@@ -5,6 +5,10 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
+        {/* Tailwind CSS 測試區塊 */}
+        <div className="p-6 mb-6 rounded-lg bg-gradient-to-r from-blue-400 to-purple-500 text-white text-3xl font-bold shadow-lg">
+          Tailwind CSS 已安裝成功！🎉
+        </div>
         <Image
           className={styles.logo}
           src="/next.svg"
