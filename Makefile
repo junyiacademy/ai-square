@@ -1,9 +1,12 @@
 # Makefile for AI Square monorepo
 
-.PHONY: frontend backend dev
+.PHONY: frontend backend dev build-frontend
 
 frontend:
 	cd frontend && npm run dev
+
+build-frontend:
+	cd frontend && npm run build
 
 backend:
 	cd backend && source venv/bin/activate && uvicorn main:app --reload
