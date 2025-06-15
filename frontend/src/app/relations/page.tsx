@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import '../../i18n';
 
@@ -10,6 +10,10 @@ interface Competency {
   knowledge: string[];
   skills: string[];
   attitudes: string[];
+  scenarios?: string[];
+  scenarios_zh?: string[];
+  content?: string;
+  content_zh?: string;
 }
 
 interface Domain {
@@ -108,6 +112,8 @@ function CompetencyAccordion({ comp, kMap, sMap, aMap, lang }: { comp: Competenc
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
   const description = lang === 'zh-TW' && (comp.description_zh) ? comp.description_zh : comp.description;
+  const scenarios = lang === 'zh-TW' && comp.scenarios_zh ? comp.scenarios_zh : comp.scenarios;
+  const content = lang === 'zh-TW' && comp.content_zh ? comp.content_zh : comp.content;
   return (
     <div className="mb-4">
       <div
@@ -119,17 +125,48 @@ function CompetencyAccordion({ comp, kMap, sMap, aMap, lang }: { comp: Competenc
         <span className="ml-2">{open ? '▲' : '▼'}</span>
       </div>
       {open && (
-        <div className="bg-white border border-gray-100 rounded-b px-4 py-3 mt-1">
-          <KSAList type={t('knowledge')} codes={comp.knowledge} map={kMap} lang={lang} />
-          <KSAList type={t('skills')} codes={comp.skills} map={sMap} lang={lang} />
-          <KSAList type={t('attitudes')} codes={comp.attitudes} map={aMap} lang={lang} />
+        <div className="bg-white border border-blue-100 rounded-xl px-6 py-4 mt-2 shadow-md">
+          <div className="mb-4">
+            {content && (
+              <div className="text-base font-bold text-blue-900 mb-2 whitespace-pre-line">{content}</div>
+            )}
+            {scenarios && scenarios.length > 0 && (
+              <div>
+                <div className="font-bold text-gray-600 mb-1">{t('scenarios')}</div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
+                  {scenarios.map((s, i) => (
+                    <div key={i} className="flex items-start gap-2 text-gray-800 text-sm">
+                      <span className="mt-0.5">📘</span>
+                      <span>{s}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="border-t border-gray-200 pt-6 mt-6">
+            <div className="bg-gray-50 rounded-lg shadow-inner p-4 md:p-8">
+              <div className="mb-4 px-4 py-2">
+                <div className="text-lg font-bold text-blue-700 flex items-center gap-2 mb-1">
+                  <span>🧭</span>
+                  <span>AI 素養衡量指標三大維度</span>
+                </div>
+                <div className="text-gray-600 text-sm">知識（Knowledge）、技能（Skills）、態度（Attitudes）三大面向，協助你全方位理解與評量 AI 素養。</div>
+              </div>
+              <div className="px-4">
+                <KSAList type={<span className="flex items-center gap-1 text-blue-700 font-semibold"><span>📖</span>{t('knowledge')}</span>} codes={comp.knowledge} map={kMap} lang={lang} />
+                <KSAList type={<span className="flex items-center gap-1 text-green-700 font-semibold"><span>🛠️</span>{t('skills')}</span>} codes={comp.skills} map={sMap} lang={lang} />
+                <KSAList type={<span className="flex items-center gap-1 text-yellow-700 font-semibold"><span>💡</span>{t('attitudes')}</span>} codes={comp.attitudes} map={aMap} lang={lang} />
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
   );
 }
 
-function KSAList({ type, codes, map, lang }: { type: string, codes: string[], map: Record<string, KSAItem>, lang: string }) {
+function KSAList({ type, codes, map, lang }: { type: ReactNode, codes: string[], map: Record<string, KSAItem>, lang: string }) {
   const [selected, setSelected] = useState<string | null>(null);
   return (
     <div className="mb-6 flex gap-6 items-start">

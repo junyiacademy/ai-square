@@ -10,6 +10,10 @@ interface CompetencyYaml {
   knowledge: string[];
   skills: string[];
   attitudes: string[];
+  scenarios?: string[];
+  scenarios_zh?: string[];
+  content?: string;
+  content_zh?: string;
 }
 interface DomainYaml {
   overview: string;
@@ -65,6 +69,10 @@ export async function GET(req: NextRequest) {
       knowledge: comp.knowledge || [],
       skills: comp.skills || [],
       attitudes: comp.attitudes || [],
+      scenarios: comp.scenarios || [],
+      scenarios_zh: comp.scenarios_zh || [],
+      content: comp.content || '',
+      content_zh: comp.content_zh || '',
     })),
   }));
 
