@@ -1,0 +1,43 @@
+# ----------  Knowledge (K) ----------
+knowledge_codes:
+  K1.1: "AI uses algorithms & statistics to detect patterns and generate outputs."
+  K1.2: "Machine learning infers rules from data and adapts after deployment."
+  K1.3: "Generative AI produces human-like outputs but lacks intent or true understanding."
+  K1.4: "AI system types differ (create / predict / recommend / respond)."
+
+  K2.1: "Humans design AI; choices & labor conditions shape outputs."
+  K2.2: "Training data comes from public, user-generated, curated, sensor sources."
+  K2.3: "AI gathers new interaction data that alters future outputs."
+  K2.4: "Training selects, labels, and prioritizes data; AI finds patterns within."
+  K2.5: "Bias exists in AI life-cycle; humans can perpetuate or mitigate it."
+
+  K3.1: "AI automates structured tasks; humans must up-/re-skill."
+  K3.2: "People decide which tasks suit machines vs. human expertise."
+  K3.3: "Humans remain responsible for ethically sensitive decisions."
+
+  K4.1: "AI excels at pattern recognition; lacks emotion, ethics, originality."
+  K4.2: "Large-scale computation consumes energy and resources."
+  K4.3: "Generative AI blurs fact and fabrication, risking misinformation."
+
+  K5.1: "AI influences high-stakes decisions across sectors."
+  K5.2: "AI needs audit, regulation to balance benefit and harm."
+  K5.3: "Generative AI raises authenticity and copyright issues."
+  K5.4: "Ethical principles: fairness, transparency, accountability, privacy."
+
+# ----------  Skills (S) ----------
+skill_codes:
+  Critical_Thinking:        "Evaluate AI outputs for accuracy, fairness, bias."
+  Creativity:               "Co-create and iterate ideas with AI."
+  Computational_Thinking:   "Decompose tasks; craft instructions/prompt chains."
+  Collaboration:            "Work effectively with AI and human teammates."
+  Problem_Solving:          "Choose when/how AI should assist; weigh risks."
+  Self_and_Social_Awareness: "Recognize AI's impacts on self, society, environment."
+  Communication:            "Explain AI operations clearly and without anthropomorphism."
+
+# ----------  Attitudes (A) ----------
+attitude_codes:
+  Responsible: "Be accountable; seek to prevent harm from AI use."
+  Curious:     "Explore AI capabilities and limitations with openness."
+  Innovative:  "Pursue novel, positive applications of AI."
+  Adaptable:   "Iterate flexibly with feedback and new contexts."
+  Empathetic:  "Consider diverse human and environmental impacts." 

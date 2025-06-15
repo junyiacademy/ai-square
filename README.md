@@ -87,19 +87,3 @@
 | **Total** | **≈ US $55 / NT$1,900** |
 
 ---
-
-## 🚀 Getting Started（–1 ➜ 1）
-
-```bash
-# clone mono-repo
-git clone https://github.com/your-org/aisquare.git
-cd aisquare
-
-# –1 Rule Core quick test
-python rule_core/run_demo.py
-
-# 1 Build & run mono container (Strapi + FastAPI + Next.js)
-docker compose -f infra/mono.compose.yml up --build
-
-# open http://localhost:1337   # Strapi admin
-# open http://localhost:3000   # Next front-end

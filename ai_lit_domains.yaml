@@ -1,0 +1,230 @@
+domains:
+  Engaging_with_AI:
+    overview: "involves using AI as a tool to access new content, information, or recommendations. These situations require learners to first recognize AI's presence, then evaluate the accuracy and relevance of AI outputs. Learners must develop a fundamental understanding of AI's technical foundations in order to critically analyze its capabilities and limitations."
+    competencies:
+      - id: E1
+        description: "Recognize AI's role & influence in different contexts."
+        knowledge: [K1.4, K5.1]
+        skills:    [Self_and_Social_Awareness]
+        attitudes: [Curious, Responsible]
+        content:   "Learners identify the presence of AI in everyday tools and systems and consider its purpose in various situations, such as content recommendations or adaptive learning. They reflect on how AI influences their choices, learning, and perceptions. "
+        scenarios: ["List familiar digital interactions (e.g., using a web camera, video recommendations) and discuss if and how each uses AI.", "Explore how an online math platform uses real-time data to present content at different levels of difficulty."]
+
+      - id: E2
+        description: "Evaluate whether AI outputs should be accepted, revised, or rejected."
+        knowledge: [K4.1, K4.3]
+        skills:    [Critical_Thinking]
+        attitudes: [Responsible]
+        content:   "Learners critically assess the accuracy and fairness of AI-generated content, recognizing that AI can generate misinformation or biased outputs. They decide whether to trust, modify, or override AI outputs by considering their potential impact on themselves and others."
+        scenarios:
+          - "Compare an AI tool's step-by-step math solution to a learner's explanation to determine if the AI's process aligns with techniques that students have already learned."
+          - "Prompt a language model with questions about historical events and evaluate the accuracy and bias of its responses by cross-referencing with reliable sources."
+
+      - id: E3
+        description: "Examine how predictive AI systems provide recommendations that can inform and limit perspectives."
+        knowledge: [K1.1, K4.3]
+        skills:    [Self_and_Social_Awareness]
+        attitudes: [Curious]
+        content:   "Learners explore how AI uses data patterns to offer suggestions (e.g., what to watch, buy, or read) and consider how those recommendations may both support learning or decision-making and reinforce narrow viewpoints or biases."
+        scenarios:
+          - "Count by 2s, 5s, and 10s to introduce how humans recognize and predict sequences, then explore how AI generates recommendations based on patterns."
+          - "Examine how social media algorithms can contribute to spreading disinformation or misinformation about a public health issue and compare the responsibilities of individuals and platforms in addressing the harm."
+
+      - id: E4
+        description: "Explain how AI could be used to amplify societal biases."
+        knowledge: [K2.1, K2.5]
+        skills:    [Critical_Thinking, Self_and_Social_Awareness, Problem_Solving]
+        attitudes: [Empathetic, Responsible]
+        content:   "Learners investigate how AI systems, such as facial recognition or hiring algorithms, reflect human decisions and data, and identify ways that bias in data or design can lead to unfair outcomes for different groups of people."
+        scenarios:
+          - "Split several characters from different stories into categories, then discuss how using rules or data to group people can be useful or treat some people unfairly."
+          - "Examine how an AI system was trained to recognize faces, evaluate potential sources of bias in the training data, and suggest steps developers could take to improve fairness."
+
+      - id: E5
+        description: "Describe how AI systems consume energy and natural resources."
+        knowledge: [K4.2]
+        skills:    [Self_and_Social_Awareness]
+        attitudes: [Responsible]
+        content:   "Learners explore the environmental impact of AI, including its energy and data infrastructure, and consider how responsible design and use can support sustainability."
+        scenarios:
+          - "Create an infographic illustrating AI's environmental impacts, including the electricity it consumes, the devices it operates on, and the materials required to manufacture those devices."
+          - "Compare AI's environmental costs with efforts to reduce them, then debate whether using AI in specific scenarios is environmentally responsible."
+
+      - id: E6
+        description: "Analyze how well the use of an AI system aligns with ethical principles and human values."
+        knowledge: [K1.4, K3.3, K5.4]
+        skills:    [Self_and_Social_Awareness, Critical_Thinking, Problem_Solving]
+        attitudes: [Responsible]
+        content:   "Learners assess whether using AI in a given situation, such as surveillance cameras in public spaces or moderating online content, supports values such as fairness, transparency, and privacy. They reflect on whether its use is appropriate, beneficial, or potentially harmful."
+        scenarios:
+          - "Evaluate if AI is used kindly, fairly, and respectfully in multiple scenarios, such as editing or sharing someone's photo without permission."
+          - "Use an AI writing assistant to revise a personal narrative, then reflect on whether its suggestions supported authentic voice or changed the story undesirably."
+
+      - id: E7
+        description: "Connect AI's social & ethical impacts to technical capabilities and limitations."
+        knowledge: [K2.1, K5.2]
+        skills:    [Self_and_Social_Awareness, Problem_Solving]
+        attitudes: [Curious, Empathetic, Responsible]
+        content:   "Learners explore how AI's strengths and weaknesses affect how it's used in society. They connect the design and function of AI systems to real-world impact on people, communities, and systems."
+        scenarios:
+          - "Discuss why a smartphone voice assistant sometimes doesn't understand commands or questions, and when to turn to another source for information."
+          - "Investigate how predictive AI calculates credit scores or loan eligibility. Then explore which data is used, what bias might appear, and how mathematical models can reinforce inequality."
+
+  Creating_with_AI:
+    overview: "Consists of collaborating with an AI system in a creative or problem-solving process; it involves guiding and refining AI output through prompts and feedback while ensuring the content remains fair and appropriate, and it also includes ethical considerations related to content ownership, attribution, and the responsible use of existing materials."
+    competencies:
+      - id: C1
+        description: "Use AI systems to explore new perspectives and approaches that build upon original ideas"
+        knowledge: [K4.1]
+        skills:    [Creativity]
+        attitudes: [Innovative, Adaptable]
+        content:   "Learners experiment with AI to expand their thinking, generate new ideas, or consider alternative viewpoints. They stay accountable for the final content while letting AI support their creative process."
+        scenarios:
+          - "Evaluate AI-generated images to create story settings based on learner ideas (e.g., 'a jungle in space'), then write new stories inspired by unexpected results."
+          - "Use AI to develop counterarguments for a class debate to anticipate and address opposing viewpoints."
+
+      - id: C2
+        description: "Visualize, prototype, and combine ideas using different types of AI systems."
+        knowledge: [K1.4]
+        skills:    [Collaboration, Creativity]
+        attitudes: [Curious, Adaptable]
+        content:   "Learners try out AI tools that operate in different formats (text, images, music, etc.) to explore and refine new ideas. They combine outputs into a meaningful product or solution."
+        scenarios:
+          - "Use an AI music tool to create a short song to describe a season, then experiment with different moods, instruments, and lyrics, and combine learners' favorite parts into a final track."
+          - "Use AI tools to explore different formats (e.g., text, graphics, music) for a public awareness campaign and combine elements from each with existing ideas to create a final product."
+
+      - id: C3
+        description: "Collaborate with generative AI systems to elicit feedback, refine results, and reflect on thought processes."
+        knowledge: [K2.3]
+        skills:    [Computational_Thinking, Creativity]
+        attitudes: [Innovative, Adaptable]
+        content:   "Learners engage in an iterative process with AI by testing prompts and refining AI-generated outputs, and then reflect on how the interaction shaped their thinking and choices."
+        scenarios:
+          - "Use an AI writing tool to improve a class story, by choosing which suggestions support their creative vision, and discussing how their ideas changed through the process."
+          - "Use an AI coding assistant to fix errors and modify code for a video game, then reflect on how the tool affected the debugging process."
+
+      - id: C4
+        description: "Analyze how AI can safeguard or violate content authenticity and intellectual property."
+        knowledge: [K5.3]
+        skills:    [Problem_Solving, Self_and_Social_Awareness]
+        attitudes: [Empathetic, Responsible]
+        content:   "Learners explore how AI-generated content may borrow from or replicate existing work, and consider when that use is fair, original, or in need of attribution. They reflect on the ethical implications of AI-assisted creation."
+        scenarios:
+          - "Compare original student work to AI-generated poems, then discuss what makes something 'original' and how to give credit when AI tools help create content."
+          - "Research how certain artists' styles appear in AI-generated art, then debate whether the use of the artists' content is fair or requires consent."
+
+      - id: C5
+        description: "Explain how AI systems perform tasks using precise language that avoids anthropomorphism."
+        knowledge: [K1.3, K1.4]
+        skills:    [Communication]
+        attitudes: [Responsible]
+        content:   "Learners describe how AI operates in realistic, accurate terms, avoiding language that suggests AI has human feelings or understanding. They understand that their language can either clarify or perpetuate misconceptions about AI."
+        scenarios:
+          - "Compare art created by a human with art generated by AI, and discuss how artists express themselves while generative AI uses patterns in existing data."
+          - "Describe how a generative AI system can create a song based on prompts, learned patterns, and training data, without assigning it intent, emotion, or creativity."
+
+  Managing_with_AI:
+    overview: "requires intentionally choosing how AI can support and enhance human work. This includes assigning structured tasks to AI, such as organizing information, so humans can focus on areas requiring creativity, empathy, and judgment. AI systems can simulate a variety of roles, acting as an analyst, debate partner, or career guide. Learners who manage AI's actions learn to delegate tasks thoughtfully, guide AI outputs with clear instructions, and assess whether AI's role aligns with their goals and values. This domain helps learners build agency, ensuring that AI works for them and that its use remains ethical and human-centered."
+    competencies:
+      - id: M1
+        description: "Decide whether to use AI systems based on the nature of the task."
+        knowledge: [K4.1, K5.4]
+        skills:    [Problem_Solving, Computational_Thinking]
+        attitudes: [Responsible, Innovative]
+        content:   "Learners assess whether AI is the right tool for a specific situation. They consider factors like the complexity of the task, the need for human judgment, and the ethical implications."
+        scenarios:
+          - "Consider everyday tasks (e.g., writing a birthday card) and assess when AI use is appropriate, considering the need for individuality, creativity, or human judgment."
+          - "Determine whether specific AI systems should be avoided, or used to complete specific tasks, based on how well each option aligns with an assignment's learning objectives."
+
+      - id: M2
+        description: "Decompose a problem based on the capabilities and limitations of both AI systems and humans."
+        knowledge: [K4.1]
+        skills:    [Collaboration, Computational_Thinking, Problem_Solving]
+        attitudes: [Innovative, Adaptable]
+        content:   "Learners break down a complex task and decide which parts can be handled by AI and which require human involvement. They distribute tasks based on their nature and human and AI strengths."
+        scenarios:
+          - "Use AI to brainstorm science fair ideas and gather background information, while the class votes on the best project, designs and carries out the experiment, and interprets the results."
+          - "Examine a historical question using AI to summarize primary sources and commentaries, while students assess context, detect bias, discuss resources and make new interpretations."
+
+      - id: M3
+        description: "Direct generative AI systems by providing specific instructions, appropriate context, and evaluation criteria."
+        knowledge: [K1.3, K2.3]
+        skills:    [Collaboration, Computational_Thinking]
+        attitudes: [Innovative, Adaptable]
+        content:   "Learners practice prompt engineering by giving AI clear, structured inputs to guide outputs that meet expectations and goals."
+        scenarios:
+          - "Construct a prompt that another student could use to draw a poster, including the poster topic, what not to do, and what a quality result should look like."
+          - "Experiment with instructing an AI chatbot to take on the role of a debate partner by engineering prompts that define its purpose, tone, and task. Then test and evaluate how effectively it supports learning goals."
+
+      - id: M4
+        description: "Delegate tasks to AI systems to appropriately automate or augment human workflows."
+        knowledge: [K3.1]
+        skills:    [Collaboration, Problem_Solving]
+        attitudes: [Innovative]
+        content:   "Learners identify opportunities to offload repetitive or structured tasks to AI, allowing people to focus on creativity, ethics, or decision-making."
+        scenarios:
+          - "Plan a writing process where AI helps with spelling corrections and synonym suggestions, while learners focus on storytelling, character development, and creative plot twists."
+          - "Use AI to generate variations of a concept based on a group's initial ideas, while team members evaluate the options, refine the final version, and present their rationale."
+
+      - id: M5
+        description: "Develop and communicate guidelines for using AI systems that align with human values, promote fairness, and prioritize transparency."
+        knowledge: [K5.4]
+        skills:    [Communication, Critical_Thinking, Self_and_Social_Awareness]
+        attitudes: [Responsible, Empathetic]
+        content:   "Learners create or reinforce responsible guidelines for AI use in academic contexts. They consider existing guidelines from local, national, or international organizations, such as the European Commission or the OECD."
+        scenarios:
+          - "Create a classroom poster outlining fair ways to use an AI tool, such as crediting sources and seeking a teacher's approval before using it for assignments."
+          - "Lead a workshop for peers on common AI tools, sharing guidelines for AI use that promote honesty, respect for intellectual property, and critical thinking."
+
+  Designing_with_AI:
+    overview: "empowers learners to understand how AI works and connect it to its social and ethical impacts by shaping how AI systems function. Through hands-on exploration in an education context, students examine how data, design choices, and model behavior influence the fairness, usefulness, and impact of AI systems. The goal is not to develop commercial products or put them into service, but to build the confidence and capacity to shape AI for human good by understanding the principles underpinning the design of AI from an early age."
+    competencies:
+      - id: D1
+        description: "Describe how AI systems can be designed to support a solution to a community problem."
+        knowledge: [K2.3, K3.2]
+        skills:    [Collaboration, Problem_Solving, Self_and_Social_Awareness]
+        attitudes: [Curious, Innovative, Responsible]
+        content:   "Learners explore how AI can solve real-world problems by identifying a community need that could be addressed with AI, considering how to design AI to contribute to a solution, and evaluating the potential benefits, risks, and limitations."
+        scenarios:
+          - "Develop a method for sorting healthy vs. unhealthy snacks for the school cafeteria by gathering images of real snack items from home or the cafeteria, labeling them, and testing how the method classifies new items."
+          - "Propose how AI could help recommend after-school activities based on interests by exploring what data would be needed, how the AI would make decisions, and what parts of the solution should involve human input."
+
+      - id: D2
+        description: "Compare the capabilities and limitations of AI systems that follow algorithms created by humans with those that make predictions based on data."
+        knowledge: [K1.2, K1.4]
+        skills:    [Computational_Thinking, Problem_Solving]
+        attitudes: [Curious]
+        content:   "Learners examine the difference between systems that follow fixed rules (or manually programmed logic) and machine learning models to understand the value of machine learning and determine when each approach is most useful or appropriate."
+        scenarios:
+          - "Compare a method for organizing animals based on physical characteristics with one that groups animals based on habitat and behavior, then discuss when each approach is useful."
+          - "Program a simple chatbot using conditional logic (e.g., to help people select a book), and compare its capabilities to those of a machine learning–based system handling the same task."
+
+      - id: D3
+        description: "Collect and curate data that could be used to train an AI model by considering relevance, representation, and potential impact."
+        knowledge: [K1.2, K2.2, K2.4]
+        skills:    [Computational_Thinking, Self_and_Social_Awareness]
+        attitudes: [Innovative, Responsible]
+        content:   "Learners discover how data is labeled, selected, and prepared to train an AI model. They learn how data quality and representation affect the model's performance and potential effect on people."
+        scenarios:
+          - "Label and sort building blocks based on specific features (e.g., shape, color), then create a decision tree to categorize new blocks."
+          - "Explore how a basic AI model can be trained to recognize recyclable materials from photos taken in real life or collected online, then describe the impact the data had on the model's performance."
+
+      - id: D4
+        description: "Evaluate AI systems using defined criteria, expected outcomes, and user feedback."
+        knowledge: [K1.2, K2.3]
+        skills:    [Collaboration, Computational_Thinking]
+        attitudes: [Innovative, Adaptable]
+        content:   "Learners set criteria for a successful AI system, test it with various inputs, and evaluate its performance to make improvements. They use an iterative process shaped by feedback from diverse users."
+        scenarios:
+          - "Use a generative AI tool to create a joke or riddle by defining what makes a good joke, rating the system's responses, and trying new prompts to improve results."
+          - "Evaluate AI systems by testing different types of AI models with the same datasets for the same task, then discuss and propose ways to improve them that includes user feedback."
+
+      - id: D5
+        description: "Describe an AI model's purpose, intended users, and its limitations."
+        knowledge: [K1.2, K2.1]
+        skills:    [Communication, Problem_Solving, Self_and_Social_Awareness]
+        attitudes: [Curious, Responsible]
+        content:   "Learners describe the purpose of an AI model, the data used to train it, and what it can or cannot do well. They help others develop a realistic understanding of the model's capabilities and limitations."
+        scenarios:
+          - "Direct a classmate, who is role-playing as a robot, to sort snacks or animals by color, size, or shape, and observe how changing the rules creates confusion."
+          - "Create a model card (brief, structured document) to summarize how a machine learning model works, its training data, intended uses, and possible limitations." 
