@@ -3,6 +3,42 @@ import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 
+// 型別定義
+interface CompetencyYaml {
+  description: string;
+  description_zh?: string;
+  knowledge: string[];
+  skills: string[];
+  attitudes: string[];
+}
+interface DomainYaml {
+  overview: string;
+  overview_zh?: string;
+  competencies: Record<string, CompetencyYaml>;
+}
+interface DomainsYaml {
+  domains: Record<string, DomainYaml>;
+}
+
+interface KSAItemYaml {
+  summary: string;
+  summary_zh?: string;
+}
+interface ThemeYaml {
+  theme_zh?: string;
+  explanation: string;
+  explanation_zh?: string;
+  codes: Record<string, KSAItemYaml>;
+}
+interface KSAThemesYaml {
+  themes: Record<string, ThemeYaml>;
+}
+interface KSAYaml {
+  knowledge_codes: KSAThemesYaml;
+  skill_codes: KSAThemesYaml;
+  attitude_codes: KSAThemesYaml;
+}
+
 function loadYaml<T>(filePath: string): T {
   const fullPath = path.join(process.cwd(), 'public', filePath);
   const fileContents = fs.readFileSync(fullPath, 'utf8');
@@ -16,14 +52,14 @@ export async function GET(req: NextRequest) {
   else lang = 'en';
 
   // 讀取 YAML
-  const domains = loadYaml<any>('ai_lit_domains.yaml');
-  const ksa = loadYaml<any>('ksa_codes.yaml');
+  const domains = loadYaml<DomainsYaml>('ai_lit_domains.yaml');
+  const ksa = loadYaml<KSAYaml>('ksa_codes.yaml');
 
   // domains
-  const domainList = Object.entries(domains.domains).map(([domainKey, domain]: any) => ({
+  const domainList = Object.entries(domains.domains).map(([domainKey, domain]) => ({
     key: domainKey,
     overview: lang === 'zh-TW' && domain.overview_zh ? domain.overview_zh : domain.overview,
-    competencies: Object.entries(domain.competencies).map(([compKey, comp]: any) => ({
+    competencies: Object.entries(domain.competencies).map(([compKey, comp]) => ({
       key: compKey,
       description: lang === 'zh-TW' && comp.description_zh ? comp.description_zh : comp.description,
       knowledge: comp.knowledge || [],
@@ -33,12 +69,12 @@ export async function GET(req: NextRequest) {
   }));
 
   // KSA
-  function mapKSA(themes: any) {
-    const map: Record<string, any> = {};
-    Object.entries(themes).forEach(([theme, themeObj]: any) => {
+  function mapKSA(themes: Record<string, ThemeYaml>) {
+    const map: Record<string, { summary: string; theme: string; explanation?: string }> = {};
+    Object.entries(themes).forEach(([theme, themeObj]) => {
       const themeLabel = lang === 'zh-TW' && themeObj.theme_zh ? themeObj.theme_zh : theme;
       const explanation = lang === 'zh-TW' && themeObj.explanation_zh ? themeObj.explanation_zh : themeObj.explanation;
-      Object.entries(themeObj.codes).forEach(([code, obj]: any) => {
+      Object.entries(themeObj.codes).forEach(([code, obj]) => {
         map[code] = {
           summary: lang === 'zh-TW' && obj.summary_zh ? obj.summary_zh : obj.summary,
           theme: themeLabel,
