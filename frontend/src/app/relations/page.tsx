@@ -166,8 +166,33 @@ function CompetencyAccordion({ comp, kMap, sMap, aMap, lang }: { comp: Competenc
   );
 }
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+  return isMobile;
+}
+
+function KSAOverlay({ open, onClose, info, lang }: { open: boolean, onClose: () => void, info: KSAItem | null, lang: string }) {
+  if (!open || !info) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center md:hidden">
+      <div className="absolute inset-0 bg-black bg-opacity-60" onClick={onClose}></div>
+      <div className="relative w-full max-w-md bg-white rounded-2xl shadow-lg p-4 max-h-[90vh] overflow-y-auto animate-slideup">
+        <button className="absolute right-4 top-3 text-2xl text-gray-400" onClick={onClose} aria-label="關閉">✕</button>
+        <KSACard info={info} lang={lang} />
+      </div>
+    </div>
+  );
+}
+
 function KSAList({ type, codes, map, lang }: { type: ReactNode, codes: string[], map: Record<string, KSAItem>, lang: string }) {
   const [selected, setSelected] = useState<string | null>(null);
+  const isMobile = useIsMobile();
   return (
     <div className="mb-6 flex flex-col md:flex-row gap-6 items-start">
       <div className="flex flex-col gap-2 min-w-[80px]">
@@ -182,13 +207,16 @@ function KSAList({ type, codes, map, lang }: { type: ReactNode, codes: string[],
           </span>
         ))}
       </div>
-      <div className="w-full flex-1 min-h-[120px]">
-        {selected ? (
-          <KSACard info={map[selected]} lang={lang} />
-        ) : (
-          <div className="text-gray-400 italic mt-8">請點選左側代碼以檢視詳細內容</div>
-        )}
-      </div>
+      {!isMobile && (
+        <div className="w-full flex-1 min-h-[120px]">
+          {selected ? (
+            <KSACard info={map[selected]} lang={lang} />
+          ) : (
+            <div className="text-gray-400 italic mt-8">請點選左側代碼以檢視詳細內容</div>
+          )}
+        </div>
+      )}
+      <KSAOverlay open={isMobile && !!selected} onClose={() => setSelected(null)} info={selected ? map[selected] : null} lang={lang} />
     </div>
   );
 }
@@ -217,4 +245,13 @@ function KSACard({ info, lang }: { info: KSAItem, lang: string }) {
       )}
     </div>
   );
-} 
+}
+
+/* 加入簡單動畫 */
+<style jsx global>{`
+@keyframes slideup {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.animate-slideup { animation: slideup 0.2s cubic-bezier(0.4,0,0.2,1); }
+`}</style>
