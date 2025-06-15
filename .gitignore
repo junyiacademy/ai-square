@@ -1,0 +1,19 @@
+# Python
+backend/venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# FastAPI/uvicorn log
+*.log
+
+# Node.js
+node_modules/
+frontend/.next/
+frontend/out/
+
+# OS/Editor
+.DS_Store
+.env
+.env.*
