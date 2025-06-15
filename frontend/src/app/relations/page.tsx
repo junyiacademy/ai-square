@@ -3,6 +3,7 @@ import path from 'path';
 import yaml from 'js-yaml';
 import React from 'react';
 import RelationsClient from './RelationsClient';
+import { useTranslation } from 'react-i18next';
 
 // 定義型別
 interface Competency {
@@ -58,7 +59,6 @@ function getDomainTree() {
   // 讀取 domains 與 ksa codes
   const domains = loadYaml<DomainsYaml>('ai_lit_domains.yaml');
   const ksa = loadYaml<KSAData>('ksa_codes.yaml');
-
   // 建立 code -> summary 對照表
   const kMap: Record<string, KSAItem> = {};
   Object.entries(ksa.knowledge_codes.themes).forEach(([theme, themeObj]) => {
@@ -78,7 +78,6 @@ function getDomainTree() {
       aMap[code] = { summary: obj.summary, theme, explanation: themeObj.explanation };
     });
   });
-
   // domains tree 結構
   const domainList: Domain[] = [];
   Object.entries(domains.domains).forEach(([domainKey, domain]) => {
@@ -107,8 +106,7 @@ function getDomainTree() {
 }
 
 export default function RelationsPage() {
-  const tree = getDomainTree();
   return (
-    <RelationsClient tree={tree} />
+    <RelationsClient />
   );
 } 

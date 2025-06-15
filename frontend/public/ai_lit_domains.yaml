@@ -1,214 +1,328 @@
 domains:
   Engaging_with_AI:
     overview: "involves using AI as a tool to access new content, information, or recommendations. These situations require learners to first recognize AI's presence, then evaluate the accuracy and relevance of AI outputs. Learners must develop a fundamental understanding of AI's technical foundations in order to critically analyze its capabilities and limitations."
+    overview_zh: "涉及運用AI作為工具來獲取新內容、資訊或建議。這些情境要求學習者首先辨識AI的存在，然後評估AI輸出的準確性和相關性。學習者必須對AI的技術基礎建立基本理解，以便批判性地分析其能力和局限性。"
     competencies:
       E1:
         description: "Recognize AI's role & influence in different contexts."
+        description_zh: "辨識AI在不同情境中的角色與影響力。"
         knowledge: [K1.4, K5.1]
         skills:    [S6.1]
         attitudes: [A2.1, A1.1]
         content:   "Learners identify the presence of AI in everyday tools and systems and consider its purpose in various situations, such as content recommendations or adaptive learning. They reflect on how AI influences their choices, learning, and perceptions. "
+        content_zh: "學習者能辨識日常工具與系統中AI的存在，並思考其在各種情境（如內容推薦、適應性學習）中的用途。他們會反思AI如何影響自己的選擇、學習與觀點。"
         scenarios:
           - "List familiar digital interactions (e.g., using a web camera, video recommendations) and discuss if and how each uses AI."
           - "Explore how an online math platform uses real-time data to present content at different levels of difficulty."
+        scenarios_zh:
+          - "列舉熟悉的數位互動（如使用網路攝影機、影片推薦），並討論每一項是否以及如何運用AI。"
+          - "探索線上數學平台如何利用即時資料，呈現不同難度層級的內容。"
       E2:
         description: "Evaluate whether AI outputs should be accepted, revised, or rejected."
+        description_zh: "評估AI輸出應該被接受、修改或拒絕。"
         knowledge: [K4.1, K4.3]
         skills:    [S1.1]
         attitudes: [A1.1]
         content:   "Learners critically assess the accuracy and fairness of AI-generated content, recognizing that AI can generate misinformation or biased outputs. They decide whether to trust, modify, or override AI outputs by considering their potential impact on themselves and others."
+        content_zh: "學習者批判性地評估AI生成內容的準確性和公平性，認識到AI可能產生錯誤資訊或偏見輸出。他們透過考慮AI輸出對自己和他人的潛在影響，決定是否要信任、修改或推翻AI的輸出。"
         scenarios:
           - "Compare an AI tool's step-by-step math solution to a learner's explanation to determine if the AI's process aligns with techniques that students have already learned."
           - "Prompt a language model with questions about historical events and evaluate the accuracy and bias of its responses by cross-referencing with reliable sources."
+        scenarios_zh:
+          - "比較AI工具的數學解題步驟與學習者的解釋，以判斷AI的解題過程是否符合學生已學過的技巧。"
+          - "向語言模型詢問有關歷史事件的問題，並透過與可靠來源交叉比對來評估其回應的準確性和偏見。"
       E3:
         description: "Examine how predictive AI systems provide recommendations that can inform and limit perspectives."
+        description_zh: "檢視預測性AI系統如何提供建議，這些建議既能提供資訊也可能限制觀點。"
         knowledge: [K1.1, K4.3]
         skills:    [S6.1]
         attitudes: [A2.1]
         content:   "Learners explore how AI uses data patterns to offer suggestions (e.g., what to watch, buy, or read) and consider how those recommendations may both support learning or decision-making and reinforce narrow viewpoints or biases."
+        content_zh: "學習者探索AI如何使用資料模式來提供建議（如觀看、購買或閱讀什麼），並考慮這些建議如何既能支持學習或決策，又可能強化狹隘的觀點或偏見。"
         scenarios:
           - "Count by 2s, 5s, and 10s to introduce how humans recognize and predict sequences, then explore how AI generates recommendations based on patterns."
           - "Examine how social media algorithms can contribute to spreading disinformation or misinformation about a public health issue and compare the responsibilities of individuals and platforms in addressing the harm."
+        scenarios_zh:
+          - "以2、5、10的倍數計數來介紹人類如何辨識和預測序列，然後探索AI如何根據模式產生建議。"
+          - "檢視社群媒體演算法如何促進公共衛生議題的假訊息或錯誤資訊傳播，並比較個人和平台在處理這些危害方面的責任。"
       E4:
         description: "Explain how AI could be used to amplify societal biases."
+        description_zh: "解釋AI如何可能被用來放大社會偏見。"
         knowledge: [K2.1, K2.5]
         skills:    [S1.1, S6.1, S5.1]
         attitudes: [A5.1, A1.1]
         content:   "Learners investigate how AI systems, such as facial recognition or hiring algorithms, reflect human decisions and data, and identify ways that bias in data or design can lead to unfair outcomes for different groups of people."
+        content_zh: "學習者研究AI系統（如臉部辨識或招聘演算法）如何反映人類決策和資料，並識別資料或設計中的偏見如何導致對不同群體的不公平結果。"
         scenarios:
           - "Split several characters from different stories into categories, then discuss how using rules or data to group people can be useful or treat some people unfairly."
           - "Examine how an AI system was trained to recognize faces, evaluate potential sources of bias in the training data, and suggest steps developers could take to improve fairness."
+        scenarios_zh:
+          - "將來自不同故事的角色分類，然後討論使用規則或資料對人群分組如何既有用又可能對某些人不公平。"
+          - "檢視AI系統如何被訓練來辨識臉部，評估訓練資料中潛在的偏見來源，並建議開發者可以採取的改善公平性步驟。"
       E5:
         description: "Describe how AI systems consume energy and natural resources."
+        description_zh: "描述AI系統如何消耗能源和自然資源。"
         knowledge: [K4.2]
         skills:    [S6.1]
         attitudes: [A1.1]
         content:   "Learners explore the environmental impact of AI, including its energy and data infrastructure, and consider how responsible design and use can support sustainability."
+        content_zh: "學習者探索AI的環境影響，包括其能源和資料基礎設施，並考慮負責任的設計和使用如何支持永續性。"
         scenarios:
           - "Create an infographic illustrating AI's environmental impacts, including the electricity it consumes, the devices it operates on, and the materials required to manufacture those devices."
           - "Compare AI's environmental costs with efforts to reduce them, then debate whether using AI in specific scenarios is environmentally responsible."
+        scenarios_zh:
+          - "製作資訊圖表，說明AI的環境影響，包括其消耗的電力、運行的設備，以及製造這些設備所需的材料。"
+          - "比較AI的環境成本與減少這些成本的努力，然後辯論在特定情境下使用AI是否環境友善。"
       E6:
         description: "Analyze how well the use of an AI system aligns with ethical principles and human values."
+        description_zh: "分析AI系統的使用如何與倫理原則和人類價值觀相符。"
         knowledge: [K1.4, K3.3, K5.4]
         skills:    [S6.1, S1.1, S5.1]
         attitudes: [A1.1]
         content:   "Learners assess whether using AI in a given situation, such as surveillance cameras in public spaces or moderating online content, supports values such as fairness, transparency, and privacy. They reflect on whether its use is appropriate, beneficial, or potentially harmful."
+        content_zh: "學習者評估在特定情況下使用AI（如在公共場所設置監控攝影機或調節線上內容）是否支持公平、透明和隱私等價值觀。他們反思其使用是否適當、有益或潛在有害。"
         scenarios:
           - "Evaluate if AI is used kindly, fairly, and respectfully in multiple scenarios, such as editing or sharing someone's photo without permission."
           - "Use an AI writing assistant to revise a personal narrative, then reflect on whether its suggestions supported authentic voice or changed the story undesirably."
+        scenarios_zh:
+          - "評估AI在多種情境中是否被善意、公平和尊重地使用，例如未經許可編輯或分享他人照片。"
+          - "使用AI寫作助手修改個人敘述，然後反思其建議是否支持真實聲音，或是以不理想的方式改變了故事。"
       E7:
         description: "Connect AI's social & ethical impacts to technical capabilities and limitations."
+        description_zh: "將AI的社會和倫理影響與技術能力和局限性聯繫起來。"
         knowledge: [K2.1, K5.2]
         skills:    [S6.1, S5.1]
         attitudes: [A2.1, A5.1, A1.1]
         content:   "Learners explore how AI's strengths and weaknesses affect how it's used in society. They connect the design and function of AI systems to real-world impact on people, communities, and systems."
+        content_zh: "學習者探索AI的優勢和弱點如何影響其在社會中的使用。他們將AI系統的設計和功能與對人們、社區和系統的現實世界影響聯繫起來。"
         scenarios:
           - "Discuss why a smartphone voice assistant sometimes doesn't understand commands or questions, and when to turn to another source for information."
           - "Investigate how predictive AI calculates credit scores or loan eligibility. Then explore which data is used, what bias might appear, and how mathematical models can reinforce inequality."
+        scenarios_zh:
+          - "討論為什麼智慧型手機語音助手有時無法理解指令或問題，以及何時應該轉向其他資訊來源。"
+          - "研究預測性AI如何計算信用評分或貸款資格。然後探索使用了哪些資料、可能出現什麼偏見，以及數學模型如何可能強化不平等。"
 
   Creating_with_AI:
     overview: "Consists of collaborating with an AI system in a creative or problem-solving process; it involves guiding and refining AI output through prompts and feedback while ensuring the content remains fair and appropriate, and it also includes ethical considerations related to content ownership, attribution, and the responsible use of existing materials."
+    overview_zh: "包含在創意或問題解決過程中與AI系統協作；這涉及透過提示和回饋來指導和改進AI輸出，同時確保內容保持公平和適當，也包括與內容所有權、歸屬和負責任使用現有材料相關的倫理考量。"
     competencies:
       C1:
         description: "Use AI systems to explore new perspectives and approaches that build upon original ideas"
+        description_zh: "使用AI系統探索建立在原創想法基礎上的新觀點和方法。"
         knowledge: [K4.1]
         skills:    [S2.1]
         attitudes: [A3.1, A4.1]
         content:   "Learners experiment with AI to expand their thinking, generate new ideas, or consider alternative viewpoints. They stay accountable for the final content while letting AI support their creative process."
+        content_zh: "學習者嘗試使用AI來擴展思維、產生新想法或考慮替代觀點。他們在讓AI支持創意過程的同時，對最終內容負責。"
         scenarios:
           - "Evaluate AI-generated images to create story settings based on learner ideas (e.g., 'a jungle in space'), then write new stories inspired by unexpected results."
           - "Use AI to develop counterarguments for a class debate to anticipate and address opposing viewpoints."
+        scenarios_zh:
+          - "評估AI生成的圖像，根據學習者的想法創建故事背景（如「太空中的叢林」），然後撰寫受到意外結果啟發的新故事。"
+          - "使用AI為課堂辯論開發反駁論點，以預期和應對對立觀點。"
       C2:
         description: "Visualize, prototype, and combine ideas using different types of AI systems."
+        description_zh: "使用不同類型的AI系統來視覺化、原型製作和結合想法。"
         knowledge: [K1.4]
         skills:    [S4.1, S2.1]
         attitudes: [A2.1, A4.1]
         content:   "Learners try out AI tools that operate in different formats (text, images, music, etc.) to explore and refine new ideas. They combine outputs into a meaningful product or solution."
+        content_zh: "學習者試用以不同格式（文字、圖像、音樂等）操作的AI工具來探索和改善新想法。他們將輸出結合成有意義的產品或解決方案。"
         scenarios:
           - "Use an AI music tool to create a short song to describe a season, then experiment with different moods, instruments, and lyrics, and combine learners' favorite parts into a final track."
           - "Use AI tools to explore different formats (e.g., text, graphics, music) for a public awareness campaign and combine elements from each with existing ideas to create a final product."
+        scenarios_zh:
+          - "使用AI音樂工具創作描述季節的短歌，然後嘗試不同的情緒、樂器和歌詞，並將學習者最喜歡的部分合併成最終曲目。"
+          - "使用AI工具探索公共宣傳活動的不同格式（如文字、圖形、音樂），並將每種格式的元素與現有想法結合，創造最終產品。"
       C3:
         description: "Collaborate with generative AI systems to elicit feedback, refine results, and reflect on thought processes."
+        description_zh: "與生成式AI系統協作以獲得回饋、改進結果，並反思思維過程。"
         knowledge: [K2.3]
         skills:    [S3.1, S2.1]
         attitudes: [A3.1, A4.1]
         content:   "Learners engage in an iterative process with AI by testing prompts and refining AI-generated outputs, and then reflect on how the interaction shaped their thinking and choices."
+        content_zh: "學習者透過測試提示和改進AI生成的輸出，與AI進行反覆的過程，然後反思這種互動如何塑造他們的思維和選擇。"
         scenarios:
           - "Use an AI writing tool to improve a class story, by choosing which suggestions support their creative vision, and discussing how their ideas changed through the process."
           - "Use an AI coding assistant to fix errors and modify code for a video game, then reflect on how the tool affected the debugging process."
+        scenarios_zh:
+          - "使用AI寫作工具改進班級故事，透過選擇支持他們創意願景的建議，並討論在過程中他們的想法如何改變。"
+          - "使用AI編程助手修復錯誤並修改電子遊戲的程式碼，然後反思該工具如何影響除錯過程。"
       C4:
         description: "Analyze how AI can safeguard or violate content authenticity and intellectual property."
+        description_zh: "分析AI如何保護或侵犯內容真實性和智慧財產權。"
         knowledge: [K5.3]
         skills:    [S5.1, S6.1]
         attitudes: [A5.1, A1.1]
         content:   "Learners explore how AI-generated content may borrow from or replicate existing work, and consider when that use is fair, original, or in need of attribution. They reflect on the ethical implications of AI-assisted creation."
+        content_zh: "學習者探索AI生成的內容如何可能借用或複製現有作品，並考慮何時這種使用是公平的、原創的，或需要歸屬。他們反思AI輔助創作的倫理影響。"
         scenarios:
           - "Compare original student work to AI-generated poems, then discuss what makes something 'original' and how to give credit when AI tools help create content."
           - "Research how certain artists' styles appear in AI-generated art, then debate whether the use of the artists' content is fair or requires consent."
+        scenarios_zh:
+          - "將學生原創作品與AI生成的詩歌進行比較，然後討論什麼使某物成為『原創』，以及當AI工具幫助創造內容時如何給予信用。"
+          - "研究某些藝術家的風格如何出現在AI生成的藝術中，然後辯論使用藝術家內容是否公平或需要同意。"
       C5:
         description: "Explain how AI systems perform tasks using precise language that avoids anthropomorphism."
+        description_zh: "使用避免擬人化的精確語言解釋AI系統如何執行任務。"
         knowledge: [K1.3, K1.4]
         skills:    [S7.1]
         attitudes: [A1.1]
         content:   "Learners describe how AI operates in realistic, accurate terms, avoiding language that suggests AI has human feelings or understanding. They understand that their language can either clarify or perpetuate misconceptions about AI."
+        content_zh: "學習者以現實、準確的術語描述AI如何運作，避免暗示AI具有人類情感或理解的語言。他們理解自己的語言可以澄清或延續對AI的誤解。"
         scenarios:
           - "Compare art created by a human with art generated by AI, and discuss how artists express themselves while generative AI uses patterns in existing data."
           - "Describe how a generative AI system can create a song based on prompts, learned patterns, and training data, without assigning it intent, emotion, or creativity."
+        scenarios_zh:
+          - "比較人類創作的藝術與AI生成的藝術，並討論藝術家如何表達自己，而生成式AI如何使用現有資料中的模式。"
+          - "描述生成式AI系統如何根據提示、學習到的模式和訓練資料創作歌曲，而不賦予其意圖、情感或創造力。"
 
   Managing_with_AI:
     overview: "requires intentionally choosing how AI can support and enhance human work. This includes assigning structured tasks to AI, such as organizing information, so humans can focus on areas requiring creativity, empathy, and judgment. AI systems can simulate a variety of roles, acting as an analyst, debate partner, or career guide. Learners who manage AI's actions learn to delegate tasks thoughtfully, guide AI outputs with clear instructions, and assess whether AI's role aligns with their goals and values. This domain helps learners build agency, ensuring that AI works for them and that its use remains ethical and human-centered."
+    overview_zh: "需要有意識地選擇AI如何支持和增強人類工作。這包括將結構化任務分派給AI（如組織資訊），以便人類可以專注於需要創造力、同理心和判斷力的領域。AI系統可以模擬各種角色，充當分析師、辯論夥伴或職涯指導。管理AI行為的學習者學會深思熟慮地委派任務、用清晰指示引導AI輸出，並評估AI的角色是否符合他們的目標和價值觀。這個領域幫助學習者建立主導性，確保AI為他們工作，並且其使用保持倫理和以人為本。"
     competencies:
       M1:
         description: "Decide whether to use AI systems based on the nature of the task."
+        description_zh: "根據任務性質決定是否使用AI系統。"
         knowledge: [K4.1, K5.4]
         skills:    [S5.1, S3.1]
         attitudes: [A1.1, A3.1]
         content:   "Learners assess whether AI is the right tool for a specific situation. They consider factors like the complexity of the task, the need for human judgment, and the ethical implications."
+        content_zh: "學習者評估AI是否是特定情況下的正確工具。他們考慮任務複雜性、人類判斷需求和倫理影響等因素。"
         scenarios:
           - "Consider everyday tasks (e.g., writing a birthday card) and assess when AI use is appropriate, considering the need for individuality, creativity, or human judgment."
           - "Determine whether specific AI systems should be avoided, or used to complete specific tasks, based on how well each option aligns with an assignment's learning objectives."
+        scenarios_zh:
+          - "考慮日常任務（如寫生日卡片）並評估何時使用AI是適當的，考慮個人化、創造力或人類判斷的需求。"
+          - "根據每個選項與作業學習目標的契合程度，決定是否應該避免使用特定AI系統，或使用它們來完成特定任務。"
       M2:
         description: "Decompose a problem based on the capabilities and limitations of both AI systems and humans."
+        description_zh: "根據AI系統和人類的能力與限制來分解問題。"
         knowledge: [K4.1]
         skills:    [S4.1, S3.1, S5.1]
         attitudes: [A3.1, A4.1]
         content:   "Learners break down a complex task and decide which parts can be handled by AI and which require human involvement. They distribute tasks based on their nature and human and AI strengths."
+        content_zh: "學習者分解複雜任務，決定哪些部分可以由AI處理，哪些需要人類參與。他們根據任務性質以及人類和AI的優勢來分配任務。"
         scenarios:
           - "Use AI to brainstorm science fair ideas and gather background information, while the class votes on the best project, designs and carries out the experiment, and interprets the results."
           - "Examine a historical question using AI to summarize primary sources and commentaries, while students assess context, detect bias, discuss resources and make new interpretations."
+        scenarios_zh:
+          - "使用AI腦力激盪科學展覽點子並收集背景資訊，同時班級投票選擇最佳專案、設計和執行實驗，並解釋結果。"
+          - "使用AI總結原始資料和評論來檢視歷史問題，同時學生評估背景、偵測偏見、討論資源並做出新解釋。"
       M3:
         description: "Direct generative AI systems by providing specific instructions, appropriate context, and evaluation criteria."
+        description_zh: "透過提供具體指示、適當背景和評估標準來指導生成式AI系統。"
         knowledge: [K1.3, K2.3]
         skills:    [S4.1, S3.1]
         attitudes: [A3.1, A4.1]
         content:   "Learners practice prompt engineering by giving AI clear, structured inputs to guide outputs that meet expectations and goals."
+        content_zh: "學習者透過給予AI清晰、結構化的輸入來練習提示工程，以指導符合期望和目標的輸出。"
         scenarios:
           - "Construct a prompt that another student could use to draw a poster, including the poster topic, what not to do, and what a quality result should look like."
           - "Experiment with instructing an AI chatbot to take on the role of a debate partner by engineering prompts that define its purpose, tone, and task. Then test and evaluate how effectively it supports learning goals."
+        scenarios_zh:
+          - "構建一個其他學生可以用來繪製海報的提示，包括海報主題、不該做什麼，以及高品質結果應該是什麼樣子。"
+          - "嘗試透過設計定義其目的、語調和任務的提示來指導AI聊天機器人扮演辯論夥伴的角色。然後測試和評估它如何有效支持學習目標。"
       M4:
         description: "Delegate tasks to AI systems to appropriately automate or augment human workflows."
+        description_zh: "將任務委派給AI系統，以適當地自動化或增強人類工作流程。"
         knowledge: [K3.1]
         skills:    [S4.1, S5.1]
         attitudes: [A3.1]
         content:   "Learners identify opportunities to offload repetitive or structured tasks to AI, allowing people to focus on creativity, ethics, or decision-making."
+        content_zh: "學習者識別將重複或結構化任務轉移給AI的機會，讓人們能夠專注於創造力、倫理或決策制定。"
         scenarios:
           - "Plan a writing process where AI helps with spelling corrections and synonym suggestions, while learners focus on storytelling, character development, and creative plot twists."
           - "Use AI to generate variations of a concept based on a group's initial ideas, while team members evaluate the options, refine the final version, and present their rationale."
+        scenarios_zh:
+          - "規劃一個寫作過程，其中AI協助拼字修正和同義詞建議，而學習者專注於故事敘述、角色發展和創意情節轉折。"
+          - "使用AI根據小組的初始想法生成概念變化，同時團隊成員評估選項、改善最終版本並提出他們的理由。"
       M5:
         description: "Develop and communicate guidelines for using AI systems that align with human values, promote fairness, and prioritize transparency."
+        description_zh: "制定和傳達符合人類價值觀、促進公平性和優先考慮透明度的AI系統使用指導原則。"
         knowledge: [K5.4]
         skills:    [S7.1, S1.1, S6.1]
         attitudes: [A1.1, A5.1]
         content:   "Learners create or reinforce responsible guidelines for AI use in academic contexts. They consider existing guidelines from local, national, or international organizations, such as the European Commission or the OECD."
+        content_zh: "學習者在學術脈絡中創建或強化負責任的AI使用指導原則。他們考慮來自地方、國家或國際組織（如歐盟委員會或經濟合作暨發展組織）的現有指導原則。"
         scenarios:
           - "Create a classroom poster outlining fair ways to use an AI tool, such as crediting sources and seeking a teacher's approval before using it for assignments."
           - "Lead a workshop for peers on common AI tools, sharing guidelines for AI use that promote honesty, respect for intellectual property, and critical thinking."
+        scenarios_zh:
+          - "製作課堂海報，概述使用AI工具的公平方式，如標註來源和在用於作業前徵求教師同意。"
+          - "為同儕主持常見AI工具工作坊，分享促進誠實、尊重智慧財產權和批判性思維的AI使用指導原則。"
 
   Designing_with_AI:
     overview: "empowers learners to understand how AI works and connect it to its social and ethical impacts by shaping how AI systems function. Through hands-on exploration in an education context, students examine how data, design choices, and model behavior influence the fairness, usefulness, and impact of AI systems. The goal is not to develop commercial products or put them into service, but to build the confidence and capacity to shape AI for human good by understanding the principles underpinning the design of AI from an early age."
+    overview_zh: "透過塑造AI系統功能的方式，使學習者能夠理解AI如何運作並將其與社會和倫理影響聯繫起來。透過在教育脈絡中的實作探索，學生檢視資料、設計選擇和模型行為如何影響AI系統的公平性、實用性和影響。目標不是開發商業產品或將其投入使用，而是透過從小理解AI設計的基本原則，建立塑造AI造福人類的信心和能力。"
     competencies:
       D1:
         description: "Describe how AI systems can be designed to support a solution to a community problem."
+        description_zh: "描述如何設計AI系統來支持社區問題的解決方案。"
         knowledge: [K2.3, K3.2]
         skills:    [S4.1, S5.1, S6.1]
         attitudes: [A2.1, A3.1, A1.1]
         content:   "Learners explore how AI can solve real-world problems by identifying a community need that could be addressed with AI, considering how to design AI to contribute to a solution, and evaluating the potential benefits, risks, and limitations."
+        content_zh: "學習者透過識別可以用AI解決的社區需求、考慮如何設計AI來促成解決方案，以及評估潛在的益處、風險和限制，來探索AI如何解決現實世界的問題。"
         scenarios:
           - "Develop a method for sorting healthy vs. unhealthy snacks for the school cafeteria by gathering images of real snack items from home or the cafeteria, labeling them, and testing how the method classifies new items."
           - "Propose how AI could help recommend after-school activities based on interests by exploring what data would be needed, how the AI would make decisions, and what parts of the solution should involve human input."
+        scenarios_zh:
+          - "透過收集來自家庭或學校餐廳的真實零食圖像、為其標記，並測試該方法如何對新項目進行分類，來開發為學校餐廳分類健康與不健康零食的方法。"
+          - "透過探索需要什麼資料、AI如何做決定，以及解決方案的哪些部分應該涉及人類輸入，來提議AI如何協助根據興趣推薦課後活動。"
       D2:
         description: "Compare the capabilities and limitations of AI systems that follow algorithms created by humans with those that make predictions based on data."
+        description_zh: "比較遵循人類創建演算法的AI系統與基於資料進行預測的AI系統的能力和限制。"
         knowledge: [K1.2, K1.4]
         skills:    [S3.1, S5.1]
         attitudes: [A2.1]
         content:   "Learners examine the difference between systems that follow fixed rules (or manually programmed logic) and machine learning models to understand the value of machine learning and determine when each approach is most useful or appropriate."
+        content_zh: "學習者檢視遵循固定規則（或手動程式化邏輯）的系統與機器學習模型之間的差異，以理解機器學習的價值並確定何時每種方法最有用或最適當。"
         scenarios:
           - "Compare a method for organizing animals based on physical characteristics with one that groups animals based on habitat and behavior, then discuss when each approach is useful."
           - "Program a simple chatbot using conditional logic (e.g., to help people select a book), and compare its capabilities to those of a machine learning–based system handling the same task."
+        scenarios_zh:
+          - "比較基於物理特徵組織動物的方法與基於棲息地和行為分組動物的方法，然後討論何時每種方法有用。"
+          - "使用條件邏輯程式設計簡單聊天機器人（如協助人們選擇書籍），並將其能力與處理相同任務的機器學習系統進行比較。"
       D3:
         description: "Collect and curate data that could be used to train an AI model by considering relevance, representation, and potential impact."
+        description_zh: "透過考慮相關性、代表性和潛在影響來收集和策劃可用於訓練AI模型的資料。"
         knowledge: [K1.2, K2.2, K2.4]
         skills:    [S3.1, S6.1]
         attitudes: [A3.1, A1.1]
         content:   "Learners discover how data is labeled, selected, and prepared to train an AI model. They learn how data quality and representation affect the model's performance and potential effect on people."
+        content_zh: "學習者發現資料如何被標記、選擇和準備以訓練AI模型。他們學習資料品質和代表性如何影響模型的性能和對人們的潛在影響。"
         scenarios:
           - "Label and sort building blocks based on specific features (e.g., shape, color), then create a decision tree to categorize new blocks."
           - "Explore how a basic AI model can be trained to recognize recyclable materials from photos taken in real life or collected online, then describe the impact the data had on the model's performance."
+        scenarios_zh:
+          - "根據特定特徵（如形狀、顏色）標記和分類積木，然後創建決策樹來分類新的積木。"
+          - "探索如何訓練基本AI模型從現實生活中拍攝或線上收集的照片中識別可回收材料，然後描述資料對模型性能的影響。"
       D4:
         description: "Evaluate AI systems using defined criteria, expected outcomes, and user feedback."
+        description_zh: "使用定義的標準、預期結果和使用者回饋來評估AI系統。"
         knowledge: [K1.2, K2.3]
         skills:    [S4.1, S3.1]
         attitudes: [A3.1, A4.1]
         content:   "Learners set criteria for a successful AI system, test it with various inputs, and evaluate its performance to make improvements. They use an iterative process shaped by feedback from diverse users."
+        content_zh: "學習者為成功的AI系統設定標準、用各種輸入測試它，並評估其性能以進行改進。他們使用由來自不同使用者回饋塑造的反覆過程。"
         scenarios:
           - "Use a generative AI tool to create a joke or riddle by defining what makes a good joke, rating the system's responses, and trying new prompts to improve results."
           - "Evaluate AI systems by testing different types of AI models with the same datasets for the same task, then discuss and propose ways to improve them that includes user feedback."
+        scenarios_zh:
+          - "透過定義什麼構成好笑話、評分系統的回應，並嘗試新提示來改善結果，使用生成式AI工具創造笑話或謎語。"
+          - "透過用相同資料集為相同任務測試不同類型的AI模型來評估AI系統，然後討論並提出包括使用者回饋的改進方法。"
       D5:
         description: "Describe an AI model's purpose, intended users, and its limitations."
+        description_zh: "描述AI模型的目的、目標使用者和限制。"
         knowledge: [K1.2, K2.1]
         skills:    [S7.1, S5.1, S6.1]
         attitudes: [A2.1, A1.1]
         content:   "Learners describe the purpose of an AI model, the data used to train it, and what it can or cannot do well. They help others develop a realistic understanding of the model's capabilities and limitations."
+        content_zh: "學習者描述AI模型的目的、用於訓練它的資料，以及它能做得好或不好的事情。他們協助他人對模型的能力和限制發展現實的理解。"
         scenarios:
           - "Direct a classmate, who is role-playing as a robot, to sort snacks or animals by color, size, or shape, and observe how changing the rules creates confusion."
-          - "Create a model card (brief, structured document) to summarize how a machine learning model works, its training data, intended uses, and possible limitations." 
+          - "Create a model card (brief, structured document) to summarize how a machine learning model works, its training data, intended uses, and possible limitations."
+        scenarios_zh:
+          - "指導扮演機器人角色的同學按顏色、大小或形狀分類零食或動物，並觀察改變規則如何造成混淆。"
+          - "創建模型卡片（簡要、結構化的文件）來總結機器學習模型如何運作、其訓練資料、預期用途和可能的限制。"
