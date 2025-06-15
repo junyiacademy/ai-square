@@ -1,5 +1,5 @@
 # AI Square 🌐 – Multi-Agent Learning Platform Roadmap  
-> **Vision** – _A hackable AI workspace where anyone can “Learn with AI, Build with AI, and Ship with AI.”_
+> **Vision** – _A hackable AI workspace where anyone can "Learn with AI, Build with AI, and Ship with AI."_
 
 ---
 
@@ -85,5 +85,35 @@
 | Gemini Flash (2 M tokens) | ~US $30 |
 | Neo4j Aura Free | 0 |
 | **Total** | **≈ US $55 / NT$1,900** |
+
+---
+
+## 📚 YAML Framework Files
+
+### `ai_lit_domains.yaml`
+- **Purpose**: Defines the four core domains of AI Literacy (Engaging_with_AI, Creating_with_AI, Managing_with_AI, Designing_with_AI), each with detailed competencies.
+- **Structure**:
+  - `domains`: Top-level key.
+    - Each domain (e.g., Engaging_with_AI) has:
+      - `overview`: Domain summary.
+      - `competencies`: Dictionary of competencies (e.g., E1, C1, M1, D1), each with:
+        - `description`: Competency statement
+        - `knowledge`: List of knowledge codes (e.g., K1.4)
+        - `skills`: List of skill themes (e.g., Critical_Thinking)
+        - `attitudes`: List of attitude themes (e.g., Responsible)
+        - `content`: Learning content
+        - `scenarios`: Example learning scenarios
+
+### `ksa_codes.yaml`
+- **Purpose**: Stores the full set of Knowledge (K), Skills (S), and Attitudes (A) indicators referenced by the domains and competencies.
+- **Structure**:
+  - `knowledge_codes` / `skill_codes` / `attitude_codes`: Each has:
+    - `desciption`: Section summary
+    - `themes`: Dictionary of themes (e.g., The_Nature_of_AI, Critical_Thinking, Responsible)
+      - Each theme contains:
+        - `codes`: Dictionary of codes (e.g., K1.1, S1.1, A1.1), each with `summary` (and for skills/attitudes, possibly `questions`)
+        - `explanation`: Theme-level explanation
+
+- **Reference**: The codes (e.g., K1.4, S1.1, A1.1) are referenced in `ai_lit_domains.yaml` to link each competency to the relevant knowledge, skills, and attitudes.
 
 ---
