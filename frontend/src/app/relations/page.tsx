@@ -169,7 +169,7 @@ function CompetencyAccordion({ comp, kMap, sMap, aMap, lang }: { comp: Competenc
 function KSAList({ type, codes, map, lang }: { type: ReactNode, codes: string[], map: Record<string, KSAItem>, lang: string }) {
   const [selected, setSelected] = useState<string | null>(null);
   return (
-    <div className="mb-6 flex gap-6 items-start">
+    <div className="mb-6 flex flex-col md:flex-row gap-6 items-start">
       <div className="flex flex-col gap-2 min-w-[80px]">
         <div className="font-bold text-gray-600 mb-1">{type}</div>
         {codes.map((code: string) => (
@@ -182,7 +182,7 @@ function KSAList({ type, codes, map, lang }: { type: ReactNode, codes: string[],
           </span>
         ))}
       </div>
-      <div className="flex-1 min-h-[120px]">
+      <div className="w-full flex-1 min-h-[120px]">
         {selected ? (
           <KSACard info={map[selected]} lang={lang} />
         ) : (
@@ -201,17 +201,17 @@ function KSACard({ info, lang }: { info: KSAItem, lang: string }) {
   const theme = t(themeKey);
   const explanation = lang === 'zh-TW' && info.explanation_zh ? info.explanation_zh : info.explanation;
   return (
-    <div className="bg-white border border-blue-200 rounded-xl px-4 py-3 shadow-lg transition-all duration-200 max-w-2xl">
+    <div className="w-full max-w-md mx-auto bg-white border border-blue-200 rounded-lg md:rounded-xl p-3 md:p-4 shadow-lg transition-all duration-200">
       <div className="flex items-center mb-2">
-        <span className="text-blue-600 text-xl font-extrabold mr-2">🔎</span>
-        <span className="text-lg font-bold text-blue-800 leading-snug">{summary}</span>
+        <span className="text-blue-600 text-lg md:text-xl font-extrabold mr-2">🔎</span>
+        <span className="text-base md:text-lg font-bold text-blue-800 leading-snug break-words">{summary}</span>
       </div>
-      <div className="flex items-center mb-2">
-        <span className="bg-blue-100 text-blue-700 rounded-full px-3 py-0.5 text-xs font-semibold mr-2">{t('theme')}</span>
-        <span className="text-blue-700 text-sm font-medium">{theme}</span>
+      <div className="flex flex-col md:flex-row items-start md:items-center mb-2 gap-2">
+        <span className="bg-blue-100 text-blue-700 rounded-full px-3 py-0.5 text-xs font-semibold mr-2 mb-1 md:mb-0">{t('theme')}</span>
+        <span className="text-blue-700 text-sm md:text-base font-medium break-words">{theme}</span>
       </div>
       {explanation && (
-        <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 mt-2 text-gray-700 text-sm whitespace-pre-line">
+        <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 mt-2 text-gray-700 text-sm md:text-base whitespace-pre-line break-words">
           {explanation}
         </div>
       )}
