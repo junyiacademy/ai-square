@@ -35,7 +35,6 @@ gcloud-deploy-frontend:
 	  --image $(GCR_IMAGE) \
 	  --platform managed \
 	  --region asia-east1 \
-	  --allow-unauthenticated \
 	  --port 3000
 
 gcloud-build-and-deploy-frontend: gcloud-build-frontend gcloud-deploy-frontend 
