@@ -1,12 +1,39 @@
 'use client';
 import React, { useState } from 'react';
 
-export default function RelationsClient({ tree }: { tree: any }) {
+interface Competency {
+  key: string;
+  description: string;
+  knowledge: string[];
+  skills: string[];
+  attitudes: string[];
+}
+
+interface Domain {
+  key: string;
+  overview: string;
+  competencies: Competency[];
+}
+
+interface KSAItem {
+  summary: string;
+  theme: string;
+  explanation?: string;
+}
+
+interface TreeData {
+  domains: Domain[];
+  kMap: Record<string, KSAItem>;
+  sMap: Record<string, KSAItem>;
+  aMap: Record<string, KSAItem>;
+}
+
+export default function RelationsClient({ tree }: { tree: TreeData }) {
   return (
     <main className="p-8 bg-gray-50 min-h-screen">
-      <h1 className="mb-8 text-3xl font-bold text-center">AI Literacy 四大領域架構</h1>
+      <h1 className="mb-8 text-3xl font-bold text-center">Empowering Learners for the Age of AI</h1>
       <div className="max-w-3xl mx-auto">
-        {tree.domains.map((domain: any, idx: number) => (
+        {tree.domains.map((domain) => (
           <DomainAccordion key={domain.key} domain={domain} kMap={tree.kMap} sMap={tree.sMap} aMap={tree.aMap} />
         ))}
       </div>
@@ -14,7 +41,7 @@ export default function RelationsClient({ tree }: { tree: any }) {
   );
 }
 
-function DomainAccordion({ domain, kMap, sMap, aMap }: { domain: any, kMap: any, sMap: any, aMap: any }) {
+function DomainAccordion({ domain, kMap, sMap, aMap }: { domain: Domain, kMap: Record<string, KSAItem>, sMap: Record<string, KSAItem>, aMap: Record<string, KSAItem> }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="mb-6">
@@ -30,7 +57,7 @@ function DomainAccordion({ domain, kMap, sMap, aMap }: { domain: any, kMap: any,
       {open && (
         <div className="bg-white border border-gray-200 rounded-b-lg px-6 py-4">
           <p className="mb-4 text-gray-700">{domain.overview}</p>
-          {domain.competencies.map((comp: any) => (
+          {domain.competencies.map((comp) => (
             <CompetencyAccordion key={comp.key} comp={comp} kMap={kMap} sMap={sMap} aMap={aMap} />
           ))}
         </div>
@@ -39,7 +66,7 @@ function DomainAccordion({ domain, kMap, sMap, aMap }: { domain: any, kMap: any,
   );
 }
 
-function CompetencyAccordion({ comp, kMap, sMap, aMap }: { comp: any, kMap: any, sMap: any, aMap: any }) {
+function CompetencyAccordion({ comp, kMap, sMap, aMap }: { comp: Competency, kMap: Record<string, KSAItem>, sMap: Record<string, KSAItem>, aMap: Record<string, KSAItem> }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="mb-4">
@@ -62,7 +89,7 @@ function CompetencyAccordion({ comp, kMap, sMap, aMap }: { comp: any, kMap: any,
   );
 }
 
-function KSAList({ type, codes, map }: { type: string, codes: string[], map: any }) {
+function KSAList({ type, codes, map }: { type: string, codes: string[], map: Record<string, KSAItem> }) {
   return (
     <div className="mb-2">
       <div className="font-bold text-gray-600 mb-1">{type}</div>
@@ -75,7 +102,7 @@ function KSAList({ type, codes, map }: { type: string, codes: string[], map: any
   );
 }
 
-function KSATagAccordion({ code, info }: { code: string, info: any }) {
+function KSATagAccordion({ code, info }: { code: string, info: KSAItem }) {
   const [open, setOpen] = useState(false);
   if (!info) return null;
   return (
