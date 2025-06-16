@@ -2,6 +2,7 @@
 import React, { useState, useEffect, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import '../../i18n';
+import Image from 'next/image';
 
 interface Competency {
   key: string;
@@ -21,6 +22,7 @@ interface Domain {
   overview: string;
   overview_zh?: string;
   competencies: Competency[];
+  emoji?: string;
 }
 
 interface KSAItem {
@@ -65,40 +67,68 @@ export default function RelationsClient() {
     return <div className="p-8 text-center">Loading...</div>;
   }
 
+  // 假插圖區塊
+  const fakeIllustration = (
+    <div className="w-full flex justify-center mb-6">
+      <div className="w-[320px] h-[120px] bg-gradient-to-r from-blue-200 to-purple-200 rounded-2xl flex items-center justify-center text-3xl text-blue-500 font-bold">
+        Fake Illustration
+      </div>
+    </div>
+  );
+
   return (
     <main className="p-8 bg-gray-50 min-h-screen">
       <div className="flex justify-end mb-4">
         <button className={`px-3 py-1 rounded-l ${lang === 'en' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`} onClick={() => handleLangChange('en')}>EN</button>
         <button className={`px-3 py-1 rounded-r ${lang === 'zh-TW' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`} onClick={() => handleLangChange('zh-TW')}>繁體中文</button>
       </div>
-      <h1 className="mb-8 text-3xl font-bold text-center">{t('pageTitle')}</h1>
+      {fakeIllustration}
+      <h1 className="mb-2 text-3xl font-bold text-center">{t('pageTitle')}</h1>
+      <p className="text-center text-gray-500 mb-8">探索 AI 素養的四大核心能力</p>
       <div className="max-w-3xl mx-auto">
         {tree.domains.map((domain) => (
-          <DomainAccordion key={domain.key} domain={domain} kMap={tree.kMap} sMap={tree.sMap} aMap={tree.aMap} lang={lang} />
+          <DomainAccordion key={domain.key} domain={domain} kMap={tree.kMap} sMap={tree.sMap} aMap={tree.aMap} lang={lang} emoji={domain.emoji || '🤖'} />
         ))}
       </div>
     </main>
   );
 }
 
-function DomainAccordion({ domain, kMap, sMap, aMap, lang }: { domain: Domain, kMap: Record<string, KSAItem>, sMap: Record<string, KSAItem>, aMap: Record<string, KSAItem>, lang: string }) {
+function DomainAccordion({ domain, kMap, sMap, aMap, lang, emoji }: { domain: Domain, kMap: Record<string, KSAItem>, sMap: Record<string, KSAItem>, aMap: Record<string, KSAItem>, lang: string, emoji: string }) {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
   const overview = lang === 'zh-TW' && (domain.overview_zh) ? domain.overview_zh : domain.overview;
+  // 圖片路徑自動對應 domain.key
+  const imgSrc = `/images/${domain.key}.png`;
   return (
     <div className="mb-6">
       <div
         className="cursor-pointer bg-gradient-to-r from-blue-100 to-purple-100 px-6 py-4 rounded-lg shadow flex items-center justify-between"
         onClick={() => setOpen(o => !o)}
       >
-        <div>
+        <div className="flex items-center">
+          <span className="text-2xl mr-3">{emoji}</span>
           <span className="text-xl font-bold text-blue-800 mr-2">{t(domain.key)}</span>
           <span className="text-gray-700 text-base font-medium">{open ? '▲' : '▼'}</span>
         </div>
       </div>
       {open && (
         <div className="bg-white border border-gray-200 rounded-b-lg px-6 py-4">
-          <p className="mb-4 text-gray-700">{overview}</p>
+          <div className="flex flex-col md:flex-row md:items-start gap-4 mb-4">
+            <div className="w-full md:w-56 max-w-xs md:max-w-[224px] mb-2 md:mb-0 md:mr-6">
+              <Image
+                src={imgSrc}
+                alt={t(domain.key)}
+                width={400}
+                height={240}
+                className="rounded-xl shadow-md object-cover"
+                style={{background: '#f3f4f6'}}
+                sizes="(max-width: 768px) 100vw, 224px"
+                priority={true}
+              />
+            </div>
+            <p className="text-gray-700 flex-1">{overview}</p>
+          </div>
           {domain.competencies.map((comp) => (
             <CompetencyAccordion key={comp.key} comp={comp} kMap={kMap} sMap={sMap} aMap={aMap} lang={lang} />
           ))}

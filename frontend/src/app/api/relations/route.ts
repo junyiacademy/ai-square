@@ -19,6 +19,7 @@ interface DomainYaml {
   overview: string;
   overview_zh?: string;
   competencies: Record<string, CompetencyYaml>;
+  emoji?: string;
 }
 interface DomainsYaml {
   domains: Record<string, DomainYaml>;
@@ -56,13 +57,14 @@ export async function GET(req: NextRequest) {
   else lang = 'en';
 
   // 讀取 YAML
-  const domains = loadYaml<DomainsYaml>('ai_lit_domains.yaml');
-  const ksa = loadYaml<KSAYaml>('ksa_codes.yaml');
+  const domains = loadYaml<DomainsYaml>('rubrics_data/ai_lit_domains.yaml');
+  const ksa = loadYaml<KSAYaml>('rubrics_data/ksa_codes.yaml');
 
   // domains
   const domainList = Object.entries(domains.domains).map(([domainKey, domain]) => ({
     key: domainKey,
     overview: lang === 'zh-TW' && domain.overview_zh ? domain.overview_zh : domain.overview,
+    emoji: domain.emoji,
     competencies: Object.entries(domain.competencies).map(([compKey, comp]) => ({
       key: compKey,
       description: lang === 'zh-TW' && comp.description_zh ? comp.description_zh : comp.description,

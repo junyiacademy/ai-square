@@ -1,5 +1,6 @@
 domains:
   Engaging_with_AI:
+    emoji: "🎯"
     overview: "involves using AI as a tool to access new content, information, or recommendations. These situations require learners to first recognize AI's presence, then evaluate the accuracy and relevance of AI outputs. Learners must develop a fundamental understanding of AI's technical foundations in order to critically analyze its capabilities and limitations."
     overview_zh: "涉及運用AI作為工具來獲取新內容、資訊或建議。這些情境要求學習者首先辨識AI的存在，然後評估AI輸出的準確性和相關性。學習者必須對AI的技術基礎建立基本理解，以便批判性地分析其能力和局限性。"
     competencies:
@@ -103,6 +104,7 @@ domains:
           - "研究預測性AI如何計算信用評分或貸款資格。然後探索使用了哪些資料、可能出現什麼偏見，以及數學模型如何可能強化不平等。"
 
   Creating_with_AI:
+    emoji: "🛠️"
     overview: "Consists of collaborating with an AI system in a creative or problem-solving process; it involves guiding and refining AI output through prompts and feedback while ensuring the content remains fair and appropriate, and it also includes ethical considerations related to content ownership, attribution, and the responsible use of existing materials."
     overview_zh: "包含在創意或問題解決過程中與AI系統協作；這涉及透過提示和回饋來指導和改進AI輸出，同時確保內容保持公平和適當，也包括與內容所有權、歸屬和負責任使用現有材料相關的倫理考量。"
     competencies:
@@ -178,6 +180,7 @@ domains:
           - "描述生成式AI系統如何根據提示、學習到的模式和訓練資料創作歌曲，而不賦予其意圖、情感或創造力。"
 
   Managing_with_AI:
+    emoji: "🎪"
     overview: "requires intentionally choosing how AI can support and enhance human work. This includes assigning structured tasks to AI, such as organizing information, so humans can focus on areas requiring creativity, empathy, and judgment. AI systems can simulate a variety of roles, acting as an analyst, debate partner, or career guide. Learners who manage AI's actions learn to delegate tasks thoughtfully, guide AI outputs with clear instructions, and assess whether AI's role aligns with their goals and values. This domain helps learners build agency, ensuring that AI works for them and that its use remains ethical and human-centered."
     overview_zh: "需要有意識地選擇AI如何支持和增強人類工作。這包括將結構化任務分派給AI（如組織資訊），以便人類可以專注於需要創造力、同理心和判斷力的領域。AI系統可以模擬各種角色，充當分析師、辯論夥伴或職涯指導。管理AI行為的學習者學會深思熟慮地委派任務、用清晰指示引導AI輸出，並評估AI的角色是否符合他們的目標和價值觀。這個領域幫助學習者建立主導性，確保AI為他們工作，並且其使用保持倫理和以人為本。"
     competencies:
@@ -253,6 +256,7 @@ domains:
           - "為同儕主持常見AI工具工作坊，分享促進誠實、尊重智慧財產權和批判性思維的AI使用指導原則。"
 
   Designing_with_AI:
+    emoji: "💡"
     overview: "empowers learners to understand how AI works and connect it to its social and ethical impacts by shaping how AI systems function. Through hands-on exploration in an education context, students examine how data, design choices, and model behavior influence the fairness, usefulness, and impact of AI systems. The goal is not to develop commercial products or put them into service, but to build the confidence and capacity to shape AI for human good by understanding the principles underpinning the design of AI from an early age."
     overview_zh: "透過塑造AI系統功能的方式，使學習者能夠理解AI如何運作並將其與社會和倫理影響聯繫起來。透過在教育脈絡中的實作探索，學生檢視資料、設計選擇和模型行為如何影響AI系統的公平性、實用性和影響。目標不是開發商業產品或將其投入使用，而是透過從小理解AI設計的基本原則，建立塑造AI造福人類的信心和能力。"
     competencies:
