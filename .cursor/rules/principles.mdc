@@ -1,0 +1,22 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Core Principles for Code Modification
+Rule 1: Analyze First, Respect Existing Architecture
+Description: Before modifying any code, I must first thoroughly understand the existing code architecture and design patterns. I will no longer make incorrect assumptions about how the code should work.
+Specific Case: I initially failed to recognize that your translation logic was handled by the backend API (/api/relations?lang=...) and incorrectly tried to impose a front-end translation pattern. I should have analyzed the fetchTree(lng) function first to understand the data flow.
+Future Action: I will prioritize identifying the core logic for data flow and state management and will strictly adhere to that pattern, rather than attempting to override it with my own.
+Rule 2: Make Minimal, Targeted Changes
+Description: I must strictly adhere to the principle of "minimal modification." I will only change the code that is absolutely necessary to solve the problem and will not introduce new components, files, or unnecessary refactoring.
+Specific Case: I mistakenly introduced non-existent components like CompetencyCard and Accordion, causing Module not found errors. When asked to extend a feature, I should have only extended the existing logic (e.g., the lang === 'zh-TW' ? ... conditional) instead of trying to replace it entirely.
+Future Action: My modifications will be surgical and precise, targeting only the problem area. If a helper function is needed, I will ensure it perfectly matches the style and logic of the surrounding code.
+Rule 3: Adhere to Project Quality Standards (TypeScript & ESLint)
+Description: I must recognize the importance of commands like make build and ensure that any code I provide passes both TypeScript's type-checking and ESLint's style-checking.
+Specific Case: I caused ESLint errors by using the any type. After fixing any to unknown, I failed to anticipate the resulting TypeScript error in the JSX, which requires unknown to be explicitly asserted as a renderable type (e.g., as string).
+Future Action: When providing code, I will preemptively consider strict type rules. If I use unknown, I will immediately recognize its implications for JSX and apply the necessary type assertions (e.g., as string) in the same step.
+Rule 4: Ask for Clarification, Do Not Assume
+Description: If I am uncertain about any part of your code or configuration, I must proactively ask for more information instead of acting on assumptions.
+Specific Case: I incorrectly assumed your i18n configuration was in next-i18next.config.js. Had I asked, "Where is your i18n configuration located?" I would have avoided this error.
+Future Action: I will be more proactive in using questions to clarify the current state of the codebase, ensuring every modification is based on factual information.
