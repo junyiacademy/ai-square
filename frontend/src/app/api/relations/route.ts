@@ -3,46 +3,44 @@ import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 
-// --- 擴充後的型別定義 ---
-const languages = ['es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'];
+// --- 修正後的型別定義 ---
+// 移除未使用的 languageCodes
+type LanguageCode = 'es' | 'ja' | 'ko' | 'fr' | 'de' | 'ru' | 'it';
 
-type TranslationFields<T> = {
-  [P in keyof T]?: T[P];
-} & {
-  [key in `${string}_${(typeof languages)[number]}`]?: any;
+// 使用 'unknown' 替代 'any'
+type TranslationFields = {
+  [key in `${string}_${LanguageCode}`]?: unknown;
 };
 
-interface CompetencyYaml extends TranslationFields<{
+interface CompetencyYaml extends TranslationFields {
   description: string;
   description_zh?: string;
   scenarios?: string[];
   scenarios_zh?: string[];
   content?: string;
   content_zh?: string;
-}> {
   knowledge: string[];
   skills: string[];
   attitudes: string[];
 }
 
-interface DomainYaml extends TranslationFields<{
+interface DomainYaml extends TranslationFields {
   overview: string;
   overview_zh?: string;
-}> {
   competencies: Record<string, CompetencyYaml>;
   emoji?: string;
 }
 
-interface KSAItemYaml extends TranslationFields<{
+// 修正：KSAItemYaml 現在直接定義，避免空 interface
+interface KSAItemYaml extends TranslationFields {
   summary: string;
   summary_zh?: string;
-}> {}
+}
 
-interface ThemeYaml extends TranslationFields<{
+interface ThemeYaml extends TranslationFields {
   theme_zh?: string;
   explanation: string;
   explanation_zh?: string;
-}> {
   codes: Record<string, KSAItemYaml>;
 }
 
@@ -58,24 +56,24 @@ interface KSAYaml {
   attitude_codes: KSAThemesYaml;
 }
 
-// --- 通用的翻譯輔助函式 ---
-const getTranslatedField = (lang: string, item: any, fieldName: string) => {
+// --- 通用的翻譯輔助函式 (修正版) ---
+const getTranslatedField = (lang: string, item: object | null, fieldName: string): unknown => {
   if (!item) return null;
 
-  // 1. 處理繁體中文的特殊情況 (zh-TW -> _zh)
+  const record = item as Record<string, unknown>;
+
   if (lang.startsWith('zh')) {
-    return item[`${fieldName}_zh`] || item[fieldName];
+    const zhKey = `${fieldName}_zh`;
+    return record[zhKey] ?? record[fieldName];
   }
 
-  // 2. 處理所有其他語言 (es -> _es, ja -> _ja, etc.)
   const langCode = lang.split('-')[0];
   if (langCode !== 'en') {
     const key = `${fieldName}_${langCode}`;
-    return item[key] || item[fieldName];
+    return record[key] ?? record[fieldName];
   }
   
-  // 3. 預設回傳英文
-  return item[fieldName];
+  return record[fieldName];
 };
 
 function loadYaml<T>(filePath: string): T {
@@ -110,15 +108,13 @@ export async function GET(req: NextRequest) {
 
   // --- 使用通則函式處理 KSA ---
   function mapKSA(themes: Record<string, ThemeYaml>) {
-    const map: Record<string, { summary: string; theme: string; explanation?: string }> = {};
+    const map: Record<string, { summary: unknown; theme: string; explanation?: unknown }> = {};
     Object.entries(themes).forEach(([themeKey, themeObj]) => {
-      // 這裡我們假設 theme 的 key (如 "Engaging with AI") 本身不需要翻譯，而是由前端 t() 函式處理
-      // 但 themeObj 內部的 explanation 需要翻譯
       const explanation = getTranslatedField(lang, themeObj, 'explanation');
       Object.entries(themeObj.codes).forEach(([code, obj]) => {
         map[code] = {
           summary: getTranslatedField(lang, obj, 'summary'),
-          theme: themeKey, // 傳遞 key 給前端，讓 t() 函式去翻譯
+          theme: themeKey,
           explanation,
         };
       });

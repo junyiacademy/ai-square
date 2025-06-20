@@ -86,23 +86,23 @@ interface TreeData {
  * 這是一個通用的翻譯輔助函式。
  * 它會完全複製您原本 `lang === 'zh-TW'` 的判斷邏輯，並將其擴充到所有語言。
  */
-const getTranslatedText = (lang: string, item: any, fieldName: string) => {
+const getTranslatedText = (lang: string, item: object | null, fieldName: string): unknown => {
   if (!item) return '';
 
-  // 1. 處理繁體中文的特殊情況 (zh-TW -> _zh)
+  const record = item as Record<string, unknown>;
+
   if (lang === 'zh-TW') {
-    return item[`${fieldName}_zh`] || item[fieldName];
+    const zhKey = `${fieldName}_zh`;
+    return record[zhKey] ?? record[fieldName];
   }
 
-  // 2. 處理所有其他語言 (es -> _es, ja -> _ja, etc.)
   const langCode = lang.split('-')[0];
   if (langCode !== 'en') {
     const key = `${fieldName}_${langCode}`;
-    return item[key] || item[fieldName]; // 如果找不到該語言翻譯，退回英文
+    return record[key] ?? record[fieldName];
   }
 
-  // 3. 預設回傳英文
-  return item[fieldName];
+  return record[fieldName];
 };
 
 export default function RelationsClient() {
@@ -183,9 +183,8 @@ export default function RelationsClient() {
 function DomainAccordion({ domain, kMap, sMap, aMap, lang, emoji }: { domain: Domain, kMap: Record<string, KSAItem>, sMap: Record<string, KSAItem>, aMap: Record<string, KSAItem>, lang: string, emoji: string }) {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
-  // 使用通則函式取代原本的判斷式
-  const overview = getTranslatedText(lang, domain, 'overview');
-  // 圖片路徑自動對應 domain.key
+  // 使用通則函式，並斷言回傳型別為 string
+  const overview = getTranslatedText(lang, domain, 'overview') as string;
   const imgSrc = `/images/${domain.key}.png`;
   return (
     <div className="mb-6">
@@ -228,10 +227,10 @@ function DomainAccordion({ domain, kMap, sMap, aMap, lang, emoji }: { domain: Do
 function CompetencyAccordion({ comp, kMap, sMap, aMap, lang }: { comp: Competency, kMap: Record<string, KSAItem>, sMap: Record<string, KSAItem>, aMap: Record<string, KSAItem>, lang: string }) {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
-  // 使用通則函式取代原本的判斷式
-  const description = getTranslatedText(lang, comp, 'description');
-  const scenarios = getTranslatedText(lang, comp, 'scenarios');
-  const content = getTranslatedText(lang, comp, 'content');
+  // 使用通則函式，並斷言對應的型別
+  const description = getTranslatedText(lang, comp, 'description') as string;
+  const scenarios = getTranslatedText(lang, comp, 'scenarios') as string[];
+  const content = getTranslatedText(lang, comp, 'content') as string;
   return (
     <div className="mb-4">
       <div
@@ -252,7 +251,7 @@ function CompetencyAccordion({ comp, kMap, sMap, aMap, lang }: { comp: Competenc
               <div>
                 <div className="font-bold text-gray-600 mb-1">{t('scenarios')}</div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
-                  {scenarios.map((s, i) => (
+                  {scenarios.map((s: string, i: number) => (
                     <div key={i} className="flex items-start gap-2 text-gray-800 text-sm">
                       <span className="mt-0.5">📘</span>
                       <span>{s}</span>
@@ -342,11 +341,11 @@ function KSAList({ type, codes, map, lang }: { type: ReactNode, codes: string[],
 function KSACard({ info, lang }: { info: KSAItem, lang: string }) {
   const { t } = useTranslation();
   if (!info) return null;
-  // 使用通則函式取代原本的判斷式
-  const summary = getTranslatedText(lang, info, 'summary');
+  // 使用通則函式，並斷言回傳型別為 string
+  const summary = getTranslatedText(lang, info, 'summary') as string;
   const themeKey = info.theme;
   const theme = t(themeKey);
-  const explanation = getTranslatedText(lang, info, 'explanation');
+  const explanation = getTranslatedText(lang, info, 'explanation') as string;
   return (
     <div className="w-full max-w-md mx-auto bg-white border border-blue-200 rounded-lg md:rounded-xl p-3 md:p-4 shadow-lg transition-all duration-200">
       <div className="flex items-center mb-2">
