@@ -111,6 +111,17 @@ export default function RelationsClient() {
   const [tree, setTree] = useState<TreeData | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // 初始化時同步語言狀態
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedLang = localStorage.getItem('ai-square-language');
+      if (savedLang && savedLang !== i18n.language) {
+        i18n.changeLanguage(savedLang);
+        setLang(savedLang);
+      }
+    }
+  }, [i18n]);
+
   const fetchTree = async (lng: string) => {
     setLoading(true);
     const res = await fetch(`/api/relations?lang=${lng}`);
@@ -126,6 +137,10 @@ export default function RelationsClient() {
   const handleLangChange = (lng: string) => {
     i18n.changeLanguage(lng);
     setLang(lng);
+    // 儲存用戶語言偏好
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('ai-square-language', lng);
+    }
   };
 
   const languages = [

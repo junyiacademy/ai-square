@@ -10,9 +10,13 @@ import de from '../public/locales/de/relations.json';
 import ru from '../public/locales/ru/relations.json';
 import it from '../public/locales/it/relations.json';
 
-// 可根據實際需求自動偵測語言，這裡預設 zh-TW
+// 可根據實際需求自動偵測語言，這裡預設 en
 const getDefaultLng = () => {
   if (typeof window !== 'undefined') {
+    // 從 localStorage 優先讀取用戶偏好
+    const savedLang = localStorage.getItem('ai-square-language');
+    if (savedLang) return savedLang;
+    
     const lang = navigator.language.toLowerCase();
     if (lang.startsWith('zh')) return 'zh-TW';
     if (lang.startsWith('es')) return 'es';
@@ -25,7 +29,7 @@ const getDefaultLng = () => {
     // fallback to English for other languages like en-US, en-GB
     if (lang.startsWith('en')) return 'en';
   }
-  return 'zh-TW';
+  return 'en'; // 改為默認英文
 };
 
 i18n
