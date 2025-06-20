@@ -84,7 +84,7 @@ export default function RelationsClient() {
       </div>
       {fakeIllustration}
       <h1 className="mb-2 text-3xl font-bold text-center">{t('pageTitle')}</h1>
-      <p className="text-center text-gray-500 mb-8">探索 AI 素養的四大核心能力</p>
+      <p className="text-center text-gray-500 mb-8">{t('pageSubtitle')}</p>
       <div className="max-w-3xl mx-auto">
         {tree.domains.map((domain) => (
           <DomainAccordion key={domain.key} domain={domain} kMap={tree.kMap} sMap={tree.sMap} aMap={tree.aMap} lang={lang} emoji={domain.emoji || '🤖'} />
@@ -179,9 +179,9 @@ function CompetencyAccordion({ comp, kMap, sMap, aMap, lang }: { comp: Competenc
               <div className="mb-4 px-4 py-2">
                 <div className="text-lg font-bold text-blue-700 flex items-center gap-2 mb-1">
                   <span>🧭</span>
-                  <span>AI 素養衡量指標三大維度</span>
+                  <span>{t('ksaTitle')}</span>
                 </div>
-                <div className="text-gray-600 text-sm">知識（Knowledge）、技能（Skills）、態度（Attitudes）三大面向，協助你全方位理解與評量 AI 素養。</div>
+                <div className="text-gray-600 text-sm">{t('ksaDescription')}</div>
               </div>
               <div className="px-4">
                 <KSAList type={<span className="flex items-center gap-1 text-blue-700 font-semibold"><span>📖</span>{t('knowledge')}</span>} codes={comp.knowledge} map={kMap} lang={lang} />
