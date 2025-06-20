@@ -278,6 +278,108 @@ class CommitGuide:
         else:
             print(f"    {Colors.YELLOW}⚠️ 未輸入完成項目，跳過更新{Colors.END}")
             
+    def update_changelog(self, commit_type: str, commit_message: str, changes: Dict[str, List[str]]):
+        """更新 CHANGELOG.md"""
+        print(f"{Colors.BLUE}📋 更新 Changelog...{Colors.END}")
+        
+        changelog_path = self.project_root / "CHANGELOG.md"
+        if not changelog_path.exists():
+            print(f"    {Colors.YELLOW}⚠️ CHANGELOG.md 不存在，跳過更新{Colors.END}")
+            return
+            
+        try:
+            # 讀取現有 changelog
+            with open(changelog_path, "r", encoding="utf-8") as f:
+                content = f.read()
+            
+            # 找到 [Unreleased] 區段
+            unreleased_pattern = r"(## \[Unreleased\])(.*?)((?=## \[|\Z))"
+            import re
+            match = re.search(unreleased_pattern, content, re.DOTALL)
+            
+            if not match:
+                print(f"    {Colors.YELLOW}⚠️ 找不到 [Unreleased] 區段{Colors.END}")
+                return
+            
+            # 分析變更類型並生成條目
+            change_entry = self.generate_changelog_entry(commit_type, commit_message, changes)
+            
+            if change_entry:
+                # 取得現有的 Unreleased 內容
+                existing_unreleased = match.group(2)
+                
+                # 根據 commit 類型插入到對應區段
+                updated_unreleased = self.insert_changelog_entry(existing_unreleased, commit_type, change_entry)
+                
+                # 替換內容
+                new_content = content.replace(match.group(0), f"## [Unreleased]{updated_unreleased}{match.group(3)}")
+                
+                # 寫回檔案
+                with open(changelog_path, "w", encoding="utf-8") as f:
+                    f.write(new_content)
+                
+                print(f"    {Colors.GREEN}✅ Changelog 已更新{Colors.END}")
+            else:
+                print(f"    {Colors.YELLOW}⚠️ 無需更新 Changelog{Colors.END}")
+                
+        except Exception as e:
+            print(f"    {Colors.RED}❌ 更新 Changelog 失敗: {e}{Colors.END}")
+    
+    def generate_changelog_entry(self, commit_type: str, commit_message: str, changes: Dict[str, List[str]]) -> Optional[str]:
+        """生成 changelog 條目"""
+        # 移除 commit 類型前綴
+        clean_message = commit_message
+        if clean_message.startswith(f"{commit_type}: "):
+            clean_message = clean_message[len(f"{commit_type}: "):]
+        
+        # 根據變更檔案生成更詳細的描述
+        details = []
+        if changes["frontend"]:
+            details.append("前端功能更新")
+        if changes["docs"]:
+            details.append("文檔更新")
+        if changes["config"]:
+            details.append("配置調整")
+        if changes["tests"]:
+            details.append("測試改進")
+            
+        if details:
+            detail_str = f" ({', '.join(details)})"
+            return f"- {clean_message}{detail_str}"
+        else:
+            return f"- {clean_message}"
+    
+    def insert_changelog_entry(self, existing_content: str, commit_type: str, entry: str) -> str:
+        """插入 changelog 條目到對應區段"""
+        # 定義區段標題映射
+        section_mapping = {
+            "feat": "### Added",
+            "fix": "### Fixed", 
+            "docs": "### Changed",
+            "test": "### Changed",
+            "chore": "### Changed",
+            "refactor": "### Changed",
+            "style": "### Changed"
+        }
+        
+        target_section = section_mapping.get(commit_type, "### Changed")
+        
+        # 如果目標區段存在，插入條目
+        section_pattern = f"({target_section})(.*?)((?=### |\Z))"
+        import re
+        match = re.search(section_pattern, existing_content, re.DOTALL)
+        
+        if match:
+            # 在區段末尾新增條目
+            section_content = match.group(2).rstrip()
+            if section_content and not section_content.endswith('\n'):
+                section_content += '\n'
+            new_section = f"{target_section}{section_content}\n{entry}\n"
+            return existing_content.replace(match.group(0), f"{new_section}{match.group(3)}")
+        else:
+            # 區段不存在，在開頭新增
+            return f"\n{target_section}\n{entry}\n{existing_content}"
+            
     def generate_commit_message(self, commit_type: str, changes: Dict[str, List[str]]) -> str:
         """生成提交訊息建議"""
         print(f"\n{Colors.PURPLE}💡 生成提交訊息建議...{Colors.END}")
@@ -310,7 +412,7 @@ class CommitGuide:
         
         return suggested_template
         
-    def create_commit(self, modified_files: List[str], new_files: List[str]) -> bool:
+    def create_commit(self, modified_files: List[str], new_files: List[str]) -> Tuple[bool, str]:
         """建立提交"""
         print(f"\n{Colors.BLUE}📦 準備建立提交...{Colors.END}")
         
@@ -325,14 +427,14 @@ class CommitGuide:
         
         if confirm != 'y':
             print(f"{Colors.YELLOW}❌ 提交已取消{Colors.END}")
-            return False
+            return False, ""
             
         # 獲取提交訊息
         commit_message = input(f"{Colors.GREEN}請輸入提交訊息: {Colors.END}").strip()
         
         if not commit_message:
             print(f"{Colors.RED}❌ 提交訊息不能為空{Colors.END}")
-            return False
+            return False, ""
             
         try:
             # 加入檔案到暫存區
@@ -362,11 +464,11 @@ Co-Authored-By: Claude <noreply@anthropic.com>"""
             )
             print(f"  📝 {result.stdout.strip()}")
             
-            return True
+            return True, commit_message
             
         except subprocess.CalledProcessError as e:
             print(f"{Colors.RED}❌ 提交失敗: {e}{Colors.END}")
-            return False
+            return False, ""
             
     def run(self):
         """執行主要流程"""
@@ -424,13 +526,18 @@ Co-Authored-By: Claude <noreply@anthropic.com>"""
             self.update_development_log()
             
             # 建立提交
-            if self.create_commit(modified_files, new_files):
+            success, commit_message = self.create_commit(modified_files, new_files)
+            if success:
+                # 更新 Changelog
+                self.update_changelog(commit_type, commit_message, changes)
+                
                 print(f"\n{Colors.GREEN}{Colors.BOLD}🎉 提交流程完成！{Colors.END}")
                 print(f"\n{Colors.CYAN}📊 提交統計：{Colors.END}")
                 print(f"  📝 修改: {len(modified_files)} 檔案")
                 print(f"  ➕ 新增: {len(new_files)} 檔案")
                 print(f"  🧪 測試: 通過")
                 print(f"  📋 檢查: 通過")
+                print(f"  📋 Changelog: 已更新")
                 
         except KeyboardInterrupt:
             print(f"\n{Colors.YELLOW}👋 提交流程已取消{Colors.END}")

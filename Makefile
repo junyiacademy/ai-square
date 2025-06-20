@@ -76,6 +76,22 @@ docs-check:
 	@ls -la docs/architecture/ 2>/dev/null || echo "  ❌ 架構文檔目錄不存在"
 	@echo "技術文檔 (TDD):"
 	@ls -la docs/technical/ 2>/dev/null || echo "  ❌ 技術文檔目錄不存在"
+	@echo "Changelog:"
+	@ls -la CHANGELOG.md 2>/dev/null || echo "  ❌ CHANGELOG.md 不存在"
+
+# 📋 Changelog 管理
+changelog-view:
+	@echo "📋 當前 Changelog (最近 20 行):"
+	@head -20 CHANGELOG.md 2>/dev/null || echo "❌ CHANGELOG.md 不存在"
+
+changelog-unreleased:
+	@echo "📋 未發布的變更:"
+	@sed -n '/## \[Unreleased\]/,/## \[/p' CHANGELOG.md | head -n -1 2>/dev/null || echo "❌ 找不到 Unreleased 區段"
+
+changelog-release:
+	@echo "📋 準備發布新版本..."
+	@echo "請手動編輯 CHANGELOG.md 將 [Unreleased] 改為版本號"
+	@echo "例如: ## [1.0.0] - $(shell date +%Y-%m-%d)"
 
 # 🏗️ 架構一致性檢查
 arch-check:
@@ -176,6 +192,11 @@ help:
 	@echo "  make product-start     產品開發模式 (BDD)"
 	@echo "  make arch-start        架構設計模式 (DDD)"
 	@echo "  make tech-start        技術實作模式 (TDD)"
+	@echo ""
+	@echo "📋 Changelog 管理:"
+	@echo "  make changelog-view    查看當前 Changelog"
+	@echo "  make changelog-unreleased  查看未發布變更"
+	@echo "  make changelog-release 準備發布新版本"
 	@echo ""
 	@echo "🧪 品質保證:"
 	@echo "  make test-all          執行所有測試與檢查"
