@@ -17,3 +17,24 @@ frontend/out/
 .DS_Store
 .env
 .env.*
+
+# Development & Testing
+coverage/
+dist/
+tmp/
+.next/cache
+
+# AI Development Workflow
+*.backup
+docs/current/claude-guidance.md
+docs/current/work-*.md
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Dependencies
+package-lock.json.backup
+frontend/package-lock.json.backup
