@@ -63,6 +63,18 @@ export default function RelationsClient() {
     setLang(lng);
   };
 
+  const languages = [
+    { code: 'en', name: 'English' },
+    { code: 'zh-TW', name: '繁體中文' },
+    { code: 'es', name: 'Español' },
+    { code: 'ja', name: '日本語' },
+    { code: 'ko', name: '한국어' },
+    { code: 'fr', name: 'Français' },
+    { code: 'de', name: 'Deutsch' },
+    { code: 'ru', name: 'Русский' },
+    { code: 'it', name: 'Italiano' },
+  ];
+
   if (loading || !tree) {
     return <div className="p-8 text-center">Loading...</div>;
   }
@@ -79,8 +91,17 @@ export default function RelationsClient() {
   return (
     <main className="p-8 bg-gray-50 min-h-screen">
       <div className="flex justify-end mb-4">
-        <button className={`px-3 py-1 rounded-l ${lang === 'en' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`} onClick={() => handleLangChange('en')}>EN</button>
-        <button className={`px-3 py-1 rounded-r ${lang === 'zh-TW' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`} onClick={() => handleLangChange('zh-TW')}>繁體中文</button>
+        <select
+          onChange={(e) => handleLangChange(e.target.value)}
+          value={lang}
+          className="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+        >
+          {languages.map((language) => (
+            <option key={language.code} value={language.code}>
+              {language.name}
+            </option>
+          ))}
+        </select>
       </div>
       {fakeIllustration}
       <h1 className="mb-2 text-3xl font-bold text-center">{t('pageTitle')}</h1>
