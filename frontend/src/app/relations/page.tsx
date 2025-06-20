@@ -8,19 +8,47 @@ interface Competency {
   key: string;
   description: string;
   description_zh?: string;
+  description_es?: string;
+  description_ja?: string;
+  description_ko?: string;
+  description_fr?: string;
+  description_de?: string;
+  description_ru?: string;
+  description_it?: string;
   knowledge: string[];
   skills: string[];
   attitudes: string[];
   scenarios?: string[];
   scenarios_zh?: string[];
+  scenarios_es?: string[];
+  scenarios_ja?: string[];
+  scenarios_ko?: string[];
+  scenarios_fr?: string[];
+  scenarios_de?: string[];
+  scenarios_ru?: string[];
+  scenarios_it?: string[];
   content?: string;
   content_zh?: string;
+  content_es?: string;
+  content_ja?: string;
+  content_ko?: string;
+  content_fr?: string;
+  content_de?: string;
+  content_ru?: string;
+  content_it?: string;
 }
 
 interface Domain {
   key: string;
   overview: string;
   overview_zh?: string;
+  overview_es?: string;
+  overview_ja?: string;
+  overview_ko?: string;
+  overview_fr?: string;
+  overview_de?: string;
+  overview_ru?: string;
+  overview_it?: string;
   competencies: Competency[];
   emoji?: string;
 }
@@ -28,9 +56,23 @@ interface Domain {
 interface KSAItem {
   summary: string;
   summary_zh?: string;
+  summary_es?: string;
+  summary_ja?: string;
+  summary_ko?: string;
+  summary_fr?: string;
+  summary_de?: string;
+  summary_ru?: string;
+  summary_it?: string;
   theme: string;
   explanation?: string;
   explanation_zh?: string;
+  explanation_es?: string;
+  explanation_ja?: string;
+  explanation_ko?: string;
+  explanation_fr?: string;
+  explanation_de?: string;
+  explanation_ru?: string;
+  explanation_it?: string;
 }
 
 interface TreeData {
@@ -39,6 +81,29 @@ interface TreeData {
   sMap: Record<string, KSAItem>;
   aMap: Record<string, KSAItem>;
 }
+
+/**
+ * 這是一個通用的翻譯輔助函式。
+ * 它會完全複製您原本 `lang === 'zh-TW'` 的判斷邏輯，並將其擴充到所有語言。
+ */
+const getTranslatedText = (lang: string, item: any, fieldName: string) => {
+  if (!item) return '';
+
+  // 1. 處理繁體中文的特殊情況 (zh-TW -> _zh)
+  if (lang === 'zh-TW') {
+    return item[`${fieldName}_zh`] || item[fieldName];
+  }
+
+  // 2. 處理所有其他語言 (es -> _es, ja -> _ja, etc.)
+  const langCode = lang.split('-')[0];
+  if (langCode !== 'en') {
+    const key = `${fieldName}_${langCode}`;
+    return item[key] || item[fieldName]; // 如果找不到該語言翻譯，退回英文
+  }
+
+  // 3. 預設回傳英文
+  return item[fieldName];
+};
 
 export default function RelationsClient() {
   const { t, i18n } = useTranslation();
@@ -118,7 +183,8 @@ export default function RelationsClient() {
 function DomainAccordion({ domain, kMap, sMap, aMap, lang, emoji }: { domain: Domain, kMap: Record<string, KSAItem>, sMap: Record<string, KSAItem>, aMap: Record<string, KSAItem>, lang: string, emoji: string }) {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
-  const overview = lang === 'zh-TW' && (domain.overview_zh) ? domain.overview_zh : domain.overview;
+  // 使用通則函式取代原本的判斷式
+  const overview = getTranslatedText(lang, domain, 'overview');
   // 圖片路徑自動對應 domain.key
   const imgSrc = `/images/${domain.key}.png`;
   return (
@@ -162,9 +228,10 @@ function DomainAccordion({ domain, kMap, sMap, aMap, lang, emoji }: { domain: Do
 function CompetencyAccordion({ comp, kMap, sMap, aMap, lang }: { comp: Competency, kMap: Record<string, KSAItem>, sMap: Record<string, KSAItem>, aMap: Record<string, KSAItem>, lang: string }) {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
-  const description = lang === 'zh-TW' && (comp.description_zh) ? comp.description_zh : comp.description;
-  const scenarios = lang === 'zh-TW' && comp.scenarios_zh ? comp.scenarios_zh : comp.scenarios;
-  const content = lang === 'zh-TW' && comp.content_zh ? comp.content_zh : comp.content;
+  // 使用通則函式取代原本的判斷式
+  const description = getTranslatedText(lang, comp, 'description');
+  const scenarios = getTranslatedText(lang, comp, 'scenarios');
+  const content = getTranslatedText(lang, comp, 'content');
   return (
     <div className="mb-4">
       <div
@@ -275,10 +342,11 @@ function KSAList({ type, codes, map, lang }: { type: ReactNode, codes: string[],
 function KSACard({ info, lang }: { info: KSAItem, lang: string }) {
   const { t } = useTranslation();
   if (!info) return null;
-  const summary = lang === 'zh-TW' && info.summary_zh ? info.summary_zh : info.summary;
+  // 使用通則函式取代原本的判斷式
+  const summary = getTranslatedText(lang, info, 'summary');
   const themeKey = info.theme;
   const theme = t(themeKey);
-  const explanation = lang === 'zh-TW' && info.explanation_zh ? info.explanation_zh : info.explanation;
+  const explanation = getTranslatedText(lang, info, 'explanation');
   return (
     <div className="w-full max-w-md mx-auto bg-white border border-blue-200 rounded-lg md:rounded-xl p-3 md:p-4 shadow-lg transition-all duration-200">
       <div className="flex items-center mb-2">
