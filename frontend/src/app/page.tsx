@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
 import { LoginForm } from '@/components/auth/LoginForm'
+import '@/i18n'
 
 export default function Home() {
   const { t } = useTranslation('auth')
@@ -73,7 +74,7 @@ export default function Home() {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">檢查登入狀態中...</p>
+          <p className="text-gray-600">{t('checkingAuth')}</p>
         </div>
       </div>
     )
@@ -103,7 +104,7 @@ export default function Home() {
             {t('loginTitle')}
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            AI 素養學習平台
+            {t('platformSubtitle')}
           </p>
         </div>
 
@@ -118,7 +119,7 @@ export default function Home() {
 
         {/* 底部說明 */}
         <div className="text-center text-xs text-gray-500">
-          這是開發版本，使用假資料進行測試
+          {t('devNote')}
         </div>
       </div>
     </div>

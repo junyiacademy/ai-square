@@ -72,7 +72,7 @@ export default function LoginPage() {
             {t('loginTitle')}
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            AI 素養學習平台
+            {t('platformSubtitle')}
           </p>
         </div>
 
@@ -87,7 +87,7 @@ export default function LoginPage() {
 
         {/* 底部說明 */}
         <div className="text-center text-xs text-gray-500">
-          這是開發版本，使用假資料進行測試
+          {t('devNote')}
         </div>
       </div>
     </div>

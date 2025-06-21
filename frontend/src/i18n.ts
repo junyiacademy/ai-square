@@ -17,6 +17,11 @@ import zhTWAuth from '../public/locales/zh-TW/auth.json';
 import enAuth from '../public/locales/en/auth.json';
 import esAuth from '../public/locales/es/auth.json';
 import jaAuth from '../public/locales/ja/auth.json';
+import koAuth from '../public/locales/ko/auth.json';
+import frAuth from '../public/locales/fr/auth.json';
+import deAuth from '../public/locales/de/auth.json';
+import ruAuth from '../public/locales/ru/auth.json';
+import itAuth from '../public/locales/it/auth.json';
 
 // 可根據實際需求自動偵測語言，這裡預設 en
 const getDefaultLng = () => {
@@ -62,23 +67,23 @@ i18n
       },
       ko: { 
         relations: koRelations,
-        auth: enAuth // 暫時使用英文，需要時再翻譯
+        auth: koAuth
       },
       fr: { 
         relations: frRelations,
-        auth: enAuth // 暫時使用英文，需要時再翻譯
+        auth: frAuth
       },
       de: { 
         relations: deRelations,
-        auth: enAuth // 暫時使用英文，需要時再翻譯
+        auth: deAuth
       },
       ru: { 
         relations: ruRelations,
-        auth: enAuth // 暫時使用英文，需要時再翻譯
+        auth: ruAuth
       },
       it: { 
         relations: itRelations,
-        auth: enAuth // 暫時使用英文，需要時再翻譯
+        auth: itAuth
       },
     },
     lng: getDefaultLng(),

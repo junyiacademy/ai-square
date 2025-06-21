@@ -122,6 +122,19 @@ export default function RelationsClient() {
     }
   }, [i18n]);
 
+  // 監聽語言變化事件
+  useEffect(() => {
+    const handleLanguageChange = (event: CustomEvent) => {
+      const newLang = event.detail.language;
+      setLang(newLang);
+    };
+
+    window.addEventListener('language-changed', handleLanguageChange as EventListener);
+    return () => {
+      window.removeEventListener('language-changed', handleLanguageChange as EventListener);
+    };
+  }, []);
+
   const fetchTree = async (lng: string) => {
     setLoading(true);
     const res = await fetch(`/api/relations?lang=${lng}`);
@@ -133,27 +146,6 @@ export default function RelationsClient() {
   useEffect(() => {
     fetchTree(lang);
   }, [lang]);
-
-  const handleLangChange = (lng: string) => {
-    i18n.changeLanguage(lng);
-    setLang(lng);
-    // 儲存用戶語言偏好
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('ai-square-language', lng);
-    }
-  };
-
-  const languages = [
-    { code: 'en', name: 'English' },
-    { code: 'zh-TW', name: '繁體中文' },
-    { code: 'es', name: 'Español' },
-    { code: 'ja', name: '日本語' },
-    { code: 'ko', name: '한국어' },
-    { code: 'fr', name: 'Français' },
-    { code: 'de', name: 'Deutsch' },
-    { code: 'ru', name: 'Русский' },
-    { code: 'it', name: 'Italiano' },
-  ];
 
   if (loading || !tree) {
     return <div className="p-8 text-center">Loading...</div>;
@@ -170,24 +162,10 @@ export default function RelationsClient() {
 
   return (
     <main className="p-8 bg-gray-50 min-h-screen">
-      <div className="flex justify-end mb-4">
-        <select
-          onChange={(e) => handleLangChange(e.target.value)}
-          value={lang}
-          className="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-        >
-          {languages.map((language) => (
-            <option key={language.code} value={language.code}>
-              {language.name}
-            </option>
-          ))}
-        </select>
-      </div>
       {fakeIllustration}
       <h1 className="mb-2 text-3xl font-bold text-center">{t('pageTitle')}</h1>
       <p className="text-center text-gray-500 mb-8">{t('pageSubtitle')}</p>
-      <div className="max-w-3xl mx-auto">
-        {tree.domains.map((domain) => (
+      <div className="max-w-3xl mx-auto">{tree.domains.map((domain) => (
           <DomainAccordion key={domain.key} domain={domain} kMap={tree.kMap} sMap={tree.sMap} aMap={tree.aMap} lang={lang} emoji={domain.emoji || '🤖'} />
         ))}
       </div>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import { LanguageSelector } from '@/components/ui/LanguageSelector'
 
 interface User {
   id: number
@@ -118,6 +119,9 @@ export function Header() {
 
           {/* 導航區域 */}
           <nav role="navigation" className="flex items-center space-x-4">
+            {/* 語言選擇器 */}
+            <LanguageSelector />
+            
             {isLoggedIn && user ? (
               /* 已登入狀態 */
               <div className="flex items-center space-x-4">
