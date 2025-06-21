@@ -8,6 +8,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+## [2025-06-22] - 首頁登入整合功能
+
+### Added
+- 首頁智能登入入口：根據登入狀態自動重定向
+- 登入狀態檢查機制：避免頁面閃爍的載入狀態
+- 完整錯誤處理：登入失敗和網路錯誤處理
+- 功能文檔：`docs/product/features/homepage-login-integration.md`
+- 工作日誌：`docs/current/work-2025-06-22-homepage-login.md`
+
+### Changed
+- 首頁從靜態展示頁面轉為智能登入入口
+- 已登入用戶訪問首頁自動重定向到 `/relations`
+- 未登入用戶在首頁直接看到登入表單
+- 100% 重用現有 LoginForm 組件，保持功能一致性
+
+### Fixed
+- 清理未使用的 imports：移除 `fireEvent` 和 `waitFor`
+- 移除 Header 組件中未使用的 `useTranslation` 和 `t` 變數
+- 修正文檔日期錯誤
+
+## [2024-06-21] - Header 登入狀態顯示功能
+
+### Added
 - Header 組件顯示登入狀態 (前端功能更新, 測試改進)
 - 響應式導航欄支援桌面和移動版
 - 跨 tab 登入狀態同步功能
@@ -16,10 +46,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - 全域 layout 整合 Header 組件到所有頁面
 - 登入用戶體驗提升：任何頁面都能看到登入狀態
-
-### Fixed
-
-### Removed
 
 ## [2024-06-20] - Phase 1: Documentation System
 

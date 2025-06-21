@@ -1,99 +1,126 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { useTranslation } from 'react-i18next'
+import { LoginForm } from '@/components/auth/LoginForm'
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        {/* Tailwind CSS 測試區塊 */}
-        <div className="p-6 mb-6 rounded-lg bg-gradient-to-r from-blue-400 to-purple-500 text-white text-3xl font-bold shadow-lg">
-          Tailwind CSS 已安裝成功！🎉
-        </div>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const { t } = useTranslation('auth')
+  const router = useRouter()
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true)
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+  // 檢查登入狀態
+  useEffect(() => {
+    const checkAuthStatus = () => {
+      const isLoggedIn = localStorage.getItem('isLoggedIn')
+      const user = localStorage.getItem('user')
+
+      if (isLoggedIn === 'true' && user) {
+        // 已登入，重定向到 relations 頁面
+        router.push('/relations')
+      } else {
+        // 未登入，顯示登入表單
+        setIsCheckingAuth(false)
+      }
+    }
+
+    checkAuthStatus()
+  }, [router])
+
+  const handleLogin = async (credentials: { email: string; password: string }) => {
+    setLoading(true)
+    setError('')
+
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        // 儲存用戶資訊到 localStorage
+        localStorage.setItem('user', JSON.stringify(data.user))
+        localStorage.setItem('isLoggedIn', 'true')
+        
+        // 觸發自定義事件通知 Header 更新
+        window.dispatchEvent(new CustomEvent('auth-changed'))
+        
+        // 導向到 relations 頁面
+        router.push('/relations')
+      } else {
+        // 顯示錯誤訊息
+        setError(data.error || t('error.invalidCredentials'))
+      }
+    } catch (err) {
+      console.error('Login error:', err)
+      setError(t('error.networkError'))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // 正在檢查登入狀態時顯示載入畫面
+  if (isCheckingAuth) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">檢查登入狀態中...</p>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        {/* 標題區域 */}
+        <div className="text-center">
+          <div className="mx-auto h-12 w-12 bg-blue-600 rounded-xl flex items-center justify-center mb-4">
+            <svg 
+              className="h-8 w-8 text-white" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" 
+              />
+            </svg>
+          </div>
+          <h2 className="text-3xl font-bold text-gray-900">
+            {t('loginTitle')}
+          </h2>
+          <p className="mt-2 text-sm text-gray-600">
+            AI 素養學習平台
+          </p>
+        </div>
+
+        {/* 登入表單區域 */}
+        <div className="bg-white rounded-2xl shadow-xl p-8">
+          <LoginForm 
+            onSubmit={handleLogin}
+            loading={loading}
+            error={error}
           />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        </div>
+
+        {/* 底部說明 */}
+        <div className="text-center text-xs text-gray-500">
+          這是開發版本，使用假資料進行測試
+        </div>
+      </div>
     </div>
-  );
+  )
 }
