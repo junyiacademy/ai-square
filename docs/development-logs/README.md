@@ -6,7 +6,7 @@
 
 ```
 development-logs/
-├── 2024-06-20/
+├── 2025-06-20/
 │   ├── email-login-feature/
 │   │   ├── guidance.md              # AI 引導文檔
 │   │   ├── work-log.md             # 工作記錄
@@ -43,8 +43,8 @@ development-logs/
 ```json
 {
   "feature": "email-login",
-  "startTime": "2024-06-20T22:30:00Z",
-  "endTime": "2024-06-20T23:15:00Z", 
+  "startTime": "2025-06-20T22:30:00Z",
+  "endTime": "2025-06-20T23:15:00Z", 
   "totalMinutes": 45,
   "phases": {
     "analysis": 10,      // BDD/DDD 分析

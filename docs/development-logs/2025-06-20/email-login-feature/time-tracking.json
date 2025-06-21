@@ -2,8 +2,8 @@
   "feature": "email-login",
   "description": "新增一個 email 登入功能，先用假資料，因為我還沒有DB",
   "flow": "feature-driven-development",
-  "startTime": "2024-06-20T22:30:00+08:00",
-  "endTime": "2024-06-20T23:15:00+08:00",
+  "startTime": "2025-06-20T22:30:00+08:00",
+  "endTime": "2025-06-20T23:15:00+08:00",
   "totalMinutes": 45,
   "phases": {
     "analysis": 5,

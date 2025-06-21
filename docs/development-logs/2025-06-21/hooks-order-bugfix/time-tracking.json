@@ -1,0 +1,130 @@
+{
+  "bugId": "HEADER-001",
+  "type": "bugfix",
+  "severity": "medium",
+  "startTime": "2025-06-21T19:00:00Z",
+  "endTime": "2025-06-21T20:40:00Z",
+  "totalMinutes": 100,
+  "phases": {
+    "diagnosis": 20,
+    "solutionDesign": 15,
+    "implementation": 30,
+    "testing": 25,
+    "documentation": 10
+  },
+  "bugDetails": {
+    "description": "Header 組件出現 React Hooks 順序錯誤",
+    "errorMessage": "React has detected a change in the order of Hooks called by Header",
+    "rootCause": "useEffect 中的錯誤處理邏輯調用了可能改變 hooks 順序的函數",
+    "impact": "控制台警告、潛在的狀態不一致問題"
+  },
+  "solution": {
+    "approach": "函數穩定化和依賴管理",
+    "technique": "useCallback + 正確的依賴數組",
+    "keyChanges": [
+      "創建穩定的 clearAuthState 函數",
+      "使用 useCallback 優化事件處理函數",
+      "修復 useEffect 依賴數組",
+      "分離狀態清除邏輯"
+    ]
+  },
+  "codeChanges": {
+    "filesModified": 1,
+    "linesAdded": 20,
+    "linesRemoved": 8,
+    "useCallbackAdded": 3,
+    "dependencyArraysFixed": 2
+  },
+  "testing": {
+    "newTestsAdded": 5,
+    "testFileCreated": "Header.hooks-order.test.tsx",
+    "totalTests": 46,
+    "allTestsPassing": true,
+    "testCoverage": "maintained"
+  },
+  "technologies": [
+    "React",
+    "TypeScript",
+    "React Hooks",
+    "useCallback",
+    "useEffect",
+    "Jest",
+    "React Testing Library"
+  ],
+  "challenges": [
+    {
+      "issue": "Hooks 順序一致性",
+      "solution": "使用 useCallback 穩定函數引用",
+      "timeSpent": 30,
+      "learningPoints": [
+        "React 依賴 hooks 調用順序來維護狀態",
+        "useCallback 的重要性",
+        "錯誤處理中的 hooks 順序考量"
+      ]
+    },
+    {
+      "issue": "依賴數組管理",
+      "solution": "正確設置 useEffect 依賴數組",
+      "timeSpent": 15,
+      "learningPoints": [
+        "useEffect 依賴數組必須完整",
+        "函數穩定化避免循環依賴",
+        "依賴管理最佳實踐"
+      ]
+    }
+  ],
+  "qualityMetrics": {
+    "bugFixed": true,
+    "hooksOrderStable": true,
+    "consoleWarnings": 0,
+    "regressionTests": "all passing",
+    "codeQuality": "significantly improved"
+  },
+  "architecture": {
+    "pattern": "Stable function references",
+    "hooksUsed": ["useState", "useEffect", "useCallback", "useRouter"],
+    "stateManagement": "localStorage + React state with stable functions",
+    "errorHandling": "safe error handling without hooks order changes"
+  },
+  "preventiveMeasures": [
+    "Hooks 規則檢查清單",
+    "useCallback 使用規範",
+    "依賴數組正確性檢查",
+    "專門的 Hooks 測試策略"
+  ],
+  "testingStrategy": {
+    "edgeCases": [
+      "多次渲染一致性",
+      "登出操作 Hooks 穩定性",
+      "錯誤處理中的 Hooks 順序",
+      "Storage 事件中的 Hooks 順序",
+      "快速連續狀態變化"
+    ],
+    "testTypes": [
+      "unit tests",
+      "hooks order tests",
+      "error handling tests",
+      "state consistency tests"
+    ]
+  },
+  "learningOutcomes": [
+    "React Hooks 最佳實踐深化",
+    "依賴管理原則理解",
+    "測試策略改進",
+    "錯誤處理安全性"
+  ],
+  "codeQualityImprovements": {
+    "beforeFix": {
+      "hooksOrderStable": false,
+      "functionReferences": "unstable",
+      "dependencyArrays": "incomplete",
+      "errorHandling": "unsafe"
+    },
+    "afterFix": {
+      "hooksOrderStable": true,
+      "functionReferences": "stable with useCallback",
+      "dependencyArrays": "complete and correct",
+      "errorHandling": "safe and predictable"
+    }
+  }
+} 
