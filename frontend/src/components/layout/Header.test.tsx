@@ -3,7 +3,7 @@
  * 使用 TDD 方式驗證頭部導航欄的登入狀態顯示功能
  */
 
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Header } from './Header'
 
@@ -27,8 +27,6 @@ Object.defineProperty(window, 'localStorage', {
 })
 
 describe('Header 組件測試', () => {
-  const mockRouter = { push: jest.fn() }
-
   beforeEach(() => {
     jest.clearAllMocks()
     mockLocalStorage.getItem.mockClear()

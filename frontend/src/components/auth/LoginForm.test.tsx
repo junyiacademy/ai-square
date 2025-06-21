@@ -3,7 +3,7 @@
  * 使用 TDD 方式驗證登入表單的所有功能
  */
 
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { LoginForm } from './LoginForm'
 

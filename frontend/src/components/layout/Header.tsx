@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { useTranslation } from 'react-i18next'
 
 interface User {
   id: number
@@ -12,7 +11,6 @@ interface User {
 }
 
 export function Header() {
-  const { t } = useTranslation('auth')
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
