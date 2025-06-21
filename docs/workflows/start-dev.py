@@ -562,10 +562,13 @@ describe('Bug Fix: {user_input}', () => {{
 **下一步**: 請先建立重現 Bug 的測試案例！
 """
 
-    def create_work_log(self, flow: str, user_input: str) -> Path:
+    def create_work_log(self, flow: str, user_input: str, feature_name: str) -> Path:
         """建立今日工作記錄"""
         today = datetime.date.today().strftime("%Y-%m-%d")
         work_log_path = self.current_path / f"work-{today}.md"
+        
+        # 同時建立開發歷程記錄
+        self.create_development_log(today, feature_name, flow, user_input)
         
         # 如果檔案已存在，追加新任務
         if work_log_path.exists():
@@ -608,6 +611,132 @@ describe('Bug Fix: {user_input}', () => {{
 """)
         
         return work_log_path
+    
+    def generate_feature_name(self, user_input: str) -> str:
+        """根據用戶輸入生成功能名稱"""
+        # 簡化中文為英文功能名
+        feature_mapping = {
+            "登入": "login",
+            "註冊": "register", 
+            "google": "google-auth",
+            "email": "email-login",
+            "密碼": "password",
+            "用戶": "user",
+            "資料庫": "database",
+            "api": "api",
+            "介面": "ui",
+            "測試": "testing"
+        }
+        
+        input_lower = user_input.lower()
+        feature_parts = []
+        
+        for chinese, english in feature_mapping.items():
+            if chinese in input_lower:
+                feature_parts.append(english)
+        
+        if not feature_parts:
+            # 如果沒有映射，使用前幾個單詞
+            words = user_input.replace(" ", "-").replace("，", "-").replace("。", "")
+            feature_parts = [words[:20]]
+        
+        return "-".join(feature_parts[:3])  # 最多3個部分
+    
+    def create_development_log(self, date: str, feature_name: str, flow: str, user_input: str):
+        """建立開發歷程記錄"""
+        dev_logs_path = self.project_root / "docs" / "development-logs" / date / feature_name
+        dev_logs_path.mkdir(parents=True, exist_ok=True)
+        
+        # 時間追蹤檔案
+        time_tracking = {
+            "feature": feature_name,
+            "description": user_input,
+            "flow": flow,
+            "startTime": datetime.datetime.now().isoformat(),
+            "endTime": None,
+            "totalMinutes": 0,
+            "phases": {
+                "analysis": 0,
+                "design": 0, 
+                "implementation": 0,
+                "testing": 0,
+                "documentation": 0
+            },
+            "metrics": {
+                "linesOfCode": 0,
+                "filesCreated": 0,
+                "testsWritten": 0,
+                "bugsFixed": 0
+            }
+        }
+        
+        with open(dev_logs_path / "time-tracking.json", "w", encoding="utf-8") as f:
+            import json
+            json.dump(time_tracking, f, indent=2, ensure_ascii=False)
+        
+        # 審查檢查清單
+        review_checklist = f"""# 代碼審查檢查清單 - {feature_name}
+
+## 📋 功能概述
+**功能**: {user_input}  
+**開發流程**: {flow}  
+**開始時間**: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}
+
+## ✅ BDD (行為驅動開發)
+- [ ] 用戶故事定義清楚且可測試
+- [ ] 驗收標準 (Given-When-Then) 完整
+- [ ] 涵蓋主要使用場景和邊界情況
+- [ ] 錯誤處理場景已考慮
+
+## ✅ DDD (領域驅動設計)  
+- [ ] 界限上下文劃分合理
+- [ ] 聚合邊界設計恰當
+- [ ] 領域事件定義清楚
+- [ ] 通用語言一致性維護
+
+## ✅ TDD (測試驅動開發)
+- [ ] 遵循紅綠重構循環
+- [ ] 單元測試覆蓋核心邏輯
+- [ ] 整合測試驗證端到端流程
+- [ ] 測試案例涵蓋錯誤情況
+
+## ✅ 技術實作品質
+- [ ] 程式碼符合專案風格指南
+- [ ] TypeScript 類型定義完整
+- [ ] ESLint 檢查通過
+- [ ] 建置過程無錯誤或警告
+
+## ✅ 多語言和可訪問性
+- [ ] 支援所有 9 種語言翻譯
+- [ ] UI 文字無硬編碼
+- [ ] 響應式設計適配手機和桌面
+- [ ] 鍵盤導航和屏幕閱讀器友好
+
+## ✅ 安全性和效能
+- [ ] 輸入驗證和清理
+- [ ] 錯誤訊息不洩露敏感資訊  
+- [ ] API 回應時間合理
+- [ ] 無明顯的安全漏洞
+
+## ✅ 文檔和維護性
+- [ ] API 文檔準確且完整
+- [ ] 程式碼註解清楚必要處
+- [ ] README 或相關文檔已更新
+- [ ] CHANGELOG 記錄新功能
+
+## 📊 審查結果
+- **總體評分**: ⭐⭐⭐⭐⭐ (1-5星)
+- **主要優點**: 
+- **改進建議**: 
+- **是否批准**: [ ] 通過 [ ] 需要修改
+
+---
+> 審查者: ____________  
+> 審查時間: ____________
+"""
+        
+        with open(dev_logs_path / "review-checklist.md", "w", encoding="utf-8") as f:
+            f.write(review_checklist)
     
     def setup_development_environment(self, flow: str):
         """準備開發環境"""
@@ -668,6 +797,10 @@ describe('Bug Fix: {user_input}', () => {{
             flow = self.select_development_flow(dev_type, complexity)
             print(f"  建議流程: {flow}")
             
+            # 生成功能名稱
+            feature_name = self.generate_feature_name(user_input)
+            print(f"  功能代號: {feature_name}")
+            
             # 生成 AI 引導文檔
             print(f"\n{Colors.BLUE}📝 生成 AI 引導文檔...{Colors.END}")
             guidance = self.generate_claude_guidance(flow, user_input, context)
@@ -678,7 +811,7 @@ describe('Bug Fix: {user_input}', () => {{
                 f.write(guidance)
             
             # 建立工作記錄
-            work_log_path = self.create_work_log(flow, user_input)
+            work_log_path = self.create_work_log(flow, user_input, feature_name)
             
             # 準備開發環境
             self.setup_development_environment(flow)

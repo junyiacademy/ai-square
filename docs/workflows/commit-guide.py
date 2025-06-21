@@ -38,7 +38,8 @@ class CommitGuide:
         print(f"{Colors.CYAN}{Colors.BOLD}")
         print("📋 AI Square 智能提交引導")
         print("=" * 40)
-        print(f"自動化品質檢查與文檔同步系統{Colors.END}")
+        print(f"TDD 驅動開發 - 自動化品質檢查與文檔同步系統{Colors.END}")
+        print(f"{Colors.BLUE}🧪 測試驅動開發原則：測試必須通過才能提交{Colors.END}")
         print()
         
     def check_git_status(self) -> Tuple[List[str], List[str], List[str]]:
@@ -178,40 +179,68 @@ class CommitGuide:
         return checks_passed
         
     def run_tests(self) -> bool:
-        """運行測試套件"""
-        print(f"{Colors.BLUE}🧪 執行測試套件...{Colors.END}")
+        """運行測試套件 - TDD 強制要求"""
+        print(f"{Colors.BLUE}🧪 執行測試套件 (TDD 必須通過)...{Colors.END}")
         
         frontend_path = self.project_root / "frontend"
         
         # 檢查是否有測試檔案
         test_files = list(frontend_path.glob("**/*.test.{ts,tsx,js,jsx}"))
-        if not test_files:
-            print(f"    {Colors.YELLOW}⚠️ 未找到測試檔案，跳過測試{Colors.END}")
-            return True
+        e2e_files = list(frontend_path.glob("**/e2e/**/*.spec.{ts,js}"))
+        
+        if not test_files and not e2e_files:
+            print(f"    {Colors.RED}❌ 未找到測試檔案！根據 TDD 規則，代碼必須有對應測試{Colors.END}")
+            return False
             
         try:
+            # 運行單元測試
+            print(f"  📋 運行單元測試...")
             result = subprocess.run(
-                ["npm", "test", "--", "--passWithNoTests", "--watchAll=false"],
+                ["npm", "run", "test:ci"],
                 cwd=frontend_path,
                 capture_output=True,
                 text=True,
                 timeout=300
             )
             
-            if result.returncode == 0:
-                print(f"    {Colors.GREEN}✅ 所有測試通過{Colors.END}")
-                return True
-            else:
-                print(f"    {Colors.RED}❌ 測試失敗{Colors.END}")
+            if result.returncode != 0:
+                print(f"    {Colors.RED}❌ 單元測試失敗{Colors.END}")
                 print(f"    {result.stdout}")
+                print(f"    {result.stderr}")
                 return False
+            else:
+                print(f"    {Colors.GREEN}✅ 單元測試通過{Colors.END}")
+            
+            # 檢查測試覆蓋率
+            if "Coverage" in result.stdout:
+                print(f"    {Colors.BLUE}📊 測試覆蓋率報告已生成{Colors.END}")
+            
+            # 運行 E2E 測試 (如果存在且環境允許)
+            if e2e_files:
+                print(f"  🎭 檢查 E2E 測試...")
+                # 檢查是否可以運行 E2E 測試
+                e2e_result = subprocess.run(
+                    ["npx", "playwright", "--version"],
+                    cwd=frontend_path,
+                    capture_output=True,
+                    text=True,
+                    timeout=30
+                )
+                
+                if e2e_result.returncode == 0:
+                    print(f"    {Colors.YELLOW}⚠️ E2E 測試存在但需要運行環境，建議在 CI/CD 中執行{Colors.END}")
+                else:
+                    print(f"    {Colors.YELLOW}⚠️ E2E 測試環境未設置{Colors.END}")
+            
+            return True
                 
         except subprocess.TimeoutExpired:
             print(f"    {Colors.RED}❌ 測試執行超時{Colors.END}")
             return False
         except Exception as e:
-            print(f"    {Colors.YELLOW}⚠️ 無法執行測試: {e}{Colors.END}")
-            return True  # 不因為無法執行測試而阻擋提交
+            print(f"    {Colors.RED}❌ 無法執行測試: {e}{Colors.END}")
+            print(f"    {Colors.RED}根據 TDD 規則，測試必須能夠執行並通過{Colors.END}")
+            return False
             
     def analyze_changes(self, modified_files: List[str], new_files: List[str]) -> Dict[str, List[str]]:
         """分析變更類型"""
@@ -507,13 +536,15 @@ Co-Authored-By: Claude <noreply@anthropic.com>"""
                 print(f"\n{Colors.RED}❌ 品質檢查失敗，請修正後再提交{Colors.END}")
                 return
                 
-            # 運行測試
+            # 運行測試 - TDD 強制要求
             if not self.run_tests():
-                print(f"\n{Colors.RED}❌ 測試失敗，請修正後再提交{Colors.END}")
-                
-                force_commit = input(f"{Colors.YELLOW}是否要強制提交？ (y/N): {Colors.END}").strip().lower()
-                if force_commit != 'y':
-                    return
+                print(f"\n{Colors.RED}❌ 測試失敗，根據 TDD 開發規則，必須修正後才能提交{Colors.END}")
+                print(f"{Colors.BLUE}💡 請確保：{Colors.END}")
+                print(f"  📋 所有測試通過")
+                print(f"  📊 達到測試覆蓋率要求 (80%+)")
+                print(f"  🧪 新功能有對應的測試")
+                print(f"\n{Colors.YELLOW}使用 'npm run test:coverage' 檢查測試覆蓋率{Colors.END}")
+                return
                     
             # 分析變更
             changes = self.analyze_changes(modified_files, new_files)
