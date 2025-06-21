@@ -93,6 +93,25 @@ changelog-release:
 	@echo "請手動編輯 CHANGELOG.md 將 [Unreleased] 改為版本號"
 	@echo "例如: ## [1.0.0] - $(shell date +%Y-%m-%d)"
 
+# 📚 開發歷程管理
+dev-logs:
+	@echo "📚 查看開發歷程記錄:"
+	@find docs/development-logs -name "*.md" -type f | head -10 2>/dev/null || echo "❌ 暫無開發記錄"
+
+dev-logs-today:
+	@echo "📅 今日開發記錄:"
+	@find docs/development-logs/$(shell date +%Y-%m-%d) -name "*.md" -type f 2>/dev/null || echo "❌ 今日暫無記錄"
+
+dev-logs-feature:
+	@echo "🔍 請指定功能名稱:"
+	@echo "例如: find docs/development-logs -name '*email-login*' -type d"
+
+dev-stats:
+	@echo "📊 開發統計:"
+	@echo "總功能數: $(shell find docs/development-logs -name 'time-tracking.json' | wc -l | tr -d ' ')"
+	@echo "今日功能: $(shell find docs/development-logs/$(shell date +%Y-%m-%d) -name 'time-tracking.json' 2>/dev/null | wc -l | tr -d ' ')"
+	@echo "本週功能: $(shell find docs/development-logs -name 'time-tracking.json' -newermt '1 week ago' 2>/dev/null | wc -l | tr -d ' ')"
+
 # 🏗️ 架構一致性檢查
 arch-check:
 	@echo "🏗️ 檢查架構一致性..."
@@ -197,6 +216,11 @@ help:
 	@echo "  make changelog-view    查看當前 Changelog"
 	@echo "  make changelog-unreleased  查看未發布變更"
 	@echo "  make changelog-release 準備發布新版本"
+	@echo ""
+	@echo "📚 開發歷程:"
+	@echo "  make dev-logs          查看開發歷程記錄"
+	@echo "  make dev-logs-today    查看今日開發記錄"
+	@echo "  make dev-stats         查看開發統計"
 	@echo ""
 	@echo "🧪 品質保證:"
 	@echo "  make test-all          執行所有測試與檢查"
