@@ -8,8 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Header 組件顯示登入狀態 (前端功能更新, 測試改進)
+- 響應式導航欄支援桌面和移動版
+- 跨 tab 登入狀態同步功能
+- 完整 TDD 測試套件：Header 組件 19 個測試案例
 
 ### Changed
+- 全域 layout 整合 Header 組件到所有頁面
+- 登入用戶體驗提升：任何頁面都能看到登入狀態
 
 ### Fixed
 
