@@ -371,43 +371,136 @@ class CommitGuide:
         """智能生成提交訊息"""
         print(f"\n{Colors.BLUE}💡 生成提交訊息...{Colors.END}")
         
-        # 分析變更內容
-        if self.changes_summary['added']:
-            action = "feat"
-            scope = self._get_scope(self.changes_summary['added'][0])
-        elif self.changes_summary['modified']:
-            # 檢查是否是修復
-            if any('fix' in f or 'bug' in f for f in self.changes_summary['modified']):
-                action = "fix"
-            else:
-                action = "refactor"
-            scope = self._get_scope(self.changes_summary['modified'][0])
-        else:
-            action = "chore"
-            scope = "misc"
+        # 分析變更內容以產生有意義的描述
+        all_files = (self.changes_summary['added'] + 
+                    self.changes_summary['modified'] + 
+                    self.changes_summary['deleted'])
         
-        # 生成描述
-        total_changes = sum(len(v) for v in self.changes_summary.values())
-        if total_changes == 1:
-            file = list(self.changes_summary.values())[0][0]
-            description = f"update {Path(file).name}"
+        # 檢測主要變更類型
+        primary_action = ""
+        primary_scope = ""
+        description = ""
+        
+        # 特殊檔案模式識別
+        if any('migrate' in f for f in all_files):
+            if any('dev-logs' in f for f in all_files):
+                primary_action = "refactor"
+                primary_scope = "dev-logs"
+                description = "migrate dev logs with accurate time calculation and clear filenames"
+            else:
+                primary_action = "refactor"
+                primary_scope = "migration"
+                description = "migrate files"
+        
+        elif any('time' in f and ('tracker' in f or 'tracking' in f or 'calculation' in f) for f in all_files):
+            primary_action = "fix" if self.changes_summary['modified'] else "feat"
+            primary_scope = "time-tracking"
+            description = "improve time tracking accuracy"
+        
+        elif any('pre-commit' in f or 'post-commit' in f for f in all_files):
+            primary_action = "feat"
+            primary_scope = "docs"
+            description = "implement pre-commit and post-commit documentation generation"
+        
+        elif any('commit-guide' in f for f in all_files):
+            primary_action = "improve"
+            primary_scope = "commit"
+            description = "enhance commit message generation"
+        
+        elif any('test' in f for f in all_files):
+            primary_action = "test"
+            primary_scope = "test"
+            description = "add tests"
+        
+        # 檢查檔案內容模式
+        elif len(self.changes_summary['added']) > 10:
+            # 大量新增檔案
+            primary_action = "feat"
+            primary_scope = self._detect_common_scope(self.changes_summary['added'])
+            description = f"add {len(self.changes_summary['added'])} new files"
+        
+        elif len(self.changes_summary['deleted']) > 5:
+            # 大量刪除檔案
+            primary_action = "chore"
+            primary_scope = "cleanup"
+            description = f"remove {len(self.changes_summary['deleted'])} obsolete files"
+        
+        # 預設情況：基於檔案分析
         else:
-            description = f"update {total_changes} files"
+            # 分析主要變更
+            if self.changes_summary['added']:
+                primary_action = "feat"
+                first_added = self.changes_summary['added'][0]
+                primary_scope = self._get_scope(first_added)
+                
+                # 根據檔案名稱生成描述
+                filename = Path(first_added).stem
+                if 'config' in filename:
+                    description = "add configuration"
+                elif 'component' in filename:
+                    description = f"add {filename} component"
+                elif 'script' in filename:
+                    description = f"add {filename} script"
+                elif 'doc' in filename or 'log' in filename:
+                    description = "add documentation"
+                else:
+                    description = f"add {filename}"
+                    
+            elif self.changes_summary['modified']:
+                # 檢查是否是修復
+                modified_files = self.changes_summary['modified']
+                if any('fix' in f or 'bug' in f for f in modified_files):
+                    primary_action = "fix"
+                    description = "fix bugs"
+                elif any('improve' in f or 'enhance' in f or 'optimize' in f for f in modified_files):
+                    primary_action = "improve"
+                    description = "enhance functionality"
+                else:
+                    primary_action = "refactor"
+                    description = "refactor code"
+                
+                primary_scope = self._get_scope(modified_files[0])
+                
+            else:
+                primary_action = "chore"
+                primary_scope = "misc"
+                description = "cleanup"
         
         # 組合訊息
-        commit_msg = f"{action}({scope}): {description}"
+        commit_msg = f"{primary_action}({primary_scope}): {description}"
         
-        # 加入詳細資訊
+        # 加入詳細資訊（如果需要）
         body_lines = []
-        if self.changes_summary['added']:
-            body_lines.append(f"Added: {', '.join(Path(f).name for f in self.changes_summary['added'][:3])}")
-        if self.changes_summary['modified']:
-            body_lines.append(f"Modified: {', '.join(Path(f).name for f in self.changes_summary['modified'][:3])}")
+        
+        # 只在有多個檔案時才加入檔案列表
+        total_changes = sum(len(v) for v in self.changes_summary.values())
+        if total_changes > 3:
+            if self.changes_summary['added'] and len(self.changes_summary['added']) > 1:
+                body_lines.append(f"\nAdded {len(self.changes_summary['added'])} files:")
+                for f in self.changes_summary['added'][:5]:
+                    body_lines.append(f"  - {Path(f).name}")
+                if len(self.changes_summary['added']) > 5:
+                    body_lines.append(f"  ... and {len(self.changes_summary['added']) - 5} more")
+                    
+            if self.changes_summary['modified'] and len(self.changes_summary['modified']) > 1:
+                body_lines.append(f"\nModified {len(self.changes_summary['modified'])} files:")
+                for f in self.changes_summary['modified'][:5]:
+                    body_lines.append(f"  - {Path(f).name}")
+                if len(self.changes_summary['modified']) > 5:
+                    body_lines.append(f"  ... and {len(self.changes_summary['modified']) - 5} more")
         
         if body_lines:
-            commit_msg += "\n\n" + "\n".join(body_lines)
+            commit_msg += "\n" + "\n".join(body_lines)
         
         return commit_msg
+    
+    def _detect_common_scope(self, files: List[str]) -> str:
+        """檢測檔案的共同 scope"""
+        scopes = [self._get_scope(f) for f in files]
+        # 找出最常見的 scope
+        from collections import Counter
+        scope_counts = Counter(scopes)
+        return scope_counts.most_common(1)[0][0] if scope_counts else "misc"
     
     def _get_scope(self, file_path: str) -> str:
         """根據檔案路徑判斷 scope"""
