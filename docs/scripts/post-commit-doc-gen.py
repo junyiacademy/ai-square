@@ -712,10 +712,59 @@ class PostCommitDocGenerator:
         
         print(f"\n✨ 文檔生成完成！")
         
+        # 如果有更新文檔，自動執行補充 commit
+        if dev_log:
+            self._auto_commit_updates(dev_log, story)
+        
         # 提示下一步
         print(f"\n💡 提示：")
         print(f"   - 可以執行 'make reflect' 進行深度分析")
         print(f"   - 可以手動編輯生成的文檔添加更多細節")
+    
+    def _auto_commit_updates(self, dev_log: str, story: Optional[str]):
+        """自動提交文檔更新"""
+        print(f"\n📤 自動提交文檔更新...")
+        
+        # 準備要提交的檔案
+        files_to_commit = [dev_log]
+        if story:
+            files_to_commit.append(story)
+        
+        # 加入 git
+        for file in files_to_commit:
+            code, _, _ = self._run_command(["git", "add", file])
+            if code != 0:
+                print(f"⚠️  無法加入檔案: {file}")
+                return
+        
+        # 檢查是否有變更
+        code, stdout, _ = self._run_command(["git", "status", "--porcelain"])
+        if not stdout.strip():
+            print("ℹ️  沒有需要提交的變更")
+            return
+        
+        # 執行補充 commit
+        commit_msg = f"docs: add commit hash {self.commit_hash} to dev log"
+        
+        # 設置環境變數避免無限循環
+        env = os.environ.copy()
+        env['SKIP_POST_COMMIT'] = '1'
+        
+        result = subprocess.run(
+            ["git", "commit", "-m", commit_msg],
+            capture_output=True,
+            text=True,
+            cwd=self.project_root,
+            env=env
+        )
+        
+        if result.returncode == 0:
+            # 獲取新的 commit hash
+            _, new_hash, _ = self._run_command(["git", "rev-parse", "--short", "HEAD"])
+            new_hash = new_hash.strip()
+            print(f"✅ 已自動提交文檔更新: {new_hash}")
+        else:
+            print(f"⚠️  自動提交失敗: {result.stderr}")
 
 if __name__ == "__main__":
     # 檢查是否應該跳過（避免無限循環）
