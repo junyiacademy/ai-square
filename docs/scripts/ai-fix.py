@@ -89,7 +89,7 @@ class AIAutoFixer:
             print("⚠️  沒有 frontend 目錄，跳過 TypeScript 檢查")
             return True, []
         
-        cmd = ["npm", "run", "type-check"]
+        cmd = ["npx", "tsc", "--noEmit"]
         result = subprocess.run(
             cmd,
             cwd=self.frontend_path,

@@ -125,7 +125,7 @@ ai-fix:
 commit-auto:
 	@echo "🤖 自動提交模式（非交互式）..."
 	@git add -A
-	@python3 docs/scripts/auto-commit.py
+	@CI=true python3 docs/scripts/commit-guide.py
 
 # 📚 文檔完整性檢查
 docs-check:
