@@ -7,12 +7,7 @@
 ```
 dev-logs/
 ├── YYYY-MM-DD/                    # 日期資料夾
-│   ├── features/                   # 功能開發
-│   ├── bugfixes/                   # Bug 修復
-│   ├── documentation/              # 文檔更新
-│   ├── refactoring/               # 程式碼重構
-│   ├── time-tracking/             # 時間追蹤相關
-│   └── auto-documentation/        # 自動生成的文檔
+│   └── *.yml                      # 所有日誌直接放在日期資料夾下
 └── templates/                     # 日誌模板
 ```
 
@@ -38,13 +33,15 @@ YYYY-MM-DD-{type}-{description}.yml
 
 ## 🏷️ 日誌類型
 
-| Type | 用途 | 存放位置 | 模板 |
-|------|------|----------|------|
-| feature | 新功能開發 | features/ | feature-log-template.yml |
-| bug | 問題修復 | bugfixes/ | bug-log-template.yml |
-| docs | 文檔更新 | documentation/ | docs-log-template.yml |
-| refactor | 程式碼重構 | refactoring/ | refactor-log-template.yml |
-| test | 測試相關 | misc/ | - |
+| Type | 用途 | 模板 |
+|------|------|------|
+| feature | 新功能開發 | feature-log-template.yml |
+| bug | 問題修復 | bug-log-template.yml |
+| docs | 文檔更新 | docs-log-template.yml |
+| refactor | 程式碼重構 | refactor-log-template.yml |
+| test | 測試相關 | - |
+
+**注意**：所有日誌都直接放在日期資料夾下，依靠檔名中的類型識別
 
 ## 📊 自動化功能
 
@@ -110,4 +107,4 @@ YYYY-MM-DD-{type}-{description}.yml
 3. **手動創建日誌**
    - 複製對應的模板
    - 填寫必要資訊
-   - 保存到正確的日期/類別資料夾
+   - 保存到對應的日期資料夾（直接放在日期資料夾下）

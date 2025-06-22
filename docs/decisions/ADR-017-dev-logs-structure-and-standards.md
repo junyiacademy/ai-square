@@ -19,21 +19,15 @@ Accepted
 ```
 docs/dev-logs/
 ├── YYYY-MM-DD/                    # 日期資料夾
-│   ├── features/                   # 功能開發（≥2個檔案時創建）
-│   ├── bugfixes/                   # Bug 修復（≥2個檔案時創建）
-│   ├── documentation/              # 文檔更新（≥2個檔案時創建）
-│   ├── refactoring/               # 程式碼重構（≥2個檔案時創建）
-│   ├── time-tracking/             # 時間追蹤相關
-│   ├── auto-documentation/        # 自動生成的文檔
-│   └── *.yml                      # 單獨檔案（該類別只有1個時）
+│   └── *.yml                      # 所有日誌檔案直接放在日期資料夾下
 ├── *.yml                          # 模板檔案
 └── README.md                      # 使用說明
 ```
 
 **規則**：
 - 每日的日誌放在 `YYYY-MM-DD` 資料夾下
-- 同類型檔案 ≥2 個時，創建對應的子資料夾
-- 單一檔案直接放在日期資料夾下
+- 所有檔案直接放在日期資料夾根目錄，不再分子資料夾
+- 依賴清晰的檔名來識別檔案類型和內容
 
 ### 2. 檔案命名標準
 
@@ -144,13 +138,13 @@ generation_time: 'YYYY-MM-DDTHH:MM:SS.ffffff'
 
 ### 7. 類型定義
 
-| Type | 用途 | 存放位置 | Conventional Commit |
-|------|------|----------|---------------------|
-| feature | 新功能開發 | features/ | feat |
-| bug | 問題修復 | bugfixes/ | fix |
-| docs | 文檔更新 | documentation/ | docs |
-| refactor | 程式碼重構 | refactoring/ | refactor |
-| test | 測試相關 | misc/ | test |
+| Type | 用途 | Conventional Commit |
+|------|------|---------------------|
+| feature | 新功能開發 | feat |
+| bug | 問題修復 | fix |
+| docs | 文檔更新 | docs |
+| refactor | 程式碼重構 | refactor |
+| test | 測試相關 | test |
 
 ## Consequences
 

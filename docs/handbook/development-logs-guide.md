@@ -10,10 +10,7 @@
 ```
 docs/dev-logs/
 ├── 2025-06-23/                    # 日期資料夾
-│   ├── features/                  # 功能開發
-│   ├── bugfixes/                  # Bug 修復
-│   ├── documentation/             # 文檔更新
-│   └── refactoring/              # 重構工作
+│   └── *.yml                      # 所有日誌檔案直接放在日期資料夾下
 └── README.md                      # 總覽說明
 ```
 
@@ -30,6 +27,8 @@ YYYY-MM-DD-HH-MM-SS-{type}-{description}.yml
 YYYY-MM-DD-{type}-{description}.yml
 ```
 範例：`2025-06-23-docs-api-documentation.yml`
+
+**注意**：檔名已包含類型資訊，不需要子資料夾分類
 
 ## 🚀 使用流程
 
@@ -98,7 +97,7 @@ python3 docs/scripts/commit-guide.py
 
 3. 保存到正確位置：
    - 檔名：`2025-06-23-feature-user-authentication.yml`
-   - 路徑：`docs/dev-logs/2025-06-23/features/`
+   - 路徑：`docs/dev-logs/2025-06-23/`
 
 ## 📏 嚴格規則
 
@@ -106,7 +105,7 @@ python3 docs/scripts/commit-guide.py
 
 1. **檔案位置**
    - 所有日誌必須放在對應的日期資料夾
-   - 同類型 ≥2 個檔案時，必須創建子資料夾
+   - 所有檔案直接放在日期資料夾下，不使用子資料夾
    - 不可將日誌直接放在 `dev-logs/` 根目錄
 
 2. **命名規範**

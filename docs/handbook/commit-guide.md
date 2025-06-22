@@ -86,11 +86,8 @@ Closes #123
 ### 自動生成的日誌位置
 ```
 docs/dev-logs/
-└── YYYY-MM-DD/
-    ├── features/         # feat commits
-    ├── bugfixes/         # fix commits
-    ├── documentation/    # docs commits
-    └── refactoring/     # refactor commits
+└── YYYY-MM-DD/          # 所有日誌直接放在日期資料夾下
+    └── *.yml             # 按時間戳排序的日誌檔案
 ```
 
 ### 日誌檔名格式
