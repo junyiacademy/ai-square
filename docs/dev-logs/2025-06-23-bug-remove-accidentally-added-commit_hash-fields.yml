@@ -1,0 +1,39 @@
+type: bug
+title: 'fix(templates): remove accidentally added commit_hash fields from templates'
+date: '2025-06-23'
+developer: AI + Human
+status: completed
+commit_hash: c304c234
+description: 'fix(templates): remove accidentally added commit_hash fields from templates
+
+
+  - Clean up bug-log-template.yml and feature-log-template.yml
+
+  - Add auto-generated development log for one-time script cleanup implementation
+
+
+  🤖 Generated with [Claude Code](https://claude.ai/code)
+
+
+  Co-Authored-By: Claude <noreply@anthropic.com>'
+timeline:
+- phase: 實現
+  duration: 30
+  ai_time: 24
+  human_time: 6
+  tasks:
+  - 創建 2025-06-23-feature-one-time-script-cleanup-policy.yml
+metrics:
+  total_time: 30
+  ai_percentage: 80.0
+  human_percentage: 20.0
+  files_added: 1
+  files_modified: 0
+  files_deleted: 0
+changes:
+  added:
+  - docs/dev-logs/2025-06-23-feature-one-time-script-cleanup-policy.yml
+  modified: []
+  deleted: []
+auto_generated: true
+generation_time: '2025-06-23T02:08:30.983750'
