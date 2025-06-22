@@ -134,9 +134,23 @@ class PostCommitDocGenerator:
         scope = self._extract_commit_scope()
         time_info = self._estimate_time_spent()
         
-        # 生成檔名
+        # 生成更清楚的檔名
         date_str = self.commit_info['time'].strftime('%Y-%m-%d')
-        filename = f"{date_str}-{commit_type}-{scope}-{self.commit_hash}.yml"
+        
+        # 從 commit 訊息中提取關鍵詞作為檔名
+        commit_title = self.commit_info['message'].split('\n')[0]
+        # 移除 conventional commit 前綴，提取核心描述
+        clean_title = re.sub(r'^[^:]+:\s*', '', commit_title)
+        # 將描述轉換為檔名友好格式
+        name_part = re.sub(r'[^\w\s-]', '', clean_title)  # 移除特殊字符
+        name_part = re.sub(r'\s+', '-', name_part.strip())  # 空格轉連字符
+        name_part = name_part.lower()[:30]  # 轉小寫並限制長度
+        
+        # 如果提取的名稱太短，使用 scope 替代
+        if len(name_part) < 3:
+            name_part = f"{scope}-update"
+        
+        filename = f"{date_str}-{commit_type}-{name_part}.yml"
         filepath = self.project_root / "docs" / "dev-logs" / filename
         
         # 準備日誌內容
@@ -225,9 +239,18 @@ class PostCommitDocGenerator:
         else:
             category = 'collaboration-insights'
         
-        # 生成檔名
-        scope = self._extract_commit_scope()
-        filename = f"{date_str}-{scope}-{self.commit_hash}.md"
+        # 生成清楚的檔名
+        commit_title = self.commit_info['message'].split('\n')[0]
+        clean_title = re.sub(r'^[^:]+:\s*', '', commit_title)
+        name_part = re.sub(r'[^\w\s-]', '', clean_title)
+        name_part = re.sub(r'\s+', '-', name_part.strip())
+        name_part = name_part.lower()[:30]
+        
+        if len(name_part) < 3:
+            scope = self._extract_commit_scope()
+            name_part = f"{scope}-update"
+        
+        filename = f"{date_str}-{name_part}.md"
         filepath = self.project_root / "docs" / "stories" / category / filename
         
         # 生成故事內容
@@ -237,6 +260,7 @@ class PostCommitDocGenerator:
 **日期**: {date_str}  
 **類型**: {commit_type}  
 **Commit**: {self.commit_hash}
+**變更檔案**: {self.commit_info['total_changes']} 個
 
 ## 背景
 
