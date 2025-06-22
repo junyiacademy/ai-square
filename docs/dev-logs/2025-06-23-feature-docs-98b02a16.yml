@@ -1,0 +1,47 @@
+type: feature
+title: 'feat(docs): update 10 files'
+date: '2025-06-23'
+developer: AI + Human
+status: completed
+commit_hash: 98b02a16
+description: 'feat(docs): update 10 files
+
+
+  Added: ADR-005-automatic-documentation-generation.md, 2025-06-23-bug-misc-840cecf9.yml,
+  2025-06-23-feature-auto-documentation.yml
+
+  Modified: Makefile, commit-guide.py'
+timeline:
+- phase: 實現
+  duration: 60
+  ai_time: 48
+  human_time: 12
+  tasks:
+  - 創建 ADR-005-automatic-documentation-generation.md
+  - 創建 2025-06-23-bug-misc-840cecf9.yml
+  - 創建 2025-06-23-feature-auto-documentation.yml
+  - 更新 Makefile
+  - 更新 commit-guide.py
+metrics:
+  total_time: 60
+  ai_percentage: 80.0
+  human_percentage: 20.0
+  files_added: 8
+  files_modified: 2
+  files_deleted: 0
+changes:
+  added:
+  - docs/decisions/ADR-005-automatic-documentation-generation.md
+  - docs/dev-logs/2025-06-23-bug-misc-840cecf9.yml
+  - docs/dev-logs/2025-06-23-feature-auto-documentation.yml
+  - docs/handbook/improvements/improvement-2025-06-23-0117.md
+  - docs/handbook/improvements/improvement-2025-06-23-0117.yml
+  - docs/scripts/post-commit-doc-gen.py
+  - docs/stories/collaboration-insights/2025-06-23-automated-documentation-workflow.md
+  - docs/stories/features/2025-06-22-unknown-insight.md
+  modified:
+  - Makefile
+  - docs/scripts/commit-guide.py
+  deleted: []
+auto_generated: true
+generation_time: '2025-06-23T01:26:31.545203'
