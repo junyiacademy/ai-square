@@ -126,9 +126,23 @@ generation_time: 'YYYY-MM-DDTHH:MM:SS.ffffff'
 #### Post-commit 階段
 1. 更新日誌加入 commit hash
 2. 重新計算更準確的時間
-3. 自動執行補充 commit
+3. 自動執行補充 commit（僅限於補充 hash）
 
-### 6. 類型定義
+### 6. Commit 執行規則
+
+**重要**：AI 助手必須遵守以下規則：
+1. **只有在收到明確的 `commit` 指令時才能執行 commit**
+2. **例外情況**：補充 commit hash 的自動 commit（由 post-commit hook 觸發）
+3. **禁止行為**：
+   - 不可在一般對話中自行決定 commit
+   - 不可因為「覺得應該」就執行 commit
+   - 不可在執行其他任務時順便 commit
+4. **正確流程**：
+   - Human: "commit" → AI: 執行 commit 流程
+   - Human: "把這些改動提交" → AI: 詢問確認
+   - Human: 其他指令 → AI: 不執行 commit
+
+### 7. 類型定義
 
 | Type | 用途 | 存放位置 | Conventional Commit |
 |------|------|----------|---------------------|

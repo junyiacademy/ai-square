@@ -2,7 +2,14 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-**Important**: This file is now located at `docs/CLAUDE.md`. All development documentation is centralized in the `docs/` directory.
+## Critical Rules for AI Assistant
+
+### Commit Execution Rules
+1. **NEVER execute commit without explicit instruction**
+2. **ONLY commit when user says "commit" or similar clear command**
+3. **EXCEPTION**: Auto-commit for adding commit hash (with SKIP_POST_COMMIT=1)
+4. **NO self-initiated commits** after completing tasks
+5. **Reference**: See [ADR-017](docs/decisions/ADR-017-dev-logs-structure-and-standards.md) Section 6
 
 ## Project Overview
 

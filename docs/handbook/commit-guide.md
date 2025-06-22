@@ -6,6 +6,7 @@
 2. **使用智能提交助手**
 3. **遵循 Conventional Commits 規範**
 4. **準確記錄開發時間**
+5. **只有收到明確指令才執行 commit**
 
 ## 🚀 標準流程
 
@@ -112,12 +113,41 @@ YYYY-MM-DD-HH-MM-SS-{type}-{description}.yml
 2. 使用 `make commit` 確保流程完整
 3. 填寫有意義的 commit 訊息
 4. 一個 commit 只做一件事
+5. 等待明確的 commit 指令
 
 ### ❌ 不應該做
 1. 不要繞過智能提交助手
 2. 不要手動修改自動生成的時間
 3. 不要混合多個功能在一個 commit
 4. 不要使用無意義的訊息
+5. **AI 不可自行決定執行 commit**
+
+## 🤖 AI Commit 執行規則
+
+### 允許執行 commit 的情況
+1. **明確指令**：收到 "commit" 指令
+2. **自動補充**：post-commit 自動補充 hash（有 SKIP_POST_COMMIT=1）
+
+### 禁止執行 commit 的情況
+1. **一般對話**：討論過程中不可自行 commit
+2. **完成任務**：完成某個功能後不可自行 commit
+3. **清理工作**：整理檔案後不可自行 commit
+4. **修復問題**：修復錯誤後不可自行 commit
+
+### 正確的互動模式
+```
+✅ Human: "commit"
+   AI: 執行 commit 流程
+
+✅ Human: "把這些改動 commit 掉"
+   AI: 執行 commit 流程
+
+❌ Human: "幫我整理這些檔案"
+   AI: 整理完後自行 commit ← 錯誤！
+
+❌ Human: "修復這個 bug"
+   AI: 修復完後自行 commit ← 錯誤！
+```
 
 ## 🔧 特殊情況
 
