@@ -558,5 +558,10 @@ class PostCommitDocGenerator:
         print(f"   - 可以手動編輯生成的文檔添加更多細節")
 
 if __name__ == "__main__":
+    # 檢查是否應該跳過（避免無限循環）
+    if os.environ.get('SKIP_POST_COMMIT') == '1':
+        print("🔇 跳過文檔生成（文檔補充 commit）")
+        sys.exit(0)
+    
     generator = PostCommitDocGenerator()
     generator.run()

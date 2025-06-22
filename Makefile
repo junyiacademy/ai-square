@@ -74,7 +74,14 @@ commit-ticket:
 	@python3 docs/scripts/commit-guide.py
 	@echo "📝 生成開發文檔..."
 	@python3 docs/scripts/post-commit-doc-gen.py
+	@echo "📄 完成文檔提交..."
+	@python3 docs/scripts/finalize-docs.py
 	@echo "✅ Ticket 完成！"
+
+# 📄 補充文檔提交（單獨使用）
+finalize-docs:
+	@echo "📄 檢查並提交待處理的文檔..."
+	@python3 docs/scripts/finalize-docs.py
 
 # 🚀 快速開發模式 (原型/概念驗證)
 quick-dev:
