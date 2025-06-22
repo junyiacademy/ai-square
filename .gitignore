@@ -52,4 +52,3 @@ docs/time-logs/raw/
 # Dependencies
 package-lock.json.backup
 frontend/package-lock.json.backup
-.githooks/
