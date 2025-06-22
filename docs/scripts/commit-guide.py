@@ -641,13 +641,18 @@ class CommitGuide:
         try:
             time_data_file = self.project_root / ".git" / "last_commit_time_metrics.json"
             
-            # 處理 datetime 序列化問題
-            serializable_metrics = {}
-            for key, value in self.time_metrics.items():
-                if isinstance(value, datetime):
-                    serializable_metrics[key] = value.isoformat()
+            # 處理 datetime 序列化問題 - 遞歸處理嵌套結構
+            def make_serializable(obj):
+                if isinstance(obj, datetime):
+                    return obj.isoformat()
+                elif isinstance(obj, dict):
+                    return {k: make_serializable(v) for k, v in obj.items()}
+                elif isinstance(obj, list):
+                    return [make_serializable(item) for item in obj]
                 else:
-                    serializable_metrics[key] = value
+                    return obj
+            
+            serializable_metrics = make_serializable(self.time_metrics)
             
             with open(time_data_file, 'w', encoding='utf-8') as f:
                 json.dump(serializable_metrics, f, indent=2, ensure_ascii=False)
