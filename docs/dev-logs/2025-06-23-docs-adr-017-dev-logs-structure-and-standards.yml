@@ -1,0 +1,52 @@
+type: docs
+title: '[待補充 commit 訊息]'
+date: '2025-06-23'
+developer: AI + Human
+status: in_progress
+commit_hash: pending
+description: '[待補充 commit 描述]'
+timeline:
+- phase: 實現
+  duration: 6.5
+  ai_time: 5.2
+  human_time: 1.3
+  tasks:
+  - 創建 ADR-017-dev-logs-structure-and-standards.md
+  - 創建 docs-log-template.yml
+  - 創建 refactor-log-template.yml
+  - 更新 README.md
+  - 更新 bug-log-template.yml
+  - 更新 feature-log-template.yml
+  - 移除 reorganize-dev-logs.py
+metrics:
+  total_time_minutes: 6.5
+  ai_time_minutes: 5.2
+  human_time_minutes: 1.3
+  ai_percentage: 80.0
+  human_percentage: 20.0
+  files_added: 7
+  files_modified: 4
+  files_deleted: 1
+  time_calculation_method: file_timestamp_analysis
+  time_calculation_details:
+    start_time: '2025-06-23T03:46:30.421401'
+    end_time: '2025-06-23T03:53:02.261588'
+    file_count: 11
+changes:
+  added:
+  - docs/decisions/ADR-017-dev-logs-structure-and-standards.md
+  - docs/dev-logs/docs-log-template.yml
+  - docs/dev-logs/refactor-log-template.yml
+  - docs/handbook/commit-guide.md
+  - docs/handbook/development-logs-guide.md
+  - docs/handbook/improvements/improvement-2025-06-23-0352.md
+  - docs/handbook/improvements/improvement-2025-06-23-0352.yml
+  modified:
+  - docs/dev-logs/README.md
+  - docs/dev-logs/bug-log-template.yml
+  - docs/dev-logs/feature-log-template.yml
+  - docs/handbook/README.md
+  deleted:
+  - docs/scripts/reorganize-dev-logs.py
+pre_commit_generated: true
+generation_time: '2025-06-23T03:53:02.261794'

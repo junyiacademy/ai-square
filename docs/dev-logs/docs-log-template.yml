@@ -1,9 +1,9 @@
-# 功能開發日誌模板
-# 檔名格式: YYYY-MM-DD-HH-MM-SS-feature-brief-description.yml
-# 存放位置: docs/dev-logs/YYYY-MM-DD/features/
+# 文檔更新日誌模板
+# 檔名格式: YYYY-MM-DD-HH-MM-SS-docs-brief-description.yml
+# 存放位置: docs/dev-logs/YYYY-MM-DD/documentation/
 
-type: feature
-title: 功能的清晰標題（不含 conventional commit 前綴）
+type: docs
+title: 文檔更新的清晰標題（不含 conventional commit 前綴）
 date: 'YYYY-MM-DD'
 developer: AI + Human
 status: completed
@@ -11,10 +11,10 @@ commit_hash: xxxxxxxx
 
 # 簡短描述（包含 conventional commit 格式的完整 commit 訊息）
 description: |
-  feat(scope): brief description
+  docs(scope): brief description
   
-  - Detail point 1
-  - Detail point 2
+  - Updated documentation for X
+  - Added examples for Y
 
 # 時間追蹤（簡化為單一實現階段）
 timeline:
@@ -23,10 +23,11 @@ timeline:
     ai_time: 0.0       # AI 時間
     human_time: 0.0    # 人類時間
     tasks:
-      - 具體完成的任務 1
-      - 具體完成的任務 2
+      - 更新 README.md
+      - 撰寫 API 文檔
+      - 添加使用範例
 
-# 開發指標
+# 文檔指標
 metrics:
   total_time_minutes: 0.0        # 總時間（分鐘）
   ai_time_minutes: 0.0           # AI 時間
@@ -40,24 +41,20 @@ metrics:
   # 時間計算相關
   commit_timestamp: 'YYYY-MM-DDTHH:MM:SS'
   generation_timestamp: 'YYYY-MM-DDTHH:MM:SS.ffffff'
-  time_estimation_method: commit_based_file_timestamp_analysis  # 或 git_log_analysis, file_count_estimate
+  time_estimation_method: commit_based_file_timestamp_analysis
   is_real_time: false
-  time_data_quality: estimated    # high, medium, estimated
+  time_data_quality: estimated
 
 # 檔案變更
 changes:
   added:
-    - path/to/new/file.py
+    - docs/new-guide.md
   modified:
-    - path/to/modified/file.py
-  deleted:
-    - path/to/deleted/file.py
+    - README.md
+    - docs/existing-guide.md
+  deleted: []
 
 # 自動生成標記
 auto_generated: true
 generation_time: 'YYYY-MM-DDTHH:MM:SS.ffffff'
-pre_commit_generated: false  # 是否為 pre-commit 生成
-
-# 選填：如果經過 migration
-# migrated_at: 'YYYY-MM-DDTHH:MM:SS.ffffff'
-# time_confidence: high  # high, medium, low
+pre_commit_generated: false
