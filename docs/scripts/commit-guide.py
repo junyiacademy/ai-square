@@ -33,6 +33,8 @@ class CommitGuide:
         self.changes_summary = {}
         # 檢測是否在 CI 或非交互式環境
         self.is_ci = os.environ.get('CI', '').lower() in ('true', '1', 'yes')
+        # 時間追蹤相關
+        self.time_metrics = None
         
     def run_command(self, command: List[str], cwd=None) -> Tuple[int, str, str]:
         """執行命令並返回結果"""
@@ -46,6 +48,87 @@ class CommitGuide:
             return result.returncode, result.stdout, result.stderr
         except Exception as e:
             return 1, "", str(e)
+    
+    def get_time_metrics(self) -> Dict:
+        """獲取當前會話的時間指標"""
+        print(f"\n{Colors.BLUE}⏱️ 計算開發時間...{Colors.END}")
+        
+        try:
+            # 嘗試從時間追蹤系統獲取真實時間
+            time_tracker_path = self.project_root / "docs" / "scripts" / "time-tracker.py"
+            if time_tracker_path.exists():
+                import importlib.util
+                spec = importlib.util.spec_from_file_location("time_tracker", time_tracker_path)
+                time_tracker = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(time_tracker)
+                
+                # 嘗試獲取全域 tracker
+                tracker = time_tracker.get_tracker()
+                if tracker.session_start:
+                    # 有活躍的時間追蹤會話
+                    metrics = tracker.calculate_metrics()
+                    print(f"✅ 發現活躍時間追蹤會話")
+                    print(f"   總時間: {metrics['total_time_minutes']:.1f} 分鐘")
+                    print(f"   AI 時間: {metrics['ai_time_minutes']:.1f} 分鐘")
+                    print(f"   Human 時間: {metrics['human_time_minutes']:.1f} 分鐘")
+                    return metrics
+                    
+        except Exception as e:
+            print(f"⚠️ 無法讀取即時時間追蹤: {e}")
+        
+        # 使用事後時間分析作為後備方案
+        try:
+            analyzer_path = self.project_root / "docs" / "scripts" / "retrospective-time-analyzer.py"
+            if analyzer_path.exists():
+                import importlib.util
+                spec = importlib.util.spec_from_file_location("analyzer", analyzer_path)
+                analyzer_module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(analyzer_module)
+                
+                analyzer = analyzer_module.RetrospectiveTimeAnalyzer()
+                
+                # 分析最近的開發活動
+                result = analyzer.analyze_task_time(['development', 'commit', 'feature', 'fix'], hours=2)
+                
+                if result.get('total_time_minutes'):
+                    print(f"✅ 使用事後時間分析")
+                    print(f"   估算時間: {result['total_time_minutes']:.1f} 分鐘")
+                    print(f"   數據品質: {result.get('data_quality', 'unknown')}")
+                    return result
+                    
+        except Exception as e:
+            print(f"⚠️ 事後時間分析失敗: {e}")
+        
+        # 如果以上都失敗，使用基本估算
+        print(f"⚠️ 使用檔案變更數量估算")
+        
+        # 獲取變更統計
+        returncode, stdout, _ = self.run_command(["git", "diff", "--cached", "--numstat"])
+        if returncode == 0:
+            lines = stdout.strip().split('\n')
+            total_changes = len([line for line in lines if line.strip()])
+        else:
+            total_changes = 1
+        
+        # 簡單估算邏輯
+        if total_changes <= 3:
+            estimated_time = 30
+        elif total_changes <= 10:
+            estimated_time = 60
+        elif total_changes <= 20:
+            estimated_time = 120
+        else:
+            estimated_time = 180
+            
+        return {
+            'total_time_minutes': estimated_time,
+            'ai_time_minutes': int(estimated_time * 0.8),
+            'human_time_minutes': int(estimated_time * 0.2),
+            'time_estimation_method': 'file_count_estimate',
+            'is_real_time': False,
+            'data_quality': 'estimated',
+            'confidence_level': 'low'
+        }
     
     def print_header(self):
         """顯示標題"""
@@ -475,6 +558,9 @@ class CommitGuide:
         # 檢查一次性腳本
         self.check_one_time_scripts()
         
+        # 計算時間指標
+        self.time_metrics = self.get_time_metrics()
+        
         # 更新文檔
         self.update_feature_log()
         
@@ -486,7 +572,20 @@ class CommitGuide:
         
         # 如果提交成功，執行後續分析
         if commit_success:
+            # 保存時間指標供 post-commit 使用
+            if self.time_metrics:
+                self.save_time_metrics_for_post_commit()
             self.run_post_commit_tasks()
+    
+    def save_time_metrics_for_post_commit(self):
+        """保存時間指標供 post-commit-doc-gen.py 使用"""
+        try:
+            time_data_file = self.project_root / ".git" / "last_commit_time_metrics.json"
+            with open(time_data_file, 'w', encoding='utf-8') as f:
+                json.dump(self.time_metrics, f, indent=2, ensure_ascii=False)
+            print(f"{Colors.GREEN}📊 時間指標已保存供文檔生成使用{Colors.END}")
+        except Exception as e:
+            print(f"{Colors.YELLOW}⚠️ 無法保存時間指標: {e}{Colors.END}")
 
 if __name__ == "__main__":
     # 檢查是否為嚴格模式

@@ -47,6 +47,35 @@ gcloud-build-and-deploy-frontend: gcloud-build-frontend gcloud-deploy-frontend
 
 # === AI 引導開發系統 ===
 
+# ⏱️ 開始開發會話 (自動啟動時間追蹤)
+dev-ticket:
+	@echo "🎫 開始新的開發 Ticket"
+	@echo "功能名稱: $(TICKET)"
+	@if [ -z "$(TICKET)" ]; then \
+		echo "❌ 請指定 Ticket 名稱: make dev-ticket TICKET=feature-name"; \
+		exit 1; \
+	fi
+	@echo "⏱️ 啟動時間追蹤..."
+	@python3 -c "import importlib.util; import sys; spec = importlib.util.spec_from_file_location('time_tracker', 'docs/scripts/time-tracker.py'); time_tracker = importlib.util.module_from_spec(spec); sys.modules['time_tracker'] = time_tracker; spec.loader.exec_module(time_tracker); tracker = time_tracker.start_tracking_session('$(TICKET)'); tracker.start_operation('ai', 'starting development ticket: $(TICKET)'); print(f'✅ 時間追蹤已啟動！Ticket: $(TICKET)')"
+	@echo "📋 開發規則："
+	@echo "   1. 一次只做一件事"
+	@echo "   2. 直到 commit 結束才算完成"
+	@echo "   3. 使用 make commit-ticket 結束此 Ticket"
+	@echo ""
+	@echo "🎯 開始開發 $(TICKET)..."
+
+# ✅ 完成開發 Ticket (自動結束時間追蹤)
+commit-ticket:
+	@echo "🎫 完成開發 Ticket"
+	@echo "📊 結束時間追蹤並生成報告..."
+	@python3 -c "import importlib.util; import sys; spec = importlib.util.spec_from_file_location('time_tracker', 'docs/scripts/time-tracker.py'); time_tracker = importlib.util.module_from_spec(spec); sys.modules['time_tracker'] = time_tracker; spec.loader.exec_module(time_tracker); metrics = time_tracker.end_tracking_session(); print('✅ 時間追蹤已結束')"
+	@echo "🤖 執行智能提交..."
+	@git add -A
+	@python3 docs/scripts/commit-guide.py
+	@echo "📝 生成開發文檔..."
+	@python3 docs/scripts/post-commit-doc-gen.py
+	@echo "✅ Ticket 完成！"
+
 # 🚀 快速開發模式 (原型/概念驗證)
 quick-dev:
 	@echo "🚀 快速開發模式 - 最小文檔要求"
@@ -298,6 +327,10 @@ help:
 	@echo "  make frontend          啟動前端開發伺服器"
 	@echo "  make backend           啟動後端開發伺服器"
 	@echo "  make build-frontend    建置前端專案"
+	@echo ""
+	@echo "🎫 Ticket 開發流程:"
+	@echo "  make dev-ticket TICKET=xxx  開始新的開發 Ticket (自動時間追蹤)"
+	@echo "  make commit-ticket          完成 Ticket 並提交 (自動結束追蹤)"
 	@echo ""
 	@echo "🤖 AI 協作開發 (分級模式):"
 	@echo "  make quick-dev FEATURE=xxx   快速開發模式 (原型)"

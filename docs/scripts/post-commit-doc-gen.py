@@ -106,6 +106,20 @@ class PostCommitDocGenerator:
     
     def _get_real_time_data(self) -> Optional[Dict]:
         """檢查是否有真實時間追蹤數據"""
+        
+        # 優先檢查 commit-guide 保存的時間指標
+        commit_time_file = self.project_root / ".git" / "last_commit_time_metrics.json"
+        if commit_time_file.exists():
+            try:
+                with open(commit_time_file, 'r', encoding='utf-8') as f:
+                    time_data = json.load(f)
+                print("✅ 發現 commit-guide 時間數據")
+                # 使用完後刪除暫存檔案
+                commit_time_file.unlink()
+                return time_data
+            except Exception as e:
+                print(f"⚠️  讀取 commit 時間數據失敗: {e}")
+        
         # 檢查時間日誌目錄
         today = self.commit_info['time'].strftime('%Y-%m-%d')
         sessions_dir = self.project_root / "docs" / "time-logs" / "sessions" / today
@@ -116,13 +130,13 @@ class PostCommitDocGenerator:
             if session_files:
                 latest_session = max(session_files, key=lambda x: x.stat().st_mtime)
                 try:
-                    import json
                     with open(latest_session, 'r', encoding='utf-8') as f:
                         session_data = json.load(f)
                     
                     # 檢查時間是否接近當前 commit
                     session_metrics = session_data.get('session_metrics', {})
                     if session_metrics.get('is_real_time', False):
+                        print("✅ 發現時間追蹤會話數據")
                         return session_metrics
                 except Exception as e:
                     print(f"⚠️  讀取時間日誌失敗: {e}")
