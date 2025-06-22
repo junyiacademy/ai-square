@@ -371,6 +371,34 @@ class CommitGuide:
             print(f"{Colors.YELLOW}⚠️  無法執行反思分析: {e}{Colors.END}")
             # 不影響整體流程
     
+    def run_post_commit_doc_gen(self):
+        """執行 post-commit 文檔生成"""
+        print(f"\n{Colors.BLUE}📝 生成開發文檔...{Colors.END}")
+        try:
+            doc_gen_script = Path(__file__).parent / "post-commit-doc-gen.py"
+            result = subprocess.run([sys.executable, str(doc_gen_script)], 
+                                  capture_output=True, text=True)
+            
+            if result.returncode == 0:
+                print(f"{Colors.GREEN}✅ 文檔生成完成{Colors.END}")
+                # 顯示生成的文件
+                if "已生成開發日誌:" in result.stdout:
+                    for line in result.stdout.split('\n'):
+                        if "已生成" in line:
+                            print(f"   {line.strip()}")
+            else:
+                print(f"{Colors.YELLOW}⚠️  文檔生成遇到問題: {result.stderr}{Colors.END}")
+        except Exception as e:
+            print(f"{Colors.YELLOW}⚠️  無法生成文檔: {e}{Colors.END}")
+    
+    def run_post_commit_tasks(self):
+        """執行所有 post-commit 任務"""
+        # 1. 生成文檔
+        self.run_post_commit_doc_gen()
+        
+        # 2. 執行反思分析
+        self.run_reflection_analysis()
+    
     def run(self, strict=False):
         """執行提交引導流程"""
         self.print_header()
@@ -414,9 +442,9 @@ class CommitGuide:
         # 確認並提交
         commit_success = self.confirm_and_commit(commit_msg)
         
-        # 如果提交成功，執行反思分析
+        # 如果提交成功，執行後續分析
         if commit_success:
-            self.run_reflection_analysis()
+            self.run_post_commit_tasks()
 
 if __name__ == "__main__":
     # 檢查是否為嚴格模式

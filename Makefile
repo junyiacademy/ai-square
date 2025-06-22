@@ -254,6 +254,11 @@ improve:
 	@echo "🔧 執行自動改進..."
 	@python3 docs/scripts/auto-improve.py || echo "⚠️ 請先執行 make reflect"
 
+# 📝 為最新提交生成文檔
+doc-gen:
+	@echo "📝 為最新提交生成文檔..."
+	@python3 docs/scripts/post-commit-doc-gen.py
+
 # === 清理指令 ===
 
 # 🧹 清理建置產物

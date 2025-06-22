@@ -1,0 +1,53 @@
+type: feature
+title: 自動化文檔生成系統
+date: 2025-06-23
+developer: Claude
+status: in_progress
+
+description: |
+  使用者提出了重要的痛點：commit 後沒有相應的開發日誌、故事和決策記錄。
+  需要建立一個自動化系統，在開發過程中主動生成這些文檔。
+
+timeline:
+  - phase: 問題發現
+    duration: 10
+    ai_time: 5
+    human_time: 5
+    tasks:
+      - 使用者發現 6/23 沒有相關的 logs、stories、decisions
+      - 提出每次 commit 後應該自動補上文檔的需求
+      
+  - phase: 方案設計
+    duration: 30
+    ai_time: 30
+    human_time: 0
+    tasks:
+      - 設計 post-commit hook 系統
+      - 規劃 AI 對話分析功能
+      - 整合現有提交流程
+
+metrics:
+  total_time: 40
+  ai_percentage: 87.5
+  human_percentage: 12.5
+  
+problems_encountered:
+  - description: 開發過程中生成了代碼但沒有對應文檔
+    severity: high
+    solution: 建立自動文檔生成系統
+    
+key_decisions:
+  - 在 commit 後自動生成開發日誌
+  - 分析 git commit 訊息和變更內容
+  - 從 AI 對話中提取洞察和決策
+  - 主動生成故事和改進建議
+
+user_feedback: |
+  "像是我現在這個要求就是一個開發過程上的困擾
+  以後能不能減少我要去檢查 commit 了，但是沒有文件的問題
+  我們把這個流程優化一下"
+
+next_steps:
+  - 實現 post-commit-doc-gen.py 腳本
+  - 整合到 commit-guide.py 流程
+  - 添加 AI 對話分析功能

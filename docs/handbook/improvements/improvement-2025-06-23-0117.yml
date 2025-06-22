@@ -1,0 +1,21 @@
+improvements:
+  documentation: []
+  process: []
+  tooling:
+  - action: enhance_commit_guide
+    issue: 測試覆蓋率只有 0%
+    suggestion: 加入 pre-commit hook 檢查覆蓋率
+  training: []
+patterns:
+  ai_effectiveness:
+    average: 91.0
+    trend: improving
+  common_issues: {}
+  time_trends: {}
+problems:
+- coverage: 0
+  severity: high
+  target: 80
+  type: low_coverage
+source_log: 2025-06-22-homepage-login.yml
+timestamp: 2025-06-23-0117
