@@ -114,7 +114,18 @@ commit-quick:
 commit-smart:
 	@echo "🤖 智能提交模式..."
 	@git add -A
-	@python3 docs/scripts/commit-guide.py
+	@python3 docs/scripts/smart-commit.py
+
+# 🔧 AI 自動修復
+ai-fix:
+	@echo "🤖 AI 自動修復..."
+	@python3 docs/scripts/ai-fix.py
+
+# 🤖 自動提交（非交互式）
+commit-auto:
+	@echo "🤖 自動提交模式（非交互式）..."
+	@git add -A
+	@python3 docs/scripts/auto-commit.py
 
 # 📚 文檔完整性檢查
 docs-check:

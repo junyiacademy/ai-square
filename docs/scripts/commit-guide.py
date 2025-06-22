@@ -26,10 +26,13 @@ class Colors:
 
 class CommitGuide:
     def __init__(self):
-        self.project_root = Path(__file__).parent.parent
+        # 修正路徑：從 docs/scripts/ 往上兩層到專案根目錄
+        self.project_root = Path(__file__).parent.parent.parent
         self.checks_passed = []
         self.checks_failed = []
         self.changes_summary = {}
+        # 檢測是否在 CI 或非交互式環境
+        self.is_ci = os.environ.get('CI', '').lower() in ('true', '1', 'yes')
         
     def run_command(self, command: List[str], cwd=None) -> Tuple[int, str, str]:
         """執行命令並返回結果"""
@@ -95,9 +98,15 @@ class CommitGuide:
         """執行 ESLint 檢查"""
         print(f"\n{Colors.BLUE}🔍 執行 ESLint 檢查...{Colors.END}")
         
+        # 檢查是否有 frontend 目錄
+        frontend_path = self.project_root / "frontend"
+        if not frontend_path.exists():
+            print(f"{Colors.YELLOW}⚠️ 沒有 frontend 目錄，跳過 ESLint 檢查{Colors.END}")
+            return True
+        
         code, stdout, stderr = self.run_command(
             ["npm", "run", "lint"],
-            cwd=self.project_root / "frontend"
+            cwd=frontend_path
         )
         
         if code == 0:
@@ -115,9 +124,15 @@ class CommitGuide:
         """執行 TypeScript 檢查"""
         print(f"\n{Colors.BLUE}🔍 執行 TypeScript 檢查...{Colors.END}")
         
+        # 檢查是否有 frontend 目錄
+        frontend_path = self.project_root / "frontend"
+        if not frontend_path.exists():
+            print(f"{Colors.YELLOW}⚠️ 沒有 frontend 目錄，跳過 TypeScript 檢查{Colors.END}")
+            return True
+        
         code, stdout, stderr = self.run_command(
             ["npx", "tsc", "--noEmit"],
-            cwd=self.project_root / "frontend"
+            cwd=frontend_path
         )
         
         if code == 0:
@@ -133,9 +148,15 @@ class CommitGuide:
         """執行建置檢查"""
         print(f"\n{Colors.BLUE}🔨 執行建置檢查...{Colors.END}")
         
+        # 檢查是否有 frontend 目錄
+        frontend_path = self.project_root / "frontend"
+        if not frontend_path.exists():
+            print(f"{Colors.YELLOW}⚠️ 沒有 frontend 目錄，跳過建置檢查{Colors.END}")
+            return True
+        
         code, stdout, stderr = self.run_command(
             ["npm", "run", "build"],
-            cwd=self.project_root / "frontend"
+            cwd=frontend_path
         )
         
         if code == 0:
@@ -181,18 +202,19 @@ class CommitGuide:
         
         # 檢查今天是否有功能日誌
         today = datetime.now().strftime("%Y-%m-%d")
-        feature_logs = list(Path(self.project_root / "docs/features").glob(f"{today}*.yml"))
+        feature_logs_dir = self.project_root / "docs/dev-logs"
+        
+        if not feature_logs_dir.exists():
+            print(f"{Colors.YELLOW}⚠️ 開發日誌目錄不存在{Colors.END}")
+            return True
+            
+        feature_logs = list(feature_logs_dir.glob(f"{today}*.yml"))
         
         if not feature_logs:
-            print(f"{Colors.YELLOW}⚠️ 今天沒有功能日誌，是否要創建？{Colors.END}")
-            create = input("創建新的功能日誌? (y/n): ").lower()
-            if create == 'y':
-                feature_name = input("功能名稱: ")
-                # 這裡可以自動創建一個基礎的功能日誌
-                print(f"{Colors.GREEN}✅ 已創建功能日誌模板{Colors.END}")
-                return True
+            print(f"{Colors.YELLOW}⚠️ 今天沒有開發日誌{Colors.END}")
+            print(f"{Colors.YELLOW}💡 提示: 可以手動創建日誌於 docs/dev-logs/{today}-type-name.yml{Colors.END}")
         else:
-            print(f"{Colors.GREEN}✅ 找到 {len(feature_logs)} 個今日功能日誌{Colors.END}")
+            print(f"{Colors.GREEN}✅ 找到 {len(feature_logs)} 個今日開發日誌{Colors.END}")
         
         return True
     
@@ -268,17 +290,12 @@ class CommitGuide:
             print(f"\n{Colors.RED}❌ 失敗的檢查:{Colors.END}")
             for check in self.checks_failed:
                 print(f"  • {check}")
+            print(f"\n{Colors.YELLOW}💡 提示: 請修復錯誤後再提交，或使用 'make ai-fix' 獲取修復建議{Colors.END}")
+            return False
         
-        # 詢問用戶
-        print(f"\n{Colors.CYAN}選擇操作:{Colors.END}")
-        print("1. 使用建議的提交訊息")
-        print("2. 編輯提交訊息")
-        print("3. 取消提交")
-        
-        choice = input("\n請選擇 (1/2/3): ")
-        
-        if choice == '1':
-            # 執行提交
+        # 如果在 CI 環境，自動使用建議的提交訊息
+        if self.is_ci:
+            print(f"\n{Colors.CYAN}🤖 CI 模式：自動使用建議的提交訊息{Colors.END}")
             code, stdout, stderr = self.run_command(["git", "commit", "-m", commit_msg])
             if code == 0:
                 print(f"\n{Colors.GREEN}✅ 提交成功！{Colors.END}")
@@ -286,27 +303,59 @@ class CommitGuide:
             else:
                 print(f"\n{Colors.RED}❌ 提交失敗: {stderr}{Colors.END}")
                 return False
+        
+        # 檢查是否在交互式環境
+        try:
+            # 詢問用戶
+            print(f"\n{Colors.CYAN}選擇操作:{Colors.END}")
+            print("1. 使用建議的提交訊息")
+            print("2. 編輯提交訊息")
+            print("3. 取消提交")
+            
+            choice = input("\n請選擇 (1/2/3): ")
+            
+            if choice == '1':
+                # 執行提交
+                code, stdout, stderr = self.run_command(["git", "commit", "-m", commit_msg])
+                if code == 0:
+                    print(f"\n{Colors.GREEN}✅ 提交成功！{Colors.END}")
+                    return True
+                else:
+                    print(f"\n{Colors.RED}❌ 提交失敗: {stderr}{Colors.END}")
+                    return False
+                    
+            elif choice == '2':
+                # 編輯訊息
+                new_msg = input("\n請輸入新的提交訊息: ")
+                code, stdout, stderr = self.run_command(["git", "commit", "-m", new_msg])
+                if code == 0:
+                    print(f"\n{Colors.GREEN}✅ 提交成功！{Colors.END}")
+                    return True
+                else:
+                    print(f"\n{Colors.RED}❌ 提交失敗: {stderr}{Colors.END}")
+                    return False
+                    
+            else:
+                print(f"\n{Colors.YELLOW}⚠️ 已取消提交{Colors.END}")
+                return False
                 
-        elif choice == '2':
-            # 編輯訊息
-            new_msg = input("\n請輸入新的提交訊息: ")
-            code, stdout, stderr = self.run_command(["git", "commit", "-m", new_msg])
+        except (EOFError, KeyboardInterrupt):
+            # 非交互式環境或用戶中斷
+            print(f"\n{Colors.YELLOW}⚠️ 非交互式環境，自動使用建議的提交訊息{Colors.END}")
+            code, stdout, stderr = self.run_command(["git", "commit", "-m", commit_msg])
             if code == 0:
                 print(f"\n{Colors.GREEN}✅ 提交成功！{Colors.END}")
                 return True
             else:
                 print(f"\n{Colors.RED}❌ 提交失敗: {stderr}{Colors.END}")
                 return False
-                
-        else:
-            print(f"\n{Colors.YELLOW}⚠️ 已取消提交{Colors.END}")
-            return False
     
     def run_reflection_analysis(self):
         """執行開發反思分析"""
         print(f"\n{Colors.BLUE}🤔 執行開發反思分析...{Colors.END}")
         try:
-            reflection_script = self.project_root / "docs" / "scripts" / "dev-reflection.py"
+            # 修正路徑問題
+            reflection_script = Path(__file__).parent / "dev-reflection.py"
             result = subprocess.run([sys.executable, str(reflection_script)], 
                                   capture_output=True, text=True)
             
