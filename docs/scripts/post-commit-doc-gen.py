@@ -148,15 +148,22 @@ class PostCommitDocGenerator:
         
         # 1. 首先嘗試獲取真實時間數據
         real_time = self._get_real_time_data()
-        if real_time:
+        if real_time and real_time.get('total_time_minutes', 0) > 0:
             print("✅ 發現真實時間追蹤數據")
+            # 使用 round 而不是 int，避免小於 1 的時間變成 0
+            total_time = real_time.get('total_time_minutes', 30)
+            ai_time = real_time.get('ai_time_minutes', total_time * 0.8)
+            human_time = real_time.get('human_time_minutes', total_time * 0.2)
+            
             return {
-                'total': int(real_time.get('total_time_minutes', 30)),
-                'ai': int(real_time.get('ai_time_minutes', 24)),
-                'human': int(real_time.get('human_time_minutes', 6)),
-                'source': 'real_tracking',
+                'total': round(total_time, 1),  # 保留小數點
+                'ai': round(ai_time, 1),
+                'human': round(human_time, 1),
+                'source': real_time.get('time_estimation_method', 'real_tracking'),
                 'is_real': True
             }
+        elif real_time:
+            print("⚠️ 時間數據無效（總時間為 0）")
         
         # 2. 沒有真實時間，發出警告並使用估算
         print("⚠️  沒有發現真實時間追蹤數據，使用檔案數量估算")
@@ -175,8 +182,8 @@ class PostCommitDocGenerator:
             time_spent = 180  # 3小時
         
         # AI 通常占 80% 的時間
-        ai_time = int(time_spent * 0.8)
-        human_time = time_spent - ai_time
+        ai_time = round(time_spent * 0.8, 1)
+        human_time = round(time_spent * 0.2, 1)
         
         return {
             'total': time_spent,
