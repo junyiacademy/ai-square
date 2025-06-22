@@ -1,0 +1,68 @@
+type: feature
+title: 'feat(docs): implement one-time script cleanup policy and meaningful story
+  generation'
+date: '2025-06-23'
+developer: AI + Human
+status: completed
+commit_hash: ab69b47b
+description: 'feat(docs): implement one-time script cleanup policy and meaningful
+  story generation
+
+
+  - Add ADR-008: Meaningful story generation rules with 60-point scoring system
+
+  - Add ADR-009: One-time script cleanup policy for maintaining clean codebase
+
+  - Enhance post-commit-doc-gen.py with story value assessment
+
+  - Add one-time script detection in commit-guide.py
+
+  - Delete completed one-time scripts (rename-legacy-files.py, emergency-fix-utility.py)
+
+  - Remove 4 meaningless auto-generated stories, replaced with high-value breakthrough
+  story
+
+  - Establish automated cleanup workflow for future one-time scripts
+
+
+  🤖 Generated with [Claude Code](https://claude.ai/code)
+
+
+  Co-Authored-By: Claude <noreply@anthropic.com>'
+timeline:
+- phase: 實現
+  duration: 120
+  ai_time: 96
+  human_time: 24
+  tasks:
+  - 創建 ADR-008-meaningful-story-generation-rules.md
+  - 創建 ADR-009-one-time-script-cleanup-policy.md
+  - 創建 2025-06-23-ai-development-workflow-automation-breakthrough.md
+  - 更新 commit-guide.py
+  - 更新 post-commit-doc-gen.py
+  - 移除 emergency-fix-utility.py
+  - 移除 rename-legacy-files.py
+metrics:
+  total_time: 120
+  ai_percentage: 80.0
+  human_percentage: 20.0
+  files_added: 3
+  files_modified: 2
+  files_deleted: 6
+changes:
+  added:
+  - docs/decisions/ADR-008-meaningful-story-generation-rules.md
+  - docs/decisions/ADR-009-one-time-script-cleanup-policy.md
+  - docs/stories/collaboration-insights/2025-06-23-ai-development-workflow-automation-breakthrough.md
+  modified:
+  - docs/scripts/commit-guide.py
+  - docs/scripts/post-commit-doc-gen.py
+  deleted:
+  - docs/scripts/emergency-fix-utility.py
+  - docs/scripts/rename-legacy-files.py
+  - docs/stories/features/2025-06-23-core-system-enhancement-story.md
+  - docs/stories/features/2025-06-23-documentation-system-story.md
+  - docs/stories/features/2025-06-23-file-naming-conventions-story.md
+  - docs/stories/features/2025-06-23-filename-generation-improvement-story.md
+auto_generated: true
+generation_time: '2025-06-23T02:07:59.044867'
