@@ -1,5 +1,5 @@
 type: feature
-title: 'feat(core): implement smart commit analysis and githooks integration'
+title: implement smart commit analysis and githooks integration
 date: '2025-06-23'
 developer: AI + Human
 status: completed

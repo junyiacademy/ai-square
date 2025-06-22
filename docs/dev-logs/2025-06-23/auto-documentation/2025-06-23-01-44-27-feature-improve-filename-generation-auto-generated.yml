@@ -1,5 +1,5 @@
 type: feature
-title: 'feat(docs): improve filename generation for auto-generated documentation'
+title: improve filename generation for auto-generated documentation
 date: '2025-06-23'
 developer: AI + Human
 status: completed

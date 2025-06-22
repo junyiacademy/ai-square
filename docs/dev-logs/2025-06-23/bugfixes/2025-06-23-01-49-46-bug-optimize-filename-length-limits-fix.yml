@@ -1,5 +1,5 @@
 type: bug
-title: 'fix(docs): optimize filename length limits and fix truncation issues'
+title: optimize filename length limits and fix truncation issues
 date: '2025-06-23'
 developer: AI + Human
 status: completed

@@ -1,6 +1,5 @@
 type: feature
-title: 'feat(docs): implement one-time script cleanup policy and meaningful story
-  generation'
+title: implement one-time script cleanup policy and meaningful story generation
 date: '2025-06-23'
 developer: AI + Human
 status: completed

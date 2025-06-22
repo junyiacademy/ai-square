@@ -1,0 +1,35 @@
+type: docs
+title: '[待補充 commit 訊息]'
+date: '2025-06-23'
+developer: AI + Human
+status: in_progress
+commit_hash: pending
+description: '[待補充 commit 描述]'
+timeline:
+- phase: 實現
+  duration: 5
+  ai_time: 4.0
+  human_time: 1.0
+  tasks:
+  - 創建 reorganize-dev-logs.py
+metrics:
+  total_time_minutes: 5
+  ai_time_minutes: 4.0
+  human_time_minutes: 1.0
+  ai_percentage: 80.0
+  human_percentage: 20.0
+  files_added: 1
+  files_modified: 0
+  files_deleted: 0
+  time_calculation_method: deletion_estimate
+  time_calculation_details:
+    start_time: null
+    end_time: null
+    file_count: 0
+changes:
+  added:
+  - docs/scripts/reorganize-dev-logs.py
+  modified: []
+  deleted: []
+pre_commit_generated: true
+generation_time: '2025-06-23T03:52:35.895803'

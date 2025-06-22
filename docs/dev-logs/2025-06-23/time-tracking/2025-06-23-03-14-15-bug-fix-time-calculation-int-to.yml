@@ -1,5 +1,5 @@
 type: bug
-title: 'fix(docs): fix time calculation int() to round() conversion issue'
+title: fix time calculation int() to round() conversion issue
 date: '2025-06-23'
 developer: AI + Human
 status: completed

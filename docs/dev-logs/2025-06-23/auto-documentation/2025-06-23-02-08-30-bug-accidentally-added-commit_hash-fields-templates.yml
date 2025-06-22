@@ -1,5 +1,5 @@
 type: bug
-title: 'fix(templates): remove accidentally added commit_hash fields from templates'
+title: remove accidentally added commit_hash fields from templates
 date: '2025-06-23'
 developer: AI + Human
 status: completed

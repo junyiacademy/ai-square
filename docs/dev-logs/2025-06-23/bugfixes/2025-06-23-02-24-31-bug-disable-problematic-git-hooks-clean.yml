@@ -1,5 +1,5 @@
 type: bug
-title: 'fix(hooks): resolve infinite loop in git hooks and clean up configuration'
+title: disable problematic git hooks and clean up configuration
 date: 2025-06-23
 developer: AI + Human
 status: completed
