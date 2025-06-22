@@ -141,14 +141,50 @@ class PostCommitDocGenerator:
         commit_title = self.commit_info['message'].split('\n')[0]
         # 移除 conventional commit 前綴，提取核心描述
         clean_title = re.sub(r'^[^:]+:\s*', '', commit_title)
+        
+        # 智能關鍵詞映射
+        keyword_mapping = {
+            'implement': 'implementation',
+            'add': 'addition', 
+            'update': 'enhancement',
+            'fix': 'bugfix',
+            'refactor': 'refactoring',
+            'improve': 'improvement',
+            'enhance': 'enhancement',
+            'create': 'creation',
+            'setup': 'configuration',
+            'config': 'configuration',
+            'ui': 'user-interface',
+            'api': 'application-interface',
+            'db': 'database',
+            'auth': 'authentication',
+            'docs': 'documentation',
+            'test': 'testing',
+            'feat': 'feature',
+            'perf': 'performance'
+        }
+        
         # 將描述轉換為檔名友好格式
         name_part = re.sub(r'[^\w\s-]', '', clean_title)  # 移除特殊字符
         name_part = re.sub(r'\s+', '-', name_part.strip())  # 空格轉連字符
-        name_part = name_part.lower()[:30]  # 轉小寫並限制長度
+        name_part = name_part.lower()
         
-        # 如果提取的名稱太短，使用 scope 替代
-        if len(name_part) < 3:
-            name_part = f"{scope}-update"
+        # 應用關鍵詞映射
+        for short, full in keyword_mapping.items():
+            name_part = re.sub(r'\b' + short + r'\b', full, name_part)
+        
+        # 確保名稱有意義且不會截斷
+        if len(name_part) < 15:  # 太短，需要補充
+            name_part = f"{scope}-{name_part}" if name_part else f"{scope}-enhancement"
+        elif len(name_part) > 50:  # 太長，智能縮減但保持清晰
+            # 保留關鍵詞，移除冗餘詞語
+            redundant_words = ['for', 'and', 'with', 'the', 'of', 'in', 'to', 'from']
+            words = name_part.split('-')
+            filtered_words = [w for w in words if w not in redundant_words]
+            name_part = '-'.join(filtered_words)[:50]
+        
+        # 最終檢查：確保不以數字或特殊字符結尾
+        name_part = re.sub(r'-+$', '', name_part)  # 移除末尾的連字符
         
         filename = f"{date_str}-{commit_type}-{name_part}.yml"
         filepath = self.project_root / "docs" / "dev-logs" / filename
@@ -239,18 +275,52 @@ class PostCommitDocGenerator:
         else:
             category = 'collaboration-insights'
         
-        # 生成清楚的檔名
+        # 生成清楚的檔名（使用與開發日誌相同的邏輯）
         commit_title = self.commit_info['message'].split('\n')[0]
         clean_title = re.sub(r'^[^:]+:\s*', '', commit_title)
+        
+        # 應用關鍵詞映射
+        keyword_mapping = {
+            'implement': 'implementation',
+            'add': 'addition', 
+            'update': 'enhancement',
+            'fix': 'bugfix',
+            'refactor': 'refactoring',
+            'improve': 'improvement',
+            'enhance': 'enhancement',
+            'create': 'creation',
+            'setup': 'configuration',
+            'config': 'configuration',
+            'ui': 'user-interface',
+            'api': 'application-interface',
+            'db': 'database',
+            'auth': 'authentication',
+            'docs': 'documentation',
+            'test': 'testing',
+            'feat': 'feature',
+            'perf': 'performance'
+        }
+        
         name_part = re.sub(r'[^\w\s-]', '', clean_title)
         name_part = re.sub(r'\s+', '-', name_part.strip())
-        name_part = name_part.lower()[:30]
+        name_part = name_part.lower()
         
-        if len(name_part) < 3:
+        # 應用關鍵詞映射
+        for short, full in keyword_mapping.items():
+            name_part = re.sub(r'\b' + short + r'\b', full, name_part)
+        
+        # 確保名稱有意義
+        if len(name_part) < 15:
             scope = self._extract_commit_scope()
-            name_part = f"{scope}-update"
+            name_part = f"{scope}-{name_part}" if name_part else f"{scope}-enhancement"
+        elif len(name_part) > 45:  # 故事檔名稍短，為 -story 留空間
+            redundant_words = ['for', 'and', 'with', 'the', 'of', 'in', 'to', 'from']
+            words = name_part.split('-')
+            filtered_words = [w for w in words if w not in redundant_words]
+            name_part = '-'.join(filtered_words)[:45]
         
-        filename = f"{date_str}-{name_part}.md"
+        name_part = re.sub(r'-+$', '', name_part)
+        filename = f"{date_str}-{name_part}-story.md"
         filepath = self.project_root / "docs" / "stories" / category / filename
         
         # 生成故事內容

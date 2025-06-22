@@ -1,0 +1,37 @@
+type: feature
+title: 'feat(docs): improve filename generation for auto-generated documentation'
+date: '2025-06-23'
+developer: AI + Human
+status: completed
+commit_hash: 0b5f1a81
+description: 'feat(docs): improve filename generation for auto-generated documentation
+
+
+  Use meaningful names extracted from commit messages instead of commit hashes
+
+  - Extract key words from commit messages for filenames
+
+  - Keep commit hash in file content for reference
+
+  - Limit filename length to 30 characters for readability'
+timeline:
+- phase: 實現
+  duration: 30
+  ai_time: 24
+  human_time: 6
+  tasks:
+  - 更新 post-commit-doc-gen.py
+metrics:
+  total_time: 30
+  ai_percentage: 80.0
+  human_percentage: 20.0
+  files_added: 0
+  files_modified: 1
+  files_deleted: 0
+changes:
+  added: []
+  modified:
+  - docs/scripts/post-commit-doc-gen.py
+  deleted: []
+auto_generated: true
+generation_time: '2025-06-23T01:44:27.945969'

@@ -264,6 +264,11 @@ analyze:
 	@echo "🔍 分析變更並建議提交策略..."
 	@python3 docs/scripts/smart-commit-analyzer.py
 
+# 📝 檢查檔案命名規範
+check-naming:
+	@echo "📝 檢查檔案命名規範..."
+	@python3 docs/scripts/rename-legacy-files.py
+
 # === 清理指令 ===
 
 # 🧹 清理建置產物
