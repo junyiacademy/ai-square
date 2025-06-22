@@ -1,0 +1,52 @@
+type: feature
+title: 'feat(docs): update 8 files'
+date: '2025-06-23'
+developer: AI + Human
+status: completed
+commit_hash: 8e9a9a84
+description: 'feat(docs): update 8 files
+
+
+  Added: ADR-010-real-time-tracking-system.md, ADR-011-time-log-lifecycle-management.md,
+  2025-06-23-docs-addition-remaining-auto-generated-development.yml
+
+  Modified: .gitignore, post-commit-doc-gen.py'
+timeline:
+- phase: 實現
+  duration: 60
+  ai_time: 48
+  human_time: 12
+  tasks:
+  - 創建 ADR-010-real-time-tracking-system.md
+  - 創建 ADR-011-time-log-lifecycle-management.md
+  - 創建 2025-06-23-docs-addition-remaining-auto-generated-development.yml
+  - 更新 .gitignore
+  - 更新 post-commit-doc-gen.py
+metrics:
+  total_time_minutes: 60
+  ai_time_minutes: 48
+  human_time_minutes: 12
+  ai_percentage: 80.0
+  human_percentage: 20.0
+  files_added: 7
+  files_modified: 2
+  files_deleted: 0
+  commit_timestamp: '2025-06-23T02:20:48'
+  generation_timestamp: '2025-06-23T02:20:49.064827'
+  time_estimation_method: file_count_based_estimate
+  is_real_time: false
+changes:
+  added:
+  - docs/decisions/ADR-010-real-time-tracking-system.md
+  - docs/decisions/ADR-011-time-log-lifecycle-management.md
+  - docs/dev-logs/2025-06-23-docs-addition-remaining-auto-generated-development.yml
+  - docs/scripts/time-tracker.py
+  - docs/time-logs/README.md
+  - docs/time-logs/aggregated/daily/2025-06-23-summary.yml
+  - docs/time-logs/session_20250623_021145.json
+  modified:
+  - .gitignore
+  - docs/scripts/post-commit-doc-gen.py
+  deleted: []
+auto_generated: true
+generation_time: '2025-06-23T02:20:49.064830'
