@@ -143,8 +143,64 @@ class PostCommitDocGenerator:
         
         return None
     
+    def _analyze_commit_time(self) -> Dict:
+        """基於 ADR-016 的 commit-based 時間分析"""
+        try:
+            # 1. 獲取當前 commit 的變更檔案
+            code, stdout, _ = self._run_command(["git", "diff-tree", "--no-commit-id", "--name-only", "-r", "HEAD"])
+            if code != 0:
+                return {}
+                
+            changed_files = [f.strip() for f in stdout.strip().split('\n') if f.strip()]
+            
+            # 2. 獲取每個檔案的修改時間戳
+            file_timestamps = []
+            for file_path in changed_files:
+                full_path = self.project_root / file_path
+                if full_path.exists():
+                    mtime = datetime.fromtimestamp(full_path.stat().st_mtime)
+                    file_timestamps.append(mtime)
+            
+            if not file_timestamps:
+                return {}
+            
+            # 3. 計算時間範圍
+            start_time = min(file_timestamps)
+            end_time = max(file_timestamps)
+            duration_minutes = (end_time - start_time).total_seconds() / 60
+            
+            # 4. 如果時間範圍太小，使用 commit 間隔
+            if duration_minutes < 1:
+                # 獲取上一個 commit 的時間
+                code, stdout, _ = self._run_command(["git", "log", "-2", "--pretty=%ct"])
+                if code == 0:
+                    timestamps = stdout.strip().split('\n')
+                    if len(timestamps) >= 2:
+                        current_commit_time = datetime.fromtimestamp(int(timestamps[0]))
+                        last_commit_time = datetime.fromtimestamp(int(timestamps[1]))
+                        commit_interval = (current_commit_time - last_commit_time).total_seconds() / 60
+                        
+                        if 0 < commit_interval < 180:  # 最多 3 小時
+                            duration_minutes = commit_interval
+            
+            # 5. 驗證合理性
+            if duration_minutes < 0.5:
+                duration_minutes = len(changed_files) * 2  # 每個檔案 2 分鐘
+            elif duration_minutes > 180:
+                return {}  # 太長，不合理
+            
+            return {
+                'total_time_minutes': round(duration_minutes, 1),
+                'ai_time_minutes': round(duration_minutes * 0.8, 1),
+                'human_time_minutes': round(duration_minutes * 0.2, 1)
+            }
+            
+        except Exception as e:
+            print(f"⚠️ Commit 時間分析失敗: {e}")
+            return {}
+    
     def _estimate_time_spent(self) -> Dict[str, int]:
-        """優先使用真實時間，否則估算（並警告）"""
+        """優先使用真實時間，其次 commit-based 分析，最後才估算"""
         
         # 1. 首先嘗試獲取真實時間數據
         real_time = self._get_real_time_data()
@@ -165,14 +221,38 @@ class PostCommitDocGenerator:
         elif real_time:
             print("⚠️ 時間數據無效（總時間為 0）")
         
-        # 2. 沒有真實時間，發出警告並使用估算
-        print("⚠️  沒有發現真實時間追蹤數據，使用檔案數量估算")
-        print("💡 建議：下次開發前執行 start_tracking_session()")
+        # 2. 使用 commit-based 時間分析（ADR-016）
+        print("📊 使用 Commit 邊界時間分析...")
+        commit_time = self._analyze_commit_time()
+        if commit_time and commit_time.get('total_time_minutes', 0) > 0:
+            print(f"✅ Commit 時間分析完成: {commit_time['total_time_minutes']} 分鐘")
+            return {
+                'total': commit_time['total_time_minutes'],
+                'ai': commit_time.get('ai_time_minutes', commit_time['total_time_minutes'] * 0.8),
+                'human': commit_time.get('human_time_minutes', commit_time['total_time_minutes'] * 0.2),
+                'source': 'commit_based_analysis',
+                'is_real': False
+            }
+        
+        # 3. 最後才使用檔案數量估算
+        print("⚠️  無法進行 commit 時間分析，使用檔案數量估算")
+        print("💡 建議：檢查 git 配置和檔案權限")
         
         total_changes = self.commit_info['total_changes']
         
-        # 簡單的時間估算規則（保持原邏輯）
-        if total_changes <= 3:
+        # 更合理的時間估算規則
+        if total_changes == 1:
+            # 單檔案修改：根據 commit 類型估算
+            commit_type = self._analyze_commit_type()
+            if commit_type == 'bug':
+                time_spent = 5  # bug 修復通常較快
+            elif commit_type == 'docs':
+                time_spent = 3  # 文檔更新更快
+            else:
+                time_spent = 10  # 一般單檔案修改
+        elif total_changes <= 3:
+            time_spent = 15  # 15分鐘
+        elif total_changes <= 5:
             time_spent = 30  # 30分鐘
         elif total_changes <= 10:
             time_spent = 60  # 1小時
@@ -193,14 +273,87 @@ class PostCommitDocGenerator:
             'is_real': False
         }
     
-    def generate_dev_log(self) -> str:
-        """生成開發日誌"""
+    def update_or_generate_dev_log(self) -> str:
+        """更新現有日誌或生成新日誌"""
         commit_type = self._analyze_commit_type()
         scope = self._extract_commit_scope()
         time_info = self._estimate_time_spent()
         
         # 生成更清楚的檔名
         date_str = self.commit_info['time'].strftime('%Y-%m-%d')
+        
+        # 先檢查是否有 pre-commit 生成的日誌
+        dev_logs_dir = self.project_root / "docs" / "dev-logs"
+        existing_logs = list(dev_logs_dir.glob(f"{date_str}-*.yml"))
+        
+        # 查找 pre-commit 生成的日誌
+        pre_commit_log = None
+        for log_file in existing_logs:
+            try:
+                with open(log_file, 'r', encoding='utf-8') as f:
+                    content = yaml.safe_load(f)
+                    if content.get('pre_commit_generated') and content.get('status') == 'in_progress':
+                        pre_commit_log = log_file
+                        print(f"✅ 發現 pre-commit 生成的日誌: {log_file.name}")
+                        break
+            except Exception:
+                continue
+        
+        if pre_commit_log:
+            # 更新現有日誌
+            return self._update_existing_log(pre_commit_log, commit_type, scope, time_info)
+        else:
+            # 生成新日誌
+            return self._generate_new_log(commit_type, scope, time_info, date_str)
+    
+    def _update_existing_log(self, log_file: Path, commit_type: str, scope: str, time_info: Dict) -> str:
+        """更新現有的 pre-commit 日誌"""
+        try:
+            with open(log_file, 'r', encoding='utf-8') as f:
+                log_content = yaml.safe_load(f)
+            
+            # 更新資訊
+            log_content['status'] = 'completed'
+            log_content['commit_hash'] = self.commit_hash
+            log_content['title'] = self.commit_info['message'].split('\n')[0]
+            log_content['description'] = self.commit_info['message']
+            
+            # 如果有更準確的時間資訊，更新它
+            if time_info.get('source') != 'file_count_estimate' or not log_content.get('metrics'):
+                log_content['timeline'][0]['duration'] = time_info['total']
+                log_content['timeline'][0]['ai_time'] = time_info['ai']
+                log_content['timeline'][0]['human_time'] = time_info['human']
+                
+                log_content['metrics']['total_time_minutes'] = time_info['total']
+                log_content['metrics']['ai_time_minutes'] = time_info['ai']
+                log_content['metrics']['human_time_minutes'] = time_info['human']
+                log_content['metrics']['time_estimation_method'] = time_info.get('source', 'post_commit_update')
+                log_content['metrics']['is_real_time'] = time_info.get('is_real', False)
+            
+            # 更新時間戳
+            log_content['metrics']['commit_timestamp'] = self.commit_info['time'].isoformat()
+            log_content['metrics']['post_commit_update_timestamp'] = datetime.now().isoformat()
+            
+            # 更新檔案變更資訊
+            log_content['changes'] = self.commit_info['changes']
+            log_content['metrics']['files_added'] = len(self.commit_info['changes']['added'])
+            log_content['metrics']['files_modified'] = len(self.commit_info['changes']['modified'])
+            log_content['metrics']['files_deleted'] = len(self.commit_info['changes']['deleted'])
+            
+            # 寫回檔案
+            with open(log_file, 'w', encoding='utf-8') as f:
+                yaml.dump(log_content, f, allow_unicode=True, sort_keys=False)
+            
+            print(f"✅ 已更新開發日誌: {log_file}")
+            return str(log_file)
+            
+        except Exception as e:
+            print(f"⚠️ 無法更新現有日誌: {e}")
+            # 如果更新失敗，生成新的
+            return self._generate_new_log(commit_type, scope, time_info, log_file.parent.name)
+    
+    def _generate_new_log(self, commit_type: str, scope: str, time_info: Dict, date_str: str) -> str:
+        """生成新的開發日誌"""
         
         # 從 commit 訊息中提取關鍵詞作為檔名
         commit_title = self.commit_info['message'].split('\n')[0]
@@ -551,8 +704,8 @@ class PostCommitDocGenerator:
         print(f"💬 訊息: {first_line}")
         print(f"📊 變更: {self.commit_info['total_changes']} 個檔案\n")
         
-        # 生成開發日誌
-        dev_log = self.generate_dev_log()
+        # 更新或生成開發日誌
+        dev_log = self.update_or_generate_dev_log()
         
         # 根據條件生成故事
         story = self.generate_story()

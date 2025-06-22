@@ -1,0 +1,39 @@
+type: docs
+title: '[待補充 commit 訊息]'
+date: '2025-06-23'
+developer: AI + Human
+status: in_progress
+commit_hash: pending
+description: '[待補充 commit 描述]'
+timeline:
+- phase: 實現
+  duration: 5.3
+  ai_time: 4.2
+  human_time: 1.1
+  tasks:
+  - 創建 pre-commit-doc-gen.py
+  - 更新 commit-guide.py
+  - 更新 post-commit-doc-gen.py
+metrics:
+  total_time_minutes: 5.3
+  ai_time_minutes: 4.2
+  human_time_minutes: 1.1
+  ai_percentage: 80.0
+  human_percentage: 20.0
+  files_added: 1
+  files_modified: 2
+  files_deleted: 0
+  time_calculation_method: file_timestamp_analysis
+  time_calculation_details:
+    start_time: '2025-06-23T03:20:46.830036'
+    end_time: '2025-06-23T03:26:02.628008'
+    file_count: 3
+changes:
+  added:
+  - docs/scripts/pre-commit-doc-gen.py
+  modified:
+  - docs/scripts/commit-guide.py
+  - docs/scripts/post-commit-doc-gen.py
+  deleted: []
+pre_commit_generated: true
+generation_time: '2025-06-23T03:26:02.628209'

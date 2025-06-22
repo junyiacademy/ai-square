@@ -552,25 +552,45 @@ class CommitGuide:
                 print(f"   - {script}")
             print(f"   💡 提示：根據 ADR-009，確認任務完成後請刪除這些腳本")
 
+    def run_pre_commit_doc_gen(self):
+        """執行 pre-commit 文檔生成"""
+        print(f"\n{Colors.BLUE}📝 生成開發文檔 (Pre-commit)...{Colors.END}")
+        try:
+            doc_gen_script = Path(__file__).parent / "pre-commit-doc-gen.py"
+            result = subprocess.run([sys.executable, str(doc_gen_script)], 
+                                  capture_output=True, text=True)
+            
+            if result.returncode == 0:
+                print(f"{Colors.GREEN}✅ Pre-commit 文檔生成完成{Colors.END}")
+                # 顯示生成的文件
+                if "已生成 pre-commit 開發日誌:" in result.stdout:
+                    for line in result.stdout.split('\n'):
+                        if "已生成" in line or "✅" in line:
+                            print(f"   {line.strip()}")
+            else:
+                print(f"{Colors.YELLOW}⚠️  Pre-commit 文檔生成遇到問題: {result.stderr}{Colors.END}")
+        except Exception as e:
+            print(f"{Colors.YELLOW}⚠️  無法生成 pre-commit 文檔: {e}{Colors.END}")
+    
     def run_post_commit_doc_gen(self):
         """執行 post-commit 文檔生成"""
-        print(f"\n{Colors.BLUE}📝 生成開發文檔...{Colors.END}")
+        print(f"\n{Colors.BLUE}📝 更新開發文檔 (Post-commit)...{Colors.END}")
         try:
             doc_gen_script = Path(__file__).parent / "post-commit-doc-gen.py"
             result = subprocess.run([sys.executable, str(doc_gen_script)], 
                                   capture_output=True, text=True)
             
             if result.returncode == 0:
-                print(f"{Colors.GREEN}✅ 文檔生成完成{Colors.END}")
+                print(f"{Colors.GREEN}✅ Post-commit 文檔更新完成{Colors.END}")
                 # 顯示生成的文件
-                if "已生成開發日誌:" in result.stdout:
+                if "已更新" in result.stdout or "已生成" in result.stdout:
                     for line in result.stdout.split('\n'):
-                        if "已生成" in line:
+                        if "已更新" in line or "已生成" in line:
                             print(f"   {line.strip()}")
             else:
-                print(f"{Colors.YELLOW}⚠️  文檔生成遇到問題: {result.stderr}{Colors.END}")
+                print(f"{Colors.YELLOW}⚠️  Post-commit 文檔更新遇到問題: {result.stderr}{Colors.END}")
         except Exception as e:
-            print(f"{Colors.YELLOW}⚠️  無法生成文檔: {e}{Colors.END}")
+            print(f"{Colors.YELLOW}⚠️  無法更新文檔: {e}{Colors.END}")
     
     def run_post_commit_tasks(self):
         """執行所有 post-commit 任務"""
@@ -622,6 +642,9 @@ class CommitGuide:
         
         # 更新文檔
         self.update_feature_log()
+        
+        # 生成 pre-commit 文檔（在 commit 前生成，包含在 commit 中）
+        self.run_pre_commit_doc_gen()
         
         # 生成提交訊息
         commit_msg = self.generate_commit_message()
