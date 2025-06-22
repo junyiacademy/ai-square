@@ -253,15 +253,94 @@ class PostCommitDocGenerator:
         return tasks
     
     def should_generate_story(self) -> bool:
-        """判斷是否應該生成故事"""
-        # 生成故事的條件
-        conditions = [
-            self.commit_info['total_changes'] > 10,  # 大量變更
-            'feat' in self.commit_info['message'].lower(),  # 新功能
-            'fix' in self.commit_info['message'].lower() and self.commit_info['total_changes'] > 5,  # 重要修復
-            'refactor' in self.commit_info['message'].lower() and self.commit_info['total_changes'] > 8,  # 大重構
+        """嚴格判斷是否應該生成故事"""
+        story_score = self._calculate_story_score()
+        
+        # 分數低於 60 不生成故事
+        if story_score < 60:
+            return False
+            
+        # 檢查是否為無意義的更新
+        if self._is_meaningless_update():
+            return False
+            
+        return True
+    
+    def _calculate_story_score(self) -> int:
+        """計算故事價值分數 (0-100)"""
+        score = 0
+        message = self.commit_info['message'].lower()
+        
+        # 技術複雜度評分 (0-30分)
+        if self.commit_info['total_changes'] > 15:
+            score += 15
+        elif self.commit_info['total_changes'] > 8:
+            score += 10
+        elif self.commit_info['total_changes'] > 5:
+            score += 5
+            
+        # 涉及多個系統
+        affected_systems = set()
+        for file in self.commit_info['changes']['added'] + self.commit_info['changes']['modified']:
+            if 'frontend' in file:
+                affected_systems.add('frontend')
+            elif 'backend' in file:
+                affected_systems.add('backend')
+            elif 'docs' in file:
+                affected_systems.add('docs')
+                
+        if len(affected_systems) > 1:
+            score += 10
+            
+        # 業務影響評分 (0-30分)
+        business_keywords = ['feature', 'user', 'api', 'ui', 'auth', 'login', 'integrate']
+        for keyword in business_keywords:
+            if keyword in message:
+                score += 8
+                break
+                
+        # 性能或架構改進
+        if any(word in message for word in ['optimize', 'performance', 'architecture', 'refactor']):
+            score += 15
+            
+        # 開發洞察評分 (0-40分)
+        insight_keywords = ['implement', 'solve', 'breakthrough', 'challenge', 'discovery', 'integration']
+        for keyword in insight_keywords:
+            if keyword in message:
+                score += 15
+                break
+                
+        # 系統性改進
+        if any(word in message for word in ['system', 'workflow', 'automation', 'process']):
+            score += 20
+            
+        # 複雜問題解決
+        if any(word in message for word in ['fix complex', 'resolve issue', 'debug', 'troubleshoot']):
+            score += 25
+            
+        return min(score, 100)  # 最高 100 分
+    
+    def _is_meaningless_update(self) -> bool:
+        """檢查是否為無意義的更新"""
+        message = self.commit_info['message'].lower()
+        
+        # 無意義關鍵詞
+        meaningless_keywords = [
+            'format', 'style', 'cleanup', 'typo', 'rename', 'move', 
+            'update version', 'bump', 'merge', 'sync', 'delete',
+            'filename', 'naming', 'convention', 'documentation system',
+            'file naming', 'auto-generated'
         ]
-        return any(conditions)
+        
+        for keyword in meaningless_keywords:
+            if keyword in message:
+                return True
+                
+        # 如果只是文檔相關的小更新
+        if 'docs' in message and self.commit_info['total_changes'] < 5:
+            return True
+            
+        return False
     
     def generate_story(self) -> Optional[str]:
         """生成開發故事"""

@@ -378,6 +378,38 @@ class CommitGuide:
             print(f"{Colors.YELLOW}⚠️  無法執行反思分析: {e}{Colors.END}")
             # 不影響整體流程
     
+    def check_one_time_scripts(self):
+        """檢查是否有應該清理的一次性腳本"""
+        scripts_dir = Path(__file__).parent
+        one_time_patterns = [
+            r'rename.*legacy',
+            r'emergency.*fix',
+            r'temp.*fix',
+            r'cleanup.*\w+',
+            r'migrate.*\w+',
+            r'convert.*\w+'
+        ]
+        
+        import re
+        potential_cleanup = []
+        
+        for script_file in scripts_dir.glob("*.py"):
+            # 跳過核心腳本
+            if script_file.name in ['commit-guide.py', 'post-commit-doc-gen.py', 'dev-reflection.py', 'analytics.py', 'smart-commit-analyzer.py', 'auto-improve.py']:
+                continue
+                
+            script_name = script_file.name.lower()
+            for pattern in one_time_patterns:
+                if re.search(pattern, script_name):
+                    potential_cleanup.append(script_file.name)
+                    break
+        
+        if potential_cleanup:
+            print(f"\n{Colors.YELLOW}⚠️  發現可能需要清理的一次性腳本：{Colors.END}")
+            for script in potential_cleanup:
+                print(f"   - {script}")
+            print(f"   💡 提示：根據 ADR-009，確認任務完成後請刪除這些腳本")
+
     def run_post_commit_doc_gen(self):
         """執行 post-commit 文檔生成"""
         print(f"\n{Colors.BLUE}📝 生成開發文檔...{Colors.END}")
@@ -439,6 +471,9 @@ class CommitGuide:
             
             if not self.check_tests():
                 print(f"\n{Colors.YELLOW}⚠️ 建議補充測試{Colors.END}")
+        
+        # 檢查一次性腳本
+        self.check_one_time_scripts()
         
         # 更新文檔
         self.update_feature_log()
