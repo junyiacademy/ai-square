@@ -1,0 +1,17 @@
+#!/bin/bash
+# AI Square Post-commit Hook
+# 自動生成開發文檔
+
+echo "📝 Post-commit: 生成開發文檔..."
+
+# 檢查是否有 Python 3
+if ! command -v python3 &> /dev/null; then
+    echo "⚠️  需要 Python 3 來生成文檔，跳過文檔生成"
+    exit 0
+fi
+
+# 執行文檔生成
+python3 docs/scripts/post-commit-doc-gen.py
+
+echo "✅ Post-commit 處理完成"
+exit 0

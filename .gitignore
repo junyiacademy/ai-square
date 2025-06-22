@@ -41,3 +41,4 @@ docs/metrics-report.md
 # Dependencies
 package-lock.json.backup
 frontend/package-lock.json.backup
+.githooks/

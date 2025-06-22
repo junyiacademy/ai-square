@@ -259,6 +259,11 @@ doc-gen:
 	@echo "📝 為最新提交生成文檔..."
 	@python3 docs/scripts/post-commit-doc-gen.py
 
+# 🔍 智能分析變更並建議提交分組
+analyze:
+	@echo "🔍 分析變更並建議提交策略..."
+	@python3 docs/scripts/smart-commit-analyzer.py
+
 # === 清理指令 ===
 
 # 🧹 清理建置產物

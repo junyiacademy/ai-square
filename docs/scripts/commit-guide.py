@@ -198,7 +198,7 @@ class CommitGuide:
     
     def update_feature_log(self) -> bool:
         """更新功能日誌"""
-        print(f"\n{Colors.BLUE}📝 檢查功能日誌...{Colors.END}")
+        print(f"\n{Colors.BLUE}📝 檢查並自動補齊文檔...{Colors.END}")
         
         # 檢查今天是否有功能日誌
         today = datetime.now().strftime("%Y-%m-%d")
@@ -210,11 +210,18 @@ class CommitGuide:
             
         feature_logs = list(feature_logs_dir.glob(f"{today}*.yml"))
         
-        if not feature_logs:
-            print(f"{Colors.YELLOW}⚠️ 今天沒有開發日誌{Colors.END}")
-            print(f"{Colors.YELLOW}💡 提示: 可以手動創建日誌於 docs/dev-logs/{today}-type-name.yml{Colors.END}")
-        else:
+        # 檢查是否有代碼變更需要文檔
+        has_code_changes = any(
+            f.endswith(('.py', '.ts', '.tsx', '.js', '.jsx')) 
+            for f in self.changes_summary['modified'] + self.changes_summary['added']
+        )
+        
+        if not feature_logs and has_code_changes:
+            print(f"{Colors.BLUE}🤖 偵測到代碼變更，將在提交後自動生成開發日誌{Colors.END}")
+        elif feature_logs:
             print(f"{Colors.GREEN}✅ 找到 {len(feature_logs)} 個今日開發日誌{Colors.END}")
+        else:
+            print(f"{Colors.GREEN}✅ 無需額外文檔{Colors.END}")
         
         return True
     
