@@ -283,11 +283,19 @@ class PostCommitDocGenerator:
         date_str = self.commit_info['time'].strftime('%Y-%m-%d')
         
         # 先檢查是否有 pre-commit 生成的日誌
-        dev_logs_dir = self.project_root / "docs" / "dev-logs"
-        existing_logs = list(dev_logs_dir.glob(f"{date_str}-*.yml"))
+        # 檢查日期資料夾和根目錄（兼容舊格式）
+        date_folder = self.project_root / "docs" / "dev-logs" / date_str
+        root_folder = self.project_root / "docs" / "dev-logs"
+        
+        existing_logs = []
+        if date_folder.exists():
+            existing_logs.extend(list(date_folder.glob(f"{date_str}-*.yml")))
+        # 也檢查根目錄以兼容舊格式
+        existing_logs.extend(list(root_folder.glob(f"{date_str}-*.yml")))
         
         # 查找 pre-commit 生成的日誌
         pre_commit_log = None
+        print(f"🔍 檢查 {len(existing_logs)} 個現有日誌檔案...")
         for log_file in existing_logs:
             try:
                 with open(log_file, 'r', encoding='utf-8') as f:
@@ -296,17 +304,21 @@ class PostCommitDocGenerator:
                         pre_commit_log = log_file
                         print(f"✅ 發現 pre-commit 生成的日誌: {log_file.name}")
                         break
-            except Exception:
+            except Exception as e:
+                print(f"⚠️  無法讀取 {log_file.name}: {e}")
                 continue
         
         if pre_commit_log:
             # 更新現有日誌
+            print(f"📝 更新現有日誌: {pre_commit_log.name}")
             return self._update_existing_log(pre_commit_log, commit_type, scope, time_info)
         else:
             # 生成新日誌
+            print(f"📝 未找到 pre-commit 日誌，生成新日誌...")
             return self._generate_new_log(commit_type, scope, time_info, date_str)
     
     def _update_existing_log(self, log_file: Path, commit_type: str, scope: str, time_info: Dict) -> str:
+        print(f"📝 開始更新日誌: {log_file.name}")
         """更新現有的 pre-commit 日誌"""
         try:
             with open(log_file, 'r', encoding='utf-8') as f:
@@ -410,8 +422,14 @@ class PostCommitDocGenerator:
         # 最終檢查：確保不以數字或特殊字符結尾
         name_part = re.sub(r'-+$', '', name_part)  # 移除末尾的連字符
         
-        filename = f"{date_str}-{commit_type}-{name_part}.yml"
-        filepath = self.project_root / "docs" / "dev-logs" / filename
+        # 生成包含時間戳的檔名
+        time_str = self.commit_info['time'].strftime('%H-%M-%S')
+        filename = f"{date_str}-{time_str}-{commit_type}-{name_part}.yml"
+        
+        # 確保日期資料夾存在
+        date_folder = self.project_root / "docs" / "dev-logs" / date_str
+        date_folder.mkdir(parents=True, exist_ok=True)
+        filepath = date_folder / filename
         
         # 準備日誌內容
         log_content = {
@@ -714,7 +732,10 @@ class PostCommitDocGenerator:
         
         # 如果有更新文檔，自動執行補充 commit
         if dev_log:
+            print(f"📝 準備自動提交更新的文檔...")
             self._auto_commit_updates(dev_log, story)
+        else:
+            print(f"ℹ️  沒有需要更新的文檔")
         
         # 提示下一步
         print(f"\n💡 提示：")

@@ -696,12 +696,15 @@ class CommitGuide:
     def run(self, strict=False):
         """執行提交引導流程"""
         self.print_header()
+        print(f"\n{Colors.YELLOW}[步驟 1/8] 初始化...{Colors.END}")
         
         # 檢查 Git 狀態
+        print(f"\n{Colors.YELLOW}[步驟 2/8] 檢查 Git 狀態...{Colors.END}")
         if not self.check_git_status():
             return
         
         # 執行各項檢查
+        print(f"\n{Colors.YELLOW}[步驟 3/8] 執行程式碼檢查...{Colors.END}")
         all_passed = True
         
         # 必要檢查
@@ -728,25 +731,31 @@ class CommitGuide:
                 print(f"\n{Colors.YELLOW}⚠️ 建議補充測試{Colors.END}")
         
         # 檢查一次性腳本
+        print(f"\n{Colors.YELLOW}[步驟 4/8] 檢查一次性腳本...{Colors.END}")
         self.check_one_time_scripts()
         
         # 計算時間指標
+        print(f"\n{Colors.YELLOW}[步驟 5/8] 計算開發時間...{Colors.END}")
         self.time_metrics = self.get_time_metrics()
         
         # 更新文檔
         self.update_feature_log()
         
         # 生成 pre-commit 文檔（在 commit 前生成，包含在 commit 中）
+        print(f"\n{Colors.YELLOW}[步驟 6/8] 生成 Pre-commit 文檔...{Colors.END}")
         self.run_pre_commit_doc_gen()
         
         # 生成提交訊息
+        print(f"\n{Colors.YELLOW}[步驟 7/8] 生成提交訊息...{Colors.END}")
         commit_msg = self.generate_commit_message()
         
         # 確認並提交
+        print(f"\n{Colors.YELLOW}[步驟 8/8] 確認並提交...{Colors.END}")
         commit_success = self.confirm_and_commit(commit_msg)
         
         # 如果提交成功，執行後續分析
         if commit_success:
+            print(f"\n{Colors.YELLOW}[Post-commit] 執行後續任務...{Colors.END}")
             # 保存時間指標供 post-commit 使用
             if self.time_metrics:
                 self.save_time_metrics_for_post_commit()

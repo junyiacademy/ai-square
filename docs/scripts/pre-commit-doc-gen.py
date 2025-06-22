@@ -140,7 +140,10 @@ class PreCommitDocGenerator:
         # 生成檔名
         task_desc = self._generate_task_description()
         filename = f"{date_str}-{commit_type}-{task_desc}.yml"
-        filepath = self.project_root / "docs" / "dev-logs" / filename
+        # 確保日期資料夾存在
+        date_folder = self.project_root / "docs" / "dev-logs" / date_str
+        date_folder.mkdir(parents=True, exist_ok=True)
+        filepath = date_folder / filename
         
         # 準備檔案變更資訊
         changes = {
