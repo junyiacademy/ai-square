@@ -104,11 +104,53 @@ class PostCommitDocGenerator:
             return match.group(1)
         return 'general'
     
+    def _get_real_time_data(self) -> Optional[Dict]:
+        """檢查是否有真實時間追蹤數據"""
+        # 檢查時間日誌目錄
+        today = self.commit_info['time'].strftime('%Y-%m-%d')
+        sessions_dir = self.project_root / "docs" / "time-logs" / "sessions" / today
+        
+        if sessions_dir.exists():
+            # 查找最近的會話日誌
+            session_files = list(sessions_dir.glob("session_*.json"))
+            if session_files:
+                latest_session = max(session_files, key=lambda x: x.stat().st_mtime)
+                try:
+                    import json
+                    with open(latest_session, 'r', encoding='utf-8') as f:
+                        session_data = json.load(f)
+                    
+                    # 檢查時間是否接近當前 commit
+                    session_metrics = session_data.get('session_metrics', {})
+                    if session_metrics.get('is_real_time', False):
+                        return session_metrics
+                except Exception as e:
+                    print(f"⚠️  讀取時間日誌失敗: {e}")
+        
+        return None
+    
     def _estimate_time_spent(self) -> Dict[str, int]:
-        """估算開發時間（基於變更大小）"""
+        """優先使用真實時間，否則估算（並警告）"""
+        
+        # 1. 首先嘗試獲取真實時間數據
+        real_time = self._get_real_time_data()
+        if real_time:
+            print("✅ 發現真實時間追蹤數據")
+            return {
+                'total': int(real_time.get('total_time_minutes', 30)),
+                'ai': int(real_time.get('ai_time_minutes', 24)),
+                'human': int(real_time.get('human_time_minutes', 6)),
+                'source': 'real_tracking',
+                'is_real': True
+            }
+        
+        # 2. 沒有真實時間，發出警告並使用估算
+        print("⚠️  沒有發現真實時間追蹤數據，使用檔案數量估算")
+        print("💡 建議：下次開發前執行 start_tracking_session()")
+        
         total_changes = self.commit_info['total_changes']
         
-        # 簡單的時間估算規則
+        # 簡單的時間估算規則（保持原邏輯）
         if total_changes <= 3:
             time_spent = 30  # 30分鐘
         elif total_changes <= 10:
@@ -125,7 +167,9 @@ class PostCommitDocGenerator:
         return {
             'total': time_spent,
             'ai': ai_time,
-            'human': human_time
+            'human': human_time,
+            'source': 'file_count_estimate',
+            'is_real': False
         }
     
     def generate_dev_log(self) -> str:
@@ -223,9 +267,10 @@ class PostCommitDocGenerator:
                 # 時間戳記錄
                 'commit_timestamp': self.commit_info['time'].isoformat(),
                 'generation_timestamp': datetime.now().isoformat(),
-                # 標記估算方式
-                'time_estimation_method': 'file_count_based_estimate',  # 標明這是估算值
-                'is_real_time': False  # 明確標示這不是真實時間追蹤
+                # 動態標記時間來源
+                'time_estimation_method': time_info.get('source', 'file_count_estimate'),
+                'is_real_time': time_info.get('is_real', False),
+                'time_data_quality': 'high' if time_info.get('is_real', False) else 'estimated'
             },
             'changes': self.commit_info['changes'],
             'auto_generated': True,
