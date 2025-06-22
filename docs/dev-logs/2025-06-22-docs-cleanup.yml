@@ -1,0 +1,73 @@
+type: docs
+title: 文檔結構清理與優化
+date: 2025-06-22
+developer: AI
+status: completed
+
+description: |
+  根據改進建議優化文檔結構，清理未使用的檔案和資料夾
+
+timeline:
+  - phase: 改進實作
+    duration: 20
+    ai_time: 20
+    human_time: 0
+    tasks:
+      - 創建 quick-reference.md 快速參考卡
+      - 創建 tutorials/onboarding.md 新人導覽
+      - 創建 examples/feature-development-example.md 範例
+    
+  - phase: 清理分析
+    duration: 10
+    ai_time: 10
+    human_time: 0
+    tasks:
+      - 掃描 docs 目錄結構
+      - 識別未使用或重複的檔案
+      - 評估保留或刪除
+    
+  - phase: 執行清理
+    duration: 10
+    ai_time: 10
+    human_time: 0
+    tasks:
+      - 刪除 docs/README.md (過時)
+      - 刪除 docs/ai-tasks/ (已整合到 PLAYBOOK)
+      - 刪除 docs/metrics/ (空目錄)
+      - 移動 docs/architecture/ 至 archive/planning/
+      - 更新 PLAYBOOK.md 文檔結構
+
+metrics:
+  total_time: 40
+  ai_percentage: 100
+  human_percentage: 0
+  files_created: 3
+  files_deleted: 4
+  directories_removed: 2
+  
+deliverables:
+  - type: doc
+    files: 
+      - docs/quick-reference.md
+      - docs/tutorials/onboarding.md
+      - docs/examples/feature-development-example.md
+  - type: cleanup
+    removed:
+      - docs/README.md
+      - docs/ai-tasks/
+      - docs/metrics/
+    moved:
+      - from: docs/architecture/
+        to: docs/archive/planning/architecture/
+
+improvements:
+  - 新開發者有清晰的入門指南
+  - 快速參考卡加速日常開發
+  - 完整範例展示標準流程
+  - 減少檔案重複和混淆
+  - 文檔結構更加精簡
+
+learnings:
+  - 定期清理文檔很重要
+  - 保持文檔與實際流程同步
+  - 範例比長篇說明更有效

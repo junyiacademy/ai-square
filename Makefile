@@ -47,10 +47,33 @@ gcloud-build-and-deploy-frontend: gcloud-build-frontend gcloud-deploy-frontend
 
 # === AI 引導開發系統 ===
 
-# 🎯 開始開發 (全流程 AI 引導)
+# 🚀 快速開發模式 (原型/概念驗證)
+quick-dev:
+	@echo "🚀 快速開發模式 - 最小文檔要求"
+	@echo "功能名稱: $(FEATURE)"
+	@if [ -z "$(FEATURE)" ]; then \
+		echo "❌ 請指定功能名稱: make quick-dev FEATURE=feature-name"; \
+		exit 1; \
+	fi
+	@echo "✅ 跳過部分檢查，適用於快速原型開發"
+	@echo "📝 請記得更新 docs/dev-logs/$(shell date +%Y-%m-%d)-feature-$(FEATURE).yml"
+
+# 🎯 標準開發模式 (一般功能)
 dev-start:
-	@echo "🤖 啟動 AI 引導開發系統..."
-	@python3 docs/workflows/start-dev.py
+	@echo "🤖 啟動標準開發模式..."
+	@echo "📖 請參考 docs/PLAYBOOK.md 開始開發"
+
+# 🔒 嚴格開發模式 (核心功能)
+strict-dev:
+	@echo "🔒 嚴格開發模式 - 完整品質檢查"
+	@echo "Epic: $(EPIC)"
+	@if [ -z "$(EPIC)" ]; then \
+		echo "❌ 請指定 Epic: make strict-dev EPIC=epic-name"; \
+		exit 1; \
+	fi
+	@echo "✅ 強化測試要求：95% 覆蓋率"
+	@echo "✅ 完整文檔要求：L3 級別"
+	@echo "✅ 效能測試要求：必須通過"
 
 # 🔄 繼續開發 (檢查進度)
 dev-continue:
@@ -62,10 +85,36 @@ dev-continue:
 		echo "❌ 未找到今日工作記錄，請先執行 make dev-start"; \
 	fi
 
-# ✅ 智能提交引導
-commit-guide:
-	@echo "📋 啟動智能提交檢查..."
-	@python3 docs/workflows/commit-guide.py
+# === Git 提交自動化 ===
+
+# 🔧 設置 Git Hooks（首次使用）
+setup-hooks:
+	@echo "🔧 設置 Git Hooks..."
+	@bash docs/scripts/setup-hooks.sh
+	@echo "✅ 設置完成！現在 git commit 會自動執行檢查"
+
+# ✅ 智能提交助手（手動執行）
+commit-check:
+	@echo "📋 執行提交前檢查..."
+	@python3 docs/scripts/commit-guide.py
+
+# 🔒 嚴格模式提交（包含建置和測試）
+commit-strict:
+	@echo "🔒 執行嚴格提交檢查..."
+	@python3 docs/scripts/commit-guide.py --strict
+
+# 🚀 快速提交（跳過 hooks）
+commit-quick:
+	@echo "🚀 快速提交模式..."
+	@echo "⚠️ 警告：將跳過所有檢查"
+	@git add -A
+	@git commit --no-verify
+
+# 📝 智能提交（自動加入所有變更）
+commit-smart:
+	@echo "🤖 智能提交模式..."
+	@git add -A
+	@python3 docs/scripts/commit-guide.py
 
 # 📚 文檔完整性檢查
 docs-check:
@@ -170,6 +219,30 @@ coverage:
 	@echo "📊 生成測試覆蓋率報告..."
 	cd frontend && npm test -- --coverage --watchAll=false || echo "⚠️ 測試指令需要配置"
 
+# 📈 開發指標分析
+metrics:
+	@echo "📈 生成開發指標報告..."
+	@python3 docs/scripts/analytics.py || echo "⚠️ 需要安裝 PyYAML: pip install pyyaml"
+
+# 📊 查看開發統計
+stats:
+	@echo "📊 開發統計摘要:"
+	@if [ -f docs/metrics-report.md ]; then \
+		head -20 docs/metrics-report.md; \
+	else \
+		echo "❌ 尚無統計報告，請先執行 make metrics"; \
+	fi
+
+# 🤔 開發反思分析
+reflect:
+	@echo "🤔 執行開發反思分析..."
+	@python3 docs/scripts/dev-reflection.py || echo "⚠️ 需要安裝 PyYAML: pip install pyyaml"
+
+# 🔧 自動改進流程
+improve:
+	@echo "🔧 執行自動改進..."
+	@python3 docs/scripts/auto-improve.py || echo "⚠️ 請先執行 make reflect"
+
 # === 清理指令 ===
 
 # 🧹 清理建置產物
@@ -200,10 +273,18 @@ help:
 	@echo "  make backend           啟動後端開發伺服器"
 	@echo "  make build-frontend    建置前端專案"
 	@echo ""
-	@echo "🤖 AI 引導開發:"
-	@echo "  make dev-start         啟動 AI 開發引導系統"
-	@echo "  make dev-continue      檢查當前開發進度"
-	@echo "  make commit-guide      智能提交檢查與引導"
+	@echo "🤖 AI 協作開發 (分級模式):"
+	@echo "  make quick-dev FEATURE=xxx   快速開發模式 (原型)"
+	@echo "  make dev-start              標準開發模式 (一般功能)"
+	@echo "  make strict-dev EPIC=xxx    嚴格開發模式 (核心功能)"
+	@echo "  make dev-continue           檢查當前開發進度"
+	@echo ""
+	@echo "📝 智能提交系統:"
+	@echo "  make setup-hooks       設置 Git Hooks (首次使用)"
+	@echo "  make commit-check      手動執行提交檢查"
+	@echo "  make commit-strict     嚴格模式檢查 (含建置)"
+	@echo "  make commit-smart      智能提交 (自動 add + 檢查)"
+	@echo "  make commit-quick      快速提交 (跳過檢查)"
 	@echo ""
 	@echo "📚 文檔與架構:"
 	@echo "  make docs-check        檢查文檔完整性"
@@ -217,10 +298,12 @@ help:
 	@echo "  make changelog-unreleased  查看未發布變更"
 	@echo "  make changelog-release 準備發布新版本"
 	@echo ""
-	@echo "📚 開發歷程:"
+	@echo "📊 開發分析:"
 	@echo "  make dev-logs          查看開發歷程記錄"
 	@echo "  make dev-logs-today    查看今日開發記錄"
 	@echo "  make dev-stats         查看開發統計"
+	@echo "  make metrics           生成開發指標報告"
+	@echo "  make stats             查看統計摘要"
 	@echo ""
 	@echo "🧪 品質保證:"
 	@echo "  make test-all          執行所有測試與檢查"

@@ -1,119 +1,74 @@
-# AI Square 🌐 – Multi-Agent Learning Platform Roadmap  
-> **Vision** – _A hackable AI workspace where anyone can "Learn with AI, Build with AI, and Ship with AI."_
+# AI Square 🌐
+
+一個多智能體學習平台，幫助全球用戶提升 AI 素養能力。
+
+## 🚀 快速開始
+
+### 前端開發
+```bash
+cd frontend
+npm install
+npm run dev
+# 或使用 Makefile
+make frontend
+```
+
+### 後端開發（規劃中）
+```bash
+cd backend
+# Python FastAPI (Coming Soon)
+```
+
+## 🏗️ 專案架構
+
+```
+ai-square/
+├── frontend/          # Next.js 15 + React 19 + TypeScript
+├── backend/           # FastAPI + Python (規劃中)
+├── docs/              # AI 開發知識庫 📚
+└── Makefile          # 開發指令集
+```
+
+### 技術棧
+- **前端**: Next.js, React, TypeScript, Tailwind CSS
+- **國際化**: 9 種語言支援 (en, zh-TW, es, ja, ko, fr, de, ru, it)
+- **部署**: Google Cloud Platform
+
+## 🤖 AI 協作開發
+
+本專案採用 AI-First 開發模式，所有開發流程文件都在 `docs/` 目錄：
+
+### 核心文件
+- 📖 [docs/PLAYBOOK.md](docs/PLAYBOOK.md) - 開發指南
+- 🤖 [docs/CLAUDE.md](docs/CLAUDE.md) - AI 專案知識
+- 📋 [docs/CHANGELOG.md](docs/CHANGELOG.md) - 版本記錄
+
+### 開始 AI 開發
+1. **閱讀 PLAYBOOK**: 了解開發流程和標準
+2. **使用 AI 模板**: 參考 `docs/ai-tasks/` 的任務模板
+3. **記錄開發歷程**: 使用 `docs/features/` 的 YAML 格式
+
+### 智能提交系統
+```bash
+# 首次設置
+make setup-hooks
+
+# 日常使用
+make commit-smart  # 推薦：自動檢查 + 生成訊息
+```
+
+## 📊 專案狀態
+
+- **Phase 1** (進行中): 基礎平台與認證系統
+- **Phase 2**: 智能練習系統
+- **Phase 3**: AI 輔助學習
+- **Phase 4-6**: 知識圖譜與企業版
+
+## 🔗 相關連結
+
+- [開發文檔](docs/)
+- [功能演示](https://ai-square.com) (Coming Soon)
 
 ---
 
-## 📅 Phase Index
-
-| Phase | Tagline | Status |
-|-------|---------|--------|
-| **–1 Rule Core** | 離線 YAML 題庫＋規則評分可跑得出對錯 | ✅ PoC |
-| **1 Auth + I18N Mono** | Google / Email 登入＋雙語 CMS＋練習 MVP | 🔜 |
-| **2 Placement & Practice** | 基線 10 題小測＋每日練習→夜批折線圖 | − |
-| **3 Notebook + LLM Assist** | LangGraph Research Agent、GPT / Gemini 補題＋RAG 解說 | − |
-| **4 Personal Knowledge Graph** | Neo4j 圖譜＋CrewAI Tutor Squad 推薦 | − |
-| **5 CMS Decouple (optional)** | Maple CMS SaaS 或獨立 Strapi Service | − |
-| **6 Plug-in & Marketplace (optional)** | Flowise GUI＋沙盒 Loader＋App 市集 | − |
-
----
-
-## 🔨 技術選型總覽
-
-| 層級 | 基準框架 / 服務 | 可替換 |
-|------|-----------------|--------|
-| **LLM** | Google Gemini 2.5 (Flash / Pro) | OpenAI GPT-4o, Claude 3 |
-| **Orchestrator** | LangChain Core ＋ LangGraph | Llama-Index Flow, 自建 FSM |
-| **Multi-Agent** | CrewAI (Phase 4+) | Autogen Agent, AutoGPT |
-| **Plug-in GUI** | Flowise (Node) (Phase 6) | n8n, LangFlow |
-| **CMS** | **Strapi v4** (Phase 1) → _+ Decap CMS Git GUI_ (Phase 2) → Maple CMS (Phase 5 可選) | Netlify / Decap-only |
-| **DB** | Cloud SQL Postgres 15 (+ pgvector) | AlloyDB Vector, Supabase |
-| **文件/CDN** | GitHub repo → CI → GCS (+ Cloud CDN) | S3 + CloudFront |
-| **Graph** | Neo4j Aura Free (Phase 4) | Memgraph, Dgraph |
-| **部署** | Cloud Run (multi-svc) + Cloud Build CI | GKE Autopilot |
-
----
-
-## 🚦 Phase Breakdown & Rationale
-
-### –1 Rule Core (1 day)
-* **Why** 驗證「題庫＋規則評分」可行  
-* **Stack** Python Rule-Engine・SQLite・Markdown/YAML  
-* **Skip** LLM / LangChain
-
-### 1 Auth + I18N Mono (6 weeks)
-* **Goal** 登入 → 編輯題庫 → 練題 → 寫 log  
-* **Stack**  
-  * **Strapi (同容器)** – 存 meta, i18n plug-in  
-  * **Next.js** – `next-intl` (zh-TW / en)  
-  * **Cloud SQL f1-micro** – `practice_log`  
-  * **Gemini API** – 單步補題  
-* **No LangChain yet** — 單線流程足夠
-
-### 2 Placement & Practice (8 weeks)
-* **Goal**  Baseline 10 題＋每日練習＋夜批  
-* **Add**  Nightly Analyzer (Cloud Functions)・LangChain Memory (RAM)  
-* **CMS 雙軌** — 導入 **Decap CMS** GUI，Markdown 正文全 Git；Strapi 只存 `gcs_uri`
-
-### 3 Notebook + LLM Assist (6 weeks)
-* **Goal** Research Agent - Think → Search → Cite  
-* **Add**  Fork `gemini-fullstack-langgraph-quickstart` as `research-agent`  
-  LangGraph ReAct loop・pgvector RAG  
-* **LangSmith 可選** — Trace on dev, off prod
-
-### 4 Personal Knowledge Graph (6 weeks)
-* **Goal** 弱點染色圖譜＋CrewAI Tutor Squad  
-* **Add**  Neo4j Aura・CrewAI Squad integrated via LangGraph
-
-### 5 CMS Decouple (optional)
-* **Goal** 內容層獨立為 SaaS or 微服務  
-* **Action**  `MAPLE_CMS_BASE=https://…` 切換，不改 code
-
-### 6 Plug-in & Marketplace (optional)
-* **Goal** 老師拖拉 Flowise 建外掛，一鍵上架  
-* **Stack**  Flowise GUI・Plug-in Loader (Cloud Run sandbox)・`plugin.yaml`＋Docker  
-* **Security**  最小權限、Cloud Armor、資源限額
-
----
-
-## 💰 小流量雲端月費估算
-
-| 服務 | 月費 |
-|------|------|
-| Cloud Run ×3 | US $15 |
-| Cloud SQL f1-micro | US $7 |
-| GCS (+ CDN 20 GB) | ~US $2 |
-| Gemini Flash (2 M tokens) | ~US $30 |
-| Neo4j Aura Free | 0 |
-| **Total** | **≈ US $55 / NT$1,900** |
-
----
-
-## 📚 YAML Framework Files
-
-### `ai_lit_domains.yaml`
-- **Purpose**: Defines the four core domains of AI Literacy (Engaging_with_AI, Creating_with_AI, Managing_with_AI, Designing_with_AI), each with detailed competencies.
-- **Structure**:
-  - `domains`: Top-level key.
-    - Each domain (e.g., Engaging_with_AI) has:
-      - `overview`: Domain summary.
-      - `competencies`: Dictionary of competencies (e.g., E1, C1, M1, D1), each with:
-        - `description`: Competency statement
-        - `knowledge`: List of knowledge codes (e.g., K1.4)
-        - `skills`: List of skill themes (e.g., Critical_Thinking)
-        - `attitudes`: List of attitude themes (e.g., Responsible)
-        - `content`: Learning content
-        - `scenarios`: Example learning scenarios
-
-### `ksa_codes.yaml`
-- **Purpose**: Stores the full set of Knowledge (K), Skills (S), and Attitudes (A) indicators referenced by the domains and competencies.
-- **Structure**:
-  - `knowledge_codes` / `skill_codes` / `attitude_codes`: Each has:
-    - `desciption`: Section summary
-    - `themes`: Dictionary of themes (e.g., The_Nature_of_AI, Critical_Thinking, Responsible)
-      - Each theme contains:
-        - `codes`: Dictionary of codes (e.g., K1.1, S1.1, A1.1), each with `summary` (and for skills/attitudes, possibly `questions`)
-        - `explanation`: Theme-level explanation
-
-- **Reference**: The codes (e.g., K1.4, S1.1, A1.1) are referenced in `ai_lit_domains.yaml` to link each competency to the relevant knowledge, skills, and attitudes.
-
----
+> **提示**: 如果你是 AI 助手，請先閱讀 `docs/CLAUDE.md` 了解專案全貌。

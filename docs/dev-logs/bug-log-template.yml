@@ -1,0 +1,92 @@
+# Bug 修復日誌模板
+# 檔名格式: YYYY-MM-DD-bug-description.yml
+
+type: bug
+title: Bug 標題
+date: YYYY-MM-DD
+developer: Human/AI/Pair
+status: identified/fixing/fixed/verified
+severity: critical/high/medium/low
+
+# Bug 描述
+bug_description: |
+  簡短描述問題現象
+
+# 重現步驟
+reproduction_steps:
+  - 步驟 1
+  - 步驟 2
+  - 步驟 3
+
+# 根本原因
+root_cause: |
+  問題的根本原因分析
+
+# 時間追蹤 (分鐘)
+timeline:
+  - phase: 診斷
+    duration: 0
+    ai_time: 0
+    human_time: 0
+    notes: 問題定位、原因分析
+    
+  - phase: 修復
+    duration: 0
+    ai_time: 0
+    human_time: 0
+    notes: 實作修復方案
+    
+  - phase: 測試
+    duration: 0
+    ai_time: 0
+    human_time: 0
+    notes: 驗證修復效果
+    
+  - phase: 文檔
+    duration: 0
+    ai_time: 0
+    human_time: 0
+    notes: 更新相關文檔
+
+# 修復指標
+metrics:
+  total_time: 0         # 總時間（分鐘）
+  ai_percentage: 0      # AI 貢獻百分比
+  human_percentage: 0   # 人類貢獻百分比
+  files_changed: 0      # 修改檔案數
+  lines_changed: 0      # 修改行數
+  
+# 影響範圍
+impact:
+  affected_features: []  # 受影響的功能
+  affected_users: ""     # 受影響的用戶群
+  data_loss: false       # 是否造成資料遺失
+  downtime: 0            # 停機時間（分鐘）
+
+# 交付成果
+deliverables:
+  - type: fix
+    files: []
+    description: 修復程式碼
+    
+  - type: test
+    files: []
+    description: 新增或修改的測試
+    
+  - type: doc
+    files: []
+    description: 文檔更新
+
+# 預防措施
+prevention:
+  - measure: 
+    description: 
+
+# 學習筆記
+learnings:
+  what_went_wrong:
+    - 
+  what_went_well:
+    - 
+  improvement_actions:
+    -

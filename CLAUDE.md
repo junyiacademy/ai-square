@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+**Important**: This file is now located at `docs/CLAUDE.md`. All development documentation is centralized in the `docs/` directory.
+
 ## Project Overview
 
 AI Square is a multi-agent learning platform for AI literacy education. The project is a monorepo with a Next.js frontend and Python FastAPI backend, designed to be deployed on Google Cloud Platform.
@@ -105,6 +107,15 @@ The app uses a dual translation approach:
 3. New languages: Add translations to both JSON locales and YAML field suffixes
 4. Testing: Run `npm run lint` in frontend directory
 5. Deployment: Use Makefile commands for GCP deployment
+
+## Documentation Structure
+- **docs/PLAYBOOK.md** - Main development guide  
+- **docs/dev-logs/** - Development logs in YAML format (features, bugs, refactors)
+- **docs/decisions/** - Architecture Decision Records
+- **docs/ai-tasks/** - AI collaboration templates
+- **docs/scripts/** - Development automation scripts
+
+Note: This CLAUDE.md file must remain in the project root directory to be automatically read by Claude AI.
 
 ## Project Context
 This is Phase 1 of a 6-phase roadmap to build a comprehensive AI learning platform. Current focus is on authentication, internationalization, and basic practice functionality with Google Gemini API integration planned.

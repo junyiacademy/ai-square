@@ -1,0 +1,23 @@
+#!/bin/bash
+# AI Square Pre-commit Hook
+# 自動執行品質檢查
+
+echo "🤖 AI Square Pre-commit 檢查開始..."
+
+# 檢查是否有 Python 3
+if ! command -v python3 &> /dev/null; then
+    echo "❌ 需要 Python 3 來執行提交檢查"
+    exit 1
+fi
+
+# 執行提交檢查腳本
+python3 docs/scripts/commit-guide.py
+
+# 檢查結果
+if [ $? -ne 0 ]; then
+    echo "❌ 提交檢查失敗，請修正問題後再提交"
+    exit 1
+fi
+
+echo "✅ Pre-commit 檢查通過"
+exit 0

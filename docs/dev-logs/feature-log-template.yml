@@ -1,0 +1,99 @@
+# 功能開發日誌模板
+# 檔名格式: YYYY-MM-DD-feature-name.yml
+
+feature: 功能名稱
+date: YYYY-MM-DD
+developer: Human/AI/Pair
+status: planning/in-progress/completed/archived
+
+# 簡短描述 (1-2句話)
+description: |
+  功能的簡短描述
+
+# 時間追蹤 (分鐘)
+timeline:
+  - phase: 分析
+    duration: 0
+    ai_time: 0
+    human_time: 0
+    notes: 需求分析、技術評估
+    
+  - phase: 設計
+    duration: 0
+    ai_time: 0
+    human_time: 0
+    notes: 架構設計、介面設計
+    
+  - phase: 實作
+    duration: 0
+    ai_time: 0
+    human_time: 0
+    notes: 程式碼撰寫
+    
+  - phase: 測試
+    duration: 0
+    ai_time: 0
+    human_time: 0
+    notes: 單元測試、整合測試
+    
+  - phase: 文檔
+    duration: 0
+    ai_time: 0
+    human_time: 0
+    notes: 文檔撰寫、更新
+
+# 開發指標
+metrics:
+  total_time: 0         # 總時間（分鐘）
+  ai_percentage: 0      # AI 貢獻百分比
+  human_percentage: 0   # 人類貢獻百分比
+  lines_of_code: 0      # 程式碼行數
+  test_coverage: 0      # 測試覆蓋率
+  files_changed: 0      # 修改檔案數
+  
+# 成本估算 (USD)
+cost_estimation:
+  ai_cost: 0.00         # AI API 成本
+  human_cost: 0.00      # 人力成本 (假設 $50/hour)
+  total_cost: 0.00      # 總成本
+  traditional_cost: 0.00 # 傳統開發估計成本
+  cost_saving: 0.00     # 節省成本
+  roi_percentage: 0     # 投資報酬率
+
+# 交付成果
+deliverables:
+  - type: code
+    files: []
+    description: 主要程式碼
+    
+  - type: test
+    files: []
+    description: 測試程式碼
+    
+  - type: doc
+    files: []
+    description: 文檔更新
+
+# 技術細節
+technical_details:
+  architecture_changes: false
+  new_dependencies: []
+  breaking_changes: false
+  performance_impact: neutral # positive/neutral/negative
+
+# 學習筆記
+learnings:
+  ai_strengths:
+    - 
+  human_strengths:
+    - 
+  collaboration_insights:
+    - 
+  improvement_areas:
+    -
+
+# 可教學化內容
+teachable_moments:
+  - topic: 
+    insight: 
+    example:
