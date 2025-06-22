@@ -273,8 +273,8 @@ class PostCommitDocGenerator:
                 'total_time_minutes': time_info['total'],  # 明確標示單位：分鐘
                 'ai_time_minutes': time_info['ai'],
                 'human_time_minutes': time_info['human'],
-                'ai_percentage': round(time_info['ai'] / time_info['total'] * 100, 1),
-                'human_percentage': round(time_info['human'] / time_info['total'] * 100, 1),
+                'ai_percentage': round(time_info['ai'] / time_info['total'] * 100, 1) if time_info['total'] > 0 else 0,
+                'human_percentage': round(time_info['human'] / time_info['total'] * 100, 1) if time_info['total'] > 0 else 0,
                 'files_added': len(self.commit_info['changes']['added']),
                 'files_modified': len(self.commit_info['changes']['modified']),
                 'files_deleted': len(self.commit_info['changes']['deleted']),

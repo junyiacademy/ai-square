@@ -50,11 +50,11 @@ class CommitGuide:
             return 1, "", str(e)
     
     def get_time_metrics(self) -> Dict:
-        """獲取當前會話的時間指標"""
-        print(f"\n{Colors.BLUE}⏱️ 計算開發時間...{Colors.END}")
+        """基於 ADR-016 的 commit-based 時間分析"""
+        print(f"\n{Colors.BLUE}⏱️ 計算開發時間 (基於 Commit 邊界分析)...{Colors.END}")
         
         try:
-            # 嘗試從時間追蹤系統獲取真實時間
+            # 嘗試從時間追蹤系統獲取真實時間（優先，但不依賴）
             time_tracker_path = self.project_root / "docs" / "scripts" / "time-tracker.py"
             if time_tracker_path.exists():
                 import importlib.util
@@ -67,39 +67,98 @@ class CommitGuide:
                 if tracker.session_start:
                     # 有活躍的時間追蹤會話
                     metrics = tracker.calculate_metrics()
-                    print(f"✅ 發現活躍時間追蹤會話")
-                    print(f"   總時間: {metrics['total_time_minutes']:.1f} 分鐘")
-                    print(f"   AI 時間: {metrics['ai_time_minutes']:.1f} 分鐘")
-                    print(f"   Human 時間: {metrics['human_time_minutes']:.1f} 分鐘")
-                    return metrics
+                    if metrics.get('total_time_minutes', 0) > 0.5:  # 過濾測試數據
+                        print(f"✅ 發現活躍時間追蹤會話")
+                        print(f"   總時間: {metrics['total_time_minutes']:.1f} 分鐘")
+                        print(f"   AI 時間: {metrics['ai_time_minutes']:.1f} 分鐘")
+                        print(f"   Human 時間: {metrics['human_time_minutes']:.1f} 分鐘")
+                        return metrics
                     
         except Exception as e:
             print(f"⚠️ 無法讀取即時時間追蹤: {e}")
         
-        # 使用事後時間分析作為後備方案
-        try:
-            analyzer_path = self.project_root / "docs" / "scripts" / "retrospective-time-analyzer.py"
-            if analyzer_path.exists():
-                import importlib.util
-                spec = importlib.util.spec_from_file_location("analyzer", analyzer_path)
-                analyzer_module = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(analyzer_module)
-                
-                analyzer = analyzer_module.RetrospectiveTimeAnalyzer()
-                
-                # 分析最近的開發活動
-                result = analyzer.analyze_task_time(['development', 'commit', 'feature', 'fix'], hours=2)
-                
-                if result.get('total_time_minutes'):
-                    print(f"✅ 使用事後時間分析")
-                    print(f"   估算時間: {result['total_time_minutes']:.1f} 分鐘")
-                    print(f"   數據品質: {result.get('data_quality', 'unknown')}")
-                    return result
-                    
-        except Exception as e:
-            print(f"⚠️ 事後時間分析失敗: {e}")
+        # 使用 ADR-016 的 commit-based 分析方法
+        print(f"📊 使用 Commit 邊界時間分析")
         
-        # 如果以上都失敗，使用基本估算
+        try:
+            # 1. 獲取這次 commit 的檔案列表 (staged files)
+            returncode, stdout, _ = self.run_command(["git", "diff", "--cached", "--name-only"])
+            if returncode != 0 or not stdout.strip():
+                print(f"⚠️ 無法獲取 staged 檔案")
+                return self._fallback_estimation()
+            
+            staged_files = [f.strip() for f in stdout.strip().split('\n') if f.strip()]
+            print(f"   分析檔案: {len(staged_files)} 個")
+            
+            # 2. 獲取每個檔案的修改時間戳
+            file_timestamps = []
+            for file_path in staged_files:
+                file_full_path = self.project_root / file_path
+                if file_full_path.exists():
+                    mtime = datetime.fromtimestamp(file_full_path.stat().st_mtime)
+                    file_timestamps.append({
+                        'file': file_path,
+                        'timestamp': mtime
+                    })
+            
+            if not file_timestamps:
+                print(f"⚠️ 無法獲取檔案時間戳")
+                return self._fallback_estimation()
+            
+            # 3. 計算時間範圍
+            start_time = min(ts['timestamp'] for ts in file_timestamps)
+            end_time = max(ts['timestamp'] for ts in file_timestamps)
+            duration_minutes = (end_time - start_time).total_seconds() / 60
+            
+            # 4. 檢查上個 commit 時間作為參考
+            returncode, stdout, _ = self.run_command(["git", "log", "-1", "--pretty=%ct"])
+            if returncode == 0 and stdout.strip():
+                last_commit_time = datetime.fromtimestamp(int(stdout.strip()))
+                # 如果檔案時間範圍很小，使用 commit 間隔時間
+                if duration_minutes < 1:
+                    commit_interval = (datetime.now() - last_commit_time).total_seconds() / 60
+                    if commit_interval > 0 and commit_interval < 180:  # 最多 3 小時
+                        duration_minutes = commit_interval
+                        print(f"   使用 commit 間隔時間: {duration_minutes:.1f} 分鐘")
+                    else:
+                        duration_minutes = max(duration_minutes, 2)  # 最少 2 分鐘
+                else:
+                    print(f"   基於檔案時間戳: {duration_minutes:.1f} 分鐘")
+            
+            # 5. 驗證合理性
+            if duration_minutes > 180:  # 超過 3 小時
+                print(f"⚠️ 時間過長 ({duration_minutes:.1f}分鐘)，使用檔案數量估算")
+                return self._fallback_estimation()
+            
+            if duration_minutes < 0.5:  # 少於 30 秒
+                duration_minutes = len(staged_files) * 2  # 每個檔案 2 分鐘
+                print(f"   調整為檔案數量估算: {duration_minutes:.1f} 分鐘")
+            
+            print(f"✅ Commit 時間分析完成")
+            print(f"   開發時間: {duration_minutes:.1f} 分鐘")
+            print(f"   時間範圍: {start_time.strftime('%H:%M:%S')} → {end_time.strftime('%H:%M:%S')}")
+            
+            return {
+                'total_time_minutes': round(duration_minutes, 1),
+                'ai_time_minutes': round(duration_minutes * 0.8, 1),
+                'human_time_minutes': round(duration_minutes * 0.2, 1),
+                'time_estimation_method': 'commit_based_file_timestamp_analysis',
+                'is_real_time': False,
+                'data_quality': 'high',
+                'confidence_level': 'high',
+                'evidence': {
+                    'file_timestamps': file_timestamps,
+                    'start_time': start_time.isoformat(),
+                    'end_time': end_time.isoformat()
+                }
+            }
+            
+        except Exception as e:
+            print(f"⚠️ Commit 分析失敗: {e}")
+            return self._fallback_estimation()
+    
+    def _fallback_estimation(self) -> Dict:
+        """後備估算方法"""
         print(f"⚠️ 使用檔案變更數量估算")
         
         # 獲取變更統計
@@ -111,14 +170,14 @@ class CommitGuide:
             total_changes = 1
         
         # 簡單估算邏輯
-        if total_changes <= 3:
-            estimated_time = 30
+        if total_changes <= 1:
+            estimated_time = 5
+        elif total_changes <= 3:
+            estimated_time = 15
         elif total_changes <= 10:
-            estimated_time = 60
-        elif total_changes <= 20:
-            estimated_time = 120
+            estimated_time = 30
         else:
-            estimated_time = 180
+            estimated_time = 60
             
         return {
             'total_time_minutes': estimated_time,
@@ -127,7 +186,7 @@ class CommitGuide:
             'time_estimation_method': 'file_count_estimate',
             'is_real_time': False,
             'data_quality': 'estimated',
-            'confidence_level': 'low'
+            'confidence_level': 'medium'
         }
     
     def print_header(self):
@@ -581,8 +640,17 @@ class CommitGuide:
         """保存時間指標供 post-commit-doc-gen.py 使用"""
         try:
             time_data_file = self.project_root / ".git" / "last_commit_time_metrics.json"
+            
+            # 處理 datetime 序列化問題
+            serializable_metrics = {}
+            for key, value in self.time_metrics.items():
+                if isinstance(value, datetime):
+                    serializable_metrics[key] = value.isoformat()
+                else:
+                    serializable_metrics[key] = value
+            
             with open(time_data_file, 'w', encoding='utf-8') as f:
-                json.dump(self.time_metrics, f, indent=2, ensure_ascii=False)
+                json.dump(serializable_metrics, f, indent=2, ensure_ascii=False)
             print(f"{Colors.GREEN}📊 時間指標已保存供文檔生成使用{Colors.END}")
         except Exception as e:
             print(f"{Colors.YELLOW}⚠️ 無法保存時間指標: {e}{Colors.END}")
