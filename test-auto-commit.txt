@@ -1,2 +1,0 @@
-This is a test file to verify the auto-commit functionality
-for post-commit documentation updates.
