@@ -12,19 +12,19 @@ description: 'feat(docs): update 3 files
   Modified: commit-guide.py, post-commit-doc-gen.py'
 timeline:
 - phase: 實現
-  duration: 4.9
-  ai_time: 3.9
-  human_time: 1.0
+  duration: 11.2
+  ai_time: 9.0
+  human_time: 2.2
   tasks:
   - 創建 pre-commit-doc-gen.py
   - 更新 commit-guide.py
   - 更新 post-commit-doc-gen.py
 metrics:
-  total_time_minutes: 4.9
-  ai_time_minutes: 3.9
-  human_time_minutes: 1.0
-  ai_percentage: 80.0
-  human_percentage: 20.0
+  total_time_minutes: 11.2
+  ai_time_minutes: 9.0
+  human_time_minutes: 2.2
+  ai_percentage: 80.4
+  human_percentage: 19.6
   files_added: 2
   files_modified: 2
   files_deleted: 0
@@ -33,10 +33,12 @@ metrics:
     start_time: '2025-06-23T03:20:46.830036'
     end_time: '2025-06-23T03:26:02.628008'
     file_count: 3
-  time_estimation_method: commit_based_file_timestamp_analysis
+  time_estimation_method: git_log_analysis
   is_real_time: true
   commit_timestamp: '2025-06-23T03:26:02'
   post_commit_update_timestamp: '2025-06-23T03:26:02.777530'
+  migrated_at: '2025-06-23T03:34:50.895713'
+  time_confidence: high
 changes:
   added:
   - docs/dev-logs/2025-06-23-docs-commit-guide.yml

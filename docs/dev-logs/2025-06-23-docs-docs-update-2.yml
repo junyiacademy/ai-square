@@ -13,19 +13,25 @@ description: 'docs: add remaining auto-generated development logs
   Co-Authored-By: Claude <noreply@anthropic.com>'
 timeline:
 - phase: 實現
-  duration: 30
-  ai_time: 24
-  human_time: 6
+  duration: 18.9
+  ai_time: 15.1
+  human_time: 3.8
   tasks:
   - 創建 2025-06-23-bug-optimize-filename-length-limits-bugfix.yml
   - 創建 2025-06-23-bug-remove-accidentally-added-commit_hash-fields.yml
 metrics:
   total_time: 30
-  ai_percentage: 80.0
-  human_percentage: 20.0
+  ai_percentage: 79.9
+  human_percentage: 20.1
   files_added: 2
   files_modified: 0
   files_deleted: 0
+  total_time_minutes: 18.9
+  ai_time_minutes: 15.1
+  human_time_minutes: 3.8
+  time_estimation_method: git_log_analysis
+  migrated_at: '2025-06-23T03:34:51.337506'
+  time_confidence: high
 changes:
   added:
   - docs/dev-logs/2025-06-23-bug-optimize-filename-length-limits-bugfix.yml

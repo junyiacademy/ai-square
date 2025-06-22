@@ -20,15 +20,15 @@ description: 'fix(docs): fix time calculation int() to round() conversion issue
   Co-Authored-By: Claude <noreply@anthropic.com>'
 timeline:
 - phase: 實現
-  duration: 30
-  ai_time: 24.0
-  human_time: 6.0
+  duration: 4.0
+  ai_time: 3.2
+  human_time: 0.8
   tasks:
   - 更新 post-commit-doc-gen.py
 metrics:
-  total_time_minutes: 30
-  ai_time_minutes: 24.0
-  human_time_minutes: 6.0
+  total_time_minutes: 4.0
+  ai_time_minutes: 3.2
+  human_time_minutes: 0.8
   ai_percentage: 80.0
   human_percentage: 20.0
   files_added: 0
@@ -36,9 +36,11 @@ metrics:
   files_deleted: 0
   commit_timestamp: '2025-06-23T03:14:15'
   generation_timestamp: '2025-06-23T03:14:22.713841'
-  time_estimation_method: file_count_estimate
+  time_estimation_method: git_log_analysis
   is_real_time: false
   time_data_quality: estimated
+  migrated_at: '2025-06-23T03:34:50.960641'
+  time_confidence: high
 changes:
   added: []
   modified:

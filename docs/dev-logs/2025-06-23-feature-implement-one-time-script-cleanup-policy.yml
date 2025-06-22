@@ -31,9 +31,9 @@ description: 'feat(docs): implement one-time script cleanup policy and meaningfu
   Co-Authored-By: Claude <noreply@anthropic.com>'
 timeline:
 - phase: 實現
-  duration: 120
-  ai_time: 96
-  human_time: 24
+  duration: 18.2
+  ai_time: 14.6
+  human_time: 3.6
   tasks:
   - 創建 ADR-008-meaningful-story-generation-rules.md
   - 創建 ADR-009-one-time-script-cleanup-policy.md
@@ -44,11 +44,17 @@ timeline:
   - 移除 rename-legacy-files.py
 metrics:
   total_time: 120
-  ai_percentage: 80.0
-  human_percentage: 20.0
+  ai_percentage: 80.2
+  human_percentage: 19.8
   files_added: 3
   files_modified: 2
   files_deleted: 6
+  total_time_minutes: 18.2
+  ai_time_minutes: 14.6
+  human_time_minutes: 3.6
+  time_estimation_method: git_log_analysis
+  migrated_at: '2025-06-23T03:34:50.929123'
+  time_confidence: high
 changes:
   added:
   - docs/decisions/ADR-008-meaningful-story-generation-rules.md

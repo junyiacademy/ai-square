@@ -7,18 +7,24 @@ commit_hash: 1d6388cc
 description: 'docs(decisions): add smart commit rules and auto-documentation ADR'
 timeline:
 - phase: 實現
-  duration: 30
-  ai_time: 24
-  human_time: 6
+  duration: 15.4
+  ai_time: 12.3
+  human_time: 3.1
   tasks:
   - 創建 ADR-006-smart-commit-rules.md
 metrics:
   total_time: 30
-  ai_percentage: 80.0
-  human_percentage: 20.0
+  ai_percentage: 79.9
+  human_percentage: 20.1
   files_added: 1
   files_modified: 0
   files_deleted: 0
+  total_time_minutes: 15.4
+  ai_time_minutes: 12.3
+  human_time_minutes: 3.1
+  time_estimation_method: git_log_analysis
+  migrated_at: '2025-06-23T03:34:51.143581'
+  time_confidence: high
 changes:
   added:
   - docs/decisions/ADR-006-smart-commit-rules.md

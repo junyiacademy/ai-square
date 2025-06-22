@@ -18,9 +18,9 @@ description: 'feat(docs): implement comprehensive file naming conventions
   - Ensure all filenames are descriptive and searchable'
 timeline:
 - phase: 實現
-  duration: 180
-  ai_time: 144
-  human_time: 36
+  duration: 4.3
+  ai_time: 3.5
+  human_time: 0.9
   tasks:
   - 創建 ADR-007-file-naming-conventions.md
   - 創建 2025-06-23-bug-miscellaneous-fixes.yml
@@ -31,11 +31,17 @@ timeline:
   - 移除 2025-06-23-docs-decisions-1d6388cc.yml
 metrics:
   total_time: 180
-  ai_percentage: 80.0
-  human_percentage: 20.0
+  ai_percentage: 81.4
+  human_percentage: 20.9
   files_added: 15
   files_modified: 2
   files_deleted: 10
+  total_time_minutes: 4.3
+  ai_time_minutes: 3.5
+  human_time_minutes: 0.9
+  time_estimation_method: git_log_analysis
+  migrated_at: '2025-06-23T03:34:51.270748'
+  time_confidence: high
 changes:
   added:
   - docs/decisions/ADR-007-file-naming-conventions.md

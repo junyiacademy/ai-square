@@ -7,9 +7,9 @@ commit_hash: dc21387f
 description: 'feat(core): implement smart commit analysis and githooks integration'
 timeline:
 - phase: 實現
-  duration: 60
-  ai_time: 48
-  human_time: 12
+  duration: 15.2
+  ai_time: 12.2
+  human_time: 3.0
   tasks:
   - 創建 post-commit
   - 創建 pre-commit
@@ -20,11 +20,17 @@ timeline:
   - 移除 pre-commit
 metrics:
   total_time: 60
-  ai_percentage: 80.0
-  human_percentage: 20.0
+  ai_percentage: 80.3
+  human_percentage: 19.7
   files_added: 3
   files_modified: 4
   files_deleted: 1
+  total_time_minutes: 15.2
+  ai_time_minutes: 12.2
+  human_time_minutes: 3.0
+  time_estimation_method: git_log_analysis
+  migrated_at: '2025-06-23T03:34:50.862830'
+  time_confidence: high
 changes:
   added:
   - docs/scripts/githooks/post-commit

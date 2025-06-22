@@ -13,24 +13,26 @@ description: 'docs: add auto-generated development log for time tracking impleme
   Co-Authored-By: Claude <noreply@anthropic.com>'
 timeline:
 - phase: 實現
-  duration: 30
-  ai_time: 24
-  human_time: 6
+  duration: 12.4
+  ai_time: 9.9
+  human_time: 2.5
   tasks:
   - 創建 2025-06-23-feature-enhancement-8-files.yml
 metrics:
-  total_time_minutes: 30
-  ai_time_minutes: 24
-  human_time_minutes: 6
-  ai_percentage: 80.0
-  human_percentage: 20.0
+  total_time_minutes: 12.4
+  ai_time_minutes: 9.9
+  human_time_minutes: 2.5
+  ai_percentage: 79.8
+  human_percentage: 20.2
   files_added: 1
   files_modified: 0
   files_deleted: 0
   commit_timestamp: '2025-06-23T02:21:04'
   generation_timestamp: '2025-06-23T02:21:04.738448'
-  time_estimation_method: file_count_based_estimate
+  time_estimation_method: git_log_analysis
   is_real_time: false
+  migrated_at: '2025-06-23T03:34:51.049629'
+  time_confidence: high
 changes:
   added:
   - docs/dev-logs/2025-06-23-feature-enhancement-8-files.yml

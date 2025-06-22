@@ -18,18 +18,24 @@ description: 'fix(templates): remove accidentally added commit_hash fields from 
   Co-Authored-By: Claude <noreply@anthropic.com>'
 timeline:
 - phase: 實現
-  duration: 30
-  ai_time: 24
-  human_time: 6
+  duration: 18.7
+  ai_time: 15.0
+  human_time: 3.7
   tasks:
   - 創建 2025-06-23-feature-one-time-script-cleanup-policy.yml
 metrics:
   total_time: 30
-  ai_percentage: 80.0
-  human_percentage: 20.0
+  ai_percentage: 80.2
+  human_percentage: 19.8
   files_added: 1
   files_modified: 0
   files_deleted: 0
+  total_time_minutes: 18.7
+  ai_time_minutes: 15.0
+  human_time_minutes: 3.7
+  time_estimation_method: git_log_analysis
+  migrated_at: '2025-06-23T03:34:51.445725'
+  time_confidence: high
 changes:
   added:
   - docs/dev-logs/2025-06-23-feature-one-time-script-cleanup-policy.yml

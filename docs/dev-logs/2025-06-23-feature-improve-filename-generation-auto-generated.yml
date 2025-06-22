@@ -16,18 +16,24 @@ description: 'feat(docs): improve filename generation for auto-generated documen
   - Limit filename length to 30 characters for readability'
 timeline:
 - phase: 實現
-  duration: 30
-  ai_time: 24
-  human_time: 6
+  duration: 2.4
+  ai_time: 1.9
+  human_time: 0.5
   tasks:
   - 更新 post-commit-doc-gen.py
 metrics:
   total_time: 30
-  ai_percentage: 80.0
-  human_percentage: 20.0
+  ai_percentage: 79.2
+  human_percentage: 20.8
   files_added: 0
   files_modified: 1
   files_deleted: 0
+  total_time_minutes: 2.4
+  ai_time_minutes: 1.9
+  human_time_minutes: 0.5
+  time_estimation_method: git_log_analysis
+  migrated_at: '2025-06-23T03:34:51.474038'
+  time_confidence: high
 changes:
   added: []
   modified:

@@ -13,9 +13,9 @@ description: 'feat(docs): update 8 files
   Modified: .gitignore, post-commit-doc-gen.py'
 timeline:
 - phase: 實現
-  duration: 60
-  ai_time: 48
-  human_time: 12
+  duration: 12.1
+  ai_time: 9.7
+  human_time: 2.4
   tasks:
   - 創建 ADR-010-real-time-tracking-system.md
   - 創建 ADR-011-time-log-lifecycle-management.md
@@ -23,18 +23,20 @@ timeline:
   - 更新 .gitignore
   - 更新 post-commit-doc-gen.py
 metrics:
-  total_time_minutes: 60
-  ai_time_minutes: 48
-  human_time_minutes: 12
-  ai_percentage: 80.0
-  human_percentage: 20.0
+  total_time_minutes: 12.1
+  ai_time_minutes: 9.7
+  human_time_minutes: 2.4
+  ai_percentage: 80.2
+  human_percentage: 19.8
   files_added: 7
   files_modified: 2
   files_deleted: 0
   commit_timestamp: '2025-06-23T02:20:48'
   generation_timestamp: '2025-06-23T02:20:49.064827'
-  time_estimation_method: file_count_based_estimate
+  time_estimation_method: git_log_analysis
   is_real_time: false
+  migrated_at: '2025-06-23T03:34:51.370677'
+  time_confidence: high
 changes:
   added:
   - docs/decisions/ADR-010-real-time-tracking-system.md
