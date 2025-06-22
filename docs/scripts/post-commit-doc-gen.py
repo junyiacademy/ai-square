@@ -212,12 +212,20 @@ class PostCommitDocGenerator:
                 'tasks': self._generate_task_list()
             }],
             'metrics': {
-                'total_time': time_info['total'],
+                'total_time_minutes': time_info['total'],  # 明確標示單位：分鐘
+                'ai_time_minutes': time_info['ai'],
+                'human_time_minutes': time_info['human'],
                 'ai_percentage': round(time_info['ai'] / time_info['total'] * 100, 1),
                 'human_percentage': round(time_info['human'] / time_info['total'] * 100, 1),
                 'files_added': len(self.commit_info['changes']['added']),
                 'files_modified': len(self.commit_info['changes']['modified']),
-                'files_deleted': len(self.commit_info['changes']['deleted'])
+                'files_deleted': len(self.commit_info['changes']['deleted']),
+                # 時間戳記錄
+                'commit_timestamp': self.commit_info['time'].isoformat(),
+                'generation_timestamp': datetime.now().isoformat(),
+                # 標記估算方式
+                'time_estimation_method': 'file_count_based_estimate',  # 標明這是估算值
+                'is_real_time': False  # 明確標示這不是真實時間追蹤
             },
             'changes': self.commit_info['changes'],
             'auto_generated': True,

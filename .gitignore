@@ -32,6 +32,17 @@ tmp/
 docs/metrics-dashboard.json
 docs/metrics-report.md
 
+# Time Logs - Privacy Protection
+docs/time-logs/sessions/
+docs/time-logs/raw/
+*.session.json
+*.detailed-log.json
+
+# Keep aggregated data for team insights
+!docs/time-logs/aggregated/
+!docs/time-logs/analytics/
+!docs/time-logs/README.md
+
 # IDE
 .vscode/
 .idea/
