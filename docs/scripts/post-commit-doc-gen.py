@@ -176,12 +176,18 @@ class PostCommitDocGenerator:
         # 確保名稱有意義且不會截斷
         if len(name_part) < 15:  # 太短，需要補充
             name_part = f"{scope}-{name_part}" if name_part else f"{scope}-enhancement"
-        elif len(name_part) > 50:  # 太長，智能縮減但保持清晰
+        elif len(name_part) > 40:  # 太長，智能縮減但保持清晰
             # 保留關鍵詞，移除冗餘詞語
-            redundant_words = ['for', 'and', 'with', 'the', 'of', 'in', 'to', 'from']
+            redundant_words = ['for', 'and', 'with', 'the', 'of', 'in', 'to', 'from', 'implementation', 'comprehensive']
             words = name_part.split('-')
             filtered_words = [w for w in words if w not in redundant_words]
-            name_part = '-'.join(filtered_words)[:50]
+            
+            # 如果還是太長，保留前幾個關鍵詞
+            if len('-'.join(filtered_words)) > 40:
+                key_words = filtered_words[:5]  # 只保留前5個詞
+                name_part = '-'.join(key_words)
+            else:
+                name_part = '-'.join(filtered_words)
         
         # 最終檢查：確保不以數字或特殊字符結尾
         name_part = re.sub(r'-+$', '', name_part)  # 移除末尾的連字符
@@ -313,11 +319,17 @@ class PostCommitDocGenerator:
         if len(name_part) < 15:
             scope = self._extract_commit_scope()
             name_part = f"{scope}-{name_part}" if name_part else f"{scope}-enhancement"
-        elif len(name_part) > 45:  # 故事檔名稍短，為 -story 留空間
-            redundant_words = ['for', 'and', 'with', 'the', 'of', 'in', 'to', 'from']
+        elif len(name_part) > 35:  # 故事檔名稍短，為 -story 留空間
+            redundant_words = ['for', 'and', 'with', 'the', 'of', 'in', 'to', 'from', 'implementation', 'comprehensive']
             words = name_part.split('-')
             filtered_words = [w for w in words if w not in redundant_words]
-            name_part = '-'.join(filtered_words)[:45]
+            
+            # 如果還是太長，保留前幾個關鍵詞
+            if len('-'.join(filtered_words)) > 35:
+                key_words = filtered_words[:4]  # 只保留前4個詞
+                name_part = '-'.join(key_words)
+            else:
+                name_part = '-'.join(filtered_words)
         
         name_part = re.sub(r'-+$', '', name_part)
         filename = f"{date_str}-{name_part}-story.md"

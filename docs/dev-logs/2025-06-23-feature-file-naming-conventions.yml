@@ -1,0 +1,71 @@
+type: feature
+title: 'feat(docs): implement comprehensive file naming conventions'
+date: '2025-06-23'
+developer: AI + Human
+status: completed
+commit_hash: 12d4436e
+description: 'feat(docs): implement comprehensive file naming conventions
+
+
+  - Add ADR-007 for file naming standards
+
+  - Enhance post-commit-doc-gen.py with intelligent naming
+
+  - Rename all legacy files with unclear names
+
+  - Add naming convention checking tools
+
+  - Ensure all filenames are descriptive and searchable'
+timeline:
+- phase: 實現
+  duration: 180
+  ai_time: 144
+  human_time: 36
+  tasks:
+  - 創建 ADR-007-file-naming-conventions.md
+  - 創建 2025-06-23-bug-miscellaneous-fixes.yml
+  - 創建 2025-06-23-docs-architecture-decisions.yml
+  - 更新 Makefile
+  - 更新 post-commit-doc-gen.py
+  - 移除 2025-06-23-bug-misc-840cecf9.yml
+  - 移除 2025-06-23-docs-decisions-1d6388cc.yml
+metrics:
+  total_time: 180
+  ai_percentage: 80.0
+  human_percentage: 20.0
+  files_added: 15
+  files_modified: 2
+  files_deleted: 10
+changes:
+  added:
+  - docs/decisions/ADR-007-file-naming-conventions.md
+  - docs/dev-logs/2025-06-23-bug-miscellaneous-fixes.yml
+  - docs/dev-logs/2025-06-23-docs-architecture-decisions.yml
+  - docs/dev-logs/2025-06-23-docs-automation-setup.yml
+  - docs/dev-logs/2025-06-23-feature-core-system-enhancement.yml
+  - docs/dev-logs/2025-06-23-feature-documentation-system.yml
+  - docs/dev-logs/2025-06-23-feature-filename-generation-improvement.yml
+  - docs/handbook/improvements/improvement-2025-06-23-early-morning-fixes.md
+  - docs/handbook/improvements/improvement-2025-06-23-early-morning-fixes.yml
+  - docs/scripts/emergency-fix-utility.py
+  - docs/scripts/rename-legacy-files.py
+  - docs/stories/features/2025-06-22-development-insights.md
+  - docs/stories/features/2025-06-23-core-system-enhancement-story.md
+  - docs/stories/features/2025-06-23-documentation-system-story.md
+  - docs/stories/features/2025-06-23-filename-generation-improvement-story.md
+  modified:
+  - Makefile
+  - docs/scripts/post-commit-doc-gen.py
+  deleted:
+  - docs/dev-logs/2025-06-23-bug-misc-840cecf9.yml
+  - docs/dev-logs/2025-06-23-docs-decisions-1d6388cc.yml
+  - docs/dev-logs/2025-06-23-feature-core-dc21387f.yml
+  - docs/dev-logs/2025-06-23-feature-docs-98b02a16.yml
+  - docs/handbook/improvements/improvement-2025-06-23-0117.md
+  - docs/handbook/improvements/improvement-2025-06-23-0117.yml
+  - docs/scripts/temp-fix.py
+  - docs/stories/features/2025-06-22-unknown-insight.md
+  - docs/stories/features/2025-06-23-core-dc21387f.md
+  - docs/stories/features/2025-06-23-docs-98b02a16.md
+auto_generated: true
+generation_time: '2025-06-23T01:48:48.881067'
