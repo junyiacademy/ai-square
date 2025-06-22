@@ -1,10 +1,11 @@
 type: test
-title: '[待補充 commit 訊息]'
+title: 'feat(docs): implement pre-commit and post-commit documentation generation'
 date: '2025-06-23'
 developer: AI + Human
-status: in_progress
-commit_hash: pending
-description: '[待補充 commit 描述]'
+status: completed
+commit_hash: ba7c0ae8
+description: "feat(docs): implement pre-commit and post-commit documentation generation\n\
+  \nModified 3 files:\n  - commit-guide.py\n  - post-commit-doc-gen.py\n  - pre-commit-doc-gen.py"
 timeline:
 - phase: 實現
   duration: 15.9
@@ -18,7 +19,7 @@ metrics:
   human_time_minutes: 3.2
   ai_percentage: 80.0
   human_percentage: 20.0
-  files_added: 1
+  files_added: 2
   files_modified: 0
   files_deleted: 0
   time_calculation_method: file_timestamp_analysis
@@ -26,8 +27,13 @@ metrics:
     start_time: '2025-06-23T04:38:42.890126'
     end_time: '2025-06-23T04:38:58.490266'
     file_count: 1
+  time_estimation_method: commit_based_file_timestamp_analysis
+  is_real_time: true
+  commit_timestamp: '2025-06-23T04:38:58'
+  post_commit_update_timestamp: '2025-06-23T04:38:58.716246'
 changes:
   added:
+  - docs/dev-logs/2025-06-23/2025-06-23-test-test-commit-flow.yml
   - test-commit-flow.txt
   modified: []
   deleted: []
