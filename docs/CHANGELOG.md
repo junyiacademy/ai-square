@@ -65,6 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 修復 Header 組件鍵盤導航測試
   - 修復 API 路由的 NextResponse mock 問題
   - 修復 i18next 設定問題
+- fix filename duplication, improve time calculation, and prevent recursive tracking (ea06b2d)
 
 ### Removed
 - 移除遷移腳本 (366b72e)

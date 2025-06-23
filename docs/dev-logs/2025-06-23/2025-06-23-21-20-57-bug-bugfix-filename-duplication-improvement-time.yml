@@ -1,0 +1,59 @@
+type: bug
+title: 'fix(dev-logs): fix filename duplication, improve time calculation, and prevent
+  recursive tracking'
+date: '2025-06-23'
+developer: AI + Human
+status: completed
+commit_hash: ea06b2d4
+description: 'fix(dev-logs): fix filename duplication, improve time calculation, and
+  prevent recursive tracking
+
+
+  - Fixed filename generation to exclude dev-log files and auto-generated files
+
+  - Improved time calculation to use git history instead of filesystem timestamps
+
+  - Added recursive tracking prevention for auto-generated commits
+
+  - Enhanced both pre-commit and post-commit scripts with better filtering
+
+
+  Fixes:
+
+  1. No more duplicate filenames like ''2025-06-23-docs-2025-06-23-docs-refactor.yml''
+
+  2. More accurate time tracking using git log --follow
+
+  3. Prevents infinite loops when tracking dev-log changes
+
+  4. Smarter file exclusion patterns for meaningful filenames'
+timeline:
+- phase: 實現
+  duration: 15
+  ai_time: 12.0
+  human_time: 3.0
+  tasks:
+  - 更新 post-commit-doc-gen.py
+  - 更新 pre-commit-doc-gen.py
+metrics:
+  total_time_minutes: 15
+  ai_time_minutes: 12.0
+  human_time_minutes: 3.0
+  ai_percentage: 80.0
+  human_percentage: 20.0
+  files_added: 0
+  files_modified: 2
+  files_deleted: 0
+  commit_timestamp: '2025-06-23T21:20:57'
+  generation_timestamp: '2025-06-23T21:21:04.969828'
+  time_estimation_method: file_count_estimate
+  is_real_time: false
+  time_data_quality: estimated
+changes:
+  added: []
+  modified:
+  - docs/scripts/post-commit-doc-gen.py
+  - docs/scripts/pre-commit-doc-gen.py
+  deleted: []
+auto_generated: true
+generation_time: '2025-06-23T21:21:04.969831'
