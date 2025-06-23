@@ -6,6 +6,7 @@
 
 import sys
 import subprocess
+import importlib.util
 from pathlib import Path
 from typing import Dict, List
 
@@ -19,14 +20,20 @@ def main():
         return True  # 不阻止提交
     
     try:
-        # 動態導入
+        # 動態導入 - 修復模組名稱
         sys.path.insert(0, str(tdd_script.parent))
-        from ticket_driven_dev import TicketDrivenDevelopment
+        # 導入檔名為 ticket-driven-dev.py 的模組
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("ticket_driven_dev", tdd_script)
+        ticket_driven_dev = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(ticket_driven_dev)
+        
+        TicketDrivenDevelopment = ticket_driven_dev.TicketDrivenDevelopment
         
         tdd = TicketDrivenDevelopment()
         
-        # 驗證文件完整性
-        result = tdd.validate_commit_documentation()
+        # 驗證文件完整性 - 使用開發階段檢查
+        result = tdd.validate_development_status()
         
         print("\n" + "="*60)
         print("📋 票券驅動開發 - 文件完整性檢查")

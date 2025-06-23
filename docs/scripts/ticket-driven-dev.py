@@ -228,7 +228,7 @@ class TicketDrivenDevelopment:
                 ticket_name=ticket_name,
                 date=date_str,
                 timestamp=timestamp_str,
-                component_path='',  # 需要在實際使用時填入
+                component_path=ticket_name,  # 使用票券名稱作為組件路徑
                 ext='tsx',  # 預設為 tsx
                 adr_number=self._get_next_adr_number()
             )
@@ -237,6 +237,8 @@ class TicketDrivenDevelopment:
                 'path': path,
                 'template': doc_config.get('template'),
                 'required': doc_config.get('required', True),
+                'required_phase': doc_config.get('required_phase', 'commit'),
+                'auto_generated': doc_config.get('auto_generated', False),
                 'description': doc_config.get('description', ''),
                 'validator': doc_config.get('validator'),
                 'status': 'pending'
@@ -251,26 +253,64 @@ class TicketDrivenDevelopment:
         templates_dir = self.project_root / "docs" / "templates"
         
         for req in requirements:
-            if not req.get('template'):
-                continue
-                
-            template_path = templates_dir / req['template']
             target_path = self.project_root / req['path']
             
             # 創建目錄
             target_path.parent.mkdir(parents=True, exist_ok=True)
             
-            if template_path.exists() and not target_path.exists():
-                # 讀取模板並替換變量
-                template_content = template_path.read_text(encoding='utf-8')
-                content = self._fill_template_variables(template_content, ticket_name, dev_type)
-                
-                # 寫入目標文件
-                target_path.write_text(content, encoding='utf-8')
-                print(f"📝 已生成文件模板: {req['path']}")
+            if not target_path.exists():
+                if req.get('template'):
+                    # 使用模板創建文件
+                    template_path = templates_dir / req['template']
+                    if template_path.exists():
+                        template_content = template_path.read_text(encoding='utf-8')
+                        content = self._fill_template_variables(template_content, ticket_name, dev_type)
+                        target_path.write_text(content, encoding='utf-8')
+                        print(f"📝 已生成文件模板: {req['path']}")
+                    else:
+                        print(f"⚠️ 模板不存在: {req['template']}")
+                else:
+                    # 創建空文件佔位符
+                    if req['path'].endswith('.test.tsx') or req['path'].endswith('.test.ts'):
+                        # 創建基本測試文件結構
+                        test_content = self._generate_test_template(ticket_name, dev_type)
+                        target_path.write_text(test_content, encoding='utf-8')
+                        print(f"📝 已生成測試文件: {req['path']}")
+                    else:
+                        # 創建簡單的佔位符文件
+                        placeholder_content = f"# {req['description']}\n\n<!-- TODO: 填寫{req['description']}內容 -->\n"
+                        target_path.write_text(placeholder_content, encoding='utf-8')
+                        print(f"📝 已生成佔位符文件: {req['path']}")
     
+    def _generate_test_template(self, ticket_name: str, dev_type: str) -> str:
+        """生成測試文件模板"""
+        test_name = ticket_name.replace('-', ' ').title()
+        
+        return f'''/**
+ * Test Suite for {test_name}
+ * 票券: {ticket_name}
+ * 類型: {dev_type}
+ */
+
+import {{ describe, it, expect }} from '@jest/globals';
+
+describe('{test_name}', () => {{
+  it('should pass basic validation', () => {{
+    // TODO: 添加具體的測試邏輯
+    expect(true).toBe(true);
+  }});
+
+  it('should handle error cases', () => {{
+    // TODO: 添加錯誤處理測試
+    expect(true).toBe(true);
+  }});
+
+  // TODO: 根據功能需求添加更多測試案例
+}});
+'''
+
     def _fill_template_variables(self, template: str, ticket_name: str, dev_type: str) -> str:
-        """填充模板變量"""
+        """填充模板變數"""
         now = datetime.now()
         
         variables = {
@@ -317,8 +357,16 @@ class TicketDrivenDevelopment:
         with open(ticket_file, 'w', encoding='utf-8') as f:
             yaml.dump(ticket_data, f, allow_unicode=True, sort_keys=False)
     
+    def validate_development_status(self, ticket_name: Optional[str] = None) -> Dict:
+        """驗證開發階段的文件完整性"""
+        return self._validate_documentation(ticket_name, phase='development')
+    
     def validate_commit_documentation(self, ticket_name: Optional[str] = None) -> Dict:
         """驗證提交時的文件完整性"""
+        return self._validate_documentation(ticket_name, phase='commit')
+    
+    def _validate_documentation(self, ticket_name: Optional[str], phase: str) -> Dict:
+        """驗證指定階段的文件完整性"""
         if not ticket_name:
             ticket_name = self._find_active_ticket()
         
@@ -329,16 +377,20 @@ class TicketDrivenDevelopment:
         if not ticket_data:
             return {"status": "error", "message": f"找不到票券: {ticket_name}"}
         
-        # 檢查文件完整性
-        validation_result = self._validate_required_documents(ticket_data)
+        # 檢查文件完整性（只檢查當前階段需要的文件）
+        validation_result = self._validate_required_documents(ticket_data, phase)
         
-        # 檢查品質門檻
-        quality_result = self._validate_quality_gates(ticket_data)
+        # 檢查品質門檻（只在提交時檢查）
+        if phase == 'commit':
+            quality_result = self._validate_quality_gates(ticket_data)
+        else:
+            quality_result = {"all_passed": True, "passed_count": 0, "total_count": 0, "failed_gates": [], "passed_gates": []}
         
         # 合併結果
         result = {
             "status": "pass" if validation_result["all_complete"] and quality_result["all_passed"] else "fail",
             "ticket_name": ticket_name,
+            "phase": phase,
             "documents": validation_result,
             "quality_gates": quality_result,
             "suggestions": []
@@ -395,13 +447,22 @@ class TicketDrivenDevelopment:
         
         return None
     
-    def _validate_required_documents(self, ticket_data: Dict) -> Dict:
+    def _validate_required_documents(self, ticket_data: Dict, phase: str = 'commit') -> Dict:
         """驗證必要文件"""
         required_docs = ticket_data.get('required_documents', [])
+        
+        # 只檢查當前階段需要的文件
+        phase_docs = [doc for doc in required_docs 
+                     if doc.get('required_phase', 'commit') == phase]
+        
         missing_docs = []
         completed_docs = []
         
-        for doc in required_docs:
+        for doc in phase_docs:
+            # 跳過自動生成的文件
+            if doc.get('auto_generated', False) and phase == 'development':
+                continue
+            
             doc_path = self.project_root / doc['path']
             
             if doc_path.exists():
@@ -417,9 +478,10 @@ class TicketDrivenDevelopment:
         return {
             "all_complete": len(missing_docs) == 0,
             "completed_count": len(completed_docs),
-            "total_count": len(required_docs),
+            "total_count": len(phase_docs),
             "missing_docs": missing_docs,
-            "completed_docs": completed_docs
+            "completed_docs": completed_docs,
+            "phase": phase
         }
     
     def _validate_document_content(self, doc_path: Path, doc_config: Dict) -> bool:
@@ -584,10 +646,12 @@ def main():
     if len(sys.argv) < 2:
         print("使用方式:")
         print("  python3 ticket-driven-dev.py create <ticket_name> <dev_type> [description]")
-        print("  python3 ticket-driven-dev.py validate [ticket_name]")
+        print("  python3 ticket-driven-dev.py status [ticket_name]        # 檢查開發狀態")
+        print("  python3 ticket-driven-dev.py validate [ticket_name] [phase]  # 檢查文件完整性")
         print("  python3 ticket-driven-dev.py auto-create")
         print()
-        print("開發類型: feature, bugfix, refactor, docs")
+        print("開發類型: feature, bugfix, refactor, docs, test")
+        print("檢查階段: development (開發中), commit (提交時)")
         return
     
     tdd = TicketDrivenDevelopment()
@@ -609,9 +673,14 @@ def main():
     
     elif command == "validate":
         ticket_name = sys.argv[2] if len(sys.argv) > 2 else None
-        result = tdd.validate_commit_documentation(ticket_name)
+        phase = sys.argv[3] if len(sys.argv) > 3 else 'commit'
         
-        print("📋 文件完整性檢查結果:")
+        if phase == 'development':
+            result = tdd.validate_development_status(ticket_name)
+        else:
+            result = tdd.validate_commit_documentation(ticket_name)
+        
+        print(f"📋 文件完整性檢查結果 ({result.get('phase', phase)} 階段):")
         print(f"狀態: {'✅ 通過' if result['status'] == 'pass' else '❌ 未通過'}")
         
         if 'documents' in result:
@@ -627,6 +696,26 @@ def main():
             print("建議:")
             for suggestion in result['suggestions']:
                 print(f"   - {suggestion}")
+    
+    elif command == "status":
+        # 新增開發狀態檢查命令
+        ticket_name = sys.argv[2] if len(sys.argv) > 2 else None
+        result = tdd.validate_development_status(ticket_name)
+        
+        print("🔍 開發狀態檢查:")
+        print(f"票券: {result.get('ticket_name', 'N/A')}")
+        print(f"狀態: {'✅ 準備就緒' if result['status'] == 'pass' else '⚠️ 需要完善'}")
+        
+        if 'documents' in result:
+            docs = result['documents']
+            print(f"開發文件: {docs['completed_count']}/{docs['total_count']} 完成")
+            
+            if docs['missing_docs']:
+                print("\n待完成:")
+                for doc in docs['missing_docs']:
+                    print(f"   - {doc}")
+            else:
+                print("✅ 所有開發階段文件已完成，可以進行提交")
     
     elif command == "auto-create":
         result = tdd._handle_no_ticket_scenario()

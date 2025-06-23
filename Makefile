@@ -99,6 +99,16 @@ list-tickets:
 	@echo "📋 所有 Tickets:"
 	@python3 docs/scripts/ticket-manager.py list
 
+# 🔍 檢查開發狀態
+dev-status:
+	@echo "🔍 檢查開發狀態..."
+	@python3 docs/scripts/ticket-driven-dev.py status
+
+# 📋 檢查文件完整性
+check-docs:
+	@echo "📋 檢查開發階段文件完整性..."
+	@python3 docs/scripts/ticket-driven-dev.py validate $(TICKET) development
+
 # 🔓 授權 AI 提交（用戶明確授權時使用）
 authorize-commit:
 	@echo "🔓 授權 AI 進行提交（有效期 5 分鐘）..."
@@ -140,43 +150,7 @@ finalize-docs:
 	@echo "📄 檢查並提交待處理的文檔..."
 	@python3 docs/scripts/finalize-docs.py
 
-# 🚀 快速開發模式 (原型/概念驗證)
-quick-dev:
-	@echo "🚀 快速開發模式 - 最小文檔要求"
-	@echo "功能名稱: $(FEATURE)"
-	@if [ -z "$(FEATURE)" ]; then \
-		echo "❌ 請指定功能名稱: make quick-dev FEATURE=feature-name"; \
-		exit 1; \
-	fi
-	@echo "✅ 跳過部分檢查，適用於快速原型開發"
-	@echo "📝 請記得更新 docs/dev-logs/$(shell date +%Y-%m-%d)-feature-$(FEATURE).yml"
-
-# 🎯 標準開發模式 (一般功能)
-dev-start:
-	@echo "🤖 啟動標準開發模式..."
-	@echo "📖 請參考 docs/PLAYBOOK.md 開始開發"
-
-# 🔒 嚴格開發模式 (核心功能)
-strict-dev:
-	@echo "🔒 嚴格開發模式 - 完整品質檢查"
-	@echo "Epic: $(EPIC)"
-	@if [ -z "$(EPIC)" ]; then \
-		echo "❌ 請指定 Epic: make strict-dev EPIC=epic-name"; \
-		exit 1; \
-	fi
-	@echo "✅ 強化測試要求：95% 覆蓋率"
-	@echo "✅ 完整文檔要求：L3 級別"
-	@echo "✅ 效能測試要求：必須通過"
-
-# 🔄 繼續開發 (檢查進度)
-dev-continue:
-	@echo "📊 檢查開發進度..."
-	@if [ -f docs/current/work-$(shell date +%Y-%m-%d).md ]; then \
-		echo "📋 今日工作記錄:"; \
-		cat docs/current/work-$(shell date +%Y-%m-%d).md; \
-	else \
-		echo "❌ 未找到今日工作記錄，請先執行 make dev-start"; \
-	fi
+# === 票券驅動開發系統已取代以上開發模式 ===
 
 # === Git 提交自動化 ===
 
@@ -235,41 +209,7 @@ update-changelog:
 	@echo "📝 更新 changelog..."
 	@python docs/scripts/update-changelog.py
 
-# ✅ 智能提交助手（手動執行）
-commit-check:
-	@echo "📋 執行提交前檢查..."
-	@echo "🛡️ 執行 AI 提交授權檢查..."
-	@python3 docs/scripts/ai-commit-guard.py || (echo "❌ 未授權的提交已被阻止" && exit 1)
-	@python3 docs/scripts/commit-guide.py
-
-# 🔒 嚴格模式提交（包含建置和測試）
-commit-strict:
-	@echo "🔒 執行嚴格提交檢查..."
-	@python3 docs/scripts/commit-guide.py --strict
-
-# 🚀 快速提交（跳過 hooks）
-commit-quick:
-	@echo "🚀 快速提交模式..."
-	@echo "⚠️ 警告：將跳過所有檢查"
-	@git add -A
-	@git commit --no-verify
-
-# 📝 智能提交（自動加入所有變更）
-commit-smart:
-	@echo "🤖 智能提交模式..."
-	@python3 docs/scripts/smart-commit.py
-
-# 🎗️ 列出最近的 commits 和 tickets
-dev-status:
-	@echo "🎗️ 開發狀態概覽"
-	@echo "\n📍 當前 Branch:"
-	@git branch --show-current
-	@echo "\n📦 最近的 Commits:"
-	@git log --oneline -5
-	@echo "\n🎫 Active Tickets:"
-	@python3 docs/scripts/ticket-manager.py list | grep -A 5 "Active:" || echo "沒有 active tickets"
-	@echo "\n📊 今日開發日誌:"
-	@ls -la docs/dev-logs/$$(date +%Y-%m-%d)/*.yml 2>/dev/null | tail -5 || echo "今日還沒有開發日誌"
+# === 以上過時的提交命令已被票券驅動開發系統取代 ===
 
 # 🔧 AI 自動修復
 ai-fix:
@@ -308,68 +248,7 @@ changelog-release:
 	@echo "請手動編輯 CHANGELOG.md 將 [Unreleased] 改為版本號"
 	@echo "例如: ## [1.0.0] - $(shell date +%Y-%m-%d)"
 
-# 📚 開發歷程管理
-dev-logs:
-	@echo "📚 查看開發歷程記錄:"
-	@find docs/development-logs -name "*.md" -type f | head -10 2>/dev/null || echo "❌ 暫無開發記錄"
-
-dev-logs-today:
-	@echo "📅 今日開發記錄:"
-	@find docs/development-logs/$(shell date +%Y-%m-%d) -name "*.md" -type f 2>/dev/null || echo "❌ 今日暫無記錄"
-
-dev-logs-feature:
-	@echo "🔍 請指定功能名稱:"
-	@echo "例如: find docs/development-logs -name '*email-login*' -type d"
-
-dev-stats:
-	@echo "📊 開發統計:"
-	@echo "總功能數: $(shell find docs/development-logs -name 'time-tracking.json' | wc -l | tr -d ' ')"
-	@echo "今日功能: $(shell find docs/development-logs/$(shell date +%Y-%m-%d) -name 'time-tracking.json' 2>/dev/null | wc -l | tr -d ' ')"
-	@echo "本週功能: $(shell find docs/development-logs -name 'time-tracking.json' -newermt '1 week ago' 2>/dev/null | wc -l | tr -d ' ')"
-
-# 🏗️ 架構一致性檢查
-arch-check:
-	@echo "🏗️ 檢查架構一致性..."
-	@echo "檢查界限上下文實作..."
-	@grep -r "bounded.context" docs/ || echo "  ⚠️ 未找到界限上下文文檔"
-	@echo "檢查領域模型..."
-	@find frontend/src -name "*.ts" -exec grep -l "aggregate\|entity\|valueobject" {} \; || echo "  ⚠️ 未找到領域模型實作"
-
-# === 快速開發模式指令 ===
-
-# 🎯 產品開發 (BDD 模式)
-product-start:
-	@echo "📋 產品功能開發模式"
-	@echo "可用文檔:"
-	@ls docs/product/ 2>/dev/null || echo "  ❌ 產品文檔不存在"
-	@echo ""
-	@echo "建議流程:"
-	@echo "1. 檢視 docs/product/vision.md"
-	@echo "2. 確認用戶角色 docs/product/user-personas.md"
-	@echo "3. 選擇 Epic docs/product/epics/"
-	@echo "4. 定義功能 docs/product/features/"
-
-# 🏗️ 架構設計 (DDD 模式)
-arch-start:
-	@echo "🏗️ 架構設計模式"
-	@echo "可用文檔:"
-	@ls docs/architecture/ 2>/dev/null || echo "  ❌ 架構文檔不存在"
-	@echo ""
-	@echo "建議流程:"
-	@echo "1. 檢視系統上下文 docs/architecture/system-context.md"
-	@echo "2. 確認界限上下文 docs/architecture/bounded-contexts.md"
-	@echo "3. 統一術語 docs/architecture/ubiquitous-language.md"
-
-# 🔧 技術實作 (TDD 模式)  
-tech-start:
-	@echo "🔧 技術實作模式"
-	@echo "可用文檔:"
-	@ls docs/technical/ 2>/dev/null || echo "  ❌ 技術文檔不存在"
-	@echo ""
-	@echo "建議流程:"
-	@echo "1. 檢視測試策略 docs/technical/test-strategy.md"
-	@echo "2. 參考實作指南 docs/technical/implementation/"
-	@echo "3. 遵循 TDD 紅綠重構循環"
+# === 以上開發記錄和架構命令已被新系統取代 ===
 
 # === 品質保證指令 ===
 

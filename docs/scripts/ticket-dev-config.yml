@@ -9,14 +9,18 @@ development_strategies:
       - path: docs/features/{ticket_name}-spec.md
         template: feature-spec-template.md
         required: true
+        required_phase: development
         description: 功能規格文件
+      - path: __tests__/{component_path}.test.{ext}
+        required: true
+        required_phase: development
+        description: 單元測試
       - path: docs/dev-logs/{date}/{timestamp}-feature-{ticket_name}.yml
         template: feature-log-template.yml
         required: true
+        required_phase: development
+        auto_generated: false
         description: 開發日誌
-      - path: __tests__/{component_path}.test.{ext}
-        required: true
-        description: 單元測試
     quality_gates:
       test_coverage: 80
       documentation_score: 8
@@ -29,14 +33,18 @@ development_strategies:
       - path: docs/bugs/{ticket_name}-analysis.md
         template: bug-analysis-template.md
         required: true
+        required_phase: development
         description: Bug 分析報告
+      - path: __tests__/{component_path}.test.{ext}
+        required: true
+        required_phase: development
+        description: 回歸測試
       - path: docs/dev-logs/{date}/{timestamp}-bug-{ticket_name}.yml
         template: bug-log-template.yml
         required: true
+        required_phase: development
+        auto_generated: false
         description: 修復日誌
-      - path: __tests__/{component_path}.test.{ext}
-        required: true
-        description: 回歸測試
     quality_gates:
       reproduction_test: true
       fix_verification: true
@@ -57,6 +65,8 @@ development_strategies:
       - path: docs/dev-logs/{date}/{timestamp}-refactor-{ticket_name}.yml
         template: refactor-log-template.yml
         required: true
+        required_phase: development
+        auto_generated: false
         description: 重構日誌
     quality_gates:
       test_coverage_maintained: true
@@ -70,6 +80,8 @@ development_strategies:
       - path: docs/dev-logs/{date}/{timestamp}-docs-{ticket_name}.yml
         template: docs-log-template.yml
         required: true
+        required_phase: development
+        auto_generated: false
         description: 文檔更新日誌
     quality_gates:
       spelling_check: true
