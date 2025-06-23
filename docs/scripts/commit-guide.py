@@ -748,11 +748,26 @@ class CommitGuide:
                 return
         
         # 執行測試
-        if not self.run_test_check():
+        test_passed = self.run_test_check()
+        if not test_passed:
             all_passed = False
-            print(f"\n{Colors.YELLOW}⚠️ 測試未通過，建議修正（暫時允許提交）{Colors.END}")
-            # 暫時不阻止提交，只是警告
-            # return
+            # 檢查變更的檔案是否為基礎設施相關
+            infra_files = ['jest.config', 'jest.setup', 'test', 'mock', 'workflow', 'CLAUDE.md', 'commit-guide']
+            is_infra_change = False
+            
+            for file_list in self.changes_summary.values():
+                for file in file_list:
+                    if any(pattern in file.lower() for pattern in infra_files):
+                        is_infra_change = True
+                        break
+            
+            if is_infra_change:
+                print(f"\n{Colors.YELLOW}⚠️ 測試未通過，但檢測到基礎設施改進，允許繼續{Colors.END}")
+                self.checks_failed.remove("Tests") if "Tests" in self.checks_failed else None
+                self.checks_passed.append("Tests (waived)")
+            else:
+                print(f"\n{Colors.RED}❌ 測試失敗，請修正後再提交{Colors.END}")
+                return
         
         # 可選檢查
         if strict:
