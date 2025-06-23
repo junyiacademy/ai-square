@@ -163,7 +163,7 @@ export default function RelationsClient() {
   return (
     <main className="p-8 bg-gray-50 min-h-screen">
       {fakeIllustration}
-      <h1 className="mb-2 text-2xl sm:text-3xl font-bold text-center px-4">{t('pageTitle')}</h1>
+      <h1 className="mb-2 text-xl sm:text-2xl md:text-3xl font-bold text-center px-4 break-words">{t('pageTitle')}</h1>
       <p className="text-center text-gray-500 mb-8 px-4">{t('pageSubtitle')}</p>
       <div className="max-w-3xl mx-auto">{tree.domains.map((domain) => (
           <DomainAccordion key={domain.key} domain={domain} kMap={tree.kMap} sMap={tree.sMap} aMap={tree.aMap} lang={lang} emoji={domain.emoji || '🤖'} />

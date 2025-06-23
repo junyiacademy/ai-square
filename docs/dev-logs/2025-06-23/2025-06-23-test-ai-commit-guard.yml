@@ -1,0 +1,51 @@
+type: test
+title: '[待補充 commit 訊息]'
+date: '2025-06-23'
+developer: AI + Human
+status: in_progress
+commit_hash: pending
+description: '[待補充 commit 描述]'
+timeline:
+- phase: 實現
+  duration: 10.6
+  ai_time: 8.5
+  human_time: 2.1
+  tasks:
+  - 創建 .ai-commit-guard
+  - 創建 language-title-test-report.md
+  - 創建 translation-fixes-summary.md
+  - 更新 relations.json
+  - 更新 relations.json
+  - 更新 relations.json
+metrics:
+  total_time_minutes: 10.6
+  ai_time_minutes: 8.5
+  human_time_minutes: 2.1
+  ai_percentage: 80.0
+  human_percentage: 20.0
+  files_added: 8
+  files_modified: 4
+  files_deleted: 0
+  time_calculation_method: file_timestamp_analysis
+  time_calculation_details:
+    start_time: '2025-06-23T23:17:49.168794'
+    end_time: '2025-06-23T23:28:26.147945'
+    file_count: 12
+changes:
+  added:
+  - .ai-commit-guard
+  - docs/test-reports/language-title-test-report.md
+  - docs/test-reports/translation-fixes-summary.md
+  - frontend/e2e/all-languages-title.spec.ts
+  - frontend/e2e/quick-title-check.spec.ts
+  - frontend/scripts/check-title-lengths.js
+  - frontend/scripts/validate-translations.js
+  - frontend/src/components/ui/ResponsiveTitle.tsx
+  modified:
+  - frontend/public/locales/es/relations.json
+  - frontend/public/locales/fr/relations.json
+  - frontend/public/locales/ru/relations.json
+  - frontend/src/app/relations/page.tsx
+  deleted: []
+pre_commit_generated: true
+generation_time: '2025-06-23T23:28:26.148156'
