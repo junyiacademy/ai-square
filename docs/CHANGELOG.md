@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- implement pre-commit and post-commit documentation generation (60fb717)
 ### Fixed
 - improve time tracking accuracy (b79d337)
 ## [2025-06-23] - 開發流程自動化與品質門檻建立
