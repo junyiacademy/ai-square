@@ -392,6 +392,42 @@ class PostCommitDocGenerator:
             # 如果更新失敗，生成新的
             return self._generate_new_log(commit_type, scope, time_info, log_file.parent.name)
     
+    def _get_active_ticket_info(self) -> Optional[Dict]:
+        """獲取當前 active ticket 資訊"""
+        try:
+            # 使用 ticket-manager.py 獲取 active ticket
+            ticket_manager_path = self.project_root / "docs" / "scripts" / "ticket-manager.py"
+            if not ticket_manager_path.exists():
+                return None
+            
+            result = subprocess.run(
+                [sys.executable, str(ticket_manager_path), "active"],
+                capture_output=True,
+                text=True,
+                cwd=self.project_root
+            )
+            
+            if result.returncode == 0 and "Active ticket:" in result.stdout:
+                # 簡單解析輸出
+                lines = result.stdout.strip().split('\n')
+                for line in lines:
+                    if "Active ticket:" in line:
+                        ticket_name = line.split("Active ticket:")[1].strip()
+                        # 嘗試讀取 ticket 檔案獲取完整資訊
+                        tickets_dir = self.project_root / "docs" / "tickets"
+                        for date_dir in tickets_dir.iterdir():
+                            if date_dir.is_dir():
+                                ticket_file = date_dir / f"{ticket_name}.json"
+                                if ticket_file.exists():
+                                    with open(ticket_file, 'r', encoding='utf-8') as f:
+                                        return json.load(f)
+            
+            return None
+            
+        except Exception as e:
+            print(f"⚠️ 無法獲取 active ticket: {e}")
+            return None
+    
     def _should_generate_dev_log(self) -> bool:
         """判斷是否應該生成 dev log，避免遞迴追蹤"""
         # 檢查 commit 訊息是否為自動生成的
@@ -495,6 +531,9 @@ class PostCommitDocGenerator:
         date_folder.mkdir(parents=True, exist_ok=True)
         filepath = date_folder / filename
         
+        # 檢查是否有 active ticket
+        ticket_info = self._get_active_ticket_info()
+        
         # 準備日誌內容
         log_content = {
             'type': commit_type,
@@ -504,6 +543,8 @@ class PostCommitDocGenerator:
             'status': 'completed',
             'commit_hash': self.commit_hash,
             'description': self.commit_info['message'],
+            'ticket_id': ticket_info.get('id') if ticket_info else None,
+            'ticket_name': ticket_info.get('name') if ticket_info else None,
             'timeline': [{
                 'phase': '實現',
                 'duration': time_info['total'],

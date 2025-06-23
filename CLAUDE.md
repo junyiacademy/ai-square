@@ -158,6 +158,100 @@ The app uses a dual translation approach:
 - `next-i18next.config.js` - Internationalization setup
 - `tsconfig.json` - TypeScript configuration
 
+## Ticket Development Rules
+
+### When to Create a Ticket
+You MUST create a ticket when the user requests:
+1. **New Features**: "implement", "add", "create", "build" 
+2. **Bug Fixes**: "fix", "resolve", "bug doesn't work"
+3. **Refactoring**: "refactor", "improve", "optimize"
+4. **Multi-file Changes**: Any change affecting > 3 files
+5. **Time Estimate > 15 minutes**
+
+### Ticket Workflow
+When a ticket is needed, respond with:
+```
+This task requires a development ticket. Let me create one:
+
+[Execute: make dev-ticket TICKET=<descriptive-name>]
+
+This will:
+1. Create a ticket file for time tracking
+2. Start a dedicated branch (if enabled)
+3. Track all changes related to this task
+```
+
+### Skip Ticket for:
+- Simple documentation updates
+- Typo fixes
+- Single config file changes
+- CSS/style only changes
+
+### Active Ticket Check
+Always check for active tickets before creating new ones:
+```bash
+python docs/scripts/ticket-manager.py active
+```
+
+### Automated Decision Making
+
+**Can Execute Without Asking**:
+1. Creating/pausing/resuming tickets
+2. Branch operations (create, switch)
+3. Git stash/WIP commits
+4. Running tests and checks
+5. Generating commit messages
+
+**Must Ask Before**:
+1. Resolving merge conflicts (unless trivial)
+2. Changing business logic
+3. Deleting code/files
+4. Force pushing
+5. Switching context (unless urgent)
+
+**Smart Automation Rules**:
+- If "urgent/緊急/broken/壞了" → Auto pause current & switch
+- If "continue/繼續/回到" → Auto resume matching ticket
+- If conflict in package-lock.json → Auto resolve with --theirs
+- If only formatting changes → Auto fix with prettier/eslint
+
+### Parallel Ticket Handling
+When user switches context during an active ticket:
+
+1. **Detect Context Switch**:
+   - Different topic/feature mentioned
+   - Explicit request like "等等" or "先處理"
+   - New bug report while developing feature
+
+2. **Response Template**:
+   ```
+   我注意到您提到了 [新主題]，這與當前的 [ticket名稱] 不同。
+   
+   請問您想要：
+   1. 暫停當前 ticket，處理新問題
+   2. 將這作為當前 ticket 的一部分  
+   3. 先記下來，完成當前工作後處理
+   
+   當前進度：[簡述當前ticket進度]
+   ```
+
+3. **Switching Tickets**:
+   ```bash
+   # Pause current
+   make pause-ticket
+   
+   # Create new
+   make dev-ticket TICKET=new-issue
+   
+   # Or resume previous
+   make resume-ticket TICKET=previous-name
+   ```
+
+4. **List All Tickets**:
+   ```bash
+   make list-tickets
+   ```
+
 ## Development Workflow
 
 ### Standard Development Flow

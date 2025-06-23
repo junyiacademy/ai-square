@@ -65,6 +65,28 @@ dev-ticket:
 	@echo "🎯 開始開發 $(TICKET)..."
 
 # ✅ 完成開發 Ticket (自動結束時間追蹤)
+# ⏸️ 暫停當前 ticket
+pause-ticket:
+	@echo "⏸️ 暫停當前開發 Ticket"
+	@python3 docs/scripts/ticket-manager.py pause
+	@echo ""
+	@echo "💡 使用 'make list-tickets' 查看所有 tickets"
+	@echo "💡 使用 'make resume-ticket TICKET=xxx' 恢復工作"
+
+# ▶️ 恢復暫停的 ticket
+resume-ticket:
+	@if [ -z "$(TICKET)" ]; then \
+		echo "❌ 請指定要恢復的 Ticket: make resume-ticket TICKET=ticket-name"; \
+		exit 1; \
+	fi
+	@echo "▶️ 恢復開發 Ticket: $(TICKET)"
+	@python3 docs/scripts/ticket-manager.py resume $(TICKET)
+
+# 📋 列出所有 tickets
+list-tickets:
+	@echo "📋 所有 Tickets:"
+	@python3 docs/scripts/ticket-manager.py list
+
 commit-ticket:
 	@echo "🎫 完成開發 Ticket"
 	@echo "📊 結束時間追蹤並生成報告..."
