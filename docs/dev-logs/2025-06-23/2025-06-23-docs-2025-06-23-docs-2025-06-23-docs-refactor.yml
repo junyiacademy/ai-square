@@ -8,18 +8,18 @@ description: "feat(docs): implement pre-commit and post-commit documentation gen
   \nModified 3 files:\n  - commit-guide.py\n  - post-commit-doc-gen.py\n  - pre-commit-doc-gen.py"
 timeline:
 - phase: 實現
-  duration: 14.9
-  ai_time: 11.9
-  human_time: 3.0
+  duration: 12.1
+  ai_time: 9.7
+  human_time: 2.4
   tasks:
   - 更新 commit-guide.py
   - 更新 post-commit-doc-gen.py
   - 更新 pre-commit-doc-gen.py
   - 移除 test-commit-flow.txt
 metrics:
-  total_time_minutes: 14.9
-  ai_time_minutes: 11.9
-  human_time_minutes: 3.0
+  total_time_minutes: 12.1
+  ai_time_minutes: 9.7
+  human_time_minutes: 2.4
   ai_percentage: 80.0
   human_percentage: 20.0
   files_added: 2
@@ -34,6 +34,8 @@ metrics:
   is_real_time: true
   commit_timestamp: '2025-06-23T04:40:11'
   post_commit_update_timestamp: '2025-06-23T04:40:11.538511'
+  time_calculation_fixed: true
+  time_calculation_fix_date: '2025-06-23T23:44:08.274472'
 changes:
   added:
   - docs/dev-logs/2025-06-23/2025-06-23-docs-2025-06-23-docs-2025-06-23-docs-refactor.yml

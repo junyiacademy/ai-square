@@ -7,15 +7,15 @@ commit_hash: d1051bb3
 description: 'refactor(frontend): refactor code'
 timeline:
 - phase: 實現
-  duration: 5.9
-  ai_time: 4.7
-  human_time: 1.2
+  duration: 1.0
+  ai_time: 0.8
+  human_time: 0.2
   tasks:
   - 更新 page.tsx
 metrics:
-  total_time_minutes: 5.9
-  ai_time_minutes: 4.7
-  human_time_minutes: 1.2
+  total_time_minutes: 1.0
+  ai_time_minutes: 0.8
+  human_time_minutes: 0.2
   ai_percentage: 80.0
   human_percentage: 20.0
   files_added: 1
@@ -30,6 +30,8 @@ metrics:
   is_real_time: true
   commit_timestamp: '2025-06-23T22:24:12'
   post_commit_update_timestamp: '2025-06-23T22:24:13.121628'
+  time_calculation_fixed: true
+  time_calculation_fix_date: '2025-06-23T23:44:08.228629'
 changes:
   added:
   - docs/dev-logs/2025-06-23/2025-06-23-update-page.yml

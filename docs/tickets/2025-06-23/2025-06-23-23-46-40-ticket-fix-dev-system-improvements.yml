@@ -1,0 +1,14 @@
+id: 2025-06-23-23-46-40-fix-dev-system-improvements
+name: fix-dev-system-improvements
+description: Fix dev log time calculations and implement bidirectional linking
+status: in_progress
+created_at: '2025-06-23T23:46:40.055668'
+started_at: '2025-06-23T23:46:40.055668'
+completed_at: null
+duration_minutes: null
+ai_time_minutes: null
+human_time_minutes: null
+commit_hash: null
+files_changed: []
+date: '2025-06-23'
+time: 23-46-40

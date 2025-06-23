@@ -4,7 +4,7 @@ Ticket 管理系統
 創建和管理開發 tickets，作為時間追蹤的錨點
 """
 
-import json
+import yaml
 import sys
 import subprocess
 from datetime import datetime
@@ -21,6 +21,7 @@ class TicketManager:
         """創建新的 ticket"""
         timestamp = datetime.now()
         date_str = timestamp.strftime('%Y-%m-%d')
+        time_str = timestamp.strftime('%H-%M-%S')
         
         # 創建日期資料夾
         date_dir = self.tickets_dir / date_str
@@ -28,7 +29,7 @@ class TicketManager:
         
         # Ticket 資料
         ticket_data = {
-            'id': f"{date_str}-{ticket_name}",
+            'id': f"{date_str}-{time_str}-{ticket_name}",
             'name': ticket_name,
             'description': description,
             'status': 'in_progress',
@@ -39,13 +40,15 @@ class TicketManager:
             'ai_time_minutes': None,
             'human_time_minutes': None,
             'commit_hash': None,
-            'files_changed': []
+            'files_changed': [],
+            'date': date_str,
+            'time': time_str
         }
         
-        # 儲存 ticket
-        ticket_file = date_dir / f"{ticket_name}.json"
+        # 儲存 ticket (使用 YAML 格式，檔名包含時間)
+        ticket_file = date_dir / f"{date_str}-{time_str}-ticket-{ticket_name}.yml"
         with open(ticket_file, 'w', encoding='utf-8') as f:
-            json.dump(ticket_data, f, indent=2, ensure_ascii=False)
+            yaml.dump(ticket_data, f, allow_unicode=True, sort_keys=False)
         
         print(f"📝 Ticket 已創建: {ticket_file}")
         print(f"🕐 開始時間: {timestamp.strftime('%H:%M:%S')}")
@@ -76,28 +79,36 @@ class TicketManager:
         
         return ticket_data
     
-    def complete_ticket(self, ticket_name: str, commit_hash: str) -> Optional[Dict]:
+    def complete_ticket(self, ticket_name: str, commit_hash: str, dev_log_path: str = None) -> Optional[Dict]:
         """完成 ticket"""
-        # 尋找今天的 ticket
-        date_str = datetime.now().strftime('%Y-%m-%d')
-        ticket_file = self.tickets_dir / date_str / f"{ticket_name}.json"
-        
-        if not ticket_file.exists():
-            # 嘗試找其他日期的
-            for date_dir in sorted(self.tickets_dir.iterdir(), reverse=True):
-                if date_dir.is_dir():
-                    possible_file = date_dir / f"{ticket_name}.json"
-                    if possible_file.exists():
-                        ticket_file = possible_file
+        # 尋找 ticket (新格式和舊格式)
+        ticket_file = None
+        for date_dir in sorted(self.tickets_dir.iterdir(), reverse=True):
+            if date_dir.is_dir():
+                # 先找新格式 (YAML)
+                for yml_file in date_dir.glob(f"*-ticket-{ticket_name}.yml"):
+                    ticket_file = yml_file
+                    break
+                # 再找舊格式 (JSON)
+                if not ticket_file:
+                    json_file = date_dir / f"{ticket_name}.json"
+                    if json_file.exists():
+                        ticket_file = json_file
                         break
+            if ticket_file:
+                break
         
-        if not ticket_file.exists():
+        if not ticket_file:
             print(f"❌ 找不到 ticket: {ticket_name}")
             return None
         
         # 讀取並更新 ticket
         with open(ticket_file, 'r', encoding='utf-8') as f:
-            ticket_data = json.load(f)
+            if ticket_file.suffix == '.json':
+                import json
+                ticket_data = json.load(f)
+            else:
+                ticket_data = yaml.safe_load(f)
         
         completed_at = datetime.now()
         started_at = datetime.fromisoformat(ticket_data['started_at'])
@@ -110,9 +121,17 @@ class TicketManager:
         ticket_data['commit_hash'] = commit_hash
         ticket_data['status'] = 'completed'
         
+        # 添加 dev log 連結
+        if dev_log_path:
+            ticket_data['dev_log_path'] = dev_log_path
+        
         # 儲存更新
         with open(ticket_file, 'w', encoding='utf-8') as f:
-            json.dump(ticket_data, f, indent=2, ensure_ascii=False)
+            if ticket_file.suffix == '.json':
+                import json
+                json.dump(ticket_data, f, indent=2, ensure_ascii=False)
+            else:
+                yaml.dump(ticket_data, f, allow_unicode=True, sort_keys=False)
         
         print(f"✅ Ticket 已完成: {ticket_name}")
         print(f"⏱️  總時間: {ticket_data['duration_minutes']} 分鐘")

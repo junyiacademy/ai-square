@@ -20,6 +20,7 @@ class PreCommitDocGenerator:
         self.project_root = Path(__file__).parent.parent.parent
         self.staged_files = self._get_staged_files()
         self.time_metrics = self._calculate_time_from_files()
+        self.active_ticket = self._get_active_ticket()
         
     def _run_command(self, cmd: List[str]) -> Tuple[int, str, str]:
         """執行命令並返回結果"""
@@ -49,67 +50,110 @@ class PreCommitDocGenerator:
                     })
         return files
     
+    def _get_active_ticket(self) -> Optional[Dict]:
+        """獲取當前 active ticket"""
+        tickets_dir = self.project_root / "docs" / "tickets"
+        if not tickets_dir.exists():
+            return None
+            
+        # 從最新日期開始尋找
+        for date_dir in sorted(tickets_dir.iterdir(), reverse=True):
+            if date_dir.is_dir():
+                # 先找新格式 (YAML)
+                for yml_file in date_dir.glob("*-ticket-*.yml"):
+                    try:
+                        with open(yml_file, 'r', encoding='utf-8') as f:
+                            ticket_data = yaml.safe_load(f)
+                        if ticket_data.get('status') == 'in_progress':
+                            ticket_data['_file_path'] = str(yml_file)
+                            return ticket_data
+                    except Exception:
+                        pass
+                # 再找舊格式 (JSON)
+                for json_file in date_dir.glob("*.json"):
+                    try:
+                        with open(json_file, 'r', encoding='utf-8') as f:
+                            ticket_data = json.load(f)
+                        if ticket_data.get('status') == 'in_progress':
+                            ticket_data['_file_path'] = str(json_file)
+                            return ticket_data
+                    except Exception:
+                        pass
+        return None
+    
     def _calculate_time_from_files(self) -> Dict:
-        """基於檔案修改時間計算開發時間"""
+        """基於 git 歷史計算開發時間（參考 ADR-016）"""
         if not self.staged_files:
             return {
                 'total_time_minutes': 0,
                 'method': 'no_files'
             }
         
-        # 收集所有檔案的修改時間
-        timestamps = []
-        for file_info in self.staged_files:
-            file_path = self.project_root / file_info['path']
-            if file_path.exists() and file_info['status'] != 'D':
-                mtime = datetime.fromtimestamp(file_path.stat().st_mtime)
-                timestamps.append({
-                    'file': file_info['path'],
-                    'time': mtime
-                })
+        # 排除自動生成的檔案
+        exclude_patterns = ['dev-logs/', 'CHANGELOG.md', '.yml', 'auto-generated']
+        meaningful_files = [
+            f for f in self.staged_files 
+            if not any(pattern in f['path'] for pattern in exclude_patterns)
+        ]
         
-        if not timestamps:
-            return {
-                'total_time_minutes': 5,  # 刪除檔案的預設時間
-                'method': 'deletion_estimate'
-            }
+        # 如果沒有有意義的檔案，使用所有檔案
+        files_to_analyze = meaningful_files if meaningful_files else self.staged_files
         
-        # 計算時間範圍
-        timestamps.sort(key=lambda x: x['time'])
-        start_time = timestamps[0]['time']
-        end_time = timestamps[-1]['time']
+        # 使用 git 歷史獲取檔案的修改時間
+        earliest_time = None
+        latest_time = None
         
-        # 加上當前時間作為結束時間（正在準備 commit）
+        for file_info in files_to_analyze[:10]:  # 最多分析 10 個檔案
+            # 獲取檔案的 git 歷史時間戳
+            code, stdout, _ = self._run_command([
+                "git", "log", "--follow", "--format=%ct", "--", file_info['path']
+            ])
+            
+            if code == 0 and stdout:
+                timestamps = [int(ts) for ts in stdout.strip().split('\n') if ts]
+                if timestamps:
+                    file_earliest = min(timestamps)
+                    file_latest = max(timestamps)
+                    
+                    if earliest_time is None or file_earliest < earliest_time:
+                        earliest_time = file_earliest
+                    if latest_time is None or file_latest > latest_time:
+                        latest_time = file_latest
+        
+        # 如果無法從檔案歷史獲取，使用 commit 間隔
         now = datetime.now()
-        if (now - end_time).total_seconds() < 300:  # 5分鐘內
-            end_time = now
-        
-        duration_minutes = (end_time - start_time).total_seconds() / 60
-        
-        # 如果太短，使用最小值
-        if duration_minutes < 1:
-            # 檢查上個 commit 時間
+        if earliest_time is None or latest_time is None:
+            # 獲取上一個 commit 時間
             code, stdout, _ = self._run_command(["git", "log", "-1", "--pretty=%ct"])
             if code == 0 and stdout.strip():
-                last_commit_time = datetime.fromtimestamp(int(stdout.strip()))
-                interval = (now - last_commit_time).total_seconds() / 60
-                if 0 < interval < 180:  # 3小時內
-                    duration_minutes = interval
+                last_commit_time = int(stdout.strip())
+                duration_minutes = (now.timestamp() - last_commit_time) / 60
+                return {
+                    'total_time_minutes': max(round(duration_minutes, 1), 1),
+                    'method': 'commit_interval',
+                    'start_time': datetime.fromtimestamp(last_commit_time).isoformat(),
+                    'end_time': now.isoformat()
+                }
         
-        # 合理性檢查
-        if duration_minutes < 0.5:
-            duration_minutes = len(self.staged_files) * 2
-        elif duration_minutes > 480:  # 8小時
-            duration_minutes = 60  # 預設1小時
+        # 計算時間差
+        if earliest_time and latest_time:
+            duration_minutes = (latest_time - earliest_time) / 60
+            # 如果太短，使用當前時間
+            if duration_minutes < 1:
+                duration_minutes = (now.timestamp() - latest_time) / 60
+            
+            return {
+                'total_time_minutes': max(round(duration_minutes, 1), 1),
+                'method': 'git_history',
+                'start_time': datetime.fromtimestamp(earliest_time).isoformat(),
+                'end_time': datetime.fromtimestamp(latest_time).isoformat(),
+                'file_count': len(files_to_analyze)
+            }
         
+        # 預設值
         return {
-            'total_time_minutes': round(duration_minutes, 1),
-            'ai_time_minutes': round(duration_minutes * 0.8, 1),
-            'human_time_minutes': round(duration_minutes * 0.2, 1),
-            'method': 'file_timestamp_analysis',
-            'start_time': start_time.isoformat(),
-            'end_time': end_time.isoformat(),
-            'file_count': len(timestamps)
+            'total_time_minutes': len(self.staged_files) * 2,
+            'method': 'file_count_estimate'
         }
     
     def _analyze_commit_type(self) -> str:
@@ -137,9 +181,11 @@ class PreCommitDocGenerator:
         commit_type = self._analyze_commit_type()
         date_str = datetime.now().strftime('%Y-%m-%d')
         
-        # 生成檔名
+        # 生成檔名（包含時間）
+        now = datetime.now()
+        time_str = now.strftime('%H-%M-%S')
         task_desc = self._generate_task_description()
-        filename = f"{date_str}-{commit_type}-{task_desc}.yml"
+        filename = f"{date_str}-{time_str}-{commit_type}-{task_desc}.yml"
         # 確保日期資料夾存在
         date_folder = self.project_root / "docs" / "dev-logs" / date_str
         date_folder.mkdir(parents=True, exist_ok=True)
@@ -181,6 +227,9 @@ class PreCommitDocGenerator:
             'status': 'in_progress',  # 標記為進行中
             'commit_hash': 'pending',  # 待補充
             'description': '[待補充 commit 描述]',
+            'ticket_id': self.active_ticket['id'] if self.active_ticket else None,
+            'ticket_name': self.active_ticket['name'] if self.active_ticket else None,
+            'ticket_path': self.active_ticket.get('_file_path') if self.active_ticket else None,
             'timeline': [{
                 'phase': '實現',
                 'duration': self.time_metrics['total_time_minutes'],

@@ -358,8 +358,16 @@ class PostCommitDocGenerator:
             log_content['title'] = self.commit_info['message'].split('\n')[0]
             log_content['description'] = self.commit_info['message']
             
-            # 如果有更準確的時間資訊，更新它
-            if time_info.get('source') != 'file_count_estimate' or not log_content.get('metrics'):
+            # 保留 pre-commit 的時間計算，除非 post-commit 有更好的時間來源
+            pre_commit_has_time = (
+                log_content.get('metrics', {}).get('time_calculation_details') and 
+                log_content.get('metrics', {}).get('total_time_minutes', 0) > 0
+            )
+            
+            # 只有在以下情況才更新時間：
+            # 1. post-commit 有真實時間追蹤 (is_real=True)
+            # 2. pre-commit 沒有計算時間
+            if time_info.get('is_real', False) or not pre_commit_has_time:
                 log_content['timeline'][0]['duration'] = time_info['total']
                 log_content['timeline'][0]['ai_time'] = time_info['ai']
                 log_content['timeline'][0]['human_time'] = time_info['human']
@@ -369,9 +377,32 @@ class PostCommitDocGenerator:
                 log_content['metrics']['human_time_minutes'] = time_info['human']
                 log_content['metrics']['time_estimation_method'] = time_info.get('source', 'post_commit_update')
                 log_content['metrics']['is_real_time'] = time_info.get('is_real', False)
+            else:
+                # 如果 pre-commit 已經有時間計算詳情，重新計算正確的總時間
+                if log_content.get('metrics', {}).get('time_calculation_details'):
+                    details = log_content['metrics']['time_calculation_details']
+                    if details.get('start_time') and details.get('end_time'):
+                        try:
+                            start = datetime.fromisoformat(details['start_time'])
+                            end = datetime.fromisoformat(details['end_time'])
+                            actual_minutes = (end - start).total_seconds() / 60
+                            
+                            # 更新為正確的時間
+                            log_content['timeline'][0]['duration'] = round(actual_minutes, 1)
+                            log_content['timeline'][0]['ai_time'] = round(actual_minutes * 0.8, 1)
+                            log_content['timeline'][0]['human_time'] = round(actual_minutes * 0.2, 1)
+                            
+                            log_content['metrics']['total_time_minutes'] = round(actual_minutes, 1)
+                            log_content['metrics']['ai_time_minutes'] = round(actual_minutes * 0.8, 1)
+                            log_content['metrics']['human_time_minutes'] = round(actual_minutes * 0.2, 1)
+                            
+                            print(f"✅ 修正時間計算: {round(actual_minutes, 1)} 分鐘")
+                        except Exception as e:
+                            print(f"⚠️ 無法重新計算時間: {e}")
             
-            # 更新時間戳
-            log_content['metrics']['commit_timestamp'] = self.commit_info['time'].isoformat()
+            # 更新時間戳（保留原有的 commit_timestamp 如果已存在）
+            if 'commit_timestamp' not in log_content.get('metrics', {}):
+                log_content['metrics']['commit_timestamp'] = self.commit_info['time'].isoformat()
             log_content['metrics']['post_commit_update_timestamp'] = datetime.now().isoformat()
             
             # 更新檔案變更資訊
@@ -394,39 +425,104 @@ class PostCommitDocGenerator:
     
     def _get_active_ticket_info(self) -> Optional[Dict]:
         """獲取當前 active ticket 資訊"""
-        try:
-            # 使用 ticket-manager.py 獲取 active ticket
-            ticket_manager_path = self.project_root / "docs" / "scripts" / "ticket-manager.py"
-            if not ticket_manager_path.exists():
-                return None
-            
-            result = subprocess.run(
-                [sys.executable, str(ticket_manager_path), "active"],
-                capture_output=True,
-                text=True,
-                cwd=self.project_root
-            )
-            
-            if result.returncode == 0 and "Active ticket:" in result.stdout:
-                # 簡單解析輸出
-                lines = result.stdout.strip().split('\n')
-                for line in lines:
-                    if "Active ticket:" in line:
-                        ticket_name = line.split("Active ticket:")[1].strip()
-                        # 嘗試讀取 ticket 檔案獲取完整資訊
-                        tickets_dir = self.project_root / "docs" / "tickets"
-                        for date_dir in tickets_dir.iterdir():
-                            if date_dir.is_dir():
-                                ticket_file = date_dir / f"{ticket_name}.json"
-                                if ticket_file.exists():
-                                    with open(ticket_file, 'r', encoding='utf-8') as f:
-                                        return json.load(f)
-            
+        tickets_dir = self.project_root / "docs" / "tickets"
+        if not tickets_dir.exists():
             return None
             
-        except Exception as e:
-            print(f"⚠️ 無法獲取 active ticket: {e}")
-            return None
+        # 從最新日期開始尋找
+        for date_dir in sorted(tickets_dir.iterdir(), reverse=True):
+            if date_dir.is_dir():
+                # 先找新格式 (YAML)
+                for yml_file in date_dir.glob("*-ticket-*.yml"):
+                    try:
+                        with open(yml_file, 'r', encoding='utf-8') as f:
+                            ticket_data = yaml.safe_load(f)
+                        if ticket_data.get('status') == 'in_progress':
+                            ticket_data['_file_path'] = str(yml_file)
+                            return ticket_data
+                    except Exception:
+                        pass
+                # 再找舊格式 (JSON)
+                for json_file in date_dir.glob("*.json"):
+                    try:
+                        with open(json_file, 'r', encoding='utf-8') as f:
+                            ticket_data = json.load(f)
+                        if ticket_data.get('status') == 'in_progress':
+                            ticket_data['_file_path'] = str(json_file)
+                            return ticket_data
+                    except Exception:
+                        pass
+        return None
+    
+    def _get_or_create_ticket_info(self) -> Dict:
+        """獲取或創建 ticket 資訊"""
+        # 先嘗試獲取現有的 active ticket
+        ticket_info = self._get_active_ticket_info()
+        if ticket_info:
+            return ticket_info
+        
+        # 如果沒有 active ticket，創建一張新的
+        print("⚠️ 沒有找到 active ticket，自動創建新 ticket")
+        
+        # 從 commit 訊息中提取 ticket 名稱
+        commit_msg = self.commit_info['message']
+        first_line = commit_msg.split('\n')[0]
+        
+        # 提取 scope 和描述
+        match = re.match(r'^(\w+)(?:\(([^)]+)\))?:\s*(.+)', first_line)
+        if match:
+            commit_type = match.group(1)
+            scope = match.group(2) or 'general'
+            description = match.group(3)
+        else:
+            commit_type = 'update'
+            scope = 'general'
+            description = first_line
+        
+        # 生成 ticket 名稱
+        ticket_name = re.sub(r'[^\w\s-]', '', description)
+        ticket_name = re.sub(r'\s+', '-', ticket_name.strip()).lower()[:30]
+        if not ticket_name:
+            ticket_name = f"{commit_type}-{scope}"
+        
+        # 創建 ticket 資料
+        timestamp = self.commit_info['time']
+        date_str = timestamp.strftime('%Y-%m-%d')
+        time_str = timestamp.strftime('%H-%M-%S')
+        
+        # 計算估計時間
+        time_info = self._estimate_time_spent()
+        
+        ticket_data = {
+            'id': f"{date_str}-{time_str}-{ticket_name}",
+            'name': ticket_name,
+            'description': f"Auto-created for commit: {description}",
+            'status': 'completed',  # 直接設為完成
+            'created_at': timestamp.isoformat(),
+            'started_at': timestamp.isoformat(),
+            'completed_at': timestamp.isoformat(),
+            'duration_minutes': time_info['total'],
+            'ai_time_minutes': time_info['ai'],
+            'human_time_minutes': time_info['human'],
+            'commit_hash': self.commit_hash,
+            'files_changed': self.commit_info['changes']['added'] + self.commit_info['changes']['modified'],
+            'auto_created': True,
+            'date': date_str,
+            'time': time_str
+        }
+        
+        # 儲存 ticket
+        tickets_dir = self.project_root / "docs" / "tickets" / date_str
+        tickets_dir.mkdir(parents=True, exist_ok=True)
+        ticket_file = tickets_dir / f"{date_str}-{time_str}-ticket-{ticket_name}.yml"
+        
+        with open(ticket_file, 'w', encoding='utf-8') as f:
+            yaml.dump(ticket_data, f, allow_unicode=True, sort_keys=False)
+        
+        print(f"✅ 已自動創建 ticket: {ticket_file.name}")
+        
+        ticket_data['_file_path'] = str(ticket_file)
+        return ticket_data
     
     def _should_generate_dev_log(self) -> bool:
         """判斷是否應該生成 dev log，避免遞迴追蹤"""
@@ -531,8 +627,8 @@ class PostCommitDocGenerator:
         date_folder.mkdir(parents=True, exist_ok=True)
         filepath = date_folder / filename
         
-        # 檢查是否有 active ticket
-        ticket_info = self._get_active_ticket_info()
+        # 檢查是否有 active ticket，如果沒有就創建一張
+        ticket_info = self._get_or_create_ticket_info()
         
         # 準備日誌內容
         log_content = {
@@ -545,6 +641,7 @@ class PostCommitDocGenerator:
             'description': self.commit_info['message'],
             'ticket_id': ticket_info.get('id') if ticket_info else None,
             'ticket_name': ticket_info.get('name') if ticket_info else None,
+            'ticket_path': ticket_info.get('_file_path') if ticket_info else None,
             'timeline': [{
                 'phase': '實現',
                 'duration': time_info['total'],
@@ -868,6 +965,10 @@ class PostCommitDocGenerator:
         # 更新或生成開發日誌
         dev_log = self.update_or_generate_dev_log()
         
+        # 更新 ticket 資訊（如果有）
+        if dev_log:
+            self._update_ticket_with_dev_log(dev_log)
+        
         # 根據條件生成故事
         story = None
         if dev_log:  # 只有在生成了 dev log 時才考慮生成 story
@@ -934,6 +1035,40 @@ class PostCommitDocGenerator:
             print(f"✅ 已自動提交文檔更新: {new_hash}")
         else:
             print(f"⚠️  自動提交失敗: {result.stderr}")
+    
+    def _update_ticket_with_dev_log(self, dev_log_path: str):
+        """更新 ticket 中的 dev log 路徑"""
+        # 讀取 dev log 獲取 ticket 資訊
+        try:
+            with open(dev_log_path, 'r', encoding='utf-8') as f:
+                dev_log_content = yaml.safe_load(f)
+            
+            ticket_path = dev_log_content.get('ticket_path')
+            if not ticket_path or not Path(ticket_path).exists():
+                return
+            
+            # 讀取 ticket
+            ticket_file = Path(ticket_path)
+            with open(ticket_file, 'r', encoding='utf-8') as f:
+                if ticket_file.suffix == '.json':
+                    ticket_data = json.load(f)
+                else:
+                    ticket_data = yaml.safe_load(f)
+            
+            # 更新 dev_log_path
+            ticket_data['dev_log_path'] = dev_log_path
+            
+            # 寫回檔案
+            with open(ticket_file, 'w', encoding='utf-8') as f:
+                if ticket_file.suffix == '.json':
+                    json.dump(ticket_data, f, indent=2, ensure_ascii=False)
+                else:
+                    yaml.dump(ticket_data, f, allow_unicode=True, sort_keys=False)
+            
+            print(f"✅ 已更新 ticket 的 dev log 連結")
+            
+        except Exception as e:
+            print(f"⚠️ 無法更新 ticket: {e}")
 
 if __name__ == "__main__":
     # 檢查是否應該跳過（避免無限循環）

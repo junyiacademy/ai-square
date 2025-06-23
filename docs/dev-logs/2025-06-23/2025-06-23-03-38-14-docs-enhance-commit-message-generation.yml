@@ -7,15 +7,15 @@ commit_hash: 87aa8f74
 description: 'improve(commit): enhance commit message generation'
 timeline:
 - phase: 實現
-  duration: 2.7
-  ai_time: 2.2
-  human_time: 0.5
+  duration: 0.2
+  ai_time: 0.1
+  human_time: 0.0
   tasks:
   - 更新 commit-guide.py
 metrics:
-  total_time_minutes: 2.7
-  ai_time_minutes: 2.2
-  human_time_minutes: 0.5
+  total_time_minutes: 0.2
+  ai_time_minutes: 0.1
+  human_time_minutes: 0.0
   ai_percentage: 80.0
   human_percentage: 20.0
   files_added: 1
@@ -30,6 +30,8 @@ metrics:
   is_real_time: true
   commit_timestamp: '2025-06-23T03:38:14'
   post_commit_update_timestamp: '2025-06-23T03:38:14.276823'
+  time_calculation_fixed: true
+  time_calculation_fix_date: '2025-06-23T23:44:08.211212'
 changes:
   added:
   - docs/dev-logs/2025-06-23-docs-commit-guide.yml

@@ -23,9 +23,9 @@ description: 'fix(i18n): fix translation key mismatch and responsive title overf
   especially for Romance languages with longer titles.'
 timeline:
 - phase: 實現
-  duration: 0.7
-  ai_time: 0.6
-  human_time: 0.1
+  duration: 10.6
+  ai_time: 8.5
+  human_time: 2.1
   tasks:
   - 創建 .ai-commit-guard
   - 創建 language-title-test-report.md
@@ -34,9 +34,9 @@ timeline:
   - 更新 relations.json
   - 更新 relations.json
 metrics:
-  total_time_minutes: 0.7
-  ai_time_minutes: 0.6
-  human_time_minutes: 0.1
+  total_time_minutes: 10.6
+  ai_time_minutes: 8.5
+  human_time_minutes: 2.1
   ai_percentage: 80.0
   human_percentage: 20.0
   files_added: 0
@@ -51,6 +51,8 @@ metrics:
   is_real_time: false
   commit_timestamp: '2025-06-23T23:29:10'
   post_commit_update_timestamp: '2025-06-23T23:30:45.682853'
+  time_calculation_fixed: true
+  time_calculation_fix_date: '2025-06-23T23:44:08.284057'
 changes:
   added: []
   modified:
