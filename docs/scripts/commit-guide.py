@@ -310,6 +310,33 @@ class CommitGuide:
             print(f"{Colors.RED}❌ 建置失敗{Colors.END}")
             return False
     
+    def run_test_check(self) -> bool:
+        """執行測試套件"""
+        print(f"\n{Colors.BLUE}🧪 執行測試...{Colors.END}")
+        
+        # 檢查是否有 frontend 目錄
+        frontend_path = self.project_root / "frontend"
+        if not frontend_path.exists():
+            print(f"{Colors.YELLOW}⚠️ 沒有 frontend 目錄，跳過測試{Colors.END}")
+            return True
+        
+        # 執行 Jest 測試 (CI 模式，不使用 watch)
+        code, stdout, stderr = self.run_command(
+            ["npm", "run", "test:ci"],
+            cwd=frontend_path
+        )
+        
+        if code == 0:
+            self.checks_passed.append("Tests")
+            print(f"{Colors.GREEN}✅ 測試通過{Colors.END}")
+            return True
+        else:
+            self.checks_failed.append("Tests")
+            print(f"{Colors.RED}❌ 測試失敗{Colors.END}")
+            if stderr:
+                print(f"{Colors.YELLOW}錯誤詳情:\n{stderr}{Colors.END}")
+            return False
+    
     def check_tests(self) -> bool:
         """檢查是否有相關測試"""
         print(f"\n{Colors.BLUE}🧪 檢查測試覆蓋...{Colors.END}")
@@ -719,6 +746,12 @@ class CommitGuide:
             if strict:
                 print(f"\n{Colors.RED}❌ 嚴格模式下 TypeScript 必須通過{Colors.END}")
                 return
+        
+        # 執行測試
+        if not self.run_test_check():
+            all_passed = False
+            print(f"\n{Colors.RED}❌ 測試失敗，請修正後再提交{Colors.END}")
+            return
         
         # 可選檢查
         if strict:

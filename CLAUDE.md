@@ -37,6 +37,16 @@ make build-frontend
 
 # Lint
 cd frontend && npm run lint
+
+# Run tests
+cd frontend && npm run test
+# or CI mode (no watch)
+cd frontend && npm run test:ci
+
+# Type checking
+cd frontend && npm run typecheck
+# or
+cd frontend && npx tsc --noEmit
 ```
 
 ### Backend (Python FastAPI)
@@ -45,6 +55,12 @@ cd frontend && npm run lint
 cd backend && source venv/bin/activate && uvicorn main:app --reload
 # or use Makefile
 make backend
+
+# Run tests (if pytest is installed)
+cd backend && python -m pytest
+
+# Linting (if ruff is installed)
+cd backend && python -m ruff check .
 ```
 
 ### Docker & Cloud Deployment
@@ -109,11 +125,57 @@ The app uses a dual translation approach:
 - `tsconfig.json` - TypeScript configuration
 
 ## Development Workflow
+
+### Standard Development Flow
 1. Frontend development: Use `make frontend` for live reload
 2. Content updates: Edit YAML files in `public/rubrics_data/`
 3. New languages: Add translations to both JSON locales and YAML field suffixes
-4. Testing: Run `npm run lint` in frontend directory
+4. Testing: Run `npm run test` and `npm run lint` in frontend directory
 5. Deployment: Use Makefile commands for GCP deployment
+
+### Quality Checks and Commit Workflow
+The project uses automated checks through the Makefile workflow:
+
+#### Before Committing (Manual or via Makefile)
+Run quality checks before committing:
+```bash
+# Run all tests and checks
+make test-all
+
+# Or use the commit workflow which includes checks
+make commit-check
+```
+
+The following checks are performed:
+- **Frontend Tests**: `npm run test:ci` (Jest tests)
+- **Frontend Linting**: `npm run lint` (ESLint)
+- **Frontend Type Checking**: `npm run typecheck` or `npx tsc --noEmit`
+- **Backend Tests**: `python -m pytest` (if available)
+- **Backend Linting**: `python -m ruff check .` (if available)
+
+#### Commit Workflow (via Makefile)
+```bash
+# Standard commit with checks
+make commit-check
+
+# Ticket-based development with time tracking
+make dev-ticket TICKET=feature-name
+# ... develop ...
+make commit-ticket
+```
+
+#### Post-commit (Automatic)
+After successful commits, the following happens automatically:
+- **Changelog Update**: Updates `docs/CHANGELOG.md` for feat/fix/perf commits
+- **Documentation Generation**: Generates dev logs and documentation
+- **Time Tracking**: Records development time if using ticket workflow
+
+### Commit Workflow Rules
+1. **ALWAYS run tests before committing** (use `make test-all` or `make commit-check`)
+2. **NEVER commit failing tests** unless explicitly fixing them
+3. **Changelog updates are automatic** for significant changes (feat, fix, perf) via post-commit
+4. **Use conventional commits**: feat, fix, docs, style, refactor, test, chore, perf, build, ci
+5. **Use Makefile commands** for consistent workflow: `make commit-check`, `make commit-ticket`
 
 ## Documentation Structure
 - **docs/PLAYBOOK.md** - Main development guide  

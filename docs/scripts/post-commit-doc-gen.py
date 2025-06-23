@@ -714,6 +714,41 @@ class PostCommitDocGenerator:
         print(f"✅ 已生成開發故事: {filepath}")
         return str(filepath)
     
+    def update_changelog(self) -> bool:
+        """更新 CHANGELOG.md"""
+        print(f"📝 更新 CHANGELOG.md...")
+        
+        # 檢查是否需要更新 changelog
+        commit_type = self._analyze_commit_type()
+        if commit_type not in ['feature', 'bug', 'other']:  # other 包含 perf
+            print(f"ℹ️  {commit_type} 類型不需要更新 changelog")
+            return False
+            
+        # 使用 update-changelog.py 腳本
+        try:
+            update_script = self.project_root / "docs" / "scripts" / "update-changelog.py"
+            if not update_script.exists():
+                print(f"⚠️  找不到 update-changelog.py")
+                return False
+                
+            result = subprocess.run(
+                [sys.executable, str(update_script)],
+                capture_output=True,
+                text=True,
+                cwd=self.project_root
+            )
+            
+            if result.returncode == 0:
+                print(f"✅ Changelog 已更新")
+                return True
+            else:
+                print(f"⚠️  Changelog 更新失敗: {result.stderr}")
+                return False
+                
+        except Exception as e:
+            print(f"⚠️  無法更新 changelog: {e}")
+            return False
+    
     def run(self):
         """執行文檔生成流程"""
         print(f"\n📝 Post-commit 文檔生成系統")
@@ -721,6 +756,9 @@ class PostCommitDocGenerator:
         first_line = self.commit_info['message'].split('\n')[0]
         print(f"💬 訊息: {first_line}")
         print(f"📊 變更: {self.commit_info['total_changes']} 個檔案\n")
+        
+        # 更新 changelog
+        changelog_updated = self.update_changelog()
         
         # 更新或生成開發日誌
         dev_log = self.update_or_generate_dev_log()
@@ -731,9 +769,17 @@ class PostCommitDocGenerator:
         print(f"\n✨ 文檔生成完成！")
         
         # 如果有更新文檔，自動執行補充 commit
+        files_to_commit = []
         if dev_log:
+            files_to_commit.append(dev_log)
+        if story:
+            files_to_commit.append(story)
+        if changelog_updated:
+            files_to_commit.append(str(self.project_root / "docs" / "CHANGELOG.md"))
+            
+        if files_to_commit:
             print(f"📝 準備自動提交更新的文檔...")
-            self._auto_commit_updates(dev_log, story)
+            self._auto_commit_updates(files_to_commit)
         else:
             print(f"ℹ️  沒有需要更新的文檔")
         
@@ -742,14 +788,9 @@ class PostCommitDocGenerator:
         print(f"   - 可以執行 'make reflect' 進行深度分析")
         print(f"   - 可以手動編輯生成的文檔添加更多細節")
     
-    def _auto_commit_updates(self, dev_log: str, story: Optional[str]):
+    def _auto_commit_updates(self, files_to_commit: List[str]):
         """自動提交文檔更新"""
         print(f"\n📤 自動提交文檔更新...")
-        
-        # 準備要提交的檔案
-        files_to_commit = [dev_log]
-        if story:
-            files_to_commit.append(story)
         
         # 加入 git
         for file in files_to_commit:
