@@ -1,18 +1,21 @@
 type: bug
-title: '[待補充 commit 訊息]'
+title: 'test(test): add tests'
 date: '2025-06-24'
 developer: AI + Human
-status: in_progress
-commit_hash: pending
-description: '[待補充 commit 描述]'
+status: completed
+commit_hash: c5be84fd
+description: "test(test): add tests\n\nAdded 9 files:\n  - test-ticket-system-spec.md\n\
+  \  - commit-doc-validator.py\n  - ticket-dev-config.yml\n  - ticket-driven-dev.py\n\
+  \  - bug-analysis-template.md\n  ... and 4 more\n\nModified 3 files:\n  - .ai-commit-guard\n\
+  \  - Makefile\n  - smart-commit.py"
 ticket_id: null
 ticket_name: null
 ticket_path: null
 timeline:
 - phase: 實現
-  duration: 11721.4
-  ai_time: 9377.12
-  human_time: 2344.28
+  duration: 8.0
+  ai_time: 6.4
+  human_time: 1.6
   tasks:
   - 創建 quick-workflow-test.py
   - 創建 workflow-test-config.yml
@@ -21,12 +24,12 @@ timeline:
   - 更新 2025-06-23-23-47-38-bug-bugfix-time-calculations-bidirectional-ticket.yml
   - 更新 2025-06-23-23-46-40-ticket-fix-dev-system-improvements.yml
 metrics:
-  total_time_minutes: 11721.4
-  ai_time_minutes: 9377.12
-  human_time_minutes: 2344.28
+  total_time_minutes: 8.0
+  ai_time_minutes: 6.4
+  human_time_minutes: 1.6
   ai_percentage: 80.0
   human_percentage: 20.0
-  files_added: 4
+  files_added: 9
   files_modified: 3
   files_deleted: 0
   time_calculation_method: git_history
@@ -34,16 +37,25 @@ metrics:
     start_time: '2025-06-15T20:36:50'
     end_time: '2025-06-23T23:58:11'
     file_count: 4
+  time_estimation_method: commit_based_file_timestamp_analysis
+  is_real_time: true
+  commit_timestamp: '2025-06-24T00:36:45'
+  post_commit_update_timestamp: '2025-06-24T00:36:45.261226'
 changes:
   added:
-  - docs/scripts/quick-workflow-test.py
-  - docs/scripts/workflow-test-config.yml
-  - docs/scripts/workflow-test-suite.py
-  - docs/testing/WORKFLOW_TESTING.md
+  - docs/features/test-ticket-system-spec.md
+  - docs/scripts/commit-doc-validator.py
+  - docs/scripts/ticket-dev-config.yml
+  - docs/scripts/ticket-driven-dev.py
+  - docs/templates/bug-analysis-template.md
+  - docs/templates/feature-spec-template.md
+  - docs/templates/refactor-plan-template.md
+  - docs/tickets/in_progress/2025-06-24-00-32-18-ticket-test-ticket-system.yml
+  - docs/workflows/TICKET_DRIVEN_DEVELOPMENT.md
   modified:
+  - .ai-commit-guard
   - Makefile
-  - docs/dev-logs/2025-06-23/2025-06-23-23-47-38-bug-bugfix-time-calculations-bidirectional-ticket.yml
-  - docs/tickets/completed/2025-06-23-23-46-40-ticket-fix-dev-system-improvements.yml
+  - docs/scripts/smart-commit.py
   deleted: []
 pre_commit_generated: true
 generation_time: '2025-06-24T00:21:55.952009'
