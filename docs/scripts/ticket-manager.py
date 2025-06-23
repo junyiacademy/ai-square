@@ -18,15 +18,16 @@ class TicketManager:
         self.tickets_dir = self.project_root / "docs" / "tickets"
         self.tickets_dir.mkdir(parents=True, exist_ok=True)
         
+        # 創建狀態資料夾
+        (self.tickets_dir / "todo").mkdir(exist_ok=True)
+        (self.tickets_dir / "in_progress").mkdir(exist_ok=True)
+        (self.tickets_dir / "done").mkdir(exist_ok=True)
+        
     def create_ticket(self, ticket_name: str, description: str = "", create_branch: bool = True) -> Dict:
         """創建新的 ticket"""
         timestamp = datetime.now()
         date_str = timestamp.strftime('%Y-%m-%d')
         time_str = timestamp.strftime('%H-%M-%S')
-        
-        # 創建日期資料夾
-        date_dir = self.tickets_dir / date_str
-        date_dir.mkdir(exist_ok=True)
         
         # Ticket 資料
         ticket_data = {
@@ -46,8 +47,9 @@ class TicketManager:
             'time': time_str
         }
         
-        # 儲存 ticket (使用 YAML 格式，檔名包含時間)
-        ticket_file = date_dir / f"{date_str}-{time_str}-ticket-{ticket_name}.yml"
+        # 儲存到 in_progress 資料夾 (使用 YAML 格式，檔名包含時間)
+        status_dir = self.tickets_dir / "in_progress"
+        ticket_file = status_dir / f"{date_str}-{time_str}-ticket-{ticket_name}.yml"
         with open(ticket_file, 'w', encoding='utf-8') as f:
             yaml.dump(ticket_data, f, allow_unicode=True, sort_keys=False)
         
@@ -82,22 +84,32 @@ class TicketManager:
     
     def complete_ticket(self, ticket_name: str, commit_hash: str, dev_log_path: str = None) -> Optional[Dict]:
         """完成 ticket"""
-        # 尋找 ticket (新格式和舊格式)
+        # 尋找 ticket (優先在 in_progress 資料夾查找)
         ticket_file = None
-        for date_dir in sorted(self.tickets_dir.iterdir(), reverse=True):
-            if date_dir.is_dir():
-                # 先找新格式 (YAML)
-                for yml_file in date_dir.glob(f"*-ticket-{ticket_name}.yml"):
-                    ticket_file = yml_file
-                    break
-                # 再找舊格式 (JSON)
-                if not ticket_file:
-                    json_file = date_dir / f"{ticket_name}.json"
-                    if json_file.exists():
-                        ticket_file = json_file
-                        break
-            if ticket_file:
+        
+        # 先在 in_progress 資料夾找
+        in_progress_dir = self.tickets_dir / "in_progress"
+        if in_progress_dir.exists():
+            for yml_file in in_progress_dir.glob(f"*-ticket-{ticket_name}.yml"):
+                ticket_file = yml_file
                 break
+        
+        # 如果沒找到，再在舊的日期資料夾找 (向後兼容)
+        if not ticket_file:
+            for date_dir in sorted(self.tickets_dir.iterdir(), reverse=True):
+                if date_dir.is_dir() and date_dir.name not in ['todo', 'in_progress', 'done']:
+                    # 先找新格式 (YAML)
+                    for yml_file in date_dir.glob(f"*-ticket-{ticket_name}.yml"):
+                        ticket_file = yml_file
+                        break
+                    # 再找舊格式 (JSON)
+                    if not ticket_file:
+                        json_file = date_dir / f"{ticket_name}.json"
+                        if json_file.exists():
+                            ticket_file = json_file
+                            break
+                if ticket_file:
+                    break
         
         if not ticket_file:
             print(f"❌ 找不到 ticket: {ticket_name}")
@@ -126,15 +138,22 @@ class TicketManager:
         if dev_log_path:
             ticket_data['dev_log_path'] = dev_log_path
         
-        # 儲存更新
-        with open(ticket_file, 'w', encoding='utf-8') as f:
+        # 移動到 done 資料夾
+        done_dir = self.tickets_dir / "done"
+        new_ticket_file = done_dir / ticket_file.name
+        
+        # 儲存到新位置
+        with open(new_ticket_file, 'w', encoding='utf-8') as f:
             if ticket_file.suffix == '.json':
                 import json
                 json.dump(ticket_data, f, indent=2, ensure_ascii=False)
             else:
                 yaml.dump(ticket_data, f, allow_unicode=True, sort_keys=False)
         
-        print(f"✅ Ticket 已完成: {ticket_name}")
+        # 刪除舊檔案
+        ticket_file.unlink()
+        
+        print(f"✅ Ticket 已完成並移至 done: {ticket_name}")
         print(f"⏱️  總時間: {ticket_data['duration_minutes']} 分鐘")
         
         return ticket_data
