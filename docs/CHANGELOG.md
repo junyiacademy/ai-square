@@ -69,6 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 修復 i18next 設定問題
 - fix filename duplication, improve time calculation, and prevent recursive tracking (ea06b2d)
 - fix translation key mismatch and responsive title overflow (39b3aaf)
+- fix time calculations and implement bidirectional ticket linking (2e22dbc)
 
 ### Removed
 - 移除遷移腳本 (366b72e)
