@@ -1,10 +1,10 @@
 type: update
-title: '[待補充 commit 訊息]'
+title: 'refactor(frontend): refactor code'
 date: '2025-06-23'
 developer: AI + Human
-status: in_progress
-commit_hash: pending
-description: '[待補充 commit 描述]'
+status: completed
+commit_hash: d1051bb3
+description: 'refactor(frontend): refactor code'
 timeline:
 - phase: 實現
   duration: 5.9
@@ -18,7 +18,7 @@ metrics:
   human_time_minutes: 1.2
   ai_percentage: 80.0
   human_percentage: 20.0
-  files_added: 0
+  files_added: 1
   files_modified: 1
   files_deleted: 0
   time_calculation_method: file_timestamp_analysis
@@ -26,8 +26,13 @@ metrics:
     start_time: '2025-06-23T22:23:15.660198'
     end_time: '2025-06-23T22:24:12.887725'
     file_count: 1
+  time_estimation_method: commit_based_file_timestamp_analysis
+  is_real_time: true
+  commit_timestamp: '2025-06-23T22:24:12'
+  post_commit_update_timestamp: '2025-06-23T22:24:13.121628'
 changes:
-  added: []
+  added:
+  - docs/dev-logs/2025-06-23/2025-06-23-update-page.yml
   modified:
   - frontend/src/app/relations/page.tsx
   deleted: []
