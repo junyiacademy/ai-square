@@ -32,9 +32,9 @@ description: 'fix(devlog): fix time calculations and implement bidirectional tic
   - Dev log filenames now include HH-MM-SS timestamps
 
   - Tickets and dev logs reference each other''s paths'
-ticket_id: 2025-06-23-23-42-28-test-bidirectional-linking
-ticket_name: test-bidirectional-linking
-ticket_path: /Users/young/project/ai-square/docs/tickets/2025-06-23/2025-06-23-23-42-28-ticket-test-bidirectional-linking.yml
+ticket_id: 2025-06-23-23-46-40-fix-dev-system-improvements
+ticket_name: fix-dev-system-improvements
+ticket_path: docs/tickets/completed/2025-06-23-23-46-40-ticket-fix-dev-system-improvements.yml
 timeline:
 - phase: 實現
   duration: 120
@@ -58,9 +58,14 @@ metrics:
   files_deleted: 0
   commit_timestamp: '2025-06-23T23:47:38'
   generation_timestamp: '2025-06-23T23:48:36.460412'
-  time_estimation_method: file_count_estimate
+  time_calculation_method: commit_interval
+  time_calculation_details:
+    start_commit: '2025-06-23T23:46:40'
+    end_commit: '2025-06-23T23:47:38'
+    commit_interval_minutes: 0.97
+    scaled_by_complexity: 120
   is_real_time: false
-  time_data_quality: estimated
+  time_data_quality: commit_interval_scaled
 changes:
   added:
   - docs/decisions/ADR-027-devlog-standards-enforcement.md

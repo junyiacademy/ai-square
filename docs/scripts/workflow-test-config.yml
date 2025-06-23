@@ -1,0 +1,114 @@
+# 開發流程測試配置
+# 定義各種測試場景和驗證規則
+
+test_scenarios:
+  - name: "single_feature_workflow"
+    description: "單一功能完整開發流程"
+    priority: "high"
+    components:
+      - ticket_creation
+      - dev_log_generation  
+      - time_tracking
+      - bidirectional_linking
+      - status_transitions
+    
+  - name: "multi_target_workflow" 
+    description: "多目標並行開發場景"
+    priority: "high"
+    components:
+      - multi_file_handling
+      - time_aggregation
+      - comprehensive_logging
+    
+  - name: "interrupted_workflow"
+    description: "對話中斷恢復場景"
+    priority: "medium"
+    components:
+      - state_recovery
+      - continuity_validation
+      
+  - name: "auto_ticket_creation"
+    description: "無票券時自動創建"
+    priority: "medium"
+    components:
+      - auto_generation
+      - fallback_handling
+
+validation_rules:
+  ticket_format:
+    required_fields:
+      - id
+      - name
+      - status
+      - created_at
+      - started_at
+    optional_fields:
+      - completed_at
+      - duration_minutes
+      - commit_hash
+      - dev_log_path
+    
+  devlog_format:
+    required_fields:
+      - type
+      - title
+      - date
+      - status
+      - commit_hash
+    optional_fields:
+      - ticket_id
+      - ticket_name
+      - metrics
+      
+  time_calculation:
+    allowed_methods:
+      - git_history
+      - commit_interval
+      - unknown_time
+    forbidden_methods:
+      - file_count_estimate
+    
+  folder_structure:
+    tickets:
+      - in_progress
+      - completed
+    dev_logs:
+      - date_based_folders  # YYYY-MM-DD format
+      
+data_consistency:
+  bidirectional_links:
+    ticket_to_devlog: true
+    devlog_to_ticket: true
+    
+  time_accuracy:
+    max_deviation_minutes: 5
+    min_duration_seconds: 1
+    
+  status_transitions:
+    valid_states:
+      - in_progress
+      - completed
+    invalid_states:
+      - todo  # removed as unnecessary
+
+performance_benchmarks:
+  test_execution_time:
+    quick_validation: 30  # seconds
+    full_test_suite: 300  # seconds
+    
+  file_operations:
+    max_files_per_test: 100
+    cleanup_timeout: 10
+
+reporting:
+  output_formats:
+    - markdown
+    - yaml
+  
+  save_location: "docs/test-reports"
+  
+  retention_days: 30
+  
+  notification_thresholds:
+    critical_failures: 1
+    warning_threshold: 3

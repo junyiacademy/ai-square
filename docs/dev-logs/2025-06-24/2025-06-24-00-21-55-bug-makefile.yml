@@ -1,0 +1,49 @@
+type: bug
+title: '[待補充 commit 訊息]'
+date: '2025-06-24'
+developer: AI + Human
+status: in_progress
+commit_hash: pending
+description: '[待補充 commit 描述]'
+ticket_id: null
+ticket_name: null
+ticket_path: null
+timeline:
+- phase: 實現
+  duration: 11721.4
+  ai_time: 9377.12
+  human_time: 2344.28
+  tasks:
+  - 創建 quick-workflow-test.py
+  - 創建 workflow-test-config.yml
+  - 創建 workflow-test-suite.py
+  - 更新 Makefile
+  - 更新 2025-06-23-23-47-38-bug-bugfix-time-calculations-bidirectional-ticket.yml
+  - 更新 2025-06-23-23-46-40-ticket-fix-dev-system-improvements.yml
+metrics:
+  total_time_minutes: 11721.4
+  ai_time_minutes: 9377.12
+  human_time_minutes: 2344.28
+  ai_percentage: 80.0
+  human_percentage: 20.0
+  files_added: 4
+  files_modified: 3
+  files_deleted: 0
+  time_calculation_method: git_history
+  time_calculation_details:
+    start_time: '2025-06-15T20:36:50'
+    end_time: '2025-06-23T23:58:11'
+    file_count: 4
+changes:
+  added:
+  - docs/scripts/quick-workflow-test.py
+  - docs/scripts/workflow-test-config.yml
+  - docs/scripts/workflow-test-suite.py
+  - docs/testing/WORKFLOW_TESTING.md
+  modified:
+  - Makefile
+  - docs/dev-logs/2025-06-23/2025-06-23-23-47-38-bug-bugfix-time-calculations-bidirectional-ticket.yml
+  - docs/tickets/completed/2025-06-23-23-46-40-ticket-fix-dev-system-improvements.yml
+  deleted: []
+pre_commit_generated: true
+generation_time: '2025-06-24T00:21:55.952009'

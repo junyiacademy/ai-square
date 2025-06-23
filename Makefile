@@ -369,6 +369,16 @@ tech-start:
 
 # === 品質保證指令 ===
 
+# 🔍 快速驗證開發流程
+test-workflow:
+	@echo "🔍 快速驗證開發流程..."
+	@python3 docs/scripts/quick-workflow-test.py
+
+# 🧪 完整流程端到端測試
+test-workflow-full:
+	@echo "🧪 執行完整流程端到端測試..."
+	@python3 docs/scripts/workflow-test-suite.py
+
 # 📊 生成覆蓋率報告
 coverage:
 	@echo "📊 生成測試覆蓋率報告..."
@@ -483,6 +493,8 @@ help:
 	@echo "🧪 品質保證:"
 	@echo "  make test-all          執行所有測試與檢查"
 	@echo "  make coverage          生成測試覆蓋率報告"
+	@echo "  make test-workflow     快速驗證開發流程"
+	@echo "  make test-workflow-full 完整流程端到端測試"
 	@echo ""
 	@echo "🧹 清理:"
 	@echo "  make clean             清理建置產物"
