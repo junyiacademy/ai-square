@@ -129,6 +129,32 @@ setup-dev:
 	@cd frontend && npm install
 	@echo "✅ 開發環境設置完成！"
 
+# 🔧 設置 Git Hooks
+setup-hooks:
+	@echo "🔧 設置 Git Hooks..."
+	@echo "📋 安裝 pre-push hook..."
+	@if [ -f docs/scripts/pre-push-hook.sh ]; then \
+		cp docs/scripts/pre-push-hook.sh .git/hooks/pre-push; \
+		chmod +x .git/hooks/pre-push; \
+		echo "✅ pre-push hook 已安裝"; \
+	else \
+		echo "❌ 找不到 pre-push hook 腳本"; \
+		exit 1; \
+	fi
+	@echo "📋 檢查其他 hooks..."
+	@if [ -f .git/hooks/pre-commit ]; then \
+		echo "✅ pre-commit hook 已存在"; \
+	else \
+		echo "ℹ️ pre-commit hook 未安裝"; \
+	fi
+	@if [ -f .git/hooks/post-commit ]; then \
+		echo "✅ post-commit hook 已存在"; \
+	else \
+		echo "ℹ️ post-commit hook 未安裝"; \
+	fi
+	@echo "✅ Git Hooks 設置完成！"
+	@echo "💡 使用 git push --no-verify 可在需要時跳過 pre-push 檢查"
+
 # 🧪 執行所有測試和品質檢查（與 pre-commit 相同）
 test-all:
 	@echo "🧪 執行所有測試和品質檢查..."
@@ -136,6 +162,16 @@ test-all:
 	@cd frontend && npm run lint
 	@cd frontend && npx tsc --noEmit
 	@echo "✅ 所有檢查通過！"
+
+# 🚀 執行 pre-push 檢查（不實際推送）
+pre-push-check:
+	@echo "🚀 執行 pre-push 檢查..."
+	@if [ -f .git/hooks/pre-push ]; then \
+		bash .git/hooks/pre-push origin HEAD; \
+	else \
+		echo "❌ pre-push hook 未安裝，請先執行 make setup-hooks"; \
+		exit 1; \
+	fi
 
 # 📝 手動更新 changelog
 update-changelog:
@@ -267,13 +303,6 @@ tech-start:
 
 # === 品質保證指令 ===
 
-# 🧪 執行所有測試
-test-all:
-	@echo "🧪 執行完整測試套件..."
-	cd frontend && npm run lint
-	cd frontend && npm run build
-	@echo "✅ 所有檢查完成"
-
 # 📊 生成覆蓋率報告
 coverage:
 	@echo "📊 生成測試覆蓋率報告..."
@@ -364,6 +393,7 @@ help:
 	@echo "  make commit-strict     嚴格模式檢查 (含建置)"
 	@echo "  make commit-smart      智能提交 (自動 add + 檢查)"
 	@echo "  make commit-quick      快速提交 (跳過檢查)"
+	@echo "  make pre-push-check    執行 pre-push 檢查 (不推送)"
 	@echo ""
 	@echo "📚 文檔與架構:"
 	@echo "  make docs-check        檢查文檔完整性"

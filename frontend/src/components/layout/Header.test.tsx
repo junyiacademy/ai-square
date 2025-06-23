@@ -254,8 +254,14 @@ describe('Header 組件測試', () => {
       
       render(<Header />)
 
+      const languageSelector = screen.getByLabelText(/選擇語言|select language/i)
       const loginButton = screen.getByRole('button', { name: /sign in|登入/i })
       
+      // 第一個 tab 應該聚焦到語言選擇器
+      await user.tab()
+      expect(languageSelector).toHaveFocus()
+      
+      // 第二個 tab 應該聚焦到登入按鈕
       await user.tab()
       expect(loginButton).toHaveFocus()
     })

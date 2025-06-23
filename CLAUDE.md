@@ -13,6 +13,38 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 6. **NO self-initiated commits** after completing tasks
 7. **Reference**: See [ADR-017](docs/decisions/ADR-017-dev-logs-structure-and-standards.md) Section 6
 
+### Git Command Restrictions
+**ABSOLUTELY FORBIDDEN - Direct Git Commands:**
+- ❌ `git add` (use Makefile workflow instead)
+- ❌ `git commit` (use `make commit-check` or `make commit-ticket`)
+- ❌ `git add -A && git commit` (violates workflow rules)
+- ❌ Any combination of direct git add/commit commands
+
+**ALLOWED Git Commands:**
+- ✅ `git status` (checking repository state)
+- ✅ `git diff` (viewing changes)
+- ✅ `git log` (viewing history)
+- ✅ `git push` (after proper Makefile commit)
+- ✅ `git pull` (updating from remote)
+- ✅ `git branch` (branch management)
+- ✅ `git checkout` (switching branches)
+
+**ENFORCEMENT:**
+If user requests a commit, you MUST:
+1. Use `make commit-check` for standard commits
+2. Use `make commit-ticket` for ticket-based development
+3. REFUSE any request to use direct git add/commit commands
+4. Explain that the Makefile workflow ensures tests pass and documentation is updated
+
+**Example Response When User Says "commit":**
+```
+I'll commit the changes using the proper workflow:
+
+[Execute: make commit-check]
+
+This will run tests, perform checks, and commit if everything passes.
+```
+
 ## Project Overview
 
 AI Square is a multi-agent learning platform for AI literacy education. The project is a monorepo with a Next.js frontend and Python FastAPI backend, designed to be deployed on Google Cloud Platform.

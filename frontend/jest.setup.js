@@ -104,14 +104,31 @@ global.Response = jest.fn().mockImplementation((body, init) => ({
 }))
 
 // Mock NextResponse for API routes
-jest.mock('next/server', () => ({
-  NextResponse: {
-    json: jest.fn((data, init) => ({
-      status: init?.status || 200,
+const mockNextResponse = {
+  json: (data, init) => {
+    const response = {
       ok: (init?.status || 200) >= 200 && (init?.status || 200) < 300,
+      status: init?.status || 200,
+      statusText: init?.statusText || 'OK',
+      headers: new Headers(init?.headers),
       json: jest.fn().mockResolvedValue(data),
-    })),
+      text: jest.fn().mockResolvedValue(JSON.stringify(data)),
+      blob: jest.fn(),
+      arrayBuffer: jest.fn(),
+      formData: jest.fn(),
+      body: null,
+      bodyUsed: false,
+      url: '',
+      redirected: false,
+      type: 'basic',
+      clone: jest.fn(),
+    }
+    return response
   },
+}
+
+jest.mock('next/server', () => ({
+  NextResponse: mockNextResponse,
 }))
 
 // Clean up after each test
