@@ -55,12 +55,12 @@ dev-ticket:
 		echo "❌ 請指定 Ticket 名稱: make dev-ticket TICKET=feature-name"; \
 		exit 1; \
 	fi
-	@echo "⏱️ 啟動時間追蹤..."
-	@python3 -c "import importlib.util; import sys; spec = importlib.util.spec_from_file_location('time_tracker', 'docs/scripts/time-tracker.py'); time_tracker = importlib.util.module_from_spec(spec); sys.modules['time_tracker'] = time_tracker; spec.loader.exec_module(time_tracker); tracker = time_tracker.start_tracking_session('$(TICKET)'); tracker.start_operation('ai', 'starting development ticket: $(TICKET)'); print(f'✅ 時間追蹤已啟動！Ticket: $(TICKET)')"
+	@echo "🎫 創建 Ticket 和 Branch..."
+	@python3 docs/scripts/ticket-manager.py create $(TICKET) "$(DESC)"
 	@echo "📋 開發規則："
 	@echo "   1. 一次只做一件事"
-	@echo "   2. 直到 commit 結束才算完成"
-	@echo "   3. 使用 make commit-ticket 結束此 Ticket"
+	@echo "   2. 使用 make commit-ticket 提交進度"
+	@echo "   3. 使用 make merge-ticket TICKET=$(TICKET) 完成開發"
 	@echo ""
 	@echo "🎯 開始開發 $(TICKET)..."
 
@@ -68,7 +68,15 @@ dev-ticket:
 # ⏸️ 暫停當前 ticket
 pause-ticket:
 	@echo "⏸️ 暫停當前開發 Ticket"
-	@python3 docs/scripts/ticket-manager.py pause
+	@current_branch=$$(git branch --show-current); \
+	if [[ "$$current_branch" == ticket/* ]]; then \
+		ticket_name=$${current_branch#ticket/}; \
+		echo "🎫 暫停 Ticket: $$ticket_name"; \
+		python3 docs/scripts/ticket-manager.py pause $$ticket_name; \
+		git checkout main; \
+	else \
+		echo "⚠️ 您不在 ticket branch 上"; \
+	fi
 	@echo ""
 	@echo "💡 使用 'make list-tickets' 查看所有 tickets"
 	@echo "💡 使用 'make resume-ticket TICKET=xxx' 恢復工作"
@@ -92,20 +100,36 @@ authorize-commit:
 	@echo "🔓 授權 AI 進行提交（有效期 5 分鐘）..."
 	@python3 docs/scripts/ai-commit-guard.py --authorize
 
+# 🔀 合併 ticket branch 回 main
+merge-ticket:
+	@echo "🔀 合併 ticket branch 回 main"
+	@if [ -z "$(TICKET)" ]; then \
+		echo "❌ 請指定 Ticket: make merge-ticket TICKET=xxx"; \
+		exit 1; \
+	fi
+	@echo "🔍 檢查 ticket 狀態..."
+	@current_branch=$$(git branch --show-current); \
+	if [ "$$current_branch" != "ticket/$(TICKET)" ]; then \
+		echo "❌ 您不在 ticket/$(TICKET) branch 上"; \
+		exit 1; \
+	fi
+	@echo "🎉 完成 ticket: $(TICKET)"
+	@python3 docs/scripts/ticket-manager.py complete $(TICKET) $$(git rev-parse --short HEAD)
+	@echo "🔀 切換到 main branch..."
+	@git checkout main
+	@echo "🔄 合併 ticket/$(TICKET)..."
+	@git merge ticket/$(TICKET)
+	@echo "🗑️ 刪除 local branch..."
+	@git branch -d ticket/$(TICKET)
+	@echo "✅ Ticket $(TICKET) 已完成並合併！"
+
 commit-ticket:
-	@echo "🎫 完成開發 Ticket"
+	@echo "🎫 提交 Ticket 開發進度"
 	@echo "🛡️ 執行 AI 提交授權檢查..."
 	@python3 docs/scripts/ai-commit-guard.py || (echo "❌ 未授權的提交已被阻止" && exit 1)
-	@echo "📊 結束時間追蹤並生成報告..."
-	@python3 -c "import importlib.util; import sys; spec = importlib.util.spec_from_file_location('time_tracker', 'docs/scripts/time-tracker.py'); time_tracker = importlib.util.module_from_spec(spec); sys.modules['time_tracker'] = time_tracker; spec.loader.exec_module(time_tracker); metrics = time_tracker.end_tracking_session(); print('✅ 時間追蹤已結束')"
-	@echo "🤖 執行智能提交..."
-	@git add -A
-	@python3 docs/scripts/commit-guide.py
-	@echo "📝 生成開發文檔..."
-	@python3 docs/scripts/post-commit-doc-gen.py
-	@echo "📄 完成文檔提交..."
-	@python3 docs/scripts/finalize-docs.py
-	@echo "✅ Ticket 完成！"
+	@echo "🤖 執行智能提交流程..."
+	@python3 docs/scripts/smart-commit.py
+	@echo "✅ 提交完成！"
 
 # 📄 補充文檔提交（單獨使用）
 finalize-docs:
@@ -229,8 +253,19 @@ commit-quick:
 # 📝 智能提交（自動加入所有變更）
 commit-smart:
 	@echo "🤖 智能提交模式..."
-	@git add -A
 	@python3 docs/scripts/smart-commit.py
+
+# 🎗️ 列出最近的 commits 和 tickets
+dev-status:
+	@echo "🎗️ 開發狀態概覽"
+	@echo "\n📍 當前 Branch:"
+	@git branch --show-current
+	@echo "\n📦 最近的 Commits:"
+	@git log --oneline -5
+	@echo "\n🎫 Active Tickets:"
+	@python3 docs/scripts/ticket-manager.py list | grep -A 5 "Active:" || echo "沒有 active tickets"
+	@echo "\n📊 今日開發日誌:"
+	@ls -la docs/dev-logs/$$(date +%Y-%m-%d)/*.yml 2>/dev/null | tail -5 || echo "今日還沒有開發日誌"
 
 # 🔧 AI 自動修復
 ai-fix:

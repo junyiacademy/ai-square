@@ -1,0 +1,9 @@
+Testing removal of file_count_estimate
+
+This commit should NOT use file_count_estimate for time calculation.
+Instead it should use:
+1. Git history analysis (preferred)
+2. Commit interval analysis
+3. Unknown time (if nothing else works)
+
+But NEVER file_count_estimate.

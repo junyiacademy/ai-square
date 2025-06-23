@@ -5,6 +5,7 @@ Ticket 管理系統
 """
 
 import yaml
+import json
 import sys
 import subprocess
 from datetime import datetime
@@ -413,8 +414,17 @@ class TicketManager:
         
         for date_dir in date_dirs:
             if date_dir.is_dir():
-                for ticket_file in date_dir.glob("*.json"):
-                    with open(ticket_file, 'r', encoding='utf-8') as f:
+                # 處理新格式 (YAML)
+                for yml_file in date_dir.glob("*-ticket-*.yml"):
+                    with open(yml_file, 'r', encoding='utf-8') as f:
+                        ticket_data = yaml.safe_load(f)
+                    
+                    if status is None or ticket_data['status'] == status:
+                        tickets.append(ticket_data)
+                
+                # 處理舊格式 (JSON)
+                for json_file in date_dir.glob("*.json"):
+                    with open(json_file, 'r', encoding='utf-8') as f:
                         ticket_data = json.load(f)
                     
                     if status is None or ticket_data['status'] == status:

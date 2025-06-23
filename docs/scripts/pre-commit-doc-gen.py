@@ -150,10 +150,14 @@ class PreCommitDocGenerator:
                 'file_count': len(files_to_analyze)
             }
         
-        # 預設值
+        # 如果無法計算準確時間，記錄為未知
+        print("⚠️  無法計算準確的開發時間")
+        print("💡 建議：使用 ticket 系統追蹤時間")
+        
         return {
-            'total_time_minutes': len(self.staged_files) * 2,
-            'method': 'file_count_estimate'
+            'total_time_minutes': 0,  # 標記為未知時間
+            'method': 'unknown_time',
+            'note': '無法準確計算時間，建議使用 ticket 系統追蹤'
         }
     
     def _analyze_commit_type(self) -> str:

@@ -1,0 +1,48 @@
+type: docs
+title: '[待補充 commit 訊息]'
+date: '2025-06-23'
+developer: AI + Human
+status: in_progress
+commit_hash: pending
+description: '[待補充 commit 描述]'
+ticket_id: 2025-06-23-23-42-28-test-bidirectional-linking
+ticket_name: test-bidirectional-linking
+ticket_path: docs/tickets/2025-06-23/2025-06-23-23-42-28-ticket-test-bidirectional-linking.yml
+timeline:
+- phase: 實現
+  duration: 11710.8
+  ai_time: 9368.64
+  human_time: 2342.16
+  tasks:
+  - 創建 test-no-file-count-estimate.txt
+  - 更新 Makefile
+  - 更新 post-commit-doc-gen.py
+  - 更新 pre-commit-doc-gen.py
+metrics:
+  total_time_minutes: 11710.8
+  ai_time_minutes: 9368.64
+  human_time_minutes: 2342.16
+  ai_percentage: 80.0
+  human_percentage: 20.0
+  files_added: 1
+  files_modified: 7
+  files_deleted: 0
+  time_calculation_method: git_history
+  time_calculation_details:
+    start_time: '2025-06-15T20:36:50'
+    end_time: '2025-06-23T23:47:38'
+    file_count: 6
+changes:
+  added:
+  - test-no-file-count-estimate.txt
+  modified:
+  - Makefile
+  - docs/scripts/post-commit-doc-gen.py
+  - docs/scripts/pre-commit-doc-gen.py
+  - docs/scripts/smart-commit.py
+  - docs/scripts/ticket-manager.py
+  - docs/tickets/2025-06-23/2025-06-23-23-42-28-ticket-test-bidirectional-linking.yml
+  - docs/tickets/2025-06-23/2025-06-23-23-46-40-ticket-fix-dev-system-improvements.yml
+  deleted: []
+pre_commit_generated: true
+generation_time: '2025-06-23T23:58:11.297779'

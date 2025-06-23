@@ -258,43 +258,30 @@ class PostCommitDocGenerator:
                 'is_real': False
             }
         
-        # 3. 最後才使用檔案數量估算
-        print("⚠️  無法進行 commit 時間分析，使用檔案數量估算")
-        print("💡 建議：檢查 git 配置和檔案權限")
+        # 3. 嘗試從 commit 間隔獲取時間
+        print("📊 嘗試從 commit 間隔分析時間...")
+        interval_time = self._get_commit_interval_time()
+        if interval_time and interval_time > 0:
+            print(f"✅ Commit 間隔分析完成: {interval_time} 分鐘")
+            return {
+                'total': interval_time,
+                'ai': round(interval_time * 0.8, 1),
+                'human': round(interval_time * 0.2, 1),
+                'source': 'commit_interval_analysis',
+                'is_real': False
+            }
         
-        total_changes = self.commit_info['total_changes']
-        
-        # 更合理的時間估算規則
-        if total_changes == 1:
-            # 單檔案修改：根據 commit 類型估算
-            commit_type = self._analyze_commit_type()
-            if commit_type == 'bug':
-                time_spent = 5  # bug 修復通常較快
-            elif commit_type == 'docs':
-                time_spent = 3  # 文檔更新更快
-            else:
-                time_spent = 10  # 一般單檔案修改
-        elif total_changes <= 3:
-            time_spent = 15  # 15分鐘
-        elif total_changes <= 5:
-            time_spent = 30  # 30分鐘
-        elif total_changes <= 10:
-            time_spent = 60  # 1小時
-        elif total_changes <= 20:
-            time_spent = 120  # 2小時
-        else:
-            time_spent = 180  # 3小時
-        
-        # AI 通常占 80% 的時間
-        ai_time = round(time_spent * 0.8, 1)
-        human_time = round(time_spent * 0.2, 1)
+        # 4. 如果無法獲取準確時間，記錄為未知但不使用估算
+        print("⚠️  無法計算準確的開發時間")
+        print("💡 建議：使用 ticket 系統或手動記錄時間")
         
         return {
-            'total': time_spent,
-            'ai': ai_time,
-            'human': human_time,
-            'source': 'file_count_estimate',
-            'is_real': False
+            'total': 0,  # 標記為未知時間
+            'ai': 0,
+            'human': 0,
+            'source': 'unknown_time',
+            'is_real': False,
+            'note': '無法準確計算時間，建議使用 ticket 系統追蹤'
         }
     
     def update_or_generate_dev_log(self) -> str:
@@ -367,16 +354,29 @@ class PostCommitDocGenerator:
             # 只有在以下情況才更新時間：
             # 1. post-commit 有真實時間追蹤 (is_real=True)
             # 2. pre-commit 沒有計算時間
-            if time_info.get('is_real', False) or not pre_commit_has_time:
-                log_content['timeline'][0]['duration'] = time_info['total']
-                log_content['timeline'][0]['ai_time'] = time_info['ai']
-                log_content['timeline'][0]['human_time'] = time_info['human']
-                
-                log_content['metrics']['total_time_minutes'] = time_info['total']
-                log_content['metrics']['ai_time_minutes'] = time_info['ai']
-                log_content['metrics']['human_time_minutes'] = time_info['human']
-                log_content['metrics']['time_estimation_method'] = time_info.get('source', 'post_commit_update')
-                log_content['metrics']['is_real_time'] = time_info.get('is_real', False)
+            # 3. post-commit 有更好的時間來源（非 unknown_time）
+            should_update_time = (
+                time_info.get('is_real', False) or 
+                not pre_commit_has_time or
+                (time_info.get('source') != 'unknown_time' and 
+                 log_content.get('metrics', {}).get('time_estimation_method') == 'file_count_estimate')
+            )
+            
+            if should_update_time:
+                if time_info.get('source') != 'unknown_time':
+                    log_content['timeline'][0]['duration'] = time_info['total']
+                    log_content['timeline'][0]['ai_time'] = time_info['ai']
+                    log_content['timeline'][0]['human_time'] = time_info['human']
+                    
+                    log_content['metrics']['total_time_minutes'] = time_info['total']
+                    log_content['metrics']['ai_time_minutes'] = time_info['ai']
+                    log_content['metrics']['human_time_minutes'] = time_info['human']
+                    log_content['metrics']['time_estimation_method'] = time_info.get('source', 'post_commit_update')
+                    log_content['metrics']['is_real_time'] = time_info.get('is_real', False)
+                else:
+                    # 時間未知，設為 None 或保留原值
+                    log_content['metrics']['time_estimation_method'] = 'unknown_time'
+                    log_content['metrics']['time_note'] = time_info.get('note', '無法計算時間')
             else:
                 # 如果 pre-commit 已經有時間計算詳情，重新計算正確的總時間
                 if log_content.get('metrics', {}).get('time_calculation_details'):
@@ -454,6 +454,30 @@ class PostCommitDocGenerator:
                         pass
         return None
     
+    def _get_commit_interval_time(self) -> float:
+        """從 commit 間隔獲取時間"""
+        try:
+            # 獲取最近兩個 commit 的時間
+            code, stdout, _ = self._run_command(["git", "log", "-2", "--pretty=%ct"])
+            if code != 0:
+                return 0
+                
+            timestamps = [int(ts) for ts in stdout.strip().split('\n') if ts]
+            if len(timestamps) < 2:
+                return 0
+                
+            # 計算時間差
+            duration_minutes = (timestamps[0] - timestamps[1]) / 60
+            
+            # 合理性檢查：1分鐘到 8 小時
+            if 1 <= duration_minutes <= 480:
+                return round(duration_minutes, 1)
+            
+            return 0
+            
+        except Exception:
+            return 0
+    
     def _get_or_create_ticket_info(self) -> Dict:
         """獲取或創建 ticket 資訊"""
         # 先嘗試獲取現有的 active ticket
@@ -493,6 +517,16 @@ class PostCommitDocGenerator:
         # 計算估計時間
         time_info = self._estimate_time_spent()
         
+        # 只有當時間是準確的時才記錄，否則設為 None
+        if time_info.get('source') == 'unknown_time':
+            duration_minutes = None
+            ai_time_minutes = None
+            human_time_minutes = None
+        else:
+            duration_minutes = time_info['total']
+            ai_time_minutes = time_info['ai']
+            human_time_minutes = time_info['human']
+        
         ticket_data = {
             'id': f"{date_str}-{time_str}-{ticket_name}",
             'name': ticket_name,
@@ -501,9 +535,10 @@ class PostCommitDocGenerator:
             'created_at': timestamp.isoformat(),
             'started_at': timestamp.isoformat(),
             'completed_at': timestamp.isoformat(),
-            'duration_minutes': time_info['total'],
-            'ai_time_minutes': time_info['ai'],
-            'human_time_minutes': time_info['human'],
+            'duration_minutes': duration_minutes,
+            'ai_time_minutes': ai_time_minutes,
+            'human_time_minutes': human_time_minutes,
+            'time_source': time_info.get('source', 'unknown'),
             'commit_hash': self.commit_hash,
             'files_changed': self.commit_info['changes']['added'] + self.commit_info['changes']['modified'],
             'auto_created': True,
@@ -644,15 +679,15 @@ class PostCommitDocGenerator:
             'ticket_path': ticket_info.get('_file_path') if ticket_info else None,
             'timeline': [{
                 'phase': '實現',
-                'duration': time_info['total'],
-                'ai_time': time_info['ai'],
-                'human_time': time_info['human'],
+                'duration': time_info['total'] if time_info.get('source') != 'unknown_time' else None,
+                'ai_time': time_info['ai'] if time_info.get('source') != 'unknown_time' else None,
+                'human_time': time_info['human'] if time_info.get('source') != 'unknown_time' else None,
                 'tasks': self._generate_task_list()
             }],
             'metrics': {
-                'total_time_minutes': time_info['total'],  # 明確標示單位：分鐘
-                'ai_time_minutes': time_info['ai'],
-                'human_time_minutes': time_info['human'],
+                'total_time_minutes': time_info['total'] if time_info.get('source') != 'unknown_time' else None,
+                'ai_time_minutes': time_info['ai'] if time_info.get('source') != 'unknown_time' else None,
+                'human_time_minutes': time_info['human'] if time_info.get('source') != 'unknown_time' else None,
                 'ai_percentage': round(time_info['ai'] / time_info['total'] * 100, 1) if time_info['total'] > 0 else 0,
                 'human_percentage': round(time_info['human'] / time_info['total'] * 100, 1) if time_info['total'] > 0 else 0,
                 'files_added': len(self.commit_info['changes']['added']),
