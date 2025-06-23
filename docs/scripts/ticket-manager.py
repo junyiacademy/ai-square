@@ -19,9 +19,8 @@ class TicketManager:
         self.tickets_dir.mkdir(parents=True, exist_ok=True)
         
         # 創建狀態資料夾
-        (self.tickets_dir / "todo").mkdir(exist_ok=True)
         (self.tickets_dir / "in_progress").mkdir(exist_ok=True)
-        (self.tickets_dir / "done").mkdir(exist_ok=True)
+        (self.tickets_dir / "completed").mkdir(exist_ok=True)
         
     def create_ticket(self, ticket_name: str, description: str = "", create_branch: bool = True) -> Dict:
         """創建新的 ticket"""
@@ -97,7 +96,7 @@ class TicketManager:
         # 如果沒找到，再在舊的日期資料夾找 (向後兼容)
         if not ticket_file:
             for date_dir in sorted(self.tickets_dir.iterdir(), reverse=True):
-                if date_dir.is_dir() and date_dir.name not in ['todo', 'in_progress', 'done']:
+                if date_dir.is_dir() and date_dir.name not in ['in_progress', 'completed']:
                     # 先找新格式 (YAML)
                     for yml_file in date_dir.glob(f"*-ticket-{ticket_name}.yml"):
                         ticket_file = yml_file
@@ -138,9 +137,9 @@ class TicketManager:
         if dev_log_path:
             ticket_data['dev_log_path'] = dev_log_path
         
-        # 移動到 done 資料夾
-        done_dir = self.tickets_dir / "done"
-        new_ticket_file = done_dir / ticket_file.name
+        # 移動到 completed 資料夾
+        completed_dir = self.tickets_dir / "completed"
+        new_ticket_file = completed_dir / ticket_file.name
         
         # 儲存到新位置
         with open(new_ticket_file, 'w', encoding='utf-8') as f:
@@ -153,7 +152,7 @@ class TicketManager:
         # 刪除舊檔案
         ticket_file.unlink()
         
-        print(f"✅ Ticket 已完成並移至 done: {ticket_name}")
+        print(f"✅ Ticket 已完成並移至 completed: {ticket_name}")
         print(f"⏱️  總時間: {ticket_data['duration_minutes']} 分鐘")
         
         return ticket_data
