@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - implement pre-commit and post-commit documentation generation (docs) (32157d8)
+- implement comprehensive workflow automation and quality gates (workflow) (28678b7)
 
 ### Changed
 - improve(commit): enhance commit message generation (f42e828)
