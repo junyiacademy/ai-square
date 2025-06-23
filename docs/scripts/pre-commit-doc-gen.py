@@ -217,23 +217,47 @@ class PreCommitDocGenerator:
         return str(filepath)
     
     def _generate_task_description(self) -> str:
-        """生成任務描述"""
+        """生成任務描述，避免使用 dev-log 和自動生成的檔案名稱"""
         # 基於檔案名稱生成描述
         if not self.staged_files:
             return "changes"
         
-        # 取第一個重要檔案的名稱
+        # 排除不應該用作描述的檔案
+        exclude_patterns = [
+            'dev-logs/',      # dev log 檔案
+            'CHANGELOG',      # changelog 檔案
+            '.yml',           # YAML 設定檔
+            '.yaml',          # YAML 設定檔
+            'test-',          # 測試檔案
+            '.test.',         # 測試檔案
+            '.spec.',         # 測試檔案
+            'auto-generated', # 自動生成的檔案
+        ]
+        
+        # 找第一個有意義的檔案
         for file_info in self.staged_files:
-            name = Path(file_info['path']).stem
-            # 過濾一些通用檔案
-            if name not in ['index', 'main', 'app', 'config']:
+            file_path = file_info['path']
+            
+            # 檢查是否應該排除
+            should_exclude = any(pattern in file_path for pattern in exclude_patterns)
+            if should_exclude:
+                continue
+                
+            name = Path(file_path).stem
+            # 過濾一些通用檔案名
+            if name not in ['index', 'main', 'app', 'config', 'setup', 'init']:
                 # 轉換為 kebab-case
                 desc = re.sub(r'[^a-zA-Z0-9]+', '-', name).lower()
                 desc = re.sub(r'-+', '-', desc).strip('-')
                 if len(desc) > 3:
                     return desc[:40]  # 限制長度
         
-        # 預設描述
+        # 如果沒有找到合適的檔案，使用提交類型或預設描述
+        commit_type = self._analyze_commit_type()
+        if commit_type != 'update':
+            return f"{commit_type}-implementation"
+        
+        # 最終預設描述
         return f"update-{len(self.staged_files)}-files"
     
     def run(self):

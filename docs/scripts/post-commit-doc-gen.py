@@ -144,56 +144,80 @@ class PostCommitDocGenerator:
         return None
     
     def _analyze_commit_time(self) -> Dict:
-        """基於 ADR-016 的 commit-based 時間分析"""
+        """基於 ADR-016 的 commit-based 時間分析，使用 git 歷史而非檔案系統時間"""
         try:
-            # 1. 獲取當前 commit 的變更檔案
+            # 1. 獲取當前 commit 的變更檔案（排除自動生成的檔案）
             code, stdout, _ = self._run_command(["git", "diff-tree", "--no-commit-id", "--name-only", "-r", "HEAD"])
             if code != 0:
                 return {}
                 
-            changed_files = [f.strip() for f in stdout.strip().split('\n') if f.strip()]
+            all_files = [f.strip() for f in stdout.strip().split('\n') if f.strip()]
             
-            # 2. 獲取每個檔案的修改時間戳
-            file_timestamps = []
-            for file_path in changed_files:
-                full_path = self.project_root / file_path
-                if full_path.exists():
-                    mtime = datetime.fromtimestamp(full_path.stat().st_mtime)
-                    file_timestamps.append(mtime)
+            # 排除自動生成的檔案
+            exclude_patterns = ['dev-logs/', 'CHANGELOG.md', '.yml', 'auto-generated']
+            meaningful_files = [
+                f for f in all_files 
+                if not any(pattern in f for pattern in exclude_patterns)
+            ]
             
-            if not file_timestamps:
-                return {}
+            # 如果沒有有意義的檔案，使用所有檔案
+            files_to_analyze = meaningful_files if meaningful_files else all_files
             
-            # 3. 計算時間範圍
-            start_time = min(file_timestamps)
-            end_time = max(file_timestamps)
-            duration_minutes = (end_time - start_time).total_seconds() / 60
+            # 2. 使用 git 歷史獲取檔案的首次和最後修改時間
+            earliest_time = None
+            latest_time = None
             
-            # 4. 如果時間範圍太小，使用 commit 間隔
-            if duration_minutes < 1:
-                # 獲取上一個 commit 的時間
-                code, stdout, _ = self._run_command(["git", "log", "-2", "--pretty=%ct"])
-                if code == 0:
-                    timestamps = stdout.strip().split('\n')
-                    if len(timestamps) >= 2:
-                        current_commit_time = datetime.fromtimestamp(int(timestamps[0]))
-                        last_commit_time = datetime.fromtimestamp(int(timestamps[1]))
-                        commit_interval = (current_commit_time - last_commit_time).total_seconds() / 60
+            for file_path in files_to_analyze[:10]:  # 最多分析 10 個檔案以提高效能
+                # 獲取檔案的 git 歷史時間戳
+                # 使用 git log 獲取檔案的修改歷史
+                code, stdout, _ = self._run_command([
+                    "git", "log", "--follow", "--format=%ct", "--", file_path
+                ])
+                
+                if code == 0 and stdout:
+                    timestamps = [int(ts) for ts in stdout.strip().split('\n') if ts]
+                    if timestamps:
+                        file_earliest = min(timestamps)
+                        file_latest = max(timestamps)
                         
-                        if 0 < commit_interval < 180:  # 最多 3 小時
-                            duration_minutes = commit_interval
+                        if earliest_time is None or file_earliest < earliest_time:
+                            earliest_time = file_earliest
+                        if latest_time is None or file_latest > latest_time:
+                            latest_time = file_latest
             
-            # 5. 驗證合理性
-            if duration_minutes < 0.5:
-                duration_minutes = len(changed_files) * 2  # 每個檔案 2 分鐘
-            elif duration_minutes > 180:
-                return {}  # 太長，不合理
+            # 3. 如果無法從檔案歷史獲取，使用 commit 間隔
+            if earliest_time is None or latest_time is None:
+                # 獲取最近幾個 commit 的時間
+                code, stdout, _ = self._run_command(["git", "log", "-5", "--pretty=%ct"])
+                if code == 0:
+                    timestamps = [int(ts) for ts in stdout.strip().split('\n') if ts]
+                    if len(timestamps) >= 2:
+                        # 使用當前和上一個 commit 的時間差
+                        duration_minutes = (timestamps[0] - timestamps[1]) / 60
+                        
+                        # 檢查是否為連續工作（間隔小於 2 小時）
+                        if 0 < duration_minutes < 120:
+                            return {
+                                'total_time_minutes': round(duration_minutes, 1),
+                                'ai_time_minutes': round(duration_minutes * 0.8, 1),
+                                'human_time_minutes': round(duration_minutes * 0.2, 1),
+                                'time_calculation_method': 'git_commit_interval'
+                            }
+            else:
+                # 計算時間範圍
+                duration_minutes = (latest_time - earliest_time) / 60
+                
+                # 驗證合理性
+                if 0.5 <= duration_minutes <= 240:  # 30秒到4小時
+                    return {
+                        'total_time_minutes': round(duration_minutes, 1),
+                        'ai_time_minutes': round(duration_minutes * 0.8, 1),
+                        'human_time_minutes': round(duration_minutes * 0.2, 1),
+                        'time_calculation_method': 'git_file_history'
+                    }
             
-            return {
-                'total_time_minutes': round(duration_minutes, 1),
-                'ai_time_minutes': round(duration_minutes * 0.8, 1),
-                'human_time_minutes': round(duration_minutes * 0.2, 1)
-            }
+            # 4. 如果都失敗，返回空
+            return {}
             
         except Exception as e:
             print(f"⚠️ Commit 時間分析失敗: {e}")
@@ -275,6 +299,10 @@ class PostCommitDocGenerator:
     
     def update_or_generate_dev_log(self) -> str:
         """更新現有日誌或生成新日誌"""
+        # 先檢查是否應該生成 dev log
+        if not self._should_generate_dev_log():
+            return ""
+        
         commit_type = self._analyze_commit_type()
         scope = self._extract_commit_scope()
         time_info = self._estimate_time_spent()
@@ -363,6 +391,42 @@ class PostCommitDocGenerator:
             print(f"⚠️ 無法更新現有日誌: {e}")
             # 如果更新失敗，生成新的
             return self._generate_new_log(commit_type, scope, time_info, log_file.parent.name)
+    
+    def _should_generate_dev_log(self) -> bool:
+        """判斷是否應該生成 dev log，避免遞迴追蹤"""
+        # 檢查 commit 訊息是否為自動生成的
+        auto_generated_patterns = [
+            'docs: add commit hash',
+            'docs: auto-generated',
+            'auto-commit',
+            'Update dev log',
+            'Update CHANGELOG'
+        ]
+        
+        for pattern in auto_generated_patterns:
+            if pattern.lower() in self.commit_info['message'].lower():
+                print(f"⏭️ 跳過自動生成的 commit: {pattern}")
+                return False
+        
+        # 檢查變更的檔案是否都是自動生成的
+        all_files = (self.commit_info['changes']['added'] + 
+                    self.commit_info['changes']['modified'])
+        
+        if not all_files:
+            return False
+        
+        # 如果所有檔案都是 dev-logs 或 CHANGELOG，跳過
+        auto_files = ['dev-logs/', 'CHANGELOG.md', 'dev log', 'changelog']
+        non_auto_files = [
+            f for f in all_files 
+            if not any(auto in f.lower() for auto in auto_files)
+        ]
+        
+        if not non_auto_files:
+            print("⏭️ 只有自動生成的檔案變更，跳過 dev log 生成")
+            return False
+        
+        return True
     
     def _generate_new_log(self, commit_type: str, scope: str, time_info: Dict, date_str: str) -> str:
         """生成新的開發日誌"""
@@ -764,7 +828,9 @@ class PostCommitDocGenerator:
         dev_log = self.update_or_generate_dev_log()
         
         # 根據條件生成故事
-        story = self.generate_story()
+        story = None
+        if dev_log:  # 只有在生成了 dev log 時才考慮生成 story
+            story = self.generate_story()
         
         print(f"\n✨ 文檔生成完成！")
         
