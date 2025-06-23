@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 支援基礎設施變更的測試豁免機制
 - implement comprehensive ticket management system with parallel development support (94453f0)
 - implement AI auto-commit prevention mechanism (4658190)
+- implement pre-commit and post-commit documentation generation (03572d3)
 
 ### Changed
 - **提交訊息生成改進** (f42e828, 4c1de64)
