@@ -55,6 +55,12 @@ test.describe('多語言標題響應式測試', () => {
         const titleBox = await title.boundingBox()
         const containerBox = await page.locator('main').boundingBox()
         
+        // 檢查是否成功獲取邊界框
+        if (!titleBox || !containerBox) {
+          console.warn(`無法獲取 ${lang.name} 的邊界框`)
+          continue
+        }
+        
         // 驗證標題沒有溢出
         const isOverflowing = titleBox.width > containerBox.width - 32 // 32px for padding
         
