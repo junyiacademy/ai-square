@@ -1,27 +1,27 @@
 type: test
-title: '[待補充 commit 訊息]'
+title: 'test(test): add tests'
 date: '2025-06-24'
 developer: AI + Human
-status: in_progress
-commit_hash: pending
-description: '[待補充 commit 描述]'
+status: completed
+commit_hash: 292f76ca
+description: 'test(test): add tests'
 ticket_id: 2025-06-23-23-42-28-test-bidirectional-linking
 ticket_name: test-bidirectional-linking
 ticket_path: docs/tickets/2025-06-23/2025-06-23-23-42-28-ticket-test-bidirectional-linking.yml
 timeline:
 - phase: 實現
-  duration: 10.6
-  ai_time: 8.48
-  human_time: 2.12
+  duration: 2.0
+  ai_time: 1.6
+  human_time: 0.4
   tasks:
   - 更新 2025-06-23-23-42-28-ticket-test-bidirectional-linking.yml
 metrics:
-  total_time_minutes: 10.6
-  ai_time_minutes: 8.48
-  human_time_minutes: 2.12
+  total_time_minutes: 2.0
+  ai_time_minutes: 1.6
+  human_time_minutes: 0.4
   ai_percentage: 80.0
   human_percentage: 20.0
-  files_added: 0
+  files_added: 1
   files_modified: 1
   files_deleted: 0
   time_calculation_method: git_history
@@ -29,8 +29,13 @@ metrics:
     start_time: '2025-06-23T23:47:38'
     end_time: '2025-06-23T23:58:11'
     file_count: 1
+  time_estimation_method: commit_based_file_timestamp_analysis
+  is_real_time: true
+  commit_timestamp: '2025-06-24T00:00:09'
+  post_commit_update_timestamp: '2025-06-24T00:00:09.974857'
 changes:
-  added: []
+  added:
+  - docs/dev-logs/2025-06-24/2025-06-24-00-00-09-test-test-implementation.yml
   modified:
   - docs/tickets/2025-06-23/2025-06-23-23-42-28-ticket-test-bidirectional-linking.yml
   deleted: []
