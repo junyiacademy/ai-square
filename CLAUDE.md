@@ -4,6 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Critical Rules for AI Assistant
 
+### 🚨 MANDATORY WORKFLOW COMPLIANCE CHECK 🚨
+**BEFORE ANY FILE CREATION OR MODIFICATION:**
+1. **STOP** - Ask yourself: "Am I about to create or modify a file?"
+2. **CHECK** - Run `python docs/scripts/ticket-manager.py active` FIRST
+3. **ACT** - Based on result:
+   - Active ticket matches task → Proceed
+   - Active ticket doesn't match → Pause current, create new ticket
+   - No active ticket → Create ticket if task is non-trivial
+4. **ENFORCEMENT**: Violation = Workflow failure. User will correct you.
+
 ### Commit Execution Rules
 1. **NEVER execute commit without explicit instruction**
 2. **ONLY commit when user says "commit" or similar clear command**
@@ -169,6 +179,16 @@ You MUST create a ticket when the user requests:
 5. **Time Estimate > 15 minutes**
 
 ### Ticket Workflow
+
+#### Self-Check Protocol (MANDATORY)
+Before ANY file operation, mentally run this checklist:
+```
+□ Am I creating a new file? → Need ticket check
+□ Am I modifying existing files? → Need ticket check  
+□ Is this just reading/analyzing? → No ticket needed
+□ Have I checked active ticket? → If no, STOP and check
+```
+
 When a ticket is needed, respond with:
 ```
 This task requires a development ticket. Let me create one:
@@ -182,16 +202,22 @@ This will:
 ```
 
 ### Skip Ticket for:
-- Simple documentation updates
-- Typo fixes
-- Single config file changes
-- CSS/style only changes
+- Reading files only (no modifications)
+- Running analysis commands
+- Answering questions without code changes
+- Simple typo fixes in comments only
 
 ### Active Ticket Check
-Always check for active tickets before creating new ones:
+**MANDATORY** - Check for active tickets BEFORE any file operation:
 ```bash
 python docs/scripts/ticket-manager.py active
 ```
+
+**Common Violation Scenarios to Avoid**:
+1. User: "Write this as a story" → You: *creates file* ❌ WRONG
+2. User: "Write this as a story" → You: *checks ticket first* ✅ CORRECT
+3. User: "Add this feature" → You: *starts coding* ❌ WRONG  
+4. User: "Add this feature" → You: *checks/creates ticket* ✅ CORRECT
 
 ### Automated Decision Making
 
