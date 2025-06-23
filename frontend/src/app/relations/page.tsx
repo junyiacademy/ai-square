@@ -163,8 +163,8 @@ export default function RelationsClient() {
   return (
     <main className="p-8 bg-gray-50 min-h-screen">
       {fakeIllustration}
-      <h1 className="mb-2 text-3xl font-bold text-center">{t('pageTitle')}</h1>
-      <p className="text-center text-gray-500 mb-8">{t('pageSubtitle')}</p>
+      <h1 className="mb-2 text-2xl sm:text-3xl font-bold text-center px-4">{t('pageTitle')}</h1>
+      <p className="text-center text-gray-500 mb-8 px-4">{t('pageSubtitle')}</p>
       <div className="max-w-3xl mx-auto">{tree.domains.map((domain) => (
           <DomainAccordion key={domain.key} domain={domain} kMap={tree.kMap} sMap={tree.sMap} aMap={tree.aMap} lang={lang} emoji={domain.emoji || '🤖'} />
         ))}
@@ -187,7 +187,7 @@ function DomainAccordion({ domain, kMap, sMap, aMap, lang, emoji }: { domain: Do
       >
         <div className="flex items-center">
           <span className="text-2xl mr-3">{emoji}</span>
-          <span className="text-xl font-bold text-blue-800 mr-2">{t(domain.key)}</span>
+          <span className="text-lg sm:text-xl font-bold text-blue-800 mr-2">{t(domain.key)}</span>
           <span className="text-gray-700 text-base font-medium">{open ? '▲' : '▼'}</span>
         </div>
       </div>
