@@ -1,0 +1,48 @@
+type: docs
+title: '[待補充 commit 訊息]'
+date: '2025-06-23'
+developer: AI + Human
+status: in_progress
+commit_hash: pending
+description: '[待補充 commit 描述]'
+timeline:
+- phase: 實現
+  duration: 20.7
+  ai_time: 16.6
+  human_time: 4.1
+  tasks:
+  - 創建 update-changelog.py
+  - 創建 i18n.ts
+  - 更新 CLAUDE.md
+  - 更新 Makefile
+  - 更新 commit-guide.py
+  - 移除 setup-hooks.sh
+metrics:
+  total_time_minutes: 20.7
+  ai_time_minutes: 16.6
+  human_time_minutes: 4.1
+  ai_percentage: 80.0
+  human_percentage: 20.0
+  files_added: 2
+  files_modified: 6
+  files_deleted: 1
+  time_calculation_method: file_timestamp_analysis
+  time_calculation_details:
+    start_time: '2025-06-23T10:39:25.928710'
+    end_time: '2025-06-23T11:00:08.260434'
+    file_count: 8
+changes:
+  added:
+  - docs/scripts/update-changelog.py
+  - frontend/__mocks__/i18n.ts
+  modified:
+  - CLAUDE.md
+  - Makefile
+  - docs/scripts/commit-guide.py
+  - docs/scripts/post-commit-doc-gen.py
+  - frontend/jest.config.js
+  - frontend/jest.setup.js
+  deleted:
+  - docs/scripts/setup-hooks.sh
+pre_commit_generated: true
+generation_time: '2025-06-23T11:00:08.260632'

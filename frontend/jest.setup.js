@@ -63,6 +63,18 @@ jest.mock('react-i18next', () => ({
       language: 'en',
     },
   }),
+  initReactI18next: {
+    type: '3rdParty',
+    init: jest.fn(),
+  },
+}))
+
+// Mock i18next module
+jest.mock('i18next', () => ({
+  use: jest.fn().mockReturnThis(),
+  init: jest.fn().mockReturnThis(),
+  t: jest.fn((key) => key),
+  changeLanguage: jest.fn(),
 }))
 
 // Mock localStorage
@@ -76,6 +88,31 @@ global.localStorage = localStorageMock
 
 // Mock fetch
 global.fetch = jest.fn()
+
+// Mock Request and Response for Next.js API routes
+global.Request = jest.fn().mockImplementation((url, init) => ({
+  url,
+  method: init?.method || 'GET',
+  headers: new Headers(init?.headers || {}),
+  json: jest.fn().mockResolvedValue(init?.body ? JSON.parse(init.body) : {}),
+}))
+
+global.Response = jest.fn().mockImplementation((body, init) => ({
+  ok: init?.status >= 200 && init?.status < 300,
+  status: init?.status || 200,
+  json: jest.fn().mockResolvedValue(JSON.parse(body)),
+}))
+
+// Mock NextResponse for API routes
+jest.mock('next/server', () => ({
+  NextResponse: {
+    json: jest.fn((data, init) => ({
+      status: init?.status || 200,
+      ok: (init?.status || 200) >= 200 && (init?.status || 200) < 300,
+      json: jest.fn().mockResolvedValue(data),
+    })),
+  },
+}))
 
 // Clean up after each test
 afterEach(() => {

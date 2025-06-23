@@ -123,11 +123,24 @@ dev-continue:
 
 # === Git 提交自動化 ===
 
-# 🔧 設置 Git Hooks（首次使用）
-setup-hooks:
-	@echo "🔧 設置 Git Hooks..."
-	@bash docs/scripts/setup-hooks.sh
-	@echo "✅ 設置完成！現在 git commit 會自動執行檢查"
+# 🔧 設置開發環境
+setup-dev:
+	@echo "🔧 設置開發環境..."
+	@cd frontend && npm install
+	@echo "✅ 開發環境設置完成！"
+
+# 🧪 執行所有測試和品質檢查（與 pre-commit 相同）
+test-all:
+	@echo "🧪 執行所有測試和品質檢查..."
+	@cd frontend && npm run test:ci
+	@cd frontend && npm run lint
+	@cd frontend && npx tsc --noEmit
+	@echo "✅ 所有檢查通過！"
+
+# 📝 手動更新 changelog
+update-changelog:
+	@echo "📝 更新 changelog..."
+	@python docs/scripts/update-changelog.py
 
 # ✅ 智能提交助手（手動執行）
 commit-check:
