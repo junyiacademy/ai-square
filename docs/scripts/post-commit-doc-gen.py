@@ -1072,7 +1072,7 @@ class PostCommitDocGenerator:
             print(f"⚠️  自動提交失敗: {result.stderr}")
     
     def _update_ticket_with_dev_log(self, dev_log_path: str):
-        """更新 ticket 中的 dev log 路徑"""
+        """更新 ticket 中的 dev log 路徑並完成票券"""
         # 讀取 dev log 獲取 ticket 資訊
         try:
             with open(dev_log_path, 'r', encoding='utf-8') as f:
@@ -1090,17 +1090,46 @@ class PostCommitDocGenerator:
                 else:
                     ticket_data = yaml.safe_load(f)
             
-            # 更新 dev_log_path
+            # 更新 ticket 資訊
             ticket_data['dev_log_path'] = dev_log_path
+            ticket_data['status'] = 'completed'
+            ticket_data['completed_at'] = datetime.now().isoformat()
+            ticket_data['commit_hash'] = self.commit_hash
             
-            # 寫回檔案
+            # 更新文件狀態
+            if 'documents_status' in ticket_data:
+                for doc_path in ticket_data['documents_status']:
+                    ticket_data['documents_status'][doc_path] = 'completed'
+            
+            # 更新 required_documents 中的狀態
+            if 'required_documents' in ticket_data:
+                for doc in ticket_data['required_documents']:
+                    doc['status'] = 'completed'
+            
+            # 計算總開發時間
+            if 'created_at' in ticket_data:
+                created_at = datetime.fromisoformat(ticket_data['created_at'])
+                completed_at = datetime.now()
+                duration_minutes = (completed_at - created_at).total_seconds() / 60
+                ticket_data['total_duration_minutes'] = round(duration_minutes, 1)
+            
+            # 寫回原檔案（暫時）
             with open(ticket_file, 'w', encoding='utf-8') as f:
                 if ticket_file.suffix == '.json':
                     json.dump(ticket_data, f, indent=2, ensure_ascii=False)
                 else:
                     yaml.dump(ticket_data, f, allow_unicode=True, sort_keys=False)
             
+            # 將票券移到 completed 資料夾
+            completed_dir = self.project_root / "docs" / "tickets" / "completed"
+            completed_dir.mkdir(parents=True, exist_ok=True)
+            
+            new_ticket_file = completed_dir / ticket_file.name
+            ticket_file.rename(new_ticket_file)
+            
             print(f"✅ 已更新 ticket 的 dev log 連結")
+            print(f"✅ 已將票券移至 completed: {new_ticket_file.name}")
+            print(f"✅ 票券狀態已更新為 completed")
             
         except Exception as e:
             print(f"⚠️ 無法更新 ticket: {e}")
