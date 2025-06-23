@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **測試整合** (59ae5cf)
   - 將測試執行整合到 commit 工作流程
   - 支援基礎設施變更的測試豁免機制
+- implement comprehensive ticket management system with parallel development support (94453f0)
 
 ### Changed
 - **提交訊息生成改進** (f42e828, 4c1de64)
