@@ -7,16 +7,68 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2025-06-23] - 開發流程自動化與品質門檻建立
+
 ### Added
-- implement pre-commit and post-commit documentation generation (docs) (32157d8)
-- implement comprehensive workflow automation and quality gates (workflow) (28678b7)
+- **智能提交分析系統** (dc21387)
+  - 實作 smart-commit-analyzer.py 自動化提交分析
+  - 整合 pre-commit 和 post-commit hooks 自動化流程
+  - 建立智能化的提交訊息處理機制
+  
+- **全面性工作流程自動化** (28678b7)
+  - 設置 GitHub Actions CI/CD pipeline 支援多版本測試 (Node.js 18.x, 20.x)
+  - 實作 pre-push hook 確保程式碼品質
+  - 建立多層次品質檢查點：pre-commit → pre-push → CI/CD
+  - 創建 ADR-020 記錄架構決策
+  
+- **開發日誌自動生成系統** (678eac2, ba7c0ae)
+  - 實作 pre-commit 開發日誌生成功能
+  - 實作 post-commit 文檔自動更新機制
+  - 整合 changelog 自動更新流程
+  - 支援時間追蹤與分析 (commit-based analysis)
+
+- **文件命名規範系統** (01b4100, 0b5f1a8)
+  - 實作智能檔案名稱生成邏輯
+  - 優化檔名長度限制處理
+  - 建立一次性腳本清理政策
+  
+- **測試整合** (59ae5cf)
+  - 將測試執行整合到 commit 工作流程
+  - 支援基礎設施變更的測試豁免機制
 
 ### Changed
-- improve(commit): enhance commit message generation (f42e828)
+- **提交訊息生成改進** (f42e828, 4c1de64)
+  - 增強提交訊息生成邏輯
+  - 改進多檔案變更的描述方式
+  
+- **開發日誌結構重組** (788776a, 97de2d2, 7f572ab)
+  - 簡化 dev logs 目錄結構
+  - 移除子目錄分類，採用日期資料夾組織
+  - 修正錯誤放置的檔案
+
+- **CLAUDE.md 規則強化**
+  - 嚴格禁止 AI 助手使用直接 git 命令
+  - 明確規定必須使用 Makefile 工作流程
+  - 加入違規處理的明確指引
 
 ### Fixed
+- **時間計算修正** (e030932)
+  - 修復 int() 轉 round() 的問題
+  - 解決小於一分鐘的時間被轉為 0 的問題
+  - 正確顯示小數點時間（如 0.9 分鐘）
+
+- **Git hooks 問題** (f1cd8ff)
+  - 停用有問題的 git hooks
+  - 清理設定檔案
+  
+- **測試修復**
+  - 修復 Header 組件鍵盤導航測試
+  - 修復 API 路由的 NextResponse mock 問題
+  - 修復 i18next 設定問題
 
 ### Removed
+- 移除遷移腳本 (366b72e)
+- 清理測試用暫存檔案 (7d0edf4, adcbb99)
 
 ## [2025-06-22] - 智能首頁與國際化完善
 
