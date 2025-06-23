@@ -28,6 +28,9 @@ tmp/
 *.backup
 # 移除 docs/current/ 的忽略，改為追蹤開發歷程
 
+# AI Commit Guard - temporary authorization file
+.ai-commit-guard
+
 # Generated Reports
 docs/metrics-dashboard.json
 docs/metrics-report.md

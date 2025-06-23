@@ -1,0 +1,137 @@
+# Bug 修復日誌模板
+# 票券: fix-post-commit-ticket-update
+# 開發類型: bugfix
+# 創建日期: 2025-06-24
+
+ticket_info:
+  name: fix-post-commit-ticket-update
+  type: bugfix
+  created_at: 2025-06-24T01:31:01.655263
+  description: ""
+
+# Bug 資訊
+bug_info:
+  reported_date: "2025-06-24"
+  severity: "low|medium|high|critical"
+  priority: "low|medium|high|urgent"
+  affected_components: []
+  affected_users: "all|specific|none"
+  
+  reproduction:
+    steps: []
+    expected_behavior: ""
+    actual_behavior: ""
+    environment: ""
+    browser_version: ""
+
+# 修復進度記錄
+fix_progress:
+  start_time: 2025-06-24T01:31:01.655263
+  end_time: ""
+  total_time_minutes: 0
+  time_calculation_method: "bug_tracking"
+  
+  phases:
+    investigation:
+      status: pending
+      time_minutes: 0
+      findings: ""
+    root_cause_analysis:
+      status: pending
+      time_minutes: 0
+      root_cause: ""
+    fix_implementation:
+      status: pending
+      time_minutes: 0
+      approach: ""
+    testing:
+      status: pending
+      time_minutes: 0
+      test_results: ""
+    verification:
+      status: pending
+      time_minutes: 0
+      verification_notes: ""
+
+# 技術修復詳情
+technical_fix:
+  files_modified: []
+  lines_changed: 0
+  fix_approach: "hotfix|patch|refactor|revert"
+  
+  changes:
+    - file: ""
+      line_numbers: []
+      change_type: "add|modify|delete"
+      description: ""
+      before: ""
+      after: ""
+
+# 測試記錄
+testing:
+  regression_tests:
+    created: []
+    passed: []
+    failed: []
+  fix_verification:
+    test_cases: []
+    all_passed: false
+  manual_testing:
+    reproduction_test: false
+    fix_verification: false
+    edge_cases_tested: []
+
+# 影響分析
+impact_analysis:
+  breaking_changes: false
+  performance_impact: "none|positive|negative"
+  security_implications: []
+  user_experience_changes: []
+  
+# 預防措施
+prevention_measures:
+  code_review_improvements: []
+  additional_tests: []
+  monitoring_enhancements: []
+  documentation_updates: []
+
+# 相關問題
+related_issues:
+  duplicate_reports: []
+  similar_bugs: []
+  follow_up_tasks: []
+
+# 學習與改進
+learnings:
+  root_cause_category: "logic|data|ui|integration|performance|security"
+  prevention_strategy: ""
+  process_improvements: []
+  knowledge_gaps_identified: []
+
+# 相關資源
+resources:
+  bug_reports: []
+  documentation_links: []
+  reference_tickets: []
+  external_references: []
+
+# 最終狀態
+completion_status:
+  bug_fixed: false
+  tested: false
+  deployed: false
+  verified_in_production: false
+  
+# 提交信息
+commit_info:
+  hash: ""
+  message: ""
+  files_changed: []
+  
+# 備註
+notes: |
+  Bug 修復過程中的重要備註和發現
+
+---
+# 此文件在票券創建時自動生成
+# 請在修復過程中持續更新相關字段

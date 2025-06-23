@@ -1,6 +1,6 @@
 name: fix-ticket-init-system
 description: 修復票券初始化系統-所有文件一開始就創建
-status: in_progress
+status: completed
 created_at: '2025-06-24T01:01:07.666543'
 date: '2025-06-24'
 time: 01-01-07
@@ -13,7 +13,7 @@ required_documents:
   auto_generated: false
   description: 功能規格文件
   validator: null
-  status: pending
+  status: completed
 - path: __tests__/fix-ticket-init-system.test.tsx
   template: null
   required: true
@@ -21,7 +21,7 @@ required_documents:
   auto_generated: false
   description: 單元測試
   validator: null
-  status: pending
+  status: completed
 - path: docs/dev-logs/2025-06-24/2025-06-24-01-01-07-feature-fix-ticket-init-system.yml
   template: feature-log-template.yml
   required: true
@@ -29,12 +29,16 @@ required_documents:
   auto_generated: false
   description: 開發日誌
   validator: null
-  status: pending
+  status: completed
 quality_gates:
   test_coverage: 80
   documentation_score: 8
   code_review: true
 documents_status:
-  docs/features/fix-ticket-init-system-spec.md: pending
-  __tests__/fix-ticket-init-system.test.tsx: pending
-  docs/dev-logs/2025-06-24/2025-06-24-01-01-07-feature-fix-ticket-init-system.yml: pending
+  docs/features/fix-ticket-init-system-spec.md: completed
+  __tests__/fix-ticket-init-system.test.tsx: completed
+  docs/dev-logs/2025-06-24/2025-06-24-01-01-07-feature-fix-ticket-init-system.yml: completed
+dev_log_path: docs/dev-logs/2025-06-24/2025-06-24-01-32-35-feature-pre-commit-post-commit-documentation.yml
+completed_at: '2025-06-24T01:32:35.793039'
+commit_hash: 60fb717a
+total_duration_minutes: 31.5
