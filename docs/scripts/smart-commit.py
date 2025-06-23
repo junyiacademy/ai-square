@@ -119,6 +119,37 @@ class SmartCommit:
         subprocess.run(["git", "add", "-A"], capture_output=True)
         return True
     
+    def validate_ticket_documentation(self) -> bool:
+        """驗證票券文件完整性"""
+        validator_script = self.scripts_path / "commit-doc-validator.py"
+        
+        if not validator_script.exists():
+            print("⚠️ 票券文件驗證器不存在，跳過驗證")
+            return True
+        
+        print("\n📋 執行票券文件完整性檢查...")
+        
+        try:
+            result = subprocess.run(
+                [sys.executable, str(validator_script)],
+                capture_output=True,
+                text=True
+            )
+            
+            if result.stdout:
+                print(result.stdout)
+            
+            if result.returncode != 0:
+                if result.stderr:
+                    print(f"❌ 驗證錯誤: {result.stderr}")
+                return False
+            
+            return True
+            
+        except Exception as e:
+            print(f"⚠️ 票券驗證過程發生錯誤: {e}")
+            return True  # 不阻止提交
+    
     def run_post_commit_generation(self) -> bool:
         """執行 post-commit 文檔生成"""
         print("\n📝 執行 post-commit 文檔生成...")
@@ -161,15 +192,19 @@ class SmartCommit:
         if not self.run_pre_commit_generation():
             return False
         
-        # 4. 執行正常的提交流程
+        # 4. 執行票券文件驗證
+        if not self.validate_ticket_documentation():
+            return False
+        
+        # 5. 執行正常的提交流程
         print("\n✅ 所有檢查通過，繼續提交流程...\n")
         if not self.run_commit_guide():
             return False
         
-        # 5. 執行 post-commit 生成
+        # 6. 執行 post-commit 生成
         self.run_post_commit_generation()
         
-        # 6. 提供後續操作建議
+        # 7. 提供後續操作建議
         print("\n" + "="*50)
         print("✅ 提交完成！")
         

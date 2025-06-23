@@ -52,11 +52,15 @@ dev-ticket:
 	@echo "🎫 開始新的開發 Ticket"
 	@echo "功能名稱: $(TICKET)"
 	@if [ -z "$(TICKET)" ]; then \
-		echo "❌ 請指定 Ticket 名稱: make dev-ticket TICKET=feature-name"; \
+		echo "❌ 請指定 Ticket 名稱: make dev-ticket TICKET=feature-name TYPE=feature"; \
 		exit 1; \
 	fi
-	@echo "🎫 創建 Ticket 和 Branch..."
-	@python3 docs/scripts/ticket-manager.py create $(TICKET) "$(DESC)"
+	@if [ -z "$(TYPE)" ]; then \
+		echo "❌ 請指定開發類型: TYPE=feature|bugfix|refactor|docs|test"; \
+		exit 1; \
+	fi
+	@echo "🎫 創建 Ticket 和 Branch (類型: $(TYPE))..."
+	@python3 docs/scripts/ticket-driven-dev.py create $(TICKET) $(TYPE) "$(DESC)"
 	@echo "📋 開發規則："
 	@echo "   1. 一次只做一件事"
 	@echo "   2. 使用 make commit-ticket 提交進度"
