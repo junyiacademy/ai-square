@@ -1,18 +1,24 @@
 type: docs
-title: '[待補充 commit 訊息]'
+title: 'fix(time-tracking): improve time tracking accuracy'
 date: '2025-06-24'
 developer: AI + Human
-status: in_progress
-commit_hash: pending
-description: '[待補充 commit 描述]'
+status: completed
+commit_hash: 50f9a2d3
+description: "fix(time-tracking): improve time tracking accuracy\n\nAdded 64 files:\n\
+  \  - 2025-06-24-01-42-22-refactor-fix-dev-logs-accuracy.yml\n  - fix-dev-logs-accuracy-plan.md\n\
+  \  - analyze-dev-logs.py\n  - fix-dev-logs-issues.py\n  - fix-dev-logs.sh\n  ...\
+  \ and 59 more\n\nModified 6 files:\n  - 2025-06-23-02-24-31-bug-disable-problematic-git-hooks-clean.yml\n\
+  \  - 2025-06-23-04-06-49-refactor-simplify-dev-logs-structure-by.yml\n  - 2025-06-23-21-20-57-bug-bugfix-filename-duplication-improvement-time.yml\n\
+  \  - 2025-06-23-21-41-22-feature-ticket-management-system-parallel-development.yml\n\
+  \  - 2025-06-24-01-17-13-ticket-single-ticket-commit.yml\n  ... and 1 more"
 ticket_id: 2025-06-24-01-42-19-fix-dev-logs-accuracy
 ticket_name: fix-dev-logs-accuracy
 ticket_path: docs/tickets/in_progress/2025-06-24-01-42-19-ticket-fix-dev-logs-accuracy.yml
 timeline:
 - phase: 實現
-  duration: 13.3
-  ai_time: 10.64
-  human_time: 2.66
+  duration: 123.5
+  ai_time: 98.8
+  human_time: 24.7
   tasks:
   - 創建 2025-06-24-01-42-22-refactor-fix-dev-logs-accuracy.yml
   - 創建 fix-dev-logs-accuracy-plan.md
@@ -21,22 +27,47 @@ timeline:
   - 更新 2025-06-23-04-06-49-refactor-simplify-dev-logs-structure-by.yml
   - 更新 2025-06-23-21-20-57-bug-bugfix-filename-duplication-improvement-time.yml
 metrics:
-  total_time_minutes: 13.3
-  ai_time_minutes: 10.64
-  human_time_minutes: 2.66
+  total_time_minutes: 123.5
+  ai_time_minutes: 98.8
+  human_time_minutes: 24.7
   ai_percentage: 80.0
   human_percentage: 20.0
-  files_added: 64
+  files_added: 85
   files_modified: 6
-  files_deleted: 0
+  files_deleted: 20
   time_calculation_method: commit_interval
   time_calculation_details:
     start_time: '2025-06-24T01:38:48'
     end_time: '2025-06-24T01:52:05.308204'
     file_count: 0
+  time_estimation_method: commit_based_file_timestamp_analysis
+  is_real_time: true
+  commit_timestamp: '2025-06-24T01:52:05'
+  post_commit_update_timestamp: '2025-06-24T01:52:05.556567'
 changes:
   added:
+  - docs/dev-logs/2025-06-20/2025-06-20-00-00-00-other-Email-Login.yml
+  - docs/dev-logs/2025-06-21/2025-06-21-00-00-00-other-Header-Login-Status.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-00-00-00-docs-Architecture-Completion.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-00-00-00-docs-Architecture-Definition.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-00-00-00-docs-Cleanup.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-00-00-00-docs-Frontend-Guide-Integration.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-00-00-00-feature-Auto-Reflection-Story.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-00-00-00-feature-Learning-Progress-Tracker.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-00-00-00-other-Homepage-Login.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-00-00-00-refactor-Documentation-Structure.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-00-00-00-refactor-Handbook-Reorganize.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-00-00-00-refactor-Improvements-Location.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-00-00-00-refactor-Restructure.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-00-00-00-docs-claude.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-00-00-00-docs-commit-guide.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-00-00-00-docs-docs-docs-refactor.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-00-00-00-docs-docs-refactor-update-update-t.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-00-00-00-test-ai-commit-guard.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-00-00-00-test-test-commit-flow.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-00-00-00-update-page.yml
   - docs/dev-logs/2025-06-24/2025-06-24-01-42-22-refactor-fix-dev-logs-accuracy.yml
+  - docs/dev-logs/2025-06-24/2025-06-24-01-52-05-docs-fix-dev-logs-accuracy-plan.yml
   - docs/refactoring/fix-dev-logs-accuracy-plan.md
   - docs/scripts/analyze-dev-logs.py
   - docs/scripts/fix-dev-logs-issues.py
@@ -107,6 +138,26 @@ changes:
   - docs/dev-logs/2025-06-23/2025-06-23-21-41-22-feature-ticket-management-system-parallel-development.yml
   - docs/tickets/completed/2025-06-24-01-17-13-ticket-single-ticket-commit.yml
   - docs/tickets/completed/2025-06-24-01-31-01-ticket-fix-post-commit-ticket-update.yml
-  deleted: []
+  deleted:
+  - docs/dev-logs/2025-06-20/2025-06-20-other-Email-Login.yml
+  - docs/dev-logs/2025-06-21/2025-06-21-other-Header-Login-Status.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-docs-Architecture-Completion.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-docs-Architecture-Definition.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-docs-Cleanup.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-docs-Frontend-Guide-Integration.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-feature-Auto-Reflection-Story.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-feature-Learning-Progress-Tracker.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-other-Homepage-Login.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-refactor-Documentation-Structure.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-refactor-Handbook-Reorganize.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-refactor-Improvements-Location.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-refactor-Restructure.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-docs-2025-06-23-docs-2025-06-23-docs-refactor.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-docs-2025-06-23-docs-refactor-update-update-t.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-docs-claude.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-docs-commit-guide.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-test-ai-commit-guard.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-test-test-commit-flow.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-update-page.yml
 pre_commit_generated: true
 generation_time: '2025-06-24T01:52:05.321682'
