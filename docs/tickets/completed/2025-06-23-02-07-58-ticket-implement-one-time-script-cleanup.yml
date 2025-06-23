@@ -1,0 +1,34 @@
+name: implement-one-time-script-cleanup
+type: feature
+status: completed
+created_at: '2025-06-23T02:07:58'
+completed_at: '2025-06-23T23:59:59'
+description: 'feat(docs): implement one-time script cleanup policy and meaningful
+  story generation
+
+
+  - Add ADR-008: Meaningful story generation rules with 60-point scoring system
+
+  - Add ADR-009: One-time script cleanup policy for maintaining clean codebase
+
+  - Enhance post-commit-doc-gen.py with story value assessment
+
+  - Add one-time script detection in commit-guide.py
+
+  - Delete completed one-time scripts (rename-legacy-files.py, emergency-fix-utility.py)
+
+  - Remove 4 meaningless auto-generated stories, replaced with high-value breakthrough
+  story
+
+  - Establish automated cleanup workflow for future one-time scripts
+
+
+  🤖 Generated with [Claude Code](https://claude.ai/code)
+
+
+  Co-Authored-By: Claude <noreply@anthropic.com>'
+dev_logs:
+- docs/dev-logs/2025-06-23/2025-06-23-02-07-58-feature-implement-one-time-script-cleanup.yml
+reconstructed: true
+reconstruction_date: '2025-06-24T01:49:40.752406'
+commit_hash: ab69b47b

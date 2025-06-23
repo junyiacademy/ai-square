@@ -40,7 +40,7 @@ timeline:
   - 移除 2025-06-22-docs-Architecture-Completion.yml
   - 移除 2025-06-22-docs-Architecture-Definition.yml
 metrics:
-  total_time_minutes: 180
+  total_time_minutes: 10.0
   ai_time_minutes: 144.0
   human_time_minutes: 36.0
   ai_percentage: 80.0
@@ -50,9 +50,10 @@ metrics:
   files_deleted: 35
   commit_timestamp: '2025-06-23T04:06:49'
   generation_timestamp: '2025-06-23T04:11:01.571831'
-  time_estimation_method: file_count_estimate
   is_real_time: false
   time_data_quality: estimated
+  time_calculation_method: default_estimate
+  note: 時間為預設估計值
 changes:
   added:
   - docs/dev-logs/2025-06-22/2025-06-22-docs-Architecture-Completion.yml

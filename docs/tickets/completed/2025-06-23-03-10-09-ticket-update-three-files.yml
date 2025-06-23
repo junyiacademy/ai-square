@@ -1,0 +1,16 @@
+name: update-three-files
+type: feature
+status: completed
+created_at: '2025-06-23T03:10:09'
+completed_at: '2025-06-23T23:59:59'
+description: 'feat(docs): update 3 files
+
+
+  Added: finalize-docs.py
+
+  Modified: Makefile, post-commit-doc-gen.py'
+dev_logs:
+- docs/dev-logs/2025-06-23/2025-06-23-03-10-09-feature-update-three-files.yml
+reconstructed: true
+reconstruction_date: '2025-06-24T01:49:40.650162'
+commit_hash: 2964a668

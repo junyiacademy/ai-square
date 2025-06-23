@@ -48,7 +48,7 @@ timeline:
   duration: 1
   description: 確認問題解決，清理剩餘變更
 metrics:
-  total_time_minutes: 15
+  total_time_minutes: 10.0
   ai_time_minutes: 12.0
   human_time_minutes: 3.0
   ai_percentage: 80.0
@@ -63,7 +63,6 @@ metrics:
   - f1cd8ff
   - 633c15f
   key_file_timestamp: 02:23:43
-  time_estimation_method: file_count_estimate
   is_real_time: false
   data_quality: high
   confidence_level: high
@@ -73,6 +72,8 @@ metrics:
   - stat -f "%Sm" -t "%H:%M:%S" docs/decisions/ADR-012*
   migrated_at: '2025-06-23T03:34:51.416558'
   time_confidence: medium
+  time_calculation_method: default_estimate
+  note: 時間為預設估計值
 changes:
   added:
   - docs/decisions/ADR-012-githooks-analysis-and-cleanup.md

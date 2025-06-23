@@ -1,0 +1,11 @@
+name: pre-commit-post-commit-documentation
+type: feature
+status: completed
+created_at: '2025-06-24T01:32:35'
+completed_at: '2025-06-24T23:59:59'
+description: 'feat(docs): implement pre-commit and post-commit documentation generation'
+dev_logs:
+- docs/dev-logs/2025-06-24/2025-06-24-01-32-35-feature-pre-commit-post-commit-documentation.yml
+reconstructed: true
+reconstruction_date: '2025-06-24T01:49:40.615143'
+commit_hash: 60fb717a

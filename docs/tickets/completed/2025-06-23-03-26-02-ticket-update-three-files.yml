@@ -1,0 +1,16 @@
+name: update-three-files
+type: docs
+status: completed
+created_at: '2025-06-23T03:26:02'
+completed_at: '2025-06-23T23:59:59'
+description: 'feat(docs): update 3 files
+
+
+  Added: pre-commit-doc-gen.py
+
+  Modified: commit-guide.py, post-commit-doc-gen.py'
+dev_logs:
+- docs/dev-logs/2025-06-23/2025-06-23-03-26-02-docs-update-three-files.yml
+reconstructed: true
+reconstruction_date: '2025-06-24T01:49:40.642162'
+commit_hash: 2a29b4f0

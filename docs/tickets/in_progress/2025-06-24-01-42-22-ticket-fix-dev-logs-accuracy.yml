@@ -1,0 +1,40 @@
+name: fix-dev-logs-accuracy
+description: 檢查並修復 dev logs 的準確性，移除推估時間，從 dev logs 回推重建 tickets
+status: in_progress
+created_at: '2025-06-24T01:42:22.346007'
+date: '2025-06-24'
+time: 01-42-22
+development_type: refactor
+required_documents:
+- path: docs/refactoring/fix-dev-logs-accuracy-plan.md
+  template: refactor-plan-template.md
+  required: true
+  required_phase: commit
+  auto_generated: false
+  description: 重構計劃
+  validator: null
+  status: pending
+- path: docs/decisions/ADR-029-fix-dev-logs-accuracy.md
+  template: adr-template.md
+  required: true
+  required_phase: commit
+  auto_generated: false
+  description: 架構決策記錄
+  validator: null
+  status: pending
+- path: docs/dev-logs/2025-06-24/2025-06-24-01-42-22-refactor-fix-dev-logs-accuracy.yml
+  template: refactor-log-template.yml
+  required: true
+  required_phase: development
+  auto_generated: false
+  description: 重構日誌
+  validator: null
+  status: pending
+quality_gates:
+  test_coverage_maintained: true
+  performance_not_degraded: true
+  api_compatibility: true
+documents_status:
+  docs/refactoring/fix-dev-logs-accuracy-plan.md: pending
+  docs/decisions/ADR-029-fix-dev-logs-accuracy.md: pending
+  docs/dev-logs/2025-06-24/2025-06-24-01-42-22-refactor-fix-dev-logs-accuracy.yml: pending

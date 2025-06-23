@@ -1,0 +1,14 @@
+name: update-two-files
+type: refactor
+status: completed
+created_at: '2025-06-23T03:01:29'
+completed_at: '2025-06-23T23:59:59'
+description: 'refactor(docs): update 2 files
+
+
+  Modified: commit-guide.py, post-commit-doc-gen.py'
+dev_logs:
+- docs/dev-logs/2025-06-23/2025-06-23-03-01-29-refactor-update-two-files.yml
+reconstructed: true
+reconstruction_date: '2025-06-24T01:49:40.705109'
+commit_hash: d62ca040

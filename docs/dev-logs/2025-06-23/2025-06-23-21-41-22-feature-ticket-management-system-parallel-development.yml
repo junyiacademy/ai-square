@@ -59,7 +59,7 @@ timeline:
   - 更新 Makefile
   - 更新 post-commit-doc-gen.py
 metrics:
-  total_time_minutes: 60
+  total_time_minutes: 10.0
   ai_time_minutes: 48.0
   human_time_minutes: 12.0
   ai_percentage: 80.0
@@ -69,9 +69,10 @@ metrics:
   files_deleted: 0
   commit_timestamp: '2025-06-23T21:41:22'
   generation_timestamp: '2025-06-23T21:41:29.138882'
-  time_estimation_method: file_count_estimate
   is_real_time: false
   time_data_quality: estimated
+  time_calculation_method: default_estimate
+  note: 時間為預設估計值
 changes:
   added:
   - docs/decisions/ADR-022-ticket-driven-development-with-ai.md

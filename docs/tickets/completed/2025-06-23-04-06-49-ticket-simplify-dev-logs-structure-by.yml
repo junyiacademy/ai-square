@@ -1,0 +1,31 @@
+name: simplify-dev-logs-structure-by
+type: refactor
+status: completed
+created_at: '2025-06-23T04:06:49'
+completed_at: '2025-06-23T23:59:59'
+description: 'refactor: simplify dev logs structure by removing subdirectory categorization
+
+
+  - Flattened all dev logs to be directly under date folders
+
+  - Moved 35 files from subdirectories (features/, bugfixes/, etc.) to date folder
+  root
+
+  - Updated ADR-017 to reflect new simplified structure
+
+  - Updated handbook guides (development-logs-guide.md, commit-guide.md)
+
+  - Updated dev-logs README.md to match new structure
+
+  - Removed redundant subdirectory categorization since filenames already contain
+  type info
+
+  - Cleaned up temporary migration script
+
+
+  The new structure is simpler and relies on clear filenames for categorization.'
+dev_logs:
+- docs/dev-logs/2025-06-23/2025-06-23-04-06-49-refactor-simplify-dev-logs-structure-by.yml
+reconstructed: true
+reconstruction_date: '2025-06-24T01:49:40.712657'
+commit_hash: 7f572ab1

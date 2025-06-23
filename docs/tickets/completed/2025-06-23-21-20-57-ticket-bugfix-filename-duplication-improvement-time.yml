@@ -1,0 +1,32 @@
+name: bugfix-filename-duplication-improvement-time
+type: bug
+status: completed
+created_at: '2025-06-23T21:20:57'
+completed_at: '2025-06-23T23:59:59'
+description: 'fix(dev-logs): fix filename duplication, improve time calculation, and
+  prevent recursive tracking
+
+
+  - Fixed filename generation to exclude dev-log files and auto-generated files
+
+  - Improved time calculation to use git history instead of filesystem timestamps
+
+  - Added recursive tracking prevention for auto-generated commits
+
+  - Enhanced both pre-commit and post-commit scripts with better filtering
+
+
+  Fixes:
+
+  1. No more duplicate filenames like ''2025-06-23-docs-2025-06-23-docs-refactor.yml''
+
+  2. More accurate time tracking using git log --follow
+
+  3. Prevents infinite loops when tracking dev-log changes
+
+  4. Smarter file exclusion patterns for meaningful filenames'
+dev_logs:
+- docs/dev-logs/2025-06-23/2025-06-23-21-20-57-bug-bugfix-filename-duplication-improvement-time.yml
+reconstructed: true
+reconstruction_date: '2025-06-24T01:49:40.668478'
+commit_hash: ea06b2d4

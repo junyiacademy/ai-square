@@ -1,44 +1,10 @@
 name: fix-post-commit-ticket-update
-description: ''
+type: bug
 status: completed
-completed_at: '2025-06-24T01:32:35.000000'
-commit_hash: 'deba2f0'
-total_duration_minutes: 1.6
-created_at: '2025-06-24T01:31:01.652189'
-date: '2025-06-24'
-time: 01-31-01
-development_type: bugfix
-required_documents:
-- path: docs/bugs/fix-post-commit-ticket-update-analysis.md
-  template: bug-analysis-template.md
-  required: true
-  required_phase: development
-  auto_generated: false
-  description: Bug 分析報告
-  validator: null
-  status: completed
-- path: __tests__/fix-post-commit-ticket-update.test.tsx
-  template: null
-  required: true
-  required_phase: development
-  auto_generated: false
-  description: 回歸測試
-  validator: null
-  status: completed
-- path: docs/dev-logs/2025-06-24/2025-06-24-01-31-01-bug-fix-post-commit-ticket-update.yml
-  template: bug-log-template.yml
-  required: true
-  required_phase: development
-  auto_generated: false
-  description: 修復日誌
-  validator: null
-  status: completed
-quality_gates:
-  reproduction_test: true
-  fix_verification: true
-  regression_test: true
-documents_status:
-  docs/bugs/fix-post-commit-ticket-update-analysis.md: completed
-  __tests__/fix-post-commit-ticket-update.test.tsx: completed
-  docs/dev-logs/2025-06-24/2025-06-24-01-31-01-bug-fix-post-commit-ticket-update.yml: completed
-dev_log_path: docs/dev-logs/2025-06-24/2025-06-24-01-32-35-feature-pre-commit-post-commit-documentation.yml
+created_at: '2025-06-24T01:31:01'
+completed_at: '2025-06-24T23:59:59'
+description: 從 dev log 回推創建的票券
+dev_logs:
+- docs/dev-logs/2025-06-24/2025-06-24-01-31-01-bug-fix-post-commit-ticket-update.yml
+reconstructed: true
+reconstruction_date: '2025-06-24T01:49:40.624820'

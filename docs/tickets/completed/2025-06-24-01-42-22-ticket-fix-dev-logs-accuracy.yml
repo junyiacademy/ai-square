@@ -1,0 +1,10 @@
+name: fix-dev-logs-accuracy
+type: refactor
+status: completed
+created_at: '2025-06-24T01:42:22'
+completed_at: '2025-06-24T23:59:59'
+description: 從 dev log 回推創建的票券
+dev_logs:
+- docs/dev-logs/2025-06-24/2025-06-24-01-42-22-refactor-fix-dev-logs-accuracy.yml
+reconstructed: true
+reconstruction_date: '2025-06-24T01:49:40.639290'

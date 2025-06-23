@@ -1,0 +1,14 @@
+id: 2025-06-24-01-42-19-fix-dev-logs-accuracy
+name: fix-dev-logs-accuracy
+description: 檢查並修復 dev logs 的準確性，移除推估時間，從 dev logs 回推重建 tickets
+status: in_progress
+created_at: '2025-06-24T01:42:19.474086'
+started_at: '2025-06-24T01:42:19.474086'
+completed_at: null
+duration_minutes: null
+ai_time_minutes: null
+human_time_minutes: null
+commit_hash: null
+files_changed: []
+date: '2025-06-24'
+time: 01-42-19
