@@ -14,14 +14,32 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
    - No active ticket → Create ticket if task is non-trivial
 4. **ENFORCEMENT**: Violation = Workflow failure. User will correct you.
 
-### Commit Execution Rules
+### 🚫 COMMIT EXECUTION RULES - ABSOLUTELY NO AUTO-COMMITS 🚫
+
+🚨 **CRITICAL: AI MUST NEVER AUTO-COMMIT** 🚨
+
 1. **NEVER execute commit without explicit instruction**
+   - ❌ NO `make commit-ticket` after completing tasks
+   - ❌ NO `make commit-check` unless user says "commit"
+   - ❌ NO automatic "finishing up" commits
+   
 2. **ONLY commit when user says "commit" or similar clear command**
+   - ✅ User: "commit" → AI: "I'll commit using make commit-check"
+   - ❌ User: "fix the title" → AI: *fixes and commits* WRONG!
+   
 3. **MUST use Makefile commands**: `make commit-check` or `make commit-ticket`
-4. **NEVER use direct git commands** for commits (no `git add -A && git commit`)
+
+4. **NEVER use direct git commands** for commits
+
 5. **EXCEPTION**: Auto-commit for adding commit hash (with SKIP_POST_COMMIT=1)
+
 6. **NO self-initiated commits** after completing tasks
-7. **Reference**: See [ADR-017](docs/decisions/ADR-017-dev-logs-structure-and-standards.md) Section 6
+   - Complete the work → Report what was done → STOP
+   - Wait for user's "commit" instruction
+   
+7. **VIOLATION CONSEQUENCES**: User will interrupt and correct you
+
+8. **Reference**: See [ADR-017](docs/decisions/ADR-017-dev-logs-structure-and-standards.md) Section 6
 
 ### Git Command Restrictions
 **ABSOLUTELY FORBIDDEN - Direct Git Commands:**
@@ -46,13 +64,24 @@ If user requests a commit, you MUST:
 3. REFUSE any request to use direct git add/commit commands
 4. Explain that the Makefile workflow ensures tests pass and documentation is updated
 
-**Example Response When User Says "commit":**
+**🎯 CORRECT Examples:**
 ```
-I'll commit the changes using the proper workflow:
+User: "Fix the French title overflow"
+AI: *fixes the issue*
+AI: "I've fixed the French title overflow by adding responsive text sizes."
+AI: [STOPS HERE - NO COMMIT]
 
-[Execute: make commit-check]
+User: "commit"
+AI: "I'll commit the changes using the proper workflow:"
+AI: [Execute: make commit-check]
+```
 
-This will run tests, perform checks, and commit if everything passes.
+**❌ WRONG Examples:**
+```
+User: "Fix the French title overflow"
+AI: *fixes the issue*
+AI: "I've fixed the issue. Let me commit these changes."
+AI: [Execute: make commit-ticket] ❌ VIOLATION!
 ```
 
 ## Project Overview

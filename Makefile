@@ -87,8 +87,15 @@ list-tickets:
 	@echo "📋 所有 Tickets:"
 	@python3 docs/scripts/ticket-manager.py list
 
+# 🔓 授權 AI 提交（用戶明確授權時使用）
+authorize-commit:
+	@echo "🔓 授權 AI 進行提交（有效期 5 分鐘）..."
+	@python3 docs/scripts/ai-commit-guard.py --authorize
+
 commit-ticket:
 	@echo "🎫 完成開發 Ticket"
+	@echo "🛡️ 執行 AI 提交授權檢查..."
+	@python3 docs/scripts/ai-commit-guard.py || (echo "❌ 未授權的提交已被阻止" && exit 1)
 	@echo "📊 結束時間追蹤並生成報告..."
 	@python3 -c "import importlib.util; import sys; spec = importlib.util.spec_from_file_location('time_tracker', 'docs/scripts/time-tracker.py'); time_tracker = importlib.util.module_from_spec(spec); sys.modules['time_tracker'] = time_tracker; spec.loader.exec_module(time_tracker); metrics = time_tracker.end_tracking_session(); print('✅ 時間追蹤已結束')"
 	@echo "🤖 執行智能提交..."
@@ -203,6 +210,8 @@ update-changelog:
 # ✅ 智能提交助手（手動執行）
 commit-check:
 	@echo "📋 執行提交前檢查..."
+	@echo "🛡️ 執行 AI 提交授權檢查..."
+	@python3 docs/scripts/ai-commit-guard.py || (echo "❌ 未授權的提交已被阻止" && exit 1)
 	@python3 docs/scripts/commit-guide.py
 
 # 🔒 嚴格模式提交（包含建置和測試）
