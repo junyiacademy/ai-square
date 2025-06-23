@@ -1,0 +1,38 @@
+type: test
+title: '[待補充 commit 訊息]'
+date: '2025-06-24'
+developer: AI + Human
+status: in_progress
+commit_hash: pending
+description: '[待補充 commit 描述]'
+ticket_id: 2025-06-23-23-42-28-test-bidirectional-linking
+ticket_name: test-bidirectional-linking
+ticket_path: docs/tickets/2025-06-23/2025-06-23-23-42-28-ticket-test-bidirectional-linking.yml
+timeline:
+- phase: 實現
+  duration: 10.6
+  ai_time: 8.48
+  human_time: 2.12
+  tasks:
+  - 更新 2025-06-23-23-42-28-ticket-test-bidirectional-linking.yml
+metrics:
+  total_time_minutes: 10.6
+  ai_time_minutes: 8.48
+  human_time_minutes: 2.12
+  ai_percentage: 80.0
+  human_percentage: 20.0
+  files_added: 0
+  files_modified: 1
+  files_deleted: 0
+  time_calculation_method: git_history
+  time_calculation_details:
+    start_time: '2025-06-23T23:47:38'
+    end_time: '2025-06-23T23:58:11'
+    file_count: 1
+changes:
+  added: []
+  modified:
+  - docs/tickets/2025-06-23/2025-06-23-23-42-28-ticket-test-bidirectional-linking.yml
+  deleted: []
+pre_commit_generated: true
+generation_time: '2025-06-24T00:00:09.854398'
