@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - implement pre-commit and post-commit documentation generation (docs) (32157d8)
 
 ### Changed
+- improve(commit): enhance commit message generation (f42e828)
 
 ### Fixed
 
