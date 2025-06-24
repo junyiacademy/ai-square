@@ -1,0 +1,12 @@
+{
+  "home": "Главная",
+  "relations": "Relations",
+  "ksa": "KSA Framework",
+  "signIn": "Войти",
+  "signOut": "Выйти",
+  "userRole": {
+    "student": "Студент",
+    "teacher": "Преподаватель",
+    "admin": "Администратор"
+  }
+}

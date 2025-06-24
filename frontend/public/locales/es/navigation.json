@@ -1,0 +1,12 @@
+{
+  "home": "Inicio",
+  "relations": "Relations",
+  "ksa": "KSA Framework",
+  "signIn": "Iniciar sesión",
+  "signOut": "Cerrar sesión",
+  "userRole": {
+    "student": "Estudiante",
+    "teacher": "Profesor",
+    "admin": "Administrador"
+  }
+}

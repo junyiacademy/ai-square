@@ -1,0 +1,12 @@
+{
+  "home": "首頁",
+  "relations": "關係圖",
+  "ksa": "KSA 框架",
+  "signIn": "登入",
+  "signOut": "登出",
+  "userRole": {
+    "student": "學生",
+    "teacher": "教師",
+    "admin": "管理員"
+  }
+}

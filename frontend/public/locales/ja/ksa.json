@@ -1,0 +1,43 @@
+{
+  "title": "AIリテラシーフレームワーク",
+  "subtitle": "AI教育のための知識・スキル・態度",
+  "loading": "KSAフレームワークを読み込み中...",
+  "loadError": "KSAデータの読み込みに失敗しました",
+  "searchPlaceholder": "テーマ、コード、コンテンツを検索...",
+  "sections": {
+    "knowledge": "知識",
+    "skills": "スキル",
+    "attitudes": "態度",
+    "knowledgeShort": "K",
+    "skillsShort": "S",
+    "attitudesShort": "A"
+  },
+  "results": {
+    "themesFound": "{{count}}個のテーマが見つかりました",
+    "themesFoundFor": "「{{search}}」に関する{{count}}個のテーマが見つかりました",
+    "noResults": "結果が見つかりません",
+    "noResultsHint": "検索条件を調整してみてください。"
+  },
+  "codes": "コード",
+  "codesPlural": "コード",
+  "reflectionQuestions": "振り返りの質問",
+  "themes": {
+    "The_Nature_of_AI": "AIの本質",
+    "AI_Reflects_Human_Choices_and_Perspectives": "AIは人間の選択と視点を反映する",
+    "AI_Reshapes_Work_and_Human_Roles": "AIは仕事と人間の役割を再構築する",
+    "AIs_Capabilities_and_Limitations": "AIの能力と限界",
+    "AIs_Role_in_Society": "社会におけるAIの役割",
+    "Critical_Thinking": "批判的思考",
+    "Creativity": "創造性",
+    "Computational_Thinking": "計算論的思考",
+    "Collaboration": "協働",
+    "Problem_Solving": "問題解決",
+    "Self_and_Social_Awareness": "自己と社会への意識",
+    "Communication": "コミュニケーション",
+    "Responsible": "責任感",
+    "Curious": "好奇心",
+    "Innovative": "革新的",
+    "Adaptable": "適応力",
+    "Empathetic": "共感的"
+  }
+}

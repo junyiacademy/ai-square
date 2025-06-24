@@ -1,0 +1,43 @@
+{
+  "title": "Cadre de Littératie IA",
+  "subtitle": "Connaissances, Compétences et Attitudes pour l'Éducation à l'IA",
+  "loading": "Chargement du cadre KSA...",
+  "loadError": "Échec du chargement des données KSA",
+  "searchPlaceholder": "Rechercher des thèmes, codes ou contenus...",
+  "sections": {
+    "knowledge": "Connaissances",
+    "skills": "Compétences",
+    "attitudes": "Attitudes",
+    "knowledgeShort": "C",
+    "skillsShort": "C",
+    "attitudesShort": "A"
+  },
+  "results": {
+    "themesFound": "{{count}} thèmes trouvés",
+    "themesFoundFor": "{{count}} thèmes trouvés pour \"{{search}}\"",
+    "noResults": "Aucun résultat trouvé",
+    "noResultsHint": "Essayez d'ajuster vos termes de recherche."
+  },
+  "codes": "code",
+  "codesPlural": "codes",
+  "reflectionQuestions": "Questions de Réflexion",
+  "themes": {
+    "The_Nature_of_AI": "La Nature de l'IA",
+    "AI_Reflects_Human_Choices_and_Perspectives": "L'IA Reflète les Choix et Perspectives Humains",
+    "AI_Reshapes_Work_and_Human_Roles": "L'IA Redéfinit le Travail et les Rôles Humains",
+    "AIs_Capabilities_and_Limitations": "Capacités et Limites de l'IA",
+    "AIs_Role_in_Society": "Le Rôle de l'IA dans la Société",
+    "Critical_Thinking": "Pensée Critique",
+    "Creativity": "Créativité",
+    "Computational_Thinking": "Pensée Informatique",
+    "Collaboration": "Collaboration",
+    "Problem_Solving": "Résolution de Problèmes",
+    "Self_and_Social_Awareness": "Conscience de Soi et Sociale",
+    "Communication": "Communication",
+    "Responsible": "Responsable",
+    "Curious": "Curieux",
+    "Innovative": "Innovant",
+    "Adaptable": "Adaptable",
+    "Empathetic": "Empathique"
+  }
+}

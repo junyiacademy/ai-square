@@ -1,0 +1,43 @@
+{
+  "title": "Marco de Alfabetización en IA",
+  "subtitle": "Conocimientos, Habilidades y Actitudes para la Educación en IA",
+  "loading": "Cargando Marco KSA...",
+  "loadError": "Error al cargar los datos KSA",
+  "searchPlaceholder": "Buscar temas, códigos o contenido...",
+  "sections": {
+    "knowledge": "Conocimiento",
+    "skills": "Habilidades",
+    "attitudes": "Actitudes",
+    "knowledgeShort": "C",
+    "skillsShort": "H",
+    "attitudesShort": "A"
+  },
+  "results": {
+    "themesFound": "{{count}} temas encontrados",
+    "themesFoundFor": "{{count}} temas encontrados para \"{{search}}\"",
+    "noResults": "No se encontraron resultados",
+    "noResultsHint": "Intenta ajustar tus términos de búsqueda."
+  },
+  "codes": "código",
+  "codesPlural": "códigos",
+  "reflectionQuestions": "Preguntas de Reflexión",
+  "themes": {
+    "The_Nature_of_AI": "La Naturaleza de la IA",
+    "AI_Reflects_Human_Choices_and_Perspectives": "La IA Refleja las Elecciones y Perspectivas Humanas",
+    "AI_Reshapes_Work_and_Human_Roles": "La IA Remodela el Trabajo y los Roles Humanos",
+    "AIs_Capabilities_and_Limitations": "Capacidades y Limitaciones de la IA",
+    "AIs_Role_in_Society": "El Papel de la IA en la Sociedad",
+    "Critical_Thinking": "Pensamiento Crítico",
+    "Creativity": "Creatividad",
+    "Computational_Thinking": "Pensamiento Computacional",
+    "Collaboration": "Colaboración",
+    "Problem_Solving": "Resolución de Problemas",
+    "Self_and_Social_Awareness": "Conciencia Personal y Social",
+    "Communication": "Comunicación",
+    "Responsible": "Responsable",
+    "Curious": "Curioso",
+    "Innovative": "Innovador",
+    "Adaptable": "Adaptable",
+    "Empathetic": "Empático"
+  }
+}

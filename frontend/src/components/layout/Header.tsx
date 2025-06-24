@@ -1,7 +1,9 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
+import Link from 'next/link'
+import { useTranslation } from 'react-i18next'
 import { LanguageSelector } from '@/components/ui/LanguageSelector'
 
 interface User {
@@ -13,8 +15,11 @@ interface User {
 
 export function Header() {
   const router = useRouter()
+  const pathname = usePathname()
+  const { t } = useTranslation(['navigation'])
   const [user, setUser] = useState<User | null>(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   // 使用 useCallback 確保函數引用穩定，避免 hooks 順序問題
   const clearAuthState = useCallback(() => {
@@ -78,13 +83,17 @@ export function Header() {
   }, [checkAuthStatus])
 
   const getRoleDisplayName = (role: string) => {
-    const roleMap: { [key: string]: string } = {
-      student: '學生',
-      teacher: '教師',
-      admin: '管理員'
-    }
-    return roleMap[role] || role
+    return t(`userRole.${role}`)
   }
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen)
+  }
+
+  const navLinks = [
+    { href: '/relations', label: t('relations') },
+    { href: '/ksa', label: t('ksa') },
+  ]
 
   return (
     <header 
@@ -96,7 +105,7 @@ export function Header() {
           {/* Logo 區域 */}
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <div className="flex items-center">
+              <Link href="/" className="flex items-center">
                 <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
                   <svg 
                     className="h-5 w-5 text-white" 
@@ -113,21 +122,70 @@ export function Header() {
                   </svg>
                 </div>
                 <h1 className="text-xl font-bold text-gray-900">AI Square</h1>
-              </div>
+              </Link>
             </div>
+
+            {/* Desktop Navigation Links */}
+            <nav className="hidden md:ml-10 md:flex md:space-x-8" aria-label="Main navigation">
+              {navLinks.map(link => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors ${
+                    pathname === link.href
+                      ? 'text-gray-900 border-b-2 border-blue-600 active'
+                      : 'text-gray-500 hover:text-gray-900 hover:border-b-2 hover:border-gray-300'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
           </div>
 
-          {/* 導航區域 */}
-          <nav role="navigation" className="flex items-center space-x-4">
+          {/* 右側區域 */}
+          <div className="flex items-center space-x-4">
             {/* 語言選擇器 */}
             <LanguageSelector />
+            
+            {/* Mobile menu button */}
+            <button
+              type="button"
+              className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+              onClick={toggleMobileMenu}
+              aria-label="Toggle navigation menu"
+              aria-expanded={isMobileMenuOpen}
+            >
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                {isMobileMenuOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
+              </svg>
+            </button>
             
             {isLoggedIn && user ? (
               /* 已登入狀態 */
               <div className="flex items-center space-x-4">
                 {/* 用戶資訊 */}
-                <div className="flex items-center space-x-3">
-                  <div className="hidden sm:block text-right">
+                <div className="hidden sm:flex sm:items-center sm:space-x-3">
+                  <div className="text-right">
                     <div className="text-sm font-medium text-gray-900">
                       {user.email}
                     </div>
@@ -148,7 +206,7 @@ export function Header() {
                 <button
                   onClick={handleLogout}
                   className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-                  aria-label="Sign out"
+                  aria-label={t('signOut')}
                 >
                   <svg 
                     className="h-4 w-4 mr-2" 
@@ -163,8 +221,8 @@ export function Header() {
                       d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" 
                     />
                   </svg>
-                  <span className="hidden sm:inline">Sign out</span>
-                  <span className="sm:hidden">登出</span>
+                  <span className="hidden sm:inline">{t('signOut')}</span>
+                  <span className="sm:hidden">{t('signOut')}</span>
                 </button>
               </div>
             ) : (
@@ -172,14 +230,36 @@ export function Header() {
               <button
                 onClick={handleLogin}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-                aria-label="Sign in"
+                aria-label={t('signIn')}
               >
-                Sign in
+                {t('signIn')}
               </button>
             )}
-          </nav>
+          </div>
         </div>
       </div>
+
+      {/* Mobile Navigation Menu */}
+      {isMobileMenuOpen && (
+        <nav className="md:hidden bg-white border-t border-gray-200" aria-label="Mobile navigation">
+          <div className="px-2 pt-2 pb-3 space-y-1">
+            {navLinks.map(link => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  pathname === link.href
+                    ? 'text-gray-900 bg-gray-100'
+                    : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
+                }`}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        </nav>
+      )}
 
       {/* 移動端用戶資訊 (當登入時顯示) */}
       {isLoggedIn && user && (
