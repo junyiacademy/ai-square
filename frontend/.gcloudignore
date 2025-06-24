@@ -1,0 +1,43 @@
+# Frontend-specific gcloudignore for Google Cloud deployment
+
+# Include base ignores
+#!include ../.gcloudignore
+
+# Frontend development files
+__tests__/
+__mocks__/
+*.test.ts
+*.test.tsx
+*.spec.ts
+jest.config.js
+jest.setup.js
+jest.setup.ts
+
+# E2E tests
+e2e/
+playwright.config.ts
+playwright-report/
+
+# Development configs that aren't needed in production
+.eslintrc.*
+eslint.config.mjs
+prettier.config.*
+.prettierignore
+
+# Coverage reports
+coverage/
+lcov.info
+.nyc_output/
+
+# Source maps (uncomment if you don't want them in production)
+# *.map
+
+# Documentation
+*.md
+!README.md
+
+# Scripts not needed in production
+scripts/
+
+# Keep only production dependencies
+# The build process will handle node_modules

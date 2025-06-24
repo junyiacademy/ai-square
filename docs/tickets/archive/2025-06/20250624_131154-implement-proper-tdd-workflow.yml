@@ -1,0 +1,119 @@
+id: 2025-06-24-13-11-54-implement-proper-tdd-workflow
+name: implement-proper-tdd-workflow
+type: refactor
+status: completed
+created_at: '2025-06-24T13:11:54.447360'
+spec:
+  goals: '重構開發流程，實施正確的 TDD (Test-Driven Development) 循環
+
+    - 建立 TDD 最佳實踐流程和模板
+
+    - 修復當前專案中跳過 TDD 的問題
+
+    - 確保所有新功能都遵循 Red-Green-Refactor 循環
+
+    - 提升代碼品質和測試覆蓋率
+
+    '
+  technical_specs: '### TDD 流程改進
+
+    - 建立標準的 TDD 工作流程文檔
+
+    - 創建測試優先的開發模板
+
+    - 整合 TDD 檢查到 make 命令中
+
+
+    ### 測試策略優化
+
+    - 完善測試金字塔實踐（70% 單元測試、25% 整合測試、5% E2E）
+
+    - 改進 Jest 和 React Testing Library 配置
+
+    - 建立 API 路由測試標準模板
+
+
+    ### 開發工具整合
+
+    - 在 dev-commit 流程中加入 TDD 合規檢查
+
+    - 建立測試覆蓋率門檻要求
+
+    - 創建 TDD 指導和提醒機制
+
+
+    ### 修復現有問題
+
+    - 修復 KSA API 路由測試中的 NextRequest 問題
+
+    - 完善所有測試的 TypeScript 類型安全
+
+    - 標準化測試檔案結構和命名
+
+    '
+  acceptance_criteria:
+  - TDD 工作流程文檔完成並整合到 handbook
+  - 建立測試優先的開發模板和範例
+  - 所有現有測試通過且無 TypeScript 錯誤
+  - dev-commit 流程包含 TDD 合規檢查
+  - 測試覆蓋率達到最低門檻（80%）
+  - 修復 NextRequest 測試問題
+  - 建立 Red-Green-Refactor 循環檢查機制
+  - AI 開發助手能正確指導 TDD 流程
+  - 所有新功能必須先寫測試的強制規則
+dev_log:
+  sessions:
+  - session_id: 1
+    date: '2025-06-24'
+    start_time: ''
+    end_time: ''
+    activities: []
+    challenges: []
+    decisions: []
+  - session_id: 2
+    date: '2025-06-24'
+    start_time: ''
+    end_time: ''
+    activities: []
+    challenges: []
+    decisions: []
+  - session_id: 3
+    date: '2025-06-23'
+    start_time: ''
+    end_time: ''
+    activities: []
+    challenges: []
+    decisions: []
+test_report:
+  last_run: null
+  summary:
+    total: 0
+    passed: 0
+    failed: 0
+    coverage: 0
+  history: []
+ai_usage:
+  interactions: []
+  total_interactions: 0
+  estimated_cost_usd: 0.0
+time_tracking:
+  started_at: '2025-06-24T13:11:54.447360'
+  completed_at: '2025-06-24T13:20:00'
+  actual_duration_minutes: null
+  ai_time_minutes: null
+  human_time_minutes: null
+development:
+  branch: ticket/implement-proper-tdd-workflow
+  commits: []
+  files_changed:
+  - Makefile
+  - docs/handbook/03-technical-references/technical/test-strategy.md
+  - docs/scripts/tdd-compliance-checker.py
+  - docs/scripts/workflow-guard.py
+document_references:
+- path: docs/handbook/workflows/TICKET_DRIVEN_DEVELOPMENT.md
+  reason: 遵循票券驅動開發流程
+- path: docs/handbook/01-context/business-rules.md
+  reason: 確保符合業務規則
+- path: docs/handbook/03-technical-references/design-patterns/
+  reason: 參考設計模式最佳實踐

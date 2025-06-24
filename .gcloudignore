@@ -1,0 +1,97 @@
+# This file specifies files that are *not* uploaded to Google Cloud
+# using gcloud. It follows the same syntax as .gitignore, with the addition of
+# "#!include" directives (which insert the entries of the given .gitignore-style
+# file at that point).
+#
+# For more information, run:
+#   $ gcloud topic gcloudignore
+#
+.gcloudignore
+# If you would like to upload your .git directory, .gitignore file or files
+# from your .gitignore file, remove the corresponding line
+# below:
+.git
+.gitignore
+
+# Development documentation
+docs/
+docs-backup-*.tar.gz
+archive-makefile/
+
+# Development tests
+__tests__/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# Frontend specific ignores for backend deployment
+frontend/
+
+# Backend specific ignores for frontend deployment  
+backend/
+
+# Development files
+*.md
+!README.md
+Makefile*
+CLAUDE.md
+test-workflow.md
+
+# Version control
+.git/
+.gitignore
+.github/
+
+# Dependencies (will be installed during build)
+node_modules/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Build artifacts
+.next/
+out/
+dist/
+build/
+*.log
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files (should use Cloud Run env vars)
+.env
+.env.*
+
+# Test coverage
+coverage/
+.coverage
+htmlcov/
+lcov.info
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Development scripts that shouldn't be deployed
+scripts/
+*.sh
+
+# E2E test files
+e2e/
+playwright.config.ts
+playwright-report/
+
+# Source maps (optional, uncomment if you don't need them in production)
+# *.map

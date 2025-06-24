@@ -1,0 +1,140 @@
+# 現代化 AI 開發流程 - 極簡版
+# 專注於效率和 AI 友善的設計
+
+.PHONY: new save done fix review help
+
+# 預設顯示幫助
+.DEFAULT_GOAL := help
+
+# 顏色定義
+GREEN := \033[0;32m
+YELLOW := \033[0;33m
+BLUE := \033[0;34m
+RED := \033[0;31m
+NC := \033[0m
+
+#=============================================================================
+# 核心命令（覆蓋 80% 使用場景）
+#=============================================================================
+
+## 開始新工作（自動創建票券、分支、記錄 AI 使用）
+new:
+	@echo "$(GREEN)🚀 開始新工作: $(TICKET)$(NC)"
+	@python3 docs/scripts/ticket-driven-dev.py create \
+		--type=$(TYPE) \
+		--name=$(TICKET) \
+		--auto-branch
+	@echo "$(BLUE)📊 AI 指標追蹤已啟動$(NC)"
+
+## 智能保存進度（自動 checkpoint + AI 分析 + 記錄 tokens）
+save:
+	@echo "$(YELLOW)💾 智能保存進度...$(NC)"
+	@# 自動分析變更
+	@git diff --stat
+	@# 記錄 AI 使用（如果有）
+	@python3 docs/scripts/ai-metrics-tracker.py track \
+		--model=claude-3-opus \
+		--prompt-tokens=$${PROMPT_TOKENS:-0} \
+		--completion-tokens=$${COMPLETION_TOKENS:-0}
+	@# Checkpoint
+	@git add -A
+	@git commit -m "checkpoint: $(shell date +%Y%m%d-%H%M%S)" || true
+	@echo "$(GREEN)✅ 進度已保存$(NC)"
+
+## 完成工作（測試 + 智能提交 + 合併）
+done:
+	@echo "$(GREEN)🏁 完成工作流程$(NC)"
+	@# 執行測試
+	@make -s test-smart
+	@# 智能提交
+	@python3 docs/scripts/smart-commit.py
+	@# 生成 AI 使用報告
+	@python3 docs/scripts/ai-metrics-tracker.py report
+	@# 合併到主分支
+	@git checkout main && git merge --no-ff ticket/$(TICKET)
+	@echo "$(GREEN)✅ 工作完成！$(NC)"
+
+#=============================================================================
+# AI 輔助命令（20% 特殊場景）
+#=============================================================================
+
+## AI 自動修復問題
+fix:
+	@echo "$(YELLOW)🔧 AI 自動修復模式$(NC)"
+	@# 收集錯誤信息
+	@make test-smart > /tmp/test-errors.log 2>&1 || true
+	@# 讓 AI 分析並修復
+	@echo "分析測試錯誤並提供修復建議..."
+	@cat /tmp/test-errors.log | tail -20
+	@echo "$(BLUE)💡 提示: 使用 'make save' 保存 AI 的修復$(NC)"
+
+## AI Code Review
+review:
+	@echo "$(BLUE)🔍 AI Code Review$(NC)"
+	@git diff --cached > /tmp/review.diff
+	@echo "變更摘要:"
+	@git diff --cached --stat
+	@echo "$(BLUE)💡 AI 正在分析程式碼品質...$(NC)"
+
+#=============================================================================
+# 智能測試（自動選擇相關測試）
+#=============================================================================
+
+test-smart:
+	@echo "$(YELLOW)🧪 智能測試模式$(NC)"
+	@# 偵測變更的檔案
+	@changed_files=$$(git diff --name-only HEAD~1..HEAD | grep -E '\.(ts|tsx|js|jsx)$$' || true); \
+	if [ -n "$$changed_files" ]; then \
+		echo "偵測到變更，執行相關測試..."; \
+		cd frontend && npm test -- --findRelatedTests $$changed_files || true; \
+	else \
+		echo "執行基礎測試套件..."; \
+		cd frontend && npm test -- --coverage=false || true; \
+	fi
+
+#=============================================================================
+# 效率報告
+#=============================================================================
+
+## 顯示 AI 使用效率報告
+report:
+	@echo "$(BLUE)📊 AI 開發效率報告$(NC)"
+	@python3 docs/scripts/analytics.py efficiency --period=week
+	@echo ""
+	@python3 docs/scripts/ai-metrics-tracker.py report
+
+#=============================================================================
+# 幫助
+#=============================================================================
+
+help:
+	@echo "$(GREEN)🚀 現代化 AI 開發流程$(NC)"
+	@echo ""
+	@echo "$(YELLOW)核心命令（80% 場景）:$(NC)"
+	@echo "  $(GREEN)make new$(NC) TYPE=feature TICKET=name  - 開始新工作"
+	@echo "  $(GREEN)make save$(NC)                          - 智能保存進度"  
+	@echo "  $(GREEN)make done$(NC)                          - 完成工作"
+	@echo ""
+	@echo "$(YELLOW)AI 輔助（20% 場景）:$(NC)"
+	@echo "  $(GREEN)make fix$(NC)                           - AI 自動修復"
+	@echo "  $(GREEN)make review$(NC)                        - AI Code Review"
+	@echo "  $(GREEN)make report$(NC)                        - 效率報告"
+	@echo ""
+	@echo "$(BLUE)💡 環境變數:$(NC)"
+	@echo "  PROMPT_TOKENS=1500                  - 記錄 prompt tokens"
+	@echo "  COMPLETION_TOKENS=3000              - 記錄 completion tokens"
+
+#=============================================================================
+# AI 專用配置
+#=============================================================================
+
+# 減少輸出雜訊，讓 AI 更容易解析
+export MAKEFLAGS += --no-print-directory --silent
+
+# 自動記錄執行時間
+export TIME_START := $(shell date +%s)
+
+# 結束時顯示執行時間
+.ONESHELL:
+SHELL = /bin/bash
+.SHELLFLAGS = -ec
