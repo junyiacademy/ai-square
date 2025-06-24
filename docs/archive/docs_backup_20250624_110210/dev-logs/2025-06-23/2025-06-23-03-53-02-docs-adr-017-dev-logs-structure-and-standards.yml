@@ -1,0 +1,87 @@
+type: docs
+title: 'improve(commit): enhance commit message generation'
+date: '2025-06-23'
+developer: AI + Human
+status: completed
+commit_hash: 4c1de645
+description: "improve(commit): enhance commit message generation\n\nAdded 7 files:\n\
+  \  - ADR-017-dev-logs-structure-and-standards.md\n  - docs-log-template.yml\n  -\
+  \ refactor-log-template.yml\n  - commit-guide.md\n  - development-logs-guide.md\n\
+  \  ... and 2 more\n\nModified 4 files:\n  - README.md\n  - bug-log-template.yml\n\
+  \  - feature-log-template.yml\n  - README.md"
+timeline:
+- phase: 實現
+  duration: 6.5
+  ai_time: 5.2
+  human_time: 1.3
+  tasks:
+  - 創建 ADR-017-dev-logs-structure-and-standards.md
+  - 創建 docs-log-template.yml
+  - 創建 refactor-log-template.yml
+  - 更新 README.md
+  - 更新 bug-log-template.yml
+  - 更新 feature-log-template.yml
+  - 移除 reorganize-dev-logs.py
+metrics:
+  total_time_minutes: 6.5
+  ai_time_minutes: 5.2
+  human_time_minutes: 1.3
+  ai_percentage: 80.0
+  human_percentage: 20.0
+  files_added: 22
+  files_modified: 4
+  files_deleted: 15
+  time_calculation_method: file_timestamp_analysis
+  time_calculation_details:
+    start_time: '2025-06-23T03:46:30.421401'
+    end_time: '2025-06-23T03:53:02.261588'
+    file_count: 11
+  commit_timestamp: '2025-06-23T03:53:02'
+  post_commit_update_timestamp: '2025-06-23T03:53:02.400693'
+changes:
+  added:
+  - docs/decisions/ADR-017-dev-logs-structure-and-standards.md
+  - docs/dev-logs/2025-06-20/2025-06-20-other-Email-Login.yml
+  - docs/dev-logs/2025-06-21/2025-06-21-other-Header-Login-Status.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-other-Homepage-Login.yml
+  - docs/dev-logs/2025-06-22/2025-06-22-refactor-Improvements-Location.yml
+  - docs/dev-logs/2025-06-22/architecture/2025-06-22-docs-Architecture-Completion.yml
+  - docs/dev-logs/2025-06-22/architecture/2025-06-22-docs-Architecture-Definition.yml
+  - docs/dev-logs/2025-06-22/documentation/2025-06-22-docs-Cleanup.yml
+  - docs/dev-logs/2025-06-22/documentation/2025-06-22-docs-Frontend-Guide-Integration.yml
+  - docs/dev-logs/2025-06-22/documentation/2025-06-22-refactor-Documentation-Structure.yml
+  - docs/dev-logs/2025-06-22/documentation/2025-06-22-refactor-Handbook-Reorganize.yml
+  - docs/dev-logs/2025-06-22/documentation/2025-06-22-refactor-Restructure.yml
+  - docs/dev-logs/2025-06-22/features/2025-06-22-feature-Auto-Reflection-Story.yml
+  - docs/dev-logs/2025-06-22/features/2025-06-22-feature-Learning-Progress-Tracker.yml
+  - docs/dev-logs/2025-06-23-docs-adr-017-dev-logs-structure-and-standards.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-feature-Auto-Documentation.yml
+  - docs/dev-logs/docs-log-template.yml
+  - docs/dev-logs/refactor-log-template.yml
+  - docs/handbook/commit-guide.md
+  - docs/handbook/development-logs-guide.md
+  - docs/handbook/improvements/improvement-2025-06-23-0352.md
+  - docs/handbook/improvements/improvement-2025-06-23-0352.yml
+  modified:
+  - docs/dev-logs/README.md
+  - docs/dev-logs/bug-log-template.yml
+  - docs/dev-logs/feature-log-template.yml
+  - docs/handbook/README.md
+  deleted:
+  - docs/dev-logs/2025-06-20-email-login.yml
+  - docs/dev-logs/2025-06-21-header-login-status.yml
+  - docs/dev-logs/2025-06-22-docs-architecture-completion.yml
+  - docs/dev-logs/2025-06-22-docs-architecture-definition.yml
+  - docs/dev-logs/2025-06-22-docs-cleanup.yml
+  - docs/dev-logs/2025-06-22-docs-frontend-guide-integration.yml
+  - docs/dev-logs/2025-06-22-docs-handbook-reorganize.yml
+  - docs/dev-logs/2025-06-22-docs-restructure.yml
+  - docs/dev-logs/2025-06-22-feature-auto-reflection-story.yml
+  - docs/dev-logs/2025-06-22-feature-learning-progress-tracker.yml
+  - docs/dev-logs/2025-06-22-homepage-login.yml
+  - docs/dev-logs/2025-06-22-refactor-documentation-structure.yml
+  - docs/dev-logs/2025-06-22-refactor-improvements-location.yml
+  - docs/dev-logs/2025-06-23-feature-auto-documentation.yml
+  - docs/scripts/reorganize-dev-logs.py
+pre_commit_generated: true
+generation_time: '2025-06-23T03:53:02.261794'

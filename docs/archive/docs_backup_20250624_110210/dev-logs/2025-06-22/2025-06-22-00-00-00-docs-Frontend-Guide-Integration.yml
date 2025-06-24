@@ -1,0 +1,70 @@
+type: docs
+title: 整合前端實作指南到主要文檔流程
+date: 2025-06-22
+developer: AI
+status: completed
+
+timeline:
+  - phase: 分析
+    duration: 10
+    ai_time: 10
+    human_time: 0
+    tasks:
+      - 審查 legacy 文檔內容
+      - 評估前端指南重要性
+      - 規劃整合方式
+    
+  - phase: 設計
+    duration: 5
+    ai_time: 5
+    human_time: 0
+    tasks:
+      - 決定創建 ADR-004 前端架構標準
+      - 規劃 frontend-patterns.md 教學文件
+    
+  - phase: 實作
+    duration: 15
+    ai_time: 15
+    human_time: 0
+    tasks:
+      - 創建 ADR-004-frontend-architecture.md
+      - 創建 tutorials/frontend-patterns.md
+      - 更新 PLAYBOOK.md 增加前端標準章節
+      - 更新 PLAYBOOK.md 增加教學文件引用
+
+metrics:
+  total_time: 30
+  ai_percentage: 100
+  human_percentage: 0
+  files_created: 2
+  files_modified: 1
+  
+deliverables:
+  - type: doc
+    files: 
+      - docs/decisions/ADR-004-frontend-architecture.md
+      - docs/tutorials/frontend-patterns.md
+  - type: config
+    files:
+      - docs/PLAYBOOK.md
+
+learnings:
+  - Legacy 文檔包含寶貴的技術細節
+  - 前端架構模式需要正式化為標準
+  - 教學文件對新加入的開發者很有幫助
+  - ADR 和教學文件相輔相成
+
+integration_details:
+  from: docs/archive/legacy/technical/implementation/frontend-guide.md
+  to:
+    - docs/decisions/ADR-004-frontend-architecture.md
+    - docs/tutorials/frontend-patterns.md
+  content_preserved:
+    - 組件分層架構
+    - 狀態管理策略
+    - 自訂 Hooks 集合
+    - 效能優化模式
+    - 響應式設計方法
+    - 錯誤處理策略
+    - 國際化實作
+    - 開發最佳實踐

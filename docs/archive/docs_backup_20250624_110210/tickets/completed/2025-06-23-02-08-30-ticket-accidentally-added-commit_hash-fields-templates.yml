@@ -1,0 +1,22 @@
+name: accidentally-added-commit_hash-fields-templates
+type: bug
+status: completed
+created_at: '2025-06-23T02:08:30'
+completed_at: '2025-06-23T23:59:59'
+description: 'fix(templates): remove accidentally added commit_hash fields from templates
+
+
+  - Clean up bug-log-template.yml and feature-log-template.yml
+
+  - Add auto-generated development log for one-time script cleanup implementation
+
+
+  🤖 Generated with [Claude Code](https://claude.ai/code)
+
+
+  Co-Authored-By: Claude <noreply@anthropic.com>'
+dev_logs:
+- docs/dev-logs/2025-06-23/2025-06-23-02-08-30-bug-accidentally-added-commit_hash-fields-templates.yml
+reconstructed: true
+reconstruction_date: '2025-06-24T01:49:40.702416'
+commit_hash: c304c234

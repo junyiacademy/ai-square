@@ -1,0 +1,68 @@
+type: docs
+title: 定義 architecture 目錄內容
+date: 2025-06-22
+developer: AI
+status: completed
+
+description: |
+  明確定義 architecture/ 目錄應該放什麼：
+  - current/: 當前的系統架構
+  - patterns/: 可參考的架構模式
+  - decisions/: 架構決策（為什麼）
+
+timeline:
+  - phase: 分析
+    duration: 10
+    ai_time: 10
+    human_time: 0
+    tasks:
+      - 思考 architecture 目錄的定位
+      - 區分與 DDD 的差異
+      - 設計目錄結構
+    
+  - phase: 實作
+    duration: 20
+    ai_time: 20
+    human_time: 0
+    tasks:
+      - 創建目錄結構
+      - 撰寫 system-overview.md
+      - 撰寫 tech-stack.md
+      - 創建 README 說明
+
+metrics:
+  total_time: 30
+  ai_percentage: 100
+  human_percentage: 0
+  files_created: 3
+  
+deliverables:
+  - type: doc
+    files:
+      - architecture/current/system-overview.md
+      - architecture/current/tech-stack.md
+      - architecture/README.md
+
+architecture_scope:
+  current:
+    - 系統架構圖
+    - 技術棧選擇
+    - 部署架構
+    - API 設計
+  patterns:
+    - 微服務模式
+    - 事件驅動
+    - 分層架構
+  decisions:
+    - 技術選型理由
+    - 架構演進計劃
+
+vs_other_docs:
+  architecture: 系統層面的設計
+  ddd: 業務領域的建模
+  frontend: 前端特定的模式
+  
+learnings:
+  - architecture/ 應該專注於系統架構
+  - 要包含現狀和未來規劃
+  - 架構圖用 ASCII 或 Mermaid 最方便

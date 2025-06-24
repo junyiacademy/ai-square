@@ -1,0 +1,42 @@
+type: update
+title: 'refactor(frontend): refactor code'
+date: '2025-06-23'
+developer: AI + Human
+status: completed
+commit_hash: d1051bb3
+description: 'refactor(frontend): refactor code'
+timeline:
+- phase: 實現
+  duration: 1.0
+  ai_time: 0.8
+  human_time: 0.2
+  tasks:
+  - 更新 page.tsx
+metrics:
+  total_time_minutes: 1.0
+  ai_time_minutes: 0.8
+  human_time_minutes: 0.2
+  ai_percentage: 80.0
+  human_percentage: 20.0
+  files_added: 1
+  files_modified: 1
+  files_deleted: 0
+  time_calculation_method: file_timestamp_analysis
+  time_calculation_details:
+    start_time: '2025-06-23T22:23:15.660198'
+    end_time: '2025-06-23T22:24:12.887725'
+    file_count: 1
+  time_estimation_method: commit_based_file_timestamp_analysis
+  is_real_time: true
+  commit_timestamp: '2025-06-23T22:24:12'
+  post_commit_update_timestamp: '2025-06-23T22:24:13.121628'
+  time_calculation_fixed: true
+  time_calculation_fix_date: '2025-06-23T23:44:08.228629'
+changes:
+  added:
+  - docs/dev-logs/2025-06-23/2025-06-23-update-page.yml
+  modified:
+  - frontend/src/app/relations/page.tsx
+  deleted: []
+pre_commit_generated: true
+generation_time: '2025-06-23T22:24:12.900987'

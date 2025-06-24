@@ -1,71 +1,70 @@
-# 開發者手冊 (Developer Handbook)
+# 📚 開發手冊 - AI 開發參考
 
-為 AI 和開發者提供的技術參考文檔。
+## 🚀 01-getting-started - 快速開始
+- [PLAYBOOK.md](01-getting-started/PLAYBOOK.md) - 專案開發指南
+- [quick-reference.md](01-getting-started/quick-reference.md) - 常用命令速查
+- [workflow.md](01-getting-started/workflow.md) - 三階段開發流程
+- [README.md](01-getting-started/README.md) - 原始索引文件
 
-## 📁 新的組織結構
+## 📖 02-development-guides - 開發指南
+- [guides/](02-development-guides/guides/) - 各類操作指南
+  - [frontend-guide.md](02-development-guides/guides/frontend-guide.md) - 前端開發指南
+  - [onboarding.md](02-development-guides/guides/onboarding.md) - 新人入門
+- [development-logs-guide.md](02-development-guides/development-logs-guide.md) - 開發日誌指南
+- [commit-guide.md](02-development-guides/commit-guide.md) - 提交規範
 
-### core-practices/ - 核心開發實踐
-**AI 高頻使用**，每次開發都要遵循的方法：
-- `tdd.md` - 測試驅動開發
-- `bdd.md` - 行為驅動開發  
-- `git-workflow.md` - Git 工作流程
-- `commit-guide.md` - Commit 提交指南 🆕
+## 🔧 03-technical-references - 技術參考
+- [core-practices/](03-technical-references/core-practices/) - 核心實踐
+  - TDD、BDD、Git 工作流程
+- [design-patterns/](03-technical-references/design-patterns/) - 設計模式
+  - DDD、前端架構、系統架構
+- [technical/](03-technical-references/technical/) - 技術文檔
+  - 測試策略
 
-### design-patterns/ - 設計模式
-**AI 參考使用**，特定情況下查閱的模式：
-- `ddd/` - 領域驅動設計
-- `frontend/` - 前端架構模式
-- `architecture/` - 系統架構設計
+## 📋 相關文檔位置
+- 產品願景：[/docs/specs/product-vision/](../specs/product-vision/)
+- 功能規格：[/docs/specs/features/](../specs/features/)
+- 歷史文檔：[/docs/archive/](../archive/)
 
-### product/ - 產品規格
-**理解業務**，產品願景和功能規劃：
-- 產品願景
-- Epic 定義
-- 用戶畫像
+## 📊 05-reports - 報告與記錄
+- [CHANGELOG.md](05-reports/CHANGELOG.md) - 變更歷史
+- [migration-report.md](05-reports/migration-report.md) - 遷移報告
+- [simplification-summary.md](05-reports/simplification-summary.md) - 簡化總結
+- [improvements/](05-reports/improvements/) - 改進建議
 
-### guides/ - 操作指南
-**人類導向**，幫助開發者的指南：
-- 新人入門
-- 文檔生成
-- 故障排除
-- `development-logs-guide.md` - 開發日誌操作指南 🆕
+## 🤖 01-context - AI 開發背景知識
+- [product-vision.md](01-context/product-vision.md) - 產品願景（理解專案目標）
+- [business-rules.md](01-context/business-rules.md) - 業務規則（AI 必須遵守）
+- [domain-knowledge.md](01-context/domain-knowledge.md) - 領域知識（AI 素養概念）
 
-### improvements/ - 改進建議 🆕
-**自動生成**，持續優化的建議：
-- 每次提交後的反思分析
-- 問題模式和改進方案
-- AI 提示詞優化建議
-- 流程改進追蹤
-
-## 🤖 為什麼這樣組織？
-
-### AI 使用頻率
-1. **每次都用** → core-practices/
-2. **需要時查** → design-patterns/
-3. **偶爾參考** → product/
-4. **人類為主** → guides/
-
-### 一致性原則
-- BDD、TDD、DDD 都是方法論，但使用頻率不同
-- TDD/BDD 是每日實踐，DDD 是架構設計時才用
-- 按使用頻率而非概念類型分組，更符合 AI 工作模式
-
-## 📖 使用指南
-
-### AI 開發時
-```
-1. 先查 core-practices/ - 遵循 TDD/BDD
-2. 遇到設計問題查 design-patterns/
-3. 不確定需求查 product/
-```
-
-### 人類學習時
-```
-1. 新人從 guides/onboarding.md 開始
-2. 想看案例去 stories/
-3. 深入技術看 design-patterns/
-```
+## 🔄 workflows - 工作流程
+- [TICKET_DRIVEN_DEVELOPMENT.md](workflows/TICKET_DRIVEN_DEVELOPMENT.md) - 票券驅動開發
 
 ---
 
-💡 記住：文檔組織要服務於使用場景，而非概念分類。
+## 快速導航
+
+### 新手入門
+1. 先看 [workflow.md](01-getting-started/workflow.md) 了解開發流程
+2. 查看 [quick-reference.md](01-getting-started/quick-reference.md) 熟悉常用命令
+3. 閱讀 [onboarding.md](02-development-guides/guides/onboarding.md) 完成環境設置
+
+### 日常開發
+- **必讀**：[business-rules.md](01-context/business-rules.md) - 業務規則
+- 開發規範：[commit-guide.md](02-development-guides/commit-guide.md)
+- 前端開發：[frontend-guide.md](02-development-guides/guides/frontend-guide.md)
+- 核心實踐：[core-practices/](03-technical-references/core-practices/)
+
+### 查找資料
+- 領域知識：[domain-knowledge.md](01-context/domain-knowledge.md)
+- 技術決策：[/docs/decisions/](../decisions/)
+- 變更歷史：[CHANGELOG.md](05-reports/CHANGELOG.md)
+
+---
+
+## 💡 AI 開發提示
+
+當 AI 需要開發 AI Square 功能時，應該：
+1. 先讀 [business-rules.md](01-context/business-rules.md) 了解必須遵守的規則
+2. 查看 [domain-knowledge.md](01-context/domain-knowledge.md) 理解專有名詞
+3. 參考 [frontend-guide.md](02-development-guides/guides/frontend-guide.md) 遵循編碼規範

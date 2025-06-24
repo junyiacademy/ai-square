@@ -1,0 +1,15 @@
+id: 2025-06-24-12-08-17-test-new-workflow
+name: test-new-workflow
+type: feature
+description: 測試新的文件追蹤流程
+status: completed
+created_at: '2025-06-24T12:08:17.540833'
+started_at: '2025-06-24T12:08:17.540833'
+completed_at: '2025-06-24T12:10:00.823965'
+duration_minutes: 1
+ai_time_minutes: null
+human_time_minutes: null
+commit_hash: 203b6710eb1fa538ab5b0e0f1047c62b184ade3f
+files_changed: []
+date: '2025-06-24'
+time: 12-08-17

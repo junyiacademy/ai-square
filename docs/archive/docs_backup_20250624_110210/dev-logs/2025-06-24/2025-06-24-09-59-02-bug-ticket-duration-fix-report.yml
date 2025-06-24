@@ -1,0 +1,82 @@
+type: bug
+title: 'fix(time-tracking): improve time tracking accuracy'
+date: '2025-06-24'
+developer: AI + Human
+status: completed
+commit_hash: 8f16e4cd
+description: "fix(time-tracking): improve time tracking accuracy\n\nAdded 3 files:\n\
+  \  - ticket-duration-fix-report.md\n  - fix-ticket-durations.py\n  - 2025-06-24-01-58-13-ticket-check-completed-tickets-duration.yml\n\
+  \nModified 27 files:\n  - 2025-06-23-00-00-00-ticket-docs-docs-refactor.yml\n  -\
+  \ 2025-06-23-00-00-00-ticket-docs-refactor-update-update-t.yml\n  - 2025-06-23-00-00-00-ticket-test-commit-flow.yml\n\
+  \  - 2025-06-23-01-26-31-ticket-update-ten-files.yml\n  - 2025-06-23-01-41-45-ticket-implement-smart-commit-analysis-githooks.yml\n\
+  \  ... and 22 more"
+ticket_id: 2025-06-24-01-58-13-check-completed-tickets-duration
+ticket_name: check-completed-tickets-duration
+ticket_path: docs/tickets/in_progress/2025-06-24-01-58-13-ticket-check-completed-tickets-duration.yml
+timeline:
+- phase: 實現
+  duration: 4.9
+  ai_time: 3.9
+  human_time: 1.0
+  tasks:
+  - 創建 ticket-duration-fix-report.md
+  - 創建 fix-ticket-durations.py
+  - 創建 2025-06-24-01-58-13-ticket-check-completed-tickets-duration.yml
+  - 更新 2025-06-23-00-00-00-ticket-docs-docs-refactor.yml
+  - 更新 2025-06-23-00-00-00-ticket-docs-refactor-update-update-t.yml
+  - 更新 2025-06-23-00-00-00-ticket-test-commit-flow.yml
+metrics:
+  total_time_minutes: 4.9
+  ai_time_minutes: 3.9
+  human_time_minutes: 1.0
+  ai_percentage: 80.0
+  human_percentage: 20.0
+  files_added: 4
+  files_modified: 27
+  files_deleted: 0
+  time_calculation_method: commit_interval
+  time_calculation_details:
+    start_time: '2025-06-24T01:55:58'
+    end_time: '2025-06-24T09:59:02.768303'
+    file_count: 0
+  time_estimation_method: commit_based_file_timestamp_analysis
+  is_real_time: true
+  commit_timestamp: '2025-06-24T09:59:02'
+  post_commit_update_timestamp: '2025-06-24T09:59:02.999395'
+changes:
+  added:
+  - docs/dev-logs/2025-06-24/2025-06-24-09-59-02-bug-ticket-duration-fix-report.yml
+  - docs/reports/ticket-duration-fix-report.md
+  - docs/scripts/fix-ticket-durations.py
+  - docs/tickets/in_progress/2025-06-24-01-58-13-ticket-check-completed-tickets-duration.yml
+  modified:
+  - docs/tickets/completed/2025-06-23-00-00-00-ticket-docs-docs-refactor.yml
+  - docs/tickets/completed/2025-06-23-00-00-00-ticket-docs-refactor-update-update-t.yml
+  - docs/tickets/completed/2025-06-23-00-00-00-ticket-test-commit-flow.yml
+  - docs/tickets/completed/2025-06-23-01-26-31-ticket-update-ten-files.yml
+  - docs/tickets/completed/2025-06-23-01-41-45-ticket-implement-smart-commit-analysis-githooks.yml
+  - docs/tickets/completed/2025-06-23-01-44-27-ticket-improve-filename-generation-auto-generated.yml
+  - docs/tickets/completed/2025-06-23-01-48-48-ticket-implement-comprehensive-file-naming-conventions.yml
+  - docs/tickets/completed/2025-06-23-02-07-58-ticket-implement-one-time-script-cleanup.yml
+  - docs/tickets/completed/2025-06-23-02-20-48-ticket-update-eight-files.yml
+  - docs/tickets/completed/2025-06-23-03-01-29-ticket-update-two-files.yml
+  - docs/tickets/completed/2025-06-23-03-10-09-ticket-update-three-files.yml
+  - docs/tickets/completed/2025-06-23-03-26-02-ticket-update-three-files.yml
+  - docs/tickets/completed/2025-06-23-03-38-14-ticket-enhance-commit-message-generation.yml
+  - docs/tickets/completed/2025-06-23-03-52-35-ticket-refactor-update-update-two-files.yml
+  - docs/tickets/completed/2025-06-23-03-53-02-ticket-adr-017-dev-logs-structure-and-standards.yml
+  - docs/tickets/completed/2025-06-23-04-06-49-ticket-simplify-dev-logs-structure-by.yml
+  - docs/tickets/completed/2025-06-23-21-01-07-ticket-workflow-automation-quality-gates.yml
+  - docs/tickets/completed/2025-06-23-21-15-20-ticket-improvement-changelog-enhancement-system-analyze.yml
+  - docs/tickets/completed/2025-06-23-21-20-57-ticket-bugfix-filename-duplication-improvement-time.yml
+  - docs/tickets/completed/2025-06-23-21-41-22-ticket-ticket-management-system-parallel-development.yml
+  - docs/tickets/completed/2025-06-23-23-42-28-ticket-test-bidirectional-linking.yml
+  - docs/tickets/completed/2025-06-23-23-46-40-ticket-fix-dev-system-improvements.yml
+  - docs/tickets/completed/2025-06-23-23-47-38-ticket-bugfix-time-calculations-bidirectional-ticket.yml
+  - docs/tickets/completed/2025-06-24-00-21-55-ticket-makefile.yml
+  - docs/tickets/completed/2025-06-24-00-22-02-ticket-ai-commit-guard.yml
+  - docs/tickets/completed/2025-06-24-01-08-19-ticket-test-addition-tests.yml
+  - docs/tickets/completed/2025-06-24-01-32-35-ticket-pre-commit-post-commit-documentation.yml
+  deleted: []
+pre_commit_generated: true
+generation_time: '2025-06-24T09:59:02.781451'

@@ -1,0 +1,110 @@
+# 功能開發日誌模板
+# 票券: single-ticket-commit
+# 開發類型: feature
+# 創建日期: 2025-06-24
+
+ticket_info:
+  name: single-ticket-commit
+  type: feature
+  created_at: 2025-06-24T01:17:13.832736
+  description: "實施單一票券提交策略"
+
+# 開發進度記錄
+development_progress:
+  start_time: 2025-06-24T01:17:13.832736
+  end_time: ""
+  total_time_minutes: 0
+  time_calculation_method: "development_tracking"
+  
+  phases:
+    planning:
+      status: pending
+      time_minutes: 0
+      notes: ""
+    implementation:
+      status: pending
+      time_minutes: 0
+      notes: ""
+    testing:
+      status: pending
+      time_minutes: 0
+      notes: ""
+    documentation:
+      status: pending
+      time_minutes: 0
+      notes: ""
+
+# 技術實作記錄
+technical_details:
+  files_modified: []
+  new_files_created: []
+  dependencies_added: []
+  configuration_changes: []
+  
+  key_changes:
+    - change_type: "new_feature"
+      description: ""
+      files: []
+      rationale: ""
+
+# 測試記錄
+testing:
+  unit_tests:
+    created: []
+    passed: []
+    failed: []
+  integration_tests:
+    created: []
+    passed: []
+    failed: []
+  manual_testing:
+    test_cases: []
+    results: []
+
+# 問題與解決方案
+issues_and_solutions:
+  - issue: ""
+    solution: ""
+    time_spent_minutes: 0
+    impact: "low|medium|high"
+
+# 學習與改進
+learnings:
+  new_technologies: []
+  best_practices: []
+  areas_for_improvement: []
+  future_considerations: []
+
+# 代碼品質
+code_quality:
+  complexity_score: 0
+  test_coverage_percentage: 0
+  linting_issues: 0
+  security_considerations: []
+
+# 相關資源
+resources:
+  documentation_links: []
+  reference_tickets: []
+  external_resources: []
+
+# 最終狀態
+completion_status:
+  completed: false
+  deployment_ready: false
+  documentation_updated: false
+  tests_passing: false
+  
+# 提交信息
+commit_info:
+  hash: ""
+  message: ""
+  files_changed: []
+  
+# 備註
+notes: |
+  開發過程中的重要備註和想法
+
+---
+# 此文件在票券創建時自動生成
+# 請在開發過程中持續更新相關字段

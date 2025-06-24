@@ -1,0 +1,60 @@
+# 重構日誌模板
+# 檔名格式: YYYY-MM-DD-HH-MM-SS-refactor-brief-description.yml
+# 存放位置: docs/dev-logs/YYYY-MM-DD/refactoring/
+
+type: refactor
+title: 重構的清晰標題（不含 conventional commit 前綴）
+date: 'YYYY-MM-DD'
+developer: AI + Human
+status: completed
+commit_hash: xxxxxxxx
+
+# 簡短描述（包含 conventional commit 格式的完整 commit 訊息）
+description: |
+  refactor(scope): brief description
+  
+  - Refactored X to improve Y
+  - Simplified Z logic
+
+# 時間追蹤（簡化為單一實現階段）
+timeline:
+  - phase: 實現
+    duration: 0.0      # 總時間（分鐘，保留一位小數）
+    ai_time: 0.0       # AI 時間
+    human_time: 0.0    # 人類時間
+    tasks:
+      - 分析現有程式碼結構
+      - 實施重構方案
+      - 確保功能不變
+
+# 重構指標
+metrics:
+  total_time_minutes: 0.0        # 總時間（分鐘）
+  ai_time_minutes: 0.0           # AI 時間
+  human_time_minutes: 0.0        # 人類時間
+  ai_percentage: 0.0             # AI 貢獻百分比
+  human_percentage: 0.0          # 人類貢獻百分比
+  files_added: 0                 # 新增檔案數
+  files_modified: 0              # 修改檔案數
+  files_deleted: 0               # 刪除檔案數
+  
+  # 時間計算相關
+  commit_timestamp: 'YYYY-MM-DDTHH:MM:SS'
+  generation_timestamp: 'YYYY-MM-DDTHH:MM:SS.ffffff'
+  time_estimation_method: commit_based_file_timestamp_analysis
+  is_real_time: false
+  time_data_quality: estimated
+
+# 檔案變更
+changes:
+  added: []
+  modified:
+    - src/components/refactored-component.tsx
+    - src/utils/helper.ts
+  deleted:
+    - src/legacy/old-component.tsx
+
+# 自動生成標記
+auto_generated: true
+generation_time: 'YYYY-MM-DDTHH:MM:SS.ffffff'
+pre_commit_generated: false

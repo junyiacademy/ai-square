@@ -1,0 +1,44 @@
+type: feature
+title: update 2 files
+date: '2025-06-23'
+developer: AI + Human
+status: completed
+commit_hash: 282f8088
+description: 'feat(docs): update 2 files
+
+
+  Added: 2025-06-23-refactor-enhancement-2-files.yml
+
+  Modified: commit-guide.py'
+timeline:
+- phase: 實現
+  duration: 9.8
+  ai_time: 7.8
+  human_time: 2.0
+  tasks:
+  - 創建 2025-06-23-refactor-enhancement-2-files.yml
+  - 更新 commit-guide.py
+metrics:
+  total_time_minutes: 9.8
+  ai_time_minutes: 7.8
+  human_time_minutes: 2.0
+  ai_percentage: 79.6
+  human_percentage: 20.4
+  files_added: 1
+  files_modified: 1
+  files_deleted: 0
+  commit_timestamp: '2025-06-23T03:02:24'
+  generation_timestamp: '2025-06-23T03:02:24.436533'
+  time_estimation_method: git_log_analysis
+  is_real_time: true
+  time_data_quality: high
+  migrated_at: '2025-06-23T03:34:51.088857'
+  time_confidence: high
+changes:
+  added:
+  - docs/dev-logs/2025-06-23-refactor-enhancement-2-files.yml
+  modified:
+  - docs/scripts/commit-guide.py
+  deleted: []
+auto_generated: true
+generation_time: '2025-06-23T03:02:24.436536'

@@ -1,0 +1,35 @@
+# Ticket: test-new-workflow
+
+## 📋 基本資訊
+- **類型**: feature
+- **創建時間**: 2025-06-24 12:08:17
+- **描述**: 測試新的文件追蹤流程
+
+## 🎯 目標
+[待補充]
+
+## 📐 技術規格
+[待補充]
+
+## ✅ 驗收條件
+- [ ] 待定義
+
+## 📚 參考文件
+
+本票券創建時參考了以下 handbook 文件：
+
+### docs/handbook/workflows/TICKET_DRIVEN_DEVELOPMENT.md
+- **參考原因**: 遵循票券驅動開發流程
+
+### docs/handbook/01-context/business-rules.md
+- **參考原因**: 確保符合業務規則
+
+### docs/handbook/01-context/product-vision.md
+- **參考原因**: 理解產品目標和方向
+
+### docs/handbook/01-context/domain-knowledge.md
+- **參考原因**: 參考 AI 素養領域知識
+
+
+💡 **注意**：在開發過程中，請持續更新此區段，記錄所有參考的 handbook 文件。
+使用 `make dev-track STAGE=xxx` 來自動記錄。

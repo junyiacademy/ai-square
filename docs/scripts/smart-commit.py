@@ -9,6 +9,13 @@ import subprocess
 from pathlib import Path
 from datetime import datetime
 
+# 加入 commit guide 解析器
+sys.path.append(str(Path(__file__).parent))
+try:
+    from commit_guide_parser import CommitGuideParser
+except ImportError:
+    CommitGuideParser = None
+
 class SmartCommit:
     def __init__(self):
         self.project_root = Path(__file__).parent.parent.parent
@@ -39,6 +46,23 @@ class SmartCommit:
         if self.ticket_name:
             print(f"🎫 Ticket: {self.ticket_name}")
         print("="*50 + "\n")
+        
+        # 顯示核心原則
+        if CommitGuideParser:
+            self.show_core_principles()
+    
+    def show_core_principles(self):
+        """顯示 commit guide 的核心原則"""
+        try:
+            parser = CommitGuideParser()
+            principles = parser.get_core_principles()
+            if principles:
+                print("📌 提交規範提醒：")
+                for principle in principles[:3]:  # 只顯示前3個
+                    print(f"   • {principle}")
+                print()
+        except Exception:
+            pass
     
     def run_ai_fix(self) -> bool:
         """執行 AI 自動修復"""
@@ -68,6 +92,8 @@ class SmartCommit:
             print("\n⚠️ 非交互式環境，自動顯示 AI 修復建議")
             self.show_ai_fix_suggestions()
         
+        # 顯示相關文檔
+        self.show_helpful_links("ai_fix")
         return False
     
     def show_ai_fix_suggestions(self):
@@ -90,8 +116,27 @@ class SmartCommit:
             print("2. 請 AI 生成具體的修復代碼")
             print("3. 應用修復後重新執行 make commit-smart")
     
+    def show_commit_types(self):
+        """顯示可用的 commit 類型"""
+        if not CommitGuideParser:
+            return
+            
+        try:
+            parser = CommitGuideParser()
+            types = parser.get_commit_types()
+            if types:
+                print("\n📝 可用的 Commit 類型：")
+                for type_name, desc in types.items():
+                    print(f"   • {type_name}: {desc}")
+                print()
+        except Exception:
+            pass
+    
     def run_commit_guide(self) -> bool:
         """執行原有的提交指南"""
+        # 先顯示 commit 類型參考
+        self.show_commit_types()
+        
         commit_guide_script = self.scripts_path / "commit-guide.py"
         result = subprocess.run(
             [sys.executable, str(commit_guide_script)],
@@ -100,9 +145,28 @@ class SmartCommit:
         
         return result.returncode == 0
     
+    def show_pre_commit_checklist(self):
+        """顯示 pre-commit 檢查清單"""
+        if not CommitGuideParser:
+            return
+            
+        try:
+            parser = CommitGuideParser()
+            checklist = parser.get_checklist()
+            if checklist:
+                print("\n✅ Pre-commit 檢查清單：")
+                for item in checklist:
+                    print(f"   {item}")
+                print()
+        except Exception:
+            pass
+    
     def run_pre_commit_generation(self) -> bool:
         """執行 pre-commit 文檔生成和驗證"""
         print("📝 執行 pre-commit 驗證和文檔生成...")
+        
+        # 顯示檢查清單
+        self.show_pre_commit_checklist()
         
         # 先執行新的驗證器
         validator_script = self.scripts_path / "pre-commit-validator.py"
@@ -208,11 +272,13 @@ class SmartCommit:
         
         # 4. 執行票券文件驗證
         if not self.validate_ticket_documentation():
+            self.show_helpful_links("ticket_issue")
             return False
         
         # 5. 執行正常的提交流程
         print("\n✅ 所有檢查通過，繼續提交流程...\n")
         if not self.run_commit_guide():
+            self.show_helpful_links("failed_checks")
             return False
         
         # 6. 執行 post-commit 生成
@@ -233,6 +299,32 @@ class SmartCommit:
         
         print("=" * 50)
         return True
+    
+    def show_helpful_links(self, context="general"):
+        """根據情境顯示相關的 handbook 連結"""
+        links = {
+            "general": [
+                "📚 提交規範：docs/handbook/02-development-guides/commit-guide.md",
+                "🔄 工作流程：docs/handbook/01-getting-started/workflow.md"
+            ],
+            "failed_checks": [
+                "🔧 程式碼規範：docs/handbook/03-technical-references/core-practices/",
+                "📝 提交指南：docs/handbook/02-development-guides/commit-guide.md"
+            ],
+            "ticket_issue": [
+                "🎫 票券流程：docs/handbook/workflows/TICKET_DRIVEN_DEVELOPMENT.md",
+                "📋 業務規則：docs/handbook/01-context/business-rules.md"
+            ],
+            "ai_fix": [
+                "💡 改進建議：docs/handbook/05-reports/improvements/",
+                "🛠️ 技術參考：docs/handbook/03-technical-references/"
+            ]
+        }
+        
+        print("\n💡 相關參考文檔：")
+        for link in links.get(context, links["general"]):
+            print(f"   {link}")
+        print()
 
 if __name__ == "__main__":
     smart_commit = SmartCommit()

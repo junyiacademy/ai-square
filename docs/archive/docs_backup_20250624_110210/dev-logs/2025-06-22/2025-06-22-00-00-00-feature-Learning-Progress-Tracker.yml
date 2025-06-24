@@ -1,0 +1,68 @@
+type: feature
+title: AI 學習進度追蹤功能
+date: 2025-06-22
+developer: Human/AI
+status: in_progress
+epic: Phase 2 - 智能練習系統
+
+user_story:
+  as: 學習者
+  want: 查看自己的 AI 素養學習進度
+  so_that: 了解學習狀況並規劃下一步
+
+acceptance_criteria:
+  - 顯示各領域的完成百分比
+  - 記錄已完成的能力指標
+  - 提供視覺化進度圖表
+  - 支援多語言顯示
+  - 資料保存在 localStorage
+
+timeline:
+  - phase: 分析
+    duration: 30
+    ai_time: 20
+    human_time: 10
+    tasks:
+      - 研究現有資料結構
+      - 設計進度追蹤模型
+      - 確認儲存方案
+    
+  - phase: 設計
+    duration: 45
+    ai_time: 25
+    human_time: 20
+    tasks:
+      - 設計 UI 組件
+      - 規劃狀態管理
+      - 設計 API 介面
+    
+  - phase: 實作
+    duration: 120
+    ai_time: 90
+    human_time: 30
+    tasks:
+      - TDD 開發組件
+      - 實作進度計算邏輯
+      - 整合多語言支援
+    
+  - phase: 測試
+    duration: 30
+    ai_time: 20
+    human_time: 10
+    tasks:
+      - 單元測試
+      - 整合測試
+      - E2E 測試
+
+metrics:
+  total_time: 225  # 3.75 hours
+  ai_percentage: 69
+  human_percentage: 31
+  estimated_loc: 500
+  target_coverage: 85
+
+technical_decisions:
+  storage: localStorage with JSON
+  state_management: useReducer + Context
+  visualization: Tailwind + CSS Grid
+  calculation: percentage per domain/competency

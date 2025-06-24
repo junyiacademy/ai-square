@@ -1,0 +1,13 @@
+name: claude
+type: docs
+status: completed
+created_at: '2025-06-23T00:00:00'
+completed_at: '2025-06-23T23:59:59'
+description: "feat(docs): implement pre-commit and post-commit documentation generation\n\
+  \nAdded 2 files:\n  - update-changelog.py\n  - i18n.ts\n\nModified 5 files:\n  -\
+  \ CLAUDE.md\n  - Makefile\n  - post-commit-doc-gen.py\n  - jest.config.js\n  - jest.setup.js"
+dev_logs:
+- docs/dev-logs/2025-06-23/2025-06-23-00-00-00-docs-claude.yml
+reconstructed: true
+reconstruction_date: '2025-06-24T01:49:40.685016'
+commit_hash: 32157d80

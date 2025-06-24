@@ -15,12 +15,20 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
+# 加入文件參考追蹤
+sys.path.append(str(Path(__file__).parent))
+try:
+    from document_reference_tracker import DocumentReferenceTracker
+except ImportError:
+    DocumentReferenceTracker = None
+
 class PreCommitDocGenerator:
     def __init__(self):
         self.project_root = Path(__file__).parent.parent.parent
         self.staged_files = self._get_staged_files()
         self.time_metrics = self._calculate_time_from_files()
         self.active_ticket = self._get_active_ticket()
+        self.doc_tracker = DocumentReferenceTracker() if DocumentReferenceTracker else None
         
     def _run_command(self, cmd: List[str]) -> Tuple[int, str, str]:
         """執行命令並返回結果"""
@@ -222,6 +230,29 @@ class PreCommitDocGenerator:
         if not tasks:
             tasks.append("程式碼優化和改進")
         
+        # 收集文件參考（如果有票券）
+        document_references = None
+        if self.active_ticket and self.doc_tracker:
+            # 找到票券目錄
+            ticket_path = self.active_ticket.get('_file_path')
+            if ticket_path:
+                ticket_dir = Path(ticket_path).parent
+                ref_file = ticket_dir / "document-references.yml"
+                if ref_file.exists():
+                    with open(ref_file, 'r', encoding='utf-8') as f:
+                        ref_data = yaml.safe_load(f)
+                        if ref_data and 'references' in ref_data:
+                            # 轉換格式以符合 dev log 結構
+                            document_references = {
+                                'consulted_documents': [
+                                    {
+                                        'path': ref['document'],
+                                        'reason': ref['reason']
+                                    }
+                                    for ref in ref_data['references']
+                                ]
+                            }
+        
         # 準備日誌內容
         log_content = {
             'type': commit_type,
@@ -261,6 +292,10 @@ class PreCommitDocGenerator:
             'pre_commit_generated': True,
             'generation_time': datetime.now().isoformat()
         }
+        
+        # 加入文件參考（如果有）
+        if document_references:
+            log_content['document_references'] = document_references
         
         # 寫入檔案
         with open(filepath, 'w', encoding='utf-8') as f:

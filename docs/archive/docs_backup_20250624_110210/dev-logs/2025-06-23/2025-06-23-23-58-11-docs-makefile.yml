@@ -1,0 +1,55 @@
+type: docs
+title: 'feat(docs): implement pre-commit and post-commit documentation generation'
+date: '2025-06-23'
+developer: AI + Human
+status: completed
+commit_hash: 03572d30
+description: "feat(docs): implement pre-commit and post-commit documentation generation\n\
+  \nModified 7 files:\n  - Makefile\n  - post-commit-doc-gen.py\n  - pre-commit-doc-gen.py\n\
+  \  - smart-commit.py\n  - ticket-manager.py\n  ... and 2 more"
+ticket_id: 2025-06-23-23-42-28-test-bidirectional-linking
+ticket_name: test-bidirectional-linking
+ticket_path: docs/tickets/2025-06-23/2025-06-23-23-42-28-ticket-test-bidirectional-linking.yml
+timeline:
+- phase: 實現
+  duration: 9.2
+  ai_time: 7.4
+  human_time: 1.8
+  tasks:
+  - 創建 test-no-file-count-estimate.txt
+  - 更新 Makefile
+  - 更新 post-commit-doc-gen.py
+  - 更新 pre-commit-doc-gen.py
+metrics:
+  total_time_minutes: 9.2
+  ai_time_minutes: 7.4
+  human_time_minutes: 1.8
+  ai_percentage: 80.0
+  human_percentage: 20.0
+  files_added: 2
+  files_modified: 7
+  files_deleted: 0
+  time_calculation_method: git_history
+  time_calculation_details:
+    start_time: '2025-06-15T20:36:50'
+    end_time: '2025-06-23T23:47:38'
+    file_count: 6
+  time_estimation_method: commit_based_file_timestamp_analysis
+  is_real_time: true
+  commit_timestamp: '2025-06-23T23:58:11'
+  post_commit_update_timestamp: '2025-06-23T23:58:11.519984'
+changes:
+  added:
+  - docs/dev-logs/2025-06-23/2025-06-23-23-58-11-docs-makefile.yml
+  - test-no-file-count-estimate.txt
+  modified:
+  - Makefile
+  - docs/scripts/post-commit-doc-gen.py
+  - docs/scripts/pre-commit-doc-gen.py
+  - docs/scripts/smart-commit.py
+  - docs/scripts/ticket-manager.py
+  - docs/tickets/2025-06-23/2025-06-23-23-42-28-ticket-test-bidirectional-linking.yml
+  - docs/tickets/2025-06-23/2025-06-23-23-46-40-ticket-fix-dev-system-improvements.yml
+  deleted: []
+pre_commit_generated: true
+generation_time: '2025-06-23T23:58:11.297779'

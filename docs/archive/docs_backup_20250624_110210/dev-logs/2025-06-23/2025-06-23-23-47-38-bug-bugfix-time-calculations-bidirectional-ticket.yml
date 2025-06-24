@@ -1,0 +1,93 @@
+type: bug
+title: 'fix(devlog): fix time calculations and implement bidirectional ticket linking'
+date: '2025-06-23'
+developer: AI + Human
+status: completed
+commit_hash: 2e22dbcb
+description: 'fix(devlog): fix time calculations and implement bidirectional ticket
+  linking
+
+
+  - Fix dev log time calculation errors (was showing 0.7min instead of 10.6min)
+
+  - Implement bidirectional linking between tickets and dev logs
+
+  - Add automatic ticket creation if no active ticket exists
+
+  - Convert ticket system from JSON to YAML with timestamps
+
+  - Fix all existing dev log filenames to include timestamps
+
+  - Update pre-commit and post-commit scripts for better time handling
+
+  - Add ADR-027 documenting dev log standards enforcement
+
+
+  Key fixes:
+
+  - Pre-commit now properly calculates time from git history
+
+  - Post-commit preserves pre-commit time calculations unless it has better data
+
+  - Dev log filenames now include HH-MM-SS timestamps
+
+  - Tickets and dev logs reference each other''s paths'
+ticket_id: 2025-06-23-23-46-40-fix-dev-system-improvements
+ticket_name: fix-dev-system-improvements
+ticket_path: docs/tickets/completed/2025-06-23-23-46-40-ticket-fix-dev-system-improvements.yml
+timeline:
+- phase: 實現
+  duration: 120
+  ai_time: 96.0
+  human_time: 24.0
+  tasks:
+  - 創建 ADR-027-devlog-standards-enforcement.md
+  - 創建 fix-devlog-filenames.py
+  - 創建 fix-time-calculations.py
+  - 更新 2025-06-23-03-26-02-docs-update-three-files.yml
+  - 更新 2025-06-23-03-29-43-test-auto-commit-txt.yml
+  - 更新 2025-06-23-03-35-30-bug-update-four-files.yml
+metrics:
+  total_time_minutes: 120
+  ai_time_minutes: 96.0
+  human_time_minutes: 24.0
+  ai_percentage: 80.0
+  human_percentage: 20.0
+  files_added: 6
+  files_modified: 13
+  files_deleted: 0
+  commit_timestamp: '2025-06-23T23:47:38'
+  generation_timestamp: '2025-06-23T23:48:36.460412'
+  time_calculation_method: commit_interval
+  time_calculation_details:
+    start_commit: '2025-06-23T23:46:40'
+    end_commit: '2025-06-23T23:47:38'
+    commit_interval_minutes: 0.97
+    scaled_by_complexity: 120
+  is_real_time: false
+  time_data_quality: commit_interval_scaled
+changes:
+  added:
+  - docs/decisions/ADR-027-devlog-standards-enforcement.md
+  - docs/scripts/fix-devlog-filenames.py
+  - docs/scripts/fix-time-calculations.py
+  - docs/tickets/2025-06-23/2025-06-23-23-42-28-ticket-test-bidirectional-linking.yml
+  - docs/tickets/2025-06-23/2025-06-23-23-46-40-ticket-fix-dev-system-improvements.yml
+  - docs/tickets/2025-06-23/fix-devlog-filename-time.json
+  modified:
+  - docs/dev-logs/2025-06-23/2025-06-23-03-26-02-docs-update-three-files.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-03-29-43-test-auto-commit-txt.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-03-35-30-bug-update-four-files.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-03-38-14-docs-enhance-commit-message-generation.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-docs-2025-06-23-docs-2025-06-23-docs-refactor.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-docs-claude.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-docs-commit-guide.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-test-ai-commit-guard.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-test-test-commit-flow.yml
+  - docs/dev-logs/2025-06-23/2025-06-23-update-page.yml
+  - docs/scripts/post-commit-doc-gen.py
+  - docs/scripts/pre-commit-doc-gen.py
+  - docs/scripts/ticket-manager.py
+  deleted: []
+auto_generated: true
+generation_time: '2025-06-23T23:48:36.460416'

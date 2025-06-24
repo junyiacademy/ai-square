@@ -1,0 +1,62 @@
+type: docs
+title: 'docs(changelog): improve changelog update system and analyze dev log issues'
+date: '2025-06-23'
+developer: AI + Human
+status: completed
+commit_hash: 576e4d32
+description: 'docs(changelog): improve changelog update system and analyze dev log
+  issues
+
+
+  - Enhanced update-changelog.py with dev logs aggregation
+
+  - Added --aggregate flag to collect all today''s changes
+
+  - Updated CHANGELOG.md with comprehensive today''s summary
+
+  - Created ADR-021 documenting dev log generation improvements
+
+  - Analyzed root causes of filename duplication and time calculation issues
+
+
+  Improvements:
+
+  1. Changelog now properly aggregates daily changes from dev logs
+
+  2. Avoids duplicate entries when multiple sources exist
+
+  3. Maintains proper section ordering (Added, Fixed, Changed)
+
+  4. Supports both manual and automated changelog updates'
+timeline:
+- phase: 實現
+  duration: 5.2
+  ai_time: 4.1
+  human_time: 1.0
+  tasks:
+  - 創建 ADR-021-dev-log-generation-improvements.md
+  - 更新 CHANGELOG.md
+  - 更新 update-changelog.py
+metrics:
+  total_time_minutes: 5.2
+  ai_time_minutes: 4.1
+  human_time_minutes: 1.0
+  ai_percentage: 78.8
+  human_percentage: 19.2
+  files_added: 1
+  files_modified: 2
+  files_deleted: 0
+  commit_timestamp: '2025-06-23T21:15:20'
+  generation_timestamp: '2025-06-23T21:15:26.554487'
+  time_estimation_method: commit_based_analysis
+  is_real_time: false
+  time_data_quality: estimated
+changes:
+  added:
+  - docs/decisions/ADR-021-dev-log-generation-improvements.md
+  modified:
+  - docs/CHANGELOG.md
+  - docs/scripts/update-changelog.py
+  deleted: []
+auto_generated: true
+generation_time: '2025-06-23T21:15:26.554491'

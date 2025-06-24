@@ -1,0 +1,53 @@
+type: docs
+title: update 3 files
+date: '2025-06-23'
+developer: AI + Human
+status: completed
+commit_hash: 2a29b4f0
+description: 'feat(docs): update 3 files
+
+
+  Added: pre-commit-doc-gen.py
+
+  Modified: commit-guide.py, post-commit-doc-gen.py'
+timeline:
+- phase: 實現
+  duration: 5.3
+  ai_time: 4.2
+  human_time: 1.1
+  tasks:
+  - 創建 pre-commit-doc-gen.py
+  - 更新 commit-guide.py
+  - 更新 post-commit-doc-gen.py
+metrics:
+  total_time_minutes: 5.3
+  ai_time_minutes: 4.2
+  human_time_minutes: 1.1
+  ai_percentage: 80.4
+  human_percentage: 19.6
+  files_added: 2
+  files_modified: 2
+  files_deleted: 0
+  time_calculation_method: file_timestamp_analysis
+  time_calculation_details:
+    start_time: '2025-06-23T03:20:46.830036'
+    end_time: '2025-06-23T03:26:02.628008'
+    file_count: 3
+  time_estimation_method: git_log_analysis
+  is_real_time: true
+  commit_timestamp: '2025-06-23T03:26:02'
+  post_commit_update_timestamp: '2025-06-23T03:26:02.777530'
+  migrated_at: '2025-06-23T03:34:50.895713'
+  time_confidence: high
+  time_calculation_fixed: true
+  time_calculation_fix_date: '2025-06-23T23:44:08.187097'
+changes:
+  added:
+  - docs/dev-logs/2025-06-23-docs-commit-guide.yml
+  - docs/scripts/pre-commit-doc-gen.py
+  modified:
+  - docs/scripts/commit-guide.py
+  - docs/scripts/post-commit-doc-gen.py
+  deleted: []
+pre_commit_generated: true
+generation_time: '2025-06-23T03:26:02.628209'

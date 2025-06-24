@@ -1,0 +1,40 @@
+type: docs
+title: add auto-generated development logs and stories
+date: '2025-06-23'
+developer: AI + Human
+status: completed
+commit_hash: d8cd84c3
+description: 'docs(auto): add auto-generated development logs and stories'
+timeline:
+- phase: 實現
+  duration: 15.6
+  ai_time: 12.4
+  human_time: 3.1
+  tasks:
+  - 創建 2025-06-23-docs-decisions-1d6388cc.yml
+  - 創建 2025-06-23-feature-core-dc21387f.yml
+  - 創建 2025-06-23-feature-docs-98b02a16.yml
+metrics:
+  total_time: 60
+  ai_percentage: 79.5
+  human_percentage: 19.9
+  files_added: 5
+  files_modified: 0
+  files_deleted: 0
+  total_time_minutes: 15.6
+  ai_time_minutes: 12.4
+  human_time_minutes: 3.1
+  time_estimation_method: git_log_analysis
+  migrated_at: '2025-06-23T03:34:51.212164'
+  time_confidence: high
+changes:
+  added:
+  - docs/dev-logs/2025-06-23-docs-decisions-1d6388cc.yml
+  - docs/dev-logs/2025-06-23-feature-core-dc21387f.yml
+  - docs/dev-logs/2025-06-23-feature-docs-98b02a16.yml
+  - docs/stories/features/2025-06-23-core-dc21387f.md
+  - docs/stories/features/2025-06-23-docs-98b02a16.md
+  modified: []
+  deleted: []
+auto_generated: true
+generation_time: '2025-06-23T01:42:05.018463'

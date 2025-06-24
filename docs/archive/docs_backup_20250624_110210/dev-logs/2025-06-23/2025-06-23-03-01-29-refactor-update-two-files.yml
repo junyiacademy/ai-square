@@ -1,0 +1,42 @@
+type: refactor
+title: update 2 files
+date: '2025-06-23'
+developer: AI + Human
+status: completed
+commit_hash: d62ca040
+description: 'refactor(docs): update 2 files
+
+
+  Modified: commit-guide.py, post-commit-doc-gen.py'
+timeline:
+- phase: 實現
+  duration: 3.3
+  ai_time: 2.6
+  human_time: 0.7
+  tasks:
+  - 更新 commit-guide.py
+  - 更新 post-commit-doc-gen.py
+metrics:
+  total_time_minutes: 3.3
+  ai_time_minutes: 2.6
+  human_time_minutes: 0.7
+  ai_percentage: 78.8
+  human_percentage: 21.2
+  files_added: 0
+  files_modified: 2
+  files_deleted: 0
+  commit_timestamp: '2025-06-23T03:01:29'
+  generation_timestamp: '2025-06-23T03:01:29.474685'
+  time_estimation_method: git_log_analysis
+  is_real_time: false
+  time_data_quality: estimated
+  migrated_at: '2025-06-23T03:34:51.116654'
+  time_confidence: high
+changes:
+  added: []
+  modified:
+  - docs/scripts/commit-guide.py
+  - docs/scripts/post-commit-doc-gen.py
+  deleted: []
+auto_generated: true
+generation_time: '2025-06-23T03:01:29.474687'

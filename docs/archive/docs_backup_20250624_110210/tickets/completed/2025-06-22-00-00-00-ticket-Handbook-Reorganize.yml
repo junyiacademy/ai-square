@@ -1,0 +1,18 @@
+name: Handbook-Reorganize
+type: refactor
+status: completed
+created_at: '2025-06-22T00:00:00'
+completed_at: '2025-06-22T23:59:59'
+description: '根據 AI 使用頻率重組 handbook 結構：
+
+  - core-practices: AI 每次開發都要用的
+
+  - design-patterns: AI 需要時查閱的
+
+  - guides: 主要給人類用的指南
+
+  '
+dev_logs:
+- docs/dev-logs/2025-06-22/2025-06-22-00-00-00-refactor-Handbook-Reorganize.yml
+reconstructed: true
+reconstruction_date: '2025-06-24T01:49:40.796236'

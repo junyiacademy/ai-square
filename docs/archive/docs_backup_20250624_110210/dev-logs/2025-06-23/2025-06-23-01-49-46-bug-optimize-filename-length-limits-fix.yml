@@ -1,0 +1,38 @@
+type: bug
+title: optimize filename length limits and fix truncation issues
+date: '2025-06-23'
+developer: AI + Human
+status: completed
+commit_hash: e1b4100b
+description: 'fix(docs): optimize filename length limits and fix truncation issues'
+timeline:
+- phase: 實現
+  duration: 5.3
+  ai_time: 4.3
+  human_time: 1.1
+  tasks:
+  - 創建 2025-06-23-feature-file-naming-conventions.yml
+  - 創建 2025-06-23-file-naming-conventions-story.md
+  - 更新 post-commit-doc-gen.py
+metrics:
+  total_time: 30
+  ai_percentage: 81.1
+  human_percentage: 20.8
+  files_added: 2
+  files_modified: 1
+  files_deleted: 0
+  total_time_minutes: 5.3
+  ai_time_minutes: 4.3
+  human_time_minutes: 1.1
+  time_estimation_method: git_log_analysis
+  migrated_at: '2025-06-23T03:34:51.170631'
+  time_confidence: high
+changes:
+  added:
+  - docs/dev-logs/2025-06-23-feature-file-naming-conventions.yml
+  - docs/stories/features/2025-06-23-file-naming-conventions-story.md
+  modified:
+  - docs/scripts/post-commit-doc-gen.py
+  deleted: []
+auto_generated: true
+generation_time: '2025-06-23T01:49:46.640262'

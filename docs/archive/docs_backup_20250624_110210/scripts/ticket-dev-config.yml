@@ -1,0 +1,172 @@
+# 票券驅動開發配置文件
+# 定義不同開發類型的文件需求和品質門檻
+
+development_strategies:
+  feature:
+    name: 功能開發
+    description: 新功能實作
+    required_docs:
+      - path: docs/features/{ticket_name}-spec.md
+        template: feature-spec-template.md
+        required: true
+        required_phase: development
+        description: 功能規格文件
+      - path: __tests__/{component_path}.test.{ext}
+        required: true
+        required_phase: development
+        description: 單元測試
+      - path: docs/dev-logs/{date}/{timestamp}-feature-{ticket_name}.yml
+        template: feature-log-template.yml
+        required: true
+        required_phase: development
+        auto_generated: false
+        description: 開發日誌
+    quality_gates:
+      test_coverage: 80
+      documentation_score: 8
+      code_review: true
+
+  bugfix:
+    name: 錯誤修復
+    description: Bug 修復
+    required_docs:
+      - path: docs/bugs/{ticket_name}-analysis.md
+        template: bug-analysis-template.md
+        required: true
+        required_phase: development
+        description: Bug 分析報告
+      - path: __tests__/{component_path}.test.{ext}
+        required: true
+        required_phase: development
+        description: 回歸測試
+      - path: docs/dev-logs/{date}/{timestamp}-bug-{ticket_name}.yml
+        template: bug-log-template.yml
+        required: true
+        required_phase: development
+        auto_generated: false
+        description: 修復日誌
+    quality_gates:
+      reproduction_test: true
+      fix_verification: true
+      regression_test: true
+
+  refactor:
+    name: 重構
+    description: 代碼重構
+    required_docs:
+      - path: docs/refactoring/{ticket_name}-plan.md
+        template: refactor-plan-template.md
+        required: true
+        description: 重構計劃
+      - path: docs/decisions/ADR-{adr_number}-{ticket_name}.md
+        template: adr-template.md
+        required: true
+        description: 架構決策記錄
+      - path: docs/dev-logs/{date}/{timestamp}-refactor-{ticket_name}.yml
+        template: refactor-log-template.yml
+        required: true
+        required_phase: development
+        auto_generated: false
+        description: 重構日誌
+    quality_gates:
+      test_coverage_maintained: true
+      performance_not_degraded: true
+      api_compatibility: true
+
+  docs:
+    name: 文件更新
+    description: 文檔更新
+    required_docs:
+      - path: docs/dev-logs/{date}/{timestamp}-docs-{ticket_name}.yml
+        template: docs-log-template.yml
+        required: true
+        required_phase: development
+        auto_generated: false
+        description: 文檔更新日誌
+    quality_gates:
+      spelling_check: true
+      link_validation: true
+
+  test:
+    name: 測試改進
+    description: 測試相關改進
+    required_docs:
+      - path: docs/testing/{ticket_name}-plan.md
+        template: test-plan-template.md
+        required: true
+        description: 測試計劃
+      - path: docs/dev-logs/{date}/{timestamp}-test-{ticket_name}.yml
+        template: test-log-template.yml
+        required: true
+        description: 測試改進日誌
+    quality_gates:
+      test_coverage_improvement: true
+      test_reliability: true
+
+auto_generation:
+  enabled: true
+  create_missing_templates: true
+  auto_fill_metadata: true
+
+validation:
+  strict_mode: true
+  allow_missing_docs_for_types: 
+    - docs
+    - ci
+    - hotfix
+  require_approval_for_incomplete: true
+  
+  # 檔案類型檢查
+  file_validators:
+    markdown:
+      min_lines: 10
+      require_title: true
+      require_sections: 2
+    yaml:
+      valid_syntax: true
+      required_fields: 3
+    test:
+      require_test_functions: true
+      min_test_cases: 1
+
+# 文件模板路徑
+templates_path: docs/templates
+
+# 品質門檻配置
+quality_thresholds:
+  test_coverage:
+    feature: 80
+    bugfix: 70
+    refactor: 85
+  documentation_score:
+    feature: 8
+    bugfix: 7
+    refactor: 9
+  complexity_limit: 10
+
+# 自動檢測規則
+auto_detection:
+  file_patterns:
+    feature:
+      - "src/components/"
+      - "src/pages/"
+      - "src/api/"
+      - ".tsx"
+      - ".ts"
+    bugfix:
+      - "fix"
+      - "bug"
+      - "patch"
+      - "hotfix"
+    refactor:
+      - "refactor"
+      - "restructure"
+      - "optimize"
+    docs:
+      - ".md"
+      - "docs/"
+      - "README"
+    test:
+      - "__tests__/"
+      - ".test."
+      - ".spec."
