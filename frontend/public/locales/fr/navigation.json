@@ -1,0 +1,12 @@
+{
+  "home": "Accueil",
+  "relations": "Relations",
+  "ksa": "KSA Framework",
+  "signIn": "Se connecter",
+  "signOut": "Se déconnecter",
+  "userRole": {
+    "student": "Étudiant",
+    "teacher": "Enseignant",
+    "admin": "Administrateur"
+  }
+}

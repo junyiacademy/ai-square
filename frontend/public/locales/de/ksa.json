@@ -1,0 +1,43 @@
+{
+  "title": "KI-Kompetenzrahmen",
+  "subtitle": "Wissen, Fähigkeiten und Einstellungen für die KI-Bildung",
+  "loading": "KSA-Rahmen wird geladen...",
+  "loadError": "KSA-Daten konnten nicht geladen werden",
+  "searchPlaceholder": "Themen, Codes oder Inhalte suchen...",
+  "sections": {
+    "knowledge": "Wissen",
+    "skills": "Fähigkeiten",
+    "attitudes": "Einstellungen",
+    "knowledgeShort": "W",
+    "skillsShort": "F",
+    "attitudesShort": "E"
+  },
+  "results": {
+    "themesFound": "{{count}} Themen gefunden",
+    "themesFoundFor": "{{count}} Themen für \"{{search}}\" gefunden",
+    "noResults": "Keine Ergebnisse gefunden",
+    "noResultsHint": "Versuchen Sie, Ihre Suchbegriffe anzupassen."
+  },
+  "codes": "Code",
+  "codesPlural": "Codes",
+  "reflectionQuestions": "Reflexionsfragen",
+  "themes": {
+    "The_Nature_of_AI": "Die Natur der KI",
+    "AI_Reflects_Human_Choices_and_Perspectives": "KI Spiegelt Menschliche Entscheidungen und Perspektiven Wider",
+    "AI_Reshapes_Work_and_Human_Roles": "KI Gestaltet Arbeit und Menschliche Rollen Neu",
+    "AIs_Capabilities_and_Limitations": "Fähigkeiten und Grenzen der KI",
+    "AIs_Role_in_Society": "Die Rolle der KI in der Gesellschaft",
+    "Critical_Thinking": "Kritisches Denken",
+    "Creativity": "Kreativität",
+    "Computational_Thinking": "Informatisches Denken",
+    "Collaboration": "Zusammenarbeit",
+    "Problem_Solving": "Problemlösung",
+    "Self_and_Social_Awareness": "Selbst- und Sozialbewusstsein",
+    "Communication": "Kommunikation",
+    "Responsible": "Verantwortungsbewusst",
+    "Curious": "Neugierig",
+    "Innovative": "Innovativ",
+    "Adaptable": "Anpassungsfähig",
+    "Empathetic": "Empathisch"
+  }
+}

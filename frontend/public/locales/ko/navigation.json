@@ -1,0 +1,12 @@
+{
+  "home": "홈",
+  "relations": "Relations",
+  "ksa": "KSA Framework",
+  "signIn": "로그인",
+  "signOut": "로그아웃",
+  "userRole": {
+    "student": "학생",
+    "teacher": "교사",
+    "admin": "관리자"
+  }
+}

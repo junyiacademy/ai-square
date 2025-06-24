@@ -1,0 +1,43 @@
+{
+  "title": "Структура ИИ-грамотности",
+  "subtitle": "Знания, навыки и отношения для образования в области ИИ",
+  "loading": "Загрузка структуры KSA...",
+  "loadError": "Не удалось загрузить данные KSA",
+  "searchPlaceholder": "Поиск тем, кодов или содержания...",
+  "sections": {
+    "knowledge": "Знания",
+    "skills": "Навыки",
+    "attitudes": "Отношения",
+    "knowledgeShort": "З",
+    "skillsShort": "Н",
+    "attitudesShort": "О"
+  },
+  "results": {
+    "themesFound": "Найдено тем: {{count}}",
+    "themesFoundFor": "Найдено тем для \"{{search}}\": {{count}}",
+    "noResults": "Результаты не найдены",
+    "noResultsHint": "Попробуйте изменить поисковый запрос."
+  },
+  "codes": "код",
+  "codesPlural": "кодов",
+  "reflectionQuestions": "Вопросы для размышления",
+  "themes": {
+    "The_Nature_of_AI": "Природа ИИ",
+    "AI_Reflects_Human_Choices_and_Perspectives": "ИИ Отражает Человеческий Выбор и Взгляды",
+    "AI_Reshapes_Work_and_Human_Roles": "ИИ Изменяет Работу и Роли Людей",
+    "AIs_Capabilities_and_Limitations": "Возможности и Ограничения ИИ",
+    "AIs_Role_in_Society": "Роль ИИ в Обществе",
+    "Critical_Thinking": "Критическое Мышление",
+    "Creativity": "Креативность",
+    "Computational_Thinking": "Вычислительное Мышление",
+    "Collaboration": "Сотрудничество",
+    "Problem_Solving": "Решение Проблем",
+    "Self_and_Social_Awareness": "Самосознание и Социальная Осведомленность",
+    "Communication": "Коммуникация",
+    "Responsible": "Ответственный",
+    "Curious": "Любознательный",
+    "Innovative": "Инновационный",
+    "Adaptable": "Адаптивный",
+    "Empathetic": "Эмпатичный"
+  }
+}

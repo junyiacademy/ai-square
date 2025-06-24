@@ -1,0 +1,43 @@
+{
+  "title": "AI 리터러시 프레임워크",
+  "subtitle": "AI 교육을 위한 지식, 기술 및 태도",
+  "loading": "KSA 프레임워크 로딩 중...",
+  "loadError": "KSA 데이터 로드 실패",
+  "searchPlaceholder": "테마, 코드 또는 콘텐츠 검색...",
+  "sections": {
+    "knowledge": "지식",
+    "skills": "기술",
+    "attitudes": "태도",
+    "knowledgeShort": "K",
+    "skillsShort": "S",
+    "attitudesShort": "A"
+  },
+  "results": {
+    "themesFound": "{{count}}개의 테마를 찾았습니다",
+    "themesFoundFor": "\"{{search}}\"에 대해 {{count}}개의 테마를 찾았습니다",
+    "noResults": "결과를 찾을 수 없습니다",
+    "noResultsHint": "검색어를 조정해보세요."
+  },
+  "codes": "코드",
+  "codesPlural": "코드",
+  "reflectionQuestions": "성찰 질문",
+  "themes": {
+    "The_Nature_of_AI": "AI의 본질",
+    "AI_Reflects_Human_Choices_and_Perspectives": "AI는 인간의 선택과 관점을 반영한다",
+    "AI_Reshapes_Work_and_Human_Roles": "AI는 일과 인간의 역할을 재구성한다",
+    "AIs_Capabilities_and_Limitations": "AI의 역량과 한계",
+    "AIs_Role_in_Society": "사회에서 AI의 역할",
+    "Critical_Thinking": "비판적 사고",
+    "Creativity": "창의성",
+    "Computational_Thinking": "컴퓨팅 사고",
+    "Collaboration": "협업",
+    "Problem_Solving": "문제 해결",
+    "Self_and_Social_Awareness": "자아 및 사회적 인식",
+    "Communication": "의사소통",
+    "Responsible": "책임감 있는",
+    "Curious": "호기심 많은",
+    "Innovative": "혁신적인",
+    "Adaptable": "적응력 있는",
+    "Empathetic": "공감하는"
+  }
+}

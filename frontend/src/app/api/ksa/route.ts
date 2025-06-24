@@ -41,7 +41,14 @@ export async function GET(request: NextRequest) {
       if (language === 'en') {
         return obj[fieldName] as string | string[];
       }
-      const translatedField = `${fieldName}_${language}`;
+      
+      // Handle zh-TW -> zh mapping
+      let langCode = language;
+      if (language === 'zh-TW') {
+        langCode = 'zh';
+      }
+      
+      const translatedField = `${fieldName}_${langCode}`;
       return (obj[translatedField] as string | string[]) || (obj[fieldName] as string | string[]);
     };
 

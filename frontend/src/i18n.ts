@@ -23,6 +23,28 @@ import deAuth from '../public/locales/de/auth.json';
 import ruAuth from '../public/locales/ru/auth.json';
 import itAuth from '../public/locales/it/auth.json';
 
+// Navigation 翻譯
+import zhTWNavigation from '../public/locales/zh-TW/navigation.json';
+import enNavigation from '../public/locales/en/navigation.json';
+import esNavigation from '../public/locales/es/navigation.json';
+import jaNavigation from '../public/locales/ja/navigation.json';
+import koNavigation from '../public/locales/ko/navigation.json';
+import frNavigation from '../public/locales/fr/navigation.json';
+import deNavigation from '../public/locales/de/navigation.json';
+import ruNavigation from '../public/locales/ru/navigation.json';
+import itNavigation from '../public/locales/it/navigation.json';
+
+// KSA 翻譯
+import zhTWKsa from '../public/locales/zh-TW/ksa.json';
+import enKsa from '../public/locales/en/ksa.json';
+import esKsa from '../public/locales/es/ksa.json';
+import jaKsa from '../public/locales/ja/ksa.json';
+import koKsa from '../public/locales/ko/ksa.json';
+import frKsa from '../public/locales/fr/ksa.json';
+import deKsa from '../public/locales/de/ksa.json';
+import ruKsa from '../public/locales/ru/ksa.json';
+import itKsa from '../public/locales/it/ksa.json';
+
 // 可根據實際需求自動偵測語言，這裡預設 en
 const getDefaultLng = () => {
   if (typeof window !== 'undefined') {
@@ -51,39 +73,57 @@ i18n
     resources: {
       'zh-TW': { 
         relations: zhTWRelations,
-        auth: zhTWAuth
+        auth: zhTWAuth,
+        navigation: zhTWNavigation,
+        ksa: zhTWKsa
       },
       en: { 
         relations: enRelations,
-        auth: enAuth
+        auth: enAuth,
+        navigation: enNavigation,
+        ksa: enKsa
       },
       es: { 
         relations: esRelations,
-        auth: esAuth
+        auth: esAuth,
+        navigation: esNavigation,
+        ksa: esKsa
       },
       ja: { 
         relations: jaRelations,
-        auth: jaAuth
+        auth: jaAuth,
+        navigation: jaNavigation,
+        ksa: jaKsa
       },
       ko: { 
         relations: koRelations,
-        auth: koAuth
+        auth: koAuth,
+        navigation: koNavigation,
+        ksa: koKsa
       },
       fr: { 
         relations: frRelations,
-        auth: frAuth
+        auth: frAuth,
+        navigation: frNavigation,
+        ksa: frKsa
       },
       de: { 
         relations: deRelations,
-        auth: deAuth
+        auth: deAuth,
+        navigation: deNavigation,
+        ksa: deKsa
       },
       ru: { 
         relations: ruRelations,
-        auth: ruAuth
+        auth: ruAuth,
+        navigation: ruNavigation,
+        ksa: ruKsa
       },
       it: { 
         relations: itRelations,
-        auth: itAuth
+        auth: itAuth,
+        navigation: itNavigation,
+        ksa: itKsa
       },
     },
     lng: getDefaultLng(),

@@ -25,7 +25,7 @@ interface KSAResponse {
 }
 
 export default function KSADisplayPage() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation('ksa');
   const [ksaData, setKsaData] = useState<KSAResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState<'knowledge' | 'skills' | 'attitudes'>('knowledge');
@@ -102,47 +102,27 @@ export default function KSADisplayPage() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-lg text-gray-600">Loading KSA Framework...</p>
-        </div>
-      </div>
-    );
+    return <div className="p-8 text-center">Loading...</div>;
   }
 
   if (!ksaData) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-lg text-red-600">Failed to load KSA data</p>
-        </div>
-      </div>
-    );
+    return <div className="p-8 text-center text-red-600">{t('loadError')}</div>;
   }
 
   const currentSectionData = getSectionData(activeSection);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="container mx-auto px-4 py-8">
+    <main className="p-8 bg-gray-50 min-h-screen">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-            AI Literacy Framework
-          </h1>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Knowledge, Skills, and Attitudes for AI Education
-          </p>
-        </div>
+        <h1 className="mb-2 text-xl sm:text-2xl md:text-3xl font-bold text-center px-4 break-words">{t('title')}</h1>
+        <p className="text-center text-gray-500 mb-8 px-4">{t('subtitle')}</p>
 
         {/* Search Bar */}
         <div className="max-w-md mx-auto mb-8 px-4">
           <div className="relative">
             <input
               type="text"
-              placeholder="Search themes, codes, or content..."
+              placeholder={t('searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full px-4 py-3 pl-12 pr-4 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -171,9 +151,9 @@ export default function KSADisplayPage() {
         {/* Section Navigation */}
         <div className="flex flex-col sm:flex-row justify-center mb-8 gap-2 px-4">
           {[
-            { key: 'knowledge' as const, label: 'Knowledge (K)', shortLabel: 'K', count: Object.keys(ksaData.knowledge_codes.themes).length },
-            { key: 'skills' as const, label: 'Skills (S)', shortLabel: 'S', count: Object.keys(ksaData.skill_codes.themes).length },
-            { key: 'attitudes' as const, label: 'Attitudes (A)', shortLabel: 'A', count: Object.keys(ksaData.attitude_codes.themes).length }
+            { key: 'knowledge' as const, label: `${t('sections.knowledge')} (${t('sections.knowledgeShort')})`, shortLabel: t('sections.knowledgeShort'), count: Object.keys(ksaData.knowledge_codes.themes).length },
+            { key: 'skills' as const, label: `${t('sections.skills')} (${t('sections.skillsShort')})`, shortLabel: t('sections.skillsShort'), count: Object.keys(ksaData.skill_codes.themes).length },
+            { key: 'attitudes' as const, label: `${t('sections.attitudes')} (${t('sections.attitudesShort')})`, shortLabel: t('sections.attitudesShort'), count: Object.keys(ksaData.attitude_codes.themes).length }
           ].map((section) => (
             <button
               key={section.key}
@@ -194,70 +174,57 @@ export default function KSADisplayPage() {
         </div>
 
         {/* Section Description */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4 capitalize">
-            {activeSection}
-          </h2>
-          <p className="text-gray-600 leading-relaxed">
-            {currentSectionData?.description}
-          </p>
+        <div className="max-w-3xl mx-auto mb-8">
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4 capitalize">
+              {t(`sections.${activeSection}`)}
+            </h2>
+            <p className="text-gray-600 leading-relaxed">
+              {currentSectionData?.description}
+            </p>
+          </div>
         </div>
 
         {/* Results Info */}
         {searchTerm && (
           <div className="text-center mb-6">
             <p className="text-gray-600">
-              {Object.keys(filterThemes(currentSectionData?.themes || {})).length} themes found
-              {searchTerm && ` for "${searchTerm}"`}
+              {searchTerm ? 
+                t('results.themesFoundFor', { count: Object.keys(filterThemes(currentSectionData?.themes || {})).length, search: searchTerm }) :
+                t('results.themesFound', { count: Object.keys(filterThemes(currentSectionData?.themes || {})).length })
+              }
             </p>
           </div>
         )}
 
         {/* Themes Grid */}
-        <div className="grid gap-4 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="max-w-3xl mx-auto space-y-6">
           {currentSectionData && Object.entries(filterThemes(currentSectionData.themes)).length === 0 ? (
             <div className="col-span-full text-center py-12">
               <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.034 0-3.9.785-5.291 2.09M6.343 6.343A8 8 0 1017.657 17.657 8 8 0 006.343 6.343z" />
               </svg>
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No results found</h3>
-              <p className="mt-1 text-sm text-gray-500">Try adjusting your search terms.</p>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">{t('results.noResults')}</h3>
+              <p className="mt-1 text-sm text-gray-500">{t('results.noResultsHint')}</p>
             </div>
           ) : (
             currentSectionData && Object.entries(filterThemes(currentSectionData.themes)).map(([themeKey, theme]) => (
-            <div key={themeKey} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <div key={themeKey} className="mb-6">
               <div
-                className="p-4 sm:p-6 cursor-pointer hover:bg-gray-50 transition-colors"
+                className="cursor-pointer bg-gradient-to-r from-blue-100 to-purple-100 px-6 py-4 rounded-lg shadow flex items-center justify-between"
                 onClick={() => toggleTheme(themeKey)}
               >
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 gap-2">
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-800 break-words">
-                    {formatThemeName(themeKey)}
+                <div className="flex items-center">
+                  <h3 className="text-lg sm:text-xl font-bold text-blue-800 mr-2">
+                    {t(`themes.${themeKey}`, { defaultValue: formatThemeName(themeKey) })}
                   </h3>
-                  <span className="text-xs sm:text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full self-start whitespace-nowrap">
-                    {Object.keys(theme.codes).length} code{Object.keys(theme.codes).length !== 1 ? 's' : ''}
-                  </span>
-                </div>
-                <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
-                  {theme.explanation}
-                </p>
-                <div className="flex justify-center">
-                  <svg
-                    className={`w-5 h-5 text-gray-400 transition-transform ${
-                      expandedThemes.has(themeKey) ? 'rotate-180' : ''
-                    }`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
+                  <span className="text-gray-700 text-base font-medium">{expandedThemes.has(themeKey) ? '▲' : '▼'}</span>
                 </div>
               </div>
 
               {/* Expanded Content */}
               {expandedThemes.has(themeKey) && (
-                <div className="border-t bg-gray-50 animate-fadeIn">
+                <div className="bg-white border border-gray-200 rounded-b-lg px-6 py-4">
                   {Object.entries(theme.codes).map(([codeKey, code]) => (
                     <div key={codeKey} className="p-3 sm:p-4 border-b last:border-b-0">
                       <div className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-3 mb-3">
@@ -271,7 +238,7 @@ export default function KSADisplayPage() {
                       {code.questions && code.questions.length > 0 && (
                         <div className="mt-3">
                           <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">
-                            Reflection Questions
+                            {t('reflectionQuestions')}
                           </h4>
                           <div className="space-y-2">
                             {code.questions.map((question: string, idx: number) => (
@@ -290,7 +257,6 @@ export default function KSADisplayPage() {
           ))
           )}
         </div>
-      </div>
-    </div>
+    </main>
   );
 }
