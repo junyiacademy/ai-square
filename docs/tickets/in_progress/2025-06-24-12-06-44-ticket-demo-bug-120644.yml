@@ -13,3 +13,9 @@ commit_hash: null
 files_changed: []
 date: '2025-06-24'
 time: 12-06-44
+spec:
+  goals: '[待補充]'
+  technical_specs: '[待補充]'
+  acceptance_criteria:
+  - 待定義
+document_references: []
