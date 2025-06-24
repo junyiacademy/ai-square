@@ -227,7 +227,7 @@ class TDDComplianceChecker:
         }
         
         # 保存報告到文件
-        report_file = self.project_root / "docs" / "reports" / "tdd-compliance-report.json"
+        report_file = self.project_root / "docs" / "handbook" / "05-reports" / "tdd-compliance-report.json"
         report_file.parent.mkdir(parents=True, exist_ok=True)
         
         with open(report_file, 'w', encoding='utf-8') as f:
@@ -316,7 +316,7 @@ class TDDComplianceChecker:
 *此報告由 TDD 合規檢查器自動生成*
 """
         
-        md_file = self.project_root / "docs" / "reports" / "tdd-compliance-report.md"
+        md_file = self.project_root / "docs" / "handbook" / "05-reports" / "tdd-compliance-report.md"
         with open(md_file, 'w', encoding='utf-8') as f:
             f.write(md_content)
     

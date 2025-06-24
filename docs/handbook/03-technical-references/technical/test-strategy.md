@@ -450,6 +450,28 @@ Object.defineProperty(window, 'localStorage', {
 })
 ```
 
+## 🔍 TDD 合規檢查
+
+### 自動化檢查工具
+```bash
+# 執行 TDD 合規檢查
+make dev-tdd-check
+
+# 強制檢查（有問題時失敗）
+make dev-tdd-enforce
+```
+
+### 檢查項目
+- **測試覆蓋率**: 確保達到最低門檻 80%
+- **測試文件完整性**: 重要文件必須有對應測試
+- **TDD 流程遵循**: 檢查是否先寫測試後實現
+- **測試品質**: 測試命名和結構檢查
+
+### 合規報告
+- 報告位置: `docs/handbook/05-reports/tdd-compliance-report.md`
+- JSON 資料: `docs/handbook/05-reports/tdd-compliance-report.json`
+- 生成頻率: 每次執行 `make dev-tdd-check` 時更新
+
 ## 📈 測試指標與監控
 
 ### 關鍵指標
@@ -457,12 +479,14 @@ Object.defineProperty(window, 'localStorage', {
 - **Test Execution Time**: < 10 minutes
 - **Code Coverage**: > 80% overall
 - **Flaky Test Rate**: < 1%
+- **TDD Compliance Score**: > 80%
 
 ### 持續改善
 - 每週檢視失敗測試
 - 定期重構慢速測試
 - 監控測試執行時間趨勢
 - 分析覆蓋率變化
+- 追蹤 TDD 合規性趨勢
 
 ---
 

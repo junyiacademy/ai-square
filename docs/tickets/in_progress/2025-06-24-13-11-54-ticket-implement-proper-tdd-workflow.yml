@@ -10,7 +10,11 @@ duration_minutes: null
 ai_time_minutes: null
 human_time_minutes: null
 commit_hash: null
-files_changed: []
+files_changed:
+- Makefile
+- docs/handbook/03-technical-references/technical/test-strategy.md
+- docs/scripts/tdd-compliance-checker.py
+- docs/scripts/workflow-guard.py
 date: '2025-06-24'
 time: 13-11-54
 spec:

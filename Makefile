@@ -15,11 +15,11 @@ help:
 	@echo "====================="
 	@echo ""
 	@echo "🎫 票券驅動開發流程 (依序執行):"
-	@echo "  make dev-start TYPE=feature TICKET=name   開始新的開發任務"
+	@echo "  make dev-start TYPE=feature TICKET=name   開始新的開發任務 (含工作流程保護)"
 	@echo "  make dev-check                            檢查當前開發狀態"
 	@echo "  make dev-checkpoint                       保存開發進度點"
 	@echo "  make dev-test                             執行測試套件"
-	@echo "  make dev-commit                           智能提交變更"
+	@echo "  make dev-commit                           智能提交變更 (含工作流程保護)"
 	@echo "  make dev-done TICKET=name                 完成並合併工作"
 	@echo ""
 	@echo "🔄 開發流程管理:"
@@ -39,6 +39,7 @@ help:
 	@echo "  make dev-quality                          執行所有品質檢查"
 	@echo "  make dev-tdd-check                        執行 TDD 合規檢查"
 	@echo "  make dev-tdd-enforce                      執行 TDD 強制檢查"
+	@echo "  make dev-workflow-check                   執行工作流程檢查"
 	@echo ""
 	@echo "📦 建置與部署:"
 	@echo "  make build-frontend                       建置前端生產版本"
@@ -60,12 +61,14 @@ help:
 
 # === 核心流程命令 ===
 
-# 開始新的開發任務
+# 開始新的開發任務（含工作流程保護）
 dev-start:
 	@if [ -z "$(TYPE)" ] || [ -z "$(TICKET)" ]; then \
 		echo "❌ 用法: make dev-start TYPE=feature|bug|refactor|hotfix TICKET=descriptive-name [DEPENDS=ticket-1,ticket-2]"; \
 		exit 1; \
 	fi
+	@echo "🛡️ 工作流程護衛檢查..."
+	@python3 docs/scripts/workflow-guard.py start
 	@echo "🎫 開始新工作: $(TICKET) (類型: $(TYPE))"
 	@python3 docs/scripts/ticket-manager-enhanced.py create $(TICKET) $(TYPE) "$(DESC)"
 
@@ -94,8 +97,15 @@ dev-tdd-enforce:
 	@echo "🚨 執行 TDD 強制檢查..."
 	@python3 docs/scripts/tdd-compliance-checker.py --fail-on-issues
 
-# 智能提交變更
+# 工作流程檢查
+dev-workflow-check:
+	@echo "🛡️ 執行工作流程檢查..."
+	@python3 docs/scripts/workflow-guard.py check
+
+# 智能提交變更（含工作流程保護）
 dev-commit:
+	@echo "🛡️ 工作流程護衛檢查..."
+	@python3 docs/scripts/workflow-guard.py commit
 	@echo "🔓 授權提交..."
 	@python3 docs/scripts/ai-commit-guard.py --authorize
 	@echo "📝 智能提交..."

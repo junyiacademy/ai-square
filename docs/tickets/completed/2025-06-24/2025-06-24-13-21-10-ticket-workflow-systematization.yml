@@ -1,0 +1,74 @@
+id: workflow-systematization-20250624-132110
+name: workflow-systematization
+type: refactor
+title: 系統化工作流程規則到 make commands
+status: completed
+started_at: '2025-06-24T13:15:00'
+completed_at: '2025-06-24T13:21:10'
+duration_minutes: 6
+branch: main
+developer: AI Assistant
+
+description: |
+  系統化工作流程規則到 make commands，整合工作流程護衛防止違規操作。
+  
+  主要改進：
+  - 創建 workflow-guard.py 腳本，檢查分支、票券、提交規則
+  - 整合到 Makefile 核心命令 (dev-start, dev-commit)
+  - 新增 dev-workflow-check 獨立檢查命令
+  - 強制互動確認機制防止自動提交
+  - 系統自動阻止在 main 分支直接開發等違規操作
+
+goals:
+- 防止 AI 助手未經授權自動提交
+- 強制票券驅動開發流程
+- 系統化檢查分支和票券狀態
+- 提供清晰的違規提示和修復建議
+
+acceptance_criteria:
+- ✅ 工作流程護衛腳本創建完成 (workflow-guard.py)
+- ✅ 整合到 dev-start 和 dev-commit 命令
+- ✅ 新增 dev-workflow-check 命令
+- ✅ 測試護衛功能正常運作 (阻止 main 分支操作)
+- ✅ 更新 Makefile 說明文件
+
+technical_implementation:
+  files_modified:
+    - Makefile: 整合工作流程護衛到核心命令
+    - docs/scripts/workflow-guard.py: 新增工作流程護衛腳本
+  
+  key_features:
+    - 分支檢查：禁止在 main 分支直接開發
+    - 票券驗證：確保有活躍票券且匹配分支
+    - 提交保護：需要用戶明確授權
+    - 互動確認：防止自動化腳本違規操作
+
+changes:
+  added:
+    - docs/scripts/workflow-guard.py
+    - docs/reports/tdd-compliance-report.md
+  modified:
+    - Makefile
+    - docs/handbook/improvements/auto-fix-instructions.md
+    - docs/scripts/temp-fix.py
+
+document_references:
+  consulted_documents:
+    - path: CLAUDE.md
+      reason: 確保遵循核心工作流程原則
+    - path: docs/handbook/01-context/business-rules.md
+      reason: 理解開發規則和限制
+
+metrics:
+  files_added: 2
+  files_modified: 3
+  ai_time_minutes: 6
+  human_time_minutes: 0
+  total_time_minutes: 6
+
+test_results:
+  workflow_guard_test: ✅ 成功阻止在 main 分支的違規操作
+  makefile_integration: ✅ 命令成功整合工作流程檢查
+  help_documentation: ✅ 說明文件已更新
+
+commit_hash: "will_be_updated_after_commit"
