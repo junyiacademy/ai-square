@@ -23,19 +23,9 @@ class StoryExtractor:
         with open(ticket_path, 'r', encoding='utf-8') as f:
             ticket_data = yaml.safe_load(f)
         
-        # 讀取相關文件
-        devlog_path = ticket_data.get('files', {}).get('devlog')
-        test_report_path = ticket_data.get('files', {}).get('test_report')
-        
-        devlog_data = {}
-        if devlog_path and os.path.exists(devlog_path):
-            with open(devlog_path, 'r', encoding='utf-8') as f:
-                devlog_data = yaml.safe_load(f)
-        
-        test_data = {}
-        if test_report_path and os.path.exists(test_report_path):
-            with open(test_report_path, 'r', encoding='utf-8') as f:
-                test_data = yaml.safe_load(f)
+        # 從整合式票券中直接讀取
+        devlog_data = ticket_data.get('dev_log', {})
+        test_data = ticket_data.get('test_report', {})
         
         # 萃取故事元素
         story = {
@@ -56,7 +46,7 @@ class StoryExtractor:
             'technical_insights': {
                 'challenges': self._extract_challenges(devlog_data),
                 'solutions': self._extract_solutions(devlog_data),
-                'key_decisions': self._extract_decisions(devlog_data),
+                'decisions': self._extract_decisions(devlog_data),
                 'patterns_used': self._extract_patterns(ticket_data)
             },
             
@@ -72,13 +62,9 @@ class StoryExtractor:
             
             # 4. AI 協作經驗
             'ai_collaboration': {
-                'total_sessions': len(ticket_data.get('ai_usage', {}).get('sessions', [])),
-                'total_tokens': (
-                    ticket_data.get('ai_usage', {}).get('total_prompt_tokens', 0) +
-                    ticket_data.get('ai_usage', {}).get('total_completion_tokens', 0)
-                ),
-                'total_cost': ticket_data.get('ai_usage', {}).get('total_cost_usd', 0),
-                'models_used': list(ticket_data.get('ai_usage', {}).get('models_used', {}).keys()),
+                'total_interactions': ticket_data.get('ai_usage', {}).get('total_interactions', 0),
+                'estimated_cost': ticket_data.get('ai_usage', {}).get('estimated_cost_usd', 0),
+                'complexity_breakdown': ticket_data.get('ai_usage', {}).get('complexity_breakdown', {}),
                 'cost_per_feature': self._calculate_cost_per_feature(ticket_data)
             },
             
@@ -116,7 +102,7 @@ class StoryExtractor:
         for session in devlog_data.get('sessions', []):
             for challenge in session.get('challenges', []):
                 challenges.append({
-                    'description': challenge,
+                    'description': challenge.get('description', challenge) if isinstance(challenge, dict) else challenge,
                     'session': session.get('session_id')
                 })
         return challenges
@@ -126,9 +112,11 @@ class StoryExtractor:
         solutions = []
         for session in devlog_data.get('sessions', []):
             for activity in session.get('activities', []):
-                if any(keyword in activity.lower() for keyword in ['解決', '修復', 'fix', 'solve']):
+                # 處理 dict 或 string 格式
+                activity_text = activity.get('action', '') if isinstance(activity, dict) else str(activity)
+                if any(keyword in activity_text.lower() for keyword in ['解決', '修復', 'fix', 'solve', '實作', '完成']):
                     solutions.append({
-                        'description': activity,
+                        'description': activity_text,
                         'session': session.get('session_id')
                     })
         return solutions
@@ -139,7 +127,7 @@ class StoryExtractor:
         for session in devlog_data.get('sessions', []):
             for decision in session.get('decisions', []):
                 decisions.append({
-                    'description': decision,
+                    'description': decision.get('description', decision) if isinstance(decision, dict) else decision,
                     'session': session.get('session_id')
                 })
         return decisions
@@ -174,7 +162,7 @@ class StoryExtractor:
     
     def _calculate_cost_per_feature(self, ticket_data: Dict) -> float:
         """計算每個功能的成本"""
-        total_cost = ticket_data.get('ai_usage', {}).get('total_cost_usd', 0)
+        total_cost = ticket_data.get('ai_usage', {}).get('estimated_cost_usd', 0)
         criteria_count = len(ticket_data.get('spec', {}).get('acceptance_criteria', [1]))
         return round(total_cost / criteria_count, 4)
     
@@ -288,9 +276,8 @@ class StoryExtractor:
 - **文件變更**: {story['efficiency_metrics']['files_changed']} 個
 
 ## 🤖 AI 協作
-- **對話次數**: {story['ai_collaboration']['total_sessions']}
-- **Token 使用**: {story['ai_collaboration']['total_tokens']:,}
-- **總成本**: ${story['ai_collaboration']['total_cost']:.2f}
+- **互動次數**: {story['ai_collaboration']['total_interactions']}
+- **估算成本**: ${story['ai_collaboration']['estimated_cost']:.2f}
 - **每功能成本**: ${story['ai_collaboration']['cost_per_feature']:.4f}
 
 ## 📚 學習要點
@@ -351,7 +338,7 @@ def main():
     # 顯示摘要
     print(f"\n📊 摘要:")
     print(f"   - AI 效率: {story['efficiency_metrics']['ai_efficiency_ratio'] * 100:.1f}%")
-    print(f"   - 總成本: ${story['ai_collaboration']['total_cost']:.2f}")
+    print(f"   - 總成本: ${story['ai_collaboration']['estimated_cost']:.2f}")
     print(f"   - 學到 {len(story['learnings']['reusable_patterns'])} 個可重用模式")
 
 

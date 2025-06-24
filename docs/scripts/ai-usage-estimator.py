@@ -31,7 +31,8 @@ class AIUsageEstimator:
     def record_interaction(self, 
                          complexity: str = 'medium',
                          task_type: str = 'development',
-                         description: str = None) -> Dict:
+                         description: str = None,
+                         mark_start: bool = False) -> Dict:
         """記錄一次 AI 互動"""
         
         # 找到當前活躍的票券
@@ -62,8 +63,36 @@ class AIUsageEstimator:
             'task_type': task_type,
             'complexity': complexity,
             'description': description or f'{task_type} - {complexity}',
-            'estimated_cost': estimated_cost
+            'estimated_cost': estimated_cost,
+            'is_start_marker': mark_start
         }
+        
+        # 如果是開始標記，也記錄到 session
+        if mark_start:
+            # 找到或創建當前 session
+            dev_log = ticket_data.get('dev_log', {})
+            sessions = dev_log.get('sessions', [])
+            
+            if sessions and not sessions[-1].get('end_time'):
+                # 更新現有 session
+                sessions[-1]['last_activity'] = datetime.now().isoformat()
+            else:
+                # 創建新 session
+                new_session = {
+                    'session_id': len(sessions) + 1,
+                    'date': datetime.now().strftime('%Y-%m-%d'),
+                    'start_time': datetime.now().strftime('%H:%M:%S'),
+                    'end_time': None,
+                    'duration_minutes': 0,
+                    'activities': [{
+                        'time': datetime.now().strftime('%H:%M'),
+                        'action': f'開始任務: {description or task_type}'
+                    }],
+                    'ai_interactions': []
+                }
+                sessions.append(new_session)
+                dev_log['sessions'] = sessions
+                ticket_data['dev_log'] = dev_log
         
         # 更新統計
         usage = ticket_data['ai_usage']
@@ -140,7 +169,8 @@ AI 使用報告 (Claude Code)
         recent = usage.get('interactions', [])[-5:]
         for interaction in reversed(recent):
             timestamp = interaction['timestamp'].split('T')[1].split('.')[0]
-            report += f"- [{timestamp}] {interaction['description']} (${interaction['estimated_cost']:.2f})\n"
+            cost = interaction.get('estimated_cost', interaction.get('total_cost', 0))
+            report += f"- [{timestamp}] {interaction['description']} (${cost:.2f})\n"
         
         return report
 
@@ -163,6 +193,8 @@ def main():
                               help='任務類型 (development/debug/refactor/review)')
     record_parser.add_argument('--desc',
                               help='簡短描述')
+    record_parser.add_argument('--start', action='store_true',
+                              help='標記為任務開始')
     
     # report 命令
     report_parser = subparsers.add_parser('report', help='生成報告')
@@ -175,7 +207,8 @@ def main():
         result = estimator.record_interaction(
             complexity=args.complexity,
             task_type=args.type,
-            description=args.desc
+            description=args.desc,
+            mark_start=args.start
         )
         if result:
             print(f"✅ 已記錄 AI 互動 #{result['interaction_count']}")

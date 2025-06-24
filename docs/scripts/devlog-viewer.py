@@ -26,13 +26,14 @@ class DevLogViewer:
         return None
     
     def display_devlog(self, ticket_path: Path, session_id: Optional[int] = None):
-        """顯示開發日誌"""
+        """顯示開發日誌（從整合式票券中讀取）"""
         with open(ticket_path, 'r', encoding='utf-8') as f:
             ticket_data = yaml.safe_load(f)
         
         print(f"📋 開發日誌 - {ticket_data.get('name', 'Unknown')}")
         print("=" * 60)
         
+        # 從整合式票券中讀取 dev_log
         dev_log = ticket_data.get('dev_log', {})
         sessions = dev_log.get('sessions', [])
         
@@ -127,13 +128,14 @@ class DevLogViewer:
         with open(ticket_path, 'w', encoding='utf-8') as f:
             yaml.dump(ticket_data, f, default_flow_style=False, allow_unicode=True)
         
-        print(f"✅ 活動已記錄: {action}")
+        print(f"✅ 活動已記錄到整合式票券: {action}")
     
     def generate_summary(self, ticket_path: Path) -> str:
-        """生成開發日誌摘要"""
+        """生成開發日誌摘要（從整合式票券）"""
         with open(ticket_path, 'r', encoding='utf-8') as f:
             ticket_data = yaml.safe_load(f)
         
+        # 從整合式票券中讀取
         dev_log = ticket_data.get('dev_log', {})
         sessions = dev_log.get('sessions', [])
         

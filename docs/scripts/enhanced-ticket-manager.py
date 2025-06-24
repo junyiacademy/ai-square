@@ -11,6 +11,7 @@ import subprocess
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
+import time
 
 class EnhancedTicketManager:
     """增強版票券管理"""
@@ -21,25 +22,18 @@ class EnhancedTicketManager:
         
     def create_ticket_with_files(self, ticket_type: str, name: str, 
                                 description: str = None) -> Dict[str, Path]:
-        """創建票券並初始化所有相關文件"""
+        """創建整合式票券（所有內容在單一檔案中）"""
         
         timestamp = datetime.now()
-        ticket_id = f"{timestamp.strftime('%Y-%m-%d-%H-%M-%S')}-{name}"
+        # 使用新的命名格式 YYYYMMDD_HHMMSS
+        ticket_id = f"{timestamp.strftime('%Y%m%d_%H%M%S')}-{name}"
         
-        # 創建所有必要的目錄
-        paths = {
-            'ticket_dir': self.docs_dir / "tickets" / "active",
-            'devlog_dir': self.docs_dir / "dev-logs" / timestamp.strftime('%Y-%m-%d'),
-            'test_dir': self.docs_dir / "test-reports" / timestamp.strftime('%Y-%m-%d'),
-            'spec_dir': self.docs_dir / "specs",
-            'story_dir': self.docs_dir / "stories" / timestamp.strftime('%Y-%m')
-        }
+        # 只需要創建票券目錄
+        ticket_dir = self.docs_dir / "tickets" / "active"
+        ticket_dir.mkdir(parents=True, exist_ok=True)
         
-        for path in paths.values():
-            path.mkdir(parents=True, exist_ok=True)
-        
-        # 1. 創建票券文件
-        ticket_file = paths['ticket_dir'] / f"{ticket_id}.yml"
+        # 創建整合式票券文件
+        ticket_file = ticket_dir / f"{ticket_id}.yml"
         ticket_data = {
             'id': ticket_id,
             'name': name,
@@ -48,7 +42,8 @@ class EnhancedTicketManager:
             'created_at': timestamp.isoformat(),
             'status': 'active',
             
-            # 規格
+            
+            # 規格內容直接整合
             'spec': {
                 'feature': f'{name} 功能',
                 'purpose': '[請描述目的]',
@@ -66,22 +61,47 @@ class EnhancedTicketManager:
                 ]
             },
             
-            # 文件追蹤
-            'files': {
-                'ticket': str(ticket_file.relative_to(self.project_root)),
-                'devlog': None,
-                'test_report': None,
-                'spec': None,
-                'story': None
+            # 開發日誌直接整合
+            'dev_log': {
+                'sessions': [{
+                    'session_id': 1,
+                    'date': timestamp.strftime('%Y-%m-%d'),
+                    'start_time': timestamp.strftime('%H:%M:%S'),
+                    'end_time': None,
+                    'duration_minutes': 0,
+                    'activities': [],
+                    'challenges': [],
+                    'decisions': [],
+                    'next_steps': [],
+                    'files_modified': [],
+                    'ai_interactions': []
+                }]
             },
             
-            # AI 使用追蹤
+            # 測試報告直接整合
+            'test_report': {
+                'test_runs': [],
+                'coverage': {
+                    'statements': 0,
+                    'branches': 0,
+                    'functions': 0,
+                    'lines': 0
+                },
+                'summary': {
+                    'total_tests': 0,
+                    'passed': 0,
+                    'failed': 0,
+                    'skipped': 0,
+                    'duration_ms': 0
+                }
+            },
+            
+            # AI 使用追蹤（基於複雜度估算）
             'ai_usage': {
-                'sessions': [],
-                'total_prompt_tokens': 0,
-                'total_completion_tokens': 0,
-                'total_cost_usd': 0.0,
-                'models_used': {}
+                'interactions': [],
+                'total_interactions': 0,
+                'estimated_cost_usd': 0.0,
+                'complexity_breakdown': {}
             },
             
             # 時間追蹤（精確計算）
@@ -115,121 +135,7 @@ class EnhancedTicketManager:
             }
         }
         
-        # 2. 創建開發日誌
-        devlog_file = paths['devlog_dir'] / f"{ticket_id}-devlog.yml"
-        devlog_data = {
-            'ticket_id': ticket_id,
-            'ticket_name': name,
-            'created_at': timestamp.isoformat(),
-            'sessions': [{
-                'session_id': 1,
-                'start_time': timestamp.isoformat(),
-                'end_time': None,
-                'duration_minutes': 0,
-                'activities': [],
-                'challenges': [],
-                'decisions': [],
-                'next_steps': [],
-                'files_modified': []
-            }]
-        }
-        
-        # 3. 創建測試報告模板
-        test_report_file = paths['test_dir'] / f"{ticket_id}-test-report.yml"
-        test_report_data = {
-            'ticket_id': ticket_id,
-            'created_at': timestamp.isoformat(),
-            'test_runs': [],
-            'coverage': {
-                'statements': 0,
-                'branches': 0,
-                'functions': 0,
-                'lines': 0
-            },
-            'summary': {
-                'total_tests': 0,
-                'passed': 0,
-                'failed': 0,
-                'skipped': 0,
-                'duration_ms': 0
-            }
-        }
-        
-        # 4. 創建規格文件（Markdown）
-        spec_file = paths['spec_dir'] / f"{ticket_id}-spec.md"
-        spec_content = f"""# {name} 規格說明
-
-## 概述
-{description or '待補充'}
-
-## 功能需求
-
-### 核心功能
-- [ ] 功能 1
-- [ ] 功能 2
-- [ ] 功能 3
-
-### 非功能需求
-- [ ] 效能：回應時間 < 200ms
-- [ ] 安全：輸入驗證
-- [ ] 可用性：錯誤處理
-
-## 技術設計
-
-### API 設計
-```yaml
-endpoint: /api/v1/{name}
-method: POST
-request:
-  field1: string
-  field2: number
-response:
-  status: string
-  data: object
-```
-
-### 資料模型
-```typescript
-interface {name.capitalize()} {{
-  id: string;
-  // 待定義
-}}
-```
-
-## 測試計劃
-
-### 單元測試
-- [ ] 核心邏輯測試
-- [ ] 邊界條件測試
-- [ ] 錯誤處理測試
-
-### 整合測試
-- [ ] API 端對端測試
-- [ ] 資料庫整合測試
-
-## 驗收標準
-{chr(10).join(f"- [ ] {criterion}" for criterion in ticket_data['spec']['acceptance_criteria'])}
-"""
-        
-        # 寫入所有文件
-        with open(ticket_file, 'w', encoding='utf-8') as f:
-            yaml.dump(ticket_data, f, default_flow_style=False, allow_unicode=True)
-            
-        with open(devlog_file, 'w', encoding='utf-8') as f:
-            yaml.dump(devlog_data, f, default_flow_style=False, allow_unicode=True)
-            
-        with open(test_report_file, 'w', encoding='utf-8') as f:
-            yaml.dump(test_report_data, f, default_flow_style=False, allow_unicode=True)
-            
-        with open(spec_file, 'w', encoding='utf-8') as f:
-            f.write(spec_content)
-        
-        # 更新票券文件路徑
-        ticket_data['files']['devlog'] = str(devlog_file.relative_to(self.project_root))
-        ticket_data['files']['test_report'] = str(test_report_file.relative_to(self.project_root))
-        ticket_data['files']['spec'] = str(spec_file.relative_to(self.project_root))
-        
-        # 重新保存票券
+        # 寫入整合式票券文件
         with open(ticket_file, 'w', encoding='utf-8') as f:
             yaml.dump(ticket_data, f, default_flow_style=False, allow_unicode=True)
         
@@ -242,23 +148,23 @@ interface {name.capitalize()} {{
             print(f"⚠️  分支創建失敗: {e}")
         
         # 顯示創建結果
-        print(f"\n✅ 票券系統已初始化")
-        print(f"\n📁 已創建文件:")
-        print(f"   - 票券: {ticket_file.relative_to(self.project_root)}")
-        print(f"   - 規格: {spec_file.relative_to(self.project_root)}")
-        print(f"   - 開發日誌: {devlog_file.relative_to(self.project_root)}")
-        print(f"   - 測試報告: {test_report_file.relative_to(self.project_root)}")
+        print(f"\n✅ 整合式票券已創建")
+        print(f"\n📁 票券檔案: {ticket_file.relative_to(self.project_root)}")
+        print(f"\n📝 票券內容包含:")
+        print(f"   - 規格定義 (spec)")
+        print(f"   - 開發日誌 (dev_log)")
+        print(f"   - 測試報告 (test_report)")
+        print(f"   - AI 使用追蹤 (ai_usage)")
+        print(f"   - 時間追蹤 (time_tracking)")
+        print(f"   - 完成度檢查 (completion_checklist)")
         
         print(f"\n📝 下一步:")
-        print(f"   1. 編輯規格文件: {spec_file.name}")
+        print(f"   1. 編輯票券檔案更新規格")
         print(f"   2. 開始開發")
-        print(f"   3. 使用 'make save' 記錄進度")
+        print(f"   3. 使用 'make ai-save' 記錄進度")
         
         return {
-            'ticket': ticket_file,
-            'devlog': devlog_file,
-            'test_report': test_report_file,
-            'spec': spec_file
+            'ticket': ticket_file
         }
     
     def calculate_actual_duration(self, ticket_path: Path) -> int:
@@ -267,38 +173,71 @@ interface {name.capitalize()} {{
         with open(ticket_path, 'r', encoding='utf-8') as f:
             ticket_data = yaml.safe_load(f)
         
+        # 獲取開始時間
+        start_time = datetime.fromisoformat(ticket_data['time_tracking']['started_at'])
+        
         # 獲取所有相關文件
         files_to_check = []
         
-        # 從 git 獲取當前分支修改的文件
+        # 1. 從 git 獲取當前分支修改的文件
         try:
+            # 獲取當前分支
+            current_branch = subprocess.run(
+                ['git', 'branch', '--show-current'],
+                capture_output=True, text=True, check=True
+            ).stdout.strip()
+            
+            # 獲取與 main 的差異
             result = subprocess.run(
-                ['git', 'diff', '--name-only', 'HEAD', 'main'],
+                ['git', 'diff', '--name-only', 'main...HEAD'],
                 capture_output=True, text=True, check=True
             )
-            files_to_check.extend(result.stdout.strip().split('\n'))
+            if result.stdout:
+                files_to_check.extend(result.stdout.strip().split('\n'))
+            
+            # 也檢查未 commit 的文件
+            result = subprocess.run(
+                ['git', 'status', '--porcelain'],
+                capture_output=True, text=True, check=True
+            )
+            for line in result.stdout.strip().split('\n'):
+                if line:
+                    # 取得檔名（去除狀態標記）
+                    file_path = line[3:].strip()
+                    files_to_check.append(file_path)
         except:
             pass
         
-        # 加入 ticket 追蹤的文件
+        # 2. 加入 ticket 追蹤的文件
         if 'development' in ticket_data and 'files_changed' in ticket_data['development']:
             files_to_check.extend(ticket_data['development']['files_changed'])
         
-        # 計算文件修改時間範圍
-        timestamps = []
-        for file_path in files_to_check:
+        # 3. 計算文件修改時間
+        latest_mtime = start_time.timestamp()
+        
+        for file_path in set(files_to_check):  # 使用 set 去重
             if file_path and os.path.exists(file_path):
-                mtime = os.path.getmtime(file_path)
-                timestamps.append(mtime)
+                # 排除 docs 目錄下的文件（避免票券自己影響計算）
+                if not file_path.startswith('docs/'):
+                    mtime = os.path.getmtime(file_path)
+                    if mtime > latest_mtime:
+                        latest_mtime = mtime
         
-        if timestamps:
-            min_time = min(timestamps)
-            max_time = max(timestamps)
-            duration_seconds = max_time - min_time
-            duration_minutes = int(duration_seconds / 60)
-            return duration_minutes
+        # 計算時間差
+        duration_seconds = latest_mtime - start_time.timestamp()
+        duration_minutes = max(int(duration_seconds / 60), 0)
         
-        return 0
+        # 更新票券
+        ticket_data['time_tracking']['actual_duration_minutes'] = duration_minutes
+        
+        # 記錄檔案清單
+        ticket_data['development']['files_changed'] = list(set(files_to_check))
+        
+        # 保存更新
+        with open(ticket_path, 'w', encoding='utf-8') as f:
+            yaml.dump(ticket_data, f, default_flow_style=False, allow_unicode=True)
+        
+        return duration_minutes
     
     def check_completion_status(self, ticket_path: Path) -> Dict[str, bool]:
         """檢查票券完成狀態"""
@@ -317,18 +256,15 @@ interface {name.capitalize()} {{
         if ticket_data.get('development', {}).get('files_changed'):
             checklist['code_implemented'] = True
         
-        # 3. 檢查測試狀態
-        test_report_path = ticket_data.get('files', {}).get('test_report')
-        if test_report_path and os.path.exists(test_report_path):
-            with open(test_report_path, 'r', encoding='utf-8') as f:
-                test_data = yaml.safe_load(f)
-                if test_data.get('summary', {}).get('total_tests', 0) > 0:
-                    checklist['tests_written'] = True
-                if test_data.get('summary', {}).get('failed', 0) == 0:
-                    checklist['tests_passing'] = True
+        # 3. 檢查測試狀態（從整合的 test_report 中）
+        test_report = ticket_data.get('test_report', {})
+        if test_report.get('summary', {}).get('total_tests', 0) > 0:
+            checklist['tests_written'] = True
+            if test_report.get('summary', {}).get('failed', 0) == 0:
+                checklist['tests_passing'] = True
         
         # 4. 檢查 AI metrics
-        if ticket_data.get('ai_usage', {}).get('total_prompt_tokens', 0) > 0:
+        if ticket_data.get('ai_usage', {}).get('total_interactions', 0) > 0:
             checklist['ai_metrics_recorded'] = True
         
         # 更新票券
@@ -360,6 +296,10 @@ def main():
     # duration 命令 - 計算實際時間
     duration_parser = subparsers.add_parser('duration', help='計算實際開發時間')
     duration_parser.add_argument('--ticket', help='票券路徑')
+    
+    # checkpoint 命令 - 記錄檢查點
+    checkpoint_parser = subparsers.add_parser('checkpoint', help='記錄時間檢查點')
+    checkpoint_parser.add_argument('--desc', help='檢查點描述')
     
     args = parser.parse_args()
     
@@ -401,7 +341,41 @@ def main():
                 args.ticket = tickets[0]
         
         duration = manager.calculate_actual_duration(Path(args.ticket))
-        print(f"⏱️  實際開發時間: {duration} 分鐘")
+        hours = duration // 60
+        minutes = duration % 60
+        if hours > 0:
+            print(f"⏱️  實際開發時間: {hours} 小時 {minutes} 分鐘")
+        else:
+            print(f"⏱️  實際開發時間: {duration} 分鐘")
+    
+    elif args.command == 'checkpoint':
+        # 記錄檢查點
+        if not args.ticket:
+            active_dir = manager.docs_dir / "tickets" / "active"
+            tickets = list(active_dir.glob("*.yml"))
+            if tickets:
+                args.ticket = tickets[0]
+        
+        if args.ticket:
+            with open(args.ticket, 'r', encoding='utf-8') as f:
+                ticket_data = yaml.safe_load(f)
+            
+            checkpoint = {
+                'timestamp': datetime.now().isoformat(),
+                'description': args.desc or '進度檢查點',
+                'duration_so_far': manager.calculate_actual_duration(Path(args.ticket))
+            }
+            
+            if 'checkpoints' not in ticket_data['time_tracking']:
+                ticket_data['time_tracking']['checkpoints'] = []
+            
+            ticket_data['time_tracking']['checkpoints'].append(checkpoint)
+            
+            with open(args.ticket, 'w', encoding='utf-8') as f:
+                yaml.dump(ticket_data, f, default_flow_style=False, allow_unicode=True)
+            
+            print(f"✅ 已記錄檢查點: {checkpoint['description']}")
+            print(f"   目前時間: {checkpoint['duration_so_far']} 分鐘")
     
     else:
         parser.print_help()

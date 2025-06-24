@@ -1,7 +1,15 @@
-# 現代化 AI 開發流程 - 增強版
-# 包含完整的文件初始化、精確時間計算、故事萃取
+# 現代化 AI 開發流程 - 整合式票券版本
+# 單一檔案包含規格、開發日誌、測試報告、AI追蹤
 
-.PHONY: ai-new ai-save ai-done ai-fix ai-review ai-story ai-report help \
+# 預設變數
+TYPE ?= feature
+COMPLEXITY ?= medium
+TASK_TYPE ?= development
+ACTION ?= ""
+FILES ?= ""
+DESC ?= ""
+
+.PHONY: ai-new ai-start ai-save ai-done ai-fix ai-review ai-story ai-report ai-log help \
         dev run-frontend run-backend \
         dev-setup dev-install dev-update \
         dev-workflow-check dev-secret-check dev-tdd-check dev-tdd-enforce \
@@ -26,41 +34,46 @@ NC := \033[0m
 # 核心命令（覆蓋 80% 使用場景）
 #=============================================================================
 
-## 開始新工作（初始化所有必要文件）
+## 開始新工作（創建整合式票券）
 ai-new:
-	@echo "$(GREEN)🚀 開始新工作: $(TICKET)$(NC)"
-	@echo "$(CYAN)📁 初始化文件系統...$(NC)"
+	@echo "$(GREEN)🚀 創建整合式票券: $(TICKET)$(NC)"
+	@echo "$(CYAN)📁 初始化票券系統...$(NC)"
 	@python3 docs/scripts/enhanced-ticket-manager.py init \
 		--type=$(TYPE) \
 		--name=$(TICKET) \
 		--desc="$(DESC)"
-	@# 更新路徑以使用新的 active 目錄
-	@sed -i.bak 's/tickets\/in_progress/tickets\/active/g' docs/scripts/*.py 2>/dev/null || true
-	@rm -f docs/scripts/*.py.bak 2>/dev/null || true
-	@echo "$(BLUE)📊 AI 指標追蹤已啟動$(NC)"
-	@echo "$(YELLOW)💡 提示: 請先編輯規格文件再開始開發$(NC)"
+	@echo "$(BLUE)📊 票券已包含所有必要元素（規格、日誌、測試、AI追蹤）$(NC)"
+	@echo "$(YELLOW)💡 提示: 請編輯票券檔案更新規格後開始開發$(NC)"
 
-## 智能保存進度（精確時間計算 + AI 記錄）
+## 開始任務（標記開始時間）
+ai-start:
+	@echo "$(GREEN)▶️  開始任務...$(NC)"
+	@python3 docs/scripts/ai-usage-estimator.py record \
+		--complexity=$(COMPLEXITY) \
+		--type=$(TASK_TYPE) \
+		--desc="開始: $(DESC)" \
+		--start
+	@echo "$(YELLOW)⏱️  已記錄任務開始時間$(NC)"
+
+## 保存進度到整合式票券
 ai-save:
-	@echo "$(YELLOW)💾 智能保存進度...$(NC)"
-	@# 計算實際開發時間
-	@echo "$(CYAN)⏱️  計算開發時間...$(NC)"
-	@python3 docs/scripts/enhanced-ticket-manager.py duration
-	@# 自動分析變更
-	@echo "\n$(CYAN)📝 變更摘要:$(NC)"
-	@git diff --stat
-	@# 記錄 AI 使用（簡化版本，適用於 Claude Code）
-	@if [ -n "$${AI_TASK}" ]; then \
-		echo "\n$(CYAN)🤖 記錄 AI 使用...$(NC)"; \
-		python3 docs/scripts/ai-usage-estimator.py record \
-			--complexity=$${AI_COMPLEXITY:-medium} \
-			--type=$${AI_TYPE:-development} \
-			--desc="$${AI_TASK}"; \
+	@echo "$(YELLOW)💾 保存進度到整合式票券...$(NC)"
+	@# 記錄 AI 使用（基於複雜度估算）
+	@echo "$(CYAN)🤖 記錄 AI 互動...$(NC)"
+	@python3 docs/scripts/ai-usage-estimator.py record \
+		--complexity=$(COMPLEXITY) \
+		--type=$(TASK_TYPE) \
+		--desc="$(DESC)"
+	@# 記錄開發活動
+	@if [ -n "$(ACTION)" ]; then \
+		echo "$(CYAN)📝 記錄開發活動...$(NC)"; \
+		python3 docs/scripts/devlog-viewer.py add "$(ACTION)" --files $(FILES); \
 	fi
-	@# Checkpoint
-	@git add -A
-	@git commit -m "checkpoint: $(shell date +%Y%m%d-%H%M%S) - $(TICKET)" || true
-	@echo "\n$(GREEN)✅ 進度已保存$(NC)"
+	@# 計算實際開發時間（基於檔案修改時間）
+	@echo "$(CYAN)⏱️  更新時間統計...$(NC)"
+	@python3 docs/scripts/enhanced-ticket-manager.py duration
+	@echo "\n$(GREEN)✅ 進度已保存到票券$(NC)"
+
 
 ## 完成工作（完整性檢查 + 測試 + 提交）
 ai-done:
@@ -119,6 +132,12 @@ ai-story:
 	@echo "\n$(GREEN)✅ 故事萃取完成$(NC)"
 	@echo "$(YELLOW)💡 查看 docs/stories/ 目錄獲取詳細內容$(NC)"
 
+## 檢視開發日誌
+ai-log:
+	@echo "$(CYAN)📋 檢視開發日誌...$(NC)"
+	@python3 docs/scripts/devlog-viewer.py view
+	@echo ""
+
 #=============================================================================
 # 智能測試（自動選擇相關測試）
 #=============================================================================
@@ -142,15 +161,18 @@ test-smart:
 # 效率報告
 #=============================================================================
 
-## 顯示 AI 使用效率報告
+## 顯示整合式報告
 ai-report:
-	@echo "$(BLUE)📊 AI 開發效率報告$(NC)"
-	@echo "\n$(CYAN)=== 本週效率統計 ===$(NC)"
-	@python3 docs/scripts/analytics.py efficiency --period=week 2>/dev/null || \
-		echo "$(YELLOW)暫無統計數據$(NC)"
-	@echo "\n$(CYAN)=== 當前票券 AI 使用 ===$(NC)"
+	@echo "$(BLUE)📊 整合式開發報告$(NC)"
+	@echo "\n$(CYAN)=== AI 使用報告 ===$(NC)"
 	@python3 docs/scripts/ai-usage-estimator.py report 2>/dev/null || \
 		echo "$(YELLOW)尚未記錄 AI 使用$(NC)"
+	@echo "\n$(CYAN)=== 開發日誌摘要 ===$(NC)"
+	@python3 docs/scripts/devlog-viewer.py summary 2>/dev/null || \
+		echo "$(YELLOW)尚無開發日誌$(NC)"
+	@echo "\n$(CYAN)=== 完成度檢查 ===$(NC)"
+	@python3 docs/scripts/enhanced-ticket-manager.py check 2>/dev/null || \
+		echo "$(YELLOW)尚無活躍票券$(NC)"
 
 #=============================================================================
 # 幫助
@@ -162,14 +184,16 @@ help:
 	@echo "$(YELLOW)=== AI 工作流程命令 ===$(NC)"
 	@echo "$(CYAN)核心流程:$(NC)"
 	@echo "  $(GREEN)make ai-new$(NC) TYPE=feature TICKET=name DESC=\"描述\"  - 開始新工作"
-	@echo "  $(GREEN)make ai-save$(NC)                                       - 智能保存進度"  
+	@echo "  $(GREEN)make ai-start$(NC) DESC=\"任務描述\"                      - 標記任務開始時間"
+	@echo "  $(GREEN)make ai-save$(NC) COMPLEXITY=medium DESC=\"描述\"         - 保存進度（整合式票券）"
 	@echo "  $(GREEN)make ai-done$(NC)                                       - 完成工作"
 	@echo ""
 	@echo "$(CYAN)AI 輔助:$(NC)"
 	@echo "  $(GREEN)make ai-fix$(NC)                                        - AI 自動修復"
 	@echo "  $(GREEN)make ai-review$(NC)                                     - AI Code Review"
 	@echo "  $(GREEN)make ai-story$(NC)                                      - 萃取開發故事"
-	@echo "  $(GREEN)make ai-report$(NC)                                     - 效率報告"
+	@echo "  $(GREEN)make ai-report$(NC)                                     - 整合式報告"
+	@echo "  $(GREEN)make ai-log$(NC)                                        - 檢視開發日誌"
 	@echo ""
 	@echo "$(YELLOW)=== 開發命令 ===$(NC)"
 	@echo "$(CYAN)應用程式執行:$(NC)"
@@ -212,10 +236,14 @@ help:
 	@echo "  $(GREEN)make clean$(NC)                                     - 清理建置產物"
 	@echo "  $(GREEN)make clean-all$(NC)                                 - 深度清理（含 node_modules）"
 	@echo ""
-	@echo "$(BLUE)💡 AI 環境變數:$(NC)"
-	@echo "  AI_TASK=\"實作登入功能\"                          - AI 任務描述"
-	@echo "  AI_COMPLEXITY=medium                            - 複雜度 (simple/medium/complex/debug)"
-	@echo "  AI_TYPE=development                             - 類型 (development/debug/refactor/review)"
+	@echo "$(BLUE)💡 環境變數:$(NC)"
+	@echo "  TYPE=feature                                    - 票券類型 (feature/fix/refactor)"
+	@echo "  TICKET=name                                     - 票券名稱"
+	@echo "  DESC=\"描述\"                                     - 任務描述"
+	@echo "  COMPLEXITY=medium                               - 複雜度 (simple/medium/complex/debug)"
+	@echo "  TASK_TYPE=development                           - 任務類型"
+	@echo "  ACTION=\"完成登入功能\"                            - 活動描述"
+	@echo "  FILES=\"file1 file2\"                             - 相關檔案"
 
 #=============================================================================
 # 開發指令
