@@ -101,8 +101,22 @@ class SmartCommit:
         return result.returncode == 0
     
     def run_pre_commit_generation(self) -> bool:
-        """執行 pre-commit 文檔生成"""
-        print("📝 執行 pre-commit 文檔生成...")
+        """執行 pre-commit 文檔生成和驗證"""
+        print("📝 執行 pre-commit 驗證和文檔生成...")
+        
+        # 先執行新的驗證器
+        validator_script = self.scripts_path / "pre-commit-validator.py"
+        if validator_script.exists():
+            print("🔍 執行票券完整性驗證...")
+            result = subprocess.run(
+                [sys.executable, str(validator_script)],
+                capture_output=False  # 直接顯示輸出
+            )
+            if result.returncode != 0:
+                print("❌ 票券完整性驗證失敗")
+                return False
+        
+        # 再執行原有的文檔生成
         pre_commit_script = self.scripts_path / "pre-commit-doc-gen.py"
         result = subprocess.run(
             [sys.executable, str(pre_commit_script)],

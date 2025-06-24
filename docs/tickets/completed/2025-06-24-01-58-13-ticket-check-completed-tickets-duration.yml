@@ -1,14 +1,16 @@
 id: 2025-06-24-01-58-13-check-completed-tickets-duration
 name: check-completed-tickets-duration
 description: 檢查並補齊 completed tickets 的 total_duration_minutes，使用 commit base 計算
-status: in_progress
+status: completed
 created_at: '2025-06-24T01:58:13.832304'
 started_at: '2025-06-24T01:58:13.832304'
-completed_at: null
+completed_at: '2025-06-24T09:59:03.008117'
 duration_minutes: null
 ai_time_minutes: null
 human_time_minutes: null
-commit_hash: null
+commit_hash: 8f16e4cd
 files_changed: []
 date: '2025-06-24'
 time: 01-58-13
+dev_log_path: docs/dev-logs/2025-06-24/2025-06-24-09-59-02-bug-ticket-duration-fix-report.yml
+total_duration_minutes: 480.8

@@ -109,6 +109,33 @@ check-docs:
 	@echo "📋 檢查開發階段文件完整性..."
 	@python3 docs/scripts/ticket-driven-dev.py validate $(TICKET) development
 
+# 🎫 檢查票券完整性
+check-ticket:
+	@echo "🎫 檢查票券完整性..."
+	@if [ -z "$(TICKET)" ]; then \
+		python3 docs/scripts/ticket-integrity-checker.py active -v; \
+	else \
+		python3 docs/scripts/ticket-integrity-checker.py verify $(TICKET) -v; \
+	fi
+
+# 🔧 修復票券常見問題
+fix-ticket:
+	@echo "🔧 嘗試修復票券問題..."
+	@if [ -z "$(TICKET)" ]; then \
+		echo "❌ 請指定票券: make fix-ticket TICKET=xxx"; \
+		exit 1; \
+	fi
+	@python3 docs/scripts/ticket-integrity-checker.py fix $(TICKET)
+
+# 🔍 開發時完整檢查（包含票券和文件）
+check-all:
+	@echo "🔍 執行完整開發檢查..."
+	@echo "\n📋 檢查票券完整性..."
+	@python3 docs/scripts/ticket-integrity-checker.py active -v
+	@echo "\n📄 檢查文件完整性..."
+	@python3 docs/scripts/ticket-driven-dev.py status
+	@echo "\n✅ 檢查完成"
+
 # 🔓 授權 AI 提交（用戶明確授權時使用）
 authorize-commit:
 	@echo "🔓 授權 AI 進行提交（有效期 5 分鐘）..."
