@@ -5,11 +5,11 @@ description: 移除 specs 資料夾，將 spec 內容整合到票券 YAML
 status: completed
 created_at: '2025-06-24T12:38:34.725988'
 started_at: '2025-06-24T12:38:34.725988'
-completed_at: '2025-06-24T12:39:37.162271'
+completed_at: '2025-06-24T12:46:01.615526'
 duration_minutes: null
 ai_time_minutes: null
 human_time_minutes: null
-commit_hash: 976e4a36
+commit_hash: e6f705f4
 files_changed: []
 date: '2025-06-24'
 time: 12-38-34
@@ -35,5 +35,5 @@ document_references:
   reason: 確保符合業務規則
 - path: docs/handbook/03-technical-references/design-patterns/
   reason: 參考設計模式最佳實踐
-dev_log_path: docs/dev-logs/2025-06-24/2025-06-24-12-39-36-docs-claude.yml
-total_duration_minutes: 1.0
+dev_log_path: docs/dev-logs/2025-06-24/2025-06-24-12-46-01-docs-makefile.yml
+total_duration_minutes: 7.4

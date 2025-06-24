@@ -1,0 +1,37 @@
+id: 2025-06-24-12-42-50-fix-ticket-completion-workflow
+name: fix-ticket-completion-workflow
+type: refactor
+description: 修改票券完成流程，確保狀態變更包含在同一個 commit 中
+status: completed
+created_at: '2025-06-24T12:42:50.008330'
+started_at: '2025-06-24T12:42:50.008330'
+completed_at: '2025-06-24T12:46:18.639608'
+duration_minutes: 3
+ai_time_minutes: null
+human_time_minutes: null
+commit_hash: 135f6a9111fd1be5ee0df3a60190170db2f94997
+files_changed: []
+date: '2025-06-24'
+time: 12-42-50
+spec:
+  goals:
+  - 修改票券完成流程，確保票券狀態變更包含在同一個 commit 中
+  - 改進工作流程的一致性和完整性
+  - 避免票券完成後的狀態變更被分開提交
+  technical_specs:
+  - 修改 smart-commit.py 在提交前檢查是否為最終提交
+  - 如果是最終提交，自動完成票券狀態變更
+  - 修改 Makefile 中的 dev-done 流程
+  - 確保票券移動操作包含在 commit 中
+  acceptance_criteria:
+  - dev-commit 能檢測到這是票券的最終提交
+  - 票券狀態變更和移動操作包含在同一個 commit 中
+  - dev-done 只負責合併分支，不再處理票券狀態
+  - 整個票券生命週期的變更都在一個 commit 中
+document_references:
+- path: docs/handbook/workflows/TICKET_DRIVEN_DEVELOPMENT.md
+  reason: 遵循票券驅動開發流程
+- path: docs/handbook/01-context/business-rules.md
+  reason: 確保符合業務規則
+- path: docs/handbook/03-technical-references/design-patterns/
+  reason: 參考設計模式最佳實踐
