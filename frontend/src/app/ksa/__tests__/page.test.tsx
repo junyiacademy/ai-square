@@ -5,7 +5,7 @@ import KSADisplayPage from '../page';
 // Mock react-i18next
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string, options?: any) => {
+    t: (key: string, options?: Record<string, unknown>) => {
       // Handle theme names specially to return formatted name
       if (key.startsWith('themes.')) {
         const themeName = key.replace('themes.', '');
