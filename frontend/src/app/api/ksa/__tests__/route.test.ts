@@ -2,6 +2,7 @@
  * @jest-environment node
  */
 import { GET } from '../route';
+import { NextRequest } from 'next/server';
 import fs from 'fs';
 import yaml from 'js-yaml';
 
@@ -10,15 +11,44 @@ jest.mock('fs');
 jest.mock('js-yaml');
 
 // Mock NextRequest for Node.js environment
-const createMockRequest = (url: string) => {
+const createMockRequest = (url: string): NextRequest => {
   const mockUrl = new URL(url);
   return {
     url,
     method: 'GET',
-    headers: new Map(),
+    headers: new Headers(),
     nextUrl: mockUrl,
-    searchParams: mockUrl.searchParams,
-  } as any;
+    cookies: {
+      get: jest.fn(),
+      getAll: jest.fn(),
+      set: jest.fn(),
+      delete: jest.fn(),
+      has: jest.fn(),
+      clear: jest.fn(),
+    },
+    geo: {},
+    ip: undefined,
+    bodyUsed: false,
+    cache: 'default',
+    credentials: 'same-origin',
+    destination: '',
+    integrity: '',
+    mode: 'cors',
+    redirect: 'follow',
+    referrer: '',
+    referrerPolicy: '',
+    signal: new AbortController().signal,
+    arrayBuffer: jest.fn(),
+    blob: jest.fn(),
+    clone: jest.fn(),
+    formData: jest.fn(),
+    json: jest.fn(),
+    text: jest.fn(),
+    body: null,
+    // Additional NextRequest specific properties
+    page: undefined,
+    ua: undefined,
+  } as unknown as NextRequest;
 };
 
 const mockFs = fs as jest.Mocked<typeof fs>;
