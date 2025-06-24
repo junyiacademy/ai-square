@@ -2,11 +2,11 @@ id: 2025-06-24-16-18-20-ticket-cleanup
 name: ticket-cleanup
 type: hotfix
 description: 清理並歸檔已完成的 homepage-simplification 票券
-status: in_progress
+status: completed
 created_at: '2025-06-24T16:18:20.596945'
 started_at: '2025-06-24T16:18:20.596945'
-completed_at: null
-duration_minutes: null
+completed_at: '2025-06-24T16:45:30.000000'
+duration_minutes: 27
 ai_time_minutes: null
 human_time_minutes: null
 commit_hash: null
