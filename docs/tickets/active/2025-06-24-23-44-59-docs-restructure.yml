@@ -1,7 +1,8 @@
 ai_usage:
   complexity_breakdown:
     complex_count: 2
-  estimated_cost_usd: 0.5
+    medium_count: 1
+  estimated_cost_usd: 0.65
   interactions:
   - complexity: complex
     description: 分析現有文檔結構並規劃遷移
@@ -13,11 +14,16 @@ ai_usage:
     estimated_cost: 0.25
     task_type: development
     timestamp: '2025-06-24T23:46:50.461490'
+  - complexity: medium
+    description: 執行清理腳本，移除冗餘檔案
+    estimated_cost: 0.15000000000000002
+    task_type: refactor
+    timestamp: '2025-06-24T23:47:12.124713'
   models_used: {}
   sessions: []
   total_completion_tokens: 0
   total_cost_usd: 0.0
-  total_interactions: 2
+  total_interactions: 3
   total_prompt_tokens: 0
 completion_checklist:
   ai_metrics_recorded: false
