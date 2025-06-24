@@ -204,7 +204,7 @@ gcp-deploy-service:
 	  --port 3000
 
 # 完整部署到 Google Cloud Platform
-deploy-gcp: build-docker-image gcp-build-and-push gcp-deploy-service
+deploy-gcp: build-frontend build-docker-image gcp-build-and-push gcp-deploy-service
 
 # === 品質檢查命令 ===
 
