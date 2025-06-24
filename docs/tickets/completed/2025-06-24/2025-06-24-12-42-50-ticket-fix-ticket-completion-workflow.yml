@@ -5,11 +5,11 @@ description: 修改票券完成流程，確保狀態變更包含在同一個 com
 status: completed
 created_at: '2025-06-24T12:42:50.008330'
 started_at: '2025-06-24T12:42:50.008330'
-completed_at: '2025-06-24T12:46:18.639608'
-duration_minutes: 3
+completed_at: '2025-06-24T13:14:53.399285'
+duration_minutes: null
 ai_time_minutes: null
 human_time_minutes: null
-commit_hash: 135f6a9111fd1be5ee0df3a60190170db2f94997
+commit_hash: fc9d4368
 files_changed: []
 date: '2025-06-24'
 time: 12-42-50
@@ -35,3 +35,5 @@ document_references:
   reason: 確保符合業務規則
 - path: docs/handbook/03-technical-references/design-patterns/
   reason: 參考設計模式最佳實踐
+dev_log_path: docs/dev-logs/2025-06-24/2025-06-24-13-14-53-bug-auto-fix-instructions.yml
+total_duration_minutes: 32.1
