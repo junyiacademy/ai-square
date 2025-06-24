@@ -1,0 +1,50 @@
+ai_collaboration:
+  complexity_breakdown:
+    medium_count: 7
+  cost_per_feature: 0.2625
+  estimated_cost: 1.0500000000000003
+  total_interactions: 7
+created_at: '2025-06-25T01:54:34.679171'
+efficiency_metrics:
+  ai_efficiency_ratio: 0.0
+  ai_time_minutes: 0
+  duration_minutes: 16
+  files_changed: 4
+  human_time_minutes: 0
+  test_coverage:
+    branches: 0
+    functions: 0
+    lines: 0
+    statements: 0
+learnings:
+  avoid_in_future: []
+  reusable_patterns: []
+  what_could_improve: []
+  what_worked_well: []
+product_insights:
+  acceptance_criteria:
+  - 修復 KSA page 測試中的 i18n mock 問題
+  - 修復 Header 測試中的 i18n mock 問題
+  - 更新測試期望值以匹配實際渲染內容
+  - 確保所有測試通過
+  feature: 前端測試修復
+  purpose: 修復因 i18n 整合導致的測試失敗，確保測試能正確執行
+  user_value: 修復因 i18n 整合導致的測試失敗，確保測試能正確執行
+reusable_assets:
+  code_snippets: []
+  configuration: []
+  test_patterns: []
+technical_insights:
+  challenges: []
+  decisions: []
+  patterns_used: []
+  solutions:
+  - description: Fixed i18n mock issues in KSA and Header tests
+    session: 1
+  - description: Improved test mocks and fixed most test failures
+    session: 1
+  - description: Final test fixes - significant improvement achieved
+    session: 1
+ticket_id: 20250625_013648-fix-frontend-tests
+ticket_name: fix-frontend-tests
+type: fix
