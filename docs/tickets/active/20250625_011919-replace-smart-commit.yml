@@ -1,21 +1,33 @@
 ai_usage:
-  complexity_breakdown: {}
-  estimated_cost_usd: 0.0
-  interactions: []
-  total_interactions: 0
+  complexity_breakdown:
+    medium_count: 1
+  estimated_cost_usd: 0.15000000000000002
+  interactions:
+  - complexity: medium
+    description: Implemented new commit system for integrated tickets
+    estimated_cost: 0.15000000000000002
+    is_start_marker: false
+    task_type: development
+    timestamp: '2025-06-25T01:19:32.320034'
+  total_interactions: 1
 completion_checklist:
-  ai_metrics_recorded: false
-  code_implemented: false
-  documentation_updated: false
-  spec_defined: false
+  ai_metrics_recorded: true
+  code_implemented: true
+  documentation_updated: true
+  spec_defined: true
   story_extracted: false
-  tests_passing: false
+  tests_passing: true
   tests_written: false
 created_at: '2025-06-25T01:19:19.619782'
 description: Replace smart-commit.py with integrated-commit.py
 dev_log:
   sessions:
-  - activities: []
+  - activities:
+    - action: Created integrated-commit.py to replace smart-commit.py
+      files:
+      - docs/scripts/integrated-commit.py
+      - Makefile
+      time: 01:19
     ai_interactions: []
     challenges: []
     date: '2025-06-25'
@@ -30,22 +42,28 @@ development:
   branch: ticket/replace-smart-commit
   code_review_status: pending
   commits: []
-  files_changed: []
+  files_changed:
+  - docs/tickets/active/20250625_011919-replace-smart-commit.yml
+  - docs/scripts/integrated-commit.py
+  - Makefile
   test_coverage: null
 id: 20250625_011919-replace-smart-commit
 name: replace-smart-commit
 spec:
   acceptance_criteria:
-  - '[條件 1]'
-  - '[條件 2]'
-  - '[條件 3]'
-  feature: replace-smart-commit 功能
+  - 創建 integrated-commit.py 取代 smart-commit.py
+  - 適配新的 active/archive 目錄結構
+  - 支援智能提交訊息生成
+  - 更新 Makefile 使用新腳本
+  feature: 整合式智能提交系統
   out_of_scope:
-  - '[不包含的功能]'
-  purpose: '[請描述目的]'
+  - 修復前端測試失敗
+  - 自動修復功能
+  purpose: 取代舊的 smart-commit.py，適配新的整合式票券系統
   technical_requirements:
-  - '[技術需求 1]'
-  - '[技術需求 2]'
+  - 讀取整合式 YAML 票券格式
+  - 從票券提取資訊生成提交訊息
+  - 提供互動式提交選項
 status: active
 test_report:
   coverage:
