@@ -185,6 +185,9 @@ class WorkflowGuard:
                     "severity": "error"
                 })
             
+            # 檢查是否有 secrets
+            self.check_secrets()
+            
         except Exception as e:
             self.warnings.append({
                 "rule": "COMMIT_CHECK_FAILED",
@@ -215,6 +218,34 @@ class WorkflowGuard:
             self.warnings.append({
                 "rule": "START_CHECK_FAILED",
                 "message": f"⚠️ 無法檢查開始條件: {str(e)}",
+                "severity": "warning"
+            })
+
+    def check_secrets(self):
+        """檢查是否有 secrets"""
+        try:
+            # 執行 secret 檢測器
+            result = subprocess.run(
+                ["python3", str(self.project_root / "docs" / "scripts" / "secret-detector.py"), 
+                 "--project-root", str(self.project_root), "--fail-on-secrets", "--report-only"],
+                cwd=self.project_root,
+                capture_output=True,
+                text=True
+            )
+            
+            if result.returncode != 0:
+                self.violations.append({
+                    "rule": "SECRETS_DETECTED",
+                    "message": "🚨 檢測到敏感資訊 (secrets)！",
+                    "suggestion": "請執行 'make dev-secret-check' 查看詳細報告並移除所有 secrets",
+                    "severity": "error"
+                })
+                
+        except Exception as e:
+            self.warnings.append({
+                "rule": "SECRET_CHECK_FAILED",
+                "message": f"⚠️ 無法執行 secret 檢查: {str(e)}",
+                "suggestion": "請手動執行 'make dev-secret-check' 確認沒有 secrets",
                 "severity": "warning"
             })
 

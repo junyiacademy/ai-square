@@ -40,6 +40,7 @@ help:
 	@echo "  make dev-tdd-check                        執行 TDD 合規檢查"
 	@echo "  make dev-tdd-enforce                      執行 TDD 強制檢查"
 	@echo "  make dev-workflow-check                   執行工作流程檢查"
+	@echo "  make dev-secret-check                     執行 Secret 安全檢查"
 	@echo ""
 	@echo "📦 建置與部署:"
 	@echo "  make build-frontend                       建置前端生產版本"
@@ -101,6 +102,11 @@ dev-tdd-enforce:
 dev-workflow-check:
 	@echo "🛡️ 執行工作流程檢查..."
 	@python3 docs/scripts/workflow-guard.py check
+
+# Secret 安全檢查
+dev-secret-check:
+	@echo "🔍 執行 Secret 安全檢查..."
+	@python3 docs/scripts/secret-detector.py
 
 # 智能提交變更（含工作流程保護）
 dev-commit:
