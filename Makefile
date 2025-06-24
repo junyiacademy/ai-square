@@ -37,6 +37,8 @@ help:
 	@echo "  make dev-lint                             執行程式碼檢查"
 	@echo "  make dev-typecheck                        執行型別檢查"
 	@echo "  make dev-quality                          執行所有品質檢查"
+	@echo "  make dev-tdd-check                        執行 TDD 合規檢查"
+	@echo "  make dev-tdd-enforce                      執行 TDD 強制檢查"
 	@echo ""
 	@echo "📦 建置與部署:"
 	@echo "  make build-frontend                       建置前端生產版本"
@@ -81,6 +83,16 @@ dev-checkpoint:
 dev-test:
 	@echo "🧪 執行測試..."
 	@cd frontend && npm run test:ci && npm run lint && npx tsc --noEmit
+
+# TDD 合規檢查
+dev-tdd-check:
+	@echo "🔍 執行 TDD 合規檢查..."
+	@python3 docs/scripts/tdd-compliance-checker.py
+
+# TDD 強制檢查（有問題時失敗）
+dev-tdd-enforce:
+	@echo "🚨 執行 TDD 強制檢查..."
+	@python3 docs/scripts/tdd-compliance-checker.py --fail-on-issues
 
 # 智能提交變更
 dev-commit:

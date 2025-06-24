@@ -1,7 +1,6 @@
 /**
  * @jest-environment node
  */
-import { NextRequest } from 'next/server';
 import { GET } from '../route';
 import fs from 'fs';
 import yaml from 'js-yaml';
@@ -9,6 +8,18 @@ import yaml from 'js-yaml';
 // Mock fs and yaml modules
 jest.mock('fs');
 jest.mock('js-yaml');
+
+// Mock NextRequest for Node.js environment
+const createMockRequest = (url: string) => {
+  const mockUrl = new URL(url);
+  return {
+    url,
+    method: 'GET',
+    headers: new Map(),
+    nextUrl: mockUrl,
+    searchParams: mockUrl.searchParams,
+  } as any;
+};
 
 const mockFs = fs as jest.Mocked<typeof fs>;
 const mockYaml = yaml as jest.Mocked<typeof yaml>;
@@ -75,7 +86,7 @@ describe('/api/ksa route', () => {
 
   describe('Language Parameter Handling', () => {
     it('should default to English when no language parameter is provided', async () => {
-      const request = new NextRequest('http://localhost:3000/api/ksa');
+      const request = createMockRequest('http://localhost:3000/api/ksa');
       
       const response = await GET(request);
       const data = await response.json();
@@ -85,7 +96,7 @@ describe('/api/ksa route', () => {
     });
 
     it('should return Chinese translations when lang=zh is provided', async () => {
-      const request = new NextRequest('http://localhost:3000/api/ksa?lang=zh');
+      const request = createMockRequest('http://localhost:3000/api/ksa?lang=zh');
       
       const response = await GET(request);
       const data = await response.json();
@@ -96,7 +107,7 @@ describe('/api/ksa route', () => {
     });
 
     it('should fallback to English when translation is not available', async () => {
-      const request = new NextRequest('http://localhost:3000/api/ksa?lang=fr');
+      const request = createMockRequest('http://localhost:3000/api/ksa?lang=fr');
       
       const response = await GET(request);
       const data = await response.json();
@@ -109,7 +120,7 @@ describe('/api/ksa route', () => {
 
   describe('Data Structure Processing', () => {
     it('should process all three sections correctly', async () => {
-      const request = new NextRequest('http://localhost:3000/api/ksa');
+      const request = createMockRequest('http://localhost:3000/api/ksa');
       
       const response = await GET(request);
       const data = await response.json();
@@ -128,7 +139,7 @@ describe('/api/ksa route', () => {
     });
 
     it('should include questions for skills codes when present', async () => {
-      const request = new NextRequest('http://localhost:3000/api/ksa');
+      const request = createMockRequest('http://localhost:3000/api/ksa');
       
       const response = await GET(request);
       const data = await response.json();
@@ -145,7 +156,7 @@ describe('/api/ksa route', () => {
         throw new Error('File not found');
       });
 
-      const request = new NextRequest('http://localhost:3000/api/ksa');
+      const request = createMockRequest('http://localhost:3000/api/ksa');
       
       const response = await GET(request);
       
