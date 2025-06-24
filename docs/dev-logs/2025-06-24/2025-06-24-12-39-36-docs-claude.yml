@@ -1,18 +1,23 @@
 type: docs
-title: '[待補充 commit 訊息]'
+title: 'refactor(dev-logs): migrate dev logs with accurate time calculation and clear
+  filenames'
 date: '2025-06-24'
 developer: AI + Human
-status: in_progress
-commit_hash: pending
-description: '[待補充 commit 描述]'
+status: completed
+commit_hash: 976e4a36
+description: "refactor(dev-logs): migrate dev logs with accurate time calculation\
+  \ and clear filenames\n\nAdded 349 files:\n  - Makefile-simplified.md\n  - README-migration.md\n\
+  \  - README.md\n  - development-standards.md\n  - bugfix-2025-06-21-auth-sync.md\n\
+  \  ... and 344 more\n\nModified 5 files:\n  - CLAUDE.md\n  - Makefile\n  - README.md\n\
+  \  - pre-commit-doc-gen.py\n  - smart-commit.py"
 ticket_id: 2025-06-24-12-38-34-remove-specs-folder
 ticket_name: remove-specs-folder
 ticket_path: docs/tickets/in_progress/2025-06-24-12-38-34-ticket-remove-specs-folder.yml
 timeline:
 - phase: 實現
-  duration: 12345.7
-  ai_time: 9876.560000000001
-  human_time: 2469.1400000000003
+  duration: 60
+  ai_time: 48
+  human_time: 12
   tasks:
   - 創建 Makefile-simplified.md
   - 創建 README-migration.md
@@ -22,25 +27,32 @@ timeline:
   - 更新 README.md
   - 移除 test-no-file-count-estimate.txt
 metrics:
-  total_time_minutes: 12345.7
-  ai_time_minutes: 9876.560000000001
-  human_time_minutes: 2469.1400000000003
+  total_time_minutes: 60
+  ai_time_minutes: 48
+  human_time_minutes: 12
   ai_percentage: 80.0
   human_percentage: 20.0
-  files_added: 349
+  files_added: 468
   files_modified: 5
-  files_deleted: 1
+  files_deleted: 119
   time_calculation_method: git_history
   time_calculation_details:
     start_time: '2025-06-15T20:36:50'
     end_time: '2025-06-24T10:22:31'
     file_count: 232
+  time_estimation_method: file_count_estimate
+  is_real_time: true
+  commit_timestamp: '2025-06-24T12:39:36'
+  post_commit_update_timestamp: '2025-06-24T12:39:37.092048'
 changes:
   added:
   - Makefile-simplified.md
   - docs/README-migration.md
   - docs/README.md
   - docs/archive/development-standards.md
+  - docs/archive/docs_backup_20250624_110210/CHANGELOG.md
+  - docs/archive/docs_backup_20250624_110210/PLAYBOOK.md
+  - docs/archive/docs_backup_20250624_110210/architecture/ticket-integrity-design.md
   - docs/archive/docs_backup_20250624_110210/archive/2025-06/current/bugfix-2025-06-21-auth-sync.md
   - docs/archive/docs_backup_20250624_110210/archive/2025-06/current/bugfix-2025-06-21-hooks-order.md
   - docs/archive/docs_backup_20250624_110210/archive/2025-06/current/claude-guidance.md
@@ -69,6 +81,7 @@ changes:
   - docs/archive/docs_backup_20250624_110210/archive/legacy/technical/test-strategy.md
   - docs/archive/docs_backup_20250624_110210/archive/planning/FILE_STRUCTURE_PLAN.md
   - docs/archive/docs_backup_20250624_110210/archive/planning/MIGRATION_PLAN.md
+  - docs/archive/docs_backup_20250624_110210/bugs/fix-post-commit-ticket-update-analysis.md
   - docs/archive/docs_backup_20250624_110210/decisions/ADR-001-simplified-documentation.md
   - docs/archive/docs_backup_20250624_110210/decisions/ADR-002-test-strategy.md
   - docs/archive/docs_backup_20250624_110210/decisions/ADR-003-change-management.md
@@ -163,7 +176,44 @@ changes:
   - docs/archive/docs_backup_20250624_110210/dev-logs/docs-log-template.yml
   - docs/archive/docs_backup_20250624_110210/dev-logs/feature-log-template.yml
   - docs/archive/docs_backup_20250624_110210/dev-logs/refactor-log-template.yml
+  - docs/archive/docs_backup_20250624_110210/features/fix-ticket-init-system-spec.md
+  - docs/archive/docs_backup_20250624_110210/features/single-ticket-commit-spec.md
+  - docs/archive/docs_backup_20250624_110210/features/workflow-test-complete-spec.md
   - docs/archive/docs_backup_20250624_110210/handbook/README.md
+  - docs/archive/docs_backup_20250624_110210/handbook/commit-guide.md
+  - docs/archive/docs_backup_20250624_110210/handbook/core-practices/bdd.md
+  - docs/archive/docs_backup_20250624_110210/handbook/core-practices/git-workflow.md
+  - docs/archive/docs_backup_20250624_110210/handbook/core-practices/tdd.md
+  - docs/archive/docs_backup_20250624_110210/handbook/design-patterns/architecture/README.md
+  - docs/archive/docs_backup_20250624_110210/handbook/design-patterns/architecture/current/api-design.md
+  - docs/archive/docs_backup_20250624_110210/handbook/design-patterns/architecture/current/deployment.md
+  - docs/archive/docs_backup_20250624_110210/handbook/design-patterns/architecture/current/system-overview.md
+  - docs/archive/docs_backup_20250624_110210/handbook/design-patterns/architecture/current/tech-stack.md
+  - docs/archive/docs_backup_20250624_110210/handbook/design-patterns/architecture/patterns/microservices.md
+  - docs/archive/docs_backup_20250624_110210/handbook/design-patterns/ddd/bounded-contexts.md
+  - docs/archive/docs_backup_20250624_110210/handbook/design-patterns/ddd/system-context.md
+  - docs/archive/docs_backup_20250624_110210/handbook/design-patterns/ddd/ubiquitous-language.md
+  - docs/archive/docs_backup_20250624_110210/handbook/design-patterns/frontend/frontend-patterns.md
+  - docs/archive/docs_backup_20250624_110210/handbook/development-logs-guide.md
+  - docs/archive/docs_backup_20250624_110210/handbook/guides/how-to-generate-from-logs.md
+  - docs/archive/docs_backup_20250624_110210/handbook/guides/onboarding.md
+  - docs/archive/docs_backup_20250624_110210/handbook/improvements/README.md
+  - docs/archive/docs_backup_20250624_110210/handbook/improvements/auto-fix-instructions.md
+  - docs/archive/docs_backup_20250624_110210/handbook/improvements/improvement-2025-06-23-0352.md
+  - docs/archive/docs_backup_20250624_110210/handbook/improvements/improvement-2025-06-23-0352.yml
+  - docs/archive/docs_backup_20250624_110210/handbook/improvements/improvement-2025-06-23-0353.md
+  - docs/archive/docs_backup_20250624_110210/handbook/improvements/improvement-2025-06-23-0353.yml
+  - docs/archive/docs_backup_20250624_110210/handbook/improvements/improvement-2025-06-23-early-morning-fixes.md
+  - docs/archive/docs_backup_20250624_110210/handbook/improvements/improvement-2025-06-23-early-morning-fixes.yml
+  - docs/archive/docs_backup_20250624_110210/handbook/product/epics/ai-literacy.md
+  - docs/archive/docs_backup_20250624_110210/handbook/product/epics/authentication.md
+  - docs/archive/docs_backup_20250624_110210/handbook/product/features/homepage-login-integration.md
+  - docs/archive/docs_backup_20250624_110210/handbook/product/features/language-switch.md
+  - docs/archive/docs_backup_20250624_110210/handbook/product/user-personas.md
+  - docs/archive/docs_backup_20250624_110210/handbook/product/vision.md
+  - docs/archive/docs_backup_20250624_110210/quick-reference.md
+  - docs/archive/docs_backup_20250624_110210/refactoring/fix-dev-logs-accuracy-plan.md
+  - docs/archive/docs_backup_20250624_110210/reports/ticket-duration-fix-report.md
   - docs/archive/docs_backup_20250624_110210/scripts/README.md
   - docs/archive/docs_backup_20250624_110210/scripts/ai-commit-guard.py
   - docs/archive/docs_backup_20250624_110210/scripts/ai-fix.py
@@ -213,19 +263,97 @@ changes:
   - docs/archive/docs_backup_20250624_110210/stories/features/2025-06-23-user-preferences.md
   - docs/archive/docs_backup_20250624_110210/stories/features/2025-06-23-workflow-automation-quality-gates-story.md
   - docs/archive/docs_backup_20250624_110210/stories/refactoring/2025-06-22-documentation-yaml.md
+  - docs/archive/docs_backup_20250624_110210/templates/bug-analysis-template.md
+  - docs/archive/docs_backup_20250624_110210/templates/bug-log-template.yml
+  - docs/archive/docs_backup_20250624_110210/templates/docs-log-template.yml
+  - docs/archive/docs_backup_20250624_110210/templates/feature-log-template.yml
+  - docs/archive/docs_backup_20250624_110210/templates/feature-spec-template.md
+  - docs/archive/docs_backup_20250624_110210/templates/refactor-log-template.yml
+  - docs/archive/docs_backup_20250624_110210/templates/refactor-plan-template.md
+  - docs/archive/docs_backup_20250624_110210/templates/test-log-template.yml
   - docs/archive/docs_backup_20250624_110210/test-reports/language-title-test-report.md
   - docs/archive/docs_backup_20250624_110210/test-reports/translation-fixes-summary.md
   - docs/archive/docs_backup_20250624_110210/test-reports/workflow-validation-20250624-001711.md
   - docs/archive/docs_backup_20250624_110210/test-reports/workflow-validation-20250624-001933.md
   - docs/archive/docs_backup_20250624_110210/test-reports/workflow-validation-20250624-002006.md
   - docs/archive/docs_backup_20250624_110210/test-reports/workflow-validation-20250624-002048.md
+  - docs/archive/docs_backup_20250624_110210/testing/WORKFLOW_TESTING.md
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-20-00-00-00-ticket-Email-Login.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-21-00-00-00-ticket-Header-Login-Status.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-22-00-00-00-ticket-Architecture-Completion.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-22-00-00-00-ticket-Architecture-Definition.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-22-00-00-00-ticket-Auto-Reflection-Story.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-22-00-00-00-ticket-Cleanup.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-22-00-00-00-ticket-Documentation-Structure.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-22-00-00-00-ticket-Frontend-Guide-Integration.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-22-00-00-00-ticket-Handbook-Reorganize.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-22-00-00-00-ticket-Homepage-Login.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-22-00-00-00-ticket-Improvements-Location.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-22-00-00-00-ticket-Learning-Progress-Tracker.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-22-00-00-00-ticket-Restructure.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-00-00-00-ticket-ai-commit-guard.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-00-00-00-ticket-claude.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-00-00-00-ticket-commit-guide.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-00-00-00-ticket-docs-docs-refactor.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-00-00-00-ticket-docs-refactor-update-update-t.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-00-00-00-ticket-page.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-00-00-00-ticket-test-commit-flow.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-01-13-52-ticket-update-three-files.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-01-26-31-ticket-update-ten-files.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-01-41-45-ticket-implement-smart-commit-analysis-githooks.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-01-41-55-ticket-smart-commit-rules-auto-documentation.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-01-42-04-ticket-auto-generated-development-logs-stories.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-01-44-27-ticket-improve-filename-generation-auto-generated.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-01-48-48-ticket-implement-comprehensive-file-naming-conventions.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-01-49-46-ticket-optimize-filename-length-limits-fix.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-02-07-58-ticket-implement-one-time-script-cleanup.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-02-08-30-ticket-accidentally-added-commit_hash-fields-templates.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-02-08-41-ticket-remaining-auto-generated-development.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-02-20-48-ticket-update-eight-files.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-02-21-04-ticket-auto-generated-development-log.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-02-24-31-ticket-disable-problematic-git-hooks-clean.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-03-01-29-ticket-update-two-files.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-03-02-24-ticket-update-two-files.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-03-10-09-ticket-update-three-files.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-03-14-15-ticket-fix-time-calculation-int-to.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-03-26-02-ticket-update-three-files.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-03-29-43-ticket-auto-commit-txt.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-03-35-30-ticket-update-four-files.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-03-38-14-ticket-enhance-commit-message-generation.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-03-52-35-ticket-refactor-update-update-two-files.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-03-53-02-ticket-adr-017-dev-logs-structure-and-standards.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-04-06-49-ticket-simplify-dev-logs-structure-by.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-21-01-07-ticket-workflow-automation-quality-gates.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-21-15-20-ticket-improvement-changelog-enhancement-system-analyze.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-21-20-57-ticket-bugfix-filename-duplication-improvement-time.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-21-41-22-ticket-ticket-management-system-parallel-development.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-23-42-28-ticket-test-bidirectional-linking.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-23-46-40-ticket-fix-dev-system-improvements.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-23-47-38-ticket-bugfix-time-calculations-bidirectional-ticket.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-23-23-58-11-ticket-makefile.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-24-00-00-09-ticket-test-implementation.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-24-00-21-55-ticket-makefile.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-24-00-22-02-ticket-ai-commit-guard.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-24-00-45-11-ticket-workflow-test-complete.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-24-01-01-07-ticket-fix-ticket-init-system.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-24-01-08-19-ticket-test-addition-tests.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-24-01-17-13-ticket-single-ticket-commit.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-24-01-31-01-ticket-fix-post-commit-ticket-update.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-24-01-32-35-ticket-pre-commit-post-commit-documentation.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-24-01-42-19-ticket-fix-dev-logs-accuracy.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-24-01-42-22-ticket-fix-dev-logs-accuracy.yml
+  - docs/archive/docs_backup_20250624_110210/tickets/completed/2025-06-24-01-58-13-ticket-check-completed-tickets-duration.yml
+  - docs/archive/docs_backup_20250624_110210/time-logs/README.md
+  - docs/archive/docs_backup_20250624_110210/time-logs/aggregated/daily/2025-06-23-summary.yml
   - docs/archive/docs_backup_20250624_110210/time-logs/sessions/2025-06-23/session_20250623_222404.json
   - docs/archive/docs_backup_20250624_110210/time-logs/sessions/2025-06-23/session_20250623_232818.json
+  - docs/archive/docs_backup_20250624_110210/workflows/TICKET_DRIVEN_DEVELOPMENT.md
   - docs/archive/time-logs/README.md
   - docs/archive/time-logs/aggregated/daily/2025-06-23-summary.yml
   - docs/archive/time-logs/sessions/2025-06-23/session_20250623_222404.json
   - docs/archive/time-logs/sessions/2025-06-23/session_20250623_232818.json
   - docs/dev-logs/2025-06-24/2025-06-24-12-39-30-docs-claude.yml
+  - docs/dev-logs/2025-06-24/2025-06-24-12-39-36-docs-claude.yml
   - docs/dev-logs/archive/2025-06-20/email-login-feature/guidance.md
   - docs/dev-logs/archive/2025-06-20/email-login-feature/review-checklist.md
   - docs/dev-logs/archive/2025-06-20/email-login-feature/time-tracking.json
@@ -393,6 +521,124 @@ changes:
   - docs/scripts/pre-commit-doc-gen.py
   - docs/scripts/smart-commit.py
   deleted:
+  - docs/CHANGELOG.md
+  - docs/PLAYBOOK.md
+  - docs/architecture/ticket-integrity-design.md
+  - docs/bugs/fix-post-commit-ticket-update-analysis.md
+  - docs/features/fix-ticket-init-system-spec.md
+  - docs/features/single-ticket-commit-spec.md
+  - docs/features/workflow-test-complete-spec.md
+  - docs/handbook/commit-guide.md
+  - docs/handbook/core-practices/bdd.md
+  - docs/handbook/core-practices/git-workflow.md
+  - docs/handbook/core-practices/tdd.md
+  - docs/handbook/design-patterns/architecture/README.md
+  - docs/handbook/design-patterns/architecture/current/api-design.md
+  - docs/handbook/design-patterns/architecture/current/deployment.md
+  - docs/handbook/design-patterns/architecture/current/system-overview.md
+  - docs/handbook/design-patterns/architecture/current/tech-stack.md
+  - docs/handbook/design-patterns/architecture/patterns/microservices.md
+  - docs/handbook/design-patterns/ddd/bounded-contexts.md
+  - docs/handbook/design-patterns/ddd/system-context.md
+  - docs/handbook/design-patterns/ddd/ubiquitous-language.md
+  - docs/handbook/design-patterns/frontend/frontend-patterns.md
+  - docs/handbook/development-logs-guide.md
+  - docs/handbook/guides/how-to-generate-from-logs.md
+  - docs/handbook/guides/onboarding.md
+  - docs/handbook/improvements/README.md
+  - docs/handbook/improvements/auto-fix-instructions.md
+  - docs/handbook/improvements/improvement-2025-06-23-0352.md
+  - docs/handbook/improvements/improvement-2025-06-23-0352.yml
+  - docs/handbook/improvements/improvement-2025-06-23-0353.md
+  - docs/handbook/improvements/improvement-2025-06-23-0353.yml
+  - docs/handbook/improvements/improvement-2025-06-23-early-morning-fixes.md
+  - docs/handbook/improvements/improvement-2025-06-23-early-morning-fixes.yml
+  - docs/handbook/product/epics/ai-literacy.md
+  - docs/handbook/product/epics/authentication.md
+  - docs/handbook/product/features/homepage-login-integration.md
+  - docs/handbook/product/features/language-switch.md
+  - docs/handbook/product/user-personas.md
+  - docs/handbook/product/vision.md
+  - docs/quick-reference.md
+  - docs/refactoring/fix-dev-logs-accuracy-plan.md
+  - docs/reports/ticket-duration-fix-report.md
+  - docs/templates/bug-analysis-template.md
+  - docs/templates/bug-log-template.yml
+  - docs/templates/docs-log-template.yml
+  - docs/templates/feature-log-template.yml
+  - docs/templates/feature-spec-template.md
+  - docs/templates/refactor-log-template.yml
+  - docs/templates/refactor-plan-template.md
+  - docs/templates/test-log-template.yml
+  - docs/testing/WORKFLOW_TESTING.md
+  - docs/tickets/completed/2025-06-20-00-00-00-ticket-Email-Login.yml
+  - docs/tickets/completed/2025-06-21-00-00-00-ticket-Header-Login-Status.yml
+  - docs/tickets/completed/2025-06-22-00-00-00-ticket-Architecture-Completion.yml
+  - docs/tickets/completed/2025-06-22-00-00-00-ticket-Architecture-Definition.yml
+  - docs/tickets/completed/2025-06-22-00-00-00-ticket-Auto-Reflection-Story.yml
+  - docs/tickets/completed/2025-06-22-00-00-00-ticket-Cleanup.yml
+  - docs/tickets/completed/2025-06-22-00-00-00-ticket-Documentation-Structure.yml
+  - docs/tickets/completed/2025-06-22-00-00-00-ticket-Frontend-Guide-Integration.yml
+  - docs/tickets/completed/2025-06-22-00-00-00-ticket-Handbook-Reorganize.yml
+  - docs/tickets/completed/2025-06-22-00-00-00-ticket-Homepage-Login.yml
+  - docs/tickets/completed/2025-06-22-00-00-00-ticket-Improvements-Location.yml
+  - docs/tickets/completed/2025-06-22-00-00-00-ticket-Learning-Progress-Tracker.yml
+  - docs/tickets/completed/2025-06-22-00-00-00-ticket-Restructure.yml
+  - docs/tickets/completed/2025-06-23-00-00-00-ticket-ai-commit-guard.yml
+  - docs/tickets/completed/2025-06-23-00-00-00-ticket-claude.yml
+  - docs/tickets/completed/2025-06-23-00-00-00-ticket-commit-guide.yml
+  - docs/tickets/completed/2025-06-23-00-00-00-ticket-docs-docs-refactor.yml
+  - docs/tickets/completed/2025-06-23-00-00-00-ticket-docs-refactor-update-update-t.yml
+  - docs/tickets/completed/2025-06-23-00-00-00-ticket-page.yml
+  - docs/tickets/completed/2025-06-23-00-00-00-ticket-test-commit-flow.yml
+  - docs/tickets/completed/2025-06-23-01-13-52-ticket-update-three-files.yml
+  - docs/tickets/completed/2025-06-23-01-26-31-ticket-update-ten-files.yml
+  - docs/tickets/completed/2025-06-23-01-41-45-ticket-implement-smart-commit-analysis-githooks.yml
+  - docs/tickets/completed/2025-06-23-01-41-55-ticket-smart-commit-rules-auto-documentation.yml
+  - docs/tickets/completed/2025-06-23-01-42-04-ticket-auto-generated-development-logs-stories.yml
+  - docs/tickets/completed/2025-06-23-01-44-27-ticket-improve-filename-generation-auto-generated.yml
+  - docs/tickets/completed/2025-06-23-01-48-48-ticket-implement-comprehensive-file-naming-conventions.yml
+  - docs/tickets/completed/2025-06-23-01-49-46-ticket-optimize-filename-length-limits-fix.yml
+  - docs/tickets/completed/2025-06-23-02-07-58-ticket-implement-one-time-script-cleanup.yml
+  - docs/tickets/completed/2025-06-23-02-08-30-ticket-accidentally-added-commit_hash-fields-templates.yml
+  - docs/tickets/completed/2025-06-23-02-08-41-ticket-remaining-auto-generated-development.yml
+  - docs/tickets/completed/2025-06-23-02-20-48-ticket-update-eight-files.yml
+  - docs/tickets/completed/2025-06-23-02-21-04-ticket-auto-generated-development-log.yml
+  - docs/tickets/completed/2025-06-23-02-24-31-ticket-disable-problematic-git-hooks-clean.yml
+  - docs/tickets/completed/2025-06-23-03-01-29-ticket-update-two-files.yml
+  - docs/tickets/completed/2025-06-23-03-02-24-ticket-update-two-files.yml
+  - docs/tickets/completed/2025-06-23-03-10-09-ticket-update-three-files.yml
+  - docs/tickets/completed/2025-06-23-03-14-15-ticket-fix-time-calculation-int-to.yml
+  - docs/tickets/completed/2025-06-23-03-26-02-ticket-update-three-files.yml
+  - docs/tickets/completed/2025-06-23-03-29-43-ticket-auto-commit-txt.yml
+  - docs/tickets/completed/2025-06-23-03-35-30-ticket-update-four-files.yml
+  - docs/tickets/completed/2025-06-23-03-38-14-ticket-enhance-commit-message-generation.yml
+  - docs/tickets/completed/2025-06-23-03-52-35-ticket-refactor-update-update-two-files.yml
+  - docs/tickets/completed/2025-06-23-03-53-02-ticket-adr-017-dev-logs-structure-and-standards.yml
+  - docs/tickets/completed/2025-06-23-04-06-49-ticket-simplify-dev-logs-structure-by.yml
+  - docs/tickets/completed/2025-06-23-21-01-07-ticket-workflow-automation-quality-gates.yml
+  - docs/tickets/completed/2025-06-23-21-15-20-ticket-improvement-changelog-enhancement-system-analyze.yml
+  - docs/tickets/completed/2025-06-23-21-20-57-ticket-bugfix-filename-duplication-improvement-time.yml
+  - docs/tickets/completed/2025-06-23-21-41-22-ticket-ticket-management-system-parallel-development.yml
+  - docs/tickets/completed/2025-06-23-23-42-28-ticket-test-bidirectional-linking.yml
+  - docs/tickets/completed/2025-06-23-23-46-40-ticket-fix-dev-system-improvements.yml
+  - docs/tickets/completed/2025-06-23-23-47-38-ticket-bugfix-time-calculations-bidirectional-ticket.yml
+  - docs/tickets/completed/2025-06-23-23-58-11-ticket-makefile.yml
+  - docs/tickets/completed/2025-06-24-00-00-09-ticket-test-implementation.yml
+  - docs/tickets/completed/2025-06-24-00-21-55-ticket-makefile.yml
+  - docs/tickets/completed/2025-06-24-00-22-02-ticket-ai-commit-guard.yml
+  - docs/tickets/completed/2025-06-24-00-45-11-ticket-workflow-test-complete.yml
+  - docs/tickets/completed/2025-06-24-01-01-07-ticket-fix-ticket-init-system.yml
+  - docs/tickets/completed/2025-06-24-01-08-19-ticket-test-addition-tests.yml
+  - docs/tickets/completed/2025-06-24-01-17-13-ticket-single-ticket-commit.yml
+  - docs/tickets/completed/2025-06-24-01-31-01-ticket-fix-post-commit-ticket-update.yml
+  - docs/tickets/completed/2025-06-24-01-32-35-ticket-pre-commit-post-commit-documentation.yml
+  - docs/tickets/completed/2025-06-24-01-42-19-ticket-fix-dev-logs-accuracy.yml
+  - docs/tickets/completed/2025-06-24-01-42-22-ticket-fix-dev-logs-accuracy.yml
+  - docs/tickets/completed/2025-06-24-01-58-13-ticket-check-completed-tickets-duration.yml
+  - docs/time-logs/README.md
+  - docs/time-logs/aggregated/daily/2025-06-23-summary.yml
+  - docs/workflows/TICKET_DRIVEN_DEVELOPMENT.md
   - test-no-file-count-estimate.txt
 pre_commit_generated: true
 generation_time: '2025-06-24T12:39:36.851981'
