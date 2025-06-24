@@ -8,5 +8,7 @@
     "student": "학생",
     "teacher": "교사",
     "admin": "관리자"
-  }
+  },
+  "darkMode": "다크 모드로 전환",
+  "lightMode": "라이트 모드로 전환"
 }

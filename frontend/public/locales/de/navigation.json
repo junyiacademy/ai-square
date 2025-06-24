@@ -8,5 +8,7 @@
     "student": "Schüler",
     "teacher": "Lehrer",
     "admin": "Administrator"
-  }
+  },
+  "darkMode": "In den dunklen Modus wechseln",
+  "lightMode": "In den hellen Modus wechseln"
 }
