@@ -149,8 +149,12 @@ class IntegratedCommit:
         # 如果有 staged 檔案，返回碼會是 1
         return result.returncode != 0
     
-    def run(self):
-        """執行智能提交流程"""
+    def run(self, auto_mode=False):
+        """執行智能提交流程
+        
+        Args:
+            auto_mode: 是否自動模式（不等待用戶輸入）
+        """
         print("\n" + "="*50)
         print("🤖 整合式智能提交系統")
         print(f"📍 Branch: {self.current_branch}")
@@ -170,14 +174,17 @@ class IntegratedCommit:
             default_message = "chore: update files"
             print(f"💡 將使用預設訊息: {default_message}")
             
-            try:
-                response = input("\n是否繼續提交？(y/n): ")
-                if response.lower() != 'y':
-                    print("❌ 取消提交")
+            if not auto_mode:
+                try:
+                    response = input("\n是否繼續提交？(y/n): ")
+                    if response.lower() != 'y':
+                        print("❌ 取消提交")
+                        return False
+                except (EOFError, KeyboardInterrupt):
+                    print("\n❌ 取消提交")
                     return False
-            except (EOFError, KeyboardInterrupt):
-                print("\n❌ 取消提交")
-                return False
+            else:
+                print("🤖 自動模式：使用預設訊息提交")
             
             # 執行提交
             result = subprocess.run(
@@ -208,34 +215,46 @@ class IntegratedCommit:
         print("-" * 40)
         
         # 詢問是否使用此訊息
-        try:
-            print("\n選項:")
-            print("1. 使用此訊息提交")
-            print("2. 編輯訊息")
-            print("3. 取消提交")
-            
-            choice = input("\n請選擇 (1/2/3): ")
-            
-            if choice == '3':
-                print("❌ 取消提交")
-                return False
-            
-            if choice == '2':
-                # 使用 git commit 互動模式
-                with open('/tmp/commit_msg.txt', 'w') as f:
-                    f.write(commit_message)
+        if not auto_mode:
+            try:
+                print("\n選項:")
+                print("1. 使用此訊息提交")
+                print("2. 編輯訊息")
+                print("3. 取消提交")
                 
-                result = subprocess.run(
-                    ["git", "commit", "-e", "-F", "/tmp/commit_msg.txt"],
-                    capture_output=False
-                )
-            else:
-                # 直接提交
-                result = subprocess.run(
-                    ["git", "commit", "-m", commit_message],
-                    capture_output=True,
-                    text=True
-                )
+                choice = input("\n請選擇 (1/2/3): ")
+                
+                if choice == '3':
+                    print("❌ 取消提交")
+                    return False
+                
+                if choice == '2':
+                    # 使用 git commit 互動模式
+                    with open('/tmp/commit_msg.txt', 'w') as f:
+                        f.write(commit_message)
+                    
+                    result = subprocess.run(
+                        ["git", "commit", "-e", "-F", "/tmp/commit_msg.txt"],
+                        capture_output=False
+                    )
+                else:
+                    # 直接提交
+                    result = subprocess.run(
+                        ["git", "commit", "-m", commit_message],
+                        capture_output=True,
+                        text=True
+                    )
+            except (EOFError, KeyboardInterrupt):
+                print("\n❌ 取消提交")
+                return False
+        else:
+            # 自動模式：直接提交
+            print("\n🤖 自動模式：使用生成的訊息提交")
+            result = subprocess.run(
+                ["git", "commit", "-m", commit_message],
+                capture_output=True,
+                text=True
+            )
             
             if result.returncode == 0:
                 print("\n✅ 提交成功！")
@@ -277,6 +296,14 @@ class IntegratedCommit:
 
 
 if __name__ == "__main__":
+    import argparse
+    
+    parser = argparse.ArgumentParser(description='整合式智能提交系統')
+    parser.add_argument('--auto', action='store_true', 
+                       help='自動模式（不等待用戶輸入）')
+    
+    args = parser.parse_args()
+    
     commit = IntegratedCommit()
-    success = commit.run()
+    success = commit.run(auto_mode=args.auto)
     sys.exit(0 if success else 1)

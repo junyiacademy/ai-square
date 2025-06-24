@@ -87,7 +87,7 @@ ai-done:
 	@echo "\n$(CYAN)📖 萃取開發故事...$(NC)"
 	@python3 docs/scripts/story-extractor.py
 	@echo "\n$(CYAN)💬 智能提交...$(NC)"
-	@python3 docs/scripts/integrated-commit.py
+	@python3 docs/scripts/integrated-commit.py --auto
 	@echo "\n$(CYAN)🔀 合併到主分支...$(NC)"
 	@current_branch=$$(git branch --show-current); \
 	git checkout main && \
