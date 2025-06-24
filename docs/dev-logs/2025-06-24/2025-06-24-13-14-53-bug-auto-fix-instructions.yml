@@ -1,0 +1,49 @@
+type: bug
+title: '[待補充 commit 訊息]'
+date: '2025-06-24'
+developer: AI + Human
+status: in_progress
+commit_hash: pending
+description: '[待補充 commit 描述]'
+ticket_id: 2025-06-24-12-42-50-fix-ticket-completion-workflow
+ticket_name: fix-ticket-completion-workflow
+ticket_path: docs/tickets/in_progress/2025-06-24-12-42-50-ticket-fix-ticket-completion-workflow.yml
+timeline:
+- phase: 實現
+  duration: 12552.0
+  ai_time: 10041.6
+  human_time: 2510.4
+  tasks:
+  - 創建 auto-fix-instructions.md
+  - 創建 temp-fix.py
+  - 創建 2025-06-24-12-51-38-ticket-ksa-display-page.yml
+  - 更新 globals.css
+metrics:
+  total_time_minutes: 12552.0
+  ai_time_minutes: 10041.6
+  human_time_minutes: 2510.4
+  ai_percentage: 80.0
+  human_percentage: 20.0
+  files_added: 8
+  files_modified: 1
+  files_deleted: 0
+  time_calculation_method: git_history
+  time_calculation_details:
+    start_time: '2025-06-15T19:30:51'
+    end_time: '2025-06-24T12:42:53'
+    file_count: 7
+changes:
+  added:
+  - docs/handbook/improvements/auto-fix-instructions.md
+  - docs/scripts/temp-fix.py
+  - docs/tickets/in_progress/2025-06-24-12-51-38-ticket-ksa-display-page.yml
+  - docs/tickets/in_progress/2025-06-24-13-11-54-ticket-implement-proper-tdd-workflow.yml
+  - frontend/src/app/api/ksa/__tests__/route.test.ts
+  - frontend/src/app/api/ksa/route.ts
+  - frontend/src/app/ksa/__tests__/page.test.tsx
+  - frontend/src/app/ksa/page.tsx
+  modified:
+  - frontend/src/app/globals.css
+  deleted: []
+pre_commit_generated: true
+generation_time: '2025-06-24T13:14:53.249046'
