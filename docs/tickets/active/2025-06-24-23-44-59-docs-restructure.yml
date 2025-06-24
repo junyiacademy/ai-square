@@ -1,18 +1,23 @@
 ai_usage:
   complexity_breakdown:
-    complex_count: 1
-  estimated_cost_usd: 0.25
+    complex_count: 2
+  estimated_cost_usd: 0.5
   interactions:
   - complexity: complex
     description: 分析現有文檔結構並規劃遷移
     estimated_cost: 0.25
     task_type: development
     timestamp: '2025-06-24T23:46:32.070627'
+  - complexity: complex
+    description: 編寫遷移腳本 migrate-to-new-architecture.py
+    estimated_cost: 0.25
+    task_type: development
+    timestamp: '2025-06-24T23:46:50.461490'
   models_used: {}
   sessions: []
   total_completion_tokens: 0
   total_cost_usd: 0.0
-  total_interactions: 1
+  total_interactions: 2
   total_prompt_tokens: 0
 completion_checklist:
   ai_metrics_recorded: false
