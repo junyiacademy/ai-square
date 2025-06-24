@@ -92,6 +92,8 @@ ai-done:
 	@current_branch=$$(git branch --show-current); \
 	git checkout main && \
 	git merge --no-ff $$current_branch -m "Merge $$current_branch"
+	@echo "\n$(CYAN)📁 自動歸檔票券...$(NC)"
+	@python3 docs/scripts/auto-archive-ticket.py
 	@echo "\n$(GREEN)✅ 工作完成！$(NC)"
 
 #=============================================================================
