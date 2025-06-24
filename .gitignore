@@ -34,6 +34,9 @@ tmp/
 # Generated Reports
 docs/metrics-dashboard.json
 docs/metrics-report.md
+docs/reports/
+docs/handbook/05-reports/secret-scan-report.json
+docs/handbook/05-reports/secret-scan-report.md
 
 # Time Logs - Privacy Protection
 docs/time-logs/sessions/
