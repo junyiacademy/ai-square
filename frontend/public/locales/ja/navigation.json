@@ -8,5 +8,7 @@
     "student": "学生",
     "teacher": "教師",
     "admin": "管理者"
-  }
+  },
+  "darkMode": "ダークモードに切り替える",
+  "lightMode": "ライトモードに切り替える"
 }

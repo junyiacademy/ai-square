@@ -6,6 +6,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Header } from './Header'
+import { useTheme } from '../../contexts/ThemeContext'
 
 // Mock next/navigation
 jest.mock('next/navigation', () => ({
@@ -13,6 +14,15 @@ jest.mock('next/navigation', () => ({
     push: jest.fn(),
     replace: jest.fn(),
   }),
+  usePathname: () => '/',
+}))
+
+// Mock ThemeContext
+jest.mock('../../contexts/ThemeContext', () => ({
+  useTheme: jest.fn(() => ({
+    theme: 'light',
+    toggleTheme: jest.fn(),
+  })),
 }))
 
 // Mock localStorage for auth state
@@ -293,6 +303,120 @@ describe('Header 組件測試', () => {
 
       const header = screen.getByRole('banner')
       expect(header).toBeInTheDocument()
+    })
+  })
+
+  describe('🌓 主題切換測試', () => {
+    let mockUseTheme: jest.Mock
+
+    beforeEach(() => {
+      // Get the mocked useTheme
+      mockUseTheme = jest.mocked(useTheme)
+      mockUseTheme.mockClear()
+    })
+
+    it('應該顯示主題切換按鈕', () => {
+      mockLocalStorage.getItem.mockReturnValue(null)
+      mockUseTheme.mockReturnValue({
+        theme: 'light',
+        toggleTheme: jest.fn(),
+      })
+      
+      render(<Header />)
+
+      const themeButton = screen.getByRole('button', { name: /darkMode|lightMode/i })
+      expect(themeButton).toBeInTheDocument()
+    })
+
+    it('應該在淺色模式時顯示月亮圖標', () => {
+      mockLocalStorage.getItem.mockReturnValue(null)
+      mockUseTheme.mockReturnValue({
+        theme: 'light',
+        toggleTheme: jest.fn(),
+      })
+      
+      render(<Header />)
+
+      const themeButton = screen.getByRole('button', { name: /darkMode/i })
+      // 檢查按鈕內有月亮圖標（SVG）
+      const moonIcon = themeButton.querySelector('svg')
+      expect(moonIcon).toBeInTheDocument()
+    })
+
+    it('應該在深色模式時顯示太陽圖標', () => {
+      mockLocalStorage.getItem.mockReturnValue(null)
+      mockUseTheme.mockReturnValue({
+        theme: 'dark',
+        toggleTheme: jest.fn(),
+      })
+      
+      render(<Header />)
+
+      const themeButton = screen.getByRole('button', { name: /lightMode/i })
+      // 檢查按鈕內有太陽圖標（SVG）
+      const sunIcon = themeButton.querySelector('svg')
+      expect(sunIcon).toBeInTheDocument()
+    })
+
+    it('應該在點擊時調用 toggleTheme', async () => {
+      const user = userEvent.setup()
+      const mockToggleTheme = jest.fn()
+      
+      mockLocalStorage.getItem.mockReturnValue(null)
+      mockUseTheme.mockReturnValue({
+        theme: 'light',
+        toggleTheme: mockToggleTheme,
+      })
+      
+      render(<Header />)
+
+      const themeButton = screen.getByRole('button', { name: /darkMode/i })
+      await user.click(themeButton)
+
+      expect(mockToggleTheme).toHaveBeenCalledTimes(1)
+    })
+
+    it('主題切換按鈕應該在語言選擇器旁邊', () => {
+      mockLocalStorage.getItem.mockReturnValue(null)
+      mockUseTheme.mockReturnValue({
+        theme: 'light',
+        toggleTheme: jest.fn(),
+      })
+      
+      render(<Header />)
+
+      const languageSelector = screen.getByLabelText(/選擇語言|select language/i)
+      const themeButton = screen.getByRole('button', { name: /darkMode/i })
+      
+      // 檢查兩者都存在
+      expect(languageSelector).toBeInTheDocument()
+      expect(themeButton).toBeInTheDocument()
+      
+      // 確認兩者在相同的父元素內部
+      const rightSection = languageSelector.closest('.flex.items-center.space-x-4')
+      expect(rightSection).toContainElement(languageSelector)
+      expect(rightSection).toContainElement(themeButton)
+    })
+
+    it('應該支援鍵盤導航到主題切換按鈕', async () => {
+      const user = userEvent.setup()
+      mockLocalStorage.getItem.mockReturnValue(null)
+      mockUseTheme.mockReturnValue({
+        theme: 'light',
+        toggleTheme: jest.fn(),
+      })
+      
+      render(<Header />)
+
+      const themeButton = screen.getByRole('button', { name: /darkMode/i })
+      
+      // 確認主題切換按鈕可以被聚焦
+      themeButton.focus()
+      expect(themeButton).toHaveFocus()
+      
+      // 確認可以通過點擊觸發
+      await user.click(themeButton)
+      expect(mockUseTheme().toggleTheme).toHaveBeenCalled()
     })
   })
 })

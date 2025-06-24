@@ -1,0 +1,60 @@
+id: 2025-06-24-15-36-33-dark-mode-toggle
+name: dark-mode-toggle
+type: feature
+description: 實作深色模式切換功能，包含 Header 切換按鈕、Context API 狀態管理、localStorage 持久化、系統主題偏好支援
+status: in_progress
+created_at: '2025-06-24T15:36:33.019021'
+started_at: '2025-06-24T15:36:33.019021'
+completed_at: null
+duration_minutes: null
+ai_time_minutes: null
+human_time_minutes: null
+commit_hash: null
+files_changed: []
+date: '2025-06-24'
+time: 15-36-33
+spec:
+  goals: |
+    實作一個完整的深色模式切換功能，讓使用者可以根據偏好選擇淺色或深色主題，
+    並確保主題偏好能夠被記住。功能需要符合專案的國際化要求和設計規範。
+  technical_specs: |
+    1. **主題管理系統**
+       - 使用 React Context API 建立 ThemeContext
+       - 實作 useTheme 自訂 Hook 方便組件存取主題狀態
+       - 使用 useLocalStorage Hook 持久化主題偏好
+       
+    2. **UI 實作**
+       - 在 Header 組件右側（語言選擇器旁）添加主題切換按鈕
+       - 使用適當的圖標（太陽/月亮）表示當前主題
+       - 切換時使用平滑過渡效果
+       
+    3. **樣式系統**
+       - 擴展 Tailwind CSS 配置支援 dark mode
+       - 使用 CSS 變數定義主題色彩
+       - 確保所有現有組件都支援深色模式
+       
+    4. **系統主題偵測**
+       - 使用 prefers-color-scheme 媒體查詢偵測系統偏好
+       - 首次訪問時默認使用系統主題
+       
+    5. **國際化支援**
+       - 為主題切換添加 9 種語言的翻譯
+       - 在每個語言的 navigation.json 中添加相關文字
+  acceptance_criteria:
+  - '主題切換按鈕在 Header 中正確顯示並可點擊'
+  - '點擊按鈕可以在淺色和深色主題間切換'
+  - '主題偏好儲存在 localStorage 並在頁面重載後保持'
+  - '首次訪問時自動偵測並應用系統主題偏好'
+  - '所有現有頁面和組件在深色模式下正確顯示（文字可讀、對比度適當）'
+  - '主題切換有平滑的過渡動畫'
+  - '主題切換按鈕支援 9 種語言的工具提示或標籤'
+  - '測試覆蓋率達到 80% 以上'
+document_references:
+- path: docs/handbook/workflows/TICKET_DRIVEN_DEVELOPMENT.md
+  reason: 遵循票券驅動開發流程
+- path: docs/handbook/01-context/business-rules.md
+  reason: 確保符合業務規則
+- path: docs/handbook/01-context/product-vision.md
+  reason: 理解產品目標和方向
+- path: docs/handbook/01-context/domain-knowledge.md
+  reason: 參考 AI 素養領域知識
