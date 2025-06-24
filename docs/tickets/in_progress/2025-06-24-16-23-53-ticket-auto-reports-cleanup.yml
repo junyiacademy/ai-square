@@ -2,11 +2,11 @@ id: 2025-06-24-16-23-53-auto-reports-cleanup
 name: auto-reports-cleanup
 type: hotfix
 description: 清理自動生成的報告和更新 gitignore
-status: completed
+status: in_progress
 created_at: '2025-06-24T16:23:53.140907'
 started_at: '2025-06-24T16:23:53.140907'
-completed_at: '2025-06-24T16:45:45.000000'
-duration_minutes: 22
+completed_at: null
+duration_minutes: null
 ai_time_minutes: null
 human_time_minutes: null
 commit_hash: null
