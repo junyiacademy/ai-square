@@ -2,15 +2,19 @@ id: 2025-06-24-12-51-38-ksa-display-page
 name: ksa-display-page
 type: feature
 description: 建立 KSA codes 靜態展示頁面，包含 RWD 設計
-status: paused
+status: completed
 created_at: '2025-06-24T12:51:38.597430'
 started_at: '2025-06-24T12:51:38.597430'
-completed_at: null
+completed_at: '2025-06-24T14:05:00'
 duration_minutes: null
 ai_time_minutes: null
 human_time_minutes: null
 commit_hash: null
-files_changed: []
+files_changed:
+- frontend/src/app/ksa/page.tsx
+- frontend/src/app/api/ksa/route.ts
+- frontend/src/app/ksa/__tests__/page.test.tsx
+- frontend/src/app/api/ksa/__tests__/route.test.ts
 date: '2025-06-24'
 time: 12-51-38
 spec:
@@ -78,3 +82,4 @@ document_references:
 - path: docs/handbook/01-context/domain-knowledge.md
   reason: 參考 AI 素養領域知識
 paused_at: '2025-06-24T13:16:06.695712'
+resumed_at: '2025-06-24T14:02:33.024676'
