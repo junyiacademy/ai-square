@@ -8,15 +8,15 @@ ai_usage:
     estimated_cost: 0.05
     is_start_marker: true
     task_type: development
-    timestamp: '2025-06-25T01:58:48.848847'
+    timestamp: '2025-06-25T02:05:22.190672'
   - complexity: simple
     description: development - simple
     estimated_cost: 0.05
     is_start_marker: false
     task_type: development
-    timestamp: '2025-06-25T02:00:10.656762'
+    timestamp: '2025-06-25T02:06:38.801014'
   total_interactions: 2
-commit_hash: 8ebaac97
+commit_hash: 27b84d53
 completion_checklist:
   ai_metrics_recorded: true
   code_implemented: false
@@ -25,8 +25,8 @@ completion_checklist:
   story_extracted: false
   tests_passing: false
   tests_written: false
-created_at: '2025-06-25T01:58:43.743432'
-description: Remove redundant root src directory and fix frontend config paths
+created_at: '2025-06-25T02:05:16.806241'
+description: Add automatic ticket archival to ai-done workflow
 dev_log:
   sessions:
   - activities: []
@@ -37,24 +37,24 @@ dev_log:
     duration_minutes: 0
     end_time: null
     files_modified: []
-    last_activity: '2025-06-25T01:58:48.848863'
+    last_activity: '2025-06-25T02:05:22.190681'
     next_steps: []
     session_id: 1
-    start_time: 01:58:43
+    start_time: 02:05:16
 development:
-  branch: ticket/cleanup-redundant-src
+  branch: ticket/auto-ticket-archival
   code_review_status: pending
   commits: []
   files_changed: []
   test_coverage: null
-id: 20250625_015843-cleanup-redundant-src
-name: cleanup-redundant-src
+id: 20250625_020516-auto-ticket-archival
+name: auto-ticket-archival
 spec:
   acceptance_criteria:
   - '[條件 1]'
   - '[條件 2]'
   - '[條件 3]'
-  feature: cleanup-redundant-src 功能
+  feature: auto-ticket-archival 功能
   out_of_scope:
   - '[不包含的功能]'
   purpose: '[請描述目的]'
@@ -81,5 +81,5 @@ time_tracking:
   checkpoints: []
   completed_at: null
   human_time_minutes: 0
-  started_at: '2025-06-25T01:58:43.743432'
-type: refactor
+  started_at: '2025-06-25T02:05:16.806241'
+type: feature
