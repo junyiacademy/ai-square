@@ -1,18 +1,23 @@
 type: bug
-title: '[待補充 commit 訊息]'
+title: 'fix(time-tracking): improve time tracking accuracy'
 date: '2025-06-24'
 developer: AI + Human
-status: in_progress
-commit_hash: pending
-description: '[待補充 commit 描述]'
+status: completed
+commit_hash: 8f16e4cd
+description: "fix(time-tracking): improve time tracking accuracy\n\nAdded 3 files:\n\
+  \  - ticket-duration-fix-report.md\n  - fix-ticket-durations.py\n  - 2025-06-24-01-58-13-ticket-check-completed-tickets-duration.yml\n\
+  \nModified 27 files:\n  - 2025-06-23-00-00-00-ticket-docs-docs-refactor.yml\n  -\
+  \ 2025-06-23-00-00-00-ticket-docs-refactor-update-update-t.yml\n  - 2025-06-23-00-00-00-ticket-test-commit-flow.yml\n\
+  \  - 2025-06-23-01-26-31-ticket-update-ten-files.yml\n  - 2025-06-23-01-41-45-ticket-implement-smart-commit-analysis-githooks.yml\n\
+  \  ... and 22 more"
 ticket_id: 2025-06-24-01-58-13-check-completed-tickets-duration
 ticket_name: check-completed-tickets-duration
 ticket_path: docs/tickets/in_progress/2025-06-24-01-58-13-ticket-check-completed-tickets-duration.yml
 timeline:
 - phase: 實現
-  duration: 483.1
-  ai_time: 386.48
-  human_time: 96.62
+  duration: 4.9
+  ai_time: 3.9
+  human_time: 1.0
   tasks:
   - 創建 ticket-duration-fix-report.md
   - 創建 fix-ticket-durations.py
@@ -21,12 +26,12 @@ timeline:
   - 更新 2025-06-23-00-00-00-ticket-docs-refactor-update-update-t.yml
   - 更新 2025-06-23-00-00-00-ticket-test-commit-flow.yml
 metrics:
-  total_time_minutes: 483.1
-  ai_time_minutes: 386.48
-  human_time_minutes: 96.62
+  total_time_minutes: 4.9
+  ai_time_minutes: 3.9
+  human_time_minutes: 1.0
   ai_percentage: 80.0
   human_percentage: 20.0
-  files_added: 3
+  files_added: 4
   files_modified: 27
   files_deleted: 0
   time_calculation_method: commit_interval
@@ -34,8 +39,13 @@ metrics:
     start_time: '2025-06-24T01:55:58'
     end_time: '2025-06-24T09:59:02.768303'
     file_count: 0
+  time_estimation_method: commit_based_file_timestamp_analysis
+  is_real_time: true
+  commit_timestamp: '2025-06-24T09:59:02'
+  post_commit_update_timestamp: '2025-06-24T09:59:02.999395'
 changes:
   added:
+  - docs/dev-logs/2025-06-24/2025-06-24-09-59-02-bug-ticket-duration-fix-report.yml
   - docs/reports/ticket-duration-fix-report.md
   - docs/scripts/fix-ticket-durations.py
   - docs/tickets/in_progress/2025-06-24-01-58-13-ticket-check-completed-tickets-duration.yml
