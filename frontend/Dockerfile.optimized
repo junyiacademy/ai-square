@@ -1,0 +1,52 @@
+# 1. Dependencies stage
+FROM node:20-alpine AS deps
+WORKDIR /app
+# Copy only package files for better caching
+COPY package.json package-lock.json ./
+# Install only production dependencies
+RUN npm ci --only=production
+
+# 2. Build stage
+FROM node:20-alpine AS builder
+WORKDIR /app
+# Copy package files
+COPY package.json package-lock.json ./
+# Install all dependencies (including devDependencies for build)
+RUN npm ci
+# Copy source code (excluding files in .dockerignore)
+COPY . .
+# Build the application
+RUN npm run build
+
+# 3. Production stage
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+# Set production environment
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Create a non-root user
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
+
+# Copy necessary files from builder
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+# Copy production dependencies
+COPY --from=deps /app/node_modules ./node_modules
+
+# Change ownership to non-root user
+RUN chown -R nextjs:nodejs /app
+
+USER nextjs
+
+EXPOSE 3000
+
+ENV PORT 3000
+ENV HOSTNAME "0.0.0.0"
+
+# Use node directly for better performance
+CMD ["node", "server.js"]

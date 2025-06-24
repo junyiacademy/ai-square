@@ -1,0 +1,14 @@
+coverage:
+  branches: 0
+  functions: 0
+  lines: 0
+  statements: 0
+created_at: '2025-06-24T23:44:59.867227'
+summary:
+  duration_ms: 0
+  failed: 0
+  passed: 0
+  skipped: 0
+  total_tests: 0
+test_runs: []
+ticket_id: 2025-06-24-23-44-59-docs-restructure
