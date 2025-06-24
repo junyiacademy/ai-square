@@ -32,3 +32,6 @@ dev_logs:
 reconstructed: true
 reconstruction_date: '2025-06-24T01:49:40.699533'
 commit_hash: 576e4d32
+total_duration_minutes: 164.7
+duration_calculation_method: timestamp_difference
+duration_updated_at: '2025-06-24T02:01:28.684579'
