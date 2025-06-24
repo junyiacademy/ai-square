@@ -89,17 +89,18 @@ dev-commit:
 	@echo "📝 智能提交..."
 	@python3 docs/scripts/smart-commit.py
 
-# 完成開發任務並合併
+# 合併已完成的票券到 main
 dev-done:
 	@if [ -z "$(TICKET)" ]; then \
 		echo "❌ 用法: make dev-done TICKET=ticket-name"; \
 		exit 1; \
 	fi
-	@echo "✅ 完成票券: $(TICKET)"
-	@python3 docs/scripts/ticket-manager-enhanced.py complete $(TICKET) $$(git rev-parse HEAD)
+	@echo "🔀 合併票券分支到 main: $(TICKET)"
+	@echo "💡 注意：票券應該已經在 dev-commit 時完成"
 	@git checkout main
-	@git merge ticket/$(TICKET) --no-ff
+	@git merge ticket/$(TICKET) --no-ff -m "Merge ticket/$(TICKET) into main"
 	@git branch -d ticket/$(TICKET)
+	@echo "✅ 分支合併完成，ticket/$(TICKET) 已刪除"
 
 # === 輔助命令 ===
 

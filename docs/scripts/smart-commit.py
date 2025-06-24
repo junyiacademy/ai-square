@@ -6,15 +6,9 @@
 import os
 import sys
 import subprocess
+import yaml
 from pathlib import Path
 from datetime import datetime
-
-# 加入 commit guide 解析器
-sys.path.append(str(Path(__file__).parent))
-try:
-    from commit_guide_parser import CommitGuideParser
-except ImportError:
-    CommitGuideParser = None
 
 class SmartCommit:
     def __init__(self):
@@ -46,23 +40,6 @@ class SmartCommit:
         if self.ticket_name:
             print(f"🎫 Ticket: {self.ticket_name}")
         print("="*50 + "\n")
-        
-        # 顯示核心原則
-        if CommitGuideParser:
-            self.show_core_principles()
-    
-    def show_core_principles(self):
-        """顯示 commit guide 的核心原則"""
-        try:
-            parser = CommitGuideParser()
-            principles = parser.get_core_principles()
-            if principles:
-                print("📌 提交規範提醒：")
-                for principle in principles[:3]:  # 只顯示前3個
-                    print(f"   • {principle}")
-                print()
-        except Exception:
-            pass
     
     def run_ai_fix(self) -> bool:
         """執行 AI 自動修復"""
@@ -92,8 +69,6 @@ class SmartCommit:
             print("\n⚠️ 非交互式環境，自動顯示 AI 修復建議")
             self.show_ai_fix_suggestions()
         
-        # 顯示相關文檔
-        self.show_helpful_links("ai_fix")
         return False
     
     def show_ai_fix_suggestions(self):
@@ -116,27 +91,8 @@ class SmartCommit:
             print("2. 請 AI 生成具體的修復代碼")
             print("3. 應用修復後重新執行 make commit-smart")
     
-    def show_commit_types(self):
-        """顯示可用的 commit 類型"""
-        if not CommitGuideParser:
-            return
-            
-        try:
-            parser = CommitGuideParser()
-            types = parser.get_commit_types()
-            if types:
-                print("\n📝 可用的 Commit 類型：")
-                for type_name, desc in types.items():
-                    print(f"   • {type_name}: {desc}")
-                print()
-        except Exception:
-            pass
-    
     def run_commit_guide(self) -> bool:
         """執行原有的提交指南"""
-        # 先顯示 commit 類型參考
-        self.show_commit_types()
-        
         commit_guide_script = self.scripts_path / "commit-guide.py"
         result = subprocess.run(
             [sys.executable, str(commit_guide_script)],
@@ -145,28 +101,9 @@ class SmartCommit:
         
         return result.returncode == 0
     
-    def show_pre_commit_checklist(self):
-        """顯示 pre-commit 檢查清單"""
-        if not CommitGuideParser:
-            return
-            
-        try:
-            parser = CommitGuideParser()
-            checklist = parser.get_checklist()
-            if checklist:
-                print("\n✅ Pre-commit 檢查清單：")
-                for item in checklist:
-                    print(f"   {item}")
-                print()
-        except Exception:
-            pass
-    
     def run_pre_commit_generation(self) -> bool:
         """執行 pre-commit 文檔生成和驗證"""
         print("📝 執行 pre-commit 驗證和文檔生成...")
-        
-        # 顯示檢查清單
-        self.show_pre_commit_checklist()
         
         # 先執行新的驗證器
         validator_script = self.scripts_path / "pre-commit-validator.py"
@@ -245,7 +182,7 @@ class SmartCommit:
             
         print(f"🎫 檢查 ticket 狀態: {self.ticket_name}")
         result = subprocess.run(
-            [sys.executable, str(self.scripts_path / "ticket-manager.py"), "active"],
+            [sys.executable, str(self.scripts_path / "ticket-manager-enhanced.py"), "active"],
             capture_output=True,
             text=True
         )
@@ -253,6 +190,107 @@ class SmartCommit:
         if "No active ticket" in result.stdout:
             print(f"⚠️  Ticket '{self.ticket_name}' 不是 active 狀態")
             print("💡 提示：使用 'make resume-ticket TICKET={self.ticket_name}' 恢復工作")
+
+    def should_complete_ticket(self) -> bool:
+        """檢查是否應該完成票券"""
+        if not self.ticket_name:
+            return False
+            
+        # 簡單的啟發式檢查：如果用戶想要最終提交
+        try:
+            response = input(f"\n是否要完成票券 '{self.ticket_name}' 並準備合併？(y/n): ")
+            return response.lower() == 'y'
+        except (EOFError, KeyboardInterrupt):
+            # 非交互式環境，檢查是否有特殊標記
+            return False
+    
+    def prepare_ticket_completion(self) -> bool:
+        """準備完成票券 - 移動到 completed 但不設置 commit hash"""
+        if not self.ticket_name:
+            return True
+            
+        print(f"📋 準備完成票券: {self.ticket_name}")
+        
+        # 手動移動票券檔案到 completed
+        tickets_dir = self.project_root / "docs" / "tickets"
+        in_progress_dir = tickets_dir / "in_progress"
+        
+        # 尋找票券檔案
+        ticket_file = None
+        for file_path in in_progress_dir.glob(f"*-ticket-{self.ticket_name}.yml"):
+            ticket_file = file_path
+            break
+        
+        if not ticket_file:
+            print(f"❌ 找不到票券檔案: {self.ticket_name}")
+            return False
+        
+        # 讀取票券資料
+        with open(ticket_file, 'r', encoding='utf-8') as f:
+            ticket_data = yaml.safe_load(f)
+        
+        # 更新完成資訊（除了 commit_hash）
+        completed_at = datetime.now()
+        ticket_data['status'] = 'completed'
+        ticket_data['completed_at'] = completed_at.isoformat()
+        
+        # 計算持續時間
+        started_at = datetime.fromisoformat(ticket_data['started_at'])
+        duration = completed_at - started_at
+        ticket_data['duration_minutes'] = int(duration.total_seconds() / 60)
+        
+        # 移動到 completed 資料夾
+        date_str = started_at.strftime('%Y-%m-%d')
+        completed_date_dir = tickets_dir / "completed" / date_str
+        completed_date_dir.mkdir(parents=True, exist_ok=True)
+        
+        # 移動票券檔案
+        new_ticket_file = completed_date_dir / ticket_file.name
+        
+        # 寫入更新的資料到新位置
+        with open(new_ticket_file, 'w', encoding='utf-8') as f:
+            yaml.dump(ticket_data, f, allow_unicode=True, sort_keys=False)
+        
+        # 刪除舊檔案
+        ticket_file.unlink()
+        
+        print("✅ 票券已完成並移動到 completed 目錄")
+        
+        # 將變更加入到 staging area
+        subprocess.run(["git", "add", "-A"], capture_output=True)
+        
+        return True
+    
+    def update_ticket_commit_hash(self, commit_hash: str) -> bool:
+        """更新票券的 commit hash（在提交後）"""
+        if not self.ticket_name:
+            return True
+            
+        # 尋找已完成的票券
+        tickets_dir = self.project_root / "docs" / "tickets" / "completed"
+        
+        ticket_file = None
+        for date_dir in tickets_dir.iterdir():
+            if date_dir.is_dir():
+                for file_path in date_dir.glob(f"*-ticket-{self.ticket_name}.yml"):
+                    ticket_file = file_path
+                    break
+            if ticket_file:
+                break
+        
+        if not ticket_file:
+            return True  # 不阻止流程
+            
+        # 更新 commit hash
+        with open(ticket_file, 'r', encoding='utf-8') as f:
+            ticket_data = yaml.safe_load(f)
+        
+        ticket_data['commit_hash'] = commit_hash
+        
+        with open(ticket_file, 'w', encoding='utf-8') as f:
+            yaml.dump(ticket_data, f, allow_unicode=True, sort_keys=False)
+        
+        return True
     
     def run(self):
         """執行智能提交流程"""
@@ -272,59 +310,53 @@ class SmartCommit:
         
         # 4. 執行票券文件驗證
         if not self.validate_ticket_documentation():
-            self.show_helpful_links("ticket_issue")
             return False
         
-        # 5. 執行正常的提交流程
+        # 5. 檢查是否要完成票券（在提交前）
+        ticket_should_complete = self.should_complete_ticket()
+        if ticket_should_complete:
+            if not self.prepare_ticket_completion():
+                return False
+        
+        # 6. 執行正常的提交流程
         print("\n✅ 所有檢查通過，繼續提交流程...\n")
         if not self.run_commit_guide():
-            self.show_helpful_links("failed_checks")
             return False
         
-        # 6. 執行 post-commit 生成
+        # 7. 如果完成了票券，更新 commit hash
+        if ticket_should_complete:
+            result = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                capture_output=True,
+                text=True
+            )
+            if result.returncode == 0:
+                commit_hash = result.stdout.strip()
+                self.update_ticket_commit_hash(commit_hash)
+        
+        # 8. 執行 post-commit 生成
         self.run_post_commit_generation()
         
-        # 7. 提供後續操作建議
+        # 9. 提供後續操作建議
         print("\n" + "="*50)
         print("✅ 提交完成！")
         
         if self.ticket_name:
-            print(f"\n💡 後續操作建議：")
-            print(f"   1. 如果開發完成：make merge-ticket TICKET={self.ticket_name}")
-            print(f"   2. 如果要暫停：make pause-ticket")
-            print(f"   3. 繼續開發：繼續修改程式碼")
+            if ticket_should_complete:
+                print(f"\n💡 票券已完成，後續操作建議：")
+                print(f"   1. 合併到 main: make dev-done TICKET={self.ticket_name}")
+                print(f"   2. 或直接執行: git checkout main && git merge {self.current_branch}")
+            else:
+                print(f"\n💡 後續操作建議：")
+                print(f"   1. 如果開發完成：make dev-commit (再次執行並選擇完成票券)")
+                print(f"   2. 如果要暫停：make dev-pause")
+                print(f"   3. 繼續開發：繼續修改程式碼")
         elif self.current_branch == "main":
             print("\n⚠️  您在 main branch 上直接提交")
             print("💡 建議：下次使用 'make dev-ticket TICKET=xxx' 開始新功能開發")
         
         print("=" * 50)
         return True
-    
-    def show_helpful_links(self, context="general"):
-        """根據情境顯示相關的 handbook 連結"""
-        links = {
-            "general": [
-                "📚 提交規範：docs/handbook/02-development-guides/commit-guide.md",
-                "🔄 工作流程：docs/handbook/01-getting-started/workflow.md"
-            ],
-            "failed_checks": [
-                "🔧 程式碼規範：docs/handbook/03-technical-references/core-practices/",
-                "📝 提交指南：docs/handbook/02-development-guides/commit-guide.md"
-            ],
-            "ticket_issue": [
-                "🎫 票券流程：docs/handbook/workflows/TICKET_DRIVEN_DEVELOPMENT.md",
-                "📋 業務規則：docs/handbook/01-context/business-rules.md"
-            ],
-            "ai_fix": [
-                "💡 改進建議：docs/handbook/05-reports/improvements/",
-                "🛠️ 技術參考：docs/handbook/03-technical-references/"
-            ]
-        }
-        
-        print("\n💡 相關參考文檔：")
-        for link in links.get(context, links["general"]):
-            print(f"   {link}")
-        print()
 
 if __name__ == "__main__":
     smart_commit = SmartCommit()
