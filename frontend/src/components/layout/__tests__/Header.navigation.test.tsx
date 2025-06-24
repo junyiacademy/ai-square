@@ -21,6 +21,14 @@ jest.mock('next/navigation', () => {
 
 import { Header } from '../Header'
 
+// Mock ThemeContext
+jest.mock('../../../contexts/ThemeContext', () => ({
+  useTheme: jest.fn(() => ({
+    theme: 'light',
+    toggleTheme: jest.fn(),
+  })),
+}))
+
 // Mock Link component
 jest.mock('next/link', () => {
   return {
