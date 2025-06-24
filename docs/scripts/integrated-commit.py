@@ -289,10 +289,6 @@ class IntegratedCommit:
                 if hasattr(result, 'stderr') and result.stderr:
                     print(f"錯誤: {result.stderr}")
                 return False
-                
-        except (EOFError, KeyboardInterrupt):
-            print("\n❌ 取消提交")
-            return False
 
 
 if __name__ == "__main__":
