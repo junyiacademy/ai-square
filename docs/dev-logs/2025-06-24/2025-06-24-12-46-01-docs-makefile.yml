@@ -1,29 +1,29 @@
 type: docs
-title: '[待補充 commit 訊息]'
+title: 'feat(docs): add 2025-06-24-12-42-50-ticket-fix-ticket-completion-workflow'
 date: '2025-06-24'
 developer: AI + Human
-status: in_progress
-commit_hash: pending
-description: '[待補充 commit 描述]'
+status: completed
+commit_hash: e6f705f4
+description: 'feat(docs): add 2025-06-24-12-42-50-ticket-fix-ticket-completion-workflow'
 ticket_id: 2025-06-24-12-38-34-remove-specs-folder
 ticket_name: remove-specs-folder
 ticket_path: docs/tickets/in_progress/2025-06-24-12-38-34-ticket-remove-specs-folder.yml
 timeline:
 - phase: 實現
-  duration: 12486.0
-  ai_time: 9988.800000000001
-  human_time: 2497.2000000000003
+  duration: 2.6
+  ai_time: 2.1
+  human_time: 0.5
   tasks:
   - 創建 2025-06-24-12-42-50-ticket-fix-ticket-completion-workflow.yml
   - 更新 Makefile
   - 更新 smart-commit.py
 metrics:
-  total_time_minutes: 12486.0
-  ai_time_minutes: 9988.800000000001
-  human_time_minutes: 2497.2000000000003
+  total_time_minutes: 2.6
+  ai_time_minutes: 2.1
+  human_time_minutes: 0.5
   ai_percentage: 80.0
   human_percentage: 20.0
-  files_added: 1
+  files_added: 2
   files_modified: 2
   files_deleted: 0
   time_calculation_method: git_history
@@ -31,8 +31,13 @@ metrics:
     start_time: '2025-06-15T20:36:50'
     end_time: '2025-06-24T12:42:53'
     file_count: 2
+  time_estimation_method: commit_based_file_timestamp_analysis
+  is_real_time: true
+  commit_timestamp: '2025-06-24T12:46:01'
+  post_commit_update_timestamp: '2025-06-24T12:46:01.609356'
 changes:
   added:
+  - docs/dev-logs/2025-06-24/2025-06-24-12-46-01-docs-makefile.yml
   - docs/tickets/in_progress/2025-06-24-12-42-50-ticket-fix-ticket-completion-workflow.yml
   modified:
   - Makefile
