@@ -13,7 +13,7 @@ export function ClientLayout({ children }: ClientLayoutProps) {
     <I18nProvider>
       <ThemeProvider>
         <Header />
-        <main className="min-h-screen bg-white dark:bg-dark-bg text-gray-900 dark:text-dark-text-primary">
+        <main className="min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-white">
           {children}
         </main>
       </ThemeProvider>

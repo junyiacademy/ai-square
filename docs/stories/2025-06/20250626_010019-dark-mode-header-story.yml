@@ -1,0 +1,45 @@
+ai_collaboration:
+  complexity_breakdown:
+    medium_count: 1
+  cost_per_feature: 0.0375
+  estimated_cost: 0.15000000000000002
+  total_interactions: 1
+created_at: '2025-06-26T01:04:37.472523'
+efficiency_metrics:
+  ai_efficiency_ratio: 0.0
+  ai_time_minutes: 0
+  duration_minutes: 2
+  files_changed: 4
+  human_time_minutes: 0
+  test_coverage:
+    branches: 0
+    functions: 0
+    lines: 0
+    statements: 0
+learnings:
+  avoid_in_future: []
+  reusable_patterns: []
+  what_could_improve: []
+  what_worked_well:
+  - 成本效益高（每功能 < $0.10）
+product_insights:
+  acceptance_criteria:
+  - Header 在深色模式下顯示正確的深色背景
+  - 深色模式切換按鈕正常運作
+  - Header 文字在深淺模式下都有適當的對比度
+  - 導航連結在深色模式下有正確的顏色
+  feature: 修復深色模式 Header 顏色和功能
+  purpose: 確保 Header 在深淺模式下都有正確的視覺呈現和功能
+  user_value: 確保 Header 在深淺模式下都有正確的視覺呈現和功能
+reusable_assets:
+  code_snippets: []
+  configuration: []
+  test_patterns: []
+technical_insights:
+  challenges: []
+  decisions: []
+  patterns_used: []
+  solutions: []
+ticket_id: 20250626_010019-dark-mode-header
+ticket_name: dark-mode-header
+type: fix
