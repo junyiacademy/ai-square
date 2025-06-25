@@ -3,6 +3,15 @@
 # Include base ignores
 #!include ../.gcloudignore
 
+# Parent directory docs (when running from frontend/)
+../docs/
+../backend/
+../archive-makefile/
+../*.tar.gz
+../CLAUDE.md
+../Makefile*
+../test-workflow.md
+
 # Frontend development files
 __tests__/
 __mocks__/
@@ -41,3 +50,14 @@ scripts/
 
 # Keep only production dependencies
 # The build process will handle node_modules
+
+# Node modules and build artifacts
+node_modules/
+.next/
+.swc/
+.turbo/
+
+# Large unnecessary files
+*.backup
+coverage/
+.nyc_output/
