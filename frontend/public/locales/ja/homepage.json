@@ -42,7 +42,21 @@
   "domains": {
     "title": "4つのコアAIリテラシードメイン",
     "subtitle": "AI相互作用と創造のあらゆる側面をマスター",
-    "viewDetails": "詳細を見る"
+    "viewDetails": "詳細を見る",
+    "items": {
+      "engaging": {
+        "name": "AIとの関わり"
+      },
+      "creating": {
+        "name": "AIとの創造"
+      },
+      "managing": {
+        "name": "AIの管理"
+      },
+      "designing": {
+        "name": "AIによる設計"
+      }
+    }
   },
   "howItWorks": {
     "title": "仕組み",

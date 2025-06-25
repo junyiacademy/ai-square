@@ -42,7 +42,21 @@
   "domains": {
     "title": "Quatre domaines principaux de littératie IA",
     "subtitle": "Maîtrisez tous les aspects de l'interaction et de la création avec l'IA",
-    "viewDetails": "Voir les détails"
+    "viewDetails": "Voir les détails",
+    "items": {
+      "engaging": {
+        "name": "Interagir avec l'IA"
+      },
+      "creating": {
+        "name": "Créer avec l'IA"
+      },
+      "managing": {
+        "name": "Gérer avec l'IA"
+      },
+      "designing": {
+        "name": "Concevoir avec l'IA"
+      }
+    }
   },
   "howItWorks": {
     "title": "Comment ça marche",

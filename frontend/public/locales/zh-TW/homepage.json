@@ -42,7 +42,21 @@
   "domains": {
     "title": "四大核心 AI 素養領域",
     "subtitle": "掌握 AI 互動與創造的每個面向",
-    "viewDetails": "查看詳情"
+    "viewDetails": "查看詳情",
+    "items": {
+      "engaging": {
+        "name": "與 AI 互動"
+      },
+      "creating": {
+        "name": "與 AI 共創"
+      },
+      "managing": {
+        "name": "AI 管理"
+      },
+      "designing": {
+        "name": "AI 設計思維"
+      }
+    }
   },
   "howItWorks": {
     "title": "如何運作",

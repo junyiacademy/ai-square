@@ -42,7 +42,21 @@
   "domains": {
     "title": "Cuatro Dominios Principales de Alfabetización en IA",
     "subtitle": "Domina todos los aspectos de la interacción y creación con IA",
-    "viewDetails": "Ver Detalles"
+    "viewDetails": "Ver Detalles",
+    "items": {
+      "engaging": {
+        "name": "Interactuar con IA"
+      },
+      "creating": {
+        "name": "Crear con IA"
+      },
+      "managing": {
+        "name": "Gestionar con IA"
+      },
+      "designing": {
+        "name": "Diseñar con IA"
+      }
+    }
   },
   "howItWorks": {
     "title": "Cómo Funciona",

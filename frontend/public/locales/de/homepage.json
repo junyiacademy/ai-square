@@ -42,7 +42,21 @@
   "domains": {
     "title": "Vier zentrale KI-Kompetenz-Domänen",
     "subtitle": "Beherrschen Sie jeden Aspekt der KI-Interaktion und -Erstellung",
-    "viewDetails": "Details anzeigen"
+    "viewDetails": "Details anzeigen",
+    "items": {
+      "engaging": {
+        "name": "Mit KI interagieren"
+      },
+      "creating": {
+        "name": "Mit KI erstellen"
+      },
+      "managing": {
+        "name": "Mit KI verwalten"
+      },
+      "designing": {
+        "name": "Mit KI entwerfen"
+      }
+    }
   },
   "howItWorks": {
     "title": "So funktioniert's",

@@ -25,34 +25,34 @@ export default function KnowledgeGraph() {
 
   const domains: Domain[] = useMemo(() => [
     { 
-      id: 'engaging', 
-      name: 'Engaging with AI', 
+      id: 'engaging_with_ai', 
+      name: t('domains.items.engaging.name'), 
       emoji: '🎯', 
       color: '#3B82F6',
       competencies: 5
     },
     { 
-      id: 'creating', 
-      name: 'Creating with AI', 
+      id: 'creating_with_ai', 
+      name: t('domains.items.creating.name'), 
       emoji: '🎨', 
       color: '#10B981',
       competencies: 6
     },
     { 
-      id: 'managing', 
-      name: 'Managing with AI', 
+      id: 'managing_with_ai', 
+      name: t('domains.items.managing.name'), 
       emoji: '🎮', 
       color: '#F59E0B',
       competencies: 4
     },
     { 
-      id: 'designing', 
-      name: 'Designing with AI', 
+      id: 'designing_with_ai', 
+      name: t('domains.items.designing.name'), 
       emoji: '🏗️', 
       color: '#EF4444',
       competencies: 5
     }
-  ], []);
+  ], [t]);
 
   useEffect(() => {
     const canvas = canvasRef.current;

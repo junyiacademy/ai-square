@@ -42,7 +42,21 @@
   "domains": {
     "title": "4개의 핵심 AI 리터러시 도메인",
     "subtitle": "AI 상호작용과 창조의 모든 측면을 마스터하세요",
-    "viewDetails": "자세히 보기"
+    "viewDetails": "자세히 보기",
+    "items": {
+      "engaging": {
+        "name": "AI와의 상호작용"
+      },
+      "creating": {
+        "name": "AI와 함께 창조하기"
+      },
+      "managing": {
+        "name": "AI 관리"
+      },
+      "designing": {
+        "name": "AI로 설계하기"
+      }
+    }
   },
   "howItWorks": {
     "title": "작동 방식",

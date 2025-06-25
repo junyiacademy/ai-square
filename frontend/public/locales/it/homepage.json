@@ -42,7 +42,21 @@
   "domains": {
     "title": "Quattro domini principali di alfabetizzazione AI",
     "subtitle": "Padroneggia ogni aspetto dell'interazione e creazione con l'AI",
-    "viewDetails": "Vedi dettagli"
+    "viewDetails": "Vedi dettagli",
+    "items": {
+      "engaging": {
+        "name": "Interagire con l'AI"
+      },
+      "creating": {
+        "name": "Creare con l'AI"
+      },
+      "managing": {
+        "name": "Gestire con l'AI"
+      },
+      "designing": {
+        "name": "Progettare con l'AI"
+      }
+    }
   },
   "howItWorks": {
     "title": "Come funziona",

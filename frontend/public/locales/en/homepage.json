@@ -42,7 +42,21 @@
   "domains": {
     "title": "Four Core AI Literacy Domains",
     "subtitle": "Master every aspect of AI interaction and creation",
-    "viewDetails": "View Details"
+    "viewDetails": "View Details",
+    "items": {
+      "engaging": {
+        "name": "Engaging with AI"
+      },
+      "creating": {
+        "name": "Creating with AI"
+      },
+      "managing": {
+        "name": "Managing with AI"
+      },
+      "designing": {
+        "name": "Designing with AI"
+      }
+    }
   },
   "howItWorks": {
     "title": "How It Works",
