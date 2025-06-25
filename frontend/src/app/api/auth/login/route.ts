@@ -68,6 +68,14 @@ export async function POST(request: NextRequest) {
         maxAge: 60 * 60 * 24 * 7 // 7 days
       })
       
+      // Store user object in cookie for middleware
+      response.cookies.set('user', JSON.stringify(userWithoutPassword), {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 7 // 7 days
+      })
+      
       return response
     } else {
       // 登入失敗

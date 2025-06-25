@@ -1,0 +1,107 @@
+ai_usage:
+  complexity_breakdown:
+    medium_count: 2
+  estimated_cost_usd: 0.30000000000000004
+  interactions:
+  - complexity: medium
+    description: development - medium
+    estimated_cost: 0.15000000000000002
+    is_start_marker: false
+    task_type: development
+    timestamp: '2025-06-26T02:13:58.370421'
+  - complexity: medium
+    description: development - medium
+    estimated_cost: 0.15000000000000002
+    is_start_marker: false
+    task_type: development
+    timestamp: '2025-06-26T02:14:22.318634'
+  total_interactions: 2
+completion_checklist:
+  ai_metrics_recorded: true
+  code_implemented: true
+  documentation_updated: false
+  spec_defined: true
+  story_extracted: false
+  tests_passing: true
+  tests_written: false
+created_at: '2025-06-26T02:13:01.108034'
+description: Fix authentication and UI issues in CMS dashboard
+dev_log:
+  sessions:
+  - activities:
+    - Debugged CMS dashboard showing 0 counts for all document types
+    - Identified authentication token mismatch between localStorage and cookies
+    - Added cookie storage during login process using js-cookie library
+    - Updated logout to clear both localStorage and cookies
+    - Fixed login form UI issue with white text on white background
+    - Tested GCS integration after authentication fix
+    ai_interactions:
+    - Assisted with debugging authentication issue
+    - Helped implement cookie storage solution
+    - Fixed UI visibility issue in login form
+    challenges:
+    - CMS dashboard was fetching data but showing 0 counts
+    - Authentication working in UI but failing in API routes
+    - Login form inputs were invisible due to color mismatch
+    date: '2025-06-26'
+    decisions:
+    - Store auth token in both localStorage and cookies for compatibility
+    - Use js-cookie library for reliable cookie management
+    - Change input text color to gray-900 for visibility
+    duration_minutes: 30
+    end_time: 02:43:01
+    files_modified:
+    - frontend/src/components/AdminLogin.tsx
+    - frontend/src/app/cms/components/AdminNavbar.tsx
+    next_steps:
+    - Monitor authentication stability in production
+    - Consider migrating fully to cookie-based auth in future
+    session_id: 1
+    start_time: 02:13:01
+development:
+  branch: ticket/auth-fixes
+  code_review_status: pending
+  commits: []
+  files_changed:
+  - docs/tickets/active/
+  test_coverage: null
+id: 20250626_021301-auth-fixes
+name: auth-fixes
+spec:
+  acceptance_criteria:
+  - CMS dashboard shows correct document counts from GCS
+  - Authentication token is stored in both localStorage and cookies
+  - Login form input text is visible (dark text on white background)
+  - Logout properly clears both localStorage and cookies
+  feature: Fix authentication mechanism and UI visibility issues
+  out_of_scope:
+  - Refactoring authentication flow
+  - Adding new authentication methods
+  purpose: Fix CMS dashboard showing 0 counts due to authentication mismatch between
+    localStorage and cookies, and fix white-on-white input text in login form
+  technical_requirements:
+  - Add cookie storage using js-cookie library during login
+  - Clear cookies during logout
+  - Update login form input text color to be visible
+status: active
+test_report:
+  coverage:
+    branches: 0
+    functions: 0
+    lines: 0
+    statements: 0
+  summary:
+    duration_ms: 0
+    failed: 0
+    passed: 0
+    skipped: 0
+    total_tests: 0
+  test_runs: []
+time_tracking:
+  actual_duration_minutes: 0
+  ai_time_minutes: 0
+  checkpoints: []
+  completed_at: null
+  human_time_minutes: 0
+  started_at: '2025-06-26T02:13:01.108034'
+type: fix
