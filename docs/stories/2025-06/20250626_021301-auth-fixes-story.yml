@@ -1,0 +1,63 @@
+ai_collaboration:
+  complexity_breakdown:
+    medium_count: 2
+  cost_per_feature: 0.075
+  estimated_cost: 0.30000000000000004
+  total_interactions: 2
+created_at: '2025-06-26T02:17:16.107009'
+efficiency_metrics:
+  ai_efficiency_ratio: 0.0
+  ai_time_minutes: 0
+  duration_minutes: 0
+  files_changed: 1
+  human_time_minutes: 0
+  test_coverage:
+    branches: 0
+    functions: 0
+    lines: 0
+    statements: 0
+learnings:
+  avoid_in_future: []
+  reusable_patterns: []
+  what_could_improve: []
+  what_worked_well:
+  - 成本效益高（每功能 < $0.10）
+product_insights:
+  acceptance_criteria:
+  - CMS dashboard shows correct document counts from GCS
+  - Authentication token is stored in both localStorage and cookies
+  - Login form input text is visible (dark text on white background)
+  - Logout properly clears both localStorage and cookies
+  feature: Fix authentication mechanism and UI visibility issues
+  purpose: Fix CMS dashboard showing 0 counts due to authentication mismatch between
+    localStorage and cookies, and fix white-on-white input text in login form
+  user_value: Fix CMS dashboard showing 0 counts due to authentication mismatch between
+    localStorage and cookies, and fix white-on-white input text in login form
+reusable_assets:
+  code_snippets: []
+  configuration: []
+  test_patterns: []
+technical_insights:
+  challenges:
+  - description: CMS dashboard was fetching data but showing 0 counts
+    session: 1
+  - description: Authentication working in UI but failing in API routes
+    session: 1
+  - description: Login form inputs were invisible due to color mismatch
+    session: 1
+  decisions:
+  - description: Store auth token in both localStorage and cookies for compatibility
+    session: 1
+  - description: Use js-cookie library for reliable cookie management
+    session: 1
+  - description: Change input text color to gray-900 for visibility
+    session: 1
+  patterns_used: []
+  solutions:
+  - description: Fixed login form UI issue with white text on white background
+    session: 1
+  - description: Tested GCS integration after authentication fix
+    session: 1
+ticket_id: 20250626_021301-auth-fixes
+ticket_name: auth-fixes
+type: fix

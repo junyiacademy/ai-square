@@ -20,12 +20,6 @@ export class ContentService {
   constructor() {
     this.isProduction = process.env.NODE_ENV === 'production';
     
-    console.log('ContentService: Initializing with:', {
-      GCS_BUCKET_NAME: process.env.GCS_BUCKET_NAME,
-      GOOGLE_CLOUD_PROJECT: process.env.GOOGLE_CLOUD_PROJECT,
-      GOOGLE_APPLICATION_CREDENTIALS: process.env.GOOGLE_APPLICATION_CREDENTIALS
-    });
-    
     if (process.env.GCS_BUCKET_NAME) {
       try {
         this.storage = new Storage({
@@ -33,12 +27,9 @@ export class ContentService {
           keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS
         });
         this.bucket = this.storage.bucket(process.env.GCS_BUCKET_NAME);
-        console.log('ContentService: GCS initialized successfully');
       } catch (error) {
         console.error('ContentService: Failed to initialize GCS:', error);
       }
-    } else {
-      console.log('ContentService: Running without GCS (local mode)');
     }
   }
 
