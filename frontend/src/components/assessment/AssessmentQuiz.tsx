@@ -16,8 +16,8 @@ interface AssessmentQuizProps {
   timeLimit: number; // in minutes
 }
 
-export default function AssessmentQuiz({ questions, domains, onComplete, timeLimit }: AssessmentQuizProps) {
-  const { t, i18n } = useTranslation('assessment');
+export default function AssessmentQuiz({ questions, onComplete, timeLimit }: AssessmentQuizProps) {
+  const { t } = useTranslation('assessment');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<UserAnswer[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<'a' | 'b' | 'c' | 'd' | null>(null);

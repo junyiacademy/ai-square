@@ -1,0 +1,93 @@
+{
+  "hero": {
+    "title": "Master AI Literacy with AI Square",
+    "subtitle": "Your personalized journey to understanding and leveraging artificial intelligence",
+    "description": "AI Square is a revolutionary multi-agent learning platform that empowers you to develop essential AI competencies through interactive assessments, personalized learning paths, and real-time AI assistance.",
+    "cta": {
+      "getStarted": "Start Your Journey",
+      "explore": "Explore AI Domains",
+      "assessment": "Take Assessment"
+    }
+  },
+  "features": {
+    "title": "Why Choose AI Square?",
+    "subtitle": "Comprehensive AI education designed for the modern world",
+    "items": {
+      "personalizedLearning": {
+        "title": "Personalized Learning Paths",
+        "description": "AI-powered recommendations adapt to your learning style and pace"
+      },
+      "multilingualSupport": {
+        "title": "9 Language Support",
+        "description": "Learn in your preferred language with full multilingual content"
+      },
+      "realTimeAI": {
+        "title": "24/7 AI Tutoring",
+        "description": "Get instant feedback and guidance from advanced AI assistants"
+      },
+      "comprehensiveAssessment": {
+        "title": "Comprehensive Assessment",
+        "description": "Evaluate your AI literacy across four core domains with detailed insights"
+      },
+      "interactiveTasks": {
+        "title": "Interactive Learning Tasks",
+        "description": "Hands-on projects and real-world scenarios to apply your knowledge"
+      },
+      "progressTracking": {
+        "title": "Visual Progress Tracking",
+        "description": "Track your growth with intuitive radar charts and achievement badges"
+      }
+    }
+  },
+  "domains": {
+    "title": "Four Core AI Literacy Domains",
+    "subtitle": "Master every aspect of AI interaction and creation",
+    "viewDetails": "View Details"
+  },
+  "howItWorks": {
+    "title": "How It Works",
+    "subtitle": "Your journey to AI mastery in simple steps",
+    "steps": {
+      "assessment": {
+        "title": "1. Take Initial Assessment",
+        "description": "Evaluate your current AI literacy level across four domains"
+      },
+      "personalized": {
+        "title": "2. Get Personalized Path",
+        "description": "Receive a customized learning journey based on your results"
+      },
+      "learn": {
+        "title": "3. Learn and Practice",
+        "description": "Engage with interactive content and AI-assisted tasks"
+      },
+      "track": {
+        "title": "4. Track Progress",
+        "description": "Monitor your growth and earn achievements"
+      }
+    }
+  },
+  "target": {
+    "title": "Who Is AI Square For?",
+    "subtitle": "Designed for learners at every level",
+    "audiences": {
+      "individuals": {
+        "title": "Individual Learners",
+        "description": "Develop essential AI skills for personal and professional growth"
+      },
+      "educators": {
+        "title": "Educators",
+        "description": "Access comprehensive resources for teaching AI literacy"
+      },
+      "organizations": {
+        "title": "Organizations",
+        "description": "Train your team with enterprise-grade AI education solutions"
+      }
+    }
+  },
+  "cta": {
+    "title": "Ready to Start Your AI Learning Journey?",
+    "subtitle": "Join thousands of learners mastering AI literacy",
+    "button": "Get Started Free",
+    "login": "Already have an account? Sign in"
+  }
+}
