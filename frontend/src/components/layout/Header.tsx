@@ -108,7 +108,7 @@ export function Header() {
   return (
     <header 
       role="banner" 
-      className="bg-white dark:bg-dark-surface shadow-sm border-b border-gray-200 dark:border-dark-border sticky top-0 z-50"
+      className="bg-white dark:bg-slate-800 shadow-sm border-b border-gray-200 dark:border-slate-700 sticky top-0 z-50"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -131,7 +131,7 @@ export function Header() {
                     />
                   </svg>
                 </div>
-                <h1 className="text-xl font-bold text-gray-900 dark:text-dark-text-primary">AI Square</h1>
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">AI Square</h1>
               </Link>
             </div>
 
@@ -143,8 +143,8 @@ export function Header() {
                   href={link.href}
                   className={`inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors ${
                     pathname === link.href
-                      ? 'text-gray-900 border-b-2 border-blue-600 active'
-                      : 'text-gray-500 hover:text-gray-900 hover:border-b-2 hover:border-gray-300'
+                      ? 'text-gray-900 dark:text-white border-b-2 border-blue-600 active'
+                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:border-b-2 hover:border-gray-300 dark:hover:border-gray-600'
                   }`}
                 >
                   {link.label}
@@ -161,7 +161,7 @@ export function Header() {
             {/* 主題切換按鈕 */}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              className="p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
               aria-label={t('toggleTheme')}
             >
               {/* 在 mount 前顯示預設圖標，避免 hydration 問題 */}
@@ -191,7 +191,7 @@ export function Header() {
             {/* Mobile menu button */}
             <button
               type="button"
-              className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+              className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-300 hover:text-gray-500 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
               onClick={toggleMobileMenu}
               aria-label="Toggle navigation menu"
               aria-expanded={isMobileMenuOpen}
@@ -226,10 +226,10 @@ export function Header() {
                 {/* 用戶資訊 */}
                 <div className="hidden sm:flex sm:items-center sm:space-x-3">
                   <div className="text-right">
-                    <div className="text-sm font-medium text-gray-900">
+                    <div className="text-sm font-medium text-gray-900 dark:text-white">
                       {user.email}
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
                       {getRoleDisplayName(user.role)}
                     </div>
                   </div>
@@ -281,7 +281,7 @@ export function Header() {
 
       {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && (
-        <nav className="md:hidden bg-white border-t border-gray-200" aria-label="Mobile navigation">
+        <nav className="md:hidden bg-white dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700" aria-label="Mobile navigation">
           <div className="px-2 pt-2 pb-3 space-y-1">
             {navLinks.map(link => (
               <Link
@@ -289,8 +289,8 @@ export function Header() {
                 href={link.href}
                 className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
                   pathname === link.href
-                    ? 'text-gray-900 bg-gray-100'
-                    : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
+                    ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-slate-700'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-700'
                 }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
@@ -303,13 +303,13 @@ export function Header() {
 
       {/* 移動端用戶資訊 (當登入時顯示) */}
       {isLoggedIn && user && (
-        <div className="sm:hidden bg-gray-50 border-t border-gray-200 px-4 py-3">
+        <div className="sm:hidden bg-gray-50 dark:bg-slate-900 border-t border-gray-200 dark:border-slate-700 px-4 py-3">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm font-medium text-gray-900">
+              <div className="text-sm font-medium text-gray-900 dark:text-white">
                 {user.email}
               </div>
-              <div className="text-xs text-gray-500">
+              <div className="text-xs text-gray-500 dark:text-gray-400">
                 {getRoleDisplayName(user.role)}
               </div>
             </div>

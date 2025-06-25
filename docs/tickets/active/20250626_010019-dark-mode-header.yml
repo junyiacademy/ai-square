@@ -1,0 +1,84 @@
+ai_usage:
+  complexity_breakdown:
+    medium_count: 1
+  estimated_cost_usd: 0.15000000000000002
+  interactions:
+  - complexity: medium
+    description: development - medium
+    estimated_cost: 0.15000000000000002
+    is_start_marker: false
+    task_type: development
+    timestamp: '2025-06-26T01:03:58.259325'
+  total_interactions: 1
+completion_checklist:
+  ai_metrics_recorded: false
+  code_implemented: false
+  documentation_updated: false
+  spec_defined: false
+  story_extracted: false
+  tests_passing: false
+  tests_written: false
+created_at: '2025-06-26T01:00:19.677003'
+description: dark-mode-header implementation
+dev_log:
+  sessions:
+  - activities: []
+    ai_interactions: []
+    challenges: []
+    date: '2025-06-26'
+    decisions: []
+    duration_minutes: 0
+    end_time: null
+    files_modified: []
+    next_steps: []
+    session_id: 1
+    start_time: 01:00:19
+development:
+  branch: ticket/dark-mode-header
+  code_review_status: pending
+  commits: []
+  files_changed:
+  - frontend/src/components/layout/Header.tsx
+  - docs/tickets/active/
+  - rontend/app.css
+  - frontend/src/components/layout/ClientLayout.tsx
+  test_coverage: null
+id: 20250626_010019-dark-mode-header
+name: dark-mode-header
+spec:
+  acceptance_criteria:
+  - Header 在深色模式下顯示正確的深色背景
+  - 深色模式切換按鈕正常運作
+  - Header 文字在深淺模式下都有適當的對比度
+  - 導航連結在深色模式下有正確的顏色
+  feature: 修復深色模式 Header 顏色和功能
+  out_of_scope:
+  - 不修改其他頁面的深色模式樣式
+  - 不改變 Header 的結構或佈局
+  purpose: 確保 Header 在深淺模式下都有正確的視覺呈現和功能
+  technical_requirements:
+  - 使用 Tailwind CSS v4 的深色模式支援
+  - 確保 dark class 正確應用到 HTML 元素
+  - 修復 Header 背景色在深色模式下的顯示問題
+status: active
+test_report:
+  coverage:
+    branches: 0
+    functions: 0
+    lines: 0
+    statements: 0
+  summary:
+    duration_ms: 0
+    failed: 0
+    passed: 0
+    skipped: 0
+    total_tests: 0
+  test_runs: []
+time_tracking:
+  actual_duration_minutes: 2
+  ai_time_minutes: 0
+  checkpoints: []
+  completed_at: null
+  human_time_minutes: 0
+  started_at: '2025-06-26T01:00:19.677003'
+type: fix
