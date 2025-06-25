@@ -176,51 +176,27 @@ ai-report:
 	@python3 docs/scripts/enhanced-ticket-manager.py check 2>/dev/null || \
 		echo "$(YELLOW)尚無活躍票券$(NC)"
 
-## 分析 commits 和票券對應關係
-commit-analysis:
-	@echo "$(BLUE)🔍 分析 Commits 與票券對應關係$(NC)"
-	@python3 docs/scripts/commit-to-ticket-analyzer.py --days 30
 
-## 匯出 commit 分析為 CSV
-commit-export:
-	@echo "$(YELLOW)📊 匯出 Commit 分析資料$(NC)"
-	@python3 docs/scripts/commit-to-ticket-analyzer.py --export --output commit_analysis_$(shell date +%Y%m%d).csv
-	@echo "$(GREEN)✅ 已匯出至 commit_analysis_$(shell date +%Y%m%d).csv$(NC)"
+#=============================================================================
+# 智能補票系統
+#=============================================================================
 
 ## 查找沒有票券的 commits
 orphan-commits:
 	@echo "$(YELLOW)🔍 查找沒有票券的 commits$(NC)"
 	@python3 docs/scripts/ticket-repair-tool.py orphans --days 30
 
-## 從 commit 創建票券
-ticket-from-commit:
-	@if [ -z "$(COMMIT)" ]; then \
-		echo "$(RED)❌ 請提供 COMMIT 參數$(NC)"; \
-		echo "$(CYAN)用法: make ticket-from-commit COMMIT=abc123 TYPE=feature$(NC)"; \
-		exit 1; \
-	fi
-	@python3 docs/scripts/ticket-repair-tool.py create --commit $(COMMIT) --type $(TYPE)
-
-## 修復票券遺漏資訊
-ticket-repair:
-	@if [ -z "$(TICKET)" ]; then \
-		echo "$(RED)❌ 請提供 TICKET 參數$(NC)"; \
-		echo "$(CYAN)用法: make ticket-repair TICKET=docs/tickets/active/xxx.yml$(NC)"; \
-		exit 1; \
-	fi
-	@python3 docs/scripts/ticket-repair-tool.py repair --ticket $(TICKET)
+## 智能補票預覽（推薦先執行）
+smart-tickets-preview:
+	@echo "$(YELLOW)👀 預覽智能補票分組結果$(NC)"
+	@python3 docs/scripts/smart-ticket-creator.py --days 30 --dry-run
 
 ## 智能補票（自動分組相關 commits）
 smart-tickets:
 	@echo "$(BLUE)🤖 智能分析 commits 並自動補票$(NC)"
 	@python3 docs/scripts/smart-ticket-creator.py --days 30
 
-## 智能補票預覽（不實際創建）
-smart-tickets-preview:
-	@echo "$(YELLOW)👀 預覽智能補票分組結果$(NC)"
-	@python3 docs/scripts/smart-ticket-creator.py --days 30 --dry-run
-
-## 批次創建票券（選擇性）
+## 批次創建票券（選擇性創建）
 batch-tickets:
 	@echo "$(BLUE)📦 批次創建票券$(NC)"
 	@if [ -z "$(TICKETS)" ] && [ -z "$(RECENT)" ] && [ -z "$(TYPE)" ]; then \
@@ -234,6 +210,15 @@ batch-tickets:
 		$$([ -n "$(TICKETS)" ] && echo "--tickets $(TICKETS)") \
 		$$([ -n "$(RECENT)" ] && echo "--recent $(RECENT)") \
 		$$([ -n "$(TYPE)" ] && echo "--type $(TYPE)")
+
+## 從單個 commit 創建票券
+ticket-from-commit:
+	@if [ -z "$(COMMIT)" ]; then \
+		echo "$(RED)❌ 請提供 COMMIT 參數$(NC)"; \
+		echo "$(CYAN)用法: make ticket-from-commit COMMIT=abc123 TYPE=feature$(NC)"; \
+		exit 1; \
+	fi
+	@python3 docs/scripts/ticket-repair-tool.py create --commit $(COMMIT) --type $(TYPE)
 
 #=============================================================================
 # 幫助
@@ -255,6 +240,12 @@ help:
 	@echo "  $(GREEN)make ai-story$(NC)                                      - 萃取開發故事"
 	@echo "  $(GREEN)make ai-report$(NC)                                     - 整合式報告"
 	@echo "  $(GREEN)make ai-log$(NC)                                        - 檢視開發日誌"
+	@echo ""
+	@echo "$(CYAN)智能補票:$(NC)"
+	@echo "  $(GREEN)make orphan-commits$(NC)                                - 查找沒票的 commits"
+	@echo "  $(GREEN)make smart-tickets-preview$(NC)                         - 預覽智能分組"
+	@echo "  $(GREEN)make smart-tickets$(NC)                                 - 智能補票（互動式）"
+	@echo "  $(GREEN)make batch-tickets$(NC) RECENT=5                        - 批次補票"
 	@echo ""
 	@echo "$(YELLOW)=== 開發命令 ===$(NC)"
 	@echo "$(CYAN)應用程式執行:$(NC)"
