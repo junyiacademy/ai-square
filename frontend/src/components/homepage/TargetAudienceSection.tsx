@@ -45,13 +45,13 @@ export default function TargetAudienceSection() {
     }
   ];
 
-  const colorClasses = {
+  const colorClasses: Record<string, string> = {
     blue: 'from-blue-400 to-blue-600',
     green: 'from-green-400 to-green-600',
     purple: 'from-purple-400 to-purple-600'
   };
 
-  const bgColorClasses = {
+  const bgColorClasses: Record<string, string> = {
     blue: 'bg-blue-50',
     green: 'bg-green-50',
     purple: 'bg-purple-50'

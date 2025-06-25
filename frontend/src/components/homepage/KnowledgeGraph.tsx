@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useRouter } from 'next/navigation';
 
 interface Domain {
   id: string;
@@ -15,12 +16,14 @@ interface Domain {
 
 export default function KnowledgeGraph() {
   const { t } = useTranslation('homepage');
+  const router = useRouter();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [hoveredDomain, setHoveredDomain] = useState<string | null>(null);
   const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number>(0);
 
-  const domains: Domain[] = [
+  const domains: Domain[] = useMemo(() => [
     { 
       id: 'engaging', 
       name: 'Engaging with AI', 
@@ -49,7 +52,7 @@ export default function KnowledgeGraph() {
       color: '#EF4444',
       competencies: 5
     }
-  ];
+  ], []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -103,8 +106,7 @@ export default function KnowledgeGraph() {
 
       // Draw domains
       domains.forEach((domain) => {
-        const isHovered = 
-          Math.sqrt(Math.pow(mousePos.x - domain.x!, 2) + Math.pow(mousePos.y - domain.y!, 2)) < 50;
+        const isHovered = hoveredDomain === domain.id;
         
         // Domain circle
         ctx.fillStyle = domain.color;
@@ -121,8 +123,8 @@ export default function KnowledgeGraph() {
         ctx.fillText(domain.emoji, domain.x!, domain.y!);
 
         // Domain name
-        ctx.fillStyle = '#374151';
-        ctx.font = '12px sans-serif';
+        ctx.fillStyle = isHovered ? '#4F46E5' : '#374151';
+        ctx.font = isHovered ? 'bold 14px sans-serif' : '12px sans-serif';
         ctx.fillText(domain.name, domain.x!, domain.y! + 70);
 
         // Competency count
@@ -138,10 +140,18 @@ export default function KnowledgeGraph() {
 
     const handleMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
-      setMousePos({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
-      });
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      setMousePos({ x, y });
+      
+      // Check if hovering over a domain
+      const hovered = domains.find(domain => 
+        Math.sqrt(Math.pow(x - domain.x!, 2) + Math.pow(y - domain.y!, 2)) < 50
+      );
+      
+      setHoveredDomain(hovered ? hovered.id : null);
+      canvas.style.cursor = hovered ? 'pointer' : 'default';
     };
 
     const handleClick = (e: MouseEvent) => {
@@ -153,7 +163,11 @@ export default function KnowledgeGraph() {
         Math.sqrt(Math.pow(x - domain.x!, 2) + Math.pow(y - domain.y!, 2)) < 50
       );
 
-      setSelectedDomain(clicked || null);
+      if (clicked) {
+        setSelectedDomain(clicked);
+        // Navigate to relations page when a domain is clicked
+        router.push('/relations');
+      }
     };
 
     canvas.addEventListener('mousemove', handleMouseMove);
@@ -166,7 +180,7 @@ export default function KnowledgeGraph() {
       canvas.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('click', handleClick);
     };
-  }, [mousePos]);
+  }, [mousePos, domains, router, hoveredDomain]);
 
   return (
     <div className="relative w-full">

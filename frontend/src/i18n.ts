@@ -56,6 +56,17 @@ import deAssessment from '../public/locales/de/assessment.json';
 import ruAssessment from '../public/locales/ru/assessment.json';
 import itAssessment from '../public/locales/it/assessment.json';
 
+// Homepage 翻譯
+import zhTWHomepage from '../public/locales/zh-TW/homepage.json';
+import enHomepage from '../public/locales/en/homepage.json';
+import esHomepage from '../public/locales/es/homepage.json';
+import jaHomepage from '../public/locales/ja/homepage.json';
+import koHomepage from '../public/locales/ko/homepage.json';
+import frHomepage from '../public/locales/fr/homepage.json';
+import deHomepage from '../public/locales/de/homepage.json';
+import ruHomepage from '../public/locales/ru/homepage.json';
+import itHomepage from '../public/locales/it/homepage.json';
+
 // 在伺服器端和客戶端都使用相同的預設語言避免 hydration mismatch
 const getDefaultLng = () => {
   // 伺服器端總是返回英文作為預設語言
@@ -72,63 +83,72 @@ i18n
         auth: zhTWAuth,
         navigation: zhTWNavigation,
         ksa: zhTWKsa,
-        assessment: zhTWAssessment
+        assessment: zhTWAssessment,
+        homepage: zhTWHomepage
       },
       en: { 
         relations: enRelations,
         auth: enAuth,
         navigation: enNavigation,
         ksa: enKsa,
-        assessment: enAssessment
+        assessment: enAssessment,
+        homepage: enHomepage
       },
       es: { 
         relations: esRelations,
         auth: esAuth,
         navigation: esNavigation,
         ksa: esKsa,
-        assessment: esAssessment
+        assessment: esAssessment,
+        homepage: esHomepage
       },
       ja: { 
         relations: jaRelations,
         auth: jaAuth,
         navigation: jaNavigation,
         ksa: jaKsa,
-        assessment: jaAssessment
+        assessment: jaAssessment,
+        homepage: jaHomepage
       },
       ko: { 
         relations: koRelations,
         auth: koAuth,
         navigation: koNavigation,
         ksa: koKsa,
-        assessment: koAssessment
+        assessment: koAssessment,
+        homepage: koHomepage
       },
       fr: { 
         relations: frRelations,
         auth: frAuth,
         navigation: frNavigation,
         ksa: frKsa,
-        assessment: frAssessment
+        assessment: frAssessment,
+        homepage: frHomepage
       },
       de: { 
         relations: deRelations,
         auth: deAuth,
         navigation: deNavigation,
         ksa: deKsa,
-        assessment: deAssessment
+        assessment: deAssessment,
+        homepage: deHomepage
       },
       ru: { 
         relations: ruRelations,
         auth: ruAuth,
         navigation: ruNavigation,
         ksa: ruKsa,
-        assessment: ruAssessment
+        assessment: ruAssessment,
+        homepage: ruHomepage
       },
       it: { 
         relations: itRelations,
         auth: itAuth,
         navigation: itNavigation,
         ksa: itKsa,
-        assessment: itAssessment
+        assessment: itAssessment,
+        homepage: itHomepage
       },
     },
     lng: getDefaultLng(),
