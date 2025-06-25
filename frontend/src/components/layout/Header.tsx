@@ -95,6 +95,7 @@ export function Header() {
   const navLinks = [
     { href: '/relations', label: t('relations') },
     { href: '/ksa', label: t('ksa') },
+    { href: '/assessment', label: t('assessment') },
   ]
 
   return (

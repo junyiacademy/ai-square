@@ -1,0 +1,90 @@
+{
+  "loading": "評価を読み込み中...",
+  "errorLoading": "評価データの読み込みに失敗しました。もう一度お試しください。",
+  "title": "AIリテラシー評価",
+  "description": "4つの主要分野でAIリテラシースキルを評価",
+  "assessmentInfo": {
+    "title": "評価の詳細",
+    "questions": "{{count}}問の包括的な質問",
+    "timeLimit": "{{minutes}}分の制限時間",
+    "domains": "{{count}}つのスキル分野",
+    "immediate": "詳細なフィードバック付きの即時結果"
+  },
+  "benefits": {
+    "title": "取得できるもの",
+    "personalized": "パーソナライズされたスキル評価",
+    "skillGaps": "知識のギャップを特定",
+    "radarChart": "視覚的なスキルレーダーチャート",
+    "recommendations": "ターゲットを絞った学習推奨事項"
+  },
+  "startAssessment": "評価を開始",
+  "quiz": {
+    "title": "AIリテラシー評価",
+    "question": "質問",
+    "timeLeft": "残り時間",
+    "selectAnswer": "続行するには回答を選択してください",
+    "checkAnswer": "下記で答えと説明を確認してください",
+    "submit": "回答を送信",
+    "next": "次の質問",
+    "finish": "評価を完了",
+    "explanation": "説明",
+    "ksaMapping": "関連コンピテンシー",
+    "knowledge": "知識",
+    "skills": "スキル",
+    "attitudes": "態度"
+  },
+  "difficulty": {
+    "basic": "基礎",
+    "intermediate": "中級",
+    "advanced": "上級"
+  },
+  "results": {
+    "title": "評価結果",
+    "subtitle": "AIリテラシー評価でのパフォーマンスは以下の通りです",
+    "correctAnswers": "正解数",
+    "timeSpent": "所要時間",
+    "completedAt": "完了日",
+    "skillRadar": "スキルレーダーチャート",
+    "yourScore": "あなたのスコア",
+    "summary": "評価サマリー",
+    "summaryText": "{{level}}レベルを達成し、全体スコア{{score}}%で、{{total}}問中{{correct}}問正解しました。",
+    "domainBreakdown": "分野別内訳",
+    "personalizedRecommendations": "パーソナライズされた推奨事項",
+    "nextSteps": "推奨される次のステップ",
+    "nextStep1": "スコアの低い分野に集中する",
+    "nextStep2": "インタラクティブな演習で練習する",
+    "nextStep3": "AIリテラシー学習コミュニティに参加する",
+    "retakeAssessment": "評価を再受験",
+    "downloadReport": "レポートをダウンロード",
+    "tabs": {
+      "overview": "概要",
+      "domains": "分野",
+      "recommendations": "推奨事項",
+      "ksa": "KSA分析"
+    },
+    "ksaAnalysis": {
+      "title": "KSAコンピテンシー分析",
+      "description": "正解を通じて示された知識、スキル、態度の分析",
+      "competenciesDemonstrated": "個のコンピテンシーを実証",
+      "times": "回",
+      "demonstratedIn": "{{count}}問で実証",
+      "noCompetencies": "このカテゴリーでコンピテンシーは実証されませんでした",
+      "summary": "全体的なKSAサマリー",
+      "knowledgeAreas": "知識領域",
+      "skillsAreas": "スキル領域",
+      "attitudesAreas": "態度領域"
+    }
+  },
+  "level": {
+    "beginner": "初心者",
+    "intermediate": "中級者",
+    "advanced": "上級者",
+    "expert": "エキスパート"
+  },
+  "domains": {
+    "engaging_with_ai": "AIとの関わり",
+    "creating_with_ai": "AIと共に創造",
+    "managing_with_ai": "AIの管理",
+    "designing_with_ai": "AIのデザイン"
+  }
+}

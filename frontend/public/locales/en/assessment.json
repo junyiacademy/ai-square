@@ -1,0 +1,90 @@
+{
+  "loading": "Loading assessment...",
+  "errorLoading": "Failed to load assessment data. Please try again.",
+  "title": "AI Literacy Assessment",
+  "description": "Evaluate your AI literacy skills across four key domains",
+  "assessmentInfo": {
+    "title": "Assessment Details",
+    "questions": "{{count}} comprehensive questions",
+    "timeLimit": "{{minutes}} minute time limit",
+    "domains": "{{count}} skill domains",
+    "immediate": "Immediate results with detailed feedback"
+  },
+  "benefits": {
+    "title": "What You'll Get",
+    "personalized": "Personalized skill assessment",
+    "skillGaps": "Identify knowledge gaps",
+    "radarChart": "Visual skill radar chart",
+    "recommendations": "Targeted learning recommendations"
+  },
+  "startAssessment": "Start Assessment",
+  "quiz": {
+    "title": "AI Literacy Assessment",
+    "question": "Question",
+    "timeLeft": "Time Left",
+    "selectAnswer": "Please select an answer to continue",
+    "checkAnswer": "Check your answer and explanation below",
+    "submit": "Submit Answer",
+    "next": "Next Question",
+    "finish": "Finish Assessment",
+    "explanation": "Explanation",
+    "ksaMapping": "Related Competencies",
+    "knowledge": "Knowledge",
+    "skills": "Skills",
+    "attitudes": "Attitudes"
+  },
+  "difficulty": {
+    "basic": "Basic",
+    "intermediate": "Intermediate", 
+    "advanced": "Advanced"
+  },
+  "results": {
+    "title": "Assessment Results",
+    "subtitle": "Here's how you performed on the AI literacy assessment",
+    "correctAnswers": "Correct Answers",
+    "timeSpent": "Time Spent",
+    "completedAt": "Completed On",
+    "skillRadar": "Skill Radar Chart",
+    "yourScore": "Your Score",
+    "summary": "Assessment Summary",
+    "summaryText": "You achieved {{level}} level with {{score}}% overall score, answering {{correct}} out of {{total}} questions correctly.",
+    "domainBreakdown": "Domain Breakdown",
+    "personalizedRecommendations": "Personalized Recommendations",
+    "nextSteps": "Recommended Next Steps",
+    "nextStep1": "Focus on your lowest scoring domains",
+    "nextStep2": "Practice with interactive exercises",
+    "nextStep3": "Join AI literacy learning communities",
+    "retakeAssessment": "Retake Assessment",
+    "downloadReport": "Download Report",
+    "tabs": {
+      "overview": "Overview",
+      "domains": "Domains", 
+      "recommendations": "Recommendations",
+      "ksa": "KSA Analysis"
+    },
+    "ksaAnalysis": {
+      "title": "KSA Competency Analysis",
+      "description": "Analysis of Knowledge, Skills, and Attitudes demonstrated through your correct answers",
+      "competenciesDemonstrated": "competencies demonstrated",
+      "times": "times",
+      "demonstratedIn": "Demonstrated in {{count}} question(s)",
+      "noCompetencies": "No competencies demonstrated in this category",
+      "summary": "Overall KSA Summary",
+      "knowledgeAreas": "Knowledge Areas",
+      "skillsAreas": "Skills Areas",
+      "attitudesAreas": "Attitudes Areas"
+    }
+  },
+  "level": {
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "expert": "Expert"
+  },
+  "domains": {
+    "engaging_with_ai": "Engaging with AI",
+    "creating_with_ai": "Creating with AI",
+    "managing_with_ai": "Managing with AI",
+    "designing_with_ai": "Designing with AI"
+  }
+}

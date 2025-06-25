@@ -1,0 +1,90 @@
+{
+  "loading": "Bewertung wird geladen...",
+  "errorLoading": "Bewertungsdaten konnten nicht geladen werden. Bitte versuchen Sie es erneut.",
+  "title": "KI-Kompetenz Bewertung",
+  "description": "Bewerten Sie Ihre KI-Kompetenzen in vier Schlüsselbereichen",
+  "assessmentInfo": {
+    "title": "Bewertungsdetails",
+    "questions": "{{count}} umfassende Fragen",
+    "timeLimit": "{{minutes}} Minuten Zeitlimit",
+    "domains": "{{count}} Kompetenzbereiche",
+    "immediate": "Sofortige Ergebnisse mit detailliertem Feedback"
+  },
+  "benefits": {
+    "title": "Was Sie erhalten",
+    "personalized": "Personalisierte Kompetenzbewertung",
+    "skillGaps": "Wissenslücken identifizieren",
+    "radarChart": "Visuelles Kompetenz-Radardiagramm",
+    "recommendations": "Gezielte Lernempfehlungen"
+  },
+  "startAssessment": "Bewertung starten",
+  "quiz": {
+    "title": "KI-Kompetenz Bewertung",
+    "question": "Frage",
+    "timeLeft": "Verbleibende Zeit",
+    "selectAnswer": "Bitte wählen Sie eine Antwort aus, um fortzufahren",
+    "checkAnswer": "Überprüfen Sie Ihre Antwort und Erklärung unten",
+    "submit": "Antwort einreichen",
+    "next": "Nächste Frage",
+    "finish": "Bewertung abschließen",
+    "explanation": "Erklärung",
+    "ksaMapping": "Zugehörige Kompetenzen",
+    "knowledge": "Wissen",
+    "skills": "Fähigkeiten",
+    "attitudes": "Einstellungen"
+  },
+  "difficulty": {
+    "basic": "Grundlegend",
+    "intermediate": "Mittel",
+    "advanced": "Fortgeschritten"
+  },
+  "results": {
+    "title": "Bewertungsergebnisse",
+    "subtitle": "So haben Sie bei der KI-Kompetenz-Bewertung abgeschnitten",
+    "correctAnswers": "Richtige Antworten",
+    "timeSpent": "Benötigte Zeit",
+    "completedAt": "Abgeschlossen am",
+    "skillRadar": "Kompetenz-Radardiagramm",
+    "yourScore": "Ihre Punktzahl",
+    "summary": "Bewertungszusammenfassung",
+    "summaryText": "Sie haben das {{level}}-Niveau mit {{score}}% Gesamtpunktzahl erreicht und {{correct}} von {{total}} Fragen richtig beantwortet.",
+    "domainBreakdown": "Bereichsaufschlüsselung",
+    "personalizedRecommendations": "Personalisierte Empfehlungen",
+    "nextSteps": "Empfohlene nächste Schritte",
+    "nextStep1": "Konzentrieren Sie sich auf Ihre schwächsten Bereiche",
+    "nextStep2": "Üben Sie mit interaktiven Übungen",
+    "nextStep3": "Treten Sie KI-Kompetenz-Lerngemeinschaften bei",
+    "retakeAssessment": "Bewertung wiederholen",
+    "downloadReport": "Bericht herunterladen",
+    "tabs": {
+      "overview": "Übersicht",
+      "domains": "Bereiche",
+      "recommendations": "Empfehlungen",
+      "ksa": "KSA-Analyse"
+    },
+    "ksaAnalysis": {
+      "title": "KSA-Kompetenzanalyse",
+      "description": "Analyse von Wissen, Fähigkeiten und Einstellungen, die durch Ihre richtigen Antworten demonstriert wurden",
+      "competenciesDemonstrated": "demonstrierte Kompetenzen",
+      "times": "mal",
+      "demonstratedIn": "In {{count}} Frage(n) demonstriert",
+      "noCompetencies": "Keine Kompetenzen in dieser Kategorie demonstriert",
+      "summary": "Gesamt-KSA-Zusammenfassung",
+      "knowledgeAreas": "Wissensbereiche",
+      "skillsAreas": "Fähigkeitsbereiche",
+      "attitudesAreas": "Einstellungsbereiche"
+    }
+  },
+  "level": {
+    "beginner": "Anfänger",
+    "intermediate": "Fortgeschritten",
+    "advanced": "Erweitert",
+    "expert": "Experte"
+  },
+  "domains": {
+    "engaging_with_ai": "Mit KI interagieren",
+    "creating_with_ai": "Mit KI erstellen",
+    "managing_with_ai": "Mit KI verwalten",
+    "designing_with_ai": "Mit KI gestalten"
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "loading": "Chargement de l'évaluation...",
+  "errorLoading": "Échec du chargement des données d'évaluation. Veuillez réessayer.",
+  "title": "Évaluation de la Littératie en IA",
+  "description": "Évaluez vos compétences en littératie IA dans quatre domaines clés",
+  "assessmentInfo": {
+    "title": "Détails de l'Évaluation",
+    "questions": "{{count}} questions complètes",
+    "timeLimit": "Limite de {{minutes}} minutes",
+    "domains": "{{count}} domaines de compétences",
+    "immediate": "Résultats immédiats avec feedback détaillé"
+  },
+  "benefits": {
+    "title": "Ce que vous obtiendrez",
+    "personalized": "Évaluation personnalisée des compétences",
+    "skillGaps": "Identifier les lacunes de connaissances",
+    "radarChart": "Graphique radar visuel des compétences",
+    "recommendations": "Recommandations d'apprentissage ciblées"
+  },
+  "startAssessment": "Commencer l'Évaluation",
+  "quiz": {
+    "title": "Évaluation de la Littératie en IA",
+    "question": "Question",
+    "timeLeft": "Temps Restant",
+    "selectAnswer": "Veuillez sélectionner une réponse pour continuer",
+    "checkAnswer": "Vérifiez votre réponse et l'explication ci-dessous",
+    "submit": "Soumettre la Réponse",
+    "next": "Question Suivante",
+    "finish": "Terminer l'Évaluation",
+    "explanation": "Explication",
+    "ksaMapping": "Compétences Associées",
+    "knowledge": "Connaissances",
+    "skills": "Compétences",
+    "attitudes": "Attitudes"
+  },
+  "difficulty": {
+    "basic": "Basique",
+    "intermediate": "Intermédiaire",
+    "advanced": "Avancé"
+  },
+  "results": {
+    "title": "Résultats de l'Évaluation",
+    "subtitle": "Voici votre performance à l'évaluation de littératie en IA",
+    "correctAnswers": "Réponses Correctes",
+    "timeSpent": "Temps Passé",
+    "completedAt": "Complété le",
+    "skillRadar": "Graphique Radar des Compétences",
+    "yourScore": "Votre Score",
+    "summary": "Résumé de l'Évaluation",
+    "summaryText": "Vous avez atteint le niveau {{level}} avec un score global de {{score}}%, répondant correctement à {{correct}} questions sur {{total}}.",
+    "domainBreakdown": "Répartition par Domaine",
+    "personalizedRecommendations": "Recommandations Personnalisées",
+    "nextSteps": "Prochaines Étapes Recommandées",
+    "nextStep1": "Concentrez-vous sur vos domaines les moins performants",
+    "nextStep2": "Pratiquez avec des exercices interactifs",
+    "nextStep3": "Rejoignez les communautés d'apprentissage en littératie IA",
+    "retakeAssessment": "Repasser l'Évaluation",
+    "downloadReport": "Télécharger le Rapport",
+    "tabs": {
+      "overview": "Aperçu",
+      "domains": "Domaines",
+      "recommendations": "Recommandations",
+      "ksa": "Analyse KSA"
+    },
+    "ksaAnalysis": {
+      "title": "Analyse des Compétences KSA",
+      "description": "Analyse des Connaissances, Compétences et Attitudes démontrées à travers vos réponses correctes",
+      "competenciesDemonstrated": "compétences démontrées",
+      "times": "fois",
+      "demonstratedIn": "Démontré dans {{count}} question(s)",
+      "noCompetencies": "Aucune compétence démontrée dans cette catégorie",
+      "summary": "Résumé Global KSA",
+      "knowledgeAreas": "Domaines de Connaissances",
+      "skillsAreas": "Domaines de Compétences",
+      "attitudesAreas": "Domaines d'Attitudes"
+    }
+  },
+  "level": {
+    "beginner": "Débutant",
+    "intermediate": "Intermédiaire",
+    "advanced": "Avancé",
+    "expert": "Expert"
+  },
+  "domains": {
+    "engaging_with_ai": "Interagir avec l'IA",
+    "creating_with_ai": "Créer avec l'IA",
+    "managing_with_ai": "Gérer avec l'IA",
+    "designing_with_ai": "Concevoir avec l'IA"
+  }
+}

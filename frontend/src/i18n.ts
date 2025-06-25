@@ -45,26 +45,22 @@ import deKsa from '../public/locales/de/ksa.json';
 import ruKsa from '../public/locales/ru/ksa.json';
 import itKsa from '../public/locales/it/ksa.json';
 
-// 可根據實際需求自動偵測語言，這裡預設 en
+// Assessment 翻譯
+import zhTWAssessment from '../public/locales/zh-TW/assessment.json';
+import enAssessment from '../public/locales/en/assessment.json';
+import esAssessment from '../public/locales/es/assessment.json';
+import jaAssessment from '../public/locales/ja/assessment.json';
+import koAssessment from '../public/locales/ko/assessment.json';
+import frAssessment from '../public/locales/fr/assessment.json';
+import deAssessment from '../public/locales/de/assessment.json';
+import ruAssessment from '../public/locales/ru/assessment.json';
+import itAssessment from '../public/locales/it/assessment.json';
+
+// 在伺服器端和客戶端都使用相同的預設語言避免 hydration mismatch
 const getDefaultLng = () => {
-  if (typeof window !== 'undefined') {
-    // 從 localStorage 優先讀取用戶偏好
-    const savedLang = localStorage.getItem('ai-square-language');
-    if (savedLang) return savedLang;
-    
-    const lang = navigator.language.toLowerCase();
-    if (lang.startsWith('zh')) return 'zh-TW';
-    if (lang.startsWith('es')) return 'es';
-    if (lang.startsWith('ja')) return 'ja';
-    if (lang.startsWith('ko')) return 'ko';
-    if (lang.startsWith('fr')) return 'fr';
-    if (lang.startsWith('de')) return 'de';
-    if (lang.startsWith('ru')) return 'ru';
-    if (lang.startsWith('it')) return 'it';
-    // fallback to English for other languages like en-US, en-GB
-    if (lang.startsWith('en')) return 'en';
-  }
-  return 'en'; // 改為默認英文
+  // 伺服器端總是返回英文作為預設語言
+  // 客戶端的語言偵測會在 I18nProvider 中處理
+  return 'en';
 };
 
 i18n
@@ -75,55 +71,64 @@ i18n
         relations: zhTWRelations,
         auth: zhTWAuth,
         navigation: zhTWNavigation,
-        ksa: zhTWKsa
+        ksa: zhTWKsa,
+        assessment: zhTWAssessment
       },
       en: { 
         relations: enRelations,
         auth: enAuth,
         navigation: enNavigation,
-        ksa: enKsa
+        ksa: enKsa,
+        assessment: enAssessment
       },
       es: { 
         relations: esRelations,
         auth: esAuth,
         navigation: esNavigation,
-        ksa: esKsa
+        ksa: esKsa,
+        assessment: esAssessment
       },
       ja: { 
         relations: jaRelations,
         auth: jaAuth,
         navigation: jaNavigation,
-        ksa: jaKsa
+        ksa: jaKsa,
+        assessment: jaAssessment
       },
       ko: { 
         relations: koRelations,
         auth: koAuth,
         navigation: koNavigation,
-        ksa: koKsa
+        ksa: koKsa,
+        assessment: koAssessment
       },
       fr: { 
         relations: frRelations,
         auth: frAuth,
         navigation: frNavigation,
-        ksa: frKsa
+        ksa: frKsa,
+        assessment: frAssessment
       },
       de: { 
         relations: deRelations,
         auth: deAuth,
         navigation: deNavigation,
-        ksa: deKsa
+        ksa: deKsa,
+        assessment: deAssessment
       },
       ru: { 
         relations: ruRelations,
         auth: ruAuth,
         navigation: ruNavigation,
-        ksa: ruKsa
+        ksa: ruKsa,
+        assessment: ruAssessment
       },
       it: { 
         relations: itRelations,
         auth: itAuth,
         navigation: itNavigation,
-        ksa: itKsa
+        ksa: itKsa,
+        assessment: itAssessment
       },
     },
     lng: getDefaultLng(),
