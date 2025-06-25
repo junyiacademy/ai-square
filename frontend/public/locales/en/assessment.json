@@ -31,7 +31,10 @@
     "ksaMapping": "Related Competencies",
     "knowledge": "Knowledge",
     "skills": "Skills",
-    "attitudes": "Attitudes"
+    "attitudes": "Attitudes",
+    "correct": "Correct!",
+    "incorrect": "Incorrect",
+    "selectAnswerToSeeExplanation": "Select an answer to see explanation"
   },
   "difficulty": {
     "basic": "Basic",

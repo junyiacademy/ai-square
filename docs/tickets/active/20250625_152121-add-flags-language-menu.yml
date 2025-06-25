@@ -50,21 +50,21 @@ id: 20250625_152121-add-flags-language-menu
 name: add-flags-language-menu
 spec:
   acceptance_criteria:
-  - '每個語言選項旁邊顯示對應的國旗 emoji 或圖示'
-  - '國旗圖示在不同瀏覽器和作業系統上都能正確顯示'
-  - '選擇器的可用性保持不變，不影響現有功能'
-  - '無障礙支援：螢幕閱讀器能正確讀出語言名稱'
+  - 每個語言選項旁邊顯示對應的國旗 emoji 或圖示
+  - 國旗圖示在不同瀏覽器和作業系統上都能正確顯示
+  - 選擇器的可用性保持不變，不影響現有功能
+  - 無障礙支援：螢幕閱讀器能正確讀出語言名稱
   feature: 在多國語言選擇器中加入國旗圖示
   out_of_scope:
-  - '不改變現有的語言切換邏輯'
-  - '不新增或移除支援的語言'
-  - '不實作自訂下拉選單 UI（保持原生 select）'
-  purpose: '透過視覺化的國旗圖示，讓使用者更容易識別和選擇語言'
+  - 不改變現有的語言切換邏輯
+  - 不新增或移除支援的語言
+  - 不實作自訂下拉選單 UI（保持原生 select）
+  purpose: 透過視覺化的國旗圖示，讓使用者更容易識別和選擇語言
   technical_requirements:
-  - '使用 emoji 國旗符號或 SVG 圖示'
-  - '確保跨瀏覽器相容性（特別是 Windows 系統）'
-  - '維持現有的 select 元素結構'
-  - '語言與國旗的對應關係：en→🇺🇸, zh-TW→🇹🇼, es→🇪🇸, ja→🇯🇵, ko→🇰🇷, fr→🇫🇷, de→🇩🇪, ru→🇷🇺, it→🇮🇹'
+  - 使用 emoji 國旗符號或 SVG 圖示
+  - 確保跨瀏覽器相容性（特別是 Windows 系統）
+  - 維持現有的 select 元素結構
+  - 語言與國旗的對應關係：en→🇺🇸, zh-TW→🇹🇼, es→🇪🇸, ja→🇯🇵, ko→🇰🇷, fr→🇫🇷, de→🇩🇪, ru→🇷🇺, it→🇮🇹
 status: ready_for_commit
 test_report:
   coverage:

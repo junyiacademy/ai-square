@@ -31,7 +31,10 @@
     "ksaMapping": "相關能力指標",
     "knowledge": "知識",
     "skills": "技能",
-    "attitudes": "態度"
+    "attitudes": "態度",
+    "correct": "正確！",
+    "incorrect": "不正確",
+    "selectAnswerToSeeExplanation": "選擇答案後查看詳細說明"
   },
   "difficulty": {
     "basic": "基礎",
