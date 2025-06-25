@@ -1,0 +1,139 @@
+export interface AssessmentQuestion {
+  id: string;
+  domain: 'engaging_with_ai' | 'creating_with_ai' | 'managing_with_ai' | 'designing_with_ai';
+  difficulty: 'basic' | 'intermediate' | 'advanced';
+  type: 'multiple_choice';
+  question: string;
+  question_zh?: string;
+  question_es?: string;
+  question_ja?: string;
+  question_ko?: string;
+  question_fr?: string;
+  question_de?: string;
+  question_ru?: string;
+  question_it?: string;
+  options: {
+    a: string;
+    b: string;
+    c: string;
+    d: string;
+  };
+  options_zh?: {
+    a: string;
+    b: string;
+    c: string;
+    d: string;
+  };
+  options_es?: {
+    a: string;
+    b: string;
+    c: string;
+    d: string;
+  };
+  options_ja?: {
+    a: string;
+    b: string;
+    c: string;
+    d: string;
+  };
+  options_ko?: {
+    a: string;
+    b: string;
+    c: string;
+    d: string;
+  };
+  options_fr?: {
+    a: string;
+    b: string;
+    c: string;
+    d: string;
+  };
+  options_de?: {
+    a: string;
+    b: string;
+    c: string;
+    d: string;
+  };
+  options_ru?: {
+    a: string;
+    b: string;
+    c: string;
+    d: string;
+  };
+  options_it?: {
+    a: string;
+    b: string;
+    c: string;
+    d: string;
+  };
+  correct_answer: 'a' | 'b' | 'c' | 'd';
+  explanation: string;
+  ksa_mapping: {
+    knowledge: string[];
+    skills: string[];
+    attitudes: string[];
+  };
+}
+
+export interface AssessmentDomain {
+  name: string;
+  name_zh?: string;
+  name_es?: string;
+  name_ja?: string;
+  name_ko?: string;
+  name_fr?: string;
+  name_de?: string;
+  name_ru?: string;
+  name_it?: string;
+  description: string;
+  questions: number;
+}
+
+export interface AssessmentConfig {
+  total_questions: number;
+  time_limit_minutes: number;
+  passing_score: number;
+  domains: string[];
+}
+
+export interface AssessmentData {
+  assessment_config: AssessmentConfig;
+  domains: {
+    engaging_with_ai: AssessmentDomain;
+    creating_with_ai: AssessmentDomain;
+    managing_with_ai: AssessmentDomain;
+    designing_with_ai: AssessmentDomain;
+  };
+  questions: AssessmentQuestion[];
+}
+
+export interface UserAnswer {
+  questionId: string;
+  selectedAnswer: 'a' | 'b' | 'c' | 'd';
+  timeSpent: number;
+  isCorrect: boolean;
+}
+
+export interface DomainScores {
+  engaging_with_ai: number;
+  creating_with_ai: number;
+  managing_with_ai: number;
+  designing_with_ai: number;
+}
+
+export interface AssessmentResult {
+  overallScore: number;
+  domainScores: DomainScores;
+  totalQuestions: number;
+  correctAnswers: number;
+  timeSpentSeconds: number;
+  completedAt: Date;
+  level: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+  recommendations: string[];
+}
+
+export interface RadarChartData {
+  domain: string;
+  score: number;
+  fullMark: 100;
+}

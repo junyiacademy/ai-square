@@ -1,0 +1,90 @@
+{
+  "loading": "載入評估中...",
+  "errorLoading": "無法載入評估資料，請重試。",
+  "title": "AI 素養評估",
+  "description": "評估您在四個關鍵領域的 AI 素養技能",
+  "assessmentInfo": {
+    "title": "評估詳情",
+    "questions": "{{count}} 道全面性題目",
+    "timeLimit": "{{minutes}} 分鐘時間限制",
+    "domains": "{{count}} 個技能領域",
+    "immediate": "立即獲得詳細回饋結果"
+  },
+  "benefits": {
+    "title": "您將獲得",
+    "personalized": "個人化技能評估",
+    "skillGaps": "識別知識缺口",
+    "radarChart": "視覺化技能雷達圖",
+    "recommendations": "針對性學習建議"
+  },
+  "startAssessment": "開始評估",
+  "quiz": {
+    "title": "AI 素養評估",
+    "question": "題目",
+    "timeLeft": "剩餘時間",
+    "selectAnswer": "請選擇答案以繼續",
+    "checkAnswer": "查看下方的答案解釋",
+    "submit": "提交答案",
+    "next": "下一題",
+    "finish": "完成評估",
+    "explanation": "解釋說明",
+    "ksaMapping": "相關能力指標",
+    "knowledge": "知識",
+    "skills": "技能",
+    "attitudes": "態度"
+  },
+  "difficulty": {
+    "basic": "基礎",
+    "intermediate": "中級",
+    "advanced": "進階"
+  },
+  "results": {
+    "title": "評估結果",
+    "subtitle": "以下是您在 AI 素養評估中的表現",
+    "correctAnswers": "正確答題數",
+    "timeSpent": "花費時間",
+    "completedAt": "完成日期",
+    "skillRadar": "技能雷達圖",
+    "yourScore": "您的分數",
+    "summary": "評估摘要",
+    "summaryText": "您達到{{level}}水平，總體得分{{score}}%，{{total}}題中答對{{correct}}題。",
+    "domainBreakdown": "領域分析",
+    "personalizedRecommendations": "個人化建議",
+    "nextSteps": "建議下一步",
+    "nextStep1": "專注於得分較低的領域",
+    "nextStep2": "進行互動式練習",
+    "nextStep3": "加入 AI 素養學習社群",
+    "retakeAssessment": "重新評估",
+    "downloadReport": "下載報告",
+    "tabs": {
+      "overview": "概覽",
+      "domains": "領域",
+      "recommendations": "建議",
+      "ksa": "KSA 分析"
+    },
+    "ksaAnalysis": {
+      "title": "KSA 能力分析",
+      "description": "根據您的正確答案分析所展現的知識、技能和態度",
+      "competenciesDemonstrated": "項能力已展現",
+      "times": "次",
+      "demonstratedIn": "在 {{count}} 個問題中展現",
+      "noCompetencies": "此類別中未展現任何能力",
+      "summary": "整體 KSA 摘要",
+      "knowledgeAreas": "知識領域",
+      "skillsAreas": "技能領域",
+      "attitudesAreas": "態度領域"
+    }
+  },
+  "level": {
+    "beginner": "初學者",
+    "intermediate": "中級",
+    "advanced": "進階",
+    "expert": "專家"
+  },
+  "domains": {
+    "engaging_with_ai": "與 AI 互動",
+    "creating_with_ai": "與 AI 共創",
+    "managing_with_ai": "AI 管理",
+    "designing_with_ai": "AI 設計思維"
+  }
+}

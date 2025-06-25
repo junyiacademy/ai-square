@@ -1,0 +1,90 @@
+{
+  "loading": "평가 로딩 중...",
+  "errorLoading": "평가 데이터를 불러오는데 실패했습니다. 다시 시도해주세요.",
+  "title": "AI 리터러시 평가",
+  "description": "4개 핵심 영역에서 AI 리터러시 역량 평가",
+  "assessmentInfo": {
+    "title": "평가 상세정보",
+    "questions": "{{count}}개의 종합적인 문제",
+    "timeLimit": "{{minutes}}분 제한시간",
+    "domains": "{{count}}개 역량 영역",
+    "immediate": "상세한 피드백과 함께 즉시 결과 제공"
+  },
+  "benefits": {
+    "title": "평가 혜택",
+    "personalized": "개인 맞춤형 역량 평가",
+    "skillGaps": "지식 격차 파악",
+    "radarChart": "시각적 역량 레이더 차트",
+    "recommendations": "맞춤형 학습 권장사항"
+  },
+  "startAssessment": "평가 시작하기",
+  "quiz": {
+    "title": "AI 리터러시 평가",
+    "question": "문제",
+    "timeLeft": "남은 시간",
+    "selectAnswer": "계속하려면 답변을 선택해주세요",
+    "checkAnswer": "아래에서 답변과 설명을 확인하세요",
+    "submit": "답변 제출",
+    "next": "다음 문제",
+    "finish": "평가 완료",
+    "explanation": "해설",
+    "ksaMapping": "관련 역량",
+    "knowledge": "지식",
+    "skills": "기술",
+    "attitudes": "태도"
+  },
+  "difficulty": {
+    "basic": "기초",
+    "intermediate": "중급",
+    "advanced": "고급"
+  },
+  "results": {
+    "title": "평가 결과",
+    "subtitle": "AI 리터러시 평가에서의 성과입니다",
+    "correctAnswers": "정답 수",
+    "timeSpent": "소요 시간",
+    "completedAt": "완료 일시",
+    "skillRadar": "역량 레이더 차트",
+    "yourScore": "당신의 점수",
+    "summary": "평가 요약",
+    "summaryText": "{{level}} 수준을 달성했으며, 전체 점수 {{score}}%로 {{total}}문제 중 {{correct}}개를 맞췄습니다.",
+    "domainBreakdown": "영역별 분석",
+    "personalizedRecommendations": "개인 맞춤 권장사항",
+    "nextSteps": "다음 단계 권장사항",
+    "nextStep1": "점수가 낮은 영역에 집중하기",
+    "nextStep2": "인터랙티브 연습 문제로 실습하기",
+    "nextStep3": "AI 리터러시 학습 커뮤니티 참여하기",
+    "retakeAssessment": "재평가하기",
+    "downloadReport": "보고서 다운로드",
+    "tabs": {
+      "overview": "개요",
+      "domains": "영역",
+      "recommendations": "권장사항",
+      "ksa": "KSA 분석"
+    },
+    "ksaAnalysis": {
+      "title": "KSA 역량 분석",
+      "description": "정답을 통해 입증된 지식, 기술, 태도 분석",
+      "competenciesDemonstrated": "개의 역량 입증",
+      "times": "회",
+      "demonstratedIn": "{{count}}개 문항에서 입증",
+      "noCompetencies": "이 카테고리에서 입증된 역량이 없습니다",
+      "summary": "전체 KSA 요약",
+      "knowledgeAreas": "지식 영역",
+      "skillsAreas": "기술 영역",
+      "attitudesAreas": "태도 영역"
+    }
+  },
+  "level": {
+    "beginner": "초급",
+    "intermediate": "중급",
+    "advanced": "고급",
+    "expert": "전문가"
+  },
+  "domains": {
+    "engaging_with_ai": "AI와 상호작용",
+    "creating_with_ai": "AI로 창작하기",
+    "managing_with_ai": "AI 관리하기",
+    "designing_with_ai": "AI 설계하기"
+  }
+}

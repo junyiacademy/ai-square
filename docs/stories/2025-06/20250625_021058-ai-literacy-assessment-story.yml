@@ -1,0 +1,44 @@
+ai_collaboration:
+  complexity_breakdown:
+    complex_count: 1
+  cost_per_feature: 0.0833
+  estimated_cost: 0.25
+  total_interactions: 1
+created_at: '2025-06-25T12:50:41.887337'
+efficiency_metrics:
+  ai_efficiency_ratio: 0.0
+  ai_time_minutes: 0
+  duration_minutes: 0
+  files_changed: 0
+  human_time_minutes: 0
+  test_coverage:
+    branches: 0
+    functions: 0
+    lines: 0
+    statements: 0
+learnings:
+  avoid_in_future: []
+  reusable_patterns: []
+  what_could_improve: []
+  what_worked_well:
+  - 成本效益高（每功能 < $0.10）
+product_insights:
+  acceptance_criteria:
+  - '[條件 1]'
+  - '[條件 2]'
+  - '[條件 3]'
+  feature: ai-literacy-assessment 功能
+  purpose: '[請描述目的]'
+  user_value: 待分析
+reusable_assets:
+  code_snippets: []
+  configuration: []
+  test_patterns: []
+technical_insights:
+  challenges: []
+  decisions: []
+  patterns_used: []
+  solutions: []
+ticket_id: 20250625_021058-ai-literacy-assessment
+ticket_name: ai-literacy-assessment
+type: feature

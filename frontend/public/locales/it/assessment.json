@@ -1,0 +1,90 @@
+{
+  "loading": "Caricamento valutazione...",
+  "errorLoading": "Impossibile caricare i dati di valutazione. Riprova.",
+  "title": "Valutazione dell'Alfabetizzazione IA",
+  "description": "Valuta le tue competenze di alfabetizzazione IA in quattro domini chiave",
+  "assessmentInfo": {
+    "title": "Dettagli della Valutazione",
+    "questions": "{{count}} domande complete",
+    "timeLimit": "Limite di {{minutes}} minuti",
+    "domains": "{{count}} domini di competenze",
+    "immediate": "Risultati immediati con feedback dettagliato"
+  },
+  "benefits": {
+    "title": "Cosa Otterrai",
+    "personalized": "Valutazione personalizzata delle competenze",
+    "skillGaps": "Identificare le lacune di conoscenza",
+    "radarChart": "Grafico radar visivo delle competenze",
+    "recommendations": "Raccomandazioni di apprendimento mirate"
+  },
+  "startAssessment": "Inizia la Valutazione",
+  "quiz": {
+    "title": "Valutazione dell'Alfabetizzazione IA",
+    "question": "Domanda",
+    "timeLeft": "Tempo Rimanente",
+    "selectAnswer": "Seleziona una risposta per continuare",
+    "checkAnswer": "Controlla la tua risposta e la spiegazione qui sotto",
+    "submit": "Invia Risposta",
+    "next": "Prossima Domanda",
+    "finish": "Completa la Valutazione",
+    "explanation": "Spiegazione",
+    "ksaMapping": "Competenze Correlate",
+    "knowledge": "Conoscenze",
+    "skills": "Abilità",
+    "attitudes": "Attitudini"
+  },
+  "difficulty": {
+    "basic": "Base",
+    "intermediate": "Intermedio",
+    "advanced": "Avanzato"
+  },
+  "results": {
+    "title": "Risultati della Valutazione",
+    "subtitle": "Ecco come hai performato nella valutazione dell'alfabetizzazione IA",
+    "correctAnswers": "Risposte Corrette",
+    "timeSpent": "Tempo Impiegato",
+    "completedAt": "Completato il",
+    "skillRadar": "Grafico Radar delle Competenze",
+    "yourScore": "Il Tuo Punteggio",
+    "summary": "Riepilogo della Valutazione",
+    "summaryText": "Hai raggiunto il livello {{level}} con un punteggio complessivo del {{score}}%, rispondendo correttamente a {{correct}} domande su {{total}}.",
+    "domainBreakdown": "Analisi per Domini",
+    "personalizedRecommendations": "Raccomandazioni Personalizzate",
+    "nextSteps": "Prossimi Passi Consigliati",
+    "nextStep1": "Concentrati sui domini con punteggio più basso",
+    "nextStep2": "Pratica con esercizi interattivi",
+    "nextStep3": "Unisciti alle comunità di apprendimento dell'alfabetizzazione IA",
+    "retakeAssessment": "Ripeti la Valutazione",
+    "downloadReport": "Scarica il Rapporto",
+    "tabs": {
+      "overview": "Panoramica",
+      "domains": "Domini",
+      "recommendations": "Raccomandazioni",
+      "ksa": "Analisi KSA"
+    },
+    "ksaAnalysis": {
+      "title": "Analisi delle Competenze KSA",
+      "description": "Analisi di Conoscenze, Abilità e Attitudini dimostrate attraverso le tue risposte corrette",
+      "competenciesDemonstrated": "competenze dimostrate",
+      "times": "volte",
+      "demonstratedIn": "Dimostrato in {{count}} domanda/e",
+      "noCompetencies": "Nessuna competenza dimostrata in questa categoria",
+      "summary": "Riepilogo Generale KSA",
+      "knowledgeAreas": "Aree di Conoscenza",
+      "skillsAreas": "Aree di Abilità",
+      "attitudesAreas": "Aree di Attitudini"
+    }
+  },
+  "level": {
+    "beginner": "Principiante",
+    "intermediate": "Intermedio",
+    "advanced": "Avanzato",
+    "expert": "Esperto"
+  },
+  "domains": {
+    "engaging_with_ai": "Interagire con l'IA",
+    "creating_with_ai": "Creare con l'IA",
+    "managing_with_ai": "Gestire con l'IA",
+    "designing_with_ai": "Progettare con l'IA"
+  }
+}
