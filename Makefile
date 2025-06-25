@@ -176,6 +176,65 @@ ai-report:
 	@python3 docs/scripts/enhanced-ticket-manager.py check 2>/dev/null || \
 		echo "$(YELLOW)尚無活躍票券$(NC)"
 
+## 分析 commits 和票券對應關係
+commit-analysis:
+	@echo "$(BLUE)🔍 分析 Commits 與票券對應關係$(NC)"
+	@python3 docs/scripts/commit-to-ticket-analyzer.py --days 30
+
+## 匯出 commit 分析為 CSV
+commit-export:
+	@echo "$(YELLOW)📊 匯出 Commit 分析資料$(NC)"
+	@python3 docs/scripts/commit-to-ticket-analyzer.py --export --output commit_analysis_$(shell date +%Y%m%d).csv
+	@echo "$(GREEN)✅ 已匯出至 commit_analysis_$(shell date +%Y%m%d).csv$(NC)"
+
+## 查找沒有票券的 commits
+orphan-commits:
+	@echo "$(YELLOW)🔍 查找沒有票券的 commits$(NC)"
+	@python3 docs/scripts/ticket-repair-tool.py orphans --days 30
+
+## 從 commit 創建票券
+ticket-from-commit:
+	@if [ -z "$(COMMIT)" ]; then \
+		echo "$(RED)❌ 請提供 COMMIT 參數$(NC)"; \
+		echo "$(CYAN)用法: make ticket-from-commit COMMIT=abc123 TYPE=feature$(NC)"; \
+		exit 1; \
+	fi
+	@python3 docs/scripts/ticket-repair-tool.py create --commit $(COMMIT) --type $(TYPE)
+
+## 修復票券遺漏資訊
+ticket-repair:
+	@if [ -z "$(TICKET)" ]; then \
+		echo "$(RED)❌ 請提供 TICKET 參數$(NC)"; \
+		echo "$(CYAN)用法: make ticket-repair TICKET=docs/tickets/active/xxx.yml$(NC)"; \
+		exit 1; \
+	fi
+	@python3 docs/scripts/ticket-repair-tool.py repair --ticket $(TICKET)
+
+## 智能補票（自動分組相關 commits）
+smart-tickets:
+	@echo "$(BLUE)🤖 智能分析 commits 並自動補票$(NC)"
+	@python3 docs/scripts/smart-ticket-creator.py --days 30
+
+## 智能補票預覽（不實際創建）
+smart-tickets-preview:
+	@echo "$(YELLOW)👀 預覽智能補票分組結果$(NC)"
+	@python3 docs/scripts/smart-ticket-creator.py --days 30 --dry-run
+
+## 批次創建票券（選擇性）
+batch-tickets:
+	@echo "$(BLUE)📦 批次創建票券$(NC)"
+	@if [ -z "$(TICKETS)" ] && [ -z "$(RECENT)" ] && [ -z "$(TYPE)" ]; then \
+		echo "$(CYAN)用法:$(NC)"; \
+		echo "  make batch-tickets TICKETS=1,3,5-8  # 創建特定編號"; \
+		echo "  make batch-tickets RECENT=5         # 創建最近 5 個"; \
+		echo "  make batch-tickets TYPE=fix         # 創建所有 fix 類型"; \
+		exit 1; \
+	fi
+	@python3 docs/scripts/batch-ticket-creator.py --days 30 \
+		$$([ -n "$(TICKETS)" ] && echo "--tickets $(TICKETS)") \
+		$$([ -n "$(RECENT)" ] && echo "--recent $(RECENT)") \
+		$$([ -n "$(TYPE)" ] && echo "--type $(TYPE)")
+
 #=============================================================================
 # 幫助
 #=============================================================================
