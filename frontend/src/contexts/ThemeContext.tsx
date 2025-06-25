@@ -16,19 +16,22 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    // Initialize theme from localStorage or system preference
-    if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('ai-square-theme') as Theme | null
-      if (savedTheme) {
-        return savedTheme
-      }
+  // 初始狀態總是 'light' 以避免 hydration 不匹配
+  const [theme, setTheme] = useState<Theme>('light')
+  const [mounted, setMounted] = useState(false)
+
+  // 在客戶端 mount 後才讀取實際的主題偏好
+  useEffect(() => {
+    setMounted(true)
+    const savedTheme = localStorage.getItem('ai-square-theme') as Theme | null
+    if (savedTheme) {
+      setTheme(savedTheme)
+    } else {
       // Check system preference
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      return prefersDark ? 'dark' : 'light'
+      setTheme(prefersDark ? 'dark' : 'light')
     }
-    return 'light'
-  })
+  }, [])
 
   useEffect(() => {
     // Apply theme class to document element

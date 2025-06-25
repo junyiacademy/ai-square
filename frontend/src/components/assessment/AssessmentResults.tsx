@@ -25,6 +25,7 @@ interface AssessmentResultsProps {
   onRetake: () => void;
   questions?: AssessmentQuestion[]; // 用於 KSA 分析
   userAnswers?: UserAnswer[]; // 用於詳細分析
+  isReview?: boolean; // 是否為歷史記錄查看模式
 }
 
 interface KSAAnalysis {
@@ -33,7 +34,7 @@ interface KSAAnalysis {
   attitudes: { code: string; count: number; competencies: string[] }[];
 }
 
-export default function AssessmentResults({ result, domains, onRetake, questions = [], userAnswers = [] }: AssessmentResultsProps) {
+export default function AssessmentResults({ result, domains, onRetake, questions = [], userAnswers = [], isReview = false }: AssessmentResultsProps) {
   const { t, i18n } = useTranslation('assessment');
   const [activeTab, setActiveTab] = useState<'overview' | 'domains' | 'recommendations' | 'ksa' | 'knowledge-graph'>('overview');
   const [domainsData, setDomainsData] = useState<unknown[] | null>(null);
@@ -42,6 +43,10 @@ export default function AssessmentResults({ result, domains, onRetake, questions
     sMap: Record<string, { summary: string; theme: string; explanation?: string }>;
     aMap: Record<string, { summary: string; theme: string; explanation?: string }>;
   } | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [isSaved, setIsSaved] = useState(false);
+  const [currentUser, setCurrentUser] = useState<{ id: string; email?: string } | null>(null);
 
   // Fetch domain and KSA data for knowledge graph
   useEffect(() => {
@@ -61,6 +66,36 @@ export default function AssessmentResults({ result, domains, onRetake, questions
     };
     fetchData();
   }, [i18n.language]);
+
+  // Check for logged in user
+  useEffect(() => {
+    // Check if user is logged in
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const userData = localStorage.getItem('user');
+    
+    if (isLoggedIn === 'true' && userData) {
+      const user = JSON.parse(userData);
+      // Use email as user_id directly
+      setCurrentUser({
+        id: user.email,
+        email: user.email
+      });
+    } else {
+      // Fallback for non-logged in users
+      const mockUser = localStorage.getItem('mockUser');
+      if (mockUser) {
+        setCurrentUser(JSON.parse(mockUser));
+      } else {
+        // Create a temporary user ID for demo
+        const tempUser = {
+          id: `guest_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          email: 'guest@example.com'
+        };
+        localStorage.setItem('mockUser', JSON.stringify(tempUser));
+        setCurrentUser(tempUser);
+      }
+    }
+  }, []);
 
   const getDomainName = useCallback((domainKey: string) => {
     // 使用 i18n 系統來獲取領域名稱翻譯
@@ -165,6 +200,73 @@ export default function AssessmentResults({ result, domains, onRetake, questions
   }, [questions, userAnswers]);
 
   const ksaAnalysis = analyzeKSA();
+
+  const handleSaveResults = useCallback(async () => {
+    console.log('=== Save button clicked ===');
+    console.log('Current user:', currentUser);
+    console.log('Is saved:', isSaved);
+    
+    if (!currentUser || isSaved) return;
+    
+    setIsSaving(true);
+    setSaveMessage(null);
+    
+    const requestBody = {
+      userId: currentUser.id,
+      userEmail: currentUser.email,
+      language: i18n.language,
+      answers: userAnswers,
+      result: {
+        ...result,
+        timeSpentSeconds: result.timeSpentSeconds,
+      },
+    };
+    
+    console.log('Sending request to API with body:', requestBody);
+    
+    try {
+      const response = await fetch('/api/assessment/results', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        setIsSaved(true);
+        setSaveMessage({
+          type: 'success',
+          text: t('results.saveSuccess', { assessmentId: data.assessmentId }),
+        });
+      } else {
+        setSaveMessage({
+          type: 'error',
+          text: t('results.saveError', { error: data.error }),
+        });
+      }
+    } catch (error) {
+      console.error('Error saving results:', error);
+      setSaveMessage({
+        type: 'error',
+        text: t('results.saveError', { error: 'Network error' }),
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  }, [currentUser, isSaved, userAnswers, result, i18n.language, t]);
+
+  // Auto-save when component mounts (assessment completed)
+  useEffect(() => {
+    // Only auto-save if user is logged in and result hasn't been saved yet
+    // Don't auto-save in review mode
+    if (currentUser && !isSaved && result && !isReview) {
+      console.log('Auto-saving assessment result...');
+      handleSaveResults();
+    }
+  }, [currentUser, isSaved, result, isReview, handleSaveResults]);
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -504,20 +606,82 @@ export default function AssessmentResults({ result, domains, onRetake, questions
           </div>
         </div>
 
+        {/* Save Message */}
+        {saveMessage && (
+          <div className={`mb-6 p-4 rounded-lg ${
+            saveMessage.type === 'success' 
+              ? 'bg-green-50 border border-green-200 text-green-800'
+              : 'bg-red-50 border border-red-200 text-red-800'
+          }`}>
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                {saveMessage.type === 'success' ? (
+                  <svg className="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                ) : (
+                  <svg className="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  </svg>
+                )}
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium">{saveMessage.text}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Action Buttons */}
         <div className="text-center space-y-4">
-          <button
-            onClick={onRetake}
-            className="bg-indigo-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors mr-4"
-          >
-            {t('results.retakeAssessment')}
-          </button>
-          <button
-            onClick={() => window.print()}
-            className="bg-gray-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-gray-700 transition-colors"
-          >
-            {t('results.downloadReport')}
-          </button>
+          <div className="flex justify-center gap-4 flex-wrap">
+            {/* Only show save button for non-logged in users or if auto-save failed */}
+            {/* Hide save button in review mode */}
+            {!isReview && (!currentUser || !isSaved) && (
+              <button
+                onClick={handleSaveResults}
+                disabled={isSaving || isSaved}
+                className={`px-8 py-3 rounded-lg font-medium transition-colors ${
+                  isSaved
+                    ? 'bg-green-600 text-white cursor-not-allowed'
+                    : isSaving
+                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                }`}
+              >
+                {isSaving ? (
+                  <span className="flex items-center">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    {t('results.saving')}
+                  </span>
+                ) : isSaved ? (
+                  <span className="flex items-center">
+                    <svg className="mr-2 h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    {t('results.saved')}
+                  </span>
+                ) : (
+                  t('results.saveResults')
+                )}
+              </button>
+            )}
+            <button
+              onClick={onRetake}
+              className="bg-indigo-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors"
+            >
+              {t('results.retakeAssessment')}
+            </button>
+            <button
+              onClick={() => window.print()}
+              className="bg-gray-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-gray-700 transition-colors"
+            >
+              {t('results.downloadReport')}
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -1,0 +1,125 @@
+ai_usage:
+  complexity_breakdown:
+    medium_count: 3
+  estimated_cost_usd: 0.45000000000000007
+  interactions:
+  - complexity: medium
+    description: development - medium
+    estimated_cost: 0.15000000000000002
+    is_start_marker: false
+    task_type: development
+    timestamp: '2025-06-26T00:01:15.914064'
+  - complexity: medium
+    description: development - medium
+    estimated_cost: 0.15000000000000002
+    is_start_marker: false
+    task_type: development
+    timestamp: '2025-06-26T00:40:16.792366'
+  - complexity: medium
+    description: development - medium
+    estimated_cost: 0.15000000000000002
+    is_start_marker: false
+    task_type: development
+    timestamp: '2025-06-26T00:48:08.041522'
+  total_interactions: 3
+completion_checklist:
+  ai_metrics_recorded: true
+  code_implemented: true
+  documentation_updated: false
+  spec_defined: true
+  story_extracted: false
+  tests_passing: false
+  tests_written: false
+created_at: '2025-06-25T23:37:15.717905'
+description: 實作評估結果儲存功能
+dev_log:
+  sessions:
+  - activities: []
+    ai_interactions: []
+    challenges: []
+    date: '2025-06-25'
+    decisions: []
+    duration_minutes: 0
+    end_time: null
+    files_modified: []
+    next_steps: []
+    session_id: 1
+    start_time: '23:37:15'
+development:
+  branch: ticket/assessment-save-results
+  code_review_status: pending
+  commits: []
+  files_changed:
+  - frontend/public/locales/zh-TW/navigation.json
+  - frontend/public/locales/en/navigation.json
+  - frontend/src/app/api/assessment/results/
+  - frontend/src/app/assessment/history/
+  - docs/tickets/active/20250625_233715-assessment-save-results.yml
+  - frontend/package-lock.json
+  - rontend/src/components/assessment/AssessmentResults.tsx
+  - frontend/package.json
+  - frontend/public/locales/en/assessment.json
+  - frontend/src/contexts/ThemeContext.tsx
+  - frontend/src/lib/
+  - gitignore
+  - frontend/src/components/layout/Header.tsx
+  - frontend/src/components/assessment/AssessmentResults.tsx
+  - frontend/public/locales/zh-TW/assessment.json
+  - frontend/src/app/assessment/review/
+  test_coverage: null
+id: 20250625_233715-assessment-save-results
+name: assessment-save-results
+spec:
+  acceptance_criteria:
+  - 使用者必須登入才能儲存評估結果到雲端
+  - 評估結果必須包含所有答案、分數和時間戳記
+  - API 必須回傳成功/失敗狀態和 assessment_id
+  - 結果儲存後可在歷史記錄中查看
+  - 未登入用戶可儲存結果到 localStorage
+  feature: 實作評估結果儲存功能（使用 GCS）
+  out_of_scope:
+  - 使用者認證系統（使用現有的）
+  - 完整資料庫設計（未來再實作）
+  - 進階分析功能
+  - 跨用戶資料分析
+  purpose: 讓使用者的評估結果可以被儲存到 Google Cloud Storage，並能查看歷史記錄
+  storage_design:
+    json_schema: "{\n  \"assessment_id\": \"asmt_20250625_141005_abc123\",\n  \"user_id\"\
+      : \"user_123\",\n  \"user_email\": \"user@example.com\",\n  \"timestamp\": \"\
+      2025-06-25T14:35:42Z\",\n  \"duration_seconds\": 1537,\n  \"language\": \"zh-TW\"\
+      ,\n  \"scores\": {\n    \"overall\": 82,\n    \"domains\": {\n      \"engaging_with_ai\"\
+      : 85,\n      \"creating_with_ai\": 78,\n      \"managing_with_ai\": 80,\n  \
+      \    \"designing_with_ai\": 85\n    }\n  },\n  \"summary\": {\n    \"total_questions\"\
+      : 40,\n    \"correct_answers\": 33,\n    \"level\": \"advanced\"\n  },\n  \"\
+      answers\": [\n    {\n      \"question_id\": \"q_1\",\n      \"selected\": \"\
+      b\",\n      \"correct\": \"b\", \n      \"time_spent\": 32\n    }\n  ]\n}\n"
+    structure: "gs://ai-square-assessments/\n└── assessments/\n    └── {user_id}/\n\
+      \        └── {assessment_id}.json\n"
+  technical_requirements:
+  - 更新 POST /api/assessment/results 端點使用 GCS
+  - 建立 GET /api/assessment/results?userId={id} 端點
+  - 在 AssessmentResults 組件加入儲存按鈕
+  - 建立簡單的歷史記錄頁面 /assessment/history
+  - 使用 localStorage 暫存未登入使用者的結果
+status: active
+test_report:
+  coverage:
+    branches: 0
+    functions: 0
+    lines: 0
+    statements: 0
+  summary:
+    duration_ms: 0
+    failed: 0
+    passed: 0
+    skipped: 0
+    total_tests: 0
+  test_runs: []
+time_tracking:
+  actual_duration_minutes: 70
+  ai_time_minutes: 0
+  checkpoints: []
+  completed_at: null
+  human_time_minutes: 0
+  started_at: '2025-06-25T23:37:15.717905'
+type: feature

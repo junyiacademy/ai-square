@@ -66,6 +66,13 @@
     "nextStep3": "加入 AI 素養學習社群",
     "retakeAssessment": "重新評估",
     "downloadReport": "下載報告",
+    "saveResults": "儲存結果",
+    "saving": "儲存中...",
+    "saved": "已儲存",
+    "saveSuccess": "結果儲存成功！ID: {{assessmentId}}",
+    "saveError": "儲存失敗: {{error}}",
+    "autoSaving": "自動儲存您的結果中...",
+    "autoSaved": "結果已自動儲存",
     "tabs": {
       "overview": "概覽",
       "domains": "領域",
@@ -116,5 +123,27 @@
     "creating_with_ai": "與 AI 共創",
     "managing_with_ai": "AI 管理",
     "designing_with_ai": "AI 設計思維"
+  },
+  "history": {
+    "title": "評估歷史記錄",
+    "subtitle": "查看您過去的評估結果並追蹤您的進步",
+    "loading": "載入歷史記錄中...",
+    "error": "無法載入歷史記錄",
+    "retry": "重試",
+    "notLoggedIn": "請登入以查看您的評估歷史",
+    "takeAssessment": "進行評估",
+    "user": "使用者",
+    "totalAssessments": "總評估次數",
+    "noHistory": "尚無評估歷史記錄",
+    "takeFirstAssessment": "進行您的第一次評估",
+    "overallScore": "總體分數",
+    "correct": "正確",
+    "domainScores": "領域分數",
+    "duration": "時長",
+    "viewDetails": "查看詳情",
+    "takeNewAssessment": "進行新評估"
+  },
+  "review": {
+    "title": "評估檢視"
   }
 }

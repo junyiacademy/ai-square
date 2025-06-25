@@ -66,6 +66,13 @@
     "nextStep3": "Join AI literacy learning communities",
     "retakeAssessment": "Retake Assessment",
     "downloadReport": "Download Report",
+    "saveResults": "Save Results",
+    "saving": "Saving...",
+    "saved": "Saved",
+    "saveSuccess": "Results saved successfully! ID: {{assessmentId}}",
+    "saveError": "Failed to save results: {{error}}",
+    "autoSaving": "Auto-saving your results...",
+    "autoSaved": "Results automatically saved",
     "tabs": {
       "overview": "Overview",
       "domains": "Domains", 
@@ -116,5 +123,27 @@
     "creating_with_ai": "Creating with AI",
     "managing_with_ai": "Managing with AI",
     "designing_with_ai": "Designing with AI"
+  },
+  "history": {
+    "title": "Assessment History",
+    "subtitle": "View your past assessment results and track your progress",
+    "loading": "Loading history...",
+    "error": "Failed to load history",
+    "retry": "Try Again",
+    "notLoggedIn": "Please log in to view your assessment history",
+    "takeAssessment": "Take an Assessment",
+    "user": "User",
+    "totalAssessments": "Total Assessments",
+    "noHistory": "No assessment history yet",
+    "takeFirstAssessment": "Take Your First Assessment",
+    "overallScore": "Overall Score",
+    "correct": "correct",
+    "domainScores": "Domain Scores",
+    "duration": "Duration",
+    "viewDetails": "View Details",
+    "takeNewAssessment": "Take New Assessment"
+  },
+  "review": {
+    "title": "Assessment Review"
   }
 }
