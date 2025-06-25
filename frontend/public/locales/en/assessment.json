@@ -50,6 +50,13 @@
     "summaryText": "You achieved {{level}} level with {{score}}% overall score, answering {{correct}} out of {{total}} questions correctly.",
     "domainBreakdown": "Domain Breakdown",
     "personalizedRecommendations": "Personalized Recommendations",
+    "recommendations": {
+      "focusOn": "Focus on improving",
+      "engaging_with_ai": "Focus on improving Engaging with AI: Understanding AI limitations, privacy concerns, and ethical considerations when interacting with AI systems",
+      "creating_with_ai": "Focus on improving Creating with AI: Learning prompting techniques, content generation best practices, and creative collaboration with AI tools",
+      "managing_with_ai": "Focus on improving Managing with AI: Developing skills for AI-assisted decision making, workflow automation, and team collaboration",
+      "designing_with_ai": "Focus on improving Designing with AI: Building AI literacy curriculum, creating learning materials, and designing AI-enhanced experiences"
+    },
     "nextSteps": "Recommended Next Steps",
     "nextStep1": "Focus on your lowest scoring domains",
     "nextStep2": "Practice with interactive exercises",
@@ -60,7 +67,27 @@
       "overview": "Overview",
       "domains": "Domains", 
       "recommendations": "Recommendations",
-      "ksa": "KSA Analysis"
+      "ksa": "KSA Analysis",
+      "knowledge-graph": "Knowledge Graph"
+    },
+    "knowledgeGraph": {
+      "title": "Competency Knowledge Graph",
+      "description": "Interactive visualization of your AI literacy competencies showing detailed mastery levels",
+      "yourProfile": "Your AI Literacy Profile",
+      "mastery": "Mastery",
+      "masteryLevel": "Mastery Level (0-100%)"
+    },
+    "questionReview": {
+      "title": "Question Review",
+      "noQuestions": "No questions available for review",
+      "questionNumber": "Question {{current}} of {{total}}",
+      "previous": "Previous",
+      "next": "Next",
+      "correct": "Your answer was correct!",
+      "incorrect": "Your answer was incorrect",
+      "practicePrompt": "Review this question and try to understand the concept better",
+      "practiceAgain": "Practice Similar Questions",
+      "closeReview": "Close Review"
     },
     "ksaAnalysis": {
       "title": "KSA Competency Analysis",

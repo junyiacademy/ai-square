@@ -130,10 +130,34 @@ export default function AssessmentPage() {
     // Recommend improvement areas for lowest scoring domains
     sortedDomains.slice(0, 2).forEach(([domain]) => {
       const domainInfo = data.domains[domain as keyof typeof data.domains];
-      recommendations.push(`Focus on improving ${domainInfo.name}: ${domainInfo.description}`);
+      const domainName = getTranslatedField(i18n.language, domainInfo, 'name') as string;
+      const domainDescription = getTranslatedField(i18n.language, domainInfo, 'description') as string;
+      
+      const recommendationKey = `results.recommendations.${domain}`;
+      const recommendation = t(recommendationKey, { 
+        defaultValue: `${t('results.recommendations.focusOn')} ${domainName}: ${domainDescription}`
+      });
+      
+      recommendations.push(recommendation);
     });
 
     return recommendations;
+  };
+  
+  // Helper function to get translated fields
+  const getTranslatedField = (lang: string, item: any, fieldName: string): string => {
+    if (!item) return '';
+    
+    if (lang.startsWith('zh')) {
+      return item[`${fieldName}_zh`] || item[fieldName] || '';
+    }
+    
+    const langCode = lang.split('-')[0];
+    if (langCode !== 'en') {
+      return item[`${fieldName}_${langCode}`] || item[fieldName] || '';
+    }
+    
+    return item[fieldName] || '';
   };
 
   const handleRetakeAssessment = () => {

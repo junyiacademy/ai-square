@@ -50,6 +50,13 @@
     "summaryText": "您達到{{level}}水平，總體得分{{score}}%，{{total}}題中答對{{correct}}題。",
     "domainBreakdown": "領域分析",
     "personalizedRecommendations": "個人化建議",
+    "recommendations": {
+      "focusOn": "重點加強",
+      "engaging_with_ai": "重點加強與 AI 互動：了解 AI 的限制、隱私議題，以及與 AI 系統互動時的倫理考量",
+      "creating_with_ai": "重點加強與 AI 共創：學習提示技巧、內容生成最佳實踐，以及與 AI 工具的創意協作",
+      "managing_with_ai": "重點加強 AI 管理：發展 AI 輔助決策、工作流程自動化，以及團隊協作的技能",
+      "designing_with_ai": "重點加強 AI 設計思維：建立 AI 素養課程、創建學習材料，以及設計 AI 增強體驗"
+    },
     "nextSteps": "建議下一步",
     "nextStep1": "專注於得分較低的領域",
     "nextStep2": "進行互動式練習",
@@ -60,7 +67,27 @@
       "overview": "概覽",
       "domains": "領域",
       "recommendations": "建議",
-      "ksa": "KSA 分析"
+      "ksa": "KSA 分析",
+      "knowledge-graph": "知識圖譜"
+    },
+    "knowledgeGraph": {
+      "title": "能力知識圖譜",
+      "description": "互動式視覺化展示您的 AI 素養能力，顯示詳細的掌握程度冷熱點",
+      "yourProfile": "您的 AI 素養檔案",
+      "mastery": "掌握程度",
+      "masteryLevel": "掌握程度 (0-100%)"
+    },
+    "questionReview": {
+      "title": "題目回顧",
+      "noQuestions": "沒有可回顧的題目",
+      "questionNumber": "第 {{current}} / {{total}} 題",
+      "previous": "上一題",
+      "next": "下一題",
+      "correct": "您的答案是正確的！",
+      "incorrect": "您的答案不正確",
+      "practicePrompt": "回顧這道題目，試著更好地理解相關概念",
+      "practiceAgain": "練習類似題目",
+      "closeReview": "關閉檢視"
     },
     "ksaAnalysis": {
       "title": "KSA 能力分析",

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AssessmentResult, AssessmentDomain, RadarChartData, AssessmentQuestion, UserAnswer } from '../../types/assessment';
 import {
@@ -12,6 +12,7 @@ import {
   ResponsiveContainer,
   Legend
 } from 'recharts';
+import CompetencyKnowledgeGraph from './CompetencyKnowledgeGraph';
 
 interface AssessmentResultsProps {
   result: AssessmentResult;
@@ -33,8 +34,29 @@ interface KSAAnalysis {
 }
 
 export default function AssessmentResults({ result, domains, onRetake, questions = [], userAnswers = [] }: AssessmentResultsProps) {
-  const { t } = useTranslation('assessment');
-  const [activeTab, setActiveTab] = useState<'overview' | 'domains' | 'recommendations' | 'ksa'>('overview');
+  const { t, i18n } = useTranslation('assessment');
+  const [activeTab, setActiveTab] = useState<'overview' | 'domains' | 'recommendations' | 'ksa' | 'knowledge-graph'>('overview');
+  const [domainsData, setDomainsData] = useState<any>(null);
+  const [ksaMaps, setKsaMaps] = useState<any>(null);
+
+  // Fetch domain and KSA data for knowledge graph
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`/api/relations?lang=${i18n.language}`);
+        const data = await response.json();
+        setDomainsData(data.domains);
+        setKsaMaps({
+          kMap: data.kMap,
+          sMap: data.sMap,
+          aMap: data.aMap
+        });
+      } catch (error) {
+        console.error('Failed to fetch domains data:', error);
+      }
+    };
+    fetchData();
+  }, [i18n.language]);
 
   const getDomainName = useCallback((domainKey: string) => {
     // 使用 i18n 系統來獲取領域名稱翻譯
@@ -197,12 +219,12 @@ export default function AssessmentResults({ result, domains, onRetake, questions
         {/* Tab Navigation */}
         <div className="bg-white rounded-lg shadow-sm mb-8">
           <div className="border-b border-gray-200">
-            <nav className="flex space-x-8 px-6">
-              {['overview', 'domains', 'recommendations', 'ksa'].map((tab) => (
+            <nav className="flex space-x-8 px-6 overflow-x-auto">
+              {['overview', 'domains', 'recommendations', 'ksa', 'knowledge-graph'].map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab as typeof activeTab)}
-                  className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                  className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
                     activeTab === tab
                       ? 'border-indigo-500 text-indigo-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -460,6 +482,19 @@ export default function AssessmentResults({ result, domains, onRetake, questions
                     </div>
                   </div>
                 </div>
+              </div>
+            )}
+
+            {/* Knowledge Graph Tab */}
+            {activeTab === 'knowledge-graph' && (
+              <div className="space-y-6">
+                <CompetencyKnowledgeGraph
+                  result={result}
+                  questions={questions}
+                  userAnswers={userAnswers}
+                  domainsData={domainsData}
+                  ksaMaps={ksaMaps}
+                />
               </div>
             )}
           </div>

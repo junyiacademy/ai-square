@@ -17,6 +17,8 @@
     "quality-check": "npm run lint && npm run test:all"
   },
   "dependencies": {
+    "@types/d3": "^7.4.3",
+    "d3": "^7.9.0",
     "i18next": "^25.2.1",
     "js-yaml": "^4.1.0",
     "next": "15.3.3",
