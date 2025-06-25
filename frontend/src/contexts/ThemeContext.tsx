@@ -18,7 +18,7 @@ interface ThemeProviderProps {
 export function ThemeProvider({ children }: ThemeProviderProps) {
   // 初始狀態總是 'light' 以避免 hydration 不匹配
   const [theme, setTheme] = useState<Theme>('light')
-  const [mounted, setMounted] = useState(false)
+  const [, setMounted] = useState(false)
 
   // 在客戶端 mount 後才讀取實際的主題偏好
   useEffect(() => {

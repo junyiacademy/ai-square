@@ -3,7 +3,10 @@ import { Storage } from '@google-cloud/storage';
 // Initialize GCS client
 // 在 GCP 環境會自動使用預設認證（Cloud Run 服務帳號）
 // 在本地開發需要設定 GOOGLE_APPLICATION_CREDENTIALS
-const storageConfig: any = {
+const storageConfig: {
+  projectId?: string;
+  keyFilename?: string;
+} = {
   projectId: process.env.GOOGLE_CLOUD_PROJECT,
 };
 
@@ -72,11 +75,13 @@ export class GCSStorageService {
       
       console.log(`✅ Assessment saved successfully to GCS: ${filePath}`);
       return assessmentId;
-    } catch (error: any) {
+    } catch (error) {
       console.error('❌ Error saving to GCS:', error);
-      console.error('Error details:', error.message);
-      console.error('Error code:', error.code);
-      throw new Error(`Failed to save assessment result: ${error.message}`);
+      if (error instanceof Error) {
+        console.error('Error details:', error.message);
+        throw new Error(`Failed to save assessment result: ${error.message}`);
+      }
+      throw new Error('Failed to save assessment result');
     }
   }
 

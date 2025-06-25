@@ -9,7 +9,7 @@ const RESULTS_FILE = path.join(process.cwd(), 'data', 'assessment-results', 'res
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { searchParams } = new URL(request.url);
@@ -22,7 +22,7 @@ export async function GET(
       );
     }
 
-    const assessmentId = params.id;
+    const { id: assessmentId } = await params;
     console.log(`Fetching assessment ${assessmentId} for user ${userId}`);
 
     if (USE_GCS) {
@@ -44,7 +44,7 @@ export async function GET(
       const results = parsed.results || [];
       
       // Find the specific assessment
-      const result = results.find((r: any) => 
+      const result = results.find((r: { user_id: string; assessment_id: string }) => 
         r.user_id === userId && r.assessment_id === assessmentId
       );
       
