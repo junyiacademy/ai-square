@@ -14,16 +14,23 @@ export default function AssessmentPage() {
   const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
   const [assessmentResult, setAssessmentResult] = useState<AssessmentResult | null>(null);
   const [startTime, setStartTime] = useState<Date | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchAssessmentData = async () => {
       setLoading(true);
+      setError(null);
       try {
         const response = await fetch(`/api/assessment?lang=${i18n.language}`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch: ${response.status}`);
+        }
         const data = await response.json();
+        console.log('Assessment data loaded:', data);
         setAssessmentData(data);
       } catch (error) {
         console.error('Failed to fetch assessment data:', error);
+        setError(error instanceof Error ? error.message : 'Unknown error');
       } finally {
         setLoading(false);
       }
@@ -33,8 +40,14 @@ export default function AssessmentPage() {
   }, [i18n.language]);
 
   const handleStartAssessment = () => {
-    setCurrentStep('quiz');
-    setStartTime(new Date());
+    console.log('Start assessment clicked');
+    console.log('Current assessment data:', assessmentData);
+    if (assessmentData) {
+      setCurrentStep('quiz');
+      setStartTime(new Date());
+    } else {
+      console.error('No assessment data available');
+    }
   };
 
   // 當語言改變時，如果正在測驗中，重新載入並回到介紹頁
@@ -45,7 +58,7 @@ export default function AssessmentPage() {
       setAssessmentResult(null);
       setStartTime(null);
     }
-  }, [i18n.language]); // Only reset when language changes
+  }, [i18n.language]); // Only reset when language changes, not currentStep
 
   const handleQuizComplete = (answers: UserAnswer[]) => {
     setUserAnswers(answers);
@@ -145,19 +158,21 @@ export default function AssessmentPage() {
   };
   
   // Helper function to get translated fields
-  const getTranslatedField = (lang: string, item: any, fieldName: string): string => {
+  const getTranslatedField = (lang: string, item: unknown, fieldName: string): string => {
     if (!item) return '';
     
+    const obj = item as Record<string, unknown>;
+    
     if (lang.startsWith('zh')) {
-      return item[`${fieldName}_zh`] || item[fieldName] || '';
+      return (obj[`${fieldName}_zh`] || obj[fieldName] || '') as string;
     }
     
     const langCode = lang.split('-')[0];
     if (langCode !== 'en') {
-      return item[`${fieldName}_${langCode}`] || item[fieldName] || '';
+      return (obj[`${fieldName}_${langCode}`] || obj[fieldName] || '') as string;
     }
     
-    return item[fieldName] || '';
+    return (obj[fieldName] || '') as string;
   };
 
   const handleRetakeAssessment = () => {
@@ -178,6 +193,17 @@ export default function AssessmentPage() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600">{t('errorLoading')}</p>
+          <p className="text-gray-600 mt-2">Error: {error}</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!assessmentData) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -187,6 +213,9 @@ export default function AssessmentPage() {
       </div>
     );
   }
+
+  console.log('Current step:', currentStep);
+  console.log('Assessment data questions:', assessmentData?.questions?.length);
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -238,7 +267,7 @@ export default function AssessmentPage() {
         </div>
       )}
 
-      {currentStep === 'quiz' && (
+      {currentStep === 'quiz' && assessmentData && (
         <AssessmentQuiz
           questions={assessmentData.questions}
           domains={assessmentData.domains}

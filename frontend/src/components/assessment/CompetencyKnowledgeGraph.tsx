@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as d3 from 'd3';
 import { AssessmentResult, AssessmentQuestion, UserAnswer } from '../../types/assessment';
@@ -10,15 +10,15 @@ interface CompetencyKnowledgeGraphProps {
   result: AssessmentResult;
   questions: AssessmentQuestion[];
   userAnswers: UserAnswer[];
-  domainsData?: any; // Domain competency data from API
+  domainsData?: unknown[] | null; // Domain competency data from API
   ksaMaps?: {
     kMap: Record<string, { summary: string; theme: string; explanation?: string }>;
     sMap: Record<string, { summary: string; theme: string; explanation?: string }>;
     aMap: Record<string, { summary: string; theme: string; explanation?: string }>;
-  };
+  } | null;
 }
 
-interface GraphNode {
+interface GraphNode extends d3.SimulationNodeDatum {
   id: string;
   type: 'domain' | 'competency' | 'ksa-theme' | 'ksa-code';
   name: string;
@@ -34,9 +34,7 @@ interface GraphNode {
   };
 }
 
-interface GraphLink {
-  source: string;
-  target: string;
+interface GraphLink extends d3.SimulationLinkDatum<GraphNode> {
   value: number;
 }
 
@@ -55,7 +53,7 @@ export default function CompetencyKnowledgeGraph({
   const [selectedQuestionIds, setSelectedQuestionIds] = useState<string[]>([]);
 
   // Calculate KSA code mastery based on user answers
-  const calculateKSAMastery = () => {
+  const calculateKSAMastery = useCallback(() => {
     const ksaMastery: Record<string, { correct: number; total: number; questions: string[] }> = {};
 
     // First pass: collect all KSA codes from all questions (not just answered ones)
@@ -98,7 +96,7 @@ export default function CompetencyKnowledgeGraph({
     });
 
     return ksaMastery;
-  };
+  }, [questions, userAnswers]);
 
   // Get mastery status: 0 = red (no correct), 1 = yellow (some correct), 2 = green (all correct)
   const getMasteryStatus = (correct: number, total: number): number => {
@@ -109,7 +107,7 @@ export default function CompetencyKnowledgeGraph({
   };
 
   // Build graph data structure focusing on KSA codes
-  const buildGraphData = () => {
+  const buildGraphData = useCallback(() => {
     const nodes: GraphNode[] = [];
     const links: GraphLink[] = [];
     const ksaMastery = calculateKSAMastery();
@@ -182,7 +180,8 @@ export default function CompetencyKnowledgeGraph({
     });
 
     return { nodes, links };
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questions, userAnswers, ksaMaps, result, t]);
 
   // Traffic light colors for mastery status
   const getTrafficLightColor = (mastery: number): string => {
@@ -226,28 +225,29 @@ export default function CompetencyKnowledgeGraph({
         .scaleExtent([0.3, 3])
         .on('zoom', (event) => {
           g.attr('transform', event.transform);
-        }) as any
+        })
     );
 
     // Set up force simulation with better spacing for KSA codes
-    const simulation = d3.forceSimulation(nodes as any)
-      .force('link', d3.forceLink(links).id((d: any) => d.id)
-        .distance((d: any) => {
+    const simulation = d3.forceSimulation<GraphNode>(nodes)
+      .force('link', d3.forceLink<GraphNode, GraphLink>(links).id((d) => d.id)
+        .distance((d) => {
           // Shorter distance for code nodes to group them better
-          if (d.target.type === 'ksa-code') return 60;
+          const target = d.target as GraphNode;
+          if (target.type === 'ksa-code') return 60;
           return 120;
         }))
-      .force('charge', d3.forceManyBody()
-        .strength((d: any) => {
+      .force('charge', d3.forceManyBody<GraphNode>()
+        .strength((d) => {
           // Stronger repulsion for code nodes to prevent overlap
           if (d.type === 'ksa-code') return -150;
           if (d.type === 'ksa-theme') return -400;
           return -500;
         }))
       .force('center', d3.forceCenter(dimensions.width / 2, dimensions.height / 2))
-      .force('collision', d3.forceCollide()
-        .radius((d: any) => getNodeRadius(d) + 10))
-      .force('radial', d3.forceRadial((d: any) => {
+      .force('collision', d3.forceCollide<GraphNode>()
+        .radius((d) => getNodeRadius(d) + 10))
+      .force('radial', d3.forceRadial<GraphNode>((d) => {
         // Position nodes in circles based on type
         if (d.type === 'ksa-theme') return 150;
         if (d.type === 'ksa-code') return 250;
@@ -261,22 +261,22 @@ export default function CompetencyKnowledgeGraph({
       .join('line')
       .attr('stroke', '#999')
       .attr('stroke-opacity', 0.6)
-      .attr('stroke-width', (d: any) => Math.sqrt(d.value) * 2);
+      .attr('stroke-width', (d) => Math.sqrt(d.value) * 2);
 
     // Add nodes
     const node = g.append('g')
       .selectAll('g')
       .data(nodes)
       .join('g')
-      .call(d3.drag<any, any>()
+      .call((d3.drag<SVGGElement, GraphNode>()
         .on('start', dragstarted)
         .on('drag', dragged)
-        .on('end', dragended) as any);
+        .on('end', dragended)) as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     // Add circles for nodes
     node.append('circle')
-      .attr('r', (d: any) => getNodeRadius(d))
-      .attr('fill', (d: any) => {
+      .attr('r', (d) => getNodeRadius(d))
+      .attr('fill', (d) => {
         // For KSA code nodes, use traffic light colors
         if (d.type === 'ksa-code' && d.mastery !== undefined) {
           return getTrafficLightColor(d.mastery);
@@ -296,14 +296,14 @@ export default function CompetencyKnowledgeGraph({
           default: return '#6b7280';
         }
       })
-      .attr('stroke', (d: any) => {
+      .attr('stroke', (d) => {
         // Highlight selected node
         if (selectedNode && d.id === selectedNode.id) {
           return '#4f46e5';
         }
         return '#fff';
       })
-      .attr('stroke-width', (d: any) => {
+      .attr('stroke-width', (d) => {
         // Thicker stroke for selected node
         if (selectedNode && d.id === selectedNode.id) {
           return 4;
@@ -311,7 +311,7 @@ export default function CompetencyKnowledgeGraph({
         return 2;
       })
       .style('cursor', 'pointer')
-      .on('click', (event, d: any) => {
+      .on('click', (event, d) => {
         setSelectedNode(d);
         // If clicking on a KSA code node, show related questions
         if (d.type === 'ksa-code' && d.details?.questions) {
@@ -326,8 +326,8 @@ export default function CompetencyKnowledgeGraph({
     // Add labels
     node.append('text')
       .attr('dy', '.35em')
-      .attr('x', (d: any) => getNodeRadius(d) + 5)
-      .style('font-size', (d: any) => {
+      .attr('x', (d) => getNodeRadius(d as GraphNode) + 5)
+      .style('font-size', (d) => {
         switch (d.type) {
           case 'domain': return '14px';
           case 'competency': return '12px';
@@ -336,8 +336,8 @@ export default function CompetencyKnowledgeGraph({
           default: return '10px';
         }
       })
-      .style('font-weight', (d: any) => d.type === 'domain' ? 'bold' : 'normal')
-      .text((d: any) => d.name);
+      .style('font-weight', (d) => d.type === 'domain' ? 'bold' : 'normal')
+      .text((d) => d.name);
 
     // Add tooltips
     const tooltip = d3.select('body').append('div')
@@ -351,7 +351,7 @@ export default function CompetencyKnowledgeGraph({
       .style('pointer-events', 'none');
 
     node
-      .on('mouseover', (event, d: any) => {
+      .on('mouseover', (event, d) => {
         tooltip.transition().duration(200).style('opacity', .9);
         let content = `<strong>${d.name}</strong><br/>`;
         
@@ -384,27 +384,30 @@ export default function CompetencyKnowledgeGraph({
     // Update positions on tick
     simulation.on('tick', () => {
       link
-        .attr('x1', (d: any) => d.source.x)
-        .attr('y1', (d: any) => d.source.y)
-        .attr('x2', (d: any) => d.target.x)
-        .attr('y2', (d: any) => d.target.y);
+        .attr('x1', (d) => (d.source as GraphNode & {x: number; y: number}).x)
+        .attr('y1', (d) => (d.source as GraphNode & {x: number; y: number}).y)
+        .attr('x2', (d) => (d.target as GraphNode & {x: number; y: number}).x)
+        .attr('y2', (d) => (d.target as GraphNode & {x: number; y: number}).y);
 
-      node.attr('transform', (d: any) => `translate(${d.x},${d.y})`);
+      node.attr('transform', (d) => `translate(${(d as GraphNode & {x: number; y: number}).x},${(d as GraphNode & {x: number; y: number}).y})`);
     });
 
     // Drag functions
-    function dragstarted(event: any, d: any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function dragstarted(this: SVGGElement, event: any, d: any) {
       if (!event.active) simulation.alphaTarget(0.3).restart();
       d.fx = d.x;
       d.fy = d.y;
     }
 
-    function dragged(event: any, d: any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function dragged(this: SVGGElement, event: any, d: any) {
       d.fx = event.x;
       d.fy = event.y;
     }
 
-    function dragended(event: any, d: any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function dragended(this: SVGGElement, event: any, d: any) {
       if (!event.active) simulation.alphaTarget(0);
       d.fx = null;
       d.fy = null;
@@ -414,14 +417,15 @@ export default function CompetencyKnowledgeGraph({
     if (selectedNode) {
       d3.select(svgRef.current)
         .selectAll('circle')
-        .attr('stroke', (d: any) => d.id === selectedNode.id ? '#4f46e5' : '#fff')
-        .attr('stroke-width', (d: any) => d.id === selectedNode.id ? 4 : 2);
+        .attr('stroke', (d) => (d as GraphNode).id === selectedNode.id ? '#4f46e5' : '#fff')
+        .attr('stroke-width', (d) => (d as GraphNode).id === selectedNode.id ? 4 : 2);
     }
 
     // Cleanup
     return () => {
       tooltip.remove();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [domainsData, ksaMaps, result, questions, userAnswers, i18n.language, selectedNode]);
 
   // Handle window resize
@@ -509,7 +513,7 @@ export default function CompetencyKnowledgeGraph({
                   </div>
                   <button
                     onClick={() => {
-                      setSelectedQuestionIds(selectedNode.details.questions || []);
+                      setSelectedQuestionIds(selectedNode.details?.questions || []);
                       setShowQuestionReview(true);
                     }}
                     className="mt-2 text-sm bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 transition-colors"

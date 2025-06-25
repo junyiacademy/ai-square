@@ -64,6 +64,7 @@ export async function GET(request: NextRequest) {
       ...question,
       question: getTranslatedField(question as unknown as Record<string, unknown>, 'question', lang),
       options: getTranslatedOptions(question as unknown as Record<string, unknown>, lang),
+      explanation: getTranslatedField(question as unknown as Record<string, unknown>, 'explanation', lang),
     }));
 
     // Return processed data

@@ -36,8 +36,12 @@ interface KSAAnalysis {
 export default function AssessmentResults({ result, domains, onRetake, questions = [], userAnswers = [] }: AssessmentResultsProps) {
   const { t, i18n } = useTranslation('assessment');
   const [activeTab, setActiveTab] = useState<'overview' | 'domains' | 'recommendations' | 'ksa' | 'knowledge-graph'>('overview');
-  const [domainsData, setDomainsData] = useState<any>(null);
-  const [ksaMaps, setKsaMaps] = useState<any>(null);
+  const [domainsData, setDomainsData] = useState<unknown[] | null>(null);
+  const [ksaMaps, setKsaMaps] = useState<{
+    kMap: Record<string, { summary: string; theme: string; explanation?: string }>;
+    sMap: Record<string, { summary: string; theme: string; explanation?: string }>;
+    aMap: Record<string, { summary: string; theme: string; explanation?: string }>;
+  } | null>(null);
 
   // Fetch domain and KSA data for knowledge graph
   useEffect(() => {

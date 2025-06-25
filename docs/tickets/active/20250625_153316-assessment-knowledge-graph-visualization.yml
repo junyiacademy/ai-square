@@ -12,7 +12,8 @@ completion_checklist:
   tests_passing: false
   tests_written: false
 created_at: '2025-06-25T15:33:16.000000'
-description: Add detailed knowledge graph visualization showing user competency heatmap after assessment
+description: Add detailed knowledge graph visualization showing user competency heatmap
+  after assessment
 dev_log:
   sessions:
   - activities:
@@ -60,23 +61,23 @@ id: 20250625_153316-assessment-knowledge-graph-visualization
 name: assessment-knowledge-graph-visualization
 spec:
   acceptance_criteria:
-  - '評估完成後，除了雷達圖外，新增知識圖譜視覺化'
-  - '知識圖譜顯示各能力的冷熱點分布（用顏色深淺表示掌握程度）'
-  - '可點擊查看每個能力的詳細 KSA 指標'
-  - '支援互動式探索，hover 時顯示詳細資訊'
-  - '響應式設計，支援手機和平板裝置'
+  - 評估完成後，除了雷達圖外，新增知識圖譜視覺化
+  - 知識圖譜顯示各能力的冷熱點分布（用顏色深淺表示掌握程度）
+  - 可點擊查看每個能力的詳細 KSA 指標
+  - 支援互動式探索，hover 時顯示詳細資訊
+  - 響應式設計，支援手機和平板裝置
   feature: 評估結果的進階知識圖譜視覺化
   out_of_scope:
-  - '不修改現有的雷達圖功能'
-  - '不改變評估題目或計分方式'
-  - '不儲存視覺化圖表為圖片'
-  purpose: '讓使用者透過視覺化的知識圖譜，更直觀地了解自己在各個 AI 素養能力上的掌握程度，識別強項和需要加強的領域'
+  - 不修改現有的雷達圖功能
+  - 不改變評估題目或計分方式
+  - 不儲存視覺化圖表為圖片
+  purpose: 讓使用者透過視覺化的知識圖譜，更直觀地了解自己在各個 AI 素養能力上的掌握程度，識別強項和需要加強的領域
   technical_requirements:
-  - '使用 D3.js 或類似的視覺化函式庫'
-  - '整合現有的評估結果資料結構'
-  - '使用顏色漸層表示能力掌握程度（紅→黃→綠）'
-  - '支援 tooltip 和互動功能'
-  - '確保效能優化，避免大量節點時的卡頓'
+  - 使用 D3.js 或類似的視覺化函式庫
+  - 整合現有的評估結果資料結構
+  - 使用顏色漸層表示能力掌握程度（紅→黃→綠）
+  - 支援 tooltip 和互動功能
+  - 確保效能優化，避免大量節點時的卡頓
 status: ready_for_commit
 test_report:
   coverage:
