@@ -45,11 +45,30 @@ export async function POST(request: NextRequest) {
       // 成功登入，回傳用戶資訊 (不包含密碼)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password: userPassword, ...userWithoutPassword } = user
-      return NextResponse.json({
+      
+      // Create response with cookies
+      const response = NextResponse.json({
         success: true,
         user: userWithoutPassword,
         message: 'Login successful'
       })
+      
+      // Set cookies for API authentication
+      response.cookies.set('isLoggedIn', 'true', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 7 // 7 days
+      })
+      
+      response.cookies.set('userRole', user.role, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 7 // 7 days
+      })
+      
+      return response
     } else {
       // 登入失敗
       return NextResponse.json(

@@ -4,7 +4,7 @@ import { contentService } from '@/lib/cms/content-service';
 export async function GET(request: NextRequest) {
   // Check admin auth
   const authHeader = request.headers.get('cookie');
-  if (!authHeader?.includes('isLoggedIn=true')) {
+  if (!authHeader?.includes('isLoggedIn=true') || !authHeader?.includes('userRole=admin')) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

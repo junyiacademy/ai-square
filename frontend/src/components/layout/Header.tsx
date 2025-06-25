@@ -34,7 +34,17 @@ export function Header() {
     window.dispatchEvent(new CustomEvent('auth-changed'))
   }, [])
 
-  const handleLogout = useCallback(() => {
+  const handleLogout = useCallback(async () => {
+    // Call logout API to clear cookies
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+      })
+    } catch (error) {
+      console.error('Logout error:', error)
+    }
+    
+    // Clear local state
     clearAuthState()
     router.push('/login')
   }, [clearAuthState, router])
