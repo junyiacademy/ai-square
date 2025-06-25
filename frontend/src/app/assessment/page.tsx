@@ -58,6 +58,7 @@ export default function AssessmentPage() {
       setAssessmentResult(null);
       setStartTime(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [i18n.language]); // Only reset when language changes, not currentStep
 
   const handleQuizComplete = (answers: UserAnswer[]) => {
