@@ -49,12 +49,19 @@ export class ContentService {
     const items: ContentItem[] = [];
     
     // 1. List from repo
-    const repoPath = path.join(process.cwd(), 'public', this.getRepoPath(type));
+    // In Next.js, we need to ensure we're looking in the right directory
+    const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
+    const repoPath = path.join(baseDir, 'public', this.getRepoPath(type));
+    
     try {
       const files = await fs.readdir(repoPath);
       
       for (const file of files) {
         if (file.endsWith('.yaml') || file.endsWith('.yml')) {
+          // Skip files that don't belong to this content type
+          if (type === 'domain' && file === 'ksa_codes.yaml') continue;
+          if (type === 'ksa' && file === 'ai_lit_domains.yaml') continue;
+          
           const content = await this.readFromRepo(type, file);
           const metadata = await this.getMetadata(type, file);
           
@@ -228,7 +235,9 @@ export class ContentService {
 
   // Private helper methods
   private async readFromRepo(type: ContentType, fileName: string): Promise<any> {
-    const filePath = path.join(process.cwd(), 'public', this.getRepoPath(type), fileName);
+    // In Next.js, we need to ensure we're looking in the right directory
+    const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
+    const filePath = path.join(baseDir, 'public', this.getRepoPath(type), fileName);
     
     try {
       const content = await fs.readFile(filePath, 'utf-8');
@@ -298,16 +307,14 @@ export class ContentService {
   }
 
   private getRepoPath(type: ContentType): string {
-    switch (type) {
-      case 'domain':
-        return 'rubrics_data';
-      case 'question':
-        return 'assessment_data';
-      case 'ksa':
-        return 'rubrics_data';
-      default:
-        return 'rubrics_data';
-    }
+    const mapping: Record<ContentType, string> = {
+      domain: 'rubrics_data',
+      question: 'assessment_data',
+      ksa: 'rubrics_data'
+    };
+    
+    const path = mapping[type] || 'rubrics_data';
+    return path;
   }
 }
 
