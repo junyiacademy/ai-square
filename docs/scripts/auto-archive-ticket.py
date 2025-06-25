@@ -61,8 +61,8 @@ def archive_ticket(ticket_path):
         today = datetime.now()
         archive_date = today.strftime("%Y-%m-%d")
     
-    # 創建歸檔目錄
-    archive_dir = Path(f"docs/tickets/archive/{archive_date}")
+    # 創建歸檔目錄 (直接放在 archive 目錄，不再按日期分類)
+    archive_dir = Path("docs/tickets/archive")
     archive_dir.mkdir(parents=True, exist_ok=True)
     
     # 移動檔案
