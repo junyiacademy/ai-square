@@ -45,7 +45,7 @@ export default function AssessmentPage() {
       setAssessmentResult(null);
       setStartTime(null);
     }
-  }, [i18n.language]);
+  }, [i18n.language, currentStep, assessmentData]);
 
   const handleQuizComplete = (answers: UserAnswer[]) => {
     setUserAnswers(answers);

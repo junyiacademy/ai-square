@@ -1,0 +1,95 @@
+ai_usage:
+  complexity_breakdown:
+    medium_count: 1
+  estimated_cost_usd: 0.15000000000000002
+  interactions:
+  - complexity: medium
+    description: Added unit tests for HeroSection and FeaturesSection components to
+      ensure code quality and proper rendering of multilingual content
+    estimated_cost: 0.15000000000000002
+    is_start_marker: false
+    task_type: development
+    timestamp: '2025-06-25T13:25:54.925235'
+  total_interactions: 1
+commit_hash: 9171acc8
+completion_checklist:
+  ai_metrics_recorded: true
+  code_implemented: true
+  documentation_updated: false
+  spec_defined: false
+  story_extracted: false
+  tests_passing: false
+  tests_written: false
+created_at: '2025-06-25T13:14:26.406587'
+description: Redesign homepage with multilingual welcome content, visual knowledge
+  graph, and compelling CTAs
+dev_log:
+  sessions:
+  - activities: []
+    ai_interactions: []
+    challenges: []
+    date: '2025-06-25'
+    decisions: []
+    duration_minutes: 0
+    end_time: null
+    files_modified: []
+    next_steps: []
+    session_id: 1
+    start_time: '13:14:26'
+development:
+  branch: ticket/homepage-redesign
+  code_review_status: pending
+  commits: []
+  files_changed:
+  - frontend/public/locales/ko/homepage.json
+  - frontend/public/locales/it/homepage.json
+  - frontend/public/locales/fr/homepage.json
+  - frontend/public/locales/zh-TW/homepage.json
+  - frontend/public/locales/es/homepage.json
+  - frontend/public/locales/de/homepage.json
+  - frontend/src/components/assessment/AssessmentResults.tsx
+  - frontend/public/locales/en/homepage.json
+  - frontend/src/components/homepage/
+  - docs/tickets/active/
+  - frontend/public/locales/ru/homepage.json
+  - frontend/public/locales/ja/homepage.json
+  - frontend/src/components/assessment/AssessmentQuiz.tsx
+  - rontend/src/app/assessment/page.tsx
+  - frontend/src/app/page.tsx
+  test_coverage: null
+id: 20250625_131426-homepage-redesign
+name: homepage-redesign
+spec:
+  acceptance_criteria:
+  - '[條件 1]'
+  - '[條件 2]'
+  - '[條件 3]'
+  feature: homepage-redesign 功能
+  out_of_scope:
+  - '[不包含的功能]'
+  purpose: '[請描述目的]'
+  technical_requirements:
+  - '[技術需求 1]'
+  - '[技術需求 2]'
+status: active
+test_report:
+  coverage:
+    branches: 0
+    functions: 0
+    lines: 0
+    statements: 0
+  summary:
+    duration_ms: 0
+    failed: 0
+    passed: 0
+    skipped: 0
+    total_tests: 0
+  test_runs: []
+time_tracking:
+  actual_duration_minutes: 10
+  ai_time_minutes: 0
+  checkpoints: []
+  completed_at: null
+  human_time_minutes: 0
+  started_at: '2025-06-25T13:14:26.406587'
+type: feature

@@ -1,0 +1,93 @@
+{
+  "hero": {
+    "title": "透過 AI Square 精通 AI 素養",
+    "subtitle": "您的個人化人工智慧理解與應用之旅",
+    "description": "AI Square 是一個革命性的多智能體學習平台，透過互動式評估、個人化學習路徑和即時 AI 輔助，賦能您發展必要的 AI 能力。",
+    "cta": {
+      "getStarted": "開始您的旅程",
+      "explore": "探索 AI 領域",
+      "assessment": "進行評估"
+    }
+  },
+  "features": {
+    "title": "為什麼選擇 AI Square？",
+    "subtitle": "為現代世界設計的全方位 AI 教育",
+    "items": {
+      "personalizedLearning": {
+        "title": "個人化學習路徑",
+        "description": "AI 驅動的推薦系統適應您的學習風格和節奏"
+      },
+      "multilingualSupport": {
+        "title": "支援 9 種語言",
+        "description": "使用您偏好的語言學習，享受完整的多語言內容"
+      },
+      "realTimeAI": {
+        "title": "全天候 AI 輔導",
+        "description": "從進階 AI 助理獲得即時反饋和指導"
+      },
+      "comprehensiveAssessment": {
+        "title": "全面性評估",
+        "description": "透過詳細洞察評估您在四大核心領域的 AI 素養"
+      },
+      "interactiveTasks": {
+        "title": "互動式學習任務",
+        "description": "透過實作專案和真實場景應用您的知識"
+      },
+      "progressTracking": {
+        "title": "視覺化進度追蹤",
+        "description": "透過直觀的雷達圖和成就徽章追蹤您的成長"
+      }
+    }
+  },
+  "domains": {
+    "title": "四大核心 AI 素養領域",
+    "subtitle": "掌握 AI 互動與創造的每個面向",
+    "viewDetails": "查看詳情"
+  },
+  "howItWorks": {
+    "title": "如何運作",
+    "subtitle": "簡單步驟開啟您的 AI 精通之旅",
+    "steps": {
+      "assessment": {
+        "title": "1. 進行初始評估",
+        "description": "評估您在四大領域的當前 AI 素養水平"
+      },
+      "personalized": {
+        "title": "2. 獲得個人化路徑",
+        "description": "根據您的結果接收客製化的學習旅程"
+      },
+      "learn": {
+        "title": "3. 學習與練習",
+        "description": "參與互動內容和 AI 輔助任務"
+      },
+      "track": {
+        "title": "4. 追蹤進度",
+        "description": "監控您的成長並獲得成就"
+      }
+    }
+  },
+  "target": {
+    "title": "AI Square 適合誰？",
+    "subtitle": "為各個層級的學習者設計",
+    "audiences": {
+      "individuals": {
+        "title": "個人學習者",
+        "description": "為個人和專業成長發展必要的 AI 技能"
+      },
+      "educators": {
+        "title": "教育工作者",
+        "description": "獲取教授 AI 素養的全面資源"
+      },
+      "organizations": {
+        "title": "組織機構",
+        "description": "使用企業級 AI 教育解決方案培訓您的團隊"
+      }
+    }
+  },
+  "cta": {
+    "title": "準備開始您的 AI 學習之旅了嗎？",
+    "subtitle": "加入數千名正在精通 AI 素養的學習者",
+    "button": "免費開始",
+    "login": "已有帳號？立即登入"
+  }
+}

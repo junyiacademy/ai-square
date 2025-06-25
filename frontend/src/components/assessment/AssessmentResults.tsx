@@ -33,7 +33,7 @@ interface KSAAnalysis {
 }
 
 export default function AssessmentResults({ result, domains, onRetake, questions = [], userAnswers = [] }: AssessmentResultsProps) {
-  const { t, i18n } = useTranslation('assessment');
+  const { t } = useTranslation('assessment');
   const [activeTab, setActiveTab] = useState<'overview' | 'domains' | 'recommendations' | 'ksa'>('overview');
 
   const getDomainName = useCallback((domainKey: string) => {
