@@ -5,18 +5,19 @@ import '@/i18n'
 interface Language {
   code: string
   name: string
+  flag: string
 }
 
 const languages: Language[] = [
-  { code: 'en', name: 'English' },
-  { code: 'zh-TW', name: '繁體中文' },
-  { code: 'es', name: 'Español' },
-  { code: 'ja', name: '日本語' },
-  { code: 'ko', name: '한국어' },
-  { code: 'fr', name: 'Français' },
-  { code: 'de', name: 'Deutsch' },
-  { code: 'ru', name: 'Русский' },
-  { code: 'it', name: 'Italiano' },
+  { code: 'en', name: 'English', flag: '🇺🇸' },
+  { code: 'zh-TW', name: '繁體中文', flag: '🇹🇼' },
+  { code: 'es', name: 'Español', flag: '🇪🇸' },
+  { code: 'ja', name: '日本語', flag: '🇯🇵' },
+  { code: 'ko', name: '한국어', flag: '🇰🇷' },
+  { code: 'fr', name: 'Français', flag: '🇫🇷' },
+  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+  { code: 'ru', name: 'Русский', flag: '🇷🇺' },
+  { code: 'it', name: 'Italiano', flag: '🇮🇹' },
 ]
 
 export function LanguageSelector() {
@@ -50,19 +51,19 @@ export function LanguageSelector() {
       <select
         onChange={(e) => handleLanguageChange(e.target.value)}
         value={currentLang}
-        className="bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm appearance-none cursor-pointer hover:bg-gray-50 transition-colors"
+        className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm appearance-none cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors dark:text-gray-200"
         aria-label="選擇語言"
       >
         {languages.map((language) => (
           <option key={language.code} value={language.code}>
-            {language.name}
+            {language.flag} {language.name}
           </option>
         ))}
       </select>
       {/* 自定義下拉箭頭 */}
       <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
         <svg 
-          className="w-4 h-4 text-gray-400" 
+          className="w-4 h-4 text-gray-400 dark:text-gray-500" 
           fill="none" 
           stroke="currentColor" 
           viewBox="0 0 24 24"
