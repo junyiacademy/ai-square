@@ -12,25 +12,16 @@ dev_log:
   sessions:
   - session_id: 1
     date: '2025-06-24'
-    start_time: ''
-    end_time: ''
-    activities: []
+    start_time: '7.540833'
+    end_time: null
+    duration_minutes: 1
+    activities:
+    - Ticket completed
     challenges: []
     decisions: []
-  - session_id: 2
-    date: '2025-06-24'
-    start_time: ''
-    end_time: ''
-    activities: []
-    challenges: []
-    decisions: []
-  - session_id: 3
-    date: '2025-06-23'
-    start_time: ''
-    end_time: ''
-    activities: []
-    challenges: []
-    decisions: []
+    files_modified: &id001 []
+    ai_interactions: []
+    next_steps: []
 test_report:
   last_run: null
   summary:
@@ -52,4 +43,4 @@ time_tracking:
 development:
   branch: ticket/test-new-workflow
   commits: []
-  files_changed: []
+  files_changed: *id001

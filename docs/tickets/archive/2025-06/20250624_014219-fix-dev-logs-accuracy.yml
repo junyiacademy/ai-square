@@ -12,11 +12,16 @@ dev_log:
   sessions:
   - session_id: 1
     date: '2025-06-24'
-    start_time: ''
-    end_time: ''
-    activities: []
+    start_time: '9.474086'
+    end_time: null
+    duration_minutes: null
+    activities:
+    - Ticket completed
     challenges: []
     decisions: []
+    files_modified: &id001 []
+    ai_interactions: []
+    next_steps: []
 test_report:
   last_run: null
   summary:
@@ -32,10 +37,10 @@ ai_usage:
 time_tracking:
   started_at: '2025-06-24T01:42:19.474086'
   completed_at: '2025-06-24T01:52:05.573460'
-  actual_duration_minutes: null
+  actual_duration_minutes: 9
   ai_time_minutes: null
   human_time_minutes: null
 development:
   branch: ticket/fix-dev-logs-accuracy
   commits: []
-  files_changed: []
+  files_changed: *id001

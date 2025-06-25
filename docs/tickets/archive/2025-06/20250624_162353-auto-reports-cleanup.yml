@@ -11,12 +11,17 @@ spec:
 dev_log:
   sessions:
   - session_id: 1
-    date: '2025-06-23'
-    start_time: ''
-    end_time: ''
-    activities: []
+    date: '2025-06-24'
+    start_time: '3.140907'
+    end_time: null
+    duration_minutes: 22
+    activities:
+    - Ticket completed
     challenges: []
     decisions: []
+    files_modified: &id001 []
+    ai_interactions: []
+    next_steps: []
 test_report:
   last_run: null
   summary:
@@ -32,13 +37,13 @@ ai_usage:
 time_tracking:
   started_at: '2025-06-24T16:23:53.140907'
   completed_at: '2025-06-24T16:45:45.000000'
-  actual_duration_minutes: 22
+  actual_duration_minutes: 21
   ai_time_minutes: null
   human_time_minutes: null
 development:
   branch: ticket/auto-reports-cleanup
   commits: []
-  files_changed: []
+  files_changed: *id001
 document_references:
 - path: docs/handbook/workflows/TICKET_DRIVEN_DEVELOPMENT.md
   reason: 遵循票券驅動開發流程

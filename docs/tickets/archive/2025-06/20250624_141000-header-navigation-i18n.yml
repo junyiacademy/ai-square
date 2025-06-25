@@ -78,7 +78,7 @@ ai_usage:
 time_tracking:
   started_at: '2025-06-24T14:10:00'
   completed_at: '2025-06-24T14:43:59.500122'
-  actual_duration_minutes: null
+  actual_duration_minutes: 33
   ai_time_minutes: null
   human_time_minutes: null
 development:

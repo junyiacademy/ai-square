@@ -22,25 +22,16 @@ dev_log:
   sessions:
   - session_id: 1
     date: '2025-06-24'
-    start_time: ''
-    end_time: ''
-    activities: []
+    start_time: '0.008330'
+    end_time: null
+    duration_minutes: null
+    activities:
+    - Ticket completed
     challenges: []
     decisions: []
-  - session_id: 2
-    date: '2025-06-24'
-    start_time: ''
-    end_time: ''
-    activities: []
-    challenges: []
-    decisions: []
-  - session_id: 3
-    date: '2025-06-23'
-    start_time: ''
-    end_time: ''
-    activities: []
-    challenges: []
-    decisions: []
+    files_modified: &id001 []
+    ai_interactions: []
+    next_steps: []
 test_report:
   last_run: null
   summary:
@@ -56,13 +47,13 @@ ai_usage:
 time_tracking:
   started_at: '2025-06-24T12:42:50.008330'
   completed_at: '2025-06-24T13:14:53.399285'
-  actual_duration_minutes: null
+  actual_duration_minutes: 32
   ai_time_minutes: null
   human_time_minutes: null
 development:
   branch: ticket/fix-ticket-completion-workflow
   commits: []
-  files_changed: []
+  files_changed: *id001
 document_references:
 - path: docs/handbook/workflows/TICKET_DRIVEN_DEVELOPMENT.md
   reason: 遵循票券驅動開發流程

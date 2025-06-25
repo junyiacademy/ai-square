@@ -61,26 +61,21 @@ spec:
 dev_log:
   sessions:
   - session_id: 1
-    date: ''
-    start_time: ''
-    end_time: ''
-    activities: []
+    date: '2025-06-24'
+    start_time: '8.597430'
+    end_time: null
+    duration_minutes: null
+    activities:
+    - Ticket completed
     challenges: []
     decisions: []
-  - session_id: 2
-    date: '2025-06-23'
-    start_time: ''
-    end_time: ''
-    activities: []
-    challenges: []
-    decisions: []
-  - session_id: 3
-    date: 2025-06-22
-    start_time: ''
-    end_time: ''
-    activities: []
-    challenges: []
-    decisions: []
+    files_modified: &id001
+    - frontend/src/app/ksa/page.tsx
+    - frontend/src/app/api/ksa/route.ts
+    - frontend/src/app/ksa/__tests__/page.test.tsx
+    - frontend/src/app/api/ksa/__tests__/route.test.ts
+    ai_interactions: []
+    next_steps: []
 test_report:
   last_run: null
   summary:
@@ -96,17 +91,13 @@ ai_usage:
 time_tracking:
   started_at: '2025-06-24T12:51:38.597430'
   completed_at: '2025-06-24T14:05:00'
-  actual_duration_minutes: null
+  actual_duration_minutes: 73
   ai_time_minutes: null
   human_time_minutes: null
 development:
   branch: ticket/ksa-display-page
   commits: []
-  files_changed:
-  - frontend/src/app/ksa/page.tsx
-  - frontend/src/app/api/ksa/route.ts
-  - frontend/src/app/ksa/__tests__/page.test.tsx
-  - frontend/src/app/api/ksa/__tests__/route.test.ts
+  files_changed: *id001
 document_references:
 - path: docs/handbook/workflows/TICKET_DRIVEN_DEVELOPMENT.md
   reason: 遵循票券驅動開發流程

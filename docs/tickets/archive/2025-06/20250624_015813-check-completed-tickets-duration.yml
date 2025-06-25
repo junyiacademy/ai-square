@@ -12,11 +12,16 @@ dev_log:
   sessions:
   - session_id: 1
     date: '2025-06-24'
-    start_time: ''
-    end_time: ''
-    activities: []
+    start_time: '3.832304'
+    end_time: null
+    duration_minutes: null
+    activities:
+    - Ticket completed
     challenges: []
     decisions: []
+    files_modified: &id001 []
+    ai_interactions: []
+    next_steps: []
 test_report:
   last_run: null
   summary:
@@ -32,10 +37,10 @@ ai_usage:
 time_tracking:
   started_at: '2025-06-24T01:58:13.832304'
   completed_at: '2025-06-24T09:59:03.008117'
-  actual_duration_minutes: null
+  actual_duration_minutes: 480
   ai_time_minutes: null
   human_time_minutes: null
 development:
   branch: ticket/check-completed-tickets-duration
   commits: []
-  files_changed: []
+  files_changed: *id001
