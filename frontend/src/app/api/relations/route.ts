@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-import yaml from 'js-yaml';
+import { contentService } from '@/lib/cms/content-service';
 
 // --- 修正後的型別定義 ---
 // 移除未使用的 languageCodes
@@ -76,19 +74,14 @@ const getTranslatedField = (lang: string, item: object | null, fieldName: string
   return record[fieldName];
 };
 
-function loadYaml<T>(filePath: string): T {
-  const fullPath = path.join(process.cwd(), 'public', filePath);
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
-  return yaml.load(fileContents) as T;
-}
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const lang = searchParams.get('lang') || 'en';
 
-  // 讀取 YAML
-  const domainsData = loadYaml<DomainsYaml>('rubrics_data/ai_lit_domains.yaml');
-  const ksaData = loadYaml<KSAYaml>('rubrics_data/ksa_codes.yaml');
+  // 讀取 YAML with CMS override support
+  const domainsData = await contentService.getContent('domain', 'ai_lit_domains.yaml') as DomainsYaml;
+  const ksaData = await contentService.getContent('ksa', 'ksa_codes.yaml') as KSAYaml;
 
   // --- 使用通則函式處理 domains ---
   const domainList = Object.entries(domainsData.domains).map(([domainKey, domain]) => ({

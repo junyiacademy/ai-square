@@ -1,18 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readFileSync } from 'fs';
-import { join } from 'path';
-import yaml from 'js-yaml';
 import { AssessmentData } from '../../../types/assessment';
+import { contentService } from '@/lib/cms/content-service';
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
 
-    // Read the assessment data YAML file
-    const filePath = join(process.cwd(), 'public', 'assessment_data', 'ai_literacy_questions.yaml');
-    const fileContents = readFileSync(filePath, 'utf8');
-    const assessmentData = yaml.load(fileContents) as AssessmentData;
+    // Read the assessment data with CMS override support
+    const assessmentData = await contentService.getContent('question', 'ai_literacy_questions.yaml') as AssessmentData;
 
     // Utility function to get translated field
     const getTranslatedField = (obj: Record<string, unknown>, fieldName: string, language: string): string => {
