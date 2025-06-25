@@ -1,6 +1,13 @@
 @import "tailwindcss";
 
-/* Tailwind v4 configuration */
+/* Dark mode selector for Tailwind v4 */
+@supports (--tw: 0) {
+  :root.dark {
+    color-scheme: dark;
+  }
+}
+
+/* Tailwind v4 theme configuration */
 @theme {
   /* Extended color palette for dark mode */
   --color-dark-bg: #0f172a;
@@ -8,25 +15,6 @@
   --color-dark-border: #334155;
   --color-dark-text-primary: #f1f5f9;
   --color-dark-text-secondary: #cbd5e1;
-
-  /* Define custom colors for Tailwind */
-  --color-dark-bg: var(--color-dark-bg);
-  --color-dark-surface: var(--color-dark-surface);
-  --color-dark-border: var(--color-dark-border);
-  --color-dark-text-primary: var(--color-dark-text-primary);
-  --color-dark-text-secondary: var(--color-dark-text-secondary);
-}
-
-/* Dark mode support for Tailwind v4 */
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-  }
-}
-
-/* Apply dark mode when dark class is present */
-:root.dark {
-  color-scheme: dark;
 }
 
 /* Custom utilities */
@@ -55,4 +43,67 @@
 /* Base styles */
 html {
   scroll-behavior: smooth;
+}
+
+/* Dark mode utilities - Tailwind v4 approach */
+@layer utilities {
+  .dark\:bg-slate-800 {
+    &:is(.dark *) {
+      background-color: rgb(30 41 59);
+    }
+  }
+  
+  .dark\:bg-slate-900 {
+    &:is(.dark *) {
+      background-color: rgb(15 23 42);
+    }
+  }
+  
+  .dark\:text-white {
+    &:is(.dark *) {
+      color: rgb(255 255 255);
+    }
+  }
+  
+  .dark\:text-gray-300 {
+    &:is(.dark *) {
+      color: rgb(209 213 219);
+    }
+  }
+  
+  .dark\:text-gray-400 {
+    &:is(.dark *) {
+      color: rgb(156 163 175);
+    }
+  }
+  
+  .dark\:border-slate-700 {
+    &:is(.dark *) {
+      border-color: rgb(51 65 85);
+    }
+  }
+  
+  .dark\:bg-slate-700 {
+    &:is(.dark *) {
+      background-color: rgb(51 65 85);
+    }
+  }
+  
+  .dark\:hover\:bg-slate-700:hover {
+    &:is(.dark *) {
+      background-color: rgb(51 65 85);
+    }
+  }
+  
+  .dark\:hover\:text-white:hover {
+    &:is(.dark *) {
+      color: rgb(255 255 255);
+    }
+  }
+  
+  .dark\:hover\:bg-slate-600:hover {
+    &:is(.dark *) {
+      background-color: rgb(71 85 105);
+    }
+  }
 }
