@@ -412,9 +412,11 @@ lint-backend:
 #=============================================================================
 
 # Google Cloud 設定
-YOUR_PROJECT_ID = ai-square-463013
+# Google Cloud 配置 - 請通過環境變數設定
+# 例如: export PROJECT_ID=your-project-id
+PROJECT_ID ?= $(shell gcloud config get-value project 2>/dev/null || echo "PLEASE_SET_PROJECT_ID")
 IMAGE_NAME = ai-square-frontend
-GCR_IMAGE = gcr.io/$(YOUR_PROJECT_ID)/$(IMAGE_NAME)
+GCR_IMAGE = gcr.io/$(PROJECT_ID)/$(IMAGE_NAME)
 
 ## 檢查部署大小（排除 .gcloudignore 的檔案）
 check-deploy-size:
@@ -433,15 +435,34 @@ gcp-build-and-push:
 	@cd frontend && gcloud meta list-files-for-upload . | xargs du -ch 2>/dev/null | tail -1 | cut -f1 | xargs echo "總大小:"
 	cd frontend && gcloud builds submit --tag $(GCR_IMAGE)
 
-## 部署服務到 Cloud Run
+## 部署服務到 Cloud Run (使用 Secret Manager)
 gcp-deploy-service:
-	@echo "$(GREEN)🚀 部署服務到 Cloud Run$(NC)"
+	@echo "$(GREEN)🚀 部署服務到 Cloud Run (使用 Secret Manager)$(NC)"
 	gcloud run deploy $(IMAGE_NAME) \
 		--image $(GCR_IMAGE) \
 		--platform managed \
 		--region asia-east1 \
 		--port 3000 \
-		--allow-unauthenticated
+		--allow-unauthenticated \
+		--set-secrets="GCS_BUCKET_NAME=gcs-bucket-name:latest" \
+		--set-env-vars="GOOGLE_CLOUD_PROJECT=$(PROJECT_ID)" \
+		--service-account="ai-square-frontend@$(PROJECT_ID).iam.gserviceaccount.com"
+
+## 設定 Google Secret Manager
+setup-secrets:
+	@echo "$(BLUE)🔐 設定 Google Secret Manager$(NC)"
+	@echo "$(YELLOW)📝 創建 GCS Bucket Name secret...$(NC)"
+	@read -p "請輸入 GCS Bucket 名稱: " bucket_name; \
+	echo -n "$$bucket_name" | gcloud secrets create gcs-bucket-name \
+		--replication-policy="automatic" \
+		--data-file=- \
+		--project=$(PROJECT_ID) || echo "Secret 已存在"
+	@echo "$(YELLOW)🔑 授予 Service Account 讀取權限...$(NC)"
+	gcloud secrets add-iam-policy-binding gcs-bucket-name \
+		--member="serviceAccount:ai-square-frontend@$(PROJECT_ID).iam.gserviceaccount.com" \
+		--role="roles/secretmanager.secretAccessor" \
+		--project=$(PROJECT_ID)
+	@echo "$(GREEN)✅ Secret Manager 設定完成！$(NC)"
 
 ## 完整部署到 Google Cloud Platform
 deploy-gcp: build-frontend build-docker-image gcp-build-and-push gcp-deploy-service
