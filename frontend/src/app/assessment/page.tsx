@@ -39,13 +39,13 @@ export default function AssessmentPage() {
 
   // 當語言改變時，如果正在測驗中，重新載入並回到介紹頁
   useEffect(() => {
-    if (currentStep === 'quiz' && assessmentData) {
+    if (currentStep === 'quiz') {
       setCurrentStep('intro');
       setUserAnswers([]);
       setAssessmentResult(null);
       setStartTime(null);
     }
-  }, [i18n.language, currentStep, assessmentData]);
+  }, [i18n.language]); // Only reset when language changes
 
   const handleQuizComplete = (answers: UserAnswer[]) => {
     setUserAnswers(answers);

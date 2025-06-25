@@ -11,5 +11,6 @@
     "admin": "Administrator"
   },
   "darkMode": "Switch to dark mode",
-  "lightMode": "Switch to light mode"
+  "lightMode": "Switch to light mode",
+  "toggleTheme": "Toggle theme"
 }
