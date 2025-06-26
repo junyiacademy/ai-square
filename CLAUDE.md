@@ -107,7 +107,7 @@ backend/            # FastAPI + Python
 docs/
 ├── tickets/        
 │   ├── active/     # 進行中的票券（整合式 YAML）
-│   └── archive/    # 已完成的票券（按年月歸檔）
+│   └── archive/    # 已完成的票券（平面結構）
 ├── handbook/       # AI-QUICK-REFERENCE.md（單一參考文件）
 ├── scripts/        # 核心自動化工具
 └── reports/        # 每日/週報
