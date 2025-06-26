@@ -1,0 +1,79 @@
+ai_usage:
+  complexity_breakdown: {}
+  estimated_cost_usd: 0.0
+  interactions: []
+  total_interactions: 0
+completion_checklist:
+  ai_metrics_recorded: false
+  code_implemented: false
+  documentation_updated: false
+  spec_defined: false
+  tests_passing: false
+  tests_written: false
+created_at: '2025-06-26T13:58:21.642944'
+description: pbl-learning-system implementation
+dev_log:
+  sessions:
+  - activities: []
+    ai_interactions: []
+    challenges: []
+    date: '2025-06-26'
+    decisions: []
+    duration_minutes: 0
+    end_time: null
+    files_modified: []
+    next_steps: []
+    session_id: 1
+    start_time: '13:58:21'
+development:
+  branch: ticket/pbl-learning-system
+  code_review_status: pending
+  commits: []
+  files_changed: []
+  test_coverage: null
+id: 20250626_135821-pbl-learning-system
+name: pbl-learning-system
+spec:
+  acceptance_criteria:
+  - '使用者可以在 /pbl/scenarios/[id]/learn 開始學習'
+  - '顯示當前階段和任務，支援階段切換'
+  - '整合 AI 對話功能（使用 Gemini）'
+  - '自動保存學習進度到 GCS'
+  - '歷史記錄頁面顯示所有過去的學習會話'
+  - '進度追蹤顯示完成的任務和階段'
+  - '支援中英文切換'
+  feature: 'PBL 完整學習系統'
+  out_of_scope:
+  - '評分和認證系統'
+  - '社交分享功能'
+  - '離線學習支援'
+  purpose: '實作 PBL 學習介面、歷史記錄頁面和進度追蹤功能，提供完整的學習體驗'
+  technical_requirements:
+  - '創建 /pbl/scenarios/[id]/learn 學習介面'
+  - '創建 /pbl/history 歷史記錄頁面'
+  - '實作進度追蹤組件和 API'
+  - '整合 GCS 儲存服務讀寫學習記錄'
+  - '使用 React hooks 管理學習狀態'
+  - '響應式設計支援行動裝置'
+status: active
+test_report:
+  coverage:
+    branches: 0
+    functions: 0
+    lines: 0
+    statements: 0
+  summary:
+    duration_ms: 0
+    failed: 0
+    passed: 0
+    skipped: 0
+    total_tests: 0
+  test_runs: []
+time_tracking:
+  actual_duration_minutes: 0
+  ai_time_minutes: 0
+  checkpoints: []
+  completed_at: null
+  human_time_minutes: 0
+  started_at: '2025-06-26T13:58:21.642944'
+type: feature
