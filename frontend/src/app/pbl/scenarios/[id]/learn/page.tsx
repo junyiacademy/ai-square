@@ -166,6 +166,7 @@ export default function PBLLearnPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             scenarioId,
+            scenarioTitle: scenario.title,
             userId,
             language: i18n.language,
             stageIndex: currentStageIndex,

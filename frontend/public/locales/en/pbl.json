@@ -106,5 +106,26 @@
     "review": "Review",
     "noSessions": "No learning sessions started yet",
     "startLearning": "Start Learning"
+  },
+  "complete": {
+    "congratulations": "Congratulations!",
+    "scenarioCompleted": "You have completed {{title}}",
+    "completionStats": "Completion Statistics",
+    "completionRate": "Completion Rate",
+    "stagesCompleted": "Stages Completed",
+    "totalTimeSpent": "Total Time Spent",
+    "learningObjectivesAchieved": "Learning Objectives Achieved",
+    "stageSummary": "Stage Summary",
+    "completed": "Completed",
+    "notStarted": "Not Started",
+    "viewHistory": "View Learning History",
+    "retryScenario": "Retry Scenario",
+    "backToPBL": "Back to PBL",
+    "errorLoading": "Error loading completion data",
+    "timeFormat": {
+      "hours": "{{hours}}h {{minutes}}m",
+      "minutes": "{{minutes}}m {{seconds}}s",
+      "seconds": "{{seconds}}s"
+    }
   }
 }

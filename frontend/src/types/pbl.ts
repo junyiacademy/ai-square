@@ -132,9 +132,11 @@ export interface Evidence {
 // Stage Result
 export interface StageResult {
   stageId: string;
+  status: 'not_started' | 'in_progress' | 'completed';
   completed: boolean;
   startedAt: Date;
   completedAt?: Date;
+  score?: number;
   performanceMetrics: {
     completionTime: number; // seconds
     interactionCount: number;
@@ -166,6 +168,8 @@ export interface SessionData {
   userId: string;
   userEmail?: string;
   scenarioId: string;
+  scenarioTitle?: string;
+  scenario?: ScenarioProgram; // Optional full scenario data
   status: SessionStatus;
   currentStage: number;
   progress: {
@@ -177,6 +181,10 @@ export interface SessionData {
   lastActiveAt: string;
   stageResults: StageResult[];
   processLogs: ProcessLog[];
+  evaluations?: Array<{
+    score: number;
+    feedback?: string;
+  }>;
 }
 
 // Session Metadata (for GCS storage)

@@ -106,5 +106,26 @@
     "review": "回顧",
     "noSessions": "尚未開始任何學習項目",
     "startLearning": "開始學習"
+  },
+  "complete": {
+    "congratulations": "恭喜您！",
+    "scenarioCompleted": "您已完成 {{title}}",
+    "completionStats": "完成統計",
+    "completionRate": "完成率",
+    "stagesCompleted": "已完成階段",
+    "totalTimeSpent": "總花費時間",
+    "learningObjectivesAchieved": "達成的學習目標",
+    "stageSummary": "階段摘要",
+    "completed": "已完成",
+    "notStarted": "未開始",
+    "viewHistory": "查看學習歷程",
+    "retryScenario": "重新嘗試",
+    "backToPBL": "返回 PBL",
+    "errorLoading": "載入完成資料時發生錯誤",
+    "timeFormat": {
+      "hours": "{{hours}} 小時 {{minutes}} 分鐘",
+      "minutes": "{{minutes}} 分鐘 {{seconds}} 秒",
+      "seconds": "{{seconds}} 秒"
+    }
   }
 }

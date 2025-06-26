@@ -9,7 +9,7 @@ const sessions = new Map<string, SessionData>();
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { scenarioId, userId, stageIndex = 0, stageId } = body;
+    const { scenarioId, scenarioTitle, userId, stageIndex = 0, stageId } = body;
 
     if (!scenarioId || !userId) {
       return NextResponse.json(
@@ -46,6 +46,7 @@ export async function POST(request: NextRequest) {
       userId,
       userEmail,
       scenarioId,
+      scenarioTitle,
       status: 'in_progress',
       currentStage: stageIndex || 0,  // Set from parameter
       progress: {
@@ -115,6 +116,8 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');
+    const scenarioId = searchParams.get('scenarioId');
+    const status = searchParams.get('status') as 'in_progress' | 'completed' | 'paused' | null;
 
     if (!userId) {
       return NextResponse.json(
@@ -129,19 +132,50 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Extract user email from cookies if available
+    let userEmail: string | undefined;
+    try {
+      const userCookie = request.cookies.get('user')?.value;
+      if (userCookie) {
+        const user = JSON.parse(userCookie);
+        userEmail = user.email;
+      }
+    } catch {
+      console.log('No user cookie found');
+    }
+
     // Try to fetch from GCS first
     let userSessions: SessionData[] = [];
     
     try {
-      const logDataList = await pblGCS.listUserSessions(userId, 'in_progress');
+      const logDataList = await pblGCS.listUserSessions(
+        userId, 
+        status || undefined,
+        userEmail
+      );
       
       // Extract session data from log data
-      userSessions = logDataList.map(logData => logData.session_data);
+      userSessions = logDataList.map(logData => {
+        // Restore processLogs from root level
+        return {
+          ...logData.session_data,
+          processLogs: logData.process_logs || []
+        };
+      });
+      
+      // Filter by scenarioId if provided
+      if (scenarioId) {
+        userSessions = userSessions.filter(session => session.scenarioId === scenarioId);
+      }
     } catch (gcsError) {
       console.error('Failed to fetch from GCS, using in-memory storage:', gcsError);
       // Fallback to in-memory storage
       sessions.forEach((session) => {
-        if (session.userId === userId && session.status === 'in_progress') {
+        const matchesUserId = session.userId === userId;
+        const matchesStatus = !status || session.status === status;
+        const matchesScenarioId = !scenarioId || session.scenarioId === scenarioId;
+        
+        if (matchesUserId && matchesStatus && matchesScenarioId) {
           userSessions.push(session);
         }
       });
