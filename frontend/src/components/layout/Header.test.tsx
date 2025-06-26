@@ -283,6 +283,7 @@ describe('Header 組件測試', () => {
       await user.tab() // Logo link
       await user.tab() // Relations link  
       await user.tab() // KSA link
+      await user.tab() // PBL link (newly added)
       await user.tab() // Assessment link
       await user.tab() // Assessment History link
       await user.tab() // Language selector
