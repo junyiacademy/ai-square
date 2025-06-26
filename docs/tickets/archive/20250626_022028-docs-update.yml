@@ -1,7 +1,7 @@
 ai_usage:
   complexity_breakdown:
-    medium_count: 1
-  estimated_cost_usd: 0.15000000000000002
+    medium_count: 2
+  estimated_cost_usd: 0.30000000000000004
   interactions:
   - complexity: medium
     description: development - medium
@@ -9,10 +9,16 @@ ai_usage:
     is_start_marker: false
     task_type: development
     timestamp: '2025-06-26T02:24:15.132106'
-  total_interactions: 1
+  - complexity: medium
+    description: development - medium
+    estimated_cost: 0.15000000000000002
+    is_start_marker: false
+    task_type: development
+    timestamp: '2025-06-26T11:05:51.953838'
+  total_interactions: 2
 completion_checklist:
-  ai_metrics_recorded: false
-  code_implemented: false
+  ai_metrics_recorded: true
+  code_implemented: true
   documentation_updated: true
   spec_defined: true
   story_extracted: false
@@ -51,6 +57,7 @@ development:
   files_changed:
   - ocs/handbook/product-requirements-document.md
   - docs/tickets/active/
+  - ocs/tickets/active/20250626_022028-docs-update.yml
   test_coverage: null
 id: 20250626_022028-docs-update
 name: docs-update

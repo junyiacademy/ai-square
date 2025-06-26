@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-將 completed tickets 移動到 archive 目錄（按年月歸檔）
+將 completed tickets 移動到 archive 目錄（平面結構，不按日期分類）
 """
 
 import os
@@ -19,19 +19,15 @@ def main():
     tickets = list(completed_dir.glob("*.yml"))
     print(f"找到 {len(tickets)} 個票券")
     
+    # 創建歸檔目錄（平面結構）
+    archive_dir = Path("docs/tickets/archive")
+    archive_dir.mkdir(parents=True, exist_ok=True)
+    
     for ticket in tickets:
-        # 解析日期 (格式: YYYY-MM-DD-HH-MM-SS-ticket-*.yml)
-        parts = ticket.name.split('-')
-        if len(parts) >= 3:
-            year = parts[0]
-            month = parts[1]
-            archive_dir = Path(f"docs/tickets/archive/{year}-{month}")
-            archive_dir.mkdir(parents=True, exist_ok=True)
-            
-            # 移動票券
-            dest = archive_dir / ticket.name
-            shutil.move(str(ticket), str(dest))
-            print(f"  ✅ {ticket.name} → archive/{year}-{month}/")
+        # 直接移動票券到 archive 目錄
+        dest = archive_dir / ticket.name
+        shutil.move(str(ticket), str(dest))
+        print(f"  ✅ {ticket.name} → archive/")
     
     # 刪除空的 completed 目錄
     if completed_dir.exists() and not list(completed_dir.iterdir()):
