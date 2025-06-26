@@ -105,6 +105,25 @@ AI：${conv.ai}
     "skills": 數字 (0-100),
     "attitudes": 數字 (0-100)
   },
+  "individualKsaScores": {
+    "K1.1": 數字 (0-100),
+    "K1.2": 數字 (0-100),
+    "K2.1": 數字 (0-100),
+    "K2.3": 數字 (0-100),
+    "S1.1": 數字 (0-100),
+    "S1.2": 數字 (0-100),
+    "S2.1": 數字 (0-100),
+    "S2.3": 數字 (0-100),
+    "A1.1": 數字 (0-100),
+    "A1.2": 數字 (0-100),
+    "A2.1": 數字 (0-100)
+  },
+  "domainScores": {
+    "engaging_with_ai": 數字 (0-100),
+    "creating_with_ai": 數字 (0-100),
+    "managing_with_ai": 數字 (0-100),
+    "designing_with_ai": 數字 (0-100)
+  },
   "rubricsScores": {
     "Research Quality": 級別 (1-4),
     "AI Utilization": 級別 (1-4),
@@ -141,6 +160,17 @@ AI：${conv.ai}
           skills: 75,
           attitudes: 80
         },
+        individualKsaScores: {
+          "K1.1": 70, "K1.2": 65, "K2.1": 75, "K2.3": 70,
+          "S1.1": 80, "S1.2": 70, "S2.1": 75, "S2.3": 75,
+          "A1.1": 85, "A1.2": 80, "A2.1": 75
+        },
+        domainScores: {
+          "engaging_with_ai": 75,
+          "creating_with_ai": 70,
+          "managing_with_ai": 65,
+          "designing_with_ai": 60
+        },
         rubricsScores: {
           "Research Quality": 2,
           "AI Utilization": 3,
@@ -153,21 +183,28 @@ AI：${conv.ai}
       };
     }
 
-    // Build KSA achievement map
+    // Build KSA achievement map with individual scores
     const ksaAchievement = {};
-    if (assessmentFocus.primary) {
-      assessmentFocus.primary.forEach(ksa => {
-        const category = ksa.charAt(0).toLowerCase(); // k, s, or a
-        const score = evaluation.ksaScores?.[
-          category === 'k' ? 'knowledge' : 
-          category === 's' ? 'skills' : 'attitudes'
-        ] || 75;
-        ksaAchievement[ksa] = {
-          score,
-          evidence: stageLogs.filter(log => log.actionType === 'write')
-        };
-      });
-    }
+    
+    // Include all KSA items from the scenario mapping
+    const allKsaItems = [
+      ...(scenario?.ksaMapping?.knowledge || []),
+      ...(scenario?.ksaMapping?.skills || []),
+      ...(scenario?.ksaMapping?.attitudes || [])
+    ];
+    
+    allKsaItems.forEach(ksa => {
+      const score = evaluation.individualKsaScores?.[ksa] || 
+                   evaluation.ksaScores?.[
+                     ksa.charAt(0) === 'K' ? 'knowledge' : 
+                     ksa.charAt(0) === 'S' ? 'skills' : 'attitudes'
+                   ] || 75;
+      
+      ksaAchievement[ksa] = {
+        score,
+        evidence: stageLogs.filter(log => log.actionType === 'write')
+      };
+    });
     
     // Build rubrics score map
     const rubricsScore = {};
@@ -195,6 +232,7 @@ AI：${conv.ai}
         resourceUsage: 0
       },
       ksaAchievement,
+      domainScores: evaluation.domainScores,
       rubricsScore,
       feedback: {
         strengths: evaluation.strengths,

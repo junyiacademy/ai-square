@@ -130,6 +130,12 @@
     "skills": "Skills",
     "attitudes": "Attitudes",
     "rubricsScores": "Rubrics Assessment",
+    "ksaRadarTitle": "KSA Competency Profile",
+    "domainRadarTitle": "AI Literacy Domains",
+    "ksaDiagnosticReport": "KSA Diagnostic Report",
+    "diagnosticInsights": "Diagnostic Insights",
+    "strongestAreas": "Strongest Areas",
+    "areasForImprovement": "Areas for Improvement",
     "timeFormat": {
       "hours": "{{hours}}h {{minutes}}m",
       "minutes": "{{minutes}}m {{seconds}}s",

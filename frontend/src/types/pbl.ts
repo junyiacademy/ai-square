@@ -149,6 +149,12 @@ export interface StageResult {
       evidence: ProcessLog[];
     };
   };
+  domainScores?: {
+    engaging_with_ai: number;
+    creating_with_ai: number;
+    managing_with_ai: number;
+    designing_with_ai: number;
+  };
   rubricsScore: {
     [criterion: string]: {
       level: number;

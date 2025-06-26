@@ -130,6 +130,12 @@
     "skills": "技能",
     "attitudes": "態度",
     "rubricsScores": "評量標準評分",
+    "ksaRadarTitle": "KSA 能力剖面圖",
+    "domainRadarTitle": "AI 素養領域",
+    "ksaDiagnosticReport": "KSA 診斷報告",
+    "diagnosticInsights": "診斷洞察",
+    "strongestAreas": "最強項目",
+    "areasForImprovement": "待加強項目",
     "timeFormat": {
       "hours": "{{hours}} 小時 {{minutes}} 分鐘",
       "minutes": "{{minutes}} 分鐘 {{seconds}} 秒",

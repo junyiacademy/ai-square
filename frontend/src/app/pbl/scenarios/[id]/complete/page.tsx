@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { ScenarioProgram, SessionData } from '@/types/pbl';
+import KSARadarChart from '@/components/pbl/KSARadarChart';
+import DomainRadarChart from '@/components/pbl/DomainRadarChart';
+import KSADiagnosticReport from '@/components/pbl/KSADiagnosticReport';
 
 export default function PBLCompletePage() {
   const { t, i18n, ready } = useTranslation(['pbl']);
@@ -200,71 +203,85 @@ export default function PBLCompletePage() {
           </div>
         </div>
 
-        {/* KSA Overall Summary */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-            {t('complete.ksaSummary')}
-          </h2>
-          
+        {/* Visual Analytics Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          {/* KSA Radar Chart */}
           {(() => {
-            // Calculate overall KSA scores from all stages
-            const ksaScores = { knowledge: [], skills: [], attitudes: [] };
+            // Aggregate all KSA scores for radar chart
+            const allKsaScores: { [ksa: string]: { score: number; category: 'knowledge' | 'skills' | 'attitudes' } } = {};
             
             sessions.forEach(session => {
               session.stageResults?.forEach(result => {
                 Object.entries(result.ksaAchievement || {}).forEach(([ksa, achievement]) => {
-                  const category = ksa.charAt(0).toLowerCase();
-                  if (category === 'k') ksaScores.knowledge.push(achievement.score);
-                  else if (category === 's') ksaScores.skills.push(achievement.score);
-                  else if (category === 'a') ksaScores.attitudes.push(achievement.score);
+                  const category = ksa.charAt(0) === 'K' ? 'knowledge' : 
+                                  ksa.charAt(0) === 'S' ? 'skills' : 'attitudes';
+                  
+                  if (!allKsaScores[ksa] || achievement.score > allKsaScores[ksa].score) {
+                    allKsaScores[ksa] = {
+                      score: achievement.score,
+                      category
+                    };
+                  }
                 });
               });
             });
             
-            const avgScore = (scores: number[]) => 
-              scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+            return Object.keys(allKsaScores).length > 0 ? (
+              <KSARadarChart 
+                ksaScores={allKsaScores}
+                title={t('complete.ksaRadarTitle')}
+              />
+            ) : null;
+          })()}
+          
+          {/* Domain Radar Chart */}
+          {(() => {
+            // Calculate domain scores from all stages
+            const domainScores = {
+              engaging_with_ai: 0,
+              creating_with_ai: 0,
+              managing_with_ai: 0,
+              designing_with_ai: 0
+            };
+            const domainCounts = { ...domainScores };
+            
+            sessions.forEach(session => {
+              session.stageResults?.forEach(result => {
+                if (result.domainScores) {
+                  Object.entries(result.domainScores).forEach(([domain, score]) => {
+                    domainScores[domain] += score;
+                    domainCounts[domain] += 1;
+                  });
+                }
+              });
+            });
+            
+            // Calculate averages
+            Object.keys(domainScores).forEach(domain => {
+              if (domainCounts[domain] > 0) {
+                domainScores[domain] = Math.round(domainScores[domain] / domainCounts[domain]);
+              }
+            });
             
             return (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                  <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                    {avgScore(ksaScores.knowledge)}%
-                  </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    {t('complete.knowledge')}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                    {scenario.ksaMapping?.knowledge?.join(', ')}
-                  </p>
-                </div>
-                
-                <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                  <div className="text-3xl font-bold text-green-600 dark:text-green-400">
-                    {avgScore(ksaScores.skills)}%
-                  </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    {t('complete.skills')}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                    {scenario.ksaMapping?.skills?.join(', ')}
-                  </p>
-                </div>
-                
-                <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-                  <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">
-                    {avgScore(ksaScores.attitudes)}%
-                  </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    {t('complete.attitudes')}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                    {scenario.ksaMapping?.attitudes?.join(', ')}
-                  </p>
-                </div>
-              </div>
+              <DomainRadarChart 
+                domainScores={domainScores}
+                title={t('complete.domainRadarTitle')}
+              />
             );
           })()}
         </div>
+        
+        {/* KSA Diagnostic Report */}
+        {(() => {
+          const allStageResults = sessions.flatMap(session => session.stageResults || []);
+          return allStageResults.length > 0 ? (
+            <KSADiagnosticReport 
+              stageResults={allStageResults}
+              ksaMapping={scenario.ksaMapping}
+            />
+          ) : null;
+        })()}
 
         {/* Learning Objectives Achieved */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
@@ -420,6 +437,8 @@ export default function PBLCompletePage() {
             })}
           </div>
         </div>
+        
+        <div className="mb-6" />
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
