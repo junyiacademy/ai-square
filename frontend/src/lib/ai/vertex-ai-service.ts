@@ -287,7 +287,8 @@ Remember to be supportive, educational, and adapt to the learner's level.
 export function vertexAIResponseToConversation(
   response: VertexAIResponse,
   sessionId: string,
-  stageId: string
+  stageId: string,
+  taskId?: string
 ): ConversationTurn & { processLog: ProcessLog } {
   const timestamp = new Date();
   
@@ -315,7 +316,8 @@ export function vertexAIResponseToConversation(
         response: response.content,
         tokensUsed: response.tokensUsed || 0
       },
-      timeSpent: response.processingTime / 1000 // Convert to seconds
+      timeSpent: response.processingTime / 1000, // Convert to seconds
+      taskId // Include task ID if provided
     }
   };
 

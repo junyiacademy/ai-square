@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pblGCS } from '@/lib/storage/pbl-gcs-service';
 import { SessionData, StageResult } from '@/types/pbl';
-import { vertexAIService } from '@/lib/ai/vertex-ai-service';
+import { VertexAIService } from '@/lib/ai/vertex-ai-service';
+import { readFile } from 'fs/promises';
+import path from 'path';
+import yaml from 'yaml';
 
 // Evaluate a completed stage
 export async function POST(request: NextRequest) {
@@ -42,32 +45,68 @@ export async function POST(request: NextRequest) {
     // Get stage process logs
     const stageLogs = sessionData.processLogs.filter(log => log.stageId === stageId);
     
-    // Get conversation history for this stage
+    // Get conversation history for this stage with user inputs from process logs
     const conversations = stageLogs
-      .filter(log => log.actionType === 'write' && log.detail?.aiInteraction)
+      .filter(log => log.detail?.aiInteraction)
       .map(log => ({
-        user: log.detail.userInput,
-        ai: log.detail.aiInteraction?.response
-      }));
+        user: log.detail.aiInteraction?.prompt || log.detail.userInput || '',
+        ai: log.detail.aiInteraction?.response || ''
+      }))
+      .filter(conv => conv.user || conv.ai); // Filter out empty conversations
 
-    // Get scenario data to access rubrics and KSA mapping
-    const scenarioResponse = await fetch(`${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/api/pbl/scenarios/${sessionData.scenarioId}`);
-    const scenarioData = await scenarioResponse.json();
-    const scenario = scenarioData.data;
+    // Get scenario data by reading the YAML file directly
+    console.log('Loading scenario:', sessionData.scenarioId);
     
-    // Get stage info
-    const stageIndex = sessionData.currentStage;
-    const stage = scenario?.stages[stageIndex];
-    const assessmentFocus = stage?.assessmentFocus || { primary: [], secondary: [] };
+    // Map scenario ID to filename
+    const scenarioFiles = {
+      'ai-job-search': 'ai_job_search_scenario.yaml'
+    };
+    
+    const filename = scenarioFiles[sessionData.scenarioId];
+    if (!filename) {
+      throw new Error(`Unknown scenario ID: ${sessionData.scenarioId}`);
+    }
+    
+    const filePath = path.join(process.cwd(), 'public', 'pbl_data', filename);
+    const fileContent = await readFile(filePath, 'utf-8');
+    const yamlData = yaml.parse(fileContent);
+    
+    const scenario = {
+      ...yamlData.scenario_info,
+      stages: yamlData.stages,
+      ksaMapping: yamlData.ksa_mapping,
+      rubricsCriteria: yamlData.rubrics_criteria,
+      targetDomain: yamlData.scenario_info.target_domains
+    };
+    console.log('Scenario loaded successfully');
+    
+    // Get stage info by ID instead of index
+    const stage = scenario?.stages.find(s => s.id === stageId);
+    if (!stage) {
+      throw new Error(`Stage not found: ${stageId}`);
+    }
+    const assessmentFocus = stage.assessmentFocus || { primary: [], secondary: [] };
+    
+    // Log what we're evaluating for debugging
+    console.log('Evaluating user inputs:', conversations.map(c => c.user));
+    console.log('Total user input length:', conversations.reduce((sum, c) => sum + (c.user || '').length, 0));
     
     // Generate evaluation using AI with KSA and rubrics context
     const evaluationPrompt = `
-你是一位專業的學習評估專家。請根據以下對話記錄，評估學習者在此階段的表現。
+你是一位專業的學習評估專家。請根據以下對話記錄，**嚴格且客觀地**評估學習者在此階段的表現。
+
+重要評估原則：
+1. **只評估學習者實際說了什麼**，不要評估AI助手的回應
+2. 如果學習者只是打招呼（如"hi"、"hello"）或給出極短回應，應該給予**極低分數**（0-20分）
+3. 學習者必須**實際嘗試解決任務**才能獲得及格分數
+4. 評分應基於學習者展現的**努力程度、理解深度、和任務完成度**
 
 階段資訊：
 - 名稱：${stage?.name || stageId}
 - 類型：${stage?.stageType}
 - 模式重點：${stage?.modalityFocus}
+- 任務指示：${stage?.tasks?.[0]?.instructions?.join('; ') || '無'}
+- 預期成果：${stage?.tasks?.[0]?.expectedOutcome || '無'}
 
 目標領域 (Target Domains)：
 ${scenario?.targetDomain?.join(', ') || '無特定領域'}
@@ -90,32 +129,44 @@ ${scenario?.rubricsCriteria?.map(rubric => `
   Level 4: ${rubric.levels[3].description}
 `).join('\n') || '無特定標準'}
 
-對話記錄：
+對話記錄（請特別注意學習者實際輸入的內容）：
 ${conversations.map((conv, i) => `
 對話 ${i + 1}:
-學習者：${conv.user}
-AI：${conv.ai}
+【學習者輸入】：${conv.user || '(無輸入)'}
+【AI回應】：${conv.ai ? conv.ai.substring(0, 200) + '...' : '(無回應)'}
 `).join('\n')}
+
+學習者總共輸入次數：${conversations.filter(c => c.user).length}
+學習者實際內容字數：${conversations.reduce((sum, c) => sum + (c.user || '').length, 0)}
 
 請基於對話內容，評估學習者在以下各項的表現：
 
-1. 整體表現分數（0-100）
+**評分準則**：
+- 如果學習者只是簡單打招呼或極短回應，所有分數應在 0-20 分範圍
+- 如果學習者有嘗試但未完成任務，分數應在 20-50 分範圍
+- 如果學習者有認真嘗試並部分完成任務，分數應在 50-70 分範圍
+- 只有當學習者充分展現理解並完成任務時，才給予 70 分以上
+
+1. 整體表現分數（0-100）：基於學習者的實際努力和任務完成度
 
 2. 個別 KSA 項目評分（每項 0-100）：
-   請針對每個 KSA 代碼，根據學習者在對話中展現的理解和應用程度給分
+   如果學習者未展現相關能力，該項應給 0-10 分
 
 3. Domain 評分（0-100）：
-   - engaging_with_ai: 評估學習者與 AI 互動的能力
-   - creating_with_ai: 評估學習者使用 AI 創造內容的能力
-   - managing_with_ai: 評估學習者管理 AI 輔助流程的能力
-   - designing_with_ai: 評估學習者設計 AI 解決方案的能力
+   - engaging_with_ai: 學習者是否真的在與 AI 互動解決問題？
+   - creating_with_ai: 學習者是否嘗試創造內容？
+   - managing_with_ai: 學習者是否展現管理能力？
+   - designing_with_ai: 學習者是否有設計思維？
 
 4. Rubrics 評分（1-4 級）：
-   請根據上述標準，給予每個評量項目 1-4 的等級評分
+   Level 1: 未達標準（如只打招呼）
+   Level 2: 初步嘗試
+   Level 3: 部分達成
+   Level 4: 完全達成
 
-5. 優點（至少3點，需關聯到具體的 KSA 代碼）
-6. 需要改進的地方（至少2點，需關聯到具體的 KSA 代碼）
-7. 下一步建議（至少2點）
+5. 優點（如果表現不佳，可以說"願意開始對話"等基本優點）
+6. 需要改進的地方（明確指出未完成的任務）
+7. 下一步建議（具體的行動建議）
 
 請用 JSON 格式回應：
 {
@@ -156,50 +207,60 @@ AI：${conv.ai}
 }
 `;
 
-    const aiResponse = await vertexAIService.generateContent({
+    // Create a VertexAIService instance for evaluation
+    const evaluationService = new VertexAIService({
       model: 'gemini-2.0-flash-exp',
-      messages: [{
-        role: 'user',
-        content: evaluationPrompt
-      }],
-      temperature: 0.3,
-      maxOutputTokens: 1024
+      systemPrompt: '你是一位嚴格但公正的學習評估專家。請根據學習者的實際表現給予客觀評分。如果學習者只是打招呼或未嘗試解決任務，必須給予低分。',
+      temperature: 0.1, // Lower temperature for more consistent evaluation
+      maxOutputTokens: 2048
     });
+    
+    const aiResponse = await evaluationService.sendMessage(evaluationPrompt);
 
     let evaluation;
     try {
       // Parse AI response
-      const responseText = aiResponse.candidates[0].content.parts[0].text;
-      evaluation = JSON.parse(responseText);
+      const responseText = aiResponse.content;
+      // Extract JSON from the response (it might be wrapped in markdown or other text)
+      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        evaluation = JSON.parse(jsonMatch[0]);
+      } else {
+        throw new Error('Could not parse JSON from AI response');
+      }
     } catch (error) {
-      // Fallback evaluation if parsing fails
+      console.error('Error parsing AI response:', error);
+      // Fallback evaluation if parsing fails - give conservative scores
+      const totalWords = conversations.reduce((sum, c) => sum + (c.user || '').length, 0);
+      const baseScore = totalWords < 10 ? 10 : totalWords < 50 ? 30 : 50;
+      
       evaluation = {
-        score: 75,
+        score: baseScore,
         ksaScores: {
-          knowledge: 70,
-          skills: 75,
-          attitudes: 80
+          knowledge: baseScore - 5,
+          skills: baseScore,
+          attitudes: baseScore + 5
         },
         individualKsaScores: {
-          "K1.1": 70, "K1.2": 65, "K2.1": 75, "K2.3": 70,
-          "S1.1": 80, "S1.2": 70, "S2.1": 75, "S2.3": 75,
-          "A1.1": 85, "A1.2": 80, "A2.1": 75
+          "K1.1": baseScore - 5, "K1.2": baseScore - 5, "K2.1": baseScore - 5, "K2.3": baseScore - 5,
+          "S1.1": baseScore, "S1.2": baseScore, "S2.1": baseScore, "S2.3": baseScore,
+          "A1.1": baseScore + 5, "A1.2": baseScore + 5, "A2.1": baseScore + 5
         },
         domainScores: {
-          "engaging_with_ai": 75,
-          "creating_with_ai": 70,
-          "managing_with_ai": 65,
-          "designing_with_ai": 60
+          "engaging_with_ai": baseScore,
+          "creating_with_ai": baseScore - 10,
+          "managing_with_ai": baseScore - 10,
+          "designing_with_ai": baseScore - 15
         },
         rubricsScores: {
-          "Research Quality": 2,
-          "AI Utilization": 3,
-          "Content Quality": 2,
-          "Learning Progress": 3
+          "Research Quality": 1,
+          "AI Utilization": totalWords < 10 ? 1 : 2,
+          "Content Quality": 1,
+          "Learning Progress": totalWords < 10 ? 1 : 2
         },
-        strengths: ['積極參與學習 (A1.1)', '認真完成任務 (S1.1)', '展現學習熱情 (A1.1)'],
-        improvements: ['可以更深入思考問題 (K1.1)', '嘗試提供更具體的例子 (S2.1)'],
-        nextSteps: ['繼續練習相關技能', '應用所學到實際情境']
+        strengths: ['願意開始學習 (A1.1)'],
+        improvements: ['需要更積極參與任務 (S1.1)', '應該嘗試回答問題而非只是打招呼 (K1.1)'],
+        nextSteps: ['認真閱讀任務說明', '嘗試回答AI提出的問題']
       };
     }
 
@@ -236,9 +297,9 @@ AI：${conv.ai}
                      ksa.charAt(0) === 'S' ? 'skills' : 'attitudes'
                    ] || 75;
       
-      // Give higher weight to primary assessment focus items
+      // Give higher weight to primary assessment focus items, but cap based on performance
       const isPrimary = assessmentFocus.primary?.includes(ksa);
-      const adjustedScore = isPrimary ? Math.min(100, score + 5) : score;
+      const adjustedScore = isPrimary ? Math.min(100, Math.min(score + 5, evaluation.score + 10)) : score;
       
       ksaAchievement[ksa] = {
         score: adjustedScore,
@@ -281,13 +342,17 @@ AI：${conv.ai}
       }
     };
 
-    // Update session with stage result
+    // Update session with stage result - always overwrite if exists
     const updatedStageResults = [...sessionData.stageResults];
     const existingIndex = updatedStageResults.findIndex(r => r.stageId === stageId);
     
     if (existingIndex >= 0) {
+      // Overwrite existing evaluation with new one
+      console.log('Overwriting existing evaluation for stage:', stageId);
       updatedStageResults[existingIndex] = stageResult;
     } else {
+      // Add new evaluation
+      console.log('Adding new evaluation for stage:', stageId);
       updatedStageResults.push(stageResult);
     }
 
@@ -313,7 +378,8 @@ AI：${conv.ai}
         success: false,
         error: {
           code: 'EVALUATION_ERROR',
-          message: 'Failed to evaluate stage'
+          message: 'Failed to evaluate stage',
+          details: error instanceof Error ? error.message : 'Unknown error'
         }
       },
       { status: 500 }

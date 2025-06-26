@@ -9,7 +9,7 @@ const sessions = new Map<string, SessionData>();
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { scenarioId, scenarioTitle, userId, stageIndex = 0, stageId } = body;
+    const { scenarioId, scenarioTitle, userId, stageIndex = 0, stageId, taskId } = body;
 
     if (!scenarioId || !userId) {
       return NextResponse.json(
@@ -49,6 +49,7 @@ export async function POST(request: NextRequest) {
       scenarioTitle,
       status: 'in_progress',
       currentStage: stageIndex || 0,  // Set from parameter
+      currentTaskIndex: 0,  // Always start at first task of the stage
       progress: {
         percentage: 0,
         completedStages: [],
@@ -75,7 +76,14 @@ export async function POST(request: NextRequest) {
     // Try to save to GCS
     let logId: string | undefined;
     try {
-      logId = await pblGCS.saveSession(sessionId, sessionData);
+      // Generate custom log ID with stage and task info if provided
+      if (stageId && taskId) {
+        const timestamp = Date.now();
+        const random = Math.random().toString(36).substring(2, 12);
+        logId = `pbl_${scenarioId}_stage_${stageId}_task_${taskId}_${timestamp}_${random}`;
+      }
+      
+      logId = await pblGCS.saveSession(sessionId, sessionData, logId);
       console.log(`Session ${sessionId} saved to GCS with logId: ${logId}`);
     } catch (gcsError) {
       console.error('Failed to save to GCS, using in-memory storage:', gcsError);

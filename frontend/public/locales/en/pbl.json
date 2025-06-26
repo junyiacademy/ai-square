@@ -81,7 +81,22 @@
     "aiResponse": {
       "placeholder": "Thank you for your input. Let me help you with this task...",
       "error": "Sorry, I'm having trouble connecting. Please try again."
-    }
+    },
+    "analyzeStage": "Analyze Stage",
+    "analyzing": "Analyzing...",
+    "stageAnalyzed": "Stage Analyzed",
+    "stageAnalysisResults": "Stage Analysis Results",
+    "overallScore": "Overall Score",
+    "strengths": "Strengths",
+    "suggestion": "Suggestion",
+    "suggestions": "Suggestions",
+    "analyzeRequired": "Please analyze the current stage before proceeding to the next stage.",
+    "excellent": "Excellent",
+    "good": "Good",
+    "needsImprovement": "Needs Improvement",
+    "ksaBreakdown": "KSA Breakdown",
+    "noAnalysisYet": "No analysis results yet. Click 'Analyze Stage' after completing your conversation.",
+    "reanalyzeAvailable": "Re-analyze available"
   },
   "history": {
     "title": "Learning Journey",
@@ -136,6 +151,13 @@
     "diagnosticInsights": "Diagnostic Insights",
     "strongestAreas": "Strongest Areas",
     "areasForImprovement": "Areas for Improvement",
+    "stageTasks": "Stage Tasks",
+    "stageObjectives": "Learning Objectives",
+    "targetedKSA": "Targeted KSA",
+    "calculateScore": "Calculate Score",
+    "analyzing": "Analyzing...",
+    "goToPractice": "Go to Practice",
+    "notCalculated": "Not analyzed yet",
     "timeFormat": {
       "hours": "{{hours}}h {{minutes}}m",
       "minutes": "{{minutes}}m {{seconds}}s",

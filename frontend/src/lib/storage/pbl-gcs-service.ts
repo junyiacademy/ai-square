@@ -74,15 +74,15 @@ export class PBLGCSService {
 
   /**
    * Generate PBL log filename
-   * Format: pbl_{timestamp}_{random} or pbl_{scenarioId}_stage{stageIndex}_{timestamp}_{random}
+   * Format: pbl_{timestamp}_{random} or pbl_{scenarioId}_stage_{stageId}_task_{taskId}_{timestamp}_{random}
    */
-  private generateLogFilename(scenarioId?: string, stageIndex?: number): string {
+  private generateLogFilename(scenarioId?: string, stageId?: string, taskId?: string): string {
     const timestamp = Date.now();
     const random = Math.random().toString(36).substring(2, 12);
     
-    if (scenarioId !== undefined && stageIndex !== undefined) {
-      // Include stage info in filename for better organization
-      return `pbl_${scenarioId}_stage${stageIndex}_${timestamp}_${random}`;
+    if (scenarioId !== undefined && stageId !== undefined && taskId !== undefined) {
+      // Include stage and task info in filename for better organization and querying
+      return `pbl_${scenarioId}_stage_${stageId}_task_${taskId}_${timestamp}_${random}`;
     }
     
     return `pbl_${timestamp}_${random}`;
@@ -107,10 +107,19 @@ export class PBLGCSService {
    * Save complete session data to GCS (single file format)
    */
   async saveSession(sessionId: string, sessionData: SessionData, logId?: string): Promise<string> {
-    // Use existing logId or generate new one with stage info
+    // Get current stage and task IDs from session data
+    const currentStage = sessionData.scenario?.stages?.[sessionData.currentStage];
+    const currentStageId = currentStage?.id;
+    
+    // Get current task ID using currentTaskIndex
+    const currentTaskIndex = sessionData.currentTaskIndex || 0;
+    const currentTaskId = currentStage?.tasks?.[currentTaskIndex]?.id;
+    
+    // Use existing logId or generate new one with stage and task info
     const pblLogId = logId || this.generateLogFilename(
       sessionData.scenarioId, 
-      sessionData.currentStage
+      currentStageId,
+      currentTaskId
     );
     
     // Create metadata
@@ -128,7 +137,7 @@ export class PBLGCSService {
     // Create progress data
     const progress: ProgressData = {
       current_stage: sessionData.currentStage,
-      current_task: 0, // TODO: track current task
+      current_task: sessionData.currentTaskIndex || 0,
       completed_stages: sessionData.progress.completedStages,
       stage_results: sessionData.stageResults.reduce((acc, result) => {
         acc[result.stageId] = result;

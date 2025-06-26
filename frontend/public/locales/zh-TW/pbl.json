@@ -81,7 +81,22 @@
     "aiResponse": {
       "placeholder": "感謝您的輸入。讓我協助您完成這個任務...",
       "error": "抱歉，連線發生問題。請再試一次。"
-    }
+    },
+    "analyzeStage": "分析階段",
+    "analyzing": "分析中...",
+    "stageAnalyzed": "階段已分析",
+    "stageAnalysisResults": "階段分析結果",
+    "overallScore": "總體分數",
+    "strengths": "優點",
+    "suggestion": "建議",
+    "suggestions": "建議事項",
+    "analyzeRequired": "請先分析當前階段再進入下一階段。",
+    "excellent": "優秀",
+    "good": "良好",
+    "needsImprovement": "需要改進",
+    "ksaBreakdown": "KSA 分項成績",
+    "noAnalysisYet": "尚無分析結果。完成對話後請點擊「分析階段」。",
+    "reanalyzeAvailable": "可重新分析"
   },
   "history": {
     "title": "學習歷程",
@@ -136,6 +151,13 @@
     "diagnosticInsights": "診斷洞察",
     "strongestAreas": "最強項目",
     "areasForImprovement": "待加強項目",
+    "stageTasks": "階段任務",
+    "stageObjectives": "學習目標",
+    "targetedKSA": "目標 KSA",
+    "calculateScore": "計算分數",
+    "analyzing": "分析中...",
+    "goToPractice": "前往練習",
+    "notCalculated": "尚未分析",
     "timeFormat": {
       "hours": "{{hours}} 小時 {{minutes}} 分鐘",
       "minutes": "{{minutes}} 分鐘 {{seconds}} 秒",

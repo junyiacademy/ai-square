@@ -19,6 +19,7 @@ export default function PBLCompletePage() {
   const [loading, setLoading] = useState(true);
   const [totalTimeSpent, setTotalTimeSpent] = useState(0);
   const [completedStages, setCompletedStages] = useState(0);
+  const [analyzingStage, setAnalyzingStage] = useState<string | null>(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -115,6 +116,52 @@ export default function PBLCompletePage() {
   const handleRetryScenario = () => {
     // Clear progress and start over
     localStorage.removeItem(`pbl-progress-${scenarioId}`);
+    router.push(`/pbl/scenarios/${scenarioId}/learn`);
+  };
+
+  const handleAnalyzeStage = async (sessionId: string, stageId: string) => {
+    setAnalyzingStage(stageId);
+    
+    try {
+      const evaluateResponse = await fetch('/api/pbl/evaluate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId,
+          stageId
+        })
+      });
+      
+      if (evaluateResponse.ok) {
+        const evaluationData = await evaluateResponse.json();
+        
+        // Update the session with the new stage result
+        setSessions(prevSessions => 
+          prevSessions.map(session => 
+            session.id === sessionId 
+              ? {
+                  ...session,
+                  stageResults: [...(session.stageResults || []), evaluationData.data.stageResult]
+                }
+              : session
+          )
+        );
+      }
+    } catch (error) {
+      console.error('Error analyzing stage:', error);
+    } finally {
+      setAnalyzingStage(null);
+    }
+  };
+
+  const handleGoToStage = (stageIndex: number) => {
+    // Set the progress to this stage
+    const progress = {
+      scenarioId,
+      completedStages: [],
+      currentStage: stageIndex
+    };
+    localStorage.setItem(`pbl-progress-${scenarioId}`, JSON.stringify(progress));
     router.push(`/pbl/scenarios/${scenarioId}/learn`);
   };
 
@@ -233,6 +280,7 @@ export default function PBLCompletePage() {
         {/* Visual Analytics Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* KSA Radar Chart */}
+          <div>
           {(() => {
             // Aggregate all KSA scores for radar chart
             const allKsaScores: { [ksa: string]: { score: number; category: 'knowledge' | 'skills' | 'attitudes' } } = {};
@@ -260,8 +308,10 @@ export default function PBLCompletePage() {
               />
             ) : null;
           })()}
+          </div>
           
           {/* Domain Radar Chart */}
+          <div>
           {(() => {
             // Calculate domain scores from all stages
             const domainScores = {
@@ -297,6 +347,7 @@ export default function PBLCompletePage() {
               />
             );
           })()}
+          </div>
         </div>
         
         {/* KSA Diagnostic Report */}
@@ -310,26 +361,6 @@ export default function PBLCompletePage() {
           ) : null;
         })()}
 
-        {/* Learning Objectives Achieved */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 mb-8 border border-gray-100 dark:border-gray-700">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-            <span className="w-2 h-8 bg-gradient-to-b from-green-500 to-emerald-500 rounded-full mr-3"></span>
-            {t('complete.learningObjectivesAchieved')}
-          </h2>
-          
-          <div className="grid gap-4">
-            {scenario.learningObjectives.map((objective, index) => (
-              <div key={index} className="flex items-start p-4 bg-green-50 dark:bg-green-900/10 rounded-xl border border-green-200 dark:border-green-800/50">
-                <div className="flex-shrink-0 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-4">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <span className="text-gray-700 dark:text-gray-300 font-medium">{objective}</span>
-              </div>
-            ))}
-          </div>
-        </div>
 
         {/* Stage Summary with Evaluations */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 mb-8 border border-gray-100 dark:border-gray-700">
@@ -354,7 +385,7 @@ export default function PBLCompletePage() {
                   }`}
                 >
                   <div className="flex items-start justify-between mb-2">
-                    <div className="flex items-start">
+                    <div className="flex items-start flex-1">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 flex-shrink-0 ${
                         isCompleted 
                           ? 'bg-green-500 text-white' 
@@ -373,12 +404,172 @@ export default function PBLCompletePage() {
                         <p className="text-sm text-gray-600 dark:text-gray-400">{stage.description}</p>
                       </div>
                     </div>
-                    {stageResult?.score && (
-                      <div className="text-right">
-                        <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                          {stageResult.score}%
+                    
+                    <div className="flex items-center gap-2">
+                      {/* Show score if available */}
+                      {stageResult?.score && (
+                        <div className="text-right">
+                          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                            {stageResult.score}%
+                          </div>
+                          <p className="text-xs text-gray-500">{t('complete.score')}</p>
                         </div>
-                        <p className="text-xs text-gray-500">{t('complete.score')}</p>
+                      )}
+                      
+                      {/* Show analyze button if completed but no score */}
+                      {isCompleted && !stageResult && (
+                        <div className="flex flex-col items-end gap-1">
+                          <span className="text-xs text-amber-600 dark:text-amber-400">
+                            {t('complete.notCalculated')}
+                          </span>
+                          <button
+                            onClick={() => handleAnalyzeStage(stageSession.id, stage.id)}
+                            disabled={analyzingStage === stage.id}
+                            className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                          >
+                          {analyzingStage === stage.id ? (
+                            <>
+                              <svg className="animate-spin h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                              {t('complete.analyzing')}
+                            </>
+                          ) : (
+                            <>
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                              </svg>
+                              {t('complete.calculateScore')}
+                            </>
+                          )}
+                          </button>
+                        </div>
+                      )}
+                      
+                      {/* Show go to stage button if not completed */}
+                      {!isCompleted && (
+                        <button
+                          onClick={() => handleGoToStage(index)}
+                          className="px-3 py-1.5 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700 flex items-center gap-1"
+                        >
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          {t('complete.goToPractice')}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Stage Details - Tasks and Expected Outcomes */}
+                  <div className="mt-4 pl-11 space-y-4">
+                    {/* Stage Tasks */}
+                    <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
+                      <h5 className="font-medium text-gray-900 dark:text-white mb-2">
+                        {t('complete.stageTasks')}
+                      </h5>
+                      <ul className="space-y-2">
+                        {stage.tasks.map((task, i) => (
+                          <li key={i} className="flex items-start text-sm">
+                            <span className="text-indigo-500 mr-2">•</span>
+                            <div>
+                              <span className="font-medium text-gray-700 dark:text-gray-300">{task.title}</span>
+                              <p className="text-gray-600 dark:text-gray-400 mt-1">{task.expectedOutcome}</p>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    
+                    {/* Stage Learning Objectives Achievement */}
+                    {stageResult && (
+                      <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
+                        <h5 className="font-medium text-green-700 dark:text-green-400 mb-3">
+                          {t('complete.stageObjectives')}
+                        </h5>
+                        <div className="space-y-3">
+                          {/* Primary KSA Achievement */}
+                          {stage.assessmentFocus?.primary && stage.assessmentFocus.primary.length > 0 && (
+                            <div>
+                              <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">
+                                {t('complete.targetedKSA')} (Primary):
+                              </p>
+                              <div className="grid grid-cols-2 gap-2">
+                                {stage.assessmentFocus.primary.map(ksa => {
+                                  const achievement = stageResult.ksaAchievement?.[ksa];
+                                  const score = achievement?.score || 0;
+                                  return (
+                                    <div key={ksa} className="flex items-center justify-between bg-white dark:bg-gray-800 rounded-lg px-3 py-2">
+                                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{ksa}</span>
+                                      <span className={`text-sm font-bold ${
+                                        score >= 80 ? 'text-green-600' : 
+                                        score >= 60 ? 'text-yellow-600' : 'text-red-600'
+                                      }`}>
+                                        {score}%
+                                      </span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
+                          
+                          {/* Secondary KSA Achievement */}
+                          {stage.assessmentFocus?.secondary && stage.assessmentFocus.secondary.length > 0 && (
+                            <div>
+                              <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">
+                                {t('complete.targetedKSA')} (Secondary):
+                              </p>
+                              <div className="grid grid-cols-2 gap-2">
+                                {stage.assessmentFocus.secondary.map(ksa => {
+                                  const achievement = stageResult.ksaAchievement?.[ksa];
+                                  const score = achievement?.score || 0;
+                                  return (
+                                    <div key={ksa} className="flex items-center justify-between bg-white dark:bg-gray-800 rounded-lg px-3 py-2">
+                                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{ksa}</span>
+                                      <span className={`text-sm font-bold ${
+                                        score >= 80 ? 'text-green-600' : 
+                                        score >= 60 ? 'text-yellow-600' : 'text-red-600'
+                                      }`}>
+                                        {score}%
+                                      </span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
+                          
+                          {/* Stage Result Summary */}
+                          {stageResult.feedback && (
+                            <div className="mt-3 pt-3 border-t border-green-200 dark:border-green-800">
+                              <p className="text-sm text-gray-700 dark:text-gray-300">
+                                {stageResult.feedback.strengths?.[0] || t('complete.completed')}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Show placeholder if no results yet */}
+                    {!stageResult && isCompleted && (
+                      <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
+                        <h5 className="font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          {t('complete.stageObjectives')}
+                        </h5>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                          <p className="mb-2">{t('complete.targetedKSA')}:</p>
+                          <div className="flex flex-wrap gap-2">
+                            {[...(stage.assessmentFocus?.primary || []), ...(stage.assessmentFocus?.secondary || [])].map(ksa => (
+                              <span key={ksa} className="px-2 py-1 bg-white dark:bg-gray-800 rounded-md text-xs font-medium">
+                                {ksa}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     )}
                   </div>

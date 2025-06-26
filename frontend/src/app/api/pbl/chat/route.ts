@@ -37,11 +37,12 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString()
     });
 
-    // Convert to conversation format
+    // Convert to conversation format with task ID
     const { processLog, ...conversation } = vertexAIResponseToConversation(
       vertexResponse,
       sessionId,
-      stageContext.stageId
+      stageContext.stageId,
+      stageContext.taskId
     );
 
     // Update process log with user prompt
