@@ -8,23 +8,9 @@ import Link from 'next/link';
 
 // Dynamic import Monaco to avoid SSR issues
 const MonacoEditor = dynamic(
-  () => import('@monaco-editor/react').then(mod => mod.default),
+  () => import('@monaco-editor/react'),
   { ssr: false }
-) as React.ComponentType<{
-  height?: string;
-  defaultLanguage?: string;
-  value?: string;
-  onChange?: (value: string | undefined) => void;
-  theme?: string;
-  options?: {
-    minimap?: { enabled: boolean };
-    fontSize?: number;
-    lineNumbers?: string;
-    scrollBeyondLastLine?: boolean;
-    wordWrap?: string;
-    tabSize?: number;
-  };
-}>;
+);
 
 export default function ContentEditor() {
   const searchParams = useSearchParams();
