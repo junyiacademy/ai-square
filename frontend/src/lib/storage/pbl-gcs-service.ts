@@ -74,11 +74,17 @@ export class PBLGCSService {
 
   /**
    * Generate PBL log filename
-   * Format: pbl_{timestamp}_{random}
+   * Format: pbl_{timestamp}_{random} or pbl_{scenarioId}_stage{stageIndex}_{timestamp}_{random}
    */
-  private generateLogFilename(): string {
+  private generateLogFilename(scenarioId?: string, stageIndex?: number): string {
     const timestamp = Date.now();
     const random = Math.random().toString(36).substring(2, 12);
+    
+    if (scenarioId !== undefined && stageIndex !== undefined) {
+      // Include stage info in filename for better organization
+      return `pbl_${scenarioId}_stage${stageIndex}_${timestamp}_${random}`;
+    }
+    
     return `pbl_${timestamp}_${random}`;
   }
 
@@ -101,8 +107,11 @@ export class PBLGCSService {
    * Save complete session data to GCS (single file format)
    */
   async saveSession(sessionId: string, sessionData: SessionData, logId?: string): Promise<string> {
-    // Use existing logId or generate new one
-    const pblLogId = logId || this.generateLogFilename();
+    // Use existing logId or generate new one with stage info
+    const pblLogId = logId || this.generateLogFilename(
+      sessionData.scenarioId, 
+      sessionData.currentStage
+    );
     
     // Create metadata
     const metadata: SessionMetadata = {

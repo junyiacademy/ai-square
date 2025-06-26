@@ -139,14 +139,37 @@ export default function PBLLearnPage() {
       
       // Create session on first message if not exists
       if (!currentSession) {
-        console.log('Creating new session for first message...');
+        // Get current stage index from localStorage or default to 0
+        const savedProgress = localStorage.getItem(`pbl-progress-${scenarioId}`);
+        const currentStageIndex = savedProgress ? JSON.parse(savedProgress).currentStage : 0;
+        
+        console.log(`Creating new session for stage ${currentStageIndex}...`);
+        
+        // Try to get user info from cookie
+        let userId = 'user-demo';
+        try {
+          const userCookie = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('user='))
+            ?.split('=')[1];
+          
+          if (userCookie) {
+            const user = JSON.parse(decodeURIComponent(userCookie));
+            userId = user.email || userId;
+          }
+        } catch (e) {
+          console.log('No user cookie found, using demo user');
+        }
+        
         const sessionResponse = await fetch('/api/pbl/sessions', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             scenarioId,
-            userId: 'user-demo', // TODO: Get from auth
-            language: i18n.language
+            userId,
+            language: i18n.language,
+            stageIndex: currentStageIndex,
+            stageId: scenario.stages[currentStageIndex].id
           })
         });
 
@@ -242,7 +265,7 @@ export default function PBLLearnPage() {
     }
   };
 
-  const handleNextTask = () => {
+  const handleNextTask = async () => {
     if (!session || !scenario) return;
 
     const stageIndex = session.currentStage || 0;
@@ -254,18 +277,37 @@ export default function PBLLearnPage() {
       // Next task in current stage
       setCurrentTask(currentStage.tasks[currentTaskIndex + 1]);
     } else if (session.currentStage < scenario.stages.length - 1) {
-      // Move to next stage
+      // Move to next stage - complete current stage session first
       const newStageIndex = session.currentStage + 1;
-      setSession({
-        ...session,
-        currentStage: newStageIndex,
-        progress: {
-          ...session.progress,
-          completedStages: [...session.progress.completedStages, session.currentStage]
+      
+      // Mark current stage session as completed
+      if (session) {
+        try {
+          await fetch(`/api/pbl/sessions/${session.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'complete' })
+          });
+          console.log(`Stage ${session.currentStage} session completed`);
+        } catch (error) {
+          console.error('Error completing stage session:', error);
         }
-      });
+      }
+      
+      // Update progress in localStorage before clearing session
+      const overallProgress = {
+        scenarioId,
+        completedStages: [...(session.progress.completedStages || []), session.currentStage],
+        currentStage: newStageIndex
+      };
+      localStorage.setItem(`pbl-progress-${scenarioId}`, JSON.stringify(overallProgress));
+      
+      // Clear current session and conversation for new stage
+      setSession(null);
+      setConversation([]);
       setCurrentTask(scenario.stages[newStageIndex].tasks[0]);
-      setConversation([]); // Clear conversation for new stage
+      
+      // The next session will be created with the new stage index when user sends first message
     } else {
       // Scenario completed
       handleCompleteScenario();
