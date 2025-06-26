@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { SessionData, ProcessLog } from '@/types/pbl';
+import { SessionData } from '@/types/pbl';
 import { pblGCS } from '@/lib/storage/pbl-gcs-service';
 
 // Shared in-memory storage (fallback when GCS is not available)

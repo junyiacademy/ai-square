@@ -63,5 +63,48 @@
       "speaking": "口說",
       "mixed": "綜合"
     }
+  },
+  "learn": {
+    "errorLoading": "載入情境時發生錯誤",
+    "backToPBL": "返回 PBL",
+    "progress": "進度",
+    "currentTask": "當前任務",
+    "instructions": "指示",
+    "expectedOutcome": "預期成果",
+    "startConversation": "開始與 AI 助手對話",
+    "inputPlaceholder": "請輸入您的訊息...",
+    "send": "發送",
+    "saving": "儲存中...",
+    "saveProgress": "儲存進度",
+    "nextTask": "下一個任務",
+    "completeScenario": "完成情境",
+    "aiResponse": {
+      "placeholder": "感謝您的輸入。讓我協助您完成這個任務...",
+      "error": "抱歉，連線發生問題。請再試一次。"
+    }
+  },
+  "history": {
+    "title": "學習歷程",
+    "description": "查看您的 PBL 學習記錄和進度",
+    "filter": {
+      "all": "全部",
+      "completed": "已完成",
+      "inProgress": "進行中"
+    },
+    "status": {
+      "completed": "已完成",
+      "in_progress": "進行中",
+      "paused": "已暫停"
+    },
+    "started": "開始時間",
+    "completed": "完成時間",
+    "duration": "持續時間",
+    "progress": "進度",
+    "stages": "階段",
+    "score": "分數",
+    "continue": "繼續學習",
+    "review": "回顧",
+    "noSessions": "尚未開始任何學習項目",
+    "startLearning": "開始學習"
   }
 }
