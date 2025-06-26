@@ -16,7 +16,6 @@ completion_checklist:
   code_implemented: true
   documentation_updated: false
   spec_defined: true
-  story_extracted: false
   tests_passing: false
   tests_written: false
 created_at: '2025-06-26T12:58:13.250272'

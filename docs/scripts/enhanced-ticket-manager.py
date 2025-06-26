@@ -131,7 +131,6 @@ class EnhancedTicketManager:
                 'tests_passing': False,
                 'documentation_updated': False,
                 'ai_metrics_recorded': False,
-                'story_extracted': False
             }
         }
         

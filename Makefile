@@ -9,7 +9,7 @@ ACTION ?= ""
 FILES ?= ""
 DESC ?= ""
 
-.PHONY: ai-new ai-start ai-save ai-done ai-fix ai-review ai-story ai-report ai-log help \
+.PHONY: ai-new ai-start ai-save ai-done ai-fix ai-review ai-report ai-log help \
         dev run-frontend run-backend \
         dev-setup dev-install dev-update \
         dev-workflow-check dev-secret-check dev-tdd-check dev-tdd-enforce \
@@ -84,8 +84,6 @@ ai-done:
 	@make -s test-smart
 	@echo "\n$(CYAN)📊 生成 AI 使用報告...$(NC)"
 	@python3 docs/scripts/ai-usage-estimator.py report
-	@echo "\n$(CYAN)📖 萃取開發故事...$(NC)"
-	@python3 docs/scripts/story-extractor.py
 	@echo "\n$(CYAN)💬 智能提交...$(NC)"
 	@python3 docs/scripts/integrated-commit.py --auto
 	@echo "\n$(CYAN)🔀 合併到主分支...$(NC)"
@@ -126,13 +124,6 @@ ai-review:
 	@git diff --cached --color | head -50
 	@echo "\n$(BLUE)💡 請使用 AI 進行代碼審查$(NC)"
 	@echo "$(BLUE)💡 重點關注: 代碼品質、安全性、性能$(NC)"
-
-## 萃取開發故事和經驗
-ai-story:
-	@echo "$(CYAN)📖 萃取開發故事...$(NC)"
-	@python3 docs/scripts/story-extractor.py
-	@echo "\n$(GREEN)✅ 故事萃取完成$(NC)"
-	@echo "$(YELLOW)💡 查看 docs/stories/ 目錄獲取詳細內容$(NC)"
 
 ## 檢視開發日誌
 ai-log:
@@ -237,7 +228,6 @@ help:
 	@echo "$(CYAN)AI 輔助:$(NC)"
 	@echo "  $(GREEN)make ai-fix$(NC)                                        - AI 自動修復"
 	@echo "  $(GREEN)make ai-review$(NC)                                     - AI Code Review"
-	@echo "  $(GREEN)make ai-story$(NC)                                      - 萃取開發故事"
 	@echo "  $(GREEN)make ai-report$(NC)                                     - 整合式報告"
 	@echo "  $(GREEN)make ai-log$(NC)                                        - 檢視開發日誌"
 	@echo ""
