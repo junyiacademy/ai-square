@@ -108,7 +108,7 @@ export function Header() {
     { href: '/ksa', label: t('ksa') },
     { href: '/assessment', label: t('assessment') },
     { href: '/pbl', label: t('pbl') },
-    { href: '/assessment/history', label: t('assessmentHistory') },
+    { href: '/history', label: t('history') },
   ]
 
   // 設置 mounted 狀態

@@ -1,7 +1,11 @@
 {
   "home": "홈",
-  "relations": "Relations",
-  "ksa": "KSA Framework",
+  "relations": "관계도",
+  "ksa": "KSA 프레임워크",
+  "assessment": "AI 평가",
+  "pbl": "PBL 학습",
+  "assessmentHistory": "평가 기록",
+  "history": "기록",
   "signIn": "로그인",
   "signOut": "로그아웃",
   "userRole": {
@@ -10,5 +14,6 @@
     "admin": "관리자"
   },
   "darkMode": "다크 모드로 전환",
-  "lightMode": "라이트 모드로 전환"
+  "lightMode": "라이트 모드로 전환",
+  "toggleTheme": "테마 전환"
 }

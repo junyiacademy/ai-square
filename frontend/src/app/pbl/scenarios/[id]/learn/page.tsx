@@ -60,20 +60,37 @@ export default function PBLLearnPage() {
     const fetchExistingLogs = async () => {
       if (!currentTask || !scenario) return;
       
-      // Get user info from cookie
+      // Get user info from localStorage or cookie
       let userId = 'user-demo';
       try {
-        const userCookie = document.cookie
-          .split('; ')
-          .find(row => row.startsWith('user='))
-          ?.split('=')[1];
+        // First check localStorage (consistent with history page)
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        const userData = localStorage.getItem('user');
         
-        if (userCookie) {
-          const user = JSON.parse(decodeURIComponent(userCookie));
+        if (isLoggedIn === 'true' && userData) {
+          const user = JSON.parse(userData);
           userId = user.email || userId;
+        } else {
+          // Check mockUser
+          const mockUser = localStorage.getItem('mockUser');
+          if (mockUser) {
+            const mock = JSON.parse(mockUser);
+            userId = mock.id || userId;
+          } else {
+            // Fallback to cookie
+            const userCookie = document.cookie
+              .split('; ')
+              .find(row => row.startsWith('user='))
+              ?.split('=')[1];
+            
+            if (userCookie) {
+              const user = JSON.parse(decodeURIComponent(userCookie));
+              userId = user.email || userId;
+            }
+          }
         }
       } catch (e) {
-        console.log('No user cookie found, using demo user');
+        console.log('Error getting user info, using demo user:', e);
       }
       
       // Find current stage ID
@@ -132,20 +149,37 @@ export default function PBLLearnPage() {
         
         setScenario(scenarioData.data);
         
-        // Try to load existing session
+        // Get user info from localStorage or cookie (consistent with history page)
         let userId = 'user-demo';
         try {
-          const userCookie = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('user='))
-            ?.split('=')[1];
+          // First check localStorage (consistent with history page)
+          const isLoggedIn = localStorage.getItem('isLoggedIn');
+          const userData = localStorage.getItem('user');
           
-          if (userCookie) {
-            const user = JSON.parse(decodeURIComponent(userCookie));
+          if (isLoggedIn === 'true' && userData) {
+            const user = JSON.parse(userData);
             userId = user.email || userId;
+          } else {
+            // Check mockUser
+            const mockUser = localStorage.getItem('mockUser');
+            if (mockUser) {
+              const mock = JSON.parse(mockUser);
+              userId = mock.id || userId;
+            } else {
+              // Fallback to cookie
+              const userCookie = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('user='))
+                ?.split('=')[1];
+              
+              if (userCookie) {
+                const user = JSON.parse(decodeURIComponent(userCookie));
+                userId = user.email || userId;
+              }
+            }
           }
         } catch (e) {
-          console.log('No user cookie found, using demo user');
+          console.log('Error getting user info, using demo user:', e);
         }
         
         // Check for existing active session
@@ -378,20 +412,37 @@ export default function PBLLearnPage() {
         
         console.log(`Creating new session for stage ${actualStageIndex} (task: ${currentTask?.id})...`);
         
-        // Try to get user info from cookie
+        // Get user info from localStorage or cookie (consistent with history page)
         let userId = 'user-demo';
         try {
-          const userCookie = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('user='))
-            ?.split('=')[1];
+          // First check localStorage (consistent with history page)
+          const isLoggedIn = localStorage.getItem('isLoggedIn');
+          const userData = localStorage.getItem('user');
           
-          if (userCookie) {
-            const user = JSON.parse(decodeURIComponent(userCookie));
+          if (isLoggedIn === 'true' && userData) {
+            const user = JSON.parse(userData);
             userId = user.email || userId;
+          } else {
+            // Check mockUser
+            const mockUser = localStorage.getItem('mockUser');
+            if (mockUser) {
+              const mock = JSON.parse(mockUser);
+              userId = mock.id || userId;
+            } else {
+              // Fallback to cookie
+              const userCookie = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('user='))
+                ?.split('=')[1];
+              
+              if (userCookie) {
+                const user = JSON.parse(decodeURIComponent(userCookie));
+                userId = user.email || userId;
+              }
+            }
           }
         } catch (e) {
-          console.log('No user cookie found, using demo user');
+          console.log('Error getting user info, using demo user:', e);
         }
         
         const sessionResponse = await fetch('/api/pbl/sessions', {

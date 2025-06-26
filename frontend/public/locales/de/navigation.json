@@ -1,7 +1,11 @@
 {
   "home": "Startseite",
-  "relations": "Relations",
-  "ksa": "KSA Framework",
+  "relations": "Beziehungen",
+  "ksa": "KSA-Rahmenwerk",
+  "assessment": "KI-Bewertung",
+  "pbl": "PBL-Lernen",
+  "assessmentHistory": "Bewertungsverlauf",
+  "history": "Verlauf",
   "signIn": "Anmelden",
   "signOut": "Abmelden",
   "userRole": {
@@ -10,5 +14,6 @@
     "admin": "Administrator"
   },
   "darkMode": "In den dunklen Modus wechseln",
-  "lightMode": "In den hellen Modus wechseln"
+  "lightMode": "In den hellen Modus wechseln",
+  "toggleTheme": "Thema wechseln"
 }

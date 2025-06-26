@@ -1,7 +1,11 @@
 {
   "home": "Inicio",
-  "relations": "Relations",
-  "ksa": "KSA Framework",
+  "relations": "Relaciones",
+  "ksa": "Marco KSA",
+  "assessment": "Evaluación de IA",
+  "pbl": "Aprendizaje PBL",
+  "assessmentHistory": "Historial de evaluación",
+  "history": "Historial",
   "signIn": "Iniciar sesión",
   "signOut": "Cerrar sesión",
   "userRole": {
@@ -10,5 +14,6 @@
     "admin": "Administrador"
   },
   "darkMode": "Cambiar a modo oscuro",
-  "lightMode": "Cambiar a modo claro"
+  "lightMode": "Cambiar a modo claro",
+  "toggleTheme": "Cambiar tema"
 }

@@ -16,6 +16,21 @@ interface SessionSummary {
     totalStages: number;
   };
   score?: number;
+  stageDetails?: Array<{
+    stageId: string;
+    stageTitle: string;
+    status: string;
+    score?: number;
+    interactions: number;
+  }>;
+  totalInteractions: number;
+  averageScore?: number;
+  domainScores?: {
+    engaging_with_ai: number;
+    creating_with_ai: number;
+    managing_with_ai: number;
+    designing_with_ai: number;
+  };
 }
 
 export async function GET(request: NextRequest) {
@@ -23,8 +38,34 @@ export async function GET(request: NextRequest) {
     // Get userId from query params (in a real app, this would come from auth)
     const userId = request.nextUrl.searchParams.get('userId') || 'default-user';
     
+    // Try to get user email from cookie or assume it's the userId if it looks like an email
+    let userEmail: string | undefined;
+    try {
+      const userCookie = request.cookies.get('user')?.value;
+      if (userCookie) {
+        const user = JSON.parse(userCookie);
+        userEmail = user.email;
+      }
+    } catch {
+      console.log('No user cookie found');
+    }
+    
+    // If userId looks like an email, use it as userEmail
+    if (!userEmail && userId.includes('@')) {
+      userEmail = userId;
+    }
+    
+    // If we still don't have userEmail but have a demo user, try to get from localStorage pattern
+    if (!userEmail && userId === 'user-demo') {
+      userEmail = 'demo@example.com';
+    }
+    
+    console.log('Fetching PBL history for userId:', userId, 'userEmail:', userEmail);
+    
     // Get all learning logs for the user
-    const logs = await pblGCS.getUserLearningLogs(userId);
+    const logs = await pblGCS.getUserLearningLogs(userId, userEmail);
+    
+    console.log(`Found ${logs.length} PBL sessions for user ${userId}`);
     
     // Transform logs into session summaries
     const sessions: SessionSummary[] = logs.map(log => {
@@ -54,6 +95,71 @@ export async function GET(request: NextRequest) {
         score = Math.round(totalScore / log.evaluations.length);
       }
       
+      // Count total interactions from process logs
+      const totalInteractions = log.processLogs?.filter(
+        pl => pl.actionType === 'write' || pl.actionType === 'ai_response'
+      ).length || 0;
+      
+      // Build stage details
+      const stageDetails = log.scenario.stages.map((stage: any, index: number) => {
+        const stageProgress = log.progress.stageProgress.find(sp => sp.stageId === stage.id);
+        const stageResult = log.stageResults?.find(sr => sr.stageId === stage.id);
+        
+        // Count interactions for this stage
+        const stageInteractions = log.processLogs?.filter(
+          pl => pl.stageId === stage.id && (pl.actionType === 'write' || pl.actionType === 'ai_response')
+        ).length || 0;
+        
+        return {
+          stageId: stage.id,
+          stageTitle: stage.title || `Stage ${index + 1}`,
+          status: stageProgress?.status || 'not_started',
+          score: stageResult?.score,
+          interactions: Math.floor(stageInteractions / 2) // Divide by 2 for user-AI pairs
+        };
+      });
+      
+      // Calculate average score from stage results
+      const stageScores = log.stageResults?.map(sr => sr.score).filter(s => s !== undefined) || [];
+      const averageScore = stageScores.length > 0 
+        ? Math.round(stageScores.reduce((sum, s) => sum + (s || 0), 0) / stageScores.length)
+        : undefined;
+      
+      // Calculate domain scores from stage results
+      let domainScores: SessionSummary['domainScores'] | undefined;
+      if (log.stageResults && log.stageResults.length > 0) {
+        const domains = {
+          engaging_with_ai: 0,
+          creating_with_ai: 0,
+          managing_with_ai: 0,
+          designing_with_ai: 0
+        };
+        const domainCounts = { ...domains };
+        
+        // Aggregate domain scores from stage results
+        log.stageResults.forEach(result => {
+          if (result.domainScores) {
+            Object.entries(result.domainScores).forEach(([domain, score]) => {
+              domains[domain as keyof typeof domains] += score as number;
+              domainCounts[domain as keyof typeof domains] += 1;
+            });
+          }
+        });
+        
+        // Calculate average for each domain
+        Object.keys(domains).forEach(domain => {
+          const key = domain as keyof typeof domains;
+          if (domainCounts[key] > 0) {
+            domains[key] = Math.round(domains[key] / domainCounts[key]);
+          }
+        });
+        
+        // Only include domain scores if we have at least one score
+        if (Object.values(domainCounts).some(count => count > 0)) {
+          domainScores = domains;
+        }
+      }
+      
       return {
         id: log.sessionId,
         logId: log.logId,
@@ -68,7 +174,11 @@ export async function GET(request: NextRequest) {
           completedStages,
           totalStages
         },
-        score
+        score: score || averageScore,
+        stageDetails,
+        totalInteractions: Math.floor(totalInteractions / 2), // Divide by 2 for user-AI pairs
+        averageScore,
+        domainScores
       };
     });
     

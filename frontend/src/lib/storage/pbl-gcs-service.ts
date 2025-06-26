@@ -67,6 +67,8 @@ export interface LearningLog {
     score: number;
     feedback?: string;
   }>;
+  processLogs?: ProcessLog[];
+  stageResults?: StageResult[];
 }
 
 export class PBLGCSService {
@@ -405,21 +407,27 @@ export class PBLGCSService {
    */
   async listUserSessions(userId: string, status?: 'in_progress' | 'completed' | 'paused', userEmail?: string): Promise<PBLLogData[]> {
     try {
+      console.log(`listUserSessions called with userId: ${userId}, status: ${status}, userEmail: ${userEmail}`);
       const sessions: PBLLogData[] = [];
       
       // If userEmail is provided, search in user's folder first
       if (userEmail) {
         const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
+        console.log(`Searching in user folder: ${PBL_BASE_PATH}/${sanitizedEmail}/`);
         try {
           const [userFiles] = await this.bucket.getFiles({
             prefix: `${PBL_BASE_PATH}/${sanitizedEmail}/`,
           });
+          
+          console.log(`Found ${userFiles.length} files in user folder`);
 
           for (const file of userFiles) {
             if (file.name.endsWith('.json')) {
               try {
                 const [contents] = await file.download();
                 const logData = JSON.parse(contents.toString()) as PBLLogData;
+                
+                console.log(`File ${file.name} - user_id: ${logData.user_id}, status: ${logData.status}`);
                 
                 if (logData.user_id === userId) {
                   if (!status || logData.status === status) {
@@ -431,8 +439,8 @@ export class PBLGCSService {
               }
             }
           }
-        } catch {
-          console.log(`User folder ${sanitizedEmail} not found, searching all files`);
+        } catch (err) {
+          console.log(`User folder ${sanitizedEmail} not found or error accessing it:`, err);
         }
       }
       
@@ -470,37 +478,100 @@ export class PBLGCSService {
   }
 
   /**
+   * Get sessions directly by email folder without checking user_id
+   */
+  async getSessionsByEmail(userEmail: string): Promise<PBLLogData[]> {
+    try {
+      const sessions: PBLLogData[] = [];
+      const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
+      const folderPath = `${PBL_BASE_PATH}/${sanitizedEmail}/`;
+      
+      console.log(`Getting all sessions from email folder: ${folderPath}`);
+      
+      const [files] = await this.bucket.getFiles({
+        prefix: folderPath,
+      });
+      
+      console.log(`Found ${files.length} files in email folder`);
+      
+      for (const file of files) {
+        if (file.name.endsWith('.json')) {
+          try {
+            const [contents] = await file.download();
+            const logData = JSON.parse(contents.toString()) as PBLLogData;
+            
+            console.log(`Loaded session from ${file.name} - status: ${logData.status}, scenario: ${logData.scenario_id}`);
+            sessions.push(logData);
+          } catch (parseError) {
+            console.error(`Failed to parse file ${file.name}:`, parseError);
+          }
+        }
+      }
+      
+      return sessions.sort((a, b) => 
+        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      );
+    } catch (error) {
+      console.error('Error getting sessions by email:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Transform PBLLogData to LearningLog format
+   */
+  private transformToLearningLog(session: PBLLogData): LearningLog {
+    return {
+      sessionId: session.session_id,
+      logId: session.session_id, // Use session_id as logId for consistency
+      scenario: {
+        id: session.scenario_id,
+        title: session.session_data.scenarioTitle || session.scenario_id,
+        stages: session.session_data.scenario?.stages || []
+      },
+      metadata: {
+        startTime: session.session_data.startedAt,
+        endTime: session.session_data.lastActiveAt,
+        status: session.status,
+        userId: session.user_id,
+        language: session.language
+      },
+      progress: {
+        stageProgress: session.session_data.stageResults?.map(result => ({
+          stageId: result.stageId,
+          status: result.status,
+          completedAt: result.completedAt,
+          score: result.score
+        })) || []
+      },
+      evaluations: session.session_data.evaluations || [],
+      processLogs: session.process_logs || [],
+      stageResults: session.session_data.stageResults || []
+    };
+  }
+
+  /**
    * Get user learning logs for history page (transformed format)
    */
-  async getUserLearningLogs(userId: string): Promise<LearningLog[]> {
+  async getUserLearningLogs(userId: string, userEmail?: string): Promise<LearningLog[]> {
     try {
-      const sessions = await this.listUserSessions(userId);
+      console.log(`Getting learning logs for userId: ${userId}, userEmail: ${userEmail}`);
       
-      return sessions.map(session => ({
-        sessionId: session.session_id,
-        logId: session.session_id, // Use session_id as logId for consistency
-        scenario: {
-          id: session.scenario_id,
-          title: session.session_data.scenarioTitle || session.scenario_id,
-          stages: session.session_data.scenario?.stages || []
-        },
-        metadata: {
-          startTime: session.session_data.startedAt,
-          endTime: session.session_data.lastActiveAt,
-          status: session.status,
-          userId: session.user_id,
-          language: session.language
-        },
-        progress: {
-          stageProgress: session.session_data.stageResults?.map(result => ({
-            stageId: result.stageId,
-            status: result.status,
-            completedAt: result.completedAt,
-            score: result.score
-          })) || []
-        },
-        evaluations: session.session_data.evaluations || []
-      }));
+      // If we have userEmail, prioritize getting sessions by email folder
+      if (userEmail) {
+        const sessions = await this.getSessionsByEmail(userEmail);
+        console.log(`Found ${sessions.length} sessions by email: ${userEmail}`);
+        
+        if (sessions.length > 0) {
+          return sessions.map(session => this.transformToLearningLog(session));
+        }
+      }
+      
+      // Fallback to original method
+      const sessions = await this.listUserSessions(userId, undefined, userEmail);
+      console.log(`Found ${sessions.length} sessions for userId: ${userId}`);
+      
+      return sessions.map(session => this.transformToLearningLog(session));
     } catch (error) {
       console.error('Error getting user learning logs:', error);
       return [];

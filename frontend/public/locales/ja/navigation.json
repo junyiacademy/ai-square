@@ -1,7 +1,11 @@
 {
   "home": "ホーム",
-  "relations": "Relations",
-  "ksa": "KSA Framework",
+  "relations": "関係図",
+  "ksa": "KSAフレームワーク",
+  "assessment": "AI評価",
+  "pbl": "PBL学習",
+  "assessmentHistory": "評価履歴",
+  "history": "履歴",
   "signIn": "ログイン",
   "signOut": "ログアウト",
   "userRole": {
@@ -10,5 +14,6 @@
     "admin": "管理者"
   },
   "darkMode": "ダークモードに切り替える",
-  "lightMode": "ライトモードに切り替える"
+  "lightMode": "ライトモードに切り替える",
+  "toggleTheme": "テーマを切り替える"
 }

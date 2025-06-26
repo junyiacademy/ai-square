@@ -1,7 +1,11 @@
 {
   "home": "Главная",
-  "relations": "Relations",
-  "ksa": "KSA Framework",
+  "relations": "Связи",
+  "ksa": "Структура KSA",
+  "assessment": "Оценка ИИ",
+  "pbl": "PBL обучение",
+  "assessmentHistory": "История оценок",
+  "history": "История",
   "signIn": "Войти",
   "signOut": "Выйти",
   "userRole": {
@@ -10,5 +14,6 @@
     "admin": "Администратор"
   },
   "darkMode": "Переключить на тёмный режим",
-  "lightMode": "Переключить на светлый режим"
+  "lightMode": "Переключить на светлый режим",
+  "toggleTheme": "Переключить тему"
 }
