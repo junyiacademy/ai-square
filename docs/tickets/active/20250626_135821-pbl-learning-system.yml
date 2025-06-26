@@ -1,7 +1,7 @@
 ai_usage:
   complexity_breakdown:
-    medium_count: 3
-  estimated_cost_usd: 0.45000000000000007
+    medium_count: 4
+  estimated_cost_usd: 0.6000000000000001
   interactions:
   - complexity: medium
     description: development - medium
@@ -21,7 +21,13 @@ ai_usage:
     is_start_marker: false
     task_type: development
     timestamp: '2025-06-26T15:05:12.695341'
-  total_interactions: 3
+  - complexity: medium
+    description: development - medium
+    estimated_cost: 0.15000000000000002
+    is_start_marker: false
+    task_type: development
+    timestamp: '2025-06-27T00:33:27.473356'
+  total_interactions: 4
 completion_checklist:
   ai_metrics_recorded: true
   code_implemented: true
@@ -49,22 +55,26 @@ development:
   code_review_status: pending
   commits: []
   files_changed:
-  - frontend/src/lib/ai/
-  - docs/tickets/active/20250626_135821-pbl-learning-system.yml
-  - frontend/package.json
   - frontend/src/app/pbl/sessions/
-  - frontend/package-lock.json
-  - frontend/src/app/api/pbl/history/
-  - frontend/src/app/pbl/history/
-  - frontend/src/app/api/pbl/sessions/[id]/route.ts
-  - ocs/tickets/active/20250626_135821-pbl-learning-system.yml
-  - frontend/src/app/api/pbl/progress/
   - frontend/public/locales/en/pbl.json
-  - frontend/Dockerfile
   - frontend/src/lib/storage/pbl-gcs-service.ts
-  - frontend/src/app/pbl/scenarios/[id]/learn/
-  - frontend/public/locales/zh-TW/pbl.json
   - frontend/src/app/api/pbl/chat/
+  - frontend/src/app/pbl/scenarios/[id]/learn/page.tsx
+  - frontend/src/lib/ai/
+  - frontend/src/app/api/pbl/progress/
+  - frontend/Dockerfile
+  - frontend/src/app/api/pbl/history/
+  - frontend/src/app/pbl/scenarios/[id]/page.tsx
+  - frontend/src/app/pbl/scenarios/[id]/complete/page.tsx
+  - frontend/src/app/api/pbl/sessions/[id]/route.ts
+  - frontend/public/locales/zh-TW/pbl.json
+  - frontend/package-lock.json
+  - frontend/src/app/pbl/history/
+  - frontend/src/components/pbl/KSAKnowledgeGraph.tsx
+  - docs/tickets/active/20250626_135821-pbl-learning-system.yml
+  - ocs/tickets/active/20250626_135821-pbl-learning-system.yml
+  - frontend/src/app/pbl/scenarios/[id]/learn/
+  - frontend/package.json
   test_coverage: null
 id: 20250626_135821-pbl-learning-system
 name: pbl-learning-system
@@ -105,7 +115,7 @@ test_report:
     total_tests: 0
   test_runs: []
 time_tracking:
-  actual_duration_minutes: 66
+  actual_duration_minutes: 633
   ai_time_minutes: 0
   checkpoints: []
   completed_at: null

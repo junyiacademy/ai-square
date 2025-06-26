@@ -31,6 +31,7 @@ export default function PBLLearnPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [existingLogs, setExistingLogs] = useState<any[]>([]);
   const [currentLogId, setCurrentLogId] = useState<string | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   
   // Ref for auto-scrolling
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -528,7 +529,7 @@ export default function PBLLearnPage() {
   };
 
   const handleNextTask = async () => {
-    if (!session || !scenario) return;
+    if (!session || !scenario || isTransitioning) return;
 
     const stageIndex = session.currentStage || 0;
     const currentStage = scenario.stages[stageIndex];
@@ -555,22 +556,22 @@ export default function PBLLearnPage() {
         return;
       }
       
+      // Set transitioning state immediately
+      setIsTransitioning(true);
+      
       // Move to next stage - complete current stage session first
       const newStageIndex = session.currentStage + 1;
       
-      // Mark current stage session as completed
+      // Mark current stage session as completed (non-blocking)
       if (session) {
-        try {
-          // Complete the session
-          await fetch(`/api/pbl/sessions/${session.id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'complete' })
-          });
-          console.log(`Stage ${session.currentStage} session completed`);
-        } catch (error) {
-          console.error('Error completing stage session:', error);
-        }
+        // Complete the session in the background
+        fetch(`/api/pbl/sessions/${session.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'complete' })
+        })
+        .then(() => console.log(`Stage ${session.currentStage} session completed`))
+        .catch(error => console.error('Error completing stage session:', error));
       }
       
       // Update progress in localStorage before clearing session
@@ -592,6 +593,7 @@ export default function PBLLearnPage() {
       setCurrentTask(scenario.stages[newStageIndex].tasks[0]);
       setStageAnalysis(null); // Clear stage analysis for new stage
       setCurrentLogId(null); // Clear log ID for new stage
+      setIsTransitioning(false); // Reset transitioning state
       
       // The next session will be created with the new stage index when user sends first message
     } else {
@@ -607,17 +609,20 @@ export default function PBLLearnPage() {
       return;
     }
 
-    try {
-      await fetch(`/api/pbl/sessions/${session.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'complete' })
-      });
+    // Set transitioning state for visual feedback
+    setIsTransitioning(true);
 
-      router.push(`/pbl/scenarios/${scenarioId}/complete`);
-    } catch (error) {
-      console.error('Error completing scenario:', error);
-    }
+    // Navigate immediately
+    router.push(`/pbl/scenarios/${scenarioId}/complete`);
+
+    // Complete the session in the background
+    fetch(`/api/pbl/sessions/${session.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'complete' })
+    })
+    .then(() => console.log('Scenario completed successfully'))
+    .catch(error => console.error('Error completing scenario:', error));
   };
 
   if (loading || !ready || !i18n.isInitialized) {
@@ -1218,19 +1223,29 @@ export default function PBLLearnPage() {
                 
                 <button
                   onClick={handleNextTask}
-                  disabled={!session || (
+                  disabled={!session || isTransitioning || (
                     // Disable if it's the last task of a stage and not analyzed
                     currentTask && currentStage && 
                     currentTask.id === currentStage.tasks[currentStage.tasks.length - 1].id &&
                     session.currentStage < scenario.stages.length - 1 &&
                     !stageAnalysis
                   )}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                 >
-                  {session && session.currentStage === scenario.stages.length - 1 && 
-                   currentTask?.id === currentStage.tasks[currentStage.tasks.length - 1].id
-                    ? t('learn.completeScenario')
-                    : t('learn.nextTask')}
+                  {isTransitioning ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Loading...
+                    </>
+                  ) : (
+                    session && session.currentStage === scenario.stages.length - 1 && 
+                    currentTask?.id === currentStage.tasks[currentStage.tasks.length - 1].id
+                      ? t('learn.completeScenario')
+                      : t('learn.nextTask')
+                  )}
                 </button>
               </div>
             </div>

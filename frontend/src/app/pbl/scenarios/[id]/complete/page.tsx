@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { ScenarioProgram, SessionData } from '@/types/pbl';
-import KSARadarChart from '@/components/pbl/KSARadarChart';
+import KSAKnowledgeGraph from '@/components/pbl/KSAKnowledgeGraph';
 import DomainRadarChart from '@/components/pbl/DomainRadarChart';
 import KSADiagnosticReport from '@/components/pbl/KSADiagnosticReport';
 
@@ -303,9 +303,10 @@ export default function PBLCompletePage() {
             });
             
             return Object.keys(allKsaScores).length > 0 ? (
-              <KSARadarChart 
+              <KSAKnowledgeGraph 
                 ksaScores={allKsaScores}
                 title={t('complete.ksaRadarTitle')}
+                ksaMapping={scenario.ksaMapping}
               />
             ) : null;
           })()}
@@ -370,6 +371,7 @@ export default function PBLCompletePage() {
             {t('complete.stageSummary')}
           </h2>
           
+          
           <div className="space-y-4">
             {scenario.stages.map((stage, index) => {
               const stageSession = sessions.find(s => s.currentStage === index);
@@ -381,7 +383,7 @@ export default function PBLCompletePage() {
                   key={stage.id}
                   className={`p-4 rounded-lg ${
                     isCompleted 
-                      ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800' 
+                      ? 'bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600' 
                       : 'bg-gray-50 dark:bg-gray-700'
                   }`}
                 >
@@ -484,76 +486,6 @@ export default function PBLCompletePage() {
                       </ul>
                     </div>
                     
-                    {/* Stage Learning Objectives Achievement */}
-                    {stageResult && (
-                      <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
-                        <h5 className="font-medium text-green-700 dark:text-green-400 mb-3">
-                          {t('complete.stageObjectives')}
-                        </h5>
-                        <div className="space-y-3">
-                          {/* Primary KSA Achievement */}
-                          {stage.assessmentFocus?.primary && stage.assessmentFocus.primary.length > 0 && (
-                            <div>
-                              <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">
-                                {t('complete.targetedKSA')} (Primary):
-                              </p>
-                              <div className="grid grid-cols-2 gap-2">
-                                {stage.assessmentFocus.primary.map(ksa => {
-                                  const achievement = stageResult.ksaAchievement?.[ksa];
-                                  const score = achievement?.score || 0;
-                                  return (
-                                    <div key={ksa} className="flex items-center justify-between bg-white dark:bg-gray-800 rounded-lg px-3 py-2">
-                                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{ksa}</span>
-                                      <span className={`text-sm font-bold ${
-                                        score >= 80 ? 'text-green-600' : 
-                                        score >= 60 ? 'text-yellow-600' : 'text-red-600'
-                                      }`}>
-                                        {score}%
-                                      </span>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          )}
-                          
-                          {/* Secondary KSA Achievement */}
-                          {stage.assessmentFocus?.secondary && stage.assessmentFocus.secondary.length > 0 && (
-                            <div>
-                              <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">
-                                {t('complete.targetedKSA')} (Secondary):
-                              </p>
-                              <div className="grid grid-cols-2 gap-2">
-                                {stage.assessmentFocus.secondary.map(ksa => {
-                                  const achievement = stageResult.ksaAchievement?.[ksa];
-                                  const score = achievement?.score || 0;
-                                  return (
-                                    <div key={ksa} className="flex items-center justify-between bg-white dark:bg-gray-800 rounded-lg px-3 py-2">
-                                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{ksa}</span>
-                                      <span className={`text-sm font-bold ${
-                                        score >= 80 ? 'text-green-600' : 
-                                        score >= 60 ? 'text-yellow-600' : 'text-red-600'
-                                      }`}>
-                                        {score}%
-                                      </span>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          )}
-                          
-                          {/* Stage Result Summary */}
-                          {stageResult.feedback && (
-                            <div className="mt-3 pt-3 border-t border-green-200 dark:border-green-800">
-                              <p className="text-sm text-gray-700 dark:text-gray-300">
-                                {stageResult.feedback.strengths?.[0] || t('complete.completed')}
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
                     
                     {/* Show placeholder if no results yet */}
                     {!stageResult && isCompleted && (
@@ -580,15 +512,68 @@ export default function PBLCompletePage() {
                     <div className="mt-4 space-y-3 pl-11">
                       {/* KSA Achievement */}
                       {stageResult.ksaAchievement && Object.keys(stageResult.ksaAchievement).length > 0 && (
-                        <div className="grid grid-cols-3 gap-2 mb-3">
-                          {Object.entries(stageResult.ksaAchievement).map(([ksa, achievement]) => (
-                            <div key={ksa} className="text-center p-2 bg-gray-100 dark:bg-gray-700 rounded">
-                              <div className="text-xs font-medium text-gray-600 dark:text-gray-400">{ksa}</div>
-                              <div className="text-lg font-bold text-blue-600 dark:text-blue-400">
-                                {achievement.score}%
+                        <div className="mb-3">
+                          <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                            KSA Achievement
+                          </h5>
+                          
+                          {/* P/S Legend */}
+                          <div className="flex items-center gap-4 text-xs mb-3">
+                            <div className="flex items-center gap-2">
+                              <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                                <span className="text-white text-xs font-bold">P</span>
                               </div>
+                              <span className="text-gray-600 dark:text-gray-400">Primary Learning Objective</span>
                             </div>
-                          ))}
+                            <div className="flex items-center gap-2">
+                              <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                                <span className="text-white text-xs font-bold">S</span>
+                              </div>
+                              <span className="text-gray-600 dark:text-gray-400">Secondary Learning Objective</span>
+                            </div>
+                          </div>
+                          
+                          <div className="grid grid-cols-3 gap-3">
+                          {Object.entries(stageResult.ksaAchievement).map(([ksa, achievement]) => {
+                            // Check if this KSA is a learning objective for this stage
+                            const isPrimary = stage.assessmentFocus?.primary?.includes(ksa);
+                            const isSecondary = stage.assessmentFocus?.secondary?.includes(ksa);
+                            const isLearningObjective = isPrimary || isSecondary;
+                            
+                            return (
+                              <div 
+                                key={ksa} 
+                                className={`text-center p-2 rounded relative border ${
+                                  isLearningObjective 
+                                    ? 'bg-blue-100 dark:bg-blue-900/30 border-2 border-blue-400 dark:border-blue-600' 
+                                    : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600'
+                                }`}
+                              >
+                                {isLearningObjective && (
+                                  <div className="absolute -top-2 -right-2">
+                                    <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                                      <span className="text-white text-xs font-bold">
+                                        {isPrimary ? 'P' : 'S'}
+                                      </span>
+                                    </div>
+                                  </div>
+                                )}
+                                <div className={`text-xs font-medium ${
+                                  isLearningObjective 
+                                    ? 'text-gray-600 dark:text-gray-400' 
+                                    : 'text-gray-400 dark:text-gray-500'
+                                }`}>{ksa}</div>
+                                <div className={`text-lg font-bold ${
+                                  isLearningObjective 
+                                    ? 'text-blue-600 dark:text-blue-400' 
+                                    : 'text-gray-400 dark:text-gray-500'
+                                }`}>
+                                  {achievement.score}%
+                                </div>
+                              </div>
+                            );
+                          })}
+                          </div>
                         </div>
                       )}
                       

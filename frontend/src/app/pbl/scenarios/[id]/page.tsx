@@ -14,6 +14,7 @@ export default function PBLScenarioDetailsPage() {
   const [scenario, setScenario] = useState<ScenarioProgram | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hasCompletionReport, setHasCompletionReport] = useState(false);
 
   useEffect(() => {
     const fetchScenario = async () => {
@@ -23,6 +24,34 @@ export default function PBLScenarioDetailsPage() {
         
         if (data.success) {
           setScenario(data.data);
+          
+          // Check if user has completed this scenario
+          let userId = 'user-demo';
+          try {
+            const userCookie = document.cookie
+              .split('; ')
+              .find(row => row.startsWith('user='))
+              ?.split('=')[1];
+            
+            if (userCookie) {
+              const user = JSON.parse(decodeURIComponent(userCookie));
+              userId = user.email || userId;
+            }
+          } catch (e) {
+            console.log('No user cookie found, using demo user');
+          }
+          
+          // Check for completed sessions
+          const sessionsResponse = await fetch(`/api/pbl/sessions?userId=${userId}&scenarioId=${scenarioId}&status=completed`);
+          const sessionsData = await sessionsResponse.json();
+          
+          if (sessionsData.success && sessionsData.data.sessions.length > 0) {
+            // Check if all stages are completed
+            const scenario = data.data;
+            const completedStages = new Set(sessionsData.data.sessions.map((s: any) => s.currentStage));
+            const allStagesCompleted = scenario.stages.length === completedStages.size;
+            setHasCompletionReport(allStagesCompleted);
+          }
         } else {
           setError(data.error?.message || 'Failed to load scenario');
         }
@@ -146,14 +175,23 @@ export default function PBLScenarioDetailsPage() {
             </div>
           </div>
 
-          {/* Start Learning Button */}
-          <div className="text-center">
+          {/* Action Buttons */}
+          <div className="flex flex-wrap gap-4 justify-center">
             <Link
               href={`/pbl/scenarios/${scenarioId}/learn`}
               className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
             >
               🚀 {t('details.startLearningJourney')}
             </Link>
+            
+            {hasCompletionReport && (
+              <Link
+                href={`/pbl/scenarios/${scenarioId}/complete`}
+                className="inline-flex items-center px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors"
+              >
+                📊 {t('details.viewCompletionReport')}
+              </Link>
+            )}
           </div>
         </div>
 
@@ -268,13 +306,22 @@ export default function PBLScenarioDetailsPage() {
         </div>
 
         {/* Bottom Action */}
-        <div className="text-center mt-8">
+        <div className="flex flex-wrap gap-4 justify-center mt-8">
           <Link
             href={`/pbl/scenarios/${scenarioId}/learn`}
             className="inline-flex items-center px-8 py-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors text-lg"
           >
             🚀 {t('details.startLearning')}
           </Link>
+          
+          {hasCompletionReport && (
+            <Link
+              href={`/pbl/scenarios/${scenarioId}/complete`}
+              className="inline-flex items-center px-8 py-4 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors text-lg"
+            >
+              📊 {t('details.viewCompletionReport')}
+            </Link>
+          )}
         </div>
       </div>
     </main>
