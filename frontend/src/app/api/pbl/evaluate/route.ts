@@ -64,11 +64,22 @@ export async function POST(request: NextRequest) {
     const evaluationPrompt = `
 你是一位專業的學習評估專家。請根據以下對話記錄，評估學習者在此階段的表現。
 
-階段名稱：${stage?.name || stageId}
-階段類型：${stage?.stageType}
+階段資訊：
+- 名稱：${stage?.name || stageId}
+- 類型：${stage?.stageType}
+- 模式重點：${stage?.modalityFocus}
+
+目標領域 (Target Domains)：
+${scenario?.targetDomain?.join(', ') || '無特定領域'}
+
 評估重點 KSA：
-- 主要：${assessmentFocus.primary.join(', ')}
-- 次要：${assessmentFocus.secondary.join(', ')}
+- 主要評估項目：${assessmentFocus.primary.join(', ')}（請給予較高權重）
+- 次要評估項目：${assessmentFocus.secondary.join(', ')}
+
+完整 KSA 映射：
+知識 (Knowledge)：${scenario?.ksaMapping?.knowledge?.join(', ') || '無'}
+技能 (Skills)：${scenario?.ksaMapping?.skills?.join(', ') || '無'}
+態度 (Attitudes)：${scenario?.ksaMapping?.attitudes?.join(', ') || '無'}
 
 評估標準 (Rubrics)：
 ${scenario?.rubricsCriteria?.map(rubric => `
@@ -86,16 +97,25 @@ ${conversations.map((conv, i) => `
 AI：${conv.ai}
 `).join('\n')}
 
-請提供以下評估：
+請基於對話內容，評估學習者在以下各項的表現：
+
 1. 整體表現分數（0-100）
-2. 根據 KSA 評估：
-   - 知識掌握程度 (Knowledge)
-   - 技能展現程度 (Skills)
-   - 態度表現 (Attitudes)
-3. 根據 Rubrics 評分（每項 1-4 級）
-4. 優點（至少3點，關聯到具體的 KSA）
-5. 需要改進的地方（至少2點，關聯到具體的 KSA）
-6. 下一步建議（至少2點）
+
+2. 個別 KSA 項目評分（每項 0-100）：
+   請針對每個 KSA 代碼，根據學習者在對話中展現的理解和應用程度給分
+
+3. Domain 評分（0-100）：
+   - engaging_with_ai: 評估學習者與 AI 互動的能力
+   - creating_with_ai: 評估學習者使用 AI 創造內容的能力
+   - managing_with_ai: 評估學習者管理 AI 輔助流程的能力
+   - designing_with_ai: 評估學習者設計 AI 解決方案的能力
+
+4. Rubrics 評分（1-4 級）：
+   請根據上述標準，給予每個評量項目 1-4 的等級評分
+
+5. 優點（至少3點，需關聯到具體的 KSA 代碼）
+6. 需要改進的地方（至少2點，需關聯到具體的 KSA 代碼）
+7. 下一步建議（至少2點）
 
 請用 JSON 格式回應：
 {
@@ -193,6 +213,22 @@ AI：${conv.ai}
       ...(scenario?.ksaMapping?.attitudes || [])
     ];
     
+    // Also include assessment focus items if not already included
+    if (assessmentFocus.primary) {
+      assessmentFocus.primary.forEach(ksa => {
+        if (!allKsaItems.includes(ksa)) {
+          allKsaItems.push(ksa);
+        }
+      });
+    }
+    if (assessmentFocus.secondary) {
+      assessmentFocus.secondary.forEach(ksa => {
+        if (!allKsaItems.includes(ksa)) {
+          allKsaItems.push(ksa);
+        }
+      });
+    }
+    
     allKsaItems.forEach(ksa => {
       const score = evaluation.individualKsaScores?.[ksa] || 
                    evaluation.ksaScores?.[
@@ -200,8 +236,12 @@ AI：${conv.ai}
                      ksa.charAt(0) === 'S' ? 'skills' : 'attitudes'
                    ] || 75;
       
+      // Give higher weight to primary assessment focus items
+      const isPrimary = assessmentFocus.primary?.includes(ksa);
+      const adjustedScore = isPrimary ? Math.min(100, score + 5) : score;
+      
       ksaAchievement[ksa] = {
-        score,
+        score: adjustedScore,
         evidence: stageLogs.filter(log => log.actionType === 'write')
       };
     });

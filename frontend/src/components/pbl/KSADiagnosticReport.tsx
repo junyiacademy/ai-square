@@ -92,8 +92,9 @@ export default function KSADiagnosticReport({ stageResults, ksaMapping }: KSADia
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-      <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-100 dark:border-gray-700">
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center">
+        <span className="w-2 h-8 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full mr-3"></span>
         {t('complete.ksaDiagnosticReport')}
       </h2>
 

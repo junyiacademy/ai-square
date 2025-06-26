@@ -110,7 +110,21 @@ export default function KSARadarChart({ ksaScores, title }: KSARadarChartProps) 
           padding: 20,
           usePointStyle: true,
           font: {
-            size: 12
+            size: 13
+          },
+          generateLabels: (chart) => {
+            const data = chart.data;
+            if (data.datasets) {
+              return data.datasets.map((dataset, i) => ({
+                text: dataset.label || '',
+                fillStyle: dataset.borderColor as string,
+                strokeStyle: dataset.borderColor as string,
+                pointStyle: 'circle',
+                hidden: false,
+                index: i
+              }));
+            }
+            return [];
           }
         }
       },
@@ -130,62 +144,79 @@ export default function KSARadarChart({ ksaScores, title }: KSARadarChartProps) 
           stepSize: 20,
           callback: (value) => `${value}%`,
           font: {
-            size: 10
-          }
+            size: 11
+          },
+          backdropColor: 'transparent',
+          color: 'rgba(107, 114, 128, 0.7)'
         },
         grid: {
-          color: 'rgba(0, 0, 0, 0.1)'
+          color: 'rgba(107, 114, 128, 0.2)',
+          circular: true
         },
         pointLabels: {
           font: {
-            size: 11,
-            weight: 'bold'
+            size: 12,
+            weight: '600'
           },
+          padding: 10,
+          color: 'rgb(55, 65, 81)',
           callback: (label) => {
             // Show KSA code with description if available
             return label;
           }
+        },
+        angleLines: {
+          color: 'rgba(107, 114, 128, 0.2)'
         }
       }
     }
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-100 dark:border-gray-700">
       {title && (
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
           {title}
         </h3>
       )}
-      <div className="h-80">
+      <div className="h-80 flex items-center justify-center">
         <Radar data={data} options={options} />
       </div>
       
       {/* Summary Stats */}
       <div className="grid grid-cols-3 gap-4 mt-6">
-        <div className="text-center">
-          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-            {Math.round(avgScore(scoresByCategory.knowledge))}%
+        <div className="relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 rounded-xl" />
+          <div className="relative p-4 text-center">
+            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+              {Math.round(avgScore(scoresByCategory.knowledge))}%
+            </div>
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-1">
+              {t('complete.knowledge')}
+            </p>
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            {t('complete.knowledge')}
-          </p>
         </div>
-        <div className="text-center">
-          <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-            {Math.round(avgScore(scoresByCategory.skills))}%
+        <div className="relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl" />
+          <div className="relative p-4 text-center">
+            <div className="text-3xl font-bold text-green-600 dark:text-green-400">
+              {Math.round(avgScore(scoresByCategory.skills))}%
+            </div>
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-1">
+              {t('complete.skills')}
+            </p>
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            {t('complete.skills')}
-          </p>
         </div>
-        <div className="text-center">
-          <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-            {Math.round(avgScore(scoresByCategory.attitudes))}%
+        <div className="relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl" />
+          <div className="relative p-4 text-center">
+            <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+              {Math.round(avgScore(scoresByCategory.attitudes))}%
+            </div>
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-1">
+              {t('complete.attitudes')}
+            </p>
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            {t('complete.attitudes')}
-          </p>
         </div>
       </div>
     </div>
