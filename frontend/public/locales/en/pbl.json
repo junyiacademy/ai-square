@@ -37,5 +37,31 @@
       "title": "Personalized Feedback",
       "description": "Receive tailored suggestions based on your performance"
     }
+  },
+  "details": {
+    "breadcrumb": {
+      "pbl": "PBL Learning"
+    },
+    "learningObjectives": "Learning Objectives",
+    "prerequisites": "Prerequisites",
+    "learningStages": "Learning Stages",
+    "modality": "Modality",
+    "duration": "Duration",
+    "minutes": "minutes",
+    "tasksInStage": "Tasks in this stage:",
+    "instructions": "Instructions:",
+    "expectedOutcome": "Expected Outcome:",
+    "startLearning": "Start Learning",
+    "startLearningJourney": "Start Learning Journey",
+    "backToScenarios": "Back to Scenarios",
+    "scenarioNotFound": "Scenario not found",
+    "backToPBL": "Back to PBL",
+    "modalities": {
+      "reading": "Reading",
+      "writing": "Writing",
+      "listening": "Listening",
+      "speaking": "Speaking",
+      "mixed": "Mixed"
+    }
   }
 }
