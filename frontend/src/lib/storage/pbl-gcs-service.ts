@@ -38,6 +38,36 @@ export interface PBLLogData {
   process_logs: ProcessLog[];
 }
 
+// Learning log interface for history API
+export interface LearningLog {
+  sessionId: string;
+  logId: string;
+  scenario: {
+    id: string;
+    title: string;
+    stages: any[];
+  };
+  metadata: {
+    startTime: string;
+    endTime?: string;
+    status: 'in_progress' | 'completed' | 'paused';
+    userId: string;
+    language: string;
+  };
+  progress: {
+    stageProgress: Array<{
+      stageId: string;
+      status: string;
+      completedAt?: string;
+      score?: number;
+    }>;
+  };
+  evaluations: Array<{
+    score: number;
+    feedback?: string;
+  }>;
+}
+
 export class PBLGCSService {
   private bucket = storage.bucket(BUCKET_NAME);
 
@@ -212,6 +242,44 @@ export class PBLGCSService {
       );
     } catch (error) {
       console.error('Error listing user sessions:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Get user learning logs for history page (transformed format)
+   */
+  async getUserLearningLogs(userId: string): Promise<LearningLog[]> {
+    try {
+      const sessions = await this.listUserSessions(userId);
+      
+      return sessions.map(session => ({
+        sessionId: session.session_id,
+        logId: session.session_id, // Use session_id as logId for consistency
+        scenario: {
+          id: session.scenario_id,
+          title: session.session_data.scenarioTitle || session.scenario_id,
+          stages: session.session_data.scenario?.stages || []
+        },
+        metadata: {
+          startTime: session.session_data.startedAt,
+          endTime: session.session_data.lastActiveAt,
+          status: session.status,
+          userId: session.user_id,
+          language: session.language
+        },
+        progress: {
+          stageProgress: session.session_data.stageResults?.map(result => ({
+            stageId: result.stageId,
+            status: result.status,
+            completedAt: result.completedAt,
+            score: result.score
+          })) || []
+        },
+        evaluations: session.session_data.evaluations || []
+      }));
+    } catch (error) {
+      console.error('Error getting user learning logs:', error);
       return [];
     }
   }

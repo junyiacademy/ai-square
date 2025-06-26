@@ -63,5 +63,48 @@
       "speaking": "Speaking",
       "mixed": "Mixed"
     }
+  },
+  "learn": {
+    "errorLoading": "Error loading scenario",
+    "backToPBL": "Back to PBL",
+    "progress": "Progress",
+    "currentTask": "Current Task",
+    "instructions": "Instructions",
+    "expectedOutcome": "Expected Outcome",
+    "startConversation": "Start your conversation with the AI assistant",
+    "inputPlaceholder": "Type your message here...",
+    "send": "Send",
+    "saving": "Saving...",
+    "saveProgress": "Save Progress",
+    "nextTask": "Next Task",
+    "completeScenario": "Complete Scenario",
+    "aiResponse": {
+      "placeholder": "Thank you for your input. Let me help you with this task...",
+      "error": "Sorry, I'm having trouble connecting. Please try again."
+    }
+  },
+  "history": {
+    "title": "Learning Journey",
+    "description": "View your PBL learning records and progress",
+    "filter": {
+      "all": "All",
+      "completed": "Completed",
+      "inProgress": "In Progress"
+    },
+    "status": {
+      "completed": "Completed",
+      "in_progress": "In Progress",
+      "paused": "Paused"
+    },
+    "started": "Started",
+    "completed": "Completed",
+    "duration": "Duration",
+    "progress": "Progress",
+    "stages": "stages",
+    "score": "Score",
+    "continue": "Continue",
+    "review": "Review",
+    "noSessions": "No learning sessions started yet",
+    "startLearning": "Start Learning"
   }
 }
