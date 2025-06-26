@@ -1,0 +1,47 @@
+ai_collaboration:
+  complexity_breakdown:
+    medium_count: 1
+  cost_per_feature: 0.025
+  estimated_cost: 0.15000000000000002
+  total_interactions: 1
+created_at: '2025-06-26T12:59:48.533107'
+efficiency_metrics:
+  ai_efficiency_ratio: 0.0
+  ai_time_minutes: 0
+  duration_minutes: 0
+  files_changed: 2
+  human_time_minutes: 0
+  test_coverage:
+    branches: 0
+    functions: 0
+    lines: 0
+    statements: 0
+learnings:
+  avoid_in_future: []
+  reusable_patterns: []
+  what_could_improve: []
+  what_worked_well:
+  - 成本效益高（每功能 < $0.10）
+product_insights:
+  acceptance_criteria:
+  - PBL 導航入口在頂部選單成功整合
+  - 完成 AI 輔助求職情境的四個階段實作
+  - 使用 Google Gemini API 實現 AI 對話功能
+  - GCS 儲存所有 session 資料和互動日誌
+  - 支援暫停/繼續功能，保留學習進度
+  - 完成階段後生成包含 KSA 評估的綜合報告
+  feature: PBL 情境式學習系統 Frontend-Only MVP
+  purpose: 實作第一個完整的 PBL 情境學習體驗，驗證 Frontend-Only 架構可行性
+  user_value: 實作第一個完整的 PBL 情境學習體驗，驗證 Frontend-Only 架構可行性
+reusable_assets:
+  code_snippets: []
+  configuration: []
+  test_patterns: []
+technical_insights:
+  challenges: []
+  decisions: []
+  patterns_used: []
+  solutions: []
+ticket_id: 20250626_125813-pbl-frontend-mvp
+ticket_name: pbl-frontend-mvp
+type: feature
