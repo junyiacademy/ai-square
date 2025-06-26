@@ -4,9 +4,20 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 
+interface Scenario {
+  id: string;
+  title: string;
+  description: string;
+  difficulty: string;
+  estimatedDuration: number;
+  targetDomain: string[];
+  isAvailable: boolean;
+  thumbnailEmoji?: string;
+}
+
 export default function PBLPage() {
   const { t, i18n } = useTranslation(['pbl']);
-  const [scenarios, setScenarios] = useState<any[]>([]);
+  const [scenarios, setScenarios] = useState<Scenario[]>([]);
   const [loading, setLoading] = useState(true);
 
   const getDifficultyStars = (difficulty: string) => {

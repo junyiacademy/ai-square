@@ -1,5 +1,5 @@
 import { Storage } from '@google-cloud/storage';
-import { SessionData, SessionMetadata, ProgressData } from '@/types/pbl';
+import { SessionData, SessionMetadata, ProgressData, ProcessLog, StageResult } from '@/types/pbl';
 
 // Initialize GCS client
 const storageConfig: {
@@ -31,11 +31,11 @@ export interface PBLLogData {
   timestamp: string;
   duration_seconds: number;
   language: string;
-  status: 'in_progress' | 'completed' | 'paused';
+  status: 'in_progress' | 'completed' | 'paused' | 'not_started';
   session_data: SessionData;
   metadata: SessionMetadata;
   progress: ProgressData;
-  process_logs: any[];
+  process_logs: ProcessLog[];
 }
 
 export class PBLGCSService {
@@ -87,7 +87,7 @@ export class PBLGCSService {
       stage_results: sessionData.stageResults.reduce((acc, result) => {
         acc[result.stageId] = result;
         return acc;
-      }, {} as { [stageId: string]: any }),
+      }, {} as { [stageId: string]: StageResult }),
       total_time_spent: sessionData.progress.timeSpent,
       progress_percentage: sessionData.progress.percentage
     };
@@ -236,7 +236,7 @@ export class PBLGCSService {
   /**
    * Append process log to session
    */
-  async appendProcessLog(sessionId: string, log: any): Promise<void> {
+  async appendProcessLog(sessionId: string, log: ProcessLog): Promise<void> {
     const result = await this.getSession(sessionId);
     if (!result) {
       console.error(`Session ${sessionId} not found`);

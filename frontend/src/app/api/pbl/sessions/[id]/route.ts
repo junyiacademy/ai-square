@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { SessionData, ProcessLog } from '@/types/pbl';
+import { SessionData } from '@/types/pbl';
 import { pblGCS } from '@/lib/storage/pbl-gcs-service';
 
 // Shared in-memory storage (fallback when GCS is not available)
@@ -7,10 +7,10 @@ const sessions = new Map<string, SessionData>();
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const sessionId = params.id;
+    const { id: sessionId } = await params;
     
     // Try to fetch from GCS first
     let session: SessionData | null = null;
@@ -62,10 +62,10 @@ export async function GET(
 // Update session progress
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const sessionId = params.id;
+    const { id: sessionId } = await params;
     const updates = await request.json();
 
     // TODO: In step 4, fetch from GCS instead
@@ -147,10 +147,10 @@ export async function PATCH(
 // Complete or pause session
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const sessionId = params.id;
+    const { id: sessionId } = await params;
     const { action } = await request.json();
 
     if (!['complete', 'pause'].includes(action)) {

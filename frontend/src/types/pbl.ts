@@ -120,7 +120,7 @@ export interface Evidence {
     timestamp: Date;
     stageId: string;
     taskId: string;
-    [key: string]: any;
+    [key: string]: Date | string | number | boolean;
   };
   analysis?: {
     keywords: string[];
@@ -229,7 +229,7 @@ export interface ScenarioListItem {
 // WebSocket Message Types
 export interface WSMessage {
   type: 'user_input' | 'ai_response' | 'evaluation' | 'progress_update';
-  payload: any;
+  payload: Record<string, unknown>;
   timestamp: string;
 }
 
