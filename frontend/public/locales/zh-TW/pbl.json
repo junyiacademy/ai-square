@@ -37,5 +37,31 @@
       "title": "個人化回饋",
       "description": "根據您的表現獲得量身定制的建議"
     }
+  },
+  "details": {
+    "breadcrumb": {
+      "pbl": "PBL 學習"
+    },
+    "learningObjectives": "學習目標",
+    "prerequisites": "先備知識",
+    "learningStages": "學習階段",
+    "modality": "模式",
+    "duration": "時長",
+    "minutes": "分鐘",
+    "tasksInStage": "此階段的任務：",
+    "instructions": "指示：",
+    "expectedOutcome": "預期成果：",
+    "startLearning": "開始學習",
+    "startLearningJourney": "開始學習之旅",
+    "backToScenarios": "返回情境列表",
+    "scenarioNotFound": "找不到情境",
+    "backToPBL": "返回 PBL",
+    "modalities": {
+      "reading": "閱讀",
+      "writing": "寫作",
+      "listening": "聆聽",
+      "speaking": "口說",
+      "mixed": "綜合"
+    }
   }
 }
