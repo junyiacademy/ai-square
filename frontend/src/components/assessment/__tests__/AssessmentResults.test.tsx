@@ -20,11 +20,76 @@ jest.mock('recharts', () => ({
   Legend: () => <div data-testid="legend" />,
 }));
 
+// Mock d3
+jest.mock('d3', () => ({
+  select: jest.fn(() => ({
+    selectAll: jest.fn(() => ({ remove: jest.fn() })),
+    append: jest.fn(() => ({ attr: jest.fn() })),
+  })),
+  forceSimulation: jest.fn(() => ({
+    force: jest.fn().mockReturnThis(),
+    nodes: jest.fn().mockReturnThis(),
+    on: jest.fn().mockReturnThis(),
+  })),
+  forceLink: jest.fn(() => ({ id: jest.fn() })),
+  forceManyBody: jest.fn(),
+  forceCenter: jest.fn(),
+  drag: jest.fn(() => ({
+    on: jest.fn().mockReturnThis(),
+  })),
+  scaleOrdinal: jest.fn(() => jest.fn()),
+  schemeCategory10: [],
+}));
+
+// Mock CompetencyKnowledgeGraph
+jest.mock('../CompetencyKnowledgeGraph', () => ({
+  __esModule: true,
+  default: () => <div data-testid="competency-knowledge-graph">Knowledge Graph</div>,
+}));
+
 const mockT = jest.fn((key, options) => {
+  const translations: Record<string, string> = {
+    'results.title': 'Assessment Results',
+    'results.subtitle': 'Your comprehensive AI literacy assessment results',
+    'results.overview': 'Overview',
+    'results.domainBreakdown': 'Domain Breakdown',
+    'results.recommendations': 'Recommendations',
+    'results.knowledgeGraph': 'Knowledge Graph',
+    'results.overallScore': 'Overall Score',
+    'results.level': 'Level',
+    'results.timeSpent': 'Time Spent',
+    'results.questionsAnswered': 'Questions Answered',
+    'results.retake': 'Retake Assessment',
+    'results.print': 'Print Results',
+    'results.correctAnswers': 'Correct Answers',
+    'results.completedAt': 'Completed At',
+    'results.summary': 'Summary',
+    'results.yourScore': 'Your Score',
+    'level.beginner': 'Beginner',
+    'level.intermediate': 'Intermediate',
+    'level.advanced': 'Advanced',
+    'level.expert': 'Expert',
+    'results.skillRadar': 'Skill Radar',
+    'results.tabs.domains': 'Domains',
+    'results.tabs.recommendations': 'Recommendations',
+    'results.tabs.overview': 'Overview',
+    'results.tabs.ksa': 'KSA Analysis',
+    'results.tabs.knowledge-graph': 'Knowledge Graph',
+    'results.personalizedRecommendations': 'Personalized Recommendations',
+    'results.nextStep1': 'Take advanced AI courses',
+    'results.retakeAssessment': 'Retake Assessment',
+    'results.downloadReport': 'Download Report',
+    'domains.engaging_with_ai': 'Engaging with AI',
+    'domains.creating_with_ai': 'Creating with AI',
+    'domains.managing_with_ai': 'Managing with AI',
+    'domains.designing_with_ai': 'Designing with AI',
+  };
+  
   if (key === 'results.summaryText') {
     return `You achieved ${options?.level} level with ${options?.score}% overall score, answering ${options?.correct} out of ${options?.total} questions correctly.`;
   }
-  return key;
+  
+  return translations[key] || key;
 });
 
 const mockUseTranslation = useTranslation as jest.MockedFunction<typeof useTranslation>;
@@ -91,9 +156,9 @@ describe('AssessmentResults', () => {
       />
     );
 
-    expect(screen.getByText('results.title')).toBeInTheDocument();
+    expect(screen.getByText('Assessment Results')).toBeInTheDocument();
     expect(screen.getByText('85%')).toBeInTheDocument();
-    expect(screen.getByText('level.expert')).toBeInTheDocument();
+    expect(screen.getByText('Expert')).toBeInTheDocument();
     expect(screen.getByText('10/12')).toBeInTheDocument();
     expect(screen.getByText('12:00')).toBeInTheDocument();
   });
@@ -121,15 +186,15 @@ describe('AssessmentResults', () => {
     );
 
     // Check initial tab (overview)
-    expect(screen.getByText('results.skillRadar')).toBeInTheDocument();
+    expect(screen.getByText('Skill Radar')).toBeInTheDocument();
 
     // Switch to domains tab
-    fireEvent.click(screen.getByText('results.tabs.domains'));
-    expect(screen.getByText('results.domainBreakdown')).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Domains'));
+    expect(screen.getByText('Domain Breakdown')).toBeInTheDocument();
 
     // Switch to recommendations tab
-    fireEvent.click(screen.getByText('results.tabs.recommendations'));
-    expect(screen.getByText('results.personalizedRecommendations')).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Recommendations'));
+    expect(screen.getByText('Personalized Recommendations')).toBeInTheDocument();
   });
 
   it('displays domain breakdown correctly', () => {
@@ -142,7 +207,7 @@ describe('AssessmentResults', () => {
     );
 
     // Switch to domains tab
-    fireEvent.click(screen.getByText('results.tabs.domains'));
+    fireEvent.click(screen.getByText('Domains'));
 
     expect(screen.getByText('Engaging with AI')).toBeInTheDocument();
     expect(screen.getByText('90%')).toBeInTheDocument();
@@ -160,11 +225,11 @@ describe('AssessmentResults', () => {
     );
 
     // Switch to recommendations tab
-    fireEvent.click(screen.getByText('results.tabs.recommendations'));
+    fireEvent.click(screen.getByText('Recommendations'));
 
     expect(screen.getByText(/Focus on improving Creating with AI/)).toBeInTheDocument();
     expect(screen.getByText(/Focus on improving Managing with AI/)).toBeInTheDocument();
-    expect(screen.getByText('• results.nextStep1')).toBeInTheDocument();
+    expect(screen.getByText('• Take advanced AI courses')).toBeInTheDocument();
   });
 
   it('calls onRetake when retake button is clicked', () => {
@@ -176,7 +241,7 @@ describe('AssessmentResults', () => {
       />
     );
 
-    fireEvent.click(screen.getByText('results.retakeAssessment'));
+    fireEvent.click(screen.getByText('Retake Assessment'));
     expect(mockOnRetake).toHaveBeenCalledTimes(1);
   });
 
@@ -213,7 +278,7 @@ describe('AssessmentResults', () => {
     );
 
     expect(screen.getByText('45%')).toHaveClass('text-red-600');
-    expect(screen.getByText('level.beginner')).toBeInTheDocument();
+    expect(screen.getByText('Beginner')).toBeInTheDocument();
   });
 
   it('displays summary text correctly', () => {
@@ -225,7 +290,7 @@ describe('AssessmentResults', () => {
       />
     );
 
-    expect(screen.getByText(/You achieved expert level with 85% overall score/)).toBeInTheDocument();
+    expect(screen.getByText(/You achieved Expert level with 85% overall score/)).toBeInTheDocument();
   });
 
   it('handles print functionality', () => {
@@ -240,7 +305,7 @@ describe('AssessmentResults', () => {
       />
     );
 
-    fireEvent.click(screen.getByText('results.downloadReport'));
+    fireEvent.click(screen.getByText('Download Report'));
     expect(window.print).toHaveBeenCalledTimes(1);
 
     window.print = originalPrint;

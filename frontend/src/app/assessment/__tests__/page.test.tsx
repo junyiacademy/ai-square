@@ -9,7 +9,7 @@ jest.mock('react-i18next', () => ({
 }));
 
 // Mock the assessment components
-jest.mock('../../components/assessment/AssessmentQuiz', () => {
+jest.mock('../../../components/assessment/AssessmentQuiz', () => {
   return function MockAssessmentQuiz({ onComplete, questions }: any) {
     return (
       <div data-testid="assessment-quiz">
@@ -25,7 +25,7 @@ jest.mock('../../components/assessment/AssessmentQuiz', () => {
   };
 });
 
-jest.mock('../../components/assessment/AssessmentResults', () => {
+jest.mock('../../../components/assessment/AssessmentResults', () => {
   return function MockAssessmentResults({ result, onRetake }: any) {
     return (
       <div data-testid="assessment-results">
@@ -39,7 +39,31 @@ jest.mock('../../components/assessment/AssessmentResults', () => {
 // Mock fetch
 global.fetch = jest.fn();
 
-const mockT = jest.fn((key) => key);
+const mockT = jest.fn((key) => {
+  const translations: Record<string, string> = {
+    'title': 'AI Literacy Assessment',
+    'description': 'Evaluate your AI literacy across four key domains',
+    'startAssessment': 'Start Assessment',
+    'loading': 'Loading assessment...',
+    'error': 'Error loading assessment',
+    'retry': 'Try Again',
+    'assessment.title': 'AI Literacy Assessment',
+    'assessment.loading': 'Loading assessment...',
+    'assessment.intro.title': 'AI Literacy Assessment',
+    'assessment.intro.description': 'This assessment will evaluate your understanding across four key AI literacy domains.',
+    'assessment.intro.domains': 'Assessment Domains',
+    'assessment.intro.timeLimit': 'Time Limit',
+    'assessment.intro.questions': 'Questions',
+    'assessment.intro.startButton': 'Start Assessment',
+    'assessment.error.title': 'Error Loading Assessment',
+    'assessment.error.retry': 'Try Again',
+    'domains.engaging_with_ai': 'Engaging with AI',
+    'domains.creating_with_ai': 'Creating with AI',
+    'domains.managing_with_ai': 'Managing with AI',
+    'domains.designing_with_ai': 'Designing with AI'
+  };
+  return translations[key] || key;
+});
 const mockUseTranslation = useTranslation as jest.MockedFunction<typeof useTranslation>;
 
 describe('AssessmentPage', () => {
@@ -50,6 +74,7 @@ describe('AssessmentPage', () => {
     } as any);
 
     (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
       json: () => Promise.resolve({
         assessment_config: {
           total_questions: 12,
@@ -111,16 +136,16 @@ describe('AssessmentPage', () => {
 
   it('renders loading state initially', () => {
     render(<AssessmentPage />);
-    expect(screen.getByText('loading')).toBeInTheDocument();
+    expect(screen.getByText('Loading assessment...')).toBeInTheDocument();
   });
 
   it('renders intro screen after loading', async () => {
     render(<AssessmentPage />);
     
     await waitFor(() => {
-      expect(screen.getByText('title')).toBeInTheDocument();
-      expect(screen.getByText('description')).toBeInTheDocument();
-      expect(screen.getByText('startAssessment')).toBeInTheDocument();
+      expect(screen.getByText('AI Literacy Assessment')).toBeInTheDocument();
+      expect(screen.getByText('Evaluate your AI literacy across four key domains')).toBeInTheDocument();
+      expect(screen.getByText('Start Assessment')).toBeInTheDocument();
     });
   });
 
@@ -128,10 +153,10 @@ describe('AssessmentPage', () => {
     render(<AssessmentPage />);
     
     await waitFor(() => {
-      expect(screen.getByText('startAssessment')).toBeInTheDocument();
+      expect(screen.getByText('Start Assessment')).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByText('startAssessment'));
+    fireEvent.click(screen.getByText('Start Assessment'));
     
     await waitFor(() => {
       expect(screen.getByTestId('assessment-quiz')).toBeInTheDocument();
@@ -142,10 +167,10 @@ describe('AssessmentPage', () => {
     render(<AssessmentPage />);
     
     await waitFor(() => {
-      expect(screen.getByText('startAssessment')).toBeInTheDocument();
+      expect(screen.getByText('Start Assessment')).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByText('startAssessment'));
+    fireEvent.click(screen.getByText('Start Assessment'));
     
     await waitFor(() => {
       expect(screen.getByTestId('assessment-quiz')).toBeInTheDocument();
@@ -164,10 +189,10 @@ describe('AssessmentPage', () => {
     
     // Complete the assessment
     await waitFor(() => {
-      expect(screen.getByText('startAssessment')).toBeInTheDocument();
+      expect(screen.getByText('Start Assessment')).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByText('startAssessment'));
+    fireEvent.click(screen.getByText('Start Assessment'));
     
     await waitFor(() => {
       expect(screen.getByTestId('assessment-quiz')).toBeInTheDocument();
@@ -183,8 +208,8 @@ describe('AssessmentPage', () => {
     fireEvent.click(screen.getByText('Retake'));
     
     await waitFor(() => {
-      expect(screen.getByText('title')).toBeInTheDocument();
-      expect(screen.getByText('startAssessment')).toBeInTheDocument();
+      expect(screen.getByText('AI Literacy Assessment')).toBeInTheDocument();
+      expect(screen.getByText('Start Assessment')).toBeInTheDocument();
     });
   });
 
@@ -202,10 +227,10 @@ describe('AssessmentPage', () => {
     render(<AssessmentPage />);
     
     await waitFor(() => {
-      expect(screen.getByText('startAssessment')).toBeInTheDocument();
+      expect(screen.getByText('Start Assessment')).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByText('startAssessment'));
+    fireEvent.click(screen.getByText('Start Assessment'));
     
     await waitFor(() => {
       expect(screen.getByTestId('assessment-quiz')).toBeInTheDocument();

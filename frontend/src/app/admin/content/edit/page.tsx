@@ -7,7 +7,24 @@ import yaml from 'js-yaml';
 import Link from 'next/link';
 
 // Dynamic import Monaco to avoid SSR issues
-const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false });
+const MonacoEditor = dynamic(
+  () => import('@monaco-editor/react').then(mod => mod.default),
+  { ssr: false }
+) as React.ComponentType<{
+  height?: string;
+  defaultLanguage?: string;
+  value?: string;
+  onChange?: (value: string | undefined) => void;
+  theme?: string;
+  options?: {
+    minimap?: { enabled: boolean };
+    fontSize?: number;
+    lineNumbers?: string;
+    scrollBeyondLastLine?: boolean;
+    wordWrap?: string;
+    tabSize?: number;
+  };
+}>;
 
 export default function ContentEditor() {
   const searchParams = useSearchParams();
@@ -116,7 +133,7 @@ export default function ContentEditor() {
       } else {
         setError('Failed to delete override');
       }
-    } catch (err) {
+    } catch {
       setError('Failed to delete override');
     }
   };

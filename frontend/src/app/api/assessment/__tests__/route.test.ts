@@ -1,10 +1,10 @@
 import { GET } from '../route';
-import { readFileSync } from 'fs';
+import { readFile } from 'fs/promises';
 import yaml from 'js-yaml';
 
-// Mock filesystem
-jest.mock('fs', () => ({
-  readFileSync: jest.fn(),
+// Mock fs/promises
+jest.mock('fs/promises', () => ({
+  readFile: jest.fn(),
 }));
 
 // Mock yaml
@@ -12,12 +12,13 @@ jest.mock('js-yaml', () => ({
   load: jest.fn(),
 }));
 
-// Mock path
+// Mock path to handle different OS paths
 jest.mock('path', () => ({
-  join: jest.fn(() => '/mocked/path/ai_literacy_questions.yaml'),
+  join: jest.fn((...args) => args.join('/').replace(/\/\//g, '/')),
+  basename: jest.fn((path) => path.split('/').pop()),
 }));
 
-const mockReadFileSync = readFileSync as jest.MockedFunction<typeof readFileSync>;
+const mockReadFile = readFile as jest.MockedFunction<typeof readFile>;
 const mockYamlLoad = yaml.load as jest.MockedFunction<typeof yaml.load>;
 
 const mockAssessmentData = {
@@ -87,7 +88,7 @@ const mockAssessmentData = {
 describe('/api/assessment', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockReadFileSync.mockReturnValue('mock yaml content');
+    mockReadFile.mockResolvedValue(Buffer.from('mock yaml content'));
     mockYamlLoad.mockReturnValue(mockAssessmentData);
   });
 
@@ -135,9 +136,7 @@ describe('/api/assessment', () => {
   });
 
   it('handles file read errors', async () => {
-    mockReadFileSync.mockImplementation(() => {
-      throw new Error('File not found');
-    });
+    mockReadFile.mockRejectedValue(new Error('File not found'));
 
     const request = new Request('http://localhost/api/assessment?lang=en');
     const response = await GET(request as any);

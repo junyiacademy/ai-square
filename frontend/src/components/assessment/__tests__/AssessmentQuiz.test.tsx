@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { useTranslation } from 'react-i18next';
 import AssessmentQuiz from '../AssessmentQuiz';
 import { AssessmentQuestion, AssessmentDomain } from '../../../types/assessment';
@@ -9,7 +9,30 @@ jest.mock('react-i18next', () => ({
   useTranslation: jest.fn(),
 }));
 
-const mockT = jest.fn((key) => key);
+const mockT = jest.fn((key) => {
+  const translations: Record<string, string> = {
+    'quiz.title': 'AI Literacy Assessment',
+    'quiz.question': 'Question',
+    'quiz.timeLeft': 'Time Left',
+    'quiz.selectAnswer': 'Please select an answer',
+    'quiz.selectAnswerToSeeExplanation': 'Select an answer to see explanation',
+    'quiz.submit': 'Submit',
+    'quiz.next': 'Next',
+    'quiz.complete': 'Complete Assessment',
+    'quiz.finish': 'Complete Assessment',
+    'domains.engaging_with_ai': 'Engaging with AI',
+    'domains.creating_with_ai': 'Creating with AI',
+    'domains.managing_with_ai': 'Managing with AI',
+    'domains.designing_with_ai': 'Designing with AI',
+    'difficulty.basic': 'Basic',
+    'difficulty.intermediate': 'Intermediate',
+    'difficulty.advanced': 'Advanced',
+    'quiz.correct': 'Correct!',
+    'quiz.incorrect': 'Incorrect',
+    'quiz.tryAgain': 'Try Again'
+  };
+  return translations[key] || key;
+});
 const mockUseTranslation = useTranslation as jest.MockedFunction<typeof useTranslation>;
 
 const mockQuestions: AssessmentQuestion[] = [
@@ -99,10 +122,10 @@ describe('AssessmentQuiz', () => {
       />
     );
 
-    expect(screen.getByText('quiz.title')).toBeInTheDocument();
+    expect(screen.getByText('AI Literacy Assessment')).toBeInTheDocument();
     expect(screen.getByText('What is the most effective way to get better results from an AI chatbot?')).toBeInTheDocument();
-    expect(screen.getByText('A. Ask very general questions')).toBeInTheDocument();
-    expect(screen.getByText('B. Provide clear, specific prompts with context')).toBeInTheDocument();
+    expect(screen.getByText('Ask very general questions')).toBeInTheDocument();
+    expect(screen.getByText('Provide clear, specific prompts with context')).toBeInTheDocument();
   });
 
   it('displays progress correctly', () => {
@@ -115,7 +138,7 @@ describe('AssessmentQuiz', () => {
       />
     );
 
-    expect(screen.getByText('1 / 2')).toBeInTheDocument();
+    expect(screen.getByText(/1 \/ 2/)).toBeInTheDocument();
   });
 
   it('allows selecting answers', () => {
@@ -128,7 +151,7 @@ describe('AssessmentQuiz', () => {
       />
     );
 
-    const optionB = screen.getByText('B. Provide clear, specific prompts with context');
+    const optionB = screen.getByText('Provide clear, specific prompts with context');
     fireEvent.click(optionB);
 
     expect(optionB.closest('button')).toHaveClass('border-indigo-500');
@@ -145,12 +168,13 @@ describe('AssessmentQuiz', () => {
     );
 
     // Select answer for first question
-    fireEvent.click(screen.getByText('B. Provide clear, specific prompts with context'));
-    fireEvent.click(screen.getByText('quiz.next'));
+    fireEvent.click(screen.getByText('Provide clear, specific prompts with context'));
+    fireEvent.click(screen.getByText('Submit'));
+    fireEvent.click(screen.getByText('Next'));
 
     // Should show second question
     expect(screen.getByText('Which approach is most effective when using AI for creative writing?')).toBeInTheDocument();
-    expect(screen.getByText('2 / 2')).toBeInTheDocument();
+    expect(screen.getByText(/2 \/ 2/)).toBeInTheDocument();
   });
 
   it('completes quiz on last question', () => {
@@ -164,12 +188,14 @@ describe('AssessmentQuiz', () => {
     );
 
     // Answer first question
-    fireEvent.click(screen.getByText('B. Provide clear, specific prompts with context'));
-    fireEvent.click(screen.getByText('quiz.next'));
+    fireEvent.click(screen.getByText('Provide clear, specific prompts with context'));
+    fireEvent.click(screen.getByText('Submit'));
+    fireEvent.click(screen.getByText('Next'));
 
     // Answer second question
-    fireEvent.click(screen.getByText('B. Use AI as a collaborative partner for brainstorming and refinement'));
-    fireEvent.click(screen.getByText('quiz.finish'));
+    fireEvent.click(screen.getByText('Use AI as a collaborative partner for brainstorming and refinement'));
+    fireEvent.click(screen.getByText('Submit'));
+    fireEvent.click(screen.getByText('Complete Assessment'));
 
     expect(mockOnComplete).toHaveBeenCalledWith([
       {
@@ -197,7 +223,7 @@ describe('AssessmentQuiz', () => {
       />
     );
 
-    const nextButton = screen.getByText('quiz.next');
+    const nextButton = screen.getByText('Submit');
     expect(nextButton).toBeDisabled();
   });
 
@@ -211,9 +237,9 @@ describe('AssessmentQuiz', () => {
       />
     );
 
-    fireEvent.click(screen.getByText('A. Ask very general questions'));
+    fireEvent.click(screen.getByText('Ask very general questions'));
     
-    const nextButton = screen.getByText('quiz.next');
+    const nextButton = screen.getByText('Submit');
     expect(nextButton).not.toBeDisabled();
   });
 
@@ -227,7 +253,7 @@ describe('AssessmentQuiz', () => {
       />
     );
 
-    expect(screen.getByText('1:00')).toBeInTheDocument();
+    expect(screen.getByText(/1:00/)).toBeInTheDocument();
   });
 
   it('auto-completes when timer reaches zero', async () => {
@@ -242,8 +268,10 @@ describe('AssessmentQuiz', () => {
       />
     );
 
-    // Fast-forward time
-    jest.advanceTimersByTime(2000);
+    // Fast-forward time within act
+    await act(async () => {
+      jest.advanceTimersByTime(2000);
+    });
 
     // Wait for auto-completion
     await waitFor(() => {
@@ -264,6 +292,6 @@ describe('AssessmentQuiz', () => {
     );
 
     expect(screen.getByText('Engaging with AI')).toBeInTheDocument();
-    expect(screen.getByText('difficulty.basic')).toBeInTheDocument();
+    expect(screen.getByText('Basic')).toBeInTheDocument();
   });
 });
