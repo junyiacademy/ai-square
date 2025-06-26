@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pblGCS } from '@/lib/storage/pbl-gcs-service';
-import { StageResult } from '@/types/pbl';
+import { StageResult, ProcessLog } from '@/types/pbl';
 import { VertexAIService } from '@/lib/ai/vertex-ai-service';
 import { readFile } from 'fs/promises';
 import path from 'path';
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
     console.log('Loading scenario:', sessionData.scenarioId);
     
     // Map scenario ID to filename
-    const scenarioFiles = {
+    const scenarioFiles: Record<string, string> = {
       'ai-job-search': 'ai_job_search_scenario.yaml'
     };
     
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
     console.log('Scenario loaded successfully');
     
     // Get stage info by ID instead of index
-    const stage = scenario?.stages.find(s => s.id === stageId);
+    const stage = scenario?.stages.find((s: { id: string }) => s.id === stageId);
     if (!stage) {
       throw new Error(`Stage not found: ${stageId}`);
     }
@@ -253,7 +253,7 @@ IMPORTANT: Respond in the language specified by code: ${language || 'en'}. All f
     }
 
     // Build KSA achievement map with individual scores
-    const ksaAchievement = {};
+    const ksaAchievement: Record<string, { score: number; evidence: ProcessLog[] }> = {};
     
     // Include all KSA items from the scenario mapping
     const allKsaItems = [
@@ -264,21 +264,21 @@ IMPORTANT: Respond in the language specified by code: ${language || 'en'}. All f
     
     // Also include assessment focus items if not already included
     if (assessmentFocus.primary) {
-      assessmentFocus.primary.forEach(ksa => {
+      assessmentFocus.primary.forEach((ksa: string) => {
         if (!allKsaItems.includes(ksa)) {
           allKsaItems.push(ksa);
         }
       });
     }
     if (assessmentFocus.secondary) {
-      assessmentFocus.secondary.forEach(ksa => {
+      assessmentFocus.secondary.forEach((ksa: string) => {
         if (!allKsaItems.includes(ksa)) {
           allKsaItems.push(ksa);
         }
       });
     }
     
-    allKsaItems.forEach(ksa => {
+    allKsaItems.forEach((ksa: string) => {
       const score = evaluation.individualKsaScores?.[ksa] || 
                    evaluation.ksaScores?.[
                      ksa.charAt(0) === 'K' ? 'knowledge' : 
@@ -296,9 +296,9 @@ IMPORTANT: Respond in the language specified by code: ${language || 'en'}. All f
     });
     
     // Build rubrics score map
-    const rubricsScore = {};
+    const rubricsScore: Record<string, { level: number; justification: string }> = {};
     if (evaluation.rubricsScores) {
-      Object.entries(evaluation.rubricsScores).forEach(([criterion, level]) => {
+      Object.entries(evaluation.rubricsScores).forEach(([criterion, level]: [string, unknown]) => {
         rubricsScore[criterion] = {
           level: level as number,
           justification: `Based on performance analysis in ${stage?.name || 'this stage'}`

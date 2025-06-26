@@ -97,7 +97,7 @@ export async function GET(request: NextRequest) {
       
       // Count total interactions from process logs
       const totalInteractions = log.processLogs?.filter(
-        pl => pl.actionType === 'write' || pl.actionType === 'ai_response'
+        pl => pl.actionType === 'write' || pl.actionType === 'speak'
       ).length || 0;
       
       // Build stage details
@@ -107,12 +107,12 @@ export async function GET(request: NextRequest) {
         
         // Count interactions for this stage
         const stageInteractions = log.processLogs?.filter(
-          pl => pl.stageId === stage.id && (pl.actionType === 'write' || pl.actionType === 'ai_response')
+          pl => pl.stageId === stage.id && (pl.actionType === 'write' || pl.actionType === 'speak')
         ).length || 0;
         
         return {
-          stageId: stage.id,
-          stageTitle: stage.title || `Stage ${index + 1}`,
+          stageId: String(stage.id),
+          stageTitle: String(stage.title) || `Stage ${index + 1}`,
           status: stageProgress?.status || 'not_started',
           score: stageResult?.score,
           interactions: Math.floor(stageInteractions / 2) // Divide by 2 for user-AI pairs
