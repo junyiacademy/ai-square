@@ -22,13 +22,37 @@ DESC ?= ""
 # 預設顯示幫助
 .DEFAULT_GOAL := help
 
-# 顏色定義
-GREEN := \033[0;32m
-YELLOW := \033[0;33m
-BLUE := \033[0;34m
-RED := \033[0;31m
-CYAN := \033[0;36m
-NC := \033[0m
+# 智能顏色定義 - 自動檢測終端支援
+# 檢查是否支援顏色輸出
+SUPPORTS_COLOR := $(shell test -t 1 && tput colors >/dev/null 2>&1 && echo "yes" || echo "no")
+
+ifeq ($(SUPPORTS_COLOR),yes)
+    # 終端支援顏色
+    GREEN := \033[0;32m
+    YELLOW := \033[0;33m
+    BLUE := \033[0;34m
+    RED := \033[0;31m
+    CYAN := \033[0;36m
+    NC := \033[0m
+else
+    # 終端不支援顏色或輸出被重定向
+    GREEN :=
+    YELLOW :=
+    BLUE :=
+    RED :=
+    CYAN :=
+    NC :=
+endif
+
+# 允許通過環境變數強制禁用顏色
+ifeq ($(NO_COLOR),1)
+    GREEN :=
+    YELLOW :=
+    BLUE :=
+    RED :=
+    CYAN :=
+    NC :=
+endif
 
 #=============================================================================
 # 核心命令（覆蓋 80% 使用場景）
