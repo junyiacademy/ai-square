@@ -26,7 +26,7 @@ const GCS_PATHS = {
 
 export class ContentService {
   private storage?: Storage;
-  private bucket?: unknown;
+  private bucket?: ReturnType<Storage['bucket']>;
   private isProduction: boolean;
   
   constructor() {
@@ -105,15 +105,16 @@ export class ContentService {
     
     // 2. Add GCS-only items (drafts)
     if (this.bucket) {
-      const [files] = await (this.bucket as { getFiles: (options: { prefix: string }) => Promise<[unknown[]]> }).getFiles({ prefix: `${GCS_PATHS.drafts}${type}/` });
-      
-      for (const file of files) {
-        const fileName = path.basename((file as { name: string }).name);
-        const exists = items.find(item => item.file_path === `${type}/${fileName}`);
+      try {
+        const [files] = await this.bucket.getFiles({ prefix: `${GCS_PATHS.drafts}${type}/` });
         
-        if (!exists) {
-          const content = await this.readFromGCS((file as { name: string }).name);
-          const metadata = await this.getMetadata(type, fileName);
+        for (const file of files) {
+          const fileName = path.basename(file.name);
+          const exists = items.find(item => item.file_path === `${type}/${fileName}`);
+          
+          if (!exists) {
+            const content = await this.readFromGCS(file.name);
+            const metadata = await this.getMetadata(type, fileName);
           
           items.push({
             id: `${type}/${fileName}`,
@@ -128,9 +129,12 @@ export class ContentService {
             description: (content as { description?: string })?.description,
             content,
             file_path: `${type}/${fileName}`,
-            gcs_path: (file as { name: string }).name
+            gcs_path: file.name
           });
         }
+      }
+      } catch (error) {
+        console.error('Error listing GCS drafts:', error);
       }
     }
     
@@ -154,7 +158,7 @@ export class ContentService {
     
     // Save content
     const yamlContent = yaml.dump(content);
-    const file = (this.bucket as { file: (path: string) => { save: (content: string, options: unknown) => Promise<void> } }).file(filePath);
+    const file = this.bucket.file(filePath);
     await file.save(yamlContent, {
       metadata: {
         contentType: 'application/x-yaml',
@@ -192,13 +196,13 @@ export class ContentService {
     
     try {
       await this.bucket.file(overridePath).delete();
-    } catch (error) {
+    } catch {
       // Ignore if not exists
     }
     
     try {
       await this.bucket.file(draftPath).delete();
-    } catch (error) {
+    } catch {
       // Ignore if not exists
     }
   }
@@ -213,9 +217,9 @@ export class ContentService {
     const overridePath = `${GCS_PATHS.overrides}${type}/${fileName}`;
     
     // Copy draft to override
-    const draftFile = (this.bucket as { file: (path: string) => { download: () => Promise<[Buffer]> } }).file(draftPath);
+    const draftFile = this.bucket.file(draftPath);
     const [draftContent] = await draftFile.download();
-    const overrideFile = (this.bucket as { file: (path: string) => { save: (content: Buffer, options: unknown) => Promise<void> } }).file(overridePath);
+    const overrideFile = this.bucket.file(overridePath);
     await overrideFile.save(draftContent, {
       metadata: {
         contentType: 'application/x-yaml',
@@ -275,7 +279,7 @@ export class ContentService {
     if (!this.bucket) return null;
     
     try {
-      const file = (this.bucket as { file: (path: string) => { download: () => Promise<[Buffer]> } }).file(filePath);
+      const file = this.bucket.file(filePath);
       const [content] = await file.download();
       return yaml.load(content.toString());
     } catch {
@@ -289,7 +293,7 @@ export class ContentService {
     const metadataPath = `${GCS_PATHS.metadata}${type}/${fileName}.meta.json`;
     
     try {
-      const file = (this.bucket as { file: (path: string) => { download: () => Promise<[Buffer]> } }).file(metadataPath);
+      const file = this.bucket.file(metadataPath);
       const [content] = await file.download();
       return JSON.parse(content.toString()) as ContentMetadata;
     } catch {
@@ -301,7 +305,7 @@ export class ContentService {
     if (!this.bucket) return;
     
     const metadataPath = `${GCS_PATHS.metadata}${type}/${fileName}.meta.json`;
-    const file = (this.bucket as { file: (path: string) => { save: (content: string, options: unknown) => Promise<void> } }).file(metadataPath);
+    const file = this.bucket.file(metadataPath);
     await file.save(JSON.stringify(metadata, null, 2), {
       metadata: { contentType: 'application/json' }
     });
@@ -329,7 +333,7 @@ export class ContentService {
     };
     
     const historyPath = `${GCS_PATHS.history}${type}/${fileName}/${version}.json`;
-    const file = (this.bucket as { file: (path: string) => { save: (content: string, options: unknown) => Promise<void> } }).file(historyPath);
+    const file = this.bucket.file(historyPath);
     await file.save(JSON.stringify(historyEntry, null, 2), {
       metadata: { contentType: 'application/json' }
     });
@@ -339,6 +343,7 @@ export class ContentService {
     const mapping: Record<ContentType, string> = {
       domain: 'rubrics_data',
       question: 'assessment_data',
+      rubric: 'rubrics_data',
       ksa: 'rubrics_data'
     };
     

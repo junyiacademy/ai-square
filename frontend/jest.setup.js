@@ -122,6 +122,11 @@ const mockNextResponse = {
       redirected: false,
       type: 'basic',
       clone: jest.fn(),
+      cookies: {
+        set: jest.fn(),
+        get: jest.fn(),
+        delete: jest.fn(),
+      },
     }
     return response
   },

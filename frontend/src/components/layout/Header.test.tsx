@@ -283,6 +283,8 @@ describe('Header 組件測試', () => {
       await user.tab() // Logo link
       await user.tab() // Relations link  
       await user.tab() // KSA link
+      await user.tab() // Assessment link
+      await user.tab() // Assessment History link
       await user.tab() // Language selector
       expect(languageSelector).toHaveFocus()
       
@@ -344,7 +346,7 @@ describe('Header 組件測試', () => {
       
       render(<Header />)
 
-      const themeButton = screen.getByRole('button', { name: /darkMode|lightMode/i })
+      const themeButton = screen.getByRole('button', { name: /toggleTheme/i })
       expect(themeButton).toBeInTheDocument()
     })
 
@@ -357,7 +359,7 @@ describe('Header 組件測試', () => {
       
       render(<Header />)
 
-      const themeButton = screen.getByRole('button', { name: /darkMode/i })
+      const themeButton = screen.getByRole('button', { name: /toggleTheme/i })
       // 檢查按鈕內有月亮圖標（SVG）
       const moonIcon = themeButton.querySelector('svg')
       expect(moonIcon).toBeInTheDocument()
@@ -372,7 +374,7 @@ describe('Header 組件測試', () => {
       
       render(<Header />)
 
-      const themeButton = screen.getByRole('button', { name: /lightMode/i })
+      const themeButton = screen.getByRole('button', { name: /toggleTheme/i })
       // 檢查按鈕內有太陽圖標（SVG）
       const sunIcon = themeButton.querySelector('svg')
       expect(sunIcon).toBeInTheDocument()
@@ -390,7 +392,7 @@ describe('Header 組件測試', () => {
       
       render(<Header />)
 
-      const themeButton = screen.getByRole('button', { name: /darkMode/i })
+      const themeButton = screen.getByRole('button', { name: /toggleTheme/i })
       await user.click(themeButton)
 
       expect(mockToggleTheme).toHaveBeenCalledTimes(1)
@@ -406,7 +408,7 @@ describe('Header 組件測試', () => {
       render(<Header />)
 
       const languageSelector = screen.getByLabelText(/選擇語言|select language/i)
-      const themeButton = screen.getByRole('button', { name: /darkMode/i })
+      const themeButton = screen.getByRole('button', { name: /toggleTheme/i })
       
       // 檢查兩者都存在
       expect(languageSelector).toBeInTheDocument()
@@ -428,7 +430,7 @@ describe('Header 組件測試', () => {
       
       render(<Header />)
 
-      const themeButton = screen.getByRole('button', { name: /darkMode/i })
+      const themeButton = screen.getByRole('button', { name: /toggleTheme/i })
       
       // 確認主題切換按鈕可以被聚焦
       themeButton.focus()
