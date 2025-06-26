@@ -5,14 +5,37 @@ import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 
 export default function PBLPage() {
-  const { t } = useTranslation(['pbl']);
-  const [scenarios, setScenarios] = useState([]);
+  const { t, i18n } = useTranslation(['pbl']);
+  const [scenarios, setScenarios] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const getDifficultyStars = (difficulty: string) => {
+    switch (difficulty) {
+      case 'beginner': return '⭐';
+      case 'intermediate': return '⭐⭐⭐';
+      case 'advanced': return '⭐⭐⭐⭐⭐';
+      default: return '⭐';
+    }
+  };
+
   useEffect(() => {
-    // TODO: Fetch scenarios from API
-    setLoading(false);
-  }, []);
+    const fetchScenarios = async () => {
+      try {
+        const response = await fetch(`/api/pbl/scenarios?lang=${i18n.language}`);
+        const data = await response.json();
+        
+        if (data.success) {
+          setScenarios(data.data.scenarios);
+        }
+      } catch (error) {
+        console.error('Error fetching scenarios:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchScenarios();
+  }, [i18n.language]);
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -28,83 +51,70 @@ export default function PBLPage() {
         </div>
 
         {/* Scenarios Grid */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {/* AI Job Search Scenario Card */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-            <div className="p-6">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
-                  <span className="text-2xl">💼</span>
-                </div>
-                <h2 className="ml-4 text-xl font-semibold text-gray-900 dark:text-white">
-                  {t('scenarios.jobSearch.title')}
-                </h2>
-              </div>
-              
-              <div className="mb-4">
-                <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
-                  <span className="mr-4">
-                    {t('difficulty')}: ⭐⭐⭐ {t('level.intermediate')}
-                  </span>
-                  <span>
-                    {t('duration')}: 90 {t('minutes')}
-                  </span>
-                </div>
-                <p className="text-gray-600 dark:text-gray-300">
-                  {t('scenarios.jobSearch.description')}
-                </p>
-              </div>
-
-              <div className="flex space-x-3">
-                <Link
-                  href="/pbl/scenarios/ai-job-search"
-                  className="flex-1 bg-blue-600 text-white text-center px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  {t('startLearning')}
-                </Link>
-                <Link
-                  href="/pbl/scenarios/ai-job-search/details"
-                  className="flex-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-center px-4 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                >
-                  {t('viewDetails')}
-                </Link>
-              </div>
-            </div>
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
           </div>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {scenarios.map((scenario) => (
+              <div 
+                key={scenario.id}
+                className={`bg-white dark:bg-gray-800 rounded-lg shadow-md ${
+                  scenario.isAvailable ? 'hover:shadow-lg transition-shadow' : 'opacity-50'
+                }`}
+              >
+                <div className="p-6">
+                  <div className="flex items-center mb-4">
+                    <div className={`w-12 h-12 ${
+                      scenario.isAvailable ? 'bg-blue-100 dark:bg-blue-900' : 'bg-gray-200 dark:bg-gray-700'
+                    } rounded-lg flex items-center justify-center`}>
+                      <span className="text-2xl">{scenario.thumbnailEmoji || '📚'}</span>
+                    </div>
+                    <h2 className="ml-4 text-xl font-semibold text-gray-900 dark:text-white">
+                      {scenario.title}
+                    </h2>
+                  </div>
+                  
+                  <div className="mb-4">
+                    <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
+                      <span className="mr-4">
+                        {t('difficulty')}: {getDifficultyStars(scenario.difficulty)} {t(`level.${scenario.difficulty}`)}
+                      </span>
+                      <span>
+                        {t('duration')}: {scenario.estimatedDuration} {t('minutes')}
+                      </span>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      {scenario.description}
+                    </p>
+                  </div>
 
-          {/* Coming Soon Cards */}
-          <div className="bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md opacity-50">
-            <div className="p-6">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
-                  <span className="text-2xl">🎯</span>
+                  {scenario.isAvailable ? (
+                    <div className="flex space-x-3">
+                      <Link
+                        href={`/pbl/scenarios/${scenario.id}`}
+                        className="flex-1 bg-blue-600 text-white text-center px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                      >
+                        {t('startLearning')}
+                      </Link>
+                      <Link
+                        href={`/pbl/scenarios/${scenario.id}/details`}
+                        className="flex-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-center px-4 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                      >
+                        {t('viewDetails')}
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="text-center text-gray-500 dark:text-gray-400">
+                      {t('comingSoon')}
+                    </div>
+                  )}
                 </div>
-                <h2 className="ml-4 text-xl font-semibold text-gray-500 dark:text-gray-400">
-                  {t('comingSoon')}
-                </h2>
               </div>
-              <p className="text-gray-400 dark:text-gray-500">
-                {t('moreScenarios')}
-              </p>
-            </div>
+            ))}
           </div>
-
-          <div className="bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md opacity-50">
-            <div className="p-6">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
-                  <span className="text-2xl">🚀</span>
-                </div>
-                <h2 className="ml-4 text-xl font-semibold text-gray-500 dark:text-gray-400">
-                  {t('comingSoon')}
-                </h2>
-              </div>
-              <p className="text-gray-400 dark:text-gray-500">
-                {t('moreScenarios')}
-              </p>
-            </div>
-          </div>
-        </div>
+        )}
 
         {/* Features Section */}
         <div className="mt-16">

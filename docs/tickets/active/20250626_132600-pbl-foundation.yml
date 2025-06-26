@@ -1,0 +1,165 @@
+ai_usage:
+  complexity_breakdown:
+    medium_count: 5
+  estimated_cost_usd: 0.7500000000000001
+  interactions:
+  - complexity: medium
+    description: development - medium
+    estimated_cost: 0.15000000000000002
+    is_start_marker: false
+    task_type: development
+    timestamp: '2025-06-26T13:26:30.010883'
+  - complexity: medium
+    description: development - medium
+    estimated_cost: 0.15000000000000002
+    is_start_marker: false
+    task_type: development
+    timestamp: '2025-06-26T13:27:06.563862'
+  - complexity: medium
+    description: development - medium
+    estimated_cost: 0.15000000000000002
+    is_start_marker: false
+    task_type: development
+    timestamp: '2025-06-26T13:36:12.280203'
+  - complexity: medium
+    description: development - medium
+    estimated_cost: 0.15000000000000002
+    is_start_marker: false
+    task_type: development
+    timestamp: '2025-06-26T13:41:55.376315'
+  - complexity: medium
+    description: development - medium
+    estimated_cost: 0.15000000000000002
+    is_start_marker: false
+    task_type: development
+    timestamp: '2025-06-26T13:42:36.798392'
+  total_interactions: 5
+completion_checklist:
+  ai_metrics_recorded: true
+  code_implemented: true
+  documentation_updated: false
+  spec_defined: true
+  tests_passing: false
+  tests_written: false
+created_at: '2025-06-26T13:26:00.366027'
+description: pbl-foundation implementation
+dev_log:
+  sessions:
+  - activities:
+    - 更新 AI 領域名稱為「與 AI」概念（與 AI 共創、與 AI 管理、與 AI 設計）
+    - 創建 PBL 頁面結構和導航連結
+    - 定義完整的 TypeScript 介面（/src/types/pbl.ts）
+    - 實作 PBL API 路由（scenarios, sessions）
+    - 添加中英文翻譯檔案
+    - 整合動態資料載入到前端頁面
+    ai_interactions: []
+    challenges:
+    - 需要安裝 uuid 套件
+    - 記憶體儲存需要未來升級到 GCS
+    date: '2025-06-26'
+    decisions:
+    - 使用記憶體暫存，預留 GCS 整合介面
+    - 先實作基礎 CRUD API，WebSocket 留待後續
+    - 使用 mock 資料展示三個情境（一個可用，兩個即將推出）
+    duration_minutes: 30
+    end_time: '13:56:00'
+    files_modified:
+    - frontend/public/locales/*/navigation.json
+    - frontend/public/locales/*/pbl.json
+    - frontend/src/app/pbl/page.tsx
+    - frontend/src/types/pbl.ts
+    - frontend/src/app/api/pbl/**/*.ts
+    - frontend/src/components/layout/Header.tsx
+    next_steps:
+    - 實作 GCS 整合
+    - 創建情境詳情頁面
+    - 實作 WebSocket 即時通訊
+    - 整合 AI 對話功能
+    session_id: 1
+    start_time: '13:26:00'
+  - activities:
+    - 創建 PBL 專用的 GCS 服務 (pbl-gcs-service.ts)
+    - 實作單檔案儲存格式 (類似 assessment 的命名規則)
+    - 更新 API 以支援 GCS 儲存和備援機制
+    - 創建範例 PBL 情境 YAML 檔案
+    - 重構儲存架構以避免資料分散對齊問題
+    ai_interactions: []
+    challenges:
+    - 初始設計的分散儲存結構有對齊問題
+    - 需要重構為單檔案格式
+    date: '2025-06-26'
+    decisions:
+    - 採用單檔案格式儲存所有 session 相關資料
+    - 使用 pbl_{timestamp}_{random} 命名格式
+    - 靜態資料放在 public/pbl_data/
+    - 使用者日誌統一在 user_pbl_logs/ 目錄
+    duration_minutes: 20
+    end_time: '13:46:00'
+    files_modified:
+    - frontend/src/lib/storage/pbl-gcs-service.ts
+    - frontend/public/pbl_data/ai_job_search_scenario.yaml
+    - frontend/scripts/upload-pbl-scenarios.sh
+    - frontend/src/app/api/pbl/sessions/*.ts
+    - frontend/src/app/api/pbl/scenarios/[id]/route.ts
+    next_steps:
+    - 創建情境詳情頁面
+    - 實作學習介面
+    - 撰寫測試
+    session_id: 2
+    start_time: '13:27:00'
+development:
+  branch: ticket/pbl-foundation
+  code_review_status: pending
+  commits: []
+  files_changed:
+  - docs/tickets/active/
+  - frontend/package.json
+  - frontend/src/app/api/pbl/
+  - frontend/scripts/upload-pbl-scenarios.sh
+  - frontend/src/lib/storage/pbl-gcs-service.ts
+  - frontend/src/app/pbl/page.tsx
+  - frontend/public/pbl_data/
+  - rontend/package-lock.json
+  test_coverage: null
+id: 20250626_132600-pbl-foundation
+name: pbl-foundation
+spec:
+  acceptance_criteria:
+  - PBL 頁面可從導航列訪問
+  - 顯示可用的學習情境列表
+  - API 支援情境資料的 CRUD 操作
+  - 支援中英文多語言切換
+  - 準備好 GCS 儲存整合架構
+  feature: PBL 問題導向學習系統基礎建設
+  out_of_scope:
+  - 完整的 GCS 實際整合（僅準備架構）
+  - WebSocket 即時通訊實作
+  - AI 對話功能實作
+  purpose: 建立 PBL 系統的基礎架構，包含前端頁面、API 路由和資料結構定義
+  technical_requirements:
+  - TypeScript 類型定義完整
+  - RESTful API 設計
+  - 支援多語言 i18n
+  - 記憶體暫存（準備 GCS 整合）
+status: active
+test_report:
+  coverage:
+    branches: 0
+    functions: 0
+    lines: 0
+    statements: 0
+  summary:
+    duration_ms: 0
+    failed: 0
+    passed: 0
+    skipped: 0
+    total_tests: 0
+  test_runs: []
+time_tracking:
+  actual_duration_minutes: 14
+  ai_time_minutes: 0
+  checkpoints: []
+  completed_at: null
+  human_time_minutes: 0
+  started_at: '2025-06-26T13:26:00.366027'
+type: feature
