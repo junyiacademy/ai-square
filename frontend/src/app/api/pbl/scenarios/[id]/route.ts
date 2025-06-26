@@ -291,13 +291,16 @@ export async function GET(
 ) {
   try {
     const { id: scenarioId } = await params;
+    console.log(`Loading scenario: ${scenarioId}`);
     
     // Try to load from YAML first
     const yamlData = await loadScenarioFromYAML(scenarioId);
+    console.log('YAML data loaded:', yamlData ? 'success' : 'failed');
     
     let scenario: ScenarioProgram | null = null;
     
     if (yamlData && yamlData.scenario_info) {
+      console.log('Transforming YAML data to ScenarioProgram format...');
       // Transform YAML data to ScenarioProgram format
       scenario = {
         id: yamlData.scenario_info.id,
@@ -317,25 +320,32 @@ export async function GET(
           modalityFocus: stage.modality_focus,
           assessmentFocus: stage.assessment_focus,
           rubricsCriteria: yamlData.rubrics_criteria || [],
-          aiModules: stage.ai_modules,
-          tasks: stage.tasks.map((task, index) => ({
-            id: `${stage.id}-task-${index + 1}`,
+          aiModules: stage.ai_modules || [],
+          tasks: (stage.tasks || []).map((task, index) => ({
+            id: task.id || `${stage.id}-task-${index + 1}`,
             title: task.title,
             description: task.description,
-            instructions: task.instructions,
+            instructions: task.instructions || [],
             expectedOutcome: task.expected_outcome,
             timeLimit: task.time_limit || 15
           })),
           timeLimit: stage.time_limit || 30,
-          loggingConfig: {
+          loggingConfig: stage.logging_config ? {
             trackInteractions: stage.logging_config.track_interactions,
             trackThinkingTime: stage.logging_config.track_thinking_time,
             trackRevisions: stage.logging_config.track_revisions,
             trackResourceUsage: stage.logging_config.track_resource_usage
+          } : {
+            trackInteractions: true,
+            trackThinkingTime: false,
+            trackRevisions: false,
+            trackResourceUsage: false
           }
         }))
       };
+      console.log('Scenario transformation completed');
     } else {
+      console.log('Using mock data fallback');
       // Fallback to mock data
       scenario = mockScenarioDetails[scenarioId];
     }
@@ -444,12 +454,14 @@ export async function GET(
     });
   } catch (error) {
     console.error('Error fetching scenario details:', error);
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
     return NextResponse.json(
       {
         success: false,
         error: {
           code: 'FETCH_SCENARIO_ERROR',
-          message: 'Failed to fetch scenario details'
+          message: 'Failed to fetch scenario details',
+          details: error instanceof Error ? error.message : 'Unknown error'
         }
       },
       { status: 500 }

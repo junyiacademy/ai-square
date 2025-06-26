@@ -34,13 +34,20 @@ export default function PBLLearnPage() {
   // Load scenario only (don't create session until first message)
   useEffect(() => {
     const loadScenario = async () => {
+      let scenarioData = null;
       try {
         // Load scenario details
         const scenarioResponse = await fetch(`/api/pbl/scenarios/${scenarioId}?lang=${i18n.language}`);
-        const scenarioData = await scenarioResponse.json();
+        
+        if (!scenarioResponse.ok) {
+          throw new Error(`HTTP error! status: ${scenarioResponse.status}`);
+        }
+        
+        scenarioData = await scenarioResponse.json();
+        console.log('Scenario data received:', scenarioData);
         
         if (!scenarioData.success) {
-          throw new Error('Failed to load scenario');
+          throw new Error(`API error: ${scenarioData.error?.message || 'Failed to load scenario'}`);
         }
         
         setScenario(scenarioData.data);
@@ -52,6 +59,11 @@ export default function PBLLearnPage() {
         }
       } catch (error) {
         console.error('Error loading scenario:', error);
+        if (scenarioData) {
+          console.error('Scenario response data:', scenarioData);
+        }
+        // Set error state so user can see what went wrong
+        setLoading(false);
       } finally {
         setLoading(false);
       }
@@ -288,7 +300,7 @@ export default function PBLLearnPage() {
     );
   }
 
-  if (!scenario || !session) {
+  if (!scenario) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
