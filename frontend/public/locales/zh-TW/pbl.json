@@ -149,6 +149,8 @@
     "rubricsScores": "評量標準評分",
     "ksaRadarTitle": "KSA 能力剖面圖",
     "domainRadarTitle": "AI 素養領域",
+    "overallScore": "整體分數",
+    "overallScoreDescription": "所有階段的平均表現",
     "ksaDiagnosticReport": "KSA 診斷報告",
     "diagnosticInsights": "診斷洞察",
     "strongestAreas": "最強項目",

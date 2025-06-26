@@ -149,6 +149,8 @@
     "rubricsScores": "Rubrics Assessment",
     "ksaRadarTitle": "KSA Competency Profile",
     "domainRadarTitle": "AI Literacy Domains",
+    "overallScore": "Overall Score",
+    "overallScoreDescription": "Average performance across all stages",
     "ksaDiagnosticReport": "KSA Diagnostic Report",
     "diagnosticInsights": "Diagnostic Insights",
     "strongestAreas": "Strongest Areas",

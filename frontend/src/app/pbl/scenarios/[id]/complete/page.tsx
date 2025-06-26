@@ -9,7 +9,7 @@ import DomainRadarChart from '@/components/pbl/DomainRadarChart';
 import KSADiagnosticReport from '@/components/pbl/KSADiagnosticReport';
 
 export default function PBLCompletePage() {
-  const { t, i18n, ready } = useTranslation(['pbl']);
+  const { t, i18n, ready } = useTranslation(['pbl', 'homepage']);
   const params = useParams();
   const router = useRouter();
   const scenarioId = params.id as string;
@@ -294,79 +294,161 @@ export default function PBLCompletePage() {
           </div>
         </div>
 
-        {/* Visual Analytics Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* KSA Radar Chart */}
-          <div>
-          {(() => {
-            // Aggregate all KSA scores for radar chart
-            const allKsaScores: { [ksa: string]: { score: number; category: 'knowledge' | 'skills' | 'attitudes' } } = {};
-            
-            sessions.forEach(session => {
-              session.stageResults?.forEach(result => {
-                Object.entries(result.ksaAchievement || {}).forEach(([ksa, achievement]) => {
-                  const category = ksa.charAt(0) === 'K' ? 'knowledge' : 
-                                  ksa.charAt(0) === 'S' ? 'skills' : 'attitudes';
-                  
-                  if (!allKsaScores[ksa] || achievement.score > allKsaScores[ksa].score) {
-                    allKsaScores[ksa] = {
-                      score: achievement.score,
-                      category
-                    };
-                  }
+        {/* AI Literacy Domains Section */}
+        {(() => {
+          // Calculate domain scores from all stages
+          const domainScores = {
+            engaging_with_ai: 0,
+            creating_with_ai: 0,
+            managing_with_ai: 0,
+            designing_with_ai: 0
+          };
+          const domainCounts = { ...domainScores };
+          
+          sessions.forEach(session => {
+            session.stageResults?.forEach(result => {
+              if (result.domainScores) {
+                Object.entries(result.domainScores).forEach(([domain, score]) => {
+                  domainScores[domain] += score;
+                  domainCounts[domain] += 1;
                 });
+              }
+            });
+          });
+          
+          // Calculate averages
+          Object.keys(domainScores).forEach(domain => {
+            if (domainCounts[domain] > 0) {
+              domainScores[domain] = Math.round(domainScores[domain] / domainCounts[domain]);
+            }
+          });
+          
+          // Calculate overall score
+          let overallScore = 0;
+          let totalScores = 0;
+          let scoreCount = 0;
+          
+          sessions.forEach(session => {
+            session.stageResults?.forEach(result => {
+              if (result.score) {
+                totalScores += result.score;
+                scoreCount++;
+              }
+            });
+          });
+          
+          if (scoreCount > 0) {
+            overallScore = Math.round(totalScores / scoreCount);
+          }
+          
+          return (
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+                {t('pbl:complete.domainRadarTitle')}
+              </h2>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                {/* Radar Chart on the left */}
+                <div>
+                  <DomainRadarChart 
+                    domainScores={domainScores}
+                    title=""
+                  />
+                </div>
+                
+                {/* Domain Scores and Overall Score on the right */}
+                <div className="space-y-4">
+                  {/* Overall Score Card */}
+                  <div className="p-6 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-lg shadow-lg">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-lg font-semibold opacity-90">
+                          {t('pbl:complete.overallScore')}
+                        </h3>
+                        <p className="text-sm opacity-75 mt-1">
+                          {t('pbl:complete.overallScoreDescription')}
+                        </p>
+                      </div>
+                      <div className="text-5xl font-bold">
+                        {overallScore}%
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Domain Scores */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                      <h5 className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1">
+                        {t('homepage:domains.items.engaging.name')}
+                      </h5>
+                      <span className="text-xl font-bold text-blue-600 dark:text-blue-400">
+                        {domainScores.engaging_with_ai}%
+                      </span>
+                    </div>
+                    
+                    <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                      <h5 className="text-sm font-medium text-green-900 dark:text-green-100 mb-1">
+                        {t('homepage:domains.items.creating.name')}
+                      </h5>
+                      <span className="text-xl font-bold text-green-600 dark:text-green-400">
+                        {domainScores.creating_with_ai}%
+                      </span>
+                    </div>
+                    
+                    <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+                      <h5 className="text-sm font-medium text-purple-900 dark:text-purple-100 mb-1">
+                        {t('homepage:domains.items.managing.name')}
+                      </h5>
+                      <span className="text-xl font-bold text-purple-600 dark:text-purple-400">
+                        {domainScores.managing_with_ai}%
+                      </span>
+                    </div>
+                    
+                    <div className="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
+                      <h5 className="text-sm font-medium text-orange-900 dark:text-orange-100 mb-1">
+                        {t('homepage:domains.items.designing.name')}
+                      </h5>
+                      <span className="text-xl font-bold text-orange-600 dark:text-orange-400">
+                        {domainScores.designing_with_ai}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+        
+        {/* KSA Competency Profile Section */}
+        {(() => {
+          // Aggregate all KSA scores
+          const allKsaScores: { [ksa: string]: { score: number; category: 'knowledge' | 'skills' | 'attitudes' } } = {};
+          
+          sessions.forEach(session => {
+            session.stageResults?.forEach(result => {
+              Object.entries(result.ksaAchievement || {}).forEach(([ksa, achievement]) => {
+                const category = ksa.charAt(0) === 'K' ? 'knowledge' : 
+                                ksa.charAt(0) === 'S' ? 'skills' : 'attitudes';
+                
+                if (!allKsaScores[ksa] || achievement.score > allKsaScores[ksa].score) {
+                  allKsaScores[ksa] = {
+                    score: achievement.score,
+                    category
+                  };
+                }
               });
             });
-            
-            return Object.keys(allKsaScores).length > 0 ? (
+          });
+          
+          return Object.keys(allKsaScores).length > 0 ? (
+            <div className="mb-8">
               <KSAKnowledgeGraph 
                 ksaScores={allKsaScores}
                 title={t('complete.ksaRadarTitle')}
                 ksaMapping={scenario.ksaMapping}
               />
-            ) : null;
-          })()}
-          </div>
-          
-          {/* Domain Radar Chart */}
-          <div>
-          {(() => {
-            // Calculate domain scores from all stages
-            const domainScores = {
-              engaging_with_ai: 0,
-              creating_with_ai: 0,
-              managing_with_ai: 0,
-              designing_with_ai: 0
-            };
-            const domainCounts = { ...domainScores };
-            
-            sessions.forEach(session => {
-              session.stageResults?.forEach(result => {
-                if (result.domainScores) {
-                  Object.entries(result.domainScores).forEach(([domain, score]) => {
-                    domainScores[domain] += score;
-                    domainCounts[domain] += 1;
-                  });
-                }
-              });
-            });
-            
-            // Calculate averages
-            Object.keys(domainScores).forEach(domain => {
-              if (domainCounts[domain] > 0) {
-                domainScores[domain] = Math.round(domainScores[domain] / domainCounts[domain]);
-              }
-            });
-            
-            return (
-              <DomainRadarChart 
-                domainScores={domainScores}
-                title={t('complete.domainRadarTitle')}
-              />
-            );
-          })()}
-          </div>
-        </div>
+            </div>
+          ) : null;
+        })()}
         
         {/* KSA Diagnostic Report */}
         {(() => {
