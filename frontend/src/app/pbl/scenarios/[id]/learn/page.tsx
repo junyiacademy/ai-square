@@ -328,47 +328,42 @@ export default function PBLLearnPage() {
             </button>
           </div>
           
-          {/* Progress Bar with Steps */}
-          <div className="mt-4">
-            <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
-              <span>{t('learn.progress')}</span>
-              <span>{Math.round(progress)}%</span>
-            </div>
-            
-            {/* Stage Progress Indicators */}
+          {/* Compact Progress Bar */}
+          <div className="mt-3">
             <div className="flex items-center justify-between mb-2">
-              {scenario.stages.map((stage, index) => (
-                <div key={stage.id} className="flex flex-col items-center">
-                  <div 
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-300 ${
-                      index < stageIndex
-                        ? 'bg-green-500 text-white' // Completed
-                        : index === stageIndex
-                        ? 'bg-blue-600 text-white' // Current
-                        : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400' // Not started
-                    }`}
-                  >
-                    {index < stageIndex ? (
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    ) : (
-                      index + 1
+              {/* Stage indicators with progress info */}
+              <div className="flex items-center space-x-2">
+                {scenario.stages.map((stage, index) => (
+                  <div key={stage.id} className="flex items-center">
+                    <div 
+                      className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-300 ${
+                        index < stageIndex
+                          ? 'bg-green-500 text-white' // Completed
+                          : index === stageIndex
+                          ? 'bg-blue-600 text-white' // Current
+                          : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400' // Not started
+                      }`}
+                      title={stage.name}
+                    >
+                      {index < stageIndex ? (
+                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      ) : (
+                        index + 1
+                      )}
+                    </div>
+                    {index < scenario.stages.length - 1 && (
+                      <div className={`w-8 h-0.5 mx-1 ${index < stageIndex ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'}`} />
                     )}
                   </div>
-                  <span className="text-xs mt-1 text-center max-w-16 truncate">
-                    {stage.name}
-                  </span>
-                </div>
-              ))}
-            </div>
-            
-            {/* Progress Bar */}
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-              <div 
-                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              />
+                ))}
+              </div>
+              
+              {/* Progress percentage */}
+              <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                {Math.round(progress)}%
+              </span>
             </div>
           </div>
         </div>
@@ -421,7 +416,7 @@ export default function PBLLearnPage() {
 
           {/* Conversation Area */}
           <div className="lg:col-span-2">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md h-[600px] flex flex-col">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md h-[calc(100vh-280px)] min-h-[500px] flex flex-col">
               {/* Messages */}
               <div className="flex-1 overflow-y-auto p-6 space-y-4">
                 {conversation.length === 0 ? (

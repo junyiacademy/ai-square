@@ -19,7 +19,8 @@ const BUCKET_NAME = process.env.GCS_BUCKET_NAME || 'ai-square-db';
 
 // PBL specific paths
 // Static data (scenarios) are in frontend/public/pbl_data/
-// User logs are in GCS under user_pbl_logs/ with naming: pbl_{timestamp}_{random}
+// User logs are in GCS under user_pbl_logs/{email}/pbl_{timestamp}_{random}.json
+// Where {email} is sanitized (@ and . replaced with _)
 const PBL_BASE_PATH = 'user_pbl_logs';
 
 // Interface for PBL log file structure (similar to assessment)
@@ -82,9 +83,15 @@ export class PBLGCSService {
   }
 
   /**
-   * Get log file path
+   * Get log file path with email folder structure
    */
-  private getLogPath(logId: string): string {
+  private getLogPath(logId: string, userEmail?: string): string {
+    if (userEmail) {
+      // Sanitize email for folder name (replace @ and . with _)
+      const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
+      return `${PBL_BASE_PATH}/${sanitizedEmail}/${logId}.json`;
+    }
+    // Fallback to old structure for backward compatibility
     return `${PBL_BASE_PATH}/${logId}.json`;
   }
 
@@ -138,8 +145,8 @@ export class PBLGCSService {
       process_logs: sessionData.processLogs || []
     };
 
-    // Save to GCS
-    const file = this.bucket.file(this.getLogPath(pblLogId));
+    // Save to GCS with email folder structure
+    const file = this.bucket.file(this.getLogPath(pblLogId, sessionData.userEmail));
     await file.save(JSON.stringify(logData, null, 2), {
       metadata: {
         contentType: 'application/json',
@@ -150,18 +157,36 @@ export class PBLGCSService {
   }
 
   /**
-   * Get session by logId
+   * Get session by logId (searches across all email folders)
    */
-  async getSessionByLogId(logId: string): Promise<SessionData | null> {
+  async getSessionByLogId(logId: string, userEmail?: string): Promise<SessionData | null> {
     try {
-      const file = this.bucket.file(this.getLogPath(logId));
-      const [exists] = await file.exists();
+      // Try with email folder first if provided
+      if (userEmail) {
+        const file = this.bucket.file(this.getLogPath(logId, userEmail));
+        const [exists] = await file.exists();
+        
+        if (exists) {
+          const [contents] = await file.download();
+          const logData = JSON.parse(contents.toString()) as PBLLogData;
+          return logData.session_data;
+        }
+      }
       
-      if (!exists) return null;
+      // Fallback: search across all files (for backward compatibility)
+      const [files] = await this.bucket.getFiles({
+        prefix: `${PBL_BASE_PATH}/`,
+      });
+
+      for (const file of files) {
+        if (file.name.endsWith(`${logId}.json`)) {
+          const [contents] = await file.download();
+          const logData = JSON.parse(contents.toString()) as PBLLogData;
+          return logData.session_data;
+        }
+      }
       
-      const [contents] = await file.download();
-      const logData = JSON.parse(contents.toString()) as PBLLogData;
-      return logData.session_data;
+      return null;
     } catch (error) {
       console.error('Error fetching session from GCS:', error);
       return null;
@@ -201,29 +226,57 @@ export class PBLGCSService {
    */
   async updateSession(sessionId: string, updates: Partial<SessionData>): Promise<SessionData | null> {
     try {
-      // Search for existing session file
-      const [files] = await this.bucket.getFiles({
-        prefix: `${PBL_BASE_PATH}/`,
-      });
-
+      // Try to find the session more efficiently if we have userEmail in updates
       let targetFile = null;
       let logData: PBLLogData | null = null;
 
-      // Find the file containing this session
-      for (const file of files) {
-        if (file.name.endsWith('.json')) {
-          try {
-            const [contents] = await file.download();
-            const data = JSON.parse(contents.toString()) as PBLLogData;
-            
-            if (data.session_id === sessionId) {
-              targetFile = file;
-              logData = data;
-              break;
+      // If we have userEmail in updates, try the user's folder first
+      if (updates.userEmail) {
+        const sanitizedEmail = updates.userEmail.replace(/[@.]/g, '_');
+        const [userFiles] = await this.bucket.getFiles({
+          prefix: `${PBL_BASE_PATH}/${sanitizedEmail}/`,
+        });
+
+        for (const file of userFiles) {
+          if (file.name.endsWith('.json')) {
+            try {
+              const [contents] = await file.download();
+              const data = JSON.parse(contents.toString()) as PBLLogData;
+              
+              if (data.session_id === sessionId) {
+                targetFile = file;
+                logData = data;
+                break;
+              }
+            } catch (parseError) {
+              console.error(`Failed to parse file ${file.name}:`, parseError);
+              continue;
             }
-          } catch (parseError) {
-            console.error(`Failed to parse file ${file.name}:`, parseError);
-            continue;
+          }
+        }
+      }
+
+      // If not found in user folder, search all files (backward compatibility)
+      if (!targetFile) {
+        const [files] = await this.bucket.getFiles({
+          prefix: `${PBL_BASE_PATH}/`,
+        });
+
+        for (const file of files) {
+          if (file.name.endsWith('.json')) {
+            try {
+              const [contents] = await file.download();
+              const data = JSON.parse(contents.toString()) as PBLLogData;
+              
+              if (data.session_id === sessionId) {
+                targetFile = file;
+                logData = data;
+                break;
+              }
+            } catch (parseError) {
+              console.error(`Failed to parse file ${file.name}:`, parseError);
+              continue;
+            }
           }
         }
       }
@@ -265,24 +318,60 @@ export class PBLGCSService {
   }
 
   /**
-   * List all sessions for a user
+   * List all sessions for a user (optimized with email folder structure)
    */
-  async listUserSessions(userId: string, status?: 'in_progress' | 'completed' | 'paused'): Promise<PBLLogData[]> {
+  async listUserSessions(userId: string, status?: 'in_progress' | 'completed' | 'paused', userEmail?: string): Promise<PBLLogData[]> {
     try {
-      const [files] = await this.bucket.getFiles({
-        prefix: `${PBL_BASE_PATH}/`,
-      });
-
       const sessions: PBLLogData[] = [];
       
-      for (const file of files) {
-        if (file.name.endsWith('.json')) {
-          const [contents] = await file.download();
-          const logData = JSON.parse(contents.toString()) as PBLLogData;
-          
-          if (logData.user_id === userId) {
-            if (!status || logData.status === status) {
-              sessions.push(logData);
+      // If userEmail is provided, search in user's folder first
+      if (userEmail) {
+        const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
+        try {
+          const [userFiles] = await this.bucket.getFiles({
+            prefix: `${PBL_BASE_PATH}/${sanitizedEmail}/`,
+          });
+
+          for (const file of userFiles) {
+            if (file.name.endsWith('.json')) {
+              try {
+                const [contents] = await file.download();
+                const logData = JSON.parse(contents.toString()) as PBLLogData;
+                
+                if (logData.user_id === userId) {
+                  if (!status || logData.status === status) {
+                    sessions.push(logData);
+                  }
+                }
+              } catch (parseError) {
+                console.error(`Failed to parse file ${file.name}:`, parseError);
+              }
+            }
+          }
+        } catch {
+          console.log(`User folder ${sanitizedEmail} not found, searching all files`);
+        }
+      }
+      
+      // If no sessions found in user folder or no email provided, search all files
+      if (sessions.length === 0) {
+        const [files] = await this.bucket.getFiles({
+          prefix: `${PBL_BASE_PATH}/`,
+        });
+
+        for (const file of files) {
+          if (file.name.endsWith('.json')) {
+            try {
+              const [contents] = await file.download();
+              const logData = JSON.parse(contents.toString()) as PBLLogData;
+              
+              if (logData.user_id === userId) {
+                if (!status || logData.status === status) {
+                  sessions.push(logData);
+                }
+              }
+            } catch (parseError) {
+              console.error(`Failed to parse file ${file.name}:`, parseError);
             }
           }
         }
@@ -341,9 +430,9 @@ export class PBLGCSService {
   /**
    * Delete session by logId
    */
-  async deleteSession(logId: string): Promise<void> {
+  async deleteSession(logId: string, userEmail?: string): Promise<void> {
     try {
-      const file = this.bucket.file(this.getLogPath(logId));
+      const file = this.bucket.file(this.getLogPath(logId, userEmail));
       await file.delete();
       console.log(`Deleted PBL log: ${logId}`);
     } catch (error) {

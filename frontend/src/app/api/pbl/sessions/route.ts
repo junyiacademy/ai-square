@@ -9,7 +9,7 @@ const sessions = new Map<string, SessionData>();
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { scenarioId, userId, language } = body;
+    const { scenarioId, userId } = body;
 
     if (!scenarioId || !userId) {
       return NextResponse.json(
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
         const user = JSON.parse(userCookie);
         userEmail = user.email || userEmail;
       }
-    } catch (error) {
+    } catch {
       console.log('No user cookie found, using demo email');
     }
 
