@@ -236,6 +236,31 @@ export class PBLGCSService {
    */
   async getSession(sessionId: string): Promise<{ sessionData: SessionData; logId: string } | null> {
     try {
+      // First try direct file access if sessionId looks like a filename
+      if (sessionId.startsWith('pbl_')) {
+        const [files] = await this.bucket.getFiles({
+          prefix: `${PBL_BASE_PATH}/`,
+        });
+        
+        for (const file of files) {
+          const filename = file.name.split('/').pop()?.replace('.json', '') || '';
+          if (filename === sessionId) {
+            console.log('Found file by direct match:', file.name);
+            const [contents] = await file.download();
+            const logData = JSON.parse(contents.toString()) as PBLLogData;
+            
+            // Restore processLogs from root level to session_data
+            const sessionDataWithLogs = {
+              ...logData.session_data,
+              processLogs: logData.process_logs || []
+            };
+            
+            return { sessionData: sessionDataWithLogs, logId: sessionId };
+          }
+        }
+      }
+      
+      // Fallback: search by session_id field
       const [files] = await this.bucket.getFiles({
         prefix: `${PBL_BASE_PATH}/`,
       });
@@ -484,6 +509,35 @@ export class PBLGCSService {
 
 
   // === Utility Methods ===
+
+  /**
+   * List files with a specific prefix (searches across all user folders)
+   */
+  async listFiles(prefix: string): Promise<any[]> {
+    try {
+      // Get all files under PBL_BASE_PATH (including all subfolders)
+      const [files] = await this.bucket.getFiles({
+        prefix: `${PBL_BASE_PATH}/`,
+      });
+      
+      // Filter files that match the prefix (checking only the filename part)
+      const matchingFiles = files.filter(file => {
+        const filename = file.name.split('/').pop() || '';
+        return filename.startsWith(prefix) && filename.endsWith('.json');
+      });
+      
+      return matchingFiles.map(file => ({
+        name: file.name,
+        timeCreated: file.metadata?.timeCreated,
+        updated: file.metadata?.updated,
+        size: file.metadata?.size,
+        metadata: file.metadata
+      }));
+    } catch (error) {
+      console.error('Error listing files from GCS:', error);
+      return [];
+    }
+  }
 
   /**
    * Delete session by logId

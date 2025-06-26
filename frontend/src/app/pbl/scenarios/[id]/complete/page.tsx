@@ -128,7 +128,8 @@ export default function PBLCompletePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           sessionId,
-          stageId
+          stageId,
+          language: i18n.language
         })
       });
       

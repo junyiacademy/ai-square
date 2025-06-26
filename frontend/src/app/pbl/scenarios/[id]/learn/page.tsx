@@ -29,6 +29,8 @@ export default function PBLLearnPage() {
   const [isAIThinking, setIsAIThinking] = useState(false);
   const [stageAnalysis, setStageAnalysis] = useState<any>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [existingLogs, setExistingLogs] = useState<any[]>([]);
+  const [currentLogId, setCurrentLogId] = useState<string | null>(null);
   
   // Ref for auto-scrolling
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -49,6 +51,62 @@ export default function PBLLearnPage() {
       }
     }
   }, [session?.currentStage, session?.stageResults, scenario]);
+
+  // Fetch existing logs when task changes
+  useEffect(() => {
+    const fetchExistingLogs = async () => {
+      if (!currentTask || !scenario) return;
+      
+      // Get user info from cookie
+      let userId = 'user-demo';
+      try {
+        const userCookie = document.cookie
+          .split('; ')
+          .find(row => row.startsWith('user='))
+          ?.split('=')[1];
+        
+        if (userCookie) {
+          const user = JSON.parse(decodeURIComponent(userCookie));
+          userId = user.email || userId;
+        }
+      } catch (e) {
+        console.log('No user cookie found, using demo user');
+      }
+      
+      // Find current stage ID
+      const currentStageIndex = scenario.stages.findIndex(stage => 
+        stage.tasks.some(task => task.id === currentTask?.id)
+      );
+      const currentStageId = scenario.stages[currentStageIndex]?.id;
+      
+      if (currentStageId) {
+        try {
+          const url = `/api/pbl/logs?userId=${userId}&scenarioId=${scenarioId}&stageId=${currentStageId}&taskId=${currentTask.id}`;
+          console.log('Fetching logs with URL:', url);
+          console.log('Parameters:', {
+            userId,
+            scenarioId,
+            stageId: currentStageId,
+            taskId: currentTask.id
+          });
+          
+          const response = await fetch(url);
+          
+          if (response.ok) {
+            const data = await response.json();
+            setExistingLogs(data.data.logs);
+            console.log(`Found ${data.data.logs.length} existing logs for task ${currentTask.id}`);
+          } else {
+            console.error('Failed to fetch logs:', response.status, response.statusText);
+          }
+        } catch (error) {
+          console.error('Error fetching existing logs:', error);
+        }
+      }
+    };
+
+    fetchExistingLogs();
+  }, [currentTask, scenario, scenarioId]);
 
   // Load scenario only (don't create session until first message)
   useEffect(() => {
@@ -96,6 +154,8 @@ export default function PBLLearnPage() {
             const existingSession = sessionsData.data.sessions[0];
             console.log('Found existing session:', existingSession.id);
             setSession(existingSession);
+            // Set currentLogId from the existing session's ID
+            setCurrentLogId(existingSession.id);
             
             // Set current task based on session progress
             const stageIndex = existingSession.currentStage || 0;
@@ -162,6 +222,59 @@ export default function PBLLearnPage() {
       behavior: 'smooth',
       block: 'end'
     });
+  };
+
+  // Load conversation from an existing log
+  const loadLogConversation = async (logSessionId: string) => {
+    try {
+      console.log('Loading conversation from log:', logSessionId);
+      
+      // Fetch the session data
+      const response = await fetch(`/api/pbl/sessions/${logSessionId}`);
+      if (!response.ok) {
+        throw new Error('Failed to load session');
+      }
+      
+      const data = await response.json();
+      if (data.success && data.data) {
+        const loadedSession = data.data;
+        
+        // Set the loaded session as current
+        setSession(loadedSession);
+        setCurrentLogId(logSessionId);
+        
+        // Load conversation history for current stage
+        const currentStageId = scenario?.stages[loadedSession.currentStage]?.id;
+        if (currentStageId) {
+          const stageLogs = loadedSession.processLogs
+            .filter(log => log.stageId === currentStageId && log.detail?.aiInteraction)
+            .map(log => ({
+              user: {
+                id: `user-${log.timestamp}`,
+                timestamp: log.timestamp,
+                role: 'user' as const,
+                content: log.detail.aiInteraction?.prompt || log.detail.userInput || ''
+              },
+              ai: {
+                id: `ai-${log.timestamp}`,
+                timestamp: log.timestamp,
+                role: 'ai' as const,
+                content: log.detail.aiInteraction?.response || ''
+              }
+            }));
+          
+          // Flatten to array of conversation turns
+          const conversationTurns: ConversationTurn[] = [];
+          stageLogs.forEach(log => {
+            if (log.user.content) conversationTurns.push(log.user);
+            if (log.ai.content) conversationTurns.push(log.ai);
+          });
+          setConversation(conversationTurns);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading log conversation:', error);
+    }
   };
 
   const saveProgress = useCallback(async () => {
@@ -268,7 +381,8 @@ export default function PBLLearnPage() {
         if (sessionData.success) {
           currentSession = sessionData.data.sessionData;
           setSession(currentSession);
-          console.log('Session created:', currentSession.id);
+          setCurrentLogId(sessionData.data.logId); // Set the log ID
+          console.log('Session created:', currentSession.id, 'Log ID:', sessionData.data.logId);
         } else {
           throw new Error('Failed to create session');
         }
@@ -370,7 +484,8 @@ export default function PBLLearnPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           sessionId: session.id,
-          stageId: currentStageId
+          stageId: currentStageId,
+          language: i18n.language
         })
       });
       
@@ -476,6 +591,7 @@ export default function PBLLearnPage() {
       setConversation([]);
       setCurrentTask(scenario.stages[newStageIndex].tasks[0]);
       setStageAnalysis(null); // Clear stage analysis for new stage
+      setCurrentLogId(null); // Clear log ID for new stage
       
       // The next session will be created with the new stage index when user sends first message
     } else {
@@ -700,15 +816,46 @@ export default function PBLLearnPage() {
                       </div>
                     </div>
                     
+                    {/* Domain Scores */}
+                    {stageAnalysis.domainScores && (
+                      <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
+                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">AI Literacy Domains</h4>
+                        <div className="grid grid-cols-2 gap-3">
+                          {Object.entries(stageAnalysis.domainScores).map(([domain, score]) => (
+                            <div key={domain} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 capitalize">
+                                {domain.replace(/_/g, ' ')}
+                              </span>
+                              <span className={`text-lg font-bold ${
+                                score >= 70 ? 'text-green-600 dark:text-green-400' :
+                                score >= 40 ? 'text-yellow-600 dark:text-yellow-400' :
+                                'text-red-600 dark:text-red-400'
+                              }`}>
+                                {score}%
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
                     {/* KSA Achievement */}
                     {stageAnalysis.ksaAchievement && Object.keys(stageAnalysis.ksaAchievement).length > 0 && (
                       <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
                         <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">{t('learn.ksaBreakdown')}</h4>
-                        <div className="grid grid-cols-3 gap-2">
-                          {Object.entries(stageAnalysis.ksaAchievement).slice(0, 6).map(([ksa, achievement]: [string, any]) => (
-                            <div key={ksa} className="text-center p-2 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <div className="grid grid-cols-4 gap-2">
+                          {Object.entries(stageAnalysis.ksaAchievement).map(([ksa, achievement]: [string, any]) => (
+                            <div key={ksa} className={`text-center p-2 rounded-lg ${
+                              ksa.startsWith('K') ? 'bg-blue-50 dark:bg-blue-900/20' :
+                              ksa.startsWith('S') ? 'bg-green-50 dark:bg-green-900/20' :
+                              'bg-purple-50 dark:bg-purple-900/20'
+                            }`}>
                               <div className="text-xs font-medium text-gray-600 dark:text-gray-400">{ksa}</div>
-                              <div className="text-lg font-bold text-blue-600 dark:text-blue-400">
+                              <div className={`text-lg font-bold ${
+                                ksa.startsWith('K') ? 'text-blue-600 dark:text-blue-400' :
+                                ksa.startsWith('S') ? 'text-green-600 dark:text-green-400' :
+                                'text-purple-600 dark:text-purple-400'
+                              }`}>
                                 {achievement.score}%
                               </div>
                             </div>
@@ -841,13 +988,98 @@ export default function PBLLearnPage() {
                     </p>
                   </div>
                 )}
+                
               </div>
             </div>
           </div>
 
           {/* Conversation Area */}
-          <div className="lg:col-span-2">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md h-[calc(100vh-280px)] min-h-[500px] flex flex-col">
+          <div className="lg:col-span-2 space-y-4">
+            {/* Conversation Logs Dropdown */}
+            {existingLogs.length > 0 && (
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+                <div className="flex items-center justify-between">
+                  <label htmlFor="conversation-logs" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Conversation Logs
+                  </label>
+                  <select
+                    id="conversation-logs"
+                    value={currentLogId || ''}
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        loadLogConversation(e.target.value);
+                      }
+                    }}
+                    className="flex-1 ml-4 px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  >
+                    <option value="">Select a conversation log...</option>
+                    {existingLogs.map((log) => (
+                      <option key={log.sessionId} value={log.sessionId}>
+                        {new Date(log.createdAt).toLocaleString()} - {log.metadata.conversationCount} messages ({Math.round(log.metadata.timeSpent / 60)}m)
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
+            
+            {/* Chat Interface */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md h-[calc(100vh-350px)] min-h-[400px] flex flex-col">
+              {/* Log filename header with New Conversation button */}
+              <div className="px-6 py-3 border-b border-gray-200 dark:border-gray-700">
+                <div className="flex items-center justify-between">
+                  {currentLogId ? (
+                    <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <span className="font-mono">{currentLogId}.json</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                      </svg>
+                      <span>New Conversation</span>
+                    </div>
+                  )}
+                  
+                  {/* New Conversation Button - Show different states */}
+                  {(currentLogId || conversation.length > 0) && (
+                    <div className="relative group">
+                      <button
+                        onClick={() => {
+                          // Confirm before clearing if there's an active conversation
+                          if (conversation.length > 0 && !currentLogId) {
+                            if (!confirm('Start a new conversation? Current conversation will be cleared.')) {
+                              return;
+                            }
+                          }
+                          // Clear loaded session data
+                          setSession(null);
+                          setConversation([]);
+                          setCurrentLogId(null);
+                          setStageAnalysis(null);
+                          console.log('Starting new conversation');
+                        }}
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg transition-all duration-200"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                        </svg>
+                        <span>New</span>
+                      </button>
+                      
+                      {/* Tooltip on hover */}
+                      <div className="absolute right-0 top-full mt-2 w-48 p-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                        <div className="absolute -top-1 right-4 w-2 h-2 bg-gray-900 transform rotate-45"></div>
+                        {currentLogId ? 'Start fresh conversation' : 'Clear current chat and start over'}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
               {/* Messages */}
               <div className="flex-1 overflow-y-auto p-6 space-y-4">
                 {conversation.length === 0 ? (

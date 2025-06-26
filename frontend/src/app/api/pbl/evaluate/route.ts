@@ -10,7 +10,7 @@ import yaml from 'yaml';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { sessionId, stageId } = body;
+    const { sessionId, stageId, language } = body;
 
     if (!sessionId || !stageId) {
       return NextResponse.json(
@@ -91,126 +91,111 @@ export async function POST(request: NextRequest) {
     console.log('Evaluating user inputs:', conversations.map(c => c.user));
     console.log('Total user input length:', conversations.reduce((sum, c) => sum + (c.user || '').length, 0));
     
-    // Generate evaluation using AI with KSA and rubrics context
-    const evaluationPrompt = `
-你是一位專業的學習評估專家。請根據以下對話記錄，**嚴格且客觀地**評估學習者在此階段的表現。
+    // Generate evaluation prompt data
+    const conversationCount = conversations.filter(c => c.user).length;
+    const totalInputLength = conversations.reduce((sum, c) => sum + (c.user || '').length, 0);
+    
+    const evaluationPrompt = `You are a professional learning assessment expert. Please **strictly and objectively** evaluate the learner's performance in this stage based on the following conversation records.
 
-重要評估原則：
-1. **只評估學習者實際說了什麼**，不要評估AI助手的回應
-2. 如果學習者只是打招呼（如"hi"、"hello"）或給出極短回應，應該給予**極低分數**（0-20分）
-3. 學習者必須**實際嘗試解決任務**才能獲得及格分數
-4. 評分應基於學習者展現的**努力程度、理解深度、和任務完成度**
+Important evaluation principles:
+1. **Only evaluate what the learner actually said**, do not evaluate the AI assistant's responses
+2. If the learner just greets (like "hi", "hello") or gives very short responses, they should receive **very low scores** (0-20 points)
+3. The learner must **actually attempt to solve the task** to receive a passing score
+4. Scoring should be based on the learner's demonstrated **effort level, depth of understanding, and task completion**
 
-階段資訊：
-- 名稱：${stage?.name || stageId}
-- 類型：${stage?.stageType}
-- 模式重點：${stage?.modalityFocus}
-- 任務指示：${stage?.tasks?.[0]?.instructions?.join('; ') || '無'}
-- 預期成果：${stage?.tasks?.[0]?.expectedOutcome || '無'}
+Stage Information:
+- Name: ${stage?.name || stageId}
+- Type: ${stage?.stageType}
+- Modality Focus: ${stage?.modalityFocus}
+- Task Instructions: ${stage?.tasks?.[0]?.instructions?.join('; ') || 'None'}
+- Expected Outcome: ${stage?.tasks?.[0]?.expectedOutcome || 'None'}
 
-目標領域 (Target Domains)：
-${scenario?.targetDomain?.join(', ') || '無特定領域'}
+Target Domains:
+${scenario?.targetDomain?.join(', ') || 'No specific domains'}
 
-評估重點 KSA：
-- 主要評估項目：${assessmentFocus.primary.join(', ')}（請給予較高權重）
-- 次要評估項目：${assessmentFocus.secondary.join(', ')}
+Assessment Focus KSA:
+- Primary items: ${assessmentFocus.primary.join(', ')} (please give higher weight)
+- Secondary items: ${assessmentFocus.secondary.join(', ')}
 
-完整 KSA 映射：
-知識 (Knowledge)：${scenario?.ksaMapping?.knowledge?.join(', ') || '無'}
-技能 (Skills)：${scenario?.ksaMapping?.skills?.join(', ') || '無'}
-態度 (Attitudes)：${scenario?.ksaMapping?.attitudes?.join(', ') || '無'}
+Full KSA Mapping:
+Knowledge: ${scenario?.ksaMapping?.knowledge?.join(', ') || 'None'}
+Skills: ${scenario?.ksaMapping?.skills?.join(', ') || 'None'}
+Attitudes: ${scenario?.ksaMapping?.attitudes?.join(', ') || 'None'}
 
-評估標準 (Rubrics)：
-${scenario?.rubricsCriteria?.map(rubric => `
-- ${rubric.criterion} (權重: ${rubric.weight * 100}%)
-  Level 1: ${rubric.levels[0].description}
-  Level 2: ${rubric.levels[1].description}
-  Level 3: ${rubric.levels[2].description}
-  Level 4: ${rubric.levels[3].description}
-`).join('\n') || '無特定標準'}
-
-對話記錄（請特別注意學習者實際輸入的內容）：
+Conversation Records (pay special attention to learner's actual inputs):
 ${conversations.map((conv, i) => `
-對話 ${i + 1}:
-【學習者輸入】：${conv.user || '(無輸入)'}
-【AI回應】：${conv.ai ? conv.ai.substring(0, 200) + '...' : '(無回應)'}
+Conversation ${i + 1}:
+[Learner Input]: ${conv.user || '(no input)'}
+[AI Response]: ${conv.ai ? conv.ai.substring(0, 200) + '...' : '(no response)'}
 `).join('\n')}
 
-學習者總共輸入次數：${conversations.filter(c => c.user).length}
-學習者實際內容字數：${conversations.reduce((sum, c) => sum + (c.user || '').length, 0)}
+Total learner inputs: ${conversationCount}
+Total input characters: ${totalInputLength}
 
-請基於對話內容，評估學習者在以下各項的表現：
+Please evaluate the learner's performance in the following areas:
 
-**評分準則**：
-- 如果學習者只是簡單打招呼或極短回應，所有分數應在 0-20 分範圍
-- 如果學習者有嘗試但未完成任務，分數應在 20-50 分範圍
-- 如果學習者有認真嘗試並部分完成任務，分數應在 50-70 分範圍
-- 只有當學習者充分展現理解並完成任務時，才給予 70 分以上
+**Scoring Criteria**:
+- If learner only greets or gives very short responses, all scores should be in 0-20 range
+- If learner attempts but doesn't complete task, scores should be in 20-50 range
+- If learner seriously attempts and partially completes task, scores should be in 50-70 range
+- Only when learner fully demonstrates understanding and completes task, give 70+ points
 
-1. 整體表現分數（0-100）：基於學習者的實際努力和任務完成度
+1. Overall performance score (0-100): Based on actual effort and task completion
 
-2. 個別 KSA 項目評分（每項 0-100）：
-   如果學習者未展現相關能力，該項應給 0-10 分
+2. Individual KSA scores (0-100 each):
+   If learner doesn't demonstrate relevant ability, give 0-10 points
 
-3. Domain 評分（0-100）：
-   - engaging_with_ai: 學習者是否真的在與 AI 互動解決問題？
-   - creating_with_ai: 學習者是否嘗試創造內容？
-   - managing_with_ai: 學習者是否展現管理能力？
-   - designing_with_ai: 學習者是否有設計思維？
+3. Domain scores (0-100):
+   - engaging_with_ai: Is the learner really engaging with AI to solve problems?
+   - creating_with_ai: Did the learner attempt to create content?
+   - managing_with_ai: Did the learner show management abilities?
+   - designing_with_ai: Did the learner show design thinking?
 
-4. Rubrics 評分（1-4 級）：
-   Level 1: 未達標準（如只打招呼）
-   Level 2: 初步嘗試
-   Level 3: 部分達成
-   Level 4: 完全達成
+4. Rubrics scores (1-4 levels):
+   Level 1: Below standard (e.g., just greeting)
+   Level 2: Initial attempt
+   Level 3: Partially achieved
+   Level 4: Fully achieved
 
-5. 優點（至少1點，每點都要包含相關的 KSA 代碼，格式："描述文字 (K1.1)" 或 "描述文字 (K1.1, S2.1)"）
-6. 需要改進的地方（至少2點，每點都要包含相關的 KSA 代碼，格式同上）
-7. 下一步建議（至少2點，每點都要包含相關的 KSA 代碼，格式同上）
+5. Strengths (at least 1 point, each must include relevant KSA codes, format: "description (K1.1)" or "description (K1.1, S2.1)")
+6. Areas for improvement (at least 2 points, each must include relevant KSA codes, same format)
+7. Next steps (at least 2 points, each must include relevant KSA codes, same format)
 
-請用 JSON 格式回應：
+Please respond in JSON format:
 {
-  "score": 數字,
+  "score": number,
   "ksaScores": {
-    "knowledge": 數字 (0-100),
-    "skills": 數字 (0-100),
-    "attitudes": 數字 (0-100)
+    "knowledge": number (0-100),
+    "skills": number (0-100),
+    "attitudes": number (0-100)
   },
   "individualKsaScores": {
-    "K1.1": 數字 (0-100),
-    "K1.2": 數字 (0-100),
-    "K2.1": 數字 (0-100),
-    "K2.3": 數字 (0-100),
-    "S1.1": 數字 (0-100),
-    "S1.2": 數字 (0-100),
-    "S2.1": 數字 (0-100),
-    "S2.3": 數字 (0-100),
-    "A1.1": 數字 (0-100),
-    "A1.2": 數字 (0-100),
-    "A2.1": 數字 (0-100)
+    "K1.1": number (0-100),
+    ...
   },
   "domainScores": {
-    "engaging_with_ai": 數字 (0-100),
-    "creating_with_ai": 數字 (0-100),
-    "managing_with_ai": 數字 (0-100),
-    "designing_with_ai": 數字 (0-100)
+    "engaging_with_ai": number (0-100),
+    "creating_with_ai": number (0-100),
+    "managing_with_ai": number (0-100),
+    "designing_with_ai": number (0-100)
   },
   "rubricsScores": {
-    "Research Quality": 級別 (1-4),
-    "AI Utilization": 級別 (1-4),
-    "Content Quality": 級別 (1-4),
-    "Learning Progress": 級別 (1-4)
+    "Research Quality": level (1-4),
+    "AI Utilization": level (1-4),
+    "Content Quality": level (1-4),
+    "Learning Progress": level (1-4)
   },
-  "strengths": ["描述優點 (K1.1)", "另一個優點 (S1.1, A1.1)"],
-  "improvements": ["需要改進的地方 (K2.1)", "另一個改進點 (S2.1)"],
-  "nextSteps": ["具體行動建議 (K1.1, S1.1)", "另一個建議 (S2.3)"]
-}
-`;
+  "strengths": ["strength description (K1.1)", "another strength (S1.1, A1.1)"],
+  "improvements": ["area needing improvement (K2.1)", "another improvement (S2.1)"],
+  "nextSteps": ["specific action suggestion (K1.1, S1.1)", "another suggestion (S2.3)"]
+}`;
 
-    // Create a VertexAIService instance for evaluation
+    // Create a VertexAIService instance for evaluation with language-aware system prompt
     const evaluationService = new VertexAIService({
       model: 'gemini-2.0-flash-exp',
-      systemPrompt: '你是一位嚴格但公正的學習評估專家。請根據學習者的實際表現給予客觀評分。如果學習者只是打招呼或未嘗試解決任務，必須給予低分。',
+      systemPrompt: `You are a strict but fair learning assessment expert. Please provide objective scores based on the learner's actual performance. If the learner only greets or does not attempt to solve the task, you must give low scores.
+      
+IMPORTANT: Respond in the language specified by code: ${language || 'en'}. All feedback, strengths, improvements, and suggestions must be in this language.`,
       temperature: 0.1, // Lower temperature for more consistent evaluation
       maxOutputTokens: 2048
     });
@@ -230,38 +215,20 @@ ${conversations.map((conv, i) => `
       }
     } catch (error) {
       console.error('Error parsing AI response:', error);
-      // Fallback evaluation if parsing fails - give conservative scores
-      const totalWords = conversations.reduce((sum, c) => sum + (c.user || '').length, 0);
-      const baseScore = totalWords < 10 ? 10 : totalWords < 50 ? 30 : 50;
+      console.error('AI response content:', aiResponse.content);
       
-      evaluation = {
-        score: baseScore,
-        ksaScores: {
-          knowledge: baseScore - 5,
-          skills: baseScore,
-          attitudes: baseScore + 5
+      // Return error response instead of fake data
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'EVALUATION_PARSE_ERROR',
+            message: 'Failed to parse evaluation results from AI response',
+            details: error instanceof Error ? error.message : 'Unknown parsing error'
+          }
         },
-        individualKsaScores: {
-          "K1.1": baseScore - 5, "K1.2": baseScore - 5, "K2.1": baseScore - 5, "K2.3": baseScore - 5,
-          "S1.1": baseScore, "S1.2": baseScore, "S2.1": baseScore, "S2.3": baseScore,
-          "A1.1": baseScore + 5, "A1.2": baseScore + 5, "A2.1": baseScore + 5
-        },
-        domainScores: {
-          "engaging_with_ai": baseScore,
-          "creating_with_ai": baseScore - 10,
-          "managing_with_ai": baseScore - 10,
-          "designing_with_ai": baseScore - 15
-        },
-        rubricsScores: {
-          "Research Quality": 1,
-          "AI Utilization": totalWords < 10 ? 1 : 2,
-          "Content Quality": 1,
-          "Learning Progress": totalWords < 10 ? 1 : 2
-        },
-        strengths: ['願意開始學習 (A1.1)'],
-        improvements: ['需要更積極參與任務 (S1.1)', '應該嘗試回答問題而非只是打招呼 (K1.1)'],
-        nextSteps: ['認真閱讀任務說明並理解要求 (K1.1)', '嘗試回答AI提出的問題 (S1.1, A1.2)']
-      };
+        { status: 500 }
+      );
     }
 
     // Build KSA achievement map with individual scores
