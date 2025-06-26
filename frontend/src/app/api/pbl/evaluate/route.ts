@@ -25,7 +25,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get session data
+    // Get session data - force fresh read from GCS
+    console.log('Fetching session for evaluation:', sessionId);
     const result = await pblGCS.getSession(sessionId);
     if (!result) {
       return NextResponse.json(
@@ -40,18 +41,36 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { sessionData } = result;
+    const { sessionData, logId } = result;
+    
+    // Debug logging
+    console.log('Retrieved session from logId:', logId);
+    console.log('Session data keys:', Object.keys(sessionData));
+    console.log('ProcessLogs exists?', 'processLogs' in sessionData);
+    console.log('ProcessLogs length:', sessionData.processLogs?.length || 0);
+    console.log('ProcessLogs for stage', stageId, ':', sessionData.processLogs?.filter(log => log.stageId === stageId).length || 0);
+    console.log('First few logs:', sessionData.processLogs?.slice(0, 3));
     
     // Get stage process logs
-    const stageLogs = sessionData.processLogs.filter(log => log.stageId === stageId);
+    const stageLogs = (sessionData.processLogs || []).filter(log => log.stageId === stageId);
     
     // Get conversation history for this stage with user inputs from process logs
     const conversations = stageLogs
-      .filter(log => log.detail?.aiInteraction)
-      .map(log => ({
-        user: log.detail.aiInteraction?.prompt || log.detail.userInput || '',
-        ai: log.detail.aiInteraction?.response || ''
-      }))
+      .filter(log => log.actionType === 'write' || log.detail?.aiInteraction)
+      .map(log => {
+        // For write actions, get userInput
+        if (log.actionType === 'write') {
+          return {
+            user: log.detail?.userInput || '',
+            ai: ''
+          };
+        }
+        // For interaction actions, get both prompt and response
+        return {
+          user: log.detail?.aiInteraction?.prompt || log.detail?.userInput || '',
+          ai: log.detail?.aiInteraction?.response || ''
+        };
+      })
       .filter(conv => conv.user || conv.ai); // Filter out empty conversations
 
     // Get scenario data by reading the YAML file directly
@@ -88,6 +107,8 @@ export async function POST(request: NextRequest) {
     const assessmentFocus = stage.assessmentFocus || { primary: [], secondary: [] };
     
     // Log what we're evaluating for debugging
+    console.log('Stage logs count:', stageLogs.length);
+    console.log('Conversations count:', conversations.length);
     console.log('Evaluating user inputs:', conversations.map(c => c.user));
     console.log('Total user input length:', conversations.reduce((sum, c) => sum + (c.user || '').length, 0));
     

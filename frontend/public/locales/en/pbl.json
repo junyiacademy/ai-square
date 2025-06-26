@@ -128,7 +128,7 @@
     "congratulations": "Congratulations!",
     "scenarioCompleted": "You have completed {{title}}",
     "completionStats": "Completion Statistics",
-    "completionRate": "Completion Rate",
+    "totalInteractions": "Total Interactions",
     "stagesCompleted": "Stages Completed",
     "totalTimeSpent": "Total Time Spent",
     "learningObjectivesAchieved": "Learning Objectives Achieved",

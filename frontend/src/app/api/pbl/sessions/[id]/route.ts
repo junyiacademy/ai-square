@@ -113,45 +113,64 @@ export async function PATCH(
       );
     }
 
-    // Update session data
+    // Filter out special update fields that shouldn't be stored in session data
+    const { newProcessLog, newStageResult, progress, ...otherUpdates } = updates;
+    
+    // Update session data (excluding special fields)
     const updatedSession: SessionData = {
       ...session,
-      ...updates,
+      ...otherUpdates,
       lastActiveAt: new Date().toISOString()
     };
 
     // If updating progress
-    if (updates.progress) {
+    if (progress) {
       updatedSession.progress = {
         ...session.progress,
-        ...updates.progress
+        ...progress
       };
     }
 
     // If adding process logs
-    if (updates.newProcessLog) {
+    if (newProcessLog) {
+      console.log('Adding new process log to session:', sessionId);
+      console.log('Current processLogs count:', session.processLogs?.length || 0);
+      console.log('New process log:', newProcessLog);
+      
       updatedSession.processLogs = [
-        ...session.processLogs,
-        updates.newProcessLog
+        ...(session.processLogs || []),
+        newProcessLog
       ];
+      
+      console.log('Updated processLogs count:', updatedSession.processLogs.length);
     }
 
     // If adding stage results
-    if (updates.newStageResult) {
+    if (newStageResult) {
       updatedSession.stageResults = [
         ...session.stageResults,
-        updates.newStageResult
+        newStageResult
       ];
     }
 
-    // Update in memory first for immediate response
+    // Update in memory first
     sessions.set(sessionId, updatedSession);
 
-    // Save to GCS asynchronously (don't await to avoid blocking the response)
-    pblGCS.updateSession(sessionId, updatedSession).catch(gcsError => {
-      console.error('Failed to save to GCS (async):', gcsError);
-      // This won't affect the response since we're not awaiting
-    });
+    // Save to GCS synchronously when adding process logs to ensure data consistency
+    if (newProcessLog) {
+      try {
+        await pblGCS.updateSession(sessionId, updatedSession);
+        console.log('Process log saved to GCS successfully');
+      } catch (gcsError) {
+        console.error('Failed to save process log to GCS:', gcsError);
+        // Continue with in-memory storage
+      }
+    } else {
+      // For other updates, save asynchronously
+      pblGCS.updateSession(sessionId, updatedSession).catch(gcsError => {
+        console.error('Failed to save to GCS (async):', gcsError);
+      });
+    }
 
     return NextResponse.json({
       success: true,

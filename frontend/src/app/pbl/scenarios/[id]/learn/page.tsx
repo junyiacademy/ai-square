@@ -32,6 +32,8 @@ export default function PBLLearnPage() {
   const [existingLogs, setExistingLogs] = useState<any[]>([]);
   const [currentLogId, setCurrentLogId] = useState<string | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [sessionStartTime, setSessionStartTime] = useState<number>(Date.now());
+  const [lastInteractionTime, setLastInteractionTime] = useState<number>(Date.now());
   
   // Ref for auto-scrolling
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -157,6 +159,8 @@ export default function PBLLearnPage() {
             setSession(existingSession);
             // Set currentLogId from the existing session's ID
             setCurrentLogId(existingSession.id);
+            // Reset session start time for time tracking
+            setSessionStartTime(Date.now());
             
             // Set current task based on session progress
             const stageIndex = existingSession.currentStage || 0;
@@ -243,6 +247,8 @@ export default function PBLLearnPage() {
         // Set the loaded session as current
         setSession(loadedSession);
         setCurrentLogId(logSessionId);
+        // Reset session start time for time tracking
+        setSessionStartTime(Date.now());
         
         // Load conversation history for current stage
         const currentStageId = scenario?.stages[loadedSession.currentStage]?.id;
@@ -282,25 +288,49 @@ export default function PBLLearnPage() {
     // Only save if session exists (i.e., user has started chatting)
     if (!session) {
       console.log('No session to save - user hasn\'t started chatting yet');
-      return;
+      return Promise.resolve();
     }
     
     setSaving(true);
     try {
-      await fetch(`/api/pbl/sessions/${session.id}`, {
+      // Calculate total time spent
+      const currentTime = Date.now();
+      const sessionDuration = Math.floor((currentTime - sessionStartTime) / 1000); // Convert to seconds
+      
+      console.log('Saving progress - Time spent:', sessionDuration, 'seconds');
+      
+      const response = await fetch(`/api/pbl/sessions/${session.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          progress: session.progress,
+          progress: {
+            ...session.progress,
+            timeSpent: sessionDuration
+          },
           lastActiveAt: new Date().toISOString()
         })
       });
+      
+      if (!response.ok) {
+        throw new Error('Failed to save progress');
+      }
+      
+      // Update local session state
+      setSession(prev => prev ? {
+        ...prev,
+        progress: {
+          ...prev.progress,
+          timeSpent: sessionDuration
+        }
+      } : null);
+      
+      console.log('Progress saved successfully');
     } catch (error) {
       console.error('Error saving progress:', error);
     } finally {
       setSaving(false);
     }
-  }, [session]);
+  }, [session, sessionStartTime]);
 
   // Auto-save session progress
   useEffect(() => {
@@ -383,6 +413,7 @@ export default function PBLLearnPage() {
           currentSession = sessionData.data.sessionData;
           setSession(currentSession);
           setCurrentLogId(sessionData.data.logId); // Set the log ID
+          setSessionStartTime(Date.now()); // Reset session start time
           console.log('Session created:', currentSession.id, 'Log ID:', sessionData.data.logId);
         } else {
           throw new Error('Failed to create session');
@@ -393,6 +424,11 @@ export default function PBLLearnPage() {
         throw new Error('No session available');
       }
 
+      // Calculate time spent since last interaction
+      const currentTime = Date.now();
+      const timeSinceLastInteraction = Math.floor((currentTime - lastInteractionTime) / 1000); // Convert to seconds
+      setLastInteractionTime(currentTime);
+
       // Log user action with task ID
       const processLog: ProcessLog = {
         id: `log-${Date.now()}`,
@@ -402,7 +438,7 @@ export default function PBLLearnPage() {
         actionType: 'write' as ActionType,
         detail: {
           userInput: currentUserInput,
-          timeSpent: 0, // TODO: Track actual time
+          timeSpent: timeSinceLastInteraction,
           taskId: currentTask?.id // Add task ID to process log
         }
       };
@@ -431,7 +467,8 @@ export default function PBLLearnPage() {
             taskId: currentTask?.id || '',
             taskTitle: currentTask?.title || '',
             taskInstructions: currentTask?.instructions || []
-          }
+          },
+          userProcessLog: processLog // Send the user's process log to be saved together with AI response
         })
       });
 
@@ -440,7 +477,8 @@ export default function PBLLearnPage() {
       if (responseData.success) {
         setConversation(prev => [...prev, responseData.data.conversation]);
         
-        // Update session with new process log
+        // Update local session state
+        // Both user and AI process logs are saved by the chat API to avoid race conditions
         setSession(prev => prev ? {
           ...prev,
           processLogs: [...prev.processLogs, processLog]
@@ -559,6 +597,9 @@ export default function PBLLearnPage() {
       // Set transitioning state immediately
       setIsTransitioning(true);
       
+      // Save current progress before moving to next stage
+      await saveProgress();
+      
       // Move to next stage - complete current stage session first
       const newStageIndex = session.currentStage + 1;
       
@@ -611,6 +652,9 @@ export default function PBLLearnPage() {
 
     // Set transitioning state for visual feedback
     setIsTransitioning(true);
+
+    // Save final progress before completing
+    await saveProgress();
 
     // Navigate immediately
     router.push(`/pbl/scenarios/${scenarioId}/complete`);

@@ -11,7 +11,8 @@ export async function POST(request: NextRequest) {
       aiModule, 
       stageContext,
       userId,
-      language = 'en'
+      language = 'en',
+      userProcessLog
     } = body;
 
     if (!sessionId || !message || !aiModule || !stageContext) {
@@ -48,10 +49,41 @@ export async function POST(request: NextRequest) {
     // Update process log with user prompt
     processLog.detail.aiInteraction!.prompt = message;
 
-    // Async save to GCS (don't wait)
-    pblGCS.appendProcessLog(sessionId, processLog).catch(error => {
-      console.error('Failed to save process log:', error);
-    });
+    // Save both user and AI process logs together to avoid race conditions
+    const saveProcessLogs = async () => {
+      try {
+        // Get current session
+        const result = await pblGCS.getSession(sessionId);
+        if (!result) {
+          console.error(`Session ${sessionId} not found`);
+          return;
+        }
+        
+        const { sessionData, logId } = result;
+        
+        // Add both logs to session
+        if (!sessionData.processLogs) {
+          sessionData.processLogs = [];
+        }
+        
+        // Add user process log first (if provided)
+        if (userProcessLog) {
+          sessionData.processLogs.push(userProcessLog);
+        }
+        
+        // Add AI process log
+        sessionData.processLogs.push(processLog);
+        
+        // Save session with both logs
+        await pblGCS.saveSession(sessionId, sessionData, logId);
+        console.log(`Saved ${userProcessLog ? 2 : 1} process logs for session ${sessionId}`);
+      } catch (error) {
+        console.error('Failed to save process logs:', error);
+      }
+    };
+    
+    // Save asynchronously but don't wait
+    saveProcessLogs();
 
     return NextResponse.json({
       success: true,

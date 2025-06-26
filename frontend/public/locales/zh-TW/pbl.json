@@ -128,7 +128,7 @@
     "congratulations": "恭喜您！",
     "scenarioCompleted": "您已完成 {{title}}",
     "completionStats": "完成統計",
-    "completionRate": "完成率",
+    "totalInteractions": "總互動次數",
     "stagesCompleted": "已完成階段",
     "totalTimeSpent": "總花費時間",
     "learningObjectivesAchieved": "達成的學習目標",

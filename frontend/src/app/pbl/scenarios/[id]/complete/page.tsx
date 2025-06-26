@@ -19,6 +19,7 @@ export default function PBLCompletePage() {
   const [loading, setLoading] = useState(true);
   const [totalTimeSpent, setTotalTimeSpent] = useState(0);
   const [completedStages, setCompletedStages] = useState(0);
+  const [totalInteractions, setTotalInteractions] = useState(0);
   const [analyzingStage, setAnalyzingStage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -69,17 +70,29 @@ export default function PBLCompletePage() {
           const latestSessions = Array.from(latestSessionsByStage.values());
           setSessions(latestSessions);
           
-          // Calculate total time and completed stages from latest sessions only
+          // Calculate total time, completed stages, and interactions from latest sessions only
           let totalTime = 0;
+          let totalMessages = 0;
           const stagesCompleted = new Set<number>();
           
           latestSessions.forEach((session: SessionData) => {
+            console.log('Session:', session.id, 'TimeSpent:', session.progress.timeSpent, 'ProcessLogs:', session.processLogs?.length);
             totalTime += session.progress.timeSpent;
             stagesCompleted.add(session.currentStage);
+            
+            // Count user messages from process logs
+            if (session.processLogs) {
+              const userMessages = session.processLogs.filter(log => 
+                log.actionType === 'write' && log.detail?.userInput
+              );
+              console.log('User messages in session:', userMessages.length);
+              totalMessages += userMessages.length;
+            }
           });
           
           setTotalTimeSpent(totalTime);
           setCompletedStages(stagesCompleted.size);
+          setTotalInteractions(totalMessages);
         }
       } catch (error) {
         console.error('Error loading completion data:', error);
@@ -121,6 +134,12 @@ export default function PBLCompletePage() {
 
   const handleAnalyzeStage = async (sessionId: string, stageId: string) => {
     setAnalyzingStage(stageId);
+    
+    // Find the session being analyzed
+    const sessionToAnalyze = sessions.find(s => s.id === sessionId);
+    console.log('Analyzing session:', sessionId, 'for stage:', stageId);
+    console.log('Session processLogs count:', sessionToAnalyze?.processLogs?.length || 0);
+    console.log('Session status:', sessionToAnalyze?.status);
     
     try {
       const evaluateResponse = await fetch('/api/pbl/evaluate', {
@@ -190,9 +209,6 @@ export default function PBLCompletePage() {
     );
   }
 
-  const completionRate = scenario.stages.length > 0 
-    ? Math.round((completedStages / scenario.stages.length) * 100) 
-    : 0;
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -217,22 +233,22 @@ export default function PBLCompletePage() {
 
         {/* Completion Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* Completion Rate */}
+          {/* Total Interactions */}
           <div className="relative group">
             <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
             <div className="relative bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl">
               <div className="flex items-center justify-between mb-2">
                 <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
                   <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                   </svg>
                 </div>
                 <span className="text-4xl font-bold bg-gradient-to-br from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-                  {completionRate}%
+                  {totalInteractions}
                 </span>
               </div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                {t('complete.completionRate')}
+                {t('complete.totalInteractions')}
               </p>
             </div>
           </div>
