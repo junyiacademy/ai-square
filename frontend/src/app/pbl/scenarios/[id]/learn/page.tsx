@@ -224,11 +224,15 @@ export default function PBLLearnPage() {
       
       // Create session on first message if not exists
       if (!currentSession) {
-        // Get current stage index from localStorage or default to 0
-        const savedProgress = localStorage.getItem(`pbl-progress-${scenarioId}`);
-        const currentStageIndex = savedProgress ? JSON.parse(savedProgress).currentStage : 0;
+        // Use the actual current stage based on the current task
+        const currentStageIndex = scenario.stages.findIndex(stage => 
+          stage.tasks.some(task => task.id === currentTask?.id)
+        );
         
-        console.log(`Creating new session for stage ${currentStageIndex}...`);
+        // Fallback to 0 if not found
+        const actualStageIndex = currentStageIndex >= 0 ? currentStageIndex : 0;
+        
+        console.log(`Creating new session for stage ${actualStageIndex} (task: ${currentTask?.id})...`);
         
         // Try to get user info from cookie
         let userId = 'user-demo';
@@ -254,9 +258,9 @@ export default function PBLLearnPage() {
             scenarioTitle: scenario.title,
             userId,
             language: i18n.language,
-            stageIndex: currentStageIndex,
-            stageId: scenario.stages[currentStageIndex].id,
-            taskId: currentTask?.id || scenario.stages[currentStageIndex].tasks[0]?.id
+            stageIndex: actualStageIndex,
+            stageId: scenario.stages[actualStageIndex].id,
+            taskId: currentTask?.id || scenario.stages[actualStageIndex].tasks[0]?.id
           })
         });
 
@@ -524,7 +528,11 @@ export default function PBLLearnPage() {
     );
   }
 
-  const stageIndex = session?.currentStage || 0;
+  // Get the actual stage index based on current task
+  const actualStageIndex = scenario.stages.findIndex(stage => 
+    stage.tasks.some(task => task.id === currentTask?.id)
+  );
+  const stageIndex = actualStageIndex >= 0 ? actualStageIndex : (session?.currentStage || 0);
   const currentStage = scenario.stages[stageIndex];
   const completedStages = session?.progress?.completedStages || [];
   const progress = scenario ? ((completedStages.length / scenario.stages.length) * 100) : 0;
@@ -719,12 +727,70 @@ export default function PBLLearnPage() {
                           {t('learn.strengths')}
                         </h4>
                         <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                          {stageAnalysis.feedback.strengths.map((strength: string, i: number) => (
-                            <li key={i} className="flex items-start">
-                              <span className="text-green-500 mr-2">•</span>
-                              {strength}
-                            </li>
-                          ))}
+                          {stageAnalysis.feedback.strengths.map((strength: string, i: number) => {
+                            // Extract KSA codes from the strength text (e.g., "Good effort (K1.1, S2.1)")
+                            const ksaMatch = strength.match(/\(([^)]+)\)/);
+                            const text = strength.replace(/\s*\([^)]+\)/, '');
+                            const ksaCodes = ksaMatch ? ksaMatch[1].split(',').map(code => code.trim()) : [];
+                            
+                            return (
+                              <li key={i} className="flex items-start">
+                                <span className="text-green-500 mr-2">•</span>
+                                <span className="flex-1">
+                                  {text}
+                                  {ksaCodes.length > 0 && (
+                                    <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
+                                      ({ksaCodes.map((code, idx) => (
+                                        <span key={idx} className="inline-flex items-center">
+                                          <span className="font-medium text-green-600 dark:text-green-400">{code}</span>
+                                          {idx < ksaCodes.length - 1 && ', '}
+                                        </span>
+                                      ))})
+                                    </span>
+                                  )}
+                                </span>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    )}
+                    
+                    {/* Improvements */}
+                    {stageAnalysis.feedback?.improvements && stageAnalysis.feedback.improvements.length > 0 && (
+                      <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-4">
+                        <h4 className="text-sm font-medium text-amber-700 dark:text-amber-400 mb-2 flex items-center">
+                          <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                          </svg>
+                          {t('learn.improvements', '需要改進')}
+                        </h4>
+                        <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
+                          {stageAnalysis.feedback.improvements.map((improvement: string, i: number) => {
+                            // Extract KSA codes from the improvement text
+                            const ksaMatch = improvement.match(/\(([^)]+)\)/);
+                            const text = improvement.replace(/\s*\([^)]+\)/, '');
+                            const ksaCodes = ksaMatch ? ksaMatch[1].split(',').map(code => code.trim()) : [];
+                            
+                            return (
+                              <li key={i} className="flex items-start">
+                                <span className="text-amber-500 mr-2">•</span>
+                                <span className="flex-1">
+                                  {text}
+                                  {ksaCodes.length > 0 && (
+                                    <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
+                                      ({ksaCodes.map((code, idx) => (
+                                        <span key={idx} className="inline-flex items-center">
+                                          <span className="font-medium text-amber-600 dark:text-amber-400">{code}</span>
+                                          {idx < ksaCodes.length - 1 && ', '}
+                                        </span>
+                                      ))})
+                                    </span>
+                                  )}
+                                </span>
+                              </li>
+                            );
+                          })}
                         </ul>
                       </div>
                     )}
@@ -739,12 +805,31 @@ export default function PBLLearnPage() {
                           {t('learn.suggestions')}
                         </h4>
                         <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                          {stageAnalysis.feedback.nextSteps.map((step: string, i: number) => (
-                            <li key={i} className="flex items-start">
-                              <span className="text-blue-500 mr-2">•</span>
-                              {step}
-                            </li>
-                          ))}
+                          {stageAnalysis.feedback.nextSteps.map((step: string, i: number) => {
+                            // Extract KSA codes from the suggestion text
+                            const ksaMatch = step.match(/\(([^)]+)\)/);
+                            const text = step.replace(/\s*\([^)]+\)/, '');
+                            const ksaCodes = ksaMatch ? ksaMatch[1].split(',').map(code => code.trim()) : [];
+                            
+                            return (
+                              <li key={i} className="flex items-start">
+                                <span className="text-blue-500 mr-2">•</span>
+                                <span className="flex-1">
+                                  {text}
+                                  {ksaCodes.length > 0 && (
+                                    <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
+                                      ({ksaCodes.map((code, idx) => (
+                                        <span key={idx} className="inline-flex items-center">
+                                          <span className="font-medium text-blue-600 dark:text-blue-400">{code}</span>
+                                          {idx < ksaCodes.length - 1 && ', '}
+                                        </span>
+                                      ))})
+                                    </span>
+                                  )}
+                                </span>
+                              </li>
+                            );
+                          })}
                         </ul>
                       </div>
                     )}

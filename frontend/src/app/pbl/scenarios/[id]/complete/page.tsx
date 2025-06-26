@@ -116,7 +116,7 @@ export default function PBLCompletePage() {
   const handleRetryScenario = () => {
     // Clear progress and start over
     localStorage.removeItem(`pbl-progress-${scenarioId}`);
-    router.push(`/pbl/scenarios/${scenarioId}/learn`);
+    router.push(`/pbl/scenarios/${scenarioId}`);
   };
 
   const handleAnalyzeStage = async (sessionId: string, stageId: string) => {
