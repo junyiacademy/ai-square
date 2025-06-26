@@ -1,0 +1,89 @@
+ai_usage:
+  complexity_breakdown:
+    medium_count: 1
+  estimated_cost_usd: 0.15000000000000002
+  interactions:
+  - complexity: medium
+    description: development - medium
+    estimated_cost: 0.15000000000000002
+    is_start_marker: false
+    task_type: development
+    timestamp: '2025-06-26T12:58:47.787582'
+  total_interactions: 1
+completion_checklist:
+  ai_metrics_recorded: false
+  code_implemented: false
+  documentation_updated: false
+  spec_defined: false
+  story_extracted: false
+  tests_passing: false
+  tests_written: false
+created_at: '2025-06-26T12:58:13.250272'
+description: pbl-frontend-mvp implementation
+dev_log:
+  sessions:
+  - activities: []
+    ai_interactions: []
+    challenges: []
+    date: '2025-06-26'
+    decisions: []
+    duration_minutes: 0
+    end_time: null
+    files_modified: []
+    next_steps: []
+    session_id: 1
+    start_time: '12:58:13'
+development:
+  branch: ticket/pbl-frontend-mvp
+  code_review_status: pending
+  commits: []
+  files_changed:
+  - ocs/handbook/product-requirements-document.md
+  - docs/tickets/active/
+  test_coverage: null
+id: 20250626_125813-pbl-frontend-mvp
+name: pbl-frontend-mvp
+spec:
+  acceptance_criteria:
+  - PBL 導航入口在頂部選單成功整合
+  - 完成 AI 輔助求職情境的四個階段實作
+  - 使用 Google Gemini API 實現 AI 對話功能
+  - GCS 儲存所有 session 資料和互動日誌
+  - 支援暫停/繼續功能，保留學習進度
+  - 完成階段後生成包含 KSA 評估的綜合報告
+  feature: PBL 情境式學習系統 Frontend-Only MVP
+  out_of_scope:
+  - Python FastAPI 後端開發
+  - WebSocket 真實即時通訊（使用輪詢替代）
+  - 語音輸入/輸出功能
+  - 多個情境選擇（只實作求職訓練）
+  purpose: 實作第一個完整的 PBL 情境學習體驗，驗證 Frontend-Only 架構可行性
+  technical_requirements:
+  - Next.js API Routes 處理所有後端邏輯
+  - Google Gemini API 整合（使用 @google/generative-ai SDK）
+  - GCS 作為主要資料儲存（參考現有 assessment 模組）
+  - TypeScript 類型定義完整
+  - React Context 管理 PBL session 狀態
+  - 響應式設計支援手機/平板/桌面
+status: active
+test_report:
+  coverage:
+    branches: 0
+    functions: 0
+    lines: 0
+    statements: 0
+  summary:
+    duration_ms: 0
+    failed: 0
+    passed: 0
+    skipped: 0
+    total_tests: 0
+  test_runs: []
+time_tracking:
+  actual_duration_minutes: 0
+  ai_time_minutes: 0
+  checkpoints: []
+  completed_at: null
+  human_time_minutes: 0
+  started_at: '2025-06-26T12:58:13.250272'
+type: feature

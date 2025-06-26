@@ -38,9 +38,13 @@ AI Square 是一個革命性的多智能體學習平台，旨在通過創新的 
 ```
 
 ### 2.2 技術棧
-- **前端**：Next.js 15, TypeScript, Tailwind CSS, React Query
-- **後端**：Python FastAPI, PostgreSQL, Redis
-- **AI 層**：LangChain, OpenAI API, Google Gemini, MCP
+- **前端**：Next.js 15, TypeScript, Tailwind CSS, React Query, D3.js
+- **後端**：Python FastAPI
+- **資料儲存**：
+  - Phase 2: Google Cloud Storage (GCS) 作為主要資料庫
+  - Phase 3: PostgreSQL (主資料庫), Redis (快取), Neo4j (知識圖譜)
+  - 客戶端: IndexedDB (離線儲存)
+- **AI 層**：LangChain, OpenAI API, Google Gemini, Claude 3, MCP Protocol
 - **部署**：Google Cloud Platform, Docker, Kubernetes
 
 ## 3. 功能模組詳細說明
@@ -81,7 +85,7 @@ AI Square 是一個革命性的多智能體學習平台，旨在通過創新的 
 
 #### 3.2.2 主要功能
 - **Rubrics 建構器**
-  - ❌ 視覺化拖拽介面（待開發）
+  - ❌ 視覺化拖拽介面（移至 Phase 3）
   - ❌ AI 輔助生成評估標準（待開發）
   - ✅ 多維度評分矩陣（YAML 格式）
   - ✅ 版本控制和協作（GCS 整合）
@@ -312,6 +316,908 @@ interface DynamicLanguageConfig {
 - ❌ 節點篩選（待開發）
 - ❌ 自定義佈局（待開發）
 
+### 3.9 PBL 情境式學習系統 (Problem-Based Learning System)
+
+#### 3.9.1 功能描述
+透過真實世界的情境模擬，提供任務導向的學習體驗。學習者在多階段任務中運用「聽說讀寫」不同能力，過程中的所有互動都被記錄並作為評估依據。每個情境都對應到特定的 KSA 能力指標和領域 Rubrics。
+
+#### 3.9.2 核心概念
+- **PBL 學習理念**
+  - 從做中學（Learning by Doing）
+  - 真實情境模擬（Real-world Scenarios）
+  - 過程重於結果（Process over Product）
+  - 多元能力整合（Multi-modal Skills）
+  - 個性化回饋（Personalized Feedback）
+
+#### 3.9.3 系統架構
+```typescript
+interface ScenarioProgram {
+  id: string;
+  title: string; // 如："AI 輔助求職訓練"
+  description: string;
+  targetDomain: DomainType[]; // 對應四大領域
+  ksaMapping: {
+    knowledge: string[]; // K1.1, K2.3 等
+    skills: string[]; // S1.2, S3.1 等
+    attitudes: string[]; // A1.1, A2.2 等
+  };
+  stages: Stage[];
+  estimatedDuration: number; // 分鐘
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+}
+
+interface Stage {
+  id: string;
+  name: string; // 如："搜尋合適職缺"
+  description: string;
+  stageType: 'research' | 'analysis' | 'creation' | 'interaction';
+  modalityFocus: 'reading' | 'writing' | 'listening' | 'speaking' | 'mixed';
+  
+  // KSA 評估重點
+  assessmentFocus: {
+    primary: string[]; // 主要評估的 KSA codes
+    secondary: string[]; // 次要評估的 KSA codes
+  };
+  
+  // Rubrics 對應
+  rubricsCriteria: {
+    criterion: string;
+    weight: number;
+    levels: RubricLevel[];
+  }[];
+  
+  // AI 模組配置
+  aiModules: {
+    role: 'assistant' | 'evaluator' | 'actor'; // 助手/評估者/角色扮演
+    model: string;
+    persona?: string; // 如：面試官、客戶、導師
+  }[];
+  
+  // 階段任務
+  tasks: Task[];
+  timeLimit?: number;
+  
+  // 過程記錄
+  loggingConfig: {
+    trackInteractions: boolean;
+    trackThinkingTime: boolean;
+    trackRevisions: boolean;
+    trackResourceUsage: boolean;
+  };
+}
+
+interface ProcessLog {
+  timestamp: Date;
+  stageId: string;
+  actionType: 'search' | 'write' | 'speak' | 'revise' | 'submit';
+  
+  // 詳細記錄
+  detail: {
+    userInput?: string;
+    aiInteraction?: {
+      model: string;
+      prompt: string;
+      response: string;
+      tokensUsed: number;
+    };
+    resourceAccessed?: string[];
+    timeSpent: number;
+  };
+  
+  // 即時評估
+  evaluation?: {
+    ksaCode: string;
+    score: number;
+    feedback: string;
+  };
+}
+
+interface StageResult {
+  stageId: string;
+  completed: boolean;
+  performanceMetrics: {
+    completionTime: number;
+    interactionCount: number;
+    revisionCount: number;
+    resourceUsage: number;
+  };
+  
+  // KSA 達成度
+  ksaAchievement: {
+    [ksaCode: string]: {
+      score: number; // 0-100
+      evidence: ProcessLog[];
+    };
+  };
+  
+  // Rubrics 評分
+  rubricsScore: {
+    [criterion: string]: {
+      level: number;
+      justification: string;
+    };
+  };
+  
+  feedback: {
+    strengths: string[];
+    improvements: string[];
+    nextSteps: string[];
+  };
+}
+```
+
+#### 3.9.4 情境範例：AI 輔助求職
+
+```yaml
+程式名稱: AI 輔助求職訓練
+目標領域: [Engaging with AI, Creating with AI, Managing with AI]
+對應 KSA:
+  Knowledge: [K1.2, K2.1, K3.3] # AI 搜尋、內容創作、隱私意識
+  Skills: [S1.3, S2.2, S3.1] # 提示工程、文書撰寫、批判思考
+  Attitudes: [A1.1, A2.2, A3.2] # 開放心態、創意思維、倫理考量
+
+階段 1: 職缺搜尋與篩選
+  類型: research
+  重點: reading + AI interaction
+  評估 KSA: [K1.2, S1.3, A1.1]
+  任務:
+    - 使用 AI 搜尋引擎找到 5 個合適職缺
+    - 學習有效的搜尋提示技巧
+    - 建立職缺評估標準
+  AI 角色: 搜尋助手
+  記錄重點: 搜尋策略、提示優化過程、篩選邏輯
+
+階段 2: 職缺需求分析
+  類型: analysis
+  重點: reading + critical thinking
+  評估 KSA: [K3.3, S3.1, A3.2]
+  任務:
+    - 深入分析 3 個目標職缺
+    - 識別關鍵技能要求
+    - 評估自身條件匹配度
+  AI 角色: 分析顧問
+  記錄重點: 分析深度、批判性思考、自我認知
+
+階段 3: 履歷客製化
+  類型: creation
+  重點: writing + AI collaboration
+  評估 KSA: [K2.1, S2.2, A2.2]
+  任務:
+    - 為目標職缺撰寫客製化履歷
+    - 使用 AI 優化用詞和格式
+    - 突出相關經驗和技能
+  AI 角色: 寫作教練
+  記錄重點: 寫作過程、AI 使用方式、修改迭代
+
+階段 4: 模擬面試
+  類型: interaction
+  重點: speaking + listening
+  評估 KSA: [S1.3, S3.1, A1.1]
+  任務:
+    - 與 AI 面試官進行模擬面試
+    - 回答行為面試問題
+    - 展現溝通和思考能力
+  AI 角色: 面試官
+  記錄重點: 表達能力、回應品質、壓力管理
+
+綜合評估報告:
+  - 各階段 KSA 達成度雷達圖
+  - 四大領域能力提升分析
+  - 個人化改進建議
+  - 下一步學習路徑推薦
+```
+
+#### 3.9.5 關鍵功能特色
+
+1. **多模態能力評估**
+   - ❌ 聽：理解指令、接收回饋
+   - ❌ 說：口語表達、即時對話
+   - ❌ 讀：資訊分析、批判閱讀
+   - ❌ 寫：文件創作、結構化表達
+
+2. **過程追蹤系統**
+   - ❌ 完整互動日誌
+   - ❌ 思考時間分析
+   - ❌ 修改歷程記錄
+   - ❌ 資源使用追蹤
+
+3. **智能評估引擎**
+   - ❌ 即時過程評分
+   - ❌ 多維度能力分析
+   - ❌ 證據導向評估
+   - ❌ 個性化回饋生成
+
+4. **AI 角色系統**
+   - ❌ 多樣化 AI 角色（導師、面試官、客戶等）
+   - ❌ 情境化對話能力
+   - ❌ 適應性難度調整
+   - ❌ 個性化互動風格
+
+5. **綜合報告系統**
+   - ❌ 視覺化能力分析
+   - ❌ 質性評語生成
+   - ❌ 量化指標呈現
+   - ❌ 學習路徑建議
+
+#### 3.9.6 實施優勢
+
+1. **真實性**：模擬真實世界的任務和挑戰
+2. **整合性**：結合多種能力的綜合運用
+3. **過程性**：重視學習過程而非僅看結果
+4. **個性化**：根據表現提供客製化回饋
+5. **可擴展**：易於新增不同類型的情境
+
+#### 3.9.7 UI/UX 設計
+
+##### 3.9.7.1 導航入口
+- 在頂部導航列新增「PBL 學習」選項
+- 位置：在「評估」和「歷史」之間
+- 任何人都可以直接開始 PBL，無需先完成評估
+
+##### 3.9.7.2 PBL 首頁設計
+```
+[標題區]
+PBL 情境式學習
+透過真實世界的任務，提升您的 AI 素養能力
+
+[情境卡片區]
+┌────────────────────────────────────────────┐
+│ 💼 AI 輔助求職訓練                        │
+│ 難度：⭐⭐⭐ 中級 | 時間：90分鐘           │
+│ 學習如何使用 AI 工具優化求職流程          │
+│ [開始學習] [查看詳情]                    │
+└────────────────────────────────────────────┘
+
+[更多情境即將推出...]
+```
+
+##### 3.9.7.3 情境學習主介面
+```
+[進度條]
+●───○───○───○  階段 1/4：職缺搜尋與篩選
+
+[主要內容區]
+┌──────────────────────────────────────────────────┐
+│ [任務說明]                                      │
+│ 您是一位正在尋找資料分析師職位的求職者。       │
+│ 請使用 AI 搜尋工具找到 5 個合適的職缺。       │
+│                                                │
+│ [互動區]                                       │
+│ ┌──────────────────────────────────────────┐ │
+│ │ AI 助手：您好！我可以幫助您搜尋職缺...      │ │
+│ │                                          │ │
+│ │ [輸入您的搜尋指令...]                     │ │
+│ └──────────────────────────────────────────┘ │
+└──────────────────────────────────────────────────┘
+
+[左側工具列]          [右側資訊面板]
+▢ 記事本            評估重點：
+▢ 我的收藏           - AI 搜尋技巧 (K1.2)
+▢ 提示范例           - 批判性思考 (S3.1)
+                      - 開放心態 (A1.1)
+```
+
+##### 3.9.7.4 多模態任務介面
+
+**語音任務介面：**
+```
+[錄音控制區]
+     🎤
+  [開始錄音]
+  
+[波形顯示區]
+││││┃┃┃███┃┃│││
+
+錄音時間： 0:15 / 2:00
+```
+
+**寫作任務介面：**
+```
+[Monaco Editor]
+支援拖放上傳檔案
+字數統計： 156 字
+[AI 寫作建議] [版本歷史]
+```
+
+#### 3.9.8 API 規格
+
+##### 3.9.8.1 RESTful API 端點
+
+```typescript
+// PBL 情境管理
+GET    /api/pbl/scenarios              // 取得所有情境列表
+GET    /api/pbl/scenarios/:id          // 取得情境詳情
+POST   /api/pbl/scenarios/:id/start    // 開始新情境
+
+// Session 管理
+GET    /api/pbl/sessions/active        // 取得進行中的 sessions
+GET    /api/pbl/sessions/:id           // 取得 session 詳情
+PUT    /api/pbl/sessions/:id/progress  // 更新進度
+POST   /api/pbl/sessions/:id/pause     // 暫停
+POST   /api/pbl/sessions/:id/resume    // 繼續
+POST   /api/pbl/sessions/:id/complete  // 完成
+
+// 任務執行
+POST   /api/pbl/tasks/submit           // 提交任務答案
+POST   /api/pbl/tasks/upload           // 上傳檔案（音檔、圖片）
+GET    /api/pbl/tasks/:id/hints        // 取得提示
+
+// 評估與回饋
+POST   /api/pbl/evaluate/stage         // 階段評估
+GET    /api/pbl/reports/:sessionId     // 取得完整報告
+```
+
+##### 3.9.8.2 WebSocket 事件
+
+```typescript
+// WebSocket 連線
+ws://api/pbl/stream?sessionId={sessionId}
+
+// 事件類型
+interface WSMessage {
+  type: 'user_input' | 'ai_response' | 'evaluation' | 'progress_update'
+  payload: any
+  timestamp: string
+}
+
+// 使用者輸入
+{
+  "type": "user_input",
+  "payload": {
+    "stageId": "stage_1",
+    "input": "我想找台北的資料分析師職缺",
+    "inputType": "text"
+  }
+}
+
+// AI 回應（串流）
+{
+  "type": "ai_response",
+  "payload": {
+    "content": "好的，我來幫您搜尋...",
+    "isComplete": false,
+    "tokens": 15
+  }
+}
+```
+
+##### 3.9.8.3 資料結構
+
+```typescript
+// API 回應格式
+interface ApiResponse<T> {
+  success: boolean
+  data?: T
+  error?: {
+    code: string
+    message: string
+  }
+  meta?: {
+    timestamp: string
+    version: string
+  }
+}
+
+// Session 資料
+interface SessionData {
+  id: string
+  userId: string
+  scenarioId: string
+  status: SessionState
+  currentStage: number
+  progress: {
+    percentage: number
+    completedStages: number[]
+    timeSpent: number
+  }
+  startedAt: string
+  lastActiveAt: string
+}
+```
+
+#### 3.9.9 實作計劃
+
+##### 3.9.9.1 Phase 2.1 - 基礎架構 (Week 1-2)
+
+**前端工作：**
+1. 建立 PBL 路由和基本頁面
+2. 實作情境列表和詳情頁
+3. 建立基本的進度管理系統
+4. 實作 WebSocket 連線管理
+
+**後端工作：**
+1. 建立 PBL API 路由
+2. 實作 GCS 儲存服務
+3. 建立 WebSocket 伺服器
+4. 實作基本的 session 管理
+
+##### 3.9.9.2 Phase 2.2 - 核心功能 (Week 3-4)
+
+**任務系統：**
+1. 實作文字輸入任務元件
+2. 實作語音錄製元件
+3. 實作 Monaco Editor 寫作任務
+4. 檔案上傳與 GCS 整合
+
+**AI 整合：**
+1. 建立 LLM 服務抽象層
+2. 實作不同 AI 角色
+3. 串流回應機制
+4. Token 使用追蹤
+
+##### 3.9.9.3 Phase 2.3 - 第一個情境 (Week 5-8)
+
+**「AI 輔助求職」各階段實作：**
+- Week 5: 階段 1 - 職缺搜尋
+- Week 6: 階段 2 - 需求分析
+- Week 7: 階段 3 - 履歷創作
+- Week 8: 階段 4 - 模擬面試
+
+#### 3.9.10 AI Prompt Templates
+
+##### 3.9.10.1 階段 1：搜尋助手
+
+```python
+# System Prompt
+system_prompt = """
+你是一位專業的職涯諮詢師，正在幫助使用者學習如何有效地使用 AI 工具進行職缺搜尋。
+
+你的任務：
+1. 引導使用者學習有效的搜尋策略
+2. 教導如何撰寫好的搜尋提示
+3. 提供建設性的回饋，但不直接給答案
+4. 鼓勵使用者思考和嘗試
+
+記住：這是一個學習過程，不要直接提供職缺列表。
+"""
+
+# 使用者輸入處理
+user_input_handler = """
+使用者說：{user_input}
+
+請分析使用者的搜尋策略，並提供引導：
+1. 肯定他們做得好的地方
+2. 提出可以改進的建議
+3. 給予一個具體的下一步行動
+
+回應限制在 150 字內。
+"""
+```
+
+##### 3.9.10.2 階段 2：分析顧問
+
+```python
+# System Prompt
+system_prompt = """
+你是一位資深的職涯分析師，專門幫助人們分析職缺需求。
+
+你的角色：
+1. 引導使用者深入分析職缺要求
+2. 教導如何識別關鍵技能
+3. 幫助評估自身條件的匹配度
+4. 培養批判性思考能力
+
+不要直接告訴答案，而是通過提問引導思考。
+"""
+
+# 分析框架
+analysis_framework = """
+當使用者提供職缺資訊時，請：
+
+1. 先肯定他們的選擇
+2. 提出 2-3 個關鍵問題讓他們思考
+   例如：「這個職位的核心責任是什麼？」
+3. 提供一個分析框架或工具
+
+保持友善和鼓勵的語氣。
+"""
+```
+
+##### 3.9.10.3 階段 3：寫作教練
+
+```python
+# System Prompt
+system_prompt = """
+你是一位專業的履歷寫作教練，善於使用 AI 工具協助寫作。
+
+你的教學方法：
+1. 分析現有內容的優缺點
+2. 提供具體的改進建議
+3. 示範如何使用 AI 優化文字
+4. 保留個人風格和真實性
+
+記住：教導方法，而非直接重寫。
+"""
+
+# 寫作回饋模板
+writing_feedback = """
+對於使用者的履歷內容：
+
+【優點】
+- {strengths}
+
+【建議改進】
+- {improvements}
+
+【AI 使用技巧】
+試試這樣的提示："{sample_prompt}"
+
+【下一步】
+{next_action}
+"""
+```
+
+##### 3.9.10.4 階段 4：面試官
+
+```python
+# System Prompt
+system_prompt = """
+你是一位經驗豐富的面試官，正在進行資料分析師的面試。
+
+面試風格：
+1. 專業但友善
+2. 循序漸進，從簡單到複雜
+3. 注重思考過程
+4. 給予正面鼓勵
+
+面試結構：
+1. 自我介紹 (1-2 題)
+2. 技術問題 (2-3 題)
+3. 情境題 (1-2 題)
+4. 提問時間
+"""
+
+# 面試評估
+interviewer_evaluation = """
+回答評估：
+
+1. 內容完整性：{completeness_score}/10
+2. 邏輯清晰度：{logic_score}/10
+3. 溝通表達力：{communication_score}/10
+
+回饋："{feedback}"
+
+[下一個問題] 或 [結束面試]
+"""
+```
+
+#### 3.9.11 評估機制詳細說明
+
+##### 3.9.11.1 過程評分機制
+
+```typescript
+// 評分時機
+enum EvaluationTiming {
+  IMMEDIATE = 'immediate',     // 立即評分（內部記錄）
+  STAGE_END = 'stage_end',     // 階段結束顯示
+  FINAL = 'final'              // 最終綜合評估
+}
+
+// 評分維度
+interface EvaluationDimensions {
+  // 基礎評分（每個階段都有）
+  taskCompletion: number      // 任務完成度 (0-100)
+  processQuality: number      // 過程品質 (0-100)
+  
+  // KSA 對應評分
+  ksaScores: {
+    [ksaCode: string]: {
+      score: number           // 分數 (0-100)
+      evidence: string[]      // 證據列表
+    }
+  }
+  
+  // Rubrics 評分
+  rubricScores: {
+    [criterion: string]: {
+      level: 1 | 2 | 3 | 4   // 等級
+      justification: string   // 說明
+    }
+  }
+}
+```
+
+##### 3.9.11.2 證據收集機制
+
+```typescript
+interface EvidenceCollector {
+  // 文字證據
+  collectTextEvidence(input: string, context: any): Evidence
+  
+  // 語音證據
+  collectAudioEvidence(audioUrl: string, transcript: string): Evidence
+  
+  // 寫作證據
+  collectWritingEvidence(content: string, revisions: string[]): Evidence
+  
+  // 互動證據
+  collectInteractionEvidence(logs: ConversationTurn[]): Evidence
+}
+
+// 證據結構
+interface Evidence {
+  type: 'text' | 'audio' | 'writing' | 'interaction'
+  content: string
+  metadata: {
+    timestamp: Date
+    stageId: string
+    taskId: string
+    [key: string]: any
+  }
+  analysis?: {
+    keywords: string[]
+    sentiment: number
+    quality: number
+  }
+}
+```
+
+##### 3.9.11.3 回饋生成策略
+
+```typescript
+// 回饋類型
+enum FeedbackType {
+  ENCOURAGEMENT = 'encouragement',     // 鼓勵性
+  GUIDANCE = 'guidance',               // 引導性
+  CORRECTION = 'correction',           // 糾正性
+  ACHIEVEMENT = 'achievement'          // 成就認可
+}
+
+// 回饋生成器
+class FeedbackGenerator {
+  // 過程中的鼓勵性回饋
+  generateProcessFeedback(action: UserAction): string {
+    const templates = {
+      good_attempt: "很好的嘗試！{specific_praise}",
+      improvement: "我注意到您{improvement_area}，繼續加油！",
+      milestone: "太棒了！您已經{achievement}"
+    }
+    return this.fillTemplate(templates, action)
+  }
+  
+  // 階段結束的綜合回饋
+  generateStageFeedback(stageResult: StageResult): StageFeedback {
+    return {
+      summary: this.generateSummary(stageResult),
+      strengths: this.identifyStrengths(stageResult),
+      improvements: this.suggestImprovements(stageResult),
+      nextSteps: this.recommendNextSteps(stageResult)
+    }
+  }
+}
+```
+
+### 3.10 統一學習活動架構 (Unified Learning Activity Architecture)
+
+#### 3.10.1 功能描述
+提供統一的抽象層，支援傳統評測和互動式學習，確保系統的可擴展性和維護性。
+
+#### 3.10.2 核心架構
+```typescript
+// 最高層抽象
+interface LearningActivity {
+  id: string
+  type: 'assessment' | 'practice' | 'project'
+  title: string
+  description: string
+  estimatedDuration: number
+  domains: DomainType[]
+  ksaMapping: KSAMapping
+  
+  // 生命週期方法
+  start(): Promise<void>
+  pause(): Promise<void>
+  resume(): Promise<void>
+  complete(): Promise<ActivityResult>
+}
+
+// 統一的任務介面
+interface Task {
+  id: string
+  order: number
+  type: TaskType
+  content: any
+  requirements: string[]
+  rubrics: RubricCriteria[]
+  ksaMapping: KSAMapping
+  
+  present(): ReactNode
+  evaluate(response: TaskResponse): Promise<TaskResult>
+  getProgress(): TaskProgress
+}
+
+// 擴展的任務類型
+enum TaskType {
+  MULTIPLE_CHOICE = 'multiple_choice',
+  LISTENING = 'listening',
+  SPEAKING = 'speaking',
+  READING = 'reading',
+  WRITING = 'writing',
+  PROJECT = 'project',
+  OPEN_ENDED = 'open_ended'
+}
+```
+
+#### 3.10.3 實施策略
+- **Phase 2.1**: 擴展現有 Assessment 系統支援新任務類型
+- **Phase 2.2**: 建立統一的抽象層和介面
+- **Phase 2.3**: 實作 PBL 專屬功能模組
+
+### 3.11 進度追蹤與資料管理系統 (Progress Tracking & Data Management)
+
+#### 3.11.1 功能描述
+提供完整的學習進度追蹤、互動記錄儲存和智能恢復功能，確保學習連續性。Phase 2 先使用 GCS 作為資料儲存，Phase 3 再遷移至 PostgreSQL。
+
+#### 3.11.2 GCS 資料結構（Phase 2）
+```yaml
+# GCS 儲存路徑結構
+pbl/
+  sessions/
+    {user_id}/
+      {session_id}/
+        metadata.json      # Session 基本資訊
+        progress.json      # 當前進度狀態
+        logs/
+          {timestamp}.json # 活動日誌
+        snapshots/
+          {timestamp}.json # 狀態快照
+
+# Session Metadata 結構
+{
+  "session_id": "sess_123",
+  "user_id": "user_456",
+  "activity_type": "pbl_practice",
+  "activity_id": "ai_job_search",
+  "status": "in_progress",
+  "created_at": "2025-06-26T10:00:00Z",
+  "last_active_at": "2025-06-26T11:30:00Z",
+  "version": 1
+}
+
+# Progress 結構
+{
+  "current_stage": 2,
+  "current_task": 1,
+  "completed_stages": [0, 1],
+  "stage_results": {...},
+  "total_time_spent": 5400,
+  "progress_percentage": 45
+}
+```
+
+#### 3.11.3 PostgreSQL 架構（Phase 3 - 未來升級）
+```sql
+-- 學習活動 session 表
+CREATE TABLE learning_sessions (
+  id UUID PRIMARY KEY,
+  user_id VARCHAR(255) NOT NULL,
+  activity_type VARCHAR(50) NOT NULL,
+  activity_id VARCHAR(255) NOT NULL,
+  status VARCHAR(50) DEFAULT 'in_progress',
+  started_at TIMESTAMP DEFAULT NOW(),
+  last_active_at TIMESTAMP DEFAULT NOW(),
+  current_position JSONB DEFAULT '{}',
+  progress_percentage INTEGER DEFAULT 0
+);
+
+-- 詳細活動記錄表
+CREATE TABLE activity_logs (
+  id UUID PRIMARY KEY,
+  session_id UUID REFERENCES learning_sessions(id),
+  timestamp TIMESTAMP DEFAULT NOW(),
+  log_type VARCHAR(50) NOT NULL,
+  content JSONB NOT NULL,
+  evaluation JSONB
+);
+
+-- 快照表（定期儲存完整狀態）
+CREATE TABLE session_snapshots (
+  id UUID PRIMARY KEY,
+  session_id UUID REFERENCES learning_sessions(id),
+  created_at TIMESTAMP DEFAULT NOW(),
+  state JSONB NOT NULL,
+  snapshot_type VARCHAR(50) NOT NULL
+);
+```
+
+#### 3.11.4 互動資料記錄
+```typescript
+interface InteractiveAnswer extends UserAnswer {
+  interactionType: 'multiple_choice' | 'speaking' | 'writing' | 'project'
+  conversationLog: ConversationTurn[]
+  evaluation: {
+    score: number
+    rubricScores: Record<string, number>
+    llmFeedback: string
+  }
+  evidence: Evidence[]
+}
+
+interface ConversationTurn {
+  timestamp: Date
+  role: 'user' | 'ai' | 'system'
+  content: string
+  metadata?: {
+    audioUrl?: string
+    duration?: number
+    corrections?: string[]
+  }
+}
+```
+
+#### 3.11.5 GCS 儲存服務（Phase 2）
+```typescript
+class PBLStorageService {
+  private bucket: Storage.Bucket
+  
+  // Session 管理
+  async createSession(userId: string, activityId: string): Promise<string>
+  async updateProgress(sessionId: string, progress: Progress): Promise<void>
+  async getSession(sessionId: string): Promise<Session>
+  
+  // 活動日誌
+  async appendLog(sessionId: string, log: ActivityLog): Promise<void>
+  async getLogs(sessionId: string, limit?: number): Promise<ActivityLog[]>
+  
+  // 快照管理
+  async createSnapshot(sessionId: string, state: any): Promise<void>
+  async getLatestSnapshot(sessionId: string): Promise<Snapshot>
+  
+  // 批次操作（效能優化）
+  async batchWriteLogs(sessionId: string, logs: ActivityLog[]): Promise<void>
+}
+```
+
+#### 3.11.6 智能恢復機制
+- **Phase 2 架構**：Memory → GCS
+  - 記憶體快取即時資料
+  - 每 10 秒批次寫入 GCS
+  - 每 5 分鐘創建快照
+  
+- **Phase 3 架構**：Memory → PostgreSQL → GCS
+  - PostgreSQL 作為主要資料庫
+  - GCS 作為長期歸檔
+  - 即時同步和智能快取
+
+### 3.12 即時評估與回饋系統 (Real-time Evaluation & Feedback)
+
+#### 3.12.1 功能描述
+提供串流式的即時評估和個性化回饋，支援多種評估模式。
+
+#### 3.12.2 評估架構
+```typescript
+class InteractiveEvaluationService {
+  // 即時串流評估
+  async evaluateStreaming(
+    taskType: string,
+    userInput: string,
+    context: TaskContext
+  ): AsyncGenerator<EvaluationChunk>
+  
+  // 最終綜合評估
+  async finalEvaluate(
+    answer: InteractiveAnswer
+  ): Promise<EvaluationResult>
+}
+
+// 統一評估介面
+interface Evaluator {
+  evaluate(response: any): Promise<EvaluationResult>
+}
+
+const evaluators: Record<TaskType, Evaluator> = {
+  multiple_choice: new MCEvaluator(),
+  speaking: new LLMEvaluator('speech'),
+  writing: new LLMEvaluator('text')
+}
+```
+
+#### 3.12.3 回饋機制
+- **即時回饋**：使用 SSE/WebSocket 提供串流回饋
+- **多維度評分**：基於 Rubrics 的細項評分
+- **證據導向**：每個評分都有對應的證據支撐
+- **個性化建議**：根據表現生成改進建議
+
 ## 4. 技術實現細節
 
 ### 4.1 知識圖譜系統 (Knowledge Graph System)
@@ -347,10 +1253,14 @@ interface LearningPath {
 ```
 
 #### 4.1.2 技術架構
-- **圖資料庫**: Neo4j（存儲概念關係）
-- **圖處理**: NetworkX（路徑演算法）
-- **視覺化**: D3.js / Cytoscape.js（前端渲染）
-- **推薦引擎**: 基於圖分析的個人化推薦
+- **Phase 2**: 
+  - 知識結構儲存於 GCS (YAML/JSON)
+  - 前端使用 D3.js 渲染
+  - 基於規則的路徑推薦
+- **Phase 3**: 
+  - 升級至 Neo4j 圖資料庫
+  - NetworkX 進階路徑演算法
+  - 基於圖分析的個人化推薦
 
 #### 4.1.3 核心功能
 1. **知識關聯查詢**
@@ -395,9 +1305,9 @@ class MCPConfig:
     }
 ```
 
-### 4.2 智能體編排 (Agent Orchestrator)
+### 4.3 智能體編排 (Agent Orchestrator)
 
-#### 4.2.1 架構設計
+#### 4.3.1 架構設計
 ```python
 # 編排器核心結構
 class AgentOrchestrator:
@@ -416,15 +1326,15 @@ class AgentOrchestrator:
         return await agent.execute(request)
 ```
 
-#### 4.2.2 Agent 類型
+#### 4.3.2 Agent 類型
 1. **教學 Agent**：提供學習指導
 2. **評估 Agent**：處理作業評分
 3. **內容 Agent**：生成和優化內容
 4. **分析 Agent**：提供學習分析
 
-### 4.3 插件系統架構
+### 4.4 插件系統架構
 
-#### 4.3.1 插件接口
+#### 4.4.1 插件接口
 ```typescript
 interface Plugin {
   id: string;
@@ -442,21 +1352,104 @@ interface Plugin {
 }
 ```
 
-#### 4.3.2 插件類型
+#### 4.4.2 插件類型
 - **內容插件**：新題型、學習資源
 - **評估插件**：特殊評分邏輯
 - **分析插件**：自定義報表
 - **整合插件**：第三方服務
 
-### 4.4 Chatbot 整合
+### 4.5 多模態任務支援系統 (Multi-modal Task Support)
 
-#### 4.4.1 功能範圍
+#### 4.5.1 語音任務處理
+```typescript
+class SpeakingTaskHandler {
+  // 語音轉文字
+  async speechToText(audio: Blob): Promise<string>
+  
+  // 語音分析（發音、流暢度）
+  async analyzeSpeech(audio: Blob): Promise<SpeechAnalysis>
+  
+  // AI 對話回應
+  async generateResponse(context: DialogContext): Promise<AIResponse>
+}
+```
+
+#### 4.5.2 寫作任務處理
+```typescript
+class WritingTaskHandler {
+  // 即時寫作輔助
+  async provideWritingSuggestions(text: string): Promise<Suggestions>
+  
+  // 文章結構分析
+  async analyzeStructure(text: string): Promise<StructureAnalysis>
+  
+  // 文法和風格檢查
+  async checkGrammarStyle(text: string): Promise<GrammarCheck>
+}
+```
+
+#### 4.5.3 專案任務管理
+```typescript
+class ProjectTaskHandler {
+  // 專案進度追蹤
+  trackProgress(projectId: string): ProjectProgress
+  
+  // 協作支援
+  enableCollaboration(participants: User[]): CollaborationSpace
+  
+  // 成果評估
+  async evaluateDeliverable(artifact: any): Promise<ProjectEvaluation>
+}
+```
+
+### 4.6 離線支援策略 (Offline Support Strategy)
+
+#### 4.6.1 IndexedDB 離線快取
+```typescript
+class OfflineCache {
+  private db: IDBDatabase
+  
+  // 儲存待同步的活動日誌
+  async queueLog(log: ActivityLog): Promise<void>
+  
+  // 網路恢復時自動同步到 GCS
+  async syncPendingLogs(): Promise<void>
+  
+  // 快取學習內容供離線使用
+  async cacheContent(content: any): Promise<void>
+}
+```
+
+#### 4.6.2 同步機制（Phase 2 - GCS）
+- **樂觀更新**：先更新 IndexedDB，後同步到 GCS
+- **批次上傳**：累積多個操作後批次寫入 GCS
+- **衝突解決**：使用時間戳和檔案版本
+- **智能重試**：指數退避演算法
+
+#### 4.6.3 資料同步流程
+```typescript
+// Phase 2: IndexedDB → GCS
+const syncToGCS = async () => {
+  const pendingLogs = await offlineCache.getPendingLogs()
+  if (pendingLogs.length > 0) {
+    const batchFile = `logs/batch_${Date.now()}.json`
+    await gcsStorage.uploadJSON(batchFile, pendingLogs)
+    await offlineCache.clearSyncedLogs(pendingLogs)
+  }
+}
+
+// Phase 3: IndexedDB → PostgreSQL → GCS (長期歸檔)
+```
+
+### 4.7 Chatbot 整合
+
+#### 4.7.1 功能範圍
 - ❌ 24/7 學習支援（待開發）
 - ❌ 多語言對話（待開發）
 - ❌ 上下文記憶（待開發）
 - ❌ 情緒識別和回應（待開發）
 
-#### 4.4.2 整合點
+#### 4.7.2 整合點
 - ❌ 網頁內嵌 Widget（待開發）
 - ❌ Mobile App SDK（待開發）
 - ❌ 第三方平台（Slack, Teams）（待開發）
@@ -478,35 +1471,79 @@ interface Plugin {
   - ✅ YAML 內容管理
   - ✅ Monaco Editor 整合
   - ✅ 版本歷史追蹤
-  - ❌ 視覺化 Rubrics 建構器（移至 Phase 2）
+  - ❌ 視覺化 Rubrics 建構器（移至 Phase 3）
 
-### Phase 2: 智能練習系統（進行中 - 目標：3 個月）
-- ❌ 動態語言系統（待開發）
-  - ❌ 自定義語言支援
-  - ❌ LLM 即時翻譯
-  - ❌ GCS 翻譯快取
-  - ❌ 自動同步到 i18n
-- ❌ CMS 多語言增強（待開發）
-  - ❌ 多語言欄位輔助編輯
-  - ❌ 翻譯狀態追蹤
-  - ❌ AI 輔助翻譯整合
-- ❌ 視覺化 Rubrics 建構器（從 Phase 1 移入）
-- ❌ AI 題目生成（待開發）
-  - ❌ 個人化情境式任務生成
-  - ❌ 基於學習歷程的任務推薦
-- ❌ 互動式評估模組（待開發）
-  - ❌ 拖拽式互動題型
-  - ❌ 過程追蹤評估
-  - ❌ 模擬實作題
-- ❌ 題目內智能助手（待開發）
-  - ❌ 漸進式提示系統
-  - ❌ 即時解題輔助
-- ❌ 自適應學習路徑（待開發）
-- ❌ 即時反饋系統（待開發）
-- ❌ 基礎分析儀表板（待開發）
-- ❌ Google Gemini API 整合（待開發）
+### Phase 2: PBL 情境式學習系統（進行中 - 目標：3 個月）
 
-### Phase 3: AI 輔助學習（6 個月）
+**核心目標：實現第一個完整的 PBL 情境學習 MVP - "AI 輔助求職訓練"**
+
+#### 月份 1：基礎架構建設
+- ❌ **PBL 系統框架**（待開發）
+  - ❌ 情境程式（Program）資料模型
+  - ❌ 階段（Stage）管理系統
+  - ❌ 任務（Task）執行引擎
+  - ❌ KSA-Rubrics 對應機制
+
+- ❌ **過程記錄系統**（待開發）
+  - ❌ 互動日誌架構（GCS JSON 儲存）
+  - ❌ 時間追蹤系統
+  - ❌ 修改歷程記錄
+  - ❌ 證據收集機制（音檔、截圖等存 GCS）
+
+- ❌ **多 LLM 協作框架**（待開發）
+  - ❌ LLM 角色管理（助手、評估者、演員）
+  - ❌ 模型路由機制
+  - ❌ 上下文管理系統
+  - ❌ Token 使用追蹤
+
+#### 月份 2：MVP 情境開發
+- ❌ **"AI 輔助求職" 情境實作**（待開發）
+  - ❌ 階段 1：職缺搜尋系統
+    - AI 搜尋助手整合
+    - 搜尋策略評估
+    - KSA 對應：K1.2, S1.3, A1.1
+  
+  - ❌ 階段 2：職缺分析模組
+    - 需求解析工具
+    - 批判思考評估
+    - KSA 對應：K3.3, S3.1, A3.2
+  
+  - ❌ 階段 3：履歷創作系統
+    - AI 寫作輔助
+    - 版本控制與比較
+    - KSA 對應：K2.1, S2.2, A2.2
+  
+  - ❌ 階段 4：模擬面試平台
+    - 語音對話系統
+    - 即時回饋機制
+    - KSA 對應：S1.3, S3.1, A1.1
+
+- ❌ **評估引擎開發**（待開發）
+  - ❌ 即時過程評分系統
+  - ❌ 多維度能力分析
+  - ❌ Rubrics 自動對應
+  - ❌ 證據導向評估
+
+#### 月份 3：報告與優化
+- ❌ **綜合報告系統**（待開發）
+  - ❌ 視覺化分析儀表板
+  - ❌ KSA 達成度雷達圖
+  - ❌ 個人化回饋生成
+  - ❌ 學習路徑推薦
+
+- ❌ **系統整合與優化**（待開發）
+  - ❌ 與現有評估系統整合
+  - ❌ 使用者體驗優化
+  - ❌ 效能調校
+  - ❌ A/B 測試框架
+
+#### 延後至 Phase 3 的功能
+- 動態語言系統（移至 Phase 3）
+- CMS 多語言增強（移至 Phase 3）
+- 視覺化 Rubrics 建構器（移至 Phase 3）
+- 傳統題型的 AI 生成（由 PBL 情境取代）
+
+### Phase 3: AI 輔助學習與進階功能（6 個月）
 - ❌ 完整 AI 助教功能（待開發）
   - ❌ 24/7 網站 AI 助手
   - ❌ 多輪對話支援
@@ -514,6 +1551,14 @@ interface Plugin {
 - ❌ 開放式問答評估（待開發）
 - ❌ 協作學習工具（待開發）
 - ❌ 進階個性化（待開發）
+- ❌ 視覺化 Rubrics 建構器（從 Phase 1 移入）
+  - ❌ 拖拽式介面設計
+  - ❌ AI 輔助評估標準生成
+  - ❌ 即時預覽功能
+- ❌ 動態語言系統（從 Phase 2 移入）
+  - ❌ LLM 即時翻譯
+  - ❌ 智能快取管理
+  - ❌ 自動 locale 更新
 
 ### Phase 4: 知識圖譜（9 個月）
 - ✅ 基礎知識圖譜視覺化（已在 Phase 1 完成）
@@ -602,6 +1647,6 @@ AI Square 定位為下一代 AI 素養學習平台，通過整合最新的 AI �
 
 ---
 
-*文檔版本: 1.5*  
+*文檔版本: 1.8*  
 *更新日期: 2025-06-26*  
 *下次審查: 2025-07-26*
