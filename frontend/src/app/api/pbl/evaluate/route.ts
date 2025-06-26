@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pblGCS } from '@/lib/storage/pbl-gcs-service';
-import { SessionData, StageResult } from '@/types/pbl';
+import { StageResult } from '@/types/pbl';
 import { VertexAIService } from '@/lib/ai/vertex-ai-service';
 import { readFile } from 'fs/promises';
 import path from 'path';

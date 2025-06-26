@@ -27,7 +27,7 @@ const KSA_DESCRIPTIONS = {
   'A2.1': 'Responsible AI use'
 };
 
-export default function KSADiagnosticReport({ stageResults, ksaMapping }: KSADiagnosticReportProps) {
+export default function KSADiagnosticReport({ stageResults }: KSADiagnosticReportProps) {
   const { t } = useTranslation(['pbl']);
 
   // Aggregate KSA scores across all stages

@@ -101,7 +101,7 @@ export async function GET(request: NextRequest) {
       ).length || 0;
       
       // Build stage details
-      const stageDetails = log.scenario.stages.map((stage: any, index: number) => {
+      const stageDetails = log.scenario.stages.map((stage: Record<string, unknown>, index: number) => {
         const stageProgress = log.progress.stageProgress.find(sp => sp.stageId === stage.id);
         const stageResult = log.stageResults?.find(sr => sr.stageId === stage.id);
         

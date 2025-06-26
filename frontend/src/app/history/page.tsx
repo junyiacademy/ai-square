@@ -86,7 +86,7 @@ export default function UnifiedHistoryPage() {
       });
     } else {
       // Check for mockUser
-      let mockUser = localStorage.getItem('mockUser');
+      const mockUser = localStorage.getItem('mockUser');
       if (!mockUser) {
         // Create a consistent mock user if none exists
         const newMockUser = {
@@ -317,7 +317,7 @@ export default function UnifiedHistoryPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            {filteredItems.map((item, index) => {
+            {filteredItems.map((item) => {
               if (item.type === 'assessment') {
                 const assessment = item.data as AssessmentHistoryItem;
                 return (

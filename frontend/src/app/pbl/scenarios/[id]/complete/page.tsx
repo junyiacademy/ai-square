@@ -45,7 +45,7 @@ export default function PBLCompletePage() {
             const user = JSON.parse(decodeURIComponent(userCookie));
             userId = user.email || userId;
           }
-        } catch (e) {
+        } catch {
           console.log('No user cookie found, using demo user');
         }
 

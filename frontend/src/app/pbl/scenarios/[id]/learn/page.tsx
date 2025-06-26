@@ -27,9 +27,9 @@ export default function PBLLearnPage() {
   const [conversation, setConversation] = useState<ConversationTurn[]>([]);
   const [userInput, setUserInput] = useState('');
   const [isAIThinking, setIsAIThinking] = useState(false);
-  const [stageAnalysis, setStageAnalysis] = useState<any>(null);
+  const [stageAnalysis, setStageAnalysis] = useState<Record<string, unknown> | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [existingLogs, setExistingLogs] = useState<any[]>([]);
+  const [existingLogs, setExistingLogs] = useState<Record<string, unknown>[]>([]);
   const [currentLogId, setCurrentLogId] = useState<string | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [sessionStartTime, setSessionStartTime] = useState<number>(Date.now());

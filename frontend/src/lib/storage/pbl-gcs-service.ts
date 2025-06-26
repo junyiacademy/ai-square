@@ -584,7 +584,7 @@ export class PBLGCSService {
   /**
    * List files with a specific prefix (searches across all user folders)
    */
-  async listFiles(prefix: string): Promise<any[]> {
+  async listFiles(prefix: string): Promise<Record<string, unknown>[]> {
     try {
       // Get all files under PBL_BASE_PATH (including all subfolders)
       const [files] = await this.bucket.getFiles({
