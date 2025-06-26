@@ -141,7 +141,9 @@
     "domainScores": "Domain Scores",
     "duration": "Duration",
     "viewDetails": "View Details",
-    "takeNewAssessment": "Take New Assessment"
+    "takeNewAssessment": "Take New Assessment",
+    "startTime": "Start Time",
+    "endTime": "End Time"
   },
   "review": {
     "title": "Assessment Review"

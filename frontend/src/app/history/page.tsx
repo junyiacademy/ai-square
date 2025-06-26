@@ -236,7 +236,7 @@ export default function UnifiedHistoryPage() {
             {t('navigation:history')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            查看您的所有學習歷程記錄
+            {t('navigation:historySubtitle')}
           </p>
         </div>
 
@@ -248,7 +248,7 @@ export default function UnifiedHistoryPage() {
               <p className="text-lg font-medium text-gray-900 dark:text-white">{currentUser.email || currentUser.id}</p>
             </div>
             <div className="text-right">
-              <p className="text-sm text-gray-500 dark:text-gray-400">總活動數</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t('navigation:totalActivities')}</p>
               <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{historyItems.length}</p>
             </div>
           </div>
@@ -265,7 +265,7 @@ export default function UnifiedHistoryPage() {
                   : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >
-              全部 ({historyItems.length})
+              {t('navigation:filterAll')} ({historyItems.length})
             </button>
             <button
               onClick={() => setFilter('assessment')}
@@ -275,7 +275,7 @@ export default function UnifiedHistoryPage() {
                   : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >
-              AI 素養評估 ({historyItems.filter(item => item.type === 'assessment').length})
+              {t('assessment:title')} ({historyItems.filter(item => item.type === 'assessment').length})
             </button>
             <button
               onClick={() => setFilter('pbl')}
@@ -285,7 +285,7 @@ export default function UnifiedHistoryPage() {
                   : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >
-              PBL 學習 ({historyItems.filter(item => item.type === 'pbl').length})
+              {t('pbl:title')} ({historyItems.filter(item => item.type === 'pbl').length})
             </button>
           </div>
         </div>
@@ -297,21 +297,21 @@ export default function UnifiedHistoryPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
             <p className="text-gray-600 dark:text-gray-400 mb-4">
-              尚無學習記錄
+              {t('navigation:noHistory')}
             </p>
             <div className="space-x-4">
               <Link
                 href="/assessment"
                 className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
               >
-                開始 AI 素養評估
+                {t('navigation:startAssessment')}
               </Link>
               <span className="text-gray-400">|</span>
               <Link
                 href="/pbl"
                 className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
               >
-                開始 PBL 學習
+                {t('navigation:startPBL')}
               </Link>
             </div>
           </div>
@@ -327,7 +327,7 @@ export default function UnifiedHistoryPage() {
                         <div className="flex-1">
                           <div className="flex items-center mb-2">
                             <span className="bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300 text-xs font-medium px-2.5 py-0.5 rounded mr-2">
-                              AI 素養評估
+                              {t('assessment:title')}
                             </span>
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                               {formatDate(assessment.timestamp)}
@@ -340,11 +340,11 @@ export default function UnifiedHistoryPage() {
                           {/* Date and Time Info */}
                           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-gray-600 dark:text-gray-400 mt-3">
                             <div>
-                              <span className="font-medium">開始時間:</span>
+                              <span className="font-medium">{t('assessment:history.startTime')}:</span>
                               <p>{formatDate(assessment.timestamp)}</p>
                             </div>
                             <div>
-                              <span className="font-medium">完成時間:</span>
+                              <span className="font-medium">{t('assessment:history.endTime')}:</span>
                               <p>{formatDate(new Date(new Date(assessment.timestamp).getTime() + assessment.duration_seconds * 1000).toISOString())}</p>
                             </div>
                           </div>
@@ -359,27 +359,24 @@ export default function UnifiedHistoryPage() {
                         {/* Left Column - Overall Score */}
                         <div>
                           <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">總體分數</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('assessment:history.overallScore')}</p>
                             <p className={`text-3xl font-bold ${getScoreColor(assessment.scores.overall)}`}>
                               {assessment.scores.overall}%
                             </p>
                             <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                              {assessment.summary.correct_answers}/{assessment.summary.total_questions} 正確
+                              {assessment.summary.correct_answers}/{assessment.summary.total_questions} {t('assessment:history.correct')}
                             </p>
                           </div>
                         </div>
                         
                         {/* Right Column - Domain Scores */}
                         <div>
-                          <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">領域分數</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{t('assessment:history.domainScores')}</p>
                           <div className="space-y-2">
                             {Object.entries(assessment.scores.domains).map(([domain, score]) => (
                               <div key={domain} className="flex items-center gap-2">
                                 <span className="text-sm text-gray-600 dark:text-gray-400 flex-1">
-                                  {domain === 'engaging_with_ai' ? '與 AI 互動' :
-                                   domain === 'creating_with_ai' ? '與 AI 共創' :
-                                   domain === 'managing_with_ai' ? '與 AI 管理' :
-                                   domain === 'designing_with_ai' ? '與 AI 設計' : domain}
+                                  {t(`assessment:domains.${domain}`)}
                                 </span>
                                 <span className={`text-sm font-medium ${getScoreColor(score)}`}>
                                   {score}%
@@ -395,13 +392,13 @@ export default function UnifiedHistoryPage() {
                           <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          時長: {formatDuration(assessment.duration_seconds)}
+                          {t('assessment:history.duration')}: {formatDuration(assessment.duration_seconds)}
                         </div>
                         <Link
                           href={`/assessment/review/${assessment.assessment_id}`}
                           className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
                         >
-                          查看詳情 →
+                          {t('assessment:history.viewDetails')} →
                         </Link>
                       </div>
                     </div>
@@ -416,7 +413,7 @@ export default function UnifiedHistoryPage() {
                         <div className="flex-1">
                           <div className="flex items-center mb-2">
                             <span className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300 text-xs font-medium px-2.5 py-0.5 rounded mr-2">
-                              PBL 學習
+                              {t('pbl:title')}
                             </span>
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mr-3">
                               {session.scenarioTitle}
@@ -429,11 +426,11 @@ export default function UnifiedHistoryPage() {
                           {/* Date and Time Info - Similar to Assessment */}
                           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-gray-600 dark:text-gray-400 mt-3">
                             <div>
-                              <span className="font-medium">開始時間:</span>
+                              <span className="font-medium">{t('assessment:history.startTime')}:</span>
                               <p>{formatDate(session.startedAt)}</p>
                             </div>
                             <div>
-                              <span className="font-medium">完成時間:</span>
+                              <span className="font-medium">{t('assessment:history.endTime')}:</span>
                               <p>{session.completedAt ? formatDate(session.completedAt) : '-'}</p>
                             </div>
                           </div>
@@ -450,7 +447,7 @@ export default function UnifiedHistoryPage() {
                               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                                 {session.averageScore !== undefined ? (
                                   <>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">總體分數</p>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('assessment:history.overallScore')}</p>
                                     <p className={`text-3xl font-bold ${getScoreColor(session.averageScore)}`}>
                                       {session.averageScore}%
                                     </p>
@@ -479,7 +476,7 @@ export default function UnifiedHistoryPage() {
                             <div>
                               {session.domainScores ? (
                                 <>
-                                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">領域分數</p>
+                                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{t('assessment:history.domainScores')}</p>
                                   <div className="space-y-2">
                                     <div className="flex items-center gap-2">
                                       <span className="text-sm text-gray-600 dark:text-gray-400 flex-1">與 AI 互動</span>
@@ -580,14 +577,14 @@ export default function UnifiedHistoryPage() {
                             onClick={() => router.push(`/pbl/scenarios/${session.scenarioId}/learn?sessionId=${session.id}`)}
                             className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
                           >
-                            繼續學習 →
+                            {t('pbl:history.continueStudy')} →
                           </button>
                         ) : (
                           <Link
                             href={`/pbl/scenarios/${session.scenarioId}/complete?sessionId=${session.id}`}
                             className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
                           >
-                            查看詳情 →
+                            {t('assessment:history.viewDetails')} →
                           </Link>
                         )}
                       </div>
@@ -611,7 +608,7 @@ export default function UnifiedHistoryPage() {
             href="/pbl"
             className="bg-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors inline-block"
           >
-            開始新的 PBL 學習
+            {t('navigation:startNewPBL')}
           </Link>
         </div>
       </div>

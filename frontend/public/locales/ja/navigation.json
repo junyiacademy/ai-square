@@ -15,5 +15,12 @@
   },
   "darkMode": "ダークモードに切り替える",
   "lightMode": "ライトモードに切り替える",
-  "toggleTheme": "テーマを切り替える"
+  "toggleTheme": "テーマを切り替える",
+  "historySubtitle": "すべての学習履歴記録を表示",
+  "totalActivities": "総活動数",
+  "filterAll": "すべて",
+  "noHistory": "まだ学習記録がありません",
+  "startAssessment": "AI リテラシー評価を開始",
+  "startPBL": "PBL 学習を開始",
+  "startNewPBL": "新しい PBL 学習を開始"
 }

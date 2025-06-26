@@ -15,5 +15,19 @@
   },
   "darkMode": "Switch to dark mode",
   "lightMode": "Switch to light mode",
-  "toggleTheme": "Toggle theme"
+  "toggleTheme": "Toggle theme",
+  "historySubtitle": "View all your learning history records",
+  "totalActivities": "Total Activities",
+  "filterAll": "All",
+  "noHistory": "No learning records yet",
+  "startAssessment": "Start AI Literacy Assessment",
+  "startPBL": "Start PBL Learning",
+  "startNewPBL": "Start New PBL Learning",
+  "historySubtitle": "View all your learning activity records",
+  "totalActivities": "Total Activities",
+  "filterAll": "All",
+  "noHistory": "No learning records yet",
+  "startAssessment": "Start AI Assessment",
+  "startPBL": "Start PBL Learning",
+  "startNewPBL": "Start New PBL Learning"
 }

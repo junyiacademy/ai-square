@@ -122,7 +122,13 @@
     "continue": "Continue",
     "review": "Review",
     "noSessions": "No learning sessions started yet",
-    "startLearning": "Start Learning"
+    "startLearning": "Start Learning",
+    "conversationCount": "Conversation Count",
+    "times": "times",
+    "stageDetails": "Stage Details",
+    "conversations": "Conversations",
+    "continueStudy": "Continue Learning",
+    "stagesCompleted": "Stages Completed"
   },
   "complete": {
     "congratulations": "Congratulations!",

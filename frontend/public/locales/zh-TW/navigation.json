@@ -15,5 +15,12 @@
   },
   "darkMode": "切換到深色模式",
   "lightMode": "切換到淺色模式",
-  "toggleTheme": "切換主題"
+  "toggleTheme": "切換主題",
+  "historySubtitle": "查看您的所有學習歷程記錄",
+  "totalActivities": "總活動數",
+  "filterAll": "全部",
+  "noHistory": "尚無學習記錄",
+  "startAssessment": "開始 AI 素養評估",
+  "startPBL": "開始 PBL 學習",
+  "startNewPBL": "開始新的 PBL 學習"
 }

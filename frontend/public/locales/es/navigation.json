@@ -15,5 +15,12 @@
   },
   "darkMode": "Cambiar a modo oscuro",
   "lightMode": "Cambiar a modo claro",
-  "toggleTheme": "Cambiar tema"
+  "toggleTheme": "Cambiar tema",
+  "historySubtitle": "Ver todos sus registros de historial de aprendizaje",
+  "totalActivities": "Actividades totales",
+  "filterAll": "Todos",
+  "noHistory": "Aún no hay registros de aprendizaje",
+  "startAssessment": "Iniciar evaluación de alfabetización en IA",
+  "startPBL": "Iniciar aprendizaje PBL",
+  "startNewPBL": "Iniciar nuevo aprendizaje PBL"
 }

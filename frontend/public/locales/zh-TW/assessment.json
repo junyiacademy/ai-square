@@ -141,7 +141,9 @@
     "domainScores": "領域分數",
     "duration": "時長",
     "viewDetails": "查看詳情",
-    "takeNewAssessment": "進行新評估"
+    "takeNewAssessment": "進行新評估",
+    "startTime": "開始時間",
+    "endTime": "完成時間"
   },
   "review": {
     "title": "評估檢視"

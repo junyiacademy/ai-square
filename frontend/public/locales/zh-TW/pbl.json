@@ -122,7 +122,13 @@
     "continue": "繼續學習",
     "review": "回顧",
     "noSessions": "尚未開始任何學習項目",
-    "startLearning": "開始學習"
+    "startLearning": "開始學習",
+    "conversationCount": "對話次數",
+    "times": "次",
+    "stageDetails": "階段詳情",
+    "conversations": "對話",
+    "continueStudy": "繼續學習",
+    "stagesCompleted": "階段完成"
   },
   "complete": {
     "congratulations": "恭喜您！",

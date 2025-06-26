@@ -15,5 +15,12 @@
   },
   "darkMode": "In den dunklen Modus wechseln",
   "lightMode": "In den hellen Modus wechseln",
-  "toggleTheme": "Thema wechseln"
+  "toggleTheme": "Thema wechseln",
+  "historySubtitle": "Alle Ihre Lernverlaufsaufzeichnungen anzeigen",
+  "totalActivities": "Gesamtaktivitäten",
+  "filterAll": "Alle",
+  "noHistory": "Noch keine Lernaufzeichnungen",
+  "startAssessment": "KI-Kompetenz-Bewertung starten",
+  "startPBL": "PBL-Lernen starten",
+  "startNewPBL": "Neues PBL-Lernen starten"
 }
