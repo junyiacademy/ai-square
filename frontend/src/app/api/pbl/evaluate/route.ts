@@ -50,11 +50,35 @@ export async function POST(request: NextRequest) {
         ai: log.detail.aiInteraction?.response
       }));
 
-    // Generate evaluation using AI
+    // Get scenario data to access rubrics and KSA mapping
+    const scenarioResponse = await fetch(`${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/api/pbl/scenarios/${sessionData.scenarioId}`);
+    const scenarioData = await scenarioResponse.json();
+    const scenario = scenarioData.data;
+    
+    // Get stage info
+    const stageIndex = sessionData.currentStage;
+    const stage = scenario?.stages[stageIndex];
+    const assessmentFocus = stage?.assessmentFocus || { primary: [], secondary: [] };
+    
+    // Generate evaluation using AI with KSA and rubrics context
     const evaluationPrompt = `
 你是一位專業的學習評估專家。請根據以下對話記錄，評估學習者在此階段的表現。
 
-階段名稱：${stageId}
+階段名稱：${stage?.name || stageId}
+階段類型：${stage?.stageType}
+評估重點 KSA：
+- 主要：${assessmentFocus.primary.join(', ')}
+- 次要：${assessmentFocus.secondary.join(', ')}
+
+評估標準 (Rubrics)：
+${scenario?.rubricsCriteria?.map(rubric => `
+- ${rubric.criterion} (權重: ${rubric.weight * 100}%)
+  Level 1: ${rubric.levels[0].description}
+  Level 2: ${rubric.levels[1].description}
+  Level 3: ${rubric.levels[2].description}
+  Level 4: ${rubric.levels[3].description}
+`).join('\n') || '無特定標準'}
+
 對話記錄：
 ${conversations.map((conv, i) => `
 對話 ${i + 1}:
@@ -64,15 +88,31 @@ AI：${conv.ai}
 
 請提供以下評估：
 1. 整體表現分數（0-100）
-2. 優點（至少3點）
-3. 需要改進的地方（至少2點）
-4. 下一步建議（至少2點）
+2. 根據 KSA 評估：
+   - 知識掌握程度 (Knowledge)
+   - 技能展現程度 (Skills)
+   - 態度表現 (Attitudes)
+3. 根據 Rubrics 評分（每項 1-4 級）
+4. 優點（至少3點，關聯到具體的 KSA）
+5. 需要改進的地方（至少2點，關聯到具體的 KSA）
+6. 下一步建議（至少2點）
 
 請用 JSON 格式回應：
 {
   "score": 數字,
-  "strengths": ["優點1", "優點2", "優點3"],
-  "improvements": ["改進1", "改進2"],
+  "ksaScores": {
+    "knowledge": 數字 (0-100),
+    "skills": 數字 (0-100),
+    "attitudes": 數字 (0-100)
+  },
+  "rubricsScores": {
+    "Research Quality": 級別 (1-4),
+    "AI Utilization": 級別 (1-4),
+    "Content Quality": 級別 (1-4),
+    "Learning Progress": 級別 (1-4)
+  },
+  "strengths": ["優點1 (關聯 K1.1)", "優點2 (關聯 S1.1)", "優點3"],
+  "improvements": ["改進1 (關聯 K2.1)", "改進2 (關聯 S2.1)"],
   "nextSteps": ["建議1", "建議2"]
 }
 `;
@@ -96,10 +136,48 @@ AI：${conv.ai}
       // Fallback evaluation if parsing fails
       evaluation = {
         score: 75,
-        strengths: ['積極參與學習', '認真完成任務', '展現學習熱情'],
-        improvements: ['可以更深入思考問題', '嘗試提供更具體的例子'],
+        ksaScores: {
+          knowledge: 70,
+          skills: 75,
+          attitudes: 80
+        },
+        rubricsScores: {
+          "Research Quality": 2,
+          "AI Utilization": 3,
+          "Content Quality": 2,
+          "Learning Progress": 3
+        },
+        strengths: ['積極參與學習 (A1.1)', '認真完成任務 (S1.1)', '展現學習熱情 (A1.1)'],
+        improvements: ['可以更深入思考問題 (K1.1)', '嘗試提供更具體的例子 (S2.1)'],
         nextSteps: ['繼續練習相關技能', '應用所學到實際情境']
       };
+    }
+
+    // Build KSA achievement map
+    const ksaAchievement = {};
+    if (assessmentFocus.primary) {
+      assessmentFocus.primary.forEach(ksa => {
+        const category = ksa.charAt(0).toLowerCase(); // k, s, or a
+        const score = evaluation.ksaScores?.[
+          category === 'k' ? 'knowledge' : 
+          category === 's' ? 'skills' : 'attitudes'
+        ] || 75;
+        ksaAchievement[ksa] = {
+          score,
+          evidence: stageLogs.filter(log => log.actionType === 'write')
+        };
+      });
+    }
+    
+    // Build rubrics score map
+    const rubricsScore = {};
+    if (evaluation.rubricsScores) {
+      Object.entries(evaluation.rubricsScores).forEach(([criterion, level]) => {
+        rubricsScore[criterion] = {
+          level: level as number,
+          justification: `Based on performance analysis in ${stage?.name || 'this stage'}`
+        };
+      });
     }
 
     // Create stage result
@@ -116,8 +194,8 @@ AI：${conv.ai}
         revisionCount: 0,
         resourceUsage: 0
       },
-      ksaAchievement: {},
-      rubricsScore: {},
+      ksaAchievement,
+      rubricsScore,
       feedback: {
         strengths: evaluation.strengths,
         improvements: evaluation.improvements,

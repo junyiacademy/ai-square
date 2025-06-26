@@ -200,6 +200,72 @@ export default function PBLCompletePage() {
           </div>
         </div>
 
+        {/* KSA Overall Summary */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+            {t('complete.ksaSummary')}
+          </h2>
+          
+          {(() => {
+            // Calculate overall KSA scores from all stages
+            const ksaScores = { knowledge: [], skills: [], attitudes: [] };
+            
+            sessions.forEach(session => {
+              session.stageResults?.forEach(result => {
+                Object.entries(result.ksaAchievement || {}).forEach(([ksa, achievement]) => {
+                  const category = ksa.charAt(0).toLowerCase();
+                  if (category === 'k') ksaScores.knowledge.push(achievement.score);
+                  else if (category === 's') ksaScores.skills.push(achievement.score);
+                  else if (category === 'a') ksaScores.attitudes.push(achievement.score);
+                });
+              });
+            });
+            
+            const avgScore = (scores: number[]) => 
+              scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+            
+            return (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                  <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                    {avgScore(ksaScores.knowledge)}%
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    {t('complete.knowledge')}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                    {scenario.ksaMapping?.knowledge?.join(', ')}
+                  </p>
+                </div>
+                
+                <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                  <div className="text-3xl font-bold text-green-600 dark:text-green-400">
+                    {avgScore(ksaScores.skills)}%
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    {t('complete.skills')}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                    {scenario.ksaMapping?.skills?.join(', ')}
+                  </p>
+                </div>
+                
+                <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                  <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+                    {avgScore(ksaScores.attitudes)}%
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    {t('complete.attitudes')}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                    {scenario.ksaMapping?.attitudes?.join(', ')}
+                  </p>
+                </div>
+              </div>
+            );
+          })()}
+        </div>
+
         {/* Learning Objectives Achieved */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
@@ -270,10 +336,52 @@ export default function PBLCompletePage() {
                   </div>
                   
                   {/* Stage Feedback */}
-                  {stageResult?.feedback && (
+                  {stageResult && (
                     <div className="mt-4 space-y-3 pl-11">
+                      {/* KSA Achievement */}
+                      {stageResult.ksaAchievement && Object.keys(stageResult.ksaAchievement).length > 0 && (
+                        <div className="grid grid-cols-3 gap-2 mb-3">
+                          {Object.entries(stageResult.ksaAchievement).map(([ksa, achievement]) => (
+                            <div key={ksa} className="text-center p-2 bg-gray-100 dark:bg-gray-700 rounded">
+                              <div className="text-xs font-medium text-gray-600 dark:text-gray-400">{ksa}</div>
+                              <div className="text-lg font-bold text-blue-600 dark:text-blue-400">
+                                {achievement.score}%
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      
+                      {/* Rubrics Scores */}
+                      {stageResult.rubricsScore && Object.keys(stageResult.rubricsScore).length > 0 && (
+                        <div className="mb-3">
+                          <h5 className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            {t('complete.rubricsScores')}
+                          </h5>
+                          <div className="space-y-1">
+                            {Object.entries(stageResult.rubricsScore).map(([criterion, score]) => (
+                              <div key={criterion} className="flex items-center justify-between text-xs">
+                                <span className="text-gray-600 dark:text-gray-400">{criterion}</span>
+                                <div className="flex items-center">
+                                  {[1, 2, 3, 4].map(level => (
+                                    <div
+                                      key={level}
+                                      className={`w-4 h-4 rounded-full mx-0.5 ${
+                                        level <= score.level
+                                          ? 'bg-blue-500'
+                                          : 'bg-gray-300 dark:bg-gray-600'
+                                      }`}
+                                    />
+                                  ))}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
                       {/* Strengths */}
-                      {stageResult.feedback.strengths.length > 0 && (
+                      {stageResult.feedback?.strengths && stageResult.feedback.strengths.length > 0 && (
                         <div>
                           <h4 className="text-sm font-medium text-green-700 dark:text-green-400 mb-1">
                             {t('complete.strengths')}
@@ -290,7 +398,7 @@ export default function PBLCompletePage() {
                       )}
                       
                       {/* Improvements */}
-                      {stageResult.feedback.improvements.length > 0 && (
+                      {stageResult.feedback?.improvements && stageResult.feedback.improvements.length > 0 && (
                         <div>
                           <h4 className="text-sm font-medium text-orange-700 dark:text-orange-400 mb-1">
                             {t('complete.improvements')}

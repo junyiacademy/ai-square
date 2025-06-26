@@ -125,6 +125,11 @@
     "score": "分數",
     "strengths": "優點",
     "improvements": "待改進之處",
+    "ksaSummary": "KSA 成就總覽",
+    "knowledge": "知識",
+    "skills": "技能",
+    "attitudes": "態度",
+    "rubricsScores": "評量標準評分",
     "timeFormat": {
       "hours": "{{hours}} 小時 {{minutes}} 分鐘",
       "minutes": "{{minutes}} 分鐘 {{seconds}} 秒",

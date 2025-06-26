@@ -125,6 +125,11 @@
     "score": "Score",
     "strengths": "Strengths",
     "improvements": "Areas for Improvement",
+    "ksaSummary": "KSA Achievement Summary",
+    "knowledge": "Knowledge",
+    "skills": "Skills",
+    "attitudes": "Attitudes",
+    "rubricsScores": "Rubrics Assessment",
     "timeFormat": {
       "hours": "{{hours}}h {{minutes}}m",
       "minutes": "{{minutes}}m {{seconds}}s",
