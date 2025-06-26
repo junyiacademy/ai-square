@@ -4,7 +4,7 @@ import { pblGCS } from '@/lib/storage/pbl-gcs-service';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { sessionId, stageId, taskId, progress, metadata } = body;
+    const { sessionId, stageId, progress, metadata } = body;
 
     if (!sessionId || !stageId) {
       return NextResponse.json(
@@ -56,12 +56,22 @@ export async function POST(request: NextRequest) {
 
       const stageResult = {
         stageId,
-        taskId: taskId || 0,
-        status: 'completed' as const,
-        completedAt: new Date().toISOString(),
-        score: metadata.score || 0,
-        feedback: metadata.feedback,
-        timeSpent: metadata.timeSpent || 0
+        completed: true,
+        startedAt: new Date(),
+        completedAt: new Date(),
+        performanceMetrics: {
+          completionTime: metadata.timeSpent || 0,
+          interactionCount: 1,
+          revisionCount: 0,
+          resourceUsage: 1
+        },
+        ksaAchievement: {},
+        rubricsScore: {},
+        feedback: {
+          strengths: [],
+          improvements: [],
+          nextSteps: []
+        }
       };
 
       if (existingStageIndex >= 0) {
@@ -70,10 +80,10 @@ export async function POST(request: NextRequest) {
         updates.stageResults = [...(sessionData.stageResults || []), stageResult];
       }
 
-      // Update overall progress
-      updates.progress.completedStages = updates.stageResults.filter(
-        r => r.status === 'completed'
-      ).length;
+      // Update overall progress  
+      const completedStageIds = updates.stageResults.filter(r => r.completed).map(r => r.stageId);
+      // Convert stage IDs to indices (assuming they're numeric)
+      updates.progress.completedStages = completedStageIds.map(id => parseInt(id, 10)).filter(n => !isNaN(n));
     }
 
     // Save updated session

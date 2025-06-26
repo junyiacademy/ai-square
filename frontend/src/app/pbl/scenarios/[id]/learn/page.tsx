@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
+import ReactMarkdown from 'react-markdown';
 import { 
   SessionData, 
   ScenarioProgram, 
@@ -13,7 +14,7 @@ import {
 } from '@/types/pbl';
 
 export default function PBLLearnPage() {
-  const { t, i18n } = useTranslation(['pbl']);
+  const { t, i18n, ready } = useTranslation(['pbl']);
   const params = useParams();
   const router = useRouter();
   const scenarioId = params.id as string;
@@ -26,6 +27,9 @@ export default function PBLLearnPage() {
   const [conversation, setConversation] = useState<ConversationTurn[]>([]);
   const [userInput, setUserInput] = useState('');
   const [isAIThinking, setIsAIThinking] = useState(false);
+  
+  // Ref for auto-scrolling
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Load scenario and start/resume session
   useEffect(() => {
@@ -54,11 +58,12 @@ export default function PBLLearnPage() {
 
         const sessionData = await sessionResponse.json();
         if (sessionData.success) {
-          setSession(sessionData.data);
+          setSession(sessionData.data.sessionData);
           
           // Set current task based on progress
-          const currentStage = scenarioData.data.stages[sessionData.data.currentStage];
-          if (currentStage && currentStage.tasks.length > 0) {
+          const stageIndex = sessionData.data.sessionData.currentStage || 0;
+          const currentStage = scenarioData.data.stages[stageIndex];
+          if (currentStage && currentStage.tasks && currentStage.tasks.length > 0) {
             setCurrentTask(currentStage.tasks[0]);
           }
         }
@@ -72,18 +77,14 @@ export default function PBLLearnPage() {
     initializeSession();
   }, [scenarioId, i18n.language]);
 
-  // Auto-save session progress
-  useEffect(() => {
-    const saveInterval = setInterval(() => {
-      if (session && !saving) {
-        saveProgress();
-      }
-    }, 30000); // Save every 30 seconds
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'end'
+    });
+  };
 
-    return () => clearInterval(saveInterval);
-  }, [session, saving]);
-
-  const saveProgress = async () => {
+  const saveProgress = useCallback(async () => {
     if (!session) return;
     
     setSaving(true);
@@ -101,7 +102,23 @@ export default function PBLLearnPage() {
     } finally {
       setSaving(false);
     }
-  };
+  }, [session]);
+
+  // Auto-save session progress
+  useEffect(() => {
+    const saveInterval = setInterval(() => {
+      if (session && !saving) {
+        saveProgress();
+      }
+    }, 30000); // Save every 30 seconds
+
+    return () => clearInterval(saveInterval);
+  }, [session, saving, saveProgress]);
+
+  // Auto-scroll to bottom when conversation updates
+  useEffect(() => {
+    scrollToBottom();
+  }, [conversation, isAIThinking]);
 
   const handleSendMessage = async () => {
     if (!userInput.trim() || isAIThinking || !session || !currentTask) return;
@@ -132,7 +149,13 @@ export default function PBLLearnPage() {
       };
 
       // Send to Gemini API
-      const currentStage = scenario.stages[session.currentStage];
+      const stageIndex = session.currentStage || 0;
+      const currentStage = scenario?.stages[stageIndex];
+      if (!currentStage) {
+        console.error('Current stage not found');
+        return;
+      }
+      
       const response = await fetch('/api/pbl/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -140,6 +163,7 @@ export default function PBLLearnPage() {
           sessionId: session.id,
           message: userInput,
           userId: session.userId,
+          language: i18n.language,
           aiModule: currentStage.aiModules[0], // Use first AI module for now
           stageContext: {
             stageId: currentStage.id,
@@ -171,8 +195,20 @@ export default function PBLLearnPage() {
         };
         setConversation(prev => [...prev, aiMessage]);
       }
+      
+      // Always reset AI thinking state
+      setIsAIThinking(false);
     } catch (error) {
       console.error('Error sending message:', error);
+      
+      // Add error message to conversation
+      const errorMessage: ConversationTurn = {
+        id: `msg-${Date.now()}`,
+        timestamp: new Date(),
+        role: 'ai',
+        content: t('learn.aiResponse.error')
+      };
+      setConversation(prev => [...prev, errorMessage]);
       setIsAIThinking(false);
     }
   };
@@ -180,7 +216,9 @@ export default function PBLLearnPage() {
   const handleNextTask = () => {
     if (!session || !scenario) return;
 
-    const currentStage = scenario.stages[session.currentStage];
+    const stageIndex = session.currentStage || 0;
+    const currentStage = scenario.stages[stageIndex];
+    if (!currentStage) return;
     const currentTaskIndex = currentStage.tasks.findIndex(t => t.id === currentTask?.id);
     
     if (currentTaskIndex < currentStage.tasks.length - 1) {
@@ -221,7 +259,7 @@ export default function PBLLearnPage() {
     }
   };
 
-  if (loading) {
+  if (loading || !ready || !i18n.isInitialized) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -245,8 +283,26 @@ export default function PBLLearnPage() {
     );
   }
 
-  const currentStage = scenario.stages[session.currentStage];
-  const progress = ((session.currentStage + 1) / scenario.stages.length) * 100;
+  const stageIndex = session.currentStage || 0;
+  const currentStage = scenario.stages[stageIndex];
+  const progress = ((stageIndex + 1) / scenario.stages.length) * 100;
+
+  // Safety check for currentStage
+  if (!currentStage) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600 dark:text-gray-400 mb-4">Invalid stage configuration</p>
+          <button
+            onClick={() => router.push('/pbl')}
+            className="text-blue-600 hover:text-blue-700"
+          >
+            {t('learn.backToPBL')}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -272,12 +328,42 @@ export default function PBLLearnPage() {
             </button>
           </div>
           
-          {/* Progress Bar */}
+          {/* Progress Bar with Steps */}
           <div className="mt-4">
-            <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-1">
+            <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
               <span>{t('learn.progress')}</span>
               <span>{Math.round(progress)}%</span>
             </div>
+            
+            {/* Stage Progress Indicators */}
+            <div className="flex items-center justify-between mb-2">
+              {scenario.stages.map((stage, index) => (
+                <div key={stage.id} className="flex flex-col items-center">
+                  <div 
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-300 ${
+                      index < stageIndex
+                        ? 'bg-green-500 text-white' // Completed
+                        : index === stageIndex
+                        ? 'bg-blue-600 text-white' // Current
+                        : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400' // Not started
+                    }`}
+                  >
+                    {index < stageIndex ? (
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    ) : (
+                      index + 1
+                    )}
+                  </div>
+                  <span className="text-xs mt-1 text-center max-w-16 truncate">
+                    {stage.name}
+                  </span>
+                </div>
+              ))}
+            </div>
+            
+            {/* Progress Bar */}
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
               <div 
                 className="bg-blue-600 h-2 rounded-full transition-all duration-300"
@@ -355,7 +441,25 @@ export default function PBLLearnPage() {
                             : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
                         }`}
                       >
-                        <p className="text-sm">{message.content}</p>
+                        <div className="text-sm">
+                          {message.role === 'ai' ? (
+                            <div className="max-w-none">
+                              <ReactMarkdown 
+                                components={{
+                                  p: ({children}) => <p className="mb-2 last:mb-0">{children}</p>,
+                                  strong: ({children}) => <strong className="font-semibold">{children}</strong>,
+                                  ul: ({children}) => <ul className="list-disc ml-4 mb-2">{children}</ul>,
+                                  ol: ({children}) => <ol className="list-decimal ml-4 mb-2">{children}</ol>,
+                                  li: ({children}) => <li className="mb-1">{children}</li>
+                                }}
+                              >
+                                {message.content}
+                              </ReactMarkdown>
+                            </div>
+                          ) : (
+                            <p>{message.content}</p>
+                          )}
+                        </div>
                         <p className="text-xs opacity-70 mt-1">
                           {new Date(message.timestamp).toLocaleTimeString()}
                         </p>
@@ -375,6 +479,9 @@ export default function PBLLearnPage() {
                     </div>
                   </div>
                 )}
+                
+                {/* Invisible element for auto-scrolling */}
+                <div ref={messagesEndRef} />
               </div>
 
               {/* Input Area */}

@@ -45,7 +45,7 @@ export interface LearningLog {
   scenario: {
     id: string;
     title: string;
-    stages: any[];
+    stages: Array<Record<string, unknown>>;
   };
   metadata: {
     startTime: string;
@@ -126,6 +126,7 @@ export class PBLGCSService {
     const logData: PBLLogData = {
       session_id: sessionId,
       user_id: sessionData.userId,
+      user_email: sessionData.userEmail,
       scenario_id: sessionData.scenarioId,
       timestamp: new Date().toISOString(),
       duration_seconds: sessionData.progress.timeSpent,
@@ -196,21 +197,71 @@ export class PBLGCSService {
   }
 
   /**
-   * Update session data in GCS
+   * Update session data in GCS (efficiently update existing file)
    */
   async updateSession(sessionId: string, updates: Partial<SessionData>): Promise<SessionData | null> {
-    const result = await this.getSession(sessionId);
-    if (!result) return null;
+    try {
+      // Search for existing session file
+      const [files] = await this.bucket.getFiles({
+        prefix: `${PBL_BASE_PATH}/`,
+      });
 
-    const { sessionData, logId } = result;
-    const updated = {
-      ...sessionData,
-      ...updates,
-      lastActiveAt: new Date().toISOString()
-    };
+      let targetFile = null;
+      let logData: PBLLogData | null = null;
 
-    await this.saveSession(sessionId, updated, logId);
-    return updated;
+      // Find the file containing this session
+      for (const file of files) {
+        if (file.name.endsWith('.json')) {
+          try {
+            const [contents] = await file.download();
+            const data = JSON.parse(contents.toString()) as PBLLogData;
+            
+            if (data.session_id === sessionId) {
+              targetFile = file;
+              logData = data;
+              break;
+            }
+          } catch (parseError) {
+            console.error(`Failed to parse file ${file.name}:`, parseError);
+            continue;
+          }
+        }
+      }
+
+      if (!targetFile || !logData) {
+        console.error(`Session ${sessionId} not found for update`);
+        return null;
+      }
+
+      // Update the session data
+      const updatedSessionData = {
+        ...logData.session_data,
+        ...updates,
+        lastActiveAt: new Date().toISOString()
+      };
+
+      // Update the complete log data
+      const updatedLogData: PBLLogData = {
+        ...logData,
+        session_data: updatedSessionData,
+        duration_seconds: updatedSessionData.progress.timeSpent,
+        status: updatedSessionData.status,
+        timestamp: new Date().toISOString(),
+        process_logs: updatedSessionData.processLogs || logData.process_logs || []
+      };
+
+      // Save back to the SAME file (overwrite)
+      await targetFile.save(JSON.stringify(updatedLogData, null, 2), {
+        metadata: {
+          contentType: 'application/json',
+        },
+      });
+
+      return updatedSessionData;
+    } catch (error) {
+      console.error('Error updating session in GCS:', error);
+      return null;
+    }
   }
 
   /**

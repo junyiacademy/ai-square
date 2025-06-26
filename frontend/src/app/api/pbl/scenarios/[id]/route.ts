@@ -72,7 +72,12 @@ interface YAMLScenarioData {
 
 async function loadScenarioFromYAML(scenarioId: string): Promise<YAMLScenarioData | null> {
   try {
-    const yamlPath = path.join(process.cwd(), 'public', 'pbl_data', `${scenarioId}_scenario.yaml`);
+    // Only support ai-job-search for now
+    if (scenarioId !== 'ai-job-search') {
+      return null;
+    }
+    
+    const yamlPath = path.join(process.cwd(), 'public', 'pbl_data', 'ai_job_search_scenario.yaml');
     const fileContents = await fs.readFile(yamlPath, 'utf8');
     return yaml.load(fileContents) as YAMLScenarioData;
   } catch (error) {
@@ -293,8 +298,43 @@ export async function GET(
     let scenario: ScenarioProgram | null = null;
     
     if (yamlData && yamlData.scenario_info) {
-      // For now, skip YAML data transformation due to type complexity
-      scenario = null;
+      // Transform YAML data to ScenarioProgram format
+      scenario = {
+        id: yamlData.scenario_info.id,
+        title: yamlData.scenario_info.title,
+        description: yamlData.scenario_info.description,
+        targetDomain: yamlData.scenario_info.target_domains,
+        ksaMapping: yamlData.ksa_mapping,
+        estimatedDuration: yamlData.scenario_info.estimated_duration,
+        difficulty: yamlData.scenario_info.difficulty,
+        prerequisites: yamlData.scenario_info.prerequisites,
+        learningObjectives: yamlData.scenario_info.learning_objectives,
+        stages: yamlData.stages.map(stage => ({
+          id: stage.id,
+          name: stage.name,
+          description: stage.description,
+          stageType: stage.stage_type,
+          modalityFocus: stage.modality_focus,
+          assessmentFocus: stage.assessment_focus,
+          rubricsCriteria: yamlData.rubrics_criteria || [],
+          aiModules: stage.ai_modules,
+          tasks: stage.tasks.map((task, index) => ({
+            id: `${stage.id}-task-${index + 1}`,
+            title: task.title,
+            description: task.description,
+            instructions: task.instructions,
+            expectedOutcome: task.expected_outcome,
+            timeLimit: task.time_limit || 15
+          })),
+          timeLimit: stage.time_limit || 30,
+          loggingConfig: {
+            trackInteractions: stage.logging_config.track_interactions,
+            trackThinkingTime: stage.logging_config.track_thinking_time,
+            trackRevisions: stage.logging_config.track_revisions,
+            trackResourceUsage: stage.logging_config.track_resource_usage
+          }
+        }))
+      };
     } else {
       // Fallback to mock data
       scenario = mockScenarioDetails[scenarioId];

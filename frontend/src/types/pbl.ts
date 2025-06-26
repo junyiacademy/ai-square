@@ -164,6 +164,7 @@ export interface StageResult {
 export interface SessionData {
   id: string;
   userId: string;
+  userEmail?: string;
   scenarioId: string;
   status: SessionStatus;
   currentStage: number;

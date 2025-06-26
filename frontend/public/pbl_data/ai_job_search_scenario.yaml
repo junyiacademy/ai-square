@@ -58,7 +58,7 @@ stages:
     
     ai_modules:
       - role: assistant
-        model: gemini-pro
+        model: gemini-2.5-flash
         persona: Career Research Assistant
         initial_prompt: |
           You are a career research assistant helping the user explore job market trends.
@@ -107,7 +107,7 @@ stages:
     
     ai_modules:
       - role: evaluator
-        model: gemini-pro
+        model: gemini-2.5-flash
         persona: Resume Expert
         initial_prompt: |
           You are an experienced resume expert and career coach.
@@ -173,7 +173,7 @@ stages:
     
     ai_modules:
       - role: assistant
-        model: gemini-pro
+        model: gemini-2.5-flash
         persona: Writing Coach
         initial_prompt: |
           You are a professional writing coach specializing in job applications.
@@ -222,7 +222,7 @@ stages:
     
     ai_modules:
       - role: actor
-        model: gemini-pro
+        model: gemini-2.5-flash
         persona: Professional Interviewer
         initial_prompt: |
           You are an experienced interviewer conducting a job interview.

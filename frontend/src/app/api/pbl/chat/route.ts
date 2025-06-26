@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createPBLGeminiServerService, geminiServerResponseToConversation } from '@/lib/ai/gemini-server-service';
+import { createPBLVertexAIService, vertexAIResponseToConversation } from '@/lib/ai/vertex-ai-service';
 import { pblGCS } from '@/lib/storage/pbl-gcs-service';
 
 export async function POST(request: NextRequest) {
@@ -10,7 +10,8 @@ export async function POST(request: NextRequest) {
       message, 
       aiModule, 
       stageContext,
-      userId 
+      userId,
+      language = 'en'
     } = body;
 
     if (!sessionId || !message || !aiModule || !stageContext) {
@@ -26,19 +27,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create Gemini service with PBL context (server-side with service account)
-    const geminiService = createPBLGeminiServerService(aiModule, stageContext);
+    // Create Vertex AI service with PBL context (server-side with service account)
+    const vertexService = createPBLVertexAIService(aiModule, stageContext, language);
 
     // Send message and get response
-    const geminiResponse = await geminiService.sendMessage(message, {
+    const vertexResponse = await vertexService.sendMessage(message, {
       userId,
       sessionId,
       timestamp: new Date().toISOString()
     });
 
     // Convert to conversation format
-    const { processLog, ...conversation } = geminiServerResponseToConversation(
-      geminiResponse,
+    const { processLog, ...conversation } = vertexAIResponseToConversation(
+      vertexResponse,
       sessionId,
       stageContext.stageId
     );
@@ -70,14 +71,14 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Chat API error:', error);
     
-    // Check if it's a Gemini API key error
-    if (error instanceof Error && error.message.includes('API key')) {
+    // Check if it's a Vertex AI authentication error
+    if (error instanceof Error && error.message.includes('authentication')) {
       return NextResponse.json(
         {
           success: false,
           error: {
-            code: 'API_KEY_ERROR',
-            message: 'Gemini API key not configured'
+            code: 'AUTH_ERROR',
+            message: 'Vertex AI authentication failed'
           }
         },
         { status: 503 }

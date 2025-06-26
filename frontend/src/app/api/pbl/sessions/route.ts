@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { SessionData, SessionMetadata } from '@/types/pbl';
 import { v4 as uuidv4 } from 'uuid';
 import { pblGCS } from '@/lib/storage/pbl-gcs-service';
@@ -6,10 +6,10 @@ import { pblGCS } from '@/lib/storage/pbl-gcs-service';
 // In-memory session storage (fallback when GCS is not available)
 const sessions = new Map<string, SessionData>();
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { scenarioId, userId } = body;
+    const { scenarioId, userId, language } = body;
 
     if (!scenarioId || !userId) {
       return NextResponse.json(
@@ -24,6 +24,18 @@ export async function POST(request: Request) {
       );
     }
 
+    // Extract user email from cookies if available
+    let userEmail = 'demo@example.com'; // fallback
+    try {
+      const userCookie = request.cookies.get('user')?.value;
+      if (userCookie) {
+        const user = JSON.parse(userCookie);
+        userEmail = user.email || userEmail;
+      }
+    } catch (error) {
+      console.log('No user cookie found, using demo email');
+    }
+
     // Generate session ID
     const sessionId = uuidv4();
     const now = new Date().toISOString();
@@ -32,6 +44,7 @@ export async function POST(request: Request) {
     const sessionData: SessionData = {
       id: sessionId,
       userId,
+      userEmail,
       scenarioId,
       status: 'in_progress',
       currentStage: 0,
@@ -98,7 +111,7 @@ export async function POST(request: Request) {
 }
 
 // GET active sessions for a user
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');

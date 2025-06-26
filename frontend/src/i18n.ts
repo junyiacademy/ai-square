@@ -67,6 +67,17 @@ import deHomepage from '../public/locales/de/homepage.json';
 import ruHomepage from '../public/locales/ru/homepage.json';
 import itHomepage from '../public/locales/it/homepage.json';
 
+// PBL 翻譯
+import zhTWPbl from '../public/locales/zh-TW/pbl.json';
+import enPbl from '../public/locales/en/pbl.json';
+import esPbl from '../public/locales/es/pbl.json';
+import jaPbl from '../public/locales/ja/pbl.json';
+import koPbl from '../public/locales/ko/pbl.json';
+import frPbl from '../public/locales/fr/pbl.json';
+import dePbl from '../public/locales/de/pbl.json';
+import ruPbl from '../public/locales/ru/pbl.json';
+import itPbl from '../public/locales/it/pbl.json';
+
 // 在伺服器端和客戶端都使用相同的預設語言避免 hydration mismatch
 const getDefaultLng = () => {
   // 伺服器端總是返回英文作為預設語言
@@ -84,7 +95,8 @@ i18n
         navigation: zhTWNavigation,
         ksa: zhTWKsa,
         assessment: zhTWAssessment,
-        homepage: zhTWHomepage
+        homepage: zhTWHomepage,
+        pbl: zhTWPbl
       },
       en: { 
         relations: enRelations,
@@ -92,7 +104,8 @@ i18n
         navigation: enNavigation,
         ksa: enKsa,
         assessment: enAssessment,
-        homepage: enHomepage
+        homepage: enHomepage,
+        pbl: enPbl
       },
       es: { 
         relations: esRelations,
@@ -100,7 +113,8 @@ i18n
         navigation: esNavigation,
         ksa: esKsa,
         assessment: esAssessment,
-        homepage: esHomepage
+        homepage: esHomepage,
+        pbl: esPbl
       },
       ja: { 
         relations: jaRelations,
@@ -108,7 +122,8 @@ i18n
         navigation: jaNavigation,
         ksa: jaKsa,
         assessment: jaAssessment,
-        homepage: jaHomepage
+        homepage: jaHomepage,
+        pbl: jaPbl
       },
       ko: { 
         relations: koRelations,
@@ -116,7 +131,8 @@ i18n
         navigation: koNavigation,
         ksa: koKsa,
         assessment: koAssessment,
-        homepage: koHomepage
+        homepage: koHomepage,
+        pbl: koPbl
       },
       fr: { 
         relations: frRelations,
@@ -124,7 +140,8 @@ i18n
         navigation: frNavigation,
         ksa: frKsa,
         assessment: frAssessment,
-        homepage: frHomepage
+        homepage: frHomepage,
+        pbl: frPbl
       },
       de: { 
         relations: deRelations,
@@ -132,7 +149,8 @@ i18n
         navigation: deNavigation,
         ksa: deKsa,
         assessment: deAssessment,
-        homepage: deHomepage
+        homepage: deHomepage,
+        pbl: dePbl
       },
       ru: { 
         relations: ruRelations,
@@ -140,7 +158,8 @@ i18n
         navigation: ruNavigation,
         ksa: ruKsa,
         assessment: ruAssessment,
-        homepage: ruHomepage
+        homepage: ruHomepage,
+        pbl: ruPbl
       },
       it: { 
         relations: itRelations,
@@ -148,7 +167,8 @@ i18n
         navigation: itNavigation,
         ksa: itKsa,
         assessment: itAssessment,
-        homepage: itHomepage
+        homepage: itHomepage,
+        pbl: itPbl
       },
     },
     lng: getDefaultLng(),

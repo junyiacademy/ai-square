@@ -66,10 +66,39 @@ export async function PATCH(
 ) {
   try {
     const { id: sessionId } = await params;
-    const updates = await request.json();
+    
+    // Check if request has body
+    const text = await request.text();
+    let updates = {};
+    
+    if (text.trim()) {
+      try {
+        updates = JSON.parse(text);
+      } catch (parseError) {
+        console.error('JSON parse error:', parseError, 'Raw text:', text);
+        return NextResponse.json(
+          {
+            success: false,
+            error: {
+              code: 'INVALID_JSON',
+              message: 'Invalid JSON in request body'
+            }
+          },
+          { status: 400 }
+        );
+      }
+    }
 
-    // TODO: In step 4, fetch from GCS instead
-    const session = sessions.get(sessionId);
+    // Try to fetch from GCS first, then fallback to in-memory
+    let session: SessionData | null = null;
+    
+    try {
+      const result = await pblGCS.getSession(sessionId);
+      session = result?.sessionData || null;
+    } catch (gcsError) {
+      console.error('Failed to fetch from GCS, trying in-memory:', gcsError);
+      session = sessions.get(sessionId) || null;
+    }
 
     if (!session) {
       return NextResponse.json(
@@ -115,11 +144,14 @@ export async function PATCH(
       ];
     }
 
-    // Update in memory (will save to GCS in step 4)
+    // Update in memory first for immediate response
     sessions.set(sessionId, updatedSession);
 
-    // TODO: Save to GCS in step 4
-    // await updateInGCS(sessionId, updatedSession);
+    // Save to GCS asynchronously (don't await to avoid blocking the response)
+    pblGCS.updateSession(sessionId, updatedSession).catch(gcsError => {
+      console.error('Failed to save to GCS (async):', gcsError);
+      // This won't affect the response since we're not awaiting
+    });
 
     return NextResponse.json({
       success: true,
@@ -166,8 +198,16 @@ export async function PUT(
       );
     }
 
-    // TODO: In step 4, fetch from GCS instead
-    const session = sessions.get(sessionId);
+    // Try to fetch from GCS first, then fallback to in-memory
+    let session: SessionData | null = null;
+    
+    try {
+      const result = await pblGCS.getSession(sessionId);
+      session = result?.sessionData || null;
+    } catch (gcsError) {
+      console.error('Failed to fetch from GCS, trying in-memory:', gcsError);
+      session = sessions.get(sessionId) || null;
+    }
 
     if (!session) {
       return NextResponse.json(
@@ -189,11 +229,16 @@ export async function PUT(
       lastActiveAt: new Date().toISOString()
     };
 
-    // Update in memory (will save to GCS in step 4)
+    // Update in memory and GCS
     sessions.set(sessionId, updatedSession);
 
-    // TODO: Save to GCS in step 4
-    // await updateInGCS(sessionId, updatedSession);
+    // Save to GCS
+    try {
+      await pblGCS.updateSession(sessionId, updatedSession);
+    } catch (gcsError) {
+      console.error('Failed to save to GCS:', gcsError);
+      // Continue with in-memory only
+    }
 
     return NextResponse.json({
       success: true,
