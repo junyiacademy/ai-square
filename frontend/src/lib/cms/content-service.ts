@@ -66,9 +66,7 @@ export class ContentService {
     const items: ContentItem[] = [];
     
     // 1. List from repo
-    // In Next.js, we need to ensure we're looking in the right directory
-    const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
-    const repoPath = path.join(baseDir, 'public', this.getRepoPath(type));
+    const repoPath = path.join(process.cwd(), 'public', this.getRepoPath(type));
     
     try {
       const files = await fs.readdir(repoPath);
@@ -262,9 +260,8 @@ export class ContentService {
 
   // Private helper methods
   private async readFromRepo(type: ContentType, fileName: string): Promise<unknown> {
-    // In Next.js, we need to ensure we're looking in the right directory
-    const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
-    const filePath = path.join(baseDir, 'public', this.getRepoPath(type), fileName);
+    // In production (Docker), cwd is /app. In dev, it might be /path/to/project/frontend
+    const filePath = path.join(process.cwd(), 'public', this.getRepoPath(type), fileName);
     
     try {
       const content = await fs.readFile(filePath, 'utf-8');
