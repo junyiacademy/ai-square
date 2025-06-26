@@ -56,6 +56,7 @@ export async function POST(request: NextRequest) {
 
       const stageResult = {
         stageId,
+        status: 'completed' as const,
         completed: true,
         startedAt: new Date(),
         completedAt: new Date(),

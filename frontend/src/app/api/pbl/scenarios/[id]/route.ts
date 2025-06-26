@@ -306,10 +306,10 @@ export async function GET(
         id: yamlData.scenario_info.id,
         title: yamlData.scenario_info.title,
         description: yamlData.scenario_info.description,
-        targetDomain: yamlData.scenario_info.target_domains,
+        targetDomain: yamlData.scenario_info.target_domains as ('engaging_with_ai' | 'creating_with_ai' | 'managing_with_ai' | 'designing_with_ai')[],
         ksaMapping: yamlData.ksa_mapping,
         estimatedDuration: yamlData.scenario_info.estimated_duration,
-        difficulty: yamlData.scenario_info.difficulty,
+        difficulty: yamlData.scenario_info.difficulty as 'beginner' | 'intermediate' | 'advanced',
         prerequisites: yamlData.scenario_info.prerequisites,
         learningObjectives: yamlData.scenario_info.learning_objectives,
         stages: yamlData.stages.map(stage => ({
