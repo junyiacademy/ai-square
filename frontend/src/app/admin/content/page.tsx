@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ContentItem, ContentType } from '@/types/cms';
@@ -14,11 +14,7 @@ export default function ContentBrowser() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
 
-  useEffect(() => {
-    fetchContent();
-  }, [contentType]);
-
-  const fetchContent = async () => {
+  const fetchContent = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(`/api/admin/content?type=${contentType}`);
@@ -31,7 +27,11 @@ export default function ContentBrowser() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [contentType]);
+
+  useEffect(() => {
+    fetchContent();
+  }, [fetchContent]);
 
   const filteredItems = items.filter(item => 
     item.title.toLowerCase().includes(filter.toLowerCase()) ||

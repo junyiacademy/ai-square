@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export function checkAdminAuth(request: NextRequest): { isValid: boolean; user?: any } {
+interface User {
+  email: string;
+  role: string;
+}
+
+export function checkAdminAuth(request: NextRequest): { isValid: boolean; user?: User } {
   // Get auth from cookies
   const isLoggedIn = request.cookies.get('isLoggedIn')?.value === 'true';
   const userCookie = request.cookies.get('user')?.value;
@@ -10,19 +15,21 @@ export function checkAdminAuth(request: NextRequest): { isValid: boolean; user?:
   }
   
   try {
-    const user = JSON.parse(userCookie);
+    const user = JSON.parse(userCookie) as User;
     if (user.role !== 'admin') {
       return { isValid: false };
     }
     
     return { isValid: true, user };
-  } catch (error) {
+  } catch {
     return { isValid: false };
   }
 }
 
-export function withAdminAuth(handler: Function) {
-  return async (request: NextRequest, context?: any) => {
+type HandlerFunction = (request: NextRequest, context?: unknown) => Promise<NextResponse>;
+
+export function withAdminAuth(handler: HandlerFunction) {
+  return async (request: NextRequest, context?: unknown) => {
     const { isValid, user } = checkAdminAuth(request);
     
     if (!isValid) {
@@ -30,7 +37,7 @@ export function withAdminAuth(handler: Function) {
     }
     
     // Add user to request
-    (request as any).user = user;
+    (request as NextRequest & { user: User }).user = user as User;
     
     return handler(request, context);
   };

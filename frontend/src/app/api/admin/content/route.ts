@@ -24,7 +24,7 @@ export const POST = withAdminAuth(async (request: NextRequest) => {
     const { type, id, content, status } = body;
 
     // Get user from request
-    const user = (request as any).user.email;
+    const user = (request as NextRequest & { user: { email: string } }).user.email;
 
     // Extract filename from id
     const fileName = id.split('/').pop();

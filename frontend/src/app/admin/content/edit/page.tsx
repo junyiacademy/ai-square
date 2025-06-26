@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import yaml from 'js-yaml';
@@ -17,19 +17,18 @@ export default function ContentEditor() {
   
   const [content, setContent] = useState('');
   const [originalContent, setOriginalContent] = useState('');
-  const [metadata, setMetadata] = useState<any>(null);
+  const [metadata, setMetadata] = useState<{
+    version: number;
+    updated_at: string;
+    updated_by: string;
+    gcs_path?: string;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isDirty, setIsDirty] = useState(false);
 
-  useEffect(() => {
-    if (contentId) {
-      fetchContent();
-    }
-  }, [contentId]);
-
-  const fetchContent = async () => {
+  const fetchContent = useCallback(async () => {
     try {
       const response = await fetch(`/api/admin/content/${encodeURIComponent(contentId)}`);
       if (response.ok) {
@@ -51,7 +50,13 @@ export default function ContentEditor() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [contentId]);
+
+  useEffect(() => {
+    if (contentId) {
+      fetchContent();
+    }
+  }, [contentId, fetchContent]);
 
   const handleSave = async (status: 'draft' | 'published') => {
     setSaving(true);
@@ -88,8 +93,8 @@ export default function ContentEditor() {
         const data = await response.json();
         setError(data.error || 'Failed to save content');
       }
-    } catch (err: any) {
-      setError(err.message || 'Invalid YAML format');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Invalid YAML format');
     } finally {
       setSaving(false);
     }
@@ -240,10 +245,10 @@ export default function ContentEditor() {
       <div className="mt-8 bg-gray-50 rounded-lg p-4">
         <h3 className="text-sm font-medium text-gray-900 mb-2">Publishing Notes:</h3>
         <ul className="text-sm text-gray-600 space-y-1">
-          <li>• <strong>Save as Draft</strong>: Saves changes to GCS but doesn't affect the live site</li>
+          <li>• <strong>Save as Draft</strong>: Saves changes to GCS but doesn&apos;t affect the live site</li>
           <li>• <strong>Publish</strong>: Makes changes live immediately by creating a GCS override</li>
           <li>• <strong>Delete Override</strong>: Removes GCS override and reverts to repository version</li>
-          <li>• Changes are isolated to GCS and don't modify the git repository</li>
+          <li>• Changes are isolated to GCS and don&apos;t modify the git repository</li>
         </ul>
       </div>
     </div>

@@ -14,7 +14,7 @@ export interface ContentItem {
   updated_by: string;
   title: string;
   description?: string;
-  content: any; // YAML content as object
+  content: unknown; // YAML content as object
   file_path: string; // Original file path in repo
   gcs_path?: string; // GCS override path if exists
 }
@@ -27,7 +27,7 @@ export interface ContentHistory {
   user: string;
   action: 'create' | 'update' | 'delete' | 'publish';
   changes: string;
-  content_snapshot: any;
+  content_snapshot: unknown;
 }
 
 export interface ContentFilter {

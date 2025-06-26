@@ -2,7 +2,19 @@ import { Storage } from '@google-cloud/storage';
 import fs from 'fs/promises';
 import path from 'path';
 import yaml from 'js-yaml';
-import { ContentItem, ContentType, ContentHistory } from '@/types/cms';
+import { ContentItem, ContentType, ContentHistory, ContentStatus } from '@/types/cms';
+
+interface ContentMetadata {
+  version: number;
+  status: string;
+  created_at: Date;
+  updated_at: Date;
+  created_by: string;
+  updated_by: string;
+  gcs_path?: string;
+  published_at?: Date;
+  published_by?: string;
+}
 
 // GCS paths structure
 const GCS_PATHS = {
@@ -14,7 +26,7 @@ const GCS_PATHS = {
 
 export class ContentService {
   private storage?: Storage;
-  private bucket?: any;
+  private bucket?: unknown;
   private isProduction: boolean;
   
   constructor() {
@@ -34,19 +46,19 @@ export class ContentService {
   }
 
   // Get content with GCS override check
-  async getContent(type: ContentType, fileName: string): Promise<any> {
+  async getContent(type: ContentType, fileName: string): Promise<unknown> {
     // 1. Read base content from repo
     const baseContent = await this.readFromRepo(type, fileName);
     
     // 2. Check for GCS override
     if (this.bucket) {
       const override = await this.readFromGCS(`${GCS_PATHS.overrides}${type}/${fileName}`);
-      if (override) {
-        return { ...baseContent, ...override, _source: 'gcs_override' };
+      if (override && typeof override === 'object' && override !== null) {
+        return { ...(baseContent as object), ...(override as object), _source: 'gcs_override' };
       }
     }
     
-    return { ...baseContent, _source: 'repo' };
+    return { ...(baseContent as object), _source: 'repo' };
   }
 
   // List all content items
@@ -73,14 +85,14 @@ export class ContentService {
           items.push({
             id: `${type}/${file}`,
             type,
-            status: metadata?.status || 'published',
+            status: (metadata?.status as ContentStatus) || 'published',
             version: metadata?.version || 1,
             created_at: metadata?.created_at || new Date(),
             updated_at: metadata?.updated_at || new Date(),
             created_by: metadata?.created_by || 'system',
             updated_by: metadata?.updated_by || 'system',
-            title: content.title || file,
-            description: content.description,
+            title: (content as { title?: string })?.title || file,
+            description: (content as { description?: string })?.description,
             content,
             file_path: `${type}/${file}`,
             gcs_path: metadata?.gcs_path
@@ -93,14 +105,14 @@ export class ContentService {
     
     // 2. Add GCS-only items (drafts)
     if (this.bucket) {
-      const [files] = await this.bucket.getFiles({ prefix: `${GCS_PATHS.drafts}${type}/` });
+      const [files] = await (this.bucket as { getFiles: (options: { prefix: string }) => Promise<[unknown[]]> }).getFiles({ prefix: `${GCS_PATHS.drafts}${type}/` });
       
       for (const file of files) {
-        const fileName = path.basename(file.name);
+        const fileName = path.basename((file as { name: string }).name);
         const exists = items.find(item => item.file_path === `${type}/${fileName}`);
         
         if (!exists) {
-          const content = await this.readFromGCS(file.name);
+          const content = await this.readFromGCS((file as { name: string }).name);
           const metadata = await this.getMetadata(type, fileName);
           
           items.push({
@@ -112,11 +124,11 @@ export class ContentService {
             updated_at: metadata?.updated_at || new Date(),
             created_by: metadata?.created_by || 'system',
             updated_by: metadata?.updated_by || 'system',
-            title: content.title || fileName,
-            description: content.description,
+            title: (content as { title?: string })?.title || fileName,
+            description: (content as { description?: string })?.description,
             content,
             file_path: `${type}/${fileName}`,
-            gcs_path: file.name
+            gcs_path: (file as { name: string }).name
           });
         }
       }
@@ -129,7 +141,7 @@ export class ContentService {
   async saveContent(
     type: ContentType, 
     fileName: string, 
-    content: any, 
+    content: unknown, 
     status: 'draft' | 'published',
     user: string
   ): Promise<void> {
@@ -142,17 +154,21 @@ export class ContentService {
     
     // Save content
     const yamlContent = yaml.dump(content);
-    await this.bucket.file(filePath).save(yamlContent, {
+    const file = (this.bucket as { file: (path: string) => { save: (content: string, options: unknown) => Promise<void> } }).file(filePath);
+    await file.save(yamlContent, {
       metadata: {
         contentType: 'application/x-yaml',
       },
     });
     
     // Update metadata
-    const metadata = await this.getMetadata(type, fileName) || {
+    const metadata: ContentMetadata = await this.getMetadata(type, fileName) || {
       created_at: new Date(),
       created_by: user,
-      version: 0
+      version: 0,
+      status: 'draft',
+      updated_at: new Date(),
+      updated_by: user
     };
     
     metadata.updated_at = new Date();
@@ -197,8 +213,10 @@ export class ContentService {
     const overridePath = `${GCS_PATHS.overrides}${type}/${fileName}`;
     
     // Copy draft to override
-    const [draftFile] = await this.bucket.file(draftPath).get();
-    await this.bucket.file(overridePath).save(await draftFile.download(), {
+    const draftFile = (this.bucket as { file: (path: string) => { download: () => Promise<[Buffer]> } }).file(draftPath);
+    const [draftContent] = await draftFile.download();
+    const overrideFile = (this.bucket as { file: (path: string) => { save: (content: Buffer, options: unknown) => Promise<void> } }).file(overridePath);
+    await overrideFile.save(draftContent, {
       metadata: {
         contentType: 'application/x-yaml',
       },
@@ -239,7 +257,7 @@ export class ContentService {
   }
 
   // Private helper methods
-  private async readFromRepo(type: ContentType, fileName: string): Promise<any> {
+  private async readFromRepo(type: ContentType, fileName: string): Promise<unknown> {
     // In Next.js, we need to ensure we're looking in the right directory
     const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
     const filePath = path.join(baseDir, 'public', this.getRepoPath(type), fileName);
@@ -247,68 +265,74 @@ export class ContentService {
     try {
       const content = await fs.readFile(filePath, 'utf-8');
       return yaml.load(content);
-    } catch (error) {
-      console.error(`Error reading ${filePath}:`, error);
+    } catch {
+      console.warn(`File not found: ${filePath}`);
       return null;
     }
   }
 
-  private async readFromGCS(filePath: string): Promise<any> {
+  private async readFromGCS(filePath: string): Promise<unknown> {
     if (!this.bucket) return null;
     
     try {
-      const [file] = await this.bucket.file(filePath).download();
-      return yaml.load(file.toString());
-    } catch (error) {
+      const file = (this.bucket as { file: (path: string) => { download: () => Promise<[Buffer]> } }).file(filePath);
+      const [content] = await file.download();
+      return yaml.load(content.toString());
+    } catch {
       return null;
     }
   }
 
-  private async getMetadata(type: ContentType, fileName: string): Promise<any> {
+  private async getMetadata(type: ContentType, fileName: string): Promise<ContentMetadata | null> {
     if (!this.bucket) return null;
     
-    const metadataPath = `${GCS_PATHS.metadata}${type}/${fileName}.json`;
+    const metadataPath = `${GCS_PATHS.metadata}${type}/${fileName}.meta.json`;
     
     try {
-      const [file] = await this.bucket.file(metadataPath).download();
-      return JSON.parse(file.toString());
-    } catch (error) {
+      const file = (this.bucket as { file: (path: string) => { download: () => Promise<[Buffer]> } }).file(metadataPath);
+      const [content] = await file.download();
+      return JSON.parse(content.toString()) as ContentMetadata;
+    } catch {
       return null;
     }
   }
 
-  private async saveMetadata(type: ContentType, fileName: string, metadata: any): Promise<void> {
+  private async saveMetadata(type: ContentType, fileName: string, metadata: ContentMetadata): Promise<void> {
     if (!this.bucket) return;
     
-    const metadataPath = `${GCS_PATHS.metadata}${type}/${fileName}.json`;
-    await this.bucket.file(metadataPath).save(JSON.stringify(metadata, null, 2));
+    const metadataPath = `${GCS_PATHS.metadata}${type}/${fileName}.meta.json`;
+    const file = (this.bucket as { file: (path: string) => { save: (content: string, options: unknown) => Promise<void> } }).file(metadataPath);
+    await file.save(JSON.stringify(metadata, null, 2), {
+      metadata: { contentType: 'application/json' }
+    });
   }
 
   private async saveHistory(
     type: ContentType, 
     fileName: string, 
-    content: any, 
+    content: unknown, 
     version: number,
     user: string,
     action: string
   ): Promise<void> {
     if (!this.bucket) return;
     
-    const timestamp = new Date().toISOString();
-    const historyPath = `${GCS_PATHS.history}${type}/${fileName}/${timestamp}.json`;
-    
     const historyEntry: ContentHistory = {
-      id: `${type}/${fileName}/${timestamp}`,
+      id: `${type}/${fileName}/${version}`,
       content_id: `${type}/${fileName}`,
       version,
-      timestamp: new Date(timestamp),
+      timestamp: new Date(),
       user,
-      action: action as any,
-      changes: `${action} by ${user}`,
+      action: action as 'create' | 'update' | 'delete' | 'publish',
+      changes: `${action} version ${version}`,
       content_snapshot: content
     };
     
-    await this.bucket.file(historyPath).save(JSON.stringify(historyEntry, null, 2));
+    const historyPath = `${GCS_PATHS.history}${type}/${fileName}/${version}.json`;
+    const file = (this.bucket as { file: (path: string) => { save: (content: string, options: unknown) => Promise<void> } }).file(historyPath);
+    await file.save(JSON.stringify(historyEntry, null, 2), {
+      metadata: { contentType: 'application/json' }
+    });
   }
 
   private getRepoPath(type: ContentType): string {
