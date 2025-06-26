@@ -35,20 +35,20 @@ interface DomainRadarChartProps {
 }
 
 export default function DomainRadarChart({ domainScores, title }: DomainRadarChartProps) {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation(['homepage', 'assessment']);
 
   const domainLabels = [
-    t('domains.engaging_with_ai.title'),
-    t('domains.creating_with_ai.title'),
-    t('domains.managing_with_ai.title'),
-    t('domains.designing_with_ai.title')
+    t('domains.items.engaging.name'),
+    t('domains.items.creating.name'),
+    t('domains.items.managing.name'),
+    t('domains.items.designing.name')
   ];
 
   const data: ChartData<'radar'> = {
     labels: domainLabels,
     datasets: [
       {
-        label: t('domains.title'),
+        label: t('homepage:domains.title'),
         data: [
           domainScores.engaging_with_ai,
           domainScores.creating_with_ai,
@@ -71,6 +71,14 @@ export default function DomainRadarChart({ domainScores, title }: DomainRadarCha
   const options: ChartOptions<'radar'> = {
     responsive: true,
     maintainAspectRatio: false,
+    layout: {
+      padding: {
+        top: 20,
+        right: 20,
+        bottom: 20,
+        left: 20
+      }
+    },
     plugins: {
       legend: {
         display: false
@@ -103,11 +111,19 @@ export default function DomainRadarChart({ domainScores, title }: DomainRadarCha
         pointLabels: {
           font: {
             size: 13,
-            weight: '600'
+            weight: '500',
+            family: 'inherit'
           },
-          padding: 20,
-          centerPointLabels: true,
-          color: 'rgb(55, 65, 81)'
+          padding: 15,
+          centerPointLabels: false,
+          color: 'rgb(75, 85, 99)',
+          display: true,
+          backdrop: {
+            enabled: true,
+            color: 'rgba(255, 255, 255, 0.8)',
+            padding: 4,
+            borderRadius: 4
+          }
         },
         angleLines: {
           color: 'rgba(107, 114, 128, 0.2)'
@@ -132,8 +148,10 @@ export default function DomainRadarChart({ domainScores, title }: DomainRadarCha
         </h3>
       )}
       
-      <div className="h-64 flex items-center justify-center">
-        <Radar data={data} options={options} />
+      <div className="h-80 flex items-center justify-center relative">
+        <div className="w-full h-full max-w-md">
+          <Radar data={data} options={options} />
+        </div>
       </div>
       
       {/* Overall Score */}
@@ -143,7 +161,7 @@ export default function DomainRadarChart({ domainScores, title }: DomainRadarCha
             {overallScore}%
           </div>
           <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-2">
-            {t('overall_score')}
+            {t('assessment:overallScore')}
           </p>
         </div>
       </div>
@@ -157,7 +175,7 @@ export default function DomainRadarChart({ domainScores, title }: DomainRadarCha
               {domainScores.engaging_with_ai}%
             </div>
             <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mt-1">
-              {t('domains.engaging_with_ai.short')}
+              {t('domains.items.engaging.name')}
             </p>
           </div>
         </div>
@@ -169,7 +187,7 @@ export default function DomainRadarChart({ domainScores, title }: DomainRadarCha
               {domainScores.creating_with_ai}%
             </div>
             <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mt-1">
-              {t('domains.creating_with_ai.short')}
+              {t('domains.items.creating.name')}
             </p>
           </div>
         </div>
@@ -181,7 +199,7 @@ export default function DomainRadarChart({ domainScores, title }: DomainRadarCha
               {domainScores.managing_with_ai}%
             </div>
             <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mt-1">
-              {t('domains.managing_with_ai.short')}
+              {t('domains.items.managing.name')}
             </p>
           </div>
         </div>
@@ -193,7 +211,7 @@ export default function DomainRadarChart({ domainScores, title }: DomainRadarCha
               {domainScores.designing_with_ai}%
             </div>
             <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mt-1">
-              {t('domains.designing_with_ai.short')}
+              {t('domains.items.designing.name')}
             </p>
           </div>
         </div>
