@@ -129,6 +129,12 @@ export class PBLGCSService {
       progress_percentage: sessionData.progress.percentage
     };
 
+    // Create a clean session_data without processLogs to avoid duplication
+    const cleanSessionData = {
+      ...sessionData,
+      processLogs: [] // Clear to avoid duplication - process_logs is stored at root level
+    };
+
     // Create complete log data
     const logData: PBLLogData = {
       session_id: sessionId,
@@ -139,7 +145,7 @@ export class PBLGCSService {
       duration_seconds: sessionData.progress.timeSpent,
       language: 'zh-TW', // TODO: get from session
       status: sessionData.status,
-      session_data: sessionData,
+      session_data: cleanSessionData,
       metadata,
       progress,
       process_logs: sessionData.processLogs || []
@@ -169,7 +175,14 @@ export class PBLGCSService {
         if (exists) {
           const [contents] = await file.download();
           const logData = JSON.parse(contents.toString()) as PBLLogData;
-          return logData.session_data;
+          
+          // Restore processLogs from root level to session_data
+          const sessionDataWithLogs = {
+            ...logData.session_data,
+            processLogs: logData.process_logs || []
+          };
+          
+          return sessionDataWithLogs;
         }
       }
       
@@ -182,7 +195,14 @@ export class PBLGCSService {
         if (file.name.endsWith(`${logId}.json`)) {
           const [contents] = await file.download();
           const logData = JSON.parse(contents.toString()) as PBLLogData;
-          return logData.session_data;
+          
+          // Restore processLogs from root level to session_data
+          const sessionDataWithLogs = {
+            ...logData.session_data,
+            processLogs: logData.process_logs || []
+          };
+          
+          return sessionDataWithLogs;
         }
       }
       
@@ -209,7 +229,14 @@ export class PBLGCSService {
           
           if (logData.session_id === sessionId) {
             const logId = file.name.split('/').pop()!.replace('.json', '');
-            return { sessionData: logData.session_data, logId };
+            
+            // Restore processLogs from root level to session_data
+            const sessionDataWithLogs = {
+              ...logData.session_data,
+              processLogs: logData.process_logs || []
+            };
+            
+            return { sessionData: sessionDataWithLogs, logId };
           }
         }
       }
@@ -286,21 +313,33 @@ export class PBLGCSService {
         return null;
       }
 
+      // First restore processLogs from root level to session_data for proper updating
+      const currentSessionData = {
+        ...logData.session_data,
+        processLogs: logData.process_logs || []
+      };
+
       // Update the session data
       const updatedSessionData = {
-        ...logData.session_data,
+        ...currentSessionData,
         ...updates,
         lastActiveAt: new Date().toISOString()
+      };
+
+      // Create clean session data without processLogs for storage
+      const cleanSessionData = {
+        ...updatedSessionData,
+        processLogs: [] // Clear to avoid duplication - process_logs is stored at root level
       };
 
       // Update the complete log data
       const updatedLogData: PBLLogData = {
         ...logData,
-        session_data: updatedSessionData,
+        session_data: cleanSessionData,
         duration_seconds: updatedSessionData.progress.timeSpent,
         status: updatedSessionData.status,
         timestamp: new Date().toISOString(),
-        process_logs: updatedSessionData.processLogs || logData.process_logs || []
+        process_logs: updatedSessionData.processLogs || []
       };
 
       // Save back to the SAME file (overwrite)
@@ -310,6 +349,7 @@ export class PBLGCSService {
         },
       });
 
+      // Return the updated session data with processLogs for the application
       return updatedSessionData;
     } catch (error) {
       console.error('Error updating session in GCS:', error);

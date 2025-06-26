@@ -22,7 +22,7 @@ export default function PBLLearnPage() {
   const [scenario, setScenario] = useState<ScenarioProgram | null>(null);
   const [session, setSession] = useState<SessionData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [saving, setSaving] = useState(false); // Keep for auto-save functionality
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
   const [conversation, setConversation] = useState<ConversationTurn[]>([]);
   const [userInput, setUserInput] = useState('');
@@ -536,14 +536,7 @@ export default function PBLLearnPage() {
             </div>
 
             {/* Action Buttons */}
-            <div className="mt-4 flex justify-end space-x-3">
-              <button
-                onClick={saveProgress}
-                disabled={saving || !session}
-                className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {saving ? t('learn.saving') : t('learn.saveProgress')}
-              </button>
+            <div className="mt-4 flex justify-end">
               <button
                 onClick={handleNextTask}
                 disabled={!session}
