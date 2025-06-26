@@ -31,11 +31,11 @@ export default function PBLLearnPage() {
   // Ref for auto-scrolling
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Load scenario and start/resume session
+  // Load scenario only (don't create session until first message)
   useEffect(() => {
-    const initializeSession = async () => {
+    const loadScenario = async () => {
       try {
-        // 1. Load scenario details
+        // Load scenario details
         const scenarioResponse = await fetch(`/api/pbl/scenarios/${scenarioId}?lang=${i18n.language}`);
         const scenarioData = await scenarioResponse.json();
         
@@ -44,37 +44,20 @@ export default function PBLLearnPage() {
         }
         
         setScenario(scenarioData.data);
-
-        // 2. Check for existing session or create new one
-        const sessionResponse = await fetch('/api/pbl/sessions', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            scenarioId,
-            userId: 'user-demo', // TODO: Get from auth
-            language: i18n.language
-          })
-        });
-
-        const sessionData = await sessionResponse.json();
-        if (sessionData.success) {
-          setSession(sessionData.data.sessionData);
-          
-          // Set current task based on progress
-          const stageIndex = sessionData.data.sessionData.currentStage || 0;
-          const currentStage = scenarioData.data.stages[stageIndex];
-          if (currentStage && currentStage.tasks && currentStage.tasks.length > 0) {
-            setCurrentTask(currentStage.tasks[0]);
-          }
+        
+        // Set initial current task (stage 0, task 0)
+        const currentStage = scenarioData.data.stages[0];
+        if (currentStage && currentStage.tasks && currentStage.tasks.length > 0) {
+          setCurrentTask(currentStage.tasks[0]);
         }
       } catch (error) {
-        console.error('Error initializing session:', error);
+        console.error('Error loading scenario:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    initializeSession();
+    loadScenario();
   }, [scenarioId, i18n.language]);
 
   const scrollToBottom = () => {
@@ -85,7 +68,11 @@ export default function PBLLearnPage() {
   };
 
   const saveProgress = useCallback(async () => {
-    if (!session) return;
+    // Only save if session exists (i.e., user has started chatting)
+    if (!session) {
+      console.log('No session to save - user hasn\'t started chatting yet');
+      return;
+    }
     
     setSaving(true);
     try {
@@ -121,7 +108,7 @@ export default function PBLLearnPage() {
   }, [conversation, isAIThinking]);
 
   const handleSendMessage = async () => {
-    if (!userInput.trim() || isAIThinking || !session || !currentTask) return;
+    if (!userInput.trim() || isAIThinking || !currentTask || !scenario) return;
 
     const userMessage: ConversationTurn = {
       id: `msg-${Date.now()}`,
@@ -131,26 +118,56 @@ export default function PBLLearnPage() {
     };
 
     setConversation(prev => [...prev, userMessage]);
+    const currentUserInput = userInput;
     setUserInput('');
     setIsAIThinking(true);
 
     try {
+      let currentSession = session;
+      
+      // Create session on first message if not exists
+      if (!currentSession) {
+        console.log('Creating new session for first message...');
+        const sessionResponse = await fetch('/api/pbl/sessions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            scenarioId,
+            userId: 'user-demo', // TODO: Get from auth
+            language: i18n.language
+          })
+        });
+
+        const sessionData = await sessionResponse.json();
+        if (sessionData.success) {
+          currentSession = sessionData.data.sessionData;
+          setSession(currentSession);
+          console.log('Session created:', currentSession.id);
+        } else {
+          throw new Error('Failed to create session');
+        }
+      }
+
+      if (!currentSession) {
+        throw new Error('No session available');
+      }
+
       // Log user action
       const processLog: ProcessLog = {
         id: `log-${Date.now()}`,
         timestamp: new Date(),
-        sessionId: session.id,
-        stageId: scenario?.stages[session.currentStage].id || '',
+        sessionId: currentSession.id,
+        stageId: scenario.stages[currentSession.currentStage].id || '',
         actionType: 'write' as ActionType,
         detail: {
-          userInput: userInput,
+          userInput: currentUserInput,
           timeSpent: 0 // TODO: Track actual time
         }
       };
 
-      // Send to Gemini API
-      const stageIndex = session.currentStage || 0;
-      const currentStage = scenario?.stages[stageIndex];
+      // Send to AI API
+      const stageIndex = currentSession.currentStage || 0;
+      const currentStage = scenario.stages[stageIndex];
       if (!currentStage) {
         console.error('Current stage not found');
         return;
@@ -160,9 +177,9 @@ export default function PBLLearnPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          sessionId: session.id,
-          message: userInput,
-          userId: session.userId,
+          sessionId: currentSession.id,
+          message: currentUserInput,
+          userId: currentSession.userId,
           language: i18n.language,
           aiModule: currentStage.aiModules[0], // Use first AI module for now
           stageContext: {
@@ -244,7 +261,11 @@ export default function PBLLearnPage() {
   };
 
   const handleCompleteScenario = async () => {
-    if (!session) return;
+    if (!session) {
+      // If no session exists, just redirect (no conversation happened)
+      router.push(`/pbl/scenarios/${scenarioId}/complete`);
+      return;
+    }
 
     try {
       await fetch(`/api/pbl/sessions/${session.id}`, {
@@ -283,9 +304,9 @@ export default function PBLLearnPage() {
     );
   }
 
-  const stageIndex = session.currentStage || 0;
+  const stageIndex = session?.currentStage || 0;
   const currentStage = scenario.stages[stageIndex];
-  const progress = ((stageIndex + 1) / scenario.stages.length) * 100;
+  const progress = session ? ((stageIndex + 1) / scenario.stages.length) * 100 : 0;
 
   // Safety check for currentStage
   if (!currentStage) {
@@ -506,16 +527,17 @@ export default function PBLLearnPage() {
             <div className="mt-4 flex justify-end space-x-3">
               <button
                 onClick={saveProgress}
-                disabled={saving}
-                className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                disabled={saving || !session}
+                className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {saving ? t('learn.saving') : t('learn.saveProgress')}
               </button>
               <button
                 onClick={handleNextTask}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                disabled={!session}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {session.currentStage === scenario.stages.length - 1 && 
+                {session && session.currentStage === scenario.stages.length - 1 && 
                  currentTask?.id === currentStage.tasks[currentStage.tasks.length - 1].id
                   ? t('learn.completeScenario')
                   : t('learn.nextTask')}
