@@ -107,6 +107,7 @@ export function Header() {
     { href: '/relations', label: t('relations') },
     { href: '/ksa', label: t('ksa') },
     { href: '/assessment', label: t('assessment') },
+    { href: '/pbl', label: t('pbl') },
     { href: '/assessment/history', label: t('assessmentHistory') },
   ]
 

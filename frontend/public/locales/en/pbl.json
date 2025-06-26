@@ -1,0 +1,41 @@
+{
+  "title": "PBL Scenario-Based Learning",
+  "description": "Enhance your AI literacy through real-world tasks. Apply what you learn in practical scenarios.",
+  "difficulty": "Difficulty",
+  "duration": "Duration",
+  "minutes": "minutes",
+  "level": {
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced"
+  },
+  "startLearning": "Start Learning",
+  "viewDetails": "View Details",
+  "comingSoon": "Coming Soon",
+  "moreScenarios": "More scenarios will be available soon",
+  "scenarios": {
+    "jobSearch": {
+      "title": "AI-Assisted Job Search Training",
+      "description": "Learn how to use AI tools to optimize your job search process"
+    }
+  },
+  "features": {
+    "title": "Why PBL Learning?",
+    "realWorld": {
+      "title": "Real-World Scenarios",
+      "description": "Practice with authentic tasks you'll encounter in daily life"
+    },
+    "aiGuidance": {
+      "title": "AI Guidance",
+      "description": "Get personalized help from AI tutors throughout your learning"
+    },
+    "progress": {
+      "title": "Track Progress",
+      "description": "Monitor your skill development with detailed analytics"
+    },
+    "personalized": {
+      "title": "Personalized Feedback",
+      "description": "Receive tailored suggestions based on your performance"
+    }
+  }
+}

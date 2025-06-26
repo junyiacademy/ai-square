@@ -1,0 +1,41 @@
+{
+  "title": "PBL 情境式學習",
+  "description": "透過真實世界的任務，提升您的 AI 素養能力。在實際情境中應用所學。",
+  "difficulty": "難度",
+  "duration": "時長",
+  "minutes": "分鐘",
+  "level": {
+    "beginner": "初級",
+    "intermediate": "中級",
+    "advanced": "高級"
+  },
+  "startLearning": "開始學習",
+  "viewDetails": "查看詳情",
+  "comingSoon": "即將推出",
+  "moreScenarios": "更多情境即將推出",
+  "scenarios": {
+    "jobSearch": {
+      "title": "AI 輔助求職訓練",
+      "description": "學習如何使用 AI 工具優化求職流程"
+    }
+  },
+  "features": {
+    "title": "為什麼選擇 PBL 學習？",
+    "realWorld": {
+      "title": "真實世界情境",
+      "description": "透過日常生活中會遇到的真實任務進行練習"
+    },
+    "aiGuidance": {
+      "title": "AI 智能引導",
+      "description": "在學習過程中獲得 AI 導師的個人化協助"
+    },
+    "progress": {
+      "title": "追蹤進度",
+      "description": "透過詳細的分析追蹤您的技能發展"
+    },
+    "personalized": {
+      "title": "個人化回饋",
+      "description": "根據您的表現獲得量身定制的建議"
+    }
+  }
+}
