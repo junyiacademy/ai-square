@@ -20,25 +20,26 @@ interface KSAKnowledgeGraphProps {
   };
 }
 
-interface Node {
+interface Node extends d3.SimulationNodeDatum {
   id: string;
   label: string;
   category: 'knowledge' | 'skills' | 'attitudes' | 'center';
   score?: number;
   x?: number;
   y?: number;
-  fx?: number;
-  fy?: number;
+  fx?: number | null;
+  fy?: number | null;
 }
 
-interface Link {
-  source: string;
-  target: string;
+interface Link extends d3.SimulationLinkDatum<Node> {
+  source: string | Node;
+  target: string | Node;
 }
 
 export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAKnowledgeGraphProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const zoomRef = useRef<d3.ZoomBehavior<SVGSVGElement, unknown> | null>(null);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
 
@@ -131,7 +132,8 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
         g.attr('transform', event.transform);
       });
 
-    svg.call(zoom as any);
+    zoomRef.current = zoom;
+    svg.call(zoom);
 
     // Create main group for transformation
     const g = svg.append('g');
@@ -179,7 +181,7 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
           svg.transition()
             .duration(750)
             .call(
-              zoom.transform as any,
+              zoom.transform,
               d3.zoomIdentity
                 .translate(translate[0], translate[1])
                 .scale(scale)
@@ -189,7 +191,7 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
       .call(d3.drag<SVGGElement, Node>()
         .on('start', dragstarted)
         .on('drag', dragged)
-        .on('end', dragended) as any);
+        .on('end', dragended));
 
     // Add circles for nodes
     const nodeRadius = Math.min(width, height) * 0.04;
@@ -251,27 +253,27 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
     // Update positions on simulation tick
     simulation.on('tick', () => {
       link
-        .attr('x1', d => (d.source as any).x)
-        .attr('y1', d => (d.source as any).y)
-        .attr('x2', d => (d.target as any).x)
-        .attr('y2', d => (d.target as any).y);
+        .attr('x1', d => (d.source as Node).x || 0)
+        .attr('y1', d => (d.source as Node).y || 0)
+        .attr('x2', d => (d.target as Node).x || 0)
+        .attr('y2', d => (d.target as Node).y || 0);
 
       node.attr('transform', d => `translate(${d.x},${d.y})`);
     });
 
     // Drag functions
-    function dragstarted(event: any, d: Node) {
+    function dragstarted(event: d3.D3DragEvent<SVGGElement, Node, Node>, d: Node) {
       if (!event.active) simulation.alphaTarget(0.3).restart();
       d.fx = d.x;
       d.fy = d.y;
     }
 
-    function dragged(event: any, d: Node) {
+    function dragged(event: d3.D3DragEvent<SVGGElement, Node, Node>, d: Node) {
       d.fx = event.x;
       d.fy = event.y;
     }
 
-    function dragended(event: any, d: Node) {
+    function dragended(event: d3.D3DragEvent<SVGGElement, Node, Node>, d: Node) {
       if (!event.active) simulation.alphaTarget(0);
       if (d.id !== 'center' && !['knowledge', 'skills', 'attitudes'].includes(d.id)) {
         d.fx = null;
@@ -283,7 +285,7 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
     svg.on('dblclick.zoom', () => {
       svg.transition()
         .duration(750)
-        .call(zoom.transform as any, d3.zoomIdentity);
+        .call(zoom.transform, d3.zoomIdentity);
     });
 
     return () => {
@@ -299,10 +301,10 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
       .selectAll('.node-circle')
       .transition()
       .duration(300)
-      .attr('stroke-width', function(this: any, d: any) {
+      .attr('stroke-width', function(this: SVGElement, d: Node) {
         return selectedNode && d.id === selectedNode.id ? 4 : 2;
       })
-      .attr('stroke', function(this: any, d: any) {
+      .attr('stroke', function(this: SVGElement, d: Node) {
         if (selectedNode && d.id === selectedNode.id) return '#1f2937';
         if (d.category === 'knowledge') return '#3b82f6';
         if (d.category === 'skills') return '#10b981';
@@ -342,8 +344,10 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
             <div className="absolute top-2 right-2 flex flex-col gap-1">
               <button
                 onClick={() => {
-                  const svg = d3.select(svgRef.current);
-                  svg.transition().call(d3.zoom<SVGSVGElement, unknown>().scaleBy as any, 1.2);
+                  if (svgRef.current && zoomRef.current) {
+                    const svg = d3.select(svgRef.current);
+                    svg.transition().call(zoomRef.current.scaleBy, 1.2);
+                  }
                 }}
                 className="p-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
                 title="Zoom in"
@@ -354,8 +358,10 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
               </button>
               <button
                 onClick={() => {
-                  const svg = d3.select(svgRef.current);
-                  svg.transition().call(d3.zoom<SVGSVGElement, unknown>().scaleBy as any, 0.8);
+                  if (svgRef.current && zoomRef.current) {
+                    const svg = d3.select(svgRef.current);
+                    svg.transition().call(zoomRef.current.scaleBy, 0.8);
+                  }
                 }}
                 className="p-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
                 title="Zoom out"
@@ -366,9 +372,10 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
               </button>
               <button
                 onClick={() => {
-                  const svg = d3.select(svgRef.current);
-                  const zoom = d3.zoom<SVGSVGElement, unknown>();
-                  svg.transition().duration(750).call(zoom.transform as any, d3.zoomIdentity);
+                  if (svgRef.current && zoomRef.current) {
+                    const svg = d3.select(svgRef.current);
+                    svg.transition().duration(750).call(zoomRef.current.transform, d3.zoomIdentity);
+                  }
                 }}
                 className="p-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
                 title="Reset zoom"

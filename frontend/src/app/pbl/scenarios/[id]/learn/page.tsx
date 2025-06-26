@@ -944,7 +944,7 @@ export default function PBLLearnPage() {
                       <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
                         <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">{t('learn.ksaBreakdown')}</h4>
                         <div className="grid grid-cols-4 gap-2">
-                          {Object.entries(stageAnalysis.ksaAchievement).map(([ksa, achievement]: [string, any]) => (
+                          {Object.entries(stageAnalysis.ksaAchievement).map(([ksa, achievement]: [string, { score: number; feedback: string }]) => (
                             <div key={ksa} className={`text-center p-2 rounded-lg ${
                               ksa.startsWith('K') ? 'bg-blue-50 dark:bg-blue-900/20' :
                               ksa.startsWith('S') ? 'bg-green-50 dark:bg-green-900/20' :

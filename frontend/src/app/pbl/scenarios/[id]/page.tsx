@@ -48,7 +48,7 @@ export default function PBLScenarioDetailsPage() {
           if (sessionsData.success && sessionsData.data.sessions.length > 0) {
             // Check if all stages are completed
             const scenario = data.data;
-            const completedStages = new Set(sessionsData.data.sessions.map((s: any) => s.currentStage));
+            const completedStages = new Set(sessionsData.data.sessions.map((s: { currentStage: number }) => s.currentStage));
             const allStagesCompleted = scenario.stages.length === completedStages.size;
             setHasCompletionReport(allStagesCompleted);
           }
