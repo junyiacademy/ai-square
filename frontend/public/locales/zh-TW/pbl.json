@@ -122,6 +122,9 @@
     "retryScenario": "重新嘗試",
     "backToPBL": "返回 PBL",
     "errorLoading": "載入完成資料時發生錯誤",
+    "score": "分數",
+    "strengths": "優點",
+    "improvements": "待改進之處",
     "timeFormat": {
       "hours": "{{hours}} 小時 {{minutes}} 分鐘",
       "minutes": "{{minutes}} 分鐘 {{seconds}} 秒",

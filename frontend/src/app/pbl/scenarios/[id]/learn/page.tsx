@@ -281,9 +281,26 @@ export default function PBLLearnPage() {
       // Move to next stage - complete current stage session first
       const newStageIndex = session.currentStage + 1;
       
-      // Mark current stage session as completed
+      // Mark current stage session as completed and evaluate
       if (session) {
         try {
+          // First evaluate the stage
+          const currentStageId = scenario.stages[session.currentStage].id;
+          const evaluateResponse = await fetch('/api/pbl/evaluate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              sessionId: session.id,
+              stageId: currentStageId
+            })
+          });
+          
+          if (evaluateResponse.ok) {
+            const evaluationData = await evaluateResponse.json();
+            console.log(`Stage ${session.currentStage} evaluated:`, evaluationData.data.evaluation);
+          }
+          
+          // Then complete the session
           await fetch(`/api/pbl/sessions/${session.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },

@@ -122,6 +122,9 @@
     "retryScenario": "Retry Scenario",
     "backToPBL": "Back to PBL",
     "errorLoading": "Error loading completion data",
+    "score": "Score",
+    "strengths": "Strengths",
+    "improvements": "Areas for Improvement",
     "timeFormat": {
       "hours": "{{hours}}h {{minutes}}m",
       "minutes": "{{minutes}}m {{seconds}}s",
