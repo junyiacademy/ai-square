@@ -125,19 +125,19 @@ export default function DomainRadarChart({ domainScores, title }: DomainRadarCha
   );
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-100 dark:border-gray-700">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-100 dark:border-gray-700 h-full flex flex-col">
       {title && (
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
           {title}
         </h3>
       )}
       
-      <div className="h-80 flex items-center justify-center">
+      <div className="h-64 flex items-center justify-center">
         <Radar data={data} options={options} />
       </div>
       
       {/* Overall Score */}
-      <div className="text-center mt-8 mb-6">
+      <div className="text-center mt-6 mb-4">
         <div className="inline-flex flex-col items-center justify-center p-6 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-2xl">
           <div className="text-5xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
             {overallScore}%

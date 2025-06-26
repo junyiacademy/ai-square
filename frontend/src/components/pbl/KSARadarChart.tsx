@@ -173,13 +173,13 @@ export default function KSARadarChart({ ksaScores, title }: KSARadarChartProps) 
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-100 dark:border-gray-700">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-100 dark:border-gray-700 h-full flex flex-col">
       {title && (
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
           {title}
         </h3>
       )}
-      <div className="h-80 flex items-center justify-center">
+      <div className="h-64 flex items-center justify-center">
         <Radar data={data} options={options} />
       </div>
       
