@@ -1,0 +1,47 @@
+ai_collaboration:
+  complexity_breakdown:
+    medium_count: 1
+  cost_per_feature: 0.025
+  estimated_cost: 0.15000000000000002
+  total_interactions: 1
+created_at: '2025-06-26T11:44:45.237732'
+efficiency_metrics:
+  ai_efficiency_ratio: 0.0
+  ai_time_minutes: 0
+  duration_minutes: 0
+  files_changed: 9
+  human_time_minutes: 0
+  test_coverage:
+    branches: 0
+    functions: 0
+    lines: 0
+    statements: 0
+learnings:
+  avoid_in_future: []
+  reusable_patterns: []
+  what_could_improve: []
+  what_worked_well:
+  - 成本效益高（每功能 < $0.10）
+product_insights:
+  acceptance_criteria:
+  - 修復 AssessmentQuiz 測試中的翻譯和 mock 問題
+  - 修復 AssessmentResults 測試中的翻譯鍵值對應
+  - 修復 API route 測試中的 fs/promises mock 問題
+  - 修復 login API 測試中的 NextResponse cookies mock
+  - 修復 Header 測試中的 aria-label 對應問題
+  - 所有測試必須通過
+  feature: 修復所有失敗的前端測試
+  purpose: 確保測試套件能夠正常運行，提高程式碼品質和可靠性
+  user_value: 確保測試套件能夠正常運行，提高程式碼品質和可靠性
+reusable_assets:
+  code_snippets: []
+  configuration: []
+  test_patterns: []
+technical_insights:
+  challenges: []
+  decisions: []
+  patterns_used: []
+  solutions: []
+ticket_id: 20250626_114346-test-failures
+ticket_name: test-failures
+type: fix
