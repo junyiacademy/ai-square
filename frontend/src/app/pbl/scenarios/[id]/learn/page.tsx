@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
@@ -51,6 +51,75 @@ export default function PBLLearnPage() {
   
   // Ref for auto-scrolling
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Load all task analyses from all sessions when scenario loads
+  useEffect(() => {
+    const loadAllTaskAnalyses = async () => {
+      if (!scenario || !scenarioId || !isAuthenticated) return;
+      
+      // Get user info from localStorage
+      let userId: string | null = null;
+      try {
+        const userData = localStorage.getItem('user');
+        if (userData) {
+          const user = JSON.parse(userData);
+          userId = String(user.id);
+        }
+      } catch (e) {
+        console.log('Error getting user info:', e);
+      }
+      
+      if (!userId) return;
+      
+      try {
+        // Fetch all sessions (both active and completed) for this scenario
+        const response = await fetch(`/api/pbl/sessions?userId=${userId}&scenarioId=${scenarioId}`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.data.sessions.length > 0) {
+            const allAnalyses: Record<string, StageResult> = {};
+            const allCompletedTasks = new Set<string>();
+            
+            // Combine analyses from all sessions
+            data.data.sessions.forEach((session: SessionData) => {
+              if (session.stageResults && session.stageResults.length > 0) {
+                session.stageResults.forEach((result: StageResult) => {
+                  if (result.taskId) {
+                    // Only update if we don't have this analysis yet or this one is newer
+                    if (!allAnalyses[result.taskId] || 
+                        new Date(result.completedAt) > new Date(allAnalyses[result.taskId].completedAt)) {
+                      allAnalyses[result.taskId] = result;
+                      allCompletedTasks.add(result.taskId);
+                    }
+                  } else if (scenario) {
+                    // Stage-level analysis (backward compatibility)
+                    const stageIndex = scenario.stages.findIndex(s => s.id === result.stageId);
+                    if (stageIndex >= 0) {
+                      const stage = scenario.stages[stageIndex];
+                      stage.tasks.forEach((task: Task) => {
+                        if (!allAnalyses[task.id]) {
+                          allAnalyses[task.id] = result;
+                          allCompletedTasks.add(task.id);
+                        }
+                      });
+                    }
+                  }
+                });
+              }
+            });
+            
+            console.log('Loaded all task analyses from all sessions:', allAnalyses);
+            setTaskAnalysisMap(allAnalyses);
+            setCompletedTasks(allCompletedTasks);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading all task analyses:', error);
+      }
+    };
+    
+    loadAllTaskAnalyses();
+  }, [scenario, scenarioId, isAuthenticated]);
 
   // Check for existing task analysis when session, stage or task changes
   useEffect(() => {
@@ -420,17 +489,43 @@ export default function PBLLearnPage() {
           if (taskAnalysis) {
             console.log('Found analysis in loaded session:', taskAnalysis);
             setStageAnalysis(taskAnalysis);
-            // Also update the task analysis map
-            setTaskAnalysisMap(prev => ({
-              ...prev,
-              [currentTask.id]: taskAnalysis
-            }));
-            // Mark task as completed if it has been analyzed
-            setCompletedTasks(prev => new Set([...prev, currentTask.id]));
           } else {
             console.log('No analysis found for current task or stage');
             // Clear any existing analysis
             setStageAnalysis(null);
+          }
+          
+          // Update task analysis map with ALL task analyses from the loaded session
+          if (loadedSession.stageResults && loadedSession.stageResults.length > 0) {
+            const newAnalysisMap: Record<string, StageResult> = {};
+            const newCompletedTasks = new Set<string>();
+            
+            loadedSession.stageResults.forEach((result: StageResult) => {
+              if (result.taskId) {
+                // Task-specific analysis
+                newAnalysisMap[result.taskId] = result;
+                newCompletedTasks.add(result.taskId);
+              } else if (scenario) {
+                // Stage-level analysis (backward compatibility) - apply to all tasks in that stage
+                const stageIndex = scenario.stages.findIndex(s => s.id === result.stageId);
+                if (stageIndex >= 0) {
+                  const stage = scenario.stages[stageIndex];
+                  stage.tasks.forEach((task: Task) => {
+                    if (!newAnalysisMap[task.id]) { // Don't overwrite task-specific analysis
+                      newAnalysisMap[task.id] = result;
+                      newCompletedTasks.add(task.id);
+                    }
+                  });
+                }
+              }
+            });
+            
+            console.log('Updating task analysis map with all analyses:', newAnalysisMap);
+            setTaskAnalysisMap(prev => ({
+              ...prev,
+              ...newAnalysisMap
+            }));
+            setCompletedTasks(prev => new Set([...prev, ...newCompletedTasks]));
           }
         }
       }
@@ -1015,12 +1110,12 @@ export default function PBLLearnPage() {
                                           setStageAnalysis(taskAnalysisMap[task.id] || null);
                                         }}
                                         className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-300 cursor-pointer hover:scale-110 ${
-                                          isCompleted && score !== undefined
+                                          score !== undefined
                                             ? score >= 80 
-                                              ? 'bg-green-500 text-white hover:bg-green-600'
+                                              ? `bg-green-500 text-white hover:bg-green-600 ${isCurrentTask ? 'ring-4 ring-green-200 dark:ring-green-900' : ''}`
                                               : score >= 60 
-                                              ? 'bg-yellow-500 text-white hover:bg-yellow-600'
-                                              : 'bg-red-500 text-white hover:bg-red-600'
+                                              ? `bg-yellow-500 text-white hover:bg-yellow-600 ${isCurrentTask ? 'ring-4 ring-yellow-200 dark:ring-yellow-900' : ''}`
+                                              : `bg-red-500 text-white hover:bg-red-600 ${isCurrentTask ? 'ring-4 ring-red-200 dark:ring-red-900' : ''}`
                                             : isCurrentTask
                                             ? 'bg-blue-600 text-white ring-4 ring-blue-200 dark:ring-blue-900 hover:bg-blue-700'
                                             : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-400 dark:hover:bg-gray-500'
