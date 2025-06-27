@@ -87,6 +87,8 @@
     "analyzing": "分析中...",
     "stageAnalyzed": "階段已分析",
     "stageAnalysisResults": "階段分析結果",
+    "loginRequired": "需要登入",
+    "loginRequiredMessage": "請登入以開始您的 PBL 學習之旅。",
     "overallScore": "總體分數",
     "strengths": "優點",
     "improvements": "需要改進",
@@ -172,6 +174,8 @@
       "hours": "{{hours}} 小時 {{minutes}} 分鐘",
       "minutes": "{{minutes}} 分鐘 {{seconds}} 秒",
       "seconds": "{{seconds}} 秒"
-    }
+    },
+    "loginRequired": "需要登入",
+    "loginRequiredMessage": "請登入以查看您的完成報告。"
   }
 }

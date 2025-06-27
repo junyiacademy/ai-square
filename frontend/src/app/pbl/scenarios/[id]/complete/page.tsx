@@ -21,6 +21,8 @@ export default function PBLCompletePage() {
   const [completedStages, setCompletedStages] = useState(0);
   const [totalInteractions, setTotalInteractions] = useState(0);
   const [analyzingStage, setAnalyzingStage] = useState<string | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -33,21 +35,49 @@ export default function PBLCompletePage() {
           setScenario(scenarioData.data);
         }
 
-        // Get user info from cookie
-        let userId = 'user-demo';
-        try {
-          const userCookie = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('user='))
-            ?.split('=')[1];
-          
-          if (userCookie) {
-            const user = JSON.parse(decodeURIComponent(userCookie));
-            userId = user.email || userId;
-          }
-        } catch {
-          console.log('No user cookie found, using demo user');
+        // Get user info from cookie AND localStorage
+        let userId: string | null = null;
+        let userEmail: string | null = null;
+        let isLoggedIn = false;
+        
+        // Check localStorage first (client-side auth state)
+        const localStorageLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        const localStorageUser = localStorage.getItem('user');
+        
+        console.log('Auth check - localStorage isLoggedIn:', localStorageLoggedIn);
+        console.log('Auth check - localStorage user exists:', !!localStorageUser);
+        
+        // Only proceed if localStorage shows logged in
+        if (!localStorageLoggedIn || !localStorageUser) {
+          console.log('User not logged in (no localStorage), skipping session data fetch');
+          setAuthChecked(true);
+          setIsAuthenticated(false);
+          setLoading(false);
+          return;
         }
+        
+        // Trust localStorage for authentication state
+        // The httpOnly cookies will be sent automatically with API requests
+        try {
+          const localUser = JSON.parse(localStorageUser);
+          userId = String(localUser.id);
+          userEmail = localUser.email;
+          isLoggedIn = true;
+          setIsAuthenticated(true);
+          console.log('User authenticated from localStorage:', { userId, userEmail });
+        } catch (err) {
+          console.log('Error parsing user data', err);
+          // Clear invalid auth state
+          localStorage.removeItem('isLoggedIn');
+          localStorage.removeItem('user');
+          setAuthChecked(true);
+          setIsAuthenticated(false);
+          setLoading(false);
+          return;
+        }
+
+        // Set auth checked after successful authentication
+        setAuthChecked(true);
 
         // Load all completed sessions for this scenario
         const sessionsResponse = await fetch(`/api/pbl/sessions?userId=${userId}&scenarioId=${scenarioId}&status=completed`);
@@ -96,6 +126,7 @@ export default function PBLCompletePage() {
         }
       } catch (error) {
         console.error('Error loading completion data:', error);
+        setAuthChecked(true);
       } finally {
         setLoading(false);
       }
@@ -185,7 +216,7 @@ export default function PBLCompletePage() {
     router.push(`/pbl/scenarios/${scenarioId}/learn`);
   };
 
-  if (loading || !ready || !i18n.isInitialized) {
+  if (loading || !ready || !i18n.isInitialized || !authChecked) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -203,6 +234,33 @@ export default function PBLCompletePage() {
             className="text-blue-600 hover:text-blue-700"
           >
             {t('complete.backToPBL')}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Check if user is not logged in after auth check is complete
+  if (authChecked && !isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto px-4">
+          <div className="mb-6">
+            <svg className="w-24 h-24 text-gray-400 dark:text-gray-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            {t('complete.loginRequired', 'Login Required')}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">
+            {t('complete.loginRequiredMessage', 'Please log in to view your completion report.')}
+          </p>
+          <button
+            onClick={() => router.push('/login')}
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+          >
+            {t('navigation:signIn', 'Sign In')}
           </button>
         </div>
       </div>

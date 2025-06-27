@@ -75,26 +75,13 @@ export default function AssessmentResults({ result, domains, onRetake, questions
     
     if (isLoggedIn === 'true' && userData) {
       const user = JSON.parse(userData);
-      // Use email as user_id directly
+      // Use user ID instead of email
       setCurrentUser({
-        id: user.email,
+        id: String(user.id),
         email: user.email
       });
-    } else {
-      // Fallback for non-logged in users
-      const mockUser = localStorage.getItem('mockUser');
-      if (mockUser) {
-        setCurrentUser(JSON.parse(mockUser));
-      } else {
-        // Create a temporary user ID for demo
-        const tempUser = {
-          id: `guest_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-          email: 'guest@example.com'
-        };
-        localStorage.setItem('mockUser', JSON.stringify(tempUser));
-        setCurrentUser(tempUser);
-      }
     }
+    // If not logged in, don't set any user
   }, []);
 
   const getDomainName = useCallback((domainKey: string) => {

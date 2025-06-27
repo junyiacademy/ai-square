@@ -24,16 +24,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Extract user email from cookies if available
-    let userEmail = 'demo@example.com'; // fallback
+    // Extract user email from cookies - required
+    let userEmail: string | undefined;
     try {
       const userCookie = request.cookies.get('user')?.value;
       if (userCookie) {
         const user = JSON.parse(userCookie);
-        userEmail = user.email || userEmail;
+        userEmail = user.email;
+        console.log('User email from cookie:', userEmail);
       }
-    } catch {
-      console.log('No user cookie found, using demo email');
+    } catch (err) {
+      console.error('Error parsing user cookie:', err);
+    }
+    
+    // User authentication is required for creating sessions
+    if (!userEmail) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'USER_NOT_AUTHENTICATED',
+            message: 'User authentication required'
+          }
+        },
+        { status: 401 }
+      );
     }
 
     // Generate session ID

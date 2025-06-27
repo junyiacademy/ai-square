@@ -28,6 +28,8 @@ export default function PBLLearnPage() {
   const [conversation, setConversation] = useState<ConversationTurn[]>([]);
   const [userInput, setUserInput] = useState('');
   const [isAIThinking, setIsAIThinking] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [stageAnalysis, setStageAnalysis] = useState<StageResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [existingLogs, setExistingLogs] = useState<Array<{
@@ -68,37 +70,25 @@ export default function PBLLearnPage() {
     const fetchExistingLogs = async () => {
       if (!currentTask || !scenario) return;
       
-      // Get user info from localStorage or cookie
-      let userId = 'user-demo';
+      // Get user info from localStorage
+      let userId: string | null = null;
       try {
-        // First check localStorage (consistent with history page)
         const isLoggedIn = localStorage.getItem('isLoggedIn');
         const userData = localStorage.getItem('user');
         
         if (isLoggedIn === 'true' && userData) {
           const user = JSON.parse(userData);
-          userId = user.email || userId;
-        } else {
-          // Check mockUser
-          const mockUser = localStorage.getItem('mockUser');
-          if (mockUser) {
-            const mock = JSON.parse(mockUser);
-            userId = mock.id || userId;
-          } else {
-            // Fallback to cookie
-            const userCookie = document.cookie
-              .split('; ')
-              .find(row => row.startsWith('user='))
-              ?.split('=')[1];
-            
-            if (userCookie) {
-              const user = JSON.parse(decodeURIComponent(userCookie));
-              userId = user.email || userId;
-            }
-          }
+          userId = String(user.id);
+          console.log('User ID for fetching logs:', userId);
         }
       } catch (e) {
-        console.log('Error getting user info, using demo user:', e);
+        console.log('Error getting user info:', e);
+      }
+      
+      // If no user ID, don't fetch logs
+      if (!userId) {
+        console.log('No user ID found, skipping log fetch');
+        return;
       }
       
       // Find current stage ID
@@ -122,10 +112,14 @@ export default function PBLLearnPage() {
           
           if (response.ok) {
             const data = await response.json();
+            console.log('API response data:', data);
             setExistingLogs(data.data.logs);
             console.log(`Found ${data.data.logs.length} existing logs for task ${currentTask.id}`);
+            console.log('Logs detail:', data.data.logs);
           } else {
             console.error('Failed to fetch logs:', response.status, response.statusText);
+            const errorText = await response.text();
+            console.error('Error response:', errorText);
           }
         } catch (error) {
           console.error('Error fetching existing logs:', error);
@@ -139,6 +133,26 @@ export default function PBLLearnPage() {
   // Load scenario only (don't create session until first message)
   useEffect(() => {
     const loadScenario = async () => {
+      // First check authentication
+      const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      const userData = localStorage.getItem('user');
+      
+      if (isLoggedIn && userData) {
+        // Trust localStorage for authentication state
+        // The httpOnly cookies will be sent automatically with API requests
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+      
+      setAuthChecked(true);
+      
+      // If not authenticated, don't load scenario
+      if (!isLoggedIn) {
+        setLoading(false);
+        return;
+      }
+      
       let scenarioData = null;
       try {
         // Load scenario details
@@ -157,37 +171,30 @@ export default function PBLLearnPage() {
         
         setScenario(scenarioData.data);
         
-        // Get user info from localStorage or cookie (consistent with history page)
-        let userId = 'user-demo';
+        // Get user info from localStorage or cookie
+        let userId = `anonymous_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
         try {
-          // First check localStorage (consistent with history page)
+          // First check localStorage
           const isLoggedIn = localStorage.getItem('isLoggedIn');
           const userData = localStorage.getItem('user');
           
           if (isLoggedIn === 'true' && userData) {
             const user = JSON.parse(userData);
-            userId = user.email || userId;
+            userId = String(user.id);
           } else {
-            // Check mockUser
-            const mockUser = localStorage.getItem('mockUser');
-            if (mockUser) {
-              const mock = JSON.parse(mockUser);
-              userId = mock.id || userId;
-            } else {
-              // Fallback to cookie
-              const userCookie = document.cookie
-                .split('; ')
-                .find(row => row.startsWith('user='))
-                ?.split('=')[1];
-              
-              if (userCookie) {
-                const user = JSON.parse(decodeURIComponent(userCookie));
-                userId = user.email || userId;
-              }
+            // Fallback to cookie
+            const userCookie = document.cookie
+              .split('; ')
+              .find(row => row.startsWith('user='))
+              ?.split('=')[1];
+            
+            if (userCookie) {
+              const user = JSON.parse(decodeURIComponent(userCookie));
+              userId = String(user.id);
             }
           }
         } catch (e) {
-          console.log('Error getting user info, using demo user:', e);
+          console.log('Error getting user info, using anonymous user:', e);
         }
         
         // Check for existing active session
@@ -420,37 +427,30 @@ export default function PBLLearnPage() {
         
         console.log(`Creating new session for stage ${actualStageIndex} (task: ${currentTask?.id})...`);
         
-        // Get user info from localStorage or cookie (consistent with history page)
-        let userId = 'user-demo';
+        // Get user info from localStorage or cookie
+        let userId = `anonymous_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
         try {
-          // First check localStorage (consistent with history page)
+          // First check localStorage
           const isLoggedIn = localStorage.getItem('isLoggedIn');
           const userData = localStorage.getItem('user');
           
           if (isLoggedIn === 'true' && userData) {
             const user = JSON.parse(userData);
-            userId = user.email || userId;
+            userId = String(user.id);
           } else {
-            // Check mockUser
-            const mockUser = localStorage.getItem('mockUser');
-            if (mockUser) {
-              const mock = JSON.parse(mockUser);
-              userId = mock.id || userId;
-            } else {
-              // Fallback to cookie
-              const userCookie = document.cookie
-                .split('; ')
-                .find(row => row.startsWith('user='))
-                ?.split('=')[1];
-              
-              if (userCookie) {
-                const user = JSON.parse(decodeURIComponent(userCookie));
-                userId = user.email || userId;
-              }
+            // Fallback to cookie
+            const userCookie = document.cookie
+              .split('; ')
+              .find(row => row.startsWith('user='))
+              ?.split('=')[1];
+            
+            if (userCookie) {
+              const user = JSON.parse(decodeURIComponent(userCookie));
+              userId = String(user.id);
             }
           }
         } catch (e) {
-          console.log('Error getting user info, using demo user:', e);
+          console.log('Error getting user info, using anonymous user:', e);
         }
         
         const sessionResponse = await fetch('/api/pbl/sessions', {
@@ -727,10 +727,45 @@ export default function PBLLearnPage() {
     .catch(error => console.error('Error completing scenario:', error));
   };
 
-  if (loading || !ready || !i18n.isInitialized) {
+  if (loading || !ready || !i18n.isInitialized || !authChecked) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  // Check if user is not logged in after auth check is complete
+  if (authChecked && !isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto px-4">
+          <div className="mb-6">
+            <svg className="w-24 h-24 text-gray-400 dark:text-gray-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            {t('learn.loginRequired', 'Login Required')}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">
+            {t('learn.loginRequiredMessage', 'Please log in to start your PBL learning journey.')}
+          </p>
+          <div className="space-y-3">
+            <button
+              onClick={() => router.push('/login')}
+              className="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+            >
+              {t('navigation:signIn', 'Sign In')}
+            </button>
+            <button
+              onClick={() => router.push('/pbl')}
+              className="w-full inline-flex items-center justify-center px-6 py-3 border border-gray-300 dark:border-gray-600 text-base font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+            >
+              {t('learn.backToPBL')}
+            </button>
+          </div>
+        </div>
       </div>
     );
   }

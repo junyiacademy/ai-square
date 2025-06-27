@@ -81,24 +81,11 @@ export default function UnifiedHistoryPage() {
     if (isLoggedIn === 'true' && userData) {
       const user = JSON.parse(userData);
       setCurrentUser({
-        id: user.email,
+        id: String(user.id),
         email: user.email
       });
-    } else {
-      // Check for mockUser
-      const mockUser = localStorage.getItem('mockUser');
-      if (!mockUser) {
-        // Create a consistent mock user if none exists
-        const newMockUser = {
-          id: 'user-demo',
-          email: 'demo@example.com'
-        };
-        localStorage.setItem('mockUser', JSON.stringify(newMockUser));
-        setCurrentUser(newMockUser);
-      } else {
-        setCurrentUser(JSON.parse(mockUser));
-      }
     }
+    // If not logged in, don't set any user
   }, []);
 
   // Fetch both assessment and PBL history

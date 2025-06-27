@@ -429,7 +429,8 @@ export class PBLGCSService {
                 
                 console.log(`File ${file.name} - user_id: ${logData.user_id}, status: ${logData.status}`);
                 
-                if (logData.user_id === userId) {
+                // Check if user_id matches (could be string or number)
+                if (String(logData.user_id) === String(userId)) {
                   if (!status || logData.status === status) {
                     sessions.push(logData);
                   }
@@ -456,7 +457,8 @@ export class PBLGCSService {
               const [contents] = await file.download();
               const logData = JSON.parse(contents.toString()) as PBLLogData;
               
-              if (logData.user_id === userId) {
+              // Check if user_id matches (could be string or number)
+              if (String(logData.user_id) === String(userId)) {
                 if (!status || logData.status === status) {
                   sessions.push(logData);
                 }
