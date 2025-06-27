@@ -967,8 +967,8 @@ export default function PBLLearnPage() {
               </div>
               
               {/* Progress Bar - Task-based with scores */}
-              <div className="flex-1">
-                <div className="flex flex-col gap-2">
+              <div className="flex-1 overflow-x-auto">
+                <div className="flex flex-col gap-2 min-w-max">
                   {/* Progress percentage */}
                   <div className="flex justify-end">
                     <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">
@@ -977,12 +977,12 @@ export default function PBLLearnPage() {
                   </div>
                   
                   {/* Task nodes grouped by stage */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     {scenario.stages.map((stage, stageIndex) => {
                       const isCurrentStage = stageIndex === actualStageIndex;
                       
                       return (
-                        <div key={stage.id} className="flex items-center">
+                        <React.Fragment key={stage.id}>
                           {/* Stage group */}
                           <div className="flex flex-col items-center gap-1">
                             {/* Stage name */}
@@ -1003,7 +1003,7 @@ export default function PBLLearnPage() {
                                 const score = taskAnalysis?.score;
                                 
                                 return (
-                                  <div key={task.id} className="flex items-center">
+                                  <React.Fragment key={task.id}>
                                     <div className="relative group">
                                       <button
                                         onClick={() => {
@@ -1045,9 +1045,9 @@ export default function PBLLearnPage() {
                                     
                                     {/* Connector between tasks in same stage */}
                                     {taskIndex < stage.tasks.length - 1 && (
-                                      <div className="w-2 h-0.5 bg-gray-300 dark:bg-gray-600" />
+                                      <div className="w-2 h-0.5 bg-gray-300 dark:bg-gray-600 flex-shrink-0" />
                                     )}
-                                  </div>
+                                  </React.Fragment>
                                 );
                               })}
                             </div>
@@ -1055,9 +1055,9 @@ export default function PBLLearnPage() {
                           
                           {/* Connector between stages */}
                           {stageIndex < scenario.stages.length - 1 && (
-                            <div className="w-4 h-0.5 bg-gray-300 dark:bg-gray-600 mx-2" />
+                            <div className="w-8 h-0.5 bg-gray-300 dark:bg-gray-600 flex-shrink-0 self-end mb-5" />
                           )}
-                        </div>
+                        </React.Fragment>
                       );
                     })}
                   </div>
