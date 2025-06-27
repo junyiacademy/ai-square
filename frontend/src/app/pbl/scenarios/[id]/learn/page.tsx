@@ -48,6 +48,7 @@ export default function PBLLearnPage() {
   const [lastInteractionTime, setLastInteractionTime] = useState<number>(Date.now());
   const [isLoadingLogs, setIsLoadingLogs] = useState(false);
   const [isLoadingConversation, setIsLoadingConversation] = useState(false);
+  const [hasNewUserMessage, setHasNewUserMessage] = useState(false);
   
   // Ref for auto-scrolling
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -444,7 +445,16 @@ export default function PBLLearnPage() {
           // Build conversation from logs
           const conversationTurns: ConversationTurn[] = [];
           
-          taskLogs.forEach((log: ProcessLog) => {
+          console.log(`Building conversation from ${taskLogs.length} logs for task ${currentTask.id}`);
+          
+          taskLogs.forEach((log: ProcessLog, index: number) => {
+            console.log(`Log ${index}:`, {
+              actionType: log.actionType,
+              hasUserInput: !!log.detail?.userInput,
+              hasAiInteraction: !!log.detail?.aiInteraction,
+              detail: log.detail
+            });
+            
             if (log.actionType === 'write' && log.detail?.userInput) {
               // User message
               conversationTurns.push({
@@ -454,7 +464,20 @@ export default function PBLLearnPage() {
                 content: log.detail.userInput
               });
             } else if (log.actionType === 'interaction' && log.detail?.aiInteraction) {
-              // AI response
+              // AI response - also check for user prompt in AI interaction
+              if (log.detail.aiInteraction.prompt && !conversationTurns.some(t => 
+                t.role === 'user' && t.content === log.detail.aiInteraction!.prompt
+              )) {
+                // Add user message from AI interaction prompt if not already added
+                conversationTurns.push({
+                  id: `user-prompt-${log.timestamp}`,
+                  timestamp: new Date(log.timestamp),
+                  role: 'user' as const,
+                  content: log.detail.aiInteraction.prompt
+                });
+              }
+              
+              // Add AI response
               conversationTurns.push({
                 id: `ai-${log.timestamp}`,
                 timestamp: new Date(log.timestamp),
@@ -464,7 +487,9 @@ export default function PBLLearnPage() {
             }
           });
           
+          console.log(`Built ${conversationTurns.length} conversation turns`);
           setConversation(conversationTurns);
+          setHasNewUserMessage(false); // Reset when loading existing conversation
           
           // Check if there's a task analysis result for the current task
           console.log('Looking for task analysis with stageId:', currentStageId, 'and taskId:', currentTask.id);
@@ -614,6 +639,7 @@ export default function PBLLearnPage() {
     const currentUserInput = userInput;
     setUserInput('');
     setIsAIThinking(true);
+    setHasNewUserMessage(true); // Mark that user has sent a new message
 
     try {
       let currentSession = session;
@@ -806,6 +832,9 @@ export default function PBLLearnPage() {
           // Mark task as completed
           setCompletedTasks(prev => new Set([...prev, currentTask.id]));
         }
+        
+        // Hide analyze button after analysis
+        setHasNewUserMessage(false);
         
         // Stage map removed - using task-based tracking only
         
@@ -1015,11 +1044,6 @@ export default function PBLLearnPage() {
   const stageIndex = actualStageIndex >= 0 ? actualStageIndex : (session?.currentStage || 0);
   const currentStage = scenario.stages[stageIndex];
   
-  // Calculate total tasks and completed tasks
-  const totalTasks = scenario ? scenario.stages.reduce((sum, stage) => sum + stage.tasks.length, 0) : 0;
-  const completedTasksCount = completedTasks.size;
-  const progress = totalTasks > 0 ? ((completedTasksCount / totalTasks) * 100) : 0;
-  
   // Consider a stage as completed if all its tasks are completed
   const effectiveCompletedStages = new Set<number>();
   scenario?.stages.forEach((stage, index) => {
@@ -1063,16 +1087,7 @@ export default function PBLLearnPage() {
               
               {/* Progress Bar - Task-based with scores */}
               <div className="flex-1 overflow-x-auto">
-                <div className="flex flex-col gap-2 min-w-max">
-                  {/* Progress percentage */}
-                  <div className="flex justify-end">
-                    <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">
-                      {Math.round(progress)}%
-                    </span>
-                  </div>
-                  
-                  {/* Task nodes grouped by stage */}
-                  <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 min-w-max">
                     {scenario.stages.map((stage, stageIndex) => {
                       const isCurrentStage = stageIndex === actualStageIndex;
                       
@@ -1108,6 +1123,7 @@ export default function PBLLearnPage() {
                                           setSession(null);
                                           setCurrentLogId(null);
                                           setStageAnalysis(taskAnalysisMap[task.id] || null);
+                                          setHasNewUserMessage(false);
                                         }}
                                         className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-300 cursor-pointer hover:scale-110 ${
                                           score !== undefined
@@ -1155,19 +1171,33 @@ export default function PBLLearnPage() {
                         </React.Fragment>
                       );
                     })}
-                  </div>
                 </div>
               </div>
             </div>
             
-            <button
-              onClick={() => router.push('/pbl')}
-              className="ml-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+            <div className="flex items-center gap-2">
+              {/* Completion/Score Button */}
+              <button
+                onClick={() => router.push(`/pbl/scenarios/${scenarioId}/complete`)}
+                className="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg"
+                title={t('learn.viewScores', '查看成績')}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="font-medium">{t('learn.completion', '完成情況')}</span>
+              </button>
+              
+              {/* Close Button */}
+              <button
+                onClick={() => router.push('/pbl')}
+                className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -1558,6 +1588,7 @@ export default function PBLLearnPage() {
                           setConversation([]);
                           setCurrentLogId(null);
                           setStageAnalysis(null);
+                          setHasNewUserMessage(false);
                           console.log('Starting new conversation');
                         }}
                         className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg transition-all duration-200"
@@ -1694,12 +1725,8 @@ export default function PBLLearnPage() {
               {!stageAnalysis && <div></div>}
               
               <div className="flex gap-2">
-                {/* Show analyze button if AI has responded and (not analyzed OR conversation continued after analysis) */}
-                {session && conversation.some(msg => msg.role === 'ai') && (
-                  !stageAnalysis || 
-                  (stageAnalysis && conversation.filter(msg => msg.role === 'user').length > 
-                    (stageAnalysis.performanceMetrics?.interactionCount || 0))
-                ) && (
+                {/* Show analyze button only if user has sent a new message and AI has responded */}
+                {session && hasNewUserMessage && conversation.some(msg => msg.role === 'ai') && (
                   <button
                     onClick={handleAnalyzeStage}
                     disabled={isAnalyzing || !session}
