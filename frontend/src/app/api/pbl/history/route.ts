@@ -193,13 +193,33 @@ export async function GET(request: NextRequest) {
       if (recentProcessLog?.detail?.taskId) {
         currentTaskId = recentProcessLog.detail.taskId;
         
-        // Find the task title from scenario
+        // Find the task title and stage title from scenario
         for (const stage of log.scenario.stages as Array<Record<string, unknown>>) {
           const stageTasks = stage.tasks as Array<{ id: string; title?: string; name?: string }> | undefined;
           const task = stageTasks?.find((t) => t.id === currentTaskId);
           if (task) {
-            currentTaskTitle = task.title || task.name;
+            const scenarioTitle = log.scenario.title || 'Scenario';
+            const stageTitle = String(stage.title || stage.name || 'Stage');
+            const taskTitle = task.title || task.name || 'Task';
+            // Combine scenario, stage and task title
+            currentTaskTitle = `${scenarioTitle} - ${stageTitle} - ${taskTitle}`;
             break;
+          }
+        }
+      } else {
+        // If no taskId in process logs, use the first task from the first stage as default
+        // This is for backward compatibility with sessions created before task tracking
+        const firstStage = log.scenario.stages[0] as Record<string, unknown> | undefined;
+        if (firstStage) {
+          const stageTasks = firstStage.tasks as Array<{ id: string; title?: string; name?: string }> | undefined;
+          const firstTask = stageTasks?.[0];
+          if (firstTask) {
+            currentTaskId = firstTask.id;
+            const scenarioTitle = log.scenario.title || 'Scenario';
+            const stageTitle = String(firstStage.title || firstStage.name || 'Stage');
+            const taskTitle = firstTask.title || firstTask.name || 'Task';
+            // Combine scenario, stage and task title
+            currentTaskTitle = `${scenarioTitle} - ${stageTitle} - ${taskTitle}`;
           }
         }
       }

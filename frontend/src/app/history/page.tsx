@@ -397,12 +397,7 @@ export default function UnifiedHistoryPage() {
                               {t('pbl:title')}
                             </span>
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mr-3">
-                              {session.scenarioTitle}
-                              {session.currentTaskTitle && (
-                                <span className="text-sm font-normal text-gray-600 dark:text-gray-400 ml-2">
-                                  - {session.currentTaskTitle}
-                                </span>
-                              )}
+                              {session.currentTaskTitle || session.scenarioTitle}
                             </h3>
                           </div>
                           <p className="text-sm text-gray-500 dark:text-gray-400">

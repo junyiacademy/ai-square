@@ -235,6 +235,9 @@ export default function PBLLearnPage() {
 
   // Load scenario only (don't create session until first message)
   useEffect(() => {
+    // Wait for i18n to be ready before loading
+    if (!ready) return;
+    
     const loadScenario = async () => {
       // First check authentication
       const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
@@ -399,7 +402,7 @@ export default function PBLLearnPage() {
     };
 
     loadScenario();
-  }, [scenarioId, i18n.language]);
+  }, [scenarioId, i18n.language, ready]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ 
