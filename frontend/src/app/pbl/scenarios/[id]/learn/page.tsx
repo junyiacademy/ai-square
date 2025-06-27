@@ -307,6 +307,10 @@ export default function PBLLearnPage() {
       if (data.success && data.data) {
         const loadedSession = data.data;
         
+        console.log('Loaded session data:', loadedSession);
+        console.log('Stage results in session:', loadedSession.stageResults);
+        console.log('Current task ID:', currentTask?.id);
+        
         // Set the loaded session as current
         setSession(loadedSession);
         setCurrentLogId(logSessionId);
@@ -349,12 +353,27 @@ export default function PBLLearnPage() {
           setConversation(conversationTurns);
           
           // Check if there's a task analysis result for the current task
-          const taskAnalysis = loadedSession.stageResults?.find((r: StageResult) => 
-            r.stageId === currentStageId && r.taskId === currentTask.id
-          );
+          console.log('Looking for task analysis with stageId:', currentStageId, 'and taskId:', currentTask.id);
+          
+          // First try to find task-specific analysis
+          let taskAnalysis = loadedSession.stageResults?.find((r: StageResult) => {
+            console.log('Checking result:', r, 'stageId match:', r.stageId === currentStageId, 'taskId match:', r.taskId === currentTask.id);
+            return r.stageId === currentStageId && r.taskId === currentTask.id;
+          });
+          
+          // If no task-specific analysis, check for stage-level analysis (backward compatibility)
+          if (!taskAnalysis) {
+            console.log('No task-specific analysis found, checking for stage-level analysis');
+            taskAnalysis = loadedSession.stageResults?.find((r: StageResult) => 
+              r.stageId === currentStageId && !r.taskId
+            );
+            if (taskAnalysis) {
+              console.log('Found stage-level analysis (legacy), will use it for this task');
+            }
+          }
           
           if (taskAnalysis) {
-            console.log('Found task analysis in loaded session:', taskAnalysis);
+            console.log('Found analysis in loaded session:', taskAnalysis);
             setStageAnalysis(taskAnalysis);
             // Also update the task analysis map
             setTaskAnalysisMap(prev => ({
@@ -363,6 +382,10 @@ export default function PBLLearnPage() {
             }));
             // Mark task as completed if it has been analyzed
             setCompletedTasks(prev => new Set([...prev, currentTask.id]));
+          } else {
+            console.log('No analysis found for current task or stage');
+            // Clear any existing analysis
+            setStageAnalysis(null);
           }
         }
       }
