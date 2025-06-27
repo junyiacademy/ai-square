@@ -88,7 +88,8 @@ export default function PBLLearnPage() {
                   if (result.taskId) {
                     // Only update if we don't have this analysis yet or this one is newer
                     if (!allAnalyses[result.taskId] || 
-                        new Date(result.completedAt) > new Date(allAnalyses[result.taskId].completedAt)) {
+                        (result.completedAt && allAnalyses[result.taskId].completedAt &&
+                         new Date(result.completedAt as Date) > new Date(allAnalyses[result.taskId].completedAt as Date))) {
                       allAnalyses[result.taskId] = result;
                       allCompletedTasks.add(result.taskId);
                     }
@@ -229,6 +230,7 @@ export default function PBLLearnPage() {
     };
 
     fetchExistingLogs();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTask, scenario, scenarioId]);
 
   // Load scenario only (don't create session until first message)
@@ -254,7 +256,7 @@ export default function PBLLearnPage() {
         return;
       }
       
-      let scenarioData = null;
+      let scenarioData: { success: boolean; data: ScenarioProgram; error?: { message: string } } | null = null;
       try {
         // Load scenario details
         const scenarioResponse = await fetch(`/api/pbl/scenarios/${scenarioId}?lang=${i18n.language}`);
@@ -266,8 +268,8 @@ export default function PBLLearnPage() {
         scenarioData = await scenarioResponse.json();
         console.log('Scenario data received:', scenarioData);
         
-        if (!scenarioData.success) {
-          throw new Error(`API error: ${scenarioData.error?.message || 'Failed to load scenario'}`);
+        if (!scenarioData || !scenarioData.success) {
+          throw new Error(`API error: ${scenarioData?.error?.message || 'Failed to load scenario'}`);
         }
         
         setScenario(scenarioData.data);
@@ -321,12 +323,12 @@ export default function PBLLearnPage() {
                 if (result.taskId) {
                   analysisMap[result.taskId] = result;
                   completedTasksSet.add(result.taskId);
-                } else {
+                } else if (scenarioData && scenarioData.data) {
                   // For backward compatibility - if no taskId, try to map to all tasks in the stage
-                  const stageIndex = scenarioData.data.stages.findIndex((s: any) => s.id === result.stageId);
+                  const stageIndex = scenarioData.data.stages.findIndex((s: { id: string }) => s.id === result.stageId);
                   if (stageIndex >= 0) {
                     const stage = scenarioData.data.stages[stageIndex];
-                    stage.tasks.forEach((task: any) => {
+                    stage.tasks?.forEach((task: Task) => {
                       analysisMap[task.id] = result;
                       completedTasksSet.add(task.id);
                     });
@@ -376,7 +378,7 @@ export default function PBLLearnPage() {
               });
               setConversation(conversationTurns);
             }
-          } else {
+          } else if (scenarioData && scenarioData.data) {
             // No existing session, set initial task
             const currentStage = scenarioData.data.stages[0];
             if (currentStage && currentStage.tasks && currentStage.tasks.length > 0) {
@@ -407,7 +409,7 @@ export default function PBLLearnPage() {
   };
 
   // Load conversation from an existing log
-  const loadLogConversation = async (logSessionId: string) => {
+  const loadLogConversation = useCallback(async (logSessionId: string) => {
     try {
       console.log('Loading conversation from log:', logSessionId);
       setIsLoadingConversation(true);
@@ -559,7 +561,7 @@ export default function PBLLearnPage() {
     } finally {
       setIsLoadingConversation(false);
     }
-  };
+  }, [scenario, currentTask]);
 
   const saveProgress = useCallback(async () => {
     // Only save if session exists (i.e., user has started chatting)
@@ -1108,7 +1110,7 @@ export default function PBLLearnPage() {
                             <div className="flex items-center gap-1">
                               {stage.tasks.map((task, taskIndex) => {
                                 const isCurrentTask = task.id === currentTask?.id;
-                                const isCompleted = completedTasks.has(task.id);
+                                // const isCompleted = completedTasks.has(task.id);
                                 const taskAnalysis = taskAnalysisMap[task.id];
                                 const score = taskAnalysis?.score;
                                 
