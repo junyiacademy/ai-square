@@ -32,6 +32,8 @@ interface PBLSession {
   logId: string;
   scenarioId: string;
   scenarioTitle: string;
+  currentTaskId?: string;
+  currentTaskTitle?: string;
   status: 'completed' | 'in_progress' | 'paused';
   startedAt: string;
   completedAt?: string;
@@ -48,6 +50,11 @@ interface PBLSession {
     status: string;
     score?: number;
     interactions: number;
+    taskDetails?: Array<{
+      taskId: string;
+      taskTitle: string;
+      score?: number;
+    }>;
   }>;
   totalInteractions?: number;
   averageScore?: number;
@@ -404,6 +411,11 @@ export default function UnifiedHistoryPage() {
                             </span>
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mr-3">
                               {session.scenarioTitle}
+                              {session.currentTaskTitle && (
+                                <span className="text-sm font-normal text-gray-600 dark:text-gray-400 ml-2">
+                                  - {session.currentTaskTitle}
+                                </span>
+                              )}
                             </h3>
                           </div>
                           <p className="text-sm text-gray-500 dark:text-gray-400">

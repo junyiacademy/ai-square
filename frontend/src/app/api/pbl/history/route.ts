@@ -6,6 +6,8 @@ interface SessionSummary {
   logId: string;
   scenarioId: string;
   scenarioTitle: string;
+  currentTaskId?: string;
+  currentTaskTitle?: string;
   status: 'completed' | 'in_progress' | 'paused';
   startedAt: string;
   completedAt?: string;
@@ -22,6 +24,11 @@ interface SessionSummary {
     status: string;
     score?: number;
     interactions: number;
+    taskDetails?: Array<{
+      taskId: string;
+      taskTitle: string;
+      score?: number;
+    }>;
   }>;
   totalInteractions: number;
   averageScore?: number;
@@ -101,7 +108,7 @@ export async function GET(request: NextRequest) {
       ).length || 0;
       
       // Build stage details
-      const stageDetails = log.scenario.stages.map((stage: Record<string, unknown>, index: number) => {
+      const stageDetails = log.scenario.stages.map((stage: any, index: number) => {
         const stageProgress = log.progress.stageProgress.find(sp => sp.stageId === stage.id);
         const stageResult = log.stageResults?.find(sr => sr.stageId === stage.id);
         
@@ -110,12 +117,27 @@ export async function GET(request: NextRequest) {
           pl => pl.stageId === stage.id && (pl.actionType === 'write' || pl.actionType === 'speak')
         ).length || 0;
         
+        // Build task details if stage has tasks
+        const taskDetails = stage.tasks?.map((task: any) => {
+          // Find task-specific result
+          const taskResult = log.stageResults?.find(sr => 
+            sr.stageId === stage.id && sr.taskId === task.id
+          );
+          
+          return {
+            taskId: task.id,
+            taskTitle: task.title || task.name,
+            score: taskResult?.score
+          };
+        });
+        
         return {
           stageId: String(stage.id),
-          stageTitle: String(stage.title) || `Stage ${index + 1}`,
+          stageTitle: String(stage.title || stage.name) || `Stage ${index + 1}`,
           status: stageProgress?.status || 'not_started',
           score: stageResult?.score,
-          interactions: Math.floor(stageInteractions / 2) // Divide by 2 for user-AI pairs
+          interactions: Math.floor(stageInteractions / 2), // Divide by 2 for user-AI pairs
+          taskDetails: taskDetails || []
         };
       });
       
@@ -160,11 +182,32 @@ export async function GET(request: NextRequest) {
         }
       }
       
+      // Find the current/latest task from process logs
+      let currentTaskId: string | undefined;
+      let currentTaskTitle: string | undefined;
+      
+      // Look for the most recent task in process logs
+      const recentProcessLog = log.processLogs?.findLast((pl: any) => pl.detail?.taskId);
+      if (recentProcessLog?.detail?.taskId) {
+        currentTaskId = recentProcessLog.detail.taskId;
+        
+        // Find the task title from scenario
+        for (const stage of log.scenario.stages) {
+          const task = stage.tasks?.find((t: any) => t.id === currentTaskId);
+          if (task) {
+            currentTaskTitle = task.title || task.name;
+            break;
+          }
+        }
+      }
+      
       return {
         id: log.sessionId,
         logId: log.logId,
         scenarioId: log.scenario.id,
         scenarioTitle: log.scenario.title,
+        currentTaskId,
+        currentTaskTitle,
         status,
         startedAt: log.metadata.startTime,
         completedAt: log.metadata.endTime,
