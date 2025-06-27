@@ -146,7 +146,7 @@ stages:
           - Ensure clarity and impact in descriptions
         instructions_zh:
           - 應用 AI 建議來增強您的履歷
-          - 為 ATS 系統優化關鍵字
+          - 為申請人追蹤系統(ATS) 優化關鍵字
           - 確保描述清晰有力
         expected_outcome: An optimized, ATS-friendly resume
         expected_outcome_zh: 一份優化的、ATS 友好的履歷

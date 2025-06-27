@@ -313,33 +313,57 @@ export default function PBLLearnPage() {
         // Reset session start time for time tracking
         setSessionStartTime(Date.now());
         
-        // Load conversation history for current stage
+        // Load conversation history for current stage and task
         const currentStageId = scenario?.stages[loadedSession.currentStage]?.id;
-        if (currentStageId) {
-          const stageLogs = loadedSession.processLogs
-            .filter((log: ProcessLog) => log.stageId === currentStageId && log.detail?.aiInteraction)
-            .map((log: ProcessLog) => ({
-              user: {
-                id: `user-${log.timestamp}`,
-                timestamp: log.timestamp,
-                role: 'user' as const,
-                content: log.detail.aiInteraction?.prompt || log.detail.userInput || ''
-              },
-              ai: {
-                id: `ai-${log.timestamp}`,
-                timestamp: log.timestamp,
-                role: 'ai' as const,
-                content: log.detail.aiInteraction?.response || ''
-              }
-            }));
+        if (currentStageId && currentTask) {
+          // Filter logs by current task ID - get all logs for this task
+          const taskLogs = loadedSession.processLogs
+            .filter((log: ProcessLog) => 
+              log.stageId === currentStageId && 
+              log.detail?.taskId === currentTask.id
+            );
           
-          // Flatten to array of conversation turns
+          // Build conversation from logs
           const conversationTurns: ConversationTurn[] = [];
-          stageLogs.forEach((log: { user: ConversationTurn; ai: ConversationTurn }) => {
-            if (log.user.content) conversationTurns.push(log.user);
-            if (log.ai.content) conversationTurns.push(log.ai);
+          
+          taskLogs.forEach((log: ProcessLog) => {
+            if (log.actionType === 'write' && log.detail?.userInput) {
+              // User message
+              conversationTurns.push({
+                id: `user-${log.timestamp}`,
+                timestamp: new Date(log.timestamp),
+                role: 'user' as const,
+                content: log.detail.userInput
+              });
+            } else if (log.actionType === 'interaction' && log.detail?.aiInteraction) {
+              // AI response
+              conversationTurns.push({
+                id: `ai-${log.timestamp}`,
+                timestamp: new Date(log.timestamp),
+                role: 'ai' as const,
+                content: log.detail.aiInteraction.response
+              });
+            }
           });
+          
           setConversation(conversationTurns);
+          
+          // Check if there's a task analysis result for the current task
+          const taskAnalysis = loadedSession.stageResults?.find((r: StageResult) => 
+            r.stageId === currentStageId && r.taskId === currentTask.id
+          );
+          
+          if (taskAnalysis) {
+            console.log('Found task analysis in loaded session:', taskAnalysis);
+            setStageAnalysis(taskAnalysis);
+            // Also update the task analysis map
+            setTaskAnalysisMap(prev => ({
+              ...prev,
+              [currentTask.id]: taskAnalysis
+            }));
+            // Mark task as completed if it has been analyzed
+            setCompletedTasks(prev => new Set([...prev, currentTask.id]));
+          }
         }
       }
     } catch (error) {
