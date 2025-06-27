@@ -51,22 +51,33 @@ export default function PBLLearnPage() {
   // Ref for auto-scrolling
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Check for existing stage analysis when session or current stage changes
+  // Check for existing task analysis when session, stage or task changes
   useEffect(() => {
-    if (session && scenario) {
+    if (session && scenario && currentTask) {
       const currentStageId = scenario.stages[session.currentStage]?.id;
       if (currentStageId) {
-        const existingAnalysis = session.stageResults?.find(r => r.stageId === currentStageId);
-        if (existingAnalysis) {
-          console.log('Found existing stage analysis for stage:', currentStageId);
-          setStageAnalysis(existingAnalysis);
+        // Look for task-specific analysis first
+        const taskAnalysis = session.stageResults?.find(r => 
+          r.stageId === currentStageId && r.taskId === currentTask.id
+        );
+        
+        if (taskAnalysis) {
+          console.log('Found existing task analysis for task:', currentTask.id);
+          setStageAnalysis(taskAnalysis);
         } else {
-          console.log('No existing stage analysis for stage:', currentStageId);
-          setStageAnalysis(null);
+          // Check if we have a cached analysis for this task
+          const cachedAnalysis = taskAnalysisMap[currentTask.id];
+          if (cachedAnalysis) {
+            console.log('Using cached task analysis for task:', currentTask.id);
+            setStageAnalysis(cachedAnalysis);
+          } else {
+            console.log('No existing task analysis for task:', currentTask.id);
+            setStageAnalysis(null);
+          }
         }
       }
     }
-  }, [session, scenario]);
+  }, [session, scenario, currentTask, taskAnalysisMap]);
 
   // Fetch existing logs when task changes
   useEffect(() => {
@@ -660,6 +671,10 @@ export default function PBLLearnPage() {
     if (currentTaskIndex < currentStage.tasks.length - 1) {
       // Next task in current stage
       setCurrentTask(currentStage.tasks[currentTaskIndex + 1]);
+      // Clear log ID for new task
+      setCurrentLogId(null);
+      // Reset conversation for new task
+      setConversation([]);
       // Update session with new task index
       if (session) {
         setSession(prev => prev ? {
@@ -891,6 +906,7 @@ export default function PBLLearnPage() {
                                   // Reset for new task
                                   setConversation([]);
                                   setSession(null);
+                                  setCurrentLogId(null); // Clear log ID
                                   setStageAnalysis(taskAnalysisMap[targetTask.id] || null);
                                 }
                               }}
@@ -977,6 +993,7 @@ export default function PBLLearnPage() {
                             // Reset everything for new task
                             setConversation([]);
                             setSession(null);
+                            setCurrentLogId(null); // Clear log ID
                             setStageAnalysis(taskAnalysisMap[newTask.id] || null);
                           }
                         }}
@@ -1003,6 +1020,7 @@ export default function PBLLearnPage() {
                             // Reset everything for new task
                             setConversation([]);
                             setSession(null);
+                            setCurrentLogId(null); // Clear log ID
                             setStageAnalysis(taskAnalysisMap[newTask.id] || null);
                           }
                         }}
