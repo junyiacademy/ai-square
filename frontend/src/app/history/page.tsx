@@ -234,19 +234,6 @@ export default function UnifiedHistoryPage() {
           </p>
         </div>
 
-        {/* User Info */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t('assessment:history.user')}</p>
-              <p className="text-lg font-medium text-gray-900 dark:text-white">{currentUser.email || currentUser.id}</p>
-            </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t('navigation:totalActivities')}</p>
-              <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{historyItems.length}</p>
-            </div>
-          </div>
-        </div>
 
         {/* Filters */}
         <div className="mb-6">
