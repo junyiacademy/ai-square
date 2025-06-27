@@ -26,7 +26,7 @@ interface SessionSummary {
     interactions: number;
     taskDetails?: Array<{
       taskId: string;
-      taskTitle: string;
+      taskTitle: string | undefined;
       score?: number;
     }>;
   }>;
@@ -108,20 +108,22 @@ export async function GET(request: NextRequest) {
       ).length || 0;
       
       // Build stage details
-      const stageDetails = log.scenario.stages.map((stage: any, index: number) => {
-        const stageProgress = log.progress.stageProgress.find(sp => sp.stageId === stage.id);
-        const stageResult = log.stageResults?.find(sr => sr.stageId === stage.id);
+      const stageDetails = (log.scenario.stages as Array<Record<string, unknown>>).map((stage: Record<string, unknown>, index: number) => {
+        const stageId = String(stage.id);
+        const stageProgress = log.progress.stageProgress.find((sp: { stageId: string }) => sp.stageId === stageId);
+        const stageResult = log.stageResults?.find((sr: { stageId: string }) => sr.stageId === stageId);
         
         // Count interactions for this stage
         const stageInteractions = log.processLogs?.filter(
-          pl => pl.stageId === stage.id && (pl.actionType === 'write' || pl.actionType === 'speak')
+          (pl: { stageId: string; actionType: string }) => pl.stageId === stageId && (pl.actionType === 'write' || pl.actionType === 'speak')
         ).length || 0;
         
         // Build task details if stage has tasks
-        const taskDetails = stage.tasks?.map((task: any) => {
+        const stageTasks = stage.tasks as Array<{ id: string; title?: string; name?: string }> | undefined;
+        const taskDetails = stageTasks?.map((task) => {
           // Find task-specific result
-          const taskResult = log.stageResults?.find(sr => 
-            sr.stageId === stage.id && sr.taskId === task.id
+          const taskResult = log.stageResults?.find((sr: { stageId: string; taskId?: string }) => 
+            sr.stageId === stageId && sr.taskId === task.id
           );
           
           return {
@@ -132,7 +134,7 @@ export async function GET(request: NextRequest) {
         });
         
         return {
-          stageId: String(stage.id),
+          stageId: stageId,
           stageTitle: String(stage.title || stage.name) || `Stage ${index + 1}`,
           status: stageProgress?.status || 'not_started',
           score: stageResult?.score,
@@ -187,13 +189,14 @@ export async function GET(request: NextRequest) {
       let currentTaskTitle: string | undefined;
       
       // Look for the most recent task in process logs
-      const recentProcessLog = log.processLogs?.findLast((pl: any) => pl.detail?.taskId);
+      const recentProcessLog = log.processLogs?.findLast((pl: { detail?: { taskId?: string } }) => pl.detail?.taskId);
       if (recentProcessLog?.detail?.taskId) {
         currentTaskId = recentProcessLog.detail.taskId;
         
         // Find the task title from scenario
-        for (const stage of log.scenario.stages) {
-          const task = stage.tasks?.find((t: any) => t.id === currentTaskId);
+        for (const stage of log.scenario.stages as Array<Record<string, unknown>>) {
+          const stageTasks = stage.tasks as Array<{ id: string; title?: string; name?: string }> | undefined;
+          const task = stageTasks?.find((t) => t.id === currentTaskId);
           if (task) {
             currentTaskTitle = task.title || task.name;
             break;

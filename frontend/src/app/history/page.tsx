@@ -104,7 +104,7 @@ export default function UnifiedHistoryPage() {
       
       try {
         // Fetch assessment history
-        const assessmentResponse = await fetch(`/api/assessment/results?userId=${currentUser.id}`);
+        const assessmentResponse = await fetch(`/api/assessment/results?userId=${currentUser.id}&userEmail=${encodeURIComponent(currentUser.email || currentUser.id)}`);
         const assessmentData = await assessmentResponse.json();
         const assessmentItems: HistoryItem[] = (assessmentData.results || []).map((item: AssessmentHistoryItem) => ({
           type: 'assessment' as const,

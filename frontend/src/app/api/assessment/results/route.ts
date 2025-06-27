@@ -103,7 +103,9 @@ export async function POST(request: NextRequest) {
     
     if (USE_GCS) {
       console.log('Using GCS storage...');
-      await gcsStorage.saveAssessmentResult(body.userId, resultData);
+      // Use userEmail for GCS path if available, otherwise use userId
+      const gcsUserId = body.userEmail || body.userId;
+      await gcsStorage.saveAssessmentResult(gcsUserId, resultData);
     } else {
       console.log('Using local storage...');
       await saveResultLocal(resultData);
@@ -128,6 +130,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');
+    const userEmail = searchParams.get('userEmail');
 
     if (!userId) {
       return NextResponse.json(
@@ -140,7 +143,9 @@ export async function GET(request: NextRequest) {
     let userResults: AssessmentResultGCS[];
     
     if (USE_GCS) {
-      userResults = await gcsStorage.getUserAssessments(userId);
+      // Use userEmail for GCS path if available, otherwise use userId
+      const gcsUserId = userEmail || userId;
+      userResults = await gcsStorage.getUserAssessments(gcsUserId);
     } else {
       userResults = await getAllResultsLocal(userId);
     }
