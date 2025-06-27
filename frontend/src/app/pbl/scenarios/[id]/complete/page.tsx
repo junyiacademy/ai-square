@@ -38,7 +38,6 @@ export default function PBLCompletePage() {
         // Get user info from cookie AND localStorage
         let userId: string | null = null;
         let userEmail: string | null = null;
-        let isLoggedIn = false;
         
         // Check localStorage first (client-side auth state)
         const localStorageLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
