@@ -32,6 +32,9 @@ export default function PBLLearnPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [stageAnalysis, setStageAnalysis] = useState<StageResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [stageAnalysisMap, setStageAnalysisMap] = useState<Record<number, StageResult>>({});
+  const [taskAnalysisMap, setTaskAnalysisMap] = useState<Record<string, StageResult>>({});
+  const [completedTasks, setCompletedTasks] = useState<Set<string>>(new Set());
   const [existingLogs, setExistingLogs] = useState<Array<{
     sessionId: string;
     createdAt: string;
@@ -497,7 +500,8 @@ export default function PBLLearnPage() {
         actionType: 'write' as ActionType,
         detail: {
           userInput: currentUserInput,
-          timeSpent: timeSinceLastInteraction
+          timeSpent: timeSinceLastInteraction,
+          taskId: currentTask?.id // Include current task ID
         }
       };
 
@@ -582,6 +586,7 @@ export default function PBLLearnPage() {
         body: JSON.stringify({
           sessionId: session.id,
           stageId: currentStageId,
+          taskId: currentTask?.id, // Include task ID for task-based evaluation
           language: i18n.language
         })
       });
@@ -590,6 +595,26 @@ export default function PBLLearnPage() {
         const evaluationData = await evaluateResponse.json();
         console.log('Stage analysis data:', evaluationData.data.stageResult);
         setStageAnalysis(evaluationData.data.stageResult);
+        
+        // Save analysis result to task map
+        if (currentTask) {
+          setTaskAnalysisMap(prev => ({
+            ...prev,
+            [currentTask.id]: evaluationData.data.stageResult
+          }));
+          
+          // Mark task as completed
+          setCompletedTasks(prev => new Set([...prev, currentTask.id]));
+        }
+        
+        // Also save to stage map for backward compatibility
+        const currentStageIndex = scenario.stages.findIndex(stage => stage.id === currentStageId);
+        if (currentStageIndex >= 0) {
+          setStageAnalysisMap(prev => ({
+            ...prev,
+            [currentStageIndex]: evaluationData.data.stageResult
+          }));
+        }
         
         // Update session with the new stage result but DON'T mark as completed yet
         setSession(prev => {
@@ -793,7 +818,19 @@ export default function PBLLearnPage() {
   const stageIndex = actualStageIndex >= 0 ? actualStageIndex : (session?.currentStage || 0);
   const currentStage = scenario.stages[stageIndex];
   const completedStages = session?.progress?.completedStages || [];
-  const progress = scenario ? ((completedStages.length / scenario.stages.length) * 100) : 0;
+  
+  // Calculate total tasks and completed tasks
+  const totalTasks = scenario ? scenario.stages.reduce((sum, stage) => sum + stage.tasks.length, 0) : 0;
+  const completedTasksCount = completedTasks.size;
+  const progress = totalTasks > 0 ? ((completedTasksCount / totalTasks) * 100) : 0;
+  
+  // Consider a stage as completed if all its tasks are completed
+  const effectiveCompletedStages = new Set<number>();
+  scenario?.stages.forEach((stage, index) => {
+    if (stage.tasks.every(task => completedTasks.has(task.id))) {
+      effectiveCompletedStages.add(index);
+    }
+  });
 
   // Safety check for currentStage
   if (!currentStage) {
@@ -833,39 +870,65 @@ export default function PBLLearnPage() {
                 <div className="flex items-center justify-between">
                   {/* Stage indicators with names */}
                   <div className="flex items-center flex-1">
-                    {scenario.stages.map((stage, index) => (
-                      <div key={stage.id} className="flex items-center flex-1">
-                        <div className="flex flex-col items-center">
-                          <div 
-                            className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300 ${
-                              completedStages.includes(index)
-                                ? 'bg-green-500 text-white' // Completed
-                                : index === stageIndex
-                                ? 'bg-blue-600 text-white ring-4 ring-blue-200 dark:ring-blue-900' // Current
-                                : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400' // Not started
-                            }`}
-                          >
-                            {completedStages.includes(index) ? (
-                              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                              </svg>
-                            ) : (
-                              index + 1
-                            )}
+                    {scenario.stages.map((stage, index) => {
+                      const stageCompletedTasks = stage.tasks.filter(task => completedTasks.has(task.id)).length;
+                      const stageTotalTasks = stage.tasks.length;
+                      const isStageFullyCompleted = stageCompletedTasks === stageTotalTasks;
+                      const isStagePartiallyCompleted = stageCompletedTasks > 0;
+                      const isCurrent = index === stageIndex;
+                      
+                      return (
+                        <div key={stage.id} className="flex items-center flex-1">
+                          <div className="flex flex-col items-center">
+                            <button
+                              onClick={() => {
+                                // Navigate to first incomplete task in stage, or first task if all complete
+                                const targetStage = scenario.stages[index];
+                                if (targetStage && targetStage.tasks.length > 0) {
+                                  const incompleteTask = targetStage.tasks.find(task => !completedTasks.has(task.id));
+                                  const targetTask = incompleteTask || targetStage.tasks[0];
+                                  setCurrentTask(targetTask);
+                                  // Reset for new task
+                                  setConversation([]);
+                                  setSession(null);
+                                  setStageAnalysis(taskAnalysisMap[targetTask.id] || null);
+                                }
+                              }}
+                              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300 cursor-pointer hover:scale-110 ${
+                                isStageFullyCompleted
+                                  ? 'bg-green-500 text-white hover:bg-green-600' // All tasks completed
+                                  : isStagePartiallyCompleted
+                                  ? 'bg-yellow-500 text-white hover:bg-yellow-600' // Some tasks completed
+                                  : isCurrent
+                                  ? 'bg-blue-600 text-white ring-4 ring-blue-200 dark:ring-blue-900 hover:bg-blue-700' // Current
+                                  : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-400 dark:hover:bg-gray-500' // Not started
+                              }`}
+                              title={`${stageCompletedTasks}/${stageTotalTasks} tasks completed`}
+                            >
+                              {isStageFullyCompleted ? (
+                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                </svg>
+                              ) : isStagePartiallyCompleted ? (
+                                <span className="text-xs font-bold">{stageCompletedTasks}/{stageTotalTasks}</span>
+                              ) : (
+                                index + 1
+                              )}
+                            </button>
+                            <span className={`text-xs mt-1 whitespace-nowrap ${
+                              isCurrent 
+                                ? 'text-blue-600 dark:text-blue-400 font-medium' 
+                                : 'text-gray-500 dark:text-gray-400'
+                            }`}>
+                              {stage.name}
+                            </span>
                           </div>
-                          <span className={`text-xs mt-1 whitespace-nowrap ${
-                            index === stageIndex 
-                              ? 'text-blue-600 dark:text-blue-400 font-medium' 
-                              : 'text-gray-500 dark:text-gray-400'
-                          }`}>
-                            {stage.name}
-                          </span>
+                          {index < scenario.stages.length - 1 && (
+                            <div className={`flex-1 h-0.5 mx-2 ${isStageFullyCompleted ? 'bg-green-500' : isStagePartiallyCompleted ? 'bg-yellow-500' : 'bg-gray-300 dark:bg-gray-600'}`} />
+                          )}
                         </div>
-                        {index < scenario.stages.length - 1 && (
-                          <div className={`flex-1 h-0.5 mx-2 ${completedStages.includes(index) ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'}`} />
-                        )}
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                   
                   {/* Progress percentage */}
@@ -893,9 +956,72 @@ export default function PBLLearnPage() {
           {/* Task Instructions */}
           <div className="lg:col-span-1">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                {t('learn.currentTask')}
-              </h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  {t('learn.currentTask')}
+                </h2>
+                {/* Task navigation buttons */}
+                {scenario && currentTask && (() => {
+                  const currentStage = scenario.stages[stageIndex];
+                  const taskIndex = currentStage?.tasks.findIndex(t => t.id === currentTask.id) ?? 0;
+                  const hasPrevTask = taskIndex > 0;
+                  const hasNextTask = taskIndex < (currentStage?.tasks.length ?? 0) - 1;
+                  
+                  return (hasPrevTask || hasNextTask) ? (
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => {
+                          if (hasPrevTask && currentStage) {
+                            const newTask = currentStage.tasks[taskIndex - 1];
+                            setCurrentTask(newTask);
+                            // Reset everything for new task
+                            setConversation([]);
+                            setSession(null);
+                            setStageAnalysis(taskAnalysisMap[newTask.id] || null);
+                          }
+                        }}
+                        disabled={!hasPrevTask}
+                        className={`p-1 rounded transition-colors ${
+                          hasPrevTask 
+                            ? 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700' 
+                            : 'text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                        }`}
+                        title="Previous task"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                      </button>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                        {taskIndex + 1} / {currentStage?.tasks.length ?? 0}
+                      </span>
+                      <button
+                        onClick={() => {
+                          if (hasNextTask && currentStage) {
+                            const newTask = currentStage.tasks[taskIndex + 1];
+                            setCurrentTask(newTask);
+                            // Reset everything for new task
+                            setConversation([]);
+                            setSession(null);
+                            setStageAnalysis(taskAnalysisMap[newTask.id] || null);
+                          }
+                        }}
+                        disabled={!hasNextTask}
+                        className={`p-1 rounded transition-colors ${
+                          hasNextTask 
+                            ? 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700' 
+                            : 'text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                        }`}
+                        title="Next task"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    </div>
+                  ) : null;
+                })()}
+              </div>
               
               <div className="space-y-4">
                 <div>
@@ -937,7 +1063,7 @@ export default function PBLLearnPage() {
                   <svg className="w-6 h-6 mr-2 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  {t('learn.stageAnalysisResults')}
+                  {t('learn.taskAnalysisResults')}
                 </h3>
                 
                 {stageAnalysis ? (
@@ -1315,7 +1441,7 @@ export default function PBLLearnPage() {
                   <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  <span>{t('learn.stageAnalyzed')}</span>
+                  <span>{t('learn.taskAnalyzed')}
                   {/* Show re-analyze hint if conversation continued */}
                   {conversation.filter(msg => msg.role === 'user').length > 
                     (stageAnalysis.performanceMetrics?.interactionCount || 0) && (
@@ -1352,7 +1478,7 @@ export default function PBLLearnPage() {
                         <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                         </svg>
-                        {t('learn.analyzeStage')}
+                        {t('learn.analyzeTask')}
                       </>
                     )}
                   </button>

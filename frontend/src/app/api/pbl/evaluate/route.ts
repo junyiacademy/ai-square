@@ -10,7 +10,7 @@ import yaml from 'yaml';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { sessionId, stageId, language } = body;
+    const { sessionId, stageId, taskId, language } = body;
 
     if (!sessionId || !stageId) {
       return NextResponse.json(
@@ -51,8 +51,15 @@ export async function POST(request: NextRequest) {
     console.log('ProcessLogs for stage', stageId, ':', sessionData.processLogs?.filter(log => log.stageId === stageId).length || 0);
     console.log('First few logs:', sessionData.processLogs?.slice(0, 3));
     
-    // Get stage process logs
-    const stageLogs = (sessionData.processLogs || []).filter(log => log.stageId === stageId);
+    // Get stage process logs, filtered by taskId if provided
+    const stageLogs = (sessionData.processLogs || []).filter(log => {
+      if (taskId) {
+        // If taskId is provided, filter by both stageId and taskId
+        return log.stageId === stageId && log.detail?.taskId === taskId;
+      }
+      // Otherwise, filter by stageId only
+      return log.stageId === stageId;
+    });
     
     // Get conversation history for this stage with user inputs from process logs
     const conversations = stageLogs
@@ -116,7 +123,7 @@ export async function POST(request: NextRequest) {
     const conversationCount = conversations.filter(c => c.user).length;
     const totalInputLength = conversations.reduce((sum, c) => sum + (c.user || '').length, 0);
     
-    const evaluationPrompt = `You are a professional learning assessment expert. Please **strictly and objectively** evaluate the learner's performance in this stage based on the following conversation records.
+    const evaluationPrompt = `You are a professional learning assessment expert. Please **strictly and objectively** evaluate the learner's performance in this ${taskId ? 'task' : 'stage'} based on the following conversation records.
 
 Important evaluation principles:
 1. **Only evaluate what the learner actually said**, do not evaluate the AI assistant's responses
@@ -127,9 +134,14 @@ Important evaluation principles:
 Stage Information:
 - Name: ${stage?.name || stageId}
 - Type: ${stage?.stageType}
-- Modality Focus: ${stage?.modalityFocus}
-- Task Instructions: ${stage?.tasks?.[0]?.instructions?.join('; ') || 'None'}
-- Expected Outcome: ${stage?.tasks?.[0]?.expectedOutcome || 'None'}
+- Modality Focus: ${stage?.modalityFocus}${taskId ? `
+- Current Task ID: ${taskId}` : ''}
+- Task Instructions: ${taskId && stage?.tasks ? 
+    stage.tasks.find((t: {id: string}) => t.id === taskId)?.instructions?.join('; ') || 'None' :
+    stage?.tasks?.[0]?.instructions?.join('; ') || 'None'}
+- Expected Outcome: ${taskId && stage?.tasks ? 
+    stage.tasks.find((t: {id: string}) => t.id === taskId)?.expectedOutcome || 'None' :
+    stage?.tasks?.[0]?.expectedOutcome || 'None'}
 
 Target Domains:
 ${scenario?.targetDomain?.join(', ') || 'No specific domains'}
@@ -309,6 +321,7 @@ IMPORTANT: Respond in the language specified by code: ${language || 'en'}. All f
     // Create stage result
     const stageResult: StageResult = {
       stageId,
+      taskId, // Include task ID if provided
       status: 'completed',
       completed: true,
       startedAt: new Date(stageLogs[0]?.timestamp || new Date()),
@@ -330,17 +343,33 @@ IMPORTANT: Respond in the language specified by code: ${language || 'en'}. All f
       }
     };
 
-    // Update session with stage result - always overwrite if exists
+    // Update session with stage result - handle task-based or stage-based storage
     const updatedStageResults = [...sessionData.stageResults];
-    const existingIndex = updatedStageResults.findIndex(r => r.stageId === stageId);
+    let existingIndex: number;
+    
+    if (taskId) {
+      // For task-based evaluation, find by both stageId and taskId
+      existingIndex = updatedStageResults.findIndex(r => r.stageId === stageId && r.taskId === taskId);
+      if (existingIndex >= 0) {
+        console.log('Overwriting existing evaluation for task:', taskId);
+      } else {
+        console.log('Adding new evaluation for task:', taskId);
+      }
+    } else {
+      // For stage-based evaluation, find by stageId only
+      existingIndex = updatedStageResults.findIndex(r => r.stageId === stageId && !r.taskId);
+      if (existingIndex >= 0) {
+        console.log('Overwriting existing evaluation for stage:', stageId);
+      } else {
+        console.log('Adding new evaluation for stage:', stageId);
+      }
+    }
     
     if (existingIndex >= 0) {
       // Overwrite existing evaluation with new one
-      console.log('Overwriting existing evaluation for stage:', stageId);
       updatedStageResults[existingIndex] = stageResult;
     } else {
       // Add new evaluation
-      console.log('Adding new evaluation for stage:', stageId);
       updatedStageResults.push(stageResult);
     }
 

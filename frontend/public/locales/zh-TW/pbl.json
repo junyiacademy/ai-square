@@ -84,9 +84,12 @@
       "error": "抱歉，連線發生問題。請再試一次。"
     },
     "analyzeStage": "分析階段",
+    "analyzeTask": "分析任務",
     "analyzing": "分析中...",
     "stageAnalyzed": "階段已分析",
+    "taskAnalyzed": "任務已分析",
     "stageAnalysisResults": "階段分析結果",
+    "taskAnalysisResults": "任務分析結果",
     "loginRequired": "需要登入",
     "loginRequiredMessage": "請登入以開始您的 PBL 學習之旅。",
     "overallScore": "總體分數",

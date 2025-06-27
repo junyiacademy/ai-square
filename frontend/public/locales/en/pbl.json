@@ -84,9 +84,12 @@
       "error": "Sorry, I'm having trouble connecting. Please try again."
     },
     "analyzeStage": "Analyze Stage",
+    "analyzeTask": "Analyze Task",
     "analyzing": "Analyzing...",
     "stageAnalyzed": "Stage Analyzed",
+    "taskAnalyzed": "Task Analyzed",
     "stageAnalysisResults": "Stage Analysis Results",
+    "taskAnalysisResults": "Task Analysis Results",
     "loginRequired": "Login Required",
     "loginRequiredMessage": "Please log in to start your PBL learning journey.",
     "overallScore": "Overall Score",

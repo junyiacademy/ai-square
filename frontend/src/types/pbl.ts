@@ -133,6 +133,7 @@ export interface Evidence {
 // Stage Result
 export interface StageResult {
   stageId: string;
+  taskId?: string; // Optional task ID for task-based evaluation
   status: 'not_started' | 'in_progress' | 'completed';
   completed: boolean;
   startedAt: Date;
