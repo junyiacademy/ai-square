@@ -62,7 +62,6 @@ export default function PBLCompletePage() {
           const localUser = JSON.parse(localStorageUser);
           userId = String(localUser.id);
           userEmail = localUser.email;
-          isLoggedIn = true;
           setIsAuthenticated(true);
           console.log('User authenticated from localStorage:', { userId, userEmail });
         } catch (err) {

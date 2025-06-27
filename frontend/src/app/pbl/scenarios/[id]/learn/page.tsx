@@ -32,7 +32,6 @@ export default function PBLLearnPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [stageAnalysis, setStageAnalysis] = useState<StageResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [stageAnalysisMap, setStageAnalysisMap] = useState<Record<number, StageResult>>({});
   const [taskAnalysisMap, setTaskAnalysisMap] = useState<Record<string, StageResult>>({});
   const [completedTasks, setCompletedTasks] = useState<Set<string>>(new Set());
   const [existingLogs, setExistingLogs] = useState<Array<{
@@ -665,14 +664,7 @@ export default function PBLLearnPage() {
           setCompletedTasks(prev => new Set([...prev, currentTask.id]));
         }
         
-        // Also save to stage map for backward compatibility
-        const currentStageIndex = scenario.stages.findIndex(stage => stage.id === currentStageId);
-        if (currentStageIndex >= 0) {
-          setStageAnalysisMap(prev => ({
-            ...prev,
-            [currentStageIndex]: evaluationData.data.stageResult
-          }));
-        }
+        // Stage map removed - using task-based tracking only
         
         // Update session with the new stage result but DON'T mark as completed yet
         setSession(prev => {
@@ -879,7 +871,6 @@ export default function PBLLearnPage() {
   );
   const stageIndex = actualStageIndex >= 0 ? actualStageIndex : (session?.currentStage || 0);
   const currentStage = scenario.stages[stageIndex];
-  const completedStages = session?.progress?.completedStages || [];
   
   // Calculate total tasks and completed tasks
   const totalTasks = scenario ? scenario.stages.reduce((sum, stage) => sum + stage.tasks.length, 0) : 0;
