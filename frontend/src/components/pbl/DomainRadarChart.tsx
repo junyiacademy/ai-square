@@ -111,19 +111,15 @@ export default function DomainRadarChart({ domainScores, title }: DomainRadarCha
         pointLabels: {
           font: {
             size: 13,
-            weight: '500',
+            weight: 500,
             family: 'inherit'
           },
           padding: 15,
           centerPointLabels: false,
           color: 'rgb(75, 85, 99)',
           display: true,
-          backdrop: {
-            enabled: true,
-            color: 'rgba(255, 255, 255, 0.8)',
-            padding: 4,
-            borderRadius: 4
-          }
+          backdropColor: 'rgba(255, 255, 255, 0.8)',
+          backdropPadding: 4
         },
         angleLines: {
           color: 'rgba(107, 114, 128, 0.2)'

@@ -156,7 +156,7 @@ export default function KSARadarChart({ ksaScores, title }: KSARadarChartProps) 
         pointLabels: {
           font: {
             size: 12,
-            weight: '600'
+            weight: 600
           },
           padding: 10,
           color: 'rgb(55, 65, 81)',

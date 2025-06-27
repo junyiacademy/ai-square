@@ -11,6 +11,19 @@ export interface GeminiServerConfig {
   topK?: number;
 }
 
+interface GeminiApiResponse {
+  candidates?: Array<{
+    content?: {
+      parts?: Array<{
+        text?: string;
+      }>;
+    };
+  }>;
+  usageMetadata?: {
+    totalTokenCount?: number;
+  };
+}
+
 export interface GeminiServerResponse {
   content: string;
   tokensUsed?: number;
@@ -65,7 +78,7 @@ export class GeminiServerService {
     return accessToken.token;
   }
 
-  private async makeRequest(endpoint: string, body: Record<string, unknown>): Promise<Record<string, unknown>> {
+  private async makeRequest(endpoint: string, body: Record<string, unknown>): Promise<GeminiApiResponse> {
     const token = await this.getAccessToken();
     const url = `${GEMINI_API_BASE}/${GEMINI_API_VERSION}/${endpoint}`;
     
@@ -83,7 +96,7 @@ export class GeminiServerService {
       throw new Error(`Gemini API error: ${response.status} - ${error}`);
     }
 
-    return response.json();
+    return response.json() as Promise<GeminiApiResponse>;
   }
 
   async sendMessage(message: string, context?: Record<string, unknown>): Promise<GeminiServerResponse> {

@@ -10,7 +10,8 @@ import {
   Task,
   ConversationTurn,
   ProcessLog,
-  ActionType
+  ActionType,
+  StageResult
 } from '@/types/pbl';
 
 export default function PBLLearnPage() {
@@ -27,9 +28,16 @@ export default function PBLLearnPage() {
   const [conversation, setConversation] = useState<ConversationTurn[]>([]);
   const [userInput, setUserInput] = useState('');
   const [isAIThinking, setIsAIThinking] = useState(false);
-  const [stageAnalysis, setStageAnalysis] = useState<Record<string, unknown> | null>(null);
+  const [stageAnalysis, setStageAnalysis] = useState<StageResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [existingLogs, setExistingLogs] = useState<Record<string, unknown>[]>([]);
+  const [existingLogs, setExistingLogs] = useState<Array<{
+    sessionId: string;
+    createdAt: string;
+    metadata: {
+      conversationCount: number;
+      timeSpent: number;
+    };
+  }>>([]);
   const [currentLogId, setCurrentLogId] = useState<string | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [sessionStartTime, setSessionStartTime] = useState<number>(Date.now());
@@ -53,7 +61,7 @@ export default function PBLLearnPage() {
         }
       }
     }
-  }, [session?.currentStage, session?.stageResults, scenario]);
+  }, [session, scenario]);
 
   // Fetch existing logs when task changes
   useEffect(() => {
@@ -209,8 +217,8 @@ export default function PBLLearnPage() {
             const currentStageId = stage?.id;
             if (currentStageId) {
               const stageLogs = existingSession.processLogs
-                .filter(log => log.stageId === currentStageId && log.detail?.aiInteraction)
-                .map(log => ({
+                .filter((log: ProcessLog) => log.stageId === currentStageId && log.detail?.aiInteraction)
+                .map((log: ProcessLog) => ({
                   user: {
                     id: `user-${log.timestamp}`,
                     timestamp: log.timestamp,
@@ -227,7 +235,7 @@ export default function PBLLearnPage() {
               
               // Flatten to array of conversation turns
               const conversationTurns: ConversationTurn[] = [];
-              stageLogs.forEach(log => {
+              stageLogs.forEach((log: { user: ConversationTurn; ai: ConversationTurn }) => {
                 if (log.user.content) conversationTurns.push(log.user);
                 if (log.ai.content) conversationTurns.push(log.ai);
               });
@@ -288,8 +296,8 @@ export default function PBLLearnPage() {
         const currentStageId = scenario?.stages[loadedSession.currentStage]?.id;
         if (currentStageId) {
           const stageLogs = loadedSession.processLogs
-            .filter(log => log.stageId === currentStageId && log.detail?.aiInteraction)
-            .map(log => ({
+            .filter((log: ProcessLog) => log.stageId === currentStageId && log.detail?.aiInteraction)
+            .map((log: ProcessLog) => ({
               user: {
                 id: `user-${log.timestamp}`,
                 timestamp: log.timestamp,
@@ -306,7 +314,7 @@ export default function PBLLearnPage() {
           
           // Flatten to array of conversation turns
           const conversationTurns: ConversationTurn[] = [];
-          stageLogs.forEach(log => {
+          stageLogs.forEach((log: { user: ConversationTurn; ai: ConversationTurn }) => {
             if (log.user.content) conversationTurns.push(log.user);
             if (log.ai.content) conversationTurns.push(log.ai);
           });
@@ -465,7 +473,7 @@ export default function PBLLearnPage() {
           setSession(currentSession);
           setCurrentLogId(sessionData.data.logId); // Set the log ID
           setSessionStartTime(Date.now()); // Reset session start time
-          console.log('Session created:', currentSession.id, 'Log ID:', sessionData.data.logId);
+          console.log('Session created:', currentSession?.id, 'Log ID:', sessionData.data.logId);
         } else {
           throw new Error('Failed to create session');
         }
@@ -489,8 +497,7 @@ export default function PBLLearnPage() {
         actionType: 'write' as ActionType,
         detail: {
           userInput: currentUserInput,
-          timeSpent: timeSinceLastInteraction,
-          taskId: currentTask?.id // Add task ID to process log
+          timeSpent: timeSinceLastInteraction
         }
       };
 
@@ -909,8 +916,8 @@ export default function PBLLearnPage() {
                             {stageAnalysis.score}%
                           </span>
                           <div className="text-xs text-gray-500 mt-1">
-                            {stageAnalysis.score >= 80 ? t('learn.excellent') : 
-                             stageAnalysis.score >= 60 ? t('learn.good') : t('learn.needsImprovement')}
+                            {(stageAnalysis.score ?? 0) >= 80 ? t('learn.excellent') : 
+                             (stageAnalysis.score ?? 0) >= 60 ? t('learn.good') : t('learn.needsImprovement')}
                           </div>
                         </div>
                       </div>
@@ -944,7 +951,7 @@ export default function PBLLearnPage() {
                       <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
                         <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">{t('learn.ksaBreakdown')}</h4>
                         <div className="grid grid-cols-4 gap-2">
-                          {Object.entries(stageAnalysis.ksaAchievement).map(([ksa, achievement]: [string, { score: number; feedback: string }]) => (
+                          {Object.entries(stageAnalysis.ksaAchievement).map(([ksa, achievement]) => (
                             <div key={ksa} className={`text-center p-2 rounded-lg ${
                               ksa.startsWith('K') ? 'bg-blue-50 dark:bg-blue-900/20' :
                               ksa.startsWith('S') ? 'bg-green-50 dark:bg-green-900/20' :
@@ -1318,7 +1325,7 @@ export default function PBLLearnPage() {
                 
                 <button
                   onClick={handleNextTask}
-                  disabled={!session || isTransitioning || (
+                  disabled={!session || isTransitioning || !!(
                     // Disable if it's the last task of a stage and not analyzed
                     currentTask && currentStage && 
                     currentTask.id === currentStage.tasks[currentStage.tasks.length - 1].id &&

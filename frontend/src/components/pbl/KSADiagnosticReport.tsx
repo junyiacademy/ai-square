@@ -70,13 +70,13 @@ export default function KSADiagnosticReport({ stageResults }: KSADiagnosticRepor
     groupedScores[category].push({
       code: ksa,
       score,
-      description: KSA_DESCRIPTIONS[ksa] || ksa
+      description: KSA_DESCRIPTIONS[ksa as keyof typeof KSA_DESCRIPTIONS] || ksa
     });
   });
 
   // Sort by score (descending)
   Object.keys(groupedScores).forEach(category => {
-    groupedScores[category].sort((a, b) => b.score - a.score);
+    groupedScores[category as keyof typeof groupedScores].sort((a, b) => b.score - a.score);
   });
 
   const getScoreColor = (score: number) => {

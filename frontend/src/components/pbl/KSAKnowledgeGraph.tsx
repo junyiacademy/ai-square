@@ -301,14 +301,16 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
       .selectAll('.node-circle')
       .transition()
       .duration(300)
-      .attr('stroke-width', function(this: SVGElement, d: Node) {
-        return selectedNode && d.id === selectedNode.id ? 4 : 2;
+      .attr('stroke-width', function(d: unknown) {
+        const node = d as Node;
+        return selectedNode && node.id === selectedNode.id ? 4 : 2;
       })
-      .attr('stroke', function(this: SVGElement, d: Node) {
-        if (selectedNode && d.id === selectedNode.id) return '#1f2937';
-        if (d.category === 'knowledge') return '#3b82f6';
-        if (d.category === 'skills') return '#10b981';
-        if (d.category === 'attitudes') return '#a855f7';
+      .attr('stroke', function(d: unknown) {
+        const node = d as Node;
+        if (selectedNode && node.id === selectedNode.id) return '#1f2937';
+        if (node.category === 'knowledge') return '#3b82f6';
+        if (node.category === 'skills') return '#10b981';
+        if (node.category === 'attitudes') return '#a855f7';
         return '#6366f1';
       });
   }, [selectedNode]);

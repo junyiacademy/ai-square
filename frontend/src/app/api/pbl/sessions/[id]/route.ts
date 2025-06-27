@@ -1,6 +1,13 @@
 import { NextResponse } from 'next/server';
-import { SessionData } from '@/types/pbl';
+import { SessionData, ProcessLog, StageResult } from '@/types/pbl';
 import { pblGCS } from '@/lib/storage/pbl-gcs-service';
+
+interface SessionUpdateRequest {
+  newProcessLog?: ProcessLog;
+  newStageResult?: StageResult;
+  progress?: Partial<SessionData['progress']>;
+  [key: string]: unknown;
+}
 
 // Shared in-memory storage (fallback when GCS is not available)
 const sessions = new Map<string, SessionData>();
@@ -69,7 +76,7 @@ export async function PATCH(
     
     // Check if request has body
     const text = await request.text();
-    let updates = {};
+    let updates: SessionUpdateRequest = {};
     
     if (text.trim()) {
       try {

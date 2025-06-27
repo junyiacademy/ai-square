@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { ScenarioProgram } from '@/types/pbl';
+import { ScenarioProgram, StageType, ModalityFocus, AIRole } from '@/types/pbl';
 import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
@@ -43,6 +43,7 @@ interface YAMLScenarioData {
       initial_prompt?: string;
     }>;
     tasks: Array<{
+      id?: string;
       title: string;
       title_zh?: string;
       description: string;
@@ -51,6 +52,7 @@ interface YAMLScenarioData {
       instructions_zh?: string[];
       expected_outcome: string;
       expected_outcome_zh?: string;
+      time_limit?: number;
     }>;
     logging_config: {
       trackInteractions: boolean;
@@ -58,6 +60,7 @@ interface YAMLScenarioData {
       trackRevisions: boolean;
       trackResourceUsage: boolean;
     };
+    time_limit?: number;
   }>;
   rubrics_criteria?: Array<{
     criterion: string;
@@ -316,11 +319,20 @@ export async function GET(
           id: stage.id,
           name: stage.name,
           description: stage.description,
-          stageType: stage.stage_type,
-          modalityFocus: stage.modality_focus,
+          stageType: stage.stage_type as StageType,
+          modalityFocus: stage.modality_focus as ModalityFocus,
           assessmentFocus: stage.assessment_focus,
-          rubricsCriteria: yamlData.rubrics_criteria || [],
-          aiModules: stage.ai_modules || [],
+          rubricsCriteria: (yamlData.rubrics_criteria || []).map(criteria => ({
+            ...criteria,
+            levels: criteria.levels.map(level => ({
+              ...level,
+              level: level.level as 1 | 2 | 3 | 4
+            }))
+          })),
+          aiModules: (stage.ai_modules || []).map(module => ({
+            ...module,
+            role: module.role as AIRole
+          })),
           tasks: (stage.tasks || []).map((task, index) => ({
             id: task.id || `${stage.id}-task-${index + 1}`,
             title: task.title,
@@ -331,10 +343,10 @@ export async function GET(
           })),
           timeLimit: stage.time_limit || 30,
           loggingConfig: stage.logging_config ? {
-            trackInteractions: stage.logging_config.track_interactions,
-            trackThinkingTime: stage.logging_config.track_thinking_time,
-            trackRevisions: stage.logging_config.track_revisions,
-            trackResourceUsage: stage.logging_config.track_resource_usage
+            trackInteractions: stage.logging_config.trackInteractions,
+            trackThinkingTime: stage.logging_config.trackThinkingTime,
+            trackRevisions: stage.logging_config.trackRevisions,
+            trackResourceUsage: stage.logging_config.trackResourceUsage
           } : {
             trackInteractions: true,
             trackThinkingTime: false,

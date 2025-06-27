@@ -33,7 +33,7 @@ export class VertexAIService {
   constructor(config: VertexAIConfig) {
     this.config = config;
     this.model = config.model || 'gemini-2.5-flash';
-    this.projectId = PROJECT_ID;
+    this.projectId = PROJECT_ID || '';
     this.location = LOCATION;
     
     if (!this.projectId) {
@@ -132,7 +132,10 @@ export class VertexAIService {
       const response = await this.makeRequest(requestBody);
 
       // Extract response text
-      const aiResponse = response.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      const candidates = response.candidates as Array<{
+        content?: { parts?: Array<{ text?: string }> }
+      }> | undefined;
+      const aiResponse = candidates?.[0]?.content?.parts?.[0]?.text || '';
       
       if (!aiResponse) {
         console.error('Vertex AI response structure:', JSON.stringify(response, null, 2));
@@ -152,7 +155,7 @@ export class VertexAIService {
         content: aiResponse,
         processingTime,
         // Token usage from API response if available
-        tokensUsed: response.usageMetadata?.totalTokenCount || 
+        tokensUsed: (response.usageMetadata as { totalTokenCount?: number } | undefined)?.totalTokenCount || 
                    Math.ceil((message.length + aiResponse.length) / 4)
       };
     } catch (error) {

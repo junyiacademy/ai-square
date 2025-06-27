@@ -309,8 +309,8 @@ export default function PBLCompletePage() {
             session.stageResults?.forEach(result => {
               if (result.domainScores) {
                 Object.entries(result.domainScores).forEach(([domain, score]) => {
-                  domainScores[domain] += score;
-                  domainCounts[domain] += 1;
+                  domainScores[domain as keyof typeof domainScores] += score;
+                  domainCounts[domain as keyof typeof domainCounts] += 1;
                 });
               }
             });
@@ -318,8 +318,9 @@ export default function PBLCompletePage() {
           
           // Calculate averages
           Object.keys(domainScores).forEach(domain => {
-            if (domainCounts[domain] > 0) {
-              domainScores[domain] = Math.round(domainScores[domain] / domainCounts[domain]);
+            const key = domain as keyof typeof domainScores;
+            if (domainCounts[key] > 0) {
+              domainScores[key] = Math.round(domainScores[key] / domainCounts[key]);
             }
           });
           
@@ -444,7 +445,6 @@ export default function PBLCompletePage() {
               <KSAKnowledgeGraph 
                 ksaScores={allKsaScores}
                 title={t('complete.ksaRadarTitle')}
-                ksaMapping={scenario.ksaMapping}
               />
             </div>
           ) : null;

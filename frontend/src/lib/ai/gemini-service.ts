@@ -23,6 +23,7 @@ export class GeminiService {
   private model;
   private chat;
   private startTime: number = 0;
+  private chatHistory: Array<{ role: string; parts: Array<{ text: string }> }> = [];
 
   constructor(config: GeminiChatConfig) {
     this.model = genAI.getGenerativeModel({
@@ -35,18 +36,21 @@ export class GeminiService {
       },
     });
 
+    // Initialize chat history
+    this.chatHistory = [
+      {
+        role: 'user',
+        parts: [{ text: `System: ${config.systemPrompt}` }],
+      },
+      {
+        role: 'model',
+        parts: [{ text: 'Understood. I will act according to the given instructions.' }],
+      },
+    ];
+    
     // Initialize chat with system prompt
     this.chat = this.model.startChat({
-      history: [
-        {
-          role: 'user',
-          parts: [{ text: `System: ${config.systemPrompt}` }],
-        },
-        {
-          role: 'model',
-          parts: [{ text: 'Understood. I will act according to the given instructions.' }],
-        },
-      ],
+      history: this.chatHistory,
     });
   }
 
@@ -60,9 +64,21 @@ export class GeminiService {
         fullMessage = `Context: ${JSON.stringify(context)}\n\nUser: ${message}`;
       }
 
+      // Add user message to history
+      this.chatHistory.push({
+        role: 'user',
+        parts: [{ text: fullMessage }],
+      });
+
       const result = await this.chat.sendMessage(fullMessage);
       const response = await result.response;
       const text = response.text();
+
+      // Add model response to history
+      this.chatHistory.push({
+        role: 'model',
+        parts: [{ text }],
+      });
 
       const processingTime = Date.now() - this.startTime;
 
@@ -135,7 +151,7 @@ Format your response as JSON with keys: score, feedback, suggestions (array)
 
   // Get chat history for session recovery
   getChatHistory(): Array<{ role: string; content: string }> {
-    return this.chat._history.map(item => ({
+    return this.chatHistory.map(item => ({
       role: item.role,
       content: item.parts[0].text || ''
     }));
@@ -143,18 +159,19 @@ Format your response as JSON with keys: score, feedback, suggestions (array)
 
   // Reset chat session
   resetChat(systemPrompt?: string) {
-    const prompt = systemPrompt || this.chat._history[0].parts[0].text;
+    const prompt = systemPrompt || this.chatHistory[0].parts[0].text;
+    this.chatHistory = [
+      {
+        role: 'user',
+        parts: [{ text: prompt }],
+      },
+      {
+        role: 'model',
+        parts: [{ text: 'Understood. I will act according to the given instructions.' }],
+      },
+    ];
     this.chat = this.model.startChat({
-      history: [
-        {
-          role: 'user',
-          parts: [{ text: prompt }],
-        },
-        {
-          role: 'model',
-          parts: [{ text: 'Understood. I will act according to the given instructions.' }],
-        },
-      ],
+      history: this.chatHistory,
     });
   }
 }

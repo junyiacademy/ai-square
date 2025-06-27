@@ -6,7 +6,7 @@ export type StageType = 'research' | 'analysis' | 'creation' | 'interaction';
 export type ModalityFocus = 'reading' | 'writing' | 'listening' | 'speaking' | 'mixed';
 export type AIRole = 'assistant' | 'evaluator' | 'actor';
 export type SessionStatus = 'not_started' | 'in_progress' | 'paused' | 'completed';
-export type ActionType = 'search' | 'write' | 'speak' | 'revise' | 'submit';
+export type ActionType = 'search' | 'write' | 'speak' | 'revise' | 'submit' | 'interaction';
 
 // KSA Mapping
 export interface KSAMapping {
@@ -104,6 +104,7 @@ export interface ProcessLog {
     };
     resourceAccessed?: string[];
     timeSpent: number; // seconds
+    taskId?: string; // Optional task ID
   };
   evaluation?: {
     ksaCode: string;
@@ -259,6 +260,8 @@ export interface ConversationTurn {
     audioUrl?: string;
     duration?: number;
     corrections?: string[];
+    processingTime?: number;
+    tokensUsed?: number;
   };
 }
 

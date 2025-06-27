@@ -527,20 +527,20 @@ export class PBLGCSService {
       scenario: {
         id: session.scenario_id,
         title: session.session_data.scenarioTitle || session.scenario_id,
-        stages: session.session_data.scenario?.stages || []
+        stages: (session.session_data.scenario?.stages || []) as unknown as Array<Record<string, unknown>>
       },
       metadata: {
         startTime: session.session_data.startedAt,
         endTime: session.session_data.lastActiveAt,
-        status: session.status,
+        status: session.status === 'not_started' ? 'in_progress' : session.status,
         userId: session.user_id,
         language: session.language
       },
       progress: {
         stageProgress: session.session_data.stageResults?.map(result => ({
           stageId: result.stageId,
-          status: result.status,
-          completedAt: result.completedAt,
+          status: result.status as 'not_started' | 'in_progress' | 'completed',
+          completedAt: result.completedAt instanceof Date ? result.completedAt.toISOString() : result.completedAt,
           score: result.score
         })) || []
       },
@@ -640,10 +640,7 @@ export class PBLGCSService {
     if (!sessionData.processLogs) {
       sessionData.processLogs = [];
     }
-    sessionData.processLogs.push({
-      ...log,
-      timestamp: new Date()
-    });
+    sessionData.processLogs.push(log);
 
     // Update session
     await this.saveSession(sessionId, sessionData, logId);
