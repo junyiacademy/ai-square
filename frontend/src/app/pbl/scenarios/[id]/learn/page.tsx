@@ -242,6 +242,33 @@ export default function PBLLearnPage() {
             // Reset session start time for time tracking
             setSessionStartTime(Date.now());
             
+            // Populate task analysis map with all existing analyses
+            if (existingSession.stageResults && existingSession.stageResults.length > 0) {
+              const analysisMap: Record<string, StageResult> = {};
+              const completedTasksSet = new Set<string>();
+              
+              existingSession.stageResults.forEach((result: StageResult) => {
+                if (result.taskId) {
+                  analysisMap[result.taskId] = result;
+                  completedTasksSet.add(result.taskId);
+                } else {
+                  // For backward compatibility - if no taskId, try to map to all tasks in the stage
+                  const stageIndex = scenarioData.data.stages.findIndex((s: any) => s.id === result.stageId);
+                  if (stageIndex >= 0) {
+                    const stage = scenarioData.data.stages[stageIndex];
+                    stage.tasks.forEach((task: any) => {
+                      analysisMap[task.id] = result;
+                      completedTasksSet.add(task.id);
+                    });
+                  }
+                }
+              });
+              
+              setTaskAnalysisMap(analysisMap);
+              setCompletedTasks(completedTasksSet);
+              console.log('Loaded task analysis map:', analysisMap);
+            }
+            
             // Set current task based on session progress
             const stageIndex = existingSession.currentStage || 0;
             const stage = scenarioData.data.stages[stageIndex];
@@ -939,77 +966,101 @@ export default function PBLLearnPage() {
                 </p>
               </div>
               
-              {/* Progress Bar - Horizontal with title */}
+              {/* Progress Bar - Task-based with scores */}
               <div className="flex-1">
-                <div className="flex items-center justify-between">
-                  {/* Stage indicators with names */}
-                  <div className="flex items-center flex-1">
-                    {scenario.stages.map((stage, index) => {
-                      const stageCompletedTasks = stage.tasks.filter(task => completedTasks.has(task.id)).length;
-                      const stageTotalTasks = stage.tasks.length;
-                      const isStageFullyCompleted = stageCompletedTasks === stageTotalTasks;
-                      const isStagePartiallyCompleted = stageCompletedTasks > 0;
-                      const isCurrent = index === stageIndex;
+                <div className="flex flex-col gap-2">
+                  {/* Progress percentage */}
+                  <div className="flex justify-end">
+                    <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                      {Math.round(progress)}%
+                    </span>
+                  </div>
+                  
+                  {/* Task nodes grouped by stage */}
+                  <div className="flex items-center gap-2">
+                    {scenario.stages.map((stage, stageIndex) => {
+                      const isCurrentStage = stageIndex === actualStageIndex;
                       
                       return (
-                        <div key={stage.id} className="flex items-center flex-1">
-                          <div className="flex flex-col items-center">
-                            <button
-                              onClick={() => {
-                                // Navigate to first incomplete task in stage, or first task if all complete
-                                const targetStage = scenario.stages[index];
-                                if (targetStage && targetStage.tasks.length > 0) {
-                                  const incompleteTask = targetStage.tasks.find(task => !completedTasks.has(task.id));
-                                  const targetTask = incompleteTask || targetStage.tasks[0];
-                                  setCurrentTask(targetTask);
-                                  // Reset for new task
-                                  setConversation([]);
-                                  setSession(null);
-                                  setCurrentLogId(null); // Clear log ID
-                                  setStageAnalysis(taskAnalysisMap[targetTask.id] || null);
-                                }
-                              }}
-                              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300 cursor-pointer hover:scale-110 ${
-                                isStageFullyCompleted
-                                  ? 'bg-green-500 text-white hover:bg-green-600' // All tasks completed
-                                  : isStagePartiallyCompleted
-                                  ? 'bg-yellow-500 text-white hover:bg-yellow-600' // Some tasks completed
-                                  : isCurrent
-                                  ? 'bg-blue-600 text-white ring-4 ring-blue-200 dark:ring-blue-900 hover:bg-blue-700' // Current
-                                  : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-400 dark:hover:bg-gray-500' // Not started
-                              }`}
-                              title={`${stageCompletedTasks}/${stageTotalTasks} tasks completed`}
-                            >
-                              {isStageFullyCompleted ? (
-                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                </svg>
-                              ) : isStagePartiallyCompleted ? (
-                                <span className="text-xs font-bold">{stageCompletedTasks}/{stageTotalTasks}</span>
-                              ) : (
-                                index + 1
-                              )}
-                            </button>
-                            <span className={`text-xs mt-1 whitespace-nowrap ${
-                              isCurrent 
+                        <div key={stage.id} className="flex items-center">
+                          {/* Stage group */}
+                          <div className="flex flex-col items-center gap-1">
+                            {/* Stage name */}
+                            <span className={`text-xs whitespace-nowrap ${
+                              isCurrentStage 
                                 ? 'text-blue-600 dark:text-blue-400 font-medium' 
                                 : 'text-gray-500 dark:text-gray-400'
                             }`}>
                               {stage.name}
                             </span>
+                            
+                            {/* Task nodes for this stage */}
+                            <div className="flex items-center gap-1">
+                              {stage.tasks.map((task, taskIndex) => {
+                                const isCurrentTask = task.id === currentTask?.id;
+                                const isCompleted = completedTasks.has(task.id);
+                                const taskAnalysis = taskAnalysisMap[task.id];
+                                const score = taskAnalysis?.score;
+                                
+                                return (
+                                  <div key={task.id} className="flex items-center">
+                                    <div className="relative group">
+                                      <button
+                                        onClick={() => {
+                                          setCurrentTask(task);
+                                          // Reset for new task
+                                          setConversation([]);
+                                          setSession(null);
+                                          setCurrentLogId(null);
+                                          setStageAnalysis(taskAnalysisMap[task.id] || null);
+                                        }}
+                                        className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-300 cursor-pointer hover:scale-110 ${
+                                          isCompleted && score !== undefined
+                                            ? score >= 80 
+                                              ? 'bg-green-500 text-white hover:bg-green-600'
+                                              : score >= 60 
+                                              ? 'bg-yellow-500 text-white hover:bg-yellow-600'
+                                              : 'bg-red-500 text-white hover:bg-red-600'
+                                            : isCurrentTask
+                                            ? 'bg-blue-600 text-white ring-4 ring-blue-200 dark:ring-blue-900 hover:bg-blue-700'
+                                            : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-400 dark:hover:bg-gray-500'
+                                        }`}
+                                        title={`${task.title}${score !== undefined ? ` - Score: ${score}%` : ''}`}
+                                      >
+                                        {score !== undefined ? (
+                                          <span className="font-bold">{score}</span>
+                                        ) : (
+                                          <span>{taskIndex + 1}</span>
+                                        )}
+                                      </button>
+                                      
+                                      {/* Task title tooltip */}
+                                      <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10">
+                                        <div className="bg-gray-900 text-white text-xs rounded px-2 py-1 whitespace-nowrap">
+                                          {task.title}
+                                          {score !== undefined && <span className="ml-1">({score}%)</span>}
+                                        </div>
+                                      </div>
+                                    </div>
+                                    
+                                    {/* Connector between tasks in same stage */}
+                                    {taskIndex < stage.tasks.length - 1 && (
+                                      <div className="w-2 h-0.5 bg-gray-300 dark:bg-gray-600" />
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
                           </div>
-                          {index < scenario.stages.length - 1 && (
-                            <div className={`flex-1 h-0.5 mx-2 ${isStageFullyCompleted ? 'bg-green-500' : isStagePartiallyCompleted ? 'bg-yellow-500' : 'bg-gray-300 dark:bg-gray-600'}`} />
+                          
+                          {/* Connector between stages */}
+                          {stageIndex < scenario.stages.length - 1 && (
+                            <div className="w-4 h-0.5 bg-gray-300 dark:bg-gray-600 mx-2" />
                           )}
                         </div>
                       );
                     })}
                   </div>
-                  
-                  {/* Progress percentage */}
-                  <span className="ml-4 text-sm text-gray-600 dark:text-gray-400 font-medium whitespace-nowrap">
-                    {Math.round(progress)}%
-                  </span>
                 </div>
               </div>
             </div>
