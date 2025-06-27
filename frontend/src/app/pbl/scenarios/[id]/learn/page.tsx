@@ -46,6 +46,8 @@ export default function PBLLearnPage() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [sessionStartTime, setSessionStartTime] = useState<number>(Date.now());
   const [lastInteractionTime, setLastInteractionTime] = useState<number>(Date.now());
+  const [isLoadingLogs, setIsLoadingLogs] = useState(false);
+  const [isLoadingConversation, setIsLoadingConversation] = useState(false);
   
   // Ref for auto-scrolling
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -82,6 +84,8 @@ export default function PBLLearnPage() {
   useEffect(() => {
     const fetchExistingLogs = async () => {
       if (!currentTask || !scenario) return;
+      
+      setIsLoadingLogs(true);
       
       // Get user info from localStorage
       let userId: string | null = null;
@@ -129,6 +133,16 @@ export default function PBLLearnPage() {
             setExistingLogs(data.data.logs);
             console.log(`Found ${data.data.logs.length} existing logs for task ${currentTask.id}`);
             console.log('Logs detail:', data.data.logs);
+            
+            // Auto-load the latest log if available
+            if (data.data.logs.length > 0) {
+              const latestLog = data.data.logs[0]; // Logs are sorted by creation time (newest first)
+              console.log('Auto-loading latest log:', latestLog.sessionId);
+              // Delay slightly to ensure UI is ready
+              setTimeout(() => {
+                loadLogConversation(latestLog.sessionId);
+              }, 100);
+            }
           } else {
             console.error('Failed to fetch logs:', response.status, response.statusText);
             const errorText = await response.text();
@@ -136,7 +150,11 @@ export default function PBLLearnPage() {
           }
         } catch (error) {
           console.error('Error fetching existing logs:', error);
+        } finally {
+          setIsLoadingLogs(false);
         }
+      } else {
+        setIsLoadingLogs(false);
       }
     };
 
@@ -295,6 +313,7 @@ export default function PBLLearnPage() {
   const loadLogConversation = async (logSessionId: string) => {
     try {
       console.log('Loading conversation from log:', logSessionId);
+      setIsLoadingConversation(true);
       
       // Fetch the session data
       const response = await fetch(`/api/pbl/sessions/${logSessionId}`);
@@ -390,6 +409,8 @@ export default function PBLLearnPage() {
       }
     } catch (error) {
       console.error('Error loading log conversation:', error);
+    } finally {
+      setIsLoadingConversation(false);
     }
   };
 
@@ -1319,33 +1340,40 @@ export default function PBLLearnPage() {
 
           {/* Conversation Area */}
           <div className="lg:col-span-2 space-y-4">
-            {/* Conversation Logs Dropdown */}
-            {existingLogs.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
-                <div className="flex items-center justify-between">
-                  <label htmlFor="conversation-logs" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Conversation Logs
-                  </label>
-                  <select
-                    id="conversation-logs"
-                    value={currentLogId || ''}
-                    onChange={(e) => {
-                      if (e.target.value) {
-                        loadLogConversation(e.target.value);
-                      }
-                    }}
-                    className="flex-1 ml-4 px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                  >
-                    <option value="">Select a conversation log...</option>
-                    {existingLogs.map((log) => (
-                      <option key={log.sessionId} value={log.sessionId}>
-                        {new Date(log.createdAt).toLocaleString()} - {log.metadata.conversationCount} messages ({Math.round(log.metadata.timeSpent / 60)}m)
-                      </option>
-                    ))}
-                  </select>
-                </div>
+            {/* Conversation Logs Dropdown - Always show */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+              <div className="flex items-center justify-between">
+                <label htmlFor="conversation-logs" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Conversation Logs
+                </label>
+                <select
+                  id="conversation-logs"
+                  value={currentLogId || ''}
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      loadLogConversation(e.target.value);
+                    }
+                  }}
+                  disabled={isLoadingLogs}
+                  className="flex-1 ml-4 px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white disabled:opacity-50"
+                >
+                  {isLoadingLogs ? (
+                    <option value="">Loading logs...</option>
+                  ) : existingLogs.length > 0 ? (
+                    <>
+                      <option value="">Select a conversation log...</option>
+                      {existingLogs.map((log) => (
+                        <option key={log.sessionId} value={log.sessionId}>
+                          {new Date(log.createdAt).toLocaleString()} - {log.metadata.conversationCount} messages ({Math.round(log.metadata.timeSpent / 60)}m)
+                        </option>
+                      ))}
+                    </>
+                  ) : (
+                    <option value="">No logs available</option>
+                  )}
+                </select>
               </div>
-            )}
+            </div>
             
             {/* Chat Interface */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md h-[calc(100vh-350px)] min-h-[400px] flex flex-col">
@@ -1406,7 +1434,17 @@ export default function PBLLearnPage() {
               
               {/* Messages */}
               <div className="flex-1 overflow-y-auto p-6 space-y-4">
-                {conversation.length === 0 ? (
+                {isLoadingConversation ? (
+                  <div className="text-center text-gray-500 dark:text-gray-400 mt-20">
+                    <div className="inline-flex items-center">
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Loading conversation...
+                    </div>
+                  </div>
+                ) : conversation.length === 0 ? (
                   <div className="text-center text-gray-500 dark:text-gray-400 mt-20">
                     <p>{t('learn.startConversation')}</p>
                   </div>
