@@ -112,7 +112,7 @@ export function useAuth(): UseAuthReturn {
   // Initial auth check
   useEffect(() => {
     checkAuth()
-  }, [])
+  }, [checkAuth])
 
   // Listen for auth changes
   useEffect(() => {

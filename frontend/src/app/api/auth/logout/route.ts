@@ -3,7 +3,7 @@ import { cookies } from 'next/headers'
 
 export async function POST() {
   // Get the cookies instance
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   
   // Create response
   const response = NextResponse.json({

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 
 export async function GET() {
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   
   // Check if user is logged in from cookies
   const isLoggedIn = cookieStore.get('isLoggedIn')
