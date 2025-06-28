@@ -125,12 +125,19 @@ export async function GET(request: NextRequest) {
       const endTime = log.metadata.endTime ? new Date(log.metadata.endTime) : new Date();
       const duration = Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
       
-      // Calculate progress
-      const totalStages = log.scenario.stages.length;
-      const completedStages = log.progress.stageProgress.filter(
+      // Calculate progress - defensive programming for invalid data
+      const totalStages = log.scenario.stages?.length || 0;
+      const completedStages = log.progress.stageProgress?.filter(
         stage => stage.status === 'completed'
-      ).length;
-      const percentage = Math.round((completedStages / totalStages) * 100);
+      ).length || 0;
+      
+      // If totalStages is 0 but we have completed stages, try to infer from stageProgress
+      const actualTotalStages = totalStages > 0 ? totalStages : 
+        (log.progress.stageProgress?.length || Math.max(completedStages, 1));
+      
+      const percentage = actualTotalStages > 0 
+        ? Math.round((completedStages / actualTotalStages) * 100)
+        : 0;
       
       // Determine status
       let status: SessionSummary['status'] = 'in_progress';
@@ -152,8 +159,9 @@ export async function GET(request: NextRequest) {
         pl => pl.actionType === 'write' || pl.actionType === 'speak'
       ).length || 0;
       
-      // Build stage details
-      const stageDetails = (log.scenario.stages as Array<Record<string, unknown>>).map((stage: Record<string, unknown>, index: number) => {
+      // Build stage details - handle cases where stages might be missing
+      const stages = (log.scenario.stages as Array<Record<string, unknown>>) || [];
+      const stageDetails = stages.length > 0 ? stages.map((stage: Record<string, unknown>, index: number) => {
         const stageId = String(stage.id);
         const stageProgress = log.progress.stageProgress.find((sp: { stageId: string }) => sp.stageId === stageId);
         const stageResult = log.stageResults?.find((sr: { stageId: string }) => sr.stageId === stageId);
@@ -196,7 +204,19 @@ export async function GET(request: NextRequest) {
           interactions: Math.floor(stageInteractions / 2), // Divide by 2 for user-AI pairs
           taskDetails: taskDetails || []
         };
-      });
+      }) : [];
+      
+      // If no stage details but we have stageProgress, create minimal stage details
+      if (stageDetails.length === 0 && log.progress.stageProgress?.length > 0) {
+        stageDetails.push(...log.progress.stageProgress.map((sp: any, index: number) => ({
+          stageId: sp.stageId,
+          stageTitle: `Stage ${index + 1}`,
+          status: sp.status || 'not_started',
+          score: sp.score,
+          interactions: 0,
+          taskDetails: []
+        })));
+      }
       
       // Calculate average score from stage results
       const stageScores = log.stageResults?.map(sr => sr.score).filter(s => s !== undefined) || [];
@@ -357,7 +377,7 @@ export async function GET(request: NextRequest) {
         progress: {
           percentage,
           completedStages,
-          totalStages
+          totalStages: actualTotalStages
         },
         score: score || averageScore,
         stageDetails,
