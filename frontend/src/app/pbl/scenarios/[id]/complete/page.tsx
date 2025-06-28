@@ -81,8 +81,11 @@ export default function PBLCompletePage() {
         const sessionsResponse = await fetch(`/api/pbl/sessions?userId=${userId}&scenarioId=${scenarioId}&status=completed`);
         const sessionsData = await sessionsResponse.json();
         
+        console.log('Sessions API response:', sessionsData);
+        
         if (sessionsData.success) {
           const allSessions = sessionsData.data.sessions;
+          console.log('All sessions count:', allSessions.length);
           
           // Group sessions by stage and keep only the latest one for each stage
           const latestSessionsByStage = new Map<number, SessionData>();
@@ -97,6 +100,7 @@ export default function PBLCompletePage() {
           // Convert map to array for display
           const latestSessions = Array.from(latestSessionsByStage.values());
           setSessions(latestSessions);
+          console.log('Latest sessions by stage:', latestSessions.length);
           
           // Calculate total time, completed stages, and interactions from latest sessions only
           let totalTime = 0;
@@ -104,12 +108,15 @@ export default function PBLCompletePage() {
           const stagesCompleted = new Set<number>();
           
           latestSessions.forEach((session: SessionData) => {
-            console.log('Session:', session.id, 'TimeSpent:', session.progress.timeSpent, 'ProcessLogs:', session.processLogs?.length);
+            console.log('Session:', session.id, 'Stage:', session.currentStage, 'TimeSpent:', session.progress.timeSpent);
+            console.log('ProcessLogs exists:', !!session.processLogs, 'Length:', session.processLogs?.length);
+            console.log('StageResults exists:', !!session.stageResults, 'Length:', session.stageResults?.length);
+            
             totalTime += session.progress.timeSpent;
             stagesCompleted.add(session.currentStage);
             
             // Count user messages from process logs
-            if (session.processLogs) {
+            if (session.processLogs && session.processLogs.length > 0) {
               const userMessages = session.processLogs.filter(log => 
                 log.actionType === 'write' && log.detail?.userInput
               );
@@ -117,6 +124,8 @@ export default function PBLCompletePage() {
               totalMessages += userMessages.length;
             }
           });
+          
+          console.log('Total time:', totalTime, 'Total interactions:', totalMessages, 'Completed stages:', stagesCompleted.size);
           
           setTotalTimeSpent(totalTime);
           setCompletedStages(stagesCompleted.size);
@@ -480,8 +489,13 @@ export default function PBLCompletePage() {
           // Aggregate all KSA scores
           const allKsaScores: { [ksa: string]: { score: number; category: 'knowledge' | 'skills' | 'attitudes' } } = {};
           
-          sessions.forEach(session => {
-            session.stageResults?.forEach(result => {
+          console.log('=== KSA Score Aggregation ===');
+          console.log('Sessions count:', sessions.length);
+          
+          sessions.forEach((session, idx) => {
+            console.log(`Session ${idx}: stageResults count:`, session.stageResults?.length || 0);
+            session.stageResults?.forEach((result, ridx) => {
+              console.log(`  Result ${ridx}: ksaAchievement:`, result.ksaAchievement);
               Object.entries(result.ksaAchievement || {}).forEach(([ksa, achievement]) => {
                 const category = ksa.charAt(0) === 'K' ? 'knowledge' : 
                                 ksa.charAt(0) === 'S' ? 'skills' : 'attitudes';
@@ -496,6 +510,9 @@ export default function PBLCompletePage() {
             });
           });
           
+          console.log('Final KSA scores:', allKsaScores);
+          console.log('KSA scores count:', Object.keys(allKsaScores).length);
+          
           return Object.keys(allKsaScores).length > 0 ? (
             <div className="mb-8">
               <KSAKnowledgeGraph 
@@ -503,7 +520,13 @@ export default function PBLCompletePage() {
                 title={t('complete.ksaRadarTitle')}
               />
             </div>
-          ) : null;
+          ) : (
+            <div className="mb-8 bg-gray-50 dark:bg-gray-800 rounded-xl p-8 text-center">
+              <p className="text-gray-500 dark:text-gray-400">
+                {t('complete.noKsaData', 'No KSA competency data available. Complete stages to see your competency profile.')}
+              </p>
+            </div>
+          );
         })()}
         
         {/* KSA Diagnostic Report */}
