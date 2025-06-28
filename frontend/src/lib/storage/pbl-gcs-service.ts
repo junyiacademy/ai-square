@@ -455,9 +455,12 @@ export class PBLGCSService {
       
       // If no sessions found in user folder or no email provided, search all files
       if (sessions.length === 0) {
+        console.log('No sessions found in user folder, searching all files...');
         const [files] = await this.bucket.getFiles({
           prefix: `${PBL_BASE_PATH}/`,
         });
+        
+        console.log(`Found ${files.length} total files in ${PBL_BASE_PATH}/`);
 
         for (const file of files) {
           if (file.name.endsWith('.json')) {
@@ -465,9 +468,13 @@ export class PBLGCSService {
               const [contents] = await file.download();
               const logData = JSON.parse(contents.toString()) as PBLLogData;
               
+              console.log(`Checking file ${file.name} - user_id: ${logData.user_id}, status: ${logData.status}, scenario_id: ${logData.scenario_id}`);
+              
               // Check if user_id matches (could be string or number)
               if (String(logData.user_id) === String(userId)) {
+                console.log(`User ID matches. Status filter: looking for ${status}, file has ${logData.status}`);
                 if (!status || logData.status === status) {
+                  console.log('Adding session from all files search');
                   sessions.push(logData);
                 }
               }
@@ -490,7 +497,7 @@ export class PBLGCSService {
   /**
    * Get sessions directly by email folder without checking user_id
    */
-  async getSessionsByEmail(userEmail: string): Promise<PBLLogData[]> {
+  async getSessionsByEmail(userEmail: string, status?: 'in_progress' | 'completed' | 'paused', scenarioId?: string): Promise<PBLLogData[]> {
     try {
       const sessions: PBLLogData[] = [];
       const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
@@ -511,6 +518,18 @@ export class PBLGCSService {
             const logData = JSON.parse(contents.toString()) as PBLLogData;
             
             console.log(`Loaded session from ${file.name} - status: ${logData.status}, scenario: ${logData.scenario_id}`);
+            
+            // Apply filters
+            if (status && logData.status !== status) {
+              console.log(`Skipping due to status filter: looking for ${status}, found ${logData.status}`);
+              continue;
+            }
+            
+            if (scenarioId && logData.scenario_id !== scenarioId) {
+              console.log(`Skipping due to scenario filter: looking for ${scenarioId}, found ${logData.scenario_id}`);
+              continue;
+            }
+            
             sessions.push(logData);
           } catch (parseError) {
             console.error(`Failed to parse file ${file.name}:`, parseError);
@@ -569,7 +588,7 @@ export class PBLGCSService {
       
       // If we have userEmail, prioritize getting sessions by email folder
       if (userEmail) {
-        const sessions = await this.getSessionsByEmail(userEmail);
+        const sessions = await this.getSessionsByEmail(userEmail, undefined, undefined);
         console.log(`Found ${sessions.length} sessions by email: ${userEmail}`);
         
         if (sessions.length > 0) {

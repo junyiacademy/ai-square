@@ -180,24 +180,45 @@ export async function GET(request: NextRequest) {
     let userSessions: SessionData[] = [];
     
     try {
-      const logDataList = await pblGCS.listUserSessions(
-        userId, 
-        status || undefined,
-        userEmail
-      );
-      
-      // Extract session data from log data
-      userSessions = logDataList.map(logData => {
-        // Restore processLogs from root level
-        return {
-          ...logData.session_data,
-          processLogs: logData.process_logs || []
-        };
-      });
-      
-      // Filter by scenarioId if provided
-      if (scenarioId) {
-        userSessions = userSessions.filter(session => session.scenarioId === scenarioId);
+      // If we have userEmail, use email-based search (more reliable)
+      if (userEmail) {
+        console.log('Using email-based search for sessions');
+        const logDataList = await pblGCS.getSessionsByEmail(
+          userEmail,
+          status || undefined,
+          scenarioId || undefined
+        );
+        
+        // Extract session data from log data
+        userSessions = logDataList.map(logData => {
+          // Restore processLogs from root level
+          return {
+            ...logData.session_data,
+            processLogs: logData.process_logs || []
+          };
+        });
+      } else {
+        // Fallback to userId-based search
+        console.log('Using userId-based search for sessions');
+        const logDataList = await pblGCS.listUserSessions(
+          userId, 
+          status || undefined,
+          userEmail
+        );
+        
+        // Extract session data from log data
+        userSessions = logDataList.map(logData => {
+          // Restore processLogs from root level
+          return {
+            ...logData.session_data,
+            processLogs: logData.process_logs || []
+          };
+        });
+        
+        // Filter by scenarioId if provided
+        if (scenarioId) {
+          userSessions = userSessions.filter(session => session.scenarioId === scenarioId);
+        }
       }
     } catch (gcsError) {
       console.error('Failed to fetch from GCS, using in-memory storage:', gcsError);
