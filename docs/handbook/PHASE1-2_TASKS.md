@@ -9,12 +9,15 @@
 ```yaml
 id: AUTH-001
 title: "Fix logout functionality"
-status: 🔴 BLOCKED
-assigned: TBD
+status: ✅ COMPLETED
+assigned: Claude
 notes: |
-  - Logout doesn't clear session properly
-  - Token remains in localStorage
-  - Need to implement proper cleanup
+  - Fixed cookie clearing with path: '/' parameter
+  - Added redundant cookie deletion methods
+  - Created /api/auth/check endpoint for unified auth
+  - Created useAuth hook for consistent state management
+  - Resolved localStorage/cookie inconsistency
+completed: 2025-01-28
 ```
 
 ```yaml
@@ -57,7 +60,7 @@ notes: |
 
 | Area | Tasks | Done | In Progress | Todo |
 |------|-------|------|-------------|------|
-| Auth | 4 | 0 | 2 | 2 |
+| Auth | 4 | 1 | 1 | 2 |
 | PBL | 5 | 3 | 1 | 1 |
 | Content | 3 | 1 | 0 | 2 |
 | Infra | 2 | 1 | 1 | 0 |
@@ -71,7 +74,7 @@ notes: |
 
 ### Authentication & User Management
 
-- [ ] AUTH-001: Fix logout functionality 🔴
+- [x] AUTH-001: Fix logout functionality ✅
 - [ ] AUTH-002: Session persistence 🟡
 - [ ] AUTH-003: Add "Remember Me" checkbox
 - [ ] AUTH-004: Handle token refresh
@@ -146,8 +149,9 @@ Focus areas:
 ### High Priority
 1. **BUG-001**: Logout doesn't work
    - Severity: Critical
-   - Status: Open
-   - Assigned: TBD
+   - Status: FIXED ✅
+   - Assigned: Claude
+   - Fixed: 2025-01-28
 
 2. **BUG-002**: PBL progress lost on refresh
    - Severity: High
@@ -166,8 +170,8 @@ Focus areas:
 ## 📈 Burndown Tracking
 
 ### Phase 1-2 Total Tasks: 25
-- ✅ Completed: 6 (24%)
-- 🟡 In Progress: 4 (16%)
+- ✅ Completed: 7 (28%)
+- 🟡 In Progress: 3 (12%)
 - 📋 Todo: 15 (60%)
 
 ### Target Completion: June 2025

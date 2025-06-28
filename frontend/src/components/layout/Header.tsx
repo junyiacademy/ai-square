@@ -26,6 +26,7 @@ export function Header() {
 
   // 使用 useCallback 確保函數引用穩定，避免 hooks 順序問題
   const clearAuthState = useCallback(() => {
+    // 清除 localStorage (為了相容性)
     localStorage.removeItem('isLoggedIn')
     localStorage.removeItem('user')
     setUser(null)
@@ -54,22 +55,40 @@ export function Header() {
   }, [router])
 
   // 檢查登入狀態的函數
-  const checkAuthStatus = useCallback(() => {
-    const loggedInStatus = localStorage.getItem('isLoggedIn')
-    const userData = localStorage.getItem('user')
-
-    if (loggedInStatus === 'true' && userData) {
-      try {
-        const parsedUser = JSON.parse(userData)
-        setUser(parsedUser)
+  const checkAuthStatus = useCallback(async () => {
+    try {
+      // 先從服務器檢查認證狀態
+      const response = await fetch('/api/auth/check')
+      const data = await response.json()
+      
+      if (data.authenticated && data.user) {
+        setUser(data.user)
         setIsLoggedIn(true)
-      } catch (error) {
-        console.error('Error parsing user data:', error)
+        // 同步到 localStorage (為了相容性)
+        localStorage.setItem('isLoggedIn', 'true')
+        localStorage.setItem('user', JSON.stringify(data.user))
+      } else {
+        // 未認證，清除狀態
         clearAuthState()
       }
-    } else {
-      setUser(null)
-      setIsLoggedIn(false)
+    } catch (error) {
+      console.error('Error checking auth status:', error)
+      // 發生錯誤時，fallback 到 localStorage
+      const loggedInStatus = localStorage.getItem('isLoggedIn')
+      const userData = localStorage.getItem('user')
+
+      if (loggedInStatus === 'true' && userData) {
+        try {
+          const parsedUser = JSON.parse(userData)
+          setUser(parsedUser)
+          setIsLoggedIn(true)
+        } catch (parseError) {
+          console.error('Error parsing user data:', parseError)
+          clearAuthState()
+        }
+      } else {
+        clearAuthState()
+      }
     }
   }, [clearAuthState])
 
