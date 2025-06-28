@@ -358,18 +358,28 @@ export async function GET(request: NextRequest) {
         }
       }
       
-      // Get localized scenario title
-      const scenarioTitle = (lang === 'zh' || lang === 'zh-TW' || lang === 'zh-CN') 
-        ? ((log.scenario as any).title_zh || log.scenario.title)
-        : log.scenario.title;
+      // Get localized scenario title - prefer session_data
+      const scenarioTitle = log.session_data?.scenarioTitle || 
+        ((lang === 'zh' || lang === 'zh-TW' || lang === 'zh-CN') 
+          ? ((log.scenario as any)?.title_zh || log.scenario?.title || 'Scenario')
+          : (log.scenario?.title || 'Scenario'));
+      
+      // Use session_data for task info if available
+      if (!currentTaskTitle && log.session_data?.currentTaskTitle) {
+        currentTaskId = log.session_data.currentTaskId || currentTaskId;
+        currentTaskTitle = `${scenarioTitle} - ${log.session_data.currentStageTitle || ''} - ${log.session_data.currentTaskTitle}`;
+      }
       
       return {
         id: log.sessionId,
         logId: log.logId,
-        scenarioId: log.scenario.id,
+        scenarioId: log.session_data?.scenarioId || log.scenario?.id || log.scenario_id,
         scenarioTitle,
-        currentTaskId,
-        currentTaskTitle,
+        currentTaskId: currentTaskId || log.session_data?.currentTaskId,
+        currentTaskTitle: currentTaskTitle || 
+          (log.session_data?.currentTaskTitle ? 
+            `${scenarioTitle} - ${log.session_data.currentStageTitle || ''} - ${log.session_data.currentTaskTitle}` : 
+            null),
         status,
         startedAt: log.metadata.startTime,
         completedAt: log.metadata.endTime,

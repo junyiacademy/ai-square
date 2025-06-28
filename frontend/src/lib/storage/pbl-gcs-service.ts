@@ -87,6 +87,7 @@ export interface LearningLog {
   }>;
   processLogs?: ProcessLog[];
   stageResults?: StageResult[];
+  session_data?: SessionData;
 }
 
 export class PBLGCSService {
@@ -611,7 +612,8 @@ export class PBLGCSService {
       },
       evaluations: session.session_data.evaluations || [],
       processLogs: session.process_logs || [],
-      stageResults: session.session_data.stageResults || []
+      stageResults: session.session_data.stageResults || [],
+      session_data: session.session_data
     };
   }
 
