@@ -106,6 +106,5 @@ const response = await fetch('/api/pbl/task-logs?taskId=task-1-1');
 ### 優點
 1. **減少資料冗餘** - 相同資料不重複儲存，避免 conversation_logs 重複
 2. **更清晰的結構** - 核心識別碼、進度、完整資料分類清楚
-3. **向後相容** - transformToLearningLog 處理新舊格式
-4. **效能優化** - 檔案大小更小，傳輸更快
-5. **彈性查詢** - 支援按 task_id 查詢所有歷史記錄
+3. **效能優化** - 檔案大小更小，傳輸更快
+4. **彈性查詢** - 支援按 task_id 查詢所有歷史記錄

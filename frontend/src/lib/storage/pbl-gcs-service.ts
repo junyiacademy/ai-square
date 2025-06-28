@@ -423,13 +423,10 @@ export class PBLGCSService {
   /**
    * Transform PBLLogData to LearningLog format
    */
-  private transformToLearningLog(session: any): LearningLog {
-    // Get processLogs from session_data
-    const processLogs: ProcessLog[] = session.session_data?.processLogs || session.process_logs || [];
-
+  private transformToLearningLog(session: PBLLogData): LearningLog {
     return {
       sessionId: session.session_id,
-      logId: session.session_id, // Use session_id as logId for consistency
+      logId: session.session_id,
       scenario: {
         id: session.scenario_id,
         title: session.session_data.scenarioTitle || session.scenario_id,
@@ -438,20 +435,20 @@ export class PBLGCSService {
       metadata: {
         startTime: session.session_data.startedAt,
         endTime: session.session_data.lastActiveAt,
-        status: session.status === 'not_started' ? 'in_progress' : session.status,
-        userId: session.session_data?.userId || session.user_id,
+        status: session.status,
+        userId: session.session_data.userId,
         language: session.language
       },
       progress: {
         stageProgress: session.session_data.stageResults?.map((result: StageResult) => ({
           stageId: result.stageId,
-          status: result.status as 'not_started' | 'in_progress' | 'completed',
+          status: result.status,
           completedAt: result.completedAt instanceof Date ? result.completedAt.toISOString() : result.completedAt,
           score: result.score
         })) || []
       },
       evaluations: session.session_data.evaluations || [],
-      processLogs: processLogs,
+      processLogs: session.session_data.processLogs || [],
       stageResults: session.session_data.stageResults || [],
       session_data: session.session_data
     };
