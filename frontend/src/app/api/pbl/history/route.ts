@@ -203,22 +203,49 @@ export async function GET(request: NextRequest) {
             break;
           }
         }
-      } else {
-        // If no taskId in process logs, use the first task from the first stage as default
-        // This is for backward compatibility with sessions created before task tracking
-        const firstStage = log.scenario.stages[0] as Record<string, unknown> | undefined;
-        if (firstStage) {
-          const stageTasks = firstStage.tasks as Array<{ id: string; title?: string; name?: string }> | undefined;
+      }
+      
+      // If we still don't have a currentTaskTitle, try to determine from progress
+      if (!currentTaskTitle) {
+        // Find the latest active or completed stage
+        let latestStageIndex = 0;
+        if (log.progress && log.progress.stageProgress) {
+          for (let i = log.progress.stageProgress.length - 1; i >= 0; i--) {
+            const stageProgress = log.progress.stageProgress[i];
+            if (stageProgress.status === 'completed' || stageProgress.status === 'in_progress') {
+              const stageIndex = (log.scenario.stages as Array<Record<string, unknown>>).findIndex(
+                (s: Record<string, unknown>) => String(s.id) === stageProgress.stageId
+              );
+              if (stageIndex >= 0) {
+                latestStageIndex = stageIndex;
+                break;
+              }
+            }
+          }
+        }
+        
+        // Use the latest stage and its first task
+        const currentStage = log.scenario.stages[latestStageIndex] as Record<string, unknown> | undefined;
+        if (currentStage) {
+          const stageTasks = currentStage.tasks as Array<{ id: string; title?: string; name?: string }> | undefined;
           const firstTask = stageTasks?.[0];
           if (firstTask) {
             currentTaskId = firstTask.id;
             const scenarioTitle = log.scenario.title || 'Scenario';
-            const stageTitle = String(firstStage.title || firstStage.name || 'Stage');
+            const stageTitle = String(currentStage.title || currentStage.name || `Stage ${latestStageIndex + 1}`);
             const taskTitle = firstTask.title || firstTask.name || 'Task';
             // Combine scenario, stage and task title
             currentTaskTitle = `${scenarioTitle} - ${stageTitle} - ${taskTitle}`;
           }
         }
+      }
+      
+      // Final fallback: just use scenario title with first stage
+      if (!currentTaskTitle && log.scenario.stages.length > 0) {
+        const firstStage = log.scenario.stages[0] as Record<string, unknown>;
+        const scenarioTitle = log.scenario.title || 'Scenario';
+        const stageTitle = String(firstStage.title || firstStage.name || 'Stage 1');
+        currentTaskTitle = `${scenarioTitle} - ${stageTitle}`;
       }
       
       return {

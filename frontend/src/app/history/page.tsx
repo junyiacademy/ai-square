@@ -387,6 +387,12 @@ export default function UnifiedHistoryPage() {
                 );
               } else {
                 const session = item.data as PBLSession;
+                console.log('PBL Session:', {
+                  id: session.id,
+                  scenarioTitle: session.scenarioTitle,
+                  currentTaskTitle: session.currentTaskTitle,
+                  currentTaskId: session.currentTaskId
+                });
                 return (
                   <div key={`pbl-${session.id}`} className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow">
                     <div className="p-6">
