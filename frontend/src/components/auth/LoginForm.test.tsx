@@ -20,9 +20,8 @@ describe('LoginForm 組件測試', () => {
     it('應該正確渲染登入表單的所有元素', () => {
       render(<LoginForm onSubmit={mockOnSubmit} />)
 
-      // 檢查表單標題和測試帳戶資訊
+      // 檢查表單標題
       expect(screen.getByText('Test Accounts')).toBeInTheDocument()
-      expect(screen.getByText('Student: student@example.com / student123')).toBeInTheDocument()
 
       // 檢查表單輸入欄位
       expect(screen.getByLabelText('Email')).toBeInTheDocument()
@@ -36,12 +35,12 @@ describe('LoginForm 組件測試', () => {
       expect(screen.getByLabelText('Password')).toHaveAttribute('type', 'password')
     })
 
-    it('應該顯示所有測試帳戶資訊', () => {
+    it('應該顯示所有測試帳戶按鈕', () => {
       render(<LoginForm onSubmit={mockOnSubmit} />)
 
-      expect(screen.getByText(/student@example.com/)).toBeInTheDocument()
-      expect(screen.getByText(/teacher@example.com/)).toBeInTheDocument()
-      expect(screen.getByText(/admin@example.com/)).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Student' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Teacher' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Admin' })).toBeInTheDocument()
     })
   })
 
@@ -75,8 +74,30 @@ describe('LoginForm 組件測試', () => {
       expect(mockOnSubmit).toHaveBeenCalledWith({
         email: 'student@example.com',
         password: 'student123',
+        rememberMe: false, // 預設值
       })
       expect(mockOnSubmit).toHaveBeenCalledTimes(1)
+    })
+    
+    it('應該正確處理 Remember Me 勾選框', async () => {
+      const user = userEvent.setup()
+      render(<LoginForm onSubmit={mockOnSubmit} />)
+
+      const emailInput = screen.getByLabelText('Email')
+      const passwordInput = screen.getByLabelText('Password')
+      const rememberMeCheckbox = screen.getByRole('checkbox', { name: 'rememberMe' })
+      const submitButton = screen.getByRole('button', { name: 'Login' })
+
+      await user.type(emailInput, 'student@example.com')
+      await user.type(passwordInput, 'student123')
+      await user.click(rememberMeCheckbox)
+      await user.click(submitButton)
+
+      expect(mockOnSubmit).toHaveBeenCalledWith({
+        email: 'student@example.com',
+        password: 'student123',
+        rememberMe: true,
+      })
     })
 
     it('應該在按下 Enter 鍵時提交表單', async () => {
@@ -93,6 +114,7 @@ describe('LoginForm 組件測試', () => {
       expect(mockOnSubmit).toHaveBeenCalledWith({
         email: 'test@example.com',
         password: 'password123',
+        rememberMe: false,
       })
     })
   })
@@ -101,7 +123,7 @@ describe('LoginForm 組件測試', () => {
     it('應該在載入狀態時顯示載入文字和禁用按鈕', () => {
       render(<LoginForm onSubmit={mockOnSubmit} loading={true} />)
 
-      const submitButton = screen.getByRole('button')
+      const submitButton = screen.getByRole('button', { name: 'Signing in...' })
       expect(submitButton).toHaveTextContent('Signing in...')
       expect(submitButton).toBeDisabled()
     })
@@ -191,7 +213,7 @@ describe('LoginForm 組件測試', () => {
       render(<LoginForm onSubmit={mockOnSubmit} loading={true} />)
 
       // 即使表單看起來完整，在載入狀態時也不應該能提交
-      const submitButton = screen.getByRole('button')
+      const submitButton = screen.getByRole('button', { name: 'Signing in...' })
       await user.click(submitButton)
 
       expect(mockOnSubmit).not.toHaveBeenCalled()
@@ -212,6 +234,7 @@ describe('LoginForm 組件測試', () => {
       expect(mockOnSubmit).toHaveBeenCalledWith({
         email: 'test+special@example.com',
         password: 'pass@word#123!',
+        rememberMe: false,
       })
     })
 
@@ -233,6 +256,7 @@ describe('LoginForm 組件測試', () => {
       expect(mockOnSubmit).toHaveBeenCalledWith({
         email: longEmail,
         password: longPassword,
+        rememberMe: false,
       })
     })
   })
@@ -256,6 +280,7 @@ describe('LoginForm 組件測試', () => {
 
       const emailInput = screen.getByLabelText('Email')
       const passwordInput = screen.getByLabelText('Password')
+      const rememberMeCheckbox = screen.getByRole('checkbox')
 
       // Tab 導航測試
       await user.tab()
@@ -264,11 +289,24 @@ describe('LoginForm 組件測試', () => {
       await user.tab()
       expect(passwordInput).toHaveFocus()
 
-      // 在表單完整時按鈕才能獲得焦點
+      await user.tab()
+      expect(rememberMeCheckbox).toHaveFocus()
+
+      // 從 Remember Me checkbox 再按一次 tab 會到忘記密碼連結
+      await user.tab()
+      const forgotPasswordLink = screen.getByText('forgotPassword')
+      expect(forgotPasswordLink).toHaveFocus()
+
+      // 填寫表單後，submit 按鈕會啟用
+      await user.click(emailInput)
       await user.type(emailInput, 'test@example.com')
+      await user.click(passwordInput)
       await user.type(passwordInput, 'password123')
       
-      await user.tab()
+      // 按鈕現在可用，可以 tab 到它
+      await user.tab() // to remember me
+      await user.tab() // to forgot password
+      await user.tab() // to submit button
       const submitButton = screen.getByRole('button', { name: 'Login' })
       expect(submitButton).toHaveFocus()
     })
@@ -301,7 +339,7 @@ describe('LoginForm 組件測試', () => {
     it('應該在禁用狀態時有正確的樣式', () => {
       render(<LoginForm onSubmit={mockOnSubmit} loading={true} />)
 
-      const submitButton = screen.getByRole('button')
+      const submitButton = screen.getByRole('button', { name: 'Signing in...' })
       expect(submitButton).toHaveClass('disabled:opacity-50', 'disabled:cursor-not-allowed')
     })
   })

@@ -29,7 +29,7 @@ const MOCK_USERS = [
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { email, password } = body
+    const { email, password, rememberMe = false } = body
 
     // 基本驗證
     if (!email || !password) {
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
         name: user.name
       })
       
-      const refreshToken = await createRefreshToken(user.id)
+      const refreshToken = await createRefreshToken(user.id, rememberMe)
       
       // Create response with cookies
       const response = NextResponse.json({
@@ -63,6 +63,11 @@ export async function POST(request: NextRequest) {
         user: userWithoutPassword,
         message: 'Login successful'
       })
+      
+      // Determine cookie expiration based on Remember Me
+      const refreshTokenMaxAge = rememberMe 
+        ? 60 * 60 * 24 * 30  // 30 days if Remember Me is checked
+        : 60 * 60 * 24 * 7   // 7 days otherwise
       
       // Set access token cookie (short-lived)
       response.cookies.set('accessToken', accessToken, {
@@ -77,7 +82,7 @@ export async function POST(request: NextRequest) {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
-        maxAge: 60 * 60 * 24 * 7, // 7 days
+        maxAge: refreshTokenMaxAge,
         path: '/api/auth/refresh' // Only sent to refresh endpoint
       })
       
@@ -86,14 +91,22 @@ export async function POST(request: NextRequest) {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
-        maxAge: 60 * 60 * 24 * 7 // 7 days
+        maxAge: refreshTokenMaxAge
       })
       
       response.cookies.set('user', JSON.stringify(userWithoutPassword), {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
-        maxAge: 60 * 60 * 24 * 7 // 7 days
+        maxAge: refreshTokenMaxAge
+      })
+      
+      // Store Remember Me preference
+      response.cookies.set('rememberMe', rememberMe ? 'true' : 'false', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: refreshTokenMaxAge
       })
       
       return response

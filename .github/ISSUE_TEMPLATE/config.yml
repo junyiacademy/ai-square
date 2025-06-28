@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 💬 社群討論
+    url: https://github.com/anthropics/claude-code/discussions
+    about: 在討論區詢問問題和分享想法
+  - name: 📚 文件
+    url: https://docs.anthropic.com/en/docs/claude-code
+    about: 查看 Claude Code 官方文件
+  - name: 🚨 安全性問題
+    url: mailto:security@example.com
+    about: 請私下回報安全性問題

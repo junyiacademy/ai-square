@@ -1,17 +1,26 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
 import { LoginForm } from '@/components/auth/LoginForm'
 
 export default function LoginPage() {
   const { t } = useTranslation('auth')
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [info, setInfo] = useState('')
 
-  const handleLogin = async (credentials: { email: string; password: string }) => {
+  useEffect(() => {
+    // 檢查是否因為 token 過期而被重定向
+    if (searchParams.get('expired') === 'true') {
+      setInfo(t('info.sessionExpired', 'Your session has expired. Please login again.'))
+    }
+  }, [searchParams, t])
+
+  const handleLogin = async (credentials: { email: string; password: string; rememberMe: boolean }) => {
     setLoading(true)
     setError('')
 
@@ -78,6 +87,11 @@ export default function LoginPage() {
 
         {/* 登入表單區域 */}
         <div className="bg-white rounded-2xl shadow-xl p-8">
+          {info && (
+            <div className="mb-4 p-3 bg-blue-50 text-blue-700 rounded-lg text-sm">
+              {info}
+            </div>
+          )}
           <LoginForm 
             onSubmit={handleLogin}
             loading={loading}

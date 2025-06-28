@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 interface LoginFormProps {
-  onSubmit: (credentials: { email: string; password: string }) => void
+  onSubmit: (credentials: { email: string; password: string; rememberMe: boolean }) => void
   loading?: boolean
   error?: string
 }
@@ -13,11 +13,12 @@ export function LoginForm({ onSubmit, loading = false, error }: LoginFormProps) 
   const { t } = useTranslation('auth')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [rememberMe, setRememberMe] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!loading) {
-      onSubmit({ email, password })
+      onSubmit({ email, password, rememberMe })
     }
   }
 
@@ -33,7 +34,7 @@ export function LoginForm({ onSubmit, loading = false, error }: LoginFormProps) 
     setPassword(demoAccount.password)
     // 自動提交表單
     setTimeout(() => {
-      onSubmit(demoAccount)
+      onSubmit({ ...demoAccount, rememberMe })
     }, 100)
   }
 
@@ -87,6 +88,26 @@ export function LoginForm({ onSubmit, loading = false, error }: LoginFormProps) 
             required
             disabled={loading}
           />
+        </div>
+
+        {/* Remember Me 複選框 */}
+        <div className="flex items-center justify-between">
+          <label className="flex items-center">
+            <input
+              id="remember-me"
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              disabled={loading}
+            />
+            <span className="ml-2 text-sm text-gray-700">
+              {t('rememberMe', 'Remember me')}
+            </span>
+          </label>
+          <a href="#" className="text-sm text-blue-600 hover:text-blue-500">
+            {t('forgotPassword', 'Forgot password?')}
+          </a>
         </div>
 
         <button

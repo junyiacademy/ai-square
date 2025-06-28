@@ -21,6 +21,12 @@ const customJestConfig = {
       statements: 35,
     },
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(jose)/)',
+  ],
+  moduleNameMapper: {
+    '^jose$': '<rootDir>/__mocks__/jose.js',
+  },
 }
 
 module.exports = createJestConfig(customJestConfig)

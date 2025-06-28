@@ -105,7 +105,25 @@ AI Square 是一個 Git-Based 學習平台，核心目標是使用 GitHub 作為
 - **Phase 3**: +PostgreSQL (主資料庫)
 - **Phase 4**: +Neo4j (知識圖譜) + Vector DB
 
-#### 2.3.5 部署架構
+#### 2.3.5 測試架構
+- **單元測試**: Jest + React Testing Library
+  - 測試覆蓋率目標: 70%+
+  - API 端點測試
+  - React 組件測試
+  - 工具函數測試
+- **端到端測試**: Playwright
+  - 跨瀏覽器測試 (Chromium, Firefox, WebKit)
+  - 關鍵用戶流程測試
+  - 視覺迴歸測試
+- **測試策略**:
+  - TDD (Test-Driven Development) 為主
+  - 每個 PR 必須包含相關測試
+  - CI/CD 自動執行測試
+  - 測試檔案位置:
+    - 單元測試: `__tests__` 資料夾
+    - E2E 測試: `e2e` 資料夾
+
+#### 2.3.6 部署架構
 - **容器化**: Docker + Docker Compose
 - **雲端平台**: Google Cloud Platform
   - Cloud Run (應用部署)
@@ -1740,6 +1758,22 @@ services:
 - Phase 1: Monaco Editor 網頁版
 - Phase 2: GitHub API 自動 PR
 - Phase 3: 視覺化編輯器
+
+#### 4.4.4 錯誤監控與追蹤
+**問題：** MVP 階段缺乏錯誤監控機制
+**解決方案：**
+- ✅ Phase 0: 簡單錯誤記錄器（已實作）
+  - Console + localStorage 記錄
+  - 開發階段除錯用
+- ❌ Phase 1: 整合 Sentry（待實作）
+  - 自動錯誤收集
+  - 錯誤分組與趨勢分析
+  - 用戶影響範圍追蹤
+  - 免費方案：5,000 事件/月
+- ❌ Phase 2: 效能監控
+  - API 回應時間
+  - 頁面載入速度
+  - Core Web Vitals 指標
 
 ## 5. 技術實現細節
 

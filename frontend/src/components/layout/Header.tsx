@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
 import { LanguageSelector } from '@/components/ui/LanguageSelector'
 import { useTheme } from '@/contexts/ThemeContext'
+import { getTokenManager } from '@/lib/auth/token-manager'
 
 interface User {
   id: number
@@ -105,14 +106,23 @@ export function Header() {
       checkAuthStatus()
     }
 
+    // 監聽 token 過期事件
+    const handleAuthExpired = () => {
+      console.log('Auth token expired, clearing auth state')
+      clearAuthState()
+      router.push('/login?expired=true')
+    }
+
     window.addEventListener('storage', handleStorageChange)
     window.addEventListener('auth-changed', handleAuthChange)
+    window.addEventListener('auth:expired', handleAuthExpired)
     
     return () => {
       window.removeEventListener('storage', handleStorageChange)
       window.removeEventListener('auth-changed', handleAuthChange)
+      window.removeEventListener('auth:expired', handleAuthExpired)
     }
-  }, [checkAuthStatus])
+  }, [checkAuthStatus, clearAuthState, router])
 
   const getRoleDisplayName = (role: string) => {
     return t(`userRole.${role}`)

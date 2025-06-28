@@ -87,9 +87,11 @@ make ai-report
 
 ### ✅ 應該做的
 1. **開始前執行 `make ai-new`** - 創建整合式票券
-2. **定期執行 `make ai-save`** - 保存進度並記錄 AI 使用
-3. **完成後等待指示** - 不要自動執行 `make ai-done`
-4. **記錄 AI 複雜度** - 透過環境變數傳遞
+2. **開發功能時同步撰寫測試** - TDD (Test-Driven Development) 優先
+3. **定期執行 `make ai-save`** - 保存進度並記錄 AI 使用
+4. **執行測試確保品質** - 單元測試和 E2E 測試都要通過
+5. **完成後等待指示** - 不要自動執行 `make ai-done`
+6. **記錄 AI 複雜度** - 透過環境變數傳遞
 
 ### ❌ 不應該做的
 1. **自動 commit** - 除非用戶明確要求
@@ -122,9 +124,12 @@ docs/
 User: "實作登入功能"
 AI: "我來創建一個新的工作票券"
 AI: [執行: make ai-new TYPE=feature TICKET=login]
-AI: "票券已創建，請先編輯 spec 部分..."
-AI: [開發過程中: AI_TASK="實作登入" AI_COMPLEXITY=medium make ai-save]
-AI: "登入功能已完成，包含以下變更..."
+AI: "票券已創建，開始開發並撰寫測試..."
+AI: [建立測試檔案: src/components/auth/__tests__/LoginForm.test.tsx]
+AI: [實作功能: src/components/auth/LoginForm.tsx]
+AI: [執行: npm run test -- src/components/auth]
+AI: [開發過程中: AI_TASK="實作登入含測試" AI_COMPLEXITY=medium make ai-save]
+AI: "登入功能已完成，測試全部通過，包含以下變更..."
 AI: [等待用戶指示]
 
 User: "好，提交吧"
@@ -132,6 +137,31 @@ AI: [執行: make ai-done]
 ```
 
 ---
+
+## 🧪 測試最佳實踐
+
+### 測試原則
+1. **TDD 優先**：先寫測試，再寫程式碼
+2. **測試覆蓋率**：目標 70%+ 覆蓋率
+3. **測試分離**：單元測試和 E2E 測試分開
+4. **模擬外部依賴**：使用 mock 隔離測試
+
+### 何時寫單元測試 vs E2E 測試
+- **單元測試**：
+  - API 路由邏輯
+  - React 組件行為
+  - 工具函數
+  - 狀態管理邏輯
+  
+- **E2E 測試**：
+  - 完整用戶流程（登入、註冊、購買等）
+  - 跨頁面互動
+  - 瀏覽器特定行為（cookies、localStorage）
+  - 關鍵業務流程
+
+### 測試檔案命名
+- 單元測試：`ComponentName.test.tsx` 或 `functionName.test.ts`
+- E2E 測試：`feature-name.spec.ts`
 
 ## 💡 快速參考
 
@@ -174,13 +204,44 @@ cd frontend && npm run build
 # Lint
 cd frontend && npm run lint
 
-# Run tests
-cd frontend && npm run test
-# or CI mode (no watch)
-cd frontend && npm run test:ci
-
 # Type checking
 cd frontend && npm run typecheck
+```
+
+#### Testing Commands
+```bash
+# Unit Tests (Jest + React Testing Library)
+cd frontend && npm run test                    # Watch mode
+cd frontend && npm run test:ci                  # CI mode (no watch)
+cd frontend && npm run test -- --coverage       # With coverage report
+cd frontend && npm run test -- src/components   # Test specific folder
+
+# E2E Tests (Playwright)
+cd frontend && npx playwright install           # Install browsers (first time)
+cd frontend && npm run test:e2e                 # Run all E2E tests
+cd frontend && npm run test:e2e -- --project=chromium  # Chrome only
+cd frontend && npm run test:e2e -- --grep "Login"      # Specific test
+```
+
+#### Test File Structure
+```
+frontend/
+├── src/
+│   ├── components/
+│   │   └── auth/
+│   │       ├── LoginForm.tsx
+│   │       └── __tests__/
+│   │           └── LoginForm.test.tsx    # Unit test
+│   ├── app/
+│   │   └── api/
+│   │       └── auth/
+│   │           ├── login/
+│   │           │   └── route.ts
+│   │           └── __tests__/
+│   │               └── login.test.ts     # API test
+├── e2e/
+│   └── login.spec.ts                     # E2E test
+└── __mocks__/                            # Test mocks
 ```
 
 #### Backend (Python FastAPI)

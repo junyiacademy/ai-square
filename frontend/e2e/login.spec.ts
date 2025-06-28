@@ -167,6 +167,89 @@ test.describe('登入流程 E2E 測試', () => {
     await expect(page.getByText('Test Accounts')).toBeVisible()
   })
 
+  test('🔒 Remember Me 功能 - 勾選記住我', async ({ page, context, browserName }) => {
+    // 根據瀏覽器使用不同的測試帳號，避免衝突
+    const testAccounts = {
+      chromium: { email: 'student@example.com', password: 'student123' },
+      firefox: { email: 'teacher@example.com', password: 'teacher123' },
+      webkit: { email: 'admin@example.com', password: 'admin123' }
+    }
+    const account = testAccounts[browserName] || testAccounts.chromium
+    
+    // 填寫登入資訊
+    await page.getByLabel('Email').fill(account.email)
+    await page.getByLabel('Password').fill(account.password)
+    
+    // 勾選 Remember Me
+    await page.locator('#remember-me').check()
+    
+    // 確認勾選狀態
+    await expect(page.locator('#remember-me')).toBeChecked()
+    
+    // 等待登入按鈕可用
+    const loginButton = page.getByRole('button', { name: 'Login' })
+    await expect(loginButton).toBeEnabled({ timeout: 10000 })
+    
+    // 登入前截圖（調試用）
+    await page.screenshot({ path: `test-results/before-login-${browserName}.png` })
+    
+    // 登入
+    await loginButton.click()
+    
+    // 等待導航或錯誤訊息
+    await page.waitForLoadState('networkidle')
+    
+    // 檢查是否有錯誤訊息
+    const errorAlert = page.locator('[role="alert"]')
+    if (await errorAlert.isVisible()) {
+      const errorText = await errorAlert.textContent()
+      console.error(`Login failed with error: ${errorText}`)
+    }
+    
+    // 登入後截圖（調試用）
+    await page.screenshot({ path: `test-results/after-login-${browserName}.png` })
+    
+    await expect(page).toHaveURL(/\/relations/, { timeout: 10000 })
+    
+    // 檢查 cookies
+    const cookies = await context.cookies()
+    const rememberMeCookie = cookies.find(c => c.name === 'rememberMe')
+    expect(rememberMeCookie?.value).toBe('true')
+    
+    // refreshToken 應該有 30 天期限（2592000 秒）
+    const refreshTokenCookie = cookies.find(c => c.name === 'refreshToken')
+    if (refreshTokenCookie && refreshTokenCookie.expires) {
+      const expiresIn = refreshTokenCookie.expires - Date.now() / 1000
+      expect(expiresIn).toBeGreaterThan(2500000) // 大約 30 天
+    }
+  })
+
+  test('🔒 Remember Me 功能 - 不勾選記住我', async ({ page, context }) => {
+    // 填寫登入資訊但不勾選 Remember Me
+    await page.getByLabel('Email').fill('teacher@example.com')
+    await page.getByLabel('Password').fill('teacher123')
+    
+    // 確認未勾選
+    await expect(page.locator('#remember-me')).not.toBeChecked()
+    
+    // 登入
+    await page.getByRole('button', { name: 'Login' }).click()
+    await expect(page).toHaveURL(/\/relations/)
+    
+    // 檢查 cookies
+    const cookies = await context.cookies()
+    const rememberMeCookie = cookies.find(c => c.name === 'rememberMe')
+    expect(rememberMeCookie?.value).toBe('false')
+    
+    // refreshToken 應該有 7 天期限（604800 秒）
+    const refreshTokenCookie = cookies.find(c => c.name === 'refreshToken')
+    if (refreshTokenCookie && refreshTokenCookie.expires) {
+      const expiresIn = refreshTokenCookie.expires - Date.now() / 1000
+      expect(expiresIn).toBeLessThan(700000) // 小於 8 天
+      expect(expiresIn).toBeGreaterThan(500000) // 大於 5 天
+    }
+  })
+
   test('🔄 表單重置和再次嘗試', async ({ page }) => {
     // 第一次失敗嘗試
     await page.getByLabel('Email').fill('wrong@example.com')

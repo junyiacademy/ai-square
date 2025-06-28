@@ -33,11 +33,11 @@ export async function createAccessToken(payload: Omit<TokenPayload, 'exp' | 'iat
 }
 
 // Create refresh token (long-lived)
-export async function createRefreshToken(userId: number): Promise<string> {
+export async function createRefreshToken(userId: number, rememberMe: boolean = false): Promise<string> {
   const token = await new SignJWT({ userId })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime('7d') // 7 days
+    .setExpirationTime(rememberMe ? '30d' : '7d') // 30 days if Remember Me, otherwise 7 days
     .sign(getJwtSecret());
   
   return token;

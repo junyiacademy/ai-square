@@ -53,12 +53,22 @@ export async function POST() {
     path: '/'
   })
   
+  // Clear Remember Me cookie
+  response.cookies.set('rememberMe', '', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 0,
+    path: '/'
+  })
+  
   // Also try to delete cookies using the cookies() API
   cookieStore.delete('accessToken')
   cookieStore.delete('refreshToken')
   cookieStore.delete('isLoggedIn')
   cookieStore.delete('userRole')
   cookieStore.delete('user')
+  cookieStore.delete('rememberMe')
   
   return response
 }

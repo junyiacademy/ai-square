@@ -13,7 +13,7 @@ interface UseAuthReturn {
   isLoggedIn: boolean
   isLoading: boolean
   tokenExpiringSoon: boolean
-  login: (credentials: { email: string; password: string }) => Promise<{ success: boolean; error?: string }>
+  login: (credentials: { email: string; password: string; rememberMe?: boolean }) => Promise<{ success: boolean; error?: string }>
   logout: () => Promise<void>
   checkAuth: () => Promise<void>
   refreshToken: () => Promise<boolean>
@@ -72,7 +72,7 @@ export function useAuth(): UseAuthReturn {
     }
   }, [clearAuthState])
 
-  const login = useCallback(async (credentials: { email: string; password: string }) => {
+  const login = useCallback(async (credentials: { email: string; password: string; rememberMe?: boolean }) => {
     try {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
