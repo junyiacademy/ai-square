@@ -163,24 +163,11 @@ export default function PBLLearnPage() {
       
       setIsLoadingLogs(true);
       
-      // Get user info from localStorage
-      let userId: string | null = null;
-      try {
-        const isLoggedIn = localStorage.getItem('isLoggedIn');
-        const userData = localStorage.getItem('user');
-        
-        if (isLoggedIn === 'true' && userData) {
-          const user = JSON.parse(userData);
-          userId = String(user.id);
-          console.log('User ID for fetching logs:', userId);
-        }
-      } catch (e) {
-        console.log('Error getting user info:', e);
-      }
-      
-      // If no user ID, don't fetch logs
-      if (!userId) {
-        console.log('No user ID found, skipping log fetch');
+      // Check if user is logged in
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      if (!isLoggedIn || isLoggedIn !== 'true') {
+        console.log('User not logged in, skipping log fetch');
+        setIsLoadingLogs(false);
         return;
       }
       
@@ -192,10 +179,9 @@ export default function PBLLearnPage() {
       
       if (currentStageId) {
         try {
-          const url = `/api/pbl/logs?userId=${userId}&scenarioId=${scenarioId}&stageId=${currentStageId}&taskId=${currentTask.id}`;
+          const url = `/api/pbl/logs?scenarioId=${scenarioId}&stageId=${currentStageId}&taskId=${currentTask.id}`;
           console.log('Fetching logs with URL:', url);
           console.log('Parameters:', {
-            userId,
             scenarioId,
             stageId: currentStageId,
             taskId: currentTask.id
