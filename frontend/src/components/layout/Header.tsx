@@ -6,7 +6,6 @@ import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
 import { LanguageSelector } from '@/components/ui/LanguageSelector'
 import { useTheme } from '@/contexts/ThemeContext'
-import { getTokenManager } from '@/lib/auth/token-manager'
 
 interface User {
   id: number

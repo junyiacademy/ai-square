@@ -4,15 +4,15 @@ import { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AssessmentResult, AssessmentDomain, RadarChartData, AssessmentQuestion, UserAnswer } from '../../types/assessment';
 import {
-  Radar,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  ResponsiveContainer,
-  Legend
-} from 'recharts';
-import CompetencyKnowledgeGraph from './CompetencyKnowledgeGraph';
+  DynamicRadar as Radar,
+  DynamicRadarChart as RadarChart,
+  DynamicPolarGrid as PolarGrid,
+  DynamicPolarAngleAxis as PolarAngleAxis,
+  DynamicPolarRadiusAxis as PolarRadiusAxis,
+  DynamicResponsiveContainer as ResponsiveContainer,
+  DynamicLegend as Legend,
+  DynamicCompetencyKnowledgeGraph as CompetencyKnowledgeGraph
+} from '@/lib/dynamic-imports';
 import { contentService } from '@/services/content-service';
 
 interface AssessmentResultsProps {

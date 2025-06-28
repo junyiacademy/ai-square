@@ -15,7 +15,7 @@ interface CacheOptions {
 }
 
 class CacheService {
-  private memoryCache = new Map<string, CacheEntry<any>>()
+  private memoryCache = new Map<string, CacheEntry<unknown>>()
   private readonly DEFAULT_TTL = 5 * 60 * 1000 // 5 minutes
   private readonly MAX_MEMORY_ENTRIES = 100
 
@@ -48,8 +48,8 @@ class CacheService {
             localStorage.removeItem(this.getCacheKey(key))
           }
         }
-      } catch (error) {
-        console.error('Cache read error:', error)
+      } catch {
+        // Silently ignore cache read errors
       }
     }
 
@@ -78,8 +78,7 @@ class CacheService {
     if (storage === 'localStorage' || storage === 'both') {
       try {
         localStorage.setItem(this.getCacheKey(key), JSON.stringify(entry))
-      } catch (error) {
-        console.error('Cache write error:', error)
+      } catch {
         // 如果 localStorage 滿了，清理最舊的項目
         this.cleanupLocalStorage()
       }
@@ -179,14 +178,14 @@ class CacheService {
    * 清理 localStorage 中過期或最舊的項目
    */
   private cleanupLocalStorage(): void {
-    const cacheItems: Array<{ key: string; entry: CacheEntry<any> }> = []
+    const cacheItems: Array<{ key: string; entry: CacheEntry<unknown> }> = []
     
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('cache:')) {
         try {
           const entry = JSON.parse(localStorage.getItem(key) || '{}')
           cacheItems.push({ key, entry })
-        } catch (error) {
+        } catch {
           // 移除無效項目
           localStorage.removeItem(key)
         }

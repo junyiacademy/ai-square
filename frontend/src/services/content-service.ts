@@ -6,20 +6,20 @@ import { performanceMonitor } from '@/lib/performance/performance-monitor'
 
 // 定義內容類型
 interface TreeData {
-  domains: any[]
-  kMap: Record<string, any>
-  sMap: Record<string, any>
-  aMap: Record<string, any>
+  domains: Array<Record<string, unknown>>
+  kMap: Record<string, unknown>
+  sMap: Record<string, unknown>
+  aMap: Record<string, unknown>
 }
 
 interface AssessmentData {
   id: string
-  [key: string]: any
+  [key: string]: unknown
 }
 
 interface PBLScenario {
   id: string
-  [key: string]: any
+  [key: string]: unknown
 }
 
 class ContentService {
@@ -34,8 +34,6 @@ class ContentService {
    */
   async getRelationsTree(lang: string): Promise<TreeData> {
     return performanceMonitor.measureAsync('content.getRelationsTree', async () => {
-      const cacheKey = `relations:${lang}`
-      
       return cacheService.fetchWithCache<TreeData>(
         `/api/relations?lang=${lang}`,
         {
@@ -50,8 +48,6 @@ class ContentService {
    * 取得評估資料
    */
   async getAssessment(assessmentId: string): Promise<AssessmentData> {
-    const cacheKey = `assessment:${assessmentId}`
-    
     return cacheService.fetchWithCache<AssessmentData>(
       `/api/assessments/${assessmentId}`,
       {
@@ -65,8 +61,6 @@ class ContentService {
    * 取得 PBL 情境資料
    */
   async getPBLScenario(scenarioId: string): Promise<PBLScenario> {
-    const cacheKey = `pbl:${scenarioId}`
-    
     return cacheService.fetchWithCache<PBLScenario>(
       `/api/pbl/scenarios/${scenarioId}`,
       {
@@ -79,10 +73,8 @@ class ContentService {
   /**
    * 取得 KSA 定義資料
    */
-  async getKSADefinitions(lang: string): Promise<any> {
-    const cacheKey = `ksa:${lang}`
-    
-    return cacheService.fetchWithCache<any>(
+  async getKSADefinitions(lang: string): Promise<Record<string, unknown>> {
+    return cacheService.fetchWithCache<Record<string, unknown>>(
       `/api/ksa?lang=${lang}`,
       {
         ttl: this.STATIC_CONTENT_TTL,
@@ -130,11 +122,11 @@ class ContentService {
    */
   getCacheStats(): { memoryEntries: number; localStorageSize: number } {
     let localStorageSize = 0
-    let cacheCount = 0
+    // Count cache entries
 
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('cache:')) {
-        cacheCount++
+        // Increment count
         localStorageSize += (localStorage.getItem(key)?.length || 0) * 2 // UTF-16
       }
     })

@@ -12,14 +12,14 @@ import { RefreshCw, Activity, Database, Zap } from 'lucide-react'
  * 只在開發環境顯示
  */
 export function PerformanceReport() {
-  const [summary, setSummary] = useState<any>(null)
-  const [cacheStats, setCacheStats] = useState<any>(null)
+  const [summary, setSummary] = useState<ReturnType<typeof performanceMonitor.getSummary> | null>(null)
+  const [cacheStats, setCacheStats] = useState<{ memoryEntries: number; localStorageSize: number } | null>(null)
   const [isRefreshing, setIsRefreshing] = useState(false)
 
   const refresh = () => {
     setIsRefreshing(true)
     setSummary(performanceMonitor.getSummary())
-    setCacheStats((cacheService as any).getCacheStats?.() || {})
+    setCacheStats((cacheService as unknown as { getCacheStats?: () => { memoryEntries: number; localStorageSize: number } }).getCacheStats?.() || { memoryEntries: 0, localStorageSize: 0 })
     setTimeout(() => setIsRefreshing(false), 500)
   }
 
@@ -138,7 +138,7 @@ export function PerformanceReport() {
             <div className="space-y-1">
               <h4 className="text-xs font-medium text-gray-600">Recent Activities</h4>
               <div className="max-h-24 overflow-y-auto space-y-1">
-                {recentMetrics.slice(-5).reverse().map((metric: any, idx: number) => (
+                {recentMetrics.slice(-5).reverse().map((metric, idx) => (
                   <div key={idx} className="text-xs flex justify-between text-gray-600">
                     <span className="truncate max-w-[200px]">{metric.name}</span>
                     <span>{metric.value.toFixed(0)}{metric.unit}</span>
