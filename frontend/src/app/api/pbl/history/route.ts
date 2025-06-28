@@ -114,8 +114,8 @@ export async function GET(request: NextRequest) {
     
     console.log('Fetching PBL history for userEmail:', userEmail);
     
-    // Get all learning logs for the user (using email only)
-    const logs = await pblGCS.getUserLearningLogs('', userEmail);
+    // Get all learning logs for the user
+    const logs = await pblGCS.getUserLearningLogs(userEmail);
     
     console.log(`Found ${logs.length} PBL sessions for user ${userEmail}`);
     

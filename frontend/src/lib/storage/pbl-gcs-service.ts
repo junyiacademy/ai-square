@@ -23,37 +23,45 @@ const BUCKET_NAME = process.env.GCS_BUCKET_NAME || 'ai-square-db';
 // Where {email} is sanitized (@ and . replaced with _)
 const PBL_BASE_PATH = 'user_pbl_logs';
 
-// Interface for PBL log file structure (similar to assessment)
+// Interface for PBL log file structure (simplified task-based)
 export interface PBLLogData {
+  // Core identifiers
   session_id: string;
-  user_id: string;
-  user_email?: string;
   scenario_id: string;
-  timestamp: string;
-  duration_seconds: number;
+  stage_id: string;
+  task_id: string;
+  
+  // Status and language
+  status: 'in_progress' | 'completed' | 'paused';
   language: string;
-  status: 'in_progress' | 'completed' | 'paused' | 'not_started';
+  
+  // Progress tracking
+  progress: {
+    score?: number; // Task analysis score
+    conversation_count: number; // Number of user-AI exchanges
+    total_time_seconds: number; // Total time spent on task
+    completed_at?: string; // Completion timestamp
+  };
+  
+  // Conversation history
+  conversation_logs: ConversationLog[];
+  
+  // Complete session data (source of truth for user info, timestamps, etc.)
   session_data: SessionData;
-  metadata: SessionMetadata;
-  progress: ProgressData;
-  process_logs: ProcessLog[];
-  // Add detailed task information for better organization
-  scenario_info?: {
-    id: string;
-    title: string;
-    title_zh?: string;
-  };
-  stage_info?: {
-    id: string;
-    index: number;
-    title: string;
-    title_zh?: string;
-  };
-  task_info?: {
-    id: string;
-    index: number;
-    title: string;
-    title_zh?: string;
+}
+
+// Simplified conversation log
+export interface ConversationLog {
+  id: string;
+  timestamp: string;
+  role: 'user' | 'assistant';
+  content: string;
+  duration_seconds?: number; // Time spent on this interaction
+  tokens_used?: number; // For AI responses
+  analysis?: { // For AI analysis responses
+    score?: number;
+    feedback?: string;
+    competencies?: string[];
   };
 }
 
@@ -125,87 +133,82 @@ export class PBLGCSService {
   // === Session Management ===
   
   /**
-   * Save complete session data to GCS (single file format)
+   * Save complete session data to GCS (simplified format)
    */
   async saveSession(sessionId: string, sessionData: SessionData, logId?: string): Promise<string> {
-    // Get current stage and task IDs from session data
-    const currentStage = sessionData.scenario?.stages?.[sessionData.currentStage];
-    const currentStageId = currentStage?.id;
+    // Extract IDs from session data
+    const stageId = sessionData.currentStageId || `stage-${sessionData.currentStage + 1}`;
+    const taskId = sessionData.currentTaskId || `task-${sessionData.currentStage + 1}-${sessionData.currentTaskIndex + 1}`;
     
-    // Get current task ID using currentTaskIndex
-    const currentTaskIndex = sessionData.currentTaskIndex || 0;
-    const currentTaskId = currentStage?.tasks?.[currentTaskIndex]?.id;
-    
-    // Use existing logId or generate new one with stage and task info
+    // Use existing logId or generate new one
     const pblLogId = logId || this.generateLogFilename(
       sessionData.scenarioId, 
-      currentStageId,
-      currentTaskId
+      stageId,
+      taskId
     );
     
-    // Create metadata
-    const metadata: SessionMetadata = {
-      session_id: sessionId,
-      user_id: sessionData.userId,
-      activity_type: 'pbl_practice',
-      activity_id: sessionData.scenarioId,
-      status: sessionData.status,
-      created_at: sessionData.startedAt,
-      last_active_at: sessionData.lastActiveAt,
-      version: 1
-    };
-
-    // Create progress data
-    const progress: ProgressData = {
-      current_stage: sessionData.currentStage,
-      current_task: sessionData.currentTaskIndex || 0,
-      completed_stages: sessionData.progress.completedStages,
-      stage_results: sessionData.stageResults.reduce((acc, result) => {
-        acc[result.stageId] = result;
-        return acc;
-      }, {} as { [stageId: string]: StageResult }),
-      total_time_spent: sessionData.progress.timeSpent,
-      progress_percentage: sessionData.progress.percentage
-    };
-
-    // Create a clean session_data without processLogs to avoid duplication
-    const cleanSessionData = {
-      ...sessionData,
-      processLogs: [] // Clear to avoid duplication - process_logs is stored at root level
-    };
-
-    // Create complete log data with detailed task information
+    // Transform processLogs to conversation_logs
+    const conversationLogs: ConversationLog[] = sessionData.processLogs?.map(log => {
+      // Extract conversation content from process log
+      if (log.actionType === 'write' && log.detail?.content) {
+        return {
+          id: log.id,
+          timestamp: log.timestamp,
+          role: 'user' as const,
+          content: log.detail.content,
+          duration_seconds: log.detail?.duration
+        };
+      } else if (log.actionType === 'speak' && log.detail?.aiInteraction) {
+        return {
+          id: log.id,
+          timestamp: log.timestamp,
+          role: 'assistant' as const,
+          content: log.detail.aiInteraction.response || '',
+          tokens_used: log.detail.aiInteraction.tokensUsed,
+          analysis: log.detail.aiInteraction.analysis
+        };
+      }
+      return null;
+    }).filter((log): log is ConversationLog => log !== null) || [];
+    
+    // Calculate conversation count (user messages only)
+    const conversationCount = conversationLogs.filter(log => log.role === 'user').length;
+    
+    // Calculate total time
+    const startTime = new Date(sessionData.startedAt).getTime();
+    const currentTime = new Date().getTime();
+    const totalTimeSeconds = Math.floor((currentTime - startTime) / 1000);
+    
+    // Get task score from stage results
+    const taskResult = sessionData.stageResults.find(
+      result => result.stageId === stageId && result.taskId === taskId
+    );
+    
+    // Create simplified log data
     const logData: PBLLogData = {
+      // Core identifiers
       session_id: sessionId,
-      user_id: sessionData.userId,
-      user_email: sessionData.userEmail,
       scenario_id: sessionData.scenarioId,
-      timestamp: new Date().toISOString(),
-      duration_seconds: sessionData.progress.timeSpent,
-      language: 'zh-TW', // TODO: get from session
-      status: sessionData.status,
-      session_data: cleanSessionData,
-      metadata,
-      progress,
-      process_logs: sessionData.processLogs || [],
-      // Include detailed scenario/stage/task info
-      scenario_info: sessionData.scenarioId ? {
-        id: sessionData.scenarioId,
-        title: sessionData.scenarioTitle || '',
-        title_zh: sessionData.scenarioTitle || ''
-      } : undefined,
-      stage_info: sessionData.currentStageId ? {
-        id: sessionData.currentStageId,
-        index: sessionData.currentStage,
-        title: sessionData.currentStageTitle || '',
-        title_zh: sessionData.currentStageTitle || ''
-      } : undefined,
-      task_info: sessionData.currentTaskId ? {
-        id: sessionData.currentTaskId,
-        index: sessionData.currentTaskIndex,
-        title: sessionData.currentTaskTitle || '',
-        title_zh: sessionData.currentTaskTitle || ''
-      } : undefined
+      stage_id: stageId,
+      task_id: taskId,
+      
+      // Status and language
+      status: sessionData.status === 'not_started' ? 'in_progress' : sessionData.status,
+      language: 'zh-TW', // TODO: get from session context
+      
+      // Progress tracking
+      progress: {
+        score: taskResult?.score,
+        conversation_count: conversationCount,
+        total_time_seconds: totalTimeSeconds,
+        completed_at: sessionData.status === 'completed' ? new Date().toISOString() : undefined
+      },
+      
+      // Conversation history
+      conversation_logs: conversationLogs,
+      
+      // Complete session data (source of truth)
+      session_data: sessionData
     };
 
     // Save to GCS with email folder structure
@@ -233,13 +236,8 @@ export class PBLGCSService {
           const [contents] = await file.download();
           const logData = JSON.parse(contents.toString()) as PBLLogData;
           
-          // Restore processLogs from root level to session_data
-          const sessionDataWithLogs = {
-            ...logData.session_data,
-            processLogs: logData.process_logs || []
-          };
-          
-          return sessionDataWithLogs;
+          // Return session_data directly (it's the source of truth)
+          return logData.session_data;
         }
       }
       
@@ -253,13 +251,8 @@ export class PBLGCSService {
           const [contents] = await file.download();
           const logData = JSON.parse(contents.toString()) as PBLLogData;
           
-          // Restore processLogs from root level to session_data
-          const sessionDataWithLogs = {
-            ...logData.session_data,
-            processLogs: logData.process_logs || []
-          };
-          
-          return sessionDataWithLogs;
+          // Return session_data directly (it's the source of truth)
+          return logData.session_data;
         }
       }
       
@@ -288,13 +281,8 @@ export class PBLGCSService {
             const [contents] = await file.download();
             const logData = JSON.parse(contents.toString()) as PBLLogData;
             
-            // Restore processLogs from root level to session_data
-            const sessionDataWithLogs = {
-              ...logData.session_data,
-              processLogs: logData.process_logs || []
-            };
-            
-            return { sessionData: sessionDataWithLogs, logId: sessionId };
+            // Return session_data directly
+            return { sessionData: logData.session_data, logId: sessionId };
           }
         }
       }
@@ -312,13 +300,8 @@ export class PBLGCSService {
           if (logData.session_id === sessionId) {
             const logId = file.name.split('/').pop()!.replace('.json', '');
             
-            // Restore processLogs from root level to session_data
-            const sessionDataWithLogs = {
-              ...logData.session_data,
-              processLogs: logData.process_logs || []
-            };
-            
-            return { sessionData: sessionDataWithLogs, logId };
+            // Return session_data directly
+            return { sessionData: logData.session_data, logId };
           }
         }
       }
@@ -395,45 +378,20 @@ export class PBLGCSService {
         return null;
       }
 
-      // First restore processLogs from root level to session_data for proper updating
-      const currentSessionData = {
-        ...logData.session_data,
-        processLogs: logData.process_logs || []
-      };
-
       // Update the session data
       const updatedSessionData = {
-        ...currentSessionData,
+        ...logData.session_data,
         ...updates,
         lastActiveAt: new Date().toISOString()
       };
 
-      // Create clean session data without processLogs for storage
-      const cleanSessionData = {
-        ...updatedSessionData,
-        processLogs: [] // Clear to avoid duplication - process_logs is stored at root level
-      };
-
-      // Update the complete log data
-      const updatedLogData: PBLLogData = {
-        ...logData,
-        session_data: cleanSessionData,
-        duration_seconds: updatedSessionData.progress.timeSpent,
-        status: updatedSessionData.status,
-        timestamp: new Date().toISOString(),
-        process_logs: updatedSessionData.processLogs || []
-      };
+      // Re-save with updated session data using new format
+      const logId = targetFile.name.split('/').pop()!.replace('.json', '');
+      await this.saveSession(sessionId, updatedSessionData, logId);
       
-      console.log(`Updating session ${sessionId} - status: ${logData.status} -> ${updatedSessionData.status}`);
+      console.log(`Updated session ${sessionId} - status: ${logData.status} -> ${updatedSessionData.status}`);
 
-      // Save back to the SAME file (overwrite)
-      await targetFile.save(JSON.stringify(updatedLogData, null, 2), {
-        metadata: {
-          contentType: 'application/json',
-        },
-      });
-
-      // Return the updated session data with processLogs for the application
+      // Return the updated session data
       return updatedSessionData;
     } catch (error) {
       console.error('Error updating session in GCS:', error);
@@ -442,89 +400,11 @@ export class PBLGCSService {
   }
 
   /**
-   * List all sessions for a user (optimized with email folder structure)
+   * List all sessions for a user by email
    */
-  async listUserSessions(userId: string, status?: 'in_progress' | 'completed' | 'paused', userEmail?: string): Promise<PBLLogData[]> {
+  async listUserSessions(userEmail: string, status?: 'in_progress' | 'completed' | 'paused'): Promise<PBLLogData[]> {
     try {
-      console.log(`listUserSessions called with userId: ${userId}, status: ${status}, userEmail: ${userEmail}`);
-      const sessions: PBLLogData[] = [];
-      
-      // If userEmail is provided, search in user's folder first
-      if (userEmail) {
-        const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
-        console.log(`Searching in user folder: ${PBL_BASE_PATH}/${sanitizedEmail}/`);
-        try {
-          const [userFiles] = await this.bucket.getFiles({
-            prefix: `${PBL_BASE_PATH}/${sanitizedEmail}/`,
-          });
-          
-          console.log(`Found ${userFiles.length} files in user folder`);
-
-          for (const file of userFiles) {
-            if (file.name.endsWith('.json')) {
-              try {
-                const [contents] = await file.download();
-                const logData = JSON.parse(contents.toString()) as PBLLogData;
-                
-                console.log(`File ${file.name} - user_id: ${logData.user_id}, status: ${logData.status}, scenario_id: ${logData.scenario_id}`);
-                
-                // Check if user_id matches (could be string or number)
-                if (String(logData.user_id) === String(userId)) {
-                  console.log(`User ID matches. Checking status filter: looking for ${status}, file has ${logData.status}`);
-                  if (!status || logData.status === status) {
-                    console.log(`Status matches, adding to results`);
-                    sessions.push(logData);
-                  } else {
-                    console.log(`Status doesn't match, skipping`);
-                  }
-                } else {
-                  console.log(`User ID doesn't match: ${logData.user_id} !== ${userId}`);
-                }
-              } catch (parseError) {
-                console.error(`Failed to parse file ${file.name}:`, parseError);
-              }
-            }
-          }
-        } catch (err) {
-          console.log(`User folder ${sanitizedEmail} not found or error accessing it:`, err);
-        }
-      }
-      
-      // If no sessions found in user folder or no email provided, search all files
-      if (sessions.length === 0) {
-        console.log('No sessions found in user folder, searching all files...');
-        const [files] = await this.bucket.getFiles({
-          prefix: `${PBL_BASE_PATH}/`,
-        });
-        
-        console.log(`Found ${files.length} total files in ${PBL_BASE_PATH}/`);
-
-        for (const file of files) {
-          if (file.name.endsWith('.json')) {
-            try {
-              const [contents] = await file.download();
-              const logData = JSON.parse(contents.toString()) as PBLLogData;
-              
-              console.log(`Checking file ${file.name} - user_id: ${logData.user_id}, status: ${logData.status}, scenario_id: ${logData.scenario_id}`);
-              
-              // Check if user_id matches (could be string or number)
-              if (String(logData.user_id) === String(userId)) {
-                console.log(`User ID matches. Status filter: looking for ${status}, file has ${logData.status}`);
-                if (!status || logData.status === status) {
-                  console.log('Adding session from all files search');
-                  sessions.push(logData);
-                }
-              }
-            } catch (parseError) {
-              console.error(`Failed to parse file ${file.name}:`, parseError);
-            }
-          }
-        }
-      }
-
-      return sessions.sort((a, b) => 
-        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-      );
+      return await this.getSessionsByEmail(userEmail, status);
     } catch (error) {
       console.error('Error listing user sessions:', error);
       return [];
@@ -586,7 +466,36 @@ export class PBLGCSService {
   /**
    * Transform PBLLogData to LearningLog format
    */
-  private transformToLearningLog(session: PBLLogData): LearningLog {
+  private transformToLearningLog(session: any): LearningLog {
+    // Handle both old and new format
+    const isNewFormat = 'conversation_logs' in session;
+    
+    let processLogs: ProcessLog[] = [];
+    if (isNewFormat) {
+      // Transform conversation_logs back to processLogs format for compatibility
+      processLogs = session.conversation_logs.map((log: ConversationLog) => ({
+        id: log.id,
+        timestamp: log.timestamp,
+        sessionId: session.session_id,
+        stageId: session.stage_id,
+        taskId: session.task_id,
+        actionType: log.role === 'user' ? 'write' as const : 'speak' as const,
+        detail: log.role === 'user' ? {
+          content: log.content,
+          duration: log.duration_seconds
+        } : {
+          aiInteraction: {
+            response: log.content,
+            tokensUsed: log.tokens_used,
+            analysis: log.analysis
+          }
+        }
+      }));
+    } else {
+      // Old format - use process_logs directly
+      processLogs = session.process_logs || [];
+    }
+
     return {
       sessionId: session.session_id,
       logId: session.session_id, // Use session_id as logId for consistency
@@ -599,11 +508,11 @@ export class PBLGCSService {
         startTime: session.session_data.startedAt,
         endTime: session.session_data.lastActiveAt,
         status: session.status === 'not_started' ? 'in_progress' : session.status,
-        userId: session.user_id,
+        userId: session.session_data?.userId || session.user_id,
         language: session.language
       },
       progress: {
-        stageProgress: session.session_data.stageResults?.map(result => ({
+        stageProgress: session.session_data.stageResults?.map((result: StageResult) => ({
           stageId: result.stageId,
           status: result.status as 'not_started' | 'in_progress' | 'completed',
           completedAt: result.completedAt instanceof Date ? result.completedAt.toISOString() : result.completedAt,
@@ -611,7 +520,7 @@ export class PBLGCSService {
         })) || []
       },
       evaluations: session.session_data.evaluations || [],
-      processLogs: session.process_logs || [],
+      processLogs: processLogs,
       stageResults: session.session_data.stageResults || [],
       session_data: session.session_data
     };
@@ -620,17 +529,11 @@ export class PBLGCSService {
   /**
    * Get user learning logs for history page (transformed format)
    */
-  async getUserLearningLogs(userId: string, userEmail?: string): Promise<LearningLog[]> {
+  async getUserLearningLogs(userEmail: string): Promise<LearningLog[]> {
     try {
       console.log(`Getting learning logs for userEmail: ${userEmail}`);
       
-      // Always use email-based search if available
-      if (!userEmail) {
-        console.log('No userEmail provided, returning empty array');
-        return [];
-      }
-      
-      const sessions = await this.getSessionsByEmail(userEmail, undefined, undefined);
+      const sessions = await this.getSessionsByEmail(userEmail);
       console.log(`Found ${sessions.length} sessions by email: ${userEmail}`);
       
       return sessions.map(session => this.transformToLearningLog(session));
@@ -687,7 +590,7 @@ export class PBLGCSService {
   }
 
   /**
-   * Append process log to session
+   * Append process log to session (maintains compatibility)
    */
   async appendProcessLog(sessionId: string, log: ProcessLog): Promise<void> {
     const result = await this.getSession(sessionId);
@@ -704,7 +607,7 @@ export class PBLGCSService {
     }
     sessionData.processLogs.push(log);
 
-    // Update session
+    // Update session (saveSession will handle conversion to new format)
     await this.saveSession(sessionId, sessionData, logId);
   }
 
