@@ -13,6 +13,7 @@ import {
   Legend
 } from 'recharts';
 import CompetencyKnowledgeGraph from './CompetencyKnowledgeGraph';
+import { contentService } from '@/services/content-service';
 
 interface AssessmentResultsProps {
   result: AssessmentResult;
@@ -52,8 +53,7 @@ export default function AssessmentResults({ result, domains, onRetake, questions
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/api/relations?lang=${i18n.language}`);
-        const data = await response.json();
+        const data = await contentService.getRelationsTree(i18n.language);
         setDomainsData(data.domains);
         setKsaMaps({
           kMap: data.kMap,

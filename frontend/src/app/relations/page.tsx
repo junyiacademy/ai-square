@@ -3,6 +3,8 @@ import React, { useState, useEffect, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import '../../i18n';
 import Image from 'next/image';
+import { contentService } from '@/services/content-service';
+import { LoadingAccordion } from '@/components/ui/loading-skeleton';
 
 interface Competency {
   key: string;
@@ -137,10 +139,14 @@ export default function RelationsClient() {
 
   const fetchTree = async (lng: string) => {
     setLoading(true);
-    const res = await fetch(`/api/relations?lang=${lng}`);
-    const data = await res.json();
-    setTree(data);
-    setLoading(false);
+    try {
+      const data = await contentService.getRelationsTree(lng);
+      setTree(data);
+    } catch (error) {
+      console.error('Failed to load relations tree:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -148,7 +154,16 @@ export default function RelationsClient() {
   }, [lang]);
 
   if (loading || !tree) {
-    return <div className="p-8 text-center">Loading...</div>;
+    return (
+      <main className="p-8 bg-gray-50 min-h-screen">
+        <div className="w-full flex justify-center mb-6">
+          <div className="w-[320px] h-[120px] bg-gradient-to-r from-blue-200 to-purple-200 rounded-2xl animate-pulse" />
+        </div>
+        <div className="max-w-3xl mx-auto">
+          <LoadingAccordion />
+        </div>
+      </main>
+    );
   }
 
   // 假插圖區塊
