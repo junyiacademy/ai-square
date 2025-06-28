@@ -2,11 +2,45 @@
 
 ## Overview
 
-This document outlines the technical infrastructure architecture for AI Square, including Google Cloud Platform deployment, Kubernetes configuration, database architecture, and caching strategies designed for scalability and high availability.
+This document outlines the technical infrastructure architecture for AI Square, following the phased approach defined in the PRD. The system evolves from GitHub Pages hosting (Phase 1, $0/month) to enterprise-grade GCP infrastructure (Phase 4+, $1000+/month).
 
 ## Architecture Design
 
-### Cloud Infrastructure Architecture
+### 漸進式基礎設施演進
+
+#### Phase 1-2: GitHub Pages + Cloud Run (現況)
+```
+┌────────────────────────────────────────────────────────┐
+│                    Simple Setup                         │
+├────────────────────────────────────────────────────────┤
+│   GitHub Pages    │    Cloud Run     │   Vertex AI     │
+│   (Static Host)   │    (Backend)     │   (AI APIs)     │
+│   Cost: $0        │   Cost: ~$10/mo  │  Cost: Usage    │
+└────────────────────────────────────────────────────────┘
+```
+
+#### Phase 3: Production Infrastructure
+```
+┌────────────────────────────────────────────────────────┐
+│                 Google Cloud Platform                   │
+├────────────────────────────────────────────────────────┤
+│                    Load Balancer                        │
+│                         ↓                               │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐   │
+│  │  Cloud Run  │  │  Cloud Run  │  │ Memory Store│   │
+│  │  (Frontend) │  │  (Backend)  │  │   (Redis)   │   │
+│  └─────────────┘  └─────────────┘  └─────────────┘   │
+├────────────────────────────────────────────────────────┤
+│                   Data Layer                            │
+│  ┌─────────────┐  ┌─────────────┐                     │
+│  │ Cloud SQL   │  │   Cloud     │                     │
+│  │(PostgreSQL) │  │  Storage    │                     │
+│  └─────────────┘  └─────────────┘                     │
+└────────────────────────────────────────────────────────┘
+Cost: ~$200/month
+```
+
+#### Phase 4+: Enterprise Scale
 ```
 ┌────────────────────────────────────────────────────────┐
 │                 Google Cloud Platform                   │
@@ -27,13 +61,8 @@ This document outlines the technical infrastructure architecture for AI Square, 
 │  │ PostgreSQL  │  │    Redis    │  │   Neo4j     │   │
 │  │  Cloud SQL  │  │  Memorystore│  │  (Managed)  │   │
 │  └─────────────┘  └─────────────┘  └─────────────┘   │
-├────────────────────────────────────────────────────────┤
-│                  Storage & CDN                          │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐   │
-│  │   Cloud     │  │  Cloud CDN  │  │  BigQuery   │   │
-│  │  Storage    │  │             │  │             │   │
-│  └─────────────┘  └─────────────┘  └─────────────┘   │
 └────────────────────────────────────────────────────────┘
+Cost: $1000+/month
 ```
 
 ## Technical Requirements
@@ -66,10 +95,44 @@ This document outlines the technical infrastructure architecture for AI Square, 
 
 ## Implementation Details
 
-### 1. GCP Project Structure
+### 1. GCP Project Structure (根據階段)
 
+#### Phase 1-2: Minimal Setup
 ```yaml
-# terraform/gcp/main.tf
+# terraform/gcp/phase1/main.tf
+# 只需要最基本的 Cloud Run 和 Vertex AI
+terraform {
+  required_version = ">= 1.0"
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 4.0"
+    }
+  }
+}
+
+# Single project for MVP
+resource "google_project" "ai_square_mvp" {
+  name       = "AI Square MVP"
+  project_id = "ai-square-mvp"
+}
+
+# Enable required APIs
+resource "google_project_service" "required_apis" {
+  for_each = toset([
+    "run.googleapis.com",
+    "cloudbuild.googleapis.com",
+    "aiplatform.googleapis.com"
+  ])
+  
+  project = google_project.ai_square_mvp.project_id
+  service = each.key
+}
+```
+
+#### Phase 3+: Full Project Structure
+```yaml
+# terraform/gcp/phase3/main.tf
 terraform {
   required_version = ">= 1.0"
   required_providers {
@@ -1343,22 +1406,58 @@ scaling_strategy:
     connection_pool_sizing: dynamic
 ```
 
-## Future Infrastructure Plans
+## Implementation Roadmap (根據 PRD)
 
-### Phase 2 (Q2 2025)
-- Multi-cloud deployment (AWS, Azure)
-- Edge computing nodes
-- Blockchain infrastructure
-- Quantum-ready architecture
+### Phase 1-2: MVP (2025/01-06) - 極簡基礎設施
+- [x] GitHub Pages 靜態託管
+- [x] Cloud Run 後端部署
+- [x] Vertex AI API 整合
+- [ ] 基礎 CI/CD (GitHub Actions)
+- [ ] 簡單監控 (Uptime checks)
+**成本**: ~$10/月
 
-### Phase 3 (Q3 2025)
-- Serverless architecture migration
-- GraphQL federation
-- Event-driven architecture
-- Real-time data streaming
+### Phase 2: Enhanced MVP (2025/07-09) - 生產就緒
+- [ ] Cloud SQL PostgreSQL (最小規格)
+- [ ] Memory Store Redis (最小規格)
+- [ ] Cloud Load Balancer
+- [ ] Cloud CDN 整合
+- [ ] 基礎備份策略
+**成本**: ~$50/月
 
-### Phase 4 (Q4 2025)
-- Global content delivery network
-- Decentralized storage
-- AI infrastructure optimization
-- Zero-trust security model
+### Phase 3: Production (2025/10-12) - 規模化準備
+- [ ] 多區域部署
+- [ ] Auto-scaling 設定
+- [ ] 完整監控系統 (Cloud Monitoring)
+- [ ] 災難復原計劃
+- [ ] 安全強化 (Cloud Armor)
+**成本**: ~$200/月
+
+### Phase 4+: Scale (2026+) - 企業級基礎設施
+- [ ] GKE Kubernetes 叢集
+- [ ] 全球負載平衡
+- [ ] 多雲端策略
+- [ ] 進階安全 (Zero Trust)
+- [ ] BigQuery 數據倉儲
+**成本**: $1000+/月
+
+## 成本優化策略
+
+### 現階段 (Phase 1-2)
+1. **使用免費層級**：善用 GCP 免費額度
+2. **按需擴展**：只在需要時開啟資源
+3. **靜態優先**：盡可能使用 GitHub Pages
+4. **Spot 實例**：開發環境使用 Spot VM
+
+### 未來優化 (Phase 3+)
+1. **Committed Use Discounts**：長期承諾折扣
+2. **自動擴展**：根據流量動態調整
+3. **區域優化**：選擇成本效益最高的區域
+4. **資源標記**：精確追蹤成本
+
+## 技術債務管理
+
+### 優先處理
+1. **基礎設施即代碼**：所有配置 Terraform 化
+2. **自動化部署**：減少手動操作
+3. **監控覆蓋**：確保所有服務可觀測
+4. **安全加固**：定期安全審計

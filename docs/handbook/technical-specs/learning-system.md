@@ -1331,20 +1331,28 @@ cache_keys = {
 
 ## Future Enhancements
 
-### Phase 2 (Q2 2025)
-- Peer assessment capabilities
-- Collaborative learning paths
-- AR/VR learning experiences
-- Gamification elements
+### Phase 2-alt: PBL 系統（✓ 已完成）
+- ✓ PBL 系統框架建設
+- ✓ AI 輔助求職情境 MVP
+- ✓ 過程記錄系統 (GCS JSON)
+- ✓ KSA-Rubrics 對應機制
 
-### Phase 3 (Q3 2025)
-- Predictive learning analytics
-- Automated content generation
-- Social learning features
-- Competency-based progression
+### Phase 2: 學習系統優化 (2025/07-09)
+- [ ] GCS 到 Redis 快取遷移
+- [ ] Rubrics 專家協作流程 (GitHub PR)
+- [ ] 評估系統整合 Rubrics
+- [ ] PBL 效能優化
 
-### Phase 4 (Q4 2025)
-- Blockchain credentials
-- Cross-platform learning sync
-- AI-powered study groups
-- Employer skill verification
+### Phase 3: 知識圖譜系統 (2025/10-12)
+- [ ] 學習路徑生成器
+- [ ] 知識圖譜視覺化 (D3.js)
+- [ ] 自適應學習建議
+- [ ] PostgreSQL 整合 (DAU > 100)
+- [ ] Neo4j 知識圖譜 (Phase 4 準備)
+
+### Phase 4: 進階功能 (2026+)
+- [ ] AI 個人化推薦 (MCP Agent)
+- [ ] 協作學習功能
+- [ ] 遊戲化元素
+- [ ] 企業級學習管理
+- [ ] 區塊鏈證書

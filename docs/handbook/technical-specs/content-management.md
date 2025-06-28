@@ -1,8 +1,13 @@
 # Content Management System Technical Specification
 
+> **Related Documents**:
+> - [CMS Setup Guide](./cms-setup.md) - Deployment, configuration and Git-based architecture
+> - [Product Requirements](../product-requirements-document.md) - Business requirements and roadmap
+> - [Infrastructure Spec](./infrastructure.md) - Infrastructure and deployment details
+
 ## Overview
 
-This document outlines the technical architecture for AI Square's content management system, including the visual rubrics builder, AI-powered content generation, media library, and version control capabilities.
+This document provides the detailed technical specification for AI Square's content management features, including the visual rubrics builder, AI-powered content generation, media library, and version control capabilities. For deployment and configuration, see the [CMS Setup Guide](./cms-setup.md).
 
 ## Architecture Design
 
@@ -266,7 +271,9 @@ const RubricGrid: React.FC<{ rubric: VisualRubric }> = ({ rubric }) => {
 }
 ```
 
-### 2. AI-Powered Content Generation
+### 2. AI-Powered Content Generation (Phase 3+)
+
+根據 PRD 的漸進式架構，AI 內容生成將在 Phase 3 後導入：
 
 ```python
 # backend/content/ai_generator.py
@@ -274,6 +281,9 @@ from typing import Dict, List, Optional, Union
 from dataclasses import dataclass
 from enum import Enum
 import asyncio
+import yaml
+import json
+from git import Repo
 
 class ContentType(Enum):
     LESSON = "lesson"
@@ -290,10 +300,14 @@ class ContentRequest:
     topic: str
     level: str  # beginner, intermediate, advanced
     style: Optional[str] = None  # formal, casual, technical
-    format: Optional[str] = None  # text, markdown, html, json
+    format: Optional[str] = None  # yaml, json, markdown
     constraints: Optional[Dict] = None
     examples: Optional[List[str]] = None
     metadata: Optional[Dict] = None
+    # 新增：Git-Based 相關欄位
+    target_repo: Optional[str] = None
+    target_branch: Optional[str] = "main"
+    auto_commit: bool = False
 
 @dataclass
 class GeneratedContent:
@@ -306,13 +320,17 @@ class GeneratedContent:
     generated_at: datetime
     provider: str
     model: str
+    # 新增：Git 相關資訊
+    file_path: Optional[str] = None
+    commit_hash: Optional[str] = None
 
 class AIContentGenerator:
-    """AI-powered content generation system"""
+    """AI-powered content generation system with Git integration"""
     
-    def __init__(self, ai_service, content_validator):
+    def __init__(self, ai_service, content_validator, git_service):
         self.ai = ai_service
         self.validator = content_validator
+        self.git = git_service  # 新增：Git 服務
         self.templates = self._load_templates()
         self.quality_checker = ContentQualityChecker()
         
@@ -320,7 +338,12 @@ class AIContentGenerator:
         self, 
         request: ContentRequest
     ) -> GeneratedContent:
-        """Generate content based on request"""
+        """Generate content based on request with Git integration"""
+        
+        # Phase 2: 直接呼叫 LLM
+        # Phase 3+: 透過 Agent 系統
+        if hasattr(self.ai, 'use_agent_system'):
+            return await self._generate_via_agent(request)
         
         # Select appropriate template and model
         template = self.templates.get(request.type)
@@ -381,6 +404,19 @@ class AIContentGenerator:
             provider=model_config["provider"],
             model=model_config["model"]
         )
+        
+        # Git-Based 內容儲存 (根據 PRD 3.3)
+        if request.target_repo and request.auto_commit:
+            file_path = await self._save_to_git(generated, request)
+            generated.file_path = file_path
+            if request.auto_commit:
+                commit_hash = await self.git.commit_and_push(
+                    repo=request.target_repo,
+                    branch=request.target_branch,
+                    message=f"AI Generated: {request.type.value} - {request.topic}",
+                    files=[file_path]
+                )
+                generated.commit_hash = commit_hash
         
         return generated
         
@@ -568,6 +604,7 @@ class ContentQualityChecker:
         
         return total_score
 ```
+
 
 ### 3. Media Library System
 
@@ -1497,22 +1534,20 @@ analytics_metrics = {
 }
 ```
 
-## Future Enhancements
+## Implementation Roadmap
 
-### Phase 2 (Q2 2025)
-- Real-time collaborative editing
-- Advanced AI content personalization
-- Automated content translation
-- 3D/AR content support
+See [CMS Setup Guide - Implementation Roadmap](./cms-setup.md#implementation-roadmap) for the complete phased implementation plan.
 
-### Phase 3 (Q3 2025)
-- Blockchain content verification
-- Decentralized content storage
-- AI-powered content curation
-- Advanced plagiarism detection
+## 技術債務與優化
 
-### Phase 4 (Q4 2025)
-- Neural content synthesis
-- Automated curriculum generation
-- Cross-platform content sync
-- Predictive content recommendations
+### 優先處理項目
+1. **內容驗證框架**：確保 YAML/JSON 格式正確性
+2. **Git 操作優化**：批次處理減少 API 呼叫
+3. **快取策略**：從記憶體快取逐步升級到 Redis
+4. **錯誤處理**：完善的錯誤訊息和復原機制
+
+### 效能目標
+- 內容載入時間 < 200ms
+- 編輯器回應時間 < 100ms
+- Git 操作完成時間 < 2s
+- 並發編輯支援 > 50 users

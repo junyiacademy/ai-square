@@ -4,29 +4,73 @@
 
 This document outlines the technical architecture for integrating multiple Large Language Models (LLMs) and implementing the Model Context Protocol (MCP) for AI Square's intelligent tutoring and assistant systems.
 
+根據最新的產品需求文檔（PRD），AI 整合將採用漸進式演進策略：
+- **Phase 1-2（現況）**：直接呼叫 LLM API，各功能獨立管理
+- **Phase 2**：建立 LLM Service 抽象層，統一介面
+- **Phase 3**：Agent 抽象層，將功能包裝成 Agent
+- **Phase 4**：完整 MCP 實作，多 Agent 協作
+
 ## Architecture Design
 
-### Multi-LLM Integration Architecture
+### 漸進式 MCP 整合架構
+
+#### Phase 1-2: 直接 LLM 呼叫（現況）
 ```
 ┌─────────────────────────────────────────────────────┐
-│                   AI Square Platform                 │
+│                 SaaS Application                     │
 ├─────────────────────────────────────────────────────┤
-│              AI Orchestration Layer                  │
+│   PBL System          Assessment         Content     │
+│       ↓                    ↓               ↓        │
+│  Vertex AI API       Gemini API      OpenAI API    │
+└─────────────────────────────────────────────────────┘
+問題：各功能重複程式碼、無法共享上下文、難以切換模型
+```
+
+#### Phase 2: LLM Service 抽象層
+```
+┌─────────────────────────────────────────────────────┐
+│                 SaaS Application                     │
+├─────────────────────────────────────────────────────┤
+│   PBL System     Assessment      Content             │
+│       ↓              ↓              ↓               │
+│              LLM Service Layer                       │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐ │
-│  │   Router    │  │   Cache     │  │  Rate Limit │ │
+│  │Prompt Mgmt  │  │Model Router │  │Usage Track  │ │
 │  └─────────────┘  └─────────────┘  └─────────────┘ │
 ├─────────────────────────────────────────────────────┤
-│              Model Abstraction Layer                 │
+│  Vertex AI    │    Gemini    │    OpenAI    │ ...  │
+└─────────────────────────────────────────────────────┘
+```
+
+#### Phase 3: Agent 系統架構
+```
+┌─────────────────────────────────────────────────────┐
+│                 SaaS Application                     │
+├─────────────────────────────────────────────────────┤
+│              Agent Orchestrator                      │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐         │
+│  │TutorAgent│  │Assessor  │  │Content   │  ...    │
+│  │(from PBL)│  │Agent     │  │Agent     │         │
+│  └──────────┘  └──────────┘  └──────────┘         │
+├─────────────────────────────────────────────────────┤
+│         Context Manager  │  LLM Service              │
+└─────────────────────────────────────────────────────┘
+```
+
+#### Phase 4: 完整 MCP 實作
+```
+┌─────────────────────────────────────────────────────┐
+│                 SaaS Application                     │
+├─────────────────────────────────────────────────────┤
+│              MCP Orchestrator                        │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐ │
-│  │ OpenAI API  │  │ Google AI   │  │ Anthropic   │ │
-│  │   (GPT-4)   │  │  (Gemini)   │  │  (Claude)   │ │
+│  │Agent Registry│  │Context Mgr │  │Message Bus  │ │
 │  └─────────────┘  └─────────────┘  └─────────────┘ │
 ├─────────────────────────────────────────────────────┤
-│                  MCP Protocol Layer                  │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐ │
-│  │   Context   │  │   Tools     │  │  Prompts    │ │
-│  │  Provider   │  │  Registry   │  │  Templates  │ │
-│  └─────────────┘  └─────────────┘  └─────────────┘ │
+│   Internal Agents    │    External Agents           │
+│  ┌──────┐ ┌──────┐  │  ┌──────┐ ┌──────┐         │
+│  │Tutor │ │Assess│  │  │3rd   │ │Plugin│         │
+│  └──────┘ └──────┘  │  │Party │ └──────┘         │
 └─────────────────────────────────────────────────────┘
 ```
 
@@ -219,20 +263,197 @@ class GeminiProvider(LLMProvider):
         return result.embedding
 ```
 
-### 3. MCP Protocol Implementation
+### 3. 從現有功能到 Agent 系統的演進
+
+#### Phase 2: 建立 LLM Service 層（3-6個月）
+
+**目標**：統一所有 LLM 呼叫，為未來 Agent 系統做準備
 
 ```python
-# backend/ai/mcp/protocol.py
-from typing import Dict, List, Optional, Any, Callable
-from dataclasses import dataclass, field
-import json
+# backend/ai/services/llm_service.py
+from typing import Dict, List, Optional, Any
+from dataclasses import dataclass
 
 @dataclass
-class Tool:
+class LLMConfig:
+    model: str
+    temperature: float = 0.7
+    max_tokens: int = 2000
+    stream: bool = False
+
+class LLMService:
+    """第一步：統一 LLM 呼叫（Phase 2）"""
+    def __init__(self):
+        self.models = {
+            'vertex': VertexAIClient(),
+            'openai': OpenAIClient(), 
+            'gemini': GeminiClient()
+        }
+        self.prompt_templates = self._load_templates()
+        self.usage_tracker = UsageTracker()
+    
+    async def generate(self, 
+                      task_type: str,
+                      context: dict,
+                      model: str = 'vertex') -> str:
+        """統一介面，但還不是 Agent"""
+        # 根據任務類型選擇 prompt 模板
+        prompt = self.get_prompt(task_type, context)
+        
+        # 執行並追蹤使用情況
+        try:
+            response = await self.models[model].generate(prompt)
+            await self._track_usage(task_type, model, prompt, response)
+            return response
+        except Exception as e:
+            # 自動 fallback 到其他模型
+            fallback_model = self._get_fallback(model)
+            return await self.models[fallback_model].generate(prompt)
+    
+    def get_prompt(self, task_type: str, context: dict) -> str:
+        """統一的 prompt 管理"""
+        template = self.prompt_templates.get(task_type)
+        return template.format(**context)
+```
+
+**Migration 範例：PBL 系統**
+```python
+# 現況：直接呼叫
+async def chat_with_ai(stage_config, user_input):
+    response = await vertex_ai.generate(
+        prompt=stage_config['prompt'],
+        user_input=user_input
+    )
+    return response
+
+# Phase 2：使用 LLM Service
+async def chat_with_ai(stage_config, user_input):
+    response = await llm_service.generate(
+        task_type='pbl_tutoring',
+        context={
+            'stage': stage_config,
+            'user_input': user_input
+        }
+    )
+    return response
+```
+
+#### Phase 3: Agent 抽象層（6-9個月）
+
+**目標**：將現有功能包裝成標準化的 Agent
+```python
+# backend/ai/agents/base_agent.py
+from abc import ABC, abstractmethod
+from typing import List, Dict, Any
+
+class BaseAgent(ABC):
+    """Phase 3: Base agent abstraction"""
+    def __init__(self, agent_id: str, capabilities: List[str]):
+        self.id = agent_id
+        self.capabilities = capabilities
+        self.context = {}
+        self.llm_service = LLMService()
+    
+    @abstractmethod
+    async def execute(self, task: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute agent task"""
+        pass
+    
+    def can_handle(self, task_type: str) -> bool:
+        """Check if agent can handle task"""
+        return task_type in self.capabilities
+    
+    def update_context(self, context: Dict[str, Any]):
+        """Update agent context"""
+        self.context.update(context)
+
+# backend/ai/agents/tutor_agent.py
+class TutorAgent(BaseAgent):
+    """Migrated from PBL system"""
+    def __init__(self):
+        super().__init__('tutor', [
+            'teach', 'explain', 'guide', 
+            'provide_hints', 'assess_understanding'
+        ])
+    
+    async def execute(self, task: Dict[str, Any]) -> Dict[str, Any]:
+        task_type = task.get('type')
+        
+        if task_type == 'teach':
+            return await self.teach(task)
+        elif task_type == 'provide_hints':
+            return await self.provide_hints(task)
+        # ... other capabilities
+    
+    async def teach(self, task: Dict[str, Any]) -> Dict[str, Any]:
+        # Migrate existing PBL teaching logic
+        context = {
+            'stage': task.get('stage'),
+            'user_level': task.get('user_level'),
+            'topic': task.get('topic'),
+            'history': self.context.get('conversation_history', [])
+        }
+        
+        response = await self.llm_service.generate(
+            task_type='tutoring',
+            context=context
+        )
+        
+        # Update conversation history
+        self.context.setdefault('conversation_history', []).append({
+            'user': task.get('user_input'),
+            'assistant': response
+        })
+        
+        return {
+            'response': response,
+            'suggestions': await self.generate_suggestions(context)
+        }
+```
+
+#### Phase 4: 完整 MCP 實作（9-12個月）
+
+**目標**：實現標準 MCP Protocol，支援多 Agent 協作
+```python
+# backend/ai/mcp/protocol.py (Phase 4)
+from typing import Dict, List, Optional, Any, Protocol
+from dataclasses import dataclass, field
+import asyncio
+
+@dataclass
+class MCPMessage:
+    """Standard MCP message format"""
+    id: str
+    type: str  # 'request', 'response', 'event'
+    source: str  # agent_id
+    target: Optional[str]  # agent_id or None for broadcast
+    payload: Dict[str, Any]
+    timestamp: float
+
+@dataclass
+class AgentCapability:
+    """Agent capability declaration"""
     name: str
     description: str
-    parameters: Dict[str, Any]
-    handler: Callable
+    input_schema: Dict[str, Any]
+    output_schema: Dict[str, Any]
+
+class MCPAgent(Protocol):
+    """MCP-compliant agent interface"""
+    id: str
+    capabilities: List[AgentCapability]
+    
+    async def initialize(self, context: Dict[str, Any]) -> None:
+        """Initialize agent with context"""
+        ...
+    
+    async def handle_message(self, message: MCPMessage) -> Optional[MCPMessage]:
+        """Handle incoming MCP message"""
+        ...
+    
+    async def get_context_requirements(self) -> Dict[str, Any]:
+        """Return required context schema"""
+        ...
     
 @dataclass
 class Context:
@@ -389,23 +610,61 @@ class MCPAgent:
         return results
 ```
 
-### 4. AI Orchestration Service
+### 4. 智能協調器演進
 
+#### Phase 3: Simple Agent Orchestrator
 ```python
-# backend/ai/orchestrator.py
+# backend/ai/orchestration/agent_orchestrator.py
 from typing import Dict, List, Optional
 import asyncio
-from enum import Enum
 
-class TaskType(Enum):
-    TUTORING = "tutoring"
-    ASSESSMENT = "assessment"
-    CONTENT_GENERATION = "content_generation"
-    CODE_ASSISTANCE = "code_assistance"
-    GENERAL = "general"
+class AgentOrchestrator:
+    """Phase 3: Basic agent orchestration"""
+    def __init__(self):
+        self.agents = {
+            'tutor': TutorAgent(),
+            'assessor': AssessmentAgent(),
+            'content': ContentAgent()
+        }
+        self.context_store = {}
+    
+    async def execute_task(self, 
+                          task_type: str,
+                          payload: Dict[str, Any],
+                          user_id: str) -> Dict[str, Any]:
+        # Find capable agent
+        agent = self.select_agent(task_type)
+        if not agent:
+            raise ValueError(f"No agent available for task: {task_type}")
+        
+        # Load user context
+        user_context = self.context_store.get(user_id, {})
+        agent.update_context(user_context)
+        
+        # Execute task
+        result = await agent.execute({
+            'type': task_type,
+            **payload
+        })
+        
+        # Update context store
+        self.context_store[user_id] = agent.context
+        
+        return result
+    
+    def select_agent(self, task_type: str) -> Optional[BaseAgent]:
+        """Select agent based on capabilities"""
+        for agent in self.agents.values():
+            if agent.can_handle(task_type):
+                return agent
+        return None
+```
 
-class AIOrchestrator:
-    """Orchestrates AI agents for different tasks"""
+#### Phase 4: MCP-Based Orchestrator
+```python
+# backend/ai/mcp/orchestrator.py
+class MCPOrchestrator:
+    """Phase 4: Full MCP orchestration"""
     
     def __init__(self):
         self.providers = {
@@ -523,28 +782,127 @@ class AIOrchestrator:
         pass
 ```
 
-### 5. Intelligent Tutoring System
+### 4. Context Management System
 
 ```python
-# backend/ai/tutoring/tutor.py
-from typing import Dict, List, Optional
-from dataclasses import dataclass
+# backend/ai/context/manager.py
+from typing import Dict, Any, Optional
+import json
+from datetime import datetime
 
-@dataclass
-class LearningContext:
-    student_id: str
-    current_topic: str
-    knowledge_level: str  # beginner, intermediate, advanced
-    learning_style: str  # visual, auditory, kinesthetic
-    past_interactions: List[Dict]
-    assessment_scores: Dict[str, float]
-
-class AITutor:
-    """Intelligent tutoring system with personalized learning"""
+class ContextManager:
+    """Unified context management across phases"""
+    def __init__(self, storage_backend='gcs'):
+        self.storage = self._init_storage(storage_backend)
+        self.cache = {}  # In-memory cache
+        self.ttl = 3600  # 1 hour cache
     
-    def __init__(self, orchestrator: AIOrchestrator):
-        self.orchestrator = orchestrator
-        self.prompt_templates = self._load_prompt_templates()
+    async def get_context(self, 
+                         user_id: str,
+                         scope: str = 'global') -> Dict[str, Any]:
+        """Get user context with caching"""
+        cache_key = f"{user_id}:{scope}"
+        
+        # Check cache
+        if cache_key in self.cache:
+            cached = self.cache[cache_key]
+            if cached['timestamp'] > datetime.now().timestamp() - self.ttl:
+                return cached['data']
+        
+        # Load from storage
+        context = await self.storage.load(f"contexts/{user_id}/{scope}.json")
+        
+        # Update cache
+        self.cache[cache_key] = {
+            'data': context,
+            'timestamp': datetime.now().timestamp()
+        }
+        
+        return context
+    
+    async def update_context(self,
+                           user_id: str,
+                           updates: Dict[str, Any],
+                           scope: str = 'global'):
+        """Update user context"""
+        context = await self.get_context(user_id, scope)
+        context.update(updates)
+        
+        # Save to storage
+        await self.storage.save(
+            f"contexts/{user_id}/{scope}.json",
+            context
+        )
+        
+        # Update cache
+        cache_key = f"{user_id}:{scope}"
+        self.cache[cache_key] = {
+            'data': context,
+            'timestamp': datetime.now().timestamp()
+        }
+```
+
+### 5. Migration Path for Existing Features
+
+#### PBL System Migration Example
+```python
+# Current implementation (Phase 1)
+# backend/routers/pbl.py
+async def chat_with_ai(stage_config, user_input):
+    # Direct Vertex AI call
+    response = await vertex_ai.generate(
+        prompt=stage_config['prompt'],
+        user_input=user_input
+    )
+    return response
+
+# Phase 2: Using LLM Service
+async def chat_with_ai(stage_config, user_input):
+    response = await llm_service.generate(
+        task_type='pbl_tutoring',
+        context={
+            'stage': stage_config,
+            'user_input': user_input
+        }
+    )
+    return response
+
+# Phase 3: Using Agent System
+async def chat_with_ai(stage_config, user_input, user_id):
+    response = await orchestrator.execute_task(
+        task_type='teach',
+        payload={
+            'stage': stage_config,
+            'user_input': user_input
+        },
+        user_id=user_id
+    )
+    return response['response']
+```
+
+#### Assessment System Migration
+```python
+# Current implementation
+async def evaluate_answer(question, answer):
+    prompt = f"Evaluate: Q: {question} A: {answer}"
+    score = await gemini.generate(prompt)
+    return score
+
+# Phase 2: LLM Service
+async def evaluate_answer(question, answer):
+    return await llm_service.generate(
+        task_type='assessment',
+        context={'question': question, 'answer': answer}
+    )
+
+# Phase 3: Agent System
+async def evaluate_answer(question, answer, user_id):
+    return await orchestrator.execute_task(
+        task_type='assess',
+        payload={'question': question, 'answer': answer},
+        user_id=user_id
+    )
+```
         
     async def generate_lesson(
         self, 
@@ -951,42 +1309,184 @@ logger.info("AI_INTERACTION", {
 - Budget alerts
 - Cost optimization recommendations
 
-## Future Enhancements
+## Implementation Timeline
 
-### Phase 2 (Q2 2025)
-- Fine-tuned models for specific domains
-- Multi-modal AI (image, audio)
-- Local LLM integration
-- Advanced prompt engineering
+### Phase 2: LLM Service Layer (2025/07 - 2025/09)
+**目標**: 集中化 LLM 使用，為 Agent 系統做準備
 
-### Phase 3 (Q3 2025)
-- Custom model training
-- Federated learning support
-- Real-time collaboration with AI
-- Voice-based tutoring
+**關鍵任務**:
+1. **建立 LLM Service 抽象層**
+   - 從 PBL 和評估系統提取共同模式
+   - 建立統一的 prompt 管理系統
+   - 實作多模型支援（Vertex AI、OpenAI、Gemini）
 
-### Phase 4 (Q4 2025)
-- AI-generated interactive simulations
-- Predictive learning paths
-- Emotional intelligence integration
-- Cross-lingual tutoring
+2. **遷移現有功能**
+   - PBL 系統改用 LLM Service
+   - 評估系統改用 LLM Service  
+   - 加入使用情況追蹤（基於複雜度估算）
+
+3. **優化與快取**
+   - 加入 Redis 快取層（根據 PRD 4.1.3）
+   - 實作智能 fallback 機制
+   - 效能調校與監控
+
+**觸發條件**: DAU > 100 或 GCS API 費用 > $50/月
+
+### Phase 3: Agent System (2025/10 - 2025/12)
+**目標**: 將功能轉換為 Agent 架構
+
+**關鍵任務**:
+1. **Agent 框架設計**
+   - BaseAgent 介面定義
+   - AgentOrchestrator 實作
+   - Context Manager（整合 GCS 儲存）
+
+2. **Agent 遷移計畫**
+   - TutorAgent（從 PBL 系統遷移）
+   - AssessmentAgent（從評估功能遷移）
+   - ContentAgent（新增，管理學習內容）
+   - RubricsAgent（新增，處理評量標準）
+
+3. **系統整合**
+   - 更新 API endpoints 支援 Agent
+   - Agent 間協調機制
+   - PostgreSQL 資料庫整合（根據 PRD 4.1.3）
+
+**觸發條件**: 功能數量 > 10 個，需要更好的模組化
+
+### Phase 4: MCP Implementation (2026/01 - 2026/03) 
+**目標**: 完整 MCP 協議支援
+
+**關鍵任務**:
+1. **MCP Protocol 實作**
+   - 定義標準訊息格式
+   - 建立 Message Bus
+   - Agent Registry 系統
+   - 跨 Agent 通訊協定
+
+2. **進階功能**
+   - Multi-Agent 工作流程
+   - 上下文同步機制
+   - Tool 共享框架
+   - Vector DB 整合（知識庫）
+
+3. **生態系統建設**
+   - 第三方 Agent 支援
+   - 開發者 SDK
+   - MCP 文檔與範例
+
+**觸發條件**: 需要支援外部 Agent 或複雜的多 Agent 協作
+
+### Phase 5: 完整 MCP 生態系統 (2026/04+)
+**目標**: 建立開放的 AI Agent 生態系統
+
+**關鍵功能**:
+- Agent Marketplace
+- 自訂 Agent 開發框架  
+- 企業級 Agent 管理
+- 分散式 Agent 部署
+
+## Key Technical Decisions
+
+### 為何採用漸進式架構？
+根據 PRD 4.1「儲存方案演進策略」的理念：
+- **降低複雜度**：從簡單直接呼叫開始
+- **快速迭代**：先驗證核心功能
+- **成本控制**：避免過早優化
+- **靈活調整**：根據實際需求演進
+
+### 技術債務管理
+1. **Phase 1-2 技術債**
+   - 各功能重複的 LLM 呼叫程式碼
+   - 缺乏統一的錯誤處理
+   - 無法共享學習上下文
+
+2. **償還計畫**
+   - Phase 2: 建立 LLM Service 統一介面
+   - Phase 3: Agent 架構解決模組化問題
+   - Phase 4: MCP 實現完整協作能力
 
 ## Testing Strategy
 
-### Unit Tests
-- Provider interface implementations
-- MCP protocol handling
-- Context management
-- Tool execution
+### Phase 2: LLM Service 測試策略
+```python
+# tests/test_llm_service.py
+import pytest
+from unittest.mock import AsyncMock
 
-### Integration Tests
-- End-to-end AI workflows
-- Provider failover scenarios
-- Caching behavior
-- Rate limiting
+class TestLLMService:
+    async def test_provider_fallback(self):
+        # Test automatic fallback on provider failure
+        service = LLMService()
+        service.providers['vertex'] = AsyncMock(side_effect=Exception())
+        
+        response = await service.generate('test', {})
+        assert response is not None
+    
+    async def test_usage_tracking(self):
+        # Verify usage is properly tracked
+        service = LLMService()
+        tracker = AsyncMock()
+        service.usage_tracker = tracker
+        
+        await service.generate('test', {})
+        tracker.log.assert_called_once()
+```
 
-### Performance Tests
-- Load testing with concurrent users
-- Latency benchmarking
-- Token optimization
-- Cost efficiency analysis
+### Phase 3: Agent Testing
+```python
+# tests/test_agents.py
+class TestAgentSystem:
+    async def test_agent_selection(self):
+        orchestrator = AgentOrchestrator()
+        agent = orchestrator.select_agent('teach')
+        assert isinstance(agent, TutorAgent)
+    
+    async def test_context_persistence(self):
+        # Verify context persists across calls
+        orchestrator = AgentOrchestrator()
+        
+        # First call
+        await orchestrator.execute_task(
+            'teach', {'topic': 'Python'}, 'user123'
+        )
+        
+        # Second call should have context
+        result = await orchestrator.execute_task(
+            'teach', {'topic': 'Lists'}, 'user123'
+        )
+        
+        assert 'Python' in str(result)  # Previous context
+```
+
+### Performance Benchmarks
+- Response time: < 2s for 95% of requests
+- Token efficiency: < 2000 tokens average
+- Cost per interaction: < $0.01
+- Concurrent users: Support 100+ simultaneous sessions
+
+## Migration Checklist
+
+### From Direct Calls to LLM Service
+- [ ] Identify all direct LLM calls in codebase
+- [ ] Create task-specific prompt templates
+- [ ] Replace direct calls with LLMService
+- [ ] Add error handling and fallbacks
+- [ ] Implement usage tracking
+- [ ] Update tests
+
+### From Functions to Agents
+- [ ] Map features to agent capabilities
+- [ ] Design agent interfaces
+- [ ] Implement BaseAgent for each feature
+- [ ] Create AgentOrchestrator
+- [ ] Migrate API endpoints
+- [ ] Update documentation
+
+### To Full MCP Support
+- [ ] Define MCP message schema
+- [ ] Build message routing system
+- [ ] Implement agent discovery
+- [ ] Add context synchronization
+- [ ] Create developer tools
+- [ ] Publish MCP specification

@@ -2,14 +2,45 @@
 
 ## Overview
 
-This document outlines the technical architecture for AI Square's comprehensive analytics and reporting system, including learning analytics, performance metrics, dashboard systems, and KPI tracking capabilities.
+This document outlines the technical architecture for AI Square's analytics and reporting system, following the phased approach defined in the PRD. The system evolves from basic client-side analytics (Phase 1) to comprehensive learning analytics with predictive capabilities (Phase 4+).
 
 ## Architecture Design
 
-### Analytics Architecture
+### 漸進式分析架構演進
+
+#### Phase 1-2: Basic Analytics (現況)
 ```
 ┌────────────────────────────────────────────────────────┐
-│                Analytics Platform                       │
+│                 Frontend Only                           │
+├────────────────────────────────────────────────────────┤
+│  Google Analytics  │  Local Storage  │  Console Logs   │
+│  (基礎追蹤)        │  (進度儲存)     │  (除錯用)       │
+└────────────────────────────────────────────────────────┘
+```
+
+#### Phase 3: Production Analytics
+```
+┌────────────────────────────────────────────────────────┐
+│              Analytics Platform                         │
+├────────────────────────────────────────────────────────┤
+│              Data Collection Layer                      │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐   │
+│  │   Event     │  │  Learning   │  │    Usage    │   │
+│  │  Tracking   │  │  Progress   │  │   Metrics   │   │
+│  └─────────────┘  └─────────────┘  └─────────────┘   │
+├────────────────────────────────────────────────────────┤
+│               Storage Layer                             │
+│  ┌─────────────┐  ┌─────────────┐                     │
+│  │ PostgreSQL  │  │    Redis    │                     │
+│  │  (Events)   │  │   (Cache)   │                     │
+│  └─────────────┘  └─────────────┘                     │
+└────────────────────────────────────────────────────────┘
+```
+
+#### Phase 4+: Advanced Analytics
+```
+┌────────────────────────────────────────────────────────┐
+│              Analytics Platform                         │
 ├────────────────────────────────────────────────────────┤
 │              Data Collection Layer                      │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐   │
@@ -27,11 +58,6 @@ This document outlines the technical architecture for AI Square's comprehensive 
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐   │
 │  │  Learning   │  │ Performance │  │ Predictive  │   │
 │  │  Analytics  │  │   Metrics   │  │   Models    │   │
-│  └─────────────┘  └─────────────┘  └─────────────┘   │
-├────────────────────────────────────────────────────────┤
-│              Presentation Layer                         │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐   │
-│  │ Dashboards  │  │   Reports   │  │    APIs     │   │
 │  └─────────────┘  └─────────────┘  └─────────────┘   │
 └────────────────────────────────────────────────────────┘
 ```
@@ -68,6 +94,40 @@ This document outlines the technical architecture for AI Square's comprehensive 
 
 ### 1. Event Tracking System
 
+#### Phase 1-2 實作 (現況)
+```typescript
+// frontend/lib/analytics/simple-tracker.ts
+class SimpleAnalyticsTracker {
+  constructor() {
+    // 使用 Google Analytics
+    if (typeof window !== 'undefined' && window.gtag) {
+      this.gtag = window.gtag
+    }
+  }
+  
+  track(eventName: string, properties?: Record<string, any>) {
+    // Google Analytics
+    if (this.gtag) {
+      this.gtag('event', eventName, properties)
+    }
+    
+    // Local Storage for progress
+    if (eventName.includes('progress')) {
+      this.saveProgress(properties)
+    }
+  }
+  
+  private saveProgress(data: any) {
+    const progress = JSON.parse(
+      localStorage.getItem('learning_progress') || '{}'
+    )
+    progress[data.lessonId] = data
+    localStorage.setItem('learning_progress', JSON.stringify(progress))
+  }
+}
+```
+
+#### Phase 3+ 實作
 ```typescript
 // frontend/lib/analytics/tracker.ts
 interface AnalyticsEvent {
@@ -1580,22 +1640,46 @@ alerts:
       - scale_resources
 ```
 
-## Future Enhancements
+## Implementation Roadmap (根據 PRD)
 
-### Phase 2 (Q2 2025)
-- Real-time collaboration analytics
-- Advanced ML models for prediction
-- Natural language report generation
-- Mobile analytics SDK
+### Phase 1-2: MVP (2025/01-06) - 基礎分析
+- [x] Google Analytics 整合
+- [x] Local Storage 進度追蹤
+- [ ] 基礎使用統計 (頁面訪問、功能使用)
+- [ ] 簡單的錯誤追蹤
+- [ ] CSV 匯出功能
 
-### Phase 3 (Q3 2025)
-- Predictive intervention system
-- Automated insight generation
-- Cross-platform analytics
-- Custom ML model builder
+### Phase 2: Enhanced MVP (2025/07-09) - 學習分析
+- [ ] 後端事件收集 API
+- [ ] 學習進度追蹤系統
+- [ ] 基礎學習報表
+- [ ] Redis 事件快取
+- [ ] 每日/週報自動生成
 
-### Phase 4 (Q4 2025)
-- Federated analytics
-- Privacy-preserving analytics
-- Blockchain-based audit trail
-- AI-powered anomaly detection
+### Phase 3: Production (2025/10-12) - 進階分析
+- [ ] PostgreSQL 事件儲存
+- [ ] 即時分析儀表板
+- [ ] 學習路徑分析
+- [ ] A/B 測試框架
+- [ ] 自訂報表產生器
+
+### Phase 4+: Scale (2026+) - AI 驅動分析
+- [ ] 預測性學習分析
+- [ ] AI 異常檢測
+- [ ] 個人化學習建議
+- [ ] 跨平台分析整合
+- [ ] 企業級報表系統
+
+## 技術考量
+
+### 隱私與合規
+1. **資料最小化**：只收集必要的資料
+2. **匿名化**：移除個人識別資訊
+3. **資料保留**：定期清理舊資料
+4. **使用者控制**：提供資料刪除選項
+
+### 效能優化
+- 批次事件發送減少網路請求
+- 客戶端快取減少重複計算
+- 非同步處理避免阻塞使用者操作
+- 漸進式載入大型報表資料

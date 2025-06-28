@@ -2,11 +2,32 @@
 
 ## Overview
 
-This document outlines the technical implementation for the authentication and Single Sign-On (SSO) system for AI Square, supporting OAuth2 integration with Google and GitHub providers.
+This document outlines the technical implementation for the authentication and Single Sign-On (SSO) system for AI Square, following the phased approach defined in the PRD. The system evolves from simple JWT tokens (Phase 1) to enterprise SSO with multiple providers (Phase 4+).
 
 ## Architecture Design
 
-### Authentication Flow
+### 漸進式認證架構演進
+
+#### Phase 1-2: JWT + Local Storage (現況)
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Browser   │────>│  Next.js    │────>│  FastAPI    │
+│             │     │  Frontend   │     │  Backend    │
+└─────────────┘     └─────────────┘     └─────────────┘
+       │                    │                    │
+       │                    │                    ▼
+       │                    │            ┌─────────────┐
+       │                    │            │   JWT       │
+       │                    │            │  Generator  │
+       │                    │            └─────────────┘
+       │                    ▼
+       └─────────>┌─────────────────┐
+                  │ OAuth Provider  │
+                  │ • Google Only   │
+                  └─────────────────┘
+```
+
+#### Phase 3: Production Auth
 ```
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
 │   Browser   │────>│  Next.js    │────>│  FastAPI    │
@@ -40,7 +61,31 @@ This document outlines the technical implementation for the authentication and S
 - Session synchronization
 - API key management for service accounts
 
-### Database Schema
+### Data Storage Evolution
+
+#### Phase 1-2: No Database (現況)
+```typescript
+// JWT Token Payload
+interface JWTPayload {
+  sub: string          // user email
+  name: string
+  picture?: string
+  provider: 'google'
+  iat: number
+  exp: number
+}
+
+// Local Storage
+interface LocalUserData {
+  progress: Record<string, any>
+  preferences: {
+    language: string
+    theme: 'light' | 'dark'
+  }
+}
+```
+
+#### Phase 3+: PostgreSQL Database
 ```sql
 -- Users table
 CREATE TABLE users (
@@ -446,3 +491,47 @@ Updates user profile
 - OAuth provider downtime
 - Unusual login patterns
 - Session storage issues
+
+## Implementation Roadmap (根據 PRD)
+
+### Phase 1-2: MVP (2025/01-06) - 基礎認證
+- [x] Google OAuth2 整合
+- [x] JWT Token 生成與驗證
+- [x] Local Storage 使用者資料
+- [ ] 基礎 Session 管理
+- [ ] Logout 功能完善
+
+### Phase 2: Enhanced MVP (2025/07-09) - 改進認證
+- [ ] GitHub OAuth2 整合
+- [ ] Refresh Token 機制
+- [ ] Remember Me 功能
+- [ ] 進階 Session 管理
+- [ ] Rate Limiting
+
+### Phase 3: Production (2025/10-12) - 完整認證系統
+- [ ] PostgreSQL User Store
+- [ ] Multi-factor Authentication (MFA)
+- [ ] Account Linking
+- [ ] Password-less Login
+- [ ] Session Management API
+
+### Phase 4+: Scale (2026+) - 企業級認證
+- [ ] SAML 2.0 支援
+- [ ] Active Directory 整合
+- [ ] 自訂 OAuth Provider
+- [ ] API Key Management
+- [ ] Zero Trust Architecture
+
+## 安全考量
+
+### 現階段 (Phase 1-2)
+1. **JWT 安全**：使用強加密，設定合理過期時間
+2. **HTTPS Only**：所有認證流程必須使用 HTTPS
+3. **CORS 設定**：嚴格限制允許的來源
+4. **Input Validation**：驗證所有使用者輸入
+
+### 未來強化 (Phase 3+)
+1. **Token Rotation**：定期更新 Token
+2. **IP Whitelisting**：企業用戶 IP 限制
+3. **Anomaly Detection**：異常登入偵測
+4. **Audit Logging**：完整的安全審計日誌
