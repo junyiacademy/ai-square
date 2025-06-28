@@ -1,12 +1,26 @@
-# CMS 多語言內容管理增強提案
+# CMS 多語言內容管理增強技術規格
 
-## 現況分析
+> **Related Documents**:
+> - [CMS Setup Guide](./cms-setup.md) - CMS architecture and deployment
+> - [Dynamic Language System](./dynamic-language-system.md) - Frontend language switching
+> - [Product Requirements](../product-requirements-document.md) - Business requirements
 
-目前的 CMS 系統：
-- ✅ 支援 YAML 格式編輯
-- ✅ 支援多語言內容存儲（透過欄位後綴，如 `_zh`、`_es`）
-- ❌ 缺乏多語言內容輔助工具
-- ❌ 需要手動管理所有語言版本
+## Overview
+
+本文檔定義 CMS 多語言內容管理功能的技術規格，基於 PRD 的漸進式架構設計。系統將從手動管理（Phase 1）演進到 AI 輔助翻譯（Phase 4）。
+
+## 現況分析 (Phase 1-2)
+
+### 已實現功能
+- ✅ YAML 格式多語言存儲（欄位後綴：`_zh`、`_es` 等）
+- ✅ 支援 9 種語言（en, zh-TW, es, ja, ko, fr, de, ru, it）
+- ✅ Git-Based 內容管理
+
+### 待改進項目
+- ❌ 缺乏多語言編輯介面
+- ❌ 無翻譯狀態追蹤
+- ❌ 需手動維護所有語言版本
+- ❌ 無法批量處理翻譯
 
 ## 建議功能
 
@@ -50,22 +64,58 @@ description_it: ""
 ### 5. 多語言預覽
 即時預覽不同語言版本的顯示效果
 
-## 實作方案
+## Implementation Roadmap
 
-### Phase 1：基礎多語言編輯器（1-2 週）
-1. 將純文字編輯器改為結構化表單
-2. 自動識別多語言欄位
-3. 提供語言切換介面
+### Phase 2: Basic Enhancement (2025/07-09)
+**目標**: 改善手動翻譯流程
 
-### Phase 2：翻譯管理（2-3 週）
-1. 翻譯狀態追蹤
-2. 翻譯進度報表
-3. 缺失翻譯提醒
+#### 功能實作
+- [ ] 結構化多語言編輯介面
+- [ ] 語言切換標籤
+- [ ] 基礎翻譯狀態標示
+- [ ] YAML 語法驗證
 
-### Phase 3：AI 整合（3-4 週）
-1. 整合翻譯 API
-2. 實作批量翻譯
-3. 建立審核流程
+#### 技術需求
+- Monaco Editor 客製化
+- YAML 解析器增強
+- 簡單的狀態管理
+
+**成本影響**: 包含在 CMS Service 成本內（~$50/月）
+
+### Phase 3: Advanced Features (2025/10-12)
+**目標**: 翻譯流程自動化
+
+#### 功能實作
+- [ ] 翻譯進度儀表板
+- [ ] 批量操作功能
+- [ ] 版本比較（顯示原文變更）
+- [ ] 翻譯工作流程管理
+
+#### 技術需求
+- PostgreSQL 儲存翻譯狀態
+- Background job 處理
+- WebSocket 即時更新
+
+**成本影響**: 包含在 Production 成本內（~$200/月）
+
+### Phase 4+: AI Integration (2026+)
+**目標**: AI 輔助翻譯
+
+#### 功能實作
+- [ ] Google Translate API 整合
+- [ ] DeepL API 整合（可選）
+- [ ] 一鍵翻譯所有語言
+- [ ] AI 翻譯品質評分
+- [ ] 人工審核流程
+
+#### 技術需求
+- Translation API 整合
+- Queue 系統處理批量翻譯
+- 翻譯記憶庫（Translation Memory）
+
+**成本影響**: 
+- Translation API: ~$20/百萬字元
+- 額外運算資源: ~$100/月
 
 ## 技術架構
 
@@ -119,6 +169,25 @@ interface CMSContent {
 3. **改善品質**：統一管理所有語言版本
 4. **加速國際化**：快速新增語言支援
 
+## 技術考量
+
+### Git-Based 架構優勢
+1. **版本追蹤**: 每個語言版本的變更都有完整歷史
+2. **協作翻譯**: 透過 PR 進行翻譯審核
+3. **回滾能力**: 可恢復到任何歷史版本
+4. **分支策略**: 可建立翻譯專用分支
+
+### 效能優化
+- **Phase 2**: Client-side YAML 解析，減少伺服器負擔
+- **Phase 3**: 增量更新，只傳送變更的語言欄位
+- **Phase 4**: 翻譯快取，避免重複翻譯相同內容
+
+### 整合考量
+- 與現有 YAML 結構完全相容
+- 保持 Git-Based 工作流程
+- 支援漸進式升級
+- 不影響現有前端讀取邏輯
+
 ## 結論
 
-此增強功能將大幅改善 CMS 的多語言內容管理體驗，使內容編輯者能更有效率地維護多語言版本，確保所有語言版本的一致性和完整性。
+此多語言增強功能遵循 PRD 的漸進式架構原則，從基礎編輯介面開始，逐步演進到 AI 輔助翻譯。每個階段都能獨立運作，確保系統穩定性的同時持續改善使用者體驗。

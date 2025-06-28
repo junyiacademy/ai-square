@@ -1,8 +1,13 @@
 # Plugin Architecture Technical Specification
 
+> **Related Documents**:
+> - [Enterprise Features](./enterprise-features.md) - Enterprise integration needs
+> - [AI Integration](./ai-integration.md) - MCP/Agent plugin integration
+> - [Product Requirements](../product-requirements-document.md) - Business requirements
+
 ## Overview
 
-This document outlines the technical architecture for AI Square's plugin system, including the plugin interface design, marketplace infrastructure, revenue sharing model, and development ecosystem.
+This document outlines the technical architecture for AI Square's plugin system, a Phase 5+ (2027+) feature. The plugin architecture will enable third-party developers to extend the platform's functionality after we've established a stable core platform and significant user base.
 
 ## Architecture Design
 
@@ -1622,22 +1627,103 @@ developer_metrics = {
 }
 ```
 
-## Future Enhancements
+## Implementation Roadmap
 
-### Phase 2 (Q2 2025)
-- Plugin dependencies management
-- Plugin-to-plugin communication
-- Visual plugin builder
-- AI-assisted plugin development
+### Why Phase 5+?
+根據 PRD，插件系統需要：
+1. **穩定的核心平台**: 避免插件影響核心功能
+2. **足夠的用戶基礎**: 吸引開發者投入
+3. **成熟的 API**: 提供豐富的擴展能力
+4. **商業模式驗證**: 確保收益分享可行
 
-### Phase 3 (Q3 2025)
-- Blockchain plugin verification
-- Federated plugin marketplace
-- Plugin version rollback
-- Advanced A/B testing
+### Phase 5 Prerequisites (2026)
+**必須先完成**:
+- ✅ 10,000+ 活躍用戶
+- ✅ 穩定的 API v2.0
+- ✅ 企業功能上線
+- ✅ 開發者社群建立
 
-### Phase 4 (Q4 2025)
-- Plugin AI marketplace
-- Automated security audits
-- Performance optimization AI
-- Cross-platform plugin support
+### Phase 5: Basic Plugin System (2027 Q1-Q2)
+**目標**: MVP 插件系統
+
+#### 功能實作
+- [ ] 基礎插件 SDK
+- [ ] 簡單的插件管理介面
+- [ ] 本地開發環境
+- [ ] 手動審核流程
+
+#### 支援的插件類型
+- 內容擴展（新題型、新內容）
+- UI 主題
+- 簡單的工具整合
+
+**開發者數量目標**: 10-50
+
+### Phase 5+: Plugin Marketplace (2027 Q3-Q4)
+**目標**: 完整市場生態
+
+#### 功能實作
+- [ ] 插件市場 UI
+- [ ] 自動化審核系統
+- [ ] 付費插件支援
+- [ ] 收益分享系統
+- [ ] 開發者 Portal
+
+#### 進階功能
+- 插件間通訊
+- 資源配額管理
+- A/B 測試框架
+
+**開發者數量目標**: 100-500
+
+### Phase 6: Advanced Ecosystem (2028+)
+**目標**: 繁榮的生態系統
+
+#### 功能實作
+- [ ] AI 輔助插件開發
+- [ ] 視覺化插件建構器
+- [ ] 企業私有插件庫
+- [ ] 跨平台插件支援
+
+#### 商業模式
+- 30/70 收益分享（平台/開發者）
+- 企業插件訂閱
+- 認證開發者計畫
+
+**開發者數量目標**: 1000+
+
+## 技術考量
+
+### 安全性設計
+1. **沙箱隔離**: 每個插件獨立運行環境
+2. **權限系統**: 細粒度 API 權限控制
+3. **資源限制**: CPU、記憶體、網路配額
+4. **程式碼審核**: 自動化 + 人工審核
+
+### 效能考量
+- 懶加載插件
+- 插件快取機制
+- 背景更新
+- 效能監控
+
+### 開發者體驗
+1. **完整文檔**: API 參考、教程、範例
+2. **開發工具**: CLI、偵錯器、測試框架
+3. **社群支援**: 論壇、Discord、定期活動
+4. **收益透明**: 即時統計、自動支付
+
+## 成功指標
+
+### Phase 5 目標
+- 50+ 已發布插件
+- 1000+ 插件安裝次數
+- 90% 開發者滿意度
+
+### Phase 6 目標
+- 500+ 已發布插件
+- 50,000+ 插件安裝次數
+- $100K+ 開發者總收益
+
+## 結論
+
+插件架構是 AI Square 長期願景的重要組成部分，但需要在核心平台成熟後才能實施。透過漸進式開發和完善的生態系統設計，我們將建立一個繁榮的開發者社群，共同擴展平台的可能性。
