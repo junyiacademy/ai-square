@@ -112,8 +112,8 @@ export default function UnifiedHistoryPage() {
           data: item
         }));
 
-        // Fetch PBL history
-        const pblResponse = await fetch(`/api/pbl/history?userId=${currentUser.id}`);
+        // Fetch PBL history with current language
+        const pblResponse = await fetch(`/api/pbl/history?userId=${currentUser.id}&lang=${i18n.language}`);
         const pblData = await pblResponse.json();
         const pblItems: HistoryItem[] = (pblData.data || []).map((item: PBLSession) => ({
           type: 'pbl' as const,
@@ -439,21 +439,21 @@ export default function UnifiedHistoryPage() {
                                       {session.averageScore}%
                                     </p>
                                     <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                                      {session.progress.completedStages}/{session.progress.totalStages} 階段完成
+                                      {session.progress.completedStages}/{session.progress.totalStages} {t('pbl:history.stagesCompleted')}
                                     </p>
                                   </>
                                 ) : (
                                   <>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">進度</p>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('pbl:history.progress')}</p>
                                     <p className="text-lg font-bold text-gray-900 dark:text-white">
-                                      {session.progress.completedStages}/{session.progress.totalStages} 階段
+                                      {session.progress.completedStages}/{session.progress.totalStages} {t('pbl:history.stages')}
                                     </p>
                                   </>
                                 )}
                                 {session.totalInteractions !== undefined && (
                                   <div className="mt-3">
-                                    <p className="text-sm text-gray-500 dark:text-gray-400">對話次數</p>
-                                    <p className="font-semibold text-gray-900 dark:text-white">{session.totalInteractions} 次</p>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">{t('pbl:history.conversationCount')}</p>
+                                    <p className="font-semibold text-gray-900 dark:text-white">{session.totalInteractions} {t('pbl:history.times')}</p>
                                   </div>
                                 )}
                               </div>
@@ -466,25 +466,25 @@ export default function UnifiedHistoryPage() {
                                   <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{t('assessment:history.domainScores')}</p>
                                   <div className="space-y-2">
                                     <div className="flex items-center gap-2">
-                                      <span className="text-sm text-gray-600 dark:text-gray-400 flex-1">與 AI 互動</span>
+                                      <span className="text-sm text-gray-600 dark:text-gray-400 flex-1">{t('assessment:domains.engaging_with_ai')}</span>
                                       <span className={`text-sm font-medium ${getScoreColor(session.domainScores.engaging_with_ai)}`}>
                                         {session.domainScores.engaging_with_ai}%
                                       </span>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                      <span className="text-sm text-gray-600 dark:text-gray-400 flex-1">與 AI 共創</span>
+                                      <span className="text-sm text-gray-600 dark:text-gray-400 flex-1">{t('assessment:domains.creating_with_ai')}</span>
                                       <span className={`text-sm font-medium ${getScoreColor(session.domainScores.creating_with_ai)}`}>
                                         {session.domainScores.creating_with_ai}%
                                       </span>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                      <span className="text-sm text-gray-600 dark:text-gray-400 flex-1">與 AI 管理</span>
+                                      <span className="text-sm text-gray-600 dark:text-gray-400 flex-1">{t('assessment:domains.managing_with_ai')}</span>
                                       <span className={`text-sm font-medium ${getScoreColor(session.domainScores.managing_with_ai)}`}>
                                         {session.domainScores.managing_with_ai}%
                                       </span>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                      <span className="text-sm text-gray-600 dark:text-gray-400 flex-1">與 AI 設計</span>
+                                      <span className="text-sm text-gray-600 dark:text-gray-400 flex-1">{t('assessment:domains.designing_with_ai')}</span>
                                       <span className={`text-sm font-medium ${getScoreColor(session.domainScores.designing_with_ai)}`}>
                                         {session.domainScores.designing_with_ai}%
                                       </span>
@@ -493,7 +493,7 @@ export default function UnifiedHistoryPage() {
                                 </>
                               ) : session.stageDetails && session.stageDetails.length > 0 ? (
                                 <div>
-                                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">階段詳情</p>
+                                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{t('pbl:history.stageDetails')}</p>
                                   <div className="space-y-2">
                                     {session.stageDetails.map((stage, index) => (
                                       <div key={stage.stageId} className="flex items-center justify-between text-sm">
@@ -508,7 +508,7 @@ export default function UnifiedHistoryPage() {
                                         </div>
                                         <div className="flex items-center space-x-3">
                                           {stage.interactions > 0 && (
-                                            <span className="text-gray-500 dark:text-gray-400">{stage.interactions} 對話</span>
+                                            <span className="text-gray-500 dark:text-gray-400">{stage.interactions} {t('pbl:history.conversations')}</span>
                                           )}
                                           {stage.score !== undefined && (
                                             <span className={`font-medium ${getScoreColor(stage.score)}`}>{stage.score}%</span>
@@ -525,7 +525,7 @@ export default function UnifiedHistoryPage() {
                           {/* Stage Details Below (when we have domain scores) */}
                           {session.domainScores && session.stageDetails && session.stageDetails.length > 0 && (
                             <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">階段詳情</p>
+                              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t('pbl:history.stageDetails')}</p>
                               <div className="space-y-2">
                                 {session.stageDetails.map((stage, index) => (
                                   <div key={stage.stageId} className="flex items-center justify-between text-sm">
@@ -557,7 +557,7 @@ export default function UnifiedHistoryPage() {
                           <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          時長: {formatDuration(session.duration)}
+                          {t('pbl:history.duration')}: {formatDuration(session.duration)}
                         </div>
                         {session.status === 'in_progress' ? (
                           <button

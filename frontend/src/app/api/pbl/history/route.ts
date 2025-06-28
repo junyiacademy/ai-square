@@ -57,20 +57,21 @@ async function loadScenarioData(scenarioId: string) {
 }
 
 // Get task title from scenario data
-function getTaskTitle(scenarioData: any, taskId: string, lang: string = 'zh-TW'): string | null {
+function getTaskTitle(scenarioData: any, taskId: string, lang: string = 'en'): string | null {
   if (!scenarioData || !scenarioData.stages) return null;
   
   for (const stage of scenarioData.stages) {
     if (stage.tasks) {
       const task = stage.tasks.find((t: any) => t.id === taskId);
       if (task) {
-        // Get localized title
-        if (lang === 'zh-TW') {
+        // Get localized title based on language
+        if (lang === 'zh' || lang === 'zh-TW' || lang === 'zh-CN') {
           const scenarioTitle = scenarioData.scenario_info?.title_zh || scenarioData.scenario_info?.title || 'Scenario';
           const stageTitle = stage.name_zh || stage.name || 'Stage';
           const taskTitle = task.title_zh || task.title || 'Task';
           return `${scenarioTitle} - ${stageTitle} - ${taskTitle}`;
         }
+        // Default to English
         const scenarioTitle = scenarioData.scenario_info?.title || 'Scenario';
         const stageTitle = stage.name || 'Stage';
         const taskTitle = task.title || 'Task';
@@ -84,6 +85,11 @@ function getTaskTitle(scenarioData: any, taskId: string, lang: string = 'zh-TW')
 
 export async function GET(request: NextRequest) {
   try {
+    // Get language from request header or query parameter
+    const acceptLanguage = request.headers.get('accept-language');
+    const { searchParams } = new URL(request.url);
+    const lang = searchParams.get('lang') || acceptLanguage?.split(',')[0]?.split('-')[0] || 'en';
+    
     // Get user email from cookie - this is now required
     let userEmail: string | undefined;
     try {
@@ -158,23 +164,33 @@ export async function GET(request: NextRequest) {
         ).length || 0;
         
         // Build task details if stage has tasks
-        const stageTasks = stage.tasks as Array<{ id: string; title?: string; name?: string }> | undefined;
+        const stageTasks = stage.tasks as Array<{ id: string; title?: string; title_zh?: string; name?: string; name_zh?: string }> | undefined;
         const taskDetails = stageTasks?.map((task) => {
           // Find task-specific result
           const taskResult = log.stageResults?.find((sr: { stageId: string; taskId?: string }) => 
             sr.stageId === stageId && sr.taskId === task.id
           );
           
+          // Get localized task title
+          const taskTitle = (lang === 'zh' || lang === 'zh-TW' || lang === 'zh-CN')
+            ? (task.title_zh || task.name_zh || task.title || task.name)
+            : (task.title || task.name);
+          
           return {
             taskId: task.id,
-            taskTitle: task.title || task.name,
+            taskTitle,
             score: taskResult?.score
           };
         });
         
+        // Get localized stage title
+        const stageTitle = (lang === 'zh' || lang === 'zh-TW' || lang === 'zh-CN')
+          ? String((stage as any).title_zh || (stage as any).name_zh || stage.title || stage.name) || `Stage ${index + 1}`
+          : String(stage.title || stage.name) || `Stage ${index + 1}`;
+        
         return {
           stageId: stageId,
-          stageTitle: String(stage.title || stage.name) || `Stage ${index + 1}`,
+          stageTitle,
           status: stageProgress?.status || 'not_started',
           score: stageResult?.score,
           interactions: Math.floor(stageInteractions / 2), // Divide by 2 for user-AI pairs
@@ -234,14 +250,21 @@ export async function GET(request: NextRequest) {
         
         // Find the task title and stage title from scenario
         for (const stage of log.scenario.stages as Array<Record<string, unknown>>) {
-          const stageTasks = stage.tasks as Array<{ id: string; title?: string; name?: string }> | undefined;
+          const stageTasks = stage.tasks as Array<{ id: string; title?: string; title_zh?: string; name?: string; name_zh?: string }> | undefined;
           const task = stageTasks?.find((t) => t.id === currentTaskId);
           if (task) {
-            const scenarioTitle = log.scenario.title || 'Scenario';
-            const stageTitle = String(stage.title || stage.name || 'Stage');
-            const taskTitle = task.title || task.name || 'Task';
-            // Combine scenario, stage and task title
-            currentTaskTitle = `${scenarioTitle} - ${stageTitle} - ${taskTitle}`;
+            // Get localized titles based on language
+            if (lang === 'zh' || lang === 'zh-TW' || lang === 'zh-CN') {
+              const scenarioTitle = (log.scenario as any).title_zh || log.scenario.title || 'Scenario';
+              const stageTitle = String((stage as any).title_zh || (stage as any).name_zh || stage.title || stage.name || 'Stage');
+              const taskTitle = task.title_zh || task.name_zh || task.title || task.name || 'Task';
+              currentTaskTitle = `${scenarioTitle} - ${stageTitle} - ${taskTitle}`;
+            } else {
+              const scenarioTitle = log.scenario.title || 'Scenario';
+              const stageTitle = String(stage.title || stage.name || 'Stage');
+              const taskTitle = task.title || task.name || 'Task';
+              currentTaskTitle = `${scenarioTitle} - ${stageTitle} - ${taskTitle}`;
+            }
             break;
           }
         }
@@ -273,11 +296,18 @@ export async function GET(request: NextRequest) {
           const firstTask = stageTasks?.[0];
           if (firstTask) {
             currentTaskId = firstTask.id;
-            const scenarioTitle = log.scenario.title || 'Scenario';
-            const stageTitle = String(currentStage.title || currentStage.name || `Stage ${latestStageIndex + 1}`);
-            const taskTitle = firstTask.title || firstTask.name || 'Task';
-            // Combine scenario, stage and task title
-            currentTaskTitle = `${scenarioTitle} - ${stageTitle} - ${taskTitle}`;
+            // Get localized titles based on language
+            if (lang === 'zh' || lang === 'zh-TW' || lang === 'zh-CN') {
+              const scenarioTitle = (log.scenario as any).title_zh || log.scenario.title || 'Scenario';
+              const stageTitle = String((currentStage as any).title_zh || (currentStage as any).name_zh || currentStage.title || currentStage.name || `Stage ${latestStageIndex + 1}`);
+              const taskTitle = (firstTask as any).title_zh || (firstTask as any).name_zh || firstTask.title || firstTask.name || 'Task';
+              currentTaskTitle = `${scenarioTitle} - ${stageTitle} - ${taskTitle}`;
+            } else {
+              const scenarioTitle = log.scenario.title || 'Scenario';
+              const stageTitle = String(currentStage.title || currentStage.name || `Stage ${latestStageIndex + 1}`);
+              const taskTitle = firstTask.title || firstTask.name || 'Task';
+              currentTaskTitle = `${scenarioTitle} - ${stageTitle} - ${taskTitle}`;
+            }
           }
         }
       }
@@ -285,16 +315,22 @@ export async function GET(request: NextRequest) {
       // Final fallback: just use scenario title with first stage
       if (!currentTaskTitle && log.scenario.stages.length > 0) {
         const firstStage = log.scenario.stages[0] as Record<string, unknown>;
-        const scenarioTitle = log.scenario.title || 'Scenario';
-        const stageTitle = String(firstStage.title || firstStage.name || 'Stage 1');
-        currentTaskTitle = `${scenarioTitle} - ${stageTitle}`;
+        if (lang === 'zh' || lang === 'zh-TW' || lang === 'zh-CN') {
+          const scenarioTitle = (log.scenario as any).title_zh || log.scenario.title || 'Scenario';
+          const stageTitle = String((firstStage as any).title_zh || (firstStage as any).name_zh || firstStage.title || firstStage.name || 'Stage 1');
+          currentTaskTitle = `${scenarioTitle} - ${stageTitle}`;
+        } else {
+          const scenarioTitle = log.scenario.title || 'Scenario';
+          const stageTitle = String(firstStage.title || firstStage.name || 'Stage 1');
+          currentTaskTitle = `${scenarioTitle} - ${stageTitle}`;
+        }
       }
       
       // Last resort: if we still don't have a title but have taskId, load from YAML
       if (!currentTaskTitle && currentTaskId && log.scenario.id) {
         const scenarioData = await loadScenarioData(log.scenario.id);
         if (scenarioData) {
-          const titleFromYaml = getTaskTitle(scenarioData, currentTaskId, 'zh-TW');
+          const titleFromYaml = getTaskTitle(scenarioData, currentTaskId, lang);
           if (titleFromYaml) {
             currentTaskTitle = titleFromYaml;
             console.log(`Loaded task title from YAML for ${currentTaskId}: ${currentTaskTitle}`);
@@ -302,11 +338,16 @@ export async function GET(request: NextRequest) {
         }
       }
       
+      // Get localized scenario title
+      const scenarioTitle = (lang === 'zh' || lang === 'zh-TW' || lang === 'zh-CN') 
+        ? ((log.scenario as any).title_zh || log.scenario.title)
+        : log.scenario.title;
+      
       return {
         id: log.sessionId,
         logId: log.logId,
         scenarioId: log.scenario.id,
-        scenarioTitle: log.scenario.title,
+        scenarioTitle,
         currentTaskId,
         currentTaskTitle,
         status,
