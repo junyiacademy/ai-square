@@ -1,7 +1,6 @@
 import { 
   SessionData, 
   ProcessLog, 
-  StageResult, 
   ApiResponse, 
   EvaluationResult,
   ProgressData 
