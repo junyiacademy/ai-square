@@ -87,17 +87,20 @@ make ai-report
 
 ### ✅ 應該做的
 1. **開始前執行 `make ai-new`** - 創建整合式票券
-2. **開發功能時同步撰寫測試** - TDD (Test-Driven Development) 優先
-3. **定期執行 `make ai-save`** - 保存進度並記錄 AI 使用
-4. **執行測試確保品質** - 單元測試和 E2E 測試都要通過
-5. **完成後等待指示** - 不要自動執行 `make ai-done`
-6. **記錄 AI 複雜度** - 透過環境變數傳遞
+2. **MVP 優先思維** - 先實作核心用戶價值，再完善基礎設施
+3. **開發功能時同步撰寫測試** - TDD (Test-Driven Development) 優先
+4. **定期執行 `make ai-save`** - 保存進度並記錄 AI 使用
+5. **執行測試確保品質** - 單元測試和 E2E 測試都要通過
+6. **完成後等待指示** - 不要自動執行 `make ai-done`
+7. **記錄 AI 複雜度** - 透過環境變數傳遞
 
 ### ❌ 不應該做的
 1. **自動 commit** - 除非用戶明確要求
 2. **使用舊命令** - 如 dev-start、dev-commit 等
 3. **創建冗長文件** - 保持極簡原則
 4. **分散資訊到多個檔案** - 使用整合式票券
+5. **過早優化** - 在驗證核心價值前避免過度工程化
+6. **隨意創建新目錄** - 保持 docs/ 架構簡潔，優先使用現有文件
 
 ---
 
@@ -108,12 +111,19 @@ frontend/           # Next.js + TypeScript + Tailwind
 backend/            # FastAPI + Python  
 docs/
 ├── tickets/        
-│   ├── active/     # 進行中的票券（整合式 YAML）
 │   └── archive/    # 已完成的票券（平面結構）
-├── handbook/       # AI-QUICK-REFERENCE.md（單一參考文件）
-├── scripts/        # 核心自動化工具
-└── reports/        # 每日/週報
+├── handbook/       # 開發指南文件
+│   ├── AI-QUICK-REFERENCE.md  # 實用開發模式
+│   └── proposals/  # 提案和設計文件
+└── *.md            # 項目級文檔（如 content-validation-report.md）
 ```
+
+### 📁 檔案結構原則
+- **保持極簡** - 不隨意創建新目錄
+- **善用現有檔案** - 優先在現有文件中添加內容  
+- **單一參考文件** - CLAUDE.md 為主要 AI 指南
+- **避免文件碎片化** - 相關資訊集中管理
+- **現有結構優先** - 新內容加入現有文件而非創建新目錄
 
 ---
 
@@ -163,13 +173,39 @@ AI: [執行: make ai-done]
 - 單元測試：`ComponentName.test.tsx` 或 `functionName.test.ts`
 - E2E 測試：`feature-name.spec.ts`
 
-## 💡 快速參考
+## 🎯 MVP 開發策略
 
-查看 `docs/handbook/AI-QUICK-REFERENCE.md` 獲取：
+### MVP 優先級順序
+1. **核心用戶價值** - 先驗證產品假設
+2. **基本功能完整性** - 確保主要流程可用
+3. **品質保證** - 適度的測試覆蓋（70%+）
+4. **基礎設施完善** - 等有實際需求再優化
+
+### 避免過早優化
+- ❌ 複雜的錯誤監控系統（用第三方服務）
+- ❌ 過度的性能優化（等遇到瓶頸）
+- ❌ 100% 測試覆蓋（聚焦關鍵路徑）
+- ❌ 完美的基礎設施（漸進式改善）
+
+### 技術債務管理
+- 記錄但不立即修復的技術債務
+- 當功能穩定後再重構優化
+- 用戶反饋驅動的改善優先
+
+## 💡 開發參考
+
+### 文檔結構
+- **CLAUDE.md** (本文件) - AI 行為準則與項目概覽
+- **docs/handbook/AI-QUICK-REFERENCE.md** - 實用開發模式與技巧
+- **docs/handbook/proposals/** - 設計提案與架構文件
+
+包含內容：
 - 常用程式碼模式
-- API 結構
+- API 結構  
 - 測試命令
 - Git commit 格式
+- MVP 策略指導
+- 高效 AI 協作技巧
 
 ---
 
