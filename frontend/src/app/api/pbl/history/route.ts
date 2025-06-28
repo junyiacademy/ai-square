@@ -42,10 +42,7 @@ interface SessionSummary {
 
 export async function GET(request: NextRequest) {
   try {
-    // Get userId from query params (in a real app, this would come from auth)
-    const userId = request.nextUrl.searchParams.get('userId') || 'default-user';
-    
-    // Try to get user email from cookie or assume it's the userId if it looks like an email
+    // Get user email from cookie - this is now required
     let userEmail: string | undefined;
     try {
       const userCookie = request.cookies.get('user')?.value;
@@ -57,22 +54,22 @@ export async function GET(request: NextRequest) {
       console.log('No user cookie found');
     }
     
-    // If userId looks like an email, use it as userEmail
-    if (!userEmail && userId.includes('@')) {
-      userEmail = userId;
+    if (!userEmail) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'User authentication required (no email found)'
+        },
+        { status: 401 }
+      );
     }
     
-    // If we still don't have userEmail but have a demo user, try to get from localStorage pattern
-    if (!userEmail && userId === 'user-demo') {
-      userEmail = 'demo@example.com';
-    }
+    console.log('Fetching PBL history for userEmail:', userEmail);
     
-    console.log('Fetching PBL history for userId:', userId, 'userEmail:', userEmail);
+    // Get all learning logs for the user (using email only)
+    const logs = await pblGCS.getUserLearningLogs('', userEmail);
     
-    // Get all learning logs for the user
-    const logs = await pblGCS.getUserLearningLogs(userId, userEmail);
-    
-    console.log(`Found ${logs.length} PBL sessions for user ${userId}`);
+    console.log(`Found ${logs.length} PBL sessions for user ${userEmail}`);
     
     // Transform logs into session summaries
     const sessions: SessionSummary[] = logs.map(log => {

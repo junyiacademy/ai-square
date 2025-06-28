@@ -144,24 +144,11 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('userId');
+    const userId = searchParams.get('userId'); // Keep for backward compatibility but not used
     const scenarioId = searchParams.get('scenarioId');
     const status = searchParams.get('status') as 'in_progress' | 'completed' | 'paused' | null;
 
-    if (!userId) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: 'INVALID_REQUEST',
-            message: 'userId is required'
-          }
-        },
-        { status: 400 }
-      );
-    }
-
-    // Extract user email from cookies if available
+    // Extract user email from cookies - this is now required
     let userEmail: string | undefined;
     try {
       const userCookie = request.cookies.get('user')?.value;
@@ -174,64 +161,46 @@ export async function GET(request: NextRequest) {
       console.log('No user cookie found');
     }
 
-    console.log(`GET /api/pbl/sessions - userId: ${userId}, status: ${status}, scenarioId: ${scenarioId}, userEmail: ${userEmail}`);
+    if (!userEmail) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'USER_NOT_AUTHENTICATED',
+            message: 'User authentication required (no email found)'
+          }
+        },
+        { status: 401 }
+      );
+    }
+
+    console.log(`GET /api/pbl/sessions - email: ${userEmail}, status: ${status}, scenarioId: ${scenarioId}`);
     
     // Try to fetch from GCS first
     let userSessions: SessionData[] = [];
     
     try {
-      // If we have userEmail, use email-based search (more reliable)
-      if (userEmail) {
-        console.log('Using email-based search for sessions');
-        const logDataList = await pblGCS.getSessionsByEmail(
-          userEmail,
-          status || undefined,
-          scenarioId || undefined
-        );
-        
-        // Extract session data from log data
-        userSessions = logDataList.map(logData => {
-          // Restore processLogs from root level
-          return {
-            ...logData.session_data,
-            processLogs: logData.process_logs || []
-          };
-        });
-      } else {
-        // Fallback to userId-based search
-        console.log('Using userId-based search for sessions');
-        const logDataList = await pblGCS.listUserSessions(
-          userId, 
-          status || undefined,
-          userEmail
-        );
-        
-        // Extract session data from log data
-        userSessions = logDataList.map(logData => {
-          // Restore processLogs from root level
-          return {
-            ...logData.session_data,
-            processLogs: logData.process_logs || []
-          };
-        });
-        
-        // Filter by scenarioId if provided
-        if (scenarioId) {
-          userSessions = userSessions.filter(session => session.scenarioId === scenarioId);
-        }
-      }
-    } catch (gcsError) {
-      console.error('Failed to fetch from GCS, using in-memory storage:', gcsError);
-      // Fallback to in-memory storage
-      sessions.forEach((session) => {
-        const matchesUserId = session.userId === userId;
-        const matchesStatus = !status || session.status === status;
-        const matchesScenarioId = !scenarioId || session.scenarioId === scenarioId;
-        
-        if (matchesUserId && matchesStatus && matchesScenarioId) {
-          userSessions.push(session);
-        }
+      // Always use email-based search
+      console.log('Using email-based search for sessions');
+      const logDataList = await pblGCS.getSessionsByEmail(
+        userEmail,
+        status || undefined,
+        scenarioId || undefined
+      );
+      
+      // Extract session data from log data
+      userSessions = logDataList.map(logData => {
+        // Restore processLogs from root level
+        return {
+          ...logData.session_data,
+          processLogs: logData.process_logs || []
+        };
       });
+    } catch (gcsError) {
+      console.error('Failed to fetch from GCS:', gcsError);
+      // In-memory storage is not reliable for email-based search
+      // Return empty array
+      userSessions = [];
     }
 
     return NextResponse.json({

@@ -584,21 +584,16 @@ export class PBLGCSService {
    */
   async getUserLearningLogs(userId: string, userEmail?: string): Promise<LearningLog[]> {
     try {
-      console.log(`Getting learning logs for userId: ${userId}, userEmail: ${userEmail}`);
+      console.log(`Getting learning logs for userEmail: ${userEmail}`);
       
-      // If we have userEmail, prioritize getting sessions by email folder
-      if (userEmail) {
-        const sessions = await this.getSessionsByEmail(userEmail, undefined, undefined);
-        console.log(`Found ${sessions.length} sessions by email: ${userEmail}`);
-        
-        if (sessions.length > 0) {
-          return sessions.map(session => this.transformToLearningLog(session));
-        }
+      // Always use email-based search if available
+      if (!userEmail) {
+        console.log('No userEmail provided, returning empty array');
+        return [];
       }
       
-      // Fallback to original method
-      const sessions = await this.listUserSessions(userId, undefined, userEmail);
-      console.log(`Found ${sessions.length} sessions for userId: ${userId}`);
+      const sessions = await this.getSessionsByEmail(userEmail, undefined, undefined);
+      console.log(`Found ${sessions.length} sessions by email: ${userEmail}`);
       
       return sessions.map(session => this.transformToLearningLog(session));
     } catch (error) {
