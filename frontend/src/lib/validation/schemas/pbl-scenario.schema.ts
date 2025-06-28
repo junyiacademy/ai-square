@@ -1,153 +1,126 @@
 /**
- * Validation schema for PBL (Problem-Based Learning) scenarios
+ * Validation schemas for PBL (Problem-Based Learning) scenarios
+ * These schemas match the types defined in @/types/pbl.ts
  */
 
-import { z } from 'zod'
-import { multilingualFieldSchema, idSchemas, commonSchemas } from './base.schema'
+import { z } from 'zod';
 
-// Scenario info schema
-const scenarioInfoSchema = z.object({
-  id: idSchemas.scenarioId,
-  ...multilingualFieldSchema('title').shape,
-  ...multilingualFieldSchema('description').shape,
-  difficulty: commonSchemas.difficulty,
-  estimated_duration: z.number().positive().int(), // in minutes
-  target_domains: z.array(idSchemas.domainId),
-  prerequisites: z.array(z.string()),
-  ...multilingualFieldSchema('learning_objectives').shape
-}).transform(data => {
-  // Transform learning_objectives fields to arrays
-  const transformed: any = { ...data }
-  Object.keys(data).forEach(key => {
-    if (key === 'learning_objectives' || key.startsWith('learning_objectives_')) {
-      if (typeof transformed[key] === 'string') {
-        try {
-          transformed[key] = JSON.parse(transformed[key])
-        } catch {
-          // If not valid JSON, split by newlines or semicolons
-          transformed[key] = transformed[key].split(/[;\n]/).map((s: string) => s.trim()).filter(Boolean)
-        }
-      }
-    }
-  })
-  return transformed
-})
+// Enum schemas
+const domainTypeSchema = z.enum(['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai']);
+const difficultyLevelSchema = z.enum(['beginner', 'intermediate', 'advanced']);
+const stageTypeSchema = z.enum(['research', 'analysis', 'creation', 'interaction']);
+const modalityFocusSchema = z.enum(['reading', 'writing', 'listening', 'speaking', 'mixed']);
+const aiRoleSchema = z.enum(['assistant', 'evaluator', 'actor']);
 
-// KSA mapping schema for scenarios
-const scenarioKSAMappingSchema = z.object({
-  knowledge: z.array(idSchemas.knowledgeId),
-  skills: z.array(idSchemas.skillId),
-  attitudes: z.array(idSchemas.attitudeId)
-})
+// KSA mapping schema
+const ksaMappingSchema = z.object({
+  knowledge: z.array(z.string()), // K1.1, K2.3 etc
+  skills: z.array(z.string()),    // S1.2, S3.1 etc
+  attitudes: z.array(z.string()), // A1.1, A2.2 etc
+});
+
+// Rubric level schema
+const rubricLevelSchema = z.object({
+  level: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]),
+  description: z.string(),
+  criteria: z.array(z.string()),
+});
+
+// Rubrics criteria schema
+const rubricsCriteriaSchema = z.object({
+  criterion: z.string(),
+  weight: z.number().min(0).max(1),
+  levels: z.array(rubricLevelSchema),
+});
+
+// AI module schema
+const aiModuleSchema = z.object({
+  role: aiRoleSchema,
+  model: z.string(),
+  persona: z.string().optional(),
+});
+
+// Logging config schema
+const loggingConfigSchema = z.object({
+  trackInteractions: z.boolean(),
+  trackThinkingTime: z.boolean(),
+  trackRevisions: z.boolean(),
+  trackResourceUsage: z.boolean(),
+});
 
 // Task schema
-const taskSchema = z.object({
-  ...multilingualFieldSchema('task').shape,
-  ...multilingualFieldSchema('expected_output').shape,
-  ...multilingualFieldSchema('ai_tool_suggestion').shape
-})
+export const taskSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  description: z.string(),
+  instructions: z.array(z.string()),
+  expectedOutcome: z.string(),
+  timeLimit: z.number().positive().optional(),
+  resources: z.array(z.string()).optional(),
+});
 
 // Stage schema
-const stageSchema = z.object({
-  id: idSchemas.stageId,
-  ...multilingualFieldSchema('name').shape,
-  ...multilingualFieldSchema('description').shape,
-  duration: z.number().positive().int(), // in minutes
-  modality: z.enum(['individual', 'group', 'ai_assisted']),
+export const stageSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string(),
+  stageType: stageTypeSchema,
+  modalityFocus: modalityFocusSchema,
+  assessmentFocus: z.object({
+    primary: z.array(z.string()),
+    secondary: z.array(z.string()),
+  }),
+  rubricsCriteria: z.array(rubricsCriteriaSchema),
+  aiModules: z.array(aiModuleSchema),
   tasks: z.array(taskSchema),
-  ...multilingualFieldSchema('learning_points').shape,
-  ...multilingualFieldSchema('assessment_criteria').shape
-}).transform(data => {
-  // Transform array-like fields
-  const transformed: any = { ...data }
-  const arrayFields = ['learning_points', 'assessment_criteria']
-  
-  Object.keys(data).forEach(key => {
-    arrayFields.forEach(field => {
-      if (key === field || key.startsWith(`${field}_`)) {
-        if (typeof transformed[key] === 'string') {
-          try {
-            transformed[key] = JSON.parse(transformed[key])
-          } catch {
-            transformed[key] = transformed[key].split(/[;\n]/).map((s: string) => s.trim()).filter(Boolean)
-          }
-        }
-      }
-    })
-  })
-  return transformed
-})
+  timeLimit: z.number().positive().optional(),
+  loggingConfig: loggingConfigSchema,
+});
 
-// Evaluation criteria schema
-const evaluationCriteriaSchema = z.object({
-  ...multilingualFieldSchema('criteria').shape,
-  weight: commonSchemas.percentage
-})
-
-// Complete PBL scenario file schema
-export const pblScenarioFileSchema = z.object({
-  scenario_info: scenarioInfoSchema,
-  ksa_mapping: scenarioKSAMappingSchema,
+// Scenario program schema
+export const scenarioSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  description: z.string(),
+  targetDomain: z.array(domainTypeSchema),
+  ksaMapping: ksaMappingSchema,
   stages: z.array(stageSchema),
-  evaluation: z.object({
-    ...multilingualFieldSchema('rubric_description').shape,
-    criteria: z.array(evaluationCriteriaSchema),
-    ...multilingualFieldSchema('completion_requirements').shape
-  }).optional()
-})
+  estimatedDuration: z.number().positive(),
+  difficulty: difficultyLevelSchema,
+  prerequisites: z.array(z.string()).optional(),
+  learningObjectives: z.array(z.string()),
+});
 
 // Type exports
-export type PBLScenarioFile = z.infer<typeof pblScenarioFileSchema>
-export type ScenarioInfo = z.infer<typeof scenarioInfoSchema>
-export type Stage = z.infer<typeof stageSchema>
-export type Task = z.infer<typeof taskSchema>
+export type Task = z.infer<typeof taskSchema>;
+export type Stage = z.infer<typeof stageSchema>;
+export type ScenarioProgram = z.infer<typeof scenarioSchema>;
 
-// Helper functions
-export function validateStageDuration(scenario: PBLScenarioFile): { valid: boolean; errors: string[] } {
-  const errors: string[] = []
+// Custom validators
+export const validateRubricWeights = (stage: Stage): boolean => {
+  const totalWeight = stage.rubricsCriteria.reduce((sum, criteria) => sum + criteria.weight, 0);
+  return Math.abs(totalWeight - 1.0) < 0.001; // Allow small floating point errors
+};
+
+export const validateRubricLevels = (criteria: z.infer<typeof rubricsCriteriaSchema>): boolean => {
+  // Check that we have exactly 4 levels (1-4)
+  if (criteria.levels.length !== 4) return false;
   
-  // Calculate total duration from stages
-  const totalStageDuration = scenario.stages.reduce((sum, stage) => sum + stage.duration, 0)
+  // Check that levels are numbered correctly
+  const levelNumbers = criteria.levels.map(l => l.level).sort();
+  return JSON.stringify(levelNumbers) === JSON.stringify([1, 2, 3, 4]);
+};
+
+// Additional validation for KSA codes
+export const validateKSACode = (code: string, type: 'K' | 'S' | 'A'): boolean => {
+  const pattern = new RegExp(`^${type}\\d+\\.\\d+$`);
+  return pattern.test(code);
+};
+
+export const validateKSAMapping = (mapping: z.infer<typeof ksaMappingSchema>): boolean => {
+  const knowledgeValid = mapping.knowledge.every(k => validateKSACode(k, 'K'));
+  const skillsValid = mapping.skills.every(s => validateKSACode(s, 'S'));
+  const attitudesValid = mapping.attitudes.every(a => validateKSACode(a, 'A'));
   
-  // Check if it matches estimated duration (with some tolerance)
-  const estimatedDuration = scenario.scenario_info.estimated_duration
-  const tolerance = estimatedDuration * 0.1 // 10% tolerance
-  
-  if (Math.abs(totalStageDuration - estimatedDuration) > tolerance) {
-    errors.push(
-      `Total stage duration (${totalStageDuration} min) differs significantly from estimated duration (${estimatedDuration} min)`
-    )
-  }
-
-  return { valid: errors.length === 0, errors }
-}
-
-export function validateScenarioKSAReferences(
-  scenario: PBLScenarioFile,
-  validKSAIds: { knowledgeIds: string[], skillIds: string[], attitudeIds: string[] }
-): { valid: boolean; errors: string[] } {
-  const errors: string[] = []
-
-  // Check knowledge references
-  scenario.ksa_mapping.knowledge.forEach(kId => {
-    if (!validKSAIds.knowledgeIds.includes(kId)) {
-      errors.push(`Invalid knowledge reference ${kId} in scenario ${scenario.scenario_info.id}`)
-    }
-  })
-
-  // Check skill references
-  scenario.ksa_mapping.skills.forEach(sId => {
-    if (!validKSAIds.skillIds.includes(sId)) {
-      errors.push(`Invalid skill reference ${sId} in scenario ${scenario.scenario_info.id}`)
-    }
-  })
-
-  // Check attitude references
-  scenario.ksa_mapping.attitudes.forEach(aId => {
-    if (!validKSAIds.attitudeIds.includes(aId)) {
-      errors.push(`Invalid attitude reference ${aId} in scenario ${scenario.scenario_info.id}`)
-    }
-  })
-
-  return { valid: errors.length === 0, errors }
-}
+  return knowledgeValid && skillsValid && attitudesValid;
+};
