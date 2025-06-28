@@ -107,7 +107,7 @@ spec:
   - 整合 GCS 儲存服務讀寫學習記錄
   - 使用 React hooks 管理學習狀態
   - 響應式設計支援行動裝置
-status: active
+status: completed
 test_report:
   coverage:
     branches: 0
@@ -125,7 +125,7 @@ time_tracking:
   actual_duration_minutes: 642
   ai_time_minutes: 0
   checkpoints: []
-  completed_at: null
+  completed_at: '2025-06-28T14:52:00.000000'
   human_time_minutes: 0
   started_at: '2025-06-26T13:58:21.642944'
 type: feature
