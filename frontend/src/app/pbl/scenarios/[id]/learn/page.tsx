@@ -724,6 +724,7 @@ export default function PBLLearnPage() {
         
         // Get user info from localStorage or cookie
         let userId = `anonymous_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        let userEmail: string | undefined;
         try {
           // First check localStorage
           const isLoggedIn = localStorage.getItem('isLoggedIn');
@@ -732,6 +733,7 @@ export default function PBLLearnPage() {
           if (isLoggedIn === 'true' && userData) {
             const user = JSON.parse(userData);
             userId = String(user.id);
+            userEmail = user.email;
           } else {
             // Fallback to cookie
             const userCookie = document.cookie
@@ -742,6 +744,7 @@ export default function PBLLearnPage() {
             if (userCookie) {
               const user = JSON.parse(decodeURIComponent(userCookie));
               userId = String(user.id);
+              userEmail = user.email;
             }
           }
         } catch (e) {
@@ -755,6 +758,7 @@ export default function PBLLearnPage() {
             scenarioId,
             scenarioTitle: scenario.title,
             userId,
+            userEmail, // Add userEmail to the request
             language: i18n.language,
             stageIndex: actualStageIndex,
             stageId: scenario.stages[actualStageIndex].id,

@@ -386,6 +386,8 @@ export class PBLGCSService {
         timestamp: new Date().toISOString(),
         process_logs: updatedSessionData.processLogs || []
       };
+      
+      console.log(`Updating session ${sessionId} - status: ${logData.status} -> ${updatedSessionData.status}`);
 
       // Save back to the SAME file (overwrite)
       await targetFile.save(JSON.stringify(updatedLogData, null, 2), {
@@ -427,13 +429,19 @@ export class PBLGCSService {
                 const [contents] = await file.download();
                 const logData = JSON.parse(contents.toString()) as PBLLogData;
                 
-                console.log(`File ${file.name} - user_id: ${logData.user_id}, status: ${logData.status}`);
+                console.log(`File ${file.name} - user_id: ${logData.user_id}, status: ${logData.status}, scenario_id: ${logData.scenario_id}`);
                 
                 // Check if user_id matches (could be string or number)
                 if (String(logData.user_id) === String(userId)) {
+                  console.log(`User ID matches. Checking status filter: looking for ${status}, file has ${logData.status}`);
                   if (!status || logData.status === status) {
+                    console.log(`Status matches, adding to results`);
                     sessions.push(logData);
+                  } else {
+                    console.log(`Status doesn't match, skipping`);
                   }
+                } else {
+                  console.log(`User ID doesn't match: ${logData.user_id} !== ${userId}`);
                 }
               } catch (parseError) {
                 console.error(`Failed to parse file ${file.name}:`, parseError);

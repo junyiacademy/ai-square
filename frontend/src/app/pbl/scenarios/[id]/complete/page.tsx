@@ -82,10 +82,23 @@ export default function PBLCompletePage() {
         const sessionsData = await sessionsResponse.json();
         
         console.log('Sessions API response:', sessionsData);
+        console.log('Fetching sessions with params:', {
+          userId,
+          userEmail,
+          scenarioId,
+          status: 'completed'
+        });
         
         if (sessionsData.success) {
           const allSessions = sessionsData.data.sessions;
           console.log('All sessions count:', allSessions.length);
+          console.log('Sessions:', allSessions.map((s: SessionData) => ({
+            id: s.id,
+            status: s.status,
+            scenarioId: s.scenarioId,
+            userEmail: s.userEmail,
+            userId: s.userId
+          })));
           
           // Group sessions by stage and keep only the latest one for each stage
           const latestSessionsByStage = new Map<number, SessionData>();

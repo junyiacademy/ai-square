@@ -9,7 +9,7 @@ const sessions = new Map<string, SessionData>();
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { scenarioId, scenarioTitle, userId, stageIndex = 0, stageId, taskId } = body;
+    const { scenarioId, scenarioTitle, userId, userEmail: providedEmail, stageIndex = 0, stageId, taskId } = body;
 
     if (!scenarioId || !userId) {
       return NextResponse.json(
@@ -24,17 +24,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Extract user email from cookies - required
-    let userEmail: string | undefined;
-    try {
-      const userCookie = request.cookies.get('user')?.value;
-      if (userCookie) {
-        const user = JSON.parse(userCookie);
-        userEmail = user.email;
-        console.log('User email from cookie:', userEmail);
+    // Extract user email from request body or cookies
+    let userEmail: string | undefined = providedEmail;
+    
+    // If not provided in body, try to get from cookies
+    if (!userEmail) {
+      try {
+        const userCookie = request.cookies.get('user')?.value;
+        if (userCookie) {
+          const user = JSON.parse(userCookie);
+          userEmail = user.email;
+          console.log('User email from cookie:', userEmail);
+        }
+      } catch (err) {
+        console.error('Error parsing user cookie:', err);
       }
-    } catch (err) {
-      console.error('Error parsing user cookie:', err);
+    } else {
+      console.log('User email from request body:', userEmail);
     }
     
     // User authentication is required for creating sessions
@@ -162,11 +168,14 @@ export async function GET(request: NextRequest) {
       if (userCookie) {
         const user = JSON.parse(userCookie);
         userEmail = user.email;
+        console.log('User email from cookie:', userEmail);
       }
     } catch {
       console.log('No user cookie found');
     }
 
+    console.log(`GET /api/pbl/sessions - userId: ${userId}, status: ${status}, scenarioId: ${scenarioId}, userEmail: ${userEmail}`);
+    
     // Try to fetch from GCS first
     let userSessions: SessionData[] = [];
     
