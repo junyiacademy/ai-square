@@ -9,50 +9,52 @@ import { multilingualFieldSchema, idSchemas } from './base.schema'
 const ksaCodeSchema = multilingualFieldSchema('summary')
 
 // Theme schema containing multiple codes
-const themeSchema = z.record(
-  z.union([idSchemas.knowledgeId, idSchemas.skillId, idSchemas.attitudeId]),
-  ksaCodeSchema
-)
+const themeSchema = z.object({
+  codes: z.record(
+    z.union([idSchemas.knowledgeId, idSchemas.skillId, idSchemas.attitudeId]),
+    ksaCodeSchema
+  )
+})
 
 // Schema for knowledge codes section
 const knowledgeCodesSchema = z.object({
-  description: z.string().min(1),
-  description_zh: z.string().min(1),
-  description_es: z.string().min(1),
-  description_ja: z.string().min(1),
-  description_ko: z.string().min(1),
-  description_fr: z.string().min(1),
-  description_de: z.string().min(1),
-  description_ru: z.string().min(1),
-  description_it: z.string().min(1),
+  desciption: z.string().min(1), // Note: typo in actual YAML file
+  desciption_zh: z.string().min(1),
+  desciption_es: z.string().min(1),
+  desciption_ja: z.string().min(1),
+  desciption_ko: z.string().min(1),
+  desciption_fr: z.string().min(1),
+  desciption_de: z.string().min(1),
+  desciption_ru: z.string().min(1),
+  desciption_it: z.string().min(1),
   themes: z.record(z.string(), themeSchema)
 })
 
 // Schema for skills codes section
 const skillsCodesSchema = z.object({
-  description: z.string().min(1),
-  description_zh: z.string().min(1),
-  description_es: z.string().min(1),
-  description_ja: z.string().min(1),
-  description_ko: z.string().min(1),
-  description_fr: z.string().min(1),
-  description_de: z.string().min(1),
-  description_ru: z.string().min(1),
-  description_it: z.string().min(1),
+  desciption: z.string().min(1), // Note: typo in actual YAML file
+  desciption_zh: z.string().min(1),
+  desciption_es: z.string().min(1),
+  desciption_ja: z.string().min(1),
+  desciption_ko: z.string().min(1),
+  desciption_fr: z.string().min(1),
+  desciption_de: z.string().min(1),
+  desciption_ru: z.string().min(1),
+  desciption_it: z.string().min(1),
   themes: z.record(z.string(), themeSchema)
 })
 
 // Schema for attitudes codes section
 const attitudesCodesSchema = z.object({
-  description: z.string().min(1),
-  description_zh: z.string().min(1),
-  description_es: z.string().min(1),
-  description_ja: z.string().min(1),
-  description_ko: z.string().min(1),
-  description_fr: z.string().min(1),
-  description_de: z.string().min(1),
-  description_ru: z.string().min(1),
-  description_it: z.string().min(1),
+  desciption: z.string().min(1), // Note: typo in actual YAML file
+  desciption_zh: z.string().min(1),
+  desciption_es: z.string().min(1),
+  desciption_ja: z.string().min(1),
+  desciption_ko: z.string().min(1),
+  desciption_fr: z.string().min(1),
+  desciption_de: z.string().min(1),
+  desciption_ru: z.string().min(1),
+  desciption_it: z.string().min(1),
   themes: z.record(z.string(), themeSchema)
 })
 
@@ -71,24 +73,28 @@ export type AttitudesCodes = z.infer<typeof attitudesCodesSchema>
 
 // Helper function to extract all valid KSA IDs from a file
 export function extractKSAIds(ksaData: KSACodesFile) {
-  const knowledgeIds: string[] = []
-  const skillIds: string[] = []
-  const attitudeIds: string[] = []
+  const knowledgeIds = new Set<string>()
+  const skillIds = new Set<string>()
+  const attitudeIds = new Set<string>()
 
   // Extract knowledge IDs
   Object.values(ksaData.knowledge_codes.themes).forEach(theme => {
-    knowledgeIds.push(...Object.keys(theme))
+    Object.keys(theme.codes).forEach(id => knowledgeIds.add(id))
   })
 
   // Extract skill IDs
   Object.values(ksaData.skills_codes.themes).forEach(theme => {
-    skillIds.push(...Object.keys(theme))
+    Object.keys(theme.codes).forEach(id => skillIds.add(id))
   })
 
   // Extract attitude IDs
   Object.values(ksaData.attitudes_codes.themes).forEach(theme => {
-    attitudeIds.push(...Object.keys(theme))
+    Object.keys(theme.codes).forEach(id => attitudeIds.add(id))
   })
 
-  return { knowledgeIds, skillIds, attitudeIds }
+  return { 
+    knowledgeIds: Array.from(knowledgeIds),
+    skillIds: Array.from(skillIds),
+    attitudeIds: Array.from(attitudeIds)
+  }
 }

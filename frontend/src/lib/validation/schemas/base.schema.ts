@@ -49,9 +49,9 @@ export const optionalMultilingualFieldSchema = (fieldName: string) => {
 export const idSchemas = {
   domainId: z.enum(['Engaging_with_AI', 'Creating_with_AI', 'Managing_with_AI', 'Designing_with_AI']),
   competencyId: z.string().regex(/^[ECMD]\d+$/, 'Competency ID must be in format like E1, C2, etc.'),
-  knowledgeId: z.string().regex(/^K\d+$/, 'Knowledge ID must be in format K1, K2, etc.'),
-  skillId: z.string().regex(/^S\d+$/, 'Skill ID must be in format S1, S2, etc.'),
-  attitudeId: z.string().regex(/^A\d+$/, 'Attitude ID must be in format A1, A2, etc.'),
+  knowledgeId: z.string().regex(/^K\d+\.\d+$/, 'Knowledge ID must be in format K1.1, K2.3, etc.'),
+  skillId: z.string().regex(/^S\d+\.\d+$/, 'Skill ID must be in format S1.1, S2.3, etc.'),
+  attitudeId: z.string().regex(/^A\d+\.\d+$/, 'Attitude ID must be in format A1.1, A2.3, etc.'),
   questionId: z.string().regex(/^Q\d{3}$/, 'Question ID must be in format Q001, Q002, etc.'),
   scenarioId: z.string().min(1),
   stageId: z.string().min(1)

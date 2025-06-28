@@ -12,24 +12,15 @@ const competencySchema = z.object({
   skills: z.array(idSchemas.skillId),
   attitudes: z.array(idSchemas.attitudeId),
   ...multilingualFieldSchema('content').shape,
-  ...multilingualFieldSchema('scenarios').shape
-}).transform(data => {
-  // Transform scenarios fields to arrays
-  const transformed: any = { ...data }
-  Object.keys(data).forEach(key => {
-    if (key === 'scenarios' || key.startsWith('scenarios_')) {
-      // Parse scenarios as array if it's a string
-      if (typeof transformed[key] === 'string') {
-        try {
-          transformed[key] = JSON.parse(transformed[key])
-        } catch {
-          // If not valid JSON, split by newlines
-          transformed[key] = transformed[key].split('\n').filter(Boolean)
-        }
-      }
-    }
-  })
-  return transformed
+  scenarios: z.array(z.string()),
+  scenarios_zh: z.array(z.string()),
+  scenarios_es: z.array(z.string()),
+  scenarios_ja: z.array(z.string()),
+  scenarios_ko: z.array(z.string()),
+  scenarios_fr: z.array(z.string()),
+  scenarios_de: z.array(z.string()),
+  scenarios_ru: z.array(z.string()),
+  scenarios_it: z.array(z.string())
 })
 
 // Domain schema
