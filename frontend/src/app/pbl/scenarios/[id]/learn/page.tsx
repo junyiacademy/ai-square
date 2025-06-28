@@ -179,11 +179,9 @@ export default function PBLLearnPage() {
       
       if (currentStageId) {
         try {
-          const url = `/api/pbl/logs?scenarioId=${scenarioId}&stageId=${currentStageId}&taskId=${currentTask.id}`;
-          console.log('Fetching logs with URL:', url);
+          const url = `/api/pbl/task-logs?taskId=${currentTask.id}`;
+          console.log('Fetching task logs with URL:', url);
           console.log('Parameters:', {
-            scenarioId,
-            stageId: currentStageId,
             taskId: currentTask.id
           });
           
@@ -192,13 +190,23 @@ export default function PBLLearnPage() {
           if (response.ok) {
             const data = await response.json();
             console.log('API response data:', data);
-            setExistingLogs(data.data.logs);
-            console.log(`Found ${data.data.logs.length} existing logs for task ${currentTask.id}`);
-            console.log('Logs detail:', data.data.logs);
+            // Transform task logs to existing logs format
+            const transformedLogs = data.data.logs.map((log: any) => ({
+              sessionId: log.sessionId,
+              createdAt: log.startedAt,
+              metadata: {
+                conversationCount: log.conversationCount || 0,
+                timeSpent: log.totalTimeSeconds || 0
+              }
+            }));
+            
+            setExistingLogs(transformedLogs);
+            console.log(`Found ${transformedLogs.length} existing logs for task ${currentTask.id}`);
+            console.log('Logs detail:', transformedLogs);
             
             // Auto-load the latest log if available
-            if (data.data.logs.length > 0) {
-              const latestLog = data.data.logs[0]; // Logs are sorted by creation time (newest first)
+            if (transformedLogs.length > 0) {
+              const latestLog = transformedLogs[0]; // Logs are sorted by creation time (newest first)
               console.log('Auto-loading latest log:', latestLog.sessionId);
               // Delay slightly to ensure UI is ready
               setTimeout(() => {
