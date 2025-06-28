@@ -64,22 +64,22 @@ export default function PBLLearnPage() {
       if (!scenario || !scenarioId || !isAuthenticated) return;
       
       // Get user info from localStorage
-      let userId: string | null = null;
+      let userEmail: string | null = null;
       try {
         const userData = localStorage.getItem('user');
         if (userData) {
           const user = JSON.parse(userData);
-          userId = String(user.id);
+          userEmail = user.email;
         }
       } catch (e) {
         console.log('Error getting user info:', e);
       }
       
-      if (!userId) return;
+      if (!userEmail) return;
       
       try {
         // Fetch all sessions (both active and completed) for this scenario
-        const response = await fetch(`/api/pbl/sessions?userId=${userId}&scenarioId=${scenarioId}`);
+        const response = await fetch(`/api/pbl/sessions?scenarioId=${scenarioId}`);
         if (response.ok) {
           const data = await response.json();
           if (data.success && data.data.sessions.length > 0) {

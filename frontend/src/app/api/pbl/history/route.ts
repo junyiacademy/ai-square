@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pblGCS } from '@/lib/storage/pbl-gcs-service';
+import { promises as fs } from 'fs';
+import path from 'path';
+import yaml from 'js-yaml';
 
 interface SessionSummary {
   id: string;
@@ -40,6 +43,45 @@ interface SessionSummary {
   };
 }
 
+// Load scenario data from YAML file
+async function loadScenarioData(scenarioId: string) {
+  try {
+    const yamlPath = path.join(process.cwd(), 'public', 'pbl_data', `${scenarioId.replace(/-/g, '_')}_scenario.yaml`);
+    const yamlContent = await fs.readFile(yamlPath, 'utf8');
+    const data = yaml.load(yamlContent) as any;
+    return data;
+  } catch (error) {
+    console.error(`Error loading scenario data for ${scenarioId}:`, error);
+    return null;
+  }
+}
+
+// Get task title from scenario data
+function getTaskTitle(scenarioData: any, taskId: string, lang: string = 'zh-TW'): string | null {
+  if (!scenarioData || !scenarioData.stages) return null;
+  
+  for (const stage of scenarioData.stages) {
+    if (stage.tasks) {
+      const task = stage.tasks.find((t: any) => t.id === taskId);
+      if (task) {
+        // Get localized title
+        if (lang === 'zh-TW') {
+          const scenarioTitle = scenarioData.scenario_info?.title_zh || scenarioData.scenario_info?.title || 'Scenario';
+          const stageTitle = stage.name_zh || stage.name || 'Stage';
+          const taskTitle = task.title_zh || task.title || 'Task';
+          return `${scenarioTitle} - ${stageTitle} - ${taskTitle}`;
+        }
+        const scenarioTitle = scenarioData.scenario_info?.title || 'Scenario';
+        const stageTitle = stage.name || 'Stage';
+        const taskTitle = task.title || 'Task';
+        return `${scenarioTitle} - ${stageTitle} - ${taskTitle}`;
+      }
+    }
+  }
+  
+  return null;
+}
+
 export async function GET(request: NextRequest) {
   try {
     // Get user email from cookie - this is now required
@@ -72,7 +114,7 @@ export async function GET(request: NextRequest) {
     console.log(`Found ${logs.length} PBL sessions for user ${userEmail}`);
     
     // Transform logs into session summaries
-    const sessions: SessionSummary[] = logs.map(log => {
+    const sessions: SessionSummary[] = await Promise.all(logs.map(async (log) => {
       const startTime = new Date(log.metadata.startTime);
       const endTime = log.metadata.endTime ? new Date(log.metadata.endTime) : new Date();
       const duration = Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
@@ -248,6 +290,18 @@ export async function GET(request: NextRequest) {
         currentTaskTitle = `${scenarioTitle} - ${stageTitle}`;
       }
       
+      // Last resort: if we still don't have a title but have taskId, load from YAML
+      if (!currentTaskTitle && currentTaskId && log.scenario.id) {
+        const scenarioData = await loadScenarioData(log.scenario.id);
+        if (scenarioData) {
+          const titleFromYaml = getTaskTitle(scenarioData, currentTaskId, 'zh-TW');
+          if (titleFromYaml) {
+            currentTaskTitle = titleFromYaml;
+            console.log(`Loaded task title from YAML for ${currentTaskId}: ${currentTaskTitle}`);
+          }
+        }
+      }
+      
       return {
         id: log.sessionId,
         logId: log.logId,
@@ -270,7 +324,7 @@ export async function GET(request: NextRequest) {
         averageScore,
         domainScores
       };
-    });
+    }));
     
     // Sort by most recent first
     sessions.sort((a, b) => 
