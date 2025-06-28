@@ -9,7 +9,18 @@ const sessions = new Map<string, SessionData>();
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { scenarioId, scenarioTitle, userId, userEmail: providedEmail, stageIndex = 0, stageId, taskId } = body;
+    const { 
+      scenarioId, 
+      scenarioTitle, 
+      userId, 
+      userEmail: providedEmail, 
+      stageIndex = 0, 
+      stageId,
+      stageTitle,
+      taskId,
+      taskTitle,
+      taskIndex = 0
+    } = body;
 
     if (!scenarioId || !userId) {
       return NextResponse.json(
@@ -61,7 +72,7 @@ export async function POST(request: NextRequest) {
     const sessionId = uuidv4();
     const now = new Date().toISOString();
 
-    // Create new session with stage info
+    // Create new session with detailed stage and task info
     const sessionData: SessionData = {
       id: sessionId,
       userId,
@@ -70,7 +81,11 @@ export async function POST(request: NextRequest) {
       scenarioTitle,
       status: 'in_progress',
       currentStage: stageIndex || 0,  // Set from parameter
-      currentTaskIndex: 0,  // Always start at first task of the stage
+      currentStageId: stageId,
+      currentStageTitle: stageTitle,
+      currentTaskIndex: taskIndex,  // Set from parameter
+      currentTaskId: taskId,
+      currentTaskTitle: taskTitle,
       progress: {
         percentage: 0,
         completedStages: [],

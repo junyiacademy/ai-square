@@ -741,6 +741,9 @@ export default function PBLLearnPage() {
           console.log('Error getting user info, using anonymous user:', e);
         }
         
+        const currentStageData = scenario.stages[actualStageIndex];
+        const currentTaskData = currentTask || currentStageData.tasks[0];
+        
         const sessionResponse = await fetch('/api/pbl/sessions', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -751,8 +754,11 @@ export default function PBLLearnPage() {
             userEmail, // Add userEmail to the request
             language: i18n.language,
             stageIndex: actualStageIndex,
-            stageId: scenario.stages[actualStageIndex].id,
-            taskId: currentTask?.id || scenario.stages[actualStageIndex].tasks[0]?.id
+            stageId: currentStageData.id,
+            stageTitle: currentStageData.name || currentStageData.title,
+            taskId: currentTaskData?.id,
+            taskTitle: currentTaskData?.title || currentTaskData?.name,
+            taskIndex: currentStageData.tasks.findIndex(t => t.id === currentTaskData?.id) || 0
           })
         });
 
@@ -951,18 +957,30 @@ export default function PBLLearnPage() {
     
     if (currentTaskIndex < currentStage.tasks.length - 1) {
       // Next task in current stage
-      setCurrentTask(currentStage.tasks[currentTaskIndex + 1]);
-      // Clear log ID for new task
-      setCurrentLogId(null);
-      // Reset conversation for new task
-      setConversation([]);
-      // Update session with new task index
+      const nextTask = currentStage.tasks[currentTaskIndex + 1];
+      
+      // Complete current task session
       if (session) {
-        setSession(prev => prev ? {
-          ...prev,
-          currentTaskIndex: currentTaskIndex + 1
-        } : null);
+        try {
+          await fetch(`/api/pbl/sessions/${session.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'complete' })
+          });
+          console.log(`Task ${currentTask?.id} session completed`);
+        } catch (error) {
+          console.error('Error completing task session:', error);
+        }
       }
+      
+      // Clear current session and create new one for next task
+      setSession(null);
+      setCurrentLogId(null);
+      setConversation([]);
+      setStageAnalysis(null);
+      setCurrentTask(nextTask);
+      
+      // The new session will be created when user sends first message
     } else if (session.currentStage < scenario.stages.length - 1) {
       // Check if current stage is the last task and needs analysis
       if (currentTask && currentStage && 

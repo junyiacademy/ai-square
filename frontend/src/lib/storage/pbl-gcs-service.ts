@@ -37,6 +37,24 @@ export interface PBLLogData {
   metadata: SessionMetadata;
   progress: ProgressData;
   process_logs: ProcessLog[];
+  // Add detailed task information for better organization
+  scenario_info?: {
+    id: string;
+    title: string;
+    title_zh?: string;
+  };
+  stage_info?: {
+    id: string;
+    index: number;
+    title: string;
+    title_zh?: string;
+  };
+  task_info?: {
+    id: string;
+    index: number;
+    title: string;
+    title_zh?: string;
+  };
 }
 
 // Learning log interface for history API
@@ -155,7 +173,7 @@ export class PBLGCSService {
       processLogs: [] // Clear to avoid duplication - process_logs is stored at root level
     };
 
-    // Create complete log data
+    // Create complete log data with detailed task information
     const logData: PBLLogData = {
       session_id: sessionId,
       user_id: sessionData.userId,
@@ -168,7 +186,25 @@ export class PBLGCSService {
       session_data: cleanSessionData,
       metadata,
       progress,
-      process_logs: sessionData.processLogs || []
+      process_logs: sessionData.processLogs || [],
+      // Include detailed scenario/stage/task info
+      scenario_info: sessionData.scenarioId ? {
+        id: sessionData.scenarioId,
+        title: sessionData.scenarioTitle || '',
+        title_zh: sessionData.scenarioTitle || ''
+      } : undefined,
+      stage_info: sessionData.currentStageId ? {
+        id: sessionData.currentStageId,
+        index: sessionData.currentStage,
+        title: sessionData.currentStageTitle || '',
+        title_zh: sessionData.currentStageTitle || ''
+      } : undefined,
+      task_info: sessionData.currentTaskId ? {
+        id: sessionData.currentTaskId,
+        index: sessionData.currentTaskIndex,
+        title: sessionData.currentTaskTitle || '',
+        title_zh: sessionData.currentTaskTitle || ''
+      } : undefined
     };
 
     // Save to GCS with email folder structure

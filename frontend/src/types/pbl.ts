@@ -180,7 +180,11 @@ export interface SessionData {
   scenario?: ScenarioProgram; // Optional full scenario data
   status: SessionStatus;
   currentStage: number;
+  currentStageId?: string; // Stage ID
+  currentStageTitle?: string; // Stage title
   currentTaskIndex: number; // Track current task within the stage
+  currentTaskId?: string; // Task ID
+  currentTaskTitle?: string; // Task title
   progress: {
     percentage: number;
     completedStages: number[];
