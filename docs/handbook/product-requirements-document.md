@@ -3,7 +3,15 @@
 ## 1. 專案概述
 
 ### 1.1 產品願景
-AI Square 是一個革命性的多智能體學習平台，旨在通過創新的 AI 技術提升全球用戶的 AI 素養能力。平台結合了傳統學習管理系統（LMS）的優點與最新的 AI 技術，為用戶提供個性化、智能化的學習體驗。
+AI Square 是一個 Git-Based 學習平台，核心目標是使用 GitHub 作為唯一內容來源，從文字檔中維護教材、講義、練習題、評量規準等資源，並逐步擴充成一套完整的 AI 輔助學習平台。
+
+平台採用分層架構設計：
+1. **Content File Layer（內容層）**：用 Git 管理教材與題目等結構化文字檔
+2. **CMS Service Layer（服務層）**：將文字檔解析為 API 並提供可編輯的後台  
+3. **SaaS App Layer（應用層）**：面對使用者的學習服務（前端UI + 後端API）
+4. **MCP/Agent Layer（智能層）**：統一的 AI Agent 管理與協調（Phase 3+）
+
+目前 MVP 目標：使用 GitHub Pages 作為內容來源，SaaS 直接讀取並渲染。未來將逐步加入 CMS 服務層和 MCP 智能層。
 
 ### 1.2 目標用戶
 - **主要用戶**：希望提升 AI 素養的個人學習者
@@ -19,33 +27,91 @@ AI Square 是一個革命性的多智能體學習平台，旨在通過創新的 
 
 ## 2. 產品架構
 
-### 2.1 系統架構圖
+### 2.1 系統架構設計
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                     前端應用層                           │
-├─────────────┬─────────────┬─────────────┬───────────────┤
-│  學習平台   │   CMS後台    │  用戶中心   │   插件市集    │
-├─────────────┴─────────────┴─────────────┴───────────────┤
-│                     API 網關層                           │
-├─────────────┬─────────────┬─────────────┬───────────────┤
-│  認證服務   │  學習服務    │   AI服務    │   分析服務    │
-├─────────────┴─────────────┴─────────────┴───────────────┤
-│                  智能體編排層 (Orchestrator)             │
-├─────────────┬─────────────┬─────────────┬───────────────┤
-│    MCP      │  LLM Agent   │ Knowledge   │   Plugin     │
-│  Protocol   │   Manager    │   Graph     │   Engine     │
-└─────────────┴─────────────┴─────────────┴───────────────┘
+│                  SaaS App Layer                          │
+│         (Next.js Frontend + FastAPI Backend)             │
+│  • 學習平台 UI  • 用戶認證  • 學習進度  • 評估介面     │
+├─────────────────────────────────────────────────────────┤
+│           MCP / Agent Layer (Phase 3+)                   │
+│      (Model Context Protocol + Agent系統)               │
+│  • Agent註冊  • 上下文管理  • 協調器  • LLM路由        │
+├─────────────────────────────────────────────────────────┤
+│              Content Service Layer (CMS)                 │
+│                  (FastAPI + Git)                         │
+│  • Content API  • YAML/JSON 解析  • 版本控制  • 編輯器  │
+├─────────────────────────────────────────────────────────┤
+│               Content File Layer                         │
+│              (GitHub Repository)                         │
+│  • 教材 YAML  • 題庫 JSON  • Rubrics  • GitHub Pages   │
+└─────────────────────────────────────────────────────────┘
+
+現況（Phase 1-2）：SaaS 直接呼叫 LLM API
+未來（Phase 3+）：透過 MCP Layer 統一管理
 ```
 
-### 2.2 技術棧
-- **前端**：Next.js 15, TypeScript, Tailwind CSS, React Query, D3.js
-- **後端**：Python FastAPI
-- **資料儲存**：
-  - Phase 2: Google Cloud Storage (GCS) 作為主要資料庫
-  - Phase 3: PostgreSQL (主資料庫), Redis (快取), Neo4j (知識圖譜)
-  - 客戶端: IndexedDB (離線儲存)
-- **AI 層**：LangChain, OpenAI API, Google Gemini, Claude 3, MCP Protocol
-- **部署**：Google Cloud Platform, Docker, Kubernetes
+### 2.2 資料流架構
+#### 2.2.1 MVP 階段（Phase 1-2）
+```
+使用者 → SaaS Frontend → SaaS Backend → GitHub Pages
+           ↓                ↓              ├── tree.json
+      Local Storage    Direct LLM Call     ├── quizzes/*.json
+                       (Vertex AI)         └── rubrics/*.yml
+```
+
+#### 2.2.2 目標架構（Phase 3+）
+```
+使用者 → SaaS Frontend → SaaS Backend → MCP Layer → Multi-Agent
+           ↓                ↓              ↓            ├── Tutor Agent
+      IndexedDB        User API      Content API       ├── Evaluator Agent
+                           ↓              ↓            └── Content Agent
+                    PostgreSQL      Redis Cache
+```
+
+### 2.3 技術棧
+
+#### 2.3.1 SaaS App 層
+- **前端**：
+  - Framework: Next.js 15 + TypeScript
+  - UI: Tailwind CSS + Radix UI
+  - 狀態管理: Zustand + React Query
+  - 視覺化: D3.js + Recharts
+  - 離線支援: IndexedDB + Service Worker
+- **後端**：
+  - User API: Python FastAPI (backend/)
+  - 認證: JWT + Local Storage (Phase 1)
+  - 即時通訊: WebSocket (PBL 功能)
+
+#### 2.3.2 MCP/Agent 層 (Phase 3+)
+- **協議**: Model Context Protocol
+- **框架**: LangChain + Custom Agent Framework
+- **模型整合**: 
+  - Google Vertex AI (現況)
+  - OpenAI GPT-4
+  - Anthropic Claude
+- **上下文儲存**: Vector DB (Phase 4+)
+
+#### 2.3.3 CMS 層
+- **API**: Python FastAPI (cms/)
+- **內容格式**: YAML/JSON
+- **版本控制**: Git + GitHub API
+- **編輯器**: Monaco Editor
+- **發布**: GitHub Actions → GitHub Pages
+
+#### 2.3.4 資料儲存演進
+- **Phase 1**: Local Storage + GitHub Pages
+- **Phase 2**: +GCS (學習記錄) + Redis (快取)
+- **Phase 3**: +PostgreSQL (主資料庫)
+- **Phase 4**: +Neo4j (知識圖譜) + Vector DB
+
+#### 2.3.5 部署架構
+- **容器化**: Docker + Docker Compose
+- **雲端平台**: Google Cloud Platform
+  - Cloud Run (應用部署)
+  - Cloud Storage (檔案儲存)
+  - Vertex AI (LLM 服務)
+- **CDN**: GitHub Pages + Cloudflare (Phase 2+)
 
 ## 3. 功能模組詳細說明
 
@@ -81,38 +147,236 @@ AI Square 是一個革命性的多智能體學習平台，旨在通過創新的 
 ### 3.2 內容管理系統 (CMS)
 
 #### 3.2.1 功能描述
-提供智能化、插件化的內容創建和管理平台，支援多種題型和評估方式。
+基於 Git 的內容管理系統，將所有學習內容以文字檔形式儲存在 GitHub，並透過 API 服務層提供結構化存取。
 
 #### 3.2.2 主要功能
-- **Rubrics 建構器**
-  - ❌ 視覺化拖拽介面（移至 Phase 3）
-  - ❌ AI 輔助生成評估標準（待開發）
-  - ✅ 多維度評分矩陣（YAML 格式）
-  - ✅ 版本控制和協作（GCS 整合）
+- **Git-Based 內容管理**
+  - ✅ 所有內容用 YAML/JSON 純文字檔管理
+  - ✅ GitHub 作為唯一事實來源 (Single Source of Truth)
+  - ✅ PR 機制進行內容審查
+  - ✅ GitHub Actions 自動發布到 GitHub Pages
   
-- **任務創建系統**
-  - ✅ 標準題型：選擇題、判斷題、配對題
-  - ❌ 開放題型：論述題、專案任務、程式設計題（待開發）
-  - ❌ AI 生成題目建議（待開發）
-  - ❌ 難度自動評估（待開發）
-  
-- **內容管理**
-  - ✅ 分類和標籤系統（YAML 結構）
-  - ✅ 多語言內容管理（9 種語言）
-  - ❌ 媒體資源庫（待開發）
-  - ✅ 內容審核流程（草稿/發布狀態）
+- **Content Service API**
+  - ✅ 解析 YAML/JSON 格式
+  - ❌ 提供 RESTful API 接口（Phase 2）
+  - ❌ 快取機制（Phase 2）
+  - ❌ 權限控制（Phase 3）
+
+- **檔案結構設計**
+  ```
+  content/
+  ├── tree.json          # 學習路徑樹狀結構
+  ├── quizzes/           # 題目資料
+  │   ├── basic-ai.json
+  │   └── advanced-ai.json
+  ├── rubrics/           # 評量規準
+  │   └── ai-literacy.yml
+  └── _meta.yaml         # 節點元資料
+  ```
+
+- **CI/CD 流程**
+  - ✅ Git push 觸發 GitHub Actions
+  - ✅ 自動建置 tree.json
+  - ✅ 發布到 GitHub Pages
+  - ❌ CMS 同步到 Content API（Phase 2）
 
 #### 3.2.3 AI 輔助功能
 - ❌ **智能題目生成**：基於學習目標自動生成題目（待開發）
 - ❌ **內容優化建議**：分析現有內容並提供改進建議（待開發）
 - ❌ **自動翻譯**：一鍵翻譯到支援的 9 種語言（待開發）
 
-### 3.3 學習平台流程 (Learning Platform Flow)
+### 3.3 Rubrics 專家協作系統 (Rubrics Expert Collaboration System)
 
 #### 3.3.1 功能描述
+提供專家協作編輯、審核和管理評量規準（Rubrics）的完整工作流程，確保評量標準的專業性和一致性。
+
+#### 3.3.2 Rubrics 資料結構設計
+```yaml
+# rubrics/ai_literacy_rubrics.yaml
+rubrics:
+  [rubric_id]:  # 如: E1_rubric
+    competency_ref: "E1"  # 關聯到能力
+    title: "Using AI Tools Effectively"
+    title_zh: "有效使用 AI 工具"
+    
+    # 評分維度
+    dimensions:
+      - dimension_id: "understanding"
+        name: "概念理解"
+        weight: 0.3  # 權重
+        
+        # 評分等級（通常 3-5 級）
+        levels:
+          - level: 1
+            label: "初級"
+            label_en: "Novice"
+            score_range: [0, 60]
+            criteria: "能識別基本 AI 工具"
+            criteria_en: "Can identify basic AI tools"
+            indicators:
+              - "知道 ChatGPT 是什麼"
+              - "能區分 AI 和傳統軟體"
+            
+          - level: 2
+            label: "進階"
+            label_en: "Proficient"
+            score_range: [61, 80]
+            criteria: "能選擇合適的 AI 工具解決問題"
+            
+    # 版本控制
+    version: "1.2.0"
+    last_updated: "2024-01-15"
+    authors: ["expert1@email.com", "expert2@email.com"]
+    status: "published"  # draft, review, published
+```
+
+#### 3.6.3 專家協作工作流程
+
+**Phase 1: GitHub-Based 協作（MVP）**
+```
+專家 → Fork → 編輯 YAML → Pull Request → 審核 → 合併 → 自動發布
+```
+
+實作要點：
+- 建立專家協作指南（RUBRICS_GUIDE.md）
+- GitHub Actions 自動化驗證
+- PR 模板與審核流程
+- YAML 格式與多語言檢查
+
+**Phase 2: Web-Based 編輯器（3-6個月）**
+```typescript
+interface RubricsEditor {
+  // 視覺化編輯
+  editDimensions(): void
+  previewRubric(): void
+  compareVersions(): Diff
+  
+  // 協作功能
+  createDraft(): Draft
+  submitForReview(): PR
+  addComment(): Comment
+  
+  // AI 輔助
+  suggestCriteria(): Suggestion[]
+  autoTranslate(): Translation
+}
+```
+
+**Phase 3: 完整 CMS 整合（6-9個月）**
+- 視覺化 Rubrics 矩陣編輯器
+- 即時協作與評論系統
+- 版本管理與變更追蹤
+- 權限管理與審核流程
+
+#### 3.3.4 品質保證機制
+
+**自動化檢查：**
+- YAML 格式驗證
+- 評分等級連續性檢查
+- 多語言完整性驗證
+- KSA 引用有效性確認
+- 權重總和驗證（應為 1.0）
+
+**人工審核要求：**
+- 至少 2 位領域專家審核
+- 教育理論符合性評估
+- 實務可行性驗證
+- 跨文化適用性檢查
+
+**版本追蹤範例：**
+```yaml
+changelog:
+  - version: "1.2.0"
+    date: "2024-01-15"
+    changes:
+      - "調整 E1 評分標準，細化初級指標"
+      - "新增日文翻譯"
+      - "修正權重分配"
+    reviewers: ["expert1@edu", "expert2@org"]
+    approval_date: "2024-01-16"
+```
+
+#### 3.3.5 專家權限管理
+
+```yaml
+# config/rubrics_experts.yaml
+experts:
+  - email: "professor@university.edu"
+    role: "lead_reviewer"
+    expertise:
+      domains: ["Engaging_with_AI", "Creating_with_AI"]
+      languages: ["en", "zh-TW"]
+    permissions:
+      - create_rubric
+      - approve_changes
+      - publish
+      - manage_reviewers
+    
+  - email: "practitioner@company.com"
+    role: "contributor"
+    expertise:
+      domains: ["Managing_with_AI"]
+      languages: ["en", "ja"]
+    permissions:
+      - create_draft
+      - suggest_changes
+      - translate
+```
+
+#### 3.3.6 技術實作路徑
+
+**立即可做（無需開發）：**
+```bash
+# 1. 建立 Rubrics 工具包
+tools/rubrics/
+├── templates/
+│   ├── rubric_template.yaml
+│   ├── dimension_types.yaml
+│   └── level_descriptors.yaml
+├── validate.py      # YAML 驗證腳本
+├── preview.py       # 生成預覽 HTML
+└── excel2yaml.py    # Excel 轉換工具
+
+# 2. 建立協作文檔
+docs/rubrics/
+├── CONTRIBUTING.md
+├── REVIEW_CHECKLIST.md
+└── DESIGN_PRINCIPLES.md
+```
+
+**Phase 2 開發重點：**
+```typescript
+// Rubrics API 端點
+GET /api/rubrics              // 列出所有 Rubrics
+GET /api/rubrics/{id}         // 取得特定 Rubric
+POST /api/rubrics/validate    // 驗證 Rubric 結構
+GET /api/rubrics/diff/{v1}/{v2}  // 版本比較
+POST /api/rubrics/preview     // 生成預覽
+
+// 前端元件
+const RubricMatrix: React.FC = ({ rubricId }) => {
+  return (
+    <div className="rubric-matrix">
+      <DimensionGrid dimensions={rubric.dimensions} />
+      <ScoreCalculator weights={rubric.weights} />
+      <ExampleViewer examples={rubric.examples} />
+    </div>
+  )
+}
+```
+
+**Phase 3 進階功能：**
+- AI 輔助生成評分標準
+- 自動化跨語言一致性檢查
+- 評分者間信度分析工具
+- Rubrics 使用情況分析
+
+### 3.4 學習平台流程 (Learning Platform Flow)
+
+#### 3.4.1 功能描述
 提供完整的學習體驗，從課程選擇到完成認證的全流程支援。
 
-#### 3.3.2 核心學習流程
+#### 3.4.2 核心學習流程
 1. **課程發現**
    - ❌ AI 推薦課程（待開發）
    - ✅ 分類瀏覽（四大領域）
@@ -128,18 +392,18 @@ AI Square 是一個革命性的多智能體學習平台，旨在通過創新的 
    - ❌ 同儕學習小組（待開發）
    - ❌ 討論區（待開發）
 
-#### 3.3.3 學習模式
+#### 3.6.3 學習模式
 - ✅ **自主學習**：按自己節奏學習
 - ❌ **引導學習**：跟隨 AI 建議的路徑（待開發）
 - ❌ **協作學習**：小組專案和討論（待開發）
 - ❌ **競賽模式**：限時挑戰和排行榜（待開發）
 
-### 3.4 AI 輔助任務執行 (Do Tasks with LLM AI)
+### 3.5 AI 輔助任務執行 (Do Tasks with LLM AI)
 
-#### 3.4.1 功能描述
+#### 3.5.1 功能描述
 整合多個 LLM 提供智能化的任務執行支援。
 
-#### 3.4.2 主要功能
+#### 3.5.2 主要功能
 - **即時提示**
   - ❌ 上下文感知提示（待開發）
   - ❌ 漸進式提示（不直接給答案）（待開發）
@@ -155,45 +419,52 @@ AI Square 是一個革命性的多智能體學習平台，旨在通過創新的 
   - ❌ 內容生成指導（待開發）
   - ❌ 創意評估（待開發）
 
-#### 3.4.3 LLM 整合
+#### 3.6.3 LLM 整合
 - ❌ OpenAI GPT-4（待開發）
 - ❌ Google Gemini Pro（待開發）
 - ❌ Claude 3（待開發）
 - ❌ 本地部署模型（未來）
 
-### 3.5 AI 評估與反饋 (Review and Feedback by LLM AI)
+### 3.6 AI 評估與反饋 (Review and Feedback by LLM AI)
 
-#### 3.5.1 功能描述
+#### 3.6.1 功能描述
 使用 AI 技術提供即時、個性化的評估和反饋。
 
-#### 3.5.2 評估機制
+#### 3.6.2 評估機制
 - **標準答案評估**
   - ✅ 自動評分（選擇題）
   - ✅ 錯誤分析（顯示正確答案）
   - ❌ 知識點定位（待開發）
   
-- **開放式評估**
+- **開放式評估（整合 Rubrics）**
   - ❌ 基於 Rubrics 的 AI 評分（待開發）
+    - 連結到 3.3 專家設計的評分標準
+    - AI 根據 Rubrics 維度自動評分
+    - 支援多等級評分（初級/進階/精熟）
   - ❌ 多維度評估（創意、邏輯、完整性）（待開發）
+    - 每個維度對應 Rubrics 定義
+    - 權重化綜合分數計算
   - ❌ 評分理由說明（待開發）
+    - 引用 Rubrics 具體指標
+    - 提供改進建議路徑
   
 - **Log 分析評估**
   - ❌ 學習行為分析（待開發）
   - ❌ 思考過程評估（待開發）
   - ❌ 努力程度量化（待開發）
 
-#### 3.5.3 反饋系統
+#### 3.6.3 反饋系統
 - ✅ **即時反饋**：提交後立即獲得
 - ✅ **詳細報告**：包含改進建議（解釋文字）
 - ❌ **個性化建議**：基於歷史表現（待開發）
 - ❌ **同儕比較**：匿名化的相對表現（待開發）
 
-### 3.6 個人檔案與歷史儀表板 (Profile and History Dashboard)
+### 3.7 個人檔案與歷史儀表板 (Profile and History Dashboard)
 
-#### 3.6.1 功能描述
+#### 3.7.1 功能描述
 提供全面的個人學習數據視覺化和歷史記錄。
 
-#### 3.6.2 主要功能
+#### 3.7.2 主要功能
 - **能力雷達圖**
   - ✅ 四大 AI 素養領域視覺化
   - ❌ 時間序列變化（待開發）
@@ -214,12 +485,12 @@ AI Square 是一個革命性的多智能體學習平台，旨在通過創新的 
   - ✅ 強弱項識別（領域分數）
   - ❌ 個性化建議（待開發）
 
-### 3.7 動態語言系統 (Dynamic Language System)
+### 3.8 動態語言系統 (Dynamic Language System)
 
-#### 3.7.1 功能描述
+#### 3.8.1 功能描述
 提供超越預設 9 種語言的動態語言支援，使用 LLM 即時翻譯並智能管理翻譯快取。
 
-#### 3.7.2 核心功能
+#### 3.8.2 核心功能
 - **語言選擇**
   - ✅ 預設語言支援（9 種）：en, zh, es, ja, ko, fr, de, ru, it
   - ❌ 自定義語言輸入（待開發）
@@ -245,7 +516,7 @@ AI Square 是一個革命性的多智能體學習平台，旨在通過創新的 
     - 自動生成 i18n 資源檔
     - Git PR 自動創建
 
-#### 3.7.3 技術架構
+#### 3.4.3 技術架構
 ```typescript
 interface DynamicLanguageConfig {
   defaultLanguages: string[]; // 預設 9 種
@@ -263,7 +534,7 @@ interface DynamicLanguageConfig {
 }
 ```
 
-#### 3.7.4 工作流程
+#### 3.8.4 工作流程
 1. **用戶選擇非預設語言**
    - 檢查 GCS 快取
    - 若無快取，呼叫 LLM API
@@ -279,12 +550,12 @@ interface DynamicLanguageConfig {
    - 提交 Git PR 供審核
    - 合併後成為預設語言的一部分
 
-### 3.8 知識圖譜系統 (Knowledge Graph System)
+### 3.9 知識圖譜系統 (Knowledge Graph System)
 
-#### 3.8.1 功能描述
+#### 3.9.1 功能描述
 提供視覺化、互動式的知識結構展示，幫助學習者理解概念關係和規劃學習路徑。
 
-#### 3.8.2 核心功能
+#### 3.9.2 核心功能
 - **知識結構視覺化**
   - ✅ KSA 能力關係圖（D3.js 實作）
   - ✅ 四大領域導航圖
@@ -303,25 +574,25 @@ interface DynamicLanguageConfig {
   - ❌ 知識缺口識別（待開發）
   - ❌ 學習順序建議（待開發）
 
-#### 3.8.3 視覺化模式
+#### 3.5.3 視覺化模式
 - ✅ **力導向圖**：顯示概念間的關係強度
 - ❌ **層級樹狀圖**：展示知識體系結構（待開發）
 - ❌ **時間軸視圖**：呈現學習進度（待開發）
 - ❌ **3D 網絡圖**：複雜關係的立體展示（待開發）
 
-#### 3.8.4 互動功能
+#### 3.9.4 互動功能
 - ✅ 節點點擊查看詳情
 - ✅ 縮放和平移
 - ❌ 路徑高亮（待開發）
 - ❌ 節點篩選（待開發）
 - ❌ 自定義佈局（待開發）
 
-### 3.9 PBL 情境式學習系統 (Problem-Based Learning System)
+### 3.10 PBL 情境式學習系統 (Problem-Based Learning System)
 
-#### 3.9.1 功能描述
+#### 3.10.1 功能描述
 透過真實世界的情境模擬，提供任務導向的學習體驗。學習者在多階段任務中運用「聽說讀寫」不同能力，過程中的所有互動都被記錄並作為評估依據。每個情境都對應到特定的 KSA 能力指標和領域 Rubrics。
 
-#### 3.9.2 核心概念
+#### 3.10.2 核心概念
 - **PBL 學習理念**
   - 從做中學（Learning by Doing）
   - 真實情境模擬（Real-world Scenarios）
@@ -329,7 +600,7 @@ interface DynamicLanguageConfig {
   - 多元能力整合（Multi-modal Skills）
   - 個性化回饋（Personalized Feedback）
 
-#### 3.9.3 系統架構
+#### 3.8.3 系統架構
 ```typescript
 interface ScenarioProgram {
   id: string;
@@ -446,7 +717,7 @@ interface StageResult {
 }
 ```
 
-#### 3.9.4 情境範例：AI 輔助求職
+#### 3.10.4 情境範例：AI 輔助求職
 
 ```yaml
 程式名稱: AI 輔助求職訓練
@@ -507,7 +778,7 @@ interface StageResult {
   - 下一步學習路徑推薦
 ```
 
-#### 3.9.5 關鍵功能特色
+#### 3.10.5 關鍵功能特色
 
 1. **多模態能力評估**
    - ✅ 聽：理解指令、接收回饋（文字模式）
@@ -753,9 +1024,9 @@ interface SessionData {
 - Week 7: 階段 3 - 履歷創作
 - Week 8: 階段 4 - 模擬面試
 
-#### 3.9.10 AI Prompt Templates
+#### 3.10.10 AI Prompt Templates
 
-##### 3.9.10.1 階段 1：搜尋助手
+##### 3.10.10.1 階段 1：搜尋助手
 
 ```python
 # System Prompt
@@ -784,7 +1055,7 @@ user_input_handler = """
 """
 ```
 
-##### 3.9.10.2 階段 2：分析顧問
+##### 3.10.10.2 階段 2：分析顧問
 
 ```python
 # System Prompt
@@ -813,7 +1084,7 @@ analysis_framework = """
 """
 ```
 
-##### 3.9.10.3 階段 3：寫作教練
+##### 3.10.10.3 階段 3：寫作教練
 
 ```python
 # System Prompt
@@ -847,7 +1118,7 @@ writing_feedback = """
 """
 ```
 
-##### 3.9.10.4 階段 4：面試官
+##### 3.10.10.4 階段 4：面試官
 
 ```python
 # System Prompt
@@ -881,9 +1152,9 @@ interviewer_evaluation = """
 """
 ```
 
-#### 3.9.11 評估機制詳細說明
+#### 3.10.11 評估機制詳細說明
 
-##### 3.9.11.1 過程評分機制
+##### 3.10.11.1 過程評分機制
 
 ```typescript
 // 評分時機
@@ -917,7 +1188,7 @@ interface EvaluationDimensions {
 }
 ```
 
-##### 3.9.11.2 證據收集機制
+##### 3.10.11.2 證據收集機制
 
 ```typescript
 interface EvidenceCollector {
@@ -952,7 +1223,7 @@ interface Evidence {
 }
 ```
 
-##### 3.9.11.3 回饋生成策略
+##### 3.10.11.3 回饋生成策略
 
 ```typescript
 // 回饋類型
@@ -1038,7 +1309,7 @@ enum TaskType {
 }
 ```
 
-#### 3.10.3 實施策略
+#### 3.9.3 實施策略
 - **Phase 2.1**: 擴展現有 Assessment 系統支援新任務類型
 - **Phase 2.2**: 建立統一的抽象層和介面
 - **Phase 2.3**: 實作 PBL 專屬功能模組
@@ -1218,11 +1489,263 @@ const evaluators: Record<TaskType, Evaluator> = {
 - **證據導向**：每個評分都有對應的證據支撐
 - **個性化建議**：根據表現生成改進建議
 
-## 4. 技術實現細節
+## 4. 技術決策與架構演進
 
-### 4.1 知識圖譜系統 (Knowledge Graph System)
+### 4.1 儲存方案演進策略
 
-#### 4.1.1 資料模型
+#### 4.1.1 現階段方案（Phase 0-1）
+**為何不用資料庫？**
+- **降低複雜度**：專注於核心功能開發
+- **快速迭代**：減少基礎設施維護
+- **成本控制**：避免早期過度投資
+- **靈活性高**：易於調整資料結構
+
+**現有儲存方案：**
+```
+├── 用戶資料 → Local Storage (瀏覽器)
+├── 學習內容 → GitHub Pages (靜態 JSON/YAML)
+├── 學習歷史 → GCS (JSON 檔案)
+└── 暫存資料 → IndexedDB (離線快取)
+```
+
+#### 4.1.2 資料庫升級時機指標
+**量化指標：**
+- 日活躍用戶 (DAU) > 100
+- 並發用戶數 > 20
+- GCS API 費用 > $50/月
+- 平均回應時間 > 1 秒
+- 資料查詢需求變複雜
+
+**質化指標：**
+- 需要即時協作功能
+- 需要複雜查詢（JOIN、聚合）
+- 需要事務一致性
+- 需要資料分析功能
+
+#### 4.1.3 漸進式升級路徑
+```
+Phase 2 (3-6個月)：加入快取層
+├── Redis：熱點資料快取
+├── 目的：減少 GCS 呼叫
+└── 成本：~$20/月
+
+Phase 3 (6-9個月)：加入關聯式資料庫
+├── PostgreSQL：用戶、進度、評估資料
+├── 目的：支援複雜查詢和事務
+└── 成本：~$50/月
+
+Phase 4 (9-12個月)：專用資料庫
+├── Neo4j：知識圖譜
+├── TimescaleDB：時序資料分析
+└── 成本：~$200/月
+```
+
+#### 4.1.4 技術債務管理
+**現階段技術債：**
+- Local Storage 無法跨裝置同步
+- GCS 查詢效能受限
+- 缺乏即時更新機制
+
+**償還計畫：**
+1. 建立資料抽象層（Repository Pattern）
+2. 統一資料存取介面
+3. 逐步遷移，不影響功能
+
+### 4.2 內容管理架構決策
+
+#### 4.2.1 為何選擇 Git-Based？
+**優勢：**
+- 版本控制內建
+- 協作機制成熟（PR、Review）
+- 靜態託管免費（GitHub Pages）
+- 開發者友善
+
+**限制：**
+- 非技術用戶門檻高
+- 即時編輯受限
+- 大檔案處理困難
+
+#### 4.2.2 內容服務層演進
+```
+Phase 1：純靜態檔案
+└── 直接從 GitHub Pages 讀取
+
+Phase 2：API 包裝層
+├── 快取機制
+├── 查詢優化
+└── 權限控制
+
+Phase 3：CMS UI
+├── 視覺化編輯器
+├── 自動產生 PR
+└── 預覽功能
+```
+
+### 4.3 內部抽象層演進策略
+
+#### 4.3.1 抽象層時機與觸發條件
+
+**原則：Market-Driven + Tech Debt Balance**
+- 市場需求驅動功能
+- 功能複雜度觸發抽象
+- 技術債務適時償還
+
+#### 4.3.2 認證抽象層 (Auth Provider)
+**現狀（MVP）：**
+```typescript
+// 直接使用 Local Storage
+localStorage.setItem('user', JSON.stringify(userData))
+```
+
+**觸發時機：**
+- 🎯 **準備公開上線時** → 需要真實用戶系統
+- 🎯 **企業客戶需求** → 需要 SSO 整合
+- 🎯 **安全合規要求** → 需要 OAuth2/SAML
+
+**演進路徑：**
+```typescript
+// Phase 2: 抽象介面
+interface AuthProvider {
+  login(credentials): Promise<User>
+  logout(): Promise<void>
+  validateToken(): Promise<boolean>
+}
+
+// 實作切換
+LocalAuthProvider → JWTAuthProvider → OAuth2Provider → SSOProvider
+```
+
+#### 4.3.3 檔案儲存抽象層 (Storage Service)
+**現狀（MVP）：**
+```python
+# 直接呼叫 GCS
+from google.cloud import storage
+bucket.upload_blob(...)
+```
+
+**觸發時機：**
+- 🎯 **多雲部署需求** → 客戶要求 AWS/Azure
+- 🎯 **成本優化** → 需要切換更便宜的方案
+- 🎯 **合規要求** → 資料必須存在特定地區
+
+**演進路徑：**
+```python
+# Phase 2: Storage 介面
+class StorageBackend(ABC):
+    async def upload(self, file: bytes, path: str) -> str
+    async def download(self, path: str) -> bytes
+    
+# 逐步支援
+GCSBackend → S3Backend → AzureBlobBackend → LocalBackend
+```
+
+#### 4.3.4 快取抽象層 (Cache Service)
+**現狀（MVP）：**
+```typescript
+// 簡單的 Map 快取
+const cache = new Map<string, any>()
+```
+
+**觸發時機：**
+- 🎯 **DAU > 100** → 記憶體不足
+- 🎯 **多伺服器部署** → 需要共享快取
+- 🎯 **效能瓶頸** → 需要分散式快取
+
+**演進路徑：**
+```
+Phase 1: Memory Cache (Map)
+Phase 2: Redis Cache (DAU > 100)
+Phase 3: Multi-tier Cache (DAU > 1000)
+```
+
+#### 4.3.5 事件系統 (Event Bus)
+**現狀（MVP）：**
+```typescript
+// 直接呼叫
+onAssessmentComplete() {
+  updateProgress()
+  saveToGCS()
+  showNotification()
+}
+```
+
+**觸發時機：**
+- 🎯 **功能解耦需求** → 程式碼太複雜
+- 🎯 **即時通知** → 需要 WebSocket/SSE
+- 🎯 **資料分析** → 需要事件串流
+
+**演進路徑：**
+```
+Phase 1: 直接呼叫
+Phase 2: 簡單 EventEmitter
+Phase 3: Redis Pub/Sub
+Phase 4: Kafka/RabbitMQ (企業版)
+```
+
+#### 4.3.6 決策矩陣
+| 抽象層 | 觸發條件 | 預估時機 | 工作量 |
+|--------|----------|----------|--------|
+| Auth Provider | 公開上線 | Phase 2 | 1週 |
+| Storage Service | 多雲需求 | Phase 3 | 3天 |
+| Cache Service | DAU > 100 | Phase 2 | 2天 |
+| Event Bus | 功能 > 10個 | Phase 3 | 1週 |
+| API Gateway | 微服務化 | Phase 4 | 2週 |
+
+### 4.4 MVP 技術優化建議
+
+#### 4.4.1 API 整合優化
+**問題：** 前端直接呼叫多個來源，缺乏統一管理
+**解決方案：**
+```typescript
+// 建立統一的 Content Service
+class ContentService {
+  private cache = new Map()
+  
+  async getTree(): Promise<TreeData> {
+    return this.fetchWithCache('/tree.json')
+  }
+  
+  private async fetchWithCache(path: string) {
+    // 1. 檢查記憶體快取
+    // 2. Fetch from GitHub Pages
+    // 3. 統一錯誤處理
+    // 4. 自動重試機制
+  }
+}
+```
+
+#### 4.4.2 開發體驗優化
+**目標：** 一鍵啟動所有服務
+**解決方案：** Docker Compose
+```yaml
+services:
+  frontend:
+    build: ./frontend
+    ports: ["3000:3000"]
+    volumes: ["./frontend:/app"]
+    
+  backend:
+    build: ./backend
+    ports: ["8000:8000"]
+    
+  cms:
+    build: ./cms
+    ports: ["8001:8001"]
+    volumes: ["./content:/app/content"]
+```
+
+#### 4.4.3 內容編輯優化
+**問題：** 需要直接編輯 YAML/JSON
+**解決方案：**
+- Phase 1: Monaco Editor 網頁版
+- Phase 2: GitHub API 自動 PR
+- Phase 3: 視覺化編輯器
+
+## 5. 技術實現細節
+
+### 5.1 知識圖譜系統 (Knowledge Graph System)
+
+#### 5.1.1 資料模型
 ```typescript
 // 概念節點
 interface ConceptNode {
@@ -1252,7 +1775,7 @@ interface LearningPath {
 }
 ```
 
-#### 4.1.2 技術架構
+#### 5.1.2 技術架構
 - **Phase 2**: 
   - 知識結構儲存於 GCS (YAML/JSON)
   - 前端使用 D3.js 渲染
@@ -1262,7 +1785,7 @@ interface LearningPath {
   - NetworkX 進階路徑演算法
   - 基於圖分析的個人化推薦
 
-#### 4.1.3 核心功能
+#### 5.1.3 核心功能
 1. **知識關聯查詢**
    - 前置知識識別
    - 相關概念發現
@@ -1278,63 +1801,156 @@ interface LearningPath {
    - 個人化路線
    - 知識缺口分析
 
-### 4.2 MCP (Model Context Protocol) 整合
+### 5.2 MCP (Model Context Protocol) 整合策略
 
-#### 4.2.1 用途
-- 標準化 AI 模型接入
-- 上下文管理和傳遞
-- 多模型協同工作
+#### 5.2.1 現況與演進
+**現況（Phase 0-2）：**
+- 直接在功能中呼叫 LLM API
+- 每個功能寫死特定模型
+- 缺乏統一的上下文管理
 
-#### 4.2.2 實現方式
-```python
-# MCP 配置示例
-class MCPConfig:
-    models = {
-        "primary": "gpt-4",
-        "fallback": "gemini-pro",
-        "specialized": {
-            "code": "claude-3-opus",
-            "creative": "gpt-4-creative"
-        }
-    }
-    context_window = 128000
-    temperature_defaults = {
-        "evaluation": 0.2,
-        "creative": 0.8,
-        "assistance": 0.5
-    }
+**未來目標（Phase 3+）：**
+- 標準化的 Agent 接入協定
+- 統一的上下文管理層
+- 多 Agent 協同工作能力
+
+#### 5.2.2 漸進式 MCP 整合路徑
+```
+Phase 1：直接 LLM 呼叫（現況）
+├── PBL 系統：直接呼叫 Vertex AI
+├── 評估系統：硬編碼 Gemini API
+└── 各功能獨立管理 prompt
+
+Phase 2：抽象層封裝
+├── 建立 LLM Service 抽象層
+├── 統一 prompt 管理
+└── 基礎上下文傳遞
+
+Phase 3：MCP 標準化
+├── 實作 MCP Protocol
+├── Agent 註冊機制
+└── 上下文編排器
+
+Phase 4：完整 Agent 系統
+├── 多 Agent 協作
+├── 智能路由
+└── 分散式 Agent
 ```
 
-### 4.3 智能體編排 (Agent Orchestrator)
+#### 5.2.3 MCP 核心概念
+```typescript
+// 未來的 MCP 介面設計
+interface MCPAgent {
+  id: string
+  capabilities: string[]
+  contextRequirements: ContextSchema
+  
+  // Agent 生命週期
+  initialize(context: Context): Promise<void>
+  execute(task: Task): Promise<Result>
+  updateContext(delta: ContextDelta): void
+}
 
-#### 4.3.1 架構設計
+// 統一的上下文管理
+interface ContextManager {
+  // 跨 Agent 共享上下文
+  globalContext: GlobalContext
+  // Agent 專屬上下文
+  agentContexts: Map<string, AgentContext>
+  // 上下文同步機制
+  syncContext(agentId: string): Promise<void>
+}
+```
+
+### 5.3 從現有功能到 Agent 系統的演進
+
+#### 5.3.1 現有 LLM 使用情況
 ```python
-# 編排器核心結構
-class AgentOrchestrator:
+# 現況：直接呼叫（分散在各功能）
+# backend/routers/pbl.py
+async def chat_with_ai(stage_config, user_input):
+    # 直接呼叫 Vertex AI
+    response = await vertex_ai.generate(
+        prompt=stage_config['prompt'],
+        user_input=user_input
+    )
+    return response
+
+# 問題：
+# 1. 各功能重複程式碼
+# 2. 無法共享上下文
+# 3. 難以切換模型
+```
+
+#### 5.3.2 Phase 2：建立 LLM Service 層
+```python
+# 第一步：統一 LLM 呼叫
+class LLMService:
     def __init__(self):
-        self.agents = {
-            "tutor": TutorAgent(),
-            "evaluator": EvaluatorAgent(),
-            "content_creator": ContentAgent(),
-            "analytics": AnalyticsAgent()
+        self.models = {
+            'vertex': VertexAIClient(),
+            'openai': OpenAIClient(),
+            'gemini': GeminiClient()
         }
     
-    async def process_request(self, request):
-        # 智能路由到合適的 agent
-        agent = self.route_to_agent(request)
-        # 執行並返回結果
-        return await agent.execute(request)
+    async def generate(self, 
+                      task_type: str,
+                      context: dict,
+                      model: str = 'vertex'):
+        # 統一介面，但還不是 Agent
+        prompt = self.get_prompt(task_type, context)
+        return await self.models[model].generate(prompt)
 ```
 
-#### 4.3.2 Agent 類型
-1. **教學 Agent**：提供學習指導
-2. **評估 Agent**：處理作業評分
-3. **內容 Agent**：生成和優化內容
-4. **分析 Agent**：提供學習分析
+#### 5.3.3 Phase 3：Agent 抽象層
+```python
+# 將功能包裝成 Agent
+class BaseAgent:
+    def __init__(self, agent_id: str, capabilities: List[str]):
+        self.id = agent_id
+        self.capabilities = capabilities
+        self.context = {}
+    
+    async def execute(self, task: Task) -> Result:
+        # Agent 標準介面
+        pass
 
-### 4.4 插件系統架構
+class TutorAgent(BaseAgent):
+    def __init__(self):
+        super().__init__('tutor', ['teach', 'explain', 'guide'])
+    
+    async def execute(self, task: Task) -> Result:
+        # 現有 PBL 教學邏輯
+        # 但包裝成 Agent 介面
+        pass
+```
 
-#### 4.4.1 插件接口
+#### 5.3.4 Phase 4：完整 MCP 實作
+```python
+# 未來：標準 MCP Protocol
+class MCPOrchestrator:
+    def __init__(self):
+        self.registry = AgentRegistry()
+        self.context_manager = ContextManager()
+        self.message_bus = MessageBus()
+    
+    async def process(self, request: MCPRequest):
+        # 1. 解析需求
+        agents = self.select_agents(request)
+        
+        # 2. 協調多 Agent
+        for agent in agents:
+            context = self.context_manager.get_context(agent.id)
+            result = await agent.execute(request, context)
+            self.context_manager.update(agent.id, result)
+        
+        # 3. 整合結果
+        return self.aggregate_results(results)
+```
+
+### 5.4 插件系統架構
+
+#### 5.4.1 插件接口
 ```typescript
 interface Plugin {
   id: string;
@@ -1352,15 +1968,15 @@ interface Plugin {
 }
 ```
 
-#### 4.4.2 插件類型
+#### 5.4.2 插件類型
 - **內容插件**：新題型、學習資源
 - **評估插件**：特殊評分邏輯
 - **分析插件**：自定義報表
 - **整合插件**：第三方服務
 
-### 4.5 多模態任務支援系統 (Multi-modal Task Support)
+### 5.5 多模態任務支援系統 (Multi-modal Task Support)
 
-#### 4.5.1 語音任務處理
+#### 5.5.1 語音任務處理
 ```typescript
 class SpeakingTaskHandler {
   // 語音轉文字
@@ -1374,7 +1990,7 @@ class SpeakingTaskHandler {
 }
 ```
 
-#### 4.5.2 寫作任務處理
+#### 5.5.2 寫作任務處理
 ```typescript
 class WritingTaskHandler {
   // 即時寫作輔助
@@ -1388,7 +2004,7 @@ class WritingTaskHandler {
 }
 ```
 
-#### 4.5.3 專案任務管理
+#### 5.5.3 專案任務管理
 ```typescript
 class ProjectTaskHandler {
   // 專案進度追蹤
@@ -1402,9 +2018,9 @@ class ProjectTaskHandler {
 }
 ```
 
-### 4.6 離線支援策略 (Offline Support Strategy)
+### 5.6 離線支援策略 (Offline Support Strategy)
 
-#### 4.6.1 IndexedDB 離線快取
+#### 5.6.1 IndexedDB 離線快取
 ```typescript
 class OfflineCache {
   private db: IDBDatabase
@@ -1420,13 +2036,13 @@ class OfflineCache {
 }
 ```
 
-#### 4.6.2 同步機制（Phase 2 - GCS）
+#### 5.6.2 同步機制（Phase 2 - GCS）
 - **樂觀更新**：先更新 IndexedDB，後同步到 GCS
 - **批次上傳**：累積多個操作後批次寫入 GCS
 - **衝突解決**：使用時間戳和檔案版本
 - **智能重試**：指數退避演算法
 
-#### 4.6.3 資料同步流程
+#### 5.6.3 資料同步流程
 ```typescript
 // Phase 2: IndexedDB → GCS
 const syncToGCS = async () => {
@@ -1441,39 +2057,116 @@ const syncToGCS = async () => {
 // Phase 3: IndexedDB → PostgreSQL → GCS (長期歸檔)
 ```
 
-### 4.7 Chatbot 整合
+### 5.7 Chatbot 整合
 
-#### 4.7.1 功能範圍
+#### 5.7.1 功能範圍
 - ❌ 24/7 學習支援（待開發）
 - ❌ 多語言對話（待開發）
 - ❌ 上下文記憶（待開發）
 - ❌ 情緒識別和回應（待開發）
 
-#### 4.7.2 整合點
+#### 5.7.2 整合點
 - ❌ 網頁內嵌 Widget（待開發）
 - ❌ Mobile App SDK（待開發）
 - ❌ 第三方平台（Slack, Teams）（待開發）
 - ❌ API 接口（待開發）
 
-## 5. 發展階段規劃
+## 6. 發展階段規劃
 
-### Phase 1: 基礎平台與認證（✅ 已完成）
-**期間：2025/06/15 - 2025/06/26（12 天）**
-- ✅ 用戶認證系統（本地認證）
-- ✅ 基礎 UI/UX（響應式設計）
-- ✅ 多語言支援（9 種語言）
-- ✅ 能力評估系統（四大領域評估）
-- ✅ 基礎 Rubrics 系統
-  - ✅ YAML 格式的評估標準定義
-  - ✅ KSA（知識、技能、態度）對應關係
-  - ✅ 多語言評估情境
-- ✅ 基礎 CMS（YAML 編輯器、GCS 整合、版本控制）
-  - ✅ YAML 內容管理
-  - ✅ Monaco Editor 整合
-  - ✅ 版本歷史追蹤
-  - ❌ 視覺化 Rubrics 建構器（移至 Phase 3）
+### Phase 0: Bootstrapping (✅ 已完成)
+**時程：** 2025/06/15 - 2025/06/26  
+**目標：** 建立基礎 Git-Based 內容管理
 
-### Phase 2: PBL 情境式學習系統（進行中 - 目標：3 個月）
+**功能面：**
+- ✅ 建立 content repo 結構
+- ✅ 基本的文字檔格式定義 (YAML/JSON)
+
+**技術面：**
+- ✅ 開啟 GitHub Pages
+- ✅ SaaS scaffolding (現有的 frontend/backend)
+- ✅ 基礎認證系統 (Local Storage)
+
+### Phase 1: MVP Baseline (進行中)
+**時程：** 2025/06/27 - 2025/07/15  
+**目標：** SaaS 正確抓取 GitHub Pages 上的資料
+
+**功能面：**
+- ✅ 正確渲染講義與題目畫面
+- ⚠️  自動化內容發布流程
+- ❌ 基礎內容編輯器
+
+**技術面：**
+- ✅ SaaS 能 fetch GitHub Pages JSON
+- ⚠️  tree.json 自動 build (GitHub Actions)
+- ❌ CMS 資料夾結構 (cms/)
+- ❌ 統一的 Content Service
+- ❌ Docker Compose 開發環境
+
+**MVP 成功條件：**
+- SaaS 頁面能正確 render GitHub 上的內容
+- 開發者能用 PR 管教材內容
+- 內容結構簡潔，允許日後擴充
+
+### Phase 2: CMS Content API + LLM 抽象層 (3-6 個月)
+**時程：** 2025/07 - 2025/09  
+**目標：** 建立內容服務層 + 統一 LLM 呼叫
+
+**功能面：**
+- ❌ Git 內容轉成 REST API
+- ❌ 內容版本管理
+- ❌ 多語言內容支援
+- ❌ 統一 LLM 服務介面
+- ❌ Rubrics 專家協作流程（GitHub PR）
+- ❌ Rubrics 基礎編輯器（Web-based）
+
+**技術面：**
+- ❌ 建立 cms/ 服務
+- ❌ Redis 快取層
+- ❌ API Gateway 模式
+- ❌ 內容 CDN 加速
+- ❌ **LLM Service 抽象層**
+  - 統一 prompt 管理
+  - 模型切換機制
+  - 基礎 context 傳遞
+  - 使用量追蹤
+
+**關鍵指標：**
+- API 回應時間 < 200ms
+- 支援 100 並發用戶
+- LLM 呼叫統一化 100%
+
+### Phase 3: CMS 編輯 UI + Agent 基礎 (6-9 個月)
+**時程：** 2025/10 - 2025/12  
+**目標：** 建立專家後台 + Agent 雛形
+
+**功能面：**
+- ❌ 視覺化編輯器
+- ❌ 即時預覽功能
+- ❌ 協作編輯
+- ❌ **Rubrics 進階功能**
+  - 視覺化 Rubrics 矩陣編輯器
+  - AI 輔助生成評分標準
+  - 專家審核工作流
+  - 版本比較與追蹤
+- ❌ 基礎 Agent 功能
+
+**技術面：**
+- ❌ Monaco Editor 整合
+- ❌ GitHub API 自動 PR
+- ❌ WebSocket 即時同步
+- ❌ PostgreSQL 資料庫
+- ❌ **Agent 抽象層**
+  - BaseAgent 介面定義
+  - 將現有功能包裝成 Agent
+  - Agent 註冊機制
+  - 簡單的 Agent 協調器
+
+**MCP 準備：**
+- 定義 Agent 標準介面
+- 實作 2-3 個示範 Agent
+- 基礎上下文管理
+
+### Phase 2-alt: PBL 情境式學習系統（現有進度）
 
 **核心目標：實現第一個完整的 PBL 情境學習 MVP - "AI 輔助求職訓練"**
 
@@ -1539,55 +2232,75 @@ const syncToGCS = async () => {
   - ❌ A/B 測試框架（未實作）
 
 
-### Phase 3: AI 輔助學習與進階功能（6 個月）
+### Phase 4: 效能與擴充 (9-12 個月)
+**時程：** 2026/01 - 2026/03  
+**目標：** 支援大規模使用
 
-#### 從 Phase 2 延後的功能
-- ❌ **動態語言系統**
-  - ❌ LLM 即時翻譯
-  - ❌ 智能快取管理
-  - ❌ 自動 locale 更新
-- ❌ **CMS 多語言增強**
-  - ❌ AI 輔助翻譯
-  - ❌ 多語言版本管理
-- ❌ **視覺化 Rubrics 建構器**
-  - ❌ 拖拽式介面設計
-  - ❌ AI 輔助評估標準生成
-  - ❌ 即時預覽功能
-- ❌ **傳統題型的 AI 生成**
-  - ❌ 選擇題自動生成
-  - ❌ 難度自動調整
+**功能面：**
+- ❌ 進階搜尋功能
+- ❌ 批次內容管理
+- ❌ 內容分析報表
 
-#### Phase 3 新功能
-- ❌ **完整 AI 助教功能**
-  - ❌ 24/7 網站 AI 助手
-  - ❌ 多輪對話支援
-  - ❌ 學習問題解答
-- ❌ **開放式問答評估**
-- ❌ **協作學習工具**
-- ❌ **進階個性化**
-- ❌ **統一學習活動抽象層**
-  - ❌ Assessment 和 PBL 系統整合
-  - ❌ 統一進度追蹤
-  - ❌ 統一評估機制
+**技術面：**
+- ❌ 微服務架構
+- ❌ Kubernetes 部署
+- ❌ PostgreSQL + Redis
+- ❌ 內容分片策略
+- ❌ GraphQL API
 
-### Phase 4: 知識圖譜（9 個月）
-- ✅ 基礎知識圖譜視覺化（已在 Phase 1 完成）
-  - ✅ KSA 能力關係圖
-  - ✅ 領域導航圖
-- ❌ 進階知識圖譜功能（待開發）
-  - ❌ 知識點關聯
-    - 概念間的前置關係
-    - 相關性連結
-    - 難度層級
-  - ❌ 學習路徑優化
-    - 個人化學習路線生成
-    - 最短路徑演算法
-    - 進度視覺化
-  - ❌ 概念視覺化
-    - 多視角切換（層級、網絡、時間軸）
-    - 概念地圖編輯器
-    - 知識密度熱圖
-  - ❌ 智能推薦升級
+**關鍵指標：**
+- 支援 1000+ 並發用戶
+- 99.9% 可用性
+- < 100ms API 延遲
+
+### Phase 5: AI 輔助學習與 MCP 整合 (12-15 個月)
+**時程：** 2026/04 - 2026/06  
+**目標：** 智能化學習體驗與 Agent 系統
+
+**功能面：**
+- ❌ 動態語言系統 (LLM 翻譯)
+- ❌ AI 內容生成器
+- ❌ 個人化學習路徑
+- ❌ 智能評估系統
+- ❌ 多 Agent 協作學習
+
+**技術面：**
+- ❌ 完整 MCP Protocol 實作
+- ❌ Agent Registry 與管理
+- ❌ 統一上下文管理器
+- ❌ LangChain 整合
+- ❌ 向量資料庫 (Context Store)
+- ❌ Agent 間通訊協定
+- ❌ ML Pipeline
+- ❌ A/B 測試框架
+
+**MCP 里程碑：**
+- 將現有功能重構為 Agent
+- 實現跨 Agent 上下文共享
+- 支援第三方 Agent 接入
+
+### Phase 6: 企業版與生態系 (15+ 個月)
+**時程：** 2026/07+  
+**目標：** 企業解決方案與開發者生態系
+
+**功能面：**
+- ❌ 企業管理後台
+- ❌ 團隊協作工具
+- ❌ 自訂學習路徑
+- ❌ 第三方 Agent 市集
+- ❌ 外掛開發 SDK
+
+**技術面：**
+- ❌ Multi-tenant 架構
+- ❌ Agent Plugin 系統
+- ❌ 企業級 SSO
+- ❌ 私有部署選項
+- ❌ Agent 開發框架
+
+**生態系建設：**
+- MCP 標準開放
+- Agent 開發者社群
+- 收益分享機制
     - 基於圖分析的推薦
     - 知識缺口識別
     - 學習順序建議
@@ -1608,7 +2321,7 @@ const syncToGCS = async () => {
 - 收益分享機制
 - 社群生態系統
 
-## 6. 成功指標 (KPIs)
+## 7. 成功指標 (KPIs)
 
 ### 6.1 用戶指標
 - 月活躍用戶（MAU）
@@ -1634,7 +2347,7 @@ const syncToGCS = async () => {
 - 客戶獲取成本（CAC）
 - 月經常性收入（MRR）
 
-## 7. 風險與挑戰
+## 8. 風險與挑戰
 
 ### 7.1 技術風險
 - **AI 模型成本**：需要優化使用策略
@@ -1651,12 +2364,12 @@ const syncToGCS = async () => {
 - **隱私合規**：符合各地區法規
 - **服務穩定性**：確保 24/7 可用性
 
-## 8. 結論
+## 9. 結論
 
 AI Square 定位為下一代 AI 素養學習平台，通過整合最新的 AI 技術和教育理念，為全球用戶提供革命性的學習體驗。透過分階段實施和持續優化，我們有信心打造一個真正改變 AI 教育格局的產品。
 
 ---
 
-*文檔版本: 1.8*  
-*更新日期: 2025-06-26*  
-*下次審查: 2025-07-26*
+*文檔版本: 2.1*  
+*更新日期: 2025-06-28*  
+*下次審查: 2025-07-28*
