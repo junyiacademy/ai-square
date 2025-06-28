@@ -397,12 +397,16 @@ export default function PBLLearnPage() {
   
   // Check for saved progress when scenario loads
   useEffect(() => {
+    // Temporarily disabled - this feature is confusing users when switching tasks
+    // TODO: Improve the logic to only show when actually resuming a scenario, not when switching tasks
+    /*
     if (scenario && authChecked && !session && !loading) {
       // Check if there's saved progress
       if (hasSavedProgress()) {
         setShowProgressRestorePrompt(true);
       }
     }
+    */
   }, [scenario, authChecked, session, loading, hasSavedProgress]);
 
   const scrollToBottom = () => {
@@ -1158,6 +1162,12 @@ export default function PBLLearnPage() {
                 onClick={() => {
                   clearProgress();
                   setShowProgressRestorePrompt(false);
+                  // Reset to first task if scenario is loaded
+                  if (scenario && scenario.stages.length > 0 && scenario.stages[0].tasks.length > 0) {
+                    setCurrentTask(scenario.stages[0].tasks[0]);
+                    setConversation([]);
+                    setStageAnalysis(null);
+                  }
                 }}
                 className="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
               >
