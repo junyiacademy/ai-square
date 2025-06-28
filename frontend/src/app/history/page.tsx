@@ -113,7 +113,7 @@ export default function UnifiedHistoryPage() {
         }));
 
         // Fetch PBL history with current language
-        const pblResponse = await fetch(`/api/pbl/history?userId=${currentUser.id}&lang=${i18n.language}`);
+        const pblResponse = await fetch(`/api/pbl/history?userId=${currentUser.id}&lang=${i18n.language}&t=${Date.now()}`);
         const pblData = await pblResponse.json();
         const pblItems: HistoryItem[] = (pblData.data || []).map((item: PBLSession) => ({
           type: 'pbl' as const,
@@ -135,7 +135,7 @@ export default function UnifiedHistoryPage() {
     };
     
     fetchAllHistory();
-  }, [currentUser]);
+  }, [currentUser, i18n.language]);
 
   const formatDate = (timestamp: string) => {
     return new Date(timestamp).toLocaleDateString(i18n.language, {
