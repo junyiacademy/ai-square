@@ -52,3 +52,6 @@ dist
 tmp
 .next/cache
 *.backup
+
+/playwright-report
+/test-results
