@@ -28,6 +28,51 @@ const nextConfig: NextConfig = {
         // 減少 moment.js 大小（如果有使用）
         'moment': 'moment/min/moment.min.js',
       };
+      
+      // Bundle 分割優化
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            // Google 服務單獨打包
+            google: {
+              test: /[\\/]node_modules[\\/](@google|google-)/,
+              name: 'google-services',
+              chunks: 'all',
+              priority: 30,
+            },
+            // 圖表庫單獨打包
+            charts: {
+              test: /[\\/]node_modules[\\/](recharts|d3|chart\.js|react-chartjs-2)/,
+              name: 'charts',
+              chunks: 'all',
+              priority: 25,
+            },
+            // i18n 相關單獨打包
+            i18n: {
+              test: /[\\/]node_modules[\\/](i18next|react-i18next|next-i18next)/,
+              name: 'i18n',
+              chunks: 'all',
+              priority: 20,
+            },
+            // React 生態系統
+            react: {
+              test: /[\\/]node_modules[\\/](react|react-dom)/,
+              name: 'react',
+              chunks: 'all',
+              priority: 15,
+            },
+            // 其他第三方庫
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendor',
+              chunks: 'all',
+              priority: 10,
+            },
+          },
+        },
+      };
     }
     
     return config;

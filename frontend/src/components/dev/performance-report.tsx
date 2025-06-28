@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react'
 import { performanceMonitor } from '@/lib/performance/performance-monitor'
 import { cacheService } from '@/lib/cache/cache-service'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+// 暫時使用基本 HTML 元素替代 UI 組件
+// import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+// import { Badge } from '@/components/ui/badge'
 import { RefreshCw, Activity, Database, Zap } from 'lucide-react'
 
 /**

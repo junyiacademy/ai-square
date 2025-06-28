@@ -11,7 +11,7 @@ import {
   DynamicPolarRadiusAxis as PolarRadiusAxis,
   DynamicResponsiveContainer as ResponsiveContainer,
   DynamicLegend as Legend,
-  DynamicCompetencyKnowledgeGraph as CompetencyKnowledgeGraph
+  // DynamicCompetencyKnowledgeGraph as CompetencyKnowledgeGraph // 暫時註釋
 } from '@/lib/dynamic-imports';
 import { contentService } from '@/services/content-service';
 
@@ -578,16 +578,19 @@ export default function AssessmentResults({ result, domains, onRetake, questions
               </div>
             )}
 
-            {/* Knowledge Graph Tab */}
+            {/* Knowledge Graph Tab - 暫時註釋 */}
             {activeTab === 'knowledge-graph' && (
               <div className="space-y-6">
-                <CompetencyKnowledgeGraph
+                <div className="p-8 text-center text-gray-500">
+                  知識圖譜功能開發中...
+                </div>
+                {/* <CompetencyKnowledgeGraph
                   result={result}
                   questions={questions}
                   userAnswers={userAnswers}
                   domainsData={domainsData}
                   ksaMaps={ksaMaps}
-                />
+                /> */}
               </div>
             )}
           </div>

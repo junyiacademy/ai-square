@@ -46,21 +46,22 @@ export const DynamicLegend = dynamic(
 )
 
 // D3.js 元件 - 延遲載入
-export const DynamicKnowledgeGraph = dynamic(
-  () => import('@/components/assessment/KnowledgeGraph').then(mod => ({ default: mod.KnowledgeGraph })),
-  { 
-    ssr: false,
-    loading: () => <div className="h-96 flex items-center justify-center">載入知識圖譜中...</div>
-  }
-)
+// 暫時註釋 - 組件尚未實作
+// export const DynamicKnowledgeGraph = dynamic(
+//   () => import('@/components/assessment/KnowledgeGraph').then(mod => ({ default: mod.KnowledgeGraph })),
+//   { 
+//     ssr: false,
+//     loading: () => <div className="h-96 flex items-center justify-center">載入知識圖譜中...</div>
+//   }
+// )
 
-export const DynamicCompetencyKnowledgeGraph = dynamic(
-  () => import('@/components/assessment/CompetencyKnowledgeGraph'),
-  { 
-    ssr: false,
-    loading: () => <div className="h-96 flex items-center justify-center">載入能力圖譜中...</div>
-  }
-)
+// export const DynamicCompetencyKnowledgeGraph = dynamic(
+//   () => import('@/components/assessment/CompetencyKnowledgeGraph'),
+//   { 
+//     ssr: false,
+//     loading: () => <div className="h-96 flex items-center justify-center">載入能力圖譜中...</div>
+//   }
+// )
 
 // Monaco Editor - 延遲載入
 export const DynamicMonacoEditor = dynamic(
@@ -88,9 +89,41 @@ export const DynamicChart = dynamic(
   }
 )
 
-// 效能報告元件 - 只在開發環境載入
-export const DynamicPerformanceReport = dynamic(
-  () => import('@/components/dev/performance-report').then(mod => ({ default: mod.PerformanceReport })),
+// 效能報告元件 - 暫時註釋，等 UI 組件實作完成
+// export const DynamicPerformanceReport = dynamic(
+//   () => import('@/components/dev/performance-report').then(mod => ({ default: mod.PerformanceReport })),
+//   { 
+//     ssr: false,
+//     loading: () => null
+//   }
+// )
+
+// 大型 Assessment 組件 - 動態載入
+export const DynamicAssessmentResults = dynamic(
+  () => import('@/components/assessment/AssessmentResults'),
+  { 
+    loading: () => <div className="animate-pulse space-y-4">
+      <div className="h-8 bg-gray-200 rounded w-1/3"></div>
+      <div className="h-64 bg-gray-200 rounded"></div>
+      <div className="h-32 bg-gray-200 rounded"></div>
+    </div>
+  }
+)
+
+// PBL 相關大型組件 - 動態載入
+export const DynamicPBLScenarioView = dynamic(
+  () => import('@/app/pbl/scenarios/[id]/page').then(mod => ({ default: mod.default })),
+  { 
+    loading: () => <div className="animate-pulse space-y-6">
+      <div className="h-12 bg-gray-200 rounded w-2/3"></div>
+      <div className="h-96 bg-gray-200 rounded"></div>
+    </div>
+  }
+)
+
+// Sentry 錯誤追蹤 - 僅在生產環境動態載入
+export const DynamicSentryInit = dynamic(
+  () => import('@sentry/nextjs').then(mod => ({ default: mod.init })),
   { 
     ssr: false,
     loading: () => null
