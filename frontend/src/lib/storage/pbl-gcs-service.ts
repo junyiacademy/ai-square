@@ -43,26 +43,8 @@ export interface PBLLogData {
     completed_at?: string; // Completion timestamp
   };
   
-  // Conversation history
-  conversation_logs: ConversationLog[];
-  
   // Complete session data (source of truth for user info, timestamps, etc.)
   session_data: SessionData;
-}
-
-// Simplified conversation log
-export interface ConversationLog {
-  id: string;
-  timestamp: string;
-  role: 'user' | 'assistant';
-  content: string;
-  duration_seconds?: number; // Time spent on this interaction
-  tokens_used?: number; // For AI responses
-  analysis?: { // For AI analysis responses
-    score?: number;
-    feedback?: string;
-    competencies?: string[];
-  };
 }
 
 // Learning log interface for history API
@@ -147,32 +129,10 @@ export class PBLGCSService {
       taskId
     );
     
-    // Transform processLogs to conversation_logs
-    const conversationLogs: ConversationLog[] = sessionData.processLogs?.map(log => {
-      // Extract conversation content from process log
-      if (log.actionType === 'write' && log.detail?.content) {
-        return {
-          id: log.id,
-          timestamp: log.timestamp,
-          role: 'user' as const,
-          content: log.detail.content,
-          duration_seconds: log.detail?.duration
-        };
-      } else if (log.actionType === 'speak' && log.detail?.aiInteraction) {
-        return {
-          id: log.id,
-          timestamp: log.timestamp,
-          role: 'assistant' as const,
-          content: log.detail.aiInteraction.response || '',
-          tokens_used: log.detail.aiInteraction.tokensUsed,
-          analysis: log.detail.aiInteraction.analysis
-        };
-      }
-      return null;
-    }).filter((log): log is ConversationLog => log !== null) || [];
-    
-    // Calculate conversation count (user messages only)
-    const conversationCount = conversationLogs.filter(log => log.role === 'user').length;
+    // Calculate conversation count from processLogs (user messages only)
+    const conversationCount = sessionData.processLogs?.filter(
+      log => log.actionType === 'write' || (log.actionType === 'interaction' && log.detail?.userInput)
+    ).length || 0;
     
     // Calculate total time
     const startTime = new Date(sessionData.startedAt).getTime();
@@ -203,9 +163,6 @@ export class PBLGCSService {
         total_time_seconds: totalTimeSeconds,
         completed_at: sessionData.status === 'completed' ? new Date().toISOString() : undefined
       },
-      
-      // Conversation history
-      conversation_logs: conversationLogs,
       
       // Complete session data (source of truth)
       session_data: sessionData
@@ -467,34 +424,8 @@ export class PBLGCSService {
    * Transform PBLLogData to LearningLog format
    */
   private transformToLearningLog(session: any): LearningLog {
-    // Handle both old and new format
-    const isNewFormat = 'conversation_logs' in session;
-    
-    let processLogs: ProcessLog[] = [];
-    if (isNewFormat) {
-      // Transform conversation_logs back to processLogs format for compatibility
-      processLogs = session.conversation_logs.map((log: ConversationLog) => ({
-        id: log.id,
-        timestamp: log.timestamp,
-        sessionId: session.session_id,
-        stageId: session.stage_id,
-        taskId: session.task_id,
-        actionType: log.role === 'user' ? 'write' as const : 'speak' as const,
-        detail: log.role === 'user' ? {
-          content: log.content,
-          duration: log.duration_seconds
-        } : {
-          aiInteraction: {
-            response: log.content,
-            tokensUsed: log.tokens_used,
-            analysis: log.analysis
-          }
-        }
-      }));
-    } else {
-      // Old format - use process_logs directly
-      processLogs = session.process_logs || [];
-    }
+    // Get processLogs from session_data
+    const processLogs: ProcessLog[] = session.session_data?.processLogs || session.process_logs || [];
 
     return {
       sessionId: session.session_id,
@@ -539,6 +470,31 @@ export class PBLGCSService {
       return sessions.map(session => this.transformToLearningLog(session));
     } catch (error) {
       console.error('Error getting user learning logs:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Get all task logs for a specific task by user email and task ID
+   * Returns all sessions for this task across different attempts
+   */
+  async getTaskLogs(userEmail: string, taskId: string): Promise<PBLLogData[]> {
+    try {
+      console.log(`Getting task logs for email: ${userEmail}, taskId: ${taskId}`);
+      
+      const sessions = await this.getSessionsByEmail(userEmail);
+      
+      // Filter sessions by task_id
+      const taskSessions = sessions.filter(session => session.task_id === taskId);
+      
+      console.log(`Found ${taskSessions.length} sessions for task ${taskId}`);
+      
+      // Sort by timestamp (most recent first)
+      return taskSessions.sort((a, b) => 
+        new Date(b.session_data.startedAt).getTime() - new Date(a.session_data.startedAt).getTime()
+      );
+    } catch (error) {
+      console.error(`Error getting task logs for ${taskId}:`, error);
       return [];
     }
   }
