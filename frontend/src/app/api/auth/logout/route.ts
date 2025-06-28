@@ -11,14 +11,30 @@ export async function POST() {
     message: 'Logged out successfully'
   })
   
-  // Clear authentication cookies by setting them with maxAge: 0
-  // This ensures they are deleted from the browser
+  // Clear JWT tokens
+  response.cookies.set('accessToken', '', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 0,
+    path: '/'
+  })
+  
+  response.cookies.set('refreshToken', '', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 0,
+    path: '/'
+  })
+  
+  // Clear legacy authentication cookies
   response.cookies.set('isLoggedIn', '', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     maxAge: 0,
-    path: '/' // Ensure cookie is cleared for all paths
+    path: '/'
   })
   
   response.cookies.set('userRole', '', {
@@ -38,7 +54,8 @@ export async function POST() {
   })
   
   // Also try to delete cookies using the cookies() API
-  // This helps ensure cookies are properly cleared
+  cookieStore.delete('accessToken')
+  cookieStore.delete('refreshToken')
   cookieStore.delete('isLoggedIn')
   cookieStore.delete('userRole')
   cookieStore.delete('user')

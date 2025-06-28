@@ -13,6 +13,7 @@ import {
   ActionType,
   StageResult
 } from '@/types/pbl';
+import { usePBLProgress } from '@/hooks/usePBLProgress';
 
 export default function PBLLearnPage() {
   const { t, i18n, ready } = useTranslation(['pbl']);
@@ -49,9 +50,13 @@ export default function PBLLearnPage() {
   const [isLoadingLogs, setIsLoadingLogs] = useState(false);
   const [isLoadingConversation, setIsLoadingConversation] = useState(false);
   const [hasNewUserMessage, setHasNewUserMessage] = useState(false);
+  const [showProgressRestorePrompt, setShowProgressRestorePrompt] = useState(false);
   
   // Ref for auto-scrolling
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  // Use the PBL progress hook
+  const { saveProgress: saveToLocalStorage, loadProgress, clearProgress, hasSavedProgress } = usePBLProgress(scenarioId);
 
   // Load all task analyses from all sessions when scenario loads
   useEffect(() => {
@@ -403,6 +408,16 @@ export default function PBLLearnPage() {
 
     loadScenario();
   }, [scenarioId, i18n.language, ready]);
+  
+  // Check for saved progress when scenario loads
+  useEffect(() => {
+    if (scenario && authChecked && !session && !loading) {
+      // Check if there's saved progress
+      if (hasSavedProgress()) {
+        setShowProgressRestorePrompt(true);
+      }
+    }
+  }, [scenario, authChecked, session, loading, hasSavedProgress]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ 
@@ -613,17 +628,63 @@ export default function PBLLearnPage() {
       setSaving(false);
     }
   }, [session, sessionStartTime]);
+  
+  // Restore progress from localStorage
+  const restoreProgress = useCallback(() => {
+    const savedProgress = loadProgress();
+    if (!savedProgress || !scenario) return;
+    
+    console.log('Restoring progress from localStorage:', savedProgress);
+    
+    // Restore conversation
+    if (savedProgress.conversation && savedProgress.conversation.length > 0) {
+      setConversation(savedProgress.conversation);
+    }
+    
+    // Restore current task
+    if (savedProgress.currentTaskId) {
+      // Find the task in the scenario
+      for (const stage of scenario.stages) {
+        const task = stage.tasks.find((t: Task) => t.id === savedProgress.currentTaskId);
+        if (task) {
+          setCurrentTask(task);
+          break;
+        }
+      }
+    }
+    
+    // Restore stage analysis
+    if (savedProgress.stageAnalysis) {
+      setStageAnalysis(savedProgress.stageAnalysis);
+    }
+    
+    // Restore time spent
+    if (savedProgress.timeSpent) {
+      // Adjust session start time to account for previous time spent
+      setSessionStartTime(Date.now() - savedProgress.timeSpent * 1000);
+    }
+    
+    // If there's a session ID, try to load the full session
+    if (savedProgress.sessionId) {
+      loadLogConversation(savedProgress.sessionId);
+    }
+    
+    setShowProgressRestorePrompt(false);
+  }, [loadProgress, scenario, loadLogConversation]);
 
-  // Auto-save session progress
+  // Auto-save session progress to both server and localStorage
   useEffect(() => {
     const saveInterval = setInterval(() => {
       if (session && !saving) {
         saveProgress();
+        // Also save to localStorage
+        const totalTimeSpent = Math.floor((Date.now() - sessionStartTime) / 1000);
+        saveToLocalStorage(session, conversation, currentTask?.id, stageAnalysis, totalTimeSpent);
       }
     }, 30000); // Save every 30 seconds
 
     return () => clearInterval(saveInterval);
-  }, [session, saving, saveProgress]);
+  }, [session, saving, saveProgress, conversation, currentTask, stageAnalysis, sessionStartTime, saveToLocalStorage]);
 
   // Auto-scroll to bottom when conversation updates
   useEffect(() => {
@@ -789,6 +850,12 @@ export default function PBLLearnPage() {
       
       // Always reset AI thinking state
       setIsAIThinking(false);
+      
+      // Save progress to localStorage after each message
+      if (currentSession) {
+        const totalTimeSpent = Math.floor((Date.now() - sessionStartTime) / 1000);
+        saveToLocalStorage(currentSession, conversation, currentTask?.id, stageAnalysis, totalTimeSpent);
+      }
     } catch (error) {
       console.error('Error sending message:', error);
       
@@ -864,6 +931,10 @@ export default function PBLLearnPage() {
             stageResults: updatedStageResults
           };
         });
+        
+        // Save progress to localStorage after analysis
+        const totalTimeSpent = Math.floor((Date.now() - sessionStartTime) / 1000);
+        saveToLocalStorage(session, conversation, currentTask?.id, evaluationData.data.stageResult, totalTimeSpent);
       } else {
         console.error('Evaluation response not ok:', evaluateResponse.status);
         const errorData = await evaluateResponse.json();
@@ -1076,6 +1147,37 @@ export default function PBLLearnPage() {
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Progress Restore Prompt */}
+      {showProgressRestorePrompt && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 max-w-md mx-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+              {t('learn.restoreProgress.title', '發現未完成的學習進度')}
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              {t('learn.restoreProgress.message', '您之前在這個場景有未完成的學習進度，是否要繼續？')}
+            </p>
+            <div className="flex space-x-3">
+              <button
+                onClick={restoreProgress}
+                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                {t('learn.restoreProgress.continue', '繼續學習')}
+              </button>
+              <button
+                onClick={() => {
+                  clearProgress();
+                  setShowProgressRestorePrompt(false);
+                }}
+                className="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+              >
+                {t('learn.restoreProgress.startNew', '重新開始')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Header */}
       <div className="bg-white dark:bg-gray-800 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">

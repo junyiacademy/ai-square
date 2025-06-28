@@ -12,9 +12,11 @@ interface UseAuthReturn {
   user: User | null
   isLoggedIn: boolean
   isLoading: boolean
+  tokenExpiringSoon: boolean
   login: (credentials: { email: string; password: string }) => Promise<{ success: boolean; error?: string }>
   logout: () => Promise<void>
   checkAuth: () => Promise<void>
+  refreshToken: () => Promise<boolean>
 }
 
 export function useAuth(): UseAuthReturn {
@@ -22,6 +24,7 @@ export function useAuth(): UseAuthReturn {
   const [user, setUser] = useState<User | null>(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [tokenExpiringSoon, setTokenExpiringSoon] = useState(false)
 
   const clearAuthState = useCallback(() => {
     localStorage.removeItem('isLoggedIn')
@@ -40,6 +43,7 @@ export function useAuth(): UseAuthReturn {
       if (data.authenticated && data.user) {
         setUser(data.user)
         setIsLoggedIn(true)
+        setTokenExpiringSoon(data.tokenExpiringSoon || false)
         // Sync to localStorage for compatibility
         localStorage.setItem('isLoggedIn', 'true')
         localStorage.setItem('user', JSON.stringify(data.user))
@@ -108,6 +112,27 @@ export function useAuth(): UseAuthReturn {
     clearAuthState()
     router.push('/login')
   }, [clearAuthState, router])
+  
+  const refreshToken = useCallback(async (): Promise<boolean> => {
+    try {
+      const response = await fetch('/api/auth/refresh', {
+        method: 'POST',
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        if (data.success) {
+          // Token refreshed successfully, re-check auth
+          await checkAuth()
+          return true
+        }
+      }
+    } catch (error) {
+      console.error('Token refresh error:', error)
+    }
+    
+    return false
+  }, [checkAuth])
 
   // Initial auth check
   useEffect(() => {
@@ -128,13 +153,33 @@ export function useAuth(): UseAuthReturn {
       window.removeEventListener('storage', handleAuthChange)
     }
   }, [checkAuth])
+  
+  // Auto-refresh token when expiring soon
+  useEffect(() => {
+    if (tokenExpiringSoon && isLoggedIn) {
+      refreshToken()
+    }
+  }, [tokenExpiringSoon, isLoggedIn, refreshToken])
+  
+  // Set up periodic auth check (every 5 minutes)
+  useEffect(() => {
+    if (!isLoggedIn) return
+    
+    const interval = setInterval(() => {
+      checkAuth()
+    }, 5 * 60 * 1000) // 5 minutes
+    
+    return () => clearInterval(interval)
+  }, [isLoggedIn, checkAuth])
 
   return {
     user,
     isLoggedIn,
     isLoading,
+    tokenExpiringSoon,
     login,
     logout,
     checkAuth,
+    refreshToken,
   }
 }

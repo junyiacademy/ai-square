@@ -1,10 +1,31 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
+import { verifyAccessToken, isTokenExpiringSoon } from '@/lib/auth/jwt'
 
 export async function GET() {
   const cookieStore = await cookies()
   
-  // Check if user is logged in from cookies
+  // First try JWT access token
+  const accessToken = cookieStore.get('accessToken')
+  
+  if (accessToken) {
+    const payload = await verifyAccessToken(accessToken.value)
+    
+    if (payload) {
+      return NextResponse.json({
+        authenticated: true,
+        user: {
+          id: payload.userId,
+          email: payload.email,
+          role: payload.role,
+          name: payload.name
+        },
+        tokenExpiringSoon: isTokenExpiringSoon(payload.exp)
+      })
+    }
+  }
+  
+  // Fallback to legacy cookie check for backward compatibility
   const isLoggedIn = cookieStore.get('isLoggedIn')
   const userRole = cookieStore.get('userRole')
   const userCookie = cookieStore.get('user')
@@ -17,7 +38,8 @@ export async function GET() {
         user: {
           ...user,
           role: userRole?.value || user.role
-        }
+        },
+        tokenExpiringSoon: false // Legacy cookies don't expire soon
       })
     } catch (error) {
       console.error('Error parsing user cookie:', error)
@@ -26,6 +48,7 @@ export async function GET() {
   
   return NextResponse.json({
     authenticated: false,
-    user: null
+    user: null,
+    tokenExpiringSoon: false
   })
 }

@@ -23,12 +23,16 @@ completed: 2025-01-28
 ```yaml
 id: AUTH-002  
 title: "Session persistence"
-status: 🟡 IN PROGRESS
-assigned: TBD
+status: ✅ COMPLETED
+assigned: Claude
 dependencies: [AUTH-001]
 notes: |
-  - Implement refresh token logic
-  - Handle token expiry gracefully
+  - Implemented JWT access tokens (15 min) and refresh tokens (7 days)
+  - Added automatic token refresh when expiring soon
+  - Created /api/auth/refresh endpoint
+  - Updated useAuth hook with periodic auth checks
+  - Backward compatible with existing cookie system
+completed: 2025-01-28
 ```
 
 ### PBL System
@@ -48,13 +52,16 @@ completed: 2025-01-28
 ```yaml
 id: PBL-002
 title: "Save progress to localStorage"
-status: 📋 TODO
-assigned: TBD
+status: ✅ COMPLETED
+assigned: Claude
 dependencies: [AUTH-002]
 notes: |
-  - Save after each question
-  - Restore on page reload
-  - Clear on completion
+  - Created usePBLProgress hook for localStorage management
+  - Auto-saves every 30 seconds and after each message
+  - Shows restore prompt when saved progress detected
+  - Saves conversation, task, analysis, and time spent
+  - 24-hour expiry for saved progress
+completed: 2025-01-28
 ```
 
 ## 📊 Progress Overview
@@ -63,8 +70,8 @@ notes: |
 
 | Area | Tasks | Done | In Progress | Todo |
 |------|-------|------|-------------|------|
-| Auth | 4 | 1 | 1 | 2 |
-| PBL | 5 | 4 | 0 | 1 |
+| Auth | 4 | 2 | 0 | 2 |
+| PBL | 5 | 5 | 0 | 0 |
 | Content | 3 | 1 | 0 | 2 |
 | Infra | 2 | 1 | 1 | 0 |
 
@@ -78,7 +85,7 @@ notes: |
 ### Authentication & User Management
 
 - [x] AUTH-001: Fix logout functionality ✅
-- [ ] AUTH-002: Session persistence 🟡
+- [x] AUTH-002: Session persistence ✅
 - [ ] AUTH-003: Add "Remember Me" checkbox
 - [ ] AUTH-004: Handle token refresh
 
@@ -88,7 +95,7 @@ notes: |
 - [x] PBL-DONE-002: AI evaluation integration ✅
 - [x] PBL-DONE-003: Score calculation ✅
 - [x] PBL-001: Fix response validation ✅
-- [ ] PBL-002: Save progress to localStorage
+- [x] PBL-002: Save progress to localStorage ✅
 
 ### Content Management
 
@@ -173,9 +180,9 @@ Focus areas:
 ## 📈 Burndown Tracking
 
 ### Phase 1-2 Total Tasks: 25
-- ✅ Completed: 8 (32%)
-- 🟡 In Progress: 2 (8%)
-- 📋 Todo: 15 (60%)
+- ✅ Completed: 10 (40%)
+- 🟡 In Progress: 1 (4%)
+- 📋 Todo: 14 (56%)
 
 ### Target Completion: June 2025
 - Current Rate: 1.5 tasks/week

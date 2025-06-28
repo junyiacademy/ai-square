@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createAccessToken, createRefreshToken } from '@/lib/auth/jwt'
 
 // 假資料 - 測試用戶
 const MOCK_USERS = [
@@ -46,6 +47,16 @@ export async function POST(request: NextRequest) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password: userPassword, ...userWithoutPassword } = user
       
+      // Create JWT tokens
+      const accessToken = await createAccessToken({
+        userId: user.id,
+        email: user.email,
+        role: user.role,
+        name: user.name
+      })
+      
+      const refreshToken = await createRefreshToken(user.id)
+      
       // Create response with cookies
       const response = NextResponse.json({
         success: true,
@@ -53,7 +64,24 @@ export async function POST(request: NextRequest) {
         message: 'Login successful'
       })
       
-      // Set cookies for API authentication
+      // Set access token cookie (short-lived)
+      response.cookies.set('accessToken', accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 15 // 15 minutes
+      })
+      
+      // Set refresh token cookie (long-lived)
+      response.cookies.set('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        path: '/api/auth/refresh' // Only sent to refresh endpoint
+      })
+      
+      // Keep backward compatibility cookies for now
       response.cookies.set('isLoggedIn', 'true', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
@@ -61,14 +89,6 @@ export async function POST(request: NextRequest) {
         maxAge: 60 * 60 * 24 * 7 // 7 days
       })
       
-      response.cookies.set('userRole', user.role, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 60 * 60 * 24 * 7 // 7 days
-      })
-      
-      // Store user object in cookie for middleware
       response.cookies.set('user', JSON.stringify(userWithoutPassword), {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
