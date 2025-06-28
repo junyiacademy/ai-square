@@ -35,11 +35,14 @@ notes: |
 ```yaml
 id: PBL-001
 title: "Fix response validation"
-status: 🟡 IN PROGRESS
-assigned: TBD
+status: ✅ COMPLETED
+assigned: Claude
 notes: |
-  - Validation too strict for open-ended questions
-  - Need flexible validation rules
+  - Adjusted evaluation criteria for different task types
+  - Research/exploration tasks now value process over completion
+  - Scoring ranges updated to be more supportive
+  - AI evaluator prompt changed to be constructive
+completed: 2025-01-28
 ```
 
 ```yaml
@@ -61,7 +64,7 @@ notes: |
 | Area | Tasks | Done | In Progress | Todo |
 |------|-------|------|-------------|------|
 | Auth | 4 | 1 | 1 | 2 |
-| PBL | 5 | 3 | 1 | 1 |
+| PBL | 5 | 4 | 0 | 1 |
 | Content | 3 | 1 | 0 | 2 |
 | Infra | 2 | 1 | 1 | 0 |
 
@@ -84,7 +87,7 @@ notes: |
 - [x] PBL-DONE-001: Basic question flow ✅
 - [x] PBL-DONE-002: AI evaluation integration ✅
 - [x] PBL-DONE-003: Score calculation ✅
-- [ ] PBL-001: Fix response validation 🟡
+- [x] PBL-001: Fix response validation ✅
 - [ ] PBL-002: Save progress to localStorage
 
 ### Content Management
@@ -170,8 +173,8 @@ Focus areas:
 ## 📈 Burndown Tracking
 
 ### Phase 1-2 Total Tasks: 25
-- ✅ Completed: 7 (28%)
-- 🟡 In Progress: 3 (12%)
+- ✅ Completed: 8 (32%)
+- 🟡 In Progress: 2 (8%)
 - 📋 Todo: 15 (60%)
 
 ### Target Completion: June 2025

@@ -123,13 +123,21 @@ export async function POST(request: NextRequest) {
     const conversationCount = conversations.filter(c => c.user).length;
     const totalInputLength = conversations.reduce((sum, c) => sum + (c.user || '').length, 0);
     
-    const evaluationPrompt = `You are a professional learning assessment expert. Please **strictly and objectively** evaluate the learner's performance in this ${taskId ? 'task' : 'stage'} based on the following conversation records.
+    const evaluationPrompt = `You are a professional learning assessment expert. Please evaluate the learner's performance in this ${taskId ? 'task' : 'stage'} based on the following conversation records.
 
 Important evaluation principles:
 1. **Only evaluate what the learner actually said**, do not evaluate the AI assistant's responses
-2. If the learner just greets (like "hi", "hello") or gives very short responses, they should receive **very low scores** (0-20 points)
-3. The learner must **actually attempt to solve the task** to receive a passing score
-4. Scoring should be based on the learner's demonstrated **effort level, depth of understanding, and task completion**
+2. Consider the **stage type** and **task nature** when evaluating:
+   - For research/exploration tasks: Value curiosity, questioning, and discovery process
+   - For analysis tasks: Value critical thinking and systematic approach
+   - For creation tasks: Value creativity and practical application
+   - For practice tasks: Value skill demonstration and improvement
+3. **Engagement quality matters more than quantity** - A thoughtful question or insight is valuable
+4. Scoring should be based on:
+   - Effort and engagement with the learning material
+   - Progress toward learning objectives
+   - Quality of interaction with AI (asking good questions, iterating on responses)
+   - Understanding demonstrated through their responses
 
 Stage Information:
 - Name: ${stage?.name || stageId}
@@ -167,28 +175,33 @@ Total input characters: ${totalInputLength}
 
 Please evaluate the learner's performance in the following areas:
 
-**Scoring Criteria**:
-- If learner only greets or gives very short responses, all scores should be in 0-20 range
-- If learner attempts but doesn't complete task, scores should be in 20-50 range
-- If learner seriously attempts and partially completes task, scores should be in 50-70 range
-- Only when learner fully demonstrates understanding and completes task, give 70+ points
+**Adjusted Scoring Criteria Based on Stage Type**:
+
+For ${stage?.stageType || 'general'} stages:
+- Minimal engagement (just greetings): 20-40 points
+- Basic engagement (asks questions, shows interest): 40-60 points  
+- Good engagement (thoughtful questions, follows up): 60-75 points
+- Excellent engagement (deep exploration, insights): 75-90 points
+- Outstanding performance (exceptional understanding): 90-100 points
+
+Note: For research/exploration tasks, value the learning process over "completion"
 
 1. Overall performance score (0-100): Based on actual effort and task completion
 
 2. Individual KSA scores (0-100 each):
-   If learner doesn't demonstrate relevant ability, give 0-10 points
+   Consider partial demonstration and learning progress
 
 3. Domain scores (0-100):
-   - engaging_with_ai: Is the learner really engaging with AI to solve problems?
-   - creating_with_ai: Did the learner attempt to create content?
-   - managing_with_ai: Did the learner show management abilities?
-   - designing_with_ai: Did the learner show design thinking?
+   - engaging_with_ai: Quality of AI interaction and questioning
+   - creating_with_ai: Creativity in using AI responses
+   - managing_with_ai: Organization and planning in approach
+   - designing_with_ai: Strategic thinking and problem-solving
 
 4. Rubrics scores (1-4 levels):
-   Level 1: Below standard (e.g., just greeting)
-   Level 2: Initial attempt
-   Level 3: Partially achieved
-   Level 4: Fully achieved
+   Level 1: Beginning (starting to explore)
+   Level 2: Developing (showing progress)
+   Level 3: Proficient (meeting expectations)
+   Level 4: Advanced (exceeding expectations)
 
 5. Strengths (at least 1 point, each must include relevant KSA codes, format: "description (K1.1)" or "description (K1.1, S2.1)")
 6. Areas for improvement (at least 2 points, each must include relevant KSA codes, same format)
@@ -226,10 +239,10 @@ Please respond in JSON format:
     // Create a VertexAIService instance for evaluation with language-aware system prompt
     const evaluationService = new VertexAIService({
       model: 'gemini-2.0-flash-exp',
-      systemPrompt: `You are a strict but fair learning assessment expert. Please provide objective scores based on the learner's actual performance. If the learner only greets or does not attempt to solve the task, you must give low scores.
+      systemPrompt: `You are a supportive and fair learning assessment expert. Please provide constructive feedback based on the learner's actual performance, considering their learning journey and progress. Value engagement, curiosity, and effort alongside task completion. For research and exploration tasks, the learning process is as important as the outcome.
       
 IMPORTANT: Respond in the language specified by code: ${language || 'en'}. All feedback, strengths, improvements, and suggestions must be in this language.`,
-      temperature: 0.1, // Lower temperature for more consistent evaluation
+      temperature: 0.3, // Slightly higher temperature for more nuanced evaluation
       maxOutputTokens: 2048
     });
     
