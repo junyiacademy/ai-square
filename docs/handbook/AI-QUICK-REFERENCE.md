@@ -275,3 +275,149 @@ interface UserProps {
   data: any
 }
 ```
+
+---
+
+# 🚀 快速任務參考
+
+## 任務 ID 格式
+- **AUTH-XXX**: 認證相關
+- **PBL-XXX**: 問題導向學習
+- **CONTENT-XXX**: 內容管理
+- **INFRA-XXX**: 基礎設施
+- **PERF-XXX**: 效能優化
+- **TEST-XXX**: 測試相關
+
+## 任務狀態標記
+- 🔴 **Blocked**: 被阻擋
+- 🟡 **In Progress**: 進行中
+- ✅ **Done**: 已完成
+- 📋 **Todo**: 待處理
+
+## 每日站會模板
+```markdown
+### Date: [TODAY]
+
+**Yesterday**:
+- Completed: [TASK-IDs]
+- Blocked: [TASK-IDs]
+
+**Today**:
+- Working on: [TASK-IDs]
+- Goal: [Specific outcome]
+
+**Blockers**:
+- [Description and what's needed]
+```
+
+---
+
+# 🔧 開發環境設置
+
+## 快速啟動
+```bash
+# Frontend
+cd frontend
+npm install
+npm run dev
+
+# Backend
+cd ../backend
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+## 驗證指令
+```bash
+# 內容驗證
+npm run validate
+
+# 程式碼品質
+npm run lint
+npm run typecheck
+
+# 測試
+npm run test
+npm run test:e2e
+```
+
+## 常見問題修復
+```bash
+# 清理和重建
+rm -rf node_modules package-lock.json
+npm install
+
+# 修復 Git hooks
+npx husky install
+
+# 清理測試快取
+npm run test -- --clearCache
+```
+
+---
+
+# 🤝 貢獻指南
+
+## Pull Request 流程
+
+### 1. 選擇適當的 PR 模板
+- `feature.md` - 新功能
+- `bugfix.md` - 錯誤修復
+- `content.md` - 內容更新
+- `refactor.md` - 程式碼重構
+- `docs.md` - 文件更新
+
+### 2. PR 檢查清單
+```bash
+# 執行測試
+npm run test
+
+# 檢查程式碼品質
+npm run lint
+npm run typecheck
+
+# 驗證內容（如果修改 YAML）
+npm run validate
+```
+
+### 3. 合併條件
+- ✅ 通過所有 CI 檢查
+- ✅ 獲得至少一位維護者同意
+- ✅ 解決所有討論
+- ✅ 更新相關文件
+
+## Issue 模板
+
+### Bug Report
+- 重現步驟
+- 預期行為
+- 實際行為
+- 環境資訊
+
+### Feature Request
+- 功能描述
+- 使用案例
+- 可能實作方式
+
+### Content Issue
+- 問題位置
+- 建議修正
+- 參考資料
+
+## 貢獻最佳實踐
+
+### DO ✅
+- 保持程式碼簡潔清晰
+- 撰寫自我說明的程式碼
+- 適當處理錯誤
+- 考慮效能影響
+- 遵循安全最佳實踐
+
+### DON'T ❌
+- 提交包含敏感資訊的程式碼
+- 留下 console.log 或 debug 程式碼
+- 忽略測試失敗
+- 引入不必要的依賴
+- 破壞現有功能
