@@ -6,7 +6,8 @@ import {
   TaskLog, 
   TaskProgress, 
   TaskInteraction,
-  ProgramSummary
+  ProgramSummary,
+  ProgramStatus
 } from '@/types/pbl';
 
 // Initialize GCS client
@@ -56,6 +57,49 @@ class PBLProgramService {
   }
 
   /**
+   * Find existing draft program for user and scenario
+   */
+  async findUserDraftProgram(userEmail: string, scenarioId: string): Promise<ProgramMetadata | null> {
+    try {
+      const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
+      const basePath = `${PBL_BASE_PATH}/${sanitizedEmail}/scenario_${scenarioId}`;
+      
+      const [files] = await this.bucket.getFiles({ 
+        prefix: basePath,
+        autoPaginate: false,
+        maxResults: 50
+      });
+      
+      // Find metadata files (not in task folders)
+      const metadataFiles = files.filter(file => 
+        file.name.includes('/program_') && 
+        file.name.endsWith('/metadata.json') &&
+        !file.name.includes('/task_')
+      );
+      
+      // Check each program to find drafts
+      for (const file of metadataFiles) {
+        try {
+          const [content] = await file.download();
+          const metadata = JSON.parse(content.toString()) as ProgramMetadata;
+          
+          if (metadata.status === 'draft') {
+            return metadata;
+          }
+        } catch (error) {
+          console.error(`Error reading metadata from ${file.name}:`, error);
+          continue;
+        }
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Error finding draft program:', error);
+      return null;
+    }
+  }
+
+  /**
    * Create a new program
    */
   async createProgram(
@@ -63,7 +107,8 @@ class PBLProgramService {
     scenarioId: string,
     scenarioTitle: string,
     totalTasks: number,
-    language: string = 'en'
+    language: string = 'en',
+    status: ProgramStatus = 'in_progress'
   ): Promise<ProgramMetadata> {
     const programId = this.generateProgramId();
     const now = new Date().toISOString();
@@ -76,7 +121,7 @@ class PBLProgramService {
       userEmail,
       startedAt: now,
       updatedAt: now,
-      status: 'in_progress',
+      status,
       totalTasks,
       language
     };
@@ -822,6 +867,11 @@ class PBLProgramService {
             if (metadataFile) {
               const [content] = await metadataFile.download();
               const metadata = JSON.parse(content.toString()) as ProgramMetadata;
+              
+              // Skip draft programs - they should not appear in user's program list
+              if (metadata.status === 'draft') {
+                return null;
+              }
               
               // Create basic completion data from metadata
               return {

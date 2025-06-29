@@ -29,7 +29,7 @@ interface UserProgram {
   id: string;
   scenarioId: string;
   scenarioTitle: string;
-  status: 'in_progress' | 'completed' | 'paused';
+  status: 'draft' | 'in_progress' | 'completed';
   startedAt: string;
   updatedAt: string;
   totalTasks: number;
@@ -50,6 +50,7 @@ export default function ScenarioDetailsPage() {
   const [isStarting, setIsStarting] = useState(false);
   const [userPrograms, setUserPrograms] = useState<UserProgram[]>([]);
   const [selectedProgramId, setSelectedProgramId] = useState<string | null>(null);
+  const [draftProgram, setDraftProgram] = useState<UserProgram | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -85,8 +86,34 @@ export default function ScenarioDetailsPage() {
       }
     };
 
+    const checkForDraftProgram = async () => {
+      try {
+        const response = await fetch(`/api/pbl/draft-program?scenarioId=${scenarioId}`);
+        const data = await response.json();
+        
+        if (data.success && data.program) {
+          // Convert program metadata to UserProgram format
+          const draftUserProgram: UserProgram = {
+            id: data.program.id,
+            scenarioId: data.program.scenarioId,
+            scenarioTitle: data.program.scenarioTitle,
+            status: data.program.status,
+            startedAt: data.program.startedAt,
+            updatedAt: data.program.updatedAt,
+            totalTasks: data.program.totalTasks,
+            evaluatedTasks: 0,
+            overallScore: 0
+          };
+          setDraftProgram(draftUserProgram);
+        }
+      } catch (error) {
+        console.error('Error checking for draft program:', error);
+      }
+    };
+
     fetchScenarioDetails();
     fetchUserPrograms();
+    checkForDraftProgram();
   }, [scenarioId, i18n.language]);
 
   const getDifficultyBadge = (difficulty: string) => {
@@ -124,14 +151,48 @@ export default function ScenarioDetailsPage() {
           router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${firstTaskId}/learn`);
         }
       } else {
-        // Start new program (will be created on first message)
-        const tempProgramId = `temp_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
-        const firstTaskId = scenario.tasks[0]?.id || 'task-1';
-        router.push(`/pbl/scenarios/${scenarioId}/program/${tempProgramId}/tasks/${firstTaskId}/learn?isNew=true`);
+        // Start new program - use draft if available, otherwise create new one
+        if (draftProgram) {
+          // Use existing draft program directly
+          const firstTaskId = scenario.tasks[0]?.id || 'task-1';
+          router.push(`/pbl/scenarios/${scenarioId}/program/${draftProgram.id}/tasks/${firstTaskId}/learn`);
+        } else {
+          // Create new draft program
+          try {
+            const createResponse = await fetch(`/api/pbl/scenarios/${scenarioId}/create-draft`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                language: i18n.language
+              })
+            });
+            
+            if (!createResponse.ok) throw new Error('Failed to create draft program');
+            
+            const createData = await createResponse.json();
+            if (!createData.success || !createData.programId) {
+              throw new Error('Failed to create draft program');
+            }
+            
+            // Navigate to the learning page with new draft
+            const firstTaskId = scenario.tasks[0]?.id || 'task-1';
+            router.push(`/pbl/scenarios/${scenarioId}/program/${createData.programId}/tasks/${firstTaskId}/learn`);
+            
+          } catch (error) {
+            console.error('Error creating draft program:', error);
+            // Fallback to old temp ID method
+            const tempProgramId = `temp_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+            const firstTaskId = scenario.tasks[0]?.id || 'task-1';
+            router.push(`/pbl/scenarios/${scenarioId}/program/${tempProgramId}/tasks/${firstTaskId}/learn?isNew=true`);
+          }
+        }
       }
     } catch (error) {
       console.error('Error starting program:', error);
       alert(t('details.errorStarting'));
+    } finally {
       setIsStarting(false);
     }
   };
@@ -278,7 +339,12 @@ export default function ScenarioDetailsPage() {
                   disabled={isStarting}
                   className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isStarting ? t('details.starting') : t('details.startNewProgram')}
+                  {isStarting 
+                    ? t('details.starting') 
+                    : draftProgram 
+                    ? t('details.continueDraft')
+                    : t('details.startNewProgram')
+                  }
                 </button>
                 <Link
                   href="/pbl"

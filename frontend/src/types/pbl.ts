@@ -6,7 +6,7 @@ export type DifficultyLevel = 'beginner' | 'intermediate' | 'advanced';
 export type TaskCategory = 'research' | 'analysis' | 'creation' | 'interaction';
 export type ModalityFocus = 'reading' | 'writing' | 'listening' | 'speaking' | 'mixed';
 export type AIRole = 'assistant' | 'evaluator' | 'actor';
-export type ProgramStatus = 'not_started' | 'in_progress' | 'paused' | 'completed';
+export type ProgramStatus = 'draft' | 'in_progress' | 'completed';
 export type TaskStatus = 'not_started' | 'in_progress' | 'completed';
 export type InteractionType = 'user' | 'ai' | 'system';
 

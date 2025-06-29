@@ -81,22 +81,64 @@ export default function ProgramLearningPage() {
       const scenarioData = await scenarioRes.json();
       setScenario(scenarioData.data);
       
-      // For now, create a mock program object
-      // In production, this would load from the API
-      const mockProgram: Program = {
-        id: programId,
-        scenarioId: scenarioId,
-        userId: 'user@example.com',
-        userEmail: 'user@example.com',
-        startedAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        status: 'in_progress',
-        totalTasks: scenarioData.data.tasks.length,
-        completedTasks: 0,
-        currentTaskId: taskId || scenarioData.data.tasks[0]?.id,
-        language: i18n.language
-      };
-      setProgram(mockProgram);
+      // Load program data (skip for temp programs)
+      let loadedProgram: Program | null = null;
+      if (!programId.startsWith('temp_')) {
+        try {
+          const programRes = await fetch(`/api/pbl/programs/${programId}?scenarioId=${scenarioId}`);
+          if (programRes.ok) {
+            const programData = await programRes.json();
+            if (programData.success && programData.program) {
+              loadedProgram = programData.program;
+              
+              // If this is a draft program being accessed, update its timestamps
+              if (loadedProgram.status === 'draft') {
+                try {
+                  const updateRes = await fetch(`/api/pbl/programs/${programId}/update-timestamps`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      scenarioId
+                    })
+                  });
+                  
+                  if (updateRes.ok) {
+                    const updatedData = await updateRes.json();
+                    if (updatedData.success && updatedData.program) {
+                      loadedProgram = updatedData.program;
+                    }
+                  }
+                } catch (error) {
+                  console.error('Error updating draft timestamps:', error);
+                }
+              }
+              
+              setProgram(loadedProgram);
+            }
+          }
+        } catch (error) {
+          console.error('Error loading program data:', error);
+        }
+      }
+      
+      // Fallback: create mock program for temp IDs or if loading failed
+      if (!loadedProgram) {
+        const mockProgram: Program = {
+          id: programId,
+          scenarioId: scenarioId,
+          userId: 'user@example.com',
+          userEmail: 'user@example.com',
+          startedAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          status: programId.startsWith('temp_') ? 'in_progress' : 'draft',
+          totalTasks: scenarioData.data.tasks.length,
+          currentTaskId: taskId || scenarioData.data.tasks[0]?.id,
+          language: i18n.language
+        };
+        setProgram(mockProgram);
+      }
       
       // Load completion data to get all task evaluations (only for non-temp programs)
       if (!programId.startsWith('temp_')) {
@@ -224,10 +266,11 @@ export default function ProgramLearningPage() {
     setConversations(prev => [...prev, newUserEntry]);
     
     try {
-      // If this is a new program (temp ID), create it now
+      // Handle program ID conversion: temp ID or draft → active program
       let actualProgramId = programId;
-      if (isNewProgram && programId.startsWith('temp_')) {
-        // Create the actual program
+      
+      if (programId.startsWith('temp_')) {
+        // Legacy temp ID - create new program (fallback)
         const createRes = await fetch(`/api/pbl/scenarios/${scenarioId}/start`, {
           method: 'POST',
           headers: {
@@ -251,11 +294,36 @@ export default function ProgramLearningPage() {
           
           // Force update the params to ensure consistency
           (params as any).programId = actualProgramId;
-          
-          // Don't reload history here - keep the current conversations
-          // The user message is already in the UI, just update the programId
         } else {
           throw new Error('Failed to create program');
+        }
+      } else if (program?.status === 'draft') {
+        // Convert draft to active program on first message
+        const updateRes = await fetch(`/api/pbl/programs/${programId}/activate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            scenarioId,
+            taskId: currentTask.id,
+            taskTitle: i18n.language === 'zh' || i18n.language === 'zh-TW' 
+              ? (currentTask.title_zh || currentTask.title)
+              : currentTask.title
+          })
+        });
+        
+        if (!updateRes.ok) {
+          console.error('Failed to activate draft program, continuing anyway');
+        }
+        
+        // Update program status in state
+        if (program) {
+          setProgram({
+            ...program,
+            status: 'in_progress',
+            updatedAt: new Date().toISOString()
+          });
         }
       }
       
