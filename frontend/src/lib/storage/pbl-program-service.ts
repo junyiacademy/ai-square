@@ -43,9 +43,9 @@ class PBLProgramService {
   /**
    * Get program folder path
    */
-  private getProgramPath(userEmail: string, scenarioId: string, programId: string, timestamp: string): string {
+  private getProgramPath(userEmail: string, scenarioId: string, programId: string): string {
     const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
-    return `${PBL_BASE_PATH}/${sanitizedEmail}/scenario_${scenarioId}/program_${programId}_${timestamp}`;
+    return `${PBL_BASE_PATH}/${sanitizedEmail}/scenario_${scenarioId}/program_${programId}`;
   }
 
   /**
@@ -66,7 +66,6 @@ class PBLProgramService {
     language: string = 'en'
   ): Promise<ProgramMetadata> {
     const programId = this.generateProgramId();
-    const timestamp = Date.now().toString();
     const now = new Date().toISOString();
 
     const program: ProgramMetadata = {
@@ -84,7 +83,7 @@ class PBLProgramService {
     };
 
     // Save program metadata
-    const programPath = this.getProgramPath(userEmail, scenarioId, programId, timestamp);
+    const programPath = this.getProgramPath(userEmail, scenarioId, programId);
     const metadataFile = this.bucket.file(`${programPath}/metadata.json`);
     
     await metadataFile.save(JSON.stringify(program, null, 2), {
@@ -499,27 +498,14 @@ class PBLProgramService {
     
     const file = this.bucket.file(evaluationPath);
     
-    // Load existing evaluations (in case there are multiple)
-    let evaluations: any[] = [];
-    try {
-      const [exists] = await file.exists();
-      if (exists) {
-        const [contents] = await file.download();
-        const data = JSON.parse(contents.toString());
-        evaluations = Array.isArray(data) ? data : [data];
-      }
-    } catch (error) {
-      console.log('No existing evaluations found');
-    }
-    
-    // Add new evaluation
-    evaluations.push({
+    // Save only the latest evaluation (overwrite existing)
+    const evaluationData = {
       ...evaluation,
       createdAt: new Date().toISOString()
-    });
+    };
     
-    // Save updated evaluations
-    await file.save(JSON.stringify(evaluations, null, 2), {
+    // Save evaluation (overwrites existing file)
+    await file.save(JSON.stringify(evaluationData, null, 2), {
       metadata: {
         contentType: 'application/json',
       },
@@ -593,7 +579,7 @@ class PBLProgramService {
       
       for (const programPath of programPaths) {
         // Extract scenario and program IDs from path
-        const pathMatch = programPath.match(/scenario_([^/]+)\/program_([^_]+)_/);
+        const pathMatch = programPath.match(/scenario_([^/]+)\/program_([^/]+)/);
         if (pathMatch) {
           const [, extractedScenarioId, programId] = pathMatch;
           const summary = await this.getProgramSummary(userEmail, extractedScenarioId, programId);

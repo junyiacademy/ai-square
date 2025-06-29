@@ -45,8 +45,12 @@ export async function POST(request: NextRequest) {
       `${entry.type === 'user' ? 'User' : 'Assistant'}: ${entry.content}`
     ).join('\n');
 
-    // Create the prompt
-    const systemPrompt = `${aiModule.initial_prompt}
+    // Analyze user message for relevance
+    const isGreetingOnly = /^(hi|hello|hey|good morning|good afternoon|good evening|how are you|what's up|thanks|thank you|bye|goodbye)[\s\.,!?]*$/i.test(message.trim());
+    const isOffTopic = !/(?:resume|cv|job|career|work|experience|skill|education|analysis|industry|trends|hiring|employer|application|interview|professional)/i.test(message) && message.length > 10;
+    
+    // Create the prompt with message filtering
+    let systemPrompt = `${aiModule.initial_prompt}
 
 Current Task: ${taskTitle}
 Task Description: ${taskDescription}
@@ -56,7 +60,20 @@ Expected Outcome: ${expectedOutcome}
 Previous conversation:
 ${conversationContext || 'No previous conversation'}
 
+IMPORTANT GUIDELINES:
+1. Stay focused on the current task and learning objectives
+2. If the user sends only greetings or off-topic messages, politely redirect them to the task
+3. Keep responses concise and task-focused
+4. Encourage meaningful engagement with the learning material
+
 Please respond as ${aiModule.persona} and help the user with this task.`;
+
+    // Handle low-value messages
+    if (isGreetingOnly) {
+      systemPrompt += `\n\nNOTE: The user sent only a greeting. Respond briefly and immediately guide them to start working on the task.`;
+    } else if (isOffTopic) {
+      systemPrompt += `\n\nNOTE: The user's message appears off-topic. Politely redirect them to focus on the current task.`;
+    }
 
     // Initialize Vertex AI
     const vertexAI = new VertexAI({

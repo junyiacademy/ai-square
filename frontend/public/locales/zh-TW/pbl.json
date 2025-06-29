@@ -130,7 +130,10 @@
     "goToCompletion": "前往完成報告",
     "evaluate": "評估表現",
     "evaluating": "評估中...",
-    "evaluationResults": "評估結果"
+    "evaluationResults": "評估結果",
+    "conversationInsights": "對話洞察",
+    "effectiveExamples": "表現良好的部分：",
+    "improvementExamples": "可以改進的地方："
   },
   "history": {
     "title": "學習歷程",

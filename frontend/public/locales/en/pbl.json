@@ -130,7 +130,10 @@
     "goToCompletion": "Go to Completion Report",
     "evaluate": "Evaluate Performance",
     "evaluating": "Evaluating...",
-    "evaluationResults": "Evaluation Results"
+    "evaluationResults": "Evaluation Results",
+    "conversationInsights": "Conversation Insights",
+    "effectiveExamples": "What worked well:",
+    "improvementExamples": "Areas for improvement:"
   },
   "history": {
     "title": "Learning Journey",

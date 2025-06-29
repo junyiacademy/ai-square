@@ -337,30 +337,47 @@ export default function ProgramLearningPage() {
         })
       });
       
-      if (!response.ok) throw new Error('Failed to evaluate');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Evaluation API error:', errorData);
+        throw new Error(errorData.error || `HTTP ${response.status}: Failed to evaluate`);
+      }
       
       const data = await response.json();
+      console.log('Evaluation response:', data);
       
       if (data.success) {
         setEvaluation(data.evaluation);
         
         // Save evaluation to GCS
-        await fetch('/api/pbl/task-logs', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-scenario-id': scenarioId
-          },
-          body: JSON.stringify({
-            programId,
-            taskId: currentTask.id,
-            scenarioId,
-            evaluation: data.evaluation
-          })
-        });
+        try {
+          const saveResponse = await fetch('/api/pbl/task-logs', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-scenario-id': scenarioId
+            },
+            body: JSON.stringify({
+              programId,
+              taskId: currentTask.id,
+              scenarioId,
+              evaluation: data.evaluation
+            })
+          });
+          
+          if (!saveResponse.ok) {
+            console.error('Failed to save evaluation to GCS');
+          }
+        } catch (saveError) {
+          console.error('Error saving evaluation:', saveError);
+          // Don't fail the whole evaluation if saving fails
+        }
+      } else {
+        throw new Error(data.error || 'Evaluation failed');
       }
     } catch (error) {
       console.error('Error evaluating:', error);
+      alert(`評估失敗: ${error instanceof Error ? error.message : '未知錯誤'}`);
       setShowEvaluateButton(true);
     } finally {
       setIsEvaluating(false);
@@ -678,23 +695,80 @@ export default function ProgramLearningPage() {
                 </div>
                 
                 {/* Domain Scores */}
-                <div className="mb-4">
+                <div className="mb-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                   <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     {t('pbl:complete.domainScores')}
                   </h4>
-                  <div className="space-y-2 text-sm">
+                  <div className="space-y-2">
                     {Object.entries(evaluation.domainScores).map(([domain, score]: [string, any]) => (
                       <div key={domain} className="flex items-center justify-between">
-                        <span className="text-gray-600 dark:text-gray-400">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">
                           {t(`assessment:domains.${domain}`)}
                         </span>
-                        <span className="font-medium text-gray-700 dark:text-gray-300">
-                          {score}%
-                        </span>
+                        <div className="flex items-center">
+                          <div className="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
+                            <div 
+                              className="bg-purple-600 h-2 rounded-full"
+                              style={{ width: `${score}%` }}
+                            />
+                          </div>
+                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            {score}%
+                          </span>
+                        </div>
                       </div>
                     ))}
                   </div>
                 </div>
+                
+                {/* Conversation Insights */}
+                {evaluation.conversationInsights && (
+                  <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-3">
+                      {t('pbl:learn.conversationInsights', 'Conversation Insights')}
+                    </h4>
+                    
+                    {evaluation.conversationInsights.effectiveExamples?.length > 0 && (
+                      <div className="mb-3">
+                        <h5 className="text-xs font-medium text-blue-800 dark:text-blue-200 mb-2">
+                          {t('pbl:learn.effectiveExamples', 'What worked well:')}
+                        </h5>
+                        <div className="space-y-2">
+                          {evaluation.conversationInsights.effectiveExamples.map((example: any, idx: number) => (
+                            <div key={idx} className="bg-white dark:bg-gray-800 p-2 rounded">
+                              <p className="text-sm text-gray-700 dark:text-gray-300 italic">
+                                "{example.quote}"
+                              </p>
+                              <p className="text-xs text-green-600 dark:text-green-400 mt-1">
+                                ✓ {example.reason}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {evaluation.conversationInsights.improvementAreas?.length > 0 && (
+                      <div>
+                        <h5 className="text-xs font-medium text-blue-800 dark:text-blue-200 mb-2">
+                          {t('pbl:learn.improvementExamples', 'Areas for improvement:')}
+                        </h5>
+                        <div className="space-y-2">
+                          {evaluation.conversationInsights.improvementAreas.map((area: any, idx: number) => (
+                            <div key={idx} className="bg-white dark:bg-gray-800 p-2 rounded">
+                              <p className="text-sm text-gray-700 dark:text-gray-300 italic">
+                                "{area.quote}"
+                              </p>
+                              <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                                → {area.suggestion}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
                 
                 {/* Strengths & Improvements */}
                 <div className="space-y-3">
