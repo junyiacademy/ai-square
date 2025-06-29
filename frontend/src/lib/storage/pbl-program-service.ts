@@ -736,6 +736,43 @@ class PBLProgramService {
   }
 
   /**
+   * Update program completion with qualitative feedback
+   */
+  async updateProgramCompletionFeedback(
+    userEmail: string,
+    scenarioId: string,
+    programId: string,
+    feedback: any
+  ): Promise<void> {
+    try {
+      const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
+      const completionPath = `${PBL_BASE_PATH}/${sanitizedEmail}/scenario_${scenarioId}/program_${programId}/completion.json`;
+      
+      const file = this.bucket.file(completionPath);
+      const [exists] = await file.exists();
+      
+      if (exists) {
+        const [contents] = await file.download();
+        const completionData = JSON.parse(contents.toString());
+        
+        // Update with feedback
+        completionData.qualitativeFeedback = feedback;
+        completionData.feedbackGeneratedAt = new Date().toISOString();
+        
+        // Save updated data
+        await file.save(JSON.stringify(completionData, null, 2), {
+          metadata: {
+            contentType: 'application/json',
+          },
+        });
+      }
+    } catch (error) {
+      console.error('Error updating completion feedback:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Get all programs for a user and specific scenario (using completion data)
    */
   async getUserProgramsForScenario(userEmail: string, scenarioId: string): Promise<any[]> {
@@ -743,71 +780,77 @@ class PBLProgramService {
       const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
       const basePath = `${PBL_BASE_PATH}/${sanitizedEmail}/scenario_${scenarioId}`;
       
-      // List completion.json files
+      // List all files
       const [files] = await this.bucket.getFiles({ 
         prefix: basePath,
         autoPaginate: false,
         maxResults: 100
       });
       
-      // Filter completion files
-      const completionFiles = files.filter(file => 
-        file.name.includes('/program_') && 
-        file.name.endsWith('/completion.json')
-      );
+      // Find all program folders
+      const programFolders = new Set<string>();
+      files.forEach(file => {
+        const match = file.name.match(/\/program_([^\/]+)\//);
+        if (match) {
+          programFolders.add(match[0]);
+        }
+      });
       
-      // If no completion files, fall back to metadata files
-      if (completionFiles.length === 0) {
-        const metadataFiles = files.filter(file => 
-          file.name.includes('/program_') && 
-          file.name.endsWith('/metadata.json') && 
-          !file.name.includes('/task_')
-        );
-        
-        // Create basic completion data from metadata
-        const metadataPromises = metadataFiles.map(async (file) => {
-          try {
-            const [content] = await file.download();
-            const metadata = JSON.parse(content.toString()) as ProgramMetadata;
-            
-            return {
-              programId: metadata.id,
-              scenarioId: metadata.scenarioId,
-              userEmail: metadata.userEmail,
-              status: metadata.status,
-              startedAt: metadata.startedAt,
-              updatedAt: metadata.updatedAt,
-              completedAt: metadata.completedAt,
-              totalTasks: metadata.totalTasks,
-              evaluatedTasks: 0,
-              overallScore: 0,
-              domainScores: {},
-              ksaScores: {},
-              totalTimeSeconds: 0,
-              taskSummaries: []
-            };
-          } catch (error) {
-            console.error(`Error reading program metadata from ${file.name}:`, error);
-            return null;
-          }
-        });
-        
-        const results = await Promise.all(metadataPromises);
-        return results.filter(p => p !== null);
-      }
+      console.log(`Found ${programFolders.size} program folders for user ${userEmail} in scenario ${scenarioId}`);
       
-      // Download completion data in parallel
-      const completionPromises = completionFiles.map(async (file) => {
+      // Process each program folder
+      const programPromises = Array.from(programFolders).map(async (programFolder) => {
         try {
-          const [content] = await file.download();
-          return JSON.parse(content.toString());
+          // Check if completion.json exists
+          const completionFile = files.find(f => 
+            f.name.includes(programFolder) && 
+            f.name.endsWith('/completion.json')
+          );
+          
+          if (completionFile) {
+            // Use completion data
+            const [content] = await completionFile.download();
+            return JSON.parse(content.toString());
+          } else {
+            // Fall back to metadata.json
+            const metadataFile = files.find(f => 
+              f.name.includes(programFolder) && 
+              f.name.endsWith('/metadata.json') &&
+              !f.name.includes('/task_')
+            );
+            
+            if (metadataFile) {
+              const [content] = await metadataFile.download();
+              const metadata = JSON.parse(content.toString()) as ProgramMetadata;
+              
+              // Create basic completion data from metadata
+              return {
+                programId: metadata.id,
+                scenarioId: metadata.scenarioId,
+                userEmail: metadata.userEmail,
+                status: metadata.status,
+                startedAt: metadata.startedAt,
+                updatedAt: metadata.updatedAt,
+                completedAt: metadata.completedAt,
+                totalTasks: metadata.totalTasks,
+                evaluatedTasks: 0,
+                overallScore: 0,
+                domainScores: {},
+                ksaScores: {},
+                totalTimeSeconds: 0,
+                taskSummaries: []
+              };
+            }
+          }
+          
+          return null;
         } catch (error) {
-          console.error(`Error reading completion data from ${file.name}:`, error);
+          console.error(`Error reading program data from ${programFolder}:`, error);
           return null;
         }
       });
       
-      const results = await Promise.all(completionPromises);
+      const results = await Promise.all(programPromises);
       return results.filter(p => p !== null);
     } catch (error) {
       console.error('Error getting user programs for scenario:', error);

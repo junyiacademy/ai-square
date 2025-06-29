@@ -98,24 +98,26 @@ export default function ProgramLearningPage() {
       };
       setProgram(mockProgram);
       
-      // Load completion data to get all task evaluations
-      try {
-        const completionRes = await fetch(`/api/pbl/completion?programId=${programId}&scenarioId=${scenarioId}`);
-        if (completionRes.ok) {
-          const completionData = await completionRes.json();
-          if (completionData.success && completionData.data) {
-            // Build a map of task evaluations
-            const evaluations: Record<string, any> = {};
-            completionData.data.tasks?.forEach((task: any) => {
-              if (task.evaluation) {
-                evaluations[task.taskId] = task.evaluation;
-              }
-            });
-            setTaskEvaluations(evaluations);
+      // Load completion data to get all task evaluations (only for non-temp programs)
+      if (!programId.startsWith('temp_')) {
+        try {
+          const completionRes = await fetch(`/api/pbl/completion?programId=${programId}&scenarioId=${scenarioId}`);
+          if (completionRes.ok) {
+            const completionData = await completionRes.json();
+            if (completionData.success && completionData.data) {
+              // Build a map of task evaluations
+              const evaluations: Record<string, any> = {};
+              completionData.data.tasks?.forEach((task: any) => {
+                if (task.evaluation) {
+                  evaluations[task.taskId] = task.evaluation;
+                }
+              });
+              setTaskEvaluations(evaluations);
+            }
           }
+        } catch (error) {
+          console.error('Error loading completion data:', error);
         }
-      } catch (error) {
-        console.error('Error loading completion data:', error);
       }
       
       // If no taskId provided, use the first task
@@ -138,7 +140,10 @@ export default function ProgramLearningPage() {
     try {
       // Skip loading history for temp programs
       if (programId.startsWith('temp_')) {
-        setConversations([]);
+        // Don't clear conversations if we already have some (e.g., during transition)
+        if (conversations.length === 0) {
+          setConversations([]);
+        }
         return;
       }
       
@@ -185,8 +190,12 @@ export default function ProgramLearningPage() {
           }
         } else {
           console.log('No interactions found in response');
-          setConversations([]);
-          setShowEvaluateButton(false);
+          // Only clear conversations if we don't have any in UI already
+          // This prevents clearing during the temp->actual ID transition
+          if (conversations.length === 0) {
+            setConversations([]);
+            setShowEvaluateButton(false);
+          }
         }
       } else {
         console.error('Failed to load task history:', res.status);
@@ -239,13 +248,19 @@ export default function ProgramLearningPage() {
           // Update URL without navigation
           const newUrl = `/pbl/scenarios/${scenarioId}/program/${actualProgramId}/tasks/${taskId}/learn`;
           window.history.replaceState({}, '', newUrl);
+          
+          // Force update the params to ensure consistency
+          (params as any).programId = actualProgramId;
+          
+          // Don't reload history here - keep the current conversations
+          // The user message is already in the UI, just update the programId
         } else {
           throw new Error('Failed to create program');
         }
       }
       
       // Save user interaction
-      await fetch('/api/pbl/task-logs', {
+      const saveUserRes = await fetch('/api/pbl/task-logs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -265,6 +280,13 @@ export default function ProgramLearningPage() {
           }
         })
       });
+      
+      if (!saveUserRes.ok) {
+        console.error('Failed to save user interaction');
+      }
+      
+      // Small delay to ensure GCS consistency
+      await new Promise(resolve => setTimeout(resolve, 200));
       
       // Get AI response
       const aiRes = await fetch('/api/pbl/chat', {

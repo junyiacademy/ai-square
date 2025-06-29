@@ -221,6 +221,11 @@
     },
     "loginRequired": "Login Required",
     "loginRequiredMessage": "Please log in to view your completion report.",
-    "viewReport": "View Report"
+    "viewReport": "View Report",
+    "generatingFeedback": "Generating personalized feedback...",
+    "qualitativeFeedback": "Personalized Feedback",
+    "strengths": "Your Strengths",
+    "areasForImprovement": "Growth Opportunities",
+    "nextSteps": "Recommended Next Steps"
   }
 }

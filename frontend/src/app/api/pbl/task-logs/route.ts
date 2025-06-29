@@ -182,6 +182,29 @@ export async function PUT(request: NextRequest) {
         taskId,
         evaluation
       );
+      
+      // Trigger feedback generation in the background (don't await)
+      // This happens after each task evaluation, but the feedback generation
+      // will check if completion.json exists and has feedback already
+      const baseUrl = request.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL;
+      if (baseUrl) {
+        // Pass the cookie header for authentication
+        const cookieHeader = request.headers.get('cookie');
+        fetch(`${baseUrl}/api/pbl/generate-feedback`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(cookieHeader && { 'Cookie': cookieHeader })
+          },
+          body: JSON.stringify({
+            programId,
+            scenarioId,
+          }),
+        }).catch(error => {
+          // Log error but don't block the response
+          console.error('Failed to trigger feedback generation:', error);
+        });
+      }
     }
     
     return NextResponse.json({

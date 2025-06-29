@@ -209,14 +209,14 @@ export default function ScenarioDetailsPage() {
                     {userPrograms.map((program, index) => (
                       <div
                         key={program.id}
-                        className="flex items-center p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-600"
+                        className="p-4 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-600"
                       >
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between">
+                        <div className="flex items-start justify-between mb-3">
+                          <div>
                             <span className="font-medium text-gray-900 dark:text-white">
                               {index === 0 ? t('details.latestProgram') : `${t('details.program')} ${index + 1}`}
                             </span>
-                            <span className={`text-xs px-2 py-1 rounded-full ${
+                            <span className={`ml-3 text-xs px-2 py-1 rounded-full ${
                               program.status === 'completed' 
                                 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                                 : program.status === 'in_progress'
@@ -226,40 +226,40 @@ export default function ScenarioDetailsPage() {
                               {t(`history.status.${program.status}`)}
                             </span>
                           </div>
-                          <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                            <div>
-                              {t('details.progress')}: {program.evaluatedTasks}/{program.taskCount || program.totalTasks} {t('details.tasks')}
-                              {program.overallScore > 0 && (
-                                <>
-                                  <span className="mx-2">•</span>
-                                  <span className="font-medium">
-                                    {t('pbl:learn.overallScore')}: {program.overallScore}%
-                                  </span>
-                                </>
-                              )}
-                            </div>
-                            <div>
-                              {t('details.started')}: {new Date(program.startedAt).toLocaleDateString()}
-                              {program.evaluatedTasks > 0 && (
-                                <>
-                                  <span className="mx-2">•</span>
-                                  {t('pbl:history.tasksEvaluated')}: {program.evaluatedTasks}
-                                </>
-                              )}
-                            </div>
+                        </div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                          <div>
+                            {t('details.progress')}: {program.evaluatedTasks}/{program.taskCount || program.totalTasks} {t('details.tasks')}
+                            {program.overallScore > 0 && (
+                              <>
+                                <span className="mx-2">•</span>
+                                <span className="font-medium">
+                                  {t('pbl:learn.overallScore')}: {program.overallScore}%
+                                </span>
+                              </>
+                            )}
+                          </div>
+                          <div>
+                            {t('details.started')}: {new Date(program.startedAt).toLocaleDateString()}
+                            {program.evaluatedTasks > 0 && (
+                              <>
+                                <span className="mx-2">•</span>
+                                {t('pbl:history.tasksEvaluated')}: {program.evaluatedTasks}
+                              </>
+                            )}
                           </div>
                         </div>
-                        <div className="ml-4 flex gap-2">
+                        <div className="flex gap-2 justify-end">
                           <button
                             onClick={() => handleStartProgram(program.id)}
-                            className="text-sm px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                            className="text-sm px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium"
                           >
                             {t('details.continue')}
                           </button>
                           {(program.evaluatedTasks > 0 || program.status === 'completed') && (
                             <button
                               onClick={() => router.push(`/pbl/scenarios/${scenarioId}/program/${program.id}/complete`)}
-                              className="text-sm px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors"
+                              className="text-sm px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors font-medium"
                             >
                               {t('details.goToCompletion')}
                             </button>

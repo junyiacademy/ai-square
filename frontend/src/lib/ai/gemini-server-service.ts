@@ -43,7 +43,7 @@ export class GeminiServerService {
 
   constructor(config: GeminiServerConfig) {
     this.config = config;
-    this.model = config.model || 'gemini-1.5-flash';
+    this.model = config.model || 'gemini-2.5-flash';
     
     // Initialize Google Auth with service account
     const keyFilePath = process.env.GOOGLE_APPLICATION_CREDENTIALS || 
@@ -302,7 +302,7 @@ export function geminiServerResponseToConversation(
     actionType: 'interaction',
     detail: {
       aiInteraction: {
-        model: 'gemini-1.5-flash',
+        model: 'gemini-2.5-flash',
         prompt: '', // Will be filled by caller
         response: response.content,
         tokensUsed: response.tokensUsed || 0

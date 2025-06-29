@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
@@ -16,45 +16,79 @@ export default function ProgramCompletePage() {
   const [loading, setLoading] = useState(true);
   const [completionData, setCompletionData] = useState<any>(null);
   const [scenarioData, setScenarioData] = useState<any>(null);
+  const [generatingFeedback, setGeneratingFeedback] = useState(false);
+  const [feedbackError, setFeedbackError] = useState<string | null>(null);
+  
+  // Use ref to prevent duplicate API calls
+  const loadingRef = useRef(false);
+  const feedbackGeneratingRef = useRef(false);
+  const isMountedRef = useRef(false);
   
   useEffect(() => {
+    // Check if already mounted (handles StrictMode double mount)
+    if (isMountedRef.current) return;
+    isMountedRef.current = true;
+    
     loadProgramData();
-  }, [programId, scenarioId]);
+    
+    // Cleanup function for StrictMode
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
   
   const loadProgramData = async () => {
+    if (loadingRef.current) return;
+    loadingRef.current = true;
+    
     try {
       setLoading(true);
       
-      // Load scenario data first
-      const scenarioRes = await fetch(`/api/pbl/scenarios/${scenarioId}`);
+      // Load both scenario and completion data in parallel
+      const [scenarioRes, completionRes] = await Promise.all([
+        fetch(`/api/pbl/scenarios/${scenarioId}`),
+        fetch(`/api/pbl/completion?programId=${programId}&scenarioId=${scenarioId}`)
+      ]);
+      
+      // Process scenario data
       if (scenarioRes.ok) {
         const scenarioResult = await scenarioRes.json();
         setScenarioData(scenarioResult.data);
       }
       
-      // Get completion data
-      const response = await fetch(`/api/pbl/completion?programId=${programId}&scenarioId=${scenarioId}`);
-      
-      if (!response.ok) {
+      // Process completion data
+      if (!completionRes.ok) {
         // If completion.json doesn't exist, try to create it
-        await fetch(`/api/pbl/completion`, {
+        const updateRes = await fetch(`/api/pbl/completion`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ programId, scenarioId })
         });
         
-        // Try again
-        const retryResponse = await fetch(`/api/pbl/completion?programId=${programId}&scenarioId=${scenarioId}`);
-        if (retryResponse.ok) {
-          const data = await retryResponse.json();
-          if (data.success && data.data) {
-            setCompletionData(data.data);
+        if (updateRes.ok) {
+          // Try to get the newly created completion data
+          const retryResponse = await fetch(`/api/pbl/completion?programId=${programId}&scenarioId=${scenarioId}`);
+          if (retryResponse.ok) {
+            const data = await retryResponse.json();
+            if (data.success && data.data) {
+              setCompletionData(data.data);
+              
+              // Generate feedback for newly created completion
+              if (!data.data.qualitativeFeedback && !feedbackGeneratingRef.current) {
+                await generateFeedback();
+              }
+            }
           }
         }
       } else {
-        const data = await response.json();
+        const data = await completionRes.json();
         if (data.success && data.data) {
           setCompletionData(data.data);
+          
+          // Check if qualitative feedback exists, if not, generate it
+          if (!data.data.qualitativeFeedback && !feedbackGeneratingRef.current) {
+            await generateFeedback();
+          }
         }
       }
       
@@ -62,6 +96,47 @@ export default function ProgramCompletePage() {
       console.error('Error loading program data:', error);
     } finally {
       setLoading(false);
+      loadingRef.current = false;
+    }
+  };
+  
+  const generateFeedback = async () => {
+    if (feedbackGeneratingRef.current) return;
+    feedbackGeneratingRef.current = true;
+    
+    try {
+      setGeneratingFeedback(true);
+      setFeedbackError(null);
+      
+      const response = await fetch('/api/pbl/generate-feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept-Language': i18n.language,
+        },
+        body: JSON.stringify({
+          programId,
+          scenarioId,
+        }),
+      });
+      
+      const result = await response.json();
+      
+      if (result.success && result.feedback) {
+        // Update completion data with the new feedback
+        setCompletionData((prev: any) => ({
+          ...prev,
+          qualitativeFeedback: result.feedback,
+        }));
+      } else {
+        throw new Error(result.error || 'Failed to generate feedback');
+      }
+    } catch (error) {
+      console.error('Error generating feedback:', error);
+      setFeedbackError('Failed to generate qualitative feedback');
+    } finally {
+      setGeneratingFeedback(false);
+      feedbackGeneratingRef.current = false;
     }
   };
   
@@ -141,6 +216,122 @@ export default function ProgramCompletePage() {
             {t('pbl:complete.scenarioCompleted', { title: scenarioTitle })}
           </p>
         </div>
+        
+        {/* Qualitative Feedback Section */}
+        {(completionData?.qualitativeFeedback || generatingFeedback) && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
+            {generatingFeedback ? (
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-4"></div>
+                <p className="text-gray-600 dark:text-gray-400">
+                  {t('pbl:complete.generatingFeedback', 'Generating personalized feedback...')}
+                </p>
+              </div>
+            ) : completionData?.qualitativeFeedback ? (
+              <>
+                <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
+                  {t('pbl:complete.qualitativeFeedback', 'Personalized Feedback')}
+                </h2>
+                
+                {/* Overall Assessment */}
+                <div className="mb-6">
+                  <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+                    {completionData.qualitativeFeedback.overallAssessment}
+                  </p>
+                </div>
+                
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                  {/* Strengths */}
+                  <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-6">
+                    <h3 className="text-lg font-medium text-green-900 dark:text-green-100 mb-4 flex items-center">
+                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      {t('pbl:complete.strengths', 'Your Strengths')}
+                    </h3>
+                    <div className="space-y-3">
+                      {completionData.qualitativeFeedback.strengths?.map((strength: any, index: number) => (
+                        <div key={index}>
+                          <h4 className="font-medium text-green-800 dark:text-green-200">
+                            {strength.area}
+                          </h4>
+                          <p className="text-sm text-green-700 dark:text-green-300 mt-1">
+                            {strength.description}
+                          </p>
+                          {strength.example && (
+                            <p className="text-sm text-green-600 dark:text-green-400 italic mt-2 pl-4 border-l-2 border-green-300 dark:border-green-600">
+                              "{strength.example}"
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Areas for Improvement */}
+                  <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6">
+                    <h3 className="text-lg font-medium text-blue-900 dark:text-blue-100 mb-4 flex items-center">
+                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                      {t('pbl:complete.areasForImprovement', 'Growth Opportunities')}
+                    </h3>
+                    <div className="space-y-3">
+                      {completionData.qualitativeFeedback.areasForImprovement?.map((area: any, index: number) => (
+                        <div key={index}>
+                          <h4 className="font-medium text-blue-800 dark:text-blue-200">
+                            {area.area}
+                          </h4>
+                          <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
+                            {area.description}
+                          </p>
+                          {area.suggestion && (
+                            <p className="text-sm text-blue-600 dark:text-blue-400 mt-2 flex items-start">
+                              <svg className="w-4 h-4 mr-1 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                              {area.suggestion}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Next Steps */}
+                {completionData.qualitativeFeedback.nextSteps?.length > 0 && (
+                  <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-6 mb-6">
+                    <h3 className="text-lg font-medium text-purple-900 dark:text-purple-100 mb-4">
+                      {t('pbl:complete.nextSteps', 'Recommended Next Steps')}
+                    </h3>
+                    <ul className="space-y-2">
+                      {completionData.qualitativeFeedback.nextSteps.map((step: string, index: number) => (
+                        <li key={index} className="flex items-start">
+                          <span className="text-purple-600 dark:text-purple-400 mr-2">
+                            {index + 1}.
+                          </span>
+                          <span className="text-purple-800 dark:text-purple-200">
+                            {step}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                {/* Encouragement */}
+                {completionData.qualitativeFeedback.encouragement && (
+                  <div className="text-center p-6 bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/20 dark:to-blue-900/20 rounded-lg">
+                    <p className="text-lg text-gray-800 dark:text-gray-200 italic">
+                      "{completionData.qualitativeFeedback.encouragement}"
+                    </p>
+                  </div>
+                )}
+              </>
+            ) : null}
+          </div>
+        )}
         
         {/* Three Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
