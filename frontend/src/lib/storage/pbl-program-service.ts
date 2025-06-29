@@ -396,6 +396,29 @@ class PBLProgramService {
         status: isCompleted ? 'completed' : 'in_progress',
         completedAt: isCompleted ? new Date().toISOString() : undefined
       });
+    } else {
+      // If no completion data yet, check by counting evaluated tasks
+      const program = await this.getProgram(userEmail, scenarioId, programId);
+      if (program) {
+        const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
+        const [files] = await this.bucket.getFiles({
+          prefix: `${PBL_BASE_PATH}/${sanitizedEmail}/scenario_${scenarioId}/program_${programId}/task_`,
+        });
+        
+        let evaluatedCount = 0;
+        for (const file of files) {
+          if (file.name.endsWith('/evaluation.json')) {
+            evaluatedCount++;
+          }
+        }
+        
+        if (evaluatedCount >= program.totalTasks) {
+          await this.updateProgram(userEmail, scenarioId, programId, {
+            status: 'completed',
+            completedAt: new Date().toISOString()
+          });
+        }
+      }
     }
   }
 
@@ -658,10 +681,10 @@ class PBLProgramService {
         programId,
         scenarioId,
         userEmail,
-        status: program.status,
+        status: evaluatedTasks >= program.totalTasks ? 'completed' : 'in_progress',
         startedAt: program.startedAt,
         updatedAt: new Date().toISOString(),
-        completedAt: program.completedAt,
+        completedAt: evaluatedTasks >= program.totalTasks ? new Date().toISOString() : program.completedAt,
         totalTasks: program.totalTasks,
         evaluatedTasks,
         overallScore: avgScore,

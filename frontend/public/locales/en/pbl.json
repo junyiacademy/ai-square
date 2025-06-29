@@ -172,6 +172,7 @@
     "scenarioCompleted": "You have completed {{title}}",
     "completionStats": "Completion Statistics",
     "totalInteractions": "Total Interactions",
+    "conversationCount": "Conversation Count",
     "tasksEvaluated": "Tasks Evaluated",
     "tasksCompleted": "Tasks Completed",
     "totalTimeSpent": "Total Time Spent",

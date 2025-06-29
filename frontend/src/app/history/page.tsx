@@ -52,6 +52,11 @@ interface PBLSession {
     managing_with_ai: number;
     designing_with_ai: number;
   };
+  ksaScores?: {
+    knowledge: number;
+    skills: number;
+    attitudes: number;
+  };
 }
 
 type HistoryItem = {
@@ -100,34 +105,36 @@ export default function UnifiedHistoryPage() {
           data: item
         }));
 
-        // Fetch PBL history
+        // Fetch PBL history using completion data
         let pblItems: HistoryItem[] = [];
         try {
           const pblResponse = await fetch(`/api/pbl/history?lang=${i18n.language}&t=${Date.now()}`);
           if (pblResponse.ok) {
             const pblData = await pblResponse.json();
             if (pblData.success && pblData.programs) {
-              // Transform programs to history item format
+              // Transform programs to history item format using completion data
               pblItems = pblData.programs.map((program: any) => ({
                 type: 'pbl' as const,
-                timestamp: program.program.startedAt,
+                timestamp: program.startedAt || program.program?.startedAt,
                 data: {
-                  id: program.program.id,
-                  logId: program.program.id,
-                  scenarioId: program.program.scenarioId,
-                  scenarioTitle: program.program.scenarioTitle,
-                  status: program.program.status,
-                  startedAt: program.program.startedAt,
-                  completedAt: program.program.completedAt,
-                  duration: program.totalTimeSeconds,
+                  id: program.programId || program.id,
+                  logId: program.programId || program.id,
+                  scenarioId: program.scenarioId,
+                  scenarioTitle: program.scenarioTitle || program.scenarioId,
+                  status: program.status,
+                  startedAt: program.startedAt,
+                  completedAt: program.completedAt,
+                  duration: program.totalTimeSeconds || 0,
                   progress: {
-                    percentage: program.completionRate,
-                    completedTasks: program.program.completedTasks,
-                    totalTasks: program.program.totalTasks
+                    percentage: Math.round((program.evaluatedTasks / program.totalTasks) * 100),
+                    completedTasks: program.evaluatedTasks,
+                    totalTasks: program.totalTasks
                   },
-                  totalInteractions: program.tasks.reduce((sum: number, task: any) => sum + task.interactionCount, 0),
+                  totalInteractions: program.tasks?.reduce((sum: number, task: any) => 
+                    sum + (task.log?.interactions?.length || 0), 0) || 0,
                   averageScore: program.overallScore,
-                  domainScores: program.domainScores
+                  domainScores: program.domainScores,
+                  ksaScores: program.ksaScores
                 } as PBLSession
               }));
             }
@@ -371,12 +378,25 @@ export default function UnifiedHistoryPage() {
                           <div className="space-y-2">
                             {Object.entries(assessment.scores.domains).map(([domain, score]) => (
                               <div key={domain} className="flex items-center gap-2">
-                                <span className="text-sm text-gray-600 dark:text-gray-400 flex-1">
+                                <span className="text-sm text-gray-600 dark:text-gray-400 w-32">
                                   {t(`assessment:domains.${domain}`)}
                                 </span>
-                                <span className={`text-sm font-medium ${getScoreColor(score)}`}>
-                                  {score}%
-                                </span>
+                                <div className="flex-1 flex items-center gap-2">
+                                  <div className="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                    <div 
+                                      className={`h-2 rounded-full ${
+                                        domain === 'engaging_with_ai' ? 'bg-blue-600' :
+                                        domain === 'creating_with_ai' ? 'bg-green-600' :
+                                        domain === 'managing_with_ai' ? 'bg-yellow-600' :
+                                        'bg-purple-600'
+                                      }`}
+                                      style={{ width: `${score}%` }}
+                                    />
+                                  </div>
+                                  <span className={`text-sm font-medium ${getScoreColor(score)} min-w-[40px] text-right`}>
+                                    {score}%
+                                  </span>
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -422,7 +442,7 @@ export default function UnifiedHistoryPage() {
                             </h3>
                           </div>
                           <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Journey ID: {session.id}
+                            Program ID: {session.id}
                           </p>
                           {session.currentTaskTitle && (
                             <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
@@ -447,127 +467,143 @@ export default function UnifiedHistoryPage() {
                         </span>
                       </div>
 
-                          {/* Main Stats Grid - Similar to Assessment layout */}
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                            {/* Left Column - Overall Stats */}
-                            <div>
-                              <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                                {session.averageScore !== undefined ? (
-                                  <>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('assessment:history.overallScore')}</p>
-                                    <p className={`text-3xl font-bold ${getScoreColor(session.averageScore)}`}>
+                          {/* Three Column Stats - Inline Style */}
+                          {session.averageScore !== undefined && session.domainScores && session.ksaScores ? (
+                            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 mt-4">
+                              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                {/* Left Column - Overall Score */}
+                                <div>
+                                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                                    {t('pbl:complete.overallScore')}
+                                  </h4>
+                                  <div className="mb-3">
+                                    <span className={`text-3xl font-bold ${getScoreColor(session.averageScore)}`}>
                                       {session.averageScore}%
-                                    </p>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                                      {session.progress.completedTasks}/{session.progress.totalTasks} {t('pbl:history.tasksCompleted')}
-                                    </p>
-                                  </>
-                                ) : (
-                                  <>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('pbl:history.progress')}</p>
-                                    <p className="text-lg font-bold text-gray-900 dark:text-white">
-                                      {session.progress.completedTasks}/{session.progress.totalTasks} {t('pbl:history.tasks')}
-                                    </p>
-                                  </>
-                                )}
+                                    </span>
+                                  </div>
+                                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    {session.progress.completedTasks}/{session.progress.totalTasks} {t('pbl:history.tasksEvaluated')}
+                                  </p>
+                                  <div className="mt-3 space-y-2">
+                                    <div>
+                                      <span className="text-sm text-gray-600 dark:text-gray-400">{t('pbl:history.conversationCount')}</span>
+                                      <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                                        {session.totalInteractions} {t('pbl:history.times')}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                {/* Middle Column - Domain Scores */}
+                                <div>
+                                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                                    {t('pbl:complete.domainScores')}
+                                  </h4>
+                                  <div className="space-y-3">
+                                    <div>
+                                      <div className="flex items-center justify-between mb-1">
+                                        <span className="text-sm text-gray-600 dark:text-gray-400">{t('assessment:domains.engaging_with_ai')}</span>
+                                        <span className={`text-sm font-medium ${getScoreColor(session.domainScores.engaging_with_ai)}`}>
+                                          {session.domainScores.engaging_with_ai}%
+                                        </span>
+                                      </div>
+                                      <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                        <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${session.domainScores.engaging_with_ai}%` }} />
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="flex items-center justify-between mb-1">
+                                        <span className="text-sm text-gray-600 dark:text-gray-400">{t('assessment:domains.creating_with_ai')}</span>
+                                        <span className={`text-sm font-medium ${getScoreColor(session.domainScores.creating_with_ai)}`}>
+                                          {session.domainScores.creating_with_ai}%
+                                        </span>
+                                      </div>
+                                      <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                        <div className="bg-green-600 h-2 rounded-full" style={{ width: `${session.domainScores.creating_with_ai}%` }} />
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="flex items-center justify-between mb-1">
+                                        <span className="text-sm text-gray-600 dark:text-gray-400">{t('assessment:domains.managing_with_ai')}</span>
+                                        <span className={`text-sm font-medium ${getScoreColor(session.domainScores.managing_with_ai)}`}>
+                                          {session.domainScores.managing_with_ai}%
+                                        </span>
+                                      </div>
+                                      <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                        <div className="bg-yellow-600 h-2 rounded-full" style={{ width: `${session.domainScores.managing_with_ai}%` }} />
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="flex items-center justify-between mb-1">
+                                        <span className="text-sm text-gray-600 dark:text-gray-400">{t('assessment:domains.designing_with_ai')}</span>
+                                        <span className={`text-sm font-medium ${getScoreColor(session.domainScores.designing_with_ai)}`}>
+                                          {session.domainScores.designing_with_ai}%
+                                        </span>
+                                      </div>
+                                      <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                        <div className="bg-purple-600 h-2 rounded-full" style={{ width: `${session.domainScores.designing_with_ai}%` }} />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                {/* Right Column - KSA Scores */}
+                                <div>
+                                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                                    {t('pbl:complete.ksaSummary')}
+                                  </h4>
+                                  <div className="space-y-3">
+                                    <div>
+                                      <div className="flex items-center justify-between mb-1">
+                                        <span className="text-sm text-gray-600 dark:text-gray-400">{t('pbl:complete.knowledge')}</span>
+                                        <span className={`text-sm font-medium ${getScoreColor(session.ksaScores.knowledge)}`}>
+                                          {session.ksaScores.knowledge}%
+                                        </span>
+                                      </div>
+                                      <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                        <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${session.ksaScores.knowledge}%` }} />
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="flex items-center justify-between mb-1">
+                                        <span className="text-sm text-gray-600 dark:text-gray-400">{t('pbl:complete.skills')}</span>
+                                        <span className={`text-sm font-medium ${getScoreColor(session.ksaScores.skills)}`}>
+                                          {session.ksaScores.skills}%
+                                        </span>
+                                      </div>
+                                      <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                        <div className="bg-green-600 h-2 rounded-full" style={{ width: `${session.ksaScores.skills}%` }} />
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="flex items-center justify-between mb-1">
+                                        <span className="text-sm text-gray-600 dark:text-gray-400">{t('pbl:complete.attitudes')}</span>
+                                        <span className={`text-sm font-medium ${getScoreColor(session.ksaScores.attitudes)}`}>
+                                          {session.ksaScores.attitudes}%
+                                        </span>
+                                      </div>
+                                      <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                        <div className="bg-purple-600 h-2 rounded-full" style={{ width: `${session.ksaScores.attitudes}%` }} />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ) : (
+                            /* Fallback for sessions without scores */
+                            <div className="mt-4">
+                              <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('pbl:history.progress')}</p>
+                                <p className="text-lg font-bold text-gray-900 dark:text-white">
+                                  {session.progress.completedTasks}/{session.progress.totalTasks} {t('pbl:history.tasks')}
+                                </p>
                                 {session.totalInteractions !== undefined && (
                                   <div className="mt-3">
                                     <p className="text-sm text-gray-500 dark:text-gray-400">{t('pbl:history.conversationCount')}</p>
                                     <p className="font-semibold text-gray-900 dark:text-white">{session.totalInteractions} {t('pbl:history.times')}</p>
                                   </div>
                                 )}
-                              </div>
-                            </div>
-                            
-                            {/* Right Column - Domain Scores or Stage Details */}
-                            <div>
-                              {session.domainScores ? (
-                                <>
-                                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{t('assessment:history.domainScores')}</p>
-                                  <div className="space-y-2">
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-sm text-gray-600 dark:text-gray-400 flex-1">{t('assessment:domains.engaging_with_ai')}</span>
-                                      <span className={`text-sm font-medium ${getScoreColor(session.domainScores.engaging_with_ai)}`}>
-                                        {session.domainScores.engaging_with_ai}%
-                                      </span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-sm text-gray-600 dark:text-gray-400 flex-1">{t('assessment:domains.creating_with_ai')}</span>
-                                      <span className={`text-sm font-medium ${getScoreColor(session.domainScores.creating_with_ai)}`}>
-                                        {session.domainScores.creating_with_ai}%
-                                      </span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-sm text-gray-600 dark:text-gray-400 flex-1">{t('assessment:domains.managing_with_ai')}</span>
-                                      <span className={`text-sm font-medium ${getScoreColor(session.domainScores.managing_with_ai)}`}>
-                                        {session.domainScores.managing_with_ai}%
-                                      </span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-sm text-gray-600 dark:text-gray-400 flex-1">{t('assessment:domains.designing_with_ai')}</span>
-                                      <span className={`text-sm font-medium ${getScoreColor(session.domainScores.designing_with_ai)}`}>
-                                        {session.domainScores.designing_with_ai}%
-                                      </span>
-                                    </div>
-                                  </div>
-                                </>
-                              ) : session.stageDetails && session.stageDetails.length > 0 ? (
-                                <div>
-                                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{t('pbl:history.stageDetails')}</p>
-                                  <div className="space-y-2">
-                                    {session.stageDetails.map((stage, index) => (
-                                      <div key={stage.stageId} className="flex items-center justify-between text-sm">
-                                        <div className="flex items-center">
-                                          <span className="text-gray-600 dark:text-gray-400 mr-2">{index + 1}.</span>
-                                          <span className="text-gray-700 dark:text-gray-300">{stage.stageTitle}</span>
-                                          {stage.status === 'completed' && (
-                                            <svg className="w-4 h-4 text-green-500 ml-2" fill="currentColor" viewBox="0 0 20 20">
-                                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                            </svg>
-                                          )}
-                                        </div>
-                                        <div className="flex items-center space-x-3">
-                                          {stage.interactions > 0 && (
-                                            <span className="text-gray-500 dark:text-gray-400">{stage.interactions} {t('pbl:history.conversations')}</span>
-                                          )}
-                                          {stage.score !== undefined && (
-                                            <span className={`font-medium ${getScoreColor(stage.score)}`}>{stage.score}%</span>
-                                          )}
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              ) : null}
-                            </div>
-                          </div>
-                          
-                          {/* Stage Details Below (when we have domain scores) */}
-                          {session.domainScores && session.stageDetails && session.stageDetails.length > 0 && (
-                            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t('pbl:history.stageDetails')}</p>
-                              <div className="space-y-2">
-                                {session.stageDetails.map((stage, index) => (
-                                  <div key={stage.stageId} className="flex items-center justify-between text-sm">
-                                    <div className="flex items-center">
-                                      <span className="text-gray-600 dark:text-gray-400 mr-2">{index + 1}.</span>
-                                      <span className="text-gray-700 dark:text-gray-300">{stage.stageTitle}</span>
-                                      {stage.status === 'completed' && (
-                                        <svg className="w-4 h-4 text-green-500 ml-2" fill="currentColor" viewBox="0 0 20 20">
-                                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                        </svg>
-                                      )}
-                                    </div>
-                                    <div className="flex items-center space-x-3">
-                                      {stage.interactions > 0 && (
-                                        <span className="text-gray-500 dark:text-gray-400">{stage.interactions} 對話</span>
-                                      )}
-                                      {stage.score !== undefined && (
-                                        <span className={`font-medium ${getScoreColor(stage.score)}`}>{stage.score}%</span>
-                                      )}
-                                    </div>
-                                  </div>
-                                ))}
                               </div>
                             </div>
                           )}
@@ -577,27 +613,28 @@ export default function UnifiedHistoryPage() {
                           <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          {t('pbl:history.duration')}: {formatDuration(session.duration)}
+                          {t('assessment:history.duration')}: {formatDuration(session.duration)}
                         </div>
-                        {session.status === 'in_progress' ? (
-                          <button
-                            onClick={() => {
-                              // Need to get the current task ID, assuming it's the first task or stored in session
-                              const taskId = session.currentTaskId || 'task-1';
-                              router.push(`/pbl/scenarios/${session.scenarioId}/program/${session.id}/tasks/${taskId}/learn`);
-                            }}
-                            className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
-                          >
-                            {t('pbl:history.continueStudy')} →
-                          </button>
-                        ) : (
+                        <div className="flex items-center space-x-4">
+                          {session.status === 'in_progress' && (
+                            <button
+                              onClick={() => {
+                                // Need to get the current task ID, assuming it's the first task or stored in session
+                                const taskId = session.currentTaskId || 'task-1';
+                                router.push(`/pbl/scenarios/${session.scenarioId}/program/${session.id}/tasks/${taskId}/learn`);
+                              }}
+                              className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
+                            >
+                              {t('pbl:history.continueStudy')} →
+                            </button>
+                          )}
                           <Link
                             href={`/pbl/scenarios/${session.scenarioId}/program/${session.id}/complete`}
                             className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
                           >
-                            {t('assessment:history.viewDetails')} →
+                            {t('pbl:complete.viewReport')} →
                           </Link>
-                        )}
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -33,10 +33,23 @@ export async function GET(request: NextRequest) {
     
     console.log(`Fetching PBL history for user: ${userEmail}, scenario: ${scenarioId || 'all'}`);
     
-    // Get all programs for the user
-    const programs = await pblProgramService.getUserPrograms(userEmail, scenarioId);
+    // Get all programs for the user using completion data
+    let programs = [];
+    if (scenarioId) {
+      programs = await pblProgramService.getUserProgramsForScenario(userEmail, scenarioId);
+    } else {
+      // Get all scenarios and fetch programs for each
+      const scenarios = ['ai-job-search']; // Add more scenario IDs as needed
+      for (const sid of scenarios) {
+        const scenarioPrograms = await pblProgramService.getUserProgramsForScenario(userEmail, sid);
+        programs.push(...scenarioPrograms);
+      }
+    }
     
     console.log(`Found ${programs.length} programs for user ${userEmail}`);
+    
+    // Sort by most recent first
+    programs.sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime());
     
     // Transform to API response format
     const response: GetProgramHistoryResponse = {

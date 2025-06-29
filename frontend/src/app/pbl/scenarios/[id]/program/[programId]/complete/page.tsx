@@ -142,99 +142,93 @@ export default function ProgramCompletePage() {
           </p>
         </div>
         
-        {/* Overall Performance Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
-            {t('pbl:complete.overallScoreDescription')}
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {/* Overall Score */}
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 text-center">
-              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-                {t('pbl:complete.overallScore')}
-              </h3>
+        {/* Three Column Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          {/* Left Column - Overall Score */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+              {t('pbl:complete.overallScore')}
+            </h3>
+            <div className="text-center mb-4">
               <p className={`text-5xl font-bold ${getScoreColor(completionData.overallScore || 0)}`}>
                 {completionData.overallScore || 0}%
               </p>
-              <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                {completionData.evaluatedTasks} {t('pbl:history.tasksEvaluated')}
-              </div>
-            </div>
-            
-            {/* Completion Stats */}
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 text-center">
-              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-                {t('pbl:complete.completionStats')}
-              </h3>
-              <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                {completionData.evaluatedTasks}/{completionData.totalTasks}
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                {completionData.evaluatedTasks}/{completionData.totalTasks} {t('pbl:history.tasksEvaluated')}
               </p>
-              <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                {t('pbl:complete.tasksCompleted')}
-              </div>
             </div>
-            
-            {/* Time Spent */}
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 text-center">
-              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-                {t('pbl:complete.totalTimeSpent')}
-              </h3>
-              <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                {formatDuration(completionData.totalTimeSeconds || 0)}
-              </p>
-              <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                {t('pbl:complete.timeSpent')}
+            <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  {t('pbl:complete.conversationCount')}
+                </span>
+                <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                  {completionData.tasks?.reduce((sum: number, task: any) => 
+                    sum + (task.log?.interactions?.length || 0), 0) || 0} {t('pbl:history.times')}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  {t('pbl:complete.totalTimeSpent')}
+                </span>
+                <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                  {formatDuration(completionData.totalTimeSeconds || 0)}
+                </span>
               </div>
             </div>
           </div>
           
-          {/* Domain Scores */}
-          {completionData.domainScores && (
-            <div className="mb-8">
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-                {t('pbl:complete.domainScores')}
-              </h3>
-              <div className="space-y-3">
+          {/* Middle Column - Domain Scores */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+              {t('pbl:complete.domainScores')}
+            </h3>
+            {completionData.domainScores && (
+              <div className="space-y-4">
                 {Object.entries(completionData.domainScores).map(([domain, score]: [string, any]) => (
-                  <div key={domain} className="flex items-center justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">
-                      {t(`assessment:domains.${domain}`)}
-                    </span>
-                    <div className="flex items-center flex-1 ml-4">
-                      <div className="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-3 mr-3">
-                        <div 
-                          className={`h-3 rounded-full ${getScoreBgColor(score)}`}
-                          style={{ width: `${score}%` }}
-                        />
-                      </div>
-                      <span className={`font-medium ${getScoreColor(score)} min-w-[50px] text-right`}>
+                  <div key={domain}>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">
+                        {t(`assessment:domains.${domain}`)}
+                      </span>
+                      <span className={`text-sm font-medium ${getScoreColor(score)}`}>
                         {score}%
                       </span>
+                    </div>
+                    <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                      <div 
+                        className={`h-2 rounded-full ${
+                          domain === 'engaging_with_ai' ? 'bg-blue-600' :
+                          domain === 'creating_with_ai' ? 'bg-green-600' :
+                          domain === 'managing_with_ai' ? 'bg-yellow-600' :
+                          'bg-purple-600'
+                        }`}
+                        style={{ width: `${score}%` }}
+                      />
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
-          )}
+            )}
+          </div>
           
-          {/* KSA Scores */}
-          {completionData.ksaScores && (
-            <div>
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-                {t('pbl:complete.ksaSummary')}
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
+          {/* Right Column - KSA Scores */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+              {t('pbl:complete.ksaSummary')}
+            </h3>
+            {completionData.ksaScores && (
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
                       {t('pbl:complete.knowledge')}
                     </span>
-                    <span className={`text-2xl font-bold ${getScoreColor(completionData.ksaScores.knowledge)}`}>
+                    <span className={`text-sm font-medium ${getScoreColor(completionData.ksaScores.knowledge)}`}>
                       {completionData.ksaScores.knowledge}%
                     </span>
                   </div>
-                  <div className="w-full bg-blue-200 dark:bg-blue-800 rounded-full h-2">
+                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                     <div 
                       className="bg-blue-600 h-2 rounded-full"
                       style={{ width: `${completionData.ksaScores.knowledge}%` }}
@@ -242,16 +236,16 @@ export default function ProgramCompletePage() {
                   </div>
                 </div>
                 
-                <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-green-900 dark:text-green-100">
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
                       {t('pbl:complete.skills')}
                     </span>
-                    <span className={`text-2xl font-bold ${getScoreColor(completionData.ksaScores.skills)}`}>
+                    <span className={`text-sm font-medium ${getScoreColor(completionData.ksaScores.skills)}`}>
                       {completionData.ksaScores.skills}%
                     </span>
                   </div>
-                  <div className="w-full bg-green-200 dark:bg-green-800 rounded-full h-2">
+                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                     <div 
                       className="bg-green-600 h-2 rounded-full"
                       style={{ width: `${completionData.ksaScores.skills}%` }}
@@ -259,16 +253,16 @@ export default function ProgramCompletePage() {
                   </div>
                 </div>
                 
-                <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-purple-900 dark:text-purple-100">
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
                       {t('pbl:complete.attitudes')}
                     </span>
-                    <span className={`text-2xl font-bold ${getScoreColor(completionData.ksaScores.attitudes)}`}>
+                    <span className={`text-sm font-medium ${getScoreColor(completionData.ksaScores.attitudes)}`}>
                       {completionData.ksaScores.attitudes}%
                     </span>
                   </div>
-                  <div className="w-full bg-purple-200 dark:bg-purple-800 rounded-full h-2">
+                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                     <div 
                       className="bg-purple-600 h-2 rounded-full"
                       style={{ width: `${completionData.ksaScores.attitudes}%` }}
@@ -276,8 +270,8 @@ export default function ProgramCompletePage() {
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
         
         {/* Task Details */}

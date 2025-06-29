@@ -173,6 +173,7 @@
     "scenarioCompleted": "您已完成 {{title}}",
     "completionStats": "完成統計",
     "totalInteractions": "總互動次數",
+    "conversationCount": "對話次數",
     "tasksEvaluated": "已評估任務",
     "tasksCompleted": "已完成任務",
     "totalTimeSpent": "總花費時間",
