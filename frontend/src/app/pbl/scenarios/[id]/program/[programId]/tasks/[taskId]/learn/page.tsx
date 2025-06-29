@@ -89,7 +89,7 @@ export default function ProgramLearningPage() {
   // Load program and scenario data
   useEffect(() => {
     loadProgramData();
-  }, [programId, scenarioId]);
+  }, [programId, scenarioId, i18n.language]);
 
   // Load task data when taskId changes
   useEffect(() => {
@@ -111,8 +111,8 @@ export default function ProgramLearningPage() {
     try {
       setLoading(true);
       
-      // Load scenario data
-      const scenarioRes = await fetch(`/api/pbl/scenarios/${scenarioId}`);
+      // Load scenario data with language parameter
+      const scenarioRes = await fetch(`/api/pbl/scenarios/${scenarioId}?lang=${i18n.language}`);
       if (!scenarioRes.ok) throw new Error('Failed to load scenario');
       const scenarioData = await scenarioRes.json();
       setScenario(scenarioData.data);

@@ -24,6 +24,18 @@ interface ScenarioResponse {
   }>;
 }
 
+// Helper function to get localized field
+function getLocalizedValue(data: any, fieldName: string, lang: string): any {
+  // Map language codes to suffixes
+  let langSuffix = lang;
+  if (lang === 'zh-TW' || lang === 'zh-CN') {
+    langSuffix = 'zh';
+  }
+  
+  const localizedField = `${fieldName}_${langSuffix}`;
+  return data[localizedField] || data[fieldName] || '';
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -32,9 +44,8 @@ export async function GET(
     const { id: scenarioId } = await params;
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
-    const isZh = lang === 'zh' || lang === 'zh-TW' || lang === 'zh-CN';
     
-    console.log('Loading scenario:', scenarioId);
+    console.log('Loading scenario:', scenarioId, 'with lang:', lang);
     
     // Load YAML file
     const yamlPath = path.join(process.cwd(), 'public', 'pbl_data', `${scenarioId.replace(/-/g, '_')}_scenario.yaml`);
@@ -46,22 +57,20 @@ export async function GET(
     // Transform to API response format (new structure without stages)
     const scenario: ScenarioResponse = {
       id: yamlData.scenario_info.id,
-      title: isZh && yamlData.scenario_info.title_zh ? yamlData.scenario_info.title_zh : yamlData.scenario_info.title,
-      description: isZh && yamlData.scenario_info.description_zh ? yamlData.scenario_info.description_zh : yamlData.scenario_info.description,
+      title: getLocalizedValue(yamlData.scenario_info, 'title', lang),
+      description: getLocalizedValue(yamlData.scenario_info, 'description', lang),
       difficulty: yamlData.scenario_info.difficulty,
       estimatedDuration: yamlData.scenario_info.estimated_duration,
       targetDomain: yamlData.scenario_info.target_domains,
-      prerequisites: yamlData.scenario_info.prerequisites || [],
-      learningObjectives: isZh && yamlData.scenario_info.learning_objectives_zh ? 
-        yamlData.scenario_info.learning_objectives_zh : 
-        yamlData.scenario_info.learning_objectives,
+      prerequisites: getLocalizedValue(yamlData.scenario_info, 'prerequisites', lang) || yamlData.scenario_info.prerequisites || [],
+      learningObjectives: getLocalizedValue(yamlData.scenario_info, 'learning_objectives', lang) || yamlData.scenario_info.learning_objectives || [],
       tasks: (yamlData.tasks || []).map(task => ({
         id: task.id,
-        title: isZh && task.title_zh ? task.title_zh : task.title,
-        description: isZh && task.description_zh ? task.description_zh : task.description,
+        title: getLocalizedValue(task, 'title', lang),
+        description: getLocalizedValue(task, 'description', lang),
         category: task.category || 'general',
-        instructions: isZh && task.instructions_zh ? task.instructions_zh : task.instructions,
-        expectedOutcome: isZh && task.expected_outcome_zh ? task.expected_outcome_zh : task.expected_outcome,
+        instructions: getLocalizedValue(task, 'instructions', lang) || task.instructions || [],
+        expectedOutcome: getLocalizedValue(task, 'expected_outcome', lang) || getLocalizedValue(task, 'expectedOutcome', lang),
         timeLimit: task.time_limit
       }))
     };
