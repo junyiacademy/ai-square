@@ -216,6 +216,8 @@
     "taskScore": "任務分數",
     "feedback": "回饋",
     "domainScores": "領域分數",
+    "tasksSummary": "任務總結",
+    "ksaAchievementSummary": "KSA 成就總結",
     "timeFormat": {
       "hours": "{{hours}} 小時 {{minutes}} 分鐘",
       "minutes": "{{minutes}} 分鐘 {{seconds}} 秒",

@@ -511,51 +511,109 @@ export default function ProgramCompletePage() {
                       
                       {/* Task Evaluation Details */}
                       {task.evaluation && (
-                        <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 space-y-3">
-                          {/* Domain Scores */}
-                          {task.evaluation.domainScores && (
-                            <div className="mb-2">
-                              <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
-                                {t('pbl:complete.domainScores')}:
+                        <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 space-y-4">
+                          {/* Two Column Layout for Domain & KSA Scores */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* Domain Scores Column */}
+                            {task.evaluation.domainScores && (
+                              <div>
+                                <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                                  {t('pbl:complete.domainScores')}:
+                                </div>
+                                <div className="space-y-3">
+                                  {['creating_with_ai', 'designing_with_ai', 'engaging_with_ai', 'managing_with_ai']
+                                    .filter(domain => task.evaluation.domainScores[domain] !== undefined)
+                                    .map((domain) => {
+                                      const score = task.evaluation.domainScores[domain];
+                                      return (
+                                        <div key={domain}>
+                                          <div className="flex items-center justify-between mb-1">
+                                            <span className="text-sm text-gray-600 dark:text-gray-400">
+                                              {t(`assessment:domains.${domain}`)}
+                                            </span>
+                                            <span className={`text-sm font-bold ${getScoreColor(score)}`}>
+                                              {score}%
+                                            </span>
+                                          </div>
+                                          <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                            <div 
+                                              className={`h-2 rounded-full ${
+                                                domain === 'engaging_with_ai' ? 'bg-blue-500' :
+                                                domain === 'creating_with_ai' ? 'bg-green-500' :
+                                                domain === 'managing_with_ai' ? 'bg-orange-500' :
+                                                'bg-purple-500'
+                                              }`}
+                                              style={{ width: `${score}%` }}
+                                            />
+                                          </div>
+                                        </div>
+                                      );
+                                    })}
+                                </div>
                               </div>
-                              <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-                                {Object.entries(task.evaluation.domainScores).map(([domain, score]: [string, any]) => (
-                                  <div key={domain} className="flex items-center">
-                                    <span className="text-gray-500 dark:text-gray-400 flex-1">
-                                      {t(`assessment:domains.${domain}`).split(' ')[0]}
-                                    </span>
-                                    <span className={`font-medium ${getScoreColor(score)} ml-2`}>
-                                      {score}%
-                                    </span>
+                            )}
+                            
+                            {/* KSA Scores Column */}
+                            {task.evaluation.ksaScores && (
+                              <div>
+                                <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                                  KSA:
+                                </div>
+                                <div className="space-y-3">
+                                  <div>
+                                    <div className="flex items-center justify-between mb-1">
+                                      <span className="text-sm text-gray-600 dark:text-gray-400">
+                                        {t('pbl:complete.knowledge')}
+                                      </span>
+                                      <span className={`text-sm font-bold ${getScoreColor(task.evaluation.ksaScores.knowledge)}`}>
+                                        {task.evaluation.ksaScores.knowledge}%
+                                      </span>
+                                    </div>
+                                    <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                      <div 
+                                        className="bg-blue-500 h-2 rounded-full"
+                                        style={{ width: `${task.evaluation.ksaScores.knowledge}%` }}
+                                      />
+                                    </div>
                                   </div>
-                                ))}
+                                  
+                                  <div>
+                                    <div className="flex items-center justify-between mb-1">
+                                      <span className="text-sm text-gray-600 dark:text-gray-400">
+                                        {t('pbl:complete.skills')}
+                                      </span>
+                                      <span className={`text-sm font-bold ${getScoreColor(task.evaluation.ksaScores.skills)}`}>
+                                        {task.evaluation.ksaScores.skills}%
+                                      </span>
+                                    </div>
+                                    <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                      <div 
+                                        className="bg-green-500 h-2 rounded-full"
+                                        style={{ width: `${task.evaluation.ksaScores.skills}%` }}
+                                      />
+                                    </div>
+                                  </div>
+                                  
+                                  <div>
+                                    <div className="flex items-center justify-between mb-1">
+                                      <span className="text-sm text-gray-600 dark:text-gray-400">
+                                        {t('pbl:complete.attitudes')}
+                                      </span>
+                                      <span className={`text-sm font-bold ${getScoreColor(task.evaluation.ksaScores.attitudes)}`}>
+                                        {task.evaluation.ksaScores.attitudes}%
+                                      </span>
+                                    </div>
+                                    <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                      <div 
+                                        className="bg-purple-500 h-2 rounded-full"
+                                        style={{ width: `${task.evaluation.ksaScores.attitudes}%` }}
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
-                            </div>
-                          )}
-                          
-                          {/* Mini KSA Scores */}
-                          {task.evaluation.ksaScores && (
-                            <div className="flex gap-3 text-sm mb-2">
-                              <span>
-                                <span className="text-gray-600 dark:text-gray-400">K:</span>
-                                <span className={`font-medium ${getScoreColor(task.evaluation.ksaScores.knowledge)}`}>
-                                  {task.evaluation.ksaScores.knowledge}%
-                                </span>
-                              </span>
-                              <span>
-                                <span className="text-gray-600 dark:text-gray-400">S:</span>
-                                <span className={`font-medium ${getScoreColor(task.evaluation.ksaScores.skills)}`}>
-                                  {task.evaluation.ksaScores.skills}%
-                                </span>
-                              </span>
-                              <span>
-                                <span className="text-gray-600 dark:text-gray-400">A:</span>
-                                <span className={`font-medium ${getScoreColor(task.evaluation.ksaScores.attitudes)}`}>
-                                  {task.evaluation.ksaScores.attitudes}%
-                                </span>
-                              </span>
-                            </div>
-                          )}
+                            )}
+                          </div>
                           
                           {/* Conversation Insights */}
                           {task.evaluation.conversationInsights && (

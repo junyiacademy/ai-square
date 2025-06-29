@@ -215,6 +215,8 @@
     "taskScore": "Task Score",
     "feedback": "Feedback",
     "domainScores": "Domain Scores",
+    "tasksSummary": "Tasks Summary",
+    "ksaAchievementSummary": "KSA Achievement Summary",
     "timeFormat": {
       "hours": "{{hours}}h {{minutes}}m",
       "minutes": "{{minutes}}m {{seconds}}s",
