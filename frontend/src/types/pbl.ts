@@ -7,6 +7,7 @@ export type ModalityFocus = 'reading' | 'writing' | 'listening' | 'speaking' | '
 export type AIRole = 'assistant' | 'evaluator' | 'actor';
 export type SessionStatus = 'not_started' | 'in_progress' | 'paused' | 'completed';
 export type ActionType = 'search' | 'write' | 'speak' | 'revise' | 'submit' | 'interaction';
+export type JourneyStatus = 'in_progress' | 'completed';
 
 // KSA Mapping
 export interface KSAMapping {
@@ -277,4 +278,70 @@ export interface EvaluationResult {
   rubricScores: { [criterion: string]: number };
   feedback: string;
   suggestions: string[];
+}
+
+// === NEW JOURNEY-BASED SYSTEM ===
+
+// Task Log (1:1 with Task)
+export interface PBLTaskLog {
+  taskId: string;
+  stageId: string;
+  startedAt: string;
+  completedAt?: string;
+  status: 'in_progress' | 'completed';
+  conversations: ConversationTurn[];
+  processLogs: ProcessLog[];
+  analysis?: StageResult;
+  timeSpent: number; // seconds
+}
+
+// Journey (Scenario instance with timestamp)
+export interface PBLJourney {
+  journeyId: string;           // format: {scenarioId}_{timestamp}
+  scenarioId: string;
+  userId: string;
+  userEmail: string;
+  startedAt: string;
+  lastActiveAt: string;
+  completedAt?: string;
+  status: JourneyStatus;
+  language: string;
+  
+  // Journey metadata
+  scenarioTitle: string;
+  totalTasks: number;
+  completedTasks: number;
+  
+  // Task logs (1:1 mapping)
+  taskLogs: {
+    [taskId: string]: PBLTaskLog;
+  };
+  
+  // Overall progress
+  overallScore?: number;        // Average of all task scores
+  totalTimeSpent: number;       // Total time across all tasks
+}
+
+// Journey Summary (for History page)
+export interface PBLJourneySummary {
+  journeyId: string;
+  scenarioId: string;
+  scenarioTitle: string;
+  startedAt: string;
+  completedAt?: string;
+  status: JourneyStatus;
+  progress: {
+    completedTasks: number;
+    totalTasks: number;
+    percentage: number;
+  };
+  scores: {
+    overallScore?: number;
+    taskScores: Array<{
+      taskId: string;
+      taskTitle: string;
+      score?: number;
+    }>;
+  };
+  timeSpent: number;
 }

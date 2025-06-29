@@ -35,6 +35,9 @@ export default function PBLLearnPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [taskAnalysisMap, setTaskAnalysisMap] = useState<Record<string, StageResult>>({});
   const [completedTasks, setCompletedTasks] = useState<Set<string>>(new Set());
+  // Separate state for overall progress (latest scores from all sessions)
+  const [allSessionsAnalysisMap, setAllSessionsAnalysisMap] = useState<Record<string, StageResult>>({});
+  const [allSessionsCompletedTasks, setAllSessionsCompletedTasks] = useState<Set<string>>(new Set());
   const [existingLogs, setExistingLogs] = useState<Array<{
     sessionId: string;
     createdAt: string;
@@ -91,10 +94,10 @@ export default function PBLLearnPage() {
               if (session.stageResults && session.stageResults.length > 0) {
                 session.stageResults.forEach((result: StageResult) => {
                   if (result.taskId) {
-                    // Only update if we don't have this analysis yet or this one is newer
+                    // Use the highest score for this task (PBL learning philosophy)
                     if (!allAnalyses[result.taskId] || 
-                        (result.completedAt && allAnalyses[result.taskId].completedAt &&
-                         new Date(result.completedAt as Date) > new Date(allAnalyses[result.taskId].completedAt as Date))) {
+                        (result.score !== undefined && 
+                         (allAnalyses[result.taskId].score === undefined || result.score > allAnalyses[result.taskId].score))) {
                       allAnalyses[result.taskId] = result;
                       allCompletedTasks.add(result.taskId);
                     }
@@ -116,6 +119,9 @@ export default function PBLLearnPage() {
             });
             
             console.log('Loaded all task analyses from all sessions:', allAnalyses);
+            // Update both maps - one for overall progress, one for current view
+            setAllSessionsAnalysisMap(allAnalyses);
+            setAllSessionsCompletedTasks(allCompletedTasks);
             setTaskAnalysisMap(allAnalyses);
             setCompletedTasks(allCompletedTasks);
           }
@@ -538,11 +544,11 @@ export default function PBLLearnPage() {
             setStageAnalysis(null);
           }
           
-          // Update task analysis map with ALL task analyses from the loaded session
+          // Clear and update task analysis map with ONLY analyses from the loaded session
+          const newAnalysisMap: Record<string, StageResult> = {};
+          const newCompletedTasks = new Set<string>();
+          
           if (loadedSession.stageResults && loadedSession.stageResults.length > 0) {
-            const newAnalysisMap: Record<string, StageResult> = {};
-            const newCompletedTasks = new Set<string>();
-            
             loadedSession.stageResults.forEach((result: StageResult) => {
               if (result.taskId) {
                 // Task-specific analysis
@@ -562,14 +568,12 @@ export default function PBLLearnPage() {
                 }
               }
             });
-            
-            console.log('Updating task analysis map with all analyses:', newAnalysisMap);
-            setTaskAnalysisMap(prev => ({
-              ...prev,
-              ...newAnalysisMap
-            }));
-            setCompletedTasks(prev => new Set([...prev, ...newCompletedTasks]));
           }
+          
+          // Always update the maps - even if empty (to clear previous values)
+          console.log('Replacing task analysis map with loaded session analyses:', newAnalysisMap);
+          setTaskAnalysisMap(newAnalysisMap);
+          setCompletedTasks(newCompletedTasks);
         }
       }
     } catch (error) {
@@ -909,8 +913,15 @@ export default function PBLLearnPage() {
             [currentTask.id]: evaluationData.data.stageResult
           }));
           
+          // Also update the all sessions map (for overall progress)
+          setAllSessionsAnalysisMap(prev => ({
+            ...prev,
+            [currentTask.id]: evaluationData.data.stageResult
+          }));
+          
           // Mark task as completed
           setCompletedTasks(prev => new Set([...prev, currentTask.id]));
+          setAllSessionsCompletedTasks(prev => new Set([...prev, currentTask.id]));
         }
         
         // Hide analyze button after analysis
@@ -1141,9 +1152,10 @@ export default function PBLLearnPage() {
   const currentStage = scenario.stages[stageIndex];
   
   // Consider a stage as completed if all its tasks are completed
+  // Use allSessionsCompletedTasks for overall progress display
   const effectiveCompletedStages = new Set<number>();
   scenario?.stages.forEach((stage, index) => {
-    if (stage.tasks.every(task => completedTasks.has(task.id))) {
+    if (stage.tasks.every(task => allSessionsCompletedTasks.has(task.id))) {
       effectiveCompletedStages.add(index);
     }
   });
