@@ -20,13 +20,39 @@ interface ConversationEntry {
 }
 
 // Helper function to get localized field
-function getLocalizedField(obj: any, fieldName: string, language: string): string {
-  // Map language codes to suffixes
-  const langSuffix = language === 'zh-TW' ? 'zh' : language;
+function getLocalizedField(obj: any, fieldName: string, language: string): any {
+  if (!obj) return '';
+  
+  // Map language codes to suffixes - handle all supported languages
+  let langSuffix = language;
+  
+  // Special case for Chinese
+  if (language === 'zh-TW' || language === 'zh') {
+    langSuffix = 'zh';
+  }
+  
   const fieldWithLang = `${fieldName}_${langSuffix}`;
   
   // Return localized field if exists, otherwise return default
   return obj[fieldWithLang] || obj[fieldName] || '';
+}
+
+// Helper function to get localized array field
+function getLocalizedArrayField(obj: any, fieldName: string, language: string): any[] {
+  if (!obj) return [];
+  
+  // Map language codes to suffixes - handle all supported languages
+  let langSuffix = language;
+  
+  // Special case for Chinese
+  if (language === 'zh-TW' || language === 'zh') {
+    langSuffix = 'zh';
+  }
+  
+  const fieldWithLang = `${fieldName}_${langSuffix}`;
+  
+  // Return localized field if exists, otherwise return default
+  return obj[fieldWithLang] || obj[fieldName] || [];
 }
 
 export default function ProgramLearningPage() {
@@ -794,7 +820,7 @@ export default function ProgramLearningPage() {
                   {t('pbl:learn.instructions')}
                 </h3>
                 <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
-                  {(currentTask[`instructions_${i18n.language === 'zh-TW' ? 'zh' : i18n.language}`] || currentTask.instructions || []).map((instruction, index) => (
+                  {getLocalizedArrayField(currentTask, 'instructions', i18n.language).map((instruction, index) => (
                     <li key={index}>{instruction}</li>
                   ))}
                 </ul>
