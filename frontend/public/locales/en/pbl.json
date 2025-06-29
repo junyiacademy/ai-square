@@ -131,6 +131,7 @@
     "evaluate": "Evaluate Performance",
     "evaluating": "Evaluating...",
     "evaluationResults": "Evaluation Results",
+    "evaluationUpToDate": "Evaluation Up to Date",
     "conversationInsights": "Conversation Insights",
     "effectiveExamples": "What worked well:",
     "improvementExamples": "Areas for improvement:"
@@ -163,7 +164,7 @@
     "stageDetails": "Stage Details",
     "conversations": "Conversations",
     "continueStudy": "Continue Learning",
-    "stagesCompleted": "Stages Completed"
+    "tasksEvaluated": "Tasks Evaluated"
   },
   "complete": {
     "congratulations": "Congratulations!",
@@ -171,7 +172,7 @@
     "scenarioCompleted": "You have completed {{title}}",
     "completionStats": "Completion Statistics",
     "totalInteractions": "Total Interactions",
-    "stagesCompleted": "Stages Completed",
+    "tasksEvaluated": "Tasks Evaluated",
     "tasksCompleted": "Tasks Completed",
     "totalTimeSpent": "Total Time Spent",
     "learningObjectivesAchieved": "Learning Objectives Achieved",
@@ -218,6 +219,7 @@
       "seconds": "{{seconds}}s"
     },
     "loginRequired": "Login Required",
-    "loginRequiredMessage": "Please log in to view your completion report."
+    "loginRequiredMessage": "Please log in to view your completion report.",
+    "viewReport": "View Report"
   }
 }

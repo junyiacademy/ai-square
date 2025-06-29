@@ -131,6 +131,7 @@
     "evaluate": "評估表現",
     "evaluating": "評估中...",
     "evaluationResults": "評估結果",
+    "evaluationUpToDate": "評估已是最新",
     "conversationInsights": "對話洞察",
     "effectiveExamples": "表現良好的部分：",
     "improvementExamples": "可以改進的地方："
@@ -163,7 +164,7 @@
     "stageDetails": "階段詳情",
     "conversations": "對話",
     "continueStudy": "繼續學習",
-    "stagesCompleted": "階段完成",
+    "tasksEvaluated": "已評估任務",
     "stages": "階段"
   },
   "complete": {
@@ -172,7 +173,7 @@
     "scenarioCompleted": "您已完成 {{title}}",
     "completionStats": "完成統計",
     "totalInteractions": "總互動次數",
-    "stagesCompleted": "已完成階段",
+    "tasksEvaluated": "已評估任務",
     "tasksCompleted": "已完成任務",
     "totalTimeSpent": "總花費時間",
     "learningObjectivesAchieved": "達成的學習目標",
@@ -219,6 +220,7 @@
       "seconds": "{{seconds}} 秒"
     },
     "loginRequired": "需要登入",
-    "loginRequiredMessage": "請登入以查看您的完成報告。"
+    "loginRequiredMessage": "請登入以查看您的完成報告。",
+    "viewReport": "查看報告"
   }
 }

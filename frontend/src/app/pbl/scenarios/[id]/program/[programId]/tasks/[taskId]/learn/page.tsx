@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
+import Link from 'next/link';
 import { 
   Program, 
   Scenario, 
@@ -40,9 +41,11 @@ export default function ProgramLearningPage() {
   const [isProgressCollapsed, setIsProgressCollapsed] = useState(false);
   const [mobileView, setMobileView] = useState<'progress' | 'task' | 'chat'>('chat');
   const [showEvaluateButton, setShowEvaluateButton] = useState(false);
+  const [isEvaluateDisabled, setIsEvaluateDisabled] = useState(false);
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [evaluation, setEvaluation] = useState<any>(null);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+  const [taskEvaluations, setTaskEvaluations] = useState<Record<string, any>>({});
   
   const conversationEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -95,6 +98,26 @@ export default function ProgramLearningPage() {
       };
       setProgram(mockProgram);
       
+      // Load completion data to get all task evaluations
+      try {
+        const completionRes = await fetch(`/api/pbl/completion?programId=${programId}&scenarioId=${scenarioId}`);
+        if (completionRes.ok) {
+          const completionData = await completionRes.json();
+          if (completionData.success && completionData.data) {
+            // Build a map of task evaluations
+            const evaluations: Record<string, any> = {};
+            completionData.data.tasks?.forEach((task: any) => {
+              if (task.evaluation) {
+                evaluations[task.taskId] = task.evaluation;
+              }
+            });
+            setTaskEvaluations(evaluations);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading completion data:', error);
+      }
+      
       // If no taskId provided, use the first task
       if (!taskId && scenarioData.data.tasks.length > 0) {
         const firstTaskId = scenarioData.data.tasks[0].id;
@@ -122,7 +145,7 @@ export default function ProgramLearningPage() {
       setIsLoadingHistory(true);
       console.log('Loading task history for:', { programId, taskId, scenarioId });
       
-      // Load task conversation history
+      // Load task conversation history and evaluation
       const res = await fetch(`/api/pbl/task-logs?programId=${programId}&taskId=${taskId}&scenarioId=${scenarioId}`);
       if (res.ok) {
         const data = await res.json();
@@ -138,13 +161,32 @@ export default function ProgramLearningPage() {
           console.log('Loaded conversations:', loadedConversations);
           setConversations(loadedConversations);
           
-          // If there are conversations, show evaluate button
+          // Show evaluate button if there are conversations
           if (loadedConversations.length > 0) {
             setShowEvaluateButton(true);
+          }
+          
+          // Check if evaluation exists and is up to date
+          if (data.data?.evaluation) {
+            console.log('Loaded existing evaluation:', data.data.evaluation);
+            setEvaluation(data.data.evaluation);
+            
+            const currentUserMessageCount = loadedConversations.filter((c: any) => c.type === 'user').length;
+            const evaluationUserMessageCount = data.data.evaluation.conversationCount || 0;
+            
+            console.log('User message count:', currentUserMessageCount, 'Evaluation count:', evaluationUserMessageCount);
+            
+            // If evaluation is up to date (same or more conversations evaluated), disable button
+            if (evaluationUserMessageCount >= currentUserMessageCount) {
+              setIsEvaluateDisabled(true);
+            } else {
+              setIsEvaluateDisabled(false);
+            }
           }
         } else {
           console.log('No interactions found in response');
           setConversations([]);
+          setShowEvaluateButton(false);
         }
       } else {
         console.error('Failed to load task history:', res.status);
@@ -263,8 +305,18 @@ export default function ProgramLearningPage() {
       };
       setConversations(prev => [...prev, aiEntry]);
       
-      // Show evaluate button after AI response
+      // Show evaluate button and check if it should be disabled
       setShowEvaluateButton(true);
+      
+      // Check if we have more user messages than the last evaluation
+      const updatedConversations = [...conversations, newUserEntry, aiEntry];
+      const userMessageCount = updatedConversations.filter(c => c.type === 'user').length;
+      const lastEvaluationCount = evaluation?.conversationCount || 0;
+      
+      // Enable button if there are new user messages
+      if (userMessageCount > lastEvaluationCount) {
+        setIsEvaluateDisabled(false);
+      }
       
       // Save AI interaction
       await fetch('/api/pbl/task-logs', {
@@ -313,7 +365,6 @@ export default function ProgramLearningPage() {
     if (!currentTask || conversations.length === 0) return;
     
     setIsEvaluating(true);
-    setShowEvaluateButton(false);
     
     try {
       // Get last 10 conversations
@@ -348,6 +399,14 @@ export default function ProgramLearningPage() {
       
       if (data.success) {
         setEvaluation(data.evaluation);
+        // Disable the evaluate button after successful evaluation
+        setIsEvaluateDisabled(true);
+        
+        // Update task evaluations map
+        setTaskEvaluations(prev => ({
+          ...prev,
+          [currentTask.id]: data.evaluation
+        }));
         
         // Save evaluation to GCS
         try {
@@ -378,7 +437,6 @@ export default function ProgramLearningPage() {
     } catch (error) {
       console.error('Error evaluating:', error);
       alert(`評估失敗: ${error instanceof Error ? error.message : '未知錯誤'}`);
-      setShowEvaluateButton(true);
     } finally {
       setIsEvaluating(false);
     }
@@ -505,8 +563,9 @@ export default function ProgramLearningPage() {
                   <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600"></div>
                   <div className="space-y-6 relative">
                     {scenario.tasks.map((task, index) => {
-                      const isCompleted = index < taskIndex;
+                      const isEvaluated = !!taskEvaluations[task.id];
                       const isCurrent = index === taskIndex;
+                      const taskEval = taskEvaluations[task.id];
                       
                       return (
                         <button
@@ -515,13 +574,13 @@ export default function ProgramLearningPage() {
                           className="flex items-center w-full text-left hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors"
                         >
                           <div className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full border-2 bg-white dark:bg-gray-800 flex-shrink-0 ${
-                            isCompleted 
+                            isEvaluated 
                               ? 'border-green-600 dark:border-green-500' 
                               : isCurrent 
                               ? 'border-purple-600 dark:border-purple-500 ring-2 ring-purple-600 ring-offset-2 dark:ring-offset-white dark:ring-offset-gray-800' 
                               : 'border-gray-300 dark:border-gray-600'
                           }`}>
-                            {isCompleted ? (
+                            {isEvaluated ? (
                               <svg className="h-5 w-5 text-green-600 dark:text-green-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                               </svg>
@@ -539,7 +598,7 @@ export default function ProgramLearningPage() {
                             <p className={`text-sm font-medium ${
                               isCurrent
                                 ? 'text-purple-600 dark:text-purple-400'
-                                : isCompleted
+                                : isEvaluated
                                 ? 'text-gray-900 dark:text-white'
                                 : 'text-gray-500 dark:text-gray-400'
                             }`}>
@@ -547,6 +606,16 @@ export default function ProgramLearningPage() {
                                 ? (task.title_zh || task.title)
                                 : task.title}
                             </p>
+                            {isEvaluated && taskEval.score && (
+                              <p className={`text-xs ${
+                                taskEval.score >= 75 ? 'text-green-600' :
+                                taskEval.score >= 60 ? 'text-blue-600' :
+                                taskEval.score >= 40 ? 'text-yellow-600' :
+                                'text-red-600'
+                              }`}>
+                                {taskEval.score}%
+                              </p>
+                            )}
                           </div>
                         </button>
                       );
@@ -559,25 +628,26 @@ export default function ProgramLearningPage() {
               {isProgressCollapsed && (
                 <div className="space-y-4">
                   {scenario.tasks.map((task, index) => {
-                    const isCompleted = index < taskIndex;
+                    const isEvaluated = !!taskEvaluations[task.id];
                     const isCurrent = index === taskIndex;
+                    const taskEval = taskEvaluations[task.id];
                     
                     return (
                       <button
                         key={task.id}
                         onClick={() => switchTask(task.id)}
                         className={`flex h-8 w-8 items-center justify-center rounded-full border-2 bg-white dark:bg-gray-800 mx-auto ${
-                          isCompleted 
+                          isEvaluated 
                             ? 'border-green-600 dark:border-green-500' 
                             : isCurrent 
                             ? 'border-purple-600 dark:border-purple-500 ring-2 ring-purple-600 ring-offset-2' 
                             : 'border-gray-300 dark:border-gray-600'
                         }`}
-                        title={i18n.language === 'zh' || i18n.language === 'zh-TW' 
+                        title={`${i18n.language === 'zh' || i18n.language === 'zh-TW' 
                           ? (task.title_zh || task.title)
-                          : task.title}
+                          : task.title}${isEvaluated && taskEval.score ? ` - ${taskEval.score}%` : ''}`}
                       >
-                        {isCompleted ? (
+                        {isEvaluated ? (
                           <svg className="h-5 w-5 text-green-600 dark:text-green-500" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
@@ -593,6 +663,21 @@ export default function ProgramLearningPage() {
                       </button>
                     );
                   })}
+                </div>
+              )}
+              
+              {/* View Report Link */}
+              {!isProgressCollapsed && Object.keys(taskEvaluations).length > 0 && (
+                <div className="mt-6 px-4">
+                  <Link
+                    href={`/pbl/scenarios/${scenarioId}/program/${programId}/complete`}
+                    className="flex items-center justify-center w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    {t('pbl:complete.viewReport', 'View Report')}
+                  </Link>
                 </div>
               )}
             </div>
@@ -721,8 +806,10 @@ export default function ProgramLearningPage() {
                   </div>
                 </div>
                 
-                {/* Conversation Insights */}
-                {evaluation.conversationInsights && (
+                {/* Conversation Insights - Only show if there are meaningful insights */}
+                {evaluation.conversationInsights && 
+                 (evaluation.conversationInsights.effectiveExamples?.length > 0 || 
+                  evaluation.conversationInsights.improvementAreas?.length > 0) && (
                   <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                     <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-3">
                       {t('pbl:learn.conversationInsights', 'Conversation Insights')}
@@ -827,10 +914,10 @@ export default function ProgramLearningPage() {
                   <div
                     className={`max-w-3xl px-4 py-3 rounded-lg ${
                       entry.type === 'user'
-                        ? 'bg-purple-600 text-white'
+                        ? 'bg-purple-600 text-white ml-12'
                         : entry.type === 'ai'
-                        ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
-                        : 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200'
+                        ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white mr-12'
+                        : 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 mr-12'
                     }`}
                   >
                     <p className="whitespace-pre-wrap">{entry.content}</p>
@@ -844,7 +931,7 @@ export default function ProgramLearningPage() {
               {/* AI thinking indicator */}
               {isProcessing && (
                 <div className="flex justify-start">
-                  <div className="max-w-3xl px-4 py-3 rounded-lg bg-gray-100 dark:bg-gray-700">
+                  <div className="max-w-3xl px-4 py-3 rounded-lg bg-gray-100 dark:bg-gray-700 mr-12">
                     <div className="flex items-center space-x-2">
                       <span className="text-gray-600 dark:text-gray-400">
                         {t('pbl:learn.thinking')}
@@ -868,9 +955,16 @@ export default function ProgramLearningPage() {
             <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
               <button
                 onClick={handleEvaluate}
-                className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                disabled={isEvaluateDisabled}
+                className={`w-full px-4 py-2 rounded-lg transition-colors font-medium ${
+                  isEvaluateDisabled 
+                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
+                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                }`}
               >
-                {t('pbl:learn.evaluate', 'Evaluate Performance')}
+                {isEvaluateDisabled 
+                  ? t('pbl:learn.evaluationUpToDate', 'Evaluation Up to Date') 
+                  : t('pbl:learn.evaluate', 'Evaluate Performance')}
               </button>
             </div>
           )}

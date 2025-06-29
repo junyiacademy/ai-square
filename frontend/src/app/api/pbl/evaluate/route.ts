@@ -83,54 +83,29 @@ Please evaluate and provide:
    Level 3: Proficient (meeting expectations)
    Level 4: Advanced (exceeding expectations)
 
-5. Conversation Insights: Quote specific learner messages with feedback
-6. Strengths: 1-2 points with KSA codes
-7. Areas for improvement: 2 points with KSA codes  
-8. Next steps: 2 points with KSA codes
+5. Conversation Insights:
+   - Provide ONLY meaningful insights that add value beyond obvious observations
+   - Focus on patterns, approaches, or unique aspects of the learner's engagement
+   - Include 1-2 specific quotes as examples only when they illustrate important points
+   - If there are no significant insights, return empty arrays
+   - DO NOT comment on every message or provide generic feedback like "just said hi"
 
-Please respond ONLY with a complete JSON object (no markdown, no extra text):
-{
-  "score": number (0-100),
-  "ksaScores": {
-    "knowledge": number (0-100),
-    "skills": number (0-100),
-    "attitudes": number (0-100)
-  },
-  "individualKsaScores": {},
-  "domainScores": {
-    "engaging_with_ai": number (0-100),
-    "creating_with_ai": number (0-100),
-    "managing_with_ai": number (0-100),
-    "designing_with_ai": number (0-100)
-  },
-  "rubricsScores": {
-    "Research Quality": number (1-4),
-    "AI Utilization": number (1-4),
-    "Content Quality": number (1-4),
-    "Learning Progress": number (1-4)
-  },
-  "conversationInsights": {
-    "effectiveExamples": [
-      {
-        "quote": "exact quote from learner's message",
-        "reason": "why this was effective"
-      }
-    ],
-    "improvementAreas": [
-      {
-        "quote": "exact quote from learner's message",
-        "suggestion": "how this could be improved"
-      }
-    ]
-  },
-  "strengths": ["strength description (K1.1)", "another strength (S1.1, A1.1)"],
-  "improvements": ["area needing improvement (K2.1)", "another improvement (S2.1)"],
-  "nextSteps": ["specific action suggestion (K1.1, S1.1)", "another suggestion (S2.3)"]
-}
+6. Strengths: 1-2 most significant strengths with KSA codes
+7. Areas for improvement: 1-2 key areas with KSA codes  
+8. Next steps: 1-2 actionable suggestions with KSA codes
+
+Provide a comprehensive evaluation including:
+- Overall score (0-100)
+- KSA scores for knowledge, skills, and attitudes (0-100 each)
+- Domain scores for all four AI literacy domains (0-100 each)
+- Rubrics scores for Research Quality, AI Utilization, Content Quality, Learning Progress (1-4 each)
+- Conversation insights with specific quotes from learner messages
+- Strengths, improvements, and next steps with relevant KSA codes (e.g., K1.1, S2.3)
 
 CRITICAL: You are ONLY evaluating the LEARNER'S messages listed above. Do NOT consider or evaluate the AI assistant's responses.
 
 Important evaluation principles:
+0. **Quality over quantity in insights** - Only provide conversation insights when there's something meaningful to highlight. Empty arrays are better than generic observations.
 1. **ONLY evaluate the learner's input messages shown above** - ignore all AI assistant responses completely
 2. Consider the **stage type** and **task nature** when evaluating:
    - For research/exploration tasks: Value curiosity, questioning, and discovery process
@@ -170,53 +145,96 @@ Important evaluation principles:
       ],
       generationConfig: {
         temperature: 0.7,
-        maxOutputTokens: 4096,
+        maxOutputTokens: 65535,
+        responseMimeType: 'application/json',
+        responseSchema: {
+          type: 'object',
+          properties: {
+            score: { type: 'number' },
+            ksaScores: {
+              type: 'object',
+              properties: {
+                knowledge: { type: 'number' },
+                skills: { type: 'number' },
+                attitudes: { type: 'number' }
+              },
+              required: ['knowledge', 'skills', 'attitudes']
+            },
+            individualKsaScores: { type: 'object' },
+            domainScores: {
+              type: 'object',
+              properties: {
+                engaging_with_ai: { type: 'number' },
+                creating_with_ai: { type: 'number' },
+                managing_with_ai: { type: 'number' },
+                designing_with_ai: { type: 'number' }
+              },
+              required: ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai']
+            },
+            rubricsScores: {
+              type: 'object',
+              properties: {
+                'Research Quality': { type: 'number' },
+                'AI Utilization': { type: 'number' },
+                'Content Quality': { type: 'number' },
+                'Learning Progress': { type: 'number' }
+              },
+              required: ['Research Quality', 'AI Utilization', 'Content Quality', 'Learning Progress']
+            },
+            conversationInsights: {
+              type: 'object',
+              properties: {
+                effectiveExamples: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      quote: { type: 'string' },
+                      reason: { type: 'string' }
+                    },
+                    required: ['quote', 'reason']
+                  }
+                },
+                improvementAreas: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      quote: { type: 'string' },
+                      suggestion: { type: 'string' }
+                    },
+                    required: ['quote', 'suggestion']
+                  }
+                }
+              },
+              required: ['effectiveExamples', 'improvementAreas']
+            },
+            strengths: {
+              type: 'array',
+              items: { type: 'string' }
+            },
+            improvements: {
+              type: 'array',
+              items: { type: 'string' }
+            },
+            nextSteps: {
+              type: 'array',
+              items: { type: 'string' }
+            }
+          },
+          required: ['score', 'ksaScores', 'domainScores', 'rubricsScores', 'conversationInsights', 'strengths', 'improvements', 'nextSteps']
+        }
       }
     });
     
     const response = result.response;
     const text = response.candidates?.[0]?.content?.parts?.[0]?.text || '';
     
-    // Parse JSON from response
+    // Parse JSON response - should be clean JSON due to responseSchema
     let evaluation;
     try {
-      // Try to extract JSON from the response
-      // First try to find JSON within code blocks
-      let jsonText = text;
-      
-      // Remove markdown code blocks if present
-      const codeBlockMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/);
-      if (codeBlockMatch) {
-        jsonText = codeBlockMatch[1].trim();
-      }
-      
-      // Try to find a complete JSON object
-      const jsonStart = jsonText.indexOf('{');
-      if (jsonStart !== -1) {
-        // Try to find the matching closing brace
-        let braceCount = 0;
-        let jsonEnd = -1;
-        
-        for (let i = jsonStart; i < jsonText.length; i++) {
-          if (jsonText[i] === '{') braceCount++;
-          else if (jsonText[i] === '}') {
-            braceCount--;
-            if (braceCount === 0) {
-              jsonEnd = i + 1;
-              break;
-            }
-          }
-        }
-        
-        if (jsonEnd > jsonStart) {
-          const jsonString = jsonText.substring(jsonStart, jsonEnd);
-          evaluation = JSON.parse(jsonString);
-        } else {
-          throw new Error('Incomplete JSON in response');
-        }
-      } else {
-        throw new Error('No JSON found in response');
-      }
+      evaluation = JSON.parse(text);
+      console.log('Successfully parsed evaluation response');
     } catch (parseError) {
       console.error('Error parsing AI response:', parseError);
       console.error('Raw response:', text);
@@ -262,7 +280,7 @@ Important evaluation principles:
       ...evaluation,
       evaluatedAt: new Date().toISOString(),
       taskId: task.id,
-      conversationCount: conversations.length
+      conversationCount: conversations.filter((c: any) => c.type === 'user').length
     };
 
     return NextResponse.json({

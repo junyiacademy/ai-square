@@ -75,7 +75,6 @@ export interface Program {
   completedAt?: string;
   status: ProgramStatus;
   totalTasks: number;
-  completedTasks: number;
   currentTaskId?: string;
   language: string;
 }

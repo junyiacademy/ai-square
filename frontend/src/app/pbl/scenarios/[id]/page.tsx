@@ -32,8 +32,9 @@ interface UserProgram {
   status: 'in_progress' | 'completed' | 'paused';
   startedAt: string;
   updatedAt: string;
-  completedTasks: number;
   totalTasks: number;
+  evaluatedTasks: number;
+  overallScore?: number;
   taskCount?: number;
   completedTaskCount?: number;
   lastActivity?: string;
@@ -226,9 +227,26 @@ export default function ScenarioDetailsPage() {
                             </span>
                           </div>
                           <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                            {t('details.progress')}: {program.completedTaskCount || program.completedTasks}/{program.taskCount || program.totalTasks} {t('details.tasks')}
-                            <span className="mx-2">•</span>
-                            {t('details.started')}: {new Date(program.startedAt).toLocaleDateString()}
+                            <div>
+                              {t('details.progress')}: {program.evaluatedTasks}/{program.taskCount || program.totalTasks} {t('details.tasks')}
+                              {program.overallScore > 0 && (
+                                <>
+                                  <span className="mx-2">•</span>
+                                  <span className="font-medium">
+                                    {t('pbl:learn.overallScore')}: {program.overallScore}%
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                            <div>
+                              {t('details.started')}: {new Date(program.startedAt).toLocaleDateString()}
+                              {program.evaluatedTasks > 0 && (
+                                <>
+                                  <span className="mx-2">•</span>
+                                  {t('pbl:history.tasksEvaluated')}: {program.evaluatedTasks}
+                                </>
+                              )}
+                            </div>
                           </div>
                         </div>
                         <div className="ml-4 flex gap-2">
@@ -238,7 +256,7 @@ export default function ScenarioDetailsPage() {
                           >
                             {t('details.continue')}
                           </button>
-                          {program.status === 'completed' && (
+                          {(program.evaluatedTasks > 0 || program.status === 'completed') && (
                             <button
                               onClick={() => router.push(`/pbl/scenarios/${scenarioId}/program/${program.id}/complete`)}
                               className="text-sm px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors"

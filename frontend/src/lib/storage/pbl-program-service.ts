@@ -78,7 +78,6 @@ class PBLProgramService {
       updatedAt: now,
       status: 'in_progress',
       totalTasks,
-      completedTasks: 0,
       language
     };
 
@@ -312,8 +311,11 @@ class PBLProgramService {
         metadata.updatedAt = new Date().toISOString();
         await metadataFile.save(JSON.stringify(metadata, null, 2));
 
-        // Update program metadata
-        await this.incrementCompletedTasks(userEmail, scenarioId, programId);
+        // Check and update program completion status
+        await this.checkProgramCompletion(userEmail, scenarioId, programId);
+        
+        // Update program completion data
+        await this.updateProgramCompletion(userEmail, scenarioId, programId);
       }
     } catch (error) {
       console.error('Error updating task progress:', error);
@@ -338,18 +340,21 @@ class PBLProgramService {
       const metadataPath = `${basePath}/metadata.json`;
       const logPath = `${basePath}/log.json`;
       const progressPath = `${basePath}/progress.json`;
+      const evaluationPath = `${basePath}/evaluation.json`;
       
       const result = {
         metadata: null as TaskMetadata | null,
         log: null as TaskLog | null,
-        progress: null as TaskProgress | null
+        progress: null as TaskProgress | null,
+        evaluation: null as any
       };
       
       // Fetch files in parallel for better performance
-      const [metadataResult, logResult, progressResult] = await Promise.allSettled([
+      const [metadataResult, logResult, progressResult, evaluationResult] = await Promise.allSettled([
         this.bucket.file(metadataPath).download().catch(() => null),
         this.bucket.file(logPath).download().catch(() => null),
-        this.bucket.file(progressPath).download().catch(() => null)
+        this.bucket.file(progressPath).download().catch(() => null),
+        this.bucket.file(evaluationPath).download().catch(() => null)
       ]);
       
       if (metadataResult.status === 'fulfilled' && metadataResult.value) {
@@ -367,23 +372,29 @@ class PBLProgramService {
         result.progress = JSON.parse(contents.toString());
       }
       
+      if (evaluationResult.status === 'fulfilled' && evaluationResult.value) {
+        const [contents] = evaluationResult.value;
+        result.evaluation = JSON.parse(contents.toString());
+      }
+      
       return result;
     } catch (error) {
       console.error('Error getting task data:', error);
-      return { metadata: null, log: null, progress: null };
+      return { metadata: null, log: null, progress: null, evaluation: null };
     }
   }
 
   /**
-   * Increment completed tasks count in program
+   * Check and update program completion status
    */
-  private async incrementCompletedTasks(userEmail: string, scenarioId: string, programId: string): Promise<void> {
-    const program = await this.getProgram(userEmail, scenarioId, programId);
-    if (program) {
+  private async checkProgramCompletion(userEmail: string, scenarioId: string, programId: string): Promise<void> {
+    // Get completion data to check evaluated tasks
+    const completionData = await this.getProgramCompletion(userEmail, scenarioId, programId);
+    if (completionData) {
+      const isCompleted = completionData.evaluatedTasks >= completionData.totalTasks;
       await this.updateProgram(userEmail, scenarioId, programId, {
-        completedTasks: program.completedTasks + 1,
-        status: program.completedTasks + 1 >= program.totalTasks ? 'completed' : 'in_progress',
-        completedAt: program.completedTasks + 1 >= program.totalTasks ? new Date().toISOString() : undefined
+        status: isCompleted ? 'completed' : 'in_progress',
+        completedAt: isCompleted ? new Date().toISOString() : undefined
       });
     }
   }
@@ -475,7 +486,7 @@ class PBLProgramService {
         overallScore,
         domainScores: Object.keys(finalDomainScores).length > 0 ? finalDomainScores as any : undefined,
         totalTimeSeconds,
-        completionRate: Math.round((program.completedTasks / program.totalTasks) * 100)
+        completionRate: Math.round((tasks.filter(t => t.progress.status === 'completed').length / program.totalTasks) * 100)
       };
     } catch (error) {
       console.error('Error getting program summary:', error);
@@ -510,43 +521,271 @@ class PBLProgramService {
         contentType: 'application/json',
       },
     });
+    
+    // Check if task is already completed before updating
+    const taskData = await this.getTaskData(userEmail, scenarioId, programId, taskId);
+    if (taskData.progress && taskData.progress.status !== 'completed') {
+      // Update task progress to completed
+      await this.updateTaskProgress(
+        userEmail,
+        scenarioId,
+        programId,
+        taskId,
+        {
+          status: 'completed',
+          completedAt: new Date().toISOString()
+        }
+      );
+    } else {
+      // If already completed, just update program completion data
+      await this.updateProgramCompletion(userEmail, scenarioId, programId);
+    }
   }
 
   /**
-   * Get all programs for a user and specific scenario (metadata only)
+   * Update program completion data
    */
-  async getUserProgramsForScenario(userEmail: string, scenarioId: string): Promise<ProgramMetadata[]> {
+  async updateProgramCompletion(
+    userEmail: string,
+    scenarioId: string,
+    programId: string
+  ): Promise<void> {
+    try {
+      const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
+      const basePath = `${PBL_BASE_PATH}/${sanitizedEmail}/scenario_${scenarioId}/program_${programId}`;
+      
+      // Get program metadata
+      const program = await this.getProgram(userEmail, scenarioId, programId);
+      if (!program) return;
+      
+      // Get all tasks data
+      const [files] = await this.bucket.getFiles({ 
+        prefix: `${basePath}/task_`,
+        autoPaginate: false 
+      });
+      
+      // Extract unique task IDs
+      const taskIds = new Set<string>();
+      files.forEach(file => {
+        const match = file.name.match(/task_([^/]+)\//);
+        if (match) taskIds.add(match[1]);
+      });
+      
+      // Collect task data
+      const tasks: any[] = [];
+      let totalScore = 0;
+      let evaluatedTasks = 0;
+      const domainScores: Record<string, number[]> = {
+        engaging_with_ai: [],
+        creating_with_ai: [],
+        managing_with_ai: [],
+        designing_with_ai: []
+      };
+      const ksaScores = {
+        knowledge: [] as number[],
+        skills: [] as number[],
+        attitudes: [] as number[]
+      };
+      let totalTimeSeconds = 0;
+      
+      for (const taskId of taskIds) {
+        const taskData = await this.getTaskData(userEmail, scenarioId, programId, taskId);
+        
+        const taskInfo: any = {
+          taskId,
+          metadata: taskData.metadata,
+          log: taskData.log,
+          progress: taskData.progress,
+          evaluation: taskData.evaluation
+        };
+        
+        // Calculate time spent from log interactions
+        if (taskData.log?.interactions && taskData.log.interactions.length > 0) {
+          const firstInteraction = taskData.log.interactions[0];
+          const lastInteraction = taskData.log.interactions[taskData.log.interactions.length - 1];
+          const timeSpent = new Date(lastInteraction.timestamp).getTime() - new Date(firstInteraction.timestamp).getTime();
+          totalTimeSeconds += Math.floor(timeSpent / 1000);
+        }
+        
+        // If task has evaluation
+        if (taskData.evaluation) {
+          totalScore += taskData.evaluation.score;
+          evaluatedTasks++;
+          
+          // Collect domain scores
+          if (taskData.evaluation.domainScores) {
+            Object.entries(taskData.evaluation.domainScores).forEach(([domain, score]) => {
+              if (domainScores[domain]) {
+                domainScores[domain].push(score as number);
+              }
+            });
+          }
+          
+          // Collect KSA scores
+          if (taskData.evaluation.ksaScores) {
+            ksaScores.knowledge.push(taskData.evaluation.ksaScores.knowledge);
+            ksaScores.skills.push(taskData.evaluation.ksaScores.skills);
+            ksaScores.attitudes.push(taskData.evaluation.ksaScores.attitudes);
+          }
+        }
+        
+        tasks.push(taskInfo);
+      }
+      
+      // Calculate averages
+      const avgScore = evaluatedTasks > 0 ? Math.round(totalScore / evaluatedTasks) : 0;
+      const avgDomainScores: Record<string, number> = {};
+      Object.entries(domainScores).forEach(([domain, scores]) => {
+        avgDomainScores[domain] = scores.length > 0 
+          ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
+          : 0;
+      });
+      
+      const avgKsaScores = {
+        knowledge: ksaScores.knowledge.length > 0 
+          ? Math.round(ksaScores.knowledge.reduce((a, b) => a + b, 0) / ksaScores.knowledge.length)
+          : 0,
+        skills: ksaScores.skills.length > 0
+          ? Math.round(ksaScores.skills.reduce((a, b) => a + b, 0) / ksaScores.skills.length)
+          : 0,
+        attitudes: ksaScores.attitudes.length > 0
+          ? Math.round(ksaScores.attitudes.reduce((a, b) => a + b, 0) / ksaScores.attitudes.length)
+          : 0
+      };
+      
+      // Create completion data
+      const completionData = {
+        programId,
+        scenarioId,
+        userEmail,
+        status: program.status,
+        startedAt: program.startedAt,
+        updatedAt: new Date().toISOString(),
+        completedAt: program.completedAt,
+        totalTasks: program.totalTasks,
+        evaluatedTasks,
+        overallScore: avgScore,
+        domainScores: avgDomainScores,
+        ksaScores: avgKsaScores,
+        totalTimeSeconds,
+        tasks
+      };
+      
+      // Save completion data
+      const completionPath = `${basePath}/completion.json`;
+      const file = this.bucket.file(completionPath);
+      await file.save(JSON.stringify(completionData, null, 2), {
+        metadata: {
+          contentType: 'application/json',
+        },
+      });
+      
+    } catch (error) {
+      console.error('Error updating program completion:', error);
+    }
+  }
+
+  /**
+   * Get program completion data
+   */
+  async getProgramCompletion(
+    userEmail: string,
+    scenarioId: string,
+    programId: string
+  ): Promise<any | null> {
+    try {
+      const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
+      const completionPath = `${PBL_BASE_PATH}/${sanitizedEmail}/scenario_${scenarioId}/program_${programId}/completion.json`;
+      
+      const file = this.bucket.file(completionPath);
+      const [exists] = await file.exists();
+      
+      if (!exists) {
+        return null;
+      }
+      
+      const [contents] = await file.download();
+      return JSON.parse(contents.toString());
+    } catch (error) {
+      console.error('Error getting program completion:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Get all programs for a user and specific scenario (using completion data)
+   */
+  async getUserProgramsForScenario(userEmail: string, scenarioId: string): Promise<any[]> {
     try {
       const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
       const basePath = `${PBL_BASE_PATH}/${sanitizedEmail}/scenario_${scenarioId}`;
       
-      // List only metadata.json files directly
+      // List completion.json files
       const [files] = await this.bucket.getFiles({ 
         prefix: basePath,
         autoPaginate: false,
-        maxResults: 100  // Limit to reasonable number of programs
+        maxResults: 100
       });
       
-      // Filter and fetch metadata files in parallel
-      const metadataFiles = files.filter(file => 
+      // Filter completion files
+      const completionFiles = files.filter(file => 
         file.name.includes('/program_') && 
-        file.name.endsWith('/metadata.json') && 
-        !file.name.includes('/task_')
+        file.name.endsWith('/completion.json')
       );
       
-      // Download metadata in parallel
-      const metadataPromises = metadataFiles.map(async (file) => {
+      // If no completion files, fall back to metadata files
+      if (completionFiles.length === 0) {
+        const metadataFiles = files.filter(file => 
+          file.name.includes('/program_') && 
+          file.name.endsWith('/metadata.json') && 
+          !file.name.includes('/task_')
+        );
+        
+        // Create basic completion data from metadata
+        const metadataPromises = metadataFiles.map(async (file) => {
+          try {
+            const [content] = await file.download();
+            const metadata = JSON.parse(content.toString()) as ProgramMetadata;
+            
+            return {
+              programId: metadata.id,
+              scenarioId: metadata.scenarioId,
+              userEmail: metadata.userEmail,
+              status: metadata.status,
+              startedAt: metadata.startedAt,
+              updatedAt: metadata.updatedAt,
+              completedAt: metadata.completedAt,
+              totalTasks: metadata.totalTasks,
+              evaluatedTasks: 0,
+              overallScore: 0,
+              domainScores: {},
+              ksaScores: {},
+              totalTimeSeconds: 0,
+              taskSummaries: []
+            };
+          } catch (error) {
+            console.error(`Error reading program metadata from ${file.name}:`, error);
+            return null;
+          }
+        });
+        
+        const results = await Promise.all(metadataPromises);
+        return results.filter(p => p !== null);
+      }
+      
+      // Download completion data in parallel
+      const completionPromises = completionFiles.map(async (file) => {
         try {
           const [content] = await file.download();
-          return JSON.parse(content.toString()) as ProgramMetadata;
+          return JSON.parse(content.toString());
         } catch (error) {
-          console.error(`Error reading program metadata from ${file.name}:`, error);
+          console.error(`Error reading completion data from ${file.name}:`, error);
           return null;
         }
       });
       
-      const results = await Promise.all(metadataPromises);
-      return results.filter((p): p is ProgramMetadata => p !== null);
+      const results = await Promise.all(completionPromises);
+      return results.filter(p => p !== null);
     } catch (error) {
       console.error('Error getting user programs for scenario:', error);
       return [];

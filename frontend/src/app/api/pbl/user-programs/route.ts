@@ -39,11 +39,19 @@ export async function GET(request: NextRequest) {
     // Sort by startedAt descending (newest first)
     programs.sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime());
     
-    // The metadata already contains all necessary info, no need to fetch summaries
+    // Map completion data to expected format
     const programsWithInfo = programs.map(program => ({
-      ...program,
+      id: program.programId,  // Map programId to id
+      programId: program.programId,
+      scenarioId: program.scenarioId,
+      scenarioTitle: program.scenarioTitle || scenarioId,
+      status: program.status,
+      startedAt: program.startedAt,
+      updatedAt: program.updatedAt,
+      totalTasks: program.totalTasks,
+      evaluatedTasks: program.evaluatedTasks,
+      overallScore: program.overallScore,
       taskCount: program.totalTasks,
-      completedTaskCount: program.completedTasks,
       lastActivity: program.updatedAt
     }));
     
