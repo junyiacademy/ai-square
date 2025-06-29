@@ -43,6 +43,7 @@ export interface Task {
     primary: string[];   // Primary KSA codes to assess
     secondary: string[]; // Secondary KSA codes
   };
+  focusKSA?: string[];  // Combined KSA codes for evaluation
   aiModule?: AIModule;
 }
 

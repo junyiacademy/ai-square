@@ -127,7 +127,10 @@
     "completeTask": "完成任務",
     "errorProcessing": "處理訊息時發生錯誤，請重試。",
     "noTaskFound": "找不到任務",
-    "goToCompletion": "前往完成報告"
+    "goToCompletion": "前往完成報告",
+    "evaluate": "評估表現",
+    "evaluating": "評估中...",
+    "evaluationResults": "評估結果"
   },
   "history": {
     "title": "學習歷程",

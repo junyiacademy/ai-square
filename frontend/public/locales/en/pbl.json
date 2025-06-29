@@ -127,7 +127,10 @@
     "completeTask": "Complete Task",
     "errorProcessing": "Error processing message. Please try again.",
     "noTaskFound": "No task found",
-    "goToCompletion": "Go to Completion Report"
+    "goToCompletion": "Go to Completion Report",
+    "evaluate": "Evaluate Performance",
+    "evaluating": "Evaluating...",
+    "evaluationResults": "Evaluation Results"
   },
   "history": {
     "title": "Learning Journey",

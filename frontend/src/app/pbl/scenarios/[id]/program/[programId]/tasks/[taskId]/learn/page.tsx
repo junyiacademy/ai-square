@@ -39,6 +39,10 @@ export default function ProgramLearningPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isProgressCollapsed, setIsProgressCollapsed] = useState(false);
   const [mobileView, setMobileView] = useState<'progress' | 'task' | 'chat'>('chat');
+  const [showEvaluateButton, setShowEvaluateButton] = useState(false);
+  const [isEvaluating, setIsEvaluating] = useState(false);
+  const [evaluation, setEvaluation] = useState<any>(null);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   
   const conversationEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -105,6 +109,9 @@ export default function ProgramLearningPage() {
   };
 
   const loadTaskHistory = async () => {
+    // Prevent duplicate loading
+    if (isLoadingHistory) return;
+    
     try {
       // Skip loading history for temp programs
       if (programId.startsWith('temp_')) {
@@ -112,6 +119,7 @@ export default function ProgramLearningPage() {
         return;
       }
       
+      setIsLoadingHistory(true);
       console.log('Loading task history for:', { programId, taskId, scenarioId });
       
       // Load task conversation history
@@ -129,6 +137,11 @@ export default function ProgramLearningPage() {
           }));
           console.log('Loaded conversations:', loadedConversations);
           setConversations(loadedConversations);
+          
+          // If there are conversations, show evaluate button
+          if (loadedConversations.length > 0) {
+            setShowEvaluateButton(true);
+          }
         } else {
           console.log('No interactions found in response');
           setConversations([]);
@@ -138,6 +151,8 @@ export default function ProgramLearningPage() {
       }
     } catch (error) {
       console.error('Error loading task history:', error);
+    } finally {
+      setIsLoadingHistory(false);
     }
   };
 
@@ -248,6 +263,9 @@ export default function ProgramLearningPage() {
       };
       setConversations(prev => [...prev, aiEntry]);
       
+      // Show evaluate button after AI response
+      setShowEvaluateButton(true);
+      
       // Save AI interaction
       await fetch('/api/pbl/task-logs', {
         method: 'POST',
@@ -288,6 +306,64 @@ export default function ProgramLearningPage() {
       setConversations(prev => [...prev, errorEntry]);
     } finally {
       inputRef.current?.focus();
+    }
+  };
+
+  const handleEvaluate = async () => {
+    if (!currentTask || conversations.length === 0) return;
+    
+    setIsEvaluating(true);
+    setShowEvaluateButton(false);
+    
+    try {
+      // Get last 10 conversations
+      const recentConversations = conversations.slice(-10);
+      
+      // Call evaluate API
+      const response = await fetch('/api/pbl/evaluate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          conversations: recentConversations,
+          task: currentTask,
+          targetDomains: scenario?.targetDomain || [],
+          focusKSA: [
+            ...(currentTask.assessmentFocus?.primary || []),
+            ...(currentTask.assessmentFocus?.secondary || [])
+          ],
+          language: i18n.language
+        })
+      });
+      
+      if (!response.ok) throw new Error('Failed to evaluate');
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setEvaluation(data.evaluation);
+        
+        // Save evaluation to GCS
+        await fetch('/api/pbl/task-logs', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-scenario-id': scenarioId
+          },
+          body: JSON.stringify({
+            programId,
+            taskId: currentTask.id,
+            scenarioId,
+            evaluation: data.evaluation
+          })
+        });
+      }
+    } catch (error) {
+      console.error('Error evaluating:', error);
+      setShowEvaluateButton(true);
+    } finally {
+      setIsEvaluating(false);
     }
   };
 
@@ -555,6 +631,104 @@ export default function ProgramLearningPage() {
               )}
             </div>
             
+            {/* Evaluation Results */}
+            {evaluation && (
+              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <h3 className="font-medium text-gray-900 dark:text-white mb-4">
+                  {t('pbl:learn.evaluationResults', 'Evaluation Results')}
+                </h3>
+                
+                {/* Overall Score */}
+                <div className="mb-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {t('pbl:learn.overallScore')}
+                    </span>
+                    <span className={`text-2xl font-bold ${
+                      evaluation.score >= 75 ? 'text-green-600' :
+                      evaluation.score >= 60 ? 'text-blue-600' :
+                      evaluation.score >= 40 ? 'text-yellow-600' :
+                      'text-red-600'
+                    }`}>
+                      {evaluation.score}%
+                    </span>
+                  </div>
+                  
+                  {/* KSA Scores */}
+                  <div className="space-y-2">
+                    {Object.entries(evaluation.ksaScores).map(([key, value]: [string, any]) => (
+                      <div key={key} className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600 dark:text-gray-400 capitalize">
+                          {t(`pbl:complete.${key}`)}
+                        </span>
+                        <div className="flex items-center">
+                          <div className="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
+                            <div 
+                              className="bg-purple-600 h-2 rounded-full"
+                              style={{ width: `${value}%` }}
+                            />
+                          </div>
+                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            {value}%
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Domain Scores */}
+                <div className="mb-4">
+                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {t('pbl:complete.domainScores')}
+                  </h4>
+                  <div className="space-y-2 text-sm">
+                    {Object.entries(evaluation.domainScores).map(([domain, score]: [string, any]) => (
+                      <div key={domain} className="flex items-center justify-between">
+                        <span className="text-gray-600 dark:text-gray-400">
+                          {t(`assessment:domains.${domain}`)}
+                        </span>
+                        <span className="font-medium text-gray-700 dark:text-gray-300">
+                          {score}%
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Strengths & Improvements */}
+                <div className="space-y-3">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      {t('pbl:complete.strengths')}
+                    </h4>
+                    <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                      {evaluation.strengths.map((strength: string, idx: number) => (
+                        <li key={idx} className="flex items-start">
+                          <span className="text-green-500 mr-2">✓</span>
+                          {strength}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      {t('pbl:complete.improvements')}
+                    </h4>
+                    <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                      {evaluation.improvements.map((improvement: string, idx: number) => (
+                        <li key={idx} className="flex items-start">
+                          <span className="text-yellow-500 mr-2">•</span>
+                          {improvement}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+            
             <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
               <button
                 onClick={handleCompleteTask}
@@ -614,6 +788,30 @@ export default function ProgramLearningPage() {
               <div ref={conversationEndRef} />
             </div>
           </div>
+
+          {/* Evaluate Button */}
+          {showEvaluateButton && !isEvaluating && (
+            <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+              <button
+                onClick={handleEvaluate}
+                className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              >
+                {t('pbl:learn.evaluate', 'Evaluate Performance')}
+              </button>
+            </div>
+          )}
+          
+          {/* Evaluating indicator */}
+          {isEvaluating && (
+            <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+              <div className="flex items-center justify-center space-x-2">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+                <span className="text-gray-600 dark:text-gray-400">
+                  {t('pbl:learn.evaluating', 'Evaluating...')}
+                </span>
+              </div>
+            </div>
+          )}
 
           {/* Input Area */}
           <div className="p-6 border-t border-gray-200 dark:border-gray-700">

@@ -333,45 +333,41 @@ class PBLProgramService {
   ): Promise<{ metadata: TaskMetadata | null; log: TaskLog | null; progress: TaskProgress | null }> {
     try {
       const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
-      const [files] = await this.bucket.getFiles({
-        prefix: `${PBL_BASE_PATH}/${sanitizedEmail}/scenario_${scenarioId}/program_${programId}`,
-      });
-
-      let metadataFile = null;
-      let logFile = null;
-      let progressFile = null;
-
-      for (const file of files) {
-        if (file.name.endsWith(`/task_${taskId}/metadata.json`)) {
-          metadataFile = file;
-        } else if (file.name.endsWith(`/task_${taskId}/log.json`)) {
-          logFile = file;
-        } else if (file.name.endsWith(`/task_${taskId}/progress.json`)) {
-          progressFile = file;
-        }
-      }
-
+      const basePath = `${PBL_BASE_PATH}/${sanitizedEmail}/scenario_${scenarioId}/program_${programId}/task_${taskId}`;
+      
+      // Directly fetch the specific files instead of listing all files
+      const metadataPath = `${basePath}/metadata.json`;
+      const logPath = `${basePath}/log.json`;
+      const progressPath = `${basePath}/progress.json`;
+      
       const result = {
         metadata: null as TaskMetadata | null,
         log: null as TaskLog | null,
         progress: null as TaskProgress | null
       };
-
-      if (metadataFile) {
-        const [contents] = await metadataFile.download();
+      
+      // Fetch files in parallel for better performance
+      const [metadataResult, logResult, progressResult] = await Promise.allSettled([
+        this.bucket.file(metadataPath).download().catch(() => null),
+        this.bucket.file(logPath).download().catch(() => null),
+        this.bucket.file(progressPath).download().catch(() => null)
+      ]);
+      
+      if (metadataResult.status === 'fulfilled' && metadataResult.value) {
+        const [contents] = metadataResult.value;
         result.metadata = JSON.parse(contents.toString());
       }
-
-      if (logFile) {
-        const [contents] = await logFile.download();
+      
+      if (logResult.status === 'fulfilled' && logResult.value) {
+        const [contents] = logResult.value;
         result.log = JSON.parse(contents.toString());
       }
-
-      if (progressFile) {
-        const [contents] = await progressFile.download();
+      
+      if (progressResult.status === 'fulfilled' && progressResult.value) {
+        const [contents] = progressResult.value;
         result.progress = JSON.parse(contents.toString());
       }
-
+      
       return result;
     } catch (error) {
       console.error('Error getting task data:', error);
@@ -489,31 +485,82 @@ class PBLProgramService {
   }
 
   /**
+   * Save task evaluation results
+   */
+  async saveTaskEvaluation(
+    userEmail: string,
+    scenarioId: string,
+    programId: string,
+    taskId: string,
+    evaluation: any
+  ): Promise<void> {
+    const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
+    const evaluationPath = `${PBL_BASE_PATH}/${sanitizedEmail}/scenario_${scenarioId}/program_${programId}/task_${taskId}/evaluation.json`;
+    
+    const file = this.bucket.file(evaluationPath);
+    
+    // Load existing evaluations (in case there are multiple)
+    let evaluations: any[] = [];
+    try {
+      const [exists] = await file.exists();
+      if (exists) {
+        const [contents] = await file.download();
+        const data = JSON.parse(contents.toString());
+        evaluations = Array.isArray(data) ? data : [data];
+      }
+    } catch (error) {
+      console.log('No existing evaluations found');
+    }
+    
+    // Add new evaluation
+    evaluations.push({
+      ...evaluation,
+      createdAt: new Date().toISOString()
+    });
+    
+    // Save updated evaluations
+    await file.save(JSON.stringify(evaluations, null, 2), {
+      metadata: {
+        contentType: 'application/json',
+      },
+    });
+  }
+
+  /**
    * Get all programs for a user and specific scenario (metadata only)
    */
   async getUserProgramsForScenario(userEmail: string, scenarioId: string): Promise<ProgramMetadata[]> {
     try {
       const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
-      const prefix = `${PBL_BASE_PATH}/${sanitizedEmail}/scenario_${scenarioId}/`;
+      const basePath = `${PBL_BASE_PATH}/${sanitizedEmail}/scenario_${scenarioId}`;
       
-      const [files] = await this.bucket.getFiles({ prefix });
+      // List only metadata.json files directly
+      const [files] = await this.bucket.getFiles({ 
+        prefix: basePath,
+        autoPaginate: false,
+        maxResults: 100  // Limit to reasonable number of programs
+      });
       
-      // Find all program metadata files
-      const programs: ProgramMetadata[] = [];
+      // Filter and fetch metadata files in parallel
+      const metadataFiles = files.filter(file => 
+        file.name.includes('/program_') && 
+        file.name.endsWith('/metadata.json') && 
+        !file.name.includes('/task_')
+      );
       
-      for (const file of files) {
-        if (file.name.endsWith('/metadata.json') && file.name.includes('/program_') && !file.name.includes('/task_')) {
-          try {
-            const [content] = await file.download();
-            const metadata = JSON.parse(content.toString()) as ProgramMetadata;
-            programs.push(metadata);
-          } catch (error) {
-            console.error(`Error reading program metadata from ${file.name}:`, error);
-          }
+      // Download metadata in parallel
+      const metadataPromises = metadataFiles.map(async (file) => {
+        try {
+          const [content] = await file.download();
+          return JSON.parse(content.toString()) as ProgramMetadata;
+        } catch (error) {
+          console.error(`Error reading program metadata from ${file.name}:`, error);
+          return null;
         }
-      }
+      });
       
-      return programs;
+      const results = await Promise.all(metadataPromises);
+      return results.filter((p): p is ProgramMetadata => p !== null);
     } catch (error) {
       console.error('Error getting user programs for scenario:', error);
       return [];

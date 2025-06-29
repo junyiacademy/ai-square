@@ -135,15 +135,15 @@ export async function PUT(request: NextRequest) {
       );
     }
     
-    const body = await request.json() as SaveTaskProgressRequest;
-    const { programId, taskId, progress } = body;
+    const body = await request.json() as SaveTaskProgressRequest & { evaluation?: any };
+    const { programId, taskId, progress, evaluation } = body;
     
     // Validate required fields
-    if (!programId || !taskId || !progress) {
+    if (!programId || !taskId) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Missing required fields: programId, taskId, progress'
+          error: 'Missing required fields: programId, taskId'
         },
         { status: 400 }
       );
@@ -162,18 +162,31 @@ export async function PUT(request: NextRequest) {
       );
     }
     
-    // Update task progress
-    await pblProgramService.updateTaskProgress(
-      userEmail,
-      scenarioId,
-      programId,
-      taskId,
-      progress
-    );
+    // Update task progress if provided
+    if (progress) {
+      await pblProgramService.updateTaskProgress(
+        userEmail,
+        scenarioId,
+        programId,
+        taskId,
+        progress
+      );
+    }
+    
+    // Save evaluation if provided
+    if (evaluation) {
+      await pblProgramService.saveTaskEvaluation(
+        userEmail,
+        scenarioId,
+        programId,
+        taskId,
+        evaluation
+      );
+    }
     
     return NextResponse.json({
       success: true,
-      message: 'Progress updated successfully'
+      message: 'Task data updated successfully'
     });
     
   } catch (error) {

@@ -26,10 +26,10 @@ interface ScenarioResponse {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const scenarioId = params.id;
+    const { id: scenarioId } = await params;
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
     const isZh = lang === 'zh' || lang === 'zh-TW' || lang === 'zh-CN';

@@ -39,31 +39,18 @@ export async function GET(request: NextRequest) {
     // Sort by startedAt descending (newest first)
     programs.sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime());
     
-    // Add summary info for each program
-    const programsWithSummary = await Promise.all(programs.map(async (program) => {
-      try {
-        const summary = await pblProgramService.getProgramSummary(userEmail, scenarioId, program.id);
-        return {
-          ...program,
-          taskCount: summary.tasks.length,
-          completedTaskCount: summary.tasks.filter(t => t.progress?.status === 'completed').length,
-          lastActivity: summary.program.updatedAt
-        };
-      } catch (error) {
-        // If summary fails, return basic program info
-        return {
-          ...program,
-          taskCount: program.totalTasks,
-          completedTaskCount: program.completedTasks,
-          lastActivity: program.updatedAt
-        };
-      }
+    // The metadata already contains all necessary info, no need to fetch summaries
+    const programsWithInfo = programs.map(program => ({
+      ...program,
+      taskCount: program.totalTasks,
+      completedTaskCount: program.completedTasks,
+      lastActivity: program.updatedAt
     }));
     
     return NextResponse.json({
       success: true,
-      programs: programsWithSummary,
-      total: programsWithSummary.length
+      programs: programsWithInfo,
+      total: programsWithInfo.length
     });
     
   } catch (error) {
