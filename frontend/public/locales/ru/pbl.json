@@ -63,7 +63,20 @@
       "listening": "Listening",
       "speaking": "Speaking",
       "mixed": "Mixed"
-    }
+    },
+    "existingPrograms": "Ваши существующие программы",
+    "latestProgram": "Последняя программа",
+    "program": "Программа",
+    "progress": "Прогресс",
+    "tasks": "задачи",
+    "started": "Начато",
+    "continue": "Продолжить",
+    "goToCompletion": "Посмотреть отчет",
+    "continueProgram": "Продолжить программу",
+    "startNewProgram": "Начать новую программу",
+    "continueDraft": "Продолжить черновик",
+    "continuing": "Продолжение...",
+    "starting": "Запуск..."
   },
   "learn": {
     "errorLoading": "Error loading scenario",
@@ -102,7 +115,30 @@
     "evaluationFailed": "Ошибка оценки",
     "unknownError": "Неизвестная ошибка",
     "taskInfo": "Информация о задаче",
-    "chat": "Чат"
+    "chat": "Чат",
+    "sending": "Отправка...",
+    "thinking": "Думаю",
+    "analyzeTask": "Анализировать задачу",
+    "taskAnalyzed": "Задача проанализирована",
+    "taskAnalysisResults": "Результаты анализа задачи",
+    "loginRequired": "Требуется вход",
+    "loginRequiredMessage": "Пожалуйста, войдите, чтобы начать свое путешествие по обучению PBL.",
+    "task": "Задача",
+    "description": "Описание",
+    "switchTask": "Переключить задачу",
+    "allTasks": "Все задачи",
+    "current": "Текущая",
+    "completeTask": "Завершить задачу",
+    "errorProcessing": "Ошибка обработки сообщения. Пожалуйста, попробуйте еще раз.",
+    "noTaskFound": "Задача не найдена",
+    "goToCompletion": "Перейти к отчету о завершении",
+    "evaluate": "Оценить производительность",
+    "evaluating": "Оценка...",
+    "evaluationResults": "Результаты оценки",
+    "evaluationUpToDate": "Оценка актуальна",
+    "conversationInsights": "Информация о разговоре",
+    "effectiveExamples": "Что хорошо сработало:",
+    "improvementExamples": "Области для улучшения:"
   },
   "history": {
     "title": "Learning Journey",
@@ -126,7 +162,13 @@
     "continue": "Continue",
     "review": "Review",
     "noSessions": "No learning sessions started yet",
-    "startLearning": "Start Learning"
+    "startLearning": "Start Learning",
+    "conversationCount": "Количество разговоров",
+    "times": "раз",
+    "stageDetails": "Детали этапа",
+    "conversations": "Разговоры",
+    "continueStudy": "Продолжить обучение",
+    "tasksEvaluated": "Оцененные задачи"
   },
   "complete": {
     "congratulations": "Поздравляем!",
@@ -172,6 +214,26 @@
       "seconds": "{{seconds}}с"
     },
     "ksa": "KSA",
-    "print": "Печать"
+    "print": "Печать",
+    "completedProgram": "Вы завершили эту учебную программу!",
+    "conversationCount": "Количество разговоров",
+    "tasksEvaluated": "Оцененные задачи",
+    "tasksCompleted": "Выполненные задачи",
+    "taskSummary": "Сводка задач",
+    "noDataFound": "Данные о завершении не найдены",
+    "conversations": "Разговоры",
+    "timeSpent": "Затраченное время",
+    "taskScore": "Оценка задачи",
+    "feedback": "Обратная связь",
+    "domainScores": "Оценки по доменам",
+    "tasksSummary": "Сводка задач",
+    "ksaAchievementSummary": "Сводка достижений KSA",
+    "loginRequired": "Требуется вход",
+    "loginRequiredMessage": "Пожалуйста, войдите, чтобы просмотреть отчет о завершении.",
+    "viewReport": "Посмотреть отчет",
+    "generatingFeedback": "Генерация персонализированной обратной связи...",
+    "qualitativeFeedback": "Персонализированная обратная связь",
+    "nextSteps": "Рекомендуемые следующие шаги"
   }
 }
+

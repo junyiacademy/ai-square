@@ -63,7 +63,20 @@
       "listening": "Listening",
       "speaking": "Speaking",
       "mixed": "Mixed"
-    }
+    },
+    "existingPrograms": "既存のプログラム",
+    "latestProgram": "最新のプログラム",
+    "program": "プログラム",
+    "progress": "進捗",
+    "tasks": "タスク",
+    "started": "開始日",
+    "continue": "続ける",
+    "goToCompletion": "レポートを表示",
+    "continueProgram": "プログラムを続ける",
+    "startNewProgram": "新しいプログラムを開始",
+    "continueDraft": "下書きを続ける",
+    "continuing": "続行中...",
+    "starting": "開始中..."
   },
   "learn": {
     "errorLoading": "Error loading scenario",
@@ -102,7 +115,30 @@
     "evaluationFailed": "評価に失敗しました",
     "unknownError": "不明なエラー",
     "taskInfo": "タスク情報",
-    "chat": "チャット"
+    "chat": "チャット",
+    "sending": "送信中...",
+    "thinking": "考え中",
+    "analyzeTask": "タスクを分析",
+    "taskAnalyzed": "タスク分析完了",
+    "taskAnalysisResults": "タスク分析結果",
+    "loginRequired": "ログインが必要です",
+    "loginRequiredMessage": "PBL学習の旅を始めるにはログインしてください。",
+    "task": "タスク",
+    "description": "説明",
+    "switchTask": "タスクを切り替え",
+    "allTasks": "すべてのタスク",
+    "current": "現在",
+    "completeTask": "タスクを完了",
+    "errorProcessing": "メッセージの処理中にエラーが発生しました。もう一度お試しください。",
+    "noTaskFound": "タスクが見つかりません",
+    "goToCompletion": "完了レポートへ",
+    "evaluate": "パフォーマンスを評価",
+    "evaluating": "評価中...",
+    "evaluationResults": "評価結果",
+    "evaluationUpToDate": "評価は最新です",
+    "conversationInsights": "会話の洞察",
+    "effectiveExamples": "うまくいった点：",
+    "improvementExamples": "改善が必要な点："
   },
   "history": {
     "title": "Learning Journey",
@@ -126,7 +162,13 @@
     "continue": "Continue",
     "review": "Review",
     "noSessions": "No learning sessions started yet",
-    "startLearning": "Start Learning"
+    "startLearning": "Start Learning",
+    "conversationCount": "会話数",
+    "times": "回",
+    "stageDetails": "ステージの詳細",
+    "conversations": "会話",
+    "continueStudy": "学習を続ける",
+    "tasksEvaluated": "評価済みタスク"
   },
   "complete": {
     "congratulations": "おめでとうございます！",
@@ -172,6 +214,26 @@
       "seconds": "{{seconds}}秒"
     },
     "ksa": "KSA",
-    "print": "印刷"
+    "print": "印刷",
+    "completedProgram": "この学習プログラムを完了しました！",
+    "conversationCount": "会話数",
+    "tasksEvaluated": "評価済みタスク",
+    "tasksCompleted": "完了したタスク",
+    "taskSummary": "タスク概要",
+    "noDataFound": "完了データが見つかりません",
+    "conversations": "会話",
+    "timeSpent": "所要時間",
+    "taskScore": "タスクスコア",
+    "feedback": "フィードバック",
+    "domainScores": "ドメインスコア",
+    "tasksSummary": "タスク概要",
+    "ksaAchievementSummary": "KSA達成概要",
+    "loginRequired": "ログインが必要です",
+    "loginRequiredMessage": "完了レポートを表示するにはログインしてください。",
+    "viewReport": "レポートを表示",
+    "generatingFeedback": "パーソナライズされたフィードバックを生成中...",
+    "qualitativeFeedback": "パーソナライズされたフィードバック",
+    "nextSteps": "推奨される次のステップ"
   }
 }
+

@@ -63,7 +63,20 @@
       "listening": "Listening",
       "speaking": "Speaking",
       "mixed": "Mixed"
-    }
+    },
+    "existingPrograms": "Tus programas existentes",
+    "latestProgram": "Programa más reciente",
+    "program": "Programa",
+    "progress": "Progreso",
+    "tasks": "tareas",
+    "started": "Iniciado",
+    "continue": "Continuar",
+    "goToCompletion": "Ver informe",
+    "continueProgram": "Continuar programa",
+    "startNewProgram": "Iniciar nuevo programa",
+    "continueDraft": "Continuar borrador",
+    "continuing": "Continuando...",
+    "starting": "Iniciando..."
   },
   "learn": {
     "errorLoading": "Error loading scenario",
@@ -102,7 +115,30 @@
     "evaluationFailed": "Evaluación fallida",
     "unknownError": "Error desconocido",
     "taskInfo": "Información de tarea",
-    "chat": "Chat"
+    "chat": "Chat",
+    "sending": "Enviando...",
+    "thinking": "Pensando",
+    "analyzeTask": "Analizar tarea",
+    "taskAnalyzed": "Tarea analizada",
+    "taskAnalysisResults": "Resultados del análisis de la tarea",
+    "loginRequired": "Inicio de sesión requerido",
+    "loginRequiredMessage": "Por favor, inicia sesión para comenzar tu viaje de aprendizaje PBL.",
+    "task": "Tarea",
+    "description": "Descripción",
+    "switchTask": "Cambiar tarea",
+    "allTasks": "Todas las tareas",
+    "current": "Actual",
+    "completeTask": "Completar tarea",
+    "errorProcessing": "Error al procesar el mensaje. Por favor, inténtalo de nuevo.",
+    "noTaskFound": "No se encontró la tarea",
+    "goToCompletion": "Ir al informe de finalización",
+    "evaluate": "Evaluar rendimiento",
+    "evaluating": "Evaluando...",
+    "evaluationResults": "Resultados de la evaluación",
+    "evaluationUpToDate": "Evaluación actualizada",
+    "conversationInsights": "Perspectivas de la conversación",
+    "effectiveExamples": "Lo que funcionó bien:",
+    "improvementExamples": "Áreas de mejora:"
   },
   "history": {
     "title": "Learning Journey",
@@ -126,7 +162,13 @@
     "continue": "Continue",
     "review": "Review",
     "noSessions": "No learning sessions started yet",
-    "startLearning": "Start Learning"
+    "startLearning": "Start Learning",
+    "conversationCount": "Recuento de conversaciones",
+    "times": "veces",
+    "stageDetails": "Detalles de la etapa",
+    "conversations": "Conversaciones",
+    "continueStudy": "Continuar aprendiendo",
+    "tasksEvaluated": "Tareas evaluadas"
   },
   "complete": {
     "congratulations": "¡Felicitaciones!",
@@ -172,6 +214,26 @@
       "seconds": "{{seconds}}s"
     },
     "ksa": "KSA",
-    "print": "Imprimir"
+    "print": "Imprimir",
+    "completedProgram": "¡Has completado este programa de aprendizaje!",
+    "conversationCount": "Recuento de conversaciones",
+    "tasksEvaluated": "Tareas evaluadas",
+    "tasksCompleted": "Tareas completadas",
+    "taskSummary": "Resumen de tareas",
+    "noDataFound": "No se encontraron datos de finalización",
+    "conversations": "Conversaciones",
+    "timeSpent": "Tiempo empleado",
+    "taskScore": "Puntuación de la tarea",
+    "feedback": "Retroalimentación",
+    "domainScores": "Puntuaciones por dominio",
+    "tasksSummary": "Resumen de tareas",
+    "ksaAchievementSummary": "Resumen de logros KSA",
+    "loginRequired": "Inicio de sesión requerido",
+    "loginRequiredMessage": "Por favor, inicia sesión para ver tu informe de finalización.",
+    "viewReport": "Ver informe",
+    "generatingFeedback": "Generando retroalimentación personalizada...",
+    "qualitativeFeedback": "Retroalimentación personalizada",
+    "nextSteps": "Próximos pasos recomendados"
   }
 }
+

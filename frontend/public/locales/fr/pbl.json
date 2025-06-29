@@ -63,7 +63,20 @@
       "listening": "Listening",
       "speaking": "Speaking",
       "mixed": "Mixed"
-    }
+    },
+    "existingPrograms": "Vos programmes existants",
+    "latestProgram": "Programme le plus récent",
+    "program": "Programme",
+    "progress": "Progression",
+    "tasks": "tâches",
+    "started": "Commencé",
+    "continue": "Continuer",
+    "goToCompletion": "Voir le rapport",
+    "continueProgram": "Continuer le programme",
+    "startNewProgram": "Démarrer un nouveau programme",
+    "continueDraft": "Continuer le brouillon",
+    "continuing": "Continuation...",
+    "starting": "Démarrage..."
   },
   "learn": {
     "errorLoading": "Error loading scenario",
@@ -102,7 +115,30 @@
     "evaluationFailed": "Échec de l'évaluation",
     "unknownError": "Erreur inconnue",
     "taskInfo": "Info tâche",
-    "chat": "Discussion"
+    "chat": "Discussion",
+    "sending": "Envoi...",
+    "thinking": "Réflexion",
+    "analyzeTask": "Analyser la tâche",
+    "taskAnalyzed": "Tâche analysée",
+    "taskAnalysisResults": "Résultats de l'analyse de la tâche",
+    "loginRequired": "Connexion requise",
+    "loginRequiredMessage": "Veuillez vous connecter pour commencer votre parcours d'apprentissage PBL.",
+    "task": "Tâche",
+    "description": "Description",
+    "switchTask": "Changer de tâche",
+    "allTasks": "Toutes les tâches",
+    "current": "Actuelle",
+    "completeTask": "Terminer la tâche",
+    "errorProcessing": "Erreur lors du traitement du message. Veuillez réessayer.",
+    "noTaskFound": "Aucune tâche trouvée",
+    "goToCompletion": "Aller au rapport de finalisation",
+    "evaluate": "Évaluer la performance",
+    "evaluating": "Évaluation...",
+    "evaluationResults": "Résultats de l'évaluation",
+    "evaluationUpToDate": "Évaluation à jour",
+    "conversationInsights": "Aperçus de la conversation",
+    "effectiveExamples": "Ce qui a bien fonctionné :",
+    "improvementExamples": "Domaines d'amélioration :"
   },
   "history": {
     "title": "Learning Journey",
@@ -126,7 +162,13 @@
     "continue": "Continue",
     "review": "Review",
     "noSessions": "No learning sessions started yet",
-    "startLearning": "Start Learning"
+    "startLearning": "Start Learning",
+    "conversationCount": "Nombre de conversations",
+    "times": "fois",
+    "stageDetails": "Détails de l'étape",
+    "conversations": "Conversations",
+    "continueStudy": "Continuer l'apprentissage",
+    "tasksEvaluated": "Tâches évaluées"
   },
   "complete": {
     "congratulations": "Félicitations !",
@@ -172,6 +214,26 @@
       "seconds": "{{seconds}}s"
     },
     "ksa": "KSA",
-    "print": "Imprimer"
+    "print": "Imprimer",
+    "completedProgram": "Vous avez terminé ce programme d'apprentissage !",
+    "conversationCount": "Nombre de conversations",
+    "tasksEvaluated": "Tâches évaluées",
+    "tasksCompleted": "Tâches terminées",
+    "taskSummary": "Résumé des tâches",
+    "noDataFound": "Aucune donnée de finalisation trouvée",
+    "conversations": "Conversations",
+    "timeSpent": "Temps passé",
+    "taskScore": "Score de la tâche",
+    "feedback": "Commentaires",
+    "domainScores": "Scores par domaine",
+    "tasksSummary": "Résumé des tâches",
+    "ksaAchievementSummary": "Résumé des réalisations KSA",
+    "loginRequired": "Connexion requise",
+    "loginRequiredMessage": "Veuillez vous connecter pour voir votre rapport de finalisation.",
+    "viewReport": "Voir le rapport",
+    "generatingFeedback": "Génération de commentaires personnalisés...",
+    "qualitativeFeedback": "Commentaires personnalisés",
+    "nextSteps": "Prochaines étapes recommandées"
   }
 }
+

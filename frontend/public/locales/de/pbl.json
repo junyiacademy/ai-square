@@ -63,7 +63,20 @@
       "listening": "Listening",
       "speaking": "Speaking",
       "mixed": "Mixed"
-    }
+    },
+    "existingPrograms": "Ihre bestehenden Programme",
+    "latestProgram": "Neuestes Programm",
+    "program": "Programm",
+    "progress": "Fortschritt",
+    "tasks": "Aufgaben",
+    "started": "Gestartet",
+    "continue": "Fortsetzen",
+    "goToCompletion": "Bericht anzeigen",
+    "continueProgram": "Programm fortsetzen",
+    "startNewProgram": "Neues Programm starten",
+    "continueDraft": "Entwurf fortsetzen",
+    "continuing": "Wird fortgesetzt...",
+    "starting": "Wird gestartet..."
   },
   "learn": {
     "errorLoading": "Error loading scenario",
@@ -102,7 +115,30 @@
     "evaluationFailed": "Bewertung fehlgeschlagen",
     "unknownError": "Unbekannter Fehler",
     "taskInfo": "Aufgabeninfo",
-    "chat": "Chat"
+    "chat": "Chat",
+    "sending": "Wird gesendet...",
+    "thinking": "Denke nach",
+    "analyzeTask": "Aufgabe analysieren",
+    "taskAnalyzed": "Aufgabe analysiert",
+    "taskAnalysisResults": "Aufgabenanalyse-Ergebnisse",
+    "loginRequired": "Anmeldung erforderlich",
+    "loginRequiredMessage": "Bitte melden Sie sich an, um Ihre PBL-Lernreise zu beginnen.",
+    "task": "Aufgabe",
+    "description": "Beschreibung",
+    "switchTask": "Aufgabe wechseln",
+    "allTasks": "Alle Aufgaben",
+    "current": "Aktuell",
+    "completeTask": "Aufgabe abschließen",
+    "errorProcessing": "Fehler bei der Verarbeitung der Nachricht. Bitte versuchen Sie es erneut.",
+    "noTaskFound": "Keine Aufgabe gefunden",
+    "goToCompletion": "Zum Abschlussbericht",
+    "evaluate": "Leistung bewerten",
+    "evaluating": "Bewerte...",
+    "evaluationResults": "Bewertungsergebnisse",
+    "evaluationUpToDate": "Bewertung aktuell",
+    "conversationInsights": "Gesprächserkenntnisse",
+    "effectiveExamples": "Was gut funktioniert hat:",
+    "improvementExamples": "Verbesserungsbereiche:"
   },
   "history": {
     "title": "Learning Journey",
@@ -132,7 +168,8 @@
     "stageDetails": "Stufendetails",
     "conversations": "Gespräche",
     "continueStudy": "Weiter lernen",
-    "stagesCompleted": "Stufen abgeschlossen"
+    "stagesCompleted": "Stufen abgeschlossen",
+    "tasksEvaluated": "Bewertete Aufgaben"
   },
   "complete": {
     "congratulations": "Herzlichen Glückwunsch!",
@@ -178,6 +215,26 @@
       "seconds": "{{seconds}}s"
     },
     "ksa": "KSA",
-    "print": "Drucken"
+    "print": "Drucken",
+    "completedProgram": "Sie haben dieses Lernprogramm abgeschlossen!",
+    "conversationCount": "Anzahl der Gespräche",
+    "tasksEvaluated": "Bewertete Aufgaben",
+    "tasksCompleted": "Abgeschlossene Aufgaben",
+    "taskSummary": "Aufgabenübersicht",
+    "noDataFound": "Keine Abschlussdaten gefunden",
+    "conversations": "Gespräche",
+    "timeSpent": "Aufgewendete Zeit",
+    "taskScore": "Aufgabenpunktzahl",
+    "feedback": "Feedback",
+    "domainScores": "Domänenpunktzahlen",
+    "tasksSummary": "Aufgabenzusammenfassung",
+    "ksaAchievementSummary": "KSA-Leistungsübersicht",
+    "loginRequired": "Anmeldung erforderlich",
+    "loginRequiredMessage": "Bitte melden Sie sich an, um Ihren Abschlussbericht anzuzeigen.",
+    "viewReport": "Bericht anzeigen",
+    "generatingFeedback": "Personalisiertes Feedback wird generiert...",
+    "qualitativeFeedback": "Personalisiertes Feedback",
+    "nextSteps": "Empfohlene nächste Schritte"
   }
 }
+
