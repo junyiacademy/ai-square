@@ -1,13 +1,14 @@
-// PBL (Problem-Based Learning) Type Definitions
+// PBL v2 (Problem-Based Learning) Type Definitions
+// This is the new simplified structure without stages
 
 export type DomainType = 'engaging_with_ai' | 'creating_with_ai' | 'managing_with_ai' | 'designing_with_ai';
 export type DifficultyLevel = 'beginner' | 'intermediate' | 'advanced';
-export type StageType = 'research' | 'analysis' | 'creation' | 'interaction';
+export type TaskCategory = 'research' | 'analysis' | 'creation' | 'interaction';
 export type ModalityFocus = 'reading' | 'writing' | 'listening' | 'speaking' | 'mixed';
 export type AIRole = 'assistant' | 'evaluator' | 'actor';
-export type SessionStatus = 'not_started' | 'in_progress' | 'paused' | 'completed';
-export type ActionType = 'search' | 'write' | 'speak' | 'revise' | 'submit' | 'interaction';
-export type JourneyStatus = 'in_progress' | 'completed';
+export type ProgramStatus = 'not_started' | 'in_progress' | 'paused' | 'completed';
+export type TaskStatus = 'not_started' | 'in_progress' | 'completed';
+export type InteractionType = 'user' | 'ai' | 'system';
 
 // KSA Mapping
 export interface KSAMapping {
@@ -16,332 +17,163 @@ export interface KSAMapping {
   attitudes: string[]; // A1.1, A2.2 etc
 }
 
-// Rubrics Level
-export interface RubricLevel {
-  level: 1 | 2 | 3 | 4;
-  description: string;
-  criteria: string[];
-}
-
-// Rubrics Criteria
-export interface RubricsCriteria {
-  criterion: string;
-  weight: number;
-  levels: RubricLevel[];
-}
-
 // AI Module Configuration
 export interface AIModule {
   role: AIRole;
   model: string;
   persona?: string; // e.g., interviewer, customer, mentor
+  initialPrompt?: string;
 }
 
-// Logging Configuration
-export interface LoggingConfig {
-  trackInteractions: boolean;
-  trackThinkingTime: boolean;
-  trackRevisions: boolean;
-  trackResourceUsage: boolean;
-}
-
-// Task Definition
+// Task Definition (simplified, no longer nested under stages)
 export interface Task {
   id: string;
   title: string;
+  title_zh?: string;
   description: string;
+  description_zh?: string;
+  category: TaskCategory;
   instructions: string[];
+  instructions_zh?: string[];
   expectedOutcome: string;
+  expectedOutcome_zh?: string;
   timeLimit?: number; // minutes
   resources?: string[];
-}
-
-// Stage Definition
-export interface Stage {
-  id: string;
-  name: string;
-  description: string;
-  stageType: StageType;
-  modalityFocus: ModalityFocus;
   assessmentFocus: {
     primary: string[];   // Primary KSA codes to assess
     secondary: string[]; // Secondary KSA codes
   };
-  rubricsCriteria: RubricsCriteria[];
-  aiModules: AIModule[];
-  tasks: Task[];
-  timeLimit?: number;
-  loggingConfig: LoggingConfig;
+  aiModule?: AIModule;
 }
 
-// Scenario Program Definition
-export interface ScenarioProgram {
+// Scenario Definition (simplified, stages removed)
+export interface Scenario {
   id: string;
   title: string;
+  title_zh?: string;
   description: string;
-  targetDomain: DomainType[];
-  ksaMapping: KSAMapping;
-  stages: Stage[];
-  estimatedDuration: number; // minutes
+  description_zh?: string;
+  targetDomains: DomainType[];
   difficulty: DifficultyLevel;
+  estimatedDuration: number; // minutes
   prerequisites?: string[];
   learningObjectives: string[];
+  learningObjectives_zh?: string[];
+  ksaMapping: KSAMapping;
+  tasks: Task[]; // Direct array of tasks, no stages
 }
 
-// Process Log
-export interface ProcessLog {
+// Program - represents one learning journey through a scenario
+export interface Program {
   id: string;
-  timestamp: Date;
-  sessionId: string;
-  stageId: string;
-  actionType: ActionType;
-  detail: {
-    userInput?: string;
-    aiInteraction?: {
-      model: string;
-      prompt: string;
-      response: string;
-      tokensUsed: number;
-    };
-    resourceAccessed?: string[];
-    timeSpent: number; // seconds
-    taskId?: string; // Optional task ID
-  };
-  evaluation?: {
-    ksaCode: string;
-    score: number;
-    feedback: string;
-  };
+  scenarioId: string;
+  userId: string;
+  userEmail: string;
+  startedAt: string;
+  updatedAt: string;
+  completedAt?: string;
+  status: ProgramStatus;
+  totalTasks: number;
+  completedTasks: number;
+  currentTaskId?: string;
+  language: string;
 }
 
-// Evidence
-export interface Evidence {
-  type: 'text' | 'audio' | 'writing' | 'interaction';
+// Program Metadata (stored in program folder)
+export interface ProgramMetadata extends Program {
+  scenarioTitle: string;
+  scenarioTitle_zh?: string;
+}
+
+// Task Metadata (stored in task folder)
+export interface TaskMetadata {
+  taskId: string;
+  programId: string;
+  title: string;
+  startedAt?: string;
+  updatedAt?: string;
+  completedAt?: string;
+  status: TaskStatus;
+  attempts: number;
+}
+
+// Task Interaction
+export interface TaskInteraction {
+  timestamp: string;
+  type: InteractionType;
   content: string;
-  metadata: {
-    timestamp: Date;
-    stageId: string;
-    taskId: string;
-    [key: string]: Date | string | number | boolean;
-  };
-  analysis?: {
-    keywords: string[];
-    sentiment: number;
-    quality: number;
+  metadata?: {
+    model?: string;
+    tokensUsed?: number;
+    responseTime?: number;
   };
 }
 
-// Stage Result
-export interface StageResult {
-  stageId: string;
-  taskId?: string; // Optional task ID for task-based evaluation
-  status: 'not_started' | 'in_progress' | 'completed';
-  completed: boolean;
-  startedAt: Date;
-  completedAt?: Date;
+// Task Log (stored as log.json)
+export interface TaskLog {
+  taskId: string;
+  programId: string;
+  interactions: TaskInteraction[];
+  totalInteractions: number;
+  lastInteractionAt?: string;
+}
+
+// Task Progress (stored as progress.json)
+export interface TaskProgress {
+  taskId: string;
+  programId: string;
+  status: TaskStatus;
+  startedAt?: string;
+  completedAt?: string;
+  timeSpentSeconds: number;
   score?: number;
-  performanceMetrics: {
-    completionTime: number; // seconds
-    interactionCount: number;
-    revisionCount: number;
-    resourceUsage: number;
-  };
-  ksaAchievement: {
-    [ksaCode: string]: {
-      score: number; // 0-100
-      evidence: ProcessLog[];
-    };
-  };
-  domainScores?: {
-    engaging_with_ai: number;
-    creating_with_ai: number;
-    managing_with_ai: number;
-    designing_with_ai: number;
-  };
-  rubricsScore: {
-    [criterion: string]: {
-      level: number;
-      justification: string;
-    };
-  };
-  feedback: {
+  feedback?: string;
+  ksaScores?: Record<string, number>;
+  evaluationDetails?: {
     strengths: string[];
     improvements: string[];
     nextSteps: string[];
   };
 }
 
-// Session Data
-export interface SessionData {
-  id: string;
-  userId: string;
-  userEmail?: string;
-  scenarioId: string;
-  scenarioTitle?: string;
-  scenario?: ScenarioProgram; // Optional full scenario data
-  status: SessionStatus;
-  currentStage: number;
-  currentStageId?: string; // Stage ID
-  currentStageTitle?: string; // Stage title
-  currentTaskIndex: number; // Track current task within the stage
-  currentTaskId?: string; // Task ID
-  currentTaskTitle?: string; // Task title
-  progress: {
-    percentage: number;
-    completedStages: number[];
-    timeSpent: number; // seconds
-  };
-  startedAt: string;
-  lastActiveAt: string;
-  stageResults: StageResult[];
-  processLogs: ProcessLog[];
-  evaluations?: Array<{
-    score: number;
-    feedback?: string;
+// Program Summary (for history and complete pages)
+export interface ProgramSummary {
+  program: ProgramMetadata;
+  tasks: Array<{
+    metadata: TaskMetadata;
+    progress: TaskProgress;
+    interactionCount: number;
   }>;
-}
-
-// Session Metadata (for GCS storage)
-export interface SessionMetadata {
-  session_id: string;
-  user_id: string;
-  activity_type: 'pbl_practice';
-  activity_id: string;
-  status: SessionStatus;
-  created_at: string;
-  last_active_at: string;
-  version: number;
-}
-
-// Progress Data (for GCS storage)
-export interface ProgressData {
-  current_stage: number;
-  current_task: number;
-  completed_stages: number[];
-  stage_results: { [stageId: string]: StageResult };
-  total_time_spent: number; // seconds
-  progress_percentage: number;
+  overallScore?: number;
+  domainScores?: Record<DomainType, number>;
+  totalTimeSeconds: number;
+  completionRate: number;
 }
 
 // API Response Types
-export interface ApiResponse<T> {
+export interface CreateProgramResponse {
   success: boolean;
-  data?: T;
-  error?: {
-    code: string;
-    message: string;
-  };
-  meta?: {
-    timestamp: string;
-    version: string;
-  };
+  programId: string;
+  program: Program;
+  firstTaskId: string;
 }
 
-// Scenario List Item (for display)
-export interface ScenarioListItem {
-  id: string;
-  title: string;
-  description: string;
-  difficulty: DifficultyLevel;
-  estimatedDuration: number;
-  domains: DomainType[];
-  isAvailable: boolean;
-  thumbnailEmoji?: string;
-}
-
-// WebSocket Message Types
-export interface WSMessage {
-  type: 'user_input' | 'ai_response' | 'evaluation' | 'progress_update';
-  payload: Record<string, unknown>;
-  timestamp: string;
-}
-
-// Conversation Turn
-export interface ConversationTurn {
-  id: string;
-  timestamp: Date;
-  role: 'user' | 'ai' | 'system';
-  content: string;
-  metadata?: {
-    audioUrl?: string;
-    duration?: number;
-    corrections?: string[];
-    processingTime?: number;
-    tokensUsed?: number;
-  };
-}
-
-// Evaluation Result
-export interface EvaluationResult {
-  overallScore: number;
-  ksaScores: { [ksaCode: string]: number };
-  rubricScores: { [criterion: string]: number };
-  feedback: string;
-  suggestions: string[];
-}
-
-// === NEW JOURNEY-BASED SYSTEM ===
-
-// Task Log (1:1 with Task)
-export interface PBLTaskLog {
+export interface SaveTaskLogRequest {
+  programId: string;
   taskId: string;
-  stageId: string;
-  startedAt: string;
-  completedAt?: string;
-  status: 'in_progress' | 'completed';
-  conversations: ConversationTurn[];
-  processLogs: ProcessLog[];
-  analysis?: StageResult;
-  timeSpent: number; // seconds
+  interaction: TaskInteraction;
+  scenarioId?: string;
+  taskTitle?: string;
 }
 
-// Journey (Scenario instance with timestamp)
-export interface PBLJourney {
-  journeyId: string;           // format: {scenarioId}_{timestamp}
-  scenarioId: string;
-  userId: string;
-  userEmail: string;
-  startedAt: string;
-  lastActiveAt: string;
-  completedAt?: string;
-  status: JourneyStatus;
-  language: string;
-  
-  // Journey metadata
-  scenarioTitle: string;
-  totalTasks: number;
-  completedTasks: number;
-  
-  // Task logs (1:1 mapping)
-  taskLogs: {
-    [taskId: string]: PBLTaskLog;
-  };
-  
-  // Overall progress
-  overallScore?: number;        // Average of all task scores
-  totalTimeSpent: number;       // Total time across all tasks
+export interface SaveTaskProgressRequest {
+  programId: string;
+  taskId: string;
+  progress: Partial<TaskProgress>;
 }
 
-// Journey Summary (for History page)
-export interface PBLJourneySummary {
-  journeyId: string;
-  scenarioId: string;
-  scenarioTitle: string;
-  startedAt: string;
-  completedAt?: string;
-  status: JourneyStatus;
-  progress: {
-    completedTasks: number;
-    totalTasks: number;
-    percentage: number;
-  };
-  scores: {
-    overallScore?: number;
-    taskScores: Array<{
-      taskId: string;
-      taskTitle: string;
-      score?: number;
-    }>;
-  };
-  timeSpent: number;
+export interface GetProgramHistoryResponse {
+  success: boolean;
+  programs: ProgramSummary[];
+  totalPrograms: number;
 }

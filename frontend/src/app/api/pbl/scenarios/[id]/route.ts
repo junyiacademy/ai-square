@@ -1,480 +1,85 @@
-import { NextResponse } from 'next/server';
-import { ScenarioProgram, StageType, ModalityFocus, AIRole } from '@/types/pbl';
+import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 
-// Helper function to load scenario from YAML
-interface YAMLScenarioData {
-  scenario_info: {
+// Simplified type definitions for API response
+interface ScenarioResponse {
+  id: string;
+  title: string;
+  description: string;
+  difficulty: string;
+  estimatedDuration: number;
+  targetDomain: string[];
+  prerequisites: string[];
+  learningObjectives: string[];
+  tasks: Array<{
     id: string;
     title: string;
-    title_zh?: string;
     description: string;
-    description_zh?: string;
-    target_domains: string[];
-    estimated_duration: number;
-    difficulty: string;
-    prerequisites: string[];
-    learning_objectives: string[];
-    learning_objectives_zh?: string[];
-  };
-  ksa_mapping: {
-    knowledge: string[];
-    skills: string[];
-    attitudes: string[];
-  };
-  stages: Array<{
-    id: string;
-    name: string;
-    name_zh?: string;
-    description: string;
-    description_zh?: string;
-    stage_type: string;
-    modality_focus: string;
-    assessment_focus: {
-      primary: string[];
-      secondary: string[];
-    };
-    ai_modules: Array<{
-      role: string;
-      model: string;
-      persona?: string;
-      initial_prompt?: string;
-    }>;
-    tasks: Array<{
-      id?: string;
-      title: string;
-      title_zh?: string;
-      description: string;
-      description_zh?: string;
-      instructions: string[];
-      instructions_zh?: string[];
-      expected_outcome: string;
-      expected_outcome_zh?: string;
-      time_limit?: number;
-    }>;
-    logging_config: {
-      trackInteractions: boolean;
-      trackThinkingTime: boolean;
-      trackRevisions: boolean;
-      trackResourceUsage: boolean;
-    };
-    time_limit?: number;
-  }>;
-  rubrics_criteria?: Array<{
-    criterion: string;
-    weight: number;
-    levels: Array<{
-      level: number;
-      description: string;
-      criteria: string[];
-    }>;
+    category: string;
+    instructions: string[];
+    expectedOutcome: string;
+    timeLimit?: number;
   }>;
 }
-
-async function loadScenarioFromYAML(scenarioId: string): Promise<YAMLScenarioData | null> {
-  try {
-    // Only support ai-job-search for now
-    if (scenarioId !== 'ai-job-search') {
-      return null;
-    }
-    
-    const yamlPath = path.join(process.cwd(), 'public', 'pbl_data', 'ai_job_search_scenario.yaml');
-    const fileContents = await fs.readFile(yamlPath, 'utf8');
-    return yaml.load(fileContents) as YAMLScenarioData;
-  } catch (error) {
-    console.error(`Error loading scenario ${scenarioId}:`, error);
-    return null;
-  }
-}
-
-// Mock detailed scenario data (fallback)
-const mockScenarioDetails: { [key: string]: ScenarioProgram } = {
-  'ai-job-search': {
-    id: 'ai-job-search',
-    title: 'AI-Assisted Job Search Training',
-    description: 'Master the art of using AI tools throughout your job search journey',
-    targetDomain: ['engaging_with_ai', 'creating_with_ai'],
-    ksaMapping: {
-      knowledge: ['K1.1', 'K1.2', 'K2.1', 'K2.3'],
-      skills: ['S1.1', 'S1.2', 'S2.1', 'S2.3'],
-      attitudes: ['A1.1', 'A1.2', 'A2.1']
-    },
-    stages: [
-      {
-        id: 'stage-1-research',
-        name: 'Job Market Research',
-        description: 'Use AI to research job market trends and opportunities',
-        stageType: 'research',
-        modalityFocus: 'reading',
-        assessmentFocus: {
-          primary: ['K1.1', 'S1.1'],
-          secondary: ['A1.1']
-        },
-        rubricsCriteria: [],
-        aiModules: [
-          {
-            role: 'assistant',
-            model: 'gemini-pro',
-            persona: 'Career Research Assistant'
-          }
-        ],
-        tasks: [
-          {
-            id: 'task-1-1',
-            title: 'Industry Analysis',
-            description: 'Research current trends in your target industry',
-            instructions: [
-              'Use AI to identify top 5 trends in your industry',
-              'Analyze skill requirements for your target role',
-              'Create a summary of opportunities and challenges'
-            ],
-            expectedOutcome: 'A comprehensive industry analysis report',
-            timeLimit: 20,
-            resources: ['Industry reports', 'Job boards', 'AI search tools']
-          }
-        ],
-        timeLimit: 30,
-        loggingConfig: {
-          trackInteractions: true,
-          trackThinkingTime: true,
-          trackRevisions: false,
-          trackResourceUsage: true
-        }
-      },
-      {
-        id: 'stage-2-analysis',
-        name: 'Resume Optimization',
-        description: 'Analyze and optimize your resume with AI assistance',
-        stageType: 'analysis',
-        modalityFocus: 'writing',
-        assessmentFocus: {
-          primary: ['K2.1', 'S2.1'],
-          secondary: ['A1.2']
-        },
-        rubricsCriteria: [],
-        aiModules: [
-          {
-            role: 'evaluator',
-            model: 'gemini-pro',
-            persona: 'Resume Expert'
-          }
-        ],
-        tasks: [
-          {
-            id: 'task-2-1',
-            title: 'Resume Analysis',
-            description: 'Get AI feedback on your current resume',
-            instructions: [
-              'Upload or paste your current resume',
-              'Receive AI analysis on strengths and weaknesses',
-              'Identify areas for improvement'
-            ],
-            expectedOutcome: 'Detailed resume analysis report',
-            timeLimit: 15
-          },
-          {
-            id: 'task-2-2',
-            title: 'Resume Enhancement',
-            description: 'Improve your resume based on AI suggestions',
-            instructions: [
-              'Apply AI suggestions to enhance your resume',
-              'Optimize keywords for ATS systems',
-              'Ensure clarity and impact in descriptions'
-            ],
-            expectedOutcome: 'An optimized, ATS-friendly resume',
-            timeLimit: 25
-          }
-        ],
-        timeLimit: 40,
-        loggingConfig: {
-          trackInteractions: true,
-          trackThinkingTime: false,
-          trackRevisions: true,
-          trackResourceUsage: false
-        }
-      },
-      {
-        id: 'stage-3-creation',
-        name: 'Application Materials',
-        description: 'Create compelling cover letters and application materials',
-        stageType: 'creation',
-        modalityFocus: 'writing',
-        assessmentFocus: {
-          primary: ['K2.3', 'S2.3'],
-          secondary: ['A2.1']
-        },
-        rubricsCriteria: [],
-        aiModules: [
-          {
-            role: 'assistant',
-            model: 'gemini-pro',
-            persona: 'Writing Coach'
-          }
-        ],
-        tasks: [
-          {
-            id: 'task-3-1',
-            title: 'Cover Letter Creation',
-            description: 'Write a tailored cover letter with AI guidance',
-            instructions: [
-              'Analyze job description with AI',
-              'Draft cover letter with AI suggestions',
-              'Refine and personalize the content'
-            ],
-            expectedOutcome: 'A compelling, tailored cover letter',
-            timeLimit: 30
-          }
-        ],
-        timeLimit: 30,
-        loggingConfig: {
-          trackInteractions: true,
-          trackThinkingTime: true,
-          trackRevisions: true,
-          trackResourceUsage: false
-        }
-      },
-      {
-        id: 'stage-4-interaction',
-        name: 'Interview Preparation',
-        description: 'Practice interviews with AI role-playing',
-        stageType: 'interaction',
-        modalityFocus: 'speaking',
-        assessmentFocus: {
-          primary: ['S1.2', 'A1.1'],
-          secondary: ['K1.2']
-        },
-        rubricsCriteria: [],
-        aiModules: [
-          {
-            role: 'actor',
-            model: 'gemini-pro',
-            persona: 'Interviewer'
-          }
-        ],
-        tasks: [
-          {
-            id: 'task-4-1',
-            title: 'Mock Interview',
-            description: 'Practice with an AI interviewer',
-            instructions: [
-              'Engage in a mock interview with AI',
-              'Answer behavioral and technical questions',
-              'Receive feedback on your responses'
-            ],
-            expectedOutcome: 'Improved interview confidence and skills',
-            timeLimit: 30
-          }
-        ],
-        timeLimit: 30,
-        loggingConfig: {
-          trackInteractions: true,
-          trackThinkingTime: false,
-          trackRevisions: false,
-          trackResourceUsage: false
-        }
-      }
-    ],
-    estimatedDuration: 90,
-    difficulty: 'intermediate',
-    prerequisites: ['Basic computer skills', 'Existing resume'],
-    learningObjectives: [
-      'Master AI-powered job market research techniques',
-      'Optimize resume and cover letters using AI tools',
-      'Develop interview skills through AI practice',
-      'Build confidence in using AI for career advancement'
-    ]
-  }
-};
 
 export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id: scenarioId } = await params;
-    console.log(`Loading scenario: ${scenarioId}`);
-    
-    // Try to load from YAML first
-    const yamlData = await loadScenarioFromYAML(scenarioId);
-    console.log('YAML data loaded:', yamlData ? 'success' : 'failed');
-    
-    let scenario: ScenarioProgram | null = null;
-    
-    if (yamlData && yamlData.scenario_info) {
-      console.log('Transforming YAML data to ScenarioProgram format...');
-      // Transform YAML data to ScenarioProgram format
-      scenario = {
-        id: yamlData.scenario_info.id,
-        title: yamlData.scenario_info.title,
-        description: yamlData.scenario_info.description,
-        targetDomain: yamlData.scenario_info.target_domains as ('engaging_with_ai' | 'creating_with_ai' | 'managing_with_ai' | 'designing_with_ai')[],
-        ksaMapping: yamlData.ksa_mapping,
-        estimatedDuration: yamlData.scenario_info.estimated_duration,
-        difficulty: yamlData.scenario_info.difficulty as 'beginner' | 'intermediate' | 'advanced',
-        prerequisites: yamlData.scenario_info.prerequisites,
-        learningObjectives: yamlData.scenario_info.learning_objectives,
-        stages: yamlData.stages.map(stage => ({
-          id: stage.id,
-          name: stage.name,
-          description: stage.description,
-          stageType: stage.stage_type as StageType,
-          modalityFocus: stage.modality_focus as ModalityFocus,
-          assessmentFocus: stage.assessment_focus,
-          rubricsCriteria: (yamlData.rubrics_criteria || []).map(criteria => ({
-            ...criteria,
-            levels: criteria.levels.map(level => ({
-              ...level,
-              level: level.level as 1 | 2 | 3 | 4
-            }))
-          })),
-          aiModules: (stage.ai_modules || []).map(module => ({
-            ...module,
-            role: module.role as AIRole
-          })),
-          tasks: (stage.tasks || []).map((task, index) => ({
-            id: task.id || `${stage.id}-task-${index + 1}`,
-            title: task.title,
-            description: task.description,
-            instructions: task.instructions || [],
-            expectedOutcome: task.expected_outcome,
-            timeLimit: task.time_limit || 15
-          })),
-          timeLimit: stage.time_limit || 30,
-          loggingConfig: stage.logging_config ? {
-            trackInteractions: stage.logging_config.trackInteractions,
-            trackThinkingTime: stage.logging_config.trackThinkingTime,
-            trackRevisions: stage.logging_config.trackRevisions,
-            trackResourceUsage: stage.logging_config.trackResourceUsage
-          } : {
-            trackInteractions: true,
-            trackThinkingTime: false,
-            trackRevisions: false,
-            trackResourceUsage: false
-          }
-        }))
-      };
-      console.log('Scenario transformation completed');
-    } else {
-      console.log('Using mock data fallback');
-      // Fallback to mock data
-      scenario = mockScenarioDetails[scenarioId];
-    }
-
-    if (!scenario) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: 'SCENARIO_NOT_FOUND',
-            message: `Scenario with id '${scenarioId}' not found`
-          }
-        },
-        { status: 404 }
-      );
-    }
-
-    // Get language from query params
+    const scenarioId = params.id;
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
-
-    // Apply translations if needed
-    let translatedScenario = { ...scenario };
+    const isZh = lang === 'zh' || lang === 'zh-TW' || lang === 'zh-CN';
     
-    // Check if YAML has translations
-    if (lang === 'zh-TW' && yamlData && yamlData.scenario_info) {
-      translatedScenario = {
-        ...scenario,
-        title: yamlData.scenario_info.title_zh || scenario.title,
-        description: yamlData.scenario_info.description_zh || scenario.description,
-        learningObjectives: yamlData.scenario_info.learning_objectives_zh || scenario.learningObjectives,
-        stages: scenario.stages.map((stage, index) => {
-          const yamlStage = yamlData.stages[index];
-          if (yamlStage) {
-            return {
-              ...stage,
-              name: yamlStage.name_zh || stage.name,
-              description: yamlStage.description_zh || stage.description,
-              tasks: stage.tasks.map((task, taskIndex) => {
-                const yamlTask = yamlStage.tasks[taskIndex];
-                if (yamlTask) {
-                  return {
-                    ...task,
-                    title: yamlTask.title_zh || task.title,
-                    description: yamlTask.description_zh || task.description,
-                    instructions: yamlTask.instructions_zh || task.instructions,
-                    expectedOutcome: yamlTask.expected_outcome_zh || task.expectedOutcome
-                  };
-                }
-                return task;
-              })
-            };
-          }
-          return stage;
-        })
-      };
-    } else if (lang === 'zh-TW' && !yamlData) {
-      // Fallback translations for mock data
-      if (scenarioId === 'ai-job-search') {
-        translatedScenario = {
-          ...scenario,
-          title: 'AI 輔助求職訓練',
-          description: '掌握在求職過程中使用 AI 工具的技巧',
-          stages: scenario.stages.map(stage => {
-            const translations: { [key: string]: { name: string; description: string } } = {
-              'stage-1-research': {
-                name: '職缺市場研究',
-                description: '使用 AI 研究就業市場趨勢和機會'
-              },
-              'stage-2-analysis': {
-                name: '履歷優化',
-                description: '利用 AI 協助分析和優化您的履歷'
-              },
-              'stage-3-creation': {
-                name: '申請材料準備',
-                description: '創建引人注目的求職信和申請材料'
-              },
-              'stage-4-interaction': {
-                name: '面試準備',
-                description: '與 AI 進行模擬面試練習'
-              }
-            };
-            
-            return {
-              ...stage,
-              ...(translations[stage.id] || {})
-            };
-          }),
-          learningObjectives: [
-            '掌握 AI 驅動的就業市場研究技巧',
-            '使用 AI 工具優化履歷和求職信',
-            '通過 AI 練習提升面試技能',
-            '建立使用 AI 促進職業發展的信心'
-          ]
-        };
-      }
-    }
-
+    console.log('Loading scenario:', scenarioId);
+    
+    // Load YAML file
+    const yamlPath = path.join(process.cwd(), 'public', 'pbl_data', `${scenarioId.replace(/-/g, '_')}_scenario.yaml`);
+    const yamlContent = await fs.readFile(yamlPath, 'utf8');
+    const yamlData = yaml.load(yamlContent) as any;
+    
+    console.log('YAML data loaded: success');
+    
+    // Transform to API response format (new structure without stages)
+    const scenario: ScenarioResponse = {
+      id: yamlData.scenario_info.id,
+      title: isZh && yamlData.scenario_info.title_zh ? yamlData.scenario_info.title_zh : yamlData.scenario_info.title,
+      description: isZh && yamlData.scenario_info.description_zh ? yamlData.scenario_info.description_zh : yamlData.scenario_info.description,
+      difficulty: yamlData.scenario_info.difficulty,
+      estimatedDuration: yamlData.scenario_info.estimated_duration,
+      targetDomain: yamlData.scenario_info.target_domains,
+      prerequisites: yamlData.scenario_info.prerequisites || [],
+      learningObjectives: isZh && yamlData.scenario_info.learning_objectives_zh ? 
+        yamlData.scenario_info.learning_objectives_zh : 
+        yamlData.scenario_info.learning_objectives,
+      tasks: (yamlData.tasks || []).map(task => ({
+        id: task.id,
+        title: isZh && task.title_zh ? task.title_zh : task.title,
+        description: isZh && task.description_zh ? task.description_zh : task.description,
+        category: task.category || 'general',
+        instructions: isZh && task.instructions_zh ? task.instructions_zh : task.instructions,
+        expectedOutcome: isZh && task.expected_outcome_zh ? task.expected_outcome_zh : task.expected_outcome,
+        timeLimit: task.time_limit
+      }))
+    };
+    
     return NextResponse.json({
       success: true,
-      data: translatedScenario,
-      meta: {
-        timestamp: new Date().toISOString(),
-        version: '1.0.0'
-      }
+      data: scenario
     });
+    
   } catch (error) {
     console.error('Error fetching scenario details:', error);
-    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+    console.error('Error stack:', error);
+    
     return NextResponse.json(
-      {
-        success: false,
-        error: {
-          code: 'FETCH_SCENARIO_ERROR',
-          message: 'Failed to fetch scenario details',
-          details: error instanceof Error ? error.message : 'Unknown error'
-        }
+      { 
+        success: false, 
+        error: 'Failed to load scenario details',
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     );

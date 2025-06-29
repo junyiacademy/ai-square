@@ -102,20 +102,12 @@ export default function PBLPage() {
                   </div>
 
                   {scenario.isAvailable ? (
-                    <div className="flex space-x-3">
-                      <Link
-                        href={`/pbl/scenarios/${scenario.id}`}
-                        className="flex-1 bg-blue-600 text-white text-center px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                      >
-                        {t('startLearning')}
-                      </Link>
-                      <Link
-                        href={`/pbl/scenarios/${scenario.id}/details`}
-                        className="flex-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-center px-4 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                      >
-                        {t('viewDetails')}
-                      </Link>
-                    </div>
+                    <Link
+                      href={`/pbl/scenarios/${scenario.id}`}
+                      className="block w-full bg-blue-600 text-white text-center px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      {t('viewDetails')}
+                    </Link>
                   ) : (
                     <div className="text-center text-gray-500 dark:text-gray-400">
                       {t('comingSoon')}

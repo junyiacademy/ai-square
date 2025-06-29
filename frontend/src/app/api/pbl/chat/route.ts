@@ -1,130 +1,107 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createPBLVertexAIService, vertexAIResponseToConversation } from '@/lib/ai/vertex-ai-service';
-import { pblGCS } from '@/lib/storage/pbl-gcs-service';
+import { promises as fs } from 'fs';
+import path from 'path';
+import yaml from 'js-yaml';
+import { VertexAI } from '@google-cloud/vertexai';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { 
-      sessionId, 
-      message, 
-      aiModule, 
-      stageContext,
-      userId,
-      language = 'en',
-      userProcessLog
-    } = body;
+    const { message, sessionId, context } = body;
 
-    if (!sessionId || !message || !aiModule || !stageContext) {
+    if (!message || !sessionId || !context) {
       return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: 'MISSING_PARAMETERS',
-            message: 'Missing required parameters'
-          }
-        },
+        { success: false, error: 'Missing required fields' },
         { status: 400 }
       );
     }
 
-    // Create Vertex AI service with PBL context (server-side with service account)
-    const vertexService = createPBLVertexAIService(aiModule, stageContext, language);
+    const { scenarioId, taskId, taskTitle, taskDescription, instructions, expectedOutcome, conversationHistory } = context;
 
-    // Send message and get response
-    const vertexResponse = await vertexService.sendMessage(message, {
-      userId,
-      sessionId,
-      timestamp: new Date().toISOString()
-    });
-
-    // Convert to conversation format with task ID
-    const { processLog, ...conversation } = vertexAIResponseToConversation(
-      vertexResponse,
-      sessionId,
-      stageContext.stageId,
-      stageContext.taskId
+    // Load scenario data to get AI module configuration
+    const yamlPath = path.join(
+      process.cwd(),
+      'public',
+      'pbl_data',
+      `${scenarioId.replace(/-/g, '_')}_scenario.yaml`
     );
-
-    // Update process log with user prompt
-    processLog.detail.aiInteraction!.prompt = message;
-
-    // Save both user and AI process logs together to avoid race conditions
-    const saveProcessLogs = async () => {
-      try {
-        // Get current session
-        const result = await pblGCS.getSession(sessionId);
-        if (!result) {
-          console.error(`Session ${sessionId} not found`);
-          return;
-        }
-        
-        const { sessionData, logId } = result;
-        
-        // Add both logs to session
-        if (!sessionData.processLogs) {
-          sessionData.processLogs = [];
-        }
-        
-        // Add user process log first (if provided)
-        if (userProcessLog) {
-          sessionData.processLogs.push(userProcessLog);
-        }
-        
-        // Add AI process log
-        sessionData.processLogs.push(processLog);
-        
-        // Save session with both logs
-        await pblGCS.saveSession(sessionId, sessionData, logId);
-        console.log(`Saved ${userProcessLog ? 2 : 1} process logs for session ${sessionId}`);
-      } catch (error) {
-        console.error('Failed to save process logs:', error);
-      }
-    };
     
-    // Save asynchronously but don't wait
-    saveProcessLogs();
-
-    return NextResponse.json({
-      success: true,
-      data: {
-        conversation,
-        processLog: {
-          id: processLog.id,
-          timestamp: processLog.timestamp,
-          tokensUsed: processLog.detail.aiInteraction?.tokensUsed
-        }
-      },
-      meta: {
-        timestamp: new Date().toISOString(),
-        version: '1.0.0'
-      }
-    });
-
-  } catch (error) {
-    console.error('Chat API error:', error);
+    const yamlContent = await fs.readFile(yamlPath, 'utf8');
+    const scenarioData = yaml.load(yamlContent) as any;
     
-    // Check if it's a Vertex AI authentication error
-    if (error instanceof Error && error.message.includes('authentication')) {
+    // Find the current task
+    const currentTask = scenarioData.tasks?.find((t: any) => t.id === taskId);
+    if (!currentTask || !currentTask.ai_module) {
       return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: 'AUTH_ERROR',
-            message: 'Vertex AI authentication failed'
-          }
-        },
-        { status: 503 }
+        { success: false, error: 'Task or AI module not found' },
+        { status: 404 }
       );
     }
 
-    return NextResponse.json(
-      {
-        success: false,
-        error: {
-          code: 'CHAT_ERROR',
-          message: 'Failed to process chat message'
+    const aiModule = currentTask.ai_module;
+    
+    // Build conversation context
+    const conversationContext = conversationHistory?.map((entry: any) => 
+      `${entry.type === 'user' ? 'User' : 'Assistant'}: ${entry.content}`
+    ).join('\n');
+
+    // Create the prompt
+    const systemPrompt = `${aiModule.initial_prompt}
+
+Current Task: ${taskTitle}
+Task Description: ${taskDescription}
+Instructions: ${instructions.join(', ')}
+Expected Outcome: ${expectedOutcome}
+
+Previous conversation:
+${conversationContext || 'No previous conversation'}
+
+Please respond as ${aiModule.persona} and help the user with this task.`;
+
+    // Initialize Vertex AI
+    const vertexAI = new VertexAI({
+      project: process.env.GOOGLE_CLOUD_PROJECT || 'ai-square-463013',
+      location: 'us-central1',
+    });
+    
+    // Get the generative model
+    const model = vertexAI.getGenerativeModel({
+      model: aiModule.model || 'gemini-2.5-flash',
+    });
+
+    // Generate content
+    const result = await model.generateContent({
+      contents: [
+        {
+          role: 'user',
+          parts: [
+            {
+              text: systemPrompt + '\n\nUser: ' + message
+            }
+          ]
         }
+      ],
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 2048,
+      }
+    });
+
+    const response = result.response;
+    const aiResponse = response.candidates?.[0]?.content?.parts?.[0]?.text || 'I apologize, but I was unable to generate a response. Please try again.';
+
+    return NextResponse.json({
+      success: true,
+      response: aiResponse
+    });
+
+  } catch (error) {
+    console.error('PBL chat error:', error);
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Failed to process chat request',
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     );

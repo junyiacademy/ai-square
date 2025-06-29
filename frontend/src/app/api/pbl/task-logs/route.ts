@@ -1,25 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pblGCS } from '@/lib/storage/pbl-gcs-service';
+import { pblProgramService } from '@/lib/storage/pbl-program-service';
+import { SaveTaskLogRequest, SaveTaskProgressRequest, TaskInteraction } from '@/types/pbl';
 
-export async function GET(request: NextRequest) {
+// POST - Add interaction to task log
+export async function POST(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const taskId = searchParams.get('taskId');
-    
-    if (!taskId) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: {
-            code: 'INVALID_REQUEST',
-            message: 'taskId is required'
-          }
-        },
-        { status: 400 }
-      );
-    }
-    
-    // Get user email from cookie
+    // Get user info from cookie
     let userEmail: string | undefined;
     try {
       const userCookie = request.cookies.get('user')?.value;
@@ -35,71 +21,234 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: 'User authentication required (no email found)'
+          error: 'User authentication required'
         },
         { status: 401 }
       );
     }
     
-    console.log(`Fetching task logs for taskId: ${taskId}, userEmail: ${userEmail}`);
+    const body = await request.json() as SaveTaskLogRequest;
+    const { programId, taskId, interaction } = body;
     
-    // Get all logs for this task
-    const taskLogs = await pblGCS.getTaskLogs(userEmail, taskId);
+    // Validate required fields
+    if (!programId || !taskId || !interaction) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Missing required fields: programId, taskId, interaction'
+        },
+        { status: 400 }
+      );
+    }
     
-    // Transform logs to include conversation data
-    const logsWithConversations = taskLogs.map(log => {
-      // Extract conversations from processLogs
-      const conversations = log.session_data.processLogs?.map(processLog => {
-        if (processLog.actionType === 'interaction' && processLog.detail?.aiInteraction) {
-          return {
-            id: processLog.id,
-            timestamp: processLog.timestamp,
-            userMessage: processLog.detail.aiInteraction.prompt || '',
-            aiResponse: processLog.detail.aiInteraction.response || '',
-            tokensUsed: processLog.detail.aiInteraction.tokensUsed
-          };
-        }
-        return null;
-      }).filter(Boolean) || [];
+    // Get scenario ID from the request or find it from program
+    const scenarioId = body.scenarioId || request.headers.get('x-scenario-id');
+    
+    if (!scenarioId) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Scenario ID is required'
+        },
+        { status: 400 }
+      );
+    }
+    
+    // Add timestamp if not provided
+    if (!interaction.timestamp) {
+      interaction.timestamp = new Date().toISOString();
+    }
+    
+    // Check if task has been initialized, if not, initialize it first
+    const taskData = await pblProgramService.getTaskData(
+      userEmail,
+      scenarioId,
+      programId,
+      taskId
+    );
+    
+    // If task doesn't exist, initialize it
+    if (!taskData.metadata || !taskData.log || !taskData.progress) {
+      console.log(`Task ${taskId} not initialized, initializing now...`);
       
-      return {
-        sessionId: log.session_id,
-        status: log.status,
-        startedAt: log.session_data.startedAt,
-        completedAt: log.progress.completed_at,
-        score: log.progress.score,
-        conversationCount: log.progress.conversation_count,
-        totalTimeSeconds: log.progress.total_time_seconds,
-        conversations,
-        stageResult: log.session_data.stageResults?.find(
-          result => result.taskId === taskId
-        )
-      };
-    });
+      // Get task title from the request or use a default
+      const taskTitle = body.taskTitle || `Task ${taskId}`;
+      
+      await pblProgramService.initializeTask(
+        userEmail,
+        scenarioId,
+        programId,
+        taskId,
+        taskTitle
+      );
+    }
+    
+    // Add interaction to task log
+    await pblProgramService.addTaskInteraction(
+      userEmail,
+      scenarioId,
+      programId,
+      taskId,
+      interaction
+    );
     
     return NextResponse.json({
       success: true,
-      data: {
-        taskId,
-        totalSessions: logsWithConversations.length,
-        logs: logsWithConversations
-      },
-      meta: {
-        timestamp: new Date().toISOString(),
-        version: '1.0.0'
-      }
+      message: 'Interaction added successfully'
     });
     
   } catch (error) {
-    console.error('Error fetching task logs:', error);
+    console.error('Task log error:', error);
     
     return NextResponse.json(
       {
         success: false,
-        error: {
-          code: 'FETCH_TASK_LOGS_ERROR',
-          message: 'Failed to fetch task logs'
-        }
+        error: 'Failed to save task log'
+      },
+      { status: 500 }
+    );
+  }
+}
+
+// PUT - Update task progress
+export async function PUT(request: NextRequest) {
+  try {
+    // Get user info from cookie
+    let userEmail: string | undefined;
+    try {
+      const userCookie = request.cookies.get('user')?.value;
+      if (userCookie) {
+        const user = JSON.parse(userCookie);
+        userEmail = user.email;
+      }
+    } catch {
+      console.log('No user cookie found');
+    }
+    
+    if (!userEmail) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'User authentication required'
+        },
+        { status: 401 }
+      );
+    }
+    
+    const body = await request.json() as SaveTaskProgressRequest;
+    const { programId, taskId, progress } = body;
+    
+    // Validate required fields
+    if (!programId || !taskId || !progress) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Missing required fields: programId, taskId, progress'
+        },
+        { status: 400 }
+      );
+    }
+    
+    // Get scenario ID
+    const scenarioId = body.scenarioId || request.headers.get('x-scenario-id');
+    
+    if (!scenarioId) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Scenario ID is required'
+        },
+        { status: 400 }
+      );
+    }
+    
+    // Update task progress
+    await pblProgramService.updateTaskProgress(
+      userEmail,
+      scenarioId,
+      programId,
+      taskId,
+      progress
+    );
+    
+    return NextResponse.json({
+      success: true,
+      message: 'Progress updated successfully'
+    });
+    
+  } catch (error) {
+    console.error('Task progress error:', error);
+    
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Failed to update task progress'
+      },
+      { status: 500 }
+    );
+  }
+}
+
+// GET - Get task data (metadata, log, progress)
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const programId = searchParams.get('programId');
+    const taskId = searchParams.get('taskId');
+    const scenarioId = searchParams.get('scenarioId');
+    
+    if (!programId || !taskId || !scenarioId) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Missing required parameters: programId, taskId, scenarioId'
+        },
+        { status: 400 }
+      );
+    }
+    
+    // Get user info from cookie
+    let userEmail: string | undefined;
+    try {
+      const userCookie = request.cookies.get('user')?.value;
+      if (userCookie) {
+        const user = JSON.parse(userCookie);
+        userEmail = user.email;
+      }
+    } catch {
+      console.log('No user cookie found');
+    }
+    
+    if (!userEmail) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'User authentication required'
+        },
+        { status: 401 }
+      );
+    }
+    
+    // Get task data from storage
+    const taskData = await pblProgramService.getTaskData(
+      userEmail,
+      scenarioId,
+      programId,
+      taskId
+    );
+    
+    return NextResponse.json({
+      success: true,
+      data: taskData
+    });
+    
+  } catch (error) {
+    console.error('Get task data error:', error);
+    
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Failed to get task data'
       },
       { status: 500 }
     );

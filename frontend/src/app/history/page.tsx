@@ -40,22 +40,10 @@ interface PBLSession {
   duration: number; // in seconds
   progress: {
     percentage: number;
-    completedStages: number;
-    totalStages: number;
+    completedTasks: number;
+    totalTasks: number;
   };
   score?: number;
-  stageDetails?: Array<{
-    stageId: string;
-    stageTitle: string;
-    status: string;
-    score?: number;
-    interactions: number;
-    taskDetails?: Array<{
-      taskId: string;
-      taskTitle: string;
-      score?: number;
-    }>;
-  }>;
   totalInteractions?: number;
   averageScore?: number;
   domainScores?: {
@@ -112,14 +100,41 @@ export default function UnifiedHistoryPage() {
           data: item
         }));
 
-        // Fetch PBL history with current language
-        const pblResponse = await fetch(`/api/pbl/history?userId=${currentUser.id}&lang=${i18n.language}&t=${Date.now()}`);
-        const pblData = await pblResponse.json();
-        const pblItems: HistoryItem[] = (pblData.data || []).map((item: PBLSession) => ({
-          type: 'pbl' as const,
-          timestamp: item.startedAt,
-          data: item
-        }));
+        // Fetch PBL history
+        let pblItems: HistoryItem[] = [];
+        try {
+          const pblResponse = await fetch(`/api/pbl/history?lang=${i18n.language}&t=${Date.now()}`);
+          if (pblResponse.ok) {
+            const pblData = await pblResponse.json();
+            if (pblData.success && pblData.programs) {
+              // Transform programs to history item format
+              pblItems = pblData.programs.map((program: any) => ({
+                type: 'pbl' as const,
+                timestamp: program.program.startedAt,
+                data: {
+                  id: program.program.id,
+                  logId: program.program.id,
+                  scenarioId: program.program.scenarioId,
+                  scenarioTitle: program.program.scenarioTitle,
+                  status: program.program.status,
+                  startedAt: program.program.startedAt,
+                  completedAt: program.program.completedAt,
+                  duration: program.totalTimeSeconds,
+                  progress: {
+                    percentage: program.completionRate,
+                    completedTasks: program.program.completedTasks,
+                    totalTasks: program.program.totalTasks
+                  },
+                  totalInteractions: program.tasks.reduce((sum: number, task: any) => sum + task.interactionCount, 0),
+                  averageScore: program.overallScore,
+                  domainScores: program.domainScores
+                } as PBLSession
+              }));
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching PBL history:', error);
+        }
 
         // Combine and sort by timestamp
         const allItems = [...assessmentItems, ...pblItems].sort((a, b) => 
@@ -403,12 +418,17 @@ export default function UnifiedHistoryPage() {
                               {t('pbl:title')}
                             </span>
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mr-3">
-                              {session.currentTaskTitle || session.scenarioTitle}
+                              {session.scenarioTitle}
                             </h3>
                           </div>
                           <p className="text-sm text-gray-500 dark:text-gray-400">
-                            ID: {session.id}
+                            Journey ID: {session.id}
                           </p>
+                          {session.currentTaskTitle && (
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                              {t('pbl:currentTask', { ns: 'pbl' })}: {session.currentTaskTitle.split(' - ').slice(-1)[0]}
+                            </p>
+                          )}
                           
                           {/* Date and Time Info - Similar to Assessment */}
                           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-gray-600 dark:text-gray-400 mt-3">
@@ -439,14 +459,14 @@ export default function UnifiedHistoryPage() {
                                       {session.averageScore}%
                                     </p>
                                     <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                                      {session.progress.completedStages}/{session.progress.totalStages} {t('pbl:history.stagesCompleted')}
+                                      {session.progress.completedTasks}/{session.progress.totalTasks} {t('pbl:history.tasksCompleted')}
                                     </p>
                                   </>
                                 ) : (
                                   <>
                                     <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('pbl:history.progress')}</p>
                                     <p className="text-lg font-bold text-gray-900 dark:text-white">
-                                      {session.progress.completedStages}/{session.progress.totalStages} {t('pbl:history.stages')}
+                                      {session.progress.completedTasks}/{session.progress.totalTasks} {t('pbl:history.tasks')}
                                     </p>
                                   </>
                                 )}
@@ -561,14 +581,18 @@ export default function UnifiedHistoryPage() {
                         </div>
                         {session.status === 'in_progress' ? (
                           <button
-                            onClick={() => router.push(`/pbl/scenarios/${session.scenarioId}/learn?sessionId=${session.id}`)}
+                            onClick={() => {
+                              // Need to get the current task ID, assuming it's the first task or stored in session
+                              const taskId = session.currentTaskId || 'task-1';
+                              router.push(`/pbl/scenarios/${session.scenarioId}/program/${session.id}/tasks/${taskId}/learn`);
+                            }}
                             className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
                           >
                             {t('pbl:history.continueStudy')} →
                           </button>
                         ) : (
                           <Link
-                            href={`/pbl/scenarios/${session.scenarioId}/complete?sessionId=${session.id}`}
+                            href={`/pbl/scenarios/${session.scenarioId}/program/${session.id}/complete`}
                             className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
                           >
                             {t('assessment:history.viewDetails')} →

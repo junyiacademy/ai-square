@@ -1,5 +1,5 @@
 # AI-Assisted Job Search Training Scenario
-# PBL Scenario Definition
+# PBL Scenario Definition (Program-based, no stages)
 
 scenario_info:
   id: ai-job-search
@@ -42,267 +42,163 @@ ksa_mapping:
     - A1.2  # Critical thinking
     - A2.1  # Responsible AI use
 
-stages:
-  - id: stage-1-research
-    name: Job Market Research
-    name_zh: 職缺市場研究
-    description: Use AI to research job market trends and opportunities
-    description_zh: 使用 AI 研究就業市場趨勢和機會
-    stage_type: research
-    modality_focus: reading
-    time_limit: 30 # minutes
-    
+# Direct task list (no stages)
+tasks:
+  - id: task-1
+    title: Industry Analysis
+    title_zh: 產業分析
+    description: Research current trends in your target industry
+    description_zh: 研究目標產業的當前趨勢
+    category: research
+    instructions:
+      - Use AI to identify top 5 trends in your industry
+      - Analyze skill requirements for your target role
+      - Create a summary of opportunities and challenges
+    instructions_zh:
+      - 使用 AI 識別您產業的前 5 大趨勢
+      - 分析目標職位的技能要求
+      - 總結機會與挑戰
+    expected_outcome: A comprehensive industry analysis report
+    expected_outcome_zh: 一份全面的產業分析報告
+    time_limit: 20
+    resources:
+      - Industry reports
+      - Job boards
+      - AI search tools
     assessment_focus:
       primary: [K1.1, S1.1]
       secondary: [A1.1]
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Career Research Assistant
+      initial_prompt: |
+        You are a career research assistant helping the user explore job market trends.
+        Be informative, supportive, and provide data-driven insights.
     
-    ai_modules:
-      - role: assistant
-        model: gemini-2.5-flash
-        persona: Career Research Assistant
-        initial_prompt: |
-          You are a career research assistant helping the user explore job market trends.
-          Be informative, supportive, and provide data-driven insights.
-    
-    tasks:
-      - id: task-1-1
-        title: Industry Analysis
-        title_zh: 產業分析
-        description: Research current trends in your target industry
-        description_zh: 研究目標產業的當前趨勢
-        instructions:
-          - Use AI to identify top 5 trends in your industry
-          - Analyze skill requirements for your target role
-          - Create a summary of opportunities and challenges
-        instructions_zh:
-          - 使用 AI 識別您產業的前 5 大趨勢
-          - 分析目標職位的技能要求
-          - 總結機會與挑戰
-        expected_outcome: A comprehensive industry analysis report
-        expected_outcome_zh: 一份全面的產業分析報告
-        time_limit: 20
-        resources:
-          - Industry reports
-          - Job boards
-          - AI search tools
-    
-    logging_config:
-      track_interactions: true
-      track_thinking_time: true
-      track_revisions: false
-      track_resource_usage: true
-
-  - id: stage-2-analysis
-    name: Resume Optimization
-    name_zh: 履歷優化
-    description: Analyze and optimize your resume with AI assistance
-    description_zh: 利用 AI 協助分析和優化您的履歷
-    stage_type: analysis
-    modality_focus: writing
-    time_limit: 40
-    
+  - id: task-2
+    title: Resume Analysis
+    title_zh: 履歷分析
+    description: Get AI feedback on your current resume
+    description_zh: 獲取 AI 對您當前履歷的回饋
+    category: analysis
+    instructions:
+      - Upload or paste your current resume
+      - Receive AI analysis on strengths and weaknesses
+      - Identify areas for improvement
+    instructions_zh:
+      - 上傳或貼上您當前的履歷
+      - 接收 AI 對優缺點的分析
+      - 識別需要改進的領域
+    expected_outcome: Detailed resume analysis report
+    expected_outcome_zh: 詳細的履歷分析報告
+    time_limit: 15
     assessment_focus:
       primary: [K2.1, S2.1]
       secondary: [A1.2]
-    
-    ai_modules:
-      - role: evaluator
-        model: gemini-2.5-flash
-        persona: Resume Expert
-        initial_prompt: |
-          You are an experienced resume expert and career coach.
-          Provide constructive feedback on resumes, focusing on:
-          - Clarity and impact of descriptions
-          - ATS optimization
-          - Quantifiable achievements
-          - Professional formatting
-    
-    tasks:
-      - id: task-2-1
-        title: Resume Analysis
-        title_zh: 履歷分析
-        description: Get AI feedback on your current resume
-        description_zh: 獲取 AI 對您當前履歷的回饋
-        instructions:
-          - Upload or paste your current resume
-          - Receive AI analysis on strengths and weaknesses
-          - Identify areas for improvement
-        instructions_zh:
-          - 上傳或貼上您當前的履歷
-          - 接收 AI 對優缺點的分析
-          - 識別需要改進的領域
-        expected_outcome: Detailed resume analysis report
-        expected_outcome_zh: 詳細的履歷分析報告
-        time_limit: 15
-      
-      - id: task-2-2
-        title: Resume Enhancement
-        title_zh: 履歷增強
-        description: Improve your resume based on AI suggestions
-        description_zh: 根據 AI 建議改進您的履歷
-        instructions:
-          - Apply AI suggestions to enhance your resume
-          - Optimize keywords for ATS systems
-          - Ensure clarity and impact in descriptions
-        instructions_zh:
-          - 應用 AI 建議來增強您的履歷
-          - 為申請人追蹤系統(ATS) 優化關鍵字
-          - 確保描述清晰有力
-        expected_outcome: An optimized, ATS-friendly resume
-        expected_outcome_zh: 一份優化的、ATS 友好的履歷
-        time_limit: 25
-    
-    logging_config:
-      track_interactions: true
-      track_thinking_time: false
-      track_revisions: true
-      track_resource_usage: false
-
-  - id: stage-3-creation
-    name: Application Materials
-    name_zh: 申請材料準備
-    description: Create compelling cover letters and application materials
-    description_zh: 創建引人注目的求職信和申請材料
-    stage_type: creation
-    modality_focus: writing
-    time_limit: 30
-    
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: Resume Expert
+      initial_prompt: |
+        You are an experienced resume expert and career coach.
+        Provide constructive feedback on resumes, focusing on:
+        - Clarity and impact of descriptions
+        - ATS optimization
+        - Quantifiable achievements
+        - Professional formatting
+  
+  - id: task-3
+    title: Resume Enhancement
+    title_zh: 履歷增強
+    description: Improve your resume based on AI suggestions
+    description_zh: 根據 AI 建議改進您的履歷
+    category: creation
+    instructions:
+      - Apply AI suggestions to enhance your resume
+      - Optimize keywords for ATS systems
+      - Ensure clarity and impact in descriptions
+    instructions_zh:
+      - 應用 AI 建議來增強您的履歷
+      - 為申請人追蹤系統(ATS) 優化關鍵字
+      - 確保描述清晰有力
+    expected_outcome: An optimized, professional resume
+    expected_outcome_zh: 一份優化的專業履歷
+    time_limit: 25
     assessment_focus:
-      primary: [K2.3, S2.3]
+      primary: [S2.1, K2.3]
       secondary: [A2.1]
-    
-    ai_modules:
-      - role: assistant
-        model: gemini-2.5-flash
-        persona: Writing Coach
-        initial_prompt: |
-          You are a professional writing coach specializing in job applications.
-          Help users create compelling, personalized cover letters that:
-          - Address specific job requirements
-          - Highlight relevant experiences
-          - Show genuine interest and cultural fit
-          - Maintain professional tone while being engaging
-    
-    tasks:
-      - id: task-3-1
-        title: Cover Letter Creation
-        title_zh: 求職信撰寫
-        description: Write a tailored cover letter with AI guidance
-        description_zh: 在 AI 指導下撰寫量身定制的求職信
-        instructions:
-          - Analyze job description with AI
-          - Draft cover letter with AI suggestions
-          - Refine and personalize the content
-        instructions_zh:
-          - 使用 AI 分析職位描述
-          - 根據 AI 建議起草求職信
-          - 精煉並個性化內容
-        expected_outcome: A compelling, tailored cover letter
-        expected_outcome_zh: 一封引人注目的、量身定制的求職信
-        time_limit: 30
-    
-    logging_config:
-      track_interactions: true
-      track_thinking_time: true
-      track_revisions: true
-      track_resource_usage: false
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Resume Writing Coach
+      initial_prompt: |
+        You are a professional resume writing coach.
+        Help users enhance their resumes by:
+        - Suggesting stronger action verbs
+        - Quantifying achievements
+        - Optimizing for ATS keywords
+        - Maintaining professional tone
 
-  - id: stage-4-interaction
-    name: Interview Preparation
-    name_zh: 面試準備
-    description: Practice interviews with AI role-playing
-    description_zh: 與 AI 進行模擬面試練習
-    stage_type: interaction
-    modality_focus: speaking
-    time_limit: 30
-    
+  - id: task-4
+    title: Cover Letter Creation
+    title_zh: 求職信撰寫
+    description: Create a tailored cover letter with AI assistance
+    description_zh: 在 AI 協助下創建量身定制的求職信
+    category: creation
+    instructions:
+      - Analyze job description requirements
+      - Draft a personalized cover letter
+      - Refine with AI suggestions
+    instructions_zh:
+      - 分析職位描述要求
+      - 起草個人化的求職信
+      - 根據 AI 建議進行優化
+    expected_outcome: A compelling, tailored cover letter
+    expected_outcome_zh: 一份引人注目的定制求職信
+    time_limit: 20
     assessment_focus:
-      primary: [S1.2, A1.1]
-      secondary: [K1.2]
-    
-    ai_modules:
-      - role: actor
-        model: gemini-2.5-flash
-        persona: Professional Interviewer
-        initial_prompt: |
-          You are an experienced interviewer conducting a job interview.
-          Your style should be:
-          - Professional but friendly
-          - Ask both behavioral and technical questions
-          - Provide follow-up questions based on responses
-          - Give constructive feedback after each answer
-          Adapt your questions based on the role and industry specified.
-    
-    tasks:
-      - id: task-4-1
-        title: Mock Interview
-        title_zh: 模擬面試
-        description: Practice with an AI interviewer
-        description_zh: 與 AI 面試官練習
-        instructions:
-          - Engage in a mock interview with AI
-          - Answer behavioral and technical questions
-          - Receive feedback on your responses
-        instructions_zh:
-          - 與 AI 進行模擬面試
-          - 回答行為和技術問題
-          - 接收對您回答的反饋
-        expected_outcome: Improved interview confidence and skills
-        expected_outcome_zh: 提升面試信心和技能
-        time_limit: 30
-    
-    logging_config:
-      track_interactions: true
-      track_thinking_time: false
-      track_revisions: false
-      track_resource_usage: false
+      primary: [S2.1, K2.1]
+      secondary: [A1.2]
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Professional Writer
+      initial_prompt: |
+        You are a professional writer specializing in cover letters.
+        Help users create compelling cover letters that:
+        - Address specific job requirements
+        - Showcase relevant experiences
+        - Demonstrate genuine interest
+        - Maintain professional yet engaging tone
 
-# Rubrics for evaluation (simplified for MVP)
-rubrics_criteria:
-  - criterion: Research Quality
-    weight: 0.25
-    levels:
-      - level: 1
-        description: Basic research with limited insights
-      - level: 2
-        description: Good research with some actionable insights
-      - level: 3
-        description: Comprehensive research with clear insights
-      - level: 4
-        description: Exceptional research with strategic insights
-  
-  - criterion: AI Utilization
-    weight: 0.25
-    levels:
-      - level: 1
-        description: Basic AI usage with simple prompts
-      - level: 2
-        description: Good AI usage with clear prompts
-      - level: 3
-        description: Advanced AI usage with refined prompts
-      - level: 4
-        description: Expert AI usage with sophisticated prompting
-  
-  - criterion: Content Quality
-    weight: 0.25
-    levels:
-      - level: 1
-        description: Basic content needing improvement
-      - level: 2
-        description: Good content with minor issues
-      - level: 3
-        description: High-quality, professional content
-      - level: 4
-        description: Exceptional, standout content
-  
-  - criterion: Learning Progress
-    weight: 0.25
-    levels:
-      - level: 1
-        description: Limited progress and application
-      - level: 2
-        description: Good progress with basic application
-      - level: 3
-        description: Strong progress with effective application
-      - level: 4
-        description: Exceptional progress with innovative application
+  - id: task-5
+    title: Interview Practice
+    title_zh: 面試練習
+    description: Practice common interview questions with AI
+    description_zh: 與 AI 練習常見面試問題
+    category: interaction
+    instructions:
+      - Practice answering behavioral questions
+      - Receive feedback on your responses
+      - Improve your interview techniques
+    instructions_zh:
+      - 練習回答行為面試問題
+      - 接收對您回答的反饋
+      - 改進您的面試技巧
+    expected_outcome: Improved interview skills and confidence
+    expected_outcome_zh: 提升的面試技能和信心
+    time_limit: 30
+    assessment_focus:
+      primary: [S1.2, K1.2]
+      secondary: [A1.1, A2.1]
+    ai_module:
+      role: actor
+      model: gemini-2.5-flash
+      persona: Professional Interviewer
+      initial_prompt: |
+        You are an experienced hiring manager conducting a professional interview.
+        - Ask relevant behavioral and situational questions
+        - Provide constructive feedback on answers
+        - Help improve response structure using STAR method
+        - Maintain a professional but encouraging tone
