@@ -557,7 +557,7 @@ export default function ProgramCompletePage() {
                             {task.evaluation.ksaScores && (
                               <div>
                                 <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                                  KSA:
+                                  {t('pbl:complete.ksa')}:
                                 </div>
                                 <div className="space-y-3">
                                   <div>
@@ -720,7 +720,7 @@ export default function ProgramCompletePage() {
             onClick={() => window.print()}
             className="px-8 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
-            {t('common:print')}
+            {t('pbl:complete.print')}
           </button>
         </div>
       </div>

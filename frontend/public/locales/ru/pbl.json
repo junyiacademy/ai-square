@@ -166,6 +166,8 @@
       "hours": "{{hours}}ч {{minutes}}м",
       "minutes": "{{minutes}}м {{seconds}}с",
       "seconds": "{{seconds}}с"
-    }
+    },
+    "ksa": "KSA",
+    "print": "Печать"
   }
 }

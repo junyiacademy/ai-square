@@ -135,7 +135,12 @@
     "evaluationUpToDate": "評估已是最新",
     "conversationInsights": "對話洞察",
     "effectiveExamples": "表現良好的部分：",
-    "improvementExamples": "可以改進的地方："
+    "improvementExamples": "可以改進的地方：",
+    "evaluationResults": "評估結果",
+    "evaluationFailed": "評估失敗",
+    "unknownError": "未知錯誤",
+    "taskInfo": "任務資訊",
+    "chat": "對話"
   },
   "history": {
     "title": "學習歷程",
@@ -230,6 +235,8 @@
     "qualitativeFeedback": "個人化回饋",
     "strengths": "您的優勢",
     "areasForImprovement": "成長機會",
-    "nextSteps": "建議下一步"
+    "nextSteps": "建議下一步",
+    "ksa": "KSA",
+    "print": "列印"
   }
 }

@@ -166,6 +166,8 @@
       "hours": "{{hours}}h {{minutes}}m",
       "minutes": "{{minutes}}m {{seconds}}s",
       "seconds": "{{seconds}}s"
-    }
+    },
+    "ksa": "KSA",
+    "print": "Imprimir"
   }
 }

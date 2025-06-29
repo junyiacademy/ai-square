@@ -166,6 +166,8 @@
       "hours": "{{hours}}時間{{minutes}}分",
       "minutes": "{{minutes}}分{{seconds}}秒",
       "seconds": "{{seconds}}秒"
-    }
+    },
+    "ksa": "KSA",
+    "print": "印刷"
   }
 }

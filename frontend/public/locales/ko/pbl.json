@@ -166,6 +166,8 @@
       "hours": "{{hours}}시간 {{minutes}}분",
       "minutes": "{{minutes}}분 {{seconds}}초",
       "seconds": "{{seconds}}초"
-    }
+    },
+    "ksa": "KSA",
+    "print": "인쇄"
   }
 }
