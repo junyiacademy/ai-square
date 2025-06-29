@@ -135,7 +135,11 @@
     "evaluationUpToDate": "Evaluation Up to Date",
     "conversationInsights": "Conversation Insights",
     "effectiveExamples": "What worked well:",
-    "improvementExamples": "Areas for improvement:"
+    "improvementExamples": "Areas for improvement:",
+    "evaluationFailed": "Evaluation Failed",
+    "unknownError": "Unknown Error",
+    "taskInfo": "Task Info",
+    "chat": "Chat"
   },
   "history": {
     "title": "Learning Journey",

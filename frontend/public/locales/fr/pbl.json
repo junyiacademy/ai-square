@@ -98,7 +98,11 @@
     "needsImprovement": "À améliorer",
     "ksaBreakdown": "Répartition KSA",
     "noAnalysisYet": "Aucun résultat d'analyse pour l'instant. Cliquez sur 'Analyser l'étape' après avoir terminé votre conversation.",
-    "reanalyzeAvailable": "Réanalyse disponible"
+    "reanalyzeAvailable": "Réanalyse disponible",
+    "evaluationFailed": "Échec de l'évaluation",
+    "unknownError": "Erreur inconnue",
+    "taskInfo": "Info tâche",
+    "chat": "Discussion"
   },
   "history": {
     "title": "Learning Journey",

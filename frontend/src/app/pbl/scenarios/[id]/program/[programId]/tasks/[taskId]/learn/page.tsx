@@ -19,6 +19,16 @@ interface ConversationEntry {
   timestamp: string;
 }
 
+// Helper function to get localized field
+function getLocalizedField(obj: any, fieldName: string, language: string): string {
+  // Map language codes to suffixes
+  const langSuffix = language === 'zh-TW' ? 'zh' : language;
+  const fieldWithLang = `${fieldName}_${langSuffix}`;
+  
+  // Return localized field if exists, otherwise return default
+  return obj[fieldWithLang] || obj[fieldName] || '';
+}
+
 export default function ProgramLearningPage() {
   const params = useParams();
   const router = useRouter();
@@ -307,9 +317,7 @@ export default function ProgramLearningPage() {
           body: JSON.stringify({
             scenarioId,
             taskId: currentTask.id,
-            taskTitle: i18n.language === 'zh' || i18n.language === 'zh-TW' 
-              ? (currentTask.title_zh || currentTask.title)
-              : currentTask.title
+            taskTitle: getLocalizedField(currentTask, 'title', i18n.language)
           })
         });
         
@@ -338,9 +346,7 @@ export default function ProgramLearningPage() {
           programId: actualProgramId,
           taskId: currentTask.id,
           scenarioId,
-          taskTitle: i18n.language === 'zh' || i18n.language === 'zh-TW' 
-            ? (currentTask.title_zh || currentTask.title)
-            : currentTask.title,
+          taskTitle: getLocalizedField(currentTask, 'title', i18n.language),
           interaction: {
             type: 'user',
             content: userMessage,
@@ -419,9 +425,7 @@ export default function ProgramLearningPage() {
           programId: actualProgramId,
           taskId: currentTask.id,
           scenarioId,
-          taskTitle: i18n.language === 'zh' || i18n.language === 'zh-TW' 
-            ? (currentTask.title_zh || currentTask.title)
-            : currentTask.title,
+          taskTitle: getLocalizedField(currentTask, 'title', i18n.language),
           interaction: {
             type: 'ai',
             content: aiMessage,
@@ -526,7 +530,7 @@ export default function ProgramLearningPage() {
       }
     } catch (error) {
       console.error('Error evaluating:', error);
-      alert(`評估失敗: ${error instanceof Error ? error.message : '未知錯誤'}`);
+      alert(`${t('pbl:learn.evaluationFailed')}: ${error instanceof Error ? error.message : t('pbl:learn.unknownError')}`);
     } finally {
       setIsEvaluating(false);
     }
@@ -601,9 +605,7 @@ export default function ProgramLearningPage() {
         <div className="px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
-              {i18n.language === 'zh' || i18n.language === 'zh-TW' 
-                ? (scenario.title_zh || scenario.title)
-                : scenario.title}
+              {getLocalizedField(scenario, 'title', i18n.language)}
             </h1>
             
             {/* Action Buttons */}
@@ -692,9 +694,7 @@ export default function ProgramLearningPage() {
                                 ? 'text-gray-900 dark:text-white'
                                 : 'text-gray-500 dark:text-gray-400'
                             }`}>
-                              {i18n.language === 'zh' || i18n.language === 'zh-TW' 
-                                ? (task.title_zh || task.title)
-                                : task.title}
+                              {getLocalizedField(task, 'title', i18n.language)}
                             </p>
                             {isEvaluated && taskEval.score && (
                               <p className={`text-xs ${
@@ -733,9 +733,7 @@ export default function ProgramLearningPage() {
                             ? 'border-purple-600 dark:border-purple-500 ring-2 ring-purple-600 ring-offset-2' 
                             : 'border-gray-300 dark:border-gray-600'
                         }`}
-                        title={`${i18n.language === 'zh' || i18n.language === 'zh-TW' 
-                          ? (task.title_zh || task.title)
-                          : task.title}${isEvaluated && taskEval.score ? ` - ${taskEval.score}%` : ''}`}
+                        title={`${getLocalizedField(task, 'title', i18n.language)}${isEvaluated && taskEval.score ? ` - ${taskEval.score}%` : ''}`}
                       >
                         {isEvaluated ? (
                           <svg className="h-5 w-5 text-green-600 dark:text-green-500" fill="currentColor" viewBox="0 0 20 20">
@@ -778,9 +776,7 @@ export default function ProgramLearningPage() {
         <div className="w-96 bg-white dark:bg-gray-800 border-l border-r border-gray-200 dark:border-gray-700 overflow-y-auto">
           <div className="p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-              {t('pbl:learn.task')} {taskIndex + 1}: {i18n.language === 'zh' || i18n.language === 'zh-TW' 
-                ? (currentTask.title_zh || currentTask.title)
-                : currentTask.title}
+              {t('pbl:learn.task')} {taskIndex + 1}: {getLocalizedField(currentTask, 'title', i18n.language)}
             </h2>
             
             <div className="space-y-4">
@@ -789,9 +785,7 @@ export default function ProgramLearningPage() {
                   {t('pbl:learn.description')}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
-                  {i18n.language === 'zh' || i18n.language === 'zh-TW' 
-                    ? (currentTask.description_zh || currentTask.description)
-                    : currentTask.description}
+                  {getLocalizedField(currentTask, 'description', i18n.language)}
                 </p>
               </div>
               
@@ -800,10 +794,7 @@ export default function ProgramLearningPage() {
                   {t('pbl:learn.instructions')}
                 </h3>
                 <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
-                  {(i18n.language === 'zh' || i18n.language === 'zh-TW' 
-                    ? (currentTask.instructions_zh || currentTask.instructions)
-                    : currentTask.instructions
-                  ).map((instruction, index) => (
+                  {(currentTask[`instructions_${i18n.language === 'zh-TW' ? 'zh' : i18n.language}`] || currentTask.instructions || []).map((instruction, index) => (
                     <li key={index}>{instruction}</li>
                   ))}
                 </ul>
@@ -815,9 +806,7 @@ export default function ProgramLearningPage() {
                     {t('pbl:details.expectedOutcome')}
                   </h3>
                   <p className="text-gray-600 dark:text-gray-400">
-                    {i18n.language === 'zh' || i18n.language === 'zh-TW' 
-                      ? (currentTask.expectedOutcome_zh || currentTask.expectedOutcome)
-                      : currentTask.expectedOutcome}
+                    {getLocalizedField(currentTask, 'expectedOutcome', i18n.language)}
                   </p>
                 </div>
               )}
@@ -1156,9 +1145,7 @@ export default function ProgramLearningPage() {
                                 ? 'text-gray-900 dark:text-white'
                                 : 'text-gray-500 dark:text-gray-400'
                             }`}>
-                              {i18n.language === 'zh' || i18n.language === 'zh-TW' 
-                                ? (task.title_zh || task.title)
-                                : task.title}
+                              {getLocalizedField(task, 'title', i18n.language)}
                             </p>
                           </div>
                         </button>

@@ -98,7 +98,11 @@
     "needsImprovement": "Da migliorare",
     "ksaBreakdown": "Ripartizione KSA",
     "noAnalysisYet": "Nessun risultato di analisi ancora. Clicca su 'Analizza fase' dopo aver completato la conversazione.",
-    "reanalyzeAvailable": "Rianalisi disponibile"
+    "reanalyzeAvailable": "Rianalisi disponibile",
+    "evaluationFailed": "Valutazione fallita",
+    "unknownError": "Errore sconosciuto",
+    "taskInfo": "Info attività",
+    "chat": "Chat"
   },
   "history": {
     "title": "Learning Journey",

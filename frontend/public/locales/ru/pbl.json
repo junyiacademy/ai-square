@@ -98,7 +98,11 @@
     "needsImprovement": "Требуется улучшение",
     "ksaBreakdown": "Распределение KSA",
     "noAnalysisYet": "Результатов анализа пока нет. Нажмите 'Анализировать этап' после завершения разговора.",
-    "reanalyzeAvailable": "Повторный анализ доступен"
+    "reanalyzeAvailable": "Повторный анализ доступен",
+    "evaluationFailed": "Ошибка оценки",
+    "unknownError": "Неизвестная ошибка",
+    "taskInfo": "Информация о задаче",
+    "chat": "Чат"
   },
   "history": {
     "title": "Learning Journey",

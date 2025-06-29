@@ -98,7 +98,11 @@
     "needsImprovement": "Verbesserungsbedürftig",
     "ksaBreakdown": "KSA-Aufschlüsselung",
     "noAnalysisYet": "Noch keine Analyseergebnisse. Klicken Sie auf 'Stufe analysieren' nachdem Sie Ihr Gespräch beendet haben.",
-    "reanalyzeAvailable": "Erneute Analyse verfügbar"
+    "reanalyzeAvailable": "Erneute Analyse verfügbar",
+    "evaluationFailed": "Bewertung fehlgeschlagen",
+    "unknownError": "Unbekannter Fehler",
+    "taskInfo": "Aufgabeninfo",
+    "chat": "Chat"
   },
   "history": {
     "title": "Learning Journey",

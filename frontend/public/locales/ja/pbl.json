@@ -98,7 +98,11 @@
     "needsImprovement": "改善が必要",
     "ksaBreakdown": "KSA内訳",
     "noAnalysisYet": "まだ分析結果がありません。会話を完了した後、'ステージを分析'をクリックしてください。",
-    "reanalyzeAvailable": "再分析可能"
+    "reanalyzeAvailable": "再分析可能",
+    "evaluationFailed": "評価に失敗しました",
+    "unknownError": "不明なエラー",
+    "taskInfo": "タスク情報",
+    "chat": "チャット"
   },
   "history": {
     "title": "Learning Journey",
