@@ -168,7 +168,7 @@ const response = await aiService.generateText('Hello AI', {
 const structured = await aiService.generateStructured(
   'Generate user profile',
   userSchema,
-  { model: 'gemini-1.5-pro' }
+  { model: 'gemini-2.5-pro' }
 );
 ```
 

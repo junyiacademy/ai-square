@@ -16,7 +16,7 @@ export async function generateContent(prompt: string, systemPrompt?: string) {
   try {
     const vertex = getVertexAI();
     const model = vertex.getGenerativeModel({
-      model: 'gemini-1.5-flash-001',
+      model: 'gemini-2.5-flash',
       generationConfig: {
         maxOutputTokens: 8192,
         temperature: 0.3,
