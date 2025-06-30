@@ -1,6 +1,7 @@
 import { VertexAI } from '@google-cloud/vertexai';
 import * as yaml from 'js-yaml';
 import { PBL_SCENARIO_JSON_SCHEMA, type PBLScenarioSchema } from './schemas/pbl-scenario.schema';
+import { sortPBLScenario } from './utils/yaml-order';
 
 let vertexAI: VertexAI | null = null;
 
@@ -98,11 +99,15 @@ Return a complete JSON object following the PBL scenario schema.`;
     
     // Parse JSON and convert back to YAML
     const jsonData = JSON.parse(jsonResponse);
-    const yamlOutput = yaml.dump(jsonData, {
+    
+    // Sort the data according to schema order
+    const sortedData = sortPBLScenario(jsonData);
+    
+    const yamlOutput = yaml.dump(sortedData, {
       indent: 2,
       lineWidth: -1,
       noRefs: true,
-      sortKeys: false,
+      sortKeys: false, // We handle sorting ourselves
     });
     
     return yamlOutput;
@@ -155,11 +160,15 @@ Return a complete JSON object with all translations added.`;
     
     // Parse JSON and convert back to YAML
     const jsonData = JSON.parse(jsonResponse);
-    const yamlOutput = yaml.dump(jsonData, {
+    
+    // Sort the data according to schema order
+    const sortedData = sortPBLScenario(jsonData);
+    
+    const yamlOutput = yaml.dump(sortedData, {
       indent: 2,
       lineWidth: -1,
       noRefs: true,
-      sortKeys: false,
+      sortKeys: false, // We handle sorting ourselves
     });
     
     return yamlOutput;
@@ -215,11 +224,15 @@ Return a complete JSON object with all improvements applied while preserving all
     
     // Parse JSON and convert back to YAML
     const jsonData = JSON.parse(jsonResponse);
-    const yamlOutput = yaml.dump(jsonData, {
+    
+    // Sort the data according to schema order
+    const sortedData = sortPBLScenario(jsonData);
+    
+    const yamlOutput = yaml.dump(sortedData, {
       indent: 2,
       lineWidth: -1,
       noRefs: true,
-      sortKeys: false,
+      sortKeys: false, // We handle sorting ourselves
     });
     
     return yamlOutput;
