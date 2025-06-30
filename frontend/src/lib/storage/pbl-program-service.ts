@@ -872,18 +872,21 @@ class PBLProgramService {
         const [contents] = await file.download();
         const completionData = JSON.parse(contents.toString());
         
-        // Initialize qualitativeFeedback as object if it's old format or doesn't exist
-        if (!completionData.qualitativeFeedback || 
-            (typeof completionData.qualitativeFeedback === 'object' && 
-             completionData.qualitativeFeedback.overallAssessment)) {
+        // Initialize qualitativeFeedback as object if it doesn't exist
+        if (!completionData.qualitativeFeedback) {
+          completionData.qualitativeFeedback = {};
+        }
+        
+        // Check if it's old single-language format (has overallAssessment at root level)
+        if (typeof completionData.qualitativeFeedback === 'object' && 
+            completionData.qualitativeFeedback.overallAssessment &&
+            !completionData.feedbackLanguages) {
           // Convert old format to new multi-language format
           const oldFeedback = completionData.qualitativeFeedback;
-          const oldLang = completionData.feedbackLanguage || 'en';
+          const oldLang = completionData.feedbackLanguage || language || 'en';
           
           completionData.qualitativeFeedback = {};
-          if (oldFeedback) {
-            completionData.qualitativeFeedback[oldLang] = oldFeedback;
-          }
+          completionData.qualitativeFeedback[oldLang] = oldFeedback;
         }
         
         // Update with new language feedback

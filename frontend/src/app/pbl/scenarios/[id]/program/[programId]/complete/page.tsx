@@ -86,8 +86,14 @@ export default function ProgramCompletePage() {
         if (data.success && data.data) {
           setCompletionData(data.data);
           
-          // Check if qualitative feedback exists, if not, generate it
-          if (!data.data.qualitativeFeedback && !feedbackGeneratingRef.current) {
+          // Check if qualitative feedback exists for current language
+          const currentLang = i18n.language.split('-')[0] || 'en';
+          const hasFeedbackForLang = data.data.qualitativeFeedback && 
+            (typeof data.data.qualitativeFeedback === 'object' &&
+             (data.data.qualitativeFeedback[currentLang] || 
+              data.data.qualitativeFeedback.overallAssessment)); // Support old format
+          
+          if (!hasFeedbackForLang && !feedbackGeneratingRef.current) {
             await generateFeedback();
           }
         }
@@ -221,27 +227,34 @@ export default function ProgramCompletePage() {
         </div>
         
         {/* Qualitative Feedback Section */}
-        {(completionData?.qualitativeFeedback || generatingFeedback) && (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
-            {generatingFeedback ? (
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-4"></div>
-                <p className="text-gray-600 dark:text-gray-400">
-                  {t('pbl:complete.generatingFeedback', 'Generating personalized feedback...')}
-                </p>
-              </div>
-            ) : completionData?.qualitativeFeedback ? (
-              <>
-                <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
-                  {t('pbl:complete.qualitativeFeedback', 'Personalized Feedback')}
-                </h2>
-                
-                {/* Overall Assessment */}
-                <div className="mb-6">
-                  <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-                    {completionData.qualitativeFeedback.overallAssessment}
+        {(() => {
+          // Get feedback for current language
+          const currentLang = i18n.language.split('-')[0] || 'en';
+          const feedback = completionData?.qualitativeFeedback?.[currentLang] || 
+                          completionData?.qualitativeFeedback; // Fallback to old format
+          const hasFeedback = feedback && (feedback.overallAssessment || feedback[currentLang]?.overallAssessment);
+          
+          return (hasFeedback || generatingFeedback) && (
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
+              {generatingFeedback ? (
+                <div className="text-center">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-4"></div>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    {t('pbl:complete.generatingFeedback', 'Generating personalized feedback...')}
                   </p>
                 </div>
+              ) : feedback ? (
+                <>
+                  <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
+                    {t('pbl:complete.qualitativeFeedback', 'Personalized Feedback')}
+                  </h2>
+                  
+                  {/* Overall Assessment */}
+                  <div className="mb-6">
+                    <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+                      {feedback.overallAssessment}
+                    </p>
+                  </div>
                 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                   {/* Strengths */}
@@ -253,7 +266,7 @@ export default function ProgramCompletePage() {
                       {t('pbl:complete.strengths', 'Your Strengths')}
                     </h3>
                     <div className="space-y-3">
-                      {completionData.qualitativeFeedback.strengths?.map((strength: any, index: number) => (
+                      {feedback.strengths?.map((strength: any, index: number) => (
                         <div key={index}>
                           <h4 className="font-medium text-green-800 dark:text-green-200">
                             {strength.area}
@@ -280,7 +293,7 @@ export default function ProgramCompletePage() {
                       {t('pbl:complete.areasForImprovement', 'Growth Opportunities')}
                     </h3>
                     <div className="space-y-3">
-                      {completionData.qualitativeFeedback.areasForImprovement?.map((area: any, index: number) => (
+                      {feedback.areasForImprovement?.map((area: any, index: number) => (
                         <div key={index}>
                           <h4 className="font-medium text-blue-800 dark:text-blue-200">
                             {area.area}
@@ -303,13 +316,13 @@ export default function ProgramCompletePage() {
                 </div>
                 
                 {/* Next Steps */}
-                {completionData.qualitativeFeedback.nextSteps?.length > 0 && (
+                {feedback.nextSteps?.length > 0 && (
                   <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-6 mb-6">
                     <h3 className="text-lg font-medium text-purple-900 dark:text-purple-100 mb-4">
                       {t('pbl:complete.nextSteps', 'Recommended Next Steps')}
                     </h3>
                     <ul className="space-y-2">
-                      {completionData.qualitativeFeedback.nextSteps.map((step: string, index: number) => (
+                      {feedback.nextSteps.map((step: string, index: number) => (
                         <li key={index} className="flex items-start">
                           <span className="text-purple-600 dark:text-purple-400 mr-2">
                             {index + 1}.
@@ -324,17 +337,18 @@ export default function ProgramCompletePage() {
                 )}
                 
                 {/* Encouragement */}
-                {completionData.qualitativeFeedback.encouragement && (
+                {feedback.encouragement && (
                   <div className="text-center p-6 bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/20 dark:to-blue-900/20 rounded-lg">
                     <p className="text-lg text-gray-800 dark:text-gray-200 italic">
-                      "{completionData.qualitativeFeedback.encouragement}"
+                      "{feedback.encouragement}"
                     </p>
                   </div>
                 )}
               </>
             ) : null}
           </div>
-        )}
+          );
+        })()}
         
         {/* Three Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
