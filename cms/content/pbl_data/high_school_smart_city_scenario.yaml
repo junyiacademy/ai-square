@@ -622,7 +622,7 @@ completion_criteria:
   min_overall_score: 80
 
 resources:
-  - name: "Smart Cities Council111222"
+  - name: "Smart Cities Council111222666"
     name_zh: "智慧城市委員會"
     url: "https://smartcitiescouncil.com/"
     type: reference
