@@ -592,3 +592,10 @@ tasks:
         - Keep the conversation focused on interview practice
         - Provide specific feedback after each answer
         - Suggest improvements using STAR method
+
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - K1.1  # Must demonstrate AI understanding
+    - S1.1  # Must interact with AI
+  min_overall_score: 70
