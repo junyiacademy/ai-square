@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import yaml from 'js-yaml';
 import { ContentItem, ContentType, ContentHistory, ContentStatus } from '@/types/cms';
+import { yamlLoader } from '@/lib/yaml-loader';
 
 interface ContentMetadata {
   version: number;
@@ -28,6 +29,8 @@ export class ContentService {
   private storage?: Storage;
   private bucket?: ReturnType<Storage['bucket']>;
   private isProduction: boolean;
+  private contentCache = new Map<string, { data: any, timestamp: number }>();
+  private readonly CACHE_TTL = 5 * 60 * 1000; // 5 minutes
   
   constructor() {
     this.isProduction = process.env.NODE_ENV === 'production';
@@ -45,20 +48,37 @@ export class ContentService {
     }
   }
 
-  // Get content with GCS override check
+  // Get content with GCS override check and caching
   async getContent(type: ContentType, fileName: string): Promise<unknown> {
-    // 1. Read base content from repo
-    const baseContent = await this.readFromRepo(type, fileName);
+    // Check cache first
+    const cacheKey = `${type}:${fileName}`;
+    const cached = this.contentCache.get(cacheKey);
+    
+    if (cached && Date.now() - cached.timestamp < this.CACHE_TTL) {
+      return cached.data;
+    }
+    
+    // 1. Read base content from repo using yamlLoader for performance
+    let baseContent;
+    if (type === 'domain' || type === 'ksa') {
+      baseContent = await yamlLoader.load(fileName);
+    } else {
+      baseContent = await this.readFromRepo(type, fileName);
+    }
     
     // 2. Check for GCS override
     if (this.bucket) {
       const override = await this.readFromGCS(`${GCS_PATHS.overrides}${type}/${fileName}`);
       if (override && typeof override === 'object' && override !== null) {
-        return { ...(baseContent as object), ...(override as object), _source: 'gcs_override' };
+        const result = { ...(baseContent as object), ...(override as object), _source: 'gcs_override' };
+        this.contentCache.set(cacheKey, { data: result, timestamp: Date.now() });
+        return result;
       }
     }
     
-    return { ...(baseContent as object), _source: 'repo' };
+    const result = { ...(baseContent as object), _source: 'repo' };
+    this.contentCache.set(cacheKey, { data: result, timestamp: Date.now() });
+    return result;
   }
 
   // List all content items
@@ -205,6 +225,9 @@ export class ContentService {
     } catch {
       // Ignore if not exists
     }
+    
+    // Clear cache
+    this.contentCache.delete(`${type}:${fileName}`);
   }
 
   // Publish draft to override
@@ -349,6 +372,15 @@ export class ContentService {
     
     const path = mapping[type] || 'rubrics_data';
     return path;
+  }
+  
+  // Clear cache for specific file or all files
+  clearCache(type?: ContentType, fileName?: string) {
+    if (type && fileName) {
+      this.contentCache.delete(`${type}:${fileName}`);
+    } else {
+      this.contentCache.clear();
+    }
   }
 }
 

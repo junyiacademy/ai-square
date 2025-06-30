@@ -67,11 +67,12 @@ async function loadScenario(scenarioId: string): Promise<Scenario | null> {
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   console.log('🚨 START API CALLED - This should only happen when explicitly requested!');
   console.log('   Timestamp:', new Date().toISOString());
-  console.log('   Scenario ID:', params.id);
+  console.log('   Scenario ID:', id);
   
   // Log request headers to trace the source
   console.log('   Request headers:', {
@@ -81,7 +82,7 @@ export async function POST(
   });
   
   try {
-    const scenarioId = params.id;
+    const scenarioId = id;
     
     // Get user info from cookie
     let userEmail: string | undefined;

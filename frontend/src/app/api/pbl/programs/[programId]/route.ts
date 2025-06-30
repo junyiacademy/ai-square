@@ -3,10 +3,10 @@ import { pblProgramService } from '@/lib/storage/pbl-program-service';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { programId: string } }
+  { params }: { params: Promise<{ programId: string }> }
 ) {
   try {
-    const programId = params.programId;
+    const { programId } = await params;
     const { searchParams } = new URL(request.url);
     const scenarioId = searchParams.get('scenarioId');
     

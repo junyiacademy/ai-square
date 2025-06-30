@@ -66,10 +66,10 @@ async function loadScenario(scenarioId: string): Promise<Scenario | null> {
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const scenarioId = params.id;
+    const { id: scenarioId } = await params;
     
     // Get user info from cookie
     let userEmail: string | undefined;
