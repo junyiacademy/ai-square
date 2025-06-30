@@ -26,6 +26,7 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
     role: 'user' | 'assistant';
     content: string;
     suggestedContent?: string;
+    isProcessing?: boolean;
   }>>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -38,6 +39,22 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
     if (!content || !selectedFile) return;
     
     setIsProcessing(true);
+    
+    // Add processing message
+    const actionMessages = {
+      complete: '🔄 Completing content structure...',
+      translate: '🌐 Translating to all languages...',
+      improve: '✨ Improving and validating content...'
+    };
+    
+    const processingMessage = {
+      role: 'assistant' as const,
+      content: actionMessages[action as keyof typeof actionMessages] || `🔄 Processing ${action}...`,
+      isProcessing: true
+    };
+    
+    setMessages(prev => [...prev, processingMessage]);
+    
     try {
       const response = await fetch('/api/ai/assist', {
         method: 'POST',
@@ -50,18 +67,38 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
       });
       
       const data = await response.json();
-      if (data.result) {
-        onContentUpdate(data.result);
-        setMessages([...messages, {
+      
+      if (data.error) {
+        setMessages(prev => [...prev.slice(0, -1), {
           role: 'assistant',
-          content: `✓ ${action} completed successfully`
+          content: `❌ Error: ${data.error}`
         }]);
+        return;
+      }
+      
+      if (data.result) {
+        // Validate the result
+        const validation = data.validation || { valid: true };
+        
+        if (validation.valid) {
+          onContentUpdate(data.result);
+          setMessages(prev => [...prev.slice(0, -1), {
+            role: 'assistant',
+            content: `✅ ${action.charAt(0).toUpperCase() + action.slice(1)} completed successfully!\n\n${validation.summary || ''}`
+          }]);
+        } else {
+          setMessages(prev => [...prev.slice(0, -1), {
+            role: 'assistant',
+            content: `⚠️ ${action.charAt(0).toUpperCase() + action.slice(1)} completed with warnings:\n\n${validation.errors?.join('\n') || 'Unknown validation error'}\n\nWould you like to apply the changes anyway?`,
+            suggestedContent: data.result
+          }]);
+        }
       }
     } catch (error) {
       console.error('AI assist error:', error);
-      setMessages([...messages, {
+      setMessages(prev => [...prev.slice(0, -1), {
         role: 'assistant',
-        content: `✗ Error: ${error}`
+        content: `❌ Failed to ${action}: ${error}`
       }]);
     } finally {
       setIsProcessing(false);
@@ -114,7 +151,7 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
 
   return (
     <div className="flex flex-col h-full bg-gradient-to-b from-white to-gray-50">
-      <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-purple-50 to-indigo-50">
+      <div className="p-4 pr-12 border-b border-gray-100 bg-gradient-to-r from-purple-50 to-indigo-50">
         <h3 className="font-semibold flex items-center gap-2 text-base">
           <div className="w-7 h-7 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-sm">
             <Sparkles className="w-4 h-4 text-white" />
@@ -183,7 +220,16 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
                 )}
               </div>
               <div className="flex-1">
-                <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                <div className="flex items-start gap-2">
+                  <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap flex-1">{msg.content}</p>
+                  {msg.isProcessing && (
+                    <div className="flex items-center gap-1">
+                      <div className="w-2 h-2 bg-purple-600 rounded-full processing-dot" />
+                      <div className="w-2 h-2 bg-purple-600 rounded-full processing-dot" />
+                      <div className="w-2 h-2 bg-purple-600 rounded-full processing-dot" />
+                    </div>
+                  )}
+                </div>
                 {msg.suggestedContent && (
                   <div className="mt-3 flex gap-2">
                     <button

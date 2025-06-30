@@ -1,30 +1,8 @@
 import { VertexAI } from '@google-cloud/vertexai';
-import { GoogleAuth } from 'google-auth-library';
-import path from 'path';
+import * as yaml from 'js-yaml';
+import { PBL_SCENARIO_JSON_SCHEMA, type PBLScenarioSchema } from './schemas/pbl-scenario.schema';
 
 let vertexAI: VertexAI | null = null;
-let auth: GoogleAuth | null = null;
-
-function getAuth() {
-  if (!auth) {
-    // Check if service account key is provided
-    const keyFilePath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
-    
-    if (keyFilePath && keyFilePath !== '/path/to/your/service-account-key.json') {
-      // Use service account
-      auth = new GoogleAuth({
-        keyFile: keyFilePath,
-        scopes: ['https://www.googleapis.com/auth/cloud-platform']
-      });
-    } else {
-      // Use default credentials (gcloud auth)
-      auth = new GoogleAuth({
-        scopes: ['https://www.googleapis.com/auth/cloud-platform']
-      });
-    }
-  }
-  return auth;
-}
 
 function getVertexAI() {
   if (!vertexAI) {
@@ -75,63 +53,182 @@ export async function generateContent(prompt: string, systemPrompt?: string) {
 }
 
 export async function completeYAMLContent(yamlContent: string, context?: string) {
-  const systemPrompt = `You are an expert educational content creator specializing in YAML structure for AI literacy education platforms.
-Your task is to analyze incomplete YAML content and complete it with appropriate, educational content.
+  try {
+    // Parse existing YAML to understand what's already there
+    let existingData: Partial<PBLScenarioSchema> = {};
+    try {
+      existingData = yaml.load(yamlContent) as Partial<PBLScenarioSchema>;
+    } catch (e) {
+      console.warn('Could not parse existing YAML, starting fresh');
+    }
+
+    const vertex = getVertexAI();
+    const model = vertex.getGenerativeModel({
+      model: 'gemini-2.5-flash',
+      generationConfig: {
+        maxOutputTokens: 65535,
+        temperature: 0.3,
+        topP: 0.8,
+        responseMimeType: 'application/json',
+        responseSchema: PBL_SCENARIO_JSON_SCHEMA,
+      },
+    });
+
+    const prompt = `You are an expert educational content creator for AI literacy platforms.
+    
+Complete this PBL scenario with appropriate educational content. The existing content is:
+${yamlContent}
 
 Context: ${context || 'Educational content for AI Square platform'}
 
-Guidelines:
-1. Maintain proper YAML syntax and indentation
-2. Complete missing fields with educational content
-3. Ensure consistency with existing content patterns
-4. Use appropriate difficulty levels and learning objectives
-5. Include multilingual support where needed (en, zh-TW, es, ja, ko, fr, de, ru, it)
-6. Follow PBL (Problem-Based Learning) best practices
+Requirements:
+1. Complete all missing fields with meaningful educational content
+2. Ensure consistency with existing content patterns
+3. Use appropriate difficulty levels (beginner/intermediate/advanced)
+4. Include realistic time estimates (in minutes)
+5. Add proper KSA mapping codes if missing
+6. Create engaging tasks with clear instructions
+7. Use language code suffixes correctly: _zh, _es, _ja, _ko, _fr, _de, _ru, _it
+8. For now, focus on completing the English content. Translation fields can be filled with placeholder text.
 
-Return only the completed YAML content without additional explanation.`;
+Return a complete JSON object following the PBL scenario schema.`;
 
-  const prompt = `Complete this YAML content:\n\n${yamlContent}`;
-  
-  return generateContent(prompt, systemPrompt);
+    const result = await model.generateContent(prompt);
+    const jsonResponse = result.response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+    
+    // Parse JSON and convert back to YAML
+    const jsonData = JSON.parse(jsonResponse);
+    const yamlOutput = yaml.dump(jsonData, {
+      indent: 2,
+      lineWidth: -1,
+      noRefs: true,
+      sortKeys: false,
+    });
+    
+    return yamlOutput;
+  } catch (error) {
+    console.error('Error in completeYAMLContent:', error);
+    // Fallback to non-JSON mode
+    return generateContent(
+      `Complete this YAML content:\n\n${yamlContent}`,
+      `Complete the YAML with educational content. Return only valid YAML, no explanations.`
+    );
+  }
 }
 
-export async function translateYAMLContent(yamlContent: string, targetLanguages: string[] = ['zh-TW', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it']) {
-  const systemPrompt = `You are a professional translator specializing in educational content for AI literacy platforms.
-Your task is to translate YAML content while preserving structure and educational terminology accuracy.
+export async function translateYAMLContent(yamlContent: string) {
+  try {
+    // Parse existing YAML
+    const existingData = yaml.load(yamlContent) as PBLScenarioSchema;
+    
+    const vertex = getVertexAI();
+    const model = vertex.getGenerativeModel({
+      model: 'gemini-2.5-flash',
+      generationConfig: {
+        maxOutputTokens: 65535,
+        temperature: 0.3,
+        topP: 0.8,
+        responseMimeType: 'application/json',
+        responseSchema: PBL_SCENARIO_JSON_SCHEMA,
+      },
+    });
+
+    const prompt = `You are a professional translator for educational content.
+    
+Translate all text fields in this PBL scenario to these languages: Chinese (zh), Spanish (es), Japanese (ja), Korean (ko), French (fr), German (de), Russian (ru), Italian (it).
+
+Current content:
+${JSON.stringify(existingData, null, 2)}
 
 Guidelines:
-1. Preserve all YAML structure and syntax
-2. Only translate content values, not keys
-3. Maintain educational terminology consistency
-4. Adapt cultural context appropriately
-5. Keep technical terms in their commonly used form
-6. Preserve formatting and special characters
+1. Translate all text fields by adding language suffixes (_zh, _es, _ja, _ko, _fr, _de, _ru, _it)
+2. Maintain educational terminology consistency
+3. Adapt cultural context appropriately for each language
+4. Preserve technical terms in commonly used forms
+5. Keep the same structure and all existing content
+6. Ensure translations are natural and educationally appropriate
 
-Target languages: ${targetLanguages.join(', ')}
+Return a complete JSON object with all translations added.`;
 
-Return the complete YAML with all translations added using language suffixes (e.g., title_zh, title_es).`;
-
-  const prompt = `Translate this YAML content to all target languages:\n\n${yamlContent}`;
-  
-  return generateContent(prompt, systemPrompt);
+    const result = await model.generateContent(prompt);
+    const jsonResponse = result.response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+    
+    // Parse JSON and convert back to YAML
+    const jsonData = JSON.parse(jsonResponse);
+    const yamlOutput = yaml.dump(jsonData, {
+      indent: 2,
+      lineWidth: -1,
+      noRefs: true,
+      sortKeys: false,
+    });
+    
+    return yamlOutput;
+  } catch (error) {
+    console.error('Error in translateYAMLContent:', error);
+    // Fallback to non-JSON mode
+    const languages = ['zh', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'];
+    return generateContent(
+      `Translate this YAML content to languages: ${languages.join(', ')}\n\n${yamlContent}`,
+      `Translate all text fields. Add language suffixes like _zh, _es, etc. Return only valid YAML.`
+    );
+  }
 }
 
 export async function improveYAMLContent(yamlContent: string) {
-  const systemPrompt = `You are an expert educational designer and YAML validator for AI literacy platforms.
-Your task is to analyze and improve YAML content for quality, consistency, and educational effectiveness.
+  try {
+    // Parse existing YAML
+    const existingData = yaml.load(yamlContent) as PBLScenarioSchema;
+    
+    const vertex = getVertexAI();
+    const model = vertex.getGenerativeModel({
+      model: 'gemini-2.5-flash',
+      generationConfig: {
+        maxOutputTokens: 65535,
+        temperature: 0.3,
+        topP: 0.8,
+        responseMimeType: 'application/json',
+        responseSchema: PBL_SCENARIO_JSON_SCHEMA,
+      },
+    });
+
+    const prompt = `You are an expert educational designer for AI literacy platforms.
+    
+Improve this PBL scenario for better educational effectiveness:
+${JSON.stringify(existingData, null, 2)}
 
 Improvements to make:
-1. Fix any YAML syntax errors
-2. Improve content clarity and educational value
-3. Ensure consistent formatting and structure
-4. Add missing required fields
-5. Enhance learning objectives and outcomes
-6. Improve language and readability
-7. Validate against educational best practices
+1. Enhance content clarity and educational value
+2. Ensure learning objectives are specific and measurable
+3. Improve task instructions for better student engagement
+4. Add missing optional fields that would enhance learning
+5. Ensure proper difficulty progression
+6. Validate time estimates are realistic
+7. Enhance AI module prompts for better interaction
+8. Ensure KSA mapping is comprehensive and accurate
+9. Improve language for clarity and engagement
+10. Add helpful resources where appropriate
 
-Return the improved YAML content with clear structure and enhanced educational value.`;
+Return a complete JSON object with all improvements applied while preserving all existing content.`;
 
-  const prompt = `Analyze and improve this YAML content:\n\n${yamlContent}`;
-  
-  return generateContent(prompt, systemPrompt);
+    const result = await model.generateContent(prompt);
+    const jsonResponse = result.response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+    
+    // Parse JSON and convert back to YAML
+    const jsonData = JSON.parse(jsonResponse);
+    const yamlOutput = yaml.dump(jsonData, {
+      indent: 2,
+      lineWidth: -1,
+      noRefs: true,
+      sortKeys: false,
+    });
+    
+    return yamlOutput;
+  } catch (error) {
+    console.error('Error in improveYAMLContent:', error);
+    // Fallback to non-JSON mode
+    return generateContent(
+      `Improve this YAML content for educational effectiveness:\n\n${yamlContent}`,
+      `Enhance the content quality while preserving structure. Return only valid YAML.`
+    );
+  }
 }

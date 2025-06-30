@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { completeYAMLContent, translateYAMLContent, improveYAMLContent } from '@/lib/vertex-ai';
+import * as yaml from 'js-yaml';
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,6 +14,7 @@ export async function POST(request: NextRequest) {
     }
 
     let result = '';
+    let validation = { valid: true, errors: [] as string[], summary: '' };
 
     switch (action) {
       case 'complete':
@@ -34,7 +36,78 @@ export async function POST(request: NextRequest) {
         );
     }
 
-    return NextResponse.json({ result });
+    // Validate the result
+    try {
+      const parsed = yaml.load(result) as any;
+      
+      // Check for required keys based on file type
+      if (file?.includes('scenario')) {
+        const requiredKeys = ['scenario_info', 'tasks'];
+        const missingKeys = requiredKeys.filter(key => !parsed[key]);
+        
+        if (missingKeys.length > 0) {
+          validation.valid = false;
+          validation.errors.push(`Missing required keys: ${missingKeys.join(', ')}`);
+        }
+        
+        // Check multilingual fields for translation action
+        if (parsed.scenario_info && action === 'translate') {
+          const languages = ['zh', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'];
+          const baseFields = ['title', 'description'];
+          
+          for (const field of baseFields) {
+            // Check if base field exists
+            if (!parsed.scenario_info[field]) {
+              validation.errors.push(`Missing base field: ${field}`);
+            }
+            
+            // Check translations
+            const missingTranslations = languages.filter(
+              lang => !parsed.scenario_info[`${field}_${lang}`]
+            );
+            
+            if (missingTranslations.length > 0) {
+              validation.errors.push(`Missing ${field} translations: ${missingTranslations.join(', ')}`);
+            }
+          }
+          
+          // Check array fields
+          const arrayFields = ['prerequisites', 'learning_objectives'];
+          for (const field of arrayFields) {
+            if (parsed.scenario_info[field]) {
+              const missingTranslations = languages.filter(
+                lang => !parsed.scenario_info[`${field}_${lang}`] || 
+                        !Array.isArray(parsed.scenario_info[`${field}_${lang}`])
+              );
+              
+              if (missingTranslations.length > 0) {
+                validation.errors.push(`Missing ${field} translations: ${missingTranslations.join(', ')}`);
+              }
+            }
+          }
+          
+          if (validation.errors.length > 0) {
+            validation.valid = false;
+          }
+        }
+      }
+      
+      // Validate YAML structure
+      if (typeof parsed !== 'object' || parsed === null) {
+        validation.valid = false;
+        validation.errors.push('Invalid YAML structure: result is not an object');
+      }
+      
+      if (validation.valid) {
+        validation.summary = `✅ YAML structure is valid with ${Object.keys(parsed).length} top-level keys`;
+      }
+      
+    } catch (error: any) {
+      validation.valid = false;
+      validation.errors.push(`YAML parsing error: ${error.message}`);
+    }
+
+    return NextResponse.json({ result, validation });
   } catch (error) {
     console.error('AI assist error:', error);
     return NextResponse.json(
