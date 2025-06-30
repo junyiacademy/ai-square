@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
+import { PBLScenariosListSkeleton } from '@/components/pbl/loading-skeletons';
 
 interface Scenario {
   id: string;
@@ -11,14 +12,26 @@ interface Scenario {
   difficulty: string;
   estimatedDuration: number;
   targetDomain: string[];
+  domains: string[];
   isAvailable: boolean;
   thumbnailEmoji?: string;
 }
 
+interface UserProgram {
+  programId: string;
+  scenarioId: string;
+  status: 'draft' | 'in_progress' | 'completed';
+  progress: {
+    completedTasks: number;
+    totalTasks: number;
+  };
+}
+
 export default function PBLPage() {
-  const { t, i18n } = useTranslation(['pbl']);
+  const { t, i18n } = useTranslation(['pbl', 'assessment']);
   const [scenarios, setScenarios] = useState<Scenario[]>([]);
   const [loading, setLoading] = useState(true);
+  const [userPrograms, setUserPrograms] = useState<UserProgram[]>([]);
 
   const getDifficultyStars = (difficulty: string) => {
     switch (difficulty) {
@@ -30,22 +43,34 @@ export default function PBLPage() {
   };
 
   useEffect(() => {
-    const fetchScenarios = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch(`/api/pbl/scenarios?lang=${i18n.language}`);
-        const data = await response.json();
+        // Fetch scenarios
+        const scenarioResponse = await fetch(`/api/pbl/scenarios?lang=${i18n.language}`);
+        const scenarioData = await scenarioResponse.json();
         
-        if (data.success) {
-          setScenarios(data.data.scenarios);
+        if (scenarioData.success) {
+          setScenarios(scenarioData.data.scenarios);
+        }
+
+        // Fetch user programs if logged in
+        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        if (isLoggedIn) {
+          const programResponse = await fetch('/api/pbl/user-programs');
+          const programData = await programResponse.json();
+          
+          if (programData.success) {
+            setUserPrograms(programData.programs || []);
+          }
         }
       } catch (error) {
-        console.error('Error fetching scenarios:', error);
+        console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchScenarios();
+    fetchData();
   }, [i18n.language]);
 
   return (
@@ -63,59 +88,101 @@ export default function PBLPage() {
 
         {/* Scenarios Grid */}
         {loading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          </div>
+          <PBLScenariosListSkeleton />
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {scenarios.map((scenario) => (
-              <div 
-                key={scenario.id}
-                className={`bg-white dark:bg-gray-800 rounded-lg shadow-md ${
-                  scenario.isAvailable ? 'hover:shadow-lg transition-shadow' : 'opacity-50'
-                }`}
-              >
-                <div className="p-6">
-                  <div className="flex items-center mb-4">
-                    <div className={`w-12 h-12 ${
-                      scenario.isAvailable ? 'bg-blue-100 dark:bg-blue-900' : 'bg-gray-200 dark:bg-gray-700'
-                    } rounded-lg flex items-center justify-center`}>
-                      <span className="text-2xl">{scenario.thumbnailEmoji || '📚'}</span>
-                    </div>
-                    <h2 className="ml-4 text-xl font-semibold text-gray-900 dark:text-white">
-                      {scenario.title}
-                    </h2>
-                  </div>
-                  
-                  <div className="mb-4">
-                    <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
-                      <span className="mr-4">
-                        {t('difficulty')}: {getDifficultyStars(scenario.difficulty)} {t(`level.${scenario.difficulty}`)}
-                      </span>
-                      <span>
-                        {t('duration')}: {scenario.estimatedDuration} {t('minutes')}
-                      </span>
-                    </div>
-                    <p className="text-gray-600 dark:text-gray-300">
-                      {scenario.description}
-                    </p>
-                  </div>
-
-                  {scenario.isAvailable ? (
-                    <Link
-                      href={`/pbl/scenarios/${scenario.id}`}
-                      className="block w-full bg-blue-600 text-white text-center px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      {t('viewDetails')}
-                    </Link>
-                  ) : (
-                    <div className="text-center text-gray-500 dark:text-gray-400">
-                      {t('comingSoon')}
+            {scenarios.map((scenario) => {
+              const userProgram = userPrograms.find(p => p.scenarioId === scenario.id);
+              const hasProgress = !!userProgram;
+              
+              return (
+                <div 
+                  key={scenario.id}
+                  className={`bg-white dark:bg-gray-800 rounded-lg shadow-md relative ${
+                    scenario.isAvailable ? 'hover:shadow-lg transition-shadow' : 'opacity-50'
+                  }`}
+                >
+                  {/* Learning Status Indicator */}
+                  {hasProgress && (
+                    <div className="absolute top-4 right-4">
+                      {userProgram.status === 'completed' ? (
+                        <div className="flex items-center gap-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-2 py-1 rounded-full text-xs">
+                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                          </svg>
+                          {t('completed')}
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-full text-xs">
+                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                          </svg>
+                          {userProgram.progress.completedTasks}/{userProgram.progress.totalTasks}
+                        </div>
+                      )}
                     </div>
                   )}
+                  
+                  <div className="p-6">
+                    <div className="flex items-center mb-4">
+                      <div className={`w-12 h-12 ${
+                        scenario.isAvailable ? 'bg-blue-100 dark:bg-blue-900' : 'bg-gray-200 dark:bg-gray-700'
+                      } rounded-lg flex items-center justify-center`}>
+                        <span className="text-2xl">{scenario.thumbnailEmoji || '📚'}</span>
+                      </div>
+                      <h2 className="ml-4 text-xl font-semibold text-gray-900 dark:text-white pr-16">
+                        {scenario.title}
+                      </h2>
+                    </div>
+                    
+                    {/* Domain Labels */}
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {(scenario.domains || scenario.targetDomain || []).map((domain) => (
+                        <span 
+                          key={domain}
+                          className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            domain === 'engaging_with_ai' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' :
+                            domain === 'creating_with_ai' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                            domain === 'managing_with_ai' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
+                            domain === 'designing_with_ai' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' :
+                            'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                          }`}
+                        >
+                          {t(`assessment:domains.${domain}`)}
+                        </span>
+                      ))}
+                    </div>
+                    
+                    <div className="mb-4">
+                      <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
+                        <span className="mr-4">
+                          {t('difficulty')}: {getDifficultyStars(scenario.difficulty)} {t(`level.${scenario.difficulty}`)}
+                        </span>
+                        <span>
+                          {t('duration')}: {scenario.estimatedDuration} {t('minutes')}
+                        </span>
+                      </div>
+                      <p className="text-gray-600 dark:text-gray-300">
+                        {scenario.description}
+                      </p>
+                    </div>
+
+                    {scenario.isAvailable ? (
+                      <Link
+                        href={`/pbl/scenarios/${scenario.id}`}
+                        className="block w-full bg-blue-600 text-white text-center px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                      >
+                        {t('viewDetails')}
+                      </Link>
+                    ) : (
+                      <div className="text-center text-gray-500 dark:text-gray-400">
+                        {t('comingSoon')}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
