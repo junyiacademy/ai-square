@@ -38,6 +38,24 @@ export default function ProgramCompletePage() {
     };
   }, []);
   
+  // Listen for language changes
+  useEffect(() => {
+    if (!completionData || generatingFeedback || feedbackGeneratingRef.current) return;
+    
+    // Check if feedback exists for current language
+    const currentLang = i18n.language.split('-')[0] || 'en';
+    const hasFeedbackForLang = completionData.qualitativeFeedback && 
+      (typeof completionData.qualitativeFeedback === 'object' &&
+       (completionData.qualitativeFeedback[currentLang] || 
+        (completionData.qualitativeFeedback.overallAssessment && 
+         completionData.feedbackLanguage === currentLang)));
+    
+    // Generate feedback for new language if not exists
+    if (!hasFeedbackForLang) {
+      generateFeedback();
+    }
+  }, [i18n.language]); // eslint-disable-line react-hooks/exhaustive-deps
+  
   const loadProgramData = async () => {
     if (loadingRef.current) return;
     loadingRef.current = true;
