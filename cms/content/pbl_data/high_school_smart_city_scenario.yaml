@@ -622,12 +622,12 @@ completion_criteria:
   min_overall_score: 80
 
 resources:
-  - name: "Smart Cities Council"
+  - name: "Smart Cities Council111"
     name_zh: "智慧城市委員會"
     url: "https://smartcitiescouncil.com/"
     type: reference
     
-  - name: "MIT City Science666"
+  - name: "MIT City Science777"
     name_zh: "MIT 城市科學"
     url: "https://www.media.mit.edu/groups/city-science/overview/"
     type: research
