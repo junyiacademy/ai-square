@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { HistoryPageSkeleton } from '@/components/ui/history-skeletons';
 
 // Reuse interfaces from existing history pages
 interface AssessmentHistoryItem {
@@ -236,11 +237,7 @@ export default function UnifiedHistoryPage() {
   }
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
+    return <HistoryPageSkeleton />;
   }
 
   return (
