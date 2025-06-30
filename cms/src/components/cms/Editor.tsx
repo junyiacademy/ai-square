@@ -5,7 +5,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Code, Eye, FileText } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
-const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false });
+const MonacoEditor = dynamic(
+  () => import('@monaco-editor/react').then((mod) => ({ default: mod.default })), 
+  { 
+    ssr: false,
+    loading: () => <div className="flex items-center justify-center h-full">Loading editor...</div>
+  }
+);
 
 interface EditorProps {
   file: string | null;

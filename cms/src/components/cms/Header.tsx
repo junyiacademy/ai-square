@@ -5,17 +5,30 @@ import { Save, GitBranch, Eye } from 'lucide-react';
 
 interface HeaderProps {
   selectedFile: string | null;
+  currentBranch: string;
+  isOnMain: boolean;
   onSave?: () => void;
   onPreview?: () => void;
   onCreatePR?: () => void;
 }
 
-export function Header({ selectedFile, onSave, onPreview, onCreatePR }: HeaderProps) {
+export function Header({ selectedFile, currentBranch, isOnMain, onSave, onPreview, onCreatePR }: HeaderProps) {
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <h1 className="text-xl font-semibold">AI Square CMS</h1>
+          
+          {/* Branch indicator */}
+          <div className={`px-2 py-1 rounded-md text-xs font-medium ${
+            isOnMain 
+              ? 'bg-blue-100 text-blue-800' 
+              : 'bg-green-100 text-green-800'
+          }`}>
+            <GitBranch className="w-3 h-3 inline mr-1" />
+            {currentBranch}
+          </div>
+          
           {selectedFile && (
             <>
               <span className="text-gray-400">/</span>
@@ -48,10 +61,11 @@ export function Header({ selectedFile, onSave, onPreview, onCreatePR }: HeaderPr
           <Button
             size="sm"
             onClick={onCreatePR}
-            disabled={!selectedFile}
+            disabled={isOnMain}
+            variant={isOnMain ? "outline" : "default"}
           >
             <GitBranch className="w-4 h-4 mr-1" />
-            Create PR
+            {isOnMain ? "Need Changes" : "Create PR"}
           </Button>
         </div>
       </div>
