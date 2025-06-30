@@ -172,43 +172,41 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
           <button
             onClick={() => handleQuickAction('complete')}
             disabled={!content || isProcessing}
-            className="flex-1 px-3 py-2 bg-gradient-to-r from-violet-50 to-purple-50 hover:from-violet-100 hover:to-purple-100 text-purple-700 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-purple-100"
+            className="flex-1 px-2 py-2 bg-gradient-to-r from-violet-50 to-purple-50 hover:from-violet-100 hover:to-purple-100 text-purple-700 rounded-lg transition-all duration-200 flex items-center justify-center gap-1.5 text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-purple-100"
             title="Complete Content"
           >
             <Wand2 className="w-3.5 h-3.5" />
-            Complete
+            補完
           </button>
           
           <button
             onClick={() => handleQuickAction('translate')}
             disabled={!content || isProcessing}
-            className="flex-1 px-3 py-2 bg-gradient-to-r from-blue-50 to-cyan-50 hover:from-blue-100 hover:to-cyan-100 text-blue-700 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-blue-100"
+            className="flex-1 px-2 py-2 bg-gradient-to-r from-blue-50 to-cyan-50 hover:from-blue-100 hover:to-cyan-100 text-blue-700 rounded-lg transition-all duration-200 flex items-center justify-center gap-1.5 text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-blue-100"
             title="Translate to All Languages"
           >
             <Languages className="w-3.5 h-3.5" />
-            Translate
+            翻譯
           </button>
           
           <button
             onClick={() => handleQuickAction('improve')}
             disabled={!content || isProcessing}
-            className="flex-1 px-3 py-2 bg-gradient-to-r from-emerald-50 to-green-50 hover:from-emerald-100 hover:to-green-100 text-emerald-700 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-emerald-100"
+            className="flex-1 px-2 py-2 bg-gradient-to-r from-emerald-50 to-green-50 hover:from-emerald-100 hover:to-green-100 text-emerald-700 rounded-lg transition-all duration-200 flex items-center justify-center gap-1.5 text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-emerald-100"
             title="Improve & Validate"
           >
             <CheckCircle className="w-3.5 h-3.5" />
-            Improve
+            改進
           </button>
-        </div>
-        
-        <div className="flex gap-2">
+          
           <button
             onClick={() => handleQuickAction('ksa')}
             disabled={!content || isProcessing}
-            className="w-full px-3 py-2 bg-gradient-to-r from-orange-50 to-amber-50 hover:from-orange-100 hover:to-amber-100 text-orange-700 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-orange-100"
+            className="flex-1 px-2 py-2 bg-gradient-to-r from-orange-50 to-amber-50 hover:from-orange-100 hover:to-amber-100 text-orange-700 rounded-lg transition-all duration-200 flex items-center justify-center gap-1.5 text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-orange-100"
             title="Map KSA Competencies"
           >
             <Network className="w-3.5 h-3.5" />
-            Map KSA
+            KSA
           </button>
         </div>
       </div>
