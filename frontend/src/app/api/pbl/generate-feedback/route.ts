@@ -106,7 +106,7 @@ You must always respond with a valid JSON object following the exact schema prov
 
 export async function POST(request: NextRequest) {
   try {
-    const { programId, scenarioId } = await request.json();
+    const { programId, scenarioId, forceRegenerate = false } = await request.json();
     
     if (!programId || !scenarioId) {
       return NextResponse.json(
@@ -151,8 +151,27 @@ export async function POST(request: NextRequest) {
     // Get current language
     const currentLang = request.headers.get('accept-language')?.split(',')[0]?.split('-')[0] || 'en';
     
-    // Check if feedback already exists for current language
-    if (completionData.qualitativeFeedback) {
+    // If forceRegenerate, delete existing feedback for current language
+    if (forceRegenerate && completionData.qualitativeFeedback) {
+      // Remove the current language feedback
+      if (typeof completionData.qualitativeFeedback === 'object' && 
+          !completionData.qualitativeFeedback.overallAssessment) {
+        // Multi-language format
+        delete completionData.qualitativeFeedback[currentLang];
+        
+        // Update the completion data to remove this language's feedback
+        await pblProgramService.updateProgramCompletionFeedback(
+          userEmail,
+          scenarioId,
+          programId,
+          null, // Pass null to remove
+          currentLang
+        );
+      }
+    }
+    
+    // Check if feedback already exists for current language (skip if forceRegenerate)
+    if (!forceRegenerate && completionData.qualitativeFeedback) {
       // Handle legacy single-language feedback
       if (!completionData.qualitativeFeedback[currentLang] && 
           typeof completionData.qualitativeFeedback === 'object' &&

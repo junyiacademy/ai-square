@@ -889,8 +889,15 @@ class PBLProgramService {
           completionData.qualitativeFeedback[oldLang] = oldFeedback;
         }
         
-        // Update with new language feedback
-        completionData.qualitativeFeedback[language] = feedback;
+        // Update with new language feedback or delete if null
+        if (feedback === null) {
+          // Delete the feedback for this language
+          delete completionData.qualitativeFeedback[language];
+        } else {
+          // Update with new feedback
+          completionData.qualitativeFeedback[language] = feedback;
+        }
+        
         completionData.feedbackLanguages = Object.keys(completionData.qualitativeFeedback);
         completionData.feedbackGeneratedAt = new Date().toISOString();
         completionData.lastFeedbackLanguage = language;
