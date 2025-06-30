@@ -1,11 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { AssessmentData } from '../../../types/assessment';
 import { contentService } from '@/lib/cms/content-service';
+import { cacheService } from '@/lib/cache/cache-service';
+
+export const revalidate = 3600; // Revalidate every hour
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
+    
+    // Use cache
+    const cacheKey = `assessment:${lang}`;
+    const cached = await cacheService.get(cacheKey);
+    
+    if (cached) {
+      return NextResponse.json(cached, {
+        headers: {
+          'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
+          'X-Cache': 'HIT'
+        }
+      });
+    }
 
     // Read the assessment data with CMS override support
     const assessmentData = await contentService.getContent('question', 'ai_literacy_questions.yaml') as AssessmentData;
@@ -64,10 +80,20 @@ export async function GET(request: NextRequest) {
     }));
 
     // Return processed data
-    return NextResponse.json({
+    const result = {
       assessment_config: assessmentData.assessment_config,
       domains: processedDomains,
       questions: processedQuestions,
+    };
+    
+    // Store in cache
+    await cacheService.set(cacheKey, result, { ttl: 60 * 60 * 1000 }); // 1 hour
+    
+    return NextResponse.json(result, {
+      headers: {
+        'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
+        'X-Cache': 'MISS'
+      }
     });
 
   } catch (error) {

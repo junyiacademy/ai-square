@@ -3,6 +3,7 @@ import { ScenarioListItem } from '@/types/pbl';
 import { promises as fs } from 'fs';
 import path from 'path';
 import * as yaml from 'js-yaml';
+import { cacheService } from '@/lib/cache/cache-service';
 
 // Helper function to get localized field
 function getLocalizedValue(data: any, fieldName: string, lang: string): any {
@@ -26,6 +27,12 @@ async function loadScenariosFromYAML(lang: string): Promise<ScenarioListItem[]> 
     // List of available scenario files
     const scenarioFiles = [
       'ai_job_search_scenario.yaml',
+      'ai_education_design_scenario.yaml',
+      'high_school_climate_change_scenario.yaml',
+      'high_school_digital_wellness_scenario.yaml',
+      'high_school_smart_city_scenario.yaml',
+      'high_school_creative_arts_scenario.yaml',
+      'high_school_health_assistant_scenario.yaml',
       // Add more scenario files here as they become available
     ];
     
@@ -37,6 +44,16 @@ async function loadScenariosFromYAML(lang: string): Promise<ScenarioListItem[]> 
         
         if (yamlData && yamlData.scenario_info) {
           const info = yamlData.scenario_info;
+          // Choose emoji based on scenario ID
+          const emojiMap: Record<string, string> = {
+            'ai-job-search': '💼',
+            'ai-education-design': '🎓',
+            'high-school-climate-change': '🌍',
+            'high-school-digital-wellness': '📱',
+            'high-school-smart-city': '🏙️',
+            'high-school-creative-arts': '🎨',
+            'high-school-health-assistant': '💗'
+          };
           scenarios.push({
             id: info.id,
             title: getLocalizedValue(info, 'title', lang),
@@ -44,8 +61,9 @@ async function loadScenariosFromYAML(lang: string): Promise<ScenarioListItem[]> 
             difficulty: info.difficulty,
             estimatedDuration: info.estimated_duration,
             domains: info.target_domains,
+            targetDomain: info.target_domains, // for compatibility
             isAvailable: true,
-            thumbnailEmoji: '💼' // Could be added to YAML if needed
+            thumbnailEmoji: emojiMap[info.id] || '🤖'
           });
         }
       } catch (error) {
@@ -123,16 +141,31 @@ async function loadScenariosFromYAML(lang: string): Promise<ScenarioListItem[]> 
   return scenarios;
 }
 
+export const revalidate = 3600; // Revalidate every hour
+
 export async function GET(request: Request) {
   try {
     // Get language from query params
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
+    
+    // Use cache
+    const cacheKey = `pbl:scenarios:${lang}`;
+    const cached = await cacheService.get(cacheKey);
+    
+    if (cached) {
+      return NextResponse.json(cached, {
+        headers: {
+          'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
+          'X-Cache': 'HIT'
+        }
+      });
+    }
 
     // Load scenarios from YAML files with proper translations
     const scenarios = await loadScenariosFromYAML(lang);
 
-    return NextResponse.json({
+    const result = {
       success: true,
       data: {
         scenarios,
@@ -142,6 +175,16 @@ export async function GET(request: Request) {
       meta: {
         timestamp: new Date().toISOString(),
         version: '1.0.0'
+      }
+    };
+    
+    // Store in cache
+    await cacheService.set(cacheKey, result, { ttl: 60 * 60 * 1000 }); // 1 hour
+    
+    return NextResponse.json(result, {
+      headers: {
+        'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
+        'X-Cache': 'MISS'
       }
     });
   } catch (error) {

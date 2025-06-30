@@ -31,8 +31,8 @@ class CacheService {
       }
     }
 
-    // 再檢查 localStorage
-    if (storage === 'localStorage' || storage === 'both') {
+    // 再檢查 localStorage (只在瀏覽器環境)
+    if ((storage === 'localStorage' || storage === 'both') && typeof window !== 'undefined') {
       try {
         const stored = localStorage.getItem(this.getCacheKey(key))
         if (stored) {
@@ -74,8 +74,8 @@ class CacheService {
       this.enforceMemoryLimit()
     }
 
-    // 儲存到 localStorage
-    if (storage === 'localStorage' || storage === 'both') {
+    // 儲存到 localStorage (只在瀏覽器環境)
+    if ((storage === 'localStorage' || storage === 'both') && typeof window !== 'undefined') {
       try {
         localStorage.setItem(this.getCacheKey(key), JSON.stringify(entry))
       } catch {
@@ -90,7 +90,9 @@ class CacheService {
    */
   async delete(key: string): Promise<void> {
     this.memoryCache.delete(key)
-    localStorage.removeItem(this.getCacheKey(key))
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(this.getCacheKey(key))
+    }
   }
 
   /**
@@ -99,13 +101,15 @@ class CacheService {
   async clear(): Promise<void> {
     this.memoryCache.clear()
     
-    // 清除所有 cache 開頭的 localStorage 項目
-    const keys = Object.keys(localStorage)
-    keys.forEach(key => {
-      if (key.startsWith('cache:')) {
-        localStorage.removeItem(key)
-      }
-    })
+    // 清除所有 cache 開頭的 localStorage 項目 (只在瀏覽器環境)
+    if (typeof window !== 'undefined') {
+      const keys = Object.keys(localStorage)
+      keys.forEach(key => {
+        if (key.startsWith('cache:')) {
+          localStorage.removeItem(key)
+        }
+      })
+    }
   }
 
   /**
@@ -178,6 +182,11 @@ class CacheService {
    * 清理 localStorage 中過期或最舊的項目
    */
   private cleanupLocalStorage(): void {
+    // 只在瀏覽器環境執行
+    if (typeof window === 'undefined') {
+      return
+    }
+    
     const cacheItems: Array<{ key: string; entry: CacheEntry<unknown> }> = []
     
     Object.keys(localStorage).forEach(key => {

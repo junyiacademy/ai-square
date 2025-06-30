@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { contentService } from '@/lib/cms/content-service';
+import { cacheService } from '@/lib/cache/cache-service';
 
 // --- 修正後的型別定義 ---
 // 移除未使用的 languageCodes
@@ -75,9 +76,25 @@ const getTranslatedField = (lang: string, item: object | null, fieldName: string
 };
 
 
+export const revalidate = 3600; // Revalidate every hour
+export const runtime = 'nodejs'; // Use Node.js runtime for better performance
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const lang = searchParams.get('lang') || 'en';
+  
+  // 使用快取
+  const cacheKey = `relations:${lang}`;
+  const cached = await cacheService.get(cacheKey);
+  
+  if (cached) {
+    return NextResponse.json(cached, {
+      headers: {
+        'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
+        'X-Cache': 'HIT'
+      }
+    });
+  }
 
   // 讀取 YAML with CMS override support
   const domainsData = await contentService.getContent('domain', 'ai_lit_domains.yaml') as DomainsYaml;
@@ -119,10 +136,20 @@ export async function GET(req: NextRequest) {
   const sMap = mapKSA(ksaData.skill_codes.themes);
   const aMap = mapKSA(ksaData.attitude_codes.themes);
 
-  return NextResponse.json({
+  const result = {
     domains: domainList,
     kMap,
     sMap,
     aMap,
+  };
+  
+  // 存入快取
+  await cacheService.set(cacheKey, result, { ttl: 60 * 60 * 1000 }); // 1 hour
+  
+  return NextResponse.json(result, {
+    headers: {
+      'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
+      'X-Cache': 'MISS'
+    }
   });
 } 
