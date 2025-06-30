@@ -1,4 +1,5 @@
 import { VertexAI } from '@google-cloud/vertexai';
+import { GoogleAuth } from 'google-auth-library';
 import * as yaml from 'js-yaml';
 import { PBL_SCENARIO_JSON_SCHEMA, type PBLScenarioSchema } from './schemas/pbl-scenario.schema';
 import { sortPBLScenario } from './utils/yaml-order';
@@ -9,7 +10,6 @@ let vertexAI: VertexAI | null = null;
 function getVertexAI() {
   if (!vertexAI) {
     try {
-      // Simply use environment variables - the SDK will handle auth
       const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID;
       const location = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1';
       
@@ -17,10 +17,36 @@ function getVertexAI() {
         throw new Error('GOOGLE_CLOUD_PROJECT_ID environment variable is required');
       }
       
-      vertexAI = new VertexAI({
-        project: projectId,
-        location: location,
-      });
+      // Check if we have service account JSON from Secret Manager
+      const credentialsJson = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON;
+      
+      if (credentialsJson) {
+        // Parse the JSON credentials from Secret Manager
+        const credentials = JSON.parse(credentialsJson);
+        
+        // Create GoogleAuth with the parsed credentials
+        const auth = new GoogleAuth({
+          credentials,
+          scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+        });
+        
+        vertexAI = new VertexAI({
+          project: projectId,
+          location: location,
+          googleAuthOptions: {
+            credentials,
+            scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+          }
+        });
+      } else {
+        // Fallback to default authentication (for local development)
+        vertexAI = new VertexAI({
+          project: projectId,
+          location: location,
+        });
+      }
+      
+      console.log('Vertex AI initialized successfully');
     } catch (error) {
       console.error('Failed to initialize Vertex AI:', error);
       throw new Error('Failed to initialize Vertex AI. Please check your Google Cloud credentials.');

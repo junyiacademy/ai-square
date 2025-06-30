@@ -292,12 +292,24 @@ help:
 	@echo "  $(GREEN)make build-frontend$(NC)                            - 建置前端生產版本"
 	@echo "  $(GREEN)make build-docker-image$(NC)                        - 建置 Docker 映像"
 	@echo ""
-	@echo "$(CYAN)部署:$(NC)"
+	@echo "$(CYAN)部署準備:$(NC)"
+	@echo "  $(GREEN)make setup-secrets$(NC)                             - 設定所有 Secret Manager"
+	@echo "  $(GREEN)make setup-service-accounts$(NC)                    - 創建 Service Accounts"
 	@echo "  $(GREEN)make check-deploy-size$(NC)                         - 檢查部署大小"
-	@echo "  $(GREEN)make deploy-gcp$(NC)                                - 完整部署到 Google Cloud"
-	@echo "  $(GREEN)make gcp-build-and-push$(NC)                        - Cloud Build 並推送"
-	@echo "  $(GREEN)make gcp-deploy-service$(NC)                        - 部署服務到 Cloud Run"
+	@echo ""
+	@echo "$(CYAN)部署:$(NC)"
+	@echo "  $(GREEN)make deploy-gcp$(NC)                                - 完整部署前端到 Google Cloud"
+	@echo "  $(GREEN)make deploy-cms-gcp$(NC)                            - 完整部署 CMS 到 Google Cloud"
+	@echo "  $(GREEN)make gcp-build-and-push$(NC)                        - Cloud Build 並推送前端"
+	@echo "  $(GREEN)make cms-build-and-push$(NC)                        - Cloud Build 並推送 CMS"
+	@echo "  $(GREEN)make gcp-deploy-frontend$(NC)                       - 部署前端到 Cloud Run"
+	@echo "  $(GREEN)make gcp-deploy-cms$(NC)                            - 部署 CMS 到 Cloud Run"
 	@echo "  $(GREEN)make deploy-backend-gcp$(NC)                        - 部署後端到 GCP"
+	@echo ""
+	@echo "$(CYAN)部署檢查:$(NC)"
+	@echo "  $(GREEN)make check-deployment$(NC)                          - 檢查部署狀態"
+	@echo "  $(GREEN)make logs-cms$(NC)                                   - 檢視 CMS 日誌"
+	@echo "  $(GREEN)make logs-frontend$(NC)                              - 檢視前端日誌"
 	@echo ""
 	@echo "$(YELLOW)=== 維護命令 ===$(NC)"
 	@echo "  $(GREEN)make clean$(NC)                                     - 清理建置產物"
@@ -455,9 +467,9 @@ gcp-build-and-push:
 	@cd frontend && gcloud meta list-files-for-upload . | xargs du -ch 2>/dev/null | tail -1 | cut -f1 | xargs echo "總大小:"
 	cd frontend && gcloud builds submit --tag $(GCR_IMAGE)
 
-## 部署服務到 Cloud Run (使用 Secret Manager)
-gcp-deploy-service:
-	@echo "$(GREEN)🚀 部署服務到 Cloud Run (使用 Secret Manager)$(NC)"
+## 部署前端到 Cloud Run (使用 Secret Manager)
+gcp-deploy-frontend:
+	@echo "$(GREEN)🚀 部署前端到 Cloud Run (使用 Secret Manager)$(NC)"
 	gcloud run deploy $(IMAGE_NAME) \
 		--image $(GCR_IMAGE) \
 		--platform managed \
@@ -468,9 +480,45 @@ gcp-deploy-service:
 		--set-env-vars="GOOGLE_CLOUD_PROJECT=$(PROJECT_ID)" \
 		--service-account="ai-square-frontend@$(PROJECT_ID).iam.gserviceaccount.com"
 
-## 設定 Google Secret Manager
-setup-secrets:
-	@echo "$(BLUE)🔐 設定 Google Secret Manager$(NC)"
+## 建置 CMS Docker 映像
+build-cms-image:
+	@echo "$(BLUE)🐳 建置 CMS Docker 映像$(NC)"
+	cd cms && docker build -t ai-square-cms .
+
+## CMS Cloud Build 並推送
+cms-build-and-push:
+	@echo "$(BLUE)☁️  使用 Cloud Build 建置並推送 CMS 映像$(NC)"
+	@echo "$(YELLOW)📦 將上傳的 CMS 內容大小:$(NC)"
+	@cd cms && gcloud meta list-files-for-upload . | wc -l | xargs echo "檔案數:"
+	@cd cms && gcloud meta list-files-for-upload . | xargs du -ch 2>/dev/null | tail -1 | cut -f1 | xargs echo "總大小:"
+	cd cms && gcloud builds submit --tag gcr.io/$(PROJECT_ID)/ai-square-cms
+
+## 部署 CMS 到 Cloud Run (使用 Secret Manager)
+gcp-deploy-cms:
+	@echo "$(GREEN)🚀 部署 CMS 到 Cloud Run (使用 Secret Manager)$(NC)"
+	gcloud run deploy ai-square-cms \
+		--image gcr.io/$(PROJECT_ID)/ai-square-cms \
+		--platform managed \
+		--region asia-east1 \
+		--port 3000 \
+		--allow-unauthenticated \
+		--set-secrets="GITHUB_TOKEN=github-token:latest,GOOGLE_APPLICATION_CREDENTIALS_JSON=google-cloud-key:latest,GITHUB_OWNER=github-owner:latest,GITHUB_REPO=github-repo:latest,GOOGLE_CLOUD_PROJECT_ID=google-cloud-project-id:latest,GOOGLE_CLOUD_LOCATION=google-cloud-location:latest" \
+		--service-account="ai-square-cms@$(PROJECT_ID).iam.gserviceaccount.com" \
+		--memory="1Gi" \
+		--cpu="1" \
+		--concurrency="10" \
+		--max-instances="5"
+
+## 完整部署 CMS 到 GCP
+deploy-cms-gcp: build-cms-image cms-build-and-push gcp-deploy-cms
+	@echo "$(GREEN)✅ CMS 部署完成！$(NC)"
+
+## 重新命名舊的部署命令以保持向後兼容
+gcp-deploy-service: gcp-deploy-frontend
+
+## 設定 Google Secret Manager (前端)
+setup-secrets-frontend:
+	@echo "$(BLUE)🔐 設定前端 Google Secret Manager$(NC)"
 	@echo "$(YELLOW)📝 創建 GCS Bucket Name secret...$(NC)"
 	@read -p "請輸入 GCS Bucket 名稱: " bucket_name; \
 	echo -n "$$bucket_name" | gcloud secrets create gcs-bucket-name \
@@ -482,7 +530,120 @@ setup-secrets:
 		--member="serviceAccount:ai-square-frontend@$(PROJECT_ID).iam.gserviceaccount.com" \
 		--role="roles/secretmanager.secretAccessor" \
 		--project=$(PROJECT_ID)
-	@echo "$(GREEN)✅ Secret Manager 設定完成！$(NC)"
+	@echo "$(GREEN)✅ 前端 Secret Manager 設定完成！$(NC)"
+
+## 設定 CMS Secret Manager
+setup-secrets-cms:
+	@echo "$(BLUE)🔐 設定 CMS Google Secret Manager$(NC)"
+	@echo "$(YELLOW)📝 檢查並創建必要的 secrets...$(NC)"
+	
+	@# GitHub Token
+	@if [ -z "$$GITHUB_TOKEN" ]; then \
+		echo "$(RED)❌ GITHUB_TOKEN 環境變數未設定$(NC)"; \
+		echo "請先設定: export GITHUB_TOKEN=your_github_token"; \
+		exit 1; \
+	fi
+	@echo -n "$$GITHUB_TOKEN" | gcloud secrets create github-token \
+		--replication-policy="automatic" \
+		--data-file=- \
+		--project=$(PROJECT_ID) || echo "github-token secret 已存在"
+	
+	@# Google Cloud Key (for Vertex AI)
+	@if [ ! -f "ai-square-key.json" ]; then \
+		echo "$(RED)❌ ai-square-key.json 檔案不存在$(NC)"; \
+		echo "請先下載 Service Account key 到專案根目錄"; \
+		exit 1; \
+	fi
+	@gcloud secrets create google-cloud-key \
+		--replication-policy="automatic" \
+		--data-file="ai-square-key.json" \
+		--project=$(PROJECT_ID) || echo "google-cloud-key secret 已存在"
+	
+	@# GitHub Owner/Repo
+	@echo -n "junyiacademy" | gcloud secrets create github-owner \
+		--replication-policy="automatic" \
+		--data-file=- \
+		--project=$(PROJECT_ID) || echo "github-owner secret 已存在"
+	@echo -n "ai-square" | gcloud secrets create github-repo \
+		--replication-policy="automatic" \
+		--data-file=- \
+		--project=$(PROJECT_ID) || echo "github-repo secret 已存在"
+	
+	@# Google Cloud Project ID
+	@echo -n "$(PROJECT_ID)" | gcloud secrets create google-cloud-project-id \
+		--replication-policy="automatic" \
+		--data-file=- \
+		--project=$(PROJECT_ID) || echo "google-cloud-project-id secret 已存在"
+	
+	@# Google Cloud Location
+	@echo -n "us-central1" | gcloud secrets create google-cloud-location \
+		--replication-policy="automatic" \
+		--data-file=- \
+		--project=$(PROJECT_ID) || echo "google-cloud-location secret 已存在"
+	
+	@echo "$(YELLOW)🔑 授予 CMS Service Account 讀取權限...$(NC)"
+	@for secret in github-token google-cloud-key github-owner github-repo google-cloud-project-id google-cloud-location; do \
+		gcloud secrets add-iam-policy-binding $$secret \
+			--member="serviceAccount:ai-square-cms@$(PROJECT_ID).iam.gserviceaccount.com" \
+			--role="roles/secretmanager.secretAccessor" \
+			--project=$(PROJECT_ID); \
+	done
+	@echo "$(GREEN)✅ CMS Secret Manager 設定完成！$(NC)"
+
+## 創建必要的 Service Accounts
+setup-service-accounts:
+	@echo "$(BLUE)👤 創建 Service Accounts$(NC)"
+	
+	@# Frontend Service Account
+	@gcloud iam service-accounts create ai-square-frontend \
+		--description="AI Square Frontend Service Account" \
+		--display-name="AI Square Frontend" \
+		--project=$(PROJECT_ID) || echo "Frontend SA 已存在"
+	
+	@# CMS Service Account  
+	@gcloud iam service-accounts create ai-square-cms \
+		--description="AI Square CMS Service Account" \
+		--display-name="AI Square CMS" \
+		--project=$(PROJECT_ID) || echo "CMS SA 已存在"
+	
+	@echo "$(YELLOW)🔑 授予必要權限...$(NC)"
+	@# Frontend permissions
+	@gcloud projects add-iam-policy-binding $(PROJECT_ID) \
+		--member="serviceAccount:ai-square-frontend@$(PROJECT_ID).iam.gserviceaccount.com" \
+		--role="roles/storage.objectViewer"
+	
+	@# CMS permissions (需要更多權限)
+	@gcloud projects add-iam-policy-binding $(PROJECT_ID) \
+		--member="serviceAccount:ai-square-cms@$(PROJECT_ID).iam.gserviceaccount.com" \
+		--role="roles/aiplatform.user"
+	@gcloud projects add-iam-policy-binding $(PROJECT_ID) \
+		--member="serviceAccount:ai-square-cms@$(PROJECT_ID).iam.gserviceaccount.com" \
+		--role="roles/storage.objectAdmin"
+	
+	@echo "$(GREEN)✅ Service Accounts 創建完成！$(NC)"
+
+## 完整設定所有 secrets
+setup-secrets: setup-service-accounts setup-secrets-frontend setup-secrets-cms
+
+## 檢查部署狀態
+check-deployment:
+	@echo "$(BLUE)📊 檢查部署狀態$(NC)"
+	@echo "$(YELLOW)Cloud Run 服務:$(NC)"
+	@gcloud run services list --region=asia-east1 --project=$(PROJECT_ID)
+	@echo "\n$(YELLOW)Secret Manager:$(NC)"
+	@gcloud secrets list --project=$(PROJECT_ID) | grep -E "(github-token|google-cloud-key|gcs-bucket-name)"
+	@echo "\n$(YELLOW)Service Accounts:$(NC)"
+	@gcloud iam service-accounts list --project=$(PROJECT_ID) | grep ai-square
+
+## 檢視 CMS 日誌
+logs-cms:
+	@echo "$(BLUE)📝 檢視 CMS 日誌$(NC)"
+	@gcloud run services logs read ai-square-cms --region=asia-east1 --project=$(PROJECT_ID) --limit=50
+
+## 檢視前端日誌
+logs-frontend:
+	@echo "$(BLUE)📝 檢視前端日誌$(NC)"
+	@gcloud run services logs read ai-square-frontend --region=asia-east1 --project=$(PROJECT_ID) --limit=50
 
 ## 驗證 PBL 情境檔案
 validate-scenarios:

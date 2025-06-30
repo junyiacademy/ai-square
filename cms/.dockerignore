@@ -1,0 +1,22 @@
+Dockerfile
+.dockerignore
+node_modules
+npm-debug.log
+README.md
+.env
+.env.local
+.env.production.local
+.env.staging.local
+.git
+.gitignore
+.next
+.vercel
+*.md
+coverage/
+.DS_Store
+.vscode/
+.idea/
+
+# AI Square specific
+ai-square-key.json
+*.log
