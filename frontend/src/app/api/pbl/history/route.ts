@@ -1,6 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pblProgramService } from '@/lib/storage/pbl-program-service';
 import { GetProgramHistoryResponse } from '@/types/pbl';
+import { promises as fs } from 'fs';
+import * as yaml from 'js-yaml';
+import path from 'path';
+
+// Helper function to get localized value
+function getLocalizedValue(data: any, fieldName: string, lang: string): any {
+  // Convert language code to suffix
+  let langSuffix = lang;
+  if (lang === 'zh-TW' || lang === 'zh-CN') {
+    langSuffix = 'zh';
+  }
+  
+  // Try language-specific field first
+  const localizedField = `${fieldName}_${langSuffix}`;
+  if (data[localizedField]) {
+    return data[localizedField];
+  }
+  
+  // Fall back to default field
+  return data[fieldName] || '';
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -31,7 +52,7 @@ export async function GET(request: NextRequest) {
     const scenarioId = searchParams.get('scenarioId') || undefined;
     const language = searchParams.get('lang') || 'en';
     
-    console.log(`Fetching PBL history for user: ${userEmail}, scenario: ${scenarioId || 'all'}`);
+    console.log(`Fetching PBL history for user: ${userEmail}, scenario: ${scenarioId || 'all'}, language: ${language}`);
     
     // Get all programs for the user using completion data
     let programs = [];
@@ -48,14 +69,36 @@ export async function GET(request: NextRequest) {
     
     console.log(`Found ${programs.length} programs for user ${userEmail}`);
     
+    // Load scenario titles from YAML files
+    const scenarioTitles: Record<string, string> = {};
+    for (const program of programs) {
+      if (!scenarioTitles[program.scenarioId]) {
+        try {
+          const yamlPath = path.join(process.cwd(), 'public', 'pbl_data', `${program.scenarioId}_scenario.yaml`);
+          const yamlContent = await fs.readFile(yamlPath, 'utf8');
+          const scenarioData = yaml.load(yamlContent) as any;
+          scenarioTitles[program.scenarioId] = getLocalizedValue(scenarioData, 'title', language);
+        } catch (error) {
+          console.error(`Error loading scenario ${program.scenarioId}:`, error);
+          scenarioTitles[program.scenarioId] = program.scenarioId;
+        }
+      }
+    }
+    
+    // Add scenario titles to programs
+    const programsWithTitles = programs.map(program => ({
+      ...program,
+      scenarioTitle: scenarioTitles[program.scenarioId] || program.scenarioId
+    }));
+    
     // Sort by most recent first
-    programs.sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime());
+    programsWithTitles.sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime());
     
     // Transform to API response format
     const response: GetProgramHistoryResponse = {
       success: true,
-      programs: programs,
-      totalPrograms: programs.length
+      programs: programsWithTitles,
+      totalPrograms: programsWithTitles.length
     };
     
     return NextResponse.json(response);
