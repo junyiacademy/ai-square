@@ -559,12 +559,12 @@ completion_criteria:
   min_overall_score: 80
 
 resources:
-  - name: "Teen Health Research"
+  - name: "Teen Health Research "
     name_zh: "青少年健康研究"
     url: "https://www.cdc.gov/healthyyouth/"
     type: reference
     
-  - name: "AI Chatbot Platforms"
+  - name: "AI Chatbot Platforms "
     name_zh: "AI 聊天機器人平台"
     url: "https://www.dialogflow.com/"
     type: tool
