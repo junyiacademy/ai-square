@@ -21,16 +21,18 @@ export async function POST(request: NextRequest) {
     // Add the specific file to git
     await execAsync(`git add cms/content/${filePath}`, { cwd: projectRoot });
     
-    // Create commit with conventional format
-    const commitMessage = `feat(cms): update ${filePath}
+    // Use provided message or create default format
+    const commitMessage = message.includes('\n') 
+      ? message  // Already formatted by AI
+      : `feat(cms): ${message}
 
-${message}
+更新檔案: ${filePath}
 
-🤖 Generated with [Claude Code](https://claude.ai/code)
+🤖 Generated with AI Square CMS
+Co-Authored-By: Vertex AI <noreply@google.com>`;
 
-Co-Authored-By: Claude <noreply@anthropic.com>`;
-
-    await execAsync(`git commit -m "${commitMessage}"`, { cwd: projectRoot });
+    // Use heredoc to handle multi-line commit messages properly
+    const { stdout: commitResult } = await execAsync(`git commit -m "${commitMessage.replace(/"/g, '\\"')}"`, { cwd: projectRoot });
     
     // Get the commit hash
     const { stdout: commitHash } = await execAsync('git rev-parse HEAD', { cwd: projectRoot });

@@ -9,6 +9,7 @@ import { Header } from '@/components/cms/Header';
 export default function CmsPage() {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [content, setContent] = useState<string>('');
+  const [originalContent, setOriginalContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [currentBranch, setCurrentBranch] = useState<string>('main');
   const [isOnMain, setIsOnMain] = useState(true);
@@ -16,6 +17,13 @@ export default function CmsPage() {
   // Load branch status on mount
   useEffect(() => {
     loadBranchStatus();
+    
+    // Set global function for Editor to call
+    (window as any).setOriginalContent = setOriginalContent;
+    
+    return () => {
+      delete (window as any).setOriginalContent;
+    };
   }, []);
 
   const loadBranchStatus = async () => {
@@ -41,6 +49,8 @@ export default function CmsPage() {
       if (isOnMain) {
         const branchResponse = await fetch('/api/git/branch', {
           method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fileName: selectedFile }),
         });
         branchData = await branchResponse.json();
         
@@ -63,13 +73,34 @@ export default function CmsPage() {
         throw new Error('Failed to save file');
       }
       
+      // Generate intelligent commit message
+      let commitMessage = `更新 ${selectedFile}`;
+      try {
+        const messageResponse = await fetch('/api/git/generate-commit-message', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            filePath: selectedFile,
+            oldContent: originalContent,
+            newContent: content
+          }),
+        });
+        
+        const messageData = await messageResponse.json();
+        if (messageData.success) {
+          commitMessage = messageData.message;
+        }
+      } catch (error) {
+        console.warn('Failed to generate AI commit message, using default');
+      }
+      
       // Commit to current branch
       const commitResponse = await fetch('/api/git/commit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           filePath: selectedFile, 
-          message: `Update ${selectedFile} via CMS` 
+          message: commitMessage
         }),
       });
       

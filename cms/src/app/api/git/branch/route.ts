@@ -6,6 +6,7 @@ const execAsync = promisify(exec);
 
 export async function POST(request: NextRequest) {
   try {
+    const { fileName } = await request.json();
     const projectRoot = process.cwd().replace('/cms', '');
     
     // Get current branch
@@ -22,8 +23,13 @@ export async function POST(request: NextRequest) {
       });
     }
     
-    // Create new feature branch
-    const newBranch = `cms-edit-${Date.now()}`;
+    // Create new feature branch with file name
+    const sanitizedFileName = fileName 
+      ? fileName.replace(/[^a-zA-Z0-9_-]/g, '-').replace(/\.ya?ml$/, '')
+      : 'edit';
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+    const newBranch = `cms-${sanitizedFileName}-${timestamp}`;
+    
     await execAsync(`git checkout -b ${newBranch}`, { cwd: projectRoot });
     
     return NextResponse.json({ 

@@ -40,6 +40,11 @@ export function Editor({ file, content, onChange, isLoading }: EditorProps) {
       const data = await response.json();
       setLocalContent(data.content);
       onChange(data.content);
+      
+      // Store original content for comparison
+      if ((window as any).setOriginalContent) {
+        (window as any).setOriginalContent(data.content);
+      }
     } catch (error) {
       console.error('Failed to load file:', error);
     }
