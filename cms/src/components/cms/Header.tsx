@@ -1,18 +1,19 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Save, GitBranch, Eye } from 'lucide-react';
+import { Save, GitBranch, Eye, Loader2 } from 'lucide-react';
 
 interface HeaderProps {
   selectedFile: string | null;
   currentBranch: string;
   isOnMain: boolean;
+  isLoading?: boolean;
   onSave?: () => void;
   onPreview?: () => void;
   onCreatePR?: () => void;
 }
 
-export function Header({ selectedFile, currentBranch, isOnMain, onSave, onPreview, onCreatePR }: HeaderProps) {
+export function Header({ selectedFile, currentBranch, isOnMain, isLoading, onSave, onPreview, onCreatePR }: HeaderProps) {
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-3">
       <div className="flex items-center justify-between">
@@ -52,20 +53,36 @@ export function Header({ selectedFile, currentBranch, isOnMain, onSave, onPrevie
             variant="outline"
             size="sm"
             onClick={onSave}
-            disabled={!selectedFile}
+            disabled={!selectedFile || isLoading}
           >
-            <Save className="w-4 h-4 mr-1" />
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+            ) : (
+              <Save className="w-4 h-4 mr-1" />
+            )}
             Save
           </Button>
           
           <Button
             size="sm"
             onClick={onCreatePR}
-            disabled={isOnMain}
+            disabled={isOnMain || isLoading}
             variant={isOnMain ? "outline" : "default"}
+            className={`transition-all duration-200 ${
+              isLoading ? 'animate-pulse' : ''
+            }`}
           >
-            <GitBranch className="w-4 h-4 mr-1" />
-            {isOnMain ? "Need Changes" : "Create PR"}
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+            ) : (
+              <GitBranch className="w-4 h-4 mr-1" />
+            )}
+            {isLoading 
+              ? "Creating PR..." 
+              : isOnMain 
+              ? "Need Changes" 
+              : "Create PR"
+            }
           </Button>
         </div>
       </div>

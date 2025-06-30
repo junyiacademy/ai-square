@@ -73,7 +73,17 @@ export default function CmsPage() {
       const commitData = await commitResponse.json();
       
       if (commitData.success) {
-        alert(`Content saved and committed to branch: ${currentBranch}`);
+        // Success toast for save
+        const saveToast = document.createElement('div');
+        saveToast.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-in slide-in-from-right';
+        saveToast.innerHTML = `💾 Saved & committed to<br/><strong>${currentBranch}</strong>`;
+        document.body.appendChild(saveToast);
+        
+        setTimeout(() => {
+          if (document.body.contains(saveToast)) {
+            document.body.removeChild(saveToast);
+          }
+        }, 2000);
       } else {
         alert('Content saved but commit failed: ' + commitData.error);
       }
@@ -92,6 +102,13 @@ export default function CmsPage() {
     }
 
     setIsLoading(true);
+    
+    // Show immediate feedback
+    const toastMsg = document.createElement('div');
+    toastMsg.className = 'fixed top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-in slide-in-from-right';
+    toastMsg.textContent = `🚀 Creating PR for ${currentBranch}...`;
+    document.body.appendChild(toastMsg);
+    
     try {
       const response = await fetch('/api/git/pr', {
         method: 'POST',
@@ -104,20 +121,61 @@ export default function CmsPage() {
       
       const data = await response.json();
       
+      // Remove loading toast
+      document.body.removeChild(toastMsg);
+      
       if (data.success) {
-        alert(`Pull request created successfully!\nURL: ${data.prUrl}`);
-        // Optionally open PR in new tab
+        // Success toast
+        const successToast = document.createElement('div');
+        successToast.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-in slide-in-from-right';
+        successToast.innerHTML = `✅ PR created successfully!<br/><small>Opening in new tab...</small>`;
+        document.body.appendChild(successToast);
+        
+        // Open PR in new tab
         window.open(data.prUrl, '_blank');
         
         // Reset to main branch state
         setCurrentBranch('main');
         setIsOnMain(true);
+        
+        // Remove success toast after 3 seconds
+        setTimeout(() => {
+          if (document.body.contains(successToast)) {
+            document.body.removeChild(successToast);
+          }
+        }, 3000);
       } else {
-        alert('Failed to create PR: ' + data.error);
+        // Error toast
+        const errorToast = document.createElement('div');
+        errorToast.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-in slide-in-from-right';
+        errorToast.textContent = `❌ Failed to create PR: ${data.error}`;
+        document.body.appendChild(errorToast);
+        
+        setTimeout(() => {
+          if (document.body.contains(errorToast)) {
+            document.body.removeChild(errorToast);
+          }
+        }, 5000);
       }
     } catch (error) {
       console.error('Create PR error:', error);
-      alert('Failed to create pull request');
+      
+      // Remove loading toast if still there
+      if (document.body.contains(toastMsg)) {
+        document.body.removeChild(toastMsg);
+      }
+      
+      // Error toast
+      const errorToast = document.createElement('div');
+      errorToast.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-in slide-in-from-right';
+      errorToast.textContent = '❌ Network error: Failed to create pull request';
+      document.body.appendChild(errorToast);
+      
+      setTimeout(() => {
+        if (document.body.contains(errorToast)) {
+          document.body.removeChild(errorToast);
+        }
+      }, 5000);
     } finally {
       setIsLoading(false);
     }
@@ -129,6 +187,7 @@ export default function CmsPage() {
         selectedFile={selectedFile} 
         currentBranch={currentBranch}
         isOnMain={isOnMain}
+        isLoading={isLoading}
         onSave={handleSave}
         onPreview={() => {}}
         onCreatePR={handleCreatePR}
