@@ -72,9 +72,10 @@ The CMS will be available at http://localhost:3001
 - **YAML-specific optimizations**
 
 ### File Management
-- Reads from `../frontend/public/rubrics_data/` and `../frontend/public/pbl_data/`
+- Reads from `cms/content/` directory
 - Supports `.yaml` and `.yml` files
 - Safe file operations with path validation
+- Organized content structure with subdirectories
 
 ## 🤖 AI Features
 
@@ -126,13 +127,16 @@ GITHUB_REPO=ai-square
 ### Content Structure
 The CMS expects content in this structure:
 ```
-frontend/public/
+cms/content/
 ├── rubrics_data/
 │   ├── ai_lit_domains.yaml
 │   └── ksa_codes.yaml
-└── pbl_data/
-    ├── scenario1.yaml
-    └── scenario2.yaml
+├── pbl_data/
+│   ├── _scenario_template.yaml
+│   ├── ai_education_design_scenario.yaml
+│   └── high_school_*.yaml
+└── assessment_data/
+    └── ai_literacy_questions.yaml
 ```
 
 ## 🔧 Development
