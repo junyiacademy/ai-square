@@ -1,26 +1,23 @@
-# AI-Powered Smart City Solutions Scenario
-# PBL Scenario Definition (Program-based, no stages)
-
 scenario_info:
   id: high-school-smart-city
-  title: "AI-Powered Smart City Solutions"
-  title_zh: "AI 驅動的智慧城市解決方案"
-  title_es: "Soluciones de Ciudad Inteligente con IA"
-  title_ja: "AI駆動型スマートシティソリューション"
-  title_ko: "AI 기반 스마트 시티 솔루션"
-  title_fr: "Solutions de Ville Intelligente avec IA"
-  title_de: "KI-gestützte Smart City Lösungen"
-  title_ru: "Решения умного города с ИИ"
-  title_it: "Soluzioni per Città Intelligenti con IA"
-  description: "Design innovative AI solutions to improve urban life in your community"
-  description_zh: "設計創新的 AI 解決方案來改善社區的城市生活"
-  description_es: "Diseña soluciones innovadoras de IA para mejorar la vida urbana en tu comunidad"
-  description_ja: "コミュニティの都市生活を改善するための革新的なAIソリューションを設計する"
-  description_ko: "커뮤니티의 도시 생활을 개선하기 위한 혁신적인 AI 솔루션 설계"
-  description_fr: "Concevez des solutions IA innovantes pour améliorer la vie urbaine"
-  description_de: "Entwerfe innovative KI-Lösungen zur Verbesserung des städtischen Lebens"
-  description_ru: "Разработайте инновационные решения ИИ для улучшения городской жизни"
-  description_it: "Progetta soluzioni IA innovative per migliorare la vita urbana"
+  title: AI-Powered Smart City Solutions
+  title_zh: AI 驅動的智慧城市解決方案
+  title_es: Soluciones de Ciudad Inteligente con IA
+  title_ja: AI駆動型スマートシティソリューション
+  title_ko: AI 기반 스마트 시티 솔루션
+  title_fr: Solutions de Ville Intelligente avec IA
+  title_de: KI-gestützte Smart City Lösungen
+  title_ru: Решения умного города с ИИ
+  title_it: Soluzioni per Città Intelligenti con IA
+  description: Design innovative AI solutions to improve urban life in your community
+  description_zh: 設計創新的 AI 解決方案來改善社區的城市生活
+  description_es: Diseña soluciones innovadoras de IA para mejorar la vida urbana en tu comunidad
+  description_ja: コミュニティの都市生活を改善するための革新的なAIソリューションを設計する
+  description_ko: 커뮤니티의 도시 생활을 개선하기 위한 혁신적인 AI 솔루션 설계
+  description_fr: Concevez des solutions IA innovantes pour améliorer la vie urbaine
+  description_de: Entwerfe innovative KI-Lösungen zur Verbesserung des städtischen Lebens
+  description_ru: Разработайте инновационные решения ИИ для улучшения городской жизни
+  description_it: Progetta soluzioni IA innovative per migliorare la vita urbana
   difficulty: intermediate
   estimated_duration: 90
   target_domains:
@@ -99,44 +96,43 @@ scenario_info:
     - Progettare funzionalità di città intelligenti alimentate dall'IA
     - Creare prototipi e visualizzazioni
     - Sviluppare strategie di implementazione per soluzioni urbane
-
 ksa_mapping:
   knowledge:
-    - K1.1  # Understanding AI capabilities
-    - K1.2  # AI limitations awareness
-    - K2.1  # Effective prompting techniques
-    - K2.3  # AI content evaluation
+    - K1.1
+    - K1.2
+    - K2.1
+    - K2.3
+    - K2.5
   skills:
-    - S1.1  # Basic AI interaction
-    - S1.2  # Advanced prompting
-    - S2.1  # Content creation with AI
-    - S2.3  # AI-assisted analysis
+    - S1.1
+    - S1.2
+    - S2.1
+    - S2.3
   attitudes:
-    - A1.1  # Curiosity about AI
-    - A1.2  # Critical thinking
-    - A2.1  # Responsible AI use
-
-# Direct task list (no stages)
+    - A1.1
+    - A1.2
+    - A2.1
+    - A2.2
 tasks:
   - id: task-1
-    title: "Urban Challenge Mapping"
-    title_zh: "城市挑戰映射"
-    title_es: "Mapeo de Desafíos Urbanos"
-    title_ja: "都市課題マッピング"
-    title_ko: "도시 문제 매핑"
-    title_fr: "Cartographie des Défis Urbains"
-    title_de: "Kartierung städtischer Herausforderungen"
-    title_ru: "Картирование городских проблем"
-    title_it: "Mappatura delle Sfide Urbane"
-    description: "Use AI to identify and map urban challenges in your area"
-    description_zh: "使用 AI 識別和映射你所在地區的城市挑戰"
-    description_es: "Usa IA para identificar y mapear desafíos urbanos en tu área"
-    description_ja: "AIを使用して地域の都市課題を特定・マッピングする"
-    description_ko: "AI를 사용하여 지역의 도시 문제 식별 및 매핑"
-    description_fr: "Utilisez l'IA pour identifier et cartographier les défis urbains de votre région"
-    description_de: "Nutzen Sie KI zur Identifizierung und Kartierung städtischer Herausforderungen in Ihrer Region"
-    description_ru: "Используйте ИИ для выявления и картирования городских проблем в вашем районе"
-    description_it: "Usa l'IA per identificare e mappare le sfide urbane nella tua area"
+    title: Urban Challenge Mapping
+    title_zh: 城市挑戰映射
+    title_es: Mapeo de Desafíos Urbanos
+    title_ja: 都市課題マッピング
+    title_ko: 도시 문제 매핑
+    title_fr: Cartographie des Défis Urbains
+    title_de: Kartierung städtischer Herausforderungen
+    title_ru: Картирование городских проблем
+    title_it: Mappatura delle Sfide Urbane
+    description: Use AI to identify and map urban challenges in your area
+    description_zh: 使用 AI 識別和映射你所在地區的城市挑戰
+    description_es: Usa IA para identificar y mapear desafíos urbanos en tu área
+    description_ja: AIを使用して地域の都市課題を特定・マッピングする
+    description_ko: AI를 사용하여 지역의 도시 문제 식별 및 매핑
+    description_fr: Utilisez l'IA pour identifier et cartographier les défis urbains de votre région
+    description_de: Nutzen Sie KI zur Identifizierung und Kartierung städtischer Herausforderungen in Ihrer Region
+    description_ru: Используйте ИИ для выявления и картирования городских проблем в вашем районе
+    description_it: Usa l'IA per identificare e mappare le sfide urbane nella tua area
     category: research
     instructions:
       - Use AI to research traffic congestion, public safety, environmental issues, and public service gaps
@@ -230,8 +226,11 @@ tasks:
       - Strumenti di mappatura
       - Piattaforme di analisi IA
     assessment_focus:
-      primary: [K1.1, S2.3]
-      secondary: [A1.1]
+      primary:
+        - K1.1
+        - S2.3
+      secondary:
+        - A1.1
     ai_module:
       role: assistant
       model: gemini-2.5-flash
@@ -243,28 +242,27 @@ tasks:
         - Creating effective data visualizations
         - Understanding community needs
         - Prioritizing issues based on impact
-        
-        Focus on problems that affect young people in the community.
 
+        Focus on problems that affect young people in the community.
   - id: task-2
-    title: "Smart Traffic Solution"
-    title_zh: "智慧交通解決方案"
-    title_es: "Solución de Tráfico Inteligente"
-    title_ja: "スマート交通ソリューション"
-    title_ko: "스마트 교통 솔루션"
-    title_fr: "Solution de Trafic Intelligent"
-    title_de: "Intelligente Verkehrslösung"
-    title_ru: "Умное транспортное решение"
-    title_it: "Soluzione di Traffico Intelligente"
-    description: "Design an AI system to improve traffic flow and safety"
-    description_zh: "設計一個 AI 系統來改善交通流量和安全"
-    description_es: "Diseña un sistema de IA para mejorar el flujo de tráfico y la seguridad"
-    description_ja: "交通の流れと安全性を改善するAIシステムを設計する"
-    description_ko: "교통 흐름과 안전을 개선하는 AI 시스템 설계"
-    description_fr: "Concevez un système IA pour améliorer le flux de trafic et la sécurité"
-    description_de: "Entwerfen Sie ein KI-System zur Verbesserung des Verkehrsflusses und der Sicherheit"
-    description_ru: "Разработайте ИИ-систему для улучшения транспортного потока и безопасности"
-    description_it: "Progetta un sistema IA per migliorare il flusso del traffico e la sicurezza"
+    title: Smart Traffic Solution
+    title_zh: 智慧交通解決方案
+    title_es: Solución de Tráfico Inteligente
+    title_ja: スマート交通ソリューション
+    title_ko: 스마트 교통 솔루션
+    title_fr: Solution de Trafic Intelligent
+    title_de: Intelligente Verkehrslösung
+    title_ru: Умное транспортное решение
+    title_it: Soluzione di Traffico Intelligente
+    description: Design an AI system to improve traffic flow and safety
+    description_zh: 設計一個 AI 系統來改善交通流量和安全
+    description_es: Diseña un sistema de IA para mejorar el flujo de tráfico y la seguridad
+    description_ja: 交通の流れと安全性を改善するAIシステムを設計する
+    description_ko: 교통 흐름과 안전을 개선하는 AI 시스템 설계
+    description_fr: Concevez un système IA pour améliorer le flux de trafic et la sécurité
+    description_de: Entwerfen Sie ein KI-System zur Verbesserung des Verkehrsflusses und der Sicherheit
+    description_ru: Разработайте ИИ-систему для улучшения транспортного потока и безопасности
+    description_it: Progetta un sistema IA per migliorare il flusso del traffico e la sicurezza
     category: creation
     instructions:
       - Design AI features for traffic light optimization, pedestrian safety, public transport routing, and parking
@@ -322,8 +320,11 @@ tasks:
     expected_outcome_it: Una progettazione completa di sistema di gestione del traffico alimentato dall'IA
     time_limit: 30
     assessment_focus:
-      primary: [S2.1, K2.1]
-      secondary: [A2.1]
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A2.1
     ai_module:
       role: assistant
       model: gemini-2.5-flash
@@ -335,28 +336,27 @@ tasks:
         - Understanding system integration
         - Calculating impact metrics
         - Considering all road users including pedestrians and cyclists
-        
-        Help them design solutions that are both innovative and practical.
 
+        Help them design solutions that are both innovative and practical.
   - id: task-3
-    title: "Community Safety App"
-    title_zh: "社區安全應用"
-    title_es: "Aplicación de Seguridad Comunitaria"
-    title_ja: "コミュニティ安全アプリ"
-    title_ko: "커뮤니티 안전 앱"
-    title_fr: "Application de Sécurité Communautaire"
-    title_de: "Community-Sicherheits-App"
-    title_ru: "Приложение безопасности сообщества"
-    title_it: "App per la Sicurezza della Comunità"
-    description: "Build an AI-powered app prototype for community safety"
-    description_zh: "建立一個 AI 驅動的社區安全應用原型"
-    description_es: "Construye un prototipo de aplicación con IA para la seguridad comunitaria"
-    description_ja: "コミュニティの安全のためのAI駆動型アプリのプロトタイプを構築する"
-    description_ko: "커뮤니티 안전을 위한 AI 기반 앱 프로토타입 구축"
-    description_fr: "Construisez un prototype d'application alimentée par l'IA pour la sécurité communautaire"
-    description_de: "Erstellen Sie einen KI-gestützten App-Prototyp für die Gemeinschaftssicherheit"
-    description_ru: "Создайте прототип приложения на основе ИИ для безопасности сообщества"
-    description_it: "Costruisci un prototipo di app alimentata dall'IA per la sicurezza della comunità"
+    title: Community Safety App
+    title_zh: 社區安全應用
+    title_es: Aplicación de Seguridad Comunitaria
+    title_ja: コミュニティ安全アプリ
+    title_ko: 커뮤니티 안전 앱
+    title_fr: Application de Sécurité Communautaire
+    title_de: Community-Sicherheits-App
+    title_ru: Приложение безопасности сообщества
+    title_it: App per la Sicurezza della Comunità
+    description: Build an AI-powered app prototype for community safety
+    description_zh: 建立一個 AI 驅動的社區安全應用原型
+    description_es: Construye un prototipo de aplicación con IA para la seguridad comunitaria
+    description_ja: コミュニティの安全のためのAI駆動型アプリのプロトタイプを構築する
+    description_ko: 커뮤니티 안전을 위한 AI 기반 앱 프로토타입 구축
+    description_fr: Construisez un prototype d'application alimentée par l'IA pour la sécurité communautaire
+    description_de: Erstellen Sie einen KI-gestützten App-Prototyp für die Gemeinschaftssicherheit
+    description_ru: Создайте прототип приложения на основе ИИ для безопасности сообщества
+    description_it: Costruisci un prototipo di app alimentata dall'IA per la sicurezza della comunità
     category: interaction
     instructions:
       - Include AI features for emergency alerts, safe route suggestions, community reporting, and real-time updates
@@ -414,8 +414,12 @@ tasks:
     expected_outcome_it: Un prototipo funzionale di app per la sicurezza della comunità con funzionalità IA
     time_limit: 35
     assessment_focus:
-      primary: [K2.1, S1.2]
-      secondary: [A1.2, A2.1]
+      primary:
+        - K2.1
+        - S1.2
+      secondary:
+        - A1.2
+        - A2.1
     ai_module:
       role: evaluator
       model: gemini-2.5-flash
@@ -427,28 +431,27 @@ tasks:
         - Creating intuitive user interfaces
         - Implementing privacy by design
         - Considering diverse user needs
-        
-        Ensure the app prioritizes user safety and privacy while being accessible to all.
 
+        Ensure the app prioritizes user safety and privacy while being accessible to all.
   - id: task-4
-    title: "Green Spaces Optimizer"
-    title_zh: "綠色空間優化器"
-    title_es: "Optimizador de Espacios Verdes"
-    title_ja: "グリーンスペース最適化ツール"
-    title_ko: "녹지 공간 최적화 도구"
-    title_fr: "Optimiseur d'Espaces Verts"
-    title_de: "Grünflächen-Optimierer"
-    title_ru: "Оптимизатор зеленых зон"
-    title_it: "Ottimizzatore di Spazi Verdi"
-    description: "Use AI to optimize urban green spaces for community wellbeing"
-    description_zh: "使用 AI 優化城市綠色空間以促進社區福祉"
-    description_es: "Usa IA para optimizar espacios verdes urbanos para el bienestar comunitario"
-    description_ja: "AIを使用してコミュニティの福祉のために都市の緑地を最適化する"
-    description_ko: "AI를 사용하여 커뮤니티 웰빙을 위한 도시 녹지 공간 최적화"
-    description_fr: "Utilisez l'IA pour optimiser les espaces verts urbains pour le bien-être communautaire"
-    description_de: "Nutzen Sie KI zur Optimierung städtischer Grünflächen für das Gemeinwohl"
-    description_ru: "Используйте ИИ для оптимизации городских зеленых зон для благополучия сообщества"
-    description_it: "Usa l'IA per ottimizzare gli spazi verdi urbani per il benessere della comunità"
+    title: Green Spaces Optimizer
+    title_zh: 綠色空間優化器
+    title_es: Optimizador de Espacios Verdes
+    title_ja: グリーンスペース最適化ツール
+    title_ko: 녹지 공간 최적화 도구
+    title_fr: Optimiseur d'Espaces Verts
+    title_de: Grünflächen-Optimierer
+    title_ru: Оптимизатор зеленых зон
+    title_it: Ottimizzatore di Spazi Verdi
+    description: Use AI to optimize urban green spaces for community wellbeing
+    description_zh: 使用 AI 優化城市綠色空間以促進社區福祉
+    description_es: Usa IA para optimizar espacios verdes urbanos para el bienestar comunitario
+    description_ja: AIを使用してコミュニティの福祉のために都市の緑地を最適化する
+    description_ko: AI를 사용하여 커뮤니티 웰빙을 위한 도시 녹지 공간 최적화
+    description_fr: Utilisez l'IA pour optimiser les espaces verts urbains pour le bien-être communautaire
+    description_de: Nutzen Sie KI zur Optimierung städtischer Grünflächen für das Gemeinwohl
+    description_ru: Используйте ИИ для оптимизации городских зеленых зон для благополучия сообщества
+    description_it: Usa l'IA per ottimizzare gli spazi verdi urbani per il benessere della comunità
     category: analysis
     instructions:
       - Analyze current green space usage, community needs, environmental benefits, and accessibility
@@ -506,8 +509,11 @@ tasks:
     expected_outcome_it: Un piano ottimizzato per gli spazi verdi con visualizzazioni
     time_limit: 30
     assessment_focus:
-      primary: [K2.3, S2.3]
-      secondary: [A1.2]
+      primary:
+        - K2.3
+        - S2.3
+      secondary:
+        - A1.2
     ai_module:
       role: assistant
       model: gemini-2.5-flash
@@ -519,28 +525,27 @@ tasks:
         - Understanding environmental benefits
         - Designing inclusive and accessible spaces
         - Creating effective visualizations
-        
-        Focus on creating spaces that serve diverse age groups and promote community wellbeing.
 
+        Focus on creating spaces that serve diverse age groups and promote community wellbeing.
   - id: task-5
-    title: "Smart City Presentation"
-    title_zh: "智慧城市展示"
-    title_es: "Presentación de Ciudad Inteligente"
-    title_ja: "スマートシティプレゼンテーション"
-    title_ko: "스마트 시티 프레젠테이션"
-    title_fr: "Présentation de Ville Intelligente"
-    title_de: "Smart City Präsentation"
-    title_ru: "Презентация умного города"
-    title_it: "Presentazione della Città Intelligente"
-    description: "Present your smart city solutions to local government"
-    description_zh: "向地方政府展示你的智慧城市解決方案"
-    description_es: "Presenta tus soluciones de ciudad inteligente al gobierno local"
-    description_ja: "地方政府にスマートシティソリューションを提示する"
-    description_ko: "지방 정부에 스마트 시티 솔루션 발표"
-    description_fr: "Présentez vos solutions de ville intelligente au gouvernement local"
-    description_de: "Präsentieren Sie Ihre Smart-City-Lösungen der Stadtverwaltung"
-    description_ru: "Представьте ваши решения умного города местному правительству"
-    description_it: "Presenta le tue soluzioni di città intelligente al governo locale"
+    title: Smart City Presentation
+    title_zh: 智慧城市展示
+    title_es: Presentación de Ciudad Inteligente
+    title_ja: スマートシティプレゼンテーション
+    title_ko: 스마트 시티 프레젠테이션
+    title_fr: Présentation de Ville Intelligente
+    title_de: Smart City Präsentation
+    title_ru: Презентация умного города
+    title_it: Presentazione della Città Intelligente
+    description: Present your smart city solutions to local government
+    description_zh: 向地方政府展示你的智慧城市解決方案
+    description_es: Presenta tus soluciones de ciudad inteligente al gobierno local
+    description_ja: 地方政府にスマートシティソリューションを提示する
+    description_ko: 지방 정부에 스마트 시티 솔루션 발표
+    description_fr: Présentez vos solutions de ville intelligente au gouvernement local
+    description_de: Präsentieren Sie Ihre Smart-City-Lösungen der Stadtverwaltung
+    description_ru: Представьте ваши решения умного города местному правительству
+    description_it: Presenta le tue soluzioni di città intelligente al governo locale
     category: interaction
     instructions:
       - Use AI to prepare executive summary, solution demonstrations, cost-benefit analysis, and implementation roadmap
@@ -598,8 +603,12 @@ tasks:
     expected_outcome_it: Una presentazione professionale pronta per gli stakeholder governativi
     time_limit: 30
     assessment_focus:
-      primary: [S1.2, K1.2]
-      secondary: [A1.1, A2.1]
+      primary:
+        - S1.2
+        - K1.2
+      secondary:
+        - A1.1
+        - A2.1
     ai_module:
       role: actor
       model: gemini-2.5-flash
@@ -611,23 +620,20 @@ tasks:
         - Designing professional visuals
         - Anticipating stakeholder concerns
         - Building confidence in public speaking
-        
-        Help them create a presentation that demonstrates both innovation and practical implementation.
 
+        Help them create a presentation that demonstrates both innovation and practical implementation.
 completion_criteria:
   min_tasks_completed: 4
   required_competencies:
-    - K1.1  # Must demonstrate AI understanding
-    - S2.1  # Must create with AI
+    - K1.1
+    - S2.1
   min_overall_score: 80
-
 resources:
-  - name: "Smart Cities Council"
-    name_zh: "智慧城市委員會"
-    url: "https://smartcitiescouncil.com/"
+  - name: Smart Cities Council
+    name_zh: 智慧城市委員會
+    url: https://smartcitiescouncil.com/
     type: reference
-    
-  - name: "MIT City Science777"
-    name_zh: "MIT 城市科學"
-    url: "https://www.media.mit.edu/groups/city-science/overview/"
+  - name: MIT City Science777
+    name_zh: MIT 城市科學
+    url: https://www.media.mit.edu/groups/city-science/overview/
     type: research
