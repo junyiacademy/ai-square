@@ -63,10 +63,12 @@ export function FileTree({ onFileSelect, selectedFile }: FileTreeProps) {
       <div key={node.path}>
         <div
           className={cn(
-            "flex items-center px-2 py-1 hover:bg-gray-100 cursor-pointer",
-            isSelected && "bg-blue-50 text-blue-700"
+            "flex items-center px-3 py-2 rounded-lg mx-2 my-0.5 cursor-pointer transition-all duration-200",
+            isSelected 
+              ? "bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 font-medium shadow-sm" 
+              : "hover:bg-gray-50 text-gray-700 hover:text-gray-900"
           )}
-          style={{ paddingLeft: `${depth * 16 + 8}px` }}
+          style={{ paddingLeft: `${depth * 20 + 12}px` }}
           onClick={() => {
             if (node.type === 'directory') {
               toggleDirectory(node.path);
@@ -77,15 +79,29 @@ export function FileTree({ onFileSelect, selectedFile }: FileTreeProps) {
         >
           {node.type === 'directory' ? (
             <>
-              {isExpanded ? (
-                <ChevronDown className="w-4 h-4 mr-1" />
-              ) : (
-                <ChevronRight className="w-4 h-4 mr-1" />
-              )}
-              <Folder className="w-4 h-4 mr-2 text-blue-500" />
+              <div className={cn(
+                "w-5 h-5 rounded flex items-center justify-center mr-2 transition-all duration-200",
+                isExpanded ? "bg-indigo-100" : "hover:bg-gray-100"
+              )}>
+                {isExpanded ? (
+                  <ChevronDown className="w-3.5 h-3.5 text-indigo-600" />
+                ) : (
+                  <ChevronRight className="w-3.5 h-3.5 text-gray-500" />
+                )}
+              </div>
+              <Folder className={cn(
+                "w-4 h-4 mr-2.5",
+                isExpanded ? "text-indigo-500" : "text-gray-400"
+              )} />
             </>
           ) : (
-            <FileText className="w-4 h-4 mr-2 ml-5 text-gray-500" />
+            <>
+              <div className="w-5 h-5 mr-2" />
+              <FileText className={cn(
+                "w-4 h-4 mr-2.5",
+                isSelected ? "text-indigo-600" : "text-gray-400"
+              )} />
+            </>
           )}
           <span className="text-sm truncate">{node.name}</span>
         </div>
@@ -100,27 +116,43 @@ export function FileTree({ onFileSelect, selectedFile }: FileTreeProps) {
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="p-3 border-b border-gray-200">
+    <div className="flex flex-col h-full bg-white">
+      <div className="p-4 border-b border-gray-100">
+        <h2 className="text-sm font-semibold text-gray-900 mb-3">Content Files</h2>
         <div className="relative">
-          <Search className="absolute left-2 top-2.5 w-4 h-4 text-gray-400" />
-          <Input
+          <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+          <input
             placeholder="Search files..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-8 h-9"
+            className="w-full pl-10 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
           />
         </div>
       </div>
       
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto px-2 py-3">
         {loading ? (
-          <div className="p-4 text-center text-gray-500">Loading...</div>
+          <div className="flex items-center justify-center h-32">
+            <div className="text-sm text-gray-500">Loading files...</div>
+          </div>
+        ) : files.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-32 text-gray-400">
+            <Folder className="w-8 h-8 mb-2" />
+            <p className="text-sm">No files found</p>
+          </div>
         ) : (
-          <div className="py-2">
+          <div className="space-y-0.5">
             {files.map(node => renderNode(node))}
           </div>
         )}
+      </div>
+      
+      <div className="p-3 border-t border-gray-100">
+        <p className="text-xs text-gray-500 text-center">
+          {files.reduce((count, node) => 
+            count + (node.type === 'directory' && node.children ? node.children.length : 1), 0
+          )} files
+        </p>
       </div>
     </div>
   );

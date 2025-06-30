@@ -100,105 +100,127 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="p-4 border-b border-gray-200">
-        <h3 className="font-semibold flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-purple-500" />
-          AI Assistant
+    <div className="flex flex-col h-full bg-gradient-to-b from-white to-gray-50">
+      <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-purple-50 to-indigo-50">
+        <h3 className="font-semibold flex items-center gap-3 text-lg">
+          <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-sm">
+            <Sparkles className="w-5 h-5 text-white" />
+          </div>
+          <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+            AI Assistant
+          </span>
         </h3>
-        <p className="text-xs text-gray-500 mt-1">Powered by Vertex AI</p>
+        <p className="text-xs text-gray-600 mt-2 pl-11">Powered by Google Vertex AI</p>
       </div>
 
       {/* Quick Actions */}
-      <div className="p-4 space-y-2 border-b border-gray-200">
-        <p className="text-sm text-gray-600 mb-2">Quick Actions</p>
+      <div className="p-5 space-y-3 border-b border-gray-100 bg-white/50">
+        <div className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
+          <div className="w-1 h-4 bg-gradient-to-b from-purple-500 to-indigo-500 rounded-full" />
+          Quick Actions
+        </div>
         
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full justify-start"
+        <button
           onClick={() => handleQuickAction('complete')}
           disabled={!content || isProcessing}
+          className="w-full px-4 py-3 bg-gradient-to-r from-violet-50 to-purple-50 hover:from-violet-100 hover:to-purple-100 text-purple-700 rounded-xl transition-all duration-200 flex items-center gap-3 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-purple-100"
         >
-          <Wand2 className="w-4 h-4 mr-2" />
+          <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
+            <Wand2 className="w-4 h-4 text-purple-600" />
+          </div>
           Complete Content
-        </Button>
+        </button>
         
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full justify-start"
+        <button
           onClick={() => handleQuickAction('translate')}
           disabled={!content || isProcessing}
+          className="w-full px-4 py-3 bg-gradient-to-r from-blue-50 to-cyan-50 hover:from-blue-100 hover:to-cyan-100 text-blue-700 rounded-xl transition-all duration-200 flex items-center gap-3 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-blue-100"
         >
-          <Languages className="w-4 h-4 mr-2" />
+          <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
+            <Languages className="w-4 h-4 text-blue-600" />
+          </div>
           Translate to All Languages
-        </Button>
+        </button>
         
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full justify-start"
+        <button
           onClick={() => handleQuickAction('improve')}
           disabled={!content || isProcessing}
+          className="w-full px-4 py-3 bg-gradient-to-r from-emerald-50 to-green-50 hover:from-emerald-100 hover:to-green-100 text-emerald-700 rounded-xl transition-all duration-200 flex items-center gap-3 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-emerald-100"
         >
-          <CheckCircle className="w-4 h-4 mr-2" />
+          <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
+            <CheckCircle className="w-4 h-4 text-emerald-600" />
+          </div>
           Improve & Validate
-        </Button>
+        </button>
       </div>
 
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+      <div className="flex-1 overflow-y-auto p-5 space-y-4">
         {messages.map((msg, idx) => (
-          <Card key={idx} className={`p-3 ${
-            msg.role === 'user' ? 'bg-blue-50 border-blue-200' : 'bg-gray-50'
+          <div key={idx} className={`p-4 rounded-xl transition-all duration-200 ${
+            msg.role === 'user' 
+              ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 ml-8' 
+              : 'bg-white border border-gray-100 mr-8 shadow-sm'
           }`}>
-            <div className="flex items-start gap-2">
-              <div className={`w-2 h-2 rounded-full mt-2 ${
-                msg.role === 'user' ? 'bg-blue-500' : 'bg-purple-500'
-              }`} />
-              <p className="text-sm">{msg.content}</p>
+            <div className="flex items-start gap-3">
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                msg.role === 'user' 
+                  ? 'bg-gradient-to-br from-blue-500 to-indigo-600' 
+                  : 'bg-gradient-to-br from-purple-500 to-pink-600'
+              }`}>
+                {msg.role === 'user' ? (
+                  <span className="text-white text-xs font-bold">U</span>
+                ) : (
+                  <Sparkles className="w-4 h-4 text-white" />
+                )}
+              </div>
+              <p className="text-sm text-gray-700 pt-1.5 leading-relaxed">{msg.content}</p>
             </div>
-          </Card>
+          </div>
         ))}
         {messages.length === 0 && (
-          <div className="text-center mt-8">
-            <Sparkles className="w-8 h-8 mx-auto text-gray-300 mb-2" />
+          <div className="text-center mt-16">
+            <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-purple-100 to-indigo-100 rounded-2xl flex items-center justify-center">
+              <Sparkles className="w-10 h-10 text-purple-500" />
+            </div>
+            <p className="text-base font-medium text-gray-700 mb-2">
+              How can I help you today?
+            </p>
             <p className="text-sm text-gray-500">
-              Ask me to help with your content...
+              I can complete content, translate, or improve your work
             </p>
           </div>
         )}
       </div>
 
       {/* Chat Input */}
-      <div className="p-4 border-t border-gray-200">
-        <div className="flex gap-2">
-          <Textarea
-            placeholder="Ask AI to help..."
+      <div className="p-5 border-t border-gray-100 bg-white">
+        <div className="flex gap-3">
+          <textarea
+            placeholder="Ask AI to help with your content..."
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            className="min-h-[80px] flex-1 resize-none"
+            className="min-h-[80px] flex-1 resize-none px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-sm placeholder-gray-400"
             onKeyDown={(e) => {
               if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
                 handleCustomPrompt();
               }
             }}
           />
-          <Button
-            size="icon"
+          <button
             onClick={handleCustomPrompt}
             disabled={!prompt.trim() || isProcessing}
+            className="w-12 h-12 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-xl hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5"
           >
             {isProcessing ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 className="w-5 h-5 animate-spin" />
             ) : (
-              <Send className="w-4 h-4" />
+              <Send className="w-5 h-5" />
             )}
-          </Button>
+          </button>
         </div>
-        <p className="text-xs text-gray-500 mt-2">
-          Press ⌘+Enter (Mac) or Ctrl+Enter (Windows) to send
+        <p className="text-xs text-gray-500 mt-3 text-center">
+          Press <kbd className="px-2 py-0.5 bg-gray-100 rounded text-xs">⌘</kbd>+<kbd className="px-2 py-0.5 bg-gray-100 rounded text-xs">Enter</kbd> to send
         </p>
       </div>
     </div>

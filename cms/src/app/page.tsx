@@ -110,24 +110,31 @@ export default function CmsPage() {
         
         // Success toast for save
         const saveToast = document.createElement('div');
-        saveToast.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-in slide-in-from-right';
+        saveToast.className = 'fixed top-6 right-6 toast-success z-50 animate-in slide-in-from-right flex items-center gap-3';
         
         // Check if we created a new branch (was on main before)
         const displayBranch = wasOnMain ? branchData?.branch || currentBranch : currentBranch;
         
+        const icon = document.createElement('div');
+        icon.className = 'text-2xl';
+        icon.textContent = wasOnMain ? '🌟' : '✅';
+        
+        const textContent = document.createElement('div');
         if (wasOnMain) {
-          saveToast.innerHTML = `🌟 Created branch<br/><strong>${displayBranch}</strong> & committed`;
+          textContent.innerHTML = `<div class="font-semibold">Branch Created</div><div class="text-sm opacity-90">${displayBranch}</div>`;
         } else {
-          saveToast.innerHTML = `💾 Saved & committed to<br/><strong>${displayBranch}</strong>`;
+          textContent.innerHTML = `<div class="font-semibold">Changes Saved</div><div class="text-sm opacity-90">Committed to ${displayBranch}</div>`;
         }
         
+        saveToast.appendChild(icon);
+        saveToast.appendChild(textContent);
         document.body.appendChild(saveToast);
         
         setTimeout(() => {
           if (document.body.contains(saveToast)) {
             document.body.removeChild(saveToast);
           }
-        }, 2000);
+        }, 3000);
       } else {
         alert('Failed to save content');
       }
@@ -149,8 +156,16 @@ export default function CmsPage() {
     
     // Show immediate feedback
     const toastMsg = document.createElement('div');
-    toastMsg.className = 'fixed top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-in slide-in-from-right';
-    toastMsg.textContent = `🚀 Creating PR for ${currentBranch}...`;
+    toastMsg.className = 'fixed top-6 right-6 toast-info z-50 animate-in slide-in-from-right flex items-center gap-3';
+    
+    const loadingIcon = document.createElement('div');
+    loadingIcon.innerHTML = '<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+    
+    const loadingText = document.createElement('div');
+    loadingText.innerHTML = `<div class="font-semibold">Creating Pull Request</div><div class="text-sm opacity-90">${currentBranch}</div>`;
+    
+    toastMsg.appendChild(loadingIcon);
+    toastMsg.appendChild(loadingText);
     document.body.appendChild(toastMsg);
     
     try {
@@ -171,8 +186,17 @@ export default function CmsPage() {
       if (data.success) {
         // Success toast
         const successToast = document.createElement('div');
-        successToast.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-in slide-in-from-right';
-        successToast.innerHTML = `✅ PR created successfully!<br/><small>Opening in new tab...</small>`;
+        successToast.className = 'fixed top-6 right-6 toast-success z-50 animate-in slide-in-from-right flex items-center gap-3';
+        
+        const successIcon = document.createElement('div');
+        successIcon.className = 'text-2xl';
+        successIcon.textContent = '🎉';
+        
+        const successText = document.createElement('div');
+        successText.innerHTML = `<div class="font-semibold">Pull Request Created!</div><div class="text-sm opacity-90">Opening in new tab...</div>`;
+        
+        successToast.appendChild(successIcon);
+        successToast.appendChild(successText);
         document.body.appendChild(successToast);
         
         // Open PR in new tab
@@ -237,9 +261,9 @@ export default function CmsPage() {
         onCreatePR={handleCreatePR}
       />
       
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-50">
         {/* File Browser */}
-        <div className="w-64 bg-white border-r border-gray-200 overflow-y-auto">
+        <div className="w-72 bg-white/95 backdrop-blur-sm border-r border-gray-100 overflow-y-auto shadow-sm">
           <FileTree 
             onFileSelect={setSelectedFile}
             selectedFile={selectedFile}
@@ -247,7 +271,7 @@ export default function CmsPage() {
         </div>
 
         {/* Editor */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col bg-white/95 backdrop-blur-sm shadow-sm">
           <Editor
             file={selectedFile}
             content={content}
@@ -257,7 +281,7 @@ export default function CmsPage() {
         </div>
 
         {/* AI Assistant */}
-        <div className="w-80 bg-white border-l border-gray-200 overflow-y-auto">
+        <div className="w-80 bg-white/95 backdrop-blur-sm border-l border-gray-100 overflow-y-auto shadow-sm">
           <AIAssistant
             content={content}
             onContentUpdate={setContent}

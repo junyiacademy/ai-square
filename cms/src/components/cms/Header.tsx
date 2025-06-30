@@ -1,7 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Save, GitBranch, Eye, Loader2 } from 'lucide-react';
+import { Save, GitBranch, Eye, Loader2, FileText, GitPullRequestIcon } from 'lucide-react';
 
 interface HeaderProps {
   selectedFile: string | null;
@@ -15,76 +14,81 @@ interface HeaderProps {
 
 export function Header({ selectedFile, currentBranch, isOnMain, isLoading, onSave, onPreview, onCreatePR }: HeaderProps) {
   return (
-    <header className="bg-white border-b border-gray-200 px-6 py-3">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <h1 className="text-xl font-semibold">AI Square CMS</h1>
-          
-          {/* Branch indicator */}
-          <div className={`px-2 py-1 rounded-md text-xs font-medium ${
-            isOnMain 
-              ? 'bg-blue-100 text-blue-800' 
-              : 'bg-green-100 text-green-800'
-          }`}>
-            <GitBranch className="w-3 h-3 inline mr-1" />
-            {currentBranch}
+    <header className="h-20 bg-white border-b border-gray-100 px-8 flex items-center justify-between shadow-soft">
+      <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center shadow-soft">
+            <FileText className="w-6 h-6 text-white" />
           </div>
-          
-          {selectedFile && (
-            <>
-              <span className="text-gray-400">/</span>
-              <span className="text-sm text-gray-600">{selectedFile}</span>
-            </>
-          )}
+          <div>
+            <h1 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+              AI Square CMS
+            </h1>
+            <p className="text-xs text-gray-500">Content Management System</p>
+          </div>
         </div>
         
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onPreview}
-            disabled={!selectedFile}
-          >
-            <Eye className="w-4 h-4 mr-1" />
-            Preview
-          </Button>
-          
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onSave}
-            disabled={!selectedFile || isLoading}
-          >
-            {isLoading ? (
-              <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-            ) : (
-              <Save className="w-4 h-4 mr-1" />
-            )}
-            Save
-          </Button>
-          
-          <Button
-            size="sm"
-            onClick={onCreatePR}
-            disabled={isOnMain || isLoading}
-            variant={isOnMain ? "outline" : "default"}
-            className={`transition-all duration-200 ${
-              isLoading ? 'animate-pulse' : ''
-            }`}
-          >
-            {isLoading ? (
-              <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-            ) : (
-              <GitBranch className="w-4 h-4 mr-1" />
-            )}
-            {isLoading 
-              ? "Creating PR..." 
-              : isOnMain 
-              ? "Need Changes" 
-              : "Create PR"
-            }
-          </Button>
+        {selectedFile && (
+          <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-xl">
+            <FileText className="w-4 h-4 text-gray-400" />
+            <span className="text-sm font-medium text-gray-700">
+              {selectedFile}
+            </span>
+          </div>
+        )}
+      </div>
+      
+      <div className="flex items-center gap-3">
+        {/* Current branch indicator */}
+        <div className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+          isOnMain 
+            ? 'bg-gray-100 text-gray-600' 
+            : 'bg-gradient-to-r from-blue-50 to-indigo-50 text-indigo-700 border border-indigo-200'
+        }`}>
+          {isLoading ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <GitBranch className="w-4 h-4" />
+          )}
+          <span>{currentBranch}</span>
         </div>
+
+        <div className="h-8 w-px bg-gray-200" />
+
+        <button
+          onClick={onSave}
+          disabled={!selectedFile || isLoading}
+          className="px-5 py-2.5 bg-gradient-primary text-white rounded-xl hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-medium transition-all duration-200 hover:-translate-y-0.5"
+        >
+          {isLoading ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Save className="w-4 h-4" />
+          )}
+          Save
+        </button>
+        
+        <button
+          onClick={onPreview}
+          disabled={!selectedFile || isLoading}
+          className="px-5 py-2.5 bg-white text-gray-700 rounded-xl hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-medium transition-all duration-200 border border-gray-200 hover:border-gray-300 hover:shadow-sm"
+        >
+          <Eye className="w-4 h-4" />
+          Preview
+        </button>
+        
+        <button
+          onClick={onCreatePR}
+          disabled={isOnMain || isLoading}
+          className="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-medium transition-all duration-200 hover:-translate-y-0.5"
+        >
+          {isLoading ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <GitPullRequestIcon className="w-4 h-4" />
+          )}
+          Create PR
+        </button>
       </div>
     </header>
   );
