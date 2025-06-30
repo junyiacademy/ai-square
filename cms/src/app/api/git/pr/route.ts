@@ -104,7 +104,8 @@ Branch: \`${currentBranch}\`
       prUrl: pr.url,
       prNumber: pr.number,
       branch: currentBranch,
-      message: 'Pull request created successfully'
+      message: 'Pull request created successfully',
+      description: detailedBody
     });
     
     response.cookies.delete('cms-branch');

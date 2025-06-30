@@ -257,6 +257,7 @@ export class GitHubStorage {
     sourceBranch: string,
     targetBranch: string = 'main'
   ): Promise<{ number: number; url: string }> {
+    // Create PR first
     const { data } = await this.octokit.pulls.create({
       owner: this.owner,
       repo: this.repo,
@@ -265,6 +266,19 @@ export class GitHubStorage {
       head: sourceBranch,
       base: targetBranch
     });
+
+    // Then add label
+    try {
+      await this.octokit.issues.addLabels({
+        owner: this.owner,
+        repo: this.repo,
+        issue_number: data.number,
+        labels: ['cms-content-change']
+      });
+      console.log(`Added cms-content-change label to PR #${data.number}`);
+    } catch (error) {
+      console.error(`Failed to add label to PR #${data.number}:`, error);
+    }
 
     return {
       number: data.number,
@@ -289,6 +303,17 @@ export class GitHubStorage {
       message: commit.commit.message,
       author: commit.commit.author?.name || 'Unknown'
     }));
+  }
+
+  // Get commit details for a branch
+  async getBranchDetails(branchName: string) {
+    const { data } = await this.octokit.repos.getBranch({
+      owner: this.owner,
+      repo: this.repo,
+      branch: branchName
+    });
+    
+    return data;
   }
 }
 

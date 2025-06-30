@@ -5,6 +5,7 @@ import { FileTree } from '@/components/cms/FileTree';
 import { Editor } from '@/components/cms/Editor';
 import { AIAssistant } from '@/components/cms/AIAssistant';
 import { Header } from '@/components/cms/Header';
+import { ProcessingModal, ProcessingStep } from '@/components/cms/ProcessingModal';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { ChevronLeft, ChevronRight, GripVertical } from 'lucide-react';
 
@@ -19,10 +20,21 @@ export default function CmsPage() {
   const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false);
   const leftPanelRef = useRef<any>(null);
   const rightPanelRef = useRef<any>(null);
+  
+  // Processing modal state
+  const [processingModal, setProcessingModal] = useState({
+    isOpen: false,
+    steps: [] as ProcessingStep[],
+    currentStep: 0,
+    commitMessage: '',
+    prDescription: '',
+    branchName: ''
+  });
 
   // Load branch status on mount
   useEffect(() => {
     loadBranchStatus();
+    setupLabel();
     
     // Set global function for Editor to call
     (window as any).setOriginalContent = setOriginalContent;
@@ -31,6 +43,20 @@ export default function CmsPage() {
       delete (window as any).setOriginalContent;
     };
   }, []);
+
+  const setupLabel = async () => {
+    try {
+      const response = await fetch('/api/git/setup-label', {
+        method: 'POST'
+      });
+      const data = await response.json();
+      if (!data.exists) {
+        console.log('Created cms-content-change label');
+      }
+    } catch (error) {
+      console.error('Failed to setup label:', error);
+    }
+  };
 
   const loadBranchStatus = async () => {
     try {
@@ -55,15 +81,53 @@ export default function CmsPage() {
   const handleSave = async () => {
     if (!selectedFile || !content) return;
     
-    setIsLoading(true);
-    let branchData = null;
     const wasOnMain = isOnMain;
     
+    // Initialize processing steps
+    const steps: ProcessingStep[] = wasOnMain
+      ? [
+          { id: 'create-branch', label: 'Creating feature branch', status: 'pending' },
+          { id: 'save-changes', label: 'Saving changes', status: 'pending' },
+          { id: 'create-pr', label: 'Creating pull request', status: 'pending' }
+        ]
+      : [
+          { id: 'save-changes', label: 'Saving changes', status: 'pending' }
+        ];
+    
+    // Open modal
+    setProcessingModal({
+      isOpen: true,
+      steps,
+      currentStep: 0,
+      commitMessage: '',
+      prDescription: '',
+      branchName: ''
+    });
+    
+    setIsLoading(true);
+    let branchData: any = null;
+    let targetBranch = currentBranch;
+    let currentStepIndex = 0;
+    
+    const updateStep = (stepId: string, status: ProcessingStep['status'], error?: string) => {
+      setProcessingModal(prev => ({
+        ...prev,
+        steps: prev.steps.map(s => 
+          s.id === stepId ? { ...s, status, error } : s
+        )
+      }));
+    };
+    
+    const nextStep = () => {
+      currentStepIndex++;
+      setProcessingModal(prev => ({ ...prev, currentStep: currentStepIndex }));
+    };
+    
     try {
-      // If on main branch, create feature branch first
-      let targetBranch = currentBranch;
-      
-      if (isOnMain) {
+      // Step 1: Create branch if on main
+      if (wasOnMain) {
+        updateStep('create-branch', 'processing');
+        
         const branchResponse = await fetch('/api/git/branch', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -72,15 +136,21 @@ export default function CmsPage() {
         branchData = await branchResponse.json();
         
         if (branchData.success) {
-          targetBranch = branchData.branch; // Use the new branch immediately
+          targetBranch = branchData.branch;
           setCurrentBranch(branchData.branch);
           setIsOnMain(false);
+          
+          setProcessingModal(prev => ({ ...prev, branchName: branchData.branch }));
+          updateStep('create-branch', 'completed');
+          nextStep();
         } else {
           throw new Error('Failed to create feature branch');
         }
       }
       
-      // Generate intelligent commit message
+      // Step 2: Generate commit message and save
+      updateStep('save-changes', 'processing');
+      
       let commitMessage = `更新 ${selectedFile}`;
       try {
         const messageResponse = await fetch('/api/git/generate-commit-message', {
@@ -96,19 +166,20 @@ export default function CmsPage() {
         const messageData = await messageResponse.json();
         if (messageData.success) {
           commitMessage = messageData.message;
+          setProcessingModal(prev => ({ ...prev, commitMessage }));
         }
       } catch (error) {
         console.warn('Failed to generate AI commit message, using default');
       }
       
-      // Save the file with commit message (GitHub API commits automatically)
+      // Save the file with commit message
       const saveResponse = await fetch('/api/content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           path: selectedFile, 
           content,
-          branch: targetBranch, // Use the target branch, not currentBranch
+          branch: targetBranch,
           message: commitMessage
         }),
       });
@@ -119,150 +190,143 @@ export default function CmsPage() {
       
       const saveData = await saveResponse.json();
       
-      if (saveData.success) {
-        // Update original content after successful save
-        setOriginalContent(content);
-        
-        // Success toast for save
-        const saveToast = document.createElement('div');
-        saveToast.className = 'fixed top-6 right-6 toast-success z-50 animate-in slide-in-from-right flex items-center gap-3';
-        
-        // Check if we created a new branch (was on main before)
-        const displayBranch = wasOnMain ? branchData?.branch || currentBranch : currentBranch;
-        
-        const icon = document.createElement('div');
-        icon.className = 'text-2xl';
-        icon.textContent = wasOnMain ? '🌟' : '✅';
-        
-        const textContent = document.createElement('div');
-        if (wasOnMain) {
-          textContent.innerHTML = `<div class="font-semibold">Branch Created</div><div class="text-sm opacity-90">${displayBranch}</div>`;
-        } else {
-          textContent.innerHTML = `<div class="font-semibold">Changes Saved</div><div class="text-sm opacity-90">Committed to ${displayBranch}</div>`;
-        }
-        
-        saveToast.appendChild(icon);
-        saveToast.appendChild(textContent);
-        document.body.appendChild(saveToast);
-        
-        setTimeout(() => {
-          if (document.body.contains(saveToast)) {
-            document.body.removeChild(saveToast);
-          }
-        }, 3000);
-      } else {
-        alert('Failed to save content');
+      if (!saveData.success) {
+        throw new Error('Failed to save content');
       }
-    } catch (error) {
+      
+      // Update original content after successful save
+      setOriginalContent(content);
+      updateStep('save-changes', 'completed');
+      
+      // Step 3: Create PR if we were on main
+      if (wasOnMain) {
+        nextStep();
+        updateStep('create-pr', 'processing');
+        
+        // Generate PR description
+        const prResponse = await fetch('/api/git/pr', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: `CMS Content Updates from ${targetBranch}`,
+            body: `Content updates made via AI Square CMS in branch ${targetBranch}`
+          }),
+        });
+        
+        const prData = await prResponse.json();
+        
+        if (prData.success) {
+          // Extract PR description from the response
+          if (prData.description) {
+            setProcessingModal(prev => ({ ...prev, prDescription: prData.description }));
+          }
+          
+          updateStep('create-pr', 'completed');
+          
+          // Open PR in new tab after a short delay
+          setTimeout(() => {
+            window.open(prData.prUrl, '_blank');
+          }, 2000);
+          
+          // Reset to main branch
+          setCurrentBranch('main');
+          setIsOnMain(true);
+          
+          // Show success notification
+          setTimeout(() => {
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-6 right-6 toast-success z-[60] animate-in slide-in-from-right flex items-center gap-3';
+            
+            const icon = document.createElement('div');
+            icon.className = 'text-2xl';
+            icon.textContent = '🎉';
+            
+            const text = document.createElement('div');
+            text.innerHTML = `<div class="font-semibold">Pull Request Created!</div><div class="text-sm opacity-90">Opening in new tab...</div>`;
+            
+            toast.appendChild(icon);
+            toast.appendChild(text);
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+              if (document.body.contains(toast)) {
+                document.body.removeChild(toast);
+              }
+            }, 3000);
+          }, 500);
+        } else {
+          throw new Error(prData.error || 'Failed to create PR');
+        }
+      }
+    } catch (error: any) {
       console.error('Save error:', error);
-      alert('Failed to save content');
+      
+      // Update the current step with error
+      const currentStepId = steps[currentStepIndex]?.id;
+      if (currentStepId) {
+        updateStep(currentStepId, 'error', error.message || 'An error occurred');
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleCreatePR = async () => {
-    if (isOnMain) {
-      alert('Please make some changes and save first to create a feature branch.');
-      return;
-    }
-
+  const handleSwitchToMain = async () => {
+    if (isOnMain) return;
+    
     setIsLoading(true);
-    
-    // Show immediate feedback
-    const toastMsg = document.createElement('div');
-    toastMsg.className = 'fixed top-6 right-6 toast-info z-50 animate-in slide-in-from-right flex items-center gap-3';
-    
-    const loadingIcon = document.createElement('div');
-    loadingIcon.innerHTML = '<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
-    
-    const loadingText = document.createElement('div');
-    loadingText.innerHTML = `<div class="font-semibold">Creating Pull Request</div><div class="text-sm opacity-90">${currentBranch}</div>`;
-    
-    toastMsg.appendChild(loadingIcon);
-    toastMsg.appendChild(loadingText);
-    document.body.appendChild(toastMsg);
-    
     try {
-      const response = await fetch('/api/git/pr', {
-        method: 'POST',
+      // Switch to main branch
+      const response = await fetch('/api/git/branch', {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: `CMS Content Updates from ${currentBranch}`,
-          body: `Content updates made via AI Square CMS in branch ${currentBranch}`
-        }),
+        body: JSON.stringify({ branch: 'main' }),
       });
       
       const data = await response.json();
-      
-      // Remove loading toast
-      document.body.removeChild(toastMsg);
-      
       if (data.success) {
-        // Success toast
-        const successToast = document.createElement('div');
-        successToast.className = 'fixed top-6 right-6 toast-success z-50 animate-in slide-in-from-right flex items-center gap-3';
-        
-        const successIcon = document.createElement('div');
-        successIcon.className = 'text-2xl';
-        successIcon.textContent = '🎉';
-        
-        const successText = document.createElement('div');
-        successText.innerHTML = `<div class="font-semibold">Pull Request Created!</div><div class="text-sm opacity-90">Opening in new tab...</div>`;
-        
-        successToast.appendChild(successIcon);
-        successToast.appendChild(successText);
-        document.body.appendChild(successToast);
-        
-        // Open PR in new tab
-        window.open(data.prUrl, '_blank');
-        
-        // Reset to main branch state
         setCurrentBranch('main');
         setIsOnMain(true);
         
-        // Remove success toast after 3 seconds
-        setTimeout(() => {
-          if (document.body.contains(successToast)) {
-            document.body.removeChild(successToast);
-          }
-        }, 3000);
-      } else {
-        // Error toast
-        const errorToast = document.createElement('div');
-        errorToast.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-in slide-in-from-right';
-        errorToast.textContent = `❌ Failed to create PR: ${data.error}`;
-        document.body.appendChild(errorToast);
+        // Clear content if a file is selected
+        if (selectedFile) {
+          setContent('');
+          setOriginalContent('');
+          // Trigger file reload
+          const tempFile = selectedFile;
+          setSelectedFile(null);
+          setTimeout(() => setSelectedFile(tempFile), 100);
+        }
+        
+        // Success toast
+        const toast = document.createElement('div');
+        toast.className = 'fixed top-6 right-6 toast-success z-50 animate-in slide-in-from-right flex items-center gap-3';
+        
+        const icon = document.createElement('div');
+        icon.className = 'text-2xl';
+        icon.textContent = '✅';
+        
+        const text = document.createElement('div');
+        text.innerHTML = `<div class="font-semibold">Switched to Main</div><div class="text-sm opacity-90">You are now on the main branch</div>`;
+        
+        toast.appendChild(icon);
+        toast.appendChild(text);
+        document.body.appendChild(toast);
         
         setTimeout(() => {
-          if (document.body.contains(errorToast)) {
-            document.body.removeChild(errorToast);
+          if (document.body.contains(toast)) {
+            document.body.removeChild(toast);
           }
-        }, 5000);
+        }, 3000);
       }
     } catch (error) {
-      console.error('Create PR error:', error);
-      
-      // Remove loading toast if still there
-      if (document.body.contains(toastMsg)) {
-        document.body.removeChild(toastMsg);
-      }
-      
-      // Error toast
-      const errorToast = document.createElement('div');
-      errorToast.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-in slide-in-from-right';
-      errorToast.textContent = '❌ Network error: Failed to create pull request';
-      document.body.appendChild(errorToast);
-      
-      setTimeout(() => {
-        if (document.body.contains(errorToast)) {
-          document.body.removeChild(errorToast);
-        }
-      }, 5000);
+      console.error('Switch branch error:', error);
+      alert('Failed to switch to main branch');
     } finally {
       setIsLoading(false);
     }
   };
+
 
   return (
     <div className="flex flex-col h-screen">
@@ -273,7 +337,7 @@ export default function CmsPage() {
         isLoading={isLoading}
         onSave={handleSave}
         onPreview={() => {}}
-        onCreatePR={handleCreatePR}
+        onSwitchToMain={handleSwitchToMain}
       />
       
       <div className="flex flex-1 overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-50">
@@ -404,6 +468,17 @@ export default function CmsPage() {
           </Panel>
         </PanelGroup>
       </div>
+      
+      {/* Processing Modal */}
+      <ProcessingModal
+        isOpen={processingModal.isOpen}
+        onClose={() => setProcessingModal(prev => ({ ...prev, isOpen: false }))}
+        steps={processingModal.steps}
+        currentStep={processingModal.currentStep}
+        commitMessage={processingModal.commitMessage}
+        prDescription={processingModal.prDescription}
+        branchName={processingModal.branchName}
+      />
     </div>
   );
 }
