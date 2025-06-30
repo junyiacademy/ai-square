@@ -14,10 +14,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get the project root directory (assuming CMS is in project/cms)
-    const projectRoot = path.join(process.cwd(), '..');
-    const fullPath = path.join(projectRoot, 'frontend', 'public', filePath);
-    const allowedDir = path.join(projectRoot, 'frontend', 'public');
+    // Use local content directory
+    const contentPath = path.join(process.cwd(), 'content');
+    const fullPath = path.join(contentPath, filePath);
+    const allowedDir = contentPath;
 
     // Security check: ensure the path is within allowed directory
     if (!fullPath.startsWith(allowedDir)) {

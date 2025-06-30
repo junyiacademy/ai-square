@@ -57,12 +57,13 @@ async function scanDirectory(dirPath: string, basePath: string, relativePath: st
 
 export async function GET() {
   try {
-    // Get the project root directory (assuming CMS is in project/cms)
-    const projectRoot = path.join(process.cwd(), '..');
+    // Use local content directory
+    const contentPath = path.join(process.cwd(), 'content');
     
     const contentDirs = [
-      { path: path.join(projectRoot, 'frontend', 'public', 'rubrics_data'), name: 'rubrics_data' },
-      { path: path.join(projectRoot, 'frontend', 'public', 'pbl_data'), name: 'pbl_data' },
+      { path: path.join(contentPath, 'rubrics_data'), name: 'rubrics_data' },
+      { path: path.join(contentPath, 'pbl_data'), name: 'pbl_data' },
+      { path: path.join(contentPath, 'assessment_data'), name: 'assessment_data' },
     ];
 
     const allFiles: FileNode[] = [];
