@@ -1,69 +1,62 @@
 {
-  "title": "PBL Scenario-Based Learning",
-  "description": "Enhance your AI literacy through real-world tasks. Apply what you learn in practical scenarios.",
-  "difficulty": "Difficulty",
-  "duration": "Duration",
-  "minutes": "minutes",
+  "title": "PBLシナリオベース学習",
+  "description": "実世界のタスクを通じてAIリテラシーを向上させましょう。実践的なシナリオで学んだことを応用します。",
+  "difficulty": "難易度",
+  "duration": "所要時間",
+  "minutes": "分",
   "level": {
-    "beginner": "Beginner",
-    "intermediate": "Intermediate",
-    "advanced": "Advanced"
+    "beginner": "初級",
+    "intermediate": "中級",
+    "advanced": "上級"
   },
-  "startLearning": "Start Learning",
-  "viewDetails": "View Details",
-  "comingSoon": "Coming Soon",
-  "moreScenarios": "More scenarios will be available soon",
+  "startLearning": "学習を開始",
+  "viewDetails": "詳細を見る",
+  "comingSoon": "近日公開",
+  "moreScenarios": "さらなるシナリオが近日利用可能になります",
   "scenarios": {
     "jobSearch": {
-      "title": "AI-Assisted Job Search Training",
-      "description": "Learn how to use AI tools to optimize your job search process"
+      "title": "AI支援による就職活動トレーニング",
+      "description": "AIツールを使って就職活動プロセスを最適化する方法を学びます"
     }
   },
   "features": {
-    "title": "Why PBL Learning?",
+    "title": "なぜPBL学習なのか？",
     "realWorld": {
-      "title": "Real-World Scenarios",
-      "description": "Practice with authentic tasks you'll encounter in daily life"
+      "title": "実世界のシナリオ",
+      "description": "日常生活で遭遇する本物のタスクで練習"
     },
     "aiGuidance": {
-      "title": "AI Guidance",
-      "description": "Get personalized help from AI tutors throughout your learning"
+      "title": "AIガイダンス",
+      "description": "学習全体を通してAIチューターからパーソナライズされた支援を受ける"
     },
     "progress": {
-      "title": "Track Progress",
-      "description": "Monitor your skill development with detailed analytics"
+      "title": "進捗追跡",
+      "description": "詳細な分析でスキル開発をモニタリング"
     },
     "personalized": {
-      "title": "Personalized Feedback",
-      "description": "Receive tailored suggestions based on your performance"
+      "title": "パーソナライズされたフィードバック",
+      "description": "パフォーマンスに基づいた個別の提案を受ける"
     }
   },
   "details": {
     "breadcrumb": {
-      "pbl": "PBL Learning"
+      "pbl": "PBL学習"
     },
-    "learningObjectives": "Learning Objectives",
-    "prerequisites": "Prerequisites",
-    "learningStages": "Learning Stages",
-    "modality": "Modality",
-    "duration": "Duration",
-    "minutes": "minutes",
-    "tasksInStage": "Tasks in this stage:",
-    "instructions": "Instructions:",
-    "expectedOutcome": "Expected Outcome:",
-    "startLearning": "Start Learning",
-    "startLearningJourney": "Start Learning Journey",
+    "learningObjectives": "学習目標",
+    "prerequisites": "前提条件",
+    "learningStages": "学習ステージ",
+    "modality": "モダリティ",
+    "duration": "所要時間",
+    "minutes": "分",
+    "tasksInStage": "このステージのタスク：",
+    "instructions": "指示：",
+    "expectedOutcome": "期待される成果：",
+    "startLearning": "学習を開始",
+    "startLearningJourney": "学習の旅を始める",
     "viewCompletionReport": "完了レポートを表示",
-    "backToScenarios": "Back to Scenarios",
-    "scenarioNotFound": "Scenario not found",
-    "backToPBL": "Back to PBL",
-    "modalities": {
-      "reading": "Reading",
-      "writing": "Writing",
-      "listening": "Listening",
-      "speaking": "Speaking",
-      "mixed": "Mixed"
-    },
+    "backToScenarios": "シナリオに戻る",
+    "scenarioNotFound": "シナリオが見つかりません",
+    "backToPBL": "PBLに戻る",
     "existingPrograms": "既存のプログラム",
     "latestProgram": "最新のプログラム",
     "program": "プログラム",
@@ -76,30 +69,44 @@
     "startNewProgram": "新しいプログラムを開始",
     "continueDraft": "下書きを続ける",
     "continuing": "続行中...",
-    "starting": "開始中..."
+    "starting": "開始中...",
+    "modalities": {
+      "reading": "読解",
+      "writing": "筆記",
+      "listening": "聴解",
+      "speaking": "会話",
+      "mixed": "混合"
+    }
   },
   "learn": {
-    "errorLoading": "Error loading scenario",
-    "backToPBL": "Back to PBL",
-    "progress": "Progress",
-    "currentTask": "Current Task",
-    "instructions": "Instructions",
-    "expectedOutcome": "Expected Outcome",
-    "startConversation": "Start your conversation with the AI assistant",
-    "inputPlaceholder": "Type your message here...",
-    "send": "Send",
-    "saving": "Saving...",
-    "saveProgress": "Save Progress",
-    "nextTask": "Next Task",
-    "completeScenario": "Complete Scenario",
+    "errorLoading": "シナリオの読み込みエラー",
+    "backToPBL": "PBLに戻る",
+    "progress": "進捗",
+    "currentTask": "現在のタスク",
+    "instructions": "指示",
+    "expectedOutcome": "期待される成果",
+    "startConversation": "AIアシスタントとの会話を始めてください",
+    "inputPlaceholder": "ここにメッセージを入力してください...",
+    "send": "送信",
+    "sending": "送信中...",
+    "thinking": "考え中",
+    "saving": "保存中...",
+    "saveProgress": "進捗を保存",
+    "nextTask": "次のタスク",
+    "completeScenario": "シナリオを完了",
     "aiResponse": {
-      "placeholder": "Thank you for your input. Let me help you with this task...",
-      "error": "Sorry, I'm having trouble connecting. Please try again."
+      "placeholder": "ご入力ありがとうございます。このタスクでお手伝いさせていただきます...",
+      "error": "申し訳ございません、接続に問題があります。もう一度お試しください。"
     },
     "analyzeStage": "ステージを分析",
+    "analyzeTask": "タスクを分析",
     "analyzing": "分析中...",
     "stageAnalyzed": "ステージ分析完了",
+    "taskAnalyzed": "タスク分析完了",
     "stageAnalysisResults": "ステージ分析結果",
+    "taskAnalysisResults": "タスク分析結果",
+    "loginRequired": "ログインが必要です",
+    "loginRequiredMessage": "PBL学習の旅を始めるにはログインしてください。",
     "overallScore": "総合スコア",
     "strengths": "強み",
     "improvements": "改善点",
@@ -112,19 +119,9 @@
     "ksaBreakdown": "KSA内訳",
     "noAnalysisYet": "まだ分析結果がありません。会話を完了した後、'ステージを分析'をクリックしてください。",
     "reanalyzeAvailable": "再分析可能",
-    "evaluationFailed": "評価に失敗しました",
-    "unknownError": "不明なエラー",
-    "taskInfo": "タスク情報",
-    "chat": "チャット",
-    "sending": "送信中...",
-    "thinking": "考え中",
-    "analyzeTask": "タスクを分析",
-    "taskAnalyzed": "タスク分析完了",
-    "taskAnalysisResults": "タスク分析結果",
-    "loginRequired": "ログインが必要です",
-    "loginRequiredMessage": "PBL学習の旅を始めるにはログインしてください。",
     "task": "タスク",
     "description": "説明",
+    "progress": "進捗",
     "switchTask": "タスクを切り替え",
     "allTasks": "すべてのタスク",
     "current": "現在",
@@ -138,31 +135,35 @@
     "evaluationUpToDate": "評価は最新です",
     "conversationInsights": "会話の洞察",
     "effectiveExamples": "うまくいった点：",
-    "improvementExamples": "改善が必要な点："
+    "improvementExamples": "改善が必要な点：",
+    "evaluationFailed": "評価に失敗しました",
+    "unknownError": "不明なエラー",
+    "taskInfo": "タスク情報",
+    "chat": "チャット"
   },
   "history": {
-    "title": "Learning Journey",
-    "description": "View your PBL learning records and progress",
+    "title": "学習の旅",
+    "description": "PBL学習記録と進捗を確認",
     "filter": {
-      "all": "All",
-      "completed": "Completed",
-      "inProgress": "In Progress"
+      "all": "すべて",
+      "completed": "完了済み",
+      "inProgress": "進行中"
     },
     "status": {
-      "completed": "Completed",
-      "in_progress": "In Progress",
-      "paused": "Paused"
+      "completed": "完了",
+      "in_progress": "進行中",
+      "paused": "一時停止"
     },
-    "started": "Started",
-    "completed": "Completed",
-    "duration": "Duration",
-    "progress": "Progress",
-    "stages": "stages",
-    "score": "Score",
-    "continue": "Continue",
-    "review": "Review",
-    "noSessions": "No learning sessions started yet",
-    "startLearning": "Start Learning",
+    "started": "開始日",
+    "completed": "完了日",
+    "duration": "所要時間",
+    "progress": "進捗",
+    "stages": "ステージ",
+    "score": "スコア",
+    "continue": "続ける",
+    "review": "レビュー",
+    "noSessions": "まだ学習セッションが開始されていません",
+    "startLearning": "学習を開始",
     "conversationCount": "会話数",
     "times": "回",
     "stageDetails": "ステージの詳細",
@@ -172,19 +173,24 @@
   },
   "complete": {
     "congratulations": "おめでとうございます！",
+    "completedProgram": "この学習プログラムを完了しました！",
     "scenarioCompleted": "{{title}}を完了しました",
     "completionStats": "完了統計",
     "totalInteractions": "総インタラクション数",
-    "stagesCompleted": "完了ステージ数",
+    "conversationCount": "会話数",
+    "tasksEvaluated": "評価済みタスク",
+    "tasksCompleted": "完了したタスク",
     "totalTimeSpent": "総所要時間",
     "learningObjectivesAchieved": "達成した学習目標",
     "stageSummary": "ステージ概要",
+    "taskSummary": "タスク概要",
     "completed": "完了",
     "notStarted": "未開始",
     "viewHistory": "学習履歴を表示",
-    "retryScenario": "シナリオを再試行",
+    "retryScenario": "新しいプログラムを開始",
     "backToPBL": "PBLに戻る",
     "errorLoading": "完了データの読み込みエラー",
+    "noDataFound": "完了データが見つかりません",
     "score": "スコア",
     "strengths": "強み",
     "improvements": "改善点",
@@ -208,19 +214,6 @@
     "analyzing": "分析中...",
     "goToPractice": "練習へ進む",
     "notCalculated": "まだ分析されていません",
-    "timeFormat": {
-      "hours": "{{hours}}時間{{minutes}}分",
-      "minutes": "{{minutes}}分{{seconds}}秒",
-      "seconds": "{{seconds}}秒"
-    },
-    "ksa": "KSA",
-    "print": "印刷",
-    "completedProgram": "この学習プログラムを完了しました！",
-    "conversationCount": "会話数",
-    "tasksEvaluated": "評価済みタスク",
-    "tasksCompleted": "完了したタスク",
-    "taskSummary": "タスク概要",
-    "noDataFound": "完了データが見つかりません",
     "conversations": "会話",
     "timeSpent": "所要時間",
     "taskScore": "タスクスコア",
@@ -228,12 +221,20 @@
     "domainScores": "ドメインスコア",
     "tasksSummary": "タスク概要",
     "ksaAchievementSummary": "KSA達成概要",
+    "timeFormat": {
+      "hours": "{{hours}}時間{{minutes}}分",
+      "minutes": "{{minutes}}分{{seconds}}秒",
+      "seconds": "{{seconds}}秒"
+    },
     "loginRequired": "ログインが必要です",
     "loginRequiredMessage": "完了レポートを表示するにはログインしてください。",
     "viewReport": "レポートを表示",
     "generatingFeedback": "パーソナライズされたフィードバックを生成中...",
     "qualitativeFeedback": "パーソナライズされたフィードバック",
-    "nextSteps": "推奨される次のステップ"
+    "strengths": "あなたの強み",
+    "areasForImprovement": "成長の機会",
+    "nextSteps": "推奨される次のステップ",
+    "ksa": "KSA",
+    "print": "印刷"
   }
 }
-
