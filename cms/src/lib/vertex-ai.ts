@@ -140,7 +140,7 @@ export async function translateYAMLContent(yamlContent: string) {
 
     const prompt = `You are a professional translator for educational content.
     
-Translate all text fields in this PBL scenario to these languages: Chinese (zh), Spanish (es), Japanese (ja), Korean (ko), French (fr), German (de), Russian (ru), Italian (it).
+Translate all text fields in this PBL scenario to these languages: Chinese (zh-TW), Spanish (es), Japanese (ja), Korean (ko), French (fr), German (de), Russian (ru), Italian (it).
 
 Current content:
 ${JSON.stringify(existingData, null, 2)}
