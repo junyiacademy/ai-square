@@ -564,7 +564,7 @@ resources:
     url: "https://www.cdc.gov/healthyyouth/"
     type: reference
     
-  - name: "AI Chatbot Platforms"
+  - name: "AI Chatbot Platforms "
     name_zh: "AI 聊天機器人平台"
     url: "https://www.dialogflow.com/"
     type: tool
