@@ -2,6 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { pblProgramService } from '@/lib/storage/pbl-program-service';
 import { VertexAI, SchemaType } from '@google-cloud/vertexai';
 
+// Language mapping
+const languageMap: Record<string, string> = {
+  'zh': 'Traditional Chinese (繁體中文)',
+  'ja': 'Japanese (日本語)',
+  'ko': 'Korean (한국어)',
+  'es': 'Spanish (Español)',
+  'fr': 'French (Français)',
+  'de': 'German (Deutsch)',
+  'ru': 'Russian (Русский)',
+  'it': 'Italian (Italiano)',
+  'en': 'English'
+};
+
 // Define the feedback JSON schema
 const feedbackSchema = {
   type: SchemaType.OBJECT,
@@ -75,7 +88,7 @@ const vertexAI = new VertexAI({
 
 const model = vertexAI.getGenerativeModel({
   model: 'gemini-2.5-flash',
-  systemInstruction: `You are an AI literacy education expert providing qualitative feedback for Problem-Based Learning scenarios. 
+  systemInstruction: `You are a multilingual AI literacy education expert providing qualitative feedback for Problem-Based Learning scenarios. 
 Your role is to analyze learners' performance based on their conversations and provide constructive, encouraging feedback.
 
 Focus on:
@@ -85,6 +98,8 @@ Focus on:
 4. Providing actionable next steps
 
 Keep the tone supportive, encouraging, and educational.
+
+CRITICAL: You must ALWAYS respond in the EXACT language specified in the prompt. If Japanese is requested, respond ONLY in Japanese. If French is requested, respond ONLY in French. Never mix languages.
 
 You must always respond with a valid JSON object following the exact schema provided.`,
 });
@@ -221,7 +236,8 @@ The feedback should:
 - Suggest 2-3 specific next steps for continued learning
 - End with a personalized encouraging message
 
-Provide all feedback in ${currentLang === 'zh' ? 'Traditional Chinese (zh-TW)' : 'English'} language.
+IMPORTANT: You MUST provide ALL feedback in ${languageMap[currentLang] || languageMap['en']} language. 
+Do not mix languages. The entire response must be in ${languageMap[currentLang] || languageMap['en']}.
 `;
     
     // Generate feedback with JSON schema
