@@ -627,7 +627,7 @@ resources:
     url: "https://www.digitalwellnessinstitute.com/"
     type: reference
     
-  - name: "Common Sense Media"
+  - name: "Common Sense Media 01"
     name_zh: "常識媒體"
     url: "https://www.commonsensemedia.org/"
     type: guide
