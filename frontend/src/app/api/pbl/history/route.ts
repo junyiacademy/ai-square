@@ -93,7 +93,9 @@ export async function GET(request: NextRequest) {
     for (const program of programs) {
       if (!scenarioTitles[program.scenarioId]) {
         try {
-          const yamlPath = path.join(process.cwd(), 'public', 'pbl_data', `${program.scenarioId}_scenario.yaml`);
+          // Convert scenario ID format (ai-job-search -> ai_job_search)
+          const scenarioFileName = program.scenarioId.replace(/-/g, '_');
+          const yamlPath = path.join(process.cwd(), 'public', 'pbl_data', `${scenarioFileName}_scenario.yaml`);
           const yamlContent = await fs.readFile(yamlPath, 'utf8');
           const scenarioData = yaml.load(yamlContent) as any;
           
