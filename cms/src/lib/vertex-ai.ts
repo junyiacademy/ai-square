@@ -2,6 +2,7 @@ import { VertexAI } from '@google-cloud/vertexai';
 import * as yaml from 'js-yaml';
 import { PBL_SCENARIO_JSON_SCHEMA, type PBLScenarioSchema } from './schemas/pbl-scenario.schema';
 import { sortPBLScenario } from './utils/yaml-order';
+import { formatKSACodesForPrompt } from './utils/ksa-codes-loader';
 
 let vertexAI: VertexAI | null = null;
 
@@ -87,10 +88,12 @@ Requirements:
 2. Ensure consistency with existing content patterns
 3. Use appropriate difficulty levels (beginner/intermediate/advanced)
 4. Include realistic time estimates (in minutes)
-5. Add proper KSA mapping codes if missing
+5. Add proper KSA mapping codes if missing (see reference below)
 6. Create engaging tasks with clear instructions
 7. Use language code suffixes correctly: _zh, _es, _ja, _ko, _fr, _de, _ru, _it
 8. For now, focus on completing the English content. Translation fields can be filled with placeholder text.
+
+${formatKSACodesForPrompt()}
 
 Return a complete JSON object following the PBL scenario schema.`;
 
@@ -213,9 +216,11 @@ Improvements to make:
 5. Ensure proper difficulty progression
 6. Validate time estimates are realistic
 7. Enhance AI module prompts for better interaction
-8. Ensure KSA mapping is comprehensive and accurate
+8. Ensure KSA mapping is comprehensive and accurate (see reference below)
 9. Improve language for clarity and engagement
 10. Add helpful resources where appropriate
+
+${formatKSACodesForPrompt()}
 
 Return a complete JSON object with all improvements applied while preserving all existing content.`;
 
@@ -243,5 +248,133 @@ Return a complete JSON object with all improvements applied while preserving all
       `Improve this YAML content for educational effectiveness:\n\n${yamlContent}`,
       `Enhance the content quality while preserving structure. Return only valid YAML.`
     );
+  }
+}
+
+export async function mapKSAContent(yamlContent: string) {
+  try {
+    // Parse existing YAML
+    const existingData = yaml.load(yamlContent) as PBLScenarioSchema;
+    
+    // Keep only KSA mapping, return original content with updated KSA
+    const updatedData = {
+      ...existingData,
+      ksa_mapping: undefined // Will be replaced
+    };
+    
+    const vertex = getVertexAI();
+    
+    // Define a simple schema for KSA mapping
+    const ksaSchema = {
+      type: "object",
+      properties: {
+        ksa_mapping: {
+          type: "object",
+          properties: {
+            knowledge: { type: "array", items: { type: "string" } },
+            skills: { type: "array", items: { type: "string" } },
+            attitudes: { type: "array", items: { type: "string" } }
+          },
+          required: ["knowledge", "skills", "attitudes"]
+        }
+      },
+      required: ["ksa_mapping"]
+    };
+    
+    const model = vertex.getGenerativeModel({
+      model: 'gemini-2.5-flash',
+      generationConfig: {
+        maxOutputTokens: 8192,
+        temperature: 0.3,
+        topP: 0.8,
+        responseMimeType: 'application/json',
+        responseSchema: ksaSchema,
+      },
+    });
+
+    const prompt = `You are an expert in AI literacy education and competency mapping.
+    
+Analyze this PBL scenario and map it to appropriate KSA (Knowledge, Skills, Attitudes) competency codes.
+
+Current scenario:
+${JSON.stringify(existingData, null, 2)}
+
+${formatKSACodesForPrompt()}
+
+Based on the scenario's learning objectives, tasks, and content, analyze which competencies are addressed.
+
+Guidelines:
+1. Map 3-5 codes per category based on scenario relevance
+2. Focus on primary competencies addressed by the scenario
+3. Consider the difficulty level and target audience
+4. Ensure codes align with learning objectives and tasks
+
+Return your response as a valid JSON object with EXACTLY this structure:
+{
+  "ksa_mapping": {
+    "knowledge": ["K1.1", "K2.3"],
+    "skills": ["S1.1", "S2.2"],
+    "attitudes": ["A1.1", "A2.1"]
+  }
+}
+
+IMPORTANT: Return ONLY the JSON object above. No explanations, no markdown, no additional text.`;
+
+    const result = await model.generateContent(prompt);
+    const response = result.response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+    
+    // Parse the KSA mapping
+    let ksaMapping;
+    try {
+      // Clean the response - remove any markdown or extra text
+      let cleanResponse = response.trim();
+      
+      // Extract JSON if wrapped in markdown code blocks
+      const jsonMatch = cleanResponse.match(/```(?:json)?\s*(\{[\s\S]*\})\s*```/);
+      if (jsonMatch) {
+        cleanResponse = jsonMatch[1];
+      }
+      
+      // Find the JSON object in the response
+      const jsonStart = cleanResponse.indexOf('{');
+      const jsonEnd = cleanResponse.lastIndexOf('}');
+      if (jsonStart !== -1 && jsonEnd !== -1) {
+        cleanResponse = cleanResponse.substring(jsonStart, jsonEnd + 1);
+      }
+      
+      const jsonResponse = JSON.parse(cleanResponse);
+      ksaMapping = jsonResponse.ksa_mapping || { knowledge: [], skills: [], attitudes: [] };
+      
+      // Validate the structure
+      if (!Array.isArray(ksaMapping.knowledge) || 
+          !Array.isArray(ksaMapping.skills) || 
+          !Array.isArray(ksaMapping.attitudes)) {
+        throw new Error('Invalid KSA mapping structure');
+      }
+      
+      console.log('Successfully parsed KSA mapping:', ksaMapping);
+    } catch (e) {
+      console.error('Failed to parse KSA response:', e);
+      console.log('Raw response:', response);
+      ksaMapping = { knowledge: [], skills: [], attitudes: [] };
+    }
+    
+    // Update only the KSA mapping
+    updatedData.ksa_mapping = ksaMapping;
+    
+    // Sort and convert back to YAML
+    const sortedData = sortPBLScenario(updatedData);
+    const yamlOutput = yaml.dump(sortedData, {
+      indent: 2,
+      lineWidth: -1,
+      noRefs: true,
+      sortKeys: false,
+    });
+    
+    return yamlOutput;
+  } catch (error) {
+    console.error('Error in mapKSAContent:', error);
+    // Fallback: return original content
+    return yamlContent;
   }
 }

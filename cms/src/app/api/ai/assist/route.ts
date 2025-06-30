@@ -29,6 +29,12 @@ export async function POST(request: NextRequest) {
         result = await improveYAMLContent(content);
         break;
       
+      case 'ksa':
+        // Import KSA mapping function dynamically
+        const { mapKSAContent } = await import('@/lib/vertex-ai');
+        result = await mapKSAContent(content);
+        break;
+      
       default:
         return NextResponse.json(
           { error: 'Invalid action' },

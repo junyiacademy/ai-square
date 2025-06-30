@@ -10,7 +10,8 @@ import {
   CheckCircle, 
   Sparkles,
   Send,
-  Loader2
+  Loader2,
+  Network
 } from 'lucide-react';
 
 interface AIAssistantProps {
@@ -44,7 +45,8 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
     const actionMessages = {
       complete: '🔄 Completing content structure...',
       translate: '🌐 Translating to all languages...',
-      improve: '✨ Improving and validating content...'
+      improve: '✨ Improving and validating content...',
+      ksa: '🔗 Mapping KSA competencies...'
     };
     
     const processingMessage = {
@@ -195,6 +197,18 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
           >
             <CheckCircle className="w-3.5 h-3.5" />
             Improve
+          </button>
+        </div>
+        
+        <div className="flex gap-2">
+          <button
+            onClick={() => handleQuickAction('ksa')}
+            disabled={!content || isProcessing}
+            className="w-full px-3 py-2 bg-gradient-to-r from-orange-50 to-amber-50 hover:from-orange-100 hover:to-amber-100 text-orange-700 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-orange-100"
+            title="Map KSA Competencies"
+          >
+            <Network className="w-3.5 h-3.5" />
+            Map KSA
           </button>
         </div>
       </div>
