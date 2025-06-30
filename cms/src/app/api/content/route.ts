@@ -53,9 +53,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const projectRoot = path.join(process.cwd(), '..');
-    const fullPath = path.join(projectRoot, 'frontend', 'public', filePath);
-    const allowedDir = path.join(projectRoot, 'frontend', 'public');
+    const contentPath = path.join(process.cwd(), 'content');
+    const fullPath = path.join(contentPath, filePath);
+    const allowedDir = contentPath;
 
     // Security check
     if (!fullPath.startsWith(allowedDir)) {
