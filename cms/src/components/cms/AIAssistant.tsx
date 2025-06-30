@@ -25,6 +25,7 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
   const [messages, setMessages] = useState<Array<{
     role: 'user' | 'assistant';
     content: string;
+    suggestedContent?: string;
   }>>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -85,13 +86,19 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
       });
       
       const data = await response.json();
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: data.response
-      }]);
       
+      // If AI suggests content update, ask for confirmation
       if (data.updatedContent) {
-        onContentUpdate(data.updatedContent);
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: data.response + '\n\n💡 **Would you like to apply these changes?**',
+          suggestedContent: data.updatedContent
+        }]);
+      } else {
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: data.response
+        }]);
       }
     } catch (error) {
       console.error('AI chat error:', error);
@@ -175,7 +182,35 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
                   <Sparkles className="w-4 h-4 text-white" />
                 )}
               </div>
-              <p className="text-sm text-gray-700 pt-1.5 leading-relaxed">{msg.content}</p>
+              <div className="flex-1">
+                <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                {msg.suggestedContent && (
+                  <div className="mt-3 flex gap-2">
+                    <button
+                      onClick={() => {
+                        onContentUpdate(msg.suggestedContent!);
+                        setMessages(prev => [...prev.slice(0, idx + 1), {
+                          role: 'assistant',
+                          content: '✅ Changes applied successfully!'
+                        }]);
+                      }}
+                      className="px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-medium rounded-lg hover:shadow-md transition-all duration-200"
+                    >
+                      Apply Changes
+                    </button>
+                    <button
+                      onClick={() => {
+                        setMessages(prev => prev.map((m, i) => 
+                          i === idx ? { ...m, suggestedContent: undefined } : m
+                        ));
+                      }}
+                      className="px-3 py-1.5 bg-gray-200 text-gray-700 text-xs font-medium rounded-lg hover:bg-gray-300 transition-all duration-200"
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ))}
