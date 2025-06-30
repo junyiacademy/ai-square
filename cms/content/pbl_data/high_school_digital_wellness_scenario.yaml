@@ -1,0 +1,633 @@
+# AI for Digital Wellness Campaign Scenario
+# PBL Scenario Definition (Program-based, no stages)
+
+scenario_info:
+  id: high-school-digital-wellness
+  title: "AI for Digital Wellness Campaign"
+  title_zh: "AI 數位健康運動"
+  title_es: "Campaña de Bienestar Digital con IA"
+  title_ja: "AIによるデジタルウェルネスキャンペーン"
+  title_ko: "AI 디지털 웰니스 캠페인"
+  title_fr: "Campagne de Bien-être Numérique avec IA"
+  title_de: "KI für digitale Wellness-Kampagne"
+  title_ru: "Кампания цифрового благополучия с ИИ"
+  title_it: "Campagna di Benessere Digitale con IA"
+  description: "Design an AI-powered campaign to promote healthy digital habits among your peers"
+  description_zh: "設計一個 AI 驅動的活動，在同儕中推廣健康的數位習慣"
+  description_es: "Diseña una campaña con IA para promover hábitos digitales saludables entre tus compañeros"
+  description_ja: "仲間の間で健康的なデジタル習慣を促進するAI駆動型キャンペーンを設計する"
+  description_ko: "동료들 사이에서 건강한 디지털 습관을 촉진하는 AI 기반 캠페인 설계"
+  description_fr: "Concevez une campagne alimentée par l'IA pour promouvoir des habitudes numériques saines"
+  description_de: "Entwerfe eine KI-gestützte Kampagne zur Förderung gesunder digitaler Gewohnheiten"
+  description_ru: "Разработайте кампанию с ИИ для продвижения здоровых цифровых привычек"
+  description_it: "Progetta una campagna basata sull'IA per promuovere abitudini digitali sane"
+  difficulty: beginner
+  estimated_duration: 75
+  target_domains:
+    - creating_with_ai
+    - managing_with_ai
+    - designing_with_ai
+  prerequisites:
+    - Awareness of social media impacts
+    - Basic digital literacy
+  prerequisites_zh:
+    - 對社交媒體影響的認識
+    - 基本數位素養
+  prerequisites_es:
+    - Conciencia del impacto de las redes sociales
+    - Alfabetización digital básica
+  prerequisites_ja:
+    - ソーシャルメディアの影響への認識
+    - 基本的なデジタルリテラシー
+  prerequisites_ko:
+    - 소셜 미디어 영향에 대한 인식
+    - 기본 디지털 리터러시
+  prerequisites_fr:
+    - Conscience de l'impact des médias sociaux
+    - Littératie numérique de base
+  prerequisites_de:
+    - Bewusstsein für Social-Media-Auswirkungen
+    - Grundlegende digitale Kompetenz
+  prerequisites_ru:
+    - Осознание влияния социальных сетей
+    - Базовая цифровая грамотность
+  prerequisites_it:
+    - Consapevolezza dell'impatto dei social media
+    - Alfabetizzazione digitale di base
+  learning_objectives:
+    - Analyze digital wellness data and trends
+    - Create engaging content with AI tools
+    - Design interventions for behavior change
+    - Build a comprehensive digital wellness campaign
+  learning_objectives_zh:
+    - 分析數位健康數據和趨勢
+    - 使用 AI 工具創建引人入勝的內容
+    - 設計行為改變的干預措施
+    - 建立全面的數位健康活動
+  learning_objectives_es:
+    - Analizar datos y tendencias de bienestar digital
+    - Crear contenido atractivo con herramientas de IA
+    - Diseñar intervenciones para el cambio de comportamiento
+    - Construir una campaña integral de bienestar digital
+  learning_objectives_ja:
+    - デジタルウェルネスのデータとトレンドを分析する
+    - AIツールで魅力的なコンテンツを作成する
+    - 行動変容のための介入を設計する
+    - 包括的なデジタルウェルネスキャンペーンを構築する
+  learning_objectives_ko:
+    - 디지털 웰니스 데이터 및 트렌드 분석
+    - AI 도구로 매력적인 콘텐츠 만들기
+    - 행동 변화를 위한 개입 설계
+    - 포괄적인 디지털 웰니스 캠페인 구축
+  learning_objectives_fr:
+    - Analyser les données et tendances du bien-être numérique
+    - Créer du contenu engageant avec des outils IA
+    - Concevoir des interventions pour le changement de comportement
+    - Construire une campagne complète de bien-être numérique
+  learning_objectives_de:
+    - Daten und Trends zum digitalen Wohlbefinden analysieren
+    - Ansprechende Inhalte mit KI-Tools erstellen
+    - Interventionen für Verhaltensänderungen entwickeln
+    - Eine umfassende Kampagne für digitales Wohlbefinden aufbauen
+  learning_objectives_ru:
+    - Анализировать данные и тренды цифрового благополучия
+    - Создавать привлекательный контент с помощью ИИ-инструментов
+    - Разрабатывать вмешательства для изменения поведения
+    - Создать комплексную кампанию цифрового благополучия
+  learning_objectives_it:
+    - Analizzare dati e tendenze del benessere digitale
+    - Creare contenuti coinvolgenti con strumenti IA
+    - Progettare interventi per il cambiamento comportamentale
+    - Costruire una campagna completa di benessere digitale
+
+ksa_mapping:
+  knowledge:
+    - K1.1  # Understanding AI capabilities
+    - K1.2  # AI limitations awareness
+    - K2.1  # Effective prompting techniques
+    - K2.3  # AI content evaluation
+  skills:
+    - S1.1  # Basic AI interaction
+    - S1.2  # Advanced prompting
+    - S2.1  # Content creation with AI
+    - S2.3  # AI-assisted analysis
+  attitudes:
+    - A1.1  # Curiosity about AI
+    - A1.2  # Critical thinking
+    - A2.1  # Responsible AI use
+
+# Direct task list (no stages)
+tasks:
+  - id: task-1
+    title: "Digital Habits Survey"
+    title_zh: "數位習慣調查"
+    title_es: "Encuesta de Hábitos Digitales"
+    title_ja: "デジタル習慣調査"
+    title_ko: "디지털 습관 조사"
+    title_fr: "Enquête sur les Habitudes Numériques"
+    title_de: "Umfrage zu digitalen Gewohnheiten"
+    title_ru: "Опрос о цифровых привычках"
+    title_it: "Sondaggio sulle Abitudini Digitali"
+    description: "Use AI to create and analyze a survey about digital habits"
+    description_zh: "使用 AI 創建和分析關於數位習慣的調查"
+    description_es: "Usa IA para crear y analizar una encuesta sobre hábitos digitales"
+    description_ja: "AIを使用してデジタル習慣に関する調査を作成・分析する"
+    description_ko: "AI를 사용하여 디지털 습관에 대한 설문조사 작성 및 분석"
+    description_fr: "Utilisez l'IA pour créer et analyser une enquête sur les habitudes numériques"
+    description_de: "Verwenden Sie KI, um eine Umfrage über digitale Gewohnheiten zu erstellen und zu analysieren"
+    description_ru: "Используйте ИИ для создания и анализа опроса о цифровых привычках"
+    description_it: "Usa l'IA per creare e analizzare un sondaggio sulle abitudini digitali"
+    category: research
+    instructions:
+      - Use AI to design survey questions about screen time, social media usage, sleep habits, and digital stress
+      - Distribute to classmates ensuring privacy and anonymity
+      - Analyze responses with AI assistance
+      - Identify key problem areas and patterns
+    instructions_zh:
+      - 使用 AI 設計關於螢幕時間、社交媒體使用、睡眠習慣和數位壓力的調查問題
+      - 確保隱私和匿名地分發給同學
+      - 在 AI 協助下分析回應
+      - 識別關鍵問題領域和模式
+    instructions_es:
+      - Usa IA para diseñar preguntas sobre tiempo de pantalla, uso de redes sociales, hábitos de sueño y estrés digital
+      - Distribuye a compañeros asegurando privacidad y anonimato
+      - Analiza respuestas con asistencia de IA
+      - Identifica áreas problemáticas clave y patrones
+    instructions_ja:
+      - AIを使用してスクリーンタイム、ソーシャルメディア使用、睡眠習慣、デジタルストレスに関する調査質問を設計
+      - プライバシーと匿名性を確保してクラスメートに配布
+      - AIの支援で回答を分析
+      - 主要な問題領域とパターンを特定
+    instructions_ko:
+      - AI를 사용하여 화면 시간, 소셜 미디어 사용, 수면 습관, 디지털 스트레스에 대한 설문 문항 설계
+      - 개인정보 보호와 익명성을 보장하며 학급 친구들에게 배포
+      - AI 지원으로 응답 분석
+      - 주요 문제 영역과 패턴 식별
+    instructions_fr:
+      - Utilisez l'IA pour concevoir des questions sur le temps d'écran, l'utilisation des médias sociaux, les habitudes de sommeil et le stress numérique
+      - Distribuez aux camarades en assurant la confidentialité et l'anonymat
+      - Analysez les réponses avec l'aide de l'IA
+      - Identifiez les domaines problématiques clés et les modèles
+    instructions_de:
+      - Verwenden Sie KI, um Fragen zu Bildschirmzeit, Social-Media-Nutzung, Schlafgewohnheiten und digitalem Stress zu entwerfen
+      - Verteilen Sie an Klassenkameraden unter Wahrung von Privatsphäre und Anonymität
+      - Analysieren Sie Antworten mit KI-Unterstützung
+      - Identifizieren Sie wichtige Problembereiche und Muster
+    instructions_ru:
+      - Используйте ИИ для разработки вопросов о времени у экрана, использовании социальных сетей, привычках сна и цифровом стрессе
+      - Распространите среди одноклассников, обеспечивая конфиденциальность и анонимность
+      - Проанализируйте ответы с помощью ИИ
+      - Определите ключевые проблемные области и закономерности
+    instructions_it:
+      - Usa l'IA per progettare domande su tempo davanti allo schermo, uso dei social media, abitudini del sonno e stress digitale
+      - Distribuisci ai compagni garantendo privacy e anonimato
+      - Analizza le risposte con l'assistenza dell'IA
+      - Identifica aree problematiche chiave e modelli
+    expected_outcome: A comprehensive survey report with data-driven insights
+    expected_outcome_zh: 一份包含數據驅動見解的全面調查報告
+    expected_outcome_es: Un informe de encuesta completo con insights basados en datos
+    expected_outcome_ja: データ駆動型の洞察を含む包括的な調査レポート
+    expected_outcome_ko: 데이터 기반 통찰력을 포함한 포괄적인 설문조사 보고서
+    expected_outcome_fr: Un rapport d'enquête complet avec des insights basés sur les données
+    expected_outcome_de: Ein umfassender Umfragebericht mit datengestützten Erkenntnissen
+    expected_outcome_ru: Комплексный отчет опроса с выводами на основе данных
+    expected_outcome_it: Un rapporto di sondaggio completo con intuizioni basate sui dati
+    time_limit: 20
+    resources:
+      - Survey tools
+      - AI analysis platforms
+      - Privacy guidelines
+    resources_zh:
+      - 調查工具
+      - AI 分析平台
+      - 隱私指南
+    resources_es:
+      - Herramientas de encuesta
+      - Plataformas de análisis con IA
+      - Directrices de privacidad
+    resources_ja:
+      - 調査ツール
+      - AI分析プラットフォーム
+      - プライバシーガイドライン
+    resources_ko:
+      - 설문조사 도구
+      - AI 분석 플랫폼
+      - 개인정보 보호 지침
+    resources_fr:
+      - Outils d'enquête
+      - Plateformes d'analyse IA
+      - Directives de confidentialité
+    resources_de:
+      - Umfragetools
+      - KI-Analyseplattformen
+      - Datenschutzrichtlinien
+    resources_ru:
+      - Инструменты опроса
+      - Платформы анализа ИИ
+      - Руководства по конфиденциальности
+    resources_it:
+      - Strumenti di sondaggio
+      - Piattaforme di analisi IA
+      - Linee guida sulla privacy
+    assessment_focus:
+      primary: [K1.1, S2.3]
+      secondary: [A1.2]
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Research Assistant
+      initial_prompt: |
+        You are a research assistant helping students design and analyze digital wellness surveys.
+        Guide them through:
+        - Creating effective survey questions
+        - Ensuring privacy and ethical data collection
+        - Analyzing survey results
+        - Identifying meaningful patterns
+        
+        Focus on helping them understand digital wellness challenges among teens.
+
+  - id: task-2
+    title: "Wellness Content Creation"
+    title_zh: "健康內容創作"
+    title_es: "Creación de Contenido de Bienestar"
+    title_ja: "ウェルネスコンテンツ作成"
+    title_ko: "웰니스 콘텐츠 제작"
+    title_fr: "Création de Contenu de Bien-être"
+    title_de: "Wellness-Content-Erstellung"
+    title_ru: "Создание контента о благополучии"
+    title_it: "Creazione di Contenuti sul Benessere"
+    description: "Create engaging digital wellness content using AI tools"
+    description_zh: "使用 AI 工具創建引人入勝的數位健康內容"
+    description_es: "Crea contenido atractivo de bienestar digital usando herramientas de IA"
+    description_ja: "AIツールを使用して魅力的なデジタルウェルネスコンテンツを作成する"
+    description_ko: "AI 도구를 사용하여 매력적인 디지털 웰니스 콘텐츠 만들기"
+    description_fr: "Créez du contenu engageant sur le bien-être numérique avec des outils IA"
+    description_de: "Erstellen Sie ansprechende digitale Wellness-Inhalte mit KI-Tools"
+    description_ru: "Создайте привлекательный контент о цифровом благополучии с помощью ИИ-инструментов"
+    description_it: "Crea contenuti coinvolgenti sul benessere digitale usando strumenti IA"
+    category: creation
+    instructions:
+      - Create infographics on healthy digital habits using AI design tools
+      - Develop social media posts with positive messaging
+      - Design video scripts for wellness tips
+      - Create interactive quizzes about digital wellness
+    instructions_zh:
+      - 使用 AI 設計工具創建健康數位習慣的信息圖表
+      - 開發具有正面訊息的社交媒體帖子
+      - 設計健康提示的視頻腳本
+      - 創建關於數位健康的互動測驗
+    instructions_es:
+      - Crea infografías sobre hábitos digitales saludables usando herramientas de diseño con IA
+      - Desarrolla publicaciones en redes sociales con mensajes positivos
+      - Diseña guiones de video para consejos de bienestar
+      - Crea cuestionarios interactivos sobre bienestar digital
+    instructions_ja:
+      - AIデザインツールを使用して健康的なデジタル習慣のインフォグラフィックを作成
+      - ポジティブなメッセージングでソーシャルメディア投稿を開発
+      - ウェルネスヒントのビデオスクリプトを設計
+      - デジタルウェルネスに関するインタラクティブクイズを作成
+    instructions_ko:
+      - AI 디자인 도구를 사용하여 건강한 디지털 습관에 대한 인포그래픽 제작
+      - 긍정적인 메시지가 담긴 소셜 미디어 게시물 개발
+      - 웰니스 팁을 위한 비디오 스크립트 설계
+      - 디지털 웰니스에 대한 인터랙티브 퀴즈 만들기
+    instructions_fr:
+      - Créez des infographies sur les habitudes numériques saines avec des outils de conception IA
+      - Développez des publications sur les réseaux sociaux avec des messages positifs
+      - Concevez des scripts vidéo pour des conseils de bien-être
+      - Créez des quiz interactifs sur le bien-être numérique
+    instructions_de:
+      - Erstellen Sie Infografiken über gesunde digitale Gewohnheiten mit KI-Design-Tools
+      - Entwickeln Sie Social-Media-Beiträge mit positiven Botschaften
+      - Entwerfen Sie Videoskripte für Wellness-Tipps
+      - Erstellen Sie interaktive Quiz zum digitalen Wohlbefinden
+    instructions_ru:
+      - Создайте инфографику о здоровых цифровых привычках с помощью ИИ-инструментов дизайна
+      - Разработайте посты в социальных сетях с позитивными сообщениями
+      - Создайте сценарии видео для советов по благополучию
+      - Создайте интерактивные викторины о цифровом благополучии
+    instructions_it:
+      - Crea infografiche sulle abitudini digitali sane usando strumenti di design IA
+      - Sviluppa post sui social media con messaggi positivi
+      - Progetta script video per consigli sul benessere
+      - Crea quiz interattivi sul benessere digitale
+    expected_outcome: A portfolio of engaging digital wellness content
+    expected_outcome_zh: 一套引人入勝的數位健康內容組合
+    expected_outcome_es: Un portafolio de contenido atractivo de bienestar digital
+    expected_outcome_ja: 魅力的なデジタルウェルネスコンテンツのポートフォリオ
+    expected_outcome_ko: 매력적인 디지털 웰니스 콘텐츠 포트폴리오
+    expected_outcome_fr: Un portfolio de contenu engageant sur le bien-être numérique
+    expected_outcome_de: Ein Portfolio ansprechender digitaler Wellness-Inhalte
+    expected_outcome_ru: Портфолио привлекательного контента о цифровом благополучии
+    expected_outcome_it: Un portfolio di contenuti coinvolgenti sul benessere digitale
+    time_limit: 25
+    assessment_focus:
+      primary: [S2.1, K2.1]
+      secondary: [A2.1]
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Creative Content Coach
+      initial_prompt: |
+        You are a creative content coach helping students create digital wellness materials.
+        Assist them with:
+        - Designing visually appealing infographics
+        - Writing engaging social media content
+        - Creating compelling video scripts
+        - Developing interactive elements
+        
+        Focus on positive, teen-friendly messaging that promotes healthy digital habits.
+
+  - id: task-3
+    title: "AI Wellness Assistant"
+    title_zh: "AI 健康助手"
+    title_es: "Asistente de Bienestar con IA"
+    title_ja: "AIウェルネスアシスタント"
+    title_ko: "AI 웰니스 어시스턴트"
+    title_fr: "Assistant de Bien-être IA"
+    title_de: "KI-Wellness-Assistent"
+    title_ru: "ИИ-помощник по благополучию"
+    title_it: "Assistente al Benessere IA"
+    description: "Design an AI chatbot to help peers manage digital wellness"
+    description_zh: "設計一個 AI 聊天機器人來幫助同儕管理數位健康"
+    description_es: "Diseña un chatbot de IA para ayudar a los compañeros a gestionar el bienestar digital"
+    description_ja: "仲間がデジタルウェルネスを管理するのを助けるAIチャットボットを設計する"
+    description_ko: "동료들이 디지털 웰니스를 관리하는 데 도움이 되는 AI 챗봇 설계"
+    description_fr: "Concevez un chatbot IA pour aider les pairs à gérer le bien-être numérique"
+    description_de: "Entwerfen Sie einen KI-Chatbot, um Gleichaltrigen bei der Verwaltung des digitalen Wohlbefindens zu helfen"
+    description_ru: "Разработайте ИИ-чатбота для помощи сверстникам в управлении цифровым благополучием"
+    description_it: "Progetta un chatbot IA per aiutare i pari a gestire il benessere digitale"
+    category: interaction
+    instructions:
+      - Design chatbot features for screen time reminders, mindfulness prompts, study breaks, and mood check-ins
+      - Write conversation flows that are supportive and non-judgmental
+      - Test with classmates and gather feedback
+      - Refine based on user experience
+    instructions_zh:
+      - 設計聊天機器人功能：螢幕時間提醒、正念提示、學習休息和情緒檢查
+      - 編寫支持性和非批判性的對話流程
+      - 與同學測試並收集反饋
+      - 根據用戶體驗進行改進
+    instructions_es:
+      - Diseña funciones de chatbot para recordatorios de tiempo de pantalla, indicaciones de atención plena, descansos de estudio y chequeos de estado de ánimo
+      - Escribe flujos de conversación que sean de apoyo y sin prejuicios
+      - Prueba con compañeros y recopila comentarios
+      - Refina según la experiencia del usuario
+    instructions_ja:
+      - スクリーンタイムリマインダー、マインドフルネスプロンプト、勉強休憩、気分チェックインのチャットボット機能を設計
+      - 支援的で非批判的な会話フローを作成
+      - クラスメートとテストしてフィードバックを収集
+      - ユーザー体験に基づいて改善
+    instructions_ko:
+      - 화면 시간 알림, 마음챙김 프롬프트, 학습 휴식, 기분 체크인을 위한 챗봇 기능 설계
+      - 지지적이고 비판단적인 대화 흐름 작성
+      - 학급 친구들과 테스트하고 피드백 수집
+      - 사용자 경험을 바탕으로 개선
+    instructions_fr:
+      - Concevez des fonctionnalités de chatbot pour les rappels de temps d'écran, les invites de pleine conscience, les pauses d'étude et les vérifications d'humeur
+      - Écrivez des flux de conversation qui sont de soutien et sans jugement
+      - Testez avec des camarades et recueillez des commentaires
+      - Affinez en fonction de l'expérience utilisateur
+    instructions_de:
+      - Entwerfen Sie Chatbot-Funktionen für Bildschirmzeit-Erinnerungen, Achtsamkeitsaufforderungen, Lernpausen und Stimmungschecks
+      - Schreiben Sie unterstützende und nicht wertende Gesprächsabläufe
+      - Testen Sie mit Klassenkameraden und sammeln Sie Feedback
+      - Verfeinern Sie basierend auf der Benutzererfahrung
+    instructions_ru:
+      - Разработайте функции чатбота для напоминаний о времени у экрана, подсказок осознанности, учебных перерывов и проверок настроения
+      - Напишите поддерживающие и не осуждающие диалоговые потоки
+      - Протестируйте с одноклассниками и соберите отзывы
+      - Доработайте на основе пользовательского опыта
+    instructions_it:
+      - Progetta funzionalità del chatbot per promemoria del tempo davanti allo schermo, suggerimenti di consapevolezza, pause studio e controlli dell'umore
+      - Scrivi flussi di conversazione che siano di supporto e non giudicanti
+      - Testa con i compagni e raccogli feedback
+      - Perfeziona in base all'esperienza utente
+    expected_outcome: A functional wellness chatbot prototype
+    expected_outcome_zh: 一個功能性的健康聊天機器人原型
+    expected_outcome_es: Un prototipo funcional de chatbot de bienestar
+    expected_outcome_ja: 機能的なウェルネスチャットボットのプロトタイプ
+    expected_outcome_ko: 기능적인 웰니스 챗봇 프로토타입
+    expected_outcome_fr: Un prototype fonctionnel de chatbot de bien-être
+    expected_outcome_de: Ein funktionsfähiger Wellness-Chatbot-Prototyp
+    expected_outcome_ru: Функциональный прототип чатбота для благополучия
+    expected_outcome_it: Un prototipo funzionale di chatbot per il benessere
+    time_limit: 30
+    assessment_focus:
+      primary: [K2.1, S1.2]
+      secondary: [A1.2, A2.1]
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: UX Design Mentor
+      initial_prompt: |
+        You are a UX design mentor helping students create a wellness chatbot.
+        Guide them in:
+        - Designing user-friendly conversation flows
+        - Creating empathetic and helpful responses
+        - Building in appropriate wellness features
+        - Testing and iterating on their design
+        
+        Ensure the chatbot is supportive, non-judgmental, and age-appropriate.
+
+  - id: task-4
+    title: "Campaign Launch Plan"
+    title_zh: "活動啟動計畫"
+    title_es: "Plan de Lanzamiento de Campaña"
+    title_ja: "キャンペーン開始計画"
+    title_ko: "캠페인 시작 계획"
+    title_fr: "Plan de Lancement de Campagne"
+    title_de: "Kampagnen-Startplan"
+    title_ru: "План запуска кампании"
+    title_it: "Piano di Lancio della Campagna"
+    description: "Develop a comprehensive launch plan for your digital wellness campaign"
+    description_zh: "為你的數位健康活動制定全面的啟動計畫"
+    description_es: "Desarrolla un plan de lanzamiento integral para tu campaña de bienestar digital"
+    description_ja: "デジタルウェルネスキャンペーンの包括的な立ち上げ計画を策定する"
+    description_ko: "디지털 웰니스 캠페인을 위한 포괄적인 시작 계획 개발"
+    description_fr: "Développez un plan de lancement complet pour votre campagne de bien-être numérique"
+    description_de: "Entwickeln Sie einen umfassenden Startplan für Ihre digitale Wellness-Kampagne"
+    description_ru: "Разработайте комплексный план запуска вашей кампании цифрового благополучия"
+    description_it: "Sviluppa un piano di lancio completo per la tua campagna di benessere digitale"
+    category: creation
+    instructions:
+      - Use AI to create campaign timeline and promotional materials
+      - Plan launch events and activities
+      - Identify partners like clubs and teachers
+      - Set measurable goals and success metrics
+    instructions_zh:
+      - 使用 AI 創建活動時間表和宣傳材料
+      - 規劃啟動活動和活動
+      - 識別合作夥伴如社團和老師
+      - 設定可衡量的目標和成功指標
+    instructions_es:
+      - Usa IA para crear cronograma de campaña y materiales promocionales
+      - Planifica eventos y actividades de lanzamiento
+      - Identifica socios como clubes y profesores
+      - Establece objetivos medibles y métricas de éxito
+    instructions_ja:
+      - AIを使用してキャンペーンのタイムラインとプロモーション資料を作成
+      - 立ち上げイベントとアクティビティを計画
+      - クラブや教師などのパートナーを特定
+      - 測定可能な目標と成功指標を設定
+    instructions_ko:
+      - AI를 사용하여 캠페인 일정과 홍보 자료 만들기
+      - 런칭 이벤트와 활동 계획
+      - 동아리나 교사와 같은 파트너 식별
+      - 측정 가능한 목표와 성공 지표 설정
+    instructions_fr:
+      - Utilisez l'IA pour créer un calendrier de campagne et du matériel promotionnel
+      - Planifiez des événements et activités de lancement
+      - Identifiez des partenaires comme des clubs et des enseignants
+      - Fixez des objectifs mesurables et des indicateurs de succès
+    instructions_de:
+      - Verwenden Sie KI, um Kampagnenzeitplan und Werbematerialien zu erstellen
+      - Planen Sie Launch-Events und Aktivitäten
+      - Identifizieren Sie Partner wie Clubs und Lehrer
+      - Setzen Sie messbare Ziele und Erfolgskennzahlen
+    instructions_ru:
+      - Используйте ИИ для создания временной шкалы кампании и рекламных материалов
+      - Планируйте мероприятия и активности запуска
+      - Определите партнеров, таких как клубы и учителя
+      - Установите измеримые цели и показатели успеха
+    instructions_it:
+      - Usa l'IA per creare timeline della campagna e materiali promozionali
+      - Pianifica eventi e attività di lancio
+      - Identifica partner come club e insegnanti
+      - Stabilisci obiettivi misurabili e metriche di successo
+    expected_outcome: A detailed, actionable campaign launch plan
+    expected_outcome_zh: 一個詳細、可執行的活動啟動計畫
+    expected_outcome_es: Un plan de lanzamiento de campaña detallado y ejecutable
+    expected_outcome_ja: 詳細で実行可能なキャンペーン立ち上げ計画
+    expected_outcome_ko: 상세하고 실행 가능한 캠페인 시작 계획
+    expected_outcome_fr: Un plan de lancement de campagne détaillé et réalisable
+    expected_outcome_de: Ein detaillierter, umsetzbarer Kampagnen-Startplan
+    expected_outcome_ru: Подробный, действенный план запуска кампании
+    expected_outcome_it: Un piano di lancio della campagna dettagliato e attuabile
+    time_limit: 25
+    assessment_focus:
+      primary: [S2.1, K1.1]
+      secondary: [A1.1]
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Campaign Strategy Advisor
+      initial_prompt: |
+        You are a campaign strategy advisor helping students plan their digital wellness campaign launch.
+        Assist with:
+        - Creating realistic timelines
+        - Developing promotional strategies
+        - Identifying key stakeholders
+        - Setting achievable goals
+        
+        Help them create a campaign that will effectively reach and engage their peers.
+
+  - id: task-5
+    title: "Impact Measurement"
+    title_zh: "影響力測量"
+    title_es: "Medición de Impacto"
+    title_ja: "インパクト測定"
+    title_ko: "영향력 측정"
+    title_fr: "Mesure d'Impact"
+    title_de: "Wirkungsmessung"
+    title_ru: "Измерение воздействия"
+    title_it: "Misurazione dell'Impatto"
+    description: "Use AI to measure and report on campaign effectiveness"
+    description_zh: "使用 AI 測量和報告活動效果"
+    description_es: "Usa IA para medir e informar sobre la efectividad de la campaña"
+    description_ja: "AIを使用してキャンペーンの効果を測定・報告する"
+    description_ko: "AI를 사용하여 캠페인 효과 측정 및 보고"
+    description_fr: "Utilisez l'IA pour mesurer et rapporter l'efficacité de la campagne"
+    description_de: "Verwenden Sie KI, um die Kampagneneffektivität zu messen und zu berichten"
+    description_ru: "Используйте ИИ для измерения и отчетности об эффективности кампании"
+    description_it: "Usa l'IA per misurare e riferire sull'efficacia della campagna"
+    category: analysis
+    instructions:
+      - Collect data on engagement rates, behavior changes, feedback, and wellness improvements
+      - Use AI to analyze results and identify trends
+      - Create visual reports with charts and graphs
+      - Identify lessons learned and areas for improvement
+    instructions_zh:
+      - 收集參與率、行為改變、反饋和健康改善的數據
+      - 使用 AI 分析結果並識別趨勢
+      - 創建帶有圖表的視覺報告
+      - 識別學到的經驗和改進領域
+    instructions_es:
+      - Recopila datos sobre tasas de participación, cambios de comportamiento, comentarios y mejoras en el bienestar
+      - Usa IA para analizar resultados e identificar tendencias
+      - Crea informes visuales con gráficos
+      - Identifica lecciones aprendidas y áreas de mejora
+    instructions_ja:
+      - エンゲージメント率、行動変化、フィードバック、ウェルネス改善のデータを収集
+      - AIを使用して結果を分析し、トレンドを特定
+      - チャートとグラフを含む視覚的レポートを作成
+      - 学んだ教訓と改善領域を特定
+    instructions_ko:
+      - 참여율, 행동 변화, 피드백, 웰니스 개선에 대한 데이터 수집
+      - AI를 사용하여 결과 분석 및 트렌드 식별
+      - 차트와 그래프가 포함된 시각적 보고서 작성
+      - 배운 교훈과 개선 영역 식별
+    instructions_fr:
+      - Collectez des données sur les taux d'engagement, les changements de comportement, les commentaires et les améliorations du bien-être
+      - Utilisez l'IA pour analyser les résultats et identifier les tendances
+      - Créez des rapports visuels avec des graphiques
+      - Identifiez les leçons apprises et les domaines d'amélioration
+    instructions_de:
+      - Sammeln Sie Daten zu Engagement-Raten, Verhaltensänderungen, Feedback und Wellness-Verbesserungen
+      - Verwenden Sie KI, um Ergebnisse zu analysieren und Trends zu identifizieren
+      - Erstellen Sie visuelle Berichte mit Diagrammen
+      - Identifizieren Sie gelernte Lektionen und Verbesserungsbereiche
+    instructions_ru:
+      - Соберите данные о показателях вовлеченности, изменениях поведения, отзывах и улучшениях благополучия
+      - Используйте ИИ для анализа результатов и выявления тенденций
+      - Создайте визуальные отчеты с диаграммами
+      - Определите извлеченные уроки и области для улучшения
+    instructions_it:
+      - Raccogli dati su tassi di coinvolgimento, cambiamenti comportamentali, feedback e miglioramenti del benessere
+      - Usa l'IA per analizzare i risultati e identificare le tendenze
+      - Crea report visivi con grafici
+      - Identifica le lezioni apprese e le aree di miglioramento
+    expected_outcome: A comprehensive impact report with actionable insights
+    expected_outcome_zh: 一份包含可行見解的全面影響報告
+    expected_outcome_es: Un informe de impacto integral con insights accionables
+    expected_outcome_ja: 実行可能な洞察を含む包括的なインパクトレポート
+    expected_outcome_ko: 실행 가능한 통찰력이 포함된 포괄적인 영향 보고서
+    expected_outcome_fr: Un rapport d'impact complet avec des insights actionnables
+    expected_outcome_de: Ein umfassender Wirkungsbericht mit umsetzbaren Erkenntnissen
+    expected_outcome_ru: Комплексный отчет о воздействии с практическими выводами
+    expected_outcome_it: Un rapporto d'impatto completo con intuizioni attuabili
+    time_limit: 20
+    assessment_focus:
+      primary: [K2.3, S2.3]
+      secondary: [A1.2]
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: Data Analytics Expert
+      initial_prompt: |
+        You are a data analytics expert helping students measure campaign impact.
+        Guide them through:
+        - Collecting meaningful metrics
+        - Analyzing data for insights
+        - Creating compelling visualizations
+        - Drawing actionable conclusions
+        
+        Help them demonstrate the real impact of their digital wellness campaign.
+
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - S2.1  # Must create content
+    - K2.1  # Must understand AI prompting
+  min_overall_score: 75
+
+resources:
+  - name: "Digital Wellness Institute"
+    name_zh: "數位健康研究所"
+    url: "https://www.digitalwellnessinstitute.com/"
+    type: reference
+    
+  - name: "Common Sense Media"
+    name_zh: "常識媒體"
+    url: "https://www.commonsensemedia.org/"
+    type: guide
