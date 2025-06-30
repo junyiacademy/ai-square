@@ -1,25 +1,13 @@
 import { GET } from '../route';
-import { readFile } from 'fs/promises';
-import yaml from 'js-yaml';
+import { contentService } from '../../../../lib/cms/content-service';
+import { cacheService } from '../../../../lib/cache/cache-service';
 
-// Mock fs/promises
-jest.mock('fs/promises', () => ({
-  readFile: jest.fn(),
-}));
+// Mock dependencies
+jest.mock('../../../../lib/cms/content-service');
+jest.mock('../../../../lib/cache/cache-service');
 
-// Mock yaml
-jest.mock('js-yaml', () => ({
-  load: jest.fn(),
-}));
-
-// Mock path to handle different OS paths
-jest.mock('path', () => ({
-  join: jest.fn((...args) => args.join('/').replace(/\/\//g, '/')),
-  basename: jest.fn((path) => path.split('/').pop()),
-}));
-
-const mockReadFile = readFile as jest.MockedFunction<typeof readFile>;
-const mockYamlLoad = yaml.load as jest.MockedFunction<typeof yaml.load>;
+const mockContentService = contentService as jest.Mocked<typeof contentService>;
+const mockCacheService = cacheService as jest.Mocked<typeof cacheService>;
 
 const mockAssessmentData = {
   assessment_config: {
@@ -88,8 +76,9 @@ const mockAssessmentData = {
 describe('/api/assessment', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockReadFile.mockResolvedValue(Buffer.from('mock yaml content'));
-    mockYamlLoad.mockReturnValue(mockAssessmentData);
+    mockCacheService.get.mockResolvedValue(null);
+    mockCacheService.set.mockResolvedValue(undefined);
+    mockContentService.getContent.mockResolvedValue(mockAssessmentData);
   });
 
   it('returns assessment data for English', async () => {
@@ -135,8 +124,8 @@ describe('/api/assessment', () => {
     expect(data.domains.engaging_with_ai.name).toBe('engaging_with_ai');
   });
 
-  it('handles file read errors', async () => {
-    mockReadFile.mockRejectedValue(new Error('File not found'));
+  it('handles content service errors', async () => {
+    mockContentService.getContent.mockRejectedValue(new Error('Content not found'));
 
     const request = new Request('http://localhost/api/assessment?lang=en');
     const response = await GET(request as any);
@@ -146,17 +135,21 @@ describe('/api/assessment', () => {
     expect(data.error).toBe('Failed to load assessment data');
   });
 
-  it('handles YAML parsing errors', async () => {
-    mockYamlLoad.mockImplementation(() => {
-      throw new Error('Invalid YAML');
-    });
+  it('returns cached data when available', async () => {
+    const cachedData = {
+      assessment_config: mockAssessmentData.assessment_config,
+      domains: mockAssessmentData.domains,
+      questions: mockAssessmentData.questions
+    };
+    mockCacheService.get.mockResolvedValue(cachedData);
 
     const request = new Request('http://localhost/api/assessment?lang=en');
     const response = await GET(request as any);
     const data = await response.json();
 
-    expect(response.status).toBe(500);
-    expect(data.error).toBe('Failed to load assessment data');
+    expect(response.status).toBe(200);
+    expect(mockContentService.getContent).not.toHaveBeenCalled();
+    expect(response.headers.get('X-Cache')).toBe('HIT');
   });
 
   it('processes all questions correctly', async () => {
@@ -194,7 +187,7 @@ describe('/api/assessment', () => {
       ]
     };
 
-    mockYamlLoad.mockReturnValue(multiQuestionData);
+    mockContentService.getContent.mockResolvedValue(multiQuestionData);
 
     const request = new Request('http://localhost/api/assessment?lang=zh-TW');
     const response = await GET(request as any);
