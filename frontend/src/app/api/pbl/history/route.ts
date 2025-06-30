@@ -7,19 +7,38 @@ import path from 'path';
 
 // Helper function to get localized value
 function getLocalizedValue(data: any, fieldName: string, lang: string): any {
-  // Convert language code to suffix
+  // Convert language code to suffix - must match YAML field suffixes exactly
   let langSuffix = lang;
-  if (lang === 'zh-TW' || lang === 'zh-CN') {
+  
+  // Special handling for Chinese variants
+  if (lang === 'zh-TW' || lang === 'zh-CN' || lang === 'zh') {
     langSuffix = 'zh';
   }
   
+  // Map language codes to match YAML suffixes
+  const languageMap: Record<string, string> = {
+    'en': 'en',
+    'zh': 'zh',
+    'zh-TW': 'zh',
+    'zh-CN': 'zh',
+    'es': 'es',
+    'ja': 'ja',
+    'ko': 'ko',
+    'fr': 'fr',
+    'de': 'de',
+    'ru': 'ru',
+    'it': 'it'
+  };
+  
+  const mappedSuffix = languageMap[lang] || lang;
+  
   // Try language-specific field first
-  const localizedField = `${fieldName}_${langSuffix}`;
-  if (data[localizedField]) {
+  const localizedField = `${fieldName}_${mappedSuffix}`;
+  if (data[localizedField] !== undefined && data[localizedField] !== null) {
     return data[localizedField];
   }
   
-  // Fall back to default field
+  // Fall back to default field (no suffix)
   return data[fieldName] || '';
 }
 
@@ -77,7 +96,14 @@ export async function GET(request: NextRequest) {
           const yamlPath = path.join(process.cwd(), 'public', 'pbl_data', `${program.scenarioId}_scenario.yaml`);
           const yamlContent = await fs.readFile(yamlPath, 'utf8');
           const scenarioData = yaml.load(yamlContent) as any;
-          scenarioTitles[program.scenarioId] = getLocalizedValue(scenarioData, 'title', language);
+          
+          // Access the scenario_info section which contains the title fields
+          if (scenarioData.scenario_info) {
+            scenarioTitles[program.scenarioId] = getLocalizedValue(scenarioData.scenario_info, 'title', language);
+          } else {
+            // Fallback if structure is different
+            scenarioTitles[program.scenarioId] = getLocalizedValue(scenarioData, 'title', language);
+          }
         } catch (error) {
           console.error(`Error loading scenario ${program.scenarioId}:`, error);
           scenarioTitles[program.scenarioId] = program.scenarioId;
