@@ -10,7 +10,7 @@ FILES ?= ""
 DESC ?= ""
 
 .PHONY: ai-new ai-start ai-save ai-done ai-fix ai-review ai-report ai-log help \
-        dev run-frontend run-backend \
+        dev run-frontend run-backend run-cms \
         dev-setup dev-install dev-update \
         dev-workflow-check dev-secret-check dev-tdd-check dev-tdd-enforce \
         build-frontend build-docker-image check-deploy-size \
@@ -266,6 +266,7 @@ help:
 	@echo "  $(GREEN)make dev$(NC)                                       - 同時啟動前後端"
 	@echo "  $(GREEN)make run-frontend$(NC)                              - 啟動前端開發伺服器"
 	@echo "  $(GREEN)make run-backend$(NC)                               - 啟動後端開發伺服器"
+	@echo "  $(GREEN)make run-cms$(NC)                                   - 啟動 CMS 開發伺服器 (port 3001)"
 	@echo ""
 	@echo "$(CYAN)開發環境:$(NC)"
 	@echo "  $(GREEN)make dev-setup$(NC)                                 - 初始化開發環境"
@@ -324,6 +325,11 @@ run-frontend:
 run-backend:
 	@echo "$(GREEN)🚀 啟動後端開發伺服器$(NC)"
 	cd backend && source venv/bin/activate && uvicorn main:app --reload
+
+## CMS 開發
+run-cms:
+	@echo "$(GREEN)🚀 啟動 CMS 開發伺服器$(NC)"
+	cd cms && npm run dev
 
 ## 同時啟動前後端
 dev:
