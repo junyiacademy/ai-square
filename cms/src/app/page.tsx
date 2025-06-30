@@ -33,13 +33,16 @@ export default function CmsPage() {
     if (!selectedFile || !content) return;
     
     setIsLoading(true);
+    let branchData = null;
+    const wasOnMain = isOnMain;
+    
     try {
       // If on main branch, create feature branch first
       if (isOnMain) {
         const branchResponse = await fetch('/api/git/branch', {
           method: 'POST',
         });
-        const branchData = await branchResponse.json();
+        branchData = await branchResponse.json();
         
         if (branchData.success) {
           setCurrentBranch(branchData.branch);
@@ -76,7 +79,16 @@ export default function CmsPage() {
         // Success toast for save
         const saveToast = document.createElement('div');
         saveToast.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-in slide-in-from-right';
-        saveToast.innerHTML = `💾 Saved & committed to<br/><strong>${currentBranch}</strong>`;
+        
+        // Check if we created a new branch (was on main before)
+        const displayBranch = wasOnMain ? branchData?.branch || currentBranch : currentBranch;
+        
+        if (wasOnMain) {
+          saveToast.innerHTML = `🌟 Created branch<br/><strong>${displayBranch}</strong> & committed`;
+        } else {
+          saveToast.innerHTML = `💾 Saved & committed to<br/><strong>${displayBranch}</strong>`;
+        }
+        
         document.body.appendChild(saveToast);
         
         setTimeout(() => {
