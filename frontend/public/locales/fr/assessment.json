@@ -86,5 +86,29 @@
     "creating_with_ai": "Créer avec l'IA",
     "managing_with_ai": "Gérer avec l'IA",
     "designing_with_ai": "Concevoir avec l'IA"
+  },
+  "history": {
+    "title": "Historique des évaluations",
+    "subtitle": "Consultez vos résultats d'évaluation passés et suivez vos progrès",
+    "loading": "Chargement de l'historique...",
+    "error": "Échec du chargement de l'historique",
+    "retry": "Réessayer",
+    "notLoggedIn": "Veuillez vous connecter pour voir votre historique d'évaluation",
+    "takeAssessment": "Passer une évaluation",
+    "user": "Utilisateur",
+    "totalAssessments": "Évaluations totales",
+    "noHistory": "Aucun historique d'évaluation pour le moment",
+    "takeFirstAssessment": "Passez votre première évaluation",
+    "overallScore": "Score global",
+    "correct": "correct",
+    "domainScores": "Scores par domaine",
+    "duration": "Durée",
+    "viewDetails": "Voir les détails",
+    "takeNewAssessment": "Passer une nouvelle évaluation",
+    "startTime": "Heure de début",
+    "endTime": "Heure de fin"
+  },
+  "review": {
+    "title": "Revue de l'évaluation"
   }
 }

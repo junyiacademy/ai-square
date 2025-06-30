@@ -86,5 +86,29 @@
     "creating_with_ai": "AI로 창작하기",
     "managing_with_ai": "AI 관리하기",
     "designing_with_ai": "AI 설계하기"
+  },
+  "history": {
+    "title": "평가 기록",
+    "subtitle": "과거 평가 결과를 확인하고 진행 상황을 추적하세요",
+    "loading": "기록 불러오는 중...",
+    "error": "기록을 불러오는데 실패했습니다",
+    "retry": "다시 시도",
+    "notLoggedIn": "평가 기록을 보려면 로그인해주세요",
+    "takeAssessment": "평가 받기",
+    "user": "사용자",
+    "totalAssessments": "총 평가 횟수",
+    "noHistory": "아직 평가 기록이 없습니다",
+    "takeFirstAssessment": "첫 평가를 받아보세요",
+    "overallScore": "전체 점수",
+    "correct": "정답",
+    "domainScores": "영역별 점수",
+    "duration": "소요 시간",
+    "viewDetails": "상세 보기",
+    "takeNewAssessment": "새 평가 받기",
+    "startTime": "시작 시간",
+    "endTime": "종료 시간"
+  },
+  "review": {
+    "title": "평가 검토"
   }
 }

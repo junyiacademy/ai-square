@@ -86,5 +86,29 @@
     "creating_with_ai": "Mit KI erstellen",
     "managing_with_ai": "Mit KI verwalten",
     "designing_with_ai": "Mit KI gestalten"
+  },
+  "history": {
+    "title": "Bewertungsverlauf",
+    "subtitle": "Sehen Sie Ihre vergangenen Bewertungsergebnisse und verfolgen Sie Ihren Fortschritt",
+    "loading": "Verlauf wird geladen...",
+    "error": "Fehler beim Laden des Verlaufs",
+    "retry": "Erneut versuchen",
+    "notLoggedIn": "Bitte melden Sie sich an, um Ihren Bewertungsverlauf zu sehen",
+    "takeAssessment": "Eine Bewertung durchführen",
+    "user": "Benutzer",
+    "totalAssessments": "Gesamte Bewertungen",
+    "noHistory": "Noch kein Bewertungsverlauf vorhanden",
+    "takeFirstAssessment": "Ihre erste Bewertung durchführen",
+    "overallScore": "Gesamtpunktzahl",
+    "correct": "richtig",
+    "domainScores": "Bereichspunktzahlen",
+    "duration": "Dauer",
+    "viewDetails": "Details anzeigen",
+    "takeNewAssessment": "Neue Bewertung durchführen",
+    "startTime": "Startzeit",
+    "endTime": "Endzeit"
+  },
+  "review": {
+    "title": "Bewertungsüberprüfung"
   }
 }

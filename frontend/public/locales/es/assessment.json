@@ -86,5 +86,29 @@
     "creating_with_ai": "Creando con IA",
     "managing_with_ai": "Gestionando con IA",
     "designing_with_ai": "Diseñando con IA"
+  },
+  "history": {
+    "title": "Historial de Evaluaciones",
+    "subtitle": "Vea sus resultados de evaluaciones anteriores y siga su progreso",
+    "loading": "Cargando historial...",
+    "error": "Error al cargar el historial",
+    "retry": "Intentar de nuevo",
+    "notLoggedIn": "Por favor inicie sesión para ver su historial de evaluaciones",
+    "takeAssessment": "Realizar una evaluación",
+    "user": "Usuario",
+    "totalAssessments": "Evaluaciones totales",
+    "noHistory": "Aún no hay historial de evaluaciones",
+    "takeFirstAssessment": "Realice su primera evaluación",
+    "overallScore": "Puntuación general",
+    "correct": "correcto",
+    "domainScores": "Puntuaciones por dominio",
+    "duration": "Duración",
+    "viewDetails": "Ver detalles",
+    "takeNewAssessment": "Realizar nueva evaluación",
+    "startTime": "Hora de inicio",
+    "endTime": "Hora de finalización"
+  },
+  "review": {
+    "title": "Revisión de la evaluación"
   }
 }

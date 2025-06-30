@@ -86,5 +86,29 @@
     "creating_with_ai": "Creare con l'IA",
     "managing_with_ai": "Gestire con l'IA",
     "designing_with_ai": "Progettare con l'IA"
+  },
+  "history": {
+    "title": "Cronologia delle valutazioni",
+    "subtitle": "Visualizza i risultati delle valutazioni passate e monitora i tuoi progressi",
+    "loading": "Caricamento cronologia...",
+    "error": "Impossibile caricare la cronologia",
+    "retry": "Riprova",
+    "notLoggedIn": "Accedi per visualizzare la cronologia delle valutazioni",
+    "takeAssessment": "Fai una valutazione",
+    "user": "Utente",
+    "totalAssessments": "Valutazioni totali",
+    "noHistory": "Nessuna cronologia di valutazione ancora",
+    "takeFirstAssessment": "Fai la tua prima valutazione",
+    "overallScore": "Punteggio complessivo",
+    "correct": "corretto",
+    "domainScores": "Punteggi per dominio",
+    "duration": "Durata",
+    "viewDetails": "Vedi dettagli",
+    "takeNewAssessment": "Fai una nuova valutazione",
+    "startTime": "Ora di inizio",
+    "endTime": "Ora di fine"
+  },
+  "review": {
+    "title": "Revisione della valutazione"
   }
 }
