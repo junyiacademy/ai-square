@@ -328,8 +328,8 @@ run-backend:
 
 ## CMS 開發
 run-cms:
-	@echo "$(GREEN)🚀 啟動 CMS 開發伺服器$(NC)"
-	cd cms && npm run dev
+	@echo "$(GREEN)🚀 啟動 CMS 開發伺服器 (port 3001)$(NC)"
+	cd cms && npm run dev -- --port 3001
 
 ## 同時啟動前後端
 dev:
