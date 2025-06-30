@@ -139,199 +139,99 @@ export function PBLForm({ content, onChange }: PBLFormProps) {
   return (
     <div className="space-y-6">
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="basic">Basic Info</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="scenario">Scenario Info</TabsTrigger>
           <TabsTrigger value="content">Content</TabsTrigger>
+          <TabsTrigger value="ksa">KSA Mapping</TabsTrigger>
           <TabsTrigger value="tasks">Tasks</TabsTrigger>
           <TabsTrigger value="evaluation">Evaluation</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="basic" className="space-y-4">
+        <TabsContent value="scenario" className="space-y-4">
           <div>
-            <Label htmlFor="id">Scenario ID</Label>
-            <Input
-              id="id"
-              value={scenarioData.id || ''}
-              onChange={(e) => updateField('id', e.target.value)}
-              placeholder="e.g., resume-optimization"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="difficulty">Difficulty</Label>
-              <select
-                id="difficulty"
-                className="w-full rounded-md border border-input bg-background px-3 py-2"
-                value={scenarioData.difficulty || 'intermediate'}
-                onChange={(e) => updateField('difficulty', e.target.value)}
-              >
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="advanced">Advanced</option>
-              </select>
-            </div>
-            
-            <div>
-              <Label htmlFor="duration">Duration (minutes)</Label>
-              <Input
-                id="duration"
-                type="number"
-                value={scenarioData.estimated_duration || scenarioData.duration || 60}
-                onChange={(e) => updateField('estimated_duration', parseInt(e.target.value))}
-              />
-            </div>
-          </div>
-
-          <div>
-            <Label htmlFor="category">Category</Label>
-            <Input
-              id="category"
-              value={scenarioData.category || ''}
-              onChange={(e) => updateField('category', e.target.value)}
-              placeholder="e.g., career_development"
-            />
-          </div>
-
-          <div>
-            <Label>Prerequisites</Label>
-            <div className="space-y-2">
-              {(scenarioData.prerequisites || []).map((prereq: string, index: number) => (
-                <div key={index} className="flex gap-2">
-                  <Input
-                    value={prereq}
-                    onChange={(e) => {
-                      const prerequisites = [...(scenarioData.prerequisites || [])]
-                      prerequisites[index] = e.target.value
-                      updateField('prerequisites', prerequisites)
-                    }}
-                    placeholder="e.g., Basic computer skills"
-                  />
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => {
-                      const prerequisites = (scenarioData.prerequisites || []).filter((_: any, i: number) => i !== index)
-                      updateField('prerequisites', prerequisites)
-                    }}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => updateField('prerequisites', [...(scenarioData.prerequisites || []), ''])}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Add Prerequisite
-              </Button>
-            </div>
-          </div>
-
-          <div>
-            <Label>Target Domains</Label>
-            <div className="space-y-2">
-              {(scenarioData.target_domains || []).map((domain: string, index: number) => (
-                <div key={index} className="flex gap-2">
-                  <select
-                    className="flex-1 rounded-md border border-input bg-background px-3 py-2"
-                    value={domain}
-                    onChange={(e) => {
-                      const domains = [...(scenarioData.target_domains || [])]
-                      domains[index] = e.target.value
-                      updateField('target_domains', domains)
-                    }}
-                  >
-                    <option value="">Select a domain</option>
-                    <option value="engaging_with_ai">Engaging with AI</option>
-                    <option value="creating_with_ai">Creating with AI</option>
-                    <option value="managing_with_ai">Managing with AI</option>
-                    <option value="designing_with_ai">Designing with AI</option>
-                  </select>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => {
-                      const domains = (scenarioData.target_domains || []).filter((_: any, i: number) => i !== index)
-                      updateField('target_domains', domains)
-                    }}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => updateField('target_domains', [...(scenarioData.target_domains || []), ''])}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Add Domain
-              </Button>
-            </div>
-          </div>
-          
-          <div className="mt-6">
-            <Label>KSA Mapping</Label>
-            <p className="text-sm text-muted-foreground mb-4">
-              Map the Knowledge, Skills, and Attitudes for this scenario
+            <Label className="text-lg font-semibold">Scenario Information</Label>
+            <p className="text-sm text-muted-foreground mb-6">
+              Basic information about this learning scenario
             </p>
             
             <div className="space-y-4">
               <div>
-                <Label>Knowledge</Label>
+                <Label htmlFor="id">Scenario ID</Label>
                 <Input
-                  value={(content.ksa_mapping?.knowledge || []).join(', ')}
-                  onChange={(e) => {
-                    const ksa = content.ksa_mapping || {}
-                    updateField('ksa_mapping', {
-                      ...ksa,
-                      knowledge: e.target.value.split(',').map(s => s.trim()).filter(Boolean)
-                    })
-                  }}
-                  placeholder="e.g., K1.1, K1.2, K2.1"
+                  id="id"
+                  value={scenarioData.id || ''}
+                  onChange={(e) => updateField('id', e.target.value)}
+                  placeholder="e.g., ai-job-search"
                 />
-                <p className="text-xs text-muted-foreground mt-1">
-                  Understanding AI capabilities, limitations, and evaluation
-                </p>
               </div>
-              
-              <div>
-                <Label>Skills</Label>
-                <Input
-                  value={(content.ksa_mapping?.skills || []).join(', ')}
-                  onChange={(e) => {
-                    const ksa = content.ksa_mapping || {}
-                    updateField('ksa_mapping', {
-                      ...ksa,
-                      skills: e.target.value.split(',').map(s => s.trim()).filter(Boolean)
-                    })
-                  }}
-                  placeholder="e.g., S1.1, S1.2, S2.1"
-                />
-                <p className="text-xs text-muted-foreground mt-1">
-                  AI interaction, prompting, content creation
-                </p>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="difficulty">Difficulty</Label>
+                  <select
+                    id="difficulty"
+                    className="w-full rounded-md border border-input bg-background px-3 py-2"
+                    value={scenarioData.difficulty || 'intermediate'}
+                    onChange={(e) => updateField('difficulty', e.target.value)}
+                  >
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <Label htmlFor="duration">Duration (minutes)</Label>
+                  <Input
+                    id="duration"
+                    type="number"
+                    value={scenarioData.estimated_duration || scenarioData.duration || 60}
+                    onChange={(e) => updateField('estimated_duration', parseInt(e.target.value))}
+                  />
+                </div>
               </div>
-              
+
               <div>
-                <Label>Attitudes</Label>
-                <Input
-                  value={(content.ksa_mapping?.attitudes || []).join(', ')}
-                  onChange={(e) => {
-                    const ksa = content.ksa_mapping || {}
-                    updateField('ksa_mapping', {
-                      ...ksa,
-                      attitudes: e.target.value.split(',').map(s => s.trim()).filter(Boolean)
-                    })
-                  }}
-                  placeholder="e.g., A1.1, A1.2, A2.1"
-                />
-                <p className="text-xs text-muted-foreground mt-1">
-                  Curiosity, critical thinking, responsible use
-                </p>
+                <Label>Target Domains</Label>
+                <div className="space-y-2">
+                  {(scenarioData.target_domains || []).map((domain: string, index: number) => (
+                    <div key={index} className="flex gap-2">
+                      <select
+                        className="flex-1 rounded-md border border-input bg-background px-3 py-2"
+                        value={domain}
+                        onChange={(e) => {
+                          const domains = [...(scenarioData.target_domains || [])]
+                          domains[index] = e.target.value
+                          updateField('target_domains', domains)
+                        }}
+                      >
+                        <option value="">Select a domain</option>
+                        <option value="engaging_with_ai">Engaging with AI</option>
+                        <option value="creating_with_ai">Creating with AI</option>
+                        <option value="managing_with_ai">Managing with AI</option>
+                        <option value="designing_with_ai">Designing with AI</option>
+                      </select>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => {
+                          const domains = (scenarioData.target_domains || []).filter((_: any, i: number) => i !== index)
+                          updateField('target_domains', domains)
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => updateField('target_domains', [...(scenarioData.target_domains || []), ''])}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Domain
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
@@ -388,6 +288,48 @@ export function PBLForm({ content, onChange }: PBLFormProps) {
             </div>
 
             <div>
+              <Label>Learning Objectives ({LANGUAGES.find(l => l.code === activeLang)?.name})</Label>
+              <div className="space-y-2">
+                {(getLocalizedValue('learning_objectives', activeLang) || []).map((objective: string, index: number) => (
+                  <div key={index} className="flex gap-2">
+                    <Input
+                      value={objective}
+                      onChange={(e) => {
+                        const fieldKey = activeLang === 'en' ? 'learning_objectives' : `learning_objectives_${activeLang}`
+                        const objectives = [...(scenarioData[fieldKey] || [])]
+                        objectives[index] = e.target.value
+                        updateField(fieldKey, objectives)
+                      }}
+                      placeholder="Enter learning objective in selected language"
+                    />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        const fieldKey = activeLang === 'en' ? 'learning_objectives' : `learning_objectives_${activeLang}`
+                        const objectives = (scenarioData[fieldKey] || []).filter((_: any, i: number) => i !== index)
+                        updateField(fieldKey, objectives)
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const fieldKey = activeLang === 'en' ? 'learning_objectives' : `learning_objectives_${activeLang}`
+                    updateField(fieldKey, [...(scenarioData[fieldKey] || []), ''])
+                  }}
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Learning Objective
+                </Button>
+              </div>
+            </div>
+            
+            <div>
               <Label>Prerequisites ({LANGUAGES.find(l => l.code === activeLang)?.name})</Label>
               <div className="space-y-2">
                 {(getLocalizedValue('prerequisites', activeLang) || []).map((prereq: string, index: number) => (
@@ -430,6 +372,179 @@ export function PBLForm({ content, onChange }: PBLFormProps) {
             </div>
           </div>
 
+        </TabsContent>
+
+        <TabsContent value="ksa" className="space-y-4">
+          <div>
+            <Label className="text-lg font-semibold">KSA Mapping</Label>
+            <p className="text-sm text-muted-foreground mb-6">
+              Map the Knowledge, Skills, and Attitudes for this scenario
+            </p>
+            
+            <div className="space-y-6">
+              <div className="border rounded-lg p-6">
+                <h3 className="font-semibold mb-4 flex items-center gap-2">
+                  <span className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-sm font-bold">K</span>
+                  Knowledge
+                </h3>
+                <div className="space-y-3">
+                  {(content.ksa_mapping?.knowledge || []).map((code: string, index: number) => (
+                    <div key={index} className="flex gap-2">
+                      <Input
+                        value={code}
+                        onChange={(e) => {
+                          const knowledge = [...(content.ksa_mapping?.knowledge || [])]
+                          knowledge[index] = e.target.value
+                          updateField('ksa_mapping', {
+                            ...content.ksa_mapping,
+                            knowledge
+                          })
+                        }}
+                        placeholder="e.g., K1.1"
+                      />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => {
+                          const knowledge = (content.ksa_mapping?.knowledge || []).filter((_: any, i: number) => i !== index)
+                          updateField('ksa_mapping', {
+                            ...content.ksa_mapping,
+                            knowledge
+                          })
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      updateField('ksa_mapping', {
+                        ...content.ksa_mapping,
+                        knowledge: [...(content.ksa_mapping?.knowledge || []), '']
+                      })
+                    }}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Knowledge Code
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground mt-3">
+                  Understanding AI capabilities, limitations, and evaluation
+                </p>
+              </div>
+              
+              <div className="border rounded-lg p-6">
+                <h3 className="font-semibold mb-4 flex items-center gap-2">
+                  <span className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-sm font-bold">S</span>
+                  Skills
+                </h3>
+                <div className="space-y-3">
+                  {(content.ksa_mapping?.skills || []).map((code: string, index: number) => (
+                    <div key={index} className="flex gap-2">
+                      <Input
+                        value={code}
+                        onChange={(e) => {
+                          const skills = [...(content.ksa_mapping?.skills || [])]
+                          skills[index] = e.target.value
+                          updateField('ksa_mapping', {
+                            ...content.ksa_mapping,
+                            skills
+                          })
+                        }}
+                        placeholder="e.g., S1.1"
+                      />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => {
+                          const skills = (content.ksa_mapping?.skills || []).filter((_: any, i: number) => i !== index)
+                          updateField('ksa_mapping', {
+                            ...content.ksa_mapping,
+                            skills
+                          })
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      updateField('ksa_mapping', {
+                        ...content.ksa_mapping,
+                        skills: [...(content.ksa_mapping?.skills || []), '']
+                      })
+                    }}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Skill Code
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground mt-3">
+                  AI interaction, prompting, content creation
+                </p>
+              </div>
+              
+              <div className="border rounded-lg p-6">
+                <h3 className="font-semibold mb-4 flex items-center gap-2">
+                  <span className="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-sm font-bold">A</span>
+                  Attitudes
+                </h3>
+                <div className="space-y-3">
+                  {(content.ksa_mapping?.attitudes || []).map((code: string, index: number) => (
+                    <div key={index} className="flex gap-2">
+                      <Input
+                        value={code}
+                        onChange={(e) => {
+                          const attitudes = [...(content.ksa_mapping?.attitudes || [])]
+                          attitudes[index] = e.target.value
+                          updateField('ksa_mapping', {
+                            ...content.ksa_mapping,
+                            attitudes
+                          })
+                        }}
+                        placeholder="e.g., A1.1"
+                      />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => {
+                          const attitudes = (content.ksa_mapping?.attitudes || []).filter((_: any, i: number) => i !== index)
+                          updateField('ksa_mapping', {
+                            ...content.ksa_mapping,
+                            attitudes
+                          })
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      updateField('ksa_mapping', {
+                        ...content.ksa_mapping,
+                        attitudes: [...(content.ksa_mapping?.attitudes || []), '']
+                      })
+                    }}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Attitude Code
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground mt-3">
+                  Curiosity, critical thinking, responsible use
+                </p>
+              </div>
+            </div>
+          </div>
         </TabsContent>
 
         <TabsContent value="tasks" className="space-y-4">

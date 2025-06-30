@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { ArrowLeft, Save, GitBranch, Languages } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { githubService, ContentFile } from '@/lib/github-service'
-import { PBLForm } from '@/components/pbl/pbl-form'
+import { PBLFormAI } from '@/components/pbl/pbl-form-ai'
 import { PRDialog } from '@/components/pbl/pr-dialog'
 
 export default function PBLEditPage() {
@@ -137,7 +137,7 @@ export default function PBLEditPage() {
         </div>
       )}
 
-      <PBLForm
+      <PBLFormAI
         content={content.content}
         onChange={handleFormChange}
       />

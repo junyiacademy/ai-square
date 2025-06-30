@@ -8,6 +8,8 @@ const nextConfig = {
     GITHUB_REPO: process.env.GITHUB_REPO || 'ai-square',
     GITHUB_CONTENT_PATH: process.env.GITHUB_CONTENT_PATH || 'cms/content',
     GCS_BUCKET: process.env.GCS_BUCKET || 'ai-square-content',
+    GOOGLE_CLOUD_PROJECT: process.env.GOOGLE_CLOUD_PROJECT,
+    VERTEX_AI_LOCATION: process.env.VERTEX_AI_LOCATION || 'us-central1',
   },
   
   // 開發體驗優化
