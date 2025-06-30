@@ -222,6 +222,32 @@ AI: [執行: make ai-done]
    - `chore:` 維護性工作
 3. **不要在開發過程中自行 commit** - 必須等待用戶確認
 
+### Git 同步工作流程
+**重要**：在執行 commit 前，必須先同步遠端變更以避免衝突
+
+1. **Commit 前的標準流程**：
+   ```bash
+   # 1. 先檢查狀態
+   git status
+   
+   # 2. 拉取並 rebase 最新變更
+   git pull --rebase origin main
+   
+   # 3. 如果有衝突，提示用戶手動解決
+   # 4. 確認無衝突後才進行 commit
+   ```
+
+2. **為什麼要這樣做**：
+   - 避免本地與 CMS 編輯的內容產生衝突
+   - 保持線性的 commit 歷史
+   - 減少不必要的 merge commits
+
+3. **執行順序**：
+   - 當用戶要求 `commit` 時
+   - 先執行 `git pull --rebase`
+   - 成功後才執行 `git add` 和 `git commit`
+   - 如果 pull 失敗，提示用戶需要手動解決衝突
+
 ---
 
 ## 項目資訊
