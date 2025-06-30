@@ -9,6 +9,7 @@ import {
   ProgramSummary,
   ProgramStatus
 } from '@/types/pbl';
+import { cacheService } from '@/lib/cache/cache-service';
 
 // Initialize GCS client
 const storageConfig: {
@@ -143,7 +144,15 @@ class PBLProgramService {
    * Get program metadata
    */
   async getProgram(userEmail: string, scenarioId: string, programId: string): Promise<ProgramMetadata | null> {
+    const cacheKey = `pbl:program:${userEmail}:${scenarioId}:${programId}`;
+    
     try {
+      // Try cache first
+      const cached = await cacheService.get<ProgramMetadata>(cacheKey);
+      if (cached) {
+        return cached;
+      }
+
       // We need to find the program folder which includes timestamp
       const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
       const [files] = await this.bucket.getFiles({
@@ -153,7 +162,12 @@ class PBLProgramService {
       for (const file of files) {
         if (file.name.endsWith('/metadata.json')) {
           const [contents] = await file.download();
-          return JSON.parse(contents.toString()) as ProgramMetadata;
+          const metadata = JSON.parse(contents.toString()) as ProgramMetadata;
+          
+          // Cache for 5 minutes
+          await cacheService.set(cacheKey, metadata, { ttl: 5 * 60 * 1000 });
+          
+          return metadata;
         }
       }
 
@@ -177,6 +191,10 @@ class PBLProgramService {
         ...updates,
         updatedAt: new Date().toISOString()
       };
+      
+      // Invalidate related caches
+      const cacheKey = `pbl:program:${userEmail}:${scenarioId}:${programId}`;
+      await cacheService.delete(cacheKey);
 
       // Find the program folder
       const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
@@ -376,8 +394,27 @@ class PBLProgramService {
     scenarioId: string,
     programId: string,
     taskId: string
-  ): Promise<{ metadata: TaskMetadata | null; log: TaskLog | null; progress: TaskProgress | null }> {
+  ): Promise<{ metadata: TaskMetadata | null; log: TaskLog | null; progress: TaskProgress | null; evaluation?: any }> {
+    const cacheKey = `pbl:task:${userEmail}:${scenarioId}:${programId}:${taskId}`;
+    
     try {
+      // Try cache first for metadata and progress (not log as it changes frequently)
+      const cached = await cacheService.get<any>(cacheKey);
+      if (cached && cached.metadata && cached.progress) {
+        // Still fetch fresh log data
+        const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
+        const logPath = `${PBL_BASE_PATH}/${sanitizedEmail}/scenario_${scenarioId}/program_${programId}/task_${taskId}/log.json`;
+        
+        try {
+          const [logContents] = await this.bucket.file(logPath).download();
+          cached.log = JSON.parse(logContents.toString());
+        } catch {
+          cached.log = null;
+        }
+        
+        return cached;
+      }
+
       const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
       const basePath = `${PBL_BASE_PATH}/${sanitizedEmail}/scenario_${scenarioId}/program_${programId}/task_${taskId}`;
       
@@ -420,6 +457,15 @@ class PBLProgramService {
       if (evaluationResult.status === 'fulfilled' && evaluationResult.value) {
         const [contents] = evaluationResult.value;
         result.evaluation = JSON.parse(contents.toString());
+      }
+      
+      // Cache metadata and progress (but not log as it changes frequently)
+      if (result.metadata && result.progress) {
+        await cacheService.set(cacheKey, {
+          metadata: result.metadata,
+          progress: result.progress,
+          evaluation: result.evaluation
+        }, { ttl: 2 * 60 * 1000 }); // 2 minutes cache
       }
       
       return result;
@@ -572,6 +618,10 @@ class PBLProgramService {
     taskId: string,
     evaluation: any
   ): Promise<void> {
+    // Invalidate task cache
+    const taskCacheKey = `pbl:task:${userEmail}:${scenarioId}:${programId}:${taskId}`;
+    await cacheService.delete(taskCacheKey);
+    
     const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
     const evaluationPath = `${PBL_BASE_PATH}/${sanitizedEmail}/scenario_${scenarioId}/program_${programId}/task_${taskId}/evaluation.json`;
     
@@ -619,6 +669,14 @@ class PBLProgramService {
     programId: string
   ): Promise<void> {
     try {
+      // Invalidate related caches
+      const completionCacheKey = `pbl:completion:${userEmail}:${scenarioId}:${programId}`;
+      const userProgramsCacheKey = `pbl:user-programs:${userEmail}:${scenarioId}`;
+      await Promise.all([
+        cacheService.delete(completionCacheKey),
+        cacheService.delete(userProgramsCacheKey)
+      ]);
+      
       const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
       const basePath = `${PBL_BASE_PATH}/${sanitizedEmail}/scenario_${scenarioId}/program_${programId}`;
       
@@ -761,7 +819,15 @@ class PBLProgramService {
     scenarioId: string,
     programId: string
   ): Promise<any | null> {
+    const cacheKey = `pbl:completion:${userEmail}:${scenarioId}:${programId}`;
+    
     try {
+      // Try cache first
+      const cached = await cacheService.get<any>(cacheKey);
+      if (cached) {
+        return cached;
+      }
+      
       const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
       const completionPath = `${PBL_BASE_PATH}/${sanitizedEmail}/scenario_${scenarioId}/program_${programId}/completion.json`;
       
@@ -773,7 +839,12 @@ class PBLProgramService {
       }
       
       const [contents] = await file.download();
-      return JSON.parse(contents.toString());
+      const completionData = JSON.parse(contents.toString());
+      
+      // Cache for 3 minutes
+      await cacheService.set(cacheKey, completionData, { ttl: 3 * 60 * 1000 });
+      
+      return completionData;
     } catch (error) {
       console.error('Error getting program completion:', error);
       return null;
@@ -787,7 +858,8 @@ class PBLProgramService {
     userEmail: string,
     scenarioId: string,
     programId: string,
-    feedback: any
+    feedback: any,
+    language: string = 'en'
   ): Promise<void> {
     try {
       const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
@@ -800,9 +872,25 @@ class PBLProgramService {
         const [contents] = await file.download();
         const completionData = JSON.parse(contents.toString());
         
-        // Update with feedback
-        completionData.qualitativeFeedback = feedback;
+        // Initialize qualitativeFeedback as object if it's old format or doesn't exist
+        if (!completionData.qualitativeFeedback || 
+            (typeof completionData.qualitativeFeedback === 'object' && 
+             completionData.qualitativeFeedback.overallAssessment)) {
+          // Convert old format to new multi-language format
+          const oldFeedback = completionData.qualitativeFeedback;
+          const oldLang = completionData.feedbackLanguage || 'en';
+          
+          completionData.qualitativeFeedback = {};
+          if (oldFeedback) {
+            completionData.qualitativeFeedback[oldLang] = oldFeedback;
+          }
+        }
+        
+        // Update with new language feedback
+        completionData.qualitativeFeedback[language] = feedback;
+        completionData.feedbackLanguages = Object.keys(completionData.qualitativeFeedback);
         completionData.feedbackGeneratedAt = new Date().toISOString();
+        completionData.lastFeedbackLanguage = language;
         
         // Save updated data
         await file.save(JSON.stringify(completionData, null, 2), {
@@ -821,7 +909,15 @@ class PBLProgramService {
    * Get all programs for a user and specific scenario (using completion data)
    */
   async getUserProgramsForScenario(userEmail: string, scenarioId: string): Promise<any[]> {
+    const cacheKey = `pbl:user-programs:${userEmail}:${scenarioId}`;
+    
     try {
+      // Try cache first
+      const cached = await cacheService.get<any[]>(cacheKey);
+      if (cached) {
+        return cached;
+      }
+      
       const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
       const basePath = `${PBL_BASE_PATH}/${sanitizedEmail}/scenario_${scenarioId}`;
       
@@ -901,7 +997,12 @@ class PBLProgramService {
       });
       
       const results = await Promise.all(programPromises);
-      return results.filter(p => p !== null);
+      const programs = results.filter(p => p !== null);
+      
+      // Cache for 2 minutes
+      await cacheService.set(cacheKey, programs, { ttl: 2 * 60 * 1000 });
+      
+      return programs;
     } catch (error) {
       console.error('Error getting user programs for scenario:', error);
       return [];
