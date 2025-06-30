@@ -190,10 +190,13 @@ export async function PUT(request: NextRequest) {
       if (baseUrl) {
         // Pass the cookie header for authentication
         const cookieHeader = request.headers.get('cookie');
+        // Get Accept-Language from original request
+        const acceptLanguage = request.headers.get('accept-language') || 'en';
         fetch(`${baseUrl}/api/pbl/generate-feedback`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Accept-Language': acceptLanguage,
             ...(cookieHeader && { 'Cookie': cookieHeader })
           },
           body: JSON.stringify({

@@ -45,6 +45,23 @@ export async function POST(request: NextRequest) {
       `${entry.type === 'user' ? 'User' : 'Assistant'}: ${entry.content}`
     ).join('\n');
 
+    // Get language from Accept-Language header
+    const acceptLanguage = request.headers.get('accept-language') || 'en';
+    const userLang = acceptLanguage.split('-')[0] || 'en';
+    
+    // Language mapping for AI instructions
+    const languageInstructions: Record<string, string> = {
+      'zh': 'IMPORTANT: You must respond ONLY in Traditional Chinese (繁體中文). All your responses must be in 繁體中文.',
+      'ja': 'IMPORTANT: You must respond ONLY in Japanese (日本語). All your responses must be in 日本語.',
+      'ko': 'IMPORTANT: You must respond ONLY in Korean (한국어). All your responses must be in 한국어.',
+      'es': 'IMPORTANT: You must respond ONLY in Spanish (Español). All your responses must be in Español.',
+      'fr': 'IMPORTANT: You must respond ONLY in French (Français). All your responses must be in Français.',
+      'de': 'IMPORTANT: You must respond ONLY in German (Deutsch). All your responses must be in Deutsch.',
+      'ru': 'IMPORTANT: You must respond ONLY in Russian (Русский). All your responses must be in Русский.',
+      'it': 'IMPORTANT: You must respond ONLY in Italian (Italiano). All your responses must be in Italiano.',
+      'en': 'IMPORTANT: You must respond in English.'
+    };
+    
     // Analyze user message for relevance
     const isGreetingOnly = /^(hi|hello|hey|good morning|good afternoon|good evening|how are you|what's up|thanks|thank you|bye|goodbye)[\s\.,!?]*$/i.test(message.trim());
     const isOffTopic = !/(?:resume|cv|job|career|work|experience|skill|education|analysis|industry|trends|hiring|employer|application|interview|professional)/i.test(message) && message.length > 10;
@@ -65,6 +82,8 @@ IMPORTANT GUIDELINES:
 2. If the user sends only greetings or off-topic messages, politely redirect them to the task
 3. Keep responses concise and task-focused
 4. Encourage meaningful engagement with the learning material
+
+${languageInstructions[userLang] || languageInstructions['en']}
 
 Please respond as ${aiModule.persona} and help the user with this task.`;
 

@@ -367,6 +367,7 @@ export default function ProgramLearningPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept-Language': i18n.language,
           'x-scenario-id': scenarioId
         },
         body: JSON.stringify({
@@ -392,7 +393,10 @@ export default function ProgramLearningPage() {
       // Get AI response
       const aiRes = await fetch('/api/pbl/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept-Language': i18n.language
+        },
         body: JSON.stringify({
           message: userMessage,
           sessionId: actualProgramId,
@@ -446,6 +450,7 @@ export default function ProgramLearningPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept-Language': i18n.language,
           'x-scenario-id': scenarioId
         },
         body: JSON.stringify({
@@ -535,6 +540,7 @@ export default function ProgramLearningPage() {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
+              'Accept-Language': i18n.language,
               'x-scenario-id': scenarioId
             },
             body: JSON.stringify({
@@ -572,6 +578,7 @@ export default function ProgramLearningPage() {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Accept-Language': i18n.language,
           'x-scenario-id': scenarioId
         },
         body: JSON.stringify({

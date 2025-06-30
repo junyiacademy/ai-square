@@ -93,6 +93,7 @@ make ai-report
 5. **執行測試確保品質** - 單元測試和 E2E 測試都要通過
 6. **完成後等待指示** - 不要自動執行 `make ai-done`
 7. **記錄 AI 複雜度** - 透過環境變數傳遞
+8. **所有 commit messages 必須使用英文** - 保持一致性和國際化
 
 ### ❌ 不應該做的
 1. **自動 commit** - 除非用戶明確要求
@@ -101,6 +102,7 @@ make ai-report
 4. **分散資訊到多個檔案** - 使用整合式票券
 5. **過早優化** - 在驗證核心價值前避免過度工程化
 6. **隨意創建新目錄** - 保持 docs/ 架構簡潔，優先使用現有文件
+7. **開發到一半就自行 commit** - 必須等待用戶確認後才能 commit
 
 ---
 
@@ -194,18 +196,31 @@ AI: [執行: make ai-done]
 
 ## 💡 開發參考
 
-### 文檔結構
+### 文檔結構管理
 - **CLAUDE.md** (本文件) - AI 行為準則與項目概覽
-- **docs/handbook/AI-QUICK-REFERENCE.md** - 實用開發模式與技巧
-- **docs/handbook/proposals/** - 設計提案與架構文件
+- **docs/handbook/** - 開發指南文件
+  - `AI-QUICK-REFERENCE.md` - 實用開發模式與技巧
+  - `proposals/` - 設計提案與架構文件
+- **docs/tickets/** - 工作票券管理
+  - `archive/` - 已完成的票券
 
-包含內容：
-- 常用程式碼模式
-- API 結構  
-- 測試命令
-- Git commit 格式
-- MVP 策略指導
-- 高效 AI 協作技巧
+### 文件管理原則
+1. **不要破壞現有架構** - 保持 docs/ 和 docs/handbook/ 的目錄結構
+2. **生成文件前先確認位置** - 檢查應該放在哪個現有目錄
+3. **優先更新現有文件** - 而非創建新文件
+4. **避免文件碎片化** - 相關內容集中在同一文件
+
+### Git Commit 準則
+1. **所有 commit messages 必須使用英文**
+2. **遵循 conventional commits 格式**:
+   - `feat:` 新功能
+   - `fix:` 修復問題
+   - `docs:` 文檔更新
+   - `style:` 代碼格式（不影響功能）
+   - `refactor:` 重構
+   - `test:` 測試相關
+   - `chore:` 維護性工作
+3. **不要在開發過程中自行 commit** - 必須等待用戶確認
 
 ---
 
@@ -213,19 +228,25 @@ AI: [執行: make ai-done]
 
 ### Project Overview
 
-AI Square is a multi-agent learning platform for AI literacy education. The project is a monorepo with a Next.js frontend and Python FastAPI backend, designed to be deployed on Google Cloud Platform.
+AI Square is a comprehensive AI literacy education platform featuring Problem-Based Learning (PBL) scenarios and competency visualization. The project is a monorepo with a Next.js frontend and Python FastAPI backend, designed to be deployed on Google Cloud Platform.
 
 **Key Features:**
-- Multilingual AI literacy competency visualization (9 languages supported)
-- Interactive accordion-based competency explorer with Knowledge, Skills, and Attitudes (KSA) mapping
-- YAML-based content management for educational rubrics
-- Internationalization with dynamic language switching
+- Problem-Based Learning (PBL) system with multi-task scenarios and AI tutors
+- Multilingual support (9 languages: en, zh-TW, es, ja, ko, fr, de, ru, it)
+- AI literacy competency visualization with KSA (Knowledge, Skills, Attitudes) mapping
+- Real-time AI-powered feedback and evaluation system
+- YAML-based content management for educational rubrics and scenarios
+- Google Cloud Storage for user progress tracking
+- Unified abstraction layer architecture for scalability
 
 ### 技術棧
 - **Frontend**: Next.js 15, TypeScript, Tailwind CSS, react-i18next
 - **Backend**: FastAPI, Python 3.x
-- **Data**: YAML 檔案管理內容
-- **部署**: Google Cloud Run, Docker
+- **AI Services**: Google Vertex AI (Gemini models), OpenAI
+- **Storage**: Google Cloud Storage for user data, local YAML for content
+- **Caching**: Multi-layer cache system (memory + localStorage)
+- **Deployment**: Google Cloud Run, Docker
+- **Testing**: Jest, React Testing Library, Playwright
 
 ### Development Commands
 
@@ -307,9 +328,18 @@ make gcloud-build-and-deploy-frontend
 - **Framework**: Next.js 15 with App Router, TypeScript, Tailwind CSS
 - **Internationalization**: react-i18next with 9 language support (en, zh-TW, es, ja, ko, fr, de, ru, it)
 - **Key Pages**:
-  - `/` - Home page with Tailwind CSS demo
-  - `/relations` - Main competency visualization interface
-- **API Routes**: `/api/relations` - Serves YAML data with language-specific translations
+  - `/` - Home page
+  - `/relations` - AI literacy competency visualization interface
+  - `/pbl` - Problem-Based Learning scenario list
+  - `/pbl/scenarios/[id]` - Scenario details with KSA mapping
+  - `/pbl/scenarios/[id]/program/[programId]/tasks/[taskId]/learn` - Interactive learning with AI tutor
+  - `/pbl/scenarios/[id]/program/[programId]/complete` - Completion page with AI feedback
+- **API Routes**: 
+  - `/api/relations` - Competency data with translations
+  - `/api/pbl/scenarios` - PBL scenario management
+  - `/api/pbl/chat` - AI tutor conversation
+  - `/api/pbl/evaluate` - Task performance evaluation
+  - `/api/pbl/generate-feedback` - Multi-language feedback generation
 
 #### Backend Structure  
 - **Framework**: FastAPI with Python 3.x
@@ -317,9 +347,16 @@ make gcloud-build-and-deploy-frontend
 - **Purpose**: Handles AI/LLM integrations and data processing
 
 #### Data Architecture
-- **Content Management**: YAML files in `frontend/public/rubrics_data/`
-  - `ai_lit_domains.yaml` - Four core AI literacy domains with competencies
-  - `ksa_codes.yaml` - Knowledge, Skills, Attitudes reference codes
+- **Content Management**: 
+  - **Rubrics**: YAML files in `frontend/public/rubrics_data/`
+    - `ai_lit_domains.yaml` - Four core AI literacy domains with competencies
+    - `ksa_codes.yaml` - Knowledge, Skills, Attitudes reference codes
+  - **PBL Scenarios**: YAML files in `frontend/public/pbl_data/`
+    - `*_scenario.yaml` - Scenario definitions with tasks and AI modules
+    - Multi-language support through field suffixes
+- **User Data**: Google Cloud Storage (`ai-square-db` bucket)
+  - Program metadata, task logs, evaluations, completion data
+  - Organized by user email and scenario
 - **Translation System**: Suffix-based field naming (e.g., `description_zh`, `description_es`)
 - **Domain Structure**: Engaging_with_AI, Creating_with_AI, Managing_with_AI, Designing_with_AI
 
@@ -328,6 +365,13 @@ make gcloud-build-and-deploy-frontend
 - **Accordion interfaces** for domain and competency exploration  
 - **Responsive design** with mobile-specific overlays
 - **Dynamic content loading** via API with language parameter
+
+#### Abstraction Layer Architecture (`frontend/src/lib/abstractions/`)
+- **BaseApiHandler**: Unified API route handling with caching, error handling, and i18n
+- **BaseStorageService**: Abstracted storage interface supporting GCS and local storage
+- **BaseAIService**: Unified AI service interface for multiple providers
+- **BaseYAMLLoader**: YAML content loading with validation and caching
+- **Implementations**: Concrete implementations in `/implementations` directory
 
 ### Key Implementation Details
 
