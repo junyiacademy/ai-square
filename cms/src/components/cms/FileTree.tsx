@@ -117,8 +117,8 @@ export function FileTree({ onFileSelect, selectedFile }: FileTreeProps) {
 
   return (
     <div className="flex flex-col h-full bg-white">
-      <div className="p-4 border-b border-gray-100">
-        <h2 className="text-sm font-semibold text-gray-900 mb-3">Content Files</h2>
+      <div className="p-3 pr-12 border-b border-gray-100">
+        <h2 className="text-sm font-semibold text-gray-900 mb-2">Content Files</h2>
         <div className="relative">
           <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
           <input

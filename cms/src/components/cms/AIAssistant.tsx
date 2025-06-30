@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
@@ -26,6 +26,12 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
     role: 'user' | 'assistant';
     content: string;
   }>>([]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom when new messages are added
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   const handleQuickAction = async (action: string) => {
     if (!content || !selectedFile) return;
@@ -101,61 +107,56 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
 
   return (
     <div className="flex flex-col h-full bg-gradient-to-b from-white to-gray-50">
-      <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-purple-50 to-indigo-50">
-        <h3 className="font-semibold flex items-center gap-3 text-lg">
-          <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-sm">
-            <Sparkles className="w-5 h-5 text-white" />
+      <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-purple-50 to-indigo-50">
+        <h3 className="font-semibold flex items-center gap-2 text-base">
+          <div className="w-7 h-7 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-sm">
+            <Sparkles className="w-4 h-4 text-white" />
           </div>
           <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
             AI Assistant
           </span>
         </h3>
-        <p className="text-xs text-gray-600 mt-2 pl-11">Powered by Google Vertex AI</p>
+        <p className="text-xs text-gray-600 mt-1 pl-9">Vertex AI</p>
       </div>
 
       {/* Quick Actions */}
-      <div className="p-5 space-y-3 border-b border-gray-100 bg-white/50">
-        <div className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
-          <div className="w-1 h-4 bg-gradient-to-b from-purple-500 to-indigo-500 rounded-full" />
-          Quick Actions
+      <div className="p-3 border-b border-gray-100 bg-white/50">
+        <div className="text-xs font-medium text-gray-600 mb-2">Quick Actions</div>
+        <div className="flex gap-2">
+          <button
+            onClick={() => handleQuickAction('complete')}
+            disabled={!content || isProcessing}
+            className="flex-1 px-3 py-2 bg-gradient-to-r from-violet-50 to-purple-50 hover:from-violet-100 hover:to-purple-100 text-purple-700 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-purple-100"
+            title="Complete Content"
+          >
+            <Wand2 className="w-3.5 h-3.5" />
+            Complete
+          </button>
+          
+          <button
+            onClick={() => handleQuickAction('translate')}
+            disabled={!content || isProcessing}
+            className="flex-1 px-3 py-2 bg-gradient-to-r from-blue-50 to-cyan-50 hover:from-blue-100 hover:to-cyan-100 text-blue-700 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-blue-100"
+            title="Translate to All Languages"
+          >
+            <Languages className="w-3.5 h-3.5" />
+            Translate
+          </button>
+          
+          <button
+            onClick={() => handleQuickAction('improve')}
+            disabled={!content || isProcessing}
+            className="flex-1 px-3 py-2 bg-gradient-to-r from-emerald-50 to-green-50 hover:from-emerald-100 hover:to-green-100 text-emerald-700 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-emerald-100"
+            title="Improve & Validate"
+          >
+            <CheckCircle className="w-3.5 h-3.5" />
+            Improve
+          </button>
         </div>
-        
-        <button
-          onClick={() => handleQuickAction('complete')}
-          disabled={!content || isProcessing}
-          className="w-full px-4 py-3 bg-gradient-to-r from-violet-50 to-purple-50 hover:from-violet-100 hover:to-purple-100 text-purple-700 rounded-xl transition-all duration-200 flex items-center gap-3 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-purple-100"
-        >
-          <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
-            <Wand2 className="w-4 h-4 text-purple-600" />
-          </div>
-          Complete Content
-        </button>
-        
-        <button
-          onClick={() => handleQuickAction('translate')}
-          disabled={!content || isProcessing}
-          className="w-full px-4 py-3 bg-gradient-to-r from-blue-50 to-cyan-50 hover:from-blue-100 hover:to-cyan-100 text-blue-700 rounded-xl transition-all duration-200 flex items-center gap-3 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-blue-100"
-        >
-          <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
-            <Languages className="w-4 h-4 text-blue-600" />
-          </div>
-          Translate to All Languages
-        </button>
-        
-        <button
-          onClick={() => handleQuickAction('improve')}
-          disabled={!content || isProcessing}
-          className="w-full px-4 py-3 bg-gradient-to-r from-emerald-50 to-green-50 hover:from-emerald-100 hover:to-green-100 text-emerald-700 rounded-xl transition-all duration-200 flex items-center gap-3 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-emerald-100"
-        >
-          <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
-            <CheckCircle className="w-4 h-4 text-emerald-600" />
-          </div>
-          Improve & Validate
-        </button>
       </div>
 
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-5 space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.map((msg, idx) => (
           <div key={idx} className={`p-4 rounded-xl transition-all duration-200 ${
             msg.role === 'user' 
@@ -178,6 +179,7 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
             </div>
           </div>
         ))}
+        <div ref={messagesEndRef} />
         {messages.length === 0 && (
           <div className="text-center mt-16">
             <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-purple-100 to-indigo-100 rounded-2xl flex items-center justify-center">
@@ -194,8 +196,8 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
       </div>
 
       {/* Chat Input */}
-      <div className="p-5 border-t border-gray-100 bg-white">
-        <div className="flex gap-3">
+      <div className="p-4 border-t border-gray-100 bg-white">
+        <div className="flex gap-2">
           <textarea
             placeholder="Ask AI to help with your content..."
             value={prompt}

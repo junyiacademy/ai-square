@@ -233,3 +233,27 @@
 .gradient-text {
   @apply bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent;
 }
+
+/* Panel resize handles */
+[data-panel-resize-handle-enabled] {
+  @apply relative bg-gray-200 hover:bg-blue-400 transition-colors duration-200;
+  cursor: col-resize;
+}
+
+[data-panel-resize-handle-enabled]:hover {
+  @apply bg-blue-400;
+}
+
+[data-panel-resize-handle-enabled]:active {
+  @apply bg-blue-500;
+}
+
+/* Panel animations */
+[data-panel] {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+/* Collapsed panel indicator */
+[data-panel-collapsed] {
+  @apply overflow-hidden;
+}

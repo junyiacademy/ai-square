@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FileTree } from '@/components/cms/FileTree';
 import { Editor } from '@/components/cms/Editor';
 import { AIAssistant } from '@/components/cms/AIAssistant';
 import { Header } from '@/components/cms/Header';
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import { ChevronLeft, ChevronRight, GripVertical } from 'lucide-react';
 
 export default function CmsPage() {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
@@ -13,6 +15,10 @@ export default function CmsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [currentBranch, setCurrentBranch] = useState<string>('main');
   const [isOnMain, setIsOnMain] = useState(true);
+  const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false);
+  const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false);
+  const leftPanelRef = useRef<any>(null);
+  const rightPanelRef = useRef<any>(null);
 
   // Load branch status on mount
   useEffect(() => {
@@ -34,6 +40,15 @@ export default function CmsPage() {
       setIsOnMain(data.isOnMain);
     } catch (error) {
       console.error('Failed to load branch status:', error);
+    }
+  };
+
+  const handleFileSelect = (path: string) => {
+    setSelectedFile(path);
+    // Auto-expand left panel when selecting a file
+    if (leftPanelCollapsed && leftPanelRef.current) {
+      leftPanelRef.current.expand();
+      setLeftPanelCollapsed(false);
     }
   };
 
@@ -262,32 +277,132 @@ export default function CmsPage() {
       />
       
       <div className="flex flex-1 overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-50">
-        {/* File Browser */}
-        <div className="w-72 bg-white/95 backdrop-blur-sm border-r border-gray-100 overflow-y-auto shadow-sm">
-          <FileTree 
-            onFileSelect={setSelectedFile}
-            selectedFile={selectedFile}
-          />
-        </div>
+        <PanelGroup direction="horizontal" className="flex-1">
+          {/* File Browser Panel */}
+          <Panel
+            ref={leftPanelRef}
+            defaultSize={20}
+            minSize={15}
+            maxSize={30}
+            collapsible
+            onCollapse={() => setLeftPanelCollapsed(true)}
+            onExpand={() => setLeftPanelCollapsed(false)}
+            className="relative"
+          >
+            <div className="h-full bg-white/95 backdrop-blur-sm border-r border-gray-100 overflow-y-auto shadow-sm relative">
+              <FileTree 
+                onFileSelect={handleFileSelect}
+                selectedFile={selectedFile}
+              />
+              {/* Collapse button */}
+              <button
+                onClick={() => {
+                  if (leftPanelRef.current) {
+                    leftPanelRef.current.collapse();
+                    setLeftPanelCollapsed(true);
+                  }
+                }}
+                className="absolute top-4 right-2 p-1.5 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-all duration-200 z-10"
+                title="Collapse panel"
+              >
+                <ChevronLeft className="w-4 h-4 text-gray-600" />
+              </button>
+            </div>
+          </Panel>
 
-        {/* Editor */}
-        <div className="flex-1 flex flex-col bg-white/95 backdrop-blur-sm shadow-sm">
-          <Editor
-            file={selectedFile}
-            content={content}
-            onChange={setContent}
-            isLoading={isLoading}
-          />
-        </div>
+          {/* Left Resize Handle */}
+          <PanelResizeHandle className="relative w-1 bg-gray-200 hover:bg-gray-300 transition-colors group">
+            <div className="absolute inset-y-0 -left-2 -right-2 group-hover:bg-blue-500/10" />
+            {!leftPanelCollapsed && (
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-12 flex items-center justify-center">
+                <GripVertical className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
+              </div>
+            )}
+            {leftPanelCollapsed && (
+              <button
+                onClick={() => {
+                  if (leftPanelRef.current) {
+                    leftPanelRef.current.expand();
+                    setLeftPanelCollapsed(false);
+                  }
+                }}
+                className="absolute top-20 left-1 p-1.5 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-all duration-200 z-10 shadow-sm"
+                title="Expand panel"
+              >
+                <ChevronRight className="w-4 h-4 text-gray-600" />
+              </button>
+            )}
+          </PanelResizeHandle>
 
-        {/* AI Assistant */}
-        <div className="w-80 bg-white/95 backdrop-blur-sm border-l border-gray-100 overflow-y-auto shadow-sm">
-          <AIAssistant
-            content={content}
-            onContentUpdate={setContent}
-            selectedFile={selectedFile}
-          />
-        </div>
+          {/* Editor Panel */}
+          <Panel defaultSize={50} minSize={30}>
+            <div className="h-full flex flex-col bg-white/95 backdrop-blur-sm shadow-sm">
+              <Editor
+                file={selectedFile}
+                content={content}
+                onChange={setContent}
+                isLoading={isLoading}
+              />
+            </div>
+          </Panel>
+
+          {/* Right Resize Handle */}
+          <PanelResizeHandle className="relative w-1 bg-gray-200 hover:bg-gray-300 transition-colors group">
+            <div className="absolute inset-y-0 -left-2 -right-2 group-hover:bg-blue-500/10" />
+            {!rightPanelCollapsed && (
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-12 flex items-center justify-center">
+                <GripVertical className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
+              </div>
+            )}
+            {rightPanelCollapsed && (
+              <button
+                onClick={() => {
+                  if (rightPanelRef.current) {
+                    rightPanelRef.current.expand();
+                    setRightPanelCollapsed(false);
+                  }
+                }}
+                className="absolute top-20 right-1 p-1.5 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-all duration-200 z-10 shadow-sm"
+                title="Expand panel"
+              >
+                <ChevronLeft className="w-4 h-4 text-gray-600" />
+              </button>
+            )}
+          </PanelResizeHandle>
+
+          {/* AI Assistant Panel */}
+          <Panel
+            ref={rightPanelRef}
+            defaultSize={30}
+            minSize={20}
+            maxSize={40}
+            collapsible
+            onCollapse={() => setRightPanelCollapsed(true)}
+            onExpand={() => setRightPanelCollapsed(false)}
+            className="relative"
+          >
+            <div className="h-full bg-white/95 backdrop-blur-sm border-l border-gray-100 overflow-y-auto shadow-sm relative">
+              <AIAssistant
+                content={content}
+                onContentUpdate={setContent}
+                selectedFile={selectedFile}
+              />
+              {/* Collapse button */}
+              <button
+                onClick={() => {
+                  if (rightPanelRef.current) {
+                    rightPanelRef.current.collapse();
+                    setRightPanelCollapsed(true);
+                  }
+                }}
+                className="absolute top-4 left-2 p-1.5 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-all duration-200 z-10"
+                title="Collapse panel"
+              >
+                <ChevronRight className="w-4 h-4 text-gray-600" />
+              </button>
+            </div>
+          </Panel>
+        </PanelGroup>
       </div>
     </div>
   );
