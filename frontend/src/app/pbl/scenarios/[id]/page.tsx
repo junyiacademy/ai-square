@@ -4,6 +4,19 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { PBLScenarioDetailsSkeleton } from '@/components/pbl/loading-skeletons';
+
+interface KSAItem {
+  code: string;
+  name: string;
+  description: string;
+}
+
+interface KSAMapping {
+  knowledge: KSAItem[];
+  skills: KSAItem[];
+  attitudes: KSAItem[];
+}
 
 interface ScenarioDetails {
   id: string;
@@ -14,6 +27,7 @@ interface ScenarioDetails {
   targetDomain: string[];
   prerequisites: string[];
   learningObjectives: string[];
+  ksaMapping?: KSAMapping;
   tasks: Array<{
     id: string;
     title: string;
@@ -136,6 +150,13 @@ export default function ScenarioDetailsPage() {
     return icons[category as keyof typeof icons] || '📚';
   };
 
+  const getDomainTranslation = (domain: string) => {
+    // Use the domain translation from pbl namespace
+    return t(`details.domains.${domain}`, { 
+      defaultValue: domain.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+    });
+  };
+
 
   const handleStartProgram = async (programId?: string) => {
     if (!scenario || isStarting) return;
@@ -199,9 +220,11 @@ export default function ScenarioDetailsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <PBLScenarioDetailsSkeleton />
+        </div>
+      </main>
     );
   }
 
@@ -393,6 +416,77 @@ export default function ScenarioDetailsPage() {
             </ul>
           </div>
         </div>
+
+        {/* Target Domains */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+            <span className="text-2xl mr-2">🌐</span>
+            {t('details.targetDomains')}
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {scenario.targetDomain.map((domain, index) => (
+              <span key={index} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                {getDomainTranslation(domain)}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* KSA Mapping */}
+        {scenario.ksaMapping && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+              <span className="text-2xl mr-2">🧠</span>
+              {t('details.ksaCompetencies')}
+            </h2>
+            <div className="space-y-4">
+              {/* Knowledge */}
+              {scenario.ksaMapping.knowledge.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-semibold text-green-700 dark:text-green-300 mb-2">{t('details.knowledge')}</h3>
+                  <div className="space-y-2">
+                    {scenario.ksaMapping.knowledge.map((item, index) => (
+                      <div key={index} className="p-2 bg-green-50 dark:bg-green-900/20 rounded">
+                        <div className="text-sm font-medium text-green-800 dark:text-green-300">{item.code}</div>
+                        <div className="text-xs text-green-600 dark:text-green-400">{item.description}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Skills */}
+              {scenario.ksaMapping.skills.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-semibold text-blue-700 dark:text-blue-300 mb-2">{t('details.skills')}</h3>
+                  <div className="space-y-2">
+                    {scenario.ksaMapping.skills.map((item, index) => (
+                      <div key={index} className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded">
+                        <div className="text-sm font-medium text-blue-800 dark:text-blue-300">{item.code}</div>
+                        <div className="text-xs text-blue-600 dark:text-blue-400">{item.description}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Attitudes */}
+              {scenario.ksaMapping.attitudes.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-semibold text-purple-700 dark:text-purple-300 mb-2">{t('details.attitudes')}</h3>
+                  <div className="space-y-2">
+                    {scenario.ksaMapping.attitudes.map((item, index) => (
+                      <div key={index} className="p-2 bg-purple-50 dark:bg-purple-900/20 rounded">
+                        <div className="text-sm font-medium text-purple-800 dark:text-purple-300">{item.code}</div>
+                        <div className="text-xs text-purple-600 dark:text-purple-400">{item.description}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Learning Tasks */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
