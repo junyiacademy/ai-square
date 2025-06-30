@@ -559,7 +559,7 @@ completion_criteria:
   min_overall_score: 80
 
 resources:
-  - name: "Teen Health Research"
+  - name: "Teen Health Research 01"
     name_zh: "青少年健康研究"
     url: "https://www.cdc.gov/healthyyouth/"
     type: reference
