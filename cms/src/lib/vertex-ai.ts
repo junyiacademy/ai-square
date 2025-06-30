@@ -1,13 +1,50 @@
 import { VertexAI } from '@google-cloud/vertexai';
+import { GoogleAuth } from 'google-auth-library';
+import path from 'path';
 
 let vertexAI: VertexAI | null = null;
+let auth: GoogleAuth | null = null;
+
+function getAuth() {
+  if (!auth) {
+    // Check if service account key is provided
+    const keyFilePath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+    
+    if (keyFilePath && keyFilePath !== '/path/to/your/service-account-key.json') {
+      // Use service account
+      auth = new GoogleAuth({
+        keyFile: keyFilePath,
+        scopes: ['https://www.googleapis.com/auth/cloud-platform']
+      });
+    } else {
+      // Use default credentials (gcloud auth)
+      auth = new GoogleAuth({
+        scopes: ['https://www.googleapis.com/auth/cloud-platform']
+      });
+    }
+  }
+  return auth;
+}
 
 function getVertexAI() {
   if (!vertexAI) {
-    vertexAI = new VertexAI({
-      project: process.env.GOOGLE_CLOUD_PROJECT_ID || 'ai-square-dev',
-      location: process.env.GOOGLE_CLOUD_LOCATION || 'us-central1',
-    });
+    try {
+      // Simply use environment variables - the SDK will handle auth
+      const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID;
+      const location = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1';
+      
+      if (!projectId) {
+        throw new Error('GOOGLE_CLOUD_PROJECT_ID environment variable is required');
+      }
+      
+      vertexAI = new VertexAI({
+        project: projectId,
+        location: location,
+      });
+    } catch (error) {
+      console.error('Failed to initialize Vertex AI:', error);
+      throw new Error('Failed to initialize Vertex AI. Please check your Google Cloud credentials.');
+    }
   }
   return vertexAI;
 }

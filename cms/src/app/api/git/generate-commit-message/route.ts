@@ -2,8 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { generateContent } from '@/lib/vertex-ai';
 
 export async function POST(request: NextRequest) {
+  let requestData: any = {};
+  
   try {
-    const { filePath, oldContent, newContent } = await request.json();
+    requestData = await request.json();
+    const { filePath, oldContent, newContent } = requestData;
 
     if (!filePath || !newContent) {
       return NextResponse.json(
@@ -55,7 +58,7 @@ ${oldContent || '(新檔案)'}
 ${newContent}
 
 請根據內容差異，生成一個詳細的 commit message。
-重要：必須詳細說明具體改了什麼內容、為什麼要改、以及 review 時需要注意什麼。`;
+重要：必須詳細說明具體改了哪幾隻檔案，什麼樣的相關內容、為什麼要改、以及 review 時需要注意什麼。`;
 
     const commitMessage = await generateContent(prompt, systemPrompt);
     
@@ -66,13 +69,15 @@ ${newContent}
   } catch (error) {
     console.error('Generate commit message error:', error);
     
+    // Get filePath from requestData
+    const filePath = requestData.filePath || 'unknown';
+    
     // Fallback to simple message if AI fails
     const fallbackMessage = `feat(cms): 更新 ${filePath} 內容
 
 更新檔案: ${filePath}
 
-🤖 Generated with AI Square CMS
-Co-Authored-By: Vertex AI <noreply@google.com>`;
+🤖 Generated with AI Square CMS`;
     
     return NextResponse.json({ 
       success: true,

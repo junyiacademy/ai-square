@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
+import { getGitHubStorage } from '@/services/github-storage';
 
 interface FileNode {
   name: string;
@@ -9,86 +8,79 @@ interface FileNode {
   children?: FileNode[];
 }
 
-async function scanDirectory(dirPath: string, basePath: string, relativePath: string = ''): Promise<FileNode[]> {
-  try {
-    const items = await fs.readdir(dirPath, { withFileTypes: true });
-    const nodes: FileNode[] = [];
-
-    for (const item of items) {
-      // Skip node_modules, .git, etc.
-      if (item.name.startsWith('.') || item.name === 'node_modules') {
-        continue;
+// Helper function to organize flat list into tree structure
+function buildFileTree(files: any[]): FileNode[] {
+  const tree: { [key: string]: FileNode } = {};
+  
+  // Initialize root directories
+  const rootDirs = ['rubrics_data', 'pbl_data', 'assessment_data'];
+  rootDirs.forEach(dir => {
+    tree[dir] = {
+      name: dir,
+      path: dir,
+      type: 'directory',
+      children: []
+    };
+  });
+  
+  // Process each file
+  files.forEach(file => {
+    const pathParts = file.path.split('/');
+    
+    if (pathParts.length === 1) {
+      // Top-level file in content directory
+      const rootDir = pathParts[0].replace(/\.(yaml|yml)$/, '');
+      if (tree[rootDir]) {
+        tree[rootDir].children!.push({
+          name: file.name,
+          path: file.path,
+          type: 'file'
+        });
       }
-
-      const fullPath = path.join(dirPath, item.name);
-      const itemRelativePath = path.join(relativePath, item.name);
-
-      if (item.isDirectory()) {
-        const children = await scanDirectory(fullPath, basePath, itemRelativePath);
-        if (children.length > 0) {
-          nodes.push({
-            name: item.name,
-            path: itemRelativePath,
-            type: 'directory',
-            children,
-          });
-        }
-      } else if (item.name.endsWith('.yaml') || item.name.endsWith('.yml')) {
-        nodes.push({
-          name: item.name,
-          path: itemRelativePath,
-          type: 'file',
+    } else {
+      // File in subdirectory
+      const rootDir = pathParts[0];
+      if (tree[rootDir]) {
+        tree[rootDir].children!.push({
+          name: file.name,
+          path: file.path,
+          type: 'file'
         });
       }
     }
-
-    return nodes.sort((a, b) => {
-      // Directories first, then files
-      if (a.type !== b.type) {
-        return a.type === 'directory' ? -1 : 1;
-      }
-      return a.name.localeCompare(b.name);
-    });
-  } catch (error) {
-    console.error(`Failed to scan directory ${dirPath}:`, error);
-    return [];
-  }
+  });
+  
+  // Filter out empty directories and sort
+  return Object.values(tree)
+    .filter(node => node.children && node.children.length > 0)
+    .sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export async function GET() {
   try {
-    // Use local content directory
-    const contentPath = path.join(process.cwd(), 'content');
+    const storage = getGitHubStorage();
     
-    const contentDirs = [
-      { path: path.join(contentPath, 'rubrics_data'), name: 'rubrics_data' },
-      { path: path.join(contentPath, 'pbl_data'), name: 'pbl_data' },
-      { path: path.join(contentPath, 'assessment_data'), name: 'assessment_data' },
-    ];
-
-    const allFiles: FileNode[] = [];
-
-    for (const dir of contentDirs) {
+    // Fetch files from each directory
+    const directories = ['rubrics_data', 'pbl_data', 'assessment_data'];
+    const allFiles: any[] = [];
+    
+    for (const dir of directories) {
       try {
-        const files = await scanDirectory(dir.path, dir.path, dir.name);
-        if (files.length > 0) {
-          allFiles.push({
-            name: dir.name,
-            path: dir.name,
-            type: 'directory',
-            children: files,
-          });
-        }
+        const files = await storage.listFiles(dir);
+        allFiles.push(...files);
       } catch (error) {
-        console.error(`Failed to scan directory ${dir.path}:`, error);
+        console.error(`Failed to fetch files from ${dir}:`, error);
       }
     }
-
-    return NextResponse.json({ files: allFiles });
+    
+    // Build tree structure
+    const fileTree = buildFileTree(allFiles);
+    
+    return NextResponse.json({ files: fileTree });
   } catch (error) {
-    console.error('Failed to scan files:', error);
+    console.error('Failed to list files:', error);
     return NextResponse.json(
-      { error: 'Failed to scan files' },
+      { error: 'Failed to list files' },
       { status: 500 }
     );
   }

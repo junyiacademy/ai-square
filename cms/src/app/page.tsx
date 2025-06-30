@@ -46,6 +46,8 @@ export default function CmsPage() {
     
     try {
       // If on main branch, create feature branch first
+      let targetBranch = currentBranch;
+      
       if (isOnMain) {
         const branchResponse = await fetch('/api/git/branch', {
           method: 'POST',
@@ -55,22 +57,12 @@ export default function CmsPage() {
         branchData = await branchResponse.json();
         
         if (branchData.success) {
+          targetBranch = branchData.branch; // Use the new branch immediately
           setCurrentBranch(branchData.branch);
           setIsOnMain(false);
         } else {
           throw new Error('Failed to create feature branch');
         }
-      }
-      
-      // Save the file
-      const saveResponse = await fetch('/api/content', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path: selectedFile, content }),
-      });
-      
-      if (!saveResponse.ok) {
-        throw new Error('Failed to save file');
       }
       
       // Generate intelligent commit message
@@ -94,19 +86,28 @@ export default function CmsPage() {
         console.warn('Failed to generate AI commit message, using default');
       }
       
-      // Commit to current branch
-      const commitResponse = await fetch('/api/git/commit', {
+      // Save the file with commit message (GitHub API commits automatically)
+      const saveResponse = await fetch('/api/content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          filePath: selectedFile, 
+          path: selectedFile, 
+          content,
+          branch: targetBranch, // Use the target branch, not currentBranch
           message: commitMessage
         }),
       });
       
-      const commitData = await commitResponse.json();
+      if (!saveResponse.ok) {
+        throw new Error('Failed to save file');
+      }
       
-      if (commitData.success) {
+      const saveData = await saveResponse.json();
+      
+      if (saveData.success) {
+        // Update original content after successful save
+        setOriginalContent(content);
+        
         // Success toast for save
         const saveToast = document.createElement('div');
         saveToast.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-in slide-in-from-right';
@@ -128,7 +129,7 @@ export default function CmsPage() {
           }
         }, 2000);
       } else {
-        alert('Content saved but commit failed: ' + commitData.error);
+        alert('Failed to save content');
       }
     } catch (error) {
       console.error('Save error:', error);

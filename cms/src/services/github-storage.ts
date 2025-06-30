@@ -1,0 +1,303 @@
+import { Octokit } from '@octokit/rest';
+
+interface CacheEntry {
+  data: any;
+  expires: number;
+  etag?: string;
+}
+
+interface FileContent {
+  name: string;
+  path: string;
+  sha: string;
+  content: string;
+  size: number;
+  type: 'file' | 'dir';
+}
+
+export class GitHubStorage {
+  private octokit: Octokit;
+  private cache = new Map<string, CacheEntry>();
+  private owner: string;
+  private repo: string;
+  private basePath: string = 'cms/content';
+  
+  constructor() {
+    const token = process.env.GITHUB_TOKEN;
+    if (!token) {
+      throw new Error('GITHUB_TOKEN is required');
+    }
+    
+    this.octokit = new Octokit({ auth: token });
+    this.owner = process.env.GITHUB_OWNER || 'junyiacademy';
+    this.repo = process.env.GITHUB_REPO || 'ai-square';
+  }
+
+  // Cache management
+  private getCacheKey(method: string, path: string): string {
+    return `${method}:${path}`;
+  }
+
+  private getFromCache(key: string): any | null {
+    const entry = this.cache.get(key);
+    if (!entry) return null;
+    
+    if (Date.now() > entry.expires) {
+      this.cache.delete(key);
+      return null;
+    }
+    
+    return entry.data;
+  }
+
+  private setCache(key: string, data: any, ttlMs: number = 5 * 60 * 1000): void {
+    this.cache.set(key, {
+      data,
+      expires: Date.now() + ttlMs
+    });
+  }
+
+  private invalidateCache(path?: string): void {
+    if (!path) {
+      this.cache.clear();
+      return;
+    }
+    
+    // Invalidate specific path and all parent paths
+    const keys = Array.from(this.cache.keys());
+    keys.forEach(key => {
+      if (key.includes(path)) {
+        this.cache.delete(key);
+      }
+    });
+  }
+
+  // List files in a directory
+  async listFiles(path: string = ''): Promise<FileContent[]> {
+    const cacheKey = this.getCacheKey('list', path);
+    const cached = this.getFromCache(cacheKey);
+    if (cached) return cached;
+
+    try {
+      const fullPath = path ? `${this.basePath}/${path}` : this.basePath;
+      const { data } = await this.octokit.repos.getContent({
+        owner: this.owner,
+        repo: this.repo,
+        path: fullPath
+      });
+
+      // GitHub API returns array for directories
+      if (!Array.isArray(data)) {
+        throw new Error('Expected directory but got file');
+      }
+
+      const files = data
+        .filter(item => item.type === 'file' && (item.name.endsWith('.yaml') || item.name.endsWith('.yml')))
+        .map(item => ({
+          name: item.name,
+          path: item.path.replace(`${this.basePath}/`, ''),
+          sha: item.sha,
+          size: item.size,
+          type: item.type as 'file',
+          content: '' // Content not loaded in list
+        }));
+
+      this.setCache(cacheKey, files);
+      return files;
+    } catch (error: any) {
+      if (error.status === 404) {
+        return [];
+      }
+      throw error;
+    }
+  }
+
+  // Get file content
+  async getFile(path: string): Promise<FileContent> {
+    const cacheKey = this.getCacheKey('file', path);
+    const cached = this.getFromCache(cacheKey);
+    if (cached) return cached;
+
+    try {
+      const fullPath = `${this.basePath}/${path}`;
+      const { data } = await this.octokit.repos.getContent({
+        owner: this.owner,
+        repo: this.repo,
+        path: fullPath
+      });
+
+      if (Array.isArray(data) || data.type !== 'file') {
+        throw new Error('Expected file but got directory');
+      }
+
+      const content = Buffer.from(data.content, 'base64').toString('utf-8');
+      
+      const file: FileContent = {
+        name: data.name,
+        path: path,
+        sha: data.sha,
+        content,
+        size: data.size,
+        type: 'file'
+      };
+
+      this.setCache(cacheKey, file, 2 * 60 * 1000); // Cache for 2 minutes
+      return file;
+    } catch (error: any) {
+      console.error('Error getting file:', error);
+      throw error;
+    }
+  }
+
+  // Update file content
+  async updateFile(
+    path: string, 
+    content: string, 
+    message: string,
+    branch?: string
+  ): Promise<void> {
+    try {
+      const fullPath = `${this.basePath}/${path}`;
+      
+      // Get current file to obtain SHA
+      let sha: string | undefined;
+      try {
+        const { data } = await this.octokit.repos.getContent({
+          owner: this.owner,
+          repo: this.repo,
+          path: fullPath,
+          ref: branch
+        });
+        
+        if (!Array.isArray(data) && data.type === 'file') {
+          sha = data.sha;
+        }
+      } catch (error: any) {
+        // File doesn't exist, will create new
+        if (error.status !== 404) throw error;
+      }
+
+      // Update or create file
+      await this.octokit.repos.createOrUpdateFileContents({
+        owner: this.owner,
+        repo: this.repo,
+        path: fullPath,
+        message,
+        content: Buffer.from(content).toString('base64'),
+        sha,
+        branch
+      });
+
+      // Invalidate cache
+      this.invalidateCache(path);
+    } catch (error) {
+      console.error('Error updating file:', error);
+      throw error;
+    }
+  }
+
+  // Branch management
+  async getCurrentBranch(): Promise<string> {
+    // In GitHub context, we don't have a "current" branch
+    // This would be managed by the frontend state
+    return 'main';
+  }
+
+  async createBranch(branchName: string): Promise<void> {
+    try {
+      // Get the latest commit SHA from main branch
+      const { data: ref } = await this.octokit.git.getRef({
+        owner: this.owner,
+        repo: this.repo,
+        ref: 'heads/main'
+      });
+
+      // Create new branch
+      await this.octokit.git.createRef({
+        owner: this.owner,
+        repo: this.repo,
+        ref: `refs/heads/${branchName}`,
+        sha: ref.object.sha
+      });
+    } catch (error: any) {
+      if (error.status === 422) {
+        // Branch already exists
+        console.log(`Branch ${branchName} already exists`);
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  async listBranches(): Promise<string[]> {
+    const { data } = await this.octokit.repos.listBranches({
+      owner: this.owner,
+      repo: this.repo
+    });
+    
+    return data.map(branch => branch.name);
+  }
+
+  async deleteBranch(branchName: string): Promise<void> {
+    if (branchName === 'main') {
+      throw new Error('Cannot delete main branch');
+    }
+
+    await this.octokit.git.deleteRef({
+      owner: this.owner,
+      repo: this.repo,
+      ref: `heads/${branchName}`
+    });
+  }
+
+  // Pull Request management
+  async createPullRequest(
+    title: string,
+    body: string,
+    sourceBranch: string,
+    targetBranch: string = 'main'
+  ): Promise<{ number: number; url: string }> {
+    const { data } = await this.octokit.pulls.create({
+      owner: this.owner,
+      repo: this.repo,
+      title,
+      body,
+      head: sourceBranch,
+      base: targetBranch
+    });
+
+    return {
+      number: data.number,
+      url: data.html_url
+    };
+  }
+
+  // Get recent commits for PR description
+  async getCommitsBetweenBranches(
+    sourceBranch: string,
+    targetBranch: string = 'main'
+  ): Promise<Array<{ sha: string; message: string; author: string }>> {
+    const { data } = await this.octokit.repos.compareCommits({
+      owner: this.owner,
+      repo: this.repo,
+      base: targetBranch,
+      head: sourceBranch
+    });
+
+    return data.commits.map(commit => ({
+      sha: commit.sha,
+      message: commit.commit.message,
+      author: commit.commit.author?.name || 'Unknown'
+    }));
+  }
+}
+
+// Singleton instance
+let instance: GitHubStorage | null = null;
+
+export function getGitHubStorage(): GitHubStorage {
+  if (!instance) {
+    instance = new GitHubStorage();
+  }
+  return instance;
+}

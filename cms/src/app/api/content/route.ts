@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
+import { getGitHubStorage } from '@/services/github-storage';
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,24 +13,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Use local content directory
-    const contentPath = path.join(process.cwd(), 'content');
-    const fullPath = path.join(contentPath, filePath);
-    const allowedDir = contentPath;
-
-    // Security check: ensure the path is within allowed directory
-    if (!fullPath.startsWith(allowedDir)) {
-      return NextResponse.json(
-        { error: 'Invalid file path' },
-        { status: 403 }
-      );
-    }
-
-    const content = await fs.readFile(fullPath, 'utf-8');
+    const storage = getGitHubStorage();
+    const file = await storage.getFile(filePath);
     
     return NextResponse.json({ 
-      content,
+      content: file.content,
       path: filePath,
+      sha: file.sha
     });
   } catch (error) {
     console.error('Failed to read file:', error);
@@ -44,7 +32,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { path: filePath, content } = await request.json();
+    const { path: filePath, content, branch, message } = await request.json();
 
     if (!filePath || content === undefined) {
       return NextResponse.json(
@@ -53,27 +41,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const contentPath = path.join(process.cwd(), 'content');
-    const fullPath = path.join(contentPath, filePath);
-    const allowedDir = contentPath;
+    // Get current branch from session or use provided branch
+    const currentBranch = branch || 'main';
+    
+    // Use provided message or generate default
+    const commitMessage = message || `更新 ${filePath}
 
-    // Security check
-    if (!fullPath.startsWith(allowedDir)) {
-      return NextResponse.json(
-        { error: 'Invalid file path' },
-        { status: 403 }
-      );
-    }
+透過 AI Square CMS 更新內容
 
-    // Ensure directory exists
-    const dir = path.dirname(fullPath);
-    await fs.mkdir(dir, { recursive: true });
+🤖 Generated with AI Square CMS`;
 
-    await fs.writeFile(fullPath, content, 'utf-8');
+    const storage = getGitHubStorage();
+    await storage.updateFile(filePath, content, commitMessage, currentBranch);
     
     return NextResponse.json({ 
       success: true,
       path: filePath,
+      branch: currentBranch
     });
   } catch (error) {
     console.error('Failed to save file:', error);

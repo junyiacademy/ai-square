@@ -1,25 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { exec } from 'child_process';
-import { promisify } from 'util';
-
-const execAsync = promisify(exec);
+import { getGitHubStorage } from '@/services/github-storage';
+import { cookies } from 'next/headers';
 
 export async function POST(request: NextRequest) {
   try {
     const { fileName } = await request.json();
-    const projectRoot = process.cwd().replace('/cms', '');
+    const cookieStore = await cookies();
     
-    // Get current branch
-    const { stdout: currentBranch } = await execAsync('git branch --show-current', { cwd: projectRoot });
-    const branch = currentBranch.trim();
+    // Get current branch from cookie
+    const currentBranch = cookieStore.get('cms-branch')?.value || 'main';
     
     // If already on a feature branch, return current branch
-    if (branch !== 'main') {
+    if (currentBranch !== 'main') {
       return NextResponse.json({ 
         success: true,
-        branch,
+        branch: currentBranch,
         isNew: false,
-        message: `Already on feature branch: ${branch}`
+        message: `Already on feature branch: ${currentBranch}`
       });
     }
     
@@ -30,14 +27,24 @@ export async function POST(request: NextRequest) {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
     const newBranch = `cms-${sanitizedFileName}-${timestamp}`;
     
-    await execAsync(`git checkout -b ${newBranch}`, { cwd: projectRoot });
+    const storage = getGitHubStorage();
+    await storage.createBranch(newBranch);
     
-    return NextResponse.json({ 
+    // Set branch in cookie
+    const response = NextResponse.json({ 
       success: true,
       branch: newBranch,
       isNew: true,
       message: `Created new branch: ${newBranch}`
     });
+    
+    response.cookies.set('cms-branch', newBranch, {
+      httpOnly: true,
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 24 // 24 hours
+    });
+    
+    return response;
   } catch (error) {
     console.error('Branch creation error:', error);
     return NextResponse.json(
@@ -49,25 +56,49 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const projectRoot = process.cwd().replace('/cms', '');
-    
-    // Get current branch
-    const { stdout: currentBranch } = await execAsync('git branch --show-current', { cwd: projectRoot });
-    const branch = currentBranch.trim();
-    
-    // Check if there are uncommitted changes
-    const { stdout: status } = await execAsync('git status --porcelain', { cwd: projectRoot });
-    const hasChanges = status.trim().length > 0;
+    const cookieStore = await cookies();
+    const currentBranch = cookieStore.get('cms-branch')?.value || 'main';
     
     return NextResponse.json({ 
-      currentBranch: branch,
-      isOnMain: branch === 'main',
-      hasUncommittedChanges: hasChanges
+      currentBranch,
+      isOnMain: currentBranch === 'main',
+      hasUncommittedChanges: false // Not applicable with GitHub API
     });
   } catch (error) {
     console.error('Branch status error:', error);
     return NextResponse.json(
       { error: 'Failed to get branch status' },
+      { status: 500 }
+    );
+  }
+}
+
+// New endpoint to switch branches
+export async function PUT(request: NextRequest) {
+  try {
+    const { branch } = await request.json();
+    
+    const response = NextResponse.json({ 
+      success: true,
+      branch
+    });
+    
+    if (branch === 'main') {
+      // Clear the branch cookie to go back to main
+      response.cookies.delete('cms-branch');
+    } else {
+      response.cookies.set('cms-branch', branch, {
+        httpOnly: true,
+        sameSite: 'strict',
+        maxAge: 60 * 60 * 24 // 24 hours
+      });
+    }
+    
+    return response;
+  } catch (error) {
+    console.error('Branch switch error:', error);
+    return NextResponse.json(
+      { error: 'Failed to switch branch' },
       { status: 500 }
     );
   }

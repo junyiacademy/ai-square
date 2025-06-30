@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { exec } from 'child_process';
-import { promisify } from 'util';
-
-const execAsync = promisify(exec);
+import { getGitHubStorage } from '@/services/github-storage';
+import { cookies } from 'next/headers';
 
 export async function POST(request: NextRequest) {
   try {
     const { title, body } = await request.json();
+    const cookieStore = await cookies();
 
     if (!title) {
       return NextResponse.json(
@@ -15,50 +14,102 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const projectRoot = process.cwd().replace('/cms', '');
+    // Get current branch from cookie
+    const currentBranch = cookieStore.get('cms-branch')?.value || 'main';
     
-    // Get current branch
-    const { stdout: currentBranch } = await execAsync('git branch --show-current', { cwd: projectRoot });
-    const branch = currentBranch.trim();
-    
-    // If we're on main, create a new branch
-    if (branch === 'main') {
-      const newBranch = `cms-edit-${Date.now()}`;
-      await execAsync(`git checkout -b ${newBranch}`, { cwd: projectRoot });
-      
+    // If we're on main, no PR to create
+    if (currentBranch === 'main') {
       return NextResponse.json({
         success: false,
-        message: `Created new branch ${newBranch}. Please make some changes and save first.`
+        message: 'Please make some changes and save first to create a feature branch.'
       });
     }
     
-    // Push current branch to remote
-    await execAsync(`git push -u origin ${branch}`, { cwd: projectRoot });
+    const storage = getGitHubStorage();
     
-    // Create PR using GitHub CLI (if available)
-    const prBody = body || `Content updates made via AI Square CMS
-
-🤖 Generated with [Claude Code](https://claude.ai/code)`;
-
-    let prUrl = '';
+    // Get commits for this branch
+    const commits = await storage.getCommitsBetweenBranches(currentBranch, 'main');
+    console.log('Found commits:', commits.map(c => ({ 
+      sha: c.sha.substring(0, 7), 
+      message: c.message.substring(0, 50) + '...' 
+    })));
+    
+    // Generate intelligent PR description using LLM
+    let detailedBody = body || 'Content updates made via AI Square CMS';
+    
     try {
-      const ghCommand = `gh pr create --title "${title}" --body "${prBody}" --base main --head ${branch}`;
-      const { stdout } = await execAsync(ghCommand, { cwd: projectRoot });
-      prUrl = stdout.trim();
-    } catch (ghError) {
-      // If gh CLI fails, create manual PR URL
-      prUrl = `https://github.com/${process.env.GITHUB_OWNER || 'junyiacademy'}/${process.env.GITHUB_REPO || 'ai-square'}/pull/new/${branch}`;
+      console.log('Generating PR description with commits:', commits.length);
+      const descResponse = await fetch(`${request.headers.get('origin') || 'http://localhost:3000'}/api/git/generate-pr-description`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          commits,
+          branch: currentBranch
+        }),
+      });
+      
+      if (!descResponse.ok) {
+        console.error('PR description API failed:', descResponse.status);
+      }
+      
+      const descData = await descResponse.json();
+      console.log('PR description response:', descData);
+      
+      if (descData.success) {
+        detailedBody = descData.description;
+        console.log('Using AI-generated PR description');
+      } else {
+        console.log('AI generation failed, using fallback');
+      }
+    } catch (error) {
+      console.error('Failed to generate AI PR description:', error);
+      
+      // Fallback to detailed commit list
+      detailedBody = `${body || 'Content updates made via AI Square CMS'}
+
+## 📝 變更摘要
+
+本次 PR 包含 ${commits.length} 個提交：
+
+${commits.map(commit => {
+  const lines = commit.message.split('\n');
+  const summary = lines[0];
+  const details = lines.slice(1).join('\n').trim();
+  return `### ${summary}
+${details ? '\n' + details : ''}
+`;
+}).join('\n')}`;
     }
     
-    // Switch back to main branch
-    await execAsync('git checkout main', { cwd: projectRoot });
+    // Add footer
+    detailedBody += `
+
+---
+🤖 Generated with AI Square CMS
+Branch: \`${currentBranch}\`
+
+> 💡 **提示**：合併後可以安全刪除此分支`;
+
+    // Create PR
+    const pr = await storage.createPullRequest(
+      title,
+      detailedBody,
+      currentBranch,
+      'main'
+    );
     
-    return NextResponse.json({ 
+    // Clear branch cookie to switch back to main
+    const response = NextResponse.json({ 
       success: true,
-      prUrl,
-      branch,
-      message: 'Pull request created and switched back to main branch'
+      prUrl: pr.url,
+      prNumber: pr.number,
+      branch: currentBranch,
+      message: 'Pull request created successfully'
     });
+    
+    response.cookies.delete('cms-branch');
+    
+    return response;
   } catch (error) {
     console.error('Create PR error:', error);
     return NextResponse.json(
