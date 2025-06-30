@@ -108,6 +108,10 @@ export default function CmsPage() {
         alert(`Pull request created successfully!\nURL: ${data.prUrl}`);
         // Optionally open PR in new tab
         window.open(data.prUrl, '_blank');
+        
+        // Reset to main branch state
+        setCurrentBranch('main');
+        setIsOnMain(true);
       } else {
         alert('Failed to create PR: ' + data.error);
       }
