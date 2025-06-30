@@ -1,39 +1,127 @@
 import { NextResponse } from 'next/server';
 import { ScenarioListItem } from '@/types/pbl';
+import { promises as fs } from 'fs';
+import path from 'path';
+import * as yaml from 'js-yaml';
 
-// Mock data for AI Job Search scenario
-const mockScenarios: ScenarioListItem[] = [
-  {
-    id: 'ai-job-search',
-    title: 'AI-Assisted Job Search Training',
-    description: 'Learn how to use AI tools to optimize your job search process',
-    difficulty: 'intermediate',
-    estimatedDuration: 90,
-    domains: ['engaging_with_ai', 'creating_with_ai'],
-    isAvailable: true,
-    thumbnailEmoji: '💼'
-  },
-  {
-    id: 'ai-creative-writing',
-    title: 'Creative Writing with AI',
-    description: 'Master AI-powered creative writing techniques',
-    difficulty: 'beginner',
-    estimatedDuration: 60,
-    domains: ['creating_with_ai'],
-    isAvailable: false,
-    thumbnailEmoji: '✍️'
-  },
-  {
-    id: 'ai-data-analysis',
-    title: 'Data Analysis with AI',
-    description: 'Use AI for advanced data analysis and insights',
-    difficulty: 'advanced',
-    estimatedDuration: 120,
-    domains: ['managing_with_ai', 'designing_with_ai'],
-    isAvailable: false,
-    thumbnailEmoji: '📊'
+// Helper function to get localized field
+function getLocalizedValue(data: any, fieldName: string, lang: string): any {
+  if (!data) return '';
+  
+  // Map language codes to suffixes
+  let langSuffix = lang;
+  if (lang === 'zh-TW' || lang === 'zh-CN') {
+    langSuffix = 'zh';
   }
-];
+  
+  const localizedField = `${fieldName}_${langSuffix}`;
+  return data[localizedField] || data[fieldName] || '';
+}
+
+// Load scenarios from YAML files
+async function loadScenariosFromYAML(lang: string): Promise<ScenarioListItem[]> {
+  const scenarios: ScenarioListItem[] = [];
+  
+  try {
+    // List of available scenario files
+    const scenarioFiles = [
+      'ai_job_search_scenario.yaml',
+      // Add more scenario files here as they become available
+    ];
+    
+    for (const file of scenarioFiles) {
+      try {
+        const yamlPath = path.join(process.cwd(), 'public', 'pbl_data', file);
+        const yamlContent = await fs.readFile(yamlPath, 'utf8');
+        const yamlData = yaml.load(yamlContent) as any;
+        
+        if (yamlData && yamlData.scenario_info) {
+          const info = yamlData.scenario_info;
+          scenarios.push({
+            id: info.id,
+            title: getLocalizedValue(info, 'title', lang),
+            description: getLocalizedValue(info, 'description', lang),
+            difficulty: info.difficulty,
+            estimatedDuration: info.estimated_duration,
+            domains: info.target_domains,
+            isAvailable: true,
+            thumbnailEmoji: '💼' // Could be added to YAML if needed
+          });
+        }
+      } catch (error) {
+        console.error(`Error loading scenario file ${file}:`, error);
+      }
+    }
+  } catch (error) {
+    console.error('Error loading scenarios:', error);
+  }
+  
+  // Add placeholder scenarios for future content
+  scenarios.push(
+    {
+      id: 'ai-creative-writing',
+      title: getLocalizedValue({
+        title: 'Creative Writing with AI',
+        title_zh: '使用 AI 進行創意寫作',
+        title_ja: 'AIを使った創造的な文章作成',
+        title_ko: 'AI를 활용한 창의적 글쓰기',
+        title_es: 'Escritura Creativa con IA',
+        title_fr: 'Écriture Créative avec IA',
+        title_de: 'Kreatives Schreiben mit KI',
+        title_ru: 'Творческое письмо с ИИ',
+        title_it: 'Scrittura Creativa con IA'
+      }, 'title', lang),
+      description: getLocalizedValue({
+        description: 'Master AI-powered creative writing techniques',
+        description_zh: '掌握 AI 驅動的創意寫作技巧',
+        description_ja: 'AIを活用した創造的な文章作成技術をマスターする',
+        description_ko: 'AI 기반 창의적 글쓰기 기법 마스터하기',
+        description_es: 'Domina las técnicas de escritura creativa con IA',
+        description_fr: 'Maîtrisez les techniques d\'écriture créative avec IA',
+        description_de: 'Meistern Sie KI-gestützte kreative Schreibtechniken',
+        description_ru: 'Освойте техники творческого письма с помощью ИИ',
+        description_it: 'Padroneggia le tecniche di scrittura creativa con IA'
+      }, 'description', lang),
+      difficulty: 'beginner',
+      estimatedDuration: 60,
+      domains: ['creating_with_ai'],
+      isAvailable: false,
+      thumbnailEmoji: '✍️'
+    },
+    {
+      id: 'ai-data-analysis',
+      title: getLocalizedValue({
+        title: 'Data Analysis with AI',
+        title_zh: '使用 AI 進行數據分析',
+        title_ja: 'AIを使ったデータ分析',
+        title_ko: 'AI를 활용한 데이터 분석',
+        title_es: 'Análisis de Datos con IA',
+        title_fr: 'Analyse de Données avec IA',
+        title_de: 'Datenanalyse mit KI',
+        title_ru: 'Анализ данных с ИИ',
+        title_it: 'Analisi dei Dati con IA'
+      }, 'title', lang),
+      description: getLocalizedValue({
+        description: 'Use AI for advanced data analysis and insights',
+        description_zh: '使用 AI 進行進階數據分析和洞察',
+        description_ja: 'AIを使った高度なデータ分析と洞察',
+        description_ko: 'AI를 사용한 고급 데이터 분석 및 인사이트',
+        description_es: 'Usa IA para análisis avanzado de datos e insights',
+        description_fr: 'Utilisez l\'IA pour l\'analyse avancée et les insights',
+        description_de: 'Nutzen Sie KI für erweiterte Datenanalyse und Erkenntnisse',
+        description_ru: 'Используйте ИИ для расширенного анализа данных',
+        description_it: 'Usa l\'IA per analisi avanzate e insights'
+      }, 'description', lang),
+      difficulty: 'advanced',
+      estimatedDuration: 120,
+      domains: ['managing_with_ai', 'designing_with_ai'],
+      isAvailable: false,
+      thumbnailEmoji: '📊'
+    }
+  );
+  
+  return scenarios;
+}
 
 export async function GET(request: Request) {
   try {
@@ -41,19 +129,8 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
 
-    // For now, return mock data
-    // TODO: In future, load from GCS or YAML files
-    const scenarios = mockScenarios.map(scenario => {
-      // Apply translations based on language
-      if (lang === 'zh-TW') {
-        return {
-          ...scenario,
-          title: scenario.id === 'ai-job-search' ? 'AI 輔助求職訓練' : scenario.title,
-          description: scenario.id === 'ai-job-search' ? '學習如何使用 AI 工具優化求職流程' : scenario.description
-        };
-      }
-      return scenario;
-    });
+    // Load scenarios from YAML files with proper translations
+    const scenarios = await loadScenariosFromYAML(lang);
 
     return NextResponse.json({
       success: true,
