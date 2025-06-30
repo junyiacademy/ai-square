@@ -22,5 +22,22 @@
   "noHistory": "No learning records yet",
   "startAssessment": "Start AI Assessment",
   "startPBL": "Start PBL Learning",
-  "startNewPBL": "Start New PBL Learning"
+  "startNewPBL": "Start New PBL Learning",
+  "footer": {
+    "product": "Product",
+    "resources": "Resources",
+    "company": "Company",
+    "about": "About AI Square",
+    "description": "AI Square is a Git-Based learning platform for AI literacy education, supporting 9 languages worldwide.",
+    "roadmap": "Product Roadmap",
+    "feedback": "Feedback",
+    "rights": "All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "contact": "Contact",
+    "languages": "Languages",
+    "domains": "AI Domains",
+    "competencies": "Competencies",
+    "madeWith": "Made with ❤️ for AI literacy education"
+  }
 }

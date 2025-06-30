@@ -1,0 +1,171 @@
+{
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated",
+    "intro": "AI Square (\"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI literacy education platform.",
+    "infoCollect": {
+      "title": "1. Information We Collect",
+      "personal": "Personal Information",
+      "email": "Email address",
+      "name": "Name (optional)",
+      "role": "User role (student, teacher, admin)",
+      "language": "Language preference",
+      "usage": "Usage Data",
+      "learning": "Learning progress and assessment results",
+      "interactions": "Interactions with AI tutors",
+      "scenarios": "PBL scenario completion data",
+      "analytics": "Platform usage analytics",
+      "technical": "Technical Data",
+      "browser": "Browser type and version",
+      "device": "Device information",
+      "ip": "IP address (anonymized)",
+      "timezone": "Time zone settings"
+    },
+    "howUse": {
+      "title": "2. How We Use Your Information",
+      "provide": "To provide and maintain our service",
+      "personalize": "To personalize your learning experience",
+      "communicate": "To communicate with you about your account",
+      "improve": "To improve our platform and develop new features",
+      "analyze": "To analyze usage patterns and optimize performance",
+      "security": "To detect and prevent security threats"
+    },
+    "storage": {
+      "title": "3. Data Storage and Security",
+      "location": "Your data is stored securely on Google Cloud Platform servers. We implement appropriate technical and organizational measures to protect your personal information.",
+      "encryption": "Data encryption in transit and at rest",
+      "access": "Restricted access controls",
+      "monitoring": "Regular security monitoring",
+      "backup": "Secure backup procedures"
+    },
+    "sharing": {
+      "title": "4. Data Sharing and Disclosure",
+      "intro": "We do not sell, trade, or rent your personal information. We may share your information in the following situations:",
+      "consent": "With your consent",
+      "legal": "To comply with legal obligations",
+      "protect": "To protect our rights and safety",
+      "service": "With service providers who assist our operations"
+    },
+    "rights": {
+      "title": "5. Your Rights",
+      "intro": "You have the following rights regarding your personal data:",
+      "access": "Access your personal information",
+      "correct": "Correct inaccurate data",
+      "delete": "Request deletion of your data",
+      "export": "Export your data in a portable format",
+      "restrict": "Restrict processing of your data",
+      "withdraw": "Withdraw consent at any time"
+    },
+    "cookies": {
+      "title": "6. Cookies and Tracking",
+      "intro": "We use cookies and similar tracking technologies to enhance your experience. Essential cookies are required for platform functionality, while optional cookies help us improve our service."
+    },
+    "children": {
+      "title": "7. Children's Privacy",
+      "content": "Our platform is designed for educational use by students of all ages. For users under 13, we require parental consent and limit data collection to essential information only."
+    },
+    "international": {
+      "title": "8. International Data Transfers",
+      "content": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers."
+    },
+    "changes": {
+      "title": "9. Changes to This Policy",
+      "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the \"Last Updated\" date."
+    },
+    "contact": {
+      "title": "10. Contact Us",
+      "intro": "If you have questions about this Privacy Policy, please contact us at:"
+    }
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "effectiveDate": "Effective Date",
+    "lastUpdated": "Last Updated",
+    "intro": "Welcome to AI Square! These Terms of Service (\"Terms\") govern your use of our AI literacy education platform. By accessing or using AI Square, you agree to be bound by these Terms.",
+    "acceptance": {
+      "title": "1. Acceptance of Terms",
+      "content": "By creating an account or using our services, you acknowledge that you have read, understood, and agree to these Terms. If you do not agree, please do not use our platform.",
+      "capacity": "You must be at least 13 years old to use our services. If you are under 18, you must have parental consent."
+    },
+    "service": {
+      "title": "2. Description of Service",
+      "intro": "AI Square provides:",
+      "literacy": "AI literacy education content and assessments",
+      "pbl": "Problem-Based Learning (PBL) scenarios",
+      "ai": "AI-powered tutoring and feedback",
+      "tracking": "Progress tracking and analytics",
+      "multi": "Multi-language support (9 languages)"
+    },
+    "accounts": {
+      "title": "3. User Accounts",
+      "registration": "Registration",
+      "accurate": "Provide accurate and complete information",
+      "maintain": "Maintain and update your information",
+      "secure": "Keep your account credentials secure",
+      "responsible": "You are responsible for all activities under your account",
+      "types": "Account Types",
+      "student": "Student: Access to learning content and assessments",
+      "teacher": "Teacher: Additional class management features",
+      "admin": "Administrator: Platform management capabilities"
+    },
+    "use": {
+      "title": "4. Acceptable Use Policy",
+      "permitted": "You may:",
+      "educational": "Use the platform for educational purposes",
+      "share": "Share your learning progress appropriately",
+      "feedback": "Provide constructive feedback",
+      "prohibited": "You may not:",
+      "misuse": "Misuse or attempt to manipulate the AI systems",
+      "share_credentials": "Share account credentials",
+      "cheat": "Engage in academic dishonesty",
+      "harm": "Harass, abuse, or harm other users",
+      "illegal": "Use the platform for illegal activities",
+      "scrape": "Scrape or copy content without permission"
+    },
+    "ip": {
+      "title": "5. Intellectual Property",
+      "platform": "Platform Content",
+      "ownership": "All content on AI Square, including text, graphics, logos, and software, is owned by AI Square or its licensors and protected by intellectual property laws.",
+      "user": "User Content",
+      "retain": "You retain ownership of content you create. By submitting content, you grant us a license to use it for providing and improving our services.",
+      "open": "Open Source",
+      "git": "Educational content is managed through Git and may be subject to open-source licenses. Please check individual repositories for specific license terms."
+    },
+    "privacy": {
+      "title": "6. Privacy and Data Protection",
+      "content": "Your use of AI Square is also governed by our Privacy Policy. We are committed to protecting your personal information and using it only as described in our Privacy Policy."
+    },
+    "ai": {
+      "title": "7. AI Services and Limitations",
+      "disclaimer": "Our AI-powered features are designed to assist learning but are not perfect. We do not guarantee the accuracy of AI-generated content or feedback.",
+      "educational": "AI responses are for educational purposes only",
+      "verify": "Always verify important information independently",
+      "improve": "We continuously work to improve AI accuracy"
+    },
+    "disclaimers": {
+      "title": "8. Disclaimers and Limitations",
+      "asis": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND.",
+      "liability": "To the fullest extent permitted by law, AI Square shall not be liable for any indirect, incidental, special, consequential, or punitive damages."
+    },
+    "modifications": {
+      "title": "9. Modifications to Terms",
+      "content": "We may modify these Terms at any time. We will notify users of material changes. Continued use after changes constitutes acceptance of the new Terms."
+    },
+    "termination": {
+      "title": "10. Termination",
+      "rights": "We reserve the right to suspend or terminate accounts that violate these Terms. You may delete your account at any time."
+    },
+    "law": {
+      "title": "11. Governing Law",
+      "content": "These Terms are governed by the laws of the jurisdiction where AI Square operates, without regard to conflict of law principles."
+    },
+    "contact": {
+      "title": "12. Contact Information",
+      "intro": "For questions about these Terms, please contact us:"
+    },
+    "agreement": "By using AI Square, you acknowledge that you have read and agree to these Terms of Service."
+  },
+  "common": {
+    "backToHome": "Back to Home"
+  }
+}
