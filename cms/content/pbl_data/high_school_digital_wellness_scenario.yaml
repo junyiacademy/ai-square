@@ -622,12 +622,12 @@ completion_criteria:
   min_overall_score: 75
 
 resources:
-  - name: "Digital Wellness Institute"
+  - name: "Digital Wellness Institute "
     name_zh: "數位健康研究所"
     url: "https://www.digitalwellnessinstitute.com/"
     type: reference
     
-  - name: "Common Sense Media"
+  - name: "Common Sense Media "
     name_zh: "常識媒體"
     url: "https://www.commonsensemedia.org/"
     type: guide
