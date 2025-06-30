@@ -76,6 +76,17 @@
       "listening": "듣기",
       "speaking": "말하기",
       "mixed": "혼합"
+    },
+    "targetDomains": "대상 도메인",
+    "ksaCompetencies": "KSA 역량",
+    "knowledge": "지식",
+    "skills": "기술",
+    "attitudes": "태도",
+    "domains": {
+      "engaging_with_ai": "AI와 상호작용",
+      "creating_with_ai": "AI와 창작",
+      "managing_with_ai": "AI와 관리",
+      "designing_with_ai": "AI와 설계"
     }
   },
   "learn": {

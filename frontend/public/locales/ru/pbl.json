@@ -76,6 +76,17 @@
       "listening": "Аудирование",
       "speaking": "Говорение",
       "mixed": "Смешанный"
+    },
+    "targetDomains": "Целевые области",
+    "ksaCompetencies": "Компетенции ЗНУ",
+    "knowledge": "Знания",
+    "skills": "Навыки",
+    "attitudes": "Отношения",
+    "domains": {
+      "engaging_with_ai": "Взаимодействие с ИИ",
+      "creating_with_ai": "Создание с ИИ",
+      "managing_with_ai": "Управление с ИИ",
+      "designing_with_ai": "Проектирование с ИИ"
     }
   },
   "learn": {

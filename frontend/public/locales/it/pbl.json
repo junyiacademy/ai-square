@@ -76,6 +76,17 @@
       "listening": "Ascolto",
       "speaking": "Conversazione",
       "mixed": "Misto"
+    },
+    "targetDomains": "Domini Target",
+    "ksaCompetencies": "Competenze CSA",
+    "knowledge": "Conoscenza",
+    "skills": "Abilità",
+    "attitudes": "Attitudini",
+    "domains": {
+      "engaging_with_ai": "Interagire con l'IA",
+      "creating_with_ai": "Creare con l'IA",
+      "managing_with_ai": "Gestire con l'IA",
+      "designing_with_ai": "Progettare con l'IA"
     }
   },
   "learn": {

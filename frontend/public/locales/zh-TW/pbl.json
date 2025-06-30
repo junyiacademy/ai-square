@@ -76,6 +76,17 @@
       "listening": "聆聽",
       "speaking": "口說",
       "mixed": "綜合"
+    },
+    "targetDomains": "目標領域",
+    "ksaCompetencies": "KSA 能力指標",
+    "knowledge": "知識",
+    "skills": "技能",
+    "attitudes": "態度",
+    "domains": {
+      "engaging_with_ai": "與 AI 互動",
+      "creating_with_ai": "與 AI 共創",
+      "managing_with_ai": "與 AI 管理",
+      "designing_with_ai": "與 AI 設計"
     }
   },
   "learn": {

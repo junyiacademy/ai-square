@@ -76,6 +76,17 @@
       "listening": "Hören",
       "speaking": "Sprechen",
       "mixed": "Gemischt"
+    },
+    "targetDomains": "Zieldomänen",
+    "ksaCompetencies": "KSA-Kompetenzen",
+    "knowledge": "Wissen",
+    "skills": "Fähigkeiten",
+    "attitudes": "Einstellungen",
+    "domains": {
+      "engaging_with_ai": "Mit KI interagieren",
+      "creating_with_ai": "Mit KI erstellen",
+      "managing_with_ai": "Mit KI verwalten",
+      "designing_with_ai": "Mit KI gestalten"
     }
   },
   "learn": {

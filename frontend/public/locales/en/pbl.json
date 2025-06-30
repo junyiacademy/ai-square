@@ -76,6 +76,17 @@
       "listening": "Listening",
       "speaking": "Speaking",
       "mixed": "Mixed"
+    },
+    "targetDomains": "Target Domains",
+    "ksaCompetencies": "KSA Competencies",
+    "knowledge": "Knowledge",
+    "skills": "Skills",
+    "attitudes": "Attitudes",
+    "domains": {
+      "engaging_with_ai": "Engaging with AI",
+      "creating_with_ai": "Creating with AI",
+      "managing_with_ai": "Managing with AI",
+      "designing_with_ai": "Designing with AI"
     }
   },
   "learn": {
