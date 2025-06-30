@@ -372,7 +372,7 @@ dev-tdd-enforce:
 #=============================================================================
 
 ## 建置前端
-build-frontend:
+build-frontend: validate-scenarios
 	@echo "$(BLUE)🔨 建置前端生產版本$(NC)"
 	cd frontend && npm run build
 
@@ -478,8 +478,14 @@ setup-secrets:
 		--project=$(PROJECT_ID)
 	@echo "$(GREEN)✅ Secret Manager 設定完成！$(NC)"
 
+## 驗證 PBL 情境檔案
+validate-scenarios:
+	@echo "$(CYAN)🔍 驗證 PBL 情境檔案...$(NC)"
+	@cd frontend && node scripts/validate-scenarios.js
+	@echo "$(GREEN)✅ PBL 情境驗證完成$(NC)"
+
 ## 完整部署到 Google Cloud Platform
-deploy-gcp: build-frontend build-docker-image gcp-build-and-push gcp-deploy-service
+deploy-gcp: validate-scenarios build-frontend build-docker-image gcp-build-and-push gcp-deploy-service
 	@echo "$(GREEN)✅ 部署完成！$(NC)"
 
 ## 部署後端到 Google Cloud Run
@@ -505,7 +511,7 @@ dev-typecheck:
 	cd frontend && npx tsc --noEmit
 
 ## 執行所有品質檢查
-dev-quality: dev-lint dev-typecheck
+dev-quality: dev-lint dev-typecheck validate-scenarios
 	@echo "$(GREEN)✅ 所有品質檢查通過$(NC)"
 
 #=============================================================================
