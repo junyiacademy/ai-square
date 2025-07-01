@@ -10,14 +10,19 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // 確保 i18n 在客戶端正確初始化
     const initI18n = async () => {
-      // 從 localStorage 讀取保存的語言
-      const savedLang = localStorage.getItem('ai-square-language')
-      
-      if (savedLang && savedLang !== i18n.language) {
-        await i18n.changeLanguage(savedLang)
+      try {
+        // 從 localStorage 讀取保存的語言
+        const savedLang = localStorage.getItem('ai-square-language')
+        
+        if (savedLang && savedLang !== i18n.language) {
+          await i18n.changeLanguage(savedLang)
+        }
+      } catch (error) {
+        // Silently handle errors - fallback to default language
+        console.warn('Failed to initialize i18n:', error)
+      } finally {
+        setIsInitialized(true)
       }
-      
-      setIsInitialized(true)
     }
 
     initI18n()
