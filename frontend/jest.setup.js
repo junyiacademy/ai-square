@@ -6,6 +6,11 @@
 import '@testing-library/jest-dom'
 import 'jest-extended'
 
+// Add TextEncoder/TextDecoder polyfills for Node.js environment
+import { TextEncoder, TextDecoder } from 'util'
+global.TextEncoder = TextEncoder
+global.TextDecoder = TextDecoder
+
 // Mock next/navigation
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
