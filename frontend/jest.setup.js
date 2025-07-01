@@ -109,36 +109,67 @@ global.Response = jest.fn().mockImplementation((body, init) => ({
 }))
 
 // Mock NextResponse for API routes
-const mockNextResponse = {
-  json: (data, init) => {
-    const response = {
-      ok: (init?.status || 200) >= 200 && (init?.status || 200) < 300,
-      status: init?.status || 200,
-      statusText: init?.statusText || 'OK',
-      headers: new Headers(init?.headers),
-      json: jest.fn().mockResolvedValue(data),
-      text: jest.fn().mockResolvedValue(JSON.stringify(data)),
-      blob: jest.fn(),
-      arrayBuffer: jest.fn(),
-      formData: jest.fn(),
-      body: null,
-      bodyUsed: false,
-      url: '',
-      redirected: false,
-      type: 'basic',
-      clone: jest.fn(),
-      cookies: {
-        set: jest.fn(),
-        get: jest.fn(),
-        delete: jest.fn(),
-      },
-    }
-    return response
-  },
+const createMockResponse = (data, init) => {
+  const cookies = new Map()
+  const headers = new Headers(init?.headers)
+  
+  const response = {
+    ok: (init?.status || 200) >= 200 && (init?.status || 200) < 300,
+    status: init?.status || 200,
+    statusText: init?.statusText || 'OK',
+    headers: {
+      ...headers,
+      get: jest.fn((name) => headers.get(name)),
+      set: jest.fn((name, value) => headers.set(name, value)),
+      getSetCookie: jest.fn(() => {
+        const setCookieHeaders = []
+        for (const [name, cookieString] of cookies) {
+          setCookieHeaders.push(cookieString)
+        }
+        return setCookieHeaders
+      }),
+    },
+    json: jest.fn().mockResolvedValue(data),
+    text: jest.fn().mockResolvedValue(JSON.stringify(data)),
+    blob: jest.fn(),
+    arrayBuffer: jest.fn(),
+    formData: jest.fn(),
+    body: null,
+    bodyUsed: false,
+    url: '',
+    redirected: false,
+    type: 'basic',
+    clone: jest.fn(),
+    cookies: {
+      set: jest.fn((name, value, options) => {
+        let cookieString = `${name}=${value}`
+        if (options?.maxAge !== undefined) cookieString += `; Max-Age=${options.maxAge}`
+        if (options?.httpOnly) cookieString += `; HttpOnly`
+        if (options?.secure) cookieString += `; Secure`
+        if (options?.sameSite) {
+          const sameSite = options.sameSite.charAt(0).toUpperCase() + options.sameSite.slice(1).toLowerCase()
+          cookieString += `; SameSite=${sameSite}`
+        }
+        if (options?.path) cookieString += `; Path=${options.path}`
+        cookies.set(name, cookieString)
+      }),
+      get: jest.fn((name) => cookies.get(name)),
+      delete: jest.fn((name) => cookies.delete(name)),
+    },
+  }
+  return response
 }
 
+// Create a constructor function that can be called with 'new'
+function MockNextResponse(body, init) {
+  return createMockResponse(body, init)
+}
+
+// Add static methods
+MockNextResponse.json = createMockResponse
+
 jest.mock('next/server', () => ({
-  NextResponse: mockNextResponse,
+  NextResponse: MockNextResponse,
 }))
 
 // Clean up after each test

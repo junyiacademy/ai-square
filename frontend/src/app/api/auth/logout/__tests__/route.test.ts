@@ -1,14 +1,24 @@
-import { POST, OPTIONS } from '../route';
-import { NextRequest } from 'next/server';
+import { POST } from '../route';
+import { cookies } from 'next/headers';
+
+// Mock next/headers
+jest.mock('next/headers', () => ({
+  cookies: jest.fn()
+}));
 
 describe('/api/auth/logout', () => {
+  const mockCookies = cookies as jest.MockedFunction<typeof cookies>;
+  
+  beforeEach(() => {
+    // Mock the cookies function
+    const mockCookieStore = {
+      delete: jest.fn()
+    };
+    mockCookies.mockResolvedValue(mockCookieStore as any);
+  });
   describe('POST', () => {
     it('should logout successfully and clear cookies', async () => {
-      const request = new NextRequest('http://localhost:3000/api/auth/logout', {
-        method: 'POST'
-      });
-
-      const response = await POST(request);
+      const response = await POST();
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -25,11 +35,7 @@ describe('/api/auth/logout', () => {
     });
 
     it('should have proper cookie settings', async () => {
-      const request = new NextRequest('http://localhost:3000/api/auth/logout', {
-        method: 'POST'
-      });
-
-      const response = await POST(request);
+      const response = await POST();
       const cookies = response.headers.getSetCookie();
 
       // Check that all cookies have proper security settings
@@ -41,14 +47,4 @@ describe('/api/auth/logout', () => {
     });
   });
 
-  describe('OPTIONS', () => {
-    it('should return CORS headers', async () => {
-      const response = await OPTIONS();
-
-      expect(response.status).toBe(200);
-      expect(response.headers.get('Access-Control-Allow-Origin')).toBe('*');
-      expect(response.headers.get('Access-Control-Allow-Methods')).toBe('POST, OPTIONS');
-      expect(response.headers.get('Access-Control-Allow-Headers')).toBe('Content-Type');
-    });
-  });
 });

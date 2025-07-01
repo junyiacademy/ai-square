@@ -1,5 +1,5 @@
 import { GET } from '../route';
-import { promises as fs } from 'fs';
+import fs from 'fs/promises';
 import * as yaml from 'js-yaml';
 import { cacheService } from '@/lib/cache/cache-service';
 
