@@ -169,14 +169,25 @@ cms/content/
 - 認證系統修復（登出、session、Remember Me）
 - PBL 系統完善（進度儲存、草稿重用、任務摘要）
 - 多語言支援（9種語言完整翻譯）
+- 核心模組測試覆蓋（2025/07/01 更新）
+  - **JWT 模組**: 100% 覆蓋率 ✅
+  - **Auth Token Manager**: 97.05% 覆蓋率 ✅
+  - **Cache Service**: 93.42% 覆蓋率 ✅
+  - **Error Logger**: 97.05% 覆蓋率 ✅
+  - **Content Service**: 100% 語句覆蓋率 ✅
+  - **Error Tracker**: 93.02% 覆蓋率 ✅
+  - **Performance Monitor**: 84.84% 覆蓋率 ✅
+  - **API Routes**: Auth Check、PBL Scenarios 完整測試 ✅
+  - **React Hooks**: useAuth、useAuthenticatedFetch、use-preload-data ✅
 
 ### 進行中 🟡
 - 內容驗證系統（YAML schema、自動化測試）
 - 基礎設施優化（錯誤追蹤、簡易記錄器）
+- 測試覆蓋率提升（目標 70%+ 覆蓋率）
 
 ### 待辦 📋
 - 效能優化（快取策略、bundle 優化、載入狀態）
-- 測試覆蓋（E2E、單元測試、70%+覆蓋率）
+- 元件測試完善（UI 元件單元測試）
 
 ### 技術債務
 - **高優先**: 認證狀態管理、型別安全、測試覆蓋
@@ -188,6 +199,6 @@ AI Square 定位為下一代 AI 素養學習平台，通過整合最新 AI 技�
 
 ---
 
-*文檔版本: 3.0（簡化版）*  
+*文檔版本: 3.1（測試覆蓋率更新）*  
 *更新日期: 2025-07-01*  
 *下次審查: 2025-08-01*
