@@ -12,6 +12,7 @@ import {
   TaskInteraction,
   TaskProgress 
 } from '@/types/pbl';
+import { TaskEvaluation } from '@/types/pbl-evaluate';
 
 interface ConversationEntry {
   id: string;
@@ -21,7 +22,7 @@ interface ConversationEntry {
 }
 
 // Helper function to get localized field
-function getLocalizedField(obj: any, fieldName: string, language: string): any {
+function getLocalizedField<T extends Record<string, unknown>>(obj: T | null | undefined, fieldName: string, language: string): string {
   if (!obj) return '';
   
   // Map language codes to suffixes - handle all supported languages
@@ -35,11 +36,12 @@ function getLocalizedField(obj: any, fieldName: string, language: string): any {
   const fieldWithLang = `${fieldName}_${langSuffix}`;
   
   // Return localized field if exists, otherwise return default
-  return obj[fieldWithLang] || obj[fieldName] || '';
+  const value = obj[fieldWithLang] || obj[fieldName] || '';
+  return String(value);
 }
 
 // Helper function to get localized array field
-function getLocalizedArrayField(obj: any, fieldName: string, language: string): any[] {
+function getLocalizedArrayField<T extends Record<string, unknown>>(obj: T | null | undefined, fieldName: string, language: string): string[] {
   if (!obj) return [];
   
   // Map language codes to suffixes - handle all supported languages
@@ -53,7 +55,8 @@ function getLocalizedArrayField(obj: any, fieldName: string, language: string): 
   const fieldWithLang = `${fieldName}_${langSuffix}`;
   
   // Return localized field if exists, otherwise return default
-  return obj[fieldWithLang] || obj[fieldName] || [];
+  const value = obj[fieldWithLang] || obj[fieldName] || [];
+  return Array.isArray(value) ? value.map(String) : [];
 }
 
 export default function ProgramLearningPage() {
@@ -80,9 +83,9 @@ export default function ProgramLearningPage() {
   const [showEvaluateButton, setShowEvaluateButton] = useState(false);
   const [isEvaluateDisabled, setIsEvaluateDisabled] = useState(false);
   const [isEvaluating, setIsEvaluating] = useState(false);
-  const [evaluation, setEvaluation] = useState<any>(null);
+  const [evaluation, setEvaluation] = useState<TaskEvaluation | null>(null);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
-  const [taskEvaluations, setTaskEvaluations] = useState<Record<string, any>>({});
+  const [taskEvaluations, setTaskEvaluations] = useState<Record<string, TaskEvaluation>>({});
   
   const conversationEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -185,8 +188,8 @@ export default function ProgramLearningPage() {
             const completionData = await completionRes.json();
             if (completionData.success && completionData.data) {
               // Build a map of task evaluations
-              const evaluations: Record<string, any> = {};
-              completionData.data.tasks?.forEach((task: any) => {
+              const evaluations: Record<string, TaskEvaluation> = {};
+              completionData.data.tasks?.forEach((task: { taskId: string; evaluation?: TaskEvaluation }) => {
                 if (task.evaluation) {
                   evaluations[task.taskId] = task.evaluation;
                 }
@@ -236,7 +239,7 @@ export default function ProgramLearningPage() {
         console.log('Task history response:', data);
         
         if (data.data?.log?.interactions) {
-          const loadedConversations = data.data.log.interactions.map((interaction: TaskInteraction, index: number) => ({
+          const loadedConversations = data.data.log.interactions.map((interaction: TaskInteraction, index: number): ConversationEntry => ({
             id: `${index}`,
             type: interaction.type,
             content: interaction.content,
@@ -255,7 +258,7 @@ export default function ProgramLearningPage() {
             console.log('Loaded existing evaluation:', data.data.evaluation);
             setEvaluation(data.data.evaluation);
             
-            const currentUserMessageCount = loadedConversations.filter((c: any) => c.type === 'user').length;
+            const currentUserMessageCount = loadedConversations.filter((c: ConversationEntry) => c.type === 'user').length;
             const evaluationUserMessageCount = data.data.evaluation.conversationCount || 0;
             
             console.log('User message count:', currentUserMessageCount, 'Evaluation count:', evaluationUserMessageCount);
@@ -330,7 +333,7 @@ export default function ProgramLearningPage() {
           window.history.replaceState({}, '', newUrl);
           
           // Force update the params to ensure consistency
-          (params as any).programId = actualProgramId;
+          // Note: params from useParams are readonly, so we update programId state instead
         } else {
           throw new Error('Failed to create program');
         }
@@ -732,7 +735,7 @@ export default function ProgramLearningPage() {
                             }`}>
                               {getLocalizedField(task, 'title', i18n.language)}
                             </p>
-                            {isEvaluated && taskEval.score && (
+                            {isEvaluated && taskEval?.score !== undefined && (
                               <p className={`text-xs ${
                                 taskEval.score >= 75 ? 'text-green-600' :
                                 taskEval.score >= 60 ? 'text-blue-600' :
@@ -769,7 +772,7 @@ export default function ProgramLearningPage() {
                             ? 'border-purple-600 dark:border-purple-500 ring-2 ring-purple-600 ring-offset-2' 
                             : 'border-gray-300 dark:border-gray-600'
                         }`}
-                        title={`${getLocalizedField(task, 'title', i18n.language)}${isEvaluated && taskEval.score ? ` - ${taskEval.score}%` : ''}`}
+                        title={`${getLocalizedField(task, 'title', i18n.language)}${isEvaluated && taskEval?.score !== undefined ? ` - ${taskEval.score}%` : ''}`}
                       >
                         {isEvaluated ? (
                           <svg className="h-5 w-5 text-green-600 dark:text-green-500" fill="currentColor" viewBox="0 0 20 20">
@@ -873,7 +876,7 @@ export default function ProgramLearningPage() {
                   
                   {/* KSA Scores */}
                   <div className="space-y-2">
-                    {Object.entries(evaluation.ksaScores).map(([key, value]: [string, any]) => (
+                    {Object.entries(evaluation.ksaScores).map(([key, value]) => (
                       <div key={key} className="flex items-center justify-between">
                         <span className="text-sm text-gray-600 dark:text-gray-400 capitalize">
                           {t(`pbl:complete.${key}`)}
@@ -882,11 +885,11 @@ export default function ProgramLearningPage() {
                           <div className="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
                             <div 
                               className="bg-purple-600 h-2 rounded-full"
-                              style={{ width: `${value}%` }}
+                              style={{ width: `${Number(value)}%` }}
                             />
                           </div>
                           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                            {value}%
+                            {Number(value)}%
                           </span>
                         </div>
                       </div>
@@ -900,7 +903,7 @@ export default function ProgramLearningPage() {
                     {t('pbl:complete.domainScores')}
                   </h4>
                   <div className="space-y-2">
-                    {Object.entries(evaluation.domainScores).map(([domain, score]: [string, any]) => (
+                    {Object.entries(evaluation.domainScores).map(([domain, score]) => (
                       <div key={domain} className="flex items-center justify-between">
                         <span className="text-sm text-gray-600 dark:text-gray-400">
                           {t(`assessment:domains.${domain}`)}
@@ -909,11 +912,11 @@ export default function ProgramLearningPage() {
                           <div className="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
                             <div 
                               className="bg-purple-600 h-2 rounded-full"
-                              style={{ width: `${score}%` }}
+                              style={{ width: `${Number(score)}%` }}
                             />
                           </div>
                           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                            {score}%
+                            {Number(score)}%
                           </span>
                         </div>
                       </div>
@@ -936,7 +939,7 @@ export default function ProgramLearningPage() {
                           {t('pbl:learn.effectiveExamples', 'What worked well:')}
                         </h5>
                         <div className="space-y-2">
-                          {evaluation.conversationInsights.effectiveExamples.map((example: any, idx: number) => (
+                          {evaluation.conversationInsights.effectiveExamples.map((example, idx) => (
                             <div key={idx} className="bg-white dark:bg-gray-800 p-2 rounded">
                               <p className="text-sm text-gray-700 dark:text-gray-300 italic">
                                 "{example.quote}"
@@ -956,7 +959,7 @@ export default function ProgramLearningPage() {
                           {t('pbl:learn.improvementExamples', 'Areas for improvement:')}
                         </h5>
                         <div className="space-y-2">
-                          {evaluation.conversationInsights.improvementAreas.map((area: any, idx: number) => (
+                          {evaluation.conversationInsights.improvementAreas.map((area, idx) => (
                             <div key={idx} className="bg-white dark:bg-gray-800 p-2 rounded">
                               <p className="text-sm text-gray-700 dark:text-gray-300 italic">
                                 "{area.quote}"
@@ -979,7 +982,7 @@ export default function ProgramLearningPage() {
                       {t('pbl:complete.strengths')}
                     </h4>
                     <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                      {evaluation.strengths.map((strength: string, idx: number) => (
+                      {evaluation.strengths.map((strength, idx) => (
                         <li key={idx} className="flex items-start">
                           <span className="text-green-500 mr-2">✓</span>
                           {strength}
@@ -993,7 +996,7 @@ export default function ProgramLearningPage() {
                       {t('pbl:complete.improvements')}
                     </h4>
                     <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                      {evaluation.improvements.map((improvement: string, idx: number) => (
+                      {evaluation.improvements.map((improvement, idx) => (
                         <li key={idx} className="flex items-start">
                           <span className="text-yellow-500 mr-2">•</span>
                           {improvement}

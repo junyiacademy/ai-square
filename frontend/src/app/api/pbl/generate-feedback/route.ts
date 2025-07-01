@@ -1,6 +1,78 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pblProgramService } from '@/lib/storage/pbl-program-service';
 import { VertexAI, SchemaType } from '@google-cloud/vertexai';
+import { TaskInteraction } from '@/types/pbl';
+import { GenerateFeedbackRequest } from '@/types/pbl-api';
+
+// Types for feedback structure
+interface FeedbackStrength {
+  area: string;
+  description: string;
+  example: string;
+}
+
+interface FeedbackImprovement {
+  area: string;
+  description: string;
+  suggestion: string;
+}
+
+interface QualitativeFeedback {
+  overallAssessment: string;
+  strengths: FeedbackStrength[];
+  areasForImprovement: FeedbackImprovement[];
+  nextSteps: string[];
+  encouragement: string;
+}
+
+interface CompletionData {
+  overallScore: number;
+  evaluatedTasks: number;
+  totalTasks: number;
+  totalTimeSeconds: number;
+  domainScores: Record<string, number>;
+  tasks?: Array<{
+    taskId: string;
+    evaluation?: {
+      score: number;
+      feedback: string;
+      strengths: string[];
+      improvements: string[];
+    };
+    log?: {
+      interactions?: Array<{
+        role: string;
+        content: string;
+      }>;
+    };
+  }>;
+  qualitativeFeedback?: QualitativeFeedback | Record<string, QualitativeFeedback>;
+  feedbackLanguage?: string;
+}
+
+interface TaskSummary {
+  taskId: string;
+  score: number;
+  conversations: string[];
+  feedback: string;
+  strengths: string[];
+  improvements: string[];
+}
+
+interface GenerateFeedbackBody {
+  programId: string;
+  scenarioId: string;
+  forceRegenerate?: boolean;
+}
+
+interface ScenarioYAML {
+  title?: string;
+  learning_objectives?: string[];
+  scenario_info?: {
+    title?: string;
+    learning_objectives?: string[];
+  };
+}
 
 // Language mapping
 const languageMap: Record<string, string> = {
@@ -106,7 +178,7 @@ You must always respond with a valid JSON object following the exact schema prov
 
 export async function POST(request: NextRequest) {
   try {
-    const { programId, scenarioId, forceRegenerate = false } = await request.json();
+    const { programId, scenarioId, forceRegenerate = false }: GenerateFeedbackBody = await request.json();
     
     if (!programId || !scenarioId) {
       return NextResponse.json(
@@ -139,7 +211,7 @@ export async function POST(request: NextRequest) {
       userEmail,
       scenarioId,
       programId
-    );
+    ) as CompletionData | null;
     
     if (!completionData) {
       return NextResponse.json(
@@ -202,21 +274,21 @@ export async function POST(request: NextRequest) {
     const scenarioFilename = scenarioId.replace(/-/g, '_');
     const scenarioPath = path.join(process.cwd(), 'public', 'pbl_data', `${scenarioFilename}_scenario.yaml`);
     
-    let scenarioData: any = {};
+    let scenarioData: ScenarioYAML = {};
     try {
       const yaml = await import('yaml');
       const fileContent = await fs.readFile(scenarioPath, 'utf-8');
-      scenarioData = yaml.parse(fileContent);
+      scenarioData = yaml.parse(fileContent) as ScenarioYAML;
     } catch (error) {
       console.error('Error reading scenario data:', error);
     }
     
     // Prepare task summaries for AI analysis
-    const taskSummaries = completionData.tasks?.map((task: any) => ({
+    const taskSummaries: TaskSummary[] = completionData.tasks?.map((task) => ({
       taskId: task.taskId,
       score: task.evaluation?.score || 0,
-      conversations: task.log?.interactions?.filter((i: any) => i.role === 'user')
-        .map((i: any) => i.content) || [],
+      conversations: task.log?.interactions?.filter((i) => i.role === 'user')
+        .map((i) => i.content) || [],
       feedback: task.evaluation?.feedback || '',
       strengths: task.evaluation?.strengths || [],
       improvements: task.evaluation?.improvements || []
@@ -235,7 +307,7 @@ Overall Performance:
 - Total Time: ${Math.round((completionData.totalTimeSeconds || 0) / 60)} minutes
 
 Task Performance:
-${taskSummaries.map((task: any, index: number) => `
+${taskSummaries.map((task, index) => `
 Task ${index + 1}: Score ${task.score}%
 Key conversations: ${task.conversations.slice(0, 3).join('; ')}
 Feedback: ${task.feedback}
@@ -273,10 +345,10 @@ Do not mix languages. The entire response must be in ${languageMap[currentLang] 
     const response = result.response;
     const feedbackText = response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
     
-    let feedback;
+    let feedback: QualitativeFeedback | undefined;
     try {
       // Parse the JSON response
-      feedback = JSON.parse(feedbackText);
+      feedback = JSON.parse(feedbackText) as QualitativeFeedback;
     } catch (parseError) {
       console.error('Failed to parse AI response as JSON:', parseError);
       console.error('Response text:', feedbackText);
@@ -311,7 +383,7 @@ Do not mix languages. The entire response must be in ${languageMap[currentLang] 
           }
           
           console.log('Attempting to parse repaired JSON...');
-          feedback = JSON.parse(repairedJson);
+          feedback = JSON.parse(repairedJson) as QualitativeFeedback;
           console.log('Successfully parsed repaired JSON');
         } catch (repairError) {
           console.error('Failed to repair JSON:', repairError);

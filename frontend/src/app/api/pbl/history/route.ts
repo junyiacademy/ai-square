@@ -1,12 +1,51 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pblProgramService } from '@/lib/storage/pbl-program-service';
-import { GetProgramHistoryResponse } from '@/types/pbl';
+import { GetProgramHistoryResponse, ProgramSummary } from '@/types/pbl';
 import { promises as fs } from 'fs';
 import * as yaml from 'js-yaml';
 import path from 'path';
 
+// Types for YAML data
+interface ScenarioInfo {
+  title: string;
+  title_zh?: string;
+  title_ja?: string;
+  title_ko?: string;
+  title_es?: string;
+  title_fr?: string;
+  title_de?: string;
+  title_ru?: string;
+  title_it?: string;
+  [key: string]: string | undefined;
+}
+
+interface ScenarioYAML {
+  scenario_info?: ScenarioInfo;
+  title?: string;
+  title_zh?: string;
+  [key: string]: any;
+}
+
+interface ProgramCompletionData {
+  programId: string;
+  scenarioId: string;
+  userEmail: string;
+  status: string;
+  startedAt: string;
+  updatedAt: string;
+  completedAt?: string;
+  totalTasks: number;
+  evaluatedTasks: number;
+  overallScore: number;
+  domainScores: Record<string, number>;
+  ksaScores: Record<string, number>;
+  totalTimeSeconds: number;
+  taskSummaries: any[];
+  scenarioTitle?: string;
+}
+
 // Helper function to get localized value
-function getLocalizedValue(data: any, fieldName: string, lang: string): any {
+function getLocalizedValue(data: ScenarioInfo | ScenarioYAML, fieldName: string, lang: string): string {
   // Convert language code to suffix - must match YAML field suffixes exactly
   let langSuffix = lang;
   
@@ -74,7 +113,7 @@ export async function GET(request: NextRequest) {
     console.log(`Fetching PBL history for user: ${userEmail}, scenario: ${scenarioId || 'all'}, language: ${language}`);
     
     // Get all programs for the user using completion data
-    let programs = [];
+    let programs: ProgramCompletionData[] = [];
     if (scenarioId) {
       programs = await pblProgramService.getUserProgramsForScenario(userEmail, scenarioId);
     } else {
@@ -97,7 +136,7 @@ export async function GET(request: NextRequest) {
           const scenarioFileName = program.scenarioId.replace(/-/g, '_');
           const yamlPath = path.join(process.cwd(), 'public', 'pbl_data', `${scenarioFileName}_scenario.yaml`);
           const yamlContent = await fs.readFile(yamlPath, 'utf8');
-          const scenarioData = yaml.load(yamlContent) as any;
+          const scenarioData = yaml.load(yamlContent) as ScenarioYAML;
           
           // Access the scenario_info section which contains the title fields
           if (scenarioData.scenario_info) {
@@ -114,7 +153,7 @@ export async function GET(request: NextRequest) {
     }
     
     // Add scenario titles to programs
-    const programsWithTitles = programs.map(program => ({
+    const programsWithTitles: ProgramCompletionData[] = programs.map(program => ({
       ...program,
       scenarioTitle: scenarioTitles[program.scenarioId] || program.scenarioId
     }));
@@ -125,7 +164,7 @@ export async function GET(request: NextRequest) {
     // Transform to API response format
     const response: GetProgramHistoryResponse = {
       success: true,
-      programs: programsWithTitles,
+      programs: programsWithTitles as any, // Type conversion needed due to different structure
       totalPrograms: programsWithTitles.length
     };
     

@@ -5,8 +5,43 @@ import path from 'path';
 import * as yaml from 'js-yaml';
 import { cacheService } from '@/lib/cache/cache-service';
 
+// Types for YAML data
+interface ScenarioInfo {
+  id: string;
+  title: string;
+  title_zh?: string;
+  title_ja?: string;
+  title_ko?: string;
+  title_es?: string;
+  title_fr?: string;
+  title_de?: string;
+  title_ru?: string;
+  title_it?: string;
+  description: string;
+  description_zh?: string;
+  description_ja?: string;
+  description_ko?: string;
+  description_es?: string;
+  description_fr?: string;
+  description_de?: string;
+  description_ru?: string;
+  description_it?: string;
+  difficulty: string;
+  estimated_duration: number;
+  target_domains: string[];
+  [key: string]: any;
+}
+
+interface ScenarioYAML {
+  scenario_info: ScenarioInfo;
+}
+
+interface LocalizedField {
+  [key: string]: string | undefined;
+}
+
 // Helper function to get localized field
-function getLocalizedValue(data: any, fieldName: string, lang: string): any {
+function getLocalizedValue(data: LocalizedField, fieldName: string, lang: string): string {
   if (!data) return '';
   
   // Map language codes to suffixes
@@ -40,7 +75,7 @@ async function loadScenariosFromYAML(lang: string): Promise<ScenarioListItem[]> 
       try {
         const yamlPath = path.join(process.cwd(), 'public', 'pbl_data', file);
         const yamlContent = await fs.readFile(yamlPath, 'utf8');
-        const yamlData = yaml.load(yamlContent) as any;
+        const yamlData = yaml.load(yamlContent) as ScenarioYAML;
         
         if (yamlData && yamlData.scenario_info) {
           const info = yamlData.scenario_info;
@@ -88,7 +123,7 @@ async function loadScenariosFromYAML(lang: string): Promise<ScenarioListItem[]> 
         title_de: 'Kreatives Schreiben mit KI',
         title_ru: 'Творческое письмо с ИИ',
         title_it: 'Scrittura Creativa con IA'
-      }, 'title', lang),
+      } as LocalizedField, 'title', lang),
       description: getLocalizedValue({
         description: 'Master AI-powered creative writing techniques',
         description_zh: '掌握 AI 驅動的創意寫作技巧',
@@ -99,7 +134,7 @@ async function loadScenariosFromYAML(lang: string): Promise<ScenarioListItem[]> 
         description_de: 'Meistern Sie KI-gestützte kreative Schreibtechniken',
         description_ru: 'Освойте техники творческого письма с помощью ИИ',
         description_it: 'Padroneggia le tecniche di scrittura creativa con IA'
-      }, 'description', lang),
+      } as LocalizedField, 'description', lang),
       difficulty: 'beginner',
       estimatedDuration: 60,
       domains: ['creating_with_ai'],
@@ -118,7 +153,7 @@ async function loadScenariosFromYAML(lang: string): Promise<ScenarioListItem[]> 
         title_de: 'Datenanalyse mit KI',
         title_ru: 'Анализ данных с ИИ',
         title_it: 'Analisi dei Dati con IA'
-      }, 'title', lang),
+      } as LocalizedField, 'title', lang),
       description: getLocalizedValue({
         description: 'Use AI for advanced data analysis and insights',
         description_zh: '使用 AI 進行進階數據分析和洞察',
@@ -129,7 +164,7 @@ async function loadScenariosFromYAML(lang: string): Promise<ScenarioListItem[]> 
         description_de: 'Nutzen Sie KI für erweiterte Datenanalyse und Erkenntnisse',
         description_ru: 'Используйте ИИ для расширенного анализа данных',
         description_it: 'Usa l\'IA per analisi avanzate e insights'
-      }, 'description', lang),
+      } as LocalizedField, 'description', lang),
       difficulty: 'advanced',
       estimatedDuration: 120,
       domains: ['managing_with_ai', 'designing_with_ai'],

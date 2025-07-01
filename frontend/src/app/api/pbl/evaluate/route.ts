@@ -1,6 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { VertexAI } from '@google-cloud/vertexai';
-import { Task, TaskInteraction } from '@/types/pbl';
+import { 
+  EvaluateRequestBody, 
+  EvaluateResponse,
+  EvaluationResult,
+  Conversation 
+} from '@/types/pbl-evaluate';
+import { ErrorResponse } from '@/types/api';
+
+interface UserCookie {
+  email: string;
+  role?: string;
+  name?: string;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,7 +21,7 @@ export async function POST(request: NextRequest) {
     try {
       const userCookie = request.cookies.get('user')?.value;
       if (userCookie) {
-        const user = JSON.parse(userCookie);
+        const user: UserCookie = JSON.parse(userCookie);
         userEmail = user.email;
       }
     } catch {
@@ -17,8 +29,8 @@ export async function POST(request: NextRequest) {
     }
     
     if (!userEmail) {
-      return NextResponse.json(
-        { success: false, error: 'User authentication required' },
+      return NextResponse.json<ErrorResponse>(
+        { error: 'User authentication required' },
         { status: 401 }
       );
     }
@@ -29,7 +41,7 @@ export async function POST(request: NextRequest) {
       targetDomains,
       focusKSA,
       language = 'en'
-    } = await request.json();
+    }: EvaluateRequestBody = await request.json();
 
     if (!conversations || !task) {
       return NextResponse.json(
@@ -53,7 +65,7 @@ Task Information:
 - Focus KSA: ${focusKSA?.join(', ') || 'All KSA'}
 
 User Messages (learner's input only):
-${conversations.filter((conv: any) => conv.type === 'user').slice(-10).map((conv: any, index: number) => `${index + 1}. ${conv.content.substring(0, 200)}`).join('\n')}
+${conversations.filter((conv: Conversation) => conv.type === 'user').slice(-10).map((conv: Conversation, index: number) => `${index + 1}. ${conv.content.substring(0, 200)}`).join('\n')}
 
 Evaluation Guidelines:
 - No meaningful engagement (only greetings like "hi", "hello"): 10-25 points

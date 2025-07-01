@@ -114,7 +114,34 @@ export default function UnifiedHistoryPage() {
             const pblData = await pblResponse.json();
             if (pblData.success && pblData.programs) {
               // Transform programs to history item format using completion data
-              pblItems = pblData.programs.map((program: any) => ({
+              interface ProgramData {
+                programId?: string;
+                id?: string;
+                scenarioId: string;
+                scenarioTitle?: string;
+                status: 'completed' | 'in_progress' | 'paused';
+                startedAt: string;
+                completedAt?: string;
+                totalTimeSeconds?: number;
+                evaluatedTasks: number;
+                totalTasks: number;
+                tasks?: Array<{ log?: { interactions?: unknown[] } }>;
+                overallScore?: number;
+                domainScores?: {
+                  engaging_with_ai: number;
+                  creating_with_ai: number;
+                  managing_with_ai: number;
+                  designing_with_ai: number;
+                };
+                ksaScores?: {
+                  knowledge: number;
+                  skills: number;
+                  attitudes: number;
+                };
+                program?: { startedAt: string };
+              }
+              
+              pblItems = pblData.programs.map((program: ProgramData) => ({
                 type: 'pbl' as const,
                 timestamp: program.startedAt || program.program?.startedAt,
                 data: {
@@ -131,7 +158,7 @@ export default function UnifiedHistoryPage() {
                     completedTasks: program.evaluatedTasks,
                     totalTasks: program.totalTasks
                   },
-                  totalInteractions: program.tasks?.reduce((sum: number, task: any) => 
+                  totalInteractions: program.tasks?.reduce((sum, task) => 
                     sum + (task.log?.interactions?.length || 0), 0) || 0,
                   averageScore: program.overallScore,
                   domainScores: program.domainScores,

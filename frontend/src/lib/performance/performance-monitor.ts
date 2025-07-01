@@ -173,15 +173,16 @@ export const performanceMonitor = new PerformanceMonitor()
 
 // 方便的裝飾器函式（用於 class methods）
 export function measurePerformance(name?: string) {
-  return function (
-    target: any,
+  return function <T>(
+    target: T,
     propertyKey: string,
     descriptor: PropertyDescriptor
   ) {
     const originalMethod = descriptor.value
-    const metricName = name || `${target.constructor.name}.${propertyKey}`
+    const targetConstructor = (target as { constructor: { name: string } }).constructor
+    const metricName = name || `${targetConstructor.name}.${propertyKey}`
 
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = async function (this: T, ...args: unknown[]) {
       return performanceMonitor.measureAsync(metricName, () =>
         originalMethod.apply(this, args)
       )

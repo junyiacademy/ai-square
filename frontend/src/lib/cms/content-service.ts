@@ -27,9 +27,9 @@ const GCS_PATHS = {
 
 export class ContentService {
   private storage?: Storage;
-  private bucket?: ReturnType<Storage['bucket']>;
+  private bucket?: ReturnType<Storage['bucket']> | undefined;
   private isProduction: boolean;
-  private contentCache = new Map<string, { data: any, timestamp: number }>();
+  private contentCache = new Map<string, { data: unknown, timestamp: number }>();
   private readonly CACHE_TTL = 5 * 60 * 1000; // 5 minutes
   
   constructor() {
