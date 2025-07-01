@@ -2,6 +2,29 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 🛠️ Claude Code 實用指令
+
+### Slash Commands (在對話中使用)
+```
+/help          查看所有可用指令
+/plan          進入規劃模式（適合複雜任務）
+/search        搜尋程式碼或文件
+/scan          執行安全掃描
+/test          執行測試
+/commit        提交變更
+/diff          查看檔案差異
+/undo          復原上一個操作
+```
+
+### CLI 指令
+```bash
+claude                           # 啟動互動式對話
+claude -c                        # 繼續最近的對話
+claude -r [sessionId]            # 恢復特定對話
+claude --model opus              # 使用 Opus 模型（更強大）
+claude -p "prompt"               # 單次查詢模式
+```
+
 ## 🚀 現代化 AI 開發流程
 
 ### 核心原則：極簡、高效、AI 友善
@@ -254,25 +277,32 @@ AI: [執行: make ai-done]
 
 ### Project Overview
 
-AI Square is a comprehensive AI literacy education platform featuring Problem-Based Learning (PBL) scenarios and competency visualization. The project is a monorepo with a Next.js frontend and Python FastAPI backend, designed to be deployed on Google Cloud Platform.
+AI Square 是一個「用 AI 學 AI 素養」的創新學習平台，基於國際 AI Literacy 框架，透過 AI 技術本身來提升學習者的 AI 素養能力。
 
-**Key Features:**
-- Problem-Based Learning (PBL) system with multi-task scenarios and AI tutors
-- Multilingual support (9 languages: en, zh-TW, es, ja, ko, fr, de, ru, it)
-- AI literacy competency visualization with KSA (Knowledge, Skills, Attitudes) mapping
-- Real-time AI-powered feedback and evaluation system
-- YAML-based content management for educational rubrics and scenarios
-- Google Cloud Storage for user progress tracking
-- Unified abstraction layer architecture for scalability
+**當前狀態 (2025/07)**:
+- ✅ **Phase 1**: MVP 基礎完成 (100%)
+- ✅ **Phase 1.5**: CMS 系統增強完成 (100%)
+- 🚀 **Phase 2**: SaaS 平台開發中
+- 📋 **Phase 3**: Agent 系統規劃中
+
+**核心功能**:
+- Problem-Based Learning (PBL) 系統：多任務情境學習、AI 導師輔導
+- 多語言支援：9 種語言 (en, zh-TW, es, ja, ko, fr, de, ru, it)
+- AI 素養能力視覺化：KSA (Knowledge, Skills, Attitudes) 映射
+- 即時 AI 反饋：個人化評估與質性回饋
+- CMS 內容管理：Git-based 版本控制、AI 輔助編輯、分支管理
+- 學習進度追蹤：Google Cloud Storage 儲存用戶數據
+- 統一抽象層架構：確保系統可擴展性
 
 ### 技術棧
-- **Frontend**: Next.js 15, TypeScript, Tailwind CSS, react-i18next
-- **Backend**: FastAPI, Python 3.x
-- **AI Services**: Google Vertex AI (Gemini models), OpenAI
-- **Storage**: Google Cloud Storage for user data, local YAML for content
-- **Caching**: Multi-layer cache system (memory + localStorage)
-- **Deployment**: Google Cloud Run, Docker
-- **Testing**: Jest, React Testing Library, Playwright
+- **Frontend**: Next.js 15, TypeScript, Tailwind CSS, react-i18next, Monaco Editor
+- **Backend**: FastAPI, Python 3.x, Vertex AI SDK
+- **AI Services**: Google Vertex AI (Gemini models), 規劃中: OpenAI
+- **Storage**: Google Cloud Storage (用戶數據), GitHub (內容版本控制), Local Cache
+- **Caching**: 多層快取系統 (memory + localStorage)
+- **Deployment**: Google Cloud Run, Docker, GitHub Actions CI/CD
+- **Testing**: Jest (80%+ 覆蓋率), React Testing Library, Playwright
+- **CMS**: GitHub API 整合, YAML 處理, AI Quick Actions
 
 ### Development Commands
 
@@ -423,7 +453,22 @@ The app uses a dual translation approach:
 - `next-i18next.config.js` - Internationalization setup
 - `tsconfig.json` - TypeScript configuration
 
+### 最近成就 (2025/07)
+- ✅ **TypeScript 型別安全**: 消除所有生產代碼的 any 類型 (102 → 0)
+- ✅ **測試覆蓋率**: 核心模組達到 80%+ 覆蓋率
+- ✅ **CMS 系統增強**: 分支管理、現代化 UI/UX、AI Quick Actions
+- ✅ **安全性更新**: Next.js 升級到 14.2.30
+
+### 接下來的優先事項
+1. **OAuth2 社交登入** (Google, GitHub) - 降低註冊門檻
+2. **智能 Onboarding** - 解決「不知道從何開始」的痛點
+3. **AI 資源使用追蹤** - Token 計算與成本控制
+4. **PBL 修改歷程記錄** - 展示學習思考過程
+
 ### Project Context
-This is Phase 1 of a 6-phase roadmap to build a comprehensive AI learning platform. Current focus is on authentication, internationalization, and basic practice functionality with Google Gemini API integration planned.
+AI Square 正處於從 MVP 轉向 SaaS 平台的關鍵階段。Phase 1 已完成基礎功能，現在專注於提升用戶體驗和平台智能化。
+
+
+---
 
 Note: This CLAUDE.md file must remain in the project root directory to be automatically read by Claude AI.
