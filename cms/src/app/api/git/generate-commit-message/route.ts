@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateContent } from '@/lib/vertex-ai';
+import { CommitMessageRequest, CommitMessageResponse } from '@/types';
 
 export async function POST(request: NextRequest) {
-  let requestData: any = {};
+  let requestData: CommitMessageRequest = { filePath: '', oldContent: '', newContent: '' };
   
   try {
-    requestData = await request.json();
+    requestData = await request.json() as CommitMessageRequest;
     const { filePath, oldContent, newContent } = requestData;
 
     if (!filePath || !newContent) {
@@ -62,10 +63,11 @@ ${newContent}
 
     const commitMessage = await generateContent(prompt, systemPrompt);
     
-    return NextResponse.json({ 
+    const response: CommitMessageResponse = { 
       success: true,
       message: commitMessage.trim()
-    });
+    };
+    return NextResponse.json(response);
   } catch (error) {
     console.error('Generate commit message error:', error);
     
@@ -79,10 +81,10 @@ ${newContent}
 
 🤖 Generated with AI Square CMS`;
     
-    return NextResponse.json({ 
+    const response: CommitMessageResponse = { 
       success: true,
-      message: fallbackMessage,
-      isGenerated: false
-    });
+      message: fallbackMessage
+    };
+    return NextResponse.json(response);
   }
 }

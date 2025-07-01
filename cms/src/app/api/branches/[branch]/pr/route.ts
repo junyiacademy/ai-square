@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Octokit } from '@octokit/rest';
+import { GitHubPullRequest, OctokitError } from '@/types';
 
 // GET - Get PR info for a branch
 export async function GET(
@@ -27,7 +28,7 @@ export async function GET(
       });
     }
 
-    const pr = prs[0]; // Most recent PR
+    const pr = prs[0] as GitHubPullRequest; // Most recent PR
     
     return NextResponse.json({
       success: true,
@@ -36,14 +37,14 @@ export async function GET(
         title: pr.title,
         body: pr.body,
         state: pr.state,
-        merged: (pr as any).merged || false,
+        merged: pr.merged || false,
         mergedAt: pr.merged_at,
         createdAt: pr.created_at,
         updatedAt: pr.updated_at,
         url: pr.html_url,
         author: pr.user?.login,
-        mergeable: (pr as any).mergeable || null,
-        mergeableState: (pr as any).mergeable_state || 'unknown'
+        mergeable: pr.mergeable || null,
+        mergeableState: pr.mergeable_state || 'unknown'
       }
     });
   } catch (error) {
@@ -129,10 +130,11 @@ export async function POST(
         body: pr.body
       }
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Create PR error:', error);
+    const octokitError = error as OctokitError;
     
-    if (error.status === 422) {
+    if (octokitError.status === 422) {
       return NextResponse.json(
         { error: 'Cannot create PR - no changes or branch issues' },
         { status: 422 }

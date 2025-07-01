@@ -5,22 +5,24 @@ import path from 'path';
 /**
  * YAML 檔案載入器，提供記憶體快取以提升效能
  */
-class YAMLLoader {
-  private cache = new Map<string, any>();
-  private loadPromises = new Map<string, Promise<any>>();
+class YAMLLoader<T = unknown> {
+  private cache = new Map<string, T>();
+  private loadPromises = new Map<string, Promise<T>>();
   
   /**
    * 載入 YAML 檔案，支援記憶體快取
    */
-  async load(fileName: string): Promise<any> {
+  async load(fileName: string): Promise<T> {
     // 檢查快取
-    if (this.cache.has(fileName)) {
-      return this.cache.get(fileName);
+    const cached = this.cache.get(fileName);
+    if (cached !== undefined) {
+      return cached;
     }
     
     // 如果正在載入中，返回現有的 Promise
-    if (this.loadPromises.has(fileName)) {
-      return this.loadPromises.get(fileName);
+    const existingPromise = this.loadPromises.get(fileName);
+    if (existingPromise) {
+      return existingPromise;
     }
     
     // 開始新的載入
@@ -39,10 +41,10 @@ class YAMLLoader {
   /**
    * 從檔案系統載入 YAML
    */
-  private async loadFromFile(fileName: string): Promise<any> {
+  private async loadFromFile(fileName: string): Promise<T> {
     const filePath = path.join(process.cwd(), 'public', 'rubrics_data', fileName);
     const content = await fs.readFile(filePath, 'utf-8');
-    return yaml.load(content);
+    return yaml.load(content) as T;
   }
   
   /**

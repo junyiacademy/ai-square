@@ -1,4 +1,5 @@
 import { Octokit } from '@octokit/rest'
+import { GitHubPullRequest } from '@/types'
 
 export interface FileItem {
   name: string
@@ -149,14 +150,17 @@ export class GitHubService {
         state: 'open',
       })
 
-      return response.data.map(pr => ({
-        number: pr.number,
-        title: pr.title,
-        state: pr.state,
-        branch: pr.head.ref,
-        merged: (pr as any).merged || false,
-        url: pr.html_url,
-      }))
+      return response.data.map(pr => {
+        const pullRequest = pr as GitHubPullRequest;
+        return {
+          number: pullRequest.number,
+          title: pullRequest.title,
+          state: pullRequest.state,
+          branch: pullRequest.head.ref,
+          merged: pullRequest.merged || false,
+          url: pullRequest.html_url,
+        }
+      })
     } catch (error) {
       throw new Error(`Failed to list pull requests: ${error}`)
     }

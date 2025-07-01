@@ -4,6 +4,7 @@ import * as yaml from 'js-yaml';
 import { type PBLScenarioSchema } from './schemas/pbl-scenario.schema';
 import { sortPBLScenario } from './utils/yaml-order';
 import { formatKSACodesForPrompt } from './utils/ksa-codes-loader';
+import { PBLScenario, KSAMapping } from '@/types';
 
 let vertexAI: VertexAI | null = null;
 
@@ -188,7 +189,7 @@ Return a complete JSON object following the PBL scenario schema.`;
     const jsonData = JSON.parse(jsonResponse);
     
     // Sort the data according to schema order
-    const sortedData = sortPBLScenario(jsonData);
+    const sortedData = sortPBLScenario(jsonData as PBLScenario);
     
     const yamlOutput = yaml.dump(sortedData, {
       indent: 2,
@@ -256,7 +257,7 @@ Return a complete JSON object with all translations added.`;
     const jsonData = JSON.parse(jsonResponse);
     
     // Sort the data according to schema order
-    const sortedData = sortPBLScenario(jsonData);
+    const sortedData = sortPBLScenario(jsonData as PBLScenario);
     
     const yamlOutput = yaml.dump(sortedData, {
       indent: 2,
@@ -329,7 +330,7 @@ Return a complete JSON object with all improvements applied while preserving all
     const jsonData = JSON.parse(jsonResponse);
     
     // Sort the data according to schema order
-    const sortedData = sortPBLScenario(jsonData);
+    const sortedData = sortPBLScenario(jsonData as PBLScenario);
     
     const yamlOutput = yaml.dump(sortedData, {
       indent: 2,
@@ -355,9 +356,9 @@ export async function mapKSAContent(yamlContent: string) {
     const existingData = yaml.load(yamlContent) as PBLScenarioSchema;
     
     // Keep only KSA mapping, return original content with updated KSA
-    const updatedData = {
+    const updatedData: PBLScenarioSchema = {
       ...existingData,
-      ksa_mapping: undefined // Will be replaced
+      ksa_mapping: { knowledge: [], skills: [], attitudes: [] } // Will be replaced
     };
     
     const vertex = getVertexAI();
@@ -431,7 +432,7 @@ IMPORTANT: Return ONLY the JSON object above. No explanations, no markdown, no a
     const response = result.response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
     
     // Parse the KSA mapping
-    let ksaMapping;
+    let ksaMapping: KSAMapping;
     try {
       // Clean the response - remove any markdown or extra text
       let cleanResponse = response.trim();
@@ -449,7 +450,7 @@ IMPORTANT: Return ONLY the JSON object above. No explanations, no markdown, no a
         cleanResponse = cleanResponse.substring(jsonStart, jsonEnd + 1);
       }
       
-      const jsonResponse = JSON.parse(cleanResponse);
+      const jsonResponse = JSON.parse(cleanResponse) as { ksa_mapping: KSAMapping };
       ksaMapping = jsonResponse.ksa_mapping || { knowledge: [], skills: [], attitudes: [] };
       
       // Validate the structure

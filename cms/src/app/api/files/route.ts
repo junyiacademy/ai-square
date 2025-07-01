@@ -1,15 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getGitHubStorage } from '@/services/github-storage';
-
-interface FileNode {
-  name: string;
-  path: string;
-  type: 'file' | 'directory';
-  children?: FileNode[];
-}
+import { FileNode, FileContent } from '@/types';
 
 // Helper function to organize flat list into tree structure
-function buildFileTree(files: any[]): FileNode[] {
+function buildFileTree(files: FileContent[]): FileNode[] {
   const tree: { [key: string]: FileNode } = {};
   
   // Initialize root directories
@@ -62,7 +56,7 @@ export async function GET() {
     
     // Fetch files from each directory
     const directories = ['rubrics_data', 'pbl_data', 'assessment_data'];
-    const allFiles: any[] = [];
+    const allFiles: FileContent[] = [];
     
     for (const dir of directories) {
       try {

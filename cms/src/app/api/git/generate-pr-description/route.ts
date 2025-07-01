@@ -1,11 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateContent } from '@/lib/vertex-ai';
+import { GitHubCommit } from '@/types';
+
+interface PRDescriptionRequest {
+  commits: Array<{ message: string }>;
+  branch: string;
+}
+
+interface PRDescriptionResponse {
+  success: boolean;
+  description: string;
+  isGenerated?: boolean;
+}
 
 export async function POST(request: NextRequest) {
-  let requestData: any = {};
+  let requestData: PRDescriptionRequest = { commits: [], branch: '' };
   
   try {
-    requestData = await request.json();
+    requestData = await request.json() as PRDescriptionRequest;
     const { commits, branch } = requestData;
 
     if (!commits || !Array.isArray(commits)) {
@@ -57,7 +69,7 @@ export async function POST(request: NextRequest) {
 
 以下是這個分支中所有的 commit messages：
 
-${commits.map((commit, index) => `
+${commits.map((commit: { message: string }, index: number) => `
 Commit ${index + 1}:
 ${commit.message}
 ---
@@ -72,11 +84,12 @@ ${commit.message}
     console.log('Generating PR description for', commits.length, 'commits');
     const prDescription = await generateContent(prompt, systemPrompt);
     
-    return NextResponse.json({ 
+    const response: PRDescriptionResponse = { 
       success: true,
       description: prDescription.trim(),
       isGenerated: true
-    });
+    };
+    return NextResponse.json(response);
   } catch (error) {
     console.error('Generate PR description error:', error);
     
@@ -90,10 +103,11 @@ ${commit.message}
 
 請查看個別 commit 訊息了解詳細變更。`;
     
-    return NextResponse.json({ 
+    const response: PRDescriptionResponse = { 
       success: true,
       description: fallbackDescription,
       isGenerated: false
-    });
+    };
+    return NextResponse.json(response);
   }
 }

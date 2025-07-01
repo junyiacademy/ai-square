@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Octokit } from '@octokit/rest';
+import { OctokitError } from '@/types';
+
+type FileStatus = 'added' | 'removed' | 'modified' | 'renamed' | 'copied' | 'changed' | 'unchanged';
 
 interface DiffFile {
   filename: string;
-  status: 'added' | 'removed' | 'modified' | 'renamed';
+  status: FileStatus;
   additions: number;
   deletions: number;
   patch?: string;
@@ -31,7 +34,7 @@ export async function GET(
     // Get file changes with patches
     const files: DiffFile[] = comparison.files?.map(file => ({
       filename: file.filename,
-      status: file.status as any,
+      status: file.status as FileStatus,
       additions: file.additions,
       deletions: file.deletions,
       patch: file.patch,
@@ -54,10 +57,11 @@ export async function GET(
       files,
       commits
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Get branch diff error:', error);
+    const octokitError = error as OctokitError;
     
-    if (error.status === 404) {
+    if (octokitError.status === 404) {
       return NextResponse.json(
         { error: 'Branch not found' },
         { status: 404 }

@@ -112,12 +112,12 @@ export const YAML_KEY_ORDER = {
 };
 
 // Custom sorting function for objects
-export function sortObjectByKeyOrder(obj: any, keyOrder: string[]): any {
+export function sortObjectByKeyOrder<T extends Record<string, unknown>>(obj: T, keyOrder: string[]): T {
   if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
     return obj;
   }
   
-  const sortedObj: any = {};
+  const sortedObj: Record<string, unknown> = {};
   
   // First, add keys in the specified order
   for (const key of keyOrder) {
@@ -133,17 +133,17 @@ export function sortObjectByKeyOrder(obj: any, keyOrder: string[]): any {
     }
   }
   
-  return sortedObj;
+  return sortedObj as T;
 }
 
 // Recursively sort a PBL scenario object according to the schema order
-export function sortPBLScenario(data: any): any {
+export function sortPBLScenario<T extends Record<string, unknown>>(data: T): T {
   if (!data || typeof data !== 'object') {
     return data;
   }
   
   // Sort root level
-  const sorted: any = sortObjectByKeyOrder(data, YAML_KEY_ORDER.root);
+  const sorted = sortObjectByKeyOrder(data, YAML_KEY_ORDER.root) as Record<string, unknown>;
   
   // Sort scenario_info
   if (sorted.scenario_info) {
@@ -157,7 +157,7 @@ export function sortPBLScenario(data: any): any {
   
   // Sort tasks
   if (sorted.tasks && Array.isArray(sorted.tasks)) {
-    sorted.tasks = sorted.tasks.map((task: any) => {
+    sorted.tasks = sorted.tasks.map((task: Record<string, unknown>) => {
       const sortedTask = sortObjectByKeyOrder(task, YAML_KEY_ORDER.task);
       
       // Sort nested objects in task
@@ -179,5 +179,5 @@ export function sortPBLScenario(data: any): any {
     });
   }
   
-  return sorted;
+  return sorted as T;
 }

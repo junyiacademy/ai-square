@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Octokit } from '@octokit/rest';
+import { OctokitError } from '@/types';
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,8 +22,9 @@ export async function POST(request: NextRequest) {
         message: 'Label already exists',
         exists: true 
       });
-    } catch (error: any) {
-      if (error.status === 404) {
+    } catch (error) {
+      const octokitError = error as OctokitError;
+      if (octokitError.status === 404) {
         // Label doesn't exist, create it
         const { data } = await octokit.issues.createLabel({
           owner,

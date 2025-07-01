@@ -3,15 +3,32 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 import { VertexAI } from '@google-cloud/vertexai';
+import { ErrorResponse } from '@/types/api';
+import { ChatMessage } from '@/types/pbl-api';
+import { PBLScenario, Task, AIModule } from '@/types/pbl';
+
+interface ChatRequestBody {
+  message: string;
+  sessionId: string;
+  context: {
+    scenarioId: string;
+    taskId: string;
+    taskTitle: string;
+    taskDescription: string;
+    instructions: string[];
+    expectedOutcome: string;
+    conversationHistory?: ChatMessage[];
+  };
+}
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body: ChatRequestBody = await request.json();
     const { message, sessionId, context } = body;
 
     if (!message || !sessionId || !context) {
-      return NextResponse.json(
-        { success: false, error: 'Missing required fields' },
+      return NextResponse.json<ErrorResponse>(
+        { error: 'Missing required fields' },
         { status: 400 }
       );
     }
@@ -27,22 +44,22 @@ export async function POST(request: NextRequest) {
     );
     
     const yamlContent = await fs.readFile(yamlPath, 'utf8');
-    const scenarioData = yaml.load(yamlContent) as any;
+    const scenarioData = yaml.load(yamlContent) as PBLScenario;
     
     // Find the current task
-    const currentTask = scenarioData.tasks?.find((t: any) => t.id === taskId);
+    const currentTask = scenarioData.tasks?.find((t: Task) => t.id === taskId);
     if (!currentTask || !currentTask.ai_module) {
-      return NextResponse.json(
-        { success: false, error: 'Task or AI module not found' },
+      return NextResponse.json<ErrorResponse>(
+        { error: 'Task or AI module not found' },
         { status: 404 }
       );
     }
 
-    const aiModule = currentTask.ai_module;
+    const aiModule: AIModule = currentTask.ai_module;
     
     // Build conversation context
-    const conversationContext = conversationHistory?.map((entry: any) => 
-      `${entry.type === 'user' ? 'User' : 'Assistant'}: ${entry.content}`
+    const conversationContext = conversationHistory?.map((entry: ChatMessage) => 
+      `${entry.role === 'user' ? 'User' : 'Assistant'}: ${entry.content}`
     ).join('\n');
 
     // Get language from Accept-Language header

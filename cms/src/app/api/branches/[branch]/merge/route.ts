@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Octokit } from '@octokit/rest';
+import { OctokitError } from '@/types';
 
 export async function POST(
   request: NextRequest,
@@ -63,17 +64,18 @@ export async function POST(
       message: mergeResult.message,
       sha: mergeResult.sha
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Merge PR error:', error);
+    const octokitError = error as OctokitError;
     
-    if (error.status === 404) {
+    if (octokitError.status === 404) {
       return NextResponse.json(
         { error: 'PR not found' },
         { status: 404 }
       );
     }
 
-    if (error.status === 405) {
+    if (octokitError.status === 405) {
       return NextResponse.json(
         { error: 'PR is not mergeable' },
         { status: 405 }

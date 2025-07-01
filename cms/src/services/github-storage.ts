@@ -1,19 +1,5 @@
 import { Octokit } from '@octokit/rest';
-
-interface CacheEntry {
-  data: any;
-  expires: number;
-  etag?: string;
-}
-
-interface FileContent {
-  name: string;
-  path: string;
-  sha: string;
-  content: string;
-  size: number;
-  type: 'file' | 'dir';
-}
+import { CacheEntry, FileContent, GitHubFileContent, GitHubCommit, OctokitError } from '@/types';
 
 export class GitHubStorage {
   private octokit: Octokit;
@@ -38,7 +24,7 @@ export class GitHubStorage {
     return `${method}:${path}`;
   }
 
-  private getFromCache(key: string): any | null {
+  private getFromCache<T>(key: string): T | null {
     const entry = this.cache.get(key);
     if (!entry) return null;
     
@@ -47,10 +33,10 @@ export class GitHubStorage {
       return null;
     }
     
-    return entry.data;
+    return entry.data as T;
   }
 
-  private setCache(key: string, data: any, ttlMs: number = 5 * 60 * 1000): void {
+  private setCache<T>(key: string, data: T, ttlMs: number = 5 * 60 * 1000): void {
     this.cache.set(key, {
       data,
       expires: Date.now() + ttlMs
@@ -104,8 +90,9 @@ export class GitHubStorage {
 
       this.setCache(cacheKey, files);
       return files;
-    } catch (error: any) {
-      if (error.status === 404) {
+    } catch (error) {
+      const octokitError = error as OctokitError;
+      if (octokitError.status === 404) {
         return [];
       }
       throw error;
@@ -143,7 +130,7 @@ export class GitHubStorage {
 
       this.setCache(cacheKey, file, 2 * 60 * 1000); // Cache for 2 minutes
       return file;
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error getting file:', error);
       throw error;
     }
@@ -172,9 +159,10 @@ export class GitHubStorage {
         if (!Array.isArray(data) && data.type === 'file') {
           sha = data.sha;
         }
-      } catch (error: any) {
+      } catch (error) {
         // File doesn't exist, will create new
-        if (error.status !== 404) throw error;
+        const octokitError = error as OctokitError;
+        if (octokitError.status !== 404) throw error;
       }
 
       // Update or create file
@@ -219,8 +207,9 @@ export class GitHubStorage {
         ref: `refs/heads/${branchName}`,
         sha: ref.object.sha
       });
-    } catch (error: any) {
-      if (error.status === 422) {
+    } catch (error) {
+      const octokitError = error as OctokitError;
+      if (octokitError.status === 422) {
         // Branch already exists
         console.log(`Branch ${branchName} already exists`);
       } else {
@@ -290,7 +279,7 @@ export class GitHubStorage {
   async getCommitsBetweenBranches(
     sourceBranch: string,
     targetBranch: string = 'main'
-  ): Promise<Array<{ sha: string; message: string; author: string }>> {
+  ): Promise<GitHubCommit[]> {
     const { data } = await this.octokit.repos.compareCommits({
       owner: this.owner,
       repo: this.repo,
@@ -301,7 +290,11 @@ export class GitHubStorage {
     return data.commits.map(commit => ({
       sha: commit.sha,
       message: commit.commit.message,
-      author: commit.commit.author?.name || 'Unknown'
+      author: {
+        name: commit.commit.author?.name || 'Unknown',
+        email: commit.commit.author?.email || '',
+        date: commit.commit.author?.date || ''
+      }
     }));
   }
 

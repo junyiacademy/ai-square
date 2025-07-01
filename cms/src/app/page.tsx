@@ -8,6 +8,8 @@ import { Header } from '@/components/cms/Header';
 import { ProcessingModal, ProcessingStep } from '@/components/cms/ProcessingModal';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { ChevronLeft, ChevronRight, GripVertical } from 'lucide-react';
+import { ProcessingModalState, BranchCreateResponse, CommitMessageResponse, PullRequestCreateResponse } from '@/types';
+import type { ImperativePanelHandle } from 'react-resizable-panels';
 
 export default function CmsPage() {
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
@@ -18,13 +20,13 @@ export default function CmsPage() {
   const [isOnMain, setIsOnMain] = useState(true);
   const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false);
   const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false);
-  const leftPanelRef = useRef<any>(null);
-  const rightPanelRef = useRef<any>(null);
+  const leftPanelRef = useRef<ImperativePanelHandle>(null);
+  const rightPanelRef = useRef<ImperativePanelHandle>(null);
   
   // Processing modal state
-  const [processingModal, setProcessingModal] = useState({
+  const [processingModal, setProcessingModal] = useState<ProcessingModalState>({
     isOpen: false,
-    steps: [] as ProcessingStep[],
+    steps: [],
     currentStep: 0,
     commitMessage: '',
     prDescription: '',
@@ -37,10 +39,10 @@ export default function CmsPage() {
     setupLabel();
     
     // Set global function for Editor to call
-    (window as any).setOriginalContent = setOriginalContent;
+    (window as Window & { setOriginalContent?: typeof setOriginalContent }).setOriginalContent = setOriginalContent;
     
     return () => {
-      delete (window as any).setOriginalContent;
+      delete (window as Window & { setOriginalContent?: typeof setOriginalContent }).setOriginalContent;
     };
   }, []);
 
@@ -105,7 +107,7 @@ export default function CmsPage() {
     });
     
     setIsLoading(true);
-    let branchData: any = null;
+    let branchData: BranchCreateResponse | null = null;
     let targetBranch = currentBranch;
     let currentStepIndex = 0;
     
@@ -133,7 +135,7 @@ export default function CmsPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ fileName: selectedFile }),
         });
-        branchData = await branchResponse.json();
+        branchData = await branchResponse.json() as BranchCreateResponse;
         
         if (branchData.success) {
           targetBranch = branchData.branch;
@@ -163,7 +165,7 @@ export default function CmsPage() {
           }),
         });
         
-        const messageData = await messageResponse.json();
+        const messageData = await messageResponse.json() as CommitMessageResponse;
         if (messageData.success) {
           commitMessage = messageData.message;
           setProcessingModal(prev => ({ ...prev, commitMessage }));
@@ -213,7 +215,7 @@ export default function CmsPage() {
           }),
         });
         
-        const prData = await prResponse.json();
+        const prData = await prResponse.json() as PullRequestCreateResponse;
         
         if (prData.success) {
           // Extract PR description from the response
@@ -258,13 +260,13 @@ export default function CmsPage() {
           throw new Error(prData.error || 'Failed to create PR');
         }
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('Save error:', error);
       
       // Update the current step with error
       const currentStepId = steps[currentStepIndex]?.id;
       if (currentStepId) {
-        updateStep(currentStepId, 'error', error.message || 'An error occurred');
+        updateStep(currentStepId, 'error', error instanceof Error ? error.message : 'An error occurred');
       }
     } finally {
       setIsLoading(false);

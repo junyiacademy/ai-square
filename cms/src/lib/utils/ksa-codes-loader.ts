@@ -25,7 +25,25 @@ export function loadKSACodes(): KSACodesData {
     // Load the KSA codes YAML file
     const filePath = path.join(process.cwd(), 'content', 'rubrics_data', 'ksa_codes.yaml');
     const fileContent = fs.readFileSync(filePath, 'utf8');
-    const data = yaml.load(fileContent) as any;
+    interface KSAYamlData {
+      knowledge_codes?: {
+        themes: Record<string, {
+          codes: Record<string, { summary: string }>
+        }>
+      };
+      skills_codes?: {
+        themes: Record<string, {
+          codes: Record<string, { summary: string }>
+        }>
+      };
+      attitudes_codes?: {
+        themes: Record<string, {
+          codes: Record<string, { summary: string }>
+        }>
+      };
+    }
+    
+    const data = yaml.load(fileContent) as KSAYamlData;
 
     const ksaCodes: KSACodesData = {
       knowledge: [],
@@ -36,11 +54,11 @@ export function loadKSACodes(): KSACodesData {
     // Extract Knowledge codes
     if (data.knowledge_codes?.themes) {
       for (const theme of Object.values(data.knowledge_codes.themes)) {
-        if ((theme as any).codes) {
-          for (const [code, details] of Object.entries((theme as any).codes)) {
+        if (theme.codes) {
+          for (const [code, details] of Object.entries(theme.codes)) {
             ksaCodes.knowledge.push({
               code,
-              summary: (details as any).summary || ''
+              summary: details.summary || ''
             });
           }
         }
@@ -50,11 +68,11 @@ export function loadKSACodes(): KSACodesData {
     // Extract Skills codes
     if (data.skills_codes?.themes) {
       for (const theme of Object.values(data.skills_codes.themes)) {
-        if ((theme as any).codes) {
-          for (const [code, details] of Object.entries((theme as any).codes)) {
+        if (theme.codes) {
+          for (const [code, details] of Object.entries(theme.codes)) {
             ksaCodes.skills.push({
               code,
-              summary: (details as any).summary || ''
+              summary: details.summary || ''
             });
           }
         }
@@ -64,11 +82,11 @@ export function loadKSACodes(): KSACodesData {
     // Extract Attitudes codes
     if (data.attitudes_codes?.themes) {
       for (const theme of Object.values(data.attitudes_codes.themes)) {
-        if ((theme as any).codes) {
-          for (const [code, details] of Object.entries((theme as any).codes)) {
+        if (theme.codes) {
+          for (const [code, details] of Object.entries(theme.codes)) {
             ksaCodes.attitudes.push({
               code,
-              summary: (details as any).summary || ''
+              summary: details.summary || ''
             });
           }
         }

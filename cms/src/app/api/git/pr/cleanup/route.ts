@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getGitHubStorage } from '@/services/github-storage';
+import { OctokitError } from '@/types';
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,8 +22,9 @@ export async function POST(request: NextRequest) {
         success: true,
         message: `Branch ${branch} deleted successfully`
       });
-    } catch (error: any) {
-      if (error.status === 403) {
+    } catch (error) {
+      const octokitError = error as OctokitError;
+      if (octokitError.status === 403) {
         return NextResponse.json({ 
           success: false,
           message: 'Branch is protected or you lack permissions'

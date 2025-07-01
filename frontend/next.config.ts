@@ -1,6 +1,47 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // 安全標頭配置
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "font-src 'self' https://fonts.gstatic.com",
+              "img-src 'self' data: blob: https:",
+              "connect-src 'self' https://storage.googleapis.com https://generativelanguage.googleapis.com https://aiplatform.googleapis.com",
+              "frame-ancestors 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+            ].join('; '),
+          },
+        ],
+      },
+    ];
+  },
+
   // 優化配置
   images: {
     domains: [],
@@ -85,14 +126,16 @@ const nextConfig: NextConfig = {
   // 壓縮配置
   compress: true,
 
-  // 跳過 ESLint 檢查（暫時）
+  // ESLint 檢查 - 漸進式啟用
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: true, // 暫時忽略，需要逐步修復
+    // TODO: 設定為 false 當所有 ESLint 錯誤修復後
   },
 
-  // 跳過 TypeScript 檢查（暫時）
+  // TypeScript 檢查 - 漸進式啟用
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: true, // 暫時忽略，需要逐步修復
+    // TODO: 設定為 false 當所有 TypeScript 錯誤修復後
   },
 };
 

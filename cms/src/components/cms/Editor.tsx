@@ -49,8 +49,9 @@ export function Editor({ file, content, onChange, isLoading }: EditorProps) {
       onChange(data.content);
       
       // Store original content for comparison
-      if ((window as any).setOriginalContent) {
-        (window as any).setOriginalContent(data.content);
+      const windowWithSetOriginalContent = window as Window & { setOriginalContent?: (content: string) => void };
+      if (windowWithSetOriginalContent.setOriginalContent) {
+        windowWithSetOriginalContent.setOriginalContent(data.content);
       }
     } catch (error) {
       console.error('Failed to load file:', error);
@@ -82,7 +83,7 @@ export function Editor({ file, content, onChange, isLoading }: EditorProps) {
 
   return (
     <div className="flex flex-col h-full">
-      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="flex-1 flex flex-col">
+      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'code' | 'visual' | 'preview')} className="flex-1 flex flex-col">
         <div className="border-b border-gray-100 px-6 bg-white">
           <div className="flex gap-1 h-14 items-center">
             <button

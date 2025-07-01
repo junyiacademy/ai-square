@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { completeYAMLContent, translateYAMLContent, improveYAMLContent } from '@/lib/vertex-ai';
 import * as yaml from 'js-yaml';
+import { AIAssistRequest, AIAssistResponse, YAMLValidation, PBLScenario } from '@/types';
 
 export async function POST(request: NextRequest) {
   try {
-    const { action, content, file } = await request.json();
+    const { action, content, file }: AIAssistRequest = await request.json();
 
     if (!action || !content) {
       return NextResponse.json(
@@ -14,7 +15,7 @@ export async function POST(request: NextRequest) {
     }
 
     let result = '';
-    let validation = { valid: true, errors: [] as string[], summary: '' };
+    let validation: YAMLValidation = { valid: true, errors: [], summary: '' };
 
     switch (action) {
       case 'complete':
@@ -44,7 +45,7 @@ export async function POST(request: NextRequest) {
 
     // Validate the result
     try {
-      const parsed = yaml.load(result) as any;
+      const parsed = yaml.load(result) as PBLScenario;
       
       // Check for required keys based on file type
       if (file?.includes('scenario')) {
@@ -108,12 +109,13 @@ export async function POST(request: NextRequest) {
         validation.summary = `✅ YAML structure is valid with ${Object.keys(parsed).length} top-level keys`;
       }
       
-    } catch (error: any) {
+    } catch (error) {
       validation.valid = false;
-      validation.errors.push(`YAML parsing error: ${error.message}`);
+      validation.errors.push(`YAML parsing error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
 
-    return NextResponse.json({ result, validation });
+    const response: AIAssistResponse = { result, validation };
+    return NextResponse.json(response);
   } catch (error) {
     console.error('AI assist error:', error);
     return NextResponse.json(

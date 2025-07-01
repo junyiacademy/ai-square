@@ -3,13 +3,23 @@
  * 之後可以升級成 Sentry 或其他服務
  */
 
+interface ErrorContext {
+  componentStack?: string;
+  type?: string;
+  filename?: string;
+  lineno?: number;
+  colno?: number;
+  reason?: unknown;
+  [key: string]: unknown;
+}
+
 interface ErrorLog {
   message: string
   stack?: string
   timestamp: string
   url: string
   userAgent: string
-  context?: any
+  context?: ErrorContext
 }
 
 class ErrorLogger {
@@ -19,7 +29,7 @@ class ErrorLogger {
   /**
    * 記錄錯誤
    */
-  log(error: Error, context?: any) {
+  log(error: Error, context?: ErrorContext) {
     const errorLog: ErrorLog = {
       message: error.message,
       stack: error.stack,
@@ -45,7 +55,7 @@ class ErrorLogger {
     if (typeof window !== 'undefined') {
       try {
         localStorage.setItem('error_logs', JSON.stringify(this.logs))
-      } catch (e) {
+      } catch {
         // localStorage 可能已滿，忽略
       }
     }
@@ -78,7 +88,7 @@ class ErrorLogger {
         if (stored) {
           this.logs = JSON.parse(stored)
         }
-      } catch (e) {
+      } catch {
         // 忽略解析錯誤
       }
     }
@@ -89,13 +99,17 @@ class ErrorLogger {
 export const errorLogger = new ErrorLogger()
 
 // 便利函數
-export function logError(error: Error | string, context?: any) {
+export function logError(error: Error | string, context?: ErrorContext) {
   const err = typeof error === 'string' ? new Error(error) : error
   errorLogger.log(err, context)
 }
 
 // React Error Boundary 輔助函數
-export function logComponentError(error: Error, errorInfo: any) {
+interface ReactErrorInfo {
+  componentStack: string;
+}
+
+export function logComponentError(error: Error, errorInfo: ReactErrorInfo) {
   logError(error, {
     componentStack: errorInfo.componentStack,
     type: 'React Component Error'
