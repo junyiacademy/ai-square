@@ -107,7 +107,18 @@ async function validateContent() {
     const questionsByDomain: Record<string, number> = {}
     const questionsByDifficulty: Record<string, number> = {}
     
-    questions.forEach((q: any) => {
+    interface Question {
+      id: string;
+      domain: string;
+      difficulty: string;
+      ksa_codes?: {
+        knowledge?: string[];
+        skills?: string[];
+        attitudes?: string[];
+      };
+    }
+    
+    questions.forEach((q: Question) => {
       questionsByDomain[q.domain] = (questionsByDomain[q.domain] || 0) + 1
       questionsByDifficulty[q.difficulty] = (questionsByDifficulty[q.difficulty] || 0) + 1
       
@@ -163,7 +174,12 @@ async function validateContent() {
     let totalTasks = 0
     let totalDuration = 0
     
-    stages.forEach((stage: any) => {
+    interface Stage {
+      tasks?: unknown[];
+      duration?: number;
+    }
+    
+    stages.forEach((stage: Stage) => {
       totalTasks += stage.tasks?.length || 0
       totalDuration += stage.duration || 0
     })

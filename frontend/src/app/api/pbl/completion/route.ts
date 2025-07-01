@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pblProgramService } from '@/lib/storage/pbl-program-service';
+import { CompletionTask } from '@/types/pbl-completion';
 
 export async function GET(request: NextRequest) {
   try {
@@ -51,7 +52,7 @@ export async function GET(request: NextRequest) {
 
     // If taskId is provided, return only that task's data
     if (taskId) {
-      const taskData = completionData.tasks?.find((t: any) => t.taskId === taskId);
+      const taskData = completionData.tasks?.find((t: CompletionTask) => t.taskId === taskId);
       if (!taskData) {
         return NextResponse.json(
           { success: false, error: 'Task not found in completion data' },

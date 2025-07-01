@@ -29,7 +29,7 @@ interface ScenarioInfo {
   difficulty: string;
   estimated_duration: number;
   target_domains: string[];
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface ScenarioYAML {

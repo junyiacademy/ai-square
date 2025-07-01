@@ -38,13 +38,18 @@ export const EXTERNAL_LIBRARIES = [
   // 'react-dom',
 ]
 
+// Webpack module interface
+interface WebpackModule {
+  context: string;
+}
+
 // 代碼分割點
 export const SPLIT_CHUNKS = {
   // 供應商庫分組
   vendor: {
     test: /[\\/]node_modules[\\/]/,
-    name(module: any) {
-      const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1]
+    name(module: WebpackModule) {
+      const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)?.[1] || 'unknown'
       return `vendor.${packageName.replace('@', '')}`
     },
   },

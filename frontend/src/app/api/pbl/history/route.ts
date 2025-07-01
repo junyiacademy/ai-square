@@ -23,7 +23,14 @@ interface ScenarioYAML {
   scenario_info?: ScenarioInfo;
   title?: string;
   title_zh?: string;
-  [key: string]: any;
+  [key: string]: unknown;
+}
+
+interface TaskSummary {
+  taskId: string;
+  title?: string;
+  score?: number;
+  completedAt?: string;
 }
 
 interface ProgramCompletionData {
@@ -40,7 +47,7 @@ interface ProgramCompletionData {
   domainScores: Record<string, number>;
   ksaScores: Record<string, number>;
   totalTimeSeconds: number;
-  taskSummaries: any[];
+  taskSummaries: TaskSummary[];
   scenarioTitle?: string;
 }
 

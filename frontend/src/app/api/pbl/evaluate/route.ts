@@ -276,7 +276,7 @@ Important evaluation principles:
           effectiveExamples: [],
           improvementAreas: [
             {
-              quote: conversations.filter((c: any) => c.type === 'user')[0]?.content || "No message",
+              quote: conversations.filter((c: Conversation) => c.type === 'user')[0]?.content || "No message",
               suggestion: "Instead of just greeting, try asking a specific question about the task"
             }
           ]
@@ -292,7 +292,7 @@ Important evaluation principles:
       ...evaluation,
       evaluatedAt: new Date().toISOString(),
       taskId: task.id,
-      conversationCount: conversations.filter((c: any) => c.type === 'user').length
+      conversationCount: conversations.filter((c: Conversation) => c.type === 'user').length
     };
 
     return NextResponse.json({

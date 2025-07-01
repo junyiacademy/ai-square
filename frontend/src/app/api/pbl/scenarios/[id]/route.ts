@@ -16,6 +16,42 @@ interface KSAMapping {
   attitudes: KSAItem[];
 }
 
+// Type definitions for KSA data structure
+interface KSACode {
+  summary: string;
+  summary_zh?: string;
+  summary_es?: string;
+  summary_ja?: string;
+  summary_ko?: string;
+  summary_fr?: string;
+  summary_de?: string;
+  summary_ru?: string;
+  summary_it?: string;
+}
+
+interface KSATheme {
+  codes: Record<string, KSACode>;
+}
+
+interface KSASection {
+  themes: Record<string, KSATheme>;
+}
+
+interface KSAData {
+  knowledge_codes?: KSASection;
+  skill_codes?: KSASection;
+  attitude_codes?: KSASection;
+}
+
+interface YAMLData {
+  ksa_mapping?: {
+    knowledge?: string[];
+    skills?: string[];
+    attitudes?: string[];
+  };
+  [key: string]: unknown;
+}
+
 // Simplified type definitions for API response
 interface ScenarioResponse {
   id: string;
@@ -39,7 +75,7 @@ interface ScenarioResponse {
 }
 
 // Helper function to get localized field
-function getLocalizedValue(data: any, fieldName: string, lang: string): any {
+function getLocalizedValue<T = unknown>(data: Record<string, T>, fieldName: string, lang: string): T | string {
   // Map language codes to suffixes
   let langSuffix = lang;
   if (lang === 'zh-TW' || lang === 'zh-CN') {
@@ -51,11 +87,11 @@ function getLocalizedValue(data: any, fieldName: string, lang: string): any {
 }
 
 // Helper function to load and parse KSA codes
-async function loadKSACodes(lang: string): Promise<any> {
+async function loadKSACodes(lang: string): Promise<KSAData | null> {
   try {
     const ksaPath = path.join(process.cwd(), 'public', 'rubrics_data', 'ksa_codes.yaml');
     const ksaContent = await fs.readFile(ksaPath, 'utf8');
-    return yaml.load(ksaContent) as any;
+    return yaml.load(ksaContent) as KSAData;
   } catch (error) {
     console.error('Error loading KSA codes:', error);
     return null;
@@ -63,12 +99,12 @@ async function loadKSACodes(lang: string): Promise<any> {
 }
 
 // Helper function to get KSA item details
-function getKSAItemDetails(ksaData: any, code: string, lang: string): KSAItem | null {
+function getKSAItemDetails(ksaData: KSAData, code: string, lang: string): KSAItem | null {
   if (!ksaData) return null;
   
   // Search in knowledge codes
   if (ksaData.knowledge_codes?.themes) {
-    for (const theme of Object.values(ksaData.knowledge_codes.themes) as any[]) {
+    for (const theme of Object.values(ksaData.knowledge_codes.themes)) {
       if (theme.codes && theme.codes[code]) {
         return {
           code,
@@ -81,7 +117,7 @@ function getKSAItemDetails(ksaData: any, code: string, lang: string): KSAItem | 
   
   // Search in skills codes (note: it's skill_codes, not skills_codes)
   if (ksaData.skill_codes?.themes) {
-    for (const theme of Object.values(ksaData.skill_codes.themes) as any[]) {
+    for (const theme of Object.values(ksaData.skill_codes.themes)) {
       if (theme.codes && theme.codes[code]) {
         return {
           code,
@@ -94,7 +130,7 @@ function getKSAItemDetails(ksaData: any, code: string, lang: string): KSAItem | 
   
   // Search in attitudes codes (note: it's attitude_codes, not attitudes_codes)
   if (ksaData.attitude_codes?.themes) {
-    for (const theme of Object.values(ksaData.attitude_codes.themes) as any[]) {
+    for (const theme of Object.values(ksaData.attitude_codes.themes)) {
       if (theme.codes && theme.codes[code]) {
         return {
           code,
@@ -109,7 +145,7 @@ function getKSAItemDetails(ksaData: any, code: string, lang: string): KSAItem | 
 }
 
 // Helper function to build KSA mapping
-function buildKSAMapping(yamlData: any, ksaData: any, lang: string): KSAMapping | undefined {
+function buildKSAMapping(yamlData: YAMLData, ksaData: KSAData | null, lang: string): KSAMapping | undefined {
   if (!yamlData.ksa_mapping || !ksaData) return undefined;
   
   const mapping: KSAMapping = {

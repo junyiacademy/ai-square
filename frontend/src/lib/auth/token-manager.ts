@@ -5,9 +5,16 @@
 
 import { logError } from '@/lib/utils/error-logger'
 
+interface User {
+  email: string
+  role: string
+  userId?: number
+  name?: string
+}
+
 interface AuthCheckResponse {
   authenticated: boolean
-  user?: any
+  user?: User
   tokenExpiringSoon?: boolean
   expiresIn?: number // 秒
 }

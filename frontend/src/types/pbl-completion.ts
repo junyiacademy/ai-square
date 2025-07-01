@@ -130,6 +130,22 @@ export interface ScenarioData {
   targetDomain: string[];
   prerequisites?: string[];
   learningObjectives?: string[];
-  ksaMapping?: any;
+  ksaMapping?: {
+    knowledge: Array<{
+      code: string;
+      name: string;
+      description: string;
+    }>;
+    skills: Array<{
+      code: string;
+      name: string;
+      description: string;
+    }>;
+    attitudes: Array<{
+      code: string;
+      name: string;
+      description: string;
+    }>;
+  };
   tasks?: ScenarioTask[];
 }

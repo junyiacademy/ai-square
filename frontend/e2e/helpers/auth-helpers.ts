@@ -232,7 +232,7 @@ export async function mockApiResponse(
   urlPattern: string | RegExp,
   response: {
     status?: number
-    body?: any
+    body?: unknown
     headers?: Record<string, string>
   }
 ) {

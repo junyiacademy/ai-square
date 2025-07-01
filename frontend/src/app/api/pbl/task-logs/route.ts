@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pblProgramService } from '@/lib/storage/pbl-program-service';
 import { SaveTaskLogRequest, SaveTaskProgressRequest, TaskInteraction } from '@/types/pbl';
+import { TaskEvaluation } from '@/types/pbl-completion';
 
 // POST - Add interaction to task log
 export async function POST(request: NextRequest) {
@@ -135,7 +136,7 @@ export async function PUT(request: NextRequest) {
       );
     }
     
-    const body = await request.json() as SaveTaskProgressRequest & { evaluation?: any };
+    const body = await request.json() as SaveTaskProgressRequest & { evaluation?: TaskEvaluation };
     const { programId, taskId, progress, evaluation } = body;
     
     // Validate required fields

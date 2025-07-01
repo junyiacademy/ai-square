@@ -393,21 +393,18 @@ export default function CompetencyKnowledgeGraph({
     });
 
     // Drag functions
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    function dragstarted(this: SVGGElement, event: any, d: any) {
+    function dragstarted(this: SVGGElement, event: d3.D3DragEvent<SVGGElement, GraphNode, GraphNode>, d: GraphNode) {
       if (!event.active) simulation.alphaTarget(0.3).restart();
       d.fx = d.x;
       d.fy = d.y;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    function dragged(this: SVGGElement, event: any, d: any) {
+    function dragged(this: SVGGElement, event: d3.D3DragEvent<SVGGElement, GraphNode, GraphNode>, d: GraphNode) {
       d.fx = event.x;
       d.fy = event.y;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    function dragended(this: SVGGElement, event: any, d: any) {
+    function dragended(this: SVGGElement, event: d3.D3DragEvent<SVGGElement, GraphNode, GraphNode>, d: GraphNode) {
       if (!event.active) simulation.alphaTarget(0);
       d.fx = null;
       d.fy = null;
