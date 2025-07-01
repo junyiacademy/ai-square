@@ -9,6 +9,8 @@ import {
   ProgramSummary,
   ProgramStatus
 } from '@/types/pbl';
+import type { TaskEvaluation } from '@/types/pbl-evaluate';
+import type { CompletionData, QualitativeFeedback } from '@/types/pbl-completion';
 import { cacheService } from '@/lib/cache/cache-service';
 
 // Initialize GCS client
@@ -394,12 +396,12 @@ class PBLProgramService {
     scenarioId: string,
     programId: string,
     taskId: string
-  ): Promise<{ metadata: TaskMetadata | null; log: TaskLog | null; progress: TaskProgress | null; evaluation?: any }> {
+  ): Promise<{ metadata: TaskMetadata | null; log: TaskLog | null; progress: TaskProgress | null; evaluation?: TaskEvaluation | null }> {
     const cacheKey = `pbl:task:${userEmail}:${scenarioId}:${programId}:${taskId}`;
     
     try {
       // Try cache first for metadata and progress (not log as it changes frequently)
-      const cached = await cacheService.get<any>(cacheKey);
+      const cached = await cacheService.get<{ metadata: TaskMetadata | null; progress: TaskProgress | null; evaluation?: TaskEvaluation | null }>(cacheKey);
       if (cached && cached.metadata && cached.progress) {
         // Still fetch fresh log data
         const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
@@ -428,7 +430,7 @@ class PBLProgramService {
         metadata: null as TaskMetadata | null,
         log: null as TaskLog | null,
         progress: null as TaskProgress | null,
-        evaluation: null as any
+        evaluation: null as TaskEvaluation | null
       };
       
       // Fetch files in parallel for better performance
@@ -528,7 +530,12 @@ class PBLProgramService {
       });
 
       const tasks: ProgramSummary['tasks'] = [];
-      const taskMap = new Map<string, any>();
+      interface TaskData {
+        metadata?: TaskMetadata;
+        log?: TaskLog;
+        progress?: TaskProgress;
+      }
+      const taskMap = new Map<string, TaskData>();
 
       // Group files by task
       for (const file of files) {
@@ -598,7 +605,7 @@ class PBLProgramService {
         program,
         tasks: tasks.sort((a, b) => a.metadata.taskId.localeCompare(b.metadata.taskId)),
         overallScore,
-        domainScores: Object.keys(finalDomainScores).length > 0 ? finalDomainScores as any : undefined,
+        domainScores: Object.keys(finalDomainScores).length > 0 ? finalDomainScores : undefined,
         totalTimeSeconds,
         completionRate: Math.round((tasks.filter(t => t.progress.status === 'completed').length / program.totalTasks) * 100)
       };
@@ -616,7 +623,7 @@ class PBLProgramService {
     scenarioId: string,
     programId: string,
     taskId: string,
-    evaluation: any
+    evaluation: TaskEvaluation
   ): Promise<void> {
     // Invalidate task cache
     const taskCacheKey = `pbl:task:${userEmail}:${scenarioId}:${programId}:${taskId}`;
@@ -698,7 +705,14 @@ class PBLProgramService {
       });
       
       // Collect task data
-      const tasks: any[] = [];
+      interface CompletionTaskInfo {
+        taskId: string;
+        metadata: TaskMetadata | null;
+        log: TaskLog | null;
+        progress: TaskProgress | null;
+        evaluation?: TaskEvaluation | null;
+      }
+      const tasks: CompletionTaskInfo[] = [];
       let totalScore = 0;
       let evaluatedTasks = 0;
       const domainScores: Record<string, number[]> = {
@@ -717,7 +731,7 @@ class PBLProgramService {
       for (const taskId of taskIds) {
         const taskData = await this.getTaskData(userEmail, scenarioId, programId, taskId);
         
-        const taskInfo: any = {
+        const taskInfo: CompletionTaskInfo = {
           taskId,
           metadata: taskData.metadata,
           log: taskData.log,
@@ -818,12 +832,12 @@ class PBLProgramService {
     userEmail: string,
     scenarioId: string,
     programId: string
-  ): Promise<any | null> {
+  ): Promise<CompletionData | null> {
     const cacheKey = `pbl:completion:${userEmail}:${scenarioId}:${programId}`;
     
     try {
       // Try cache first
-      const cached = await cacheService.get<any>(cacheKey);
+      const cached = await cacheService.get<CompletionData>(cacheKey);
       if (cached) {
         return cached;
       }
@@ -858,7 +872,7 @@ class PBLProgramService {
     userEmail: string,
     scenarioId: string,
     programId: string,
-    feedback: any,
+    feedback: QualitativeFeedback | null,
     language: string = 'en'
   ): Promise<void> {
     try {
@@ -918,12 +932,12 @@ class PBLProgramService {
   /**
    * Get all programs for a user and specific scenario (using completion data)
    */
-  async getUserProgramsForScenario(userEmail: string, scenarioId: string): Promise<any[]> {
+  async getUserProgramsForScenario(userEmail: string, scenarioId: string): Promise<CompletionData[]> {
     const cacheKey = `pbl:user-programs:${userEmail}:${scenarioId}`;
     
     try {
       // Try cache first
-      const cached = await cacheService.get<any[]>(cacheKey);
+      const cached = await cacheService.get<CompletionData[]>(cacheKey);
       if (cached) {
         return cached;
       }

@@ -5,6 +5,18 @@ import { useParams, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { PBLCompletionSkeleton } from '@/components/pbl/loading-skeletons';
+import type { 
+  CompletionData, 
+  ScenarioData, 
+  QualitativeFeedback,
+  LocalizedFeedback,
+  FeedbackStrength,
+  FeedbackImprovement,
+  CompletionTask,
+  TaskInteraction,
+  ConversationExample,
+  ScenarioTask
+} from '@/types/pbl-completion';
 
 export default function ProgramCompletePage() {
   const params = useParams();
@@ -15,8 +27,8 @@ export default function ProgramCompletePage() {
   const scenarioId = params.id as string;
   
   const [loading, setLoading] = useState(true);
-  const [completionData, setCompletionData] = useState<any>(null);
-  const [scenarioData, setScenarioData] = useState<any>(null);
+  const [completionData, setCompletionData] = useState<CompletionData | null>(null);
+  const [scenarioData, setScenarioData] = useState<ScenarioData | null>(null);
   const [generatingFeedback, setGeneratingFeedback] = useState(false);
   const [feedbackError, setFeedbackError] = useState<string | null>(null);
   
@@ -151,16 +163,21 @@ export default function ProgramCompletePage() {
       if (result.success && result.feedback) {
         // Update completion data with the new feedback
         const currentLang = i18n.language.split('-')[0] || 'en';
-        setCompletionData((prev: any) => {
+        setCompletionData((prev) => {
+          if (!prev) return null;
+          
           // Handle multi-language feedback format
-          if (typeof prev.qualitativeFeedback === 'object' && !prev.qualitativeFeedback.overallAssessment) {
+          const isMultiLang = typeof prev.qualitativeFeedback === 'object' && 
+                             !('overallAssessment' in (prev.qualitativeFeedback as any));
+          
+          if (isMultiLang) {
             // New multi-language format
             return {
               ...prev,
               qualitativeFeedback: {
-                ...prev.qualitativeFeedback,
+                ...(prev.qualitativeFeedback as LocalizedFeedback),
                 [currentLang]: result.feedback
-              }
+              } as LocalizedFeedback
             };
           } else {
             // Migrate from old format to new format
@@ -168,7 +185,7 @@ export default function ProgramCompletePage() {
               ...prev,
               qualitativeFeedback: {
                 [currentLang]: result.feedback
-              }
+              } as LocalizedFeedback
             };
           }
         });
@@ -267,9 +284,19 @@ export default function ProgramCompletePage() {
         {(() => {
           // Get feedback for current language
           const currentLang = i18n.language.split('-')[0] || 'en';
-          const feedback = completionData?.qualitativeFeedback?.[currentLang] || 
-                          completionData?.qualitativeFeedback; // Fallback to old format
-          const hasFeedback = feedback && (feedback.overallAssessment || feedback[currentLang]?.overallAssessment);
+          let feedback: QualitativeFeedback | undefined;
+          
+          if (completionData?.qualitativeFeedback) {
+            if ('overallAssessment' in completionData.qualitativeFeedback) {
+              // Old format - single language feedback
+              feedback = completionData.qualitativeFeedback as QualitativeFeedback;
+            } else {
+              // New format - multi-language feedback
+              feedback = (completionData.qualitativeFeedback as LocalizedFeedback)[currentLang];
+            }
+          }
+          
+          const hasFeedback = feedback?.overallAssessment;
           
           return (hasFeedback || generatingFeedback) && (
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
@@ -319,7 +346,7 @@ export default function ProgramCompletePage() {
                       {t('pbl:complete.strengths', 'Your Strengths')}
                     </h3>
                     <div className="space-y-3">
-                      {feedback.strengths?.map((strength: any, index: number) => (
+                      {feedback.strengths?.map((strength, index) => (
                         <div key={index}>
                           <h4 className="font-medium text-green-800 dark:text-green-200">
                             {strength.area}
@@ -346,7 +373,7 @@ export default function ProgramCompletePage() {
                       {t('pbl:complete.areasForImprovement', 'Growth Opportunities')}
                     </h3>
                     <div className="space-y-3">
-                      {feedback.areasForImprovement?.map((area: any, index: number) => (
+                      {feedback.areasForImprovement?.map((area, index) => (
                         <div key={index}>
                           <h4 className="font-medium text-blue-800 dark:text-blue-200">
                             {area.area}
@@ -375,7 +402,7 @@ export default function ProgramCompletePage() {
                       {t('pbl:complete.nextSteps', 'Recommended Next Steps')}
                     </h3>
                     <ul className="space-y-2">
-                      {feedback.nextSteps.map((step: string, index: number) => (
+                      {feedback.nextSteps.map((step, index) => (
                         <li key={index} className="flex items-start">
                           <span className="text-purple-600 dark:text-purple-400 mr-2">
                             {index + 1}.
@@ -424,7 +451,7 @@ export default function ProgramCompletePage() {
                   {t('pbl:complete.conversationCount')}
                 </span>
                 <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                  {completionData.tasks?.reduce((sum: number, task: any) => 
+                  {completionData.tasks?.reduce((sum, task) => 
                     sum + (task.log?.interactions?.length || 0), 0) || 0} {t('pbl:history.times')}
                 </span>
               </div>
@@ -446,7 +473,7 @@ export default function ProgramCompletePage() {
             </h3>
             {completionData.domainScores && (
               <div className="space-y-4">
-                {Object.entries(completionData.domainScores).map(([domain, score]: [string, any]) => (
+                {Object.entries(completionData.domainScores).map(([domain, score]) => (
                   <div key={domain}>
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-sm text-gray-600 dark:text-gray-400">
@@ -542,11 +569,12 @@ export default function ProgramCompletePage() {
           </h2>
           
           <div className="space-y-6">
-            {completionData.tasks?.map((task: any, index: number) => {
-              const taskTitle = scenarioData?.tasks?.find((t: any) => t.id === task.taskId)?.title || task.taskId;
-              const taskTitleLocalized = scenarioData?.tasks?.find((t: any) => t.id === task.taskId) ? (
+            {completionData.tasks?.map((task, index) => {
+              const matchedTask = scenarioData?.tasks?.find((t) => t.id === task.taskId);
+              const taskTitle = matchedTask?.title || task.taskId;
+              const taskTitleLocalized = matchedTask ? (
                 i18n.language === 'zh' || i18n.language === 'zh-TW' 
-                  ? (scenarioData.tasks.find((t: any) => t.id === task.taskId).title_zh || taskTitle)
+                  ? (matchedTask.title_zh || taskTitle)
                   : taskTitle
               ) : taskTitle;
               
@@ -570,7 +598,7 @@ export default function ProgramCompletePage() {
                           <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                           </svg>
-                          {task.log?.interactions?.filter((i: any) => i.type === 'user').length || 0} {t('pbl:complete.conversations')}
+                          {task.log?.interactions?.filter((i) => i.type === 'user').length || 0} {t('pbl:complete.conversations')}
                         </span>
                         {task.evaluation && (
                           <span className={`font-medium ${getScoreColor(task.evaluation.score)}`}>
@@ -698,7 +726,7 @@ export default function ProgramCompletePage() {
                                     <p className="text-xs font-medium text-green-700 dark:text-green-300 mb-1">
                                       {t('pbl:learn.effectiveExamples')}
                                     </p>
-                                    {task.evaluation.conversationInsights.effectiveExamples.map((example: any, idx: number) => (
+                                    {task.evaluation.conversationInsights.effectiveExamples.map((example, idx) => (
                                       <div key={idx} className="bg-green-50 dark:bg-green-900/20 rounded p-2 mb-1">
                                         <p className="text-xs italic border-l-2 border-green-300 dark:border-green-500 pl-2 mb-1">
                                           "{example.quote}"
@@ -715,7 +743,7 @@ export default function ProgramCompletePage() {
                                     <p className="text-xs font-medium text-yellow-700 dark:text-yellow-300 mb-1">
                                       {t('pbl:learn.improvementExamples')}
                                     </p>
-                                    {task.evaluation.conversationInsights.improvementAreas.map((area: any, idx: number) => (
+                                    {task.evaluation.conversationInsights.improvementAreas.map((area, idx) => (
                                       <div key={idx} className="bg-yellow-50 dark:bg-yellow-900/20 rounded p-2 mb-1">
                                         <p className="text-xs italic border-l-2 border-yellow-300 dark:border-yellow-500 pl-2 mb-1">
                                           "{area.quote}"
@@ -736,7 +764,7 @@ export default function ProgramCompletePage() {
                                 {t('pbl:complete.strengths')}
                               </h4>
                               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                                {task.evaluation.strengths.map((strength: string, idx: number) => (
+                                {task.evaluation.strengths.map((strength, idx) => (
                                   <li key={idx} className="flex items-start">
                                     <span className="text-green-500 mr-2">✓</span>
                                     {strength}
@@ -753,7 +781,7 @@ export default function ProgramCompletePage() {
                                 {t('pbl:complete.improvements')}
                               </h4>
                               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                                {task.evaluation.improvements.map((improvement: string, idx: number) => (
+                                {task.evaluation.improvements.map((improvement, idx) => (
                                   <li key={idx} className="flex items-start">
                                     <span className="text-yellow-500 mr-2">•</span>
                                     {improvement}
