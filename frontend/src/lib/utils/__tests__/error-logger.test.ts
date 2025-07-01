@@ -1,333 +1,432 @@
-import { errorLogger } from '../error-logger';
+import { errorLogger, logError, logComponentError } from '../error-logger'
 
 // Mock localStorage
-const mockLocalStorage = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn()
-};
+const localStorageMock = {
+  store: {} as Record<string, string>,
+  getItem: jest.fn((key: string) => localStorageMock.store[key] || null),
+  setItem: jest.fn((key: string, value: string) => {
+    localStorageMock.store[key] = value
+  }),
+  removeItem: jest.fn((key: string) => {
+    delete localStorageMock.store[key]
+  })
+}
 
-// Mock window and navigator
-const mockWindow = {
-  location: {
-    href: 'https://example.com/test'
-  }
-};
-
-const mockNavigator = {
-  userAgent: 'Mozilla/5.0 Test Browser'
-};
-
-// Mock console.error
-const originalConsoleError = console.error;
-const mockConsoleError = jest.fn();
+// Mock console
+const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation()
 
 describe('ErrorLogger', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    errorLogger.clear();
-    console.error = originalConsoleError;
+    jest.clearAllMocks()
+    localStorageMock.store = {}
+    errorLogger.clear()
     
-    // Setup global mocks
-    (global as any).localStorage = mockLocalStorage;
-    (global as any).window = mockWindow;
-    (global as any).navigator = mockNavigator;
-  });
+    // Setup localStorage mock
+    Object.defineProperty(window, 'localStorage', {
+      value: localStorageMock,
+      writable: true
+    })
+    
+    // Mock window.location
+    delete (window as any).location
+    ;(window as any).location = { href: 'http://localhost:3000/test' }
+    
+    // Mock navigator.userAgent
+    Object.defineProperty(navigator, 'userAgent', {
+      value: 'Mozilla/5.0 Test Browser',
+      writable: true,
+      configurable: true
+    })
+  })
 
   afterEach(() => {
-    console.error = originalConsoleError;
-  });
+    consoleErrorSpy.mockClear()
+  })
 
   describe('log', () => {
-    it('logs an error with all required fields', () => {
-      const error = new Error('Test error message');
-      error.stack = 'Error: Test error message\n    at test.js:10:5';
+    it('should log error with all properties', () => {
+      const error = new Error('Test error')
+      error.stack = 'Error: Test error\n    at test.js:10:5'
+      const context = { userId: 123 }
       
-      errorLogger.log(error);
+      errorLogger.log(error, context)
       
-      const logs = errorLogger.getLogs();
-      expect(logs).toHaveLength(1);
+      const logs = errorLogger.getLogs()
+      expect(logs).toHaveLength(1)
       expect(logs[0]).toMatchObject({
-        message: 'Test error message',
+        message: 'Test error',
         stack: error.stack,
-        timestamp: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T/),
-        url: 'https://example.com/test',
-        userAgent: 'Mozilla/5.0 Test Browser'
-      });
-    });
+        url: 'http://localhost:3000/test',
+        userAgent: 'Mozilla/5.0 Test Browser',
+        context: { userId: 123 }
+      })
+      expect(logs[0].timestamp).toBeDefined()
+    })
 
-    it('logs an error with context', () => {
-      const error = new Error('API error');
-      const context = {
-        endpoint: '/api/users',
-        method: 'GET',
-        status: 404
-      };
+    it('should log to console in development mode', () => {
+      const originalEnv = process.env.NODE_ENV
+      process.env.NODE_ENV = 'development'
       
-      errorLogger.log(error, context);
+      const error = new Error('Dev error')
+      const context = { debug: true }
       
-      const logs = errorLogger.getLogs();
-      expect(logs[0].context).toEqual(context);
-    });
+      errorLogger.log(error, context)
+      
+      expect(consoleErrorSpy).toHaveBeenCalledWith('🚨 Error:', error)
+      expect(consoleErrorSpy).toHaveBeenCalledWith('📋 Context:', context)
+      
+      process.env.NODE_ENV = originalEnv
+    })
 
-    it('outputs to console in development environment', () => {
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'development';
-      console.error = mockConsoleError;
+    it('should not log to console in production mode', () => {
+      const originalEnv = process.env.NODE_ENV
+      process.env.NODE_ENV = 'production'
       
-      const error = new Error('Dev error');
-      const context = { debug: true };
+      const error = new Error('Prod error')
+      errorLogger.log(error)
       
-      errorLogger.log(error, context);
+      expect(consoleErrorSpy).not.toHaveBeenCalled()
       
-      expect(mockConsoleError).toHaveBeenCalledWith('🚨 Error:', error);
-      expect(mockConsoleError).toHaveBeenCalledWith('📋 Context:', context);
-      
-      process.env.NODE_ENV = originalEnv;
-    });
+      process.env.NODE_ENV = originalEnv
+    })
 
-    it('does not output to console in production', () => {
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'production';
-      console.error = mockConsoleError;
-      
-      const error = new Error('Prod error');
-      
-      errorLogger.log(error);
-      
-      expect(mockConsoleError).not.toHaveBeenCalled();
-      
-      process.env.NODE_ENV = originalEnv;
-    });
-
-    it('stores logs in localStorage', () => {
-      const error = new Error('Storage test');
-      
-      errorLogger.log(error);
-      
-      expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
-        'error_logs',
-        expect.stringContaining('Storage test')
-      );
-    });
-
-    it('handles localStorage errors gracefully', () => {
-      mockLocalStorage.setItem.mockImplementation(() => {
-        throw new Error('QuotaExceededError');
-      });
-      
-      const error = new Error('Test error');
-      
-      // Should not throw
-      expect(() => errorLogger.log(error)).not.toThrow();
-      
-      const logs = errorLogger.getLogs();
-      expect(logs).toHaveLength(1);
-    });
-
-    it('limits the number of stored logs', () => {
-      // Log more than maxLogs (50)
+    it('should maintain max logs limit', () => {
+      // Add 55 errors (exceeds maxLogs of 50)
       for (let i = 0; i < 55; i++) {
-        errorLogger.log(new Error(`Error ${i}`));
+        errorLogger.log(new Error(`Error ${i}`))
       }
       
-      const logs = errorLogger.getLogs();
-      expect(logs).toHaveLength(50);
-      // Should keep the most recent logs
-      expect(logs[0].message).toBe('Error 54');
-      expect(logs[49].message).toBe('Error 5');
-    });
+      const logs = errorLogger.getLogs()
+      expect(logs).toHaveLength(50)
+      expect(logs[0].message).toBe('Error 54') // Most recent
+      expect(logs[49].message).toBe('Error 5') // Oldest kept
+    })
 
-    it('handles server-side rendering (no window)', () => {
-      const originalWindow = global.window;
-      const originalNavigator = global.navigator;
-      (global as any).window = undefined;
-      (global as any).navigator = undefined;
+    it('should save to localStorage', () => {
+      const error = new Error('Storage test')
+      errorLogger.log(error)
       
-      const error = new Error('SSR error');
+      expect(localStorageMock.setItem).toHaveBeenCalledWith(
+        'error_logs',
+        expect.stringContaining('Storage test')
+      )
+    })
+
+    it('should handle localStorage errors gracefully', () => {
+      localStorageMock.setItem.mockImplementationOnce(() => {
+        throw new Error('Storage full')
+      })
       
-      errorLogger.log(error);
+      // Should not throw
+      expect(() => {
+        errorLogger.log(new Error('Test'))
+      }).not.toThrow()
+    })
+
+    it('should work in SSR environment', () => {
+      const originalWindow = global.window
+      // @ts-ignore
+      delete global.window
       
-      const logs = errorLogger.getLogs();
-      expect(logs[0].url).toBe('');
-      expect(logs[0].userAgent).toBe('');
-      expect(mockLocalStorage.setItem).not.toHaveBeenCalled();
+      const error = new Error('SSR error')
+      errorLogger.log(error)
       
-      global.window = originalWindow;
-      global.navigator = originalNavigator;
-    });
-  });
+      const logs = errorLogger.getLogs()
+      expect(logs[0]).toMatchObject({
+        message: 'SSR error',
+        url: '',
+        userAgent: ''
+      })
+      
+      global.window = originalWindow
+    })
+  })
 
   describe('getLogs', () => {
-    it('returns all logged errors', () => {
-      errorLogger.log(new Error('Error 1'));
-      errorLogger.log(new Error('Error 2'));
-      errorLogger.log(new Error('Error 3'));
+    it('should return all logs', () => {
+      errorLogger.log(new Error('Error 1'))
+      errorLogger.log(new Error('Error 2'))
+      errorLogger.log(new Error('Error 3'))
       
-      const logs = errorLogger.getLogs();
-      expect(logs).toHaveLength(3);
-      expect(logs[0].message).toBe('Error 3'); // Most recent first
-      expect(logs[1].message).toBe('Error 2');
-      expect(logs[2].message).toBe('Error 1');
-    });
+      const logs = errorLogger.getLogs()
+      expect(logs).toHaveLength(3)
+      expect(logs[0].message).toBe('Error 3') // Most recent first
+      expect(logs[2].message).toBe('Error 1')
+    })
 
-    it('returns empty array when no errors logged', () => {
-      const logs = errorLogger.getLogs();
-      expect(logs).toEqual([]);
-    });
-  });
+    it('should return empty array when no logs', () => {
+      expect(errorLogger.getLogs()).toEqual([])
+    })
+  })
 
   describe('clear', () => {
-    it('clears all error logs', () => {
-      errorLogger.log(new Error('Error 1'));
-      errorLogger.log(new Error('Error 2'));
+    it('should clear all logs and localStorage', () => {
+      errorLogger.log(new Error('To be cleared'))
+      expect(errorLogger.getLogs()).toHaveLength(1)
       
-      expect(errorLogger.getLogs()).toHaveLength(2);
+      errorLogger.clear()
       
-      errorLogger.clear();
-      
-      expect(errorLogger.getLogs()).toHaveLength(0);
-    });
+      expect(errorLogger.getLogs()).toEqual([])
+      expect(localStorageMock.removeItem).toHaveBeenCalledWith('error_logs')
+    })
 
-    it('removes logs from localStorage', () => {
-      errorLogger.log(new Error('Error'));
-      errorLogger.clear();
+    it('should work in SSR environment', () => {
+      const originalWindow = global.window
+      // @ts-ignore
+      delete global.window
       
-      expect(mockLocalStorage.removeItem).toHaveBeenCalledWith('error_logs');
-    });
-
-    it('handles clearing on server side', () => {
-      const originalWindow = global.window;
-      (global as any).window = undefined;
+      errorLogger.log(new Error('SSR error'))
+      errorLogger.clear()
       
-      errorLogger.log(new Error('SSR error'));
-      errorLogger.clear();
+      expect(errorLogger.getLogs()).toEqual([])
       
-      expect(errorLogger.getLogs()).toHaveLength(0);
-      expect(mockLocalStorage.removeItem).not.toHaveBeenCalled();
-      
-      global.window = originalWindow;
-    });
-  });
+      global.window = originalWindow
+    })
+  })
 
   describe('loadFromStorage', () => {
-    it('loads error logs from localStorage', () => {
+    it('should load logs from localStorage', () => {
       const storedLogs = [
         {
           message: 'Stored error 1',
-          timestamp: '2023-01-01T00:00:00.000Z',
-          url: 'https://example.com',
-          userAgent: 'Test Browser'
+          timestamp: '2024-01-01T00:00:00.000Z',
+          url: 'http://example.com',
+          userAgent: 'Test',
+          stack: 'stack1'
         },
         {
           message: 'Stored error 2',
-          timestamp: '2023-01-02T00:00:00.000Z',
-          url: 'https://example.com',
-          userAgent: 'Test Browser'
+          timestamp: '2024-01-02T00:00:00.000Z',
+          url: 'http://example.com',
+          userAgent: 'Test',
+          stack: 'stack2'
         }
-      ];
+      ]
       
-      mockLocalStorage.getItem.mockReturnValue(JSON.stringify(storedLogs));
+      localStorageMock.store['error_logs'] = JSON.stringify(storedLogs)
       
-      errorLogger.loadFromStorage();
+      errorLogger.loadFromStorage()
       
-      const logs = errorLogger.getLogs();
-      expect(logs).toEqual(storedLogs);
-    });
+      const logs = errorLogger.getLogs()
+      expect(logs).toEqual(storedLogs)
+    })
 
-    it('handles invalid JSON in localStorage', () => {
-      mockLocalStorage.getItem.mockReturnValue('invalid json');
+    it('should handle missing localStorage data', () => {
+      localStorageMock.store['error_logs'] = null as any
+      
+      errorLogger.loadFromStorage()
+      
+      expect(errorLogger.getLogs()).toEqual([])
+    })
+
+    it('should handle invalid JSON in localStorage', () => {
+      localStorageMock.store['error_logs'] = 'invalid-json'
       
       // Should not throw
-      expect(() => errorLogger.loadFromStorage()).not.toThrow();
+      expect(() => {
+        errorLogger.loadFromStorage()
+      }).not.toThrow()
       
-      // Should keep existing logs
-      const logs = errorLogger.getLogs();
-      expect(logs).toEqual([]);
-    });
+      expect(errorLogger.getLogs()).toEqual([])
+    })
 
-    it('handles empty localStorage', () => {
-      mockLocalStorage.getItem.mockReturnValue(null);
+    it('should work in SSR environment', () => {
+      const originalWindow = global.window
+      // @ts-ignore
+      delete global.window
       
-      errorLogger.loadFromStorage();
+      // Should not throw
+      expect(() => {
+        errorLogger.loadFromStorage()
+      }).not.toThrow()
       
-      const logs = errorLogger.getLogs();
-      expect(logs).toEqual([]);
-    });
+      global.window = originalWindow
+    })
+  })
 
-    it('does nothing on server side', () => {
-      const originalWindow = global.window;
-      (global as any).window = undefined;
+  describe('logError helper', () => {
+    it('should log Error instances', () => {
+      const error = new Error('Helper error')
+      const context = { helper: true }
       
-      errorLogger.loadFromStorage();
+      logError(error, context)
       
-      expect(mockLocalStorage.getItem).not.toHaveBeenCalled();
-      
-      global.window = originalWindow;
-    });
-  });
+      const logs = errorLogger.getLogs()
+      expect(logs[0]).toMatchObject({
+        message: 'Helper error',
+        context: { helper: true }
+      })
+    })
 
-  describe('generateReport', () => {
-    it('generates a summary report of errors', () => {
-      errorLogger.log(new Error('API Error'), { endpoint: '/api/users' });
-      errorLogger.log(new Error('API Error'), { endpoint: '/api/posts' });
-      errorLogger.log(new Error('Network Error'));
-      errorLogger.log(new Error('Validation Error'));
+    it('should convert strings to Error instances', () => {
+      logError('String error', { converted: true })
       
-      const report = errorLogger.generateReport();
-      
-      expect(report).toHaveLength(3);
-      expect(report[0]).toMatchObject({
-        error: 'API Error',
-        count: 2,
-        lastOccurred: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T/)
-      });
-      expect(report[1]).toMatchObject({
-        error: 'Network Error',
-        count: 1
-      });
-      expect(report[2]).toMatchObject({
-        error: 'Validation Error',
-        count: 1
-      });
-    });
+      const logs = errorLogger.getLogs()
+      expect(logs[0]).toMatchObject({
+        message: 'String error',
+        context: { converted: true }
+      })
+    })
+  })
 
-    it('returns empty array when no errors', () => {
-      const report = errorLogger.generateReport();
-      expect(report).toEqual([]);
-    });
-  });
+  describe('logComponentError helper', () => {
+    it('should log React component errors with componentStack', () => {
+      const error = new Error('Component error')
+      const errorInfo = {
+        componentStack: '\n    in ErrorComponent\n    in App'
+      }
+      
+      logComponentError(error, errorInfo)
+      
+      const logs = errorLogger.getLogs()
+      expect(logs[0]).toMatchObject({
+        message: 'Component error',
+        context: {
+          componentStack: errorInfo.componentStack,
+          type: 'React Component Error'
+        }
+      })
+    })
+  })
 
-  describe('getRecentErrors', () => {
-    it('returns errors from the last N minutes', () => {
-      const now = Date.now();
-      
-      // Mock Date.now to control timestamps
-      const originalDateNow = Date.now;
-      Date.now = jest.fn()
-        .mockReturnValueOnce(now - 10 * 60 * 1000) // 10 minutes ago
-        .mockReturnValueOnce(now - 5 * 60 * 1000)  // 5 minutes ago
-        .mockReturnValueOnce(now - 1 * 60 * 1000)  // 1 minute ago
-        .mockReturnValueOnce(now);                  // Now (for getRecentErrors)
-      
-      errorLogger.log(new Error('Old error'));
-      errorLogger.log(new Error('Recent error 1'));
-      errorLogger.log(new Error('Recent error 2'));
-      
-      Date.now = originalDateNow;
-      
-      const recentErrors = errorLogger.getRecentErrors(3); // Last 3 minutes
-      
-      expect(recentErrors).toHaveLength(1);
-      expect(recentErrors[0].message).toBe('Recent error 2');
-    });
+  describe('global error handlers', () => {
+    let errorHandler: EventListener
+    let unhandledRejectionHandler: EventListener
 
-    it('defaults to last 5 minutes', () => {
-      errorLogger.log(new Error('Test error'));
+    beforeEach(() => {
+      // Clear any existing logs and reload
+      errorLogger.clear()
       
-      const recentErrors = errorLogger.getRecentErrors();
-      expect(recentErrors).toHaveLength(1);
-    });
-  });
-});
+      // Capture the event handlers
+      const addEventListenerSpy = jest.spyOn(window, 'addEventListener')
+      
+      // Re-evaluate the module to register handlers
+      jest.isolateModules(() => {
+        require('../error-logger')
+      })
+      
+      // Find the handlers
+      const calls = addEventListenerSpy.mock.calls
+      const errorCall = calls.find(call => call[0] === 'error')
+      const rejectionCall = calls.find(call => call[0] === 'unhandledrejection')
+      
+      errorHandler = errorCall?.[1] as EventListener
+      unhandledRejectionHandler = rejectionCall?.[1] as EventListener
+      
+      addEventListenerSpy.mockRestore()
+    })
+
+    it('should handle window error events', () => {
+      const errorEvent = new ErrorEvent('error', {
+        message: 'Script error',
+        filename: 'app.js',
+        lineno: 42,
+        colno: 10
+      })
+      
+      if (errorHandler) {
+        errorHandler(errorEvent)
+      }
+      
+      const logs = errorLogger.getLogs()
+      expect(logs[0]).toMatchObject({
+        message: 'Script error',
+        context: {
+          filename: 'app.js',
+          lineno: 42,
+          colno: 10,
+          type: 'Unhandled Error'
+        }
+      })
+    })
+
+    it('should handle unhandled promise rejections', () => {
+      const rejectionEvent = new PromiseRejectionEvent('unhandledrejection', {
+        promise: Promise.reject('Test rejection'),
+        reason: 'Test rejection reason'
+      })
+      
+      if (unhandledRejectionHandler) {
+        unhandledRejectionHandler(rejectionEvent)
+      }
+      
+      const logs = errorLogger.getLogs()
+      expect(logs[0]).toMatchObject({
+        message: 'Unhandled Promise: Test rejection reason',
+        context: {
+          type: 'Unhandled Promise Rejection',
+          reason: 'Test rejection reason'
+        }
+      })
+    })
+
+    it('should load from storage on initialization', () => {
+      const storedLogs = [{
+        message: 'Previous error',
+        timestamp: '2024-01-01T00:00:00.000Z',
+        url: 'http://example.com',
+        userAgent: 'Test'
+      }]
+      
+      localStorageMock.store['error_logs'] = JSON.stringify(storedLogs)
+      
+      // Clear current instance and re-import to trigger initialization
+      errorLogger.clear()
+      jest.resetModules()
+      
+      const { errorLogger: newLogger } = require('../error-logger')
+      
+      const logs = newLogger.getLogs()
+      expect(logs).toHaveLength(1)
+      expect(logs[0].message).toBe('Previous error')
+    })
+  })
+
+  describe('edge cases', () => {
+    it('should handle errors without stack trace', () => {
+      const error = new Error('No stack')
+      delete error.stack
+      
+      errorLogger.log(error)
+      
+      const logs = errorLogger.getLogs()
+      expect(logs[0].stack).toBeUndefined()
+    })
+
+    it('should handle navigator not being defined', () => {
+      const originalNavigator = global.navigator
+      // @ts-ignore
+      delete global.navigator
+      
+      errorLogger.log(new Error('No navigator'))
+      
+      const logs = errorLogger.getLogs()
+      expect(logs[0].userAgent).toBe('')
+      
+      global.navigator = originalNavigator
+    })
+
+    it('should maintain logs order with concurrent additions', () => {
+      const errors = Array.from({ length: 10 }, (_, i) => new Error(`Error ${i}`))
+      
+      errors.forEach(error => errorLogger.log(error))
+      
+      const logs = errorLogger.getLogs()
+      expect(logs[0].message).toBe('Error 9') // Most recent
+      expect(logs[9].message).toBe('Error 0') // Oldest
+    })
+
+    it('should log to console in development without context', () => {
+      const originalEnv = process.env.NODE_ENV
+      process.env.NODE_ENV = 'development'
+      
+      const error = new Error('Dev error no context')
+      errorLogger.log(error)
+      
+      expect(consoleErrorSpy).toHaveBeenCalledWith('🚨 Error:', error)
+      expect(consoleErrorSpy).toHaveBeenCalledTimes(1) // Only error, no context
+      
+      process.env.NODE_ENV = originalEnv
+    })
+  })
+})

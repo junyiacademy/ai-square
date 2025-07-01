@@ -1,231 +1,388 @@
-/**
- * Token Manager 測試
- * 測試自動 token refresh 功能
- */
+import { TokenManager, getTokenManager } from '../token-manager'
+import { logError } from '@/lib/utils/error-logger'
 
-import { TokenManager } from '../token-manager'
-
-// Mock error logger
-jest.mock('../../utils/error-logger', () => ({
-  logError: jest.fn()
-}))
+// Mock dependencies
+jest.mock('@/lib/utils/error-logger')
 
 // Mock fetch
 global.fetch = jest.fn()
 
+// Mock timers
+jest.useFakeTimers()
+
 describe('TokenManager', () => {
   let tokenManager: TokenManager
-  
+  const mockFetch = global.fetch as jest.MockedFunction<typeof fetch>
+  const mockLogError = logError as jest.MockedFunction<typeof logError>
+
   beforeEach(() => {
     jest.clearAllMocks()
-    jest.useFakeTimers()
+    jest.clearAllTimers()
     tokenManager = new TokenManager()
+    
+    // Reset window event listeners
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('auth:expired', jest.fn())
+    }
   })
-  
+
   afterEach(() => {
-    jest.restoreAllMocks()
-    jest.useRealTimers()
+    tokenManager.cleanup()
   })
 
-  describe('初始化', () => {
-    it('應該在初始化時檢查 token 狀態', async () => {
-      const mockFetch = fetch as jest.MockedFunction<typeof fetch>
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          authenticated: true,
-          user: { id: 1, email: 'test@example.com' },
-          tokenExpiringSoon: false
-        })
-      } as Response)
-      
-      await tokenManager.initialize()
-      
-      expect(mockFetch).toHaveBeenCalledWith('/api/auth/check', {
-        credentials: 'include'
-      })
-    })
-
-    it('當 token 即將過期時應該啟動自動更新', async () => {
-      const mockFetch = fetch as jest.MockedFunction<typeof fetch>
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          authenticated: true,
-          user: { id: 1, email: 'test@example.com' },
-          tokenExpiringSoon: true
-        })
-      } as Response)
-      
-      const refreshSpy = jest.spyOn(tokenManager, 'refreshToken')
-      
-      await tokenManager.initialize()
-      
-      // 等待一小段時間讓 refresh 被觸發
-      jest.advanceTimersByTime(1000)
-      
-      expect(refreshSpy).toHaveBeenCalled()
-    })
-  })
-
-  describe('Token 更新', () => {
-    it('應該成功更新 token', async () => {
-      const mockFetch = fetch as jest.MockedFunction<typeof fetch>
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          success: true,
-          message: 'Token refreshed successfully'
-        })
-      } as Response)
-      
-      const result = await tokenManager.refreshToken()
-      
-      expect(mockFetch).toHaveBeenCalledWith('/api/auth/refresh', {
-        method: 'POST',
-        credentials: 'include'
-      })
-      expect(result).toBe(true)
-    })
-
-    it('當 refresh token 無效時應該處理錯誤', async () => {
-      const mockFetch = fetch as jest.MockedFunction<typeof fetch>
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 401,
-        json: async () => ({
-          success: false,
-          error: 'Invalid refresh token'
-        })
-      } as Response)
-      
-      const result = await tokenManager.refreshToken()
-      
-      expect(result).toBe(false)
-    })
-
-    it('應該處理網路錯誤', async () => {
-      const mockFetch = fetch as jest.MockedFunction<typeof fetch>
-      mockFetch.mockRejectedValueOnce(new Error('Network error'))
-      
-      const result = await tokenManager.refreshToken()
-      
-      expect(result).toBe(false)
-    })
-  })
-
-  describe('自動更新機制', () => {
-    it('應該在 token 過期前 5 分鐘自動更新', async () => {
-      const mockFetch = fetch as jest.MockedFunction<typeof fetch>
-      
-      // 初始檢查回應
+  describe('initialize', () => {
+    it('should check authentication status on initialization', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
           authenticated: true,
           user: { id: 1, email: 'test@example.com' },
           tokenExpiringSoon: false,
-          expiresIn: 600 // 10 分鐘後過期
+          expiresIn: 900 // 15 minutes
         })
       } as Response)
-      
+
       await tokenManager.initialize()
-      
-      // Mock refresh 請求
+
+      expect(mockFetch).toHaveBeenCalledWith('/api/auth/check', {
+        credentials: 'include'
+      })
+    })
+
+    it('should refresh token immediately if expiring soon', async () => {
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            authenticated: true,
+            tokenExpiringSoon: true,
+            expiresIn: 240 // 4 minutes
+          })
+        } as Response)
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({ success: true })
+        } as Response)
+
+      await tokenManager.initialize()
+
+      expect(mockFetch).toHaveBeenNthCalledWith(2, '/api/auth/refresh', {
+        method: 'POST',
+        credentials: 'include'
+      })
+    })
+
+    it('should schedule refresh when authenticated', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
-          success: true,
-          message: 'Token refreshed successfully'
+          authenticated: true,
+          expiresIn: 900 // 15 minutes
         })
       } as Response)
-      
-      // 快進到過期前 5 分鐘
-      jest.advanceTimersByTime(5 * 60 * 1000)
-      
+
+      await tokenManager.initialize()
+
+      // Should schedule refresh for 10 minutes (900 - 300 seconds)
+      expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 600000)
+    })
+
+    it('should handle initialization errors', async () => {
+      mockFetch.mockRejectedValueOnce(new Error('Network error'))
+
+      await tokenManager.initialize()
+
+      expect(mockLogError).toHaveBeenCalledWith(
+        expect.any(Error),
+        { context: 'TokenManager.initialize' }
+      )
+    })
+
+    it('should handle non-ok response', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500
+      } as Response)
+
+      await tokenManager.initialize()
+
+      expect(mockFetch).toHaveBeenCalledTimes(1)
+      expect(setTimeout).not.toHaveBeenCalled()
+    })
+
+    it('should not schedule refresh if not authenticated', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          authenticated: false
+        })
+      } as Response)
+
+      await tokenManager.initialize()
+
+      expect(setTimeout).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('refreshToken', () => {
+    it('should refresh token successfully', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true })
+      } as Response)
+
+      const result = await tokenManager.refreshToken()
+
+      expect(result).toBe(true)
       expect(mockFetch).toHaveBeenCalledWith('/api/auth/refresh', {
         method: 'POST',
         credentials: 'include'
       })
     })
 
-    it('應該處理多次 API 請求的 token 更新', async () => {
-      const mockFetch = fetch as jest.MockedFunction<typeof fetch>
-      let refreshCallCount = 0
+    it('should return false on refresh failure', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 400
+      } as Response)
+
+      const result = await tokenManager.refreshToken()
+
+      expect(result).toBe(false)
+    })
+
+    it('should handle 401 response', async () => {
+      const mockDispatchEvent = jest.spyOn(window, 'dispatchEvent')
       
-      // 設置 needsRefresh 為 true
-      tokenManager['needsRefresh'] = true
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 401
+      } as Response)
+
+      const result = await tokenManager.refreshToken()
+
+      expect(result).toBe(false)
+      expect(mockDispatchEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'auth:expired'
+        })
+      )
+    })
+
+    it('should prevent concurrent refreshes', async () => {
+      mockFetch.mockResolvedValue({
+        ok: true,
+        json: async () => ({ success: true })
+      } as Response)
+
+      // Start two refreshes simultaneously
+      const promise1 = tokenManager.refreshToken()
+      const promise2 = tokenManager.refreshToken()
+
+      const [result1, result2] = await Promise.all([promise1, promise2])
+
+      expect(result1).toBe(true)
+      expect(result2).toBe(true)
+      expect(mockFetch).toHaveBeenCalledTimes(1) // Only one actual refresh
+    })
+
+    it('should handle refresh errors', async () => {
+      mockFetch.mockRejectedValueOnce(new Error('Network error'))
+
+      const result = await tokenManager.refreshToken()
+
+      expect(result).toBe(false)
+      expect(mockLogError).toHaveBeenCalledWith(
+        expect.any(Error),
+        { context: 'TokenManager.doRefresh' }
+      )
+    })
+
+    it('should handle unsuccessful refresh response', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: false })
+      } as Response)
+
+      const result = await tokenManager.refreshToken()
+
+      expect(result).toBe(false)
+    })
+
+    it('should log success and reschedule on successful refresh', async () => {
+      const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation()
       
-      // Mock refresh endpoint
-      mockFetch.mockImplementation((url) => {
-        if (url === '/api/auth/refresh') {
-          refreshCallCount++
-          return Promise.resolve({
-            ok: true,
-            json: async () => ({
-              success: true,
-              message: 'Token refreshed successfully'
-            })
-          } as Response)
-        }
-        return Promise.reject(new Error('Unknown endpoint'))
-      })
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true })
+      } as Response)
+
+      await tokenManager.refreshToken()
+
+      expect(consoleLogSpy).toHaveBeenCalledWith('Token refreshed successfully')
+      expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 600000) // 10 minutes
       
-      // 同時發起多個需要 token 的請求
-      const promises = [
-        tokenManager.ensureValidToken(),
-        tokenManager.ensureValidToken(),
-        tokenManager.ensureValidToken()
-      ]
-      
-      await Promise.all(promises)
-      
-      // 應該只調用一次 refresh
-      expect(refreshCallCount).toBe(1)
+      consoleLogSpy.mockRestore()
     })
   })
 
-  describe('API 請求攔截', () => {
-    it('應該在 API 請求前確保 token 有效', async () => {
-      const mockFetch = fetch as jest.MockedFunction<typeof fetch>
-      
-      // Mock token 需要更新
-      tokenManager['needsRefresh'] = true
-      
-      // Mock refresh
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          success: true,
-          message: 'Token refreshed successfully'
-        })
-      } as Response)
-      
-      // Mock API 請求
+  describe('ensureValidToken', () => {
+    it('should return true if no refresh needed', async () => {
+      const result = await tokenManager.ensureValidToken()
+      expect(result).toBe(true)
+    })
+
+    it('should refresh token if needed', async () => {
+      // Simulate token expiring soon scenario
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            authenticated: true,
+            tokenExpiringSoon: true
+          })
+        } as Response)
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({ success: true })
+        } as Response)
+
+      await tokenManager.initialize()
+      const result = await tokenManager.ensureValidToken()
+
+      expect(result).toBe(true)
+      expect(mockFetch).toHaveBeenCalledWith('/api/auth/refresh', {
+        method: 'POST',
+        credentials: 'include'
+      })
+    })
+  })
+
+  describe('authenticatedFetch', () => {
+    it('should perform fetch with credentials', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({ data: 'test' })
       } as Response)
-      
-      await tokenManager.authenticatedFetch('/api/test')
-      
-      // 應該先 refresh，再執行 API 請求
-      expect(mockFetch).toHaveBeenCalledTimes(2)
-      expect(mockFetch).toHaveBeenNthCalledWith(1, '/api/auth/refresh', expect.any(Object))
-      expect(mockFetch).toHaveBeenNthCalledWith(2, '/api/test', expect.any(Object))
+
+      const response = await tokenManager.authenticatedFetch('/api/data')
+
+      expect(mockFetch).toHaveBeenCalledWith('/api/data', {
+        credentials: 'include'
+      })
+      expect(response.ok).toBe(true)
+    })
+
+    it('should ensure valid token before fetch', async () => {
+      // Set up token needing refresh
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            authenticated: true,
+            tokenExpiringSoon: true
+          })
+        } as Response)
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({ success: true })
+        } as Response)
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({ data: 'test' })
+        } as Response)
+
+      await tokenManager.initialize()
+      await tokenManager.authenticatedFetch('/api/data', {
+        method: 'POST',
+        body: JSON.stringify({ test: true })
+      })
+
+      expect(mockFetch).toHaveBeenNthCalledWith(3, '/api/data', {
+        method: 'POST',
+        body: JSON.stringify({ test: true }),
+        credentials: 'include'
+      })
     })
   })
 
-  describe('生命週期', () => {
-    it('應該能正確清理定時器', () => {
-      const clearTimeoutSpy = jest.spyOn(global, 'clearTimeout')
-      
-      // 先設置一個定時器
-      tokenManager['refreshTimer'] = setTimeout(() => {}, 1000)
-      
+  describe('cleanup', () => {
+    it('should clear refresh timer', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          authenticated: true,
+          expiresIn: 900
+        })
+      } as Response)
+
+      await tokenManager.initialize()
       tokenManager.cleanup()
+
+      expect(clearTimeout).toHaveBeenCalled()
+    })
+  })
+
+  describe('scheduleRefresh', () => {
+    it('should schedule refresh with minimum 30 seconds delay', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          authenticated: true,
+          expiresIn: 10 // Only 10 seconds
+        })
+      } as Response)
+
+      await tokenManager.initialize()
+
+      // Should use minimum 30 seconds
+      expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 30000)
+    })
+
+    it('should trigger refresh when timer expires', async () => {
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            authenticated: true,
+            expiresIn: 900
+          })
+        } as Response)
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({ success: true })
+        } as Response)
+
+      await tokenManager.initialize()
+
+      // Fast-forward time
+      jest.advanceTimersByTime(600000) // 10 minutes
+
+      expect(mockFetch).toHaveBeenCalledWith('/api/auth/refresh', {
+        method: 'POST',
+        credentials: 'include'
+      })
+    })
+  })
+
+  describe('getTokenManager', () => {
+    it('should return singleton instance', () => {
+      const instance1 = getTokenManager()
+      const instance2 = getTokenManager()
+
+      expect(instance1).toBe(instance2)
+    })
+  })
+
+  describe('window event handling', () => {
+    it('should handle auth:expired event', () => {
+      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation()
       
-      expect(clearTimeoutSpy).toHaveBeenCalled()
+      window.dispatchEvent(new CustomEvent('auth:expired'))
+      
+      expect(consoleWarnSpy).toHaveBeenCalledWith('Authentication expired')
+      
+      consoleWarnSpy.mockRestore()
     })
   })
 })
