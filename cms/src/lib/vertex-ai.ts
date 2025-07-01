@@ -1,7 +1,7 @@
-import { VertexAI } from '@google-cloud/vertexai';
+import { VertexAI, SchemaType } from '@google-cloud/vertexai';
 import { GoogleAuth } from 'google-auth-library';
 import * as yaml from 'js-yaml';
-import { PBL_SCENARIO_JSON_SCHEMA, type PBLScenarioSchema } from './schemas/pbl-scenario.schema';
+import { type PBLScenarioSchema } from './schemas/pbl-scenario.schema';
 import { sortPBLScenario } from './utils/yaml-order';
 import { formatKSACodesForPrompt } from './utils/ksa-codes-loader';
 
@@ -98,7 +98,65 @@ export async function completeYAMLContent(yamlContent: string, context?: string)
         temperature: 0.3,
         topP: 0.8,
         responseMimeType: 'application/json',
-        responseSchema: PBL_SCENARIO_JSON_SCHEMA,
+        responseSchema: {
+          type: SchemaType.OBJECT,
+          properties: {
+            scenario_info: {
+              type: SchemaType.OBJECT,
+              properties: {
+                id: { type: SchemaType.STRING },
+                title: { type: SchemaType.STRING },
+                description: { type: SchemaType.STRING },
+                difficulty: { type: SchemaType.STRING },
+                estimated_duration: { type: SchemaType.NUMBER },
+                target_domains: {
+                  type: SchemaType.ARRAY,
+                  items: { type: SchemaType.STRING }
+                },
+                prerequisites: {
+                  type: SchemaType.ARRAY,
+                  items: { type: SchemaType.STRING }
+                },
+                learning_objectives: {
+                  type: SchemaType.ARRAY,
+                  items: { type: SchemaType.STRING }
+                }
+              },
+              required: ["id", "title", "description", "difficulty", "estimated_duration", "target_domains", "prerequisites", "learning_objectives"]
+            },
+            ksa_mapping: {
+              type: SchemaType.OBJECT,
+              properties: {
+                knowledge: {
+                  type: SchemaType.ARRAY,
+                  items: { type: SchemaType.STRING }
+                },
+                skills: {
+                  type: SchemaType.ARRAY,
+                  items: { type: SchemaType.STRING }
+                },
+                attitudes: {
+                  type: SchemaType.ARRAY,
+                  items: { type: SchemaType.STRING }
+                }
+              }
+            },
+            tasks: {
+              type: SchemaType.ARRAY,
+              items: {
+                type: SchemaType.OBJECT,
+                properties: {
+                  id: { type: SchemaType.STRING },
+                  title: { type: SchemaType.STRING },
+                  description: { type: SchemaType.STRING },
+                  type: { type: SchemaType.STRING },
+                  estimated_duration: { type: SchemaType.NUMBER }
+                }
+              }
+            }
+          },
+          required: ["scenario_info", "tasks"]
+        },
       },
     });
 
@@ -163,7 +221,14 @@ export async function translateYAMLContent(yamlContent: string) {
         temperature: 0.3,
         topP: 0.8,
         responseMimeType: 'application/json',
-        responseSchema: PBL_SCENARIO_JSON_SCHEMA,
+        responseSchema: {
+          type: SchemaType.OBJECT,
+          properties: {
+            scenario_info: { type: SchemaType.OBJECT },
+            ksa_mapping: { type: SchemaType.OBJECT },
+            tasks: { type: SchemaType.ARRAY }
+          }
+        },
       },
     });
 
@@ -225,7 +290,14 @@ export async function improveYAMLContent(yamlContent: string) {
         temperature: 0.3,
         topP: 0.8,
         responseMimeType: 'application/json',
-        responseSchema: PBL_SCENARIO_JSON_SCHEMA,
+        responseSchema: {
+          type: SchemaType.OBJECT,
+          properties: {
+            scenario_info: { type: SchemaType.OBJECT },
+            ksa_mapping: { type: SchemaType.OBJECT },
+            tasks: { type: SchemaType.ARRAY }
+          }
+        },
       },
     });
 
@@ -292,14 +364,23 @@ export async function mapKSAContent(yamlContent: string) {
     
     // Define a simple schema for KSA mapping
     const ksaSchema = {
-      type: "object",
+      type: SchemaType.OBJECT,
       properties: {
         ksa_mapping: {
-          type: "object",
+          type: SchemaType.OBJECT,
           properties: {
-            knowledge: { type: "array", items: { type: "string" } },
-            skills: { type: "array", items: { type: "string" } },
-            attitudes: { type: "array", items: { type: "string" } }
+            knowledge: { 
+              type: SchemaType.ARRAY, 
+              items: { type: SchemaType.STRING } 
+            },
+            skills: { 
+              type: SchemaType.ARRAY, 
+              items: { type: SchemaType.STRING } 
+            },
+            attitudes: { 
+              type: SchemaType.ARRAY, 
+              items: { type: SchemaType.STRING } 
+            }
           },
           required: ["knowledge", "skills", "attitudes"]
         }
