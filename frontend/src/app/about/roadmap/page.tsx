@@ -15,7 +15,7 @@ const roadmapData = {
     layers: [
       { name: "MCP/Agent Layer", status: "planned", description: "統一的 AI Agent 管理與協調" },
       { name: "SaaS App Layer", status: "active", description: "學習平台 UI + 用戶認證 + 評估介面" },
-      { name: "CMS Service Layer", status: "partial", description: "內容 API + YAML 解析 + 版本控制" },
+      { name: "CMS Service Layer", status: "completed", description: "內容 API + YAML 解析 + 版本控制 + AI 輔助" },
       { name: "Content File Layer", status: "completed", description: "GitHub 管理的教材與題庫" }
     ]
   },
@@ -36,17 +36,32 @@ const roadmapData = {
     {
       id: "phase1",
       name: "Phase 1: MVP Baseline",
-      status: "active",
-      timeline: "2025/06/27 - 2025/07/15",
-      progress: 85,
+      status: "completed",
+      timeline: "2025/06/27 - 2025/07/02",
+      progress: 100,
       features: [
         { name: "渲染講義與題目", status: "completed" },
         { name: "PBL 情境學習", status: "completed" },
         { name: "多語言支援 (9種)", status: "completed" },
         { name: "測試覆蓋率 80%+", status: "completed" },
         { name: "TypeScript 型別安全", status: "completed" },
-        { name: "自動化內容發布", status: "partial" },
-        { name: "基礎內容編輯器", status: "planned" }
+        { name: "CMS 系統增強", status: "completed" },
+        { name: "自動化內容發布", status: "completed" }
+      ]
+    },
+    {
+      id: "phase1_5",
+      name: "Phase 1.5: CMS 進階功能",
+      status: "completed",
+      timeline: "2025/06/30 - 2025/07/02",
+      progress: 100,
+      features: [
+        { name: "分支管理系統", status: "completed" },
+        { name: "現代化 UI/UX", status: "completed" },
+        { name: "AI Quick Actions", status: "completed" },
+        { name: "YAML 驗證與排序", status: "completed" },
+        { name: "PR 工作流程自動化", status: "completed" },
+        { name: "完整測試覆蓋", status: "completed" }
       ]
     },
     {
@@ -93,10 +108,10 @@ const roadmapData = {
   },
 
   techStack: {
-    frontend: ["Next.js 15", "TypeScript", "Tailwind CSS", "Socket.io"],
-    backend: ["FastAPI", "LangChain", "Vertex AI", "Redis"],
-    storage: ["GCS", "PostgreSQL", "GitHub Pages"],
-    deployment: ["Google Cloud Run", "Docker", "CloudFlare"]
+    frontend: ["Next.js 15", "TypeScript", "Tailwind CSS", "Monaco Editor", "react-i18next"],
+    backend: ["FastAPI", "Vertex AI", "GitHub API", "YAML Processing"],
+    storage: ["GCS", "GitHub Repository", "Local Cache"],
+    deployment: ["Google Cloud Run", "Docker", "GitHub Actions", "Vercel"]
   }
 };
 
@@ -213,8 +228,8 @@ export default function RoadmapPage() {
                 <div className="text-sm text-blue-600 dark:text-blue-300">PBL 情境</div>
               </div>
               <div className="bg-green-100 dark:bg-green-900 rounded-lg p-6 text-center">
-                <div className="text-3xl font-bold text-green-800 dark:text-green-200">85%</div>
-                <div className="text-sm text-green-600 dark:text-green-300">MVP 完成度</div>
+                <div className="text-3xl font-bold text-green-800 dark:text-green-200">100%</div>
+                <div className="text-sm text-green-600 dark:text-green-300">Phase 1 完成</div>
               </div>
               <div className="bg-yellow-100 dark:bg-yellow-900 rounded-lg p-6 text-center">
                 <div className="text-3xl font-bold text-yellow-800 dark:text-yellow-200">Q3</div>

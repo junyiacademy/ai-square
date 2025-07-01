@@ -62,21 +62,31 @@ AI Square 是一個「用 AI 學 AI 素養」的創新學習平台，基於國�
 
 ## 4. 核心功能模組
 
-### 4.1 CMS 系統 (✅ 已完成)
-**核心功能**：
+### 4.1 CMS 系統 (✅ Phase 1 完成，🚀 Phase 2 增強中)
+**Phase 1 核心功能（已完成）**：
 - Git-Based 內容管理與版本控制
 - Monaco Editor 整合（VS Code 等級編輯體驗）
 - AI 輔助編輯（補完、翻譯、改進、KSA 對應）
 - 統一的儲存與 PR 創建工作流程
 - 分支管理與檔案差異檢視
 
-**檔案結構**：
-```
-cms/content/
-├── pbl_data/         # PBL 情境資料
-├── assessment_data/  # 評量資料
-└── rubrics_data/    # 評量規準
-```
+**Phase 2 增強功能（2025/07 新增）**：
+- ✅ 完整的分支管理系統（Branch Manager）
+- ✅ 現代化 UI 設計與響應式佈局
+- ✅ 進階 AI 助手功能（Quick Actions）
+  - KSA 能力映射自動生成
+  - YAML 結構驗證與排序
+  - 多語言內容翻譯（支援 zh-TW）
+- ✅ 即時處理動畫與 Toast 通知
+- ✅ PR 工作流程自動化
+- ✅ 完整測試覆蓋（UI 元件、API、服務層）
+
+**技術架構優化**：
+- FileList、FileEditor、BranchManager 元件分離
+- GitHub Service 層抽象化
+- Vertex AI 整合強化
+- Jest 測試基礎設施完善
+- Docker 部署支援
 
 ### 4.2 PBL 情境式學習系統 (🚀 開發中)
 **核心概念**：
@@ -125,6 +135,13 @@ cms/content/
 - AI 輔助編輯功能
 - 智能工作流程
 - GitHub 深度整合
+
+### Phase 1.5: CMS 增強 (✅ 2025/06/30-07/02)
+- 完整分支管理系統
+- 現代化 UI/UX 重構
+- AI Quick Actions 功能
+- 自動化測試覆蓋
+- Docker 容器化部署
 
 ### Phase 2: SaaS 平台 (🚀 2025/01-06)
 **進行中**：
@@ -188,6 +205,12 @@ cms/content/
 - 元件測試完善
   - **新增多個元件測試**: QuestionReview、ErrorDashboard、ClientLayout ✅
   - **LoginForm 和 I18nProvider 單元測試**: 完整覆蓋 ✅
+- CMS 系統增強（2025/07/01-02 更新）
+  - **UI/UX 現代化重構**: 響應式設計、動畫效果 ✅
+  - **分支管理系統**: 完整 Git 工作流程整合 ✅
+  - **AI Quick Actions**: KSA 映射、YAML 驗證、多語言翻譯 ✅
+  - **測試覆蓋**: UI 元件、API 路由、服務層完整測試 ✅
+  - **PR 自動化**: 自動創建 PR、分支切換 ✅
 
 ### 進行中 🟡
 - 內容驗證系統（YAML schema、自動化測試）
@@ -210,6 +233,6 @@ AI Square 定位為下一代 AI 素養學習平台，通過整合最新 AI 技�
 
 ---
 
-*文檔版本: 3.2（TypeScript 型別安全更新）*  
+*文檔版本: 3.3（CMS Phase 2 增強更新）*  
 *更新日期: 2025-07-02*  
 *下次審查: 2025-08-01*
