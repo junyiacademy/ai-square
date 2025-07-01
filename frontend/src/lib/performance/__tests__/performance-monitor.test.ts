@@ -4,12 +4,26 @@ import { performanceMonitor } from '../performance-monitor';
 const mockPerformanceNow = jest.fn(() => 1000);
 const mockGetEntriesByType = jest.fn();
 
-global.performance = {
-  now: mockPerformanceNow,
-  getEntriesByType: mockGetEntriesByType,
-  mark: jest.fn(),
-  measure: jest.fn(),
-} as any;
+// Mock both global and window performance
+Object.defineProperty(global, 'performance', {
+  value: {
+    now: mockPerformanceNow,
+    getEntriesByType: mockGetEntriesByType,
+    mark: jest.fn(),
+    measure: jest.fn(),
+  },
+  writable: true,
+});
+
+Object.defineProperty(window, 'performance', {
+  value: {
+    now: mockPerformanceNow,
+    getEntriesByType: mockGetEntriesByType,
+    mark: jest.fn(),
+    measure: jest.fn(),
+  },
+  writable: true,
+});
 
 // Mock console.log for development environment tests
 const originalLog = console.log;
@@ -189,19 +203,22 @@ describe('PerformanceMonitor', () => {
 
   describe('getCoreWebVitals', () => {
     it('returns null on server side', () => {
+      // Mock environment where window is undefined
       const originalWindow = global.window;
-      (global as any).window = undefined;
+      
+      // Delete window property from global
+      delete (global as any).window;
 
       const vitals = performanceMonitor.getCoreWebVitals();
       expect(vitals).toBeNull();
 
+      // Restore window
       global.window = originalWindow;
     });
 
     it('returns core web vitals metrics', () => {
       const mockNavigation = {
-        domContentLoadedEventEnd: 500,
-        domContentLoadedEventStart: 450,
+        domInteractive: 600,
         loadEventEnd: 800,
         fetchStart: 0
       };
@@ -234,9 +251,8 @@ describe('PerformanceMonitor', () => {
       expect(vitals).toEqual({
         FCP: 150,
         LCP: 300,
-        TTFB: 0,
-        TTI: 800,
-        DOMContentLoaded: 50
+        TTI: 800, // loadEventEnd - fetchStart
+        TBT: 200  // loadEventEnd - domInteractive
       });
     });
 
@@ -248,9 +264,8 @@ describe('PerformanceMonitor', () => {
       expect(vitals).toEqual({
         FCP: 0,
         LCP: 0,
-        TTFB: 0,
         TTI: 0,
-        DOMContentLoaded: 0
+        TBT: 0
       });
     });
   });
@@ -270,15 +285,13 @@ describe('PerformanceMonitor', () => {
       const mockResources = [
         {
           name: 'https://example.com/script.js',
-          responseEnd: 200,
-          fetchStart: 100,
+          duration: 100,
           transferSize: 5000,
           decodedBodySize: 4500
         },
         {
           name: 'https://example.com/style.css',
-          responseEnd: 150,
-          fetchStart: 50,
+          duration: 50,
           transferSize: 0, // Cached
           decodedBodySize: 3000
         }
@@ -297,7 +310,7 @@ describe('PerformanceMonitor', () => {
         },
         {
           name: 'https://example.com/style.css',
-          duration: 100,
+          duration: 50,
           size: 0,
           cached: true
         }
@@ -315,10 +328,10 @@ describe('PerformanceMonitor', () => {
 
     it('calculates cache hit rate correctly', () => {
       const mockResources = [
-        { name: 'file1.js', responseEnd: 200, fetchStart: 100, transferSize: 1000, decodedBodySize: 1000 },
-        { name: 'file2.js', responseEnd: 150, fetchStart: 50, transferSize: 0, decodedBodySize: 2000 }, // Cached
-        { name: 'file3.css', responseEnd: 180, fetchStart: 80, transferSize: 0, decodedBodySize: 1500 }, // Cached
-        { name: 'file4.css', responseEnd: 200, fetchStart: 100, transferSize: 500, decodedBodySize: 500 }
+        { name: 'file1.js', duration: 100, transferSize: 1000, decodedBodySize: 1000 },
+        { name: 'file2.js', duration: 100, transferSize: 0, decodedBodySize: 2000 }, // Cached
+        { name: 'file3.css', duration: 100, transferSize: 0, decodedBodySize: 1500 }, // Cached
+        { name: 'file4.css', duration: 100, transferSize: 500, decodedBodySize: 500 }
       ];
 
       mockGetEntriesByType.mockReturnValue(mockResources);
@@ -351,8 +364,7 @@ describe('PerformanceMonitor', () => {
       mockGetEntriesByType.mockImplementation((type) => {
         if (type === 'navigation') {
           return [{
-            domContentLoadedEventEnd: 500,
-            domContentLoadedEventStart: 450,
+            domInteractive: 600,
             loadEventEnd: 800,
             fetchStart: 0
           }];
@@ -362,8 +374,8 @@ describe('PerformanceMonitor', () => {
         }
         if (type === 'resource') {
           return [
-            { name: 'file1.js', responseEnd: 200, fetchStart: 100, transferSize: 1000, decodedBodySize: 1000 },
-            { name: 'file2.css', responseEnd: 150, fetchStart: 50, transferSize: 0, decodedBodySize: 2000 }
+            { name: 'file1.js', duration: 100, transferSize: 1000, decodedBodySize: 1000 },
+            { name: 'file2.css', duration: 50, transferSize: 0, decodedBodySize: 2000 }
           ];
         }
         return [];

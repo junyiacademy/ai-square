@@ -1,437 +1,339 @@
-import { ContentService } from '../content-service'
+import { contentService } from '../content-service'
+import { cacheService } from '@/lib/cache/cache-service'
+import { performanceMonitor } from '@/lib/performance/performance-monitor'
 
-// Mock fetch globally
-global.fetch = jest.fn()
+// Mock dependencies
+jest.mock('@/lib/cache/cache-service', () => ({
+  cacheService: {
+    fetchWithCache: jest.fn(),
+    delete: jest.fn(),
+    clear: jest.fn()
+  }
+}))
+
+jest.mock('@/lib/performance/performance-monitor', () => ({
+  performanceMonitor: {
+    measureAsync: jest.fn((name, fn) => fn())
+  }
+}))
 
 // Mock localStorage
 const localStorageMock = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn(),
+  store: {} as Record<string, string>,
+  getItem: jest.fn((key: string) => localStorageMock.store[key] || null),
+  setItem: jest.fn((key: string, value: string) => {
+    localStorageMock.store[key] = value
+  }),
+  removeItem: jest.fn((key: string) => {
+    delete localStorageMock.store[key]
+  }),
+  clear: jest.fn(() => {
+    localStorageMock.store = {}
+  }),
+  key: jest.fn((index: number) => Object.keys(localStorageMock.store)[index] || null),
+  get length() {
+    return Object.keys(localStorageMock.store).length
+  }
 }
+
 Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
+  writable: true
 })
+
+// Mock console methods
+const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation()
 
 describe('ContentService', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    localStorageMock.clear()
+    localStorageMock.store = {}
   })
 
-  describe('getAllContent', () => {
-    it('should fetch all content successfully', async () => {
-      const mockContent = [
-        { id: '1', title: 'Content 1', type: 'rubric' },
-        { id: '2', title: 'Content 2', type: 'scenario' },
-      ]
+  afterEach(() => {
+    consoleErrorSpy.mockClear()
+  })
 
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockContent,
-      })
+  describe('getRelationsTree', () => {
+    it('should fetch relations tree data with correct parameters', async () => {
+      const mockTreeData = {
+        domains: [{ id: 'domain1' }],
+        kMap: { k1: 'knowledge1' },
+        sMap: { s1: 'skill1' },
+        aMap: { a1: 'attitude1' }
+      }
 
-      const result = await ContentService.getAllContent()
+      ;(cacheService.fetchWithCache as jest.Mock).mockResolvedValue(mockTreeData)
 
-      expect(result).toEqual(mockContent)
-      expect(fetch).toHaveBeenCalledWith('/api/admin/content', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+      const result = await contentService.getRelationsTree('en')
+
+      expect(performanceMonitor.measureAsync).toHaveBeenCalledWith(
+        'content.getRelationsTree',
+        expect.any(Function)
+      )
+
+      expect(cacheService.fetchWithCache).toHaveBeenCalledWith(
+        '/api/relations?lang=en',
+        {
+          ttl: 30 * 60 * 1000,
+          storage: 'both'
+        }
+      )
+
+      expect(result).toEqual(mockTreeData)
     })
 
-    it('should handle fetch errors', async () => {
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: false,
-        status: 500,
-        statusText: 'Internal Server Error',
-      })
+    it('should handle errors during fetch', async () => {
+      const mockError = new Error('Network error')
+      ;(cacheService.fetchWithCache as jest.Mock).mockRejectedValue(mockError)
 
-      await expect(ContentService.getAllContent()).rejects.toThrow(
-        'Failed to fetch content: 500 Internal Server Error'
+      await expect(contentService.getRelationsTree('en')).rejects.toThrow('Network error')
+    })
+  })
+
+  describe('getAssessment', () => {
+    it('should fetch assessment data with correct parameters', async () => {
+      const mockAssessment = {
+        id: 'assessment1',
+        title: 'Test Assessment',
+        questions: []
+      }
+
+      ;(cacheService.fetchWithCache as jest.Mock).mockResolvedValue(mockAssessment)
+
+      const result = await contentService.getAssessment('assessment1')
+
+      expect(cacheService.fetchWithCache).toHaveBeenCalledWith(
+        '/api/assessments/assessment1',
+        {
+          ttl: 60 * 60 * 1000,
+          storage: 'localStorage'
+        }
+      )
+
+      expect(result).toEqual(mockAssessment)
+    })
+  })
+
+  describe('getPBLScenario', () => {
+    it('should fetch single PBL scenario with correct parameters', async () => {
+      const mockScenario = {
+        id: 'scenario1',
+        title: 'Test Scenario',
+        description: 'Description'
+      }
+
+      ;(cacheService.fetchWithCache as jest.Mock).mockResolvedValue(mockScenario)
+
+      const result = await contentService.getPBLScenario('scenario1')
+
+      expect(cacheService.fetchWithCache).toHaveBeenCalledWith(
+        '/api/pbl/scenarios/scenario1',
+        {
+          ttl: 60 * 60 * 1000,
+          storage: 'localStorage'
+        }
+      )
+
+      expect(result).toEqual(mockScenario)
+    })
+  })
+
+  describe('getKSADefinitions', () => {
+    it('should fetch KSA definitions with correct parameters', async () => {
+      const mockKSA = {
+        K001: { name: 'Knowledge 1' },
+        S001: { name: 'Skill 1' },
+        A001: { name: 'Attitude 1' }
+      }
+
+      ;(cacheService.fetchWithCache as jest.Mock).mockResolvedValue(mockKSA)
+
+      const result = await contentService.getKSADefinitions('es')
+
+      expect(cacheService.fetchWithCache).toHaveBeenCalledWith(
+        '/api/ksa?lang=es',
+        {
+          ttl: 24 * 60 * 60 * 1000,
+          storage: 'both'
+        }
+      )
+
+      expect(result).toEqual(mockKSA)
+    })
+  })
+
+  describe('preloadEssentialData', () => {
+    it('should preload relations tree and KSA definitions in parallel', async () => {
+      const mockTreeData = { domains: [] }
+      const mockKSA = { K001: {} }
+
+      ;(cacheService.fetchWithCache as jest.Mock)
+        .mockResolvedValueOnce(mockTreeData)
+        .mockResolvedValueOnce(mockKSA)
+
+      await contentService.preloadEssentialData('en')
+
+      expect(cacheService.fetchWithCache).toHaveBeenCalledTimes(2)
+      expect(cacheService.fetchWithCache).toHaveBeenCalledWith(
+        '/api/relations?lang=en',
+        expect.any(Object)
+      )
+      expect(cacheService.fetchWithCache).toHaveBeenCalledWith(
+        '/api/ksa?lang=en',
+        expect.any(Object)
       )
     })
 
-    it('should handle network errors', async () => {
-      ;(fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'))
+    it('should not throw errors if preload fails', async () => {
+      const mockError = new Error('Network error')
+      ;(cacheService.fetchWithCache as jest.Mock).mockRejectedValue(mockError)
 
-      await expect(ContentService.getAllContent()).rejects.toThrow('Network error')
+      await expect(contentService.preloadEssentialData('en')).resolves.not.toThrow()
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Preload failed:', mockError)
     })
 
-    it('should use cached data when available', async () => {
-      const mockContent = [{ id: '1', title: 'Cached Content' }]
-      const cacheData = {
-        data: mockContent,
-        timestamp: Date.now(),
-      }
+    it('should handle partial failures during preload', async () => {
+      ;(cacheService.fetchWithCache as jest.Mock)
+        .mockResolvedValueOnce({ domains: [] })
+        .mockRejectedValueOnce(new Error('KSA fetch failed'))
 
-      localStorageMock.getItem.mockReturnValueOnce(JSON.stringify(cacheData))
+      await expect(contentService.preloadEssentialData('en')).resolves.not.toThrow()
 
-      const result = await ContentService.getAllContent()
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Preload failed:', expect.any(Error))
+    })
+  })
 
-      expect(result).toEqual(mockContent)
-      expect(fetch).not.toHaveBeenCalled()
+  describe('clearLanguageCache', () => {
+    it('should clear relations and KSA cache for specific language', async () => {
+      ;(cacheService.delete as jest.Mock).mockResolvedValue(undefined)
+
+      await contentService.clearLanguageCache('zh-TW')
+
+      expect(cacheService.delete).toHaveBeenCalledTimes(2)
+      expect(cacheService.delete).toHaveBeenCalledWith('relations:zh-TW')
+      expect(cacheService.delete).toHaveBeenCalledWith('ksa:zh-TW')
     })
 
-    it('should refresh cache when expired', async () => {
-      const oldContent = [{ id: '1', title: 'Old Content' }]
-      const newContent = [{ id: '1', title: 'New Content' }]
+    it('should handle errors during cache deletion', async () => {
+      ;(cacheService.delete as jest.Mock).mockRejectedValue(new Error('Delete failed'))
+
+      await expect(contentService.clearLanguageCache('en')).rejects.toThrow()
+    })
+  })
+
+  describe('clearAllCache', () => {
+    it('should clear all cache', async () => {
+      ;(cacheService.clear as jest.Mock).mockResolvedValue(undefined)
+
+      await contentService.clearAllCache()
+
+      expect(cacheService.clear).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('getCacheStats', () => {
+    it('should return cache statistics', () => {
+      // Add some cache entries to localStorage
+      localStorageMock.store['cache:test1'] = 'a'.repeat(100)
+      localStorageMock.store['cache:test2'] = 'b'.repeat(200)
+      localStorageMock.store['other:key'] = 'should not count'
+
+      // Mock the localStorage iteration by making Object.keys return our store keys
+      const originalKeys = Object.keys
+      Object.keys = jest.fn().mockImplementation((obj) => {
+        if (obj === localStorage) {
+          return originalKeys(localStorageMock.store)
+        }
+        return originalKeys(obj)
+      })
+
+      const stats = contentService.getCacheStats()
+
+      expect(stats).toEqual({
+        memoryEntries: 0,
+        localStorageSize: expect.any(Number)
+      })
+
+      // Size should be (100 + 200) * 2 / 1024 KB
+      expect(stats.localStorageSize).toBeCloseTo(0.5859375)
+
+      // Restore original Object.keys
+      Object.keys = originalKeys
+    })
+
+    it('should handle empty localStorage', () => {
+      const stats = contentService.getCacheStats()
+
+      expect(stats).toEqual({
+        memoryEntries: 0,
+        localStorageSize: 0
+      })
+    })
+
+    it('should count only cache entries', () => {
+      // Add mixed entries to localStorage
+      localStorageMock.store['cache:item1'] = 'test1'
+      localStorageMock.store['cache:item2'] = 'test2'
+      localStorageMock.store['user:profile'] = 'should not count'
+      localStorageMock.store['settings'] = 'should not count'
+
+      // Mock the localStorage iteration
+      const originalKeys = Object.keys
+      Object.keys = jest.fn().mockImplementation((obj) => {
+        if (obj === localStorage) {
+          return originalKeys(localStorageMock.store)
+        }
+        return originalKeys(obj)
+      })
+
+      const stats = contentService.getCacheStats()
+
+      expect(stats.localStorageSize).toBeGreaterThan(0)
+
+      // Restore original Object.keys
+      Object.keys = originalKeys
+    })
+  })
+
+  describe('integration tests', () => {
+    it('should support multiple languages', async () => {
+      const languages = ['en', 'zh-TW', 'es', 'ja', 'ko']
       
-      const cacheData = {
-        data: oldContent,
-        timestamp: Date.now() - 6 * 60 * 1000, // 6 minutes ago
+      for (const lang of languages) {
+        ;(cacheService.fetchWithCache as jest.Mock).mockResolvedValue({ data: lang })
+        
+        const result = await contentService.getRelationsTree(lang)
+        
+        expect(cacheService.fetchWithCache).toHaveBeenCalledWith(
+          `/api/relations?lang=${lang}`,
+          expect.any(Object)
+        )
+        expect(result).toEqual({ data: lang })
       }
-
-      localStorageMock.getItem.mockReturnValueOnce(JSON.stringify(cacheData))
-
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        json: async () => newContent,
-      })
-
-      const result = await ContentService.getAllContent()
-
-      expect(result).toEqual(newContent)
-      expect(fetch).toHaveBeenCalled()
-      expect(localStorageMock.setItem).toHaveBeenCalled()
-    })
-  })
-
-  describe('getContentById', () => {
-    it('should fetch content by ID successfully', async () => {
-      const mockContent = { id: '123', title: 'Specific Content', type: 'rubric' }
-
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockContent,
-      })
-
-      const result = await ContentService.getContentById('123')
-
-      expect(result).toEqual(mockContent)
-      expect(fetch).toHaveBeenCalledWith('/api/admin/content/123', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
     })
 
-    it('should return null for non-existent content', async () => {
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: false,
-        status: 404,
-        statusText: 'Not Found',
-      })
-
-      const result = await ContentService.getContentById('nonexistent')
-
-      expect(result).toBeNull()
-    })
-  })
-
-  describe('createContent', () => {
-    it('should create new content successfully', async () => {
-      const newContent = {
-        title: 'New Content',
-        type: 'scenario',
-        data: { key: 'value' },
-      }
-
-      const createdContent = {
-        id: 'new123',
-        ...newContent,
-        createdAt: new Date().toISOString(),
-      }
-
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        json: async () => createdContent,
-      })
-
-      const result = await ContentService.createContent(newContent)
-
-      expect(result).toEqual(createdContent)
-      expect(fetch).toHaveBeenCalledWith('/api/admin/content', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newContent),
-      })
-    })
-
-    it('should invalidate cache after creating content', async () => {
-      const newContent = { title: 'New Content' }
-
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ id: '123', ...newContent }),
-      })
-
-      await ContentService.createContent(newContent)
-
-      expect(localStorageMock.removeItem).toHaveBeenCalledWith('content-cache')
-    })
-
-    it('should handle validation errors', async () => {
-      const invalidContent = { invalid: 'data' }
-
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: false,
-        status: 400,
-        json: async () => ({ error: 'Invalid content data' }),
-      })
-
-      await expect(ContentService.createContent(invalidContent)).rejects.toThrow(
-        'Invalid content data'
+    it('should use different TTL for different content types', async () => {
+      // Relations Tree - 30 minutes TTL
+      await contentService.getRelationsTree('en')
+      expect(cacheService.fetchWithCache).toHaveBeenLastCalledWith(
+        expect.any(String),
+        expect.objectContaining({ ttl: 30 * 60 * 1000, storage: 'both' })
       )
-    })
-  })
 
-  describe('updateContent', () => {
-    it('should update content successfully', async () => {
-      const updates = { title: 'Updated Title' }
-      const updatedContent = {
-        id: '123',
-        title: 'Updated Title',
-        type: 'rubric',
-        updatedAt: new Date().toISOString(),
-      }
-
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        json: async () => updatedContent,
-      })
-
-      const result = await ContentService.updateContent('123', updates)
-
-      expect(result).toEqual(updatedContent)
-      expect(fetch).toHaveBeenCalledWith('/api/admin/content/123', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updates),
-      })
-    })
-
-    it('should handle concurrent update conflicts', async () => {
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: false,
-        status: 409,
-        json: async () => ({ error: 'Content has been modified' }),
-      })
-
-      await expect(
-        ContentService.updateContent('123', { title: 'New Title' })
-      ).rejects.toThrow('Content has been modified')
-    })
-  })
-
-  describe('deleteContent', () => {
-    it('should delete content successfully', async () => {
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ success: true }),
-      })
-
-      const result = await ContentService.deleteContent('123')
-
-      expect(result).toBe(true)
-      expect(fetch).toHaveBeenCalledWith('/api/admin/content/123', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-    })
-
-    it('should invalidate cache after deleting content', async () => {
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ success: true }),
-      })
-
-      await ContentService.deleteContent('123')
-
-      expect(localStorageMock.removeItem).toHaveBeenCalledWith('content-cache')
-    })
-
-    it('should handle deletion of non-existent content', async () => {
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: false,
-        status: 404,
-      })
-
-      const result = await ContentService.deleteContent('nonexistent')
-
-      expect(result).toBe(false)
-    })
-  })
-
-  describe('getContentHistory', () => {
-    it('should fetch content history with default parameters', async () => {
-      const mockHistory = {
-        items: [
-          {
-            id: '1',
-            action: 'created',
-            timestamp: '2024-01-01T00:00:00Z',
-          },
-        ],
-        total: 1,
-        page: 1,
-        pageSize: 20,
-      }
-
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockHistory,
-      })
-
-      const result = await ContentService.getContentHistory()
-
-      expect(result).toEqual(mockHistory)
-      expect(fetch).toHaveBeenCalledWith('/api/admin/history?page=1&pageSize=20', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-    })
-
-    it('should handle custom filters and pagination', async () => {
-      const mockHistory = {
-        items: [],
-        total: 0,
-        page: 2,
-        pageSize: 50,
-      }
-
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockHistory,
-      })
-
-      const result = await ContentService.getContentHistory({
-        page: 2,
-        pageSize: 50,
-        contentType: 'scenario',
-        userId: 'user123',
-      })
-
-      expect(result).toEqual(mockHistory)
-      expect(fetch).toHaveBeenCalledWith(
-        '/api/admin/history?page=2&pageSize=50&contentType=scenario&userId=user123',
-        expect.any(Object)
+      // Assessment - 60 minutes TTL
+      await contentService.getAssessment('test')
+      expect(cacheService.fetchWithCache).toHaveBeenLastCalledWith(
+        expect.any(String),
+        expect.objectContaining({ ttl: 60 * 60 * 1000, storage: 'localStorage' })
       )
-    })
-  })
 
-  describe('getContentStats', () => {
-    it('should fetch content statistics successfully', async () => {
-      const mockStats = {
-        totalContent: 100,
-        contentByType: {
-          rubric: 40,
-          scenario: 60,
-        },
-        activeUsers: 25,
-      }
-
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockStats,
-      })
-
-      const result = await ContentService.getContentStats()
-
-      expect(result).toEqual(mockStats)
-      expect(fetch).toHaveBeenCalledWith('/api/admin/stats', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-    })
-
-    it('should handle date range parameters', async () => {
-      const mockStats = {
-        totalContent: 50,
-        contentByType: {},
-      }
-
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockStats,
-      })
-
-      await ContentService.getContentStats({
-        startDate: '2024-01-01',
-        endDate: '2024-01-31',
-      })
-
-      expect(fetch).toHaveBeenCalledWith(
-        '/api/admin/stats?startDate=2024-01-01&endDate=2024-01-31',
-        expect.any(Object)
-      )
-    })
-  })
-
-  describe('searchContent', () => {
-    it('should search content with query', async () => {
-      const mockResults = [
-        { id: '1', title: 'AI Literacy', type: 'rubric' },
-        { id: '2', title: 'AI Ethics', type: 'scenario' },
-      ]
-
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockResults,
-      })
-
-      const result = await ContentService.searchContent('AI')
-
-      expect(result).toEqual(mockResults)
-      expect(fetch).toHaveBeenCalledWith('/api/admin/content/search?q=AI', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-    })
-
-    it('should handle empty search results', async () => {
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        json: async () => [],
-      })
-
-      const result = await ContentService.searchContent('nonexistent')
-
-      expect(result).toEqual([])
-    })
-
-    it('should handle search with filters', async () => {
-      const mockResults = [{ id: '1', title: 'Filtered Result' }]
-
-      ;(fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockResults,
-      })
-
-      await ContentService.searchContent('test', {
-        type: 'rubric',
-        status: 'published',
-      })
-
-      expect(fetch).toHaveBeenCalledWith(
-        '/api/admin/content/search?q=test&type=rubric&status=published',
-        expect.any(Object)
+      // KSA Definitions - 24 hours TTL
+      await contentService.getKSADefinitions('en')
+      expect(cacheService.fetchWithCache).toHaveBeenLastCalledWith(
+        expect.any(String),
+        expect.objectContaining({ ttl: 24 * 60 * 60 * 1000, storage: 'both' })
       )
     })
   })
