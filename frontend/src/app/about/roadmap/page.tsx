@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 const roadmapData = {
   vision: {
     title: "產品願景",
-    content: "AI Square 是一個 Git-Based 學習平台，使用 GitHub 作為唯一內容來源，逐步擴充成完整的 AI 輔助學習平台。"
+    content: "AI Square 是一個「用 AI 學 AI 素養」的創新學習平台，基於國際 AI Literacy 框架，透過 AI 技術本身來提升學習者的 AI 素養能力。"
   },
   
   architecture: {
@@ -38,11 +38,13 @@ const roadmapData = {
       name: "Phase 1: MVP Baseline",
       status: "active",
       timeline: "2025/06/27 - 2025/07/15",
-      progress: 75,
+      progress: 85,
       features: [
         { name: "渲染講義與題目", status: "completed" },
         { name: "PBL 情境學習", status: "completed" },
         { name: "多語言支援 (9種)", status: "completed" },
+        { name: "測試覆蓋率 80%+", status: "completed" },
+        { name: "TypeScript 型別安全", status: "completed" },
         { name: "自動化內容發布", status: "partial" },
         { name: "基礎內容編輯器", status: "planned" }
       ]
@@ -54,6 +56,9 @@ const roadmapData = {
       timeline: "2025/07 - 2025/09",
       progress: 0,
       features: [
+        { name: "OAuth2 社交登入", status: "planned" },
+        { name: "AI 資源使用追蹤", status: "planned" },
+        { name: "PBL 修改歷程記錄", status: "planned" },
         { name: "智能 Onboarding", status: "planned" },
         { name: "動態難度調整", status: "planned" },
         { name: "社交學習功能", status: "planned" },
@@ -208,7 +213,7 @@ export default function RoadmapPage() {
                 <div className="text-sm text-blue-600 dark:text-blue-300">PBL 情境</div>
               </div>
               <div className="bg-green-100 dark:bg-green-900 rounded-lg p-6 text-center">
-                <div className="text-3xl font-bold text-green-800 dark:text-green-200">75%</div>
+                <div className="text-3xl font-bold text-green-800 dark:text-green-200">85%</div>
                 <div className="text-sm text-green-600 dark:text-green-300">MVP 完成度</div>
               </div>
               <div className="bg-yellow-100 dark:bg-yellow-900 rounded-lg p-6 text-center">
