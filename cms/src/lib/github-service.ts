@@ -154,7 +154,7 @@ export class GitHubService {
         title: pr.title,
         state: pr.state,
         branch: pr.head.ref,
-        merged: pr.merged || false,
+        merged: (pr as any).merged || false,
         url: pr.html_url,
       }))
     } catch (error) {
