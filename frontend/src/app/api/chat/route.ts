@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 // Initialize storage and AI services only when needed
 let storage: Storage | null = null;
 let vertexAI: VertexAI | null = null;
-let bucket: any = null;
+let bucket: ReturnType<Storage['bucket']> | null = null;
 
 function initializeServices() {
   if (!storage && process.env.GOOGLE_CLOUD_PROJECT) {
@@ -27,16 +27,16 @@ function initializeServices() {
 
 interface UserMemory {
   shortTerm: {
-    recentActivities: any[];
-    currentProgress: any;
+    recentActivities: unknown[];
+    currentProgress: unknown;
     recentTopics: string[];
     lastUpdated: string;
   };
   longTerm: {
-    profile: any;
+    profile: unknown;
     learningStyle: string;
-    achievements: any[];
-    preferences: any;
+    achievements: unknown[];
+    preferences: unknown;
     lastUpdated: string;
   };
 }
@@ -116,7 +116,8 @@ async function getUserContext(userEmail: string) {
       assessmentScore: userData.assessmentResult?.overallScore || null,
       domainScores: userData.assessmentResult?.domainScores || {},
       weakDomains: Object.entries(userData.assessmentResult?.domainScores || {})
-        .filter(([_, score]: [string, any]) => score < 60)
+        .filter(([, score]: [string, number]) => score < 60)
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         .map(([domain, _]) => domain),
       recentActivities: memory?.shortTerm.recentActivities || [],
       learningStyle: memory?.longTerm.learningStyle || 'balanced',
@@ -131,7 +132,7 @@ async function getUserContext(userEmail: string) {
   }
 }
 
-async function saveMessage(userEmail: string, sessionId: string, message: any) {
+async function saveMessage(userEmail: string, sessionId: string, message: { role: string; content: string; timestamp: string }) {
   const sanitizedEmail = userEmail.replace('@', '_at_').replace(/\./g, '_');
   const sessionFile = bucket.file(`user/${sanitizedEmail}/chat/sessions/${sessionId}.json`);
   
@@ -172,7 +173,7 @@ async function saveMessage(userEmail: string, sessionId: string, message: any) {
   }
 }
 
-async function updateChatIndex(userEmail: string, sessionId: string, session: any) {
+async function updateChatIndex(userEmail: string, sessionId: string, session: { id: string; title: string; updated_at: string; last_message?: string; message_count?: number }) {
   const sanitizedEmail = userEmail.replace('@', '_at_').replace(/\./g, '_');
   const indexFile = bucket.file(`user/${sanitizedEmail}/chat/index.json`);
   
@@ -186,7 +187,7 @@ async function updateChatIndex(userEmail: string, sessionId: string, session: an
     }
     
     // Update or add session info
-    const sessionIndex = index.sessions.findIndex((s: any) => s.id === sessionId);
+    const sessionIndex = index.sessions.findIndex((s: { id: string }) => s.id === sessionId);
     const sessionInfo = {
       id: session.id,
       title: session.title,
@@ -203,7 +204,7 @@ async function updateChatIndex(userEmail: string, sessionId: string, session: an
     }
     
     // Sort by updated_at
-    index.sessions.sort((a: any, b: any) => 
+    index.sessions.sort((a: { updated_at: string }, b: { updated_at: string }) => 
       new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
     );
     
@@ -213,7 +214,7 @@ async function updateChatIndex(userEmail: string, sessionId: string, session: an
   }
 }
 
-async function generateChatTitle(messages: any[]) {
+async function generateChatTitle(messages: { role: string; content: string }[]) {
   if (messages.length < 2) return 'New Chat';
   
   const model = vertexAI.preview.getGenerativeModel({
@@ -226,7 +227,7 @@ async function generateChatTitle(messages: any[]) {
   
   // Use up to 3 messages (first 3 exchanges) for better context
   const conversationContext = messages.slice(0, 6) // user, assistant, user (if exists)
-    .map((msg, index) => {
+    .map((msg) => {
       const role = msg.role === 'user' ? 'User' : 'Assistant';
       return `${role}: ${msg.content.substring(0, 150)}`;
     })
@@ -264,7 +265,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'AI services not configured' }, { status: 503 });
     }
     
-    const { message, sessionId, context: clientContext } = await req.json();
+    const { message, sessionId } = await req.json();
     
     // Get user info from request (passed from client)
     const userStr = req.headers.get('x-user-info');

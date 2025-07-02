@@ -133,7 +133,6 @@ const statusLabels = {
 };
 
 export default function RoadmapPage() {
-  const { t } = useTranslation(['navigation']);
   const [activePhase, setActivePhase] = useState('phase1');
   const [activeTab, setActiveTab] = useState('overview');
 

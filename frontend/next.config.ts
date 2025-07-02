@@ -126,16 +126,14 @@ const nextConfig: NextConfig = {
   // 壓縮配置
   compress: true,
 
-  // ESLint 檢查 - 漸進式啟用
+  // ESLint 檢查 - 已啟用品質檢查
   eslint: {
-    ignoreDuringBuilds: true, // 暫時忽略，需要逐步修復
-    // TODO: 設定為 false 當所有 ESLint 錯誤修復後
+    ignoreDuringBuilds: false, // 啟用 ESLint 檢查確保代碼品質
   },
 
-  // TypeScript 檢查 - 漸進式啟用
+  // TypeScript 檢查 - 已啟用類型檢查
   typescript: {
-    ignoreBuildErrors: true, // 暫時忽略，需要逐步修復
-    // TODO: 設定為 false 當所有 TypeScript 錯誤修復後
+    ignoreBuildErrors: false, // 啟用 TypeScript 檢查確保類型安全
   },
 };
 
