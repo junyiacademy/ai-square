@@ -11,7 +11,7 @@ import * as yaml from 'js-yaml'
 import { extractKSAIdsFromFlexible } from '../src/lib/validation/schemas/ksa-codes-flexible.schema'
 import { ValidationReporter } from '../src/lib/validation/validation-report'
 
-const SUPPORTED_LANGUAGES = ['en', 'zh', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it']
+const SUPPORTED_LANGUAGES = ['en', 'zhTW', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it']
 
 interface ValidationIssue {
   type: 'error' | 'warning'

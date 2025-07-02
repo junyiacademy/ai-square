@@ -89,7 +89,7 @@ describe('Content Integration Tests', () => {
 
   describe('Schema 相容性測試', () => {
     it('應該確保所有語言欄位都被定義', () => {
-      const languages = ['zh', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'];
+      const languages = ['zhTW', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'];
       
       // Test domains schema
       const testDomain = {
@@ -189,7 +189,7 @@ describe('Content Integration Tests', () => {
     });
 
     it('應該驗證多語言欄位的一致性', () => {
-      const languages = ['zh', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'];
+      const languages = ['zhTW', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'];
       
       // Helper to check if all language variants exist
       const checkMultilingualField = (obj: any, fieldName: string) => {

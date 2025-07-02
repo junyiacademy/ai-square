@@ -5,7 +5,7 @@ const path = require('path');
 const yaml = require('js-yaml');
 
 // 支援的語言
-const LANGUAGES = ['zh', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'];
+const LANGUAGES = ['zhTW', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'];
 
 // 必要的 keys
 const REQUIRED_KEYS = {

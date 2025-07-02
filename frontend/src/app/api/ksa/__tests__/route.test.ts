@@ -125,8 +125,8 @@ describe('/api/ksa route', () => {
       expect(data.knowledge_codes.themes.Theme1.explanation).toBe('Theme explanation');
     });
 
-    it('should return Chinese translations when lang=zh is provided', async () => {
-      const request = createMockRequest('http://localhost:3000/api/ksa?lang=zh');
+    it('should return Chinese translations when lang=zhTW is provided', async () => {
+      const request = createMockRequest('http://localhost:3000/api/ksa?lang=zhTW');
       
       const response = await GET(request);
       const data = await response.json();

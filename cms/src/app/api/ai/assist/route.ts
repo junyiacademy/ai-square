@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
         
         // Check multilingual fields for translation action
         if (parsed.scenario_info && action === 'translate') {
-          const languages = ['zh', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'];
+          const languages = ['zhTW', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'];
           const baseFields = ['title', 'description'];
           
           for (const field of baseFields) {

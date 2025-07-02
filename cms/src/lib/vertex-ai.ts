@@ -175,7 +175,7 @@ Requirements:
 4. Include realistic time estimates (in minutes)
 5. Add proper KSA mapping codes if missing (see reference below)
 6. Create engaging tasks with clear instructions
-7. Use language code suffixes correctly: _zh, _es, _ja, _ko, _fr, _de, _ru, _it
+7. Use language code suffixes correctly: _zhTW, _es, _ja, _ko, _fr, _de, _ru, _it
 8. For now, focus on completing the English content. Translation fields can be filled with placeholder text.
 
 ${formatKSACodesForPrompt()}
@@ -241,7 +241,7 @@ Current content:
 ${JSON.stringify(existingData, null, 2)}
 
 Guidelines:
-1. Translate all text fields by adding language suffixes (_zh, _es, _ja, _ko, _fr, _de, _ru, _it)
+1. Translate all text fields by adding language suffixes (_zhTW, _es, _ja, _ko, _fr, _de, _ru, _it)
 2. Maintain educational terminology consistency
 3. Adapt cultural context appropriately for each language
 4. Preserve technical terms in commonly used forms
@@ -270,10 +270,10 @@ Return a complete JSON object with all translations added.`;
   } catch (error) {
     console.error('Error in translateYAMLContent:', error);
     // Fallback to non-JSON mode
-    const languages = ['zh', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'];
+    const languages = ['zhTW', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'];
     return generateContent(
       `Translate this YAML content to languages: ${languages.join(', ')}\n\n${yamlContent}`,
-      `Translate all text fields. Add language suffixes like _zh, _es, etc. Return only valid YAML.`
+      `Translate all text fields. Add language suffixes like _zhTW, _es, etc. Return only valid YAML.`
     );
   }
 }
