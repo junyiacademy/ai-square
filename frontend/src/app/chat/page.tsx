@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
-import { ChevronLeft, ChevronRight, GripVertical, MessageCircle, BookOpen, Send, Sparkles, Brain, Lightbulb, Code, Users, Shield } from 'lucide-react';
+import { ChevronLeft, ChevronRight, GripVertical, MessageCircle, BookOpen, Send, Sparkles, Brain } from 'lucide-react';
 import type { ImperativePanelHandle } from 'react-resizable-panels';
 import { Header } from '@/components/layout/Header';
 import ReactMarkdown from 'react-markdown';
@@ -65,7 +65,7 @@ export default function ChatPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<{ email: string; id: string; role: string } | null>(null);
   const [isTyping, setIsTyping] = useState(false);
   const [assessmentResult, setAssessmentResult] = useState<AssessmentResult | null>(null);
   const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
@@ -87,6 +87,7 @@ export default function ChatPage() {
     if (currentUser) {
       loadUserAssessmentAndProgress();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
   // Auto-scroll to latest message
@@ -140,7 +141,14 @@ export default function ChatPage() {
           
           if (data.success && data.history) {
             // Transform history data
-            const history: PBLHistory[] = data.history.map((item: any) => ({
+            const history: PBLHistory[] = data.history.map((item: {
+              scenario_id: string;
+              scenario_title?: string;
+              completed_at: string;
+              overall_score?: number;
+              domain?: string;
+              time_spent?: number;
+            }) => ({
               scenarioId: item.scenario_id,
               scenarioTitle: item.scenario_title || 'Unknown Scenario',
               completedAt: item.completed_at,
@@ -221,15 +229,22 @@ export default function ChatPage() {
       
       // Find weak domains (score < 60)
       const weakDomains = Object.entries(result.domainScores)
-        .filter(([_, score]) => score < 60)
-        .map(([domain, _]) => domain);
+        .filter(([, score]) => score < 60)
+        .map(([domain]) => domain);
       
       // For each weak domain, find appropriate scenarios
       weakDomains.forEach(domain => {
         const domainKey = domain.replace('_', ' ');
         
         // Filter scenarios for this domain
-        const domainScenarios = scenarios.filter((s: any) => 
+        const domainScenarios = scenarios.filter((s: {
+          id: string;
+          domains?: string[];
+          targetDomain?: string[];
+          difficulty: string;
+          title: string;
+          estimatedDuration?: number;
+        }) => 
           !completedIds.has(s.id) && // Exclude completed scenarios
           !addedScenarioIds.has(s.id) && // Avoid duplicates
           (s.domains?.includes(domain) || s.domains?.includes(domainKey) ||
@@ -238,10 +253,10 @@ export default function ChatPage() {
         
         // Prefer beginner/intermediate scenarios for weak domains
         const appropriateScenarios = domainScenarios
-          .filter((s: any) => s.difficulty === 'beginner' || s.difficulty === 'intermediate')
+          .filter((s) => s.difficulty === 'beginner' || s.difficulty === 'intermediate')
           .slice(0, 1);
         
-        appropriateScenarios.forEach((scenario: any) => {
+        appropriateScenarios.forEach((scenario) => {
           addedScenarioIds.add(scenario.id);
           recommendations.push({
             id: scenario.id,
@@ -257,14 +272,14 @@ export default function ChatPage() {
       // If user is doing well, recommend advanced scenarios
       if (recommendations.length === 0) {
         const advancedScenarios = scenarios
-          .filter((s: any) => 
+          .filter((s) => 
             !completedIds.has(s.id) && // Exclude completed
             !addedScenarioIds.has(s.id) && // Avoid duplicates
             s.difficulty === 'advanced'
           )
           .slice(0, 2);
         
-        advancedScenarios.forEach((scenario: any) => {
+        advancedScenarios.forEach((scenario) => {
           if (!addedScenarioIds.has(scenario.id)) {
             addedScenarioIds.add(scenario.id);
             recommendations.push({
@@ -488,6 +503,7 @@ export default function ChatPage() {
   // Initialize quick actions on mount
   useEffect(() => {
     setQuickActions(getContextualQuickActions());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages.length]);
 
   // Update quick actions only after AI response is complete
@@ -495,6 +511,7 @@ export default function ChatPage() {
     if (!isTyping) {
       setQuickActions(getContextualQuickActions());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isTyping]);
 
   return (
@@ -683,7 +700,7 @@ export default function ChatPage() {
                     ))
                   )}
                   {isTyping && (
-                    <div className="flex justify-start">
+                    <div className="flex justify-start" data-testid="typing-indicator">
                       <div className="max-w-[70%] p-4 rounded-lg bg-gray-100 text-gray-900">
                         <div className="flex space-x-2">
                           <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
@@ -864,7 +881,7 @@ export default function ChatPage() {
                         Recommended for You
                       </h3>
                       <div className="space-y-3">
-                        {recommendedScenarios.map((scenario, index) => (
+                        {recommendedScenarios.map((scenario) => (
                           <a
                             key={scenario.id}
                             href={`/pbl/scenarios/${scenario.id}`}
