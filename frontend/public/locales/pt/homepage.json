@@ -1,0 +1,109 @@
+{
+  "hero": {
+    "title": "Domine a Alfabetização em IA com AI Square",
+    "subtitle": "Sua jornada personalizada para compreender e aproveitar a inteligência artificial",
+    "description": "AI Square é uma plataforma revolucionária de aprendizagem multi-agente que capacita você a desenvolver competências essenciais em IA através de avaliações interativas, caminhos de aprendizagem personalizados e assistência de IA em tempo real.",
+    "cta": {
+      "getStarted": "Comece Sua Jornada",
+      "explore": "Explore Domínios de IA",
+      "assessment": "Fazer Avaliação",
+      "continueLearning": "Continuar Aprendendo",
+      "takeAssessment": "Fazer Avaliação"
+    }
+  },
+  "features": {
+    "title": "Por Que Escolher AI Square?",
+    "subtitle": "Educação abrangente em IA projetada para o mundo moderno",
+    "items": {
+      "personalizedLearning": {
+        "title": "Caminhos de Aprendizagem Personalizados",
+        "description": "Recomendações baseadas em IA adaptam-se ao seu estilo e ritmo de aprendizagem"
+      },
+      "multilingualSupport": {
+        "title": "Suporte Multilíngue",
+        "description": "Aprenda em seu idioma preferido com conteúdo totalmente multilíngue"
+      },
+      "realTimeAI": {
+        "title": "Tutoria de IA 24/7",
+        "description": "Obtenha feedback instantâneo e orientação de assistentes de IA avançados"
+      },
+      "comprehensiveAssessment": {
+        "title": "Avaliação Abrangente",
+        "description": "Avalie sua alfabetização em IA em quatro domínios principais com insights detalhados"
+      },
+      "interactiveTasks": {
+        "title": "Tarefas de Aprendizagem Interativas",
+        "description": "Projetos práticos e cenários do mundo real para aplicar seu conhecimento"
+      },
+      "progressTracking": {
+        "title": "Acompanhamento Visual de Progresso",
+        "description": "Acompanhe seu crescimento com gráficos radar intuitivos e conquistas"
+      }
+    }
+  },
+  "domains": {
+    "title": "Quatro Domínios Principais de Alfabetização em IA",
+    "subtitle": "Domine todos os aspectos da interação e criação com IA",
+    "viewDetails": "Ver Detalhes",
+    "items": {
+      "engaging": {
+        "name": "Envolvendo-se com IA"
+      },
+      "creating": {
+        "name": "Criando com IA"
+      },
+      "managing": {
+        "name": "Gerenciando com IA"
+      },
+      "designing": {
+        "name": "Projetando para IA"
+      }
+    }
+  },
+  "howItWorks": {
+    "title": "Como Funciona",
+    "subtitle": "Sua jornada para o domínio da IA em passos simples",
+    "steps": {
+      "assessment": {
+        "title": "1. Faça a Avaliação Inicial",
+        "description": "Avalie seu nível atual de alfabetização em IA em quatro domínios"
+      },
+      "personalized": {
+        "title": "2. Obtenha um Caminho Personalizado",
+        "description": "Receba uma jornada de aprendizagem personalizada baseada em seus resultados"
+      },
+      "learn": {
+        "title": "3. Aprenda e Pratique",
+        "description": "Envolva-se com conteúdo interativo e tarefas assistidas por IA"
+      },
+      "track": {
+        "title": "4. Acompanhe o Progresso",
+        "description": "Monitore seu crescimento e conquiste realizações"
+      }
+    }
+  },
+  "target": {
+    "title": "Para Quem é o AI Square?",
+    "subtitle": "Projetado para aprendizes em todos os níveis",
+    "audiences": {
+      "individuals": {
+        "title": "Aprendizes Individuais",
+        "description": "Desenvolva habilidades essenciais em IA para crescimento pessoal e profissional"
+      },
+      "educators": {
+        "title": "Educadores",
+        "description": "Acesse recursos abrangentes para ensinar alfabetização em IA"
+      },
+      "organizations": {
+        "title": "Organizações",
+        "description": "Treine sua equipe com soluções de educação em IA de nível empresarial"
+      }
+    }
+  },
+  "cta": {
+    "title": "Pronto para Começar Sua Jornada de Aprendizagem em IA?",
+    "subtitle": "Junte-se a milhares de aprendizes dominando a alfabetização em IA",
+    "button": "Comece Gratuitamente",
+    "login": "Já tem uma conta? Faça login"
+  }
+}

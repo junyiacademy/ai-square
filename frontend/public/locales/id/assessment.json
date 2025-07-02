@@ -1,0 +1,152 @@
+{
+  "loading": "Memuat penilaian...",
+  "errorLoading": "Gagal memuat data penilaian. Silakan coba lagi.",
+  "title": "Penilaian Literasi AI",
+  "description": "Evaluasi keterampilan literasi AI Anda di empat domain utama",
+  "assessmentInfo": {
+    "title": "Detail Penilaian",
+    "questions": "{{count}} pertanyaan komprehensif",
+    "timeLimit": "Batas waktu {{minutes}} menit",
+    "domains": "{{count}} domain keterampilan",
+    "immediate": "Hasil segera dengan umpan balik terperinci"
+  },
+  "benefits": {
+    "title": "Apa yang Akan Anda Dapatkan",
+    "personalized": "Penilaian keterampilan personal",
+    "skillGaps": "Identifikasi kesenjangan pengetahuan",
+    "radarChart": "Grafik radar keterampilan visual",
+    "recommendations": "Rekomendasi pembelajaran yang ditargetkan"
+  },
+  "startAssessment": "Mulai Penilaian",
+  "quiz": {
+    "title": "Penilaian Literasi AI",
+    "question": "Pertanyaan",
+    "timeLeft": "Waktu Tersisa",
+    "selectAnswer": "Silakan pilih jawaban untuk melanjutkan",
+    "checkAnswer": "Periksa jawaban dan penjelasan Anda di bawah",
+    "submit": "Kirim Jawaban",
+    "next": "Pertanyaan Berikutnya",
+    "finish": "Selesaikan Penilaian",
+    "explanation": "Penjelasan",
+    "ksaMapping": "Kompetensi Terkait",
+    "knowledge": "Pengetahuan",
+    "skills": "Keterampilan",
+    "attitudes": "Sikap",
+    "correct": "Benar!",
+    "incorrect": "Salah",
+    "selectAnswerToSeeExplanation": "Pilih jawaban untuk melihat penjelasan"
+  },
+  "difficulty": {
+    "basic": "Dasar",
+    "intermediate": "Menengah", 
+    "advanced": "Lanjutan"
+  },
+  "results": {
+    "title": "Hasil Penilaian",
+    "subtitle": "Berikut adalah kinerja Anda dalam penilaian literasi AI",
+    "correctAnswers": "Jawaban Benar",
+    "timeSpent": "Waktu yang Dihabiskan",
+    "completedAt": "Diselesaikan Pada",
+    "skillRadar": "Grafik Radar Keterampilan",
+    "yourScore": "Skor Anda",
+    "summary": "Ringkasan Penilaian",
+    "summaryText": "Anda mencapai level {{level}} dengan skor keseluruhan {{score}}%, menjawab {{correct}} dari {{total}} pertanyaan dengan benar.",
+    "domainBreakdown": "Rincian Domain",
+    "personalizedRecommendations": "Rekomendasi Personal",
+    "recommendations": {
+      "focusOn": "Fokus pada peningkatan",
+      "engaging_with_ai": "Fokus pada peningkatan Berinteraksi dengan AI: Memahami keterbatasan AI, masalah privasi, dan pertimbangan etis saat berinteraksi dengan sistem AI",
+      "creating_with_ai": "Fokus pada peningkatan Berkreasi dengan AI: Mempelajari teknik prompting, praktik terbaik pembuatan konten, dan kolaborasi kreatif dengan alat AI",
+      "managing_with_ai": "Fokus pada peningkatan Mengelola dengan AI: Mengembangkan keterampilan pengambilan keputusan berbantuan AI, otomasi alur kerja, dan kolaborasi tim",
+      "designing_with_ai": "Fokus pada peningkatan Merancang dengan AI: Membangun kurikulum literasi AI, membuat materi pembelajaran, dan merancang pengalaman yang ditingkatkan AI"
+    },
+    "nextSteps": "Langkah Selanjutnya yang Direkomendasikan",
+    "nextStep1": "Fokus pada domain dengan skor terendah",
+    "nextStep2": "Berlatih dengan latihan interaktif",
+    "nextStep3": "Bergabung dengan komunitas pembelajaran literasi AI",
+    "retakeAssessment": "Ulangi Penilaian",
+    "downloadReport": "Unduh Laporan",
+    "saveResults": "Simpan Hasil",
+    "viewLearningPath": "Lihat Jalur Pembelajaran",
+    "saving": "Menyimpan...",
+    "saved": "Tersimpan",
+    "saveSuccess": "Hasil berhasil disimpan! ID: {{assessmentId}}",
+    "saveError": "Gagal menyimpan hasil: {{error}}",
+    "autoSaving": "Menyimpan hasil Anda secara otomatis...",
+    "autoSaved": "Hasil tersimpan otomatis",
+    "tabs": {
+      "overview": "Ikhtisar",
+      "domains": "Domain", 
+      "recommendations": "Rekomendasi",
+      "ksa": "Analisis KSA",
+      "knowledge-graph": "Grafik Pengetahuan"
+    },
+    "knowledgeGraph": {
+      "title": "Grafik Pengetahuan Kompetensi",
+      "description": "Visualisasi interaktif kompetensi literasi AI Anda yang menunjukkan tingkat penguasaan terperinci",
+      "yourProfile": "Profil Literasi AI Anda",
+      "mastery": "Penguasaan",
+      "masteryLevel": "Tingkat Penguasaan (0-100%)"
+    },
+    "questionReview": {
+      "title": "Tinjauan Pertanyaan",
+      "noQuestions": "Tidak ada pertanyaan yang tersedia untuk ditinjau",
+      "questionNumber": "Pertanyaan {{current}} dari {{total}}",
+      "previous": "Sebelumnya",
+      "next": "Berikutnya",
+      "correct": "Jawaban Anda benar!",
+      "incorrect": "Jawaban Anda salah",
+      "practicePrompt": "Tinjau pertanyaan ini dan coba pahami konsepnya dengan lebih baik",
+      "practiceAgain": "Latihan Pertanyaan Serupa",
+      "closeReview": "Tutup Tinjauan"
+    },
+    "ksaAnalysis": {
+      "title": "Analisis Kompetensi KSA",
+      "description": "Analisis Pengetahuan, Keterampilan, dan Sikap yang ditunjukkan melalui jawaban benar Anda",
+      "competenciesDemonstrated": "kompetensi yang ditunjukkan",
+      "times": "kali",
+      "demonstratedIn": "Ditunjukkan dalam {{count}} pertanyaan",
+      "noCompetencies": "Tidak ada kompetensi yang ditunjukkan dalam kategori ini",
+      "summary": "Ringkasan KSA Keseluruhan",
+      "knowledgeAreas": "Area Pengetahuan",
+      "skillsAreas": "Area Keterampilan",
+      "attitudesAreas": "Area Sikap"
+    }
+  },
+  "level": {
+    "beginner": "Pemula",
+    "intermediate": "Menengah",
+    "advanced": "Lanjutan",
+    "expert": "Ahli"
+  },
+  "domains": {
+    "engaging_with_ai": "Berinteraksi dengan AI",
+    "creating_with_ai": "Berkreasi dengan AI",
+    "managing_with_ai": "Mengelola dengan AI",
+    "designing_with_ai": "Merancang dengan AI"
+  },
+  "history": {
+    "title": "Riwayat Penilaian",
+    "subtitle": "Lihat hasil penilaian sebelumnya dan lacak kemajuan Anda",
+    "loading": "Memuat riwayat...",
+    "error": "Gagal memuat riwayat",
+    "retry": "Coba Lagi",
+    "notLoggedIn": "Silakan masuk untuk melihat riwayat penilaian Anda",
+    "takeAssessment": "Ambil Penilaian",
+    "user": "Pengguna",
+    "totalAssessments": "Total Penilaian",
+    "noHistory": "Belum ada riwayat penilaian",
+    "takeFirstAssessment": "Ambil Penilaian Pertama Anda",
+    "overallScore": "Skor Keseluruhan",
+    "correct": "benar",
+    "domainScores": "Skor Domain",
+    "duration": "Durasi",
+    "viewDetails": "Lihat Detail",
+    "takeNewAssessment": "Ambil Penilaian Baru",
+    "startTime": "Waktu Mulai",
+    "endTime": "Waktu Selesai"
+  },
+  "review": {
+    "title": "Tinjauan Penilaian"
+  }
+}

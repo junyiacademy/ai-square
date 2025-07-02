@@ -8,7 +8,7 @@ import i18n from 'i18next';
 
 // 支援的語言列表
 export const SUPPORTED_LANGUAGES = [
-  'en', 'zhTW', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'
+  'en', 'zhTW', 'zhCN', 'pt', 'ar', 'id', 'th', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'
 ] as const;
 
 export type SupportedLanguage = typeof SUPPORTED_LANGUAGES[number];

@@ -1,0 +1,27 @@
+{
+  "skip": "Lewati",
+  "next": "Berikutnya",
+  "back": "Kembali",
+  "continue": "Lanjutkan",
+  "loading": "Memuat...",
+  "save": "Simpan",
+  "cancel": "Batal",
+  "submit": "Kirim",
+  "delete": "Hapus",
+  "edit": "Edit",
+  "close": "Tutup",
+  "error": "Kesalahan",
+  "success": "Berhasil",
+  "warning": "Peringatan",
+  "info": "Informasi",
+  "backToDashboard": "Kembali ke Dasbor",
+  "minutes": "menit",
+  "hours": "jam",
+  "days": "hari",
+  "view": "Lihat",
+  "difficulty": {
+    "beginner": "Pemula",
+    "intermediate": "Menengah",
+    "advanced": "Lanjutan"
+  }
+}

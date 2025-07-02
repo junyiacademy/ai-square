@@ -1,0 +1,109 @@
+{
+  "hero": {
+    "title": "与 AI Square 一起掌握人工智能素养",
+    "subtitle": "您的个性化人工智能理解与应用之旅",
+    "description": "AI Square 是一个革命性的多智能体学习平台，通过互动评估、个性化学习路径和实时 AI 辅助，助力您培养必备的人工智能能力。",
+    "cta": {
+      "getStarted": "开始您的旅程",
+      "explore": "探索 AI 领域",
+      "assessment": "进行评估",
+      "continueLearning": "继续学习",
+      "takeAssessment": "进行评估"
+    }
+  },
+  "features": {
+    "title": "为什么选择 AI Square？",
+    "subtitle": "专为现代世界设计的综合人工智能教育",
+    "items": {
+      "personalizedLearning": {
+        "title": "个性化学习路径",
+        "description": "AI 驱动的推荐系统适应您的学习风格和节奏"
+      },
+      "multilingualSupport": {
+        "title": "多语言支持",
+        "description": "使用您偏好的语言学习，享受完整的多语言内容"
+      },
+      "realTimeAI": {
+        "title": "全天候 AI 辅导",
+        "description": "从高级 AI 助手获得即时反馈和指导"
+      },
+      "comprehensiveAssessment": {
+        "title": "综合评估",
+        "description": "通过详细洞察评估您在四个核心领域的 AI 素养"
+      },
+      "interactiveTasks": {
+        "title": "互动学习任务",
+        "description": "通过实践项目和真实场景应用您的知识"
+      },
+      "progressTracking": {
+        "title": "可视化进度追踪",
+        "description": "通过直观的雷达图和成就徽章追踪您的成长"
+      }
+    }
+  },
+  "domains": {
+    "title": "四大核心 AI 素养领域",
+    "subtitle": "掌握 AI 互动和创造的方方面面",
+    "viewDetails": "查看详情",
+    "items": {
+      "engaging": {
+        "name": "与 AI 互动"
+      },
+      "creating": {
+        "name": "用 AI 创作"
+      },
+      "managing": {
+        "name": "用 AI 管理"
+      },
+      "designing": {
+        "name": "为 AI 设计"
+      }
+    }
+  },
+  "howItWorks": {
+    "title": "如何运作",
+    "subtitle": "通过简单步骤实现 AI 精通之旅",
+    "steps": {
+      "assessment": {
+        "title": "1. 进行初始评估",
+        "description": "评估您在四个领域的当前 AI 素养水平"
+      },
+      "personalized": {
+        "title": "2. 获得个性化路径",
+        "description": "根据您的结果获得定制的学习旅程"
+      },
+      "learn": {
+        "title": "3. 学习与实践",
+        "description": "参与互动内容和 AI 辅助任务"
+      },
+      "track": {
+        "title": "4. 追踪进度",
+        "description": "监控您的成长并获得成就"
+      }
+    }
+  },
+  "target": {
+    "title": "AI Square 适合谁？",
+    "subtitle": "为各个层次的学习者设计",
+    "audiences": {
+      "individuals": {
+        "title": "个人学习者",
+        "description": "为个人和职业发展培养必备的 AI 技能"
+      },
+      "educators": {
+        "title": "教育工作者",
+        "description": "获取教授 AI 素养的综合资源"
+      },
+      "organizations": {
+        "title": "企业组织",
+        "description": "通过企业级 AI 教育解决方案培训您的团队"
+      }
+    }
+  },
+  "cta": {
+    "title": "准备好开始您的 AI 学习之旅了吗？",
+    "subtitle": "加入数千名正在掌握 AI 素养的学习者",
+    "button": "免费开始",
+    "login": "已有账户？立即登录"
+  }
+}

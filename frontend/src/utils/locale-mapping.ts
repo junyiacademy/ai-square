@@ -12,6 +12,10 @@ export function toBrowserLocale(internalCode: string): string {
   const mapping: Record<string, string> = {
     'zhTW': 'zh-TW',
     'zhCN': 'zh-CN',
+    'pt': 'pt-BR',
+    'ar': 'ar-SA',
+    'id': 'id-ID',
+    'th': 'th-TH',
     // Other languages remain the same
     'en': 'en',
     'es': 'es',
@@ -35,6 +39,10 @@ export function fromBrowserLocale(browserLocale: string): string {
   const mapping: Record<string, string> = {
     'zh-TW': 'zhTW',
     'zh-CN': 'zhCN',
+    'pt-BR': 'pt',
+    'ar-SA': 'ar',
+    'id-ID': 'id',
+    'th-TH': 'th',
     // Other languages remain the same
     'en': 'en',
     'es': 'es',

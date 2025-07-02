@@ -11,6 +11,11 @@ interface LanguageLoader {
 export const languageLoaders: LanguageLoader = {
   'en': () => fetch('/locales/en/common.json').then(res => res.json()),
   'zhTW': () => fetch('/locales/zhTW/common.json').then(res => res.json()),
+  'zhCN': () => fetch('/locales/zhCN/common.json').then(res => res.json()),
+  'pt': () => fetch('/locales/pt/common.json').then(res => res.json()),
+  'ar': () => fetch('/locales/ar/common.json').then(res => res.json()),
+  'id': () => fetch('/locales/id/common.json').then(res => res.json()),
+  'th': () => fetch('/locales/th/common.json').then(res => res.json()),
   'es': () => fetch('/locales/es/common.json').then(res => res.json()),
   'ja': () => fetch('/locales/ja/common.json').then(res => res.json()),
   'ko': () => fetch('/locales/ko/common.json').then(res => res.json()),

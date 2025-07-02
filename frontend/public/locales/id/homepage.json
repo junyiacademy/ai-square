@@ -1,0 +1,109 @@
+{
+  "hero": {
+    "title": "Kuasai Literasi AI dengan AI Square",
+    "subtitle": "Perjalanan pribadi Anda untuk memahami dan memanfaatkan kecerdasan buatan",
+    "description": "AI Square adalah platform pembelajaran multi-agen revolusioner yang memberdayakan Anda untuk mengembangkan kompetensi AI penting melalui penilaian interaktif, jalur pembelajaran yang dipersonalisasi, dan bantuan AI real-time.",
+    "cta": {
+      "getStarted": "Mulai Perjalanan Anda",
+      "explore": "Jelajahi Domain AI",
+      "assessment": "Ikuti Penilaian",
+      "continueLearning": "Lanjutkan Belajar",
+      "takeAssessment": "Ikuti Penilaian"
+    }
+  },
+  "features": {
+    "title": "Mengapa Memilih AI Square?",
+    "subtitle": "Pendidikan AI komprehensif yang dirancang untuk dunia modern",
+    "items": {
+      "personalizedLearning": {
+        "title": "Jalur Pembelajaran Personal",
+        "description": "Rekomendasi berbasis AI menyesuaikan dengan gaya dan kecepatan belajar Anda"
+      },
+      "multilingualSupport": {
+        "title": "Dukungan Multi Bahasa",
+        "description": "Belajar dalam bahasa pilihan Anda dengan konten multi bahasa lengkap"
+      },
+      "realTimeAI": {
+        "title": "Bimbingan AI 24/7",
+        "description": "Dapatkan umpan balik instan dan panduan dari asisten AI canggih"
+      },
+      "comprehensiveAssessment": {
+        "title": "Penilaian Komprehensif",
+        "description": "Evaluasi literasi AI Anda di empat domain inti dengan wawasan terperinci"
+      },
+      "interactiveTasks": {
+        "title": "Tugas Pembelajaran Interaktif",
+        "description": "Proyek praktis dan skenario dunia nyata untuk menerapkan pengetahuan Anda"
+      },
+      "progressTracking": {
+        "title": "Pelacakan Kemajuan Visual",
+        "description": "Lacak pertumbuhan Anda dengan grafik radar intuitif dan lencana pencapaian"
+      }
+    }
+  },
+  "domains": {
+    "title": "Empat Domain Inti Literasi AI",
+    "subtitle": "Kuasai setiap aspek interaksi dan kreasi AI",
+    "viewDetails": "Lihat Detail",
+    "items": {
+      "engaging": {
+        "name": "Berinteraksi dengan AI"
+      },
+      "creating": {
+        "name": "Berkreasi dengan AI"
+      },
+      "managing": {
+        "name": "Mengelola dengan AI"
+      },
+      "designing": {
+        "name": "Merancang untuk AI"
+      }
+    }
+  },
+  "howItWorks": {
+    "title": "Cara Kerjanya",
+    "subtitle": "Perjalanan Anda menuju penguasaan AI dalam langkah sederhana",
+    "steps": {
+      "assessment": {
+        "title": "1. Ikuti Penilaian Awal",
+        "description": "Evaluasi tingkat literasi AI Anda saat ini di empat domain"
+      },
+      "personalized": {
+        "title": "2. Dapatkan Jalur Personal",
+        "description": "Terima perjalanan pembelajaran yang disesuaikan berdasarkan hasil Anda"
+      },
+      "learn": {
+        "title": "3. Belajar dan Berlatih",
+        "description": "Terlibat dengan konten interaktif dan tugas berbantuan AI"
+      },
+      "track": {
+        "title": "4. Lacak Kemajuan",
+        "description": "Pantau pertumbuhan Anda dan raih pencapaian"
+      }
+    }
+  },
+  "target": {
+    "title": "Untuk Siapa AI Square?",
+    "subtitle": "Dirancang untuk pembelajar di setiap tingkat",
+    "audiences": {
+      "individuals": {
+        "title": "Pembelajar Individu",
+        "description": "Kembangkan keterampilan AI penting untuk pertumbuhan pribadi dan profesional"
+      },
+      "educators": {
+        "title": "Pendidik",
+        "description": "Akses sumber daya komprehensif untuk mengajarkan literasi AI"
+      },
+      "organizations": {
+        "title": "Organisasi",
+        "description": "Latih tim Anda dengan solusi pendidikan AI tingkat perusahaan"
+      }
+    }
+  },
+  "cta": {
+    "title": "Siap Memulai Perjalanan Belajar AI Anda?",
+    "subtitle": "Bergabunglah dengan ribuan pembelajar yang menguasai literasi AI",
+    "button": "Mulai Gratis",
+    "login": "Sudah punya akun? Masuk"
+  }
+}

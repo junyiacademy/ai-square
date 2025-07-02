@@ -1,0 +1,152 @@
+{
+  "loading": "Carregando avaliação...",
+  "errorLoading": "Falha ao carregar dados da avaliação. Por favor, tente novamente.",
+  "title": "Avaliação de Alfabetização em IA",
+  "description": "Avalie suas habilidades de alfabetização em IA em quatro domínios principais",
+  "assessmentInfo": {
+    "title": "Detalhes da Avaliação",
+    "questions": "{{count}} perguntas abrangentes",
+    "timeLimit": "Limite de tempo de {{minutes}} minutos",
+    "domains": "{{count}} domínios de habilidades",
+    "immediate": "Resultados imediatos com feedback detalhado"
+  },
+  "benefits": {
+    "title": "O Que Você Receberá",
+    "personalized": "Avaliação personalizada de habilidades",
+    "skillGaps": "Identificar lacunas de conhecimento",
+    "radarChart": "Gráfico radar visual de habilidades",
+    "recommendations": "Recomendações de aprendizagem direcionadas"
+  },
+  "startAssessment": "Iniciar Avaliação",
+  "quiz": {
+    "title": "Avaliação de Alfabetização em IA",
+    "question": "Pergunta",
+    "timeLeft": "Tempo Restante",
+    "selectAnswer": "Por favor, selecione uma resposta para continuar",
+    "checkAnswer": "Verifique sua resposta e explicação abaixo",
+    "submit": "Enviar Resposta",
+    "next": "Próxima Pergunta",
+    "finish": "Finalizar Avaliação",
+    "explanation": "Explicação",
+    "ksaMapping": "Competências Relacionadas",
+    "knowledge": "Conhecimento",
+    "skills": "Habilidades",
+    "attitudes": "Atitudes",
+    "correct": "Correto!",
+    "incorrect": "Incorreto",
+    "selectAnswerToSeeExplanation": "Selecione uma resposta para ver a explicação"
+  },
+  "difficulty": {
+    "basic": "Básico",
+    "intermediate": "Intermediário", 
+    "advanced": "Avançado"
+  },
+  "results": {
+    "title": "Resultados da Avaliação",
+    "subtitle": "Veja como você se saiu na avaliação de alfabetização em IA",
+    "correctAnswers": "Respostas Corretas",
+    "timeSpent": "Tempo Gasto",
+    "completedAt": "Concluído Em",
+    "skillRadar": "Gráfico Radar de Habilidades",
+    "yourScore": "Sua Pontuação",
+    "summary": "Resumo da Avaliação",
+    "summaryText": "Você alcançou o nível {{level}} com {{score}}% de pontuação geral, respondendo {{correct}} de {{total}} perguntas corretamente.",
+    "domainBreakdown": "Análise por Domínio",
+    "personalizedRecommendations": "Recomendações Personalizadas",
+    "recommendations": {
+      "focusOn": "Foque em melhorar",
+      "engaging_with_ai": "Foque em melhorar Engajamento com IA: Compreender limitações de IA, preocupações com privacidade e considerações éticas ao interagir com sistemas de IA",
+      "creating_with_ai": "Foque em melhorar Criação com IA: Aprender técnicas de prompt, melhores práticas de geração de conteúdo e colaboração criativa com ferramentas de IA",
+      "managing_with_ai": "Foque em melhorar Gestão com IA: Desenvolver habilidades para tomada de decisão assistida por IA, automação de fluxo de trabalho e colaboração em equipe",
+      "designing_with_ai": "Foque em melhorar Design com IA: Construir currículo de alfabetização em IA, criar materiais de aprendizagem e projetar experiências aprimoradas por IA"
+    },
+    "nextSteps": "Próximos Passos Recomendados",
+    "nextStep1": "Foque nos seus domínios com menor pontuação",
+    "nextStep2": "Pratique com exercícios interativos",
+    "nextStep3": "Junte-se a comunidades de aprendizagem de alfabetização em IA",
+    "retakeAssessment": "Refazer Avaliação",
+    "downloadReport": "Baixar Relatório",
+    "saveResults": "Salvar Resultados",
+    "viewLearningPath": "Ver Caminho de Aprendizagem",
+    "saving": "Salvando...",
+    "saved": "Salvo",
+    "saveSuccess": "Resultados salvos com sucesso! ID: {{assessmentId}}",
+    "saveError": "Falha ao salvar resultados: {{error}}",
+    "autoSaving": "Salvando automaticamente seus resultados...",
+    "autoSaved": "Resultados salvos automaticamente",
+    "tabs": {
+      "overview": "Visão Geral",
+      "domains": "Domínios", 
+      "recommendations": "Recomendações",
+      "ksa": "Análise KSA",
+      "knowledge-graph": "Grafo de Conhecimento"
+    },
+    "knowledgeGraph": {
+      "title": "Grafo de Conhecimento de Competências",
+      "description": "Visualização interativa de suas competências de alfabetização em IA mostrando níveis detalhados de domínio",
+      "yourProfile": "Seu Perfil de Alfabetização em IA",
+      "mastery": "Domínio",
+      "masteryLevel": "Nível de Domínio (0-100%)"
+    },
+    "questionReview": {
+      "title": "Revisão de Perguntas",
+      "noQuestions": "Nenhuma pergunta disponível para revisão",
+      "questionNumber": "Pergunta {{current}} de {{total}}",
+      "previous": "Anterior",
+      "next": "Próxima",
+      "correct": "Sua resposta estava correta!",
+      "incorrect": "Sua resposta estava incorreta",
+      "practicePrompt": "Revise esta pergunta e tente entender melhor o conceito",
+      "practiceAgain": "Praticar Perguntas Similares",
+      "closeReview": "Fechar Revisão"
+    },
+    "ksaAnalysis": {
+      "title": "Análise de Competências KSA",
+      "description": "Análise de Conhecimentos, Habilidades e Atitudes demonstrados através de suas respostas corretas",
+      "competenciesDemonstrated": "competências demonstradas",
+      "times": "vezes",
+      "demonstratedIn": "Demonstrado em {{count}} pergunta(s)",
+      "noCompetencies": "Nenhuma competência demonstrada nesta categoria",
+      "summary": "Resumo Geral KSA",
+      "knowledgeAreas": "Áreas de Conhecimento",
+      "skillsAreas": "Áreas de Habilidades",
+      "attitudesAreas": "Áreas de Atitudes"
+    }
+  },
+  "level": {
+    "beginner": "Iniciante",
+    "intermediate": "Intermediário",
+    "advanced": "Avançado",
+    "expert": "Especialista"
+  },
+  "domains": {
+    "engaging_with_ai": "Engajamento com IA",
+    "creating_with_ai": "Criação com IA",
+    "managing_with_ai": "Gestão com IA",
+    "designing_with_ai": "Design com IA"
+  },
+  "history": {
+    "title": "Histórico de Avaliações",
+    "subtitle": "Veja seus resultados de avaliações anteriores e acompanhe seu progresso",
+    "loading": "Carregando histórico...",
+    "error": "Falha ao carregar histórico",
+    "retry": "Tentar Novamente",
+    "notLoggedIn": "Por favor, faça login para ver seu histórico de avaliações",
+    "takeAssessment": "Fazer uma Avaliação",
+    "user": "Usuário",
+    "totalAssessments": "Total de Avaliações",
+    "noHistory": "Nenhum histórico de avaliação ainda",
+    "takeFirstAssessment": "Faça Sua Primeira Avaliação",
+    "overallScore": "Pontuação Geral",
+    "correct": "corretas",
+    "domainScores": "Pontuações por Domínio",
+    "duration": "Duração",
+    "viewDetails": "Ver Detalhes",
+    "takeNewAssessment": "Fazer Nova Avaliação",
+    "startTime": "Hora de Início",
+    "endTime": "Hora de Término"
+  },
+  "review": {
+    "title": "Revisão da Avaliação"
+  }
+}

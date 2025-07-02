@@ -1,0 +1,152 @@
+{
+  "loading": "正在加载评估...",
+  "errorLoading": "加载评估数据失败。请重试。",
+  "title": "AI 素养评估",
+  "description": "评估您在四个关键领域的AI素养技能",
+  "assessmentInfo": {
+    "title": "评估详情",
+    "questions": "{{count}} 道综合问题",
+    "timeLimit": "{{minutes}} 分钟时限",
+    "domains": "{{count}} 个技能领域",
+    "immediate": "即时结果与详细反馈"
+  },
+  "benefits": {
+    "title": "您将获得什么",
+    "personalized": "个性化技能评估",
+    "skillGaps": "识别知识差距",
+    "radarChart": "可视化技能雷达图",
+    "recommendations": "针对性学习建议"
+  },
+  "startAssessment": "开始评估",
+  "quiz": {
+    "title": "AI 素养评估",
+    "question": "问题",
+    "timeLeft": "剩余时间",
+    "selectAnswer": "请选择答案以继续",
+    "checkAnswer": "查看下方的答案和解释",
+    "submit": "提交答案",
+    "next": "下一题",
+    "finish": "完成评估",
+    "explanation": "解释",
+    "ksaMapping": "相关能力",
+    "knowledge": "知识",
+    "skills": "技能",
+    "attitudes": "态度",
+    "correct": "正确！",
+    "incorrect": "错误",
+    "selectAnswerToSeeExplanation": "选择答案以查看解释"
+  },
+  "difficulty": {
+    "basic": "基础",
+    "intermediate": "中级", 
+    "advanced": "高级"
+  },
+  "results": {
+    "title": "评估结果",
+    "subtitle": "这是您在AI素养评估中的表现",
+    "correctAnswers": "正确答案",
+    "timeSpent": "用时",
+    "completedAt": "完成时间",
+    "skillRadar": "技能雷达图",
+    "yourScore": "您的分数",
+    "summary": "评估总结",
+    "summaryText": "您达到了{{level}}级别，总分{{score}}%，在{{total}}道题中答对了{{correct}}道。",
+    "domainBreakdown": "领域分析",
+    "personalizedRecommendations": "个性化建议",
+    "recommendations": {
+      "focusOn": "重点提升",
+      "engaging_with_ai": "重点提升与AI互动：了解AI系统的局限性、隐私问题和伦理考虑",
+      "creating_with_ai": "重点提升与AI创作：学习提示技巧、内容生成最佳实践和与AI工具的创意协作",
+      "managing_with_ai": "重点提升与AI管理：发展AI辅助决策、工作流自动化和团队协作技能",
+      "designing_with_ai": "重点提升与AI设计：构建AI素养课程、创建学习材料和设计AI增强体验"
+    },
+    "nextSteps": "建议的下一步",
+    "nextStep1": "专注于您得分最低的领域",
+    "nextStep2": "通过互动练习进行实践",
+    "nextStep3": "加入AI素养学习社区",
+    "retakeAssessment": "重新评估",
+    "downloadReport": "下载报告",
+    "saveResults": "保存结果",
+    "viewLearningPath": "查看学习路径",
+    "saving": "保存中...",
+    "saved": "已保存",
+    "saveSuccess": "结果保存成功！ID: {{assessmentId}}",
+    "saveError": "保存结果失败: {{error}}",
+    "autoSaving": "自动保存您的结果...",
+    "autoSaved": "结果已自动保存",
+    "tabs": {
+      "overview": "概览",
+      "domains": "领域", 
+      "recommendations": "建议",
+      "ksa": "KSA分析",
+      "knowledge-graph": "知识图谱"
+    },
+    "knowledgeGraph": {
+      "title": "能力知识图谱",
+      "description": "显示详细掌握程度的AI素养能力交互可视化",
+      "yourProfile": "您的AI素养档案",
+      "mastery": "掌握程度",
+      "masteryLevel": "掌握程度 (0-100%)"
+    },
+    "questionReview": {
+      "title": "问题回顾",
+      "noQuestions": "没有可供回顾的问题",
+      "questionNumber": "第{{current}}题，共{{total}}题",
+      "previous": "上一题",
+      "next": "下一题",
+      "correct": "您的答案是正确的！",
+      "incorrect": "您的答案是错误的",
+      "practicePrompt": "回顾这个问题并尝试更好地理解概念",
+      "practiceAgain": "练习类似题目",
+      "closeReview": "关闭回顾"
+    },
+    "ksaAnalysis": {
+      "title": "KSA能力分析",
+      "description": "通过您的正确答案展示的知识、技能和态度分析",
+      "competenciesDemonstrated": "展示的能力",
+      "times": "次",
+      "demonstratedIn": "在{{count}}道题中展示",
+      "noCompetencies": "此类别中没有展示的能力",
+      "summary": "整体KSA总结",
+      "knowledgeAreas": "知识领域",
+      "skillsAreas": "技能领域",
+      "attitudesAreas": "态度领域"
+    }
+  },
+  "level": {
+    "beginner": "初级",
+    "intermediate": "中级",
+    "advanced": "高级",
+    "expert": "专家"
+  },
+  "domains": {
+    "engaging_with_ai": "与AI互动",
+    "creating_with_ai": "与AI创作",
+    "managing_with_ai": "与AI管理",
+    "designing_with_ai": "与AI设计"
+  },
+  "history": {
+    "title": "评估历史",
+    "subtitle": "查看您过去的评估结果并跟踪进展",
+    "loading": "加载历史记录...",
+    "error": "加载历史记录失败",
+    "retry": "重试",
+    "notLoggedIn": "请登录以查看您的评估历史",
+    "takeAssessment": "进行评估",
+    "user": "用户",
+    "totalAssessments": "总评估次数",
+    "noHistory": "还没有评估历史",
+    "takeFirstAssessment": "进行您的第一次评估",
+    "overallScore": "总分",
+    "correct": "正确",
+    "domainScores": "领域分数",
+    "duration": "时长",
+    "viewDetails": "查看详情",
+    "takeNewAssessment": "进行新评估",
+    "startTime": "开始时间",
+    "endTime": "结束时间"
+  },
+  "review": {
+    "title": "评估回顾"
+  }
+}
