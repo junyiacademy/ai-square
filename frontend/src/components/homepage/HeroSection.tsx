@@ -1,11 +1,43 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function HeroSection() {
   const { t } = useTranslation('homepage');
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [hasAssessmentResult, setHasAssessmentResult] = useState(false);
+
+  useEffect(() => {
+    // Check if user is logged in
+    const userStr = localStorage.getItem('user');
+    const isAuthenticated = !!userStr;
+    setIsLoggedIn(isAuthenticated);
+
+    // Check if user has assessment result
+    if (isAuthenticated) {
+      const assessmentResult = localStorage.getItem('assessmentResult');
+      setHasAssessmentResult(!!assessmentResult);
+    }
+  }, []);
+
+  const handleStartJourney = () => {
+    if (isLoggedIn) {
+      // If logged in and has assessment result, go to PBL
+      if (hasAssessmentResult) {
+        router.push('/pbl');
+      } else {
+        // If logged in but no assessment, go to assessment
+        router.push('/assessment');
+      }
+    } else {
+      // If not logged in, go to register
+      router.push('/register');
+    }
+  };
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 pt-24 pb-20">
@@ -34,15 +66,18 @@ export default function HeroSection() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/register"
+            <button
+              onClick={handleStartJourney}
               className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
             >
-              {t('hero.cta.getStarted')}
+              {isLoggedIn 
+                ? (hasAssessmentResult ? t('hero.cta.continueLearning') : t('hero.cta.takeAssessment'))
+                : t('hero.cta.getStarted')
+              }
               <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
-            </Link>
+            </button>
 
             <Link
               href="/assessment"

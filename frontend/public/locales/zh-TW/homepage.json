@@ -6,7 +6,9 @@
     "cta": {
       "getStarted": "開始您的旅程",
       "explore": "探索 AI 領域",
-      "assessment": "進行評估"
+      "assessment": "進行評估",
+      "continueLearning": "繼續學習",
+      "takeAssessment": "進行評估"
     }
   },
   "features": {

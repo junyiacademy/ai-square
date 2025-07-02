@@ -6,7 +6,9 @@
     "cta": {
       "getStarted": "Start Your Journey",
       "explore": "Explore AI Domains",
-      "assessment": "Take Assessment"
+      "assessment": "Take Assessment",
+      "continueLearning": "Continue Learning",
+      "takeAssessment": "Take Assessment"
     }
   },
   "features": {
