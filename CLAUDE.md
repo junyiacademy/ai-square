@@ -482,6 +482,27 @@ The app uses a dual translation approach:
 ### Project Context
 AI Square 正處於從 MVP 轉向 SaaS 平台的關鍵階段。Phase 1 已完成基礎功能，現在專注於提升用戶體驗和平台智能化。
 
+### 重要技術規範
+
+#### Vertex AI Model Names
+- **正確的模型名稱**: `gemini-2.5-flash` (不是 gemini-pro, 不是 gemini-2.0-flash-exp)
+- **使用方式**: 
+  ```typescript
+  const model = vertexAI.preview.getGenerativeModel({
+    model: 'gemini-2.5-flash',
+    // ...
+  });
+  
+  // 正確的 response 處理方式 (Vertex AI SDK)
+  const result = await model.generateContent(prompt);
+  const response = result.response;
+  const text = response.candidates?.[0]?.content?.parts?.[0]?.text || 'Default response';
+  
+  // 或者使用 chat.sendMessage
+  const result = await chat.sendMessage(message);
+  const response = result.response;
+  const text = response.candidates?.[0]?.content?.parts?.[0]?.text || 'Default response';
+  ```
 
 ---
 
