@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useTranslation } from 'react-i18next';
+
+// 狀態類型定義
+type Status = 'completed' | 'active' | 'partial' | 'planned' | 'future';
 
 // PRD 內容結構
 const roadmapData = {
@@ -13,10 +15,10 @@ const roadmapData = {
   
   architecture: {
     layers: [
-      { name: "MCP/Agent Layer", status: "planned", description: "統一的 AI Agent 管理與協調" },
-      { name: "SaaS App Layer", status: "active", description: "學習平台 UI + 用戶認證 + 評估介面" },
-      { name: "CMS Service Layer", status: "completed", description: "內容 API + YAML 解析 + 版本控制 + AI 輔助" },
-      { name: "Content File Layer", status: "completed", description: "GitHub 管理的教材與題庫" }
+      { name: "MCP/Agent Layer", status: "planned" as Status, description: "統一的 AI Agent 管理與協調" },
+      { name: "SaaS App Layer", status: "active" as Status, description: "學習平台 UI + 用戶認證 + 評估介面" },
+      { name: "CMS Service Layer", status: "completed" as Status, description: "內容 API + YAML 解析 + 版本控制 + AI 輔助" },
+      { name: "Content File Layer", status: "completed" as Status, description: "GitHub 管理的教材與題庫" }
     ]
   },
 
@@ -116,7 +118,7 @@ const roadmapData = {
 };
 
 // 狀態顏色對應
-const statusColors = {
+const statusColors: Record<Status, string> = {
   completed: "bg-green-500",
   active: "bg-blue-500",
   partial: "bg-yellow-500",
@@ -124,7 +126,7 @@ const statusColors = {
   future: "bg-gray-300"
 };
 
-const statusLabels = {
+const statusLabels: Record<Status, string> = {
   completed: "已完成",
   active: "進行中",
   partial: "部分完成",
