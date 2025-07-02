@@ -1036,42 +1036,121 @@ class PBLProgramService {
    * Get all programs for a user
    */
   async getUserPrograms(userEmail: string, scenarioId?: string): Promise<ProgramSummary[]> {
+    // Check cache first
+    const cacheKey = `pbl:user-programs-all:${userEmail}:${scenarioId || 'all'}`;
+    const cached = await cacheService.get<ProgramSummary[]>(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     try {
       const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
       const prefix = scenarioId 
         ? `${PBL_BASE_PATH}/${sanitizedEmail}/scenario_${scenarioId}/`
         : `${PBL_BASE_PATH}/${sanitizedEmail}/`;
 
-      const [files] = await this.bucket.getFiles({ prefix });
+      const [files] = await this.bucket.getFiles({ 
+        prefix,
+        autoPaginate: false,
+        maxResults: 1000 // Limit to prevent timeout
+      });
 
-      // Find all program metadata files
-      const programPaths = new Set<string>();
-      for (const file of files) {
-        if (file.name.endsWith('/metadata.json') && file.name.includes('/program_')) {
-          const programPath = file.name.substring(0, file.name.lastIndexOf('/'));
-          programPaths.add(programPath);
-        }
-      }
-
-      // Get summaries for each program
-      const summaries: ProgramSummary[] = [];
+      // Group files by program path
+      const programFiles = new Map<string, any[]>();
       
-      for (const programPath of programPaths) {
-        // Extract scenario and program IDs from path
-        const pathMatch = programPath.match(/scenario_([^/]+)\/program_([^/]+)/);
-        if (pathMatch) {
-          const [, extractedScenarioId, programId] = pathMatch;
-          const summary = await this.getProgramSummary(userEmail, extractedScenarioId, programId);
-          if (summary) {
-            summaries.push(summary);
+      for (const file of files) {
+        if (file.name.includes('/program_')) {
+          const programMatch = file.name.match(/(scenario_[^/]+\/program_[^/]+)/);
+          if (programMatch) {
+            const programPath = programMatch[1];
+            if (!programFiles.has(programPath)) {
+              programFiles.set(programPath, []);
+            }
+            programFiles.get(programPath)!.push(file);
           }
         }
       }
 
+      // Process programs in parallel with completion data optimization
+      const summaryPromises = Array.from(programFiles.entries()).map(async ([programPath, files]) => {
+        try {
+          // Extract scenario and program IDs
+          const pathMatch = programPath.match(/scenario_([^/]+)\/program_([^/]+)/);
+          if (!pathMatch) return null;
+          
+          const [, extractedScenarioId, programId] = pathMatch;
+          
+          // First check if we have completion.json (most efficient)
+          const completionFile = files.find(f => f.name.endsWith('/completion.json'));
+          if (completionFile) {
+            const [content] = await completionFile.download();
+            const completionData: CompletionData = JSON.parse(content.toString());
+            
+            // Convert completion data to ProgramSummary format
+            return {
+              program: {
+                id: completionData.programId,
+                userEmail: completionData.userEmail,
+                scenarioId: completionData.scenarioId,
+                scenarioTitle: completionData.scenarioTitle || completionData.scenarioId,
+                status: completionData.status || 'in_progress',
+                startedAt: completionData.startedAt,
+                updatedAt: completionData.updatedAt,
+                completedAt: completionData.completedAt,
+                totalTasks: completionData.totalTasks
+              },
+              tasks: [], // We don't need detailed task info for the list
+              overallScore: completionData.overallScore,
+              domainScores: completionData.domainScores,
+              totalTimeSeconds: completionData.totalTimeSeconds || 0,
+              completionRate: Math.round((completionData.evaluatedTasks / completionData.totalTasks) * 100)
+            } as ProgramSummary;
+          }
+          
+          // Fallback to metadata.json if no completion data
+          const metadataFile = files.find(f => 
+            f.name.endsWith('/metadata.json') && 
+            !f.name.includes('/task_')
+          );
+          
+          if (metadataFile) {
+            const [content] = await metadataFile.download();
+            const metadata: ProgramMetadata = JSON.parse(content.toString());
+            
+            // Skip draft programs
+            if (metadata.status === 'draft') {
+              return null;
+            }
+            
+            // Return basic summary without task details
+            return {
+              program: metadata,
+              tasks: [],
+              overallScore: 0,
+              totalTimeSeconds: 0,
+              completionRate: 0
+            } as ProgramSummary;
+          }
+          
+          return null;
+        } catch (error) {
+          console.error(`Error processing program ${programPath}:`, error);
+          return null;
+        }
+      });
+
+      const results = await Promise.all(summaryPromises);
+      const summaries = results.filter((s): s is ProgramSummary => s !== null);
+
       // Sort by most recent first
-      return summaries.sort((a, b) => 
+      summaries.sort((a, b) => 
         new Date(b.program.startedAt).getTime() - new Date(a.program.startedAt).getTime()
       );
+
+      // Cache for 3 minutes
+      await cacheService.set(cacheKey, summaries, { ttl: 3 * 60 * 1000 });
+
+      return summaries;
     } catch (error) {
       console.error('Error getting user programs:', error);
       return [];

@@ -17,21 +17,10 @@ interface Scenario {
   thumbnailEmoji?: string;
 }
 
-interface UserProgram {
-  programId: string;
-  scenarioId: string;
-  status: 'draft' | 'in_progress' | 'completed';
-  progress: {
-    completedTasks: number;
-    totalTasks: number;
-  };
-}
-
 export default function PBLPage() {
   const { t, i18n } = useTranslation(['pbl', 'assessment']);
   const [scenarios, setScenarios] = useState<Scenario[]>([]);
   const [loading, setLoading] = useState(true);
-  const [userPrograms, setUserPrograms] = useState<UserProgram[]>([]);
 
   const getDifficultyStars = (difficulty: string) => {
     switch (difficulty) {
@@ -45,42 +34,23 @@ export default function PBLPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('Starting to fetch PBL data...');
-        
         // Fetch scenarios
         const scenarioResponse = await fetch(`/api/pbl/scenarios?lang=${i18n.language}`);
-        console.log('Scenario response status:', scenarioResponse.status);
         
         if (!scenarioResponse.ok) {
           throw new Error(`Scenarios API failed: ${scenarioResponse.status}`);
         }
         
         const scenarioData = await scenarioResponse.json();
-        console.log('Scenario data:', scenarioData);
         
         if (scenarioData.success) {
           setScenarios(scenarioData.data.scenarios);
         }
 
-        // Fetch user programs if logged in
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-        console.log('Is logged in:', isLoggedIn);
-        
-        if (isLoggedIn) {
-          const programResponse = await fetch('/api/pbl/user-programs');
-          console.log('User programs response status:', programResponse.status);
-          
-          if (programResponse.ok) {
-            const programData = await programResponse.json();
-            console.log('User programs data:', programData);
-            
-            if (programData.success) {
-              setUserPrograms(programData.programs || []);
-            }
-          }
-        }
+        // Skip fetching user programs on list page for better performance
+        // User can see their progress when they click into specific scenarios
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching PBL scenarios:', error);
       } finally {
         setLoading(false);
       }
@@ -108,9 +78,6 @@ export default function PBLPage() {
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {scenarios.map((scenario) => {
-              const userProgram = userPrograms.find(p => p.scenarioId === scenario.id);
-              const hasProgress = !!userProgram;
-              
               return (
                 <div 
                   key={scenario.id}
@@ -118,26 +85,6 @@ export default function PBLPage() {
                     scenario.isAvailable ? 'hover:shadow-lg transition-shadow' : 'opacity-50'
                   }`}
                 >
-                  {/* Learning Status Indicator */}
-                  {hasProgress && userProgram && (
-                    <div className="absolute top-4 right-4">
-                      {userProgram.status === 'completed' ? (
-                        <div className="flex items-center gap-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-2 py-1 rounded-full text-xs">
-                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                          </svg>
-                          {t('completed')}
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-full text-xs">
-                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                          </svg>
-                          {userProgram.progress?.completedTasks || 0}/{userProgram.progress?.totalTasks || 0}
-                        </div>
-                      )}
-                    </div>
-                  )}
                   
                   <div className="p-6">
                     <div className="flex items-center mb-4">
