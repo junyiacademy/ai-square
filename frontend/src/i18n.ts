@@ -78,6 +78,15 @@ import dePbl from '../public/locales/de/pbl.json';
 import ruPbl from '../public/locales/ru/pbl.json';
 import itPbl from '../public/locales/it/pbl.json';
 
+// Onboarding 翻譯
+import enOnboarding from '../public/locales/en/onboarding.json';
+
+// Common 翻譯
+import enCommon from '../public/locales/en/common.json';
+
+// Learning Path 翻譯
+import enLearningPath from '../public/locales/en/learningPath.json';
+
 // 在伺服器端和客戶端都使用相同的預設語言避免 hydration mismatch
 const getDefaultLng = () => {
   // 伺服器端總是返回英文作為預設語言
@@ -105,7 +114,10 @@ i18n
         ksa: enKsa,
         assessment: enAssessment,
         homepage: enHomepage,
-        pbl: enPbl
+        pbl: enPbl,
+        onboarding: enOnboarding,
+        common: enCommon,
+        learningPath: enLearningPath
       },
       es: { 
         relations: esRelations,
