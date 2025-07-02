@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 
 export default function PrivacyPolicyPage() {
-  const { t, i18n } = useTranslation(['legal']);
+  const { t } = useTranslation(['legal']);
   const lastUpdated = '2025-06-30';
 
   return (

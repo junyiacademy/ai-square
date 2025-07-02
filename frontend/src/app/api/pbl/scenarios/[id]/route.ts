@@ -87,7 +87,7 @@ function getLocalizedValue<T = unknown>(data: Record<string, T>, fieldName: stri
 }
 
 // Helper function to load and parse KSA codes
-async function loadKSACodes(lang: string): Promise<KSAData | null> {
+async function loadKSACodes(): Promise<KSAData | null> {
   try {
     const ksaPath = path.join(process.cwd(), 'public', 'rubrics_data', 'ksa_codes.yaml');
     const ksaContent = await fs.readFile(ksaPath, 'utf8');
@@ -195,10 +195,42 @@ export async function GET(
     // Load scenario YAML file
     const yamlPath = path.join(process.cwd(), 'public', 'pbl_data', `${scenarioId.replace(/-/g, '_')}_scenario.yaml`);
     const yamlContent = await fs.readFile(yamlPath, 'utf8');
-    const yamlData = yaml.load(yamlContent) as any;
+    interface ScenarioYAML {
+      scenario_info: {
+        id: string;
+        title: string;
+        title_zh?: string;
+        description: string;
+        description_zh?: string;
+        difficulty: string;
+        estimated_duration: number;
+        target_domains: string[];
+        prerequisites?: string[];
+        learning_objectives?: string[];
+      };
+      ksa_mapping?: {
+        knowledge?: string[];
+        skills?: string[];
+        attitudes?: string[];
+      };
+      tasks?: Array<{
+        id: string;
+        title: string;
+        title_zh?: string;
+        description: string;
+        description_zh?: string;
+        category?: string;
+        instructions?: string[];
+        instructions_zh?: string[];
+        expected_outcome?: string;
+        expected_outcome_zh?: string;
+        time_limit?: number;
+      }>;
+    }
+    const yamlData = yaml.load(yamlContent) as ScenarioYAML;
     
     // Load KSA codes
-    const ksaData = await loadKSACodes(lang);
+    const ksaData = await loadKSACodes();
     
     console.log('YAML data loaded: success');
     
@@ -213,7 +245,7 @@ export async function GET(
       prerequisites: getLocalizedValue(yamlData.scenario_info, 'prerequisites', lang) || yamlData.scenario_info.prerequisites || [],
       learningObjectives: getLocalizedValue(yamlData.scenario_info, 'learning_objectives', lang) || yamlData.scenario_info.learning_objectives || [],
       ksaMapping: buildKSAMapping(yamlData, ksaData, lang),
-      tasks: (yamlData.tasks || []).map((task: any) => ({
+      tasks: (yamlData.tasks || []).map((task) => ({
         id: task.id,
         title: getLocalizedValue(task, 'title', lang),
         description: getLocalizedValue(task, 'description', lang),

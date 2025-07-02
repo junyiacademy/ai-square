@@ -94,7 +94,7 @@ export default function RegisterPage() {
       } else {
         setErrors({ submit: data.error || t('auth:register.errors.registrationFailed') });
       }
-    } catch (err) {
+    } catch {
       setErrors({ submit: t('auth:register.errors.networkError') });
     } finally {
       setLoading(false);

@@ -310,7 +310,7 @@ export abstract class BaseAIService {
     return Math.ceil(text.length / 4);
   }
 
-  protected estimateCost(tokens: number, model: string): number {
+  protected estimateCost(tokens: number): number {
     // 子類可覆寫以提供準確的成本計算
     const costPerThousandTokens = 0.002; // 預設值
     return (tokens / 1000) * costPerThousandTokens;

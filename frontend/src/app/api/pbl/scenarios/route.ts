@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { Scenario, ScenarioListItem } from '@/types/pbl';
+import { ScenarioListItem } from '@/types/pbl';
 import { promises as fs } from 'fs';
 import path from 'path';
 import * as yaml from 'js-yaml';

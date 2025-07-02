@@ -68,7 +68,7 @@ export default function ProgramLearningPage() {
   const [programId, setProgramId] = useState(params.programId as string);
   const scenarioId = params.id as string;
   const taskId = params.taskId as string;
-  const isNewProgram = searchParams.get('isNew') === 'true';
+  // const isNewProgram = searchParams.get('isNew') === 'true';
   
   // States
   const [loading, setLoading] = useState(true);
@@ -93,6 +93,7 @@ export default function ProgramLearningPage() {
   // Load program and scenario data
   useEffect(() => {
     loadProgramData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [programId, scenarioId, i18n.language]);
 
   // Load task data when taskId changes
@@ -104,6 +105,7 @@ export default function ProgramLearningPage() {
         loadTaskHistory();
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [taskId, scenario]);
 
   // Scroll to bottom when conversations change
@@ -635,7 +637,7 @@ export default function ProgramLearningPage() {
   }
 
   const taskIndex = scenario.tasks.findIndex(t => t.id === currentTask.id);
-  const progress = ((taskIndex + 1) / scenario.tasks.length) * 100;
+  // const progress = ((taskIndex + 1) / scenario.tasks.length) * 100;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
@@ -942,7 +944,7 @@ export default function ProgramLearningPage() {
                           {evaluation.conversationInsights.effectiveExamples.map((example, idx) => (
                             <div key={idx} className="bg-white dark:bg-gray-800 p-2 rounded">
                               <p className="text-sm text-gray-700 dark:text-gray-300 italic">
-                                "{example.quote}"
+                                &ldquo;{example.quote}&rdquo;
                               </p>
                               <p className="text-xs text-green-600 dark:text-green-400 mt-1">
                                 ✓ {example.reason}
@@ -962,7 +964,7 @@ export default function ProgramLearningPage() {
                           {evaluation.conversationInsights.improvementAreas.map((area, idx) => (
                             <div key={idx} className="bg-white dark:bg-gray-800 p-2 rounded">
                               <p className="text-sm text-gray-700 dark:text-gray-300 italic">
-                                "{area.quote}"
+                                &ldquo;{area.quote}&rdquo;
                               </p>
                               <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
                                 → {area.suggestion}

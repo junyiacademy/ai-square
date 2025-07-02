@@ -181,21 +181,21 @@ export class ContentLoader {
     const map = new Map<string, { type: 'K' | 'S' | 'A'; data: KSACode }>();
 
     // Process knowledge codes
-    for (const [themeKey, theme] of Object.entries(ksaData.knowledge_codes.themes)) {
+    for (const [, theme] of Object.entries(ksaData.knowledge_codes.themes)) {
       for (const [codeKey, code] of Object.entries(theme.codes)) {
         map.set(codeKey, { type: 'K', data: code });
       }
     }
 
     // Process skill codes
-    for (const [themeKey, theme] of Object.entries(ksaData.skill_codes.themes)) {
+    for (const [, theme] of Object.entries(ksaData.skill_codes.themes)) {
       for (const [codeKey, code] of Object.entries(theme.codes)) {
         map.set(codeKey, { type: 'S', data: code });
       }
     }
 
     // Process attitude codes
-    for (const [themeKey, theme] of Object.entries(ksaData.attitude_codes.themes)) {
+    for (const [, theme] of Object.entries(ksaData.attitude_codes.themes)) {
       for (const [codeKey, code] of Object.entries(theme.codes)) {
         map.set(codeKey, { type: 'A', data: code });
       }

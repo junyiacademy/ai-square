@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 
@@ -139,16 +139,17 @@ export default function OnboardingGoalsPage() {
     }
   };
 
-  const handleSkip = () => {
-    // Mark onboarding as completed without goals
-    const userStr = localStorage.getItem('user');
-    if (userStr) {
-      const user = JSON.parse(userStr);
-      user.hasCompletedOnboarding = true;
-      localStorage.setItem('user', JSON.stringify(user));
-    }
-    router.push('/assessment');
-  };
+  // Unused function - keeping for potential future use
+  // const handleSkip = () => {
+  //   // Mark onboarding as completed without goals
+  //   const userStr = localStorage.getItem('user');
+  //   if (userStr) {
+  //     const user = JSON.parse(userStr);
+  //     user.hasCompletedOnboarding = true;
+  //     localStorage.setItem('user', JSON.stringify(user));
+  //   }
+  //   router.push('/assessment');
+  // };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-purple-900">

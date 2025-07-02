@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 
 export default function TermsOfServicePage() {
-  const { t, i18n } = useTranslation(['legal']);
+  const { t } = useTranslation(['legal']);
   const lastUpdated = '2025-06-30';
   const effectiveDate = '2025-07-01';
 

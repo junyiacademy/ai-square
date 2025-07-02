@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pblProgramService } from '@/lib/storage/pbl-program-service';
-import { SaveTaskLogRequest, SaveTaskProgressRequest, TaskInteraction } from '@/types/pbl';
+import { SaveTaskLogRequest, SaveTaskProgressRequest } from '@/types/pbl';
 import { TaskEvaluation } from '@/types/pbl-completion';
 
 // POST - Add interaction to task log

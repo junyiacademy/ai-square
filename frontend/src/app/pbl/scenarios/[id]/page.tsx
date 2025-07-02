@@ -63,7 +63,7 @@ export default function ScenarioDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [isStarting, setIsStarting] = useState(false);
   const [userPrograms, setUserPrograms] = useState<UserProgram[]>([]);
-  const [selectedProgramId, setSelectedProgramId] = useState<string | null>(null);
+  // const [selectedProgramId, setSelectedProgramId] = useState<string | null>(null);
   const [draftProgram, setDraftProgram] = useState<UserProgram | null>(null);
   const router = useRouter();
 

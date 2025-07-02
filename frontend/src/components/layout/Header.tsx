@@ -144,6 +144,7 @@ export function Header() {
       window.removeEventListener('auth-changed', handleAuthChange)
       window.removeEventListener('auth:expired', handleAuthExpired)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []) // Remove dependencies to prevent re-registration
 
   const getRoleDisplayName = (role: string) => {

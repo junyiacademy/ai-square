@@ -76,6 +76,7 @@ export default function DashboardPage() {
     const hasAssessment = !!resultStr;
     loadUserData(userData, hasAssessment);
     setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   const loadUserData = async (userData: UserProfile, hasCompletedAssessment: boolean) => {

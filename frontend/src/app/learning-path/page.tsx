@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import type { AssessmentResult } from '@/types/assessment';
+import type { Scenario } from '@/types/pbl';
 
 interface LearningPathItem {
   id: string;
@@ -32,6 +33,14 @@ interface DomainProgress {
 interface UserProfile {
   identity?: string;
   interests?: string[];
+}
+
+interface ScenarioWithDomains extends Scenario {
+  domains?: string[];
+  targetDomain?: string[];
+  skills?: string[];
+  topics?: string[];
+  relevanceScore?: number;
 }
 
 // Role-based keyword patterns for relevance matching
@@ -88,17 +97,18 @@ function LearningPathContent() {
     // Generate learning path based on assessment
     generateLearningPath(result);
     setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router, searchParams]);
 
   // Generate personalized recommendation reason
   const generatePersonalizedReason = (
-    scenario: any, 
+    scenario: ScenarioWithDomains, 
     domain: string, 
     domainScore: number,
     matchedKeywords: string[]
   ): string => {
     const domainName = domain.replace(/_/g, ' ');
-    let reasons: string[] = [];
+    const reasons: string[] = [];
     
     // 1. Assessment-based reason
     if (domainScore < 60) {
@@ -209,7 +219,7 @@ function LearningPathContent() {
         const isStrong = score >= 80;
 
         // Filter scenarios for this domain
-        const domainScenarios = scenarios.filter((s: any) => 
+        const domainScenarios = (scenarios as ScenarioWithDomains[]).filter((s) => 
           s.domains?.includes(domain) || s.domains?.includes(domainKey) ||
           s.targetDomain?.includes(domain) || s.targetDomain?.includes(domainKey)
         );
@@ -219,17 +229,17 @@ function LearningPathContent() {
 
         if (isWeak) {
           // For weak domains, recommend beginner scenarios
-          let beginnerScenarios = domainScenarios.filter((s: any) => 
+          let beginnerScenarios = domainScenarios.filter((s) => 
             s.difficulty === 'beginner' || s.difficulty === 'intermediate'
           );
 
           // Sort by relevance score if user has identity
           if (userProfile.identity) {
-            beginnerScenarios = beginnerScenarios.map((s: any) => ({
+            beginnerScenarios = beginnerScenarios.map((s) => ({
               ...s,
               ...calculateRelevanceScore(s),
               relevanceScore: calculateRelevanceScore(s).score
-            })).sort((a: any, b: any) => b.relevanceScore - a.relevanceScore);
+            })).sort((a, b) => b.relevanceScore - a.relevanceScore);
           }
 
           beginnerScenarios.slice(0, 3).forEach((scenario: any, idx: number) => {
@@ -255,20 +265,20 @@ function LearningPathContent() {
           });
         } else if (isStrong) {
           // For strong domains, recommend advanced scenarios
-          let advancedScenarios = domainScenarios.filter((s: any) => 
+          let advancedScenarios = domainScenarios.filter((s) => 
             s.difficulty === 'advanced' || s.difficulty === 'intermediate'
           );
 
           // Sort by relevance score if user has identity
           if (userProfile.identity) {
-            advancedScenarios = advancedScenarios.map((s: any) => ({
+            advancedScenarios = advancedScenarios.map((s) => ({
               ...s,
               ...calculateRelevanceScore(s),
               relevanceScore: calculateRelevanceScore(s).score
-            })).sort((a: any, b: any) => b.relevanceScore - a.relevanceScore);
+            })).sort((a, b) => b.relevanceScore - a.relevanceScore);
           }
 
-          advancedScenarios.slice(0, 1).forEach((scenario: any, idx: number) => {
+          advancedScenarios.slice(0, 1).forEach((scenario, idx) => {
             const matchedKeywords = scenario.matchedKeywords || [];
             const reason = generatePersonalizedReason(scenario, domain, score, matchedKeywords);
 
@@ -291,20 +301,20 @@ function LearningPathContent() {
           });
         } else {
           // For average domains, recommend intermediate scenarios
-          let intermediateScenarios = domainScenarios.filter((s: any) => 
+          let intermediateScenarios = domainScenarios.filter((s) => 
             s.difficulty === 'intermediate'
           );
 
           // Sort by relevance score if user has identity
           if (userProfile.identity) {
-            intermediateScenarios = intermediateScenarios.map((s: any) => ({
+            intermediateScenarios = intermediateScenarios.map((s) => ({
               ...s,
               ...calculateRelevanceScore(s),
               relevanceScore: calculateRelevanceScore(s).score
-            })).sort((a: any, b: any) => b.relevanceScore - a.relevanceScore);
+            })).sort((a, b) => b.relevanceScore - a.relevanceScore);
           }
 
-          intermediateScenarios.slice(0, 2).forEach((scenario: any, idx: number) => {
+          intermediateScenarios.slice(0, 2).forEach((scenario, idx) => {
             const matchedKeywords = scenario.matchedKeywords || [];
             const reason = generatePersonalizedReason(scenario, domain, score, matchedKeywords);
 
@@ -387,8 +397,8 @@ function LearningPathContent() {
   // Filter by weak areas if mode is set
   if (filterMode === 'weak' && assessmentResult) {
     const weakDomains = Object.entries(assessmentResult.domainScores)
-      .filter(([_, score]) => score < 60)
-      .map(([domain, _]) => domain);
+      .filter(([, score]) => score < 60)
+      .map(([domain]) => domain);
     
     filteredPath = filteredPath.filter(item => weakDomains.includes(item.domain));
   }

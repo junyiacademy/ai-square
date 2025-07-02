@@ -90,7 +90,13 @@ export async function DELETE(
       const sessionsList = JSON.parse(listData.toString());
       
       // Remove the deleted session from the list
-      const updatedList = sessionsList.filter((s: any) => s.id !== sessionId);
+      interface SessionListItem {
+        id: string;
+        title: string;
+        created_at: string;
+        updated_at: string;
+      }
+      const updatedList = sessionsList.filter((s: SessionListItem) => s.id !== sessionId);
       
       await sessionsListFile.save(JSON.stringify(updatedList, null, 2), {
         metadata: {

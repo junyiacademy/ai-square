@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { PBLCompletionSkeleton } from '@/components/pbl/loading-skeletons';
@@ -9,18 +9,12 @@ import type {
   CompletionData, 
   ScenarioData, 
   QualitativeFeedback,
-  LocalizedFeedback,
-  FeedbackStrength,
-  FeedbackImprovement,
-  CompletionTask,
-  TaskInteraction,
-  ConversationExample,
-  ScenarioTask
+  LocalizedFeedback
 } from '@/types/pbl-completion';
 
 export default function ProgramCompletePage() {
   const params = useParams();
-  const router = useRouter();
+  // const router = useRouter();
   const { t, i18n } = useTranslation(['pbl', 'common', 'assessment']);
   
   const programId = params.programId as string;
@@ -30,7 +24,7 @@ export default function ProgramCompletePage() {
   const [completionData, setCompletionData] = useState<CompletionData | null>(null);
   const [scenarioData, setScenarioData] = useState<ScenarioData | null>(null);
   const [generatingFeedback, setGeneratingFeedback] = useState(false);
-  const [feedbackError, setFeedbackError] = useState<string | null>(null);
+  // const [feedbackError, setFeedbackError] = useState<string | null>(null);
   
   // Use ref to prevent duplicate API calls
   const loadingRef = useRef(false);
@@ -48,6 +42,7 @@ export default function ProgramCompletePage() {
     return () => {
       isMountedRef.current = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
   // Listen for language changes
@@ -168,7 +163,7 @@ export default function ProgramCompletePage() {
           
           // Handle multi-language feedback format
           const isMultiLang = typeof prev.qualitativeFeedback === 'object' && 
-                             !('overallAssessment' in (prev.qualitativeFeedback as any));
+                             !('overallAssessment' in (prev.qualitativeFeedback as QualitativeFeedback));
           
           if (isMultiLang) {
             // New multi-language format
@@ -222,13 +217,14 @@ export default function ProgramCompletePage() {
     return 'text-red-600';
   };
   
-  const getScoreBgColor = (score: number) => {
-    if (score >= 90) return 'bg-green-600';
-    if (score >= 80) return 'bg-blue-600';
-    if (score >= 70) return 'bg-yellow-600';
-    if (score >= 50) return 'bg-orange-600';
-    return 'bg-red-600';
-  };
+  // Unused function - keeping for potential future use
+  // const getScoreBgColor = (score: number) => {
+  //   if (score >= 90) return 'bg-green-600';
+  //   if (score >= 80) return 'bg-blue-600';
+  //   if (score >= 70) return 'bg-yellow-600';
+  //   if (score >= 50) return 'bg-orange-600';
+  //   return 'bg-red-600';
+  // };
   
   if (loading) {
     return (
@@ -356,7 +352,7 @@ export default function ProgramCompletePage() {
                           </p>
                           {strength.example && (
                             <p className="text-sm text-green-600 dark:text-green-400 italic mt-2 pl-4 border-l-2 border-green-300 dark:border-green-600">
-                              "{strength.example}"
+                              &ldquo;{strength.example}&rdquo;
                             </p>
                           )}
                         </div>
@@ -420,7 +416,7 @@ export default function ProgramCompletePage() {
                 {feedback.encouragement && (
                   <div className="text-center p-6 bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/20 dark:to-blue-900/20 rounded-lg">
                     <p className="text-lg text-gray-800 dark:text-gray-200 italic">
-                      "{feedback.encouragement}"
+                      &ldquo;{feedback.encouragement}&rdquo;
                     </p>
                   </div>
                 )}
@@ -729,7 +725,7 @@ export default function ProgramCompletePage() {
                                     {task.evaluation.conversationInsights.effectiveExamples.map((example, idx) => (
                                       <div key={idx} className="bg-green-50 dark:bg-green-900/20 rounded p-2 mb-1">
                                         <p className="text-xs italic border-l-2 border-green-300 dark:border-green-500 pl-2 mb-1">
-                                          "{example.quote}"
+                                          &ldquo;{example.quote}&rdquo;
                                         </p>
                                         <p className="text-xs">{example.suggestion}</p>
                                       </div>
@@ -746,7 +742,7 @@ export default function ProgramCompletePage() {
                                     {task.evaluation.conversationInsights.improvementAreas.map((area, idx) => (
                                       <div key={idx} className="bg-yellow-50 dark:bg-yellow-900/20 rounded p-2 mb-1">
                                         <p className="text-xs italic border-l-2 border-yellow-300 dark:border-yellow-500 pl-2 mb-1">
-                                          "{area.quote}"
+                                          &ldquo;{area.quote}&rdquo;
                                         </p>
                                         <p className="text-xs">{area.suggestion}</p>
                                       </div>

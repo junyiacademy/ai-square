@@ -5,7 +5,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const scenarioId = searchParams.get('scenarioId');
-    const lang = searchParams.get('lang') || 'en';
+    // const lang = searchParams.get('lang') || 'en';
     
     // Get user info from cookie
     let userEmail: string | undefined;

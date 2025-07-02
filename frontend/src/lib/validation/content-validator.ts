@@ -12,20 +12,17 @@ import {
 } from './schemas/ksa-codes-flexible.schema'
 import { 
   domainsFileSchema, 
-  validateKSAReferences as validateDomainKSAReferences,
-  type DomainsFile 
+  validateKSAReferences as validateDomainKSAReferences
 } from './schemas/domains.schema'
 import { 
   assessmentFileSchema,
   validateQuestionDistribution,
-  validateQuestionKSAReferences,
-  type AssessmentFile 
+  validateQuestionKSAReferences
 } from './schemas/assessment.schema'
 import { 
   pblScenarioFileSchema,
   validateStageDuration,
-  validateScenarioKSAReferences,
-  type PBLScenarioFile 
+  validateScenarioKSAReferences
 } from './schemas/pbl-scenario.schema'
 
 export interface ValidationResult {
@@ -48,7 +45,7 @@ export class ContentValidator {
    */
   async validateKSACodes(content: string): Promise<ValidationResult> {
     try {
-      const data = yaml.load(content) as any
+      const data = yaml.load(content) as unknown
       
       // Use flexible schema
       const parsed = flexibleKSACodesFileSchema.parse(data)
@@ -86,7 +83,7 @@ export class ContentValidator {
    */
   async validateDomains(content: string): Promise<ValidationResult> {
     try {
-      const data = yaml.load(content) as any
+      const data = yaml.load(content) as unknown
       const parsed = domainsFileSchema.parse(data)
       
       // Cross-reference validation if KSA IDs are loaded
@@ -129,7 +126,7 @@ export class ContentValidator {
    */
   async validateAssessment(content: string): Promise<ValidationResult> {
     try {
-      const data = yaml.load(content) as any
+      const data = yaml.load(content) as unknown
       const parsed = assessmentFileSchema.parse(data)
       
       // Validate question distribution
@@ -181,7 +178,7 @@ export class ContentValidator {
    */
   async validatePBLScenario(content: string): Promise<ValidationResult> {
     try {
-      const data = yaml.load(content) as any
+      const data = yaml.load(content) as unknown
       const parsed = pblScenarioFileSchema.parse(data)
       
       // Validate stage duration

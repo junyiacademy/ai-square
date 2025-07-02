@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
-import Link from 'next/link';
 
 export default function OnboardingWelcomePage() {
   const router = useRouter();

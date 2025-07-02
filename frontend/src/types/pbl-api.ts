@@ -1,5 +1,5 @@
 // PBL API Types
-import { Task, Program, PBLScenario, Scenario } from './pbl';
+import { Task, Program, PBLScenario } from './pbl';
 
 // Chat API
 export interface ChatRequest {

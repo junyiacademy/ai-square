@@ -4,7 +4,7 @@ interface ShortTermMemory {
   recentActivities: Array<{
     type: string;
     timestamp: string;
-    details: any;
+    details: Record<string, unknown>;
   }>;
   currentProgress: {
     lastScenario?: string;
@@ -26,7 +26,7 @@ interface LongTermMemory {
   achievements: Array<{
     type: string;
     date: string;
-    details: any;
+    details: Record<string, unknown>;
   }>;
   preferences: {
     preferredDifficulty?: string;
@@ -171,7 +171,7 @@ export class MemoryService {
 
   async addActivity(userEmail: string, activity: {
     type: string;
-    details: any;
+    details: Record<string, unknown>;
   }): Promise<void> {
     const memory = await this.loadMemory(userEmail);
     
@@ -191,7 +191,7 @@ export class MemoryService {
 
   async addAchievement(userEmail: string, achievement: {
     type: string;
-    details: any;
+    details: Record<string, unknown>;
   }): Promise<void> {
     const memory = await this.loadMemory(userEmail);
     

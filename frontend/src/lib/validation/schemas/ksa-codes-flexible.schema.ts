@@ -18,17 +18,17 @@ interface KSACode {
   [key: string]: unknown;
 }
 
-const ksaCodeSchema = z.object({
-  summary: z.string().optional(),
-  summary_zh: z.string().optional(),
-  summary_es: z.string().optional(),
-  summary_ja: z.string().optional(),
-  summary_ko: z.string().optional(),
-  summary_fr: z.string().optional(),
-  summary_de: z.string().optional(),
-  summary_ru: z.string().optional(),
-  summary_it: z.string().optional()
-}).passthrough() // Allow extra fields
+// // const ksaCodeSchema = z.object({
+//   summary: z.string().optional(),
+//   summary_zh: z.string().optional(),
+//   summary_es: z.string().optional(),
+//   summary_ja: z.string().optional(),
+//   summary_ko: z.string().optional(),
+//   summary_fr: z.string().optional(),
+//   summary_de: z.string().optional(),
+//   summary_ru: z.string().optional(),
+//   summary_it: z.string().optional()
+// }).passthrough() // Allow extra fields
 
 // Theme schema - flexible to handle both codes and explanations
 interface ThemeResult {

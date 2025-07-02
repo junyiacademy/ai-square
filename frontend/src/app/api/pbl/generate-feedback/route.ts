@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pblProgramService } from '@/lib/storage/pbl-program-service';
 import { VertexAI, SchemaType } from '@google-cloud/vertexai';
-import { TaskInteraction } from '@/types/pbl';
-import { GenerateFeedbackRequest } from '@/types/pbl-api';
 
 // Types for feedback structure
 interface FeedbackStrength {

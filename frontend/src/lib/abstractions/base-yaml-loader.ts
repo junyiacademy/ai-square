@@ -153,7 +153,7 @@ export abstract class BaseYAMLLoader<T = unknown> {
   /**
    * 抽象方法 - 子類可覆寫
    */
-  protected async validateData(data: unknown): Promise<{ valid: boolean; error?: string }> {
+  protected async validateData(): Promise<{ valid: boolean; error?: string }> {
     // 子類實作具體的 schema 驗證
     return { valid: true };
   }

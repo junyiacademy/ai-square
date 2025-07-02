@@ -28,7 +28,16 @@ export async function POST(request: NextRequest) {
     const file = bucket.file(filePath);
 
     // Load existing user data
-    let userData: any = {};
+    interface UserData {
+      profile?: {
+        name?: string;
+        email: string;
+        role?: string;
+      };
+      completedAssessments?: number;
+      lastActivity?: string;
+    }
+    let userData: UserData = {};
     try {
       const [exists] = await file.exists();
       if (exists) {

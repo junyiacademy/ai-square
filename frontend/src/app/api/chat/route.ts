@@ -55,7 +55,7 @@ async function getUserMemory(userEmail: string): Promise<UserMemory | null> {
     const [shortTermExists] = await shortTermFile.exists();
     const [longTermExists] = await longTermFile.exists();
     
-    let memory: UserMemory = {
+    const memory: UserMemory = {
       shortTerm: {
         recentActivities: [],
         currentProgress: {},

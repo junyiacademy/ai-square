@@ -16,7 +16,24 @@ async function loadScenario(scenarioId: string): Promise<Scenario | null> {
     );
     
     const yamlContent = await fs.readFile(yamlPath, 'utf8');
-    const data = yaml.load(yamlContent) as any;
+    interface ScenarioYAML {
+      scenario_info: {
+        id: string;
+        title: string;
+        title_zh?: string;
+        description: string;
+        description_zh?: string;
+        target_domains: string[];
+        difficulty: string;
+        estimated_duration: number;
+        tasks: Array<{
+          id: string;
+          title: string;
+          title_zh?: string;
+        }>;
+      };
+    }
+    const data = yaml.load(yamlContent) as ScenarioYAML;
     
     // Transform YAML data to match our Scenario interface
     const scenario: Scenario = {

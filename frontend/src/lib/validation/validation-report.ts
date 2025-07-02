@@ -10,12 +10,8 @@ import { extractKSAIdsFromFlexible } from './schemas/ksa-codes-flexible.schema'
 import { 
   KSAData, 
   DomainsData, 
-  Domain,
-  Competency,
   AssessmentData, 
-  AssessmentQuestion,
-  PBLData,
-  PBLStage
+  PBLData
 } from '@/types/validation'
 
 interface ContentStats {

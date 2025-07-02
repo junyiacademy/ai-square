@@ -86,6 +86,8 @@ export interface CompletionData {
   programId: string;
   scenarioId: string;
   userEmail?: string;
+  status?: string;
+  startedAt?: string;
   overallScore?: number;
   evaluatedTasks: number;
   totalTasks: number;
@@ -97,10 +99,15 @@ export interface CompletionData {
     attitudes: number;
   };
   tasks?: CompletionTask[];
+  completedTasks?: number;
   qualitativeFeedback?: QualitativeFeedback | LocalizedFeedback;
   feedbackLanguage?: string;
+  feedbackLanguages?: string[];
+  feedbackGeneratedAt?: string;
+  lastFeedbackLanguage?: string;
   completedAt?: string;
   updatedAt?: string;
+  taskSummaries?: unknown[]; // Used in getUserProgramsForScenario fallback
 }
 
 // Scenario task definition (from scenario data)

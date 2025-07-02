@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pblProgramService } from '@/lib/storage/pbl-program-service';
-import { GetProgramHistoryResponse, ProgramSummary } from '@/types/pbl';
+import { GetProgramHistoryResponse } from '@/types/pbl';
 import { promises as fs } from 'fs';
 import * as yaml from 'js-yaml';
 import path from 'path';
@@ -54,12 +54,6 @@ interface ProgramCompletionData {
 // Helper function to get localized value
 function getLocalizedValue(data: ScenarioInfo | ScenarioYAML, fieldName: string, lang: string): string {
   // Convert language code to suffix - must match YAML field suffixes exactly
-  let langSuffix = lang;
-  
-  // Special handling for Chinese variants
-  if (lang === 'zh-TW' || lang === 'zh-CN' || lang === 'zh') {
-    langSuffix = 'zh';
-  }
   
   // Map language codes to match YAML suffixes
   const languageMap: Record<string, string> = {
@@ -171,7 +165,7 @@ export async function GET(request: NextRequest) {
     // Transform to API response format
     const response: GetProgramHistoryResponse = {
       success: true,
-      programs: programsWithTitles as any, // Type conversion needed due to different structure
+      programs: programsWithTitles,
       totalPrograms: programsWithTitles.length
     };
     

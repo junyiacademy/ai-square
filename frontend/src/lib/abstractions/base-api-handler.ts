@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { captureApiError } from '@/lib/error-tracking/error-tracker';
-import { cacheService, CacheOptions } from '@/lib/cache/cache-service';
+import { cacheService } from '@/lib/cache/cache-service';
 
 export interface ApiResponse<T = unknown> {
   success: boolean;
@@ -190,7 +190,7 @@ export abstract class BaseApiHandler<TRequest = unknown, TResponse = unknown> {
   protected async parseRequestBody(request: NextRequest): Promise<TRequest> {
     try {
       return await request.json();
-    } catch (error) {
+    } catch {
       throw new Error('Invalid JSON in request body');
     }
   }

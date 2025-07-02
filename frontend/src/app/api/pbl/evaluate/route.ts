@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { VertexAI, SchemaType } from '@google-cloud/vertexai';
 import { 
   EvaluateRequestBody, 
-  EvaluateResponse,
-  EvaluationResult,
   Conversation 
 } from '@/types/pbl-evaluate';
 import { ErrorResponse } from '@/types/api';
@@ -40,7 +38,7 @@ export async function POST(request: NextRequest) {
       task,
       targetDomains,
       focusKSA,
-      language = 'en'
+      language = 'en' // eslint-disable-line @typescript-eslint/no-unused-vars
     }: EvaluateRequestBody = await request.json();
 
     if (!conversations || !task) {
@@ -305,7 +303,7 @@ Important evaluation principles:
     
     // Provide more detailed error information
     let errorMessage = 'Failed to evaluate';
-    let statusCode = 500;
+    const statusCode = 500;
     
     if (error instanceof Error) {
       errorMessage = error.message;
