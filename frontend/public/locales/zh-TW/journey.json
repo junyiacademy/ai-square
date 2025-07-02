@@ -1,0 +1,73 @@
+{
+  "title": "AI Square 用戶旅程",
+  "subtitle": "五大關鍵路徑，打造完整 AI 學習體驗",
+  "getStarted": "立即體驗",
+  "pathOverview": "完整學習循環",
+  "nextPath": "下一個路徑 →",
+  "tryFeature": "立即體驗此功能",
+  "paths": {
+    "dashboard": {
+      "title": "儀表板",
+      "subtitle": "學習指揮中心",
+      "description": "一站式掌握您的 AI 學習全貌，追蹤進度、查看成就、規劃下一步。",
+      "userNeed": "我的學習成效如何？",
+      "features": [
+        "AI 素養進度視覺化",
+        "學習統計一目了然",
+        "個人化推薦行動",
+        "快速功能導航"
+      ]
+    },
+    "assessment": {
+      "title": "評估",
+      "subtitle": "AI 素養測驗",
+      "description": "25 題專業評估，深入了解您在 AI 四大領域的能力水平。",
+      "userNeed": "我的 AI 能力在哪個程度？",
+      "features": [
+        "四大 AI 素養領域",
+        "25 題情境式題目",
+        "雷達圖能力分析",
+        "個人化建議報告"
+      ]
+    },
+    "learningPath": {
+      "title": "學習路徑",
+      "subtitle": "個人化成長計畫",
+      "description": "基於您的評估結果，推薦最適合的學習內容與進度安排。",
+      "userNeed": "什麼課程適合我？",
+      "features": [
+        "客製化課程推薦",
+        "分級學習內容",
+        "循序漸進規劃",
+        "彈性學習時程"
+      ]
+    },
+    "pbl": {
+      "title": "PBL 實作",
+      "subtitle": "真實情境練習",
+      "description": "9 大實務情境，在 AI 導師陪伴下，做中學習 AI 應用。",
+      "userNeed": "如何實際應用 AI？",
+      "features": [
+        "AI 機器人開發",
+        "AI 穩定幣交易",
+        "AI 求職訓練",
+        "即時 AI 輔導"
+      ]
+    },
+    "chat": {
+      "title": "AI 顧問",
+      "subtitle": "隨時諮詢支援",
+      "description": "24/7 智能學習夥伴，記得您的學習脈絡，提供個人化建議。",
+      "userNeed": "遇到問題找誰問？",
+      "features": [
+        "持續對話記憶",
+        "個人化學習建議",
+        "多輪深度對話",
+        "學習問題解答"
+      ]
+    }
+  },
+  "keyFeatures": "核心功能",
+  "solvedNeed": "解決的用戶需求",
+  "completeJourney": "完整學習循環"
+}

@@ -15,5 +15,30 @@
   },
   "darkMode": "Passa alla modalità scura",
   "lightMode": "Passa alla modalità chiara",
-  "toggleTheme": "Cambia tema"
+  "toggleTheme": "Cambia tema",
+  "historySubtitle": "Visualizza tutti i tuoi record di cronologia di apprendimento",
+  "totalActivities": "Attività totali",
+  "filterAll": "Tutti",
+  "noHistory": "Nessun record di apprendimento ancora",
+  "startAssessment": "Inizia la valutazione dell'alfabetizzazione IA",
+  "startPBL": "Inizia l'apprendimento PBL",
+  "startNewPBL": "Inizia un nuovo apprendimento PBL",
+  "footer": {
+    "product": "Prodotto",
+    "resources": "Risorse",
+    "company": "Azienda",
+    "about": "Informazioni su AI Square",
+    "description": "AI Square è una piattaforma di apprendimento basata su Git per l'educazione all'alfabetizzazione IA, che supporta 9 lingue in tutto il mondo.",
+    "journey": "Percorso utente",
+    "roadmap": "Roadmap del prodotto",
+    "feedback": "Feedback",
+    "rights": "Tutti i diritti riservati.",
+    "privacy": "Politica sulla privacy",
+    "terms": "Termini di servizio",
+    "contact": "Contatti",
+    "languages": "Lingue",
+    "domains": "Domini IA",
+    "competencies": "Competenze",
+    "madeWith": "Fatto con ❤️ per l'educazione all'alfabetizzazione IA"
+  }
 }

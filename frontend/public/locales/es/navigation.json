@@ -22,5 +22,23 @@
   "noHistory": "Aún no hay registros de aprendizaje",
   "startAssessment": "Iniciar evaluación de alfabetización en IA",
   "startPBL": "Iniciar aprendizaje PBL",
-  "startNewPBL": "Iniciar nuevo aprendizaje PBL"
+  "startNewPBL": "Iniciar nuevo aprendizaje PBL",
+  "footer": {
+    "product": "Producto",
+    "resources": "Recursos",
+    "company": "Empresa",
+    "about": "Acerca de AI Square",
+    "description": "AI Square es una plataforma de aprendizaje basada en Git para la educación en alfabetización de IA, que admite 9 idiomas en todo el mundo.",
+    "journey": "Viaje del usuario",
+    "roadmap": "Hoja de ruta del producto",
+    "feedback": "Comentarios",
+    "rights": "Todos los derechos reservados.",
+    "privacy": "Política de privacidad",
+    "terms": "Términos de servicio",
+    "contact": "Contacto",
+    "languages": "Idiomas",
+    "domains": "Dominios de IA",
+    "competencies": "Competencias",
+    "madeWith": "Hecho con ❤️ para la educación en alfabetización de IA"
+  }
 }

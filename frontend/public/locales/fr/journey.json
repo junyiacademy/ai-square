@@ -1,0 +1,73 @@
+{
+  "title": "Parcours Utilisateur AI Square",
+  "subtitle": "Cinq chemins clés pour une expérience d'apprentissage IA complète",
+  "getStarted": "Commencer",
+  "pathOverview": "Cycle d'Apprentissage Complet",
+  "nextPath": "Chemin Suivant →",
+  "tryFeature": "Découvrir Cette Fonctionnalité",
+  "paths": {
+    "dashboard": {
+      "title": "Tableau de Bord",
+      "subtitle": "Centre de Commande d'Apprentissage",
+      "description": "Vue d'ensemble complète de votre parcours d'apprentissage IA, suivi des progrès, visualisation des réalisations et planification des prochaines étapes.",
+      "userNeed": "Comment progresse mon apprentissage ?",
+      "features": [
+        "Visualisation des progrès en littératie IA",
+        "Statistiques d'apprentissage en un coup d'œil",
+        "Actions recommandées personnalisées",
+        "Navigation rapide des fonctionnalités"
+      ]
+    },
+    "assessment": {
+      "title": "Évaluation",
+      "subtitle": "Test de Littératie IA",
+      "description": "25 questions professionnelles pour comprendre en profondeur votre niveau de compétence dans quatre domaines de l'IA.",
+      "userNeed": "Quel est mon niveau de compétence en IA ?",
+      "features": [
+        "Quatre domaines de littératie IA",
+        "25 questions basées sur des scénarios",
+        "Analyse des capacités par graphique radar",
+        "Rapport de recommandations personnalisé"
+      ]
+    },
+    "learningPath": {
+      "title": "Parcours d'Apprentissage",
+      "subtitle": "Plan de Croissance Personnalisé",
+      "description": "Basé sur vos résultats d'évaluation, nous recommandons le contenu et le rythme d'apprentissage les plus adaptés.",
+      "userNeed": "Quels cours me conviennent ?",
+      "features": [
+        "Recommandations de cours personnalisées",
+        "Contenu d'apprentissage gradué",
+        "Planification progressive",
+        "Programme d'apprentissage flexible"
+      ]
+    },
+    "pbl": {
+      "title": "Pratique PBL",
+      "subtitle": "Scénarios du Monde Réel",
+      "description": "9 scénarios pratiques avec guidance d'un tuteur IA pour apprendre en pratiquant.",
+      "userNeed": "Comment appliquer l'IA en pratique ?",
+      "features": [
+        "Développement Robotique IA",
+        "Trading de Stablecoins IA",
+        "Formation Recherche d'Emploi IA",
+        "Tutorat IA en temps réel"
+      ]
+    },
+    "chat": {
+      "title": "Conseiller IA",
+      "subtitle": "Support 24h/24 7j/7",
+      "description": "Compagnon d'apprentissage intelligent 24h/24 7j/7 qui mémorise votre contexte d'apprentissage et fournit des conseils personnalisés.",
+      "userNeed": "À qui demander quand j'ai des questions ?",
+      "features": [
+        "Mémoire de conversation continue",
+        "Suggestions d'apprentissage personnalisées",
+        "Conversations approfondies multi-tours",
+        "Support questions-réponses d'apprentissage"
+      ]
+    }
+  },
+  "keyFeatures": "Fonctionnalités Clés",
+  "solvedNeed": "Besoin Utilisateur Résolu",
+  "completeJourney": "Parcours d'Apprentissage Complet"
+}

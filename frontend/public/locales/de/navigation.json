@@ -22,5 +22,23 @@
   "noHistory": "Noch keine Lernaufzeichnungen",
   "startAssessment": "KI-Kompetenz-Bewertung starten",
   "startPBL": "PBL-Lernen starten",
-  "startNewPBL": "Neues PBL-Lernen starten"
+  "startNewPBL": "Neues PBL-Lernen starten",
+  "footer": {
+    "product": "Produkt",
+    "resources": "Ressourcen",
+    "company": "Unternehmen",
+    "about": "Über AI Square",
+    "description": "AI Square ist eine Git-basierte Lernplattform für KI-Kompetenzbildung, die weltweit 9 Sprachen unterstützt.",
+    "journey": "Benutzerreise",
+    "roadmap": "Produkt-Roadmap",
+    "feedback": "Feedback",
+    "rights": "Alle Rechte vorbehalten.",
+    "privacy": "Datenschutzrichtlinie",
+    "terms": "Nutzungsbedingungen",
+    "contact": "Kontakt",
+    "languages": "Sprachen",
+    "domains": "KI-Domänen",
+    "competencies": "Kompetenzen",
+    "madeWith": "Mit ❤️ für die KI-Kompetenzbildung entwickelt"
+  }
 }

@@ -22,5 +22,23 @@
   "noHistory": "まだ学習記録がありません",
   "startAssessment": "AI リテラシー評価を開始",
   "startPBL": "PBL 学習を開始",
-  "startNewPBL": "新しい PBL 学習を開始"
+  "startNewPBL": "新しい PBL 学習を開始",
+  "footer": {
+    "product": "製品",
+    "resources": "リソース",
+    "company": "会社",
+    "about": "AI Squareについて",
+    "description": "AI Squareは、世界9言語をサポートするAIリテラシー教育のためのGitベースの学習プラットフォームです。",
+    "journey": "ユーザージャーニー",
+    "roadmap": "製品ロードマップ",
+    "feedback": "フィードバック",
+    "rights": "すべての権利を保有しています。",
+    "privacy": "プライバシーポリシー",
+    "terms": "利用規約",
+    "contact": "お問い合わせ",
+    "languages": "言語",
+    "domains": "AIドメイン",
+    "competencies": "コンピテンシー",
+    "madeWith": "AIリテラシー教育のために❤️で作られました"
+  }
 }
