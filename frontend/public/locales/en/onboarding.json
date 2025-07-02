@@ -65,5 +65,35 @@
     "continue": "Continue to Assessment",
     "skipForNow": "Skip for now",
     "helpText": "Don't worry, you can always change these later in your profile settings."
+  },
+  "progress": {
+    "welcome": "Welcome",
+    "identity": "Identity",
+    "goals": "Goals"
+  },
+  "identity": {
+    "title": "Who are you?",
+    "subtitle": "Help us personalize your AI learning journey",
+    "student": {
+      "title": "Student",
+      "description": "I'm studying and want to learn AI for my academic and future career"
+    },
+    "teacher": {
+      "title": "Educator",
+      "description": "I teach others and want to integrate AI into my curriculum"
+    },
+    "professional": {
+      "title": "Professional",
+      "description": "I work in industry and want to leverage AI in my role"
+    },
+    "learner": {
+      "title": "Lifelong Learner",
+      "description": "I'm curious about AI and want to explore its possibilities"
+    }
+  },
+  "button": {
+    "back": "Back",
+    "continue": "Continue",
+    "saving": "Saving..."
   }
 }

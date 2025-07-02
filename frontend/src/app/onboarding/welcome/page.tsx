@@ -144,8 +144,8 @@ export default function OnboardingWelcomePage() {
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      // Complete onboarding and go to goals selection
-      router.push('/onboarding/goals');
+      // Complete welcome steps and go to identity selection
+      router.push('/onboarding/identity');
     }
   };
 

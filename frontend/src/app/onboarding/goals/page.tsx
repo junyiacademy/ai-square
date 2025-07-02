@@ -122,6 +122,32 @@ export default function OnboardingGoalsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-purple-900">
       <div className="max-w-6xl mx-auto px-4 py-12">
+        {/* Progress indicator */}
+        <div className="mb-8">
+          <div className="flex items-center justify-center space-x-4">
+            <div className="flex items-center">
+              <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-white text-sm font-medium">
+                ✓
+              </div>
+              <span className="ml-2 text-sm text-gray-600">{t('onboarding:progress.welcome', 'Welcome')}</span>
+            </div>
+            <div className="w-16 h-0.5 bg-gray-300"></div>
+            <div className="flex items-center">
+              <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-white text-sm font-medium">
+                ✓
+              </div>
+              <span className="ml-2 text-sm text-gray-600">{t('onboarding:progress.identity', 'Identity')}</span>
+            </div>
+            <div className="w-16 h-0.5 bg-gray-300"></div>
+            <div className="flex items-center">
+              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
+                3
+              </div>
+              <span className="ml-2 text-sm font-medium text-gray-900">{t('onboarding:progress.goals', 'Goals')}</span>
+            </div>
+          </div>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
@@ -215,10 +241,10 @@ export default function OnboardingGoalsPage() {
         {/* Action Buttons */}
         <div className="flex justify-between items-center">
           <button
-            onClick={handleSkip}
-            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            onClick={() => router.push('/onboarding/identity')}
+            className="px-6 py-3 text-gray-700 hover:text-gray-900 transition-colors"
           >
-            {t('onboarding:goals.skipForNow')}
+            {t('onboarding:button.back', 'Back')}
           </button>
 
           <button
