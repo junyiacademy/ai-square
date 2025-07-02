@@ -558,3 +558,11 @@ tasks:
         - Graceful error handling and recovery
 
         What's the primary language and communication style of your target users? Let's design an interaction system that feels natural and builds confidence in your manufacturing environment.
+
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - K2.1  # Understanding AI capabilities and limitations
+    - S3.1  # AI system integration
+    - S4.2  # Collaborative AI design
+  min_overall_score: 75
