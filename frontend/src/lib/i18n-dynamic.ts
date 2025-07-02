@@ -13,19 +13,23 @@ export const SUPPORTED_LANGUAGES = [
 
 export type SupportedLanguage = typeof SUPPORTED_LANGUAGES[number];
 
-// 動態載入語言資源
+// 動態載入語言資源 - 使用 fetch 替代 dynamic import
 const loadLanguageResources = async (language: SupportedLanguage) => {
   const resources: { [key: string]: unknown } = {};
   
   try {
     // 動態載入通用翻譯
-    const commonModule = await import(`@/public/locales/${language}/common.json`);
-    resources.common = commonModule.default || commonModule;
+    const commonResponse = await fetch(`/locales/${language}/common.json`);
+    if (commonResponse.ok) {
+      resources.common = await commonResponse.json();
+    }
     
     // 動態載入 PBL 翻譯（如果存在）
     try {
-      const pblModule = await import(`@/public/locales/${language}/pbl.json`);
-      resources.pbl = pblModule.default || pblModule;
+      const pblResponse = await fetch(`/locales/${language}/pbl.json`);
+      if (pblResponse.ok) {
+        resources.pbl = await pblResponse.json();
+      }
     } catch {
       // PBL 翻譯不存在時忽略
     }
@@ -53,7 +57,7 @@ export const initI18n = async (initialLanguage: SupportedLanguage = 'en') => {
       debug: process.env.NODE_ENV === 'development',
       
       resources: {
-        [initialLanguage]: resources
+        [initialLanguage]: resources as Record<string, Record<string, string>>
       },
       
       ns: ['common', 'pbl'],

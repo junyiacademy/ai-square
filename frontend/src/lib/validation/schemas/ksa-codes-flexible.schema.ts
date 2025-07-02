@@ -36,7 +36,7 @@ interface ThemeResult {
   metadata: Record<string, unknown>;
 }
 
-const themeSchema = z.record(z.string(), z.unknown()).transform((theme): ThemeResult => {
+export const themeSchema = z.record(z.string(), z.unknown()).transform((theme): ThemeResult => {
   // Separate codes from other fields
   const codes: Record<string, KSACode> = {}
   const metadata: Record<string, unknown> = {}
@@ -92,7 +92,7 @@ export const flexibleKSACodesFileSchema = z.object({
 }).passthrough() // Allow extra top-level fields
 
 // Type for the flexible KSA data structure
-interface FlexibleKSAData {
+export interface FlexibleKSAData {
   knowledge_codes?: KSASection;
   skill_codes?: KSASection;
   skills_codes?: KSASection;

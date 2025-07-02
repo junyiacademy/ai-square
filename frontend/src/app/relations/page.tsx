@@ -141,7 +141,7 @@ export default function RelationsClient() {
     setLoading(true);
     try {
       const data = await contentService.getRelationsTree(lng);
-      setTree(data);
+      setTree(data as unknown as TreeData);
     } catch (error) {
       console.error('Failed to load relations tree:', error);
     } finally {

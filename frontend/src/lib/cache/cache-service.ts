@@ -27,7 +27,7 @@ class CacheService {
     if (storage === 'memory' || storage === 'both') {
       const memoryEntry = this.memoryCache.get(key)
       if (memoryEntry && this.isValid(memoryEntry)) {
-        return memoryEntry.data
+        return memoryEntry.data as T
       }
     }
 

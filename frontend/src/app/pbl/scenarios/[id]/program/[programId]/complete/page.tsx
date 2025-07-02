@@ -716,7 +716,9 @@ export default function ProgramCompletePage() {
                               </h4>
                               <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
                                 {/* Effective Examples */}
-                                {task.evaluation?.conversationInsights?.effectiveExamples && task.evaluation.conversationInsights.effectiveExamples.length > 0 && (
+                                {task.evaluation?.conversationInsights?.effectiveExamples && 
+                                 Array.isArray(task.evaluation.conversationInsights.effectiveExamples) &&
+                                 task.evaluation.conversationInsights.effectiveExamples.length > 0 && (
                                   <div>
                                     <p className="text-xs font-medium text-green-700 dark:text-green-300 mb-1">
                                       {t('pbl:learn.effectiveExamples')}
@@ -733,7 +735,9 @@ export default function ProgramCompletePage() {
                                 )}
                                 
                                 {/* Improvement Areas */}
-                                {task.evaluation.conversationInsights.improvementAreas?.length > 0 && (
+                                {task.evaluation.conversationInsights.improvementAreas && 
+                                 Array.isArray(task.evaluation.conversationInsights.improvementAreas) &&
+                                 task.evaluation.conversationInsights.improvementAreas.length > 0 && (
                                   <div>
                                     <p className="text-xs font-medium text-yellow-700 dark:text-yellow-300 mb-1">
                                       {t('pbl:learn.improvementExamples')}
@@ -753,7 +757,9 @@ export default function ProgramCompletePage() {
                           )}
                           
                           {/* Strengths */}
-                          {task.evaluation.strengths?.length > 0 && (
+                          {task.evaluation.strengths && 
+                           Array.isArray(task.evaluation.strengths) &&
+                           task.evaluation.strengths.length > 0 && (
                             <div>
                               <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 {t('pbl:complete.strengths')}
@@ -770,7 +776,9 @@ export default function ProgramCompletePage() {
                           )}
                           
                           {/* Areas for Improvement */}
-                          {task.evaluation.improvements?.length > 0 && (
+                          {task.evaluation.improvements && 
+                           Array.isArray(task.evaluation.improvements) &&
+                           task.evaluation.improvements.length > 0 && (
                             <div>
                               <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 {t('pbl:complete.improvements')}

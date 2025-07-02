@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import type { AssessmentResult } from '@/types/assessment';
-import type { Scenario } from '@/types/pbl';
+import type { Scenario, ScenarioListItem } from '@/types/pbl';
 
 interface LearningPathItem {
   id: string;
@@ -42,6 +42,7 @@ interface ScenarioWithDomains extends Scenario {
   topics?: string[];
   relevanceScore?: number;
   matchedKeywords?: string[];
+  taskCount: number; // Required by ScenarioListItem
 }
 
 // Role-based keyword patterns for relevance matching
@@ -103,7 +104,7 @@ function LearningPathContent() {
 
   // Generate personalized recommendation reason
   const generatePersonalizedReason = (
-    scenario: ScenarioWithDomains, 
+    scenario: ScenarioListItem | ScenarioWithDomains, 
     domain: string, 
     domainScore: number,
     matchedKeywords: string[]
@@ -157,7 +158,7 @@ function LearningPathContent() {
   };
 
   // Calculate relevance score based on user identity
-  const calculateRelevanceScore = (scenario: any): { score: number; matchedKeywords: string[] } => {
+  const calculateRelevanceScore = (scenario: ScenarioListItem & { matchedKeywords?: string[] }): { score: number; matchedKeywords: string[] } => {
     if (!userProfile.identity) return { score: 0, matchedKeywords: [] };
     
     const pattern = roleKeywordPatterns[userProfile.identity];
@@ -243,7 +244,7 @@ function LearningPathContent() {
             })).sort((a, b) => b.relevanceScore - a.relevanceScore);
           }
 
-          beginnerScenarios.slice(0, 3).forEach((scenario: any, idx: number) => {
+          beginnerScenarios.slice(0, 3).forEach((scenario: ScenarioListItem & { matchedKeywords?: string[] }, idx: number) => {
             const matchedKeywords = scenario.matchedKeywords || [];
             const reason = generatePersonalizedReason(scenario, domain, score, matchedKeywords);
 
@@ -568,7 +569,7 @@ function LearningPathContent() {
             </p>
           </div>
 
-          {filteredPath.map((item, index) => (
+          {filteredPath.map((item) => (
             <div 
               key={item.id}
               className="bg-white dark:bg-slate-800 rounded-lg shadow-md hover:shadow-lg transition-shadow"

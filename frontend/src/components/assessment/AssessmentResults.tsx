@@ -9,8 +9,7 @@ import {
   DynamicPolarGrid as PolarGrid,
   DynamicPolarAngleAxis as PolarAngleAxis,
   DynamicPolarRadiusAxis as PolarRadiusAxis,
-  DynamicResponsiveContainer as ResponsiveContainer,
-  DynamicLegend as Legend
+  DynamicResponsiveContainer as ResponsiveContainer
 } from '@/lib/dynamic-imports';
 import CompetencyKnowledgeGraph from './CompetencyKnowledgeGraph';
 import { contentService } from '@/services/content-service';
@@ -56,9 +55,9 @@ export default function AssessmentResults({ result, domains, onRetake, questions
         const data = await contentService.getRelationsTree(i18n.language);
         setDomainsData(data.domains);
         setKsaMaps({
-          kMap: data.kMap,
-          sMap: data.sMap,
-          aMap: data.aMap
+          kMap: data.kMap as Record<string, { summary: string; theme: string; explanation?: string }>,
+          sMap: data.sMap as Record<string, { summary: string; theme: string; explanation?: string }>,
+          aMap: data.aMap as Record<string, { summary: string; theme: string; explanation?: string }>
         });
       } catch (error) {
         console.error('Failed to fetch domains data:', error);
@@ -360,7 +359,7 @@ export default function AssessmentResults({ result, domains, onRetake, questions
                     <ResponsiveContainer width="100%" height={400}>
                       <RadarChart data={radarData}>
                         <PolarGrid />
-                        <PolarAngleAxis dataKey="domain" tick={{ fontSize: 12 }} />
+                        <PolarAngleAxis dataKey="domain" tick={{ fontSize: 12 }} reversed={false} scale="auto" />
                         <PolarRadiusAxis 
                           angle={90} 
                           domain={[0, 100]} 
@@ -374,7 +373,6 @@ export default function AssessmentResults({ result, domains, onRetake, questions
                           fillOpacity={0.3}
                           strokeWidth={2}
                         />
-                        <Legend />
                       </RadarChart>
                     </ResponsiveContainer>
                   </div>

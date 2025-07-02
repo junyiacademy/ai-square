@@ -1,7 +1,18 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
-import { StageResult } from '@/types/pbl';
+
+interface StageResult {
+  stage: string;
+  score: number;
+  timestamp: string;
+  ksaScores?: {
+    knowledge: number;
+    skills: number;
+    attitudes: number;
+  };
+  ksaAchievement?: Record<string, number>;
+}
 
 interface KSADiagnosticReportProps {
   stageResults: StageResult[];
@@ -40,7 +51,7 @@ export default function KSADiagnosticReport({ stageResults }: KSADiagnosticRepor
           if (!ksaScoreMap[ksa]) {
             ksaScoreMap[ksa] = [];
           }
-          ksaScoreMap[ksa].push(achievement.score);
+          ksaScoreMap[ksa].push(achievement);
         });
       }
     });

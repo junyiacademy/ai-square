@@ -7,17 +7,17 @@ interface LanguageLoader {
   [key: string]: () => Promise<Record<string, unknown>>
 }
 
-// 定義語言載入器
+// 定義語言載入器 - 使用 fetch 替代 dynamic import 來避免 TypeScript 模組解析問題
 export const languageLoaders: LanguageLoader = {
-  'en': () => import('@/public/locales/en/common.json'),
-  'zh-TW': () => import('@/public/locales/zh-TW/common.json'),
-  'es': () => import('@/public/locales/es/common.json'),
-  'ja': () => import('@/public/locales/ja/common.json'),
-  'ko': () => import('@/public/locales/ko/common.json'),
-  'fr': () => import('@/public/locales/fr/common.json'),
-  'de': () => import('@/public/locales/de/common.json'),
-  'ru': () => import('@/public/locales/ru/common.json'),
-  'it': () => import('@/public/locales/it/common.json'),
+  'en': () => fetch('/locales/en/common.json').then(res => res.json()),
+  'zh-TW': () => fetch('/locales/zh-TW/common.json').then(res => res.json()),
+  'es': () => fetch('/locales/es/common.json').then(res => res.json()),
+  'ja': () => fetch('/locales/ja/common.json').then(res => res.json()),
+  'ko': () => fetch('/locales/ko/common.json').then(res => res.json()),
+  'fr': () => fetch('/locales/fr/common.json').then(res => res.json()),
+  'de': () => fetch('/locales/de/common.json').then(res => res.json()),
+  'ru': () => fetch('/locales/ru/common.json').then(res => res.json()),
+  'it': () => fetch('/locales/it/common.json').then(res => res.json()),
 }
 
 // 載入語言包的快取
@@ -29,7 +29,7 @@ const loadedLanguages = new Map<string, Record<string, unknown>>()
 export async function loadLanguage(lang: string): Promise<Record<string, unknown>> {
   // 檢查快取
   if (loadedLanguages.has(lang)) {
-    return loadedLanguages.get(lang)
+    return loadedLanguages.get(lang) || {}
   }
 
   // 載入語言包
@@ -41,8 +41,9 @@ export async function loadLanguage(lang: string): Promise<Record<string, unknown
 
   try {
     const translations = await loader()
-    loadedLanguages.set(lang, translations.default || translations)
-    return translations.default || translations
+    const translationData = (translations as Record<string, unknown>)
+    loadedLanguages.set(lang, translationData)
+    return translationData
   } catch (error) {
     console.error(`Failed to load language ${lang}:`, error)
     // 降級到英文

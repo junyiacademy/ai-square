@@ -97,6 +97,7 @@ export abstract class BaseAIService {
       return {
         ...response,
         metadata: {
+          model: response.metadata?.model || this.defaultModel,
           ...response.metadata,
           processingTime: Date.now() - startTime
         }
@@ -151,6 +152,7 @@ export abstract class BaseAIService {
       return {
         ...response,
         metadata: {
+          model: response.metadata?.model || this.defaultModel,
           ...response.metadata,
           processingTime: Date.now() - startTime
         }
@@ -206,12 +208,13 @@ export abstract class BaseAIService {
       return {
         ...response,
         metadata: {
+          model: response.metadata?.model || this.defaultModel,
           ...response.metadata,
           processingTime: Date.now() - startTime
         }
       };
     } catch (error) {
-      return this.handleError(error, 'generateStructured');
+      return this.handleError<T>(error, 'generateStructured');
     }
   }
 
@@ -284,7 +287,7 @@ export abstract class BaseAIService {
     return Math.abs(hash).toString(36);
   }
 
-  protected handleError(error: unknown, action: string): AIResponse {
+  protected handleError<T = string>(error: unknown, action: string): AIResponse<T> {
     const errorObj = error instanceof Error ? error : new Error('Unknown error');
     
     captureError(errorObj, {

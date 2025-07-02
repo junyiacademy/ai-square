@@ -3,7 +3,7 @@ import { pblProgramService } from '@/lib/storage/pbl-program-service';
 import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
-import { Scenario, DomainType, DifficultyLevel } from '@/types/pbl';
+import { Scenario, DomainType, DifficultyLevel, KSAMapping, TaskCategory, AIModule } from '@/types/pbl';
 
 // Load scenario data from YAML file
 async function loadScenario(scenarioId: string): Promise<Scenario | null> {
@@ -35,8 +35,8 @@ async function loadScenario(scenarioId: string): Promise<Scenario | null> {
           title_zh?: string;
         }>;
       };
-      tasks?: any[];
-      ksa_mapping?: any;
+      tasks?: Record<string, unknown>[];
+      ksa_mapping?: Record<string, unknown>;
     }
     const data = yaml.load(yamlContent) as ScenarioYAML;
     
@@ -53,28 +53,28 @@ async function loadScenario(scenarioId: string): Promise<Scenario | null> {
       prerequisites: data.scenario_info.prerequisites || [],
       learningObjectives: data.scenario_info.learning_objectives || [],
       learningObjectives_zh: data.scenario_info.learning_objectives_zh || [],
-      ksaMapping: data.ksa_mapping,
+      ksaMapping: (data.ksa_mapping as unknown as KSAMapping) || { knowledge: [], skills: [], attitudes: [] },
       tasks: []
     };
     
     // Load tasks directly from root level
     if (data.tasks && Array.isArray(data.tasks)) {
-      for (const task of data.tasks) {
+      for (const task of data.tasks as Record<string, unknown>[]) {
         scenario.tasks.push({
-          id: task.id,
-          title: task.title,
-          title_zh: task.title_zh,
-          description: task.description,
-          description_zh: task.description_zh,
-          category: task.category || 'general',
-          instructions: task.instructions,
-          instructions_zh: task.instructions_zh,
-          expectedOutcome: task.expected_outcome || task.expectedOutcome,
-          expectedOutcome_zh: task.expected_outcome_zh || task.expectedOutcome_zh,
-          timeLimit: task.time_limit,
-          resources: task.resources,
-          assessmentFocus: task.assessment_focus || { primary: [], secondary: [] },
-          aiModule: task.ai_module
+          id: task.id as string,
+          title: task.title as string,
+          title_zh: task.title_zh as string,
+          description: task.description as string,
+          description_zh: task.description_zh as string,
+          category: (task.category as TaskCategory) || 'research',
+          instructions: (task.instructions as string[]) || [],
+          instructions_zh: (task.instructions_zh as string[]) || [],
+          expectedOutcome: (task.expected_outcome as string) || (task.expectedOutcome as string) || '',
+          expectedOutcome_zh: (task.expected_outcome_zh as string) || (task.expectedOutcome_zh as string) || '',
+          timeLimit: task.time_limit as number,
+          resources: (task.resources as string[]) || [],
+          assessmentFocus: (task.assessment_focus as { primary: string[]; secondary: string[] }) || { primary: [], secondary: [] },
+          aiModule: (task.ai_module as unknown as AIModule) || undefined
         });
       }
     }

@@ -233,7 +233,7 @@ export abstract class BaseApiHandler<TRequest = unknown, TResponse = unknown> {
       context.requestId || 'unknown',
       status,
       errorMessage,
-      context
+      context as Record<string, unknown>
     );
 
     if (process.env.NODE_ENV === 'development') {

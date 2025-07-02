@@ -6,7 +6,7 @@
 import { readFileSync } from 'fs'
 import { join } from 'path'
 import * as yaml from 'js-yaml'
-import { extractKSAIdsFromFlexible } from './schemas/ksa-codes-flexible.schema'
+import { extractKSAIdsFromFlexible, FlexibleKSAData } from './schemas/ksa-codes-flexible.schema'
 import { 
   KSAData, 
   DomainsData, 
@@ -39,7 +39,7 @@ export class ValidationReporter {
         switch (file.type) {
           case 'ksa':
             const ksaData = data as KSAData
-            const ksaIds = extractKSAIdsFromFlexible(ksaData)
+            const ksaIds = extractKSAIdsFromFlexible(ksaData as FlexibleKSAData)
             totalItems = ksaIds.knowledgeIds.length + ksaIds.skillIds.length + ksaIds.attitudeIds.length
             details.knowledge = ksaIds.knowledgeIds.length
             details.skills = ksaIds.skillIds.length

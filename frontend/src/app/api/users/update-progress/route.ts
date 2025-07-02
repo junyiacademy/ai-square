@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
         identityCompletedAt?: string;
         goalsCompletedAt?: string;
       };
-      [key: string]: any; // Allow other properties
+      [key: string]: unknown; // Allow other properties
     }
     let userData: UserData = {};
     try {

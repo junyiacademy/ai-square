@@ -8,9 +8,15 @@ import {
   ProgramSummary,
   ProgramStatus
 } from '@/types/pbl';
-import type { TaskEvaluation } from '@/types/pbl-evaluate';
+import type { TaskEvaluation } from '@/types/pbl-completion';
 import type { CompletionData, QualitativeFeedback } from '@/types/pbl-completion';
 import { cacheService } from '@/lib/cache/cache-service';
+
+// GCS File interface
+interface GCSFile {
+  name: string;
+  download(): Promise<[Buffer]>;
+}
 
 // Initialize GCS client
 const storageConfig: {
@@ -400,7 +406,7 @@ class PBLProgramService {
     
     try {
       // Try cache first for metadata and progress (not log as it changes frequently)
-      const cached = await cacheService.get<{ metadata: TaskMetadata | null; progress: TaskProgress | null; evaluation?: TaskEvaluation | null }>(cacheKey);
+      const cached = await cacheService.get<{ metadata: TaskMetadata | null; progress: TaskProgress | null; evaluation?: TaskEvaluation | null; log?: TaskLog | null }>(cacheKey);
       if (cached && cached.metadata && cached.progress) {
         // Still fetch fresh log data
         const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
@@ -413,7 +419,12 @@ class PBLProgramService {
           cached.log = null;
         }
         
-        return cached;
+        return {
+          metadata: cached.metadata,
+          log: cached.log || null,
+          progress: cached.progress,
+          evaluation: cached.evaluation
+        };
       }
 
       const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
@@ -546,7 +557,10 @@ class PBLProgramService {
           }
           
           const [contents] = await file.download();
-          taskMap.get(taskId)[fileType] = JSON.parse(contents.toString());
+          const taskData = taskMap.get(taskId);
+          if (taskData) {
+            (taskData as Record<string, unknown>)[fileType] = JSON.parse(contents.toString());
+          }
         }
       }
 
@@ -556,7 +570,7 @@ class PBLProgramService {
       let scoredTasks = 0;
       const domainScores: Record<string, { total: number; count: number }> = {};
 
-      for (const [taskId, data] of taskMap) {
+      for (const [, data] of taskMap) {
         if (data.metadata && data.progress && data.log) {
           tasks.push({
             metadata: data.metadata,
@@ -1056,17 +1070,17 @@ class PBLProgramService {
       });
 
       // Group files by program path
-      const programFiles = new Map<string, any[]>();
+      const programFiles = new Map<string, GCSFile[]>();
       
       for (const file of files) {
-        if (file.name.includes('/program_')) {
-          const programMatch = file.name.match(/(scenario_[^/]+\/program_[^/]+)/);
+        if ((file as GCSFile).name.includes('/program_')) {
+          const programMatch = (file as GCSFile).name.match(/(scenario_[^/]+\/program_[^/]+)/);
           if (programMatch) {
             const programPath = programMatch[1];
             if (!programFiles.has(programPath)) {
               programFiles.set(programPath, []);
             }
-            programFiles.get(programPath)!.push(file);
+            programFiles.get(programPath)!.push(file as GCSFile);
           }
         }
       }
@@ -1078,10 +1092,10 @@ class PBLProgramService {
           const pathMatch = programPath.match(/scenario_([^/]+)\/program_([^/]+)/);
           if (!pathMatch) return null;
           
-          const [, extractedScenarioId, programId] = pathMatch;
+          const [,] = pathMatch; // extractedScenarioId and programId not used here
           
           // First check if we have completion.json (most efficient)
-          const completionFile = files.find(f => f.name.endsWith('/completion.json'));
+          const completionFile = files.find(f => (f as GCSFile).name.endsWith('/completion.json'));
           if (completionFile) {
             const [content] = await completionFile.download();
             const completionData: CompletionData = JSON.parse(content.toString());
@@ -1092,7 +1106,7 @@ class PBLProgramService {
                 id: completionData.programId,
                 userEmail: completionData.userEmail,
                 scenarioId: completionData.scenarioId,
-                scenarioTitle: completionData.scenarioTitle || completionData.scenarioId,
+                scenarioTitle: (completionData as unknown as Record<string, unknown>).scenarioTitle as string || completionData.scenarioId,
                 status: completionData.status || 'in_progress',
                 startedAt: completionData.startedAt,
                 updatedAt: completionData.updatedAt,
@@ -1104,7 +1118,7 @@ class PBLProgramService {
               domainScores: completionData.domainScores,
               totalTimeSeconds: completionData.totalTimeSeconds || 0,
               completionRate: Math.round((completionData.evaluatedTasks / completionData.totalTasks) * 100)
-            } as ProgramSummary;
+            } as unknown as ProgramSummary;
           }
           
           // Fallback to metadata.json if no completion data
@@ -1129,7 +1143,7 @@ class PBLProgramService {
               overallScore: 0,
               totalTimeSeconds: 0,
               completionRate: 0
-            } as ProgramSummary;
+            } as unknown as ProgramSummary;
           }
           
           return null;

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { PBLLearningContentSkeleton } from '@/components/pbl/loading-skeletons';
@@ -12,7 +12,7 @@ import {
   TaskInteraction,
   TaskProgress 
 } from '@/types/pbl';
-import { TaskEvaluation } from '@/types/pbl-evaluate';
+import { TaskEvaluation } from '@/types/pbl-completion';
 
 interface ConversationEntry {
   id: string;
@@ -62,7 +62,7 @@ function getLocalizedArrayField<T extends Record<string, unknown>>(obj: T | null
 export default function ProgramLearningPage() {
   const params = useParams();
   const router = useRouter();
-  const searchParams = useSearchParams();
+  // Note: searchParams removed as it was unused
   const { t, i18n } = useTranslation(['pbl', 'common']);
   
   const [programId, setProgramId] = useState(params.programId as string);
@@ -134,7 +134,7 @@ export default function ProgramLearningPage() {
               loadedProgram = programData.program;
               
               // If this is a draft program being accessed, update its timestamps
-              if (loadedProgram.status === 'draft') {
+              if (loadedProgram && loadedProgram.status === 'draft') {
                 try {
                   const updateRes = await fetch(`/api/pbl/programs/${programId}/update-timestamps`, {
                     method: 'POST',
@@ -349,7 +349,7 @@ export default function ProgramLearningPage() {
           body: JSON.stringify({
             scenarioId,
             taskId: currentTask.id,
-            taskTitle: getLocalizedField(currentTask, 'title', i18n.language)
+            taskTitle: getLocalizedField(currentTask as unknown as Record<string, unknown>, 'title', i18n.language)
           })
         });
         
@@ -379,7 +379,7 @@ export default function ProgramLearningPage() {
           programId: actualProgramId,
           taskId: currentTask.id,
           scenarioId,
-          taskTitle: getLocalizedField(currentTask, 'title', i18n.language),
+          taskTitle: getLocalizedField(currentTask as unknown as Record<string, unknown>, 'title', i18n.language),
           interaction: {
             type: 'user',
             content: userMessage,
@@ -446,10 +446,9 @@ export default function ProgramLearningPage() {
       // Check if we have more user messages than the last evaluation
       const updatedConversations = [...conversations, newUserEntry, aiEntry];
       const userMessageCount = updatedConversations.filter(c => c.type === 'user').length;
-      const lastEvaluationCount = evaluation?.conversationCount || 0;
       
-      // Enable button if there are new user messages
-      if (userMessageCount > lastEvaluationCount) {
+      // Enable button if there are user messages and no evaluation yet, or if new messages were added
+      if (userMessageCount > 0 && (!evaluation || userMessageCount > 1)) {
         setIsEvaluateDisabled(false);
       }
       
@@ -465,7 +464,7 @@ export default function ProgramLearningPage() {
           programId: actualProgramId,
           taskId: currentTask.id,
           scenarioId,
-          taskTitle: getLocalizedField(currentTask, 'title', i18n.language),
+          taskTitle: getLocalizedField(currentTask as unknown as Record<string, unknown>, 'title', i18n.language),
           interaction: {
             type: 'ai',
             content: aiMessage,
@@ -513,7 +512,7 @@ export default function ProgramLearningPage() {
         body: JSON.stringify({
           conversations: recentConversations,
           task: currentTask,
-          targetDomains: scenario?.targetDomain || [],
+          targetDomains: scenario?.targetDomains || [],
           focusKSA: [
             ...(currentTask.assessmentFocus?.primary || []),
             ...(currentTask.assessmentFocus?.secondary || [])
@@ -649,7 +648,7 @@ export default function ProgramLearningPage() {
         <div className="px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
-              {getLocalizedField(scenario, 'title', i18n.language)}
+              {getLocalizedField(scenario as unknown as Record<string, unknown>, 'title', i18n.language)}
             </h1>
             
             {/* Action Buttons */}
@@ -738,7 +737,7 @@ export default function ProgramLearningPage() {
                                 ? 'text-gray-900 dark:text-white'
                                 : 'text-gray-500 dark:text-gray-400'
                             }`}>
-                              {getLocalizedField(task, 'title', i18n.language)}
+                              {getLocalizedField(task as unknown as Record<string, unknown>, 'title', i18n.language)}
                             </p>
                             {isEvaluated && taskEval?.score !== undefined && (
                               <p className={`text-xs ${
@@ -777,7 +776,7 @@ export default function ProgramLearningPage() {
                             ? 'border-purple-600 dark:border-purple-500 ring-2 ring-purple-600 ring-offset-2' 
                             : 'border-gray-300 dark:border-gray-600'
                         }`}
-                        title={`${getLocalizedField(task, 'title', i18n.language)}${isEvaluated && taskEval?.score !== undefined ? ` - ${taskEval.score}%` : ''}`}
+                        title={`${getLocalizedField(task as unknown as Record<string, unknown>, 'title', i18n.language)}${isEvaluated && taskEval?.score !== undefined ? ` - ${taskEval.score}%` : ''}`}
                       >
                         {isEvaluated ? (
                           <svg className="h-5 w-5 text-green-600 dark:text-green-500" fill="currentColor" viewBox="0 0 20 20">
@@ -820,7 +819,7 @@ export default function ProgramLearningPage() {
         <div className="w-96 bg-white dark:bg-gray-800 border-l border-r border-gray-200 dark:border-gray-700 overflow-y-auto">
           <div className="p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-              {t('pbl:learn.task')} {taskIndex + 1}: {getLocalizedField(currentTask, 'title', i18n.language)}
+              {t('pbl:learn.task')} {taskIndex + 1}: {getLocalizedField(currentTask as unknown as Record<string, unknown>, 'title', i18n.language)}
             </h2>
             
             <div className="space-y-4">
@@ -829,7 +828,7 @@ export default function ProgramLearningPage() {
                   {t('pbl:learn.description')}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
-                  {getLocalizedField(currentTask, 'description', i18n.language)}
+                  {getLocalizedField(currentTask as unknown as Record<string, unknown>, 'description', i18n.language)}
                 </p>
               </div>
               
@@ -838,7 +837,7 @@ export default function ProgramLearningPage() {
                   {t('pbl:learn.instructions')}
                 </h3>
                 <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
-                  {getLocalizedArrayField(currentTask, 'instructions', i18n.language).map((instruction, index) => (
+                  {getLocalizedArrayField(currentTask as unknown as Record<string, unknown>, 'instructions', i18n.language).map((instruction, index) => (
                     <li key={index}>{instruction}</li>
                   ))}
                 </ul>
@@ -850,7 +849,7 @@ export default function ProgramLearningPage() {
                     {t('pbl:details.expectedOutcome')}
                   </h3>
                   <p className="text-gray-600 dark:text-gray-400">
-                    {getLocalizedField(currentTask, 'expectedOutcome', i18n.language)}
+                    {getLocalizedField(currentTask as unknown as Record<string, unknown>, 'expectedOutcome', i18n.language)}
                   </p>
                 </div>
               )}
@@ -880,6 +879,7 @@ export default function ProgramLearningPage() {
                   </div>
                   
                   {/* KSA Scores */}
+                  {evaluation.ksaScores && (
                   <div className="space-y-2">
                     {Object.entries(evaluation.ksaScores).map(([key, value]) => (
                       <div key={key} className="flex items-center justify-between">
@@ -900,6 +900,7 @@ export default function ProgramLearningPage() {
                       </div>
                     ))}
                   </div>
+                  )}
                 </div>
                 
                 {/* Domain Scores */}
@@ -908,7 +909,7 @@ export default function ProgramLearningPage() {
                     {t('pbl:complete.domainScores')}
                   </h4>
                   <div className="space-y-2">
-                    {Object.entries(evaluation.domainScores).map(([domain, score]) => (
+                    {evaluation.domainScores && Object.entries(evaluation.domainScores).map(([domain, score]) => (
                       <div key={domain} className="flex items-center justify-between">
                         <span className="text-sm text-gray-600 dark:text-gray-400">
                           {t(`assessment:domains.${domain}`)}
@@ -931,14 +932,20 @@ export default function ProgramLearningPage() {
                 
                 {/* Conversation Insights - Only show if there are meaningful insights */}
                 {evaluation.conversationInsights && 
-                 (evaluation.conversationInsights.effectiveExamples?.length > 0 || 
-                  evaluation.conversationInsights.improvementAreas?.length > 0) && (
+                 ((evaluation.conversationInsights.effectiveExamples && 
+                   Array.isArray(evaluation.conversationInsights.effectiveExamples) &&
+                   evaluation.conversationInsights.effectiveExamples.length > 0) || 
+                  (evaluation.conversationInsights.improvementAreas && 
+                   Array.isArray(evaluation.conversationInsights.improvementAreas) &&
+                   evaluation.conversationInsights.improvementAreas.length > 0)) && (
                   <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                     <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-3">
                       {t('pbl:learn.conversationInsights', 'Conversation Insights')}
                     </h4>
                     
-                    {evaluation.conversationInsights.effectiveExamples?.length > 0 && (
+                    {evaluation.conversationInsights.effectiveExamples && 
+                     Array.isArray(evaluation.conversationInsights.effectiveExamples) &&
+                     evaluation.conversationInsights.effectiveExamples.length > 0 && (
                       <div className="mb-3">
                         <h5 className="text-xs font-medium text-blue-800 dark:text-blue-200 mb-2">
                           {t('pbl:learn.effectiveExamples', 'What worked well:')}
@@ -950,7 +957,7 @@ export default function ProgramLearningPage() {
                                 &ldquo;{example.quote}&rdquo;
                               </p>
                               <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-                                ✓ {example.reason}
+                                ✓ {example.suggestion}
                               </p>
                             </div>
                           ))}
@@ -958,7 +965,9 @@ export default function ProgramLearningPage() {
                       </div>
                     )}
                     
-                    {evaluation.conversationInsights.improvementAreas?.length > 0 && (
+                    {evaluation.conversationInsights.improvementAreas && 
+                     Array.isArray(evaluation.conversationInsights.improvementAreas) &&
+                     evaluation.conversationInsights.improvementAreas.length > 0 && (
                       <div>
                         <h5 className="text-xs font-medium text-blue-800 dark:text-blue-200 mb-2">
                           {t('pbl:learn.improvementExamples', 'Areas for improvement:')}
@@ -987,7 +996,7 @@ export default function ProgramLearningPage() {
                       {t('pbl:complete.strengths')}
                     </h4>
                     <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                      {evaluation.strengths.map((strength, idx) => (
+                      {evaluation.strengths && evaluation.strengths.map((strength, idx) => (
                         <li key={idx} className="flex items-start">
                           <span className="text-green-500 mr-2">✓</span>
                           {strength}
@@ -1001,7 +1010,7 @@ export default function ProgramLearningPage() {
                       {t('pbl:complete.improvements')}
                     </h4>
                     <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                      {evaluation.improvements.map((improvement, idx) => (
+                      {evaluation.improvements && evaluation.improvements.map((improvement, idx) => (
                         <li key={idx} className="flex items-start">
                           <span className="text-yellow-500 mr-2">•</span>
                           {improvement}
@@ -1189,7 +1198,7 @@ export default function ProgramLearningPage() {
                                 ? 'text-gray-900 dark:text-white'
                                 : 'text-gray-500 dark:text-gray-400'
                             }`}>
-                              {getLocalizedField(task, 'title', i18n.language)}
+                              {getLocalizedField(task as unknown as Record<string, unknown>, 'title', i18n.language)}
                             </p>
                           </div>
                         </button>

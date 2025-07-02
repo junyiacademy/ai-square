@@ -3,7 +3,7 @@ import { pblProgramService } from '@/lib/storage/pbl-program-service';
 import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
-import { Scenario, CreateProgramResponse } from '@/types/pbl';
+import { Scenario, CreateProgramResponse, DomainType, DifficultyLevel, KSAMapping, TaskCategory, AIModule } from '@/types/pbl';
 
 
 // Load scenario data from YAML file
@@ -17,43 +17,44 @@ async function loadScenario(scenarioId: string): Promise<Scenario | null> {
     );
     
     const yamlContent = await fs.readFile(yamlPath, 'utf8');
-    const data = yaml.load(yamlContent) as any;
+    const data = yaml.load(yamlContent) as Record<string, unknown>;
     
     // Transform YAML data to match our Scenario interface
+    const scenarioInfo = data.scenario_info as Record<string, unknown>;
     const scenario: Scenario = {
-      id: data.scenario_info.id,
-      title: data.scenario_info.title,
-      title_zh: data.scenario_info.title_zh,
-      description: data.scenario_info.description,
-      description_zh: data.scenario_info.description_zh,
-      targetDomains: data.scenario_info.target_domains,
-      difficulty: data.scenario_info.difficulty,
-      estimatedDuration: data.scenario_info.estimated_duration,
-      prerequisites: data.scenario_info.prerequisites,
-      learningObjectives: data.scenario_info.learning_objectives,
-      learningObjectives_zh: data.scenario_info.learning_objectives_zh,
-      ksaMapping: data.ksa_mapping,
+      id: scenarioInfo.id as string,
+      title: scenarioInfo.title as string,
+      title_zh: scenarioInfo.title_zh as string,
+      description: scenarioInfo.description as string,
+      description_zh: scenarioInfo.description_zh as string,
+      targetDomains: scenarioInfo.target_domains as DomainType[],
+      difficulty: scenarioInfo.difficulty as DifficultyLevel,
+      estimatedDuration: scenarioInfo.estimated_duration as number,
+      prerequisites: (scenarioInfo.prerequisites as string[]) || [],
+      learningObjectives: (scenarioInfo.learning_objectives as string[]) || [],
+      learningObjectives_zh: (scenarioInfo.learning_objectives_zh as string[]) || [],
+      ksaMapping: (data.ksa_mapping as unknown as KSAMapping) || { knowledge: [], skills: [], attitudes: [] },
       tasks: []
     };
     
     // Load tasks directly from root level (new structure)
     if (data.tasks && Array.isArray(data.tasks)) {
-      for (const task of data.tasks) {
+      for (const task of data.tasks as Record<string, unknown>[]) {
         scenario.tasks.push({
-          id: task.id,
-          title: task.title,
-          title_zh: task.title_zh,
-          description: task.description,
-          description_zh: task.description_zh,
-          category: task.category || 'general',
-          instructions: task.instructions,
-          instructions_zh: task.instructions_zh,
-          expectedOutcome: task.expected_outcome || task.expectedOutcome,
-          expectedOutcome_zh: task.expected_outcome_zh || task.expectedOutcome_zh,
-          timeLimit: task.time_limit,
-          resources: task.resources,
-          assessmentFocus: task.assessment_focus || { primary: [], secondary: [] },
-          aiModule: task.ai_module
+          id: task.id as string,
+          title: task.title as string,
+          title_zh: task.title_zh as string,
+          description: task.description as string,
+          description_zh: task.description_zh as string,
+          category: (task.category as TaskCategory) || 'research',
+          instructions: (task.instructions as string[]) || [],
+          instructions_zh: (task.instructions_zh as string[]) || [],
+          expectedOutcome: (task.expected_outcome as string) || (task.expectedOutcome as string) || '',
+          expectedOutcome_zh: (task.expected_outcome_zh as string) || (task.expectedOutcome_zh as string) || '',
+          timeLimit: task.time_limit as number,
+          resources: (task.resources as string[]) || [],
+          assessmentFocus: (task.assessment_focus as { primary: string[]; secondary: string[] }) || { primary: [], secondary: [] },
+          aiModule: (task.ai_module as unknown as AIModule) || undefined
         });
       }
     }

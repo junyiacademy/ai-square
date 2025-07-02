@@ -5,7 +5,7 @@ import yaml from 'js-yaml';
 import { VertexAI } from '@google-cloud/vertexai';
 import { ErrorResponse } from '@/types/api';
 import { ChatMessage } from '@/types/pbl-api';
-import { Scenario, Task, AIModule } from '@/types/pbl';
+import { Scenario, AIModule, AIRole } from '@/types/pbl';
 
 interface ChatRequestBody {
   message: string;
@@ -19,6 +19,30 @@ interface ChatRequestBody {
     expectedOutcome: string;
     conversationHistory?: ChatMessage[];
   };
+}
+
+interface TaskWithAIModule {
+  id: string;
+  aiModule?: {
+    role: string;
+    model: string;
+    persona?: string;
+    initialPrompt?: string;
+  };
+  ai_module?: {
+    role: string;
+    model: string;
+    persona?: string;
+    initial_prompt?: string;
+  };
+}
+
+interface AIModuleData {
+  role: string;
+  model: string;
+  persona: string;
+  initialPrompt?: string;
+  initial_prompt?: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -56,7 +80,7 @@ export async function POST(request: NextRequest) {
     }
     
     // Find the current task
-    const currentTask = scenarioData.tasks?.find((t: any) => t.id === taskId);
+    const currentTask = scenarioData.tasks?.find((t: TaskWithAIModule) => t.id === taskId);
     if (!currentTask) {
       return NextResponse.json<ErrorResponse>(
         { error: 'Task not found' },
@@ -65,7 +89,7 @@ export async function POST(request: NextRequest) {
     }
     
     // Handle both camelCase and snake_case for aiModule
-    const aiModuleData = currentTask.aiModule || currentTask.ai_module;
+    const aiModuleData = currentTask.aiModule || (currentTask as TaskWithAIModule).ai_module;
     if (!aiModuleData) {
       return NextResponse.json<ErrorResponse>(
         { error: 'AI module not found for this task' },
@@ -74,10 +98,10 @@ export async function POST(request: NextRequest) {
     }
 
     const aiModule: AIModule = {
-      role: aiModuleData.role,
+      role: aiModuleData.role as AIRole,
       model: aiModuleData.model,
       persona: aiModuleData.persona,
-      initialPrompt: aiModuleData.initialPrompt || aiModuleData.initial_prompt
+      initialPrompt: (aiModuleData as AIModuleData).initialPrompt || (aiModuleData as AIModuleData).initial_prompt
     };
     
     // Build conversation context

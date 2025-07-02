@@ -40,10 +40,7 @@ export const DynamicResponsiveContainer = dynamic(
   { ssr: false }
 )
 
-export const DynamicLegend = dynamic(
-  () => import('recharts').then(mod => mod.Legend),
-  { ssr: false }
-)
+// DynamicLegend - 已移除 (類型問題)
 
 // D3.js 元件 - 延遲載入
 // 暫時註釋 - 組件尚未實作
@@ -121,11 +118,4 @@ export const DynamicPBLScenarioView = dynamic(
   }
 )
 
-// Sentry 錯誤追蹤 - 僅在生產環境動態載入
-export const DynamicSentryInit = dynamic(
-  () => import('@sentry/nextjs').then(mod => ({ default: mod.init })),
-  { 
-    ssr: false,
-    loading: () => null
-  }
-)
+// Sentry 錯誤追蹤 - 已移除

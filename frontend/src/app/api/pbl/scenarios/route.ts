@@ -54,8 +54,8 @@ function getLocalizedValue(data: LocalizedField, fieldName: string, lang: string
 }
 
 // Load scenarios from YAML files
-async function loadScenariosFromYAML(lang: string): Promise<any[]> {
-  const scenarios: any[] = [];
+async function loadScenariosFromYAML(lang: string): Promise<Record<string, unknown>[]> {
+  const scenarios: Record<string, unknown>[] = [];
   
   try {
     // List of available scenario files

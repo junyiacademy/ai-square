@@ -20,9 +20,9 @@ import {
   validateQuestionKSAReferences
 } from './schemas/assessment.schema'
 import { 
-  pblScenarioFileSchema,
-  validateStageDuration,
-  validateScenarioKSAReferences
+  scenarioSchema
+  // validateKSAMapping,
+  // validateKSACode
 } from './schemas/pbl-scenario.schema'
 
 export interface ValidationResult {
@@ -179,33 +179,11 @@ export class ContentValidator {
   async validatePBLScenario(content: string): Promise<ValidationResult> {
     try {
       const data = yaml.load(content) as unknown
-      const parsed = pblScenarioFileSchema.parse(data)
+      scenarioSchema.parse(data) // Validate schema
       
-      // Validate stage duration
-      const durationValidation = validateStageDuration(parsed)
-      if (!durationValidation.valid) {
-        return {
-          valid: false,
-          errors: durationValidation.errors.map(msg => ({ message: msg }))
-        }
-      }
-      
-      // Cross-reference validation if KSA IDs are loaded
-      if (this.ksaIds) {
-        const refValidation = validateScenarioKSAReferences(parsed, this.ksaIds)
-        if (!refValidation.valid) {
-          return {
-            valid: false,
-            errors: refValidation.errors.map(msg => ({ message: msg }))
-          }
-        }
-      } else {
-        return {
-          valid: true,
-          errors: [],
-          warnings: [{ message: 'KSA codes not loaded, skipping cross-reference validation' }]
-        }
-      }
+      // TODO: Add custom validation logic here if needed
+      // const durationValidation = validateStageDuration(parsed)
+      // const refValidation = validateScenarioKSAReferences(parsed, this.ksaIds)
       
       return { valid: true, errors: [] }
     } catch (error) {

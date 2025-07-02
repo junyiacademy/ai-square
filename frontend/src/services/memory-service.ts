@@ -1,5 +1,15 @@
 import { Storage } from '@google-cloud/storage';
 
+interface BucketFile {
+  exists(): Promise<[boolean]>;
+  download(): Promise<[Buffer]>;
+  save(data: Buffer | string): Promise<void>;
+}
+
+interface GCSBucket {
+  file(path: string): BucketFile;
+}
+
 interface ShortTermMemory {
   recentActivities: Array<{
     type: string;
@@ -44,7 +54,7 @@ export interface UserMemory {
 export class MemoryService {
   private static instance: MemoryService;
   private storage: Storage | null = null;
-  private bucket: any = null;
+  private bucket: GCSBucket | null = null;
 
   private constructor() {
     if (typeof window === 'undefined') {

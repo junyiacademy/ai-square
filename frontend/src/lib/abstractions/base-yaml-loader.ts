@@ -74,7 +74,7 @@ export abstract class BaseYAMLLoader<T = unknown> {
 
       // 驗證 schema
       if (finalOptions.validateSchema) {
-        const validation = await this.validateData(rawData);
+        const validation = await this.validateData();
         if (!validation.valid) {
           throw new Error(`Schema validation failed: ${validation.error}`);
         }

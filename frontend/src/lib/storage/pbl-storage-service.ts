@@ -1,9 +1,5 @@
 import { 
-  SessionData, 
-  ProcessLog, 
-  ApiResponse, 
-  EvaluationResult,
-  ProgressData 
+  ProcessLog
 } from '@/types/pbl';
 
 export class PBLStorageService {
@@ -33,7 +29,7 @@ export class PBLStorageService {
         throw new Error('Failed to create session');
       }
 
-      const data = await response.json() as ApiResponse<{ session_id: string }>;
+      const data = await response.json() as { success: boolean; data?: { session_id: string } };
       
       if (!data.success || !data.data?.session_id) {
         throw new Error('Failed to create session');
@@ -63,7 +59,7 @@ export class PBLStorageService {
         throw new Error('Failed to append logs');
       }
 
-      const data = await response.json() as ApiResponse<unknown>;
+      const data = await response.json() as { success: boolean };
       
       if (!data.success) {
         throw new Error('Failed to append logs');
@@ -79,7 +75,7 @@ export class PBLStorageService {
   /**
    * Get session data by ID
    */
-  async getSession(sessionId: string): Promise<SessionData | null> {
+  async getSession(sessionId: string): Promise<Record<string, unknown> | null> {
     try {
       const response = await fetch(`${this.baseUrl}/session/${sessionId}`);
 
@@ -90,7 +86,7 @@ export class PBLStorageService {
         throw new Error('Failed to get session');
       }
 
-      const data = await response.json() as ApiResponse<SessionData>;
+      const data = await response.json() as { success: boolean; data?: Record<string, unknown>; error?: { code: string; message?: string } };
       
       if (!data.success) {
         if (data.error?.code === 'SESSION_NOT_FOUND') {
@@ -111,7 +107,7 @@ export class PBLStorageService {
   /**
    * Update session progress
    */
-  async updateProgress(sessionId: string, progress: ProgressData): Promise<void> {
+  async updateProgress(sessionId: string, progress: Record<string, unknown>): Promise<void> {
     try {
       const response = await fetch(`${this.baseUrl}/session/${sessionId}/progress`, {
         method: 'PUT',
@@ -123,7 +119,7 @@ export class PBLStorageService {
         throw new Error('Failed to update progress');
       }
 
-      const data = await response.json() as ApiResponse<unknown>;
+      const data = await response.json() as { success: boolean };
       
       if (!data.success) {
         throw new Error('Failed to update progress');
@@ -141,7 +137,7 @@ export class PBLStorageService {
    */
   async completeSession(
     sessionId: string,
-    evaluation: EvaluationResult
+    evaluation: Record<string, unknown>
   ): Promise<void> {
     try {
       const response = await fetch(`${this.baseUrl}/session/${sessionId}/complete`, {
@@ -154,7 +150,7 @@ export class PBLStorageService {
         throw new Error('Failed to complete session');
       }
 
-      const data = await response.json() as ApiResponse<unknown>;
+      const data = await response.json() as { success: boolean };
       
       if (!data.success) {
         throw new Error('Failed to complete session');
@@ -173,7 +169,7 @@ export class PBLStorageService {
   async getUserSessions(
     userId: string,
     activityId?: string
-  ): Promise<SessionData[]> {
+  ): Promise<Record<string, unknown>[]> {
     try {
       let url = `${this.baseUrl}/user/${userId}/sessions`;
       if (activityId) {
@@ -186,7 +182,7 @@ export class PBLStorageService {
         throw new Error('Failed to get user sessions');
       }
 
-      const data = await response.json() as ApiResponse<SessionData[]>;
+      const data = await response.json() as { success: boolean; data?: Record<string, unknown>[] };
       
       if (!data.success) {
         throw new Error('Failed to get user sessions');
@@ -216,7 +212,7 @@ export class PBLStorageService {
         throw new Error('Failed to batch write logs');
       }
 
-      const data = await response.json() as ApiResponse<unknown>;
+      const data = await response.json() as { success: boolean };
       
       if (!data.success) {
         throw new Error('Failed to batch write logs');
