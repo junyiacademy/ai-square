@@ -57,7 +57,6 @@ interface RecommendedScenario {
 }
 
 function ChatPageContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false);
   const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false);
@@ -594,7 +593,7 @@ function ChatPageContent() {
 
   // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = () => {
       if (dropdownOpen) {
         setDropdownOpen(null);
       }

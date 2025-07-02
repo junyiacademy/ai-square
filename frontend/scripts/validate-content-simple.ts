@@ -128,10 +128,10 @@ async function validateContent() {
       }
       
       // Check KSA mappings
-      if (q.ksa_mapping) {
-        const invalidK = q.ksa_mapping.knowledge?.filter((k: string) => !ksaIds.knowledgeIds.includes(k)) || []
-        const invalidS = q.ksa_mapping.skills?.filter((s: string) => !ksaIds.skillIds.includes(s)) || []
-        const invalidA = q.ksa_mapping.attitudes?.filter((a: string) => !ksaIds.attitudeIds.includes(a)) || []
+      if (q.ksa_codes) {
+        const invalidK = q.ksa_codes.knowledge?.filter((k: string) => !ksaIds.knowledgeIds.includes(k)) || []
+        const invalidS = q.ksa_codes.skills?.filter((s: string) => !ksaIds.skillIds.includes(s)) || []
+        const invalidA = q.ksa_codes.attitudes?.filter((a: string) => !ksaIds.attitudeIds.includes(a)) || []
         
         if (invalidK.length > 0) {
           addIssue('error', 'ai_literacy_questions.yaml', `Question ${q.id}: Invalid knowledge codes: ${invalidK.join(', ')}`)

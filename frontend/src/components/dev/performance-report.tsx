@@ -47,13 +47,13 @@ export function PerformanceReport() {
 
   return (
     <div className="fixed bottom-4 right-4 w-96 z-50">
-      <Card className="shadow-lg border-2 border-blue-200">
-        <CardHeader className="pb-3">
+      <div className="bg-white rounded-lg shadow-lg border-2 border-blue-200">
+        <div className="p-4 pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-sm font-medium flex items-center gap-2">
+            <h3 className="text-sm font-medium flex items-center gap-2">
               <Activity className="h-4 w-4" />
               Performance Monitor
-            </CardTitle>
+            </h3>
             <button
               onClick={refresh}
               className={`p-1 rounded hover:bg-gray-100 ${isRefreshing ? 'animate-spin' : ''}`}
@@ -61,8 +61,8 @@ export function PerformanceReport() {
               <RefreshCw className="h-4 w-4" />
             </button>
           </div>
-        </CardHeader>
-        <CardContent className="space-y-3">
+        </div>
+        <div className="p-4 pt-0 space-y-3">
           {/* Core Web Vitals */}
           {coreWebVitals && (
             <div className="space-y-2">
@@ -107,9 +107,9 @@ export function PerformanceReport() {
             </h4>
             <div className="flex items-center justify-between text-xs">
               <span>Hit Rate:</span>
-              <Badge variant="secondary" className="text-xs">
+              <span className="px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800">
                 {cacheHitRate}
-              </Badge>
+              </span>
             </div>
             {cacheStats && (
               <div className="flex items-center justify-between text-xs">
@@ -148,8 +148,8 @@ export function PerformanceReport() {
               </div>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   )
 }
