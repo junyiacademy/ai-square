@@ -66,18 +66,68 @@ export default function DashboardPage() {
     const userData = JSON.parse(userStr) as UserProfile;
     setUser(userData);
 
-    // Load assessment result if exists
-    const resultStr = localStorage.getItem('assessmentResult');
-    if (resultStr) {
-      setAssessmentResult(JSON.parse(resultStr) as AssessmentResult);
-    }
-
-    // Load user progress and activities
-    const hasAssessment = !!resultStr;
-    loadUserData(userData, hasAssessment);
-    setLoading(false);
+    // Load assessment result from database
+    loadAssessmentResult(userData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
+
+  const loadAssessmentResult = async (userData: UserProfile) => {
+    try {
+      // First try localStorage for immediate display (fallback)
+      const localResultStr = localStorage.getItem('assessmentResult');
+      if (localResultStr) {
+        setAssessmentResult(JSON.parse(localResultStr) as AssessmentResult);
+      }
+
+      // Then fetch from database (authoritative source)
+      const response = await fetch(`/api/assessment/results?userId=${encodeURIComponent(userData.id)}&userEmail=${encodeURIComponent(userData.email)}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.results && data.results.length > 0) {
+          // Use the most recent result
+          const latestResult = data.results[0];
+          
+          // Convert GCS format to local AssessmentResult format
+          const assessmentResult: AssessmentResult = {
+            overallScore: latestResult.scores.overall,
+            domainScores: latestResult.scores.domains,
+            level: latestResult.summary.level,
+            totalQuestions: latestResult.summary.total_questions,
+            correctAnswers: latestResult.summary.correct_answers,
+            timeSpentSeconds: latestResult.duration_seconds,
+            completedAt: new Date(latestResult.timestamp),
+            recommendations: latestResult.recommendations || []
+          };
+          
+          setAssessmentResult(assessmentResult);
+          
+          // Update localStorage to keep it in sync
+          localStorage.setItem('assessmentResult', JSON.stringify(assessmentResult));
+          
+          // Load user data with database assessment status
+          loadUserData(userData, true);
+        } else {
+          // No assessment results in database
+          setAssessmentResult(null);
+          loadUserData(userData, false);
+        }
+      } else {
+        console.warn('Failed to fetch assessment results from database, using localStorage only');
+        // Fall back to localStorage-only behavior
+        const hasLocalAssessment = !!localResultStr;
+        loadUserData(userData, hasLocalAssessment);
+      }
+    } catch (error) {
+      console.error('Error loading assessment result:', error);
+      // Fall back to localStorage-only behavior
+      const localResultStr = localStorage.getItem('assessmentResult');
+      const hasLocalAssessment = !!localResultStr;
+      loadUserData(userData, hasLocalAssessment);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const loadUserData = async (userData: UserProfile, hasCompletedAssessment: boolean) => {
     // Simulate loading user progress
