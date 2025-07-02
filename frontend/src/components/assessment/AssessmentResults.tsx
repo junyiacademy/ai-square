@@ -228,6 +228,25 @@ export default function AssessmentResults({ result, domains, onRetake, questions
           type: 'success',
           text: t('results.saveSuccess', { assessmentId: data.assessmentId }),
         });
+        
+        // Also update progress in GCS
+        if (currentUser.email) {
+          try {
+            await fetch('/api/users/update-progress', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                email: currentUser.email,
+                stage: 'assessment',
+                data: { result }
+              })
+            });
+          } catch (error) {
+            console.error('Failed to update GCS progress:', error);
+          }
+        }
       } else {
         setSaveMessage({
           type: 'error',

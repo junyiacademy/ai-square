@@ -95,17 +95,48 @@ export default function OnboardingGoalsPage() {
 
     setLoading(true);
 
-    // Save selected goals to user profile
-    const userStr = localStorage.getItem('user');
-    if (userStr) {
-      const user = JSON.parse(userStr);
-      user.learningGoals = selectedGoals;
-      user.hasCompletedOnboarding = true;
-      localStorage.setItem('user', JSON.stringify(user));
-    }
+    try {
+      // Save selected goals to user profile
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        user.learningGoals = selectedGoals;
+        user.hasCompletedOnboarding = true;
+        localStorage.setItem('user', JSON.stringify(user));
+        
+        // Save profile including interests to localStorage for personalization
+        const userProfile = {
+          identity: user.identity || 'learner',
+          interests: selectedGoals,
+          goals: selectedGoals
+        };
+        localStorage.setItem('userProfile', JSON.stringify(userProfile));
+        
+        // Update progress in GCS
+        await fetch('/api/users/update-progress', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: user.email,
+            stage: 'goals',
+            data: { 
+              goals: selectedGoals,
+              interests: selectedGoals 
+            }
+          })
+        });
+      }
 
-    // Proceed to assessment
-    router.push('/assessment');
+      // Proceed to assessment
+      router.push('/assessment');
+    } catch (error) {
+      console.error('Error saving goals:', error);
+      router.push('/assessment'); // Still proceed even if save fails
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSkip = () => {

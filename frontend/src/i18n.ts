@@ -87,6 +87,9 @@ import enCommon from '../public/locales/en/common.json';
 // Learning Path 翻譯
 import enLearningPath from '../public/locales/en/learningPath.json';
 
+// Dashboard 翻譯
+import enDashboard from '../public/locales/en/dashboard.json';
+
 // 在伺服器端和客戶端都使用相同的預設語言避免 hydration mismatch
 const getDefaultLng = () => {
   // 伺服器端總是返回英文作為預設語言
@@ -117,7 +120,8 @@ i18n
         pbl: enPbl,
         onboarding: enOnboarding,
         common: enCommon,
-        learningPath: enLearningPath
+        learningPath: enLearningPath,
+        dashboard: enDashboard
       },
       es: { 
         relations: esRelations,

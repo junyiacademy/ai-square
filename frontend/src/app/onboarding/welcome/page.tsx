@@ -140,10 +140,30 @@ export default function OnboardingWelcomePage() {
     }
   ];
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
+      // Update progress in GCS before moving to identity
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        
+        try {
+          await fetch('/api/users/update-progress', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: user.email,
+              stage: 'welcome',
+              data: {}
+            })
+          });
+        } catch (error) {
+          console.error('Failed to update progress:', error);
+        }
+      }
+      
       // Complete welcome steps and go to identity selection
       router.push('/onboarding/identity');
     }

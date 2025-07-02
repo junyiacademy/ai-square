@@ -37,5 +37,8 @@
     "progress": "Progress",
     "goToDashboard": "Go to Dashboard",
     "dashboardHint": "Track your overall progress and achievements in the dashboard"
-  }
+  },
+  "showAll": "Show All",
+  "focusOnWeakAreas": "Focus on Weak Areas",
+  "backToDashboard": "Back to Dashboard"
 }

@@ -43,13 +43,21 @@ function LoginContent() {
         // 觸發自定義事件通知 Header 更新
         window.dispatchEvent(new CustomEvent('auth-changed'))
         
-        // 根據用戶狀態導向不同頁面
-        if (!data.user.hasCompletedOnboarding) {
-          router.push('/onboarding/welcome')
-        } else if (!data.user.hasCompletedAssessment) {
-          router.push('/assessment')
+        // Check onboarding status from user data (from GCS via login response)
+        const onboarding = data.user.onboarding || {};
+        const hasAssessment = data.user.assessmentCompleted || false;
+        
+        // Navigate based on actual progress
+        if (!onboarding.welcomeCompleted) {
+          router.push('/onboarding/welcome');
+        } else if (!onboarding.identityCompleted) {
+          router.push('/onboarding/identity');
+        } else if (!onboarding.goalsCompleted) {
+          router.push('/onboarding/goals');
+        } else if (!hasAssessment) {
+          router.push('/assessment');
         } else {
-          router.push('/dashboard')
+          router.push('/dashboard');
         }
       } else {
         // 顯示錯誤訊息

@@ -73,11 +73,12 @@ export default function DashboardPage() {
     }
 
     // Load user progress and activities
-    loadUserData(userData);
+    const hasAssessment = !!resultStr;
+    loadUserData(userData, hasAssessment);
     setLoading(false);
   }, [router]);
 
-  const loadUserData = async (userData: UserProfile) => {
+  const loadUserData = async (userData: UserProfile, hasCompletedAssessment: boolean) => {
     // Simulate loading user progress
     const progress: LearningProgress = {
       totalScenarios: 12,
@@ -92,7 +93,7 @@ export default function DashboardPage() {
     // Generate recent activities
     const activities: RecentActivity[] = [];
     
-    if (userData.hasCompletedAssessment) {
+    if (hasCompletedAssessment) {
       activities.push({
         id: 'assessment-1',
         type: 'assessment',
@@ -109,7 +110,7 @@ export default function DashboardPage() {
     // Generate next actions
     const actions: NextAction[] = [];
 
-    if (!userData.hasCompletedAssessment) {
+    if (!hasCompletedAssessment) {
       actions.push({
         id: 'take-assessment',
         title: t('dashboard:nextActions.takeAssessment'),
@@ -184,6 +185,46 @@ export default function DashboardPage() {
             {t('dashboard:subtitle')}
           </p>
         </div>
+
+        {/* Learning Path Quick Access - New prominent section */}
+        {assessmentResult && (
+          <div className="mb-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-xl p-6 text-white">
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <h2 className="text-2xl font-bold mb-2 flex items-center">
+                  🎯 {t('dashboard:learningPathQuickAccess')}
+                </h2>
+                <p className="text-white/90 mb-4">
+                  {t('dashboard:learningPathDescription')}
+                </p>
+                <div className="flex flex-wrap gap-4">
+                  <Link
+                    href="/learning-path"
+                    className="inline-flex items-center px-6 py-3 bg-white text-blue-600 rounded-lg font-medium hover:bg-gray-100 transition-colors"
+                  >
+                    {t('dashboard:viewAllPaths')}
+                    <svg className="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </Link>
+                  <Link
+                    href="/learning-path?filter=weak"
+                    className="inline-flex items-center px-6 py-3 bg-white/20 text-white rounded-lg font-medium hover:bg-white/30 transition-colors"
+                  >
+                    {t('dashboard:focusOnWeakAreas')}
+                  </Link>
+                </div>
+              </div>
+              <div className="hidden lg:block ml-6">
+                <div className="bg-white/20 rounded-full p-6">
+                  <svg className="h-16 w-16 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import type { AssessmentResult } from '@/types/assessment';
@@ -44,6 +44,7 @@ const roleKeywordPatterns: { [key: string]: RegExp } = {
 
 export default function LearningPathPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { t } = useTranslation(['learningPath', 'common', 'assessment']);
   const [assessmentResult, setAssessmentResult] = useState<AssessmentResult | null>(null);
   const [learningPath, setLearningPath] = useState<LearningPathItem[]>([]);
@@ -51,8 +52,15 @@ export default function LearningPathPage() {
   const [domainProgress, setDomainProgress] = useState<DomainProgress[]>([]);
   const [selectedDomain, setSelectedDomain] = useState<string | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile>({});
+  const [filterMode, setFilterMode] = useState<'all' | 'weak'>('all');
 
   useEffect(() => {
+    // Check URL parameter for filter mode
+    const filter = searchParams.get('filter');
+    if (filter === 'weak') {
+      setFilterMode('weak');
+    }
+
     // Check if user is logged in
     const userStr = localStorage.getItem('user');
     if (!userStr) {
@@ -80,7 +88,7 @@ export default function LearningPathPage() {
     // Generate learning path based on assessment
     generateLearningPath(result);
     setLoading(false);
-  }, [router]);
+  }, [router, searchParams]);
 
   // Generate personalized recommendation reason
   const generatePersonalizedReason = (
@@ -373,9 +381,22 @@ export default function LearningPathPage() {
     }
   };
 
-  const filteredPath = selectedDomain 
-    ? learningPath.filter(item => item.domain === selectedDomain)
-    : learningPath;
+  // Apply filters
+  let filteredPath = learningPath;
+  
+  // Filter by weak areas if mode is set
+  if (filterMode === 'weak' && assessmentResult) {
+    const weakDomains = Object.entries(assessmentResult.domainScores)
+      .filter(([_, score]) => score < 60)
+      .map(([domain, _]) => domain);
+    
+    filteredPath = filteredPath.filter(item => weakDomains.includes(item.domain));
+  }
+  
+  // Filter by selected domain
+  if (selectedDomain) {
+    filteredPath = filteredPath.filter(item => item.domain === selectedDomain);
+  }
 
   const totalEstimatedTime = filteredPath.reduce((sum, item) => sum + item.estimatedTime, 0);
 
@@ -417,6 +438,42 @@ export default function LearningPathPage() {
             </div>
           </div>
         )}
+
+        {/* Filter Controls */}
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setFilterMode('all')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                filterMode === 'all'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700'
+              }`}
+            >
+              {t('learningPath:showAll')}
+            </button>
+            <button
+              onClick={() => setFilterMode('weak')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                filterMode === 'weak'
+                  ? 'bg-red-600 text-white'
+                  : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700'
+              }`}
+            >
+              🎯 {t('learningPath:focusOnWeakAreas')}
+            </button>
+          </div>
+          
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+          >
+            <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            {t('learningPath:backToDashboard')}
+          </Link>
+        </div>
 
         {/* Overall Progress Card */}
         {assessmentResult && (

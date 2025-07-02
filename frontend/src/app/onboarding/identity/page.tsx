@@ -66,15 +66,16 @@ export default function IdentityPage() {
         // Save updated user data
         localStorage.setItem('user', JSON.stringify(user))
         
-        // Update user in backend
-        await fetch(`/api/users/${encodeURIComponent(user.email)}`, {
-          method: 'PATCH',
+        // Update progress in GCS
+        await fetch('/api/users/update-progress', {
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            role: user.role,
-            identity: selectedIdentity
+            email: user.email,
+            stage: 'identity',
+            data: { identity: selectedIdentity }
           })
         })
       }
