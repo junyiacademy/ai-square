@@ -6,8 +6,48 @@ import Link from 'next/link';
 // 狀態類型定義
 type Status = 'completed' | 'active' | 'partial' | 'planned' | 'future';
 
+// 型別定義
+interface Feature {
+  name: string;
+  status: Status;
+}
+
+interface Phase {
+  id: string;
+  name: string;
+  status: Status;
+  timeline: string;
+  progress: number;
+  features: Feature[];
+}
+
+interface RoadmapData {
+  vision: {
+    title: string;
+    content: string;
+  };
+  architecture: {
+    layers: Array<{
+      name: string;
+      status: Status;
+      description: string;
+    }>;
+  };
+  phases: Phase[];
+  marketInsights: {
+    painPoints: Array<{ icon: string; title: string; description: string }>;
+    solutions: Array<{ icon: string; title: string; description: string }>;
+  };
+  techStack: {
+    frontend: string[];
+    backend: string[];
+    storage: string[];
+    deployment: string[];
+  };
+}
+
 // PRD 內容結構
-const roadmapData = {
+const roadmapData: RoadmapData = {
   vision: {
     title: "產品願景",
     content: "AI Square 是一個「用 AI 學 AI 素養」的創新學習平台，基於國際 AI Literacy 框架，透過 AI 技術本身來提升學習者的 AI 素養能力。"
@@ -26,72 +66,72 @@ const roadmapData = {
     {
       id: "phase0",
       name: "Phase 0: Bootstrapping",
-      status: "completed",
+      status: "completed" as Status,
       timeline: "2025/06/15 - 2025/06/26",
       progress: 100,
       features: [
-        { name: "Git-Based 內容管理", status: "completed" },
-        { name: "基礎認證系統", status: "completed" },
-        { name: "GitHub Pages 啟用", status: "completed" }
+        { name: "Git-Based 內容管理", status: "completed" as Status },
+        { name: "基礎認證系統", status: "completed" as Status },
+        { name: "GitHub Pages 啟用", status: "completed" as Status }
       ]
     },
     {
       id: "phase1",
       name: "Phase 1: MVP Baseline",
-      status: "completed",
+      status: "completed" as Status,
       timeline: "2025/06/27 - 2025/07/02",
       progress: 100,
       features: [
-        { name: "渲染講義與題目", status: "completed" },
-        { name: "PBL 情境學習", status: "completed" },
-        { name: "多語言支援 (9種)", status: "completed" },
-        { name: "測試覆蓋率 80%+", status: "completed" },
-        { name: "TypeScript 型別安全", status: "completed" },
-        { name: "CMS 系統增強", status: "completed" },
-        { name: "自動化內容發布", status: "completed" }
+        { name: "渲染講義與題目", status: "completed" as Status },
+        { name: "PBL 情境學習", status: "completed" as Status },
+        { name: "多語言支援 (9種)", status: "completed" as Status },
+        { name: "測試覆蓋率 80%+", status: "completed" as Status },
+        { name: "TypeScript 型別安全", status: "completed" as Status },
+        { name: "CMS 系統增強", status: "completed" as Status },
+        { name: "自動化內容發布", status: "completed" as Status }
       ]
     },
     {
       id: "phase1_5",
       name: "Phase 1.5: CMS 進階功能",
-      status: "completed",
+      status: "completed" as Status,
       timeline: "2025/06/30 - 2025/07/02",
       progress: 100,
       features: [
-        { name: "分支管理系統", status: "completed" },
-        { name: "現代化 UI/UX", status: "completed" },
-        { name: "AI Quick Actions", status: "completed" },
-        { name: "YAML 驗證與排序", status: "completed" },
-        { name: "PR 工作流程自動化", status: "completed" },
-        { name: "完整測試覆蓋", status: "completed" }
+        { name: "分支管理系統", status: "completed" as Status },
+        { name: "現代化 UI/UX", status: "completed" as Status },
+        { name: "AI Quick Actions", status: "completed" as Status },
+        { name: "YAML 驗證與排序", status: "completed" as Status },
+        { name: "PR 工作流程自動化", status: "completed" as Status },
+        { name: "完整測試覆蓋", status: "completed" as Status }
       ]
     },
     {
       id: "phase2",
       name: "Phase 2: 智能化升級",
-      status: "planned",
+      status: "planned" as Status,
       timeline: "2025/07 - 2025/09",
       progress: 0,
       features: [
-        { name: "OAuth2 社交登入", status: "planned" },
-        { name: "AI 資源使用追蹤", status: "planned" },
-        { name: "PBL 修改歷程記錄", status: "planned" },
-        { name: "智能 Onboarding", status: "planned" },
-        { name: "動態難度調整", status: "planned" },
-        { name: "社交學習功能", status: "planned" },
-        { name: "LLM Service 抽象層", status: "planned" }
+        { name: "OAuth2 社交登入", status: "planned" as Status },
+        { name: "AI 資源使用追蹤", status: "planned" as Status },
+        { name: "PBL 修改歷程記錄", status: "planned" as Status },
+        { name: "智能 Onboarding", status: "planned" as Status },
+        { name: "動態難度調整", status: "planned" as Status },
+        { name: "社交學習功能", status: "planned" as Status },
+        { name: "LLM Service 抽象層", status: "planned" as Status }
       ]
     },
     {
       id: "phase3",
       name: "Phase 3: Agent 系統",
-      status: "future",
+      status: "future" as Status,
       timeline: "2025/10 - 2025/12",
       progress: 0,
       features: [
-        { name: "學習路徑規劃 Agent", status: "future" },
-        { name: "個人化教學 Agent", status: "future" },
-        { name: "協作學習 Agent", status: "future" }
+        { name: "學習路徑規劃 Agent", status: "future" as Status },
+        { name: "個人化教學 Agent", status: "future" as Status },
+        { name: "協作學習 Agent", status: "future" as Status }
       ]
     }
   ],
