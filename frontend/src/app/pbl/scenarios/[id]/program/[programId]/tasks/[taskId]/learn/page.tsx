@@ -408,11 +408,14 @@ export default function ProgramLearningPage() {
           context: {
             scenarioId,
             taskId: currentTask.id,
-            taskTitle: currentTask.title,
-            taskDescription: currentTask.description,
-            instructions: currentTask.instructions,
-            expectedOutcome: currentTask.expectedOutcome,
-            conversationHistory: conversations.slice(-10)
+            taskTitle: getLocalizedField(currentTask as unknown as Record<string, unknown>, 'title', i18n.language),
+            taskDescription: getLocalizedField(currentTask as unknown as Record<string, unknown>, 'description', i18n.language),
+            instructions: getLocalizedField(currentTask as unknown as Record<string, unknown>, 'instructions', i18n.language) || [],
+            expectedOutcome: getLocalizedField(currentTask as unknown as Record<string, unknown>, 'expectedOutcome', i18n.language),
+            conversationHistory: conversations.slice(-10).map(conv => ({
+              role: conv.type === 'user' ? 'user' : 'assistant',
+              content: conv.content
+            }))
           }
         })
       });

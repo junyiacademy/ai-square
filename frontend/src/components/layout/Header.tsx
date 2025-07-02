@@ -155,14 +155,22 @@ export function Header() {
     setIsMobileMenuOpen(!isMobileMenuOpen)
   }
 
-  const navLinks = [
+  // 主要導航連結（顯示在導航欄）
+  const primaryNavLinks = [
     { href: '/dashboard', label: t('dashboard') },
+    { href: '/pbl', label: t('pbl') },
+    { href: '/assessment', label: t('assessment') },
+  ]
+  
+  // 次要導航連結（放在「更多」選單中）
+  const secondaryNavLinks = [
     { href: '/relations', label: t('relations') },
     { href: '/ksa', label: t('ksa') },
-    { href: '/assessment', label: t('assessment') },
-    { href: '/pbl', label: t('pbl') },
     { href: '/history', label: t('history') },
   ]
+  
+  // 所有導航連結（用於手機選單）
+  const allNavLinks = [...primaryNavLinks, ...secondaryNavLinks]
 
   // 設置 mounted 狀態
   useEffect(() => {
@@ -193,8 +201,8 @@ export function Header() {
             </div>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden md:ml-10 md:flex md:space-x-8" aria-label="Main navigation">
-              {navLinks.map(link => (
+            <nav className="hidden lg:ml-10 lg:flex lg:space-x-6" aria-label="Main navigation">
+              {primaryNavLinks.map(link => (
                 <Link
                   key={link.href}
                   href={link.href}
@@ -207,6 +215,37 @@ export function Header() {
                   {link.label}
                 </Link>
               ))}
+              
+              {/* More dropdown menu */}
+              <div className="relative group">
+                <button
+                  className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:border-b-2 hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
+                >
+                  {t('more')}
+                  <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {/* Dropdown menu */}
+                <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <div className="py-1">
+                    {secondaryNavLinks.map(link => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className={`block px-4 py-2 text-sm ${
+                          pathname === link.href
+                            ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700'
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                        }`}
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </nav>
           </div>
 
@@ -248,7 +287,7 @@ export function Header() {
             {/* Mobile menu button */}
             <button
               type="button"
-              className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-300 hover:text-gray-500 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+              className="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-300 hover:text-gray-500 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
               onClick={toggleMobileMenu}
               aria-label="Toggle navigation menu"
               aria-expanded={isMobileMenuOpen}
@@ -280,33 +319,34 @@ export function Header() {
             {isLoggedIn && user ? (
               /* 已登入狀態 */
               <div className="flex items-center space-x-4">
-                {/* 用戶資訊 */}
-                <div className="hidden sm:flex sm:items-center sm:space-x-3">
-                  <div className="text-right">
-                    <div className="text-sm font-medium text-gray-900 dark:text-white">
+                {/* 用戶資訊 - 簡化版本 */}
+                <div className="hidden md:flex md:items-center md:space-x-2">
+                  {/* 用戶頭像與角色 */}
+                  <div className="flex items-center space-x-2 cursor-pointer group relative">
+                    <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
+                      <span className="text-blue-600 text-sm font-medium">
+                        {user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                      {getRoleDisplayName(user.role)}
+                    </span>
+                    
+                    {/* Hover 時顯示完整信箱 */}
+                    <div className="absolute top-full mt-2 right-0 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap">
                       {user.email}
                     </div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
-                      {getRoleDisplayName(user.role)}
-                    </div>
-                  </div>
-                  
-                  {/* 用戶頭像 */}
-                  <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
-                    <span className="text-blue-600 text-sm font-medium">
-                      {user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
-                    </span>
                   </div>
                 </div>
 
                 {/* 登出按鈕 */}
                 <button
                   onClick={handleLogout}
-                  className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                  className="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
                   aria-label={t('signOut')}
                 >
                   <svg 
-                    className="h-4 w-4 mr-2" 
+                    className="h-5 w-5" 
                     fill="none" 
                     viewBox="0 0 24 24" 
                     stroke="currentColor"
@@ -318,8 +358,7 @@ export function Header() {
                       d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" 
                     />
                   </svg>
-                  <span className="hidden sm:inline">{t('signOut')}</span>
-                  <span className="sm:hidden">{t('signOut')}</span>
+                  <span className="hidden xl:inline ml-2">{t('signOut')}</span>
                 </button>
               </div>
             ) : (
@@ -338,9 +377,9 @@ export function Header() {
 
       {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && (
-        <nav className="md:hidden bg-white dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700" aria-label="Mobile navigation">
+        <nav className="lg:hidden bg-white dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700" aria-label="Mobile navigation">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            {navLinks.map(link => (
+            {allNavLinks.map(link => (
               <Link
                 key={link.href}
                 href={link.href}

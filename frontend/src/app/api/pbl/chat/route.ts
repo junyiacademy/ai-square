@@ -43,8 +43,17 @@ export async function POST(request: NextRequest) {
       `${scenarioId.replace(/-/g, '_')}_scenario.yaml`
     );
     
-    const yamlContent = await fs.readFile(yamlPath, 'utf8');
-    const scenarioData = yaml.load(yamlContent) as Scenario;
+    let scenarioData: Scenario;
+    try {
+      const yamlContent = await fs.readFile(yamlPath, 'utf8');
+      scenarioData = yaml.load(yamlContent) as Scenario;
+    } catch (error) {
+      console.error(`Error loading scenario file: ${yamlPath}`, error);
+      return NextResponse.json<ErrorResponse>(
+        { error: `Scenario file not found: ${scenarioId}` },
+        { status: 404 }
+      );
+    }
     
     // Find the current task
     const currentTask = scenarioData.tasks?.find((t: Task) => t.id === taskId);
