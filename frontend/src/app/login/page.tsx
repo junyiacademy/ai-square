@@ -91,6 +91,16 @@ function LoginContent() {
           </p>
         </div>
 
+        {/* 註冊連結 - 移到最上方 */}
+        <div className="bg-blue-50 rounded-lg p-4 text-center">
+          <p className="text-sm text-gray-700">
+            {t('dontHaveAccount', "Don't have an account?")}{' '}
+            <a href="/register" className="font-semibold text-blue-600 hover:text-blue-700 underline">
+              {t('createAccount', 'Create one')}
+            </a>
+          </p>
+        </div>
+
         {/* 登入表單區域 */}
         <div className="bg-white rounded-2xl shadow-xl p-8">
           {info && (
@@ -106,7 +116,7 @@ function LoginContent() {
         </div>
 
         {/* 底部說明 */}
-        <div className="text-center text-xs text-gray-500">
+        <div className="text-center text-xs text-gray-500 mt-4">
           {t('devNote')}
         </div>
       </div>
