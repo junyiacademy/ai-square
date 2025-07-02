@@ -90,10 +90,7 @@ export default function ScenarioDetailsPage() {
         
         if (data.success && data.programs) {
           setUserPrograms(data.programs);
-          // Select the most recent program by default
-          if (data.programs.length > 0) {
-            setSelectedProgramId(data.programs[0].id);
-          }
+          // Most recent program is available in data.programs[0]
         }
       } catch (error) {
         console.error('Error fetching user programs:', error);
@@ -314,7 +311,7 @@ export default function ScenarioDetailsPage() {
                         <div className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                           <div>
                             {t('details.progress')}: {program.evaluatedTasks}/{program.taskCount || program.totalTasks} {t('details.tasks')}
-                            {program.overallScore > 0 && (
+                            {program.overallScore && program.overallScore > 0 && (
                               <>
                                 <span className="mx-2">•</span>
                                 <span className="font-medium">

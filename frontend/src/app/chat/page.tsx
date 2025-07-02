@@ -47,6 +47,15 @@ interface PBLHistory {
   timeSpent: number;
 }
 
+interface ScenarioFromAPI {
+  id: string;
+  domains?: string[];
+  targetDomain?: string[];
+  difficulty: string;
+  title: string;
+  estimatedDuration?: number;
+}
+
 interface RecommendedScenario {
   id: string;
   title: string;
@@ -269,14 +278,7 @@ function ChatPageContent() {
         const domainKey = domain.replace('_', ' ');
         
         // Filter scenarios for this domain
-        const domainScenarios = scenarios.filter((s: {
-          id: string;
-          domains?: string[];
-          targetDomain?: string[];
-          difficulty: string;
-          title: string;
-          estimatedDuration?: number;
-        }) => 
+        const domainScenarios = (scenarios as ScenarioFromAPI[]).filter((s) => 
           !completedIds.has(s.id) && // Exclude completed scenarios
           !addedScenarioIds.has(s.id) && // Avoid duplicates
           (s.domains?.includes(domain) || s.domains?.includes(domainKey) ||
@@ -303,7 +305,7 @@ function ChatPageContent() {
       
       // If user is doing well, recommend advanced scenarios
       if (recommendations.length === 0) {
-        const advancedScenarios = scenarios
+        const advancedScenarios = (scenarios as ScenarioFromAPI[])
           .filter((s) => 
             !completedIds.has(s.id) && // Exclude completed
             !addedScenarioIds.has(s.id) && // Avoid duplicates

@@ -45,9 +45,18 @@ export default function PBLPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log('Starting to fetch PBL data...');
+        
         // Fetch scenarios
         const scenarioResponse = await fetch(`/api/pbl/scenarios?lang=${i18n.language}`);
+        console.log('Scenario response status:', scenarioResponse.status);
+        
+        if (!scenarioResponse.ok) {
+          throw new Error(`Scenarios API failed: ${scenarioResponse.status}`);
+        }
+        
         const scenarioData = await scenarioResponse.json();
+        console.log('Scenario data:', scenarioData);
         
         if (scenarioData.success) {
           setScenarios(scenarioData.data.scenarios);
@@ -55,12 +64,19 @@ export default function PBLPage() {
 
         // Fetch user programs if logged in
         const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        console.log('Is logged in:', isLoggedIn);
+        
         if (isLoggedIn) {
           const programResponse = await fetch('/api/pbl/user-programs');
-          const programData = await programResponse.json();
+          console.log('User programs response status:', programResponse.status);
           
-          if (programData.success) {
-            setUserPrograms(programData.programs || []);
+          if (programResponse.ok) {
+            const programData = await programResponse.json();
+            console.log('User programs data:', programData);
+            
+            if (programData.success) {
+              setUserPrograms(programData.programs || []);
+            }
           }
         }
       } catch (error) {

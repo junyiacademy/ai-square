@@ -53,8 +53,8 @@ export default function ProgramCompletePage() {
     const currentLang = i18n.language.split('-')[0] || 'en';
     const hasFeedbackForLang = completionData.qualitativeFeedback && 
       (typeof completionData.qualitativeFeedback === 'object' &&
-       (completionData.qualitativeFeedback[currentLang] || 
-        (completionData.qualitativeFeedback.overallAssessment && 
+       ((completionData.qualitativeFeedback as LocalizedFeedback)[currentLang] || 
+        ('overallAssessment' in completionData.qualitativeFeedback && 
          completionData.feedbackLanguage === currentLang)));
     
     // Generate feedback for new language if not exists
@@ -138,7 +138,6 @@ export default function ProgramCompletePage() {
     
     try {
       setGeneratingFeedback(true);
-      setFeedbackError(null);
       
       const response = await fetch('/api/pbl/generate-feedback', {
         method: 'POST',
@@ -189,7 +188,7 @@ export default function ProgramCompletePage() {
       }
     } catch (error) {
       console.error('Error generating feedback:', error);
-      setFeedbackError('Failed to generate qualitative feedback');
+      // Error generating feedback
     } finally {
       setGeneratingFeedback(false);
       feedbackGeneratingRef.current = false;
@@ -392,7 +391,7 @@ export default function ProgramCompletePage() {
                 </div>
                 
                 {/* Next Steps */}
-                {feedback.nextSteps?.length > 0 && (
+                {feedback.nextSteps && feedback.nextSteps.length > 0 && (
                   <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-6 mb-6">
                     <h3 className="text-lg font-medium text-purple-900 dark:text-purple-100 mb-4">
                       {t('pbl:complete.nextSteps', 'Recommended Next Steps')}
@@ -616,9 +615,9 @@ export default function ProgramCompletePage() {
                                 </div>
                                 <div className="space-y-3">
                                   {['creating_with_ai', 'designing_with_ai', 'engaging_with_ai', 'managing_with_ai']
-                                    .filter(domain => task.evaluation.domainScores[domain] !== undefined)
+                                    .filter(domain => task.evaluation?.domainScores?.[domain] !== undefined)
                                     .map((domain) => {
-                                      const score = task.evaluation.domainScores[domain];
+                                      const score = task.evaluation?.domainScores?.[domain] || 0;
                                       return (
                                         <div key={domain}>
                                           <div className="flex items-center justify-between mb-1">
@@ -717,7 +716,7 @@ export default function ProgramCompletePage() {
                               </h4>
                               <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
                                 {/* Effective Examples */}
-                                {task.evaluation.conversationInsights.effectiveExamples?.length > 0 && (
+                                {task.evaluation?.conversationInsights?.effectiveExamples && task.evaluation.conversationInsights.effectiveExamples.length > 0 && (
                                   <div>
                                     <p className="text-xs font-medium text-green-700 dark:text-green-300 mb-1">
                                       {t('pbl:learn.effectiveExamples')}

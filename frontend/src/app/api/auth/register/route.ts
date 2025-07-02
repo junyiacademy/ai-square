@@ -269,7 +269,13 @@ export async function POST(request: NextRequest) {
       role: 'student', // Default role
       hasCompletedAssessment: false,
       hasCompletedOnboarding: false,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      registrationSource: 'web',
+      lastLogin: new Date().toISOString(),
+      preferences: {
+        language: 'en',
+        theme: 'light'
+      }
     };
 
     // Add to mock database

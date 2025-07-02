@@ -41,6 +41,7 @@ interface ScenarioWithDomains extends Scenario {
   skills?: string[];
   topics?: string[];
   relevanceScore?: number;
+  matchedKeywords?: string[];
 }
 
 // Role-based keyword patterns for relevance matching
@@ -253,7 +254,7 @@ function LearningPathContent() {
               domain,
               title: scenario.title,
               description: scenario.description,
-              estimatedTime: scenario.estimatedDuration || scenario.estimated_duration || 30,
+              estimatedTime: scenario.estimatedDuration || 30,
               difficulty: scenario.difficulty,
               reason,
               scenarioId: scenario.id,
@@ -289,7 +290,7 @@ function LearningPathContent() {
               domain,
               title: scenario.title,
               description: scenario.description,
-              estimatedTime: scenario.estimatedDuration || scenario.estimated_duration || 45,
+              estimatedTime: scenario.estimatedDuration || 45,
               difficulty: scenario.difficulty,
               reason,
               scenarioId: scenario.id,
@@ -325,7 +326,7 @@ function LearningPathContent() {
               domain,
               title: scenario.title,
               description: scenario.description,
-              estimatedTime: scenario.estimatedDuration || scenario.estimated_duration || 30,
+              estimatedTime: scenario.estimatedDuration || 30,
               difficulty: scenario.difficulty,
               reason,
               scenarioId: scenario.id,

@@ -36,6 +36,16 @@ export async function POST(request: NextRequest) {
       };
       completedAssessments?: number;
       lastActivity?: string;
+      onboarding?: {
+        welcomeCompleted: boolean;
+        identityCompleted: boolean;
+        goalsCompleted: boolean;
+        completedAt: string | null;
+        welcomeCompletedAt?: string;
+        identityCompletedAt?: string;
+        goalsCompletedAt?: string;
+      };
+      [key: string]: any; // Allow other properties
     }
     let userData: UserData = {};
     try {

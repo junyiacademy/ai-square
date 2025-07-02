@@ -33,21 +33,21 @@ export async function GET(request: NextRequest) {
     
     // Map ProgramSummary data to expected format
     const programsWithInfo = programs.map(summary => ({
-      id: summary.program.programId,  // Map programId to id
-      programId: summary.program.programId,
+      id: summary.program.id,  // Use id property from Program interface
+      programId: summary.program.id,
       scenarioId: summary.program.scenarioId,
       scenarioTitle: summary.program.scenarioTitle || summary.program.scenarioId,
       status: summary.program.status,
       startedAt: summary.program.startedAt,
       updatedAt: summary.program.updatedAt,
       totalTasks: summary.tasks.length,
-      evaluatedTasks: summary.tasks.filter(task => task.progress.isCompleted).length,
+      evaluatedTasks: summary.tasks.filter(task => task.progress.completedAt).length,
       overallScore: summary.overallScore,
       taskCount: summary.tasks.length,
       lastActivity: summary.program.updatedAt,
       // Add the progress field that the frontend expects
       progress: {
-        completedTasks: summary.tasks.filter(task => task.progress.isCompleted).length,
+        completedTasks: summary.tasks.filter(task => task.progress.completedAt).length,
         totalTasks: summary.tasks.length
       }
     }));
