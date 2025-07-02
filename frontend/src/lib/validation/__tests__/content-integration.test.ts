@@ -139,7 +139,7 @@ describe('Content Integration Tests', () => {
     it('應該確保每個 competency 至少有一個 K、S、A 參考', () => {
       const testCompetency = {
         description: 'Test competency',
-        description_zh: '測試能力',
+        description_zhTW: '測試能力',
         description_es: 'Competencia de prueba',
         description_ja: 'テストコンピテンシー',
         description_ko: '테스트 역량',
@@ -151,7 +151,7 @@ describe('Content Integration Tests', () => {
         skills: ['S1.1'],
         attitudes: ['A1.1'],
         content: 'Content',
-        content_zh: '內容',
+        content_zhTW: '內容',
         content_es: 'Contenido',
         content_ja: 'コンテンツ',
         content_ko: '콘텐츠',
@@ -160,7 +160,7 @@ describe('Content Integration Tests', () => {
         content_ru: 'Содержание',
         content_it: 'Contenuto',
         scenarios: '[]',
-        scenarios_zh: '[]',
+        scenarios_zhTW: '[]',
         scenarios_es: '[]',
         scenarios_ja: '[]',
         scenarios_ko: '[]',
@@ -201,7 +201,7 @@ describe('Content Integration Tests', () => {
       const testDomain = {
         emoji: '🤝',
         overview: 'Overview',
-        overview_zh: '概覽',
+        overview_zhTW: '概覽',
         overview_es: 'Resumen',
         overview_ja: '概要',
         overview_ko: '개요',
@@ -224,7 +224,7 @@ describe('Content Integration Tests', () => {
           Engaging_with_AI: {
             emoji: '🤝',
             overview: 'Overview',
-            overview_zh: '概覽',
+            overview_zhTW: '概覽',
             overview_es: 'Resumen',
             overview_ja: '概要',
             overview_ko: '개요',
@@ -237,7 +237,7 @@ describe('Content Integration Tests', () => {
           Creating_with_AI: {
             emoji: '🎨',
             overview: 'Overview',
-            overview_zh: '概覽',
+            overview_zhTW: '概覽',
             overview_es: 'Resumen',
             overview_ja: '概要',
             overview_ko: '개요',
@@ -250,7 +250,7 @@ describe('Content Integration Tests', () => {
           Managing_with_AI: {
             emoji: '📊',
             overview: 'Overview',
-            overview_zh: '概覽',
+            overview_zhTW: '概覽',
             overview_es: 'Resumen',
             overview_ja: '概要',
             overview_ko: '개요',
@@ -263,7 +263,7 @@ describe('Content Integration Tests', () => {
           Designing_with_AI: {
             emoji: '🏗️',
             overview: 'Overview',
-            overview_zh: '概覽',
+            overview_zhTW: '概覽',
             overview_es: 'Resumen',
             overview_ja: '概要',
             overview_ko: '개요',
@@ -282,7 +282,7 @@ describe('Content Integration Tests', () => {
           const competencyId = `C${i}.${j}`;
           largeDomainFile.domains.Engaging_with_AI.competencies[competencyId] = {
             description: `Competency ${competencyId}`,
-            description_zh: `能力 ${competencyId}`,
+            description_zhTW: `能力 ${competencyId}`,
             description_es: `Competencia ${competencyId}`,
             description_ja: `コンピテンシー ${competencyId}`,
             description_ko: `역량 ${competencyId}`,
@@ -294,7 +294,7 @@ describe('Content Integration Tests', () => {
             skills: ['S1.1'],
             attitudes: ['A1.1'],
             content: `Content for ${competencyId}`,
-            content_zh: `內容 ${competencyId}`,
+            content_zhTW: `內容 ${competencyId}`,
             content_es: `Contenido ${competencyId}`,
             content_ja: `コンテンツ ${competencyId}`,
             content_ko: `콘텐츠 ${competencyId}`,
@@ -303,7 +303,7 @@ describe('Content Integration Tests', () => {
             content_ru: `Содержание ${competencyId}`,
             content_it: `Contenuto ${competencyId}`,
             scenarios: '[]',
-            scenarios_zh: '[]',
+            scenarios_zhTW: '[]',
             scenarios_es: '[]',
             scenarios_ja: '[]',
             scenarios_ko: '[]',

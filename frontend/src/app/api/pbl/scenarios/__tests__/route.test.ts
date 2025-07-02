@@ -28,7 +28,7 @@ const mockScenarioData = {
   scenario_info: {
     id: 'ai-job-search',
     title: 'AI-Powered Job Search Assistant',
-    title_zh: 'AI 求職助手',
+    title_zhTW: 'AI 求職助手',
     title_ja: 'AI就職活動アシスタント',
     title_ko: 'AI 구직 도우미',
     title_es: 'Asistente de Búsqueda de Empleo con IA',
@@ -37,7 +37,7 @@ const mockScenarioData = {
     title_ru: 'AI-помощник по поиску работы',
     title_it: 'Assistente di Ricerca Lavoro con IA',
     description: 'Learn to use AI for job searching',
-    description_zh: '學習使用 AI 進行求職',
+    description_zhTW: '學習使用 AI 進行求職',
     description_ja: 'AIを使った就職活動を学ぶ',
     description_ko: 'AI를 사용한 구직 활동 배우기',
     description_es: 'Aprende a usar IA para buscar empleo',

@@ -1,7 +1,7 @@
 # ----------  Knowledge (K) ----------
 knowledge_codes:
   desciption: "The knowledge statements in the framework include facts, concepts, ideas, and processes reflecting disciplinary, interdisciplinary, epistemic, and procedural knowledge. They outline the technical and societal understandings that learners need to apply and engage with AI systems."
-  desciption_zh: "框架中的知識陳述包含反映學科、跨學科、認識論和程序性知識的事實、概念、想法和過程。它們概述了學習者在應用和參與AI系統時需要的技術和社會理解。"
+  desciption_zhTW: "框架中的知識陳述包含反映學科、跨學科、認識論和程序性知識的事實、概念、想法和過程。它們概述了學習者在應用和參與AI系統時需要的技術和社會理解。"
   desciption_es: "Las declaraciones de conocimiento en el marco incluyen hechos, conceptos, ideas y procesos que reflejan el conocimiento disciplinario, interdisciplinario, epistémico y procedimental. Esbozan las comprensiones técnicas y sociales que los estudiantes necesitan para aplicar y participar en sistemas de IA."
   desciption_ja: "フレームワーク内の知識の声明には、学問的、学際的、認識論的、手続き的知識を反映する事実、概念、アイデア、プロセスが含まれています。これらは、学習者がAIシステムを適用し、関与するために必要な技術的および社会的理解を概説しています。"
   desciption_ko: "프레임워크의 지식 진술에는 학문적, 학제적, 인식론적 및 절차적 지식을 반영하는 사실, 개념, 아이디어 및 프로세스가 포함됩니다. 이는 학습자가 AI 시스템을 적용하고 참여하는 데 필요한 기술적 및 사회적 이해를 개략적으로 설명합니다."
@@ -14,7 +14,7 @@ knowledge_codes:
       codes:
         K1.1:
           summary: "AI systems use algorithms that combine step-by-step procedures with statistical inferences (e.g., weights and biases) to process data, detect patterns, and generate probable outputs."
-          summary_zh: "AI系統使用演算法結合步驟程序與統計推論（如權重和偏差）來處理資料、偵測模式並產生可能的輸出。"
+          summary_zhTW: "AI系統使用演算法結合步驟程序與統計推論（如權重和偏差）來處理資料、偵測模式並產生可能的輸出。"
           summary_es: "Los sistemas de IA utilizan algoritmos que combinan procedimientos paso a paso con inferencias estadísticas (por ejemplo, pesos y sesgos) para procesar datos, detectar patrones y generar resultados probables."
           summary_ja: "AIシスムは、データを処理し、パターンを検出し、可能性のある出力を生成するために、段階的手順と統計的推論（例：重みとバイアス）を組み合わせたアルゴリズムを使用します。"
           summary_ko: "AI 시스템은 데이터를 처리하고 패턴을 감지하며 가능한 출력을 생성하기 위해 단계별 절차와 통계적 추론(예: 가중치 및 편향)을 결합한 알고리즘을 사용합니다."
@@ -24,7 +24,7 @@ knowledge_codes:
           summary_it: "I sistemi di IA utilizzano algoritmi che combinano procedure passo-passo con inferenze statistiche (ad esempio, pesi e pregiudizi) per elaborare dati, rilevare modelli e generare output probabili."
         K1.2:
           summary: "Machines 'learn' by inferring how to generate outputs such as predictions, content, and recommendations that influence physical or virtual environments, in response to information from the input they receive. They do so with varying levels of autonomy and adaptiveness after deployment."
-          summary_zh: "機器透過推論如何產生預測、內容與建議等輸出來「學習」，這些輸出會影響實體或虛擬環境，並根據接收到的輸入資訊，在部署後以不同程度的自主性與適應性運作。"
+          summary_zhTW: "機器透過推論如何產生預測、內容與建議等輸出來「學習」，這些輸出會影響實體或虛擬環境，並根據接收到的輸入資訊，在部署後以不同程度的自主性與適應性運作。"
           summary_es: "Las máquinas 'aprenden' inferiendo cómo generar salidas como predicciones, contenido y recomendaciones que influyen en entornos físicos o virtuales, en respuesta a la información de la entrada que reciben. Lo hacen con diferentes niveles de autonomía y adaptabilidad después de la implementación."
           summary_ja: "機械は、受け取った入力情報に応じて、物理的または仮想的環境に影響を与える予測、コンテンツ、推奨などの出力を生成する方法を推測することによって「学習」します。彼らは、展開後にさまざまなレベルの自律性と適応性でそれを行います。"
           summary_ko: "기계는 수신한 입력 정보에 따라 물리적 또는 가상 환경에 영향을 미치는 예측, 콘텐츠 및 추천과 같은 출력을 생성하는 방법을 추론하여 '학습'합니다. 그들은 배포 후 다양한 수준의 자율성과 적응성으로 이를 수행합니다."
@@ -34,7 +34,7 @@ knowledge_codes:
           summary_it: "Le macchine 'imparano' deducendo come generare output come previsioni, contenuti e raccomandazioni che influenzano ambienti fisici o virtuali, in risposta alle informazioni in ingresso che ricevono. Lo fanno con diversi livelli di autonomia e adattabilità dopo il dispiegamento."
         K1.3:
           summary: "Generative AI uses probabilities to generate human-like outputs across various modalities (e.g., text, audio, visuals) but lacks authentic understanding and intent."
-          summary_zh: "生成式AI利用機率產生各種模態的類人輸出（如文字、音訊、視覺），但缺乏真正的理解與意圖。"
+          summary_zhTW: "生成式AI利用機率產生各種模態的類人輸出（如文字、音訊、視覺），但缺乏真正的理解與意圖。"
           summary_es: "La IA generativa utiliza probabilidades para generar salidas similares a las humanas en diversas modalidades (por ejemplo, texto, audio, visuales), pero carece de comprensión y propósito auténticos."
           summary_ja: "生成型AIは、さまざまなモダリティ（テキスト、音声、視覚など）で人間のような出力を生成するために確率を使用しますが、真の理解や意図は欠けています。"
           summary_ko: "생성형 AI는 다양한 모달리티(예: 텍스트, 오디오, 비주얼)에서 인간과 유사한 출력을 생성하기 위해 확률을 사용하지만, 진정한 이해와 의도가 부족합니다."
@@ -44,7 +44,7 @@ knowledge_codes:
           summary_it: "L'IA generativa utilizza probabilità per generare output simili a quelli umani in varie modalità (ad esempio, testo, audio, visivi), ma manca di una comprensione e di un'intenzione autentiche."
         K1.4:
           summary: "AI systems operate differently depending on their purpose, whether to create, predict, recommend, or respond."
-          summary_zh: "AI系統依其目的不同而有不同運作方式，可能用於創作、預測、推薦或回應。"
+          summary_zhTW: "AI系統依其目的不同而有不同運作方式，可能用於創作、預測、推薦或回應。"
           summary_es: "Los sistemas de IA operan de manera diferente según su propósito, ya sea para crear, predecir, recomendar o responder."
           summary_ja: "AIシスムは、その目的に応じて異なる方法で動作します。創造、予測、推奨、または応答するためです。"
           summary_ko: "AI 시스템은 목적에 따라 다르게 작동하며, 창작, 예측, 추천 또는 응답을 위해 사용될 수 있습니다."
@@ -54,7 +54,7 @@ knowledge_codes:
           summary_it: "I sistemi di IA operano in modo diverso a seconda del loro scopo, sia per creare, prevedere, raccomandare o rispondere."
       explanation: |
         AI systems—including, but not limited to, classifiers, recommenders, predictive models, generative AI, and autonomous agents – operate by processing vast datasets to identify statistical patterns. As a broad class of technology, AI simulates intelligent behavior. Whether generating content, sorting information, making predictions, or executing sequences of actions, these systems aim to produce outputs that are statistically most likely to meet a given objective. While these systems can produce highly sophisticated and human-like outputs, they do so without comprehension, awareness, or intent. Understanding this distinction dispels the misconception that AI is all-knowing or consistently correct, and helps learners assess its reliability, limitations, and potential impact.
-      explanation_zh: |
+      explanation_zhTW: |
         AI系統（包括但不限於分類器、推薦系統、預測模型、生成式AI及自主代理）透過處理大量資料集來識別統計模式。AI作為一種廣義技術類別，模擬智慧行為。無論是產生內容、整理資訊、做出預測或執行一連串動作，這些系統的目標都是產生統計上最有可能達成既定目標的輸出。雖然這些系統能產生高度複雜且類似人類的結果，但它們並不具備理解、意識或意圖。理解這一點有助於破除「AI無所不知、永遠正確」的迷思，並協助學習者評估其可靠性、限制與潛在影響。
       explanation_es: |
         Los sistemas de IA, incluidos, entre otros, clasificadores, recomendadores, modelos predictivos, IA generativa y agentes autónomos, operan procesando vastos conjuntos de datos para identificar patrones estadísticos. Como una amplia clase de tecnología, la IA simula el comportamiento inteligente. Ya sea generando contenido, clasificando información, haciendo predicciones o ejecutando secuencias de acciones, estos sistemas tienen como objetivo producir salidas que sean estadísticamente más probables de cumplir un objetivo dado. Si bien estos sistemas pueden producir resultados altamente sofisticados y similares a los humanos, lo hacen sin comprensión, conciencia o intención. Comprender esta distinción disipa la idea errónea de que la IA lo sabe todo o es consistentemente correcta, y ayuda a los estudiantes a evaluar su fiabilidad, limitaciones e impacto potencial.
@@ -75,7 +75,7 @@ knowledge_codes:
       codes:
         K2.1:
           summary: "Building and maintaining AI systems relies on humans to design algorithms, collect and label data, and moderate harmful content. These systems reflect human choices, assumptions, and labor practices, shaped by unequal global conditions."
-          summary_zh: "建構與維護AI系統仰賴人類設計演算法、蒐集與標註資料，以及管理有害內容。這些系統反映人類的選擇、假設與勞動實踐，並受全球不平等條件所塑造。"
+          summary_zhTW: "建構與維護AI系統仰賴人類設計演算法、蒐集與標註資料，以及管理有害內容。這些系統反映人類的選擇、假設與勞動實踐，並受全球不平等條件所塑造。"
           summary_es: "La construcción y el mantenimiento de sistemas de IA dependen de que los humanos diseñen algoritmos, recojan y etiqueten datos, y moderen contenido dañino. Estos sistemas reflejan las elecciones, suposiciones y prácticas laborales humanas, moldeadas por condiciones globales desiguales."
           summary_ja: "AIシスムの構築と維持は、人間がアルゴリズムを設計し、データを収集してラベル付けし、有害なコンテンツを管理することに依存しています。これらのシステムは、人間の選択、仮定、労働慣行を反映しており、不平等なグローバル条件によって形作られています。"
           summary_ko: "AI 시스템의 구축 및 유지 관리는 인간이 알고리즘을 설계하고 데이터를 수집 및 라벨링하며 유해한 콘텐츠를 조정하는 데 의존합니다. 이러한 시스템은 인간의 선택, 가정 및 노동 관행을 반영하며, 불평등한 글로벌 조건에 의해 형성됩니다."
@@ -85,7 +85,7 @@ knowledge_codes:
           summary_it: "La costruzione e il mantenimento dei sistemi di IA dipendono dagli esseri umani per progettare algoritmi, raccogliere e etichettare dati e moderare contenuti dannosi. Questi sistemi riflettono le scelte, le assunzioni e le pratiche lavorative umane, plasmate da condizioni globali disuguali."
         K2.2:
           summary: "AI is trained on vast datasets sourced from publicly available information, user-generated content, curated databases, and real-world data collected through sensors, interactions, and digital systems."
-          summary_zh: "AI以龐大資料集進行訓練，來源包括公開資訊、使用者產生內容、精選資料庫與透過感測器、互動及數位系統蒐集的真實世界資料。"
+          summary_zhTW: "AI以龐大資料集進行訓練，來源包括公開資訊、使用者產生內容、精選資料庫與透過感測器、互動及數位系統蒐集的真實世界資料。"
           summary_es: "La IA se entrena con vastos conjuntos de datos provenientes de información disponible públicamente, contenido generado por usuarios, bases de datos curadas y datos del mundo real recopilados"
           summary_ja: "AIは、公開情報、ユーザーが生成したコンテンツ、カールドデータベース、センサー、インタラクション、デジタルシステムを介して収集された実世界のデータを使用してトレーニングします。"
           summary_ko: "AI는 공개 정보, 사용자가 생성한 콘텐츠, 커리티드 데이터베이스 및 센서, 인터랙션 및 디지털 시스템을 통해 수집된 실제 세계의 데이터를 사용하여 훈련합니다."
@@ -95,7 +95,7 @@ knowledge_codes:
           summary_it: "AI viene addestrato su enormi set di dati provenienti da informazioni disponibili pubblicamente, contenuto generato dagli utenti, database curati e dati del mondo reale raccolti"
         K2.3:
           summary: "AI systems gather new data from interactions with users; decisions, processes, and outputs may be directly influenced by inputs in real time."
-          summary_zh: "AI系統會從與使用者的互動中收集新資料；決策、流程與輸出可能即時受到輸入的直接影響。"
+          summary_zhTW: "AI系統會從與使用者的互動中收集新資料；決策、流程與輸出可能即時受到輸入的直接影響。"
           summary_es: "Los sistemas de IA operan de manera diferente según su propósito, ya sea para crear, predecir, recomendar o responder."
           summary_ja: "AIシスムは、その目的に応じて異なる方法で動作します。創造、予測、推奨、または応答するためです。"
           summary_ko: "AI 시스템은 목적에 따라 다르게 작동하며, 창작, 예측, 추천 또는 응답을 위해 사용될 수 있습니다."
@@ -105,7 +105,7 @@ knowledge_codes:
           summary_it: "I sistemi di IA operano in modo diverso a seconda del loro scopo, sia per creare, prevedere, raccomandare o rispondere."
         K2.4:
           summary: "AI systems are trained to identify patterns among data elements that humans have selected, categorized, and prioritized."
-          summary_zh: "AI系統被訓練來識別人類所選擇、分類與排序的資料元素間的模式。"
+          summary_zhTW: "AI系統被訓練來識別人類所選擇、分類與排序的資料元素間的模式。"
           summary_es: "Los sistemas de IA operan de manera diferente según su propósito, ya sea para crear, predecir, recomendar o responder."
           summary_ja: "AIシスムは、その目的に応じて異なる方法で動作します。創造、予測、推奨、または応答するためです。"
           summary_ko: "AI 시스템은 목적에 따라 다르게 작동하며, 창작, 예측, 추천 또는 응답을 위해 사용될 수 있습니다."
@@ -115,7 +115,7 @@ knowledge_codes:
           summary_it: "I sistemi di IA operano in modo diverso a seconda del loro scopo, sia per creare, prevedere, raccomandare o rispondere."
         K2.5:
           summary: "Bias inherently exists in AI systems, which can also reflect societal biases embedded in its training data or algorithm design. Humans can perpetuate or mitigate harmful biases in AI systems during the design, development, or testing process."
-          summary_zh: "AI系統本質上存在偏見，也可能反映嵌入在訓練資料或演算法設計中的社會偏見。人類可在設計、開發或測試過程中延續或減緩AI系統中的有害偏見。"
+          summary_zhTW: "AI系統本質上存在偏見，也可能反映嵌入在訓練資料或演算法設計中的社會偏見。人類可在設計、開發或測試過程中延續或減緩AI系統中的有害偏見。"
           summary_es: "La construcción y el mantenimiento de sistemas de IA dependen de que los humanos diseñen algoritmos, recojan y etiqueten datos, y moderen contenido dañino. Estos sistemas reflejan las elecciones, suposiciones y prácticas laborales humanas, moldeadas por condiciones globales desiguales."
           summary_ja: "AIシステムの構築と維持は、人間がアルゴリズムを設計し、データを収集してラベル付けし、有害なコンテンツを管理することに依存しています。これらのシステムは、人間の選択、仮定、労働慣行を反映しており、不平等なグローバル条件によって形作られています。"
           summary_ko: "AI 시스템의 구축 및 유지 관리는 인간이 알고리즘을 설계하고 데이터를 수집 및 라벨링하며 유해한 콘텐츠를 조정하는 데 의존합니다. 이러한 시스템은 인간의 선택, 가정 및 노동 관행을 반영하며, 불평등한 글로벌 조건에 의해 형성됩니다."
@@ -125,7 +125,7 @@ knowledge_codes:
           summary_it: "La costruzione e il mantenimento dei sistemi di IA dipendono dagli esseri umani per progettare algoritmi, raccogliere e etichettare dati e moderare contenuti dannosi. Questi sistemi riflettono le scelte, le assunzioni e le pratiche lavorative umane, plasmate da condizioni globali disuguali."
       explanation: |
         AI is not neutral; it is shaped by the decisions of those who build it. Humans select training data, which may have been collected unethically or feature inaccurate and incomplete representations of individuals and perspectives. They also impart judgment during the classification of that training data, which informs the algorithms that produce AI systems' outputs. While statistical and societal biases may exist undetected in training data or be reinforced in other aspects of the training process, AI's prevalence in decision-making and everyday life can replicate those biases in ways that harmfully affect different groups of people. This makes ethics, algorithmic fairness, representation, explainability, and accountability essential to AI literacy.
-      explanation_zh: |
+      explanation_zhTW: |
         AI並非中立，而是由開發者的決策所形塑。人類選擇訓練資料，這些資料可能以不道德方式蒐集，或對個人與觀點的呈現不準確且不完整。人類在分類訓練資料時也會加入判斷，這些都會影響產生AI輸出的演算法。統計與社會偏見可能潛藏於訓練資料中未被發現，或在訓練過程的其他面向被強化。AI在決策與日常生活中的普及，可能讓這些偏見以有害方式影響不同群體。因此，倫理、演算法公平性、代表性、可解釋性與問責制是AI素養不可或缺的要素。
       explanation_es: |
         La IA no es neutral; está moldeada por las decisiones de quienes la construyen. Los humanos seleccionan los datos de entrenamiento, que pueden haber sido recopilados de manera poco ética o presentar representaciones inexactas e incompletas de individuos y perspectivas. También aportan juicio durante la clasificación de esos datos de entrenamiento, lo que informa los algoritmos que producen las salidas de los sistemas de IA. Si bien los sesgos estadísticos y sociales pueden existir sin ser detectados en los datos de entrenamiento o ser reforzados en otros aspectos del proceso de entrenamiento, la prevalencia de la IA en la toma de decisiones y en la vida cotidiana puede replicar esos sesgos de maneras que afectan negativamente a diferentes grupos de personas. Esto hace que la ética, la equidad algorítmica, la representación, la explicabilidad y la responsabilidad sean esenciales para la alfabetización en IA.
@@ -146,7 +146,7 @@ knowledge_codes:
       codes:
         K3.1:
           summary: "AI systems automate structured tasks, augment decision-making, and transform industries, requiring humans to adapt, reskill, and upskill."
-          summary_zh: "AI系統自動化結構化任務、輔助決策並轉型產業，要求人類適應、再學習與提升技能。"
+          summary_zhTW: "AI系統自動化結構化任務、輔助決策並轉型產業，要求人類適應、再學習與提升技能。"
           summary_es: "Los sistemas de IA automatizan tareas estructuradas, aumentan la toma de decisiones y transforman industrias, lo que requiere que los humanos se adapten, reentrenen y mejoren sus habilidades."
           summary_ja: "AIシステムは構造化されたタスクを自動化し、意思決定を補助し、産業を変革します。これにより、人間は適応し、再スキルを習得し、スキルを向上させる必要があります。"
           summary_ko: "AI 시스템은 구조화된 작업을 자동화하고 의사 결정을 보강하며 산업을 변화시킵니다. 이는 인간이 적응하고 재교육하며 기술을 향상시켜야 함을 의미합니다."
@@ -156,7 +156,7 @@ knowledge_codes:
           summary_it: "I sistemi di IA automatizzano compiti strutturati, aumentano il processo decisionale e trasformano le industrie, richiedendo agli esseri umani di adattarsi, riqualificarsi e migliorare le proprie competenze."
         K3.2:
           summary: "AI integration requires individuals to determine which tasks are best suited for machines and which require human intervention or expertise."
-          summary_zh: "AI整合要求個人判斷哪些任務最適合機器執行，哪些需要人類介入或專業知識。"
+          summary_zhTW: "AI整合要求個人判斷哪些任務最適合機器執行，哪些需要人類介入或專業知識。"
           summary_es: "La integración de la IA requiere que las personas determinen qué tareas son más adecuadas para las máquinas y cuáles requieren intervención o experiencia humana."
           summary_ja: "AIの統合には、どのタスクが機械に最適で、どのタスクが人間の介入や専門知識を必要とするかを判断する必要があります。"
           summary_ko: "AI 통합은 개인이 어떤 작업이 기계에 가장 적합하고 어떤 작업이 인간의 개입이나 전문 지식을 필요로 하는지 결정해야 합니다."
@@ -166,7 +166,7 @@ knowledge_codes:
           summary_it: "L'integrazione dell'IA richiede che gli individui determinino quali compiti sono più adatti per le macchine e quali richiedono l'intervento o l'expertise umana."
         K3.3:
           summary: "While AI can support analysis and prediction, humans must be responsible for decisions that reflect human judgment and ethical considerations."
-          summary_zh: "雖然AI可協助分析與預測，但人類必須對反映人類判斷與倫理考量的決策負責。"
+          summary_zhTW: "雖然AI可協助分析與預測，但人類必須對反映人類判斷與倫理考量的決策負責。"
           summary_es: "Si bien la IA puede apoyar el análisis y la predicción, los humanos deben ser responsables de las decisiones que reflejan el juicio humano y las consideraciones éticas."
           summary_ja: "AIは分析や予測をサポートできますが、人間は人間の判断や倫理的考慮を反映した決定に責任を持たなければなりません。"
           summary_ko: "AI는 분석 및 예측을 지원할 수 있지만, 인간은 인간의 판단과 윤리적 고려를 반映한 결정에 대해 책임을 져야 합니다."
@@ -176,7 +176,7 @@ knowledge_codes:
           summary_it: "Sebbene l'IA possa supportare l'analisi e la previsione, gli esseri umani devono essere responsabili delle decisioni che riflettono il giudizio umano e le considerazioni etiche."
       explanation: |
         The impact of AI across industries emphasizes the importance of adaptability and lifelong learning. While AI systems can increase efficiency for many types of tasks, these tools might not always be the best choice; humans must hone their knowledge of AI's capabilities and their domain expertise to manage AI systems effectively. Success in an AI-integrated workforce entails developing fluency in a range of technologies, staying current with new tools and techniques, and leveraging human judgment in decision-making starting from early ages, in and outside of formal education. This combination ensures that AI complements human skills and augments human capacities, rather than replaces them.
-      explanation_zh: |
+      explanation_zhTW: |
         AI對各產業的影響凸顯了適應力與終身學習的重要性。雖然AI系統能提升許多類型任務的效率，但這些工具並非總是最佳選擇；人類必須精進對AI能力的理解與專業領域知識，才能有效管理AI系統。在AI整合的工作環境中成功，需要培養對多種技術的熟練度、跟上新工具與技術的發展，並從小開始在正式與非正式教育中善用人類判斷進行決策。這種結合確保AI補足人類技能、增強人類能力，而非取代人類。
       explanation_es: |
         El impacto de la IA en diversas industrias enfatiza la importancia de la adaptabilidad y el aprendizaje continuo. Si bien los sistemas de IA pueden aumentar la eficiencia en muchos tipos de tareas, estas herramientas no siempre son la mejor opción; los humanos deben perfeccionar su conocimiento de las capacidades de la IA y su experiencia en el dominio para gestionar eficazmente los sistemas de IA. El éxito en una fuerza laboral integrada por IA implica desarrollar fluidez en una variedad de tecnologías, mantenerse al día con nuevas herramientas y técnicas, y aprovechar el juicio humano en la toma de decisiones desde una edad temprana, tanto en la educación formal como informal. Esta combinación asegura que la IA complemente las habilidades humanas y aumente las capacidades humanas, en lugar de reemplazarlas.
@@ -197,7 +197,7 @@ knowledge_codes:
       codes:
         K4.1:
           summary: "AI excels at pattern recognition and automation but lacks emotions, ethical reasoning, context, and originality."
-          summary_zh: "AI擅長模式識別與自動化，但缺乏情感、倫理推理、情境理解與原創性。"
+          summary_zhTW: "AI擅長模式識別與自動化，但缺乏情感、倫理推理、情境理解與原創性。"
           summary_es: "La IA sobresale en el reconocimiento de patrones y la automatización, pero carece de emociones, razonamiento ético, contexto y originalidad."
           summary_ja: "AIはパターン認識と自動化に優れていますが、感情、倫理的推論、文脈、独創性が欠けています。"
           summary_ko: "AI는 패턴 인식 및 자동화에 뛰어나지만 감정, 윤리적 추론, 맥락 및 독창성이 부족합니다."
@@ -207,7 +207,7 @@ knowledge_codes:
           summary_it: "L'IA eccelle nel riconoscimento dei modelli e nell'automazione, ma manca di emozioni, ragionamento etico, contesto e originalità."
         K4.2:
           summary: "AI requires vast amounts of computing power and data, which consumes energy, thus demanding limited natural resources and increasing carbon emissions. AI's long-term sustainability impact, both positive and negative, largely depends on how it is implemented and utilized."
-          summary_zh: "AI需要大量運算能力與資料，消耗能源並需求有限的自然資源，增加碳排放。AI的長期永續影響（無論正面或負面）很大程度取決於如何實施與利用。"
+          summary_zhTW: "AI需要大量運算能力與資料，消耗能源並需求有限的自然資源，增加碳排放。AI的長期永續影響（無論正面或負面）很大程度取決於如何實施與利用。"
           summary_es: "La IA se entrena con vastos conjuntos de datos provenientes de información disponible públicamente, contenido generado por usuarios, bases de datos curadas y datos del mundo real recopilados"
           summary_ja: "AIは、公開情報、ユーザーが生成したコンテンツ、カールドデータベース、センサー、インタラクション、デジタルシステムを介して収集された実世界のデータを使用してトレーニングします。"
           summary_ko: "AI는 공개 정보, 사용자가 생성한 콘텐츠, 커리티드 데이터베이스 및 센서, 인터랙션 및 디지털 시스템을 통해 수집된 실제 세계의 데이터를 사용하여 훈련합니다."
@@ -217,7 +217,7 @@ knowledge_codes:
           summary_it: "AI viene addestrato su enormi set di dati provenienti da informazioni disponibili pubblicamente, contenuto generato dagli utenti, database curati e dati del mondo reale raccolti"
         K4.3:
           summary: "The capability of generative AI, particularly large language models (LLMs), to generate humanlike content can make it difficult to distinguish fact from fabrication, increasing the potential to generate misinformation, deepfakes, or manipulative materials."
-          summary_zh: "生成式AI（特別是大型語言模型）產生類人內容的能力，可能導致事實與虛構難以分辨，增加產生錯誤資訊、深度偽造或操弄材料的可能性。"
+          summary_zhTW: "生成式AI（特別是大型語言模型）產生類人內容的能力，可能導致事實與虛構難以分辨，增加產生錯誤資訊、深度偽造或操弄材料的可能性。"
           summary_es: "La capacidad de la IA generativa, particularmente de los grandes modelos de lenguaje (LLMs), para generar contenido similar al humano puede dificultar la distinción entre hechos y fabricaciones, aumentando el potencial de generar desinformación, deepfakes o materiales manipulativos."
           summary_ja: "生成型AI、特に大規模言語モデル（LLM）が人間のようなコンテンツを生成する能力は、事実と虚構を区別することを難しくし、誤情報、ディープフェイク、または操作的な資料を生成する可能性を高めることがあります。"
           summary_ko: "생성형 AI, 특히 대형 언어 모델(LLM)의 인간과 유사한 콘텐츠 생성 능력은 사실과 허구를 구별하기 어렵게 만들 수 있으며, 잘못된 정보, 딥페이크 또는 조작된 자료를 생성할 가능성을 높입니다."
@@ -227,7 +227,7 @@ knowledge_codes:
           summary_it: "La capacità dell'IA generativa, in particolare dei grandi modelli di linguaggio (LLM), di generare contenuti simili a quelli umani può rendere difficile distinguere tra fatti e invenzioni, aumentando il potenziale di generare disinformazione, deepfake o materiali manipolativi."
       explanation: |
         AI lacks a true grasp of real-world context, human values and behaviors, and nuance—even when systems modify their own outputs to respond to a user's complex emotional states. While AI systems can analyze enormous amounts of data, they are prone to bias, confabulation, and misuse and rely on vast but finite natural resources. A human must make judgments about specific contexts that AI systems cannot, including whether the benefits of an AI tool is worth the environmental or societal cost. AI literacy requires critical thinking about when, where, and how AI should be applied to ensure it serves human needs equitably.
-      explanation_zh: |
+      explanation_zhTW: |
         AI缺乏對現實世界情境、人類價值與行為以及細微差異的真正理解——即使系統能修改輸出來回應使用者複雜的情緒狀態。雖然AI系統能分析大量資料，但容易產生偏見、虛構與誤用，且仰賴龐大但有限的自然資源。人類必須針對AI系統無法判斷的特定情境做出決策，包括評估AI工具的效益是否值得其環境或社會成本。AI素養需要批判性思考何時、何地、如何應用AI，確保其公平服務人類需求。
       explanation_es: |
         La IA carece de una verdadera comprensión del contexto del mundo real, de los valores y comportamientos humanos, y de los matices, incluso cuando los sistemas modifican sus propias salidas para responder a los complejos estados emocionales de un usuario. Si bien los sistemas de IA pueden analizar enormes cantidades de datos, son propensos a sesgos, confabulación y abuso, y dependen de vastos pero finitos recursos naturales. Un ser humano debe tomar decisiones sobre contextos específicos que los sistemas de IA no pueden, incluyendo si los beneficios de una herramienta de IA justifican el costo ambiental o social. La alfabetización en IA requiere un pensamiento crítico sobre cuándo, dónde y cómo se debe aplicar la IA para garantizar que sirva equitativamente a las necesidades humanas.
@@ -248,7 +248,7 @@ knowledge_codes:
       codes:
         K5.1:
           summary: "AI plays an increasingly prevalent role in decision-making that impacts humans, from hiring practices to healthcare to criminal justice."
-          summary_zh: "AI在影響人類的決策中扮演日益重要的角色，從招聘實務到醫療保健到刑事司法。"
+          summary_zhTW: "AI在影響人類的決策中扮演日益重要的角色，從招聘實務到醫療保健到刑事司法。"
           summary_es: "La IA desempeña un papel cada vez más importante en la toma de decisiones que impactan a los humanos, desde las prácticas de contratación hasta la atención médica y la justicia penal."
           summary_ja: "AIは、人事慣行から医療、刑事司法に至るまで、人間に影響を与える意思決定においてますます重要な役割を果たしています。"
           summary_ko: "AI는 채용 관행에서 의료, 형사 사법에 이르기까지 인간에게 영향을 미치는 의사 결정에서 점점 더 중요한 역할을 하고 있습니다."
@@ -258,7 +258,7 @@ knowledge_codes:
           summary_it: "L'IA svolge un ruolo sempre più prevalente nel processo decisionale che impatta gli esseri umani, dalle pratiche di assunzione all'assistenza sanitaria fino alla giustizia penale."
         K5.2:
           summary: "AI systems must be understood, audited, and regulated to ensure that their use leads to more benefits than harm for individuals and society."
-          summary_zh: "AI系統必須被理解、稽核與規範，以確保其使用對個人與社會帶來更多益處而非傷害。"
+          summary_zhTW: "AI系統必須被理解、稽核與規範，以確保其使用對個人與社會帶來更多益處而非傷害。"
           summary_es: "La integración de la IA requiere que las personas determinen qué tareas son más adecuadas para las máquinas y cuáles requieren intervención o experiencia humana."
           summary_ja: "AIの統合には、どのタスクが機械に最適で、どのタスクが人間の介入や専門知識を必要とするかを判断する必要があります。"
           summary_ko: "AI 통합은 개인이 어떤 작업이 기계에 가장 적합하고 어떤 작업이 인간의 개입이나 전문 지식을 필요로 하는지 결정해야 합니다."
@@ -268,7 +268,7 @@ knowledge_codes:
           summary_it: "L'integrazione dell'IA richiede che gli individui determinino quali compiti sono più adatti per le macchine e quali richiedono l'intervento o l'expertise umana."
         K5.3:
           summary: "Generative AI and Large Language Models create content based on existing materials in training data, which includes copyright-protected work, thereby raising questions about authenticity, authorship, and ownership."
-          summary_zh: "生成式AI與大型語言模型根據訓練資料中的既有材料創造內容，其中包括受著作權保護的作品，因此引發真實性、作者身分與所有權的問題。"
+          summary_zhTW: "生成式AI與大型語言模型根據訓練資料中的既有材料創造內容，其中包括受著作權保護的作品，因此引發真實性、作者身分與所有權的問題。"
           summary_es: "La IA generativa y los grandes modelos de lenguaje crean contenido basado en materiales existentes en los datos de entrenamiento, que incluyen obras protegidas por derechos de autor, lo que plantea preguntas sobre autenticidad, autoría y propiedad."
           summary_ja: "生成型AIと大規模言語モデルは、トレーニングデータにある既存の資料に基づいてコンテンツを生成します。これには著作権で保護された作品が含まれ、真実性、著者性、所有権に関する疑問を引き起こします。"
           summary_ko: "생성형 AI와 대형 언어 모델은 훈련 데이터에 있는 기존 자료를 기반으로 콘텐츠를 생성하며, 여기에는 저작권으로 보호되는 작품이 포함되어 진정성, 저자성 및 소유권에 대한 질문을 제기합니다."
@@ -278,7 +278,7 @@ knowledge_codes:
           summary_it: "L'IA generativa e i grandi modelli di linguaggio creano contenuti basati su materiali esistenti nei dati di addestramento, che includono opere protette da copyright, sollevando così interrogativi su autenticità, paternità e proprietà."
         K5.4:
           summary: "Ethical AI design encompasses fairness, transparency, explainability, accountability, respect for privacy, and legal compliance."
-          summary_zh: "倫理AI設計涵蓋公平性、透明度、可解釋性、問責制、隱私尊重與法規遵循。"
+          summary_zhTW: "倫理AI設計涵蓋公平性、透明度、可解釋性、問責制、隱私尊重與法規遵循。"
           summary_es: "El diseño ético de la IA abarca la equidad, la transparencia, la explicabilidad, la responsabilidad, el respeto por la privacidad y el cumplimiento legal."
           summary_ja: "倫理的なAI設計は、公平性、透明性、説明可能性、責任、プライバシーの尊重、法令遵守を含みます。"
           summary_ko: "윤리적 AI 설계는 공정성, 투명성, 설명 가능성, 책임, 프라이버시 존중 및 법적 준수를 포함합니다."
@@ -288,7 +288,7 @@ knowledge_codes:
           summary_it: "Il design etico dell'IA comprende equità, trasparenza, spiegabilità, responsabilità, rispetto per la privacy e conformità legale."
       explanation: |
         AI systems do not exist in isolation; their use reflects, reinforces, and reshapes societal values and decisions. Without careful oversight, AI-driven decision-making can amplify bias and cause widespread harm. AI systems introduce implications for how learners should think about truth, authorship, and ownership in digital spaces. Individual and system-level guidance and regulations can help address areas where AI intersects with fundamental rights, such as surveillance and data privacy. Familiarity with ethical AI design principles helps learners to critically assess how AI systems are built and deployed. Without the understanding, learners risk accepting AI outputs at face value rather than asking whom they benefit or harm. To ensure AI serves society responsibly, we must continuously question and evaluate its effects and guide its use to mitigate its risks.
-      explanation_zh: |
+      explanation_zhTW: |
         AI系統並非孤立存在；其使用會反映、強化並重塑社會價值與決策。若缺乏審慎監督，AI驅動的決策可能放大偏見並造成廣泛傷害。AI系統引入了學習者應如何思考數位空間中真實性、作者身分與所有權的議題。個人與系統層級的指導與規範有助於處理AI與基本權利（如監控與資料隱私）交集的領域。熟悉倫理AI設計原則有助於學習者批判性評估AI系統的建構與部署。若缺乏這種理解，學習者可能會表面接受AI輸出，而不問它們對誰有益或有害。為確保AI負責任地服務社會，我們必須持續質疑與評估其影響，並引導其使用以減輕風險。
       explanation_es: |
         Los sistemas de IA no existen en aislamiento; su uso refleja, refuerza y remodela los valores y decisiones sociales. Sin una supervisión cuidadosa, la toma de decisiones impulsada por IA puede amplificar sesgos y causar daños generalizados. Los sistemas de IA introducen implicaciones sobre cómo los aprendices deben pensar sobre la verdad, la autoría y la propiedad en los espacios digitales. La orientación y regulación a nivel individual y sistémico pueden ayudar a abordar áreas donde la IA se cruza con derechos fundamentales, como la vigilancia y la privacidad de datos. La familiaridad con los principios de diseño ético de IA ayuda a los aprendices a evaluar críticamente cómo se construyen y despliegan los sistemas de IA. Sin esta comprensión, los aprendices corren el riesgo de aceptar los resultados de la IA al pie de la letra, en lugar de preguntar a quién benefician o perjudican. Para garantizar que la IA sirva a la sociedad de manera responsable, debemos cuestionar y evaluar continuamente sus efectos y guiar su uso para mitigar sus riesgos.
@@ -308,7 +308,7 @@ knowledge_codes:
 # ----------  Skills (S) ----------
 skill_codes:
   desciption: "These skills represent fundamental human abilities applied to an AI context. They guide learners in using AI ethically and ensure that learners actively shape how AI fits into their lives."
-  desciption_zh: "這些技能代表應用於AI情境的基本人類能力。它們指導學習者倫理地使用AI，並確保學習者主動塑造AI如何融入他們的生活。"
+  desciption_zhTW: "這些技能代表應用於AI情境的基本人類能力。它們指導學習者倫理地使用AI，並確保學習者主動塑造AI如何融入他們的生活。"
   desciption_es: "Estas habilidades representan capacidades humanas fundamentales aplicadas a un contexto de IA. Guían a los estudiantes en el uso ético de la IA y aseguran que los estudiantes moldeen activamente cómo la IA se integra en sus vidas."
   desciption_ja: "これらのスキルは、AIの文脈に適用される基本的な人間の能力を表しています。学習者がAIを倫理的に使用するよう導き、学習者がAIを自分の生活にどのように適合させるかを積極的に形作ることを確実にします。"
   desciption_ko: "이러한 기술들은 AI 맥락에 적용되는 기본적인 인간 능력을 나타냅니다. 학습자들이 AI를 윤리적으로 사용하도록 안내하며, 학습자들이 AI가 그들의 삶에 어떻게 적용되는지를 적극적으로 형성하도록 보장합니다."
@@ -321,7 +321,7 @@ skill_codes:
       codes:
         S1.1:
           summary: "Evaluate AI-generated content for accuracy, fairness, and bias to make informed and ethical decisions."
-          summary_zh: "評估AI生成內容的準確性、公平性與偏見，以做出明智且符合倫理的決策。"
+          summary_zhTW: "評估AI生成內容的準確性、公平性與偏見，以做出明智且符合倫理的決策。"
           summary_es: "Evalúa el contenido generado por IA en términos de precisión, equidad y sesgo para tomar decisiones informadas y éticas."
           summary_ja: "AIが生成したコンテンツの正確性、公平性、バイアスを評価し、情報に基づいた倫理的な決定を下します。"
           summary_ko: "AI가 생성한 콘텐츠의 정확성, 공정성 및 편향을 평가하여 정보에 기반한 윤리적 결정을 내립니다."
@@ -332,7 +332,7 @@ skill_codes:
           questions:
             - "How can I check the accuracy of AI-generated outputs and reduce the risk of harmful bias?"
             - "How do I know if AI is relevant or appropriate?"
-          questions_zh:
+          questions_zhTW:
             - "如何檢驗AI生成輸出的準確性並降低有害偏見的風險？"
             - "如何知道AI是否相關或適當？"
           questions_es:
@@ -358,7 +358,7 @@ skill_codes:
             - "Come faccio a sapere se l'IA è rilevante o appropriata?"
       explanation: |
         Practicing critical thinking in an AI context involves verifying whether the information provided by an AI system is accurate, relevant, and fair. Because AI systems can generate convincing but incorrect or biased content, learners must actively work to identify potential misinformation and weigh outputs with other sources of information. These actions result in a greater awareness of AI's impact on the broader information system. This process uncovers hidden biases or gaps and ensures AI outputs support ethical decision-making. By developing these skills, learners exercise media literacy, digital literacy, and digital citizenship, while becoming more discerning users of AI.
-      explanation_zh: |
+      explanation_zhTW: |
         在AI情境中實踐批判性思維涉及驗證AI系統提供的資訊是否準確、相關且公平。由於AI系統可能產生令人信服但不正確或有偏見的內容，學習者必須積極識別潛在的錯誤資訊，並將輸出與其他資訊來源進行比較。這些行動使人們更加意識到AI對更廣泛資訊系統的影響。這個過程揭露隱藏的偏見或差距，並確保AI輸出支持倫理決策。透過發展這些技能，學習者運用媒體素養、數位素養與數位公民素養，同時成為更具辨識力的AI使用者。
       explanation_es: |
         Practicar el pensamiento crítico en un contexto de IA implica verificar si la información proporcionada por un sistema de IA es precisa, relevante y justa. Debido a que los sistemas de IA pueden generar contenido convincente pero incorrecto o sesgado, los estudiantes deben trabajar activamente para identificar la desinformación potencial y evaluar las salidas con otras fuentes de información. Estas acciones resultan en una mayor conciencia del impacto de la IA en el sistema de información más amplio. Este proceso descubre sesgos ocultos o brechas y asegura que las salidas de IA apoyen la toma de decisiones éticas. Al desarrollar estas habilidades, los estudiantes ejercen la alfabetización mediática, la alfabetización digital y la ciudadanía digital, mientras se convierten en usuarios más perspicaces de la IA.
@@ -379,7 +379,7 @@ skill_codes:
       codes:
         S2.1:
           summary: "Collaborate with AI to create and refine original ideas while considering issues of ownership, attribution, and responsible use."
-          summary_zh: "與AI協作創造與精煉原創想法，同時考量所有權、歸屬與負責任使用等議題。"
+          summary_zhTW: "與AI協作創造與精煉原創想法，同時考量所有權、歸屬與負責任使用等議題。"
           summary_es: "Colaborar con la IA para crear y refinar ideas originales mientras se consideran cuestiones de propiedad, atribución y uso responsable."
           summary_ja: "所有権、帰属、責任ある使用の問題を考慮しながら、AIと協力してオリジナルのアイデアを創造し洗練する。"
           summary_ko: "소유권, 저작자 표시, 책임감 있는 사용 문제를 고려하면서 AI와 협력하여 독창적인 아이디어를 창조하고 개선합니다."
@@ -389,7 +389,7 @@ skill_codes:
           summary_it: "Collaborare con l'IA per creare e raffinare idee originali considerando questioni di proprietà, attribuzione e uso responsabile."
           questions:
             - "How can I use AI responsibly to bring my creative visions to life?"
-          questions_zh:
+          questions_zhTW:
             - "如何負責任地使用AI來實現我的創意願景？"
           questions_es:
             - "¿Cómo puedo usar la IA de manera responsable para dar vida a mis visiones creativas?"
@@ -407,7 +407,7 @@ skill_codes:
             - "Come posso usare l'IA in modo responsabile per dare vita alle mie visioni creative?"
       explanation: |
         Exercising creativity when using AI involves interacting with AI systems to brainstorm, generate, and refine original ideas. As learners use AI systems to explore possibilities beyond what they had originally envisioned, they must consider AI's impacts on originality, ownership, attribution, and copyright. By engaging creatively and responsibly with AI systems, learners stay accountable for the ideas they shape and share.
-      explanation_zh: |
+      explanation_zhTW: |
         在使用AI時運用創造力涉及與AI系統互動，進行腦力激盪、產生與精煉原創想法。當學習者使用AI系統探索超出原本設想的可能性時，他們必須考慮AI對原創性、所有權、歸屬與著作權的影響。透過創造性且負責任地與AI系統互動，學習者對其塑造與分享的想法保持問責。
       explanation_es: |
         Ejercer la creatividad al usar IA involucra interactuar con sistemas de IA para hacer lluvia de ideas, generar y refinar ideas originales. Mientras los estudiantes usan sistemas de IA para explorar posibilidades más allá de lo que habían imaginado originalmente, deben considerar los impactos de la IA en la originalidad, propiedad, atribución y derechos de autor. Al involucrarse creativa y responsablemente con sistemas de IA, los estudiantes se mantienen responsables de las ideas que moldean y comparten.
@@ -428,7 +428,7 @@ skill_codes:
       codes:
         S3.1:
           summary: "Decompose problems and provide instructions in ways that allow AI systems to effectively contribute to solutions."
-          summary_zh: "將問題分解並提供指示，使AI系統能有效促成解決方案。"
+          summary_zhTW: "將問題分解並提供指示，使AI系統能有效促成解決方案。"
           summary_es: "Descomponer problemas y proporcionar instrucciones de maneras que permitan a los sistemas de IA contribuir efectivamente a las soluciones."
           summary_ja: "AIシステムが効果的に解決策に貢献できるような方法で問題を分解し指示を提供する。"
           summary_ko: "AI 시스템이 해결책에 효과적으로 기여할 수 있도록 문제를 분해하고 지시를 제공합니다."
@@ -438,7 +438,7 @@ skill_codes:
           summary_it: "Scomporre i problemi e fornire istruzioni in modi che permettano ai sistemi di IA di contribuire efficacemente alle soluzioni."
           questions:
             - "How do I frame my problem so that AI can help solve it?"
-          questions_zh:
+          questions_zhTW:
             - "如何架構問題讓AI能協助解決？"
           questions_es:
             - "¿Cómo estructuro mi problema para que la IA pueda ayudar a resolverlo?"
@@ -456,7 +456,7 @@ skill_codes:
             - "Come posso strutturare il mio problema in modo che l'IA possa aiutare a risolverlo?"
       explanation: |
         Computational thinking skills help approach and frame problems in ways that leverage the capabilities of AI and account for its limitations. This involves decomposing, or breaking down complex problems into structured components, and communicating goals and constraints in a manner that AI systems can effectively process (e.g., prompt engineering). By providing use cases, counterexamples, and expected outcomes to AI systems, learners refine their own communication skills, engage with metacognitive strategies, and make progress toward their goals.
-      explanation_zh: |
+      explanation_zhTW: |
         運算思維技能有助於以善用AI能力並考量其限制的方式來處理與架構問題。這涉及分解或將複雜問題拆解為結構化組件，並以AI系統能有效處理的方式傳達目標與限制（如提示工程）。透過向AI系統提供使用案例、反例與預期結果，學習者精進自己的溝通技能，運用後設認知策略，並朝目標邁進。
       explanation_es: |
         Las habilidades de pensamiento computacional ayudan a abordar y enmarcar problemas de maneras que aprovechan las capacidades de la IA y consideran sus limitaciones. Esto implica descomponer, o dividir problemas complejos en componentes estructurados, y comunicar objetivos y restricciones de una manera que los sistemas de IA puedan procesar efectivamente (por ejemplo, ingeniería de prompts). Al proporcionar casos de uso, contraejemplos y resultados esperados a los sistemas de IA, los estudiantes refinan sus propias habilidades de comunicación, se involucran con estrategias metacognitivas y progresan hacia sus objetivos.
@@ -477,7 +477,7 @@ skill_codes:
       codes:
         S4.1:
           summary: "Work effectively with AI and humans by communicating clearly, giving feedback, and navigating shared tasks."
-          summary_zh: "透過清楚溝通、提供回饋與協調共同任務，有效與AI及人類合作。"
+          summary_zhTW: "透過清楚溝通、提供回饋與協調共同任務，有效與AI及人類合作。"
           summary_es: "Trabajar efectivamente con IA y humanos comunicándose claramente, dando retroalimentación y navegando tareas compartidas."
           summary_ja: "明確にコミュニケーションを取り、フィードバックを提供し、共有タスクをナビゲートすることで、AIと人間と効果的に協働する。"
           summary_ko: "명확하게 소통하고, 피드백을 제공하며, 공유 작업을 관리함으로써 AI와 인간과 효과적으로 협력합니다."
@@ -487,7 +487,7 @@ skill_codes:
           summary_it: "Lavorare efficacemente con l'IA e gli esseri umani comunicando chiaramente, fornendo feedback e gestendo compiti condivisi."
           questions:
             - "How can I collaborate transparently and ethically with AI to accomplish a goal?"
-          questions_zh:
+          questions_zhTW:
             - "如何透明且倫理地與AI協作以達成目標？"
           questions_es:
             - "¿Cómo puedo colaborar de manera transparente y ética con la IA para lograr un objetivo?"
@@ -505,7 +505,7 @@ skill_codes:
             - "Come posso collaborare in modo trasparente ed etico con l'IA per raggiungere un obiettivo?"
       explanation: |
         Collaboration with AI relies on positive and productive interactions between humans and AI systems. This requires the ability to both give feedback and ask for help in and outside of the digital world. As learners collaborate with AI systems, they demonstrate agency alongside metacognition. By collaborating tactfully, assessing strengths in context, and honing relationship-building skills, learners develop the ability to navigate new and complex situations.
-      explanation_zh: |
+      explanation_zhTW: |
         與AI的協作仰賴人類與AI系統間積極且富有成效的互動。這需要在數位世界內外提供回饋與尋求協助的能力。當學習者與AI系統協作時，他們展現了主體性與後設認知。透過巧妙協作、在情境中評估優勢與磨練關係建立技能，學習者培養應對新穎複雜情況的能力。
       explanation_es: |
         La colaboración con IA se basa en interacciones positivas y productivas entre humanos y sistemas de IA. Esto requiere la capacidad de dar retroalimentación y pedir ayuda tanto dentro como fuera del mundo digital. Mientras los estudiantes colaboran con sistemas de IA, demuestran agencia junto con metacognición. Al colaborar con tacto, evaluar fortalezas en contexto y perfeccionar habilidades de construcción de relaciones, los estudiantes desarrollan la capacidad de navegar situaciones nuevas y complejas.
@@ -526,7 +526,7 @@ skill_codes:
       codes:
         S5.1:
           summary: "Determine when and how to use AI for a task by assessing its capabilities, risks, and ethical implications."
-          summary_zh: "透過評估AI的能力、風險與倫理影響，決定何時及如何將AI用於任務。"
+          summary_zhTW: "透過評估AI的能力、風險與倫理影響，決定何時及如何將AI用於任務。"
           summary_es: "Determinar cuándo y cómo usar IA para una tarea evaluando sus capacidades, riesgos e implicaciones éticas."
           summary_ja: "AIの能力、リスク、倫理的影響を評価して、タスクにいつどのようにAIを使用するかを決定する。"
           summary_ko: "AI의 능력, 위험 및 윤리적 영향을 평가하여 작업에 언제 어떻게 AI를 사용할지 결정합니다."
@@ -536,7 +536,7 @@ skill_codes:
           summary_it: "Determinare quando e come utilizzare l'IA per un compito valutando le sue capacità, rischi e implicazioni etiche."
           questions:
             - "How do I choose the right type of tool for the task at hand?"
-          questions_zh:
+          questions_zhTW:
             - "如何為手邊的任務選擇正確類型的工具？"
           questions_es:
             - "¿Cómo elijo el tipo correcto de herramienta para la tarea en cuestión?"
@@ -554,7 +554,7 @@ skill_codes:
             - "Come scelgo il tipo giusto di strumento per il compito da svolgere?"
       explanation: |
         Using AI to address a problem begins with thoughtful reflection on the task at hand and includes thorough consideration of whether AI's capabilities meet the task's technical and ethical requirements. To do this, learners might test specific AI systems for reliability and potential to replicate harmful bias. Learners problem-solve with AI when they ask themselves how AI systems might add value, where human judgment should come into play, and when to avoid AI use altogether.
-      explanation_zh: |
+      explanation_zhTW: |
         使用AI解決問題始於對手邊任務的深思熟慮，包括徹底考慮AI的能力是否符合任務的技術與倫理要求。為此，學習者可能測試特定AI系統的可靠性與複製有害偏見的可能性。學習者在問自己AI系統如何增加價值、人類判斷應在何處發揮作用，以及何時應完全避免使用AI時，就是在與AI解決問題。
       explanation_es: |
         Usar IA para abordar un problema comienza con una reflexión cuidadosa sobre la tarea en cuestión e incluye una consideración exhaustiva de si las capacidades de la IA cumplen con los requisitos técnicos y éticos de la tarea. Para hacer esto, los estudiantes podrían probar sistemas de IA específicos para evaluar su confiabilidad y potencial para replicar sesgos dañinos. Los estudiantes resuelven problemas con IA cuando se preguntan cómo los sistemas de IA podrían agregar valor, dónde debería entrar en juego el juicio humano y cuándo evitar completamente el uso de IA.
@@ -575,7 +575,7 @@ skill_codes:
       codes:
         S6.1:
           summary: "Recognize how AI influences personal choices, relationships, and communities, and reflect on its broader societal and environmental impact."
-          summary_zh: "認識AI如何影響個人選擇、關係與社群，並反思其更廣泛的社會與環境影響。"
+          summary_zhTW: "認識AI如何影響個人選擇、關係與社群，並反思其更廣泛的社會與環境影響。"
           summary_es: "Reconocer cómo la IA influye en las decisiones personales, relaciones y comunidades, y reflexionar sobre su impacto social y ambiental más amplio."
           summary_ja: "AIが個人の選択、人間関係、コミュニティにどのように影響を与えるかを認識し、その広範な社会的および環境的影響について考察する。"
           summary_ko: "AI가 개인의 선택, 관계, 커뮤니티에 미치는 영향을 인식하고, 더 넓은 사회적 및 환경적 영향에 대해 성찰합니다."
@@ -585,7 +585,7 @@ skill_codes:
           summary_it: "Riconoscere come l'IA influenza le scelte personali, le relazioni e le comunità, e riflettere sul suo impatto sociale e ambientale più ampio."
           questions:
             - "How does AI impact me and others?"
-          questions_zh:
+          questions_zhTW:
             - "AI如何影響我和他人？"
           questions_es:
             - "¿Cómo impacta la IA en mí y en otros?"
@@ -603,7 +603,7 @@ skill_codes:
             - "Come l'IA influisce su di me e sugli altri?"
       explanation: |
         Self and social awareness are vital when interacting with AI. This skill begins with recognizing AI's presence in daily life and understanding how it influences decisions in both the digital and physical worlds. This extends beyond mere identification and applies to thoughtful consideration of AI's broader effects on individuals, communities, and the environment. Learners might also engage metacognitively with AI's effects on their own behaviors, thoughts, and learning processes. By recognizing AI's influence, learners are better equipped to evaluate AI-generated content and monitor how these technologies influence their thoughts and behaviors over time.
-      explanation_zh: |
+      explanation_zhTW: |
         自我與社會意識在與AI互動時至關重要。這項技能始於認識AI在日常生活中的存在，並理解它如何影響數位與實體世界的決策。這超越了單純的識別，延伸到對AI對個人、社群與環境更廣泛影響的深思熟慮。學習者也可能後設認知地思考AI對其行為、想法與學習過程的影響。透過認識AI的影響，學習者更能評估AI生成的內容，並監控這些技術如何隨時間影響其思想與行為。
       explanation_es: |
         La autoconciencia y la conciencia social son vitales al interactuar con IA. Esta habilidad comienza con reconocer la presencia de la IA en la vida diaria y entender cómo influye en las decisiones tanto en el mundo digital como físico. Esto se extiende más allá de la mera identificación y se aplica a la consideración reflexiva de los efectos más amplios de la IA en individuos, comunidades y el medio ambiente. Los estudiantes también podrían involucrarse metacognitivamente con los efectos de la IA en sus propios comportamientos, pensamientos y procesos de aprendizaje. Al reconocer la influencia de la IA, los estudiantes están mejor equipados para evaluar el contenido generado por IA y monitorear cómo estas tecnologías influyen en sus pensamientos y comportamientos a lo largo del tiempo.
@@ -624,7 +624,7 @@ skill_codes:
       codes:
         S7.1:
           summary: "Explain how AI is used in a way that promotes transparency, avoids anthropomorphism, and encourages responsible use."
-          summary_zh: "以促進透明度、避免擬人化並鼓勵負責任使用的方式說明AI的使用。"
+          summary_zhTW: "以促進透明度、避免擬人化並鼓勵負責任使用的方式說明AI的使用。"
           summary_es: "Explicar cómo se usa la IA de una manera que promueva la transparencia, evite el antropomorfismo y fomente el uso responsable."
           summary_ja: "透明性を促進し、擬人化を避け、責任ある使用を奨励する方法でAIの使用について説明する。"
           summary_ko: "투명성을 촉진하고, 의인화를 피하며, 책임감 있는 사용을 장려하는 방식으로 AI 사용을 설명합니다."
@@ -634,7 +634,7 @@ skill_codes:
           summary_it: "Spiegare come viene utilizzata l'IA in un modo che promuova la trasparenza, eviti l'antropomorfismo e incoraggi un uso responsabile."
           questions:
             - "How do I describe AI use for myself and others?"
-          questions_zh:
+          questions_zhTW:
             - "如何為自己和他人描述AI的使用？"
           questions_es:
             - "¿Cómo describo el uso de IA para mí mismo y otros?"
@@ -652,7 +652,7 @@ skill_codes:
             - "Come descrivo l'uso dell'IA per me stesso e per gli altri?"
       explanation: |
         Communicating about AI involves explaining when and how AI systems are used, including how they may have shaped content or contributed to decisions that impact others. This skill emphasizes that AI-literate learners have a responsibility to accurately describe how AI works in ways that do not mischaracterize or assign human traits to its capabilities. When learners choose their words to promote transparency and responsible use of AI systems, they uphold ethical practices and encourage informed conversation about AI's implications.
-      explanation_zh: |
+      explanation_zhTW: |
         關於AI的溝通涉及解釋何時及如何使用AI系統，包括它們如何塑造內容或促成影響他人的決策。這項技能強調，具備AI素養的學習者有責任準確描述AI的運作方式，不誤解或賦予其能力人類特質。當學習者選擇用詞來促進AI系統的透明與負責任使用時，他們維護倫理實踐並鼓勵對AI影響的知情對話。
       explanation_es: |
         Comunicar sobre IA implica explicar cuándo y cómo se usan los sistemas de IA, incluyendo cómo pueden haber moldeado contenido o contribuido a decisiones que impactan a otros. Esta habilidad enfatiza que los estudiantes alfabetizados en IA tienen la responsabilidad de describir con precisión cómo funciona la IA de maneras que no malinterpreten o asignen rasgos humanos a sus capacidades. Cuando los estudiantes eligen sus palabras para promover la transparencia y el uso responsable de los sistemas de IA, mantienen prácticas éticas y fomentan conversaciones informadas sobre las implicaciones de la IA.
@@ -672,7 +672,7 @@ skill_codes:
 # ----------  Attitudes (A) ----------
 attitude_codes:
   desciption: "These attitudes represent the values and dispositions that guide ethical and responsible engagement with AI."
-  desciption_zh: "這些態度代表指導倫理且負責任地參與AI的價值觀與性格傾向。"
+  desciption_zhTW: "這些態度代表指導倫理且負責任地參與AI的價值觀與性格傾向。"
   desciption_es: "Estas actitudes representan los valores y disposiciones que guían el compromiso ético y responsable con la IA."
   desciption_ja: "これらの態度は、AIとの倫理的で責任ある関わりを導く価値観と性向を表しています。"
   desciption_ko: "이러한 태도들은 AI와의 윤리적이고 책임감 있는 참여를 이끄는 가치와 성향을 나타냅니다."
@@ -685,7 +685,7 @@ attitude_codes:
       codes:
         A1.1:
           summary: "Be accountable; seek to prevent harm from AI use."
-          summary_zh: "負起責任；致力於防止AI使用帶來的傷害。"
+          summary_zhTW: "負起責任；致力於防止AI使用帶來的傷害。"
           summary_es: "Sé responsable; busca prevenir daños por el uso de IA."
           summary_ja: "責任を持ち、AIの使用による害を防ぐよう努めます。"
           summary_ko: "책임을 지고 AI 사용으로 인한 피해를 예방하도록 노력합니다."
@@ -694,7 +694,7 @@ attitude_codes:
           summary_ru: "Будьте ответственными; стремитесь предотвратить вред от использования ИИ."
           summary_it: "Sii responsabile; cerca di prevenire danni derivanti dall'uso dell'IA."
           questions: []
-          questions_zh: []
+          questions_zhTW: []
           questions_es: []
           questions_ja: []
           questions_ko: []
@@ -704,7 +704,7 @@ attitude_codes:
           questions_it: []
       explanation: |
         Learners think carefully about how they use AI and are accountable of their choices. They consider both the intended and the potential unintended effects of their actions, and are committed to preventing harm to others. They believe everyone has the right to understand how AI affects them and to make informed decisions about its use.
-      explanation_zh: |
+      explanation_zhTW: |
         學習者深思熟慮地考慮如何使用AI，並對其選擇負責。他們考慮行動的預期與潛在意外後果，並致力於防止對他人造成傷害。他們相信每個人都有權理解AI如何影響他們，並對其使用做出明智決策。
       explanation_es: |
         Los estudiantes piensan cuidadosamente sobre cómo usan la IA y son responsables de sus decisiones. Consideran tanto los efectos intencionados como los potenciales efectos no intencionados de sus acciones, y están comprometidos a prevenir daños a otros. Creen que todos tienen el derecho de entender cómo la IA los afecta y de tomar decisiones informadas sobre su uso.
@@ -724,7 +724,7 @@ attitude_codes:
       codes:
         A2.1:
           summary: "Explore AI capabilities and limitations with openness."
-          summary_zh: "以開放態度探索AI的能力與限制。"
+          summary_zhTW: "以開放態度探索AI的能力與限制。"
           summary_es: "Explora las capacidades y limitaciones de la IA con apertura."
           summary_ja: "オープンな姿勢でAIの能力と限界を探求する。"
           summary_ko: "열린 마음으로 AI의 능력과 한계를 탐구합니다."
@@ -733,7 +733,7 @@ attitude_codes:
           summary_ru: "Исследуйте возможности и ограничения ИИ с открытостью."
           summary_it: "Esplora le capacità e limitazioni dell'IA con apertura."
           questions: []
-          questions_zh: []
+          questions_zhTW: []
           questions_es: []
           questions_ja: []
           questions_ko: []
@@ -743,7 +743,7 @@ attitude_codes:
           questions_it: []
       explanation: |
         Learners are eager to explore what AI can do today and how it might evolve in the future. They want to understand how AI affects their personal lives and future careers. They consider learning to be an ongoing process and enjoy experimenting, believing that meaningful discoveries happen through exploration.
-      explanation_zh: |
+      explanation_zhTW: |
         學習者渴望探索AI今日能做什麼以及未來可能如何演進。他們想了解AI如何影響個人生活與未來職涯。他們認為學習是持續的過程，享受實驗，相信有意義的發現透過探索而來。
       explanation_es: |
         Los estudiantes están ansiosos por explorar lo que la IA puede hacer hoy y cómo podría evolucionar en el futuro. Quieren entender cómo la IA afecta sus vidas personales y carreras futuras. Consideran que el aprendizaje es un proceso continuo y disfrutan experimentando, creyendo que los descubrimientos significativos ocurren a través de la exploración.
@@ -763,7 +763,7 @@ attitude_codes:
       codes:
         A3.1:
           summary: "Pursue novel, positive applications of AI."
-          summary_zh: "追求AI的新穎且正面的應用。"
+          summary_zhTW: "追求AI的新穎且正面的應用。"
           summary_es: "Busca aplicaciones novedosas y positivas de la IA."
           summary_ja: "AIの新規で前向きな応用を追求する。"
           summary_ko: "AI의 새롭고 긍정적인 응용을 추구합니다."
@@ -772,7 +772,7 @@ attitude_codes:
           summary_ru: "Стремитесь к новым, позитивным применениям ИИ."
           summary_it: "Persegui applicazioni nuove e positive dell'IA."
           questions: []
-          questions_zh: []
+          questions_zhTW: []
           questions_es: []
           questions_ja: []
           questions_ko: []
@@ -782,7 +782,7 @@ attitude_codes:
           questions_it: []
       explanation: |
         Learners seek to use AI to address real-world challenges and embrace new opportunities. They experiment, try different approaches, and think creatively to solve a problem. They believe AI can be a powerful tool for creating positive change in their own lives and the lives of others.
-      explanation_zh: |
+      explanation_zhTW: |
         學習者尋求使用AI來應對現實世界的挑戰並擁抱新機會。他們實驗、嘗試不同方法，並創造性地思考解決問題。他們相信AI可以成為在自己與他人生活中創造正面改變的強大工具。
       explanation_es: |
         Los estudiantes buscan usar la IA para abordar desafíos del mundo real y abrazar nuevas oportunidades. Experimentan, prueban diferentes enfoques y piensan creativamente para resolver un problema. Creen que la IA puede ser una herramienta poderosa para crear cambios positivos en sus propias vidas y en las vidas de otros.
@@ -802,7 +802,7 @@ attitude_codes:
       codes:
         A4.1:
           summary: "Iterate flexibly with feedback and new contexts."
-          summary_zh: "能彈性回應回饋與新情境，靈活地反覆調整。"
+          summary_zhTW: "能彈性回應回饋與新情境，靈活地反覆調整。"
           summary_es: "Itera flexiblemente con retroalimentación y nuevos contextos."
           summary_ja: "フィードバックと新しい文脈に柔軟に対応して反復する。"
           summary_ko: "피드백과 새로운 상황에 유연하게 반복적으로 대응합니다."
@@ -811,7 +811,7 @@ attitude_codes:
           summary_ru: "Гибко итерируйте с обратной связью и новыми контекстами."
           summary_it: "Itera flessibilmente con feedback e nuovi contesti."
           questions: []
-          questions_zh: []
+          questions_zhTW: []
           questions_es: []
           questions_ja: []
           questions_ko: []
@@ -821,7 +821,7 @@ attitude_codes:
           questions_it: []
       explanation: |
         Learners show perseverance and flexibility when working with AI. They are open to diverse ideas, perspectives, and approaches. They understand that collaborating with AI is an iterative process shaped by feedback and revision.
-      explanation_zh: |
+      explanation_zhTW: |
         學習者在與AI工作時展現堅持與彈性。他們對多元想法、觀點與方法保持開放。他們理解與AI協作是一個由回饋與修正塑造的反覆過程。
       explanation_es: |
         Los estudiantes muestran perseverancia y flexibilidad al trabajar con IA. Están abiertos a ideas, perspectivas y enfoques diversos. Entienden que colaborar con IA es un proceso iterativo moldeado por la retroalimentación y la revisión.
@@ -841,7 +841,7 @@ attitude_codes:
       codes:
         A5.1:
           summary: "Consider diverse human and environmental impacts."
-          summary_zh: "考量AI對不同人群與環境的多元影響。"
+          summary_zhTW: "考量AI對不同人群與環境的多元影響。"
           summary_es: "Considera diversos impactos humanos y ambientales."
           summary_ja: "多様な人間と環境への影響を考慮する。"
           summary_ko: "다양한 인간과 환경에 미치는 영향을 고려합니다."
@@ -850,7 +850,7 @@ attitude_codes:
           summary_ru: "Учитывайте различные воздействия на людей и окружающую среду."
           summary_it: "Considera diversi impatti umani e ambientali."
           questions: []
-          questions_zh: []
+          questions_zhTW: []
           questions_es: []
           questions_ja: []
           questions_ko: []
@@ -860,7 +860,7 @@ attitude_codes:
           questions_it: []
       explanation: |
         Learners thoughtfully examine how AI impacts individuals, communities, and the environment. They weigh both the benefits and potential risks of using AI, understanding that its impact can vary for different groups of people. 
-      explanation_zh: |
+      explanation_zhTW: |
         學習者深思熟慮地檢視AI如何影響個人、社群與環境。他們權衡使用AI的益處與潛在風險，理解其影響可能因不同人群而異。
       explanation_es: |
         Los estudiantes examinan cuidadosamente cómo la IA impacta a individuos, comunidades y el medio ambiente. Evalúan tanto los beneficios como los riesgos potenciales de usar IA, entendiendo que su impacto puede variar para diferentes grupos de personas.

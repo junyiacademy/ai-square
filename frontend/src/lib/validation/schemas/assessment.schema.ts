@@ -42,7 +42,7 @@ const questionSchema = z.object({
   type: z.enum(['multiple_choice', 'true_false', 'short_answer']),
   ...multilingualFieldSchema('question').shape,
   options: optionsSchema,
-  options_zh: optionsSchema,
+  options_zhTW: optionsSchema,
   options_es: optionsSchema,
   options_ja: optionsSchema,
   options_ko: optionsSchema,

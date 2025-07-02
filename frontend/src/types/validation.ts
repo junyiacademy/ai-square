@@ -18,7 +18,7 @@ export interface KSAData {
 
 export interface KSATheme {
   theme: string;
-  theme_zh?: string;
+  theme_zhTW?: string;
   theme_es?: string;
   theme_ja?: string;
   theme_ko?: string;
@@ -31,7 +31,7 @@ export interface KSATheme {
 export interface KSACode {
   code: string;
   name: string;
-  name_zh?: string;
+  name_zhTW?: string;
   name_es?: string;
   name_ja?: string;
   name_ko?: string;
@@ -49,7 +49,7 @@ export interface DomainsData {
 
 export interface Domain {
   name: string;
-  name_zh?: string;
+  name_zhTW?: string;
   name_es?: string;
   name_ja?: string;
   name_ko?: string;
@@ -62,7 +62,7 @@ export interface Domain {
 
 export interface Competency {
   name: string;
-  name_zh?: string;
+  name_zhTW?: string;
   name_es?: string;
   name_ja?: string;
   name_ko?: string;
@@ -83,7 +83,7 @@ export interface AssessmentData {
 export interface AssessmentQuestion {
   id: string;
   question: string;
-  question_zh?: string;
+  question_zhTW?: string;
   question_es?: string;
   question_ja?: string;
   question_ko?: string;
@@ -112,7 +112,7 @@ export interface PBLData {
 export interface PBLStage {
   id: string;
   title: string;
-  title_zh?: string;
+  title_zhTW?: string;
   title_es?: string;
   title_ja?: string;
   title_ko?: string;

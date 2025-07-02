@@ -114,14 +114,14 @@ export interface CompletionData {
 export interface ScenarioTask {
   id: string;
   title: string;
-  title_zh?: string;
+  title_zhTW?: string;
   description: string;
-  description_zh?: string;
+  description_zhTW?: string;
   category?: string;
   instructions?: string[];
-  instructions_zh?: string[];
+  instructions_zhTW?: string[];
   expectedOutcome?: string;
-  expectedOutcome_zh?: string;
+  expectedOutcome_zhTW?: string;
   timeLimit?: number;
 }
 
@@ -129,9 +129,9 @@ export interface ScenarioTask {
 export interface ScenarioData {
   id: string;
   title: string;
-  title_zh?: string;
+  title_zhTW?: string;
   description: string;
-  description_zh?: string;
+  description_zhTW?: string;
   difficulty: string;
   estimatedDuration: number;
   targetDomain: string[];

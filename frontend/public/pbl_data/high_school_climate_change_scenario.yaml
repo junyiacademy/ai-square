@@ -4,7 +4,7 @@
 scenario_info:
   id: high-school-climate-change
   title: "AI-Powered Climate Action Plan"
-  title_zh: "AI 驅動的氣候行動計畫"
+  title_zhTW: "AI 驅動的氣候行動計畫"
   title_es: "Plan de Acción Climática con IA"
   title_ja: "AI駆動型気候行動計画"
   title_ko: "AI 기반 기후 행동 계획"
@@ -13,7 +13,7 @@ scenario_info:
   title_ru: "План действий по климату с ИИ"
   title_it: "Piano d'Azione Climatica con IA"
   description: "Use AI to analyze climate data and create actionable solutions for your school and community"
-  description_zh: "使用 AI 分析氣候數據，為學校和社區創建可行的解決方案"
+  description_zhTW: "使用 AI 分析氣候數據，為學校和社區創建可行的解決方案"
   description_es: "Usa IA para analizar datos climáticos y crear soluciones prácticas para tu escuela y comunidad"
   description_ja: "AIを使用して気候データを分析し、学校とコミュニティのための実行可能な解決策を作成する"
   description_ko: "AI를 사용하여 기후 데이터를 분석하고 학교와 지역사회를 위한 실행 가능한 솔루션 만들기"
@@ -30,7 +30,7 @@ scenario_info:
   prerequisites:
     - Basic understanding of climate change
     - Interest in environmental issues
-  prerequisites_zh:
+  prerequisites_zhTW:
     - 對氣候變化的基本理解
     - 對環境議題的興趣
   prerequisites_es:
@@ -59,7 +59,7 @@ scenario_info:
     - Create data visualizations to communicate findings
     - Develop practical climate action proposals
     - Build confidence in using AI for environmental advocacy
-  learning_objectives_zh:
+  learning_objectives_zhTW:
     - 使用 AI 工具分析環境數據
     - 創建數據視覺化來傳達發現
     - 制定實用的氣候行動提案
@@ -120,7 +120,7 @@ ksa_mapping:
 tasks:
   - id: task-1
     title: "Climate Data Collection"
-    title_zh: "氣候數據收集"
+    title_zhTW: "氣候數據收集"
     title_es: "Recolección de Datos Climáticos"
     title_ja: "気候データ収集"
     title_ko: "기후 데이터 수집"
@@ -129,7 +129,7 @@ tasks:
     title_ru: "Сбор климатических данных"
     title_it: "Raccolta di Dati Climatici"
     description: "Use AI to gather and organize climate data for your local area"
-    description_zh: "使用 AI 收集和整理你所在地區的氣候數據"
+    description_zhTW: "使用 AI 收集和整理你所在地區的氣候數據"
     description_es: "Usa IA para recopilar y organizar datos climáticos de tu área local"
     description_ja: "AIを使用して地域の気候データを収集・整理する"
     description_ko: "AI를 사용하여 지역 기후 데이터 수집 및 정리"
@@ -143,7 +143,7 @@ tasks:
       - Gather data on temperature trends, precipitation, air quality, and energy consumption
       - Organize data in spreadsheets
       - Identify key patterns and trends
-    instructions_zh:
+    instructions_zhTW:
       - 使用 AI 尋找可靠的氣候數據來源
       - 收集溫度趨勢、降水、空氣質量和能源消耗的數據
       - 在電子表格中整理數據
@@ -184,7 +184,7 @@ tasks:
       - Organizza i dati in fogli di calcolo
       - Identifica modelli e tendenze chiave
     expected_outcome: A comprehensive climate data collection for your area
-    expected_outcome_zh: 你所在地區的全面氣候數據收集
+    expected_outcome_zhTW: 你所在地區的全面氣候數據收集
     expected_outcome_es: Una recopilación completa de datos climáticos para tu área
     expected_outcome_ja: あなたの地域の包括的な気候データ収集
     expected_outcome_ko: 지역의 포괄적인 기후 데이터 수집
@@ -197,7 +197,7 @@ tasks:
       - Climate data sources
       - AI search tools
       - Spreadsheet software
-    resources_zh:
+    resources_zhTW:
       - 氣候數據來源
       - AI 搜尋工具
       - 電子表格軟體
@@ -250,7 +250,7 @@ tasks:
 
   - id: task-2
     title: "AI Data Analysis"
-    title_zh: "AI 數據分析"
+    title_zhTW: "AI 數據分析"
     title_es: "Análisis de Datos con IA"
     title_ja: "AIデータ分析"
     title_ko: "AI 데이터 분석"
@@ -259,7 +259,7 @@ tasks:
     title_ru: "Анализ данных с ИИ"
     title_it: "Analisi dei Dati con IA"
     description: "Use AI tools to analyze climate data and identify actionable insights"
-    description_zh: "使用 AI 工具分析氣候數據並識別可行的見解"
+    description_zhTW: "使用 AI 工具分析氣候數據並識別可行的見解"
     description_es: "Usa herramientas de IA para analizar datos climáticos e identificar insights accionables"
     description_ja: "AIツールを使用して気候データを分析し、実行可能な洞察を特定する"
     description_ko: "AI 도구를 사용하여 기후 데이터 분석 및 실행 가능한 인사이트 식별"
@@ -273,7 +273,7 @@ tasks:
       - Create visualizations showing temperature changes, seasonal variations, and human impacts
       - Generate predictions for future trends
       - Identify areas requiring intervention
-    instructions_zh:
+    instructions_zhTW:
       - 使用 AI 識別氣候數據中的模式和相關性
       - 創建顯示溫度變化、季節變化和人類影響的視覺化
       - 生成未來趨勢預測
@@ -314,7 +314,7 @@ tasks:
       - Genera previsioni per tendenze future
       - Identifica aree che richiedono intervento
     expected_outcome: Comprehensive analysis with clear insights and predictions
-    expected_outcome_zh: 具有清晰見解和預測的全面分析
+    expected_outcome_zhTW: 具有清晰見解和預測的全面分析
     expected_outcome_es: Análisis integral con insights claros y predicciones
     expected_outcome_ja: 明確な洞察と予測を含む包括的な分析
     expected_outcome_ko: 명확한 통찰력과 예측을 포함한 포괄적인 분석
@@ -342,7 +342,7 @@ tasks:
 
   - id: task-3
     title: "Solution Design"
-    title_zh: "解決方案設計"
+    title_zhTW: "解決方案設計"
     title_es: "Diseño de Soluciones"
     title_ja: "ソリューション設計"
     title_ko: "솔루션 설계"
@@ -351,7 +351,7 @@ tasks:
     title_ru: "Разработка решений"
     title_it: "Progettazione di Soluzioni"
     description: "Create practical climate solutions for your school using AI assistance"
-    description_zh: "在 AI 協助下為學校創建實用的氣候解決方案"
+    description_zhTW: "在 AI 協助下為學校創建實用的氣候解決方案"
     description_es: "Crea soluciones climáticas prácticas para tu escuela con ayuda de IA"
     description_ja: "AIの支援を受けて学校向けの実用的な気候ソリューションを作成する"
     description_ko: "AI 지원으로 학교를 위한 실용적인 기후 솔루션 만들기"
@@ -365,7 +365,7 @@ tasks:
       - Evaluate feasibility and impact of each solution
       - Create detailed implementation plans
       - Calculate potential carbon savings
-    instructions_zh:
+    instructions_zhTW:
       - 與 AI 一起為節能、減廢、綠色空間和交通運輸腦力激盪解決方案
       - 評估每個解決方案的可行性和影響
       - 創建詳細的實施計劃
@@ -406,7 +406,7 @@ tasks:
       - Crea piani di implementazione dettagliati
       - Calcola i potenziali risparmi di carbonio
     expected_outcome: A portfolio of practical, implementable climate solutions
-    expected_outcome_zh: 一套實用、可實施的氣候解決方案組合
+    expected_outcome_zhTW: 一套實用、可實施的氣候解決方案組合
     expected_outcome_es: Un portafolio de soluciones climáticas prácticas e implementables
     expected_outcome_ja: 実用的で実施可能な気候ソリューションのポートフォリオ
     expected_outcome_ko: 실용적이고 구현 가능한 기후 솔루션 포트폴리오
@@ -434,7 +434,7 @@ tasks:
 
   - id: task-4
     title: "Action Plan Presentation"
-    title_zh: "行動計畫展示"
+    title_zhTW: "行動計畫展示"
     title_es: "Presentación del Plan de Acción"
     title_ja: "行動計画プレゼンテーション"
     title_ko: "행동 계획 프레젠테이션"
@@ -443,7 +443,7 @@ tasks:
     title_ru: "Презентация плана действий"
     title_it: "Presentazione del Piano d'Azione"
     description: "Create a compelling presentation using AI to propose your climate action plan"
-    description_zh: "使用 AI 創建引人注目的演示文稿來提出你的氣候行動計畫"
+    description_zhTW: "使用 AI 創建引人注目的演示文稿來提出你的氣候行動計畫"
     description_es: "Crea una presentación convincente usando IA para proponer tu plan de acción climática"
     description_ja: "AIを使用して魅力的なプレゼンテーションを作成し、気候行動計画を提案する"
     description_ko: "AI를 사용하여 기후 행동 계획을 제안하는 매력적인 프레젠테이션 만들기"
@@ -457,7 +457,7 @@ tasks:
       - Include problem statement with data, proposed solutions, implementation timeline, and expected outcomes
       - Generate compelling visuals and infographics
       - Prepare for Q&A with AI assistance
-    instructions_zh:
+    instructions_zhTW:
       - 使用 AI 有效地構建演示文稿
       - 包括帶數據的問題陳述、提議的解決方案、實施時間表和預期成果
       - 生成引人注目的視覺效果和信息圖表
@@ -498,7 +498,7 @@ tasks:
       - Genera visuali e infografiche convincenti
       - Preparati per le domande con l'assistenza dell'IA
     expected_outcome: A professional, persuasive presentation ready for stakeholders
-    expected_outcome_zh: 一份準備向利益相關者展示的專業、有說服力的演示文稿
+    expected_outcome_zhTW: 一份準備向利益相關者展示的專業、有說服力的演示文稿
     expected_outcome_es: Una presentación profesional y persuasiva lista para las partes interesadas
     expected_outcome_ja: ステークホルダー向けの専門的で説得力のあるプレゼンテーション
     expected_outcome_ko: 이해관계자를 위한 전문적이고 설득력 있는 프레젠테이션
@@ -533,11 +533,11 @@ completion_criteria:
 
 resources:
   - name: "NASA Climate Kids"
-    name_zh: "NASA 氣候兒童"
+    name_zhTW: "NASA 氣候兒童"
     url: "https://climatekids.nasa.gov/"
     type: reference
     
   - name: "AI Climate Tools Guide"
-    name_zh: "AI 氣候工具指南"
+    name_zhTW: "AI 氣候工具指南"
     url: "https://www.climate.ai/"
     type: tool

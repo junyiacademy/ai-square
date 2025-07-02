@@ -7,7 +7,7 @@ import path from 'path';
 // Types for YAML data
 interface ScenarioInfo {
   title: string;
-  title_zh?: string;
+  title_zhTW?: string;
   title_ja?: string;
   title_ko?: string;
   title_es?: string;
@@ -21,7 +21,7 @@ interface ScenarioInfo {
 interface ScenarioYAML {
   scenario_info?: ScenarioInfo;
   title?: string;
-  title_zh?: string;
+  title_zhTW?: string;
   [key: string]: unknown;
 }
 
@@ -54,22 +54,8 @@ interface ProgramCompletionData {
 function getLocalizedValue(data: ScenarioInfo | ScenarioYAML, fieldName: string, lang: string): string {
   // Convert language code to suffix - must match YAML field suffixes exactly
   
-  // Map language codes to match YAML suffixes
-  const languageMap: Record<string, string> = {
-    'en': 'en',
-    'zh': 'zh',
-    'zhTW': 'zh',
-    'zh-CN': 'zh',
-    'es': 'es',
-    'ja': 'ja',
-    'ko': 'ko',
-    'fr': 'fr',
-    'de': 'de',
-    'ru': 'ru',
-    'it': 'it'
-  };
-  
-  const mappedSuffix = languageMap[lang] || lang;
+  // Use language code directly as suffix
+  const mappedSuffix = lang;
   
   // Try language-specific field first
   const localizedField = `${fieldName}_${mappedSuffix}`;

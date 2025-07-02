@@ -8,7 +8,7 @@ import { cacheService } from '@/lib/cache/cache-service';
 interface ScenarioInfo {
   id: string;
   title: string;
-  title_zh?: string;
+  title_zhTW?: string;
   title_ja?: string;
   title_ko?: string;
   title_es?: string;
@@ -17,7 +17,7 @@ interface ScenarioInfo {
   title_ru?: string;
   title_it?: string;
   description: string;
-  description_zh?: string;
+  description_zhTW?: string;
   description_ja?: string;
   description_ko?: string;
   description_es?: string;
@@ -43,11 +43,8 @@ interface LocalizedField {
 function getLocalizedValue(data: LocalizedField, fieldName: string, lang: string): string {
   if (!data) return '';
   
-  // Map language codes to suffixes
-  let langSuffix = lang;
-  if (lang === 'zhTW' || lang === 'zh-CN') {
-    langSuffix = 'zh';
-  }
+  // Use language code directly as suffix
+  const langSuffix = lang;
   
   const localizedField = `${fieldName}_${langSuffix}`;
   return data[localizedField] || data[fieldName] || '';
@@ -120,7 +117,7 @@ async function loadScenariosFromYAML(lang: string): Promise<Record<string, unkno
       id: 'ai-creative-writing',
       title: getLocalizedValue({
         title: 'Creative Writing with AI',
-        title_zh: '使用 AI 進行創意寫作',
+        title_zhTW: '使用 AI 進行創意寫作',
         title_ja: 'AIを使った創造的な文章作成',
         title_ko: 'AI를 활용한 창의적 글쓰기',
         title_es: 'Escritura Creativa con IA',
@@ -131,7 +128,7 @@ async function loadScenariosFromYAML(lang: string): Promise<Record<string, unkno
       } as LocalizedField, 'title', lang),
       description: getLocalizedValue({
         description: 'Master AI-powered creative writing techniques',
-        description_zh: '掌握 AI 驅動的創意寫作技巧',
+        description_zhTW: '掌握 AI 驅動的創意寫作技巧',
         description_ja: 'AIを活用した創造的な文章作成技術をマスターする',
         description_ko: 'AI 기반 창의적 글쓰기 기법 마스터하기',
         description_es: 'Domina las técnicas de escritura creativa con IA',
@@ -153,7 +150,7 @@ async function loadScenariosFromYAML(lang: string): Promise<Record<string, unkno
       id: 'ai-data-analysis',
       title: getLocalizedValue({
         title: 'Data Analysis with AI',
-        title_zh: '使用 AI 進行數據分析',
+        title_zhTW: '使用 AI 進行數據分析',
         title_ja: 'AIを使ったデータ分析',
         title_ko: 'AI를 활용한 데이터 분석',
         title_es: 'Análisis de Datos con IA',
@@ -164,7 +161,7 @@ async function loadScenariosFromYAML(lang: string): Promise<Record<string, unkno
       } as LocalizedField, 'title', lang),
       description: getLocalizedValue({
         description: 'Use AI for advanced data analysis and insights',
-        description_zh: '使用 AI 進行進階數據分析和洞察',
+        description_zhTW: '使用 AI 進行進階數據分析和洞察',
         description_ja: 'AIを使った高度なデータ分析と洞察',
         description_ko: 'AI를 사용한 고급 데이터 분석 및 인사이트',
         description_es: 'Usa IA para análisis avanzado de datos e insights',

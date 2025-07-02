@@ -29,14 +29,14 @@ export interface AIModule {
 export interface Task {
   id: string;
   title: string;
-  title_zh?: string;
+  title_zhTW?: string;
   description: string;
-  description_zh?: string;
+  description_zhTW?: string;
   category: TaskCategory;
   instructions: string[];
-  instructions_zh?: string[];
+  instructions_zhTW?: string[];
   expectedOutcome: string;
-  expectedOutcome_zh?: string;
+  expectedOutcome_zhTW?: string;
   timeLimit?: number; // minutes
   resources?: string[];
   assessmentFocus: {
@@ -51,15 +51,15 @@ export interface Task {
 export interface Scenario {
   id: string;
   title: string;
-  title_zh?: string;
+  title_zhTW?: string;
   description: string;
-  description_zh?: string;
+  description_zhTW?: string;
   targetDomains: DomainType[];
   difficulty: DifficultyLevel;
   estimatedDuration: number; // minutes
   prerequisites?: string[];
   learningObjectives: string[];
-  learningObjectives_zh?: string[];
+  learningObjectives_zhTW?: string[];
   ksaMapping: KSAMapping;
   tasks: Task[]; // Direct array of tasks, no stages
 }
@@ -71,9 +71,9 @@ export type PBLScenario = Scenario;
 export interface ScenarioListItem {
   id: string;
   title: string;
-  title_zh?: string;
+  title_zhTW?: string;
   description: string;
-  description_zh?: string;
+  description_zhTW?: string;
   targetDomains: DomainType[];
   difficulty: DifficultyLevel;
   estimatedDuration: number;
@@ -100,7 +100,7 @@ export interface Program {
 // Program Metadata (stored in program folder)
 export interface ProgramMetadata extends Program {
   scenarioTitle: string;
-  scenarioTitle_zh?: string;
+  scenarioTitle_zhTW?: string;
 }
 
 // Task Metadata (stored in task folder)

@@ -172,8 +172,8 @@ export default function AssessmentPage() {
     
     const obj = item as Record<string, unknown>;
     
-    if (lang.startsWith('zh')) {
-      return (obj[`${fieldName}_zh`] || obj[fieldName] || '') as string;
+    if (lang === 'zhTW') {
+      return (obj[`${fieldName}_zhTW`] || obj[fieldName] || '') as string;
     }
     
     const langCode = lang.split('-')[0];

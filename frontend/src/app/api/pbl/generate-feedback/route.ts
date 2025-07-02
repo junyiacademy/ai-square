@@ -75,7 +75,7 @@ interface ScenarioYAML {
 
 // Language mapping
 const languageMap: Record<string, string> = {
-  'zh': 'Traditional Chinese (繁體中文)',
+  'zhTW': 'Traditional Chinese (繁體中文)',
   'ja': 'Japanese (日本語)',
   'ko': 'Korean (한국어)',
   'es': 'Spanish (Español)',
@@ -399,31 +399,31 @@ Do not mix languages. The entire response must be in ${languageMap[currentLang] 
     if (!feedback) {
       // Fallback to a default structured response
       feedback = {
-        overallAssessment: currentLang === 'zh' 
+        overallAssessment: currentLang === 'zhTW' 
           ? "已完成效能分析評估" 
           : "Performance analysis completed",
         strengths: [{
-          area: currentLang === 'zh' ? "任務完成" : "Task Completion",
-          description: currentLang === 'zh' 
+          area: currentLang === 'zhTW' ? "任務完成" : "Task Completion",
+          description: currentLang === 'zhTW' 
             ? "成功完成情境任務" 
             : "Successfully completed the scenario tasks",
-          example: currentLang === 'zh'
+          example: currentLang === 'zhTW'
             ? "積極與 AI 助手互動"
             : "Engaged actively with the AI assistant"
         }],
         areasForImprovement: [{
-          area: currentLang === 'zh' ? "進階練習" : "Further Practice",
-          description: currentLang === 'zh'
+          area: currentLang === 'zhTW' ? "進階練習" : "Further Practice",
+          description: currentLang === 'zhTW'
             ? "持續探索 AI 的能力"
             : "Continue exploring AI capabilities",
-          suggestion: currentLang === 'zh'
+          suggestion: currentLang === 'zhTW'
             ? "嘗試更複雜的情境以加深理解"
             : "Try more complex scenarios to deepen understanding"
         }],
-        nextSteps: currentLang === 'zh' 
+        nextSteps: currentLang === 'zhTW' 
           ? ["回顧情境目標並反思學習成果", "探索更多 AI 素養資源"]
           : ["Review the scenario objectives and reflect on learning", "Explore additional AI literacy resources"],
-        encouragement: currentLang === 'zh'
+        encouragement: currentLang === 'zhTW'
           ? "做得很好！完成了這個情境！繼續探索和學習 AI 吧。"
           : "Great job completing this scenario! Keep exploring and learning about AI."
       };

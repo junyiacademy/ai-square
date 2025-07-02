@@ -20,19 +20,19 @@ async function loadScenario(scenarioId: string): Promise<Scenario | null> {
       scenario_info: {
         id: string;
         title: string;
-        title_zh?: string;
+        title_zhTW?: string;
         description: string;
-        description_zh?: string;
+        description_zhTW?: string;
         target_domains: string[];
         difficulty: string;
         estimated_duration: number;
         prerequisites?: string[];
         learning_objectives?: string[];
-        learning_objectives_zh?: string[];
+        learning_objectives_zhTW?: string[];
         tasks: Array<{
           id: string;
           title: string;
-          title_zh?: string;
+          title_zhTW?: string;
         }>;
       };
       tasks?: Record<string, unknown>[];
@@ -44,15 +44,15 @@ async function loadScenario(scenarioId: string): Promise<Scenario | null> {
     const scenario: Scenario = {
       id: data.scenario_info.id,
       title: data.scenario_info.title,
-      title_zh: data.scenario_info.title_zh,
+      title_zhTW: data.scenario_info.title_zhTW,
       description: data.scenario_info.description,
-      description_zh: data.scenario_info.description_zh,
+      description_zhTW: data.scenario_info.description_zhTW,
       targetDomains: data.scenario_info.target_domains as DomainType[],
       difficulty: data.scenario_info.difficulty as DifficultyLevel,
       estimatedDuration: data.scenario_info.estimated_duration,
       prerequisites: data.scenario_info.prerequisites || [],
       learningObjectives: data.scenario_info.learning_objectives || [],
-      learningObjectives_zh: data.scenario_info.learning_objectives_zh || [],
+      learningObjectives_zhTW: data.scenario_info.learning_objectives_zhTW || [],
       ksaMapping: (data.ksa_mapping as unknown as KSAMapping) || { knowledge: [], skills: [], attitudes: [] },
       tasks: []
     };
@@ -63,14 +63,14 @@ async function loadScenario(scenarioId: string): Promise<Scenario | null> {
         scenario.tasks.push({
           id: task.id as string,
           title: task.title as string,
-          title_zh: task.title_zh as string,
+          title_zhTW: task.title_zhTW as string,
           description: task.description as string,
-          description_zh: task.description_zh as string,
+          description_zhTW: task.description_zhTW as string,
           category: (task.category as TaskCategory) || 'research',
           instructions: (task.instructions as string[]) || [],
-          instructions_zh: (task.instructions_zh as string[]) || [],
+          instructions_zhTW: (task.instructions_zhTW as string[]) || [],
           expectedOutcome: (task.expected_outcome as string) || (task.expectedOutcome as string) || '',
-          expectedOutcome_zh: (task.expected_outcome_zh as string) || (task.expectedOutcome_zh as string) || '',
+          expectedOutcome_zhTW: (task.expected_outcome_zhTW as string) || (task.expectedOutcome_zhTW as string) || '',
           timeLimit: task.time_limit as number,
           resources: (task.resources as string[]) || [],
           assessmentFocus: (task.assessment_focus as { primary: string[]; secondary: string[] }) || { primary: [], secondary: [] },
@@ -129,7 +129,7 @@ export async function POST(
     const program = await pblProgramService.createProgram(
       userEmail,
       scenarioId,
-      language === 'zh' || language === 'zhTW' ? (scenario.title_zh || scenario.title) : scenario.title,
+      language === 'zhTW' ? (scenario.title_zhTW || scenario.title) : scenario.title,
       scenario.tasks.length,
       language,
       'draft' // Create as draft status

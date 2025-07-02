@@ -4,7 +4,7 @@
 scenario_info:
   id: high-school-creative-arts
   title: "AI-Powered Creative Arts Exhibition"
-  title_zh: "AI 驅動的創意藝術展覽"
+  title_zhTW: "AI 驅動的創意藝術展覽"
   title_es: "Exposición de Artes Creativas con IA"
   title_ja: "AI駆動型クリエイティブアート展覧会"
   title_ko: "AI 기반 창작 예술 전시회"
@@ -13,7 +13,7 @@ scenario_info:
   title_ru: "Выставка творческих искусств с ИИ"
   title_it: "Mostra di Arti Creative con IA"
   description: "Create a digital art exhibition using AI tools to explore artistic expression and creativity"
-  description_zh: "使用 AI 工具創建數位藝術展覽，探索藝術表達和創造力"
+  description_zhTW: "使用 AI 工具創建數位藝術展覽，探索藝術表達和創造力"
   description_es: "Crea una exposición de arte digital usando herramientas de IA para explorar la expresión artística"
   description_ja: "AIツールを使用してデジタルアート展覧会を作成し、芸術的表現と創造性を探求する"
   description_ko: "AI 도구를 사용하여 예술적 표현과 창의성을 탐구하는 디지털 아트 전시회 만들기"
@@ -30,7 +30,7 @@ scenario_info:
   prerequisites:
     - Basic art appreciation
     - Interest in creative expression
-  prerequisites_zh:
+  prerequisites_zhTW:
     - 基本藝術欣賞能力
     - 對創意表達的興趣
   prerequisites_es:
@@ -59,7 +59,7 @@ scenario_info:
     - Create original digital artworks
     - Curate and present a cohesive exhibition
     - Reflect on the relationship between AI and human creativity
-  learning_objectives_zh:
+  learning_objectives_zhTW:
     - 探索 AI 輔助的創作過程
     - 創建原創數位藝術作品
     - 策劃和展示連貫的展覽
@@ -117,7 +117,7 @@ ksa_mapping:
 tasks:
   - id: task-1
     title: "AI Art Style Exploration"
-    title_zh: "AI 藝術風格探索"
+    title_zhTW: "AI 藝術風格探索"
     title_es: "Exploración de Estilos de Arte con IA"
     title_ja: "AIアートスタイル探求"
     title_ko: "AI 아트 스타일 탐구"
@@ -126,7 +126,7 @@ tasks:
     title_ru: "Исследование художественных стилей ИИ"
     title_it: "Esplorazione di Stili Artistici IA"
     description: "Explore different artistic styles and movements using AI generation tools"
-    description_zh: "使用 AI 生成工具探索不同的藝術風格和流派"
+    description_zhTW: "使用 AI 生成工具探索不同的藝術風格和流派"
     description_es: "Explora diferentes estilos artísticos y movimientos usando herramientas de generación de IA"
     description_ja: "AI生成ツールを使用して異なる芸術スタイルと運動を探求する"
     description_ko: "AI 생성 도구를 사용하여 다양한 예술 스타일과 움직임 탐구"
@@ -140,7 +140,7 @@ tasks:
       - Use AI tools to generate images in different artistic styles
       - Document and compare the results
       - Select 3-4 styles that resonate with your creative vision
-    instructions_zh:
+    instructions_zhTW:
       - 研究主要藝術運動及其特徵
       - 使用 AI 工具以不同藝術風格生成圖像
       - 記錄並比較結果
@@ -181,7 +181,7 @@ tasks:
       - Documenta e confronta i risultati
       - Seleziona 3-4 stili che risuonano con la tua visione creativa
     expected_outcome: "A portfolio of AI-generated artworks showcasing different styles"
-    expected_outcome_zh: "展示不同風格的 AI 生成藝術作品集"
+    expected_outcome_zhTW: "展示不同風格的 AI 生成藝術作品集"
     expected_outcome_es: "Un portafolio de obras de arte generadas por IA mostrando diferentes estilos"
     expected_outcome_ja: "異なるスタイルを紹介するAI生成アートワークのポートフォリオ"
     expected_outcome_ko: "다양한 스타일을 보여주는 AI 생성 아트워크 포트폴리오"
@@ -194,7 +194,7 @@ tasks:
       - AI art generation tools
       - Art history resources
       - Style reference guides
-    resources_zh:
+    resources_zhTW:
       - AI 藝術生成工具
       - 藝術史資源
       - 風格參考指南
@@ -253,7 +253,7 @@ tasks:
 
   - id: task-2
     title: "Personal Art Creation"
-    title_zh: "個人藝術創作"
+    title_zhTW: "個人藝術創作"
     title_es: "Creación de Arte Personal"
     title_ja: "個人アート制作"
     title_ko: "개인 예술 창작"
@@ -262,7 +262,7 @@ tasks:
     title_ru: "Создание личного искусства"
     title_it: "Creazione di Arte Personale"
     description: "Create original artworks that express your personal themes and emotions"
-    description_zh: "創作表達個人主題和情感的原創藝術作品"
+    description_zhTW: "創作表達個人主題和情感的原創藝術作品"
     description_es: "Crea obras de arte originales que expresen tus temas personales y emociones"
     description_ja: "個人的なテーマや感情を表現するオリジナルアートワークを作成する"
     description_ko: "개인적인 주제와 감정을 표현하는 독창적인 예술 작품 만들기"
@@ -276,7 +276,7 @@ tasks:
       - Develop prompts that blend your chosen styles with personal content
       - Generate multiple iterations and refine your prompts
       - Create 5-8 final pieces for your exhibition
-    instructions_zh:
+    instructions_zhTW:
       - 識別你想表達的個人主題或情感
       - 開發將你選擇的風格與個人內容結合的提示詞
       - 生成多次迭代並完善你的提示詞
@@ -317,7 +317,7 @@ tasks:
       - Genera più iterazioni e affina i tuoi prompt
       - Crea 5-8 pezzi finali per la tua mostra
     expected_outcome: "A collection of personal artworks ready for exhibition"
-    expected_outcome_zh: "準備好展覽的個人藝術作品集"
+    expected_outcome_zhTW: "準備好展覽的個人藝術作品集"
     expected_outcome_es: "Una colección de obras de arte personales listas para la exposición"
     expected_outcome_ja: "展覧会準備完了の個人アートワークコレクション"
     expected_outcome_ko: "전시 준비가 완료된 개인 예술 작품 컬렉션"
@@ -353,7 +353,7 @@ tasks:
 
   - id: task-3
     title: "Exhibition Curation"
-    title_zh: "展覽策劃"
+    title_zhTW: "展覽策劃"
     title_es: "Curaduría de Exposición"
     title_ja: "展覧会キュレーション"
     title_ko: "전시 기획"
@@ -362,7 +362,7 @@ tasks:
     title_ru: "Кураторство выставки"
     title_it: "Curatela della Mostra"
     description: "Design and organize your artworks into a cohesive digital exhibition"
-    description_zh: "設計並組織你的藝術作品成為連貫的數位展覽"
+    description_zhTW: "設計並組織你的藝術作品成為連貫的數位展覽"
     description_es: "Diseña y organiza tus obras de arte en una exposición digital cohesiva"
     description_ja: "アートワークを一貫性のあるデジタル展覧会にデザイン・組織する"
     description_ko: "작품을 일관성 있는 디지털 전시회로 디자인하고 구성"
@@ -376,7 +376,7 @@ tasks:
       - Design the layout and flow of your digital exhibition
       - Create exhibition materials (title, description, artist bio)
       - Use AI to help refine your curatorial text and presentation
-    instructions_zh:
+    instructions_zhTW:
       - 為每件作品撰寫解釋創作過程的藝術家陳述
       - 設計數位展覽的佈局和流程
       - 創建展覽材料（標題、描述、藝術家簡介）
@@ -417,7 +417,7 @@ tasks:
       - Crea materiali espositivi (titolo, descrizione, biografia dell'artista)
       - Usa l'IA per aiutare a raffinare il tuo testo curatoriale e la presentazione
     expected_outcome: "A professionally curated digital art exhibition"
-    expected_outcome_zh: "專業策劃的數位藝術展覽"
+    expected_outcome_zhTW: "專業策劃的數位藝術展覽"
     expected_outcome_es: "Una exposición de arte digital curada profesionalmente"
     expected_outcome_ja: "プロフェッショナルにキュレーションされたデジタルアート展覧会"
     expected_outcome_ko: "전문적으로 기획된 디지털 아트 전시회"
@@ -460,11 +460,11 @@ completion_criteria:
 
 resources:
   - name: "AI Art Generation Tools"
-    name_zh: "AI 藝術生成工具"
+    name_zhTW: "AI 藝術生成工具"
     url: "https://www.midjourney.com/"
     type: tool
     
   - name: "Digital Art Galleries"
-    name_zh: "數位藝術畫廊"
+    name_zhTW: "數位藝術畫廊"
     url: "https://www.artbreeder.com/"
     type: platform

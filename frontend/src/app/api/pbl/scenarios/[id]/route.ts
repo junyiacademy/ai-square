@@ -19,7 +19,7 @@ interface KSAMapping {
 // Type definitions for KSA data structure
 interface KSACode {
   summary: string;
-  summary_zh?: string;
+  summary_zhTW?: string;
   summary_es?: string;
   summary_ja?: string;
   summary_ko?: string;
@@ -76,11 +76,8 @@ interface ScenarioResponse {
 
 // Helper function to get localized field
 function getLocalizedValue<T = unknown>(data: Record<string, T>, fieldName: string, lang: string): T | string {
-  // Map language codes to suffixes
-  let langSuffix = lang;
-  if (lang === 'zhTW' || lang === 'zh-CN') {
-    langSuffix = 'zh';
-  }
+  // Use language code directly as suffix
+  const langSuffix = lang;
   
   const localizedField = `${fieldName}_${langSuffix}`;
   return data[localizedField] || data[fieldName] || '';
@@ -199,9 +196,9 @@ export async function GET(
       scenario_info: {
         id: string;
         title: string;
-        title_zh?: string;
+        title_zhTW?: string;
         description: string;
-        description_zh?: string;
+        description_zhTW?: string;
         difficulty: string;
         estimated_duration: number;
         target_domains: string[];
@@ -216,14 +213,14 @@ export async function GET(
       tasks?: Array<{
         id: string;
         title: string;
-        title_zh?: string;
+        title_zhTW?: string;
         description: string;
-        description_zh?: string;
+        description_zhTW?: string;
         category?: string;
         instructions?: string[];
-        instructions_zh?: string[];
+        instructions_zhTW?: string[];
         expected_outcome?: string;
-        expected_outcome_zh?: string;
+        expected_outcome_zhTW?: string;
         time_limit?: number;
       }>;
     }

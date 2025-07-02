@@ -4,7 +4,7 @@
 scenario_info:
   id: ai-education-design
   title: "Designing AI-Enhanced Learning Experiences"
-  title_zh: "設計 AI 增強的學習體驗"
+  title_zhTW: "設計 AI 增強的學習體驗"
   title_es: "Diseñando Experiencias de Aprendizaje Mejoradas con IA"
   title_ja: "AI強化学習体験の設計"
   title_ko: "AI 강화 학습 경험 설계"
@@ -13,7 +13,7 @@ scenario_info:
   title_ru: "Проектирование учебного опыта с использованием ИИ"
   title_it: "Progettare Esperienze di Apprendimento Potenziate dall'IA"
   description: "Learn to design and implement AI-powered educational tools and experiences for diverse learners"
-  description_zh: "學習為不同學習者設計和實施 AI 驅動的教育工具和體驗"
+  description_zhTW: "學習為不同學習者設計和實施 AI 驅動的教育工具和體驗"
   description_es: "Aprende a diseñar e implementar herramientas y experiencias educativas impulsadas por IA para diversos estudiantes"
   description_ja: "多様な学習者のためのAI駆動型教育ツールと体験の設計と実装を学ぶ"
   description_ko: "다양한 학습자를 위한 AI 기반 교육 도구 및 경험 설계 및 구현 학습"
@@ -31,7 +31,7 @@ scenario_info:
     - Basic understanding of learning theories
     - Familiarity with educational technology
     - Experience with AI tools
-  prerequisites_zh:
+  prerequisites_zhTW:
     - 學習理論的基本理解
     - 熟悉教育科技
     - 使用 AI 工具的經驗
@@ -68,7 +68,7 @@ scenario_info:
     - Create adaptive assessments with AI assistance
     - Implement AI-powered feedback systems
     - Evaluate AI tools for educational effectiveness
-  learning_objectives_zh:
+  learning_objectives_zhTW:
     - 使用 AI 設計個人化學習路徑
     - 在 AI 協助下創建適應性評估
     - 實施 AI 驅動的回饋系統
@@ -126,7 +126,7 @@ ksa_mapping:
 tasks:
   - id: task-1
     title: "AI Learner Profile Analysis"
-    title_zh: "AI 學習者檔案分析"
+    title_zhTW: "AI 學習者檔案分析"
     title_es: "Análisis del Perfil del Estudiante con IA"
     title_ja: "AI学習者プロファイル分析"
     title_ko: "AI 학습자 프로필 분석"
@@ -135,7 +135,7 @@ tasks:
     title_ru: "Анализ профиля учащегося с помощью ИИ"
     title_it: "Analisi del Profilo dello Studente con IA"
     description: "Use AI to analyze learner data and create personalized learning profiles"
-    description_zh: "使用 AI 分析學習者數據並創建個人化學習檔案"
+    description_zhTW: "使用 AI 分析學習者數據並創建個人化學習檔案"
     description_es: "Usar IA para analizar datos de estudiantes y crear perfiles de aprendizaje personalizados"
     description_ja: "AIを使用して学習者データを分析し、個別化された学習プロファイルを作成する"
     description_ko: "AI를 사용하여 학습자 데이터를 분석하고 개인화된 학습 프로필 생성"
@@ -149,7 +149,7 @@ tasks:
       - Use AI to identify patterns and learning characteristics
       - Create comprehensive learner profiles with AI assistance
       - Design personalized learning recommendations based on profiles
-    instructions_zh:
+    instructions_zhTW:
       - 查看包括學習風格、進度和偏好的學習者數據樣本
       - 使用 AI 識別模式和學習特徵
       - 在 AI 協助下創建全面的學習者檔案
@@ -190,7 +190,7 @@ tasks:
       - Creare profili completi di studenti con assistenza IA
       - Progettare raccomandazioni di apprendimento personalizzate basate sui profili
     expected_outcome: "Comprehensive learner profiles with AI-generated insights and personalization recommendations"
-    expected_outcome_zh: "具有 AI 生成洞察和個性化建議的全面學習者檔案"
+    expected_outcome_zhTW: "具有 AI 生成洞察和個性化建議的全面學習者檔案"
     expected_outcome_es: "Perfiles completos de estudiantes con insights generados por IA y recomendaciones de personalización"
     expected_outcome_ja: "AIが生成したインサイトと個別化推奨を含む包括的な学習者プロファイル"
     expected_outcome_ko: "AI 생성 인사이트와 개인화 추천이 포함된 포괄적인 학습자 프로필"
@@ -226,7 +226,7 @@ tasks:
 
   - id: task-2
     title: "Adaptive Content Creation"
-    title_zh: "適應性內容創建"
+    title_zhTW: "適應性內容創建"
     title_es: "Creación de Contenido Adaptativo"
     title_ja: "適応型コンテンツ作成"
     title_ko: "적응형 콘텐츠 생성"
@@ -235,7 +235,7 @@ tasks:
     title_ru: "Создание адаптивного контента"
     title_it: "Creazione di Contenuti Adattivi"
     description: "Design learning content that adapts to different learner needs using AI"
-    description_zh: "使用 AI 設計適應不同學習者需求的學習內容"
+    description_zhTW: "使用 AI 設計適應不同學習者需求的學習內容"
     description_es: "Diseñar contenido de aprendizaje que se adapte a diferentes necesidades usando IA"
     description_ja: "AIを使用して異なる学習者のニーズに適応する学習コンテンツを設計する"
     description_ko: "AI를 사용하여 다양한 학습자 요구에 적응하는 학습 콘텐츠 설계"
@@ -249,7 +249,7 @@ tasks:
       - Use AI to generate content variations for different learning levels and styles
       - Create content for different language proficiencies and accessibility needs
       - Implement adaptive pathways and test content effectiveness
-    instructions_zh:
+    instructions_zhTW:
       - 選擇適合適應的學習主題
       - 使用 AI 為不同學習水平和風格生成內容變化
       - 為不同語言熟練度和無障礙需求創建內容
@@ -290,7 +290,7 @@ tasks:
       - Creare contenuto per diverse competenze linguistiche e necessità di accessibilità
       - Implementare percorsi adattivi e testare l'efficacia del contenuto
     expected_outcome: "Adaptive learning content with multiple variations addressing diverse learner needs"
-    expected_outcome_zh: "具有多種變化的適應性學習內容，滿足不同學習者需求"
+    expected_outcome_zhTW: "具有多種變化的適應性學習內容，滿足不同學習者需求"
     expected_outcome_es: "Contenido de aprendizaje adaptativo con múltiples variaciones que abordan diversas necesidades de estudiantes"
     expected_outcome_ja: "多様な学習者のニーズに対応する複数のバリエーションを持つ適応型学習コンテンツ"
     expected_outcome_ko: "다양한 학습자 요구를 해결하는 여러 변형을 가진 적응형 학습 콘텐츠"
@@ -326,7 +326,7 @@ tasks:
 
   - id: task-3
     title: "AI Assessment System Design"
-    title_zh: "AI 評估系統設計"
+    title_zhTW: "AI 評估系統設計"
     title_es: "Diseño de Sistema de Evaluación con IA"
     title_ja: "AI評価システム設計"
     title_ko: "AI 평가 시스템 설계"
@@ -335,7 +335,7 @@ tasks:
     title_ru: "Проектирование системы оценки с ИИ"
     title_it: "Progettazione del Sistema di Valutazione con IA"
     description: "Build an intelligent assessment system that provides meaningful feedback"
-    description_zh: "建立提供有意義回饋的智能評估系統"
+    description_zhTW: "建立提供有意義回饋的智能評估系統"
     description_es: "Construir un sistema de evaluación inteligente que proporcione retroalimentación significativa"
     description_ja: "意味のあるフィードバックを提供するインテリジェント評価システムを構築する"
     description_ko: "의미 있는 피드백을 제공하는 지능형 평가 시스템 구축"
@@ -349,7 +349,7 @@ tasks:
       - Create various assessment types including formative and summative assessments
       - Implement AI-driven feedback mechanisms that provide actionable insights
       - Design progress tracking and ensure fairness in assessment
-    instructions_zh:
+    instructions_zhTW:
       - 為你選擇的學習領域定義評估目標和標準
       - 創建包括形成性和總結性評估的各種評估類型
       - 實施提供可操作見解的 AI 驅動反饋機制
@@ -390,7 +390,7 @@ tasks:
       - Implementare meccanismi di feedback alimentati dall'IA che forniscano insights attuabili
       - Progettare il monitoraggio del progresso e assicurare l'equità nella valutazione
     expected_outcome: "Comprehensive AI-powered assessment system with fair and meaningful feedback mechanisms"
-    expected_outcome_zh: "具有公平和有意義反饋機制的全面 AI 驅動評估系統"
+    expected_outcome_zhTW: "具有公平和有意義反饋機制的全面 AI 驅動評估系統"
     expected_outcome_es: "Sistema de evaluación integral impulsado por IA con mecanismos de retroalimentación justos y significativos"
     expected_outcome_ja: "公平で意味のあるフィードバックメカニズムを持つ包括的なAI駆動型評価システム"
     expected_outcome_ko: "공정하고 의미 있는 피드백 메커니즘을 갖춘 포괄적인 AI 기반 평가 시스템"
@@ -426,7 +426,7 @@ tasks:
 
   - id: task-4
     title: "Learning Analytics Dashboard"
-    title_zh: "學習分析儀表板"
+    title_zhTW: "學習分析儀表板"
     title_es: "Panel de Análisis de Aprendizaje"
     title_ja: "学習分析ダッシュボード"
     title_ko: "학습 분석 대시보드"
@@ -435,7 +435,7 @@ tasks:
     title_ru: "Панель аналитики обучения"
     title_it: "Dashboard di Analisi dell'Apprendimento"
     description: "Create a learning analytics dashboard using AI insights"
-    description_zh: "使用 AI 洞察創建學習分析儀表板"
+    description_zhTW: "使用 AI 洞察創建學習分析儀表板"
     description_es: "Crear un panel de análisis de aprendizaje usando insights de IA"
     description_ja: "AIインサイトを使用して学習分析ダッシュボードを作成する"
     description_ko: "AI 인사이트를 사용하여 학습 분석 대시보드 생성"
@@ -449,7 +449,7 @@ tasks:
       - Design visualizations for individual progress and class performance
       - Implement AI-powered predictions and recommendations
       - Create actionable insights that balance complexity with usability
-    instructions_zh:
+    instructions_zhTW:
       - 識別為不同利益相關者追蹤的關鍵學習指標
       - 為個人進度和班級表現設計視覺化
       - 實施 AI 驅動的預測和建議
@@ -490,7 +490,7 @@ tasks:
       - Implementare previsioni e raccomandazioni alimentate dall'IA
       - Creare insights attuabili che bilancino complessità con usabilità
     expected_outcome: "Interactive learning analytics dashboard with AI-powered insights and actionable recommendations"
-    expected_outcome_zh: "具有 AI 驅動洞察和可操作建議的互動學習分析儀表板"
+    expected_outcome_zhTW: "具有 AI 驅動洞察和可操作建議的互動學習分析儀表板"
     expected_outcome_es: "Panel interactivo de análisis de aprendizaje con insights impulsados por IA y recomendaciones accionables"
     expected_outcome_ja: "AI駆動型インサイトと実行可能な推奨を備えたインタラクティブ学習分析ダッシュボード"
     expected_outcome_ko: "AI 기반 통찰력과 실행 가능한 추천이 포함된 대화형 학습 분석 대시보드"
@@ -533,16 +533,16 @@ completion_criteria:
 
 resources:
   - name: "AI in Education Toolkit"
-    name_zh: "教育中的 AI 工具包"
+    name_zhTW: "教育中的 AI 工具包"
     url: "https://www.unesco.org/en/digital-education/ai-future-learning"
     type: guide
     
   - name: "Learning Analytics Handbook"
-    name_zh: "學習分析手冊"
+    name_zhTW: "學習分析手冊"
     url: "https://solaresearch.org/core/learning-analytics/"
     type: reference
     
   - name: "Ethical AI in Education Framework"
-    name_zh: "教育中的倫理 AI 框架"
+    name_zhTW: "教育中的倫理 AI 框架"
     url: "https://unesdoc.unesco.org/ark:/48223/pf0000376709"
     type: framework

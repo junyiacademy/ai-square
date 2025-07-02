@@ -58,15 +58,15 @@ describe('/api/ksa route', () => {
   const mockYamlData = {
     knowledge_codes: {
       desciption: 'Knowledge description',
-      desciption_zh: '知識描述',
+      desciption_zhTW: '知識描述',
       themes: {
         'Theme1': {
           explanation: 'Theme explanation',
-          explanation_zh: '主題解釋',
+          explanation_zhTW: '主題解釋',
           codes: {
             'K1.1': {
               summary: 'Code summary',
-              summary_zh: '代碼摘要'
+              summary_zhTW: '代碼摘要'
             }
           }
         }
@@ -74,17 +74,17 @@ describe('/api/ksa route', () => {
     },
     skill_codes: {
       desciption: 'Skills description',
-      desciption_zh: '技能描述',
+      desciption_zhTW: '技能描述',
       themes: {
         'SkillTheme': {
           explanation: 'Skill explanation',
-          explanation_zh: '技能解釋',
+          explanation_zhTW: '技能解釋',
           codes: {
             'S1.1': {
               summary: 'Skill summary',
-              summary_zh: '技能摘要',
+              summary_zhTW: '技能摘要',
               questions: ['Question 1', 'Question 2'],
-              questions_zh: ['問題1', '問題2']
+              questions_zhTW: ['問題1', '問題2']
             }
           }
         }
@@ -92,15 +92,15 @@ describe('/api/ksa route', () => {
     },
     attitude_codes: {
       desciption: 'Attitudes description',
-      desciption_zh: '態度描述',
+      desciption_zhTW: '態度描述',
       themes: {
         'AttitudeTheme': {
           explanation: 'Attitude explanation',
-          explanation_zh: '態度解釋',
+          explanation_zhTW: '態度解釋',
           codes: {
             'A1.1': {
               summary: 'Attitude summary',
-              summary_zh: '態度摘要'
+              summary_zhTW: '態度摘要'
             }
           }
         }

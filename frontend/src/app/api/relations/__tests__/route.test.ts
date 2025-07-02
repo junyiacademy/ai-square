@@ -13,32 +13,32 @@ const mockDomainsData = {
   domains: {
     engaging_with_ai: {
       overview: 'Overview of engaging with AI',
-      overview_zh: '與 AI 互動概述',
+      overview_zhTW: '與 AI 互動概述',
       overview_es: 'Descripción general de interactuar con IA',
       emoji: '💬',
       competencies: {
         ai_literacy: {
           description: 'Understanding AI capabilities',
-          description_zh: '理解 AI 能力',
+          description_zhTW: '理解 AI 能力',
           description_es: 'Comprensión de las capacidades de IA',
           knowledge: ['K1.1', 'K1.2'],
           skills: ['S1.1'],
           attitudes: ['A1.1'],
           scenarios: ['scenario1', 'scenario2'],
-          scenarios_zh: ['情境1', '情境2'],
+          scenarios_zhTW: ['情境1', '情境2'],
           content: 'Content about AI literacy',
-          content_zh: '關於 AI 素養的內容'
+          content_zhTW: '關於 AI 素養的內容'
         }
       }
     },
     creating_with_ai: {
       overview: 'Overview of creating with AI',
-      overview_zh: '與 AI 共創概述',
+      overview_zhTW: '與 AI 共創概述',
       emoji: '🎨',
       competencies: {
         creative_collaboration: {
           description: 'Collaborating creatively with AI',
-          description_zh: '與 AI 創意合作',
+          description_zhTW: '與 AI 創意合作',
           knowledge: ['K2.1'],
           skills: ['S2.1', 'S2.2'],
           attitudes: ['A2.1']
@@ -53,17 +53,17 @@ const mockKsaData = {
     themes: {
       understanding_ai: {
         theme: 'Understanding AI',
-        theme_zh: '理解 AI',
+        theme_zhTW: '理解 AI',
         explanation: 'Basic understanding of AI systems',
-        explanation_zh: '對 AI 系統的基本理解',
+        explanation_zhTW: '對 AI 系統的基本理解',
         codes: {
           'K1.1': {
             summary: 'Know what AI is',
-            summary_zh: '知道什麼是 AI'
+            summary_zhTW: '知道什麼是 AI'
           },
           'K1.2': {
             summary: 'Understand AI limitations',
-            summary_zh: '理解 AI 的限制'
+            summary_zhTW: '理解 AI 的限制'
           }
         }
       },
@@ -72,7 +72,7 @@ const mockKsaData = {
         codes: {
           'K2.1': {
             summary: 'Know AI creative tools',
-            summary_zh: '了解 AI 創意工具'
+            summary_zhTW: '了解 AI 創意工具'
           }
         }
       }
@@ -85,7 +85,7 @@ const mockKsaData = {
         codes: {
           'S1.1': {
             summary: 'Communicate effectively with AI',
-            summary_zh: '與 AI 有效溝通'
+            summary_zhTW: '與 AI 有效溝通'
           }
         }
       },
@@ -94,11 +94,11 @@ const mockKsaData = {
         codes: {
           'S2.1': {
             summary: 'Use AI for creative tasks',
-            summary_zh: '使用 AI 進行創意任務'
+            summary_zhTW: '使用 AI 進行創意任務'
           },
           'S2.2': {
             summary: 'Iterate with AI feedback',
-            summary_zh: '根據 AI 反饋進行迭代'
+            summary_zhTW: '根據 AI 反饋進行迭代'
           }
         }
       }
@@ -111,7 +111,7 @@ const mockKsaData = {
         codes: {
           'A1.1': {
             summary: 'Open to AI assistance',
-            summary_zh: '對 AI 協助持開放態度'
+            summary_zhTW: '對 AI 協助持開放態度'
           }
         }
       },
@@ -120,7 +120,7 @@ const mockKsaData = {
         codes: {
           'A2.1': {
             summary: 'Value AI as partner',
-            summary_zh: '將 AI 視為合作夥伴'
+            summary_zhTW: '將 AI 視為合作夥伴'
           }
         }
       }

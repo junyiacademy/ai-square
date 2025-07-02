@@ -257,12 +257,7 @@ export abstract class BaseYAMLLoader<T = unknown> {
   ): unknown {
     // 嘗試取得指定語言的欄位
     if (language !== 'en') {
-      // 處理 zhTW -> zh 映射 (YAML 檔案中使用 zh 後綴)
-      let langCode = language;
-      if (language === 'zhTW') {
-        langCode = 'zh';
-      }
-      const translatedField = `${fieldName}_${langCode}`;
+      const translatedField = `${fieldName}_${language}`;
       if (obj[translatedField] !== undefined) {
         return obj[translatedField];
       }

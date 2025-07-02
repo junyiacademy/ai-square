@@ -29,13 +29,8 @@ export async function GET(request: NextRequest) {
 
     // Utility function to get translated field
     const getTranslatedField = (obj: Record<string, unknown>, fieldName: string, language: string): string => {
-      // 處理 zhTW -> zh_TW 的轉換
-      let langKey = language.replace('-', '_');
-      
-      // 對於中文，使用 zh 而不是 zh_TW
-      if (langKey === 'zh_TW') {
-        langKey = 'zh';
-      }
+      // Language key is already in the correct format (e.g., zhTW, es, ja)
+      const langKey = language;
       
       const translatedKey = `${fieldName}_${langKey}`;
       const translatedValue = obj[translatedKey] as string;
@@ -46,12 +41,7 @@ export async function GET(request: NextRequest) {
 
     // Helper function to get translated options
     const getTranslatedOptions = (question: Record<string, unknown>, language: string) => {
-      let langKey = language.replace('-', '_');
-      
-      // 對於中文，使用 zh 而不是 zh_TW
-      if (langKey === 'zh_TW') {
-        langKey = 'zh';
-      }
+      const langKey = language;
       
       const optionsKey = `options_${langKey}`;
       const translatedOptions = question[optionsKey];

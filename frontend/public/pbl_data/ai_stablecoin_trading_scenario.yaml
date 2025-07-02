@@ -4,7 +4,7 @@
 scenario_info:
   id: ai-stablecoin-trading
   title: AI-Powered Stablecoin Trading and Risk Management
-  title_zh: AI 驅動的穩定幣交易與風險管理
+  title_zhTW: AI 驅動的穩定幣交易與風險管理
   title_es: Trading y Gestión de Riesgos de Stablecoins Potenciado por IA
   title_ja: AIを活用したステーブルコイン取引とリスク管理
   title_ko: AI 기반 스테이블코인 거래 및 위험 관리
@@ -13,7 +13,7 @@ scenario_info:
   title_ru: Торговля стейблкоинами и управление рисками с помощью ИИ
   title_it: Trading e Gestione del Rischio di Stablecoin Potenziato dall'IA
   description: Learn to use AI for analyzing stablecoin markets, managing DeFi portfolios, and making informed trading decisions in real crypto scenarios
-  description_zh: 學習使用 AI 分析穩定幣市場、管理 DeFi 投資組合，並在真實加密貨幣場景中做出明智的交易決策
+  description_zhTW: 學習使用 AI 分析穩定幣市場、管理 DeFi 投資組合，並在真實加密貨幣場景中做出明智的交易決策
   description_es: Aprende a usar IA para analizar mercados de stablecoins, gestionar carteras DeFi y tomar decisiones comerciales informadas en escenarios criptográficos reales
   description_ja: AIを使ってステーブルコイン市場を分析し、DeFiポートフォリオを管理し、実際の暗号通貨シナリオで情報に基づいた取引決定を行う方法を学ぶ
   description_ko: AI를 사용하여 스테이블코인 시장을 분석하고, DeFi 포트폴리오를 관리하며, 실제 암호화폐 시나리오에서 정보에 기반한 거래 결정을 내리는 방법을 배우세요
@@ -31,7 +31,7 @@ scenario_info:
     - Basic understanding of cryptocurrency and blockchain
     - Familiarity with trading concepts
     - Access to crypto exchanges or DeFi platforms (testnet)
-  prerequisites_zh:
+  prerequisites_zhTW:
     - 對加密貨幣和區塊鏈的基本理解
     - 熟悉交易概念
     - 可使用加密貨幣交易所或 DeFi 平台（測試網）
@@ -68,7 +68,7 @@ scenario_info:
     - Develop automated trading strategies using AI for stablecoin arbitrage
     - Learn to assess and manage DeFi protocol risks using AI monitoring tools
     - Create AI-powered portfolio optimization for multi-chain stablecoin exposure
-  learning_objectives_zh:
+  learning_objectives_zhTW:
     - 掌握用於即時加密貨幣市場分析和趨勢預測的 AI 工具
     - 使用 AI 開發穩定幣套利的自動化交易策略
     - 學習使用 AI 監控工具評估和管理 DeFi 協議風險
@@ -126,7 +126,7 @@ ksa_mapping:
 tasks:
   - id: market-analysis
     title: AI-Powered Market Intelligence
-    title_zh: AI 驅動的市場情報
+    title_zhTW: AI 驅動的市場情報
     title_es: Inteligencia de Mercado Potenciada por IA
     title_ja: AIを活用した市場インテリジェンス
     title_ko: AI 기반 시장 인텔리전스
@@ -135,7 +135,7 @@ tasks:
     title_ru: Рыночная аналитика на основе ИИ
     title_it: Intelligence di Mercato Potenziata dall'IA
     description: You're a DeFi portfolio manager for a crypto hedge fund. Use AI to analyze current stablecoin market conditions and identify potential trading opportunities
-    description_zh: 你是一家加密對沖基金的 DeFi 投資組合經理。使用 AI 分析當前穩定幣市場狀況並識別潛在交易機會
+    description_zhTW: 你是一家加密對沖基金的 DeFi 投資組合經理。使用 AI 分析當前穩定幣市場狀況並識別潛在交易機會
     description_es: Eres un gestor de cartera DeFi para un fondo de cobertura cripto. Usa IA para analizar las condiciones actuales del mercado de stablecoins e identificar oportunidades comerciales potenciales
     description_ja: あなたは暗号ヘッジファンドのDeFiポートフォリオマネージャーです。AIを使用して現在のステーブルコイン市場状況を分析し、潜在的な取引機会を特定してください
     description_ko: 당신은 암호화폐 헤지펀드의 DeFi 포트폴리오 매니저입니다. AI를 사용하여 현재 스테이블코인 시장 상황을 분석하고 잠재적 거래 기회를 식별하세요
@@ -149,7 +149,7 @@ tasks:
       - Analyze yield farming opportunities across different DeFi protocols (Aave, Compound, Curve)
       - Identify potential depeg risks and arbitrage opportunities using AI market analysis
       - Create an AI-generated executive summary with actionable trading recommendations
-    instructions_zh:
+    instructions_zhTW:
       - 使用 AI 工具（Claude、ChatGPT 或 Perplexity）研究當前 USDC、USDT、DAI 和 FRAX 市場狀況
       - 分析不同 DeFi 協議（Aave、Compound、Curve）中的流動性挖礦機會
       - 使用 AI 市場分析識別潛在的脫鉤風險和套利機會
@@ -190,7 +190,7 @@ tasks:
       - Identifica potenziali rischi di depeg e opportunità di arbitraggio usando l'analisi di mercato AI
       - Crea un riassunto esecutivo generato dall'AI con raccomandazioni commerciali attuabili
     expected_outcome: A comprehensive market analysis report with specific trading opportunities, risk assessments, and AI-backed recommendations for stablecoin portfolio allocation
-    expected_outcome_zh: 一份包含具體交易機會、風險評估和 AI 支持的穩定幣投資組合配置建議的綜合市場分析報告
+    expected_outcome_zhTW: 一份包含具體交易機會、風險評估和 AI 支持的穩定幣投資組合配置建議的綜合市場分析報告
     expected_outcome_es: Un informe completo de análisis de mercado con oportunidades comerciales específicas, evaluaciones de riesgo y recomendaciones respaldadas por IA para la asignación de cartera de stablecoins
     expected_outcome_ja: 具体的な取引機会、リスク評価、およびステーブルコインポートフォリオ配分のためのAI支援推奨事項を含む包括的な市場分析レポート
     expected_outcome_ko: 구체적인 거래 기회, 위험 평가, 그리고 스테이블코인 포트폴리오 할당을 위한 AI 지원 권장사항이 포함된 종합적인 시장 분석 보고서
@@ -204,7 +204,7 @@ tasks:
       - CoinGecko API for price feeds
       - DeBank for portfolio tracking
       - AI tools: Claude, ChatGPT, Perplexity
-    resources_zh:
+    resources_zhTW:
       - DeFiLlama 用於協議 TVL 數據
       - CoinGecko API 用於價格推送
       - DeBank 用於投資組合追蹤
@@ -266,7 +266,7 @@ tasks:
 
   - id: strategy-development
     title: AI-Enhanced Trading Strategy Creation
-    title_zh: AI 增強的交易策略創建
+    title_zhTW: AI 增強的交易策略創建
     title_es: Creación de Estrategia de Trading Mejorada por IA
     title_ja: AI強化取引戦略の作成
     title_ko: AI 향상 거래 전략 생성
@@ -275,7 +275,7 @@ tasks:
     title_ru: Создание торговой стратегии с улучшением ИИ
     title_it: Creazione di Strategia di Trading Migliorata dall'IA
     description: Design and backtest an automated trading strategy using AI to optimize entry/exit points for stablecoin arbitrage across multiple DEXs
-    description_zh: 使用 AI 設計並回測自動化交易策略，優化多個 DEX 間穩定幣套利的進出場點
+    description_zhTW: 使用 AI 設計並回測自動化交易策略，優化多個 DEX 間穩定幣套利的進出場點
     description_es: Diseña y prueba una estrategia de trading automatizada usando IA para optimizar puntos de entrada/salida para arbitraje de stablecoins a través de múltiples DEXs
     description_ja: 複数のDEX間でのステーブルコインアービトラージのエントリー/エグジットポイントを最適化するために、AIを使用して自動取引戦略を設計およびバックテストする
     description_ko: 여러 DEX에서 스테이블코인 차익거래의 진입/청산 지점을 최적화하기 위해 AI를 사용하여 자동화된 거래 전략을 설계하고 백테스트하기
@@ -289,7 +289,7 @@ tasks:
       - Implement AI-based alert systems for arbitrage opportunities with specific profit thresholds
       - Create risk management rules using AI to calculate optimal position sizes and stop-losses
       - Develop backtesting framework with AI assistance to validate strategy performance
-    instructions_zh:
+    instructions_zhTW:
       - 使用 AI 編程助手編寫 Python 腳本來監控 Uniswap、SushiSwap 和 Curve 間的價格差異
       - 實施基於 AI 的警報系統，用於具有特定利潤閾值的套利機會
       - 使用 AI 創建風險管理規則來計算最佳倉位大小和止損
@@ -330,7 +330,7 @@ tasks:
       - Crea regole di gestione del rischio usando l'IA per calcolare dimensioni di posizione ottimali e stop-loss
       - Sviluppa un framework di backtesting con assistenza AI per validare le prestazioni della strategia
     expected_outcome: A functional trading bot prototype with AI-optimized parameters, comprehensive backtesting results, and clear implementation guidelines
-    expected_outcome_zh: 一個具有 AI 優化參數、全面回測結果和清晰實施指導的功能性交易機器人原型
+    expected_outcome_zhTW: 一個具有 AI 優化參數、全面回測結果和清晰實施指導的功能性交易機器人原型
     expected_outcome_es: Un prototipo de bot de trading funcional con parámetros optimizados por IA, resultados completos de backtesting y pautas claras de implementación
     expected_outcome_ja: AI最適化パラメータ、包括的なバックテスト結果、明確な実装ガイドラインを持つ機能的な取引ボットプロトタイプ
     expected_outcome_ko: AI 최적화된 매개변수, 포괄적인 백테스팅 결과, 명확한 구현 가이드라인을 갖춘 기능적인 트레이딩 봇 프로토타입
@@ -344,7 +344,7 @@ tasks:
       - AI coding assistants: GitHub Copilot, Cursor, Replit
       - DEX APIs: Uniswap V3, SushiSwap, Curve
       - Backtesting libraries: Backtrader, Zipline
-    resources_zh:
+    resources_zhTW:
       - 帶有 Web3.py 庫的 Python
       - AI 編程助手：GitHub Copilot、Cursor、Replit
       - DEX API：Uniswap V3、SushiSwap、Curve
@@ -410,7 +410,7 @@ tasks:
 
   - id: risk-management
     title: AI-Powered Portfolio Risk Assessment
-    title_zh: AI 驅動的投資組合風險評估
+    title_zhTW: AI 驅動的投資組合風險評估
     title_es: Evaluación de Riesgo de Cartera Potenciada por IA
     title_ja: AIを活用したポートフォリオリスク評価
     title_ko: AI 기반 포트폴리오 위험 평가
@@ -419,7 +419,7 @@ tasks:
     title_ru: Оценка рисков портфеля с помощью ИИ
     title_it: Valutazione del Rischio del Portafoglio Potenziata dall'IA
     description: A major DeFi protocol exploit just happened. Use AI to assess your stablecoin portfolio's exposure and develop an emergency response plan
-    description_zh: 一個主要的 DeFi 協議剛剛發生漏洞利用。使用 AI 評估你的穩定幣投資組合敞口並制定緊急應對計劃
+    description_zhTW: 一個主要的 DeFi 協議剛剛發生漏洞利用。使用 AI 評估你的穩定幣投資組合敞口並制定緊急應對計劃
     description_es: Acaba de ocurrir un exploit importante de protocolo DeFi. Usa IA para evaluar la exposición de tu cartera de stablecoins y desarrollar un plan de respuesta de emergencia
     description_ja: 主要なDeFiプロトコルエクスプロイトが発生しました。AIを使用してステーブルコインポートフォリオのエクスポージャーを評価し、緊急対応計画を策定してください
     description_ko: 주요 DeFi 프로토콜 익스플로잇이 방금 발생했습니다. AI를 사용하여 스테이블코인 포트폴리오의 노출을 평가하고 비상 대응 계획을 개발하세요
@@ -433,7 +433,7 @@ tasks:
       - Calculate portfolio exposure using AI-assisted risk analysis across all your DeFi positions
       - Develop contingency scenarios using AI simulation for different market stress conditions
       - Create automated monitoring and alert systems using AI for future risk detection
-    instructions_zh:
+    instructions_zhTW:
       - 使用 AI 快速分析新聞和社交媒體以了解漏洞詳情和受影響的協議
       - 使用 AI 輔助風險分析計算所有 DeFi 持倉的投資組合敞口
       - 使用 AI 模擬為不同市場壓力條件開發應急場景
@@ -474,7 +474,7 @@ tasks:
       - Sviluppa scenari di contingenza usando simulazione AI per diverse condizioni di stress del mercato
       - Crea sistemi automatizzati di monitoraggio e allerta usando l'IA per rilevamento futuro dei rischi
     expected_outcome: A detailed risk assessment report with immediate action items, portfolio rebalancing recommendations, and an automated risk monitoring system setup
-    expected_outcome_zh: 一份詳細的風險評估報告，包含即時行動項目、投資組合再平衡建議和自動化風險監控系統設置
+    expected_outcome_zhTW: 一份詳細的風險評估報告，包含即時行動項目、投資組合再平衡建議和自動化風險監控系統設置
     expected_outcome_es: Un informe detallado de evaluación de riesgos con elementos de acción inmediata, recomendaciones de rebalanceo de cartera y configuración de sistema de monitoreo de riesgos automatizado
     expected_outcome_ja: 即座のアクション項目、ポートフォリオリバランシング推奨事項、および自動リスク監視システムセットアップを含む詳細なリスク評価レポート
     expected_outcome_ko: 즉각적인 행동 항목, 포트폴리오 리밸런싱 권장사항, 그리고 자동화된 위험 모니터링 시스템 설정이 포함된 상세한 위험 평가 보고서
@@ -488,7 +488,7 @@ tasks:
       - Risk analysis tools: Nansen, Dune Analytics, DefiSafety
       - AI monitoring: Chainalysis, Elliptic, custom Python scripts
       - Emergency liquidity: DEX aggregators, Flash loan protocols
-    resources_zh:
+    resources_zhTW:
       - 即時新聞聚合器：DeFiPulse、CoinDesk、The Block
       - 風險分析工具：Nansen、Dune Analytics、DefiSafety
       - AI 監控：Chainalysis、Elliptic、自定義 Python 腳本

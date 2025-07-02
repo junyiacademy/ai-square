@@ -4,7 +4,7 @@
 scenario_info:
   id: ""  # Required: scenario unique identifier
   title: ""  # Required: English title
-  title_zh: ""  # Required: Traditional Chinese title
+  title_zhTW: ""  # Required: Traditional Chinese title
   title_es: ""  # Required: Spanish title
   title_ja: ""  # Required: Japanese title
   title_ko: ""  # Required: Korean title
@@ -13,7 +13,7 @@ scenario_info:
   title_ru: ""  # Required: Russian title
   title_it: ""  # Required: Italian title
   description: ""  # Required: English description
-  description_zh: ""  # Required: Traditional Chinese description
+  description_zhTW: ""  # Required: Traditional Chinese description
   description_es: ""  # Required: Spanish description
   description_ja: ""  # Required: Japanese description
   description_ko: ""  # Required: Korean description
@@ -28,7 +28,7 @@ scenario_info:
     - creating_with_ai
   prerequisites:  # Required: array of prerequisite strings (English)
     - ""
-  prerequisites_zh:  # Required: array of Traditional Chinese prerequisites
+  prerequisites_zhTW:  # Required: array of Traditional Chinese prerequisites
     - ""
   prerequisites_es:  # Required: array of Spanish prerequisites
     - ""
@@ -46,7 +46,7 @@ scenario_info:
     - ""
   learning_objectives:  # Required: array of learning objective strings (English)
     - ""
-  learning_objectives_zh:  # Required: array of Traditional Chinese learning objectives
+  learning_objectives_zhTW:  # Required: array of Traditional Chinese learning objectives
     - ""
   learning_objectives_es:  # Required: array of Spanish learning objectives
     - ""
@@ -74,7 +74,7 @@ ksa_mapping:  # Optional: KSA mapping for the scenario
 tasks:  # Required: array of task objects
   - id: ""  # Required: unique task identifier (use 'id' not 'task_id')
     title: ""  # Required: English task title
-    title_zh: ""  # Required: Traditional Chinese task title
+    title_zhTW: ""  # Required: Traditional Chinese task title
     title_es: ""  # Required: Spanish task title
     title_ja: ""  # Required: Japanese task title
     title_ko: ""  # Required: Korean task title
@@ -83,7 +83,7 @@ tasks:  # Required: array of task objects
     title_ru: ""  # Required: Russian task title
     title_it: ""  # Required: Italian task title
     description: ""  # Required: English task description
-    description_zh: ""  # Required: Traditional Chinese task description
+    description_zhTW: ""  # Required: Traditional Chinese task description
     description_es: ""  # Required: Spanish task description
     description_ja: ""  # Required: Japanese task description
     description_ko: ""  # Required: Korean task description
@@ -94,7 +94,7 @@ tasks:  # Required: array of task objects
     category: ""  # Required: research|analysis|creation|interaction
     instructions:  # Required: array of instruction strings (English)
       - ""
-    instructions_zh:  # Required: array of Traditional Chinese instructions
+    instructions_zhTW:  # Required: array of Traditional Chinese instructions
       - ""
     instructions_es:  # Required: array of Spanish instructions
       - ""
@@ -111,7 +111,7 @@ tasks:  # Required: array of task objects
     instructions_it:  # Required: array of Italian instructions
       - ""
     expected_outcome: ""  # Required: English expected outcome
-    expected_outcome_zh: ""  # Required: Traditional Chinese expected outcome
+    expected_outcome_zhTW: ""  # Required: Traditional Chinese expected outcome
     expected_outcome_es: ""  # Required: Spanish expected outcome
     expected_outcome_ja: ""  # Required: Japanese expected outcome
     expected_outcome_ko: ""  # Required: Korean expected outcome
@@ -122,7 +122,7 @@ tasks:  # Required: array of task objects
     time_limit: 30  # Optional: time limit in minutes
     resources:  # Optional: array of resource strings (English)
       - ""
-    resources_zh:  # Optional: array of Traditional Chinese resources
+    resources_zhTW:  # Optional: array of Traditional Chinese resources
       - ""
     resources_es:  # Optional: array of Spanish resources
       - ""

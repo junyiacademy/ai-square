@@ -4,7 +4,7 @@
 scenario_info:
   id: high-school-health-assistant
   title: "AI-Powered Teen Health Assistant"
-  title_zh: "AI 驅動的青少年健康助手"
+  title_zhTW: "AI 驅動的青少年健康助手"
   title_es: "Asistente de Salud Adolescente con IA"
   title_ja: "AI駆動型ティーンヘルスアシスタント"
   title_ko: "AI 기반 청소년 건강 도우미"
@@ -13,7 +13,7 @@ scenario_info:
   title_ru: "Помощник по здоровью подростков с ИИ"
   title_it: "Assistente Sanitario per Adolescenti con IA"
   description: "Design an AI-powered health assistant specifically for teenagers to promote healthy lifestyle choices"
-  description_zh: "為青少年設計一個 AI 驅動的健康助手，促進健康的生活方式選擇"
+  description_zhTW: "為青少年設計一個 AI 驅動的健康助手，促進健康的生活方式選擇"
   description_es: "Diseña un asistente de salud impulsado por IA específicamente para adolescentes para promover elecciones de vida saludables"
   description_ja: "十代の若者に特化したAI駆動型健康アシスタントを設計して健康的なライフスタイルの選択を促進する"
   description_ko: "청소년을 위해 특별히 설계된 AI 기반 건강 도우미로 건강한 생활 방식 선택을 촉진"
@@ -30,7 +30,7 @@ scenario_info:
   prerequisites:
     - Basic understanding of health concepts
     - Awareness of teenage health challenges
-  prerequisites_zh:
+  prerequisites_zhTW:
     - 對健康概念的基本理解
     - 對青少年健康挑戰的認識
   prerequisites_es:
@@ -59,7 +59,7 @@ scenario_info:
     - Design user-centered AI solutions for health promotion
     - Create ethical guidelines for AI health applications
     - Develop a functional prototype with user testing
-  learning_objectives_zh:
+  learning_objectives_zhTW:
     - 識別青少年面臨的主要健康挑戰
     - 為健康促進設計以用戶為中心的 AI 解決方案
     - 為 AI 健康應用創建道德準則
@@ -117,7 +117,7 @@ ksa_mapping:
 tasks:
   - id: task-1
     title: "Health Challenge Research"
-    title_zh: "健康挑戰研究"
+    title_zhTW: "健康挑戰研究"
     title_es: "Investigación de Desafíos de Salud"
     title_ja: "健康課題研究"
     title_ko: "건강 문제 연구"
@@ -126,7 +126,7 @@ tasks:
     title_ru: "Исследование проблем здоровья"
     title_it: "Ricerca sulle Sfide Sanitarie"
     description: "Research and analyze the most pressing health challenges facing teenagers today"
-    description_zh: "研究和分析當今青少年面臨的最緊迫的健康挑戰"
+    description_zhTW: "研究和分析當今青少年面臨的最緊迫的健康挑戰"
     description_es: "Investiga y analiza los desafíos de salud más urgentes que enfrentan los adolescentes hoy"
     description_ja: "今日の十代の若者が直面する最も差し迫った健康課題を研究・分析する"
     description_ko: "오늘날 청소년이 직면한 가장 시급한 건강 문제 연구 및 분석"
@@ -140,7 +140,7 @@ tasks:
       - Identify top 5 health challenges (mental health, nutrition, exercise, sleep, social media impact)
       - Analyze current solutions and their limitations
       - Survey peers about their health concerns and needs
-    instructions_zh:
+    instructions_zhTW:
       - 使用 AI 研究青少年健康統計和趨勢
       - 識別前 5 大健康挑戰（心理健康、營養、運動、睡眠、社交媒體影響）
       - 分析現有解決方案及其局限性
@@ -181,7 +181,7 @@ tasks:
       - Analizza le soluzioni attuali e le loro limitazioni
       - Sondaggia i coetanei sui loro problemi e bisogni di salute
     expected_outcome: "Comprehensive report on teenage health challenges with survey data"
-    expected_outcome_zh: "包含調查數據的青少年健康挑戰綜合報告"
+    expected_outcome_zhTW: "包含調查數據的青少年健康挑戰綜合報告"
     expected_outcome_es: "Informe integral sobre desafíos de salud adolescente con datos de encuesta"
     expected_outcome_ja: "調査データを含む十代の健康課題に関する包括的レポート"
     expected_outcome_ko: "설문 데이터가 포함된 청소년 건강 문제에 대한 종합 보고서"
@@ -194,7 +194,7 @@ tasks:
       - Health research databases
       - AI research tools
       - Survey platforms
-    resources_zh:
+    resources_zhTW:
       - 健康研究數據庫
       - AI 研究工具
       - 調查平台
@@ -253,7 +253,7 @@ tasks:
 
   - id: task-2
     title: "AI Assistant Design"
-    title_zh: "AI 助手設計"
+    title_zhTW: "AI 助手設計"
     title_es: "Diseño de Asistente IA"
     title_ja: "AIアシスタント設計"
     title_ko: "AI 도우미 설계"
@@ -262,7 +262,7 @@ tasks:
     title_ru: "Дизайн ИИ-помощника"
     title_it: "Progettazione Assistente IA"
     description: "Design the features and personality of your teen health AI assistant"
-    description_zh: "設計你的青少年健康 AI 助手的功能和個性"
+    description_zhTW: "設計你的青少年健康 AI 助手的功能和個性"
     description_es: "Diseña las características y personalidad de tu asistente de salud adolescente con IA"
     description_ja: "あなたのティーンヘルスAIアシスタントの機能と個性を設計する"
     description_ko: "청소년 건강 AI 도우미의 기능과 성격 설계"
@@ -276,7 +276,7 @@ tasks:
       - Design conversation flows and user interactions
       - Create an appropriate personality and tone for teenage users
       - Develop privacy protection and safety measures
-    instructions_zh:
+    instructions_zhTW:
       - 定義解決已識別健康挑戰的核心功能
       - 設計對話流程和用戶互動
       - 為青少年用戶創建合適的個性和語調
@@ -317,7 +317,7 @@ tasks:
       - Crea una personalità e un tono appropriati per utenti adolescenti
       - Sviluppa misure di protezione della privacy e sicurezza
     expected_outcome: "Complete design specification for the AI health assistant"
-    expected_outcome_zh: "AI 健康助手的完整設計規格"
+    expected_outcome_zhTW: "AI 健康助手的完整設計規格"
     expected_outcome_es: "Especificación de diseño completa para el asistente de salud IA"
     expected_outcome_ja: "AI健康アシスタントの完全な設計仕様"
     expected_outcome_ko: "AI 건강 도우미의 완전한 설계 사양"
@@ -353,7 +353,7 @@ tasks:
 
   - id: task-3
     title: "Prototype Development"
-    title_zh: "原型開發"
+    title_zhTW: "原型開發"
     title_es: "Desarrollo de Prototipo"
     title_ja: "プロトタイプ開発"
     title_ko: "프로토타입 개발"
@@ -362,7 +362,7 @@ tasks:
     title_ru: "Разработка прототипа"
     title_it: "Sviluppo del Prototipo"
     description: "Create a working prototype of your AI health assistant using available tools"
-    description_zh: "使用可用工具創建你的 AI 健康助手的工作原型"
+    description_zhTW: "使用可用工具創建你的 AI 健康助手的工作原型"
     description_es: "Crea un prototipo funcional de tu asistente de salud IA usando herramientas disponibles"
     description_ja: "利用可能なツールを使用してAI健康アシスタントの動作プロトタイプを作成する"
     description_ko: "사용 가능한 도구를 사용하여 AI 건강 도우미의 작동 프로토타입 만들기"
@@ -376,7 +376,7 @@ tasks:
       - Implement key features from your design
       - Create sample conversations for different health scenarios
       - Test the prototype with basic functionality
-    instructions_zh:
+    instructions_zhTW:
       - 使用 AI 工具建立對話界面
       - 實現設計中的關鍵功能
       - 為不同健康情境創建示例對話
@@ -417,7 +417,7 @@ tasks:
       - Crea conversazioni di esempio per diversi scenari sanitari
       - Testa il prototipo con funzionalità di base
     expected_outcome: "Working prototype demonstrating core health assistant features"
-    expected_outcome_zh: "展示核心健康助手功能的工作原型"
+    expected_outcome_zhTW: "展示核心健康助手功能的工作原型"
     expected_outcome_es: "Prototipo funcional demostrando características principales del asistente de salud"
     expected_outcome_ja: "コア健康アシスタント機能を実証する動作プロトタイプ"
     expected_outcome_ko: "핵심 건강 도우미 기능을 보여주는 작동 프로토타입"
@@ -453,7 +453,7 @@ tasks:
 
   - id: task-4
     title: "User Testing & Refinement"
-    title_zh: "用戶測試與改進"
+    title_zhTW: "用戶測試與改進"
     title_es: "Pruebas de Usuario y Refinamiento"
     title_ja: "ユーザーテストと改良"
     title_ko: "사용자 테스트 및 개선"
@@ -462,7 +462,7 @@ tasks:
     title_ru: "Пользовательское тестирование и усовершенствование"
     title_it: "Test Utente e Raffinamento"
     description: "Test your prototype with real users and refine based on feedback"
-    description_zh: "與真實用戶測試你的原型並根據反饋進行改進"
+    description_zhTW: "與真實用戶測試你的原型並根據反饋進行改進"
     description_es: "Prueba tu prototipo con usuarios reales y refina basándote en la retroalimentación"
     description_ja: "実際のユーザーでプロトタイプをテストし、フィードバックに基づいて改良する"
     description_ko: "실제 사용자와 프로토타입을 테스트하고 피드백을 바탕으로 개선"
@@ -476,7 +476,7 @@ tasks:
       - Design testing scenarios covering different health topics
       - Collect and analyze user feedback systematically
       - Implement improvements based on testing results
-    instructions_zh:
+    instructions_zhTW:
       - 招募 5-8 名青少年測試者進行用戶反饋會議
       - 設計涵蓋不同健康主題的測試情境
       - 系統性地收集和分析用戶反饋
@@ -517,7 +517,7 @@ tasks:
       - Raccogli e analizza il feedback utente sistematicamente
       - Implementa miglioramenti basati sui risultati dei test
     expected_outcome: "Refined prototype with documented user feedback and improvements"
-    expected_outcome_zh: "有記錄用戶反饋和改進的精緻原型"
+    expected_outcome_zhTW: "有記錄用戶反饋和改進的精緻原型"
     expected_outcome_es: "Prototipo refinado con retroalimentación de usuario documentada y mejoras"
     expected_outcome_ja: "ユーザーフィードバックと改善が記録された改良プロトタイプ"
     expected_outcome_ko: "사용자 피드백과 개선사항이 문서화된 개선된 프로토타입"
@@ -560,11 +560,11 @@ completion_criteria:
 
 resources:
   - name: "Teen Health Research"
-    name_zh: "青少年健康研究"
+    name_zhTW: "青少年健康研究"
     url: "https://www.cdc.gov/healthyyouth/"
     type: reference
     
   - name: "AI Chatbot Platforms"
-    name_zh: "AI 聊天機器人平台"
+    name_zhTW: "AI 聊天機器人平台"
     url: "https://www.dialogflow.com/"
     type: tool

@@ -13,11 +13,11 @@ type TranslationFields = {
 
 interface CompetencyYaml extends TranslationFields {
   description: string;
-  description_zh?: string;
+  description_zhTW?: string;
   scenarios?: string[];
-  scenarios_zh?: string[];
+  scenarios_zhTW?: string[];
   content?: string;
-  content_zh?: string;
+  content_zhTW?: string;
   knowledge: string[];
   skills: string[];
   attitudes: string[];
@@ -25,7 +25,7 @@ interface CompetencyYaml extends TranslationFields {
 
 interface DomainYaml extends TranslationFields {
   overview: string;
-  overview_zh?: string;
+  overview_zhTW?: string;
   competencies: Record<string, CompetencyYaml>;
   emoji?: string;
 }
@@ -33,13 +33,13 @@ interface DomainYaml extends TranslationFields {
 // 修正：KSAItemYaml 現在直接定義，避免空 interface
 interface KSAItemYaml extends TranslationFields {
   summary: string;
-  summary_zh?: string;
+  summary_zhTW?: string;
 }
 
 interface ThemeYaml extends TranslationFields {
-  theme_zh?: string;
+  theme_zhTW?: string;
   explanation: string;
-  explanation_zh?: string;
+  explanation_zhTW?: string;
   codes: Record<string, KSAItemYaml>;
 }
 
@@ -61,8 +61,8 @@ const getTranslatedField = (lang: string, item: object | null, fieldName: string
 
   const record = item as Record<string, unknown>;
 
-  if (lang.startsWith('zh')) {
-    const zhKey = `${fieldName}_zh`;
+  if (lang === 'zhTW') {
+    const zhKey = `${fieldName}_zhTW`;
     return record[zhKey] ?? record[fieldName];
   }
 

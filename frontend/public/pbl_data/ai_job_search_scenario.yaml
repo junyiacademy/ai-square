@@ -4,7 +4,7 @@
 scenario_info:
   id: ai-job-search
   title: AI-Assisted Job Search Training
-  title_zh: AI 輔助求職訓練
+  title_zhTW: AI 輔助求職訓練
   title_es: Búsqueda de Empleo Asistida por IA
   title_ja: AI支援就職活動トレーニング
   title_ko: AI 지원 구직 훈련
@@ -13,7 +13,7 @@ scenario_info:
   title_ru: Обучение поиску работы с помощью ИИ
   title_it: Formazione alla Ricerca di Lavoro Assistita da AI
   description: Master the art of using AI tools throughout your job search journey
-  description_zh: 掌握在求職過程中使用 AI 工具的技巧
+  description_zhTW: 掌握在求職過程中使用 AI 工具的技巧
   description_es: Domina el arte de usar herramientas de IA en tu búsqueda de empleo
   description_ja: 就職活動全体でAIツールを使いこなす技術をマスターする
   description_ko: 구직 여정 전반에 걸쳐 AI 도구를 사용하는 기술을 마스터하세요
@@ -29,7 +29,7 @@ scenario_info:
   prerequisites:
     - Basic computer skills
     - Existing resume
-  prerequisites_zh:
+  prerequisites_zhTW:
     - 基本電腦技能
     - 現有履歷
   prerequisites_es:
@@ -58,7 +58,7 @@ scenario_info:
     - Optimize resume and cover letters using AI tools
     - Develop interview skills through AI practice
     - Build confidence in using AI for career advancement
-  learning_objectives_zh:
+  learning_objectives_zhTW:
     - 掌握 AI 驅動的就業市場研究技巧
     - 使用 AI 工具優化履歷和求職信
     - 通過 AI 練習提升面試技能
@@ -119,7 +119,7 @@ ksa_mapping:
 tasks:
   - id: task-1
     title: Industry Analysis
-    title_zh: 產業分析
+    title_zhTW: 產業分析
     title_es: Análisis de la Industria
     title_ja: 業界分析
     title_ko: 산업 분석
@@ -128,7 +128,7 @@ tasks:
     title_ru: Анализ отрасли
     title_it: Analisi del Settore
     description: Research current trends in your target industry
-    description_zh: 研究目標產業的當前趨勢
+    description_zhTW: 研究目標產業的當前趨勢
     description_es: Investigar las tendencias actuales en tu industria objetivo
     description_ja: ターゲット業界の現在のトレンドを調査する
     description_ko: 목표 산업의 현재 트렌드 조사하기
@@ -141,7 +141,7 @@ tasks:
       - Use AI to identify top 5 trends in your industry
       - Analyze skill requirements for your target role
       - Create a summary of opportunities and challenges
-    instructions_zh:
+    instructions_zhTW:
       - 使用 AI 識別您產業的前 5 大趨勢
       - 分析目標職位的技能要求
       - 總結機會與挑戰
@@ -174,7 +174,7 @@ tasks:
       - Analizza i requisiti di competenze per il tuo ruolo target
       - Crea un riepilogo di opportunità e sfide
     expected_outcome: A comprehensive industry analysis report
-    expected_outcome_zh: 一份全面的產業分析報告
+    expected_outcome_zhTW: 一份全面的產業分析報告
     expected_outcome_es: Un informe completo de análisis de la industria
     expected_outcome_ja: 包括的な業界分析レポート
     expected_outcome_ko: 종합적인 산업 분석 보고서
@@ -187,7 +187,7 @@ tasks:
       - Industry reports
       - Job boards
       - AI search tools
-    resources_zh:
+    resources_zhTW:
       - 產業報告
       - 求職網站
       - AI 搜尋工具
@@ -241,7 +241,7 @@ tasks:
     
   - id: task-2
     title: Resume Analysis
-    title_zh: 履歷分析
+    title_zhTW: 履歷分析
     title_es: Análisis de Currículum
     title_ja: 履歴書分析
     title_ko: 이력서 분석
@@ -250,7 +250,7 @@ tasks:
     title_ru: Анализ резюме
     title_it: Analisi del Curriculum
     description: Get AI feedback on your current resume
-    description_zh: 獲取 AI 對您當前履歷的回饋
+    description_zhTW: 獲取 AI 對您當前履歷的回饋
     description_es: Recibe retroalimentación de IA sobre tu currículum actual
     description_ja: 現在の履歴書に対するAIフィードバックを受ける
     description_ko: 현재 이력서에 대한 AI 피드백 받기
@@ -263,7 +263,7 @@ tasks:
       - Upload or paste your current resume
       - Receive AI analysis on strengths and weaknesses
       - Identify areas for improvement
-    instructions_zh:
+    instructions_zhTW:
       - 上傳或貼上您當前的履歷
       - 接收 AI 對優缺點的分析
       - 識別需要改進的領域
@@ -296,7 +296,7 @@ tasks:
       - Ricevi analisi dell'IA su punti di forza e debolezze
       - Identifica aree di miglioramento
     expected_outcome: Detailed resume analysis report
-    expected_outcome_zh: 詳細的履歷分析報告
+    expected_outcome_zhTW: 詳細的履歷分析報告
     expected_outcome_es: Informe detallado de análisis del currículum
     expected_outcome_ja: 詳細な履歴書分析レポート
     expected_outcome_ko: 상세한 이력서 분석 보고서
@@ -332,7 +332,7 @@ tasks:
   
   - id: task-3
     title: Resume Enhancement
-    title_zh: 履歷增強
+    title_zhTW: 履歷增強
     title_es: Mejora del Currículum
     title_ja: 履歴書の強化
     title_ko: 이력서 개선
@@ -341,7 +341,7 @@ tasks:
     title_ru: Улучшение резюме
     title_it: Miglioramento del Curriculum
     description: Improve your resume based on AI suggestions
-    description_zh: 根據 AI 建議改進您的履歷
+    description_zhTW: 根據 AI 建議改進您的履歷
     description_es: Mejora tu currículum basado en sugerencias de IA
     description_ja: AIの提案に基づいて履歴書を改善する
     description_ko: AI 제안에 기반한 이력서 개선하기
@@ -354,7 +354,7 @@ tasks:
       - Apply AI suggestions to enhance your resume
       - Optimize keywords for ATS systems
       - Ensure clarity and impact in descriptions
-    instructions_zh:
+    instructions_zhTW:
       - 應用 AI 建議來增強您的履歷
       - 為申請人追蹤系統(ATS) 優化關鍵字
       - 確保描述清晰有力
@@ -387,7 +387,7 @@ tasks:
       - Ottimizza le parole chiave per i sistemi ATS
       - Assicura chiarezza e impatto nelle descrizioni
     expected_outcome: An optimized, professional resume
-    expected_outcome_zh: 一份優化的專業履歷
+    expected_outcome_zhTW: 一份優化的專業履歷
     expected_outcome_es: Un currículum optimizado y profesional
     expected_outcome_ja: 最適化されたプロフェッショナルな履歴書
     expected_outcome_ko: 최적화된 전문적인 이력서
@@ -422,7 +422,7 @@ tasks:
 
   - id: task-4
     title: Cover Letter Creation
-    title_zh: 求職信撰寫
+    title_zhTW: 求職信撰寫
     title_es: Creación de Carta de Presentación
     title_ja: カバーレター作成
     title_ko: 자기소개서 작성
@@ -431,7 +431,7 @@ tasks:
     title_ru: Создание сопроводительного письма
     title_it: Creazione della Lettera di Presentazione
     description: Create a tailored cover letter with AI assistance
-    description_zh: 在 AI 協助下創建量身定制的求職信
+    description_zhTW: 在 AI 協助下創建量身定制的求職信
     description_es: Crea una carta de presentación personalizada con asistencia de IA
     description_ja: AI支援でカスタマイズされたカバーレターを作成する
     description_ko: AI 지원으로 맞춤형 자기소개서 작성하기
@@ -444,7 +444,7 @@ tasks:
       - Analyze job description requirements
       - Draft a personalized cover letter
       - Refine with AI suggestions
-    instructions_zh:
+    instructions_zhTW:
       - 分析職位描述要求
       - 起草個人化的求職信
       - 根據 AI 建議進行優化
@@ -477,7 +477,7 @@ tasks:
       - Redigi una lettera di presentazione personalizzata
       - Perfeziona con i suggerimenti dell'IA
     expected_outcome: A compelling, tailored cover letter
-    expected_outcome_zh: 一份引人注目的定制求職信
+    expected_outcome_zhTW: 一份引人注目的定制求職信
     expected_outcome_es: Una carta de presentación convincente y personalizada
     expected_outcome_ja: 説得力のあるカスタマイズされたカバーレター
     expected_outcome_ko: 설득력 있는 맞춤형 자기소개서
@@ -509,7 +509,7 @@ tasks:
 
   - id: task-5
     title: Interview Practice
-    title_zh: 面試練習
+    title_zhTW: 面試練習
     title_es: Práctica de Entrevista
     title_ja: 面接練習
     title_ko: 면접 연습
@@ -518,7 +518,7 @@ tasks:
     title_ru: Практика собеседования
     title_it: Pratica del Colloquio
     description: Practice common interview questions with AI
-    description_zh: 與 AI 練習常見面試問題
+    description_zhTW: 與 AI 練習常見面試問題
     description_es: Practica preguntas comunes de entrevista con IA
     description_ja: AIと一般的な面接質問を練習する
     description_ko: AI와 함께 일반적인 면접 질문 연습하기
@@ -531,7 +531,7 @@ tasks:
       - Practice answering behavioral questions
       - Receive feedback on your responses
       - Improve your interview techniques
-    instructions_zh:
+    instructions_zhTW:
       - 練習回答行為面試問題
       - 接收對您回答的反饋
       - 改進您的面試技巧
@@ -564,7 +564,7 @@ tasks:
       - Ricevi feedback sulle tue risposte
       - Migliora le tue tecniche di colloquio
     expected_outcome: Improved interview skills and confidence
-    expected_outcome_zh: 提升的面試技能和信心
+    expected_outcome_zhTW: 提升的面試技能和信心
     expected_outcome_es: Habilidades de entrevista mejoradas y mayor confianza
     expected_outcome_ja: 向上した面接スキルと自信
     expected_outcome_ko: 향상된 면접 기술과 자신감

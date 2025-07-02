@@ -312,11 +312,8 @@ export abstract class BaseApiHandler<TRequest = unknown, TResponse = unknown> {
       return obj[fieldName] as string | string[];
     }
     
-    // Handle zhTW -> zh mapping
-    let langCode = language;
-    if (language === 'zhTW') {
-      langCode = 'zh';
-    }
+    // Use language code directly
+    const langCode = language;
     
     const translatedField = `${fieldName}_${langCode}`;
     return (obj[translatedField] as string | string[]) || (obj[fieldName] as string | string[]);

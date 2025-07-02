@@ -4,7 +4,7 @@
 scenario_info:
   id: ai-robotics-development
   title: AI-Powered Robotics Development and Implementation
-  title_zh: AI 驅動的機器人開發與實作
+  title_zhTW: AI 驅動的機器人開發與實作
   title_es: Desarrollo e Implementación de Robótica Potenciada por IA
   title_ja: AIを活用したロボティクス開発と実装
   title_ko: AI 기반 로보틱스 개발 및 구현
@@ -13,7 +13,7 @@ scenario_info:
   title_ru: Разработка и внедрение робототехники с использованием ИИ
   title_it: Sviluppo e Implementazione di Robotica Potenziata dall'IA
   description: Learn to build intelligent robots using AI for real-world applications like warehouse automation, elderly care assistance, and smart manufacturing
-  description_zh: 學習使用 AI 構建智能機器人，應用於倉庫自動化、老年護理協助和智能製造等真實世界場景
+  description_zhTW: 學習使用 AI 構建智能機器人，應用於倉庫自動化、老年護理協助和智能製造等真實世界場景
   description_es: Aprende a construir robots inteligentes usando IA para aplicaciones del mundo real como automatización de almacenes, asistencia de cuidado de ancianos y manufactura inteligente
   description_ja: 倉庫自動化、高齢者ケア支援、スマート製造などの実世界アプリケーションのためにAIを使用してインテリジェントロボットを構築する方法を学ぶ
   description_ko: 창고 자동화, 노인 돌봄 지원, 스마트 제조 등 실제 세계 응용을 위해 AI를 사용하여 지능형 로봇을 구축하는 방법을 배우세요
@@ -31,7 +31,7 @@ scenario_info:
     - Basic programming knowledge (Python preferred)
     - Understanding of sensors and actuators
     - Access to robotics simulation software or hardware
-  prerequisites_zh:
+  prerequisites_zhTW:
     - 基本程式設計知識（推薦 Python）
     - 了解感測器和致動器
     - 可使用機器人模擬軟體或硬體
@@ -68,7 +68,7 @@ scenario_info:
     - Develop autonomous navigation systems using AI computer vision and SLAM
     - Create intelligent human-robot interaction interfaces with natural language processing
     - Build practical robotics solutions for real-world business and social challenges
-  learning_objectives_zh:
+  learning_objectives_zhTW:
     - 掌握機器人感知和決策的 AI 整合技術
     - 使用 AI 電腦視覺和 SLAM 開發自主導航系統
     - 使用自然語言處理創建智能人機互動介面
@@ -129,7 +129,7 @@ ksa_mapping:
 tasks:
   - id: perception-system
     title: AI-Powered Robot Perception System
-    title_zh: AI 驅動的機器人感知系統
+    title_zhTW: AI 驅動的機器人感知系統
     title_es: Sistema de Percepción Robótica Potenciado por IA
     title_ja: AIを活用したロボット知覚システム
     title_ko: AI 기반 로봇 인지 시스템
@@ -138,7 +138,7 @@ tasks:
     title_ru: Система восприятия робота на основе ИИ
     title_it: Sistema di Percezione Robotica Potenziato dall'IA
     description: You're developing a warehouse automation robot that needs to identify, sort, and handle various packages. Use AI vision and sensor fusion to create a robust perception system
-    description_zh: 你正在開發一個需要識別、分類和處理各種包裹的倉庫自動化機器人。使用 AI 視覺和感測器融合創建一個強健的感知系統
+    description_zhTW: 你正在開發一個需要識別、分類和處理各種包裹的倉庫自動化機器人。使用 AI 視覺和感測器融合創建一個強健的感知系統
     description_es: Estás desarrollando un robot de automatización de almacén que necesita identificar, clasificar y manejar varios paquetes. Usa visión IA y fusión de sensores para crear un sistema de percepción robusto
     description_ja: 様々なパッケージを識別、分類、処理する必要がある倉庫自動化ロボットを開発しています。AIビジョンとセンサーフュージョンを使用して堅牢な知覚システムを作成してください
     description_ko: 다양한 패키지를 식별, 분류, 처리해야 하는 창고 자동화 로봇을 개발하고 있습니다. AI 비전과 센서 융합을 사용하여 견고한 인지 시스템을 만드세요
@@ -152,7 +152,7 @@ tasks:
       - Implement AI-assisted sensor fusion combining cameras, LiDAR, and depth sensors
       - Create machine learning models using AI platforms like Roboflow or Edge Impulse for package recognition
       - Develop real-time AI inference systems optimized for embedded robotics hardware
-    instructions_zh:
+    instructions_zhTW:
       - 使用 AI 工具設計用於物體檢測和分類的電腦視覺管道
       - 實施結合攝影機、LiDAR 和深度感測器的 AI 輔助感測器融合
       - 使用 Roboflow 或 Edge Impulse 等 AI 平台創建用於包裹識別的機器學習模型
@@ -193,7 +193,7 @@ tasks:
       - Crea modelli di machine learning usando piattaforme AI come Roboflow o Edge Impulse per riconoscimento pacchi
       - Sviluppa sistemi di inferenza AI in tempo reale ottimizzati per hardware robotico embedded
     expected_outcome: A working perception system that can reliably identify and classify packages in various lighting and environmental conditions, with documented performance metrics
-    expected_outcome_zh: 一個能夠在各種照明和環境條件下可靠識別和分類包裹的感知系統，並有記錄的性能指標
+    expected_outcome_zhTW: 一個能夠在各種照明和環境條件下可靠識別和分類包裹的感知系統，並有記錄的性能指標
     expected_outcome_es: Un sistema de percepción funcional que puede identificar y clasificar paquetes de manera confiable en varias condiciones de iluminación y ambientales, con métricas de rendimiento documentadas
     expected_outcome_ja: 様々な照明および環境条件下でパッケージを確実に識別および分類できる動作する知覚システム、文書化された性能指標付き
     expected_outcome_ko: 다양한 조명 및 환경 조건에서 패키지를 안정적으로 식별하고 분류할 수 있는 작동하는 인지 시스템, 문서화된 성능 지표 포함
@@ -207,7 +207,7 @@ tasks:
       - AI vision platforms: Roboflow, Edge Impulse, Ultralytics YOLOv8
       - Simulation environments: Gazebo, PyBullet, CARLA
       - Hardware: RealSense cameras, Velodyne LiDAR (simulation)
-    resources_zh:
+    resources_zhTW:
       - 電腦視覺框架：OpenCV、TensorFlow、PyTorch
       - AI 視覺平台：Roboflow、Edge Impulse、Ultralytics YOLOv8
       - 模擬環境：Gazebo、PyBullet、CARLA
@@ -273,7 +273,7 @@ tasks:
 
   - id: navigation-intelligence
     title: Autonomous Navigation with AI Planning
-    title_zh: 基於 AI 規劃的自主導航
+    title_zhTW: 基於 AI 規劃的自主導航
     title_es: Navegación Autónoma con Planificación IA
     title_ja: AI計画による自律ナビゲーション
     title_ko: AI 계획을 통한 자율 내비게이션
@@ -282,7 +282,7 @@ tasks:
     title_ru: Автономная навигация с планированием ИИ
     title_it: Navigazione Autonoma con Pianificazione AI
     description: Your robot needs to navigate a complex elderly care facility, avoiding obstacles while delivering medication and responding to emergency calls efficiently
-    description_zh: 你的機器人需要在複雜的老年護理設施中導航，避開障礙物同時高效地遞送藥物和回應緊急呼叫
+    description_zhTW: 你的機器人需要在複雜的老年護理設施中導航，避開障礙物同時高效地遞送藥物和回應緊急呼叫
     description_es: Tu robot necesita navegar por una instalación compleja de cuidado de ancianos, evitando obstáculos mientras entrega medicamentos y responde a llamadas de emergencia de manera eficiente
     description_ja: あなたのロボットは、障害物を避けながら薬の配達と緊急通話への効率的な対応を行い、複雑な高齢者ケア施設をナビゲートする必要があります
     description_ko: 당신의 로봇은 복잡한 노인 돌봄 시설을 탐색하여 장애물을 피하면서 약물을 전달하고 응급 호출에 효율적으로 대응해야 합니다
@@ -296,7 +296,7 @@ tasks:
       - Implement AI-powered SLAM (Simultaneous Localization and Mapping) for real-time environment understanding
       - Create intelligent behavior trees using AI assistance for task prioritization and emergency response
       - Develop predictive navigation using AI to anticipate human movement patterns and facility workflows
-    instructions_zh:
+    instructions_zhTW:
       - 使用 AI 路徑規劃演算法和強化學習在動態環境中優化路線
       - 實施 AI 驅動的 SLAM（同時定位與地圖構建）進行即時環境理解
       - 使用 AI 協助創建智能行為樹進行任務優先排序和緊急響應
@@ -337,7 +337,7 @@ tasks:
       - Crea alberi comportamentali intelligenti usando assistenza AI per prioritizzazione dei compiti e risposta di emergenza
       - Sviluppa navigazione predittiva usando AI per anticipare i modelli di movimento umano e i flussi di lavoro delle strutture
     expected_outcome: A complete autonomous navigation system that can efficiently handle multiple concurrent tasks while maintaining safety and adapting to environmental changes
-    expected_outcome_zh: 一個能夠高效處理多個同時任務同時保持安全並適應環境變化的完整自主導航系統
+    expected_outcome_zhTW: 一個能夠高效處理多個同時任務同時保持安全並適應環境變化的完整自主導航系統
     expected_outcome_es: Un sistema completo de navegación autónoma que puede manejar eficientemente múltiples tareas concurrentes mientras mantiene la seguridad y se adapta a cambios ambientales
     expected_outcome_ja: 安全性を維持し環境変化に適応しながら複数の同時タスクを効率的に処理できる完全な自律ナビゲーションシステム
     expected_outcome_ko: 안전을 유지하고 환경 변화에 적응하면서 여러 동시 작업을 효율적으로 처리할 수 있는 완전한 자율 내비게이션 시스템
@@ -351,7 +351,7 @@ tasks:
       - AI planning libraries: AI Planning, Fast Downward, Reinforcement Learning Stable-baselines3
       - SLAM implementations: Cartographer, RTAB-Map, ORB-SLAM3
       - Simulation: Gazebo with hospital/care facility environments
-    resources_zh:
+    resources_zhTW:
       - 導航框架：ROS 2 Navigation Stack、OMPL
       - AI 規劃庫：AI Planning、Fast Downward、Reinforcement Learning Stable-baselines3
       - SLAM 實作：Cartographer、RTAB-Map、ORB-SLAM3
@@ -417,7 +417,7 @@ tasks:
 
   - id: human-interaction
     title: Natural Human-Robot Interaction Interface
-    title_zh: 自然人機互動介面
+    title_zhTW: 自然人機互動介面
     title_es: Interfaz Natural de Interacción Humano-Robot
     title_ja: 自然な人間ロボット相互作用インターフェース
     title_ko: 자연스러운 인간-로봇 상호작용 인터페이스
@@ -426,7 +426,7 @@ tasks:
     title_ru: Интерфейс естественного взаимодействия человека и робота
     title_it: Interfaccia di Interazione Naturale Umano-Robot
     description: Design a manufacturing quality control robot that can communicate with workers, understand verbal instructions, and provide intuitive feedback about production issues
-    description_zh: 設計一個能與工人溝通、理解口頭指令並提供生產問題直觀反饋的製造品質控制機器人
+    description_zhTW: 設計一個能與工人溝通、理解口頭指令並提供生產問題直觀反饋的製造品質控制機器人
     description_es: Diseña un robot de control de calidad de manufactura que pueda comunicarse con trabajadores, entender instrucciones verbales y proporcionar retroalimentación intuitiva sobre problemas de producción
     description_ja: 作業者とコミュニケーションを取り、口頭指示を理解し、生産問題について直感的なフィードバックを提供できる製造品質管理ロボットを設計する
     description_ko: 작업자와 소통하고, 구두 지시를 이해하며, 생산 문제에 대한 직관적인 피드백을 제공할 수 있는 제조 품질 관리 로봇 설계하기
@@ -440,7 +440,7 @@ tasks:
       - Implement AI-powered gesture recognition and non-verbal communication systems
       - Design multimodal interaction using AI combining voice, visual displays, and physical gestures
       - Create adaptive communication styles using AI to match different worker preferences and expertise levels
-    instructions_zh:
+    instructions_zhTW:
       - 使用 AI 語言模型創建自然對話功能以理解工作指令
       - 實施 AI 驅動的手勢識別和非語言溝通系統
       - 使用 AI 結合語音、視覺顯示和身體手勢設計多模態互動
@@ -481,7 +481,7 @@ tasks:
       - Progetta interazione multimodale usando AI combinando voce, display visivi e gesti fisici
       - Crea stili di comunicazione adattivi usando AI per corrispondere a diverse preferenze e livelli di competenza dei lavoratori
     expected_outcome: An intuitive interaction system that workers can easily communicate with, reducing training time and increasing adoption rates in manufacturing environments
-    expected_outcome_zh: 一個工人可以輕鬆溝通的直觀互動系統，減少製造環境中的培訓時間並提高採用率
+    expected_outcome_zhTW: 一個工人可以輕鬆溝通的直觀互動系統，減少製造環境中的培訓時間並提高採用率
     expected_outcome_es: Un sistema de interacción intuitivo con el que los trabajadores pueden comunicarse fácilmente, reduciendo el tiempo de entrenamiento e incrementando las tasas de adopción en entornos de manufactura
     expected_outcome_ja: 作業者が簡単にコミュニケーションできる直感的な相互作用システム、製造環境でのトレーニング時間を短縮し採用率を向上させる
     expected_outcome_ko: 작업자가 쉽게 소통할 수 있는 직관적인 상호작용 시스템, 제조 환경에서 교육 시간을 줄이고 도입률 증가
@@ -495,7 +495,7 @@ tasks:
       - Speech processing: SpeechRecognition, PyAudio, Azure Speech Services
       - Gesture recognition: MediaPipe, OpenPose, Custom CNN models
       - Multimodal interfaces: Qt, Unity 3D, Web-based dashboards
-    resources_zh:
+    resources_zhTW:
       - NLP 框架：Hugging Face Transformers、OpenAI API、Google Dialogflow
       - 語音處理：SpeechRecognition、PyAudio、Azure Speech Services
       - 手勢識別：MediaPipe、OpenPose、自定義 CNN 模型

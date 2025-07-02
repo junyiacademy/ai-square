@@ -13,7 +13,7 @@ const competencySchema = z.object({
   attitudes: z.array(idSchemas.attitudeId),
   ...multilingualFieldSchema('content').shape,
   scenarios: z.array(z.string()),
-  scenarios_zh: z.array(z.string()),
+  scenarios_zhTW: z.array(z.string()),
   scenarios_es: z.array(z.string()),
   scenarios_ja: z.array(z.string()),
   scenarios_ko: z.array(z.string()),

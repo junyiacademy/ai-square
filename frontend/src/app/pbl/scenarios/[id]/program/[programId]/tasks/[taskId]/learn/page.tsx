@@ -25,13 +25,8 @@ interface ConversationEntry {
 function getLocalizedField<T extends Record<string, unknown>>(obj: T | null | undefined, fieldName: string, language: string): string {
   if (!obj) return '';
   
-  // Map language codes to suffixes - handle all supported languages
-  let langSuffix = language;
-  
-  // Special case for Chinese
-  if (language === 'zhTW' || language === 'zh') {
-    langSuffix = 'zh';
-  }
+  // Use language code directly as suffix
+  const langSuffix = language;
   
   const fieldWithLang = `${fieldName}_${langSuffix}`;
   
@@ -44,13 +39,8 @@ function getLocalizedField<T extends Record<string, unknown>>(obj: T | null | un
 function getLocalizedArrayField<T extends Record<string, unknown>>(obj: T | null | undefined, fieldName: string, language: string): string[] {
   if (!obj) return [];
   
-  // Map language codes to suffixes - handle all supported languages
-  let langSuffix = language;
-  
-  // Special case for Chinese
-  if (language === 'zhTW' || language === 'zh') {
-    langSuffix = 'zh';
-  }
+  // Use language code directly as suffix
+  const langSuffix = language;
   
   const fieldWithLang = `${fieldName}_${langSuffix}`;
   
@@ -1213,8 +1203,8 @@ export default function ProgramLearningPage() {
             {mobileView === 'task' && (
               <div className="h-full bg-white dark:bg-gray-800 p-6 overflow-y-auto">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                  {t('pbl:learn.task')} {taskIndex + 1}: {i18n.language === 'zh' || i18n.language === 'zh-TW' 
-                    ? (currentTask.title_zh || currentTask.title)
+                  {t('pbl:learn.task')} {taskIndex + 1}: {i18n.language === 'zhTW' 
+                    ? (currentTask.title_zhTW || currentTask.title)
                     : currentTask.title}
                 </h2>
                 
@@ -1224,8 +1214,8 @@ export default function ProgramLearningPage() {
                       {t('pbl:learn.description')}
                     </h3>
                     <p className="text-gray-600 dark:text-gray-400">
-                      {i18n.language === 'zh' || i18n.language === 'zh-TW' 
-                        ? (currentTask.description_zh || currentTask.description)
+                      {i18n.language === 'zhTW' 
+                        ? (currentTask.description_zhTW || currentTask.description)
                         : currentTask.description}
                     </p>
                   </div>
@@ -1235,8 +1225,8 @@ export default function ProgramLearningPage() {
                       {t('pbl:learn.instructions')}
                     </h3>
                     <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
-                      {(i18n.language === 'zh' || i18n.language === 'zh-TW' 
-                        ? (currentTask.instructions_zh || currentTask.instructions)
+                      {(i18n.language === 'zhTW' 
+                        ? (currentTask.instructions_zhTW || currentTask.instructions)
                         : currentTask.instructions
                       ).map((instruction, index) => (
                         <li key={index}>{instruction}</li>
@@ -1250,8 +1240,8 @@ export default function ProgramLearningPage() {
                         {t('pbl:details.expectedOutcome')}
                       </h3>
                       <p className="text-gray-600 dark:text-gray-400">
-                        {i18n.language === 'zh' || i18n.language === 'zh-TW' 
-                          ? (currentTask.expectedOutcome_zh || currentTask.expectedOutcome)
+                        {i18n.language === 'zhTW' 
+                          ? (currentTask.expectedOutcome_zhTW || currentTask.expectedOutcome)
                           : currentTask.expectedOutcome}
                       </p>
                     </div>

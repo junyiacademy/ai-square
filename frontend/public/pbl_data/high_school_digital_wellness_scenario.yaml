@@ -4,7 +4,7 @@
 scenario_info:
   id: high-school-digital-wellness
   title: "AI for Digital Wellness Campaign"
-  title_zh: "AI 數位健康運動"
+  title_zhTW: "AI 數位健康運動"
   title_es: "Campaña de Bienestar Digital con IA"
   title_ja: "AIによるデジタルウェルネスキャンペーン"
   title_ko: "AI 디지털 웰니스 캠페인"
@@ -13,7 +13,7 @@ scenario_info:
   title_ru: "Кампания цифрового благополучия с ИИ"
   title_it: "Campagna di Benessere Digitale con IA"
   description: "Design an AI-powered campaign to promote healthy digital habits among your peers"
-  description_zh: "設計一個 AI 驅動的活動，在同儕中推廣健康的數位習慣"
+  description_zhTW: "設計一個 AI 驅動的活動，在同儕中推廣健康的數位習慣"
   description_es: "Diseña una campaña con IA para promover hábitos digitales saludables entre tus compañeros"
   description_ja: "仲間の間で健康的なデジタル習慣を促進するAI駆動型キャンペーンを設計する"
   description_ko: "동료들 사이에서 건강한 디지털 습관을 촉진하는 AI 기반 캠페인 설계"
@@ -30,7 +30,7 @@ scenario_info:
   prerequisites:
     - Awareness of social media impacts
     - Basic digital literacy
-  prerequisites_zh:
+  prerequisites_zhTW:
     - 對社交媒體影響的認識
     - 基本數位素養
   prerequisites_es:
@@ -59,7 +59,7 @@ scenario_info:
     - Create engaging content with AI tools
     - Design interventions for behavior change
     - Build a comprehensive digital wellness campaign
-  learning_objectives_zh:
+  learning_objectives_zhTW:
     - 分析數位健康數據和趨勢
     - 使用 AI 工具創建引人入勝的內容
     - 設計行為改變的干預措施
@@ -120,7 +120,7 @@ ksa_mapping:
 tasks:
   - id: task-1
     title: "Digital Habits Survey"
-    title_zh: "數位習慣調查"
+    title_zhTW: "數位習慣調查"
     title_es: "Encuesta de Hábitos Digitales"
     title_ja: "デジタル習慣調査"
     title_ko: "디지털 습관 조사"
@@ -129,7 +129,7 @@ tasks:
     title_ru: "Опрос о цифровых привычках"
     title_it: "Sondaggio sulle Abitudini Digitali"
     description: "Use AI to create and analyze a survey about digital habits"
-    description_zh: "使用 AI 創建和分析關於數位習慣的調查"
+    description_zhTW: "使用 AI 創建和分析關於數位習慣的調查"
     description_es: "Usa IA para crear y analizar una encuesta sobre hábitos digitales"
     description_ja: "AIを使用してデジタル習慣に関する調査を作成・分析する"
     description_ko: "AI를 사용하여 디지털 습관에 대한 설문조사 작성 및 분석"
@@ -143,7 +143,7 @@ tasks:
       - Distribute to classmates ensuring privacy and anonymity
       - Analyze responses with AI assistance
       - Identify key problem areas and patterns
-    instructions_zh:
+    instructions_zhTW:
       - 使用 AI 設計關於螢幕時間、社交媒體使用、睡眠習慣和數位壓力的調查問題
       - 確保隱私和匿名地分發給同學
       - 在 AI 協助下分析回應
@@ -184,7 +184,7 @@ tasks:
       - Analizza le risposte con l'assistenza dell'IA
       - Identifica aree problematiche chiave e modelli
     expected_outcome: A comprehensive survey report with data-driven insights
-    expected_outcome_zh: 一份包含數據驅動見解的全面調查報告
+    expected_outcome_zhTW: 一份包含數據驅動見解的全面調查報告
     expected_outcome_es: Un informe de encuesta completo con insights basados en datos
     expected_outcome_ja: データ駆動型の洞察を含む包括的な調査レポート
     expected_outcome_ko: 데이터 기반 통찰력을 포함한 포괄적인 설문조사 보고서
@@ -197,7 +197,7 @@ tasks:
       - Survey tools
       - AI analysis platforms
       - Privacy guidelines
-    resources_zh:
+    resources_zhTW:
       - 調查工具
       - AI 分析平台
       - 隱私指南
@@ -248,7 +248,7 @@ tasks:
 
   - id: task-2
     title: "Wellness Content Creation"
-    title_zh: "健康內容創作"
+    title_zhTW: "健康內容創作"
     title_es: "Creación de Contenido de Bienestar"
     title_ja: "ウェルネスコンテンツ作成"
     title_ko: "웰니스 콘텐츠 제작"
@@ -257,7 +257,7 @@ tasks:
     title_ru: "Создание контента о благополучии"
     title_it: "Creazione di Contenuti sul Benessere"
     description: "Create engaging digital wellness content using AI tools"
-    description_zh: "使用 AI 工具創建引人入勝的數位健康內容"
+    description_zhTW: "使用 AI 工具創建引人入勝的數位健康內容"
     description_es: "Crea contenido atractivo de bienestar digital usando herramientas de IA"
     description_ja: "AIツールを使用して魅力的なデジタルウェルネスコンテンツを作成する"
     description_ko: "AI 도구를 사용하여 매력적인 디지털 웰니스 콘텐츠 만들기"
@@ -271,7 +271,7 @@ tasks:
       - Develop social media posts with positive messaging
       - Design video scripts for wellness tips
       - Create interactive quizzes about digital wellness
-    instructions_zh:
+    instructions_zhTW:
       - 使用 AI 設計工具創建健康數位習慣的信息圖表
       - 開發具有正面訊息的社交媒體帖子
       - 設計健康提示的視頻腳本
@@ -312,7 +312,7 @@ tasks:
       - Progetta script video per consigli sul benessere
       - Crea quiz interattivi sul benessere digitale
     expected_outcome: A portfolio of engaging digital wellness content
-    expected_outcome_zh: 一套引人入勝的數位健康內容組合
+    expected_outcome_zhTW: 一套引人入勝的數位健康內容組合
     expected_outcome_es: Un portafolio de contenido atractivo de bienestar digital
     expected_outcome_ja: 魅力的なデジタルウェルネスコンテンツのポートフォリオ
     expected_outcome_ko: 매력적인 디지털 웰니스 콘텐츠 포트폴리오
@@ -340,7 +340,7 @@ tasks:
 
   - id: task-3
     title: "AI Wellness Assistant"
-    title_zh: "AI 健康助手"
+    title_zhTW: "AI 健康助手"
     title_es: "Asistente de Bienestar con IA"
     title_ja: "AIウェルネスアシスタント"
     title_ko: "AI 웰니스 어시스턴트"
@@ -349,7 +349,7 @@ tasks:
     title_ru: "ИИ-помощник по благополучию"
     title_it: "Assistente al Benessere IA"
     description: "Design an AI chatbot to help peers manage digital wellness"
-    description_zh: "設計一個 AI 聊天機器人來幫助同儕管理數位健康"
+    description_zhTW: "設計一個 AI 聊天機器人來幫助同儕管理數位健康"
     description_es: "Diseña un chatbot de IA para ayudar a los compañeros a gestionar el bienestar digital"
     description_ja: "仲間がデジタルウェルネスを管理するのを助けるAIチャットボットを設計する"
     description_ko: "동료들이 디지털 웰니스를 관리하는 데 도움이 되는 AI 챗봇 설계"
@@ -363,7 +363,7 @@ tasks:
       - Write conversation flows that are supportive and non-judgmental
       - Test with classmates and gather feedback
       - Refine based on user experience
-    instructions_zh:
+    instructions_zhTW:
       - 設計聊天機器人功能：螢幕時間提醒、正念提示、學習休息和情緒檢查
       - 編寫支持性和非批判性的對話流程
       - 與同學測試並收集反饋
@@ -404,7 +404,7 @@ tasks:
       - Testa con i compagni e raccogli feedback
       - Perfeziona in base all'esperienza utente
     expected_outcome: A functional wellness chatbot prototype
-    expected_outcome_zh: 一個功能性的健康聊天機器人原型
+    expected_outcome_zhTW: 一個功能性的健康聊天機器人原型
     expected_outcome_es: Un prototipo funcional de chatbot de bienestar
     expected_outcome_ja: 機能的なウェルネスチャットボットのプロトタイプ
     expected_outcome_ko: 기능적인 웰니스 챗봇 프로토타입
@@ -432,7 +432,7 @@ tasks:
 
   - id: task-4
     title: "Campaign Launch Plan"
-    title_zh: "活動啟動計畫"
+    title_zhTW: "活動啟動計畫"
     title_es: "Plan de Lanzamiento de Campaña"
     title_ja: "キャンペーン開始計画"
     title_ko: "캠페인 시작 계획"
@@ -441,7 +441,7 @@ tasks:
     title_ru: "План запуска кампании"
     title_it: "Piano di Lancio della Campagna"
     description: "Develop a comprehensive launch plan for your digital wellness campaign"
-    description_zh: "為你的數位健康活動制定全面的啟動計畫"
+    description_zhTW: "為你的數位健康活動制定全面的啟動計畫"
     description_es: "Desarrolla un plan de lanzamiento integral para tu campaña de bienestar digital"
     description_ja: "デジタルウェルネスキャンペーンの包括的な立ち上げ計画を策定する"
     description_ko: "디지털 웰니스 캠페인을 위한 포괄적인 시작 계획 개발"
@@ -455,7 +455,7 @@ tasks:
       - Plan launch events and activities
       - Identify partners like clubs and teachers
       - Set measurable goals and success metrics
-    instructions_zh:
+    instructions_zhTW:
       - 使用 AI 創建活動時間表和宣傳材料
       - 規劃啟動活動和活動
       - 識別合作夥伴如社團和老師
@@ -496,7 +496,7 @@ tasks:
       - Identifica partner come club e insegnanti
       - Stabilisci obiettivi misurabili e metriche di successo
     expected_outcome: A detailed, actionable campaign launch plan
-    expected_outcome_zh: 一個詳細、可執行的活動啟動計畫
+    expected_outcome_zhTW: 一個詳細、可執行的活動啟動計畫
     expected_outcome_es: Un plan de lanzamiento de campaña detallado y ejecutable
     expected_outcome_ja: 詳細で実行可能なキャンペーン立ち上げ計画
     expected_outcome_ko: 상세하고 실행 가능한 캠페인 시작 계획
@@ -524,7 +524,7 @@ tasks:
 
   - id: task-5
     title: "Impact Measurement"
-    title_zh: "影響力測量"
+    title_zhTW: "影響力測量"
     title_es: "Medición de Impacto"
     title_ja: "インパクト測定"
     title_ko: "영향력 측정"
@@ -533,7 +533,7 @@ tasks:
     title_ru: "Измерение воздействия"
     title_it: "Misurazione dell'Impatto"
     description: "Use AI to measure and report on campaign effectiveness"
-    description_zh: "使用 AI 測量和報告活動效果"
+    description_zhTW: "使用 AI 測量和報告活動效果"
     description_es: "Usa IA para medir e informar sobre la efectividad de la campaña"
     description_ja: "AIを使用してキャンペーンの効果を測定・報告する"
     description_ko: "AI를 사용하여 캠페인 효과 측정 및 보고"
@@ -547,7 +547,7 @@ tasks:
       - Use AI to analyze results and identify trends
       - Create visual reports with charts and graphs
       - Identify lessons learned and areas for improvement
-    instructions_zh:
+    instructions_zhTW:
       - 收集參與率、行為改變、反饋和健康改善的數據
       - 使用 AI 分析結果並識別趨勢
       - 創建帶有圖表的視覺報告
@@ -588,7 +588,7 @@ tasks:
       - Crea report visivi con grafici
       - Identifica le lezioni apprese e le aree di miglioramento
     expected_outcome: A comprehensive impact report with actionable insights
-    expected_outcome_zh: 一份包含可行見解的全面影響報告
+    expected_outcome_zhTW: 一份包含可行見解的全面影響報告
     expected_outcome_es: Un informe de impacto integral con insights accionables
     expected_outcome_ja: 実行可能な洞察を含む包括的なインパクトレポート
     expected_outcome_ko: 실행 가능한 통찰력이 포함된 포괄적인 영향 보고서
@@ -623,11 +623,11 @@ completion_criteria:
 
 resources:
   - name: "Digital Wellness Institute"
-    name_zh: "數位健康研究所"
+    name_zhTW: "數位健康研究所"
     url: "https://www.digitalwellnessinstitute.com/"
     type: reference
     
   - name: "Common Sense Media"
-    name_zh: "常識媒體"
+    name_zhTW: "常識媒體"
     url: "https://www.commonsensemedia.org/"
     type: guide

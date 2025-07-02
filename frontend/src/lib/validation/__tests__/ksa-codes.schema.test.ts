@@ -11,7 +11,7 @@ describe('KSA Codes Schema Validation', () => {
       const validKSAFile = {
         knowledge_codes: {
           desciption: 'Knowledge codes description',
-          desciption_zh: '知識代碼描述',
+          desciption_zhTW: '知識代碼描述',
           desciption_es: 'Descripción de códigos de conocimiento',
           desciption_ja: '知識コードの説明',
           desciption_ko: '지식 코드 설명',
@@ -24,7 +24,7 @@ describe('KSA Codes Schema Validation', () => {
               codes: {
                 'K1.1': {
                   summary: 'Knowledge summary',
-                  summary_zh: '知識摘要',
+                  summary_zhTW: '知識摘要',
                   summary_es: 'Resumen de conocimiento',
                   summary_ja: '知識の要約',
                   summary_ko: '지식 요약',
@@ -35,7 +35,7 @@ describe('KSA Codes Schema Validation', () => {
                 },
                 'K1.2': {
                   summary: 'Another knowledge summary',
-                  summary_zh: '另一個知識摘要',
+                  summary_zhTW: '另一個知識摘要',
                   summary_es: 'Otro resumen de conocimiento',
                   summary_ja: '別の知識の要約',
                   summary_ko: '또 다른 지식 요약',
@@ -50,7 +50,7 @@ describe('KSA Codes Schema Validation', () => {
         },
         skills_codes: {
           desciption: 'Skills codes description',
-          desciption_zh: '技能代碼描述',
+          desciption_zhTW: '技能代碼描述',
           desciption_es: 'Descripción de códigos de habilidades',
           desciption_ja: 'スキルコードの説明',
           desciption_ko: '기술 코드 설명',
@@ -63,7 +63,7 @@ describe('KSA Codes Schema Validation', () => {
               codes: {
                 'S1.1': {
                   summary: 'Skill summary',
-                  summary_zh: '技能摘要',
+                  summary_zhTW: '技能摘要',
                   summary_es: 'Resumen de habilidad',
                   summary_ja: 'スキルの要約',
                   summary_ko: '기술 요약',
@@ -78,7 +78,7 @@ describe('KSA Codes Schema Validation', () => {
         },
         attitudes_codes: {
           desciption: 'Attitudes codes description',
-          desciption_zh: '態度代碼描述',
+          desciption_zhTW: '態度代碼描述',
           desciption_es: 'Descripción de códigos de actitudes',
           desciption_ja: '態度コードの説明',
           desciption_ko: '태도 코드 설명',
@@ -91,7 +91,7 @@ describe('KSA Codes Schema Validation', () => {
               codes: {
                 'A1.1': {
                   summary: 'Attitude summary',
-                  summary_zh: '態度摘要',
+                  summary_zhTW: '態度摘要',
                   summary_es: 'Resumen de actitud',
                   summary_ja: '態度の要約',
                   summary_ko: '태도 요약',
@@ -119,7 +119,7 @@ describe('KSA Codes Schema Validation', () => {
         },
         skills_codes: {
           desciption: 'Skills codes description',
-          desciption_zh: '技能代碼描述',
+          desciption_zhTW: '技能代碼描述',
           desciption_es: 'Descripción',
           desciption_ja: '説明',
           desciption_ko: '설명',
@@ -140,7 +140,7 @@ describe('KSA Codes Schema Validation', () => {
       const fileWithInvalidIds = {
         knowledge_codes: {
           desciption: 'Knowledge codes description',
-          desciption_zh: '知識代碼描述',
+          desciption_zhTW: '知識代碼描述',
           desciption_es: 'Descripción',
           desciption_ja: '説明',
           desciption_ko: '설명',
@@ -153,7 +153,7 @@ describe('KSA Codes Schema Validation', () => {
               codes: {
                 'INVALID_ID': { // Should be K#.#
                   summary: 'Summary',
-                  summary_zh: '摘要',
+                  summary_zhTW: '摘要',
                   summary_es: 'Resumen',
                   summary_ja: '要約',
                   summary_ko: '요약',
@@ -168,7 +168,7 @@ describe('KSA Codes Schema Validation', () => {
         },
         skills_codes: {
           desciption: 'Skills codes description',
-          desciption_zh: '技能代碼描述',
+          desciption_zhTW: '技能代碼描述',
           desciption_es: 'Descripción',
           desciption_ja: '説明',
           desciption_ko: '설명',
@@ -180,7 +180,7 @@ describe('KSA Codes Schema Validation', () => {
         },
         attitudes_codes: {
           desciption: 'Attitudes codes description',
-          desciption_zh: '態度代碼描述',
+          desciption_zhTW: '態度代碼描述',
           desciption_es: 'Descripción',
           desciption_ja: '説明',
           desciption_ko: '설명',
@@ -200,7 +200,7 @@ describe('KSA Codes Schema Validation', () => {
       const fileWithMultipleThemes = {
         knowledge_codes: {
           desciption: 'Knowledge codes description',
-          desciption_zh: '知識代碼描述',
+          desciption_zhTW: '知識代碼描述',
           desciption_es: 'Descripción',
           desciption_ja: '説明',
           desciption_ko: '설명',
@@ -213,7 +213,7 @@ describe('KSA Codes Schema Validation', () => {
               codes: {
                 'K1.1': {
                   summary: 'Summary 1.1',
-                  summary_zh: '摘要 1.1',
+                  summary_zhTW: '摘要 1.1',
                   summary_es: 'Resumen 1.1',
                   summary_ja: '要約 1.1',
                   summary_ko: '요약 1.1',
@@ -224,7 +224,7 @@ describe('KSA Codes Schema Validation', () => {
                 },
                 'K1.2': {
                   summary: 'Summary 1.2',
-                  summary_zh: '摘要 1.2',
+                  summary_zhTW: '摘要 1.2',
                   summary_es: 'Resumen 1.2',
                   summary_ja: '要約 1.2',
                   summary_ko: '요약 1.2',
@@ -239,7 +239,7 @@ describe('KSA Codes Schema Validation', () => {
               codes: {
                 'K2.1': {
                   summary: 'Summary 2.1',
-                  summary_zh: '摘要 2.1',
+                  summary_zhTW: '摘要 2.1',
                   summary_es: 'Resumen 2.1',
                   summary_ja: '要約 2.1',
                   summary_ko: '요약 2.1',
@@ -254,7 +254,7 @@ describe('KSA Codes Schema Validation', () => {
         },
         skills_codes: {
           desciption: 'Skills codes description',
-          desciption_zh: '技能代碼描述',
+          desciption_zhTW: '技能代碼描述',
           desciption_es: 'Descripción',
           desciption_ja: '説明',
           desciption_ko: '설명',
@@ -267,7 +267,7 @@ describe('KSA Codes Schema Validation', () => {
               codes: {
                 'S1.1': {
                   summary: 'Skill 1.1',
-                  summary_zh: '技能 1.1',
+                  summary_zhTW: '技能 1.1',
                   summary_es: 'Habilidad 1.1',
                   summary_ja: 'スキル 1.1',
                   summary_ko: '기술 1.1',
@@ -282,7 +282,7 @@ describe('KSA Codes Schema Validation', () => {
         },
         attitudes_codes: {
           desciption: 'Attitudes codes description',
-          desciption_zh: '態度代碼描述',
+          desciption_zhTW: '態度代碼描述',
           desciption_es: 'Descripción',
           desciption_ja: '説明',
           desciption_ko: '설명',
@@ -295,7 +295,7 @@ describe('KSA Codes Schema Validation', () => {
               codes: {
                 'A1.1': {
                   summary: 'Attitude 1.1',
-                  summary_zh: '態度 1.1',
+                  summary_zhTW: '態度 1.1',
                   summary_es: 'Actitud 1.1',
                   summary_ja: '態度 1.1',
                   summary_ko: '태도 1.1',
@@ -319,7 +319,7 @@ describe('KSA Codes Schema Validation', () => {
     const createValidKSAFile = (): KSACodesFile => ({
       knowledge_codes: {
         desciption: 'Knowledge codes',
-        desciption_zh: '知識代碼',
+        desciption_zhTW: '知識代碼',
         desciption_es: 'Códigos de conocimiento',
         desciption_ja: '知識コード',
         desciption_ko: '지식 코드',
@@ -332,7 +332,7 @@ describe('KSA Codes Schema Validation', () => {
             codes: {
               'K1.1': {
                 summary: 'Knowledge 1.1',
-                summary_zh: '知識 1.1',
+                summary_zhTW: '知識 1.1',
                 summary_es: 'Conocimiento 1.1',
                 summary_ja: '知識 1.1',
                 summary_ko: '지식 1.1',
@@ -343,7 +343,7 @@ describe('KSA Codes Schema Validation', () => {
               },
               'K1.2': {
                 summary: 'Knowledge 1.2',
-                summary_zh: '知識 1.2',
+                summary_zhTW: '知識 1.2',
                 summary_es: 'Conocimiento 1.2',
                 summary_ja: '知識 1.2',
                 summary_ko: '지식 1.2',
@@ -358,7 +358,7 @@ describe('KSA Codes Schema Validation', () => {
             codes: {
               'K2.1': {
                 summary: 'Knowledge 2.1',
-                summary_zh: '知識 2.1',
+                summary_zhTW: '知識 2.1',
                 summary_es: 'Conocimiento 2.1',
                 summary_ja: '知識 2.1',
                 summary_ko: '지식 2.1',
@@ -373,7 +373,7 @@ describe('KSA Codes Schema Validation', () => {
       },
       skills_codes: {
         desciption: 'Skills codes',
-        desciption_zh: '技能代碼',
+        desciption_zhTW: '技能代碼',
         desciption_es: 'Códigos de habilidades',
         desciption_ja: 'スキルコード',
         desciption_ko: '기술 코드',
@@ -386,7 +386,7 @@ describe('KSA Codes Schema Validation', () => {
             codes: {
               'S1.1': {
                 summary: 'Skill 1.1',
-                summary_zh: '技能 1.1',
+                summary_zhTW: '技能 1.1',
                 summary_es: 'Habilidad 1.1',
                 summary_ja: 'スキル 1.1',
                 summary_ko: '기술 1.1',
@@ -397,7 +397,7 @@ describe('KSA Codes Schema Validation', () => {
               },
               'S1.2': {
                 summary: 'Skill 1.2',
-                summary_zh: '技能 1.2',
+                summary_zhTW: '技能 1.2',
                 summary_es: 'Habilidad 1.2',
                 summary_ja: 'スキル 1.2',
                 summary_ko: '기술 1.2',
@@ -412,7 +412,7 @@ describe('KSA Codes Schema Validation', () => {
       },
       attitudes_codes: {
         desciption: 'Attitudes codes',
-        desciption_zh: '態度代碼',
+        desciption_zhTW: '態度代碼',
         desciption_es: 'Códigos de actitudes',
         desciption_ja: '態度コード',
         desciption_ko: '태도 코드',
@@ -425,7 +425,7 @@ describe('KSA Codes Schema Validation', () => {
             codes: {
               'A1.1': {
                 summary: 'Attitude 1.1',
-                summary_zh: '態度 1.1',
+                summary_zhTW: '態度 1.1',
                 summary_es: 'Actitud 1.1',
                 summary_ja: '態度 1.1',
                 summary_ko: '태도 1.1',
@@ -440,7 +440,7 @@ describe('KSA Codes Schema Validation', () => {
             codes: {
               'A2.1': {
                 summary: 'Attitude 2.1',
-                summary_zh: '態度 2.1',
+                summary_zhTW: '態度 2.1',
                 summary_es: 'Actitud 2.1',
                 summary_ja: '態度 2.1',
                 summary_ko: '태도 2.1',
@@ -468,7 +468,7 @@ describe('KSA Codes Schema Validation', () => {
       const ksaFile: KSACodesFile = {
         knowledge_codes: {
           desciption: 'Knowledge codes',
-          desciption_zh: '知識代碼',
+          desciption_zhTW: '知識代碼',
           desciption_es: 'Códigos',
           desciption_ja: 'コード',
           desciption_ko: '코드',
@@ -480,7 +480,7 @@ describe('KSA Codes Schema Validation', () => {
         },
         skills_codes: {
           desciption: 'Skills codes',
-          desciption_zh: '技能代碼',
+          desciption_zhTW: '技能代碼',
           desciption_es: 'Códigos',
           desciption_ja: 'コード',
           desciption_ko: '코드',
@@ -492,7 +492,7 @@ describe('KSA Codes Schema Validation', () => {
         },
         attitudes_codes: {
           desciption: 'Attitudes codes',
-          desciption_zh: '態度代碼',
+          desciption_zhTW: '態度代碼',
           desciption_es: 'Códigos',
           desciption_ja: 'コード',
           desciption_ko: '코드',
@@ -518,7 +518,7 @@ describe('KSA Codes Schema Validation', () => {
         codes: {
           'K1.1': { // 重複的 ID
             summary: 'Duplicate',
-            summary_zh: '重複',
+            summary_zhTW: '重複',
             summary_es: 'Duplicado',
             summary_ja: '重複',
             summary_ko: '중복',

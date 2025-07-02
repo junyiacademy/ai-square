@@ -19,7 +19,7 @@ const themeSchema = z.object({
 // Schema for knowledge codes section
 const knowledgeCodesSchema = z.object({
   desciption: z.string().min(1), // Note: typo in actual YAML file
-  desciption_zh: z.string().min(1),
+  desciption_zhTW: z.string().min(1),
   desciption_es: z.string().min(1),
   desciption_ja: z.string().min(1),
   desciption_ko: z.string().min(1),
@@ -33,7 +33,7 @@ const knowledgeCodesSchema = z.object({
 // Schema for skills codes section
 const skillsCodesSchema = z.object({
   desciption: z.string().min(1), // Note: typo in actual YAML file
-  desciption_zh: z.string().min(1),
+  desciption_zhTW: z.string().min(1),
   desciption_es: z.string().min(1),
   desciption_ja: z.string().min(1),
   desciption_ko: z.string().min(1),
@@ -47,7 +47,7 @@ const skillsCodesSchema = z.object({
 // Schema for attitudes codes section
 const attitudesCodesSchema = z.object({
   desciption: z.string().min(1), // Note: typo in actual YAML file
-  desciption_zh: z.string().min(1),
+  desciption_zhTW: z.string().min(1),
   desciption_es: z.string().min(1),
   desciption_ja: z.string().min(1),
   desciption_ko: z.string().min(1),

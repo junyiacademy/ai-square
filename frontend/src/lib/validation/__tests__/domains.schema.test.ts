@@ -13,7 +13,7 @@ describe('Domains Schema Validation', () => {
           Engaging_with_AI: {
             emoji: '🤝',
             overview: 'Overview text',
-            overview_zh: '概覽文字',
+            overview_zhTW: '概覽文字',
             overview_es: 'Texto de resumen',
             overview_ja: '概要テキスト',
             overview_ko: '개요 텍스트',
@@ -24,7 +24,7 @@ describe('Domains Schema Validation', () => {
             competencies: {
               'C1.1': {
                 description: 'Competency description',
-                description_zh: '能力描述',
+                description_zhTW: '能力描述',
                 description_es: 'Descripción de competencia',
                 description_ja: 'コンピテンシーの説明',
                 description_ko: '역량 설명',
@@ -36,7 +36,7 @@ describe('Domains Schema Validation', () => {
                 skills: ['S1.1'],
                 attitudes: ['A1.1'],
                 content: 'Content text',
-                content_zh: '內容文字',
+                content_zhTW: '內容文字',
                 content_es: 'Texto de contenido',
                 content_ja: 'コンテンツテキスト',
                 content_ko: '콘텐츠 텍스트',
@@ -45,7 +45,7 @@ describe('Domains Schema Validation', () => {
                 content_ru: 'Текст содержания',
                 content_it: 'Testo del contenuto',
                 scenarios: ["Scenario 1", "Scenario 2"],
-                scenarios_zh: ["情境 1", "情境 2"],
+                scenarios_zhTW: ["情境 1", "情境 2"],
                 scenarios_es: ["Escenario 1", "Escenario 2"],
                 scenarios_ja: ["シナリオ 1", "シナリオ 2"],
                 scenarios_ko: ["시나리오 1", "시나리오 2"],
@@ -59,7 +59,7 @@ describe('Domains Schema Validation', () => {
           Creating_with_AI: {
             emoji: '🎨',
             overview: 'Creating overview',
-            overview_zh: '創作概覽',
+            overview_zhTW: '創作概覽',
             overview_es: 'Resumen de creación',
             overview_ja: '創造の概要',
             overview_ko: '창작 개요',
@@ -72,7 +72,7 @@ describe('Domains Schema Validation', () => {
           Managing_with_AI: {
             emoji: '📊',
             overview: 'Managing overview',
-            overview_zh: '管理概覽',
+            overview_zhTW: '管理概覽',
             overview_es: 'Resumen de gestión',
             overview_ja: '管理の概要',
             overview_ko: '관리 개요',
@@ -85,7 +85,7 @@ describe('Domains Schema Validation', () => {
           Designing_with_AI: {
             emoji: '🏗️',
             overview: 'Designing overview',
-            overview_zh: '設計概覽',
+            overview_zhTW: '設計概覽',
             overview_es: 'Resumen de diseño',
             overview_ja: 'デザインの概要',
             overview_ko: '설계 개요',
@@ -114,7 +114,7 @@ describe('Domains Schema Validation', () => {
           Engaging_with_AI: {
             emoji: '🤝',
             overview: 'Overview',
-            overview_zh: '概覽',
+            overview_zhTW: '概覽',
             overview_es: 'Resumen',
             overview_ja: '概要',
             overview_ko: '개요',
@@ -138,7 +138,7 @@ describe('Domains Schema Validation', () => {
           Engaging_with_AI: {
             emoji: '🤝',
             overview: 'Overview',
-            overview_zh: '概覽',
+            overview_zhTW: '概覽',
             overview_es: 'Resumen',
             overview_ja: '概要',
             overview_ko: '개요',
@@ -149,7 +149,7 @@ describe('Domains Schema Validation', () => {
             competencies: {
               'C1.1': {
                 description: 'Description',
-                description_zh: '描述',
+                description_zhTW: '描述',
                 description_es: 'Descripción',
                 description_ja: '説明',
                 description_ko: '설명',
@@ -161,7 +161,7 @@ describe('Domains Schema Validation', () => {
                 skills: ['S1.1'],
                 attitudes: ['A1.1'],
                 content: 'Content',
-                content_zh: '內容',
+                content_zhTW: '內容',
                 content_es: 'Contenido',
                 content_ja: 'コンテンツ',
                 content_ko: '콘텐츠',
@@ -170,7 +170,7 @@ describe('Domains Schema Validation', () => {
                 content_ru: 'Содержание',
                 content_it: 'Contenuto',
                 scenarios: '[]',
-                scenarios_zh: '[]',
+                scenarios_zhTW: '[]',
                 scenarios_es: '[]',
                 scenarios_ja: '[]',
                 scenarios_ko: '[]',
@@ -184,7 +184,7 @@ describe('Domains Schema Validation', () => {
           Creating_with_AI: {
             emoji: '🎨',
             overview: 'Overview',
-            overview_zh: '概覽',
+            overview_zhTW: '概覽',
             overview_es: 'Resumen',
             overview_ja: '概要',
             overview_ko: '개요',
@@ -197,7 +197,7 @@ describe('Domains Schema Validation', () => {
           Managing_with_AI: {
             emoji: '📊',
             overview: 'Overview',
-            overview_zh: '概覽',
+            overview_zhTW: '概覽',
             overview_es: 'Resumen',
             overview_ja: '概要',
             overview_ko: '개요',
@@ -210,7 +210,7 @@ describe('Domains Schema Validation', () => {
           Designing_with_AI: {
             emoji: '🏗️',
             overview: 'Overview',
-            overview_zh: '概覽',
+            overview_zhTW: '概覽',
             overview_es: 'Resumen',
             overview_ja: '概要',
             overview_ko: '개요',
@@ -233,7 +233,7 @@ describe('Domains Schema Validation', () => {
           Engaging_with_AI: {
             emoji: '🤝',
             overview: 'Overview',
-            overview_zh: '概覽',
+            overview_zhTW: '概覽',
             overview_es: 'Resumen',
             overview_ja: '概要',
             overview_ko: '개요',
@@ -244,7 +244,7 @@ describe('Domains Schema Validation', () => {
             competencies: {
               'C1.1': {
                 description: 'Description',
-                description_zh: '描述',
+                description_zhTW: '描述',
                 description_es: 'Descripción',
                 description_ja: '説明',
                 description_ko: '설명',
@@ -256,7 +256,7 @@ describe('Domains Schema Validation', () => {
                 skills: ['S1.1'],
                 attitudes: ['A1.1'],
                 content: 'Content',
-                content_zh: '內容',
+                content_zhTW: '內容',
                 content_es: 'Contenido',
                 content_ja: 'コンテンツ',
                 content_ko: '콘텐츠',
@@ -265,7 +265,7 @@ describe('Domains Schema Validation', () => {
                 content_ru: 'Содержание',
                 content_it: 'Contenuto',
                 scenarios: 'Scenario 1\nScenario 2\nScenario 3', // Newline separated
-                scenarios_zh: '["情境 1", "情境 2"]', // JSON array
+                scenarios_zhTW: '["情境 1", "情境 2"]', // JSON array
                 scenarios_es: 'Escenario 1\nEscenario 2',
                 scenarios_ja: '["シナリオ 1"]',
                 scenarios_ko: '시나리오 1',
@@ -279,7 +279,7 @@ describe('Domains Schema Validation', () => {
           Creating_with_AI: {
             emoji: '🎨',
             overview: 'Overview',
-            overview_zh: '概覽',
+            overview_zhTW: '概覽',
             overview_es: 'Resumen',
             overview_ja: '概要',
             overview_ko: '개요',
@@ -292,7 +292,7 @@ describe('Domains Schema Validation', () => {
           Managing_with_AI: {
             emoji: '📊',
             overview: 'Overview',
-            overview_zh: '概覽',
+            overview_zhTW: '概覽',
             overview_es: 'Resumen',
             overview_ja: '概要',
             overview_ko: '개요',
@@ -305,7 +305,7 @@ describe('Domains Schema Validation', () => {
           Designing_with_AI: {
             emoji: '🏗️',
             overview: 'Overview',
-            overview_zh: '概覽',
+            overview_zhTW: '概覽',
             overview_es: 'Resumen',
             overview_ja: '概要',
             overview_ko: '개요',
@@ -325,7 +325,7 @@ describe('Domains Schema Validation', () => {
         // Check newline-separated conversion
         expect(competency.scenarios).toEqual(['Scenario 1', 'Scenario 2', 'Scenario 3']);
         // Check JSON array conversion
-        expect(competency.scenarios_zh).toEqual(['情境 1', '情境 2']);
+        expect(competency.scenarios_zhTW).toEqual(['情境 1', '情境 2']);
         // Check single line conversion
         expect(competency.scenarios_ko).toEqual(['시나리오 1']);
       }
@@ -344,7 +344,7 @@ describe('Domains Schema Validation', () => {
         Engaging_with_AI: {
           emoji: '🤝',
           overview: 'Overview',
-          overview_zh: '概覽',
+          overview_zhTW: '概覽',
           overview_es: 'Resumen',
           overview_ja: '概要',
           overview_ko: '개요',
@@ -355,7 +355,7 @@ describe('Domains Schema Validation', () => {
           competencies: {
             'C1.1': {
               description: 'Description',
-              description_zh: '描述',
+              description_zhTW: '描述',
               description_es: 'Descripción',
               description_ja: '説明',
               description_ko: '설명',
@@ -367,7 +367,7 @@ describe('Domains Schema Validation', () => {
               skills: ['S1.1'],
               attitudes: ['A1.1'],
               content: 'Content',
-              content_zh: '內容',
+              content_zhTW: '內容',
               content_es: 'Contenido',
               content_ja: 'コンテンツ',
               content_ko: '콘텐츠',
@@ -376,7 +376,7 @@ describe('Domains Schema Validation', () => {
               content_ru: 'Содержание',
               content_it: 'Contenuto',
               scenarios: ['Scenario 1'],
-              scenarios_zh: ['情境 1'],
+              scenarios_zhTW: ['情境 1'],
               scenarios_es: ['Escenario 1'],
               scenarios_ja: ['シナリオ 1'],
               scenarios_ko: ['시나리오 1'],
@@ -390,7 +390,7 @@ describe('Domains Schema Validation', () => {
         Creating_with_AI: {
           emoji: '🎨',
           overview: 'Overview',
-          overview_zh: '概覽',
+          overview_zhTW: '概覽',
           overview_es: 'Resumen',
           overview_ja: '概要',
           overview_ko: '개요',
@@ -403,7 +403,7 @@ describe('Domains Schema Validation', () => {
         Managing_with_AI: {
           emoji: '📊',
           overview: 'Overview',
-          overview_zh: '概覽',
+          overview_zhTW: '概覽',
           overview_es: 'Resumen',
           overview_ja: '概要',
           overview_ko: '개요',
@@ -416,7 +416,7 @@ describe('Domains Schema Validation', () => {
         Designing_with_AI: {
           emoji: '🏗️',
           overview: 'Overview',
-          overview_zh: '概覽',
+          overview_zhTW: '概覽',
           overview_es: 'Resumen',
           overview_ja: '概要',
           overview_ko: '개요',

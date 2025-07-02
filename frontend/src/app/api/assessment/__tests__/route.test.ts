@@ -19,25 +19,25 @@ const mockAssessmentData = {
   domains: {
     engaging_with_ai: {
       name: 'Engaging with AI',
-      name_zh: '與 AI 互動',
+      name_zhTW: '與 AI 互動',
       description: 'Understanding and effectively communicating with AI systems',
       questions: 3
     },
     creating_with_ai: {
       name: 'Creating with AI',
-      name_zh: '與 AI 共創',
+      name_zhTW: '與 AI 共創',
       description: 'Using AI tools to enhance creativity and productivity',
       questions: 3
     },
     managing_with_ai: {
       name: 'Managing with AI',
-      name_zh: '與 AI 管理',
+      name_zhTW: '與 AI 管理',
       description: 'Understanding AI limitations, privacy, and ethical considerations',
       questions: 3
     },
     designing_with_ai: {
       name: 'Designing with AI',
-      name_zh: '與 AI 設計',
+      name_zhTW: '與 AI 設計',
       description: 'Strategic thinking about AI implementation and innovation',
       questions: 3
     }
@@ -49,14 +49,14 @@ const mockAssessmentData = {
       difficulty: 'basic',
       type: 'multiple_choice',
       question: 'What is the most effective way to get better results from an AI chatbot?',
-      question_zh: '如何才能從 AI 聊天機器人獲得更好的結果？',
+      question_zhTW: '如何才能從 AI 聊天機器人獲得更好的結果？',
       options: {
         a: 'Ask very general questions',
         b: 'Provide clear, specific prompts with context',
         c: 'Use only yes/no questions',
         d: 'Always ask multiple questions at once'
       },
-      options_zh: {
+      options_zhTW: {
         a: '問非常籠統的問題',
         b: '提供清晰、具體且有背景的提示',
         c: '只使用是/否問題',
@@ -101,7 +101,7 @@ describe('/api/assessment', () => {
     expect(response.status).toBe(200);
     expect(data.domains.engaging_with_ai.name).toBe('engaging_with_ai');
     expect(data.questions[0].question).toBe('如何才能從 AI 聊天機器人獲得更好的結果？');
-    expect(data.questions[0].options).toEqual(mockAssessmentData.questions[0].options_zh);
+    expect(data.questions[0].options).toEqual(mockAssessmentData.questions[0].options_zhTW);
   });
 
   it('falls back to default language when translation not available', async () => {
@@ -163,14 +163,14 @@ describe('/api/assessment', () => {
           difficulty: 'basic',
           type: 'multiple_choice',
           question: 'Which approach is most effective when using AI for creative writing?',
-          question_zh: '使用 AI 進行創意寫作時，哪種方法最有效？',
+          question_zhTW: '使用 AI 進行創意寫作時，哪種方法最有效？',
           options: {
             a: 'Let AI write everything',
             b: 'Use AI as a collaborative partner',
             c: 'Only use AI to fix grammar',
             d: 'Avoid AI completely'
           },
-          options_zh: {
+          options_zhTW: {
             a: '讓 AI 寫所有內容',
             b: '將 AI 作為協作夥伴',
             c: '只用 AI 修正語法',

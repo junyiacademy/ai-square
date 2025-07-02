@@ -32,7 +32,7 @@ questions:
     difficulty: "basic"
     type: "multiple_choice"
     question: "What is the most effective way to get better results from an AI chatbot?"
-    question_zh: "如何才能從 AI 聊天機器人獲得更好的結果？"
+    question_zhTW: "如何才能從 AI 聊天機器人獲得更好的結果？"
     question_es: "¿Cuál es la forma más efectiva de obtener mejores resultados de un chatbot de IA?"
     question_ja: "AI チャットボットからより良い結果を得る最も効果的な方法は何ですか？"
     question_ko: "AI 챗봇에서 더 나은 결과를 얻는 가장 효과적인 방법은 무엇입니까？"
@@ -45,7 +45,7 @@ questions:
       b: "Provide clear, specific prompts with context"
       c: "Use only yes/no questions"
       d: "Always ask multiple questions at once"
-    options_zh:
+    options_zhTW:
       a: "問非常籠統的問題"
       b: "提供清晰、具體且有背景的提示"
       c: "只使用是/否問題"
@@ -87,7 +87,7 @@ questions:
       d: "Fare sempre più domande contemporaneamente"
     correct_answer: "b"
     explanation: "Clear, specific prompts with context help AI understand exactly what you need and provide more accurate, useful responses."
-    explanation_zh: "清晰、具體且有背景的提示有助於 AI 準確理解您的需求，並提供更準確、有用的回應。"
+    explanation_zhTW: "清晰、具體且有背景的提示有助於 AI 準確理解您的需求，並提供更準確、有用的回應。"
     explanation_es: "Las indicaciones claras y específicas con contexto ayudan a la IA a entender exactamente lo que necesitas y proporcionar respuestas más precisas y útiles."
     explanation_ja: "文脈を含む明確で具体的なプロンプトは、AI があなたのニーズを正確に理解し、より正確で有用な応答を提供するのに役立ちます。"
     explanation_ko: "맥락이 포함된 명확하고 구체적인 프롬프트는 AI가 정확히 무엇이 필요한지 이해하고 더 정확하고 유용한 응답을 제공하는 데 도움이 됩니다."
@@ -105,7 +105,7 @@ questions:
     difficulty: "intermediate"
     type: "multiple_choice"
     question: "When an AI gives you an incorrect answer, what should be your first response?"
-    question_zh: "當 AI 給出錯誤答案時，你的第一反應應該是什麼？"
+    question_zhTW: "當 AI 給出錯誤答案時，你的第一反應應該是什麼？"
     question_es: "Cuando una IA te da una respuesta incorrecta, ¿cuál debería ser tu primera respuesta?"
     question_ja: "AI が間違った回答をした場合、最初にすべきことは何ですか？"
     question_ko: "AI가 잘못된 답변을 제공했을 때, 첫 번째 대응은 무엇이어야 합니까？"
@@ -118,7 +118,7 @@ questions:
       b: "Verify the information through other reliable sources"
       c: "Stop using AI altogether"
       d: "Report the AI as broken"
-    options_zh:
+    options_zhTW:
       a: "立即相信 AI 並使用該信息"
       b: "通過其他可靠來源驗證信息"
       c: "完全停止使用 AI"
@@ -160,7 +160,7 @@ questions:
       d: "Segnalare l'IA come guasta"
     correct_answer: "b"
     explanation: "Critical thinking requires verifying AI outputs against reliable sources, as AI can make mistakes or provide outdated information."
-    explanation_zh: "批判性思維需要透過可靠的來源驗證 AI 的輸出，因為 AI 可能會出錯或提供過時的信息。"
+    explanation_zhTW: "批判性思維需要透過可靠的來源驗證 AI 的輸出，因為 AI 可能會出錯或提供過時的信息。"
     explanation_es: "El pensamiento crítico requiere verificar las salidas de la IA contra fuentes confiables, ya que la IA puede cometer errores o proporcionar información desactualizada."
     explanation_ja: "批判的思考には、AI が間違いを犯したり古い情報を提供したりする可能性があるため、信頼できる情報源に対して AI の出力を検証する必要があります。"
     explanation_ko: "비판적 사고는 AI가 실수를 하거나 오래된 정보를 제공할 수 있으므로 신뢰할 수 있는 출처에 대해 AI 출력을 확인해야 합니다."
@@ -178,7 +178,7 @@ questions:
     difficulty: "advanced"
     type: "multiple_choice"
     question: "What is the most important factor when evaluating AI-generated content for bias?"
-    question_zh: "評估 AI 生成內容的偏見時，最重要的因素是什麼？"
+    question_zhTW: "評估 AI 生成內容的偏見時，最重要的因素是什麼？"
     question_es: "¿Cuál es el factor más importante al evaluar el sesgo en contenido generado por IA?"
     question_ja: "AI が生成したコンテンツのバイアスを評価する際の最も重要な要因は何ですか？"
     question_ko: "AI가 생성한 콘텐츠의 편향을 평가할 때 가장 중요한 요소는 무엇입니까？"
@@ -191,7 +191,7 @@ questions:
       b: "The training data sources and representation"
       c: "The length of the output"
       d: "The technical complexity"
-    options_zh:
+    options_zhTW:
       a: "生成速度"
       b: "訓練數據來源和代表性"
       c: "輸出長度"
@@ -233,7 +233,7 @@ questions:
       d: "La complessità tecnica"
     correct_answer: "b"
     explanation: "AI bias often stems from training data that lacks diversity or contains historical biases, making data sources crucial for evaluation."
-    explanation_zh: "AI 偏見通常源於缺乏多樣性或含有歷史偏見的訓練數據，使得數據來源對於評估至關重要。"
+    explanation_zhTW: "AI 偏見通常源於缺乏多樣性或含有歷史偏見的訓練數據，使得數據來源對於評估至關重要。"
     explanation_es: "El sesgo de la IA a menudo proviene de datos de entrenamiento que carecen de diversidad o contienen sesgos históricos, lo que hace que las fuentes de datos sean cruciales para la evaluación."
     explanation_ja: "AI のバイアスは、多様性が不足していたり歴史的バイアスを含んでいたりする訓練データから生じることが多く、データソースが評価において重要となります。"
     explanation_ko: "AI 편향은 종종 다양성이 부족하거나 역사적 편향을 포함하는 훈련 데이터에서 비롯되어 데이터 소스가 평가에 중요합니다."
@@ -252,7 +252,7 @@ questions:
     difficulty: "basic"
     type: "multiple_choice"
     question: "Which approach is most effective when using AI for creative writing?"
-    question_zh: "使用 AI 進行創意寫作時，哪種方法最有效？"
+    question_zhTW: "使用 AI 進行創意寫作時，哪種方法最有效？"
     question_es: "¿Qué enfoque es más efectivo al usar IA para escritura creativa?"
     question_ja: "創造的な文章作成で AI を使用する際、最も効果的なアプローチは何ですか？"
     question_ko: "창의적 글쓰기에 AI를 사용할 때 가장 효과적인 접근법은 무엇입니까？"
@@ -265,7 +265,7 @@ questions:
       b: "Use AI as a collaborative partner for brainstorming and refinement"
       c: "Only use AI to fix grammar and spelling"
       d: "Avoid AI completely in creative processes"
-    options_zh:
+    options_zhTW:
       a: "讓 AI 在沒有人類輸入的情況下寫所有內容"
       b: "將 AI 作為腦力激盪和完善的協作夥伴"
       c: "只使用 AI 來修正語法和拼寫"
@@ -307,7 +307,7 @@ questions:
       d: "Evitare completamente l'IA nei processi creativi"
     correct_answer: "b"
     explanation: "AI works best as a creative partner, helping with ideation, feedback, and refinement while maintaining human creativity and oversight."
-    explanation_zh: "AI 作為創意夥伴效果最佳，可以幫助構思、提供反饋和精煉想法，同時保持人類的創造力和監督。"
+    explanation_zhTW: "AI 作為創意夥伴效果最佳，可以幫助構思、提供反饋和精煉想法，同時保持人類的創造力和監督。"
     explanation_es: "La IA funciona mejor como socio creativo, ayudando con la ideación, retroalimentación y refinamiento mientras mantiene la creatividad y supervisión humana."
     explanation_ja: "AI はクリエイティブパートナーとして最もよく機能し、人間の創造性と監督を維持しながら、アイデア出し、フィードバック、洗練を支援します。"
     explanation_ko: "AI는 인간의 창의성과 감독을 유지하면서 아이디어 발상, 피드백, 개선을 돕는 창의적 파트너로서 가장 잘 작동합니다."
@@ -325,7 +325,7 @@ questions:
     difficulty: "intermediate"
     type: "multiple_choice"
     question: "When using AI image generators, what is the most important ethical consideration?"
-    question_zh: "使用 AI 圖像生成器時，最重要的道德考量是什麼？"
+    question_zhTW: "使用 AI 圖像生成器時，最重要的道德考量是什麼？"
     question_es: "Al usar generadores de imágenes de IA, ¿cuál es la consideración ética más importante?"
     question_ja: "AI 画像生成ツールを使用する際、最も重要な倫理的考慮事項は何ですか？"
     question_ko: "AI 이미지 생성기를 사용할 때 가장 중요한 윤리적 고려사항은 무엇입니까？"
@@ -338,7 +338,7 @@ questions:
       b: "Respecting copyright and avoiding deepfakes of real people"
       c: "Using the fastest generation settings"
       d: "Creating as many images as possible"
-    options_zh:
+    options_zhTW:
       a: "讓圖像盡可能真實"
       b: "尊重版權並避免真人的深偽造像"
       c: "使用最快的生成設置"
@@ -380,7 +380,7 @@ questions:
       d: "Creare quante più immagini possibile"
     correct_answer: "b"
     explanation: "Respecting intellectual property rights and avoiding misuse for creating unauthorized likenesses or misleading content is crucial for ethical AI use."
-    explanation_zh: "尊重智慧財產權，避免濫用來創建未經授權的肖像或誤導性內容，對於道德使用 AI 至關重要。"
+    explanation_zhTW: "尊重智慧財產權，避免濫用來創建未經授權的肖像或誤導性內容，對於道德使用 AI 至關重要。"
     explanation_es: "Respetar los derechos de propiedad intelectual y evitar el mal uso para crear semejanzas no autorizadas o contenido engañoso es crucial para el uso ético de la IA."
     explanation_ja: "知的財産権を尊重し、無許可の肖像や誤解を招くコンテンツの作成のための誤用を避けることは、倫理的な AI 使用に不可欠です。"
     explanation_ko: "지적 재산권을 존중하고 무단 초상권이나 오해의 소지가 있는 콘텐츠 생성을 위한 오용을 피하는 것은 윤리적인 AI 사용에 중요합니다."
@@ -398,7 +398,7 @@ questions:
     difficulty: "advanced"
     type: "multiple_choice"
     question: "How should you approach AI-assisted code generation for a critical software project?"
-    question_zh: "對於關鍵軟件項目，你應該如何處理 AI 輔助代碼生成？"
+    question_zhTW: "對於關鍵軟件項目，你應該如何處理 AI 輔助代碼生成？"
     question_es: "¿Cómo deberías abordar la generación de código asistida por IA para un proyecto de software crítico?"
     question_ja: "重要なソフトウェアプロジェクトで AI 支援コード生成にどのようにアプローチすべきですか？"
     question_ko: "중요한 소프트웨어 프로젝트에서 AI 지원 코드 생성에 어떻게 접근해야 합니까？"
@@ -411,7 +411,7 @@ questions:
       b: "Thoroughly review, test, and validate all AI-generated code"
       c: "Only use AI for comments and documentation"
       d: "Replace all developers with AI tools"
-    options_zh:
+    options_zhTW:
       a: "直接使用 AI 代碼而不進行審查"
       b: "徹底審查、測試和驗證所有 AI 生成的代碼"
       c: "只將 AI 用於註釋和文檔"
@@ -429,7 +429,7 @@ questions:
     difficulty: "basic"
     type: "multiple_choice"
     question: "What should you do with sensitive personal information when using AI tools?"
-    question_zh: "使用 AI 工具時，應該如何處理敏感的個人信息？"
+    question_zhTW: "使用 AI 工具時，應該如何處理敏感的個人信息？"
     question_es: "¿Qué deberías hacer con información personal sensible al usar herramientas de IA?"
     question_ja: "AI ツールを使用する際、機密の個人情報をどのように扱うべきですか？"
     question_ko: "AI 도구를 사용할 때 민감한 개인정보를 어떻게 처리해야 합니까？"
@@ -442,7 +442,7 @@ questions:
       b: "Never input sensitive information into AI systems"
       c: "Only share it with trusted AI companies"
       d: "Encrypt it before sharing with AI"
-    options_zh:
+    options_zhTW:
       a: "自由分享以獲得更好的 AI 回應"
       b: "絕不將敏感信息輸入 AI 系統"
       c: "只與可信的 AI 公司分享"
@@ -459,7 +459,7 @@ questions:
     difficulty: "intermediate"
     type: "multiple_choice"
     question: "How should you manage AI tool usage in a team environment?"
-    question_zh: "在團隊環境中應該如何管理 AI 工具的使用？"
+    question_zhTW: "在團隊環境中應該如何管理 AI 工具的使用？"
     question_es: "¿Cómo deberías gestionar el uso de herramientas de IA en un entorno de equipo?"
     question_ja: "チーム環境で AI ツールの使用をどのように管理すべきですか？"
     question_ko: "팀 환경에서 AI 도구 사용을 어떻게 관리해야 합니까？"
@@ -472,7 +472,7 @@ questions:
       b: "Establish clear policies and training for AI tool usage"
       c: "Ban all AI tools to avoid risks"
       d: "Only allow managers to use AI tools"
-    options_zh:
+    options_zhTW:
       a: "讓每個人在沒有指導方針的情況下使用任何 AI 工具"
       b: "為 AI 工具使用建立明確的政策和培訓"
       c: "禁止所有 AI 工具以避免風險"
@@ -489,7 +489,7 @@ questions:
     difficulty: "advanced"
     type: "multiple_choice"
     question: "What is the most critical factor when implementing AI in business processes?"
-    question_zh: "在業務流程中實施 AI 時，最關鍵的因素是什麼？"
+    question_zhTW: "在業務流程中實施 AI 時，最關鍵的因素是什麼？"
     question_es: "¿Cuál es el factor más crítico al implementar IA en procesos empresariales?"
     question_ja: "ビジネスプロセスに AI を実装する際の最も重要な要因は何ですか？"
     question_ko: "비즈니스 프로세스에 AI를 구현할 때 가장 중요한 요소는 무엇입니까？"
@@ -502,7 +502,7 @@ questions:
       b: "Understanding limitations and maintaining human oversight"
       c: "Implementing AI as quickly as possible"
       d: "Replacing as many human workers as possible"
-    options_zh:
+    options_zhTW:
       a: "選擇最先進的 AI 技術"
       b: "理解局限性並保持人類監督"
       c: "盡快實施 AI"
@@ -520,7 +520,7 @@ questions:
     difficulty: "basic"
     type: "multiple_choice"
     question: "When designing an AI-powered feature for users, what should be the primary focus?"
-    question_zh: "為用戶設計 AI 功能時，主要關注點應該是什麼？"
+    question_zhTW: "為用戶設計 AI 功能時，主要關注點應該是什麼？"
     question_es: "Al diseñar una característica impulsada por IA para usuarios, ¿cuál debería ser el enfoque principal?"
     question_ja: "ユーザー向けの AI 機能を設計する際、主な焦点は何であるべきですか？"
     question_ko: "사용자를 위한 AI 기반 기능을 설계할 때 주요 초점은 무엇이어야 합니까？"
@@ -533,7 +533,7 @@ questions:
       b: "Solving real user problems and improving user experience"
       c: "Making the AI as complex as possible"
       d: "Hiding the fact that AI is being used"
-    options_zh:
+    options_zhTW:
       a: "展示最先進的 AI 能力"
       b: "解決真正的用戶問題並改善用戶體驗"
       c: "讓 AI 盡可能複雜"
@@ -550,7 +550,7 @@ questions:
     difficulty: "intermediate"
     type: "multiple_choice"
     question: "How should you handle AI system failures in user-facing applications?"
-    question_zh: "在面向用戶的應用程序中，應該如何處理 AI 系統故障？"
+    question_zhTW: "在面向用戶的應用程序中，應該如何處理 AI 系統故障？"
     question_es: "¿Cómo deberías manejar las fallas del sistema de IA en aplicaciones de cara al usuario?"
     question_ja: "ユーザー向けアプリケーションで AI システムの障害をどのように処理すべきですか？"
     question_ko: "사용자 대면 애플리케이션에서 AI 시스템 오류를 어떻게 처리해야 합니까？"
@@ -563,7 +563,7 @@ questions:
       b: "Design graceful fallbacks and clear error communication"
       c: "Immediately shut down the entire application"
       d: "Blame the user for the error"
-    options_zh:
+    options_zhTW:
       a: "隱藏錯誤並假裝一切正常"
       b: "設計優雅的後備方案和清晰的錯誤溝通"
       c: "立即關閉整個應用程序"
@@ -580,7 +580,7 @@ questions:
     difficulty: "advanced"
     type: "multiple_choice"
     question: "What is the most important consideration when designing AI systems for diverse global audiences?"
-    question_zh: "為多元化的全球受眾設計 AI 系統時，最重要的考量是什麼？"
+    question_zhTW: "為多元化的全球受眾設計 AI 系統時，最重要的考量是什麼？"
     question_es: "¿Cuál es la consideración más importante al diseñar sistemas de IA para audiencias globales diversas?"
     question_ja: "多様なグローバルオーディエンス向けの AI システムを設計する際の最も重要な考慮事項は何ですか？"
     question_ko: "다양한 글로벌 사용자를 위한 AI 시스템을 설계할 때 가장 중요한 고려사항은 무엇입니까？"
@@ -593,7 +593,7 @@ questions:
       b: "Understanding cultural contexts and avoiding algorithmic bias"
       c: "Focusing only on the largest market segments"
       d: "Implementing the latest AI technologies everywhere"
-    options_zh:
+    options_zhTW:
       a: "為每個人使用相同的設計以確保一致性"
       b: "理解文化背景並避免算法偏見"
       c: "只關注最大的市場細分"

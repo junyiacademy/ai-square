@@ -5,7 +5,7 @@
 import { z } from 'zod'
 
 // Supported languages
-export const SUPPORTED_LANGUAGES = ['en', 'zh', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'] as const
+export const SUPPORTED_LANGUAGES = ['en', 'zhTW', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'] as const
 export type SupportedLanguage = typeof SUPPORTED_LANGUAGES[number]
 
 /**

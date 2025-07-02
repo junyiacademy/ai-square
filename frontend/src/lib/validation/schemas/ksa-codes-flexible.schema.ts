@@ -7,7 +7,7 @@ import { z } from 'zod'
 // Individual KSA code schema - more flexible
 interface KSACode {
   summary?: string;
-  summary_zh?: string;
+  summary_zhTW?: string;
   summary_es?: string;
   summary_ja?: string;
   summary_ko?: string;
@@ -20,7 +20,7 @@ interface KSACode {
 
 // // const ksaCodeSchema = z.object({
 //   summary: z.string().optional(),
-//   summary_zh: z.string().optional(),
+//   summary_zhTW: z.string().optional(),
 //   summary_es: z.string().optional(),
 //   summary_ja: z.string().optional(),
 //   summary_ko: z.string().optional(),

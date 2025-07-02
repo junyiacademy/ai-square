@@ -111,11 +111,16 @@ export async function POST(request: NextRequest) {
 
     // Get language from Accept-Language header
     const acceptLanguage = request.headers.get('accept-language') || 'en';
-    const userLang = acceptLanguage.split('-')[0] || 'en';
+    let userLang = acceptLanguage.split('-')[0] || 'en';
+    
+    // Map zh to zhTW for Traditional Chinese
+    if (userLang === 'zh') {
+      userLang = 'zhTW';
+    }
     
     // Language mapping for AI instructions
     const languageInstructions: Record<string, string> = {
-      'zh': 'IMPORTANT: You must respond ONLY in Traditional Chinese (繁體中文). All your responses must be in 繁體中文.',
+      'zhTW': 'IMPORTANT: You must respond ONLY in Traditional Chinese (繁體中文). All your responses must be in 繁體中文.',
       'ja': 'IMPORTANT: You must respond ONLY in Japanese (日本語). All your responses must be in 日本語.',
       'ko': 'IMPORTANT: You must respond ONLY in Korean (한국어). All your responses must be in 한국어.',
       'es': 'IMPORTANT: You must respond ONLY in Spanish (Español). All your responses must be in Español.',

@@ -9,7 +9,7 @@ import { LoadingAccordion } from '@/components/ui/loading-skeleton';
 interface Competency {
   key: string;
   description: string;
-  description_zh?: string;
+  description_zhTW?: string;
   description_es?: string;
   description_ja?: string;
   description_ko?: string;
@@ -21,7 +21,7 @@ interface Competency {
   skills: string[];
   attitudes: string[];
   scenarios?: string[];
-  scenarios_zh?: string[];
+  scenarios_zhTW?: string[];
   scenarios_es?: string[];
   scenarios_ja?: string[];
   scenarios_ko?: string[];
@@ -30,7 +30,7 @@ interface Competency {
   scenarios_ru?: string[];
   scenarios_it?: string[];
   content?: string;
-  content_zh?: string;
+  content_zhTW?: string;
   content_es?: string;
   content_ja?: string;
   content_ko?: string;
@@ -43,7 +43,7 @@ interface Competency {
 interface Domain {
   key: string;
   overview: string;
-  overview_zh?: string;
+  overview_zhTW?: string;
   overview_es?: string;
   overview_ja?: string;
   overview_ko?: string;
@@ -57,7 +57,7 @@ interface Domain {
 
 interface KSAItem {
   summary: string;
-  summary_zh?: string;
+  summary_zhTW?: string;
   summary_es?: string;
   summary_ja?: string;
   summary_ko?: string;
@@ -67,7 +67,7 @@ interface KSAItem {
   summary_it?: string;
   theme: string;
   explanation?: string;
-  explanation_zh?: string;
+  explanation_zhTW?: string;
   explanation_es?: string;
   explanation_ja?: string;
   explanation_ko?: string;
@@ -94,7 +94,7 @@ const getTranslatedText = (lang: string, item: object | null, fieldName: string)
   const record = item as Record<string, unknown>;
 
   if (lang === 'zhTW') {
-    const zhKey = `${fieldName}_zh`;
+    const zhKey = `${fieldName}_zhTW`;
     return record[zhKey] ?? record[fieldName];
   }
 

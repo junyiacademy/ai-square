@@ -4,7 +4,7 @@ export interface AssessmentQuestion {
   difficulty: 'basic' | 'intermediate' | 'advanced';
   type: 'multiple_choice';
   question: string;
-  question_zh?: string;
+  question_zhTW?: string;
   question_es?: string;
   question_ja?: string;
   question_ko?: string;
@@ -18,7 +18,7 @@ export interface AssessmentQuestion {
     c: string;
     d: string;
   };
-  options_zh?: {
+  options_zhTW?: {
     a: string;
     b: string;
     c: string;
@@ -77,7 +77,7 @@ export interface AssessmentQuestion {
 
 export interface AssessmentDomain {
   name: string;
-  name_zh?: string;
+  name_zhTW?: string;
   name_es?: string;
   name_ja?: string;
   name_ko?: string;
