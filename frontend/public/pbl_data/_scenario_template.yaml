@@ -1,149 +1,143 @@
-# PBL Scenario Template
-# All scenarios should follow this exact structure and key naming
-
 scenario_info:
-  id: ""  # Required: scenario unique identifier
-  title: ""  # Required: English title
-  title_zhTW: ""  # Required: Traditional Chinese title
-  title_es: ""  # Required: Spanish title
-  title_ja: ""  # Required: Japanese title
-  title_ko: ""  # Required: Korean title
-  title_fr: ""  # Required: French title
-  title_de: ""  # Required: German title
-  title_ru: ""  # Required: Russian title
-  title_it: ""  # Required: Italian title
-  description: ""  # Required: English description
-  description_zhTW: ""  # Required: Traditional Chinese description
-  description_es: ""  # Required: Spanish description
-  description_ja: ""  # Required: Japanese description
-  description_ko: ""  # Required: Korean description
-  description_fr: ""  # Required: French description
-  description_de: ""  # Required: German description
-  description_ru: ""  # Required: Russian description
-  description_it: ""  # Required: Italian description
-  difficulty: "beginner"  # Required: beginner|intermediate|advanced
-  estimated_duration: 60  # Required: number in minutes
-  target_domains:  # Required: array of AI literacy domains
-    - engaging_with_ai
-    - creating_with_ai
-  prerequisites:  # Required: array of prerequisite strings (English)
-    - ""
-  prerequisites_zhTW:  # Required: array of Traditional Chinese prerequisites
-    - ""
-  prerequisites_es:  # Required: array of Spanish prerequisites
-    - ""
-  prerequisites_ja:  # Required: array of Japanese prerequisites
-    - ""
-  prerequisites_ko:  # Required: array of Korean prerequisites
-    - ""
-  prerequisites_fr:  # Required: array of French prerequisites
-    - ""
-  prerequisites_de:  # Required: array of German prerequisites
-    - ""
-  prerequisites_ru:  # Required: array of Russian prerequisites
-    - ""
-  prerequisites_it:  # Required: array of Italian prerequisites
-    - ""
-  learning_objectives:  # Required: array of learning objective strings (English)
-    - ""
-  learning_objectives_zhTW:  # Required: array of Traditional Chinese learning objectives
-    - ""
-  learning_objectives_es:  # Required: array of Spanish learning objectives
-    - ""
-  learning_objectives_ja:  # Required: array of Japanese learning objectives
-    - ""
-  learning_objectives_ko:  # Required: array of Korean learning objectives
-    - ""
-  learning_objectives_fr:  # Required: array of French learning objectives
-    - ""
-  learning_objectives_de:  # Required: array of German learning objectives
-    - ""
-  learning_objectives_ru:  # Required: array of Russian learning objectives
-    - ""
-  learning_objectives_it:  # Required: array of Italian learning objectives
-    - ""
-
-ksa_mapping:  # Optional: KSA mapping for the scenario
-  knowledge:  # Array of knowledge codes
-    - K1.1
-  skills:  # Array of skill codes
-    - S1.1
-  attitudes:  # Array of attitude codes
-    - A1.1
-
-tasks:  # Required: array of task objects
-  - id: ""  # Required: unique task identifier (use 'id' not 'task_id')
-    title: ""  # Required: English task title
-    title_zhTW: ""  # Required: Traditional Chinese task title
-    title_es: ""  # Required: Spanish task title
-    title_ja: ""  # Required: Japanese task title
-    title_ko: ""  # Required: Korean task title
-    title_fr: ""  # Required: French task title
-    title_de: ""  # Required: German task title
-    title_ru: ""  # Required: Russian task title
-    title_it: ""  # Required: Italian task title
-    description: ""  # Required: English task description
-    description_zhTW: ""  # Required: Traditional Chinese task description
-    description_es: ""  # Required: Spanish task description
-    description_ja: ""  # Required: Japanese task description
-    description_ko: ""  # Required: Korean task description
-    description_fr: ""  # Required: French task description
-    description_de: ""  # Required: German task description
-    description_ru: ""  # Required: Russian task description
-    description_it: ""  # Required: Italian task description
-    category: ""  # Required: research|analysis|creation|interaction
-    instructions:  # Required: array of instruction strings (English)
-      - ""
-    instructions_zhTW:  # Required: array of Traditional Chinese instructions
-      - ""
-    instructions_es:  # Required: array of Spanish instructions
-      - ""
-    instructions_ja:  # Required: array of Japanese instructions
-      - ""
-    instructions_ko:  # Required: array of Korean instructions
-      - ""
-    instructions_fr:  # Required: array of French instructions
-      - ""
-    instructions_de:  # Required: array of German instructions
-      - ""
-    instructions_ru:  # Required: array of Russian instructions
-      - ""
-    instructions_it:  # Required: array of Italian instructions
-      - ""
-    expected_outcome: ""  # Required: English expected outcome
-    expected_outcome_zhTW: ""  # Required: Traditional Chinese expected outcome
-    expected_outcome_es: ""  # Required: Spanish expected outcome
-    expected_outcome_ja: ""  # Required: Japanese expected outcome
-    expected_outcome_ko: ""  # Required: Korean expected outcome
-    expected_outcome_fr: ""  # Required: French expected outcome
-    expected_outcome_de: ""  # Required: German expected outcome
-    expected_outcome_ru: ""  # Required: Russian expected outcome
-    expected_outcome_it: ""  # Required: Italian expected outcome
-    time_limit: 30  # Optional: time limit in minutes
-    resources:  # Optional: array of resource strings (English)
-      - ""
-    resources_zhTW:  # Optional: array of Traditional Chinese resources
-      - ""
-    resources_es:  # Optional: array of Spanish resources
-      - ""
-    resources_ja:  # Optional: array of Japanese resources
-      - ""
-    resources_ko:  # Optional: array of Korean resources
-      - ""
-    resources_fr:  # Optional: array of French resources
-      - ""
-    resources_de:  # Optional: array of German resources
-      - ""
-    resources_ru:  # Optional: array of Russian resources
-      - ""
-    resources_it:  # Optional: array of Italian resources
-      - ""
-    assessment_focus:  # Optional: assessment focus
-      primary: []  # Array of primary competency codes
-      secondary: []  # Array of secondary competency codes
-    ai_module:  # Optional: AI module configuration
-      role: ""  # assistant|evaluator|actor
-      model: ""  # AI model to use
-      persona: ""  # AI persona description
-      initial_prompt: |  # Multiline prompt text
-        Prompt text here.
+  id: ''
+  title: ''
+  title_zhTW: ''
+  title_es: ''
+  title_ja: ''
+  title_ko: ''
+  title_fr: ''
+  title_de: ''
+  title_ru: ''
+  title_it: ''
+  description: ''
+  description_zhTW: ''
+  description_es: ''
+  description_ja: ''
+  description_ko: ''
+  description_fr: ''
+  description_de: ''
+  description_ru: ''
+  description_it: ''
+  difficulty: beginner
+  estimated_duration: 60
+  target_domains:
+  - engaging_with_ai
+  - creating_with_ai
+  prerequisites:
+  - ''
+  prerequisites_zhTW:
+  - ''
+  prerequisites_es:
+  - ''
+  prerequisites_ja:
+  - ''
+  prerequisites_ko:
+  - ''
+  prerequisites_fr:
+  - ''
+  prerequisites_de:
+  - ''
+  prerequisites_ru:
+  - ''
+  prerequisites_it:
+  - ''
+  learning_objectives:
+  - ''
+  learning_objectives_zhTW:
+  - ''
+  learning_objectives_es:
+  - ''
+  learning_objectives_ja:
+  - ''
+  learning_objectives_ko:
+  - ''
+  learning_objectives_fr:
+  - ''
+  learning_objectives_de:
+  - ''
+  learning_objectives_ru:
+  - ''
+  learning_objectives_it:
+  - ''
+ksa_mapping:
+  knowledge:
+  - K1.1
+  skills:
+  - S1.1
+  attitudes:
+  - A1.1
+tasks:
+- id: ''
+  title: ''
+  title_zhTW: ''
+  title_es: ''
+  title_ja: ''
+  title_ko: ''
+  title_fr: ''
+  title_de: ''
+  title_ru: ''
+  title_it: ''
+  description: ''
+  description_zhTW: ''
+  description_es: ''
+  description_ja: ''
+  description_ko: ''
+  description_fr: ''
+  description_de: ''
+  description_ru: ''
+  description_it: ''
+  category: ''
+  instructions:
+  - ''
+  instructions_zhTW:
+  - ''
+  instructions_es:
+  - ''
+  instructions_ja:
+  - ''
+  instructions_ko:
+  - ''
+  instructions_fr:
+  - ''
+  instructions_de:
+  - ''
+  instructions_ru:
+  - ''
+  instructions_it:
+  - ''
+  expected_outcome: ''
+  expected_outcome_zhTW: ''
+  expected_outcome_es: ''
+  expected_outcome_ja: ''
+  expected_outcome_ko: ''
+  expected_outcome_fr: ''
+  expected_outcome_de: ''
+  expected_outcome_ru: ''
+  expected_outcome_it: ''
+  time_limit: 30
+  resources:
+  - ''
+  resources_zhTW:
+  - ''
+  resources_es:
+  - ''
+  resources_ja:
+  - ''
+  resources_ko:
+  - ''
+  resources_fr:
+  - ''
+  resources_de:
+  - ''
+  resources_ru:
+  - ''
+  resources_it:
+  - ''
+  assessment_focus:
+    primary: []
+    secondary: []
+  ai_module:
+    role: ''
+    model: ''
+    persona: ''
+    initial_prompt: Prompt text here.

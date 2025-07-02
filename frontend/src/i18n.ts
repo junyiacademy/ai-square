@@ -14,6 +14,11 @@ import itRelations from '../public/locales/it/relations.json';
 
 // Auth 翻譯
 import zhTWAuth from '../public/locales/zhTW/auth.json';
+import zhCNAuth from '../public/locales/zhCN/auth.json';
+import ptAuth from '../public/locales/pt/auth.json';
+import arAuth from '../public/locales/ar/auth.json';
+import idAuth from '../public/locales/id/auth.json';
+import thAuth from '../public/locales/th/auth.json';
 import enAuth from '../public/locales/en/auth.json';
 import esAuth from '../public/locales/es/auth.json';
 import jaAuth from '../public/locales/ja/auth.json';
@@ -25,6 +30,11 @@ import itAuth from '../public/locales/it/auth.json';
 
 // Navigation 翻譯
 import zhTWNavigation from '../public/locales/zhTW/navigation.json';
+import zhCNNavigation from '../public/locales/zhCN/navigation.json';
+import ptNavigation from '../public/locales/pt/navigation.json';
+import arNavigation from '../public/locales/ar/navigation.json';
+import idNavigation from '../public/locales/id/navigation.json';
+import thNavigation from '../public/locales/th/navigation.json';
 import enNavigation from '../public/locales/en/navigation.json';
 import esNavigation from '../public/locales/es/navigation.json';
 import jaNavigation from '../public/locales/ja/navigation.json';
@@ -47,6 +57,11 @@ import itKsa from '../public/locales/it/ksa.json';
 
 // Assessment 翻譯
 import zhTWAssessment from '../public/locales/zhTW/assessment.json';
+import zhCNAssessment from '../public/locales/zhCN/assessment.json';
+import ptAssessment from '../public/locales/pt/assessment.json';
+import arAssessment from '../public/locales/ar/assessment.json';
+import idAssessment from '../public/locales/id/assessment.json';
+import thAssessment from '../public/locales/th/assessment.json';
 import enAssessment from '../public/locales/en/assessment.json';
 import esAssessment from '../public/locales/es/assessment.json';
 import jaAssessment from '../public/locales/ja/assessment.json';
@@ -58,6 +73,11 @@ import itAssessment from '../public/locales/it/assessment.json';
 
 // Homepage 翻譯
 import zhTWHomepage from '../public/locales/zhTW/homepage.json';
+import zhCNHomepage from '../public/locales/zhCN/homepage.json';
+import ptHomepage from '../public/locales/pt/homepage.json';
+import arHomepage from '../public/locales/ar/homepage.json';
+import idHomepage from '../public/locales/id/homepage.json';
+import thHomepage from '../public/locales/th/homepage.json';
 import enHomepage from '../public/locales/en/homepage.json';
 import esHomepage from '../public/locales/es/homepage.json';
 import jaHomepage from '../public/locales/ja/homepage.json';
@@ -69,6 +89,11 @@ import itHomepage from '../public/locales/it/homepage.json';
 
 // PBL 翻譯
 import zhTWPbl from '../public/locales/zhTW/pbl.json';
+import zhCNPbl from '../public/locales/zhCN/pbl.json';
+import ptPbl from '../public/locales/pt/pbl.json';
+import arPbl from '../public/locales/ar/pbl.json';
+import idPbl from '../public/locales/id/pbl.json';
+import thPbl from '../public/locales/th/pbl.json';
 import enPbl from '../public/locales/en/pbl.json';
 import esPbl from '../public/locales/es/pbl.json';
 import jaPbl from '../public/locales/ja/pbl.json';
@@ -114,6 +139,41 @@ i18n
         homepage: zhTWHomepage,
         pbl: zhTWPbl,
         chat: zhTWChat
+      },
+      'zhCN': { 
+        auth: zhCNAuth,
+        navigation: zhCNNavigation,
+        assessment: zhCNAssessment,
+        homepage: zhCNHomepage,
+        pbl: zhCNPbl
+      },
+      'pt': { 
+        auth: ptAuth,
+        navigation: ptNavigation,
+        assessment: ptAssessment,
+        homepage: ptHomepage,
+        pbl: ptPbl
+      },
+      'ar': { 
+        auth: arAuth,
+        navigation: arNavigation,
+        assessment: arAssessment,
+        homepage: arHomepage,
+        pbl: arPbl
+      },
+      'id': { 
+        auth: idAuth,
+        navigation: idNavigation,
+        assessment: idAssessment,
+        homepage: idHomepage,
+        pbl: idPbl
+      },
+      'th': { 
+        auth: thAuth,
+        navigation: thNavigation,
+        assessment: thAssessment,
+        homepage: thHomepage,
+        pbl: thPbl
       },
       en: { 
         relations: enRelations,

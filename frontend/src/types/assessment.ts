@@ -5,6 +5,11 @@ export interface AssessmentQuestion {
   type: 'multiple_choice';
   question: string;
   question_zhTW?: string;
+  question_zhCN?: string;
+  question_pt?: string;
+  question_ar?: string;
+  question_id?: string;
+  question_th?: string;
   question_es?: string;
   question_ja?: string;
   question_ko?: string;
@@ -19,6 +24,36 @@ export interface AssessmentQuestion {
     d: string;
   };
   options_zhTW?: {
+    a: string;
+    b: string;
+    c: string;
+    d: string;
+  };
+  options_zhCN?: {
+    a: string;
+    b: string;
+    c: string;
+    d: string;
+  };
+  options_pt?: {
+    a: string;
+    b: string;
+    c: string;
+    d: string;
+  };
+  options_ar?: {
+    a: string;
+    b: string;
+    c: string;
+    d: string;
+  };
+  options_id?: {
+    a: string;
+    b: string;
+    c: string;
+    d: string;
+  };
+  options_th?: {
     a: string;
     b: string;
     c: string;
@@ -78,6 +113,11 @@ export interface AssessmentQuestion {
 export interface AssessmentDomain {
   name: string;
   name_zhTW?: string;
+  name_zhCN?: string;
+  name_pt?: string;
+  name_ar?: string;
+  name_id?: string;
+  name_th?: string;
   name_es?: string;
   name_ja?: string;
   name_ko?: string;

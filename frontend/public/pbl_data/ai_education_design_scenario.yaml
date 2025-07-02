@@ -1,548 +1,618 @@
-# AI-Enhanced Learning Experience Design Scenario
-# PBL Scenario Definition (Program-based, no stages)
-
 scenario_info:
   id: ai-education-design
-  title: "Designing AI-Enhanced Learning Experiences"
-  title_zhTW: "設計 AI 增強的學習體驗"
-  title_es: "Diseñando Experiencias de Aprendizaje Mejoradas con IA"
-  title_ja: "AI強化学習体験の設計"
-  title_ko: "AI 강화 학습 경험 설계"
-  title_fr: "Concevoir des Expériences d'Apprentissage Améliorées par l'IA"
-  title_de: "Gestaltung KI-verbesserter Lernerfahrungen"
-  title_ru: "Проектирование учебного опыта с использованием ИИ"
-  title_it: "Progettare Esperienze di Apprendimento Potenziate dall'IA"
-  description: "Learn to design and implement AI-powered educational tools and experiences for diverse learners"
-  description_zhTW: "學習為不同學習者設計和實施 AI 驅動的教育工具和體驗"
-  description_es: "Aprende a diseñar e implementar herramientas y experiencias educativas impulsadas por IA para diversos estudiantes"
-  description_ja: "多様な学習者のためのAI駆動型教育ツールと体験の設計と実装を学ぶ"
-  description_ko: "다양한 학습자를 위한 AI 기반 교육 도구 및 경험 설계 및 구현 학습"
-  description_fr: "Apprenez à concevoir et mettre en œuvre des outils et expériences éducatifs alimentés par l'IA pour divers apprenants"
-  description_de: "Lernen Sie, KI-gestützte Bildungstools und -erfahrungen für verschiedene Lernende zu entwerfen und zu implementieren"
-  description_ru: "Научитесь проектировать и внедрять образовательные инструменты и опыт на базе ИИ для разных учащихся"
-  description_it: "Impara a progettare e implementare strumenti ed esperienze educative basati sull'IA per diversi studenti"
+  title: Designing AI-Enhanced Learning Experiences
+  title_zhTW: 設計 AI 增強的學習體驗
+  title_es: Diseñando Experiencias de Aprendizaje Mejoradas con IA
+  title_ja: AI強化学習体験の設計
+  title_ko: AI 강화 학습 경험 설계
+  title_fr: Concevoir des Expériences d'Apprentissage Améliorées par l'IA
+  title_de: Gestaltung KI-verbesserter Lernerfahrungen
+  title_ru: Проектирование учебного опыта с использованием ИИ
+  title_it: Progettare Esperienze di Apprendimento Potenziate dall'IA
+  description: Learn to design and implement AI-powered educational tools and experiences for diverse learners
+  description_zhTW: 學習為不同學習者設計和實施 AI 驅動的教育工具和體驗
+  description_es: Aprende a diseñar e implementar herramientas y experiencias educativas impulsadas por IA para diversos estudiantes
+  description_ja: 多様な学習者のためのAI駆動型教育ツールと体験の設計と実装を学ぶ
+  description_ko: 다양한 학습자를 위한 AI 기반 교육 도구 및 경험 설계 및 구현 학습
+  description_fr: Apprenez à concevoir et mettre en œuvre des outils et expériences éducatifs alimentés par l'IA pour divers
+    apprenants
+  description_de: Lernen Sie, KI-gestützte Bildungstools und -erfahrungen für verschiedene Lernende zu entwerfen und zu implementieren
+  description_ru: Научитесь проектировать и внедрять образовательные инструменты и опыт на базе ИИ для разных учащихся
+  description_it: Impara a progettare e implementare strumenti ed esperienze educative basati sull'IA per diversi studenti
   difficulty: intermediate
   estimated_duration: 90
   target_domains:
-    - designing_with_ai
-    - creating_with_ai
-    - managing_with_ai
+  - designing_with_ai
+  - creating_with_ai
+  - managing_with_ai
   prerequisites:
-    - Basic understanding of learning theories
-    - Familiarity with educational technology
-    - Experience with AI tools
+  - Basic understanding of learning theories
+  - Familiarity with educational technology
+  - Experience with AI tools
   prerequisites_zhTW:
-    - 學習理論的基本理解
-    - 熟悉教育科技
-    - 使用 AI 工具的經驗
+  - 學習理論的基本理解
+  - 熟悉教育科技
+  - 使用 AI 工具的經驗
   prerequisites_es:
-    - Comprensión básica de las teorías del aprendizaje
-    - Familiaridad con la tecnología educativa
-    - Experiencia con herramientas de IA
+  - Comprensión básica de las teorías del aprendizaje
+  - Familiaridad con la tecnología educativa
+  - Experiencia con herramientas de IA
   prerequisites_ja:
-    - 学習理論の基本的な理解
-    - 教育技術への精通
-    - AIツールの使用経験
+  - 学習理論の基本的な理解
+  - 教育技術への精通
+  - AIツールの使用経験
   prerequisites_ko:
-    - 학습 이론에 대한 기본 이해
-    - 교육 기술에 대한 친숙함
-    - AI 도구 사용 경험
+  - 학습 이론에 대한 기본 이해
+  - 교육 기술에 대한 친숙함
+  - AI 도구 사용 경험
   prerequisites_fr:
-    - Compréhension de base des théories de l'apprentissage
-    - Familiarité avec la technologie éducative
-    - Expérience avec les outils d'IA
+  - Compréhension de base des théories de l'apprentissage
+  - Familiarité avec la technologie éducative
+  - Expérience avec les outils d'IA
   prerequisites_de:
-    - Grundverständnis von Lerntheorien
-    - Vertrautheit mit Bildungstechnologie
-    - Erfahrung mit KI-Tools
+  - Grundverständnis von Lerntheorien
+  - Vertrautheit mit Bildungstechnologie
+  - Erfahrung mit KI-Tools
   prerequisites_ru:
-    - Базовое понимание теорий обучения
-    - Знакомство с образовательными технологиями
-    - Опыт работы с инструментами ИИ
+  - Базовое понимание теорий обучения
+  - Знакомство с образовательными технологиями
+  - Опыт работы с инструментами ИИ
   prerequisites_it:
-    - Comprensione di base delle teorie dell'apprendimento
-    - Familiarità con la tecnologia educativa
-    - Esperienza con strumenti IA
+  - Comprensione di base delle teorie dell'apprendimento
+  - Familiarità con la tecnologia educativa
+  - Esperienza con strumenti IA
   learning_objectives:
-    - Design personalized learning paths using AI
-    - Create adaptive assessments with AI assistance
-    - Implement AI-powered feedback systems
-    - Evaluate AI tools for educational effectiveness
+  - Design personalized learning paths using AI
+  - Create adaptive assessments with AI assistance
+  - Implement AI-powered feedback systems
+  - Evaluate AI tools for educational effectiveness
   learning_objectives_zhTW:
-    - 使用 AI 設計個人化學習路徑
-    - 在 AI 協助下創建適應性評估
-    - 實施 AI 驅動的回饋系統
-    - 評估 AI 工具的教育效果
+  - 使用 AI 設計個人化學習路徑
+  - 在 AI 協助下創建適應性評估
+  - 實施 AI 驅動的回饋系統
+  - 評估 AI 工具的教育效果
   learning_objectives_es:
-    - Diseñar rutas de aprendizaje personalizadas usando IA
-    - Crear evaluaciones adaptativas con asistencia de IA
-    - Implementar sistemas de retroalimentación impulsados por IA
-    - Evaluar herramientas de IA para la efectividad educativa
+  - Diseñar rutas de aprendizaje personalizadas usando IA
+  - Crear evaluaciones adaptativas con asistencia de IA
+  - Implementar sistemas de retroalimentación impulsados por IA
+  - Evaluar herramientas de IA para la efectividad educativa
   learning_objectives_ja:
-    - AIを使用して個別化された学習パスを設計する
-    - AIの支援で適応型評価を作成する
-    - AI駆動型フィードバックシステムを実装する
-    - 教育効果のためのAIツールを評価する
+  - AIを使用して個別化された学習パスを設計する
+  - AIの支援で適応型評価を作成する
+  - AI駆動型フィードバックシステムを実装する
+  - 教育効果のためのAIツールを評価する
   learning_objectives_ko:
-    - AI를 사용하여 개인화된 학습 경로 설계
-    - AI 지원으로 적응형 평가 만들기
-    - AI 기반 피드백 시스템 구현
-    - 교육 효과를 위한 AI 도구 평가
+  - AI를 사용하여 개인화된 학습 경로 설계
+  - AI 지원으로 적응형 평가 만들기
+  - AI 기반 피드백 시스템 구현
+  - 교육 효과를 위한 AI 도구 평가
   learning_objectives_fr:
-    - Concevoir des parcours d'apprentissage personnalisés à l'aide de l'IA
-    - Créer des évaluations adaptatives avec l'aide de l'IA
-    - Mettre en œuvre des systèmes de feedback alimentés par l'IA
-    - Évaluer les outils d'IA pour l'efficacité éducative
+  - Concevoir des parcours d'apprentissage personnalisés à l'aide de l'IA
+  - Créer des évaluations adaptatives avec l'aide de l'IA
+  - Mettre en œuvre des systèmes de feedback alimentés par l'IA
+  - Évaluer les outils d'IA pour l'efficacité éducative
   learning_objectives_de:
-    - Personalisierte Lernpfade mit KI gestalten
-    - Adaptive Bewertungen mit KI-Unterstützung erstellen
-    - KI-gestützte Feedback-Systeme implementieren
-    - KI-Tools für Bildungseffektivität bewerten
+  - Personalisierte Lernpfade mit KI gestalten
+  - Adaptive Bewertungen mit KI-Unterstützung erstellen
+  - KI-gestützte Feedback-Systeme implementieren
+  - KI-Tools für Bildungseffektivität bewerten
   learning_objectives_ru:
-    - Проектировать персонализированные учебные пути с помощью ИИ
-    - Создавать адаптивные оценки с помощью ИИ
-    - Внедрять системы обратной связи на базе ИИ
-    - Оценивать инструменты ИИ для образовательной эффективности
+  - Проектировать персонализированные учебные пути с помощью ИИ
+  - Создавать адаптивные оценки с помощью ИИ
+  - Внедрять системы обратной связи на базе ИИ
+  - Оценивать инструменты ИИ для образовательной эффективности
   learning_objectives_it:
-    - Progettare percorsi di apprendimento personalizzati utilizzando l'IA
-    - Creare valutazioni adattive con l'assistenza dell'IA
-    - Implementare sistemi di feedback basati sull'IA
-    - Valutare gli strumenti IA per l'efficacia educativa
-
+  - Progettare percorsi di apprendimento personalizzati utilizzando l'IA
+  - Creare valutazioni adattive con l'assistenza dell'IA
+  - Implementare sistemi di feedback basati sull'IA
+  - Valutare gli strumenti IA per l'efficacia educativa
 ksa_mapping:
   knowledge:
-    - K1.1  # Understanding AI capabilities
-    - K1.2  # AI limitations awareness
-    - K2.1  # Effective prompting techniques
+  - K1.1
+  - K1.2
+  - K2.1
   skills:
-    - S1.1  # Basic AI interaction
-    - S2.1  # Content creation with AI
-    - S3.1  # AI system design
+  - S1.1
+  - S2.1
+  - S3.1
   attitudes:
-    - A2.1  # Responsible AI use
-    - A2.2  # Ethical considerations
-    - A3.1  # Human-AI collaboration
-
+  - A2.1
+  - A2.2
+  - A3.1
 tasks:
-  - id: task-1
-    title: "AI Learner Profile Analysis"
-    title_zhTW: "AI 學習者檔案分析"
-    title_es: "Análisis del Perfil del Estudiante con IA"
-    title_ja: "AI学習者プロファイル分析"
-    title_ko: "AI 학습자 프로필 분석"
-    title_fr: "Analyse du Profil de l'Apprenant par IA"
-    title_de: "KI-Lernerprofil-Analyse"
-    title_ru: "Анализ профиля учащегося с помощью ИИ"
-    title_it: "Analisi del Profilo dello Studente con IA"
-    description: "Use AI to analyze learner data and create personalized learning profiles"
-    description_zhTW: "使用 AI 分析學習者數據並創建個人化學習檔案"
-    description_es: "Usar IA para analizar datos de estudiantes y crear perfiles de aprendizaje personalizados"
-    description_ja: "AIを使用して学習者データを分析し、個別化された学習プロファイルを作成する"
-    description_ko: "AI를 사용하여 학습자 데이터를 분석하고 개인화된 학습 프로필 생성"
-    description_fr: "Utiliser l'IA pour analyser les données des apprenants et créer des profils d'apprentissage personnalisés"
-    description_de: "KI nutzen, um Lernerdaten zu analysieren und personalisierte Lernprofile zu erstellen"
-    description_ru: "Использовать ИИ для анализа данных учащихся и создания персонализированных учебных профилей"
-    description_it: "Utilizzare l'IA per analizzare i dati degli studenti e creare profili di apprendimento personalizzati"
-    category: analysis
-    instructions:
-      - Review sample learner data including learning styles, progress, and preferences
-      - Use AI to identify patterns and learning characteristics
-      - Create comprehensive learner profiles with AI assistance
-      - Design personalized learning recommendations based on profiles
-    instructions_zhTW:
-      - 查看包括學習風格、進度和偏好的學習者數據樣本
-      - 使用 AI 識別模式和學習特徵
-      - 在 AI 協助下創建全面的學習者檔案
-      - 基於檔案設計個人化學習建議
-    instructions_es:
-      - Revisar datos de muestra de estudiantes incluyendo estilos de aprendizaje, progreso y preferencias
-      - Usar IA para identificar patrones y características de aprendizaje
-      - Crear perfiles completos de estudiantes con asistencia de IA
-      - Diseñar recomendaciones de aprendizaje personalizadas basadas en perfiles
-    instructions_ja:
-      - 学習スタイル、進歩、好みを含む学習者データのサンプルを確認する
-      - AIを使用してパターンと学習特性を特定する
-      - AIの支援で包括的な学習者プロファイルを作成する
-      - プロファイルに基づいた個別化学習推奨を設計する
-    instructions_ko:
-      - 학습 스타일, 진도, 선호도를 포함한 학습자 데이터 샘플 검토
-      - AI를 사용하여 패턴과 학습 특성 식별
-      - AI 지원으로 포괄적인 학습자 프로필 생성
-      - 프로필을 기반으로 개인화된 학습 추천 설계
-    instructions_fr:
-      - Examiner des échantillons de données d'apprenants incluant styles d'apprentissage, progrès et préférences
-      - Utiliser l'IA pour identifier les modèles et caractéristiques d'apprentissage
-      - Créer des profils d'apprenants complets avec l'assistance IA
-      - Concevoir des recommandations d'apprentissage personnalisées basées sur les profils
-    instructions_de:
-      - Beispieldaten von Lernenden einschließlich Lernstile, Fortschritt und Präferenzen überprüfen
-      - KI verwenden, um Muster und Lernmerkmale zu identifizieren
-      - Umfassende Lernerprofile mit KI-Unterstützung erstellen
-      - Personalisierte Lernempfehlungen basierend auf Profilen entwerfen
-    instructions_ru:
-      - Просмотреть образцы данных учащихся, включая стили обучения, прогресс и предпочтения
-      - Использовать ИИ для выявления закономерностей и характеристик обучения
-      - Создать комплексные профили учащихся с помощью ИИ
-      - Разработать персонализированные рекомендации по обучению на основе профилей
-    instructions_it:
-      - Rivedere campioni di dati di studenti inclusi stili di apprendimento, progresso e preferenze
-      - Usare l'IA per identificare pattern e caratteristiche di apprendimento
-      - Creare profili completi di studenti con assistenza IA
-      - Progettare raccomandazioni di apprendimento personalizzate basate sui profili
-    expected_outcome: "Comprehensive learner profiles with AI-generated insights and personalization recommendations"
-    expected_outcome_zhTW: "具有 AI 生成洞察和個性化建議的全面學習者檔案"
-    expected_outcome_es: "Perfiles completos de estudiantes con insights generados por IA y recomendaciones de personalización"
-    expected_outcome_ja: "AIが生成したインサイトと個別化推奨を含む包括的な学習者プロファイル"
-    expected_outcome_ko: "AI 생성 인사이트와 개인화 추천이 포함된 포괄적인 학습자 프로필"
-    expected_outcome_fr: "Profils d'apprenants complets avec insights générés par IA et recommandations de personnalisation"
-    expected_outcome_de: "Umfassende Lernerprofile mit KI-generierten Erkenntnissen und Personalisierungsempfehlungen"
-    expected_outcome_ru: "Комплексные профили учащихся с инсайтами, созданными ИИ, и рекомендациями по персонализации"
-    expected_outcome_it: "Profili completi di studenti con insights generati dall'IA e raccomandazioni di personalizzazione"
-    time_limit: 20
-    assessment_focus:
-      primary: [K1.1, S1.1]
-      secondary: [A2.1]
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: Educational Data Analyst
-      initial_prompt: |
-        You are an experienced educational data analyst specializing in learner profiling and personalization.
-        Your job is to help teachers understand student data and create effective learner profiles.
-        
-        Response guidelines:
-        - If the user only greets you, ask them about what student data they'd like to analyze
-        - If they send irrelevant content, redirect them to focus on learner profiling
-        - Guide them through analyzing learning styles, progress patterns, and preferences
-        - Help them create comprehensive learner profiles with actionable insights
-        
-        Focus on:
-        - Identifying learning patterns from student data
-        - Creating meaningful learner profiles
-        - Suggesting personalization strategies
-        - Using AI tools effectively for analysis
-        
-        Always stay focused on the learner profiling task.
+- id: task-1
+  title: AI Learner Profile Analysis
+  title_zhTW: AI 學習者檔案分析
+  title_es: Análisis del Perfil del Estudiante con IA
+  title_ja: AI学習者プロファイル分析
+  title_ko: AI 학습자 프로필 분석
+  title_fr: Analyse du Profil de l'Apprenant par IA
+  title_de: KI-Lernerprofil-Analyse
+  title_ru: Анализ профиля учащегося с помощью ИИ
+  title_it: Analisi del Profilo dello Studente con IA
+  description: Use AI to analyze learner data and create personalized learning profiles
+  description_zhTW: 使用 AI 分析學習者數據並創建個人化學習檔案
+  description_es: Usar IA para analizar datos de estudiantes y crear perfiles de aprendizaje personalizados
+  description_ja: AIを使用して学習者データを分析し、個別化された学習プロファイルを作成する
+  description_ko: AI를 사용하여 학습자 데이터를 분석하고 개인화된 학습 프로필 생성
+  description_fr: Utiliser l'IA pour analyser les données des apprenants et créer des profils d'apprentissage personnalisés
+  description_de: KI nutzen, um Lernerdaten zu analysieren und personalisierte Lernprofile zu erstellen
+  description_ru: Использовать ИИ для анализа данных учащихся и создания персонализированных учебных профилей
+  description_it: Utilizzare l'IA per analizzare i dati degli studenti e creare profili di apprendimento personalizzati
+  category: analysis
+  instructions:
+  - Review sample learner data including learning styles, progress, and preferences
+  - Use AI to identify patterns and learning characteristics
+  - Create comprehensive learner profiles with AI assistance
+  - Design personalized learning recommendations based on profiles
+  instructions_zhTW:
+  - 查看包括學習風格、進度和偏好的學習者數據樣本
+  - 使用 AI 識別模式和學習特徵
+  - 在 AI 協助下創建全面的學習者檔案
+  - 基於檔案設計個人化學習建議
+  instructions_es:
+  - Revisar datos de muestra de estudiantes incluyendo estilos de aprendizaje, progreso y preferencias
+  - Usar IA para identificar patrones y características de aprendizaje
+  - Crear perfiles completos de estudiantes con asistencia de IA
+  - Diseñar recomendaciones de aprendizaje personalizadas basadas en perfiles
+  instructions_ja:
+  - 学習スタイル、進歩、好みを含む学習者データのサンプルを確認する
+  - AIを使用してパターンと学習特性を特定する
+  - AIの支援で包括的な学習者プロファイルを作成する
+  - プロファイルに基づいた個別化学習推奨を設計する
+  instructions_ko:
+  - 학습 스타일, 진도, 선호도를 포함한 학습자 데이터 샘플 검토
+  - AI를 사용하여 패턴과 학습 특성 식별
+  - AI 지원으로 포괄적인 학습자 프로필 생성
+  - 프로필을 기반으로 개인화된 학습 추천 설계
+  instructions_fr:
+  - Examiner des échantillons de données d'apprenants incluant styles d'apprentissage, progrès et préférences
+  - Utiliser l'IA pour identifier les modèles et caractéristiques d'apprentissage
+  - Créer des profils d'apprenants complets avec l'assistance IA
+  - Concevoir des recommandations d'apprentissage personnalisées basées sur les profils
+  instructions_de:
+  - Beispieldaten von Lernenden einschließlich Lernstile, Fortschritt und Präferenzen überprüfen
+  - KI verwenden, um Muster und Lernmerkmale zu identifizieren
+  - Umfassende Lernerprofile mit KI-Unterstützung erstellen
+  - Personalisierte Lernempfehlungen basierend auf Profilen entwerfen
+  instructions_ru:
+  - Просмотреть образцы данных учащихся, включая стили обучения, прогресс и предпочтения
+  - Использовать ИИ для выявления закономерностей и характеристик обучения
+  - Создать комплексные профили учащихся с помощью ИИ
+  - Разработать персонализированные рекомендации по обучению на основе профилей
+  instructions_it:
+  - Rivedere campioni di dati di studenti inclusi stili di apprendimento, progresso e preferenze
+  - Usare l'IA per identificare pattern e caratteristiche di apprendimento
+  - Creare profili completi di studenti con assistenza IA
+  - Progettare raccomandazioni di apprendimento personalizzate basate sui profili
+  expected_outcome: Comprehensive learner profiles with AI-generated insights and personalization recommendations
+  expected_outcome_zhTW: 具有 AI 生成洞察和個性化建議的全面學習者檔案
+  expected_outcome_es: Perfiles completos de estudiantes con insights generados por IA y recomendaciones de personalización
+  expected_outcome_ja: AIが生成したインサイトと個別化推奨を含む包括的な学習者プロファイル
+  expected_outcome_ko: AI 생성 인사이트와 개인화 추천이 포함된 포괄적인 학습자 프로필
+  expected_outcome_fr: Profils d'apprenants complets avec insights générés par IA et recommandations de personnalisation
+  expected_outcome_de: Umfassende Lernerprofile mit KI-generierten Erkenntnissen und Personalisierungsempfehlungen
+  expected_outcome_ru: Комплексные профили учащихся с инсайтами, созданными ИИ, и рекомендациями по персонализации
+  expected_outcome_it: Profili completi di studenti con insights generati dall'IA e raccomandazioni di personalizzazione
+  time_limit: 20
+  assessment_focus:
+    primary:
+    - K1.1
+    - S1.1
+    secondary:
+    - A2.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Educational Data Analyst
+    initial_prompt: 'You are an experienced educational data analyst specializing in learner profiling and personalization.
 
-  - id: task-2
-    title: "Adaptive Content Creation"
-    title_zhTW: "適應性內容創建"
-    title_es: "Creación de Contenido Adaptativo"
-    title_ja: "適応型コンテンツ作成"
-    title_ko: "적응형 콘텐츠 생성"
-    title_fr: "Création de Contenu Adaptatif"
-    title_de: "Adaptive Inhaltserstellung"
-    title_ru: "Создание адаптивного контента"
-    title_it: "Creazione di Contenuti Adattivi"
-    description: "Design learning content that adapts to different learner needs using AI"
-    description_zhTW: "使用 AI 設計適應不同學習者需求的學習內容"
-    description_es: "Diseñar contenido de aprendizaje que se adapte a diferentes necesidades usando IA"
-    description_ja: "AIを使用して異なる学習者のニーズに適応する学習コンテンツを設計する"
-    description_ko: "AI를 사용하여 다양한 학습자 요구에 적응하는 학습 콘텐츠 설계"
-    description_fr: "Concevoir du contenu d'apprentissage qui s'adapte aux différents besoins à l'aide de l'IA"
-    description_de: "Lerninhalte entwerfen, die sich mit KI an verschiedene Bedürfnisse anpassen"
-    description_ru: "Проектировать учебный контент, адаптирующийся к разным потребностям с помощью ИИ"
-    description_it: "Progettare contenuti di apprendimento che si adattano a diverse esigenze usando l'IA"
-    category: creation
-    instructions:
-      - Select a learning topic suitable for adaptation
-      - Use AI to generate content variations for different learning levels and styles
-      - Create content for different language proficiencies and accessibility needs
-      - Implement adaptive pathways and test content effectiveness
-    instructions_zhTW:
-      - 選擇適合適應的學習主題
-      - 使用 AI 為不同學習水平和風格生成內容變化
-      - 為不同語言熟練度和無障礙需求創建內容
-      - 實施適應性路徑並測試內容有效性
-    instructions_es:
-      - Seleccionar un tema de aprendizaje adecuado para adaptación
-      - Usar IA para generar variaciones de contenido para diferentes niveles y estilos de aprendizaje
-      - Crear contenido para diferentes competencias lingüísticas y necesidades de accesibilidad
-      - Implementar rutas adaptativas y probar la efectividad del contenido
-    instructions_ja:
-      - 適応に適した学習トピックを選択する
-      - AIを使用して異なる学習レベルとスタイルのコンテンツバリエーションを生成する
-      - 異なる言語能力とアクセシビリティニーズのためのコンテンツを作成する
-      - 適応経路を実装しコンテンツの有効性をテストする
-    instructions_ko:
-      - 적응에 적합한 학습 주제 선택
-      - AI를 사용하여 다양한 학습 수준과 스타일에 대한 콘텐츠 변형 생성
-      - 다양한 언어 숙련도와 접근성 요구를 위한 콘텐츠 만들기
-      - 적응형 경로 구현 및 콘텐츠 효과성 테스트
-    instructions_fr:
-      - Sélectionner un sujet d'apprentissage adapté à l'adaptation
-      - Utiliser l'IA pour générer des variations de contenu pour différents niveaux et styles d'apprentissage
-      - Créer du contenu pour différentes compétences linguistiques et besoins d'accessibilité
-      - Implémenter des parcours adaptatifs et tester l'efficacité du contenu
-    instructions_de:
-      - Ein für die Anpassung geeignetes Lernthema auswählen
-      - KI verwenden, um Inhaltsvariationen für verschiedene Lernniveaus und -stile zu generieren
-      - Inhalte für verschiedene Sprachkenntnisse und Barrierefreiheitsbedürfnisse erstellen
-      - Adaptive Pfade implementieren und Inhaltseffektivität testen
-    instructions_ru:
-      - Выбрать тему обучения, подходящую для адаптации
-      - Использовать ИИ для создания вариаций контента для разных уровней и стилей обучения
-      - Создать контент для разных языковых компетенций и потребностей доступности
-      - Внедрить адаптивные пути и протестировать эффективность контента
-    instructions_it:
-      - Selezionare un argomento di apprendimento adatto per l'adattamento
-      - Usare l'IA per generare variazioni di contenuto per diversi livelli e stili di apprendimento
-      - Creare contenuto per diverse competenze linguistiche e necessità di accessibilità
-      - Implementare percorsi adattivi e testare l'efficacia del contenuto
-    expected_outcome: "Adaptive learning content with multiple variations addressing diverse learner needs"
-    expected_outcome_zhTW: "具有多種變化的適應性學習內容，滿足不同學習者需求"
-    expected_outcome_es: "Contenido de aprendizaje adaptativo con múltiples variaciones que abordan diversas necesidades de estudiantes"
-    expected_outcome_ja: "多様な学習者のニーズに対応する複数のバリエーションを持つ適応型学習コンテンツ"
-    expected_outcome_ko: "다양한 학습자 요구를 해결하는 여러 변형을 가진 적응형 학습 콘텐츠"
-    expected_outcome_fr: "Contenu d'apprentissage adaptatif avec plusieurs variations répondant aux divers besoins des apprenants"
-    expected_outcome_de: "Adaptive Lerninhalte mit mehreren Variationen, die verschiedene Lernerbedürfnisse ansprechen"
-    expected_outcome_ru: "Адаптивный учебный контент с множественными вариациями, удовлетворяющими различные потребности учащихся"
-    expected_outcome_it: "Contenuto di apprendimento adattivo con molteplici variazioni che affrontano diverse esigenze di studenti"
-    time_limit: 25
-    assessment_focus:
-      primary: [S2.1, K2.1]
-      secondary: [A3.1]
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: Content Creation Specialist
-      initial_prompt: |
-        You are an experienced content creation specialist focused on adaptive learning design.
-        Your job is to help educators create content that adapts to different learner needs and preferences.
-        
-        Response guidelines:
-        - If the user only greets you, ask them about what topic they'd like to create adaptive content for
-        - If they send irrelevant content, redirect them to focus on adaptive content creation
-        - Guide them through creating content variations for different learning levels and styles
-        - Help them implement accessibility features and language adaptations
-        
-        Focus on:
-        - Creating multiple content variations for diverse learners
-        - Adapting content for different learning styles and levels
-        - Implementing accessibility and language considerations
-        - Using AI tools to generate and refine adaptive content
-        
-        Always stay focused on the adaptive content creation task.
+      Your job is to help teachers understand student data and create effective learner profiles.
 
-  - id: task-3
-    title: "AI Assessment System Design"
-    title_zhTW: "AI 評估系統設計"
-    title_es: "Diseño de Sistema de Evaluación con IA"
-    title_ja: "AI評価システム設計"
-    title_ko: "AI 평가 시스템 설계"
-    title_fr: "Conception de Système d'Évaluation par IA"
-    title_de: "KI-Bewertungssystem-Design"
-    title_ru: "Проектирование системы оценки с ИИ"
-    title_it: "Progettazione del Sistema di Valutazione con IA"
-    description: "Build an intelligent assessment system that provides meaningful feedback"
-    description_zhTW: "建立提供有意義回饋的智能評估系統"
-    description_es: "Construir un sistema de evaluación inteligente que proporcione retroalimentación significativa"
-    description_ja: "意味のあるフィードバックを提供するインテリジェント評価システムを構築する"
-    description_ko: "의미 있는 피드백을 제공하는 지능형 평가 시스템 구축"
-    description_fr: "Construire un système d'évaluation intelligent qui fournit des retours significatifs"
-    description_de: "Ein intelligentes Bewertungssystem aufbauen, das sinnvolles Feedback liefert"
-    description_ru: "Построить интеллектуальную систему оценки, предоставляющую значимую обратную связь"
-    description_it: "Costruire un sistema di valutazione intelligente che fornisca feedback significativo"
-    category: creation
-    instructions:
-      - Define assessment objectives and criteria for your chosen learning domain
-      - Create various assessment types including formative and summative assessments
-      - Implement AI-driven feedback mechanisms that provide actionable insights
-      - Design progress tracking and ensure fairness in assessment
-    instructions_zhTW:
-      - 為你選擇的學習領域定義評估目標和標準
-      - 創建包括形成性和總結性評估的各種評估類型
-      - 實施提供可操作見解的 AI 驅動反饋機制
-      - 設計進度追蹤並確保評估的公平性
-    instructions_es:
-      - Definir objetivos y criterios de evaluación para tu dominio de aprendizaje elegido
-      - Crear varios tipos de evaluación incluyendo evaluaciones formativas y sumativas
-      - Implementar mecanismos de retroalimentación impulsados por IA que proporcionen insights accionables
-      - Diseñar seguimiento de progreso y asegurar justicia en la evaluación
-    instructions_ja:
-      - 選択した学習領域の評価目標と基準を定義する
-      - 形成的評価と総括的評価を含む様々な評価タイプを作成する
-      - 実行可能な洞察を提供するAI駆動型フィードバックメカニズムを実装する
-      - 進捗追跡を設計し評価の公平性を確保する
-    instructions_ko:
-      - 선택한 학습 영역의 평가 목표와 기준 정의
-      - 형성평가와 총괄평가를 포함한 다양한 평가 유형 만들기
-      - 실행 가능한 통찰력을 제공하는 AI 기반 피드백 메커니즘 구현
-      - 진행 상황 추적 설계 및 평가의 공정성 보장
-    instructions_fr:
-      - Définir les objectifs et critères d'évaluation pour votre domaine d'apprentissage choisi
-      - Créer divers types d'évaluation incluant évaluations formatives et sommatives
-      - Implémenter des mécanismes de feedback alimentés par IA qui fournissent des insights actionnables
-      - Concevoir le suivi de progrès et assurer l'équité dans l'évaluation
-    instructions_de:
-      - Bewertungsziele und -kriterien für Ihren gewählten Lernbereich definieren
-      - Verschiedene Bewertungstypen einschließlich formativer und summativer Bewertungen erstellen
-      - KI-gestützte Feedback-Mechanismen implementieren, die umsetzbare Erkenntnisse liefern
-      - Fortschrittsverfolgung entwerfen und Fairness in der Bewertung sicherstellen
-    instructions_ru:
-      - Определить цели и критерии оценки для выбранной области обучения
-      - Создать различные типы оценивания, включая формативное и суммативное оценивание
-      - Внедрить механизмы обратной связи на базе ИИ, предоставляющие практические инсайты
-      - Разработать отслеживание прогресса и обеспечить справедливость в оценивании
-    instructions_it:
-      - Definire obiettivi e criteri di valutazione per il tuo dominio di apprendimento scelto
-      - Creare vari tipi di valutazione incluse valutazioni formative e sommative
-      - Implementare meccanismi di feedback alimentati dall'IA che forniscano insights attuabili
-      - Progettare il monitoraggio del progresso e assicurare l'equità nella valutazione
-    expected_outcome: "Comprehensive AI-powered assessment system with fair and meaningful feedback mechanisms"
-    expected_outcome_zhTW: "具有公平和有意義反饋機制的全面 AI 驅動評估系統"
-    expected_outcome_es: "Sistema de evaluación integral impulsado por IA con mecanismos de retroalimentación justos y significativos"
-    expected_outcome_ja: "公平で意味のあるフィードバックメカニズムを持つ包括的なAI駆動型評価システム"
-    expected_outcome_ko: "공정하고 의미 있는 피드백 메커니즘을 갖춘 포괄적인 AI 기반 평가 시스템"
-    expected_outcome_fr: "Système d'évaluation complet alimenté par IA avec mécanismes de feedback équitables et significatifs"
-    expected_outcome_de: "Umfassendes KI-gestütztes Bewertungssystem mit fairen und sinnvollen Feedback-Mechanismen"
-    expected_outcome_ru: "Комплексная система оценки на базе ИИ с справедливыми и значимыми механизмами обратной связи"
-    expected_outcome_it: "Sistema di valutazione completo alimentato dall'IA con meccanismi di feedback equi e significativi"
-    time_limit: 30
-    assessment_focus:
-      primary: [S3.1, K1.2]
-      secondary: [A2.2]
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: Assessment Design Expert
-      initial_prompt: |
-        You are an expert in educational assessment design with specialization in AI-powered evaluation systems.
-        Your job is to help educators create comprehensive and fair assessment systems with meaningful feedback.
-        
-        Response guidelines:
-        - If the user only greets you, ask them about what learning domain they want to assess
-        - If they send irrelevant content, redirect them to focus on assessment system design
-        - Guide them through defining clear assessment objectives and criteria
-        - Help them implement AI-driven feedback mechanisms and ensure fairness
-        
-        Focus on:
-        - Designing various assessment types (formative and summative)
-        - Creating AI-powered feedback mechanisms
-        - Ensuring assessment fairness and validity
-        - Implementing progress tracking systems
-        
-        Always stay focused on the AI assessment system design task.
 
-  - id: task-4
-    title: "Learning Analytics Dashboard"
-    title_zhTW: "學習分析儀表板"
-    title_es: "Panel de Análisis de Aprendizaje"
-    title_ja: "学習分析ダッシュボード"
-    title_ko: "학습 분석 대시보드"
-    title_fr: "Tableau de Bord d'Analyse d'Apprentissage"
-    title_de: "Lernanalyse-Dashboard"
-    title_ru: "Панель аналитики обучения"
-    title_it: "Dashboard di Analisi dell'Apprendimento"
-    description: "Create a learning analytics dashboard using AI insights"
-    description_zhTW: "使用 AI 洞察創建學習分析儀表板"
-    description_es: "Crear un panel de análisis de aprendizaje usando insights de IA"
-    description_ja: "AIインサイトを使用して学習分析ダッシュボードを作成する"
-    description_ko: "AI 인사이트를 사용하여 학습 분석 대시보드 생성"
-    description_fr: "Créer un tableau de bord d'analyse d'apprentissage en utilisant les insights de l'IA"
-    description_de: "Ein Lernanalyse-Dashboard mit KI-Erkenntnissen erstellen"
-    description_ru: "Создать панель аналитики обучения с использованием инсайтов ИИ"
-    description_it: "Creare un dashboard di analisi dell'apprendimento utilizzando insights IA"
-    category: creation
-    instructions:
-      - Identify key learning metrics to track for different stakeholders
-      - Design visualizations for individual progress and class performance
-      - Implement AI-powered predictions and recommendations
-      - Create actionable insights that balance complexity with usability
-    instructions_zhTW:
-      - 識別為不同利益相關者追蹤的關鍵學習指標
-      - 為個人進度和班級表現設計視覺化
-      - 實施 AI 驅動的預測和建議
-      - 創建平衡複雜性與可用性的可操作見解
-    instructions_es:
-      - Identificar métricas clave de aprendizaje para rastrear para diferentes partes interesadas
-      - Diseñar visualizaciones para progreso individual y rendimiento de clase
-      - Implementar predicciones y recomendaciones impulsadas por IA
-      - Crear insights accionables que equilibren complejidad con usabilidad
-    instructions_ja:
-      - 異なるステークホルダーのために追跡する主要な学習メトリクスを特定する
-      - 個人の進歩とクラスパフォーマンスの可視化を設計する
-      - AI駆動型の予測と推奨を実装する
-      - 複雑性と使いやすさのバランスをとった実行可能な洞察を作成する
-    instructions_ko:
-      - 다양한 이해관계자를 위해 추적할 주요 학습 지표 식별
-      - 개인 진도와 클래스 성과를 위한 시각화 설계
-      - AI 기반 예측 및 추천 구현
-      - 복잡성과 사용성의 균형을 맞춘 실행 가능한 통찰력 생성
-    instructions_fr:
-      - Identifier les métriques d'apprentissage clés à suivre pour différentes parties prenantes
-      - Concevoir des visualisations pour le progrès individuel et la performance de classe
-      - Implémenter des prédictions et recommandations alimentées par IA
-      - Créer des insights actionnables qui équilibrent complexité et facilité d'utilisation
-    instructions_de:
-      - Wichtige Lernmetriken identifizieren, die für verschiedene Stakeholder verfolgt werden sollen
-      - Visualisierungen für individuellen Fortschritt und Klassenleistung entwerfen
-      - KI-gestützte Vorhersagen und Empfehlungen implementieren
-      - Umsetzbare Erkenntnisse schaffen, die Komplexität und Benutzerfreundlichkeit ausbalancieren
-    instructions_ru:
-      - Определить ключевые метрики обучения для отслеживания различными заинтересованными сторонами
-      - Разработать визуализации для индивидуального прогресса и производительности класса
-      - Внедрить прогнозы и рекомендации на базе ИИ
-      - Создать практические инсайты, балансирующие сложность с удобством использования
-    instructions_it:
-      - Identificare metriche di apprendimento chiave da tracciare per diversi stakeholder
-      - Progettare visualizzazioni per progresso individuale e performance della classe
-      - Implementare previsioni e raccomandazioni alimentate dall'IA
-      - Creare insights attuabili che bilancino complessità con usabilità
-    expected_outcome: "Interactive learning analytics dashboard with AI-powered insights and actionable recommendations"
-    expected_outcome_zhTW: "具有 AI 驅動洞察和可操作建議的互動學習分析儀表板"
-    expected_outcome_es: "Panel interactivo de análisis de aprendizaje con insights impulsados por IA y recomendaciones accionables"
-    expected_outcome_ja: "AI駆動型インサイトと実行可能な推奨を備えたインタラクティブ学習分析ダッシュボード"
-    expected_outcome_ko: "AI 기반 통찰력과 실행 가능한 추천이 포함된 대화형 학습 분석 대시보드"
-    expected_outcome_fr: "Tableau de bord d'analyse d'apprentissage interactif avec insights alimentés par IA et recommandations actionnables"
-    expected_outcome_de: "Interaktives Lernanalyse-Dashboard mit KI-gestützten Erkenntnissen und umsetzbaren Empfehlungen"
-    expected_outcome_ru: "Интерактивная панель аналитики обучения с инсайтами на базе ИИ и практическими рекомендациями"
-    expected_outcome_it: "Dashboard interattivo di analisi dell'apprendimento con insights alimentati dall'IA e raccomandazioni attuabili"
-    time_limit: 25
-    assessment_focus:
-      primary: [S2.1, K2.1]
-      secondary: [A3.1]
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: Learning Analytics Specialist
-      initial_prompt: |
-        You are a learning analytics specialist with expertise in data visualization and AI-powered insights.
-        Your job is to help educators design effective learning analytics dashboards that provide actionable insights.
-        
-        Response guidelines:
-        - If the user only greets you, ask them about what learning metrics they want to track
-        - If they send irrelevant content, redirect them to focus on analytics dashboard design
-        - Guide them through identifying key learning metrics for different stakeholders
-        - Help them create meaningful visualizations and AI-powered predictions
-        
-        Focus on:
-        - Identifying important learning metrics to track
-        - Creating effective data visualizations
-        - Implementing AI-powered predictions and recommendations
-        - Balancing complexity with usability for different users
-        
-        Always stay focused on the learning analytics dashboard task.
+      Response guidelines:
 
+      - If the user only greets you, ask them about what student data they''d like to analyze
+
+      - If they send irrelevant content, redirect them to focus on learner profiling
+
+      - Guide them through analyzing learning styles, progress patterns, and preferences
+
+      - Help them create comprehensive learner profiles with actionable insights
+
+
+      Focus on:
+
+      - Identifying learning patterns from student data
+
+      - Creating meaningful learner profiles
+
+      - Suggesting personalization strategies
+
+      - Using AI tools effectively for analysis
+
+
+      Always stay focused on the learner profiling task.
+
+      '
+- id: task-2
+  title: Adaptive Content Creation
+  title_zhTW: 適應性內容創建
+  title_es: Creación de Contenido Adaptativo
+  title_ja: 適応型コンテンツ作成
+  title_ko: 적응형 콘텐츠 생성
+  title_fr: Création de Contenu Adaptatif
+  title_de: Adaptive Inhaltserstellung
+  title_ru: Создание адаптивного контента
+  title_it: Creazione di Contenuti Adattivi
+  description: Design learning content that adapts to different learner needs using AI
+  description_zhTW: 使用 AI 設計適應不同學習者需求的學習內容
+  description_es: Diseñar contenido de aprendizaje que se adapte a diferentes necesidades usando IA
+  description_ja: AIを使用して異なる学習者のニーズに適応する学習コンテンツを設計する
+  description_ko: AI를 사용하여 다양한 학습자 요구에 적응하는 학습 콘텐츠 설계
+  description_fr: Concevoir du contenu d'apprentissage qui s'adapte aux différents besoins à l'aide de l'IA
+  description_de: Lerninhalte entwerfen, die sich mit KI an verschiedene Bedürfnisse anpassen
+  description_ru: Проектировать учебный контент, адаптирующийся к разным потребностям с помощью ИИ
+  description_it: Progettare contenuti di apprendimento che si adattano a diverse esigenze usando l'IA
+  category: creation
+  instructions:
+  - Select a learning topic suitable for adaptation
+  - Use AI to generate content variations for different learning levels and styles
+  - Create content for different language proficiencies and accessibility needs
+  - Implement adaptive pathways and test content effectiveness
+  instructions_zhTW:
+  - 選擇適合適應的學習主題
+  - 使用 AI 為不同學習水平和風格生成內容變化
+  - 為不同語言熟練度和無障礙需求創建內容
+  - 實施適應性路徑並測試內容有效性
+  instructions_es:
+  - Seleccionar un tema de aprendizaje adecuado para adaptación
+  - Usar IA para generar variaciones de contenido para diferentes niveles y estilos de aprendizaje
+  - Crear contenido para diferentes competencias lingüísticas y necesidades de accesibilidad
+  - Implementar rutas adaptativas y probar la efectividad del contenido
+  instructions_ja:
+  - 適応に適した学習トピックを選択する
+  - AIを使用して異なる学習レベルとスタイルのコンテンツバリエーションを生成する
+  - 異なる言語能力とアクセシビリティニーズのためのコンテンツを作成する
+  - 適応経路を実装しコンテンツの有効性をテストする
+  instructions_ko:
+  - 적응에 적합한 학습 주제 선택
+  - AI를 사용하여 다양한 학습 수준과 스타일에 대한 콘텐츠 변형 생성
+  - 다양한 언어 숙련도와 접근성 요구를 위한 콘텐츠 만들기
+  - 적응형 경로 구현 및 콘텐츠 효과성 테스트
+  instructions_fr:
+  - Sélectionner un sujet d'apprentissage adapté à l'adaptation
+  - Utiliser l'IA pour générer des variations de contenu pour différents niveaux et styles d'apprentissage
+  - Créer du contenu pour différentes compétences linguistiques et besoins d'accessibilité
+  - Implémenter des parcours adaptatifs et tester l'efficacité du contenu
+  instructions_de:
+  - Ein für die Anpassung geeignetes Lernthema auswählen
+  - KI verwenden, um Inhaltsvariationen für verschiedene Lernniveaus und -stile zu generieren
+  - Inhalte für verschiedene Sprachkenntnisse und Barrierefreiheitsbedürfnisse erstellen
+  - Adaptive Pfade implementieren und Inhaltseffektivität testen
+  instructions_ru:
+  - Выбрать тему обучения, подходящую для адаптации
+  - Использовать ИИ для создания вариаций контента для разных уровней и стилей обучения
+  - Создать контент для разных языковых компетенций и потребностей доступности
+  - Внедрить адаптивные пути и протестировать эффективность контента
+  instructions_it:
+  - Selezionare un argomento di apprendimento adatto per l'adattamento
+  - Usare l'IA per generare variazioni di contenuto per diversi livelli e stili di apprendimento
+  - Creare contenuto per diverse competenze linguistiche e necessità di accessibilità
+  - Implementare percorsi adattivi e testare l'efficacia del contenuto
+  expected_outcome: Adaptive learning content with multiple variations addressing diverse learner needs
+  expected_outcome_zhTW: 具有多種變化的適應性學習內容，滿足不同學習者需求
+  expected_outcome_es: Contenido de aprendizaje adaptativo con múltiples variaciones que abordan diversas necesidades de estudiantes
+  expected_outcome_ja: 多様な学習者のニーズに対応する複数のバリエーションを持つ適応型学習コンテンツ
+  expected_outcome_ko: 다양한 학습자 요구를 해결하는 여러 변형을 가진 적응형 학습 콘텐츠
+  expected_outcome_fr: Contenu d'apprentissage adaptatif avec plusieurs variations répondant aux divers besoins des apprenants
+  expected_outcome_de: Adaptive Lerninhalte mit mehreren Variationen, die verschiedene Lernerbedürfnisse ansprechen
+  expected_outcome_ru: Адаптивный учебный контент с множественными вариациями, удовлетворяющими различные потребности учащихся
+  expected_outcome_it: Contenuto di apprendimento adattivo con molteplici variazioni che affrontano diverse esigenze di studenti
+  time_limit: 25
+  assessment_focus:
+    primary:
+    - S2.1
+    - K2.1
+    secondary:
+    - A3.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Content Creation Specialist
+    initial_prompt: 'You are an experienced content creation specialist focused on adaptive learning design.
+
+      Your job is to help educators create content that adapts to different learner needs and preferences.
+
+
+      Response guidelines:
+
+      - If the user only greets you, ask them about what topic they''d like to create adaptive content for
+
+      - If they send irrelevant content, redirect them to focus on adaptive content creation
+
+      - Guide them through creating content variations for different learning levels and styles
+
+      - Help them implement accessibility features and language adaptations
+
+
+      Focus on:
+
+      - Creating multiple content variations for diverse learners
+
+      - Adapting content for different learning styles and levels
+
+      - Implementing accessibility and language considerations
+
+      - Using AI tools to generate and refine adaptive content
+
+
+      Always stay focused on the adaptive content creation task.
+
+      '
+- id: task-3
+  title: AI Assessment System Design
+  title_zhTW: AI 評估系統設計
+  title_es: Diseño de Sistema de Evaluación con IA
+  title_ja: AI評価システム設計
+  title_ko: AI 평가 시스템 설계
+  title_fr: Conception de Système d'Évaluation par IA
+  title_de: KI-Bewertungssystem-Design
+  title_ru: Проектирование системы оценки с ИИ
+  title_it: Progettazione del Sistema di Valutazione con IA
+  description: Build an intelligent assessment system that provides meaningful feedback
+  description_zhTW: 建立提供有意義回饋的智能評估系統
+  description_es: Construir un sistema de evaluación inteligente que proporcione retroalimentación significativa
+  description_ja: 意味のあるフィードバックを提供するインテリジェント評価システムを構築する
+  description_ko: 의미 있는 피드백을 제공하는 지능형 평가 시스템 구축
+  description_fr: Construire un système d'évaluation intelligent qui fournit des retours significatifs
+  description_de: Ein intelligentes Bewertungssystem aufbauen, das sinnvolles Feedback liefert
+  description_ru: Построить интеллектуальную систему оценки, предоставляющую значимую обратную связь
+  description_it: Costruire un sistema di valutazione intelligente che fornisca feedback significativo
+  category: creation
+  instructions:
+  - Define assessment objectives and criteria for your chosen learning domain
+  - Create various assessment types including formative and summative assessments
+  - Implement AI-driven feedback mechanisms that provide actionable insights
+  - Design progress tracking and ensure fairness in assessment
+  instructions_zhTW:
+  - 為你選擇的學習領域定義評估目標和標準
+  - 創建包括形成性和總結性評估的各種評估類型
+  - 實施提供可操作見解的 AI 驅動反饋機制
+  - 設計進度追蹤並確保評估的公平性
+  instructions_es:
+  - Definir objetivos y criterios de evaluación para tu dominio de aprendizaje elegido
+  - Crear varios tipos de evaluación incluyendo evaluaciones formativas y sumativas
+  - Implementar mecanismos de retroalimentación impulsados por IA que proporcionen insights accionables
+  - Diseñar seguimiento de progreso y asegurar justicia en la evaluación
+  instructions_ja:
+  - 選択した学習領域の評価目標と基準を定義する
+  - 形成的評価と総括的評価を含む様々な評価タイプを作成する
+  - 実行可能な洞察を提供するAI駆動型フィードバックメカニズムを実装する
+  - 進捗追跡を設計し評価の公平性を確保する
+  instructions_ko:
+  - 선택한 학습 영역의 평가 목표와 기준 정의
+  - 형성평가와 총괄평가를 포함한 다양한 평가 유형 만들기
+  - 실행 가능한 통찰력을 제공하는 AI 기반 피드백 메커니즘 구현
+  - 진행 상황 추적 설계 및 평가의 공정성 보장
+  instructions_fr:
+  - Définir les objectifs et critères d'évaluation pour votre domaine d'apprentissage choisi
+  - Créer divers types d'évaluation incluant évaluations formatives et sommatives
+  - Implémenter des mécanismes de feedback alimentés par IA qui fournissent des insights actionnables
+  - Concevoir le suivi de progrès et assurer l'équité dans l'évaluation
+  instructions_de:
+  - Bewertungsziele und -kriterien für Ihren gewählten Lernbereich definieren
+  - Verschiedene Bewertungstypen einschließlich formativer und summativer Bewertungen erstellen
+  - KI-gestützte Feedback-Mechanismen implementieren, die umsetzbare Erkenntnisse liefern
+  - Fortschrittsverfolgung entwerfen und Fairness in der Bewertung sicherstellen
+  instructions_ru:
+  - Определить цели и критерии оценки для выбранной области обучения
+  - Создать различные типы оценивания, включая формативное и суммативное оценивание
+  - Внедрить механизмы обратной связи на базе ИИ, предоставляющие практические инсайты
+  - Разработать отслеживание прогресса и обеспечить справедливость в оценивании
+  instructions_it:
+  - Definire obiettivi e criteri di valutazione per il tuo dominio di apprendimento scelto
+  - Creare vari tipi di valutazione incluse valutazioni formative e sommative
+  - Implementare meccanismi di feedback alimentati dall'IA che forniscano insights attuabili
+  - Progettare il monitoraggio del progresso e assicurare l'equità nella valutazione
+  expected_outcome: Comprehensive AI-powered assessment system with fair and meaningful feedback mechanisms
+  expected_outcome_zhTW: 具有公平和有意義反饋機制的全面 AI 驅動評估系統
+  expected_outcome_es: Sistema de evaluación integral impulsado por IA con mecanismos de retroalimentación justos y significativos
+  expected_outcome_ja: 公平で意味のあるフィードバックメカニズムを持つ包括的なAI駆動型評価システム
+  expected_outcome_ko: 공정하고 의미 있는 피드백 메커니즘을 갖춘 포괄적인 AI 기반 평가 시스템
+  expected_outcome_fr: Système d'évaluation complet alimenté par IA avec mécanismes de feedback équitables et significatifs
+  expected_outcome_de: Umfassendes KI-gestütztes Bewertungssystem mit fairen und sinnvollen Feedback-Mechanismen
+  expected_outcome_ru: Комплексная система оценки на базе ИИ с справедливыми и значимыми механизмами обратной связи
+  expected_outcome_it: Sistema di valutazione completo alimentato dall'IA con meccanismi di feedback equi e significativi
+  time_limit: 30
+  assessment_focus:
+    primary:
+    - S3.1
+    - K1.2
+    secondary:
+    - A2.2
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Assessment Design Expert
+    initial_prompt: 'You are an expert in educational assessment design with specialization in AI-powered evaluation systems.
+
+      Your job is to help educators create comprehensive and fair assessment systems with meaningful feedback.
+
+
+      Response guidelines:
+
+      - If the user only greets you, ask them about what learning domain they want to assess
+
+      - If they send irrelevant content, redirect them to focus on assessment system design
+
+      - Guide them through defining clear assessment objectives and criteria
+
+      - Help them implement AI-driven feedback mechanisms and ensure fairness
+
+
+      Focus on:
+
+      - Designing various assessment types (formative and summative)
+
+      - Creating AI-powered feedback mechanisms
+
+      - Ensuring assessment fairness and validity
+
+      - Implementing progress tracking systems
+
+
+      Always stay focused on the AI assessment system design task.
+
+      '
+- id: task-4
+  title: Learning Analytics Dashboard
+  title_zhTW: 學習分析儀表板
+  title_es: Panel de Análisis de Aprendizaje
+  title_ja: 学習分析ダッシュボード
+  title_ko: 학습 분석 대시보드
+  title_fr: Tableau de Bord d'Analyse d'Apprentissage
+  title_de: Lernanalyse-Dashboard
+  title_ru: Панель аналитики обучения
+  title_it: Dashboard di Analisi dell'Apprendimento
+  description: Create a learning analytics dashboard using AI insights
+  description_zhTW: 使用 AI 洞察創建學習分析儀表板
+  description_es: Crear un panel de análisis de aprendizaje usando insights de IA
+  description_ja: AIインサイトを使用して学習分析ダッシュボードを作成する
+  description_ko: AI 인사이트를 사용하여 학습 분석 대시보드 생성
+  description_fr: Créer un tableau de bord d'analyse d'apprentissage en utilisant les insights de l'IA
+  description_de: Ein Lernanalyse-Dashboard mit KI-Erkenntnissen erstellen
+  description_ru: Создать панель аналитики обучения с использованием инсайтов ИИ
+  description_it: Creare un dashboard di analisi dell'apprendimento utilizzando insights IA
+  category: creation
+  instructions:
+  - Identify key learning metrics to track for different stakeholders
+  - Design visualizations for individual progress and class performance
+  - Implement AI-powered predictions and recommendations
+  - Create actionable insights that balance complexity with usability
+  instructions_zhTW:
+  - 識別為不同利益相關者追蹤的關鍵學習指標
+  - 為個人進度和班級表現設計視覺化
+  - 實施 AI 驅動的預測和建議
+  - 創建平衡複雜性與可用性的可操作見解
+  instructions_es:
+  - Identificar métricas clave de aprendizaje para rastrear para diferentes partes interesadas
+  - Diseñar visualizaciones para progreso individual y rendimiento de clase
+  - Implementar predicciones y recomendaciones impulsadas por IA
+  - Crear insights accionables que equilibren complejidad con usabilidad
+  instructions_ja:
+  - 異なるステークホルダーのために追跡する主要な学習メトリクスを特定する
+  - 個人の進歩とクラスパフォーマンスの可視化を設計する
+  - AI駆動型の予測と推奨を実装する
+  - 複雑性と使いやすさのバランスをとった実行可能な洞察を作成する
+  instructions_ko:
+  - 다양한 이해관계자를 위해 추적할 주요 학습 지표 식별
+  - 개인 진도와 클래스 성과를 위한 시각화 설계
+  - AI 기반 예측 및 추천 구현
+  - 복잡성과 사용성의 균형을 맞춘 실행 가능한 통찰력 생성
+  instructions_fr:
+  - Identifier les métriques d'apprentissage clés à suivre pour différentes parties prenantes
+  - Concevoir des visualisations pour le progrès individuel et la performance de classe
+  - Implémenter des prédictions et recommandations alimentées par IA
+  - Créer des insights actionnables qui équilibrent complexité et facilité d'utilisation
+  instructions_de:
+  - Wichtige Lernmetriken identifizieren, die für verschiedene Stakeholder verfolgt werden sollen
+  - Visualisierungen für individuellen Fortschritt und Klassenleistung entwerfen
+  - KI-gestützte Vorhersagen und Empfehlungen implementieren
+  - Umsetzbare Erkenntnisse schaffen, die Komplexität und Benutzerfreundlichkeit ausbalancieren
+  instructions_ru:
+  - Определить ключевые метрики обучения для отслеживания различными заинтересованными сторонами
+  - Разработать визуализации для индивидуального прогресса и производительности класса
+  - Внедрить прогнозы и рекомендации на базе ИИ
+  - Создать практические инсайты, балансирующие сложность с удобством использования
+  instructions_it:
+  - Identificare metriche di apprendimento chiave da tracciare per diversi stakeholder
+  - Progettare visualizzazioni per progresso individuale e performance della classe
+  - Implementare previsioni e raccomandazioni alimentate dall'IA
+  - Creare insights attuabili che bilancino complessità con usabilità
+  expected_outcome: Interactive learning analytics dashboard with AI-powered insights and actionable recommendations
+  expected_outcome_zhTW: 具有 AI 驅動洞察和可操作建議的互動學習分析儀表板
+  expected_outcome_es: Panel interactivo de análisis de aprendizaje con insights impulsados por IA y recomendaciones accionables
+  expected_outcome_ja: AI駆動型インサイトと実行可能な推奨を備えたインタラクティブ学習分析ダッシュボード
+  expected_outcome_ko: AI 기반 통찰력과 실행 가능한 추천이 포함된 대화형 학습 분석 대시보드
+  expected_outcome_fr: Tableau de bord d'analyse d'apprentissage interactif avec insights alimentés par IA et recommandations
+    actionnables
+  expected_outcome_de: Interaktives Lernanalyse-Dashboard mit KI-gestützten Erkenntnissen und umsetzbaren Empfehlungen
+  expected_outcome_ru: Интерактивная панель аналитики обучения с инсайтами на базе ИИ и практическими рекомендациями
+  expected_outcome_it: Dashboard interattivo di analisi dell'apprendimento con insights alimentati dall'IA e raccomandazioni
+    attuabili
+  time_limit: 25
+  assessment_focus:
+    primary:
+    - S2.1
+    - K2.1
+    secondary:
+    - A3.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Learning Analytics Specialist
+    initial_prompt: 'You are a learning analytics specialist with expertise in data visualization and AI-powered insights.
+
+      Your job is to help educators design effective learning analytics dashboards that provide actionable insights.
+
+
+      Response guidelines:
+
+      - If the user only greets you, ask them about what learning metrics they want to track
+
+      - If they send irrelevant content, redirect them to focus on analytics dashboard design
+
+      - Guide them through identifying key learning metrics for different stakeholders
+
+      - Help them create meaningful visualizations and AI-powered predictions
+
+
+      Focus on:
+
+      - Identifying important learning metrics to track
+
+      - Creating effective data visualizations
+
+      - Implementing AI-powered predictions and recommendations
+
+      - Balancing complexity with usability for different users
+
+
+      Always stay focused on the learning analytics dashboard task.
+
+      '
 completion_criteria:
   min_tasks_completed: 4
   required_competencies:
-    - K1.1  # Must demonstrate AI understanding
-    - S2.1  # Must create with AI
+  - K1.1
+  - S2.1
   min_overall_score: 75
-
 resources:
-  - name: "AI in Education Toolkit"
-    name_zhTW: "教育中的 AI 工具包"
-    url: "https://www.unesco.org/en/digital-education/ai-future-learning"
-    type: guide
-    
-  - name: "Learning Analytics Handbook"
-    name_zhTW: "學習分析手冊"
-    url: "https://solaresearch.org/core/learning-analytics/"
-    type: reference
-    
-  - name: "Ethical AI in Education Framework"
-    name_zhTW: "教育中的倫理 AI 框架"
-    url: "https://unesdoc.unesco.org/ark:/48223/pf0000376709"
-    type: framework
+- name: AI in Education Toolkit
+  name_zhTW: 教育中的 AI 工具包
+  name_zhCN: '[Simplified Chinese translation needed]'
+  name_pt: '[Portuguese translation needed]'
+  name_ar: '[Arabic translation needed]'
+  name_id: '[Indonesian translation needed]'
+  name_th: '[Thai translation needed]'
+  url: https://www.unesco.org/en/digital-education/ai-future-learning
+  type: guide
+- name: Learning Analytics Handbook
+  name_zhTW: 學習分析手冊
+  name_zhCN: '[Simplified Chinese translation needed]'
+  name_pt: '[Portuguese translation needed]'
+  name_ar: '[Arabic translation needed]'
+  name_id: '[Indonesian translation needed]'
+  name_th: '[Thai translation needed]'
+  url: https://solaresearch.org/core/learning-analytics/
+  type: reference
+- name: Ethical AI in Education Framework
+  name_zhTW: 教育中的倫理 AI 框架
+  name_zhCN: '[Simplified Chinese translation needed]'
+  name_pt: '[Portuguese translation needed]'
+  name_ar: '[Arabic translation needed]'
+  name_id: '[Indonesian translation needed]'
+  name_th: '[Thai translation needed]'
+  url: https://unesdoc.unesco.org/ark:/48223/pf0000376709
+  type: framework

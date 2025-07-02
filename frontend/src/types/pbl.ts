@@ -30,13 +30,33 @@ export interface Task {
   id: string;
   title: string;
   title_zhTW?: string;
+  title_zhCN?: string;
+  title_pt?: string;
+  title_ar?: string;
+  title_id?: string;
+  title_th?: string;
   description: string;
   description_zhTW?: string;
+  description_zhCN?: string;
+  description_pt?: string;
+  description_ar?: string;
+  description_id?: string;
+  description_th?: string;
   category: TaskCategory;
   instructions: string[];
   instructions_zhTW?: string[];
+  instructions_zhCN?: string[];
+  instructions_pt?: string[];
+  instructions_ar?: string[];
+  instructions_id?: string[];
+  instructions_th?: string[];
   expectedOutcome: string;
   expectedOutcome_zhTW?: string;
+  expectedOutcome_zhCN?: string;
+  expectedOutcome_pt?: string;
+  expectedOutcome_ar?: string;
+  expectedOutcome_id?: string;
+  expectedOutcome_th?: string;
   timeLimit?: number; // minutes
   resources?: string[];
   assessmentFocus: {
@@ -52,14 +72,29 @@ export interface Scenario {
   id: string;
   title: string;
   title_zhTW?: string;
+  title_zhCN?: string;
+  title_pt?: string;
+  title_ar?: string;
+  title_id?: string;
+  title_th?: string;
   description: string;
   description_zhTW?: string;
+  description_zhCN?: string;
+  description_pt?: string;
+  description_ar?: string;
+  description_id?: string;
+  description_th?: string;
   targetDomains: DomainType[];
   difficulty: DifficultyLevel;
   estimatedDuration: number; // minutes
   prerequisites?: string[];
   learningObjectives: string[];
   learningObjectives_zhTW?: string[];
+  learningObjectives_zhCN?: string[];
+  learningObjectives_pt?: string[];
+  learningObjectives_ar?: string[];
+  learningObjectives_id?: string[];
+  learningObjectives_th?: string[];
   ksaMapping: KSAMapping;
   tasks: Task[]; // Direct array of tasks, no stages
 }
@@ -72,8 +107,18 @@ export interface ScenarioListItem {
   id: string;
   title: string;
   title_zhTW?: string;
+  title_zhCN?: string;
+  title_pt?: string;
+  title_ar?: string;
+  title_id?: string;
+  title_th?: string;
   description: string;
   description_zhTW?: string;
+  description_zhCN?: string;
+  description_pt?: string;
+  description_ar?: string;
+  description_id?: string;
+  description_th?: string;
   targetDomains: DomainType[];
   difficulty: DifficultyLevel;
   estimatedDuration: number;
@@ -101,6 +146,11 @@ export interface Program {
 export interface ProgramMetadata extends Program {
   scenarioTitle: string;
   scenarioTitle_zhTW?: string;
+  scenarioTitle_zhCN?: string;
+  scenarioTitle_pt?: string;
+  scenarioTitle_ar?: string;
+  scenarioTitle_id?: string;
+  scenarioTitle_th?: string;
 }
 
 // Task Metadata (stored in task folder)

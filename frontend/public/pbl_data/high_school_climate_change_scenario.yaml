@@ -1,543 +1,583 @@
-# AI-Powered Climate Action Plan Scenario
-# PBL Scenario Definition (Program-based, no stages)
-
 scenario_info:
   id: high-school-climate-change
-  title: "AI-Powered Climate Action Plan"
-  title_zhTW: "AI 驅動的氣候行動計畫"
-  title_es: "Plan de Acción Climática con IA"
-  title_ja: "AI駆動型気候行動計画"
-  title_ko: "AI 기반 기후 행동 계획"
-  title_fr: "Plan d'Action Climatique avec IA"
-  title_de: "KI-gestützter Klimaaktionsplan"
-  title_ru: "План действий по климату с ИИ"
-  title_it: "Piano d'Azione Climatica con IA"
-  description: "Use AI to analyze climate data and create actionable solutions for your school and community"
-  description_zhTW: "使用 AI 分析氣候數據，為學校和社區創建可行的解決方案"
-  description_es: "Usa IA para analizar datos climáticos y crear soluciones prácticas para tu escuela y comunidad"
-  description_ja: "AIを使用して気候データを分析し、学校とコミュニティのための実行可能な解決策を作成する"
-  description_ko: "AI를 사용하여 기후 데이터를 분석하고 학교와 지역사회를 위한 실행 가능한 솔루션 만들기"
-  description_fr: "Utilisez l'IA pour analyser les données climatiques et créer des solutions réalisables"
-  description_de: "Nutze KI zur Analyse von Klimadaten und erstelle umsetzbare Lösungen"
-  description_ru: "Используйте ИИ для анализа климатических данных и создания решений"
-  description_it: "Usa l'IA per analizzare i dati climatici e creare soluzioni praticabili"
+  title: AI-Powered Climate Action Plan
+  title_zhTW: AI 驅動的氣候行動計畫
+  title_es: Plan de Acción Climática con IA
+  title_ja: AI駆動型気候行動計画
+  title_ko: AI 기반 기후 행동 계획
+  title_fr: Plan d'Action Climatique avec IA
+  title_de: KI-gestützter Klimaaktionsplan
+  title_ru: План действий по климату с ИИ
+  title_it: Piano d'Azione Climatica con IA
+  description: Use AI to analyze climate data and create actionable solutions for your school and community
+  description_zhTW: 使用 AI 分析氣候數據，為學校和社區創建可行的解決方案
+  description_es: Usa IA para analizar datos climáticos y crear soluciones prácticas para tu escuela y comunidad
+  description_ja: AIを使用して気候データを分析し、学校とコミュニティのための実行可能な解決策を作成する
+  description_ko: AI를 사용하여 기후 데이터를 분석하고 학교와 지역사회를 위한 실행 가능한 솔루션 만들기
+  description_fr: Utilisez l'IA pour analyser les données climatiques et créer des solutions réalisables
+  description_de: Nutze KI zur Analyse von Klimadaten und erstelle umsetzbare Lösungen
+  description_ru: Используйте ИИ для анализа климатических данных и создания решений
+  description_it: Usa l'IA per analizzare i dati climatici e creare soluzioni praticabili
   difficulty: beginner
   estimated_duration: 60
   target_domains:
-    - engaging_with_ai
-    - creating_with_ai
-    - managing_with_ai
+  - engaging_with_ai
+  - creating_with_ai
+  - managing_with_ai
   prerequisites:
-    - Basic understanding of climate change
-    - Interest in environmental issues
+  - Basic understanding of climate change
+  - Interest in environmental issues
   prerequisites_zhTW:
-    - 對氣候變化的基本理解
-    - 對環境議題的興趣
+  - 對氣候變化的基本理解
+  - 對環境議題的興趣
   prerequisites_es:
-    - Comprensión básica del cambio climático
-    - Interés en temas ambientales
+  - Comprensión básica del cambio climático
+  - Interés en temas ambientales
   prerequisites_ja:
-    - 気候変動の基本的な理解
-    - 環境問題への関心
+  - 気候変動の基本的な理解
+  - 環境問題への関心
   prerequisites_ko:
-    - 기후 변화에 대한 기본 이해
-    - 환경 문제에 대한 관심
+  - 기후 변화에 대한 기본 이해
+  - 환경 문제에 대한 관심
   prerequisites_fr:
-    - Compréhension de base du changement climatique
-    - Intérêt pour les questions environnementales
+  - Compréhension de base du changement climatique
+  - Intérêt pour les questions environnementales
   prerequisites_de:
-    - Grundverständnis des Klimawandels
-    - Interesse an Umweltthemen
+  - Grundverständnis des Klimawandels
+  - Interesse an Umweltthemen
   prerequisites_ru:
-    - Базовое понимание изменения климата
-    - Интерес к экологическим вопросам
+  - Базовое понимание изменения климата
+  - Интерес к экологическим вопросам
   prerequisites_it:
-    - Comprensione di base del cambiamento climatico
-    - Interesse per le questioni ambientali
+  - Comprensione di base del cambiamento climatico
+  - Interesse per le questioni ambientali
   learning_objectives:
-    - Analyze environmental data using AI tools
-    - Create data visualizations to communicate findings
-    - Develop practical climate action proposals
-    - Build confidence in using AI for environmental advocacy
+  - Analyze environmental data using AI tools
+  - Create data visualizations to communicate findings
+  - Develop practical climate action proposals
+  - Build confidence in using AI for environmental advocacy
   learning_objectives_zhTW:
-    - 使用 AI 工具分析環境數據
-    - 創建數據視覺化來傳達發現
-    - 制定實用的氣候行動提案
-    - 建立使用 AI 進行環境倡議的信心
+  - 使用 AI 工具分析環境數據
+  - 創建數據視覺化來傳達發現
+  - 制定實用的氣候行動提案
+  - 建立使用 AI 進行環境倡議的信心
   learning_objectives_es:
-    - Analizar datos ambientales usando herramientas de IA
-    - Crear visualizaciones de datos para comunicar hallazgos
-    - Desarrollar propuestas prácticas de acción climática
-    - Construir confianza en el uso de IA para la defensa ambiental
+  - Analizar datos ambientales usando herramientas de IA
+  - Crear visualizaciones de datos para comunicar hallazgos
+  - Desarrollar propuestas prácticas de acción climática
+  - Construir confianza en el uso de IA para la defensa ambiental
   learning_objectives_ja:
-    - AIツールを使用して環境データを分析する
-    - 調査結果を伝えるためのデータ視覚化を作成する
-    - 実用的な気候行動提案を開発する
-    - 環境擁護のためのAI活用に自信を持つ
+  - AIツールを使用して環境データを分析する
+  - 調査結果を伝えるためのデータ視覚化を作成する
+  - 実用的な気候行動提案を開発する
+  - 環境擁護のためのAI活用に自信を持つ
   learning_objectives_ko:
-    - AI 도구를 사용하여 환경 데이터 분석
-    - 결과를 전달하기 위한 데이터 시각화 생성
-    - 실용적인 기후 행동 제안 개발
-    - 환경 옹호를 위한 AI 사용에 대한 자신감 구축
+  - AI 도구를 사용하여 환경 데이터 분석
+  - 결과를 전달하기 위한 데이터 시각화 생성
+  - 실용적인 기후 행동 제안 개발
+  - 환경 옹호를 위한 AI 사용에 대한 자신감 구축
   learning_objectives_fr:
-    - Analyser les données environnementales avec des outils IA
-    - Créer des visualisations de données pour communiquer les résultats
-    - Développer des propositions pratiques d'action climatique
-    - Renforcer la confiance dans l'utilisation de l'IA pour la défense de l'environnement
+  - Analyser les données environnementales avec des outils IA
+  - Créer des visualisations de données pour communiquer les résultats
+  - Développer des propositions pratiques d'action climatique
+  - Renforcer la confiance dans l'utilisation de l'IA pour la défense de l'environnement
   learning_objectives_de:
-    - Umweltdaten mit KI-Tools analysieren
-    - Datenvisualisierungen erstellen, um Ergebnisse zu kommunizieren
-    - Praktische Klimaschutzvorschläge entwickeln
-    - Vertrauen in die Nutzung von KI für Umweltschutz aufbauen
+  - Umweltdaten mit KI-Tools analysieren
+  - Datenvisualisierungen erstellen, um Ergebnisse zu kommunizieren
+  - Praktische Klimaschutzvorschläge entwickeln
+  - Vertrauen in die Nutzung von KI für Umweltschutz aufbauen
   learning_objectives_ru:
-    - Анализировать экологические данные с помощью инструментов ИИ
-    - Создавать визуализации данных для передачи результатов
-    - Разработать практические предложения по борьбе с изменением климата
-    - Укрепить уверенность в использовании ИИ для защиты окружающей среды
+  - Анализировать экологические данные с помощью инструментов ИИ
+  - Создавать визуализации данных для передачи результатов
+  - Разработать практические предложения по борьбе с изменением климата
+  - Укрепить уверенность в использовании ИИ для защиты окружающей среды
   learning_objectives_it:
-    - Analizzare i dati ambientali utilizzando strumenti IA
-    - Creare visualizzazioni di dati per comunicare i risultati
-    - Sviluppare proposte pratiche di azione climatica
-    - Costruire fiducia nell'uso dell'IA per la difesa ambientale
-
+  - Analizzare i dati ambientali utilizzando strumenti IA
+  - Creare visualizzazioni di dati per comunicare i risultati
+  - Sviluppare proposte pratiche di azione climatica
+  - Costruire fiducia nell'uso dell'IA per la difesa ambientale
 ksa_mapping:
   knowledge:
-    - K1.1  # Understanding AI capabilities
-    - K1.2  # AI limitations awareness
-    - K2.1  # Effective prompting techniques
-    - K2.3  # AI content evaluation
+  - K1.1
+  - K1.2
+  - K2.1
+  - K2.3
   skills:
-    - S1.1  # Basic AI interaction
-    - S1.2  # Advanced prompting
-    - S2.1  # Content creation with AI
-    - S2.3  # AI-assisted analysis
+  - S1.1
+  - S1.2
+  - S2.1
+  - S2.3
   attitudes:
-    - A1.1  # Curiosity about AI
-    - A1.2  # Critical thinking
-    - A2.1  # Responsible AI use
-
-# Direct task list (no stages)
+  - A1.1
+  - A1.2
+  - A2.1
 tasks:
-  - id: task-1
-    title: "Climate Data Collection"
-    title_zhTW: "氣候數據收集"
-    title_es: "Recolección de Datos Climáticos"
-    title_ja: "気候データ収集"
-    title_ko: "기후 데이터 수집"
-    title_fr: "Collecte de Données Climatiques"
-    title_de: "Klimadatensammlung"
-    title_ru: "Сбор климатических данных"
-    title_it: "Raccolta di Dati Climatici"
-    description: "Use AI to gather and organize climate data for your local area"
-    description_zhTW: "使用 AI 收集和整理你所在地區的氣候數據"
-    description_es: "Usa IA para recopilar y organizar datos climáticos de tu área local"
-    description_ja: "AIを使用して地域の気候データを収集・整理する"
-    description_ko: "AI를 사용하여 지역 기후 데이터 수집 및 정리"
-    description_fr: "Utilisez l'IA pour collecter et organiser les données climatiques de votre région"
-    description_de: "Nutze KI zum Sammeln und Organisieren von Klimadaten deiner Region"
-    description_ru: "Используйте ИИ для сбора и организации климатических данных вашего региона"
-    description_it: "Usa l'IA per raccogliere e organizzare i dati climatici della tua area"
-    category: research
-    instructions:
-      - Use AI to find reliable climate data sources
-      - Gather data on temperature trends, precipitation, air quality, and energy consumption
-      - Organize data in spreadsheets
-      - Identify key patterns and trends
-    instructions_zhTW:
-      - 使用 AI 尋找可靠的氣候數據來源
-      - 收集溫度趨勢、降水、空氣質量和能源消耗的數據
-      - 在電子表格中整理數據
-      - 識別關鍵模式和趨勢
-    instructions_es:
-      - Usa IA para encontrar fuentes confiables de datos climáticos
-      - Recopila datos sobre tendencias de temperatura, precipitación, calidad del aire y consumo de energía
-      - Organiza datos en hojas de cálculo
-      - Identifica patrones y tendencias clave
-    instructions_ja:
-      - AIを使用して信頼できる気候データソースを見つける
-      - 気温傾向、降水、大気質、エネルギー消費のデータを収集
-      - スプレッドシートでデータを整理
-      - 主要なパターンとトレンドを特定
-    instructions_ko:
-      - AI를 사용하여 신뢰할 수 있는 기후 데이터 소스 찾기
-      - 온도 추세, 강수, 대기질, 에너지 소비 데이터 수집
-      - 스프레드시트에 데이터 정리
-      - 주요 패턴과 추세 식별
-    instructions_fr:
-      - Utilisez l'IA pour trouver des sources fiables de données climatiques
-      - Collectez des données sur les tendances de température, les précipitations, la qualité de l'air et la consommation d'énergie
-      - Organisez les données dans des feuilles de calcul
-      - Identifiez les modèles et tendances clés
-    instructions_de:
-      - Verwenden Sie KI, um zuverlässige Klimadatenquellen zu finden
-      - Sammeln Sie Daten zu Temperaturtrends, Niederschlägen, Luftqualität und Energieverbrauch
-      - Organisieren Sie Daten in Tabellenkalkulationen
-      - Identifizieren Sie wichtige Muster und Trends
-    instructions_ru:
-      - Используйте ИИ для поиска надежных источников климатических данных
-      - Соберите данные о тенденциях температуры, осадках, качестве воздуха и потреблении энергии
-      - Организуйте данные в электронных таблицах
-      - Определите ключевые закономерности и тенденции
-    instructions_it:
-      - Usa l'IA per trovare fonti affidabili di dati climatici
-      - Raccogli dati su tendenze di temperatura, precipitazioni, qualità dell'aria e consumo energetico
-      - Organizza i dati in fogli di calcolo
-      - Identifica modelli e tendenze chiave
-    expected_outcome: A comprehensive climate data collection for your area
-    expected_outcome_zhTW: 你所在地區的全面氣候數據收集
-    expected_outcome_es: Una recopilación completa de datos climáticos para tu área
-    expected_outcome_ja: あなたの地域の包括的な気候データ収集
-    expected_outcome_ko: 지역의 포괄적인 기후 데이터 수집
-    expected_outcome_fr: Une collecte complète de données climatiques pour votre région
-    expected_outcome_de: Eine umfassende Klimadatensammlung für Ihre Region
-    expected_outcome_ru: Комплексный сбор климатических данных для вашего региона
-    expected_outcome_it: Una raccolta completa di dati climatici per la tua area
-    time_limit: 20
-    resources:
-      - Climate data sources
-      - AI search tools
-      - Spreadsheet software
-    resources_zhTW:
-      - 氣候數據來源
-      - AI 搜尋工具
-      - 電子表格軟體
-    resources_es:
-      - Fuentes de datos climáticos
-      - Herramientas de búsqueda con IA
-      - Software de hojas de cálculo
-    resources_ja:
-      - 気候データソース
-      - AI検索ツール
-      - スプレッドシートソフトウェア
-    resources_ko:
-      - 기후 데이터 소스
-      - AI 검색 도구
-      - 스프레드시트 소프트웨어
-    resources_fr:
-      - Sources de données climatiques
-      - Outils de recherche IA
-      - Logiciel de feuilles de calcul
-    resources_de:
-      - Klimadatenquellen
-      - KI-Suchtools
-      - Tabellenkalkulationssoftware
-    resources_ru:
-      - Источники климатических данных
-      - ИИ-инструменты поиска
-      - Программное обеспечение для электронных таблиц
-    resources_it:
-      - Fonti di dati climatici
-      - Strumenti di ricerca AI
-      - Software per fogli di calcolo
-    assessment_focus:
-      primary: [K1.1, S1.1]
-      secondary: [A1.1]
-    ai_module:
-      role: assistant
-      model: gemini-2.5-flash
-      persona: Climate Research Assistant
-      initial_prompt: |
-        You are a climate research assistant helping students explore climate data.
-        Your goal is to guide them through data collection and analysis tasks.
-        
-        Keep responses focused and educational:
-        - Help them find reliable climate data sources
-        - Guide them in organizing and analyzing data
-        - Explain climate concepts in age-appropriate language
-        - Encourage critical thinking about climate impacts
-        
-        Always redirect off-topic conversations back to the climate research task.
+- id: task-1
+  title: Climate Data Collection
+  title_zhTW: 氣候數據收集
+  title_es: Recolección de Datos Climáticos
+  title_ja: 気候データ収集
+  title_ko: 기후 데이터 수집
+  title_fr: Collecte de Données Climatiques
+  title_de: Klimadatensammlung
+  title_ru: Сбор климатических данных
+  title_it: Raccolta di Dati Climatici
+  description: Use AI to gather and organize climate data for your local area
+  description_zhTW: 使用 AI 收集和整理你所在地區的氣候數據
+  description_es: Usa IA para recopilar y organizar datos climáticos de tu área local
+  description_ja: AIを使用して地域の気候データを収集・整理する
+  description_ko: AI를 사용하여 지역 기후 데이터 수집 및 정리
+  description_fr: Utilisez l'IA pour collecter et organiser les données climatiques de votre région
+  description_de: Nutze KI zum Sammeln und Organisieren von Klimadaten deiner Region
+  description_ru: Используйте ИИ для сбора и организации климатических данных вашего региона
+  description_it: Usa l'IA per raccogliere e organizzare i dati climatici della tua area
+  category: research
+  instructions:
+  - Use AI to find reliable climate data sources
+  - Gather data on temperature trends, precipitation, air quality, and energy consumption
+  - Organize data in spreadsheets
+  - Identify key patterns and trends
+  instructions_zhTW:
+  - 使用 AI 尋找可靠的氣候數據來源
+  - 收集溫度趨勢、降水、空氣質量和能源消耗的數據
+  - 在電子表格中整理數據
+  - 識別關鍵模式和趨勢
+  instructions_es:
+  - Usa IA para encontrar fuentes confiables de datos climáticos
+  - Recopila datos sobre tendencias de temperatura, precipitación, calidad del aire y consumo de energía
+  - Organiza datos en hojas de cálculo
+  - Identifica patrones y tendencias clave
+  instructions_ja:
+  - AIを使用して信頼できる気候データソースを見つける
+  - 気温傾向、降水、大気質、エネルギー消費のデータを収集
+  - スプレッドシートでデータを整理
+  - 主要なパターンとトレンドを特定
+  instructions_ko:
+  - AI를 사용하여 신뢰할 수 있는 기후 데이터 소스 찾기
+  - 온도 추세, 강수, 대기질, 에너지 소비 데이터 수집
+  - 스프레드시트에 데이터 정리
+  - 주요 패턴과 추세 식별
+  instructions_fr:
+  - Utilisez l'IA pour trouver des sources fiables de données climatiques
+  - Collectez des données sur les tendances de température, les précipitations, la qualité de l'air et la consommation d'énergie
+  - Organisez les données dans des feuilles de calcul
+  - Identifiez les modèles et tendances clés
+  instructions_de:
+  - Verwenden Sie KI, um zuverlässige Klimadatenquellen zu finden
+  - Sammeln Sie Daten zu Temperaturtrends, Niederschlägen, Luftqualität und Energieverbrauch
+  - Organisieren Sie Daten in Tabellenkalkulationen
+  - Identifizieren Sie wichtige Muster und Trends
+  instructions_ru:
+  - Используйте ИИ для поиска надежных источников климатических данных
+  - Соберите данные о тенденциях температуры, осадках, качестве воздуха и потреблении энергии
+  - Организуйте данные в электронных таблицах
+  - Определите ключевые закономерности и тенденции
+  instructions_it:
+  - Usa l'IA per trovare fonti affidabili di dati climatici
+  - Raccogli dati su tendenze di temperatura, precipitazioni, qualità dell'aria e consumo energetico
+  - Organizza i dati in fogli di calcolo
+  - Identifica modelli e tendenze chiave
+  expected_outcome: A comprehensive climate data collection for your area
+  expected_outcome_zhTW: 你所在地區的全面氣候數據收集
+  expected_outcome_es: Una recopilación completa de datos climáticos para tu área
+  expected_outcome_ja: あなたの地域の包括的な気候データ収集
+  expected_outcome_ko: 지역의 포괄적인 기후 데이터 수집
+  expected_outcome_fr: Une collecte complète de données climatiques pour votre région
+  expected_outcome_de: Eine umfassende Klimadatensammlung für Ihre Region
+  expected_outcome_ru: Комплексный сбор климатических данных для вашего региона
+  expected_outcome_it: Una raccolta completa di dati climatici per la tua area
+  time_limit: 20
+  resources:
+  - Climate data sources
+  - AI search tools
+  - Spreadsheet software
+  resources_zhTW:
+  - 氣候數據來源
+  - AI 搜尋工具
+  - 電子表格軟體
+  resources_es:
+  - Fuentes de datos climáticos
+  - Herramientas de búsqueda con IA
+  - Software de hojas de cálculo
+  resources_ja:
+  - 気候データソース
+  - AI検索ツール
+  - スプレッドシートソフトウェア
+  resources_ko:
+  - 기후 데이터 소스
+  - AI 검색 도구
+  - 스프레드시트 소프트웨어
+  resources_fr:
+  - Sources de données climatiques
+  - Outils de recherche IA
+  - Logiciel de feuilles de calcul
+  resources_de:
+  - Klimadatenquellen
+  - KI-Suchtools
+  - Tabellenkalkulationssoftware
+  resources_ru:
+  - Источники климатических данных
+  - ИИ-инструменты поиска
+  - Программное обеспечение для электронных таблиц
+  resources_it:
+  - Fonti di dati climatici
+  - Strumenti di ricerca AI
+  - Software per fogli di calcolo
+  assessment_focus:
+    primary:
+    - K1.1
+    - S1.1
+    secondary:
+    - A1.1
+  ai_module:
+    role: assistant
+    model: gemini-2.5-flash
+    persona: Climate Research Assistant
+    initial_prompt: 'You are a climate research assistant helping students explore climate data.
 
-  - id: task-2
-    title: "AI Data Analysis"
-    title_zhTW: "AI 數據分析"
-    title_es: "Análisis de Datos con IA"
-    title_ja: "AIデータ分析"
-    title_ko: "AI 데이터 분석"
-    title_fr: "Analyse de Données avec IA"
-    title_de: "KI-Datenanalyse"
-    title_ru: "Анализ данных с ИИ"
-    title_it: "Analisi dei Dati con IA"
-    description: "Use AI tools to analyze climate data and identify actionable insights"
-    description_zhTW: "使用 AI 工具分析氣候數據並識別可行的見解"
-    description_es: "Usa herramientas de IA para analizar datos climáticos e identificar insights accionables"
-    description_ja: "AIツールを使用して気候データを分析し、実行可能な洞察を特定する"
-    description_ko: "AI 도구를 사용하여 기후 데이터 분석 및 실행 가능한 인사이트 식별"
-    description_fr: "Utilisez des outils IA pour analyser les données climatiques et identifier des insights actionnables"
-    description_de: "Nutze KI-Tools zur Analyse von Klimadaten und Identifizierung umsetzbarer Erkenntnisse"
-    description_ru: "Используйте инструменты ИИ для анализа климатических данных и выявления практических идей"
-    description_it: "Usa strumenti IA per analizzare i dati climatici e identificare intuizioni praticabili"
-    category: analysis
-    instructions:
-      - Use AI to identify patterns and correlations in climate data
-      - Create visualizations showing temperature changes, seasonal variations, and human impacts
-      - Generate predictions for future trends
-      - Identify areas requiring intervention
-    instructions_zhTW:
-      - 使用 AI 識別氣候數據中的模式和相關性
-      - 創建顯示溫度變化、季節變化和人類影響的視覺化
-      - 生成未來趨勢預測
-      - 識別需要干預的領域
-    instructions_es:
-      - Usa IA para identificar patrones y correlaciones en datos climáticos
-      - Crea visualizaciones mostrando cambios de temperatura, variaciones estacionales e impactos humanos
-      - Genera predicciones para tendencias futuras
-      - Identifica áreas que requieren intervención
-    instructions_ja:
-      - AIを使用して気候データのパターンと相関関係を特定
-      - 温度変化、季節変動、人間の影響を示す視覚化を作成
-      - 将来の傾向の予測を生成
-      - 介入が必要な領域を特定
-    instructions_ko:
-      - AI를 사용하여 기후 데이터의 패턴과 상관관계 식별
-      - 온도 변화, 계절적 변화, 인간의 영향을 보여주는 시각화 생성
-      - 미래 트렌드 예측 생성
-      - 개입이 필요한 영역 식별
-    instructions_fr:
-      - Utilisez l'IA pour identifier les modèles et corrélations dans les données climatiques
-      - Créez des visualisations montrant les changements de température, les variations saisonnières et les impacts humains
-      - Générez des prédictions pour les tendances futures
-      - Identifiez les domaines nécessitant une intervention
-    instructions_de:
-      - Verwenden Sie KI zur Identifizierung von Mustern und Korrelationen in Klimadaten
-      - Erstellen Sie Visualisierungen, die Temperaturveränderungen, saisonale Schwankungen und menschliche Auswirkungen zeigen
-      - Generieren Sie Vorhersagen für zukünftige Trends
-      - Identifizieren Sie Bereiche, die eine Intervention erfordern
-    instructions_ru:
-      - Используйте ИИ для выявления закономерностей и корреляций в климатических данных
-      - Создайте визуализации, показывающие изменения температуры, сезонные колебания и влияние человека
-      - Сгенерируйте прогнозы будущих тенденций
-      - Определите области, требующие вмешательства
-    instructions_it:
-      - Usa l'IA per identificare modelli e correlazioni nei dati climatici
-      - Crea visualizzazioni che mostrano cambiamenti di temperatura, variazioni stagionali e impatti umani
-      - Genera previsioni per tendenze future
-      - Identifica aree che richiedono intervento
-    expected_outcome: Comprehensive analysis with clear insights and predictions
-    expected_outcome_zhTW: 具有清晰見解和預測的全面分析
-    expected_outcome_es: Análisis integral con insights claros y predicciones
-    expected_outcome_ja: 明確な洞察と予測を含む包括的な分析
-    expected_outcome_ko: 명확한 통찰력과 예측을 포함한 포괄적인 분석
-    expected_outcome_fr: Analyse complète avec des insights clairs et des prédictions
-    expected_outcome_de: Umfassende Analyse mit klaren Erkenntnissen und Vorhersagen
-    expected_outcome_ru: Комплексный анализ с четкими выводами и прогнозами
-    expected_outcome_it: Analisi completa con intuizioni chiare e previsioni
-    time_limit: 25
-    assessment_focus:
-      primary: [K2.3, S2.3]
-      secondary: [A1.2]
-    ai_module:
-      role: evaluator
-      model: gemini-2.5-flash
-      persona: Data Analysis Expert
-      initial_prompt: |
-        You are a data analysis expert helping students analyze climate data.
-        Guide them through:
-        - Pattern recognition in climate data
-        - Creating meaningful visualizations
-        - Making evidence-based predictions
-        - Drawing actionable conclusions
-        
-        Encourage critical thinking and help them understand the implications of their findings.
+      Your goal is to guide them through data collection and analysis tasks.
 
-  - id: task-3
-    title: "Solution Design"
-    title_zhTW: "解決方案設計"
-    title_es: "Diseño de Soluciones"
-    title_ja: "ソリューション設計"
-    title_ko: "솔루션 설계"
-    title_fr: "Conception de Solutions"
-    title_de: "Lösungsdesign"
-    title_ru: "Разработка решений"
-    title_it: "Progettazione di Soluzioni"
-    description: "Create practical climate solutions for your school using AI assistance"
-    description_zhTW: "在 AI 協助下為學校創建實用的氣候解決方案"
-    description_es: "Crea soluciones climáticas prácticas para tu escuela con ayuda de IA"
-    description_ja: "AIの支援を受けて学校向けの実用的な気候ソリューションを作成する"
-    description_ko: "AI 지원으로 학교를 위한 실용적인 기후 솔루션 만들기"
-    description_fr: "Créez des solutions climatiques pratiques pour votre école avec l'aide de l'IA"
-    description_de: "Erstelle praktische Klimalösungen für deine Schule mit KI-Unterstützung"
-    description_ru: "Создайте практические климатические решения для вашей школы с помощью ИИ"
-    description_it: "Crea soluzioni climatiche pratiche per la tua scuola con l'assistenza dell'IA"
-    category: creation
-    instructions:
-      - Brainstorm solutions with AI for energy conservation, waste reduction, green spaces, and transportation
-      - Evaluate feasibility and impact of each solution
-      - Create detailed implementation plans
-      - Calculate potential carbon savings
-    instructions_zhTW:
-      - 與 AI 一起為節能、減廢、綠色空間和交通運輸腦力激盪解決方案
-      - 評估每個解決方案的可行性和影響
-      - 創建詳細的實施計劃
-      - 計算潛在的碳減排量
-    instructions_es:
-      - Lluvia de ideas con IA para conservación de energía, reducción de residuos, espacios verdes y transporte
-      - Evalúa la factibilidad e impacto de cada solución
-      - Crea planes de implementación detallados
-      - Calcula ahorros potenciales de carbono
-    instructions_ja:
-      - エネルギー節約、廃棄物削減、緑地、交通についてAIとブレインストーミング
-      - 各ソリューションの実現可能性と影響を評価
-      - 詳細な実施計画を作成
-      - 潜在的な炭素削減量を計算
-    instructions_ko:
-      - 에너지 절약, 폐기물 감소, 녹지 공간, 교통에 대해 AI와 브레인스토밍
-      - 각 솔루션의 실현 가능성과 영향 평가
-      - 상세한 실행 계획 작성
-      - 잠재적 탄소 절감량 계산
-    instructions_fr:
-      - Brainstormez avec l'IA sur la conservation d'énergie, la réduction des déchets, les espaces verts et le transport
-      - Évaluez la faisabilité et l'impact de chaque solution
-      - Créez des plans de mise en œuvre détaillés
-      - Calculez les économies de carbone potentielles
-    instructions_de:
-      - Brainstorming mit KI für Energieeinsparung, Abfallreduzierung, Grünflächen und Transport
-      - Bewerten Sie die Machbarkeit und Auswirkungen jeder Lösung
-      - Erstellen Sie detaillierte Umsetzungspläne
-      - Berechnen Sie potenzielle CO2-Einsparungen
-    instructions_ru:
-      - Проведите мозговой штурм с ИИ по энергосбережению, сокращению отходов, зеленым зонам и транспорту
-      - Оцените осуществимость и влияние каждого решения
-      - Создайте подробные планы реализации
-      - Рассчитайте потенциальную экономию углерода
-    instructions_it:
-      - Brainstorming con l'IA per conservazione energetica, riduzione dei rifiuti, spazi verdi e trasporti
-      - Valuta la fattibilità e l'impatto di ogni soluzione
-      - Crea piani di implementazione dettagliati
-      - Calcola i potenziali risparmi di carbonio
-    expected_outcome: A portfolio of practical, implementable climate solutions
-    expected_outcome_zhTW: 一套實用、可實施的氣候解決方案組合
-    expected_outcome_es: Un portafolio de soluciones climáticas prácticas e implementables
-    expected_outcome_ja: 実用的で実施可能な気候ソリューションのポートフォリオ
-    expected_outcome_ko: 실용적이고 구현 가능한 기후 솔루션 포트폴리오
-    expected_outcome_fr: Un portefeuille de solutions climatiques pratiques et réalisables
-    expected_outcome_de: Ein Portfolio praktischer, umsetzbarer Klimalösungen
-    expected_outcome_ru: Портфель практических, реализуемых климатических решений
-    expected_outcome_it: Un portfolio di soluzioni climatiche pratiche e implementabili
-    time_limit: 30
-    assessment_focus:
-      primary: [S2.1, K2.1]
-      secondary: [A2.1]
-    ai_module:
-      role: assistant
-      model: gemini-2.5-flash
-      persona: Sustainability Solutions Coach
-      initial_prompt: |
-        You are a sustainability solutions coach helping students design climate action plans.
-        Guide them to:
-        - Generate creative yet practical solutions
-        - Consider feasibility and resource requirements
-        - Calculate environmental impacts
-        - Think about stakeholder engagement
-        
-        Focus on solutions that students can realistically implement in their school.
 
-  - id: task-4
-    title: "Action Plan Presentation"
-    title_zhTW: "行動計畫展示"
-    title_es: "Presentación del Plan de Acción"
-    title_ja: "行動計画プレゼンテーション"
-    title_ko: "행동 계획 프레젠테이션"
-    title_fr: "Présentation du Plan d'Action"
-    title_de: "Aktionsplan-Präsentation"
-    title_ru: "Презентация плана действий"
-    title_it: "Presentazione del Piano d'Azione"
-    description: "Create a compelling presentation using AI to propose your climate action plan"
-    description_zhTW: "使用 AI 創建引人注目的演示文稿來提出你的氣候行動計畫"
-    description_es: "Crea una presentación convincente usando IA para proponer tu plan de acción climática"
-    description_ja: "AIを使用して魅力的なプレゼンテーションを作成し、気候行動計画を提案する"
-    description_ko: "AI를 사용하여 기후 행동 계획을 제안하는 매력적인 프레젠테이션 만들기"
-    description_fr: "Créez une présentation convaincante en utilisant l'IA pour proposer votre plan d'action climatique"
-    description_de: "Erstelle eine überzeugende Präsentation mit KI für deinen Klimaaktionsplan"
-    description_ru: "Создайте убедительную презентацию с помощью ИИ для вашего плана действий по климату"
-    description_it: "Crea una presentazione convincente usando l'IA per proporre il tuo piano d'azione climatica"
-    category: interaction
-    instructions:
-      - Use AI to structure your presentation effectively
-      - Include problem statement with data, proposed solutions, implementation timeline, and expected outcomes
-      - Generate compelling visuals and infographics
-      - Prepare for Q&A with AI assistance
-    instructions_zhTW:
-      - 使用 AI 有效地構建演示文稿
-      - 包括帶數據的問題陳述、提議的解決方案、實施時間表和預期成果
-      - 生成引人注目的視覺效果和信息圖表
-      - 在 AI 協助下準備問答環節
-    instructions_es:
-      - Usa IA para estructurar tu presentación de manera efectiva
-      - Incluye declaración del problema con datos, soluciones propuestas, cronograma de implementación y resultados esperados
-      - Genera visuales e infografías convincentes
-      - Prepárate para preguntas con ayuda de IA
-    instructions_ja:
-      - AIを使用してプレゼンテーションを効果的に構成
-      - データを含む問題提起、提案された解決策、実施スケジュール、期待される成果を含める
-      - 説得力のあるビジュアルとインフォグラフィックを生成
-      - AIの助けを借りてQ&Aの準備
-    instructions_ko:
-      - AI를 사용하여 프레젠테이션을 효과적으로 구조화
-      - 데이터가 포함된 문제 설명, 제안된 솔루션, 구현 일정, 예상 결과 포함
-      - 매력적인 시각 자료와 인포그래픽 생성
-      - AI 도움으로 Q&A 준비
-    instructions_fr:
-      - Utilisez l'IA pour structurer votre présentation efficacement
-      - Incluez l'énoncé du problème avec données, solutions proposées, calendrier de mise en œuvre et résultats attendus
-      - Générez des visuels et infographies convaincants
-      - Préparez-vous aux questions avec l'aide de l'IA
-    instructions_de:
-      - Verwenden Sie KI, um Ihre Präsentation effektiv zu strukturieren
-      - Fügen Sie Problemstellung mit Daten, vorgeschlagene Lösungen, Umsetzungszeitplan und erwartete Ergebnisse ein
-      - Generieren Sie überzeugende Visualisierungen und Infografiken
-      - Bereiten Sie sich mit KI-Hilfe auf Fragen vor
-    instructions_ru:
-      - Используйте ИИ для эффективной структуризации презентации
-      - Включите формулировку проблемы с данными, предлагаемые решения, график реализации и ожидаемые результаты
-      - Создайте убедительные визуальные материалы и инфографику
-      - Подготовьтесь к вопросам с помощью ИИ
-    instructions_it:
-      - Usa l'IA per strutturare la tua presentazione in modo efficace
-      - Includi dichiarazione del problema con dati, soluzioni proposte, timeline di implementazione e risultati attesi
-      - Genera visuali e infografiche convincenti
-      - Preparati per le domande con l'assistenza dell'IA
-    expected_outcome: A professional, persuasive presentation ready for stakeholders
-    expected_outcome_zhTW: 一份準備向利益相關者展示的專業、有說服力的演示文稿
-    expected_outcome_es: Una presentación profesional y persuasiva lista para las partes interesadas
-    expected_outcome_ja: ステークホルダー向けの専門的で説得力のあるプレゼンテーション
-    expected_outcome_ko: 이해관계자를 위한 전문적이고 설득력 있는 프레젠테이션
-    expected_outcome_fr: Une présentation professionnelle et persuasive prête pour les parties prenantes
-    expected_outcome_de: Eine professionelle, überzeugende Präsentation für Stakeholder
-    expected_outcome_ru: Профессиональная, убедительная презентация для заинтересованных сторон
-    expected_outcome_it: Una presentazione professionale e persuasiva pronta per gli stakeholder
-    time_limit: 25
-    assessment_focus:
-      primary: [S1.2, K1.2]
-      secondary: [A1.1, A2.1]
-    ai_module:
-      role: actor
-      model: gemini-2.5-flash
-      persona: Presentation Coach
-      initial_prompt: |
-        You are a presentation coach helping students prepare their climate action plan presentation.
-        Assist them with:
-        - Creating clear, compelling narratives
-        - Designing effective visual aids
-        - Anticipating and preparing for questions
-        - Building confidence in public speaking
-        
-        Help them create a presentation that will inspire action from school administrators and peers.
+      Keep responses focused and educational:
 
+      - Help them find reliable climate data sources
+
+      - Guide them in organizing and analyzing data
+
+      - Explain climate concepts in age-appropriate language
+
+      - Encourage critical thinking about climate impacts
+
+
+      Always redirect off-topic conversations back to the climate research task.
+
+      '
+- id: task-2
+  title: AI Data Analysis
+  title_zhTW: AI 數據分析
+  title_es: Análisis de Datos con IA
+  title_ja: AIデータ分析
+  title_ko: AI 데이터 분석
+  title_fr: Analyse de Données avec IA
+  title_de: KI-Datenanalyse
+  title_ru: Анализ данных с ИИ
+  title_it: Analisi dei Dati con IA
+  description: Use AI tools to analyze climate data and identify actionable insights
+  description_zhTW: 使用 AI 工具分析氣候數據並識別可行的見解
+  description_es: Usa herramientas de IA para analizar datos climáticos e identificar insights accionables
+  description_ja: AIツールを使用して気候データを分析し、実行可能な洞察を特定する
+  description_ko: AI 도구를 사용하여 기후 데이터 분석 및 실행 가능한 인사이트 식별
+  description_fr: Utilisez des outils IA pour analyser les données climatiques et identifier des insights actionnables
+  description_de: Nutze KI-Tools zur Analyse von Klimadaten und Identifizierung umsetzbarer Erkenntnisse
+  description_ru: Используйте инструменты ИИ для анализа климатических данных и выявления практических идей
+  description_it: Usa strumenti IA per analizzare i dati climatici e identificare intuizioni praticabili
+  category: analysis
+  instructions:
+  - Use AI to identify patterns and correlations in climate data
+  - Create visualizations showing temperature changes, seasonal variations, and human impacts
+  - Generate predictions for future trends
+  - Identify areas requiring intervention
+  instructions_zhTW:
+  - 使用 AI 識別氣候數據中的模式和相關性
+  - 創建顯示溫度變化、季節變化和人類影響的視覺化
+  - 生成未來趨勢預測
+  - 識別需要干預的領域
+  instructions_es:
+  - Usa IA para identificar patrones y correlaciones en datos climáticos
+  - Crea visualizaciones mostrando cambios de temperatura, variaciones estacionales e impactos humanos
+  - Genera predicciones para tendencias futuras
+  - Identifica áreas que requieren intervención
+  instructions_ja:
+  - AIを使用して気候データのパターンと相関関係を特定
+  - 温度変化、季節変動、人間の影響を示す視覚化を作成
+  - 将来の傾向の予測を生成
+  - 介入が必要な領域を特定
+  instructions_ko:
+  - AI를 사용하여 기후 데이터의 패턴과 상관관계 식별
+  - 온도 변화, 계절적 변화, 인간의 영향을 보여주는 시각화 생성
+  - 미래 트렌드 예측 생성
+  - 개입이 필요한 영역 식별
+  instructions_fr:
+  - Utilisez l'IA pour identifier les modèles et corrélations dans les données climatiques
+  - Créez des visualisations montrant les changements de température, les variations saisonnières et les impacts humains
+  - Générez des prédictions pour les tendances futures
+  - Identifiez les domaines nécessitant une intervention
+  instructions_de:
+  - Verwenden Sie KI zur Identifizierung von Mustern und Korrelationen in Klimadaten
+  - Erstellen Sie Visualisierungen, die Temperaturveränderungen, saisonale Schwankungen und menschliche Auswirkungen zeigen
+  - Generieren Sie Vorhersagen für zukünftige Trends
+  - Identifizieren Sie Bereiche, die eine Intervention erfordern
+  instructions_ru:
+  - Используйте ИИ для выявления закономерностей и корреляций в климатических данных
+  - Создайте визуализации, показывающие изменения температуры, сезонные колебания и влияние человека
+  - Сгенерируйте прогнозы будущих тенденций
+  - Определите области, требующие вмешательства
+  instructions_it:
+  - Usa l'IA per identificare modelli e correlazioni nei dati climatici
+  - Crea visualizzazioni che mostrano cambiamenti di temperatura, variazioni stagionali e impatti umani
+  - Genera previsioni per tendenze future
+  - Identifica aree che richiedono intervento
+  expected_outcome: Comprehensive analysis with clear insights and predictions
+  expected_outcome_zhTW: 具有清晰見解和預測的全面分析
+  expected_outcome_es: Análisis integral con insights claros y predicciones
+  expected_outcome_ja: 明確な洞察と予測を含む包括的な分析
+  expected_outcome_ko: 명확한 통찰력과 예측을 포함한 포괄적인 분석
+  expected_outcome_fr: Analyse complète avec des insights clairs et des prédictions
+  expected_outcome_de: Umfassende Analyse mit klaren Erkenntnissen und Vorhersagen
+  expected_outcome_ru: Комплексный анализ с четкими выводами и прогнозами
+  expected_outcome_it: Analisi completa con intuizioni chiare e previsioni
+  time_limit: 25
+  assessment_focus:
+    primary:
+    - K2.3
+    - S2.3
+    secondary:
+    - A1.2
+  ai_module:
+    role: evaluator
+    model: gemini-2.5-flash
+    persona: Data Analysis Expert
+    initial_prompt: 'You are a data analysis expert helping students analyze climate data.
+
+      Guide them through:
+
+      - Pattern recognition in climate data
+
+      - Creating meaningful visualizations
+
+      - Making evidence-based predictions
+
+      - Drawing actionable conclusions
+
+
+      Encourage critical thinking and help them understand the implications of their findings.
+
+      '
+- id: task-3
+  title: Solution Design
+  title_zhTW: 解決方案設計
+  title_es: Diseño de Soluciones
+  title_ja: ソリューション設計
+  title_ko: 솔루션 설계
+  title_fr: Conception de Solutions
+  title_de: Lösungsdesign
+  title_ru: Разработка решений
+  title_it: Progettazione di Soluzioni
+  description: Create practical climate solutions for your school using AI assistance
+  description_zhTW: 在 AI 協助下為學校創建實用的氣候解決方案
+  description_es: Crea soluciones climáticas prácticas para tu escuela con ayuda de IA
+  description_ja: AIの支援を受けて学校向けの実用的な気候ソリューションを作成する
+  description_ko: AI 지원으로 학교를 위한 실용적인 기후 솔루션 만들기
+  description_fr: Créez des solutions climatiques pratiques pour votre école avec l'aide de l'IA
+  description_de: Erstelle praktische Klimalösungen für deine Schule mit KI-Unterstützung
+  description_ru: Создайте практические климатические решения для вашей школы с помощью ИИ
+  description_it: Crea soluzioni climatiche pratiche per la tua scuola con l'assistenza dell'IA
+  category: creation
+  instructions:
+  - Brainstorm solutions with AI for energy conservation, waste reduction, green spaces, and transportation
+  - Evaluate feasibility and impact of each solution
+  - Create detailed implementation plans
+  - Calculate potential carbon savings
+  instructions_zhTW:
+  - 與 AI 一起為節能、減廢、綠色空間和交通運輸腦力激盪解決方案
+  - 評估每個解決方案的可行性和影響
+  - 創建詳細的實施計劃
+  - 計算潛在的碳減排量
+  instructions_es:
+  - Lluvia de ideas con IA para conservación de energía, reducción de residuos, espacios verdes y transporte
+  - Evalúa la factibilidad e impacto de cada solución
+  - Crea planes de implementación detallados
+  - Calcula ahorros potenciales de carbono
+  instructions_ja:
+  - エネルギー節約、廃棄物削減、緑地、交通についてAIとブレインストーミング
+  - 各ソリューションの実現可能性と影響を評価
+  - 詳細な実施計画を作成
+  - 潜在的な炭素削減量を計算
+  instructions_ko:
+  - 에너지 절약, 폐기물 감소, 녹지 공간, 교통에 대해 AI와 브레인스토밍
+  - 각 솔루션의 실현 가능성과 영향 평가
+  - 상세한 실행 계획 작성
+  - 잠재적 탄소 절감량 계산
+  instructions_fr:
+  - Brainstormez avec l'IA sur la conservation d'énergie, la réduction des déchets, les espaces verts et le transport
+  - Évaluez la faisabilité et l'impact de chaque solution
+  - Créez des plans de mise en œuvre détaillés
+  - Calculez les économies de carbone potentielles
+  instructions_de:
+  - Brainstorming mit KI für Energieeinsparung, Abfallreduzierung, Grünflächen und Transport
+  - Bewerten Sie die Machbarkeit und Auswirkungen jeder Lösung
+  - Erstellen Sie detaillierte Umsetzungspläne
+  - Berechnen Sie potenzielle CO2-Einsparungen
+  instructions_ru:
+  - Проведите мозговой штурм с ИИ по энергосбережению, сокращению отходов, зеленым зонам и транспорту
+  - Оцените осуществимость и влияние каждого решения
+  - Создайте подробные планы реализации
+  - Рассчитайте потенциальную экономию углерода
+  instructions_it:
+  - Brainstorming con l'IA per conservazione energetica, riduzione dei rifiuti, spazi verdi e trasporti
+  - Valuta la fattibilità e l'impatto di ogni soluzione
+  - Crea piani di implementazione dettagliati
+  - Calcola i potenziali risparmi di carbonio
+  expected_outcome: A portfolio of practical, implementable climate solutions
+  expected_outcome_zhTW: 一套實用、可實施的氣候解決方案組合
+  expected_outcome_es: Un portafolio de soluciones climáticas prácticas e implementables
+  expected_outcome_ja: 実用的で実施可能な気候ソリューションのポートフォリオ
+  expected_outcome_ko: 실용적이고 구현 가능한 기후 솔루션 포트폴리오
+  expected_outcome_fr: Un portefeuille de solutions climatiques pratiques et réalisables
+  expected_outcome_de: Ein Portfolio praktischer, umsetzbarer Klimalösungen
+  expected_outcome_ru: Портфель практических, реализуемых климатических решений
+  expected_outcome_it: Un portfolio di soluzioni climatiche pratiche e implementabili
+  time_limit: 30
+  assessment_focus:
+    primary:
+    - S2.1
+    - K2.1
+    secondary:
+    - A2.1
+  ai_module:
+    role: assistant
+    model: gemini-2.5-flash
+    persona: Sustainability Solutions Coach
+    initial_prompt: 'You are a sustainability solutions coach helping students design climate action plans.
+
+      Guide them to:
+
+      - Generate creative yet practical solutions
+
+      - Consider feasibility and resource requirements
+
+      - Calculate environmental impacts
+
+      - Think about stakeholder engagement
+
+
+      Focus on solutions that students can realistically implement in their school.
+
+      '
+- id: task-4
+  title: Action Plan Presentation
+  title_zhTW: 行動計畫展示
+  title_es: Presentación del Plan de Acción
+  title_ja: 行動計画プレゼンテーション
+  title_ko: 행동 계획 프레젠테이션
+  title_fr: Présentation du Plan d'Action
+  title_de: Aktionsplan-Präsentation
+  title_ru: Презентация плана действий
+  title_it: Presentazione del Piano d'Azione
+  description: Create a compelling presentation using AI to propose your climate action plan
+  description_zhTW: 使用 AI 創建引人注目的演示文稿來提出你的氣候行動計畫
+  description_es: Crea una presentación convincente usando IA para proponer tu plan de acción climática
+  description_ja: AIを使用して魅力的なプレゼンテーションを作成し、気候行動計画を提案する
+  description_ko: AI를 사용하여 기후 행동 계획을 제안하는 매력적인 프레젠테이션 만들기
+  description_fr: Créez une présentation convaincante en utilisant l'IA pour proposer votre plan d'action climatique
+  description_de: Erstelle eine überzeugende Präsentation mit KI für deinen Klimaaktionsplan
+  description_ru: Создайте убедительную презентацию с помощью ИИ для вашего плана действий по климату
+  description_it: Crea una presentazione convincente usando l'IA per proporre il tuo piano d'azione climatica
+  category: interaction
+  instructions:
+  - Use AI to structure your presentation effectively
+  - Include problem statement with data, proposed solutions, implementation timeline, and expected outcomes
+  - Generate compelling visuals and infographics
+  - Prepare for Q&A with AI assistance
+  instructions_zhTW:
+  - 使用 AI 有效地構建演示文稿
+  - 包括帶數據的問題陳述、提議的解決方案、實施時間表和預期成果
+  - 生成引人注目的視覺效果和信息圖表
+  - 在 AI 協助下準備問答環節
+  instructions_es:
+  - Usa IA para estructurar tu presentación de manera efectiva
+  - Incluye declaración del problema con datos, soluciones propuestas, cronograma de implementación y resultados esperados
+  - Genera visuales e infografías convincentes
+  - Prepárate para preguntas con ayuda de IA
+  instructions_ja:
+  - AIを使用してプレゼンテーションを効果的に構成
+  - データを含む問題提起、提案された解決策、実施スケジュール、期待される成果を含める
+  - 説得力のあるビジュアルとインフォグラフィックを生成
+  - AIの助けを借りてQ&Aの準備
+  instructions_ko:
+  - AI를 사용하여 프레젠테이션을 효과적으로 구조화
+  - 데이터가 포함된 문제 설명, 제안된 솔루션, 구현 일정, 예상 결과 포함
+  - 매력적인 시각 자료와 인포그래픽 생성
+  - AI 도움으로 Q&A 준비
+  instructions_fr:
+  - Utilisez l'IA pour structurer votre présentation efficacement
+  - Incluez l'énoncé du problème avec données, solutions proposées, calendrier de mise en œuvre et résultats attendus
+  - Générez des visuels et infographies convaincants
+  - Préparez-vous aux questions avec l'aide de l'IA
+  instructions_de:
+  - Verwenden Sie KI, um Ihre Präsentation effektiv zu strukturieren
+  - Fügen Sie Problemstellung mit Daten, vorgeschlagene Lösungen, Umsetzungszeitplan und erwartete Ergebnisse ein
+  - Generieren Sie überzeugende Visualisierungen und Infografiken
+  - Bereiten Sie sich mit KI-Hilfe auf Fragen vor
+  instructions_ru:
+  - Используйте ИИ для эффективной структуризации презентации
+  - Включите формулировку проблемы с данными, предлагаемые решения, график реализации и ожидаемые результаты
+  - Создайте убедительные визуальные материалы и инфографику
+  - Подготовьтесь к вопросам с помощью ИИ
+  instructions_it:
+  - Usa l'IA per strutturare la tua presentazione in modo efficace
+  - Includi dichiarazione del problema con dati, soluzioni proposte, timeline di implementazione e risultati attesi
+  - Genera visuali e infografiche convincenti
+  - Preparati per le domande con l'assistenza dell'IA
+  expected_outcome: A professional, persuasive presentation ready for stakeholders
+  expected_outcome_zhTW: 一份準備向利益相關者展示的專業、有說服力的演示文稿
+  expected_outcome_es: Una presentación profesional y persuasiva lista para las partes interesadas
+  expected_outcome_ja: ステークホルダー向けの専門的で説得力のあるプレゼンテーション
+  expected_outcome_ko: 이해관계자를 위한 전문적이고 설득력 있는 프레젠테이션
+  expected_outcome_fr: Une présentation professionnelle et persuasive prête pour les parties prenantes
+  expected_outcome_de: Eine professionelle, überzeugende Präsentation für Stakeholder
+  expected_outcome_ru: Профессиональная, убедительная презентация для заинтересованных сторон
+  expected_outcome_it: Una presentazione professionale e persuasiva pronta per gli stakeholder
+  time_limit: 25
+  assessment_focus:
+    primary:
+    - S1.2
+    - K1.2
+    secondary:
+    - A1.1
+    - A2.1
+  ai_module:
+    role: actor
+    model: gemini-2.5-flash
+    persona: Presentation Coach
+    initial_prompt: 'You are a presentation coach helping students prepare their climate action plan presentation.
+
+      Assist them with:
+
+      - Creating clear, compelling narratives
+
+      - Designing effective visual aids
+
+      - Anticipating and preparing for questions
+
+      - Building confidence in public speaking
+
+
+      Help them create a presentation that will inspire action from school administrators and peers.
+
+      '
 completion_criteria:
   min_tasks_completed: 3
   required_competencies:
-    - K1.1  # Must demonstrate AI understanding
-    - S2.1  # Must create with AI
+  - K1.1
+  - S2.1
   min_overall_score: 70
-
 resources:
-  - name: "NASA Climate Kids"
-    name_zhTW: "NASA 氣候兒童"
-    url: "https://climatekids.nasa.gov/"
-    type: reference
-    
-  - name: "AI Climate Tools Guide"
-    name_zhTW: "AI 氣候工具指南"
-    url: "https://www.climate.ai/"
-    type: tool
+- name: NASA Climate Kids
+  name_zhTW: NASA 氣候兒童
+  name_zhCN: '[Simplified Chinese translation needed]'
+  name_pt: '[Portuguese translation needed]'
+  name_ar: '[Arabic translation needed]'
+  name_id: '[Indonesian translation needed]'
+  name_th: '[Thai translation needed]'
+  url: https://climatekids.nasa.gov/
+  type: reference
+- name: AI Climate Tools Guide
+  name_zhTW: AI 氣候工具指南
+  name_zhCN: '[Simplified Chinese translation needed]'
+  name_pt: '[Portuguese translation needed]'
+  name_ar: '[Arabic translation needed]'
+  name_id: '[Indonesian translation needed]'
+  name_th: '[Thai translation needed]'
+  url: https://www.climate.ai/
+  type: tool
