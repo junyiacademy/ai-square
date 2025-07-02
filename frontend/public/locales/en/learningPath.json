@@ -1,0 +1,41 @@
+{
+  "title": "Your Learning Path",
+  "subtitle": "Personalized recommendations based on your assessment",
+  "yourProgress": "Your Progress",
+  "currentScore": "Current Score",
+  "targetScore": "Target Score",
+  "completed": "completed",
+  "recommendedPath": "Recommended Learning Path",
+  "startLearning": "Start Learning",
+  "estimatedTime": "Estimated time",
+  "weakDomainReason": "Recommended because this is your weakest domain",
+  "difficulty": {
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced"
+  },
+  "noAssessment": {
+    "title": "No Assessment Found",
+    "description": "Please complete the assessment first to get personalized recommendations",
+    "button": "Take Assessment"
+  },
+  "domains": {
+    "Engaging_with_AI": "Engaging with AI",
+    "Creating_with_AI": "Creating with AI",
+    "Managing_with_AI": "Managing with AI",
+    "Designing_with_AI": "Designing with AI"
+  },
+  "weakDomainReason": "This is your weakest area with {{score}}% score",
+  "strongDomainReason": "Advance your skills in {{domain}} (current: {{score}}%)",
+  "averageDomainReason": "Improve your {{domain}} skills (current: {{score}}%)",
+  "learningPath": {
+    "filteringBy": "Showing items for {{domain}}",
+    "clearFilter": "Clear filter",
+    "recommendedPath": "Recommended Learning Path",
+    "estimatedTime": "Total time: {{hours}}h {{minutes}}m",
+    "startLearning": "Start Learning",
+    "progress": "Progress",
+    "goToDashboard": "Go to Dashboard",
+    "dashboardHint": "Track your overall progress and achievements in the dashboard"
+  }
+}
