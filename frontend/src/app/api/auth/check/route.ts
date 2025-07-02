@@ -17,7 +17,7 @@ export async function GET() {
       const payload = await verifyAccessToken(accessToken.value)
       
       if (payload) {
-        const expiresIn = payload.exp - Math.floor(Date.now() / 1000) // 秒數
+        const expiresIn = payload.exp ? payload.exp - Math.floor(Date.now() / 1000) : 0 // 秒數
         return NextResponse.json({
           authenticated: true,
           user: {
@@ -26,7 +26,7 @@ export async function GET() {
             role: payload.role,
             name: payload.name
           },
-          tokenExpiringSoon: isTokenExpiringSoon(payload.exp),
+          tokenExpiringSoon: payload.exp ? isTokenExpiringSoon(payload.exp) : false,
           expiresIn: expiresIn > 0 ? expiresIn : 0
         })
       }
