@@ -138,14 +138,16 @@ describe('ChatPage', () => {
   it('renders chat page with all panels', async () => {
     render(<ChatPage />);
     
-    // Check for main components
-    expect(screen.getByText('Header')).toBeInTheDocument();
-    expect(screen.getByText('Chat History')).toBeInTheDocument();
-    expect(screen.getByText('Learning Resources')).toBeInTheDocument();
+    // Check for main components (should appear in both mobile and desktop versions)
+    expect(screen.getAllByText('Header')).toHaveLength(2); // Mobile + Desktop
+    expect(screen.getAllByText('Chat History')).toHaveLength(2);
+    expect(screen.getAllByText('Learning Resources')).toHaveLength(2);
+    expect(screen.getAllByText('AI Assistant')).toHaveLength(2);
+    expect(screen.getAllByText('Back to Dashboard')).toHaveLength(2);
     
     // Wait for async data loading
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('Type your message... (Shift+Enter for new line)')).toBeInTheDocument();
+      expect(screen.getAllByPlaceholderText('Type your message... (Shift+Enter for new line)')).toHaveLength(2);
     });
   });
 
@@ -162,8 +164,8 @@ describe('ChatPage', () => {
     render(<ChatPage />);
     
     await waitFor(() => {
-      expect(screen.getByText('Please log in to start chatting')).toBeInTheDocument();
-      expect(screen.getByText('Log In')).toBeInTheDocument();
+      expect(screen.getAllByText('Please log in to start chatting')).toHaveLength(2);
+      expect(screen.getAllByText('Log In')).toHaveLength(2);
     });
   });
 
@@ -171,12 +173,12 @@ describe('ChatPage', () => {
     render(<ChatPage />);
     
     await waitFor(() => {
-      const input = screen.getByPlaceholderText('Type your message... (Shift+Enter for new line)');
-      expect(input).toBeInTheDocument();
+      const inputs = screen.getAllByPlaceholderText('Type your message... (Shift+Enter for new line)');
+      expect(inputs).toHaveLength(2);
     });
 
-    const input = screen.getByPlaceholderText('Type your message... (Shift+Enter for new line)') as HTMLTextAreaElement;
-    const sendButton = screen.getByText('Send');
+    const input = screen.getAllByPlaceholderText('Type your message... (Shift+Enter for new line)')[0] as HTMLTextAreaElement;
+    const sendButton = screen.getAllByText('Send')[0];
 
     // Type a message
     fireEvent.change(input, { target: { value: 'Hello AI!' } });
@@ -187,12 +189,12 @@ describe('ChatPage', () => {
 
     // Check message was added
     await waitFor(() => {
-      expect(screen.getByText('Hello AI!')).toBeInTheDocument();
+      expect(screen.getAllByText('Hello AI!')).toHaveLength(2);
     });
 
     // Wait for AI response to appear
     await waitFor(() => {
-      expect(screen.getByText('Hello! How can I help you today?')).toBeInTheDocument();
+      expect(screen.getAllByText('Hello! How can I help you today?')).toHaveLength(2);
     });
   });
 
@@ -200,13 +202,13 @@ describe('ChatPage', () => {
     render(<ChatPage />);
     
     await waitFor(() => {
-      expect(screen.getByText('Get started')).toBeInTheDocument();
+      expect(screen.getAllByText('Get started')).toHaveLength(2);
     });
 
-    const quickAction = screen.getByText('Get started');
+    const quickAction = screen.getAllByText('Get started')[0];
     fireEvent.click(quickAction);
 
-    const input = screen.getByPlaceholderText('Type your message... (Shift+Enter for new line)') as HTMLTextAreaElement;
+    const input = screen.getAllByPlaceholderText('Type your message... (Shift+Enter for new line)')[0] as HTMLTextAreaElement;
     expect(input.value).toBe('Hi! Can you help me understand my current AI literacy level?');
   });
 
@@ -230,8 +232,8 @@ describe('ChatPage', () => {
     render(<ChatPage />);
     
     await waitFor(() => {
-      expect(screen.getByText('Your AI Literacy Level')).toBeInTheDocument();
-      expect(screen.getByText('75%')).toBeInTheDocument();
+      expect(screen.getAllByText('Your AI Literacy Level')).toHaveLength(2);
+      expect(screen.getAllByText('75%')).toHaveLength(2);
     });
   });
 
@@ -239,14 +241,14 @@ describe('ChatPage', () => {
     render(<ChatPage />);
     
     await waitFor(() => {
-      expect(screen.getByText('New Chat')).toBeInTheDocument();
+      expect(screen.getAllByText('New Chat')).toHaveLength(2);
     });
 
-    const newChatButton = screen.getByText('New Chat');
+    const newChatButton = screen.getAllByText('New Chat')[0];
     fireEvent.click(newChatButton);
 
     // Check that messages are cleared
-    const messagesArea = screen.getByText('Start a conversation...');
+    const messagesArea = screen.getAllByText('Start a conversation...')[0];
     expect(messagesArea).toBeInTheDocument();
   });
 
@@ -254,43 +256,43 @@ describe('ChatPage', () => {
     render(<ChatPage />);
     
     await waitFor(() => {
-      expect(screen.getByText('Chat History')).toBeInTheDocument();
-      expect(screen.getByText('Learning Resources')).toBeInTheDocument();
+      expect(screen.getAllByText('Chat History')).toHaveLength(2);
+      expect(screen.getAllByText('Learning Resources')).toHaveLength(2);
     });
 
-    // Initially, both panels should have collapse buttons visible
+    // Initially, panels should have collapse buttons visible (only in desktop version)
     const initialCollapseButtons = screen.getAllByTitle('Collapse panel');
-    expect(initialCollapseButtons.length).toBe(2);
+    expect(initialCollapseButtons.length).toBe(2); // Only desktop has collapse buttons
 
     // Verify left panel content is initially visible
-    expect(screen.getByText('No previous chats')).toBeInTheDocument();
+    expect(screen.getAllByText('No previous chats')).toHaveLength(2);
   });
 
   it('renders markdown in AI responses', async () => {
     render(<ChatPage />);
     
     await waitFor(() => {
-      const input = screen.getByPlaceholderText('Type your message... (Shift+Enter for new line)');
-      expect(input).toBeInTheDocument();
+      const inputs = screen.getAllByPlaceholderText('Type your message... (Shift+Enter for new line)');
+      expect(inputs).toHaveLength(2);
     });
 
-    const input = screen.getByPlaceholderText('Type your message... (Shift+Enter for new line)') as HTMLTextAreaElement;
-    const sendButton = screen.getByText('Send');
+    const input = screen.getAllByPlaceholderText('Type your message... (Shift+Enter for new line)')[0] as HTMLTextAreaElement;
+    const sendButton = screen.getAllByText('Send')[0];
 
     fireEvent.change(input, { target: { value: 'Test message' } });
     fireEvent.click(sendButton);
     
     // Wait for user message to appear
     await waitFor(() => {
-      expect(screen.getByText('Test message')).toBeInTheDocument();
+      expect(screen.getAllByText('Test message')).toHaveLength(2);
     });
 
     // Wait for AI response (since our mock responds immediately)
     await waitFor(() => {
-      expect(screen.getByText('Hello! How can I help you today?')).toBeInTheDocument();
+      expect(screen.getAllByText('Hello! How can I help you today?')).toHaveLength(2);
     });
     
     // Verify the response is rendered (our mock ReactMarkdown just renders the content as-is)
-    expect(screen.getByText('Hello! How can I help you today?')).toBeInTheDocument();
+    expect(screen.getAllByText('Hello! How can I help you today?')).toHaveLength(2);
   });
 });

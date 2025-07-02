@@ -208,21 +208,34 @@ async function generateChatTitle(messages: any[]) {
     },
   });
   
-  const prompt = `Based on this conversation, generate a short, descriptive title (max 5 words):
+  // Use up to 3 messages (first 3 exchanges) for better context
+  const conversationContext = messages.slice(0, 6) // user, assistant, user (if exists)
+    .map((msg, index) => {
+      const role = msg.role === 'user' ? 'User' : 'Assistant';
+      return `${role}: ${msg.content.substring(0, 150)}`;
+    })
+    .join('\n');
+  
+  const prompt = `Based on this conversation, generate a short, descriptive title in Traditional Chinese (max 6 words, 繁體中文):
 
-User: ${messages[0].content}
-Assistant: ${messages[1].content}
+${conversationContext}
+
+Generate a title that captures the main topic or question. Examples:
+- "AI 素養評估討論"
+- "機器學習入門指導"
+- "程式設計問題解答"
+- "職涯發展建議"
 
 Title:`;
   
   try {
     const result = await model.generateContent(prompt);
     const response = result.response;
-    const text = response.candidates?.[0]?.content?.parts?.[0]?.text || 'Learning Discussion';
-    return text.trim().replace(/['"]/g, '');
+    const text = response.candidates?.[0]?.content?.parts?.[0]?.text || '學習討論';
+    return text.trim().replace(/['"「」]/g, '');
   } catch (error) {
     console.error('Error generating title:', error);
-    return 'Learning Discussion';
+    return '學習討論';
   }
 }
 
@@ -320,8 +333,13 @@ Guidelines:
     await saveMessage(userEmail, currentSessionId, userMessage);
     const session = await saveMessage(userEmail, currentSessionId, assistantMessage);
     
-    // Auto-generate title if it's a new session
-    if (!sessionId && session.messages.length === 2) {
+    // Auto-generate title for new sessions or update title if still generic
+    const shouldGenerateTitle = (
+      (!sessionId && session.messages.length === 2) || // New session with first exchange
+      (session.title === 'New Chat' && session.messages.length >= 4) // Update generic title after 2 exchanges
+    );
+    
+    if (shouldGenerateTitle) {
       const title = await generateChatTitle(session.messages);
       session.title = title;
       
