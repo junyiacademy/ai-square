@@ -32,6 +32,11 @@ export function Footer() {
             <h3 className="text-white font-semibold mb-4">{t('footer.resources', 'Resources')}</h3>
             <ul className="space-y-2">
               <li>
+                <Link href="/about/journey" className="hover:text-white transition-colors">
+                  {t('footer.journey', 'User Journey')}
+                </Link>
+              </li>
+              <li>
                 <Link href="/about/roadmap" className="hover:text-white transition-colors">
                   {t('footer.roadmap', 'Product Roadmap')}
                 </Link>
