@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { contentService } from '@/lib/cms/content-service';
 import { ContentType } from '@/types/cms';
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/admin/content/[id] - Get single content item
 export async function GET(
   request: NextRequest,

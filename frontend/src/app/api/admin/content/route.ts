@@ -3,6 +3,8 @@ import { contentService } from '@/lib/cms/content-service';
 import { ContentType } from '@/types/cms';
 import { withAdminAuth } from '@/middleware/auth';
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/admin/content - List content
 export const GET = withAdminAuth(async (request: NextRequest) => {
   const { searchParams } = new URL(request.url);

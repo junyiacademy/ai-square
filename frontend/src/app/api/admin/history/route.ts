@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Storage } from '@google-cloud/storage';
 import { ContentHistory } from '@/types/cms';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   // Check admin auth
   const authHeader = request.headers.get('cookie');

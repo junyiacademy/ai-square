@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { contentService } from '@/lib/cms/content-service';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   // Check admin auth
   const authHeader = request.headers.get('cookie');
