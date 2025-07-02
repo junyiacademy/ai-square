@@ -63,6 +63,8 @@ async function loadScenariosFromYAML(lang: string): Promise<ScenarioListItem[]> 
     const scenarioFiles = [
       'ai_job_search_scenario.yaml',
       'ai_education_design_scenario.yaml',
+      'ai_stablecoin_trading_scenario.yaml',
+      'ai_robotics_development_scenario.yaml',
       'high_school_climate_change_scenario.yaml',
       'high_school_digital_wellness_scenario.yaml',
       'high_school_smart_city_scenario.yaml',
@@ -83,6 +85,8 @@ async function loadScenariosFromYAML(lang: string): Promise<ScenarioListItem[]> 
           const emojiMap: Record<string, string> = {
             'ai-job-search': '💼',
             'ai-education-design': '🎓',
+            'ai-stablecoin-trading': '₿',
+            'ai-robotics-development': '🤖',
             'high-school-climate-change': '🌍',
             'high-school-digital-wellness': '📱',
             'high-school-smart-city': '🏙️',

@@ -1,0 +1,560 @@
+# AI-Powered Robotics Development and Implementation Scenario
+# PBL Scenario Definition (Program-based, no stages)
+
+scenario_info:
+  id: ai-robotics-development
+  title: AI-Powered Robotics Development and Implementation
+  title_zh: AI 驅動的機器人開發與實作
+  title_es: Desarrollo e Implementación de Robótica Potenciada por IA
+  title_ja: AIを活用したロボティクス開発と実装
+  title_ko: AI 기반 로보틱스 개발 및 구현
+  title_fr: Développement et Implémentation de Robotique Alimentée par l'IA
+  title_de: KI-gestützte Robotik-Entwicklung und Implementierung
+  title_ru: Разработка и внедрение робототехники с использованием ИИ
+  title_it: Sviluppo e Implementazione di Robotica Potenziata dall'IA
+  description: Learn to build intelligent robots using AI for real-world applications like warehouse automation, elderly care assistance, and smart manufacturing
+  description_zh: 學習使用 AI 構建智能機器人，應用於倉庫自動化、老年護理協助和智能製造等真實世界場景
+  description_es: Aprende a construir robots inteligentes usando IA para aplicaciones del mundo real como automatización de almacenes, asistencia de cuidado de ancianos y manufactura inteligente
+  description_ja: 倉庫自動化、高齢者ケア支援、スマート製造などの実世界アプリケーションのためにAIを使用してインテリジェントロボットを構築する方法を学ぶ
+  description_ko: 창고 자동화, 노인 돌봄 지원, 스마트 제조 등 실제 세계 응용을 위해 AI를 사용하여 지능형 로봇을 구축하는 방법을 배우세요
+  description_fr: Apprenez à construire des robots intelligents en utilisant l'IA pour des applications du monde réel comme l'automatisation d'entrepôts, l'assistance aux soins des personnes âgées et la fabrication intelligente
+  description_de: Lernen Sie, intelligente Roboter mit KI für reale Anwendungen wie Lagerautomatisierung, Altenpflegeunterstützung und intelligente Fertigung zu bauen
+  description_ru: Изучите создание интеллектуальных роботов с использованием ИИ для реальных приложений, таких как автоматизация складов, помощь в уходе за пожилыми и умное производство
+  description_it: Impara a costruire robot intelligenti usando l'IA per applicazioni del mondo reale come automazione di magazzini, assistenza nella cura degli anziani e produzione intelligente
+  difficulty: intermediate
+  estimated_duration: 150 # minutes
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - designing_with_ai
+  prerequisites:
+    - Basic programming knowledge (Python preferred)
+    - Understanding of sensors and actuators
+    - Access to robotics simulation software or hardware
+  prerequisites_zh:
+    - 基本程式設計知識（推薦 Python）
+    - 了解感測器和致動器
+    - 可使用機器人模擬軟體或硬體
+  prerequisites_es:
+    - Conocimiento básico de programación (Python preferido)
+    - Comprensión de sensores y actuadores
+    - Acceso a software de simulación robótica o hardware
+  prerequisites_ja:
+    - 基本的なプログラミング知識（Python推奨）
+    - センサーとアクチュエータの理解
+    - ロボティクスシミュレーションソフトウェアまたはハードウェアへのアクセス
+  prerequisites_ko:
+    - 기본 프로그래밍 지식 (Python 선호)
+    - 센서 및 액추에이터 이해
+    - 로보틱스 시뮬레이션 소프트웨어 또는 하드웨어 접근
+  prerequisites_fr:
+    - Connaissances de base en programmation (Python préféré)
+    - Compréhension des capteurs et actionneurs
+    - Accès à un logiciel de simulation robotique ou matériel
+  prerequisites_de:
+    - Grundkenntnisse in der Programmierung (Python bevorzugt)
+    - Verständnis von Sensoren und Aktuatoren
+    - Zugang zu Robotik-Simulationssoftware oder Hardware
+  prerequisites_ru:
+    - Базовые знания программирования (предпочтительно Python)
+    - Понимание датчиков и исполнительных механизмов
+    - Доступ к программному обеспечению для симуляции робототехники или аппаратному обеспечению
+  prerequisites_it:
+    - Conoscenze di programmazione di base (Python preferito)
+    - Comprensione di sensori e attuatori
+    - Accesso a software di simulazione robotica o hardware
+  learning_objectives:
+    - Master AI integration techniques for robot perception and decision-making
+    - Develop autonomous navigation systems using AI computer vision and SLAM
+    - Create intelligent human-robot interaction interfaces with natural language processing
+    - Build practical robotics solutions for real-world business and social challenges
+  learning_objectives_zh:
+    - 掌握機器人感知和決策的 AI 整合技術
+    - 使用 AI 電腦視覺和 SLAM 開發自主導航系統
+    - 使用自然語言處理創建智能人機互動介面
+    - 為真實世界的商業和社會挑戰構建實用的機器人解決方案
+  learning_objectives_es:
+    - Dominar técnicas de integración de IA para percepción y toma de decisiones robóticas
+    - Desarrollar sistemas de navegación autónoma usando visión por computadora IA y SLAM
+    - Crear interfaces inteligentes de interacción humano-robot con procesamiento de lenguaje natural
+    - Construir soluciones robóticas prácticas para desafíos comerciales y sociales del mundo real
+  learning_objectives_ja:
+    - ロボットの知覚と意思決定のためのAI統合技術をマスターする
+    - AIコンピュータビジョンとSLAMを使用して自律ナビゲーションシステムを開発する
+    - 自然言語処理で知的な人間ロボット相互作用インターフェースを作成する
+    - 実世界のビジネスおよび社会的課題のための実用的なロボティクスソリューションを構築する
+  learning_objectives_ko:
+    - 로봇 인지 및 의사결정을 위한 AI 통합 기술 마스터하기
+    - AI 컴퓨터 비전과 SLAM을 사용하여 자율 내비게이션 시스템 개발하기
+    - 자연어 처리로 지능형 인간-로봇 상호작용 인터페이스 생성하기
+    - 실제 세계의 비즈니스 및 사회적 도전을 위한 실용적인 로보틱스 솔루션 구축하기
+  learning_objectives_fr:
+    - Maîtriser les techniques d'intégration IA pour la perception et la prise de décision robotiques
+    - Développer des systèmes de navigation autonome utilisant la vision par ordinateur IA et SLAM
+    - Créer des interfaces intelligentes d'interaction humain-robot avec traitement du langage naturel
+    - Construire des solutions robotiques pratiques pour les défis commerciaux et sociaux du monde réel
+  learning_objectives_de:
+    - KI-Integrationstechniken für Roboterwahrnehmung und Entscheidungsfindung beherrschen
+    - Autonome Navigationssysteme mit KI-Computer Vision und SLAM entwickeln
+    - Intelligente Mensch-Roboter-Interaktionsschnittstellen mit natürlicher Sprachverarbeitung erstellen
+    - Praktische Robotiklösungen für reale geschäftliche und gesellschaftliche Herausforderungen bauen
+  learning_objectives_ru:
+    - Освоить методы интеграции ИИ для восприятия и принятия решений роботами
+    - Разработать системы автономной навигации с использованием компьютерного зрения ИИ и SLAM
+    - Создать интеллектуальные интерфейсы взаимодействия человека и робота с обработкой естественного языка
+    - Построить практические робототехнические решения для реальных бизнес и социальных вызовов
+  learning_objectives_it:
+    - Padroneggiare le tecniche di integrazione AI per percezione e decisioni robotiche
+    - Sviluppare sistemi di navigazione autonoma usando computer vision AI e SLAM
+    - Creare interfacce intelligenti di interazione umano-robot con elaborazione del linguaggio naturale
+    - Costruire soluzioni robotiche pratiche per sfide commerciali e sociali del mondo reale
+
+ksa_mapping:
+  knowledge:
+    - K2.1  # Understanding AI capabilities and limitations
+    - K2.3  # Data analysis and interpretation
+    - K3.1  # AI system architecture
+    - K4.1  # Ethical AI considerations
+  skills:
+    - S2.1  # Critical evaluation of AI outputs
+    - S3.1  # AI system integration
+    - S3.3  # AI-assisted analysis
+    - S4.2  # Collaborative AI design
+  attitudes:
+    - A1.2  # Responsible AI use
+    - A2.1  # Critical thinking
+    - A3.1  # Continuous learning
+    - A4.1  # Human-centered design
+
+tasks:
+  - id: perception-system
+    title: AI-Powered Robot Perception System
+    title_zh: AI 驅動的機器人感知系統
+    title_es: Sistema de Percepción Robótica Potenciado por IA
+    title_ja: AIを活用したロボット知覚システム
+    title_ko: AI 기반 로봇 인지 시스템
+    title_fr: Système de Perception Robotique Alimenté par l'IA
+    title_de: KI-gestütztes Roboter-Wahrnehmungssystem
+    title_ru: Система восприятия робота на основе ИИ
+    title_it: Sistema di Percezione Robotica Potenziato dall'IA
+    description: You're developing a warehouse automation robot that needs to identify, sort, and handle various packages. Use AI vision and sensor fusion to create a robust perception system
+    description_zh: 你正在開發一個需要識別、分類和處理各種包裹的倉庫自動化機器人。使用 AI 視覺和感測器融合創建一個強健的感知系統
+    description_es: Estás desarrollando un robot de automatización de almacén que necesita identificar, clasificar y manejar varios paquetes. Usa visión IA y fusión de sensores para crear un sistema de percepción robusto
+    description_ja: 様々なパッケージを識別、分類、処理する必要がある倉庫自動化ロボットを開発しています。AIビジョンとセンサーフュージョンを使用して堅牢な知覚システムを作成してください
+    description_ko: 다양한 패키지를 식별, 분류, 처리해야 하는 창고 자동화 로봇을 개발하고 있습니다. AI 비전과 센서 융합을 사용하여 견고한 인지 시스템을 만드세요
+    description_fr: Vous développez un robot d'automatisation d'entrepôt qui doit identifier, trier et manipuler divers colis. Utilisez la vision IA et la fusion de capteurs pour créer un système de perception robuste
+    description_de: Sie entwickeln einen Lagerautomatisierungsroboter, der verschiedene Pakete identifizieren, sortieren und handhaben muss. Nutzen Sie KI-Vision und Sensorfusion, um ein robustes Wahrnehmungssystem zu erstellen
+    description_ru: Вы разрабатываете робота автоматизации склада, который должен идентифицировать, сортировать и обрабатывать различные посылки. Используйте ИИ-зрение и слияние датчиков для создания надежной системы восприятия
+    description_it: Stai sviluppando un robot di automazione del magazzino che deve identificare, smistare e gestire vari pacchi. Usa la visione AI e la fusione di sensori per creare un sistema di percezione robusto
+    category: creation
+    instructions:
+      - Use AI tools to design computer vision pipelines for object detection and classification
+      - Implement AI-assisted sensor fusion combining cameras, LiDAR, and depth sensors
+      - Create machine learning models using AI platforms like Roboflow or Edge Impulse for package recognition
+      - Develop real-time AI inference systems optimized for embedded robotics hardware
+    instructions_zh:
+      - 使用 AI 工具設計用於物體檢測和分類的電腦視覺管道
+      - 實施結合攝影機、LiDAR 和深度感測器的 AI 輔助感測器融合
+      - 使用 Roboflow 或 Edge Impulse 等 AI 平台創建用於包裹識別的機器學習模型
+      - 開發針對嵌入式機器人硬體優化的即時 AI 推理系統
+    instructions_es:
+      - Usa herramientas de IA para diseñar pipelines de visión por computadora para detección y clasificación de objetos
+      - Implementa fusión de sensores asistida por IA combinando cámaras, LiDAR y sensores de profundidad
+      - Crea modelos de aprendizaje automático usando plataformas de IA como Roboflow o Edge Impulse para reconocimiento de paquetes
+      - Desarrolla sistemas de inferencia IA en tiempo real optimizados para hardware robótico embebido
+    instructions_ja:
+      - AIツールを使用してオブジェクト検出と分類のためのコンピュータビジョンパイプラインを設計する
+      - カメラ、LiDAR、深度センサーを組み合わせたAI支援センサーフュージョンを実装する
+      - RoboflowやEdge ImpulseなどのAIプラットフォームを使用してパッケージ認識のための機械学習モデルを作成する
+      - 組み込みロボティクスハードウェア用に最適化されたリアルタイムAI推論システムを開発する
+    instructions_ko:
+      - AI 도구를 사용하여 객체 탐지 및 분류를 위한 컴퓨터 비전 파이프라인 설계하기
+      - 카메라, LiDAR, 깊이 센서를 결합한 AI 지원 센서 융합 구현하기
+      - Roboflow 또는 Edge Impulse와 같은 AI 플랫폼을 사용하여 패키지 인식을 위한 머신러닝 모델 생성하기
+      - 임베디드 로보틱스 하드웨어에 최적화된 실시간 AI 추론 시스템 개발하기
+    instructions_fr:
+      - Utilisez des outils IA pour concevoir des pipelines de vision par ordinateur pour la détection et classification d'objets
+      - Implémentez la fusion de capteurs assistée par IA combinant caméras, LiDAR et capteurs de profondeur
+      - Créez des modèles d'apprentissage automatique utilisant des plateformes IA comme Roboflow ou Edge Impulse pour la reconnaissance de colis
+      - Développez des systèmes d'inférence IA en temps réel optimisés pour le matériel robotique embarqué
+    instructions_de:
+      - Nutzen Sie KI-Tools, um Computer-Vision-Pipelines für Objekterkennung und -klassifizierung zu entwerfen
+      - Implementieren Sie KI-unterstützte Sensorfusion, die Kameras, LiDAR und Tiefensensoren kombiniert
+      - Erstellen Sie maschinelle Lernmodelle mit KI-Plattformen wie Roboflow oder Edge Impulse für Paketerkennung
+      - Entwickeln Sie Echtzeit-KI-Inferenzsysteme, die für eingebettete Robotik-Hardware optimiert sind
+    instructions_ru:
+      - Используйте ИИ-инструменты для проектирования пайплайнов компьютерного зрения для обнаружения и классификации объектов
+      - Внедрите слияние датчиков с помощью ИИ, объединяющее камеры, LiDAR и датчики глубины
+      - Создайте модели машинного обучения с использованием ИИ-платформ, таких как Roboflow или Edge Impulse для распознавания посылок
+      - Разработайте системы вывода ИИ в реальном времени, оптимизированные для встроенного робототехнического оборудования
+    instructions_it:
+      - Usa strumenti AI per progettare pipeline di computer vision per rilevamento e classificazione di oggetti
+      - Implementa fusione di sensori assistita dall'AI combinando telecamere, LiDAR e sensori di profondità
+      - Crea modelli di machine learning usando piattaforme AI come Roboflow o Edge Impulse per riconoscimento pacchi
+      - Sviluppa sistemi di inferenza AI in tempo reale ottimizzati per hardware robotico embedded
+    expected_outcome: A working perception system that can reliably identify and classify packages in various lighting and environmental conditions, with documented performance metrics
+    expected_outcome_zh: 一個能夠在各種照明和環境條件下可靠識別和分類包裹的感知系統，並有記錄的性能指標
+    expected_outcome_es: Un sistema de percepción funcional que puede identificar y clasificar paquetes de manera confiable en varias condiciones de iluminación y ambientales, con métricas de rendimiento documentadas
+    expected_outcome_ja: 様々な照明および環境条件下でパッケージを確実に識別および分類できる動作する知覚システム、文書化された性能指標付き
+    expected_outcome_ko: 다양한 조명 및 환경 조건에서 패키지를 안정적으로 식별하고 분류할 수 있는 작동하는 인지 시스템, 문서화된 성능 지표 포함
+    expected_outcome_fr: Un système de perception fonctionnel capable d'identifier et classifier de manière fiable les colis dans diverses conditions d'éclairage et environnementales, avec des métriques de performance documentées
+    expected_outcome_de: Ein funktionierendes Wahrnehmungssystem, das Pakete unter verschiedenen Beleuchtungs- und Umgebungsbedingungen zuverlässig identifizieren und klassifizieren kann, mit dokumentierten Leistungsmetriken
+    expected_outcome_ru: Работающая система восприятия, которая может надежно идентифицировать и классифицировать посылки в различных условиях освещения и окружающей среды, с задокументированными метриками производительности
+    expected_outcome_it: Un sistema di percezione funzionante che può identificare e classificare in modo affidabile i pacchi in varie condizioni di illuminazione e ambientali, con metriche di prestazioni documentate
+    time_limit: 60
+    resources:
+      - Computer vision frameworks: OpenCV, TensorFlow, PyTorch
+      - AI vision platforms: Roboflow, Edge Impulse, Ultralytics YOLOv8
+      - Simulation environments: Gazebo, PyBullet, CARLA
+      - Hardware: RealSense cameras, Velodyne LiDAR (simulation)
+    resources_zh:
+      - 電腦視覺框架：OpenCV、TensorFlow、PyTorch
+      - AI 視覺平台：Roboflow、Edge Impulse、Ultralytics YOLOv8
+      - 模擬環境：Gazebo、PyBullet、CARLA
+      - 硬體：RealSense 攝影機、Velodyne LiDAR（模擬）
+    resources_es:
+      - Frameworks de visión por computadora: OpenCV, TensorFlow, PyTorch
+      - Plataformas de visión IA: Roboflow, Edge Impulse, Ultralytics YOLOv8
+      - Entornos de simulación: Gazebo, PyBullet, CARLA
+      - Hardware: cámaras RealSense, Velodyne LiDAR (simulación)
+    resources_ja:
+      - コンピュータビジョンフレームワーク：OpenCV、TensorFlow、PyTorch
+      - AIビジョンプラットフォーム：Roboflow、Edge Impulse、Ultralytics YOLOv8
+      - シミュレーション環境：Gazebo、PyBullet、CARLA
+      - ハードウェア：RealSenseカメラ、Velodyne LiDAR（シミュレーション）
+    resources_ko:
+      - 컴퓨터 비전 프레임워크: OpenCV, TensorFlow, PyTorch
+      - AI 비전 플랫폼: Roboflow, Edge Impulse, Ultralytics YOLOv8
+      - 시뮬레이션 환경: Gazebo, PyBullet, CARLA
+      - 하드웨어: RealSense 카메라, Velodyne LiDAR (시뮬레이션)
+    resources_fr:
+      - Frameworks de vision par ordinateur : OpenCV, TensorFlow, PyTorch
+      - Plateformes de vision IA : Roboflow, Edge Impulse, Ultralytics YOLOv8
+      - Environnements de simulation : Gazebo, PyBullet, CARLA
+      - Matériel : caméras RealSense, Velodyne LiDAR (simulation)
+    resources_de:
+      - Computer-Vision-Frameworks: OpenCV, TensorFlow, PyTorch
+      - KI-Vision-Plattformen: Roboflow, Edge Impulse, Ultralytics YOLOv8
+      - Simulationsumgebungen: Gazebo, PyBullet, CARLA
+      - Hardware: RealSense-Kameras, Velodyne LiDAR (Simulation)
+    resources_ru:
+      - Фреймворки компьютерного зрения: OpenCV, TensorFlow, PyTorch
+      - ИИ-платформы зрения: Roboflow, Edge Impulse, Ultralytics YOLOv8
+      - Среды симуляции: Gazebo, PyBullet, CARLA
+      - Оборудование: камеры RealSense, Velodyne LiDAR (симуляция)
+    resources_it:
+      - Framework di computer vision: OpenCV, TensorFlow, PyTorch
+      - Piattaforme di visione AI: Roboflow, Edge Impulse, Ultralytics YOLOv8
+      - Ambienti di simulazione: Gazebo, PyBullet, CARLA
+      - Hardware: telecamere RealSense, Velodyne LiDAR (simulazione)
+    assessment_focus:
+      primary: [creating_with_ai, engaging_with_ai]
+      secondary: [designing_with_ai]
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: You are an expert robotics engineer and AI integration specialist. Help users understand computer vision concepts, implement sensor fusion techniques, and optimize AI models for real-time robotics applications. Focus on practical implementation and performance optimization.
+      initial_prompt: |
+        Welcome to robotics perception system development! I'm here to guide you through building a robust AI-powered vision system for your warehouse robot.
+
+        As your robotics mentor, I'll help you:
+        1. Design efficient computer vision pipelines for object detection
+        2. Implement sensor fusion techniques for reliable perception
+        3. Optimize AI models for real-time performance on robotics hardware
+        4. Test and validate your system under various conditions
+
+        Key considerations for robotics perception:
+        - Real-time performance is crucial (aim for >10 FPS)
+        - Robustness to lighting changes and occlusions
+        - Efficient resource usage for embedded systems
+        - Safety-critical error handling
+
+        What's your current experience with computer vision and robotics? Let's start by understanding your target hardware platform and performance requirements.
+
+  - id: navigation-intelligence
+    title: Autonomous Navigation with AI Planning
+    title_zh: 基於 AI 規劃的自主導航
+    title_es: Navegación Autónoma con Planificación IA
+    title_ja: AI計画による自律ナビゲーション
+    title_ko: AI 계획을 통한 자율 내비게이션
+    title_fr: Navigation Autonome avec Planification IA
+    title_de: Autonome Navigation mit KI-Planung
+    title_ru: Автономная навигация с планированием ИИ
+    title_it: Navigazione Autonoma con Pianificazione AI
+    description: Your robot needs to navigate a complex elderly care facility, avoiding obstacles while delivering medication and responding to emergency calls efficiently
+    description_zh: 你的機器人需要在複雜的老年護理設施中導航，避開障礙物同時高效地遞送藥物和回應緊急呼叫
+    description_es: Tu robot necesita navegar por una instalación compleja de cuidado de ancianos, evitando obstáculos mientras entrega medicamentos y responde a llamadas de emergencia de manera eficiente
+    description_ja: あなたのロボットは、障害物を避けながら薬の配達と緊急通話への効率的な対応を行い、複雑な高齢者ケア施設をナビゲートする必要があります
+    description_ko: 당신의 로봇은 복잡한 노인 돌봄 시설을 탐색하여 장애물을 피하면서 약물을 전달하고 응급 호출에 효율적으로 대응해야 합니다
+    description_fr: Votre robot doit naviguer dans une installation complexe de soins aux personnes âgées, en évitant les obstacles tout en livrant des médicaments et en répondant efficacement aux appels d'urgence
+    description_de: Ihr Roboter muss in einer komplexen Altenpflegeeinrichtung navigieren, Hindernisse vermeiden und gleichzeitig Medikamente liefern und effizient auf Notrufe reagieren
+    description_ru: Ваш робот должен перемещаться по сложному учреждению по уходу за пожилыми людьми, избегая препятствий при доставке лекарств и эффективно реагируя на экстренные вызовы
+    description_it: Il tuo robot deve navigare in una struttura complessa per l'assistenza agli anziani, evitando ostacoli mentre consegna farmaci e risponde efficientemente alle chiamate di emergenza
+    category: creation
+    instructions:
+      - Use AI path planning algorithms and reinforcement learning to optimize routes in dynamic environments
+      - Implement AI-powered SLAM (Simultaneous Localization and Mapping) for real-time environment understanding
+      - Create intelligent behavior trees using AI assistance for task prioritization and emergency response
+      - Develop predictive navigation using AI to anticipate human movement patterns and facility workflows
+    instructions_zh:
+      - 使用 AI 路徑規劃演算法和強化學習在動態環境中優化路線
+      - 實施 AI 驅動的 SLAM（同時定位與地圖構建）進行即時環境理解
+      - 使用 AI 協助創建智能行為樹進行任務優先排序和緊急響應
+      - 使用 AI 開發預測性導航以預測人類移動模式和設施工作流程
+    instructions_es:
+      - Usa algoritmos de planificación de rutas IA y aprendizaje por refuerzo para optimizar rutas en entornos dinámicos
+      - Implementa SLAM (Localización y Mapeo Simultáneos) potenciado por IA para comprensión del entorno en tiempo real
+      - Crea árboles de comportamiento inteligentes usando asistencia IA para priorización de tareas y respuesta de emergencia
+      - Desarrolla navegación predictiva usando IA para anticipar patrones de movimiento humano y flujos de trabajo de instalaciones
+    instructions_ja:
+      - AIパス計画アルゴリズムと強化学習を使用して動的環境でルートを最適化する
+      - リアルタイム環境理解のためのAI搭載SLAM（同時位置特定とマッピング）を実装する
+      - タスクの優先順位付けと緊急対応のためにAI支援を使用してインテリジェントな行動ツリーを作成する
+      - 人間の移動パターンと施設ワークフローを予測するためにAIを使用した予測ナビゲーションを開発する
+    instructions_ko:
+      - AI 경로 계획 알고리즘과 강화 학습을 사용하여 동적 환경에서 경로 최적화하기
+      - 실시간 환경 이해를 위한 AI 기반 SLAM (동시 위치 추정 및 매핑) 구현하기
+      - 작업 우선순위 지정 및 응급 대응을 위해 AI 지원을 사용하여 지능형 행동 트리 생성하기
+      - 인간 이동 패턴과 시설 워크플로우를 예측하기 위해 AI를 사용한 예측 내비게이션 개발하기
+    instructions_fr:
+      - Utilisez des algorithmes de planification de chemin IA et l'apprentissage par renforcement pour optimiser les routes dans des environnements dynamiques
+      - Implémentez SLAM (Localisation et Cartographie Simultanées) alimenté par IA pour la compréhension de l'environnement en temps réel
+      - Créez des arbres de comportement intelligents utilisant l'assistance IA pour la priorisation des tâches et la réponse d'urgence
+      - Développez une navigation prédictive utilisant l'IA pour anticiper les modèles de mouvement humain et les flux de travail des installations
+    instructions_de:
+      - Nutzen Sie KI-Pfadplanungsalgorithmen und Verstärkungslernen zur Routenoptimierung in dynamischen Umgebungen
+      - Implementieren Sie KI-gestütztes SLAM (Simultane Lokalisierung und Kartierung) für Echtzeit-Umgebungsverständnis
+      - Erstellen Sie intelligente Verhaltensbäume mit KI-Unterstützung für Aufgabenpriorisierung und Notfallreaktion
+      - Entwickeln Sie prädiktive Navigation mit KI zur Vorhersage menschlicher Bewegungsmuster und Einrichtungsworkflows
+    instructions_ru:
+      - Используйте алгоритмы планирования пути ИИ и обучение с подкреплением для оптимизации маршрутов в динамических средах
+      - Внедрите SLAM (одновременная локализация и картографирование) на основе ИИ для понимания среды в реальном времени
+      - Создайте интеллектуальные деревья поведения с помощью ИИ для приоритизации задач и реагирования на чрезвычайные ситуации
+      - Разработайте прогнозирующую навигацию с использованием ИИ для предвидения паттернов движения людей и рабочих процессов учреждения
+    instructions_it:
+      - Usa algoritmi di pianificazione del percorso AI e apprendimento per rinforzo per ottimizzare le rotte in ambienti dinamici
+      - Implementa SLAM (Localizzazione e Mappatura Simultanee) potenziato dall'AI per comprensione dell'ambiente in tempo reale
+      - Crea alberi comportamentali intelligenti usando assistenza AI per prioritizzazione dei compiti e risposta di emergenza
+      - Sviluppa navigazione predittiva usando AI per anticipare i modelli di movimento umano e i flussi di lavoro delle strutture
+    expected_outcome: A complete autonomous navigation system that can efficiently handle multiple concurrent tasks while maintaining safety and adapting to environmental changes
+    expected_outcome_zh: 一個能夠高效處理多個同時任務同時保持安全並適應環境變化的完整自主導航系統
+    expected_outcome_es: Un sistema completo de navegación autónoma que puede manejar eficientemente múltiples tareas concurrentes mientras mantiene la seguridad y se adapta a cambios ambientales
+    expected_outcome_ja: 安全性を維持し環境変化に適応しながら複数の同時タスクを効率的に処理できる完全な自律ナビゲーションシステム
+    expected_outcome_ko: 안전을 유지하고 환경 변화에 적응하면서 여러 동시 작업을 효율적으로 처리할 수 있는 완전한 자율 내비게이션 시스템
+    expected_outcome_fr: Un système complet de navigation autonome capable de gérer efficacement plusieurs tâches simultanées tout en maintenant la sécurité et en s'adaptant aux changements environnementaux
+    expected_outcome_de: Ein vollständiges autonomes Navigationssystem, das mehrere gleichzeitige Aufgaben effizient bewältigen kann, während es Sicherheit gewährleistet und sich an Umgebungsänderungen anpasst
+    expected_outcome_ru: Полная система автономной навигации, которая может эффективно обрабатывать несколько одновременных задач, сохраняя безопасность и адаптируясь к изменениям окружающей среды
+    expected_outcome_it: Un sistema completo di navigazione autonoma che può gestire efficientemente compiti multipli concorrenti mantenendo la sicurezza e adattandosi ai cambiamenti ambientali
+    time_limit: 50
+    resources:
+      - Navigation frameworks: ROS 2 Navigation Stack, OMPL
+      - AI planning libraries: AI Planning, Fast Downward, Reinforcement Learning Stable-baselines3
+      - SLAM implementations: Cartographer, RTAB-Map, ORB-SLAM3
+      - Simulation: Gazebo with hospital/care facility environments
+    resources_zh:
+      - 導航框架：ROS 2 Navigation Stack、OMPL
+      - AI 規劃庫：AI Planning、Fast Downward、Reinforcement Learning Stable-baselines3
+      - SLAM 實作：Cartographer、RTAB-Map、ORB-SLAM3
+      - 模擬：帶有醫院/護理設施環境的 Gazebo
+    resources_es:
+      - Frameworks de navegación: ROS 2 Navigation Stack, OMPL
+      - Librerías de planificación IA: AI Planning, Fast Downward, Reinforcement Learning Stable-baselines3
+      - Implementaciones SLAM: Cartographer, RTAB-Map, ORB-SLAM3
+      - Simulación: Gazebo con entornos de hospital/instalación de cuidados
+    resources_ja:
+      - ナビゲーションフレームワーク：ROS 2 Navigation Stack、OMPL
+      - AI計画ライブラリ：AI Planning、Fast Downward、Reinforcement Learning Stable-baselines3
+      - SLAM実装：Cartographer、RTAB-Map、ORB-SLAM3
+      - シミュレーション：病院/ケア施設環境を含むGazebo
+    resources_ko:
+      - 내비게이션 프레임워크: ROS 2 Navigation Stack, OMPL
+      - AI 계획 라이브러리: AI Planning, Fast Downward, Reinforcement Learning Stable-baselines3
+      - SLAM 구현: Cartographer, RTAB-Map, ORB-SLAM3
+      - 시뮬레이션: 병원/돌봄 시설 환경이 포함된 Gazebo
+    resources_fr:
+      - Frameworks de navigation : ROS 2 Navigation Stack, OMPL
+      - Bibliothèques de planification IA : AI Planning, Fast Downward, Reinforcement Learning Stable-baselines3
+      - Implémentations SLAM : Cartographer, RTAB-Map, ORB-SLAM3
+      - Simulation : Gazebo avec environnements d'hôpital/installation de soins
+    resources_de:
+      - Navigations-Frameworks: ROS 2 Navigation Stack, OMPL
+      - KI-Planungsbibliotheken: AI Planning, Fast Downward, Reinforcement Learning Stable-baselines3
+      - SLAM-Implementierungen: Cartographer, RTAB-Map, ORB-SLAM3
+      - Simulation: Gazebo mit Krankenhaus-/Pflegeeinrichtungsumgebungen
+    resources_ru:
+      - Фреймворки навигации: ROS 2 Navigation Stack, OMPL
+      - Библиотеки планирования ИИ: AI Planning, Fast Downward, Reinforcement Learning Stable-baselines3
+      - Реализации SLAM: Cartographer, RTAB-Map, ORB-SLAM3
+      - Симуляция: Gazebo со средами больницы/учреждения по уходу
+    resources_it:
+      - Framework di navigazione: ROS 2 Navigation Stack, OMPL
+      - Librerie di pianificazione AI: AI Planning, Fast Downward, Reinforcement Learning Stable-baselines3
+      - Implementazioni SLAM: Cartographer, RTAB-Map, ORB-SLAM3
+      - Simulazione: Gazebo con ambienti ospedalieri/strutture di cura
+    assessment_focus:
+      primary: [creating_with_ai, designing_with_ai]
+      secondary: [engaging_with_ai]
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: You are a robotics navigation expert and AI systems architect. Help users understand autonomous navigation concepts, implement SLAM algorithms, and design intelligent behavior systems. Focus on safety, efficiency, and real-world deployment challenges.
+      initial_prompt: |
+        Great! Now we're tackling one of the most challenging aspects of robotics - autonomous navigation in complex, dynamic environments.
+
+        As your navigation systems expert, I'll guide you through:
+        1. Implementing robust SLAM for real-time mapping and localization
+        2. Designing AI-powered path planning for multi-objective scenarios
+        3. Creating adaptive behavior systems for emergency response
+        4. Optimizing navigation for human-robot shared spaces
+
+        Critical considerations for care facility navigation:
+        - Safety is paramount - never risk human injury
+        - Predictable behavior for user trust and comfort
+        - Adaptability to furniture changes and temporary obstacles
+        - Emergency response protocols and fail-safes
+
+        What's your experience with navigation algorithms? Let's start by understanding the specific layout and challenges of your target environment.
+
+  - id: human-interaction
+    title: Natural Human-Robot Interaction Interface
+    title_zh: 自然人機互動介面
+    title_es: Interfaz Natural de Interacción Humano-Robot
+    title_ja: 自然な人間ロボット相互作用インターフェース
+    title_ko: 자연스러운 인간-로봇 상호작용 인터페이스
+    title_fr: Interface Naturelle d'Interaction Humain-Robot
+    title_de: Natürliche Mensch-Roboter-Interaktionsschnittstelle
+    title_ru: Интерфейс естественного взаимодействия человека и робота
+    title_it: Interfaccia di Interazione Naturale Umano-Robot
+    description: Design a manufacturing quality control robot that can communicate with workers, understand verbal instructions, and provide intuitive feedback about production issues
+    description_zh: 設計一個能與工人溝通、理解口頭指令並提供生產問題直觀反饋的製造品質控制機器人
+    description_es: Diseña un robot de control de calidad de manufactura que pueda comunicarse con trabajadores, entender instrucciones verbales y proporcionar retroalimentación intuitiva sobre problemas de producción
+    description_ja: 作業者とコミュニケーションを取り、口頭指示を理解し、生産問題について直感的なフィードバックを提供できる製造品質管理ロボットを設計する
+    description_ko: 작업자와 소통하고, 구두 지시를 이해하며, 생산 문제에 대한 직관적인 피드백을 제공할 수 있는 제조 품질 관리 로봇 설계하기
+    description_fr: Concevez un robot de contrôle qualité de fabrication qui peut communiquer avec les travailleurs, comprendre les instructions verbales et fournir des commentaires intuitifs sur les problèmes de production
+    description_de: Entwerfen Sie einen Fertigungsqualitätskontrollroboter, der mit Arbeitern kommunizieren, mündliche Anweisungen verstehen und intuitive Rückmeldungen zu Produktionsproblemen geben kann
+    description_ru: Спроектируйте робота контроля качества производства, который может общаться с рабочими, понимать устные инструкции и предоставлять интуитивную обратную связь о производственных проблемах
+    description_it: Progetta un robot di controllo qualità manifatturiero che possa comunicare con i lavoratori, comprendere istruzioni verbali e fornire feedback intuitivo sui problemi di produzione
+    category: interaction
+    instructions:
+      - Use AI language models to create natural conversation capabilities for work instruction understanding
+      - Implement AI-powered gesture recognition and non-verbal communication systems
+      - Design multimodal interaction using AI combining voice, visual displays, and physical gestures
+      - Create adaptive communication styles using AI to match different worker preferences and expertise levels
+    instructions_zh:
+      - 使用 AI 語言模型創建自然對話功能以理解工作指令
+      - 實施 AI 驅動的手勢識別和非語言溝通系統
+      - 使用 AI 結合語音、視覺顯示和身體手勢設計多模態互動
+      - 使用 AI 創建適應性溝通風格以匹配不同工人的偏好和專業水平
+    instructions_es:
+      - Usa modelos de lenguaje IA para crear capacidades de conversación natural para comprensión de instrucciones de trabajo
+      - Implementa reconocimiento de gestos potenciado por IA y sistemas de comunicación no verbal
+      - Diseña interacción multimodal usando IA combinando voz, pantallas visuales y gestos físicos
+      - Crea estilos de comunicación adaptativos usando IA para coincidir con diferentes preferencias y niveles de experiencia de trabajadores
+    instructions_ja:
+      - 作業指示理解のための自然な会話機能を作成するためにAI言語モデルを使用する
+      - AI搭載のジェスチャー認識と非言語コミュニケーションシステムを実装する
+      - 音声、視覚ディスプレイ、身体ジェスチャーを組み合わせたAIを使用してマルチモーダル相互作用を設計する
+      - 異なる作業者の好みと専門レベルに合わせるためにAIを使用して適応的コミュニケーションスタイルを作成する
+    instructions_ko:
+      - 작업 지시 이해를 위한 자연스러운 대화 기능을 만들기 위해 AI 언어 모델 사용하기
+      - AI 기반 제스처 인식 및 비언어적 의사소통 시스템 구현하기
+      - 음성, 시각적 디스플레이, 물리적 제스처를 결합한 AI를 사용하여 다중 모달 상호작용 설계하기
+      - 다양한 작업자 선호도와 전문성 수준에 맞추기 위해 AI를 사용한 적응형 의사소통 스타일 생성하기
+    instructions_fr:
+      - Utilisez des modèles de langage IA pour créer des capacités de conversation naturelles pour la compréhension des instructions de travail
+      - Implémentez la reconnaissance de gestes alimentée par IA et des systèmes de communication non verbale
+      - Concevez une interaction multimodale utilisant l'IA combinant voix, affichages visuels et gestes physiques
+      - Créez des styles de communication adaptatifs utilisant l'IA pour correspondre aux différentes préférences et niveaux d'expertise des travailleurs
+    instructions_de:
+      - Nutzen Sie KI-Sprachmodelle, um natürliche Gesprächsfähigkeiten für das Verständnis von Arbeitsanweisungen zu schaffen
+      - Implementieren Sie KI-gestützte Gestenerkennung und nonverbale Kommunikationssysteme
+      - Entwerfen Sie multimodale Interaktion mit KI, die Sprache, visuelle Displays und körperliche Gesten kombiniert
+      - Erstellen Sie adaptive Kommunikationsstile mit KI, um verschiedenen Arbeiterpräferenzen und Fachkenntnisebenen zu entsprechen
+    instructions_ru:
+      - Используйте языковые модели ИИ для создания возможностей естественного разговора для понимания рабочих инструкций
+      - Внедрите распознавание жестов на основе ИИ и системы невербальной коммуникации
+      - Спроектируйте мультимодальное взаимодействие с использованием ИИ, объединяющего голос, визуальные дисплеи и физические жесты
+      - Создайте адаптивные стили общения с использованием ИИ для соответствия различным предпочтениям и уровням экспертизы работников
+    instructions_it:
+      - Usa modelli linguistici AI per creare capacità di conversazione naturale per comprensione delle istruzioni di lavoro
+      - Implementa riconoscimento gestuale potenziato dall'AI e sistemi di comunicazione non verbale
+      - Progetta interazione multimodale usando AI combinando voce, display visivi e gesti fisici
+      - Crea stili di comunicazione adattivi usando AI per corrispondere a diverse preferenze e livelli di competenza dei lavoratori
+    expected_outcome: An intuitive interaction system that workers can easily communicate with, reducing training time and increasing adoption rates in manufacturing environments
+    expected_outcome_zh: 一個工人可以輕鬆溝通的直觀互動系統，減少製造環境中的培訓時間並提高採用率
+    expected_outcome_es: Un sistema de interacción intuitivo con el que los trabajadores pueden comunicarse fácilmente, reduciendo el tiempo de entrenamiento e incrementando las tasas de adopción en entornos de manufactura
+    expected_outcome_ja: 作業者が簡単にコミュニケーションできる直感的な相互作用システム、製造環境でのトレーニング時間を短縮し採用率を向上させる
+    expected_outcome_ko: 작업자가 쉽게 소통할 수 있는 직관적인 상호작용 시스템, 제조 환경에서 교육 시간을 줄이고 도입률 증가
+    expected_outcome_fr: Un système d'interaction intuitif avec lequel les travailleurs peuvent facilement communiquer, réduisant le temps de formation et augmentant les taux d'adoption dans les environnements de fabrication
+    expected_outcome_de: Ein intuitives Interaktionssystem, mit dem Arbeiter leicht kommunizieren können, wodurch Schulungszeit reduziert und Adoptionsraten in Fertigungsumgebungen erhöht werden
+    expected_outcome_ru: Интуитивная система взаимодействия, с которой работники могут легко общаться, сокращая время обучения и увеличивая показатели принятия в производственных средах
+    expected_outcome_it: Un sistema di interazione intuitivo con cui i lavoratori possono comunicare facilmente, riducendo i tempi di formazione e aumentando i tassi di adozione negli ambienti manifatturieri
+    time_limit: 40
+    resources:
+      - NLP frameworks: Hugging Face Transformers, OpenAI API, Google Dialogflow
+      - Speech processing: SpeechRecognition, PyAudio, Azure Speech Services
+      - Gesture recognition: MediaPipe, OpenPose, Custom CNN models
+      - Multimodal interfaces: Qt, Unity 3D, Web-based dashboards
+    resources_zh:
+      - NLP 框架：Hugging Face Transformers、OpenAI API、Google Dialogflow
+      - 語音處理：SpeechRecognition、PyAudio、Azure Speech Services
+      - 手勢識別：MediaPipe、OpenPose、自定義 CNN 模型
+      - 多模態介面：Qt、Unity 3D、基於網頁的儀表板
+    resources_es:
+      - Frameworks NLP: Hugging Face Transformers, OpenAI API, Google Dialogflow
+      - Procesamiento de voz: SpeechRecognition, PyAudio, Azure Speech Services
+      - Reconocimiento de gestos: MediaPipe, OpenPose, modelos CNN personalizados
+      - Interfaces multimodales: Qt, Unity 3D, dashboards basados en web
+    resources_ja:
+      - NLPフレームワーク：Hugging Face Transformers、OpenAI API、Google Dialogflow
+      - 音声処理：SpeechRecognition、PyAudio、Azure Speech Services
+      - ジェスチャー認識：MediaPipe、OpenPose、カスタムCNNモデル
+      - マルチモーダルインターフェース：Qt、Unity 3D、Webベースのダッシュボード
+    resources_ko:
+      - NLP 프레임워크: Hugging Face Transformers, OpenAI API, Google Dialogflow
+      - 음성 처리: SpeechRecognition, PyAudio, Azure Speech Services
+      - 제스처 인식: MediaPipe, OpenPose, 커스텀 CNN 모델
+      - 다중 모달 인터페이스: Qt, Unity 3D, 웹 기반 대시보드
+    resources_fr:
+      - Frameworks NLP : Hugging Face Transformers, OpenAI API, Google Dialogflow
+      - Traitement vocal : SpeechRecognition, PyAudio, Azure Speech Services
+      - Reconnaissance de gestes : MediaPipe, OpenPose, modèles CNN personnalisés
+      - Interfaces multimodales : Qt, Unity 3D, tableaux de bord basés sur le web
+    resources_de:
+      - NLP-Frameworks: Hugging Face Transformers, OpenAI API, Google Dialogflow
+      - Sprachverarbeitung: SpeechRecognition, PyAudio, Azure Speech Services
+      - Gestenerkennung: MediaPipe, OpenPose, benutzerdefinierte CNN-Modelle
+      - Multimodale Schnittstellen: Qt, Unity 3D, webbasierte Dashboards
+    resources_ru:
+      - NLP-фреймворки: Hugging Face Transformers, OpenAI API, Google Dialogflow
+      - Обработка речи: SpeechRecognition, PyAudio, Azure Speech Services
+      - Распознавание жестов: MediaPipe, OpenPose, пользовательские CNN-модели
+      - Мультимодальные интерфейсы: Qt, Unity 3D, веб-дашборды
+    resources_it:
+      - Framework NLP: Hugging Face Transformers, OpenAI API, Google Dialogflow
+      - Elaborazione vocale: SpeechRecognition, PyAudio, Azure Speech Services
+      - Riconoscimento gestuale: MediaPipe, OpenPose, modelli CNN personalizzati
+      - Interfacce multimodali: Qt, Unity 3D, dashboard basati su web
+    assessment_focus:
+      primary: [engaging_with_ai, designing_with_ai]
+      secondary: [creating_with_ai]
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: You are a human-computer interaction expert and conversational AI specialist. Help users design intuitive interfaces, implement natural language processing, and create engaging user experiences. Focus on accessibility, usability, and building trust between humans and machines.
+      initial_prompt: |
+        Excellent! Now we're focusing on one of the most critical aspects of modern robotics - creating natural, trustworthy interactions between humans and machines.
+
+        As your HCI (Human-Computer Interaction) specialist, I'll help you:
+        1. Design conversational interfaces that feel natural and reliable
+        2. Implement multimodal communication (voice, gesture, visual feedback)
+        3. Create adaptive interaction patterns that learn user preferences
+        4. Ensure accessibility and inclusivity in your interface design
+
+        Key principles for manufacturing HRI:
+        - Clear, unambiguous communication to prevent errors
+        - Respect for human expertise and decision-making authority
+        - Consistent behavior to build trust and predictability
+        - Graceful error handling and recovery
+
+        What's the primary language and communication style of your target users? Let's design an interaction system that feels natural and builds confidence in your manufacturing environment.

@@ -7,13 +7,6 @@ export async function GET(request: NextRequest) {
     const scenarioId = searchParams.get('scenarioId');
     const lang = searchParams.get('lang') || 'en';
     
-    if (!scenarioId) {
-      return NextResponse.json(
-        { success: false, error: 'scenarioId is required' },
-        { status: 400 }
-      );
-    }
-    
     // Get user info from cookie
     let userEmail: string | undefined;
     try {
@@ -33,27 +26,29 @@ export async function GET(request: NextRequest) {
       );
     }
     
-    // Get all programs for this user and scenario
-    const programs = await pblProgramService.getUserProgramsForScenario(userEmail, scenarioId);
+    // Get programs for this user
+    // If scenarioId is provided, get programs for that scenario only
+    // If not provided, get all programs for all scenarios
+    const programs = await pblProgramService.getUserPrograms(userEmail, scenarioId || undefined);
+    
+    // Map ProgramSummary data to expected format
+    const programsWithInfo = programs.map(summary => ({
+      id: summary.program.programId,  // Map programId to id
+      programId: summary.program.programId,
+      scenarioId: summary.program.scenarioId,
+      scenarioTitle: summary.program.scenarioTitle || summary.program.scenarioId,
+      status: summary.program.status,
+      startedAt: summary.program.startedAt,
+      updatedAt: summary.program.updatedAt,
+      totalTasks: summary.tasks.length,
+      evaluatedTasks: summary.tasks.filter(task => task.progress.isCompleted).length,
+      overallScore: summary.overallScore,
+      taskCount: summary.tasks.length,
+      lastActivity: summary.program.updatedAt
+    }));
     
     // Sort by startedAt descending (newest first)
-    programs.sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime());
-    
-    // Map completion data to expected format
-    const programsWithInfo = programs.map(program => ({
-      id: program.programId,  // Map programId to id
-      programId: program.programId,
-      scenarioId: program.scenarioId,
-      scenarioTitle: program.scenarioTitle || scenarioId,
-      status: program.status,
-      startedAt: program.startedAt,
-      updatedAt: program.updatedAt,
-      totalTasks: program.totalTasks,
-      evaluatedTasks: program.evaluatedTasks,
-      overallScore: program.overallScore,
-      taskCount: program.totalTasks,
-      lastActivity: program.updatedAt
-    }));
+    programsWithInfo.sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime());
     
     return NextResponse.json({
       success: true,
