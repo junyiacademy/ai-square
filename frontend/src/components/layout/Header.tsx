@@ -23,16 +23,19 @@ export function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [isCheckingAuth, setIsCheckingAuth] = useState(false)
 
   // 使用 useCallback 確保函數引用穩定，避免 hooks 順序問題
-  const clearAuthState = useCallback(() => {
+  const clearAuthState = useCallback((skipEvent = false) => {
     // 清除 localStorage (為了相容性)
     localStorage.removeItem('isLoggedIn')
     localStorage.removeItem('user')
     setUser(null)
     setIsLoggedIn(false)
-    // 觸發自定義事件通知其他組件
-    window.dispatchEvent(new CustomEvent('auth-changed'))
+    // 只在需要時觸發自定義事件，避免無限循環
+    if (!skipEvent) {
+      window.dispatchEvent(new CustomEvent('auth-changed'))
+    }
   }, [])
 
   const handleLogout = useCallback(async () => {
@@ -56,6 +59,10 @@ export function Header() {
 
   // 檢查登入狀態的函數
   const checkAuthStatus = useCallback(async () => {
+    // Prevent multiple simultaneous checks
+    if (isCheckingAuth) return
+    
+    setIsCheckingAuth(true)
     try {
       // 先從服務器檢查認證狀態
       const response = await fetch('/api/auth/check')
@@ -69,7 +76,7 @@ export function Header() {
         localStorage.setItem('user', JSON.stringify(data.user))
       } else {
         // 未認證，清除狀態
-        clearAuthState()
+        clearAuthState(true) // Skip event to avoid loop
       }
     } catch (error) {
       console.error('Error checking auth status:', error)
@@ -84,25 +91,40 @@ export function Header() {
           setIsLoggedIn(true)
         } catch (parseError) {
           console.error('Error parsing user data:', parseError)
-          clearAuthState()
+          clearAuthState(true) // Skip event to avoid loop
         }
       } else {
-        clearAuthState()
+        clearAuthState(true) // Skip event to avoid loop
       }
+    } finally {
+      setIsCheckingAuth(false)
     }
-  }, [clearAuthState])
+  }, [clearAuthState, isCheckingAuth])
 
   useEffect(() => {
+    // Initial check on mount
     checkAuthStatus()
+
+    // Throttle event handlers to prevent excessive calls
+    let lastCall = 0
+    const throttleDelay = 1000 // 1 second
+
+    const throttledCheckAuth = () => {
+      const now = Date.now()
+      if (now - lastCall >= throttleDelay) {
+        lastCall = now
+        checkAuthStatus()
+      }
+    }
 
     // 監聽 storage 變化 (當其他 tab 登入/登出時)
     const handleStorageChange = () => {
-      checkAuthStatus()
+      throttledCheckAuth()
     }
 
     // 監聽自定義的登入狀態變化事件 (同一 tab 內)
     const handleAuthChange = () => {
-      checkAuthStatus()
+      throttledCheckAuth()
     }
 
     // 監聽 token 過期事件
@@ -121,7 +143,7 @@ export function Header() {
       window.removeEventListener('auth-changed', handleAuthChange)
       window.removeEventListener('auth:expired', handleAuthExpired)
     }
-  }, [checkAuthStatus, clearAuthState, router])
+  }, []) // Remove dependencies to prevent re-registration
 
   const getRoleDisplayName = (role: string) => {
     return t(`userRole.${role}`)

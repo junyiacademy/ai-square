@@ -49,7 +49,10 @@ export async function verifyAccessToken(token: string): Promise<TokenPayload | n
     const { payload } = await jwtVerify(token, getJwtSecret());
     return payload as TokenPayload;
   } catch (error) {
-    console.error('Access token verification failed:', error);
+    // Reduce error logging in development
+    if (process.env.NODE_ENV !== 'development') {
+      console.error('Access token verification failed:', error);
+    }
     return null;
   }
 }

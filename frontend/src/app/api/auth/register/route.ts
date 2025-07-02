@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { Storage } from '@google-cloud/storage';
 
 // Mock database - in production, this would be a real database
 const USERS_DB: Array<{
@@ -56,6 +57,44 @@ const USERS_DB: Array<{
 // Simple ID generator
 let nextUserId = 5;
 
+// Initialize GCS
+const storage = new Storage({
+  projectId: process.env.GOOGLE_CLOUD_PROJECT,
+  keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+});
+
+const BUCKET_NAME = process.env.GCS_BUCKET_NAME || 'ai-square-db';
+const bucket = storage.bucket(BUCKET_NAME);
+
+// Function to save user data to GCS
+async function saveUserToGCS(userData: any) {
+  const sanitizedEmail = userData.email.replace('@', '_at_').replace(/\./g, '_');
+  const filePath = `user/${sanitizedEmail}/user_data.json`;
+  const file = bucket.file(filePath);
+  
+  const userDataToSave = {
+    ...userData,
+    registrationSource: 'web',
+    lastLogin: new Date().toISOString(),
+    preferences: {
+      language: 'en',
+      theme: 'light'
+    }
+  };
+  
+  try {
+    await file.save(JSON.stringify(userDataToSave, null, 2), {
+      metadata: {
+        contentType: 'application/json',
+      },
+    });
+    console.log(`✅ User data saved to GCS: ${filePath}`);
+  } catch (error) {
+    console.error('❌ Error saving user to GCS:', error);
+    // Don't throw - allow registration to continue even if GCS fails
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -109,6 +148,9 @@ export async function POST(request: NextRequest) {
 
     // Add to mock database
     USERS_DB.push(newUser);
+
+    // Save to GCS (including password for now - in production should be hashed)
+    await saveUserToGCS(newUser);
 
     // Return success (without password)
     const { password: _, ...userWithoutPassword } = newUser;

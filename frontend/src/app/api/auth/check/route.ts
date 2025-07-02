@@ -5,29 +5,35 @@ import { verifyAccessToken, isTokenExpiringSoon } from '@/lib/auth/jwt'
 export async function GET() {
   const cookieStore = await cookies()
   
-  // First try JWT access token
-  const accessToken = cookieStore.get('accessToken')
+  // Development mode: Skip strict JWT verification
+  const isDevelopment = process.env.NODE_ENV === 'development'
   
-  if (accessToken) {
-    const payload = await verifyAccessToken(accessToken.value)
+  // In development, skip JWT entirely and use legacy cookies
+  if (!isDevelopment) {
+    // Production mode: Use JWT access token
+    const accessToken = cookieStore.get('accessToken')
     
-    if (payload) {
-      const expiresIn = payload.exp - Math.floor(Date.now() / 1000) // 秒數
-      return NextResponse.json({
-        authenticated: true,
-        user: {
-          id: payload.userId,
-          email: payload.email,
-          role: payload.role,
-          name: payload.name
-        },
-        tokenExpiringSoon: isTokenExpiringSoon(payload.exp),
-        expiresIn: expiresIn > 0 ? expiresIn : 0
-      })
+    if (accessToken) {
+      const payload = await verifyAccessToken(accessToken.value)
+      
+      if (payload) {
+        const expiresIn = payload.exp - Math.floor(Date.now() / 1000) // 秒數
+        return NextResponse.json({
+          authenticated: true,
+          user: {
+            id: payload.userId,
+            email: payload.email,
+            role: payload.role,
+            name: payload.name
+          },
+          tokenExpiringSoon: isTokenExpiringSoon(payload.exp),
+          expiresIn: expiresIn > 0 ? expiresIn : 0
+        })
+      }
     }
   }
   
-  // Fallback to legacy cookie check for backward compatibility
+  // Fallback to legacy cookie check (primary method in development)
   const isLoggedIn = cookieStore.get('isLoggedIn')
   const userRole = cookieStore.get('userRole')
   const userCookie = cookieStore.get('user')

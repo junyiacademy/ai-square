@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAccessToken, createRefreshToken } from '@/lib/auth/jwt'
+import { Storage } from '@google-cloud/storage'
 
 // 假資料 - 測試用戶
 const MOCK_USERS = [
@@ -41,6 +42,46 @@ const MOCK_USERS = [
   }
 ]
 
+// Initialize GCS
+const storage = new Storage({
+  projectId: process.env.GOOGLE_CLOUD_PROJECT,
+  keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+});
+
+const BUCKET_NAME = process.env.GCS_BUCKET_NAME || 'ai-square-db';
+const bucket = storage.bucket(BUCKET_NAME);
+
+// Function to load user from GCS
+async function loadUserFromGCS(email: string): Promise<any | null> {
+  const sanitizedEmail = email.replace('@', '_at_').replace(/\./g, '_');
+  const filePath = `user/${sanitizedEmail}/user_data.json`;
+  const file = bucket.file(filePath);
+  
+  try {
+    const [exists] = await file.exists();
+    if (!exists) {
+      return null;
+    }
+    
+    const [contents] = await file.download();
+    const userData = JSON.parse(contents.toString());
+    console.log(`✅ User data loaded from GCS: ${filePath}`);
+    
+    // Update last login
+    userData.lastLogin = new Date().toISOString();
+    await file.save(JSON.stringify(userData, null, 2), {
+      metadata: {
+        contentType: 'application/json',
+      },
+    });
+    
+    return userData;
+  } catch (error) {
+    console.error('❌ Error loading user from GCS:', error);
+    return null;
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -54,8 +95,18 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 尋找用戶
-    const user = MOCK_USERS.find(u => u.email === email && u.password === password)
+    // 嘗試從 GCS 載入用戶
+    let user = await loadUserFromGCS(email);
+    
+    // 如果 GCS 沒有找到，則從 MOCK_USERS 尋找
+    if (!user) {
+      user = MOCK_USERS.find(u => u.email === email && u.password === password);
+    } else {
+      // 驗證密碼（注意：實際應用中應該使用加密密碼）
+      if (user.password !== password) {
+        user = null;
+      }
+    }
 
     if (user) {
       // 成功登入，回傳用戶資訊 (不包含密碼)
