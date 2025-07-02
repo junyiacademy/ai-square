@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
-import { ChevronLeft, ChevronRight, GripVertical, MessageCircle, BookOpen, Send, Sparkles, Brain } from 'lucide-react';
+import { ChevronLeft, ChevronRight, GripVertical, MessageCircle, BookOpen, Send, Sparkles, Brain, ChevronDown } from 'lucide-react';
 import type { ImperativePanelHandle } from 'react-resizable-panels';
 import { Header } from '@/components/layout/Header';
 import ReactMarkdown from 'react-markdown';
@@ -56,6 +57,8 @@ interface RecommendedScenario {
 }
 
 export default function ChatPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false);
   const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false);
   const [message, setMessage] = useState('');
@@ -71,16 +74,27 @@ export default function ChatPage() {
   const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
   const [recommendedScenarios, setRecommendedScenarios] = useState<RecommendedScenario[]>([]);
   const [pblHistory, setPblHistory] = useState<PBLHistory[]>([]);
+  const [showScrollButton, setShowScrollButton] = useState(false);
   
   const leftPanelRef = useRef<ImperativePanelHandle>(null);
   const rightPanelRef = useRef<ImperativePanelHandle>(null);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   // Load user and chat sessions on mount
   useEffect(() => {
     loadUserAndSessions();
   }, []);
+
+  // Handle session ID from URL
+  useEffect(() => {
+    const sessionIdFromUrl = searchParams.get('session');
+    if (sessionIdFromUrl && sessionIdFromUrl !== sessionId && currentUser) {
+      loadChatSession(sessionIdFromUrl);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, currentUser]);
   
   // Load assessment and progress when user is loaded
   useEffect(() => {
@@ -94,6 +108,23 @@ export default function ChatPage() {
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Handle scroll to show/hide scroll button
+  useEffect(() => {
+    const handleScroll = () => {
+      if (messagesContainerRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = messagesContainerRef.current;
+        const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
+        setShowScrollButton(!isNearBottom);
+      }
+    };
+
+    const container = messagesContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+      return () => container.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
 
 
   const loadUserAndSessions = async () => {
@@ -313,6 +344,10 @@ export default function ChatPage() {
       setMessages(data.messages || []);
       setSelectedChat(sessionId);
       setSessionId(sessionId);
+      
+      // Update URL without page reload
+      const newUrl = `/chat?session=${sessionId}`;
+      window.history.pushState({}, '', newUrl);
     } catch (error) {
       console.error('Failed to load chat session:', error);
     }
@@ -370,6 +405,10 @@ export default function ChatPage() {
           setSessionId(data.sessionId);
           setSelectedChat(data.sessionId);
           
+          // Update URL with new session ID
+          const newUrl = `/chat?session=${data.sessionId}`;
+          window.history.pushState({}, '', newUrl);
+          
           // Reload sessions to show the new one
           await loadUserAndSessions();
         } else if (data.title) {
@@ -418,6 +457,10 @@ export default function ChatPage() {
     const textarea = e.target;
     textarea.style.height = 'auto';
     textarea.style.height = `${Math.min(textarea.scrollHeight, 120)}px`;
+  };
+
+  const scrollToBottom = () => {
+    messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const getContextualQuickActions = () => {
@@ -539,6 +582,8 @@ export default function ChatPage() {
                         setMessages([]);
                         setSelectedChat(null);
                         setSessionId(null);
+                        // Clear URL parameter
+                        window.history.pushState({}, '', '/chat');
                       }}
                       className="w-full mb-3 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
                       title="New Chat"
@@ -627,7 +672,7 @@ export default function ChatPage() {
           <Panel defaultSize={50} minSize={30}>
             <div className="h-full flex flex-col bg-white/95 backdrop-blur-sm shadow-sm">
               {/* Messages Area */}
-              <div className="flex-1 overflow-y-auto p-6">
+              <div className="flex-1 overflow-y-auto p-6 relative" ref={messagesContainerRef}>
                 <div className="max-w-3xl mx-auto space-y-4">
                   {!currentUser ? (
                     <div className="text-center py-12">
@@ -712,10 +757,21 @@ export default function ChatPage() {
                   )}
                   <div ref={messageEndRef} />
                 </div>
+                
+                {/* Scroll to bottom button */}
+                {showScrollButton && (
+                  <button
+                    onClick={scrollToBottom}
+                    className="absolute bottom-6 left-1/2 -translate-x-1/2 p-3 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200"
+                    aria-label="Scroll to bottom"
+                  >
+                    <ChevronDown className="w-5 h-5 text-gray-600" />
+                  </button>
+                )}
               </div>
               
               {/* Input Area */}
-              <div className="border-t border-gray-200 p-4">
+              <div className="border-t border-gray-200 bg-gray-50 p-6">
                 <div className="max-w-3xl mx-auto">
                   {/* Dynamic Quick Actions */}
                   {currentUser && quickActions.length > 0 && (
@@ -732,21 +788,21 @@ export default function ChatPage() {
                       ))}
                     </div>
                   )}
-                  <div className="flex gap-2 items-end">
+                  <div className="flex gap-3 items-end bg-white rounded-xl shadow-sm border border-gray-200 p-3">
                     <textarea
                       ref={textareaRef}
                       value={message}
                       onChange={handleTextareaChange}
                       onKeyDown={handleKeyDown}
                       placeholder="Type your message... (Shift+Enter for new line)"
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none overflow-y-auto"
+                      className="flex-1 px-3 py-2 bg-transparent border-0 focus:outline-none resize-none overflow-y-auto placeholder-gray-400"
                       rows={1}
-                      style={{ minHeight: '40px', maxHeight: '120px' }}
+                      style={{ minHeight: '44px', maxHeight: '120px' }}
                     />
                     <button
                       onClick={handleSendMessage}
                       disabled={isSending || !currentUser}
-                      className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-4 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                     >
                       {isSending ? (
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
