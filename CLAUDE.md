@@ -244,6 +244,20 @@ AI: [執行: make ai-done]
    - `test:` 測試相關
    - `chore:` 維護性工作
 3. **不要在開發過程中自行 commit** - 必須等待用戶確認
+4. **AI 增強的 commit message 格式**:
+   ```
+   <type>: <subject>
+   
+   <body>
+   
+   🤖 AI Assistant: Claude Opus 4 (claude-opus-4-20250514)
+   📊 Session context: ~<estimated_tokens> tokens (estimated)
+   🎯 Task complexity: <simple|medium|complex|debug>
+   📁 Files changed: <number>
+   ```
+   - 在 commit message 底部加入 AI 使用資訊
+   - Token 估算基於對話長度和任務複雜度
+   - 清楚標示任務複雜度等級
 
 ### Git 同步工作流程
 **重要**：在執行 commit 前，必須先同步遠端變更以避免衝突
