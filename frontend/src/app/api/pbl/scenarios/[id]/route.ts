@@ -109,7 +109,7 @@ function getKSAItemDetails(ksaData: KSAData, code: string, lang: string): KSAIte
         return {
           code,
           name: `Knowledge: ${code}`,
-          description: getLocalizedValue(theme.codes[code] as Record<string, string>, 'summary', lang)
+          description: getLocalizedValue(theme.codes[code] as unknown as Record<string, unknown>, 'summary', lang) as string
         };
       }
     }
@@ -122,7 +122,7 @@ function getKSAItemDetails(ksaData: KSAData, code: string, lang: string): KSAIte
         return {
           code,
           name: `Skill: ${code}`,
-          description: getLocalizedValue(theme.codes[code] as Record<string, string>, 'summary', lang)
+          description: getLocalizedValue(theme.codes[code] as unknown as Record<string, unknown>, 'summary', lang) as string
         };
       }
     }
@@ -135,7 +135,7 @@ function getKSAItemDetails(ksaData: KSAData, code: string, lang: string): KSAIte
         return {
           code,
           name: `Attitude: ${code}`,
-          description: getLocalizedValue(theme.codes[code] as Record<string, string>, 'summary', lang)
+          description: getLocalizedValue(theme.codes[code] as unknown as Record<string, unknown>, 'summary', lang) as string
         };
       }
     }
@@ -237,21 +237,21 @@ export async function GET(
     // Transform to API response format (new structure without stages)
     const scenario: ScenarioResponse = {
       id: yamlData.scenario_info.id,
-      title: getLocalizedValue(yamlData.scenario_info, 'title', lang),
-      description: getLocalizedValue(yamlData.scenario_info, 'description', lang),
+      title: getLocalizedValue(yamlData.scenario_info, 'title', lang) as string,
+      description: getLocalizedValue(yamlData.scenario_info, 'description', lang) as string,
       difficulty: yamlData.scenario_info.difficulty,
       estimatedDuration: yamlData.scenario_info.estimated_duration,
       targetDomain: yamlData.scenario_info.target_domains,
-      prerequisites: getLocalizedValue(yamlData.scenario_info, 'prerequisites', lang) || yamlData.scenario_info.prerequisites || [],
-      learningObjectives: getLocalizedValue(yamlData.scenario_info, 'learning_objectives', lang) || yamlData.scenario_info.learning_objectives || [],
-      ksaMapping: buildKSAMapping(yamlData, ksaData, lang),
+      prerequisites: (getLocalizedValue(yamlData.scenario_info, 'prerequisites', lang) as string[] | undefined) || yamlData.scenario_info.prerequisites || [],
+      learningObjectives: (getLocalizedValue(yamlData.scenario_info, 'learning_objectives', lang) as string[] | undefined) || yamlData.scenario_info.learning_objectives || [],
+      ksaMapping: buildKSAMapping(yamlData as unknown as YAMLData, ksaData, lang),
       tasks: (yamlData.tasks || []).map((task) => ({
         id: task.id,
-        title: getLocalizedValue(task, 'title', lang),
-        description: getLocalizedValue(task, 'description', lang),
+        title: getLocalizedValue(task, 'title', lang) as string,
+        description: getLocalizedValue(task, 'description', lang) as string,
         category: task.category || 'general',
-        instructions: getLocalizedValue(task, 'instructions', lang) || task.instructions || [],
-        expectedOutcome: getLocalizedValue(task, 'expected_outcome', lang) || getLocalizedValue(task, 'expectedOutcome', lang),
+        instructions: (getLocalizedValue(task, 'instructions', lang) as string[] | undefined) || task.instructions || [],
+        expectedOutcome: (getLocalizedValue(task, 'expected_outcome', lang) || getLocalizedValue(task, 'expectedOutcome', lang)) as string,
         timeLimit: task.time_limit
       }))
     };

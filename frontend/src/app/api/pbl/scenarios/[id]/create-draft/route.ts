@@ -3,7 +3,7 @@ import { pblProgramService } from '@/lib/storage/pbl-program-service';
 import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
-import { Scenario } from '@/types/pbl';
+import { Scenario, DomainType, DifficultyLevel } from '@/types/pbl';
 
 // Load scenario data from YAML file
 async function loadScenario(scenarioId: string): Promise<Scenario | null> {
@@ -26,12 +26,17 @@ async function loadScenario(scenarioId: string): Promise<Scenario | null> {
         target_domains: string[];
         difficulty: string;
         estimated_duration: number;
+        prerequisites?: string[];
+        learning_objectives?: string[];
+        learning_objectives_zh?: string[];
         tasks: Array<{
           id: string;
           title: string;
           title_zh?: string;
         }>;
       };
+      tasks?: any[];
+      ksa_mapping?: any;
     }
     const data = yaml.load(yamlContent) as ScenarioYAML;
     
@@ -42,12 +47,12 @@ async function loadScenario(scenarioId: string): Promise<Scenario | null> {
       title_zh: data.scenario_info.title_zh,
       description: data.scenario_info.description,
       description_zh: data.scenario_info.description_zh,
-      targetDomains: data.scenario_info.target_domains,
-      difficulty: data.scenario_info.difficulty,
+      targetDomains: data.scenario_info.target_domains as DomainType[],
+      difficulty: data.scenario_info.difficulty as DifficultyLevel,
       estimatedDuration: data.scenario_info.estimated_duration,
-      prerequisites: data.scenario_info.prerequisites,
-      learningObjectives: data.scenario_info.learning_objectives,
-      learningObjectives_zh: data.scenario_info.learning_objectives_zh,
+      prerequisites: data.scenario_info.prerequisites || [],
+      learningObjectives: data.scenario_info.learning_objectives || [],
+      learningObjectives_zh: data.scenario_info.learning_objectives_zh || [],
       ksaMapping: data.ksa_mapping,
       tasks: []
     };

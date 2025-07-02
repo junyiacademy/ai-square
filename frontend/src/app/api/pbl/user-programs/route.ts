@@ -44,7 +44,12 @@ export async function GET(request: NextRequest) {
       evaluatedTasks: summary.tasks.filter(task => task.progress.isCompleted).length,
       overallScore: summary.overallScore,
       taskCount: summary.tasks.length,
-      lastActivity: summary.program.updatedAt
+      lastActivity: summary.program.updatedAt,
+      // Add the progress field that the frontend expects
+      progress: {
+        completedTasks: summary.tasks.filter(task => task.progress.isCompleted).length,
+        totalTasks: summary.tasks.length
+      }
     }));
     
     // Sort by startedAt descending (newest first)

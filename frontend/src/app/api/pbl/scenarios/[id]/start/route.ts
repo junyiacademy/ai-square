@@ -165,7 +165,6 @@ export async function POST(
         updatedAt: program.updatedAt,
         status: program.status,
         totalTasks: program.totalTasks,
-        completedTasks: program.completedTasks,
         currentTaskId: firstTask?.id,
         language: program.language
       },

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pblProgramService } from '@/lib/storage/pbl-program-service';
-import { GetProgramHistoryResponse } from '@/types/pbl';
 import { promises as fs } from 'fs';
 import * as yaml from 'js-yaml';
 import path from 'path';
@@ -74,12 +73,14 @@ function getLocalizedValue(data: ScenarioInfo | ScenarioYAML, fieldName: string,
   
   // Try language-specific field first
   const localizedField = `${fieldName}_${mappedSuffix}`;
-  if (data[localizedField] !== undefined && data[localizedField] !== null) {
-    return data[localizedField];
+  const value = data[localizedField];
+  if (value !== undefined && value !== null && typeof value === 'string') {
+    return value;
   }
   
   // Fall back to default field (no suffix)
-  return data[fieldName] || '';
+  const defaultValue = data[fieldName];
+  return typeof defaultValue === 'string' ? defaultValue : '';
 }
 
 export async function GET(request: NextRequest) {
@@ -116,13 +117,24 @@ export async function GET(request: NextRequest) {
     // Get all programs for the user using completion data
     let programs: ProgramCompletionData[] = [];
     if (scenarioId) {
-      programs = await pblProgramService.getUserProgramsForScenario(userEmail, scenarioId);
+      const completionPrograms = await pblProgramService.getUserProgramsForScenario(userEmail, scenarioId);
+      // Map CompletionData to ProgramCompletionData, ensuring userEmail is set
+      programs = completionPrograms.map(p => ({
+        ...p,
+        userEmail: p.userEmail || userEmail, // Ensure userEmail is always set
+        taskSummaries: p.taskSummaries || []
+      } as ProgramCompletionData));
     } else {
       // Get all scenarios and fetch programs for each
       const scenarios = ['ai-job-search']; // Add more scenario IDs as needed
       for (const sid of scenarios) {
         const scenarioPrograms = await pblProgramService.getUserProgramsForScenario(userEmail, sid);
-        programs.push(...scenarioPrograms);
+        const mappedPrograms = scenarioPrograms.map(p => ({
+          ...p,
+          userEmail: p.userEmail || userEmail, // Ensure userEmail is always set
+          taskSummaries: p.taskSummaries || []
+        } as ProgramCompletionData));
+        programs.push(...mappedPrograms);
       }
     }
     
@@ -163,7 +175,7 @@ export async function GET(request: NextRequest) {
     programsWithTitles.sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime());
     
     // Transform to API response format
-    const response: GetProgramHistoryResponse = {
+    const response = {
       success: true,
       programs: programsWithTitles,
       totalPrograms: programsWithTitles.length

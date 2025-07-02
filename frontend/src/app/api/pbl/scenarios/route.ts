@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { ScenarioListItem } from '@/types/pbl';
 import { promises as fs } from 'fs';
 import path from 'path';
 import * as yaml from 'js-yaml';
@@ -55,8 +54,8 @@ function getLocalizedValue(data: LocalizedField, fieldName: string, lang: string
 }
 
 // Load scenarios from YAML files
-async function loadScenariosFromYAML(lang: string): Promise<ScenarioListItem[]> {
-  const scenarios: ScenarioListItem[] = [];
+async function loadScenariosFromYAML(lang: string): Promise<any[]> {
+  const scenarios: any[] = [];
   
   try {
     // List of available scenario files
@@ -99,8 +98,10 @@ async function loadScenariosFromYAML(lang: string): Promise<ScenarioListItem[]> 
             description: getLocalizedValue(info as LocalizedField, 'description', lang),
             difficulty: info.difficulty,
             estimatedDuration: info.estimated_duration,
-            domains: info.target_domains,
+            targetDomains: info.target_domains,
             targetDomain: info.target_domains, // for compatibility
+            domains: info.target_domains, // for compatibility 
+            taskCount: Array.isArray(info.tasks) ? info.tasks.length : 0,
             isAvailable: true,
             thumbnailEmoji: emojiMap[info.id] || '🤖'
           });
@@ -141,7 +142,10 @@ async function loadScenariosFromYAML(lang: string): Promise<ScenarioListItem[]> 
       } as LocalizedField, 'description', lang),
       difficulty: 'beginner',
       estimatedDuration: 60,
+      targetDomains: ['creating_with_ai'],
+      targetDomain: ['creating_with_ai'],
       domains: ['creating_with_ai'],
+      taskCount: 0,
       isAvailable: false,
       thumbnailEmoji: '✍️'
     },
@@ -171,7 +175,10 @@ async function loadScenariosFromYAML(lang: string): Promise<ScenarioListItem[]> 
       } as LocalizedField, 'description', lang),
       difficulty: 'advanced',
       estimatedDuration: 120,
+      targetDomains: ['managing_with_ai', 'designing_with_ai'],
+      targetDomain: ['managing_with_ai', 'designing_with_ai'],
       domains: ['managing_with_ai', 'designing_with_ai'],
+      taskCount: 0,
       isAvailable: false,
       thumbnailEmoji: '📊'
     }

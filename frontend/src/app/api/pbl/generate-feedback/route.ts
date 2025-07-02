@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pblProgramService } from '@/lib/storage/pbl-program-service';
 import { VertexAI, SchemaType } from '@google-cloud/vertexai';
+import type { LocalizedFeedback } from '@/types/pbl-completion';
 
 // Types for feedback structure
 interface FeedbackStrength {
@@ -225,9 +226,10 @@ export async function POST(request: NextRequest) {
     if (forceRegenerate && completionData.qualitativeFeedback) {
       // Remove the current language feedback
       if (typeof completionData.qualitativeFeedback === 'object' && 
-          !completionData.qualitativeFeedback.overallAssessment) {
-        // Multi-language format
-        delete completionData.qualitativeFeedback[currentLang];
+          !('overallAssessment' in completionData.qualitativeFeedback)) {
+        // Multi-language format - cast to LocalizedFeedback
+        const localizedFeedback = completionData.qualitativeFeedback as LocalizedFeedback;
+        delete localizedFeedback[currentLang];
         
         // Update the completion data to remove this language's feedback
         await pblProgramService.updateProgramCompletionFeedback(
@@ -242,10 +244,8 @@ export async function POST(request: NextRequest) {
     
     // Check if feedback already exists for current language (skip if forceRegenerate)
     if (!forceRegenerate && completionData.qualitativeFeedback) {
-      // Handle legacy single-language feedback
-      if (!completionData.qualitativeFeedback[currentLang] && 
-          typeof completionData.qualitativeFeedback === 'object' &&
-          completionData.qualitativeFeedback.overallAssessment) {
+      // Check if it's single-language format (has overallAssessment property)
+      if ('overallAssessment' in completionData.qualitativeFeedback) {
         // This is old format, check if it matches current language
         const feedbackLang = completionData.feedbackLanguage || 'en';
         if (feedbackLang === currentLang) {
@@ -255,13 +255,16 @@ export async function POST(request: NextRequest) {
             cached: true
           });
         }
-      } else if (completionData.qualitativeFeedback[currentLang]) {
-        // New multi-language format
-        return NextResponse.json({
-          success: true,
-          feedback: completionData.qualitativeFeedback[currentLang],
-          cached: true
-        });
+      } else {
+        // New multi-language format - cast to LocalizedFeedback
+        const localizedFeedback = completionData.qualitativeFeedback as LocalizedFeedback;
+        if (localizedFeedback[currentLang]) {
+          return NextResponse.json({
+            success: true,
+            feedback: localizedFeedback[currentLang],
+            cached: true
+          });
+        }
       }
     }
     

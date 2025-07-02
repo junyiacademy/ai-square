@@ -136,7 +136,7 @@ export async function PUT(request: NextRequest) {
       );
     }
     
-    const body = await request.json() as SaveTaskProgressRequest & { evaluation?: TaskEvaluation };
+    const body = await request.json() as SaveTaskProgressRequest & { evaluation?: TaskEvaluation; scenarioId?: string };
     const { programId, taskId, progress, evaluation } = body;
     
     // Validate required fields

@@ -11,46 +11,172 @@ const USERS_DB: Array<{
   hasCompletedAssessment: boolean;
   hasCompletedOnboarding: boolean;
   createdAt: string;
+  registrationSource: string;
+  lastLogin: string;
+  preferences: {
+    language: string;
+    theme: string;
+  };
+  identity?: string;
+  lastUpdated?: string;
+  lastModified?: string;
+  onboarding?: {
+    welcomeCompleted: boolean;
+    identityCompleted: boolean;
+    goalsCompleted: boolean;
+    completedAt: string;
+    welcomeCompletedAt?: string;
+    identityCompletedAt?: string;
+    goalsCompletedAt?: string;
+  };
+  interests?: string[];
+  learningGoals?: string[];
+  assessmentCompleted?: boolean;
+  assessmentCompletedAt?: string;
+  assessmentResult?: {
+    overallScore: number;
+    domainScores: {
+      engaging_with_ai: number;
+      creating_with_ai: number;
+      managing_with_ai: number;
+      designing_with_ai: number;
+    };
+    totalQuestions: number;
+    correctAnswers: number;
+    timeSpentSeconds: number;
+    completedAt: string;
+    level: string;
+    recommendations?: string[];
+  };
 }> = [
   {
     id: 1,
     email: 'student@example.com',
     password: 'student123',
-    role: 'student',
     name: 'Student User',
+    role: 'student',
     hasCompletedAssessment: false,
     hasCompletedOnboarding: false,
-    createdAt: new Date('2024-01-01').toISOString()
+    createdAt: '2024-01-01T00:00:00.000Z',
+    registrationSource: 'web',
+    lastLogin: '2025-07-02T14:38:11.656Z',
+    preferences: {
+      language: 'en',
+      theme: 'light'
+    }
   },
   {
     id: 2,
     email: 'teacher@example.com',
     password: 'teacher123',
-    role: 'teacher',
     name: 'Teacher User',
+    role: 'teacher',
     hasCompletedAssessment: true,
     hasCompletedOnboarding: true,
-    createdAt: new Date('2024-01-01').toISOString()
+    createdAt: '2024-01-01T00:00:00.000Z',
+    registrationSource: 'web',
+    lastLogin: '2025-07-02T07:28:38.521Z',
+    preferences: {
+      language: 'en',
+      theme: 'light'
+    },
+    identity: 'teacher',
+    lastUpdated: '2025-07-02T05:06:58.768Z',
+    onboarding: {
+      welcomeCompleted: true,
+      identityCompleted: true,
+      goalsCompleted: true,
+      completedAt: '2025-07-02T07:27:10.190Z',
+      welcomeCompletedAt: '2025-07-02T07:26:22.078Z',
+      identityCompletedAt: '2025-07-02T07:27:06.257Z',
+      goalsCompletedAt: '2025-07-02T07:27:10.190Z'
+    },
+    lastModified: '2025-07-02T07:28:29.241Z',
+    interests: [
+      'analyze-data',
+      'create-content'
+    ],
+    learningGoals: [
+      'analyze-data',
+      'create-content'
+    ],
+    assessmentCompleted: true,
+    assessmentCompletedAt: '2025-07-02T07:28:29.241Z',
+    assessmentResult: {
+      overallScore: 42,
+      domainScores: {
+        engaging_with_ai: 33,
+        creating_with_ai: 67,
+        managing_with_ai: 33,
+        designing_with_ai: 33
+      },
+      totalQuestions: 12,
+      correctAnswers: 5,
+      timeSpentSeconds: 27,
+      completedAt: '2025-07-02T07:28:25.904Z',
+      level: 'beginner',
+      recommendations: [
+        'Focus on improving Engaging with AI: Understanding AI limitations, privacy concerns, and ethical considerations when interacting with AI systems',
+        'Focus on improving Managing with AI: Developing skills for AI-assisted decision making, workflow automation, and team collaboration'
+      ]
+    }
   },
   {
     id: 3,
     email: 'admin@example.com',
     password: 'admin123',
-    role: 'admin',
     name: 'Admin User',
+    role: 'admin',
     hasCompletedAssessment: true,
     hasCompletedOnboarding: true,
-    createdAt: new Date('2024-01-01').toISOString()
+    createdAt: '2024-01-01T00:00:00.000Z',
+    registrationSource: 'web',
+    lastLogin: '2025-07-02T10:00:00.000Z',
+    preferences: {
+      language: 'en',
+      theme: 'light'
+    },
+    identity: 'educator',
+    onboarding: {
+      welcomeCompleted: true,
+      identityCompleted: true,
+      goalsCompleted: true,
+      completedAt: '2025-01-15T10:00:00.000Z'
+    },
+    interests: ['manage-ai', 'ethical-ai'],
+    learningGoals: ['manage-ai', 'ethical-ai'],
+    assessmentCompleted: true,
+    assessmentCompletedAt: '2025-01-15T10:05:00.000Z',
+    assessmentResult: {
+      overallScore: 92,
+      domainScores: {
+        engaging_with_ai: 100,
+        creating_with_ai: 83,
+        managing_with_ai: 100,
+        designing_with_ai: 83
+      },
+      totalQuestions: 12,
+      correctAnswers: 11,
+      timeSpentSeconds: 180,
+      completedAt: '2025-01-15T10:05:00.000Z',
+      level: 'advanced'
+    }
   },
   {
     id: 4,
     email: 'test@example.com',
     password: 'password123',
-    role: 'student',
     name: 'Test User',
+    role: 'student',
     hasCompletedAssessment: false,
     hasCompletedOnboarding: false,
-    createdAt: new Date('2024-01-01').toISOString()
+    createdAt: '2024-01-01T00:00:00.000Z',
+    registrationSource: 'web',
+    lastLogin: '2025-07-02T14:38:11.656Z',
+    preferences: {
+      language: 'en',
+      theme: 'light'
+    }
   }
 ];
 

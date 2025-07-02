@@ -116,6 +116,19 @@ const nextConfig: NextConfig = {
       };
     }
     
+    // Suppress OpenTelemetry instrumentation warnings
+    config.ignoreWarnings = [
+      ...(config.ignoreWarnings || []),
+      {
+        module: /node_modules\/@opentelemetry\/instrumentation/,
+        message: /Critical dependency/,
+      },
+      {
+        module: /node_modules\/@sentry\/node/,
+        message: /Critical dependency/,
+      },
+    ];
+    
     return config;
   },
 
