@@ -5,7 +5,7 @@ import yaml from 'js-yaml';
 import { VertexAI } from '@google-cloud/vertexai';
 import { ErrorResponse } from '@/types/api';
 import { ChatMessage } from '@/types/pbl-api';
-import { PBLScenario, Task, AIModule } from '@/types/pbl';
+import { Scenario, Task, AIModule } from '@/types/pbl';
 
 interface ChatRequestBody {
   message: string;
@@ -44,18 +44,18 @@ export async function POST(request: NextRequest) {
     );
     
     const yamlContent = await fs.readFile(yamlPath, 'utf8');
-    const scenarioData = yaml.load(yamlContent) as PBLScenario;
+    const scenarioData = yaml.load(yamlContent) as Scenario;
     
     // Find the current task
     const currentTask = scenarioData.tasks?.find((t: Task) => t.id === taskId);
-    if (!currentTask || !currentTask.ai_module) {
+    if (!currentTask || !currentTask.aiModule) {
       return NextResponse.json<ErrorResponse>(
         { error: 'Task or AI module not found' },
         { status: 404 }
       );
     }
 
-    const aiModule: AIModule = currentTask.ai_module;
+    const aiModule: AIModule = currentTask.aiModule;
     
     // Build conversation context
     const conversationContext = conversationHistory?.map((entry: ChatMessage) => 
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     const isOffTopic = !/(?:resume|cv|job|career|work|experience|skill|education|analysis|industry|trends|hiring|employer|application|interview|professional)/i.test(message) && message.length > 10;
     
     // Create the prompt with message filtering
-    let systemPrompt = `${aiModule.initial_prompt}
+    let systemPrompt = `${aiModule.initialPrompt || ''}
 
 Current Task: ${taskTitle}
 Task Description: ${taskDescription}

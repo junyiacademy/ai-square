@@ -52,7 +52,7 @@ const BUCKET_NAME = process.env.GCS_BUCKET_NAME || 'ai-square-db';
 const bucket = storage.bucket(BUCKET_NAME);
 
 // Function to load user from GCS
-async function loadUserFromGCS(email: string): Promise<{ email: string; password: string; role?: string; id?: string; name?: string } | null> {
+async function loadUserFromGCS(email: string): Promise<{ email: string; password: string; role?: string; id?: string | number; name?: string } | null> {
   const sanitizedEmail = email.replace('@', '_at_').replace(/\./g, '_');
   const filePath = `user/${sanitizedEmail}/user_data.json`;
   const file = bucket.file(filePath);
@@ -97,10 +97,17 @@ export async function POST(request: NextRequest) {
 
     // 嘗試從 GCS 載入用戶
     let user = await loadUserFromGCS(email);
+    let mockUser;
     
     // 如果 GCS 沒有找到，則從 MOCK_USERS 尋找
     if (!user) {
-      user = MOCK_USERS.find(u => u.email === email && u.password === password);
+      mockUser = MOCK_USERS.find(u => u.email === email && u.password === password);
+      if (mockUser) {
+        user = {
+          ...mockUser,
+          id: mockUser.id.toString() // Convert to string for consistency
+        };
+      }
     } else {
       // 驗證密碼（注意：實際應用中應該使用加密密碼）
       if (user.password !== password) {
@@ -114,14 +121,15 @@ export async function POST(request: NextRequest) {
       const { password: userPassword, ...userWithoutPassword } = user
       
       // Create JWT tokens
+      const userId = typeof user.id === 'number' ? user.id : parseInt(user.id || '0', 10);
       const accessToken = await createAccessToken({
-        userId: user.id,
+        userId,
         email: user.email,
-        role: user.role,
-        name: user.name
+        role: user.role || 'student',
+        name: user.name || user.email
       })
       
-      const refreshToken = await createRefreshToken(user.id, rememberMe)
+      const refreshToken = await createRefreshToken(userId, rememberMe)
       
       // Create response with cookies
       const response = NextResponse.json({

@@ -67,7 +67,7 @@ const BUCKET_NAME = process.env.GCS_BUCKET_NAME || 'ai-square-db';
 const bucket = storage.bucket(BUCKET_NAME);
 
 // Function to save user data to GCS
-async function saveUserToGCS(userData: { email: string; password: string; name?: string; role?: string; id?: string }) {
+async function saveUserToGCS(userData: { email: string; password: string; name?: string; role?: string; id?: string | number }) {
   const sanitizedEmail = userData.email.replace('@', '_at_').replace(/\./g, '_');
   const filePath = `user/${sanitizedEmail}/user_data.json`;
   const file = bucket.file(filePath);

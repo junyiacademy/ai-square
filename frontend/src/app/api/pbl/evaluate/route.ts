@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { VertexAI } from '@google-cloud/vertexai';
+import { VertexAI, SchemaType } from '@google-cloud/vertexai';
 import { 
   EvaluateRequestBody, 
   EvaluateResponse,
@@ -160,60 +160,60 @@ Important evaluation principles:
         maxOutputTokens: 65535,
         responseMimeType: 'application/json',
         responseSchema: {
-          type: 'object',
+          type: SchemaType.OBJECT,
           properties: {
-            score: { type: 'number' },
+            score: { type: SchemaType.NUMBER },
             ksaScores: {
-              type: 'object',
+              type: SchemaType.OBJECT,
               properties: {
-                knowledge: { type: 'number' },
-                skills: { type: 'number' },
-                attitudes: { type: 'number' }
+                knowledge: { type: SchemaType.NUMBER },
+                skills: { type: SchemaType.NUMBER },
+                attitudes: { type: SchemaType.NUMBER }
               },
               required: ['knowledge', 'skills', 'attitudes']
             },
-            individualKsaScores: { type: 'object' },
+            individualKsaScores: { type: SchemaType.OBJECT },
             domainScores: {
-              type: 'object',
+              type: SchemaType.OBJECT,
               properties: {
-                engaging_with_ai: { type: 'number' },
-                creating_with_ai: { type: 'number' },
-                managing_with_ai: { type: 'number' },
-                designing_with_ai: { type: 'number' }
+                engaging_with_ai: { type: SchemaType.NUMBER },
+                creating_with_ai: { type: SchemaType.NUMBER },
+                managing_with_ai: { type: SchemaType.NUMBER },
+                designing_with_ai: { type: SchemaType.NUMBER }
               },
               required: ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai']
             },
             rubricsScores: {
-              type: 'object',
+              type: SchemaType.OBJECT,
               properties: {
-                'Research Quality': { type: 'number' },
-                'AI Utilization': { type: 'number' },
-                'Content Quality': { type: 'number' },
-                'Learning Progress': { type: 'number' }
+                'Research Quality': { type: SchemaType.NUMBER },
+                'AI Utilization': { type: SchemaType.NUMBER },
+                'Content Quality': { type: SchemaType.NUMBER },
+                'Learning Progress': { type: SchemaType.NUMBER }
               },
               required: ['Research Quality', 'AI Utilization', 'Content Quality', 'Learning Progress']
             },
             conversationInsights: {
-              type: 'object',
+              type: SchemaType.OBJECT,
               properties: {
                 effectiveExamples: {
-                  type: 'array',
+                  type: SchemaType.ARRAY,
                   items: {
-                    type: 'object',
+                    type: SchemaType.OBJECT,
                     properties: {
-                      quote: { type: 'string' },
-                      reason: { type: 'string' }
+                      quote: { type: SchemaType.STRING },
+                      reason: { type: SchemaType.STRING }
                     },
                     required: ['quote', 'reason']
                   }
                 },
                 improvementAreas: {
-                  type: 'array',
+                  type: SchemaType.ARRAY,
                   items: {
-                    type: 'object',
+                    type: SchemaType.OBJECT,
                     properties: {
-                      quote: { type: 'string' },
-                      suggestion: { type: 'string' }
+                      quote: { type: SchemaType.STRING },
+                      suggestion: { type: SchemaType.STRING }
                     },
                     required: ['quote', 'suggestion']
                   }
@@ -222,16 +222,16 @@ Important evaluation principles:
               required: ['effectiveExamples', 'improvementAreas']
             },
             strengths: {
-              type: 'array',
-              items: { type: 'string' }
+              type: SchemaType.ARRAY,
+              items: { type: SchemaType.STRING }
             },
             improvements: {
-              type: 'array',
-              items: { type: 'string' }
+              type: SchemaType.ARRAY,
+              items: { type: SchemaType.STRING }
             },
             nextSteps: {
-              type: 'array',
-              items: { type: 'string' }
+              type: SchemaType.ARRAY,
+              items: { type: SchemaType.STRING }
             }
           },
           required: ['score', 'ksaScores', 'domainScores', 'rubricsScores', 'conversationInsights', 'strengths', 'improvements', 'nextSteps']

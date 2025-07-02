@@ -47,7 +47,7 @@ export async function createRefreshToken(userId: number, rememberMe: boolean = f
 export async function verifyAccessToken(token: string): Promise<TokenPayload | null> {
   try {
     const { payload } = await jwtVerify(token, getJwtSecret());
-    return payload as TokenPayload;
+    return payload as unknown as TokenPayload;
   } catch (error) {
     // Reduce error logging in development
     if (process.env.NODE_ENV !== 'development') {
@@ -61,7 +61,7 @@ export async function verifyAccessToken(token: string): Promise<TokenPayload | n
 export async function verifyRefreshToken(token: string): Promise<RefreshTokenPayload | null> {
   try {
     const { payload } = await jwtVerify(token, getJwtSecret());
-    return payload as RefreshTokenPayload;
+    return payload as unknown as RefreshTokenPayload;
   } catch (error) {
     console.error('Refresh token verification failed:', error);
     return null;

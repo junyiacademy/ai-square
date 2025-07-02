@@ -116,7 +116,7 @@ async function getUserContext(userEmail: string) {
       assessmentScore: userData.assessmentResult?.overallScore || null,
       domainScores: userData.assessmentResult?.domainScores || {},
       weakDomains: Object.entries(userData.assessmentResult?.domainScores || {})
-        .filter(([, score]: [string, number]) => score < 60)
+        .filter(([, score]) => typeof score === 'number' && score < 60)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         .map(([domain, _]) => domain),
       recentActivities: memory?.shortTerm.recentActivities || [],
@@ -133,6 +133,11 @@ async function getUserContext(userEmail: string) {
 }
 
 async function saveMessage(userEmail: string, sessionId: string, message: { role: string; content: string; timestamp: string }) {
+  initializeServices();
+  if (!bucket) {
+    throw new Error('Storage service not initialized');
+  }
+  
   const sanitizedEmail = userEmail.replace('@', '_at_').replace(/\./g, '_');
   const sessionFile = bucket.file(`user/${sanitizedEmail}/chat/sessions/${sessionId}.json`);
   
@@ -173,13 +178,18 @@ async function saveMessage(userEmail: string, sessionId: string, message: { role
   }
 }
 
-async function updateChatIndex(userEmail: string, sessionId: string, session: { id: string; title: string; updated_at: string; last_message?: string; message_count?: number }) {
+async function updateChatIndex(userEmail: string, sessionId: string, session: { id: string; title: string; updated_at: string; last_message?: string; message_count?: number; created_at?: string }) {
+  initializeServices();
+  if (!bucket) {
+    throw new Error('Storage service not initialized');
+  }
+  
   const sanitizedEmail = userEmail.replace('@', '_at_').replace(/\./g, '_');
   const indexFile = bucket.file(`user/${sanitizedEmail}/chat/index.json`);
   
   try {
     const [exists] = await indexFile.exists();
-    let index = { sessions: [] };
+    let index: { sessions: Array<{ id: string; title: string; created_at: string; updated_at: string; last_message?: string; message_count?: number }> } = { sessions: [] };
     
     if (exists) {
       const [data] = await indexFile.download();
@@ -191,7 +201,7 @@ async function updateChatIndex(userEmail: string, sessionId: string, session: { 
     const sessionInfo = {
       id: session.id,
       title: session.title,
-      created_at: session.created_at,
+      created_at: session.created_at || session.updated_at,
       updated_at: session.updated_at,
       last_message: session.last_message,
       message_count: session.message_count
@@ -216,6 +226,11 @@ async function updateChatIndex(userEmail: string, sessionId: string, session: { 
 
 async function generateChatTitle(messages: { role: string; content: string }[]) {
   if (messages.length < 2) return 'New Chat';
+  
+  initializeServices();
+  if (!vertexAI) {
+    return 'New Chat';
+  }
   
   const model = vertexAI.preview.getGenerativeModel({
     model: 'gemini-2.5-flash',
@@ -420,6 +435,9 @@ async function updateShortTermMemory(userEmail: string, message: string) {
     memory.shortTerm.lastUpdated = new Date().toISOString();
     
     // Save updated memory
+    if (!bucket) {
+      throw new Error('Storage service not initialized');
+    }
     const sanitizedEmail = userEmail.replace('@', '_at_').replace(/\./g, '_');
     const shortTermFile = bucket.file(`user/${sanitizedEmail}/memory/short_term.json`);
     await shortTermFile.save(JSON.stringify(memory.shortTerm, null, 2));

@@ -141,5 +141,8 @@ class ContentService {
 // 匯出單例
 export const contentService = new ContentService()
 
+// 匯出類別（for testing）
+export { ContentService }
+
 // 匯出類型
 export type { TreeData, AssessmentData, PBLScenario }

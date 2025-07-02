@@ -64,6 +64,24 @@ export interface Scenario {
   tasks: Task[]; // Direct array of tasks, no stages
 }
 
+// Alias for backward compatibility
+export type PBLScenario = Scenario;
+
+// Scenario for list display
+export interface ScenarioListItem {
+  id: string;
+  title: string;
+  title_zh?: string;
+  description: string;
+  description_zh?: string;
+  targetDomains: DomainType[];
+  difficulty: DifficultyLevel;
+  estimatedDuration: number;
+  taskCount: number;
+  tags?: string[];
+}
+
+
 // Program - represents one learning journey through a scenario
 export interface Program {
   id: string;
@@ -148,6 +166,36 @@ export interface ProgramSummary {
   domainScores?: Record<DomainType, number>;
   totalTimeSeconds: number;
   completionRate: number;
+}
+
+// Conversation and Process Types
+export interface ConversationTurn {
+  id: string;
+  timestamp: Date;
+  role: 'user' | 'ai' | 'system';
+  content: string;
+  metadata?: {
+    processingTime?: number;
+    tokensUsed?: number;
+  };
+}
+
+export interface ProcessLog {
+  id: string;
+  timestamp: Date;
+  sessionId: string;
+  stageId: string;
+  actionType: 'interaction' | 'evaluation' | 'navigation';
+  detail: {
+    aiInteraction?: {
+      model: string;
+      prompt: string;
+      response: string;
+      tokensUsed: number;
+    };
+    timeSpent?: number;
+    taskId?: string;
+  };
 }
 
 // API Response Types

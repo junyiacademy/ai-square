@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { ScenarioListItem } from '@/types/pbl';
+import { Scenario, ScenarioListItem } from '@/types/pbl';
 import { promises as fs } from 'fs';
 import path from 'path';
 import * as yaml from 'js-yaml';
@@ -95,8 +95,8 @@ async function loadScenariosFromYAML(lang: string): Promise<ScenarioListItem[]> 
           };
           scenarios.push({
             id: info.id,
-            title: getLocalizedValue(info, 'title', lang),
-            description: getLocalizedValue(info, 'description', lang),
+            title: getLocalizedValue(info as LocalizedField, 'title', lang),
+            description: getLocalizedValue(info as LocalizedField, 'description', lang),
             difficulty: info.difficulty,
             estimatedDuration: info.estimated_duration,
             domains: info.target_domains,

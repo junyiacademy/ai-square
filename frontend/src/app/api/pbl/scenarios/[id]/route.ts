@@ -109,7 +109,7 @@ function getKSAItemDetails(ksaData: KSAData, code: string, lang: string): KSAIte
         return {
           code,
           name: `Knowledge: ${code}`,
-          description: getLocalizedValue(theme.codes[code], 'summary', lang)
+          description: getLocalizedValue(theme.codes[code] as Record<string, string>, 'summary', lang)
         };
       }
     }
@@ -122,7 +122,7 @@ function getKSAItemDetails(ksaData: KSAData, code: string, lang: string): KSAIte
         return {
           code,
           name: `Skill: ${code}`,
-          description: getLocalizedValue(theme.codes[code], 'summary', lang)
+          description: getLocalizedValue(theme.codes[code] as Record<string, string>, 'summary', lang)
         };
       }
     }
@@ -135,7 +135,7 @@ function getKSAItemDetails(ksaData: KSAData, code: string, lang: string): KSAIte
         return {
           code,
           name: `Attitude: ${code}`,
-          description: getLocalizedValue(theme.codes[code], 'summary', lang)
+          description: getLocalizedValue(theme.codes[code] as Record<string, string>, 'summary', lang)
         };
       }
     }
@@ -213,7 +213,7 @@ export async function GET(
       prerequisites: getLocalizedValue(yamlData.scenario_info, 'prerequisites', lang) || yamlData.scenario_info.prerequisites || [],
       learningObjectives: getLocalizedValue(yamlData.scenario_info, 'learning_objectives', lang) || yamlData.scenario_info.learning_objectives || [],
       ksaMapping: buildKSAMapping(yamlData, ksaData, lang),
-      tasks: (yamlData.tasks || []).map(task => ({
+      tasks: (yamlData.tasks || []).map((task: any) => ({
         id: task.id,
         title: getLocalizedValue(task, 'title', lang),
         description: getLocalizedValue(task, 'description', lang),
