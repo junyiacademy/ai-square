@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
 
 Current Task: ${taskTitle}
 Task Description: ${taskDescription}
-Instructions: ${instructions.join(', ')}
+Instructions: ${Array.isArray(instructions) ? instructions.join(', ') : instructions}
 Expected Outcome: ${expectedOutcome}
 
 Previous conversation:
