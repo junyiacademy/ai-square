@@ -1150,7 +1150,7 @@ function ChatPageContent() {
                 <div className="flex items-center justify-between">
                   <h1 className="text-xl font-semibold text-gray-900">
                   AI Assistant{sessionId && chatSessions.find(s => s.id === sessionId)?.title 
-                    ? ` + : ${chatSessions.find(s => s.id === sessionId)?.title}` 
+                    ? ` - ${chatSessions.find(s => s.id === sessionId)?.title}` 
                     : ''}
                 </h1>
                   <a
