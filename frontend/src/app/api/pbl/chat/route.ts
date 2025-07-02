@@ -56,15 +56,29 @@ export async function POST(request: NextRequest) {
     }
     
     // Find the current task
-    const currentTask = scenarioData.tasks?.find((t: Task) => t.id === taskId);
-    if (!currentTask || !currentTask.aiModule) {
+    const currentTask = scenarioData.tasks?.find((t: any) => t.id === taskId);
+    if (!currentTask) {
       return NextResponse.json<ErrorResponse>(
-        { error: 'Task or AI module not found' },
+        { error: 'Task not found' },
+        { status: 404 }
+      );
+    }
+    
+    // Handle both camelCase and snake_case for aiModule
+    const aiModuleData = currentTask.aiModule || currentTask.ai_module;
+    if (!aiModuleData) {
+      return NextResponse.json<ErrorResponse>(
+        { error: 'AI module not found for this task' },
         { status: 404 }
       );
     }
 
-    const aiModule: AIModule = currentTask.aiModule;
+    const aiModule: AIModule = {
+      role: aiModuleData.role,
+      model: aiModuleData.model,
+      persona: aiModuleData.persona,
+      initialPrompt: aiModuleData.initialPrompt || aiModuleData.initial_prompt
+    };
     
     // Build conversation context
     const conversationContext = conversationHistory?.map((entry: ChatMessage) => 
