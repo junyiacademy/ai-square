@@ -4,6 +4,7 @@ import { contentService } from '@/lib/cms/content-service';
 import { cacheService } from '@/lib/cache/cache-service';
 
 export const revalidate = 3600; // Revalidate every hour
+export const dynamic = 'force-dynamic'; // Force dynamic rendering
 
 export async function GET(request: NextRequest) {
   try {

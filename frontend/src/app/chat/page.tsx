@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { ChevronLeft, ChevronRight, GripVertical, MessageCircle, BookOpen, Send, Sparkles, Brain, ChevronDown, MoreHorizontal, Trash2 } from 'lucide-react';
@@ -56,7 +56,7 @@ interface RecommendedScenario {
   estimatedTime: number;
 }
 
-export default function ChatPage() {
+function ChatPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false);
@@ -1512,5 +1512,17 @@ export default function ChatPage() {
         {renderDesktopLayout()}
       </div>
     </>
+  );
+}
+
+export default function ChatPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    }>
+      <ChatPageContent />
+    </Suspense>
   );
 }

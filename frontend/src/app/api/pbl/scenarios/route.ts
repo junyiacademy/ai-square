@@ -181,6 +181,7 @@ async function loadScenariosFromYAML(lang: string): Promise<ScenarioListItem[]> 
 }
 
 export const revalidate = 3600; // Revalidate every hour
+export const dynamic = 'force-dynamic'; // Force dynamic rendering
 
 export async function GET(request: Request) {
   try {

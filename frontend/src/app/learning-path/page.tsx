@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
@@ -42,7 +42,7 @@ const roleKeywordPatterns: { [key: string]: RegExp } = {
   learner: /\b(learn|skill|develop|improve|knowledge)\w*/i
 };
 
-export default function LearningPathPage() {
+function LearningPathContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { t } = useTranslation(['learningPath', 'common', 'assessment']);
@@ -655,5 +655,17 @@ export default function LearningPathPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LearningPathPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    }>
+      <LearningPathContent />
+    </Suspense>
   );
 }
