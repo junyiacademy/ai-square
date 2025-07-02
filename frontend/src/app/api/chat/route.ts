@@ -3,17 +3,27 @@ import { Storage } from '@google-cloud/storage';
 import { VertexAI } from '@google-cloud/vertexai';
 import { v4 as uuidv4 } from 'uuid';
 
-const storage = new Storage({
-  projectId: process.env.GOOGLE_CLOUD_PROJECT,
-  keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
-});
+// Initialize storage and AI services only when needed
+let storage: Storage | null = null;
+let vertexAI: VertexAI | null = null;
+let bucket: any = null;
 
-const vertexAI = new VertexAI({
-  project: process.env.GOOGLE_CLOUD_PROJECT!,
-  location: process.env.GOOGLE_CLOUD_LOCATION || 'us-central1',
-});
-
-const bucket = storage.bucket('ai-square-db');
+function initializeServices() {
+  if (!storage && process.env.GOOGLE_CLOUD_PROJECT) {
+    storage = new Storage({
+      projectId: process.env.GOOGLE_CLOUD_PROJECT,
+      keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+    });
+    bucket = storage.bucket('ai-square-db');
+  }
+  
+  if (!vertexAI && process.env.GOOGLE_CLOUD_PROJECT) {
+    vertexAI = new VertexAI({
+      project: process.env.GOOGLE_CLOUD_PROJECT,
+      location: process.env.GOOGLE_CLOUD_LOCATION || 'us-central1',
+    });
+  }
+}
 
 interface UserMemory {
   shortTerm: {
@@ -32,6 +42,9 @@ interface UserMemory {
 }
 
 async function getUserMemory(userEmail: string): Promise<UserMemory | null> {
+  initializeServices();
+  if (!bucket) return null;
+  
   try {
     const sanitizedEmail = userEmail.replace('@', '_at_').replace(/\./g, '_');
     
@@ -76,6 +89,9 @@ async function getUserMemory(userEmail: string): Promise<UserMemory | null> {
 }
 
 async function getUserContext(userEmail: string) {
+  initializeServices();
+  if (!bucket) return null;
+  
   const sanitizedEmail = userEmail.replace('@', '_at_').replace(/\./g, '_');
   
   try {
@@ -241,6 +257,13 @@ Title:`;
 
 export async function POST(req: NextRequest) {
   try {
+    // Initialize services on first request
+    initializeServices();
+    
+    if (!vertexAI || !bucket) {
+      return NextResponse.json({ error: 'AI services not configured' }, { status: 503 });
+    }
+    
     const { message, sessionId, context: clientContext } = await req.json();
     
     // Get user info from request (passed from client)
