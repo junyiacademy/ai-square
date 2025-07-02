@@ -1,0 +1,69 @@
+{
+  "welcome": {
+    "greeting": "Welcome, {{name}}!",
+    "subtitle": "Let's get you started on your AI literacy journey",
+    "step1": {
+      "title": "Discover Your Path",
+      "description": "AI Square helps you understand and master AI literacy",
+      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences.",
+      "assessment": "Smart Assessment",
+      "assessmentDesc": "Discover your current AI knowledge level",
+      "learning": "Personalized Learning", 
+      "learningDesc": "Get tailored recommendations based on your goals"
+    },
+    "step2": {
+      "title": "Four Core Domains",
+      "description": "Master the essential areas of AI literacy",
+      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly.",
+      "domains": "AI Literacy Domains",
+      "engaging": "Engaging with AI",
+      "creating": "Creating with AI",
+      "managing": "Managing with AI",
+      "designing": "Designing with AI"
+    },
+    "step3": {
+      "title": "Start Your Journey",
+      "description": "Begin with an assessment and unlock your potential",
+      "content": "Ready to discover your AI literacy level and get personalized learning recommendations?",
+      "ready": "What you'll get:",
+      "benefit1": "Detailed assessment of your AI knowledge",
+      "benefit2": "Personalized learning path recommendations",
+      "benefit3": "Interactive scenarios and practical exercises"
+    },
+    "startJourney": "Start Your Journey"
+  },
+  "goals": {
+    "title": "What would you like to achieve?",
+    "subtitle": "Select your learning goals to get personalized recommendations",
+    "understand": {
+      "title": "Understand AI Fundamentals",
+      "description": "Learn the basics of AI, machine learning, and how AI systems work"
+    },
+    "create": {
+      "title": "Create Content with AI",
+      "description": "Use AI tools for writing, design, art, and creative projects"
+    },
+    "analyze": {
+      "title": "Analyze Data with AI",
+      "description": "Apply AI for data analysis, insights, and decision-making"
+    },
+    "build": {
+      "title": "Build AI Solutions",
+      "description": "Develop and implement AI systems and applications"
+    },
+    "teach": {
+      "title": "Teach AI to Others",
+      "description": "Educate and guide others in understanding and using AI"
+    },
+    "ethical": {
+      "title": "Ensure Ethical AI Use",
+      "description": "Understand and implement responsible AI practices"
+    },
+    "recommendedDomains": "Recommended domains",
+    "selected": "{{count}} goals selected",
+    "selectAtLeastOne": "Please select at least one learning goal",
+    "continue": "Continue to Assessment",
+    "skipForNow": "Skip for now",
+    "helpText": "Don't worry, you can always change these later in your profile settings."
+  }
+}

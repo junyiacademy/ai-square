@@ -43,8 +43,14 @@ function LoginContent() {
         // 觸發自定義事件通知 Header 更新
         window.dispatchEvent(new CustomEvent('auth-changed'))
         
-        // 導向到 relations 頁面
-        router.push('/relations')
+        // 根據用戶狀態導向不同頁面
+        if (!data.user.hasCompletedOnboarding) {
+          router.push('/onboarding/welcome')
+        } else if (!data.user.hasCompletedAssessment) {
+          router.push('/assessment')
+        } else {
+          router.push('/dashboard')
+        }
       } else {
         // 顯示錯誤訊息
         setError(data.error || t('error.invalidCredentials'))

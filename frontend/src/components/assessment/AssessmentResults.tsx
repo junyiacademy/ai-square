@@ -656,6 +656,23 @@ export default function AssessmentResults({ result, domains, onRetake, questions
                 )}
               </button>
             )}
+            {/* View Learning Path button - only show if user is logged in and assessment is saved */}
+            {currentUser && isSaved && (
+              <button
+                onClick={() => {
+                  // Save assessment result to localStorage for learning path page
+                  localStorage.setItem('assessmentResult', JSON.stringify(result));
+                  // Navigate to learning path
+                  window.location.href = '/learning-path';
+                }}
+                className="bg-green-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center"
+              >
+                {t('results.viewLearningPath')}
+                <svg className="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </button>
+            )}
             <button
               onClick={onRetake}
               className="bg-indigo-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors"

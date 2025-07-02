@@ -1,0 +1,21 @@
+{
+  "learningPath": {
+    "title": "Your Personalized Learning Path",
+    "subtitle": "Based on your assessment results, here's your recommended learning journey",
+    "yourProgress": "Your Progress Overview",
+    "currentScore": "Current",
+    "target": "Target", 
+    "completed": "completed",
+    "filteringBy": "Showing recommendations for: {{domain}}",
+    "clearFilter": "Show all recommendations",
+    "recommendedPath": "Recommended Learning Path",
+    "estimatedTime": "Total time: {{hours}}h {{minutes}}m",
+    "startLearning": "Start Learning",
+    "progress": "Progress",
+    "weakDomainReason": "Recommended to strengthen {{domain}} (current: {{score}}%)",
+    "strongDomainReason": "Advanced challenge for your strong {{domain}} skills ({{score}}%)",
+    "averageDomainReason": "Continue building {{domain}} expertise (current: {{score}}%)",
+    "goToDashboard": "Go to Dashboard",
+    "dashboardHint": "Track your overall progress and continue your learning journey"
+  }
+}

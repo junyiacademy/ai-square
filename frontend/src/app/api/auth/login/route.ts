@@ -8,21 +8,36 @@ const MOCK_USERS = [
     email: 'student@example.com',
     password: 'student123',
     role: 'student',
-    name: 'Student User'
+    name: 'Student User',
+    hasCompletedAssessment: false,
+    hasCompletedOnboarding: false
   },
   {
     id: 2, 
     email: 'teacher@example.com',
     password: 'teacher123',
     role: 'teacher',
-    name: 'Teacher User'
+    name: 'Teacher User',
+    hasCompletedAssessment: true,
+    hasCompletedOnboarding: true
   },
   {
     id: 3,
     email: 'admin@example.com', 
     password: 'admin123',
     role: 'admin',
-    name: 'Admin User'
+    name: 'Admin User',
+    hasCompletedAssessment: true,
+    hasCompletedOnboarding: true
+  },
+  {
+    id: 4,
+    email: 'test@example.com',
+    password: 'password123',
+    role: 'student',
+    name: 'Test User',
+    hasCompletedAssessment: false,
+    hasCompletedOnboarding: false
   }
 ]
 

@@ -1,0 +1,44 @@
+{
+  "welcome": "Welcome back, {{name}}!",
+  "subtitle": "Here's your AI literacy progress overview",
+  "aiLiteracyProgress": "AI Literacy Progress",
+  "domains": {
+    "engaging_with_ai": "Engaging with AI",
+    "creating_with_ai": "Creating with AI", 
+    "managing_with_ai": "Managing with AI",
+    "designing_with_ai": "Designing with AI"
+  },
+  "viewDetailedProgress": "View detailed learning path",
+  "learningStatistics": "Learning Statistics",
+  "completedScenarios": "Completed",
+  "inProgress": "In Progress",
+  "learningHours": "Hours",
+  "dayStreak": "Day Streak",
+  "recentActivities": "Recent Activities",
+  "noRecentActivities": "No recent activities. Start learning to see your progress here!",
+  "activities": {
+    "completedAssessment": "Completed AI Literacy Assessment",
+    "assessmentDesc": "Discovered your AI knowledge baseline"
+  },
+  "recommendedActions": "Recommended Next Steps",
+  "nextActions": {
+    "takeAssessment": "Take AI Literacy Assessment",
+    "assessmentDesc": "Discover your current AI knowledge level and get personalized recommendations",
+    "viewLearningPath": "View Your Learning Path",
+    "learningPathDesc": "See personalized recommendations based on your assessment results",
+    "startPBL": "Start a PBL Scenario",
+    "pblDesc": "Practice real-world AI skills with interactive scenarios"
+  },
+  "priority": {
+    "high": "High",
+    "medium": "Medium", 
+    "low": "Low"
+  },
+  "quickLinks": "Quick Links",
+  "explorePBL": "Explore PBL Scenarios",
+  "viewCompetencies": "View AI Competencies",
+  "viewHistory": "View Learning History",
+  "exploreKSA": "Explore Knowledge Map",
+  "yourGoals": "Your Learning Goals",
+  "updateGoals": "Update your goals"
+}

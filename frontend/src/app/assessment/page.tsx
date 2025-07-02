@@ -68,6 +68,14 @@ export default function AssessmentPage() {
       const result = calculateAssessmentResult(answers, assessmentData);
       setAssessmentResult(result);
       setCurrentStep('results');
+      
+      // Update user's assessment completion status
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        user.hasCompletedAssessment = true;
+        localStorage.setItem('user', JSON.stringify(user));
+      }
     }
   };
 

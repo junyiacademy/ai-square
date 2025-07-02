@@ -67,6 +67,7 @@
     "retakeAssessment": "Retake Assessment",
     "downloadReport": "Download Report",
     "saveResults": "Save Results",
+    "viewLearningPath": "View Learning Path",
     "saving": "Saving...",
     "saved": "Saved",
     "saveSuccess": "Results saved successfully! ID: {{assessmentId}}",
