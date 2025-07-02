@@ -13,5 +13,15 @@
   "error": "Error",
   "success": "Success",
   "warning": "Warning",
-  "info": "Info"
+  "info": "Info",
+  "backToDashboard": "Back to Dashboard",
+  "minutes": "minutes",
+  "hours": "hours",
+  "days": "days",
+  "view": "View",
+  "difficulty": {
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced"
+  }
 }

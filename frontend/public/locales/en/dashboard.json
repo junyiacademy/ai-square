@@ -44,5 +44,6 @@
   "learningPathQuickAccess": "Personalized Learning Recommendations",
   "learningPathDescription": "Explore AI learning scenarios tailored to your assessment results and interests. Choose the areas that best suit your needs.",
   "viewAllPaths": "View All Learning Paths",
-  "focusOnWeakAreas": "Focus on Weak Areas"
+  "focusOnWeakAreas": "Focus on Weak Areas",
+  "aiAdvisor": "AI Learning Advisor"
 }

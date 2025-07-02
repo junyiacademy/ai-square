@@ -197,7 +197,7 @@ export default function DashboardPage() {
                 <p className="text-white/90 mb-4">
                   {t('dashboard:learningPathDescription')}
                 </p>
-                <div className="flex flex-wrap gap-4">
+                <div className="flex flex-wrap gap-4 items-center">
                   <Link
                     href="/learning-path"
                     className="inline-flex items-center px-6 py-3 bg-white text-blue-600 rounded-lg font-medium hover:bg-gray-100 transition-colors"
@@ -207,11 +207,12 @@ export default function DashboardPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
                   </Link>
+                  <span className="text-white/70 font-medium">— OR —</span>
                   <Link
-                    href="/learning-path?filter=weak"
+                    href="/chat"
                     className="inline-flex items-center px-6 py-3 bg-white/20 text-white rounded-lg font-medium hover:bg-white/30 transition-colors"
                   >
-                    {t('dashboard:focusOnWeakAreas')}
+                    💬 {t('dashboard:aiAdvisor')}
                   </Link>
                 </div>
               </div>
@@ -417,6 +418,12 @@ export default function DashboardPage() {
                   className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
                 >
                   🎯 {t('dashboard:exploreKSA')}
+                </Link>
+                <Link
+                  href="/chat"
+                  className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                >
+                  💬 {t('dashboard:aiAdvisor')}
                 </Link>
               </div>
             </div>
