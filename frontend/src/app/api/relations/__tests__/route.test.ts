@@ -156,7 +156,7 @@ describe('/api/relations', () => {
     });
 
     it('returns translated data for Chinese', async () => {
-      const request = new Request('http://localhost/api/relations?lang=zh-TW') as any;
+      const request = new Request('http://localhost/api/relations?lang=zhTW') as any;
       const response = await GET(request);
       const data = await response.json();
 

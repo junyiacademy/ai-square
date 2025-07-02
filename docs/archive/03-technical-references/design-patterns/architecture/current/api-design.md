@@ -42,7 +42,7 @@ GET    /v1/users/123/progress # 獲取用戶進度
 // Headers
 {
   "Content-Type": "application/json",
-  "Accept-Language": "zh-TW",
+  "Accept-Language": "zhTW",
   "X-Request-ID": "uuid-here"
 }
 ```

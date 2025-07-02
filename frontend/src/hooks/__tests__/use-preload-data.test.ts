@@ -79,8 +79,8 @@ describe('usePreloadData', () => {
     expect(contentService.preloadEssentialData).toHaveBeenCalledWith('en')
 
     // Change language
-    mockI18n.language = 'zh-TW'
-    ;(useTranslation as jest.Mock).mockReturnValue({ i18n: { ...mockI18n, language: 'zh-TW' } })
+    mockI18n.language = 'zhTW'
+    ;(useTranslation as jest.Mock).mockReturnValue({ i18n: { ...mockI18n, language: 'zhTW' } })
 
     rerender()
 
@@ -88,7 +88,7 @@ describe('usePreloadData', () => {
       expect(contentService.preloadEssentialData).toHaveBeenCalledTimes(2)
     })
 
-    expect(contentService.preloadEssentialData).toHaveBeenLastCalledWith('zh-TW')
+    expect(contentService.preloadEssentialData).toHaveBeenLastCalledWith('zhTW')
   })
 
   it('should reset error on successful reload', async () => {
@@ -142,8 +142,8 @@ describe('useLanguageCache', () => {
     const { rerender } = renderHook(() => useLanguageCache())
 
     // Change language
-    mockI18n.language = 'zh-TW'
-    ;(useTranslation as jest.Mock).mockReturnValue({ i18n: { ...mockI18n, language: 'zh-TW' } })
+    mockI18n.language = 'zhTW'
+    ;(useTranslation as jest.Mock).mockReturnValue({ i18n: { ...mockI18n, language: 'zhTW' } })
 
     rerender()
 
@@ -176,22 +176,22 @@ describe('useLanguageCache', () => {
     
     const { rerender } = renderHook(() => useLanguageCache())
 
-    // First change: en -> zh-TW
-    mockI18n.language = 'zh-TW'
-    ;(useTranslation as jest.Mock).mockReturnValue({ i18n: { ...mockI18n, language: 'zh-TW' } })
+    // First change: en -> zhTW
+    mockI18n.language = 'zhTW'
+    ;(useTranslation as jest.Mock).mockReturnValue({ i18n: { ...mockI18n, language: 'zhTW' } })
     rerender()
 
     await waitFor(() => {
       expect(contentService.clearLanguageCache).toHaveBeenCalledWith('en')
     })
 
-    // Second change: zh-TW -> es
+    // Second change: zhTW -> es
     mockI18n.language = 'es'
     ;(useTranslation as jest.Mock).mockReturnValue({ i18n: { ...mockI18n, language: 'es' } })
     rerender()
 
     await waitFor(() => {
-      expect(contentService.clearLanguageCache).toHaveBeenCalledWith('zh-TW')
+      expect(contentService.clearLanguageCache).toHaveBeenCalledWith('zhTW')
     })
 
     expect(contentService.clearLanguageCache).toHaveBeenCalledTimes(2)
@@ -216,7 +216,7 @@ describe('useLanguageCache', () => {
     const { rerender } = renderHook(() => useLanguageCache())
 
     // Rapid language changes
-    const languages = ['zh-TW', 'es', 'ja', 'ko', 'fr']
+    const languages = ['zhTW', 'es', 'ja', 'ko', 'fr']
     let previousLang = 'en'
     
     for (const lang of languages) {
@@ -235,7 +235,7 @@ describe('useLanguageCache', () => {
 
     // Should have cleared caches for previous languages
     expect(contentService.clearLanguageCache).toHaveBeenCalledWith('en')
-    expect(contentService.clearLanguageCache).toHaveBeenCalledWith('zh-TW')
+    expect(contentService.clearLanguageCache).toHaveBeenCalledWith('zhTW')
     expect(contentService.clearLanguageCache).toHaveBeenCalledWith('es')
     expect(contentService.clearLanguageCache).toHaveBeenCalledWith('ja')
     expect(contentService.clearLanguageCache).toHaveBeenCalledWith('ko')

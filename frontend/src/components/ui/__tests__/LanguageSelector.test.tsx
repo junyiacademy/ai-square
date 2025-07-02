@@ -55,9 +55,9 @@ describe('LanguageSelector', () => {
     render(<LanguageSelector />)
     
     const select = screen.getByLabelText('選擇語言')
-    fireEvent.change(select, { target: { value: 'zh-TW' } })
+    fireEvent.change(select, { target: { value: 'zhTW' } })
     
-    expect(mockChangeLanguage).toHaveBeenCalledWith('zh-TW')
+    expect(mockChangeLanguage).toHaveBeenCalledWith('zhTW')
   })
 
   it('saves language preference to localStorage', () => {

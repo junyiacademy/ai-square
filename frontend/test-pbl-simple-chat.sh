@@ -29,7 +29,7 @@ SESSION_RESPONSE=$(curl -s -X POST "${API_URL}/pbl/sessions" \
         "scenarioTitle": "AI 輔助求職訓練",
         "userId": "3",
         "userEmail": "teacher@example.com",
-        "language": "zh-TW",
+        "language": "zhTW",
         "stageIndex": 0,
         "stageId": "stage-1-research",
         "stageTitle": "職缺市場研究",
@@ -63,7 +63,7 @@ CHAT1=$(curl -s -X POST "${API_URL}/pbl/chat" \
         "sessionId": "'"${SESSION_ID}"'",
         "message": "請問 AI 領域有哪些主要的職缺類型？",
         "userId": "3",
-        "language": "zh-TW",
+        "language": "zhTW",
         "aiModule": {
             "role": "assistant",
             "model": "gemini-2.0-flash-exp",
@@ -99,7 +99,7 @@ CHAT2=$(curl -s -X POST "${API_URL}/pbl/chat" \
         "sessionId": "'"${SESSION_ID}"'",
         "message": "機器學習工程師需要哪些技能？",
         "userId": "3",
-        "language": "zh-TW",
+        "language": "zhTW",
         "aiModule": {
             "role": "assistant",
             "model": "gemini-2.0-flash-exp",
@@ -136,7 +136,7 @@ EVAL_RESPONSE=$(curl -s -X POST "${API_URL}/pbl/evaluate" \
         "sessionId": "'"${SESSION_ID}"'",
         "stageId": "stage-1-research",
         "taskId": "task-1-1",
-        "language": "zh-TW"
+        "language": "zhTW"
     }')
 
 if [ "$(echo $EVAL_RESPONSE | jq -r '.success // false')" = "true" ]; then
@@ -172,7 +172,7 @@ fi
 # Step 5: Check history
 echo -e "\n${BLUE}5. 檢查歷史記錄...${NC}"
 
-HISTORY=$(curl -s "${API_URL}/pbl/history?lang=zh-TW" \
+HISTORY=$(curl -s "${API_URL}/pbl/history?lang=zhTW" \
     -H "Cookie: ${USER_COOKIE}")
 
 LATEST=$(echo $HISTORY | jq -r '.data[0] | {

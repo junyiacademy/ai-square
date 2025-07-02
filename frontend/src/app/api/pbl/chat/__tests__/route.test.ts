@@ -132,7 +132,7 @@ describe('/api/pbl/chat', () => {
       }));
 
       const request = createRequest(validRequestBody, {
-        'accept-language': 'zh-TW'
+        'accept-language': 'zhTW'
       });
       const response = await POST(request);
       const data = await response.json();

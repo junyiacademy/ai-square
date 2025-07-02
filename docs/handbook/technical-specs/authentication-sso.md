@@ -352,7 +352,7 @@ Updates user profile
 ```json
 {
   "name": "New Name",
-  "language": "zh-TW",
+  "language": "zhTW",
   "theme": "dark"
 }
 ```

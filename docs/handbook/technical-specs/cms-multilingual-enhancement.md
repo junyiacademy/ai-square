@@ -13,7 +13,7 @@
 
 ### 已實現功能
 - ✅ YAML 格式多語言存儲（欄位後綴：`_zh`、`_es` 等）
-- ✅ 支援 9 種語言（en, zh-TW, es, ja, ko, fr, de, ru, it）
+- ✅ 支援 9 種語言（en, zhTW, es, ja, ko, fr, de, ru, it）
 - ✅ Git-Based 內容管理
 
 ### 待改進項目

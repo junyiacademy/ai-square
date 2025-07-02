@@ -203,7 +203,7 @@ export default function SettingsPage() {
 ### Step 6: 更新翻譯檔案
 
 ```json
-// public/locales/zh-TW/common.json
+// public/locales/zhTW/common.json
 {
   "preferences": {
     "title": "個人偏好設定",

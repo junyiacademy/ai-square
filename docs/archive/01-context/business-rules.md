@@ -19,7 +19,7 @@
 ```javascript
 const SUPPORTED_LANGUAGES = [
   'en',      // English
-  'zh-TW',   // 繁體中文
+  'zhTW',   // 繁體中文
   'es',      // Español
   'ja',      // 日本語
   'ko',      // 한국어
@@ -29,11 +29,11 @@ const SUPPORTED_LANGUAGES = [
   'it'       // Italiano
 ];
 
-const DEFAULT_LANGUAGE = 'zh-TW';
+const DEFAULT_LANGUAGE = 'zhTW';
 ```
 
 **規則**：
-- 預設語言是 zh-TW
+- 預設語言是 zhTW
 - 語言切換必須即時生效（無需重新載入）
 - 所有 UI 文字必須有對應翻譯
 - 缺少翻譯時 fallback 到英文

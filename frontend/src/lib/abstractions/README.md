@@ -96,7 +96,7 @@ export class ContentLoader extends BaseYAMLLoader<ContentType> {
 
 內建多語言處理機制：
 - 自動欄位翻譯（`field_zh`, `field_es` 等）
-- zh-TW 到 zh 的自動映射
+- zhTW 到 zh 的自動映射
 - Fallback 語言支援
 
 ## 實作範例

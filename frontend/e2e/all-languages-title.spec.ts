@@ -7,7 +7,7 @@ import { test, expect } from '@playwright/test'
 
 const languages = [
   { code: 'en', name: 'English', expectedTitle: 'AI Literacy Relations Map' },
-  { code: 'zh-TW', name: '繁體中文', expectedTitle: 'AI 素養四大領域架構' },
+  { code: 'zhTW', name: '繁體中文', expectedTitle: 'AI 素養四大領域架構' },
   { code: 'ja', name: '日本語', expectedTitle: 'AIリテラシー関連マップ' },
   { code: 'ko', name: '한국어', expectedTitle: 'AI 리터러시 관계도' },
   { code: 'es', name: 'Español', expectedTitle: 'Mapa de Relaciones de Alfabetización en IA' },

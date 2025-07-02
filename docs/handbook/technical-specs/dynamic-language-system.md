@@ -12,7 +12,7 @@
 ## 現況分析 (Phase 1-2)
 
 ### 已實現功能
-- ✅ 支援 9 種預設語言（en, zh-TW, es, ja, ko, fr, de, ru, it）
+- ✅ 支援 9 種預設語言（en, zhTW, es, ja, ko, fr, de, ru, it）
 - ✅ 基於 YAML 欄位後綴的多語言存儲
 - ✅ react-i18next 前端國際化框架
 - ✅ 語言切換功能

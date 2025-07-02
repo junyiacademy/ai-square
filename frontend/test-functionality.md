@@ -102,7 +102,7 @@ npm run lint
 
 ### Relations API
 ```bash
-curl "http://localhost:3001/api/relations?lang=zh-TW"
+curl "http://localhost:3001/api/relations?lang=zhTW"
 ```
 
 ### PBL Scenarios API

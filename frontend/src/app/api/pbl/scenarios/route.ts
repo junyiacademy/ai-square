@@ -45,7 +45,7 @@ function getLocalizedValue(data: LocalizedField, fieldName: string, lang: string
   
   // Map language codes to suffixes
   let langSuffix = lang;
-  if (lang === 'zh-TW' || lang === 'zh-CN') {
+  if (lang === 'zhTW' || lang === 'zh-CN') {
     langSuffix = 'zh';
   }
   

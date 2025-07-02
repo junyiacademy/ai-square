@@ -130,7 +130,7 @@ export async function POST(
     const program = await pblProgramService.createProgram(
       userEmail,
       scenarioId,
-      language === 'zh' || language === 'zh-TW' ? (scenario.title_zh || scenario.title) : scenario.title,
+      language === 'zh' || language === 'zhTW' ? (scenario.title_zh || scenario.title) : scenario.title,
       scenario.tasks.length,
       language
     );
@@ -145,7 +145,7 @@ export async function POST(
         scenarioId,
         program.id,
         firstTask.id,
-        language === 'zh' || language === 'zh-TW' ? (firstTask.title_zh || firstTask.title) : firstTask.title
+        language === 'zh' || language === 'zhTW' ? (firstTask.title_zh || firstTask.title) : firstTask.title
       );
       
       // Update program with current task

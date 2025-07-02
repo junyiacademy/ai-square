@@ -10,7 +10,7 @@ interface LanguageLoader {
 // 定義語言載入器 - 使用 fetch 替代 dynamic import 來避免 TypeScript 模組解析問題
 export const languageLoaders: LanguageLoader = {
   'en': () => fetch('/locales/en/common.json').then(res => res.json()),
-  'zh-TW': () => fetch('/locales/zh-TW/common.json').then(res => res.json()),
+  'zhTW': () => fetch('/locales/zhTW/common.json').then(res => res.json()),
   'es': () => fetch('/locales/es/common.json').then(res => res.json()),
   'ja': () => fetch('/locales/ja/common.json').then(res => res.json()),
   'ko': () => fetch('/locales/ko/common.json').then(res => res.json()),
@@ -58,14 +58,14 @@ export async function loadLanguage(lang: string): Promise<Record<string, unknown
  * 預載常用語言
  */
 export async function preloadCommonLanguages() {
-  const commonLanguages = ['en', 'zh-TW']
+  const commonLanguages = ['en', 'zhTW']
   await Promise.all(commonLanguages.map(lang => loadLanguage(lang)))
 }
 
 /**
  * 清理不常用的語言快取
  */
-export function cleanupLanguageCache(keepLanguages: string[] = ['en', 'zh-TW']) {
+export function cleanupLanguageCache(keepLanguages: string[] = ['en', 'zhTW']) {
   loadedLanguages.forEach((_, lang) => {
     if (!keepLanguages.includes(lang)) {
       loadedLanguages.delete(lang)

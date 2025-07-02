@@ -86,14 +86,14 @@ interface TreeData {
 
 /**
  * 這是一個通用的翻譯輔助函式。
- * 它會完全複製您原本 `lang === 'zh-TW'` 的判斷邏輯，並將其擴充到所有語言。
+ * 它會完全複製您原本 `lang === 'zhTW'` 的判斷邏輯，並將其擴充到所有語言。
  */
 const getTranslatedText = (lang: string, item: object | null, fieldName: string): unknown => {
   if (!item) return '';
 
   const record = item as Record<string, unknown>;
 
-  if (lang === 'zh-TW') {
+  if (lang === 'zhTW') {
     const zhKey = `${fieldName}_zh`;
     return record[zhKey] ?? record[fieldName];
   }

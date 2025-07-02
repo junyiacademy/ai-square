@@ -209,11 +209,11 @@ describe('ContentService', () => {
     it('should clear relations and KSA cache for specific language', async () => {
       ;(cacheService.delete as jest.Mock).mockResolvedValue(undefined)
 
-      await contentService.clearLanguageCache('zh-TW')
+      await contentService.clearLanguageCache('zhTW')
 
       expect(cacheService.delete).toHaveBeenCalledTimes(2)
-      expect(cacheService.delete).toHaveBeenCalledWith('relations:zh-TW')
-      expect(cacheService.delete).toHaveBeenCalledWith('ksa:zh-TW')
+      expect(cacheService.delete).toHaveBeenCalledWith('relations:zhTW')
+      expect(cacheService.delete).toHaveBeenCalledWith('ksa:zhTW')
     })
 
     it('should handle errors during cache deletion', async () => {
@@ -299,7 +299,7 @@ describe('ContentService', () => {
 
   describe('integration tests', () => {
     it('should support multiple languages', async () => {
-      const languages = ['en', 'zh-TW', 'es', 'ja', 'ko']
+      const languages = ['en', 'zhTW', 'es', 'ja', 'ko']
       
       for (const lang of languages) {
         ;(cacheService.fetchWithCache as jest.Mock).mockResolvedValue({ data: lang })

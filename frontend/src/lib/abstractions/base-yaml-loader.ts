@@ -255,14 +255,13 @@ export abstract class BaseYAMLLoader<T = unknown> {
     language: string,
     fallbackLanguage: string
   ): unknown {
-    // 處理 zh-TW -> zh 映射
-    let langCode = language;
-    if (language === 'zh-TW') {
-      langCode = 'zh';
-    }
-
     // 嘗試取得指定語言的欄位
     if (language !== 'en') {
+      // 處理 zhTW -> zh 映射 (YAML 檔案中使用 zh 後綴)
+      let langCode = language;
+      if (language === 'zhTW') {
+        langCode = 'zh';
+      }
       const translatedField = `${fieldName}_${langCode}`;
       if (obj[translatedField] !== undefined) {
         return obj[translatedField];

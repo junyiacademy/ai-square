@@ -82,7 +82,7 @@ describe('/api/pbl/scenarios', () => {
     });
 
     it('returns translated data for Chinese', async () => {
-      const request = new Request('http://localhost/api/pbl/scenarios?lang=zh-TW');
+      const request = new Request('http://localhost/api/pbl/scenarios?lang=zhTW');
       const response = await GET(request);
       const data = await response.json();
 
@@ -126,7 +126,7 @@ describe('/api/pbl/scenarios', () => {
     });
 
     it('includes placeholder scenarios with correct translations', async () => {
-      const request = new Request('http://localhost/api/pbl/scenarios?lang=zh-TW');
+      const request = new Request('http://localhost/api/pbl/scenarios?lang=zhTW');
       const response = await GET(request);
       const data = await response.json();
 

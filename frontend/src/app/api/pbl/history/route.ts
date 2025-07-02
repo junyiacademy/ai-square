@@ -58,7 +58,7 @@ function getLocalizedValue(data: ScenarioInfo | ScenarioYAML, fieldName: string,
   const languageMap: Record<string, string> = {
     'en': 'en',
     'zh': 'zh',
-    'zh-TW': 'zh',
+    'zhTW': 'zh',
     'zh-CN': 'zh',
     'es': 'es',
     'ja': 'ja',

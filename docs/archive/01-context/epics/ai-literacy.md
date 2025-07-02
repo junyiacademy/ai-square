@@ -137,7 +137,7 @@ domains:
 
 ### API 設計
 ```typescript
-// GET /api/relations?lang=zh-TW
+// GET /api/relations?lang=zhTW
 interface AILiteracyResponse {
   domains: Domain[]
   kMap: Record<string, KSAItem>

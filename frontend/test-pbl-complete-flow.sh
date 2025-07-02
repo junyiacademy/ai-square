@@ -37,7 +37,7 @@ create_session() {
             \"scenarioTitle\": \"AI 輔助求職訓練\",
             \"userId\": \"3\",
             \"userEmail\": \"teacher@example.com\",
-            \"language\": \"zh-TW\",
+            \"language\": \"zhTW\",
             \"stageIndex\": ${stage_index},
             \"stageId\": \"${stage_id}\",
             \"stageTitle\": \"${stage_title}\",
@@ -78,7 +78,7 @@ send_chat_message() {
     "sessionId": "${session_id}",
     "message": "${message}",
     "userId": "3",
-    "language": "zh-TW",
+    "language": "zhTW",
     "aiModule": {
         "role": "assistant",
         "model": "gemini-2.0-flash-exp",
@@ -150,7 +150,7 @@ analyze_task() {
             \"sessionId\": \"${session_id}\",
             \"stageId\": \"${stage_id}\",
             \"taskId\": \"${task_id}\",
-            \"language\": \"zh-TW\"
+            \"language\": \"zhTW\"
         }")
     
     local success=$(echo $response | jq -r '.success // false')
@@ -246,7 +246,7 @@ fi
 
 # Check history to see all sessions
 echo -e "\n${YELLOW}=== 檢查歷史記錄 ===${NC}"
-HISTORY=$(curl -s "${API_URL}/pbl/history?lang=zh-TW" \
+HISTORY=$(curl -s "${API_URL}/pbl/history?lang=zhTW" \
     -H "Cookie: ${USER_COOKIE}")
 
 TOTAL=$(echo $HISTORY | jq '.data | length')

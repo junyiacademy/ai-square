@@ -76,7 +76,7 @@ Acceptance Criteria:
 | 語言代碼 | 語言名稱 | 原生名稱 | 狀態 |
 |---------|---------|---------|------|
 | en | English | English | ✅ 完成 |
-| zh-TW | Traditional Chinese | 繁體中文 | ✅ 完成 |
+| zhTW | Traditional Chinese | 繁體中文 | ✅ 完成 |
 | es | Spanish | Español | ✅ 完成 |
 | ja | Japanese | 日本語 | ✅ 完成 |
 | ko | Korean | 한국어 | ✅ 完成 |
@@ -132,7 +132,7 @@ interface CompetencyContent {
 }
 
 // API 回應動態翻譯
-GET /api/relations?lang=zh-TW
+GET /api/relations?lang=zhTW
 ```
 
 ## 🎨 使用者介面
@@ -145,7 +145,7 @@ GET /api/relations?lang=zh-TW
   className="language-selector"
 >
   <option value="en">English</option>
-  <option value="zh-TW">繁體中文</option>
+  <option value="zhTW">繁體中文</option>
   <option value="es">Español</option>
   {/* ... 其他語言 */}
 </select>
@@ -165,7 +165,7 @@ Feature: 自動語言偵測
 
 Scenario: 首次訪問自動偵測
   Given 用戶首次訪問 /relations 頁面
-  And 瀏覽器語言設定為 "zh-TW"
+  And 瀏覽器語言設定為 "zhTW"
   When 頁面載入完成
   Then 介面應該顯示繁體中文
   And 語言選擇器應該選中 "繁體中文"

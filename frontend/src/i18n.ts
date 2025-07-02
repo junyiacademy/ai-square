@@ -2,7 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 // Relations 翻譯
-import zhTWRelations from '../public/locales/zh-TW/relations.json';
+import zhTWRelations from '../public/locales/zhTW/relations.json';
 import enRelations from '../public/locales/en/relations.json';
 import esRelations from '../public/locales/es/relations.json';
 import jaRelations from '../public/locales/ja/relations.json';
@@ -13,7 +13,7 @@ import ruRelations from '../public/locales/ru/relations.json';
 import itRelations from '../public/locales/it/relations.json';
 
 // Auth 翻譯
-import zhTWAuth from '../public/locales/zh-TW/auth.json';
+import zhTWAuth from '../public/locales/zhTW/auth.json';
 import enAuth from '../public/locales/en/auth.json';
 import esAuth from '../public/locales/es/auth.json';
 import jaAuth from '../public/locales/ja/auth.json';
@@ -24,7 +24,7 @@ import ruAuth from '../public/locales/ru/auth.json';
 import itAuth from '../public/locales/it/auth.json';
 
 // Navigation 翻譯
-import zhTWNavigation from '../public/locales/zh-TW/navigation.json';
+import zhTWNavigation from '../public/locales/zhTW/navigation.json';
 import enNavigation from '../public/locales/en/navigation.json';
 import esNavigation from '../public/locales/es/navigation.json';
 import jaNavigation from '../public/locales/ja/navigation.json';
@@ -35,7 +35,7 @@ import ruNavigation from '../public/locales/ru/navigation.json';
 import itNavigation from '../public/locales/it/navigation.json';
 
 // KSA 翻譯
-import zhTWKsa from '../public/locales/zh-TW/ksa.json';
+import zhTWKsa from '../public/locales/zhTW/ksa.json';
 import enKsa from '../public/locales/en/ksa.json';
 import esKsa from '../public/locales/es/ksa.json';
 import jaKsa from '../public/locales/ja/ksa.json';
@@ -46,7 +46,7 @@ import ruKsa from '../public/locales/ru/ksa.json';
 import itKsa from '../public/locales/it/ksa.json';
 
 // Assessment 翻譯
-import zhTWAssessment from '../public/locales/zh-TW/assessment.json';
+import zhTWAssessment from '../public/locales/zhTW/assessment.json';
 import enAssessment from '../public/locales/en/assessment.json';
 import esAssessment from '../public/locales/es/assessment.json';
 import jaAssessment from '../public/locales/ja/assessment.json';
@@ -57,7 +57,7 @@ import ruAssessment from '../public/locales/ru/assessment.json';
 import itAssessment from '../public/locales/it/assessment.json';
 
 // Homepage 翻譯
-import zhTWHomepage from '../public/locales/zh-TW/homepage.json';
+import zhTWHomepage from '../public/locales/zhTW/homepage.json';
 import enHomepage from '../public/locales/en/homepage.json';
 import esHomepage from '../public/locales/es/homepage.json';
 import jaHomepage from '../public/locales/ja/homepage.json';
@@ -68,7 +68,7 @@ import ruHomepage from '../public/locales/ru/homepage.json';
 import itHomepage from '../public/locales/it/homepage.json';
 
 // PBL 翻譯
-import zhTWPbl from '../public/locales/zh-TW/pbl.json';
+import zhTWPbl from '../public/locales/zhTW/pbl.json';
 import enPbl from '../public/locales/en/pbl.json';
 import esPbl from '../public/locales/es/pbl.json';
 import jaPbl from '../public/locales/ja/pbl.json';
@@ -92,7 +92,7 @@ import enDashboard from '../public/locales/en/dashboard.json';
 
 // Chat 翻譯
 import enChat from '../public/locales/en/chat.json';
-import zhTWChat from '../public/locales/zh-TW/chat.json';
+import zhTWChat from '../public/locales/zhTW/chat.json';
 
 // 在伺服器端和客戶端都使用相同的預設語言避免 hydration mismatch
 const getDefaultLng = () => {
@@ -105,7 +105,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources: {
-      'zh-TW': { 
+      'zhTW': { 
         relations: zhTWRelations,
         auth: zhTWAuth,
         navigation: zhTWNavigation,

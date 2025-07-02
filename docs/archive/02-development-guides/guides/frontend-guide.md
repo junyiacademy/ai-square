@@ -38,7 +38,7 @@ frontend/
 ├── public/
 │   ├── locales/            # Translation Files
 │   │   ├── en/relations.json
-│   │   ├── zh-TW/relations.json
+│   │   ├── zhTW/relations.json
 │   │   └── ...
 │   └── rubrics_data/       # YAML Data Files
 │       ├── ai_lit_domains.yaml
@@ -134,7 +134,7 @@ const getDefaultLng = (): string => {
     
     for (const lang of supportedLangs) {
       if (browserLang.startsWith(lang.replace('-', ''))) {
-        return lang === 'zh-tw' ? 'zh-TW' : lang
+        return lang === 'zh-tw' ? 'zhTW' : lang
       }
     }
   }
@@ -146,7 +146,7 @@ i18n
   .init({
     resources: {
       en: { translation: require('../public/locales/en/relations.json') },
-      'zh-TW': { translation: require('../public/locales/zh-TW/relations.json') },
+      'zhTW': { translation: require('../public/locales/zhTW/relations.json') },
       // ... 其他語言
     },
     lng: getDefaultLng(),
@@ -166,7 +166,7 @@ import { useTranslation } from 'react-i18next'
 
 const languages = [
   { code: 'en', name: 'English' },
-  { code: 'zh-TW', name: '繁體中文' },
+  { code: 'zhTW', name: '繁體中文' },
   { code: 'es', name: 'Español' },
   // ... 其他語言
 ]
@@ -334,7 +334,7 @@ export function DomainCard({ domain, onExpand }) {
 
 // 3. 頁面組件 (app/*/page.tsx)
 export default function RelationsPage() {
-  const { data, loading, error } = useAILiteracy('zh-TW')
+  const { data, loading, error } = useAILiteracy('zhTW')
   
   if (loading) return <LoadingSpinner />
   if (error) return <ErrorMessage error={error} />

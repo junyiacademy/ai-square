@@ -42,6 +42,7 @@ const ErrorDashboard: React.FC = () => {
   };
 
   const formatTimestamp = (timestamp: string) => {
+    // Use zh-TW for browser API (toLocaleString expects standard locale format)
     return new Date(timestamp).toLocaleString('zh-TW', {
       month: 'short',
       day: 'numeric',

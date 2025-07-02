@@ -49,7 +49,7 @@ async function testTaskSwitching() {
     console.log('1. Creating new program...');
     const createRes = await makeRequest(`/api/pbl/scenarios/${SCENARIO_ID}/start`, {
       method: 'POST',
-      body: JSON.stringify({ language: 'zh-TW' })
+      body: JSON.stringify({ language: 'zhTW' })
     });
 
     if (!createRes.success) {

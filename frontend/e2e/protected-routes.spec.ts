@@ -140,7 +140,7 @@ test.describe('受保護路由測試', () => {
 
   test('URL 參數保留', async ({ page }) => {
     // 帶參數訪問受保護路由
-    const routeWithParams = '/relations?lang=zh-TW&view=graph'
+    const routeWithParams = '/relations?lang=zhTW&view=graph'
     
     // 未登入時訪問
     await page.goto(routeWithParams)

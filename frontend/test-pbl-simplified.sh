@@ -28,7 +28,7 @@ RESPONSE=$(curl -s -X POST "${API_URL}/pbl/sessions" \
         "scenarioTitle": "AI 輔助求職訓練",
         "userId": "3",
         "userEmail": "teacher@example.com",
-        "language": "zh-TW",
+        "language": "zhTW",
         "stageIndex": 0,
         "stageId": "stage-1-research",
         "stageTitle": "職缺市場研究",
@@ -59,7 +59,7 @@ CHAT_RESPONSE=$(curl -s -X POST "${API_URL}/pbl/chat" \
         \"sessionId\": \"${SESSION_ID}\",
         \"message\": \"請問如何分析科技產業的未來趨勢？\",
         \"userId\": \"3\",
-        \"language\": \"zh-TW\",
+        \"language\": \"zhTW\",
         \"aiModule\": {
             \"role\": \"assistant\",
             \"model\": \"gemini-2.5-flash\",
@@ -99,7 +99,7 @@ echo -e "\n${BLUE}Checking history...${NC}"
 
 sleep 2  # Give time for the log to be saved
 
-HISTORY=$(curl -s "${API_URL}/pbl/history?lang=zh-TW" \
+HISTORY=$(curl -s "${API_URL}/pbl/history?lang=zhTW" \
     -H "Cookie: ${USER_COOKIE}")
 
 TOTAL=$(echo $HISTORY | jq '.data | length')

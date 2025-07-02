@@ -4,7 +4,7 @@ async function captureScreenshots() {
   const browser = await chromium.launch();
   const context = await browser.newContext({
     viewport: { width: 1920, height: 1080 },
-    locale: 'zh-TW'
+    locale: 'zhTW'
   });
   const page = await context.newPage();
 

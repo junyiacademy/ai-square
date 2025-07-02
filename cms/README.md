@@ -40,7 +40,7 @@ The CMS will be available at http://localhost:3001
 - **Vertex AI Integration**: LLM-powered content assistance
 - **AI Quick Actions**:
   - Complete incomplete YAML content
-  - Translate to 9 languages (en, zh-TW, es, ja, ko, fr, de, ru, it)
+  - Translate to 9 languages (en, zhTW, es, ja, ko, fr, de, ru, it)
   - Improve content quality and validation
 - **Smart Chat**: Context-aware AI assistant for content editing
 
@@ -91,7 +91,7 @@ The CMS will be available at http://localhost:3001
 
 ### Supported Languages
 - English (en)
-- Traditional Chinese (zh-TW)
+- Traditional Chinese (zhTW)
 - Spanish (es)
 - Japanese (ja)
 - Korean (ko)

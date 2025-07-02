@@ -10,7 +10,7 @@ interface Language {
 
 const languages: Language[] = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'zh-TW', name: '繁體中文', flag: '🇹🇼' },
+  { code: 'zhTW', name: '繁體中文', flag: '🇹🇼' },
   { code: 'es', name: 'Español', flag: '🇪🇸' },
   { code: 'ja', name: '日本語', flag: '🇯🇵' },
   { code: 'ko', name: '한국어', flag: '🇰🇷' },

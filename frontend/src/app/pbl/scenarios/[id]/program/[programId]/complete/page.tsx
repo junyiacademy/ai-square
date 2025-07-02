@@ -252,7 +252,7 @@ export default function ProgramCompletePage() {
   }
   
   const scenarioTitle = scenarioData ? (
-    i18n.language === 'zh' || i18n.language === 'zh-TW' 
+    i18n.language === 'zh' || i18n.language === 'zhTW' 
       ? (scenarioData.title_zh || scenarioData.title)
       : scenarioData.title
   ) : 'Scenario';
@@ -568,7 +568,7 @@ export default function ProgramCompletePage() {
               const matchedTask = scenarioData?.tasks?.find((t) => t.id === task.taskId);
               const taskTitle = matchedTask?.title || task.taskId;
               const taskTitleLocalized = matchedTask ? (
-                i18n.language === 'zh' || i18n.language === 'zh-TW' 
+                i18n.language === 'zh' || i18n.language === 'zhTW' 
                   ? (matchedTask.title_zh || taskTitle)
                   : taskTitle
               ) : taskTitle;

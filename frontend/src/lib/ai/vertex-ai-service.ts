@@ -253,7 +253,7 @@ export function createPBLVertexAIService(
   },
   language: string = 'en'
 ): VertexAIService {
-  const languageInstruction = language === 'zh-TW' || language === 'zh' 
+  const languageInstruction = language === 'zhTW' || language === 'zh' 
     ? 'IMPORTANT: Always respond in Traditional Chinese (繁體中文). Do not mix languages.'
     : 'IMPORTANT: Always respond in English only. Do not mix languages.';
 

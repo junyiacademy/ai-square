@@ -47,7 +47,7 @@ echo -e "\n${BLUE}2. 創建新 Journey...${NC}"
 CREATE_RESPONSE=$(curl -s "${API_URL}/pbl/journeys" \
     -H "Cookie: ${USER_COOKIE}" \
     -H "Content-Type: application/json" \
-    -d '{"scenarioId": "'$SCENARIO_ID'", "language": "zh-TW"}')
+    -d '{"scenarioId": "'$SCENARIO_ID'", "language": "zhTW"}')
 
 echo $CREATE_RESPONSE | jq '.success' > /dev/null 2>&1
 if [ $? -eq 0 ]; then
@@ -81,7 +81,7 @@ if [ -n "$JOURNEY_ID" ]; then
             "taskId": "task-1-1",
             "message": "你好，我想開始這個任務",
             "userId": "3",
-            "language": "zh-TW"
+            "language": "zhTW"
         }')
     
     echo $CHAT_RESPONSE | jq '.success' > /dev/null 2>&1

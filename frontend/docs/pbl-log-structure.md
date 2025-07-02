@@ -19,7 +19,7 @@ interface PBLLogData {
   
   // 狀態和語言
   status: 'in_progress' | 'completed' | 'paused';
-  language: string;        // 語言代碼 (例: "zh-TW")
+  language: string;        // 語言代碼 (例: "zhTW")
   
   // 進度追蹤
   progress: {

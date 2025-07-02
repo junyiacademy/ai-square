@@ -94,7 +94,7 @@ describe('/api/assessment', () => {
   });
 
   it('returns translated assessment data for Chinese', async () => {
-    const request = new Request('http://localhost/api/assessment?lang=zh-TW');
+    const request = new Request('http://localhost/api/assessment?lang=zhTW');
     const response = await GET(request as any);
     const data = await response.json();
 
@@ -189,7 +189,7 @@ describe('/api/assessment', () => {
 
     mockContentService.getContent.mockResolvedValue(multiQuestionData);
 
-    const request = new Request('http://localhost/api/assessment?lang=zh-TW');
+    const request = new Request('http://localhost/api/assessment?lang=zhTW');
     const response = await GET(request as any);
     const data = await response.json();
 

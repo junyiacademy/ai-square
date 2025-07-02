@@ -29,7 +29,7 @@ function getLocalizedField<T extends Record<string, unknown>>(obj: T | null | un
   let langSuffix = language;
   
   // Special case for Chinese
-  if (language === 'zh-TW' || language === 'zh') {
+  if (language === 'zhTW' || language === 'zh') {
     langSuffix = 'zh';
   }
   
@@ -48,7 +48,7 @@ function getLocalizedArrayField<T extends Record<string, unknown>>(obj: T | null
   let langSuffix = language;
   
   // Special case for Chinese
-  if (language === 'zh-TW' || language === 'zh') {
+  if (language === 'zhTW' || language === 'zh') {
     langSuffix = 'zh';
   }
   

@@ -129,7 +129,7 @@ export async function POST(
     const program = await pblProgramService.createProgram(
       userEmail,
       scenarioId,
-      language === 'zh' || language === 'zh-TW' ? (scenario.title_zh || scenario.title) : scenario.title,
+      language === 'zh' || language === 'zhTW' ? (scenario.title_zh || scenario.title) : scenario.title,
       scenario.tasks.length,
       language,
       'draft' // Create as draft status

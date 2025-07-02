@@ -78,7 +78,7 @@ describe('I18nProvider', () => {
   });
 
   it('changes language when saved language differs from current', async () => {
-    mockLocalStorage.getItem.mockReturnValue('zh-TW');
+    mockLocalStorage.getItem.mockReturnValue('zhTW');
     (i18n as any).language = 'en';
 
     render(
@@ -92,7 +92,7 @@ describe('I18nProvider', () => {
     });
 
     expect(mockLocalStorage.getItem).toHaveBeenCalledWith('ai-square-language');
-    expect(i18n.changeLanguage).toHaveBeenCalledWith('zh-TW');
+    expect(i18n.changeLanguage).toHaveBeenCalledWith('zhTW');
   });
 
   it('does not change language when saved language is same as current', async () => {
@@ -133,7 +133,7 @@ describe('I18nProvider', () => {
   });
 
   it('handles i18n.changeLanguage errors gracefully', async () => {
-    mockLocalStorage.getItem.mockReturnValue('zh-TW');
+    mockLocalStorage.getItem.mockReturnValue('zhTW');
     (i18n.changeLanguage as jest.Mock).mockRejectedValue(new Error('Change language error'));
 
     // Should not throw error

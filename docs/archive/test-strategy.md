@@ -32,15 +32,15 @@ AI Square 採用**測試驅動開發 (TDD)** 和**行為驅動開發 (BDD)** 相
 ```typescript
 // 純函數邏輯
 describe('getTranslatedText', () => {
-  it('should return Chinese text when lang is zh-TW', () => {
+  it('should return Chinese text when lang is zhTW', () => {
     const item = { description: 'Hello', description_zh: '你好' }
-    const result = getTranslatedText('zh-TW', item, 'description')
+    const result = getTranslatedText('zhTW', item, 'description')
     expect(result).toBe('你好')
   })
   
   it('should fallback to English when translation missing', () => {
     const item = { description: 'Hello' }
-    const result = getTranslatedText('zh-TW', item, 'description')
+    const result = getTranslatedText('zhTW', item, 'description')
     expect(result).toBe('Hello')
   })
 })
@@ -83,7 +83,7 @@ describe('CompetencyEvaluationService', () => {
 describe('/api/relations', () => {
   it('should return AI literacy data for valid language', async () => {
     const response = await request(app)
-      .get('/api/relations?lang=zh-TW')
+      .get('/api/relations?lang=zhTW')
       .expect(200)
     
     expect(response.body).toHaveProperty('domains')
@@ -121,7 +121,7 @@ describe('I18n System Integration', () => {
   it('should load translations and render correctly', async () => {
     const { getByText } = render(<RelationsPage />, {
       wrapper: ({ children }) => (
-        <I18nextProvider i18n={createTestI18n('zh-TW')}>
+        <I18nextProvider i18n={createTestI18n('zhTW')}>
           {children}
         </I18nextProvider>
       )
@@ -155,7 +155,7 @@ describe('AI Literacy Exploration Journey', () => {
     await page.goto('/relations')
     
     // 語言選擇
-    await page.selectOption('[data-testid="language-selector"]', 'zh-TW')
+    await page.selectOption('[data-testid="language-selector"]', 'zhTW')
     await page.waitForLoadState('networkidle')
     
     // 驗證中文介面

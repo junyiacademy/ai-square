@@ -78,7 +78,7 @@ interface ScenarioResponse {
 function getLocalizedValue<T = unknown>(data: Record<string, T>, fieldName: string, lang: string): T | string {
   // Map language codes to suffixes
   let langSuffix = lang;
-  if (lang === 'zh-TW' || lang === 'zh-CN') {
+  if (lang === 'zhTW' || lang === 'zh-CN') {
     langSuffix = 'zh';
   }
   

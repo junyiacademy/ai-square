@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
 
     // Utility function to get translated field
     const getTranslatedField = (obj: Record<string, unknown>, fieldName: string, language: string): string => {
-      // 處理 zh-TW -> zh_TW 的轉換
+      // 處理 zhTW -> zh_TW 的轉換
       let langKey = language.replace('-', '_');
       
       // 對於中文，使用 zh 而不是 zh_TW
