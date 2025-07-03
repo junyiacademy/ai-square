@@ -1,49 +1,49 @@
 {
-  "welcome": "Welcome back, {{name}}! [Thai]",
-  "subtitle": "Here's your AI literacy progress overview [Thai]",
-  "aiLiteracyProgress": "AI Literacy Progress [Thai]",
+  "welcome": "ยินดีต้อนรับกลับมา {{name}}!",
+  "subtitle": "นี่คือภาพรวมความก้าวหน้าด้านการรู้เท่าทัน AI ของคุณ",
+  "aiLiteracyProgress": "ความก้าวหน้าการรู้เท่าทัน AI",
   "domains": {
-    "engaging_with_ai": "Engaging with AI [Thai]",
-    "creating_with_ai": "Creating with AI [Thai]",
-    "managing_with_ai": "Managing with AI [Thai]",
-    "designing_with_ai": "Designing with AI [Thai]"
+    "engaging_with_ai": "การมีปฏิสัมพันธ์กับ AI",
+    "creating_with_ai": "การสร้างสรรค์ด้วย AI",
+    "managing_with_ai": "การจัดการด้วย AI",
+    "designing_with_ai": "การออกแบบด้วย AI"
   },
-  "viewDetailedProgress": "View detailed learning path [Thai]",
-  "learningStatistics": "Learning Statistics [Thai]",
-  "completedScenarios": "Completed [Thai]",
-  "inProgress": "In Progress [Thai]",
-  "learningHours": "Hours [Thai]",
-  "dayStreak": "Day Streak [Thai]",
-  "recentActivities": "Recent Activities [Thai]",
-  "noRecentActivities": "No recent activities. Start learning to see your progress here! [Thai]",
+  "viewDetailedProgress": "ดูเส้นทางการเรียนรู้โดยละเอียด",
+  "learningStatistics": "สถิติการเรียนรู้",
+  "completedScenarios": "เสร็จสิ้น",
+  "inProgress": "กำลังดำเนินการ",
+  "learningHours": "ชั่วโมง",
+  "dayStreak": "วันต่อเนื่อง",
+  "recentActivities": "กิจกรรมล่าสุด",
+  "noRecentActivities": "ไม่มีกิจกรรมล่าสุด เริ่มเรียนรู้เพื่อดูความก้าวหน้าของคุณที่นี่!",
   "activities": {
-    "completedAssessment": "Completed AI Literacy Assessment [Thai]",
-    "assessmentDesc": "Discovered your AI knowledge baseline [Thai]"
+    "completedAssessment": "เสร็จสิ้นการประเมินการรู้เท่าทัน AI",
+    "assessmentDesc": "ค้นพบพื้นฐานความรู้ AI ของคุณ"
   },
-  "recommendedActions": "Recommended Next Steps [Thai]",
+  "recommendedActions": "ขั้นตอนต่อไปที่แนะนำ",
   "nextActions": {
-    "takeAssessment": "Take AI Literacy Assessment [Thai]",
-    "assessmentDesc": "Discover your current AI knowledge level and get personalized recommendations [Thai]",
-    "viewLearningPath": "View Your Learning Path [Thai]",
-    "learningPathDesc": "See personalized recommendations based on your assessment results [Thai]",
-    "startPBL": "Start a PBL Scenario [Thai]",
-    "pblDesc": "Practice real-world AI skills with interactive scenarios [Thai]"
+    "takeAssessment": "ทำการประเมินการรู้เท่าทัน AI",
+    "assessmentDesc": "ค้นพบระดับความรู้ AI ปัจจุบันของคุณและรับคำแนะนำเฉพาะบุคคล",
+    "viewLearningPath": "ดูเส้นทางการเรียนรู้ของคุณ",
+    "learningPathDesc": "ดูคำแนะนำเฉพาะบุคคลตามผลการประเมินของคุณ",
+    "startPBL": "เริ่มสถานการณ์ PBL",
+    "pblDesc": "ฝึกฝนทักษะ AI ในโลกแห่งความเป็นจริงด้วยสถานการณ์แบบโต้ตอบ"
   },
   "priority": {
-    "high": "High [Thai]",
-    "medium": "Medium [Thai]",
-    "low": "Low [Thai]"
+    "high": "สูง",
+    "medium": "ปานกลาง",
+    "low": "ต่ำ"
   },
-  "quickLinks": "Quick Links [Thai]",
-  "explorePBL": "Explore PBL Scenarios [Thai]",
-  "viewCompetencies": "View AI Competencies [Thai]",
-  "viewHistory": "View Learning History [Thai]",
-  "exploreKSA": "Explore Knowledge Map [Thai]",
-  "yourGoals": "Your Learning Goals [Thai]",
-  "updateGoals": "Update your goals [Thai]",
-  "learningPathQuickAccess": "Personalized Learning Recommendations [Thai]",
-  "learningPathDescription": "Explore AI learning scenarios tailored to your assessment results and interests. Choose the areas that best suit your needs. [Thai]",
-  "viewAllPaths": "View All Learning Paths [Thai]",
-  "focusOnWeakAreas": "Focus on Weak Areas [Thai]",
-  "aiAdvisor": "AI Learning Advisor [Thai]"
+  "quickLinks": "ลิงก์ด่วน",
+  "explorePBL": "สำรวจสถานการณ์ PBL",
+  "viewCompetencies": "ดูสมรรถนะ AI",
+  "viewHistory": "ดูประวัติการเรียนรู้",
+  "exploreKSA": "สำรวจแผนที่ความรู้",
+  "yourGoals": "เป้าหมายการเรียนรู้ของคุณ",
+  "updateGoals": "อัปเดตเป้าหมายของคุณ",
+  "learningPathQuickAccess": "คำแนะนำการเรียนรู้เฉพาะบุคคล",
+  "learningPathDescription": "สำรวจสถานการณ์การเรียนรู้ AI ที่ปรับแต่งให้เหมาะกับผลการประเมินและความสนใจของคุณ เลือกพื้นที่ที่เหมาะสมกับความต้องการของคุณมากที่สุด",
+  "viewAllPaths": "ดูเส้นทางการเรียนรู้ทั้งหมด",
+  "focusOnWeakAreas": "มุ่งเน้นจุดอ่อน",
+  "aiAdvisor": "ที่ปรึกษาการเรียนรู้ AI"
 }

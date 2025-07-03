@@ -1,49 +1,49 @@
 {
-  "welcome": "Welcome back, {{name}}! [Arabic]",
-  "subtitle": "Here's your AI literacy progress overview [Arabic]",
-  "aiLiteracyProgress": "AI Literacy Progress [Arabic]",
+  "welcome": "أهلاً بعودتك، {{name}}!",
+  "subtitle": "إليك نظرة عامة على تقدمك في محو الأمية بالذكاء الاصطناعي",
+  "aiLiteracyProgress": "تقدم محو الأمية بالذكاء الاصطناعي",
   "domains": {
-    "engaging_with_ai": "Engaging with AI [Arabic]",
-    "creating_with_ai": "Creating with AI [Arabic]",
-    "managing_with_ai": "Managing with AI [Arabic]",
-    "designing_with_ai": "Designing with AI [Arabic]"
+    "engaging_with_ai": "التفاعل مع الذكاء الاصطناعي",
+    "creating_with_ai": "الإبداع مع الذكاء الاصطناعي",
+    "managing_with_ai": "الإدارة مع الذكاء الاصطناعي",
+    "designing_with_ai": "التصميم مع الذكاء الاصطناعي"
   },
-  "viewDetailedProgress": "View detailed learning path [Arabic]",
-  "learningStatistics": "Learning Statistics [Arabic]",
-  "completedScenarios": "Completed [Arabic]",
-  "inProgress": "In Progress [Arabic]",
-  "learningHours": "Hours [Arabic]",
-  "dayStreak": "Day Streak [Arabic]",
-  "recentActivities": "Recent Activities [Arabic]",
-  "noRecentActivities": "No recent activities. Start learning to see your progress here! [Arabic]",
+  "viewDetailedProgress": "عرض مسار التعلم التفصيلي",
+  "learningStatistics": "إحصائيات التعلم",
+  "completedScenarios": "مكتمل",
+  "inProgress": "قيد التقدم",
+  "learningHours": "ساعات",
+  "dayStreak": "سلسلة الأيام",
+  "recentActivities": "الأنشطة الأخيرة",
+  "noRecentActivities": "لا توجد أنشطة حديثة. ابدأ التعلم لرؤية تقدمك هنا!",
   "activities": {
-    "completedAssessment": "Completed AI Literacy Assessment [Arabic]",
-    "assessmentDesc": "Discovered your AI knowledge baseline [Arabic]"
+    "completedAssessment": "تم إكمال تقييم محو الأمية بالذكاء الاصطناعي",
+    "assessmentDesc": "اكتشف خط الأساس لمعرفتك بالذكاء الاصطناعي"
   },
-  "recommendedActions": "Recommended Next Steps [Arabic]",
+  "recommendedActions": "الخطوات التالية الموصى بها",
   "nextActions": {
-    "takeAssessment": "Take AI Literacy Assessment [Arabic]",
-    "assessmentDesc": "Discover your current AI knowledge level and get personalized recommendations [Arabic]",
-    "viewLearningPath": "View Your Learning Path [Arabic]",
-    "learningPathDesc": "See personalized recommendations based on your assessment results [Arabic]",
-    "startPBL": "Start a PBL Scenario [Arabic]",
-    "pblDesc": "Practice real-world AI skills with interactive scenarios [Arabic]"
+    "takeAssessment": "إجراء تقييم محو الأمية بالذكاء الاصطناعي",
+    "assessmentDesc": "اكتشف مستوى معرفتك الحالي بالذكاء الاصطناعي واحصل على توصيات شخصية",
+    "viewLearningPath": "عرض مسار التعلم الخاص بك",
+    "learningPathDesc": "شاهد التوصيات الشخصية بناءً على نتائج تقييمك",
+    "startPBL": "بدء سيناريو التعلم القائم على المشاكل",
+    "pblDesc": "مارس مهارات الذكاء الاصطناعي الواقعية مع السيناريوهات التفاعلية"
   },
   "priority": {
-    "high": "High [Arabic]",
-    "medium": "Medium [Arabic]",
-    "low": "Low [Arabic]"
+    "high": "عالية",
+    "medium": "متوسطة",
+    "low": "منخفضة"
   },
-  "quickLinks": "Quick Links [Arabic]",
-  "explorePBL": "Explore PBL Scenarios [Arabic]",
-  "viewCompetencies": "View AI Competencies [Arabic]",
-  "viewHistory": "View Learning History [Arabic]",
-  "exploreKSA": "Explore Knowledge Map [Arabic]",
-  "yourGoals": "Your Learning Goals [Arabic]",
-  "updateGoals": "Update your goals [Arabic]",
-  "learningPathQuickAccess": "Personalized Learning Recommendations [Arabic]",
-  "learningPathDescription": "Explore AI learning scenarios tailored to your assessment results and interests. Choose the areas that best suit your needs. [Arabic]",
-  "viewAllPaths": "View All Learning Paths [Arabic]",
-  "focusOnWeakAreas": "Focus on Weak Areas [Arabic]",
-  "aiAdvisor": "AI Learning Advisor [Arabic]"
+  "quickLinks": "روابط سريعة",
+  "explorePBL": "استكشف سيناريوهات التعلم القائم على المشاكل",
+  "viewCompetencies": "عرض كفاءات الذكاء الاصطناعي",
+  "viewHistory": "عرض تاريخ التعلم",
+  "exploreKSA": "استكشف خريطة المعرفة",
+  "yourGoals": "أهداف التعلم الخاصة بك",
+  "updateGoals": "تحديث أهدافك",
+  "learningPathQuickAccess": "توصيات التعلم الشخصية",
+  "learningPathDescription": "استكشف سيناريوهات تعلم الذكاء الاصطناعي المصممة خصيصاً لنتائج تقييمك واهتماماتك. اختر المجالات التي تناسب احتياجاتك بشكل أفضل.",
+  "viewAllPaths": "عرض جميع مسارات التعلم",
+  "focusOnWeakAreas": "التركيز على المناطق الضعيفة",
+  "aiAdvisor": "مستشار تعلم الذكاء الاصطناعي"
 }

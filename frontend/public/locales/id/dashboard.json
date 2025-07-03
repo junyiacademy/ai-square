@@ -1,49 +1,49 @@
 {
-  "welcome": "Welcome back, {{name}}! [Indonesian]",
-  "subtitle": "Here's your AI literacy progress overview [Indonesian]",
-  "aiLiteracyProgress": "AI Literacy Progress [Indonesian]",
+  "welcome": "Selamat datang kembali, {{name}}!",
+  "subtitle": "Berikut gambaran kemajuan literasi AI Anda",
+  "aiLiteracyProgress": "Kemajuan Literasi AI",
   "domains": {
-    "engaging_with_ai": "Engaging with AI [Indonesian]",
-    "creating_with_ai": "Creating with AI [Indonesian]",
-    "managing_with_ai": "Managing with AI [Indonesian]",
-    "designing_with_ai": "Designing with AI [Indonesian]"
+    "engaging_with_ai": "Berinteraksi dengan AI",
+    "creating_with_ai": "Berkreasi dengan AI",
+    "managing_with_ai": "Mengelola dengan AI",
+    "designing_with_ai": "Mendesain dengan AI"
   },
-  "viewDetailedProgress": "View detailed learning path [Indonesian]",
-  "learningStatistics": "Learning Statistics [Indonesian]",
-  "completedScenarios": "Completed [Indonesian]",
-  "inProgress": "In Progress [Indonesian]",
-  "learningHours": "Hours [Indonesian]",
-  "dayStreak": "Day Streak [Indonesian]",
-  "recentActivities": "Recent Activities [Indonesian]",
-  "noRecentActivities": "No recent activities. Start learning to see your progress here! [Indonesian]",
+  "viewDetailedProgress": "Lihat jalur pembelajaran terperinci",
+  "learningStatistics": "Statistik Pembelajaran",
+  "completedScenarios": "Selesai",
+  "inProgress": "Sedang Berlangsung",
+  "learningHours": "Jam",
+  "dayStreak": "Hari Berturut-turut",
+  "recentActivities": "Aktivitas Terkini",
+  "noRecentActivities": "Tidak ada aktivitas terkini. Mulai belajar untuk melihat kemajuan Anda di sini!",
   "activities": {
-    "completedAssessment": "Completed AI Literacy Assessment [Indonesian]",
-    "assessmentDesc": "Discovered your AI knowledge baseline [Indonesian]"
+    "completedAssessment": "Menyelesaikan Penilaian Literasi AI",
+    "assessmentDesc": "Menemukan dasar pengetahuan AI Anda"
   },
-  "recommendedActions": "Recommended Next Steps [Indonesian]",
+  "recommendedActions": "Langkah Selanjutnya yang Direkomendasikan",
   "nextActions": {
-    "takeAssessment": "Take AI Literacy Assessment [Indonesian]",
-    "assessmentDesc": "Discover your current AI knowledge level and get personalized recommendations [Indonesian]",
-    "viewLearningPath": "View Your Learning Path [Indonesian]",
-    "learningPathDesc": "See personalized recommendations based on your assessment results [Indonesian]",
-    "startPBL": "Start a PBL Scenario [Indonesian]",
-    "pblDesc": "Practice real-world AI skills with interactive scenarios [Indonesian]"
+    "takeAssessment": "Ikuti Penilaian Literasi AI",
+    "assessmentDesc": "Temukan tingkat pengetahuan AI Anda saat ini dan dapatkan rekomendasi yang dipersonalisasi",
+    "viewLearningPath": "Lihat Jalur Pembelajaran Anda",
+    "learningPathDesc": "Lihat rekomendasi yang dipersonalisasi berdasarkan hasil penilaian Anda",
+    "startPBL": "Mulai Skenario PBL",
+    "pblDesc": "Praktikkan keterampilan AI dunia nyata dengan skenario interaktif"
   },
   "priority": {
-    "high": "High [Indonesian]",
-    "medium": "Medium [Indonesian]",
-    "low": "Low [Indonesian]"
+    "high": "Tinggi",
+    "medium": "Sedang",
+    "low": "Rendah"
   },
-  "quickLinks": "Quick Links [Indonesian]",
-  "explorePBL": "Explore PBL Scenarios [Indonesian]",
-  "viewCompetencies": "View AI Competencies [Indonesian]",
-  "viewHistory": "View Learning History [Indonesian]",
-  "exploreKSA": "Explore Knowledge Map [Indonesian]",
-  "yourGoals": "Your Learning Goals [Indonesian]",
-  "updateGoals": "Update your goals [Indonesian]",
-  "learningPathQuickAccess": "Personalized Learning Recommendations [Indonesian]",
-  "learningPathDescription": "Explore AI learning scenarios tailored to your assessment results and interests. Choose the areas that best suit your needs. [Indonesian]",
-  "viewAllPaths": "View All Learning Paths [Indonesian]",
-  "focusOnWeakAreas": "Focus on Weak Areas [Indonesian]",
-  "aiAdvisor": "AI Learning Advisor [Indonesian]"
+  "quickLinks": "Tautan Cepat",
+  "explorePBL": "Jelajahi Skenario PBL",
+  "viewCompetencies": "Lihat Kompetensi AI",
+  "viewHistory": "Lihat Riwayat Pembelajaran",
+  "exploreKSA": "Jelajahi Peta Pengetahuan",
+  "yourGoals": "Tujuan Pembelajaran Anda",
+  "updateGoals": "Perbarui tujuan Anda",
+  "learningPathQuickAccess": "Rekomendasi Pembelajaran yang Dipersonalisasi",
+  "learningPathDescription": "Jelajahi skenario pembelajaran AI yang disesuaikan dengan hasil penilaian dan minat Anda. Pilih area yang paling sesuai dengan kebutuhan Anda.",
+  "viewAllPaths": "Lihat Semua Jalur Pembelajaran",
+  "focusOnWeakAreas": "Fokus pada Area Lemah",
+  "aiAdvisor": "Penasihat Pembelajaran AI"
 }
