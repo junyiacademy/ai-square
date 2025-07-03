@@ -60,12 +60,31 @@ export async function POST(request: NextRequest) {
     const { scenarioId, taskId, taskTitle, taskDescription, instructions, expectedOutcome, conversationHistory } = context;
 
     // Load scenario data to get AI module configuration
-    const yamlPath = path.join(
+    const scenarioFolder = scenarioId.replace(/-/g, '_');
+    const fileName = `${scenarioFolder}_${language}.yaml`;
+    let yamlPath = path.join(
       process.cwd(),
       'public',
       'pbl_data',
-      `${scenarioId.replace(/-/g, '_')}_scenario.yaml`
+      'scenarios',
+      scenarioFolder,
+      fileName
     );
+    
+    // Check if language-specific file exists, fallback to English
+    try {
+      await fs.access(yamlPath);
+    } catch {
+      // Fallback to English if language-specific file doesn't exist
+      yamlPath = path.join(
+        process.cwd(),
+        'public',
+        'pbl_data',
+        'scenarios',
+        scenarioFolder,
+        `${scenarioFolder}_en.yaml`
+      );
+    }
     
     let scenarioData: Scenario;
     try {

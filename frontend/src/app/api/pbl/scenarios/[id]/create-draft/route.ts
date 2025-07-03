@@ -8,11 +8,16 @@ import { Scenario, DomainType, DifficultyLevel, KSAMapping, TaskCategory, AIModu
 // Load scenario data from YAML file
 async function loadScenario(scenarioId: string): Promise<Scenario | null> {
   try {
+    const scenarioFolder = scenarioId.replace(/-/g, '_');
+    // Default to English for draft creation
+    const fileName = `${scenarioFolder}_en.yaml`;
     const yamlPath = path.join(
       process.cwd(),
       'public',
       'pbl_data',
-      `${scenarioId.replace(/-/g, '_')}_scenario.yaml`
+      'scenarios',
+      scenarioFolder,
+      fileName
     );
     
     const yamlContent = await fs.readFile(yamlPath, 'utf8');

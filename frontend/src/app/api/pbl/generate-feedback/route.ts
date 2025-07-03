@@ -272,8 +272,17 @@ export async function POST(request: NextRequest) {
     const fs = await import('fs/promises');
     const path = await import('path');
     // Convert scenario ID from kebab-case to snake_case for filename
-    const scenarioFilename = scenarioId.replace(/-/g, '_');
-    const scenarioPath = path.join(process.cwd(), 'public', 'pbl_data', `${scenarioFilename}_scenario.yaml`);
+    const scenarioFolder = scenarioId.replace(/-/g, '_');
+    const fileName = `${scenarioFolder}_${language}.yaml`;
+    let scenarioPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', scenarioFolder, fileName);
+    
+    // Check if language-specific file exists, fallback to English
+    try {
+      await fs.access(scenarioPath);
+    } catch {
+      // Fallback to English if language-specific file doesn't exist
+      scenarioPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', scenarioFolder, `${scenarioFolder}_en.yaml`);
+    }
     
     let scenarioData: ScenarioYAML = {};
     try {

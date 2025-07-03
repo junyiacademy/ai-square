@@ -51,16 +51,33 @@ export async function POST(request: NextRequest) {
     const { domainScores, completedScenarios = [], learningGoals = [] } = body;
 
     // Load all scenario data
-    const scenariosDir = path.join(process.cwd(), 'public', 'pbl_data');
-    const files = await fs.readdir(scenariosDir);
-    const scenarioFiles = files.filter(file => file.endsWith('_scenario.yaml'));
+    const scenariosDir = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios');
+    const folders = await fs.readdir(scenariosDir);
+    
+    // Get language from request headers or default to 'en'
+    const lang = request.headers.get('Accept-Language')?.split(',')[0]?.split('-')[0] || 'en';
 
     const scenarios: ScenarioData[] = [];
-    for (const file of scenarioFiles) {
-      const filePath = path.join(scenariosDir, file);
-      const content = await fs.readFile(filePath, 'utf8');
-      const data = yaml.load(content) as ScenarioData;
-      scenarios.push(data);
+    for (const folder of folders) {
+      if (folder.startsWith('_')) continue; // Skip template folders
+      
+      try {
+        // Try language-specific file first
+        let filePath = path.join(scenariosDir, folder, `${folder}_${lang}.yaml`);
+        
+        // Check if language-specific file exists, fallback to English
+        try {
+          await fs.access(filePath);
+        } catch {
+          filePath = path.join(scenariosDir, folder, `${folder}_en.yaml`);
+        }
+        
+        const content = await fs.readFile(filePath, 'utf8');
+        const data = yaml.load(content) as ScenarioData;
+        scenarios.push(data);
+      } catch (error) {
+        console.error(`Error loading scenario from folder ${folder}:`, error);
+      }
     }
 
     // Filter out completed scenarios
