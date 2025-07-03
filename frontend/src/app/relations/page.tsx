@@ -79,9 +79,45 @@ interface KSAItem {
 
 interface TreeData {
   domains: Domain[];
-  kMap: Record<string, KSAItem>;
-  sMap: Record<string, KSAItem>;
-  aMap: Record<string, KSAItem>;
+  ksa?: {
+    knowledge: {
+      themes: Array<{
+        id: string;
+        name: string;
+        explanation: string;
+        items: Array<{
+          code: string;
+          summary: string;
+        }>;
+      }>;
+    };
+    skills: {
+      themes: Array<{
+        id: string;
+        name: string;
+        explanation: string;
+        items: Array<{
+          code: string;
+          summary: string;
+        }>;
+      }>;
+    };
+    attitudes: {
+      themes: Array<{
+        id: string;
+        name: string;
+        explanation: string;
+        items: Array<{
+          code: string;
+          summary: string;
+        }>;
+      }>;
+    };
+  };
+  // Legacy structure - for backward compatibility
+  kMap?: Record<string, KSAItem>;
+  sMap?: Record<string, KSAItem>;
+  aMap?: Record<string, KSAItem>;
 }
 
 /**
@@ -141,7 +177,61 @@ export default function RelationsClient() {
     setLoading(true);
     try {
       const data = await contentService.getRelationsTree(lng);
-      setTree(data as unknown as TreeData);
+      
+      // Convert new API structure to legacy structure if needed
+      let treeData: TreeData;
+      if (data.ksa && !data.kMap) {
+        // New structure - convert to legacy format
+        const kMap: Record<string, KSAItem> = {};
+        const sMap: Record<string, KSAItem> = {};
+        const aMap: Record<string, KSAItem> = {};
+        
+        // Process knowledge items
+        data.ksa.knowledge.themes.forEach(theme => {
+          theme.items.forEach(item => {
+            kMap[item.code] = {
+              summary: item.summary,
+              theme: theme.name,
+              explanation: theme.explanation
+            };
+          });
+        });
+        
+        // Process skills items
+        data.ksa.skills.themes.forEach(theme => {
+          theme.items.forEach(item => {
+            sMap[item.code] = {
+              summary: item.summary,
+              theme: theme.name,
+              explanation: theme.explanation
+            };
+          });
+        });
+        
+        // Process attitudes items
+        data.ksa.attitudes.themes.forEach(theme => {
+          theme.items.forEach(item => {
+            aMap[item.code] = {
+              summary: item.summary,
+              theme: theme.name,
+              explanation: theme.explanation
+            };
+          });
+        });
+        
+        treeData = {
+          domains: data.domains,
+          kMap,
+          sMap,
+          aMap,
+          ksa: data.ksa
+        };
+      } else {
+        // Legacy structure
+        treeData = data as TreeData;
+      }
+      
+      setTree(treeData);
     } catch (error) {
       console.error('Failed to load relations tree:', error);
     } finally {
@@ -172,7 +262,15 @@ export default function RelationsClient() {
       <p className="text-center text-gray-500 mb-8 px-4">{t('pageSubtitle')}</p>
       <div className="max-w-3xl mx-auto">
         {tree.domains.map((domain) => (
-          <DomainAccordion key={domain.key} domain={domain} kMap={tree.kMap} sMap={tree.sMap} aMap={tree.aMap} lang={lang} emoji={domain.emoji || '🤖'} />
+          <DomainAccordion 
+            key={domain.key} 
+            domain={domain} 
+            kMap={tree.kMap || {}} 
+            sMap={tree.sMap || {}} 
+            aMap={tree.aMap || {}} 
+            lang={lang} 
+            emoji={domain.emoji || '🤖'} 
+          />
         ))}
       </div>
     </main>

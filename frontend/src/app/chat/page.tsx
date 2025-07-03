@@ -8,6 +8,7 @@ import type { ImperativePanelHandle } from 'react-resizable-panels';
 import { Header } from '@/components/layout/Header';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { formatDateWithLocale } from '@/utils/locale';
 
 interface ChatSession {
   id: string;
@@ -668,7 +669,7 @@ function ChatPageContent() {
                         <div className="font-medium text-gray-900">{session.title}</div>
                         <div className="text-sm text-gray-500 truncate">{session.last_message}</div>
                         <div className="text-xs text-gray-400 mt-1">
-                          {new Date(session.updated_at).toLocaleDateString()}
+                          {formatDateWithLocale(new Date(session.updated_at), 'en')}
                         </div>
                       </div>
                       
@@ -1064,7 +1065,7 @@ function ChatPageContent() {
                           <div className="font-medium text-gray-900">{session.title}</div>
                           <div className="text-sm text-gray-500 truncate">{session.last_message}</div>
                           <div className="text-xs text-gray-400 mt-1">
-                            {new Date(session.updated_at).toLocaleDateString()}
+                            {formatDateWithLocale(new Date(session.updated_at), 'en')}
                           </div>
                         </div>
                         
@@ -1405,7 +1406,7 @@ function ChatPageContent() {
                               <div className="flex-1">
                                 <div className="text-sm font-medium text-gray-900">{history.scenarioTitle}</div>
                                 <div className="text-xs text-gray-500">
-                                  {new Date(history.completedAt).toLocaleDateString()} • Score: {history.score}%
+                                  {formatDateWithLocale(new Date(history.completedAt), 'en')} • Score: {history.score}%
                                 </div>
                               </div>
                               <div className="text-xs text-green-600 font-medium">

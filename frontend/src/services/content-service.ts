@@ -7,9 +7,14 @@ import { performanceMonitor } from '@/lib/performance/performance-monitor'
 // 定義內容類型
 interface TreeData {
   domains: Array<Record<string, unknown>>
-  kMap: Record<string, unknown>
-  sMap: Record<string, unknown>
-  aMap: Record<string, unknown>
+  kMap?: Record<string, unknown>
+  sMap?: Record<string, unknown>
+  aMap?: Record<string, unknown>
+  ksa?: {
+    knowledge: Record<string, unknown>
+    skills: Record<string, unknown>
+    attitudes: Record<string, unknown>
+  }
 }
 
 interface AssessmentData {

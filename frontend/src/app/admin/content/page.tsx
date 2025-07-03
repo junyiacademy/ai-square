@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ContentItem, ContentType } from '@/types/cms';
+import { formatDateWithLocale } from '@/utils/locale';
 
 export default function ContentBrowser() {
   const searchParams = useSearchParams();
@@ -153,7 +154,7 @@ export default function ContentBrowser() {
                     v{item.version}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(item.updated_at).toLocaleDateString()}
+                    {formatDateWithLocale(new Date(item.updated_at), 'en')}
                     <div className="text-xs text-gray-400">by {item.updated_by}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

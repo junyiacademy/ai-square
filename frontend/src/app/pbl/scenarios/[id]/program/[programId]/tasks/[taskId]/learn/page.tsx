@@ -13,6 +13,7 @@ import {
   TaskProgress 
 } from '@/types/pbl';
 import { TaskEvaluation } from '@/types/pbl-completion';
+import { formatDateWithLocale } from '@/utils/locale';
 
 interface ConversationEntry {
   id: string;
@@ -1044,7 +1045,7 @@ export default function ProgramLearningPage() {
                   >
                     <p className="whitespace-pre-wrap">{entry.content}</p>
                     <p className="text-xs mt-1 opacity-70">
-                      {new Date(entry.timestamp).toLocaleTimeString()}
+                      {formatDateWithLocale(new Date(entry.timestamp), i18n.language, { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                     </p>
                   </div>
                 </div>
@@ -1281,7 +1282,7 @@ export default function ProgramLearningPage() {
                         >
                           <p className="whitespace-pre-wrap">{entry.content}</p>
                           <p className="text-xs mt-1 opacity-70">
-                            {new Date(entry.timestamp).toLocaleTimeString()}
+                            {formatDateWithLocale(new Date(entry.timestamp), i18n.language, { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                           </p>
                         </div>
                       </div>

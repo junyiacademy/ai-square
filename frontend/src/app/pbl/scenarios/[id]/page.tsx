@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { PBLScenarioDetailsSkeleton } from '@/components/pbl/loading-skeletons';
+import { formatDateWithLocale } from '@/utils/locale';
 
 interface KSAItem {
   code: string;
@@ -321,7 +322,7 @@ export default function ScenarioDetailsPage() {
                             )}
                           </div>
                           <div>
-                            {t('details.started')}: {new Date(program.startedAt).toLocaleDateString()}
+                            {t('details.started')}: {formatDateWithLocale(new Date(program.startedAt), i18n.language)}
                             {program.evaluatedTasks > 0 && (
                               <>
                                 <span className="mx-2">•</span>

@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import yaml from 'js-yaml';
 import Link from 'next/link';
+import { formatDateWithLocale } from '@/utils/locale';
 
 // Dynamic import Monaco to avoid SSR issues
 const MonacoEditor = dynamic(
@@ -183,7 +184,7 @@ export default function ContentEditor() {
                 <>
                   <span>Version: {metadata.version}</span>
                   <span>•</span>
-                  <span>Updated: {new Date(metadata.updated_at).toLocaleDateString()}</span>
+                  <span>Updated: {formatDateWithLocale(new Date(metadata.updated_at), 'en')}</span>
                   <span>•</span>
                   <span>By: {metadata.updated_by}</span>
                 </>

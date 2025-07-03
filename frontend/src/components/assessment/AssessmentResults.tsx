@@ -13,6 +13,7 @@ import {
 } from '@/lib/dynamic-imports';
 import CompetencyKnowledgeGraph from './CompetencyKnowledgeGraph';
 import { contentService } from '@/services/content-service';
+import { formatDateWithLocale } from '@/utils/locale';
 
 interface AssessmentResultsProps {
   result: AssessmentResult;
@@ -317,7 +318,7 @@ export default function AssessmentResults({ result, domains, onRetake, questions
               </div>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <div className="text-2xl font-bold text-gray-900">
-                  {new Date(result.completedAt).toLocaleDateString()}
+                  {formatDateWithLocale(new Date(result.completedAt), i18n.language)}
                 </div>
                 <div className="text-sm text-gray-600">
                   {t('results.completedAt')}

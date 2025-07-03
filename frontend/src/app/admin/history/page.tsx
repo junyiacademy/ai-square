@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { ContentHistory } from '@/types/cms';
+import { formatDateWithLocale } from '@/utils/locale';
 
 export default function HistoryPage() {
   const [history, setHistory] = useState<ContentHistory[]>([]);
@@ -136,7 +137,13 @@ export default function HistoryPage() {
                     v{item.version}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(item.timestamp).toLocaleString()}
+                    {formatDateWithLocale(new Date(item.timestamp), 'en', { 
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
                   </td>
                 </tr>
               ))

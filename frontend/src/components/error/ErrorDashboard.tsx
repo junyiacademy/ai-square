@@ -2,8 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { getErrorTracker, ErrorReport, ErrorMetrics } from '@/lib/error-tracking/error-tracker';
+import { useTranslation } from 'react-i18next';
+import { formatDateWithLocale } from '@/utils/locale';
 
 const ErrorDashboard: React.FC = () => {
+  const { i18n } = useTranslation();
   const [metrics, setMetrics] = useState<ErrorMetrics | null>(null);
   const [errors, setErrors] = useState<ErrorReport[]>([]);
   const [selectedError, setSelectedError] = useState<ErrorReport | null>(null);
@@ -42,8 +45,7 @@ const ErrorDashboard: React.FC = () => {
   };
 
   const formatTimestamp = (timestamp: string) => {
-    // Use zh-TW for browser API (toLocaleString expects standard locale format)
-    return new Date(timestamp).toLocaleString('zh-TW', {
+    return formatDateWithLocale(new Date(timestamp), i18n.language, {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
