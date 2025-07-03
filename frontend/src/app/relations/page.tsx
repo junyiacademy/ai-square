@@ -7,7 +7,8 @@ import { contentService } from '@/services/content-service';
 import { LoadingAccordion } from '@/components/ui/loading-skeleton';
 
 interface Competency {
-  key: string;
+  id: string;
+  key?: string;
   description: string;
   description_zhTW?: string;
   description_es?: string;
@@ -341,7 +342,7 @@ function DomainAccordion({ domain, kMap, sMap, aMap, lang, emoji }: { domain: Do
             <p className="text-gray-700 flex-1">{overview}</p>
           </div>
           {domain.competencies.map((comp) => (
-            <CompetencyAccordion key={comp.key} comp={comp} kMap={kMap} sMap={sMap} aMap={aMap} lang={lang} />
+            <CompetencyAccordion key={comp.id || comp.key} comp={comp} kMap={kMap} sMap={sMap} aMap={aMap} lang={lang} />
           ))}
         </div>
       )}
