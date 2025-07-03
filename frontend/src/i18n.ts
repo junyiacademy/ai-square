@@ -3,6 +3,11 @@ import { initReactI18next } from 'react-i18next';
 
 // Relations 翻譯
 import zhTWRelations from '../public/locales/zhTW/relations.json';
+import zhCNRelations from '../public/locales/zhCN/relations.json';
+import ptRelations from '../public/locales/pt/relations.json';
+import arRelations from '../public/locales/ar/relations.json';
+import idRelations from '../public/locales/id/relations.json';
+import thRelations from '../public/locales/th/relations.json';
 import enRelations from '../public/locales/en/relations.json';
 import esRelations from '../public/locales/es/relations.json';
 import jaRelations from '../public/locales/ja/relations.json';
@@ -46,6 +51,11 @@ import itNavigation from '../public/locales/it/navigation.json';
 
 // KSA 翻譯
 import zhTWKsa from '../public/locales/zhTW/ksa.json';
+import zhCNKsa from '../public/locales/zhCN/ksa.json';
+import ptKsa from '../public/locales/pt/ksa.json';
+import arKsa from '../public/locales/ar/ksa.json';
+import idKsa from '../public/locales/id/ksa.json';
+import thKsa from '../public/locales/th/ksa.json';
 import enKsa from '../public/locales/en/ksa.json';
 import esKsa from '../public/locales/es/ksa.json';
 import jaKsa from '../public/locales/ja/ksa.json';
@@ -141,36 +151,46 @@ i18n
         chat: zhTWChat
       },
       'zhCN': { 
+        relations: zhCNRelations,
         auth: zhCNAuth,
         navigation: zhCNNavigation,
+        ksa: zhCNKsa,
         assessment: zhCNAssessment,
         homepage: zhCNHomepage,
         pbl: zhCNPbl
       },
       'pt': { 
+        relations: ptRelations,
         auth: ptAuth,
         navigation: ptNavigation,
+        ksa: ptKsa,
         assessment: ptAssessment,
         homepage: ptHomepage,
         pbl: ptPbl
       },
       'ar': { 
+        relations: arRelations,
         auth: arAuth,
         navigation: arNavigation,
+        ksa: arKsa,
         assessment: arAssessment,
         homepage: arHomepage,
         pbl: arPbl
       },
       'id': { 
+        relations: idRelations,
         auth: idAuth,
         navigation: idNavigation,
+        ksa: idKsa,
         assessment: idAssessment,
         homepage: idHomepage,
         pbl: idPbl
       },
       'th': { 
+        relations: thRelations,
         auth: thAuth,
         navigation: thNavigation,
+        ksa: thKsa,
         assessment: thAssessment,
         homepage: thHomepage,
         pbl: thPbl

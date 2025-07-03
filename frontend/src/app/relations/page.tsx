@@ -124,25 +124,13 @@ interface TreeData {
 }
 
 /**
- * 這是一個通用的翻譯輔助函式。
- * 它會完全複製您原本 `lang === 'zhTW'` 的判斷邏輯，並將其擴充到所有語言。
+ * 簡化的翻譯輔助函式
+ * 由於所有語言現在都使用獨立的 YAML 檔案，API 會根據語言參數載入對應檔案，
+ * 直接返回已翻譯的內容在基本欄位中
  */
 const getTranslatedText = (lang: string, item: object | null, fieldName: string): unknown => {
   if (!item) return '';
-
   const record = item as Record<string, unknown>;
-
-  if (lang === 'zhTW') {
-    const zhKey = `${fieldName}_zhTW`;
-    return record[zhKey] ?? record[fieldName];
-  }
-
-  const langCode = lang.split('-')[0];
-  if (langCode !== 'en') {
-    const key = `${fieldName}_${langCode}`;
-    return record[key] ?? record[fieldName];
-  }
-
   return record[fieldName];
 };
 
@@ -165,16 +153,18 @@ export default function RelationsClient() {
 
   // 監聽語言變化事件
   useEffect(() => {
-    const handleLanguageChange = (event: CustomEvent) => {
+    const handleLanguageChange = async (event: CustomEvent) => {
       const newLang = event.detail.language;
       setLang(newLang);
+      // Clear cache for the old language when language changes
+      await contentService.clearLanguageCache(lang);
     };
 
     window.addEventListener('language-changed', handleLanguageChange as EventListener);
     return () => {
       window.removeEventListener('language-changed', handleLanguageChange as EventListener);
     };
-  }, []);
+  }, [lang]);
 
   const fetchTree = async (lng: string) => {
     setLoading(true);

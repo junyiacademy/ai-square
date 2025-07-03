@@ -87,7 +87,6 @@ export async function GET(request: NextRequest) {
     if (cached) {
       return NextResponse.json(cached);
     }
-
     // Load data using the new hybrid loader with language support
     const [domainsData, ksaCodesData] = await Promise.all([
       jsonYamlLoader.load<DomainsYaml>('ai_lit_domains', { preferJson: true, language: lang }),
