@@ -496,6 +496,9 @@ export default function CompetencyKnowledgeGraph({
       {selectedNode && (
         <div className="mt-4 p-4 bg-white rounded-lg shadow-md">
           <h4 className="font-semibold text-gray-900 mb-2">{selectedNode.name}</h4>
+          {selectedNode.details?.summary && (
+            <p className="text-sm text-gray-700 mb-3">{selectedNode.details.summary}</p>
+          )}
           {selectedNode.type === 'ksa-code' && selectedNode.details && (
             <div className="mb-3">
               <div className="flex items-center gap-2 mb-2">
@@ -512,9 +515,6 @@ export default function CompetencyKnowledgeGraph({
                 </div>
               )}
             </div>
-          )}
-          {selectedNode.details?.summary && (
-            <p className="text-sm text-gray-700 mb-3">{selectedNode.details.summary}</p>
           )}
           {selectedNode.details?.theme && (
             <div className="mt-2">
