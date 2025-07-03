@@ -16,10 +16,10 @@ export function Footer() {
           <div className="md:col-span-2">
             <h3 className="text-white font-semibold mb-4">{t('footer.about', 'About AI Square')}</h3>
             <p className="text-sm mb-4">
-              {t('footer.description', 'AI Square is a Git-Based learning platform for AI literacy education, supporting 9 languages worldwide.')}
+              {t('footer.description', 'AI Square is a Git-Based learning platform for AI literacy education, supporting 10+ languages worldwide.')}
             </p>
             <div className="flex space-x-4">
-              <span className="text-sm">9 {t('footer.languages', 'Languages')}</span>
+              <span className="text-sm">10+ {t('footer.languages', 'Languages')}</span>
               <span className="text-sm">•</span>
               <span className="text-sm">4 {t('footer.domains', 'AI Domains')}</span>
               <span className="text-sm">•</span>
