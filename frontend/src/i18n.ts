@@ -136,6 +136,7 @@ import frDashboard from '../public/locales/fr/dashboard.json';
 import deDashboard from '../public/locales/de/dashboard.json';
 import ruDashboard from '../public/locales/ru/dashboard.json';
 import itDashboard from '../public/locales/it/dashboard.json';
+import zhTWDashboard from '../public/locales/zhTW/dashboard.json';
 
 // Chat 翻譯
 import enChat from '../public/locales/en/chat.json';
@@ -169,7 +170,8 @@ i18n
         assessment: zhTWAssessment,
         homepage: zhTWHomepage,
         pbl: zhTWPbl,
-        chat: zhTWChat
+        chat: zhTWChat,
+        dashboard: zhTWDashboard
       },
       'zhCN': { 
         relations: zhCNRelations,
