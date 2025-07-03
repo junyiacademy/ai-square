@@ -1,12 +1,12 @@
 {
-  "aiAdvisor": "AI Learning Advisor [Arabic]",
-  "newChat": "New Chat [Arabic]",
-  "history": "Chat History [Arabic]",
-  "welcomeTitle": "Hello! I'm your AI Learning Advisor [Arabic]",
-  "welcomeMessage": "I'm here to help you navigate your AI literacy journey. Ask me about learning paths, PBL scenarios, or any AI concepts you'd like to understand better. [Arabic]",
-  "inputPlaceholder": "Type your message here... (Press Enter to send) [Arabic]",
-  "suggestedTopic1": "Which PBL scenario should I start with? [Arabic]",
-  "suggestedTopic2": "Help me understand my assessment results [Arabic]",
-  "suggestedTopic3": "What are my weak areas and how can I improve? [Arabic]",
-  "suggestedTopic4": "Explain AI concepts in simple terms [Arabic]"
+  "aiAdvisor": "مستشار تعلم الذكاء الاصطناعي",
+  "newChat": "محادثة جديدة",
+  "history": "تاريخ المحادثة",
+  "welcomeTitle": "مرحباً! أنا مستشار تعلم الذكاء الاصطناعي الخاص بك",
+  "welcomeMessage": "أنا هنا لمساعدتك في التنقل في رحلة محو الأمية بالذكاء الاصطناعي. اسألني عن مسارات التعلم أو سيناريوهات التعلم القائم على المشاكل أو أي مفاهيم ذكاء اصطناعي تريد فهمها بشكل أفضل.",
+  "inputPlaceholder": "اكتب رسالتك هنا... (اضغط Enter للإرسال)",
+  "suggestedTopic1": "ما هو سيناريو التعلم القائم على المشاكل الذي يجب أن أبدأ به؟",
+  "suggestedTopic2": "ساعدني في فهم نتائج تقييمي",
+  "suggestedTopic3": "ما هي نقاط ضعفي وكيف يمكنني تحسينها؟",
+  "suggestedTopic4": "اشرح مفاهيم الذكاء الاصطناعي بمصطلحات بسيطة"
 }
