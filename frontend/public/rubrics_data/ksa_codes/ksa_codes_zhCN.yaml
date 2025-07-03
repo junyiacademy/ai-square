@@ -1,6 +1,17 @@
 knowledge_codes:
   description: "[ZHCN translation needed]"
   themes:
+    The_Nature_of_AI:
+      codes:
+        K1.1:
+          summary: AI系统通过算法处理数据以识别模式、进行预测并生成输出，无需为每个特定任务进行明确编程。
+        K1.2:
+          summary: AI系统的复杂度和能力各不相同，从简单的规则型系统到能通过经验适应和改进的高级机器学习模型。
+        K1.3:
+          summary: AI输出是概率性而非确定性的，意味着它们基于数据中的模式提供可能的答案，而非保证正确的解决方案。
+        K1.4:
+          summary: AI系统嵌入在许多日常技术和服务中，通常在无形中运作以增强功能和用户体验。
+      explanation: 理解AI的基本性质对于知情互动至关重要。AI系统是以不同于人类的方式处理信息的运算工具，使用统计模式而非真正的理解。它们的范围从简单的自动化规则到复杂的神经网络，但都共享基于训练数据做出概率判断的特征。认识AI在日常生活中的普遍存在——从搜索引擎到推荐系统——有助于学习者识别何时与AI互动，并了解其对体验的影响。
     AI_Reflects_Human_Choices_and_Perspectives:
       codes:
         K2.1:

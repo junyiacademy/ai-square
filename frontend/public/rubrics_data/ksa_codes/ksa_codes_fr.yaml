@@ -1,6 +1,17 @@
 knowledge_codes:
   description: Les déclarations de connaissance dans le cadre incluent des faits, des concepts, des idées et des processus reflétant des connaissances disciplinaires, interdisciplinaires, épistémiques et procédurales. Elles décrivent les compréhensions techniques et sociétales dont les apprenants ont besoin pour appliquer et s'engager avec les systèmes d'IA.
   themes:
+    The_Nature_of_AI:
+      codes:
+        K1.1:
+          summary: Les systèmes d'IA traitent les données par des algorithmes pour reconnaître des modèles, faire des prédictions et générer des résultats sans programmation explicite pour chaque tâche spécifique.
+        K1.2:
+          summary: Les systèmes d'IA varient en complexité et en capacité, des systèmes simples basés sur des règles aux modèles d'apprentissage automatique avancés qui peuvent s'adapter et s'améliorer grâce à l'expérience.
+        K1.3:
+          summary: Les sorties de l'IA sont probabilistes plutôt que déterministes, ce qui signifie qu'elles fournissent des réponses probables basées sur des modèles dans les données plutôt que des solutions correctes garanties.
+        K1.4:
+          summary: Les systèmes d'IA sont intégrés dans de nombreuses technologies et services quotidiens, fonctionnant souvent de manière invisible pour améliorer la fonctionnalité et l'expérience utilisateur.
+      explanation: Comprendre la nature fondamentale de l'IA est essentiel pour une interaction éclairée. Les systèmes d'IA sont des outils informatiques qui traitent l'information différemment des humains, en utilisant des modèles statistiques plutôt qu'une véritable compréhension. Ils vont de règles automatisées simples à des réseaux de neurones complexes, mais tous partagent la caractéristique de faire des jugements probabilistes basés sur des données d'entraînement. Reconnaître la présence omniprésente de l'IA dans la vie quotidienne—des moteurs de recherche aux systèmes de recommandation—aide les apprenants à identifier quand ils interagissent avec l'IA et à comprendre son influence sur leurs expériences.
     AI_Reflects_Human_Choices_and_Perspectives:
       codes:
         K2.1:

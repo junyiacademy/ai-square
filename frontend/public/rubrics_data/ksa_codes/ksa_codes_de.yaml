@@ -1,6 +1,17 @@
 knowledge_codes:
   description: Die Wissensäußerungen im Rahmen umfassen Fakten, Konzepte, Ideen und Prozesse, die disziplinäres, interdisziplinäres, erkenntnistheoretisches und prozedurales Wissen widerspiegeln. Sie umreißen das technische und gesellschaftliche Verständnis, das Lernende benötigen, um mit KI-Systemen zu arbeiten und sich mit ihnen auseinanderzusetzen.
   themes:
+    The_Nature_of_AI:
+      codes:
+        K1.1:
+          summary: KI-Systeme verarbeiten Daten durch Algorithmen, um Muster zu erkennen, Vorhersagen zu treffen und Ausgaben zu generieren, ohne explizite Programmierung für jede spezifische Aufgabe.
+        K1.2:
+          summary: KI-Systeme variieren in Komplexität und Fähigkeit, von einfachen regelbasierten Systemen bis zu fortgeschrittenen maschinellen Lernmodellen, die sich durch Erfahrung anpassen und verbessern können.
+        K1.3:
+          summary: KI-Ausgaben sind probabilistisch und nicht deterministisch, was bedeutet, dass sie wahrscheinliche Antworten basierend auf Mustern in Daten liefern, anstatt garantiert korrekte Lösungen.
+        K1.4:
+          summary: KI-Systeme sind in viele alltägliche Technologien und Dienste eingebettet und arbeiten oft unsichtbar, um Funktionalität und Benutzererfahrung zu verbessern.
+      explanation: Das Verständnis der grundlegenden Natur von KI ist für eine informierte Interaktion unerlässlich. KI-Systeme sind Rechenwerkzeuge, die Informationen anders als Menschen verarbeiten, indem sie statistische Muster anstelle von echtem Verständnis verwenden. Sie reichen von einfachen automatisierten Regeln bis zu komplexen neuronalen Netzen, teilen aber alle die Eigenschaft, probabilistische Urteile auf der Grundlage von Trainingsdaten zu fällen. Die allgegenwärtige Präsenz von KI im täglichen Leben zu erkennen—von Suchmaschinen bis zu Empfehlungssystemen—hilft Lernenden zu identifizieren, wann sie mit KI interagieren und ihren Einfluss auf ihre Erfahrungen zu verstehen.
     AI_Reflects_Human_Choices_and_Perspectives:
       codes:
         K2.1:

@@ -1,6 +1,17 @@
 knowledge_codes:
   description: Le dichiarazioni di conoscenza nel framework includono fatti, concetti, idee e processi che riflettono conoscenze disciplinari, interdisciplinari, epistemiche e procedurali. Delineano le comprensioni tecniche e sociali di cui gli studenti hanno bisogno per applicare e interagire con i sistemi di IA.
   themes:
+    The_Nature_of_AI:
+      codes:
+        K1.1:
+          summary: I sistemi di IA elaborano dati attraverso algoritmi per riconoscere pattern, fare previsioni e generare output senza programmazione esplicita per ogni compito specifico.
+        K1.2:
+          summary: I sistemi di IA variano in complessità e capacità, dai semplici sistemi basati su regole ai modelli avanzati di apprendimento automatico che possono adattarsi e migliorare attraverso l'esperienza.
+        K1.3:
+          summary: Gli output dell'IA sono probabilistici piuttosto che deterministici, il che significa che forniscono risposte probabili basate su pattern nei dati piuttosto che soluzioni corrette garantite.
+        K1.4:
+          summary: I sistemi di IA sono incorporati in molte tecnologie e servizi quotidiani, spesso operando in modo invisibile per migliorare la funzionalità e l'esperienza utente.
+      explanation: Comprendere la natura fondamentale dell'IA è essenziale per un'interazione informata. I sistemi di IA sono strumenti computazionali che elaborano le informazioni in modo diverso dagli esseri umani, utilizzando pattern statistici piuttosto che una vera comprensione. Vanno da semplici regole automatizzate a complesse reti neurali, ma tutti condividono la caratteristica di formulare giudizi probabilistici basati sui dati di addestramento. Riconoscere la presenza pervasiva dell'IA nella vita quotidiana—dai motori di ricerca ai sistemi di raccomandazione—aiuta gli studenti a identificare quando stanno interagendo con l'IA e a comprendere la sua influenza sulle loro esperienze.
     AI_Reflects_Human_Choices_and_Perspectives:
       codes:
         K2.1:

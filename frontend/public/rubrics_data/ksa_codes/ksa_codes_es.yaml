@@ -1,6 +1,17 @@
 knowledge_codes:
   description: Las declaraciones de conocimiento en el marco incluyen hechos, conceptos, ideas y procesos que reflejan el conocimiento disciplinario, interdisciplinario, epistémico y procedimental. Esbozan las comprensiones técnicas y sociales que los estudiantes necesitan para aplicar y participar en sistemas de IA.
   themes:
+    The_Nature_of_AI:
+      codes:
+        K1.1:
+          summary: Los sistemas de IA procesan datos a través de algoritmos para reconocer patrones, hacer predicciones y generar resultados sin programación explícita para cada tarea específica.
+        K1.2:
+          summary: Los sistemas de IA varían en complejidad y capacidad, desde sistemas simples basados en reglas hasta modelos avanzados de aprendizaje automático que pueden adaptarse y mejorar a través de la experiencia.
+        K1.3:
+          summary: Los resultados de la IA son probabilísticos en lugar de determinísticos, lo que significa que proporcionan respuestas probables basadas en patrones en los datos en lugar de soluciones correctas garantizadas.
+        K1.4:
+          summary: Los sistemas de IA están integrados en muchas tecnologías y servicios cotidianos, a menudo operando de forma invisible para mejorar la funcionalidad y la experiencia del usuario.
+      explanation: Comprender la naturaleza fundamental de la IA es esencial para una interacción informada. Los sistemas de IA son herramientas computacionales que procesan información de manera diferente a los humanos, utilizando patrones estadísticos en lugar de comprensión verdadera. Van desde reglas automatizadas simples hasta redes neuronales complejas, pero todos comparten la característica de hacer juicios probabilísticos basados en datos de entrenamiento. Reconocer la presencia generalizada de la IA en la vida diaria—desde motores de búsqueda hasta sistemas de recomendación—ayuda a los estudiantes a identificar cuándo están interactuando con IA y comprender su influencia en sus experiencias.
     AI_Reflects_Human_Choices_and_Perspectives:
       codes:
         K2.1:

@@ -1,6 +1,18 @@
 knowledge_codes:
   description: The knowledge statements in the framework include facts, concepts, ideas, and processes reflecting disciplinary, interdisciplinary, epistemic, and procedural knowledge. They outline the technical and societal understandings that learners need to apply and engage with AI systems.
   themes:
+    The_Nature_of_AI:
+      codes:
+        K1.1:
+          summary: AI systems process data through algorithms to recognize patterns, make predictions, and generate outputs without explicit programming for each specific task.
+        K1.2:
+          summary: AI systems vary in complexity and capability, from simple rule-based systems to advanced machine learning models that can adapt and improve through experience.
+        K1.3:
+          summary: AI outputs are probabilistic rather than deterministic, meaning they provide likely answers based on patterns in data rather than guaranteed correct solutions.
+        K1.4:
+          summary: AI systems are embedded in many everyday technologies and services, often operating invisibly to enhance functionality and user experience.
+      explanation: |
+        Understanding AI's fundamental nature is essential for informed interaction. AI systems are computational tools that process information differently from humans, using statistical patterns rather than true comprehension. They range from simple automated rules to complex neural networks, but all share the characteristic of making probabilistic judgments based on training data. Recognizing AI's pervasive presence in daily life—from search engines to recommendation systems—helps learners identify when they're interacting with AI and understand its influence on their experiences.
     AI_Reflects_Human_Choices_and_Perspectives:
       codes:
         K2.1:

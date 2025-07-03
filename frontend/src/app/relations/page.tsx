@@ -178,58 +178,71 @@ export default function RelationsClient() {
     try {
       const data = await contentService.getRelationsTree(lng);
       
-      // Convert new API structure to legacy structure if needed
-      let treeData: TreeData;
-      if (data.ksa && !data.kMap) {
-        // New structure - convert to legacy format
-        const kMap: Record<string, KSAItem> = {};
-        const sMap: Record<string, KSAItem> = {};
-        const aMap: Record<string, KSAItem> = {};
-        
+      // Always create the maps for compatibility
+      const kMap: Record<string, KSAItem> = {};
+      const sMap: Record<string, KSAItem> = {};
+      const aMap: Record<string, KSAItem> = {};
+      
+      // If new API structure, convert it
+      if (data.ksa) {
         // Process knowledge items
-        data.ksa.knowledge.themes.forEach(theme => {
-          theme.items.forEach(item => {
-            kMap[item.code] = {
-              summary: item.summary,
-              theme: theme.name,
-              explanation: theme.explanation
-            };
+        if (data.ksa.knowledge && data.ksa.knowledge.themes) {
+          data.ksa.knowledge.themes.forEach((theme: any) => {
+            if (theme.items && Array.isArray(theme.items)) {
+              theme.items.forEach((item: any) => {
+                kMap[item.code] = {
+                  summary: item.summary,
+                  theme: theme.name,
+                  explanation: theme.explanation
+                };
+              });
+            }
           });
-        });
+        }
         
         // Process skills items
-        data.ksa.skills.themes.forEach(theme => {
-          theme.items.forEach(item => {
-            sMap[item.code] = {
-              summary: item.summary,
-              theme: theme.name,
-              explanation: theme.explanation
-            };
+        if (data.ksa.skills && data.ksa.skills.themes) {
+          data.ksa.skills.themes.forEach((theme: any) => {
+            if (theme.items && Array.isArray(theme.items)) {
+              theme.items.forEach((item: any) => {
+                sMap[item.code] = {
+                  summary: item.summary,
+                  theme: theme.name,
+                  explanation: theme.explanation
+                };
+              });
+            }
           });
-        });
+        }
         
         // Process attitudes items
-        data.ksa.attitudes.themes.forEach(theme => {
-          theme.items.forEach(item => {
-            aMap[item.code] = {
-              summary: item.summary,
-              theme: theme.name,
-              explanation: theme.explanation
-            };
+        if (data.ksa.attitudes && data.ksa.attitudes.themes) {
+          data.ksa.attitudes.themes.forEach((theme: any) => {
+            if (theme.items && Array.isArray(theme.items)) {
+              theme.items.forEach((item: any) => {
+                aMap[item.code] = {
+                  summary: item.summary,
+                  theme: theme.name,
+                  explanation: theme.explanation
+                };
+              });
+            }
           });
-        });
-        
-        treeData = {
-          domains: data.domains,
-          kMap,
-          sMap,
-          aMap,
-          ksa: data.ksa
-        };
-      } else {
-        // Legacy structure
-        treeData = data as TreeData;
+        }
+      } else if (data.kMap && data.sMap && data.aMap) {
+        // Legacy structure - use existing maps
+        Object.assign(kMap, data.kMap);
+        Object.assign(sMap, data.sMap);
+        Object.assign(aMap, data.aMap);
       }
+      
+      const treeData: TreeData = {
+        domains: data.domains || [],
+        kMap,
+        sMap,
+        aMap,
+        ksa: data.ksa
+      };
       
       setTree(treeData);
     } catch (error) {
