@@ -1,12 +1,12 @@
 {
-  "aiAdvisor": "AI Learning Advisor [Indonesian]",
-  "newChat": "New Chat [Indonesian]",
-  "history": "Chat History [Indonesian]",
-  "welcomeTitle": "Hello! I'm your AI Learning Advisor [Indonesian]",
-  "welcomeMessage": "I'm here to help you navigate your AI literacy journey. Ask me about learning paths, PBL scenarios, or any AI concepts you'd like to understand better. [Indonesian]",
-  "inputPlaceholder": "Type your message here... (Press Enter to send) [Indonesian]",
-  "suggestedTopic1": "Which PBL scenario should I start with? [Indonesian]",
-  "suggestedTopic2": "Help me understand my assessment results [Indonesian]",
-  "suggestedTopic3": "What are my weak areas and how can I improve? [Indonesian]",
-  "suggestedTopic4": "Explain AI concepts in simple terms [Indonesian]"
+  "aiAdvisor": "Penasihat Pembelajaran AI",
+  "newChat": "Obrolan Baru",
+  "history": "Riwayat Obrolan",
+  "welcomeTitle": "Halo! Saya adalah Penasihat Pembelajaran AI Anda",
+  "welcomeMessage": "Saya di sini untuk membantu Anda menjelajahi perjalanan literasi AI Anda. Tanyakan kepada saya tentang jalur pembelajaran, skenario PBL, atau konsep AI apa pun yang ingin Anda pahami lebih baik.",
+  "inputPlaceholder": "Ketik pesan Anda di sini... (Tekan Enter untuk mengirim)",
+  "suggestedTopic1": "Skenario PBL mana yang harus saya mulai?",
+  "suggestedTopic2": "Bantu saya memahami hasil penilaian saya",
+  "suggestedTopic3": "Apa area lemah saya dan bagaimana saya bisa memperbaikinya?",
+  "suggestedTopic4": "Jelaskan konsep AI dengan istilah sederhana"
 }
