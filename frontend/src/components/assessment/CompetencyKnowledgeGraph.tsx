@@ -507,20 +507,9 @@ export default function CompetencyKnowledgeGraph({
                 答對: {selectedNode.details.correct}/{selectedNode.details.total} 題
               </div>
               {selectedNode.details.questions && selectedNode.details.questions.length > 0 && (
-                <>
-                  <div className="text-xs text-gray-500 mt-1">
-                    相關題目: {selectedNode.details.questions.length} 題
-                  </div>
-                  <button
-                    onClick={() => {
-                      setSelectedQuestionIds(selectedNode.details?.questions || []);
-                      setShowQuestionReview(true);
-                    }}
-                    className="mt-2 text-sm bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 transition-colors"
-                  >
-                    查看題目
-                  </button>
-                </>
+                <div className="text-xs text-gray-500 mt-1">
+                  相關題目: {selectedNode.details.questions.length} 題
+                </div>
               )}
             </div>
           )}
