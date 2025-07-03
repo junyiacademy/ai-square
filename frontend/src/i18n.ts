@@ -114,13 +114,52 @@ import ruPbl from '../public/locales/ru/pbl.json';
 import itPbl from '../public/locales/it/pbl.json';
 
 // Onboarding 翻譯
+import zhTWOnboarding from '../public/locales/zhTW/onboarding.json';
+import zhCNOnboarding from '../public/locales/zhCN/onboarding.json';
+import ptOnboarding from '../public/locales/pt/onboarding.json';
+import arOnboarding from '../public/locales/ar/onboarding.json';
+import idOnboarding from '../public/locales/id/onboarding.json';
+import thOnboarding from '../public/locales/th/onboarding.json';
 import enOnboarding from '../public/locales/en/onboarding.json';
+import esOnboarding from '../public/locales/es/onboarding.json';
+import jaOnboarding from '../public/locales/ja/onboarding.json';
+import koOnboarding from '../public/locales/ko/onboarding.json';
+import frOnboarding from '../public/locales/fr/onboarding.json';
+import deOnboarding from '../public/locales/de/onboarding.json';
+import ruOnboarding from '../public/locales/ru/onboarding.json';
+import itOnboarding from '../public/locales/it/onboarding.json';
 
 // Common 翻譯
+import zhTWCommon from '../public/locales/zhTW/common.json';
+import zhCNCommon from '../public/locales/zhCN/common.json';
+import ptCommon from '../public/locales/pt/common.json';
+import arCommon from '../public/locales/ar/common.json';
+import idCommon from '../public/locales/id/common.json';
+import thCommon from '../public/locales/th/common.json';
 import enCommon from '../public/locales/en/common.json';
+import esCommon from '../public/locales/es/common.json';
+import jaCommon from '../public/locales/ja/common.json';
+import koCommon from '../public/locales/ko/common.json';
+import frCommon from '../public/locales/fr/common.json';
+import deCommon from '../public/locales/de/common.json';
+import ruCommon from '../public/locales/ru/common.json';
+import itCommon from '../public/locales/it/common.json';
 
 // Learning Path 翻譯
+import zhTWLearningPath from '../public/locales/zhTW/learningPath.json';
+import zhCNLearningPath from '../public/locales/zhCN/learningPath.json';
+import ptLearningPath from '../public/locales/pt/learningPath.json';
+import arLearningPath from '../public/locales/ar/learningPath.json';
+import idLearningPath from '../public/locales/id/learningPath.json';
+import thLearningPath from '../public/locales/th/learningPath.json';
 import enLearningPath from '../public/locales/en/learningPath.json';
+import esLearningPath from '../public/locales/es/learningPath.json';
+import jaLearningPath from '../public/locales/ja/learningPath.json';
+import koLearningPath from '../public/locales/ko/learningPath.json';
+import frLearningPath from '../public/locales/fr/learningPath.json';
+import deLearningPath from '../public/locales/de/learningPath.json';
+import ruLearningPath from '../public/locales/ru/learningPath.json';
+import itLearningPath from '../public/locales/it/learningPath.json';
 
 // Dashboard 翻譯
 import zhCNDashboard from '../public/locales/zhCN/dashboard.json';
@@ -139,17 +178,68 @@ import itDashboard from '../public/locales/it/dashboard.json';
 import zhTWDashboard from '../public/locales/zhTW/dashboard.json';
 
 // Chat 翻譯
-import enChat from '../public/locales/en/chat.json';
 import zhTWChat from '../public/locales/zhTW/chat.json';
+import zhCNChat from '../public/locales/zhCN/chat.json';
+import ptChat from '../public/locales/pt/chat.json';
+import arChat from '../public/locales/ar/chat.json';
+import idChat from '../public/locales/id/chat.json';
+import thChat from '../public/locales/th/chat.json';
+import enChat from '../public/locales/en/chat.json';
+import esChat from '../public/locales/es/chat.json';
+import jaChat from '../public/locales/ja/chat.json';
+import koChat from '../public/locales/ko/chat.json';
+import frChat from '../public/locales/fr/chat.json';
+import deChat from '../public/locales/de/chat.json';
+import ruChat from '../public/locales/ru/chat.json';
+import itChat from '../public/locales/it/chat.json';
 
 // Journey 翻譯
+import zhTWJourney from '../public/locales/zhTW/journey.json';
+import zhCNJourney from '../public/locales/zhCN/journey.json';
+import ptJourney from '../public/locales/pt/journey.json';
+import arJourney from '../public/locales/ar/journey.json';
+import idJourney from '../public/locales/id/journey.json';
+import thJourney from '../public/locales/th/journey.json';
 import enJourney from '../public/locales/en/journey.json';
+import esJourney from '../public/locales/es/journey.json';
+import jaJourney from '../public/locales/ja/journey.json';
+import koJourney from '../public/locales/ko/journey.json';
+import frJourney from '../public/locales/fr/journey.json';
+import deJourney from '../public/locales/de/journey.json';
+import ruJourney from '../public/locales/ru/journey.json';
+import itJourney from '../public/locales/it/journey.json';
 
 // Learning 翻譯  
+import zhTWLearning from '../public/locales/zhTW/learning.json';
+import zhCNLearning from '../public/locales/zhCN/learning.json';
+import ptLearning from '../public/locales/pt/learning.json';
+import arLearning from '../public/locales/ar/learning.json';
+import idLearning from '../public/locales/id/learning.json';
+import thLearning from '../public/locales/th/learning.json';
 import enLearning from '../public/locales/en/learning.json';
+import esLearning from '../public/locales/es/learning.json';
+import jaLearning from '../public/locales/ja/learning.json';
+import koLearning from '../public/locales/ko/learning.json';
+import frLearning from '../public/locales/fr/learning.json';
+import deLearning from '../public/locales/de/learning.json';
+import ruLearning from '../public/locales/ru/learning.json';
+import itLearning from '../public/locales/it/learning.json';
 
 // Legal 翻譯
+import zhTWLegal from '../public/locales/zhTW/legal.json';
+import zhCNLegal from '../public/locales/zhCN/legal.json';
+import ptLegal from '../public/locales/pt/legal.json';
+import arLegal from '../public/locales/ar/legal.json';
+import idLegal from '../public/locales/id/legal.json';
+import thLegal from '../public/locales/th/legal.json';
 import enLegal from '../public/locales/en/legal.json';
+import esLegal from '../public/locales/es/legal.json';
+import jaLegal from '../public/locales/ja/legal.json';
+import koLegal from '../public/locales/ko/legal.json';
+import frLegal from '../public/locales/fr/legal.json';
+import deLegal from '../public/locales/de/legal.json';
+import ruLegal from '../public/locales/ru/legal.json';
+import itLegal from '../public/locales/it/legal.json';
 
 // 在伺服器端和客戶端都使用相同的預設語言避免 hydration mismatch
 const getDefaultLng = () => {
@@ -171,7 +261,13 @@ i18n
         homepage: zhTWHomepage,
         pbl: zhTWPbl,
         chat: zhTWChat,
-        dashboard: zhTWDashboard
+        dashboard: zhTWDashboard,
+        onboarding: zhTWOnboarding,
+        common: zhTWCommon,
+        learningPath: zhTWLearningPath,
+        journey: zhTWJourney,
+        learning: zhTWLearning,
+        legal: zhTWLegal
       },
       'zhCN': { 
         relations: zhCNRelations,
@@ -181,7 +277,14 @@ i18n
         assessment: zhCNAssessment,
         homepage: zhCNHomepage,
         pbl: zhCNPbl,
-        dashboard: zhCNDashboard
+        dashboard: zhCNDashboard,
+        chat: zhCNChat,
+        onboarding: zhCNOnboarding,
+        common: zhCNCommon,
+        learningPath: zhCNLearningPath,
+        journey: zhCNJourney,
+        learning: zhCNLearning,
+        legal: zhCNLegal
       },
       'pt': { 
         relations: ptRelations,
@@ -191,7 +294,14 @@ i18n
         assessment: ptAssessment,
         homepage: ptHomepage,
         pbl: ptPbl,
-        dashboard: ptDashboard
+        dashboard: ptDashboard,
+        chat: ptChat,
+        onboarding: ptOnboarding,
+        common: ptCommon,
+        learningPath: ptLearningPath,
+        journey: ptJourney,
+        learning: ptLearning,
+        legal: ptLegal
       },
       'ar': { 
         relations: arRelations,
@@ -201,7 +311,14 @@ i18n
         assessment: arAssessment,
         homepage: arHomepage,
         pbl: arPbl,
-        dashboard: arDashboard
+        dashboard: arDashboard,
+        chat: arChat,
+        onboarding: arOnboarding,
+        common: arCommon,
+        learningPath: arLearningPath,
+        journey: arJourney,
+        learning: arLearning,
+        legal: arLegal
       },
       'id': { 
         relations: idRelations,
@@ -211,7 +328,14 @@ i18n
         assessment: idAssessment,
         homepage: idHomepage,
         pbl: idPbl,
-        dashboard: idDashboard
+        dashboard: idDashboard,
+        chat: idChat,
+        onboarding: idOnboarding,
+        common: idCommon,
+        learningPath: idLearningPath,
+        journey: idJourney,
+        learning: idLearning,
+        legal: idLegal
       },
       'th': { 
         relations: thRelations,
@@ -221,7 +345,14 @@ i18n
         assessment: thAssessment,
         homepage: thHomepage,
         pbl: thPbl,
-        dashboard: thDashboard
+        dashboard: thDashboard,
+        chat: thChat,
+        onboarding: thOnboarding,
+        common: thCommon,
+        learningPath: thLearningPath,
+        journey: thJourney,
+        learning: thLearning,
+        legal: thLegal
       },
       en: { 
         relations: enRelations,
@@ -248,7 +379,14 @@ i18n
         assessment: esAssessment,
         homepage: esHomepage,
         pbl: esPbl,
-        dashboard: esDashboard
+        dashboard: esDashboard,
+        chat: esChat,
+        onboarding: esOnboarding,
+        common: esCommon,
+        learningPath: esLearningPath,
+        journey: esJourney,
+        learning: esLearning,
+        legal: esLegal
       },
       ja: { 
         relations: jaRelations,
@@ -258,7 +396,14 @@ i18n
         assessment: jaAssessment,
         homepage: jaHomepage,
         pbl: jaPbl,
-        dashboard: jaDashboard
+        dashboard: jaDashboard,
+        chat: jaChat,
+        onboarding: jaOnboarding,
+        common: jaCommon,
+        learningPath: jaLearningPath,
+        journey: jaJourney,
+        learning: jaLearning,
+        legal: jaLegal
       },
       ko: { 
         relations: koRelations,
@@ -268,7 +413,14 @@ i18n
         assessment: koAssessment,
         homepage: koHomepage,
         pbl: koPbl,
-        dashboard: koDashboard
+        dashboard: koDashboard,
+        chat: koChat,
+        onboarding: koOnboarding,
+        common: koCommon,
+        learningPath: koLearningPath,
+        journey: koJourney,
+        learning: koLearning,
+        legal: koLegal
       },
       fr: { 
         relations: frRelations,
@@ -278,7 +430,14 @@ i18n
         assessment: frAssessment,
         homepage: frHomepage,
         pbl: frPbl,
-        dashboard: frDashboard
+        dashboard: frDashboard,
+        chat: frChat,
+        onboarding: frOnboarding,
+        common: frCommon,
+        learningPath: frLearningPath,
+        journey: frJourney,
+        learning: frLearning,
+        legal: frLegal
       },
       de: { 
         relations: deRelations,
@@ -288,7 +447,14 @@ i18n
         assessment: deAssessment,
         homepage: deHomepage,
         pbl: dePbl,
-        dashboard: deDashboard
+        dashboard: deDashboard,
+        chat: deChat,
+        onboarding: deOnboarding,
+        common: deCommon,
+        learningPath: deLearningPath,
+        journey: deJourney,
+        learning: deLearning,
+        legal: deLegal
       },
       ru: { 
         relations: ruRelations,
@@ -298,7 +464,14 @@ i18n
         assessment: ruAssessment,
         homepage: ruHomepage,
         pbl: ruPbl,
-        dashboard: ruDashboard
+        dashboard: ruDashboard,
+        chat: ruChat,
+        onboarding: ruOnboarding,
+        common: ruCommon,
+        learningPath: ruLearningPath,
+        journey: ruJourney,
+        learning: ruLearning,
+        legal: ruLegal
       },
       it: { 
         relations: itRelations,
@@ -308,7 +481,14 @@ i18n
         assessment: itAssessment,
         homepage: itHomepage,
         pbl: itPbl,
-        dashboard: itDashboard
+        dashboard: itDashboard,
+        chat: itChat,
+        onboarding: itOnboarding,
+        common: itCommon,
+        learningPath: itLearningPath,
+        journey: itJourney,
+        learning: itLearning,
+        legal: itLegal
       },
     },
     lng: getDefaultLng(),
