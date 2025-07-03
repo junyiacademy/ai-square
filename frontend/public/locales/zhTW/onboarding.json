@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "Welcome, {{name}}! [Chinese (Traditional)]",
-    "subtitle": "Let's get you started on your AI literacy journey [Chinese (Traditional)]",
+    "greeting": "歡迎，{{name}}！",
+    "subtitle": "讓我們開始您的 AI 素養學習之旅",
     "step1": {
-      "title": "Discover Your Path [Chinese (Traditional)]",
-      "description": "AI Square helps you understand and master AI literacy [Chinese (Traditional)]",
-      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [Chinese (Traditional)]",
-      "assessment": "Smart Assessment [Chinese (Traditional)]",
-      "assessmentDesc": "Discover your current AI knowledge level [Chinese (Traditional)]",
-      "learning": "Personalized Learning [Chinese (Traditional)]",
-      "learningDesc": "Get tailored recommendations based on your goals [Chinese (Traditional)]"
+      "title": "探索您的道路",
+      "description": "AI Square 幫助您理解並掌握 AI 素養",
+      "content": "我們將透過個人化評估和引導式學習體驗，幫助您識別自己的優勢和成長領域。",
+      "assessment": "智能評估",
+      "assessmentDesc": "發現您目前的 AI 知識水平",
+      "learning": "個人化學習",
+      "learningDesc": "根據您的目標獲得量身定制的建議"
     },
     "step2": {
-      "title": "Four Core Domains [Chinese (Traditional)]",
-      "description": "Master the essential areas of AI literacy [Chinese (Traditional)]",
-      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [Chinese (Traditional)]",
-      "domains": "AI Literacy Domains [Chinese (Traditional)]",
-      "engaging": "Engaging with AI [Chinese (Traditional)]",
-      "creating": "Creating with AI [Chinese (Traditional)]",
-      "managing": "Managing with AI [Chinese (Traditional)]",
-      "designing": "Designing with AI [Chinese (Traditional)]"
+      "title": "四大核心領域",
+      "description": "掌握 AI 素養的基本領域",
+      "content": "我們的綜合框架涵蓋了您需要了解的一切，以便有效且負責任地使用 AI。",
+      "domains": "AI 素養領域",
+      "engaging": "與 AI 互動",
+      "creating": "與 AI 共創",
+      "managing": "與 AI 管理",
+      "designing": "與 AI 設計"
     },
     "step3": {
-      "title": "Start Your Journey [Chinese (Traditional)]",
-      "description": "Begin with an assessment and unlock your potential [Chinese (Traditional)]",
-      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [Chinese (Traditional)]",
-      "ready": "What you'll get: [Chinese (Traditional)]",
-      "benefit1": "Detailed assessment of your AI knowledge [Chinese (Traditional)]",
-      "benefit2": "Personalized learning path recommendations [Chinese (Traditional)]",
-      "benefit3": "Interactive scenarios and practical exercises [Chinese (Traditional)]"
+      "title": "開始您的旅程",
+      "description": "從評估開始，釋放您的潛能",
+      "content": "準備好發現您的 AI 素養水平並獲得個人化學習建議了嗎？",
+      "ready": "您將獲得：",
+      "benefit1": "詳細的 AI 知識評估",
+      "benefit2": "個人化學習路徑建議",
+      "benefit3": "互動式情境和實務練習"
     },
-    "startJourney": "Start Your Journey [Chinese (Traditional)]"
+    "startJourney": "開始您的旅程"
   },
   "goals": {
-    "title": "What would you like to achieve? [Chinese (Traditional)]",
-    "subtitle": "Select your learning goals to get personalized recommendations [Chinese (Traditional)]",
+    "title": "您想達成什麼目標？",
+    "subtitle": "選擇您的學習目標以獲得個人化建議",
     "understand": {
-      "title": "Understand AI Fundamentals [Chinese (Traditional)]",
-      "description": "Learn the basics of AI, machine learning, and how AI systems work [Chinese (Traditional)]"
+      "title": "理解 AI 基礎知識",
+      "description": "學習 AI、機器學習的基礎知識以及 AI 系統的運作方式"
     },
     "create": {
-      "title": "Create Content with AI [Chinese (Traditional)]",
-      "description": "Use AI tools for writing, design, art, and creative projects [Chinese (Traditional)]"
+      "title": "使用 AI 創作內容",
+      "description": "使用 AI 工具進行寫作、設計、藝術和創意專案"
     },
     "analyze": {
-      "title": "Analyze Data with AI [Chinese (Traditional)]",
-      "description": "Apply AI for data analysis, insights, and decision-making [Chinese (Traditional)]"
+      "title": "使用 AI 分析資料",
+      "description": "應用 AI 進行資料分析、洞察和決策制定"
     },
     "build": {
-      "title": "Build AI Solutions [Chinese (Traditional)]",
-      "description": "Develop and implement AI systems and applications [Chinese (Traditional)]"
+      "title": "建構 AI 解決方案",
+      "description": "開發和實施 AI 系統和應用程式"
     },
     "teach": {
-      "title": "Teach AI to Others [Chinese (Traditional)]",
-      "description": "Educate and guide others in understanding and using AI [Chinese (Traditional)]"
+      "title": "教授 AI 給他人",
+      "description": "教育和指導他人理解和使用 AI"
     },
     "ethical": {
-      "title": "Ensure Ethical AI Use [Chinese (Traditional)]",
-      "description": "Understand and implement responsible AI practices [Chinese (Traditional)]"
+      "title": "確保 AI 的倫理使用",
+      "description": "理解和實施負責任的 AI 實踐"
     },
-    "recommendedDomains": "Recommended domains [Chinese (Traditional)]",
-    "selected": "{{count}} goals selected",
-    "selectAtLeastOne": "Please select at least one learning goal [Chinese (Traditional)]",
-    "continue": "Continue to Assessment [Chinese (Traditional)]",
-    "skipForNow": "Skip for now [Chinese (Traditional)]",
-    "helpText": "Don't worry, you can always change these later in your profile settings. [Chinese (Traditional)]"
+    "recommendedDomains": "推薦領域",
+    "selected": "已選擇 {{count}} 個目標",
+    "selectAtLeastOne": "請至少選擇一個學習目標",
+    "continue": "繼續進行評估",
+    "skipForNow": "暫時跳過",
+    "helpText": "別擔心，您隨時可以在個人資料設定中更改這些設定。"
   },
   "progress": {
-    "welcome": "Welcome [Chinese (Traditional)]",
-    "identity": "Identity [Chinese (Traditional)]",
-    "goals": "Goals [Chinese (Traditional)]"
+    "welcome": "歡迎",
+    "identity": "身分",
+    "goals": "目標"
   },
   "identity": {
-    "title": "Who are you? [Chinese (Traditional)]",
-    "subtitle": "Help us personalize your AI learning journey [Chinese (Traditional)]",
+    "title": "您是誰？",
+    "subtitle": "幫助我們個人化您的 AI 學習之旅",
     "student": {
-      "title": "Student [Chinese (Traditional)]",
-      "description": "I'm studying and want to learn AI for my academic and future career [Chinese (Traditional)]"
+      "title": "學生",
+      "description": "我正在求學，想為我的學術和未來職業學習 AI"
     },
     "teacher": {
-      "title": "Educator [Chinese (Traditional)]",
-      "description": "I teach others and want to integrate AI into my curriculum [Chinese (Traditional)]"
+      "title": "教育工作者",
+      "description": "我教授他人，想將 AI 整合到我的課程中"
     },
     "professional": {
-      "title": "Professional [Chinese (Traditional)]",
-      "description": "I work in industry and want to leverage AI in my role [Chinese (Traditional)]"
+      "title": "專業人士",
+      "description": "我在業界工作，想在我的職務中運用 AI"
     },
     "learner": {
-      "title": "Lifelong Learner [Chinese (Traditional)]",
-      "description": "I'm curious about AI and want to explore its possibilities [Chinese (Traditional)]"
+      "title": "終身學習者",
+      "description": "我對 AI 感到好奇，想探索其可能性"
     }
   },
   "button": {
-    "back": "Back [Chinese (Traditional)]",
-    "continue": "Continue [Chinese (Traditional)]",
-    "saving": "Saving... [Chinese (Traditional)]"
+    "back": "返回",
+    "continue": "繼續",
+    "saving": "儲存中..."
   }
 }
