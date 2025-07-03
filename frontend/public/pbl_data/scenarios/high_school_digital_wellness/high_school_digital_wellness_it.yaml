@@ -1,0 +1,202 @@
+scenario_info:
+  id: high-school-digital-wellness
+  difficulty: beginner
+  estimated_duration: 75
+  target_domains:
+    - creating_with_ai
+    - managing_with_ai
+    - designing_with_ai
+  title: Campagna di Benessere Digitale con IA
+  description: Progetta una campagna basata sull'IA per promuovere abitudini digitali sane
+  prerequisites:
+    - Consapevolezza dell'impatto dei social media
+    - Alfabetizzazione digitale di base
+  learning_objectives:
+    - Analizzare dati e tendenze del benessere digitale
+    - Creare contenuti coinvolgenti con strumenti IA
+    - Progettare interventi per il cambiamento comportamentale
+    - Costruire una campagna completa di benessere digitale
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S1.2
+    - S2.1
+    - S2.3
+  attitudes:
+    - A1.1
+    - A1.2
+    - A2.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Research Assistant
+      initial_prompt: |
+        You are a research assistant helping students design and analyze digital wellness surveys.
+        Guide them through:
+        - Creating effective survey questions
+        - Ensuring privacy and ethical data collection
+        - Analyzing survey results
+        - Identifying meaningful patterns
+
+        Focus on helping them understand digital wellness challenges among teens.
+    title: Sondaggio sulle Abitudini Digitali
+    description: Usa l'IA per creare e analizzare un sondaggio sulle abitudini digitali
+    instructions:
+      - Usa l'IA per progettare domande su tempo davanti allo schermo, uso dei social media, abitudini del sonno e stress digitale
+      - Distribuisci ai compagni garantendo privacy e anonimato
+      - Analizza le risposte con l'assistenza dell'IA
+      - Identifica aree problematiche chiave e modelli
+    expected_outcome: Un rapporto di sondaggio completo con intuizioni basate sui dati
+  - id: task-2
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Creative Content Coach
+      initial_prompt: |
+        You are a creative content coach helping students create digital wellness materials.
+        Assist them with:
+        - Designing visually appealing infographics
+        - Writing engaging social media content
+        - Creating compelling video scripts
+        - Developing interactive elements
+
+        Focus on positive, teen-friendly messaging that promotes healthy digital habits.
+    title: Creazione di Contenuti sul Benessere
+    description: Crea contenuti coinvolgenti sul benessere digitale usando strumenti IA
+    instructions:
+      - Crea infografiche sulle abitudini digitali sane usando strumenti di design IA
+      - Sviluppa post sui social media con messaggi positivi
+      - Progetta script video per consigli sul benessere
+      - Crea quiz interattivi sul benessere digitale
+    expected_outcome: Un portfolio di contenuti coinvolgenti sul benessere digitale
+  - id: task-3
+    category: interaction
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - K2.1
+        - S1.2
+      secondary:
+        - A1.2
+        - A2.1
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: UX Design Mentor
+      initial_prompt: |
+        You are a UX design mentor helping students create a wellness chatbot.
+        Guide them in:
+        - Designing user-friendly conversation flows
+        - Creating empathetic and helpful responses
+        - Building in appropriate wellness features
+        - Testing and iterating on their design
+
+        Ensure the chatbot is supportive, non-judgmental, and age-appropriate.
+    title: Assistente al Benessere IA
+    description: Progetta un chatbot IA per aiutare i pari a gestire il benessere digitale
+    instructions:
+      - Progetta funzionalità del chatbot per promemoria del tempo davanti allo schermo, suggerimenti di consapevolezza, pause studio e controlli dell'umore
+      - Scrivi flussi di conversazione che siano di supporto e non giudicanti
+      - Testa con i compagni e raccogli feedback
+      - Perfeziona in base all'esperienza utente
+    expected_outcome: Un prototipo funzionale di chatbot per il benessere
+  - id: task-4
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K1.1
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Campaign Strategy Advisor
+      initial_prompt: |
+        You are a campaign strategy advisor helping students plan their digital wellness campaign launch.
+        Assist with:
+        - Creating realistic timelines
+        - Developing promotional strategies
+        - Identifying key stakeholders
+        - Setting achievable goals
+
+        Help them create a campaign that will effectively reach and engage their peers.
+    title: Piano di Lancio della Campagna
+    description: Sviluppa un piano di lancio completo per la tua campagna di benessere digitale
+    instructions:
+      - Usa l'IA per creare timeline della campagna e materiali promozionali
+      - Pianifica eventi e attività di lancio
+      - Identifica partner come club e insegnanti
+      - Stabilisci obiettivi misurabili e metriche di successo
+    expected_outcome: Un piano di lancio della campagna dettagliato e attuabile
+  - id: task-5
+    category: analysis
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K2.3
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: Data Analytics Expert
+      initial_prompt: |
+        You are a data analytics expert helping students measure campaign impact.
+        Guide them through:
+        - Collecting meaningful metrics
+        - Analyzing data for insights
+        - Creating compelling visualizations
+        - Drawing actionable conclusions
+
+        Help them demonstrate the real impact of their digital wellness campaign.
+    title: Misurazione dell'Impatto
+    description: Usa l'IA per misurare e riferire sull'efficacia della campagna
+    instructions:
+      - Raccogli dati su tassi di coinvolgimento, cambiamenti comportamentali, feedback e miglioramenti del benessere
+      - Usa l'IA per analizzare i risultati e identificare le tendenze
+      - Crea report visivi con grafici
+      - Identifica le lezioni apprese e le aree di miglioramento
+    expected_outcome: Un rapporto d'impatto completo con intuizioni attuabili
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - S2.1
+    - K2.1
+  min_overall_score: 75
+resources:
+  - url: https://www.digitalwellnessinstitute.com/
+    type: reference
+    name: Digital Wellness Institute
+  - url: https://www.commonsensemedia.org/
+    type: guide
+    name: Common Sense Media
+metadata:
+  language: it
+  version: '1.0'
+  last_updated: '2025-07-03'

@@ -1,0 +1,203 @@
+scenario_info:
+  id: high-school-smart-city
+  difficulty: intermediate
+  estimated_duration: 90
+  target_domains:
+    - designing_with_ai
+    - creating_with_ai
+    - engaging_with_ai
+  title: KI-gestützte Smart City Lösungen
+  description: Entwerfe innovative KI-Lösungen zur Verbesserung des städtischen Lebens
+  prerequisites:
+    - Grundverständnis urbaner Systeme
+    - Interesse an Technologie und Innovation
+  learning_objectives:
+    - Städtische Herausforderungen mit KI-Analyse identifizieren
+    - KI-gestützte Smart-City-Funktionen entwerfen
+    - Prototypen und Visualisierungen erstellen
+    - Implementierungsstrategien für urbane Lösungen entwickeln
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S1.2
+    - S2.1
+    - S2.3
+  attitudes:
+    - A1.1
+    - A1.2
+    - A2.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - K1.1
+        - S2.3
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Urban Research Analyst
+      initial_prompt: |
+        You are an urban research analyst helping students identify city challenges.
+        Guide them through:
+        - Researching urban problems systematically
+        - Creating effective data visualizations
+        - Understanding community needs
+        - Prioritizing issues based on impact
+
+        Focus on problems that affect young people in the community.
+    title: Kartierung städtischer Herausforderungen
+    description: Nutzen Sie KI zur Identifizierung und Kartierung städtischer Herausforderungen in Ihrer Region
+    instructions:
+      - Verwenden Sie KI zur Untersuchung von Verkehrsstaus, öffentlicher Sicherheit, Umweltproblemen und Lücken in öffentlichen Dienstleistungen
+      - Erstellen Sie interaktive Karten, die Problemgebiete zeigen
+      - Priorisieren Sie Probleme nach ihren Auswirkungen auf die Gemeinschaft
+      - Sammeln Sie Community-Feedback durch Umfragen oder Interviews
+    expected_outcome: Eine umfassende Karte städtischer Herausforderungen mit priorisierten Problemen
+  - id: task-2
+    category: creation
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Smart City Engineer
+      initial_prompt: |
+        You are a smart city engineer helping students design traffic solutions.
+        Assist them with:
+        - Creating innovative traffic management features
+        - Understanding system integration
+        - Calculating impact metrics
+        - Considering all road users including pedestrians and cyclists
+
+        Help them design solutions that are both innovative and practical.
+    title: Intelligente Verkehrslösung
+    description: Entwerfen Sie ein KI-System zur Verbesserung des Verkehrsflusses und der Sicherheit
+    instructions:
+      - Entwerfen Sie KI-Funktionen für Ampeloptimierung, Fußgängersicherheit, öffentliche Verkehrsführung und Parken
+      - Erstellen Sie Systemdiagramme, die zeigen, wie Komponenten interagieren
+      - Simulieren Sie Verkehrsverbesserungen mit Daten
+      - Berechnen Sie potenzielle Zeit- und Kraftstoffeinsparungen
+    expected_outcome: Ein umfassendes KI-gesteuertes Verkehrsmanagementsystem-Design
+  - id: task-3
+    category: interaction
+    time_limit: 35
+    assessment_focus:
+      primary:
+        - K2.1
+        - S1.2
+      secondary:
+        - A1.2
+        - A2.1
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: App Design Mentor
+      initial_prompt: |
+        You are an app design mentor helping students create a community safety app.
+        Guide them through:
+        - Designing effective safety features
+        - Creating intuitive user interfaces
+        - Implementing privacy by design
+        - Considering diverse user needs
+
+        Ensure the app prioritizes user safety and privacy while being accessible to all.
+    title: Community-Sicherheits-App
+    description: Erstellen Sie einen KI-gestützten App-Prototyp für die Gemeinschaftssicherheit
+    instructions:
+      - Fügen Sie KI-Funktionen für Notfallwarnungen, sichere Routenvorschläge, Community-Berichte und Echtzeitaktualisierungen ein
+      - Entwerfen Sie benutzerfreundliche Schnittstellen für verschiedene Altersgruppen
+      - Erstellen Sie Mockups und Wireframes
+      - Planen Sie Datenschutz und Datensicherheitsmaßnahmen
+    expected_outcome: Ein funktionsfähiger Community-Sicherheits-App-Prototyp mit KI-Funktionen
+  - id: task-4
+    category: analysis
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - K2.3
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Urban Planner
+      initial_prompt: |
+        You are an urban planner helping students optimize green spaces.
+        Guide them through:
+        - Analyzing community needs for green spaces
+        - Understanding environmental benefits
+        - Designing inclusive and accessible spaces
+        - Creating effective visualizations
+
+        Focus on creating spaces that serve diverse age groups and promote community wellbeing.
+    title: Grünflächen-Optimierer
+    description: Nutzen Sie KI zur Optimierung städtischer Grünflächen für das Gemeinwohl
+    instructions:
+      - Analysieren Sie die aktuelle Nutzung von Grünflächen, Gemeinschaftsbedürfnisse, Umweltvorteile und Zugänglichkeit
+      - Schlagen Sie Verbesserungen für bestehende Flächen vor
+      - Entwerfen Sie neue Grünflächen für unterversorgte Gebiete
+      - Erstellen Sie 3D-Visualisierungen der vorgeschlagenen Änderungen
+    expected_outcome: Ein optimierter Grünflächenplan mit Visualisierungen
+  - id: task-5
+    category: interaction
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S1.2
+        - K1.2
+      secondary:
+        - A1.1
+        - A2.1
+    ai_module:
+      role: actor
+      model: gemini-2.5-flash
+      persona: Presentation Coach
+      initial_prompt: |
+        You are a presentation coach helping students prepare for government stakeholders.
+        Assist them with:
+        - Creating clear, data-driven narratives
+        - Designing professional visuals
+        - Anticipating stakeholder concerns
+        - Building confidence in public speaking
+
+        Help them create a presentation that demonstrates both innovation and practical implementation.
+    title: Smart City Präsentation
+    description: Präsentieren Sie Ihre Smart-City-Lösungen der Stadtverwaltung
+    instructions:
+      - Verwenden Sie KI zur Vorbereitung von Executive Summary, Lösungsdemonstrationen, Kosten-Nutzen-Analyse und Implementierungs-Roadmap
+      - Erstellen Sie überzeugende Visualisierungen und Infografiken
+      - Bereiten Sie Antworten auf mögliche Fragen vor
+      - Üben Sie eine professionelle Präsentation
+    expected_outcome: Eine professionelle Präsentation für Regierungsvertreter
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - K1.1
+    - S2.1
+  min_overall_score: 80
+resources:
+  - url: https://smartcitiescouncil.com/
+    type: reference
+    name: Smart Cities Council
+  - url: https://www.media.mit.edu/groups/city-science/overview/
+    type: research
+    name: MIT City Science
+metadata:
+  language: de
+  version: '1.0'
+  last_updated: '2025-07-03'

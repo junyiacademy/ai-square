@@ -1,0 +1,202 @@
+scenario_info:
+  id: high-school-digital-wellness
+  difficulty: beginner
+  estimated_duration: 75
+  target_domains:
+    - creating_with_ai
+    - managing_with_ai
+    - designing_with_ai
+  title: KI für digitale Wellness-Kampagne
+  description: Entwerfe eine KI-gestützte Kampagne zur Förderung gesunder digitaler Gewohnheiten
+  prerequisites:
+    - Bewusstsein für Social-Media-Auswirkungen
+    - Grundlegende digitale Kompetenz
+  learning_objectives:
+    - Daten und Trends zum digitalen Wohlbefinden analysieren
+    - Ansprechende Inhalte mit KI-Tools erstellen
+    - Interventionen für Verhaltensänderungen entwickeln
+    - Eine umfassende Kampagne für digitales Wohlbefinden aufbauen
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S1.2
+    - S2.1
+    - S2.3
+  attitudes:
+    - A1.1
+    - A1.2
+    - A2.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Research Assistant
+      initial_prompt: |
+        You are a research assistant helping students design and analyze digital wellness surveys.
+        Guide them through:
+        - Creating effective survey questions
+        - Ensuring privacy and ethical data collection
+        - Analyzing survey results
+        - Identifying meaningful patterns
+
+        Focus on helping them understand digital wellness challenges among teens.
+    title: Umfrage zu digitalen Gewohnheiten
+    description: Verwenden Sie KI, um eine Umfrage über digitale Gewohnheiten zu erstellen und zu analysieren
+    instructions:
+      - Verwenden Sie KI, um Fragen zu Bildschirmzeit, Social-Media-Nutzung, Schlafgewohnheiten und digitalem Stress zu entwerfen
+      - Verteilen Sie an Klassenkameraden unter Wahrung von Privatsphäre und Anonymität
+      - Analysieren Sie Antworten mit KI-Unterstützung
+      - Identifizieren Sie wichtige Problembereiche und Muster
+    expected_outcome: Ein umfassender Umfragebericht mit datengestützten Erkenntnissen
+  - id: task-2
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Creative Content Coach
+      initial_prompt: |
+        You are a creative content coach helping students create digital wellness materials.
+        Assist them with:
+        - Designing visually appealing infographics
+        - Writing engaging social media content
+        - Creating compelling video scripts
+        - Developing interactive elements
+
+        Focus on positive, teen-friendly messaging that promotes healthy digital habits.
+    title: Wellness-Content-Erstellung
+    description: Erstellen Sie ansprechende digitale Wellness-Inhalte mit KI-Tools
+    instructions:
+      - Erstellen Sie Infografiken über gesunde digitale Gewohnheiten mit KI-Design-Tools
+      - Entwickeln Sie Social-Media-Beiträge mit positiven Botschaften
+      - Entwerfen Sie Videoskripte für Wellness-Tipps
+      - Erstellen Sie interaktive Quiz zum digitalen Wohlbefinden
+    expected_outcome: Ein Portfolio ansprechender digitaler Wellness-Inhalte
+  - id: task-3
+    category: interaction
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - K2.1
+        - S1.2
+      secondary:
+        - A1.2
+        - A2.1
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: UX Design Mentor
+      initial_prompt: |
+        You are a UX design mentor helping students create a wellness chatbot.
+        Guide them in:
+        - Designing user-friendly conversation flows
+        - Creating empathetic and helpful responses
+        - Building in appropriate wellness features
+        - Testing and iterating on their design
+
+        Ensure the chatbot is supportive, non-judgmental, and age-appropriate.
+    title: KI-Wellness-Assistent
+    description: Entwerfen Sie einen KI-Chatbot, um Gleichaltrigen bei der Verwaltung des digitalen Wohlbefindens zu helfen
+    instructions:
+      - Entwerfen Sie Chatbot-Funktionen für Bildschirmzeit-Erinnerungen, Achtsamkeitsaufforderungen, Lernpausen und Stimmungschecks
+      - Schreiben Sie unterstützende und nicht wertende Gesprächsabläufe
+      - Testen Sie mit Klassenkameraden und sammeln Sie Feedback
+      - Verfeinern Sie basierend auf der Benutzererfahrung
+    expected_outcome: Ein funktionsfähiger Wellness-Chatbot-Prototyp
+  - id: task-4
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K1.1
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Campaign Strategy Advisor
+      initial_prompt: |
+        You are a campaign strategy advisor helping students plan their digital wellness campaign launch.
+        Assist with:
+        - Creating realistic timelines
+        - Developing promotional strategies
+        - Identifying key stakeholders
+        - Setting achievable goals
+
+        Help them create a campaign that will effectively reach and engage their peers.
+    title: Kampagnen-Startplan
+    description: Entwickeln Sie einen umfassenden Startplan für Ihre digitale Wellness-Kampagne
+    instructions:
+      - Verwenden Sie KI, um Kampagnenzeitplan und Werbematerialien zu erstellen
+      - Planen Sie Launch-Events und Aktivitäten
+      - Identifizieren Sie Partner wie Clubs und Lehrer
+      - Setzen Sie messbare Ziele und Erfolgskennzahlen
+    expected_outcome: Ein detaillierter, umsetzbarer Kampagnen-Startplan
+  - id: task-5
+    category: analysis
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K2.3
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: Data Analytics Expert
+      initial_prompt: |
+        You are a data analytics expert helping students measure campaign impact.
+        Guide them through:
+        - Collecting meaningful metrics
+        - Analyzing data for insights
+        - Creating compelling visualizations
+        - Drawing actionable conclusions
+
+        Help them demonstrate the real impact of their digital wellness campaign.
+    title: Wirkungsmessung
+    description: Verwenden Sie KI, um die Kampagneneffektivität zu messen und zu berichten
+    instructions:
+      - Sammeln Sie Daten zu Engagement-Raten, Verhaltensänderungen, Feedback und Wellness-Verbesserungen
+      - Verwenden Sie KI, um Ergebnisse zu analysieren und Trends zu identifizieren
+      - Erstellen Sie visuelle Berichte mit Diagrammen
+      - Identifizieren Sie gelernte Lektionen und Verbesserungsbereiche
+    expected_outcome: Ein umfassender Wirkungsbericht mit umsetzbaren Erkenntnissen
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - S2.1
+    - K2.1
+  min_overall_score: 75
+resources:
+  - url: https://www.digitalwellnessinstitute.com/
+    type: reference
+    name: Digital Wellness Institute
+  - url: https://www.commonsensemedia.org/
+    type: guide
+    name: Common Sense Media
+metadata:
+  language: de
+  version: '1.0'
+  last_updated: '2025-07-03'

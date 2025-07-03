@@ -1,0 +1,172 @@
+assessment_config:
+  total_questions: 12
+  time_limit_minutes: 15
+  passing_score: 60
+  domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - managing_with_ai
+    - designing_with_ai
+domains:
+  engaging_with_ai:
+    description: Comprendre et communiquer efficacement avec les systèmes d'IA
+    questions: 3
+  creating_with_ai:
+    description: Utiliser les outils d'IA pour améliorer la créativité et la productivité
+    questions: 3
+  managing_with_ai:
+    description: Comprendre les limitations de l'IA, la confidentialité et les considérations éthiques
+    questions: 3
+  designing_with_ai:
+    description: Pensée stratégique sur l'implémentation et l'innovation de l'IA
+    questions: 3
+questions:
+  - id: E001
+    domain: engaging_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: Quelle est la façon la plus efficace d'obtenir de meilleurs résultats d'un chatbot IA ?
+    options:
+      a: Poser des questions très générales
+      b: Fournir des invites claires et spécifiques avec du contexte
+      c: Utiliser uniquement des questions oui/non
+      d: Toujours poser plusieurs questions à la fois
+    explanation: Des invites claires et spécifiques avec du contexte aident l'IA à comprendre exactement ce dont vous avez besoin et à fournir des réponses plus précises et utiles.
+  - id: E002
+    domain: engaging_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: Quand une IA vous donne une réponse incorrecte, quelle devrait être votre première réaction ?
+    options:
+      a: Faire immédiatement confiance à l'IA et utiliser l'information
+      b: Vérifier l'information à travers d'autres sources fiables
+      c: Arrêter complètement d'utiliser l'IA
+      d: Signaler l'IA comme défectueuse
+    explanation: La pensée critique nécessite de vérifier les résultats de l'IA auprès de sources fiables, car l'IA peut faire des erreurs ou fournir des informations obsolètes.
+  - id: E003
+    domain: engaging_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: Quel est le facteur le plus important lors de l'évaluation des biais dans le contenu généré par IA ?
+    options:
+      a: La vitesse de génération
+      b: Les sources de données d'entraînement et leur représentation
+      c: La longueur de la sortie
+      d: La complexité technique
+    explanation: Le biais de l'IA provient souvent de données d'entraînement qui manquent de diversité ou contiennent des biais historiques, rendant les sources de données cruciales pour l'évaluation.
+  - id: C001
+    domain: creating_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: Quelle approche est la plus efficace lors de l'utilisation de l'IA pour l'écriture créative ?
+    options:
+      a: Laisser l'IA tout écrire sans apport humain
+      b: Utiliser l'IA comme partenaire collaboratif pour le brainstorming et le perfectionnement
+      c: Utiliser l'IA uniquement pour corriger la grammaire et l'orthographe
+      d: Éviter complètement l'IA dans les processus créatifs
+    explanation: L'IA fonctionne mieux comme partenaire créatif, aidant à l'idéation, aux retours et au perfectionnement tout en maintenant la créativité et la supervision humaines.
+  - id: C002
+    domain: creating_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: Lors de l'utilisation de générateurs d'images IA, quelle est la considération éthique la plus importante ?
+    options:
+      a: Rendre les images aussi réalistes que possible
+      b: Respecter les droits d'auteur et éviter les deepfakes de personnes réelles
+      c: Utiliser les paramètres de génération les plus rapides
+      d: Créer autant d'images que possible
+    explanation: Respecter les droits de propriété intellectuelle et éviter l'utilisation abusive pour créer des ressemblances non autorisées ou du contenu trompeur est crucial pour l'utilisation éthique de l'IA.
+  - id: C003
+    domain: creating_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: Comment devriez-vous aborder la génération de code assistée par IA pour un projet logiciel critique ?
+    options:
+      a: '[FR: Use AI code directly without review]'
+      b: '[FR: Thoroughly review, test, and validate all AI-generated code]'
+      c: '[FR: Only use AI for comments and documentation]'
+      d: '[FR: Replace all developers with AI tools]'
+    explanation: '[FR translation needed]'
+  - id: M001
+    domain: managing_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: Que devriez-vous faire avec les informations personnelles sensibles lors de l'utilisation d'outils IA ?
+    options:
+      a: '[FR: Share it freely to get better AI responses]'
+      b: '[FR: Never input sensitive information into AI systems]'
+      c: '[FR: Only share it with trusted AI companies]'
+      d: '[FR: Encrypt it before sharing with AI]'
+    explanation: '[FR translation needed]'
+  - id: M002
+    domain: managing_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: Comment devriez-vous gérer l'utilisation d'outils IA dans un environnement d'équipe ?
+    options:
+      a: '[FR: Let everyone use any AI tool without guidelines]'
+      b: '[FR: Establish clear policies and training for AI tool usage]'
+      c: '[FR: Ban all AI tools to avoid risks]'
+      d: '[FR: Only allow managers to use AI tools]'
+    explanation: '[FR translation needed]'
+  - id: M003
+    domain: managing_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: Quel est le facteur le plus critique lors de l'implémentation de l'IA dans les processus métier ?
+    options:
+      a: '[FR: Choosing the most advanced AI technology]'
+      b: '[FR: Understanding limitations and maintaining human oversight]'
+      c: '[FR: Implementing AI as quickly as possible]'
+      d: '[FR: Replacing as many human workers as possible]'
+    explanation: '[FR translation needed]'
+  - id: D001
+    domain: designing_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: Lors de la conception d'une fonctionnalité alimentée par IA pour les utilisateurs, quel devrait être l'objectif principal ?
+    options:
+      a: '[FR: Showcasing the most advanced AI capabilities]'
+      b: '[FR: Solving real user problems and improving user experience]'
+      c: '[FR: Making the AI as complex as possible]'
+      d: '[FR: Hiding the fact that AI is being used]'
+    explanation: '[FR translation needed]'
+  - id: D002
+    domain: designing_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: Comment devriez-vous gérer les échecs du système IA dans les applications orientées utilisateur ?
+    options:
+      a: '[FR: Hide errors and pretend everything is working]'
+      b: '[FR: Design graceful fallbacks and clear error communication]'
+      c: '[FR: Immediately shut down the entire application]'
+      d: '[FR: Blame the user for the error]'
+    explanation: '[FR translation needed]'
+  - id: D003
+    domain: designing_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: Quelle est la considération la plus importante lors de la conception de systèmes IA pour des publics mondiaux divers ?
+    options:
+      a: '[FR: Using the same design for everyone to ensure consistency]'
+      b: '[FR: Understanding cultural contexts and avoiding algorithmic bias]'
+      c: '[FR: Focusing only on the largest market segments]'
+      d: '[FR: Implementing the latest AI technologies everywhere]'
+    explanation: '[FR translation needed]'
+metadata:
+  language: fr
+  language_name: French
+  generated_from: ai_literacy_questions.yaml
+  generated_at: '2025-07-03T10:07:41.113Z'

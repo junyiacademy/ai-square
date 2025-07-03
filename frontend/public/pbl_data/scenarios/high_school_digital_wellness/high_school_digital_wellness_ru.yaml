@@ -1,0 +1,202 @@
+scenario_info:
+  id: high-school-digital-wellness
+  difficulty: beginner
+  estimated_duration: 75
+  target_domains:
+    - creating_with_ai
+    - managing_with_ai
+    - designing_with_ai
+  title: Кампания цифрового благополучия с ИИ
+  description: Разработайте кампанию с ИИ для продвижения здоровых цифровых привычек
+  prerequisites:
+    - Осознание влияния социальных сетей
+    - Базовая цифровая грамотность
+  learning_objectives:
+    - Анализировать данные и тренды цифрового благополучия
+    - Создавать привлекательный контент с помощью ИИ-инструментов
+    - Разрабатывать вмешательства для изменения поведения
+    - Создать комплексную кампанию цифрового благополучия
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S1.2
+    - S2.1
+    - S2.3
+  attitudes:
+    - A1.1
+    - A1.2
+    - A2.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Research Assistant
+      initial_prompt: |
+        You are a research assistant helping students design and analyze digital wellness surveys.
+        Guide them through:
+        - Creating effective survey questions
+        - Ensuring privacy and ethical data collection
+        - Analyzing survey results
+        - Identifying meaningful patterns
+
+        Focus on helping them understand digital wellness challenges among teens.
+    title: Опрос о цифровых привычках
+    description: Используйте ИИ для создания и анализа опроса о цифровых привычках
+    instructions:
+      - Используйте ИИ для разработки вопросов о времени у экрана, использовании социальных сетей, привычках сна и цифровом стрессе
+      - Распространите среди одноклассников, обеспечивая конфиденциальность и анонимность
+      - Проанализируйте ответы с помощью ИИ
+      - Определите ключевые проблемные области и закономерности
+    expected_outcome: Комплексный отчет опроса с выводами на основе данных
+  - id: task-2
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Creative Content Coach
+      initial_prompt: |
+        You are a creative content coach helping students create digital wellness materials.
+        Assist them with:
+        - Designing visually appealing infographics
+        - Writing engaging social media content
+        - Creating compelling video scripts
+        - Developing interactive elements
+
+        Focus on positive, teen-friendly messaging that promotes healthy digital habits.
+    title: Создание контента о благополучии
+    description: Создайте привлекательный контент о цифровом благополучии с помощью ИИ-инструментов
+    instructions:
+      - Создайте инфографику о здоровых цифровых привычках с помощью ИИ-инструментов дизайна
+      - Разработайте посты в социальных сетях с позитивными сообщениями
+      - Создайте сценарии видео для советов по благополучию
+      - Создайте интерактивные викторины о цифровом благополучии
+    expected_outcome: Портфолио привлекательного контента о цифровом благополучии
+  - id: task-3
+    category: interaction
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - K2.1
+        - S1.2
+      secondary:
+        - A1.2
+        - A2.1
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: UX Design Mentor
+      initial_prompt: |
+        You are a UX design mentor helping students create a wellness chatbot.
+        Guide them in:
+        - Designing user-friendly conversation flows
+        - Creating empathetic and helpful responses
+        - Building in appropriate wellness features
+        - Testing and iterating on their design
+
+        Ensure the chatbot is supportive, non-judgmental, and age-appropriate.
+    title: ИИ-помощник по благополучию
+    description: Разработайте ИИ-чатбота для помощи сверстникам в управлении цифровым благополучием
+    instructions:
+      - Разработайте функции чатбота для напоминаний о времени у экрана, подсказок осознанности, учебных перерывов и проверок настроения
+      - Напишите поддерживающие и не осуждающие диалоговые потоки
+      - Протестируйте с одноклассниками и соберите отзывы
+      - Доработайте на основе пользовательского опыта
+    expected_outcome: Функциональный прототип чатбота для благополучия
+  - id: task-4
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K1.1
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Campaign Strategy Advisor
+      initial_prompt: |
+        You are a campaign strategy advisor helping students plan their digital wellness campaign launch.
+        Assist with:
+        - Creating realistic timelines
+        - Developing promotional strategies
+        - Identifying key stakeholders
+        - Setting achievable goals
+
+        Help them create a campaign that will effectively reach and engage their peers.
+    title: План запуска кампании
+    description: Разработайте комплексный план запуска вашей кампании цифрового благополучия
+    instructions:
+      - Используйте ИИ для создания временной шкалы кампании и рекламных материалов
+      - Планируйте мероприятия и активности запуска
+      - Определите партнеров, таких как клубы и учителя
+      - Установите измеримые цели и показатели успеха
+    expected_outcome: Подробный, действенный план запуска кампании
+  - id: task-5
+    category: analysis
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K2.3
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: Data Analytics Expert
+      initial_prompt: |
+        You are a data analytics expert helping students measure campaign impact.
+        Guide them through:
+        - Collecting meaningful metrics
+        - Analyzing data for insights
+        - Creating compelling visualizations
+        - Drawing actionable conclusions
+
+        Help them demonstrate the real impact of their digital wellness campaign.
+    title: Измерение воздействия
+    description: Используйте ИИ для измерения и отчетности об эффективности кампании
+    instructions:
+      - Соберите данные о показателях вовлеченности, изменениях поведения, отзывах и улучшениях благополучия
+      - Используйте ИИ для анализа результатов и выявления тенденций
+      - Создайте визуальные отчеты с диаграммами
+      - Определите извлеченные уроки и области для улучшения
+    expected_outcome: Комплексный отчет о воздействии с практическими выводами
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - S2.1
+    - K2.1
+  min_overall_score: 75
+resources:
+  - url: https://www.digitalwellnessinstitute.com/
+    type: reference
+    name: Digital Wellness Institute
+  - url: https://www.commonsensemedia.org/
+    type: guide
+    name: Common Sense Media
+metadata:
+  language: ru
+  version: '1.0'
+  last_updated: '2025-07-03'

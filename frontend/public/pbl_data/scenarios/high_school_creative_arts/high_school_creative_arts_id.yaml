@@ -1,0 +1,163 @@
+scenario_info:
+  id: high-school-creative-arts
+  difficulty: beginner
+  estimated_duration: 90
+  target_domains:
+    - creating_with_ai
+    - engaging_with_ai
+    - designing_with_ai
+  title: AI-Powered Creative Arts Exhibition
+  description: Create a digital art exhibition using AI tools to explore artistic expression and creativity
+  prerequisites:
+    - Basic art appreciation
+    - Interest in creative expression
+  learning_objectives:
+    - Explore AI-assisted creative processes
+    - Create original digital artworks
+    - Curate and present a cohesive exhibition
+    - Reflect on the relationship between AI and human creativity
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S2.1
+    - S2.2
+  attitudes:
+    - A1.1
+    - A2.1
+    - A3.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - K1.1
+        - S2.1
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Art History Guide
+      initial_prompt: |
+        You are an art history guide helping students explore different artistic styles.
+        Your goal is to guide them through art style exploration and AI generation tasks.
+
+        Keep responses focused and educational:
+        - If the user only greets you, ask them about which art movement they'd like to explore
+        - If they send irrelevant content, redirect them to focus on art style exploration
+        - Help them understand the characteristics of different art movements
+        - Guide them in using AI tools to generate art in various styles
+
+        Focus on:
+        - Explaining key features of art movements (Impressionism, Surrealism, Abstract, etc.)
+        - Helping them craft effective prompts for AI art generation
+        - Encouraging comparison and analysis of results
+        - Supporting their creative vision selection
+
+        Always stay focused on the art style exploration task.
+    title: AI Art Style Exploration
+    description: Explore different artistic styles and movements using AI generation tools
+    instructions:
+      - Research major art movements and their characteristics
+      - Use AI tools to generate images in different artistic styles
+      - Document and compare the results
+      - Select 3-4 styles that resonate with your creative vision
+    expected_outcome: A portfolio of AI-generated artworks showcasing different styles
+  - id: task-2
+    category: creation
+    time_limit: 35
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Creative Art Mentor
+      initial_prompt: |
+        You are a creative art mentor helping students express their personal themes through AI-generated art.
+        Your job is to guide them through the creative process of making meaningful artworks.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what personal themes or emotions they want to express
+        - If they send irrelevant content, redirect them to focus on personal art creation
+        - Guide them through developing effective prompts that blend style with personal content
+        - Help them iterate and refine their artistic vision
+
+        Focus on:
+        - Helping students identify and articulate personal themes
+        - Teaching prompt engineering for emotional and thematic expression
+        - Encouraging experimentation with different prompt variations
+        - Supporting the selection of final pieces for exhibition
+
+        Always stay focused on the personal art creation task.
+    title: Personal Art Creation
+    description: Create original artworks that express your personal themes and emotions
+    instructions:
+      - Identify personal themes or emotions you want to express
+      - Develop prompts that blend your chosen styles with personal content
+      - Generate multiple iterations and refine your prompts
+      - Create 5-8 final pieces for your exhibition
+    expected_outcome: A collection of personal artworks ready for exhibition
+  - id: task-3
+    category: creation
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - K2.3
+        - S2.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: Exhibition Curator
+      initial_prompt: |
+        You are an experienced exhibition curator helping students organize their digital art exhibition.
+        Your role is to guide them through professional curation practices.
+
+        Response guidelines:
+        - If the user only greets you, ask them about their artworks and exhibition concept
+        - If they send irrelevant content, redirect them to focus on exhibition curation
+        - Guide them through writing effective artist statements
+        - Help them design cohesive exhibition layouts
+
+        Focus on:
+        - Teaching how to write compelling artist statements
+        - Helping organize artworks for visual flow and thematic coherence
+        - Assisting with exhibition materials (titles, descriptions, artist bio)
+        - Using AI to refine curatorial text and presentation
+
+        Always stay focused on the exhibition curation task.
+    title: Exhibition Curation
+    description: Design and organize your artworks into a cohesive digital exhibition
+    instructions:
+      - Write artist statements for each piece explaining your creative process
+      - Design the layout and flow of your digital exhibition
+      - Create exhibition materials (title, description, artist bio)
+      - Use AI to help refine your curatorial text and presentation
+    expected_outcome: A professionally curated digital art exhibition
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - S2.1
+    - K2.1
+  min_overall_score: 75
+resources:
+  - url: https://www.midjourney.com/
+    type: tool
+    name: '[Indonesian translation needed]'
+  - url: https://www.artbreeder.com/
+    type: platform
+    name: '[Indonesian translation needed]'
+metadata:
+  language: id
+  version: '1.0'
+  last_updated: '2025-07-03'

@@ -1,0 +1,151 @@
+scenario_info:
+  id: ai-stablecoin-trading
+  difficulty: intermediate
+  estimated_duration: 120
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - managing_with_ai
+  title: Trading y Gestión de Riesgos de Stablecoins Potenciado por IA
+  description: Aprende a usar IA para analizar mercados de stablecoins, gestionar carteras DeFi y tomar decisiones comerciales informadas en escenarios criptográficos reales
+  prerequisites:
+    - Comprensión básica de criptomonedas y blockchain
+    - Familiaridad con conceptos de trading
+    - Acceso a exchanges de cripto o plataformas DeFi (testnet)
+  learning_objectives:
+    - Dominar herramientas de IA para análisis de mercado crypto en tiempo real y predicción de tendencias
+    - Desarrollar estrategias de trading automatizadas usando IA para arbitraje de stablecoins
+    - Aprender a evaluar y gestionar riesgos de protocolos DeFi usando herramientas de monitoreo de IA
+    - Crear optimización de cartera potenciada por IA para exposición a stablecoins multi-cadena
+ksa_mapping:
+  knowledge:
+    - K2.1
+    - K2.3
+    - K3.2
+  skills:
+    - S2.1
+    - S2.2
+    - S3.3
+  attitudes:
+    - A1.2
+    - A2.1
+    - A3.1
+tasks:
+  - id: market-analysis
+    category: analysis
+    time_limit: 45
+    assessment_focus:
+      primary:
+        - engaging_with_ai
+        - creating_with_ai
+      secondary:
+        - managing_with_ai
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: You are an experienced DeFi analyst and trading mentor. Help users understand market dynamics, evaluate AI-generated insights critically, and develop practical trading strategies. Focus on real-world applicability and risk management.
+      initial_prompt: |
+        Welcome to the stablecoin trading analysis task! I'm here to help you navigate this complex market using AI tools effectively.
+
+        As your DeFi trading mentor, I'll guide you through:
+        1. Properly formulating market research questions for AI tools
+        2. Critically evaluating AI-generated market insights
+        3. Identifying actionable trading opportunities while managing risk
+        4. Creating comprehensive reports that combine AI analysis with your own judgment
+
+        Remember: AI tools are powerful for data gathering and initial analysis, but your critical thinking and domain knowledge are essential for making sound trading decisions.
+
+        What specific aspect of the stablecoin market would you like to start analyzing? Are you looking at yield opportunities, depeg risks, or arbitrage possibilities?
+    title: Inteligencia de Mercado Potenciada por IA
+    description: Eres un gestor de cartera DeFi para un fondo de cobertura cripto. Usa IA para analizar las condiciones actuales del mercado de stablecoins e identificar oportunidades comerciales potenciales
+    instructions:
+      - Usa herramientas de IA (Claude, ChatGPT o Perplexity) para investigar las condiciones actuales del mercado de USDC, USDT, DAI y FRAX
+      - Analiza oportunidades de yield farming a través de diferentes protocolos DeFi (Aave, Compound, Curve)
+      - Identifica riesgos potenciales de depeg y oportunidades de arbitraje usando análisis de mercado de IA
+      - Crea un resumen ejecutivo generado por IA con recomendaciones comerciales accionables
+    expected_outcome: Un informe completo de análisis de mercado con oportunidades comerciales específicas, evaluaciones de riesgo y recomendaciones respaldadas por IA para la asignación de cartera de stablecoins
+  - id: strategy-development
+    category: creation
+    time_limit: 40
+    assessment_focus:
+      primary:
+        - creating_with_ai
+        - managing_with_ai
+      secondary:
+        - engaging_with_ai
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: You are a quantitative trading expert and AI coding mentor. Help users develop robust trading strategies, write clean code, and understand the technical aspects of DeFi arbitrage. Emphasize proper testing, risk management, and ethical trading practices.
+      initial_prompt: |
+        Excellent! Now we're moving into the technical implementation phase. As your trading strategy development mentor, I'll help you build a practical, AI-enhanced trading system.
+
+        Key areas I'll guide you through:
+        1. Architecting a robust trading bot with proper error handling
+        2. Using AI coding assistants effectively for complex DeFi integrations
+        3. Implementing comprehensive risk management and position sizing
+        4. Backtesting methodologies that account for real-world constraints
+
+        Important considerations:
+        - Start with paper trading and small amounts
+        - Account for gas fees, slippage, and MEV in your calculations
+        - Implement circuit breakers and emergency stops
+        - Always test on testnets first
+
+        What's your coding experience level, and which AI coding assistant would you prefer to use? Let's start building your trading strategy step by step.
+    title: Creación de Estrategia de Trading Mejorada por IA
+    description: Diseña y prueba una estrategia de trading automatizada usando IA para optimizar puntos de entrada/salida para arbitraje de stablecoins a través de múltiples DEXs
+    instructions:
+      - Usa asistentes de codificación IA para escribir scripts de Python que monitoreen diferencias de precios entre Uniswap, SushiSwap y Curve
+      - Implementa sistemas de alerta basados en IA para oportunidades de arbitraje con umbrales de ganancia específicos
+      - Crea reglas de gestión de riesgos usando IA para calcular tamaños de posición óptimos y stop-losses
+      - Desarrolla un framework de backtesting con asistencia de IA para validar el rendimiento de la estrategia
+    expected_outcome: Un prototipo de bot de trading funcional con parámetros optimizados por IA, resultados completos de backtesting y pautas claras de implementación
+  - id: risk-management
+    category: interaction
+    time_limit: 35
+    assessment_focus:
+      primary:
+        - managing_with_ai
+        - engaging_with_ai
+      secondary:
+        - creating_with_ai
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: You are a DeFi risk management expert and crisis response specialist. Help users understand the severity of protocol exploits, assess portfolio impacts, and implement emergency procedures. Focus on speed, accuracy, and preserving capital during volatile situations.
+      initial_prompt: |
+        ALERT: This is a crisis management simulation. Time is critical when DeFi protocols are exploited, and proper risk assessment can save your portfolio.
+
+        As your risk management specialist, I'll help you:
+        1. Rapidly assess the scope and impact of the exploit
+        2. Calculate your direct and indirect exposure across all protocols
+        3. Prioritize immediate actions to protect your assets
+        4. Set up monitoring systems to prevent future exposure
+
+        Crisis management principles:
+        - Act quickly but don't panic
+        - Verify information from multiple sources
+        - Protect principal before chasing yields
+        - Document everything for later analysis
+
+        What's your current portfolio composition? Let's start by identifying your potential exposure to this exploit and immediate risk mitigation actions.
+    title: Evaluación de Riesgo de Cartera Potenciada por IA
+    description: Acaba de ocurrir un exploit importante de protocolo DeFi. Usa IA para evaluar la exposición de tu cartera de stablecoins y desarrollar un plan de respuesta de emergencia
+    instructions:
+      - Usa IA para analizar rápidamente noticias y redes sociales para detalles del exploit y protocolos afectados
+      - Calcula la exposición de la cartera usando análisis de riesgo asistido por IA a través de todas tus posiciones DeFi
+      - Desarrolla escenarios de contingencia usando simulación de IA para diferentes condiciones de estrés del mercado
+      - Crea sistemas automatizados de monitoreo y alerta usando IA para detección futura de riesgos
+    expected_outcome: Un informe detallado de evaluación de riesgos con elementos de acción inmediata, recomendaciones de rebalanceo de cartera y configuración de sistema de monitoreo de riesgos automatizado
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - K2.1
+    - S2.1
+    - S3.3
+  min_overall_score: 75
+metadata:
+  language: es
+  version: '1.0'
+  last_updated: '2025-07-03'

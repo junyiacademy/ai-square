@@ -1,0 +1,174 @@
+scenario_info:
+  id: high-school-climate-change
+  difficulty: beginner
+  estimated_duration: 60
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - managing_with_ai
+  title: AI駆動型気候行動計画
+  description: AIを使用して気候データを分析し、学校とコミュニティのための実行可能な解決策を作成する
+  prerequisites:
+    - 気候変動の基本的な理解
+    - 環境問題への関心
+  learning_objectives:
+    - AIツールを使用して環境データを分析する
+    - 調査結果を伝えるためのデータ視覚化を作成する
+    - 実用的な気候行動提案を開発する
+    - 環境擁護のためのAI活用に自信を持つ
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S1.2
+    - S2.1
+    - S2.3
+  attitudes:
+    - A1.1
+    - A1.2
+    - A2.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Climate Research Assistant
+      initial_prompt: |
+        You are a climate research assistant helping students explore climate data.
+        Your goal is to guide them through data collection and analysis tasks.
+
+        Keep responses focused and educational:
+        - Help them find reliable climate data sources
+        - Guide them in organizing and analyzing data
+        - Explain climate concepts in age-appropriate language
+        - Encourage critical thinking about climate impacts
+
+        Always redirect off-topic conversations back to the climate research task.
+    title: 気候データ収集
+    description: AIを使用して地域の気候データを収集・整理する
+    instructions:
+      - AIを使用して信頼できる気候データソースを見つける
+      - 気温傾向、降水、大気質、エネルギー消費のデータを収集
+      - スプレッドシートでデータを整理
+      - 主要なパターンとトレンドを特定
+    expected_outcome: あなたの地域の包括的な気候データ収集
+  - id: task-2
+    category: analysis
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - K2.3
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: Data Analysis Expert
+      initial_prompt: |
+        You are a data analysis expert helping students analyze climate data.
+        Guide them through:
+        - Pattern recognition in climate data
+        - Creating meaningful visualizations
+        - Making evidence-based predictions
+        - Drawing actionable conclusions
+
+        Encourage critical thinking and help them understand the implications of their findings.
+    title: AIデータ分析
+    description: AIツールを使用して気候データを分析し、実行可能な洞察を特定する
+    instructions:
+      - AIを使用して気候データのパターンと相関関係を特定
+      - 温度変化、季節変動、人間の影響を示す視覚化を作成
+      - 将来の傾向の予測を生成
+      - 介入が必要な領域を特定
+    expected_outcome: 明確な洞察と予測を含む包括的な分析
+  - id: task-3
+    category: creation
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Sustainability Solutions Coach
+      initial_prompt: |
+        You are a sustainability solutions coach helping students design climate action plans.
+        Guide them to:
+        - Generate creative yet practical solutions
+        - Consider feasibility and resource requirements
+        - Calculate environmental impacts
+        - Think about stakeholder engagement
+
+        Focus on solutions that students can realistically implement in their school.
+    title: ソリューション設計
+    description: AIの支援を受けて学校向けの実用的な気候ソリューションを作成する
+    instructions:
+      - エネルギー節約、廃棄物削減、緑地、交通についてAIとブレインストーミング
+      - 各ソリューションの実現可能性と影響を評価
+      - 詳細な実施計画を作成
+      - 潜在的な炭素削減量を計算
+    expected_outcome: 実用的で実施可能な気候ソリューションのポートフォリオ
+  - id: task-4
+    category: interaction
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S1.2
+        - K1.2
+      secondary:
+        - A1.1
+        - A2.1
+    ai_module:
+      role: actor
+      model: gemini-2.5-flash
+      persona: Presentation Coach
+      initial_prompt: |
+        You are a presentation coach helping students prepare their climate action plan presentation.
+        Assist them with:
+        - Creating clear, compelling narratives
+        - Designing effective visual aids
+        - Anticipating and preparing for questions
+        - Building confidence in public speaking
+
+        Help them create a presentation that will inspire action from school administrators and peers.
+    title: 行動計画プレゼンテーション
+    description: AIを使用して魅力的なプレゼンテーションを作成し、気候行動計画を提案する
+    instructions:
+      - AIを使用してプレゼンテーションを効果的に構成
+      - データを含む問題提起、提案された解決策、実施スケジュール、期待される成果を含める
+      - 説得力のあるビジュアルとインフォグラフィックを生成
+      - AIの助けを借りてQ&Aの準備
+    expected_outcome: ステークホルダー向けの専門的で説得力のあるプレゼンテーション
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - K1.1
+    - S2.1
+  min_overall_score: 70
+resources:
+  - url: https://climatekids.nasa.gov/
+    type: reference
+    name: NASA Climate Kids
+  - url: https://www.climate.ai/
+    type: tool
+    name: AI Climate Tools Guide
+metadata:
+  language: ja
+  version: '1.0'
+  last_updated: '2025-07-03'

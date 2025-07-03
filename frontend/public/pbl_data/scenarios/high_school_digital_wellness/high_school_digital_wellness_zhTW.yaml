@@ -1,0 +1,202 @@
+scenario_info:
+  id: high-school-digital-wellness
+  difficulty: beginner
+  estimated_duration: 75
+  target_domains:
+    - creating_with_ai
+    - managing_with_ai
+    - designing_with_ai
+  title: AI 數位健康運動
+  description: 設計一個 AI 驅動的活動，在同儕中推廣健康的數位習慣
+  prerequisites:
+    - 對社交媒體影響的認識
+    - 基本數位素養
+  learning_objectives:
+    - 分析數位健康數據和趨勢
+    - 使用 AI 工具創建引人入勝的內容
+    - 設計行為改變的干預措施
+    - 建立全面的數位健康活動
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S1.2
+    - S2.1
+    - S2.3
+  attitudes:
+    - A1.1
+    - A1.2
+    - A2.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Research Assistant
+      initial_prompt: |
+        You are a research assistant helping students design and analyze digital wellness surveys.
+        Guide them through:
+        - Creating effective survey questions
+        - Ensuring privacy and ethical data collection
+        - Analyzing survey results
+        - Identifying meaningful patterns
+
+        Focus on helping them understand digital wellness challenges among teens.
+    title: 數位習慣調查
+    description: 使用 AI 創建和分析關於數位習慣的調查
+    instructions:
+      - 使用 AI 設計關於螢幕時間、社交媒體使用、睡眠習慣和數位壓力的調查問題
+      - 確保隱私和匿名地分發給同學
+      - 在 AI 協助下分析回應
+      - 識別關鍵問題領域和模式
+    expected_outcome: 一份包含數據驅動見解的全面調查報告
+  - id: task-2
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Creative Content Coach
+      initial_prompt: |
+        You are a creative content coach helping students create digital wellness materials.
+        Assist them with:
+        - Designing visually appealing infographics
+        - Writing engaging social media content
+        - Creating compelling video scripts
+        - Developing interactive elements
+
+        Focus on positive, teen-friendly messaging that promotes healthy digital habits.
+    title: 健康內容創作
+    description: 使用 AI 工具創建引人入勝的數位健康內容
+    instructions:
+      - 使用 AI 設計工具創建健康數位習慣的信息圖表
+      - 開發具有正面訊息的社交媒體帖子
+      - 設計健康提示的視頻腳本
+      - 創建關於數位健康的互動測驗
+    expected_outcome: 一套引人入勝的數位健康內容組合
+  - id: task-3
+    category: interaction
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - K2.1
+        - S1.2
+      secondary:
+        - A1.2
+        - A2.1
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: UX Design Mentor
+      initial_prompt: |
+        You are a UX design mentor helping students create a wellness chatbot.
+        Guide them in:
+        - Designing user-friendly conversation flows
+        - Creating empathetic and helpful responses
+        - Building in appropriate wellness features
+        - Testing and iterating on their design
+
+        Ensure the chatbot is supportive, non-judgmental, and age-appropriate.
+    title: AI 健康助手
+    description: 設計一個 AI 聊天機器人來幫助同儕管理數位健康
+    instructions:
+      - 設計聊天機器人功能：螢幕時間提醒、正念提示、學習休息和情緒檢查
+      - 編寫支持性和非批判性的對話流程
+      - 與同學測試並收集反饋
+      - 根據用戶體驗進行改進
+    expected_outcome: 一個功能性的健康聊天機器人原型
+  - id: task-4
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K1.1
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Campaign Strategy Advisor
+      initial_prompt: |
+        You are a campaign strategy advisor helping students plan their digital wellness campaign launch.
+        Assist with:
+        - Creating realistic timelines
+        - Developing promotional strategies
+        - Identifying key stakeholders
+        - Setting achievable goals
+
+        Help them create a campaign that will effectively reach and engage their peers.
+    title: 活動啟動計畫
+    description: 為你的數位健康活動制定全面的啟動計畫
+    instructions:
+      - 使用 AI 創建活動時間表和宣傳材料
+      - 規劃啟動活動和活動
+      - 識別合作夥伴如社團和老師
+      - 設定可衡量的目標和成功指標
+    expected_outcome: 一個詳細、可執行的活動啟動計畫
+  - id: task-5
+    category: analysis
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K2.3
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: Data Analytics Expert
+      initial_prompt: |
+        You are a data analytics expert helping students measure campaign impact.
+        Guide them through:
+        - Collecting meaningful metrics
+        - Analyzing data for insights
+        - Creating compelling visualizations
+        - Drawing actionable conclusions
+
+        Help them demonstrate the real impact of their digital wellness campaign.
+    title: 影響力測量
+    description: 使用 AI 測量和報告活動效果
+    instructions:
+      - 收集參與率、行為改變、反饋和健康改善的數據
+      - 使用 AI 分析結果並識別趨勢
+      - 創建帶有圖表的視覺報告
+      - 識別學到的經驗和改進領域
+    expected_outcome: 一份包含可行見解的全面影響報告
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - S2.1
+    - K2.1
+  min_overall_score: 75
+resources:
+  - url: https://www.digitalwellnessinstitute.com/
+    type: reference
+    name: 數位健康研究所
+  - url: https://www.commonsensemedia.org/
+    type: guide
+    name: 常識媒體
+metadata:
+  language: zhTW
+  version: '1.0'
+  last_updated: '2025-07-03'

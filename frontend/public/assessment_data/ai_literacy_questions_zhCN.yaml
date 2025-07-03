@@ -1,0 +1,172 @@
+assessment_config:
+  total_questions: 12
+  time_limit_minutes: 15
+  passing_score: 60
+  domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - managing_with_ai
+    - designing_with_ai
+domains:
+  engaging_with_ai:
+    description: 理解并有效地与AI系统沟通
+    questions: 3
+  creating_with_ai:
+    description: 使用AI工具提升创造力和生产力
+    questions: 3
+  managing_with_ai:
+    description: 理解AI的局限性、隐私和伦理考量
+    questions: 3
+  designing_with_ai:
+    description: 关于AI实施和创新的战略思考
+    questions: 3
+questions:
+  - id: E001
+    domain: engaging_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: 如何才能从 AI 聊天机器人获得更好的结果？
+    options:
+      a: 问非常笼统的问题
+      b: 提供清晰、具体且有背景的提示
+      c: 只使用是/否问题
+      d: 总是一次问多个问题
+    explanation: 清晰、具体且有背景的提示有助于 AI 准确理解您的需求，并提供更准确、有用的回应。
+  - id: E002
+    domain: engaging_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: 当 AI 给出错误答案时，你的第一反应应该是什么？
+    options:
+      a: 立即相信 AI 并使用该信息
+      b: 通过其他可靠来源验证信息
+      c: 完全停止使用 AI
+      d: 报告 AI 故障
+    explanation: 批判性思维需要通过可靠的来源验证 AI 的输出，因为 AI 可能会出错或提供过时的信息。
+  - id: E003
+    domain: engaging_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: 评估 AI 生成内容的偏见时，最重要的因素是什么？
+    options:
+      a: 生成速度
+      b: 训练数据来源和代表性
+      c: 输出长度
+      d: 技术复杂性
+    explanation: AI 偏见通常源于缺乏多样性或含有历史偏见的训练数据，使得数据来源对于评估至关重要。
+  - id: C001
+    domain: creating_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: 使用 AI 进行创意写作时，哪种方法最有效？
+    options:
+      a: 让 AI 在没有人类输入的情况下写所有内容
+      b: 将 AI 作为脑力激荡和完善的协作伙伴
+      c: 只使用 AI 来修正语法和拼写
+      d: 在创意过程中完全避免使用 AI
+    explanation: AI 作为创意伙伴效果最佳，可以帮助构思、提供反馈和精炼想法，同时保持人类的创造力和监督。
+  - id: C002
+    domain: creating_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: 使用 AI 图像生成器时，最重要的道德考量是什么？
+    options:
+      a: 让图像尽可能真实
+      b: 尊重版权并避免真人的深伪造像
+      c: 使用最快的生成设置
+      d: 创建尽可能多的图像
+    explanation: 尊重知识产权，避免滥用来创建未经授权的肖像或误导性内容，对于道德使用 AI 至关重要。
+  - id: C003
+    domain: creating_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: 对于关键软件项目，你应该如何处理 AI 辅助代码生成？
+    options:
+      a: 直接使用 AI 代码而不进行审查
+      b: 彻底审查、测试和验证所有 AI 生成的代码
+      c: 只将 AI 用于注释和文档
+      d: 用 AI 工具取代所有开发人员
+    explanation: 关键软件需要人工监督、彻底测试和验证 AI 生成的代码，以确保安全性、可靠性和正确性。
+  - id: M001
+    domain: managing_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: 使用 AI 工具时，应该如何处理敏感的个人信息？
+    options:
+      a: 自由分享以获得更好的 AI 回应
+      b: 绝不将敏感信息输入 AI 系统
+      c: 只与可信的 AI 公司分享
+      d: 在与 AI 分享前加密
+    explanation: 关键软件需要人工监督、彻底测试和验证 AI 生成的代码，以确保安全性、可靠性和正确性。
+  - id: M002
+    domain: managing_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: 在团队环境中应该如何管理 AI 工具的使用？
+    options:
+      a: 让每个人在没有指导方针的情况下使用任何 AI 工具
+      b: 为 AI 工具使用建立明确的政策和培训
+      c: 禁止所有 AI 工具以避免风险
+      d: 只允许管理人员使用 AI 工具
+    explanation: 关键软件需要人工监督、彻底测试和验证 AI 生成的代码，以确保安全性、可靠性和正确性。
+  - id: M003
+    domain: managing_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: 在业务流程中实施 AI 时，最关键的因素是什么？
+    options:
+      a: 选择最先进的 AI 技术
+      b: 理解局限性并保持人类监督
+      c: 尽快实施 AI
+      d: 尽可能替换更多人类工作者
+    explanation: 关键软件需要人工监督、彻底测试和验证 AI 生成的代码，以确保安全性、可靠性和正确性。
+  - id: D001
+    domain: designing_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: 为用户设计 AI 功能时，主要关注点应该是什么？
+    options:
+      a: 展示最先进的 AI 能力
+      b: 解决真正的用户问题并改善用户体验
+      c: 让 AI 尽可能复杂
+      d: 隐藏正在使用 AI 的事实
+    explanation: 关键软件需要人工监督、彻底测试和验证 AI 生成的代码，以确保安全性、可靠性和正确性。
+  - id: D002
+    domain: designing_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: 在面向用户的应用程序中，应该如何处理 AI 系统故障？
+    options:
+      a: 隐藏错误并假装一切正常
+      b: 设计优雅的后备方案和清晰的错误沟通
+      c: 立即关闭整个应用程序
+      d: 将错误归咎于用户
+    explanation: 关键软件需要人工监督、彻底测试和验证 AI 生成的代码，以确保安全性、可靠性和正确性。
+  - id: D003
+    domain: designing_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: 为多元化的全球受众设计 AI 系统时，最重要的考量是什么？
+    options:
+      a: 为每个人使用相同的设计以确保一致性
+      b: 理解文化背景并避免算法偏见
+      c: 只关注最大的市场细分
+      d: 在所有地方实施最新的 AI 技术
+    explanation: 关键软件需要人工监督、彻底测试和验证 AI 生成的代码，以确保安全性、可靠性和正确性。
+metadata:
+  language: zhCN
+  language_name: Simplified Chinese
+  generated_from: ai_literacy_questions.yaml
+  generated_at: '2025-07-03T10:07:41.117Z'

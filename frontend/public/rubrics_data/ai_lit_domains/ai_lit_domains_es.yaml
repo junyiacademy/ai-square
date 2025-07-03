@@ -1,0 +1,322 @@
+domains:
+  Engaging_with_AI:
+    emoji: 🎯
+    overview: Implica el uso de IA como herramienta para acceder a nuevos contenidos, información o recomendaciones. Estas situaciones requieren que los estudiantes primero identifiquen la presencia de IA y luego evalúen la precisión y relevancia de los resultados de la IA. Los estudiantes deben desarrollar una comprensión fundamental de las bases técnicas de la IA para analizar críticamente sus capacidades y limitaciones.
+    competencies:
+      E1:
+        description: Identificar el papel y el impacto de la IA en diferentes contextos.
+        knowledge:
+          - K1.4
+          - K5.1
+        skills:
+          - S6.1
+        attitudes:
+          - A2.1
+          - A1.1
+        content: Los estudiantes identifican la presencia de IA en herramientas y sistemas cotidianos, y consideran su propósito en diversas situaciones, como recomendaciones de contenido o aprendizaje adaptativo. Reflexionan sobre cómo la IA influye en sus elecciones, aprendizaje y cognición.
+        scenarios:
+          - Enumerar interacciones digitales familiares (por ejemplo, usar cámaras web, recomendaciones de video) y discutir si y cómo cada una utiliza IA.
+          - Explorar cómo las plataformas matemáticas en línea utilizan datos en tiempo real para presentar contenido de diferentes niveles de dificultad.
+      E2:
+        description: Analizar la precisión y relevancia de los resultados de la IA.
+        knowledge:
+          - K1.1
+          - K1.3
+          - K4.1
+        skills:
+          - S1.1
+        attitudes:
+          - A1.1
+          - A2.1
+        content: Los estudiantes evalúan si el contenido generado por IA es preciso, relevante y aplicable. Aprenden a identificar las fortalezas y limitaciones de la IA, y consideran múltiples fuentes de información al tomar decisiones.
+        scenarios:
+          - Comparar resúmenes de noticias generados por IA con artículos originales, identificando precisión y sesgos.
+          - Evaluar la calidad de las traducciones de idiomas por IA, considerando el contexto cultural y los matices semánticos.
+      E3:
+        description: Reconocer las capacidades y limitaciones de los sistemas de IA.
+        knowledge:
+          - K1.2
+          - K1.3
+          - K4.1
+        skills:
+          - S1.1
+        attitudes:
+          - A2.1
+        content: Los estudiantes comprenden las capacidades técnicas y los límites de los sistemas de IA, incluyendo sus diferencias de rendimiento en distintas tareas. Aprenden a distinguir entre áreas donde la IA sobresale y aquellas que requieren juicio humano.
+        scenarios:
+          - Probar el rendimiento de un chatbot de IA con diferentes tipos de preguntas, comparando sus diferencias entre preguntas factuales y creativas.
+          - Analizar la precisión de los sistemas de reconocimiento de imágenes por IA bajo diferentes condiciones.
+      E4:
+        description: Evaluar la idoneidad y las implicaciones éticas del uso de la IA.
+        knowledge:
+          - K5.4
+          - K2.1
+        skills:
+          - S5.1
+          - S6.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Los estudiantes consideran si el uso de IA en situaciones específicas es apropiado, beneficioso o potencialmente dañino. Evalúan las implicaciones éticas del uso de IA, incluyendo cuestiones de privacidad, sesgo y equidad.
+        scenarios:
+          - Discutir las implicaciones éticas del uso de IA en el proceso de contratación para filtrar currículums.
+          - Analizar cómo los sistemas de recomendación de IA pueden influir en las elecciones y perspectivas de los usuarios.
+      E5:
+        description: Practicar comportamientos responsables al usar IA.
+        knowledge:
+          - K5.4
+          - K2.1
+        skills:
+          - S7.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Los estudiantes demuestran comportamientos responsables y éticos al interactuar con sistemas de IA. Consideran el impacto de sus acciones y siguen las mejores prácticas al usar IA.
+        scenarios:
+          - Desarrollar pautas para usar herramientas de IA en tareas académicas.
+          - Diseñar estrategias para verificar la precisión de la información generada por IA antes de compartirla con otros.
+
+  Creating_with_AI:
+    emoji: 🎨
+    overview: Implica colaborar con sistemas de IA para generar nuevo contenido, ideas o soluciones. Estas situaciones requieren que los estudiantes comprendan las capacidades de la IA como socio creativo, mientras mantienen el respeto por la creatividad humana, la originalidad y la propiedad intelectual.
+    competencies:
+      C1:
+        description: Usar herramientas de IA para mejorar la creatividad y productividad.
+        knowledge:
+          - K1.4
+          - K5.3
+        skills:
+          - S2.1
+          - S3.1
+        attitudes:
+          - A3.1
+          - A4.1
+        content: Los estudiantes utilizan herramientas de IA para mejorar su trabajo creativo, como escritura, diseño o resolución de problemas. Aprenden a colaborar eficazmente con la IA mientras mantienen su visión creativa y control.
+        scenarios:
+          - Usar un asistente de escritura de IA para mejorar la estructura de un ensayo mientras se mantienen las propias ideas y argumentos.
+          - Colaborar con generadores de arte de IA para crear obras visuales, explorando diferentes estilos y conceptos.
+      C2:
+        description: Mantener la originalidad y autenticidad en el proceso creativo asistido por IA.
+        knowledge:
+          - K5.3
+          - K2.1
+        skills:
+          - S2.1
+          - S7.1
+        attitudes:
+          - A1.1
+          - A3.1
+        content: Los estudiantes comprenden cómo mantener la originalidad y voz personal mientras usan herramientas de IA. Aprenden a distinguir entre creación asistida por IA y contenido completamente generado por IA.
+        scenarios:
+          - Crear un proyecto que identifique claramente qué partes son asistidas por IA y cuáles son originales.
+          - Discutir la atribución apropiada del contenido generado por IA en contextos académicos y comerciales.
+      C3:
+        description: Comprender los derechos de autor y cuestiones de propiedad intelectual en la creación con IA.
+        knowledge:
+          - K5.3
+          - K2.1
+        skills:
+          - S1.1
+          - S7.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Los estudiantes comprenden las implicaciones de derechos de autor y propiedad intelectual del contenido generado por IA. Aprenden a usar responsablemente las herramientas de creación con IA y entienden las cuestiones legales y éticas relacionadas.
+        scenarios:
+          - Investigar los términos de uso y políticas de derechos de autor de diferentes plataformas de IA.
+          - Crear una guía de mejores prácticas para el uso de contenido generado por IA.
+      C4:
+        description: Evaluar y mejorar el contenido generado por IA.
+        knowledge:
+          - K1.3
+          - K4.1
+        skills:
+          - S1.1
+          - S2.1
+        attitudes:
+          - A2.1
+          - A4.1
+        content: Los estudiantes aprenden a evaluar la calidad del contenido generado por IA y mejorarlo a través de procesos iterativos. Desarrollan habilidades de pensamiento crítico para identificar y resolver problemas en los resultados de la IA.
+        scenarios:
+          - Mejorar una historia o artículo generado por IA a través de múltiples iteraciones.
+          - Evaluar código generado por IA y realizar las modificaciones y optimizaciones necesarias.
+      C5:
+        description: Equilibrar la asistencia de IA con el juicio humano en el proceso creativo.
+        knowledge:
+          - K3.2
+          - K4.1
+        skills:
+          - S2.1
+          - S5.1
+        attitudes:
+          - A4.1
+          - A5.1
+        content: Los estudiantes aprenden a combinar apropiadamente las herramientas de IA y el juicio humano en el proceso creativo. Comprenden cuándo confiar en la IA y cuándo se necesita la creatividad y el juicio humanos.
+        scenarios:
+          - Diseñar un flujo de trabajo creativo que defina claramente los roles de la IA y los humanos en diferentes etapas.
+          - Analizar diferentes tipos de tareas creativas para determinar el grado apropiado de asistencia de IA.
+
+  Managing_with_AI:
+    emoji: 📊
+    overview: Implica el uso estratégico de IA en tareas organizacionales y de gestión. Estas situaciones requieren que los estudiantes comprendan cómo la IA puede transformar los flujos de trabajo, procesos de toma de decisiones y estructuras organizacionales, mientras consideran la importancia de la supervisión y responsabilidad humanas.
+    competencies:
+      M1:
+        description: Evaluar oportunidades para integrar IA en flujos de trabajo.
+        knowledge:
+          - K3.1
+          - K3.2
+        skills:
+          - S5.1
+          - S3.1
+        attitudes:
+          - A3.1
+          - A4.1
+        content: Los estudiantes identifican áreas en las organizaciones donde la IA puede integrarse eficazmente, evaluando beneficios y riesgos potenciales. Aprenden a analizar flujos de trabajo existentes y determinar dónde la IA puede agregar valor.
+        scenarios:
+          - Analizar sistemas de gestión escolar, identificando procesos que podrían automatizarse o mejorarse con IA.
+          - Evaluar la viabilidad e impacto del uso de chatbots de IA en el servicio al cliente.
+      M2:
+        description: Mantener la supervisión humana en procesos de decisión asistidos por IA.
+        knowledge:
+          - K3.3
+          - K5.1
+        skills:
+          - S1.1
+          - S6.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Los estudiantes comprenden la importancia de la supervisión humana en las decisiones asistidas por IA. Aprenden a diseñar procesos de decisión que aseguren que los humanos mantengan el control y la responsabilidad finales.
+        scenarios:
+          - Diseñar un sistema de evaluación estudiantil asistido por IA que incluya mecanismos de revisión e intervención humana.
+          - Crear un marco de decisión usando IA para análisis de datos, asegurando validación e interpretación humanas.
+      M3:
+        description: Gestionar el cambio organizacional en la implementación de IA.
+        knowledge:
+          - K3.1
+          - K3.2
+        skills:
+          - S4.1
+          - S7.1
+        attitudes:
+          - A4.1
+          - A5.1
+        content: Los estudiantes comprenden cómo la implementación de IA afecta la cultura organizacional y las formas de trabajo. Aprenden a gestionar procesos de cambio, incluyendo formación, comunicación y gestión del cambio.
+        scenarios:
+          - Desarrollar un plan para ayudar a los equipos a adaptarse a nuevas herramientas y flujos de trabajo de IA.
+          - Diseñar programas de formación para mejorar la alfabetización en IA de los miembros de la organización.
+      M4:
+        description: Evaluar y mitigar riesgos del uso de IA.
+        knowledge:
+          - K4.1
+          - K5.4
+        skills:
+          - S1.1
+          - S6.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Los estudiantes identifican riesgos potenciales en el uso de IA, incluyendo sesgos, errores y problemas de seguridad. Aprenden a desarrollar estrategias para mitigar estos riesgos y asegurar un uso responsable de la IA.
+        scenarios:
+          - Realizar evaluaciones de riesgo de sistemas de IA, identificando posibles sesgos y errores.
+          - Desarrollar políticas de gobernanza y guías de mejores prácticas para el uso de IA.
+      M5:
+        description: Medir la efectividad e impacto de la implementación de IA.
+        knowledge:
+          - K3.1
+          - K5.1
+        skills:
+          - S1.1
+          - S6.1
+        attitudes:
+          - A2.1
+          - A4.1
+        content: Los estudiantes aprenden a evaluar el éxito de las implementaciones de IA, incluyendo mejoras en eficiencia, ahorro de costos y satisfacción del usuario. Desarrollan habilidades para medir y mejorar el rendimiento de los sistemas de IA.
+        scenarios:
+          - Diseñar métricas para evaluar la efectividad de un sistema de servicio al cliente con IA.
+          - Analizar el impacto de las herramientas de IA en la eficiencia y calidad del trabajo.
+
+  Designing_with_AI:
+    emoji: 🔧
+    overview: Implica diseñar y desarrollar sistemas de IA o soluciones mejoradas con IA. Estas situaciones requieren que los estudiantes comprendan las consideraciones técnicas y éticas del desarrollo de IA, incluyendo el diseño de datos, algoritmos y experiencia del usuario.
+    competencies:
+      D1:
+        description: Diseñar sistemas de IA considerando la ética y equidad.
+        knowledge:
+          - K2.1
+          - K5.4
+        skills:
+          - S1.1
+          - S3.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Los estudiantes comprenden cómo diseñar sistemas de IA justos, transparentes y responsables. Aprenden a considerar las necesidades de diferentes grupos de usuarios e incorporar consideraciones éticas en el proceso de diseño.
+        scenarios:
+          - Diseñar una herramienta de contratación con IA que asegure la eliminación de sesgos de género y raza.
+          - Crear un sistema educativo de IA que proporcione oportunidades equitativas para estudiantes con diferentes necesidades de aprendizaje.
+      D2:
+        description: Comprender los requisitos de datos y calidad de los sistemas de IA.
+        knowledge:
+          - K1.1
+          - K2.2
+        skills:
+          - S3.1
+          - S1.1
+        attitudes:
+          - A1.1
+          - A2.1
+        content: Los estudiantes comprenden la dependencia de los sistemas de IA en los datos, incluyendo recolección, limpieza y aseguramiento de calidad. Aprenden a identificar y resolver problemas de calidad de datos.
+        scenarios:
+          - Analizar conjuntos de datos de entrenamiento, identificando posibles sesgos y problemas de calidad.
+          - Diseñar estrategias de recolección de datos que aseguren representatividad y calidad.
+      D3:
+        description: Diseñar interfaces y experiencias de usuario amigables con IA.
+        knowledge:
+          - K1.2
+          - K4.1
+        skills:
+          - S3.1
+          - S7.1
+        attitudes:
+          - A3.1
+          - A5.1
+        content: Los estudiantes aprenden a diseñar interfaces de IA intuitivas y transparentes. Comprenden cómo hacer que los usuarios entiendan y confíen en los sistemas de IA, proporcionando control apropiado al usuario.
+        scenarios:
+          - Diseñar una interfaz de usuario para un sistema de recomendación de IA que permita a los usuarios entender la base de las recomendaciones.
+          - Crear un asistente de IA que proporcione retroalimentación y explicaciones claras.
+      D4:
+        description: Implementar pruebas y validación de sistemas de IA.
+        knowledge:
+          - K1.1
+          - K4.1
+        skills:
+          - S1.1
+          - S3.1
+        attitudes:
+          - A1.1
+          - A2.1
+        content: Los estudiantes aprenden a probar y validar el rendimiento, precisión y confiabilidad de los sistemas de IA. Comprenden cómo identificar y resolver problemas en los sistemas de IA.
+        scenarios:
+          - Diseñar planes de prueba para evaluar la precisión y robustez de modelos de IA.
+          - Realizar pruebas de usuario para recopilar comentarios sobre la usabilidad del sistema de IA.
+      D5:
+        description: Considerar el impacto a largo plazo y la sostenibilidad de los sistemas de IA.
+        knowledge:
+          - K3.1
+          - K5.1
+        skills:
+          - S6.1
+          - S1.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Los estudiantes consideran el impacto a largo plazo de los sistemas de IA en la sociedad, el medio ambiente y la economía. Aprenden a diseñar soluciones de IA sostenibles y escalables.
+        scenarios:
+          - Evaluar el impacto ambiental de los sistemas de IA, incluyendo el uso de energía y la huella de carbono.
+          - Analizar el impacto a largo plazo de la implementación de IA en el empleo y las estructuras sociales.
+
+metadata:
+  language: es
+  version: "1.0"
+  last_updated: "2025-07-03"

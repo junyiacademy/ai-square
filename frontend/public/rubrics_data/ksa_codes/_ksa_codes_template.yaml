@@ -1,0 +1,184 @@
+# KSA Codes Template
+# This template defines the structure for language-specific KSA (Knowledge, Skills, Attitudes) files
+# Each language file should follow this structure and translate all [TRANSLATE] values
+
+knowledge_codes:
+  description: "[TRANSLATE: Overall description of knowledge codes in target language]"
+  themes:
+    # Theme IDs should remain in English - DO NOT TRANSLATE
+    The_Nature_of_AI:
+      codes:
+        # Code IDs (K1.1, K1.2, etc.) should remain unchanged - DO NOT TRANSLATE
+        K1.1:
+          summary: "[TRANSLATE: Code summary in target language]"
+        K1.2:
+          summary: "[TRANSLATE: Code summary in target language]"
+        K1.3:
+          summary: "[TRANSLATE: Code summary in target language]"
+        K1.4:
+          summary: "[TRANSLATE: Code summary in target language]"
+      explanation: "[TRANSLATE: Theme explanation in target language]"
+    
+    AI_Reflects_Human_Choices_and_Perspectives:
+      codes:
+        K2.1:
+          summary: "[TRANSLATE: Code summary in target language]"
+        K2.2:
+          summary: "[TRANSLATE: Code summary in target language]"
+        K2.3:
+          summary: "[TRANSLATE: Code summary in target language]"
+        K2.4:
+          summary: "[TRANSLATE: Code summary in target language]"
+        K2.5:
+          summary: "[TRANSLATE: Code summary in target language]"
+      explanation: "[TRANSLATE: Theme explanation in target language]"
+    
+    AI_Reshapes_Work_and_Human_Roles:
+      codes:
+        K3.1:
+          summary: "[TRANSLATE: Code summary in target language]"
+        K3.2:
+          summary: "[TRANSLATE: Code summary in target language]"
+        K3.3:
+          summary: "[TRANSLATE: Code summary in target language]"
+      explanation: "[TRANSLATE: Theme explanation in target language]"
+    
+    AIs_Capabilities_and_Limitations:
+      codes:
+        K4.1:
+          summary: "[TRANSLATE: Code summary in target language]"
+        K4.2:
+          summary: "[TRANSLATE: Code summary in target language]"
+        K4.3:
+          summary: "[TRANSLATE: Code summary in target language]"
+      explanation: "[TRANSLATE: Theme explanation in target language]"
+    
+    AIs_Role_in_Society:
+      codes:
+        K5.1:
+          summary: "[TRANSLATE: Code summary in target language]"
+        K5.2:
+          summary: "[TRANSLATE: Code summary in target language]"
+        K5.3:
+          summary: "[TRANSLATE: Code summary in target language]"
+        K5.4:
+          summary: "[TRANSLATE: Code summary in target language]"
+      explanation: "[TRANSLATE: Theme explanation in target language]"
+
+skills_codes:
+  description: "[TRANSLATE: Overall description of skills codes in target language]"
+  themes:
+    # Theme IDs should remain in English - DO NOT TRANSLATE
+    Critical_Thinking:
+      codes:
+        S1.1:
+          summary: "[TRANSLATE: Code summary in target language]"
+          questions:
+            - "[TRANSLATE: Guiding question 1 in target language]"
+            - "[TRANSLATE: Guiding question 2 in target language]"
+      explanation: "[TRANSLATE: Theme explanation in target language]"
+    
+    Creativity:
+      codes:
+        S2.1:
+          summary: "[TRANSLATE: Code summary in target language]"
+          questions:
+            - "[TRANSLATE: Guiding question in target language]"
+      explanation: "[TRANSLATE: Theme explanation in target language]"
+    
+    Computational_Thinking:
+      codes:
+        S3.1:
+          summary: "[TRANSLATE: Code summary in target language]"
+          questions:
+            - "[TRANSLATE: Guiding question in target language]"
+      explanation: "[TRANSLATE: Theme explanation in target language]"
+    
+    Collaboration:
+      codes:
+        S4.1:
+          summary: "[TRANSLATE: Code summary in target language]"
+          questions:
+            - "[TRANSLATE: Guiding question in target language]"
+      explanation: "[TRANSLATE: Theme explanation in target language]"
+    
+    Problem_Solving:
+      codes:
+        S5.1:
+          summary: "[TRANSLATE: Code summary in target language]"
+          questions:
+            - "[TRANSLATE: Guiding question in target language]"
+      explanation: "[TRANSLATE: Theme explanation in target language]"
+    
+    Self_and_Social_Awareness:
+      codes:
+        S6.1:
+          summary: "[TRANSLATE: Code summary in target language]"
+          questions:
+            - "[TRANSLATE: Guiding question in target language]"
+      explanation: "[TRANSLATE: Theme explanation in target language]"
+    
+    Communication:
+      codes:
+        S7.1:
+          summary: "[TRANSLATE: Code summary in target language]"
+          questions:
+            - "[TRANSLATE: Guiding question in target language]"
+      explanation: "[TRANSLATE: Theme explanation in target language]"
+
+attitudes_codes:
+  description: "[TRANSLATE: Overall description of attitudes codes in target language]"
+  themes:
+    # Theme IDs should remain in English - DO NOT TRANSLATE
+    Responsible:
+      codes:
+        A1.1:
+          summary: "[TRANSLATE: Code summary in target language]"
+          questions: []  # Keep empty if no questions
+      explanation: "[TRANSLATE: Theme explanation in target language]"
+    
+    Curious:
+      codes:
+        A2.1:
+          summary: "[TRANSLATE: Code summary in target language]"
+          questions: []
+      explanation: "[TRANSLATE: Theme explanation in target language]"
+    
+    Innovative:
+      codes:
+        A3.1:
+          summary: "[TRANSLATE: Code summary in target language]"
+          questions: []
+      explanation: "[TRANSLATE: Theme explanation in target language]"
+    
+    Adaptable:
+      codes:
+        A4.1:
+          summary: "[TRANSLATE: Code summary in target language]"
+          questions: []
+      explanation: "[TRANSLATE: Theme explanation in target language]"
+    
+    Empathetic:
+      codes:
+        A5.1:
+          summary: "[TRANSLATE: Code summary in target language]"
+          questions: []
+      explanation: "[TRANSLATE: Theme explanation in target language]"
+
+metadata:
+  language: [LANGUAGE_CODE]  # e.g., en, zhCN, pt, ar, id, th
+  version: "1.0"
+  last_updated: [YYYY-MM-DD]
+
+# Translation Guidelines:
+# 1. Theme IDs must remain in English with underscores (e.g., The_Nature_of_AI, Critical_Thinking)
+# 2. Code IDs must remain unchanged (K1.1, S2.1, A3.1, etc.)
+# 3. All descriptive text marked with [TRANSLATE] must be translated
+# 4. Questions arrays can be empty if no questions exist
+# 5. Maintain academic/educational tone appropriate for the target language
+# 6. Theme explanations should provide context about the theme's importance
+
+# Structure Overview:
+# - Knowledge: 5 themes, 18 codes total (K1.1-K5.4)
+# - Skills: 7 themes, 7 codes total (S1.1-S7.1)
+# - Attitudes: 5 themes, 5 codes total (A1.1-A5.1)

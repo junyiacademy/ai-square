@@ -68,7 +68,7 @@ export abstract class BaseYAMLLoader<T = unknown> {
       }
 
       // 載入檔案
-      const filePath = this.getFilePath(fileName, finalOptions.basePath!);
+      const filePath = this.getFilePath(fileName, finalOptions.basePath!, language);
       const fileContents = await this.readFile(filePath);
       const rawData = yaml.load(fileContents) as unknown;
 
@@ -80,10 +80,8 @@ export abstract class BaseYAMLLoader<T = unknown> {
         }
       }
 
-      // 處理多語言
-      const processedData = language 
-        ? await this.processLanguage(rawData, language, finalOptions.fallbackLanguage!)
-        : rawData as T;
+      // For language-specific files, no need to process language fields
+      const processedData = rawData as T;
 
       // 後處理
       const finalData = await this.postProcess(processedData);
@@ -175,8 +173,28 @@ export abstract class BaseYAMLLoader<T = unknown> {
   /**
    * 輔助方法
    */
-  protected getFilePath(fileName: string, basePath: string): string {
-    // 確保檔案名稱有 .yaml 或 .yml 副檔名
+  protected getFilePath(fileName: string, basePath: string, language?: string): string {
+    // Remove extension if present
+    const baseFileName = fileName.replace(/\.(yaml|yml)$/, '');
+    
+    // For language-specific files
+    if (language) {
+      const langFileName = `${baseFileName}_${language}.yaml`;
+      const langFilePath = path.join(basePath, baseFileName, langFileName);
+      
+      // Check if language-specific file exists
+      if (fs.existsSync(langFilePath)) {
+        return langFilePath;
+      }
+      
+      // Fallback to main directory with language suffix
+      const altLangPath = path.join(basePath, langFileName);
+      if (fs.existsSync(altLangPath)) {
+        return altLangPath;
+      }
+    }
+    
+    // Default file path
     if (!fileName.endsWith('.yaml') && !fileName.endsWith('.yml')) {
       fileName += '.yaml';
     }

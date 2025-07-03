@@ -1,0 +1,174 @@
+scenario_info:
+  id: high-school-climate-change
+  difficulty: beginner
+  estimated_duration: 60
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - managing_with_ai
+  title: AI 驅動的氣候行動計畫
+  description: 使用 AI 分析氣候數據，為學校和社區創建可行的解決方案
+  prerequisites:
+    - 對氣候變化的基本理解
+    - 對環境議題的興趣
+  learning_objectives:
+    - 使用 AI 工具分析環境數據
+    - 創建數據視覺化來傳達發現
+    - 制定實用的氣候行動提案
+    - 建立使用 AI 進行環境倡議的信心
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S1.2
+    - S2.1
+    - S2.3
+  attitudes:
+    - A1.1
+    - A1.2
+    - A2.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Climate Research Assistant
+      initial_prompt: |
+        You are a climate research assistant helping students explore climate data.
+        Your goal is to guide them through data collection and analysis tasks.
+
+        Keep responses focused and educational:
+        - Help them find reliable climate data sources
+        - Guide them in organizing and analyzing data
+        - Explain climate concepts in age-appropriate language
+        - Encourage critical thinking about climate impacts
+
+        Always redirect off-topic conversations back to the climate research task.
+    title: 氣候數據收集
+    description: 使用 AI 收集和整理你所在地區的氣候數據
+    instructions:
+      - 使用 AI 尋找可靠的氣候數據來源
+      - 收集溫度趨勢、降水、空氣質量和能源消耗的數據
+      - 在電子表格中整理數據
+      - 識別關鍵模式和趨勢
+    expected_outcome: 你所在地區的全面氣候數據收集
+  - id: task-2
+    category: analysis
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - K2.3
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: Data Analysis Expert
+      initial_prompt: |
+        You are a data analysis expert helping students analyze climate data.
+        Guide them through:
+        - Pattern recognition in climate data
+        - Creating meaningful visualizations
+        - Making evidence-based predictions
+        - Drawing actionable conclusions
+
+        Encourage critical thinking and help them understand the implications of their findings.
+    title: AI 數據分析
+    description: 使用 AI 工具分析氣候數據並識別可行的見解
+    instructions:
+      - 使用 AI 識別氣候數據中的模式和相關性
+      - 創建顯示溫度變化、季節變化和人類影響的視覺化
+      - 生成未來趨勢預測
+      - 識別需要干預的領域
+    expected_outcome: 具有清晰見解和預測的全面分析
+  - id: task-3
+    category: creation
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Sustainability Solutions Coach
+      initial_prompt: |
+        You are a sustainability solutions coach helping students design climate action plans.
+        Guide them to:
+        - Generate creative yet practical solutions
+        - Consider feasibility and resource requirements
+        - Calculate environmental impacts
+        - Think about stakeholder engagement
+
+        Focus on solutions that students can realistically implement in their school.
+    title: 解決方案設計
+    description: 在 AI 協助下為學校創建實用的氣候解決方案
+    instructions:
+      - 與 AI 一起為節能、減廢、綠色空間和交通運輸腦力激盪解決方案
+      - 評估每個解決方案的可行性和影響
+      - 創建詳細的實施計劃
+      - 計算潛在的碳減排量
+    expected_outcome: 一套實用、可實施的氣候解決方案組合
+  - id: task-4
+    category: interaction
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S1.2
+        - K1.2
+      secondary:
+        - A1.1
+        - A2.1
+    ai_module:
+      role: actor
+      model: gemini-2.5-flash
+      persona: Presentation Coach
+      initial_prompt: |
+        You are a presentation coach helping students prepare their climate action plan presentation.
+        Assist them with:
+        - Creating clear, compelling narratives
+        - Designing effective visual aids
+        - Anticipating and preparing for questions
+        - Building confidence in public speaking
+
+        Help them create a presentation that will inspire action from school administrators and peers.
+    title: 行動計畫展示
+    description: 使用 AI 創建引人注目的演示文稿來提出你的氣候行動計畫
+    instructions:
+      - 使用 AI 有效地構建演示文稿
+      - 包括帶數據的問題陳述、提議的解決方案、實施時間表和預期成果
+      - 生成引人注目的視覺效果和信息圖表
+      - 在 AI 協助下準備問答環節
+    expected_outcome: 一份準備向利益相關者展示的專業、有說服力的演示文稿
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - K1.1
+    - S2.1
+  min_overall_score: 70
+resources:
+  - url: https://climatekids.nasa.gov/
+    type: reference
+    name: NASA 氣候兒童
+  - url: https://www.climate.ai/
+    type: tool
+    name: AI 氣候工具指南
+metadata:
+  language: zhTW
+  version: '1.0'
+  last_updated: '2025-07-03'

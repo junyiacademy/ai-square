@@ -1,0 +1,151 @@
+scenario_info:
+  id: ai-stablecoin-trading
+  difficulty: intermediate
+  estimated_duration: 120
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - managing_with_ai
+  title: AI 驅動的穩定幣交易與風險管理
+  description: 學習使用 AI 分析穩定幣市場、管理 DeFi 投資組合，並在真實加密貨幣場景中做出明智的交易決策
+  prerequisites:
+    - 對加密貨幣和區塊鏈的基本理解
+    - 熟悉交易概念
+    - 可使用加密貨幣交易所或 DeFi 平台（測試網）
+  learning_objectives:
+    - 掌握用於即時加密貨幣市場分析和趨勢預測的 AI 工具
+    - 使用 AI 開發穩定幣套利的自動化交易策略
+    - 學習使用 AI 監控工具評估和管理 DeFi 協議風險
+    - 為多鏈穩定幣敞口創建 AI 驅動的投資組合優化
+ksa_mapping:
+  knowledge:
+    - K2.1
+    - K2.3
+    - K3.2
+  skills:
+    - S2.1
+    - S2.2
+    - S3.3
+  attitudes:
+    - A1.2
+    - A2.1
+    - A3.1
+tasks:
+  - id: market-analysis
+    category: analysis
+    time_limit: 45
+    assessment_focus:
+      primary:
+        - engaging_with_ai
+        - creating_with_ai
+      secondary:
+        - managing_with_ai
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: You are an experienced DeFi analyst and trading mentor. Help users understand market dynamics, evaluate AI-generated insights critically, and develop practical trading strategies. Focus on real-world applicability and risk management.
+      initial_prompt: |
+        Welcome to the stablecoin trading analysis task! I'm here to help you navigate this complex market using AI tools effectively.
+
+        As your DeFi trading mentor, I'll guide you through:
+        1. Properly formulating market research questions for AI tools
+        2. Critically evaluating AI-generated market insights
+        3. Identifying actionable trading opportunities while managing risk
+        4. Creating comprehensive reports that combine AI analysis with your own judgment
+
+        Remember: AI tools are powerful for data gathering and initial analysis, but your critical thinking and domain knowledge are essential for making sound trading decisions.
+
+        What specific aspect of the stablecoin market would you like to start analyzing? Are you looking at yield opportunities, depeg risks, or arbitrage possibilities?
+    title: AI 驅動的市場情報
+    description: 你是一家加密對沖基金的 DeFi 投資組合經理。使用 AI 分析當前穩定幣市場狀況並識別潛在交易機會
+    instructions:
+      - 使用 AI 工具（Claude、ChatGPT 或 Perplexity）研究當前 USDC、USDT、DAI 和 FRAX 市場狀況
+      - 分析不同 DeFi 協議（Aave、Compound、Curve）中的流動性挖礦機會
+      - 使用 AI 市場分析識別潛在的脫鉤風險和套利機會
+      - 創建一份包含可行交易建議的 AI 生成執行摘要
+    expected_outcome: 一份包含具體交易機會、風險評估和 AI 支持的穩定幣投資組合配置建議的綜合市場分析報告
+  - id: strategy-development
+    category: creation
+    time_limit: 40
+    assessment_focus:
+      primary:
+        - creating_with_ai
+        - managing_with_ai
+      secondary:
+        - engaging_with_ai
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: You are a quantitative trading expert and AI coding mentor. Help users develop robust trading strategies, write clean code, and understand the technical aspects of DeFi arbitrage. Emphasize proper testing, risk management, and ethical trading practices.
+      initial_prompt: |
+        Excellent! Now we're moving into the technical implementation phase. As your trading strategy development mentor, I'll help you build a practical, AI-enhanced trading system.
+
+        Key areas I'll guide you through:
+        1. Architecting a robust trading bot with proper error handling
+        2. Using AI coding assistants effectively for complex DeFi integrations
+        3. Implementing comprehensive risk management and position sizing
+        4. Backtesting methodologies that account for real-world constraints
+
+        Important considerations:
+        - Start with paper trading and small amounts
+        - Account for gas fees, slippage, and MEV in your calculations
+        - Implement circuit breakers and emergency stops
+        - Always test on testnets first
+
+        What's your coding experience level, and which AI coding assistant would you prefer to use? Let's start building your trading strategy step by step.
+    title: AI 增強的交易策略創建
+    description: 使用 AI 設計並回測自動化交易策略，優化多個 DEX 間穩定幣套利的進出場點
+    instructions:
+      - 使用 AI 編程助手編寫 Python 腳本來監控 Uniswap、SushiSwap 和 Curve 間的價格差異
+      - 實施基於 AI 的警報系統，用於具有特定利潤閾值的套利機會
+      - 使用 AI 創建風險管理規則來計算最佳倉位大小和止損
+      - 在 AI 協助下開發回測框架來驗證策略績效
+    expected_outcome: 一個具有 AI 優化參數、全面回測結果和清晰實施指導的功能性交易機器人原型
+  - id: risk-management
+    category: interaction
+    time_limit: 35
+    assessment_focus:
+      primary:
+        - managing_with_ai
+        - engaging_with_ai
+      secondary:
+        - creating_with_ai
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: You are a DeFi risk management expert and crisis response specialist. Help users understand the severity of protocol exploits, assess portfolio impacts, and implement emergency procedures. Focus on speed, accuracy, and preserving capital during volatile situations.
+      initial_prompt: |
+        ALERT: This is a crisis management simulation. Time is critical when DeFi protocols are exploited, and proper risk assessment can save your portfolio.
+
+        As your risk management specialist, I'll help you:
+        1. Rapidly assess the scope and impact of the exploit
+        2. Calculate your direct and indirect exposure across all protocols
+        3. Prioritize immediate actions to protect your assets
+        4. Set up monitoring systems to prevent future exposure
+
+        Crisis management principles:
+        - Act quickly but don't panic
+        - Verify information from multiple sources
+        - Protect principal before chasing yields
+        - Document everything for later analysis
+
+        What's your current portfolio composition? Let's start by identifying your potential exposure to this exploit and immediate risk mitigation actions.
+    title: AI 驅動的投資組合風險評估
+    description: 一個主要的 DeFi 協議剛剛發生漏洞利用。使用 AI 評估你的穩定幣投資組合敞口並制定緊急應對計劃
+    instructions:
+      - 使用 AI 快速分析新聞和社交媒體以了解漏洞詳情和受影響的協議
+      - 使用 AI 輔助風險分析計算所有 DeFi 持倉的投資組合敞口
+      - 使用 AI 模擬為不同市場壓力條件開發應急場景
+      - 使用 AI 創建自動化監控和警報系統以進行未來風險檢測
+    expected_outcome: 一份詳細的風險評估報告，包含即時行動項目、投資組合再平衡建議和自動化風險監控系統設置
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - K2.1
+    - S2.1
+    - S3.3
+  min_overall_score: 75
+metadata:
+  language: zhTW
+  version: '1.0'
+  last_updated: '2025-07-03'

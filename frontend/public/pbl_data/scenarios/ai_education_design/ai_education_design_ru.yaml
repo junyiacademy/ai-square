@@ -1,0 +1,205 @@
+scenario_info:
+  id: ai-education-design
+  difficulty: intermediate
+  estimated_duration: 90
+  target_domains:
+    - designing_with_ai
+    - creating_with_ai
+    - managing_with_ai
+  title: Проектирование учебного опыта с использованием ИИ
+  description: Научитесь проектировать и внедрять образовательные инструменты и опыт на базе ИИ для разных учащихся
+  prerequisites:
+    - Базовое понимание теорий обучения
+    - Знакомство с образовательными технологиями
+    - Опыт работы с инструментами ИИ
+  learning_objectives:
+    - Проектировать персонализированные учебные пути с помощью ИИ
+    - Создавать адаптивные оценки с помощью ИИ
+    - Внедрять системы обратной связи на базе ИИ
+    - Оценивать инструменты ИИ для образовательной эффективности
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+  skills:
+    - S1.1
+    - S2.1
+    - S3.1
+  attitudes:
+    - A2.1
+    - A2.2
+    - A3.1
+tasks:
+  - id: task-1
+    category: analysis
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Educational Data Analyst
+      initial_prompt: |
+        You are an experienced educational data analyst specializing in learner profiling and personalization.
+        Your job is to help teachers understand student data and create effective learner profiles.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what student data they'd like to analyze
+        - If they send irrelevant content, redirect them to focus on learner profiling
+        - Guide them through analyzing learning styles, progress patterns, and preferences
+        - Help them create comprehensive learner profiles with actionable insights
+
+        Focus on:
+        - Identifying learning patterns from student data
+        - Creating meaningful learner profiles
+        - Suggesting personalization strategies
+        - Using AI tools effectively for analysis
+
+        Always stay focused on the learner profiling task.
+    title: Анализ профиля учащегося с помощью ИИ
+    description: Использовать ИИ для анализа данных учащихся и создания персонализированных учебных профилей
+    instructions:
+      - Просмотреть образцы данных учащихся, включая стили обучения, прогресс и предпочтения
+      - Использовать ИИ для выявления закономерностей и характеристик обучения
+      - Создать комплексные профили учащихся с помощью ИИ
+      - Разработать персонализированные рекомендации по обучению на основе профилей
+    expected_outcome: Комплексные профили учащихся с инсайтами, созданными ИИ, и рекомендациями по персонализации
+  - id: task-2
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Content Creation Specialist
+      initial_prompt: |
+        You are an experienced content creation specialist focused on adaptive learning design.
+        Your job is to help educators create content that adapts to different learner needs and preferences.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what topic they'd like to create adaptive content for
+        - If they send irrelevant content, redirect them to focus on adaptive content creation
+        - Guide them through creating content variations for different learning levels and styles
+        - Help them implement accessibility features and language adaptations
+
+        Focus on:
+        - Creating multiple content variations for diverse learners
+        - Adapting content for different learning styles and levels
+        - Implementing accessibility and language considerations
+        - Using AI tools to generate and refine adaptive content
+
+        Always stay focused on the adaptive content creation task.
+    title: Создание адаптивного контента
+    description: Проектировать учебный контент, адаптирующийся к разным потребностям с помощью ИИ
+    instructions:
+      - Выбрать тему обучения, подходящую для адаптации
+      - Использовать ИИ для создания вариаций контента для разных уровней и стилей обучения
+      - Создать контент для разных языковых компетенций и потребностей доступности
+      - Внедрить адаптивные пути и протестировать эффективность контента
+    expected_outcome: Адаптивный учебный контент с множественными вариациями, удовлетворяющими различные потребности учащихся
+  - id: task-3
+    category: creation
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S3.1
+        - K1.2
+      secondary:
+        - A2.2
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Assessment Design Expert
+      initial_prompt: |
+        You are an expert in educational assessment design with specialization in AI-powered evaluation systems.
+        Your job is to help educators create comprehensive and fair assessment systems with meaningful feedback.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what learning domain they want to assess
+        - If they send irrelevant content, redirect them to focus on assessment system design
+        - Guide them through defining clear assessment objectives and criteria
+        - Help them implement AI-driven feedback mechanisms and ensure fairness
+
+        Focus on:
+        - Designing various assessment types (formative and summative)
+        - Creating AI-powered feedback mechanisms
+        - Ensuring assessment fairness and validity
+        - Implementing progress tracking systems
+
+        Always stay focused on the AI assessment system design task.
+    title: Проектирование системы оценки с ИИ
+    description: Построить интеллектуальную систему оценки, предоставляющую значимую обратную связь
+    instructions:
+      - Определить цели и критерии оценки для выбранной области обучения
+      - Создать различные типы оценивания, включая формативное и суммативное оценивание
+      - Внедрить механизмы обратной связи на базе ИИ, предоставляющие практические инсайты
+      - Разработать отслеживание прогресса и обеспечить справедливость в оценивании
+    expected_outcome: Комплексная система оценки на базе ИИ с справедливыми и значимыми механизмами обратной связи
+  - id: task-4
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Learning Analytics Specialist
+      initial_prompt: |
+        You are a learning analytics specialist with expertise in data visualization and AI-powered insights.
+        Your job is to help educators design effective learning analytics dashboards that provide actionable insights.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what learning metrics they want to track
+        - If they send irrelevant content, redirect them to focus on analytics dashboard design
+        - Guide them through identifying key learning metrics for different stakeholders
+        - Help them create meaningful visualizations and AI-powered predictions
+
+        Focus on:
+        - Identifying important learning metrics to track
+        - Creating effective data visualizations
+        - Implementing AI-powered predictions and recommendations
+        - Balancing complexity with usability for different users
+
+        Always stay focused on the learning analytics dashboard task.
+    title: Панель аналитики обучения
+    description: Создать панель аналитики обучения с использованием инсайтов ИИ
+    instructions:
+      - Определить ключевые метрики обучения для отслеживания различными заинтересованными сторонами
+      - Разработать визуализации для индивидуального прогресса и производительности класса
+      - Внедрить прогнозы и рекомендации на базе ИИ
+      - Создать практические инсайты, балансирующие сложность с удобством использования
+    expected_outcome: Интерактивная панель аналитики обучения с инсайтами на базе ИИ и практическими рекомендациями
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - K1.1
+    - S2.1
+  min_overall_score: 75
+resources:
+  - url: https://www.unesco.org/en/digital-education/ai-future-learning
+    type: guide
+    name: AI in Education Toolkit
+  - url: https://solaresearch.org/core/learning-analytics/
+    type: reference
+    name: Learning Analytics Handbook
+  - url: https://unesdoc.unesco.org/ark:/48223/pf0000376709
+    type: framework
+    name: Ethical AI in Education Framework
+metadata:
+  language: ru
+  version: '1.0'
+  last_updated: '2025-07-03'

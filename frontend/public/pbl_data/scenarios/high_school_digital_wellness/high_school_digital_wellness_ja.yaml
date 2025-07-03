@@ -1,0 +1,202 @@
+scenario_info:
+  id: high-school-digital-wellness
+  difficulty: beginner
+  estimated_duration: 75
+  target_domains:
+    - creating_with_ai
+    - managing_with_ai
+    - designing_with_ai
+  title: AIによるデジタルウェルネスキャンペーン
+  description: 仲間の間で健康的なデジタル習慣を促進するAI駆動型キャンペーンを設計する
+  prerequisites:
+    - ソーシャルメディアの影響への認識
+    - 基本的なデジタルリテラシー
+  learning_objectives:
+    - デジタルウェルネスのデータとトレンドを分析する
+    - AIツールで魅力的なコンテンツを作成する
+    - 行動変容のための介入を設計する
+    - 包括的なデジタルウェルネスキャンペーンを構築する
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S1.2
+    - S2.1
+    - S2.3
+  attitudes:
+    - A1.1
+    - A1.2
+    - A2.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Research Assistant
+      initial_prompt: |
+        You are a research assistant helping students design and analyze digital wellness surveys.
+        Guide them through:
+        - Creating effective survey questions
+        - Ensuring privacy and ethical data collection
+        - Analyzing survey results
+        - Identifying meaningful patterns
+
+        Focus on helping them understand digital wellness challenges among teens.
+    title: デジタル習慣調査
+    description: AIを使用してデジタル習慣に関する調査を作成・分析する
+    instructions:
+      - AIを使用してスクリーンタイム、ソーシャルメディア使用、睡眠習慣、デジタルストレスに関する調査質問を設計
+      - プライバシーと匿名性を確保してクラスメートに配布
+      - AIの支援で回答を分析
+      - 主要な問題領域とパターンを特定
+    expected_outcome: データ駆動型の洞察を含む包括的な調査レポート
+  - id: task-2
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Creative Content Coach
+      initial_prompt: |
+        You are a creative content coach helping students create digital wellness materials.
+        Assist them with:
+        - Designing visually appealing infographics
+        - Writing engaging social media content
+        - Creating compelling video scripts
+        - Developing interactive elements
+
+        Focus on positive, teen-friendly messaging that promotes healthy digital habits.
+    title: ウェルネスコンテンツ作成
+    description: AIツールを使用して魅力的なデジタルウェルネスコンテンツを作成する
+    instructions:
+      - AIデザインツールを使用して健康的なデジタル習慣のインフォグラフィックを作成
+      - ポジティブなメッセージングでソーシャルメディア投稿を開発
+      - ウェルネスヒントのビデオスクリプトを設計
+      - デジタルウェルネスに関するインタラクティブクイズを作成
+    expected_outcome: 魅力的なデジタルウェルネスコンテンツのポートフォリオ
+  - id: task-3
+    category: interaction
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - K2.1
+        - S1.2
+      secondary:
+        - A1.2
+        - A2.1
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: UX Design Mentor
+      initial_prompt: |
+        You are a UX design mentor helping students create a wellness chatbot.
+        Guide them in:
+        - Designing user-friendly conversation flows
+        - Creating empathetic and helpful responses
+        - Building in appropriate wellness features
+        - Testing and iterating on their design
+
+        Ensure the chatbot is supportive, non-judgmental, and age-appropriate.
+    title: AIウェルネスアシスタント
+    description: 仲間がデジタルウェルネスを管理するのを助けるAIチャットボットを設計する
+    instructions:
+      - スクリーンタイムリマインダー、マインドフルネスプロンプト、勉強休憩、気分チェックインのチャットボット機能を設計
+      - 支援的で非批判的な会話フローを作成
+      - クラスメートとテストしてフィードバックを収集
+      - ユーザー体験に基づいて改善
+    expected_outcome: 機能的なウェルネスチャットボットのプロトタイプ
+  - id: task-4
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K1.1
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Campaign Strategy Advisor
+      initial_prompt: |
+        You are a campaign strategy advisor helping students plan their digital wellness campaign launch.
+        Assist with:
+        - Creating realistic timelines
+        - Developing promotional strategies
+        - Identifying key stakeholders
+        - Setting achievable goals
+
+        Help them create a campaign that will effectively reach and engage their peers.
+    title: キャンペーン開始計画
+    description: デジタルウェルネスキャンペーンの包括的な立ち上げ計画を策定する
+    instructions:
+      - AIを使用してキャンペーンのタイムラインとプロモーション資料を作成
+      - 立ち上げイベントとアクティビティを計画
+      - クラブや教師などのパートナーを特定
+      - 測定可能な目標と成功指標を設定
+    expected_outcome: 詳細で実行可能なキャンペーン立ち上げ計画
+  - id: task-5
+    category: analysis
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K2.3
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: Data Analytics Expert
+      initial_prompt: |
+        You are a data analytics expert helping students measure campaign impact.
+        Guide them through:
+        - Collecting meaningful metrics
+        - Analyzing data for insights
+        - Creating compelling visualizations
+        - Drawing actionable conclusions
+
+        Help them demonstrate the real impact of their digital wellness campaign.
+    title: インパクト測定
+    description: AIを使用してキャンペーンの効果を測定・報告する
+    instructions:
+      - エンゲージメント率、行動変化、フィードバック、ウェルネス改善のデータを収集
+      - AIを使用して結果を分析し、トレンドを特定
+      - チャートとグラフを含む視覚的レポートを作成
+      - 学んだ教訓と改善領域を特定
+    expected_outcome: 実行可能な洞察を含む包括的なインパクトレポート
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - S2.1
+    - K2.1
+  min_overall_score: 75
+resources:
+  - url: https://www.digitalwellnessinstitute.com/
+    type: reference
+    name: Digital Wellness Institute
+  - url: https://www.commonsensemedia.org/
+    type: guide
+    name: Common Sense Media
+metadata:
+  language: ja
+  version: '1.0'
+  last_updated: '2025-07-03'

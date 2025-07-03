@@ -1,0 +1,172 @@
+assessment_config:
+  total_questions: 12
+  time_limit_minutes: 15
+  passing_score: 60
+  domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - managing_with_ai
+    - designing_with_ai
+domains:
+  engaging_with_ai:
+    description: Memahami dan berkomunikasi secara efektif dengan sistem AI
+    questions: 3
+  creating_with_ai:
+    description: Menggunakan alat AI untuk meningkatkan kreativitas dan produktivitas
+    questions: 3
+  managing_with_ai:
+    description: Memahami keterbatasan AI, privasi, dan pertimbangan etis
+    questions: 3
+  designing_with_ai:
+    description: Pemikiran strategis tentang implementasi dan inovasi AI
+    questions: 3
+questions:
+  - id: E001
+    domain: engaging_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: 'Apa cara paling efektif untuk mendapatkan hasil yang lebih baik dari chatbot AI?'
+    options:
+      a: 'Ajukan pertanyaan yang sangat umum'
+      b: 'Berikan petunjuk yang jelas dan spesifik dengan konteks'
+      c: 'Gunakan hanya pertanyaan ya/tidak'
+      d: 'Selalu ajukan beberapa pertanyaan sekaligus'
+    explanation: 'Petunjuk yang jelas dan spesifik dengan konteks membantu AI memahami persis apa yang Anda butuhkan dan memberikan respons yang lebih akurat dan berguna.'
+  - id: E002
+    domain: engaging_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: 'Ketika AI memberikan jawaban yang salah, apa yang harus menjadi respons pertama Anda?'
+    options:
+      a: 'Langsung percaya pada AI dan gunakan informasinya'
+      b: 'Verifikasi informasi melalui sumber terpercaya lainnya'
+      c: 'Berhenti menggunakan AI sama sekali'
+      d: 'Laporkan AI sebagai rusak'
+    explanation: 'Pemikiran kritis memerlukan verifikasi output AI terhadap sumber terpercaya, karena AI dapat membuat kesalahan atau memberikan informasi yang sudah usang.'
+  - id: E003
+    domain: engaging_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: 'Apa faktor terpenting saat mengevaluasi konten yang dihasilkan AI untuk bias?'
+    options:
+      a: 'Kecepatan pembuatan'
+      b: 'Sumber data pelatihan dan representasinya'
+      c: 'Panjang output'
+      d: 'Kompleksitas teknis'
+    explanation: 'Bias AI sering berasal dari data pelatihan yang kurang keberagaman atau mengandung bias historis, membuat sumber data menjadi krusial untuk evaluasi.'
+  - id: C001
+    domain: creating_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: 'Pendekatan mana yang paling efektif saat menggunakan AI untuk penulisan kreatif?'
+    options:
+      a: 'Biarkan AI menulis semuanya tanpa input manusia'
+      b: 'Gunakan AI sebagai mitra kolaboratif untuk brainstorming dan penyempurnaan'
+      c: 'Hanya gunakan AI untuk memperbaiki tata bahasa dan ejaan'
+      d: 'Hindari AI sepenuhnya dalam proses kreatif'
+    explanation: 'AI bekerja paling baik sebagai mitra kreatif, membantu dengan ideasi, umpan balik, dan penyempurnaan sambil mempertahankan kreativitas dan pengawasan manusia.'
+  - id: C002
+    domain: creating_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: 'Saat menggunakan generator gambar AI, apa pertimbangan etis yang paling penting?'
+    options:
+      a: 'Membuat gambar serealistis mungkin'
+      b: 'Menghormati hak cipta dan menghindari deepfake orang nyata'
+      c: 'Menggunakan pengaturan generasi tercepat'
+      d: 'Membuat gambar sebanyak mungkin'
+    explanation: 'Menghormati hak kekayaan intelektual dan menghindari penyalahgunaan untuk membuat kemiripan yang tidak sah atau konten yang menyesatkan sangat penting untuk penggunaan AI yang etis.'
+  - id: C003
+    domain: creating_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: 'Bagaimana Anda harus mendekati pembuatan kode dengan bantuan AI untuk proyek perangkat lunak kritis?'
+    options:
+      a: 'Gunakan kode AI langsung tanpa review'
+      b: 'Tinjau, uji, dan validasi semua kode yang dihasilkan AI secara menyeluruh'
+      c: 'Hanya gunakan AI untuk komentar dan dokumentasi'
+      d: 'Ganti semua pengembang dengan alat AI'
+    explanation: 'Perangkat lunak kritis memerlukan pengawasan manusia, pengujian menyeluruh, dan validasi kode yang dihasilkan AI untuk memastikan keamanan, keandalan, dan kebenaran.'
+  - id: M001
+    domain: managing_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: 'Apa yang harus Anda lakukan dengan informasi pribadi sensitif saat menggunakan alat AI?'
+    options:
+      a: 'Bagikan dengan bebas untuk mendapatkan respons AI yang lebih baik'
+      b: 'Jangan pernah memasukkan informasi sensitif ke sistem AI'
+      c: 'Hanya bagikan dengan perusahaan AI terpercaya'
+      d: 'Enkripsi sebelum berbagi dengan AI'
+    explanation: 'Informasi pribadi sensitif tidak boleh dimasukkan ke sistem AI karena dapat disimpan, diproses, atau berpotensi terekspos.'
+  - id: M002
+    domain: managing_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: 'Bagaimana Anda harus mengelola penggunaan alat AI di lingkungan tim?'
+    options:
+      a: 'Biarkan semua orang menggunakan alat AI apa pun tanpa pedoman'
+      b: 'Tetapkan kebijakan dan pelatihan yang jelas untuk penggunaan alat AI'
+      c: 'Larang semua alat AI untuk menghindari risiko'
+      d: 'Hanya izinkan manajer menggunakan alat AI'
+    explanation: 'Kebijakan dan pelatihan yang jelas memastikan penggunaan alat AI yang bertanggung jawab, efektif, dan konsisten di seluruh tim sambil memaksimalkan manfaat dan meminimalkan risiko.'
+  - id: M003
+    domain: managing_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: 'Apa faktor paling kritis saat mengimplementasikan AI dalam proses bisnis?'
+    options:
+      a: 'Memilih teknologi AI paling canggih'
+      b: 'Memahami keterbatasan dan mempertahankan pengawasan manusia'
+      c: 'Mengimplementasikan AI secepat mungkin'
+      d: 'Mengganti sebanyak mungkin pekerja manusia'
+    explanation: 'Memahami keterbatasan AI dan mempertahankan pengawasan manusia yang tepat memastikan implementasi AI yang sukses, bertanggung jawab, dan berkelanjutan dalam bisnis.'
+  - id: D001
+    domain: designing_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: 'Saat merancang fitur bertenaga AI untuk pengguna, apa yang harus menjadi fokus utama?'
+    options:
+      a: 'Menampilkan kemampuan AI paling canggih'
+      b: 'Memecahkan masalah pengguna nyata dan meningkatkan pengalaman pengguna'
+      c: 'Membuat AI sekompleks mungkin'
+      d: 'Menyembunyikan fakta bahwa AI sedang digunakan'
+    explanation: 'Desain yang berpusat pada pengguna berfokus pada pemecahan masalah nyata dan peningkatan pengalaman, bukan pada menampilkan teknologi demi teknologi itu sendiri.'
+  - id: D002
+    domain: designing_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: 'Bagaimana Anda harus menangani kegagalan sistem AI dalam aplikasi yang berhadapan dengan pengguna?'
+    options:
+      a: 'Sembunyikan kesalahan dan berpura-pura semuanya berfungsi'
+      b: 'Rancang fallback yang elegan dan komunikasi kesalahan yang jelas'
+      c: 'Segera matikan seluruh aplikasi'
+      d: 'Salahkan pengguna atas kesalahan tersebut'
+    explanation: 'Desain AI yang baik mencakup perencanaan untuk kegagalan dengan fallback yang elegan dan komunikasi yang jelas untuk mempertahankan kepercayaan dan pengalaman pengguna.'
+  - id: D003
+    domain: designing_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: 'Apa pertimbangan terpenting saat merancang sistem AI untuk audiens global yang beragam?'
+    options:
+      a: 'Menggunakan desain yang sama untuk semua orang demi konsistensi'
+      b: 'Memahami konteks budaya dan menghindari bias algoritmik'
+      c: 'Fokus hanya pada segmen pasar terbesar'
+      d: 'Menerapkan teknologi AI terbaru di mana-mana'
+    explanation: 'Desain AI inklusif memerlukan pemahaman konteks budaya yang beragam dan bekerja secara aktif untuk mencegah bias algoritmik yang dapat merugikan kelompok yang berbeda.'
+metadata:
+  language: id
+  language_name: Indonesian
+  generated_from: ai_literacy_questions.yaml
+  generated_at: '2025-07-03T10:07:41.118Z'

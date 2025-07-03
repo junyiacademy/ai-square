@@ -1,0 +1,158 @@
+scenario_info:
+  id: ai-robotics-development
+  difficulty: intermediate
+  estimated_duration: 150
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - designing_with_ai
+  title: Разработка и внедрение робототехники с использованием ИИ
+  description: Изучите создание интеллектуальных роботов с использованием ИИ для реальных приложений, таких как автоматизация складов, помощь в уходе за пожилыми и умное производство
+  prerequisites:
+    - Базовые знания программирования (предпочтительно Python)
+    - Понимание датчиков и исполнительных механизмов
+    - Доступ к программному обеспечению для симуляции робототехники или аппаратному обеспечению
+  learning_objectives:
+    - Освоить методы интеграции ИИ для восприятия и принятия решений роботами
+    - Разработать системы автономной навигации с использованием компьютерного зрения ИИ и SLAM
+    - Создать интеллектуальные интерфейсы взаимодействия человека и робота с обработкой естественного языка
+    - Построить практические робототехнические решения для реальных бизнес и социальных вызовов
+ksa_mapping:
+  knowledge:
+    - K2.1
+    - K2.3
+    - K3.1
+    - K4.1
+  skills:
+    - S2.1
+    - S3.1
+    - S3.3
+    - S4.2
+  attitudes:
+    - A1.2
+    - A2.1
+    - A3.1
+    - A4.1
+tasks:
+  - id: perception-system
+    category: creation
+    time_limit: 60
+    assessment_focus:
+      primary:
+        - creating_with_ai
+        - engaging_with_ai
+      secondary:
+        - designing_with_ai
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: You are an expert robotics engineer and AI integration specialist. Help users understand computer vision concepts, implement sensor fusion techniques, and optimize AI models for real-time robotics applications. Focus on practical implementation and performance optimization.
+      initial_prompt: |
+        Welcome to robotics perception system development! I'm here to guide you through building a robust AI-powered vision system for your warehouse robot.
+
+        As your robotics mentor, I'll help you:
+        1. Design efficient computer vision pipelines for object detection
+        2. Implement sensor fusion techniques for reliable perception
+        3. Optimize AI models for real-time performance on robotics hardware
+        4. Test and validate your system under various conditions
+
+        Key considerations for robotics perception:
+        - Real-time performance is crucial (aim for >10 FPS)
+        - Robustness to lighting changes and occlusions
+        - Efficient resource usage for embedded systems
+        - Safety-critical error handling
+
+        What's your current experience with computer vision and robotics? Let's start by understanding your target hardware platform and performance requirements.
+    title: Система восприятия робота на основе ИИ
+    description: Вы разрабатываете робота автоматизации склада, который должен идентифицировать, сортировать и обрабатывать различные посылки. Используйте ИИ-зрение и слияние датчиков для создания надежной системы восприятия
+    instructions:
+      - Используйте ИИ-инструменты для проектирования пайплайнов компьютерного зрения для обнаружения и классификации объектов
+      - Внедрите слияние датчиков с помощью ИИ, объединяющее камеры, LiDAR и датчики глубины
+      - Создайте модели машинного обучения с использованием ИИ-платформ, таких как Roboflow или Edge Impulse для распознавания посылок
+      - Разработайте системы вывода ИИ в реальном времени, оптимизированные для встроенного робототехнического оборудования
+    expected_outcome: Работающая система восприятия, которая может надежно идентифицировать и классифицировать посылки в различных условиях освещения и окружающей среды, с задокументированными метриками производительности
+  - id: navigation-intelligence
+    category: creation
+    time_limit: 50
+    assessment_focus:
+      primary:
+        - creating_with_ai
+        - designing_with_ai
+      secondary:
+        - engaging_with_ai
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: You are a robotics navigation expert and AI systems architect. Help users understand autonomous navigation concepts, implement SLAM algorithms, and design intelligent behavior systems. Focus on safety, efficiency, and real-world deployment challenges.
+      initial_prompt: |
+        Great! Now we're tackling one of the most challenging aspects of robotics - autonomous navigation in complex, dynamic environments.
+
+        As your navigation systems expert, I'll guide you through:
+        1. Implementing robust SLAM for real-time mapping and localization
+        2. Designing AI-powered path planning for multi-objective scenarios
+        3. Creating adaptive behavior systems for emergency response
+        4. Optimizing navigation for human-robot shared spaces
+
+        Critical considerations for care facility navigation:
+        - Safety is paramount - never risk human injury
+        - Predictable behavior for user trust and comfort
+        - Adaptability to furniture changes and temporary obstacles
+        - Emergency response protocols and fail-safes
+
+        What's your experience with navigation algorithms? Let's start by understanding the specific layout and challenges of your target environment.
+    title: Автономная навигация с планированием ИИ
+    description: Ваш робот должен перемещаться по сложному учреждению по уходу за пожилыми людьми, избегая препятствий при доставке лекарств и эффективно реагируя на экстренные вызовы
+    instructions:
+      - Используйте алгоритмы планирования пути ИИ и обучение с подкреплением для оптимизации маршрутов в динамических средах
+      - Внедрите SLAM (одновременная локализация и картографирование) на основе ИИ для понимания среды в реальном времени
+      - Создайте интеллектуальные деревья поведения с помощью ИИ для приоритизации задач и реагирования на чрезвычайные ситуации
+      - Разработайте прогнозирующую навигацию с использованием ИИ для предвидения паттернов движения людей и рабочих процессов учреждения
+    expected_outcome: Полная система автономной навигации, которая может эффективно обрабатывать несколько одновременных задач, сохраняя безопасность и адаптируясь к изменениям окружающей среды
+  - id: human-interaction
+    category: interaction
+    time_limit: 40
+    assessment_focus:
+      primary:
+        - engaging_with_ai
+        - designing_with_ai
+      secondary:
+        - creating_with_ai
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: You are a human-computer interaction expert and conversational AI specialist. Help users design intuitive interfaces, implement natural language processing, and create engaging user experiences. Focus on accessibility, usability, and building trust between humans and machines.
+      initial_prompt: |
+        Excellent! Now we're focusing on one of the most critical aspects of modern robotics - creating natural, trustworthy interactions between humans and machines.
+
+        As your HCI (Human-Computer Interaction) specialist, I'll help you:
+        1. Design conversational interfaces that feel natural and reliable
+        2. Implement multimodal communication (voice, gesture, visual feedback)
+        3. Create adaptive interaction patterns that learn user preferences
+        4. Ensure accessibility and inclusivity in your interface design
+
+        Key principles for manufacturing HRI:
+        - Clear, unambiguous communication to prevent errors
+        - Respect for human expertise and decision-making authority
+        - Consistent behavior to build trust and predictability
+        - Graceful error handling and recovery
+
+        What's the primary language and communication style of your target users? Let's design an interaction system that feels natural and builds confidence in your manufacturing environment.
+    title: Интерфейс естественного взаимодействия человека и робота
+    description: Спроектируйте робота контроля качества производства, который может общаться с рабочими, понимать устные инструкции и предоставлять интуитивную обратную связь о производственных проблемах
+    instructions:
+      - Используйте языковые модели ИИ для создания возможностей естественного разговора для понимания рабочих инструкций
+      - Внедрите распознавание жестов на основе ИИ и системы невербальной коммуникации
+      - Спроектируйте мультимодальное взаимодействие с использованием ИИ, объединяющего голос, визуальные дисплеи и физические жесты
+      - Создайте адаптивные стили общения с использованием ИИ для соответствия различным предпочтениям и уровням экспертизы работников
+    expected_outcome: Интуитивная система взаимодействия, с которой работники могут легко общаться, сокращая время обучения и увеличивая показатели принятия в производственных средах
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - K2.1
+    - S3.1
+    - S4.2
+  min_overall_score: 75
+metadata:
+  language: ru
+  version: '1.0'
+  last_updated: '2025-07-03'

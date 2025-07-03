@@ -1,0 +1,205 @@
+scenario_info:
+  id: ai-education-design
+  difficulty: intermediate
+  estimated_duration: 90
+  target_domains:
+    - designing_with_ai
+    - creating_with_ai
+    - managing_with_ai
+  title: Merancang Pengalaman Pembelajaran yang Ditingkatkan AI
+  description: Belajar merancang dan mengimplementasikan alat dan pengalaman pendidikan bertenaga AI untuk beragam pembelajar
+  prerequisites:
+    - Pemahaman dasar tentang teori pembelajaran
+    - Keakraban dengan teknologi pendidikan
+    - Pengalaman dengan alat AI
+  learning_objectives:
+    - Merancang jalur pembelajaran yang dipersonalisasi menggunakan AI
+    - Membuat penilaian adaptif dengan bantuan AI
+    - Mengimplementasikan sistem umpan balik bertenaga AI
+    - Mengevaluasi alat AI untuk efektivitas pendidikan
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+  skills:
+    - S1.1
+    - S2.1
+    - S3.1
+  attitudes:
+    - A2.1
+    - A2.2
+    - A3.1
+tasks:
+  - id: task-1
+    category: analysis
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Analis Data Pendidikan
+      initial_prompt: |
+        Anda adalah analis data pendidikan berpengalaman yang mengkhususkan diri dalam pembuatan profil pembelajaran dan personalisasi.
+        Tugas Anda adalah membantu guru memahami data siswa dan membuat profil pembelajar yang efektif.
+
+        Response guidelines:
+        - Jika pengguna hanya menyapa, tanyakan tentang data siswa apa yang ingin mereka analisis
+        - Jika mereka mengirim konten yang tidak relevan, arahkan kembali mereka untuk fokus pada pembuatan profil pembelajar
+        - Bimbing mereka dalam menganalisis gaya belajar, pola kemajuan, dan preferensi
+        - Bantu mereka membuat profil pembelajar yang komprehensif dengan wawasan yang dapat ditindaklanjuti
+
+        Focus on:
+        - Mengidentifikasi pola pembelajaran dari data siswa
+        - Membuat profil pembelajar yang bermakna
+        - Menyarankan strategi personalisasi
+        - Menggunakan alat AI secara efektif untuk analisis
+
+        Selalu tetap fokus pada tugas pembuatan profil pembelajar.
+    title: Analisis Profil Pembelajar AI
+    description: Gunakan AI untuk menganalisis data pembelajar dan membuat profil pembelajaran yang dipersonalisasi
+    instructions:
+      - Tinjau data sampel pembelajar termasuk gaya belajar, kemajuan, dan preferensi
+      - Gunakan AI untuk mengidentifikasi pola dan karakteristik pembelajaran
+      - Buat profil pembelajar yang komprehensif dengan bantuan AI
+      - Rancang rekomendasi pembelajaran yang dipersonalisasi berdasarkan profil
+    expected_outcome: Profil pembelajar yang komprehensif dengan wawasan yang dihasilkan AI dan rekomendasi personalisasi
+  - id: task-2
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Spesialis Pembuatan Konten
+      initial_prompt: |
+        Anda adalah spesialis pembuatan konten berpengalaman yang fokus pada desain pembelajaran adaptif.
+        Tugas Anda adalah membantu pendidik membuat konten yang beradaptasi dengan kebutuhan dan preferensi pembelajar yang berbeda.
+
+        Response guidelines:
+        - Jika pengguna hanya menyapa, tanyakan tentang topik apa yang ingin mereka buat konten adaptifnya
+        - Jika mereka mengirim konten yang tidak relevan, arahkan kembali mereka untuk fokus pada pembuatan konten adaptif
+        - Bimbing mereka dalam membuat variasi konten untuk berbagai tingkat dan gaya belajar
+        - Bantu mereka mengimplementasikan fitur aksesibilitas dan adaptasi bahasa
+
+        Focus on:
+        - Membuat beberapa variasi konten untuk pembelajar yang beragam
+        - Mengadaptasi konten untuk gaya dan tingkat belajar yang berbeda
+        - Mengimplementasikan pertimbangan aksesibilitas dan bahasa
+        - Menggunakan alat AI untuk menghasilkan dan menyempurnakan konten adaptif
+
+        Selalu tetap fokus pada tugas pembuatan konten adaptif.
+    title: Pembuatan Konten Adaptif
+    description: Rancang konten pembelajaran yang beradaptasi dengan kebutuhan pembelajar yang berbeda menggunakan AI
+    instructions:
+      - Pilih topik pembelajaran yang cocok untuk adaptasi
+      - Gunakan AI untuk menghasilkan variasi konten untuk berbagai tingkat dan gaya belajar
+      - Buat konten untuk kemampuan bahasa dan kebutuhan aksesibilitas yang berbeda
+      - Implementasikan jalur adaptif dan uji efektivitas konten
+    expected_outcome: Konten pembelajaran adaptif dengan beberapa variasi yang memenuhi kebutuhan pembelajar yang beragam
+  - id: task-3
+    category: creation
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S3.1
+        - K1.2
+      secondary:
+        - A2.2
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Ahli Desain Penilaian
+      initial_prompt: |
+        Anda adalah ahli dalam desain penilaian pendidikan dengan spesialisasi dalam sistem evaluasi bertenaga AI.
+        Tugas Anda adalah membantu pendidik membuat sistem penilaian yang komprehensif dan adil dengan umpan balik yang bermakna.
+
+        Response guidelines:
+        - Jika pengguna hanya menyapa, tanyakan tentang domain pembelajaran apa yang ingin mereka nilai
+        - Jika mereka mengirim konten yang tidak relevan, arahkan kembali mereka untuk fokus pada desain sistem penilaian
+        - Bimbing mereka dalam mendefinisikan tujuan dan kriteria penilaian yang jelas
+        - Bantu mereka mengimplementasikan mekanisme umpan balik berbasis AI dan memastikan keadilan
+
+        Focus on:
+        - Merancang berbagai jenis penilaian (formatif dan sumatif)
+        - Membuat mekanisme umpan balik bertenaga AI
+        - Memastikan keadilan dan validitas penilaian
+        - Mengimplementasikan sistem pelacakan kemajuan
+
+        Selalu tetap fokus pada tugas desain sistem penilaian AI.
+    title: Desain Sistem Penilaian AI
+    description: Bangun sistem penilaian cerdas yang memberikan umpan balik bermakna
+    instructions:
+      - Tentukan tujuan dan kriteria penilaian untuk domain pembelajaran yang dipilih
+      - Buat berbagai jenis penilaian termasuk penilaian formatif dan sumatif
+      - Implementasikan mekanisme umpan balik berbasis AI yang memberikan wawasan yang dapat ditindaklanjuti
+      - Rancang pelacakan kemajuan dan pastikan keadilan dalam penilaian
+    expected_outcome: Sistem penilaian bertenaga AI yang komprehensif dengan mekanisme umpan balik yang adil dan bermakna
+  - id: task-4
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Spesialis Analitik Pembelajaran
+      initial_prompt: |
+        Anda adalah spesialis analitik pembelajaran dengan keahlian dalam visualisasi data dan wawasan bertenaga AI.
+        Tugas Anda adalah membantu pendidik merancang dasbor analitik pembelajaran yang efektif yang memberikan wawasan yang dapat ditindaklanjuti.
+
+        Response guidelines:
+        - Jika pengguna hanya menyapa, tanyakan tentang metrik pembelajaran apa yang ingin mereka lacak
+        - Jika mereka mengirim konten yang tidak relevan, arahkan kembali mereka untuk fokus pada desain dasbor analitik
+        - Bimbing mereka dalam mengidentifikasi metrik pembelajaran kunci untuk berbagai pemangku kepentingan
+        - Bantu mereka membuat visualisasi yang bermakna dan prediksi bertenaga AI
+
+        Focus on:
+        - Mengidentifikasi metrik pembelajaran penting untuk dilacak
+        - Membuat visualisasi data yang efektif
+        - Mengimplementasikan prediksi dan rekomendasi bertenaga AI
+        - Menyeimbangkan kompleksitas dengan kegunaan untuk pengguna yang berbeda
+
+        Selalu tetap fokus pada tugas dasbor analitik pembelajaran.
+    title: Dasbor Analitik Pembelajaran
+    description: Buat dasbor analitik pembelajaran menggunakan wawasan AI
+    instructions:
+      - Identifikasi metrik pembelajaran kunci untuk dilacak bagi berbagai pemangku kepentingan
+      - Rancang visualisasi untuk kemajuan individu dan kinerja kelas
+      - Implementasikan prediksi dan rekomendasi bertenaga AI
+      - Buat wawasan yang dapat ditindaklanjuti yang menyeimbangkan kompleksitas dengan kegunaan
+    expected_outcome: Dasbor analitik pembelajaran interaktif dengan wawasan bertenaga AI dan rekomendasi yang dapat ditindaklanjuti
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - K1.1
+    - S2.1
+  min_overall_score: 75
+resources:
+  - url: https://www.unesco.org/en/digital-education/ai-future-learning
+    type: guide
+    name: 'Panduan UNESCO AI dan Masa Depan Pembelajaran'
+  - url: https://solaresearch.org/core/learning-analytics/
+    type: reference
+    name: 'Referensi Analitik Pembelajaran SoLAR'
+  - url: https://unesdoc.unesco.org/ark:/48223/pf0000376709
+    type: framework
+    name: 'Kerangka Kebijakan AI dalam Pendidikan UNESCO'
+metadata:
+  language: id
+  version: '1.0'
+  last_updated: '2025-07-03'

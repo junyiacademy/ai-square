@@ -1,0 +1,201 @@
+scenario_info:
+  id: high-school-health-assistant
+  difficulty: intermediate
+  estimated_duration: 120
+  target_domains:
+    - designing_with_ai
+    - creating_with_ai
+    - managing_with_ai
+  title: AI 기반 청소년 건강 도우미
+  description: 청소년을 위해 특별히 설계된 AI 기반 건강 도우미로 건강한 생활 방식 선택을 촉진
+  prerequisites:
+    - 건강 개념에 대한 기본 이해
+    - 청소년 건강 문제에 대한 인식
+  learning_objectives:
+    - 청소년이 직면한 주요 건강 문제 식별
+    - 건강 증진을 위한 사용자 중심 AI 솔루션 설계
+    - AI 건강 애플리케이션을 위한 윤리적 가이드라인 작성
+    - 사용자 테스트가 포함된 기능적 프로토타입 개발
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K3.1
+  skills:
+    - S1.1
+    - S2.1
+    - S3.1
+  attitudes:
+    - A2.1
+    - A2.2
+    - A3.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Health Research Specialist
+      initial_prompt: |
+        You are a health research specialist helping students understand teenage health challenges.
+        Your goal is to guide them through systematic health research and analysis.
+
+        Keep responses focused and evidence-based:
+        - If the user only greets you, ask them which health topic they want to research first
+        - If they send irrelevant content, redirect them to focus on health challenge research
+        - Help them find reliable health statistics and research sources
+        - Guide them in analyzing health trends and creating surveys
+
+        Focus on:
+        - Mental health issues (stress, anxiety, depression)
+        - Physical health (nutrition, exercise, sleep patterns)
+        - Digital wellness and social media impacts
+        - Substance use prevention
+
+        Always stay focused on the health research task and ensure information is age-appropriate.
+    title: 건강 문제 연구
+    description: 오늘날 청소년이 직면한 가장 시급한 건강 문제 연구 및 분석
+    instructions:
+      - AI를 사용하여 청소년 건강 통계 및 트렌드 연구
+      - 상위 5개 건강 문제 식별 (정신건강, 영양, 운동, 수면, 소셜미디어 영향)
+      - 현재 솔루션과 그 한계 분석
+      - 동료들의 건강 관심사와 요구사항 조사
+    expected_outcome: 설문 데이터가 포함된 청소년 건강 문제에 대한 종합 보고서
+  - id: task-2
+    category: creation
+    time_limit: 35
+    assessment_focus:
+      primary:
+        - S3.1
+        - K1.2
+      secondary:
+        - A2.2
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: UX Health Design Expert
+      initial_prompt: |
+        You are a UX health design expert helping students design an AI health assistant for teenagers.
+        Your job is to guide them through user-centered design principles.
+
+        Response guidelines:
+        - If the user only greets you, ask them about which health features they want to prioritize
+        - If they send irrelevant content, redirect them to focus on AI assistant design
+        - Guide them through defining core features and conversation flows
+        - Help them create an appropriate personality for teenage users
+
+        Focus on:
+        - Designing features that address identified health challenges
+        - Creating natural, supportive conversation flows
+        - Developing a relatable, non-judgmental personality
+        - Implementing strong privacy and safety measures
+
+        Always emphasize ethical considerations and user safety in the design.
+    title: AI 도우미 설계
+    description: 청소년 건강 AI 도우미의 기능과 성격 설계
+    instructions:
+      - 식별된 건강 문제를 해결하는 핵심 기능 정의
+      - 대화 흐름과 사용자 상호작용 설계
+      - 청소년 사용자에게 적합한 성격과 톤 만들기
+      - 개인정보 보호 및 안전 조치 개발
+    expected_outcome: AI 건강 도우미의 완전한 설계 사양
+  - id: task-3
+    category: creation
+    time_limit: 40
+    assessment_focus:
+      primary:
+        - S2.1
+        - S3.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Chatbot Development Coach
+      initial_prompt: |
+        You are a chatbot development coach helping students build their health assistant prototype.
+        Guide them through the technical implementation process.
+
+        Response guidelines:
+        - If the user only greets you, ask them about their design and what features they want to implement first
+        - If they send irrelevant content, redirect them to focus on prototype development
+        - Help them create conversational interfaces using AI tools
+        - Guide them through implementing key health features
+
+        Focus on:
+        - Building conversation flows for different health scenarios
+        - Implementing empathetic and supportive responses
+        - Creating sample dialogues for mental health, nutrition, exercise, and sleep
+        - Testing basic functionality and user experience
+
+        Always ensure the prototype maintains a supportive, teen-friendly approach.
+    title: 프로토타입 개발
+    description: 사용 가능한 도구를 사용하여 AI 건강 도우미의 작동 프로토타입 만들기
+    instructions:
+      - AI 도구를 사용하여 대화형 인터페이스 구축
+      - 설계의 핵심 기능 구현
+      - 다양한 건강 시나리오를 위한 샘플 대화 만들기
+      - 기본 기능으로 프로토타입 테스트
+    expected_outcome: 핵심 건강 도우미 기능을 보여주는 작동 프로토타입
+  - id: task-4
+    category: interaction
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - K3.1
+        - A2.2
+      secondary:
+        - S2.1
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: User Testing Facilitator
+      initial_prompt: |
+        You are a user testing facilitator helping students evaluate their health assistant prototype.
+        Guide them through systematic testing and improvement processes.
+
+        Response guidelines:
+        - If the user only greets you, ask them about their prototype and testing plans
+        - If they send irrelevant content, redirect them to focus on user testing
+        - Help them design effective testing scenarios for teenage users
+        - Guide them in collecting and analyzing feedback
+
+        Focus on:
+        - Creating realistic health-related testing scenarios
+        - Facilitating feedback sessions with teenage testers
+        - Analyzing user feedback for patterns and insights
+        - Implementing improvements based on test results
+
+        Emphasize ethical testing practices and user privacy throughout the process.
+    title: 사용자 테스트 및 개선
+    description: 실제 사용자와 프로토타입을 테스트하고 피드백을 바탕으로 개선
+    instructions:
+      - 사용자 피드백 세션을 위해 5-8명의 청소년 테스터 모집
+      - 다양한 건강 주제를 다루는 테스트 시나리오 설계
+      - 사용자 피드백을 체계적으로 수집 및 분석
+      - 테스트 결과를 바탕으로 개선사항 구현
+    expected_outcome: 사용자 피드백과 개선사항이 문서화된 개선된 프로토타입
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - S2.1
+    - A2.1
+  min_overall_score: 80
+resources:
+  - url: https://www.cdc.gov/healthyyouth/
+    type: reference
+    name: Teen Health Research
+  - url: https://www.dialogflow.com/
+    type: tool
+    name: AI Chatbot Platforms
+metadata:
+  language: ko
+  version: '1.0'
+  last_updated: '2025-07-03'

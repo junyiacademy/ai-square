@@ -1,0 +1,322 @@
+domains:
+  Engaging_with_AI:
+    emoji: 🎯
+    overview: Melibatkan penggunaan AI sebagai alat untuk mengakses konten, informasi, atau rekomendasi baru. Situasi ini mengharuskan peserta didik untuk terlebih dahulu mengenali keberadaan AI, kemudian mengevaluasi akurasi dan relevansi output AI. Peserta didik harus mengembangkan pemahaman fundamental tentang dasar-dasar teknis AI untuk menganalisis kemampuan dan keterbatasannya secara kritis.
+    competencies:
+      E1:
+        description: Mengenali peran dan pengaruh AI dalam berbagai konteks.
+        knowledge:
+          - K1.4
+          - K5.1
+        skills:
+          - S6.1
+        attitudes:
+          - A2.1
+          - A1.1
+        content: Pembelajar mengidentifikasi keberadaan AI dalam alat dan sistem sehari-hari dan mempertimbangkan tujuannya dalam berbagai situasi, seperti rekomendasi konten atau pembelajaran adaptif. Mereka merefleksikan bagaimana AI mempengaruhi pilihan, pembelajaran, dan persepsi mereka.
+        scenarios:
+          - Mendaftar interaksi digital yang familiar (misalnya menggunakan webcam, rekomendasi video) dan mendiskusikan apakah dan bagaimana masing-masing menggunakan AI.
+          - Mengeksplorasi bagaimana platform matematika online menggunakan data real-time untuk menyajikan konten dengan tingkat kesulitan yang berbeda.
+      E2:
+        description: Menganalisis akurasi dan relevansi output AI.
+        knowledge:
+          - K1.1
+          - K1.3
+          - K4.1
+        skills:
+          - S1.1
+        attitudes:
+          - A1.1
+          - A2.1
+        content: Pembelajar mengevaluasi apakah konten yang dihasilkan AI akurat, relevan, dan dapat diterapkan. Mereka belajar mengidentifikasi kekuatan dan keterbatasan AI serta mempertimbangkan berbagai sumber informasi saat membuat keputusan.
+        scenarios:
+          - Membandingkan ringkasan berita yang dihasilkan AI dengan artikel asli, mengidentifikasi akurasi dan bias.
+          - Mengevaluasi kualitas terjemahan bahasa AI, mempertimbangkan konteks budaya dan nuansa semantik.
+      E3:
+        description: Mengenali kemampuan dan keterbatasan sistem AI.
+        knowledge:
+          - K1.2
+          - K1.3
+          - K4.1
+        skills:
+          - S1.1
+        attitudes:
+          - A2.1
+        content: Pembelajar memahami kemampuan teknis dan batas-batas sistem AI, termasuk perbedaan kinerjanya dalam tugas yang berbeda. Mereka belajar membedakan area di mana AI unggul dari yang memerlukan penilaian manusia.
+        scenarios:
+          - Menguji kinerja chatbot AI pada berbagai jenis pertanyaan, membandingkan efektivitasnya pada pertanyaan faktual versus kreatif.
+          - Menganalisis akurasi sistem pengenalan gambar AI dalam kondisi yang berbeda.
+      E4:
+        description: Mengevaluasi kesesuaian dan implikasi etis penggunaan AI.
+        knowledge:
+          - K5.4
+          - K2.1
+        skills:
+          - S5.1
+          - S6.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Pembelajar mempertimbangkan apakah penggunaan AI dalam situasi tertentu sesuai, bermanfaat, atau berpotensi merugikan. Mereka mengevaluasi implikasi etis penggunaan AI, termasuk isu privasi, bias, dan keadilan.
+        scenarios:
+          - Mendiskusikan implikasi etis penggunaan AI dalam penyaringan CV dalam proses rekrutmen.
+          - Menganalisis bagaimana sistem rekomendasi AI dapat mempengaruhi pilihan dan opini pengguna.
+      E5:
+        description: Mempraktikkan perilaku bertanggung jawab saat menggunakan AI.
+        knowledge:
+          - K5.4
+          - K2.1
+        skills:
+          - S7.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Pembelajar menunjukkan perilaku yang bertanggung jawab dan etis saat berinteraksi dengan sistem AI. Mereka mempertimbangkan dampak tindakan mereka dan mengikuti praktik terbaik saat menggunakan AI.
+        scenarios:
+          - Mengembangkan pedoman untuk menggunakan alat AI dalam pekerjaan akademis.
+          - Menciptakan strategi untuk memverifikasi akurasi informasi yang dihasilkan AI sebelum membagikannya kepada orang lain.
+
+  Creating_with_AI:
+    emoji: 🎨
+    overview: Melibatkan kolaborasi dengan sistem AI untuk menghasilkan konten, ide, atau solusi baru. Situasi ini mengharuskan peserta didik memahami kemampuan AI sebagai mitra kreatif, sambil mempertahankan penghargaan terhadap kreativitas manusia, orisinalitas, dan kekayaan intelektual.
+    competencies:
+      C1:
+        description: Menggunakan alat AI untuk meningkatkan kreativitas dan produktivitas.
+        knowledge:
+          - K1.4
+          - K5.3
+        skills:
+          - S2.1
+          - S3.1
+        attitudes:
+          - A3.1
+          - A4.1
+        content: Pembelajar menggunakan alat AI untuk meningkatkan pekerjaan kreatif mereka, seperti menulis, desain, atau pemecahan masalah. Mereka belajar berkolaborasi secara efektif dengan AI sambil mempertahankan visi kreatif dan kontrol mereka.
+        scenarios:
+          - Menggunakan asisten penulisan AI untuk meningkatkan struktur esai sambil mempertahankan sudut pandang dan argumen sendiri.
+          - Berkolaborasi dengan generator seni AI untuk menciptakan karya visual, mengeksplorasi gaya dan konsep yang berbeda.
+      C2:
+        description: Mempertahankan orisinalitas dan autentisitas dalam proses kreatif berbantuan AI.
+        knowledge:
+          - K5.3
+          - K2.1
+        skills:
+          - S2.1
+          - S7.1
+        attitudes:
+          - A1.1
+          - A3.1
+        content: Pembelajar memahami bagaimana mempertahankan orisinalitas dan suara pribadi saat menggunakan alat AI. Mereka belajar membedakan antara kreasi berbantuan AI dengan konten yang sepenuhnya bergantung pada AI.
+        scenarios:
+          - Membuat proyek yang jelas mengidentifikasi bagian mana yang berbantuan AI dan mana yang asli.
+          - Mendiskusikan atribusi yang tepat untuk konten yang dihasilkan AI dalam konteks akademis dan komersial.
+      C3:
+        description: Memahami isu hak cipta dan kekayaan intelektual dalam kreasi AI.
+        knowledge:
+          - K5.3
+          - K2.1
+        skills:
+          - S1.1
+          - S7.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Pembelajar memahami implikasi hak cipta dan kekayaan intelektual dari konten yang dihasilkan AI. Mereka belajar menggunakan alat kreasi AI secara bertanggung jawab dan memahami isu hukum dan etis terkait.
+        scenarios:
+          - Meneliti syarat penggunaan dan kebijakan hak cipta dari berbagai platform AI.
+          - Membuat panduan praktik terbaik untuk penggunaan konten yang dihasilkan AI.
+      C4:
+        description: Mengevaluasi dan meningkatkan konten yang dihasilkan AI.
+        knowledge:
+          - K1.3
+          - K4.1
+        skills:
+          - S1.1
+          - S2.1
+        attitudes:
+          - A2.1
+          - A4.1
+        content: Pembelajar belajar mengevaluasi kualitas konten yang dihasilkan AI dan meningkatkannya melalui proses iteratif. Mereka mengembangkan keterampilan berpikir kritis untuk mengidentifikasi dan menyelesaikan masalah dalam output AI.
+        scenarios:
+          - Meningkatkan cerita atau artikel yang dihasilkan AI melalui beberapa iterasi.
+          - Mengevaluasi kode yang dihasilkan AI dan melakukan modifikasi serta optimasi yang diperlukan.
+      C5:
+        description: Menyeimbangkan bantuan AI dengan penilaian manusia dalam proses kreatif.
+        knowledge:
+          - K3.2
+          - K4.1
+        skills:
+          - S2.1
+          - S5.1
+        attitudes:
+          - A4.1
+          - A5.1
+        content: Pembelajar belajar menggabungkan alat AI dan penilaian manusia secara tepat dalam proses kreatif. Mereka memahami kapan bergantung pada AI dan kapan kreativitas serta penilaian manusia diperlukan.
+        scenarios:
+          - Merancang alur kerja kreatif yang dengan jelas mendefinisikan peran AI dan manusia di berbagai tahap.
+          - Menganalisis berbagai jenis tugas kreatif, menentukan tingkat bantuan AI yang tepat.
+
+  Managing_with_AI:
+    emoji: 📊
+    overview: Melibatkan penggunaan strategis AI dalam tugas organisasi dan manajemen. Situasi ini mengharuskan peserta didik memahami bagaimana AI mengubah alur kerja, proses pengambilan keputusan, dan struktur organisasi, sambil mempertimbangkan pentingnya pengawasan dan tanggung jawab manusia.
+    competencies:
+      M1:
+        description: Mengevaluasi peluang integrasi AI dalam alur kerja.
+        knowledge:
+          - K3.1
+          - K3.2
+        skills:
+          - S5.1
+          - S3.1
+        attitudes:
+          - A3.1
+          - A4.1
+        content: Pembelajar mengidentifikasi area dalam organisasi di mana AI dapat diintegrasikan secara efektif, mengevaluasi manfaat dan risiko potensial. Mereka belajar menganalisis alur kerja yang ada dan menentukan di mana AI dapat menambah nilai.
+        scenarios:
+          - Menganalisis sistem manajemen sekolah, mengidentifikasi proses yang dapat diotomatisasi atau ditingkatkan melalui AI.
+          - Mengevaluasi kelayakan dan dampak penggunaan chatbot AI dalam layanan pelanggan.
+      M2:
+        description: Mempertahankan pengawasan manusia dalam proses pengambilan keputusan berbantuan AI.
+        knowledge:
+          - K3.3
+          - K5.1
+        skills:
+          - S1.1
+          - S6.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Pembelajar memahami pentingnya pengawasan manusia dalam pengambilan keputusan berbantuan AI. Mereka belajar merancang proses pengambilan keputusan yang memastikan manusia mempertahankan kontrol dan tanggung jawab akhir.
+        scenarios:
+          - Merancang sistem evaluasi siswa berbantuan AI termasuk mekanisme tinjauan dan intervensi manusia.
+          - Menciptakan kerangka pengambilan keputusan menggunakan AI untuk analisis data, memastikan validasi dan interpretasi manusia.
+      M3:
+        description: Mengelola perubahan organisasi dalam implementasi AI.
+        knowledge:
+          - K3.1
+          - K3.2
+        skills:
+          - S4.1
+          - S7.1
+        attitudes:
+          - A4.1
+          - A5.1
+        content: Pembelajar memahami bagaimana implementasi AI mempengaruhi budaya organisasi dan cara kerja. Mereka belajar mengelola proses perubahan, termasuk pelatihan, komunikasi, dan manajemen perubahan.
+        scenarios:
+          - Mengembangkan rencana untuk membantu tim beradaptasi dengan alat dan alur kerja AI baru.
+          - Merancang program pelatihan untuk meningkatkan literasi AI anggota organisasi.
+      M4:
+        description: Mengevaluasi dan memitigasi risiko penggunaan AI.
+        knowledge:
+          - K4.1
+          - K5.4
+        skills:
+          - S1.1
+          - S6.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Pembelajar mengidentifikasi risiko potensial dalam penggunaan AI, termasuk bias, kesalahan, dan isu keamanan. Mereka belajar mengembangkan strategi untuk memitigasi risiko ini dan memastikan penggunaan AI yang bertanggung jawab.
+        scenarios:
+          - Melakukan penilaian risiko sistem AI, mengidentifikasi bias dan kesalahan potensial.
+          - Mengembangkan kebijakan tata kelola dan panduan praktik terbaik untuk penggunaan AI.
+      M5:
+        description: Mengukur efektivitas dan dampak implementasi AI.
+        knowledge:
+          - K3.1
+          - K5.1
+        skills:
+          - S1.1
+          - S6.1
+        attitudes:
+          - A2.1
+          - A4.1
+        content: Pembelajar belajar mengevaluasi keberhasilan implementasi AI, termasuk peningkatan efisiensi, penghematan biaya, dan kepuasan pengguna. Mereka mengembangkan keterampilan untuk mengukur dan meningkatkan kinerja sistem AI.
+        scenarios:
+          - Merancang metrik untuk mengevaluasi efektivitas sistem layanan pelanggan AI.
+          - Menganalisis dampak alat AI pada efisiensi dan kualitas kerja.
+
+  Designing_with_AI:
+    emoji: 🔧
+    overview: Melibatkan perancangan dan pengembangan sistem AI atau solusi yang ditingkatkan AI. Situasi ini mengharuskan peserta didik memahami pertimbangan teknis dan etis pengembangan AI, termasuk desain data, algoritma, dan pengalaman pengguna.
+    competencies:
+      D1:
+        description: Merancang sistem AI dengan mempertimbangkan etika dan keadilan.
+        knowledge:
+          - K2.1
+          - K5.4
+        skills:
+          - S1.1
+          - S3.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Pembelajar memahami bagaimana merancang sistem AI yang adil, transparan, dan bertanggung jawab. Mereka belajar mempertimbangkan kebutuhan kelompok pengguna yang berbeda dan menyematkan pertimbangan etis dalam proses desain.
+        scenarios:
+          - Merancang alat rekrutmen AI yang memastikan penghilangan bias gender dan ras.
+          - Menciptakan sistem pendidikan AI yang memberikan kesempatan yang adil bagi siswa dengan kebutuhan belajar yang berbeda.
+      D2:
+        description: Memahami persyaratan dan kualitas data untuk sistem AI.
+        knowledge:
+          - K1.1
+          - K2.2
+        skills:
+          - S3.1
+          - S1.1
+        attitudes:
+          - A1.1
+          - A2.1
+        content: Pembelajar memahami ketergantungan sistem AI pada data, termasuk pengumpulan data, pembersihan, dan jaminan kualitas. Mereka belajar mengidentifikasi dan menyelesaikan masalah kualitas data.
+        scenarios:
+          - Menganalisis dataset pelatihan, mengidentifikasi bias potensial dan masalah kualitas.
+          - Merancang strategi pengumpulan data yang memastikan representatifitas dan kualitas.
+      D3:
+        description: Merancang antarmuka dan pengalaman pengguna yang ramah AI.
+        knowledge:
+          - K1.2
+          - K4.1
+        skills:
+          - S3.1
+          - S7.1
+        attitudes:
+          - A3.1
+          - A5.1
+        content: Pembelajar belajar merancang antarmuka pengguna AI yang intuitif dan transparan. Mereka memahami bagaimana membuat pengguna memahami dan mempercayai sistem AI, serta memberikan kontrol pengguna yang tepat.
+        scenarios:
+          - Merancang antarmuka pengguna untuk sistem rekomendasi AI, memungkinkan pengguna memahami dasar rekomendasi.
+          - Menciptakan asisten AI yang memberikan umpan balik dan penjelasan yang jelas.
+      D4:
+        description: Mengimplementasikan pengujian dan validasi sistem AI.
+        knowledge:
+          - K1.1
+          - K4.1
+        skills:
+          - S1.1
+          - S3.1
+        attitudes:
+          - A1.1
+          - A2.1
+        content: Pembelajar belajar menguji dan memvalidasi kinerja, akurasi, dan keandalan sistem AI. Mereka memahami bagaimana mengidentifikasi dan menyelesaikan masalah dalam sistem AI.
+        scenarios:
+          - Merancang skema pengujian untuk mengevaluasi akurasi dan robustness model AI.
+          - Melakukan pengujian pengguna untuk mengumpulkan umpan balik tentang kegunaan sistem AI.
+      D5:
+        description: Mempertimbangkan dampak jangka panjang dan keberlanjutan sistem AI.
+        knowledge:
+          - K3.1
+          - K5.1
+        skills:
+          - S6.1
+          - S1.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Pembelajar mempertimbangkan dampak jangka panjang sistem AI pada masyarakat, lingkungan, dan ekonomi. Mereka belajar merancang solusi AI yang berkelanjutan dan dapat diskalakan.
+        scenarios:
+          - Mengevaluasi dampak lingkungan sistem AI, termasuk penggunaan energi dan jejak karbon.
+          - Menganalisis dampak jangka panjang implementasi AI pada ketenagakerjaan dan struktur sosial.
+
+metadata:
+  language: id
+  version: "1.0"
+  last_updated: "2025-07-03"

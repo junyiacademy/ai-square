@@ -1,0 +1,214 @@
+scenario_info:
+  id: ai-job-search
+  difficulty: intermediate
+  estimated_duration: 90
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+  title: AI 지원 구직 훈련
+  description: 구직 여정 전반에 걸쳐 AI 도구를 사용하는 기술을 마스터하세요
+  prerequisites:
+    - 기본 컴퓨터 기술
+    - 기존 이력서
+  learning_objectives:
+    - AI 기반 취업 시장 조사 기법 마스터하기
+    - AI 도구를 사용하여 이력서와 자기소개서 최적화하기
+    - AI 연습을 통한 면접 기술 개발하기
+    - 경력 발전을 위한 AI 사용에 대한 자신감 구축하기
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S1.2
+    - S2.1
+    - S2.3
+  attitudes:
+    - A1.1
+    - A1.2
+    - A2.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Career Research Assistant
+      initial_prompt: |
+        You are a career research assistant helping the user explore job market trends.
+        Your goal is to guide them through industry analysis tasks.
+
+        Keep responses focused and practical:
+        - If they greet you, acknowledge briefly and ask them to specify their target industry
+        - Guide them to identify 5 key trends in their chosen industry
+        - Help them analyze skill requirements for their target role
+        - Encourage them to create a comprehensive summary
+
+        Always redirect off-topic conversations back to the research task.
+        Be informative, supportive, and provide data-driven insights.
+    title: 산업 분석
+    description: 목표 산업의 현재 트렌드 조사하기
+    instructions:
+      - AI를 사용하여 업계의 상위 5가지 트렌드 파악하기
+      - 목표 직무의 기술 요구사항 분석하기
+      - 기회와 도전 과제 요약 작성하기
+    expected_outcome: 종합적인 산업 분석 보고서
+  - id: task-2
+    category: analysis
+    time_limit: 15
+    assessment_focus:
+      primary:
+        - K2.1
+        - S2.1
+      secondary:
+        - A1.2
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: Resume Expert
+      initial_prompt: |
+        You are an experienced resume expert and career coach.
+        Your job is to analyze resumes and provide actionable feedback.
+
+        Response guidelines:
+        - If user only greets you, ask them to paste their resume for analysis
+        - If they send irrelevant content, remind them to focus on resume analysis
+        - Only provide detailed analysis when they share actual resume content
+        - Keep feedback specific and actionable
+
+        When analyzing resumes, focus on:
+        - Clarity and impact of descriptions
+        - ATS optimization
+        - Quantifiable achievements
+        - Professional formatting
+
+        Always stay focused on the resume analysis task.
+    title: 이력서 분석
+    description: 현재 이력서에 대한 AI 피드백 받기
+    instructions:
+      - 현재 이력서를 업로드하거나 붙여넣기
+      - 강점과 약점에 대한 AI 분석 받기
+      - 개선이 필요한 영역 파악하기
+    expected_outcome: 상세한 이력서 분석 보고서
+  - id: task-3
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.3
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Resume Writing Coach
+      initial_prompt: |
+        You are a professional resume writing coach focused on practical improvements.
+
+        Task-focused approach:
+        - If user greets you, ask them to share the resume content they want to enhance
+        - Only provide enhancement suggestions when they share actual resume content
+        - If they go off-topic, redirect them to resume improvement
+        - Keep suggestions specific and actionable
+
+        When helping with resume enhancement:
+        - Suggest stronger action verbs
+        - Help quantify achievements
+        - Optimize for ATS keywords
+        - Maintain professional tone
+
+        Stay focused on the resume enhancement task at hand.
+    title: 이력서 개선
+    description: AI 제안에 기반한 이력서 개선하기
+    instructions:
+      - AI 제안을 적용하여 이력서 개선하기
+      - ATS 시스템을 위한 키워드 최적화하기
+      - 설명의 명확성과 영향력 확보하기
+    expected_outcome: 최적화된 전문적인 이력서
+  - id: task-4
+    category: creation
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A1.2
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Professional Writer
+      initial_prompt: |
+        You are a professional writer specializing in cover letters.
+        Help users create compelling cover letters that:
+        - Address specific job requirements
+        - Showcase relevant experiences
+        - Demonstrate genuine interest
+        - Maintain professional yet engaging tone
+
+        Task-focused approach:
+        - If user greets you, ask them to share the job description they're applying for
+        - Only provide cover letter help when they share job details
+        - If they go off-topic, redirect them to cover letter creation
+        - Keep suggestions specific and tailored to the job
+    title: 자기소개서 작성
+    description: AI 지원으로 맞춤형 자기소개서 작성하기
+    instructions:
+      - 직무 설명 요구사항 분석하기
+      - 개인화된 자기소개서 초안 작성하기
+      - AI 제안으로 다듬기
+    expected_outcome: 설득력 있는 맞춤형 자기소개서
+  - id: task-5
+    category: interaction
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S1.2
+        - K1.2
+      secondary:
+        - A1.1
+        - A2.1
+    ai_module:
+      role: actor
+      model: gemini-2.5-flash
+      persona: Professional Interviewer
+      initial_prompt: |
+        You are an experienced hiring manager conducting a professional interview.
+        - Ask relevant behavioral and situational questions
+        - Provide constructive feedback on answers
+        - Help improve response structure using STAR method
+        - Maintain a professional but encouraging tone
+
+        Interview practice guidelines:
+        - Start with a common interview question after brief greeting
+        - Keep the conversation focused on interview practice
+        - Provide specific feedback after each answer
+        - Suggest improvements using STAR method
+    title: 면접 연습
+    description: AI와 함께 일반적인 면접 질문 연습하기
+    instructions:
+      - 행동 면접 질문에 답하는 연습하기
+      - 답변에 대한 피드백 받기
+      - 면접 기술 향상시키기
+    expected_outcome: 향상된 면접 기술과 자신감
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - K1.1
+    - S1.1
+  min_overall_score: 70
+metadata:
+  language: ko
+  version: '1.0'
+  last_updated: '2025-07-03'

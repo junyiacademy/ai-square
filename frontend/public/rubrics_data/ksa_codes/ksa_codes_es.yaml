@@ -1,0 +1,151 @@
+knowledge_codes:
+  description: Las declaraciones de conocimiento en el marco incluyen hechos, conceptos, ideas y procesos que reflejan el conocimiento disciplinario, interdisciplinario, epistémico y procedimental. Esbozan las comprensiones técnicas y sociales que los estudiantes necesitan para aplicar y participar en sistemas de IA.
+  themes:
+    AI_Reflects_Human_Choices_and_Perspectives:
+      codes:
+        K2.1:
+          summary: La construcción y el mantenimiento de sistemas de IA dependen de que los humanos diseñen algoritmos, recojan y etiqueten datos, y moderen contenido dañino. Estos sistemas reflejan las elecciones, suposiciones y prácticas laborales humanas, moldeadas por condiciones globales desiguales.
+        K2.2:
+          summary: La IA se entrena con vastos conjuntos de datos provenientes de información disponible públicamente, contenido generado por usuarios, bases de datos curadas y datos del mundo real recopilados
+        K2.3:
+          summary: Los sistemas de IA operan de manera diferente según su propósito, ya sea para crear, predecir, recomendar o responder.
+        K2.4:
+          summary: Los sistemas de IA operan de manera diferente según su propósito, ya sea para crear, predecir, recomendar o responder.
+        K2.5:
+          summary: La construcción y el mantenimiento de sistemas de IA dependen de que los humanos diseñen algoritmos, recojan y etiqueten datos, y moderen contenido dañino. Estos sistemas reflejan las elecciones, suposiciones y prácticas laborales humanas, moldeadas por condiciones globales desiguales.
+      explanation: |
+        La IA no es neutral; está moldeada por las decisiones de quienes la construyen. Los humanos seleccionan los datos de entrenamiento, que pueden haber sido recopilados de manera poco ética o presentar representaciones inexactas e incompletas de individuos y perspectivas. También aportan juicio durante la clasificación de esos datos de entrenamiento, lo que informa los algoritmos que producen las salidas de los sistemas de IA. Si bien los sesgos estadísticos y sociales pueden existir sin ser detectados en los datos de entrenamiento o ser reforzados en otros aspectos del proceso de entrenamiento, la prevalencia de la IA en la toma de decisiones y en la vida cotidiana puede replicar esos sesgos de maneras que afectan negativamente a diferentes grupos de personas. Esto hace que la ética, la equidad algorítmica, la representación, la explicabilidad y la responsabilidad sean esenciales para la alfabetización en IA.
+    AI_Reshapes_Work_and_Human_Roles:
+      codes:
+        K3.1:
+          summary: Los sistemas de IA automatizan tareas estructuradas, aumentan la toma de decisiones y transforman industrias, lo que requiere que los humanos se adapten, reentrenen y mejoren sus habilidades.
+        K3.2:
+          summary: La integración de la IA requiere que las personas determinen qué tareas son más adecuadas para las máquinas y cuáles requieren intervención o experiencia humana.
+        K3.3:
+          summary: Si bien la IA puede apoyar el análisis y la predicción, los humanos deben ser responsables de las decisiones que reflejan el juicio humano y las consideraciones éticas.
+      explanation: |
+        El impacto de la IA en diversas industrias enfatiza la importancia de la adaptabilidad y el aprendizaje continuo. Si bien los sistemas de IA pueden aumentar la eficiencia en muchos tipos de tareas, estas herramientas no siempre son la mejor opción; los humanos deben perfeccionar su conocimiento de las capacidades de la IA y su experiencia en el dominio para gestionar eficazmente los sistemas de IA. El éxito en una fuerza laboral integrada por IA implica desarrollar fluidez en una variedad de tecnologías, mantenerse al día con nuevas herramientas y técnicas, y aprovechar el juicio humano en la toma de decisiones desde una edad temprana, tanto en la educación formal como informal. Esta combinación asegura que la IA complemente las habilidades humanas y aumente las capacidades humanas, en lugar de reemplazarlas.
+    AIs_Capabilities_and_Limitations:
+      codes:
+        K4.1:
+          summary: La IA sobresale en el reconocimiento de patrones y la automatización, pero carece de emociones, razonamiento ético, contexto y originalidad.
+        K4.2:
+          summary: La IA se entrena con vastos conjuntos de datos provenientes de información disponible públicamente, contenido generado por usuarios, bases de datos curadas y datos del mundo real recopilados
+        K4.3:
+          summary: La capacidad de la IA generativa, particularmente de los grandes modelos de lenguaje (LLMs), para generar contenido similar al humano puede dificultar la distinción entre hechos y fabricaciones, aumentando el potencial de generar desinformación, deepfakes o materiales manipulativos.
+      explanation: |
+        La IA carece de una verdadera comprensión del contexto del mundo real, de los valores y comportamientos humanos, y de los matices, incluso cuando los sistemas modifican sus propias salidas para responder a los complejos estados emocionales de un usuario. Si bien los sistemas de IA pueden analizar enormes cantidades de datos, son propensos a sesgos, confabulación y abuso, y dependen de vastos pero finitos recursos naturales. Un ser humano debe tomar decisiones sobre contextos específicos que los sistemas de IA no pueden, incluyendo si los beneficios de una herramienta de IA justifican el costo ambiental o social. La alfabetización en IA requiere un pensamiento crítico sobre cuándo, dónde y cómo se debe aplicar la IA para garantizar que sirva equitativamente a las necesidades humanas.
+    AIs_Role_in_Society:
+      codes:
+        K5.1:
+          summary: La IA desempeña un papel cada vez más importante en la toma de decisiones que impactan a los humanos, desde las prácticas de contratación hasta la atención médica y la justicia penal.
+        K5.2:
+          summary: La integración de la IA requiere que las personas determinen qué tareas son más adecuadas para las máquinas y cuáles requieren intervención o experiencia humana.
+        K5.3:
+          summary: La IA generativa y los grandes modelos de lenguaje crean contenido basado en materiales existentes en los datos de entrenamiento, que incluyen obras protegidas por derechos de autor, lo que plantea preguntas sobre autenticidad, autoría y propiedad.
+        K5.4:
+          summary: El diseño ético de la IA abarca la equidad, la transparencia, la explicabilidad, la responsabilidad, el respeto por la privacidad y el cumplimiento legal.
+      explanation: |
+        Los sistemas de IA no existen en aislamiento; su uso refleja, refuerza y remodela los valores y decisiones sociales. Sin una supervisión cuidadosa, la toma de decisiones impulsada por IA puede amplificar sesgos y causar daños generalizados. Los sistemas de IA introducen implicaciones sobre cómo los aprendices deben pensar sobre la verdad, la autoría y la propiedad en los espacios digitales. La orientación y regulación a nivel individual y sistémico pueden ayudar a abordar áreas donde la IA se cruza con derechos fundamentales, como la vigilancia y la privacidad de datos. La familiaridad con los principios de diseño ético de IA ayuda a los aprendices a evaluar críticamente cómo se construyen y despliegan los sistemas de IA. Sin esta comprensión, los aprendices corren el riesgo de aceptar los resultados de la IA al pie de la letra, en lugar de preguntar a quién benefician o perjudican. Para garantizar que la IA sirva a la sociedad de manera responsable, debemos cuestionar y evaluar continuamente sus efectos y guiar su uso para mitigar sus riesgos.
+skill_codes:
+  description: Estas habilidades representan capacidades humanas fundamentales aplicadas a un contexto de IA. Guían a los estudiantes en el uso ético de la IA y aseguran que los estudiantes moldeen activamente cómo la IA se integra en sus vidas.
+  themes:
+    Critical_Thinking:
+      codes:
+        S1.1:
+          summary: Evalúa el contenido generado por IA en términos de precisión, equidad y sesgo para tomar decisiones informadas y éticas.
+          questions:
+            - ¿Cómo puedo verificar la precisión de las salidas generadas por IA y reducir el riesgo de sesgo dañino?
+            - ¿Cómo sé si la IA es relevante o apropiada?
+      explanation: |
+        Practicar el pensamiento crítico en un contexto de IA implica verificar si la información proporcionada por un sistema de IA es precisa, relevante y justa. Debido a que los sistemas de IA pueden generar contenido convincente pero incorrecto o sesgado, los estudiantes deben trabajar activamente para identificar la desinformación potencial y evaluar las salidas con otras fuentes de información. Estas acciones resultan en una mayor conciencia del impacto de la IA en el sistema de información más amplio. Este proceso descubre sesgos ocultos o brechas y asegura que las salidas de IA apoyen la toma de decisiones éticas. Al desarrollar estas habilidades, los estudiantes ejercen la alfabetización mediática, la alfabetización digital y la ciudadanía digital, mientras se convierten en usuarios más perspicaces de la IA.
+    Creativity:
+      codes:
+        S2.1:
+          summary: Colaborar con la IA para crear y refinar ideas originales mientras se consideran cuestiones de propiedad, atribución y uso responsable.
+          questions:
+            - ¿Cómo puedo usar la IA de manera responsable para dar vida a mis visiones creativas?
+      explanation: |
+        Ejercer la creatividad al usar IA involucra interactuar con sistemas de IA para hacer lluvia de ideas, generar y refinar ideas originales. Mientras los estudiantes usan sistemas de IA para explorar posibilidades más allá de lo que habían imaginado originalmente, deben considerar los impactos de la IA en la originalidad, propiedad, atribución y derechos de autor. Al involucrarse creativa y responsablemente con sistemas de IA, los estudiantes se mantienen responsables de las ideas que moldean y comparten.
+    Computational_Thinking:
+      codes:
+        S3.1:
+          summary: Descomponer problemas y proporcionar instrucciones de maneras que permitan a los sistemas de IA contribuir efectivamente a las soluciones.
+          questions:
+            - ¿Cómo estructuro mi problema para que la IA pueda ayudar a resolverlo?
+      explanation: |
+        Las habilidades de pensamiento computacional ayudan a abordar y enmarcar problemas de maneras que aprovechan las capacidades de la IA y consideran sus limitaciones. Esto implica descomponer, o dividir problemas complejos en componentes estructurados, y comunicar objetivos y restricciones de una manera que los sistemas de IA puedan procesar efectivamente (por ejemplo, ingeniería de prompts). Al proporcionar casos de uso, contraejemplos y resultados esperados a los sistemas de IA, los estudiantes refinan sus propias habilidades de comunicación, se involucran con estrategias metacognitivas y progresan hacia sus objetivos.
+    Collaboration:
+      codes:
+        S4.1:
+          summary: Trabajar efectivamente con IA y humanos comunicándose claramente, dando retroalimentación y navegando tareas compartidas.
+          questions:
+            - ¿Cómo puedo colaborar de manera transparente y ética con la IA para lograr un objetivo?
+      explanation: |
+        La colaboración con IA se basa en interacciones positivas y productivas entre humanos y sistemas de IA. Esto requiere la capacidad de dar retroalimentación y pedir ayuda tanto dentro como fuera del mundo digital. Mientras los estudiantes colaboran con sistemas de IA, demuestran agencia junto con metacognición. Al colaborar con tacto, evaluar fortalezas en contexto y perfeccionar habilidades de construcción de relaciones, los estudiantes desarrollan la capacidad de navegar situaciones nuevas y complejas.
+    Problem_Solving:
+      codes:
+        S5.1:
+          summary: Determinar cuándo y cómo usar IA para una tarea evaluando sus capacidades, riesgos e implicaciones éticas.
+          questions:
+            - ¿Cómo elijo el tipo correcto de herramienta para la tarea en cuestión?
+      explanation: |
+        Usar IA para abordar un problema comienza con una reflexión cuidadosa sobre la tarea en cuestión e incluye una consideración exhaustiva de si las capacidades de la IA cumplen con los requisitos técnicos y éticos de la tarea. Para hacer esto, los estudiantes podrían probar sistemas de IA específicos para evaluar su confiabilidad y potencial para replicar sesgos dañinos. Los estudiantes resuelven problemas con IA cuando se preguntan cómo los sistemas de IA podrían agregar valor, dónde debería entrar en juego el juicio humano y cuándo evitar completamente el uso de IA.
+    Self_and_Social_Awareness:
+      codes:
+        S6.1:
+          summary: Reconocer cómo la IA influye en las decisiones personales, relaciones y comunidades, y reflexionar sobre su impacto social y ambiental más amplio.
+          questions:
+            - ¿Cómo impacta la IA en mí y en otros?
+      explanation: |
+        La autoconciencia y la conciencia social son vitales al interactuar con IA. Esta habilidad comienza con reconocer la presencia de la IA en la vida diaria y entender cómo influye en las decisiones tanto en el mundo digital como físico. Esto se extiende más allá de la mera identificación y se aplica a la consideración reflexiva de los efectos más amplios de la IA en individuos, comunidades y el medio ambiente. Los estudiantes también podrían involucrarse metacognitivamente con los efectos de la IA en sus propios comportamientos, pensamientos y procesos de aprendizaje. Al reconocer la influencia de la IA, los estudiantes están mejor equipados para evaluar el contenido generado por IA y monitorear cómo estas tecnologías influyen en sus pensamientos y comportamientos a lo largo del tiempo.
+    Communication:
+      codes:
+        S7.1:
+          summary: Explicar cómo se usa la IA de una manera que promueva la transparencia, evite el antropomorfismo y fomente el uso responsable.
+          questions:
+            - ¿Cómo describo el uso de IA para mí mismo y otros?
+      explanation: |
+        Comunicar sobre IA implica explicar cuándo y cómo se usan los sistemas de IA, incluyendo cómo pueden haber moldeado contenido o contribuido a decisiones que impactan a otros. Esta habilidad enfatiza que los estudiantes alfabetizados en IA tienen la responsabilidad de describir con precisión cómo funciona la IA de maneras que no malinterpreten o asignen rasgos humanos a sus capacidades. Cuando los estudiantes eligen sus palabras para promover la transparencia y el uso responsable de los sistemas de IA, mantienen prácticas éticas y fomentan conversaciones informadas sobre las implicaciones de la IA.
+attitude_codes:
+  description: Estas actitudes representan los valores y disposiciones que guían el compromiso ético y responsable con la IA.
+  themes:
+    Responsible:
+      codes:
+        A1.1:
+          summary: Sé responsable; busca prevenir daños por el uso de IA.
+          questions: []
+      explanation: |
+        Los estudiantes piensan cuidadosamente sobre cómo usan la IA y son responsables de sus decisiones. Consideran tanto los efectos intencionados como los potenciales efectos no intencionados de sus acciones, y están comprometidos a prevenir daños a otros. Creen que todos tienen el derecho de entender cómo la IA los afecta y de tomar decisiones informadas sobre su uso.
+    Curious:
+      codes:
+        A2.1:
+          summary: Explora las capacidades y limitaciones de la IA con apertura.
+          questions: []
+      explanation: |
+        Los estudiantes están ansiosos por explorar lo que la IA puede hacer hoy y cómo podría evolucionar en el futuro. Quieren entender cómo la IA afecta sus vidas personales y carreras futuras. Consideran que el aprendizaje es un proceso continuo y disfrutan experimentando, creyendo que los descubrimientos significativos ocurren a través de la exploración.
+    Innovative:
+      codes:
+        A3.1:
+          summary: Busca aplicaciones novedosas y positivas de la IA.
+          questions: []
+      explanation: |
+        Los estudiantes buscan usar la IA para abordar desafíos del mundo real y abrazar nuevas oportunidades. Experimentan, prueban diferentes enfoques y piensan creativamente para resolver un problema. Creen que la IA puede ser una herramienta poderosa para crear cambios positivos en sus propias vidas y en las vidas de otros.
+    Adaptable:
+      codes:
+        A4.1:
+          summary: Itera flexiblemente con retroalimentación y nuevos contextos.
+          questions: []
+      explanation: |
+        Los estudiantes muestran perseverancia y flexibilidad al trabajar con IA. Están abiertos a ideas, perspectivas y enfoques diversos. Entienden que colaborar con IA es un proceso iterativo moldeado por la retroalimentación y la revisión.
+    Empathetic:
+      codes:
+        A5.1:
+          summary: Considera diversos impactos humanos y ambientales.
+          questions: []
+      explanation: |
+        Los estudiantes examinan cuidadosamente cómo la IA impacta a individuos, comunidades y el medio ambiente. Evalúan tanto los beneficios como los riesgos potenciales de usar IA, entendiendo que su impacto puede variar para diferentes grupos de personas.
+metadata:
+  language: es
+  version: "1.0"
+  last_updated: "2025-07-03"

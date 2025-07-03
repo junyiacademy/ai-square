@@ -1,0 +1,174 @@
+scenario_info:
+  id: high-school-climate-change
+  difficulty: beginner
+  estimated_duration: 60
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - managing_with_ai
+  title: KI-gestützter Klimaaktionsplan
+  description: Nutze KI zur Analyse von Klimadaten und erstelle umsetzbare Lösungen
+  prerequisites:
+    - Grundverständnis des Klimawandels
+    - Interesse an Umweltthemen
+  learning_objectives:
+    - Umweltdaten mit KI-Tools analysieren
+    - Datenvisualisierungen erstellen, um Ergebnisse zu kommunizieren
+    - Praktische Klimaschutzvorschläge entwickeln
+    - Vertrauen in die Nutzung von KI für Umweltschutz aufbauen
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S1.2
+    - S2.1
+    - S2.3
+  attitudes:
+    - A1.1
+    - A1.2
+    - A2.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Climate Research Assistant
+      initial_prompt: |
+        You are a climate research assistant helping students explore climate data.
+        Your goal is to guide them through data collection and analysis tasks.
+
+        Keep responses focused and educational:
+        - Help them find reliable climate data sources
+        - Guide them in organizing and analyzing data
+        - Explain climate concepts in age-appropriate language
+        - Encourage critical thinking about climate impacts
+
+        Always redirect off-topic conversations back to the climate research task.
+    title: Klimadatensammlung
+    description: Nutze KI zum Sammeln und Organisieren von Klimadaten deiner Region
+    instructions:
+      - Verwenden Sie KI, um zuverlässige Klimadatenquellen zu finden
+      - Sammeln Sie Daten zu Temperaturtrends, Niederschlägen, Luftqualität und Energieverbrauch
+      - Organisieren Sie Daten in Tabellenkalkulationen
+      - Identifizieren Sie wichtige Muster und Trends
+    expected_outcome: Eine umfassende Klimadatensammlung für Ihre Region
+  - id: task-2
+    category: analysis
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - K2.3
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: Data Analysis Expert
+      initial_prompt: |
+        You are a data analysis expert helping students analyze climate data.
+        Guide them through:
+        - Pattern recognition in climate data
+        - Creating meaningful visualizations
+        - Making evidence-based predictions
+        - Drawing actionable conclusions
+
+        Encourage critical thinking and help them understand the implications of their findings.
+    title: KI-Datenanalyse
+    description: Nutze KI-Tools zur Analyse von Klimadaten und Identifizierung umsetzbarer Erkenntnisse
+    instructions:
+      - Verwenden Sie KI zur Identifizierung von Mustern und Korrelationen in Klimadaten
+      - Erstellen Sie Visualisierungen, die Temperaturveränderungen, saisonale Schwankungen und menschliche Auswirkungen zeigen
+      - Generieren Sie Vorhersagen für zukünftige Trends
+      - Identifizieren Sie Bereiche, die eine Intervention erfordern
+    expected_outcome: Umfassende Analyse mit klaren Erkenntnissen und Vorhersagen
+  - id: task-3
+    category: creation
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Sustainability Solutions Coach
+      initial_prompt: |
+        You are a sustainability solutions coach helping students design climate action plans.
+        Guide them to:
+        - Generate creative yet practical solutions
+        - Consider feasibility and resource requirements
+        - Calculate environmental impacts
+        - Think about stakeholder engagement
+
+        Focus on solutions that students can realistically implement in their school.
+    title: Lösungsdesign
+    description: Erstelle praktische Klimalösungen für deine Schule mit KI-Unterstützung
+    instructions:
+      - Brainstorming mit KI für Energieeinsparung, Abfallreduzierung, Grünflächen und Transport
+      - Bewerten Sie die Machbarkeit und Auswirkungen jeder Lösung
+      - Erstellen Sie detaillierte Umsetzungspläne
+      - Berechnen Sie potenzielle CO2-Einsparungen
+    expected_outcome: Ein Portfolio praktischer, umsetzbarer Klimalösungen
+  - id: task-4
+    category: interaction
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S1.2
+        - K1.2
+      secondary:
+        - A1.1
+        - A2.1
+    ai_module:
+      role: actor
+      model: gemini-2.5-flash
+      persona: Presentation Coach
+      initial_prompt: |
+        You are a presentation coach helping students prepare their climate action plan presentation.
+        Assist them with:
+        - Creating clear, compelling narratives
+        - Designing effective visual aids
+        - Anticipating and preparing for questions
+        - Building confidence in public speaking
+
+        Help them create a presentation that will inspire action from school administrators and peers.
+    title: Aktionsplan-Präsentation
+    description: Erstelle eine überzeugende Präsentation mit KI für deinen Klimaaktionsplan
+    instructions:
+      - Verwenden Sie KI, um Ihre Präsentation effektiv zu strukturieren
+      - Fügen Sie Problemstellung mit Daten, vorgeschlagene Lösungen, Umsetzungszeitplan und erwartete Ergebnisse ein
+      - Generieren Sie überzeugende Visualisierungen und Infografiken
+      - Bereiten Sie sich mit KI-Hilfe auf Fragen vor
+    expected_outcome: Eine professionelle, überzeugende Präsentation für Stakeholder
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - K1.1
+    - S2.1
+  min_overall_score: 70
+resources:
+  - url: https://climatekids.nasa.gov/
+    type: reference
+    name: NASA Climate Kids
+  - url: https://www.climate.ai/
+    type: tool
+    name: AI Climate Tools Guide
+metadata:
+  language: de
+  version: '1.0'
+  last_updated: '2025-07-03'

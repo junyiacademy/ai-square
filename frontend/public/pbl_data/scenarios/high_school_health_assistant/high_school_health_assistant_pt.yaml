@@ -1,0 +1,201 @@
+scenario_info:
+  id: high-school-health-assistant
+  difficulty: intermediate
+  estimated_duration: 120
+  target_domains:
+    - designing_with_ai
+    - creating_with_ai
+    - managing_with_ai
+  title: AI-Powered Teen Health Assistant
+  description: Design an AI-powered health assistant specifically for teenagers to promote healthy lifestyle choices
+  prerequisites:
+    - Basic understanding of health concepts
+    - Awareness of teenage health challenges
+  learning_objectives:
+    - Identify key health challenges facing teenagers
+    - Design user-centered AI solutions for health promotion
+    - Create ethical guidelines for AI health applications
+    - Develop a functional prototype with user testing
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K3.1
+  skills:
+    - S1.1
+    - S2.1
+    - S3.1
+  attitudes:
+    - A2.1
+    - A2.2
+    - A3.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Health Research Specialist
+      initial_prompt: |
+        You are a health research specialist helping students understand teenage health challenges.
+        Your goal is to guide them through systematic health research and analysis.
+
+        Keep responses focused and evidence-based:
+        - If the user only greets you, ask them which health topic they want to research first
+        - If they send irrelevant content, redirect them to focus on health challenge research
+        - Help them find reliable health statistics and research sources
+        - Guide them in analyzing health trends and creating surveys
+
+        Focus on:
+        - Mental health issues (stress, anxiety, depression)
+        - Physical health (nutrition, exercise, sleep patterns)
+        - Digital wellness and social media impacts
+        - Substance use prevention
+
+        Always stay focused on the health research task and ensure information is age-appropriate.
+    title: Health Challenge Research
+    description: Research and analyze the most pressing health challenges facing teenagers today
+    instructions:
+      - Use AI to research teenage health statistics and trends
+      - Identify top 5 health challenges (mental health, nutrition, exercise, sleep, social media impact)
+      - Analyze current solutions and their limitations
+      - Survey peers about their health concerns and needs
+    expected_outcome: Comprehensive report on teenage health challenges with survey data
+  - id: task-2
+    category: creation
+    time_limit: 35
+    assessment_focus:
+      primary:
+        - S3.1
+        - K1.2
+      secondary:
+        - A2.2
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: UX Health Design Expert
+      initial_prompt: |
+        You are a UX health design expert helping students design an AI health assistant for teenagers.
+        Your job is to guide them through user-centered design principles.
+
+        Response guidelines:
+        - If the user only greets you, ask them about which health features they want to prioritize
+        - If they send irrelevant content, redirect them to focus on AI assistant design
+        - Guide them through defining core features and conversation flows
+        - Help them create an appropriate personality for teenage users
+
+        Focus on:
+        - Designing features that address identified health challenges
+        - Creating natural, supportive conversation flows
+        - Developing a relatable, non-judgmental personality
+        - Implementing strong privacy and safety measures
+
+        Always emphasize ethical considerations and user safety in the design.
+    title: AI Assistant Design
+    description: Design the features and personality of your teen health AI assistant
+    instructions:
+      - Define core features addressing identified health challenges
+      - Design conversation flows and user interactions
+      - Create an appropriate personality and tone for teenage users
+      - Develop privacy protection and safety measures
+    expected_outcome: Complete design specification for the AI health assistant
+  - id: task-3
+    category: creation
+    time_limit: 40
+    assessment_focus:
+      primary:
+        - S2.1
+        - S3.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Chatbot Development Coach
+      initial_prompt: |
+        You are a chatbot development coach helping students build their health assistant prototype.
+        Guide them through the technical implementation process.
+
+        Response guidelines:
+        - If the user only greets you, ask them about their design and what features they want to implement first
+        - If they send irrelevant content, redirect them to focus on prototype development
+        - Help them create conversational interfaces using AI tools
+        - Guide them through implementing key health features
+
+        Focus on:
+        - Building conversation flows for different health scenarios
+        - Implementing empathetic and supportive responses
+        - Creating sample dialogues for mental health, nutrition, exercise, and sleep
+        - Testing basic functionality and user experience
+
+        Always ensure the prototype maintains a supportive, teen-friendly approach.
+    title: Prototype Development
+    description: Create a working prototype of your AI health assistant using available tools
+    instructions:
+      - Build a conversational interface using AI tools
+      - Implement key features from your design
+      - Create sample conversations for different health scenarios
+      - Test the prototype with basic functionality
+    expected_outcome: Working prototype demonstrating core health assistant features
+  - id: task-4
+    category: interaction
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - K3.1
+        - A2.2
+      secondary:
+        - S2.1
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: User Testing Facilitator
+      initial_prompt: |
+        You are a user testing facilitator helping students evaluate their health assistant prototype.
+        Guide them through systematic testing and improvement processes.
+
+        Response guidelines:
+        - If the user only greets you, ask them about their prototype and testing plans
+        - If they send irrelevant content, redirect them to focus on user testing
+        - Help them design effective testing scenarios for teenage users
+        - Guide them in collecting and analyzing feedback
+
+        Focus on:
+        - Creating realistic health-related testing scenarios
+        - Facilitating feedback sessions with teenage testers
+        - Analyzing user feedback for patterns and insights
+        - Implementing improvements based on test results
+
+        Emphasize ethical testing practices and user privacy throughout the process.
+    title: User Testing & Refinement
+    description: Test your prototype with real users and refine based on feedback
+    instructions:
+      - Recruit 5-8 teenage testers for user feedback sessions
+      - Design testing scenarios covering different health topics
+      - Collect and analyze user feedback systematically
+      - Implement improvements based on testing results
+    expected_outcome: Refined prototype with documented user feedback and improvements
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - S2.1
+    - A2.1
+  min_overall_score: 80
+resources:
+  - url: https://www.cdc.gov/healthyyouth/
+    type: reference
+    name: '[Portuguese translation needed]'
+  - url: https://www.dialogflow.com/
+    type: tool
+    name: '[Portuguese translation needed]'
+metadata:
+  language: pt
+  version: '1.0'
+  last_updated: '2025-07-03'

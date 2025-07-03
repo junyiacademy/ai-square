@@ -1,0 +1,172 @@
+assessment_config:
+  total_questions: 12
+  time_limit_minutes: 15
+  passing_score: 60
+  domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - managing_with_ai
+    - designing_with_ai
+domains:
+  engaging_with_ai:
+    description: KI-Systeme verstehen und effektiv mit ihnen kommunizieren
+    questions: 3
+  creating_with_ai:
+    description: KI-Tools zur Steigerung von Kreativität und Produktivität nutzen
+    questions: 3
+  managing_with_ai:
+    description: KI-Einschränkungen, Datenschutz und ethische Überlegungen verstehen
+    questions: 3
+  designing_with_ai:
+    description: Strategisches Denken über KI-Implementierung und Innovation
+    questions: 3
+questions:
+  - id: E001
+    domain: engaging_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: Was ist der effektivste Weg, um bessere Ergebnisse von einem KI-Chatbot zu erhalten?
+    options:
+      a: Sehr allgemeine Fragen stellen
+      b: Klare, spezifische Aufforderungen mit Kontext bereitstellen
+      c: Nur Ja/Nein-Fragen verwenden
+      d: Immer mehrere Fragen gleichzeitig stellen
+    explanation: Klare, spezifische Aufforderungen mit Kontext helfen der KI, genau zu verstehen, was Sie benötigen, und genauere, nützlichere Antworten zu liefern.
+  - id: E002
+    domain: engaging_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: Wenn eine KI Ihnen eine falsche Antwort gibt, was sollte Ihre erste Reaktion sein?
+    options:
+      a: Der KI sofort vertrauen und die Informationen verwenden
+      b: Die Informationen über andere zuverlässige Quellen verifizieren
+      c: Die Verwendung von KI vollständig einstellen
+      d: Die KI als defekt melden
+    explanation: Kritisches Denken erfordert die Überprüfung von KI-Ausgaben anhand zuverlässiger Quellen, da KI Fehler machen oder veraltete Informationen liefern kann.
+  - id: E003
+    domain: engaging_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: Was ist der wichtigste Faktor bei der Bewertung von Voreingenommenheit in KI-generierten Inhalten?
+    options:
+      a: Die Geschwindigkeit der Generierung
+      b: Die Trainingsdatenquellen und deren Repräsentation
+      c: Die Länge der Ausgabe
+      d: Die technische Komplexität
+    explanation: KI-Voreingenommenheit stammt oft aus Trainingsdaten, denen es an Vielfalt mangelt oder die historische Vorurteile enthalten, was Datenquellen für die Bewertung entscheidend macht.
+  - id: C001
+    domain: creating_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: Welcher Ansatz ist am effektivsten bei der Verwendung von KI für kreatives Schreiben?
+    options:
+      a: Die KI alles ohne menschliche Eingabe schreiben lassen
+      b: KI als kollaborativen Partner für Brainstorming und Verfeinerung nutzen
+      c: KI nur zur Korrektur von Grammatik und Rechtschreibung verwenden
+      d: KI in kreativen Prozessen vollständig vermeiden
+    explanation: KI funktioniert am besten als kreativer Partner, der bei Ideenfindung, Feedback und Verfeinerung hilft, während menschliche Kreativität und Überwachung erhalten bleiben.
+  - id: C002
+    domain: creating_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: Bei der Verwendung von KI-Bildgeneratoren, was ist die wichtigste ethische Überlegung?
+    options:
+      a: Bilder so realistisch wie möglich machen
+      b: Urheberrechte respektieren und Deepfakes echter Personen vermeiden
+      c: Die schnellsten Generierungseinstellungen verwenden
+      d: So viele Bilder wie möglich erstellen
+    explanation: Die Achtung von Rechten des geistigen Eigentums und die Vermeidung von Missbrauch zur Erstellung nicht autorisierter Ähnlichkeiten oder irreführender Inhalte ist für die ethische Nutzung von KI entscheidend.
+  - id: C003
+    domain: creating_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: Wie sollten Sie KI-unterstützte Codegenerierung für ein kritisches Softwareprojekt angehen?
+    options:
+      a: '[DE: Use AI code directly without review]'
+      b: '[DE: Thoroughly review, test, and validate all AI-generated code]'
+      c: '[DE: Only use AI for comments and documentation]'
+      d: '[DE: Replace all developers with AI tools]'
+    explanation: '[DE translation needed]'
+  - id: M001
+    domain: managing_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: Was sollten Sie mit sensiblen persönlichen Informationen tun, wenn Sie KI-Tools verwenden?
+    options:
+      a: '[DE: Share it freely to get better AI responses]'
+      b: '[DE: Never input sensitive information into AI systems]'
+      c: '[DE: Only share it with trusted AI companies]'
+      d: '[DE: Encrypt it before sharing with AI]'
+    explanation: '[DE translation needed]'
+  - id: M002
+    domain: managing_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: Wie sollten Sie den Einsatz von KI-Tools in einer Teamumgebung verwalten?
+    options:
+      a: '[DE: Let everyone use any AI tool without guidelines]'
+      b: '[DE: Establish clear policies and training for AI tool usage]'
+      c: '[DE: Ban all AI tools to avoid risks]'
+      d: '[DE: Only allow managers to use AI tools]'
+    explanation: '[DE translation needed]'
+  - id: M003
+    domain: managing_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: Was ist der kritischste Faktor bei der Implementierung von KI in Geschäftsprozessen?
+    options:
+      a: '[DE: Choosing the most advanced AI technology]'
+      b: '[DE: Understanding limitations and maintaining human oversight]'
+      c: '[DE: Implementing AI as quickly as possible]'
+      d: '[DE: Replacing as many human workers as possible]'
+    explanation: '[DE translation needed]'
+  - id: D001
+    domain: designing_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: Bei der Gestaltung einer KI-basierten Funktion für Benutzer, was sollte der Hauptfokus sein?
+    options:
+      a: '[DE: Showcasing the most advanced AI capabilities]'
+      b: '[DE: Solving real user problems and improving user experience]'
+      c: '[DE: Making the AI as complex as possible]'
+      d: '[DE: Hiding the fact that AI is being used]'
+    explanation: '[DE translation needed]'
+  - id: D002
+    domain: designing_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: Wie sollten Sie KI-Systemausfälle in benutzerorientierten Anwendungen handhaben?
+    options:
+      a: '[DE: Hide errors and pretend everything is working]'
+      b: '[DE: Design graceful fallbacks and clear error communication]'
+      c: '[DE: Immediately shut down the entire application]'
+      d: '[DE: Blame the user for the error]'
+    explanation: '[DE translation needed]'
+  - id: D003
+    domain: designing_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: Was ist die wichtigste Überlegung bei der Gestaltung von KI-Systemen für vielfältige globale Zielgruppen?
+    options:
+      a: '[DE: Using the same design for everyone to ensure consistency]'
+      b: '[DE: Understanding cultural contexts and avoiding algorithmic bias]'
+      c: '[DE: Focusing only on the largest market segments]'
+      d: '[DE: Implementing the latest AI technologies everywhere]'
+    explanation: '[DE translation needed]'
+metadata:
+  language: de
+  language_name: German
+  generated_from: ai_literacy_questions.yaml
+  generated_at: '2025-07-03T10:07:41.113Z'

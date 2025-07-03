@@ -1,0 +1,205 @@
+scenario_info:
+  id: ai-education-design
+  difficulty: intermediate
+  estimated_duration: 90
+  target_domains:
+    - designing_with_ai
+    - creating_with_ai
+    - managing_with_ai
+  title: AI強化学習体験の設計
+  description: 多様な学習者のためのAI駆動型教育ツールと体験の設計と実装を学ぶ
+  prerequisites:
+    - 学習理論の基本的な理解
+    - 教育技術への精通
+    - AIツールの使用経験
+  learning_objectives:
+    - AIを使用して個別化された学習パスを設計する
+    - AIの支援で適応型評価を作成する
+    - AI駆動型フィードバックシステムを実装する
+    - 教育効果のためのAIツールを評価する
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+  skills:
+    - S1.1
+    - S2.1
+    - S3.1
+  attitudes:
+    - A2.1
+    - A2.2
+    - A3.1
+tasks:
+  - id: task-1
+    category: analysis
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Educational Data Analyst
+      initial_prompt: |
+        You are an experienced educational data analyst specializing in learner profiling and personalization.
+        Your job is to help teachers understand student data and create effective learner profiles.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what student data they'd like to analyze
+        - If they send irrelevant content, redirect them to focus on learner profiling
+        - Guide them through analyzing learning styles, progress patterns, and preferences
+        - Help them create comprehensive learner profiles with actionable insights
+
+        Focus on:
+        - Identifying learning patterns from student data
+        - Creating meaningful learner profiles
+        - Suggesting personalization strategies
+        - Using AI tools effectively for analysis
+
+        Always stay focused on the learner profiling task.
+    title: AI学習者プロファイル分析
+    description: AIを使用して学習者データを分析し、個別化された学習プロファイルを作成する
+    instructions:
+      - 学習スタイル、進歩、好みを含む学習者データのサンプルを確認する
+      - AIを使用してパターンと学習特性を特定する
+      - AIの支援で包括的な学習者プロファイルを作成する
+      - プロファイルに基づいた個別化学習推奨を設計する
+    expected_outcome: AIが生成したインサイトと個別化推奨を含む包括的な学習者プロファイル
+  - id: task-2
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Content Creation Specialist
+      initial_prompt: |
+        You are an experienced content creation specialist focused on adaptive learning design.
+        Your job is to help educators create content that adapts to different learner needs and preferences.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what topic they'd like to create adaptive content for
+        - If they send irrelevant content, redirect them to focus on adaptive content creation
+        - Guide them through creating content variations for different learning levels and styles
+        - Help them implement accessibility features and language adaptations
+
+        Focus on:
+        - Creating multiple content variations for diverse learners
+        - Adapting content for different learning styles and levels
+        - Implementing accessibility and language considerations
+        - Using AI tools to generate and refine adaptive content
+
+        Always stay focused on the adaptive content creation task.
+    title: 適応型コンテンツ作成
+    description: AIを使用して異なる学習者のニーズに適応する学習コンテンツを設計する
+    instructions:
+      - 適応に適した学習トピックを選択する
+      - AIを使用して異なる学習レベルとスタイルのコンテンツバリエーションを生成する
+      - 異なる言語能力とアクセシビリティニーズのためのコンテンツを作成する
+      - 適応経路を実装しコンテンツの有効性をテストする
+    expected_outcome: 多様な学習者のニーズに対応する複数のバリエーションを持つ適応型学習コンテンツ
+  - id: task-3
+    category: creation
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S3.1
+        - K1.2
+      secondary:
+        - A2.2
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Assessment Design Expert
+      initial_prompt: |
+        You are an expert in educational assessment design with specialization in AI-powered evaluation systems.
+        Your job is to help educators create comprehensive and fair assessment systems with meaningful feedback.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what learning domain they want to assess
+        - If they send irrelevant content, redirect them to focus on assessment system design
+        - Guide them through defining clear assessment objectives and criteria
+        - Help them implement AI-driven feedback mechanisms and ensure fairness
+
+        Focus on:
+        - Designing various assessment types (formative and summative)
+        - Creating AI-powered feedback mechanisms
+        - Ensuring assessment fairness and validity
+        - Implementing progress tracking systems
+
+        Always stay focused on the AI assessment system design task.
+    title: AI評価システム設計
+    description: 意味のあるフィードバックを提供するインテリジェント評価システムを構築する
+    instructions:
+      - 選択した学習領域の評価目標と基準を定義する
+      - 形成的評価と総括的評価を含む様々な評価タイプを作成する
+      - 実行可能な洞察を提供するAI駆動型フィードバックメカニズムを実装する
+      - 進捗追跡を設計し評価の公平性を確保する
+    expected_outcome: 公平で意味のあるフィードバックメカニズムを持つ包括的なAI駆動型評価システム
+  - id: task-4
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Learning Analytics Specialist
+      initial_prompt: |
+        You are a learning analytics specialist with expertise in data visualization and AI-powered insights.
+        Your job is to help educators design effective learning analytics dashboards that provide actionable insights.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what learning metrics they want to track
+        - If they send irrelevant content, redirect them to focus on analytics dashboard design
+        - Guide them through identifying key learning metrics for different stakeholders
+        - Help them create meaningful visualizations and AI-powered predictions
+
+        Focus on:
+        - Identifying important learning metrics to track
+        - Creating effective data visualizations
+        - Implementing AI-powered predictions and recommendations
+        - Balancing complexity with usability for different users
+
+        Always stay focused on the learning analytics dashboard task.
+    title: 学習分析ダッシュボード
+    description: AIインサイトを使用して学習分析ダッシュボードを作成する
+    instructions:
+      - 異なるステークホルダーのために追跡する主要な学習メトリクスを特定する
+      - 個人の進歩とクラスパフォーマンスの可視化を設計する
+      - AI駆動型の予測と推奨を実装する
+      - 複雑性と使いやすさのバランスをとった実行可能な洞察を作成する
+    expected_outcome: AI駆動型インサイトと実行可能な推奨を備えたインタラクティブ学習分析ダッシュボード
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - K1.1
+    - S2.1
+  min_overall_score: 75
+resources:
+  - url: https://www.unesco.org/en/digital-education/ai-future-learning
+    type: guide
+    name: AI in Education Toolkit
+  - url: https://solaresearch.org/core/learning-analytics/
+    type: reference
+    name: Learning Analytics Handbook
+  - url: https://unesdoc.unesco.org/ark:/48223/pf0000376709
+    type: framework
+    name: Ethical AI in Education Framework
+metadata:
+  language: ja
+  version: '1.0'
+  last_updated: '2025-07-03'

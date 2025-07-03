@@ -1,0 +1,172 @@
+assessment_config:
+  total_questions: 12
+  time_limit_minutes: 15
+  passing_score: 60
+  domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - managing_with_ai
+    - designing_with_ai
+domains:
+  engaging_with_ai:
+    description: Понимание и эффективное взаимодействие с системами ИИ
+    questions: 3
+  creating_with_ai:
+    description: Использование инструментов ИИ для повышения креативности и продуктивности
+    questions: 3
+  managing_with_ai:
+    description: Понимание ограничений ИИ, конфиденциальности и этических соображений
+    questions: 3
+  designing_with_ai:
+    description: Стратегическое мышление о внедрении и инновациях ИИ
+    questions: 3
+questions:
+  - id: E001
+    domain: engaging_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: Какой самый эффективный способ получить лучшие результаты от ИИ-чатбота?
+    options:
+      a: Задавать очень общие вопросы
+      b: Предоставлять четкие, конкретные подсказки с контекстом
+      c: Использовать только вопросы да/нет
+      d: Всегда задавать несколько вопросов одновременно
+    explanation: Четкие, конкретные подсказки с контекстом помогают ИИ точно понять, что вам нужно, и предоставить более точные и полезные ответы.
+  - id: E002
+    domain: engaging_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: Когда ИИ дает вам неправильный ответ, какой должна быть ваша первая реакция?
+    options:
+      a: Немедленно доверять ИИ и использовать информацию
+      b: Проверить информацию через другие надежные источники
+      c: Полностью прекратить использование ИИ
+      d: Сообщить о неисправности ИИ
+    explanation: Критическое мышление требует проверки результатов ИИ с помощью надежных источников, так как ИИ может ошибаться или предоставлять устаревшую информацию.
+  - id: E003
+    domain: engaging_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: Какой самый важный фактор при оценке предвзятости в контенте, созданном ИИ?
+    options:
+      a: Скорость генерации
+      b: Источники обучающих данных и их представительность
+      c: Длина вывода
+      d: Техническая сложность
+    explanation: Предвзятость ИИ часто происходит из обучающих данных, которым не хватает разнообразия или которые содержат исторические предрассудки, что делает источники данных решающими для оценки.
+  - id: C001
+    domain: creating_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: Какой подход наиболее эффективен при использовании ИИ для творческого письма?
+    options:
+      a: Позволить ИИ писать все без участия человека
+      b: Использовать ИИ как партнера для мозгового штурма и совершенствования
+      c: Использовать ИИ только для исправления грамматики и орфографии
+      d: Полностью избегать ИИ в творческих процессах
+    explanation: ИИ лучше всего работает как творческий партнер, помогая с генерацией идей, обратной связью и совершенствованием, сохраняя при этом человеческую креативность и контроль.
+  - id: C002
+    domain: creating_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: При использовании генераторов изображений ИИ, какое самое важное этическое соображение?
+    options:
+      a: Делать изображения максимально реалистичными
+      b: Уважать авторские права и избегать дипфейков реальных людей
+      c: Использовать самые быстрые настройки генерации
+      d: Создавать как можно больше изображений
+    explanation: Уважение прав интеллектуальной собственности и избежание злоупотребления для создания несанкционированных изображений или вводящего в заблуждение контента имеет решающее значение для этичного использования ИИ.
+  - id: C003
+    domain: creating_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: Как следует подходить к генерации кода с помощью ИИ для критически важного программного проекта?
+    options:
+      a: '[RU: Use AI code directly without review]'
+      b: '[RU: Thoroughly review, test, and validate all AI-generated code]'
+      c: '[RU: Only use AI for comments and documentation]'
+      d: '[RU: Replace all developers with AI tools]'
+    explanation: '[RU translation needed]'
+  - id: M001
+    domain: managing_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: Что следует делать с конфиденциальной личной информацией при использовании инструментов ИИ?
+    options:
+      a: '[RU: Share it freely to get better AI responses]'
+      b: '[RU: Never input sensitive information into AI systems]'
+      c: '[RU: Only share it with trusted AI companies]'
+      d: '[RU: Encrypt it before sharing with AI]'
+    explanation: '[RU translation needed]'
+  - id: M002
+    domain: managing_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: Как следует управлять использованием инструментов ИИ в командной среде?
+    options:
+      a: '[RU: Let everyone use any AI tool without guidelines]'
+      b: '[RU: Establish clear policies and training for AI tool usage]'
+      c: '[RU: Ban all AI tools to avoid risks]'
+      d: '[RU: Only allow managers to use AI tools]'
+    explanation: '[RU translation needed]'
+  - id: M003
+    domain: managing_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: Какой самый критический фактор при внедрении ИИ в бизнес-процессы?
+    options:
+      a: '[RU: Choosing the most advanced AI technology]'
+      b: '[RU: Understanding limitations and maintaining human oversight]'
+      c: '[RU: Implementing AI as quickly as possible]'
+      d: '[RU: Replacing as many human workers as possible]'
+    explanation: '[RU translation needed]'
+  - id: D001
+    domain: designing_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: При разработке функции на основе ИИ для пользователей, на чем должен быть основной фокус?
+    options:
+      a: '[RU: Showcasing the most advanced AI capabilities]'
+      b: '[RU: Solving real user problems and improving user experience]'
+      c: '[RU: Making the AI as complex as possible]'
+      d: '[RU: Hiding the fact that AI is being used]'
+    explanation: '[RU translation needed]'
+  - id: D002
+    domain: designing_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: Как следует обрабатывать сбои системы ИИ в пользовательских приложениях?
+    options:
+      a: '[RU: Hide errors and pretend everything is working]'
+      b: '[RU: Design graceful fallbacks and clear error communication]'
+      c: '[RU: Immediately shut down the entire application]'
+      d: '[RU: Blame the user for the error]'
+    explanation: '[RU translation needed]'
+  - id: D003
+    domain: designing_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: Какое самое важное соображение при разработке систем ИИ для разнообразной глобальной аудитории?
+    options:
+      a: '[RU: Using the same design for everyone to ensure consistency]'
+      b: '[RU: Understanding cultural contexts and avoiding algorithmic bias]'
+      c: '[RU: Focusing only on the largest market segments]'
+      d: '[RU: Implementing the latest AI technologies everywhere]'
+    explanation: '[RU translation needed]'
+metadata:
+  language: ru
+  language_name: Russian
+  generated_from: ai_literacy_questions.yaml
+  generated_at: '2025-07-03T10:07:41.114Z'

@@ -1,0 +1,322 @@
+domains:
+  Engaging_with_AI:
+    emoji: 🎯
+    overview: Implique l'utilisation de l'IA comme outil pour accéder à de nouveaux contenus, informations ou recommandations. Ces situations exigent que les apprenants identifient d'abord la présence de l'IA, puis évaluent l'exactitude et la pertinence des résultats de l'IA. Les apprenants doivent développer une compréhension fondamentale des bases techniques de l'IA afin d'analyser de manière critique ses capacités et ses limites.
+    competencies:
+      E1:
+        description: Identifier le rôle et l'impact de l'IA dans différents contextes.
+        knowledge:
+          - K1.4
+          - K5.1
+        skills:
+          - S6.1
+        attitudes:
+          - A2.1
+          - A1.1
+        content: Les apprenants identifient la présence de l'IA dans les outils et systèmes quotidiens et réfléchissent à son objectif dans diverses situations, comme les recommandations de contenu ou l'apprentissage adaptatif. Ils réfléchissent à la façon dont l'IA influence leurs choix, leur apprentissage et leur cognition.
+        scenarios:
+          - Énumérer des interactions numériques familières (par ex. utilisation de webcams, recommandations vidéo) et discuter si et comment l'IA est utilisée dans chaque interaction.
+          - Explorer comment les plateformes mathématiques en ligne utilisent des données en temps réel pour présenter du contenu à différents niveaux de difficulté.
+      E2:
+        description: Analyser l'exactitude et la pertinence des résultats de l'IA.
+        knowledge:
+          - K1.1
+          - K1.3
+          - K4.1
+        skills:
+          - S1.1
+        attitudes:
+          - A1.1
+          - A2.1
+        content: Les apprenants évaluent si le contenu généré par l'IA est exact, pertinent et applicable. Ils apprennent à reconnaître les forces et les limites de l'IA et à considérer plusieurs sources d'information lors de la prise de décisions.
+        scenarios:
+          - Comparer les résumés d'actualités générés par l'IA avec les articles originaux pour identifier l'exactitude et les biais.
+          - Évaluer la qualité des traductions linguistiques par IA en considérant le contexte culturel et les nuances sémantiques.
+      E3:
+        description: Reconnaître les capacités et limites des systèmes d'IA.
+        knowledge:
+          - K1.2
+          - K1.3
+          - K4.1
+        skills:
+          - S1.1
+        attitudes:
+          - A2.1
+        content: Les apprenants comprennent les capacités techniques et les limites des systèmes d'IA, y compris leurs différences de performance dans diverses tâches. Ils apprennent à distinguer les domaines où l'IA excelle de ceux qui nécessitent le jugement humain.
+        scenarios:
+          - Tester les performances d'un chatbot IA sur différents types de questions, en comparant ses différences entre questions factuelles et créatives.
+          - Analyser la précision des systèmes de reconnaissance d'images par IA dans différentes conditions.
+      E4:
+        description: Évaluer la pertinence et les implications éthiques de l'utilisation de l'IA.
+        knowledge:
+          - K5.4
+          - K2.1
+        skills:
+          - S5.1
+          - S6.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Les apprenants examinent si l'utilisation de l'IA dans des situations spécifiques est appropriée, bénéfique ou potentiellement nuisible. Ils évaluent les implications éthiques de l'utilisation de l'IA, y compris les questions de confidentialité, de biais et d'équité.
+        scenarios:
+          - Discuter des implications éthiques de l'utilisation de l'IA pour filtrer les CV dans le processus de recrutement.
+          - Analyser comment les systèmes de recommandation par IA peuvent influencer les choix et les opinions des utilisateurs.
+      E5:
+        description: Pratiquer un comportement responsable lors de l'utilisation de l'IA.
+        knowledge:
+          - K5.4
+          - K2.1
+        skills:
+          - S7.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Les apprenants font preuve d'un comportement responsable et éthique lors de l'interaction avec les systèmes d'IA. Ils considèrent l'impact de leurs actions et suivent les meilleures pratiques lors de l'utilisation de l'IA.
+        scenarios:
+          - Développer des directives pour l'utilisation des outils d'IA dans les travaux académiques.
+          - Concevoir des stratégies pour vérifier l'exactitude des informations générées par l'IA avant de les partager avec d'autres.
+
+  Creating_with_AI:
+    emoji: 🎨
+    overview: Implique la collaboration avec des systèmes d'IA pour générer de nouveaux contenus, idées ou solutions. Ces situations exigent que les apprenants comprennent les capacités de l'IA en tant que partenaire créatif tout en maintenant le respect de la créativité humaine, de l'originalité et de la propriété intellectuelle.
+    competencies:
+      C1:
+        description: Utiliser les outils d'IA pour améliorer la créativité et la productivité.
+        knowledge:
+          - K1.4
+          - K5.3
+        skills:
+          - S2.1
+          - S3.1
+        attitudes:
+          - A3.1
+          - A4.1
+        content: Les apprenants utilisent des outils d'IA pour améliorer leur travail créatif, comme l'écriture, la conception ou la résolution de problèmes. Ils apprennent à collaborer efficacement avec l'IA tout en maintenant leur vision créative et leur contrôle.
+        scenarios:
+          - Utiliser un assistant d'écriture IA pour améliorer la structure d'un essai tout en préservant ses propres idées et arguments.
+          - Collaborer avec un générateur d'art IA pour créer des œuvres visuelles, en explorant différents styles et concepts.
+      C2:
+        description: Maintenir l'originalité et l'authenticité dans le processus créatif assisté par l'IA.
+        knowledge:
+          - K5.3
+          - K2.1
+        skills:
+          - S2.1
+          - S7.1
+        attitudes:
+          - A1.1
+          - A3.1
+        content: Les apprenants comprennent comment maintenir l'originalité et la voix personnelle tout en utilisant des outils d'IA. Ils apprennent à distinguer la création assistée par l'IA du contenu entièrement généré par l'IA.
+        scenarios:
+          - Créer un projet qui identifie clairement quelles parties sont assistées par l'IA et lesquelles sont originales.
+          - Discuter de l'attribution appropriée du contenu généré par l'IA dans les contextes académiques et commerciaux.
+      C3:
+        description: Comprendre les questions de droits d'auteur et de propriété intellectuelle dans la création avec l'IA.
+        knowledge:
+          - K5.3
+          - K2.1
+        skills:
+          - S1.1
+          - S7.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Les apprenants comprennent les implications en matière de droits d'auteur et de propriété intellectuelle du contenu généré par l'IA. Ils apprennent à utiliser de manière responsable les outils de création IA et à comprendre les questions juridiques et éthiques connexes.
+        scenarios:
+          - Rechercher les conditions d'utilisation et les politiques de droits d'auteur de différentes plateformes d'IA.
+          - Créer un guide des meilleures pratiques pour l'utilisation du contenu généré par l'IA.
+      C4:
+        description: Évaluer et améliorer le contenu généré par l'IA.
+        knowledge:
+          - K1.3
+          - K4.1
+        skills:
+          - S1.1
+          - S2.1
+        attitudes:
+          - A2.1
+          - A4.1
+        content: Les apprenants apprennent à évaluer la qualité du contenu généré par l'IA et à l'améliorer par un processus itératif. Ils développent des compétences de pensée critique pour identifier et résoudre les problèmes dans les résultats de l'IA.
+        scenarios:
+          - Améliorer une histoire ou un article généré par l'IA à travers plusieurs itérations.
+          - Évaluer le code généré par l'IA et effectuer les modifications et optimisations nécessaires.
+      C5:
+        description: Équilibrer l'assistance de l'IA et le jugement humain dans le processus créatif.
+        knowledge:
+          - K3.2
+          - K4.1
+        skills:
+          - S2.1
+          - S5.1
+        attitudes:
+          - A4.1
+          - A5.1
+        content: Les apprenants apprennent à combiner de manière appropriée les outils d'IA et le jugement humain dans le processus créatif. Ils comprennent quand s'appuyer sur l'IA et quand la créativité et le jugement humains sont nécessaires.
+        scenarios:
+          - Concevoir un flux de travail créatif qui définit clairement les rôles de l'IA et des humains à différentes étapes.
+          - Analyser différents types de tâches créatives pour déterminer le niveau approprié d'assistance IA.
+
+  Managing_with_AI:
+    emoji: 📊
+    overview: Implique l'utilisation stratégique de l'IA dans les tâches organisationnelles et de gestion. Ces situations exigent que les apprenants comprennent comment l'IA transforme les flux de travail, les processus de décision et les structures organisationnelles, tout en considérant l'importance de la supervision et de la responsabilité humaines.
+    competencies:
+      M1:
+        description: Évaluer les opportunités d'intégration de l'IA dans les flux de travail.
+        knowledge:
+          - K3.1
+          - K3.2
+        skills:
+          - S5.1
+          - S3.1
+        attitudes:
+          - A3.1
+          - A4.1
+        content: Les apprenants identifient les domaines organisationnels où l'IA peut être intégrée efficacement, en évaluant les avantages et les risques potentiels. Ils apprennent à analyser les flux de travail existants et à déterminer où l'IA peut apporter de la valeur.
+        scenarios:
+          - Analyser les systèmes de gestion scolaire pour identifier les processus qui peuvent être automatisés ou améliorés par l'IA.
+          - Évaluer la faisabilité et l'impact de l'utilisation de chatbots IA dans le service client.
+      M2:
+        description: Maintenir la supervision humaine dans les processus de décision assistés par l'IA.
+        knowledge:
+          - K3.3
+          - K5.1
+        skills:
+          - S1.1
+          - S6.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Les apprenants comprennent l'importance de la supervision humaine dans la prise de décision assistée par l'IA. Ils apprennent à concevoir des processus décisionnels qui garantissent que les humains conservent le contrôle et la responsabilité finaux.
+        scenarios:
+          - Concevoir un système d'évaluation des étudiants assisté par l'IA avec des mécanismes de révision et d'intervention humaines.
+          - Créer un cadre décisionnel utilisant l'IA pour l'analyse des données, garantissant la validation et l'interprétation humaines.
+      M3:
+        description: Gérer le changement organisationnel lié à l'implémentation de l'IA.
+        knowledge:
+          - K3.1
+          - K3.2
+        skills:
+          - S4.1
+          - S7.1
+        attitudes:
+          - A4.1
+          - A5.1
+        content: Les apprenants comprennent comment l'implémentation de l'IA affecte la culture organisationnelle et les méthodes de travail. Ils apprennent à gérer le processus de changement, y compris la formation, la communication et la gestion du changement.
+        scenarios:
+          - Développer un plan pour aider les équipes à s'adapter aux nouveaux outils et flux de travail IA.
+          - Concevoir des programmes de formation pour améliorer la littératie IA des membres de l'organisation.
+      M4:
+        description: Évaluer et atténuer les risques liés à l'utilisation de l'IA.
+        knowledge:
+          - K4.1
+          - K5.4
+        skills:
+          - S1.1
+          - S6.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Les apprenants identifient les risques potentiels de l'utilisation de l'IA, y compris les biais, les erreurs et les problèmes de sécurité. Ils apprennent à développer des stratégies pour atténuer ces risques et garantir une utilisation responsable de l'IA.
+        scenarios:
+          - Effectuer une évaluation des risques des systèmes d'IA pour identifier les biais et erreurs potentiels.
+          - Développer des politiques de gouvernance et des guides de meilleures pratiques pour l'utilisation de l'IA.
+      M5:
+        description: Mesurer l'efficacité et l'impact de l'implémentation de l'IA.
+        knowledge:
+          - K3.1
+          - K5.1
+        skills:
+          - S1.1
+          - S6.1
+        attitudes:
+          - A2.1
+          - A4.1
+        content: Les apprenants apprennent à évaluer le succès de l'implémentation de l'IA, y compris l'amélioration de l'efficacité, les économies de coûts et la satisfaction des utilisateurs. Ils développent des compétences pour mesurer et améliorer les performances des systèmes d'IA.
+        scenarios:
+          - Concevoir des métriques pour évaluer l'efficacité d'un système de service client IA.
+          - Analyser l'impact des outils d'IA sur l'efficacité et la qualité du travail.
+
+  Designing_with_AI:
+    emoji: 🔧
+    overview: Implique la conception et le développement de systèmes d'IA ou de solutions augmentées par l'IA. Ces situations exigent que les apprenants comprennent les considérations techniques et éthiques du développement de l'IA, y compris la conception des données, des algorithmes et de l'expérience utilisateur.
+    competencies:
+      D1:
+        description: Concevoir des systèmes d'IA qui tiennent compte de l'éthique et de l'équité.
+        knowledge:
+          - K2.1
+          - K5.4
+        skills:
+          - S1.1
+          - S3.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Les apprenants comprennent comment concevoir des systèmes d'IA équitables, transparents et responsables. Ils apprennent à considérer les besoins de différents groupes d'utilisateurs et à intégrer des considérations éthiques dans le processus de conception.
+        scenarios:
+          - Concevoir un outil de recrutement IA qui garantit l'élimination des biais de genre et de race.
+          - Créer un système éducatif IA qui offre des opportunités équitables aux étudiants ayant différents besoins d'apprentissage.
+      D2:
+        description: Comprendre les besoins en données et la qualité des systèmes d'IA.
+        knowledge:
+          - K1.1
+          - K2.2
+        skills:
+          - S3.1
+          - S1.1
+        attitudes:
+          - A1.1
+          - A2.1
+        content: Les apprenants comprennent la dépendance des systèmes d'IA aux données, y compris la collecte, le nettoyage et l'assurance qualité des données. Ils apprennent à identifier et résoudre les problèmes de qualité des données.
+        scenarios:
+          - Analyser les ensembles de données d'entraînement pour identifier les biais et problèmes de qualité potentiels.
+          - Concevoir des stratégies de collecte de données pour garantir la représentativité et la qualité des données.
+      D3:
+        description: Concevoir des interfaces et expériences IA conviviales.
+        knowledge:
+          - K1.2
+          - K4.1
+        skills:
+          - S3.1
+          - S7.1
+        attitudes:
+          - A3.1
+          - A5.1
+        content: Les apprenants apprennent à concevoir des interfaces IA intuitives et transparentes. Ils comprennent comment permettre aux utilisateurs de comprendre et de faire confiance aux systèmes d'IA, et de fournir un contrôle utilisateur approprié.
+        scenarios:
+          - Concevoir l'interface utilisateur d'un système de recommandation IA qui permet aux utilisateurs de comprendre les bases des recommandations.
+          - Créer un assistant IA qui fournit des retours et des explications clairs.
+      D4:
+        description: Implémenter les tests et la validation des systèmes d'IA.
+        knowledge:
+          - K1.1
+          - K4.1
+        skills:
+          - S1.1
+          - S3.1
+        attitudes:
+          - A1.1
+          - A2.1
+        content: Les apprenants apprennent à tester et valider les performances, l'exactitude et la fiabilité des systèmes d'IA. Ils comprennent comment identifier et résoudre les problèmes dans les systèmes d'IA.
+        scenarios:
+          - Concevoir des plans de test pour évaluer l'exactitude et la robustesse des modèles d'IA.
+          - Effectuer des tests utilisateurs pour recueillir des commentaires sur la convivialité des systèmes d'IA.
+      D5:
+        description: Considérer l'impact à long terme et la durabilité des systèmes d'IA.
+        knowledge:
+          - K3.1
+          - K5.1
+        skills:
+          - S6.1
+          - S1.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Les apprenants considèrent l'impact à long terme des systèmes d'IA sur la société, l'environnement et l'économie. Ils apprennent à concevoir des solutions d'IA durables et évolutives.
+        scenarios:
+          - Évaluer l'impact environnemental des systèmes d'IA, y compris la consommation d'énergie et l'empreinte carbone.
+          - Analyser l'impact à long terme de l'implémentation de l'IA sur l'emploi et les structures sociales.
+
+metadata:
+  language: fr
+  version: "1.0"
+  last_updated: "2025-07-03"

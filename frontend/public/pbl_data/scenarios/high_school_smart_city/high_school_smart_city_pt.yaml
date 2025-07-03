@@ -1,0 +1,203 @@
+scenario_info:
+  id: high-school-smart-city
+  difficulty: intermediate
+  estimated_duration: 90
+  target_domains:
+    - designing_with_ai
+    - creating_with_ai
+    - engaging_with_ai
+  title: AI-Powered Smart City Solutions
+  description: Design innovative AI solutions to improve urban life in your community
+  prerequisites:
+    - Basic understanding of urban systems
+    - Interest in technology and innovation
+  learning_objectives:
+    - Identify urban challenges using AI analysis
+    - Design AI-powered smart city features
+    - Create prototypes and visualizations
+    - Develop implementation strategies for urban solutions
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S1.2
+    - S2.1
+    - S2.3
+  attitudes:
+    - A1.1
+    - A1.2
+    - A2.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - K1.1
+        - S2.3
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Urban Research Analyst
+      initial_prompt: |
+        You are an urban research analyst helping students identify city challenges.
+        Guide them through:
+        - Researching urban problems systematically
+        - Creating effective data visualizations
+        - Understanding community needs
+        - Prioritizing issues based on impact
+
+        Focus on problems that affect young people in the community.
+    title: Urban Challenge Mapping
+    description: Use AI to identify and map urban challenges in your area
+    instructions:
+      - Use AI to research traffic congestion, public safety, environmental issues, and public service gaps
+      - Create interactive maps showing problem areas
+      - Prioritize problems by impact on community
+      - Gather community input through surveys or interviews
+    expected_outcome: A comprehensive urban challenge map with prioritized issues
+  - id: task-2
+    category: creation
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Smart City Engineer
+      initial_prompt: |
+        You are a smart city engineer helping students design traffic solutions.
+        Assist them with:
+        - Creating innovative traffic management features
+        - Understanding system integration
+        - Calculating impact metrics
+        - Considering all road users including pedestrians and cyclists
+
+        Help them design solutions that are both innovative and practical.
+    title: Smart Traffic Solution
+    description: Design an AI system to improve traffic flow and safety
+    instructions:
+      - Design AI features for traffic light optimization, pedestrian safety, public transport routing, and parking
+      - Create system diagrams showing how components interact
+      - Simulate traffic improvements using data
+      - Calculate potential time and fuel savings
+    expected_outcome: A comprehensive AI-powered traffic management system design
+  - id: task-3
+    category: interaction
+    time_limit: 35
+    assessment_focus:
+      primary:
+        - K2.1
+        - S1.2
+      secondary:
+        - A1.2
+        - A2.1
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: App Design Mentor
+      initial_prompt: |
+        You are an app design mentor helping students create a community safety app.
+        Guide them through:
+        - Designing effective safety features
+        - Creating intuitive user interfaces
+        - Implementing privacy by design
+        - Considering diverse user needs
+
+        Ensure the app prioritizes user safety and privacy while being accessible to all.
+    title: Community Safety App
+    description: Build an AI-powered app prototype for community safety
+    instructions:
+      - Include AI features for emergency alerts, safe route suggestions, community reporting, and real-time updates
+      - Design user-friendly interfaces for different age groups
+      - Create mockups and wireframes
+      - Plan privacy protections and data security measures
+    expected_outcome: A functional community safety app prototype with AI features
+  - id: task-4
+    category: analysis
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - K2.3
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Urban Planner
+      initial_prompt: |
+        You are an urban planner helping students optimize green spaces.
+        Guide them through:
+        - Analyzing community needs for green spaces
+        - Understanding environmental benefits
+        - Designing inclusive and accessible spaces
+        - Creating effective visualizations
+
+        Focus on creating spaces that serve diverse age groups and promote community wellbeing.
+    title: Green Spaces Optimizer
+    description: Use AI to optimize urban green spaces for community wellbeing
+    instructions:
+      - Analyze current green space usage, community needs, environmental benefits, and accessibility
+      - Propose improvements for existing spaces
+      - Design new green spaces for underserved areas
+      - Create 3D visualizations of proposed changes
+    expected_outcome: An optimized green space plan with visualizations
+  - id: task-5
+    category: interaction
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S1.2
+        - K1.2
+      secondary:
+        - A1.1
+        - A2.1
+    ai_module:
+      role: actor
+      model: gemini-2.5-flash
+      persona: Presentation Coach
+      initial_prompt: |
+        You are a presentation coach helping students prepare for government stakeholders.
+        Assist them with:
+        - Creating clear, data-driven narratives
+        - Designing professional visuals
+        - Anticipating stakeholder concerns
+        - Building confidence in public speaking
+
+        Help them create a presentation that demonstrates both innovation and practical implementation.
+    title: Smart City Presentation
+    description: Present your smart city solutions to local government
+    instructions:
+      - Use AI to prepare executive summary, solution demonstrations, cost-benefit analysis, and implementation roadmap
+      - Create compelling visuals and infographics
+      - Prepare responses to potential questions
+      - Practice professional presentation delivery
+    expected_outcome: A professional presentation ready for government stakeholders
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - K1.1
+    - S2.1
+  min_overall_score: 80
+resources:
+  - url: https://smartcitiescouncil.com/
+    type: reference
+    name: '[Portuguese translation needed]'
+  - url: https://www.media.mit.edu/groups/city-science/overview/
+    type: research
+    name: '[Portuguese translation needed]'
+metadata:
+  language: pt
+  version: '1.0'
+  last_updated: '2025-07-03'

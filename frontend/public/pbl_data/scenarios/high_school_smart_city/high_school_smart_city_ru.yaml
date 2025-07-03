@@ -1,0 +1,203 @@
+scenario_info:
+  id: high-school-smart-city
+  difficulty: intermediate
+  estimated_duration: 90
+  target_domains:
+    - designing_with_ai
+    - creating_with_ai
+    - engaging_with_ai
+  title: Решения умного города с ИИ
+  description: Разработайте инновационные решения ИИ для улучшения городской жизни
+  prerequisites:
+    - Базовое понимание городских систем
+    - Интерес к технологиям и инновациям
+  learning_objectives:
+    - Выявить городские проблемы с помощью ИИ-анализа
+    - Разработать функции умного города на основе ИИ
+    - Создать прототипы и визуализации
+    - Разработать стратегии внедрения городских решений
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S1.2
+    - S2.1
+    - S2.3
+  attitudes:
+    - A1.1
+    - A1.2
+    - A2.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - K1.1
+        - S2.3
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Urban Research Analyst
+      initial_prompt: |
+        You are an urban research analyst helping students identify city challenges.
+        Guide them through:
+        - Researching urban problems systematically
+        - Creating effective data visualizations
+        - Understanding community needs
+        - Prioritizing issues based on impact
+
+        Focus on problems that affect young people in the community.
+    title: Картирование городских проблем
+    description: Используйте ИИ для выявления и картирования городских проблем в вашем районе
+    instructions:
+      - Используйте ИИ для исследования пробок, общественной безопасности, экологических проблем и пробелов в государственных услугах
+      - Создайте интерактивные карты, показывающие проблемные зоны
+      - Расставьте приоритеты проблем по их влиянию на сообщество
+      - Соберите мнения сообщества через опросы или интервью
+    expected_outcome: Комплексная карта городских проблем с приоритетными вопросами
+  - id: task-2
+    category: creation
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Smart City Engineer
+      initial_prompt: |
+        You are a smart city engineer helping students design traffic solutions.
+        Assist them with:
+        - Creating innovative traffic management features
+        - Understanding system integration
+        - Calculating impact metrics
+        - Considering all road users including pedestrians and cyclists
+
+        Help them design solutions that are both innovative and practical.
+    title: Умное транспортное решение
+    description: Разработайте ИИ-систему для улучшения транспортного потока и безопасности
+    instructions:
+      - Разработайте функции ИИ для оптимизации светофоров, безопасности пешеходов, маршрутизации общественного транспорта и парковки
+      - Создайте системные диаграммы, показывающие взаимодействие компонентов
+      - Смоделируйте улучшения трафика с использованием данных
+      - Рассчитайте потенциальную экономию времени и топлива
+    expected_outcome: Комплексный дизайн системы управления трафиком на основе ИИ
+  - id: task-3
+    category: interaction
+    time_limit: 35
+    assessment_focus:
+      primary:
+        - K2.1
+        - S1.2
+      secondary:
+        - A1.2
+        - A2.1
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: App Design Mentor
+      initial_prompt: |
+        You are an app design mentor helping students create a community safety app.
+        Guide them through:
+        - Designing effective safety features
+        - Creating intuitive user interfaces
+        - Implementing privacy by design
+        - Considering diverse user needs
+
+        Ensure the app prioritizes user safety and privacy while being accessible to all.
+    title: Приложение безопасности сообщества
+    description: Создайте прототип приложения на основе ИИ для безопасности сообщества
+    instructions:
+      - Включите функции ИИ для экстренных оповещений, предложений безопасных маршрутов, отчетов сообщества и обновлений в реальном времени
+      - Разработайте удобные интерфейсы для разных возрастных групп
+      - Создайте макеты и каркасы
+      - Спланируйте защиту конфиденциальности и меры безопасности данных
+    expected_outcome: Функциональный прототип приложения безопасности сообщества с функциями ИИ
+  - id: task-4
+    category: analysis
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - K2.3
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Urban Planner
+      initial_prompt: |
+        You are an urban planner helping students optimize green spaces.
+        Guide them through:
+        - Analyzing community needs for green spaces
+        - Understanding environmental benefits
+        - Designing inclusive and accessible spaces
+        - Creating effective visualizations
+
+        Focus on creating spaces that serve diverse age groups and promote community wellbeing.
+    title: Оптимизатор зеленых зон
+    description: Используйте ИИ для оптимизации городских зеленых зон для благополучия сообщества
+    instructions:
+      - Проанализируйте текущее использование зеленых зон, потребности сообщества, экологические преимущества и доступность
+      - Предложите улучшения для существующих пространств
+      - Спроектируйте новые зеленые зоны для недостаточно обслуживаемых районов
+      - Создайте 3D-визуализации предлагаемых изменений
+    expected_outcome: Оптимизированный план зеленых зон с визуализациями
+  - id: task-5
+    category: interaction
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S1.2
+        - K1.2
+      secondary:
+        - A1.1
+        - A2.1
+    ai_module:
+      role: actor
+      model: gemini-2.5-flash
+      persona: Presentation Coach
+      initial_prompt: |
+        You are a presentation coach helping students prepare for government stakeholders.
+        Assist them with:
+        - Creating clear, data-driven narratives
+        - Designing professional visuals
+        - Anticipating stakeholder concerns
+        - Building confidence in public speaking
+
+        Help them create a presentation that demonstrates both innovation and practical implementation.
+    title: Презентация умного города
+    description: Представьте ваши решения умного города местному правительству
+    instructions:
+      - Используйте ИИ для подготовки резюме, демонстраций решений, анализа затрат и выгод и дорожной карты внедрения
+      - Создайте убедительные визуальные материалы и инфографику
+      - Подготовьте ответы на возможные вопросы
+      - Практикуйте профессиональную подачу презентации
+    expected_outcome: Профессиональная презентация для правительственных заинтересованных сторон
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - K1.1
+    - S2.1
+  min_overall_score: 80
+resources:
+  - url: https://smartcitiescouncil.com/
+    type: reference
+    name: Smart Cities Council
+  - url: https://www.media.mit.edu/groups/city-science/overview/
+    type: research
+    name: MIT City Science
+metadata:
+  language: ru
+  version: '1.0'
+  last_updated: '2025-07-03'

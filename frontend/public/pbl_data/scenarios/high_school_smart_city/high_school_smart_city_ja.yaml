@@ -1,0 +1,203 @@
+scenario_info:
+  id: high-school-smart-city
+  difficulty: intermediate
+  estimated_duration: 90
+  target_domains:
+    - designing_with_ai
+    - creating_with_ai
+    - engaging_with_ai
+  title: AI駆動型スマートシティソリューション
+  description: コミュニティの都市生活を改善するための革新的なAIソリューションを設計する
+  prerequisites:
+    - 都市システムの基本的な理解
+    - 技術と革新への関心
+  learning_objectives:
+    - AI分析を使用して都市の課題を特定する
+    - AI駆動型スマートシティ機能を設計する
+    - プロトタイプと視覚化を作成する
+    - 都市ソリューションの実装戦略を開発する
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S1.2
+    - S2.1
+    - S2.3
+  attitudes:
+    - A1.1
+    - A1.2
+    - A2.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - K1.1
+        - S2.3
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Urban Research Analyst
+      initial_prompt: |
+        You are an urban research analyst helping students identify city challenges.
+        Guide them through:
+        - Researching urban problems systematically
+        - Creating effective data visualizations
+        - Understanding community needs
+        - Prioritizing issues based on impact
+
+        Focus on problems that affect young people in the community.
+    title: 都市課題マッピング
+    description: AIを使用して地域の都市課題を特定・マッピングする
+    instructions:
+      - AIを使用して交通渋滞、公共安全、環境問題、公共サービスのギャップを調査
+      - 問題のある地域を示すインタラクティブマップを作成
+      - コミュニティへの影響で問題に優先順位を付ける
+      - 調査やインタビューを通じてコミュニティの意見を収集
+    expected_outcome: 優先順位付けされた問題を含む包括的な都市課題マップ
+  - id: task-2
+    category: creation
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Smart City Engineer
+      initial_prompt: |
+        You are a smart city engineer helping students design traffic solutions.
+        Assist them with:
+        - Creating innovative traffic management features
+        - Understanding system integration
+        - Calculating impact metrics
+        - Considering all road users including pedestrians and cyclists
+
+        Help them design solutions that are both innovative and practical.
+    title: スマート交通ソリューション
+    description: 交通の流れと安全性を改善するAIシステムを設計する
+    instructions:
+      - 信号機の最適化、歩行者の安全、公共交通機関のルーティング、駐車のためのAI機能を設計
+      - コンポーネントがどのように相互作用するかを示すシステム図を作成
+      - データを使用して交通改善をシミュレート
+      - 潜在的な時間と燃料の節約を計算
+    expected_outcome: 包括的なAI駆動型交通管理システムの設計
+  - id: task-3
+    category: interaction
+    time_limit: 35
+    assessment_focus:
+      primary:
+        - K2.1
+        - S1.2
+      secondary:
+        - A1.2
+        - A2.1
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: App Design Mentor
+      initial_prompt: |
+        You are an app design mentor helping students create a community safety app.
+        Guide them through:
+        - Designing effective safety features
+        - Creating intuitive user interfaces
+        - Implementing privacy by design
+        - Considering diverse user needs
+
+        Ensure the app prioritizes user safety and privacy while being accessible to all.
+    title: コミュニティ安全アプリ
+    description: コミュニティの安全のためのAI駆動型アプリのプロトタイプを構築する
+    instructions:
+      - 緊急アラート、安全なルート提案、コミュニティレポート、リアルタイムアップデートのAI機能を含める
+      - 異なる年齢層向けのユーザーフレンドリーなインターフェースを設計
+      - モックアップとワイヤーフレームを作成
+      - プライバシー保護とデータセキュリティ対策を計画
+    expected_outcome: AI機能を備えた機能的なコミュニティ安全アプリのプロトタイプ
+  - id: task-4
+    category: analysis
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - K2.3
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Urban Planner
+      initial_prompt: |
+        You are an urban planner helping students optimize green spaces.
+        Guide them through:
+        - Analyzing community needs for green spaces
+        - Understanding environmental benefits
+        - Designing inclusive and accessible spaces
+        - Creating effective visualizations
+
+        Focus on creating spaces that serve diverse age groups and promote community wellbeing.
+    title: グリーンスペース最適化ツール
+    description: AIを使用してコミュニティの福祉のために都市の緑地を最適化する
+    instructions:
+      - 現在の緑地利用、コミュニティのニーズ、環境上の利点、アクセシビリティを分析
+      - 既存のスペースの改善を提案
+      - サービスが不足している地域のための新しい緑地を設計
+      - 提案された変更の3D視覚化を作成
+    expected_outcome: 視覚化を含む最適化された緑地計画
+  - id: task-5
+    category: interaction
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S1.2
+        - K1.2
+      secondary:
+        - A1.1
+        - A2.1
+    ai_module:
+      role: actor
+      model: gemini-2.5-flash
+      persona: Presentation Coach
+      initial_prompt: |
+        You are a presentation coach helping students prepare for government stakeholders.
+        Assist them with:
+        - Creating clear, data-driven narratives
+        - Designing professional visuals
+        - Anticipating stakeholder concerns
+        - Building confidence in public speaking
+
+        Help them create a presentation that demonstrates both innovation and practical implementation.
+    title: スマートシティプレゼンテーション
+    description: 地方政府にスマートシティソリューションを提示する
+    instructions:
+      - AIを使用してエグゼクティブサマリー、ソリューションのデモンストレーション、費用対効果分析、実装ロードマップを準備
+      - 説得力のあるビジュアルとインフォグラフィックを作成
+      - 潜在的な質問への回答を準備
+      - プロフェッショナルなプレゼンテーションの練習
+    expected_outcome: 政府の利害関係者向けの専門的なプレゼンテーション
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - K1.1
+    - S2.1
+  min_overall_score: 80
+resources:
+  - url: https://smartcitiescouncil.com/
+    type: reference
+    name: Smart Cities Council
+  - url: https://www.media.mit.edu/groups/city-science/overview/
+    type: research
+    name: MIT City Science
+metadata:
+  language: ja
+  version: '1.0'
+  last_updated: '2025-07-03'

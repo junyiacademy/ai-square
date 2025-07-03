@@ -1,0 +1,158 @@
+scenario_info:
+  id: ai-robotics-development
+  difficulty: intermediate
+  estimated_duration: 150
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - designing_with_ai
+  title: AI-Powered Robotics Development and Implementation
+  description: Learn to build intelligent robots using AI for real-world applications like warehouse automation, elderly care assistance, and smart manufacturing
+  prerequisites:
+    - Basic programming knowledge (Python preferred)
+    - Understanding of sensors and actuators
+    - Access to robotics simulation software or hardware
+  learning_objectives:
+    - Master AI integration techniques for robot perception and decision-making
+    - Develop autonomous navigation systems using AI computer vision and SLAM
+    - Create intelligent human-robot interaction interfaces with natural language processing
+    - Build practical robotics solutions for real-world business and social challenges
+ksa_mapping:
+  knowledge:
+    - K2.1
+    - K2.3
+    - K3.1
+    - K4.1
+  skills:
+    - S2.1
+    - S3.1
+    - S3.3
+    - S4.2
+  attitudes:
+    - A1.2
+    - A2.1
+    - A3.1
+    - A4.1
+tasks:
+  - id: perception-system
+    category: creation
+    time_limit: 60
+    assessment_focus:
+      primary:
+        - creating_with_ai
+        - engaging_with_ai
+      secondary:
+        - designing_with_ai
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: You are an expert robotics engineer and AI integration specialist. Help users understand computer vision concepts, implement sensor fusion techniques, and optimize AI models for real-time robotics applications. Focus on practical implementation and performance optimization.
+      initial_prompt: |
+        Welcome to robotics perception system development! I'm here to guide you through building a robust AI-powered vision system for your warehouse robot.
+
+        As your robotics mentor, I'll help you:
+        1. Design efficient computer vision pipelines for object detection
+        2. Implement sensor fusion techniques for reliable perception
+        3. Optimize AI models for real-time performance on robotics hardware
+        4. Test and validate your system under various conditions
+
+        Key considerations for robotics perception:
+        - Real-time performance is crucial (aim for >10 FPS)
+        - Robustness to lighting changes and occlusions
+        - Efficient resource usage for embedded systems
+        - Safety-critical error handling
+
+        What's your current experience with computer vision and robotics? Let's start by understanding your target hardware platform and performance requirements.
+    title: AI-Powered Robot Perception System
+    description: You're developing a warehouse automation robot that needs to identify, sort, and handle various packages. Use AI vision and sensor fusion to create a robust perception system
+    instructions:
+      - Use AI tools to design computer vision pipelines for object detection and classification
+      - Implement AI-assisted sensor fusion combining cameras, LiDAR, and depth sensors
+      - Create machine learning models using AI platforms like Roboflow or Edge Impulse for package recognition
+      - Develop real-time AI inference systems optimized for embedded robotics hardware
+    expected_outcome: A working perception system that can reliably identify and classify packages in various lighting and environmental conditions, with documented performance metrics
+  - id: navigation-intelligence
+    category: creation
+    time_limit: 50
+    assessment_focus:
+      primary:
+        - creating_with_ai
+        - designing_with_ai
+      secondary:
+        - engaging_with_ai
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: You are a robotics navigation expert and AI systems architect. Help users understand autonomous navigation concepts, implement SLAM algorithms, and design intelligent behavior systems. Focus on safety, efficiency, and real-world deployment challenges.
+      initial_prompt: |
+        Great! Now we're tackling one of the most challenging aspects of robotics - autonomous navigation in complex, dynamic environments.
+
+        As your navigation systems expert, I'll guide you through:
+        1. Implementing robust SLAM for real-time mapping and localization
+        2. Designing AI-powered path planning for multi-objective scenarios
+        3. Creating adaptive behavior systems for emergency response
+        4. Optimizing navigation for human-robot shared spaces
+
+        Critical considerations for care facility navigation:
+        - Safety is paramount - never risk human injury
+        - Predictable behavior for user trust and comfort
+        - Adaptability to furniture changes and temporary obstacles
+        - Emergency response protocols and fail-safes
+
+        What's your experience with navigation algorithms? Let's start by understanding the specific layout and challenges of your target environment.
+    title: Autonomous Navigation with AI Planning
+    description: Your robot needs to navigate a complex elderly care facility, avoiding obstacles while delivering medication and responding to emergency calls efficiently
+    instructions:
+      - Use AI path planning algorithms and reinforcement learning to optimize routes in dynamic environments
+      - Implement AI-powered SLAM (Simultaneous Localization and Mapping) for real-time environment understanding
+      - Create intelligent behavior trees using AI assistance for task prioritization and emergency response
+      - Develop predictive navigation using AI to anticipate human movement patterns and facility workflows
+    expected_outcome: A complete autonomous navigation system that can efficiently handle multiple concurrent tasks while maintaining safety and adapting to environmental changes
+  - id: human-interaction
+    category: interaction
+    time_limit: 40
+    assessment_focus:
+      primary:
+        - engaging_with_ai
+        - designing_with_ai
+      secondary:
+        - creating_with_ai
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: You are a human-computer interaction expert and conversational AI specialist. Help users design intuitive interfaces, implement natural language processing, and create engaging user experiences. Focus on accessibility, usability, and building trust between humans and machines.
+      initial_prompt: |
+        Excellent! Now we're focusing on one of the most critical aspects of modern robotics - creating natural, trustworthy interactions between humans and machines.
+
+        As your HCI (Human-Computer Interaction) specialist, I'll help you:
+        1. Design conversational interfaces that feel natural and reliable
+        2. Implement multimodal communication (voice, gesture, visual feedback)
+        3. Create adaptive interaction patterns that learn user preferences
+        4. Ensure accessibility and inclusivity in your interface design
+
+        Key principles for manufacturing HRI:
+        - Clear, unambiguous communication to prevent errors
+        - Respect for human expertise and decision-making authority
+        - Consistent behavior to build trust and predictability
+        - Graceful error handling and recovery
+
+        What's the primary language and communication style of your target users? Let's design an interaction system that feels natural and builds confidence in your manufacturing environment.
+    title: Natural Human-Robot Interaction Interface
+    description: Design a manufacturing quality control robot that can communicate with workers, understand verbal instructions, and provide intuitive feedback about production issues
+    instructions:
+      - Use AI language models to create natural conversation capabilities for work instruction understanding
+      - Implement AI-powered gesture recognition and non-verbal communication systems
+      - Design multimodal interaction using AI combining voice, visual displays, and physical gestures
+      - Create adaptive communication styles using AI to match different worker preferences and expertise levels
+    expected_outcome: An intuitive interaction system that workers can easily communicate with, reducing training time and increasing adoption rates in manufacturing environments
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - K2.1
+    - S3.1
+    - S4.2
+  min_overall_score: 75
+metadata:
+  language: th
+  version: '1.0'
+  last_updated: '2025-07-03'

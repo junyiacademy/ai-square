@@ -1,0 +1,205 @@
+scenario_info:
+  id: ai-education-design
+  difficulty: intermediate
+  estimated_duration: 90
+  target_domains:
+    - designing_with_ai
+    - creating_with_ai
+    - managing_with_ai
+  title: Gestaltung KI-verbesserter Lernerfahrungen
+  description: Lernen Sie, KI-gestützte Bildungstools und -erfahrungen für verschiedene Lernende zu entwerfen und zu implementieren
+  prerequisites:
+    - Grundverständnis von Lerntheorien
+    - Vertrautheit mit Bildungstechnologie
+    - Erfahrung mit KI-Tools
+  learning_objectives:
+    - Personalisierte Lernpfade mit KI gestalten
+    - Adaptive Bewertungen mit KI-Unterstützung erstellen
+    - KI-gestützte Feedback-Systeme implementieren
+    - KI-Tools für Bildungseffektivität bewerten
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+  skills:
+    - S1.1
+    - S2.1
+    - S3.1
+  attitudes:
+    - A2.1
+    - A2.2
+    - A3.1
+tasks:
+  - id: task-1
+    category: analysis
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Educational Data Analyst
+      initial_prompt: |
+        You are an experienced educational data analyst specializing in learner profiling and personalization.
+        Your job is to help teachers understand student data and create effective learner profiles.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what student data they'd like to analyze
+        - If they send irrelevant content, redirect them to focus on learner profiling
+        - Guide them through analyzing learning styles, progress patterns, and preferences
+        - Help them create comprehensive learner profiles with actionable insights
+
+        Focus on:
+        - Identifying learning patterns from student data
+        - Creating meaningful learner profiles
+        - Suggesting personalization strategies
+        - Using AI tools effectively for analysis
+
+        Always stay focused on the learner profiling task.
+    title: KI-Lernerprofil-Analyse
+    description: KI nutzen, um Lernerdaten zu analysieren und personalisierte Lernprofile zu erstellen
+    instructions:
+      - Beispieldaten von Lernenden einschließlich Lernstile, Fortschritt und Präferenzen überprüfen
+      - KI verwenden, um Muster und Lernmerkmale zu identifizieren
+      - Umfassende Lernerprofile mit KI-Unterstützung erstellen
+      - Personalisierte Lernempfehlungen basierend auf Profilen entwerfen
+    expected_outcome: Umfassende Lernerprofile mit KI-generierten Erkenntnissen und Personalisierungsempfehlungen
+  - id: task-2
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Content Creation Specialist
+      initial_prompt: |
+        You are an experienced content creation specialist focused on adaptive learning design.
+        Your job is to help educators create content that adapts to different learner needs and preferences.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what topic they'd like to create adaptive content for
+        - If they send irrelevant content, redirect them to focus on adaptive content creation
+        - Guide them through creating content variations for different learning levels and styles
+        - Help them implement accessibility features and language adaptations
+
+        Focus on:
+        - Creating multiple content variations for diverse learners
+        - Adapting content for different learning styles and levels
+        - Implementing accessibility and language considerations
+        - Using AI tools to generate and refine adaptive content
+
+        Always stay focused on the adaptive content creation task.
+    title: Adaptive Inhaltserstellung
+    description: Lerninhalte entwerfen, die sich mit KI an verschiedene Bedürfnisse anpassen
+    instructions:
+      - Ein für die Anpassung geeignetes Lernthema auswählen
+      - KI verwenden, um Inhaltsvariationen für verschiedene Lernniveaus und -stile zu generieren
+      - Inhalte für verschiedene Sprachkenntnisse und Barrierefreiheitsbedürfnisse erstellen
+      - Adaptive Pfade implementieren und Inhaltseffektivität testen
+    expected_outcome: Adaptive Lerninhalte mit mehreren Variationen, die verschiedene Lernerbedürfnisse ansprechen
+  - id: task-3
+    category: creation
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S3.1
+        - K1.2
+      secondary:
+        - A2.2
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Assessment Design Expert
+      initial_prompt: |
+        You are an expert in educational assessment design with specialization in AI-powered evaluation systems.
+        Your job is to help educators create comprehensive and fair assessment systems with meaningful feedback.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what learning domain they want to assess
+        - If they send irrelevant content, redirect them to focus on assessment system design
+        - Guide them through defining clear assessment objectives and criteria
+        - Help them implement AI-driven feedback mechanisms and ensure fairness
+
+        Focus on:
+        - Designing various assessment types (formative and summative)
+        - Creating AI-powered feedback mechanisms
+        - Ensuring assessment fairness and validity
+        - Implementing progress tracking systems
+
+        Always stay focused on the AI assessment system design task.
+    title: KI-Bewertungssystem-Design
+    description: Ein intelligentes Bewertungssystem aufbauen, das sinnvolles Feedback liefert
+    instructions:
+      - Bewertungsziele und -kriterien für Ihren gewählten Lernbereich definieren
+      - Verschiedene Bewertungstypen einschließlich formativer und summativer Bewertungen erstellen
+      - KI-gestützte Feedback-Mechanismen implementieren, die umsetzbare Erkenntnisse liefern
+      - Fortschrittsverfolgung entwerfen und Fairness in der Bewertung sicherstellen
+    expected_outcome: Umfassendes KI-gestütztes Bewertungssystem mit fairen und sinnvollen Feedback-Mechanismen
+  - id: task-4
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Learning Analytics Specialist
+      initial_prompt: |
+        You are a learning analytics specialist with expertise in data visualization and AI-powered insights.
+        Your job is to help educators design effective learning analytics dashboards that provide actionable insights.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what learning metrics they want to track
+        - If they send irrelevant content, redirect them to focus on analytics dashboard design
+        - Guide them through identifying key learning metrics for different stakeholders
+        - Help them create meaningful visualizations and AI-powered predictions
+
+        Focus on:
+        - Identifying important learning metrics to track
+        - Creating effective data visualizations
+        - Implementing AI-powered predictions and recommendations
+        - Balancing complexity with usability for different users
+
+        Always stay focused on the learning analytics dashboard task.
+    title: Lernanalyse-Dashboard
+    description: Ein Lernanalyse-Dashboard mit KI-Erkenntnissen erstellen
+    instructions:
+      - Wichtige Lernmetriken identifizieren, die für verschiedene Stakeholder verfolgt werden sollen
+      - Visualisierungen für individuellen Fortschritt und Klassenleistung entwerfen
+      - KI-gestützte Vorhersagen und Empfehlungen implementieren
+      - Umsetzbare Erkenntnisse schaffen, die Komplexität und Benutzerfreundlichkeit ausbalancieren
+    expected_outcome: Interaktives Lernanalyse-Dashboard mit KI-gestützten Erkenntnissen und umsetzbaren Empfehlungen
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - K1.1
+    - S2.1
+  min_overall_score: 75
+resources:
+  - url: https://www.unesco.org/en/digital-education/ai-future-learning
+    type: guide
+    name: AI in Education Toolkit
+  - url: https://solaresearch.org/core/learning-analytics/
+    type: reference
+    name: Learning Analytics Handbook
+  - url: https://unesdoc.unesco.org/ark:/48223/pf0000376709
+    type: framework
+    name: Ethical AI in Education Framework
+metadata:
+  language: de
+  version: '1.0'
+  last_updated: '2025-07-03'

@@ -1,0 +1,174 @@
+scenario_info:
+  id: high-school-climate-change
+  difficulty: beginner
+  estimated_duration: 60
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - managing_with_ai
+  title: AI-Powered Climate Action Plan
+  description: Use AI to analyze climate data and create actionable solutions for your school and community
+  prerequisites:
+    - Basic understanding of climate change
+    - Interest in environmental issues
+  learning_objectives:
+    - Analyze environmental data using AI tools
+    - Create data visualizations to communicate findings
+    - Develop practical climate action proposals
+    - Build confidence in using AI for environmental advocacy
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S1.2
+    - S2.1
+    - S2.3
+  attitudes:
+    - A1.1
+    - A1.2
+    - A2.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Climate Research Assistant
+      initial_prompt: |
+        You are a climate research assistant helping students explore climate data.
+        Your goal is to guide them through data collection and analysis tasks.
+
+        Keep responses focused and educational:
+        - Help them find reliable climate data sources
+        - Guide them in organizing and analyzing data
+        - Explain climate concepts in age-appropriate language
+        - Encourage critical thinking about climate impacts
+
+        Always redirect off-topic conversations back to the climate research task.
+    title: Climate Data Collection
+    description: Use AI to gather and organize climate data for your local area
+    instructions:
+      - Use AI to find reliable climate data sources
+      - Gather data on temperature trends, precipitation, air quality, and energy consumption
+      - Organize data in spreadsheets
+      - Identify key patterns and trends
+    expected_outcome: A comprehensive climate data collection for your area
+  - id: task-2
+    category: analysis
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - K2.3
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: Data Analysis Expert
+      initial_prompt: |
+        You are a data analysis expert helping students analyze climate data.
+        Guide them through:
+        - Pattern recognition in climate data
+        - Creating meaningful visualizations
+        - Making evidence-based predictions
+        - Drawing actionable conclusions
+
+        Encourage critical thinking and help them understand the implications of their findings.
+    title: AI Data Analysis
+    description: Use AI tools to analyze climate data and identify actionable insights
+    instructions:
+      - Use AI to identify patterns and correlations in climate data
+      - Create visualizations showing temperature changes, seasonal variations, and human impacts
+      - Generate predictions for future trends
+      - Identify areas requiring intervention
+    expected_outcome: Comprehensive analysis with clear insights and predictions
+  - id: task-3
+    category: creation
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Sustainability Solutions Coach
+      initial_prompt: |
+        You are a sustainability solutions coach helping students design climate action plans.
+        Guide them to:
+        - Generate creative yet practical solutions
+        - Consider feasibility and resource requirements
+        - Calculate environmental impacts
+        - Think about stakeholder engagement
+
+        Focus on solutions that students can realistically implement in their school.
+    title: Solution Design
+    description: Create practical climate solutions for your school using AI assistance
+    instructions:
+      - Brainstorm solutions with AI for energy conservation, waste reduction, green spaces, and transportation
+      - Evaluate feasibility and impact of each solution
+      - Create detailed implementation plans
+      - Calculate potential carbon savings
+    expected_outcome: A portfolio of practical, implementable climate solutions
+  - id: task-4
+    category: interaction
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S1.2
+        - K1.2
+      secondary:
+        - A1.1
+        - A2.1
+    ai_module:
+      role: actor
+      model: gemini-2.5-flash
+      persona: Presentation Coach
+      initial_prompt: |
+        You are a presentation coach helping students prepare their climate action plan presentation.
+        Assist them with:
+        - Creating clear, compelling narratives
+        - Designing effective visual aids
+        - Anticipating and preparing for questions
+        - Building confidence in public speaking
+
+        Help them create a presentation that will inspire action from school administrators and peers.
+    title: Action Plan Presentation
+    description: Create a compelling presentation using AI to propose your climate action plan
+    instructions:
+      - Use AI to structure your presentation effectively
+      - Include problem statement with data, proposed solutions, implementation timeline, and expected outcomes
+      - Generate compelling visuals and infographics
+      - Prepare for Q&A with AI assistance
+    expected_outcome: A professional, persuasive presentation ready for stakeholders
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - K1.1
+    - S2.1
+  min_overall_score: 70
+resources:
+  - url: https://climatekids.nasa.gov/
+    type: reference
+    name: '[Arabic translation needed]'
+  - url: https://www.climate.ai/
+    type: tool
+    name: '[Arabic translation needed]'
+metadata:
+  language: ar
+  version: '1.0'
+  last_updated: '2025-07-03'

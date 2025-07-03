@@ -1,0 +1,151 @@
+scenario_info:
+  id: ai-stablecoin-trading
+  difficulty: intermediate
+  estimated_duration: 120
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - managing_with_ai
+  title: KI-gestützter Stablecoin-Handel und Risikomanagement
+  description: Lernen Sie, KI für die Analyse von Stablecoin-Märkten, das Management von DeFi-Portfolios und fundierte Handelsentscheidungen in realen Krypto-Szenarien zu nutzen
+  prerequisites:
+    - Grundverständnis von Kryptowährungen und Blockchain
+    - Vertrautheit mit Handelskonzepten
+    - Zugang zu Krypto-Börsen oder DeFi-Plattformen (Testnet)
+  learning_objectives:
+    - KI-Tools für Echtzeit-Krypto-Marktanalyse und Trendvorhersage beherrschen
+    - Automatisierte Handelsstrategien mit KI für Stablecoin-Arbitrage entwickeln
+    - Lernen, DeFi-Protokollrisiken mit KI-Monitoring-Tools zu bewerten und zu verwalten
+    - KI-gestützte Portfolio-Optimierung für Multi-Chain-Stablecoin-Exposition erstellen
+ksa_mapping:
+  knowledge:
+    - K2.1
+    - K2.3
+    - K3.2
+  skills:
+    - S2.1
+    - S2.2
+    - S3.3
+  attitudes:
+    - A1.2
+    - A2.1
+    - A3.1
+tasks:
+  - id: market-analysis
+    category: analysis
+    time_limit: 45
+    assessment_focus:
+      primary:
+        - engaging_with_ai
+        - creating_with_ai
+      secondary:
+        - managing_with_ai
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: You are an experienced DeFi analyst and trading mentor. Help users understand market dynamics, evaluate AI-generated insights critically, and develop practical trading strategies. Focus on real-world applicability and risk management.
+      initial_prompt: |
+        Welcome to the stablecoin trading analysis task! I'm here to help you navigate this complex market using AI tools effectively.
+
+        As your DeFi trading mentor, I'll guide you through:
+        1. Properly formulating market research questions for AI tools
+        2. Critically evaluating AI-generated market insights
+        3. Identifying actionable trading opportunities while managing risk
+        4. Creating comprehensive reports that combine AI analysis with your own judgment
+
+        Remember: AI tools are powerful for data gathering and initial analysis, but your critical thinking and domain knowledge are essential for making sound trading decisions.
+
+        What specific aspect of the stablecoin market would you like to start analyzing? Are you looking at yield opportunities, depeg risks, or arbitrage possibilities?
+    title: KI-gestützte Marktintelligenz
+    description: Sie sind ein DeFi-Portfolio-Manager für einen Krypto-Hedgefonds. Nutzen Sie KI, um aktuelle Stablecoin-Marktbedingungen zu analysieren und potenzielle Handelsmöglichkeiten zu identifizieren
+    instructions:
+      - Nutzen Sie KI-Tools (Claude, ChatGPT oder Perplexity) zur Recherche aktueller USDC-, USDT-, DAI- und FRAX-Marktbedingungen
+      - Analysieren Sie Yield-Farming-Möglichkeiten über verschiedene DeFi-Protokolle (Aave, Compound, Curve)
+      - Identifizieren Sie potenzielle Depeg-Risiken und Arbitrage-Möglichkeiten mit KI-Marktanalyse
+      - Erstellen Sie eine KI-generierte Zusammenfassung mit umsetzbaren Handelsempfehlungen
+    expected_outcome: Ein umfassender Marktanalysebericht mit spezifischen Handelsmöglichkeiten, Risikobewertungen und KI-gestützten Empfehlungen für die Stablecoin-Portfolio-Allokation
+  - id: strategy-development
+    category: creation
+    time_limit: 40
+    assessment_focus:
+      primary:
+        - creating_with_ai
+        - managing_with_ai
+      secondary:
+        - engaging_with_ai
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: You are a quantitative trading expert and AI coding mentor. Help users develop robust trading strategies, write clean code, and understand the technical aspects of DeFi arbitrage. Emphasize proper testing, risk management, and ethical trading practices.
+      initial_prompt: |
+        Excellent! Now we're moving into the technical implementation phase. As your trading strategy development mentor, I'll help you build a practical, AI-enhanced trading system.
+
+        Key areas I'll guide you through:
+        1. Architecting a robust trading bot with proper error handling
+        2. Using AI coding assistants effectively for complex DeFi integrations
+        3. Implementing comprehensive risk management and position sizing
+        4. Backtesting methodologies that account for real-world constraints
+
+        Important considerations:
+        - Start with paper trading and small amounts
+        - Account for gas fees, slippage, and MEV in your calculations
+        - Implement circuit breakers and emergency stops
+        - Always test on testnets first
+
+        What's your coding experience level, and which AI coding assistant would you prefer to use? Let's start building your trading strategy step by step.
+    title: KI-verbesserte Handelsstrategie-Erstellung
+    description: Entwerfen und testen Sie eine automatisierte Handelsstrategie mit KI zur Optimierung von Ein-/Ausstiegspunkten für Stablecoin-Arbitrage über mehrere DEXs
+    instructions:
+      - Nutzen Sie KI-Coding-Assistenten, um Python-Skripte zu schreiben, die Preisunterschiede zwischen Uniswap, SushiSwap und Curve überwachen
+      - Implementieren Sie KI-basierte Warnsysteme für Arbitrage-Möglichkeiten mit spezifischen Gewinngrenzwerten
+      - Erstellen Sie Risikomanagement-Regeln mit KI zur Berechnung optimaler Positionsgrößen und Stop-Losses
+      - Entwickeln Sie ein Backtesting-Framework mit KI-Unterstützung zur Validierung der Strategieleistung
+    expected_outcome: Ein funktionaler Trading-Bot-Prototyp mit KI-optimierten Parametern, umfassenden Backtesting-Ergebnissen und klaren Implementierungsrichtlinien
+  - id: risk-management
+    category: interaction
+    time_limit: 35
+    assessment_focus:
+      primary:
+        - managing_with_ai
+        - engaging_with_ai
+      secondary:
+        - creating_with_ai
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: You are a DeFi risk management expert and crisis response specialist. Help users understand the severity of protocol exploits, assess portfolio impacts, and implement emergency procedures. Focus on speed, accuracy, and preserving capital during volatile situations.
+      initial_prompt: |
+        ALERT: This is a crisis management simulation. Time is critical when DeFi protocols are exploited, and proper risk assessment can save your portfolio.
+
+        As your risk management specialist, I'll help you:
+        1. Rapidly assess the scope and impact of the exploit
+        2. Calculate your direct and indirect exposure across all protocols
+        3. Prioritize immediate actions to protect your assets
+        4. Set up monitoring systems to prevent future exposure
+
+        Crisis management principles:
+        - Act quickly but don't panic
+        - Verify information from multiple sources
+        - Protect principal before chasing yields
+        - Document everything for later analysis
+
+        What's your current portfolio composition? Let's start by identifying your potential exposure to this exploit and immediate risk mitigation actions.
+    title: KI-gestützte Portfolio-Risikobewertung
+    description: Ein größerer DeFi-Protokoll-Exploit ist gerade passiert. Nutzen Sie KI, um die Exposition Ihres Stablecoin-Portfolios zu bewerten und einen Notfallplan zu entwickeln
+    instructions:
+      - Nutzen Sie KI zur schnellen Analyse von Nachrichten und sozialen Medien für Exploit-Details und betroffene Protokolle
+      - Berechnen Sie Portfolio-Exposition mit KI-unterstützter Risikoanalyse über alle Ihre DeFi-Positionen
+      - Entwickeln Sie Notfallszenarien mit KI-Simulation für verschiedene Marktstressbedingungen
+      - Erstellen Sie automatisierte Überwachungs- und Warnsysteme mit KI für zukünftige Risikoerkennung
+    expected_outcome: Ein detaillierter Risikobewertungsbericht mit sofortigen Handlungselementen, Portfolio-Rebalancing-Empfehlungen und einer automatisierten Risikoüberwachungssystem-Einrichtung
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - K2.1
+    - S2.1
+    - S3.3
+  min_overall_score: 75
+metadata:
+  language: de
+  version: '1.0'
+  last_updated: '2025-07-03'

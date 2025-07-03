@@ -1,0 +1,151 @@
+knowledge_codes:
+  description: The knowledge statements in the framework include facts, concepts, ideas, and processes reflecting disciplinary, interdisciplinary, epistemic, and procedural knowledge. They outline the technical and societal understandings that learners need to apply and engage with AI systems.
+  themes:
+    AI_Reflects_Human_Choices_and_Perspectives:
+      codes:
+        K2.1:
+          summary: Building and maintaining AI systems relies on humans to design algorithms, collect and label data, and moderate harmful content. These systems reflect human choices, assumptions, and labor practices, shaped by unequal global conditions.
+        K2.2:
+          summary: AI is trained on vast datasets sourced from publicly available information, user-generated content, curated databases, and real-world data collected through sensors, interactions, and digital systems.
+        K2.3:
+          summary: AI systems gather new data from interactions with users; decisions, processes, and outputs may be directly influenced by inputs in real time.
+        K2.4:
+          summary: AI systems are trained to identify patterns among data elements that humans have selected, categorized, and prioritized.
+        K2.5:
+          summary: Bias inherently exists in AI systems, which can also reflect societal biases embedded in its training data or algorithm design. Humans can perpetuate or mitigate harmful biases in AI systems during the design, development, or testing process.
+      explanation: |
+        AI is not neutral; it is shaped by the decisions of those who build it. Humans select training data, which may have been collected unethically or feature inaccurate and incomplete representations of individuals and perspectives. They also impart judgment during the classification of that training data, which informs the algorithms that produce AI systems' outputs. While statistical and societal biases may exist undetected in training data or be reinforced in other aspects of the training process, AI's prevalence in decision-making and everyday life can replicate those biases in ways that harmfully affect different groups of people. This makes ethics, algorithmic fairness, representation, explainability, and accountability essential to AI literacy.
+    AI_Reshapes_Work_and_Human_Roles:
+      codes:
+        K3.1:
+          summary: AI systems automate structured tasks, augment decision-making, and transform industries, requiring humans to adapt, reskill, and upskill.
+        K3.2:
+          summary: AI integration requires individuals to determine which tasks are best suited for machines and which require human intervention or expertise.
+        K3.3:
+          summary: While AI can support analysis and prediction, humans must be responsible for decisions that reflect human judgment and ethical considerations.
+      explanation: |
+        The impact of AI across industries emphasizes the importance of adaptability and lifelong learning. While AI systems can increase efficiency for many types of tasks, these tools might not always be the best choice; humans must hone their knowledge of AI's capabilities and their domain expertise to manage AI systems effectively. Success in an AI-integrated workforce entails developing fluency in a range of technologies, staying current with new tools and techniques, and leveraging human judgment in decision-making starting from early ages, in and outside of formal education. This combination ensures that AI complements human skills and augments human capacities, rather than replaces them.
+    AIs_Capabilities_and_Limitations:
+      codes:
+        K4.1:
+          summary: AI excels at pattern recognition and automation but lacks emotions, ethical reasoning, context, and originality.
+        K4.2:
+          summary: AI requires vast amounts of computing power and data, which consumes energy, thus demanding limited natural resources and increasing carbon emissions. AI's long-term sustainability impact, both positive and negative, largely depends on how it is implemented and utilized.
+        K4.3:
+          summary: The capability of generative AI, particularly large language models (LLMs), to generate humanlike content can make it difficult to distinguish fact from fabrication, increasing the potential to generate misinformation, deepfakes, or manipulative materials.
+      explanation: |
+        AI lacks a true grasp of real-world context, human values and behaviors, and nuance—even when systems modify their own outputs to respond to a user's complex emotional states. While AI systems can analyze enormous amounts of data, they are prone to bias, confabulation, and misuse and rely on vast but finite natural resources. A human must make judgments about specific contexts that AI systems cannot, including whether the benefits of an AI tool is worth the environmental or societal cost. AI literacy requires critical thinking about when, where, and how AI should be applied to ensure it serves human needs equitably.
+    AIs_Role_in_Society:
+      codes:
+        K5.1:
+          summary: AI plays an increasingly prevalent role in decision-making that impacts humans, from hiring practices to healthcare to criminal justice.
+        K5.2:
+          summary: AI systems must be understood, audited, and regulated to ensure that their use leads to more benefits than harm for individuals and society.
+        K5.3:
+          summary: Generative AI and Large Language Models create content based on existing materials in training data, which includes copyright-protected work, thereby raising questions about authenticity, authorship, and ownership.
+        K5.4:
+          summary: Ethical AI design encompasses fairness, transparency, explainability, accountability, respect for privacy, and legal compliance.
+      explanation: |
+        AI systems do not exist in isolation; their use reflects, reinforces, and reshapes societal values and decisions. Without careful oversight, AI-driven decision-making can amplify bias and cause widespread harm. AI systems introduce implications for how learners should think about truth, authorship, and ownership in digital spaces. Individual and system-level guidance and regulations can help address areas where AI intersects with fundamental rights, such as surveillance and data privacy. Familiarity with ethical AI design principles helps learners to critically assess how AI systems are built and deployed. Without the understanding, learners risk accepting AI outputs at face value rather than asking whom they benefit or harm. To ensure AI serves society responsibly, we must continuously question and evaluate its effects and guide its use to mitigate its risks.
+skill_codes:
+  description: These skills represent fundamental human abilities applied to an AI context. They guide learners in using AI ethically and ensure that learners actively shape how AI fits into their lives.
+  themes:
+    Critical_Thinking:
+      codes:
+        S1.1:
+          summary: Evaluate AI-generated content for accuracy, fairness, and bias to make informed and ethical decisions.
+          questions:
+            - How can I check the accuracy of AI-generated outputs and reduce the risk of harmful bias?
+            - How do I know if AI is relevant or appropriate?
+      explanation: |
+        Practicing critical thinking in an AI context involves verifying whether the information provided by an AI system is accurate, relevant, and fair. Because AI systems can generate convincing but incorrect or biased content, learners must actively work to identify potential misinformation and weigh outputs with other sources of information. These actions result in a greater awareness of AI's impact on the broader information system. This process uncovers hidden biases or gaps and ensures AI outputs support ethical decision-making. By developing these skills, learners exercise media literacy, digital literacy, and digital citizenship, while becoming more discerning users of AI.
+    Creativity:
+      codes:
+        S2.1:
+          summary: Collaborate with AI to create and refine original ideas while considering issues of ownership, attribution, and responsible use.
+          questions:
+            - How can I use AI responsibly to bring my creative visions to life?
+      explanation: |
+        Exercising creativity when using AI involves interacting with AI systems to brainstorm, generate, and refine original ideas. As learners use AI systems to explore possibilities beyond what they had originally envisioned, they must consider AI's impacts on originality, ownership, attribution, and copyright. By engaging creatively and responsibly with AI systems, learners stay accountable for the ideas they shape and share.
+    Computational_Thinking:
+      codes:
+        S3.1:
+          summary: Decompose problems and provide instructions in ways that allow AI systems to effectively contribute to solutions.
+          questions:
+            - How do I frame my problem so that AI can help solve it?
+      explanation: |
+        Computational thinking skills help approach and frame problems in ways that leverage the capabilities of AI and account for its limitations. This involves decomposing, or breaking down complex problems into structured components, and communicating goals and constraints in a manner that AI systems can effectively process (e.g., prompt engineering). By providing use cases, counterexamples, and expected outcomes to AI systems, learners refine their own communication skills, engage with metacognitive strategies, and make progress toward their goals.
+    Collaboration:
+      codes:
+        S4.1:
+          summary: Work effectively with AI and humans by communicating clearly, giving feedback, and navigating shared tasks.
+          questions:
+            - How can I collaborate transparently and ethically with AI to accomplish a goal?
+      explanation: |
+        Collaboration with AI relies on positive and productive interactions between humans and AI systems. This requires the ability to both give feedback and ask for help in and outside of the digital world. As learners collaborate with AI systems, they demonstrate agency alongside metacognition. By collaborating tactfully, assessing strengths in context, and honing relationship-building skills, learners develop the ability to navigate new and complex situations.
+    Problem_Solving:
+      codes:
+        S5.1:
+          summary: Determine when and how to use AI for a task by assessing its capabilities, risks, and ethical implications.
+          questions:
+            - How do I choose the right type of tool for the task at hand?
+      explanation: |
+        Using AI to address a problem begins with thoughtful reflection on the task at hand and includes thorough consideration of whether AI's capabilities meet the task's technical and ethical requirements. To do this, learners might test specific AI systems for reliability and potential to replicate harmful bias. Learners problem-solve with AI when they ask themselves how AI systems might add value, where human judgment should come into play, and when to avoid AI use altogether.
+    Self_and_Social_Awareness:
+      codes:
+        S6.1:
+          summary: Recognize how AI influences personal choices, relationships, and communities, and reflect on its broader societal and environmental impact.
+          questions:
+            - How does AI impact me and others?
+      explanation: |
+        Self and social awareness are vital when interacting with AI. This skill begins with recognizing AI's presence in daily life and understanding how it influences decisions in both the digital and physical worlds. This extends beyond mere identification and applies to thoughtful consideration of AI's broader effects on individuals, communities, and the environment. Learners might also engage metacognitively with AI's effects on their own behaviors, thoughts, and learning processes. By recognizing AI's influence, learners are better equipped to evaluate AI-generated content and monitor how these technologies influence their thoughts and behaviors over time.
+    Communication:
+      codes:
+        S7.1:
+          summary: Explain how AI is used in a way that promotes transparency, avoids anthropomorphism, and encourages responsible use.
+          questions:
+            - How do I describe AI use for myself and others?
+      explanation: |
+        Communicating about AI involves explaining when and how AI systems are used, including how they may have shaped content or contributed to decisions that impact others. This skill emphasizes that AI-literate learners have a responsibility to accurately describe how AI works in ways that do not mischaracterize or assign human traits to its capabilities. When learners choose their words to promote transparency and responsible use of AI systems, they uphold ethical practices and encourage informed conversation about AI's implications.
+attitude_codes:
+  description: These attitudes represent the values and dispositions that guide ethical and responsible engagement with AI.
+  themes:
+    Responsible:
+      codes:
+        A1.1:
+          summary: Be accountable; seek to prevent harm from AI use.
+          questions: []
+      explanation: |
+        Learners think carefully about how they use AI and are accountable of their choices. They consider both the intended and the potential unintended effects of their actions, and are committed to preventing harm to others. They believe everyone has the right to understand how AI affects them and to make informed decisions about its use.
+    Curious:
+      codes:
+        A2.1:
+          summary: Explore AI capabilities and limitations with openness.
+          questions: []
+      explanation: |
+        Learners are eager to explore what AI can do today and how it might evolve in the future. They want to understand how AI affects their personal lives and future careers. They consider learning to be an ongoing process and enjoy experimenting, believing that meaningful discoveries happen through exploration.
+    Innovative:
+      codes:
+        A3.1:
+          summary: Pursue novel, positive applications of AI.
+          questions: []
+      explanation: |
+        Learners seek to use AI to address real-world challenges and embrace new opportunities. They experiment, try different approaches, and think creatively to solve a problem. They believe AI can be a powerful tool for creating positive change in their own lives and the lives of others.
+    Adaptable:
+      codes:
+        A4.1:
+          summary: Iterate flexibly with feedback and new contexts.
+          questions: []
+      explanation: |
+        Learners show perseverance and flexibility when working with AI. They are open to diverse ideas, perspectives, and approaches. They understand that collaborating with AI is an iterative process shaped by feedback and revision.
+    Empathetic:
+      codes:
+        A5.1:
+          summary: Consider diverse human and environmental impacts.
+          questions: []
+      explanation: |
+        Learners thoughtfully examine how AI impacts individuals, communities, and the environment. They weigh both the benefits and potential risks of using AI, understanding that its impact can vary for different groups of people. 
+metadata:
+  language: en
+  version: "1.0"
+  last_updated: "2025-07-03"

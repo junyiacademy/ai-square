@@ -1,0 +1,149 @@
+knowledge_codes:
+  description: "Pernyataan pengetahuan dalam kerangka kerja mencakup fakta, konsep, ide, dan proses yang mencerminkan pengetahuan disipliner, interdisipliner, epistemik, dan prosedural. Mereka menguraikan pemahaman teknis dan sosial yang dibutuhkan pembelajar untuk menerapkan dan terlibat dengan sistem AI."
+  themes:
+    The_Nature_of_AI:
+      codes:
+        K1.1:
+          summary: Sistem AI menggunakan algoritma yang menggabungkan prosedur langkah demi langkah dengan inferensi statistik (misalnya, bobot dan bias) untuk memproses data, mendeteksi pola, dan menghasilkan output yang mungkin.
+        K1.2:
+          summary: Mesin 'belajar' dengan menyimpulkan cara menghasilkan output seperti prediksi, konten, dan rekomendasi yang mempengaruhi lingkungan fisik atau virtual, sebagai respons terhadap informasi dari input yang mereka terima. Mereka melakukannya dengan berbagai tingkat otonomi dan kemampuan adaptasi setelah penerapan.
+        K1.3:
+          summary: AI generatif menggunakan probabilitas untuk menghasilkan output seperti manusia di berbagai modalitas (misalnya, teks, audio, visual) tetapi tidak memiliki pemahaman dan niat yang autentik.
+        K1.4:
+          summary: Sistem AI beroperasi secara berbeda tergantung pada tujuannya, apakah untuk menciptakan, memprediksi, merekomendasikan, atau merespons.
+      explanation: "Sistem AI—termasuk, namun tidak terbatas pada, pengklasifikasi, rekomendasi, model prediktif, AI generatif, dan agen otonom—beroperasi dengan memproses dataset besar untuk mengidentifikasi pola statistik. Sebagai kelas teknologi yang luas, AI mensimulasikan perilaku cerdas. Baik menghasilkan konten, mengurutkan informasi, membuat prediksi, atau menjalankan urutan tindakan, sistem ini bertujuan untuk menghasilkan output yang secara statistik paling mungkin memenuhi tujuan yang diberikan. Meskipun sistem ini dapat menghasilkan output yang sangat canggih dan mirip manusia, mereka melakukannya tanpa pemahaman, kesadaran, atau niat. Memahami perbedaan ini menghilangkan kesalahpahaman bahwa AI mengetahui segalanya atau selalu benar, dan membantu pembelajar menilai keandalan, keterbatasan, dan dampak potensialnya."
+    AI_Reflects_Human_Choices_and_Perspectives:
+      codes:
+        K2.1:
+          summary: Membangun dan memelihara sistem AI bergantung pada manusia untuk merancang algoritma, mengumpulkan dan melabeli data, dan memoderasi konten yang berbahaya. Sistem ini mencerminkan pilihan, asumsi, dan praktik kerja manusia, yang dibentuk oleh kondisi global yang tidak setara.
+        K2.2:
+          summary: AI dilatih pada dataset besar yang bersumber dari informasi yang tersedia untuk umum, konten yang dibuat pengguna, database yang dikurasi, dan data dunia nyata yang dikumpulkan melalui sensor, interaksi, dan sistem digital.
+        K2.3:
+          summary: Sistem AI mengumpulkan data baru dari interaksi dengan pengguna; keputusan, proses, dan output dapat langsung dipengaruhi oleh input secara real-time.
+        K2.4:
+          summary: Sistem AI dilatih untuk mengidentifikasi pola di antara elemen data yang telah dipilih, dikategorikan, dan diprioritaskan oleh manusia.
+        K2.5:
+          summary: Bias secara inheren ada dalam sistem AI, yang juga dapat mencerminkan bias sosial yang tertanam dalam data pelatihan atau desain algoritma. Manusia dapat melanggengkan atau mengurangi bias berbahaya dalam sistem AI selama proses desain, pengembangan, atau pengujian.
+      explanation: "AI mencerminkan pilihan dan perspektif manusia melalui proses pengembangan, pelatihan, dan implementasi. Dataset yang digunakan untuk melatih sistem AI dikumpulkan dan dikurasi oleh manusia, yang unvermeidlich mencerminkan bias, perspektif budaya, dan keterbatasan penciptanya."
+    AI_Reshapes_Work_and_Human_Roles:
+      codes:
+        K3.1:
+          summary: Sistem AI mengotomatisasi tugas-tugas terstruktur, meningkatkan pengambilan keputusan, dan mengubah industri, mengharuskan manusia untuk beradaptasi, melatih ulang keterampilan, dan meningkatkan kemampuan.
+        K3.2:
+          summary: Integrasi AI mengharuskan individu untuk menentukan tugas mana yang paling cocok untuk mesin dan mana yang memerlukan intervensi atau keahlian manusia.
+        K3.3:
+          summary: Meskipun AI dapat mendukung analisis dan prediksi, manusia harus bertanggung jawab atas keputusan yang mencerminkan penilaian manusia dan pertimbangan etis.
+      explanation: "AI membentuk ulang pekerjaan dan peran manusia melalui otomatisasi tugas-tugas rutin, meningkatkan kemampuan manusia, dan menciptakan jenis pekerjaan baru. Transformasi ini mengharuskan pekerja untuk mengembangkan keterampilan baru dan beradaptasi dengan lingkungan kerja yang berubah."
+    AIs_Capabilities_and_Limitations:
+      codes:
+        K4.1:
+          summary: AI unggul dalam pengenalan pola dan otomatisasi, tetapi tidak memiliki emosi, penalaran etis, konteks, dan orisinalitas.
+        K4.2:
+          summary: AI memerlukan sejumlah besar daya komputasi dan data, yang mengonsumsi energi, sehingga memerlukan sumber daya alam yang terbatas dan meningkatkan emisi karbon. Dampak keberlanjutan jangka panjang AI, baik positif maupun negatif, sangat bergantung pada bagaimana ia diimplementasikan dan digunakan.
+        K4.3:
+          summary: Kemampuan AI generatif, khususnya model bahasa besar (LLM), untuk menghasilkan konten mirip manusia dapat menyulitkan untuk membedakan fakta dari fabrikasi, meningkatkan potensi untuk menghasilkan misinformasi, deepfake, atau materi manipulatif.
+      explanation: "Memahami kemampuan dan keterbatasan AI sangat penting untuk penggunaan yang efektif. AI unggul dalam tugas-tugas spesifik seperti pengenalan pola, pemrosesan volume data besar, dan otomatisasi, tetapi memiliki keterbatasan signifikan dalam area yang memerlukan pemahaman kontekstual, kreativitas sejati, dan penilaian etis."
+    AIs_Role_in_Society:
+      codes:
+        K5.1:
+          summary: AI memainkan peran yang semakin penting dalam pengambilan keputusan yang mempengaruhi manusia, dari praktik perekrutan hingga perawatan kesehatan hingga keadilan pidana.
+        K5.2:
+          summary: Sistem AI harus dipahami, diaudit, dan diatur untuk memastikan bahwa penggunaannya menghasilkan lebih banyak manfaat daripada bahaya bagi individu dan masyarakat.
+        K5.3:
+          summary: AI generatif dan Model Bahasa Besar menciptakan konten berdasarkan materi yang ada dalam data pelatihan, yang mencakup karya yang dilindungi hak cipta, sehingga menimbulkan pertanyaan tentang keaslian, kepengarangan, dan kepemilikan.
+        K5.4:
+          summary: Desain AI yang etis mencakup keadilan, transparansi, dapat dijelaskan, akuntabilitas, penghormatan terhadap privasi, dan kepatuhan hukum.
+      explanation: "AI mengambil peran yang semakin menonjol dalam masyarakat, mempengaruhi dari keputusan individu hingga kebijakan publik. Sangat penting untuk memahami bagaimana AI mempengaruhi berbagai aspek masyarakat dan bagaimana ia dapat diatur secara bertanggung jawab."
+
+skill_codes:
+  description: "Pernyataan keterampilan dalam kerangka kerja mencakup praktik, teknik, dan metode yang dibutuhkan pembelajar untuk bekerja secara efektif dengan sistem AI."
+  themes:
+    Critical_Thinking:
+      codes:
+        S1.1:
+          summary: Mengevaluasi konten yang dihasilkan AI dari segi akurasi, keadilan, dan bias untuk membuat keputusan yang terinformasi dan etis.
+          questions:
+            - Bagaimana saya dapat memeriksa akurasi output yang dihasilkan AI dan mengurangi risiko bias berbahaya?
+            - Bagaimana saya tahu apakah AI relevan atau sesuai?
+      explanation: "Berpikir kritis sangat penting saat bekerja dengan AI, memungkinkan pengguna untuk mengevaluasi kualitas, relevansi, dan keandalan output yang dihasilkan oleh sistem AI."
+    Creativity:
+      codes:
+        S2.1:
+          summary: Berkolaborasi dengan AI untuk menciptakan dan menyempurnakan ide-ide orisinal sambil mempertimbangkan masalah kepemilikan, atribusi, dan penggunaan yang bertanggung jawab.
+          questions:
+            - Bagaimana saya dapat menggunakan AI secara bertanggung jawab untuk mewujudkan visi kreatif saya?
+      explanation: "Kreativitas dalam konteks AI melibatkan kolaborasi efektif dengan sistem AI untuk menghasilkan ide-ide inovatif sambil mempertahankan integritas kreatif dan pertimbangan etis."
+    Computational_Thinking:
+      codes:
+        S3.1:
+          summary: Menguraikan masalah dan memberikan instruksi dengan cara yang memungkinkan sistem AI untuk berkontribusi secara efektif pada solusi.
+          questions:
+            - Bagaimana saya membingkai masalah saya sehingga AI dapat membantu menyelesaikannya?
+      explanation: "Berpikir komputasional memungkinkan pengguna untuk menyusun masalah dengan cara yang dapat ditangani secara efektif oleh sistem AI melalui dekomposisi dan formulasi instruksi yang jelas."
+    Collaboration:
+      codes:
+        S4.1:
+          summary: Bekerja secara efektif dengan AI dan manusia dengan berkomunikasi secara jelas, memberikan umpan balik, dan menavigasi tugas-tugas bersama.
+          questions:
+            - Bagaimana saya dapat berkolaborasi secara transparan dan etis dengan AI untuk mencapai suatu tujuan?
+      explanation: "Kolaborasi efektif dengan AI memerlukan keterampilan komunikasi yang jelas, kerja tim, dan koordinasi antara manusia dan sistem AI."
+    Problem_Solving:
+      codes:
+        S5.1:
+          summary: Menentukan kapan dan bagaimana menggunakan AI untuk suatu tugas dengan menilai kemampuan, risiko, dan implikasi etisnya.
+          questions:
+            - Bagaimana saya memilih jenis alat yang tepat untuk tugas yang ada?
+      explanation: "Pemecahan masalah dengan AI melibatkan evaluasi yang cermat tentang kapan dan bagaimana menggunakan sistem AI secara efektif dan bertanggung jawab."
+    Self_and_Social_Awareness:
+      codes:
+        S6.1:
+          summary: Mengenali bagaimana AI mempengaruhi pilihan pribadi, hubungan, dan komunitas, dan merefleksikan dampak sosial dan lingkungannya yang lebih luas.
+          questions:
+            - Bagaimana AI mempengaruhi saya dan orang lain?
+      explanation: "Kesadaran diri dan sosial sangat penting untuk memahami dampak AI baik pada tingkat individu maupun kolektif."
+    Communication:
+      codes:
+        S7.1:
+          summary: Menjelaskan bagaimana AI digunakan dengan cara yang mendorong transparansi, menghindari antropomorfisme, dan mendorong penggunaan yang bertanggung jawab.
+          questions:
+            - Bagaimana saya menggambarkan penggunaan AI untuk diri saya dan orang lain?
+      explanation: "Komunikasi yang efektif tentang AI sangat penting untuk mempromosikan pemahaman, transparansi, dan penggunaan teknologi yang bertanggung jawab."
+
+attitude_codes:
+  description: "Pernyataan sikap dalam kerangka kerja mencakup disposisi, nilai, dan orientasi yang harus dikembangkan pembelajar untuk bekerja secara bertanggung jawab dengan sistem AI."
+  themes:
+    Responsible:
+      codes:
+        A1.1:
+          summary: Bertanggung jawab; berusaha mencegah bahaya dari penggunaan AI.
+          questions: []
+      explanation: "Tanggung jawab dalam penggunaan AI melibatkan pertimbangan yang cermat terhadap konsekuensi dan komitmen untuk mencegah bahaya."
+    Curious:
+      codes:
+        A2.1:
+          summary: Jelajahi kemampuan dan keterbatasan AI dengan keterbukaan.
+          questions: []
+      explanation: "Rasa ingin tahu mendorong pembelajaran berkelanjutan tentang AI, memungkinkan pengguna untuk lebih memahami kemampuan dan keterbatasannya."
+    Innovative:
+      codes:
+        A3.1:
+          summary: Mencari aplikasi AI yang baru dan positif.
+          questions: []
+      explanation: "Inovasi dengan AI melibatkan pencarian kreatif untuk cara-cara baru menerapkan teknologi untuk memecahkan masalah dan menciptakan nilai."
+    Adaptable:
+      codes:
+        A4.1:
+          summary: Beradaptasi secara fleksibel dengan umpan balik dan konteks baru.
+          questions: []
+      explanation: "Kemampuan beradaptasi sangat penting dalam bidang yang berkembang pesat seperti AI, memungkinkan pengguna untuk menyesuaikan diri dengan teknologi dan konteks baru."
+    Empathetic:
+      codes:
+        A5.1:
+          summary: Pertimbangkan dampak manusia dan lingkungan yang beragam.
+          questions: []
+      explanation: "Empati dalam konteks AI melibatkan pertimbangan yang cermat tentang bagaimana teknologi mempengaruhi kelompok orang yang berbeda dan lingkungan."
+
+metadata:
+  language: id
+  version: "1.0"
+  last_updated: "2025-07-03"

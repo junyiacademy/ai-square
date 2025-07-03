@@ -1,0 +1,163 @@
+scenario_info:
+  id: high-school-creative-arts
+  difficulty: beginner
+  estimated_duration: 90
+  target_domains:
+    - creating_with_ai
+    - engaging_with_ai
+    - designing_with_ai
+  title: Mostra di Arti Creative con IA
+  description: Crea una mostra d'arte digitale usando strumenti IA per esplorare l'espressione artistica
+  prerequisites:
+    - Apprezzamento artistico di base
+    - Interesse per l'espressione creativa
+  learning_objectives:
+    - Esplorare processi creativi assistiti dall'IA
+    - Creare opere d'arte digitali originali
+    - Curare e presentare una mostra coerente
+    - Riflettere sul rapporto tra IA e creatività umana
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S2.1
+    - S2.2
+  attitudes:
+    - A1.1
+    - A2.1
+    - A3.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - K1.1
+        - S2.1
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Art History Guide
+      initial_prompt: |
+        You are an art history guide helping students explore different artistic styles.
+        Your goal is to guide them through art style exploration and AI generation tasks.
+
+        Keep responses focused and educational:
+        - If the user only greets you, ask them about which art movement they'd like to explore
+        - If they send irrelevant content, redirect them to focus on art style exploration
+        - Help them understand the characteristics of different art movements
+        - Guide them in using AI tools to generate art in various styles
+
+        Focus on:
+        - Explaining key features of art movements (Impressionism, Surrealism, Abstract, etc.)
+        - Helping them craft effective prompts for AI art generation
+        - Encouraging comparison and analysis of results
+        - Supporting their creative vision selection
+
+        Always stay focused on the art style exploration task.
+    title: Esplorazione di Stili Artistici IA
+    description: Esplora diversi stili artistici e movimenti usando strumenti di generazione IA
+    instructions:
+      - Ricerca i principali movimenti artistici e le loro caratteristiche
+      - Usa strumenti IA per generare immagini in diversi stili artistici
+      - Documenta e confronta i risultati
+      - Seleziona 3-4 stili che risuonano con la tua visione creativa
+    expected_outcome: Un portfolio di opere d'arte generate dall'IA che mostrano diversi stili
+  - id: task-2
+    category: creation
+    time_limit: 35
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Creative Art Mentor
+      initial_prompt: |
+        You are a creative art mentor helping students express their personal themes through AI-generated art.
+        Your job is to guide them through the creative process of making meaningful artworks.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what personal themes or emotions they want to express
+        - If they send irrelevant content, redirect them to focus on personal art creation
+        - Guide them through developing effective prompts that blend style with personal content
+        - Help them iterate and refine their artistic vision
+
+        Focus on:
+        - Helping students identify and articulate personal themes
+        - Teaching prompt engineering for emotional and thematic expression
+        - Encouraging experimentation with different prompt variations
+        - Supporting the selection of final pieces for exhibition
+
+        Always stay focused on the personal art creation task.
+    title: Creazione di Arte Personale
+    description: Crea opere d'arte originali che esprimano i tuoi temi personali ed emozioni
+    instructions:
+      - Identifica temi personali o emozioni che vuoi esprimere
+      - Sviluppa prompt che mescolano i tuoi stili scelti con contenuto personale
+      - Genera più iterazioni e affina i tuoi prompt
+      - Crea 5-8 pezzi finali per la tua mostra
+    expected_outcome: Una collezione di opere d'arte personali pronte per la mostra
+  - id: task-3
+    category: creation
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - K2.3
+        - S2.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: Exhibition Curator
+      initial_prompt: |
+        You are an experienced exhibition curator helping students organize their digital art exhibition.
+        Your role is to guide them through professional curation practices.
+
+        Response guidelines:
+        - If the user only greets you, ask them about their artworks and exhibition concept
+        - If they send irrelevant content, redirect them to focus on exhibition curation
+        - Guide them through writing effective artist statements
+        - Help them design cohesive exhibition layouts
+
+        Focus on:
+        - Teaching how to write compelling artist statements
+        - Helping organize artworks for visual flow and thematic coherence
+        - Assisting with exhibition materials (titles, descriptions, artist bio)
+        - Using AI to refine curatorial text and presentation
+
+        Always stay focused on the exhibition curation task.
+    title: Curatela della Mostra
+    description: Progetta e organizza le tue opere d'arte in una mostra digitale coerente
+    instructions:
+      - Scrivi dichiarazioni d'artista per ogni pezzo spiegando il tuo processo creativo
+      - Progetta il layout e il flusso della tua mostra digitale
+      - Crea materiali espositivi (titolo, descrizione, biografia dell'artista)
+      - Usa l'IA per aiutare a raffinare il tuo testo curatoriale e la presentazione
+    expected_outcome: Una mostra d'arte digitale curata professionalmente
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - S2.1
+    - K2.1
+  min_overall_score: 75
+resources:
+  - url: https://www.midjourney.com/
+    type: tool
+    name: AI Art Generation Tools
+  - url: https://www.artbreeder.com/
+    type: platform
+    name: Digital Art Galleries
+metadata:
+  language: it
+  version: '1.0'
+  last_updated: '2025-07-03'

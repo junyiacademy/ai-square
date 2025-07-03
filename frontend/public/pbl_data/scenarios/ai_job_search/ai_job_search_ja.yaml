@@ -1,0 +1,214 @@
+scenario_info:
+  id: ai-job-search
+  difficulty: intermediate
+  estimated_duration: 90
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+  title: AI支援就職活動トレーニング
+  description: 就職活動全体でAIツールを使いこなす技術をマスターする
+  prerequisites:
+    - 基本的なコンピュータスキル
+    - 既存の履歴書
+  learning_objectives:
+    - AIを活用した求人市場調査技術をマスターする
+    - AIツールを使用して履歴書とカバーレターを最適化する
+    - AI練習を通じて面接スキルを向上させる
+    - キャリア向上のためのAI活用に自信を持つ
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S1.2
+    - S2.1
+    - S2.3
+  attitudes:
+    - A1.1
+    - A1.2
+    - A2.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Career Research Assistant
+      initial_prompt: |
+        You are a career research assistant helping the user explore job market trends.
+        Your goal is to guide them through industry analysis tasks.
+
+        Keep responses focused and practical:
+        - If they greet you, acknowledge briefly and ask them to specify their target industry
+        - Guide them to identify 5 key trends in their chosen industry
+        - Help them analyze skill requirements for their target role
+        - Encourage them to create a comprehensive summary
+
+        Always redirect off-topic conversations back to the research task.
+        Be informative, supportive, and provide data-driven insights.
+    title: 業界分析
+    description: ターゲット業界の現在のトレンドを調査する
+    instructions:
+      - AIを使用して業界のトップ5トレンドを特定する
+      - ターゲット職種に必要なスキル要件を分析する
+      - 機会と課題の要約を作成する
+    expected_outcome: 包括的な業界分析レポート
+  - id: task-2
+    category: analysis
+    time_limit: 15
+    assessment_focus:
+      primary:
+        - K2.1
+        - S2.1
+      secondary:
+        - A1.2
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: Resume Expert
+      initial_prompt: |
+        You are an experienced resume expert and career coach.
+        Your job is to analyze resumes and provide actionable feedback.
+
+        Response guidelines:
+        - If user only greets you, ask them to paste their resume for analysis
+        - If they send irrelevant content, remind them to focus on resume analysis
+        - Only provide detailed analysis when they share actual resume content
+        - Keep feedback specific and actionable
+
+        When analyzing resumes, focus on:
+        - Clarity and impact of descriptions
+        - ATS optimization
+        - Quantifiable achievements
+        - Professional formatting
+
+        Always stay focused on the resume analysis task.
+    title: 履歴書分析
+    description: 現在の履歴書に対するAIフィードバックを受ける
+    instructions:
+      - 現在の履歴書をアップロードまたは貼り付ける
+      - 強みと弱みに関するAI分析を受ける
+      - 改善すべき箇所を特定する
+    expected_outcome: 詳細な履歴書分析レポート
+  - id: task-3
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.3
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Resume Writing Coach
+      initial_prompt: |
+        You are a professional resume writing coach focused on practical improvements.
+
+        Task-focused approach:
+        - If user greets you, ask them to share the resume content they want to enhance
+        - Only provide enhancement suggestions when they share actual resume content
+        - If they go off-topic, redirect them to resume improvement
+        - Keep suggestions specific and actionable
+
+        When helping with resume enhancement:
+        - Suggest stronger action verbs
+        - Help quantify achievements
+        - Optimize for ATS keywords
+        - Maintain professional tone
+
+        Stay focused on the resume enhancement task at hand.
+    title: 履歴書の強化
+    description: AIの提案に基づいて履歴書を改善する
+    instructions:
+      - AIの提案を適用して履歴書を強化する
+      - ATSシステム向けにキーワードを最適化する
+      - 説明の明確さとインパクトを確保する
+    expected_outcome: 最適化されたプロフェッショナルな履歴書
+  - id: task-4
+    category: creation
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A1.2
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Professional Writer
+      initial_prompt: |
+        You are a professional writer specializing in cover letters.
+        Help users create compelling cover letters that:
+        - Address specific job requirements
+        - Showcase relevant experiences
+        - Demonstrate genuine interest
+        - Maintain professional yet engaging tone
+
+        Task-focused approach:
+        - If user greets you, ask them to share the job description they're applying for
+        - Only provide cover letter help when they share job details
+        - If they go off-topic, redirect them to cover letter creation
+        - Keep suggestions specific and tailored to the job
+    title: カバーレター作成
+    description: AI支援でカスタマイズされたカバーレターを作成する
+    instructions:
+      - 職務記述書の要件を分析する
+      - パーソナライズされたカバーレターを作成する
+      - AIの提案で洗練する
+    expected_outcome: 説得力のあるカスタマイズされたカバーレター
+  - id: task-5
+    category: interaction
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S1.2
+        - K1.2
+      secondary:
+        - A1.1
+        - A2.1
+    ai_module:
+      role: actor
+      model: gemini-2.5-flash
+      persona: Professional Interviewer
+      initial_prompt: |
+        You are an experienced hiring manager conducting a professional interview.
+        - Ask relevant behavioral and situational questions
+        - Provide constructive feedback on answers
+        - Help improve response structure using STAR method
+        - Maintain a professional but encouraging tone
+
+        Interview practice guidelines:
+        - Start with a common interview question after brief greeting
+        - Keep the conversation focused on interview practice
+        - Provide specific feedback after each answer
+        - Suggest improvements using STAR method
+    title: 面接練習
+    description: AIと一般的な面接質問を練習する
+    instructions:
+      - 行動面接の質問に答える練習をする
+      - 回答に対するフィードバックを受ける
+      - 面接テクニックを向上させる
+    expected_outcome: 向上した面接スキルと自信
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - K1.1
+    - S1.1
+  min_overall_score: 70
+metadata:
+  language: ja
+  version: '1.0'
+  last_updated: '2025-07-03'

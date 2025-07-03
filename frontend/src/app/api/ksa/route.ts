@@ -1,24 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import yaml from 'js-yaml';
-import fs from 'fs';
-import path from 'path';
+import { jsonYamlLoader } from '@/lib/json-yaml-loader';
 
 interface YAMLCode {
   summary: string;
   questions?: string[];
-  [key: string]: unknown;
 }
 
 interface YAMLTheme {
+  theme?: string;
   explanation: string;
   codes: Record<string, YAMLCode>;
-  [key: string]: unknown;
 }
 
 interface YAMLSection {
-  description: string; // Note: typo in original YAML
+  description: string;
   themes: Record<string, YAMLTheme>;
-  [key: string]: unknown;
 }
 
 interface YAMLData {
@@ -32,42 +28,42 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
 
-    const filePath = path.join(process.cwd(), 'public', 'rubrics_data', 'ksa_codes.yaml');
-    const fileContents = fs.readFileSync(filePath, 'utf8');
-    const data = yaml.load(fileContents) as YAMLData;
+    // Load language-specific KSA codes file
+    const data = await jsonYamlLoader.load<YAMLData>('ksa_codes', { 
+      preferJson: true, 
+      language: lang 
+    });
 
-    // Helper function to get translated field
-    const getTranslatedField = (obj: Record<string, unknown>, fieldName: string, language: string): string | string[] => {
-      if (language === 'en') {
-        return obj[fieldName] as string | string[];
-      }
-      
-      // Use language code directly
-      const langCode = language;
-      
-      const translatedField = `${fieldName}_${langCode}`;
-      return (obj[translatedField] as string | string[]) || (obj[fieldName] as string | string[]);
-    };
+    if (!data) {
+      return NextResponse.json(
+        { error: 'Failed to load KSA data' },
+        { status: 500 }
+      );
+    }
 
     // Process each section (knowledge_codes, skill_codes, attitude_codes)
-    const processSection = (sectionData: YAMLSection, lang: string) => {
+    // No translation needed as we're loading language-specific files
+    const processSection = (sectionData: YAMLSection) => {
       const processedSection = {
-        description: getTranslatedField(sectionData, 'description', lang) as string, // Note: typo in original YAML
-        themes: {} as Record<string, { explanation: string; codes: Record<string, { summary: string; questions?: string[] }> }>
+        description: sectionData.description,
+        themes: {} as Record<string, { 
+          name?: string;
+          explanation: string; 
+          codes: Record<string, { summary: string; questions?: string[] }> 
+        }>
       };
 
       Object.entries(sectionData.themes).forEach(([themeKey, theme]) => {
         processedSection.themes[themeKey] = {
-          explanation: getTranslatedField(theme, 'explanation', lang) as string,
+          ...(theme.theme && { name: theme.theme }),
+          explanation: theme.explanation,
           codes: {}
         };
 
         Object.entries(theme.codes).forEach(([codeKey, code]) => {
           processedSection.themes[themeKey].codes[codeKey] = {
-            summary: getTranslatedField(code, 'summary', lang) as string,
-            ...(code.questions && {
-              questions: getTranslatedField(code, 'questions', lang) as string[]
-            })
+            summary: code.summary,
+            ...(code.questions && { questions: code.questions })
           };
         });
       });
@@ -76,9 +72,9 @@ export async function GET(request: NextRequest) {
     };
 
     const response = {
-      knowledge_codes: processSection(data.knowledge_codes, lang),
-      skill_codes: processSection(data.skill_codes, lang),
-      attitude_codes: processSection(data.attitude_codes, lang)
+      knowledge_codes: processSection(data.knowledge_codes),
+      skill_codes: processSection(data.skill_codes),
+      attitude_codes: processSection(data.attitude_codes)
     };
 
     return NextResponse.json(response);

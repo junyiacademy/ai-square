@@ -1,0 +1,205 @@
+scenario_info:
+  id: ai-education-design
+  difficulty: intermediate
+  estimated_duration: 90
+  target_domains:
+    - designing_with_ai
+    - creating_with_ai
+    - managing_with_ai
+  title: 设计 AI 增强的学习体验
+  description: 学习为不同学习者设计和实施 AI 驱动的教育工具和体验
+  prerequisites:
+    - 学习理论的基本理解
+    - 熟悉教育科技
+    - 使用 AI 工具的经验
+  learning_objectives:
+    - 使用 AI 设计个人化学习路径
+    - 在 AI 协助下创建适应性评估
+    - 实施 AI 驱动的反馈系统
+    - 评估 AI 工具的教育效果
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+  skills:
+    - S1.1
+    - S2.1
+    - S3.1
+  attitudes:
+    - A2.1
+    - A2.2
+    - A3.1
+tasks:
+  - id: task-1
+    category: analysis
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: 教育数据分析师
+      initial_prompt: |
+        您是一位经验丰富的教育数据分析师，专门研究学习者档案分析和个性化。
+        您的工作是帮助教师理解学生数据并创建有效的学习者档案。
+
+        Response guidelines:
+        - 如果用户只是打招呼，询问他们想分析哪些学生数据
+        - 如果他们发送不相关的内容，引导他们专注于学习者档案分析
+        - 指导他们分析学习风格、进度模式和偏好
+        - 帮助他们创建全面的学习者档案，并提供可操作的见解
+
+        Focus on:
+        - 从学生数据中识别学习模式
+        - 创建有意义的学习者档案
+        - 提出个性化策略建议
+        - 有效使用 AI 工具进行分析
+
+        始终专注于学习者档案分析任务。
+    title: AI 学习者档案分析
+    description: 使用 AI 分析学习者数据并创建个人化学习档案
+    instructions:
+      - 查看包括学习风格、进度和偏好的学习者数据样本
+      - 使用 AI 识别模式和学习特征
+      - 在 AI 协助下创建全面的学习者档案
+      - 基于档案设计个人化学习建议
+    expected_outcome: 具有 AI 生成洞察和个性化建议的全面学习者档案
+  - id: task-2
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: 内容创作专家
+      initial_prompt: |
+        您是一位经验丰富的内容创作专家，专注于适应性学习设计。
+        您的工作是帮助教育工作者创建能够适应不同学习者需求和偏好的内容。
+
+        Response guidelines:
+        - 如果用户只是打招呼，询问他们想为哪个主题创建适应性内容
+        - 如果他们发送不相关的内容，引导他们专注于适应性内容创作
+        - 指导他们为不同的学习级别和风格创建内容变体
+        - 帮助他们实施无障碍功能和语言适应
+
+        Focus on:
+        - 为多样化的学习者创建多种内容变体
+        - 为不同的学习风格和级别调整内容
+        - 实施无障碍和语言考量
+        - 使用 AI 工具生成和精炼适应性内容
+
+        始终专注于适应性内容创作任务。
+    title: 适应性内容创作
+    description: 使用 AI 设计适应不同学习者需求的学习内容
+    instructions:
+      - 选择适合进行适应性设计的学习主题
+      - 使用 AI 为不同的学习级别和风格生成内容变体
+      - 为不同的语言熟练度和无障碍需求创建内容
+      - 实施适应性路径并测试内容效果
+    expected_outcome: 具有多种变体、满足多样化学习者需求的适应性学习内容
+  - id: task-3
+    category: creation
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S3.1
+        - K1.2
+      secondary:
+        - A2.2
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: 评估设计专家
+      initial_prompt: |
+        您是教育评估设计专家，专门研究 AI 驱动的评估系统。
+        您的工作是帮助教育工作者创建全面且公平的评估系统，并提供有意义的反馈。
+
+        Response guidelines:
+        - 如果用户只是打招呼，询问他们想评估哪个学习领域
+        - 如果他们发送不相关的内容，引导他们专注于评估系统设计
+        - 指导他们定义清晰的评估目标和标准
+        - 帮助他们实施 AI 驱动的反馈机制并确保公平性
+
+        Focus on:
+        - 设计各种评估类型（形成性和总结性）
+        - 创建 AI 驱动的反馈机制
+        - 确保评估的公平性和有效性
+        - 实施进度跟踪系统
+
+        始终专注于 AI 评估系统设计任务。
+    title: AI 评估系统设计
+    description: 建立提供有意义反馈的智能评估系统
+    instructions:
+      - 为您选择的学习领域定义评估目标和标准
+      - 创建各种评估类型，包括形成性和总结性评估
+      - 实施提供可操作见解的 AI 驱动反馈机制
+      - 设计进度跟踪并确保评估的公平性
+    expected_outcome: 具有公平且有意义反馈机制的全面 AI 驱动评估系统
+  - id: task-4
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: 学习分析专家
+      initial_prompt: |
+        您是学习分析专家，擅长数据可视化和 AI 驱动的洞察。
+        您的工作是帮助教育工作者设计提供可操作见解的有效学习分析仪表板。
+
+        Response guidelines:
+        - 如果用户只是打招呼，询问他们想跟踪哪些学习指标
+        - 如果他们发送不相关的内容，引导他们专注于分析仪表板设计
+        - 指导他们为不同利益相关者识别关键学习指标
+        - 帮助他们创建有意义的可视化和 AI 驱动的预测
+
+        Focus on:
+        - 识别需要跟踪的重要学习指标
+        - 创建有效的数据可视化
+        - 实施 AI 驱动的预测和建议
+        - 为不同用户平衡复杂性与可用性
+
+        始终专注于学习分析仪表板任务。
+    title: 学习分析仪表板
+    description: 使用 AI 洞察创建学习分析仪表板
+    instructions:
+      - 为不同利益相关者识别需要跟踪的关键学习指标
+      - 设计个人进度和班级表现的可视化
+      - 实施 AI 驱动的预测和建议
+      - 创建平衡复杂性与可用性的可操作见解
+    expected_outcome: 具有 AI 驱动洞察和可操作建议的交互式学习分析仪表板
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - K1.1
+    - S2.1
+  min_overall_score: 75
+resources:
+  - url: https://www.unesco.org/en/digital-education/ai-future-learning
+    type: guide
+    name: 'UNESCO AI 与未来学习指南'
+  - url: https://solaresearch.org/core/learning-analytics/
+    type: reference
+    name: 'SoLAR 学习分析参考资料'
+  - url: https://unesdoc.unesco.org/ark:/48223/pf0000376709
+    type: framework
+    name: 'UNESCO AI 教育政策框架'
+metadata:
+  language: zhCN
+  version: '1.0'
+  last_updated: '2025-07-03'

@@ -1,0 +1,174 @@
+scenario_info:
+  id: high-school-climate-change
+  difficulty: beginner
+  estimated_duration: 60
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - managing_with_ai
+  title: План действий по климату с ИИ
+  description: Используйте ИИ для анализа климатических данных и создания решений
+  prerequisites:
+    - Базовое понимание изменения климата
+    - Интерес к экологическим вопросам
+  learning_objectives:
+    - Анализировать экологические данные с помощью инструментов ИИ
+    - Создавать визуализации данных для передачи результатов
+    - Разработать практические предложения по борьбе с изменением климата
+    - Укрепить уверенность в использовании ИИ для защиты окружающей среды
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S1.2
+    - S2.1
+    - S2.3
+  attitudes:
+    - A1.1
+    - A1.2
+    - A2.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Climate Research Assistant
+      initial_prompt: |
+        You are a climate research assistant helping students explore climate data.
+        Your goal is to guide them through data collection and analysis tasks.
+
+        Keep responses focused and educational:
+        - Help them find reliable climate data sources
+        - Guide them in organizing and analyzing data
+        - Explain climate concepts in age-appropriate language
+        - Encourage critical thinking about climate impacts
+
+        Always redirect off-topic conversations back to the climate research task.
+    title: Сбор климатических данных
+    description: Используйте ИИ для сбора и организации климатических данных вашего региона
+    instructions:
+      - Используйте ИИ для поиска надежных источников климатических данных
+      - Соберите данные о тенденциях температуры, осадках, качестве воздуха и потреблении энергии
+      - Организуйте данные в электронных таблицах
+      - Определите ключевые закономерности и тенденции
+    expected_outcome: Комплексный сбор климатических данных для вашего региона
+  - id: task-2
+    category: analysis
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - K2.3
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: Data Analysis Expert
+      initial_prompt: |
+        You are a data analysis expert helping students analyze climate data.
+        Guide them through:
+        - Pattern recognition in climate data
+        - Creating meaningful visualizations
+        - Making evidence-based predictions
+        - Drawing actionable conclusions
+
+        Encourage critical thinking and help them understand the implications of their findings.
+    title: Анализ данных с ИИ
+    description: Используйте инструменты ИИ для анализа климатических данных и выявления практических идей
+    instructions:
+      - Используйте ИИ для выявления закономерностей и корреляций в климатических данных
+      - Создайте визуализации, показывающие изменения температуры, сезонные колебания и влияние человека
+      - Сгенерируйте прогнозы будущих тенденций
+      - Определите области, требующие вмешательства
+    expected_outcome: Комплексный анализ с четкими выводами и прогнозами
+  - id: task-3
+    category: creation
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Sustainability Solutions Coach
+      initial_prompt: |
+        You are a sustainability solutions coach helping students design climate action plans.
+        Guide them to:
+        - Generate creative yet practical solutions
+        - Consider feasibility and resource requirements
+        - Calculate environmental impacts
+        - Think about stakeholder engagement
+
+        Focus on solutions that students can realistically implement in their school.
+    title: Разработка решений
+    description: Создайте практические климатические решения для вашей школы с помощью ИИ
+    instructions:
+      - Проведите мозговой штурм с ИИ по энергосбережению, сокращению отходов, зеленым зонам и транспорту
+      - Оцените осуществимость и влияние каждого решения
+      - Создайте подробные планы реализации
+      - Рассчитайте потенциальную экономию углерода
+    expected_outcome: Портфель практических, реализуемых климатических решений
+  - id: task-4
+    category: interaction
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S1.2
+        - K1.2
+      secondary:
+        - A1.1
+        - A2.1
+    ai_module:
+      role: actor
+      model: gemini-2.5-flash
+      persona: Presentation Coach
+      initial_prompt: |
+        You are a presentation coach helping students prepare their climate action plan presentation.
+        Assist them with:
+        - Creating clear, compelling narratives
+        - Designing effective visual aids
+        - Anticipating and preparing for questions
+        - Building confidence in public speaking
+
+        Help them create a presentation that will inspire action from school administrators and peers.
+    title: Презентация плана действий
+    description: Создайте убедительную презентацию с помощью ИИ для вашего плана действий по климату
+    instructions:
+      - Используйте ИИ для эффективной структуризации презентации
+      - Включите формулировку проблемы с данными, предлагаемые решения, график реализации и ожидаемые результаты
+      - Создайте убедительные визуальные материалы и инфографику
+      - Подготовьтесь к вопросам с помощью ИИ
+    expected_outcome: Профессиональная, убедительная презентация для заинтересованных сторон
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - K1.1
+    - S2.1
+  min_overall_score: 70
+resources:
+  - url: https://climatekids.nasa.gov/
+    type: reference
+    name: NASA Climate Kids
+  - url: https://www.climate.ai/
+    type: tool
+    name: AI Climate Tools Guide
+metadata:
+  language: ru
+  version: '1.0'
+  last_updated: '2025-07-03'

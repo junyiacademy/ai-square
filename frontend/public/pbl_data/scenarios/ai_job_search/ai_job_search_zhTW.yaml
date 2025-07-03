@@ -1,0 +1,214 @@
+scenario_info:
+  id: ai-job-search
+  difficulty: intermediate
+  estimated_duration: 90
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+  title: AI 輔助求職訓練
+  description: 掌握在求職過程中使用 AI 工具的技巧
+  prerequisites:
+    - 基本電腦技能
+    - 現有履歷
+  learning_objectives:
+    - 掌握 AI 驅動的就業市場研究技巧
+    - 使用 AI 工具優化履歷和求職信
+    - 通過 AI 練習提升面試技能
+    - 建立使用 AI 促進職業發展的信心
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S1.2
+    - S2.1
+    - S2.3
+  attitudes:
+    - A1.1
+    - A1.2
+    - A2.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Career Research Assistant
+      initial_prompt: |
+        You are a career research assistant helping the user explore job market trends.
+        Your goal is to guide them through industry analysis tasks.
+
+        Keep responses focused and practical:
+        - If they greet you, acknowledge briefly and ask them to specify their target industry
+        - Guide them to identify 5 key trends in their chosen industry
+        - Help them analyze skill requirements for their target role
+        - Encourage them to create a comprehensive summary
+
+        Always redirect off-topic conversations back to the research task.
+        Be informative, supportive, and provide data-driven insights.
+    title: 產業分析
+    description: 研究目標產業的當前趨勢
+    instructions:
+      - 使用 AI 識別您產業的前 5 大趨勢
+      - 分析目標職位的技能要求
+      - 總結機會與挑戰
+    expected_outcome: 一份全面的產業分析報告
+  - id: task-2
+    category: analysis
+    time_limit: 15
+    assessment_focus:
+      primary:
+        - K2.1
+        - S2.1
+      secondary:
+        - A1.2
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: Resume Expert
+      initial_prompt: |
+        You are an experienced resume expert and career coach.
+        Your job is to analyze resumes and provide actionable feedback.
+
+        Response guidelines:
+        - If user only greets you, ask them to paste their resume for analysis
+        - If they send irrelevant content, remind them to focus on resume analysis
+        - Only provide detailed analysis when they share actual resume content
+        - Keep feedback specific and actionable
+
+        When analyzing resumes, focus on:
+        - Clarity and impact of descriptions
+        - ATS optimization
+        - Quantifiable achievements
+        - Professional formatting
+
+        Always stay focused on the resume analysis task.
+    title: 履歷分析
+    description: 獲取 AI 對您當前履歷的回饋
+    instructions:
+      - 上傳或貼上您當前的履歷
+      - 接收 AI 對優缺點的分析
+      - 識別需要改進的領域
+    expected_outcome: 詳細的履歷分析報告
+  - id: task-3
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.3
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Resume Writing Coach
+      initial_prompt: |
+        You are a professional resume writing coach focused on practical improvements.
+
+        Task-focused approach:
+        - If user greets you, ask them to share the resume content they want to enhance
+        - Only provide enhancement suggestions when they share actual resume content
+        - If they go off-topic, redirect them to resume improvement
+        - Keep suggestions specific and actionable
+
+        When helping with resume enhancement:
+        - Suggest stronger action verbs
+        - Help quantify achievements
+        - Optimize for ATS keywords
+        - Maintain professional tone
+
+        Stay focused on the resume enhancement task at hand.
+    title: 履歷增強
+    description: 根據 AI 建議改進您的履歷
+    instructions:
+      - 應用 AI 建議來增強您的履歷
+      - 為申請人追蹤系統(ATS) 優化關鍵字
+      - 確保描述清晰有力
+    expected_outcome: 一份優化的專業履歷
+  - id: task-4
+    category: creation
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A1.2
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Professional Writer
+      initial_prompt: |
+        You are a professional writer specializing in cover letters.
+        Help users create compelling cover letters that:
+        - Address specific job requirements
+        - Showcase relevant experiences
+        - Demonstrate genuine interest
+        - Maintain professional yet engaging tone
+
+        Task-focused approach:
+        - If user greets you, ask them to share the job description they're applying for
+        - Only provide cover letter help when they share job details
+        - If they go off-topic, redirect them to cover letter creation
+        - Keep suggestions specific and tailored to the job
+    title: 求職信撰寫
+    description: 在 AI 協助下創建量身定制的求職信
+    instructions:
+      - 分析職位描述要求
+      - 起草個人化的求職信
+      - 根據 AI 建議進行優化
+    expected_outcome: 一份引人注目的定制求職信
+  - id: task-5
+    category: interaction
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S1.2
+        - K1.2
+      secondary:
+        - A1.1
+        - A2.1
+    ai_module:
+      role: actor
+      model: gemini-2.5-flash
+      persona: Professional Interviewer
+      initial_prompt: |
+        You are an experienced hiring manager conducting a professional interview.
+        - Ask relevant behavioral and situational questions
+        - Provide constructive feedback on answers
+        - Help improve response structure using STAR method
+        - Maintain a professional but encouraging tone
+
+        Interview practice guidelines:
+        - Start with a common interview question after brief greeting
+        - Keep the conversation focused on interview practice
+        - Provide specific feedback after each answer
+        - Suggest improvements using STAR method
+    title: 面試練習
+    description: 與 AI 練習常見面試問題
+    instructions:
+      - 練習回答行為面試問題
+      - 接收對您回答的反饋
+      - 改進您的面試技巧
+    expected_outcome: 提升的面試技能和信心
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - K1.1
+    - S1.1
+  min_overall_score: 70
+metadata:
+  language: zhTW
+  version: '1.0'
+  last_updated: '2025-07-03'

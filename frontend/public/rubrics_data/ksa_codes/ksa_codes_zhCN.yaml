@@ -1,0 +1,135 @@
+knowledge_codes:
+  description: "[ZHCN translation needed]"
+  themes:
+    AI_Reflects_Human_Choices_and_Perspectives:
+      codes:
+        K2.1:
+          summary: 建構與维护AI系统仰賴人類设计算法、蒐集與標註数据，以及管理有害內容。這些系统反映人類的選擇、假設與勞動实践，並受全球不平等条件所塑造。
+        K2.2:
+          summary: AI以龐大数据集進行训练，來源包括公開信息、使用者产生內容、精選数据庫與透過感測器、互動及數位系统蒐集的真實世界数据。
+        K2.3:
+          summary: AI系统會從與使用者的互動中收集新数据；决策、流程與输出可能即时受到输入的直接影响。
+        K2.4:
+          summary: AI系统被训练來識別人類所選擇、分类與排序的数据元素間的模式。
+        K2.5:
+          summary: AI系统本質上存在偏見，也可能反映嵌入在训练数据或算法设计中的社會偏見。人類可在设计、开发或测试过程中延續或減緩AI系统中的有害偏見。
+      explanation: "[Chinese Simplified] translation needed"
+    AI_Reshapes_Work_and_Human_Roles:
+      codes:
+        K3.1:
+          summary: AI系统自动化结构化任务、輔助决策並转型产业，要求人類适应、再学习與提升技能。
+        K3.2:
+          summary: AI整合要求個人判断哪些任务最適合机器执行，哪些需要人類介入或专业知识。
+        K3.3:
+          summary: 雖然AI可协助分析與预测，但人類必須對反映人類判断與伦理考量的决策负责。
+      explanation: "[Chinese Simplified] translation needed"
+    AIs_Capabilities_and_Limitations:
+      codes:
+        K4.1:
+          summary: AI擅長模式識別與自动化，但缺乏情感、伦理推理、情境理解與原創性。
+        K4.2:
+          summary: AI需要大量运算能力與数据，消耗能源並需求有限的自然资源，增加碳排放。AI的長期永續影响（無論正面或負面）很大程度取決於如何实施與利用。
+        K4.3:
+          summary: 生成式AI（特別是大型语言模型）产生類人內容的能力，可能導致事實與虛構難以分辨，增加产生錯誤信息、深度偽造或操弄材料的可能性。
+      explanation: "[Chinese Simplified] translation needed"
+    AIs_Role_in_Society:
+      codes:
+        K5.1:
+          summary: AI在影响人類的决策中扮演日益重要的角色，從招聘實務到醫療保健到刑事司法。
+        K5.2:
+          summary: AI系统必須被理解、稽核與规范，以確保其使用對個人與社會帶來更多益處而非傷害。
+        K5.3:
+          summary: 生成式AI與大型语言模型根據训练数据中的既有材料創造內容，其中包括受著作權保护的作品，因此引發真實性、作者身分與所有權的问题。
+        K5.4:
+          summary: 伦理AI设计涵蓋公平性、透明度、可解释性、問責制、隱私尊重與法规遵循。
+      explanation: "[Chinese Simplified] translation needed"
+skill_codes:
+  description: "[ZHCN translation needed]"
+  themes:
+    Critical_Thinking:
+      codes:
+        S1.1:
+          summary: 评估AI生成內容的准确性、公平性與偏見，以做出明智且符合伦理的决策。
+          questions:
+            - How can I check the accuracy of AI-generated outputs and reduce the risk of harmful bias?
+            - How do I know if AI is relevant or appropriate?
+      explanation: "[Chinese Simplified] translation needed"
+    Creativity:
+      codes:
+        S2.1:
+          summary: 與AI协作創造與精煉原創想法，同時考量所有權、歸屬與負责任使用等議題。
+          questions:
+            - How can I use AI responsibly to bring my creative visions to life?
+      explanation: "[Chinese Simplified] translation needed"
+    Computational_Thinking:
+      codes:
+        S3.1:
+          summary: 將问题分解並提供指示，使AI系统能有效促成解决方案。
+          questions:
+            - How do I frame my problem so that AI can help solve it?
+      explanation: "[Chinese Simplified] translation needed"
+    Collaboration:
+      codes:
+        S4.1:
+          summary: 透過清楚沟通、提供反馈與协调共同任务，有效與AI及人類合作。
+          questions:
+            - How can I collaborate transparently and ethically with AI to accomplish a goal?
+      explanation: "[Chinese Simplified] translation needed"
+    Problem_Solving:
+      codes:
+        S5.1:
+          summary: 透過评估AI的能力、风险與伦理影响，決定何時及如何將AI用於任务。
+          questions:
+            - How do I choose the right type of tool for the task at hand?
+      explanation: "[Chinese Simplified] translation needed"
+    Self_and_Social_Awareness:
+      codes:
+        S6.1:
+          summary: 认识AI如何影响個人選擇、關係與社群，並反思其更廣泛的社會與环境影响。
+          questions:
+            - How does AI impact me and others?
+      explanation: "[Chinese Simplified] translation needed"
+    Communication:
+      codes:
+        S7.1:
+          summary: 以促進透明度、避免擬人化並鼓励負责任使用的方式说明AI的使用。
+          questions:
+            - How do I describe AI use for myself and others?
+      explanation: "[Chinese Simplified] translation needed"
+attitude_codes:
+  description: "[ZHCN translation needed]"
+  themes:
+    Responsible:
+      codes:
+        A1.1:
+          summary: 負起责任；致力於防止AI使用帶來的傷害。
+          questions: []
+      explanation: "[Chinese Simplified] translation needed"
+    Curious:
+      codes:
+        A2.1:
+          summary: 以开放态度探索AI的能力與限制。
+          questions: []
+      explanation: "[Chinese Simplified] translation needed"
+    Innovative:
+      codes:
+        A3.1:
+          summary: 追求AI的新穎且正面的应用。
+          questions: []
+      explanation: "[Chinese Simplified] translation needed"
+    Adaptable:
+      codes:
+        A4.1:
+          summary: 能彈性回應反馈與新情境，靈活地反覆调整。
+          questions: []
+      explanation: "[Chinese Simplified] translation needed"
+    Empathetic:
+      codes:
+        A5.1:
+          summary: 考量AI對不同人群與环境的多元影响。
+          questions: []
+      explanation: "[Chinese Simplified] translation needed"
+metadata:
+  language: zhCN
+  version: "1.0"
+  last_updated: "2025-07-03"

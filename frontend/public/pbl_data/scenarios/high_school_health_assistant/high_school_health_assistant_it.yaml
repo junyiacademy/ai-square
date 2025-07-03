@@ -1,0 +1,201 @@
+scenario_info:
+  id: high-school-health-assistant
+  difficulty: intermediate
+  estimated_duration: 120
+  target_domains:
+    - designing_with_ai
+    - creating_with_ai
+    - managing_with_ai
+  title: Assistente Sanitario per Adolescenti con IA
+  description: Progetta un assistente sanitario alimentato dall'IA specificamente per adolescenti per promuovere scelte di vita salutari
+  prerequisites:
+    - Comprensione di base dei concetti di salute
+    - Consapevolezza delle sfide sanitarie degli adolescenti
+  learning_objectives:
+    - Identificare le sfide chiave della salute che affrontano gli adolescenti
+    - Progettare soluzioni IA centrate sull'utente per la promozione della salute
+    - Creare linee guida etiche per le applicazioni sanitarie IA
+    - Sviluppare un prototipo funzionale con test utente
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K3.1
+  skills:
+    - S1.1
+    - S2.1
+    - S3.1
+  attitudes:
+    - A2.1
+    - A2.2
+    - A3.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Health Research Specialist
+      initial_prompt: |
+        You are a health research specialist helping students understand teenage health challenges.
+        Your goal is to guide them through systematic health research and analysis.
+
+        Keep responses focused and evidence-based:
+        - If the user only greets you, ask them which health topic they want to research first
+        - If they send irrelevant content, redirect them to focus on health challenge research
+        - Help them find reliable health statistics and research sources
+        - Guide them in analyzing health trends and creating surveys
+
+        Focus on:
+        - Mental health issues (stress, anxiety, depression)
+        - Physical health (nutrition, exercise, sleep patterns)
+        - Digital wellness and social media impacts
+        - Substance use prevention
+
+        Always stay focused on the health research task and ensure information is age-appropriate.
+    title: Ricerca sulle Sfide Sanitarie
+    description: Ricerca e analizza le sfide sanitarie più urgenti che affrontano gli adolescenti oggi
+    instructions:
+      - Usa l'IA per ricercare statistiche e tendenze sulla salute degli adolescenti
+      - Identifica le 5 principali sfide sanitarie (salute mentale, nutrizione, esercizio, sonno, impatto dei social media)
+      - Analizza le soluzioni attuali e le loro limitazioni
+      - Sondaggia i coetanei sui loro problemi e bisogni di salute
+    expected_outcome: Rapporto completo sulle sfide sanitarie degli adolescenti con dati del sondaggio
+  - id: task-2
+    category: creation
+    time_limit: 35
+    assessment_focus:
+      primary:
+        - S3.1
+        - K1.2
+      secondary:
+        - A2.2
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: UX Health Design Expert
+      initial_prompt: |
+        You are a UX health design expert helping students design an AI health assistant for teenagers.
+        Your job is to guide them through user-centered design principles.
+
+        Response guidelines:
+        - If the user only greets you, ask them about which health features they want to prioritize
+        - If they send irrelevant content, redirect them to focus on AI assistant design
+        - Guide them through defining core features and conversation flows
+        - Help them create an appropriate personality for teenage users
+
+        Focus on:
+        - Designing features that address identified health challenges
+        - Creating natural, supportive conversation flows
+        - Developing a relatable, non-judgmental personality
+        - Implementing strong privacy and safety measures
+
+        Always emphasize ethical considerations and user safety in the design.
+    title: Progettazione Assistente IA
+    description: Progetta le caratteristiche e la personalità del tuo assistente sanitario adolescente IA
+    instructions:
+      - Definisci le caratteristiche principali che affrontano le sfide sanitarie identificate
+      - Progetta flussi di conversazione e interazioni utente
+      - Crea una personalità e un tono appropriati per utenti adolescenti
+      - Sviluppa misure di protezione della privacy e sicurezza
+    expected_outcome: Specifica di progettazione completa per l'assistente sanitario IA
+  - id: task-3
+    category: creation
+    time_limit: 40
+    assessment_focus:
+      primary:
+        - S2.1
+        - S3.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Chatbot Development Coach
+      initial_prompt: |
+        You are a chatbot development coach helping students build their health assistant prototype.
+        Guide them through the technical implementation process.
+
+        Response guidelines:
+        - If the user only greets you, ask them about their design and what features they want to implement first
+        - If they send irrelevant content, redirect them to focus on prototype development
+        - Help them create conversational interfaces using AI tools
+        - Guide them through implementing key health features
+
+        Focus on:
+        - Building conversation flows for different health scenarios
+        - Implementing empathetic and supportive responses
+        - Creating sample dialogues for mental health, nutrition, exercise, and sleep
+        - Testing basic functionality and user experience
+
+        Always ensure the prototype maintains a supportive, teen-friendly approach.
+    title: Sviluppo del Prototipo
+    description: Crea un prototipo funzionante del tuo assistente sanitario IA usando strumenti disponibili
+    instructions:
+      - Costruisci un'interfaccia conversazionale usando strumenti IA
+      - Implementa le caratteristiche chiave del tuo design
+      - Crea conversazioni di esempio per diversi scenari sanitari
+      - Testa il prototipo con funzionalità di base
+    expected_outcome: Prototipo funzionante che dimostra le caratteristiche principali dell'assistente sanitario
+  - id: task-4
+    category: interaction
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - K3.1
+        - A2.2
+      secondary:
+        - S2.1
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: User Testing Facilitator
+      initial_prompt: |
+        You are a user testing facilitator helping students evaluate their health assistant prototype.
+        Guide them through systematic testing and improvement processes.
+
+        Response guidelines:
+        - If the user only greets you, ask them about their prototype and testing plans
+        - If they send irrelevant content, redirect them to focus on user testing
+        - Help them design effective testing scenarios for teenage users
+        - Guide them in collecting and analyzing feedback
+
+        Focus on:
+        - Creating realistic health-related testing scenarios
+        - Facilitating feedback sessions with teenage testers
+        - Analyzing user feedback for patterns and insights
+        - Implementing improvements based on test results
+
+        Emphasize ethical testing practices and user privacy throughout the process.
+    title: Test Utente e Raffinamento
+    description: Testa il tuo prototipo con utenti reali e rifinisci basandoti sui feedback
+    instructions:
+      - Recluta 5-8 tester adolescenti per sessioni di feedback utente
+      - Progetta scenari di test che coprono diversi argomenti di salute
+      - Raccogli e analizza il feedback utente sistematicamente
+      - Implementa miglioramenti basati sui risultati dei test
+    expected_outcome: Prototipo raffinato con feedback utente documentato e miglioramenti
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - S2.1
+    - A2.1
+  min_overall_score: 80
+resources:
+  - url: https://www.cdc.gov/healthyyouth/
+    type: reference
+    name: Teen Health Research
+  - url: https://www.dialogflow.com/
+    type: tool
+    name: AI Chatbot Platforms
+metadata:
+  language: it
+  version: '1.0'
+  last_updated: '2025-07-03'

@@ -1,0 +1,83 @@
+# PBL Scenario Template
+# This template defines the structure for all PBL scenarios
+# Replace [LANGUAGE_CODE] with: en, zhTW, zhCN, es, ja, ko, fr, de, ru, it, pt, ar, id, th
+
+scenario_info:
+  id: [SCENARIO_ID]  # e.g., ai-education-design
+  title: [TITLE_IN_LANGUAGE]
+  description: [DESCRIPTION_IN_LANGUAGE]
+  difficulty: [basic|intermediate|advanced]
+  estimated_duration: [MINUTES]  # e.g., 90
+  target_domains:
+    - [DOMAIN_1]  # e.g., designing_with_ai
+    - [DOMAIN_2]  # e.g., creating_with_ai
+    - [DOMAIN_3]  # e.g., managing_with_ai
+  prerequisites:
+    - [PREREQUISITE_1]
+    - [PREREQUISITE_2]
+    - [PREREQUISITE_3]
+  learning_objectives:
+    - [OBJECTIVE_1]
+    - [OBJECTIVE_2]
+    - [OBJECTIVE_3]
+    - [OBJECTIVE_4]
+
+ksa_mapping:
+  knowledge:
+    - [K_CODE_1]  # e.g., K1.1
+    - [K_CODE_2]
+  skills:
+    - [S_CODE_1]  # e.g., S1.1
+    - [S_CODE_2]
+  attitudes:
+    - [A_CODE_1]  # e.g., A2.1
+    - [A_CODE_2]
+
+tasks:
+  - id: [TASK_ID]  # e.g., task-1
+    title: [TASK_TITLE]
+    description: [TASK_DESCRIPTION]
+    category: [analysis|creation|evaluation|implementation]
+    instructions:
+      - [INSTRUCTION_1]
+      - [INSTRUCTION_2]
+      - [INSTRUCTION_3]
+      - [INSTRUCTION_4]
+    expected_outcome: [EXPECTED_OUTCOME]
+    time_limit: [MINUTES]  # e.g., 20
+    assessment_focus:
+      primary:
+        - [PRIMARY_KSA_1]
+        - [PRIMARY_KSA_2]
+      secondary:
+        - [SECONDARY_KSA_1]
+    ai_module:
+      role: [educator|mentor|coach|expert]
+      model: gemini-2.5-flash
+      persona: [PERSONA_DESCRIPTION]
+      initial_prompt: |
+        [INITIAL_PROMPT_TEXT]
+
+completion_criteria:
+  min_tasks_completed: [NUMBER]
+  required_competencies:
+    - [COMPETENCY_1]
+    - [COMPETENCY_2]
+  min_overall_score: [SCORE]  # e.g., 75
+
+resources:
+  - name: [RESOURCE_NAME]
+    url: [RESOURCE_URL]
+    type: [guide|reference|framework|tutorial|video]
+  - name: [RESOURCE_NAME_2]
+    url: [RESOURCE_URL_2]
+    type: [TYPE]
+
+metadata:
+  language: [LANGUAGE_CODE]
+  version: "1.0"
+  last_updated: [YYYY-MM-DD]
+  tags:
+    - [TAG_1]
+    - [TAG_2]
+    - [TAG_3]

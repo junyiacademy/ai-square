@@ -1,0 +1,202 @@
+scenario_info:
+  id: high-school-digital-wellness
+  difficulty: beginner
+  estimated_duration: 75
+  target_domains:
+    - creating_with_ai
+    - managing_with_ai
+    - designing_with_ai
+  title: AI for Digital Wellness Campaign
+  description: Design an AI-powered campaign to promote healthy digital habits among your peers
+  prerequisites:
+    - Awareness of social media impacts
+    - Basic digital literacy
+  learning_objectives:
+    - Analyze digital wellness data and trends
+    - Create engaging content with AI tools
+    - Design interventions for behavior change
+    - Build a comprehensive digital wellness campaign
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S1.2
+    - S2.1
+    - S2.3
+  attitudes:
+    - A1.1
+    - A1.2
+    - A2.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Research Assistant
+      initial_prompt: |
+        You are a research assistant helping students design and analyze digital wellness surveys.
+        Guide them through:
+        - Creating effective survey questions
+        - Ensuring privacy and ethical data collection
+        - Analyzing survey results
+        - Identifying meaningful patterns
+
+        Focus on helping them understand digital wellness challenges among teens.
+    title: Digital Habits Survey
+    description: Use AI to create and analyze a survey about digital habits
+    instructions:
+      - Use AI to design survey questions about screen time, social media usage, sleep habits, and digital stress
+      - Distribute to classmates ensuring privacy and anonymity
+      - Analyze responses with AI assistance
+      - Identify key problem areas and patterns
+    expected_outcome: A comprehensive survey report with data-driven insights
+  - id: task-2
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Creative Content Coach
+      initial_prompt: |
+        You are a creative content coach helping students create digital wellness materials.
+        Assist them with:
+        - Designing visually appealing infographics
+        - Writing engaging social media content
+        - Creating compelling video scripts
+        - Developing interactive elements
+
+        Focus on positive, teen-friendly messaging that promotes healthy digital habits.
+    title: Wellness Content Creation
+    description: Create engaging digital wellness content using AI tools
+    instructions:
+      - Create infographics on healthy digital habits using AI design tools
+      - Develop social media posts with positive messaging
+      - Design video scripts for wellness tips
+      - Create interactive quizzes about digital wellness
+    expected_outcome: A portfolio of engaging digital wellness content
+  - id: task-3
+    category: interaction
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - K2.1
+        - S1.2
+      secondary:
+        - A1.2
+        - A2.1
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: UX Design Mentor
+      initial_prompt: |
+        You are a UX design mentor helping students create a wellness chatbot.
+        Guide them in:
+        - Designing user-friendly conversation flows
+        - Creating empathetic and helpful responses
+        - Building in appropriate wellness features
+        - Testing and iterating on their design
+
+        Ensure the chatbot is supportive, non-judgmental, and age-appropriate.
+    title: AI Wellness Assistant
+    description: Design an AI chatbot to help peers manage digital wellness
+    instructions:
+      - Design chatbot features for screen time reminders, mindfulness prompts, study breaks, and mood check-ins
+      - Write conversation flows that are supportive and non-judgmental
+      - Test with classmates and gather feedback
+      - Refine based on user experience
+    expected_outcome: A functional wellness chatbot prototype
+  - id: task-4
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K1.1
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Campaign Strategy Advisor
+      initial_prompt: |
+        You are a campaign strategy advisor helping students plan their digital wellness campaign launch.
+        Assist with:
+        - Creating realistic timelines
+        - Developing promotional strategies
+        - Identifying key stakeholders
+        - Setting achievable goals
+
+        Help them create a campaign that will effectively reach and engage their peers.
+    title: Campaign Launch Plan
+    description: Develop a comprehensive launch plan for your digital wellness campaign
+    instructions:
+      - Use AI to create campaign timeline and promotional materials
+      - Plan launch events and activities
+      - Identify partners like clubs and teachers
+      - Set measurable goals and success metrics
+    expected_outcome: A detailed, actionable campaign launch plan
+  - id: task-5
+    category: analysis
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K2.3
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: Data Analytics Expert
+      initial_prompt: |
+        You are a data analytics expert helping students measure campaign impact.
+        Guide them through:
+        - Collecting meaningful metrics
+        - Analyzing data for insights
+        - Creating compelling visualizations
+        - Drawing actionable conclusions
+
+        Help them demonstrate the real impact of their digital wellness campaign.
+    title: Impact Measurement
+    description: Use AI to measure and report on campaign effectiveness
+    instructions:
+      - Collect data on engagement rates, behavior changes, feedback, and wellness improvements
+      - Use AI to analyze results and identify trends
+      - Create visual reports with charts and graphs
+      - Identify lessons learned and areas for improvement
+    expected_outcome: A comprehensive impact report with actionable insights
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - S2.1
+    - K2.1
+  min_overall_score: 75
+resources:
+  - url: https://www.digitalwellnessinstitute.com/
+    type: reference
+    name: '[Simplified Chinese translation needed]'
+  - url: https://www.commonsensemedia.org/
+    type: guide
+    name: '[Simplified Chinese translation needed]'
+metadata:
+  language: zhCN
+  version: '1.0'
+  last_updated: '2025-07-03'

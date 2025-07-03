@@ -1,0 +1,151 @@
+knowledge_codes:
+  description: Die Wissensäußerungen im Rahmen umfassen Fakten, Konzepte, Ideen und Prozesse, die disziplinäres, interdisziplinäres, erkenntnistheoretisches und prozedurales Wissen widerspiegeln. Sie umreißen das technische und gesellschaftliche Verständnis, das Lernende benötigen, um mit KI-Systemen zu arbeiten und sich mit ihnen auseinanderzusetzen.
+  themes:
+    AI_Reflects_Human_Choices_and_Perspectives:
+      codes:
+        K2.1:
+          summary: Der Aufbau und die Wartung von KI-Systemen hängen davon ab, dass Menschen Algorithmen entwerfen, Daten sammeln und kennzeichnen sowie schädliche Inhalte moderieren. Diese Systeme spiegeln menschliche Entscheidungen, Annahmen und Arbeitspraktiken wider, die durch ungleiche globale Bedingungen geprägt sind.
+        K2.2:
+          summary: AI wird auf großen Datensätzen trainiert, die aus öffentlich zugänglichen Informationen, vom Benutzer generierten Inhalten, gecuraten Datenbanken und tatsächlichen Daten aus der Realität stammen, die über Sensoren, Interaktionen und digitale Systeme gesammelt wurden.
+        K2.3:
+          summary: KI-Systeme funktionieren unterschiedlich, je nach ihrem Zweck, sei es zum Erstellen, Vorhersagen, Empfehlen oder Reagieren.
+        K2.4:
+          summary: KI-Systeme funktionieren unterschiedlich, je nach ihrem Zweck, sei es zum Erstellen, Vorhersagen, Empfehlen oder Reagieren.
+        K2.5:
+          summary: Der Aufbau und die Wartung von KI-Systemen hängen davon ab, dass Menschen Algorithmen entwerfen, Daten sammeln und kennzeichnen sowie schädliche Inhalte moderieren. Diese Systeme spiegeln menschliche Entscheidungen, Annahmen und Arbeitspraktiken wider, die durch ungleiche globale Bedingungen geprägt sind.
+      explanation: |
+        KI ist nicht neutral; sie wird von den Entscheidungen derjenigen geprägt, die sie bauen. Menschen wählen Trainingsdaten aus, die möglicherweise unethisch gesammelt wurden oder ungenaue und unvollständige Darstellungen von Individuen und Perspektiven aufweisen. Sie bringen auch Urteile während der Klassifizierung dieser Trainingsdaten ein, die die Algorithmen informieren, die die Ausgaben der KI-Systeme erzeugen. Während statistische und gesellschaftliche Vorurteile unentdeckt in den Trainingsdaten existieren oder in anderen Aspekten des Trainingsprozesses verstärkt werden können, kann die Verbreitung von KI in der Entscheidungsfindung und im Alltag diese Vorurteile auf eine Weise reproduzieren, die verschiedene Gruppen von Menschen schädlich beeinflusst. Dies macht Ethik, algorithmische Fairness, Repräsentation, Erklärbarkeit und Verantwortlichkeit zu wesentlichen Elementen der KI-Kompetenz.
+    AI_Reshapes_Work_and_Human_Roles:
+      codes:
+        K3.1:
+          summary: KI-Systeme automatisieren strukturierte Aufgaben, unterstützen die Entscheidungsfindung und transformieren Branchen, was von den Menschen erfordert, dass sie sich anpassen, umschulen und ihre Fähigkeiten verbessern.
+        K3.2:
+          summary: Die Integration von KI erfordert, dass Einzelpersonen bestimmen, welche Aufgaben am besten für Maschinen geeignet sind und welche menschliches Eingreifen oder Fachwissen erfordern.
+        K3.3:
+          summary: Während KI die Analyse und Vorhersage unterstützen kann, müssen Menschen für Entscheidungen verantwortlich sein, die menschliches Urteilsvermögen und ethische Überlegungen widerspiegeln.
+      explanation: |
+        Die Auswirkungen von KI auf verschiedene Branchen betonen die Bedeutung von Anpassungsfähigkeit und lebenslangem Lernen. Während KI-Systeme die Effizienz bei vielen Arten von Aufgaben steigern können, sind diese Werkzeuge möglicherweise nicht immer die beste Wahl; Menschen müssen ihr Wissen über die Fähigkeiten von KI und ihre Fachkenntnisse verfeinern, um KI-Systeme effektiv zu verwalten. Der Erfolg in einer KI-integrierten Arbeitswelt erfordert die Entwicklung von Sprachgewandtheit in einer Vielzahl von Technologien, das Aufrechterhalten des aktuellen Stands neuer Werkzeuge und Techniken sowie die Nutzung menschlichen Urteilsvermögens bei der Entscheidungsfindung von frühester Kindheit an, sowohl in der formalen als auch in der informellen Bildung. Diese Kombination stellt sicher, dass KI die menschlichen Fähigkeiten ergänzt und die menschlichen Kapazitäten erweitert, anstatt sie zu ersetzen.
+    AIs_Capabilities_and_Limitations:
+      codes:
+        K4.1:
+          summary: KI glänzt in der Mustererkennung und Automatisierung, fehlt jedoch an Emotionen, ethischem Denken, Kontext und Originalität.
+        K4.2:
+          summary: AI wird auf großen Datensätzen trainiert, die aus öffentlich zugänglichen Informationen, vom Benutzer generierten Inhalten, gecuraten Datenbanken und tatsächlichen Daten aus der Realität stammen, die über Sensoren, Interaktionen und digitale Systeme gesammelt wurden.
+        K4.3:
+          summary: Die Fähigkeit der generativen KI, insbesondere großer Sprachmodelle (LLMs), menschenähnliche Inhalte zu erzeugen, kann es schwierig machen, zwischen Fakten und Fiktion zu unterscheiden, was das Potenzial erhöht, Fehlinformationen, Deepfakes oder manipulative Materialien zu erzeugen.
+      explanation: |
+        KI hat kein echtes Verständnis für den Kontext der realen Welt, menschliche Werte und Verhaltensweisen sowie Nuancen – selbst wenn Systeme ihre eigenen Ausgaben ändern, um auf komplexe emotionale Zustände eines Benutzers zu reagieren. Während KI-Systeme enorme Datenmengen analysieren können, sind sie anfällig für Vorurteile, Konfabulation und Missbrauch und sind auf riesige, aber begrenzte natürliche Ressourcen angewiesen. Ein Mensch muss Urteile über spezifische Kontexte fällen, die KI-Systeme nicht können, einschließlich der Frage, ob die Vorteile eines KI-Tools die Umwelt- oder Gesellschaftskosten rechtfertigen. KI-Kompetenz erfordert kritisches Denken darüber, wann, wo und wie KI angewendet werden sollte, um sicherzustellen, dass sie den menschlichen Bedürfnissen gerecht wird.
+    AIs_Role_in_Society:
+      codes:
+        K5.1:
+          summary: KI spielt eine zunehmend wichtige Rolle bei Entscheidungen, die Menschen betreffen, von Einstellungsverfahren bis hin zu Gesundheitsversorgung und Strafjustiz.
+        K5.2:
+          summary: Die Integration von KI erfordert, dass Einzelpersonen bestimmen, welche Aufgaben am besten für Maschinen geeignet sind und welche menschliches Eingreifen oder Fachwissen erfordern.
+        K5.3:
+          summary: Generative KI und große Sprachmodelle erstellen Inhalte auf der Grundlage vorhandener Materialien in den Trainingsdaten, zu denen auch urheberrechtlich geschützte Werke gehören, was Fragen zur Authentizität, Urheberschaft und Eigentum aufwirft.
+        K5.4:
+          summary: Ethisches KI-Design umfasst Fairness, Transparenz, Erklärbarkeit, Verantwortlichkeit, Respekt für die Privatsphäre und rechtliche Konformität.
+      explanation: |
+        KI-Systeme existieren nicht isoliert; ihre Nutzung spiegelt, verstärkt und formt gesellschaftliche Werte und Entscheidungen. Ohne sorgfältige Aufsicht kann die KI-gesteuerte Entscheidungsfindung Vorurteile verstärken und weitreichenden Schaden verursachen. KI-Systeme bringen Implikationen dafür mit sich, wie Lernende über Wahrheit, Urheberschaft und Eigentum in digitalen Räumen nachdenken sollten. Individuelle und systemische Leitlinien und Vorschriften können helfen, Bereiche zu behandeln, in denen KI mit grundlegenden Rechten wie Überwachung und Datenschutz in Konflikt steht. Vertrautheit mit ethischen KI-Designprinzipien hilft Lernenden, kritisch zu bewerten, wie KI-Systeme aufgebaut und eingesetzt werden. Ohne dieses Verständnis riskieren Lernende, die Ergebnisse der KI für bare Münze zu nehmen, anstatt zu fragen, wem sie nützen oder schaden. Um sicherzustellen, dass KI der Gesellschaft verantwortungsbewusst dient, müssen wir ihre Auswirkungen kontinuierlich hinterfragen und bewerten und ihre Nutzung lenken, um Risiken zu mindern.
+skill_codes:
+  description: Diese Fähigkeiten repräsentieren grundlegende menschliche Kompetenzen, die in einem KI-Kontext angewendet werden. Sie leiten Lernende bei der ethischen Nutzung von KI an und stellen sicher, dass Lernende aktiv gestalten, wie KI in ihr Leben passt.
+  themes:
+    Critical_Thinking:
+      codes:
+        S1.1:
+          summary: Bewerten Sie von KI generierte Inhalte auf Genauigkeit, Fairness und Vorurteile, um informierte und ethische Entscheidungen zu treffen.
+          questions:
+            - Wie kann ich die Genauigkeit von KI-generierten Ausgaben überprüfen und das Risiko schädlicher Vorurteile reduzieren?
+            - Woher weiß ich, ob KI relevant oder angemessen ist?
+      explanation: |
+        Die Anwendung kritischen Denkens in einem KI-Kontext beinhaltet die Überprüfung, ob die von einem KI-System bereitgestellten Informationen genau, relevant und fair sind. Da KI-Systeme überzeugende, aber falsche oder voreingenommene Inhalte generieren können, müssen Lernende aktiv daran arbeiten, potenzielle Fehlinformationen zu identifizieren und Ausgaben mit anderen Informationsquellen abzuwägen. Diese Handlungen führen zu einem größeren Bewusstsein für KIs Einfluss auf das breitere Informationssystem. Dieser Prozess deckt versteckte Voreingenommenheiten oder Lücken auf und stellt sicher, dass KI-Ausgaben ethische Entscheidungsfindung unterstützen. Durch die Entwicklung dieser Fähigkeiten üben Lernende Medienkompetenz, digitale Kompetenz und digitale Bürgerschaft aus, während sie zu kritischeren KI-Nutzern werden.
+    Creativity:
+      codes:
+        S2.1:
+          summary: Mit KI zusammenarbeiten, um originelle Ideen zu erstellen und zu verfeinern, während Fragen der Eigentumsrechte, Zuschreibung und verantwortlichen Nutzung berücksichtigt werden.
+          questions:
+            - Wie kann ich KI verantwortungsvoll nutzen, um meine kreativen Visionen zum Leben zu erwecken?
+      explanation: |
+        Kreativität beim Einsatz von KI zu üben bedeutet, mit KI-Systemen zu interagieren, um Ideen zu sammeln, zu generieren und originelle Konzepte zu verfeinern. Während Lernende KI-Systeme nutzen, um Möglichkeiten jenseits dessen zu erkunden, was sie ursprünglich vorgestellt hatten, müssen sie KIs Auswirkungen auf Originalität, Eigentumsrechte, Zuschreibung und Urheberrecht berücksichtigen. Durch kreatives und verantwortungsvolles Engagement mit KI-Systemen bleiben Lernende für die Ideen verantwortlich, die sie formen und teilen.
+    Computational_Thinking:
+      codes:
+        S3.1:
+          summary: Probleme zerlegen und Anweisungen bereitstellen, die es KI-Systemen ermöglichen, effektiv zu Lösungen beizutragen.
+          questions:
+            - Wie formuliere ich mein Problem so, dass KI bei der Lösung helfen kann?
+      explanation: |
+        Computational-Thinking-Fähigkeiten helfen dabei, Probleme auf eine Weise anzugehen und zu rahmen, die die Fähigkeiten der KI nutzt und ihre Grenzen berücksichtigt. Dies beinhaltet das Zerlegen oder Aufteilen komplexer Probleme in strukturierte Komponenten und die Kommunikation von Zielen und Einschränkungen auf eine Weise, die KI-Systeme effektiv verarbeiten können (z.B. Prompt-Engineering). Durch die Bereitstellung von Anwendungsfällen, Gegenbeispielen und erwarteten Ergebnissen an KI-Systeme verfeinern Lernende ihre eigenen Kommunikationsfähigkeiten, beschäftigen sich mit metakognitiven Strategien und machen Fortschritte in Richtung ihrer Ziele.
+    Collaboration:
+      codes:
+        S4.1:
+          summary: Effektiv mit KI und Menschen arbeiten, indem man klar kommuniziert, Feedback gibt und geteilte Aufgaben bewältigt.
+          questions:
+            - Wie kann ich transparent und ethisch mit KI zusammenarbeiten, um ein Ziel zu erreichen?
+      explanation: |
+        Die Zusammenarbeit mit KI beruht auf positiven und produktiven Interaktionen zwischen Menschen und KI-Systemen. Dies erfordert die Fähigkeit, sowohl Feedback zu geben als auch um Hilfe zu bitten, sowohl in der digitalen Welt als auch außerhalb. Während Lernende mit KI-Systemen zusammenarbeiten, zeigen sie Handlungsfähigkeit zusammen mit Metakognition. Durch taktvolle Zusammenarbeit, Bewertung von Stärken im Kontext und Verfeinerung von Beziehungsaufbau-Fähigkeiten entwickeln Lernende die Fähigkeit, neue und komplexe Situationen zu bewältigen.
+    Problem_Solving:
+      codes:
+        S5.1:
+          summary: Bestimmen, wann und wie KI für eine Aufgabe eingesetzt werden soll, indem ihre Fähigkeiten, Risiken und ethischen Implikationen bewertet werden.
+          questions:
+            - Wie wähle ich den richtigen Werkzeugtyp für die anstehende Aufgabe aus?
+      explanation: |
+        Die Verwendung von KI zur Lösung eines Problems beginnt mit einer durchdachten Reflexion über die anstehende Aufgabe und umfasst eine gründliche Überlegung, ob die Fähigkeiten der KI den technischen und ethischen Anforderungen der Aufgabe entsprechen. Dazu könnten Lernende spezifische KI-Systeme auf Zuverlässigkeit und das Potenzial zur Reproduktion schädlicher Vorurteile testen. Lernende lösen Probleme mit KI, wenn sie sich fragen, wie KI-Systeme Mehrwert schaffen könnten, wo menschliches Urteilsvermögen ins Spiel kommen sollte und wann KI-Nutzung ganz vermieden werden sollte.
+    Self_and_Social_Awareness:
+      codes:
+        S6.1:
+          summary: Erkennen, wie KI persönliche Entscheidungen, Beziehungen und Gemeinschaften beeinflusst, und über ihre breiteren gesellschaftlichen und umweltbezogenen Auswirkungen reflektieren.
+          questions:
+            - Wie wirkt sich KI auf mich und andere aus?
+      explanation: |
+        Selbst- und soziales Bewusstsein sind entscheidend bei der Interaktion mit KI. Diese Fähigkeit beginnt mit der Erkennung der Präsenz von KI im täglichen Leben und dem Verständnis, wie sie Entscheidungen sowohl in der digitalen als auch in der physischen Welt beeinflusst. Dies geht über die bloße Identifikation hinaus und bezieht sich auf die durchdachte Betrachtung der breiteren Auswirkungen von KI auf Individuen, Gemeinschaften und die Umwelt. Lernende könnten sich auch metakognitiv mit den Auswirkungen von KI auf ihre eigenen Verhaltensweisen, Gedanken und Lernprozesse auseinandersetzen. Durch die Erkennung des Einflusses von KI sind Lernende besser gerüstet, KI-generierte Inhalte zu bewerten und zu überwachen, wie diese Technologien ihre Gedanken und Verhaltensweisen im Laufe der Zeit beeinflussen.
+    Communication:
+      codes:
+        S7.1:
+          summary: Erklären, wie KI auf eine Weise verwendet wird, die Transparenz fördert, Anthropomorphismus vermeidet und verantwortlichen Gebrauch ermutigt.
+          questions:
+            - Wie beschreibe ich KI-Nutzung für mich selbst und andere?
+      explanation: |
+        Die Kommunikation über KI beinhaltet die Erklärung, wann und wie KI-Systeme verwendet werden, einschließlich wie sie Inhalte geformt oder zu Entscheidungen beigetragen haben können, die andere beeinflussen. Diese Fähigkeit betont, dass KI-kompetente Lernende die Verantwortung haben, genau zu beschreiben, wie KI funktioniert, ohne ihre Fähigkeiten falsch zu charakterisieren oder menschliche Eigenschaften zuzuschreiben. Wenn Lernende ihre Worte wählen, um Transparenz und verantwortlichen Gebrauch von KI-Systemen zu fördern, wahren sie ethische Praktiken und ermutigen zu informierten Gesprächen über KIs Auswirkungen.
+attitude_codes:
+  description: Diese Einstellungen repräsentieren die Werte und Dispositionen, die ethisches und verantwortliches Engagement mit KI leiten.
+  themes:
+    Responsible:
+      codes:
+        A1.1:
+          summary: Sei verantwortlich; strebe danach, Schäden durch die Nutzung von KI zu verhindern.
+          questions: []
+      explanation: |
+        Lernende denken sorgfältig darüber nach, wie sie KI verwenden, und sind für ihre Entscheidungen verantwortlich. Sie berücksichtigen sowohl die beabsichtigten als auch die potenziell unbeabsichtigten Auswirkungen ihrer Handlungen und sind verpflichtet, Schäden für andere zu verhindern. Sie glauben, dass jeder das Recht hat zu verstehen, wie KI sie beeinflusst, und informierte Entscheidungen über ihre Nutzung zu treffen.
+    Curious:
+      codes:
+        A2.1:
+          summary: Erkunde KI-Fähigkeiten und -Grenzen mit Offenheit.
+          questions: []
+      explanation: |
+        Lernende sind begierig darauf zu erkunden, was KI heute kann und wie sie sich in der Zukunft entwickeln könnte. Sie wollen verstehen, wie KI ihr persönliches Leben und ihre zukünftigen Karrieren beeinflusst. Sie betrachten Lernen als einen fortlaufenden Prozess und experimentieren gerne, glaubend, dass bedeutungsvolle Entdeckungen durch Erkundung geschehen.
+    Innovative:
+      codes:
+        A3.1:
+          summary: Verfolge neuartige, positive Anwendungen von KI.
+          questions: []
+      explanation: |
+        Lernende streben danach, KI zu nutzen, um reale Herausforderungen anzugehen und neue Möglichkeiten zu ergreifen. Sie experimentieren, probieren verschiedene Ansätze aus und denken kreativ, um ein Problem zu lösen. Sie glauben, dass KI ein mächtiges Werkzeug sein kann, um positive Veränderungen in ihrem eigenen Leben und dem Leben anderer zu schaffen.
+    Adaptable:
+      codes:
+        A4.1:
+          summary: Iteriere flexibel mit Feedback und neuen Kontexten.
+          questions: []
+      explanation: |
+        Lernende zeigen Ausdauer und Flexibilität beim Arbeiten mit KI. Sie sind offen für vielfältige Ideen, Perspektiven und Ansätze. Sie verstehen, dass die Zusammenarbeit mit KI ein iterativer Prozess ist, der durch Feedback und Überarbeitung geprägt wird.
+    Empathetic:
+      codes:
+        A5.1:
+          summary: Berücksichtige vielfältige menschliche und umweltbezogene Auswirkungen.
+          questions: []
+      explanation: |
+        Lernende untersuchen sorgfältig, wie KI Individuen, Gemeinschaften und die Umwelt beeinflusst. Sie wägen sowohl die Vorteile als auch die potenziellen Risiken der KI-Nutzung ab und verstehen, dass ihre Auswirkungen für verschiedene Personengruppen unterschiedlich sein können.
+metadata:
+  language: de
+  version: "1.0"
+  last_updated: "2025-07-03"

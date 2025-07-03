@@ -1,0 +1,172 @@
+assessment_config:
+  total_questions: 12
+  time_limit_minutes: 15
+  passing_score: 60
+  domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - managing_with_ai
+    - designing_with_ai
+domains:
+  engaging_with_ai:
+    description: AIシステムを理解し、効果的にコミュニケーションを取る
+    questions: 3
+  creating_with_ai:
+    description: AIツールを使用して創造性と生産性を向上させる
+    questions: 3
+  managing_with_ai:
+    description: AIの制限、プライバシー、倫理的考慮事項を理解する
+    questions: 3
+  designing_with_ai:
+    description: AIの実装とイノベーションに関する戦略的思考
+    questions: 3
+questions:
+  - id: E001
+    domain: engaging_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: AI チャットボットからより良い結果を得る最も効果的な方法は何ですか？
+    options:
+      a: 非常に一般的な質問をする
+      b: 文脈を含む明確で具体的なプロンプトを提供する
+      c: はい/いいえの質問のみを使用する
+      d: 常に一度に複数の質問をする
+    explanation: 文脈を含む明確で具体的なプロンプトは、AI があなたのニーズを正確に理解し、より正確で有用な応答を提供するのに役立ちます。
+  - id: E002
+    domain: engaging_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: AI が間違った回答をした場合、最初にすべきことは何ですか？
+    options:
+      a: すぐに AI を信頼して情報を使用する
+      b: 他の信頼できる情報源を通じて情報を検証する
+      c: AI の使用を完全にやめる
+      d: AI を故障として報告する
+    explanation: 批判的思考には、AI が間違いを犯したり古い情報を提供したりする可能性があるため、信頼できる情報源に対して AI の出力を検証する必要があります。
+  - id: E003
+    domain: engaging_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: AI が生成したコンテンツのバイアスを評価する際の最も重要な要因は何ですか？
+    options:
+      a: 生成速度
+      b: 訓練データのソースと代表性
+      c: 出力の長さ
+      d: 技術的複雑性
+    explanation: AI のバイアスは、多様性が不足していたり歴史的バイアスを含んでいたりする訓練データから生じることが多く、データソースが評価において重要となります。
+  - id: C001
+    domain: creating_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: 創造的な文章作成で AI を使用する際、最も効果的なアプローチは何ですか？
+    options:
+      a: 人間の入力なしで AI にすべてを書かせる
+      b: ブレインストーミングと洗練のための協力パートナーとして AI を使用する
+      c: 文法とスペルの修正にのみ AI を使用する
+      d: クリエイティブプロセスで AI を完全に避ける
+    explanation: AI はクリエイティブパートナーとして最もよく機能し、人間の創造性と監督を維持しながら、アイデア出し、フィードバック、洗練を支援します。
+  - id: C002
+    domain: creating_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: AI 画像生成ツールを使用する際、最も重要な倫理的考慮事項は何ですか？
+    options:
+      a: 画像をできるだけリアルにする
+      b: 著作権を尊重し、実在の人物のディープフェイクを避ける
+      c: 最速の生成設定を使用する
+      d: できるだけ多くの画像を作成する
+    explanation: 知的財産権を尊重し、無許可の肖像や誤解を招くコンテンツの作成のための誤用を避けることは、倫理的な AI 使用に不可欠です。
+  - id: C003
+    domain: creating_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: 重要なソフトウェアプロジェクトで AI 支援コード生成にどのようにアプローチすべきですか？
+    options:
+      a: '[JA: Use AI code directly without review]'
+      b: '[JA: Thoroughly review, test, and validate all AI-generated code]'
+      c: '[JA: Only use AI for comments and documentation]'
+      d: '[JA: Replace all developers with AI tools]'
+    explanation: '[JA translation needed]'
+  - id: M001
+    domain: managing_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: AI ツールを使用する際、機密の個人情報をどのように扱うべきですか？
+    options:
+      a: '[JA: Share it freely to get better AI responses]'
+      b: '[JA: Never input sensitive information into AI systems]'
+      c: '[JA: Only share it with trusted AI companies]'
+      d: '[JA: Encrypt it before sharing with AI]'
+    explanation: '[JA translation needed]'
+  - id: M002
+    domain: managing_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: チーム環境で AI ツールの使用をどのように管理すべきですか？
+    options:
+      a: '[JA: Let everyone use any AI tool without guidelines]'
+      b: '[JA: Establish clear policies and training for AI tool usage]'
+      c: '[JA: Ban all AI tools to avoid risks]'
+      d: '[JA: Only allow managers to use AI tools]'
+    explanation: '[JA translation needed]'
+  - id: M003
+    domain: managing_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: ビジネスプロセスに AI を実装する際の最も重要な要因は何ですか？
+    options:
+      a: '[JA: Choosing the most advanced AI technology]'
+      b: '[JA: Understanding limitations and maintaining human oversight]'
+      c: '[JA: Implementing AI as quickly as possible]'
+      d: '[JA: Replacing as many human workers as possible]'
+    explanation: '[JA translation needed]'
+  - id: D001
+    domain: designing_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: ユーザー向けの AI 機能を設計する際、主な焦点は何であるべきですか？
+    options:
+      a: '[JA: Showcasing the most advanced AI capabilities]'
+      b: '[JA: Solving real user problems and improving user experience]'
+      c: '[JA: Making the AI as complex as possible]'
+      d: '[JA: Hiding the fact that AI is being used]'
+    explanation: '[JA translation needed]'
+  - id: D002
+    domain: designing_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: ユーザー向けアプリケーションで AI システムの障害をどのように処理すべきですか？
+    options:
+      a: '[JA: Hide errors and pretend everything is working]'
+      b: '[JA: Design graceful fallbacks and clear error communication]'
+      c: '[JA: Immediately shut down the entire application]'
+      d: '[JA: Blame the user for the error]'
+    explanation: '[JA translation needed]'
+  - id: D003
+    domain: designing_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: 多様なグローバルオーディエンス向けの AI システムを設計する際の最も重要な考慮事項は何ですか？
+    options:
+      a: '[JA: Using the same design for everyone to ensure consistency]'
+      b: '[JA: Understanding cultural contexts and avoiding algorithmic bias]'
+      c: '[JA: Focusing only on the largest market segments]'
+      d: '[JA: Implementing the latest AI technologies everywhere]'
+    explanation: '[JA translation needed]'
+metadata:
+  language: ja
+  language_name: Japanese
+  generated_from: ai_literacy_questions.yaml
+  generated_at: '2025-07-03T10:07:41.110Z'

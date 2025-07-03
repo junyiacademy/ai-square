@@ -1,0 +1,174 @@
+scenario_info:
+  id: high-school-climate-change
+  difficulty: beginner
+  estimated_duration: 60
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - managing_with_ai
+  title: Plan d'Action Climatique avec IA
+  description: Utilisez l'IA pour analyser les données climatiques et créer des solutions réalisables
+  prerequisites:
+    - Compréhension de base du changement climatique
+    - Intérêt pour les questions environnementales
+  learning_objectives:
+    - Analyser les données environnementales avec des outils IA
+    - Créer des visualisations de données pour communiquer les résultats
+    - Développer des propositions pratiques d'action climatique
+    - Renforcer la confiance dans l'utilisation de l'IA pour la défense de l'environnement
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S1.2
+    - S2.1
+    - S2.3
+  attitudes:
+    - A1.1
+    - A1.2
+    - A2.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Climate Research Assistant
+      initial_prompt: |
+        You are a climate research assistant helping students explore climate data.
+        Your goal is to guide them through data collection and analysis tasks.
+
+        Keep responses focused and educational:
+        - Help them find reliable climate data sources
+        - Guide them in organizing and analyzing data
+        - Explain climate concepts in age-appropriate language
+        - Encourage critical thinking about climate impacts
+
+        Always redirect off-topic conversations back to the climate research task.
+    title: Collecte de Données Climatiques
+    description: Utilisez l'IA pour collecter et organiser les données climatiques de votre région
+    instructions:
+      - Utilisez l'IA pour trouver des sources fiables de données climatiques
+      - Collectez des données sur les tendances de température, les précipitations, la qualité de l'air et la consommation d'énergie
+      - Organisez les données dans des feuilles de calcul
+      - Identifiez les modèles et tendances clés
+    expected_outcome: Une collecte complète de données climatiques pour votre région
+  - id: task-2
+    category: analysis
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - K2.3
+        - S2.3
+      secondary:
+        - A1.2
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: Data Analysis Expert
+      initial_prompt: |
+        You are a data analysis expert helping students analyze climate data.
+        Guide them through:
+        - Pattern recognition in climate data
+        - Creating meaningful visualizations
+        - Making evidence-based predictions
+        - Drawing actionable conclusions
+
+        Encourage critical thinking and help them understand the implications of their findings.
+    title: Analyse de Données avec IA
+    description: Utilisez des outils IA pour analyser les données climatiques et identifier des insights actionnables
+    instructions:
+      - Utilisez l'IA pour identifier les modèles et corrélations dans les données climatiques
+      - Créez des visualisations montrant les changements de température, les variations saisonnières et les impacts humains
+      - Générez des prédictions pour les tendances futures
+      - Identifiez les domaines nécessitant une intervention
+    expected_outcome: Analyse complète avec des insights clairs et des prédictions
+  - id: task-3
+    category: creation
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Sustainability Solutions Coach
+      initial_prompt: |
+        You are a sustainability solutions coach helping students design climate action plans.
+        Guide them to:
+        - Generate creative yet practical solutions
+        - Consider feasibility and resource requirements
+        - Calculate environmental impacts
+        - Think about stakeholder engagement
+
+        Focus on solutions that students can realistically implement in their school.
+    title: Conception de Solutions
+    description: Créez des solutions climatiques pratiques pour votre école avec l'aide de l'IA
+    instructions:
+      - Brainstormez avec l'IA sur la conservation d'énergie, la réduction des déchets, les espaces verts et le transport
+      - Évaluez la faisabilité et l'impact de chaque solution
+      - Créez des plans de mise en œuvre détaillés
+      - Calculez les économies de carbone potentielles
+    expected_outcome: Un portefeuille de solutions climatiques pratiques et réalisables
+  - id: task-4
+    category: interaction
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S1.2
+        - K1.2
+      secondary:
+        - A1.1
+        - A2.1
+    ai_module:
+      role: actor
+      model: gemini-2.5-flash
+      persona: Presentation Coach
+      initial_prompt: |
+        You are a presentation coach helping students prepare their climate action plan presentation.
+        Assist them with:
+        - Creating clear, compelling narratives
+        - Designing effective visual aids
+        - Anticipating and preparing for questions
+        - Building confidence in public speaking
+
+        Help them create a presentation that will inspire action from school administrators and peers.
+    title: Présentation du Plan d'Action
+    description: Créez une présentation convaincante en utilisant l'IA pour proposer votre plan d'action climatique
+    instructions:
+      - Utilisez l'IA pour structurer votre présentation efficacement
+      - Incluez l'énoncé du problème avec données, solutions proposées, calendrier de mise en œuvre et résultats attendus
+      - Générez des visuels et infographies convaincants
+      - Préparez-vous aux questions avec l'aide de l'IA
+    expected_outcome: Une présentation professionnelle et persuasive prête pour les parties prenantes
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - K1.1
+    - S2.1
+  min_overall_score: 70
+resources:
+  - url: https://climatekids.nasa.gov/
+    type: reference
+    name: NASA Climate Kids
+  - url: https://www.climate.ai/
+    type: tool
+    name: AI Climate Tools Guide
+metadata:
+  language: fr
+  version: '1.0'
+  last_updated: '2025-07-03'

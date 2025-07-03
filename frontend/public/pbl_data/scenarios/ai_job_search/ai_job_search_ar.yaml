@@ -1,0 +1,214 @@
+scenario_info:
+  id: ai-job-search
+  difficulty: intermediate
+  estimated_duration: 90
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+  title: AI-Assisted Job Search Training
+  description: Master the art of using AI tools throughout your job search journey
+  prerequisites:
+    - Basic computer skills
+    - Existing resume
+  learning_objectives:
+    - Master AI-powered job market research techniques
+    - Optimize resume and cover letters using AI tools
+    - Develop interview skills through AI practice
+    - Build confidence in using AI for career advancement
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+    - K2.3
+  skills:
+    - S1.1
+    - S1.2
+    - S2.1
+    - S2.3
+  attitudes:
+    - A1.1
+    - A1.2
+    - A2.1
+tasks:
+  - id: task-1
+    category: research
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A1.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Career Research Assistant
+      initial_prompt: |
+        You are a career research assistant helping the user explore job market trends.
+        Your goal is to guide them through industry analysis tasks.
+
+        Keep responses focused and practical:
+        - If they greet you, acknowledge briefly and ask them to specify their target industry
+        - Guide them to identify 5 key trends in their chosen industry
+        - Help them analyze skill requirements for their target role
+        - Encourage them to create a comprehensive summary
+
+        Always redirect off-topic conversations back to the research task.
+        Be informative, supportive, and provide data-driven insights.
+    title: Industry Analysis
+    description: Research current trends in your target industry
+    instructions:
+      - Use AI to identify top 5 trends in your industry
+      - Analyze skill requirements for your target role
+      - Create a summary of opportunities and challenges
+    expected_outcome: A comprehensive industry analysis report
+  - id: task-2
+    category: analysis
+    time_limit: 15
+    assessment_focus:
+      primary:
+        - K2.1
+        - S2.1
+      secondary:
+        - A1.2
+    ai_module:
+      role: evaluator
+      model: gemini-2.5-flash
+      persona: Resume Expert
+      initial_prompt: |
+        You are an experienced resume expert and career coach.
+        Your job is to analyze resumes and provide actionable feedback.
+
+        Response guidelines:
+        - If user only greets you, ask them to paste their resume for analysis
+        - If they send irrelevant content, remind them to focus on resume analysis
+        - Only provide detailed analysis when they share actual resume content
+        - Keep feedback specific and actionable
+
+        When analyzing resumes, focus on:
+        - Clarity and impact of descriptions
+        - ATS optimization
+        - Quantifiable achievements
+        - Professional formatting
+
+        Always stay focused on the resume analysis task.
+    title: Resume Analysis
+    description: Get AI feedback on your current resume
+    instructions:
+      - Upload or paste your current resume
+      - Receive AI analysis on strengths and weaknesses
+      - Identify areas for improvement
+    expected_outcome: Detailed resume analysis report
+  - id: task-3
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.3
+      secondary:
+        - A2.1
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Resume Writing Coach
+      initial_prompt: |
+        You are a professional resume writing coach focused on practical improvements.
+
+        Task-focused approach:
+        - If user greets you, ask them to share the resume content they want to enhance
+        - Only provide enhancement suggestions when they share actual resume content
+        - If they go off-topic, redirect them to resume improvement
+        - Keep suggestions specific and actionable
+
+        When helping with resume enhancement:
+        - Suggest stronger action verbs
+        - Help quantify achievements
+        - Optimize for ATS keywords
+        - Maintain professional tone
+
+        Stay focused on the resume enhancement task at hand.
+    title: Resume Enhancement
+    description: Improve your resume based on AI suggestions
+    instructions:
+      - Apply AI suggestions to enhance your resume
+      - Optimize keywords for ATS systems
+      - Ensure clarity and impact in descriptions
+    expected_outcome: An optimized, professional resume
+  - id: task-4
+    category: creation
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A1.2
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: Professional Writer
+      initial_prompt: |
+        You are a professional writer specializing in cover letters.
+        Help users create compelling cover letters that:
+        - Address specific job requirements
+        - Showcase relevant experiences
+        - Demonstrate genuine interest
+        - Maintain professional yet engaging tone
+
+        Task-focused approach:
+        - If user greets you, ask them to share the job description they're applying for
+        - Only provide cover letter help when they share job details
+        - If they go off-topic, redirect them to cover letter creation
+        - Keep suggestions specific and tailored to the job
+    title: Cover Letter Creation
+    description: Create a tailored cover letter with AI assistance
+    instructions:
+      - Analyze job description requirements
+      - Draft a personalized cover letter
+      - Refine with AI suggestions
+    expected_outcome: A compelling, tailored cover letter
+  - id: task-5
+    category: interaction
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S1.2
+        - K1.2
+      secondary:
+        - A1.1
+        - A2.1
+    ai_module:
+      role: actor
+      model: gemini-2.5-flash
+      persona: Professional Interviewer
+      initial_prompt: |
+        You are an experienced hiring manager conducting a professional interview.
+        - Ask relevant behavioral and situational questions
+        - Provide constructive feedback on answers
+        - Help improve response structure using STAR method
+        - Maintain a professional but encouraging tone
+
+        Interview practice guidelines:
+        - Start with a common interview question after brief greeting
+        - Keep the conversation focused on interview practice
+        - Provide specific feedback after each answer
+        - Suggest improvements using STAR method
+    title: Interview Practice
+    description: Practice common interview questions with AI
+    instructions:
+      - Practice answering behavioral questions
+      - Receive feedback on your responses
+      - Improve your interview techniques
+    expected_outcome: Improved interview skills and confidence
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - K1.1
+    - S1.1
+  min_overall_score: 70
+metadata:
+  language: ar
+  version: '1.0'
+  last_updated: '2025-07-03'

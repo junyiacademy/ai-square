@@ -1,0 +1,322 @@
+domains:
+  Engaging_with_AI:
+    emoji: 🎯
+    overview: Umfasst die Nutzung von KI als Werkzeug zum Zugriff auf neue Inhalte, Informationen oder Empfehlungen. Diese Situationen erfordern, dass Lernende zunächst die Präsenz von KI erkennen und dann die Genauigkeit und Relevanz der KI-Ausgaben bewerten. Die Lernenden müssen ein grundlegendes Verständnis der technischen Grundlagen von KI entwickeln, um deren Fähigkeiten und Grenzen kritisch analysieren zu können.
+    competencies:
+      E1:
+        description: Die Rolle und Auswirkungen von KI in verschiedenen Kontexten identifizieren.
+        knowledge:
+          - K1.4
+          - K5.1
+        skills:
+          - S6.1
+        attitudes:
+          - A2.1
+          - A1.1
+        content: Die Lernenden erkennen die Präsenz von KI in alltäglichen Werkzeugen und Systemen und reflektieren über deren Zweck in verschiedenen Situationen wie Inhaltsempfehlungen oder adaptivem Lernen. Sie überlegen, wie KI ihre Entscheidungen, ihr Lernen und ihre Wahrnehmung beeinflusst.
+        scenarios:
+          - Bekannte digitale Interaktionen (z.B. Webcam-Nutzung, Videoempfehlungen) auflisten und diskutieren, ob und wie KI in jeder Interaktion verwendet wird.
+          - Erforschen, wie Online-Mathematikplattformen Echtzeitdaten nutzen, um Inhalte unterschiedlicher Schwierigkeitsgrade zu präsentieren.
+      E2:
+        description: Die Genauigkeit und Relevanz von KI-Ausgaben analysieren.
+        knowledge:
+          - K1.1
+          - K1.3
+          - K4.1
+        skills:
+          - S1.1
+        attitudes:
+          - A1.1
+          - A2.1
+        content: Die Lernenden bewerten, ob KI-generierte Inhalte genau, relevant und anwendbar sind. Sie lernen, die Stärken und Grenzen von KI zu erkennen und multiple Informationsquellen bei der Entscheidungsfindung zu berücksichtigen.
+        scenarios:
+          - KI-generierte Nachrichtenzusammenfassungen mit Originalartikeln vergleichen und Genauigkeit sowie Verzerrungen identifizieren.
+          - Die Qualität von KI-Sprachübersetzungen bewerten und dabei kulturelle Kontexte und semantische Nuancen berücksichtigen.
+      E3:
+        description: Die Fähigkeiten und Grenzen von KI-Systemen erkennen.
+        knowledge:
+          - K1.2
+          - K1.3
+          - K4.1
+        skills:
+          - S1.1
+        attitudes:
+          - A2.1
+        content: Die Lernenden verstehen die technischen Fähigkeiten und Grenzen von KI-Systemen, einschließlich ihrer unterschiedlichen Leistung bei verschiedenen Aufgaben. Sie lernen zu unterscheiden, in welchen Bereichen KI hervorragend ist und wo menschliches Urteilsvermögen erforderlich ist.
+        scenarios:
+          - Die Leistung von KI-Chatbots bei verschiedenen Fragetypen testen und ihre Unterschiede bei faktischen versus kreativen Fragen vergleichen.
+          - Die Genauigkeit von KI-Bilderkennungssystemen unter verschiedenen Bedingungen analysieren.
+      E4:
+        description: Die Angemessenheit und ethischen Auswirkungen der KI-Nutzung bewerten.
+        knowledge:
+          - K5.4
+          - K2.1
+        skills:
+          - S5.1
+          - S6.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Die Lernenden überlegen, ob die Verwendung von KI in bestimmten Situationen angemessen, vorteilhaft oder potenziell schädlich ist. Sie bewerten die ethischen Auswirkungen der KI-Nutzung, einschließlich Datenschutz-, Verzerrrungs- und Fairnessfragen.
+        scenarios:
+          - Die ethischen Auswirkungen der Verwendung von KI zur Lebenslaufprüfung im Einstellungsprozess diskutieren.
+          - Analysieren, wie KI-Empfehlungssysteme die Entscheidungen und Ansichten der Nutzer beeinflussen können.
+      E5:
+        description: Verantwortungsvolles Verhalten bei der Nutzung von KI praktizieren.
+        knowledge:
+          - K5.4
+          - K2.1
+        skills:
+          - S7.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Die Lernenden zeigen verantwortungsvolles und ethisches Verhalten bei der Interaktion mit KI-Systemen. Sie berücksichtigen die Auswirkungen ihrer Handlungen und befolgen bewährte Praktiken bei der Nutzung von KI.
+        scenarios:
+          - Richtlinien für die Nutzung von KI-Werkzeugen bei akademischen Arbeiten entwickeln.
+          - Strategien zur Überprüfung der Genauigkeit KI-generierter Informationen entwerfen, bevor diese mit anderen geteilt werden.
+
+  Creating_with_AI:
+    emoji: 🎨
+    overview: Umfasst die Zusammenarbeit mit KI-Systemen zur Generierung neuer Inhalte, Ideen oder Lösungen. Diese Situationen erfordern, dass Lernende die Fähigkeiten von KI als kreativen Partner verstehen und gleichzeitig den Respekt für menschliche Kreativität, Originalität und geistiges Eigentum wahren.
+    competencies:
+      C1:
+        description: KI-Werkzeuge zur Steigerung von Kreativität und Produktivität nutzen.
+        knowledge:
+          - K1.4
+          - K5.3
+        skills:
+          - S2.1
+          - S3.1
+        attitudes:
+          - A3.1
+          - A4.1
+        content: Die Lernenden nutzen KI-Werkzeuge zur Verbesserung ihrer kreativen Arbeit wie Schreiben, Design oder Problemlösung. Sie lernen, effektiv mit KI zusammenzuarbeiten und dabei ihre eigene kreative Vision und Kontrolle zu behalten.
+        scenarios:
+          - Einen KI-Schreibassistenten verwenden, um die Struktur eines Aufsatzes zu verbessern und dabei die eigenen Ansichten und Argumente beizubehalten.
+          - Mit einem KI-Kunstgenerator zusammenarbeiten, um visuelle Werke zu schaffen und verschiedene Stile und Konzepte zu erkunden.
+      C2:
+        description: Originalität und Authentizität im KI-unterstützten Schaffensprozess bewahren.
+        knowledge:
+          - K5.3
+          - K2.1
+        skills:
+          - S2.1
+          - S7.1
+        attitudes:
+          - A1.1
+          - A3.1
+        content: Die Lernenden verstehen, wie sie ihre Originalität und persönliche Stimme bewahren können, während sie KI-Werkzeuge nutzen. Sie lernen zwischen KI-unterstützter Kreation und vollständiger Abhängigkeit von KI-generierten Inhalten zu unterscheiden.
+        scenarios:
+          - Ein Projekt erstellen, das klar kennzeichnet, welche Teile KI-unterstützt und welche original sind.
+          - Die angemessene Zuordnung von KI-generierten Inhalten in akademischen und geschäftlichen Umgebungen diskutieren.
+      C3:
+        description: Urheberrechts- und Eigentumsrechtsfragen bei KI-Kreationen verstehen.
+        knowledge:
+          - K5.3
+          - K2.1
+        skills:
+          - S1.1
+          - S7.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Die Lernenden verstehen die Auswirkungen von KI-generierten Inhalten auf Urheberrecht und geistiges Eigentum. Sie lernen, KI-Kreativwerkzeuge verantwortungsvoll zu nutzen und die damit verbundenen rechtlichen und ethischen Fragen zu verstehen.
+        scenarios:
+          - Die Nutzungsbedingungen und Urheberrechtsrichtlinien verschiedener KI-Plattformen recherchieren.
+          - Einen Leitfaden für bewährte Praktiken zur Nutzung KI-generierter Inhalte erstellen.
+      C4:
+        description: KI-generierte Inhalte bewerten und verbessern.
+        knowledge:
+          - K1.3
+          - K4.1
+        skills:
+          - S1.1
+          - S2.1
+        attitudes:
+          - A2.1
+          - A4.1
+        content: Die Lernenden lernen, die Qualität KI-generierter Inhalte zu bewerten und durch iterative Prozesse zu verbessern. Sie entwickeln kritisches Denkvermögen, um Probleme in KI-Ausgaben zu erkennen und zu beheben.
+        scenarios:
+          - Eine KI-generierte Geschichte oder einen Artikel durch mehrere Iterationen verbessern.
+          - KI-generierten Code bewerten und notwendige Änderungen und Optimierungen vornehmen.
+      C5:
+        description: KI-Unterstützung und menschliches Urteilsvermögen im Schaffensprozess ausbalancieren.
+        knowledge:
+          - K3.2
+          - K4.1
+        skills:
+          - S2.1
+          - S5.1
+        attitudes:
+          - A4.1
+          - A5.1
+        content: Die Lernenden lernen, KI-Werkzeuge und menschliches Urteilsvermögen im kreativen Prozess angemessen zu kombinieren. Sie verstehen, wann sie sich auf KI verlassen können und wann menschliche Kreativität und Urteilskraft erforderlich sind.
+        scenarios:
+          - Einen kreativen Workflow entwerfen, der die Rollen von KI und Menschen in verschiedenen Phasen klar definiert.
+          - Verschiedene Arten kreativer Aufgaben analysieren und den angemessenen Grad der KI-Unterstützung bestimmen.
+
+  Managing_with_AI:
+    emoji: 📊
+    overview: Umfasst den strategischen Einsatz von KI bei Organisations- und Verwaltungsaufgaben. Diese Situationen erfordern, dass Lernende verstehen, wie KI Arbeitsabläufe, Entscheidungsprozesse und Organisationsstrukturen verändert, während sie die Bedeutung menschlicher Aufsicht und Verantwortung berücksichtigen.
+    competencies:
+      M1:
+        description: Möglichkeiten zur Integration von KI in Arbeitsabläufe bewerten.
+        knowledge:
+          - K3.1
+          - K3.2
+        skills:
+          - S5.1
+          - S3.1
+        attitudes:
+          - A3.1
+          - A4.1
+        content: Die Lernenden identifizieren Bereiche in Organisationen, in denen KI effektiv integriert werden kann, und bewerten potenzielle Vorteile und Risiken. Sie lernen, bestehende Arbeitsabläufe zu analysieren und festzustellen, wo KI einen Mehrwert schaffen kann.
+        scenarios:
+          - Ein Schulverwaltungssystem analysieren und Prozesse identifizieren, die durch KI automatisiert oder verbessert werden können.
+          - Die Machbarkeit und Auswirkungen des Einsatzes von KI-Chatbots im Kundenservice bewerten.
+      M2:
+        description: Menschliche Aufsicht in KI-unterstützten Entscheidungsprozessen aufrechterhalten.
+        knowledge:
+          - K3.3
+          - K5.1
+        skills:
+          - S1.1
+          - S6.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Die Lernenden verstehen die Bedeutung menschlicher Aufsicht bei KI-unterstützten Entscheidungen. Sie lernen, Entscheidungsprozesse zu gestalten, die sicherstellen, dass Menschen die letztendliche Kontrolle und Verantwortung behalten.
+        scenarios:
+          - Ein KI-unterstütztes Schülerbewertungssystem mit menschlichen Überprüfungs- und Interventionsmechanismen entwerfen.
+          - Ein Entscheidungsrahmenwerk für die Nutzung von KI zur Datenanalyse erstellen, das menschliche Validierung und Interpretation gewährleistet.
+      M3:
+        description: Organisatorische Veränderungen bei der KI-Implementierung managen.
+        knowledge:
+          - K3.1
+          - K3.2
+        skills:
+          - S4.1
+          - S7.1
+        attitudes:
+          - A4.1
+          - A5.1
+        content: Die Lernenden verstehen, wie die KI-Implementierung die Organisationskultur und Arbeitsweisen beeinflusst. Sie lernen, Veränderungsprozesse zu managen, einschließlich Schulung, Kommunikation und Change Management.
+        scenarios:
+          - Einen Plan entwickeln, um Teams bei der Anpassung an neue KI-Werkzeuge und Arbeitsabläufe zu unterstützen.
+          - Ein Schulungsprogramm zur Verbesserung der KI-Kompetenz von Organisationsmitgliedern entwerfen.
+      M4:
+        description: Risiken der KI-Nutzung bewerten und mindern.
+        knowledge:
+          - K4.1
+          - K5.4
+        skills:
+          - S1.1
+          - S6.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Die Lernenden identifizieren potenzielle Risiken bei der KI-Nutzung, einschließlich Verzerrungen, Fehler und Sicherheitsprobleme. Sie lernen, Strategien zur Risikominderung zu entwickeln und eine verantwortungsvolle KI-Nutzung sicherzustellen.
+        scenarios:
+          - Eine Risikobewertung von KI-Systemen durchführen und potenzielle Verzerrungen und Fehler identifizieren.
+          - Governance-Richtlinien und Best-Practice-Leitfäden für die KI-Nutzung entwickeln.
+      M5:
+        description: Die Wirksamkeit und Auswirkungen der KI-Implementierung messen.
+        knowledge:
+          - K3.1
+          - K5.1
+        skills:
+          - S1.1
+          - S6.1
+        attitudes:
+          - A2.1
+          - A4.1
+        content: Die Lernenden lernen, den Erfolg der KI-Implementierung zu bewerten, einschließlich Effizienzsteigerungen, Kosteneinsparungen und Nutzerzufriedenheit. Sie entwickeln Fähigkeiten zur Messung und Verbesserung der Leistung von KI-Systemen.
+        scenarios:
+          - Metriken zur Bewertung der Effektivität eines KI-Kundenservice-Systems entwerfen.
+          - Die Auswirkungen von KI-Werkzeugen auf Arbeitseffizienz und -qualität analysieren.
+
+  Designing_with_AI:
+    emoji: 🔧
+    overview: Umfasst das Design und die Entwicklung von KI-Systemen oder KI-erweiterten Lösungen. Diese Situationen erfordern, dass Lernende die technischen und ethischen Überlegungen der KI-Entwicklung verstehen, einschließlich des Designs von Daten, Algorithmen und Benutzererfahrungen.
+    competencies:
+      D1:
+        description: KI-Systeme unter Berücksichtigung von Ethik und Fairness entwerfen.
+        knowledge:
+          - K2.1
+          - K5.4
+        skills:
+          - S1.1
+          - S3.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Die Lernenden verstehen, wie man faire, transparente und verantwortungsvolle KI-Systeme entwirft. Sie lernen, die Bedürfnisse verschiedener Nutzergruppen zu berücksichtigen und ethische Überlegungen in den Designprozess einzubetten.
+        scenarios:
+          - Ein KI-Rekrutierungstool entwerfen, das Geschlechts- und Rassenverzerrungen eliminiert.
+          - Ein KI-Bildungssystem erstellen, das Schülern mit unterschiedlichen Lernbedürfnissen faire Chancen bietet.
+      D2:
+        description: Die Datenanforderungen und -qualität von KI-Systemen verstehen.
+        knowledge:
+          - K1.1
+          - K2.2
+        skills:
+          - S3.1
+          - S1.1
+        attitudes:
+          - A1.1
+          - A2.1
+        content: Die Lernenden verstehen die Abhängigkeit von KI-Systemen von Daten, einschließlich Datensammlung, -bereinigung und Qualitätssicherung. Sie lernen, Datenqualitätsprobleme zu identifizieren und zu beheben.
+        scenarios:
+          - Trainingsdatensätze analysieren und potenzielle Verzerrungen und Qualitätsprobleme identifizieren.
+          - Datensammlungsstrategien entwerfen, die Repräsentativität und Qualität der Daten sicherstellen.
+      D3:
+        description: Benutzerfreundliche KI-Schnittstellen und -Erfahrungen gestalten.
+        knowledge:
+          - K1.2
+          - K4.1
+        skills:
+          - S3.1
+          - S7.1
+        attitudes:
+          - A3.1
+          - A5.1
+        content: Die Lernenden lernen, intuitive und transparente KI-Benutzeroberflächen zu gestalten. Sie verstehen, wie man Nutzern hilft, KI-Systeme zu verstehen und zu vertrauen, und wie man angemessene Nutzerkontrolle bietet.
+        scenarios:
+          - Eine Benutzeroberfläche für ein KI-Empfehlungssystem entwerfen, die Nutzern die Grundlagen der Empfehlungen verständlich macht.
+          - Einen KI-Assistenten erstellen, der klares Feedback und Erklärungen liefert.
+      D4:
+        description: Tests und Validierung von KI-Systemen implementieren.
+        knowledge:
+          - K1.1
+          - K4.1
+        skills:
+          - S1.1
+          - S3.1
+        attitudes:
+          - A1.1
+          - A2.1
+        content: Die Lernenden lernen, die Leistung, Genauigkeit und Zuverlässigkeit von KI-Systemen zu testen und zu validieren. Sie verstehen, wie man Probleme in KI-Systemen identifiziert und behebt.
+        scenarios:
+          - Testverfahren zur Bewertung der Genauigkeit und Robustheit von KI-Modellen entwerfen.
+          - Nutzertests durchführen und Feedback zur Benutzerfreundlichkeit von KI-Systemen sammeln.
+      D5:
+        description: Langfristige Auswirkungen und Nachhaltigkeit von KI-Systemen berücksichtigen.
+        knowledge:
+          - K3.1
+          - K5.1
+        skills:
+          - S6.1
+          - S1.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Die Lernenden berücksichtigen die langfristigen Auswirkungen von KI-Systemen auf Gesellschaft, Umwelt und Wirtschaft. Sie lernen, nachhaltige und skalierbare KI-Lösungen zu entwerfen.
+        scenarios:
+          - Die Umweltauswirkungen von KI-Systemen bewerten, einschließlich Energieverbrauch und CO2-Fußabdruck.
+          - Die langfristigen Auswirkungen der KI-Implementierung auf Beschäftigung und Sozialstrukturen analysieren.
+
+metadata:
+  language: de
+  version: "1.0"
+  last_updated: "2025-07-03"

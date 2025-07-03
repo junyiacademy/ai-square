@@ -1,0 +1,138 @@
+knowledge_codes:
+  description: "As declarações de conhecimento no quadro incluem fatos, conceitos, ideias e processos que refletem conhecimento disciplinar, interdisciplinar, epistémico e processual. Elas delineiam as compreensões técnicas e sociais que os aprendizes precisam para aplicar e se envolver com sistemas de IA."
+  themes:
+    AI_Reflects_Human_Choices_and_Perspectives:
+      codes:
+        K2.1:
+          summary: A construção e manutenção de sistemas de IA dependem de que os humanos projetem algoritmos, coletem e rotulem dados, e moderem conteúdo prejudicial. Esses sistemas refletem as escolhas, suposições e práticas de trabalho humanas, moldadas por condições globais desiguais.
+        K2.2:
+          summary: A IA é treinada com vastos conjuntos de dados provenientes de informações disponíveis publicamente, conteúdo gerado por usuários, bases de dados curadas e dados do mundo real coletados.
+        K2.3:
+          summary: Os sistemas de IA operam de maneira diferente dependendo do seu propósito, seja para criar, prever, recomendar ou responder.
+        K2.4:
+          summary: Os sistemas de IA operam de maneira diferente dependendo do seu propósito, seja para criar, prever, recomendar ou responder.
+        K2.5:
+          summary: A construção e manutenção de sistemas de IA dependem de que os humanos projetem algoritmos, coletem e rotulem dados, e moderem conteúdo prejudicial. Esses sistemas refletem as escolhas, suposições e práticas de trabalho humanas, moldadas por condições globais desiguais.
+      explanation: "A IA reflete as escolhas e perspectivas humanas através do processo de desenvolvimento, treinamento e implementação. Os conjuntos de dados utilizados para treinar sistemas de IA são coletados e curados por humanos, refletindo inevitavelmente os preconceitos, perspectivas culturais e limitações dos seus criadores."
+    AI_Reshapes_Work_and_Human_Roles:
+      codes:
+        K3.1:
+          summary: Os sistemas de IA automatizam tarefas estruturadas, aumentam a tomada de decisões e transformam indústrias, exigindo que os humanos se adaptem, retreinem e melhorem suas habilidades.
+        K3.2:
+          summary: A integração da IA requer que as pessoas determinem quais tarefas são mais adequadas para máquinas e quais requerem intervenção ou experiência humana.
+        K3.3:
+          summary: Embora a IA possa apoiar a análise e a predição, os humanos devem ser responsáveis pelas decisões que refletem julgamento humano e considerações éticas.
+      explanation: "A IA está remodelando o trabalho e os papéis humanos através da automação de tarefas rotineiras, augmentação das capacidades humanas e criação de novos tipos de trabalho. Esta transformação requer que os trabalhadores desenvolvam novas competências e se adaptem a ambientes de trabalho em mudança."
+    AIs_Capabilities_and_Limitations:
+      codes:
+        K4.1:
+          summary: A IA excele no reconhecimento de padrões e automação, mas carece de emoções, raciocínio ético, contexto e originalidade.
+        K4.2:
+          summary: A IA é treinada com vastos conjuntos de dados provenientes de informações disponíveis publicamente, conteúdo gerado por usuários, bases de dados curadas e dados do mundo real coletados.
+        K4.3:
+          summary: A capacidade da IA generativa, particularmente dos grandes modelos de linguagem (LLMs), de gerar conteúdo similar ao humano pode dificultar a distinção entre fatos e fabricações, aumentando o potencial de gerar desinformação, deepfakes ou materiais manipulativos.
+      explanation: "Compreender as capacidades e limitações da IA é fundamental para o seu uso eficaz. A IA é excelente em tarefas específicas como reconhecimento de padrões, processamento de grandes volumes de dados e automação, mas tem limitações significativas em áreas que requerem compreensão contextual, criatividade genuína e julgamento ético."
+    AIs_Role_in_Society:
+      codes:
+        K5.1:
+          summary: A IA desempenha um papel cada vez mais importante na tomada de decisões que impactam os humanos, desde práticas de contratação até cuidados de saúde e justiça criminal.
+        K5.2:
+          summary: A integração da IA requer que as pessoas determinem quais tarefas são mais adequadas para máquinas e quais requerem intervenção ou experiência humana.
+        K5.3:
+          summary: A IA generativa e os grandes modelos de linguagem criam conteúdo baseado em materiais existentes nos dados de treinamento, que incluem obras protegidas por direitos autorais, levantando questões sobre autenticidade, autoria e propriedade.
+        K5.4:
+          summary: O design ético da IA abrange equidade, transparência, explicabilidade, responsabilidade, respeito pela privacidade e conformidade legal.
+      explanation: "A IA está assumindo um papel cada vez mais proeminente na sociedade, influenciando desde decisões individuais até políticas públicas. É essencial compreender como a IA impacta diferentes aspectos da sociedade e como pode ser governada de forma responsável."
+
+skill_codes:
+  description: "As declarações de habilidades no quadro incluem práticas, técnicas e métodos que os aprendizes precisam para trabalhar efetivamente com sistemas de IA."
+  themes:
+    Critical_Thinking:
+      codes:
+        S1.1:
+          summary: Avalia o conteúdo gerado por IA em termos de precisão, equidade e viés para tomar decisões informadas e éticas.
+          questions:
+            - Como posso verificar a precisão dos resultados gerados por IA e reduzir o risco de viés prejudicial?
+            - Como sei se a IA é relevante ou apropriada?
+      explanation: "O pensamento crítico é essencial ao trabalhar com IA, permitindo aos utilizadores avaliar a qualidade, relevância e confiabilidade dos resultados gerados por sistemas de IA."
+    Creativity:
+      codes:
+        S2.1:
+          summary: Colabora com a IA para criar e refinar ideias originais, considerando questões de propriedade, atribuição e uso responsável.
+          questions:
+            - Como posso usar a IA de forma responsável para dar vida às minhas visões criativas?
+      explanation: "A criatividade em contextos de IA envolve a colaboração efetiva com sistemas de IA para gerar ideias inovadoras, mantendo a integridade criativa e considerações éticas."
+    Computational_Thinking:
+      codes:
+        S3.1:
+          summary: Decompõe problemas e fornece instruções de maneiras que permitam aos sistemas de IA contribuir efetivamente para as soluções.
+          questions:
+            - Como estruturo o meu problema para que a IA possa ajudar a resolvê-lo?
+      explanation: "O pensamento computacional permite aos utilizadores estruturar problemas de forma que possam ser efetivamente abordados por sistemas de IA, através da decomposição e formulação clara de instruções."
+    Collaboration:
+      codes:
+        S4.1:
+          summary: Trabalha efetivamente com IA e humanos comunicando claramente, dando feedback e navegando tarefas partilhadas.
+          questions:
+            - Como posso colaborar de forma transparente e ética com a IA para alcançar um objetivo?
+      explanation: "A colaboração efetiva com IA requer habilidades de comunicação clara, trabalho em equipa e coordenação entre humanos e sistemas de IA."
+    Problem_Solving:
+      codes:
+        S5.1:
+          summary: Determina quando e como usar IA para uma tarefa, avaliando as suas capacidades, riscos e implicações éticas.
+          questions:
+            - Como escolho o tipo certo de ferramenta para a tarefa em questão?
+      explanation: "A resolução de problemas com IA envolve a avaliação cuidadosa de quando e como utilizar sistemas de IA de forma efetiva e responsável."
+    Self_and_Social_Awareness:
+      codes:
+        S6.1:
+          summary: Reconhece como a IA influencia as decisões pessoais, relacionamentos e comunidades, e reflete sobre o seu impacto social e ambiental mais amplo.
+          questions:
+            - Como é que a IA me impacta a mim e aos outros?
+      explanation: "A consciência pessoal e social é fundamental para compreender o impacto da IA tanto a nível individual quanto coletivo."
+    Communication:
+      codes:
+        S7.1:
+          summary: Explica como a IA é usada de uma forma que promove a transparência, evita o antropomorfismo e fomenta o uso responsável.
+          questions:
+            - Como descrevo o uso da IA para mim e para os outros?
+      explanation: "A comunicação efetiva sobre IA é essencial para promover a compreensão, transparência e uso responsável da tecnologia."
+
+attitude_codes:
+  description: "As declarações de atitudes no quadro incluem disposições, valores e orientações que os aprendizes devem desenvolver para trabalhar de forma responsável com sistemas de IA."
+  themes:
+    Responsible:
+      codes:
+        A1.1:
+          summary: Seja responsável; procure prevenir danos decorrentes do uso da IA.
+          questions: []
+      explanation: "A responsabilidade no uso da IA envolve a consideração cuidadosa das consequências e o compromisso de prevenir danos."
+    Curious:
+      codes:
+        A2.1:
+          summary: Explore as capacidades e limitações da IA com abertura.
+          questions: []
+      explanation: "A curiosidade impulsiona a aprendizagem contínua sobre IA, permitindo aos utilizadores compreender melhor as suas capacidades e limitações."
+    Innovative:
+      codes:
+        A3.1:
+          summary: Procure aplicações novas e positivas da IA.
+          questions: []
+      explanation: "A inovação com IA envolve a busca criativa de novas formas de aplicar a tecnologia para resolver problemas e criar valor."
+    Adaptable:
+      codes:
+        A4.1:
+          summary: Itere flexivelmente com feedback e novos contextos.
+          questions: []
+      explanation: "A adaptabilidade é essencial num campo em rápida evolução como a IA, permitindo aos utilizadores ajustar-se a novas tecnologias e contextos."
+    Empathetic:
+      codes:
+        A5.1:
+          summary: Considere diversos impactos humanos e ambientais.
+          questions: []
+      explanation: "A empatia no contexto da IA envolve a consideração cuidadosa de como a tecnologia afeta diferentes grupos de pessoas e o ambiente."
+
+metadata:
+  language: pt
+  version: "1.0"
+  last_updated: "2025-07-03"

@@ -1,0 +1,205 @@
+scenario_info:
+  id: ai-education-design
+  difficulty: intermediate
+  estimated_duration: 90
+  target_domains:
+    - designing_with_ai
+    - creating_with_ai
+    - managing_with_ai
+  title: Diseñando Experiencias de Aprendizaje Mejoradas con IA
+  description: Aprende a diseñar e implementar herramientas y experiencias educativas impulsadas por IA para diversos estudiantes
+  prerequisites:
+    - Comprensión básica de las teorías del aprendizaje
+    - Familiaridad con la tecnología educativa
+    - Experiencia con herramientas de IA
+  learning_objectives:
+    - Diseñar rutas de aprendizaje personalizadas usando IA
+    - Crear evaluaciones adaptativas con asistencia de IA
+    - Implementar sistemas de retroalimentación impulsados por IA
+    - Evaluar herramientas de IA para la efectividad educativa
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+  skills:
+    - S1.1
+    - S2.1
+    - S3.1
+  attitudes:
+    - A2.1
+    - A2.2
+    - A3.1
+tasks:
+  - id: task-1
+    category: analysis
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Educational Data Analyst
+      initial_prompt: |
+        You are an experienced educational data analyst specializing in learner profiling and personalization.
+        Your job is to help teachers understand student data and create effective learner profiles.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what student data they'd like to analyze
+        - If they send irrelevant content, redirect them to focus on learner profiling
+        - Guide them through analyzing learning styles, progress patterns, and preferences
+        - Help them create comprehensive learner profiles with actionable insights
+
+        Focus on:
+        - Identifying learning patterns from student data
+        - Creating meaningful learner profiles
+        - Suggesting personalization strategies
+        - Using AI tools effectively for analysis
+
+        Always stay focused on the learner profiling task.
+    title: Análisis del Perfil del Estudiante con IA
+    description: Usar IA para analizar datos de estudiantes y crear perfiles de aprendizaje personalizados
+    instructions:
+      - Revisar datos de muestra de estudiantes incluyendo estilos de aprendizaje, progreso y preferencias
+      - Usar IA para identificar patrones y características de aprendizaje
+      - Crear perfiles completos de estudiantes con asistencia de IA
+      - Diseñar recomendaciones de aprendizaje personalizadas basadas en perfiles
+    expected_outcome: Perfiles completos de estudiantes con insights generados por IA y recomendaciones de personalización
+  - id: task-2
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Content Creation Specialist
+      initial_prompt: |
+        You are an experienced content creation specialist focused on adaptive learning design.
+        Your job is to help educators create content that adapts to different learner needs and preferences.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what topic they'd like to create adaptive content for
+        - If they send irrelevant content, redirect them to focus on adaptive content creation
+        - Guide them through creating content variations for different learning levels and styles
+        - Help them implement accessibility features and language adaptations
+
+        Focus on:
+        - Creating multiple content variations for diverse learners
+        - Adapting content for different learning styles and levels
+        - Implementing accessibility and language considerations
+        - Using AI tools to generate and refine adaptive content
+
+        Always stay focused on the adaptive content creation task.
+    title: Creación de Contenido Adaptativo
+    description: Diseñar contenido de aprendizaje que se adapte a diferentes necesidades usando IA
+    instructions:
+      - Seleccionar un tema de aprendizaje adecuado para adaptación
+      - Usar IA para generar variaciones de contenido para diferentes niveles y estilos de aprendizaje
+      - Crear contenido para diferentes competencias lingüísticas y necesidades de accesibilidad
+      - Implementar rutas adaptativas y probar la efectividad del contenido
+    expected_outcome: Contenido de aprendizaje adaptativo con múltiples variaciones que abordan diversas necesidades de estudiantes
+  - id: task-3
+    category: creation
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S3.1
+        - K1.2
+      secondary:
+        - A2.2
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Assessment Design Expert
+      initial_prompt: |
+        You are an expert in educational assessment design with specialization in AI-powered evaluation systems.
+        Your job is to help educators create comprehensive and fair assessment systems with meaningful feedback.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what learning domain they want to assess
+        - If they send irrelevant content, redirect them to focus on assessment system design
+        - Guide them through defining clear assessment objectives and criteria
+        - Help them implement AI-driven feedback mechanisms and ensure fairness
+
+        Focus on:
+        - Designing various assessment types (formative and summative)
+        - Creating AI-powered feedback mechanisms
+        - Ensuring assessment fairness and validity
+        - Implementing progress tracking systems
+
+        Always stay focused on the AI assessment system design task.
+    title: Diseño de Sistema de Evaluación con IA
+    description: Construir un sistema de evaluación inteligente que proporcione retroalimentación significativa
+    instructions:
+      - Definir objetivos y criterios de evaluación para tu dominio de aprendizaje elegido
+      - Crear varios tipos de evaluación incluyendo evaluaciones formativas y sumativas
+      - Implementar mecanismos de retroalimentación impulsados por IA que proporcionen insights accionables
+      - Diseñar seguimiento de progreso y asegurar justicia en la evaluación
+    expected_outcome: Sistema de evaluación integral impulsado por IA con mecanismos de retroalimentación justos y significativos
+  - id: task-4
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Learning Analytics Specialist
+      initial_prompt: |
+        You are a learning analytics specialist with expertise in data visualization and AI-powered insights.
+        Your job is to help educators design effective learning analytics dashboards that provide actionable insights.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what learning metrics they want to track
+        - If they send irrelevant content, redirect them to focus on analytics dashboard design
+        - Guide them through identifying key learning metrics for different stakeholders
+        - Help them create meaningful visualizations and AI-powered predictions
+
+        Focus on:
+        - Identifying important learning metrics to track
+        - Creating effective data visualizations
+        - Implementing AI-powered predictions and recommendations
+        - Balancing complexity with usability for different users
+
+        Always stay focused on the learning analytics dashboard task.
+    title: Panel de Análisis de Aprendizaje
+    description: Crear un panel de análisis de aprendizaje usando insights de IA
+    instructions:
+      - Identificar métricas clave de aprendizaje para rastrear para diferentes partes interesadas
+      - Diseñar visualizaciones para progreso individual y rendimiento de clase
+      - Implementar predicciones y recomendaciones impulsadas por IA
+      - Crear insights accionables que equilibren complejidad con usabilidad
+    expected_outcome: Panel interactivo de análisis de aprendizaje con insights impulsados por IA y recomendaciones accionables
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - K1.1
+    - S2.1
+  min_overall_score: 75
+resources:
+  - url: https://www.unesco.org/en/digital-education/ai-future-learning
+    type: guide
+    name: AI in Education Toolkit
+  - url: https://solaresearch.org/core/learning-analytics/
+    type: reference
+    name: Learning Analytics Handbook
+  - url: https://unesdoc.unesco.org/ark:/48223/pf0000376709
+    type: framework
+    name: Ethical AI in Education Framework
+metadata:
+  language: es
+  version: '1.0'
+  last_updated: '2025-07-03'

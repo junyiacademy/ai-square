@@ -1,0 +1,151 @@
+knowledge_codes:
+  description: Les déclarations de connaissance dans le cadre incluent des faits, des concepts, des idées et des processus reflétant des connaissances disciplinaires, interdisciplinaires, épistémiques et procédurales. Elles décrivent les compréhensions techniques et sociétales dont les apprenants ont besoin pour appliquer et s'engager avec les systèmes d'IA.
+  themes:
+    AI_Reflects_Human_Choices_and_Perspectives:
+      codes:
+        K2.1:
+          summary: La construction et le maintien des systèmes d'IA reposent sur les humains pour concevoir des algorithmes, collecter et étiqueter des données, et modérer du contenu nuisible. Ces systèmes reflètent les choix, les hypothèses et les pratiques de travail humains, façonnés par des conditions mondiales inégales.
+        K2.2:
+          summary: La IA se forme sur de vastes ensembles de données provenant d'informations disponibles publiquement, de contenu généré par les utilisateurs, de bases de données curées et de données du monde réel collectées
+        K2.3:
+          summary: Les systèmes d'IA fonctionnent différemment selon leur objectif, qu'il s'agisse de créer, de prédire, de recommander ou de répondre.
+        K2.4:
+          summary: Les systèmes d'IA fonctionnent différemment selon leur objectif, qu'il s'agisse de créer, de prédire, de recommander ou de répondre.
+        K2.5:
+          summary: La construction et le maintien des systèmes d'IA reposent sur les humains pour concevoir des algorithmes, collecter et étiqueter des données, et modérer du contenu nuisible. Ces systèmes reflètent les choix, les hypothèses et les pratiques de travail humains, façonnés par des conditions mondiales inégales.
+      explanation: |
+        L'IA n'est pas neutre; elle est façonnée par les décisions de ceux qui la construisent. Les humains sélectionnent les données d'entraînement, qui peuvent avoir été collectées de manière peu éthique ou présenter des représentations inexactes et incomplètes d'individus et de perspectives. Ils apportent également un jugement lors de la classification de ces données d'entraînement, ce qui informe les algorithmes qui produisent les sorties des systèmes d'IA. Bien que des biais statistiques et sociétaux puissent exister sans être détectés dans les données d'entraînement ou être renforcés dans d'autres aspects du processus d'entraînement, la prévalence de l'IA dans la prise de décision et la vie quotidienne peut reproduire ces biais de manière à nuire à différents groupes de personnes. Cela rend l'éthique, l'équité algorithmique, la représentation, l'explicabilité et la responsabilité essentielles à l'alphabétisation en IA.
+    AI_Reshapes_Work_and_Human_Roles:
+      codes:
+        K3.1:
+          summary: Les systèmes d'IA automatisent des tâches structurées, augmentent la prise de décision et transforment les industries, nécessitant que les humains s'adaptent, se recyclent et améliorent leurs compétences.
+        K3.2:
+          summary: L'intégration de l'IA nécessite que les individus déterminent quelles tâches sont les mieux adaptées aux machines et lesquelles nécessitent une intervention ou une expertise humaine.
+        K3.3:
+          summary: Bien que l'IA puisse soutenir l'analyse et la prédiction, les humains doivent être responsables des décisions qui reflètent le jugement humain et les considérations éthiques.
+      explanation: |
+        L'impact de l'IA dans divers secteurs souligne l'importance de l'adaptabilité et de l'apprentissage tout au long de la vie. Bien que les systèmes d'IA puissent augmenter l'efficacité pour de nombreux types de tâches, ces outils ne sont pas toujours le meilleur choix ; les humains doivent perfectionner leur connaissance des capacités de l'IA et leur expertise dans le domaine pour gérer efficacement les systèmes d'IA. Le succès dans une main-d'œuvre intégrée par l'IA implique de développer une maîtrise d'un éventail de technologies, de rester à jour avec de nouveaux outils et techniques, et de tirer parti du jugement humain dans la prise de décision dès le plus jeune âge, tant dans l'éducation formelle qu'informelle. Cette combinaison garantit que l'IA complète les compétences humaines et augmente les capacités humaines, plutôt que de les remplacer.
+    AIs_Capabilities_and_Limitations:
+      codes:
+        K4.1:
+          summary: L'IA excelle dans la reconnaissance de motifs et l'automatisation, mais manque d'émotions, de raisonnement éthique, de contexte et d'originalité.
+        K4.2:
+          summary: La IA se forme sur de vastes ensembles de données provenant d'informations disponibles publiquement, de contenu généré par les utilisateurs, de bases de données curées et de données du monde réel collectées
+        K4.3:
+          summary: La capacité de l'IA générative, en particulier des grands modèles de langage (LLMs), à générer du contenu semblable à celui des humains peut rendre difficile la distinction entre faits et fabrications, augmentant le potentiel de générer de la désinformation, des deepfakes ou des matériaux manipulatoires.
+      explanation: |
+        L'IA n'a pas une véritable compréhension du contexte du monde réel, des valeurs et des comportements humains, et des nuances, même lorsque les systèmes modifient leurs propres sorties pour répondre aux états émotionnels complexes d'un utilisateur. Bien que les systèmes d'IA puissent analyser d'énormes quantités de données, ils sont sujets à des biais, à la confabulation et à l'abus, et dépendent de vastes mais limités ressources naturelles. Un humain doit prendre des décisions sur des contextes spécifiques que les systèmes d'IA ne peuvent pas, y compris si les avantages d'un outil d'IA justifient le coût environnemental ou social. L'alphabétisation en IA nécessite une pensée critique sur quand, où et comment l'IA doit être appliquée pour garantir qu'elle serve équitablement les besoins humains.
+    AIs_Role_in_Society:
+      codes:
+        K5.1:
+          summary: L'IA joue un rôle de plus en plus prévalent dans la prise de décision qui impacte les humains, des pratiques de recrutement aux soins de santé en passant par la justice pénale.
+        K5.2:
+          summary: L'intégration de l'IA nécessite que les individus déterminent quelles tâches sont les mieux adaptées aux machines et lesquelles nécessitent une intervention ou une expertise humaine.
+        K5.3:
+          summary: L'IA générative et les grands modèles de langage créent du contenu basé sur des matériaux existants dans les données d'entraînement, y compris des œuvres protégées par des droits d'auteur, soulevant ainsi des questions sur l'authenticité, l'auteur et la propriété.
+        K5.4:
+          summary: La conception éthique de l'IA englobe l'équité, la transparence, l'explicabilité, la responsabilité, le respect de la vie privée et la conformité légale.
+      explanation: |
+        Les systèmes d'IA n'existent pas en isolation; leur utilisation reflète, renforce et redéfinit les valeurs et décisions sociétales. Sans une supervision attentive, la prise de décision pilotée par l'IA peut amplifier les biais et causer des dommages généralisés. Les systèmes d'IA introduisent des implications sur la façon dont les apprenants doivent penser à la vérité, à l'auteur et à la propriété dans les espaces numériques. L'orientation et la réglementation au niveau individuel et systémique peuvent aider à traiter les domaines où l'IA croise des droits fondamentaux, tels que la surveillance et la confidentialité des données. La familiarité avec les principes de conception éthique de l'IA aide les apprenants à évaluer de manière critique comment les systèmes d'IA sont construits et déployés. Sans cette compréhension, les apprenants risquent d'accepter les résultats de l'IA au pied de la lettre, plutôt que de se demander à qui ils profitent ou nuisent. Pour garantir que l'IA serve la société de manière responsable, nous devons continuellement remettre en question et évaluer ses effets et guider son utilisation pour atténuer ses risques.
+skill_codes:
+  description: Ces compétences représentent des capacités humaines fondamentales appliquées dans un contexte d'IA. Elles guident les apprenants dans l'utilisation éthique de l'IA et garantissent que les apprenants façonnent activement la manière dont l'IA s'intègre dans leur vie.
+  themes:
+    Critical_Thinking:
+      codes:
+        S1.1:
+          summary: Évaluez le contenu généré par l'IA en termes de précision, d'équité et de biais pour prendre des décisions éclairées et éthiques.
+          questions:
+            - Comment puis-je vérifier la précision des sorties générées par l'IA et réduire le risque de biais nuisibles ?
+            - Comment savoir si l'IA est pertinente ou appropriée ?
+      explanation: |
+        Pratiquer la pensée critique dans un contexte d'IA implique de vérifier si les informations fournies par un système d'IA sont exactes, pertinentes et équitables. Parce que les systèmes d'IA peuvent générer du contenu convaincant mais incorrect ou biaisé, les apprenants doivent activement travailler à identifier la désinformation potentielle et peser les sorties avec d'autres sources d'information. Ces actions résultent en une plus grande prise de conscience de l'impact de l'IA sur le système d'information plus large. Ce processus découvre les biais cachés ou les lacunes et assure que les sorties d'IA soutiennent la prise de décision éthique. En développant ces compétences, les apprenants exercent la littératie médiatique, la littératie numérique et la citoyenneté numérique, tout en devenant des utilisateurs plus perspicaces de l'IA.
+    Creativity:
+      codes:
+        S2.1:
+          summary: Collaborer avec l'IA pour créer et affiner des idées originales tout en considérant les questions de propriété, d'attribution et d'utilisation responsable.
+          questions:
+            - Comment puis-je utiliser l'IA de manière responsable pour donner vie à mes visions créatives ?
+      explanation: |
+        Exercer la créativité lors de l'utilisation de l'IA implique d'interagir avec des systèmes d'IA pour faire du brainstorming, générer et affiner des idées originales. Alors que les apprenants utilisent des systèmes d'IA pour explorer des possibilités au-delà de ce qu'ils avaient initialement envisagé, ils doivent considérer les impacts de l'IA sur l'originalité, la propriété, l'attribution et le droit d'auteur. En s'engageant de manière créative et responsable avec les systèmes d'IA, les apprenants restent responsables des idées qu'ils façonnent et partagent.
+    Computational_Thinking:
+      codes:
+        S3.1:
+          summary: Décomposer les problèmes et fournir des instructions de manière à permettre aux systèmes d'IA de contribuer efficacement aux solutions.
+          questions:
+            - Comment puis-je structurer mon problème pour que l'IA puisse aider à le résoudre ?
+      explanation: |
+        Les compétences de pensée computationnelle aident à aborder et encadrer les problèmes de manière à exploiter les capacités de l'IA et tenir compte de ses limitations. Cela implique de décomposer, ou diviser des problèmes complexes en composants structurés, et de communiquer les objectifs et contraintes d'une manière que les systèmes d'IA peuvent traiter efficacement (par exemple, l'ingénierie de prompts). En fournissant des cas d'usage, des contre-exemples et des résultats attendus aux systèmes d'IA, les apprenants affinent leurs propres compétences de communication, s'engagent avec des stratégies métacognitives et progressent vers leurs objectifs.
+    Collaboration:
+      codes:
+        S4.1:
+          summary: Travailler efficacement avec l'IA et les humains en communiquant clairement, en donnant des retours et en naviguant les tâches partagées.
+          questions:
+            - Comment puis-je collaborer de manière transparente et éthique avec l'IA pour atteindre un objectif ?
+      explanation: |
+        La collaboration avec l'IA repose sur des interactions positives et productives entre les humains et les systèmes d'IA. Cela nécessite la capacité de donner des retours et de demander de l'aide dans et en dehors du monde numérique. Alors que les apprenants collaborent avec les systèmes d'IA, ils démontrent une agence aux côtés de la métacognition. En collaborant avec tact, en évaluant les forces en contexte et en perfectionnant les compétences de construction de relations, les apprenants développent la capacité de naviguer dans des situations nouvelles et complexes.
+    Problem_Solving:
+      codes:
+        S5.1:
+          summary: Déterminer quand et comment utiliser l'IA pour une tâche en évaluant ses capacités, risques et implications éthiques.
+          questions:
+            - Comment choisir le bon type d'outil pour la tâche à accomplir ?
+      explanation: |
+        Utiliser l'IA pour résoudre un problème commence par une réflexion attentive sur la tâche à accomplir et inclut une considération approfondie de savoir si les capacités de l'IA répondent aux exigences techniques et éthiques de la tâche. Pour ce faire, les apprenants pourraient tester des systèmes d'IA spécifiques pour leur fiabilité et leur potentiel à reproduire des biais nuisibles. Les apprenants résolvent des problèmes avec l'IA quand ils se demandent comment les systèmes d'IA pourraient ajouter de la valeur, où le jugement humain devrait entrer en jeu, et quand éviter complètement l'utilisation de l'IA.
+    Self_and_Social_Awareness:
+      codes:
+        S6.1:
+          summary: Reconnaître comment l'IA influence les choix personnels, les relations et les communautés, et réfléchir à son impact sociétal et environnemental plus large.
+          questions:
+            - Comment l'IA m'impacte-t-elle, moi et les autres ?
+      explanation: |
+        La conscience de soi et la conscience sociale sont vitales lors de l'interaction avec l'IA. Cette compétence commence par reconnaître la présence de l'IA dans la vie quotidienne et comprendre comment elle influence les décisions dans les mondes numérique et physique. Cela s'étend au-delà de la simple identification et s'applique à la considération réfléchie des effets plus larges de l'IA sur les individus, les communautés et l'environnement. Les apprenants pourraient aussi s'engager métacognitivement avec les effets de l'IA sur leurs propres comportements, pensées et processus d'apprentissage. En reconnaissant l'influence de l'IA, les apprenants sont mieux équipés pour évaluer le contenu généré par l'IA et surveiller comment ces technologies influencent leurs pensées et comportements au fil du temps.
+    Communication:
+      codes:
+        S7.1:
+          summary: Expliquer comment l'IA est utilisée d'une manière qui favorise la transparence, évite l'anthropomorphisme et encourage une utilisation responsable.
+          questions:
+            - Comment décrire l'utilisation de l'IA pour moi-même et pour les autres ?
+      explanation: |
+        Communiquer sur l'IA implique d'expliquer quand et comment les systèmes d'IA sont utilisés, y compris comment ils peuvent avoir façonné le contenu ou contribué à des décisions qui impactent les autres. Cette compétence souligne que les apprenants alphabétisés en IA ont la responsabilité de décrire avec précision le fonctionnement de l'IA de manière à ne pas mal caractériser ou attribuer des traits humains à ses capacités. Quand les apprenants choisissent leurs mots pour promouvoir la transparence et l'utilisation responsable des systèmes d'IA, ils maintiennent des pratiques éthiques et encouragent des conversations éclairées sur les implications de l'IA.
+attitude_codes:
+  description: Ces attitudes représentent les valeurs et dispositions qui guident l'engagement éthique et responsable avec l'IA.
+  themes:
+    Responsible:
+      codes:
+        A1.1:
+          summary: Soyez responsable; cherchez à prévenir les dommages causés par l'utilisation de l'IA.
+          questions: []
+      explanation: |
+        Les apprenants réfléchissent attentivement à la façon dont ils utilisent l'IA et sont responsables de leurs choix. Ils considèrent à la fois les effets intentionnels et les effets potentiels non intentionnels de leurs actions, et sont engagés à prévenir les dommages aux autres. Ils croient que chacun a le droit de comprendre comment l'IA les affecte et de prendre des décisions éclairées sur son utilisation.
+    Curious:
+      codes:
+        A2.1:
+          summary: Explorez les capacités et limitations de l'IA avec ouverture.
+          questions: []
+      explanation: |
+        Les apprenants sont impatients d'explorer ce que l'IA peut faire aujourd'hui et comment elle pourrait évoluer à l'avenir. Ils veulent comprendre comment l'IA affecte leur vie personnelle et leurs carrières futures. Ils considèrent l'apprentissage comme un processus continu et aiment expérimenter, croyant que les découvertes significatives se produisent grâce à l'exploration.
+    Innovative:
+      codes:
+        A3.1:
+          summary: Recherchez des applications nouvelles et positives de l'IA.
+          questions: []
+      explanation: |
+        Les apprenants cherchent à utiliser l'IA pour relever les défis du monde réel et saisir de nouvelles opportunités. Ils expérimentent, essaient différentes approches et pensent de manière créative pour résoudre un problème. Ils croient que l'IA peut être un outil puissant pour créer des changements positifs dans leur propre vie et celle des autres.
+    Adaptable:
+      codes:
+        A4.1:
+          summary: Itérez de manière flexible avec des retours et de nouveaux contextes.
+          questions: []
+      explanation: |
+        Les apprenants font preuve de persévérance et de flexibilité lorsqu'ils travaillent avec l'IA. Ils sont ouverts à des idées, perspectives et approches diverses. Ils comprennent que collaborer avec l'IA est un processus itératif façonné par les retours et la révision.
+    Empathetic:
+      codes:
+        A5.1:
+          summary: Considérez les divers impacts humains et environnementaux.
+          questions: []
+      explanation: |
+        Les apprenants examinent attentivement comment l'IA impacte les individus, les communautés et l'environnement. Ils évaluent à la fois les avantages et les risques potentiels de l'utilisation de l'IA, comprenant que son impact peut varier pour différents groupes de personnes.
+metadata:
+  language: fr
+  version: "1.0"
+  last_updated: "2025-07-03"

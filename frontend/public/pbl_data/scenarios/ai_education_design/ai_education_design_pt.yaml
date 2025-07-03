@@ -1,0 +1,205 @@
+scenario_info:
+  id: ai-education-design
+  difficulty: intermediate
+  estimated_duration: 90
+  target_domains:
+    - designing_with_ai
+    - creating_with_ai
+    - managing_with_ai
+  title: Projetando Experiências de Aprendizagem Aprimoradas por IA
+  description: Aprenda a projetar e implementar ferramentas e experiências educacionais alimentadas por IA para diversos aprendizes
+  prerequisites:
+    - Compreensão básica das teorias de aprendizagem
+    - Familiaridade com tecnologia educacional
+    - Experiência com ferramentas de IA
+  learning_objectives:
+    - Projetar caminhos de aprendizagem personalizados usando IA
+    - Criar avaliações adaptativas com assistência de IA
+    - Implementar sistemas de feedback alimentados por IA
+    - Avaliar ferramentas de IA para eficácia educacional
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+  skills:
+    - S1.1
+    - S2.1
+    - S3.1
+  attitudes:
+    - A2.1
+    - A2.2
+    - A3.1
+tasks:
+  - id: task-1
+    category: analysis
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Analista de Dados Educacionais
+      initial_prompt: |
+        Você é um analista de dados educacionais experiente, especializado em perfil de aprendiz e personalização.
+        Seu trabalho é ajudar professores a entender dados de alunos e criar perfis de aprendiz eficazes.
+
+        Response guidelines:
+        - Se o usuário apenas cumprimentar, pergunte sobre quais dados de alunos ele gostaria de analisar
+        - Se enviarem conteúdo irrelevante, redirecione-os para focar no perfil do aprendiz
+        - Guie-os na análise de estilos de aprendizagem, padrões de progresso e preferências
+        - Ajude-os a criar perfis de aprendiz abrangentes com insights acionáveis
+
+        Focus on:
+        - Identificar padrões de aprendizagem a partir de dados de alunos
+        - Criar perfis de aprendiz significativos
+        - Sugerir estratégias de personalização
+        - Usar ferramentas de IA efetivamente para análise
+
+        Sempre mantenha o foco na tarefa de criação de perfil do aprendiz.
+    title: Análise de Perfil do Aprendiz com IA
+    description: Use IA para analisar dados do aprendiz e criar perfis de aprendizagem personalizados
+    instructions:
+      - Revise dados de amostra do aprendiz incluindo estilos de aprendizagem, progresso e preferências
+      - Use IA para identificar padrões e características de aprendizagem
+      - Crie perfis de aprendiz abrangentes com assistência de IA
+      - Projete recomendações de aprendizagem personalizadas baseadas nos perfis
+    expected_outcome: Perfis de aprendiz abrangentes com insights gerados por IA e recomendações de personalização
+  - id: task-2
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Especialista em Criação de Conteúdo
+      initial_prompt: |
+        Você é um especialista em criação de conteúdo experiente, focado em design de aprendizagem adaptativa.
+        Seu trabalho é ajudar educadores a criar conteúdo que se adapta a diferentes necessidades e preferências dos aprendizes.
+
+        Response guidelines:
+        - Se o usuário apenas cumprimentar, pergunte sobre qual tópico ele gostaria de criar conteúdo adaptativo
+        - Se enviarem conteúdo irrelevante, redirecione-os para focar na criação de conteúdo adaptativo
+        - Guie-os na criação de variações de conteúdo para diferentes níveis e estilos de aprendizagem
+        - Ajude-os a implementar recursos de acessibilidade e adaptações de idioma
+
+        Focus on:
+        - Criar múltiplas variações de conteúdo para aprendizes diversos
+        - Adaptar conteúdo para diferentes estilos e níveis de aprendizagem
+        - Implementar considerações de acessibilidade e idioma
+        - Usar ferramentas de IA para gerar e refinar conteúdo adaptativo
+
+        Sempre mantenha o foco na tarefa de criação de conteúdo adaptativo.
+    title: Criação de Conteúdo Adaptativo
+    description: Projete conteúdo de aprendizagem que se adapta a diferentes necessidades do aprendiz usando IA
+    instructions:
+      - Selecione um tópico de aprendizagem adequado para adaptação
+      - Use IA para gerar variações de conteúdo para diferentes níveis e estilos de aprendizagem
+      - Crie conteúdo para diferentes proficiências linguísticas e necessidades de acessibilidade
+      - Implemente caminhos adaptativos e teste a eficácia do conteúdo
+    expected_outcome: Conteúdo de aprendizagem adaptativo com múltiplas variações atendendo às diversas necessidades dos aprendizes
+  - id: task-3
+    category: creation
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S3.1
+        - K1.2
+      secondary:
+        - A2.2
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Especialista em Design de Avaliação
+      initial_prompt: |
+        Você é um especialista em design de avaliação educacional com especialização em sistemas de avaliação alimentados por IA.
+        Seu trabalho é ajudar educadores a criar sistemas de avaliação abrangentes e justos com feedback significativo.
+
+        Response guidelines:
+        - Se o usuário apenas cumprimentar, pergunte sobre qual domínio de aprendizagem ele quer avaliar
+        - Se enviarem conteúdo irrelevante, redirecione-os para focar no design do sistema de avaliação
+        - Guie-os na definição de objetivos e critérios de avaliação claros
+        - Ajude-os a implementar mecanismos de feedback impulsionados por IA e garantir justiça
+
+        Focus on:
+        - Projetar vários tipos de avaliação (formativa e somativa)
+        - Criar mecanismos de feedback alimentados por IA
+        - Garantir justiça e validade da avaliação
+        - Implementar sistemas de acompanhamento de progresso
+
+        Sempre mantenha o foco na tarefa de design do sistema de avaliação com IA.
+    title: Design de Sistema de Avaliação com IA
+    description: Construa um sistema de avaliação inteligente que forneça feedback significativo
+    instructions:
+      - Defina objetivos e critérios de avaliação para seu domínio de aprendizagem escolhido
+      - Crie vários tipos de avaliação incluindo avaliações formativas e somativas
+      - Implemente mecanismos de feedback impulsionados por IA que forneçam insights acionáveis
+      - Projete acompanhamento de progresso e garanta justiça na avaliação
+    expected_outcome: Sistema de avaliação abrangente alimentado por IA com mecanismos de feedback justos e significativos
+  - id: task-4
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Especialista em Análise de Aprendizagem
+      initial_prompt: |
+        Você é um especialista em análise de aprendizagem com expertise em visualização de dados e insights alimentados por IA.
+        Seu trabalho é ajudar educadores a projetar painéis de análise de aprendizagem eficazes que forneçam insights acionáveis.
+
+        Response guidelines:
+        - Se o usuário apenas cumprimentar, pergunte sobre quais métricas de aprendizagem ele quer rastrear
+        - Se enviarem conteúdo irrelevante, redirecione-os para focar no design do painel de análise
+        - Guie-os na identificação de métricas-chave de aprendizagem para diferentes partes interessadas
+        - Ajude-os a criar visualizações significativas e previsões alimentadas por IA
+
+        Focus on:
+        - Identificar métricas importantes de aprendizagem para rastrear
+        - Criar visualizações de dados eficazes
+        - Implementar previsões e recomendações alimentadas por IA
+        - Equilibrar complexidade com usabilidade para diferentes usuários
+
+        Sempre mantenha o foco na tarefa do painel de análise de aprendizagem.
+    title: Painel de Análise de Aprendizagem
+    description: Crie um painel de análise de aprendizagem usando insights de IA
+    instructions:
+      - Identifique métricas-chave de aprendizagem para rastrear para diferentes partes interessadas
+      - Projete visualizações para progresso individual e desempenho da turma
+      - Implemente previsões e recomendações alimentadas por IA
+      - Crie insights acionáveis que equilibrem complexidade com usabilidade
+    expected_outcome: Painel de análise de aprendizagem interativo com insights alimentados por IA e recomendações acionáveis
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - K1.1
+    - S2.1
+  min_overall_score: 75
+resources:
+  - url: https://www.unesco.org/en/digital-education/ai-future-learning
+    type: guide
+    name: 'Guia UNESCO IA e Futuro da Aprendizagem'
+  - url: https://solaresearch.org/core/learning-analytics/
+    type: reference
+    name: 'Referência SoLAR de Análise de Aprendizagem'
+  - url: https://unesdoc.unesco.org/ark:/48223/pf0000376709
+    type: framework
+    name: 'Estrutura de Políticas de IA na Educação da UNESCO'
+metadata:
+  language: pt
+  version: '1.0'
+  last_updated: '2025-07-03'

@@ -1,0 +1,96 @@
+# PBL Scenario Template
+# This template defines the structure for language-specific PBL scenario files
+# Each language file should follow this structure and translate all [TRANSLATE] values
+
+scenario_info:
+  id: [SCENARIO_ID]  # Keep same across all languages (e.g., ai-education-design)
+  title: "[TRANSLATE: Scenario title in target language]"
+  description: "[TRANSLATE: Scenario description in target language]"
+  difficulty: [basic|intermediate|advanced]  # Keep same across all languages
+  estimated_duration: [MINUTES]  # Keep same across all languages (e.g., 90)
+  target_domains:  # Keep same across all languages
+    - [DOMAIN_1]  # e.g., designing_with_ai
+    - [DOMAIN_2]  # e.g., creating_with_ai
+    - [DOMAIN_3]  # e.g., managing_with_ai
+  prerequisites:
+    - "[TRANSLATE: Prerequisite 1 in target language]"
+    - "[TRANSLATE: Prerequisite 2 in target language]"
+    - "[TRANSLATE: Prerequisite 3 in target language]"
+  learning_objectives:
+    - "[TRANSLATE: Learning objective 1 in target language]"
+    - "[TRANSLATE: Learning objective 2 in target language]"
+    - "[TRANSLATE: Learning objective 3 in target language]"
+    - "[TRANSLATE: Learning objective 4 in target language]"
+
+ksa_mapping:  # Keep same across all languages
+  knowledge:
+    - [K_CODE_1]  # e.g., K1.1
+    - [K_CODE_2]
+  skills:
+    - [S_CODE_1]  # e.g., S1.1
+    - [S_CODE_2]
+  attitudes:
+    - [A_CODE_1]  # e.g., A2.1
+    - [A_CODE_2]
+
+tasks:
+  - id: [TASK_ID]  # Keep same across all languages (e.g., task-1)
+    title: "[TRANSLATE: Task title in target language]"
+    description: "[TRANSLATE: Task description in target language]"
+    category: [analysis|creation|evaluation|implementation]  # Keep same
+    instructions:
+      - "[TRANSLATE: Instruction 1 in target language]"
+      - "[TRANSLATE: Instruction 2 in target language]"
+      - "[TRANSLATE: Instruction 3 in target language]"
+      - "[TRANSLATE: Instruction 4 in target language]"
+    expected_outcome: "[TRANSLATE: Expected outcome description in target language]"
+    time_limit: [MINUTES]  # Keep same (e.g., 20)
+    assessment_focus:  # Keep same across all languages
+      primary:
+        - [PRIMARY_KSA_1]
+        - [PRIMARY_KSA_2]
+      secondary:
+        - [SECONDARY_KSA_1]
+    ai_module:
+      role: [educator|mentor|coach|expert]  # Keep same
+      model: gemini-2.5-flash  # Keep same
+      persona: "[TRANSLATE: AI persona description in target language]"
+      initial_prompt: |
+        [TRANSLATE: Full AI initial prompt in target language
+        This should include:
+        - AI role description
+        - Response guidelines
+        - Focus areas
+        - Task-specific instructions
+        All translated to the target language]
+
+completion_criteria:  # Keep same across all languages
+  min_tasks_completed: [NUMBER]
+  required_competencies:
+    - [COMPETENCY_1]
+    - [COMPETENCY_2]
+  min_overall_score: [SCORE]  # e.g., 75
+
+resources:
+  - name: "[TRANSLATE: Resource name in target language]"
+    url: [RESOURCE_URL]  # Keep same
+    type: [guide|reference|framework|tutorial|video]  # Keep same
+  - name: "[TRANSLATE: Resource name 2 in target language]"
+    url: [RESOURCE_URL_2]  # Keep same
+    type: [TYPE]  # Keep same
+
+metadata:
+  language: [LANGUAGE_CODE]  # e.g., en, zhCN, pt, ar, id, th
+  version: "1.0"
+  last_updated: [YYYY-MM-DD]
+  tags:  # Optional, can be translated or kept in English
+    - [TAG_1]
+    - [TAG_2]
+    - [TAG_3]
+
+# Translation Guidelines:
+# 1. All fields marked with [TRANSLATE: ...] must be translated to the target language
+# 2. Fields marked "Keep same" should remain identical across all language versions
+# 3. IDs, codes, URLs, and technical values should not be translated
+# 4. The ai_module.initial_prompt is critical - ensure it's fully translated so the AI responds in the correct language
+# 5. Maintain the same meaning and educational intent while adapting to cultural context

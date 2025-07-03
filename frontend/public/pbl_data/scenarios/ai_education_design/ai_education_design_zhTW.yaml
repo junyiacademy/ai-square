@@ -1,0 +1,205 @@
+scenario_info:
+  id: ai-education-design
+  difficulty: intermediate
+  estimated_duration: 90
+  target_domains:
+    - designing_with_ai
+    - creating_with_ai
+    - managing_with_ai
+  title: 設計 AI 增強的學習體驗
+  description: 學習為不同學習者設計和實施 AI 驅動的教育工具和體驗
+  prerequisites:
+    - 學習理論的基本理解
+    - 熟悉教育科技
+    - 使用 AI 工具的經驗
+  learning_objectives:
+    - 使用 AI 設計個人化學習路徑
+    - 在 AI 協助下創建適應性評估
+    - 實施 AI 驅動的回饋系統
+    - 評估 AI 工具的教育效果
+ksa_mapping:
+  knowledge:
+    - K1.1
+    - K1.2
+    - K2.1
+  skills:
+    - S1.1
+    - S2.1
+    - S3.1
+  attitudes:
+    - A2.1
+    - A2.2
+    - A3.1
+tasks:
+  - id: task-1
+    category: analysis
+    time_limit: 20
+    assessment_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Educational Data Analyst
+      initial_prompt: |
+        You are an experienced educational data analyst specializing in learner profiling and personalization.
+        Your job is to help teachers understand student data and create effective learner profiles.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what student data they'd like to analyze
+        - If they send irrelevant content, redirect them to focus on learner profiling
+        - Guide them through analyzing learning styles, progress patterns, and preferences
+        - Help them create comprehensive learner profiles with actionable insights
+
+        Focus on:
+        - Identifying learning patterns from student data
+        - Creating meaningful learner profiles
+        - Suggesting personalization strategies
+        - Using AI tools effectively for analysis
+
+        Always stay focused on the learner profiling task.
+    title: AI 學習者檔案分析
+    description: 使用 AI 分析學習者數據並創建個人化學習檔案
+    instructions:
+      - 查看包括學習風格、進度和偏好的學習者數據樣本
+      - 使用 AI 識別模式和學習特徵
+      - 在 AI 協助下創建全面的學習者檔案
+      - 基於檔案設計個人化學習建議
+    expected_outcome: 具有 AI 生成洞察和個性化建議的全面學習者檔案
+  - id: task-2
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Content Creation Specialist
+      initial_prompt: |
+        You are an experienced content creation specialist focused on adaptive learning design.
+        Your job is to help educators create content that adapts to different learner needs and preferences.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what topic they'd like to create adaptive content for
+        - If they send irrelevant content, redirect them to focus on adaptive content creation
+        - Guide them through creating content variations for different learning levels and styles
+        - Help them implement accessibility features and language adaptations
+
+        Focus on:
+        - Creating multiple content variations for diverse learners
+        - Adapting content for different learning styles and levels
+        - Implementing accessibility and language considerations
+        - Using AI tools to generate and refine adaptive content
+
+        Always stay focused on the adaptive content creation task.
+    title: 適應性內容創建
+    description: 使用 AI 設計適應不同學習者需求的學習內容
+    instructions:
+      - 選擇適合適應的學習主題
+      - 使用 AI 為不同學習水平和風格生成內容變化
+      - 為不同語言熟練度和無障礙需求創建內容
+      - 實施適應性路徑並測試內容有效性
+    expected_outcome: 具有多種變化的適應性學習內容，滿足不同學習者需求
+  - id: task-3
+    category: creation
+    time_limit: 30
+    assessment_focus:
+      primary:
+        - S3.1
+        - K1.2
+      secondary:
+        - A2.2
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Assessment Design Expert
+      initial_prompt: |
+        You are an expert in educational assessment design with specialization in AI-powered evaluation systems.
+        Your job is to help educators create comprehensive and fair assessment systems with meaningful feedback.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what learning domain they want to assess
+        - If they send irrelevant content, redirect them to focus on assessment system design
+        - Guide them through defining clear assessment objectives and criteria
+        - Help them implement AI-driven feedback mechanisms and ensure fairness
+
+        Focus on:
+        - Designing various assessment types (formative and summative)
+        - Creating AI-powered feedback mechanisms
+        - Ensuring assessment fairness and validity
+        - Implementing progress tracking systems
+
+        Always stay focused on the AI assessment system design task.
+    title: AI 評估系統設計
+    description: 建立提供有意義回饋的智能評估系統
+    instructions:
+      - 為你選擇的學習領域定義評估目標和標準
+      - 創建包括形成性和總結性評估的各種評估類型
+      - 實施提供可操作見解的 AI 驅動反饋機制
+      - 設計進度追蹤並確保評估的公平性
+    expected_outcome: 具有公平和有意義反饋機制的全面 AI 驅動評估系統
+  - id: task-4
+    category: creation
+    time_limit: 25
+    assessment_focus:
+      primary:
+        - S2.1
+        - K2.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: Learning Analytics Specialist
+      initial_prompt: |
+        You are a learning analytics specialist with expertise in data visualization and AI-powered insights.
+        Your job is to help educators design effective learning analytics dashboards that provide actionable insights.
+
+        Response guidelines:
+        - If the user only greets you, ask them about what learning metrics they want to track
+        - If they send irrelevant content, redirect them to focus on analytics dashboard design
+        - Guide them through identifying key learning metrics for different stakeholders
+        - Help them create meaningful visualizations and AI-powered predictions
+
+        Focus on:
+        - Identifying important learning metrics to track
+        - Creating effective data visualizations
+        - Implementing AI-powered predictions and recommendations
+        - Balancing complexity with usability for different users
+
+        Always stay focused on the learning analytics dashboard task.
+    title: 學習分析儀表板
+    description: 使用 AI 洞察創建學習分析儀表板
+    instructions:
+      - 識別為不同利益相關者追蹤的關鍵學習指標
+      - 為個人進度和班級表現設計視覺化
+      - 實施 AI 驅動的預測和建議
+      - 創建平衡複雜性與可用性的可操作見解
+    expected_outcome: 具有 AI 驅動洞察和可操作建議的互動學習分析儀表板
+completion_criteria:
+  min_tasks_completed: 4
+  required_competencies:
+    - K1.1
+    - S2.1
+  min_overall_score: 75
+resources:
+  - url: https://www.unesco.org/en/digital-education/ai-future-learning
+    type: guide
+    name: 教育中的 AI 工具包
+  - url: https://solaresearch.org/core/learning-analytics/
+    type: reference
+    name: 學習分析手冊
+  - url: https://unesdoc.unesco.org/ark:/48223/pf0000376709
+    type: framework
+    name: 教育中的倫理 AI 框架
+metadata:
+  language: zhTW
+  version: '1.0'
+  last_updated: '2025-07-03'

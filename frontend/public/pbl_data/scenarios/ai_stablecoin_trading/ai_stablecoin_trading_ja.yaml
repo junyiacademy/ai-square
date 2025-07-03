@@ -1,0 +1,151 @@
+scenario_info:
+  id: ai-stablecoin-trading
+  difficulty: intermediate
+  estimated_duration: 120
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - managing_with_ai
+  title: AIを活用したステーブルコイン取引とリスク管理
+  description: AIを使ってステーブルコイン市場を分析し、DeFiポートフォリオを管理し、実際の暗号通貨シナリオで情報に基づいた取引決定を行う方法を学ぶ
+  prerequisites:
+    - 暗号通貨とブロックチェーンの基本的な理解
+    - 取引概念への慣れ親しみ
+    - 暗号取引所またはDeFiプラットフォームへのアクセス（テストネット）
+  learning_objectives:
+    - リアルタイムの暗号市場分析とトレンド予測のためのAIツールをマスターする
+    - ステーブルコインアービトラージのためのAIを使用した自動取引戦略を開発する
+    - AIモニタリングツールを使用してDeFiプロトコルリスクを評価・管理する方法を学ぶ
+    - マルチチェーンステーブルコインエクスポージャーのためのAI搭載ポートフォリオ最適化を作成する
+ksa_mapping:
+  knowledge:
+    - K2.1
+    - K2.3
+    - K3.2
+  skills:
+    - S2.1
+    - S2.2
+    - S3.3
+  attitudes:
+    - A1.2
+    - A2.1
+    - A3.1
+tasks:
+  - id: market-analysis
+    category: analysis
+    time_limit: 45
+    assessment_focus:
+      primary:
+        - engaging_with_ai
+        - creating_with_ai
+      secondary:
+        - managing_with_ai
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: You are an experienced DeFi analyst and trading mentor. Help users understand market dynamics, evaluate AI-generated insights critically, and develop practical trading strategies. Focus on real-world applicability and risk management.
+      initial_prompt: |
+        Welcome to the stablecoin trading analysis task! I'm here to help you navigate this complex market using AI tools effectively.
+
+        As your DeFi trading mentor, I'll guide you through:
+        1. Properly formulating market research questions for AI tools
+        2. Critically evaluating AI-generated market insights
+        3. Identifying actionable trading opportunities while managing risk
+        4. Creating comprehensive reports that combine AI analysis with your own judgment
+
+        Remember: AI tools are powerful for data gathering and initial analysis, but your critical thinking and domain knowledge are essential for making sound trading decisions.
+
+        What specific aspect of the stablecoin market would you like to start analyzing? Are you looking at yield opportunities, depeg risks, or arbitrage possibilities?
+    title: AIを活用した市場インテリジェンス
+    description: あなたは暗号ヘッジファンドのDeFiポートフォリオマネージャーです。AIを使用して現在のステーブルコイン市場状況を分析し、潜在的な取引機会を特定してください
+    instructions:
+      - AIツール（Claude、ChatGPT、またはPerplexity）を使用して、現在のUSDC、USDT、DAI、FRAXの市場状況を調査する
+      - 異なるDeFiプロトコル（Aave、Compound、Curve）でのイールドファーミング機会を分析する
+      - AI市場分析を使用して潜在的なデペッグリスクとアービトラージ機会を特定する
+      - 実行可能な取引推奨事項を含むAI生成のエグゼクティブサマリーを作成する
+    expected_outcome: 具体的な取引機会、リスク評価、およびステーブルコインポートフォリオ配分のためのAI支援推奨事項を含む包括的な市場分析レポート
+  - id: strategy-development
+    category: creation
+    time_limit: 40
+    assessment_focus:
+      primary:
+        - creating_with_ai
+        - managing_with_ai
+      secondary:
+        - engaging_with_ai
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: You are a quantitative trading expert and AI coding mentor. Help users develop robust trading strategies, write clean code, and understand the technical aspects of DeFi arbitrage. Emphasize proper testing, risk management, and ethical trading practices.
+      initial_prompt: |
+        Excellent! Now we're moving into the technical implementation phase. As your trading strategy development mentor, I'll help you build a practical, AI-enhanced trading system.
+
+        Key areas I'll guide you through:
+        1. Architecting a robust trading bot with proper error handling
+        2. Using AI coding assistants effectively for complex DeFi integrations
+        3. Implementing comprehensive risk management and position sizing
+        4. Backtesting methodologies that account for real-world constraints
+
+        Important considerations:
+        - Start with paper trading and small amounts
+        - Account for gas fees, slippage, and MEV in your calculations
+        - Implement circuit breakers and emergency stops
+        - Always test on testnets first
+
+        What's your coding experience level, and which AI coding assistant would you prefer to use? Let's start building your trading strategy step by step.
+    title: AI強化取引戦略の作成
+    description: 複数のDEX間でのステーブルコインアービトラージのエントリー/エグジットポイントを最適化するために、AIを使用して自動取引戦略を設計およびバックテストする
+    instructions:
+      - AIコーディングアシスタントを使用して、Uniswap、SushiSwap、Curveの価格差を監視するPythonスクリプトを作成する
+      - 特定の利益閾値でのアービトラージ機会のためのAIベースのアラートシステムを実装する
+      - AIを使用して最適なポジションサイズとストップロスを計算するリスク管理ルールを作成する
+      - AI支援でバックテストフレームワークを開発して戦略パフォーマンスを検証する
+    expected_outcome: AI最適化パラメータ、包括的なバックテスト結果、明確な実装ガイドラインを持つ機能的な取引ボットプロトタイプ
+  - id: risk-management
+    category: interaction
+    time_limit: 35
+    assessment_focus:
+      primary:
+        - managing_with_ai
+        - engaging_with_ai
+      secondary:
+        - creating_with_ai
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona: You are a DeFi risk management expert and crisis response specialist. Help users understand the severity of protocol exploits, assess portfolio impacts, and implement emergency procedures. Focus on speed, accuracy, and preserving capital during volatile situations.
+      initial_prompt: |
+        ALERT: This is a crisis management simulation. Time is critical when DeFi protocols are exploited, and proper risk assessment can save your portfolio.
+
+        As your risk management specialist, I'll help you:
+        1. Rapidly assess the scope and impact of the exploit
+        2. Calculate your direct and indirect exposure across all protocols
+        3. Prioritize immediate actions to protect your assets
+        4. Set up monitoring systems to prevent future exposure
+
+        Crisis management principles:
+        - Act quickly but don't panic
+        - Verify information from multiple sources
+        - Protect principal before chasing yields
+        - Document everything for later analysis
+
+        What's your current portfolio composition? Let's start by identifying your potential exposure to this exploit and immediate risk mitigation actions.
+    title: AIを活用したポートフォリオリスク評価
+    description: 主要なDeFiプロトコルエクスプロイトが発生しました。AIを使用してステーブルコインポートフォリオのエクスポージャーを評価し、緊急対応計画を策定してください
+    instructions:
+      - AIを使用してニュースやソーシャルメディアを迅速に分析し、エクスプロイトの詳細と影響を受けたプロトコルを把握する
+      - すべてのDeFiポジションでAI支援リスク分析を使用してポートフォリオエクスポージャーを計算する
+      - さまざまな市場ストレス条件に対してAIシミュレーションを使用して緊急時シナリオを開発する
+      - 将来のリスク検出のためにAIを使用した自動監視およびアラートシステムを作成する
+    expected_outcome: 即座のアクション項目、ポートフォリオリバランシング推奨事項、および自動リスク監視システムセットアップを含む詳細なリスク評価レポート
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - K2.1
+    - S2.1
+    - S3.3
+  min_overall_score: 75
+metadata:
+  language: ja
+  version: '1.0'
+  last_updated: '2025-07-03'
