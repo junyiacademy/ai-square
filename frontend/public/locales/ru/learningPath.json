@@ -1,43 +1,43 @@
 {
-  "title": "[RU] translation needed",
-  "subtitle": "[RU] translation needed",
-  "yourProgress": "[RU] translation needed",
-  "currentScore": "[RU] translation needed",
-  "targetScore": "[RU] translation needed",
-  "completed": "[RU] translation needed",
-  "recommendedPath": "[RU] translation needed",
-  "startLearning": "[RU] translation needed",
-  "estimatedTime": "[RU] translation needed",
-  "weakDomainReason": "[RU] translation needed",
+  "title": "Your Learning Path [Russian]",
+  "subtitle": "Personalized recommendations based on your assessment [Russian]",
+  "yourProgress": "Your Progress [Russian]",
+  "currentScore": "Current Score [Russian]",
+  "targetScore": "Target Score [Russian]",
+  "completed": "completed [Russian]",
+  "recommendedPath": "Recommended Learning Path [Russian]",
+  "startLearning": "Start Learning [Russian]",
+  "estimatedTime": "Estimated time [Russian]",
+  "weakDomainReason": "This is your weakest area with {{score}}% score [Russian]",
   "difficulty": {
-    "beginner": "[RU] translation needed",
-    "intermediate": "[RU] translation needed",
-    "advanced": "[RU] translation needed"
+    "beginner": "Beginner [Russian]",
+    "intermediate": "Intermediate [Russian]",
+    "advanced": "Advanced [Russian]"
   },
   "noAssessment": {
-    "title": "[RU] translation needed",
-    "description": "[RU] translation needed",
-    "button": "[RU] translation needed"
+    "title": "No Assessment Found [Russian]",
+    "description": "Please complete the assessment first to get personalized recommendations [Russian]",
+    "button": "Take Assessment [Russian]"
   },
   "domains": {
-    "Engaging_with_AI": "[RU] translation needed",
-    "Creating_with_AI": "[RU] translation needed",
-    "Managing_with_AI": "[RU] translation needed",
-    "Designing_with_AI": "[RU] translation needed"
+    "Engaging_with_AI": "Engaging with AI [Russian]",
+    "Creating_with_AI": "Creating with AI [Russian]",
+    "Managing_with_AI": "Managing with AI [Russian]",
+    "Designing_with_AI": "Designing with AI [Russian]"
   },
-  "strongDomainReason": "[RU] translation needed",
-  "averageDomainReason": "[RU] translation needed",
+  "strongDomainReason": "Advance your skills in {{domain}} (current: {{score}}%) [Russian]",
+  "averageDomainReason": "Improve your {{domain}} skills (current: {{score}}%) [Russian]",
   "learningPath": {
-    "filteringBy": "[RU] translation needed",
-    "clearFilter": "[RU] translation needed",
-    "recommendedPath": "[RU] translation needed",
-    "estimatedTime": "[RU] translation needed",
-    "startLearning": "[RU] translation needed",
-    "progress": "[RU] translation needed",
-    "goToDashboard": "[RU] translation needed",
-    "dashboardHint": "[RU] translation needed"
+    "filteringBy": "Showing items for {{domain}} [Russian]",
+    "clearFilter": "Clear filter [Russian]",
+    "recommendedPath": "Recommended Learning Path [Russian]",
+    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [Russian]",
+    "startLearning": "Start Learning [Russian]",
+    "progress": "Progress [Russian]",
+    "goToDashboard": "Go to Dashboard [Russian]",
+    "dashboardHint": "Track your overall progress and achievements in the dashboard [Russian]"
   },
-  "showAll": "[RU] translation needed",
-  "focusOnWeakAreas": "[RU] translation needed",
-  "backToDashboard": "[RU] translation needed"
+  "showAll": "Show All [Russian]",
+  "focusOnWeakAreas": "Focus on Weak Areas [Russian]",
+  "backToDashboard": "Back to Dashboard [Russian]"
 }

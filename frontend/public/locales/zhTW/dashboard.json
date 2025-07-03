@@ -1,49 +1,49 @@
 {
-  "welcome": "[ZHTW] translation needed",
-  "subtitle": "[ZHTW] translation needed",
-  "aiLiteracyProgress": "[ZHTW] translation needed",
+  "welcome": "Welcome back, {{name}}! [Chinese (Traditional)]",
+  "subtitle": "Here's your AI literacy progress overview [Chinese (Traditional)]",
+  "aiLiteracyProgress": "AI Literacy Progress [Chinese (Traditional)]",
   "domains": {
-    "engaging_with_ai": "[ZHTW] translation needed",
-    "creating_with_ai": "[ZHTW] translation needed",
-    "managing_with_ai": "[ZHTW] translation needed",
-    "designing_with_ai": "[ZHTW] translation needed"
+    "engaging_with_ai": "Engaging with AI [Chinese (Traditional)]",
+    "creating_with_ai": "Creating with AI [Chinese (Traditional)]",
+    "managing_with_ai": "Managing with AI [Chinese (Traditional)]",
+    "designing_with_ai": "Designing with AI [Chinese (Traditional)]"
   },
-  "viewDetailedProgress": "[ZHTW] translation needed",
-  "learningStatistics": "[ZHTW] translation needed",
-  "completedScenarios": "[ZHTW] translation needed",
-  "inProgress": "[ZHTW] translation needed",
-  "learningHours": "[ZHTW] translation needed",
-  "dayStreak": "[ZHTW] translation needed",
-  "recentActivities": "[ZHTW] translation needed",
-  "noRecentActivities": "[ZHTW] translation needed",
+  "viewDetailedProgress": "View detailed learning path [Chinese (Traditional)]",
+  "learningStatistics": "Learning Statistics [Chinese (Traditional)]",
+  "completedScenarios": "Completed [Chinese (Traditional)]",
+  "inProgress": "In Progress [Chinese (Traditional)]",
+  "learningHours": "Hours [Chinese (Traditional)]",
+  "dayStreak": "Day Streak [Chinese (Traditional)]",
+  "recentActivities": "Recent Activities [Chinese (Traditional)]",
+  "noRecentActivities": "No recent activities. Start learning to see your progress here! [Chinese (Traditional)]",
   "activities": {
-    "completedAssessment": "[ZHTW] translation needed",
-    "assessmentDesc": "[ZHTW] translation needed"
+    "completedAssessment": "Completed AI Literacy Assessment [Chinese (Traditional)]",
+    "assessmentDesc": "Discovered your AI knowledge baseline [Chinese (Traditional)]"
   },
-  "recommendedActions": "[ZHTW] translation needed",
+  "recommendedActions": "Recommended Next Steps [Chinese (Traditional)]",
   "nextActions": {
-    "takeAssessment": "[ZHTW] translation needed",
-    "assessmentDesc": "[ZHTW] translation needed",
-    "viewLearningPath": "[ZHTW] translation needed",
-    "learningPathDesc": "[ZHTW] translation needed",
-    "startPBL": "[ZHTW] translation needed",
-    "pblDesc": "[ZHTW] translation needed"
+    "takeAssessment": "Take AI Literacy Assessment [Chinese (Traditional)]",
+    "assessmentDesc": "Discover your current AI knowledge level and get personalized recommendations [Chinese (Traditional)]",
+    "viewLearningPath": "View Your Learning Path [Chinese (Traditional)]",
+    "learningPathDesc": "See personalized recommendations based on your assessment results [Chinese (Traditional)]",
+    "startPBL": "Start a PBL Scenario [Chinese (Traditional)]",
+    "pblDesc": "Practice real-world AI skills with interactive scenarios [Chinese (Traditional)]"
   },
   "priority": {
-    "high": "[ZHTW] translation needed",
-    "medium": "[ZHTW] translation needed",
-    "low": "[ZHTW] translation needed"
+    "high": "High [Chinese (Traditional)]",
+    "medium": "Medium [Chinese (Traditional)]",
+    "low": "Low [Chinese (Traditional)]"
   },
-  "quickLinks": "[ZHTW] translation needed",
-  "explorePBL": "[ZHTW] translation needed",
-  "viewCompetencies": "[ZHTW] translation needed",
-  "viewHistory": "[ZHTW] translation needed",
-  "exploreKSA": "[ZHTW] translation needed",
-  "yourGoals": "[ZHTW] translation needed",
-  "updateGoals": "[ZHTW] translation needed",
-  "learningPathQuickAccess": "[ZHTW] translation needed",
-  "learningPathDescription": "[ZHTW] translation needed",
-  "viewAllPaths": "[ZHTW] translation needed",
-  "focusOnWeakAreas": "[ZHTW] translation needed",
-  "aiAdvisor": "[ZHTW] translation needed"
+  "quickLinks": "Quick Links [Chinese (Traditional)]",
+  "explorePBL": "Explore PBL Scenarios [Chinese (Traditional)]",
+  "viewCompetencies": "View AI Competencies [Chinese (Traditional)]",
+  "viewHistory": "View Learning History [Chinese (Traditional)]",
+  "exploreKSA": "Explore Knowledge Map [Chinese (Traditional)]",
+  "yourGoals": "Your Learning Goals [Chinese (Traditional)]",
+  "updateGoals": "Update your goals [Chinese (Traditional)]",
+  "learningPathQuickAccess": "Personalized Learning Recommendations [Chinese (Traditional)]",
+  "learningPathDescription": "Explore AI learning scenarios tailored to your assessment results and interests. Choose the areas that best suit your needs. [Chinese (Traditional)]",
+  "viewAllPaths": "View All Learning Paths [Chinese (Traditional)]",
+  "focusOnWeakAreas": "Focus on Weak Areas [Chinese (Traditional)]",
+  "aiAdvisor": "AI Learning Advisor [Chinese (Traditional)]"
 }

@@ -1,43 +1,43 @@
 {
-  "title": "[Portuguese] translation needed",
-  "subtitle": "[Portuguese] translation needed",
-  "yourProgress": "[Portuguese] translation needed",
-  "currentScore": "[Portuguese] translation needed",
-  "targetScore": "[Portuguese] translation needed",
-  "completed": "[Portuguese] translation needed",
-  "recommendedPath": "[Portuguese] translation needed",
-  "startLearning": "[Portuguese] translation needed",
-  "estimatedTime": "[Portuguese] translation needed",
-  "weakDomainReason": "[Portuguese] translation needed",
+  "title": "Your Learning Path [Portuguese]",
+  "subtitle": "Personalized recommendations based on your assessment [Portuguese]",
+  "yourProgress": "Your Progress [Portuguese]",
+  "currentScore": "Current Score [Portuguese]",
+  "targetScore": "Target Score [Portuguese]",
+  "completed": "completed [Portuguese]",
+  "recommendedPath": "Recommended Learning Path [Portuguese]",
+  "startLearning": "Start Learning [Portuguese]",
+  "estimatedTime": "Estimated time [Portuguese]",
+  "weakDomainReason": "This is your weakest area with {{score}}% score [Portuguese]",
   "difficulty": {
-    "beginner": "[Portuguese] translation needed",
-    "intermediate": "[Portuguese] translation needed",
-    "advanced": "[Portuguese] translation needed"
+    "beginner": "Beginner [Portuguese]",
+    "intermediate": "Intermediate [Portuguese]",
+    "advanced": "Advanced [Portuguese]"
   },
   "noAssessment": {
-    "title": "[Portuguese] translation needed",
-    "description": "[Portuguese] translation needed",
-    "button": "[Portuguese] translation needed"
+    "title": "No Assessment Found [Portuguese]",
+    "description": "Please complete the assessment first to get personalized recommendations [Portuguese]",
+    "button": "Take Assessment [Portuguese]"
   },
   "domains": {
-    "Engaging_with_AI": "[Portuguese] translation needed",
-    "Creating_with_AI": "[Portuguese] translation needed",
-    "Managing_with_AI": "[Portuguese] translation needed",
-    "Designing_with_AI": "[Portuguese] translation needed"
+    "Engaging_with_AI": "Engaging with AI [Portuguese]",
+    "Creating_with_AI": "Creating with AI [Portuguese]",
+    "Managing_with_AI": "Managing with AI [Portuguese]",
+    "Designing_with_AI": "Designing with AI [Portuguese]"
   },
-  "strongDomainReason": "[Portuguese] translation needed",
-  "averageDomainReason": "[Portuguese] translation needed",
+  "strongDomainReason": "Advance your skills in {{domain}} (current: {{score}}%) [Portuguese]",
+  "averageDomainReason": "Improve your {{domain}} skills (current: {{score}}%) [Portuguese]",
   "learningPath": {
-    "filteringBy": "[Portuguese] translation needed",
-    "clearFilter": "[Portuguese] translation needed",
-    "recommendedPath": "[Portuguese] translation needed",
-    "estimatedTime": "[Portuguese] translation needed",
-    "startLearning": "[Portuguese] translation needed",
-    "progress": "[Portuguese] translation needed",
-    "goToDashboard": "[Portuguese] translation needed",
-    "dashboardHint": "[Portuguese] translation needed"
+    "filteringBy": "Showing items for {{domain}} [Portuguese]",
+    "clearFilter": "Clear filter [Portuguese]",
+    "recommendedPath": "Recommended Learning Path [Portuguese]",
+    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [Portuguese]",
+    "startLearning": "Start Learning [Portuguese]",
+    "progress": "Progress [Portuguese]",
+    "goToDashboard": "Go to Dashboard [Portuguese]",
+    "dashboardHint": "Track your overall progress and achievements in the dashboard [Portuguese]"
   },
-  "showAll": "[Portuguese] translation needed",
-  "focusOnWeakAreas": "[Portuguese] translation needed",
-  "backToDashboard": "[Portuguese] translation needed"
+  "showAll": "Show All [Portuguese]",
+  "focusOnWeakAreas": "Focus on Weak Areas [Portuguese]",
+  "backToDashboard": "Back to Dashboard [Portuguese]"
 }

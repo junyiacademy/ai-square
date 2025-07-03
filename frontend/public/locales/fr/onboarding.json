@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "[FR] translation needed",
-    "subtitle": "[FR] translation needed",
+    "greeting": "Welcome, {{name}}! [French]",
+    "subtitle": "Let's get you started on your AI literacy journey [French]",
     "step1": {
-      "title": "[FR] translation needed",
-      "description": "[FR] translation needed",
-      "content": "[FR] translation needed",
-      "assessment": "[FR] translation needed",
-      "assessmentDesc": "[FR] translation needed",
-      "learning": "[FR] translation needed",
-      "learningDesc": "[FR] translation needed"
+      "title": "Discover Your Path [French]",
+      "description": "AI Square helps you understand and master AI literacy [French]",
+      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [French]",
+      "assessment": "Smart Assessment [French]",
+      "assessmentDesc": "Discover your current AI knowledge level [French]",
+      "learning": "Personalized Learning [French]",
+      "learningDesc": "Get tailored recommendations based on your goals [French]"
     },
     "step2": {
-      "title": "[FR] translation needed",
-      "description": "[FR] translation needed",
-      "content": "[FR] translation needed",
-      "domains": "[FR] translation needed",
-      "engaging": "[FR] translation needed",
-      "creating": "[FR] translation needed",
-      "managing": "[FR] translation needed",
-      "designing": "[FR] translation needed"
+      "title": "Four Core Domains [French]",
+      "description": "Master the essential areas of AI literacy [French]",
+      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [French]",
+      "domains": "AI Literacy Domains [French]",
+      "engaging": "Engaging with AI [French]",
+      "creating": "Creating with AI [French]",
+      "managing": "Managing with AI [French]",
+      "designing": "Designing with AI [French]"
     },
     "step3": {
-      "title": "[FR] translation needed",
-      "description": "[FR] translation needed",
-      "content": "[FR] translation needed",
-      "ready": "[FR] translation needed",
-      "benefit1": "[FR] translation needed",
-      "benefit2": "[FR] translation needed",
-      "benefit3": "[FR] translation needed"
+      "title": "Start Your Journey [French]",
+      "description": "Begin with an assessment and unlock your potential [French]",
+      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [French]",
+      "ready": "What you'll get: [French]",
+      "benefit1": "Detailed assessment of your AI knowledge [French]",
+      "benefit2": "Personalized learning path recommendations [French]",
+      "benefit3": "Interactive scenarios and practical exercises [French]"
     },
-    "startJourney": "[FR] translation needed"
+    "startJourney": "Start Your Journey [French]"
   },
   "goals": {
-    "title": "[FR] translation needed",
-    "subtitle": "[FR] translation needed",
+    "title": "What would you like to achieve? [French]",
+    "subtitle": "Select your learning goals to get personalized recommendations [French]",
     "understand": {
-      "title": "[FR] translation needed",
-      "description": "[FR] translation needed"
+      "title": "Understand AI Fundamentals [French]",
+      "description": "Learn the basics of AI, machine learning, and how AI systems work [French]"
     },
     "create": {
-      "title": "[FR] translation needed",
-      "description": "[FR] translation needed"
+      "title": "Create Content with AI [French]",
+      "description": "Use AI tools for writing, design, art, and creative projects [French]"
     },
     "analyze": {
-      "title": "[FR] translation needed",
-      "description": "[FR] translation needed"
+      "title": "Analyze Data with AI [French]",
+      "description": "Apply AI for data analysis, insights, and decision-making [French]"
     },
     "build": {
-      "title": "[FR] translation needed",
-      "description": "[FR] translation needed"
+      "title": "Build AI Solutions [French]",
+      "description": "Develop and implement AI systems and applications [French]"
     },
     "teach": {
-      "title": "[FR] translation needed",
-      "description": "[FR] translation needed"
+      "title": "Teach AI to Others [French]",
+      "description": "Educate and guide others in understanding and using AI [French]"
     },
     "ethical": {
-      "title": "[FR] translation needed",
-      "description": "[FR] translation needed"
+      "title": "Ensure Ethical AI Use [French]",
+      "description": "Understand and implement responsible AI practices [French]"
     },
-    "recommendedDomains": "[FR] translation needed",
+    "recommendedDomains": "Recommended domains [French]",
     "selected": "{{count}} goals selected",
-    "selectAtLeastOne": "[FR] translation needed",
-    "continue": "[FR] translation needed",
-    "skipForNow": "[FR] translation needed",
-    "helpText": "[FR] translation needed"
+    "selectAtLeastOne": "Please select at least one learning goal [French]",
+    "continue": "Continue to Assessment [French]",
+    "skipForNow": "Skip for now [French]",
+    "helpText": "Don't worry, you can always change these later in your profile settings. [French]"
   },
   "progress": {
-    "welcome": "[FR] translation needed",
-    "identity": "[FR] translation needed",
-    "goals": "[FR] translation needed"
+    "welcome": "Welcome [French]",
+    "identity": "Identity [French]",
+    "goals": "Goals [French]"
   },
   "identity": {
-    "title": "[FR] translation needed",
-    "subtitle": "[FR] translation needed",
+    "title": "Who are you? [French]",
+    "subtitle": "Help us personalize your AI learning journey [French]",
     "student": {
-      "title": "[FR] translation needed",
-      "description": "[FR] translation needed"
+      "title": "Student [French]",
+      "description": "I'm studying and want to learn AI for my academic and future career [French]"
     },
     "teacher": {
-      "title": "[FR] translation needed",
-      "description": "[FR] translation needed"
+      "title": "Educator [French]",
+      "description": "I teach others and want to integrate AI into my curriculum [French]"
     },
     "professional": {
-      "title": "[FR] translation needed",
-      "description": "[FR] translation needed"
+      "title": "Professional [French]",
+      "description": "I work in industry and want to leverage AI in my role [French]"
     },
     "learner": {
-      "title": "[FR] translation needed",
-      "description": "[FR] translation needed"
+      "title": "Lifelong Learner [French]",
+      "description": "I'm curious about AI and want to explore its possibilities [French]"
     }
   },
   "button": {
-    "back": "[FR] translation needed",
-    "continue": "[FR] translation needed",
-    "saving": "[FR] translation needed"
+    "back": "Back [French]",
+    "continue": "Continue [French]",
+    "saving": "Saving... [French]"
   }
 }

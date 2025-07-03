@@ -1,12 +1,12 @@
 {
-  "aiAdvisor": "[RU] translation needed",
-  "newChat": "[RU] translation needed",
-  "history": "[RU] translation needed",
-  "welcomeTitle": "[RU] translation needed",
-  "welcomeMessage": "[RU] translation needed",
-  "inputPlaceholder": "[RU] translation needed",
-  "suggestedTopic1": "[RU] translation needed",
-  "suggestedTopic2": "[RU] translation needed",
-  "suggestedTopic3": "[RU] translation needed",
-  "suggestedTopic4": "[RU] translation needed"
+  "aiAdvisor": "Советник по обучению ИИ",
+  "newChat": "Новый чат",
+  "history": "История чата",
+  "welcomeTitle": "Привет! Я ваш советник по обучению ИИ",
+  "welcomeMessage": "Я здесь, чтобы помочь вам в вашем путешествии по ИИ-грамотности. Спросите меня о путях обучения, PBL-сценариях или любых концепциях ИИ, которые вы хотели бы лучше понять.",
+  "inputPlaceholder": "Введите ваше сообщение здесь... (Нажмите Enter для отправки)",
+  "suggestedTopic1": "С какого PBL-сценария мне следует начать?",
+  "suggestedTopic2": "Помогите мне понять результаты моей оценки",
+  "suggestedTopic3": "Каковы мои слабые стороны и как я могу улучшиться?",
+  "suggestedTopic4": "Объясните концепции ИИ простыми словами"
 }

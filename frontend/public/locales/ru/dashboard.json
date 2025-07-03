@@ -1,49 +1,49 @@
 {
-  "welcome": "[RU] translation needed",
-  "subtitle": "[RU] translation needed",
-  "aiLiteracyProgress": "[RU] translation needed",
+  "welcome": "С возвращением, {{name}}!",
+  "subtitle": "Вот обзор вашего прогресса в ИИ-грамотности",
+  "aiLiteracyProgress": "Прогресс в ИИ-грамотности",
   "domains": {
-    "engaging_with_ai": "[RU] translation needed",
-    "creating_with_ai": "[RU] translation needed",
-    "managing_with_ai": "[RU] translation needed",
-    "designing_with_ai": "[RU] translation needed"
+    "engaging_with_ai": "Взаимодействие с ИИ",
+    "creating_with_ai": "Создание с ИИ",
+    "managing_with_ai": "Управление с ИИ",
+    "designing_with_ai": "Проектирование с ИИ"
   },
-  "viewDetailedProgress": "[RU] translation needed",
-  "learningStatistics": "[RU] translation needed",
-  "completedScenarios": "[RU] translation needed",
-  "inProgress": "[RU] translation needed",
-  "learningHours": "[RU] translation needed",
-  "dayStreak": "[RU] translation needed",
-  "recentActivities": "[RU] translation needed",
-  "noRecentActivities": "[RU] translation needed",
+  "viewDetailedProgress": "Посмотреть подробный путь обучения",
+  "learningStatistics": "Статистика обучения",
+  "completedScenarios": "Завершено",
+  "inProgress": "В процессе",
+  "learningHours": "Часов",
+  "dayStreak": "Дней подряд",
+  "recentActivities": "Недавние активности",
+  "noRecentActivities": "Нет недавних активностей. Начните учиться, чтобы увидеть свой прогресс здесь!",
   "activities": {
-    "completedAssessment": "[RU] translation needed",
-    "assessmentDesc": "[RU] translation needed"
+    "completedAssessment": "Оценка ИИ-грамотности завершена",
+    "assessmentDesc": "Обнаружен ваш базовый уровень знаний об ИИ"
   },
-  "recommendedActions": "[RU] translation needed",
+  "recommendedActions": "Рекомендуемые следующие шаги",
   "nextActions": {
-    "takeAssessment": "[RU] translation needed",
-    "assessmentDesc": "[RU] translation needed",
-    "viewLearningPath": "[RU] translation needed",
-    "learningPathDesc": "[RU] translation needed",
-    "startPBL": "[RU] translation needed",
-    "pblDesc": "[RU] translation needed"
+    "takeAssessment": "Пройти оценку ИИ-грамотности",
+    "assessmentDesc": "Откройте свой текущий уровень знаний об ИИ и получите персонализированные рекомендации",
+    "viewLearningPath": "Посмотреть ваш путь обучения",
+    "learningPathDesc": "Посмотрите персонализированные рекомендации на основе результатов вашей оценки",
+    "startPBL": "Начать PBL-сценарий",
+    "pblDesc": "Практикуйте реальные навыки ИИ с интерактивными сценариями"
   },
   "priority": {
-    "high": "[RU] translation needed",
-    "medium": "[RU] translation needed",
-    "low": "[RU] translation needed"
+    "high": "Высокий",
+    "medium": "Средний",
+    "low": "Низкий"
   },
-  "quickLinks": "[RU] translation needed",
-  "explorePBL": "[RU] translation needed",
-  "viewCompetencies": "[RU] translation needed",
-  "viewHistory": "[RU] translation needed",
-  "exploreKSA": "[RU] translation needed",
-  "yourGoals": "[RU] translation needed",
-  "updateGoals": "[RU] translation needed",
-  "learningPathQuickAccess": "[RU] translation needed",
-  "learningPathDescription": "[RU] translation needed",
-  "viewAllPaths": "[RU] translation needed",
-  "focusOnWeakAreas": "[RU] translation needed",
-  "aiAdvisor": "[RU] translation needed"
+  "quickLinks": "Быстрые ссылки",
+  "explorePBL": "Исследовать PBL-сценарии",
+  "viewCompetencies": "Посмотреть компетенции ИИ",
+  "viewHistory": "Посмотреть историю обучения",
+  "exploreKSA": "Исследовать карту знаний",
+  "yourGoals": "Ваши цели обучения",
+  "updateGoals": "Обновить ваши цели",
+  "learningPathQuickAccess": "Персонализированные рекомендации по обучению",
+  "learningPathDescription": "Исследуйте сценарии обучения ИИ, адаптированные к результатам вашей оценки и интересам. Выберите области, которые лучше всего соответствуют вашим потребностям.",
+  "viewAllPaths": "Посмотреть все пути обучения",
+  "focusOnWeakAreas": "Сосредоточиться на слабых областях",
+  "aiAdvisor": "Советник по обучению ИИ"
 }

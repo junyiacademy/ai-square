@@ -1,16 +1,16 @@
 {
-  "title": "[Thai] translation needed",
-  "subtitle": "[Thai] translation needed",
-  "getStarted": "[Thai] translation needed",
-  "pathOverview": "[Thai] translation needed",
-  "nextPath": "[Thai] translation needed",
-  "tryFeature": "[Thai] translation needed",
+  "title": "AI Square User Journey [Thai]",
+  "subtitle": "Five key paths for complete AI learning experience [Thai]",
+  "getStarted": "Get Started [Thai]",
+  "pathOverview": "Complete Learning Cycle [Thai]",
+  "nextPath": "Next Path → [Thai]",
+  "tryFeature": "Experience This Feature [Thai]",
   "paths": {
     "dashboard": {
-      "title": "[Thai] translation needed",
-      "subtitle": "[Thai] translation needed",
-      "description": "[Thai] translation needed",
-      "userNeed": "[Thai] translation needed",
+      "title": "Dashboard [Thai]",
+      "subtitle": "Learning Command Center [Thai]",
+      "description": "One-stop overview of your AI learning journey, track progress, view achievements, and plan next steps. [Thai]",
+      "userNeed": "How is my learning progress? [Thai]",
       "features": [
         "[Thai] translation needed",
         "[Thai] translation needed",
@@ -19,10 +19,10 @@
       ]
     },
     "assessment": {
-      "title": "[Thai] translation needed",
-      "subtitle": "[Thai] translation needed",
-      "description": "[Thai] translation needed",
-      "userNeed": "[Thai] translation needed",
+      "title": "Assessment [Thai]",
+      "subtitle": "AI Literacy Test [Thai]",
+      "description": "25 professional questions to deeply understand your competency level across four AI domains. [Thai]",
+      "userNeed": "What is my AI competency level? [Thai]",
       "features": [
         "[Thai] translation needed",
         "[Thai] translation needed",
@@ -31,10 +31,10 @@
       ]
     },
     "learningPath": {
-      "title": "[Thai] translation needed",
-      "subtitle": "[Thai] translation needed",
-      "description": "[Thai] translation needed",
-      "userNeed": "[Thai] translation needed",
+      "title": "Learning Path [Thai]",
+      "subtitle": "Personalized Growth Plan [Thai]",
+      "description": "Based on your assessment results, we recommend the most suitable learning content and pace. [Thai]",
+      "userNeed": "What courses are right for me? [Thai]",
       "features": [
         "[Thai] translation needed",
         "[Thai] translation needed",
@@ -43,10 +43,10 @@
       ]
     },
     "pbl": {
-      "title": "[Thai] translation needed",
-      "subtitle": "[Thai] translation needed",
-      "description": "[Thai] translation needed",
-      "userNeed": "[Thai] translation needed",
+      "title": "PBL Practice [Thai]",
+      "subtitle": "Real-world Scenarios [Thai]",
+      "description": "9 practical scenarios with AI tutor guidance for learning by doing. [Thai]",
+      "userNeed": "How do I apply AI in practice? [Thai]",
       "features": [
         "[Thai] translation needed",
         "[Thai] translation needed",
@@ -55,10 +55,10 @@
       ]
     },
     "chat": {
-      "title": "[Thai] translation needed",
-      "subtitle": "[Thai] translation needed",
-      "description": "[Thai] translation needed",
-      "userNeed": "[Thai] translation needed",
+      "title": "AI Advisor [Thai]",
+      "subtitle": "24/7 Support [Thai]",
+      "description": "24/7 intelligent learning companion that remembers your learning context and provides personalized advice. [Thai]",
+      "userNeed": "Who can I ask when I have questions? [Thai]",
       "features": [
         "[Thai] translation needed",
         "[Thai] translation needed",
@@ -67,7 +67,7 @@
       ]
     }
   },
-  "keyFeatures": "[Thai] translation needed",
-  "solvedNeed": "[Thai] translation needed",
-  "completeJourney": "[Thai] translation needed"
+  "keyFeatures": "Key Features [Thai]",
+  "solvedNeed": "User Need Addressed [Thai]",
+  "completeJourney": "Complete Learning Journey [Thai]"
 }

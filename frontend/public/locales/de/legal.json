@@ -1,171 +1,171 @@
 {
   "privacy": {
-    "title": "[DE] translation needed",
-    "lastUpdated": "[DE] translation needed",
-    "intro": "[DE] translation needed",
+    "title": "Privacy Policy [German]",
+    "lastUpdated": "Last updated [German]",
+    "intro": "AI Square (\"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI literacy education platform. [German]",
     "infoCollect": {
-      "title": "[DE] translation needed",
-      "personal": "[DE] translation needed",
-      "email": "[DE] translation needed",
-      "name": "[DE] translation needed",
-      "role": "[DE] translation needed",
-      "language": "[DE] translation needed",
-      "usage": "[DE] translation needed",
-      "learning": "[DE] translation needed",
-      "interactions": "[DE] translation needed",
-      "scenarios": "[DE] translation needed",
-      "analytics": "[DE] translation needed",
-      "technical": "[DE] translation needed",
-      "browser": "[DE] translation needed",
-      "device": "[DE] translation needed",
-      "ip": "[DE] translation needed",
-      "timezone": "[DE] translation needed"
+      "title": "1. Information We Collect [German]",
+      "personal": "Personal Information [German]",
+      "email": "Email address [German]",
+      "name": "Name (optional) [German]",
+      "role": "User role (student, teacher, admin) [German]",
+      "language": "Language preference [German]",
+      "usage": "Usage Data [German]",
+      "learning": "Learning progress and assessment results [German]",
+      "interactions": "Interactions with AI tutors [German]",
+      "scenarios": "PBL scenario completion data [German]",
+      "analytics": "Platform usage analytics [German]",
+      "technical": "Technical Data [German]",
+      "browser": "Browser type and version [German]",
+      "device": "Device information [German]",
+      "ip": "IP address (anonymized) [German]",
+      "timezone": "Time zone settings [German]"
     },
     "howUse": {
-      "title": "[DE] translation needed",
-      "provide": "[DE] translation needed",
-      "personalize": "[DE] translation needed",
-      "communicate": "[DE] translation needed",
-      "improve": "[DE] translation needed",
-      "analyze": "[DE] translation needed",
-      "security": "[DE] translation needed"
+      "title": "2. How We Use Your Information [German]",
+      "provide": "To provide and maintain our service [German]",
+      "personalize": "To personalize your learning experience [German]",
+      "communicate": "To communicate with you about your account [German]",
+      "improve": "To improve our platform and develop new features [German]",
+      "analyze": "To analyze usage patterns and optimize performance [German]",
+      "security": "To detect and prevent security threats [German]"
     },
     "storage": {
-      "title": "[DE] translation needed",
-      "location": "[DE] translation needed",
-      "encryption": "[DE] translation needed",
-      "access": "[DE] translation needed",
-      "monitoring": "[DE] translation needed",
-      "backup": "[DE] translation needed"
+      "title": "3. Data Storage and Security [German]",
+      "location": "Your data is stored securely on Google Cloud Platform servers. We implement appropriate technical and organizational measures to protect your personal information. [German]",
+      "encryption": "Data encryption in transit and at rest [German]",
+      "access": "Restricted access controls [German]",
+      "monitoring": "Regular security monitoring [German]",
+      "backup": "Secure backup procedures [German]"
     },
     "sharing": {
-      "title": "[DE] translation needed",
-      "intro": "[DE] translation needed",
-      "consent": "[DE] translation needed",
-      "legal": "[DE] translation needed",
-      "protect": "[DE] translation needed",
-      "service": "[DE] translation needed"
+      "title": "4. Data Sharing and Disclosure [German]",
+      "intro": "We do not sell, trade, or rent your personal information. We may share your information in the following situations: [German]",
+      "consent": "With your consent [German]",
+      "legal": "To comply with legal obligations [German]",
+      "protect": "To protect our rights and safety [German]",
+      "service": "With service providers who assist our operations [German]"
     },
     "rights": {
-      "title": "[DE] translation needed",
-      "intro": "[DE] translation needed",
-      "access": "[DE] translation needed",
-      "correct": "[DE] translation needed",
-      "delete": "[DE] translation needed",
-      "export": "[DE] translation needed",
-      "restrict": "[DE] translation needed",
-      "withdraw": "[DE] translation needed"
+      "title": "5. Your Rights [German]",
+      "intro": "You have the following rights regarding your personal data: [German]",
+      "access": "Access your personal information [German]",
+      "correct": "Correct inaccurate data [German]",
+      "delete": "Request deletion of your data [German]",
+      "export": "Export your data in a portable format [German]",
+      "restrict": "Restrict processing of your data [German]",
+      "withdraw": "Withdraw consent at any time [German]"
     },
     "cookies": {
-      "title": "[DE] translation needed",
-      "intro": "[DE] translation needed"
+      "title": "6. Cookies and Tracking [German]",
+      "intro": "We use cookies and similar tracking technologies to enhance your experience. Essential cookies are required for platform functionality, while optional cookies help us improve our service. [German]"
     },
     "children": {
-      "title": "[DE] translation needed",
-      "content": "[DE] translation needed"
+      "title": "7. Children's Privacy [German]",
+      "content": "Our platform is designed for educational use by students of all ages. For users under 13, we require parental consent and limit data collection to essential information only. [German]"
     },
     "international": {
-      "title": "[DE] translation needed",
-      "content": "[DE] translation needed"
+      "title": "8. International Data Transfers [German]",
+      "content": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers. [German]"
     },
     "changes": {
-      "title": "[DE] translation needed",
-      "content": "[DE] translation needed"
+      "title": "9. Changes to This Policy [German]",
+      "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the \"Last Updated\" date. [German]"
     },
     "contact": {
-      "title": "[DE] translation needed",
-      "intro": "[DE] translation needed"
+      "title": "10. Contact Us [German]",
+      "intro": "If you have questions about this Privacy Policy, please contact us at: [German]"
     }
   },
   "terms": {
-    "title": "[DE] translation needed",
-    "effectiveDate": "[DE] translation needed",
-    "lastUpdated": "[DE] translation needed",
-    "intro": "[DE] translation needed",
+    "title": "Terms of Service [German]",
+    "effectiveDate": "Effective Date [German]",
+    "lastUpdated": "Last Updated [German]",
+    "intro": "Welcome to AI Square! These Terms of Service (\"Terms\") govern your use of our AI literacy education platform. By accessing or using AI Square, you agree to be bound by these Terms. [German]",
     "acceptance": {
-      "title": "[DE] translation needed",
-      "content": "[DE] translation needed",
-      "capacity": "[DE] translation needed"
+      "title": "1. Acceptance of Terms [German]",
+      "content": "By creating an account or using our services, you acknowledge that you have read, understood, and agree to these Terms. If you do not agree, please do not use our platform. [German]",
+      "capacity": "You must be at least 13 years old to use our services. If you are under 18, you must have parental consent. [German]"
     },
     "service": {
-      "title": "[DE] translation needed",
-      "intro": "[DE] translation needed",
-      "literacy": "[DE] translation needed",
-      "pbl": "[DE] translation needed",
-      "ai": "[DE] translation needed",
-      "tracking": "[DE] translation needed",
-      "multi": "[DE] translation needed"
+      "title": "2. Description of Service [German]",
+      "intro": "AI Square provides: [German]",
+      "literacy": "AI literacy education content and assessments [German]",
+      "pbl": "Problem-Based Learning (PBL) scenarios [German]",
+      "ai": "AI-powered tutoring and feedback [German]",
+      "tracking": "Progress tracking and analytics [German]",
+      "multi": "Multi-language support (9 languages) [German]"
     },
     "accounts": {
-      "title": "[DE] translation needed",
-      "registration": "[DE] translation needed",
-      "accurate": "[DE] translation needed",
-      "maintain": "[DE] translation needed",
-      "secure": "[DE] translation needed",
-      "responsible": "[DE] translation needed",
-      "types": "[DE] translation needed",
-      "student": "[DE] translation needed",
-      "teacher": "[DE] translation needed",
-      "admin": "[DE] translation needed"
+      "title": "3. User Accounts [German]",
+      "registration": "Registration [German]",
+      "accurate": "Provide accurate and complete information [German]",
+      "maintain": "Maintain and update your information [German]",
+      "secure": "Keep your account credentials secure [German]",
+      "responsible": "You are responsible for all activities under your account [German]",
+      "types": "Account Types [German]",
+      "student": "Student: Access to learning content and assessments [German]",
+      "teacher": "Teacher: Additional class management features [German]",
+      "admin": "Administrator: Platform management capabilities [German]"
     },
     "use": {
-      "title": "[DE] translation needed",
-      "permitted": "[DE] translation needed",
-      "educational": "[DE] translation needed",
-      "share": "[DE] translation needed",
-      "feedback": "[DE] translation needed",
-      "prohibited": "[DE] translation needed",
-      "misuse": "[DE] translation needed",
-      "share_credentials": "[DE] translation needed",
-      "cheat": "[DE] translation needed",
-      "harm": "[DE] translation needed",
-      "illegal": "[DE] translation needed",
-      "scrape": "[DE] translation needed"
+      "title": "4. Acceptable Use Policy [German]",
+      "permitted": "You may: [German]",
+      "educational": "Use the platform for educational purposes [German]",
+      "share": "Share your learning progress appropriately [German]",
+      "feedback": "Provide constructive feedback [German]",
+      "prohibited": "You may not: [German]",
+      "misuse": "Misuse or attempt to manipulate the AI systems [German]",
+      "share_credentials": "Share account credentials [German]",
+      "cheat": "Engage in academic dishonesty [German]",
+      "harm": "Harass, abuse, or harm other users [German]",
+      "illegal": "Use the platform for illegal activities [German]",
+      "scrape": "Scrape or copy content without permission [German]"
     },
     "ip": {
-      "title": "[DE] translation needed",
-      "platform": "[DE] translation needed",
-      "ownership": "[DE] translation needed",
-      "user": "[DE] translation needed",
-      "retain": "[DE] translation needed",
-      "open": "[DE] translation needed",
-      "git": "[DE] translation needed"
+      "title": "5. Intellectual Property [German]",
+      "platform": "Platform Content [German]",
+      "ownership": "All content on AI Square, including text, graphics, logos, and software, is owned by AI Square or its licensors and protected by intellectual property laws. [German]",
+      "user": "User Content [German]",
+      "retain": "You retain ownership of content you create. By submitting content, you grant us a license to use it for providing and improving our services. [German]",
+      "open": "Open Source [German]",
+      "git": "Educational content is managed through Git and may be subject to open-source licenses. Please check individual repositories for specific license terms. [German]"
     },
     "privacy": {
-      "title": "[DE] translation needed",
-      "content": "[DE] translation needed"
+      "title": "6. Privacy and Data Protection [German]",
+      "content": "Your use of AI Square is also governed by our Privacy Policy. We are committed to protecting your personal information and using it only as described in our Privacy Policy. [German]"
     },
     "ai": {
-      "title": "[DE] translation needed",
-      "disclaimer": "[DE] translation needed",
-      "educational": "[DE] translation needed",
-      "verify": "[DE] translation needed",
-      "improve": "[DE] translation needed"
+      "title": "7. AI Services and Limitations [German]",
+      "disclaimer": "Our AI-powered features are designed to assist learning but are not perfect. We do not guarantee the accuracy of AI-generated content or feedback. [German]",
+      "educational": "AI responses are for educational purposes only [German]",
+      "verify": "Always verify important information independently [German]",
+      "improve": "We continuously work to improve AI accuracy [German]"
     },
     "disclaimers": {
-      "title": "[DE] translation needed",
+      "title": "8. Disclaimers and Limitations [German]",
       "asis": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND.",
-      "liability": "[DE] translation needed"
+      "liability": "To the fullest extent permitted by law, AI Square shall not be liable for any indirect, incidental, special, consequential, or punitive damages. [German]"
     },
     "modifications": {
-      "title": "[DE] translation needed",
-      "content": "[DE] translation needed"
+      "title": "9. Modifications to Terms [German]",
+      "content": "We may modify these Terms at any time. We will notify users of material changes. Continued use after changes constitutes acceptance of the new Terms. [German]"
     },
     "termination": {
-      "title": "[DE] translation needed",
-      "rights": "[DE] translation needed"
+      "title": "10. Termination [German]",
+      "rights": "We reserve the right to suspend or terminate accounts that violate these Terms. You may delete your account at any time. [German]"
     },
     "law": {
-      "title": "[DE] translation needed",
-      "content": "[DE] translation needed"
+      "title": "11. Governing Law [German]",
+      "content": "These Terms are governed by the laws of the jurisdiction where AI Square operates, without regard to conflict of law principles. [German]"
     },
     "contact": {
-      "title": "[DE] translation needed",
-      "intro": "[DE] translation needed"
+      "title": "12. Contact Information [German]",
+      "intro": "For questions about these Terms, please contact us: [German]"
     },
-    "agreement": "[DE] translation needed"
+    "agreement": "By using AI Square, you acknowledge that you have read and agree to these Terms of Service. [German]"
   },
   "common": {
-    "backToHome": "[DE] translation needed"
+    "backToHome": "Back to Home [German]"
   }
 }

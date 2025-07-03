@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "[IT] translation needed",
-    "subtitle": "[IT] translation needed",
+    "greeting": "Welcome, {{name}}! [Italian]",
+    "subtitle": "Let's get you started on your AI literacy journey [Italian]",
     "step1": {
-      "title": "[IT] translation needed",
-      "description": "[IT] translation needed",
-      "content": "[IT] translation needed",
-      "assessment": "[IT] translation needed",
-      "assessmentDesc": "[IT] translation needed",
-      "learning": "[IT] translation needed",
-      "learningDesc": "[IT] translation needed"
+      "title": "Discover Your Path [Italian]",
+      "description": "AI Square helps you understand and master AI literacy [Italian]",
+      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [Italian]",
+      "assessment": "Smart Assessment [Italian]",
+      "assessmentDesc": "Discover your current AI knowledge level [Italian]",
+      "learning": "Personalized Learning [Italian]",
+      "learningDesc": "Get tailored recommendations based on your goals [Italian]"
     },
     "step2": {
-      "title": "[IT] translation needed",
-      "description": "[IT] translation needed",
-      "content": "[IT] translation needed",
-      "domains": "[IT] translation needed",
-      "engaging": "[IT] translation needed",
-      "creating": "[IT] translation needed",
-      "managing": "[IT] translation needed",
-      "designing": "[IT] translation needed"
+      "title": "Four Core Domains [Italian]",
+      "description": "Master the essential areas of AI literacy [Italian]",
+      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [Italian]",
+      "domains": "AI Literacy Domains [Italian]",
+      "engaging": "Engaging with AI [Italian]",
+      "creating": "Creating with AI [Italian]",
+      "managing": "Managing with AI [Italian]",
+      "designing": "Designing with AI [Italian]"
     },
     "step3": {
-      "title": "[IT] translation needed",
-      "description": "[IT] translation needed",
-      "content": "[IT] translation needed",
-      "ready": "[IT] translation needed",
-      "benefit1": "[IT] translation needed",
-      "benefit2": "[IT] translation needed",
-      "benefit3": "[IT] translation needed"
+      "title": "Start Your Journey [Italian]",
+      "description": "Begin with an assessment and unlock your potential [Italian]",
+      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [Italian]",
+      "ready": "What you'll get: [Italian]",
+      "benefit1": "Detailed assessment of your AI knowledge [Italian]",
+      "benefit2": "Personalized learning path recommendations [Italian]",
+      "benefit3": "Interactive scenarios and practical exercises [Italian]"
     },
-    "startJourney": "[IT] translation needed"
+    "startJourney": "Start Your Journey [Italian]"
   },
   "goals": {
-    "title": "[IT] translation needed",
-    "subtitle": "[IT] translation needed",
+    "title": "What would you like to achieve? [Italian]",
+    "subtitle": "Select your learning goals to get personalized recommendations [Italian]",
     "understand": {
-      "title": "[IT] translation needed",
-      "description": "[IT] translation needed"
+      "title": "Understand AI Fundamentals [Italian]",
+      "description": "Learn the basics of AI, machine learning, and how AI systems work [Italian]"
     },
     "create": {
-      "title": "[IT] translation needed",
-      "description": "[IT] translation needed"
+      "title": "Create Content with AI [Italian]",
+      "description": "Use AI tools for writing, design, art, and creative projects [Italian]"
     },
     "analyze": {
-      "title": "[IT] translation needed",
-      "description": "[IT] translation needed"
+      "title": "Analyze Data with AI [Italian]",
+      "description": "Apply AI for data analysis, insights, and decision-making [Italian]"
     },
     "build": {
-      "title": "[IT] translation needed",
-      "description": "[IT] translation needed"
+      "title": "Build AI Solutions [Italian]",
+      "description": "Develop and implement AI systems and applications [Italian]"
     },
     "teach": {
-      "title": "[IT] translation needed",
-      "description": "[IT] translation needed"
+      "title": "Teach AI to Others [Italian]",
+      "description": "Educate and guide others in understanding and using AI [Italian]"
     },
     "ethical": {
-      "title": "[IT] translation needed",
-      "description": "[IT] translation needed"
+      "title": "Ensure Ethical AI Use [Italian]",
+      "description": "Understand and implement responsible AI practices [Italian]"
     },
-    "recommendedDomains": "[IT] translation needed",
+    "recommendedDomains": "Recommended domains [Italian]",
     "selected": "{{count}} goals selected",
-    "selectAtLeastOne": "[IT] translation needed",
-    "continue": "[IT] translation needed",
-    "skipForNow": "[IT] translation needed",
-    "helpText": "[IT] translation needed"
+    "selectAtLeastOne": "Please select at least one learning goal [Italian]",
+    "continue": "Continue to Assessment [Italian]",
+    "skipForNow": "Skip for now [Italian]",
+    "helpText": "Don't worry, you can always change these later in your profile settings. [Italian]"
   },
   "progress": {
-    "welcome": "[IT] translation needed",
-    "identity": "[IT] translation needed",
-    "goals": "[IT] translation needed"
+    "welcome": "Welcome [Italian]",
+    "identity": "Identity [Italian]",
+    "goals": "Goals [Italian]"
   },
   "identity": {
-    "title": "[IT] translation needed",
-    "subtitle": "[IT] translation needed",
+    "title": "Who are you? [Italian]",
+    "subtitle": "Help us personalize your AI learning journey [Italian]",
     "student": {
-      "title": "[IT] translation needed",
-      "description": "[IT] translation needed"
+      "title": "Student [Italian]",
+      "description": "I'm studying and want to learn AI for my academic and future career [Italian]"
     },
     "teacher": {
-      "title": "[IT] translation needed",
-      "description": "[IT] translation needed"
+      "title": "Educator [Italian]",
+      "description": "I teach others and want to integrate AI into my curriculum [Italian]"
     },
     "professional": {
-      "title": "[IT] translation needed",
-      "description": "[IT] translation needed"
+      "title": "Professional [Italian]",
+      "description": "I work in industry and want to leverage AI in my role [Italian]"
     },
     "learner": {
-      "title": "[IT] translation needed",
-      "description": "[IT] translation needed"
+      "title": "Lifelong Learner [Italian]",
+      "description": "I'm curious about AI and want to explore its possibilities [Italian]"
     }
   },
   "button": {
-    "back": "[IT] translation needed",
-    "continue": "[IT] translation needed",
-    "saving": "[IT] translation needed"
+    "back": "Back [Italian]",
+    "continue": "Continue [Italian]",
+    "saving": "Saving... [Italian]"
   }
 }

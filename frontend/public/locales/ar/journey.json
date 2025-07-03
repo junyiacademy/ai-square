@@ -1,16 +1,16 @@
 {
-  "title": "[Arabic] translation needed",
-  "subtitle": "[Arabic] translation needed",
-  "getStarted": "[Arabic] translation needed",
-  "pathOverview": "[Arabic] translation needed",
-  "nextPath": "[Arabic] translation needed",
-  "tryFeature": "[Arabic] translation needed",
+  "title": "AI Square User Journey [Arabic]",
+  "subtitle": "Five key paths for complete AI learning experience [Arabic]",
+  "getStarted": "Get Started [Arabic]",
+  "pathOverview": "Complete Learning Cycle [Arabic]",
+  "nextPath": "Next Path → [Arabic]",
+  "tryFeature": "Experience This Feature [Arabic]",
   "paths": {
     "dashboard": {
-      "title": "[Arabic] translation needed",
-      "subtitle": "[Arabic] translation needed",
-      "description": "[Arabic] translation needed",
-      "userNeed": "[Arabic] translation needed",
+      "title": "Dashboard [Arabic]",
+      "subtitle": "Learning Command Center [Arabic]",
+      "description": "One-stop overview of your AI learning journey, track progress, view achievements, and plan next steps. [Arabic]",
+      "userNeed": "How is my learning progress? [Arabic]",
       "features": [
         "[Arabic] translation needed",
         "[Arabic] translation needed",
@@ -19,10 +19,10 @@
       ]
     },
     "assessment": {
-      "title": "[Arabic] translation needed",
-      "subtitle": "[Arabic] translation needed",
-      "description": "[Arabic] translation needed",
-      "userNeed": "[Arabic] translation needed",
+      "title": "Assessment [Arabic]",
+      "subtitle": "AI Literacy Test [Arabic]",
+      "description": "25 professional questions to deeply understand your competency level across four AI domains. [Arabic]",
+      "userNeed": "What is my AI competency level? [Arabic]",
       "features": [
         "[Arabic] translation needed",
         "[Arabic] translation needed",
@@ -31,10 +31,10 @@
       ]
     },
     "learningPath": {
-      "title": "[Arabic] translation needed",
-      "subtitle": "[Arabic] translation needed",
-      "description": "[Arabic] translation needed",
-      "userNeed": "[Arabic] translation needed",
+      "title": "Learning Path [Arabic]",
+      "subtitle": "Personalized Growth Plan [Arabic]",
+      "description": "Based on your assessment results, we recommend the most suitable learning content and pace. [Arabic]",
+      "userNeed": "What courses are right for me? [Arabic]",
       "features": [
         "[Arabic] translation needed",
         "[Arabic] translation needed",
@@ -43,10 +43,10 @@
       ]
     },
     "pbl": {
-      "title": "[Arabic] translation needed",
-      "subtitle": "[Arabic] translation needed",
-      "description": "[Arabic] translation needed",
-      "userNeed": "[Arabic] translation needed",
+      "title": "PBL Practice [Arabic]",
+      "subtitle": "Real-world Scenarios [Arabic]",
+      "description": "9 practical scenarios with AI tutor guidance for learning by doing. [Arabic]",
+      "userNeed": "How do I apply AI in practice? [Arabic]",
       "features": [
         "[Arabic] translation needed",
         "[Arabic] translation needed",
@@ -55,10 +55,10 @@
       ]
     },
     "chat": {
-      "title": "[Arabic] translation needed",
-      "subtitle": "[Arabic] translation needed",
-      "description": "[Arabic] translation needed",
-      "userNeed": "[Arabic] translation needed",
+      "title": "AI Advisor [Arabic]",
+      "subtitle": "24/7 Support [Arabic]",
+      "description": "24/7 intelligent learning companion that remembers your learning context and provides personalized advice. [Arabic]",
+      "userNeed": "Who can I ask when I have questions? [Arabic]",
       "features": [
         "[Arabic] translation needed",
         "[Arabic] translation needed",
@@ -67,7 +67,7 @@
       ]
     }
   },
-  "keyFeatures": "[Arabic] translation needed",
-  "solvedNeed": "[Arabic] translation needed",
-  "completeJourney": "[Arabic] translation needed"
+  "keyFeatures": "Key Features [Arabic]",
+  "solvedNeed": "User Need Addressed [Arabic]",
+  "completeJourney": "Complete Learning Journey [Arabic]"
 }

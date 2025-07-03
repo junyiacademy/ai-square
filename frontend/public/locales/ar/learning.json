@@ -1,21 +1,21 @@
 {
   "learningPath": {
-    "title": "[Arabic] translation needed",
-    "subtitle": "[Arabic] translation needed",
-    "yourProgress": "[Arabic] translation needed",
-    "currentScore": "[Arabic] translation needed",
-    "target": "[Arabic] translation needed",
-    "completed": "[Arabic] translation needed",
-    "filteringBy": "[Arabic] translation needed",
-    "clearFilter": "[Arabic] translation needed",
-    "recommendedPath": "[Arabic] translation needed",
-    "estimatedTime": "[Arabic] translation needed",
-    "startLearning": "[Arabic] translation needed",
-    "progress": "[Arabic] translation needed",
-    "weakDomainReason": "[Arabic] translation needed",
-    "strongDomainReason": "[Arabic] translation needed",
-    "averageDomainReason": "[Arabic] translation needed",
-    "goToDashboard": "[Arabic] translation needed",
-    "dashboardHint": "[Arabic] translation needed"
+    "title": "Your Personalized Learning Path [Arabic]",
+    "subtitle": "Based on your assessment results, here's your recommended learning journey [Arabic]",
+    "yourProgress": "Your Progress Overview [Arabic]",
+    "currentScore": "Current [Arabic]",
+    "target": "Target [Arabic]",
+    "completed": "completed [Arabic]",
+    "filteringBy": "Showing recommendations for: {{domain}} [Arabic]",
+    "clearFilter": "Show all recommendations [Arabic]",
+    "recommendedPath": "Recommended Learning Path [Arabic]",
+    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [Arabic]",
+    "startLearning": "Start Learning [Arabic]",
+    "progress": "Progress [Arabic]",
+    "weakDomainReason": "Recommended to strengthen {{domain}} (current: {{score}}%) [Arabic]",
+    "strongDomainReason": "Advanced challenge for your strong {{domain}} skills ({{score}}%) [Arabic]",
+    "averageDomainReason": "Continue building {{domain}} expertise (current: {{score}}%) [Arabic]",
+    "goToDashboard": "Go to Dashboard [Arabic]",
+    "dashboardHint": "Track your overall progress and continue your learning journey [Arabic]"
   }
 }

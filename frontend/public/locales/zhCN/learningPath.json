@@ -1,43 +1,43 @@
 {
-  "title": "[Chinese Simplified] translation needed",
-  "subtitle": "[Chinese Simplified] translation needed",
-  "yourProgress": "[Chinese Simplified] translation needed",
-  "currentScore": "[Chinese Simplified] translation needed",
-  "targetScore": "[Chinese Simplified] translation needed",
-  "completed": "[Chinese Simplified] translation needed",
-  "recommendedPath": "[Chinese Simplified] translation needed",
-  "startLearning": "[Chinese Simplified] translation needed",
-  "estimatedTime": "[Chinese Simplified] translation needed",
-  "weakDomainReason": "[Chinese Simplified] translation needed",
+  "title": "Your Learning Path [Chinese (Simplified)]",
+  "subtitle": "Personalized recommendations based on your assessment [Chinese (Simplified)]",
+  "yourProgress": "Your Progress [Chinese (Simplified)]",
+  "currentScore": "Current Score [Chinese (Simplified)]",
+  "targetScore": "Target Score [Chinese (Simplified)]",
+  "completed": "completed [Chinese (Simplified)]",
+  "recommendedPath": "Recommended Learning Path [Chinese (Simplified)]",
+  "startLearning": "Start Learning [Chinese (Simplified)]",
+  "estimatedTime": "Estimated time [Chinese (Simplified)]",
+  "weakDomainReason": "This is your weakest area with {{score}}% score [Chinese (Simplified)]",
   "difficulty": {
-    "beginner": "[Chinese Simplified] translation needed",
-    "intermediate": "[Chinese Simplified] translation needed",
-    "advanced": "[Chinese Simplified] translation needed"
+    "beginner": "Beginner [Chinese (Simplified)]",
+    "intermediate": "Intermediate [Chinese (Simplified)]",
+    "advanced": "Advanced [Chinese (Simplified)]"
   },
   "noAssessment": {
-    "title": "[Chinese Simplified] translation needed",
-    "description": "[Chinese Simplified] translation needed",
-    "button": "[Chinese Simplified] translation needed"
+    "title": "No Assessment Found [Chinese (Simplified)]",
+    "description": "Please complete the assessment first to get personalized recommendations [Chinese (Simplified)]",
+    "button": "Take Assessment [Chinese (Simplified)]"
   },
   "domains": {
-    "Engaging_with_AI": "[Chinese Simplified] translation needed",
-    "Creating_with_AI": "[Chinese Simplified] translation needed",
-    "Managing_with_AI": "[Chinese Simplified] translation needed",
-    "Designing_with_AI": "[Chinese Simplified] translation needed"
+    "Engaging_with_AI": "Engaging with AI [Chinese (Simplified)]",
+    "Creating_with_AI": "Creating with AI [Chinese (Simplified)]",
+    "Managing_with_AI": "Managing with AI [Chinese (Simplified)]",
+    "Designing_with_AI": "Designing with AI [Chinese (Simplified)]"
   },
-  "strongDomainReason": "[Chinese Simplified] translation needed",
-  "averageDomainReason": "[Chinese Simplified] translation needed",
+  "strongDomainReason": "Advance your skills in {{domain}} (current: {{score}}%) [Chinese (Simplified)]",
+  "averageDomainReason": "Improve your {{domain}} skills (current: {{score}}%) [Chinese (Simplified)]",
   "learningPath": {
-    "filteringBy": "[Chinese Simplified] translation needed",
-    "clearFilter": "[Chinese Simplified] translation needed",
-    "recommendedPath": "[Chinese Simplified] translation needed",
-    "estimatedTime": "[Chinese Simplified] translation needed",
-    "startLearning": "[Chinese Simplified] translation needed",
-    "progress": "[Chinese Simplified] translation needed",
-    "goToDashboard": "[Chinese Simplified] translation needed",
-    "dashboardHint": "[Chinese Simplified] translation needed"
+    "filteringBy": "Showing items for {{domain}} [Chinese (Simplified)]",
+    "clearFilter": "Clear filter [Chinese (Simplified)]",
+    "recommendedPath": "Recommended Learning Path [Chinese (Simplified)]",
+    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [Chinese (Simplified)]",
+    "startLearning": "Start Learning [Chinese (Simplified)]",
+    "progress": "Progress [Chinese (Simplified)]",
+    "goToDashboard": "Go to Dashboard [Chinese (Simplified)]",
+    "dashboardHint": "Track your overall progress and achievements in the dashboard [Chinese (Simplified)]"
   },
-  "showAll": "[Chinese Simplified] translation needed",
-  "focusOnWeakAreas": "[Chinese Simplified] translation needed",
-  "backToDashboard": "[Chinese Simplified] translation needed"
+  "showAll": "Show All [Chinese (Simplified)]",
+  "focusOnWeakAreas": "Focus on Weak Areas [Chinese (Simplified)]",
+  "backToDashboard": "Back to Dashboard [Chinese (Simplified)]"
 }

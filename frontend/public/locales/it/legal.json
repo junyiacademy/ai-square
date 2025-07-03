@@ -1,171 +1,171 @@
 {
   "privacy": {
-    "title": "[IT] translation needed",
-    "lastUpdated": "[IT] translation needed",
-    "intro": "[IT] translation needed",
+    "title": "Privacy Policy [Italian]",
+    "lastUpdated": "Last updated [Italian]",
+    "intro": "AI Square (\"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI literacy education platform. [Italian]",
     "infoCollect": {
-      "title": "[IT] translation needed",
-      "personal": "[IT] translation needed",
-      "email": "[IT] translation needed",
-      "name": "[IT] translation needed",
-      "role": "[IT] translation needed",
-      "language": "[IT] translation needed",
-      "usage": "[IT] translation needed",
-      "learning": "[IT] translation needed",
-      "interactions": "[IT] translation needed",
-      "scenarios": "[IT] translation needed",
-      "analytics": "[IT] translation needed",
-      "technical": "[IT] translation needed",
-      "browser": "[IT] translation needed",
-      "device": "[IT] translation needed",
-      "ip": "[IT] translation needed",
-      "timezone": "[IT] translation needed"
+      "title": "1. Information We Collect [Italian]",
+      "personal": "Personal Information [Italian]",
+      "email": "Email address [Italian]",
+      "name": "Name (optional) [Italian]",
+      "role": "User role (student, teacher, admin) [Italian]",
+      "language": "Language preference [Italian]",
+      "usage": "Usage Data [Italian]",
+      "learning": "Learning progress and assessment results [Italian]",
+      "interactions": "Interactions with AI tutors [Italian]",
+      "scenarios": "PBL scenario completion data [Italian]",
+      "analytics": "Platform usage analytics [Italian]",
+      "technical": "Technical Data [Italian]",
+      "browser": "Browser type and version [Italian]",
+      "device": "Device information [Italian]",
+      "ip": "IP address (anonymized) [Italian]",
+      "timezone": "Time zone settings [Italian]"
     },
     "howUse": {
-      "title": "[IT] translation needed",
-      "provide": "[IT] translation needed",
-      "personalize": "[IT] translation needed",
-      "communicate": "[IT] translation needed",
-      "improve": "[IT] translation needed",
-      "analyze": "[IT] translation needed",
-      "security": "[IT] translation needed"
+      "title": "2. How We Use Your Information [Italian]",
+      "provide": "To provide and maintain our service [Italian]",
+      "personalize": "To personalize your learning experience [Italian]",
+      "communicate": "To communicate with you about your account [Italian]",
+      "improve": "To improve our platform and develop new features [Italian]",
+      "analyze": "To analyze usage patterns and optimize performance [Italian]",
+      "security": "To detect and prevent security threats [Italian]"
     },
     "storage": {
-      "title": "[IT] translation needed",
-      "location": "[IT] translation needed",
-      "encryption": "[IT] translation needed",
-      "access": "[IT] translation needed",
-      "monitoring": "[IT] translation needed",
-      "backup": "[IT] translation needed"
+      "title": "3. Data Storage and Security [Italian]",
+      "location": "Your data is stored securely on Google Cloud Platform servers. We implement appropriate technical and organizational measures to protect your personal information. [Italian]",
+      "encryption": "Data encryption in transit and at rest [Italian]",
+      "access": "Restricted access controls [Italian]",
+      "monitoring": "Regular security monitoring [Italian]",
+      "backup": "Secure backup procedures [Italian]"
     },
     "sharing": {
-      "title": "[IT] translation needed",
-      "intro": "[IT] translation needed",
-      "consent": "[IT] translation needed",
-      "legal": "[IT] translation needed",
-      "protect": "[IT] translation needed",
-      "service": "[IT] translation needed"
+      "title": "4. Data Sharing and Disclosure [Italian]",
+      "intro": "We do not sell, trade, or rent your personal information. We may share your information in the following situations: [Italian]",
+      "consent": "With your consent [Italian]",
+      "legal": "To comply with legal obligations [Italian]",
+      "protect": "To protect our rights and safety [Italian]",
+      "service": "With service providers who assist our operations [Italian]"
     },
     "rights": {
-      "title": "[IT] translation needed",
-      "intro": "[IT] translation needed",
-      "access": "[IT] translation needed",
-      "correct": "[IT] translation needed",
-      "delete": "[IT] translation needed",
-      "export": "[IT] translation needed",
-      "restrict": "[IT] translation needed",
-      "withdraw": "[IT] translation needed"
+      "title": "5. Your Rights [Italian]",
+      "intro": "You have the following rights regarding your personal data: [Italian]",
+      "access": "Access your personal information [Italian]",
+      "correct": "Correct inaccurate data [Italian]",
+      "delete": "Request deletion of your data [Italian]",
+      "export": "Export your data in a portable format [Italian]",
+      "restrict": "Restrict processing of your data [Italian]",
+      "withdraw": "Withdraw consent at any time [Italian]"
     },
     "cookies": {
-      "title": "[IT] translation needed",
-      "intro": "[IT] translation needed"
+      "title": "6. Cookies and Tracking [Italian]",
+      "intro": "We use cookies and similar tracking technologies to enhance your experience. Essential cookies are required for platform functionality, while optional cookies help us improve our service. [Italian]"
     },
     "children": {
-      "title": "[IT] translation needed",
-      "content": "[IT] translation needed"
+      "title": "7. Children's Privacy [Italian]",
+      "content": "Our platform is designed for educational use by students of all ages. For users under 13, we require parental consent and limit data collection to essential information only. [Italian]"
     },
     "international": {
-      "title": "[IT] translation needed",
-      "content": "[IT] translation needed"
+      "title": "8. International Data Transfers [Italian]",
+      "content": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers. [Italian]"
     },
     "changes": {
-      "title": "[IT] translation needed",
-      "content": "[IT] translation needed"
+      "title": "9. Changes to This Policy [Italian]",
+      "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the \"Last Updated\" date. [Italian]"
     },
     "contact": {
-      "title": "[IT] translation needed",
-      "intro": "[IT] translation needed"
+      "title": "10. Contact Us [Italian]",
+      "intro": "If you have questions about this Privacy Policy, please contact us at: [Italian]"
     }
   },
   "terms": {
-    "title": "[IT] translation needed",
-    "effectiveDate": "[IT] translation needed",
-    "lastUpdated": "[IT] translation needed",
-    "intro": "[IT] translation needed",
+    "title": "Terms of Service [Italian]",
+    "effectiveDate": "Effective Date [Italian]",
+    "lastUpdated": "Last Updated [Italian]",
+    "intro": "Welcome to AI Square! These Terms of Service (\"Terms\") govern your use of our AI literacy education platform. By accessing or using AI Square, you agree to be bound by these Terms. [Italian]",
     "acceptance": {
-      "title": "[IT] translation needed",
-      "content": "[IT] translation needed",
-      "capacity": "[IT] translation needed"
+      "title": "1. Acceptance of Terms [Italian]",
+      "content": "By creating an account or using our services, you acknowledge that you have read, understood, and agree to these Terms. If you do not agree, please do not use our platform. [Italian]",
+      "capacity": "You must be at least 13 years old to use our services. If you are under 18, you must have parental consent. [Italian]"
     },
     "service": {
-      "title": "[IT] translation needed",
-      "intro": "[IT] translation needed",
-      "literacy": "[IT] translation needed",
-      "pbl": "[IT] translation needed",
-      "ai": "[IT] translation needed",
-      "tracking": "[IT] translation needed",
-      "multi": "[IT] translation needed"
+      "title": "2. Description of Service [Italian]",
+      "intro": "AI Square provides: [Italian]",
+      "literacy": "AI literacy education content and assessments [Italian]",
+      "pbl": "Problem-Based Learning (PBL) scenarios [Italian]",
+      "ai": "AI-powered tutoring and feedback [Italian]",
+      "tracking": "Progress tracking and analytics [Italian]",
+      "multi": "Multi-language support (9 languages) [Italian]"
     },
     "accounts": {
-      "title": "[IT] translation needed",
-      "registration": "[IT] translation needed",
-      "accurate": "[IT] translation needed",
-      "maintain": "[IT] translation needed",
-      "secure": "[IT] translation needed",
-      "responsible": "[IT] translation needed",
-      "types": "[IT] translation needed",
-      "student": "[IT] translation needed",
-      "teacher": "[IT] translation needed",
-      "admin": "[IT] translation needed"
+      "title": "3. User Accounts [Italian]",
+      "registration": "Registration [Italian]",
+      "accurate": "Provide accurate and complete information [Italian]",
+      "maintain": "Maintain and update your information [Italian]",
+      "secure": "Keep your account credentials secure [Italian]",
+      "responsible": "You are responsible for all activities under your account [Italian]",
+      "types": "Account Types [Italian]",
+      "student": "Student: Access to learning content and assessments [Italian]",
+      "teacher": "Teacher: Additional class management features [Italian]",
+      "admin": "Administrator: Platform management capabilities [Italian]"
     },
     "use": {
-      "title": "[IT] translation needed",
-      "permitted": "[IT] translation needed",
-      "educational": "[IT] translation needed",
-      "share": "[IT] translation needed",
-      "feedback": "[IT] translation needed",
-      "prohibited": "[IT] translation needed",
-      "misuse": "[IT] translation needed",
-      "share_credentials": "[IT] translation needed",
-      "cheat": "[IT] translation needed",
-      "harm": "[IT] translation needed",
-      "illegal": "[IT] translation needed",
-      "scrape": "[IT] translation needed"
+      "title": "4. Acceptable Use Policy [Italian]",
+      "permitted": "You may: [Italian]",
+      "educational": "Use the platform for educational purposes [Italian]",
+      "share": "Share your learning progress appropriately [Italian]",
+      "feedback": "Provide constructive feedback [Italian]",
+      "prohibited": "You may not: [Italian]",
+      "misuse": "Misuse or attempt to manipulate the AI systems [Italian]",
+      "share_credentials": "Share account credentials [Italian]",
+      "cheat": "Engage in academic dishonesty [Italian]",
+      "harm": "Harass, abuse, or harm other users [Italian]",
+      "illegal": "Use the platform for illegal activities [Italian]",
+      "scrape": "Scrape or copy content without permission [Italian]"
     },
     "ip": {
-      "title": "[IT] translation needed",
-      "platform": "[IT] translation needed",
-      "ownership": "[IT] translation needed",
-      "user": "[IT] translation needed",
-      "retain": "[IT] translation needed",
-      "open": "[IT] translation needed",
-      "git": "[IT] translation needed"
+      "title": "5. Intellectual Property [Italian]",
+      "platform": "Platform Content [Italian]",
+      "ownership": "All content on AI Square, including text, graphics, logos, and software, is owned by AI Square or its licensors and protected by intellectual property laws. [Italian]",
+      "user": "User Content [Italian]",
+      "retain": "You retain ownership of content you create. By submitting content, you grant us a license to use it for providing and improving our services. [Italian]",
+      "open": "Open Source [Italian]",
+      "git": "Educational content is managed through Git and may be subject to open-source licenses. Please check individual repositories for specific license terms. [Italian]"
     },
     "privacy": {
-      "title": "[IT] translation needed",
-      "content": "[IT] translation needed"
+      "title": "6. Privacy and Data Protection [Italian]",
+      "content": "Your use of AI Square is also governed by our Privacy Policy. We are committed to protecting your personal information and using it only as described in our Privacy Policy. [Italian]"
     },
     "ai": {
-      "title": "[IT] translation needed",
-      "disclaimer": "[IT] translation needed",
-      "educational": "[IT] translation needed",
-      "verify": "[IT] translation needed",
-      "improve": "[IT] translation needed"
+      "title": "7. AI Services and Limitations [Italian]",
+      "disclaimer": "Our AI-powered features are designed to assist learning but are not perfect. We do not guarantee the accuracy of AI-generated content or feedback. [Italian]",
+      "educational": "AI responses are for educational purposes only [Italian]",
+      "verify": "Always verify important information independently [Italian]",
+      "improve": "We continuously work to improve AI accuracy [Italian]"
     },
     "disclaimers": {
-      "title": "[IT] translation needed",
+      "title": "8. Disclaimers and Limitations [Italian]",
       "asis": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND.",
-      "liability": "[IT] translation needed"
+      "liability": "To the fullest extent permitted by law, AI Square shall not be liable for any indirect, incidental, special, consequential, or punitive damages. [Italian]"
     },
     "modifications": {
-      "title": "[IT] translation needed",
-      "content": "[IT] translation needed"
+      "title": "9. Modifications to Terms [Italian]",
+      "content": "We may modify these Terms at any time. We will notify users of material changes. Continued use after changes constitutes acceptance of the new Terms. [Italian]"
     },
     "termination": {
-      "title": "[IT] translation needed",
-      "rights": "[IT] translation needed"
+      "title": "10. Termination [Italian]",
+      "rights": "We reserve the right to suspend or terminate accounts that violate these Terms. You may delete your account at any time. [Italian]"
     },
     "law": {
-      "title": "[IT] translation needed",
-      "content": "[IT] translation needed"
+      "title": "11. Governing Law [Italian]",
+      "content": "These Terms are governed by the laws of the jurisdiction where AI Square operates, without regard to conflict of law principles. [Italian]"
     },
     "contact": {
-      "title": "[IT] translation needed",
-      "intro": "[IT] translation needed"
+      "title": "12. Contact Information [Italian]",
+      "intro": "For questions about these Terms, please contact us: [Italian]"
     },
-    "agreement": "[IT] translation needed"
+    "agreement": "By using AI Square, you acknowledge that you have read and agree to these Terms of Service. [Italian]"
   },
   "common": {
-    "backToHome": "[IT] translation needed"
+    "backToHome": "Back to Home [Italian]"
   }
 }

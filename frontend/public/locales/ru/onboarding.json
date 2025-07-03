@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "[RU] translation needed",
-    "subtitle": "[RU] translation needed",
+    "greeting": "Welcome, {{name}}! [Russian]",
+    "subtitle": "Let's get you started on your AI literacy journey [Russian]",
     "step1": {
-      "title": "[RU] translation needed",
-      "description": "[RU] translation needed",
-      "content": "[RU] translation needed",
-      "assessment": "[RU] translation needed",
-      "assessmentDesc": "[RU] translation needed",
-      "learning": "[RU] translation needed",
-      "learningDesc": "[RU] translation needed"
+      "title": "Discover Your Path [Russian]",
+      "description": "AI Square helps you understand and master AI literacy [Russian]",
+      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [Russian]",
+      "assessment": "Smart Assessment [Russian]",
+      "assessmentDesc": "Discover your current AI knowledge level [Russian]",
+      "learning": "Personalized Learning [Russian]",
+      "learningDesc": "Get tailored recommendations based on your goals [Russian]"
     },
     "step2": {
-      "title": "[RU] translation needed",
-      "description": "[RU] translation needed",
-      "content": "[RU] translation needed",
-      "domains": "[RU] translation needed",
-      "engaging": "[RU] translation needed",
-      "creating": "[RU] translation needed",
-      "managing": "[RU] translation needed",
-      "designing": "[RU] translation needed"
+      "title": "Four Core Domains [Russian]",
+      "description": "Master the essential areas of AI literacy [Russian]",
+      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [Russian]",
+      "domains": "AI Literacy Domains [Russian]",
+      "engaging": "Engaging with AI [Russian]",
+      "creating": "Creating with AI [Russian]",
+      "managing": "Managing with AI [Russian]",
+      "designing": "Designing with AI [Russian]"
     },
     "step3": {
-      "title": "[RU] translation needed",
-      "description": "[RU] translation needed",
-      "content": "[RU] translation needed",
-      "ready": "[RU] translation needed",
-      "benefit1": "[RU] translation needed",
-      "benefit2": "[RU] translation needed",
-      "benefit3": "[RU] translation needed"
+      "title": "Start Your Journey [Russian]",
+      "description": "Begin with an assessment and unlock your potential [Russian]",
+      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [Russian]",
+      "ready": "What you'll get: [Russian]",
+      "benefit1": "Detailed assessment of your AI knowledge [Russian]",
+      "benefit2": "Personalized learning path recommendations [Russian]",
+      "benefit3": "Interactive scenarios and practical exercises [Russian]"
     },
-    "startJourney": "[RU] translation needed"
+    "startJourney": "Start Your Journey [Russian]"
   },
   "goals": {
-    "title": "[RU] translation needed",
-    "subtitle": "[RU] translation needed",
+    "title": "What would you like to achieve? [Russian]",
+    "subtitle": "Select your learning goals to get personalized recommendations [Russian]",
     "understand": {
-      "title": "[RU] translation needed",
-      "description": "[RU] translation needed"
+      "title": "Understand AI Fundamentals [Russian]",
+      "description": "Learn the basics of AI, machine learning, and how AI systems work [Russian]"
     },
     "create": {
-      "title": "[RU] translation needed",
-      "description": "[RU] translation needed"
+      "title": "Create Content with AI [Russian]",
+      "description": "Use AI tools for writing, design, art, and creative projects [Russian]"
     },
     "analyze": {
-      "title": "[RU] translation needed",
-      "description": "[RU] translation needed"
+      "title": "Analyze Data with AI [Russian]",
+      "description": "Apply AI for data analysis, insights, and decision-making [Russian]"
     },
     "build": {
-      "title": "[RU] translation needed",
-      "description": "[RU] translation needed"
+      "title": "Build AI Solutions [Russian]",
+      "description": "Develop and implement AI systems and applications [Russian]"
     },
     "teach": {
-      "title": "[RU] translation needed",
-      "description": "[RU] translation needed"
+      "title": "Teach AI to Others [Russian]",
+      "description": "Educate and guide others in understanding and using AI [Russian]"
     },
     "ethical": {
-      "title": "[RU] translation needed",
-      "description": "[RU] translation needed"
+      "title": "Ensure Ethical AI Use [Russian]",
+      "description": "Understand and implement responsible AI practices [Russian]"
     },
-    "recommendedDomains": "[RU] translation needed",
+    "recommendedDomains": "Recommended domains [Russian]",
     "selected": "{{count}} goals selected",
-    "selectAtLeastOne": "[RU] translation needed",
-    "continue": "[RU] translation needed",
-    "skipForNow": "[RU] translation needed",
-    "helpText": "[RU] translation needed"
+    "selectAtLeastOne": "Please select at least one learning goal [Russian]",
+    "continue": "Continue to Assessment [Russian]",
+    "skipForNow": "Skip for now [Russian]",
+    "helpText": "Don't worry, you can always change these later in your profile settings. [Russian]"
   },
   "progress": {
-    "welcome": "[RU] translation needed",
-    "identity": "[RU] translation needed",
-    "goals": "[RU] translation needed"
+    "welcome": "Welcome [Russian]",
+    "identity": "Identity [Russian]",
+    "goals": "Goals [Russian]"
   },
   "identity": {
-    "title": "[RU] translation needed",
-    "subtitle": "[RU] translation needed",
+    "title": "Who are you? [Russian]",
+    "subtitle": "Help us personalize your AI learning journey [Russian]",
     "student": {
-      "title": "[RU] translation needed",
-      "description": "[RU] translation needed"
+      "title": "Student [Russian]",
+      "description": "I'm studying and want to learn AI for my academic and future career [Russian]"
     },
     "teacher": {
-      "title": "[RU] translation needed",
-      "description": "[RU] translation needed"
+      "title": "Educator [Russian]",
+      "description": "I teach others and want to integrate AI into my curriculum [Russian]"
     },
     "professional": {
-      "title": "[RU] translation needed",
-      "description": "[RU] translation needed"
+      "title": "Professional [Russian]",
+      "description": "I work in industry and want to leverage AI in my role [Russian]"
     },
     "learner": {
-      "title": "[RU] translation needed",
-      "description": "[RU] translation needed"
+      "title": "Lifelong Learner [Russian]",
+      "description": "I'm curious about AI and want to explore its possibilities [Russian]"
     }
   },
   "button": {
-    "back": "[RU] translation needed",
-    "continue": "[RU] translation needed",
-    "saving": "[RU] translation needed"
+    "back": "Back [Russian]",
+    "continue": "Continue [Russian]",
+    "saving": "Saving... [Russian]"
   }
 }

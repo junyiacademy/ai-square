@@ -1,43 +1,43 @@
 {
-  "title": "[Thai] translation needed",
-  "subtitle": "[Thai] translation needed",
-  "yourProgress": "[Thai] translation needed",
-  "currentScore": "[Thai] translation needed",
-  "targetScore": "[Thai] translation needed",
-  "completed": "[Thai] translation needed",
-  "recommendedPath": "[Thai] translation needed",
-  "startLearning": "[Thai] translation needed",
-  "estimatedTime": "[Thai] translation needed",
-  "weakDomainReason": "[Thai] translation needed",
+  "title": "Your Learning Path [Thai]",
+  "subtitle": "Personalized recommendations based on your assessment [Thai]",
+  "yourProgress": "Your Progress [Thai]",
+  "currentScore": "Current Score [Thai]",
+  "targetScore": "Target Score [Thai]",
+  "completed": "completed [Thai]",
+  "recommendedPath": "Recommended Learning Path [Thai]",
+  "startLearning": "Start Learning [Thai]",
+  "estimatedTime": "Estimated time [Thai]",
+  "weakDomainReason": "This is your weakest area with {{score}}% score [Thai]",
   "difficulty": {
-    "beginner": "[Thai] translation needed",
-    "intermediate": "[Thai] translation needed",
-    "advanced": "[Thai] translation needed"
+    "beginner": "Beginner [Thai]",
+    "intermediate": "Intermediate [Thai]",
+    "advanced": "Advanced [Thai]"
   },
   "noAssessment": {
-    "title": "[Thai] translation needed",
-    "description": "[Thai] translation needed",
-    "button": "[Thai] translation needed"
+    "title": "No Assessment Found [Thai]",
+    "description": "Please complete the assessment first to get personalized recommendations [Thai]",
+    "button": "Take Assessment [Thai]"
   },
   "domains": {
-    "Engaging_with_AI": "[Thai] translation needed",
-    "Creating_with_AI": "[Thai] translation needed",
-    "Managing_with_AI": "[Thai] translation needed",
-    "Designing_with_AI": "[Thai] translation needed"
+    "Engaging_with_AI": "Engaging with AI [Thai]",
+    "Creating_with_AI": "Creating with AI [Thai]",
+    "Managing_with_AI": "Managing with AI [Thai]",
+    "Designing_with_AI": "Designing with AI [Thai]"
   },
-  "strongDomainReason": "[Thai] translation needed",
-  "averageDomainReason": "[Thai] translation needed",
+  "strongDomainReason": "Advance your skills in {{domain}} (current: {{score}}%) [Thai]",
+  "averageDomainReason": "Improve your {{domain}} skills (current: {{score}}%) [Thai]",
   "learningPath": {
-    "filteringBy": "[Thai] translation needed",
-    "clearFilter": "[Thai] translation needed",
-    "recommendedPath": "[Thai] translation needed",
-    "estimatedTime": "[Thai] translation needed",
-    "startLearning": "[Thai] translation needed",
-    "progress": "[Thai] translation needed",
-    "goToDashboard": "[Thai] translation needed",
-    "dashboardHint": "[Thai] translation needed"
+    "filteringBy": "Showing items for {{domain}} [Thai]",
+    "clearFilter": "Clear filter [Thai]",
+    "recommendedPath": "Recommended Learning Path [Thai]",
+    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [Thai]",
+    "startLearning": "Start Learning [Thai]",
+    "progress": "Progress [Thai]",
+    "goToDashboard": "Go to Dashboard [Thai]",
+    "dashboardHint": "Track your overall progress and achievements in the dashboard [Thai]"
   },
-  "showAll": "[Thai] translation needed",
-  "focusOnWeakAreas": "[Thai] translation needed",
-  "backToDashboard": "[Thai] translation needed"
+  "showAll": "Show All [Thai]",
+  "focusOnWeakAreas": "Focus on Weak Areas [Thai]",
+  "backToDashboard": "Back to Dashboard [Thai]"
 }

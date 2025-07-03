@@ -1,21 +1,21 @@
 {
   "learningPath": {
-    "title": "[DE] translation needed",
-    "subtitle": "[DE] translation needed",
-    "yourProgress": "[DE] translation needed",
-    "currentScore": "[DE] translation needed",
-    "target": "[DE] translation needed",
-    "completed": "[DE] translation needed",
-    "filteringBy": "[DE] translation needed",
-    "clearFilter": "[DE] translation needed",
-    "recommendedPath": "[DE] translation needed",
-    "estimatedTime": "[DE] translation needed",
-    "startLearning": "[DE] translation needed",
-    "progress": "[DE] translation needed",
-    "weakDomainReason": "[DE] translation needed",
-    "strongDomainReason": "[DE] translation needed",
-    "averageDomainReason": "[DE] translation needed",
-    "goToDashboard": "[DE] translation needed",
-    "dashboardHint": "[DE] translation needed"
+    "title": "Ihr personalisierter Lernpfad",
+    "subtitle": "Basierend auf Ihren Bewertungsergebnissen ist hier Ihre empfohlene Lernreise",
+    "yourProgress": "Ihre Fortschrittsübersicht",
+    "currentScore": "Aktuell",
+    "target": "Ziel",
+    "completed": "abgeschlossen",
+    "filteringBy": "Zeige Empfehlungen für: {{domain}}",
+    "clearFilter": "Alle Empfehlungen anzeigen",
+    "recommendedPath": "Empfohlener Lernpfad",
+    "estimatedTime": "Gesamtzeit: {{hours}}h {{minutes}}m",
+    "startLearning": "Lernen beginnen",
+    "progress": "Fortschritt",
+    "weakDomainReason": "Empfohlen zur Stärkung von {{domain}} (aktuell: {{score}}%)",
+    "strongDomainReason": "Fortgeschrittene Herausforderung für Ihre starken {{domain}}-Fähigkeiten ({{score}}%)",
+    "averageDomainReason": "Weiter {{domain}}-Expertise aufbauen (aktuell: {{score}}%)",
+    "goToDashboard": "Zum Dashboard",
+    "dashboardHint": "Verfolgen Sie Ihren Gesamtfortschritt und setzen Sie Ihre Lernreise fort"
   }
 }

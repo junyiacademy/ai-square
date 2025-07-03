@@ -1,16 +1,16 @@
 {
-  "title": "[Chinese Simplified] translation needed",
-  "subtitle": "[Chinese Simplified] translation needed",
-  "getStarted": "[Chinese Simplified] translation needed",
-  "pathOverview": "[Chinese Simplified] translation needed",
-  "nextPath": "[Chinese Simplified] translation needed",
-  "tryFeature": "[Chinese Simplified] translation needed",
+  "title": "AI Square User Journey [Chinese (Simplified)]",
+  "subtitle": "Five key paths for complete AI learning experience [Chinese (Simplified)]",
+  "getStarted": "Get Started [Chinese (Simplified)]",
+  "pathOverview": "Complete Learning Cycle [Chinese (Simplified)]",
+  "nextPath": "Next Path → [Chinese (Simplified)]",
+  "tryFeature": "Experience This Feature [Chinese (Simplified)]",
   "paths": {
     "dashboard": {
-      "title": "[Chinese Simplified] translation needed",
-      "subtitle": "[Chinese Simplified] translation needed",
-      "description": "[Chinese Simplified] translation needed",
-      "userNeed": "[Chinese Simplified] translation needed",
+      "title": "Dashboard [Chinese (Simplified)]",
+      "subtitle": "Learning Command Center [Chinese (Simplified)]",
+      "description": "One-stop overview of your AI learning journey, track progress, view achievements, and plan next steps. [Chinese (Simplified)]",
+      "userNeed": "How is my learning progress? [Chinese (Simplified)]",
       "features": [
         "[Chinese Simplified] translation needed",
         "[Chinese Simplified] translation needed",
@@ -19,10 +19,10 @@
       ]
     },
     "assessment": {
-      "title": "[Chinese Simplified] translation needed",
-      "subtitle": "[Chinese Simplified] translation needed",
-      "description": "[Chinese Simplified] translation needed",
-      "userNeed": "[Chinese Simplified] translation needed",
+      "title": "Assessment [Chinese (Simplified)]",
+      "subtitle": "AI Literacy Test [Chinese (Simplified)]",
+      "description": "25 professional questions to deeply understand your competency level across four AI domains. [Chinese (Simplified)]",
+      "userNeed": "What is my AI competency level? [Chinese (Simplified)]",
       "features": [
         "[Chinese Simplified] translation needed",
         "[Chinese Simplified] translation needed",
@@ -31,10 +31,10 @@
       ]
     },
     "learningPath": {
-      "title": "[Chinese Simplified] translation needed",
-      "subtitle": "[Chinese Simplified] translation needed",
-      "description": "[Chinese Simplified] translation needed",
-      "userNeed": "[Chinese Simplified] translation needed",
+      "title": "Learning Path [Chinese (Simplified)]",
+      "subtitle": "Personalized Growth Plan [Chinese (Simplified)]",
+      "description": "Based on your assessment results, we recommend the most suitable learning content and pace. [Chinese (Simplified)]",
+      "userNeed": "What courses are right for me? [Chinese (Simplified)]",
       "features": [
         "[Chinese Simplified] translation needed",
         "[Chinese Simplified] translation needed",
@@ -43,10 +43,10 @@
       ]
     },
     "pbl": {
-      "title": "[Chinese Simplified] translation needed",
-      "subtitle": "[Chinese Simplified] translation needed",
-      "description": "[Chinese Simplified] translation needed",
-      "userNeed": "[Chinese Simplified] translation needed",
+      "title": "PBL Practice [Chinese (Simplified)]",
+      "subtitle": "Real-world Scenarios [Chinese (Simplified)]",
+      "description": "9 practical scenarios with AI tutor guidance for learning by doing. [Chinese (Simplified)]",
+      "userNeed": "How do I apply AI in practice? [Chinese (Simplified)]",
       "features": [
         "[Chinese Simplified] translation needed",
         "[Chinese Simplified] translation needed",
@@ -55,10 +55,10 @@
       ]
     },
     "chat": {
-      "title": "[Chinese Simplified] translation needed",
-      "subtitle": "[Chinese Simplified] translation needed",
-      "description": "[Chinese Simplified] translation needed",
-      "userNeed": "[Chinese Simplified] translation needed",
+      "title": "AI Advisor [Chinese (Simplified)]",
+      "subtitle": "24/7 Support [Chinese (Simplified)]",
+      "description": "24/7 intelligent learning companion that remembers your learning context and provides personalized advice. [Chinese (Simplified)]",
+      "userNeed": "Who can I ask when I have questions? [Chinese (Simplified)]",
       "features": [
         "[Chinese Simplified] translation needed",
         "[Chinese Simplified] translation needed",
@@ -67,7 +67,7 @@
       ]
     }
   },
-  "keyFeatures": "[Chinese Simplified] translation needed",
-  "solvedNeed": "[Chinese Simplified] translation needed",
-  "completeJourney": "[Chinese Simplified] translation needed"
+  "keyFeatures": "Key Features [Chinese (Simplified)]",
+  "solvedNeed": "User Need Addressed [Chinese (Simplified)]",
+  "completeJourney": "Complete Learning Journey [Chinese (Simplified)]"
 }

@@ -1,43 +1,43 @@
 {
-  "title": "[DE] translation needed",
-  "subtitle": "[DE] translation needed",
-  "yourProgress": "[DE] translation needed",
-  "currentScore": "[DE] translation needed",
-  "targetScore": "[DE] translation needed",
-  "completed": "[DE] translation needed",
-  "recommendedPath": "[DE] translation needed",
-  "startLearning": "[DE] translation needed",
-  "estimatedTime": "[DE] translation needed",
-  "weakDomainReason": "[DE] translation needed",
+  "title": "Your Learning Path [German]",
+  "subtitle": "Personalized recommendations based on your assessment [German]",
+  "yourProgress": "Your Progress [German]",
+  "currentScore": "Current Score [German]",
+  "targetScore": "Target Score [German]",
+  "completed": "completed [German]",
+  "recommendedPath": "Recommended Learning Path [German]",
+  "startLearning": "Start Learning [German]",
+  "estimatedTime": "Estimated time [German]",
+  "weakDomainReason": "This is your weakest area with {{score}}% score [German]",
   "difficulty": {
-    "beginner": "[DE] translation needed",
-    "intermediate": "[DE] translation needed",
-    "advanced": "[DE] translation needed"
+    "beginner": "Beginner [German]",
+    "intermediate": "Intermediate [German]",
+    "advanced": "Advanced [German]"
   },
   "noAssessment": {
-    "title": "[DE] translation needed",
-    "description": "[DE] translation needed",
-    "button": "[DE] translation needed"
+    "title": "No Assessment Found [German]",
+    "description": "Please complete the assessment first to get personalized recommendations [German]",
+    "button": "Take Assessment [German]"
   },
   "domains": {
-    "Engaging_with_AI": "[DE] translation needed",
-    "Creating_with_AI": "[DE] translation needed",
-    "Managing_with_AI": "[DE] translation needed",
-    "Designing_with_AI": "[DE] translation needed"
+    "Engaging_with_AI": "Engaging with AI [German]",
+    "Creating_with_AI": "Creating with AI [German]",
+    "Managing_with_AI": "Managing with AI [German]",
+    "Designing_with_AI": "Designing with AI [German]"
   },
-  "strongDomainReason": "[DE] translation needed",
-  "averageDomainReason": "[DE] translation needed",
+  "strongDomainReason": "Advance your skills in {{domain}} (current: {{score}}%) [German]",
+  "averageDomainReason": "Improve your {{domain}} skills (current: {{score}}%) [German]",
   "learningPath": {
-    "filteringBy": "[DE] translation needed",
-    "clearFilter": "[DE] translation needed",
-    "recommendedPath": "[DE] translation needed",
-    "estimatedTime": "[DE] translation needed",
-    "startLearning": "[DE] translation needed",
-    "progress": "[DE] translation needed",
-    "goToDashboard": "[DE] translation needed",
-    "dashboardHint": "[DE] translation needed"
+    "filteringBy": "Showing items for {{domain}} [German]",
+    "clearFilter": "Clear filter [German]",
+    "recommendedPath": "Recommended Learning Path [German]",
+    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [German]",
+    "startLearning": "Start Learning [German]",
+    "progress": "Progress [German]",
+    "goToDashboard": "Go to Dashboard [German]",
+    "dashboardHint": "Track your overall progress and achievements in the dashboard [German]"
   },
-  "showAll": "[DE] translation needed",
-  "focusOnWeakAreas": "[DE] translation needed",
-  "backToDashboard": "[DE] translation needed"
+  "showAll": "Show All [German]",
+  "focusOnWeakAreas": "Focus on Weak Areas [German]",
+  "backToDashboard": "Back to Dashboard [German]"
 }

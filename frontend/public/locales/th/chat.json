@@ -1,12 +1,12 @@
 {
-  "aiAdvisor": "[Thai] translation needed",
-  "newChat": "[Thai] translation needed",
-  "history": "[Thai] translation needed",
-  "welcomeTitle": "[Thai] translation needed",
-  "welcomeMessage": "[Thai] translation needed",
-  "inputPlaceholder": "[Thai] translation needed",
-  "suggestedTopic1": "[Thai] translation needed",
-  "suggestedTopic2": "[Thai] translation needed",
-  "suggestedTopic3": "[Thai] translation needed",
-  "suggestedTopic4": "[Thai] translation needed"
+  "aiAdvisor": "AI Learning Advisor [Thai]",
+  "newChat": "New Chat [Thai]",
+  "history": "Chat History [Thai]",
+  "welcomeTitle": "Hello! I'm your AI Learning Advisor [Thai]",
+  "welcomeMessage": "I'm here to help you navigate your AI literacy journey. Ask me about learning paths, PBL scenarios, or any AI concepts you'd like to understand better. [Thai]",
+  "inputPlaceholder": "Type your message here... (Press Enter to send) [Thai]",
+  "suggestedTopic1": "Which PBL scenario should I start with? [Thai]",
+  "suggestedTopic2": "Help me understand my assessment results [Thai]",
+  "suggestedTopic3": "What are my weak areas and how can I improve? [Thai]",
+  "suggestedTopic4": "Explain AI concepts in simple terms [Thai]"
 }

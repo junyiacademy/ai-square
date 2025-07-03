@@ -7,14 +7,33 @@ import { Scenario, CreateProgramResponse, DomainType, DifficultyLevel, KSAMappin
 
 
 // Load scenario data from YAML file
-async function loadScenario(scenarioId: string): Promise<Scenario | null> {
+async function loadScenario(scenarioId: string, lang: string = 'en'): Promise<Scenario | null> {
   try {
-    const yamlPath = path.join(
+    const scenarioFolder = scenarioId.replace(/-/g, '_');
+    const fileName = `${scenarioFolder}_${lang}.yaml`;
+    let yamlPath = path.join(
       process.cwd(),
       'public',
       'pbl_data',
-      `${scenarioId.replace(/-/g, '_')}_scenario.yaml`
+      'scenarios',
+      scenarioFolder,
+      fileName
     );
+    
+    // Check if language-specific file exists, fallback to English
+    try {
+      await fs.access(yamlPath);
+    } catch {
+      // Fallback to English if language-specific file doesn't exist
+      yamlPath = path.join(
+        process.cwd(),
+        'public',
+        'pbl_data',
+        'scenarios',
+        scenarioFolder,
+        `${scenarioFolder}_en.yaml`
+      );
+    }
     
     const yamlContent = await fs.readFile(yamlPath, 'utf8');
     const data = yaml.load(yamlContent) as Record<string, unknown>;
@@ -114,7 +133,7 @@ export async function POST(
     const language = body.language || 'en';
     
     // Load scenario
-    const scenario = await loadScenario(scenarioId);
+    const scenario = await loadScenario(scenarioId, language);
     if (!scenario) {
       return NextResponse.json(
         {

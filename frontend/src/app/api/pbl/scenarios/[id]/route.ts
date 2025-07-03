@@ -190,7 +190,18 @@ export async function GET(
     console.log('Loading scenario:', scenarioId, 'with lang:', lang);
     
     // Load scenario YAML file
-    const yamlPath = path.join(process.cwd(), 'public', 'pbl_data', `${scenarioId.replace(/-/g, '_')}_scenario.yaml`);
+    const scenarioFolder = scenarioId.replace(/-/g, '_');
+    const fileName = `${scenarioFolder}_${lang}.yaml`;
+    let yamlPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', scenarioFolder, fileName);
+    
+    // Check if language-specific file exists, fallback to English
+    try {
+      await fs.access(yamlPath);
+    } catch {
+      // Fallback to English if language-specific file doesn't exist
+      yamlPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', scenarioFolder, `${scenarioFolder}_en.yaml`);
+    }
+    
     const yamlContent = await fs.readFile(yamlPath, 'utf8');
     interface ScenarioYAML {
       scenario_info: {

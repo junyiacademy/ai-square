@@ -1,12 +1,12 @@
 {
-  "aiAdvisor": "[DE] translation needed",
-  "newChat": "[DE] translation needed",
-  "history": "[DE] translation needed",
-  "welcomeTitle": "[DE] translation needed",
-  "welcomeMessage": "[DE] translation needed",
-  "inputPlaceholder": "[DE] translation needed",
-  "suggestedTopic1": "[DE] translation needed",
-  "suggestedTopic2": "[DE] translation needed",
-  "suggestedTopic3": "[DE] translation needed",
-  "suggestedTopic4": "[DE] translation needed"
+  "aiAdvisor": "KI-Lernberater",
+  "newChat": "Neuer Chat",
+  "history": "Chat-Verlauf",
+  "welcomeTitle": "Hallo! Ich bin Ihr KI-Lernberater",
+  "welcomeMessage": "Ich bin hier, um Ihnen bei Ihrer KI-Kompetenzreise zu helfen. Fragen Sie mich nach Lernpfaden, PBL-Szenarien oder KI-Konzepten, die Sie besser verstehen möchten.",
+  "inputPlaceholder": "Geben Sie hier Ihre Nachricht ein... (Enter zum Senden)",
+  "suggestedTopic1": "Mit welchem PBL-Szenario soll ich beginnen?",
+  "suggestedTopic2": "Helfen Sie mir, meine Bewertungsergebnisse zu verstehen",
+  "suggestedTopic3": "Was sind meine Schwachpunkte und wie kann ich mich verbessern?",
+  "suggestedTopic4": "Erklären Sie KI-Konzepte in einfachen Worten"
 }

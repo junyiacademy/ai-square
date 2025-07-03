@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "[KO] translation needed",
-    "subtitle": "[KO] translation needed",
+    "greeting": "Welcome, {{name}}! [Korean]",
+    "subtitle": "Let's get you started on your AI literacy journey [Korean]",
     "step1": {
-      "title": "[KO] translation needed",
-      "description": "[KO] translation needed",
-      "content": "[KO] translation needed",
-      "assessment": "[KO] translation needed",
-      "assessmentDesc": "[KO] translation needed",
-      "learning": "[KO] translation needed",
-      "learningDesc": "[KO] translation needed"
+      "title": "Discover Your Path [Korean]",
+      "description": "AI Square helps you understand and master AI literacy [Korean]",
+      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [Korean]",
+      "assessment": "Smart Assessment [Korean]",
+      "assessmentDesc": "Discover your current AI knowledge level [Korean]",
+      "learning": "Personalized Learning [Korean]",
+      "learningDesc": "Get tailored recommendations based on your goals [Korean]"
     },
     "step2": {
-      "title": "[KO] translation needed",
-      "description": "[KO] translation needed",
-      "content": "[KO] translation needed",
-      "domains": "[KO] translation needed",
-      "engaging": "[KO] translation needed",
-      "creating": "[KO] translation needed",
-      "managing": "[KO] translation needed",
-      "designing": "[KO] translation needed"
+      "title": "Four Core Domains [Korean]",
+      "description": "Master the essential areas of AI literacy [Korean]",
+      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [Korean]",
+      "domains": "AI Literacy Domains [Korean]",
+      "engaging": "Engaging with AI [Korean]",
+      "creating": "Creating with AI [Korean]",
+      "managing": "Managing with AI [Korean]",
+      "designing": "Designing with AI [Korean]"
     },
     "step3": {
-      "title": "[KO] translation needed",
-      "description": "[KO] translation needed",
-      "content": "[KO] translation needed",
-      "ready": "[KO] translation needed",
-      "benefit1": "[KO] translation needed",
-      "benefit2": "[KO] translation needed",
-      "benefit3": "[KO] translation needed"
+      "title": "Start Your Journey [Korean]",
+      "description": "Begin with an assessment and unlock your potential [Korean]",
+      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [Korean]",
+      "ready": "What you'll get: [Korean]",
+      "benefit1": "Detailed assessment of your AI knowledge [Korean]",
+      "benefit2": "Personalized learning path recommendations [Korean]",
+      "benefit3": "Interactive scenarios and practical exercises [Korean]"
     },
-    "startJourney": "[KO] translation needed"
+    "startJourney": "Start Your Journey [Korean]"
   },
   "goals": {
-    "title": "[KO] translation needed",
-    "subtitle": "[KO] translation needed",
+    "title": "What would you like to achieve? [Korean]",
+    "subtitle": "Select your learning goals to get personalized recommendations [Korean]",
     "understand": {
-      "title": "[KO] translation needed",
-      "description": "[KO] translation needed"
+      "title": "Understand AI Fundamentals [Korean]",
+      "description": "Learn the basics of AI, machine learning, and how AI systems work [Korean]"
     },
     "create": {
-      "title": "[KO] translation needed",
-      "description": "[KO] translation needed"
+      "title": "Create Content with AI [Korean]",
+      "description": "Use AI tools for writing, design, art, and creative projects [Korean]"
     },
     "analyze": {
-      "title": "[KO] translation needed",
-      "description": "[KO] translation needed"
+      "title": "Analyze Data with AI [Korean]",
+      "description": "Apply AI for data analysis, insights, and decision-making [Korean]"
     },
     "build": {
-      "title": "[KO] translation needed",
-      "description": "[KO] translation needed"
+      "title": "Build AI Solutions [Korean]",
+      "description": "Develop and implement AI systems and applications [Korean]"
     },
     "teach": {
-      "title": "[KO] translation needed",
-      "description": "[KO] translation needed"
+      "title": "Teach AI to Others [Korean]",
+      "description": "Educate and guide others in understanding and using AI [Korean]"
     },
     "ethical": {
-      "title": "[KO] translation needed",
-      "description": "[KO] translation needed"
+      "title": "Ensure Ethical AI Use [Korean]",
+      "description": "Understand and implement responsible AI practices [Korean]"
     },
-    "recommendedDomains": "[KO] translation needed",
+    "recommendedDomains": "Recommended domains [Korean]",
     "selected": "{{count}} goals selected",
-    "selectAtLeastOne": "[KO] translation needed",
-    "continue": "[KO] translation needed",
-    "skipForNow": "[KO] translation needed",
-    "helpText": "[KO] translation needed"
+    "selectAtLeastOne": "Please select at least one learning goal [Korean]",
+    "continue": "Continue to Assessment [Korean]",
+    "skipForNow": "Skip for now [Korean]",
+    "helpText": "Don't worry, you can always change these later in your profile settings. [Korean]"
   },
   "progress": {
-    "welcome": "[KO] translation needed",
-    "identity": "[KO] translation needed",
-    "goals": "[KO] translation needed"
+    "welcome": "Welcome [Korean]",
+    "identity": "Identity [Korean]",
+    "goals": "Goals [Korean]"
   },
   "identity": {
-    "title": "[KO] translation needed",
-    "subtitle": "[KO] translation needed",
+    "title": "Who are you? [Korean]",
+    "subtitle": "Help us personalize your AI learning journey [Korean]",
     "student": {
-      "title": "[KO] translation needed",
-      "description": "[KO] translation needed"
+      "title": "Student [Korean]",
+      "description": "I'm studying and want to learn AI for my academic and future career [Korean]"
     },
     "teacher": {
-      "title": "[KO] translation needed",
-      "description": "[KO] translation needed"
+      "title": "Educator [Korean]",
+      "description": "I teach others and want to integrate AI into my curriculum [Korean]"
     },
     "professional": {
-      "title": "[KO] translation needed",
-      "description": "[KO] translation needed"
+      "title": "Professional [Korean]",
+      "description": "I work in industry and want to leverage AI in my role [Korean]"
     },
     "learner": {
-      "title": "[KO] translation needed",
-      "description": "[KO] translation needed"
+      "title": "Lifelong Learner [Korean]",
+      "description": "I'm curious about AI and want to explore its possibilities [Korean]"
     }
   },
   "button": {
-    "back": "[KO] translation needed",
-    "continue": "[KO] translation needed",
-    "saving": "[KO] translation needed"
+    "back": "Back [Korean]",
+    "continue": "Continue [Korean]",
+    "saving": "Saving... [Korean]"
   }
 }

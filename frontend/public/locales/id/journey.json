@@ -1,16 +1,16 @@
 {
-  "title": "[Indonesian] translation needed",
-  "subtitle": "[Indonesian] translation needed",
-  "getStarted": "[Indonesian] translation needed",
-  "pathOverview": "[Indonesian] translation needed",
-  "nextPath": "[Indonesian] translation needed",
-  "tryFeature": "[Indonesian] translation needed",
+  "title": "AI Square User Journey [Indonesian]",
+  "subtitle": "Five key paths for complete AI learning experience [Indonesian]",
+  "getStarted": "Get Started [Indonesian]",
+  "pathOverview": "Complete Learning Cycle [Indonesian]",
+  "nextPath": "Next Path → [Indonesian]",
+  "tryFeature": "Experience This Feature [Indonesian]",
   "paths": {
     "dashboard": {
-      "title": "[Indonesian] translation needed",
-      "subtitle": "[Indonesian] translation needed",
-      "description": "[Indonesian] translation needed",
-      "userNeed": "[Indonesian] translation needed",
+      "title": "Dashboard [Indonesian]",
+      "subtitle": "Learning Command Center [Indonesian]",
+      "description": "One-stop overview of your AI learning journey, track progress, view achievements, and plan next steps. [Indonesian]",
+      "userNeed": "How is my learning progress? [Indonesian]",
       "features": [
         "[Indonesian] translation needed",
         "[Indonesian] translation needed",
@@ -19,10 +19,10 @@
       ]
     },
     "assessment": {
-      "title": "[Indonesian] translation needed",
-      "subtitle": "[Indonesian] translation needed",
-      "description": "[Indonesian] translation needed",
-      "userNeed": "[Indonesian] translation needed",
+      "title": "Assessment [Indonesian]",
+      "subtitle": "AI Literacy Test [Indonesian]",
+      "description": "25 professional questions to deeply understand your competency level across four AI domains. [Indonesian]",
+      "userNeed": "What is my AI competency level? [Indonesian]",
       "features": [
         "[Indonesian] translation needed",
         "[Indonesian] translation needed",
@@ -31,10 +31,10 @@
       ]
     },
     "learningPath": {
-      "title": "[Indonesian] translation needed",
-      "subtitle": "[Indonesian] translation needed",
-      "description": "[Indonesian] translation needed",
-      "userNeed": "[Indonesian] translation needed",
+      "title": "Learning Path [Indonesian]",
+      "subtitle": "Personalized Growth Plan [Indonesian]",
+      "description": "Based on your assessment results, we recommend the most suitable learning content and pace. [Indonesian]",
+      "userNeed": "What courses are right for me? [Indonesian]",
       "features": [
         "[Indonesian] translation needed",
         "[Indonesian] translation needed",
@@ -43,10 +43,10 @@
       ]
     },
     "pbl": {
-      "title": "[Indonesian] translation needed",
-      "subtitle": "[Indonesian] translation needed",
-      "description": "[Indonesian] translation needed",
-      "userNeed": "[Indonesian] translation needed",
+      "title": "PBL Practice [Indonesian]",
+      "subtitle": "Real-world Scenarios [Indonesian]",
+      "description": "9 practical scenarios with AI tutor guidance for learning by doing. [Indonesian]",
+      "userNeed": "How do I apply AI in practice? [Indonesian]",
       "features": [
         "[Indonesian] translation needed",
         "[Indonesian] translation needed",
@@ -55,10 +55,10 @@
       ]
     },
     "chat": {
-      "title": "[Indonesian] translation needed",
-      "subtitle": "[Indonesian] translation needed",
-      "description": "[Indonesian] translation needed",
-      "userNeed": "[Indonesian] translation needed",
+      "title": "AI Advisor [Indonesian]",
+      "subtitle": "24/7 Support [Indonesian]",
+      "description": "24/7 intelligent learning companion that remembers your learning context and provides personalized advice. [Indonesian]",
+      "userNeed": "Who can I ask when I have questions? [Indonesian]",
       "features": [
         "[Indonesian] translation needed",
         "[Indonesian] translation needed",
@@ -67,7 +67,7 @@
       ]
     }
   },
-  "keyFeatures": "[Indonesian] translation needed",
-  "solvedNeed": "[Indonesian] translation needed",
-  "completeJourney": "[Indonesian] translation needed"
+  "keyFeatures": "Key Features [Indonesian]",
+  "solvedNeed": "User Need Addressed [Indonesian]",
+  "completeJourney": "Complete Learning Journey [Indonesian]"
 }

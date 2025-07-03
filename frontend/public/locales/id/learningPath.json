@@ -1,43 +1,43 @@
 {
-  "title": "[Indonesian] translation needed",
-  "subtitle": "[Indonesian] translation needed",
-  "yourProgress": "[Indonesian] translation needed",
-  "currentScore": "[Indonesian] translation needed",
-  "targetScore": "[Indonesian] translation needed",
-  "completed": "[Indonesian] translation needed",
-  "recommendedPath": "[Indonesian] translation needed",
-  "startLearning": "[Indonesian] translation needed",
-  "estimatedTime": "[Indonesian] translation needed",
-  "weakDomainReason": "[Indonesian] translation needed",
+  "title": "Your Learning Path [Indonesian]",
+  "subtitle": "Personalized recommendations based on your assessment [Indonesian]",
+  "yourProgress": "Your Progress [Indonesian]",
+  "currentScore": "Current Score [Indonesian]",
+  "targetScore": "Target Score [Indonesian]",
+  "completed": "completed [Indonesian]",
+  "recommendedPath": "Recommended Learning Path [Indonesian]",
+  "startLearning": "Start Learning [Indonesian]",
+  "estimatedTime": "Estimated time [Indonesian]",
+  "weakDomainReason": "This is your weakest area with {{score}}% score [Indonesian]",
   "difficulty": {
-    "beginner": "[Indonesian] translation needed",
-    "intermediate": "[Indonesian] translation needed",
-    "advanced": "[Indonesian] translation needed"
+    "beginner": "Beginner [Indonesian]",
+    "intermediate": "Intermediate [Indonesian]",
+    "advanced": "Advanced [Indonesian]"
   },
   "noAssessment": {
-    "title": "[Indonesian] translation needed",
-    "description": "[Indonesian] translation needed",
-    "button": "[Indonesian] translation needed"
+    "title": "No Assessment Found [Indonesian]",
+    "description": "Please complete the assessment first to get personalized recommendations [Indonesian]",
+    "button": "Take Assessment [Indonesian]"
   },
   "domains": {
-    "Engaging_with_AI": "[Indonesian] translation needed",
-    "Creating_with_AI": "[Indonesian] translation needed",
-    "Managing_with_AI": "[Indonesian] translation needed",
-    "Designing_with_AI": "[Indonesian] translation needed"
+    "Engaging_with_AI": "Engaging with AI [Indonesian]",
+    "Creating_with_AI": "Creating with AI [Indonesian]",
+    "Managing_with_AI": "Managing with AI [Indonesian]",
+    "Designing_with_AI": "Designing with AI [Indonesian]"
   },
-  "strongDomainReason": "[Indonesian] translation needed",
-  "averageDomainReason": "[Indonesian] translation needed",
+  "strongDomainReason": "Advance your skills in {{domain}} (current: {{score}}%) [Indonesian]",
+  "averageDomainReason": "Improve your {{domain}} skills (current: {{score}}%) [Indonesian]",
   "learningPath": {
-    "filteringBy": "[Indonesian] translation needed",
-    "clearFilter": "[Indonesian] translation needed",
-    "recommendedPath": "[Indonesian] translation needed",
-    "estimatedTime": "[Indonesian] translation needed",
-    "startLearning": "[Indonesian] translation needed",
-    "progress": "[Indonesian] translation needed",
-    "goToDashboard": "[Indonesian] translation needed",
-    "dashboardHint": "[Indonesian] translation needed"
+    "filteringBy": "Showing items for {{domain}} [Indonesian]",
+    "clearFilter": "Clear filter [Indonesian]",
+    "recommendedPath": "Recommended Learning Path [Indonesian]",
+    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [Indonesian]",
+    "startLearning": "Start Learning [Indonesian]",
+    "progress": "Progress [Indonesian]",
+    "goToDashboard": "Go to Dashboard [Indonesian]",
+    "dashboardHint": "Track your overall progress and achievements in the dashboard [Indonesian]"
   },
-  "showAll": "[Indonesian] translation needed",
-  "focusOnWeakAreas": "[Indonesian] translation needed",
-  "backToDashboard": "[Indonesian] translation needed"
+  "showAll": "Show All [Indonesian]",
+  "focusOnWeakAreas": "Focus on Weak Areas [Indonesian]",
+  "backToDashboard": "Back to Dashboard [Indonesian]"
 }

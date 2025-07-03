@@ -1,43 +1,43 @@
 {
-  "title": "[JA] translation needed",
-  "subtitle": "[JA] translation needed",
-  "yourProgress": "[JA] translation needed",
-  "currentScore": "[JA] translation needed",
-  "targetScore": "[JA] translation needed",
-  "completed": "[JA] translation needed",
-  "recommendedPath": "[JA] translation needed",
-  "startLearning": "[JA] translation needed",
-  "estimatedTime": "[JA] translation needed",
-  "weakDomainReason": "[JA] translation needed",
+  "title": "Your Learning Path [Japanese]",
+  "subtitle": "Personalized recommendations based on your assessment [Japanese]",
+  "yourProgress": "Your Progress [Japanese]",
+  "currentScore": "Current Score [Japanese]",
+  "targetScore": "Target Score [Japanese]",
+  "completed": "completed [Japanese]",
+  "recommendedPath": "Recommended Learning Path [Japanese]",
+  "startLearning": "Start Learning [Japanese]",
+  "estimatedTime": "Estimated time [Japanese]",
+  "weakDomainReason": "This is your weakest area with {{score}}% score [Japanese]",
   "difficulty": {
-    "beginner": "[JA] translation needed",
-    "intermediate": "[JA] translation needed",
-    "advanced": "[JA] translation needed"
+    "beginner": "Beginner [Japanese]",
+    "intermediate": "Intermediate [Japanese]",
+    "advanced": "Advanced [Japanese]"
   },
   "noAssessment": {
-    "title": "[JA] translation needed",
-    "description": "[JA] translation needed",
-    "button": "[JA] translation needed"
+    "title": "No Assessment Found [Japanese]",
+    "description": "Please complete the assessment first to get personalized recommendations [Japanese]",
+    "button": "Take Assessment [Japanese]"
   },
   "domains": {
-    "Engaging_with_AI": "[JA] translation needed",
-    "Creating_with_AI": "[JA] translation needed",
-    "Managing_with_AI": "[JA] translation needed",
-    "Designing_with_AI": "[JA] translation needed"
+    "Engaging_with_AI": "Engaging with AI [Japanese]",
+    "Creating_with_AI": "Creating with AI [Japanese]",
+    "Managing_with_AI": "Managing with AI [Japanese]",
+    "Designing_with_AI": "Designing with AI [Japanese]"
   },
-  "strongDomainReason": "[JA] translation needed",
-  "averageDomainReason": "[JA] translation needed",
+  "strongDomainReason": "Advance your skills in {{domain}} (current: {{score}}%) [Japanese]",
+  "averageDomainReason": "Improve your {{domain}} skills (current: {{score}}%) [Japanese]",
   "learningPath": {
-    "filteringBy": "[JA] translation needed",
-    "clearFilter": "[JA] translation needed",
-    "recommendedPath": "[JA] translation needed",
-    "estimatedTime": "[JA] translation needed",
-    "startLearning": "[JA] translation needed",
-    "progress": "[JA] translation needed",
-    "goToDashboard": "[JA] translation needed",
-    "dashboardHint": "[JA] translation needed"
+    "filteringBy": "Showing items for {{domain}} [Japanese]",
+    "clearFilter": "Clear filter [Japanese]",
+    "recommendedPath": "Recommended Learning Path [Japanese]",
+    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [Japanese]",
+    "startLearning": "Start Learning [Japanese]",
+    "progress": "Progress [Japanese]",
+    "goToDashboard": "Go to Dashboard [Japanese]",
+    "dashboardHint": "Track your overall progress and achievements in the dashboard [Japanese]"
   },
-  "showAll": "[JA] translation needed",
-  "focusOnWeakAreas": "[JA] translation needed",
-  "backToDashboard": "[JA] translation needed"
+  "showAll": "Show All [Japanese]",
+  "focusOnWeakAreas": "Focus on Weak Areas [Japanese]",
+  "backToDashboard": "Back to Dashboard [Japanese]"
 }

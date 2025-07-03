@@ -1,43 +1,43 @@
 {
-  "title": "[IT] translation needed",
-  "subtitle": "[IT] translation needed",
-  "yourProgress": "[IT] translation needed",
-  "currentScore": "[IT] translation needed",
-  "targetScore": "[IT] translation needed",
-  "completed": "[IT] translation needed",
-  "recommendedPath": "[IT] translation needed",
-  "startLearning": "[IT] translation needed",
-  "estimatedTime": "[IT] translation needed",
-  "weakDomainReason": "[IT] translation needed",
+  "title": "Your Learning Path [Italian]",
+  "subtitle": "Personalized recommendations based on your assessment [Italian]",
+  "yourProgress": "Your Progress [Italian]",
+  "currentScore": "Current Score [Italian]",
+  "targetScore": "Target Score [Italian]",
+  "completed": "completed [Italian]",
+  "recommendedPath": "Recommended Learning Path [Italian]",
+  "startLearning": "Start Learning [Italian]",
+  "estimatedTime": "Estimated time [Italian]",
+  "weakDomainReason": "This is your weakest area with {{score}}% score [Italian]",
   "difficulty": {
-    "beginner": "[IT] translation needed",
-    "intermediate": "[IT] translation needed",
-    "advanced": "[IT] translation needed"
+    "beginner": "Beginner [Italian]",
+    "intermediate": "Intermediate [Italian]",
+    "advanced": "Advanced [Italian]"
   },
   "noAssessment": {
-    "title": "[IT] translation needed",
-    "description": "[IT] translation needed",
-    "button": "[IT] translation needed"
+    "title": "No Assessment Found [Italian]",
+    "description": "Please complete the assessment first to get personalized recommendations [Italian]",
+    "button": "Take Assessment [Italian]"
   },
   "domains": {
-    "Engaging_with_AI": "[IT] translation needed",
-    "Creating_with_AI": "[IT] translation needed",
-    "Managing_with_AI": "[IT] translation needed",
-    "Designing_with_AI": "[IT] translation needed"
+    "Engaging_with_AI": "Engaging with AI [Italian]",
+    "Creating_with_AI": "Creating with AI [Italian]",
+    "Managing_with_AI": "Managing with AI [Italian]",
+    "Designing_with_AI": "Designing with AI [Italian]"
   },
-  "strongDomainReason": "[IT] translation needed",
-  "averageDomainReason": "[IT] translation needed",
+  "strongDomainReason": "Advance your skills in {{domain}} (current: {{score}}%) [Italian]",
+  "averageDomainReason": "Improve your {{domain}} skills (current: {{score}}%) [Italian]",
   "learningPath": {
-    "filteringBy": "[IT] translation needed",
-    "clearFilter": "[IT] translation needed",
-    "recommendedPath": "[IT] translation needed",
-    "estimatedTime": "[IT] translation needed",
-    "startLearning": "[IT] translation needed",
-    "progress": "[IT] translation needed",
-    "goToDashboard": "[IT] translation needed",
-    "dashboardHint": "[IT] translation needed"
+    "filteringBy": "Showing items for {{domain}} [Italian]",
+    "clearFilter": "Clear filter [Italian]",
+    "recommendedPath": "Recommended Learning Path [Italian]",
+    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [Italian]",
+    "startLearning": "Start Learning [Italian]",
+    "progress": "Progress [Italian]",
+    "goToDashboard": "Go to Dashboard [Italian]",
+    "dashboardHint": "Track your overall progress and achievements in the dashboard [Italian]"
   },
-  "showAll": "[IT] translation needed",
-  "focusOnWeakAreas": "[IT] translation needed",
-  "backToDashboard": "[IT] translation needed"
+  "showAll": "Show All [Italian]",
+  "focusOnWeakAreas": "Focus on Weak Areas [Italian]",
+  "backToDashboard": "Back to Dashboard [Italian]"
 }

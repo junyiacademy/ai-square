@@ -1,43 +1,43 @@
 {
-  "title": "[KO] translation needed",
-  "subtitle": "[KO] translation needed",
-  "yourProgress": "[KO] translation needed",
-  "currentScore": "[KO] translation needed",
-  "targetScore": "[KO] translation needed",
-  "completed": "[KO] translation needed",
-  "recommendedPath": "[KO] translation needed",
-  "startLearning": "[KO] translation needed",
-  "estimatedTime": "[KO] translation needed",
-  "weakDomainReason": "[KO] translation needed",
+  "title": "Your Learning Path [Korean]",
+  "subtitle": "Personalized recommendations based on your assessment [Korean]",
+  "yourProgress": "Your Progress [Korean]",
+  "currentScore": "Current Score [Korean]",
+  "targetScore": "Target Score [Korean]",
+  "completed": "completed [Korean]",
+  "recommendedPath": "Recommended Learning Path [Korean]",
+  "startLearning": "Start Learning [Korean]",
+  "estimatedTime": "Estimated time [Korean]",
+  "weakDomainReason": "This is your weakest area with {{score}}% score [Korean]",
   "difficulty": {
-    "beginner": "[KO] translation needed",
-    "intermediate": "[KO] translation needed",
-    "advanced": "[KO] translation needed"
+    "beginner": "Beginner [Korean]",
+    "intermediate": "Intermediate [Korean]",
+    "advanced": "Advanced [Korean]"
   },
   "noAssessment": {
-    "title": "[KO] translation needed",
-    "description": "[KO] translation needed",
-    "button": "[KO] translation needed"
+    "title": "No Assessment Found [Korean]",
+    "description": "Please complete the assessment first to get personalized recommendations [Korean]",
+    "button": "Take Assessment [Korean]"
   },
   "domains": {
-    "Engaging_with_AI": "[KO] translation needed",
-    "Creating_with_AI": "[KO] translation needed",
-    "Managing_with_AI": "[KO] translation needed",
-    "Designing_with_AI": "[KO] translation needed"
+    "Engaging_with_AI": "Engaging with AI [Korean]",
+    "Creating_with_AI": "Creating with AI [Korean]",
+    "Managing_with_AI": "Managing with AI [Korean]",
+    "Designing_with_AI": "Designing with AI [Korean]"
   },
-  "strongDomainReason": "[KO] translation needed",
-  "averageDomainReason": "[KO] translation needed",
+  "strongDomainReason": "Advance your skills in {{domain}} (current: {{score}}%) [Korean]",
+  "averageDomainReason": "Improve your {{domain}} skills (current: {{score}}%) [Korean]",
   "learningPath": {
-    "filteringBy": "[KO] translation needed",
-    "clearFilter": "[KO] translation needed",
-    "recommendedPath": "[KO] translation needed",
-    "estimatedTime": "[KO] translation needed",
-    "startLearning": "[KO] translation needed",
-    "progress": "[KO] translation needed",
-    "goToDashboard": "[KO] translation needed",
-    "dashboardHint": "[KO] translation needed"
+    "filteringBy": "Showing items for {{domain}} [Korean]",
+    "clearFilter": "Clear filter [Korean]",
+    "recommendedPath": "Recommended Learning Path [Korean]",
+    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [Korean]",
+    "startLearning": "Start Learning [Korean]",
+    "progress": "Progress [Korean]",
+    "goToDashboard": "Go to Dashboard [Korean]",
+    "dashboardHint": "Track your overall progress and achievements in the dashboard [Korean]"
   },
-  "showAll": "[KO] translation needed",
-  "focusOnWeakAreas": "[KO] translation needed",
-  "backToDashboard": "[KO] translation needed"
+  "showAll": "Show All [Korean]",
+  "focusOnWeakAreas": "Focus on Weak Areas [Korean]",
+  "backToDashboard": "Back to Dashboard [Korean]"
 }

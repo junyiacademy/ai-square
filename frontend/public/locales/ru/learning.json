@@ -1,21 +1,21 @@
 {
   "learningPath": {
-    "title": "[RU] translation needed",
-    "subtitle": "[RU] translation needed",
-    "yourProgress": "[RU] translation needed",
-    "currentScore": "[RU] translation needed",
-    "target": "[RU] translation needed",
-    "completed": "[RU] translation needed",
-    "filteringBy": "[RU] translation needed",
-    "clearFilter": "[RU] translation needed",
-    "recommendedPath": "[RU] translation needed",
-    "estimatedTime": "[RU] translation needed",
-    "startLearning": "[RU] translation needed",
-    "progress": "[RU] translation needed",
-    "weakDomainReason": "[RU] translation needed",
-    "strongDomainReason": "[RU] translation needed",
-    "averageDomainReason": "[RU] translation needed",
-    "goToDashboard": "[RU] translation needed",
-    "dashboardHint": "[RU] translation needed"
+    "title": "Ваш персонализированный путь обучения",
+    "subtitle": "На основе результатов вашей оценки, вот ваше рекомендуемое путешествие обучения",
+    "yourProgress": "Обзор вашего прогресса",
+    "currentScore": "Текущий",
+    "target": "Цель",
+    "completed": "завершено",
+    "filteringBy": "Показаны рекомендации для: {{domain}}",
+    "clearFilter": "Показать все рекомендации",
+    "recommendedPath": "Рекомендуемый путь обучения",
+    "estimatedTime": "Общее время: {{hours}}ч {{minutes}}м",
+    "startLearning": "Начать обучение",
+    "progress": "Прогресс",
+    "weakDomainReason": "Рекомендуется для укрепления {{domain}} (текущий: {{score}}%)",
+    "strongDomainReason": "Продвинутый вызов для ваших сильных навыков {{domain}} ({{score}}%)",
+    "averageDomainReason": "Продолжайте развивать экспертизу в {{domain}} (текущий: {{score}}%)",
+    "goToDashboard": "Перейти к панели управления",
+    "dashboardHint": "Отслеживайте свой общий прогресс и продолжайте свое путешествие обучения"
   }
 }

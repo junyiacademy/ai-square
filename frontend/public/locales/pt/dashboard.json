@@ -1,49 +1,49 @@
 {
-  "welcome": "[Portuguese] translation needed",
-  "subtitle": "[Portuguese] translation needed",
-  "aiLiteracyProgress": "[Portuguese] translation needed",
+  "welcome": "Bem-vindo de volta, {{name}}!",
+  "subtitle": "Aqui está sua visão geral do progresso em alfabetização de IA",
+  "aiLiteracyProgress": "Progresso em Alfabetização de IA",
   "domains": {
-    "engaging_with_ai": "[Portuguese] translation needed",
-    "creating_with_ai": "[Portuguese] translation needed",
-    "managing_with_ai": "[Portuguese] translation needed",
-    "designing_with_ai": "[Portuguese] translation needed"
+    "engaging_with_ai": "Interagindo com IA",
+    "creating_with_ai": "Criando com IA",
+    "managing_with_ai": "Gerenciando com IA",
+    "designing_with_ai": "Projetando com IA"
   },
-  "viewDetailedProgress": "[Portuguese] translation needed",
-  "learningStatistics": "[Portuguese] translation needed",
-  "completedScenarios": "[Portuguese] translation needed",
-  "inProgress": "[Portuguese] translation needed",
-  "learningHours": "[Portuguese] translation needed",
-  "dayStreak": "[Portuguese] translation needed",
-  "recentActivities": "[Portuguese] translation needed",
-  "noRecentActivities": "[Portuguese] translation needed",
+  "viewDetailedProgress": "Ver caminho de aprendizagem detalhado",
+  "learningStatistics": "Estatísticas de Aprendizagem",
+  "completedScenarios": "Concluídos",
+  "inProgress": "Em Progresso",
+  "learningHours": "Horas",
+  "dayStreak": "Sequência de Dias",
+  "recentActivities": "Atividades Recentes",
+  "noRecentActivities": "Sem atividades recentes. Comece a aprender para ver seu progresso aqui!",
   "activities": {
-    "completedAssessment": "[Portuguese] translation needed",
-    "assessmentDesc": "[Portuguese] translation needed"
+    "completedAssessment": "Avaliação de Alfabetização de IA concluída",
+    "assessmentDesc": "Descobriu seu nível base de conhecimento de IA"
   },
-  "recommendedActions": "[Portuguese] translation needed",
+  "recommendedActions": "Próximos Passos Recomendados",
   "nextActions": {
-    "takeAssessment": "[Portuguese] translation needed",
-    "assessmentDesc": "[Portuguese] translation needed",
-    "viewLearningPath": "[Portuguese] translation needed",
-    "learningPathDesc": "[Portuguese] translation needed",
-    "startPBL": "[Portuguese] translation needed",
-    "pblDesc": "[Portuguese] translation needed"
+    "takeAssessment": "Fazer Avaliação de Alfabetização de IA",
+    "assessmentDesc": "Descubra seu nível atual de conhecimento de IA e obtenha recomendações personalizadas",
+    "viewLearningPath": "Ver Seu Caminho de Aprendizagem",
+    "learningPathDesc": "Veja recomendações personalizadas baseadas em seus resultados de avaliação",
+    "startPBL": "Iniciar um Cenário PBL",
+    "pblDesc": "Pratique habilidades de IA do mundo real com cenários interativos"
   },
   "priority": {
-    "high": "[Portuguese] translation needed",
-    "medium": "[Portuguese] translation needed",
-    "low": "[Portuguese] translation needed"
+    "high": "Alta",
+    "medium": "Média",
+    "low": "Baixa"
   },
-  "quickLinks": "[Portuguese] translation needed",
-  "explorePBL": "[Portuguese] translation needed",
-  "viewCompetencies": "[Portuguese] translation needed",
-  "viewHistory": "[Portuguese] translation needed",
-  "exploreKSA": "[Portuguese] translation needed",
-  "yourGoals": "[Portuguese] translation needed",
-  "updateGoals": "[Portuguese] translation needed",
-  "learningPathQuickAccess": "[Portuguese] translation needed",
-  "learningPathDescription": "[Portuguese] translation needed",
-  "viewAllPaths": "[Portuguese] translation needed",
-  "focusOnWeakAreas": "[Portuguese] translation needed",
-  "aiAdvisor": "[Portuguese] translation needed"
+  "quickLinks": "Links Rápidos",
+  "explorePBL": "Explorar Cenários PBL",
+  "viewCompetencies": "Ver Competências de IA",
+  "viewHistory": "Ver Histórico de Aprendizagem",
+  "exploreKSA": "Explorar Mapa de Conhecimento",
+  "yourGoals": "Seus Objetivos de Aprendizagem",
+  "updateGoals": "Atualizar seus objetivos",
+  "learningPathQuickAccess": "Recomendações de Aprendizagem Personalizadas",
+  "learningPathDescription": "Explore cenários de aprendizagem de IA adaptados aos seus resultados de avaliação e interesses. Escolha as áreas que melhor atendem às suas necessidades.",
+  "viewAllPaths": "Ver Todos os Caminhos de Aprendizagem",
+  "focusOnWeakAreas": "Focar em Áreas Fracas",
+  "aiAdvisor": "Consultor de Aprendizagem IA"
 }

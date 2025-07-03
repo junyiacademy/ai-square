@@ -1,171 +1,171 @@
 {
   "privacy": {
-    "title": "[RU] translation needed",
-    "lastUpdated": "[RU] translation needed",
-    "intro": "[RU] translation needed",
+    "title": "Privacy Policy [Russian]",
+    "lastUpdated": "Last updated [Russian]",
+    "intro": "AI Square (\"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI literacy education platform. [Russian]",
     "infoCollect": {
-      "title": "[RU] translation needed",
-      "personal": "[RU] translation needed",
-      "email": "[RU] translation needed",
-      "name": "[RU] translation needed",
-      "role": "[RU] translation needed",
-      "language": "[RU] translation needed",
-      "usage": "[RU] translation needed",
-      "learning": "[RU] translation needed",
-      "interactions": "[RU] translation needed",
-      "scenarios": "[RU] translation needed",
-      "analytics": "[RU] translation needed",
-      "technical": "[RU] translation needed",
-      "browser": "[RU] translation needed",
-      "device": "[RU] translation needed",
-      "ip": "[RU] translation needed",
-      "timezone": "[RU] translation needed"
+      "title": "1. Information We Collect [Russian]",
+      "personal": "Personal Information [Russian]",
+      "email": "Email address [Russian]",
+      "name": "Name (optional) [Russian]",
+      "role": "User role (student, teacher, admin) [Russian]",
+      "language": "Language preference [Russian]",
+      "usage": "Usage Data [Russian]",
+      "learning": "Learning progress and assessment results [Russian]",
+      "interactions": "Interactions with AI tutors [Russian]",
+      "scenarios": "PBL scenario completion data [Russian]",
+      "analytics": "Platform usage analytics [Russian]",
+      "technical": "Technical Data [Russian]",
+      "browser": "Browser type and version [Russian]",
+      "device": "Device information [Russian]",
+      "ip": "IP address (anonymized) [Russian]",
+      "timezone": "Time zone settings [Russian]"
     },
     "howUse": {
-      "title": "[RU] translation needed",
-      "provide": "[RU] translation needed",
-      "personalize": "[RU] translation needed",
-      "communicate": "[RU] translation needed",
-      "improve": "[RU] translation needed",
-      "analyze": "[RU] translation needed",
-      "security": "[RU] translation needed"
+      "title": "2. How We Use Your Information [Russian]",
+      "provide": "To provide and maintain our service [Russian]",
+      "personalize": "To personalize your learning experience [Russian]",
+      "communicate": "To communicate with you about your account [Russian]",
+      "improve": "To improve our platform and develop new features [Russian]",
+      "analyze": "To analyze usage patterns and optimize performance [Russian]",
+      "security": "To detect and prevent security threats [Russian]"
     },
     "storage": {
-      "title": "[RU] translation needed",
-      "location": "[RU] translation needed",
-      "encryption": "[RU] translation needed",
-      "access": "[RU] translation needed",
-      "monitoring": "[RU] translation needed",
-      "backup": "[RU] translation needed"
+      "title": "3. Data Storage and Security [Russian]",
+      "location": "Your data is stored securely on Google Cloud Platform servers. We implement appropriate technical and organizational measures to protect your personal information. [Russian]",
+      "encryption": "Data encryption in transit and at rest [Russian]",
+      "access": "Restricted access controls [Russian]",
+      "monitoring": "Regular security monitoring [Russian]",
+      "backup": "Secure backup procedures [Russian]"
     },
     "sharing": {
-      "title": "[RU] translation needed",
-      "intro": "[RU] translation needed",
-      "consent": "[RU] translation needed",
-      "legal": "[RU] translation needed",
-      "protect": "[RU] translation needed",
-      "service": "[RU] translation needed"
+      "title": "4. Data Sharing and Disclosure [Russian]",
+      "intro": "We do not sell, trade, or rent your personal information. We may share your information in the following situations: [Russian]",
+      "consent": "With your consent [Russian]",
+      "legal": "To comply with legal obligations [Russian]",
+      "protect": "To protect our rights and safety [Russian]",
+      "service": "With service providers who assist our operations [Russian]"
     },
     "rights": {
-      "title": "[RU] translation needed",
-      "intro": "[RU] translation needed",
-      "access": "[RU] translation needed",
-      "correct": "[RU] translation needed",
-      "delete": "[RU] translation needed",
-      "export": "[RU] translation needed",
-      "restrict": "[RU] translation needed",
-      "withdraw": "[RU] translation needed"
+      "title": "5. Your Rights [Russian]",
+      "intro": "You have the following rights regarding your personal data: [Russian]",
+      "access": "Access your personal information [Russian]",
+      "correct": "Correct inaccurate data [Russian]",
+      "delete": "Request deletion of your data [Russian]",
+      "export": "Export your data in a portable format [Russian]",
+      "restrict": "Restrict processing of your data [Russian]",
+      "withdraw": "Withdraw consent at any time [Russian]"
     },
     "cookies": {
-      "title": "[RU] translation needed",
-      "intro": "[RU] translation needed"
+      "title": "6. Cookies and Tracking [Russian]",
+      "intro": "We use cookies and similar tracking technologies to enhance your experience. Essential cookies are required for platform functionality, while optional cookies help us improve our service. [Russian]"
     },
     "children": {
-      "title": "[RU] translation needed",
-      "content": "[RU] translation needed"
+      "title": "7. Children's Privacy [Russian]",
+      "content": "Our platform is designed for educational use by students of all ages. For users under 13, we require parental consent and limit data collection to essential information only. [Russian]"
     },
     "international": {
-      "title": "[RU] translation needed",
-      "content": "[RU] translation needed"
+      "title": "8. International Data Transfers [Russian]",
+      "content": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers. [Russian]"
     },
     "changes": {
-      "title": "[RU] translation needed",
-      "content": "[RU] translation needed"
+      "title": "9. Changes to This Policy [Russian]",
+      "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the \"Last Updated\" date. [Russian]"
     },
     "contact": {
-      "title": "[RU] translation needed",
-      "intro": "[RU] translation needed"
+      "title": "10. Contact Us [Russian]",
+      "intro": "If you have questions about this Privacy Policy, please contact us at: [Russian]"
     }
   },
   "terms": {
-    "title": "[RU] translation needed",
-    "effectiveDate": "[RU] translation needed",
-    "lastUpdated": "[RU] translation needed",
-    "intro": "[RU] translation needed",
+    "title": "Terms of Service [Russian]",
+    "effectiveDate": "Effective Date [Russian]",
+    "lastUpdated": "Last Updated [Russian]",
+    "intro": "Welcome to AI Square! These Terms of Service (\"Terms\") govern your use of our AI literacy education platform. By accessing or using AI Square, you agree to be bound by these Terms. [Russian]",
     "acceptance": {
-      "title": "[RU] translation needed",
-      "content": "[RU] translation needed",
-      "capacity": "[RU] translation needed"
+      "title": "1. Acceptance of Terms [Russian]",
+      "content": "By creating an account or using our services, you acknowledge that you have read, understood, and agree to these Terms. If you do not agree, please do not use our platform. [Russian]",
+      "capacity": "You must be at least 13 years old to use our services. If you are under 18, you must have parental consent. [Russian]"
     },
     "service": {
-      "title": "[RU] translation needed",
-      "intro": "[RU] translation needed",
-      "literacy": "[RU] translation needed",
-      "pbl": "[RU] translation needed",
-      "ai": "[RU] translation needed",
-      "tracking": "[RU] translation needed",
-      "multi": "[RU] translation needed"
+      "title": "2. Description of Service [Russian]",
+      "intro": "AI Square provides: [Russian]",
+      "literacy": "AI literacy education content and assessments [Russian]",
+      "pbl": "Problem-Based Learning (PBL) scenarios [Russian]",
+      "ai": "AI-powered tutoring and feedback [Russian]",
+      "tracking": "Progress tracking and analytics [Russian]",
+      "multi": "Multi-language support (9 languages) [Russian]"
     },
     "accounts": {
-      "title": "[RU] translation needed",
-      "registration": "[RU] translation needed",
-      "accurate": "[RU] translation needed",
-      "maintain": "[RU] translation needed",
-      "secure": "[RU] translation needed",
-      "responsible": "[RU] translation needed",
-      "types": "[RU] translation needed",
-      "student": "[RU] translation needed",
-      "teacher": "[RU] translation needed",
-      "admin": "[RU] translation needed"
+      "title": "3. User Accounts [Russian]",
+      "registration": "Registration [Russian]",
+      "accurate": "Provide accurate and complete information [Russian]",
+      "maintain": "Maintain and update your information [Russian]",
+      "secure": "Keep your account credentials secure [Russian]",
+      "responsible": "You are responsible for all activities under your account [Russian]",
+      "types": "Account Types [Russian]",
+      "student": "Student: Access to learning content and assessments [Russian]",
+      "teacher": "Teacher: Additional class management features [Russian]",
+      "admin": "Administrator: Platform management capabilities [Russian]"
     },
     "use": {
-      "title": "[RU] translation needed",
-      "permitted": "[RU] translation needed",
-      "educational": "[RU] translation needed",
-      "share": "[RU] translation needed",
-      "feedback": "[RU] translation needed",
-      "prohibited": "[RU] translation needed",
-      "misuse": "[RU] translation needed",
-      "share_credentials": "[RU] translation needed",
-      "cheat": "[RU] translation needed",
-      "harm": "[RU] translation needed",
-      "illegal": "[RU] translation needed",
-      "scrape": "[RU] translation needed"
+      "title": "4. Acceptable Use Policy [Russian]",
+      "permitted": "You may: [Russian]",
+      "educational": "Use the platform for educational purposes [Russian]",
+      "share": "Share your learning progress appropriately [Russian]",
+      "feedback": "Provide constructive feedback [Russian]",
+      "prohibited": "You may not: [Russian]",
+      "misuse": "Misuse or attempt to manipulate the AI systems [Russian]",
+      "share_credentials": "Share account credentials [Russian]",
+      "cheat": "Engage in academic dishonesty [Russian]",
+      "harm": "Harass, abuse, or harm other users [Russian]",
+      "illegal": "Use the platform for illegal activities [Russian]",
+      "scrape": "Scrape or copy content without permission [Russian]"
     },
     "ip": {
-      "title": "[RU] translation needed",
-      "platform": "[RU] translation needed",
-      "ownership": "[RU] translation needed",
-      "user": "[RU] translation needed",
-      "retain": "[RU] translation needed",
-      "open": "[RU] translation needed",
-      "git": "[RU] translation needed"
+      "title": "5. Intellectual Property [Russian]",
+      "platform": "Platform Content [Russian]",
+      "ownership": "All content on AI Square, including text, graphics, logos, and software, is owned by AI Square or its licensors and protected by intellectual property laws. [Russian]",
+      "user": "User Content [Russian]",
+      "retain": "You retain ownership of content you create. By submitting content, you grant us a license to use it for providing and improving our services. [Russian]",
+      "open": "Open Source [Russian]",
+      "git": "Educational content is managed through Git and may be subject to open-source licenses. Please check individual repositories for specific license terms. [Russian]"
     },
     "privacy": {
-      "title": "[RU] translation needed",
-      "content": "[RU] translation needed"
+      "title": "6. Privacy and Data Protection [Russian]",
+      "content": "Your use of AI Square is also governed by our Privacy Policy. We are committed to protecting your personal information and using it only as described in our Privacy Policy. [Russian]"
     },
     "ai": {
-      "title": "[RU] translation needed",
-      "disclaimer": "[RU] translation needed",
-      "educational": "[RU] translation needed",
-      "verify": "[RU] translation needed",
-      "improve": "[RU] translation needed"
+      "title": "7. AI Services and Limitations [Russian]",
+      "disclaimer": "Our AI-powered features are designed to assist learning but are not perfect. We do not guarantee the accuracy of AI-generated content or feedback. [Russian]",
+      "educational": "AI responses are for educational purposes only [Russian]",
+      "verify": "Always verify important information independently [Russian]",
+      "improve": "We continuously work to improve AI accuracy [Russian]"
     },
     "disclaimers": {
-      "title": "[RU] translation needed",
+      "title": "8. Disclaimers and Limitations [Russian]",
       "asis": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND.",
-      "liability": "[RU] translation needed"
+      "liability": "To the fullest extent permitted by law, AI Square shall not be liable for any indirect, incidental, special, consequential, or punitive damages. [Russian]"
     },
     "modifications": {
-      "title": "[RU] translation needed",
-      "content": "[RU] translation needed"
+      "title": "9. Modifications to Terms [Russian]",
+      "content": "We may modify these Terms at any time. We will notify users of material changes. Continued use after changes constitutes acceptance of the new Terms. [Russian]"
     },
     "termination": {
-      "title": "[RU] translation needed",
-      "rights": "[RU] translation needed"
+      "title": "10. Termination [Russian]",
+      "rights": "We reserve the right to suspend or terminate accounts that violate these Terms. You may delete your account at any time. [Russian]"
     },
     "law": {
-      "title": "[RU] translation needed",
-      "content": "[RU] translation needed"
+      "title": "11. Governing Law [Russian]",
+      "content": "These Terms are governed by the laws of the jurisdiction where AI Square operates, without regard to conflict of law principles. [Russian]"
     },
     "contact": {
-      "title": "[RU] translation needed",
-      "intro": "[RU] translation needed"
+      "title": "12. Contact Information [Russian]",
+      "intro": "For questions about these Terms, please contact us: [Russian]"
     },
-    "agreement": "[RU] translation needed"
+    "agreement": "By using AI Square, you acknowledge that you have read and agree to these Terms of Service. [Russian]"
   },
   "common": {
-    "backToHome": "[RU] translation needed"
+    "backToHome": "Back to Home [Russian]"
   }
 }

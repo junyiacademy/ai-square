@@ -1,171 +1,171 @@
 {
   "privacy": {
-    "title": "[Arabic] translation needed",
-    "lastUpdated": "[Arabic] translation needed",
-    "intro": "[Arabic] translation needed",
+    "title": "Privacy Policy [Arabic]",
+    "lastUpdated": "Last updated [Arabic]",
+    "intro": "AI Square (\"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI literacy education platform. [Arabic]",
     "infoCollect": {
-      "title": "[Arabic] translation needed",
-      "personal": "[Arabic] translation needed",
-      "email": "[Arabic] translation needed",
-      "name": "[Arabic] translation needed",
-      "role": "[Arabic] translation needed",
-      "language": "[Arabic] translation needed",
-      "usage": "[Arabic] translation needed",
-      "learning": "[Arabic] translation needed",
-      "interactions": "[Arabic] translation needed",
-      "scenarios": "[Arabic] translation needed",
-      "analytics": "[Arabic] translation needed",
-      "technical": "[Arabic] translation needed",
-      "browser": "[Arabic] translation needed",
-      "device": "[Arabic] translation needed",
-      "ip": "[Arabic] translation needed",
-      "timezone": "[Arabic] translation needed"
+      "title": "1. Information We Collect [Arabic]",
+      "personal": "Personal Information [Arabic]",
+      "email": "Email address [Arabic]",
+      "name": "Name (optional) [Arabic]",
+      "role": "User role (student, teacher, admin) [Arabic]",
+      "language": "Language preference [Arabic]",
+      "usage": "Usage Data [Arabic]",
+      "learning": "Learning progress and assessment results [Arabic]",
+      "interactions": "Interactions with AI tutors [Arabic]",
+      "scenarios": "PBL scenario completion data [Arabic]",
+      "analytics": "Platform usage analytics [Arabic]",
+      "technical": "Technical Data [Arabic]",
+      "browser": "Browser type and version [Arabic]",
+      "device": "Device information [Arabic]",
+      "ip": "IP address (anonymized) [Arabic]",
+      "timezone": "Time zone settings [Arabic]"
     },
     "howUse": {
-      "title": "[Arabic] translation needed",
-      "provide": "[Arabic] translation needed",
-      "personalize": "[Arabic] translation needed",
-      "communicate": "[Arabic] translation needed",
-      "improve": "[Arabic] translation needed",
-      "analyze": "[Arabic] translation needed",
-      "security": "[Arabic] translation needed"
+      "title": "2. How We Use Your Information [Arabic]",
+      "provide": "To provide and maintain our service [Arabic]",
+      "personalize": "To personalize your learning experience [Arabic]",
+      "communicate": "To communicate with you about your account [Arabic]",
+      "improve": "To improve our platform and develop new features [Arabic]",
+      "analyze": "To analyze usage patterns and optimize performance [Arabic]",
+      "security": "To detect and prevent security threats [Arabic]"
     },
     "storage": {
-      "title": "[Arabic] translation needed",
-      "location": "[Arabic] translation needed",
-      "encryption": "[Arabic] translation needed",
-      "access": "[Arabic] translation needed",
-      "monitoring": "[Arabic] translation needed",
-      "backup": "[Arabic] translation needed"
+      "title": "3. Data Storage and Security [Arabic]",
+      "location": "Your data is stored securely on Google Cloud Platform servers. We implement appropriate technical and organizational measures to protect your personal information. [Arabic]",
+      "encryption": "Data encryption in transit and at rest [Arabic]",
+      "access": "Restricted access controls [Arabic]",
+      "monitoring": "Regular security monitoring [Arabic]",
+      "backup": "Secure backup procedures [Arabic]"
     },
     "sharing": {
-      "title": "[Arabic] translation needed",
-      "intro": "[Arabic] translation needed",
-      "consent": "[Arabic] translation needed",
-      "legal": "[Arabic] translation needed",
-      "protect": "[Arabic] translation needed",
-      "service": "[Arabic] translation needed"
+      "title": "4. Data Sharing and Disclosure [Arabic]",
+      "intro": "We do not sell, trade, or rent your personal information. We may share your information in the following situations: [Arabic]",
+      "consent": "With your consent [Arabic]",
+      "legal": "To comply with legal obligations [Arabic]",
+      "protect": "To protect our rights and safety [Arabic]",
+      "service": "With service providers who assist our operations [Arabic]"
     },
     "rights": {
-      "title": "[Arabic] translation needed",
-      "intro": "[Arabic] translation needed",
-      "access": "[Arabic] translation needed",
-      "correct": "[Arabic] translation needed",
-      "delete": "[Arabic] translation needed",
-      "export": "[Arabic] translation needed",
-      "restrict": "[Arabic] translation needed",
-      "withdraw": "[Arabic] translation needed"
+      "title": "5. Your Rights [Arabic]",
+      "intro": "You have the following rights regarding your personal data: [Arabic]",
+      "access": "Access your personal information [Arabic]",
+      "correct": "Correct inaccurate data [Arabic]",
+      "delete": "Request deletion of your data [Arabic]",
+      "export": "Export your data in a portable format [Arabic]",
+      "restrict": "Restrict processing of your data [Arabic]",
+      "withdraw": "Withdraw consent at any time [Arabic]"
     },
     "cookies": {
-      "title": "[Arabic] translation needed",
-      "intro": "[Arabic] translation needed"
+      "title": "6. Cookies and Tracking [Arabic]",
+      "intro": "We use cookies and similar tracking technologies to enhance your experience. Essential cookies are required for platform functionality, while optional cookies help us improve our service. [Arabic]"
     },
     "children": {
-      "title": "[Arabic] translation needed",
-      "content": "[Arabic] translation needed"
+      "title": "7. Children's Privacy [Arabic]",
+      "content": "Our platform is designed for educational use by students of all ages. For users under 13, we require parental consent and limit data collection to essential information only. [Arabic]"
     },
     "international": {
-      "title": "[Arabic] translation needed",
-      "content": "[Arabic] translation needed"
+      "title": "8. International Data Transfers [Arabic]",
+      "content": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers. [Arabic]"
     },
     "changes": {
-      "title": "[Arabic] translation needed",
-      "content": "[Arabic] translation needed"
+      "title": "9. Changes to This Policy [Arabic]",
+      "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the \"Last Updated\" date. [Arabic]"
     },
     "contact": {
-      "title": "[Arabic] translation needed",
-      "intro": "[Arabic] translation needed"
+      "title": "10. Contact Us [Arabic]",
+      "intro": "If you have questions about this Privacy Policy, please contact us at: [Arabic]"
     }
   },
   "terms": {
-    "title": "[Arabic] translation needed",
-    "effectiveDate": "[Arabic] translation needed",
-    "lastUpdated": "[Arabic] translation needed",
-    "intro": "[Arabic] translation needed",
+    "title": "Terms of Service [Arabic]",
+    "effectiveDate": "Effective Date [Arabic]",
+    "lastUpdated": "Last Updated [Arabic]",
+    "intro": "Welcome to AI Square! These Terms of Service (\"Terms\") govern your use of our AI literacy education platform. By accessing or using AI Square, you agree to be bound by these Terms. [Arabic]",
     "acceptance": {
-      "title": "[Arabic] translation needed",
-      "content": "[Arabic] translation needed",
-      "capacity": "[Arabic] translation needed"
+      "title": "1. Acceptance of Terms [Arabic]",
+      "content": "By creating an account or using our services, you acknowledge that you have read, understood, and agree to these Terms. If you do not agree, please do not use our platform. [Arabic]",
+      "capacity": "You must be at least 13 years old to use our services. If you are under 18, you must have parental consent. [Arabic]"
     },
     "service": {
-      "title": "[Arabic] translation needed",
-      "intro": "[Arabic] translation needed",
-      "literacy": "[Arabic] translation needed",
-      "pbl": "[Arabic] translation needed",
-      "ai": "[Arabic] translation needed",
-      "tracking": "[Arabic] translation needed",
-      "multi": "[Arabic] translation needed"
+      "title": "2. Description of Service [Arabic]",
+      "intro": "AI Square provides: [Arabic]",
+      "literacy": "AI literacy education content and assessments [Arabic]",
+      "pbl": "Problem-Based Learning (PBL) scenarios [Arabic]",
+      "ai": "AI-powered tutoring and feedback [Arabic]",
+      "tracking": "Progress tracking and analytics [Arabic]",
+      "multi": "Multi-language support (9 languages) [Arabic]"
     },
     "accounts": {
-      "title": "[Arabic] translation needed",
-      "registration": "[Arabic] translation needed",
-      "accurate": "[Arabic] translation needed",
-      "maintain": "[Arabic] translation needed",
-      "secure": "[Arabic] translation needed",
-      "responsible": "[Arabic] translation needed",
-      "types": "[Arabic] translation needed",
-      "student": "[Arabic] translation needed",
-      "teacher": "[Arabic] translation needed",
-      "admin": "[Arabic] translation needed"
+      "title": "3. User Accounts [Arabic]",
+      "registration": "Registration [Arabic]",
+      "accurate": "Provide accurate and complete information [Arabic]",
+      "maintain": "Maintain and update your information [Arabic]",
+      "secure": "Keep your account credentials secure [Arabic]",
+      "responsible": "You are responsible for all activities under your account [Arabic]",
+      "types": "Account Types [Arabic]",
+      "student": "Student: Access to learning content and assessments [Arabic]",
+      "teacher": "Teacher: Additional class management features [Arabic]",
+      "admin": "Administrator: Platform management capabilities [Arabic]"
     },
     "use": {
-      "title": "[Arabic] translation needed",
-      "permitted": "[Arabic] translation needed",
-      "educational": "[Arabic] translation needed",
-      "share": "[Arabic] translation needed",
-      "feedback": "[Arabic] translation needed",
-      "prohibited": "[Arabic] translation needed",
-      "misuse": "[Arabic] translation needed",
-      "share_credentials": "[Arabic] translation needed",
-      "cheat": "[Arabic] translation needed",
-      "harm": "[Arabic] translation needed",
-      "illegal": "[Arabic] translation needed",
-      "scrape": "[Arabic] translation needed"
+      "title": "4. Acceptable Use Policy [Arabic]",
+      "permitted": "You may: [Arabic]",
+      "educational": "Use the platform for educational purposes [Arabic]",
+      "share": "Share your learning progress appropriately [Arabic]",
+      "feedback": "Provide constructive feedback [Arabic]",
+      "prohibited": "You may not: [Arabic]",
+      "misuse": "Misuse or attempt to manipulate the AI systems [Arabic]",
+      "share_credentials": "Share account credentials [Arabic]",
+      "cheat": "Engage in academic dishonesty [Arabic]",
+      "harm": "Harass, abuse, or harm other users [Arabic]",
+      "illegal": "Use the platform for illegal activities [Arabic]",
+      "scrape": "Scrape or copy content without permission [Arabic]"
     },
     "ip": {
-      "title": "[Arabic] translation needed",
-      "platform": "[Arabic] translation needed",
-      "ownership": "[Arabic] translation needed",
-      "user": "[Arabic] translation needed",
-      "retain": "[Arabic] translation needed",
-      "open": "[Arabic] translation needed",
-      "git": "[Arabic] translation needed"
+      "title": "5. Intellectual Property [Arabic]",
+      "platform": "Platform Content [Arabic]",
+      "ownership": "All content on AI Square, including text, graphics, logos, and software, is owned by AI Square or its licensors and protected by intellectual property laws. [Arabic]",
+      "user": "User Content [Arabic]",
+      "retain": "You retain ownership of content you create. By submitting content, you grant us a license to use it for providing and improving our services. [Arabic]",
+      "open": "Open Source [Arabic]",
+      "git": "Educational content is managed through Git and may be subject to open-source licenses. Please check individual repositories for specific license terms. [Arabic]"
     },
     "privacy": {
-      "title": "[Arabic] translation needed",
-      "content": "[Arabic] translation needed"
+      "title": "6. Privacy and Data Protection [Arabic]",
+      "content": "Your use of AI Square is also governed by our Privacy Policy. We are committed to protecting your personal information and using it only as described in our Privacy Policy. [Arabic]"
     },
     "ai": {
-      "title": "[Arabic] translation needed",
-      "disclaimer": "[Arabic] translation needed",
-      "educational": "[Arabic] translation needed",
-      "verify": "[Arabic] translation needed",
-      "improve": "[Arabic] translation needed"
+      "title": "7. AI Services and Limitations [Arabic]",
+      "disclaimer": "Our AI-powered features are designed to assist learning but are not perfect. We do not guarantee the accuracy of AI-generated content or feedback. [Arabic]",
+      "educational": "AI responses are for educational purposes only [Arabic]",
+      "verify": "Always verify important information independently [Arabic]",
+      "improve": "We continuously work to improve AI accuracy [Arabic]"
     },
     "disclaimers": {
-      "title": "[Arabic] translation needed",
-      "asis": "[Arabic] translation needed",
-      "liability": "[Arabic] translation needed"
+      "title": "8. Disclaimers and Limitations [Arabic]",
+      "asis": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND. [Arabic]",
+      "liability": "To the fullest extent permitted by law, AI Square shall not be liable for any indirect, incidental, special, consequential, or punitive damages. [Arabic]"
     },
     "modifications": {
-      "title": "[Arabic] translation needed",
-      "content": "[Arabic] translation needed"
+      "title": "9. Modifications to Terms [Arabic]",
+      "content": "We may modify these Terms at any time. We will notify users of material changes. Continued use after changes constitutes acceptance of the new Terms. [Arabic]"
     },
     "termination": {
-      "title": "[Arabic] translation needed",
-      "rights": "[Arabic] translation needed"
+      "title": "10. Termination [Arabic]",
+      "rights": "We reserve the right to suspend or terminate accounts that violate these Terms. You may delete your account at any time. [Arabic]"
     },
     "law": {
-      "title": "[Arabic] translation needed",
-      "content": "[Arabic] translation needed"
+      "title": "11. Governing Law [Arabic]",
+      "content": "These Terms are governed by the laws of the jurisdiction where AI Square operates, without regard to conflict of law principles. [Arabic]"
     },
     "contact": {
-      "title": "[Arabic] translation needed",
-      "intro": "[Arabic] translation needed"
+      "title": "12. Contact Information [Arabic]",
+      "intro": "For questions about these Terms, please contact us: [Arabic]"
     },
-    "agreement": "[Arabic] translation needed"
+    "agreement": "By using AI Square, you acknowledge that you have read and agree to these Terms of Service. [Arabic]"
   },
   "common": {
-    "backToHome": "[Arabic] translation needed"
+    "backToHome": "Back to Home [Arabic]"
   }
 }

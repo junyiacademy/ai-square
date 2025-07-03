@@ -132,8 +132,18 @@ export async function GET(request: NextRequest) {
       if (!scenarioTitles[program.scenarioId]) {
         try {
           // Convert scenario ID format (ai-job-search -> ai_job_search)
-          const scenarioFileName = program.scenarioId.replace(/-/g, '_');
-          const yamlPath = path.join(process.cwd(), 'public', 'pbl_data', `${scenarioFileName}_scenario.yaml`);
+          const scenarioFolder = program.scenarioId.replace(/-/g, '_');
+          const fileName = `${scenarioFolder}_${language}.yaml`;
+          let yamlPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', scenarioFolder, fileName);
+          
+          // Check if language-specific file exists, fallback to English
+          try {
+            await fs.access(yamlPath);
+          } catch {
+            // Fallback to English if language-specific file doesn't exist
+            yamlPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', scenarioFolder, `${scenarioFolder}_en.yaml`);
+          }
+          
           const yamlContent = await fs.readFile(yamlPath, 'utf8');
           const scenarioData = yaml.load(yamlContent) as ScenarioYAML;
           

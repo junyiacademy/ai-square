@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "[Thai] translation needed",
-    "subtitle": "[Thai] translation needed",
+    "greeting": "Welcome, {{name}}! [Thai]",
+    "subtitle": "Let's get you started on your AI literacy journey [Thai]",
     "step1": {
-      "title": "[Thai] translation needed",
-      "description": "[Thai] translation needed",
-      "content": "[Thai] translation needed",
-      "assessment": "[Thai] translation needed",
-      "assessmentDesc": "[Thai] translation needed",
-      "learning": "[Thai] translation needed",
-      "learningDesc": "[Thai] translation needed"
+      "title": "Discover Your Path [Thai]",
+      "description": "AI Square helps you understand and master AI literacy [Thai]",
+      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [Thai]",
+      "assessment": "Smart Assessment [Thai]",
+      "assessmentDesc": "Discover your current AI knowledge level [Thai]",
+      "learning": "Personalized Learning [Thai]",
+      "learningDesc": "Get tailored recommendations based on your goals [Thai]"
     },
     "step2": {
-      "title": "[Thai] translation needed",
-      "description": "[Thai] translation needed",
-      "content": "[Thai] translation needed",
-      "domains": "[Thai] translation needed",
-      "engaging": "[Thai] translation needed",
-      "creating": "[Thai] translation needed",
-      "managing": "[Thai] translation needed",
-      "designing": "[Thai] translation needed"
+      "title": "Four Core Domains [Thai]",
+      "description": "Master the essential areas of AI literacy [Thai]",
+      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [Thai]",
+      "domains": "AI Literacy Domains [Thai]",
+      "engaging": "Engaging with AI [Thai]",
+      "creating": "Creating with AI [Thai]",
+      "managing": "Managing with AI [Thai]",
+      "designing": "Designing with AI [Thai]"
     },
     "step3": {
-      "title": "[Thai] translation needed",
-      "description": "[Thai] translation needed",
-      "content": "[Thai] translation needed",
-      "ready": "[Thai] translation needed",
-      "benefit1": "[Thai] translation needed",
-      "benefit2": "[Thai] translation needed",
-      "benefit3": "[Thai] translation needed"
+      "title": "Start Your Journey [Thai]",
+      "description": "Begin with an assessment and unlock your potential [Thai]",
+      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [Thai]",
+      "ready": "What you'll get: [Thai]",
+      "benefit1": "Detailed assessment of your AI knowledge [Thai]",
+      "benefit2": "Personalized learning path recommendations [Thai]",
+      "benefit3": "Interactive scenarios and practical exercises [Thai]"
     },
-    "startJourney": "[Thai] translation needed"
+    "startJourney": "Start Your Journey [Thai]"
   },
   "goals": {
-    "title": "[Thai] translation needed",
-    "subtitle": "[Thai] translation needed",
+    "title": "What would you like to achieve? [Thai]",
+    "subtitle": "Select your learning goals to get personalized recommendations [Thai]",
     "understand": {
-      "title": "[Thai] translation needed",
-      "description": "[Thai] translation needed"
+      "title": "Understand AI Fundamentals [Thai]",
+      "description": "Learn the basics of AI, machine learning, and how AI systems work [Thai]"
     },
     "create": {
-      "title": "[Thai] translation needed",
-      "description": "[Thai] translation needed"
+      "title": "Create Content with AI [Thai]",
+      "description": "Use AI tools for writing, design, art, and creative projects [Thai]"
     },
     "analyze": {
-      "title": "[Thai] translation needed",
-      "description": "[Thai] translation needed"
+      "title": "Analyze Data with AI [Thai]",
+      "description": "Apply AI for data analysis, insights, and decision-making [Thai]"
     },
     "build": {
-      "title": "[Thai] translation needed",
-      "description": "[Thai] translation needed"
+      "title": "Build AI Solutions [Thai]",
+      "description": "Develop and implement AI systems and applications [Thai]"
     },
     "teach": {
-      "title": "[Thai] translation needed",
-      "description": "[Thai] translation needed"
+      "title": "Teach AI to Others [Thai]",
+      "description": "Educate and guide others in understanding and using AI [Thai]"
     },
     "ethical": {
-      "title": "[Thai] translation needed",
-      "description": "[Thai] translation needed"
+      "title": "Ensure Ethical AI Use [Thai]",
+      "description": "Understand and implement responsible AI practices [Thai]"
     },
-    "recommendedDomains": "[Thai] translation needed",
-    "selected": "[Thai] translation needed",
-    "selectAtLeastOne": "[Thai] translation needed",
-    "continue": "[Thai] translation needed",
-    "skipForNow": "[Thai] translation needed",
-    "helpText": "[Thai] translation needed"
+    "recommendedDomains": "Recommended domains [Thai]",
+    "selected": "{{count}} goals selected [Thai]",
+    "selectAtLeastOne": "Please select at least one learning goal [Thai]",
+    "continue": "Continue to Assessment [Thai]",
+    "skipForNow": "Skip for now [Thai]",
+    "helpText": "Don't worry, you can always change these later in your profile settings. [Thai]"
   },
   "progress": {
-    "welcome": "[Thai] translation needed",
-    "identity": "[Thai] translation needed",
-    "goals": "[Thai] translation needed"
+    "welcome": "Welcome [Thai]",
+    "identity": "Identity [Thai]",
+    "goals": "Goals [Thai]"
   },
   "identity": {
-    "title": "[Thai] translation needed",
-    "subtitle": "[Thai] translation needed",
+    "title": "Who are you? [Thai]",
+    "subtitle": "Help us personalize your AI learning journey [Thai]",
     "student": {
-      "title": "[Thai] translation needed",
-      "description": "[Thai] translation needed"
+      "title": "Student [Thai]",
+      "description": "I'm studying and want to learn AI for my academic and future career [Thai]"
     },
     "teacher": {
-      "title": "[Thai] translation needed",
-      "description": "[Thai] translation needed"
+      "title": "Educator [Thai]",
+      "description": "I teach others and want to integrate AI into my curriculum [Thai]"
     },
     "professional": {
-      "title": "[Thai] translation needed",
-      "description": "[Thai] translation needed"
+      "title": "Professional [Thai]",
+      "description": "I work in industry and want to leverage AI in my role [Thai]"
     },
     "learner": {
-      "title": "[Thai] translation needed",
-      "description": "[Thai] translation needed"
+      "title": "Lifelong Learner [Thai]",
+      "description": "I'm curious about AI and want to explore its possibilities [Thai]"
     }
   },
   "button": {
-    "back": "[Thai] translation needed",
-    "continue": "[Thai] translation needed",
-    "saving": "[Thai] translation needed"
+    "back": "Back [Thai]",
+    "continue": "Continue [Thai]",
+    "saving": "Saving... [Thai]"
   }
 }

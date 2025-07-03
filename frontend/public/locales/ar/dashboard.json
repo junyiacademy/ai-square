@@ -1,49 +1,49 @@
 {
-  "welcome": "[Arabic] translation needed",
-  "subtitle": "[Arabic] translation needed",
-  "aiLiteracyProgress": "[Arabic] translation needed",
+  "welcome": "Welcome back, {{name}}! [Arabic]",
+  "subtitle": "Here's your AI literacy progress overview [Arabic]",
+  "aiLiteracyProgress": "AI Literacy Progress [Arabic]",
   "domains": {
-    "engaging_with_ai": "[Arabic] translation needed",
-    "creating_with_ai": "[Arabic] translation needed",
-    "managing_with_ai": "[Arabic] translation needed",
-    "designing_with_ai": "[Arabic] translation needed"
+    "engaging_with_ai": "Engaging with AI [Arabic]",
+    "creating_with_ai": "Creating with AI [Arabic]",
+    "managing_with_ai": "Managing with AI [Arabic]",
+    "designing_with_ai": "Designing with AI [Arabic]"
   },
-  "viewDetailedProgress": "[Arabic] translation needed",
-  "learningStatistics": "[Arabic] translation needed",
-  "completedScenarios": "[Arabic] translation needed",
-  "inProgress": "[Arabic] translation needed",
-  "learningHours": "[Arabic] translation needed",
-  "dayStreak": "[Arabic] translation needed",
-  "recentActivities": "[Arabic] translation needed",
-  "noRecentActivities": "[Arabic] translation needed",
+  "viewDetailedProgress": "View detailed learning path [Arabic]",
+  "learningStatistics": "Learning Statistics [Arabic]",
+  "completedScenarios": "Completed [Arabic]",
+  "inProgress": "In Progress [Arabic]",
+  "learningHours": "Hours [Arabic]",
+  "dayStreak": "Day Streak [Arabic]",
+  "recentActivities": "Recent Activities [Arabic]",
+  "noRecentActivities": "No recent activities. Start learning to see your progress here! [Arabic]",
   "activities": {
-    "completedAssessment": "[Arabic] translation needed",
-    "assessmentDesc": "[Arabic] translation needed"
+    "completedAssessment": "Completed AI Literacy Assessment [Arabic]",
+    "assessmentDesc": "Discovered your AI knowledge baseline [Arabic]"
   },
-  "recommendedActions": "[Arabic] translation needed",
+  "recommendedActions": "Recommended Next Steps [Arabic]",
   "nextActions": {
-    "takeAssessment": "[Arabic] translation needed",
-    "assessmentDesc": "[Arabic] translation needed",
-    "viewLearningPath": "[Arabic] translation needed",
-    "learningPathDesc": "[Arabic] translation needed",
-    "startPBL": "[Arabic] translation needed",
-    "pblDesc": "[Arabic] translation needed"
+    "takeAssessment": "Take AI Literacy Assessment [Arabic]",
+    "assessmentDesc": "Discover your current AI knowledge level and get personalized recommendations [Arabic]",
+    "viewLearningPath": "View Your Learning Path [Arabic]",
+    "learningPathDesc": "See personalized recommendations based on your assessment results [Arabic]",
+    "startPBL": "Start a PBL Scenario [Arabic]",
+    "pblDesc": "Practice real-world AI skills with interactive scenarios [Arabic]"
   },
   "priority": {
-    "high": "[Arabic] translation needed",
-    "medium": "[Arabic] translation needed",
-    "low": "[Arabic] translation needed"
+    "high": "High [Arabic]",
+    "medium": "Medium [Arabic]",
+    "low": "Low [Arabic]"
   },
-  "quickLinks": "[Arabic] translation needed",
-  "explorePBL": "[Arabic] translation needed",
-  "viewCompetencies": "[Arabic] translation needed",
-  "viewHistory": "[Arabic] translation needed",
-  "exploreKSA": "[Arabic] translation needed",
-  "yourGoals": "[Arabic] translation needed",
-  "updateGoals": "[Arabic] translation needed",
-  "learningPathQuickAccess": "[Arabic] translation needed",
-  "learningPathDescription": "[Arabic] translation needed",
-  "viewAllPaths": "[Arabic] translation needed",
-  "focusOnWeakAreas": "[Arabic] translation needed",
-  "aiAdvisor": "[Arabic] translation needed"
+  "quickLinks": "Quick Links [Arabic]",
+  "explorePBL": "Explore PBL Scenarios [Arabic]",
+  "viewCompetencies": "View AI Competencies [Arabic]",
+  "viewHistory": "View Learning History [Arabic]",
+  "exploreKSA": "Explore Knowledge Map [Arabic]",
+  "yourGoals": "Your Learning Goals [Arabic]",
+  "updateGoals": "Update your goals [Arabic]",
+  "learningPathQuickAccess": "Personalized Learning Recommendations [Arabic]",
+  "learningPathDescription": "Explore AI learning scenarios tailored to your assessment results and interests. Choose the areas that best suit your needs. [Arabic]",
+  "viewAllPaths": "View All Learning Paths [Arabic]",
+  "focusOnWeakAreas": "Focus on Weak Areas [Arabic]",
+  "aiAdvisor": "AI Learning Advisor [Arabic]"
 }

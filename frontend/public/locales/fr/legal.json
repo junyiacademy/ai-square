@@ -1,171 +1,171 @@
 {
   "privacy": {
-    "title": "[FR] translation needed",
-    "lastUpdated": "[FR] translation needed",
-    "intro": "[FR] translation needed",
+    "title": "Privacy Policy [French]",
+    "lastUpdated": "Last updated [French]",
+    "intro": "AI Square (\"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI literacy education platform. [French]",
     "infoCollect": {
-      "title": "[FR] translation needed",
-      "personal": "[FR] translation needed",
-      "email": "[FR] translation needed",
-      "name": "[FR] translation needed",
-      "role": "[FR] translation needed",
-      "language": "[FR] translation needed",
-      "usage": "[FR] translation needed",
-      "learning": "[FR] translation needed",
-      "interactions": "[FR] translation needed",
-      "scenarios": "[FR] translation needed",
-      "analytics": "[FR] translation needed",
-      "technical": "[FR] translation needed",
-      "browser": "[FR] translation needed",
-      "device": "[FR] translation needed",
-      "ip": "[FR] translation needed",
-      "timezone": "[FR] translation needed"
+      "title": "1. Information We Collect [French]",
+      "personal": "Personal Information [French]",
+      "email": "Email address [French]",
+      "name": "Name (optional) [French]",
+      "role": "User role (student, teacher, admin) [French]",
+      "language": "Language preference [French]",
+      "usage": "Usage Data [French]",
+      "learning": "Learning progress and assessment results [French]",
+      "interactions": "Interactions with AI tutors [French]",
+      "scenarios": "PBL scenario completion data [French]",
+      "analytics": "Platform usage analytics [French]",
+      "technical": "Technical Data [French]",
+      "browser": "Browser type and version [French]",
+      "device": "Device information [French]",
+      "ip": "IP address (anonymized) [French]",
+      "timezone": "Time zone settings [French]"
     },
     "howUse": {
-      "title": "[FR] translation needed",
-      "provide": "[FR] translation needed",
-      "personalize": "[FR] translation needed",
-      "communicate": "[FR] translation needed",
-      "improve": "[FR] translation needed",
-      "analyze": "[FR] translation needed",
-      "security": "[FR] translation needed"
+      "title": "2. How We Use Your Information [French]",
+      "provide": "To provide and maintain our service [French]",
+      "personalize": "To personalize your learning experience [French]",
+      "communicate": "To communicate with you about your account [French]",
+      "improve": "To improve our platform and develop new features [French]",
+      "analyze": "To analyze usage patterns and optimize performance [French]",
+      "security": "To detect and prevent security threats [French]"
     },
     "storage": {
-      "title": "[FR] translation needed",
-      "location": "[FR] translation needed",
-      "encryption": "[FR] translation needed",
-      "access": "[FR] translation needed",
-      "monitoring": "[FR] translation needed",
-      "backup": "[FR] translation needed"
+      "title": "3. Data Storage and Security [French]",
+      "location": "Your data is stored securely on Google Cloud Platform servers. We implement appropriate technical and organizational measures to protect your personal information. [French]",
+      "encryption": "Data encryption in transit and at rest [French]",
+      "access": "Restricted access controls [French]",
+      "monitoring": "Regular security monitoring [French]",
+      "backup": "Secure backup procedures [French]"
     },
     "sharing": {
-      "title": "[FR] translation needed",
-      "intro": "[FR] translation needed",
-      "consent": "[FR] translation needed",
-      "legal": "[FR] translation needed",
-      "protect": "[FR] translation needed",
-      "service": "[FR] translation needed"
+      "title": "4. Data Sharing and Disclosure [French]",
+      "intro": "We do not sell, trade, or rent your personal information. We may share your information in the following situations: [French]",
+      "consent": "With your consent [French]",
+      "legal": "To comply with legal obligations [French]",
+      "protect": "To protect our rights and safety [French]",
+      "service": "With service providers who assist our operations [French]"
     },
     "rights": {
-      "title": "[FR] translation needed",
-      "intro": "[FR] translation needed",
-      "access": "[FR] translation needed",
-      "correct": "[FR] translation needed",
-      "delete": "[FR] translation needed",
-      "export": "[FR] translation needed",
-      "restrict": "[FR] translation needed",
-      "withdraw": "[FR] translation needed"
+      "title": "5. Your Rights [French]",
+      "intro": "You have the following rights regarding your personal data: [French]",
+      "access": "Access your personal information [French]",
+      "correct": "Correct inaccurate data [French]",
+      "delete": "Request deletion of your data [French]",
+      "export": "Export your data in a portable format [French]",
+      "restrict": "Restrict processing of your data [French]",
+      "withdraw": "Withdraw consent at any time [French]"
     },
     "cookies": {
-      "title": "[FR] translation needed",
-      "intro": "[FR] translation needed"
+      "title": "6. Cookies and Tracking [French]",
+      "intro": "We use cookies and similar tracking technologies to enhance your experience. Essential cookies are required for platform functionality, while optional cookies help us improve our service. [French]"
     },
     "children": {
-      "title": "[FR] translation needed",
-      "content": "[FR] translation needed"
+      "title": "7. Children's Privacy [French]",
+      "content": "Our platform is designed for educational use by students of all ages. For users under 13, we require parental consent and limit data collection to essential information only. [French]"
     },
     "international": {
-      "title": "[FR] translation needed",
-      "content": "[FR] translation needed"
+      "title": "8. International Data Transfers [French]",
+      "content": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers. [French]"
     },
     "changes": {
-      "title": "[FR] translation needed",
-      "content": "[FR] translation needed"
+      "title": "9. Changes to This Policy [French]",
+      "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the \"Last Updated\" date. [French]"
     },
     "contact": {
-      "title": "[FR] translation needed",
-      "intro": "[FR] translation needed"
+      "title": "10. Contact Us [French]",
+      "intro": "If you have questions about this Privacy Policy, please contact us at: [French]"
     }
   },
   "terms": {
-    "title": "[FR] translation needed",
-    "effectiveDate": "[FR] translation needed",
-    "lastUpdated": "[FR] translation needed",
-    "intro": "[FR] translation needed",
+    "title": "Terms of Service [French]",
+    "effectiveDate": "Effective Date [French]",
+    "lastUpdated": "Last Updated [French]",
+    "intro": "Welcome to AI Square! These Terms of Service (\"Terms\") govern your use of our AI literacy education platform. By accessing or using AI Square, you agree to be bound by these Terms. [French]",
     "acceptance": {
-      "title": "[FR] translation needed",
-      "content": "[FR] translation needed",
-      "capacity": "[FR] translation needed"
+      "title": "1. Acceptance of Terms [French]",
+      "content": "By creating an account or using our services, you acknowledge that you have read, understood, and agree to these Terms. If you do not agree, please do not use our platform. [French]",
+      "capacity": "You must be at least 13 years old to use our services. If you are under 18, you must have parental consent. [French]"
     },
     "service": {
-      "title": "[FR] translation needed",
-      "intro": "[FR] translation needed",
-      "literacy": "[FR] translation needed",
-      "pbl": "[FR] translation needed",
-      "ai": "[FR] translation needed",
-      "tracking": "[FR] translation needed",
-      "multi": "[FR] translation needed"
+      "title": "2. Description of Service [French]",
+      "intro": "AI Square provides: [French]",
+      "literacy": "AI literacy education content and assessments [French]",
+      "pbl": "Problem-Based Learning (PBL) scenarios [French]",
+      "ai": "AI-powered tutoring and feedback [French]",
+      "tracking": "Progress tracking and analytics [French]",
+      "multi": "Multi-language support (9 languages) [French]"
     },
     "accounts": {
-      "title": "[FR] translation needed",
-      "registration": "[FR] translation needed",
-      "accurate": "[FR] translation needed",
-      "maintain": "[FR] translation needed",
-      "secure": "[FR] translation needed",
-      "responsible": "[FR] translation needed",
-      "types": "[FR] translation needed",
-      "student": "[FR] translation needed",
-      "teacher": "[FR] translation needed",
-      "admin": "[FR] translation needed"
+      "title": "3. User Accounts [French]",
+      "registration": "Registration [French]",
+      "accurate": "Provide accurate and complete information [French]",
+      "maintain": "Maintain and update your information [French]",
+      "secure": "Keep your account credentials secure [French]",
+      "responsible": "You are responsible for all activities under your account [French]",
+      "types": "Account Types [French]",
+      "student": "Student: Access to learning content and assessments [French]",
+      "teacher": "Teacher: Additional class management features [French]",
+      "admin": "Administrator: Platform management capabilities [French]"
     },
     "use": {
-      "title": "[FR] translation needed",
-      "permitted": "[FR] translation needed",
-      "educational": "[FR] translation needed",
-      "share": "[FR] translation needed",
-      "feedback": "[FR] translation needed",
-      "prohibited": "[FR] translation needed",
-      "misuse": "[FR] translation needed",
-      "share_credentials": "[FR] translation needed",
-      "cheat": "[FR] translation needed",
-      "harm": "[FR] translation needed",
-      "illegal": "[FR] translation needed",
-      "scrape": "[FR] translation needed"
+      "title": "4. Acceptable Use Policy [French]",
+      "permitted": "You may: [French]",
+      "educational": "Use the platform for educational purposes [French]",
+      "share": "Share your learning progress appropriately [French]",
+      "feedback": "Provide constructive feedback [French]",
+      "prohibited": "You may not: [French]",
+      "misuse": "Misuse or attempt to manipulate the AI systems [French]",
+      "share_credentials": "Share account credentials [French]",
+      "cheat": "Engage in academic dishonesty [French]",
+      "harm": "Harass, abuse, or harm other users [French]",
+      "illegal": "Use the platform for illegal activities [French]",
+      "scrape": "Scrape or copy content without permission [French]"
     },
     "ip": {
-      "title": "[FR] translation needed",
-      "platform": "[FR] translation needed",
-      "ownership": "[FR] translation needed",
-      "user": "[FR] translation needed",
-      "retain": "[FR] translation needed",
-      "open": "[FR] translation needed",
-      "git": "[FR] translation needed"
+      "title": "5. Intellectual Property [French]",
+      "platform": "Platform Content [French]",
+      "ownership": "All content on AI Square, including text, graphics, logos, and software, is owned by AI Square or its licensors and protected by intellectual property laws. [French]",
+      "user": "User Content [French]",
+      "retain": "You retain ownership of content you create. By submitting content, you grant us a license to use it for providing and improving our services. [French]",
+      "open": "Open Source [French]",
+      "git": "Educational content is managed through Git and may be subject to open-source licenses. Please check individual repositories for specific license terms. [French]"
     },
     "privacy": {
-      "title": "[FR] translation needed",
-      "content": "[FR] translation needed"
+      "title": "6. Privacy and Data Protection [French]",
+      "content": "Your use of AI Square is also governed by our Privacy Policy. We are committed to protecting your personal information and using it only as described in our Privacy Policy. [French]"
     },
     "ai": {
-      "title": "[FR] translation needed",
-      "disclaimer": "[FR] translation needed",
-      "educational": "[FR] translation needed",
-      "verify": "[FR] translation needed",
-      "improve": "[FR] translation needed"
+      "title": "7. AI Services and Limitations [French]",
+      "disclaimer": "Our AI-powered features are designed to assist learning but are not perfect. We do not guarantee the accuracy of AI-generated content or feedback. [French]",
+      "educational": "AI responses are for educational purposes only [French]",
+      "verify": "Always verify important information independently [French]",
+      "improve": "We continuously work to improve AI accuracy [French]"
     },
     "disclaimers": {
-      "title": "[FR] translation needed",
+      "title": "8. Disclaimers and Limitations [French]",
       "asis": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND.",
-      "liability": "[FR] translation needed"
+      "liability": "To the fullest extent permitted by law, AI Square shall not be liable for any indirect, incidental, special, consequential, or punitive damages. [French]"
     },
     "modifications": {
-      "title": "[FR] translation needed",
-      "content": "[FR] translation needed"
+      "title": "9. Modifications to Terms [French]",
+      "content": "We may modify these Terms at any time. We will notify users of material changes. Continued use after changes constitutes acceptance of the new Terms. [French]"
     },
     "termination": {
-      "title": "[FR] translation needed",
-      "rights": "[FR] translation needed"
+      "title": "10. Termination [French]",
+      "rights": "We reserve the right to suspend or terminate accounts that violate these Terms. You may delete your account at any time. [French]"
     },
     "law": {
-      "title": "[FR] translation needed",
-      "content": "[FR] translation needed"
+      "title": "11. Governing Law [French]",
+      "content": "These Terms are governed by the laws of the jurisdiction where AI Square operates, without regard to conflict of law principles. [French]"
     },
     "contact": {
-      "title": "[FR] translation needed",
-      "intro": "[FR] translation needed"
+      "title": "12. Contact Information [French]",
+      "intro": "For questions about these Terms, please contact us: [French]"
     },
-    "agreement": "[FR] translation needed"
+    "agreement": "By using AI Square, you acknowledge that you have read and agree to these Terms of Service. [French]"
   },
   "common": {
-    "backToHome": "[FR] translation needed"
+    "backToHome": "Back to Home [French]"
   }
 }

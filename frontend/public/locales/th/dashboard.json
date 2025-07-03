@@ -1,49 +1,49 @@
 {
-  "welcome": "[Thai] translation needed",
-  "subtitle": "[Thai] translation needed",
-  "aiLiteracyProgress": "[Thai] translation needed",
+  "welcome": "Welcome back, {{name}}! [Thai]",
+  "subtitle": "Here's your AI literacy progress overview [Thai]",
+  "aiLiteracyProgress": "AI Literacy Progress [Thai]",
   "domains": {
-    "engaging_with_ai": "[Thai] translation needed",
-    "creating_with_ai": "[Thai] translation needed",
-    "managing_with_ai": "[Thai] translation needed",
-    "designing_with_ai": "[Thai] translation needed"
+    "engaging_with_ai": "Engaging with AI [Thai]",
+    "creating_with_ai": "Creating with AI [Thai]",
+    "managing_with_ai": "Managing with AI [Thai]",
+    "designing_with_ai": "Designing with AI [Thai]"
   },
-  "viewDetailedProgress": "[Thai] translation needed",
-  "learningStatistics": "[Thai] translation needed",
-  "completedScenarios": "[Thai] translation needed",
-  "inProgress": "[Thai] translation needed",
-  "learningHours": "[Thai] translation needed",
-  "dayStreak": "[Thai] translation needed",
-  "recentActivities": "[Thai] translation needed",
-  "noRecentActivities": "[Thai] translation needed",
+  "viewDetailedProgress": "View detailed learning path [Thai]",
+  "learningStatistics": "Learning Statistics [Thai]",
+  "completedScenarios": "Completed [Thai]",
+  "inProgress": "In Progress [Thai]",
+  "learningHours": "Hours [Thai]",
+  "dayStreak": "Day Streak [Thai]",
+  "recentActivities": "Recent Activities [Thai]",
+  "noRecentActivities": "No recent activities. Start learning to see your progress here! [Thai]",
   "activities": {
-    "completedAssessment": "[Thai] translation needed",
-    "assessmentDesc": "[Thai] translation needed"
+    "completedAssessment": "Completed AI Literacy Assessment [Thai]",
+    "assessmentDesc": "Discovered your AI knowledge baseline [Thai]"
   },
-  "recommendedActions": "[Thai] translation needed",
+  "recommendedActions": "Recommended Next Steps [Thai]",
   "nextActions": {
-    "takeAssessment": "[Thai] translation needed",
-    "assessmentDesc": "[Thai] translation needed",
-    "viewLearningPath": "[Thai] translation needed",
-    "learningPathDesc": "[Thai] translation needed",
-    "startPBL": "[Thai] translation needed",
-    "pblDesc": "[Thai] translation needed"
+    "takeAssessment": "Take AI Literacy Assessment [Thai]",
+    "assessmentDesc": "Discover your current AI knowledge level and get personalized recommendations [Thai]",
+    "viewLearningPath": "View Your Learning Path [Thai]",
+    "learningPathDesc": "See personalized recommendations based on your assessment results [Thai]",
+    "startPBL": "Start a PBL Scenario [Thai]",
+    "pblDesc": "Practice real-world AI skills with interactive scenarios [Thai]"
   },
   "priority": {
-    "high": "[Thai] translation needed",
-    "medium": "[Thai] translation needed",
-    "low": "[Thai] translation needed"
+    "high": "High [Thai]",
+    "medium": "Medium [Thai]",
+    "low": "Low [Thai]"
   },
-  "quickLinks": "[Thai] translation needed",
-  "explorePBL": "[Thai] translation needed",
-  "viewCompetencies": "[Thai] translation needed",
-  "viewHistory": "[Thai] translation needed",
-  "exploreKSA": "[Thai] translation needed",
-  "yourGoals": "[Thai] translation needed",
-  "updateGoals": "[Thai] translation needed",
-  "learningPathQuickAccess": "[Thai] translation needed",
-  "learningPathDescription": "[Thai] translation needed",
-  "viewAllPaths": "[Thai] translation needed",
-  "focusOnWeakAreas": "[Thai] translation needed",
-  "aiAdvisor": "[Thai] translation needed"
+  "quickLinks": "Quick Links [Thai]",
+  "explorePBL": "Explore PBL Scenarios [Thai]",
+  "viewCompetencies": "View AI Competencies [Thai]",
+  "viewHistory": "View Learning History [Thai]",
+  "exploreKSA": "Explore Knowledge Map [Thai]",
+  "yourGoals": "Your Learning Goals [Thai]",
+  "updateGoals": "Update your goals [Thai]",
+  "learningPathQuickAccess": "Personalized Learning Recommendations [Thai]",
+  "learningPathDescription": "Explore AI learning scenarios tailored to your assessment results and interests. Choose the areas that best suit your needs. [Thai]",
+  "viewAllPaths": "View All Learning Paths [Thai]",
+  "focusOnWeakAreas": "Focus on Weak Areas [Thai]",
+  "aiAdvisor": "AI Learning Advisor [Thai]"
 }

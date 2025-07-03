@@ -1,49 +1,49 @@
 {
-  "welcome": "[JA] translation needed",
-  "subtitle": "[JA] translation needed",
-  "aiLiteracyProgress": "[JA] translation needed",
+  "welcome": "おかえりなさい、{{name}}さん！",
+  "subtitle": "AIリテラシーの進捗状況の概要です",
+  "aiLiteracyProgress": "AIリテラシーの進捗",
   "domains": {
-    "engaging_with_ai": "[JA] translation needed",
-    "creating_with_ai": "[JA] translation needed",
-    "managing_with_ai": "[JA] translation needed",
-    "designing_with_ai": "[JA] translation needed"
+    "engaging_with_ai": "AIとの関わり",
+    "creating_with_ai": "AIでの創造",
+    "managing_with_ai": "AIでの管理",
+    "designing_with_ai": "AIでの設計"
   },
-  "viewDetailedProgress": "[JA] translation needed",
-  "learningStatistics": "[JA] translation needed",
-  "completedScenarios": "[JA] translation needed",
-  "inProgress": "[JA] translation needed",
-  "learningHours": "[JA] translation needed",
-  "dayStreak": "[JA] translation needed",
-  "recentActivities": "[JA] translation needed",
-  "noRecentActivities": "[JA] translation needed",
+  "viewDetailedProgress": "詳細な学習パスを表示",
+  "learningStatistics": "学習統計",
+  "completedScenarios": "完了",
+  "inProgress": "進行中",
+  "learningHours": "時間",
+  "dayStreak": "日間連続",
+  "recentActivities": "最近のアクティビティ",
+  "noRecentActivities": "最近のアクティビティはありません。学習を始めて、ここで進捗を確認しましょう！",
   "activities": {
-    "completedAssessment": "[JA] translation needed",
-    "assessmentDesc": "[JA] translation needed"
+    "completedAssessment": "AIリテラシー評価を完了",
+    "assessmentDesc": "AIの知識レベルを発見しました"
   },
-  "recommendedActions": "[JA] translation needed",
+  "recommendedActions": "推奨される次のステップ",
   "nextActions": {
-    "takeAssessment": "[JA] translation needed",
-    "assessmentDesc": "[JA] translation needed",
-    "viewLearningPath": "[JA] translation needed",
-    "learningPathDesc": "[JA] translation needed",
-    "startPBL": "[JA] translation needed",
-    "pblDesc": "[JA] translation needed"
+    "takeAssessment": "AIリテラシー評価を受ける",
+    "assessmentDesc": "現在のAI知識レベルを発見し、パーソナライズされた推奨事項を取得します",
+    "viewLearningPath": "学習パスを表示",
+    "learningPathDesc": "評価結果に基づいたパーソナライズされた推奨事項を表示",
+    "startPBL": "PBLシナリオを開始",
+    "pblDesc": "インタラクティブなシナリオで実世界のAIスキルを練習"
   },
   "priority": {
-    "high": "[JA] translation needed",
-    "medium": "[JA] translation needed",
-    "low": "[JA] translation needed"
+    "high": "高",
+    "medium": "中",
+    "low": "低"
   },
-  "quickLinks": "[JA] translation needed",
-  "explorePBL": "[JA] translation needed",
-  "viewCompetencies": "[JA] translation needed",
-  "viewHistory": "[JA] translation needed",
-  "exploreKSA": "[JA] translation needed",
-  "yourGoals": "[JA] translation needed",
-  "updateGoals": "[JA] translation needed",
-  "learningPathQuickAccess": "[JA] translation needed",
-  "learningPathDescription": "[JA] translation needed",
-  "viewAllPaths": "[JA] translation needed",
-  "focusOnWeakAreas": "[JA] translation needed",
-  "aiAdvisor": "[JA] translation needed"
+  "quickLinks": "クイックリンク",
+  "explorePBL": "PBLシナリオを探索",
+  "viewCompetencies": "AIコンピテンシーを表示",
+  "viewHistory": "学習履歴を表示",
+  "exploreKSA": "知識マップを探索",
+  "yourGoals": "あなたの学習目標",
+  "updateGoals": "目標を更新",
+  "learningPathQuickAccess": "パーソナライズされた学習推奨事項",
+  "learningPathDescription": "評価結果と興味に合わせたAI学習シナリオを探索します。あなたのニーズに最も適した分野を選択してください。",
+  "viewAllPaths": "すべての学習パスを表示",
+  "focusOnWeakAreas": "弱点に焦点を当てる",
+  "aiAdvisor": "AI学習アドバイザー"
 }

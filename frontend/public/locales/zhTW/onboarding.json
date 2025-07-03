@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "[ZHTW] translation needed",
-    "subtitle": "[ZHTW] translation needed",
+    "greeting": "Welcome, {{name}}! [Chinese (Traditional)]",
+    "subtitle": "Let's get you started on your AI literacy journey [Chinese (Traditional)]",
     "step1": {
-      "title": "[ZHTW] translation needed",
-      "description": "[ZHTW] translation needed",
-      "content": "[ZHTW] translation needed",
-      "assessment": "[ZHTW] translation needed",
-      "assessmentDesc": "[ZHTW] translation needed",
-      "learning": "[ZHTW] translation needed",
-      "learningDesc": "[ZHTW] translation needed"
+      "title": "Discover Your Path [Chinese (Traditional)]",
+      "description": "AI Square helps you understand and master AI literacy [Chinese (Traditional)]",
+      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [Chinese (Traditional)]",
+      "assessment": "Smart Assessment [Chinese (Traditional)]",
+      "assessmentDesc": "Discover your current AI knowledge level [Chinese (Traditional)]",
+      "learning": "Personalized Learning [Chinese (Traditional)]",
+      "learningDesc": "Get tailored recommendations based on your goals [Chinese (Traditional)]"
     },
     "step2": {
-      "title": "[ZHTW] translation needed",
-      "description": "[ZHTW] translation needed",
-      "content": "[ZHTW] translation needed",
-      "domains": "[ZHTW] translation needed",
-      "engaging": "[ZHTW] translation needed",
-      "creating": "[ZHTW] translation needed",
-      "managing": "[ZHTW] translation needed",
-      "designing": "[ZHTW] translation needed"
+      "title": "Four Core Domains [Chinese (Traditional)]",
+      "description": "Master the essential areas of AI literacy [Chinese (Traditional)]",
+      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [Chinese (Traditional)]",
+      "domains": "AI Literacy Domains [Chinese (Traditional)]",
+      "engaging": "Engaging with AI [Chinese (Traditional)]",
+      "creating": "Creating with AI [Chinese (Traditional)]",
+      "managing": "Managing with AI [Chinese (Traditional)]",
+      "designing": "Designing with AI [Chinese (Traditional)]"
     },
     "step3": {
-      "title": "[ZHTW] translation needed",
-      "description": "[ZHTW] translation needed",
-      "content": "[ZHTW] translation needed",
-      "ready": "[ZHTW] translation needed",
-      "benefit1": "[ZHTW] translation needed",
-      "benefit2": "[ZHTW] translation needed",
-      "benefit3": "[ZHTW] translation needed"
+      "title": "Start Your Journey [Chinese (Traditional)]",
+      "description": "Begin with an assessment and unlock your potential [Chinese (Traditional)]",
+      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [Chinese (Traditional)]",
+      "ready": "What you'll get: [Chinese (Traditional)]",
+      "benefit1": "Detailed assessment of your AI knowledge [Chinese (Traditional)]",
+      "benefit2": "Personalized learning path recommendations [Chinese (Traditional)]",
+      "benefit3": "Interactive scenarios and practical exercises [Chinese (Traditional)]"
     },
-    "startJourney": "[ZHTW] translation needed"
+    "startJourney": "Start Your Journey [Chinese (Traditional)]"
   },
   "goals": {
-    "title": "[ZHTW] translation needed",
-    "subtitle": "[ZHTW] translation needed",
+    "title": "What would you like to achieve? [Chinese (Traditional)]",
+    "subtitle": "Select your learning goals to get personalized recommendations [Chinese (Traditional)]",
     "understand": {
-      "title": "[ZHTW] translation needed",
-      "description": "[ZHTW] translation needed"
+      "title": "Understand AI Fundamentals [Chinese (Traditional)]",
+      "description": "Learn the basics of AI, machine learning, and how AI systems work [Chinese (Traditional)]"
     },
     "create": {
-      "title": "[ZHTW] translation needed",
-      "description": "[ZHTW] translation needed"
+      "title": "Create Content with AI [Chinese (Traditional)]",
+      "description": "Use AI tools for writing, design, art, and creative projects [Chinese (Traditional)]"
     },
     "analyze": {
-      "title": "[ZHTW] translation needed",
-      "description": "[ZHTW] translation needed"
+      "title": "Analyze Data with AI [Chinese (Traditional)]",
+      "description": "Apply AI for data analysis, insights, and decision-making [Chinese (Traditional)]"
     },
     "build": {
-      "title": "[ZHTW] translation needed",
-      "description": "[ZHTW] translation needed"
+      "title": "Build AI Solutions [Chinese (Traditional)]",
+      "description": "Develop and implement AI systems and applications [Chinese (Traditional)]"
     },
     "teach": {
-      "title": "[ZHTW] translation needed",
-      "description": "[ZHTW] translation needed"
+      "title": "Teach AI to Others [Chinese (Traditional)]",
+      "description": "Educate and guide others in understanding and using AI [Chinese (Traditional)]"
     },
     "ethical": {
-      "title": "[ZHTW] translation needed",
-      "description": "[ZHTW] translation needed"
+      "title": "Ensure Ethical AI Use [Chinese (Traditional)]",
+      "description": "Understand and implement responsible AI practices [Chinese (Traditional)]"
     },
-    "recommendedDomains": "[ZHTW] translation needed",
+    "recommendedDomains": "Recommended domains [Chinese (Traditional)]",
     "selected": "{{count}} goals selected",
-    "selectAtLeastOne": "[ZHTW] translation needed",
-    "continue": "[ZHTW] translation needed",
-    "skipForNow": "[ZHTW] translation needed",
-    "helpText": "[ZHTW] translation needed"
+    "selectAtLeastOne": "Please select at least one learning goal [Chinese (Traditional)]",
+    "continue": "Continue to Assessment [Chinese (Traditional)]",
+    "skipForNow": "Skip for now [Chinese (Traditional)]",
+    "helpText": "Don't worry, you can always change these later in your profile settings. [Chinese (Traditional)]"
   },
   "progress": {
-    "welcome": "[ZHTW] translation needed",
-    "identity": "[ZHTW] translation needed",
-    "goals": "[ZHTW] translation needed"
+    "welcome": "Welcome [Chinese (Traditional)]",
+    "identity": "Identity [Chinese (Traditional)]",
+    "goals": "Goals [Chinese (Traditional)]"
   },
   "identity": {
-    "title": "[ZHTW] translation needed",
-    "subtitle": "[ZHTW] translation needed",
+    "title": "Who are you? [Chinese (Traditional)]",
+    "subtitle": "Help us personalize your AI learning journey [Chinese (Traditional)]",
     "student": {
-      "title": "[ZHTW] translation needed",
-      "description": "[ZHTW] translation needed"
+      "title": "Student [Chinese (Traditional)]",
+      "description": "I'm studying and want to learn AI for my academic and future career [Chinese (Traditional)]"
     },
     "teacher": {
-      "title": "[ZHTW] translation needed",
-      "description": "[ZHTW] translation needed"
+      "title": "Educator [Chinese (Traditional)]",
+      "description": "I teach others and want to integrate AI into my curriculum [Chinese (Traditional)]"
     },
     "professional": {
-      "title": "[ZHTW] translation needed",
-      "description": "[ZHTW] translation needed"
+      "title": "Professional [Chinese (Traditional)]",
+      "description": "I work in industry and want to leverage AI in my role [Chinese (Traditional)]"
     },
     "learner": {
-      "title": "[ZHTW] translation needed",
-      "description": "[ZHTW] translation needed"
+      "title": "Lifelong Learner [Chinese (Traditional)]",
+      "description": "I'm curious about AI and want to explore its possibilities [Chinese (Traditional)]"
     }
   },
   "button": {
-    "back": "[ZHTW] translation needed",
-    "continue": "[ZHTW] translation needed",
-    "saving": "[ZHTW] translation needed"
+    "back": "Back [Chinese (Traditional)]",
+    "continue": "Continue [Chinese (Traditional)]",
+    "saving": "Saving... [Chinese (Traditional)]"
   }
 }

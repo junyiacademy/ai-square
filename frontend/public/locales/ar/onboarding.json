@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "[Arabic] translation needed",
-    "subtitle": "[Arabic] translation needed",
+    "greeting": "Welcome, {{name}}! [Arabic]",
+    "subtitle": "Let's get you started on your AI literacy journey [Arabic]",
     "step1": {
-      "title": "[Arabic] translation needed",
-      "description": "[Arabic] translation needed",
-      "content": "[Arabic] translation needed",
-      "assessment": "[Arabic] translation needed",
-      "assessmentDesc": "[Arabic] translation needed",
-      "learning": "[Arabic] translation needed",
-      "learningDesc": "[Arabic] translation needed"
+      "title": "Discover Your Path [Arabic]",
+      "description": "AI Square helps you understand and master AI literacy [Arabic]",
+      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [Arabic]",
+      "assessment": "Smart Assessment [Arabic]",
+      "assessmentDesc": "Discover your current AI knowledge level [Arabic]",
+      "learning": "Personalized Learning [Arabic]",
+      "learningDesc": "Get tailored recommendations based on your goals [Arabic]"
     },
     "step2": {
-      "title": "[Arabic] translation needed",
-      "description": "[Arabic] translation needed",
-      "content": "[Arabic] translation needed",
-      "domains": "[Arabic] translation needed",
-      "engaging": "[Arabic] translation needed",
-      "creating": "[Arabic] translation needed",
-      "managing": "[Arabic] translation needed",
-      "designing": "[Arabic] translation needed"
+      "title": "Four Core Domains [Arabic]",
+      "description": "Master the essential areas of AI literacy [Arabic]",
+      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [Arabic]",
+      "domains": "AI Literacy Domains [Arabic]",
+      "engaging": "Engaging with AI [Arabic]",
+      "creating": "Creating with AI [Arabic]",
+      "managing": "Managing with AI [Arabic]",
+      "designing": "Designing with AI [Arabic]"
     },
     "step3": {
-      "title": "[Arabic] translation needed",
-      "description": "[Arabic] translation needed",
-      "content": "[Arabic] translation needed",
-      "ready": "[Arabic] translation needed",
-      "benefit1": "[Arabic] translation needed",
-      "benefit2": "[Arabic] translation needed",
-      "benefit3": "[Arabic] translation needed"
+      "title": "Start Your Journey [Arabic]",
+      "description": "Begin with an assessment and unlock your potential [Arabic]",
+      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [Arabic]",
+      "ready": "What you'll get: [Arabic]",
+      "benefit1": "Detailed assessment of your AI knowledge [Arabic]",
+      "benefit2": "Personalized learning path recommendations [Arabic]",
+      "benefit3": "Interactive scenarios and practical exercises [Arabic]"
     },
-    "startJourney": "[Arabic] translation needed"
+    "startJourney": "Start Your Journey [Arabic]"
   },
   "goals": {
-    "title": "[Arabic] translation needed",
-    "subtitle": "[Arabic] translation needed",
+    "title": "What would you like to achieve? [Arabic]",
+    "subtitle": "Select your learning goals to get personalized recommendations [Arabic]",
     "understand": {
-      "title": "[Arabic] translation needed",
-      "description": "[Arabic] translation needed"
+      "title": "Understand AI Fundamentals [Arabic]",
+      "description": "Learn the basics of AI, machine learning, and how AI systems work [Arabic]"
     },
     "create": {
-      "title": "[Arabic] translation needed",
-      "description": "[Arabic] translation needed"
+      "title": "Create Content with AI [Arabic]",
+      "description": "Use AI tools for writing, design, art, and creative projects [Arabic]"
     },
     "analyze": {
-      "title": "[Arabic] translation needed",
-      "description": "[Arabic] translation needed"
+      "title": "Analyze Data with AI [Arabic]",
+      "description": "Apply AI for data analysis, insights, and decision-making [Arabic]"
     },
     "build": {
-      "title": "[Arabic] translation needed",
-      "description": "[Arabic] translation needed"
+      "title": "Build AI Solutions [Arabic]",
+      "description": "Develop and implement AI systems and applications [Arabic]"
     },
     "teach": {
-      "title": "[Arabic] translation needed",
-      "description": "[Arabic] translation needed"
+      "title": "Teach AI to Others [Arabic]",
+      "description": "Educate and guide others in understanding and using AI [Arabic]"
     },
     "ethical": {
-      "title": "[Arabic] translation needed",
-      "description": "[Arabic] translation needed"
+      "title": "Ensure Ethical AI Use [Arabic]",
+      "description": "Understand and implement responsible AI practices [Arabic]"
     },
-    "recommendedDomains": "[Arabic] translation needed",
-    "selected": "[Arabic] translation needed",
-    "selectAtLeastOne": "[Arabic] translation needed",
-    "continue": "[Arabic] translation needed",
-    "skipForNow": "[Arabic] translation needed",
-    "helpText": "[Arabic] translation needed"
+    "recommendedDomains": "Recommended domains [Arabic]",
+    "selected": "{{count}} goals selected [Arabic]",
+    "selectAtLeastOne": "Please select at least one learning goal [Arabic]",
+    "continue": "Continue to Assessment [Arabic]",
+    "skipForNow": "Skip for now [Arabic]",
+    "helpText": "Don't worry, you can always change these later in your profile settings. [Arabic]"
   },
   "progress": {
-    "welcome": "[Arabic] translation needed",
-    "identity": "[Arabic] translation needed",
-    "goals": "[Arabic] translation needed"
+    "welcome": "Welcome [Arabic]",
+    "identity": "Identity [Arabic]",
+    "goals": "Goals [Arabic]"
   },
   "identity": {
-    "title": "[Arabic] translation needed",
-    "subtitle": "[Arabic] translation needed",
+    "title": "Who are you? [Arabic]",
+    "subtitle": "Help us personalize your AI learning journey [Arabic]",
     "student": {
-      "title": "[Arabic] translation needed",
-      "description": "[Arabic] translation needed"
+      "title": "Student [Arabic]",
+      "description": "I'm studying and want to learn AI for my academic and future career [Arabic]"
     },
     "teacher": {
-      "title": "[Arabic] translation needed",
-      "description": "[Arabic] translation needed"
+      "title": "Educator [Arabic]",
+      "description": "I teach others and want to integrate AI into my curriculum [Arabic]"
     },
     "professional": {
-      "title": "[Arabic] translation needed",
-      "description": "[Arabic] translation needed"
+      "title": "Professional [Arabic]",
+      "description": "I work in industry and want to leverage AI in my role [Arabic]"
     },
     "learner": {
-      "title": "[Arabic] translation needed",
-      "description": "[Arabic] translation needed"
+      "title": "Lifelong Learner [Arabic]",
+      "description": "I'm curious about AI and want to explore its possibilities [Arabic]"
     }
   },
   "button": {
-    "back": "[Arabic] translation needed",
-    "continue": "[Arabic] translation needed",
-    "saving": "[Arabic] translation needed"
+    "back": "Back [Arabic]",
+    "continue": "Continue [Arabic]",
+    "saving": "Saving... [Arabic]"
   }
 }

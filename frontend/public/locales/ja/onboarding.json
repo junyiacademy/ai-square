@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "[JA] translation needed",
-    "subtitle": "[JA] translation needed",
+    "greeting": "Welcome, {{name}}! [Japanese]",
+    "subtitle": "Let's get you started on your AI literacy journey [Japanese]",
     "step1": {
-      "title": "[JA] translation needed",
-      "description": "[JA] translation needed",
-      "content": "[JA] translation needed",
-      "assessment": "[JA] translation needed",
-      "assessmentDesc": "[JA] translation needed",
-      "learning": "[JA] translation needed",
-      "learningDesc": "[JA] translation needed"
+      "title": "Discover Your Path [Japanese]",
+      "description": "AI Square helps you understand and master AI literacy [Japanese]",
+      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [Japanese]",
+      "assessment": "Smart Assessment [Japanese]",
+      "assessmentDesc": "Discover your current AI knowledge level [Japanese]",
+      "learning": "Personalized Learning [Japanese]",
+      "learningDesc": "Get tailored recommendations based on your goals [Japanese]"
     },
     "step2": {
-      "title": "[JA] translation needed",
-      "description": "[JA] translation needed",
-      "content": "[JA] translation needed",
-      "domains": "[JA] translation needed",
-      "engaging": "[JA] translation needed",
-      "creating": "[JA] translation needed",
-      "managing": "[JA] translation needed",
-      "designing": "[JA] translation needed"
+      "title": "Four Core Domains [Japanese]",
+      "description": "Master the essential areas of AI literacy [Japanese]",
+      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [Japanese]",
+      "domains": "AI Literacy Domains [Japanese]",
+      "engaging": "Engaging with AI [Japanese]",
+      "creating": "Creating with AI [Japanese]",
+      "managing": "Managing with AI [Japanese]",
+      "designing": "Designing with AI [Japanese]"
     },
     "step3": {
-      "title": "[JA] translation needed",
-      "description": "[JA] translation needed",
-      "content": "[JA] translation needed",
-      "ready": "[JA] translation needed",
-      "benefit1": "[JA] translation needed",
-      "benefit2": "[JA] translation needed",
-      "benefit3": "[JA] translation needed"
+      "title": "Start Your Journey [Japanese]",
+      "description": "Begin with an assessment and unlock your potential [Japanese]",
+      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [Japanese]",
+      "ready": "What you'll get: [Japanese]",
+      "benefit1": "Detailed assessment of your AI knowledge [Japanese]",
+      "benefit2": "Personalized learning path recommendations [Japanese]",
+      "benefit3": "Interactive scenarios and practical exercises [Japanese]"
     },
-    "startJourney": "[JA] translation needed"
+    "startJourney": "Start Your Journey [Japanese]"
   },
   "goals": {
-    "title": "[JA] translation needed",
-    "subtitle": "[JA] translation needed",
+    "title": "What would you like to achieve? [Japanese]",
+    "subtitle": "Select your learning goals to get personalized recommendations [Japanese]",
     "understand": {
-      "title": "[JA] translation needed",
-      "description": "[JA] translation needed"
+      "title": "Understand AI Fundamentals [Japanese]",
+      "description": "Learn the basics of AI, machine learning, and how AI systems work [Japanese]"
     },
     "create": {
-      "title": "[JA] translation needed",
-      "description": "[JA] translation needed"
+      "title": "Create Content with AI [Japanese]",
+      "description": "Use AI tools for writing, design, art, and creative projects [Japanese]"
     },
     "analyze": {
-      "title": "[JA] translation needed",
-      "description": "[JA] translation needed"
+      "title": "Analyze Data with AI [Japanese]",
+      "description": "Apply AI for data analysis, insights, and decision-making [Japanese]"
     },
     "build": {
-      "title": "[JA] translation needed",
-      "description": "[JA] translation needed"
+      "title": "Build AI Solutions [Japanese]",
+      "description": "Develop and implement AI systems and applications [Japanese]"
     },
     "teach": {
-      "title": "[JA] translation needed",
-      "description": "[JA] translation needed"
+      "title": "Teach AI to Others [Japanese]",
+      "description": "Educate and guide others in understanding and using AI [Japanese]"
     },
     "ethical": {
-      "title": "[JA] translation needed",
-      "description": "[JA] translation needed"
+      "title": "Ensure Ethical AI Use [Japanese]",
+      "description": "Understand and implement responsible AI practices [Japanese]"
     },
-    "recommendedDomains": "[JA] translation needed",
+    "recommendedDomains": "Recommended domains [Japanese]",
     "selected": "{{count}} goals selected",
-    "selectAtLeastOne": "[JA] translation needed",
-    "continue": "[JA] translation needed",
-    "skipForNow": "[JA] translation needed",
-    "helpText": "[JA] translation needed"
+    "selectAtLeastOne": "Please select at least one learning goal [Japanese]",
+    "continue": "Continue to Assessment [Japanese]",
+    "skipForNow": "Skip for now [Japanese]",
+    "helpText": "Don't worry, you can always change these later in your profile settings. [Japanese]"
   },
   "progress": {
-    "welcome": "[JA] translation needed",
-    "identity": "[JA] translation needed",
-    "goals": "[JA] translation needed"
+    "welcome": "Welcome [Japanese]",
+    "identity": "Identity [Japanese]",
+    "goals": "Goals [Japanese]"
   },
   "identity": {
-    "title": "[JA] translation needed",
-    "subtitle": "[JA] translation needed",
+    "title": "Who are you? [Japanese]",
+    "subtitle": "Help us personalize your AI learning journey [Japanese]",
     "student": {
-      "title": "[JA] translation needed",
-      "description": "[JA] translation needed"
+      "title": "Student [Japanese]",
+      "description": "I'm studying and want to learn AI for my academic and future career [Japanese]"
     },
     "teacher": {
-      "title": "[JA] translation needed",
-      "description": "[JA] translation needed"
+      "title": "Educator [Japanese]",
+      "description": "I teach others and want to integrate AI into my curriculum [Japanese]"
     },
     "professional": {
-      "title": "[JA] translation needed",
-      "description": "[JA] translation needed"
+      "title": "Professional [Japanese]",
+      "description": "I work in industry and want to leverage AI in my role [Japanese]"
     },
     "learner": {
-      "title": "[JA] translation needed",
-      "description": "[JA] translation needed"
+      "title": "Lifelong Learner [Japanese]",
+      "description": "I'm curious about AI and want to explore its possibilities [Japanese]"
     }
   },
   "button": {
-    "back": "[JA] translation needed",
-    "continue": "[JA] translation needed",
-    "saving": "[JA] translation needed"
+    "back": "Back [Japanese]",
+    "continue": "Continue [Japanese]",
+    "saving": "Saving... [Japanese]"
   }
 }

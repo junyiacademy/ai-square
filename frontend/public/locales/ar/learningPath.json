@@ -1,43 +1,43 @@
 {
-  "title": "[Arabic] translation needed",
-  "subtitle": "[Arabic] translation needed",
-  "yourProgress": "[Arabic] translation needed",
-  "currentScore": "[Arabic] translation needed",
-  "targetScore": "[Arabic] translation needed",
-  "completed": "[Arabic] translation needed",
-  "recommendedPath": "[Arabic] translation needed",
-  "startLearning": "[Arabic] translation needed",
-  "estimatedTime": "[Arabic] translation needed",
-  "weakDomainReason": "[Arabic] translation needed",
+  "title": "Your Learning Path [Arabic]",
+  "subtitle": "Personalized recommendations based on your assessment [Arabic]",
+  "yourProgress": "Your Progress [Arabic]",
+  "currentScore": "Current Score [Arabic]",
+  "targetScore": "Target Score [Arabic]",
+  "completed": "completed [Arabic]",
+  "recommendedPath": "Recommended Learning Path [Arabic]",
+  "startLearning": "Start Learning [Arabic]",
+  "estimatedTime": "Estimated time [Arabic]",
+  "weakDomainReason": "This is your weakest area with {{score}}% score [Arabic]",
   "difficulty": {
-    "beginner": "[Arabic] translation needed",
-    "intermediate": "[Arabic] translation needed",
-    "advanced": "[Arabic] translation needed"
+    "beginner": "Beginner [Arabic]",
+    "intermediate": "Intermediate [Arabic]",
+    "advanced": "Advanced [Arabic]"
   },
   "noAssessment": {
-    "title": "[Arabic] translation needed",
-    "description": "[Arabic] translation needed",
-    "button": "[Arabic] translation needed"
+    "title": "No Assessment Found [Arabic]",
+    "description": "Please complete the assessment first to get personalized recommendations [Arabic]",
+    "button": "Take Assessment [Arabic]"
   },
   "domains": {
-    "Engaging_with_AI": "[Arabic] translation needed",
-    "Creating_with_AI": "[Arabic] translation needed",
-    "Managing_with_AI": "[Arabic] translation needed",
-    "Designing_with_AI": "[Arabic] translation needed"
+    "Engaging_with_AI": "Engaging with AI [Arabic]",
+    "Creating_with_AI": "Creating with AI [Arabic]",
+    "Managing_with_AI": "Managing with AI [Arabic]",
+    "Designing_with_AI": "Designing with AI [Arabic]"
   },
-  "strongDomainReason": "[Arabic] translation needed",
-  "averageDomainReason": "[Arabic] translation needed",
+  "strongDomainReason": "Advance your skills in {{domain}} (current: {{score}}%) [Arabic]",
+  "averageDomainReason": "Improve your {{domain}} skills (current: {{score}}%) [Arabic]",
   "learningPath": {
-    "filteringBy": "[Arabic] translation needed",
-    "clearFilter": "[Arabic] translation needed",
-    "recommendedPath": "[Arabic] translation needed",
-    "estimatedTime": "[Arabic] translation needed",
-    "startLearning": "[Arabic] translation needed",
-    "progress": "[Arabic] translation needed",
-    "goToDashboard": "[Arabic] translation needed",
-    "dashboardHint": "[Arabic] translation needed"
+    "filteringBy": "Showing items for {{domain}} [Arabic]",
+    "clearFilter": "Clear filter [Arabic]",
+    "recommendedPath": "Recommended Learning Path [Arabic]",
+    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [Arabic]",
+    "startLearning": "Start Learning [Arabic]",
+    "progress": "Progress [Arabic]",
+    "goToDashboard": "Go to Dashboard [Arabic]",
+    "dashboardHint": "Track your overall progress and achievements in the dashboard [Arabic]"
   },
-  "showAll": "[Arabic] translation needed",
-  "focusOnWeakAreas": "[Arabic] translation needed",
-  "backToDashboard": "[Arabic] translation needed"
+  "showAll": "Show All [Arabic]",
+  "focusOnWeakAreas": "Focus on Weak Areas [Arabic]",
+  "backToDashboard": "Back to Dashboard [Arabic]"
 }

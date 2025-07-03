@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "[DE] translation needed",
-    "subtitle": "[DE] translation needed",
+    "greeting": "Welcome, {{name}}! [German]",
+    "subtitle": "Let's get you started on your AI literacy journey [German]",
     "step1": {
-      "title": "[DE] translation needed",
-      "description": "[DE] translation needed",
-      "content": "[DE] translation needed",
-      "assessment": "[DE] translation needed",
-      "assessmentDesc": "[DE] translation needed",
-      "learning": "[DE] translation needed",
-      "learningDesc": "[DE] translation needed"
+      "title": "Discover Your Path [German]",
+      "description": "AI Square helps you understand and master AI literacy [German]",
+      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [German]",
+      "assessment": "Smart Assessment [German]",
+      "assessmentDesc": "Discover your current AI knowledge level [German]",
+      "learning": "Personalized Learning [German]",
+      "learningDesc": "Get tailored recommendations based on your goals [German]"
     },
     "step2": {
-      "title": "[DE] translation needed",
-      "description": "[DE] translation needed",
-      "content": "[DE] translation needed",
-      "domains": "[DE] translation needed",
-      "engaging": "[DE] translation needed",
-      "creating": "[DE] translation needed",
-      "managing": "[DE] translation needed",
-      "designing": "[DE] translation needed"
+      "title": "Four Core Domains [German]",
+      "description": "Master the essential areas of AI literacy [German]",
+      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [German]",
+      "domains": "AI Literacy Domains [German]",
+      "engaging": "Engaging with AI [German]",
+      "creating": "Creating with AI [German]",
+      "managing": "Managing with AI [German]",
+      "designing": "Designing with AI [German]"
     },
     "step3": {
-      "title": "[DE] translation needed",
-      "description": "[DE] translation needed",
-      "content": "[DE] translation needed",
-      "ready": "[DE] translation needed",
-      "benefit1": "[DE] translation needed",
-      "benefit2": "[DE] translation needed",
-      "benefit3": "[DE] translation needed"
+      "title": "Start Your Journey [German]",
+      "description": "Begin with an assessment and unlock your potential [German]",
+      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [German]",
+      "ready": "What you'll get: [German]",
+      "benefit1": "Detailed assessment of your AI knowledge [German]",
+      "benefit2": "Personalized learning path recommendations [German]",
+      "benefit3": "Interactive scenarios and practical exercises [German]"
     },
-    "startJourney": "[DE] translation needed"
+    "startJourney": "Start Your Journey [German]"
   },
   "goals": {
-    "title": "[DE] translation needed",
-    "subtitle": "[DE] translation needed",
+    "title": "What would you like to achieve? [German]",
+    "subtitle": "Select your learning goals to get personalized recommendations [German]",
     "understand": {
-      "title": "[DE] translation needed",
-      "description": "[DE] translation needed"
+      "title": "Understand AI Fundamentals [German]",
+      "description": "Learn the basics of AI, machine learning, and how AI systems work [German]"
     },
     "create": {
-      "title": "[DE] translation needed",
-      "description": "[DE] translation needed"
+      "title": "Create Content with AI [German]",
+      "description": "Use AI tools for writing, design, art, and creative projects [German]"
     },
     "analyze": {
-      "title": "[DE] translation needed",
-      "description": "[DE] translation needed"
+      "title": "Analyze Data with AI [German]",
+      "description": "Apply AI for data analysis, insights, and decision-making [German]"
     },
     "build": {
-      "title": "[DE] translation needed",
-      "description": "[DE] translation needed"
+      "title": "Build AI Solutions [German]",
+      "description": "Develop and implement AI systems and applications [German]"
     },
     "teach": {
-      "title": "[DE] translation needed",
-      "description": "[DE] translation needed"
+      "title": "Teach AI to Others [German]",
+      "description": "Educate and guide others in understanding and using AI [German]"
     },
     "ethical": {
-      "title": "[DE] translation needed",
-      "description": "[DE] translation needed"
+      "title": "Ensure Ethical AI Use [German]",
+      "description": "Understand and implement responsible AI practices [German]"
     },
-    "recommendedDomains": "[DE] translation needed",
+    "recommendedDomains": "Recommended domains [German]",
     "selected": "{{count}} goals selected",
-    "selectAtLeastOne": "[DE] translation needed",
-    "continue": "[DE] translation needed",
-    "skipForNow": "[DE] translation needed",
-    "helpText": "[DE] translation needed"
+    "selectAtLeastOne": "Please select at least one learning goal [German]",
+    "continue": "Continue to Assessment [German]",
+    "skipForNow": "Skip for now [German]",
+    "helpText": "Don't worry, you can always change these later in your profile settings. [German]"
   },
   "progress": {
-    "welcome": "[DE] translation needed",
-    "identity": "[DE] translation needed",
-    "goals": "[DE] translation needed"
+    "welcome": "Welcome [German]",
+    "identity": "Identity [German]",
+    "goals": "Goals [German]"
   },
   "identity": {
-    "title": "[DE] translation needed",
-    "subtitle": "[DE] translation needed",
+    "title": "Who are you? [German]",
+    "subtitle": "Help us personalize your AI learning journey [German]",
     "student": {
-      "title": "[DE] translation needed",
-      "description": "[DE] translation needed"
+      "title": "Student [German]",
+      "description": "I'm studying and want to learn AI for my academic and future career [German]"
     },
     "teacher": {
-      "title": "[DE] translation needed",
-      "description": "[DE] translation needed"
+      "title": "Educator [German]",
+      "description": "I teach others and want to integrate AI into my curriculum [German]"
     },
     "professional": {
-      "title": "[DE] translation needed",
-      "description": "[DE] translation needed"
+      "title": "Professional [German]",
+      "description": "I work in industry and want to leverage AI in my role [German]"
     },
     "learner": {
-      "title": "[DE] translation needed",
-      "description": "[DE] translation needed"
+      "title": "Lifelong Learner [German]",
+      "description": "I'm curious about AI and want to explore its possibilities [German]"
     }
   },
   "button": {
-    "back": "[DE] translation needed",
-    "continue": "[DE] translation needed",
-    "saving": "[DE] translation needed"
+    "back": "Back [German]",
+    "continue": "Continue [German]",
+    "saving": "Saving... [German]"
   }
 }

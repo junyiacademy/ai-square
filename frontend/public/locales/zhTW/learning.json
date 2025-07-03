@@ -1,21 +1,21 @@
 {
   "learningPath": {
-    "title": "[ZHTW] translation needed",
-    "subtitle": "[ZHTW] translation needed",
-    "yourProgress": "[ZHTW] translation needed",
-    "currentScore": "[ZHTW] translation needed",
-    "target": "[ZHTW] translation needed",
-    "completed": "[ZHTW] translation needed",
-    "filteringBy": "[ZHTW] translation needed",
-    "clearFilter": "[ZHTW] translation needed",
-    "recommendedPath": "[ZHTW] translation needed",
-    "estimatedTime": "[ZHTW] translation needed",
-    "startLearning": "[ZHTW] translation needed",
-    "progress": "[ZHTW] translation needed",
-    "weakDomainReason": "[ZHTW] translation needed",
-    "strongDomainReason": "[ZHTW] translation needed",
-    "averageDomainReason": "[ZHTW] translation needed",
-    "goToDashboard": "[ZHTW] translation needed",
-    "dashboardHint": "[ZHTW] translation needed"
+    "title": "Your Personalized Learning Path [Chinese (Traditional)]",
+    "subtitle": "Based on your assessment results, here's your recommended learning journey [Chinese (Traditional)]",
+    "yourProgress": "Your Progress Overview [Chinese (Traditional)]",
+    "currentScore": "Current [Chinese (Traditional)]",
+    "target": "Target [Chinese (Traditional)]",
+    "completed": "completed [Chinese (Traditional)]",
+    "filteringBy": "Showing recommendations for: {{domain}} [Chinese (Traditional)]",
+    "clearFilter": "Show all recommendations [Chinese (Traditional)]",
+    "recommendedPath": "Recommended Learning Path [Chinese (Traditional)]",
+    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [Chinese (Traditional)]",
+    "startLearning": "Start Learning [Chinese (Traditional)]",
+    "progress": "Progress [Chinese (Traditional)]",
+    "weakDomainReason": "Recommended to strengthen {{domain}} (current: {{score}}%) [Chinese (Traditional)]",
+    "strongDomainReason": "Advanced challenge for your strong {{domain}} skills ({{score}}%) [Chinese (Traditional)]",
+    "averageDomainReason": "Continue building {{domain}} expertise (current: {{score}}%) [Chinese (Traditional)]",
+    "goToDashboard": "Go to Dashboard [Chinese (Traditional)]",
+    "dashboardHint": "Track your overall progress and continue your learning journey [Chinese (Traditional)]"
   }
 }

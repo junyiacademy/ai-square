@@ -1,171 +1,171 @@
 {
   "privacy": {
-    "title": "[Thai] translation needed",
-    "lastUpdated": "[Thai] translation needed",
-    "intro": "[Thai] translation needed",
+    "title": "Privacy Policy [Thai]",
+    "lastUpdated": "Last updated [Thai]",
+    "intro": "AI Square (\"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI literacy education platform. [Thai]",
     "infoCollect": {
-      "title": "[Thai] translation needed",
-      "personal": "[Thai] translation needed",
-      "email": "[Thai] translation needed",
-      "name": "[Thai] translation needed",
-      "role": "[Thai] translation needed",
-      "language": "[Thai] translation needed",
-      "usage": "[Thai] translation needed",
-      "learning": "[Thai] translation needed",
-      "interactions": "[Thai] translation needed",
-      "scenarios": "[Thai] translation needed",
-      "analytics": "[Thai] translation needed",
-      "technical": "[Thai] translation needed",
-      "browser": "[Thai] translation needed",
-      "device": "[Thai] translation needed",
-      "ip": "[Thai] translation needed",
-      "timezone": "[Thai] translation needed"
+      "title": "1. Information We Collect [Thai]",
+      "personal": "Personal Information [Thai]",
+      "email": "Email address [Thai]",
+      "name": "Name (optional) [Thai]",
+      "role": "User role (student, teacher, admin) [Thai]",
+      "language": "Language preference [Thai]",
+      "usage": "Usage Data [Thai]",
+      "learning": "Learning progress and assessment results [Thai]",
+      "interactions": "Interactions with AI tutors [Thai]",
+      "scenarios": "PBL scenario completion data [Thai]",
+      "analytics": "Platform usage analytics [Thai]",
+      "technical": "Technical Data [Thai]",
+      "browser": "Browser type and version [Thai]",
+      "device": "Device information [Thai]",
+      "ip": "IP address (anonymized) [Thai]",
+      "timezone": "Time zone settings [Thai]"
     },
     "howUse": {
-      "title": "[Thai] translation needed",
-      "provide": "[Thai] translation needed",
-      "personalize": "[Thai] translation needed",
-      "communicate": "[Thai] translation needed",
-      "improve": "[Thai] translation needed",
-      "analyze": "[Thai] translation needed",
-      "security": "[Thai] translation needed"
+      "title": "2. How We Use Your Information [Thai]",
+      "provide": "To provide and maintain our service [Thai]",
+      "personalize": "To personalize your learning experience [Thai]",
+      "communicate": "To communicate with you about your account [Thai]",
+      "improve": "To improve our platform and develop new features [Thai]",
+      "analyze": "To analyze usage patterns and optimize performance [Thai]",
+      "security": "To detect and prevent security threats [Thai]"
     },
     "storage": {
-      "title": "[Thai] translation needed",
-      "location": "[Thai] translation needed",
-      "encryption": "[Thai] translation needed",
-      "access": "[Thai] translation needed",
-      "monitoring": "[Thai] translation needed",
-      "backup": "[Thai] translation needed"
+      "title": "3. Data Storage and Security [Thai]",
+      "location": "Your data is stored securely on Google Cloud Platform servers. We implement appropriate technical and organizational measures to protect your personal information. [Thai]",
+      "encryption": "Data encryption in transit and at rest [Thai]",
+      "access": "Restricted access controls [Thai]",
+      "monitoring": "Regular security monitoring [Thai]",
+      "backup": "Secure backup procedures [Thai]"
     },
     "sharing": {
-      "title": "[Thai] translation needed",
-      "intro": "[Thai] translation needed",
-      "consent": "[Thai] translation needed",
-      "legal": "[Thai] translation needed",
-      "protect": "[Thai] translation needed",
-      "service": "[Thai] translation needed"
+      "title": "4. Data Sharing and Disclosure [Thai]",
+      "intro": "We do not sell, trade, or rent your personal information. We may share your information in the following situations: [Thai]",
+      "consent": "With your consent [Thai]",
+      "legal": "To comply with legal obligations [Thai]",
+      "protect": "To protect our rights and safety [Thai]",
+      "service": "With service providers who assist our operations [Thai]"
     },
     "rights": {
-      "title": "[Thai] translation needed",
-      "intro": "[Thai] translation needed",
-      "access": "[Thai] translation needed",
-      "correct": "[Thai] translation needed",
-      "delete": "[Thai] translation needed",
-      "export": "[Thai] translation needed",
-      "restrict": "[Thai] translation needed",
-      "withdraw": "[Thai] translation needed"
+      "title": "5. Your Rights [Thai]",
+      "intro": "You have the following rights regarding your personal data: [Thai]",
+      "access": "Access your personal information [Thai]",
+      "correct": "Correct inaccurate data [Thai]",
+      "delete": "Request deletion of your data [Thai]",
+      "export": "Export your data in a portable format [Thai]",
+      "restrict": "Restrict processing of your data [Thai]",
+      "withdraw": "Withdraw consent at any time [Thai]"
     },
     "cookies": {
-      "title": "[Thai] translation needed",
-      "intro": "[Thai] translation needed"
+      "title": "6. Cookies and Tracking [Thai]",
+      "intro": "We use cookies and similar tracking technologies to enhance your experience. Essential cookies are required for platform functionality, while optional cookies help us improve our service. [Thai]"
     },
     "children": {
-      "title": "[Thai] translation needed",
-      "content": "[Thai] translation needed"
+      "title": "7. Children's Privacy [Thai]",
+      "content": "Our platform is designed for educational use by students of all ages. For users under 13, we require parental consent and limit data collection to essential information only. [Thai]"
     },
     "international": {
-      "title": "[Thai] translation needed",
-      "content": "[Thai] translation needed"
+      "title": "8. International Data Transfers [Thai]",
+      "content": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers. [Thai]"
     },
     "changes": {
-      "title": "[Thai] translation needed",
-      "content": "[Thai] translation needed"
+      "title": "9. Changes to This Policy [Thai]",
+      "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the \"Last Updated\" date. [Thai]"
     },
     "contact": {
-      "title": "[Thai] translation needed",
-      "intro": "[Thai] translation needed"
+      "title": "10. Contact Us [Thai]",
+      "intro": "If you have questions about this Privacy Policy, please contact us at: [Thai]"
     }
   },
   "terms": {
-    "title": "[Thai] translation needed",
-    "effectiveDate": "[Thai] translation needed",
-    "lastUpdated": "[Thai] translation needed",
-    "intro": "[Thai] translation needed",
+    "title": "Terms of Service [Thai]",
+    "effectiveDate": "Effective Date [Thai]",
+    "lastUpdated": "Last Updated [Thai]",
+    "intro": "Welcome to AI Square! These Terms of Service (\"Terms\") govern your use of our AI literacy education platform. By accessing or using AI Square, you agree to be bound by these Terms. [Thai]",
     "acceptance": {
-      "title": "[Thai] translation needed",
-      "content": "[Thai] translation needed",
-      "capacity": "[Thai] translation needed"
+      "title": "1. Acceptance of Terms [Thai]",
+      "content": "By creating an account or using our services, you acknowledge that you have read, understood, and agree to these Terms. If you do not agree, please do not use our platform. [Thai]",
+      "capacity": "You must be at least 13 years old to use our services. If you are under 18, you must have parental consent. [Thai]"
     },
     "service": {
-      "title": "[Thai] translation needed",
-      "intro": "[Thai] translation needed",
-      "literacy": "[Thai] translation needed",
-      "pbl": "[Thai] translation needed",
-      "ai": "[Thai] translation needed",
-      "tracking": "[Thai] translation needed",
-      "multi": "[Thai] translation needed"
+      "title": "2. Description of Service [Thai]",
+      "intro": "AI Square provides: [Thai]",
+      "literacy": "AI literacy education content and assessments [Thai]",
+      "pbl": "Problem-Based Learning (PBL) scenarios [Thai]",
+      "ai": "AI-powered tutoring and feedback [Thai]",
+      "tracking": "Progress tracking and analytics [Thai]",
+      "multi": "Multi-language support (9 languages) [Thai]"
     },
     "accounts": {
-      "title": "[Thai] translation needed",
-      "registration": "[Thai] translation needed",
-      "accurate": "[Thai] translation needed",
-      "maintain": "[Thai] translation needed",
-      "secure": "[Thai] translation needed",
-      "responsible": "[Thai] translation needed",
-      "types": "[Thai] translation needed",
-      "student": "[Thai] translation needed",
-      "teacher": "[Thai] translation needed",
-      "admin": "[Thai] translation needed"
+      "title": "3. User Accounts [Thai]",
+      "registration": "Registration [Thai]",
+      "accurate": "Provide accurate and complete information [Thai]",
+      "maintain": "Maintain and update your information [Thai]",
+      "secure": "Keep your account credentials secure [Thai]",
+      "responsible": "You are responsible for all activities under your account [Thai]",
+      "types": "Account Types [Thai]",
+      "student": "Student: Access to learning content and assessments [Thai]",
+      "teacher": "Teacher: Additional class management features [Thai]",
+      "admin": "Administrator: Platform management capabilities [Thai]"
     },
     "use": {
-      "title": "[Thai] translation needed",
-      "permitted": "[Thai] translation needed",
-      "educational": "[Thai] translation needed",
-      "share": "[Thai] translation needed",
-      "feedback": "[Thai] translation needed",
-      "prohibited": "[Thai] translation needed",
-      "misuse": "[Thai] translation needed",
-      "share_credentials": "[Thai] translation needed",
-      "cheat": "[Thai] translation needed",
-      "harm": "[Thai] translation needed",
-      "illegal": "[Thai] translation needed",
-      "scrape": "[Thai] translation needed"
+      "title": "4. Acceptable Use Policy [Thai]",
+      "permitted": "You may: [Thai]",
+      "educational": "Use the platform for educational purposes [Thai]",
+      "share": "Share your learning progress appropriately [Thai]",
+      "feedback": "Provide constructive feedback [Thai]",
+      "prohibited": "You may not: [Thai]",
+      "misuse": "Misuse or attempt to manipulate the AI systems [Thai]",
+      "share_credentials": "Share account credentials [Thai]",
+      "cheat": "Engage in academic dishonesty [Thai]",
+      "harm": "Harass, abuse, or harm other users [Thai]",
+      "illegal": "Use the platform for illegal activities [Thai]",
+      "scrape": "Scrape or copy content without permission [Thai]"
     },
     "ip": {
-      "title": "[Thai] translation needed",
-      "platform": "[Thai] translation needed",
-      "ownership": "[Thai] translation needed",
-      "user": "[Thai] translation needed",
-      "retain": "[Thai] translation needed",
-      "open": "[Thai] translation needed",
-      "git": "[Thai] translation needed"
+      "title": "5. Intellectual Property [Thai]",
+      "platform": "Platform Content [Thai]",
+      "ownership": "All content on AI Square, including text, graphics, logos, and software, is owned by AI Square or its licensors and protected by intellectual property laws. [Thai]",
+      "user": "User Content [Thai]",
+      "retain": "You retain ownership of content you create. By submitting content, you grant us a license to use it for providing and improving our services. [Thai]",
+      "open": "Open Source [Thai]",
+      "git": "Educational content is managed through Git and may be subject to open-source licenses. Please check individual repositories for specific license terms. [Thai]"
     },
     "privacy": {
-      "title": "[Thai] translation needed",
-      "content": "[Thai] translation needed"
+      "title": "6. Privacy and Data Protection [Thai]",
+      "content": "Your use of AI Square is also governed by our Privacy Policy. We are committed to protecting your personal information and using it only as described in our Privacy Policy. [Thai]"
     },
     "ai": {
-      "title": "[Thai] translation needed",
-      "disclaimer": "[Thai] translation needed",
-      "educational": "[Thai] translation needed",
-      "verify": "[Thai] translation needed",
-      "improve": "[Thai] translation needed"
+      "title": "7. AI Services and Limitations [Thai]",
+      "disclaimer": "Our AI-powered features are designed to assist learning but are not perfect. We do not guarantee the accuracy of AI-generated content or feedback. [Thai]",
+      "educational": "AI responses are for educational purposes only [Thai]",
+      "verify": "Always verify important information independently [Thai]",
+      "improve": "We continuously work to improve AI accuracy [Thai]"
     },
     "disclaimers": {
-      "title": "[Thai] translation needed",
-      "asis": "[Thai] translation needed",
-      "liability": "[Thai] translation needed"
+      "title": "8. Disclaimers and Limitations [Thai]",
+      "asis": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND. [Thai]",
+      "liability": "To the fullest extent permitted by law, AI Square shall not be liable for any indirect, incidental, special, consequential, or punitive damages. [Thai]"
     },
     "modifications": {
-      "title": "[Thai] translation needed",
-      "content": "[Thai] translation needed"
+      "title": "9. Modifications to Terms [Thai]",
+      "content": "We may modify these Terms at any time. We will notify users of material changes. Continued use after changes constitutes acceptance of the new Terms. [Thai]"
     },
     "termination": {
-      "title": "[Thai] translation needed",
-      "rights": "[Thai] translation needed"
+      "title": "10. Termination [Thai]",
+      "rights": "We reserve the right to suspend or terminate accounts that violate these Terms. You may delete your account at any time. [Thai]"
     },
     "law": {
-      "title": "[Thai] translation needed",
-      "content": "[Thai] translation needed"
+      "title": "11. Governing Law [Thai]",
+      "content": "These Terms are governed by the laws of the jurisdiction where AI Square operates, without regard to conflict of law principles. [Thai]"
     },
     "contact": {
-      "title": "[Thai] translation needed",
-      "intro": "[Thai] translation needed"
+      "title": "12. Contact Information [Thai]",
+      "intro": "For questions about these Terms, please contact us: [Thai]"
     },
-    "agreement": "[Thai] translation needed"
+    "agreement": "By using AI Square, you acknowledge that you have read and agree to these Terms of Service. [Thai]"
   },
   "common": {
-    "backToHome": "[Thai] translation needed"
+    "backToHome": "Back to Home [Thai]"
   }
 }

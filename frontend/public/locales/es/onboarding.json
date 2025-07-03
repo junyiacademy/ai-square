@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "[ES] translation needed",
-    "subtitle": "[ES] translation needed",
+    "greeting": "Welcome, {{name}}! [Spanish]",
+    "subtitle": "Let's get you started on your AI literacy journey [Spanish]",
     "step1": {
-      "title": "[ES] translation needed",
-      "description": "[ES] translation needed",
-      "content": "[ES] translation needed",
-      "assessment": "[ES] translation needed",
-      "assessmentDesc": "[ES] translation needed",
-      "learning": "[ES] translation needed",
-      "learningDesc": "[ES] translation needed"
+      "title": "Discover Your Path [Spanish]",
+      "description": "AI Square helps you understand and master AI literacy [Spanish]",
+      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [Spanish]",
+      "assessment": "Smart Assessment [Spanish]",
+      "assessmentDesc": "Discover your current AI knowledge level [Spanish]",
+      "learning": "Personalized Learning [Spanish]",
+      "learningDesc": "Get tailored recommendations based on your goals [Spanish]"
     },
     "step2": {
-      "title": "[ES] translation needed",
-      "description": "[ES] translation needed",
-      "content": "[ES] translation needed",
-      "domains": "[ES] translation needed",
-      "engaging": "[ES] translation needed",
-      "creating": "[ES] translation needed",
-      "managing": "[ES] translation needed",
-      "designing": "[ES] translation needed"
+      "title": "Four Core Domains [Spanish]",
+      "description": "Master the essential areas of AI literacy [Spanish]",
+      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [Spanish]",
+      "domains": "AI Literacy Domains [Spanish]",
+      "engaging": "Engaging with AI [Spanish]",
+      "creating": "Creating with AI [Spanish]",
+      "managing": "Managing with AI [Spanish]",
+      "designing": "Designing with AI [Spanish]"
     },
     "step3": {
-      "title": "[ES] translation needed",
-      "description": "[ES] translation needed",
-      "content": "[ES] translation needed",
-      "ready": "[ES] translation needed",
-      "benefit1": "[ES] translation needed",
-      "benefit2": "[ES] translation needed",
-      "benefit3": "[ES] translation needed"
+      "title": "Start Your Journey [Spanish]",
+      "description": "Begin with an assessment and unlock your potential [Spanish]",
+      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [Spanish]",
+      "ready": "What you'll get: [Spanish]",
+      "benefit1": "Detailed assessment of your AI knowledge [Spanish]",
+      "benefit2": "Personalized learning path recommendations [Spanish]",
+      "benefit3": "Interactive scenarios and practical exercises [Spanish]"
     },
-    "startJourney": "[ES] translation needed"
+    "startJourney": "Start Your Journey [Spanish]"
   },
   "goals": {
-    "title": "[ES] translation needed",
-    "subtitle": "[ES] translation needed",
+    "title": "What would you like to achieve? [Spanish]",
+    "subtitle": "Select your learning goals to get personalized recommendations [Spanish]",
     "understand": {
-      "title": "[ES] translation needed",
-      "description": "[ES] translation needed"
+      "title": "Understand AI Fundamentals [Spanish]",
+      "description": "Learn the basics of AI, machine learning, and how AI systems work [Spanish]"
     },
     "create": {
-      "title": "[ES] translation needed",
-      "description": "[ES] translation needed"
+      "title": "Create Content with AI [Spanish]",
+      "description": "Use AI tools for writing, design, art, and creative projects [Spanish]"
     },
     "analyze": {
-      "title": "[ES] translation needed",
-      "description": "[ES] translation needed"
+      "title": "Analyze Data with AI [Spanish]",
+      "description": "Apply AI for data analysis, insights, and decision-making [Spanish]"
     },
     "build": {
-      "title": "[ES] translation needed",
-      "description": "[ES] translation needed"
+      "title": "Build AI Solutions [Spanish]",
+      "description": "Develop and implement AI systems and applications [Spanish]"
     },
     "teach": {
-      "title": "[ES] translation needed",
-      "description": "[ES] translation needed"
+      "title": "Teach AI to Others [Spanish]",
+      "description": "Educate and guide others in understanding and using AI [Spanish]"
     },
     "ethical": {
-      "title": "[ES] translation needed",
-      "description": "[ES] translation needed"
+      "title": "Ensure Ethical AI Use [Spanish]",
+      "description": "Understand and implement responsible AI practices [Spanish]"
     },
-    "recommendedDomains": "[ES] translation needed",
+    "recommendedDomains": "Recommended domains [Spanish]",
     "selected": "{{count}} goals selected",
-    "selectAtLeastOne": "[ES] translation needed",
-    "continue": "[ES] translation needed",
-    "skipForNow": "[ES] translation needed",
-    "helpText": "[ES] translation needed"
+    "selectAtLeastOne": "Please select at least one learning goal [Spanish]",
+    "continue": "Continue to Assessment [Spanish]",
+    "skipForNow": "Skip for now [Spanish]",
+    "helpText": "Don't worry, you can always change these later in your profile settings. [Spanish]"
   },
   "progress": {
-    "welcome": "[ES] translation needed",
-    "identity": "[ES] translation needed",
-    "goals": "[ES] translation needed"
+    "welcome": "Welcome [Spanish]",
+    "identity": "Identity [Spanish]",
+    "goals": "Goals [Spanish]"
   },
   "identity": {
-    "title": "[ES] translation needed",
-    "subtitle": "[ES] translation needed",
+    "title": "Who are you? [Spanish]",
+    "subtitle": "Help us personalize your AI learning journey [Spanish]",
     "student": {
-      "title": "[ES] translation needed",
-      "description": "[ES] translation needed"
+      "title": "Student [Spanish]",
+      "description": "I'm studying and want to learn AI for my academic and future career [Spanish]"
     },
     "teacher": {
-      "title": "[ES] translation needed",
-      "description": "[ES] translation needed"
+      "title": "Educator [Spanish]",
+      "description": "I teach others and want to integrate AI into my curriculum [Spanish]"
     },
     "professional": {
-      "title": "[ES] translation needed",
-      "description": "[ES] translation needed"
+      "title": "Professional [Spanish]",
+      "description": "I work in industry and want to leverage AI in my role [Spanish]"
     },
     "learner": {
-      "title": "[ES] translation needed",
-      "description": "[ES] translation needed"
+      "title": "Lifelong Learner [Spanish]",
+      "description": "I'm curious about AI and want to explore its possibilities [Spanish]"
     }
   },
   "button": {
-    "back": "[ES] translation needed",
-    "continue": "[ES] translation needed",
-    "saving": "[ES] translation needed"
+    "back": "Back [Spanish]",
+    "continue": "Continue [Spanish]",
+    "saving": "Saving... [Spanish]"
   }
 }

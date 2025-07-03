@@ -1,171 +1,171 @@
 {
   "privacy": {
-    "title": "[Chinese Simplified] translation needed",
-    "lastUpdated": "[Chinese Simplified] translation needed",
-    "intro": "[Chinese Simplified] translation needed",
+    "title": "Privacy Policy [Chinese (Simplified)]",
+    "lastUpdated": "Last updated [Chinese (Simplified)]",
+    "intro": "AI Square (\"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI literacy education platform. [Chinese (Simplified)]",
     "infoCollect": {
-      "title": "[Chinese Simplified] translation needed",
-      "personal": "[Chinese Simplified] translation needed",
-      "email": "[Chinese Simplified] translation needed",
-      "name": "[Chinese Simplified] translation needed",
-      "role": "[Chinese Simplified] translation needed",
-      "language": "[Chinese Simplified] translation needed",
-      "usage": "[Chinese Simplified] translation needed",
-      "learning": "[Chinese Simplified] translation needed",
-      "interactions": "[Chinese Simplified] translation needed",
-      "scenarios": "[Chinese Simplified] translation needed",
-      "analytics": "[Chinese Simplified] translation needed",
-      "technical": "[Chinese Simplified] translation needed",
-      "browser": "[Chinese Simplified] translation needed",
-      "device": "[Chinese Simplified] translation needed",
-      "ip": "[Chinese Simplified] translation needed",
-      "timezone": "[Chinese Simplified] translation needed"
+      "title": "1. Information We Collect [Chinese (Simplified)]",
+      "personal": "Personal Information [Chinese (Simplified)]",
+      "email": "Email address [Chinese (Simplified)]",
+      "name": "Name (optional) [Chinese (Simplified)]",
+      "role": "User role (student, teacher, admin) [Chinese (Simplified)]",
+      "language": "Language preference [Chinese (Simplified)]",
+      "usage": "Usage Data [Chinese (Simplified)]",
+      "learning": "Learning progress and assessment results [Chinese (Simplified)]",
+      "interactions": "Interactions with AI tutors [Chinese (Simplified)]",
+      "scenarios": "PBL scenario completion data [Chinese (Simplified)]",
+      "analytics": "Platform usage analytics [Chinese (Simplified)]",
+      "technical": "Technical Data [Chinese (Simplified)]",
+      "browser": "Browser type and version [Chinese (Simplified)]",
+      "device": "Device information [Chinese (Simplified)]",
+      "ip": "IP address (anonymized) [Chinese (Simplified)]",
+      "timezone": "Time zone settings [Chinese (Simplified)]"
     },
     "howUse": {
-      "title": "[Chinese Simplified] translation needed",
-      "provide": "[Chinese Simplified] translation needed",
-      "personalize": "[Chinese Simplified] translation needed",
-      "communicate": "[Chinese Simplified] translation needed",
-      "improve": "[Chinese Simplified] translation needed",
-      "analyze": "[Chinese Simplified] translation needed",
-      "security": "[Chinese Simplified] translation needed"
+      "title": "2. How We Use Your Information [Chinese (Simplified)]",
+      "provide": "To provide and maintain our service [Chinese (Simplified)]",
+      "personalize": "To personalize your learning experience [Chinese (Simplified)]",
+      "communicate": "To communicate with you about your account [Chinese (Simplified)]",
+      "improve": "To improve our platform and develop new features [Chinese (Simplified)]",
+      "analyze": "To analyze usage patterns and optimize performance [Chinese (Simplified)]",
+      "security": "To detect and prevent security threats [Chinese (Simplified)]"
     },
     "storage": {
-      "title": "[Chinese Simplified] translation needed",
-      "location": "[Chinese Simplified] translation needed",
-      "encryption": "[Chinese Simplified] translation needed",
-      "access": "[Chinese Simplified] translation needed",
-      "monitoring": "[Chinese Simplified] translation needed",
-      "backup": "[Chinese Simplified] translation needed"
+      "title": "3. Data Storage and Security [Chinese (Simplified)]",
+      "location": "Your data is stored securely on Google Cloud Platform servers. We implement appropriate technical and organizational measures to protect your personal information. [Chinese (Simplified)]",
+      "encryption": "Data encryption in transit and at rest [Chinese (Simplified)]",
+      "access": "Restricted access controls [Chinese (Simplified)]",
+      "monitoring": "Regular security monitoring [Chinese (Simplified)]",
+      "backup": "Secure backup procedures [Chinese (Simplified)]"
     },
     "sharing": {
-      "title": "[Chinese Simplified] translation needed",
-      "intro": "[Chinese Simplified] translation needed",
-      "consent": "[Chinese Simplified] translation needed",
-      "legal": "[Chinese Simplified] translation needed",
-      "protect": "[Chinese Simplified] translation needed",
-      "service": "[Chinese Simplified] translation needed"
+      "title": "4. Data Sharing and Disclosure [Chinese (Simplified)]",
+      "intro": "We do not sell, trade, or rent your personal information. We may share your information in the following situations: [Chinese (Simplified)]",
+      "consent": "With your consent [Chinese (Simplified)]",
+      "legal": "To comply with legal obligations [Chinese (Simplified)]",
+      "protect": "To protect our rights and safety [Chinese (Simplified)]",
+      "service": "With service providers who assist our operations [Chinese (Simplified)]"
     },
     "rights": {
-      "title": "[Chinese Simplified] translation needed",
-      "intro": "[Chinese Simplified] translation needed",
-      "access": "[Chinese Simplified] translation needed",
-      "correct": "[Chinese Simplified] translation needed",
-      "delete": "[Chinese Simplified] translation needed",
-      "export": "[Chinese Simplified] translation needed",
-      "restrict": "[Chinese Simplified] translation needed",
-      "withdraw": "[Chinese Simplified] translation needed"
+      "title": "5. Your Rights [Chinese (Simplified)]",
+      "intro": "You have the following rights regarding your personal data: [Chinese (Simplified)]",
+      "access": "Access your personal information [Chinese (Simplified)]",
+      "correct": "Correct inaccurate data [Chinese (Simplified)]",
+      "delete": "Request deletion of your data [Chinese (Simplified)]",
+      "export": "Export your data in a portable format [Chinese (Simplified)]",
+      "restrict": "Restrict processing of your data [Chinese (Simplified)]",
+      "withdraw": "Withdraw consent at any time [Chinese (Simplified)]"
     },
     "cookies": {
-      "title": "[Chinese Simplified] translation needed",
-      "intro": "[Chinese Simplified] translation needed"
+      "title": "6. Cookies and Tracking [Chinese (Simplified)]",
+      "intro": "We use cookies and similar tracking technologies to enhance your experience. Essential cookies are required for platform functionality, while optional cookies help us improve our service. [Chinese (Simplified)]"
     },
     "children": {
-      "title": "[Chinese Simplified] translation needed",
-      "content": "[Chinese Simplified] translation needed"
+      "title": "7. Children's Privacy [Chinese (Simplified)]",
+      "content": "Our platform is designed for educational use by students of all ages. For users under 13, we require parental consent and limit data collection to essential information only. [Chinese (Simplified)]"
     },
     "international": {
-      "title": "[Chinese Simplified] translation needed",
-      "content": "[Chinese Simplified] translation needed"
+      "title": "8. International Data Transfers [Chinese (Simplified)]",
+      "content": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers. [Chinese (Simplified)]"
     },
     "changes": {
-      "title": "[Chinese Simplified] translation needed",
-      "content": "[Chinese Simplified] translation needed"
+      "title": "9. Changes to This Policy [Chinese (Simplified)]",
+      "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the \"Last Updated\" date. [Chinese (Simplified)]"
     },
     "contact": {
-      "title": "[Chinese Simplified] translation needed",
-      "intro": "[Chinese Simplified] translation needed"
+      "title": "10. Contact Us [Chinese (Simplified)]",
+      "intro": "If you have questions about this Privacy Policy, please contact us at: [Chinese (Simplified)]"
     }
   },
   "terms": {
-    "title": "[Chinese Simplified] translation needed",
-    "effectiveDate": "[Chinese Simplified] translation needed",
-    "lastUpdated": "[Chinese Simplified] translation needed",
-    "intro": "[Chinese Simplified] translation needed",
+    "title": "Terms of Service [Chinese (Simplified)]",
+    "effectiveDate": "Effective Date [Chinese (Simplified)]",
+    "lastUpdated": "Last Updated [Chinese (Simplified)]",
+    "intro": "Welcome to AI Square! These Terms of Service (\"Terms\") govern your use of our AI literacy education platform. By accessing or using AI Square, you agree to be bound by these Terms. [Chinese (Simplified)]",
     "acceptance": {
-      "title": "[Chinese Simplified] translation needed",
-      "content": "[Chinese Simplified] translation needed",
-      "capacity": "[Chinese Simplified] translation needed"
+      "title": "1. Acceptance of Terms [Chinese (Simplified)]",
+      "content": "By creating an account or using our services, you acknowledge that you have read, understood, and agree to these Terms. If you do not agree, please do not use our platform. [Chinese (Simplified)]",
+      "capacity": "You must be at least 13 years old to use our services. If you are under 18, you must have parental consent. [Chinese (Simplified)]"
     },
     "service": {
-      "title": "[Chinese Simplified] translation needed",
-      "intro": "[Chinese Simplified] translation needed",
-      "literacy": "[Chinese Simplified] translation needed",
-      "pbl": "[Chinese Simplified] translation needed",
-      "ai": "[Chinese Simplified] translation needed",
-      "tracking": "[Chinese Simplified] translation needed",
-      "multi": "[Chinese Simplified] translation needed"
+      "title": "2. Description of Service [Chinese (Simplified)]",
+      "intro": "AI Square provides: [Chinese (Simplified)]",
+      "literacy": "AI literacy education content and assessments [Chinese (Simplified)]",
+      "pbl": "Problem-Based Learning (PBL) scenarios [Chinese (Simplified)]",
+      "ai": "AI-powered tutoring and feedback [Chinese (Simplified)]",
+      "tracking": "Progress tracking and analytics [Chinese (Simplified)]",
+      "multi": "Multi-language support (9 languages) [Chinese (Simplified)]"
     },
     "accounts": {
-      "title": "[Chinese Simplified] translation needed",
-      "registration": "[Chinese Simplified] translation needed",
-      "accurate": "[Chinese Simplified] translation needed",
-      "maintain": "[Chinese Simplified] translation needed",
-      "secure": "[Chinese Simplified] translation needed",
-      "responsible": "[Chinese Simplified] translation needed",
-      "types": "[Chinese Simplified] translation needed",
-      "student": "[Chinese Simplified] translation needed",
-      "teacher": "[Chinese Simplified] translation needed",
-      "admin": "[Chinese Simplified] translation needed"
+      "title": "3. User Accounts [Chinese (Simplified)]",
+      "registration": "Registration [Chinese (Simplified)]",
+      "accurate": "Provide accurate and complete information [Chinese (Simplified)]",
+      "maintain": "Maintain and update your information [Chinese (Simplified)]",
+      "secure": "Keep your account credentials secure [Chinese (Simplified)]",
+      "responsible": "You are responsible for all activities under your account [Chinese (Simplified)]",
+      "types": "Account Types [Chinese (Simplified)]",
+      "student": "Student: Access to learning content and assessments [Chinese (Simplified)]",
+      "teacher": "Teacher: Additional class management features [Chinese (Simplified)]",
+      "admin": "Administrator: Platform management capabilities [Chinese (Simplified)]"
     },
     "use": {
-      "title": "[Chinese Simplified] translation needed",
-      "permitted": "[Chinese Simplified] translation needed",
-      "educational": "[Chinese Simplified] translation needed",
-      "share": "[Chinese Simplified] translation needed",
-      "feedback": "[Chinese Simplified] translation needed",
-      "prohibited": "[Chinese Simplified] translation needed",
-      "misuse": "[Chinese Simplified] translation needed",
-      "share_credentials": "[Chinese Simplified] translation needed",
-      "cheat": "[Chinese Simplified] translation needed",
-      "harm": "[Chinese Simplified] translation needed",
-      "illegal": "[Chinese Simplified] translation needed",
-      "scrape": "[Chinese Simplified] translation needed"
+      "title": "4. Acceptable Use Policy [Chinese (Simplified)]",
+      "permitted": "You may: [Chinese (Simplified)]",
+      "educational": "Use the platform for educational purposes [Chinese (Simplified)]",
+      "share": "Share your learning progress appropriately [Chinese (Simplified)]",
+      "feedback": "Provide constructive feedback [Chinese (Simplified)]",
+      "prohibited": "You may not: [Chinese (Simplified)]",
+      "misuse": "Misuse or attempt to manipulate the AI systems [Chinese (Simplified)]",
+      "share_credentials": "Share account credentials [Chinese (Simplified)]",
+      "cheat": "Engage in academic dishonesty [Chinese (Simplified)]",
+      "harm": "Harass, abuse, or harm other users [Chinese (Simplified)]",
+      "illegal": "Use the platform for illegal activities [Chinese (Simplified)]",
+      "scrape": "Scrape or copy content without permission [Chinese (Simplified)]"
     },
     "ip": {
-      "title": "[Chinese Simplified] translation needed",
-      "platform": "[Chinese Simplified] translation needed",
-      "ownership": "[Chinese Simplified] translation needed",
-      "user": "[Chinese Simplified] translation needed",
-      "retain": "[Chinese Simplified] translation needed",
-      "open": "[Chinese Simplified] translation needed",
-      "git": "[Chinese Simplified] translation needed"
+      "title": "5. Intellectual Property [Chinese (Simplified)]",
+      "platform": "Platform Content [Chinese (Simplified)]",
+      "ownership": "All content on AI Square, including text, graphics, logos, and software, is owned by AI Square or its licensors and protected by intellectual property laws. [Chinese (Simplified)]",
+      "user": "User Content [Chinese (Simplified)]",
+      "retain": "You retain ownership of content you create. By submitting content, you grant us a license to use it for providing and improving our services. [Chinese (Simplified)]",
+      "open": "Open Source [Chinese (Simplified)]",
+      "git": "Educational content is managed through Git and may be subject to open-source licenses. Please check individual repositories for specific license terms. [Chinese (Simplified)]"
     },
     "privacy": {
-      "title": "[Chinese Simplified] translation needed",
-      "content": "[Chinese Simplified] translation needed"
+      "title": "6. Privacy and Data Protection [Chinese (Simplified)]",
+      "content": "Your use of AI Square is also governed by our Privacy Policy. We are committed to protecting your personal information and using it only as described in our Privacy Policy. [Chinese (Simplified)]"
     },
     "ai": {
-      "title": "[Chinese Simplified] translation needed",
-      "disclaimer": "[Chinese Simplified] translation needed",
-      "educational": "[Chinese Simplified] translation needed",
-      "verify": "[Chinese Simplified] translation needed",
-      "improve": "[Chinese Simplified] translation needed"
+      "title": "7. AI Services and Limitations [Chinese (Simplified)]",
+      "disclaimer": "Our AI-powered features are designed to assist learning but are not perfect. We do not guarantee the accuracy of AI-generated content or feedback. [Chinese (Simplified)]",
+      "educational": "AI responses are for educational purposes only [Chinese (Simplified)]",
+      "verify": "Always verify important information independently [Chinese (Simplified)]",
+      "improve": "We continuously work to improve AI accuracy [Chinese (Simplified)]"
     },
     "disclaimers": {
-      "title": "[Chinese Simplified] translation needed",
-      "asis": "[Chinese Simplified] translation needed",
-      "liability": "[Chinese Simplified] translation needed"
+      "title": "8. Disclaimers and Limitations [Chinese (Simplified)]",
+      "asis": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND. [Chinese (Simplified)]",
+      "liability": "To the fullest extent permitted by law, AI Square shall not be liable for any indirect, incidental, special, consequential, or punitive damages. [Chinese (Simplified)]"
     },
     "modifications": {
-      "title": "[Chinese Simplified] translation needed",
-      "content": "[Chinese Simplified] translation needed"
+      "title": "9. Modifications to Terms [Chinese (Simplified)]",
+      "content": "We may modify these Terms at any time. We will notify users of material changes. Continued use after changes constitutes acceptance of the new Terms. [Chinese (Simplified)]"
     },
     "termination": {
-      "title": "[Chinese Simplified] translation needed",
-      "rights": "[Chinese Simplified] translation needed"
+      "title": "10. Termination [Chinese (Simplified)]",
+      "rights": "We reserve the right to suspend or terminate accounts that violate these Terms. You may delete your account at any time. [Chinese (Simplified)]"
     },
     "law": {
-      "title": "[Chinese Simplified] translation needed",
-      "content": "[Chinese Simplified] translation needed"
+      "title": "11. Governing Law [Chinese (Simplified)]",
+      "content": "These Terms are governed by the laws of the jurisdiction where AI Square operates, without regard to conflict of law principles. [Chinese (Simplified)]"
     },
     "contact": {
-      "title": "[Chinese Simplified] translation needed",
-      "intro": "[Chinese Simplified] translation needed"
+      "title": "12. Contact Information [Chinese (Simplified)]",
+      "intro": "For questions about these Terms, please contact us: [Chinese (Simplified)]"
     },
-    "agreement": "[Chinese Simplified] translation needed"
+    "agreement": "By using AI Square, you acknowledge that you have read and agree to these Terms of Service. [Chinese (Simplified)]"
   },
   "common": {
-    "backToHome": "[Chinese Simplified] translation needed"
+    "backToHome": "Back to Home [Chinese (Simplified)]"
   }
 }

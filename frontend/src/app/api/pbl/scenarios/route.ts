@@ -55,24 +55,37 @@ async function loadScenariosFromYAML(lang: string): Promise<Record<string, unkno
   const scenarios: Record<string, unknown>[] = [];
   
   try {
-    // List of available scenario files
-    const scenarioFiles = [
-      'ai_job_search_scenario.yaml',
-      'ai_education_design_scenario.yaml',
-      'ai_stablecoin_trading_scenario.yaml',
-      'ai_robotics_development_scenario.yaml',
-      'high_school_climate_change_scenario.yaml',
-      'high_school_digital_wellness_scenario.yaml',
-      'high_school_smart_city_scenario.yaml',
-      'high_school_creative_arts_scenario.yaml',
-      'high_school_health_assistant_scenario.yaml',
-      // Add more scenario files here as they become available
+    // List of available scenario folders
+    const scenarioFolders = [
+      'ai_job_search',
+      'ai_education_design',
+      'ai_stablecoin_trading',
+      'ai_robotics_development',
+      'high_school_climate_change',
+      'high_school_digital_wellness',
+      'high_school_smart_city',
+      'high_school_creative_arts',
+      'high_school_health_assistant',
+      // Add more scenario folders here as they become available
     ];
     
-    for (const file of scenarioFiles) {
+    for (const folder of scenarioFolders) {
       try {
-        const yamlPath = path.join(process.cwd(), 'public', 'pbl_data', file);
-        const yamlContent = await fs.readFile(yamlPath, 'utf8');
+        // Construct the path to the language-specific file
+        const fileName = `${folder}_${lang}.yaml`;
+        const yamlPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', folder, fileName);
+        
+        // Check if language-specific file exists, fallback to English
+        let finalPath = yamlPath;
+        try {
+          await fs.access(yamlPath);
+        } catch {
+          // Fallback to English if language-specific file doesn't exist
+          const englishPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', folder, `${folder}_en.yaml`);
+          finalPath = englishPath;
+        }
+        
+        const yamlContent = await fs.readFile(finalPath, 'utf8');
         const yamlData = yaml.load(yamlContent) as ScenarioYAML;
         
         if (yamlData && yamlData.scenario_info) {

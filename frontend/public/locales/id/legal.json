@@ -1,171 +1,171 @@
 {
   "privacy": {
-    "title": "[Indonesian] translation needed",
-    "lastUpdated": "[Indonesian] translation needed",
-    "intro": "[Indonesian] translation needed",
+    "title": "Privacy Policy [Indonesian]",
+    "lastUpdated": "Last updated [Indonesian]",
+    "intro": "AI Square (\"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI literacy education platform. [Indonesian]",
     "infoCollect": {
-      "title": "[Indonesian] translation needed",
-      "personal": "[Indonesian] translation needed",
-      "email": "[Indonesian] translation needed",
-      "name": "[Indonesian] translation needed",
-      "role": "[Indonesian] translation needed",
-      "language": "[Indonesian] translation needed",
-      "usage": "[Indonesian] translation needed",
-      "learning": "[Indonesian] translation needed",
-      "interactions": "[Indonesian] translation needed",
-      "scenarios": "[Indonesian] translation needed",
-      "analytics": "[Indonesian] translation needed",
-      "technical": "[Indonesian] translation needed",
-      "browser": "[Indonesian] translation needed",
-      "device": "[Indonesian] translation needed",
-      "ip": "[Indonesian] translation needed",
-      "timezone": "[Indonesian] translation needed"
+      "title": "1. Information We Collect [Indonesian]",
+      "personal": "Personal Information [Indonesian]",
+      "email": "Email address [Indonesian]",
+      "name": "Name (optional) [Indonesian]",
+      "role": "User role (student, teacher, admin) [Indonesian]",
+      "language": "Language preference [Indonesian]",
+      "usage": "Usage Data [Indonesian]",
+      "learning": "Learning progress and assessment results [Indonesian]",
+      "interactions": "Interactions with AI tutors [Indonesian]",
+      "scenarios": "PBL scenario completion data [Indonesian]",
+      "analytics": "Platform usage analytics [Indonesian]",
+      "technical": "Technical Data [Indonesian]",
+      "browser": "Browser type and version [Indonesian]",
+      "device": "Device information [Indonesian]",
+      "ip": "IP address (anonymized) [Indonesian]",
+      "timezone": "Time zone settings [Indonesian]"
     },
     "howUse": {
-      "title": "[Indonesian] translation needed",
-      "provide": "[Indonesian] translation needed",
-      "personalize": "[Indonesian] translation needed",
-      "communicate": "[Indonesian] translation needed",
-      "improve": "[Indonesian] translation needed",
-      "analyze": "[Indonesian] translation needed",
-      "security": "[Indonesian] translation needed"
+      "title": "2. How We Use Your Information [Indonesian]",
+      "provide": "To provide and maintain our service [Indonesian]",
+      "personalize": "To personalize your learning experience [Indonesian]",
+      "communicate": "To communicate with you about your account [Indonesian]",
+      "improve": "To improve our platform and develop new features [Indonesian]",
+      "analyze": "To analyze usage patterns and optimize performance [Indonesian]",
+      "security": "To detect and prevent security threats [Indonesian]"
     },
     "storage": {
-      "title": "[Indonesian] translation needed",
-      "location": "[Indonesian] translation needed",
-      "encryption": "[Indonesian] translation needed",
-      "access": "[Indonesian] translation needed",
-      "monitoring": "[Indonesian] translation needed",
-      "backup": "[Indonesian] translation needed"
+      "title": "3. Data Storage and Security [Indonesian]",
+      "location": "Your data is stored securely on Google Cloud Platform servers. We implement appropriate technical and organizational measures to protect your personal information. [Indonesian]",
+      "encryption": "Data encryption in transit and at rest [Indonesian]",
+      "access": "Restricted access controls [Indonesian]",
+      "monitoring": "Regular security monitoring [Indonesian]",
+      "backup": "Secure backup procedures [Indonesian]"
     },
     "sharing": {
-      "title": "[Indonesian] translation needed",
-      "intro": "[Indonesian] translation needed",
-      "consent": "[Indonesian] translation needed",
-      "legal": "[Indonesian] translation needed",
-      "protect": "[Indonesian] translation needed",
-      "service": "[Indonesian] translation needed"
+      "title": "4. Data Sharing and Disclosure [Indonesian]",
+      "intro": "We do not sell, trade, or rent your personal information. We may share your information in the following situations: [Indonesian]",
+      "consent": "With your consent [Indonesian]",
+      "legal": "To comply with legal obligations [Indonesian]",
+      "protect": "To protect our rights and safety [Indonesian]",
+      "service": "With service providers who assist our operations [Indonesian]"
     },
     "rights": {
-      "title": "[Indonesian] translation needed",
-      "intro": "[Indonesian] translation needed",
-      "access": "[Indonesian] translation needed",
-      "correct": "[Indonesian] translation needed",
-      "delete": "[Indonesian] translation needed",
-      "export": "[Indonesian] translation needed",
-      "restrict": "[Indonesian] translation needed",
-      "withdraw": "[Indonesian] translation needed"
+      "title": "5. Your Rights [Indonesian]",
+      "intro": "You have the following rights regarding your personal data: [Indonesian]",
+      "access": "Access your personal information [Indonesian]",
+      "correct": "Correct inaccurate data [Indonesian]",
+      "delete": "Request deletion of your data [Indonesian]",
+      "export": "Export your data in a portable format [Indonesian]",
+      "restrict": "Restrict processing of your data [Indonesian]",
+      "withdraw": "Withdraw consent at any time [Indonesian]"
     },
     "cookies": {
-      "title": "[Indonesian] translation needed",
-      "intro": "[Indonesian] translation needed"
+      "title": "6. Cookies and Tracking [Indonesian]",
+      "intro": "We use cookies and similar tracking technologies to enhance your experience. Essential cookies are required for platform functionality, while optional cookies help us improve our service. [Indonesian]"
     },
     "children": {
-      "title": "[Indonesian] translation needed",
-      "content": "[Indonesian] translation needed"
+      "title": "7. Children's Privacy [Indonesian]",
+      "content": "Our platform is designed for educational use by students of all ages. For users under 13, we require parental consent and limit data collection to essential information only. [Indonesian]"
     },
     "international": {
-      "title": "[Indonesian] translation needed",
-      "content": "[Indonesian] translation needed"
+      "title": "8. International Data Transfers [Indonesian]",
+      "content": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers. [Indonesian]"
     },
     "changes": {
-      "title": "[Indonesian] translation needed",
-      "content": "[Indonesian] translation needed"
+      "title": "9. Changes to This Policy [Indonesian]",
+      "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the \"Last Updated\" date. [Indonesian]"
     },
     "contact": {
-      "title": "[Indonesian] translation needed",
-      "intro": "[Indonesian] translation needed"
+      "title": "10. Contact Us [Indonesian]",
+      "intro": "If you have questions about this Privacy Policy, please contact us at: [Indonesian]"
     }
   },
   "terms": {
-    "title": "[Indonesian] translation needed",
-    "effectiveDate": "[Indonesian] translation needed",
-    "lastUpdated": "[Indonesian] translation needed",
-    "intro": "[Indonesian] translation needed",
+    "title": "Terms of Service [Indonesian]",
+    "effectiveDate": "Effective Date [Indonesian]",
+    "lastUpdated": "Last Updated [Indonesian]",
+    "intro": "Welcome to AI Square! These Terms of Service (\"Terms\") govern your use of our AI literacy education platform. By accessing or using AI Square, you agree to be bound by these Terms. [Indonesian]",
     "acceptance": {
-      "title": "[Indonesian] translation needed",
-      "content": "[Indonesian] translation needed",
-      "capacity": "[Indonesian] translation needed"
+      "title": "1. Acceptance of Terms [Indonesian]",
+      "content": "By creating an account or using our services, you acknowledge that you have read, understood, and agree to these Terms. If you do not agree, please do not use our platform. [Indonesian]",
+      "capacity": "You must be at least 13 years old to use our services. If you are under 18, you must have parental consent. [Indonesian]"
     },
     "service": {
-      "title": "[Indonesian] translation needed",
-      "intro": "[Indonesian] translation needed",
-      "literacy": "[Indonesian] translation needed",
-      "pbl": "[Indonesian] translation needed",
-      "ai": "[Indonesian] translation needed",
-      "tracking": "[Indonesian] translation needed",
-      "multi": "[Indonesian] translation needed"
+      "title": "2. Description of Service [Indonesian]",
+      "intro": "AI Square provides: [Indonesian]",
+      "literacy": "AI literacy education content and assessments [Indonesian]",
+      "pbl": "Problem-Based Learning (PBL) scenarios [Indonesian]",
+      "ai": "AI-powered tutoring and feedback [Indonesian]",
+      "tracking": "Progress tracking and analytics [Indonesian]",
+      "multi": "Multi-language support (9 languages) [Indonesian]"
     },
     "accounts": {
-      "title": "[Indonesian] translation needed",
-      "registration": "[Indonesian] translation needed",
-      "accurate": "[Indonesian] translation needed",
-      "maintain": "[Indonesian] translation needed",
-      "secure": "[Indonesian] translation needed",
-      "responsible": "[Indonesian] translation needed",
-      "types": "[Indonesian] translation needed",
-      "student": "[Indonesian] translation needed",
-      "teacher": "[Indonesian] translation needed",
-      "admin": "[Indonesian] translation needed"
+      "title": "3. User Accounts [Indonesian]",
+      "registration": "Registration [Indonesian]",
+      "accurate": "Provide accurate and complete information [Indonesian]",
+      "maintain": "Maintain and update your information [Indonesian]",
+      "secure": "Keep your account credentials secure [Indonesian]",
+      "responsible": "You are responsible for all activities under your account [Indonesian]",
+      "types": "Account Types [Indonesian]",
+      "student": "Student: Access to learning content and assessments [Indonesian]",
+      "teacher": "Teacher: Additional class management features [Indonesian]",
+      "admin": "Administrator: Platform management capabilities [Indonesian]"
     },
     "use": {
-      "title": "[Indonesian] translation needed",
-      "permitted": "[Indonesian] translation needed",
-      "educational": "[Indonesian] translation needed",
-      "share": "[Indonesian] translation needed",
-      "feedback": "[Indonesian] translation needed",
-      "prohibited": "[Indonesian] translation needed",
-      "misuse": "[Indonesian] translation needed",
-      "share_credentials": "[Indonesian] translation needed",
-      "cheat": "[Indonesian] translation needed",
-      "harm": "[Indonesian] translation needed",
-      "illegal": "[Indonesian] translation needed",
-      "scrape": "[Indonesian] translation needed"
+      "title": "4. Acceptable Use Policy [Indonesian]",
+      "permitted": "You may: [Indonesian]",
+      "educational": "Use the platform for educational purposes [Indonesian]",
+      "share": "Share your learning progress appropriately [Indonesian]",
+      "feedback": "Provide constructive feedback [Indonesian]",
+      "prohibited": "You may not: [Indonesian]",
+      "misuse": "Misuse or attempt to manipulate the AI systems [Indonesian]",
+      "share_credentials": "Share account credentials [Indonesian]",
+      "cheat": "Engage in academic dishonesty [Indonesian]",
+      "harm": "Harass, abuse, or harm other users [Indonesian]",
+      "illegal": "Use the platform for illegal activities [Indonesian]",
+      "scrape": "Scrape or copy content without permission [Indonesian]"
     },
     "ip": {
-      "title": "[Indonesian] translation needed",
-      "platform": "[Indonesian] translation needed",
-      "ownership": "[Indonesian] translation needed",
-      "user": "[Indonesian] translation needed",
-      "retain": "[Indonesian] translation needed",
-      "open": "[Indonesian] translation needed",
-      "git": "[Indonesian] translation needed"
+      "title": "5. Intellectual Property [Indonesian]",
+      "platform": "Platform Content [Indonesian]",
+      "ownership": "All content on AI Square, including text, graphics, logos, and software, is owned by AI Square or its licensors and protected by intellectual property laws. [Indonesian]",
+      "user": "User Content [Indonesian]",
+      "retain": "You retain ownership of content you create. By submitting content, you grant us a license to use it for providing and improving our services. [Indonesian]",
+      "open": "Open Source [Indonesian]",
+      "git": "Educational content is managed through Git and may be subject to open-source licenses. Please check individual repositories for specific license terms. [Indonesian]"
     },
     "privacy": {
-      "title": "[Indonesian] translation needed",
-      "content": "[Indonesian] translation needed"
+      "title": "6. Privacy and Data Protection [Indonesian]",
+      "content": "Your use of AI Square is also governed by our Privacy Policy. We are committed to protecting your personal information and using it only as described in our Privacy Policy. [Indonesian]"
     },
     "ai": {
-      "title": "[Indonesian] translation needed",
-      "disclaimer": "[Indonesian] translation needed",
-      "educational": "[Indonesian] translation needed",
-      "verify": "[Indonesian] translation needed",
-      "improve": "[Indonesian] translation needed"
+      "title": "7. AI Services and Limitations [Indonesian]",
+      "disclaimer": "Our AI-powered features are designed to assist learning but are not perfect. We do not guarantee the accuracy of AI-generated content or feedback. [Indonesian]",
+      "educational": "AI responses are for educational purposes only [Indonesian]",
+      "verify": "Always verify important information independently [Indonesian]",
+      "improve": "We continuously work to improve AI accuracy [Indonesian]"
     },
     "disclaimers": {
-      "title": "[Indonesian] translation needed",
-      "asis": "[Indonesian] translation needed",
-      "liability": "[Indonesian] translation needed"
+      "title": "8. Disclaimers and Limitations [Indonesian]",
+      "asis": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND. [Indonesian]",
+      "liability": "To the fullest extent permitted by law, AI Square shall not be liable for any indirect, incidental, special, consequential, or punitive damages. [Indonesian]"
     },
     "modifications": {
-      "title": "[Indonesian] translation needed",
-      "content": "[Indonesian] translation needed"
+      "title": "9. Modifications to Terms [Indonesian]",
+      "content": "We may modify these Terms at any time. We will notify users of material changes. Continued use after changes constitutes acceptance of the new Terms. [Indonesian]"
     },
     "termination": {
-      "title": "[Indonesian] translation needed",
-      "rights": "[Indonesian] translation needed"
+      "title": "10. Termination [Indonesian]",
+      "rights": "We reserve the right to suspend or terminate accounts that violate these Terms. You may delete your account at any time. [Indonesian]"
     },
     "law": {
-      "title": "[Indonesian] translation needed",
-      "content": "[Indonesian] translation needed"
+      "title": "11. Governing Law [Indonesian]",
+      "content": "These Terms are governed by the laws of the jurisdiction where AI Square operates, without regard to conflict of law principles. [Indonesian]"
     },
     "contact": {
-      "title": "[Indonesian] translation needed",
-      "intro": "[Indonesian] translation needed"
+      "title": "12. Contact Information [Indonesian]",
+      "intro": "For questions about these Terms, please contact us: [Indonesian]"
     },
-    "agreement": "[Indonesian] translation needed"
+    "agreement": "By using AI Square, you acknowledge that you have read and agree to these Terms of Service. [Indonesian]"
   },
   "common": {
-    "backToHome": "[Indonesian] translation needed"
+    "backToHome": "Back to Home [Indonesian]"
   }
 }

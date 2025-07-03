@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "[Portuguese] translation needed",
-    "subtitle": "[Portuguese] translation needed",
+    "greeting": "Welcome, {{name}}! [Portuguese]",
+    "subtitle": "Let's get you started on your AI literacy journey [Portuguese]",
     "step1": {
-      "title": "[Portuguese] translation needed",
-      "description": "[Portuguese] translation needed",
-      "content": "[Portuguese] translation needed",
-      "assessment": "[Portuguese] translation needed",
-      "assessmentDesc": "[Portuguese] translation needed",
-      "learning": "[Portuguese] translation needed",
-      "learningDesc": "[Portuguese] translation needed"
+      "title": "Discover Your Path [Portuguese]",
+      "description": "AI Square helps you understand and master AI literacy [Portuguese]",
+      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [Portuguese]",
+      "assessment": "Smart Assessment [Portuguese]",
+      "assessmentDesc": "Discover your current AI knowledge level [Portuguese]",
+      "learning": "Personalized Learning [Portuguese]",
+      "learningDesc": "Get tailored recommendations based on your goals [Portuguese]"
     },
     "step2": {
-      "title": "[Portuguese] translation needed",
-      "description": "[Portuguese] translation needed",
-      "content": "[Portuguese] translation needed",
-      "domains": "[Portuguese] translation needed",
-      "engaging": "[Portuguese] translation needed",
-      "creating": "[Portuguese] translation needed",
-      "managing": "[Portuguese] translation needed",
-      "designing": "[Portuguese] translation needed"
+      "title": "Four Core Domains [Portuguese]",
+      "description": "Master the essential areas of AI literacy [Portuguese]",
+      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [Portuguese]",
+      "domains": "AI Literacy Domains [Portuguese]",
+      "engaging": "Engaging with AI [Portuguese]",
+      "creating": "Creating with AI [Portuguese]",
+      "managing": "Managing with AI [Portuguese]",
+      "designing": "Designing with AI [Portuguese]"
     },
     "step3": {
-      "title": "[Portuguese] translation needed",
-      "description": "[Portuguese] translation needed",
-      "content": "[Portuguese] translation needed",
-      "ready": "[Portuguese] translation needed",
-      "benefit1": "[Portuguese] translation needed",
-      "benefit2": "[Portuguese] translation needed",
-      "benefit3": "[Portuguese] translation needed"
+      "title": "Start Your Journey [Portuguese]",
+      "description": "Begin with an assessment and unlock your potential [Portuguese]",
+      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [Portuguese]",
+      "ready": "What you'll get: [Portuguese]",
+      "benefit1": "Detailed assessment of your AI knowledge [Portuguese]",
+      "benefit2": "Personalized learning path recommendations [Portuguese]",
+      "benefit3": "Interactive scenarios and practical exercises [Portuguese]"
     },
-    "startJourney": "[Portuguese] translation needed"
+    "startJourney": "Start Your Journey [Portuguese]"
   },
   "goals": {
-    "title": "[Portuguese] translation needed",
-    "subtitle": "[Portuguese] translation needed",
+    "title": "What would you like to achieve? [Portuguese]",
+    "subtitle": "Select your learning goals to get personalized recommendations [Portuguese]",
     "understand": {
-      "title": "[Portuguese] translation needed",
-      "description": "[Portuguese] translation needed"
+      "title": "Understand AI Fundamentals [Portuguese]",
+      "description": "Learn the basics of AI, machine learning, and how AI systems work [Portuguese]"
     },
     "create": {
-      "title": "[Portuguese] translation needed",
-      "description": "[Portuguese] translation needed"
+      "title": "Create Content with AI [Portuguese]",
+      "description": "Use AI tools for writing, design, art, and creative projects [Portuguese]"
     },
     "analyze": {
-      "title": "[Portuguese] translation needed",
-      "description": "[Portuguese] translation needed"
+      "title": "Analyze Data with AI [Portuguese]",
+      "description": "Apply AI for data analysis, insights, and decision-making [Portuguese]"
     },
     "build": {
-      "title": "[Portuguese] translation needed",
-      "description": "[Portuguese] translation needed"
+      "title": "Build AI Solutions [Portuguese]",
+      "description": "Develop and implement AI systems and applications [Portuguese]"
     },
     "teach": {
-      "title": "[Portuguese] translation needed",
-      "description": "[Portuguese] translation needed"
+      "title": "Teach AI to Others [Portuguese]",
+      "description": "Educate and guide others in understanding and using AI [Portuguese]"
     },
     "ethical": {
-      "title": "[Portuguese] translation needed",
-      "description": "[Portuguese] translation needed"
+      "title": "Ensure Ethical AI Use [Portuguese]",
+      "description": "Understand and implement responsible AI practices [Portuguese]"
     },
-    "recommendedDomains": "[Portuguese] translation needed",
-    "selected": "[Portuguese] translation needed",
-    "selectAtLeastOne": "[Portuguese] translation needed",
-    "continue": "[Portuguese] translation needed",
-    "skipForNow": "[Portuguese] translation needed",
-    "helpText": "[Portuguese] translation needed"
+    "recommendedDomains": "Recommended domains [Portuguese]",
+    "selected": "{{count}} goals selected [Portuguese]",
+    "selectAtLeastOne": "Please select at least one learning goal [Portuguese]",
+    "continue": "Continue to Assessment [Portuguese]",
+    "skipForNow": "Skip for now [Portuguese]",
+    "helpText": "Don't worry, you can always change these later in your profile settings. [Portuguese]"
   },
   "progress": {
-    "welcome": "[Portuguese] translation needed",
-    "identity": "[Portuguese] translation needed",
-    "goals": "[Portuguese] translation needed"
+    "welcome": "Welcome [Portuguese]",
+    "identity": "Identity [Portuguese]",
+    "goals": "Goals [Portuguese]"
   },
   "identity": {
-    "title": "[Portuguese] translation needed",
-    "subtitle": "[Portuguese] translation needed",
+    "title": "Who are you? [Portuguese]",
+    "subtitle": "Help us personalize your AI learning journey [Portuguese]",
     "student": {
-      "title": "[Portuguese] translation needed",
-      "description": "[Portuguese] translation needed"
+      "title": "Student [Portuguese]",
+      "description": "I'm studying and want to learn AI for my academic and future career [Portuguese]"
     },
     "teacher": {
-      "title": "[Portuguese] translation needed",
-      "description": "[Portuguese] translation needed"
+      "title": "Educator [Portuguese]",
+      "description": "I teach others and want to integrate AI into my curriculum [Portuguese]"
     },
     "professional": {
-      "title": "[Portuguese] translation needed",
-      "description": "[Portuguese] translation needed"
+      "title": "Professional [Portuguese]",
+      "description": "I work in industry and want to leverage AI in my role [Portuguese]"
     },
     "learner": {
-      "title": "[Portuguese] translation needed",
-      "description": "[Portuguese] translation needed"
+      "title": "Lifelong Learner [Portuguese]",
+      "description": "I'm curious about AI and want to explore its possibilities [Portuguese]"
     }
   },
   "button": {
-    "back": "[Portuguese] translation needed",
-    "continue": "[Portuguese] translation needed",
-    "saving": "[Portuguese] translation needed"
+    "back": "Back [Portuguese]",
+    "continue": "Continue [Portuguese]",
+    "saving": "Saving... [Portuguese]"
   }
 }

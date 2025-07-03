@@ -1,12 +1,12 @@
 {
-  "aiAdvisor": "[Arabic] translation needed",
-  "newChat": "[Arabic] translation needed",
-  "history": "[Arabic] translation needed",
-  "welcomeTitle": "[Arabic] translation needed",
-  "welcomeMessage": "[Arabic] translation needed",
-  "inputPlaceholder": "[Arabic] translation needed",
-  "suggestedTopic1": "[Arabic] translation needed",
-  "suggestedTopic2": "[Arabic] translation needed",
-  "suggestedTopic3": "[Arabic] translation needed",
-  "suggestedTopic4": "[Arabic] translation needed"
+  "aiAdvisor": "AI Learning Advisor [Arabic]",
+  "newChat": "New Chat [Arabic]",
+  "history": "Chat History [Arabic]",
+  "welcomeTitle": "Hello! I'm your AI Learning Advisor [Arabic]",
+  "welcomeMessage": "I'm here to help you navigate your AI literacy journey. Ask me about learning paths, PBL scenarios, or any AI concepts you'd like to understand better. [Arabic]",
+  "inputPlaceholder": "Type your message here... (Press Enter to send) [Arabic]",
+  "suggestedTopic1": "Which PBL scenario should I start with? [Arabic]",
+  "suggestedTopic2": "Help me understand my assessment results [Arabic]",
+  "suggestedTopic3": "What are my weak areas and how can I improve? [Arabic]",
+  "suggestedTopic4": "Explain AI concepts in simple terms [Arabic]"
 }

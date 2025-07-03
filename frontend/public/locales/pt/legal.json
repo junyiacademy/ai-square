@@ -1,171 +1,171 @@
 {
   "privacy": {
-    "title": "[Portuguese] translation needed",
-    "lastUpdated": "[Portuguese] translation needed",
-    "intro": "[Portuguese] translation needed",
+    "title": "Privacy Policy [Portuguese]",
+    "lastUpdated": "Last updated [Portuguese]",
+    "intro": "AI Square (\"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI literacy education platform. [Portuguese]",
     "infoCollect": {
-      "title": "[Portuguese] translation needed",
-      "personal": "[Portuguese] translation needed",
-      "email": "[Portuguese] translation needed",
-      "name": "[Portuguese] translation needed",
-      "role": "[Portuguese] translation needed",
-      "language": "[Portuguese] translation needed",
-      "usage": "[Portuguese] translation needed",
-      "learning": "[Portuguese] translation needed",
-      "interactions": "[Portuguese] translation needed",
-      "scenarios": "[Portuguese] translation needed",
-      "analytics": "[Portuguese] translation needed",
-      "technical": "[Portuguese] translation needed",
-      "browser": "[Portuguese] translation needed",
-      "device": "[Portuguese] translation needed",
-      "ip": "[Portuguese] translation needed",
-      "timezone": "[Portuguese] translation needed"
+      "title": "1. Information We Collect [Portuguese]",
+      "personal": "Personal Information [Portuguese]",
+      "email": "Email address [Portuguese]",
+      "name": "Name (optional) [Portuguese]",
+      "role": "User role (student, teacher, admin) [Portuguese]",
+      "language": "Language preference [Portuguese]",
+      "usage": "Usage Data [Portuguese]",
+      "learning": "Learning progress and assessment results [Portuguese]",
+      "interactions": "Interactions with AI tutors [Portuguese]",
+      "scenarios": "PBL scenario completion data [Portuguese]",
+      "analytics": "Platform usage analytics [Portuguese]",
+      "technical": "Technical Data [Portuguese]",
+      "browser": "Browser type and version [Portuguese]",
+      "device": "Device information [Portuguese]",
+      "ip": "IP address (anonymized) [Portuguese]",
+      "timezone": "Time zone settings [Portuguese]"
     },
     "howUse": {
-      "title": "[Portuguese] translation needed",
-      "provide": "[Portuguese] translation needed",
-      "personalize": "[Portuguese] translation needed",
-      "communicate": "[Portuguese] translation needed",
-      "improve": "[Portuguese] translation needed",
-      "analyze": "[Portuguese] translation needed",
-      "security": "[Portuguese] translation needed"
+      "title": "2. How We Use Your Information [Portuguese]",
+      "provide": "To provide and maintain our service [Portuguese]",
+      "personalize": "To personalize your learning experience [Portuguese]",
+      "communicate": "To communicate with you about your account [Portuguese]",
+      "improve": "To improve our platform and develop new features [Portuguese]",
+      "analyze": "To analyze usage patterns and optimize performance [Portuguese]",
+      "security": "To detect and prevent security threats [Portuguese]"
     },
     "storage": {
-      "title": "[Portuguese] translation needed",
-      "location": "[Portuguese] translation needed",
-      "encryption": "[Portuguese] translation needed",
-      "access": "[Portuguese] translation needed",
-      "monitoring": "[Portuguese] translation needed",
-      "backup": "[Portuguese] translation needed"
+      "title": "3. Data Storage and Security [Portuguese]",
+      "location": "Your data is stored securely on Google Cloud Platform servers. We implement appropriate technical and organizational measures to protect your personal information. [Portuguese]",
+      "encryption": "Data encryption in transit and at rest [Portuguese]",
+      "access": "Restricted access controls [Portuguese]",
+      "monitoring": "Regular security monitoring [Portuguese]",
+      "backup": "Secure backup procedures [Portuguese]"
     },
     "sharing": {
-      "title": "[Portuguese] translation needed",
-      "intro": "[Portuguese] translation needed",
-      "consent": "[Portuguese] translation needed",
-      "legal": "[Portuguese] translation needed",
-      "protect": "[Portuguese] translation needed",
-      "service": "[Portuguese] translation needed"
+      "title": "4. Data Sharing and Disclosure [Portuguese]",
+      "intro": "We do not sell, trade, or rent your personal information. We may share your information in the following situations: [Portuguese]",
+      "consent": "With your consent [Portuguese]",
+      "legal": "To comply with legal obligations [Portuguese]",
+      "protect": "To protect our rights and safety [Portuguese]",
+      "service": "With service providers who assist our operations [Portuguese]"
     },
     "rights": {
-      "title": "[Portuguese] translation needed",
-      "intro": "[Portuguese] translation needed",
-      "access": "[Portuguese] translation needed",
-      "correct": "[Portuguese] translation needed",
-      "delete": "[Portuguese] translation needed",
-      "export": "[Portuguese] translation needed",
-      "restrict": "[Portuguese] translation needed",
-      "withdraw": "[Portuguese] translation needed"
+      "title": "5. Your Rights [Portuguese]",
+      "intro": "You have the following rights regarding your personal data: [Portuguese]",
+      "access": "Access your personal information [Portuguese]",
+      "correct": "Correct inaccurate data [Portuguese]",
+      "delete": "Request deletion of your data [Portuguese]",
+      "export": "Export your data in a portable format [Portuguese]",
+      "restrict": "Restrict processing of your data [Portuguese]",
+      "withdraw": "Withdraw consent at any time [Portuguese]"
     },
     "cookies": {
-      "title": "[Portuguese] translation needed",
-      "intro": "[Portuguese] translation needed"
+      "title": "6. Cookies and Tracking [Portuguese]",
+      "intro": "We use cookies and similar tracking technologies to enhance your experience. Essential cookies are required for platform functionality, while optional cookies help us improve our service. [Portuguese]"
     },
     "children": {
-      "title": "[Portuguese] translation needed",
-      "content": "[Portuguese] translation needed"
+      "title": "7. Children's Privacy [Portuguese]",
+      "content": "Our platform is designed for educational use by students of all ages. For users under 13, we require parental consent and limit data collection to essential information only. [Portuguese]"
     },
     "international": {
-      "title": "[Portuguese] translation needed",
-      "content": "[Portuguese] translation needed"
+      "title": "8. International Data Transfers [Portuguese]",
+      "content": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers. [Portuguese]"
     },
     "changes": {
-      "title": "[Portuguese] translation needed",
-      "content": "[Portuguese] translation needed"
+      "title": "9. Changes to This Policy [Portuguese]",
+      "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the \"Last Updated\" date. [Portuguese]"
     },
     "contact": {
-      "title": "[Portuguese] translation needed",
-      "intro": "[Portuguese] translation needed"
+      "title": "10. Contact Us [Portuguese]",
+      "intro": "If you have questions about this Privacy Policy, please contact us at: [Portuguese]"
     }
   },
   "terms": {
-    "title": "[Portuguese] translation needed",
-    "effectiveDate": "[Portuguese] translation needed",
-    "lastUpdated": "[Portuguese] translation needed",
-    "intro": "[Portuguese] translation needed",
+    "title": "Terms of Service [Portuguese]",
+    "effectiveDate": "Effective Date [Portuguese]",
+    "lastUpdated": "Last Updated [Portuguese]",
+    "intro": "Welcome to AI Square! These Terms of Service (\"Terms\") govern your use of our AI literacy education platform. By accessing or using AI Square, you agree to be bound by these Terms. [Portuguese]",
     "acceptance": {
-      "title": "[Portuguese] translation needed",
-      "content": "[Portuguese] translation needed",
-      "capacity": "[Portuguese] translation needed"
+      "title": "1. Acceptance of Terms [Portuguese]",
+      "content": "By creating an account or using our services, you acknowledge that you have read, understood, and agree to these Terms. If you do not agree, please do not use our platform. [Portuguese]",
+      "capacity": "You must be at least 13 years old to use our services. If you are under 18, you must have parental consent. [Portuguese]"
     },
     "service": {
-      "title": "[Portuguese] translation needed",
-      "intro": "[Portuguese] translation needed",
-      "literacy": "[Portuguese] translation needed",
-      "pbl": "[Portuguese] translation needed",
-      "ai": "[Portuguese] translation needed",
-      "tracking": "[Portuguese] translation needed",
-      "multi": "[Portuguese] translation needed"
+      "title": "2. Description of Service [Portuguese]",
+      "intro": "AI Square provides: [Portuguese]",
+      "literacy": "AI literacy education content and assessments [Portuguese]",
+      "pbl": "Problem-Based Learning (PBL) scenarios [Portuguese]",
+      "ai": "AI-powered tutoring and feedback [Portuguese]",
+      "tracking": "Progress tracking and analytics [Portuguese]",
+      "multi": "Multi-language support (9 languages) [Portuguese]"
     },
     "accounts": {
-      "title": "[Portuguese] translation needed",
-      "registration": "[Portuguese] translation needed",
-      "accurate": "[Portuguese] translation needed",
-      "maintain": "[Portuguese] translation needed",
-      "secure": "[Portuguese] translation needed",
-      "responsible": "[Portuguese] translation needed",
-      "types": "[Portuguese] translation needed",
-      "student": "[Portuguese] translation needed",
-      "teacher": "[Portuguese] translation needed",
-      "admin": "[Portuguese] translation needed"
+      "title": "3. User Accounts [Portuguese]",
+      "registration": "Registration [Portuguese]",
+      "accurate": "Provide accurate and complete information [Portuguese]",
+      "maintain": "Maintain and update your information [Portuguese]",
+      "secure": "Keep your account credentials secure [Portuguese]",
+      "responsible": "You are responsible for all activities under your account [Portuguese]",
+      "types": "Account Types [Portuguese]",
+      "student": "Student: Access to learning content and assessments [Portuguese]",
+      "teacher": "Teacher: Additional class management features [Portuguese]",
+      "admin": "Administrator: Platform management capabilities [Portuguese]"
     },
     "use": {
-      "title": "[Portuguese] translation needed",
-      "permitted": "[Portuguese] translation needed",
-      "educational": "[Portuguese] translation needed",
-      "share": "[Portuguese] translation needed",
-      "feedback": "[Portuguese] translation needed",
-      "prohibited": "[Portuguese] translation needed",
-      "misuse": "[Portuguese] translation needed",
-      "share_credentials": "[Portuguese] translation needed",
-      "cheat": "[Portuguese] translation needed",
-      "harm": "[Portuguese] translation needed",
-      "illegal": "[Portuguese] translation needed",
-      "scrape": "[Portuguese] translation needed"
+      "title": "4. Acceptable Use Policy [Portuguese]",
+      "permitted": "You may: [Portuguese]",
+      "educational": "Use the platform for educational purposes [Portuguese]",
+      "share": "Share your learning progress appropriately [Portuguese]",
+      "feedback": "Provide constructive feedback [Portuguese]",
+      "prohibited": "You may not: [Portuguese]",
+      "misuse": "Misuse or attempt to manipulate the AI systems [Portuguese]",
+      "share_credentials": "Share account credentials [Portuguese]",
+      "cheat": "Engage in academic dishonesty [Portuguese]",
+      "harm": "Harass, abuse, or harm other users [Portuguese]",
+      "illegal": "Use the platform for illegal activities [Portuguese]",
+      "scrape": "Scrape or copy content without permission [Portuguese]"
     },
     "ip": {
-      "title": "[Portuguese] translation needed",
-      "platform": "[Portuguese] translation needed",
-      "ownership": "[Portuguese] translation needed",
-      "user": "[Portuguese] translation needed",
-      "retain": "[Portuguese] translation needed",
-      "open": "[Portuguese] translation needed",
-      "git": "[Portuguese] translation needed"
+      "title": "5. Intellectual Property [Portuguese]",
+      "platform": "Platform Content [Portuguese]",
+      "ownership": "All content on AI Square, including text, graphics, logos, and software, is owned by AI Square or its licensors and protected by intellectual property laws. [Portuguese]",
+      "user": "User Content [Portuguese]",
+      "retain": "You retain ownership of content you create. By submitting content, you grant us a license to use it for providing and improving our services. [Portuguese]",
+      "open": "Open Source [Portuguese]",
+      "git": "Educational content is managed through Git and may be subject to open-source licenses. Please check individual repositories for specific license terms. [Portuguese]"
     },
     "privacy": {
-      "title": "[Portuguese] translation needed",
-      "content": "[Portuguese] translation needed"
+      "title": "6. Privacy and Data Protection [Portuguese]",
+      "content": "Your use of AI Square is also governed by our Privacy Policy. We are committed to protecting your personal information and using it only as described in our Privacy Policy. [Portuguese]"
     },
     "ai": {
-      "title": "[Portuguese] translation needed",
-      "disclaimer": "[Portuguese] translation needed",
-      "educational": "[Portuguese] translation needed",
-      "verify": "[Portuguese] translation needed",
-      "improve": "[Portuguese] translation needed"
+      "title": "7. AI Services and Limitations [Portuguese]",
+      "disclaimer": "Our AI-powered features are designed to assist learning but are not perfect. We do not guarantee the accuracy of AI-generated content or feedback. [Portuguese]",
+      "educational": "AI responses are for educational purposes only [Portuguese]",
+      "verify": "Always verify important information independently [Portuguese]",
+      "improve": "We continuously work to improve AI accuracy [Portuguese]"
     },
     "disclaimers": {
-      "title": "[Portuguese] translation needed",
-      "asis": "[Portuguese] translation needed",
-      "liability": "[Portuguese] translation needed"
+      "title": "8. Disclaimers and Limitations [Portuguese]",
+      "asis": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND. [Portuguese]",
+      "liability": "To the fullest extent permitted by law, AI Square shall not be liable for any indirect, incidental, special, consequential, or punitive damages. [Portuguese]"
     },
     "modifications": {
-      "title": "[Portuguese] translation needed",
-      "content": "[Portuguese] translation needed"
+      "title": "9. Modifications to Terms [Portuguese]",
+      "content": "We may modify these Terms at any time. We will notify users of material changes. Continued use after changes constitutes acceptance of the new Terms. [Portuguese]"
     },
     "termination": {
-      "title": "[Portuguese] translation needed",
-      "rights": "[Portuguese] translation needed"
+      "title": "10. Termination [Portuguese]",
+      "rights": "We reserve the right to suspend or terminate accounts that violate these Terms. You may delete your account at any time. [Portuguese]"
     },
     "law": {
-      "title": "[Portuguese] translation needed",
-      "content": "[Portuguese] translation needed"
+      "title": "11. Governing Law [Portuguese]",
+      "content": "These Terms are governed by the laws of the jurisdiction where AI Square operates, without regard to conflict of law principles. [Portuguese]"
     },
     "contact": {
-      "title": "[Portuguese] translation needed",
-      "intro": "[Portuguese] translation needed"
+      "title": "12. Contact Information [Portuguese]",
+      "intro": "For questions about these Terms, please contact us: [Portuguese]"
     },
-    "agreement": "[Portuguese] translation needed"
+    "agreement": "By using AI Square, you acknowledge that you have read and agree to these Terms of Service. [Portuguese]"
   },
   "common": {
-    "backToHome": "[Portuguese] translation needed"
+    "backToHome": "Back to Home [Portuguese]"
   }
 }

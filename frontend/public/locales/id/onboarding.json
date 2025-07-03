@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "[Indonesian] translation needed",
-    "subtitle": "[Indonesian] translation needed",
+    "greeting": "Welcome, {{name}}! [Indonesian]",
+    "subtitle": "Let's get you started on your AI literacy journey [Indonesian]",
     "step1": {
-      "title": "[Indonesian] translation needed",
-      "description": "[Indonesian] translation needed",
-      "content": "[Indonesian] translation needed",
-      "assessment": "[Indonesian] translation needed",
-      "assessmentDesc": "[Indonesian] translation needed",
-      "learning": "[Indonesian] translation needed",
-      "learningDesc": "[Indonesian] translation needed"
+      "title": "Discover Your Path [Indonesian]",
+      "description": "AI Square helps you understand and master AI literacy [Indonesian]",
+      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [Indonesian]",
+      "assessment": "Smart Assessment [Indonesian]",
+      "assessmentDesc": "Discover your current AI knowledge level [Indonesian]",
+      "learning": "Personalized Learning [Indonesian]",
+      "learningDesc": "Get tailored recommendations based on your goals [Indonesian]"
     },
     "step2": {
-      "title": "[Indonesian] translation needed",
-      "description": "[Indonesian] translation needed",
-      "content": "[Indonesian] translation needed",
-      "domains": "[Indonesian] translation needed",
-      "engaging": "[Indonesian] translation needed",
-      "creating": "[Indonesian] translation needed",
-      "managing": "[Indonesian] translation needed",
-      "designing": "[Indonesian] translation needed"
+      "title": "Four Core Domains [Indonesian]",
+      "description": "Master the essential areas of AI literacy [Indonesian]",
+      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [Indonesian]",
+      "domains": "AI Literacy Domains [Indonesian]",
+      "engaging": "Engaging with AI [Indonesian]",
+      "creating": "Creating with AI [Indonesian]",
+      "managing": "Managing with AI [Indonesian]",
+      "designing": "Designing with AI [Indonesian]"
     },
     "step3": {
-      "title": "[Indonesian] translation needed",
-      "description": "[Indonesian] translation needed",
-      "content": "[Indonesian] translation needed",
-      "ready": "[Indonesian] translation needed",
-      "benefit1": "[Indonesian] translation needed",
-      "benefit2": "[Indonesian] translation needed",
-      "benefit3": "[Indonesian] translation needed"
+      "title": "Start Your Journey [Indonesian]",
+      "description": "Begin with an assessment and unlock your potential [Indonesian]",
+      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [Indonesian]",
+      "ready": "What you'll get: [Indonesian]",
+      "benefit1": "Detailed assessment of your AI knowledge [Indonesian]",
+      "benefit2": "Personalized learning path recommendations [Indonesian]",
+      "benefit3": "Interactive scenarios and practical exercises [Indonesian]"
     },
-    "startJourney": "[Indonesian] translation needed"
+    "startJourney": "Start Your Journey [Indonesian]"
   },
   "goals": {
-    "title": "[Indonesian] translation needed",
-    "subtitle": "[Indonesian] translation needed",
+    "title": "What would you like to achieve? [Indonesian]",
+    "subtitle": "Select your learning goals to get personalized recommendations [Indonesian]",
     "understand": {
-      "title": "[Indonesian] translation needed",
-      "description": "[Indonesian] translation needed"
+      "title": "Understand AI Fundamentals [Indonesian]",
+      "description": "Learn the basics of AI, machine learning, and how AI systems work [Indonesian]"
     },
     "create": {
-      "title": "[Indonesian] translation needed",
-      "description": "[Indonesian] translation needed"
+      "title": "Create Content with AI [Indonesian]",
+      "description": "Use AI tools for writing, design, art, and creative projects [Indonesian]"
     },
     "analyze": {
-      "title": "[Indonesian] translation needed",
-      "description": "[Indonesian] translation needed"
+      "title": "Analyze Data with AI [Indonesian]",
+      "description": "Apply AI for data analysis, insights, and decision-making [Indonesian]"
     },
     "build": {
-      "title": "[Indonesian] translation needed",
-      "description": "[Indonesian] translation needed"
+      "title": "Build AI Solutions [Indonesian]",
+      "description": "Develop and implement AI systems and applications [Indonesian]"
     },
     "teach": {
-      "title": "[Indonesian] translation needed",
-      "description": "[Indonesian] translation needed"
+      "title": "Teach AI to Others [Indonesian]",
+      "description": "Educate and guide others in understanding and using AI [Indonesian]"
     },
     "ethical": {
-      "title": "[Indonesian] translation needed",
-      "description": "[Indonesian] translation needed"
+      "title": "Ensure Ethical AI Use [Indonesian]",
+      "description": "Understand and implement responsible AI practices [Indonesian]"
     },
-    "recommendedDomains": "[Indonesian] translation needed",
-    "selected": "[Indonesian] translation needed",
-    "selectAtLeastOne": "[Indonesian] translation needed",
-    "continue": "[Indonesian] translation needed",
-    "skipForNow": "[Indonesian] translation needed",
-    "helpText": "[Indonesian] translation needed"
+    "recommendedDomains": "Recommended domains [Indonesian]",
+    "selected": "{{count}} goals selected [Indonesian]",
+    "selectAtLeastOne": "Please select at least one learning goal [Indonesian]",
+    "continue": "Continue to Assessment [Indonesian]",
+    "skipForNow": "Skip for now [Indonesian]",
+    "helpText": "Don't worry, you can always change these later in your profile settings. [Indonesian]"
   },
   "progress": {
-    "welcome": "[Indonesian] translation needed",
-    "identity": "[Indonesian] translation needed",
-    "goals": "[Indonesian] translation needed"
+    "welcome": "Welcome [Indonesian]",
+    "identity": "Identity [Indonesian]",
+    "goals": "Goals [Indonesian]"
   },
   "identity": {
-    "title": "[Indonesian] translation needed",
-    "subtitle": "[Indonesian] translation needed",
+    "title": "Who are you? [Indonesian]",
+    "subtitle": "Help us personalize your AI learning journey [Indonesian]",
     "student": {
-      "title": "[Indonesian] translation needed",
-      "description": "[Indonesian] translation needed"
+      "title": "Student [Indonesian]",
+      "description": "I'm studying and want to learn AI for my academic and future career [Indonesian]"
     },
     "teacher": {
-      "title": "[Indonesian] translation needed",
-      "description": "[Indonesian] translation needed"
+      "title": "Educator [Indonesian]",
+      "description": "I teach others and want to integrate AI into my curriculum [Indonesian]"
     },
     "professional": {
-      "title": "[Indonesian] translation needed",
-      "description": "[Indonesian] translation needed"
+      "title": "Professional [Indonesian]",
+      "description": "I work in industry and want to leverage AI in my role [Indonesian]"
     },
     "learner": {
-      "title": "[Indonesian] translation needed",
-      "description": "[Indonesian] translation needed"
+      "title": "Lifelong Learner [Indonesian]",
+      "description": "I'm curious about AI and want to explore its possibilities [Indonesian]"
     }
   },
   "button": {
-    "back": "[Indonesian] translation needed",
-    "continue": "[Indonesian] translation needed",
-    "saving": "[Indonesian] translation needed"
+    "back": "Back [Indonesian]",
+    "continue": "Continue [Indonesian]",
+    "saving": "Saving... [Indonesian]"
   }
 }

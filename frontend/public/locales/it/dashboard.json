@@ -1,49 +1,49 @@
 {
-  "welcome": "[IT] translation needed",
-  "subtitle": "[IT] translation needed",
-  "aiLiteracyProgress": "[IT] translation needed",
+  "welcome": "Bentornato, {{name}}!",
+  "subtitle": "Ecco il tuo riepilogo dei progressi nell'alfabetizzazione IA",
+  "aiLiteracyProgress": "Progressi nell'Alfabetizzazione IA",
   "domains": {
-    "engaging_with_ai": "[IT] translation needed",
-    "creating_with_ai": "[IT] translation needed",
-    "managing_with_ai": "[IT] translation needed",
-    "designing_with_ai": "[IT] translation needed"
+    "engaging_with_ai": "Interagire con l'IA",
+    "creating_with_ai": "Creare con l'IA",
+    "managing_with_ai": "Gestire con l'IA",
+    "designing_with_ai": "Progettare con l'IA"
   },
-  "viewDetailedProgress": "[IT] translation needed",
-  "learningStatistics": "[IT] translation needed",
-  "completedScenarios": "[IT] translation needed",
-  "inProgress": "[IT] translation needed",
-  "learningHours": "[IT] translation needed",
-  "dayStreak": "[IT] translation needed",
-  "recentActivities": "[IT] translation needed",
-  "noRecentActivities": "[IT] translation needed",
+  "viewDetailedProgress": "Visualizza percorso di apprendimento dettagliato",
+  "learningStatistics": "Statistiche di Apprendimento",
+  "completedScenarios": "Completati",
+  "inProgress": "In Corso",
+  "learningHours": "Ore",
+  "dayStreak": "Serie di Giorni",
+  "recentActivities": "Attività Recenti",
+  "noRecentActivities": "Nessuna attività recente. Inizia ad imparare per vedere i tuoi progressi qui!",
   "activities": {
-    "completedAssessment": "[IT] translation needed",
-    "assessmentDesc": "[IT] translation needed"
+    "completedAssessment": "Valutazione di Alfabetizzazione IA completata",
+    "assessmentDesc": "Scoperto il tuo livello di base di conoscenza IA"
   },
-  "recommendedActions": "[IT] translation needed",
+  "recommendedActions": "Prossimi Passi Consigliati",
   "nextActions": {
-    "takeAssessment": "[IT] translation needed",
-    "assessmentDesc": "[IT] translation needed",
-    "viewLearningPath": "[IT] translation needed",
-    "learningPathDesc": "[IT] translation needed",
-    "startPBL": "[IT] translation needed",
-    "pblDesc": "[IT] translation needed"
+    "takeAssessment": "Fai la Valutazione di Alfabetizzazione IA",
+    "assessmentDesc": "Scopri il tuo livello attuale di conoscenza IA e ottieni raccomandazioni personalizzate",
+    "viewLearningPath": "Visualizza il Tuo Percorso di Apprendimento",
+    "learningPathDesc": "Vedi raccomandazioni personalizzate basate sui tuoi risultati di valutazione",
+    "startPBL": "Inizia uno Scenario PBL",
+    "pblDesc": "Pratica competenze IA del mondo reale con scenari interattivi"
   },
   "priority": {
-    "high": "[IT] translation needed",
-    "medium": "[IT] translation needed",
-    "low": "[IT] translation needed"
+    "high": "Alta",
+    "medium": "Media",
+    "low": "Bassa"
   },
-  "quickLinks": "[IT] translation needed",
-  "explorePBL": "[IT] translation needed",
-  "viewCompetencies": "[IT] translation needed",
-  "viewHistory": "[IT] translation needed",
-  "exploreKSA": "[IT] translation needed",
-  "yourGoals": "[IT] translation needed",
-  "updateGoals": "[IT] translation needed",
-  "learningPathQuickAccess": "[IT] translation needed",
-  "learningPathDescription": "[IT] translation needed",
-  "viewAllPaths": "[IT] translation needed",
-  "focusOnWeakAreas": "[IT] translation needed",
-  "aiAdvisor": "[IT] translation needed"
+  "quickLinks": "Collegamenti Rapidi",
+  "explorePBL": "Esplora Scenari PBL",
+  "viewCompetencies": "Visualizza Competenze IA",
+  "viewHistory": "Visualizza Cronologia Apprendimento",
+  "exploreKSA": "Esplora Mappa delle Conoscenze",
+  "yourGoals": "I Tuoi Obiettivi di Apprendimento",
+  "updateGoals": "Aggiorna i tuoi obiettivi",
+  "learningPathQuickAccess": "Raccomandazioni di Apprendimento Personalizzate",
+  "learningPathDescription": "Esplora scenari di apprendimento IA adattati ai tuoi risultati di valutazione e interessi. Scegli le aree che meglio si adattano alle tue esigenze.",
+  "viewAllPaths": "Visualizza Tutti i Percorsi di Apprendimento",
+  "focusOnWeakAreas": "Concentrati sulle Aree Deboli",
+  "aiAdvisor": "Consulente di Apprendimento IA"
 }

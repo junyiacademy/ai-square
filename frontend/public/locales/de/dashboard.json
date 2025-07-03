@@ -1,49 +1,49 @@
 {
-  "welcome": "[DE] translation needed",
-  "subtitle": "[DE] translation needed",
-  "aiLiteracyProgress": "[DE] translation needed",
+  "welcome": "Willkommen zurück, {{name}}!",
+  "subtitle": "Hier ist Ihre KI-Kompetenz-Fortschrittsübersicht",
+  "aiLiteracyProgress": "KI-Kompetenz-Fortschritt",
   "domains": {
-    "engaging_with_ai": "[DE] translation needed",
-    "creating_with_ai": "[DE] translation needed",
-    "managing_with_ai": "[DE] translation needed",
-    "designing_with_ai": "[DE] translation needed"
+    "engaging_with_ai": "Mit KI interagieren",
+    "creating_with_ai": "Mit KI erstellen",
+    "managing_with_ai": "Mit KI verwalten",
+    "designing_with_ai": "Mit KI gestalten"
   },
-  "viewDetailedProgress": "[DE] translation needed",
-  "learningStatistics": "[DE] translation needed",
-  "completedScenarios": "[DE] translation needed",
-  "inProgress": "[DE] translation needed",
-  "learningHours": "[DE] translation needed",
-  "dayStreak": "[DE] translation needed",
-  "recentActivities": "[DE] translation needed",
-  "noRecentActivities": "[DE] translation needed",
+  "viewDetailedProgress": "Detaillierten Lernpfad anzeigen",
+  "learningStatistics": "Lernstatistiken",
+  "completedScenarios": "Abgeschlossen",
+  "inProgress": "In Bearbeitung",
+  "learningHours": "Stunden",
+  "dayStreak": "Tage-Serie",
+  "recentActivities": "Neueste Aktivitäten",
+  "noRecentActivities": "Keine aktuellen Aktivitäten. Beginnen Sie zu lernen, um Ihren Fortschritt hier zu sehen!",
   "activities": {
-    "completedAssessment": "[DE] translation needed",
-    "assessmentDesc": "[DE] translation needed"
+    "completedAssessment": "KI-Kompetenz-Bewertung abgeschlossen",
+    "assessmentDesc": "Ihr KI-Wissensniveau entdeckt"
   },
-  "recommendedActions": "[DE] translation needed",
+  "recommendedActions": "Empfohlene nächste Schritte",
   "nextActions": {
-    "takeAssessment": "[DE] translation needed",
-    "assessmentDesc": "[DE] translation needed",
-    "viewLearningPath": "[DE] translation needed",
-    "learningPathDesc": "[DE] translation needed",
-    "startPBL": "[DE] translation needed",
-    "pblDesc": "[DE] translation needed"
+    "takeAssessment": "KI-Kompetenz-Bewertung durchführen",
+    "assessmentDesc": "Entdecken Sie Ihr aktuelles KI-Wissensniveau und erhalten Sie personalisierte Empfehlungen",
+    "viewLearningPath": "Ihren Lernpfad ansehen",
+    "learningPathDesc": "Sehen Sie personalisierte Empfehlungen basierend auf Ihren Bewertungsergebnissen",
+    "startPBL": "Ein PBL-Szenario starten",
+    "pblDesc": "Üben Sie praktische KI-Fähigkeiten mit interaktiven Szenarien"
   },
   "priority": {
-    "high": "[DE] translation needed",
-    "medium": "[DE] translation needed",
-    "low": "[DE] translation needed"
+    "high": "Hoch",
+    "medium": "Mittel",
+    "low": "Niedrig"
   },
-  "quickLinks": "[DE] translation needed",
-  "explorePBL": "[DE] translation needed",
-  "viewCompetencies": "[DE] translation needed",
-  "viewHistory": "[DE] translation needed",
-  "exploreKSA": "[DE] translation needed",
-  "yourGoals": "[DE] translation needed",
-  "updateGoals": "[DE] translation needed",
-  "learningPathQuickAccess": "[DE] translation needed",
-  "learningPathDescription": "[DE] translation needed",
-  "viewAllPaths": "[DE] translation needed",
-  "focusOnWeakAreas": "[DE] translation needed",
-  "aiAdvisor": "[DE] translation needed"
+  "quickLinks": "Schnellzugriff",
+  "explorePBL": "PBL-Szenarien erkunden",
+  "viewCompetencies": "KI-Kompetenzen anzeigen",
+  "viewHistory": "Lernverlauf anzeigen",
+  "exploreKSA": "Wissenskarte erkunden",
+  "yourGoals": "Ihre Lernziele",
+  "updateGoals": "Ziele aktualisieren",
+  "learningPathQuickAccess": "Personalisierte Lernempfehlungen",
+  "learningPathDescription": "Erkunden Sie KI-Lernszenarien, die auf Ihre Bewertungsergebnisse und Interessen zugeschnitten sind. Wählen Sie die Bereiche, die am besten zu Ihren Bedürfnissen passen.",
+  "viewAllPaths": "Alle Lernpfade anzeigen",
+  "focusOnWeakAreas": "Auf schwache Bereiche konzentrieren",
+  "aiAdvisor": "KI-Lernberater"
 }

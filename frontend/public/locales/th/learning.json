@@ -1,21 +1,21 @@
 {
   "learningPath": {
-    "title": "[Thai] translation needed",
-    "subtitle": "[Thai] translation needed",
-    "yourProgress": "[Thai] translation needed",
-    "currentScore": "[Thai] translation needed",
-    "target": "[Thai] translation needed",
-    "completed": "[Thai] translation needed",
-    "filteringBy": "[Thai] translation needed",
-    "clearFilter": "[Thai] translation needed",
-    "recommendedPath": "[Thai] translation needed",
-    "estimatedTime": "[Thai] translation needed",
-    "startLearning": "[Thai] translation needed",
-    "progress": "[Thai] translation needed",
-    "weakDomainReason": "[Thai] translation needed",
-    "strongDomainReason": "[Thai] translation needed",
-    "averageDomainReason": "[Thai] translation needed",
-    "goToDashboard": "[Thai] translation needed",
-    "dashboardHint": "[Thai] translation needed"
+    "title": "Your Personalized Learning Path [Thai]",
+    "subtitle": "Based on your assessment results, here's your recommended learning journey [Thai]",
+    "yourProgress": "Your Progress Overview [Thai]",
+    "currentScore": "Current [Thai]",
+    "target": "Target [Thai]",
+    "completed": "completed [Thai]",
+    "filteringBy": "Showing recommendations for: {{domain}} [Thai]",
+    "clearFilter": "Show all recommendations [Thai]",
+    "recommendedPath": "Recommended Learning Path [Thai]",
+    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [Thai]",
+    "startLearning": "Start Learning [Thai]",
+    "progress": "Progress [Thai]",
+    "weakDomainReason": "Recommended to strengthen {{domain}} (current: {{score}}%) [Thai]",
+    "strongDomainReason": "Advanced challenge for your strong {{domain}} skills ({{score}}%) [Thai]",
+    "averageDomainReason": "Continue building {{domain}} expertise (current: {{score}}%) [Thai]",
+    "goToDashboard": "Go to Dashboard [Thai]",
+    "dashboardHint": "Track your overall progress and continue your learning journey [Thai]"
   }
 }
