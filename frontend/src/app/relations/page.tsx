@@ -363,12 +363,3 @@ function KSACard({ info, lang }: { info: KSAItem, lang: string }) {
     </div>
   );
 }
-
-/* 加入簡單動畫 */
-<style jsx global>{`
-@keyframes slideup {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
-}
-.animate-slideup { animation: slideup 0.2s cubic-bezier(0.4,0,0.2,1); }
-`}</style>
