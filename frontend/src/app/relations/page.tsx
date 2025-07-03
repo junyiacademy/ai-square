@@ -362,7 +362,7 @@ function CompetencyAccordion({ comp, kMap, sMap, aMap, lang }: { comp: Competenc
         className="cursor-pointer bg-gray-100 px-4 py-2 rounded flex items-center justify-between"
         onClick={() => setOpen(o => !o)}
       >
-        <span className="font-semibold text-blue-700 mr-2">{t(comp.key)}</span>
+        <span className="font-semibold text-blue-700 mr-2">{t(comp.id || comp.key)}</span>
         <span className="text-gray-700 font-medium flex-1">{description}</span>
         <span className="ml-2">{open ? '▲' : '▼'}</span>
       </div>
