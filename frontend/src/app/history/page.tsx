@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { HistoryPageSkeleton } from '@/components/ui/history-skeletons';
+import { formatDateWithLocale } from '@/utils/locale';
 
 // Reuse interfaces from existing history pages
 interface AssessmentHistoryItem {
@@ -188,13 +189,7 @@ export default function UnifiedHistoryPage() {
   }, [currentUser, i18n.language]);
 
   const formatDate = (timestamp: string) => {
-    return new Date(timestamp).toLocaleDateString(i18n.language, {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    return formatDateWithLocale(timestamp, i18n.language);
   };
 
   const formatDuration = (seconds: number) => {
