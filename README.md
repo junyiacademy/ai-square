@@ -31,7 +31,7 @@ ai-square/
 
 ### 技術棧
 - **前端**: Next.js, React, TypeScript, Tailwind CSS
-- **國際化**: 9 種語言支援 (en, zhTW, es, ja, ko, fr, de, ru, it)
+- **國際化**: 14 種語言支援 (en, zhTW, zhCN, pt, ar, id, th, es, ja, ko, fr, de, ru, it)
 - **部署**: Google Cloud Platform
 
 ## 🤖 AI 協作開發

@@ -305,7 +305,7 @@ AI Square 是一個「用 AI 學 AI 素養」的創新學習平台，基於國�
 
 **核心功能**:
 - Problem-Based Learning (PBL) 系統：多任務情境學習、AI 導師輔導
-- 多語言支援：9 種語言 (en, zhTW, es, ja, ko, fr, de, ru, it)
+- 多語言支援：14 種語言 (en, zhTW, zhCN, pt, ar, id, th, es, ja, ko, fr, de, ru, it)
 - AI 素養能力視覺化：KSA (Knowledge, Skills, Attitudes) 映射
 - 即時 AI 反饋：個人化評估與質性回饋
 - CMS 內容管理：Git-based 版本控制、AI 輔助編輯、分支管理
