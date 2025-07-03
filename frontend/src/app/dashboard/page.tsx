@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import type { AssessmentResult } from '@/types/assessment';
+import { formatDateWithLocale } from '@/utils/locale';
 
 interface UserProfile {
   id: string;
@@ -380,7 +381,11 @@ export default function DashboardPage() {
                           {activity.description}
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                          {new Date(activity.date).toLocaleDateString()}
+                          {formatDateWithLocale(activity.date, i18n.language, {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                          })}
                         </p>
                       </div>
                       {activity.link && (
