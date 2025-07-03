@@ -1,171 +1,171 @@
 {
   "privacy": {
-    "title": "Privacy Policy [Spanish]",
-    "lastUpdated": "Last updated [Spanish]",
-    "intro": "AI Square (\"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI literacy education platform. [Spanish]",
+    "title": "Política de Privacidad",
+    "lastUpdated": "Última actualización",
+    "intro": "AI Square (\"nosotros\", \"nuestro\" o \"nos\") se compromete a proteger su privacidad. Esta Política de Privacidad explica cómo recopilamos, usamos, divulgamos y protegemos su información cuando utiliza nuestra plataforma educativa de alfabetización en IA.",
     "infoCollect": {
-      "title": "1. Information We Collect [Spanish]",
-      "personal": "Personal Information [Spanish]",
-      "email": "Email address [Spanish]",
-      "name": "Name (optional) [Spanish]",
-      "role": "User role (student, teacher, admin) [Spanish]",
-      "language": "Language preference [Spanish]",
-      "usage": "Usage Data [Spanish]",
-      "learning": "Learning progress and assessment results [Spanish]",
-      "interactions": "Interactions with AI tutors [Spanish]",
-      "scenarios": "PBL scenario completion data [Spanish]",
-      "analytics": "Platform usage analytics [Spanish]",
-      "technical": "Technical Data [Spanish]",
-      "browser": "Browser type and version [Spanish]",
-      "device": "Device information [Spanish]",
-      "ip": "IP address (anonymized) [Spanish]",
-      "timezone": "Time zone settings [Spanish]"
+      "title": "1. Información que Recopilamos",
+      "personal": "Información Personal",
+      "email": "Dirección de correo electrónico",
+      "name": "Nombre (opcional)",
+      "role": "Rol de usuario (estudiante, profesor, administrador)",
+      "language": "Preferencia de idioma",
+      "usage": "Datos de Uso",
+      "learning": "Progreso de aprendizaje y resultados de evaluación",
+      "interactions": "Interacciones con tutores de IA",
+      "scenarios": "Datos de finalización de escenarios PBL",
+      "analytics": "Análisis de uso de la plataforma",
+      "technical": "Datos Técnicos",
+      "browser": "Tipo y versión del navegador",
+      "device": "Información del dispositivo",
+      "ip": "Dirección IP (anonimizada)",
+      "timezone": "Configuración de zona horaria"
     },
     "howUse": {
-      "title": "2. How We Use Your Information [Spanish]",
-      "provide": "To provide and maintain our service [Spanish]",
-      "personalize": "To personalize your learning experience [Spanish]",
-      "communicate": "To communicate with you about your account [Spanish]",
-      "improve": "To improve our platform and develop new features [Spanish]",
-      "analyze": "To analyze usage patterns and optimize performance [Spanish]",
-      "security": "To detect and prevent security threats [Spanish]"
+      "title": "2. Cómo Utilizamos su Información",
+      "provide": "Para proporcionar y mantener nuestro servicio",
+      "personalize": "Para personalizar su experiencia de aprendizaje",
+      "communicate": "Para comunicarnos con usted sobre su cuenta",
+      "improve": "Para mejorar nuestra plataforma y desarrollar nuevas funciones",
+      "analyze": "Para analizar patrones de uso y optimizar el rendimiento",
+      "security": "Para detectar y prevenir amenazas de seguridad"
     },
     "storage": {
-      "title": "3. Data Storage and Security [Spanish]",
-      "location": "Your data is stored securely on Google Cloud Platform servers. We implement appropriate technical and organizational measures to protect your personal information. [Spanish]",
-      "encryption": "Data encryption in transit and at rest [Spanish]",
-      "access": "Restricted access controls [Spanish]",
-      "monitoring": "Regular security monitoring [Spanish]",
-      "backup": "Secure backup procedures [Spanish]"
+      "title": "3. Almacenamiento y Seguridad de Datos",
+      "location": "Sus datos se almacenan de forma segura en servidores de Google Cloud Platform. Implementamos medidas técnicas y organizativas apropiadas para proteger su información personal.",
+      "encryption": "Cifrado de datos en tránsito y en reposo",
+      "access": "Controles de acceso restringidos",
+      "monitoring": "Monitoreo de seguridad regular",
+      "backup": "Procedimientos de respaldo seguro"
     },
     "sharing": {
-      "title": "4. Data Sharing and Disclosure [Spanish]",
-      "intro": "We do not sell, trade, or rent your personal information. We may share your information in the following situations: [Spanish]",
-      "consent": "With your consent [Spanish]",
-      "legal": "To comply with legal obligations [Spanish]",
-      "protect": "To protect our rights and safety [Spanish]",
-      "service": "With service providers who assist our operations [Spanish]"
+      "title": "4. Compartir y Divulgación de Datos",
+      "intro": "No vendemos, comercializamos ni alquilamos su información personal. Podemos compartir su información en las siguientes situaciones:",
+      "consent": "Con su consentimiento",
+      "legal": "Para cumplir con obligaciones legales",
+      "protect": "Para proteger nuestros derechos y seguridad",
+      "service": "Con proveedores de servicios que asisten nuestras operaciones"
     },
     "rights": {
-      "title": "5. Your Rights [Spanish]",
-      "intro": "You have the following rights regarding your personal data: [Spanish]",
-      "access": "Access your personal information [Spanish]",
-      "correct": "Correct inaccurate data [Spanish]",
-      "delete": "Request deletion of your data [Spanish]",
-      "export": "Export your data in a portable format [Spanish]",
-      "restrict": "Restrict processing of your data [Spanish]",
-      "withdraw": "Withdraw consent at any time [Spanish]"
+      "title": "5. Sus Derechos",
+      "intro": "Tiene los siguientes derechos con respecto a sus datos personales:",
+      "access": "Acceder a su información personal",
+      "correct": "Corregir datos inexactos",
+      "delete": "Solicitar la eliminación de sus datos",
+      "export": "Exportar sus datos en un formato portable",
+      "restrict": "Restringir el procesamiento de sus datos",
+      "withdraw": "Retirar el consentimiento en cualquier momento"
     },
     "cookies": {
-      "title": "6. Cookies and Tracking [Spanish]",
-      "intro": "We use cookies and similar tracking technologies to enhance your experience. Essential cookies are required for platform functionality, while optional cookies help us improve our service. [Spanish]"
+      "title": "6. Cookies y Seguimiento",
+      "intro": "Utilizamos cookies y tecnologías de seguimiento similares para mejorar su experiencia. Las cookies esenciales son necesarias para la funcionalidad de la plataforma, mientras que las cookies opcionales nos ayudan a mejorar nuestro servicio."
     },
     "children": {
-      "title": "7. Children's Privacy [Spanish]",
-      "content": "Our platform is designed for educational use by students of all ages. For users under 13, we require parental consent and limit data collection to essential information only. [Spanish]"
+      "title": "7. Privacidad de Niños",
+      "content": "Nuestra plataforma está diseñada para uso educativo por estudiantes de todas las edades. Para usuarios menores de 13 años, requerimos consentimiento parental y limitamos la recopilación de datos a información esencial únicamente."
     },
     "international": {
-      "title": "8. International Data Transfers [Spanish]",
-      "content": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers. [Spanish]"
+      "title": "8. Transferencias Internacionales de Datos",
+      "content": "Su información puede ser transferida y procesada en países distintos al suyo. Aseguramos que se implementen las salvaguardas apropiadas para dichas transferencias."
     },
     "changes": {
-      "title": "9. Changes to This Policy [Spanish]",
-      "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the \"Last Updated\" date. [Spanish]"
+      "title": "9. Cambios a esta Política",
+      "content": "Podemos actualizar esta Política de Privacidad de vez en cuando. Le notificaremos cualquier cambio publicando la nueva política en esta página y actualizando la fecha de \"Última actualización\"."
     },
     "contact": {
-      "title": "10. Contact Us [Spanish]",
-      "intro": "If you have questions about this Privacy Policy, please contact us at: [Spanish]"
+      "title": "10. Contáctanos",
+      "intro": "Si tiene preguntas sobre esta Política de Privacidad, por favor contáctenos en:"
     }
   },
   "terms": {
-    "title": "Terms of Service [Spanish]",
-    "effectiveDate": "Effective Date [Spanish]",
-    "lastUpdated": "Last Updated [Spanish]",
-    "intro": "Welcome to AI Square! These Terms of Service (\"Terms\") govern your use of our AI literacy education platform. By accessing or using AI Square, you agree to be bound by these Terms. [Spanish]",
+    "title": "Términos de Servicio",
+    "effectiveDate": "Fecha de Vigencia",
+    "lastUpdated": "Última Actualización",
+    "intro": "¡Bienvenido a AI Square! Estos Términos de Servicio (\"Términos\") rigen su uso de nuestra plataforma educativa de alfabetización en IA. Al acceder o usar AI Square, acepta estar sujeto a estos Términos.",
     "acceptance": {
-      "title": "1. Acceptance of Terms [Spanish]",
-      "content": "By creating an account or using our services, you acknowledge that you have read, understood, and agree to these Terms. If you do not agree, please do not use our platform. [Spanish]",
-      "capacity": "You must be at least 13 years old to use our services. If you are under 18, you must have parental consent. [Spanish]"
+      "title": "1. Aceptación de los Términos",
+      "content": "Al crear una cuenta o usar nuestros servicios, reconoce que ha leído, entendido y acepta estos Términos. Si no acepta, por favor no use nuestra plataforma.",
+      "capacity": "Debe tener al menos 13 años para usar nuestros servicios. Si es menor de 18, debe tener consentimiento parental."
     },
     "service": {
-      "title": "2. Description of Service [Spanish]",
-      "intro": "AI Square provides: [Spanish]",
-      "literacy": "AI literacy education content and assessments [Spanish]",
-      "pbl": "Problem-Based Learning (PBL) scenarios [Spanish]",
-      "ai": "AI-powered tutoring and feedback [Spanish]",
-      "tracking": "Progress tracking and analytics [Spanish]",
-      "multi": "Multi-language support (9 languages) [Spanish]"
+      "title": "2. Descripción del Servicio",
+      "intro": "AI Square proporciona:",
+      "literacy": "Contenido educativo y evaluaciones de alfabetización en IA",
+      "pbl": "Escenarios de Aprendizaje Basado en Problemas (PBL)",
+      "ai": "Tutoría y retroalimentación con IA",
+      "tracking": "Seguimiento de progreso y análisis",
+      "multi": "Soporte multiidioma (14 idiomas)"
     },
     "accounts": {
-      "title": "3. User Accounts [Spanish]",
-      "registration": "Registration [Spanish]",
-      "accurate": "Provide accurate and complete information [Spanish]",
-      "maintain": "Maintain and update your information [Spanish]",
-      "secure": "Keep your account credentials secure [Spanish]",
-      "responsible": "You are responsible for all activities under your account [Spanish]",
-      "types": "Account Types [Spanish]",
-      "student": "Student: Access to learning content and assessments [Spanish]",
-      "teacher": "Teacher: Additional class management features [Spanish]",
-      "admin": "Administrator: Platform management capabilities [Spanish]"
+      "title": "3. Cuentas de Usuario",
+      "registration": "Registro",
+      "accurate": "Proporcionar información precisa y completa",
+      "maintain": "Mantener y actualizar su información",
+      "secure": "Mantener seguras sus credenciales de cuenta",
+      "responsible": "Es responsable de todas las actividades bajo su cuenta",
+      "types": "Tipos de Cuenta",
+      "student": "Estudiante: Acceso a contenido de aprendizaje y evaluaciones",
+      "teacher": "Profesor: Funciones adicionales de gestión de clase",
+      "admin": "Administrador: Capacidades de gestión de plataforma"
     },
     "use": {
-      "title": "4. Acceptable Use Policy [Spanish]",
-      "permitted": "You may: [Spanish]",
-      "educational": "Use the platform for educational purposes [Spanish]",
-      "share": "Share your learning progress appropriately [Spanish]",
-      "feedback": "Provide constructive feedback [Spanish]",
-      "prohibited": "You may not: [Spanish]",
-      "misuse": "Misuse or attempt to manipulate the AI systems [Spanish]",
-      "share_credentials": "Share account credentials [Spanish]",
-      "cheat": "Engage in academic dishonesty [Spanish]",
-      "harm": "Harass, abuse, or harm other users [Spanish]",
-      "illegal": "Use the platform for illegal activities [Spanish]",
-      "scrape": "Scrape or copy content without permission [Spanish]"
+      "title": "4. Política de Uso Aceptable",
+      "permitted": "Puede:",
+      "educational": "Usar la plataforma para fines educativos",
+      "share": "Compartir su progreso de aprendizaje apropiadamente",
+      "feedback": "Proporcionar retroalimentación constructiva",
+      "prohibited": "No puede:",
+      "misuse": "Abusar o intentar manipular los sistemas de IA",
+      "share_credentials": "Compartir credenciales de cuenta",
+      "cheat": "Participar en deshonestidad académica",
+      "harm": "Acosar, abusar o dañar a otros usuarios",
+      "illegal": "Usar la plataforma para actividades ilegales",
+      "scrape": "Extraer o copiar contenido sin permiso"
     },
     "ip": {
-      "title": "5. Intellectual Property [Spanish]",
-      "platform": "Platform Content [Spanish]",
-      "ownership": "All content on AI Square, including text, graphics, logos, and software, is owned by AI Square or its licensors and protected by intellectual property laws. [Spanish]",
-      "user": "User Content [Spanish]",
-      "retain": "You retain ownership of content you create. By submitting content, you grant us a license to use it for providing and improving our services. [Spanish]",
-      "open": "Open Source [Spanish]",
-      "git": "Educational content is managed through Git and may be subject to open-source licenses. Please check individual repositories for specific license terms. [Spanish]"
+      "title": "5. Propiedad Intelectual",
+      "platform": "Contenido de la Plataforma",
+      "ownership": "Todo el contenido en AI Square, incluyendo texto, gráficos, logos y software, es propiedad de AI Square o sus licenciantes y está protegido por leyes de propiedad intelectual.",
+      "user": "Contenido del Usuario",
+      "retain": "Conserva la propiedad del contenido que crea. Al enviar contenido, nos otorga una licencia para usarlo para proporcionar y mejorar nuestros servicios.",
+      "open": "Código Abierto",
+      "git": "El contenido educativo se gestiona a través de Git y puede estar sujeto a licencias de código abierto. Por favor revise repositorios individuales para términos de licencia específicos."
     },
     "privacy": {
-      "title": "6. Privacy and Data Protection [Spanish]",
-      "content": "Your use of AI Square is also governed by our Privacy Policy. We are committed to protecting your personal information and using it only as described in our Privacy Policy. [Spanish]"
+      "title": "6. Privacidad y Protección de Datos",
+      "content": "Su uso de AI Square también se rige por nuestra Política de Privacidad. Estamos comprometidos a proteger su información personal y usarla solo como se describe en nuestra Política de Privacidad."
     },
     "ai": {
-      "title": "7. AI Services and Limitations [Spanish]",
-      "disclaimer": "Our AI-powered features are designed to assist learning but are not perfect. We do not guarantee the accuracy of AI-generated content or feedback. [Spanish]",
-      "educational": "AI responses are for educational purposes only [Spanish]",
-      "verify": "Always verify important information independently [Spanish]",
-      "improve": "We continuously work to improve AI accuracy [Spanish]"
+      "title": "7. Servicios de IA y Limitaciones",
+      "disclaimer": "Nuestras funciones con IA están diseñadas para asistir el aprendizaje pero no son perfectas. No garantizamos la precisión del contenido o retroalimentación generada por IA.",
+      "educational": "Las respuestas de IA son solo para fines educativos",
+      "verify": "Siempre verifique información importante independientemente",
+      "improve": "Trabajamos continuamente para mejorar la precisión de la IA"
     },
     "disclaimers": {
-      "title": "8. Disclaimers and Limitations [Spanish]",
-      "asis": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND.",
-      "liability": "To the fullest extent permitted by law, AI Square shall not be liable for any indirect, incidental, special, consequential, or punitive damages. [Spanish]"
+      "title": "8. Exenciones de Responsabilidad y Limitaciones",
+      "asis": "EL SERVICIO SE PROPORCIONA \"TAL COMO ESTÁ\" SIN GARANTÍAS DE NINGÚN TIPO.",
+      "liability": "En la medida máxima permitida por la ley, AI Square no será responsable por daños indirectos, incidentales, especiales, consecuentes o punitivos."
     },
     "modifications": {
-      "title": "9. Modifications to Terms [Spanish]",
-      "content": "We may modify these Terms at any time. We will notify users of material changes. Continued use after changes constitutes acceptance of the new Terms. [Spanish]"
+      "title": "9. Modificaciones a los Términos",
+      "content": "Podemos modificar estos Términos en cualquier momento. Notificaremos a los usuarios de cambios materiales. El uso continuado después de los cambios constituye aceptación de los nuevos Términos."
     },
     "termination": {
-      "title": "10. Termination [Spanish]",
-      "rights": "We reserve the right to suspend or terminate accounts that violate these Terms. You may delete your account at any time. [Spanish]"
+      "title": "10. Terminación",
+      "rights": "Nos reservamos el derecho de suspender o terminar cuentas que violen estos Términos. Puede eliminar su cuenta en cualquier momento."
     },
     "law": {
-      "title": "11. Governing Law [Spanish]",
-      "content": "These Terms are governed by the laws of the jurisdiction where AI Square operates, without regard to conflict of law principles. [Spanish]"
+      "title": "11. Ley Aplicable",
+      "content": "Estos Términos se rigen por las leyes de la jurisdicción donde opera AI Square, sin consideración a principios de conflicto de leyes."
     },
     "contact": {
-      "title": "12. Contact Information [Spanish]",
-      "intro": "For questions about these Terms, please contact us: [Spanish]"
+      "title": "12. Información de Contacto",
+      "intro": "Para preguntas sobre estos Términos, por favor contáctenos:"
     },
-    "agreement": "By using AI Square, you acknowledge that you have read and agree to these Terms of Service. [Spanish]"
+    "agreement": "Al usar AI Square, reconoce que ha leído y acepta estos Términos de Servicio."
   },
   "common": {
-    "backToHome": "Back to Home [Spanish]"
+    "backToHome": "Volver al Inicio"
   }
 }

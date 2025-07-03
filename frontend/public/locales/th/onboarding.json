@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "Welcome, {{name}}! [Thai]",
-    "subtitle": "Let's get you started on your AI literacy journey [Thai]",
+    "greeting": "ยินดีต้อนรับ, {{name}}!",
+    "subtitle": "มาเริ่มต้นการเดินทางสู่ความรู้ด้าน AI กันเถอะ",
     "step1": {
-      "title": "Discover Your Path [Thai]",
-      "description": "AI Square helps you understand and master AI literacy [Thai]",
-      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [Thai]",
-      "assessment": "Smart Assessment [Thai]",
-      "assessmentDesc": "Discover your current AI knowledge level [Thai]",
-      "learning": "Personalized Learning [Thai]",
-      "learningDesc": "Get tailored recommendations based on your goals [Thai]"
+      "title": "ค้นพบเส้นทางของคุณ",
+      "description": "AI Square ช่วยคุณเข้าใจและเชี่ยวชาญความรู้ด้าน AI",
+      "content": "เราจะช่วยคุณระบุจุดแข็งและพื้นที่ที่ต้องพัฒนาผ่านการประเมินแบบส่วนบุคคลและประสบการณ์การเรียนรู้แบบมีคำแนะนำ",
+      "assessment": "การประเมินอัจฉริยะ",
+      "assessmentDesc": "ค้นพบระดับความรู้ AI ปัจจุบันของคุณ",
+      "learning": "การเรียนรู้แบบส่วนบุคคล",
+      "learningDesc": "รับคำแนะนำที่ปรับแต่งตามเป้าหมายของคุณ"
     },
     "step2": {
-      "title": "Four Core Domains [Thai]",
-      "description": "Master the essential areas of AI literacy [Thai]",
-      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [Thai]",
-      "domains": "AI Literacy Domains [Thai]",
-      "engaging": "Engaging with AI [Thai]",
-      "creating": "Creating with AI [Thai]",
-      "managing": "Managing with AI [Thai]",
-      "designing": "Designing with AI [Thai]"
+      "title": "สี่ด้านหลัก",
+      "description": "เชี่ยวชาญด้านสำคัญของความรู้ด้าน AI",
+      "content": "กรอบงานที่ครบถ้วนของเราครอบคลุมทุกสิ่งที่คุณจำเป็นต้องรู้เกี่ยวกับการทำงานกับ AI อย่างมีประสิทธิภาพและมีความรับผิดชอบ",
+      "domains": "ด้านความรู้ AI",
+      "engaging": "การมีส่วนร่วมกับ AI",
+      "creating": "การสร้างสรรค์ด้วย AI",
+      "managing": "การจัดการด้วย AI",
+      "designing": "การออกแบบด้วย AI"
     },
     "step3": {
-      "title": "Start Your Journey [Thai]",
-      "description": "Begin with an assessment and unlock your potential [Thai]",
-      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [Thai]",
-      "ready": "What you'll get: [Thai]",
-      "benefit1": "Detailed assessment of your AI knowledge [Thai]",
-      "benefit2": "Personalized learning path recommendations [Thai]",
-      "benefit3": "Interactive scenarios and practical exercises [Thai]"
+      "title": "เริ่มต้นการเดินทางของคุณ",
+      "description": "เริ่มต้นด้วยการประเมินและปลดล็อกศักยภาพของคุณ",
+      "content": "พร้อมที่จะค้นพบระดับความรู้ด้าน AI ของคุณและรับคำแนะนำการเรียนรู้แบบส่วนบุคคลหรือยัง?",
+      "ready": "สิ่งที่คุณจะได้รับ:",
+      "benefit1": "การประเมินความรู้ AI ของคุณอย่างละเอียด",
+      "benefit2": "คำแนะนำเส้นทางการเรียนรู้แบบส่วนบุคคล",
+      "benefit3": "สถานการณ์จำลองแบบโต้ตอบและแบบฝึกหัดเชิงปฏิบัติ"
     },
-    "startJourney": "Start Your Journey [Thai]"
+    "startJourney": "เริ่มต้นการเดินทางของคุณ"
   },
   "goals": {
-    "title": "What would you like to achieve? [Thai]",
-    "subtitle": "Select your learning goals to get personalized recommendations [Thai]",
+    "title": "คุณต้องการบรรลุอะไร?",
+    "subtitle": "เลือกเป้าหมายการเรียนรู้ของคุณเพื่อรับคำแนะนำแบบส่วนบุคคล",
     "understand": {
-      "title": "Understand AI Fundamentals [Thai]",
-      "description": "Learn the basics of AI, machine learning, and how AI systems work [Thai]"
+      "title": "เข้าใจพื้นฐาน AI",
+      "description": "เรียนรู้พื้นฐานของ AI, การเรียนรู้ของเครื่อง และวิธีการทำงานของระบบ AI"
     },
     "create": {
-      "title": "Create Content with AI [Thai]",
-      "description": "Use AI tools for writing, design, art, and creative projects [Thai]"
+      "title": "สร้างเนื้อหาด้วย AI",
+      "description": "ใช้เครื่องมือ AI สำหรับการเขียน, การออกแบบ, ศิลปะ และโปรเจกต์สร้างสรรค์"
     },
     "analyze": {
-      "title": "Analyze Data with AI [Thai]",
-      "description": "Apply AI for data analysis, insights, and decision-making [Thai]"
+      "title": "วิเคราะห์ข้อมูลด้วย AI",
+      "description": "ประยุกต์ใช้ AI สำหรับการวิเคราะห์ข้อมูล, ข้อมูลเชิงลึก และการตัดสินใจ"
     },
     "build": {
-      "title": "Build AI Solutions [Thai]",
-      "description": "Develop and implement AI systems and applications [Thai]"
+      "title": "สร้างโซลูชัน AI",
+      "description": "พัฒนาและนำระบบและแอปพลิเคชัน AI ไปใช้"
     },
     "teach": {
-      "title": "Teach AI to Others [Thai]",
-      "description": "Educate and guide others in understanding and using AI [Thai]"
+      "title": "สอน AI ให้ผู้อื่น",
+      "description": "ให้ความรู้และแนะนำผู้อื่นในการเข้าใจและใช้ AI"
     },
     "ethical": {
-      "title": "Ensure Ethical AI Use [Thai]",
-      "description": "Understand and implement responsible AI practices [Thai]"
+      "title": "รับประกันการใช้ AI อย่างมีจริยธรรม",
+      "description": "เข้าใจและนำแนวปฏิบัติ AI ที่มีความรับผิดชอบไปใช้"
     },
-    "recommendedDomains": "Recommended domains [Thai]",
-    "selected": "{{count}} goals selected [Thai]",
-    "selectAtLeastOne": "Please select at least one learning goal [Thai]",
-    "continue": "Continue to Assessment [Thai]",
-    "skipForNow": "Skip for now [Thai]",
-    "helpText": "Don't worry, you can always change these later in your profile settings. [Thai]"
+    "recommendedDomains": "ด้านที่แนะนำ",
+    "selected": "เลือกเป้าหมาย {{count}} เป้าหมาย",
+    "selectAtLeastOne": "กรุณาเลือกเป้าหมายการเรียนรู้อย่างน้อยหนึ่งเป้าหมาย",
+    "continue": "ดำเนินการต่อไปยังการประเมิน",
+    "skipForNow": "ข้ามไปก่อน",
+    "helpText": "ไม่ต้องกังวล คุณสามารถเปลี่ยนแปลงสิ่งเหล่านี้ได้ในภายหลังในการตั้งค่าโปรไฟล์ของคุณ"
   },
   "progress": {
-    "welcome": "Welcome [Thai]",
-    "identity": "Identity [Thai]",
-    "goals": "Goals [Thai]"
+    "welcome": "ยินดีต้อนรับ",
+    "identity": "อัตลักษณ์",
+    "goals": "เป้าหมาย"
   },
   "identity": {
-    "title": "Who are you? [Thai]",
-    "subtitle": "Help us personalize your AI learning journey [Thai]",
+    "title": "คุณคือใคร?",
+    "subtitle": "ช่วยเราปรับแต่งการเดินทางการเรียนรู้ AI ของคุณ",
     "student": {
-      "title": "Student [Thai]",
-      "description": "I'm studying and want to learn AI for my academic and future career [Thai]"
+      "title": "นักเรียน",
+      "description": "ฉันกำลังศึกษาและต้องการเรียนรู้ AI สำหรับการศึกษาและอาชีพในอนาคต"
     },
     "teacher": {
-      "title": "Educator [Thai]",
-      "description": "I teach others and want to integrate AI into my curriculum [Thai]"
+      "title": "นักการศึกษา",
+      "description": "ฉันสอนผู้อื่นและต้องการรวม AI เข้ากับหลักสูตรของฉัน"
     },
     "professional": {
-      "title": "Professional [Thai]",
-      "description": "I work in industry and want to leverage AI in my role [Thai]"
+      "title": "ผู้เชี่ยวชาญ",
+      "description": "ฉันทำงานในอุตสาหกรรมและต้องการใช้ประโยชน์จาก AI ในบทบาทของฉัน"
     },
     "learner": {
-      "title": "Lifelong Learner [Thai]",
-      "description": "I'm curious about AI and want to explore its possibilities [Thai]"
+      "title": "ผู้เรียนรู้ตลอดชีวิต",
+      "description": "ฉันสนใจ AI และต้องการสำรวจความเป็นไปได้ของมัน"
     }
   },
   "button": {
-    "back": "Back [Thai]",
-    "continue": "Continue [Thai]",
-    "saving": "Saving... [Thai]"
+    "back": "ย้อนกลับ",
+    "continue": "ดำเนินการต่อ",
+    "saving": "กำลังบันทึก..."
   }
 }

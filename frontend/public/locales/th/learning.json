@@ -1,21 +1,21 @@
 {
   "learningPath": {
-    "title": "Your Personalized Learning Path [Thai]",
-    "subtitle": "Based on your assessment results, here's your recommended learning journey [Thai]",
-    "yourProgress": "Your Progress Overview [Thai]",
-    "currentScore": "Current [Thai]",
-    "target": "Target [Thai]",
-    "completed": "completed [Thai]",
-    "filteringBy": "Showing recommendations for: {{domain}} [Thai]",
-    "clearFilter": "Show all recommendations [Thai]",
-    "recommendedPath": "Recommended Learning Path [Thai]",
-    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [Thai]",
-    "startLearning": "Start Learning [Thai]",
-    "progress": "Progress [Thai]",
-    "weakDomainReason": "Recommended to strengthen {{domain}} (current: {{score}}%) [Thai]",
-    "strongDomainReason": "Advanced challenge for your strong {{domain}} skills ({{score}}%) [Thai]",
-    "averageDomainReason": "Continue building {{domain}} expertise (current: {{score}}%) [Thai]",
-    "goToDashboard": "Go to Dashboard [Thai]",
-    "dashboardHint": "Track your overall progress and continue your learning journey [Thai]"
+    "title": "เส้นทางการเรียนรู้ส่วนบุคคลของคุณ",
+    "subtitle": "ตามผลการประเมินของคุณ นี่คือการเดินทางการเรียนรู้ที่แนะนำ",
+    "yourProgress": "ภาพรวมความคืบหน้าของคุณ",
+    "currentScore": "ปัจจุบัน",
+    "target": "เป้าหมาย",
+    "completed": "เสร็จสิ้น",
+    "filteringBy": "แสดงคำแนะนำสำหรับ: {{domain}}",
+    "clearFilter": "แสดงคำแนะนำทั้งหมด",
+    "recommendedPath": "เส้นทางการเรียนรู้ที่แนะนำ",
+    "estimatedTime": "เวลาทั้งหมด: {{hours}}ช {{minutes}}น",
+    "startLearning": "เริ่มเรียนรู้",
+    "progress": "ความคืบหน้า",
+    "weakDomainReason": "แนะนำให้เสริมความแข็งแกร่ง {{domain}} (ปัจจุบัน: {{score}}%)",
+    "strongDomainReason": "ความท้าทายขั้นสูงสำหรับทักษะ {{domain}} ที่แข็งแกร่งของคุณ ({{score}}%)",
+    "averageDomainReason": "ต่อการสร้างความเชี่ยวชาญ {{domain}} (ปัจจุบัน: {{score}}%)",
+    "goToDashboard": "ไปที่แดชบอร์ด",
+    "dashboardHint": "ติดตามความคืบหน้าโดยรวมของคุณและดำเนินการเดินทางการเรียนรู้ต่อไป"
   }
 }

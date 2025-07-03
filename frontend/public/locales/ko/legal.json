@@ -1,171 +1,171 @@
 {
   "privacy": {
-    "title": "Privacy Policy [Korean]",
-    "lastUpdated": "Last updated [Korean]",
-    "intro": "AI Square (\"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI literacy education platform. [Korean]",
+    "title": "개인정보 보호정책",
+    "lastUpdated": "최종 업데이트",
+    "intro": "AI Square(\"당사\", \"저희\", 또는 \"우리\")는 귀하의 개인정보를 보호하기 위해 최선을 다하고 있습니다. 이 개인정보 보호정책은 귀하가 당사의 AI 리터러시 교육 플랫폼을 이용할 때 당사가 어떻게 정보를 수집, 사용, 공개, 보호하는지를 설명합니다.",
     "infoCollect": {
-      "title": "1. Information We Collect [Korean]",
-      "personal": "Personal Information [Korean]",
-      "email": "Email address [Korean]",
-      "name": "Name (optional) [Korean]",
-      "role": "User role (student, teacher, admin) [Korean]",
-      "language": "Language preference [Korean]",
-      "usage": "Usage Data [Korean]",
-      "learning": "Learning progress and assessment results [Korean]",
-      "interactions": "Interactions with AI tutors [Korean]",
-      "scenarios": "PBL scenario completion data [Korean]",
-      "analytics": "Platform usage analytics [Korean]",
-      "technical": "Technical Data [Korean]",
-      "browser": "Browser type and version [Korean]",
-      "device": "Device information [Korean]",
-      "ip": "IP address (anonymized) [Korean]",
-      "timezone": "Time zone settings [Korean]"
+      "title": "1. 수집하는 정보",
+      "personal": "개인정보",
+      "email": "이메일 주소",
+      "name": "이름 (선택사항)",
+      "role": "사용자 역할 (학생, 교사, 관리자)",
+      "language": "언어 설정",
+      "usage": "사용 데이터",
+      "learning": "학습 진도 및 평가 결과",
+      "interactions": "AI 튜터와의 상호작용",
+      "scenarios": "PBL 시나리오 완료 데이터",
+      "analytics": "플랫폼 사용 분석",
+      "technical": "기술 데이터",
+      "browser": "브라우저 유형 및 버전",
+      "device": "기기 정보",
+      "ip": "IP 주소 (익명화)",
+      "timezone": "시간대 설정"
     },
     "howUse": {
-      "title": "2. How We Use Your Information [Korean]",
-      "provide": "To provide and maintain our service [Korean]",
-      "personalize": "To personalize your learning experience [Korean]",
-      "communicate": "To communicate with you about your account [Korean]",
-      "improve": "To improve our platform and develop new features [Korean]",
-      "analyze": "To analyze usage patterns and optimize performance [Korean]",
-      "security": "To detect and prevent security threats [Korean]"
+      "title": "2. 정보 사용 방법",
+      "provide": "서비스 제공 및 유지를 위해",
+      "personalize": "학습 경험을 개인화하기 위해",
+      "communicate": "계정에 관한 연락을 위해",
+      "improve": "플랫폼 개선 및 새로운 기능 개발을 위해",
+      "analyze": "사용 패턴 분석 및 성능 최적화를 위해",
+      "security": "보안 위협 탐지 및 방지를 위해"
     },
     "storage": {
-      "title": "3. Data Storage and Security [Korean]",
-      "location": "Your data is stored securely on Google Cloud Platform servers. We implement appropriate technical and organizational measures to protect your personal information. [Korean]",
-      "encryption": "Data encryption in transit and at rest [Korean]",
-      "access": "Restricted access controls [Korean]",
-      "monitoring": "Regular security monitoring [Korean]",
-      "backup": "Secure backup procedures [Korean]"
+      "title": "3. 데이터 저장 및 보안",
+      "location": "귀하의 데이터는 Google Cloud Platform 서버에 안전하게 저장됩니다. 당사는 귀하의 개인정보를 보호하기 위해 적절한 기술적, 조직적 조치를 시행하고 있습니다.",
+      "encryption": "전송 중 및 저장 시 데이터 암호화",
+      "access": "제한된 접근 제어",
+      "monitoring": "정기적인 보안 모니터링",
+      "backup": "안전한 백업 절차"
     },
     "sharing": {
-      "title": "4. Data Sharing and Disclosure [Korean]",
-      "intro": "We do not sell, trade, or rent your personal information. We may share your information in the following situations: [Korean]",
-      "consent": "With your consent [Korean]",
-      "legal": "To comply with legal obligations [Korean]",
-      "protect": "To protect our rights and safety [Korean]",
-      "service": "With service providers who assist our operations [Korean]"
+      "title": "4. 데이터 공유 및 공개",
+      "intro": "당사는 귀하의 개인정보를 판매, 거래 또는 임대하지 않습니다. 다음 상황에서만 귀하의 정보를 공유할 수 있습니다:",
+      "consent": "귀하의 동의가 있는 경우",
+      "legal": "법적 의무를 준수하기 위해",
+      "protect": "당사의 권리와 안전을 보호하기 위해",
+      "service": "당사 운영을 지원하는 서비스 제공업체와"
     },
     "rights": {
-      "title": "5. Your Rights [Korean]",
-      "intro": "You have the following rights regarding your personal data: [Korean]",
-      "access": "Access your personal information [Korean]",
-      "correct": "Correct inaccurate data [Korean]",
-      "delete": "Request deletion of your data [Korean]",
-      "export": "Export your data in a portable format [Korean]",
-      "restrict": "Restrict processing of your data [Korean]",
-      "withdraw": "Withdraw consent at any time [Korean]"
+      "title": "5. 귀하의 권리",
+      "intro": "귀하는 개인 데이터와 관련하여 다음과 같은 권리를 가집니다:",
+      "access": "개인정보에 접근",
+      "correct": "부정확한 데이터 수정",
+      "delete": "데이터 삭제 요청",
+      "export": "이식 가능한 형식으로 데이터 내보내기",
+      "restrict": "데이터 처리 제한",
+      "withdraw": "언제든지 동의 철회"
     },
     "cookies": {
-      "title": "6. Cookies and Tracking [Korean]",
-      "intro": "We use cookies and similar tracking technologies to enhance your experience. Essential cookies are required for platform functionality, while optional cookies help us improve our service. [Korean]"
+      "title": "6. 쿠키 및 추적",
+      "intro": "당사는 귀하의 경험을 향상시키기 위해 쿠키 및 유사한 추적 기술을 사용합니다. 필수 쿠키는 플랫폼 기능에 필요하며, 선택적 쿠키는 서비스 개선에 도움이 됩니다."
     },
     "children": {
-      "title": "7. Children's Privacy [Korean]",
-      "content": "Our platform is designed for educational use by students of all ages. For users under 13, we require parental consent and limit data collection to essential information only. [Korean]"
+      "title": "7. 아동 개인정보 보호",
+      "content": "당사 플랫폼은 모든 연령대의 학생들이 교육적으로 사용할 수 있도록 설계되었습니다. 13세 미만의 사용자에 대해서는 부모의 동의를 요구하며 데이터 수집을 필수 정보로만 제한합니다."
     },
     "international": {
-      "title": "8. International Data Transfers [Korean]",
-      "content": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers. [Korean]"
+      "title": "8. 국제 데이터 전송",
+      "content": "귀하의 정보는 거주 국가가 아닌 다른 국가로 전송되어 처리될 수 있습니다. 당사는 이러한 전송에 대해 적절한 보호 조치가 마련되어 있음을 보장합니다."
     },
     "changes": {
-      "title": "9. Changes to This Policy [Korean]",
-      "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the \"Last Updated\" date. [Korean]"
+      "title": "9. 정책 변경사항",
+      "content": "당사는 이 개인정보 보호정책을 수시로 업데이트할 수 있습니다. 변경사항이 있을 경우 이 페이지에 새로운 정책을 게시하고 \"최종 업데이트\" 날짜를 갱신하여 알려드립니다."
     },
     "contact": {
-      "title": "10. Contact Us [Korean]",
-      "intro": "If you have questions about this Privacy Policy, please contact us at: [Korean]"
+      "title": "10. 문의하기",
+      "intro": "이 개인정보 보호정책에 대한 질문이 있으시면 다음으로 연락해 주세요:"
     }
   },
   "terms": {
-    "title": "Terms of Service [Korean]",
-    "effectiveDate": "Effective Date [Korean]",
-    "lastUpdated": "Last Updated [Korean]",
-    "intro": "Welcome to AI Square! These Terms of Service (\"Terms\") govern your use of our AI literacy education platform. By accessing or using AI Square, you agree to be bound by these Terms. [Korean]",
+    "title": "서비스 이용약관",
+    "effectiveDate": "발효일",
+    "lastUpdated": "최종 업데이트",
+    "intro": "AI Square에 오신 것을 환영합니다! 이 서비스 이용약관(\"약관\")은 당사의 AI 리터러시 교육 플랫폼 이용을 규정합니다. AI Square에 접근하거나 이용함으로써 이 약관에 구속되는 것에 동의하게 됩니다.",
     "acceptance": {
-      "title": "1. Acceptance of Terms [Korean]",
-      "content": "By creating an account or using our services, you acknowledge that you have read, understood, and agree to these Terms. If you do not agree, please do not use our platform. [Korean]",
-      "capacity": "You must be at least 13 years old to use our services. If you are under 18, you must have parental consent. [Korean]"
+      "title": "1. 약관 승인",
+      "content": "계정을 생성하거나 당사 서비스를 이용함으로써 이 약관을 읽고, 이해하고, 동의했음을 인정하게 됩니다. 동의하지 않는다면 당사 플랫폼을 이용하지 마세요.",
+      "capacity": "당사 서비스를 이용하려면 최소 13세 이상이어야 합니다. 18세 미만인 경우 부모의 동의가 필요합니다."
     },
     "service": {
-      "title": "2. Description of Service [Korean]",
-      "intro": "AI Square provides: [Korean]",
-      "literacy": "AI literacy education content and assessments [Korean]",
-      "pbl": "Problem-Based Learning (PBL) scenarios [Korean]",
-      "ai": "AI-powered tutoring and feedback [Korean]",
-      "tracking": "Progress tracking and analytics [Korean]",
-      "multi": "Multi-language support (9 languages) [Korean]"
+      "title": "2. 서비스 설명",
+      "intro": "AI Square는 다음을 제공합니다:",
+      "literacy": "AI 리터러시 교육 콘텐츠 및 평가",
+      "pbl": "문제 기반 학습(PBL) 시나리오",
+      "ai": "AI 기반 튜터링 및 피드백",
+      "tracking": "진도 추적 및 분석",
+      "multi": "다국어 지원 (9개 언어)"
     },
     "accounts": {
-      "title": "3. User Accounts [Korean]",
-      "registration": "Registration [Korean]",
-      "accurate": "Provide accurate and complete information [Korean]",
-      "maintain": "Maintain and update your information [Korean]",
-      "secure": "Keep your account credentials secure [Korean]",
-      "responsible": "You are responsible for all activities under your account [Korean]",
-      "types": "Account Types [Korean]",
-      "student": "Student: Access to learning content and assessments [Korean]",
-      "teacher": "Teacher: Additional class management features [Korean]",
-      "admin": "Administrator: Platform management capabilities [Korean]"
+      "title": "3. 사용자 계정",
+      "registration": "등록",
+      "accurate": "정확하고 완전한 정보 제공",
+      "maintain": "정보 유지 및 업데이트",
+      "secure": "계정 자격 증명 보안 유지",
+      "responsible": "계정에서 발생하는 모든 활동에 대한 책임",
+      "types": "계정 유형",
+      "student": "학생: 학습 콘텐츠 및 평가 접근",
+      "teacher": "교사: 추가 수업 관리 기능",
+      "admin": "관리자: 플랫폼 관리 기능"
     },
     "use": {
-      "title": "4. Acceptable Use Policy [Korean]",
-      "permitted": "You may: [Korean]",
-      "educational": "Use the platform for educational purposes [Korean]",
-      "share": "Share your learning progress appropriately [Korean]",
-      "feedback": "Provide constructive feedback [Korean]",
-      "prohibited": "You may not: [Korean]",
-      "misuse": "Misuse or attempt to manipulate the AI systems [Korean]",
-      "share_credentials": "Share account credentials [Korean]",
-      "cheat": "Engage in academic dishonesty [Korean]",
-      "harm": "Harass, abuse, or harm other users [Korean]",
-      "illegal": "Use the platform for illegal activities [Korean]",
-      "scrape": "Scrape or copy content without permission [Korean]"
+      "title": "4. 허용 가능한 사용 정책",
+      "permitted": "허용되는 행위:",
+      "educational": "교육 목적으로 플랫폼 사용",
+      "share": "학습 진도를 적절히 공유",
+      "feedback": "건설적인 피드백 제공",
+      "prohibited": "금지되는 행위:",
+      "misuse": "AI 시스템 오용 또는 조작 시도",
+      "share_credentials": "계정 자격 증명 공유",
+      "cheat": "학업 부정행위 참여",
+      "harm": "다른 사용자를 괴롭히거나 해치는 행위",
+      "illegal": "불법 활동으로 플랫폼 사용",
+      "scrape": "허가 없이 콘텐츠 스크래핑 또는 복사"
     },
     "ip": {
-      "title": "5. Intellectual Property [Korean]",
-      "platform": "Platform Content [Korean]",
-      "ownership": "All content on AI Square, including text, graphics, logos, and software, is owned by AI Square or its licensors and protected by intellectual property laws. [Korean]",
-      "user": "User Content [Korean]",
-      "retain": "You retain ownership of content you create. By submitting content, you grant us a license to use it for providing and improving our services. [Korean]",
-      "open": "Open Source [Korean]",
-      "git": "Educational content is managed through Git and may be subject to open-source licenses. Please check individual repositories for specific license terms. [Korean]"
+      "title": "5. 지적 재산권",
+      "platform": "플랫폼 콘텐츠",
+      "ownership": "텍스트, 그래픽, 로고, 소프트웨어를 포함한 AI Square의 모든 콘텐츠는 AI Square 또는 그 라이선서의 소유이며 지적 재산권법으로 보호됩니다.",
+      "user": "사용자 콘텐츠",
+      "retain": "생성한 콘텐츠의 소유권은 유지됩니다. 콘텐츠를 제출함으로써 서비스 제공 및 개선을 위해 사용할 수 있는 라이선스를 당사에 부여하게 됩니다.",
+      "open": "오픈 소스",
+      "git": "교육 콘텐츠는 Git을 통해 관리되며 오픈 소스 라이선스의 적용을 받을 수 있습니다. 특정 라이선스 조건은 개별 저장소를 확인해 주세요."
     },
     "privacy": {
-      "title": "6. Privacy and Data Protection [Korean]",
-      "content": "Your use of AI Square is also governed by our Privacy Policy. We are committed to protecting your personal information and using it only as described in our Privacy Policy. [Korean]"
+      "title": "6. 개인정보 보호 및 데이터 보호",
+      "content": "AI Square 사용은 당사의 개인정보 보호정책에도 규정됩니다. 당사는 개인정보를 보호하고 개인정보 보호정책에 설명된 대로만 사용하기 위해 노력하고 있습니다."
     },
     "ai": {
-      "title": "7. AI Services and Limitations [Korean]",
-      "disclaimer": "Our AI-powered features are designed to assist learning but are not perfect. We do not guarantee the accuracy of AI-generated content or feedback. [Korean]",
-      "educational": "AI responses are for educational purposes only [Korean]",
-      "verify": "Always verify important information independently [Korean]",
-      "improve": "We continuously work to improve AI accuracy [Korean]"
+      "title": "7. AI 서비스 및 제한사항",
+      "disclaimer": "당사의 AI 기반 기능은 학습을 돕기 위해 설계되었지만 완벽하지 않습니다. AI 생성 콘텐츠나 피드백의 정확성을 보장하지 않습니다.",
+      "educational": "AI 응답은 교육 목적으로만 제공됩니다",
+      "verify": "중요한 정보는 항상 독립적으로 확인하세요",
+      "improve": "AI 정확성 향상을 위해 지속적으로 노력하고 있습니다"
     },
     "disclaimers": {
-      "title": "8. Disclaimers and Limitations [Korean]",
-      "asis": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND.",
-      "liability": "To the fullest extent permitted by law, AI Square shall not be liable for any indirect, incidental, special, consequential, or punitive damages. [Korean]"
+      "title": "8. 면책조항 및 제한사항",
+      "asis": "서비스는 어떠한 종류의 보증 없이 \"있는 그대로\" 제공됩니다.",
+      "liability": "법률이 허용하는 최대 범위에서 AI Square는 간접적, 우발적, 특별, 결과적 또는 징벌적 손해에 대해 책임지지 않습니다."
     },
     "modifications": {
-      "title": "9. Modifications to Terms [Korean]",
-      "content": "We may modify these Terms at any time. We will notify users of material changes. Continued use after changes constitutes acceptance of the new Terms. [Korean]"
+      "title": "9. 약관 수정",
+      "content": "당사는 언제든지 이 약관을 수정할 수 있습니다. 중요한 변경사항에 대해서는 사용자에게 알려드립니다. 변경 후 계속 사용하는 것은 새로운 약관에 동의하는 것으로 간주됩니다."
     },
     "termination": {
-      "title": "10. Termination [Korean]",
-      "rights": "We reserve the right to suspend or terminate accounts that violate these Terms. You may delete your account at any time. [Korean]"
+      "title": "10. 서비스 종료",
+      "rights": "당사는 이 약관을 위반하는 계정을 정지하거나 종료할 권리를 보유합니다. 언제든지 계정을 삭제할 수 있습니다."
     },
     "law": {
-      "title": "11. Governing Law [Korean]",
-      "content": "These Terms are governed by the laws of the jurisdiction where AI Square operates, without regard to conflict of law principles. [Korean]"
+      "title": "11. 준거법",
+      "content": "이 약관은 법률 충돌 원칙에 관계없이 AI Square가 운영되는 관할권의 법률에 의해 규정됩니다."
     },
     "contact": {
-      "title": "12. Contact Information [Korean]",
-      "intro": "For questions about these Terms, please contact us: [Korean]"
+      "title": "12. 연락처 정보",
+      "intro": "이 약관에 대한 질문이 있으시면 다음으로 연락해 주세요:"
     },
-    "agreement": "By using AI Square, you acknowledge that you have read and agree to these Terms of Service. [Korean]"
+    "agreement": "AI Square를 사용함으로써 이 서비스 이용약관을 읽고 동의했음을 인정하게 됩니다."
   },
   "common": {
-    "backToHome": "Back to Home [Korean]"
+    "backToHome": "홈으로 돌아가기"
   }
 }

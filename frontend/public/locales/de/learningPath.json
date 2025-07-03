@@ -1,43 +1,43 @@
 {
-  "title": "Your Learning Path [German]",
-  "subtitle": "Personalized recommendations based on your assessment [German]",
-  "yourProgress": "Your Progress [German]",
-  "currentScore": "Current Score [German]",
-  "targetScore": "Target Score [German]",
-  "completed": "completed [German]",
-  "recommendedPath": "Recommended Learning Path [German]",
-  "startLearning": "Start Learning [German]",
-  "estimatedTime": "Estimated time [German]",
-  "weakDomainReason": "This is your weakest area with {{score}}% score [German]",
+  "title": "Ihr Lernpfad",
+  "subtitle": "Personalisierte Empfehlungen basierend auf Ihrer Bewertung",
+  "yourProgress": "Ihr Fortschritt",
+  "currentScore": "Aktuelle Punktzahl",
+  "targetScore": "Ziel-Punktzahl",
+  "completed": "abgeschlossen",
+  "recommendedPath": "Empfohlener Lernpfad",
+  "startLearning": "Lernen beginnen",
+  "estimatedTime": "Geschätzte Zeit",
+  "weakDomainReason": "Dies ist Ihr schwächster Bereich mit {{score}}% Punktzahl",
   "difficulty": {
-    "beginner": "Beginner [German]",
-    "intermediate": "Intermediate [German]",
-    "advanced": "Advanced [German]"
+    "beginner": "Anfänger",
+    "intermediate": "Fortgeschrittene",
+    "advanced": "Experte"
   },
   "noAssessment": {
-    "title": "No Assessment Found [German]",
-    "description": "Please complete the assessment first to get personalized recommendations [German]",
-    "button": "Take Assessment [German]"
+    "title": "Keine Bewertung gefunden",
+    "description": "Bitte schließen Sie zuerst die Bewertung ab, um personalisierte Empfehlungen zu erhalten",
+    "button": "Bewertung durchführen"
   },
   "domains": {
-    "Engaging_with_AI": "Engaging with AI [German]",
-    "Creating_with_AI": "Creating with AI [German]",
-    "Managing_with_AI": "Managing with AI [German]",
-    "Designing_with_AI": "Designing with AI [German]"
+    "Engaging_with_AI": "Interaktion mit KI",
+    "Creating_with_AI": "Kreativität mit KI",
+    "Managing_with_AI": "Management mit KI",
+    "Designing_with_AI": "Design mit KI"
   },
-  "strongDomainReason": "Advance your skills in {{domain}} (current: {{score}}%) [German]",
-  "averageDomainReason": "Improve your {{domain}} skills (current: {{score}}%) [German]",
+  "strongDomainReason": "Verbessern Sie Ihre Fähigkeiten in {{domain}} (aktuell: {{score}}%)",
+  "averageDomainReason": "Verbessern Sie Ihre {{domain}}-Fähigkeiten (aktuell: {{score}}%)",
   "learningPath": {
-    "filteringBy": "Showing items for {{domain}} [German]",
-    "clearFilter": "Clear filter [German]",
-    "recommendedPath": "Recommended Learning Path [German]",
-    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [German]",
-    "startLearning": "Start Learning [German]",
-    "progress": "Progress [German]",
-    "goToDashboard": "Go to Dashboard [German]",
-    "dashboardHint": "Track your overall progress and achievements in the dashboard [German]"
+    "filteringBy": "Anzeige von Elementen für {{domain}}",
+    "clearFilter": "Filter löschen",
+    "recommendedPath": "Empfohlener Lernpfad",
+    "estimatedTime": "Gesamtzeit: {{hours}}h {{minutes}}m",
+    "startLearning": "Lernen beginnen",
+    "progress": "Fortschritt",
+    "goToDashboard": "Zum Dashboard",
+    "dashboardHint": "Verfolgen Sie Ihren Gesamtfortschritt und Ihre Erfolge im Dashboard"
   },
-  "showAll": "Show All [German]",
-  "focusOnWeakAreas": "Focus on Weak Areas [German]",
-  "backToDashboard": "Back to Dashboard [German]"
+  "showAll": "Alle anzeigen",
+  "focusOnWeakAreas": "Fokus auf schwache Bereiche",
+  "backToDashboard": "Zurück zum Dashboard"
 }

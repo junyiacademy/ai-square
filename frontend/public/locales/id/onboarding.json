@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "Welcome, {{name}}! [Indonesian]",
-    "subtitle": "Let's get you started on your AI literacy journey [Indonesian]",
+    "greeting": "Selamat datang, {{name}}!",
+    "subtitle": "Mari memulai perjalanan literasi AI Anda",
     "step1": {
-      "title": "Discover Your Path [Indonesian]",
-      "description": "AI Square helps you understand and master AI literacy [Indonesian]",
-      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [Indonesian]",
-      "assessment": "Smart Assessment [Indonesian]",
-      "assessmentDesc": "Discover your current AI knowledge level [Indonesian]",
-      "learning": "Personalized Learning [Indonesian]",
-      "learningDesc": "Get tailored recommendations based on your goals [Indonesian]"
+      "title": "Temukan Jalan Anda",
+      "description": "AI Square membantu Anda memahami dan menguasai literasi AI",
+      "content": "Kami akan membantu Anda mengidentifikasi kekuatan dan area pertumbuhan melalui penilaian yang dipersonalisasi dan pengalaman belajar terpandu.",
+      "assessment": "Penilaian Cerdas",
+      "assessmentDesc": "Temukan tingkat pengetahuan AI Anda saat ini",
+      "learning": "Pembelajaran yang Dipersonalisasi",
+      "learningDesc": "Dapatkan rekomendasi yang disesuaikan berdasarkan tujuan Anda"
     },
     "step2": {
-      "title": "Four Core Domains [Indonesian]",
-      "description": "Master the essential areas of AI literacy [Indonesian]",
-      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [Indonesian]",
-      "domains": "AI Literacy Domains [Indonesian]",
-      "engaging": "Engaging with AI [Indonesian]",
-      "creating": "Creating with AI [Indonesian]",
-      "managing": "Managing with AI [Indonesian]",
-      "designing": "Designing with AI [Indonesian]"
+      "title": "Empat Domain Inti",
+      "description": "Kuasai bidang-bidang penting dari literasi AI",
+      "content": "Kerangka komprehensif kami mencakup semua yang perlu Anda ketahui tentang bekerja dengan AI secara efektif dan bertanggung jawab.",
+      "domains": "Domain Literasi AI",
+      "engaging": "Berinteraksi dengan AI",
+      "creating": "Menciptakan dengan AI",
+      "managing": "Mengelola dengan AI",
+      "designing": "Merancang dengan AI"
     },
     "step3": {
-      "title": "Start Your Journey [Indonesian]",
-      "description": "Begin with an assessment and unlock your potential [Indonesian]",
-      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [Indonesian]",
-      "ready": "What you'll get: [Indonesian]",
-      "benefit1": "Detailed assessment of your AI knowledge [Indonesian]",
-      "benefit2": "Personalized learning path recommendations [Indonesian]",
-      "benefit3": "Interactive scenarios and practical exercises [Indonesian]"
+      "title": "Mulai Perjalanan Anda",
+      "description": "Mulai dengan penilaian dan buka potensi Anda",
+      "content": "Siap untuk menemukan tingkat literasi AI Anda dan mendapatkan rekomendasi pembelajaran yang dipersonalisasi?",
+      "ready": "Yang akan Anda dapatkan:",
+      "benefit1": "Penilaian detail pengetahuan AI Anda",
+      "benefit2": "Rekomendasi jalur pembelajaran yang dipersonalisasi",
+      "benefit3": "Skenario interaktif dan latihan praktis"
     },
-    "startJourney": "Start Your Journey [Indonesian]"
+    "startJourney": "Mulai Perjalanan Anda"
   },
   "goals": {
-    "title": "What would you like to achieve? [Indonesian]",
-    "subtitle": "Select your learning goals to get personalized recommendations [Indonesian]",
+    "title": "Apa yang ingin Anda capai?",
+    "subtitle": "Pilih tujuan pembelajaran Anda untuk mendapatkan rekomendasi yang dipersonalisasi",
     "understand": {
-      "title": "Understand AI Fundamentals [Indonesian]",
-      "description": "Learn the basics of AI, machine learning, and how AI systems work [Indonesian]"
+      "title": "Memahami Dasar-dasar AI",
+      "description": "Pelajari dasar-dasar AI, pembelajaran mesin, dan cara kerja sistem AI"
     },
     "create": {
-      "title": "Create Content with AI [Indonesian]",
-      "description": "Use AI tools for writing, design, art, and creative projects [Indonesian]"
+      "title": "Membuat Konten dengan AI",
+      "description": "Gunakan alat AI untuk menulis, desain, seni, dan proyek kreatif"
     },
     "analyze": {
-      "title": "Analyze Data with AI [Indonesian]",
-      "description": "Apply AI for data analysis, insights, and decision-making [Indonesian]"
+      "title": "Menganalisis Data dengan AI",
+      "description": "Terapkan AI untuk analisis data, wawasan, dan pengambilan keputusan"
     },
     "build": {
-      "title": "Build AI Solutions [Indonesian]",
-      "description": "Develop and implement AI systems and applications [Indonesian]"
+      "title": "Membangun Solusi AI",
+      "description": "Kembangkan dan implementasikan sistem dan aplikasi AI"
     },
     "teach": {
-      "title": "Teach AI to Others [Indonesian]",
-      "description": "Educate and guide others in understanding and using AI [Indonesian]"
+      "title": "Mengajar AI kepada Orang Lain",
+      "description": "Mendidik dan membimbing orang lain dalam memahami dan menggunakan AI"
     },
     "ethical": {
-      "title": "Ensure Ethical AI Use [Indonesian]",
-      "description": "Understand and implement responsible AI practices [Indonesian]"
+      "title": "Memastikan Penggunaan AI yang Etis",
+      "description": "Memahami dan menerapkan praktik AI yang bertanggung jawab"
     },
-    "recommendedDomains": "Recommended domains [Indonesian]",
-    "selected": "{{count}} goals selected [Indonesian]",
-    "selectAtLeastOne": "Please select at least one learning goal [Indonesian]",
-    "continue": "Continue to Assessment [Indonesian]",
-    "skipForNow": "Skip for now [Indonesian]",
-    "helpText": "Don't worry, you can always change these later in your profile settings. [Indonesian]"
+    "recommendedDomains": "Domain yang direkomendasikan",
+    "selected": "{{count}} tujuan dipilih",
+    "selectAtLeastOne": "Silakan pilih setidaknya satu tujuan pembelajaran",
+    "continue": "Lanjutkan ke Penilaian",
+    "skipForNow": "Lewati untuk sekarang",
+    "helpText": "Jangan khawatir, Anda selalu dapat mengubah ini nanti di pengaturan profil Anda."
   },
   "progress": {
-    "welcome": "Welcome [Indonesian]",
-    "identity": "Identity [Indonesian]",
-    "goals": "Goals [Indonesian]"
+    "welcome": "Selamat datang",
+    "identity": "Identitas",
+    "goals": "Tujuan"
   },
   "identity": {
-    "title": "Who are you? [Indonesian]",
-    "subtitle": "Help us personalize your AI learning journey [Indonesian]",
+    "title": "Siapakah Anda?",
+    "subtitle": "Bantu kami mempersonalisasi perjalanan pembelajaran AI Anda",
     "student": {
-      "title": "Student [Indonesian]",
-      "description": "I'm studying and want to learn AI for my academic and future career [Indonesian]"
+      "title": "Mahasiswa",
+      "description": "Saya sedang belajar dan ingin mempelajari AI untuk akademik dan karir masa depan saya"
     },
     "teacher": {
-      "title": "Educator [Indonesian]",
-      "description": "I teach others and want to integrate AI into my curriculum [Indonesian]"
+      "title": "Pendidik",
+      "description": "Saya mengajar orang lain dan ingin mengintegrasikan AI ke dalam kurikulum saya"
     },
     "professional": {
-      "title": "Professional [Indonesian]",
-      "description": "I work in industry and want to leverage AI in my role [Indonesian]"
+      "title": "Profesional",
+      "description": "Saya bekerja di industri dan ingin memanfaatkan AI dalam peran saya"
     },
     "learner": {
-      "title": "Lifelong Learner [Indonesian]",
-      "description": "I'm curious about AI and want to explore its possibilities [Indonesian]"
+      "title": "Pembelajar Seumur Hidup",
+      "description": "Saya penasaran tentang AI dan ingin menjelajahi kemungkinannya"
     }
   },
   "button": {
-    "back": "Back [Indonesian]",
-    "continue": "Continue [Indonesian]",
-    "saving": "Saving... [Indonesian]"
+    "back": "Kembali",
+    "continue": "Lanjutkan",
+    "saving": "Menyimpan..."
   }
 }

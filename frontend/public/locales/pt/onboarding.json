@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "Welcome, {{name}}! [Portuguese]",
-    "subtitle": "Let's get you started on your AI literacy journey [Portuguese]",
+    "greeting": "Bem-vindo, {{name}}!",
+    "subtitle": "Vamos começar sua jornada de alfabetização em IA",
     "step1": {
-      "title": "Discover Your Path [Portuguese]",
-      "description": "AI Square helps you understand and master AI literacy [Portuguese]",
-      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [Portuguese]",
-      "assessment": "Smart Assessment [Portuguese]",
-      "assessmentDesc": "Discover your current AI knowledge level [Portuguese]",
-      "learning": "Personalized Learning [Portuguese]",
-      "learningDesc": "Get tailored recommendations based on your goals [Portuguese]"
+      "title": "Descubra seu Caminho",
+      "description": "AI Square ajuda você a entender e dominar a alfabetização em IA",
+      "content": "Ajudaremos você a identificar seus pontos fortes e áreas de crescimento através de avaliações personalizadas e experiências de aprendizado guiadas.",
+      "assessment": "Avaliação Inteligente",
+      "assessmentDesc": "Descubra seu nível atual de conhecimento em IA",
+      "learning": "Aprendizado Personalizado",
+      "learningDesc": "Obtenha recomendações personalizadas com base em seus objetivos"
     },
     "step2": {
-      "title": "Four Core Domains [Portuguese]",
-      "description": "Master the essential areas of AI literacy [Portuguese]",
-      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [Portuguese]",
-      "domains": "AI Literacy Domains [Portuguese]",
-      "engaging": "Engaging with AI [Portuguese]",
-      "creating": "Creating with AI [Portuguese]",
-      "managing": "Managing with AI [Portuguese]",
-      "designing": "Designing with AI [Portuguese]"
+      "title": "Quatro Domínios Principais",
+      "description": "Domine as áreas essenciais da alfabetização em IA",
+      "content": "Nossa estrutura abrangente cobre tudo que você precisa saber sobre trabalhar com IA de forma eficaz e responsável.",
+      "domains": "Domínios de Alfabetização em IA",
+      "engaging": "Interagir com IA",
+      "creating": "Criar com IA",
+      "managing": "Gerenciar com IA",
+      "designing": "Projetar com IA"
     },
     "step3": {
-      "title": "Start Your Journey [Portuguese]",
-      "description": "Begin with an assessment and unlock your potential [Portuguese]",
-      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [Portuguese]",
-      "ready": "What you'll get: [Portuguese]",
-      "benefit1": "Detailed assessment of your AI knowledge [Portuguese]",
-      "benefit2": "Personalized learning path recommendations [Portuguese]",
-      "benefit3": "Interactive scenarios and practical exercises [Portuguese]"
+      "title": "Inicie sua Jornada",
+      "description": "Comece com uma avaliação e desbloqueie seu potencial",
+      "content": "Pronto para descobrir seu nível de alfabetização em IA e obter recomendações de aprendizado personalizadas?",
+      "ready": "O que você obterá:",
+      "benefit1": "Avaliação detalhada do seu conhecimento em IA",
+      "benefit2": "Recomendações de caminhos de aprendizado personalizados",
+      "benefit3": "Cenários interativos e exercícios práticos"
     },
-    "startJourney": "Start Your Journey [Portuguese]"
+    "startJourney": "Iniciar sua Jornada"
   },
   "goals": {
-    "title": "What would you like to achieve? [Portuguese]",
-    "subtitle": "Select your learning goals to get personalized recommendations [Portuguese]",
+    "title": "O que você gostaria de alcançar?",
+    "subtitle": "Selecione seus objetivos de aprendizado para obter recomendações personalizadas",
     "understand": {
-      "title": "Understand AI Fundamentals [Portuguese]",
-      "description": "Learn the basics of AI, machine learning, and how AI systems work [Portuguese]"
+      "title": "Entender os Fundamentos da IA",
+      "description": "Aprenda os conceitos básicos de IA, aprendizado de máquina e como os sistemas de IA funcionam"
     },
     "create": {
-      "title": "Create Content with AI [Portuguese]",
-      "description": "Use AI tools for writing, design, art, and creative projects [Portuguese]"
+      "title": "Criar Conteúdo com IA",
+      "description": "Use ferramentas de IA para escrita, design, arte e projetos criativos"
     },
     "analyze": {
-      "title": "Analyze Data with AI [Portuguese]",
-      "description": "Apply AI for data analysis, insights, and decision-making [Portuguese]"
+      "title": "Analisar Dados com IA",
+      "description": "Aplique IA para análise de dados, insights e tomada de decisões"
     },
     "build": {
-      "title": "Build AI Solutions [Portuguese]",
-      "description": "Develop and implement AI systems and applications [Portuguese]"
+      "title": "Construir Soluções de IA",
+      "description": "Desenvolva e implemente sistemas e aplicações de IA"
     },
     "teach": {
-      "title": "Teach AI to Others [Portuguese]",
-      "description": "Educate and guide others in understanding and using AI [Portuguese]"
+      "title": "Ensinar IA para Outros",
+      "description": "Eduque e oriente outros na compreensão e uso da IA"
     },
     "ethical": {
-      "title": "Ensure Ethical AI Use [Portuguese]",
-      "description": "Understand and implement responsible AI practices [Portuguese]"
+      "title": "Garantir o Uso Ético da IA",
+      "description": "Compreenda e implemente práticas responsáveis de IA"
     },
-    "recommendedDomains": "Recommended domains [Portuguese]",
-    "selected": "{{count}} goals selected [Portuguese]",
-    "selectAtLeastOne": "Please select at least one learning goal [Portuguese]",
-    "continue": "Continue to Assessment [Portuguese]",
-    "skipForNow": "Skip for now [Portuguese]",
-    "helpText": "Don't worry, you can always change these later in your profile settings. [Portuguese]"
+    "recommendedDomains": "Domínios recomendados",
+    "selected": "{{count}} objetivos selecionados",
+    "selectAtLeastOne": "Por favor, selecione pelo menos um objetivo de aprendizado",
+    "continue": "Continuar para Avaliação",
+    "skipForNow": "Pular por agora",
+    "helpText": "Não se preocupe, você sempre pode alterar isso mais tarde nas configurações do seu perfil."
   },
   "progress": {
-    "welcome": "Welcome [Portuguese]",
-    "identity": "Identity [Portuguese]",
-    "goals": "Goals [Portuguese]"
+    "welcome": "Bem-vindo",
+    "identity": "Identidade",
+    "goals": "Objetivos"
   },
   "identity": {
-    "title": "Who are you? [Portuguese]",
-    "subtitle": "Help us personalize your AI learning journey [Portuguese]",
+    "title": "Quem é você?",
+    "subtitle": "Ajude-nos a personalizar sua jornada de aprendizado em IA",
     "student": {
-      "title": "Student [Portuguese]",
-      "description": "I'm studying and want to learn AI for my academic and future career [Portuguese]"
+      "title": "Estudante",
+      "description": "Estou estudando e quero aprender IA para minha carreira acadêmica e futura"
     },
     "teacher": {
-      "title": "Educator [Portuguese]",
-      "description": "I teach others and want to integrate AI into my curriculum [Portuguese]"
+      "title": "Educador",
+      "description": "Ensino outros e quero integrar IA ao meu currículo"
     },
     "professional": {
-      "title": "Professional [Portuguese]",
-      "description": "I work in industry and want to leverage AI in my role [Portuguese]"
+      "title": "Profissional",
+      "description": "Trabalho na indústria e quero aproveitar a IA em minha função"
     },
     "learner": {
-      "title": "Lifelong Learner [Portuguese]",
-      "description": "I'm curious about AI and want to explore its possibilities [Portuguese]"
+      "title": "Aprendiz Vitalício",
+      "description": "Tenho curiosidade sobre IA e quero explorar suas possibilidades"
     }
   },
   "button": {
-    "back": "Back [Portuguese]",
-    "continue": "Continue [Portuguese]",
-    "saving": "Saving... [Portuguese]"
+    "back": "Voltar",
+    "continue": "Continuar",
+    "saving": "Salvando..."
   }
 }

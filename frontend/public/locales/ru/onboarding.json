@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "Welcome, {{name}}! [Russian]",
-    "subtitle": "Let's get you started on your AI literacy journey [Russian]",
+    "greeting": "Добро пожаловать, {{name}}!",
+    "subtitle": "Давайте начнем ваше путешествие к цифровой грамотности в области ИИ",
     "step1": {
-      "title": "Discover Your Path [Russian]",
-      "description": "AI Square helps you understand and master AI literacy [Russian]",
-      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [Russian]",
-      "assessment": "Smart Assessment [Russian]",
-      "assessmentDesc": "Discover your current AI knowledge level [Russian]",
-      "learning": "Personalized Learning [Russian]",
-      "learningDesc": "Get tailored recommendations based on your goals [Russian]"
+      "title": "Откройте свой путь",
+      "description": "AI Square поможет вам понять и освоить цифровую грамотность в области ИИ",
+      "content": "Мы поможем вам выявить ваши сильные стороны и области для роста через персонализированные оценки и управляемые обучающие опыты.",
+      "assessment": "Умная оценка",
+      "assessmentDesc": "Откройте ваш текущий уровень знаний ИИ",
+      "learning": "Персонализированное обучение",
+      "learningDesc": "Получите индивидуальные рекомендации на основе ваших целей"
     },
     "step2": {
-      "title": "Four Core Domains [Russian]",
-      "description": "Master the essential areas of AI literacy [Russian]",
-      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [Russian]",
-      "domains": "AI Literacy Domains [Russian]",
-      "engaging": "Engaging with AI [Russian]",
-      "creating": "Creating with AI [Russian]",
-      "managing": "Managing with AI [Russian]",
-      "designing": "Designing with AI [Russian]"
+      "title": "Четыре основных области",
+      "description": "Освойте ключевые области цифровой грамотности в области ИИ",
+      "content": "Наша комплексная структура охватывает все, что вам нужно знать о работе с ИИ эффективно и ответственно.",
+      "domains": "Области цифровой грамотности ИИ",
+      "engaging": "Взаимодействие с ИИ",
+      "creating": "Создание с ИИ",
+      "managing": "Управление с ИИ",
+      "designing": "Проектирование с ИИ"
     },
     "step3": {
-      "title": "Start Your Journey [Russian]",
-      "description": "Begin with an assessment and unlock your potential [Russian]",
-      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [Russian]",
-      "ready": "What you'll get: [Russian]",
-      "benefit1": "Detailed assessment of your AI knowledge [Russian]",
-      "benefit2": "Personalized learning path recommendations [Russian]",
-      "benefit3": "Interactive scenarios and practical exercises [Russian]"
+      "title": "Начните свое путешествие",
+      "description": "Начните с оценки и раскройте свой потенциал",
+      "content": "Готовы открыть ваш уровень цифровой грамотности в области ИИ и получить персонализированные рекомендации по обучению?",
+      "ready": "Что вы получите:",
+      "benefit1": "Детальная оценка ваших знаний ИИ",
+      "benefit2": "Персонализированные рекомендации по обучению",
+      "benefit3": "Интерактивные сценарии и практические упражнения"
     },
-    "startJourney": "Start Your Journey [Russian]"
+    "startJourney": "Начать путешествие"
   },
   "goals": {
-    "title": "What would you like to achieve? [Russian]",
-    "subtitle": "Select your learning goals to get personalized recommendations [Russian]",
+    "title": "Чего бы вы хотели достичь?",
+    "subtitle": "Выберите ваши цели обучения, чтобы получить персонализированные рекомендации",
     "understand": {
-      "title": "Understand AI Fundamentals [Russian]",
-      "description": "Learn the basics of AI, machine learning, and how AI systems work [Russian]"
+      "title": "Понимать основы ИИ",
+      "description": "Изучите основы ИИ, машинного обучения и как работают системы ИИ"
     },
     "create": {
-      "title": "Create Content with AI [Russian]",
-      "description": "Use AI tools for writing, design, art, and creative projects [Russian]"
+      "title": "Создавать контент с ИИ",
+      "description": "Используйте инструменты ИИ для написания, дизайна, искусства и творческих проектов"
     },
     "analyze": {
-      "title": "Analyze Data with AI [Russian]",
-      "description": "Apply AI for data analysis, insights, and decision-making [Russian]"
+      "title": "Анализировать данные с ИИ",
+      "description": "Применяйте ИИ для анализа данных, получения инсайтов и принятия решений"
     },
     "build": {
-      "title": "Build AI Solutions [Russian]",
-      "description": "Develop and implement AI systems and applications [Russian]"
+      "title": "Создавать решения ИИ",
+      "description": "Разрабатывайте и внедряйте системы и приложения ИИ"
     },
     "teach": {
-      "title": "Teach AI to Others [Russian]",
-      "description": "Educate and guide others in understanding and using AI [Russian]"
+      "title": "Обучать других ИИ",
+      "description": "Обучайте и направляйте других в понимании и использовании ИИ"
     },
     "ethical": {
-      "title": "Ensure Ethical AI Use [Russian]",
-      "description": "Understand and implement responsible AI practices [Russian]"
+      "title": "Обеспечивать этичное использование ИИ",
+      "description": "Понимайте и внедряйте ответственные практики ИИ"
     },
-    "recommendedDomains": "Recommended domains [Russian]",
-    "selected": "{{count}} goals selected",
-    "selectAtLeastOne": "Please select at least one learning goal [Russian]",
-    "continue": "Continue to Assessment [Russian]",
-    "skipForNow": "Skip for now [Russian]",
-    "helpText": "Don't worry, you can always change these later in your profile settings. [Russian]"
+    "recommendedDomains": "Рекомендуемые области",
+    "selected": "{{count}} целей выбрано",
+    "selectAtLeastOne": "Пожалуйста, выберите хотя бы одну цель обучения",
+    "continue": "Продолжить к оценке",
+    "skipForNow": "Пропустить пока",
+    "helpText": "Не беспокойтесь, вы всегда можете изменить это позже в настройках вашего профиля."
   },
   "progress": {
-    "welcome": "Welcome [Russian]",
-    "identity": "Identity [Russian]",
-    "goals": "Goals [Russian]"
+    "welcome": "Добро пожаловать",
+    "identity": "Идентичность",
+    "goals": "Цели"
   },
   "identity": {
-    "title": "Who are you? [Russian]",
-    "subtitle": "Help us personalize your AI learning journey [Russian]",
+    "title": "Кто вы?",
+    "subtitle": "Помогите нам персонализировать ваше путешествие в обучении ИИ",
     "student": {
-      "title": "Student [Russian]",
-      "description": "I'm studying and want to learn AI for my academic and future career [Russian]"
+      "title": "Студент",
+      "description": "Я учусь и хочу изучать ИИ для моей академической и будущей карьеры"
     },
     "teacher": {
-      "title": "Educator [Russian]",
-      "description": "I teach others and want to integrate AI into my curriculum [Russian]"
+      "title": "Преподаватель",
+      "description": "Я обучаю других и хочу интегрировать ИИ в мою учебную программу"
     },
     "professional": {
-      "title": "Professional [Russian]",
-      "description": "I work in industry and want to leverage AI in my role [Russian]"
+      "title": "Профессионал",
+      "description": "Я работаю в индустрии и хочу использовать ИИ в моей роли"
     },
     "learner": {
-      "title": "Lifelong Learner [Russian]",
-      "description": "I'm curious about AI and want to explore its possibilities [Russian]"
+      "title": "Обучающийся на протяжении жизни",
+      "description": "Мне любопытен ИИ и я хочу исследовать его возможности"
     }
   },
   "button": {
-    "back": "Back [Russian]",
-    "continue": "Continue [Russian]",
-    "saving": "Saving... [Russian]"
+    "back": "Назад",
+    "continue": "Продолжить",
+    "saving": "Сохранение..."
   }
 }

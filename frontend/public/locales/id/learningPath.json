@@ -1,43 +1,43 @@
 {
-  "title": "Your Learning Path [Indonesian]",
-  "subtitle": "Personalized recommendations based on your assessment [Indonesian]",
-  "yourProgress": "Your Progress [Indonesian]",
-  "currentScore": "Current Score [Indonesian]",
-  "targetScore": "Target Score [Indonesian]",
-  "completed": "completed [Indonesian]",
-  "recommendedPath": "Recommended Learning Path [Indonesian]",
-  "startLearning": "Start Learning [Indonesian]",
-  "estimatedTime": "Estimated time [Indonesian]",
-  "weakDomainReason": "This is your weakest area with {{score}}% score [Indonesian]",
+  "title": "Jalur Pembelajaran Anda",
+  "subtitle": "Rekomendasi yang dipersonalisasi berdasarkan penilaian Anda",
+  "yourProgress": "Kemajuan Anda",
+  "currentScore": "Skor Saat Ini",
+  "targetScore": "Skor Target",
+  "completed": "selesai",
+  "recommendedPath": "Jalur Pembelajaran yang Direkomendasikan",
+  "startLearning": "Mulai Belajar",
+  "estimatedTime": "Perkiraan waktu",
+  "weakDomainReason": "Ini adalah area terlemah Anda dengan skor {{score}}%",
   "difficulty": {
-    "beginner": "Beginner [Indonesian]",
-    "intermediate": "Intermediate [Indonesian]",
-    "advanced": "Advanced [Indonesian]"
+    "beginner": "Pemula",
+    "intermediate": "Menengah",
+    "advanced": "Lanjutan"
   },
   "noAssessment": {
-    "title": "No Assessment Found [Indonesian]",
-    "description": "Please complete the assessment first to get personalized recommendations [Indonesian]",
-    "button": "Take Assessment [Indonesian]"
+    "title": "Tidak Ditemukan Penilaian",
+    "description": "Silakan selesaikan penilaian terlebih dahulu untuk mendapatkan rekomendasi yang dipersonalisasi",
+    "button": "Ambil Penilaian"
   },
   "domains": {
-    "Engaging_with_AI": "Engaging with AI [Indonesian]",
-    "Creating_with_AI": "Creating with AI [Indonesian]",
-    "Managing_with_AI": "Managing with AI [Indonesian]",
-    "Designing_with_AI": "Designing with AI [Indonesian]"
+    "Engaging_with_AI": "Berinteraksi dengan AI",
+    "Creating_with_AI": "Berkreasi dengan AI",
+    "Managing_with_AI": "Mengelola dengan AI",
+    "Designing_with_AI": "Mendesain dengan AI"
   },
-  "strongDomainReason": "Advance your skills in {{domain}} (current: {{score}}%) [Indonesian]",
-  "averageDomainReason": "Improve your {{domain}} skills (current: {{score}}%) [Indonesian]",
+  "strongDomainReason": "Tingkatkan keterampilan Anda di {{domain}} (saat ini: {{score}}%)",
+  "averageDomainReason": "Perbaiki keterampilan {{domain}} Anda (saat ini: {{score}}%)",
   "learningPath": {
-    "filteringBy": "Showing items for {{domain}} [Indonesian]",
-    "clearFilter": "Clear filter [Indonesian]",
-    "recommendedPath": "Recommended Learning Path [Indonesian]",
-    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [Indonesian]",
-    "startLearning": "Start Learning [Indonesian]",
-    "progress": "Progress [Indonesian]",
-    "goToDashboard": "Go to Dashboard [Indonesian]",
-    "dashboardHint": "Track your overall progress and achievements in the dashboard [Indonesian]"
+    "filteringBy": "Menampilkan item untuk {{domain}}",
+    "clearFilter": "Hapus filter",
+    "recommendedPath": "Jalur Pembelajaran yang Direkomendasikan",
+    "estimatedTime": "Total waktu: {{hours}}j {{minutes}}m",
+    "startLearning": "Mulai Belajar",
+    "progress": "Kemajuan",
+    "goToDashboard": "Ke Dashboard",
+    "dashboardHint": "Lacak kemajuan keseluruhan dan pencapaian Anda di dashboard"
   },
-  "showAll": "Show All [Indonesian]",
-  "focusOnWeakAreas": "Focus on Weak Areas [Indonesian]",
-  "backToDashboard": "Back to Dashboard [Indonesian]"
+  "showAll": "Tampilkan Semua",
+  "focusOnWeakAreas": "Fokus pada Area Lemah",
+  "backToDashboard": "Kembali ke Dashboard"
 }

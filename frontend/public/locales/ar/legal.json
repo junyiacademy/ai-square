@@ -1,171 +1,171 @@
 {
   "privacy": {
-    "title": "Privacy Policy [Arabic]",
-    "lastUpdated": "Last updated [Arabic]",
-    "intro": "AI Square (\"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI literacy education platform. [Arabic]",
+    "title": "سياسة الخصوصية",
+    "lastUpdated": "آخر تحديث",
+    "intro": "تلتزم AI Square (\"نحن\" أو \"خاصتنا\" أو \"نا\") بحماية خصوصيتك. تشرح سياسة الخصوصية هذه كيف نجمع ونستخدم ونكشف ونحمي معلوماتك عند استخدام منصة تعليم محو الأمية الذكي الاصطناعي الخاصة بنا.",
     "infoCollect": {
-      "title": "1. Information We Collect [Arabic]",
-      "personal": "Personal Information [Arabic]",
-      "email": "Email address [Arabic]",
-      "name": "Name (optional) [Arabic]",
-      "role": "User role (student, teacher, admin) [Arabic]",
-      "language": "Language preference [Arabic]",
-      "usage": "Usage Data [Arabic]",
-      "learning": "Learning progress and assessment results [Arabic]",
-      "interactions": "Interactions with AI tutors [Arabic]",
-      "scenarios": "PBL scenario completion data [Arabic]",
-      "analytics": "Platform usage analytics [Arabic]",
-      "technical": "Technical Data [Arabic]",
-      "browser": "Browser type and version [Arabic]",
-      "device": "Device information [Arabic]",
-      "ip": "IP address (anonymized) [Arabic]",
-      "timezone": "Time zone settings [Arabic]"
+      "title": "1. المعلومات التي نجمعها",
+      "personal": "المعلومات الشخصية",
+      "email": "عنوان البريد الإلكتروني",
+      "name": "الاسم (اختياري)",
+      "role": "دور المستخدم (طالب، معلم، مدير)",
+      "language": "تفضيل اللغة",
+      "usage": "بيانات الاستخدام",
+      "learning": "تقدم التعلم ونتائج التقييم",
+      "interactions": "التفاعلات مع مدرسي الذكاء الاصطناعي",
+      "scenarios": "بيانات إكمال سيناريو التعلم القائم على المشاكل",
+      "analytics": "تحليلات استخدام المنصة",
+      "technical": "البيانات التقنية",
+      "browser": "نوع المتصفح والإصدار",
+      "device": "معلومات الجهاز",
+      "ip": "عنوان IP (مجهول الهوية)",
+      "timezone": "إعدادات المنطقة الزمنية"
     },
     "howUse": {
-      "title": "2. How We Use Your Information [Arabic]",
-      "provide": "To provide and maintain our service [Arabic]",
-      "personalize": "To personalize your learning experience [Arabic]",
-      "communicate": "To communicate with you about your account [Arabic]",
-      "improve": "To improve our platform and develop new features [Arabic]",
-      "analyze": "To analyze usage patterns and optimize performance [Arabic]",
-      "security": "To detect and prevent security threats [Arabic]"
+      "title": "2. كيف نستخدم معلوماتك",
+      "provide": "لتوفير وصيانة خدمتنا",
+      "personalize": "لتخصيص تجربة التعلم الخاصة بك",
+      "communicate": "للتواصل معك حول حسابك",
+      "improve": "لتحسين منصتنا وتطوير ميزات جديدة",
+      "analyze": "لتحليل أنماط الاستخدام وتحسين الأداء",
+      "security": "لاكتشاف ومنع التهديدات الأمنية"
     },
     "storage": {
-      "title": "3. Data Storage and Security [Arabic]",
-      "location": "Your data is stored securely on Google Cloud Platform servers. We implement appropriate technical and organizational measures to protect your personal information. [Arabic]",
-      "encryption": "Data encryption in transit and at rest [Arabic]",
-      "access": "Restricted access controls [Arabic]",
-      "monitoring": "Regular security monitoring [Arabic]",
-      "backup": "Secure backup procedures [Arabic]"
+      "title": "3. تخزين البيانات والأمان",
+      "location": "يتم تخزين بياناتك بأمان على خوادم Google Cloud Platform. ننفذ التدابير التقنية والتنظيمية المناسبة لحماية معلوماتك الشخصية.",
+      "encryption": "تشفير البيانات أثناء النقل والتخزين",
+      "access": "ضوابط الوصول المقيدة",
+      "monitoring": "مراقبة الأمان المنتظمة",
+      "backup": "إجراءات النسخ الاحتياطي الآمن"
     },
     "sharing": {
-      "title": "4. Data Sharing and Disclosure [Arabic]",
-      "intro": "We do not sell, trade, or rent your personal information. We may share your information in the following situations: [Arabic]",
-      "consent": "With your consent [Arabic]",
-      "legal": "To comply with legal obligations [Arabic]",
-      "protect": "To protect our rights and safety [Arabic]",
-      "service": "With service providers who assist our operations [Arabic]"
+      "title": "4. مشاركة البيانات والكشف عنها",
+      "intro": "لا نبيع أو نتاجر أو نؤجر معلوماتك الشخصية. قد نشارك معلوماتك في الحالات التالية:",
+      "consent": "بموافقتك",
+      "legal": "للامتثال للالتزامات القانونية",
+      "protect": "لحماية حقوقنا وسلامتنا",
+      "service": "مع مقدمي الخدمات الذين يساعدون في عملياتنا"
     },
     "rights": {
-      "title": "5. Your Rights [Arabic]",
-      "intro": "You have the following rights regarding your personal data: [Arabic]",
-      "access": "Access your personal information [Arabic]",
-      "correct": "Correct inaccurate data [Arabic]",
-      "delete": "Request deletion of your data [Arabic]",
-      "export": "Export your data in a portable format [Arabic]",
-      "restrict": "Restrict processing of your data [Arabic]",
-      "withdraw": "Withdraw consent at any time [Arabic]"
+      "title": "5. حقوقك",
+      "intro": "لديك الحقوق التالية فيما يتعلق ببياناتك الشخصية:",
+      "access": "الوصول إلى معلوماتك الشخصية",
+      "correct": "تصحيح البيانات غير الدقيقة",
+      "delete": "طلب حذف بياناتك",
+      "export": "تصدير بياناتك بتنسيق قابل للنقل",
+      "restrict": "تقييد معالجة بياناتك",
+      "withdraw": "سحب الموافقة في أي وقت"
     },
     "cookies": {
-      "title": "6. Cookies and Tracking [Arabic]",
-      "intro": "We use cookies and similar tracking technologies to enhance your experience. Essential cookies are required for platform functionality, while optional cookies help us improve our service. [Arabic]"
+      "title": "6. ملفات تعريف الارتباط والتتبع",
+      "intro": "نستخدم ملفات تعريف الارتباط وتقنيات التتبع المشابهة لتحسين تجربتك. ملفات تعريف الارتباط الأساسية مطلوبة لوظائف المنصة، بينما ملفات تعريف الارتباط الاختيارية تساعدنا في تحسين خدمتنا."
     },
     "children": {
-      "title": "7. Children's Privacy [Arabic]",
-      "content": "Our platform is designed for educational use by students of all ages. For users under 13, we require parental consent and limit data collection to essential information only. [Arabic]"
+      "title": "7. خصوصية الأطفال",
+      "content": "منصتنا مصممة للاستخدام التعليمي من قبل الطلاب من جميع الأعمار. للمستخدمين تحت سن 13، نطلب موافقة الوالدين ونحد من جمع البيانات للمعلومات الأساسية فقط."
     },
     "international": {
-      "title": "8. International Data Transfers [Arabic]",
-      "content": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers. [Arabic]"
+      "title": "8. النقل الدولي للبيانات",
+      "content": "قد يتم نقل معلوماتك ومعالجتها في بلدان غير بلدك. نضمن وجود الحماية المناسبة لمثل هذه النقلات."
     },
     "changes": {
-      "title": "9. Changes to This Policy [Arabic]",
-      "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the \"Last Updated\" date. [Arabic]"
+      "title": "9. التغييرات على هذه السياسة",
+      "content": "قد نحدث سياسة الخصوصية هذه من وقت لآخر. سنخطرك بأي تغييرات عن طريق نشر السياسة الجديدة على هذه الصفحة وتحديث تاريخ \"آخر تحديث\"."
     },
     "contact": {
-      "title": "10. Contact Us [Arabic]",
-      "intro": "If you have questions about this Privacy Policy, please contact us at: [Arabic]"
+      "title": "10. اتصل بنا",
+      "intro": "إذا كانت لديك أسئلة حول سياسة الخصوصية هذه، يرجى الاتصال بنا على:"
     }
   },
   "terms": {
-    "title": "Terms of Service [Arabic]",
-    "effectiveDate": "Effective Date [Arabic]",
-    "lastUpdated": "Last Updated [Arabic]",
-    "intro": "Welcome to AI Square! These Terms of Service (\"Terms\") govern your use of our AI literacy education platform. By accessing or using AI Square, you agree to be bound by these Terms. [Arabic]",
+    "title": "شروط الخدمة",
+    "effectiveDate": "تاريخ السريان",
+    "lastUpdated": "آخر تحديث",
+    "intro": "مرحباً بك في AI Square! تحكم شروط الخدمة هذه (\"الشروط\") استخدامك لمنصة تعليم محو الأمية الذكي الاصطناعي الخاصة بنا. بالوصول إلى أو استخدام AI Square، فإنك توافق على الالتزام بهذه الشروط.",
     "acceptance": {
-      "title": "1. Acceptance of Terms [Arabic]",
-      "content": "By creating an account or using our services, you acknowledge that you have read, understood, and agree to these Terms. If you do not agree, please do not use our platform. [Arabic]",
-      "capacity": "You must be at least 13 years old to use our services. If you are under 18, you must have parental consent. [Arabic]"
+      "title": "1. قبول الشروط",
+      "content": "بإنشاء حساب أو استخدام خدماتنا، فإنك تقر بأنك قد قرأت وفهمت ووافقت على هذه الشروط. إذا كنت لا توافق، فلا تستخدم منصتنا.",
+      "capacity": "يجب أن تكون عمرك 13 سنة على الأقل لاستخدام خدماتنا. إذا كنت دون 18 سنة، يجب أن تحصل على موافقة الوالدين."
     },
     "service": {
-      "title": "2. Description of Service [Arabic]",
-      "intro": "AI Square provides: [Arabic]",
-      "literacy": "AI literacy education content and assessments [Arabic]",
-      "pbl": "Problem-Based Learning (PBL) scenarios [Arabic]",
-      "ai": "AI-powered tutoring and feedback [Arabic]",
-      "tracking": "Progress tracking and analytics [Arabic]",
-      "multi": "Multi-language support (9 languages) [Arabic]"
+      "title": "2. وصف الخدمة",
+      "intro": "توفر AI Square:",
+      "literacy": "محتوى تعليمي لمحو الأمية الذكي الاصطناعي والتقييمات",
+      "pbl": "سيناريوهات التعلم القائم على المشاكل (PBL)",
+      "ai": "التدريس والتغذية الراجعة المدعومة بالذكاء الاصطناعي",
+      "tracking": "تتبع التقدم والتحليلات",
+      "multi": "دعم متعدد اللغات (9 لغات)"
     },
     "accounts": {
-      "title": "3. User Accounts [Arabic]",
-      "registration": "Registration [Arabic]",
-      "accurate": "Provide accurate and complete information [Arabic]",
-      "maintain": "Maintain and update your information [Arabic]",
-      "secure": "Keep your account credentials secure [Arabic]",
-      "responsible": "You are responsible for all activities under your account [Arabic]",
-      "types": "Account Types [Arabic]",
-      "student": "Student: Access to learning content and assessments [Arabic]",
-      "teacher": "Teacher: Additional class management features [Arabic]",
-      "admin": "Administrator: Platform management capabilities [Arabic]"
+      "title": "3. حسابات المستخدمين",
+      "registration": "التسجيل",
+      "accurate": "قدم معلومات دقيقة وكاملة",
+      "maintain": "حافظ على معلوماتك وحدثها",
+      "secure": "احتفظ بأمان بيانات اعتماد حسابك",
+      "responsible": "أنت مسؤول عن جميع الأنشطة تحت حسابك",
+      "types": "أنواع الحسابات",
+      "student": "طالب: الوصول إلى محتوى التعلم والتقييمات",
+      "teacher": "معلم: ميزات إدارة الفصل الإضافية",
+      "admin": "مدير: قدرات إدارة المنصة"
     },
     "use": {
-      "title": "4. Acceptable Use Policy [Arabic]",
-      "permitted": "You may: [Arabic]",
-      "educational": "Use the platform for educational purposes [Arabic]",
-      "share": "Share your learning progress appropriately [Arabic]",
-      "feedback": "Provide constructive feedback [Arabic]",
-      "prohibited": "You may not: [Arabic]",
-      "misuse": "Misuse or attempt to manipulate the AI systems [Arabic]",
-      "share_credentials": "Share account credentials [Arabic]",
-      "cheat": "Engage in academic dishonesty [Arabic]",
-      "harm": "Harass, abuse, or harm other users [Arabic]",
-      "illegal": "Use the platform for illegal activities [Arabic]",
-      "scrape": "Scrape or copy content without permission [Arabic]"
+      "title": "4. سياسة الاستخدام المقبول",
+      "permitted": "يمكنك:",
+      "educational": "استخدام المنصة لأغراض تعليمية",
+      "share": "مشاركة تقدم التعلم بشكل مناسب",
+      "feedback": "تقديم تغذية راجعة بناءة",
+      "prohibited": "لا يمكنك:",
+      "misuse": "سوء استخدام أو محاولة التلاعب بأنظمة الذكاء الاصطناعي",
+      "share_credentials": "مشاركة بيانات اعتماد الحساب",
+      "cheat": "الانخراط في عدم الأمانة الأكاديمية",
+      "harm": "مضايقة أو إساءة استخدام أو إيذاء مستخدمين آخرين",
+      "illegal": "استخدام المنصة لأنشطة غير قانونية",
+      "scrape": "كشط أو نسخ المحتوى بدون إذن"
     },
     "ip": {
-      "title": "5. Intellectual Property [Arabic]",
-      "platform": "Platform Content [Arabic]",
-      "ownership": "All content on AI Square, including text, graphics, logos, and software, is owned by AI Square or its licensors and protected by intellectual property laws. [Arabic]",
-      "user": "User Content [Arabic]",
-      "retain": "You retain ownership of content you create. By submitting content, you grant us a license to use it for providing and improving our services. [Arabic]",
-      "open": "Open Source [Arabic]",
-      "git": "Educational content is managed through Git and may be subject to open-source licenses. Please check individual repositories for specific license terms. [Arabic]"
+      "title": "5. الملكية الفكرية",
+      "platform": "محتوى المنصة",
+      "ownership": "جميع المحتويات على AI Square، بما في ذلك النصوص والرسوم والشعارات والبرامج، مملوكة لـ AI Square أو مرخصيها ومحمية بقوانين الملكية الفكرية.",
+      "user": "محتوى المستخدم",
+      "retain": "تحتفظ بملكية المحتوى الذي تنشئه. بتقديم المحتوى، تمنحنا ترخيصاً لاستخدامه في تقديم وتحسين خدماتنا.",
+      "open": "مفتوح المصدر",
+      "git": "يُدار المحتوى التعليمي من خلال Git وقد يخضع لتراخيص مفتوحة المصدر. يرجى التحقق من المستودعات الفردية لشروط الترخيص المحددة."
     },
     "privacy": {
-      "title": "6. Privacy and Data Protection [Arabic]",
-      "content": "Your use of AI Square is also governed by our Privacy Policy. We are committed to protecting your personal information and using it only as described in our Privacy Policy. [Arabic]"
+      "title": "6. الخصوصية وحماية البيانات",
+      "content": "استخدامك لـ AI Square محكوم أيضاً بسياسة الخصوصية الخاصة بنا. نحن ملتزمون بحماية معلوماتك الشخصية واستخدامها فقط كما هو موضح في سياسة الخصوصية الخاصة بنا."
     },
     "ai": {
-      "title": "7. AI Services and Limitations [Arabic]",
-      "disclaimer": "Our AI-powered features are designed to assist learning but are not perfect. We do not guarantee the accuracy of AI-generated content or feedback. [Arabic]",
-      "educational": "AI responses are for educational purposes only [Arabic]",
-      "verify": "Always verify important information independently [Arabic]",
-      "improve": "We continuously work to improve AI accuracy [Arabic]"
+      "title": "7. خدمات الذكاء الاصطناعي والقيود",
+      "disclaimer": "ميزاتنا المدعومة بالذكاء الاصطناعي مصممة لمساعدة التعلم ولكنها ليست مثالية. لا نضمن دقة المحتوى أو التغذية الراجعة المولدة بالذكاء الاصطناعي.",
+      "educational": "استجابات الذكاء الاصطناعي لأغراض تعليمية فقط",
+      "verify": "تحقق دائماً من المعلومات المهمة بشكل مستقل",
+      "improve": "نعمل باستمرار على تحسين دقة الذكاء الاصطناعي"
     },
     "disclaimers": {
-      "title": "8. Disclaimers and Limitations [Arabic]",
-      "asis": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND. [Arabic]",
-      "liability": "To the fullest extent permitted by law, AI Square shall not be liable for any indirect, incidental, special, consequential, or punitive damages. [Arabic]"
+      "title": "8. إخلاء المسؤولية والقيود",
+      "asis": "الخدمة مقدمة \"كما هي\" بدون ضمانات من أي نوع.",
+      "liability": "إلى أقصى حد يسمح به القانون، لن تكون AI Square مسؤولة عن أي أضرار غير مباشرة أو عرضية أو خاصة أو تبعية أو عقابية."
     },
     "modifications": {
-      "title": "9. Modifications to Terms [Arabic]",
-      "content": "We may modify these Terms at any time. We will notify users of material changes. Continued use after changes constitutes acceptance of the new Terms. [Arabic]"
+      "title": "9. تعديل الشروط",
+      "content": "يمكننا تعديل هذه الشروط في أي وقت. سنخطر المستخدمين بالتغييرات الجوهرية. الاستخدام المستمر بعد التغييرات يشكل قبولاً للشروط الجديدة."
     },
     "termination": {
-      "title": "10. Termination [Arabic]",
-      "rights": "We reserve the right to suspend or terminate accounts that violate these Terms. You may delete your account at any time. [Arabic]"
+      "title": "10. الإنهاء",
+      "rights": "نحتفظ بالحق في تعليق أو إنهاء الحسابات التي تنتهك هذه الشروط. يمكنك حذف حسابك في أي وقت."
     },
     "law": {
-      "title": "11. Governing Law [Arabic]",
-      "content": "These Terms are governed by the laws of the jurisdiction where AI Square operates, without regard to conflict of law principles. [Arabic]"
+      "title": "11. القانون الحاكم",
+      "content": "تحكم هذه الشروط قوانين الولاية القضائية التي تعمل فيها AI Square، دون اعتبار لمبادئ تضارب القوانين."
     },
     "contact": {
-      "title": "12. Contact Information [Arabic]",
-      "intro": "For questions about these Terms, please contact us: [Arabic]"
+      "title": "12. معلومات الاتصال",
+      "intro": "لأسئلة حول هذه الشروط، يرجى الاتصال بنا:"
     },
-    "agreement": "By using AI Square, you acknowledge that you have read and agree to these Terms of Service. [Arabic]"
+    "agreement": "باستخدام AI Square، فإنك تقر بأنك قد قرأت ووافقت على شروط الخدمة هذه."
   },
   "common": {
-    "backToHome": "Back to Home [Arabic]"
+    "backToHome": "العودة إلى الصفحة الرئيسية"
   }
 }

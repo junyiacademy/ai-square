@@ -1,43 +1,43 @@
 {
-  "title": "Your Learning Path [French]",
-  "subtitle": "Personalized recommendations based on your assessment [French]",
-  "yourProgress": "Your Progress [French]",
-  "currentScore": "Current Score [French]",
-  "targetScore": "Target Score [French]",
-  "completed": "completed [French]",
-  "recommendedPath": "Recommended Learning Path [French]",
-  "startLearning": "Start Learning [French]",
-  "estimatedTime": "Estimated time [French]",
-  "weakDomainReason": "This is your weakest area with {{score}}% score [French]",
+  "title": "Votre Parcours d'Apprentissage",
+  "subtitle": "Recommandations personnalisées basées sur votre évaluation",
+  "yourProgress": "Votre Progrès",
+  "currentScore": "Score Actuel",
+  "targetScore": "Score Cible",
+  "completed": "terminé",
+  "recommendedPath": "Parcours d'Apprentissage Recommandé",
+  "startLearning": "Commencer l'Apprentissage",
+  "estimatedTime": "Temps estimé",
+  "weakDomainReason": "C'est votre domaine le plus faible avec {{score}}% de score",
   "difficulty": {
-    "beginner": "Beginner [French]",
-    "intermediate": "Intermediate [French]",
-    "advanced": "Advanced [French]"
+    "beginner": "Débutant",
+    "intermediate": "Intermédiaire",
+    "advanced": "Avancé"
   },
   "noAssessment": {
-    "title": "No Assessment Found [French]",
-    "description": "Please complete the assessment first to get personalized recommendations [French]",
-    "button": "Take Assessment [French]"
+    "title": "Aucune Évaluation Trouvée",
+    "description": "Veuillez d'abord compléter l'évaluation pour obtenir des recommandations personnalisées",
+    "button": "Faire l'Évaluation"
   },
   "domains": {
-    "Engaging_with_AI": "Engaging with AI [French]",
-    "Creating_with_AI": "Creating with AI [French]",
-    "Managing_with_AI": "Managing with AI [French]",
-    "Designing_with_AI": "Designing with AI [French]"
+    "Engaging_with_AI": "Interagir avec l'IA",
+    "Creating_with_AI": "Créer avec l'IA",
+    "Managing_with_AI": "Gérer avec l'IA",
+    "Designing_with_AI": "Concevoir avec l'IA"
   },
-  "strongDomainReason": "Advance your skills in {{domain}} (current: {{score}}%) [French]",
-  "averageDomainReason": "Improve your {{domain}} skills (current: {{score}}%) [French]",
+  "strongDomainReason": "Avancez vos compétences en {{domain}} (actuel: {{score}}%)",
+  "averageDomainReason": "Améliorez vos compétences {{domain}} (actuel: {{score}}%)",
   "learningPath": {
-    "filteringBy": "Showing items for {{domain}} [French]",
-    "clearFilter": "Clear filter [French]",
-    "recommendedPath": "Recommended Learning Path [French]",
-    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [French]",
-    "startLearning": "Start Learning [French]",
-    "progress": "Progress [French]",
-    "goToDashboard": "Go to Dashboard [French]",
-    "dashboardHint": "Track your overall progress and achievements in the dashboard [French]"
+    "filteringBy": "Affichage des éléments pour {{domain}}",
+    "clearFilter": "Effacer le filtre",
+    "recommendedPath": "Parcours d'Apprentissage Recommandé",
+    "estimatedTime": "Temps total: {{hours}}h {{minutes}}m",
+    "startLearning": "Commencer l'Apprentissage",
+    "progress": "Progrès",
+    "goToDashboard": "Aller au Tableau de Bord",
+    "dashboardHint": "Suivez votre progrès global et vos réalisations dans le tableau de bord"
   },
-  "showAll": "Show All [French]",
-  "focusOnWeakAreas": "Focus on Weak Areas [French]",
-  "backToDashboard": "Back to Dashboard [French]"
+  "showAll": "Tout Afficher",
+  "focusOnWeakAreas": "Se Concentrer sur les Zones Faibles",
+  "backToDashboard": "Retour au Tableau de Bord"
 }

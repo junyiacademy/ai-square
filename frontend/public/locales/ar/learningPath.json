@@ -1,43 +1,43 @@
 {
-  "title": "Your Learning Path [Arabic]",
-  "subtitle": "Personalized recommendations based on your assessment [Arabic]",
-  "yourProgress": "Your Progress [Arabic]",
-  "currentScore": "Current Score [Arabic]",
-  "targetScore": "Target Score [Arabic]",
-  "completed": "completed [Arabic]",
-  "recommendedPath": "Recommended Learning Path [Arabic]",
-  "startLearning": "Start Learning [Arabic]",
-  "estimatedTime": "Estimated time [Arabic]",
-  "weakDomainReason": "This is your weakest area with {{score}}% score [Arabic]",
+  "title": "مسار التعلم الخاص بك",
+  "subtitle": "توصيات مخصصة بناءً على تقييمك",
+  "yourProgress": "تقدمك",
+  "currentScore": "النقاط الحالية",
+  "targetScore": "النقاط المستهدفة",
+  "completed": "مكتمل",
+  "recommendedPath": "مسار التعلم الموصى به",
+  "startLearning": "بدء التعلم",
+  "estimatedTime": "الوقت المقدر",
+  "weakDomainReason": "هذا هو أضعف مجال لديك بنسبة {{score}}%",
   "difficulty": {
-    "beginner": "Beginner [Arabic]",
-    "intermediate": "Intermediate [Arabic]",
-    "advanced": "Advanced [Arabic]"
+    "beginner": "مبتدئ",
+    "intermediate": "متوسط",
+    "advanced": "متقدم"
   },
   "noAssessment": {
-    "title": "No Assessment Found [Arabic]",
-    "description": "Please complete the assessment first to get personalized recommendations [Arabic]",
-    "button": "Take Assessment [Arabic]"
+    "title": "لم يتم العثور على تقييم",
+    "description": "يرجى إكمال التقييم أولاً للحصول على توصيات مخصصة",
+    "button": "خذ التقييم"
   },
   "domains": {
-    "Engaging_with_AI": "Engaging with AI [Arabic]",
-    "Creating_with_AI": "Creating with AI [Arabic]",
-    "Managing_with_AI": "Managing with AI [Arabic]",
-    "Designing_with_AI": "Designing with AI [Arabic]"
+    "Engaging_with_AI": "التفاعل مع الذكاء الاصطناعي",
+    "Creating_with_AI": "الإبداع مع الذكاء الاصطناعي",
+    "Managing_with_AI": "الإدارة مع الذكاء الاصطناعي",
+    "Designing_with_AI": "التصميم مع الذكاء الاصطناعي"
   },
-  "strongDomainReason": "Advance your skills in {{domain}} (current: {{score}}%) [Arabic]",
-  "averageDomainReason": "Improve your {{domain}} skills (current: {{score}}%) [Arabic]",
+  "strongDomainReason": "قم بتطوير مهاراتك في {{domain}} (الحالي: {{score}}%)",
+  "averageDomainReason": "حسّن مهاراتك في {{domain}} (الحالي: {{score}}%)",
   "learningPath": {
-    "filteringBy": "Showing items for {{domain}} [Arabic]",
-    "clearFilter": "Clear filter [Arabic]",
-    "recommendedPath": "Recommended Learning Path [Arabic]",
-    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [Arabic]",
-    "startLearning": "Start Learning [Arabic]",
-    "progress": "Progress [Arabic]",
-    "goToDashboard": "Go to Dashboard [Arabic]",
-    "dashboardHint": "Track your overall progress and achievements in the dashboard [Arabic]"
+    "filteringBy": "عرض العناصر لـ {{domain}}",
+    "clearFilter": "مسح المرشح",
+    "recommendedPath": "مسار التعلم الموصى به",
+    "estimatedTime": "إجمالي الوقت: {{hours}} ساعة {{minutes}} دقيقة",
+    "startLearning": "بدء التعلم",
+    "progress": "التقدم",
+    "goToDashboard": "اذهب إلى لوحة التحكم",
+    "dashboardHint": "تتبع تقدمك العام وإنجازاتك في لوحة التحكم"
   },
-  "showAll": "Show All [Arabic]",
-  "focusOnWeakAreas": "Focus on Weak Areas [Arabic]",
-  "backToDashboard": "Back to Dashboard [Arabic]"
+  "showAll": "إظهار الكل",
+  "focusOnWeakAreas": "التركيز على المناطق الضعيفة",
+  "backToDashboard": "العودة إلى لوحة التحكم"
 }

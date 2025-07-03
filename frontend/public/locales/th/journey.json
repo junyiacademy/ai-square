@@ -1,73 +1,73 @@
 {
-  "title": "AI Square User Journey [Thai]",
-  "subtitle": "Five key paths for complete AI learning experience [Thai]",
-  "getStarted": "Get Started [Thai]",
-  "pathOverview": "Complete Learning Cycle [Thai]",
-  "nextPath": "Next Path → [Thai]",
-  "tryFeature": "Experience This Feature [Thai]",
+  "title": "การเดินทางของผู้ใช้ AI Square",
+  "subtitle": "เส้นทางหลัก 5 เส้นทางสำหรับประสบการณ์การเรียนรู้ AI ที่สมบูรณ์",
+  "getStarted": "เริ่มต้น",
+  "pathOverview": "วงจรการเรียนรู้ที่สมบูรณ์",
+  "nextPath": "เส้นทางถัดไป →",
+  "tryFeature": "ลองใช้ฟีเจอร์นี้",
   "paths": {
     "dashboard": {
-      "title": "Dashboard [Thai]",
-      "subtitle": "Learning Command Center [Thai]",
-      "description": "One-stop overview of your AI learning journey, track progress, view achievements, and plan next steps. [Thai]",
-      "userNeed": "How is my learning progress? [Thai]",
+      "title": "แดชบอร์ด",
+      "subtitle": "ศูนย์ควบคุมการเรียนรู้",
+      "description": "ภาพรวมครบวงจรของการเดินทางการเรียนรู้ AI ของคุณ ติดตามความคืบหน้า ดูความสำเร็จ และวางแผนขั้นตอนถัดไป",
+      "userNeed": "ความคืบหน้าการเรียนรู้ของฉันเป็นอย่างไร?",
       "features": [
-        "[Thai] translation needed",
-        "[Thai] translation needed",
-        "[Thai] translation needed",
-        "[Thai] translation needed"
+        "การแสดงภาพความคืบหน้าด้านความรู้ AI",
+        "สถิติการเรียนรู้อย่างรวดเร็ว",
+        "การแนะนำการกระทำที่เป็นส่วนตัว",
+        "การนำทางฟีเจอร์อย่างรวดเร็ว"
       ]
     },
     "assessment": {
-      "title": "Assessment [Thai]",
-      "subtitle": "AI Literacy Test [Thai]",
-      "description": "25 professional questions to deeply understand your competency level across four AI domains. [Thai]",
-      "userNeed": "What is my AI competency level? [Thai]",
+      "title": "การประเมิน",
+      "subtitle": "แบบทดสอบความรู้ AI",
+      "description": "คำถามระดับมืออาชีพ 25 ข้อเพื่อทำความเข้าใจระดับความสามารถของคุณในโดเมน AI ทั้งสี่อย่างลึกซึ้ง",
+      "userNeed": "ระดับความสามารถด้าน AI ของฉันเป็นอย่างไร?",
       "features": [
-        "[Thai] translation needed",
-        "[Thai] translation needed",
-        "[Thai] translation needed",
-        "[Thai] translation needed"
+        "โดเมนความรู้ AI ทั้งสี่ด้าน",
+        "คำถาม 25 ข้อตามสถานการณ์จริง",
+        "การวิเคราะห์ความสามารถด้วยแผนภูมิเรดาร์",
+        "รายงานแนะนำเฉพาะบุคคล"
       ]
     },
     "learningPath": {
-      "title": "Learning Path [Thai]",
-      "subtitle": "Personalized Growth Plan [Thai]",
-      "description": "Based on your assessment results, we recommend the most suitable learning content and pace. [Thai]",
-      "userNeed": "What courses are right for me? [Thai]",
+      "title": "เส้นทางการเรียนรู้",
+      "subtitle": "แผนการเติบโตเฉพาะบุคคล",
+      "description": "ตามผลการประเมินของคุณ เราแนะนำเนื้อหาการเรียนรู้และจังหวะที่เหมาะสมที่สุด",
+      "userNeed": "คอร์สเรียนไหนเหมาะกับฉัน?",
       "features": [
-        "[Thai] translation needed",
-        "[Thai] translation needed",
-        "[Thai] translation needed",
-        "[Thai] translation needed"
+        "การแนะนำคอร์สเรียนที่ปรับแต่ง",
+        "เนื้อหาการเรียนรู้แบบไล่ระดับ",
+        "การวางแผนแบบก้าวหน้า",
+        "ตารางการเรียนรู้ที่ยืดหยุ่น"
       ]
     },
     "pbl": {
-      "title": "PBL Practice [Thai]",
-      "subtitle": "Real-world Scenarios [Thai]",
-      "description": "9 practical scenarios with AI tutor guidance for learning by doing. [Thai]",
-      "userNeed": "How do I apply AI in practice? [Thai]",
+      "title": "การฝึกปฏิบัติ PBL",
+      "subtitle": "สถานการณ์จริง",
+      "description": "สถานการณ์จริง 9 สถานการณ์พร้อมคำแนะนำจากครู AI สำหรับการเรียนรู้โดยการปฏิบัติ",
+      "userNeed": "ฉันจะประยุกต์ใช้ AI ในทางปฏิบัติได้อย่างไร?",
       "features": [
-        "[Thai] translation needed",
-        "[Thai] translation needed",
-        "[Thai] translation needed",
-        "[Thai] translation needed"
+        "การพัฒนาหุ่นยนต์ AI",
+        "การซื้อขาย Stablecoin ด้วย AI",
+        "การฝึกอบรมการหางานด้วย AI",
+        "การสอนพิเศษ AI แบบเรียลไทม์"
       ]
     },
     "chat": {
-      "title": "AI Advisor [Thai]",
-      "subtitle": "24/7 Support [Thai]",
-      "description": "24/7 intelligent learning companion that remembers your learning context and provides personalized advice. [Thai]",
-      "userNeed": "Who can I ask when I have questions? [Thai]",
+      "title": "ที่ปรึกษา AI",
+      "subtitle": "การสนับสนุน 24/7",
+      "description": "เพื่อนการเรียนรู้อัจฉริยะตลอด 24 ชั่วโมงที่จดจำบริบทการเรียนรู้ของคุณและให้คำแนะนำเฉพาะบุคคล",
+      "userNeed": "ฉันจะถามใครได้เมื่อมีคำถาม?",
       "features": [
-        "[Thai] translation needed",
-        "[Thai] translation needed",
-        "[Thai] translation needed",
-        "[Thai] translation needed"
+        "ความจำการสนทนาต่อเนื่อง",
+        "ข้อเสนอแนะการเรียนรู้เฉพาะบุคคล",
+        "การสนทนาลึกหลายรอบ",
+        "การสนับสนุนการเรียนรู้ Q&A"
       ]
     }
   },
-  "keyFeatures": "Key Features [Thai]",
-  "solvedNeed": "User Need Addressed [Thai]",
-  "completeJourney": "Complete Learning Journey [Thai]"
+  "keyFeatures": "คุณสมบัติหลัก",
+  "solvedNeed": "ความต้องการของผู้ใช้ที่ได้รับการแก้ไข",
+  "completeJourney": "การเดินทางการเรียนรู้ที่สมบูรณ์"
 }

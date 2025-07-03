@@ -1,171 +1,171 @@
 {
   "privacy": {
-    "title": "Privacy Policy [Russian]",
-    "lastUpdated": "Last updated [Russian]",
-    "intro": "AI Square (\"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI literacy education platform. [Russian]",
+    "title": "Политика конфиденциальности",
+    "lastUpdated": "Последнее обновление",
+    "intro": "AI Square («мы», «наша» или «нас») обязуется защищать вашу конфиденциальность. Данная Политика конфиденциальности объясняет, как мы собираем, используем, раскрываем и защищаем вашу информацию при использовании нашей образовательной платформы по цифровой грамотности ИИ.",
     "infoCollect": {
-      "title": "1. Information We Collect [Russian]",
-      "personal": "Personal Information [Russian]",
-      "email": "Email address [Russian]",
-      "name": "Name (optional) [Russian]",
-      "role": "User role (student, teacher, admin) [Russian]",
-      "language": "Language preference [Russian]",
-      "usage": "Usage Data [Russian]",
-      "learning": "Learning progress and assessment results [Russian]",
-      "interactions": "Interactions with AI tutors [Russian]",
-      "scenarios": "PBL scenario completion data [Russian]",
-      "analytics": "Platform usage analytics [Russian]",
-      "technical": "Technical Data [Russian]",
-      "browser": "Browser type and version [Russian]",
-      "device": "Device information [Russian]",
-      "ip": "IP address (anonymized) [Russian]",
-      "timezone": "Time zone settings [Russian]"
+      "title": "1. Информация, которую мы собираем",
+      "personal": "Персональная информация",
+      "email": "Адрес электронной почты",
+      "name": "Имя (необязательно)",
+      "role": "Роль пользователя (студент, преподаватель, администратор)",
+      "language": "Языковые предпочтения",
+      "usage": "Данные об использовании",
+      "learning": "Прогресс обучения и результаты оценки",
+      "interactions": "Взаимодействие с ИИ-наставниками",
+      "scenarios": "Данные завершения PBL сценариев",
+      "analytics": "Аналитика использования платформы",
+      "technical": "Технические данные",
+      "browser": "Тип и версия браузера",
+      "device": "Информация об устройстве",
+      "ip": "IP-адрес (анонимизированный)",
+      "timezone": "Настройки часового пояса"
     },
     "howUse": {
-      "title": "2. How We Use Your Information [Russian]",
-      "provide": "To provide and maintain our service [Russian]",
-      "personalize": "To personalize your learning experience [Russian]",
-      "communicate": "To communicate with you about your account [Russian]",
-      "improve": "To improve our platform and develop new features [Russian]",
-      "analyze": "To analyze usage patterns and optimize performance [Russian]",
-      "security": "To detect and prevent security threats [Russian]"
+      "title": "2. Как мы используем вашу информацию",
+      "provide": "Для предоставления и поддержания нашего сервиса",
+      "personalize": "Для персонализации вашего опыта обучения",
+      "communicate": "Для связи с вами по поводу вашего аккаунта",
+      "improve": "Для улучшения нашей платформы и разработки новых функций",
+      "analyze": "Для анализа паттернов использования и оптимизации производительности",
+      "security": "Для обнаружения и предотвращения угроз безопасности"
     },
     "storage": {
-      "title": "3. Data Storage and Security [Russian]",
-      "location": "Your data is stored securely on Google Cloud Platform servers. We implement appropriate technical and organizational measures to protect your personal information. [Russian]",
-      "encryption": "Data encryption in transit and at rest [Russian]",
-      "access": "Restricted access controls [Russian]",
-      "monitoring": "Regular security monitoring [Russian]",
-      "backup": "Secure backup procedures [Russian]"
+      "title": "3. Хранение и безопасность данных",
+      "location": "Ваши данные надежно хранятся на серверах Google Cloud Platform. Мы реализуем соответствующие технические и организационные меры для защиты вашей персональной информации.",
+      "encryption": "Шифрование данных при передаче и хранении",
+      "access": "Ограниченный контроль доступа",
+      "monitoring": "Регулярный мониторинг безопасности",
+      "backup": "Безопасные процедуры резервного копирования"
     },
     "sharing": {
-      "title": "4. Data Sharing and Disclosure [Russian]",
-      "intro": "We do not sell, trade, or rent your personal information. We may share your information in the following situations: [Russian]",
-      "consent": "With your consent [Russian]",
-      "legal": "To comply with legal obligations [Russian]",
-      "protect": "To protect our rights and safety [Russian]",
-      "service": "With service providers who assist our operations [Russian]"
+      "title": "4. Обмен и раскрытие данных",
+      "intro": "Мы не продаем, не торгуем и не сдаем в аренду вашу персональную информацию. Мы можем делиться вашей информацией в следующих ситуациях:",
+      "consent": "С вашего согласия",
+      "legal": "Для соблюдения юридических обязательств",
+      "protect": "Для защиты наших прав и безопасности",
+      "service": "С поставщиками услуг, которые помогают в нашей деятельности"
     },
     "rights": {
-      "title": "5. Your Rights [Russian]",
-      "intro": "You have the following rights regarding your personal data: [Russian]",
-      "access": "Access your personal information [Russian]",
-      "correct": "Correct inaccurate data [Russian]",
-      "delete": "Request deletion of your data [Russian]",
-      "export": "Export your data in a portable format [Russian]",
-      "restrict": "Restrict processing of your data [Russian]",
-      "withdraw": "Withdraw consent at any time [Russian]"
+      "title": "5. Ваши права",
+      "intro": "У вас есть следующие права относительно ваших персональных данных:",
+      "access": "Доступ к вашей персональной информации",
+      "correct": "Исправление неточных данных",
+      "delete": "Запрос удаления ваших данных",
+      "export": "Экспорт ваших данных в портативном формате",
+      "restrict": "Ограничение обработки ваших данных",
+      "withdraw": "Отзыв согласия в любое время"
     },
     "cookies": {
-      "title": "6. Cookies and Tracking [Russian]",
-      "intro": "We use cookies and similar tracking technologies to enhance your experience. Essential cookies are required for platform functionality, while optional cookies help us improve our service. [Russian]"
+      "title": "6. Файлы cookie и отслеживание",
+      "intro": "Мы используем файлы cookie и аналогичные технологии отслеживания для улучшения вашего опыта. Основные файлы cookie необходимы для функционирования платформы, в то время как дополнительные файлы cookie помогают нам улучшать наш сервис."
     },
     "children": {
-      "title": "7. Children's Privacy [Russian]",
-      "content": "Our platform is designed for educational use by students of all ages. For users under 13, we require parental consent and limit data collection to essential information only. [Russian]"
+      "title": "7. Конфиденциальность детей",
+      "content": "Наша платформа предназначена для образовательного использования учащимися всех возрастов. Для пользователей младше 13 лет мы требуем согласие родителей и ограничиваем сбор данных только необходимой информацией."
     },
     "international": {
-      "title": "8. International Data Transfers [Russian]",
-      "content": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers. [Russian]"
+      "title": "8. Международная передача данных",
+      "content": "Ваша информация может передаваться и обрабатываться в странах, отличных от вашей. Мы обеспечиваем наличие соответствующих мер защиты для таких передач."
     },
     "changes": {
-      "title": "9. Changes to This Policy [Russian]",
-      "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the \"Last Updated\" date. [Russian]"
+      "title": "9. Изменения в данной политике",
+      "content": "Мы можем время от времени обновлять данную Политику конфиденциальности. Мы уведомим вас о любых изменениях, опубликовав новую политику на этой странице и обновив дату \"Последнее обновление\"."
     },
     "contact": {
-      "title": "10. Contact Us [Russian]",
-      "intro": "If you have questions about this Privacy Policy, please contact us at: [Russian]"
+      "title": "10. Свяжитесь с нами",
+      "intro": "Если у вас есть вопросы по данной Политике конфиденциальности, свяжитесь с нами:"
     }
   },
   "terms": {
-    "title": "Terms of Service [Russian]",
-    "effectiveDate": "Effective Date [Russian]",
-    "lastUpdated": "Last Updated [Russian]",
-    "intro": "Welcome to AI Square! These Terms of Service (\"Terms\") govern your use of our AI literacy education platform. By accessing or using AI Square, you agree to be bound by these Terms. [Russian]",
+    "title": "Условия обслуживания",
+    "effectiveDate": "Дата вступления в силу",
+    "lastUpdated": "Последнее обновление",
+    "intro": "Добро пожаловать в AI Square! Данные Условия обслуживания («Условия») регулируют использование нашей образовательной платформы по цифровой грамотности ИИ. Получая доступ к AI Square или используя его, вы соглашаетесь соблюдать данные Условия.",
     "acceptance": {
-      "title": "1. Acceptance of Terms [Russian]",
-      "content": "By creating an account or using our services, you acknowledge that you have read, understood, and agree to these Terms. If you do not agree, please do not use our platform. [Russian]",
-      "capacity": "You must be at least 13 years old to use our services. If you are under 18, you must have parental consent. [Russian]"
+      "title": "1. Принятие условий",
+      "content": "Создавая аккаунт или используя наши сервисы, вы подтверждаете, что прочитали, поняли и согласились с данными Условиями. Если вы не согласны, пожалуйста, не используйте нашу платформу.",
+      "capacity": "Для использования наших сервисов вам должно быть не менее 13 лет. Если вам меньше 18 лет, вы должны получить согласие родителей."
     },
     "service": {
-      "title": "2. Description of Service [Russian]",
-      "intro": "AI Square provides: [Russian]",
-      "literacy": "AI literacy education content and assessments [Russian]",
-      "pbl": "Problem-Based Learning (PBL) scenarios [Russian]",
-      "ai": "AI-powered tutoring and feedback [Russian]",
-      "tracking": "Progress tracking and analytics [Russian]",
-      "multi": "Multi-language support (9 languages) [Russian]"
+      "title": "2. Описание сервиса",
+      "intro": "AI Square предоставляет:",
+      "literacy": "Образовательный контент и оценки по цифровой грамотности ИИ",
+      "pbl": "Сценарии проблемно-ориентированного обучения (PBL)",
+      "ai": "ИИ-репетиторство и обратную связь",
+      "tracking": "Отслеживание прогресса и аналитику",
+      "multi": "Поддержку многих языков (9 языков)"
     },
     "accounts": {
-      "title": "3. User Accounts [Russian]",
-      "registration": "Registration [Russian]",
-      "accurate": "Provide accurate and complete information [Russian]",
-      "maintain": "Maintain and update your information [Russian]",
-      "secure": "Keep your account credentials secure [Russian]",
-      "responsible": "You are responsible for all activities under your account [Russian]",
-      "types": "Account Types [Russian]",
-      "student": "Student: Access to learning content and assessments [Russian]",
-      "teacher": "Teacher: Additional class management features [Russian]",
-      "admin": "Administrator: Platform management capabilities [Russian]"
+      "title": "3. Пользовательские аккаунты",
+      "registration": "Регистрация",
+      "accurate": "Предоставление точной и полной информации",
+      "maintain": "Поддержание и обновление вашей информации",
+      "secure": "Обеспечение безопасности учетных данных аккаунта",
+      "responsible": "Вы несете ответственность за все действия в вашем аккаунте",
+      "types": "Типы аккаунтов",
+      "student": "Студент: доступ к обучающему контенту и оценкам",
+      "teacher": "Преподаватель: дополнительные функции управления классом",
+      "admin": "Администратор: возможности управления платформой"
     },
     "use": {
-      "title": "4. Acceptable Use Policy [Russian]",
-      "permitted": "You may: [Russian]",
-      "educational": "Use the platform for educational purposes [Russian]",
-      "share": "Share your learning progress appropriately [Russian]",
-      "feedback": "Provide constructive feedback [Russian]",
-      "prohibited": "You may not: [Russian]",
-      "misuse": "Misuse or attempt to manipulate the AI systems [Russian]",
-      "share_credentials": "Share account credentials [Russian]",
-      "cheat": "Engage in academic dishonesty [Russian]",
-      "harm": "Harass, abuse, or harm other users [Russian]",
-      "illegal": "Use the platform for illegal activities [Russian]",
-      "scrape": "Scrape or copy content without permission [Russian]"
+      "title": "4. Политика допустимого использования",
+      "permitted": "Вы можете:",
+      "educational": "Использовать платформу в образовательных целях",
+      "share": "Уместно делиться своим прогрессом обучения",
+      "feedback": "Предоставлять конструктивную обратную связь",
+      "prohibited": "Вы не можете:",
+      "misuse": "Неправильно использовать или пытаться манипулировать ИИ-системами",
+      "share_credentials": "Делиться учетными данными аккаунта",
+      "cheat": "Заниматься академической нечестностью",
+      "harm": "Преследовать, оскорблять или вредить другим пользователям",
+      "illegal": "Использовать платформу для незаконной деятельности",
+      "scrape": "Собирать или копировать контент без разрешения"
     },
     "ip": {
-      "title": "5. Intellectual Property [Russian]",
-      "platform": "Platform Content [Russian]",
-      "ownership": "All content on AI Square, including text, graphics, logos, and software, is owned by AI Square or its licensors and protected by intellectual property laws. [Russian]",
-      "user": "User Content [Russian]",
-      "retain": "You retain ownership of content you create. By submitting content, you grant us a license to use it for providing and improving our services. [Russian]",
-      "open": "Open Source [Russian]",
-      "git": "Educational content is managed through Git and may be subject to open-source licenses. Please check individual repositories for specific license terms. [Russian]"
+      "title": "5. Интеллектуальная собственность",
+      "platform": "Контент платформы",
+      "ownership": "Весь контент на AI Square, включая текст, графику, логотипы и программное обеспечение, принадлежит AI Square или его лицензиарам и защищен законами об интеллектуальной собственности.",
+      "user": "Пользовательский контент",
+      "retain": "Вы сохраняете право собственности на создаваемый контент. Отправляя контент, вы предоставляете нам лицензию на его использование для предоставления и улучшения наших сервисов.",
+      "open": "Открытый исходный код",
+      "git": "Образовательный контент управляется через Git и может подпадать под лицензии открытого исходного кода. Пожалуйста, проверьте отдельные репозитории для конкретных условий лицензии."
     },
     "privacy": {
-      "title": "6. Privacy and Data Protection [Russian]",
-      "content": "Your use of AI Square is also governed by our Privacy Policy. We are committed to protecting your personal information and using it only as described in our Privacy Policy. [Russian]"
+      "title": "6. Конфиденциальность и защита данных",
+      "content": "Использование AI Square также регулируется нашей Политикой конфиденциальности. Мы обязуемся защищать вашу персональную информацию и использовать ее только как описано в нашей Политике конфиденциальности."
     },
     "ai": {
-      "title": "7. AI Services and Limitations [Russian]",
-      "disclaimer": "Our AI-powered features are designed to assist learning but are not perfect. We do not guarantee the accuracy of AI-generated content or feedback. [Russian]",
-      "educational": "AI responses are for educational purposes only [Russian]",
-      "verify": "Always verify important information independently [Russian]",
-      "improve": "We continuously work to improve AI accuracy [Russian]"
+      "title": "7. ИИ-сервисы и ограничения",
+      "disclaimer": "Наши функции на основе ИИ разработаны для помощи в обучении, но не являются совершенными. Мы не гарантируем точность ИИ-генерируемого контента или обратной связи.",
+      "educational": "Ответы ИИ предназначены только для образовательных целей",
+      "verify": "Всегда проверяйте важную информацию независимо",
+      "improve": "Мы постоянно работаем над улучшением точности ИИ"
     },
     "disclaimers": {
-      "title": "8. Disclaimers and Limitations [Russian]",
-      "asis": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND.",
-      "liability": "To the fullest extent permitted by law, AI Square shall not be liable for any indirect, incidental, special, consequential, or punitive damages. [Russian]"
+      "title": "8. Отказ от ответственности и ограничения",
+      "asis": "СЕРВИС ПРЕДОСТАВЛЯЕТСЯ \"КАК ЕСТЬ\" БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ.",
+      "liability": "В максимальной степени, разрешенной законом, AI Square не несет ответственности за любые косвенные, случайные, особые, последующие или штрафные ущербы."
     },
     "modifications": {
-      "title": "9. Modifications to Terms [Russian]",
-      "content": "We may modify these Terms at any time. We will notify users of material changes. Continued use after changes constitutes acceptance of the new Terms. [Russian]"
+      "title": "9. Изменения в условиях",
+      "content": "Мы можем изменить данные Условия в любое время. Мы уведомим пользователей о существенных изменениях. Продолжение использования после изменений означает принятие новых Условий."
     },
     "termination": {
-      "title": "10. Termination [Russian]",
-      "rights": "We reserve the right to suspend or terminate accounts that violate these Terms. You may delete your account at any time. [Russian]"
+      "title": "10. Прекращение",
+      "rights": "Мы оставляем за собой право приостановить или прекратить аккаунты, нарушающие данные Условия. Вы можете удалить свой аккаунт в любое время."
     },
     "law": {
-      "title": "11. Governing Law [Russian]",
-      "content": "These Terms are governed by the laws of the jurisdiction where AI Square operates, without regard to conflict of law principles. [Russian]"
+      "title": "11. Применимое право",
+      "content": "Данные Условия регулируются законами юрисдикции, где действует AI Square, без учета принципов коллизии права."
     },
     "contact": {
-      "title": "12. Contact Information [Russian]",
-      "intro": "For questions about these Terms, please contact us: [Russian]"
+      "title": "12. Контактная информация",
+      "intro": "По вопросам, касающимся данных Условий, свяжитесь с нами:"
     },
-    "agreement": "By using AI Square, you acknowledge that you have read and agree to these Terms of Service. [Russian]"
+    "agreement": "Используя AI Square, вы подтверждаете, что прочитали и согласились с данными Условиями обслуживания."
   },
   "common": {
-    "backToHome": "Back to Home [Russian]"
+    "backToHome": "Вернуться на главную"
   }
 }

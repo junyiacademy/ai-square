@@ -1,43 +1,43 @@
 {
-  "title": "Your Learning Path [Japanese]",
-  "subtitle": "Personalized recommendations based on your assessment [Japanese]",
-  "yourProgress": "Your Progress [Japanese]",
-  "currentScore": "Current Score [Japanese]",
-  "targetScore": "Target Score [Japanese]",
-  "completed": "completed [Japanese]",
-  "recommendedPath": "Recommended Learning Path [Japanese]",
-  "startLearning": "Start Learning [Japanese]",
-  "estimatedTime": "Estimated time [Japanese]",
-  "weakDomainReason": "This is your weakest area with {{score}}% score [Japanese]",
+  "title": "あなたの学習パス",
+  "subtitle": "評価に基づく個人向けの推奨事項",
+  "yourProgress": "あなたの進歩",
+  "currentScore": "現在のスコア",
+  "targetScore": "目標スコア",
+  "completed": "完了",
+  "recommendedPath": "推奨学習パス",
+  "startLearning": "学習を始める",
+  "estimatedTime": "推定時間",
+  "weakDomainReason": "これは{{score}}%のスコアで最も弱い分野です",
   "difficulty": {
-    "beginner": "Beginner [Japanese]",
-    "intermediate": "Intermediate [Japanese]",
-    "advanced": "Advanced [Japanese]"
+    "beginner": "初心者",
+    "intermediate": "中級者",
+    "advanced": "上級者"
   },
   "noAssessment": {
-    "title": "No Assessment Found [Japanese]",
-    "description": "Please complete the assessment first to get personalized recommendations [Japanese]",
-    "button": "Take Assessment [Japanese]"
+    "title": "評価が見つかりません",
+    "description": "個人向けの推奨事項を取得するために、まず評価を完了してください",
+    "button": "評価を受ける"
   },
   "domains": {
-    "Engaging_with_AI": "Engaging with AI [Japanese]",
-    "Creating_with_AI": "Creating with AI [Japanese]",
-    "Managing_with_AI": "Managing with AI [Japanese]",
-    "Designing_with_AI": "Designing with AI [Japanese]"
+    "Engaging_with_AI": "AIとの関わり",
+    "Creating_with_AI": "AIでの創造",
+    "Managing_with_AI": "AIでの管理",
+    "Designing_with_AI": "AIでの設計"
   },
-  "strongDomainReason": "Advance your skills in {{domain}} (current: {{score}}%) [Japanese]",
-  "averageDomainReason": "Improve your {{domain}} skills (current: {{score}}%) [Japanese]",
+  "strongDomainReason": "{{domain}}のスキルを向上させましょう（現在：{{score}}%）",
+  "averageDomainReason": "{{domain}}スキルを改善しましょう（現在：{{score}}%）",
   "learningPath": {
-    "filteringBy": "Showing items for {{domain}} [Japanese]",
-    "clearFilter": "Clear filter [Japanese]",
-    "recommendedPath": "Recommended Learning Path [Japanese]",
-    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [Japanese]",
-    "startLearning": "Start Learning [Japanese]",
-    "progress": "Progress [Japanese]",
-    "goToDashboard": "Go to Dashboard [Japanese]",
-    "dashboardHint": "Track your overall progress and achievements in the dashboard [Japanese]"
+    "filteringBy": "{{domain}}のアイテムを表示中",
+    "clearFilter": "フィルターをクリア",
+    "recommendedPath": "推奨学習パス",
+    "estimatedTime": "合計時間：{{hours}}時間{{minutes}}分",
+    "startLearning": "学習を始める",
+    "progress": "進歩",
+    "goToDashboard": "ダッシュボードへ",
+    "dashboardHint": "ダッシュボードで全体的な進歩と成果を追跡しましょう"
   },
-  "showAll": "Show All [Japanese]",
-  "focusOnWeakAreas": "Focus on Weak Areas [Japanese]",
-  "backToDashboard": "Back to Dashboard [Japanese]"
+  "showAll": "すべて表示",
+  "focusOnWeakAreas": "弱い分野に焦点を当てる",
+  "backToDashboard": "ダッシュボードに戻る"
 }

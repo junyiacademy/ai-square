@@ -1,73 +1,73 @@
 {
-  "title": "AI Square User Journey [Indonesian]",
-  "subtitle": "Five key paths for complete AI learning experience [Indonesian]",
-  "getStarted": "Get Started [Indonesian]",
-  "pathOverview": "Complete Learning Cycle [Indonesian]",
-  "nextPath": "Next Path → [Indonesian]",
-  "tryFeature": "Experience This Feature [Indonesian]",
+  "title": "Perjalanan Pengguna AI Square",
+  "subtitle": "Lima jalur utama untuk pengalaman pembelajaran AI yang lengkap",
+  "getStarted": "Mulai",
+  "pathOverview": "Siklus Pembelajaran Lengkap",
+  "nextPath": "Jalur Berikutnya →",
+  "tryFeature": "Coba Fitur Ini",
   "paths": {
     "dashboard": {
-      "title": "Dashboard [Indonesian]",
-      "subtitle": "Learning Command Center [Indonesian]",
-      "description": "One-stop overview of your AI learning journey, track progress, view achievements, and plan next steps. [Indonesian]",
-      "userNeed": "How is my learning progress? [Indonesian]",
+      "title": "Dashboard",
+      "subtitle": "Pusat Kendali Pembelajaran",
+      "description": "Gambaran lengkap perjalanan pembelajaran AI Anda, lacak kemajuan, lihat pencapaian, dan rencanakan langkah selanjutnya.",
+      "userNeed": "Bagaimana kemajuan pembelajaran saya?",
       "features": [
-        "[Indonesian] translation needed",
-        "[Indonesian] translation needed",
-        "[Indonesian] translation needed",
-        "[Indonesian] translation needed"
+        "Visualisasi kemajuan literasi AI",
+        "Statistik pembelajaran sekilas",
+        "Rekomendasi tindakan yang dipersonalisasi",
+        "Navigasi fitur cepat"
       ]
     },
     "assessment": {
-      "title": "Assessment [Indonesian]",
-      "subtitle": "AI Literacy Test [Indonesian]",
-      "description": "25 professional questions to deeply understand your competency level across four AI domains. [Indonesian]",
-      "userNeed": "What is my AI competency level? [Indonesian]",
+      "title": "Penilaian",
+      "subtitle": "Tes Literasi AI",
+      "description": "25 pertanyaan profesional untuk memahami secara mendalam tingkat kompetensi Anda di empat domain AI.",
+      "userNeed": "Berapa tingkat kompetensi AI saya?",
       "features": [
-        "[Indonesian] translation needed",
-        "[Indonesian] translation needed",
-        "[Indonesian] translation needed",
-        "[Indonesian] translation needed"
+        "Empat domain literasi AI",
+        "25 pertanyaan berbasis skenario",
+        "Analisis kemampuan grafik radar",
+        "Laporan rekomendasi yang dipersonalisasi"
       ]
     },
     "learningPath": {
-      "title": "Learning Path [Indonesian]",
-      "subtitle": "Personalized Growth Plan [Indonesian]",
-      "description": "Based on your assessment results, we recommend the most suitable learning content and pace. [Indonesian]",
-      "userNeed": "What courses are right for me? [Indonesian]",
+      "title": "Jalur Pembelajaran",
+      "subtitle": "Rencana Pertumbuhan Pribadi",
+      "description": "Berdasarkan hasil penilaian Anda, kami merekomendasikan konten pembelajaran dan kecepatan yang paling sesuai.",
+      "userNeed": "Kursus apa yang tepat untuk saya?",
       "features": [
-        "[Indonesian] translation needed",
-        "[Indonesian] translation needed",
-        "[Indonesian] translation needed",
-        "[Indonesian] translation needed"
+        "Rekomendasi kursus yang disesuaikan",
+        "Konten pembelajaran bertingkat",
+        "Perencanaan progresif",
+        "Jadwal pembelajaran fleksibel"
       ]
     },
     "pbl": {
-      "title": "PBL Practice [Indonesian]",
-      "subtitle": "Real-world Scenarios [Indonesian]",
-      "description": "9 practical scenarios with AI tutor guidance for learning by doing. [Indonesian]",
-      "userNeed": "How do I apply AI in practice? [Indonesian]",
+      "title": "Praktik PBL",
+      "subtitle": "Skenario Dunia Nyata",
+      "description": "9 skenario praktis dengan bimbingan tutor AI untuk belajar sambil melakukan.",
+      "userNeed": "Bagaimana cara menerapkan AI dalam praktik?",
       "features": [
-        "[Indonesian] translation needed",
-        "[Indonesian] translation needed",
-        "[Indonesian] translation needed",
-        "[Indonesian] translation needed"
+        "Pengembangan Robotika AI",
+        "Trading Stablecoin AI",
+        "Pelatihan Pencarian Kerja AI",
+        "Bimbingan AI real-time"
       ]
     },
     "chat": {
-      "title": "AI Advisor [Indonesian]",
-      "subtitle": "24/7 Support [Indonesian]",
-      "description": "24/7 intelligent learning companion that remembers your learning context and provides personalized advice. [Indonesian]",
-      "userNeed": "Who can I ask when I have questions? [Indonesian]",
+      "title": "Penasihat AI",
+      "subtitle": "Dukungan 24/7",
+      "description": "Teman belajar cerdas 24/7 yang mengingat konteks pembelajaran Anda dan memberikan saran yang dipersonalisasi.",
+      "userNeed": "Siapa yang bisa saya tanya saat ada pertanyaan?",
       "features": [
-        "[Indonesian] translation needed",
-        "[Indonesian] translation needed",
-        "[Indonesian] translation needed",
-        "[Indonesian] translation needed"
+        "Memori percakapan berkelanjutan",
+        "Saran pembelajaran yang dipersonalisasi",
+        "Percakapan mendalam multi-putaran",
+        "Dukungan tanya jawab pembelajaran"
       ]
     }
   },
-  "keyFeatures": "Key Features [Indonesian]",
-  "solvedNeed": "User Need Addressed [Indonesian]",
-  "completeJourney": "Complete Learning Journey [Indonesian]"
+  "keyFeatures": "Fitur Utama",
+  "solvedNeed": "Kebutuhan Pengguna yang Dipenuhi",
+  "completeJourney": "Perjalanan Pembelajaran Lengkap"
 }

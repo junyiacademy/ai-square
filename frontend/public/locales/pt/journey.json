@@ -1,73 +1,73 @@
 {
-  "title": "AI Square User Journey [Portuguese]",
-  "subtitle": "Five key paths for complete AI learning experience [Portuguese]",
-  "getStarted": "Get Started [Portuguese]",
-  "pathOverview": "Complete Learning Cycle [Portuguese]",
-  "nextPath": "Next Path → [Portuguese]",
-  "tryFeature": "Experience This Feature [Portuguese]",
+  "title": "Jornada do Usuário AI Square",
+  "subtitle": "Cinco caminhos principais para uma experiência completa de aprendizado de IA",
+  "getStarted": "Começar",
+  "pathOverview": "Ciclo de Aprendizado Completo",
+  "nextPath": "Próximo Caminho →",
+  "tryFeature": "Experimente Este Recurso",
   "paths": {
     "dashboard": {
-      "title": "Dashboard [Portuguese]",
-      "subtitle": "Learning Command Center [Portuguese]",
-      "description": "One-stop overview of your AI learning journey, track progress, view achievements, and plan next steps. [Portuguese]",
-      "userNeed": "How is my learning progress? [Portuguese]",
+      "title": "Dashboard",
+      "subtitle": "Centro de Comando de Aprendizado",
+      "description": "Visão geral completa da sua jornada de aprendizado de IA, acompanhe o progresso, veja conquistas e planeje os próximos passos.",
+      "userNeed": "Como está meu progresso de aprendizado?",
       "features": [
-        "[Portuguese] translation needed",
-        "[Portuguese] translation needed",
-        "[Portuguese] translation needed",
-        "[Portuguese] translation needed"
+        "Visualização do progresso de literacia em IA",
+        "Estatísticas de aprendizado rápidas",
+        "Ações recomendadas personalizadas",
+        "Navegação rápida de recursos"
       ]
     },
     "assessment": {
-      "title": "Assessment [Portuguese]",
-      "subtitle": "AI Literacy Test [Portuguese]",
-      "description": "25 professional questions to deeply understand your competency level across four AI domains. [Portuguese]",
-      "userNeed": "What is my AI competency level? [Portuguese]",
+      "title": "Avaliação",
+      "subtitle": "Teste de Literacia em IA",
+      "description": "25 perguntas profissionais para entender profundamente seu nível de competência nos quatro domínios de IA.",
+      "userNeed": "Qual é meu nível de competência em IA?",
       "features": [
-        "[Portuguese] translation needed",
-        "[Portuguese] translation needed",
-        "[Portuguese] translation needed",
-        "[Portuguese] translation needed"
+        "Quatro domínios de literacia em IA",
+        "25 perguntas baseadas em cenários",
+        "Análise de capacidades em gráfico radar",
+        "Relatório de recomendações personalizado"
       ]
     },
     "learningPath": {
-      "title": "Learning Path [Portuguese]",
-      "subtitle": "Personalized Growth Plan [Portuguese]",
-      "description": "Based on your assessment results, we recommend the most suitable learning content and pace. [Portuguese]",
-      "userNeed": "What courses are right for me? [Portuguese]",
+      "title": "Caminho de Aprendizado",
+      "subtitle": "Plano de Crescimento Personalizado",
+      "description": "Com base nos resultados da sua avaliação, recomendamos o conteúdo de aprendizado e ritmo mais adequados.",
+      "userNeed": "Quais cursos são adequados para mim?",
       "features": [
-        "[Portuguese] translation needed",
-        "[Portuguese] translation needed",
-        "[Portuguese] translation needed",
-        "[Portuguese] translation needed"
+        "Recomendações de cursos personalizadas",
+        "Conteúdo de aprendizado graduado",
+        "Planejamento progressivo",
+        "Horário de aprendizado flexível"
       ]
     },
     "pbl": {
-      "title": "PBL Practice [Portuguese]",
-      "subtitle": "Real-world Scenarios [Portuguese]",
-      "description": "9 practical scenarios with AI tutor guidance for learning by doing. [Portuguese]",
-      "userNeed": "How do I apply AI in practice? [Portuguese]",
+      "title": "Prática PBL",
+      "subtitle": "Cenários do Mundo Real",
+      "description": "9 cenários práticos com orientação de tutor IA para aprender fazendo.",
+      "userNeed": "Como aplicar IA na prática?",
       "features": [
-        "[Portuguese] translation needed",
-        "[Portuguese] translation needed",
-        "[Portuguese] translation needed",
-        "[Portuguese] translation needed"
+        "Desenvolvimento de Robótica IA",
+        "Trading de Stablecoin IA",
+        "Treinamento de Busca de Emprego IA",
+        "Tutoria IA em tempo real"
       ]
     },
     "chat": {
-      "title": "AI Advisor [Portuguese]",
-      "subtitle": "24/7 Support [Portuguese]",
-      "description": "24/7 intelligent learning companion that remembers your learning context and provides personalized advice. [Portuguese]",
-      "userNeed": "Who can I ask when I have questions? [Portuguese]",
+      "title": "Consultor IA",
+      "subtitle": "Suporte 24/7",
+      "description": "Companheiro de aprendizado inteligente 24/7 que lembra do seu contexto de aprendizado e fornece conselhos personalizados.",
+      "userNeed": "A quem posso perguntar quando tenho dúvidas?",
       "features": [
-        "[Portuguese] translation needed",
-        "[Portuguese] translation needed",
-        "[Portuguese] translation needed",
-        "[Portuguese] translation needed"
+        "Memória contínua de conversas",
+        "Sugestões de aprendizado personalizadas",
+        "Conversas profundas de múltiplas rodadas",
+        "Suporte Q&A de aprendizado"
       ]
     }
   },
-  "keyFeatures": "Key Features [Portuguese]",
-  "solvedNeed": "User Need Addressed [Portuguese]",
-  "completeJourney": "Complete Learning Journey [Portuguese]"
+  "keyFeatures": "Recursos Principais",
+  "solvedNeed": "Necessidade do Usuário Atendida",
+  "completeJourney": "Jornada de Aprendizado Completa"
 }

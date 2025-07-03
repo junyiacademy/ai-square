@@ -1,43 +1,43 @@
 {
-  "title": "Your Learning Path [Spanish]",
-  "subtitle": "Personalized recommendations based on your assessment [Spanish]",
-  "yourProgress": "Your Progress [Spanish]",
-  "currentScore": "Current Score [Spanish]",
-  "targetScore": "Target Score [Spanish]",
-  "completed": "completed [Spanish]",
-  "recommendedPath": "Recommended Learning Path [Spanish]",
-  "startLearning": "Start Learning [Spanish]",
-  "estimatedTime": "Estimated time [Spanish]",
-  "weakDomainReason": "This is your weakest area with {{score}}% score [Spanish]",
+  "title": "Tu Ruta de Aprendizaje",
+  "subtitle": "Recomendaciones personalizadas basadas en tu evaluación",
+  "yourProgress": "Tu Progreso",
+  "currentScore": "Puntuación Actual",
+  "targetScore": "Puntuación Objetivo",
+  "completed": "completado",
+  "recommendedPath": "Ruta de Aprendizaje Recomendada",
+  "startLearning": "Comenzar Aprendizaje",
+  "estimatedTime": "Tiempo estimado",
+  "weakDomainReason": "Esta es tu área más débil con {{score}}% de puntuación",
   "difficulty": {
-    "beginner": "Beginner [Spanish]",
-    "intermediate": "Intermediate [Spanish]",
-    "advanced": "Advanced [Spanish]"
+    "beginner": "Principiante",
+    "intermediate": "Intermedio",
+    "advanced": "Avanzado"
   },
   "noAssessment": {
-    "title": "No Assessment Found [Spanish]",
-    "description": "Please complete the assessment first to get personalized recommendations [Spanish]",
-    "button": "Take Assessment [Spanish]"
+    "title": "No se Encontró Evaluación",
+    "description": "Por favor completa la evaluación primero para obtener recomendaciones personalizadas",
+    "button": "Hacer Evaluación"
   },
   "domains": {
-    "Engaging_with_AI": "Engaging with AI [Spanish]",
-    "Creating_with_AI": "Creating with AI [Spanish]",
-    "Managing_with_AI": "Managing with AI [Spanish]",
-    "Designing_with_AI": "Designing with AI [Spanish]"
+    "Engaging_with_AI": "Interactuar con IA",
+    "Creating_with_AI": "Crear con IA",
+    "Managing_with_AI": "Gestionar con IA",
+    "Designing_with_AI": "Diseñar con IA"
   },
-  "strongDomainReason": "Advance your skills in {{domain}} (current: {{score}}%) [Spanish]",
-  "averageDomainReason": "Improve your {{domain}} skills (current: {{score}}%) [Spanish]",
+  "strongDomainReason": "Avanza tus habilidades en {{domain}} (actual: {{score}}%)",
+  "averageDomainReason": "Mejora tus habilidades de {{domain}} (actual: {{score}}%)",
   "learningPath": {
-    "filteringBy": "Showing items for {{domain}} [Spanish]",
-    "clearFilter": "Clear filter [Spanish]",
-    "recommendedPath": "Recommended Learning Path [Spanish]",
-    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [Spanish]",
-    "startLearning": "Start Learning [Spanish]",
-    "progress": "Progress [Spanish]",
-    "goToDashboard": "Go to Dashboard [Spanish]",
-    "dashboardHint": "Track your overall progress and achievements in the dashboard [Spanish]"
+    "filteringBy": "Mostrando elementos para {{domain}}",
+    "clearFilter": "Limpiar filtro",
+    "recommendedPath": "Ruta de Aprendizaje Recomendada",
+    "estimatedTime": "Tiempo total: {{hours}}h {{minutes}}m",
+    "startLearning": "Comenzar Aprendizaje",
+    "progress": "Progreso",
+    "goToDashboard": "Ir al Tablero",
+    "dashboardHint": "Sigue tu progreso general y logros en el tablero"
   },
-  "showAll": "Show All [Spanish]",
-  "focusOnWeakAreas": "Focus on Weak Areas [Spanish]",
-  "backToDashboard": "Back to Dashboard [Spanish]"
+  "showAll": "Mostrar Todo",
+  "focusOnWeakAreas": "Enfocarse en Áreas Débiles",
+  "backToDashboard": "Volver al Tablero"
 }

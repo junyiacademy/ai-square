@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "Welcome, {{name}}! [Italian]",
-    "subtitle": "Let's get you started on your AI literacy journey [Italian]",
+    "greeting": "Benvenuto, {{name}}!",
+    "subtitle": "Iniziamo il tuo viaggio verso la competenza in IA",
     "step1": {
-      "title": "Discover Your Path [Italian]",
-      "description": "AI Square helps you understand and master AI literacy [Italian]",
-      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [Italian]",
-      "assessment": "Smart Assessment [Italian]",
-      "assessmentDesc": "Discover your current AI knowledge level [Italian]",
-      "learning": "Personalized Learning [Italian]",
-      "learningDesc": "Get tailored recommendations based on your goals [Italian]"
+      "title": "Scopri il tuo Percorso",
+      "description": "AI Square ti aiuta a comprendere e padroneggiare la competenza in IA",
+      "content": "Ti aiuteremo a identificare i tuoi punti di forza e le aree di crescita attraverso valutazioni personalizzate ed esperienze di apprendimento guidate.",
+      "assessment": "Valutazione Intelligente",
+      "assessmentDesc": "Scopri il tuo livello attuale di conoscenza dell'IA",
+      "learning": "Apprendimento Personalizzato",
+      "learningDesc": "Ottieni raccomandazioni su misura basate sui tuoi obiettivi"
     },
     "step2": {
-      "title": "Four Core Domains [Italian]",
-      "description": "Master the essential areas of AI literacy [Italian]",
-      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [Italian]",
-      "domains": "AI Literacy Domains [Italian]",
-      "engaging": "Engaging with AI [Italian]",
-      "creating": "Creating with AI [Italian]",
-      "managing": "Managing with AI [Italian]",
-      "designing": "Designing with AI [Italian]"
+      "title": "Quattro Domini Fondamentali",
+      "description": "Padroneggia le aree essenziali della competenza in IA",
+      "content": "Il nostro framework completo copre tutto quello che devi sapere per lavorare con l'IA in modo efficace e responsabile.",
+      "domains": "Domini di Competenza in IA",
+      "engaging": "Interagire con l'IA",
+      "creating": "Creare con l'IA",
+      "managing": "Gestire con l'IA",
+      "designing": "Progettare con l'IA"
     },
     "step3": {
-      "title": "Start Your Journey [Italian]",
-      "description": "Begin with an assessment and unlock your potential [Italian]",
-      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [Italian]",
-      "ready": "What you'll get: [Italian]",
-      "benefit1": "Detailed assessment of your AI knowledge [Italian]",
-      "benefit2": "Personalized learning path recommendations [Italian]",
-      "benefit3": "Interactive scenarios and practical exercises [Italian]"
+      "title": "Inizia il tuo Viaggio",
+      "description": "Inizia con una valutazione e sblocca il tuo potenziale",
+      "content": "Pronto a scoprire il tuo livello di competenza in IA e ottenere raccomandazioni di apprendimento personalizzate?",
+      "ready": "Quello che otterrai:",
+      "benefit1": "Valutazione dettagliata della tua conoscenza dell'IA",
+      "benefit2": "Raccomandazioni di percorsi di apprendimento personalizzati",
+      "benefit3": "Scenari interattivi ed esercizi pratici"
     },
-    "startJourney": "Start Your Journey [Italian]"
+    "startJourney": "Inizia il tuo Viaggio"
   },
   "goals": {
-    "title": "What would you like to achieve? [Italian]",
-    "subtitle": "Select your learning goals to get personalized recommendations [Italian]",
+    "title": "Cosa vorresti raggiungere?",
+    "subtitle": "Seleziona i tuoi obiettivi di apprendimento per ottenere raccomandazioni personalizzate",
     "understand": {
-      "title": "Understand AI Fundamentals [Italian]",
-      "description": "Learn the basics of AI, machine learning, and how AI systems work [Italian]"
+      "title": "Comprendere i Fondamenti dell'IA",
+      "description": "Impara le basi dell'IA, apprendimento automatico e come funzionano i sistemi di IA"
     },
     "create": {
-      "title": "Create Content with AI [Italian]",
-      "description": "Use AI tools for writing, design, art, and creative projects [Italian]"
+      "title": "Creare Contenuti con l'IA",
+      "description": "Usa strumenti di IA per scrittura, design, arte e progetti creativi"
     },
     "analyze": {
-      "title": "Analyze Data with AI [Italian]",
-      "description": "Apply AI for data analysis, insights, and decision-making [Italian]"
+      "title": "Analizzare Dati con l'IA",
+      "description": "Applica l'IA per analisi dei dati, insights e processo decisionale"
     },
     "build": {
-      "title": "Build AI Solutions [Italian]",
-      "description": "Develop and implement AI systems and applications [Italian]"
+      "title": "Costruire Soluzioni di IA",
+      "description": "Sviluppa e implementa sistemi e applicazioni di IA"
     },
     "teach": {
-      "title": "Teach AI to Others [Italian]",
-      "description": "Educate and guide others in understanding and using AI [Italian]"
+      "title": "Insegnare l'IA ad Altri",
+      "description": "Educa e guida altri nella comprensione e nell'uso dell'IA"
     },
     "ethical": {
-      "title": "Ensure Ethical AI Use [Italian]",
-      "description": "Understand and implement responsible AI practices [Italian]"
+      "title": "Garantire l'Uso Etico dell'IA",
+      "description": "Comprendi e implementa pratiche di IA responsabili"
     },
-    "recommendedDomains": "Recommended domains [Italian]",
-    "selected": "{{count}} goals selected",
-    "selectAtLeastOne": "Please select at least one learning goal [Italian]",
-    "continue": "Continue to Assessment [Italian]",
-    "skipForNow": "Skip for now [Italian]",
-    "helpText": "Don't worry, you can always change these later in your profile settings. [Italian]"
+    "recommendedDomains": "Domini raccomandati",
+    "selected": "{{count}} obiettivi selezionati",
+    "selectAtLeastOne": "Seleziona almeno un obiettivo di apprendimento",
+    "continue": "Continua alla Valutazione",
+    "skipForNow": "Salta per ora",
+    "helpText": "Non preoccuparti, puoi sempre modificare questi in seguito nelle impostazioni del tuo profilo."
   },
   "progress": {
-    "welcome": "Welcome [Italian]",
-    "identity": "Identity [Italian]",
-    "goals": "Goals [Italian]"
+    "welcome": "Benvenuto",
+    "identity": "Identità",
+    "goals": "Obiettivi"
   },
   "identity": {
-    "title": "Who are you? [Italian]",
-    "subtitle": "Help us personalize your AI learning journey [Italian]",
+    "title": "Chi sei?",
+    "subtitle": "Aiutaci a personalizzare il tuo viaggio di apprendimento dell'IA",
     "student": {
-      "title": "Student [Italian]",
-      "description": "I'm studying and want to learn AI for my academic and future career [Italian]"
+      "title": "Studente",
+      "description": "Sto studiando e voglio imparare l'IA per la mia carriera accademica e futura"
     },
     "teacher": {
-      "title": "Educator [Italian]",
-      "description": "I teach others and want to integrate AI into my curriculum [Italian]"
+      "title": "Educatore",
+      "description": "Insegno ad altri e voglio integrare l'IA nel mio curriculum"
     },
     "professional": {
-      "title": "Professional [Italian]",
-      "description": "I work in industry and want to leverage AI in my role [Italian]"
+      "title": "Professionista",
+      "description": "Lavoro nell'industria e voglio sfruttare l'IA nel mio ruolo"
     },
     "learner": {
-      "title": "Lifelong Learner [Italian]",
-      "description": "I'm curious about AI and want to explore its possibilities [Italian]"
+      "title": "Studente per Tutta la Vita",
+      "description": "Sono curioso dell'IA e voglio esplorare le sue possibilità"
     }
   },
   "button": {
-    "back": "Back [Italian]",
-    "continue": "Continue [Italian]",
-    "saving": "Saving... [Italian]"
+    "back": "Indietro",
+    "continue": "Continua",
+    "saving": "Salvataggio..."
   }
 }

@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "Welcome, {{name}}! [French]",
-    "subtitle": "Let's get you started on your AI literacy journey [French]",
+    "greeting": "Bienvenue, {{name}} !",
+    "subtitle": "Commençons votre parcours vers la littératie en IA",
     "step1": {
-      "title": "Discover Your Path [French]",
-      "description": "AI Square helps you understand and master AI literacy [French]",
-      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [French]",
-      "assessment": "Smart Assessment [French]",
-      "assessmentDesc": "Discover your current AI knowledge level [French]",
-      "learning": "Personalized Learning [French]",
-      "learningDesc": "Get tailored recommendations based on your goals [French]"
+      "title": "Découvrez votre Chemin",
+      "description": "AI Square vous aide à comprendre et maîtriser la littératie en IA",
+      "content": "Nous vous aiderons à identifier vos forces et zones de croissance grâce à des évaluations personnalisées et des expériences d'apprentissage guidées.",
+      "assessment": "Évaluation Intelligente",
+      "assessmentDesc": "Découvrez votre niveau actuel de connaissances en IA",
+      "learning": "Apprentissage Personnalisé",
+      "learningDesc": "Obtenez des recommandations adaptées basées sur vos objectifs"
     },
     "step2": {
-      "title": "Four Core Domains [French]",
-      "description": "Master the essential areas of AI literacy [French]",
-      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [French]",
-      "domains": "AI Literacy Domains [French]",
-      "engaging": "Engaging with AI [French]",
-      "creating": "Creating with AI [French]",
-      "managing": "Managing with AI [French]",
-      "designing": "Designing with AI [French]"
+      "title": "Quatre Domaines Fondamentaux",
+      "description": "Maîtrisez les domaines essentiels de la littératie en IA",
+      "content": "Notre cadre complet couvre tout ce que vous devez savoir sur le travail avec l'IA de manière efficace et responsable.",
+      "domains": "Domaines de Littératie en IA",
+      "engaging": "Interagir avec l'IA",
+      "creating": "Créer avec l'IA",
+      "managing": "Gérer avec l'IA",
+      "designing": "Concevoir avec l'IA"
     },
     "step3": {
-      "title": "Start Your Journey [French]",
-      "description": "Begin with an assessment and unlock your potential [French]",
-      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [French]",
-      "ready": "What you'll get: [French]",
-      "benefit1": "Detailed assessment of your AI knowledge [French]",
-      "benefit2": "Personalized learning path recommendations [French]",
-      "benefit3": "Interactive scenarios and practical exercises [French]"
+      "title": "Commencez votre Parcours",
+      "description": "Commencez par une évaluation et libérez votre potentiel",
+      "content": "Prêt à découvrir votre niveau de littératie en IA et obtenir des recommandations d'apprentissage personnalisées ?",
+      "ready": "Ce que vous obtiendrez :",
+      "benefit1": "Évaluation détaillée de vos connaissances en IA",
+      "benefit2": "Recommandations de parcours d'apprentissage personnalisées",
+      "benefit3": "Scénarios interactifs et exercices pratiques"
     },
-    "startJourney": "Start Your Journey [French]"
+    "startJourney": "Commencer votre Parcours"
   },
   "goals": {
-    "title": "What would you like to achieve? [French]",
-    "subtitle": "Select your learning goals to get personalized recommendations [French]",
+    "title": "Que souhaiteriez-vous accomplir ?",
+    "subtitle": "Sélectionnez vos objectifs d'apprentissage pour obtenir des recommandations personnalisées",
     "understand": {
-      "title": "Understand AI Fundamentals [French]",
-      "description": "Learn the basics of AI, machine learning, and how AI systems work [French]"
+      "title": "Comprendre les Fondamentaux de l'IA",
+      "description": "Apprenez les bases de l'IA, l'apprentissage automatique et le fonctionnement des systèmes d'IA"
     },
     "create": {
-      "title": "Create Content with AI [French]",
-      "description": "Use AI tools for writing, design, art, and creative projects [French]"
+      "title": "Créer du Contenu avec l'IA",
+      "description": "Utilisez les outils d'IA pour l'écriture, le design, l'art et les projets créatifs"
     },
     "analyze": {
-      "title": "Analyze Data with AI [French]",
-      "description": "Apply AI for data analysis, insights, and decision-making [French]"
+      "title": "Analyser des Données avec l'IA",
+      "description": "Appliquez l'IA pour l'analyse de données, les insights et la prise de décision"
     },
     "build": {
-      "title": "Build AI Solutions [French]",
-      "description": "Develop and implement AI systems and applications [French]"
+      "title": "Construire des Solutions d'IA",
+      "description": "Développez et implémentez des systèmes et applications d'IA"
     },
     "teach": {
-      "title": "Teach AI to Others [French]",
-      "description": "Educate and guide others in understanding and using AI [French]"
+      "title": "Enseigner l'IA aux Autres",
+      "description": "Éduquez et guidez les autres dans la compréhension et l'utilisation de l'IA"
     },
     "ethical": {
-      "title": "Ensure Ethical AI Use [French]",
-      "description": "Understand and implement responsible AI practices [French]"
+      "title": "Assurer l'Utilisation Éthique de l'IA",
+      "description": "Comprenez et implémentez des pratiques d'IA responsables"
     },
-    "recommendedDomains": "Recommended domains [French]",
-    "selected": "{{count}} goals selected",
-    "selectAtLeastOne": "Please select at least one learning goal [French]",
-    "continue": "Continue to Assessment [French]",
-    "skipForNow": "Skip for now [French]",
-    "helpText": "Don't worry, you can always change these later in your profile settings. [French]"
+    "recommendedDomains": "Domaines recommandés",
+    "selected": "{{count}} objectifs sélectionnés",
+    "selectAtLeastOne": "Veuillez sélectionner au moins un objectif d'apprentissage",
+    "continue": "Continuer vers l'Évaluation",
+    "skipForNow": "Ignorer pour l'instant",
+    "helpText": "Ne vous inquiétez pas, vous pourrez toujours modifier cela plus tard dans les paramètres de votre profil."
   },
   "progress": {
-    "welcome": "Welcome [French]",
-    "identity": "Identity [French]",
-    "goals": "Goals [French]"
+    "welcome": "Bienvenue",
+    "identity": "Identité",
+    "goals": "Objectifs"
   },
   "identity": {
-    "title": "Who are you? [French]",
-    "subtitle": "Help us personalize your AI learning journey [French]",
+    "title": "Qui êtes-vous ?",
+    "subtitle": "Aidez-nous à personnaliser votre parcours d'apprentissage en IA",
     "student": {
-      "title": "Student [French]",
-      "description": "I'm studying and want to learn AI for my academic and future career [French]"
+      "title": "Étudiant",
+      "description": "J'étudie et je veux apprendre l'IA pour mes études et ma future carrière"
     },
     "teacher": {
-      "title": "Educator [French]",
-      "description": "I teach others and want to integrate AI into my curriculum [French]"
+      "title": "Éducateur",
+      "description": "J'enseigne aux autres et je veux intégrer l'IA dans mon programme"
     },
     "professional": {
-      "title": "Professional [French]",
-      "description": "I work in industry and want to leverage AI in my role [French]"
+      "title": "Professionnel",
+      "description": "Je travaille dans l'industrie et je veux exploiter l'IA dans mon rôle"
     },
     "learner": {
-      "title": "Lifelong Learner [French]",
-      "description": "I'm curious about AI and want to explore its possibilities [French]"
+      "title": "Apprenant à Vie",
+      "description": "Je suis curieux de l'IA et je veux explorer ses possibilités"
     }
   },
   "button": {
-    "back": "Back [French]",
-    "continue": "Continue [French]",
-    "saving": "Saving... [French]"
+    "back": "Retour",
+    "continue": "Continuer",
+    "saving": "Enregistrement..."
   }
 }

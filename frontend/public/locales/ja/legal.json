@@ -1,171 +1,171 @@
 {
   "privacy": {
-    "title": "Privacy Policy [Japanese]",
-    "lastUpdated": "Last updated [Japanese]",
-    "intro": "AI Square (\"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI literacy education platform. [Japanese]",
+    "title": "プライバシーポリシー",
+    "lastUpdated": "最終更新日",
+    "intro": "AI Square（「当社」、「当方」、または「私たち」）は、お客様のプライバシーを保護することをお約束いたします。このプライバシーポリシーは、お客様が当社のAIリテラシー教育プラットフォームをご利用いただく際に、当社がどのように情報を収集、使用、開示、および保護するかを説明しています。",
     "infoCollect": {
-      "title": "1. Information We Collect [Japanese]",
-      "personal": "Personal Information [Japanese]",
-      "email": "Email address [Japanese]",
-      "name": "Name (optional) [Japanese]",
-      "role": "User role (student, teacher, admin) [Japanese]",
-      "language": "Language preference [Japanese]",
-      "usage": "Usage Data [Japanese]",
-      "learning": "Learning progress and assessment results [Japanese]",
-      "interactions": "Interactions with AI tutors [Japanese]",
-      "scenarios": "PBL scenario completion data [Japanese]",
-      "analytics": "Platform usage analytics [Japanese]",
-      "technical": "Technical Data [Japanese]",
-      "browser": "Browser type and version [Japanese]",
-      "device": "Device information [Japanese]",
-      "ip": "IP address (anonymized) [Japanese]",
-      "timezone": "Time zone settings [Japanese]"
+      "title": "1. 収集する情報",
+      "personal": "個人情報",
+      "email": "メールアドレス",
+      "name": "氏名（任意）",
+      "role": "ユーザーロール（学生、教師、管理者）",
+      "language": "言語設定",
+      "usage": "使用データ",
+      "learning": "学習進捗と評価結果",
+      "interactions": "AIチューターとのやり取り",
+      "scenarios": "PBLシナリオ完了データ",
+      "analytics": "プラットフォーム使用分析",
+      "technical": "技術データ",
+      "browser": "ブラウザの種類とバージョン",
+      "device": "デバイス情報",
+      "ip": "IPアドレス（匿名化）",
+      "timezone": "タイムゾーン設定"
     },
     "howUse": {
-      "title": "2. How We Use Your Information [Japanese]",
-      "provide": "To provide and maintain our service [Japanese]",
-      "personalize": "To personalize your learning experience [Japanese]",
-      "communicate": "To communicate with you about your account [Japanese]",
-      "improve": "To improve our platform and develop new features [Japanese]",
-      "analyze": "To analyze usage patterns and optimize performance [Japanese]",
-      "security": "To detect and prevent security threats [Japanese]"
+      "title": "2. 情報の使用方法",
+      "provide": "サービスの提供と維持のため",
+      "personalize": "学習体験をパーソナライズするため",
+      "communicate": "アカウントに関するご連絡のため",
+      "improve": "プラットフォームの改善と新機能の開発のため",
+      "analyze": "使用パターンを分析し、パフォーマンスを最適化するため",
+      "security": "セキュリティ脅威の検出と防止のため"
     },
     "storage": {
-      "title": "3. Data Storage and Security [Japanese]",
-      "location": "Your data is stored securely on Google Cloud Platform servers. We implement appropriate technical and organizational measures to protect your personal information. [Japanese]",
-      "encryption": "Data encryption in transit and at rest [Japanese]",
-      "access": "Restricted access controls [Japanese]",
-      "monitoring": "Regular security monitoring [Japanese]",
-      "backup": "Secure backup procedures [Japanese]"
+      "title": "3. データ保存とセキュリティ",
+      "location": "お客様のデータは、Google Cloud Platformサーバーに安全に保存されています。当社は、お客様の個人情報を保護するために適切な技術的および組織的措置を実施しています。",
+      "encryption": "転送中および保存時のデータ暗号化",
+      "access": "制限されたアクセス制御",
+      "monitoring": "定期的なセキュリティ監視",
+      "backup": "安全なバックアップ手順"
     },
     "sharing": {
-      "title": "4. Data Sharing and Disclosure [Japanese]",
-      "intro": "We do not sell, trade, or rent your personal information. We may share your information in the following situations: [Japanese]",
-      "consent": "With your consent [Japanese]",
-      "legal": "To comply with legal obligations [Japanese]",
-      "protect": "To protect our rights and safety [Japanese]",
-      "service": "With service providers who assist our operations [Japanese]"
+      "title": "4. データ共有と開示",
+      "intro": "当社は、お客様の個人情報を販売、取引、または賃貸することはありません。以下の状況においてのみ、お客様の情報を共有する場合があります：",
+      "consent": "お客様の同意がある場合",
+      "legal": "法的義務を遵守するため",
+      "protect": "当社の権利と安全を保護するため",
+      "service": "当社の運営を支援するサービスプロバイダーと"
     },
     "rights": {
-      "title": "5. Your Rights [Japanese]",
-      "intro": "You have the following rights regarding your personal data: [Japanese]",
-      "access": "Access your personal information [Japanese]",
-      "correct": "Correct inaccurate data [Japanese]",
-      "delete": "Request deletion of your data [Japanese]",
-      "export": "Export your data in a portable format [Japanese]",
-      "restrict": "Restrict processing of your data [Japanese]",
-      "withdraw": "Withdraw consent at any time [Japanese]"
+      "title": "5. お客様の権利",
+      "intro": "お客様は、個人データに関して以下の権利を有しています：",
+      "access": "個人情報へのアクセス",
+      "correct": "不正確なデータの修正",
+      "delete": "データの削除要求",
+      "export": "ポータブル形式でのデータエクスポート",
+      "restrict": "データ処理の制限",
+      "withdraw": "いつでも同意の撤回"
     },
     "cookies": {
-      "title": "6. Cookies and Tracking [Japanese]",
-      "intro": "We use cookies and similar tracking technologies to enhance your experience. Essential cookies are required for platform functionality, while optional cookies help us improve our service. [Japanese]"
+      "title": "6. Cookieと追跡",
+      "intro": "当社は、お客様の体験を向上させるためにCookieおよび類似の追跡技術を使用しています。必須Cookieはプラットフォームの機能に必要であり、オプションのCookieは当社のサービス向上に役立ちます。"
     },
     "children": {
-      "title": "7. Children's Privacy [Japanese]",
-      "content": "Our platform is designed for educational use by students of all ages. For users under 13, we require parental consent and limit data collection to essential information only. [Japanese]"
+      "title": "7. 児童のプライバシー",
+      "content": "当社のプラットフォームは、あらゆる年齢の学生による教育利用を目的として設計されています。13歳未満のユーザーについては、保護者の同意を求め、データ収集を必要不可欠な情報のみに制限しています。"
     },
     "international": {
-      "title": "8. International Data Transfers [Japanese]",
-      "content": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers. [Japanese]"
+      "title": "8. 国際的なデータ転送",
+      "content": "お客様の情報は、お客様の国以外の国に転送され、処理される場合があります。当社は、そのような転送に対して適切な保護措置が講じられることを保証します。"
     },
     "changes": {
-      "title": "9. Changes to This Policy [Japanese]",
-      "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the \"Last Updated\" date. [Japanese]"
+      "title": "9. このポリシーの変更",
+      "content": "当社は、このプライバシーポリシーを随時更新する場合があります。変更があった場合は、このページに新しいポリシーを投稿し、「最終更新日」を更新することによりお知らせいたします。"
     },
     "contact": {
-      "title": "10. Contact Us [Japanese]",
-      "intro": "If you have questions about this Privacy Policy, please contact us at: [Japanese]"
+      "title": "10. お問い合わせ",
+      "intro": "このプライバシーポリシーに関してご質問がございましたら、以下までお問い合わせください："
     }
   },
   "terms": {
-    "title": "Terms of Service [Japanese]",
-    "effectiveDate": "Effective Date [Japanese]",
-    "lastUpdated": "Last Updated [Japanese]",
-    "intro": "Welcome to AI Square! These Terms of Service (\"Terms\") govern your use of our AI literacy education platform. By accessing or using AI Square, you agree to be bound by these Terms. [Japanese]",
+    "title": "利用規約",
+    "effectiveDate": "発効日",
+    "lastUpdated": "最終更新日",
+    "intro": "AI Squareへようこそ！これらの利用規約（「規約」）は、当社のAIリテラシー教育プラットフォームのご利用を規定するものです。AI Squareにアクセスまたはご利用いただくことにより、お客様はこれらの規約に拘束されることに同意するものとします。",
     "acceptance": {
-      "title": "1. Acceptance of Terms [Japanese]",
-      "content": "By creating an account or using our services, you acknowledge that you have read, understood, and agree to these Terms. If you do not agree, please do not use our platform. [Japanese]",
-      "capacity": "You must be at least 13 years old to use our services. If you are under 18, you must have parental consent. [Japanese]"
+      "title": "1. 規約の承諾",
+      "content": "アカウントを作成または当社のサービスをご利用いただくことにより、お客様はこれらの規約を読み、理解し、同意したことを認めるものとします。同意されない場合は、当社のプラットフォームをご利用にならないでください。",
+      "capacity": "当社のサービスをご利用いただくには、少なくとも13歳以上である必要があります。18歳未満の場合は、保護者の同意が必要です。"
     },
     "service": {
-      "title": "2. Description of Service [Japanese]",
-      "intro": "AI Square provides: [Japanese]",
-      "literacy": "AI literacy education content and assessments [Japanese]",
-      "pbl": "Problem-Based Learning (PBL) scenarios [Japanese]",
-      "ai": "AI-powered tutoring and feedback [Japanese]",
-      "tracking": "Progress tracking and analytics [Japanese]",
-      "multi": "Multi-language support (9 languages) [Japanese]"
+      "title": "2. サービスの説明",
+      "intro": "AI Squareは以下を提供します：",
+      "literacy": "AIリテラシー教育コンテンツと評価",
+      "pbl": "問題解決型学習（PBL）シナリオ",
+      "ai": "AI搭載チュータリングとフィードバック",
+      "tracking": "進捗追跡と分析",
+      "multi": "多言語サポート（9言語）"
     },
     "accounts": {
-      "title": "3. User Accounts [Japanese]",
-      "registration": "Registration [Japanese]",
-      "accurate": "Provide accurate and complete information [Japanese]",
-      "maintain": "Maintain and update your information [Japanese]",
-      "secure": "Keep your account credentials secure [Japanese]",
-      "responsible": "You are responsible for all activities under your account [Japanese]",
-      "types": "Account Types [Japanese]",
-      "student": "Student: Access to learning content and assessments [Japanese]",
-      "teacher": "Teacher: Additional class management features [Japanese]",
-      "admin": "Administrator: Platform management capabilities [Japanese]"
+      "title": "3. ユーザーアカウント",
+      "registration": "登録",
+      "accurate": "正確で完全な情報の提供",
+      "maintain": "情報の維持と更新",
+      "secure": "アカウント認証情報の安全な保管",
+      "responsible": "お客様のアカウントでのすべての活動について責任を負います",
+      "types": "アカウントタイプ",
+      "student": "学生：学習コンテンツと評価へのアクセス",
+      "teacher": "教師：追加のクラス管理機能",
+      "admin": "管理者：プラットフォーム管理機能"
     },
     "use": {
-      "title": "4. Acceptable Use Policy [Japanese]",
-      "permitted": "You may: [Japanese]",
-      "educational": "Use the platform for educational purposes [Japanese]",
-      "share": "Share your learning progress appropriately [Japanese]",
-      "feedback": "Provide constructive feedback [Japanese]",
-      "prohibited": "You may not: [Japanese]",
-      "misuse": "Misuse or attempt to manipulate the AI systems [Japanese]",
-      "share_credentials": "Share account credentials [Japanese]",
-      "cheat": "Engage in academic dishonesty [Japanese]",
-      "harm": "Harass, abuse, or harm other users [Japanese]",
-      "illegal": "Use the platform for illegal activities [Japanese]",
-      "scrape": "Scrape or copy content without permission [Japanese]"
+      "title": "4. 利用規定ポリシー",
+      "permitted": "以下の行為が許可されています：",
+      "educational": "教育目的でのプラットフォーム利用",
+      "share": "学習進捗の適切な共有",
+      "feedback": "建設的なフィードバックの提供",
+      "prohibited": "以下の行為は禁止されています：",
+      "misuse": "AIシステムの悪用や操作の試み",
+      "share_credentials": "アカウント認証情報の共有",
+      "cheat": "学術的不正行為への従事",
+      "harm": "他のユーザーへの嫌がらせ、虐待、または危害",
+      "illegal": "違法活動でのプラットフォーム利用",
+      "scrape": "許可なしでのコンテンツのスクレイピングやコピー"
     },
     "ip": {
-      "title": "5. Intellectual Property [Japanese]",
-      "platform": "Platform Content [Japanese]",
-      "ownership": "All content on AI Square, including text, graphics, logos, and software, is owned by AI Square or its licensors and protected by intellectual property laws. [Japanese]",
-      "user": "User Content [Japanese]",
-      "retain": "You retain ownership of content you create. By submitting content, you grant us a license to use it for providing and improving our services. [Japanese]",
-      "open": "Open Source [Japanese]",
-      "git": "Educational content is managed through Git and may be subject to open-source licenses. Please check individual repositories for specific license terms. [Japanese]"
+      "title": "5. 知的財産",
+      "platform": "プラットフォームコンテンツ",
+      "ownership": "AI Square上のテキスト、グラフィック、ロゴ、ソフトウェアを含むすべてのコンテンツは、AI Squareまたはそのライセンサーの所有物であり、知的財産法により保護されています。",
+      "user": "ユーザーコンテンツ",
+      "retain": "お客様が作成したコンテンツの所有権は保持されます。コンテンツを投稿することにより、当社サービスの提供と改善のためにそれを使用するライセンスを当社に付与するものとします。",
+      "open": "オープンソース",
+      "git": "教育コンテンツはGitを通じて管理され、オープンソースライセンスの対象となる場合があります。特定のライセンス条項については、個別のリポジトリをご確認ください。"
     },
     "privacy": {
-      "title": "6. Privacy and Data Protection [Japanese]",
-      "content": "Your use of AI Square is also governed by our Privacy Policy. We are committed to protecting your personal information and using it only as described in our Privacy Policy. [Japanese]"
+      "title": "6. プライバシーとデータ保護",
+      "content": "AI Squareのご利用は、当社のプライバシーポリシーにも規定されます。当社は、お客様の個人情報を保護し、プライバシーポリシーに記載された方法でのみ使用することをお約束いたします。"
     },
     "ai": {
-      "title": "7. AI Services and Limitations [Japanese]",
-      "disclaimer": "Our AI-powered features are designed to assist learning but are not perfect. We do not guarantee the accuracy of AI-generated content or feedback. [Japanese]",
-      "educational": "AI responses are for educational purposes only [Japanese]",
-      "verify": "Always verify important information independently [Japanese]",
-      "improve": "We continuously work to improve AI accuracy [Japanese]"
+      "title": "7. AIサービスと制限",
+      "disclaimer": "当社のAI搭載機能は学習を支援するように設計されていますが、完璧ではありません。AI生成コンテンツやフィードバックの正確性を保証するものではありません。",
+      "educational": "AIの応答は教育目的のみです",
+      "verify": "重要な情報は常に独立して検証してください",
+      "improve": "AIの精度向上に継続的に取り組んでいます"
     },
     "disclaimers": {
-      "title": "8. Disclaimers and Limitations [Japanese]",
-      "asis": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND.",
-      "liability": "To the fullest extent permitted by law, AI Square shall not be liable for any indirect, incidental, special, consequential, or punitive damages. [Japanese]"
+      "title": "8. 免責事項と制限",
+      "asis": "サービスは「現状のまま」いかなる保証もなく提供されます。",
+      "liability": "法律で許可される最大限の範囲において、AI Squareは間接的、偶発的、特別、結果的、または懲罰的損害について責任を負いません。"
     },
     "modifications": {
-      "title": "9. Modifications to Terms [Japanese]",
-      "content": "We may modify these Terms at any time. We will notify users of material changes. Continued use after changes constitutes acceptance of the new Terms. [Japanese]"
+      "title": "9. 規約の変更",
+      "content": "当社は、いつでもこれらの規約を変更する場合があります。重要な変更についてはユーザーに通知いたします。変更後の継続使用は、新しい規約の承諾を構成します。"
     },
     "termination": {
-      "title": "10. Termination [Japanese]",
-      "rights": "We reserve the right to suspend or terminate accounts that violate these Terms. You may delete your account at any time. [Japanese]"
+      "title": "10. 利用停止",
+      "rights": "当社は、これらの規約に違反するアカウントを停止または終了する権利を留保します。お客様はいつでもアカウントを削除できます。"
     },
     "law": {
-      "title": "11. Governing Law [Japanese]",
-      "content": "These Terms are governed by the laws of the jurisdiction where AI Square operates, without regard to conflict of law principles. [Japanese]"
+      "title": "11. 準拠法",
+      "content": "これらの規約は、法の抵触原則にかかわらず、AI Squareが運営する管轄区域の法律に準拠します。"
     },
     "contact": {
-      "title": "12. Contact Information [Japanese]",
-      "intro": "For questions about these Terms, please contact us: [Japanese]"
+      "title": "12. 連絡先情報",
+      "intro": "これらの規約に関してご質問がございましたら、以下までお問い合わせください："
     },
-    "agreement": "By using AI Square, you acknowledge that you have read and agree to these Terms of Service. [Japanese]"
+    "agreement": "AI Squareをご利用いただくことにより、お客様はこれらの利用規約を読み、同意したことを認めるものとします。"
   },
   "common": {
-    "backToHome": "Back to Home [Japanese]"
+    "backToHome": "ホームに戻る"
   }
 }

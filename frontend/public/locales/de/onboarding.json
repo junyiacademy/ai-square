@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "Welcome, {{name}}! [German]",
-    "subtitle": "Let's get you started on your AI literacy journey [German]",
+    "greeting": "Willkommen, {{name}}!",
+    "subtitle": "Lassen Sie uns gemeinsam Ihre KI-Kompetenz-Reise beginnen",
     "step1": {
-      "title": "Discover Your Path [German]",
-      "description": "AI Square helps you understand and master AI literacy [German]",
-      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [German]",
-      "assessment": "Smart Assessment [German]",
-      "assessmentDesc": "Discover your current AI knowledge level [German]",
-      "learning": "Personalized Learning [German]",
-      "learningDesc": "Get tailored recommendations based on your goals [German]"
+      "title": "Entdecken Sie Ihren Weg",
+      "description": "AI Square hilft Ihnen, KI-Kompetenz zu verstehen und zu meistern",
+      "content": "Wir helfen Ihnen dabei, Ihre Stärken und Entwicklungsbereiche durch personalisierte Bewertungen und geführte Lernerfahrungen zu identifizieren.",
+      "assessment": "Intelligente Bewertung",
+      "assessmentDesc": "Entdecken Sie Ihr aktuelles KI-Wissensniveau",
+      "learning": "Personalisiertes Lernen",
+      "learningDesc": "Erhalten Sie maßgeschneiderte Empfehlungen basierend auf Ihren Zielen"
     },
     "step2": {
-      "title": "Four Core Domains [German]",
-      "description": "Master the essential areas of AI literacy [German]",
-      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [German]",
-      "domains": "AI Literacy Domains [German]",
-      "engaging": "Engaging with AI [German]",
-      "creating": "Creating with AI [German]",
-      "managing": "Managing with AI [German]",
-      "designing": "Designing with AI [German]"
+      "title": "Vier Kernbereiche",
+      "description": "Meistern Sie die wesentlichen Bereiche der KI-Kompetenz",
+      "content": "Unser umfassendes Framework deckt alles ab, was Sie über den effektiven und verantwortungsvollen Umgang mit KI wissen müssen.",
+      "domains": "KI-Kompetenz-Bereiche",
+      "engaging": "Interaktion mit KI",
+      "creating": "Erstellen mit KI",
+      "managing": "Verwalten mit KI",
+      "designing": "Gestalten mit KI"
     },
     "step3": {
-      "title": "Start Your Journey [German]",
-      "description": "Begin with an assessment and unlock your potential [German]",
-      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [German]",
-      "ready": "What you'll get: [German]",
-      "benefit1": "Detailed assessment of your AI knowledge [German]",
-      "benefit2": "Personalized learning path recommendations [German]",
-      "benefit3": "Interactive scenarios and practical exercises [German]"
+      "title": "Beginnen Sie Ihre Reise",
+      "description": "Starten Sie mit einer Bewertung und entfalten Sie Ihr Potenzial",
+      "content": "Bereit, Ihr KI-Kompetenzniveau zu entdecken und personalisierte Lernempfehlungen zu erhalten?",
+      "ready": "Was Sie erhalten:",
+      "benefit1": "Detaillierte Bewertung Ihres KI-Wissens",
+      "benefit2": "Personalisierte Lernweg-Empfehlungen",
+      "benefit3": "Interaktive Szenarien und praktische Übungen"
     },
-    "startJourney": "Start Your Journey [German]"
+    "startJourney": "Beginnen Sie Ihre Reise"
   },
   "goals": {
-    "title": "What would you like to achieve? [German]",
-    "subtitle": "Select your learning goals to get personalized recommendations [German]",
+    "title": "Was möchten Sie erreichen?",
+    "subtitle": "Wählen Sie Ihre Lernziele aus, um personalisierte Empfehlungen zu erhalten",
     "understand": {
-      "title": "Understand AI Fundamentals [German]",
-      "description": "Learn the basics of AI, machine learning, and how AI systems work [German]"
+      "title": "KI-Grundlagen verstehen",
+      "description": "Lernen Sie die Grundlagen von KI, maschinellem Lernen und wie KI-Systeme funktionieren"
     },
     "create": {
-      "title": "Create Content with AI [German]",
-      "description": "Use AI tools for writing, design, art, and creative projects [German]"
+      "title": "Inhalte mit KI erstellen",
+      "description": "Nutzen Sie KI-Tools für Schreiben, Design, Kunst und kreative Projekte"
     },
     "analyze": {
-      "title": "Analyze Data with AI [German]",
-      "description": "Apply AI for data analysis, insights, and decision-making [German]"
+      "title": "Daten mit KI analysieren",
+      "description": "Wenden Sie KI für Datenanalyse, Erkenntnisse und Entscheidungsfindung an"
     },
     "build": {
-      "title": "Build AI Solutions [German]",
-      "description": "Develop and implement AI systems and applications [German]"
+      "title": "KI-Lösungen entwickeln",
+      "description": "Entwickeln und implementieren Sie KI-Systeme und -Anwendungen"
     },
     "teach": {
-      "title": "Teach AI to Others [German]",
-      "description": "Educate and guide others in understanding and using AI [German]"
+      "title": "KI anderen beibringen",
+      "description": "Bilden Sie andere im Verständnis und der Nutzung von KI aus und leiten Sie sie an"
     },
     "ethical": {
-      "title": "Ensure Ethical AI Use [German]",
-      "description": "Understand and implement responsible AI practices [German]"
+      "title": "Ethische KI-Nutzung sicherstellen",
+      "description": "Verstehen und implementieren Sie verantwortungsvolle KI-Praktiken"
     },
-    "recommendedDomains": "Recommended domains [German]",
-    "selected": "{{count}} goals selected",
-    "selectAtLeastOne": "Please select at least one learning goal [German]",
-    "continue": "Continue to Assessment [German]",
-    "skipForNow": "Skip for now [German]",
-    "helpText": "Don't worry, you can always change these later in your profile settings. [German]"
+    "recommendedDomains": "Empfohlene Bereiche",
+    "selected": "{{count}} Ziele ausgewählt",
+    "selectAtLeastOne": "Bitte wählen Sie mindestens ein Lernziel aus",
+    "continue": "Weiter zur Bewertung",
+    "skipForNow": "Vorerst überspringen",
+    "helpText": "Keine Sorge, Sie können diese später in Ihren Profileinstellungen ändern."
   },
   "progress": {
-    "welcome": "Welcome [German]",
-    "identity": "Identity [German]",
-    "goals": "Goals [German]"
+    "welcome": "Willkommen",
+    "identity": "Identität",
+    "goals": "Ziele"
   },
   "identity": {
-    "title": "Who are you? [German]",
-    "subtitle": "Help us personalize your AI learning journey [German]",
+    "title": "Wer sind Sie?",
+    "subtitle": "Helfen Sie uns, Ihre KI-Lernreise zu personalisieren",
     "student": {
-      "title": "Student [German]",
-      "description": "I'm studying and want to learn AI for my academic and future career [German]"
+      "title": "Student",
+      "description": "Ich studiere und möchte KI für mein Studium und meine zukünftige Karriere lernen"
     },
     "teacher": {
-      "title": "Educator [German]",
-      "description": "I teach others and want to integrate AI into my curriculum [German]"
+      "title": "Pädagoge",
+      "description": "Ich unterrichte andere und möchte KI in meinen Lehrplan integrieren"
     },
     "professional": {
-      "title": "Professional [German]",
-      "description": "I work in industry and want to leverage AI in my role [German]"
+      "title": "Berufstätiger",
+      "description": "Ich arbeite in der Industrie und möchte KI in meiner Rolle nutzen"
     },
     "learner": {
-      "title": "Lifelong Learner [German]",
-      "description": "I'm curious about AI and want to explore its possibilities [German]"
+      "title": "Lebenslanger Lerner",
+      "description": "Ich bin neugierig auf KI und möchte ihre Möglichkeiten erkunden"
     }
   },
   "button": {
-    "back": "Back [German]",
-    "continue": "Continue [German]",
-    "saving": "Saving... [German]"
+    "back": "Zurück",
+    "continue": "Weiter",
+    "saving": "Wird gespeichert..."
   }
 }

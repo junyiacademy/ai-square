@@ -1,171 +1,171 @@
 {
   "privacy": {
-    "title": "Privacy Policy [Thai]",
-    "lastUpdated": "Last updated [Thai]",
-    "intro": "AI Square (\"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI literacy education platform. [Thai]",
+    "title": "นโยบายความเป็นส่วนตัว",
+    "lastUpdated": "อัปเดตครั้งล่าสุด",
+    "intro": "AI Square (\"เรา\", \"ของเรา\" หรือ \"พวกเรา\") มุ่งมั่นในการปกป้องความเป็นส่วนตัวของคุณ นโยบายความเป็นส่วนตัวนี้อธิบายว่าเราเก็บรวบรวม ใช้ เปิดเผย และปกป้องข้อมูลของคุณอย่างไรเมื่อคุณใช้แพลตฟอร์มการศึกษาด้านความรู้ AI ของเรา",
     "infoCollect": {
-      "title": "1. Information We Collect [Thai]",
-      "personal": "Personal Information [Thai]",
-      "email": "Email address [Thai]",
-      "name": "Name (optional) [Thai]",
-      "role": "User role (student, teacher, admin) [Thai]",
-      "language": "Language preference [Thai]",
-      "usage": "Usage Data [Thai]",
-      "learning": "Learning progress and assessment results [Thai]",
-      "interactions": "Interactions with AI tutors [Thai]",
-      "scenarios": "PBL scenario completion data [Thai]",
-      "analytics": "Platform usage analytics [Thai]",
-      "technical": "Technical Data [Thai]",
-      "browser": "Browser type and version [Thai]",
-      "device": "Device information [Thai]",
-      "ip": "IP address (anonymized) [Thai]",
-      "timezone": "Time zone settings [Thai]"
+      "title": "1. ข้อมูลที่เราเก็บรวบรวม",
+      "personal": "ข้อมูลส่วนบุคคล",
+      "email": "ที่อยู่อีเมล",
+      "name": "ชื่อ (ไม่บังคับ)",
+      "role": "บทบาทผู้ใช้ (นักเรียน ครู ผู้ดูแล)",
+      "language": "การตั้งค่าภาษา",
+      "usage": "ข้อมูลการใช้งาน",
+      "learning": "ความก้าวหน้าในการเรียนรู้และผลการประเมิน",
+      "interactions": "การโต้ตอบกับผู้สอน AI",
+      "scenarios": "ข้อมูลการทำสถานการณ์ PBL ให้เสร็จสิ้น",
+      "analytics": "การวิเคราะห์การใช้แพลตฟอร์ม",
+      "technical": "ข้อมูลทางเทคนิค",
+      "browser": "ประเภทและเวอร์ชันของเบราว์เซอร์",
+      "device": "ข้อมูลอุปกรณ์",
+      "ip": "ที่อยู่ IP (แบบไม่ระบุตัวตน)",
+      "timezone": "การตั้งค่าเขตเวลา"
     },
     "howUse": {
-      "title": "2. How We Use Your Information [Thai]",
-      "provide": "To provide and maintain our service [Thai]",
-      "personalize": "To personalize your learning experience [Thai]",
-      "communicate": "To communicate with you about your account [Thai]",
-      "improve": "To improve our platform and develop new features [Thai]",
-      "analyze": "To analyze usage patterns and optimize performance [Thai]",
-      "security": "To detect and prevent security threats [Thai]"
+      "title": "2. วิธีที่เราใช้ข้อมูลของคุณ",
+      "provide": "เพื่อให้บริการและดูแลรักษาบริการของเรา",
+      "personalize": "เพื่อปรับแต่งประสบการณ์การเรียนรู้ของคุณ",
+      "communicate": "เพื่อติดต่อสื่อสารกับคุณเกี่ยวกับบัญชีของคุณ",
+      "improve": "เพื่อปรับปรุงแพลตฟอร์มและพัฒนาคุณลักษณะใหม่",
+      "analyze": "เพื่อวิเคราะห์รูปแบบการใช้งานและเพิ่มประสิทธิภาพ",
+      "security": "เพื่อตรวจจับและป้องกันภัยคุกคามด้านความปลอดภัย"
     },
     "storage": {
-      "title": "3. Data Storage and Security [Thai]",
-      "location": "Your data is stored securely on Google Cloud Platform servers. We implement appropriate technical and organizational measures to protect your personal information. [Thai]",
-      "encryption": "Data encryption in transit and at rest [Thai]",
-      "access": "Restricted access controls [Thai]",
-      "monitoring": "Regular security monitoring [Thai]",
-      "backup": "Secure backup procedures [Thai]"
+      "title": "3. การจัดเก็บข้อมูลและความปลอดภัย",
+      "location": "ข้อมูลของคุณถูกจัดเก็บอย่างปลอดภัยบนเซิร์ฟเวอร์ Google Cloud Platform เราใช้มาตรการทางเทคนิคและองค์กรที่เหมาะสมเพื่อปกป้องข้อมูลส่วนบุคคลของคุณ",
+      "encryption": "การเข้ารหัสข้อมูลระหว่างการส่งและเก็บ",
+      "access": "การควบคุมการเข้าถึงที่จำกัด",
+      "monitoring": "การตรวจสอบความปลอดภัยเป็นประจำ",
+      "backup": "ขั้นตอนการสำรองข้อมูลที่ปลอดภัย"
     },
     "sharing": {
-      "title": "4. Data Sharing and Disclosure [Thai]",
-      "intro": "We do not sell, trade, or rent your personal information. We may share your information in the following situations: [Thai]",
-      "consent": "With your consent [Thai]",
-      "legal": "To comply with legal obligations [Thai]",
-      "protect": "To protect our rights and safety [Thai]",
-      "service": "With service providers who assist our operations [Thai]"
+      "title": "4. การแบ่งปันและเปิดเผยข้อมูล",
+      "intro": "เราไม่ขาย แลกเปลี่ยน หรือให้เช่าข้อมูลส่วนบุคคลของคุณ เราอาจแบ่งปันข้อมูลของคุณในสถานการณ์ต่อไปนี้:",
+      "consent": "ด้วยความยินยอมของคุณ",
+      "legal": "เพื่อปฏิบัติตามภาระผูกพันทางกฎหมาย",
+      "protect": "เพื่อปกป้องสิทธิและความปลอดภัยของเรา",
+      "service": "กับผู้ให้บริการที่ช่วยในการดำเนินงานของเรา"
     },
     "rights": {
-      "title": "5. Your Rights [Thai]",
-      "intro": "You have the following rights regarding your personal data: [Thai]",
-      "access": "Access your personal information [Thai]",
-      "correct": "Correct inaccurate data [Thai]",
-      "delete": "Request deletion of your data [Thai]",
-      "export": "Export your data in a portable format [Thai]",
-      "restrict": "Restrict processing of your data [Thai]",
-      "withdraw": "Withdraw consent at any time [Thai]"
+      "title": "5. สิทธิของคุณ",
+      "intro": "คุณมีสิทธิต่อไปนี้เกี่ยวกับข้อมูลส่วนบุคคลของคุณ:",
+      "access": "เข้าถึงข้อมูลส่วนบุคคลของคุณ",
+      "correct": "แก้ไขข้อมูลที่ไม่ถูกต้อง",
+      "delete": "ขอลบข้อมูลของคุณ",
+      "export": "ส่งออกข้อมูลของคุณในรูปแบบที่สามารถย้ายได้",
+      "restrict": "จำกัดการประมวลผลข้อมูลของคุณ",
+      "withdraw": "ถอนความยินยอมได้ตลอดเวลา"
     },
     "cookies": {
-      "title": "6. Cookies and Tracking [Thai]",
-      "intro": "We use cookies and similar tracking technologies to enhance your experience. Essential cookies are required for platform functionality, while optional cookies help us improve our service. [Thai]"
+      "title": "6. คุกกี้และการติดตาม",
+      "intro": "เราใช้คุกกี้และเทคโนโลยีติดตามที่คล้ายกันเพื่อปรับปรุงประสบการณ์ของคุณ คุกกี้ที่จำเป็นต้องใช้สำหรับการทำงานของแพลตฟอร์ม ในขณะที่คุกกี้ทางเลือกช่วยให้เราปรับปรุงบริการ"
     },
     "children": {
-      "title": "7. Children's Privacy [Thai]",
-      "content": "Our platform is designed for educational use by students of all ages. For users under 13, we require parental consent and limit data collection to essential information only. [Thai]"
+      "title": "7. ความเป็นส่วนตัวของเด็ก",
+      "content": "แพลตฟอร์มของเราออกแบบมาสำหรับการใช้งานทางการศึกษาโดยนักเรียนทุกวัย สำหรับผู้ใช้อายุต่ำกว่า 13 ปี เราต้องการความยินยอมจากผู้ปกครองและจำกัดการเก็บรวบรวมข้อมูลเฉพาะข้อมูลที่จำเป็นเท่านั้น"
     },
     "international": {
-      "title": "8. International Data Transfers [Thai]",
-      "content": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers. [Thai]"
+      "title": "8. การถ่ายโอนข้อมูลระหว่างประเทศ",
+      "content": "ข้อมูลของคุณอาจถูกโอนและประมวลผลในประเทศอื่นที่ไม่ใช่ประเทศของคุณ เราจะให้แน่ใจว่ามีการป้องกันที่เหมาะสมสำหรับการโอนดังกล่าว"
     },
     "changes": {
-      "title": "9. Changes to This Policy [Thai]",
-      "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the \"Last Updated\" date. [Thai]"
+      "title": "9. การเปลี่ยนแปลงนโยบายนี้",
+      "content": "เราอาจปรับปรุงนโยบายความเป็นส่วนตัวนี้เป็นครั้งคราว เราจะแจ้งให้คุณทราบถึงการเปลี่ยนแปลงใดๆ โดยการโพสต์นโยบายใหม่ในหน้านี้และปรับปรุงวันที่ \"อัปเดตครั้งล่าสุด\""
     },
     "contact": {
-      "title": "10. Contact Us [Thai]",
-      "intro": "If you have questions about this Privacy Policy, please contact us at: [Thai]"
+      "title": "10. ติดต่อเรา",
+      "intro": "หากคุณมีคำถามเกี่ยวกับนโยบายความเป็นส่วนตัวนี้ กรุณาติดต่อเราที่:"
     }
   },
   "terms": {
-    "title": "Terms of Service [Thai]",
-    "effectiveDate": "Effective Date [Thai]",
-    "lastUpdated": "Last Updated [Thai]",
-    "intro": "Welcome to AI Square! These Terms of Service (\"Terms\") govern your use of our AI literacy education platform. By accessing or using AI Square, you agree to be bound by these Terms. [Thai]",
+    "title": "เงื่อนไขการบริการ",
+    "effectiveDate": "วันที่มีผลบังคับใช้",
+    "lastUpdated": "อัปเดตครั้งล่าสุด",
+    "intro": "ยินดีต้อนรับสู่ AI Square! เงื่อนไขการบริการเหล่านี้ (\"เงื่อนไข\") ควบคุมการใช้แพลตฟอร์มการศึกษาด้านความรู้ AI ของเรา การเข้าถึงหรือใช้ AI Square หมายความว่าคุณตกลงที่จะผูกพันตามเงื่อนไขเหล่านี้",
     "acceptance": {
-      "title": "1. Acceptance of Terms [Thai]",
-      "content": "By creating an account or using our services, you acknowledge that you have read, understood, and agree to these Terms. If you do not agree, please do not use our platform. [Thai]",
-      "capacity": "You must be at least 13 years old to use our services. If you are under 18, you must have parental consent. [Thai]"
+      "title": "1. การยอมรับเงื่อนไข",
+      "content": "การสร้างบัญชีหรือใช้บริการของเรา แสดงว่าคุณรับทราบว่าคุณได้อ่าน เข้าใจ และตกลงตามเงื่อนไขเหล่านี้ หากคุณไม่เห็นด้วย กรุณาอย่าใช้แพลตฟอร์มของเรา",
+      "capacity": "คุณต้องมีอายุอย่างน้อย 13 ปีจึงจะใช้บริการของเราได้ หากคุณอายุต่ำกว่า 18 ปี คุณต้องได้รับความยินยอมจากผู้ปกครอง"
     },
     "service": {
-      "title": "2. Description of Service [Thai]",
-      "intro": "AI Square provides: [Thai]",
-      "literacy": "AI literacy education content and assessments [Thai]",
-      "pbl": "Problem-Based Learning (PBL) scenarios [Thai]",
-      "ai": "AI-powered tutoring and feedback [Thai]",
-      "tracking": "Progress tracking and analytics [Thai]",
-      "multi": "Multi-language support (9 languages) [Thai]"
+      "title": "2. คำอธิบายบริการ",
+      "intro": "AI Square ให้บริการ:",
+      "literacy": "เนื้อหาการศึกษาความรู้ AI และการประเมิน",
+      "pbl": "สถานการณ์การเรียนรู้แบบใช้ปัญหาเป็นฐาน (PBL)",
+      "ai": "การสอนและข้อเสนอแนะที่ขับเคลื่อนด้วย AI",
+      "tracking": "การติดตามความก้าวหน้าและการวิเคราะห์",
+      "multi": "การรองรับหลายภาษา (9 ภาษา)"
     },
     "accounts": {
-      "title": "3. User Accounts [Thai]",
-      "registration": "Registration [Thai]",
-      "accurate": "Provide accurate and complete information [Thai]",
-      "maintain": "Maintain and update your information [Thai]",
-      "secure": "Keep your account credentials secure [Thai]",
-      "responsible": "You are responsible for all activities under your account [Thai]",
-      "types": "Account Types [Thai]",
-      "student": "Student: Access to learning content and assessments [Thai]",
-      "teacher": "Teacher: Additional class management features [Thai]",
-      "admin": "Administrator: Platform management capabilities [Thai]"
+      "title": "3. บัญชีผู้ใช้",
+      "registration": "การลงทะเบียน",
+      "accurate": "ให้ข้อมูลที่ถูกต้องและครบถ้วน",
+      "maintain": "ดูแลและปรับปรุงข้อมูลของคุณ",
+      "secure": "รักษาข้อมูลประจำตัวของบัญชีให้ปลอดภัย",
+      "responsible": "คุณมีความรับผิดชอบต่อกิจกรรมทั้งหมดภายใต้บัญชีของคุณ",
+      "types": "ประเภทบัญชี",
+      "student": "นักเรียน: เข้าถึงเนื้อหาการเรียนรู้และการประเมิน",
+      "teacher": "ครู: คุณลักษณะการจัดการชั้นเรียนเพิ่มเติม",
+      "admin": "ผู้ดูแลระบบ: ความสามารถในการจัดการแพลตฟอร์ม"
     },
     "use": {
-      "title": "4. Acceptable Use Policy [Thai]",
-      "permitted": "You may: [Thai]",
-      "educational": "Use the platform for educational purposes [Thai]",
-      "share": "Share your learning progress appropriately [Thai]",
-      "feedback": "Provide constructive feedback [Thai]",
-      "prohibited": "You may not: [Thai]",
-      "misuse": "Misuse or attempt to manipulate the AI systems [Thai]",
-      "share_credentials": "Share account credentials [Thai]",
-      "cheat": "Engage in academic dishonesty [Thai]",
-      "harm": "Harass, abuse, or harm other users [Thai]",
-      "illegal": "Use the platform for illegal activities [Thai]",
-      "scrape": "Scrape or copy content without permission [Thai]"
+      "title": "4. นโยบายการใช้งานที่ยอมรับได้",
+      "permitted": "คุณสามารถ:",
+      "educational": "ใช้แพลตฟอร์มเพื่อวัตถุประสงค์ทางการศึกษา",
+      "share": "แบ่งปันความก้าวหน้าในการเรียนรู้อย่างเหมาะสม",
+      "feedback": "ให้ข้อเสนอแนะที่สร้างสรรค์",
+      "prohibited": "คุณไม่สามารถ:",
+      "misuse": "ใช้ผิดหรือพยายามจัดการระบบ AI",
+      "share_credentials": "แบ่งปันข้อมูลประจำตัวของบัญชี",
+      "cheat": "มีส่วนร่วมในการทุจริตทางวิชาการ",
+      "harm": "คุกคาม ใช้ในทางที่ผิด หรือทำร้ายผู้ใช้คนอื่น",
+      "illegal": "ใช้แพลตฟอร์มสำหรับกิจกรรมที่ผิดกฎหมาย",
+      "scrape": "ขูดหรือคัดลอกเนื้อหาโดยไม่ได้รับอนุญาต"
     },
     "ip": {
-      "title": "5. Intellectual Property [Thai]",
-      "platform": "Platform Content [Thai]",
-      "ownership": "All content on AI Square, including text, graphics, logos, and software, is owned by AI Square or its licensors and protected by intellectual property laws. [Thai]",
-      "user": "User Content [Thai]",
-      "retain": "You retain ownership of content you create. By submitting content, you grant us a license to use it for providing and improving our services. [Thai]",
-      "open": "Open Source [Thai]",
-      "git": "Educational content is managed through Git and may be subject to open-source licenses. Please check individual repositories for specific license terms. [Thai]"
+      "title": "5. ทรัพย์สินทางปัญญา",
+      "platform": "เนื้อหาแพลตฟอร์ม",
+      "ownership": "เนื้อหาทั้งหมดใน AI Square รวมถึงข้อความ กราฟิก โลโก้ และซอฟต์แวร์ เป็นของ AI Square หรือผู้ให้ใบอนุญาต และได้รับการปกป้องด้วยกฎหมายทรัพย์สินทางปัญญา",
+      "user": "เนื้อหาผู้ใช้",
+      "retain": "คุณยังคงเป็นเจ้าของเนื้อหาที่คุณสร้าง การส่งเนื้อหาแสดงว่าคุณให้ใบอนุญาตแก่เราในการใช้เพื่อการให้บริการและปรับปรุงบริการของเรา",
+      "open": "โอเพ่นซอร์ส",
+      "git": "เนื้อหาการศึกษาจัดการผ่าน Git และอาจอยู่ภายใต้ใบอนุญาตโอเพ่นซอร์ส กรุณาตรวจสอบที่เก็บแต่ละแห่งสำหรับเงื่อนไขใบอนุญาตเฉพาะ"
     },
     "privacy": {
-      "title": "6. Privacy and Data Protection [Thai]",
-      "content": "Your use of AI Square is also governed by our Privacy Policy. We are committed to protecting your personal information and using it only as described in our Privacy Policy. [Thai]"
+      "title": "6. ความเป็นส่วนตัวและการปกป้องข้อมูล",
+      "content": "การใช้ AI Square ของคุณยังถูกควบคุมโดยนโยบายความเป็นส่วนตัวของเรา เรามุ่งมั่นในการปกป้องข้อมูลส่วนบุคคลของคุณและใช้เฉพาะตามที่อธิบายในนโยบายความเป็นส่วนตัวของเรา"
     },
     "ai": {
-      "title": "7. AI Services and Limitations [Thai]",
-      "disclaimer": "Our AI-powered features are designed to assist learning but are not perfect. We do not guarantee the accuracy of AI-generated content or feedback. [Thai]",
-      "educational": "AI responses are for educational purposes only [Thai]",
-      "verify": "Always verify important information independently [Thai]",
-      "improve": "We continuously work to improve AI accuracy [Thai]"
+      "title": "7. บริการ AI และข้อจำกัด",
+      "disclaimer": "คุณลักษณะที่ขับเคลื่อนด้วย AI ของเราได้รับการออกแบบมาเพื่อช่วยการเรียนรู้ แต่ไม่สมบูรณ์แบบ เราไม่รับประกันความแม่นยำของเนื้อหาหรือข้อเสนอแนะที่สร้างโดย AI",
+      "educational": "การตอบสนองของ AI มีไว้เพื่อวัตถุประสงค์ทางการศึกษาเท่านั้น",
+      "verify": "ตรวจสอบข้อมูลสำคัญอย่างอิสระเสมอ",
+      "improve": "เราทำงานอย่างต่อเนื่องเพื่อปรับปรุงความแม่นยำของ AI"
     },
     "disclaimers": {
-      "title": "8. Disclaimers and Limitations [Thai]",
-      "asis": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND. [Thai]",
-      "liability": "To the fullest extent permitted by law, AI Square shall not be liable for any indirect, incidental, special, consequential, or punitive damages. [Thai]"
+      "title": "8. การปฏิเสธความรับผิดชอบและข้อจำกัด",
+      "asis": "บริการนี้จัดให้ \"ตามที่เป็น\" โดยไม่มีการรับประกันใดๆ",
+      "liability": "ตามขอบเขตสูงสุดที่กฎหมายอนุญาต AI Square จะไม่รับผิดชอบต่อความเสียหายทางอ้อม อุบัติเหตุ พิเศษ เป็นผลต่อเนื่อง หรือการลงโทษ"
     },
     "modifications": {
-      "title": "9. Modifications to Terms [Thai]",
-      "content": "We may modify these Terms at any time. We will notify users of material changes. Continued use after changes constitutes acceptance of the new Terms. [Thai]"
+      "title": "9. การแก้ไขเงื่อนไข",
+      "content": "เราอาจแก้ไขเงื่อนไขเหล่านี้ได้ตลอดเวลา เราจะแจ้งให้ผู้ใช้ทราบถึงการเปลี่ยนแปลงที่สำคัญ การใช้งานต่อไปหลังจากการเปลี่ยนแปลงถือเป็นการยอมรับเงื่อนไขใหม่"
     },
     "termination": {
-      "title": "10. Termination [Thai]",
-      "rights": "We reserve the right to suspend or terminate accounts that violate these Terms. You may delete your account at any time. [Thai]"
+      "title": "10. การยกเลิก",
+      "rights": "เราขอสงวนสิทธิ์ในการระงับหรือยกเลิกบัญชีที่ละเมิดเงื่อนไขเหล่านี้ คุณสามารถลบบัญชีของคุณได้ตลอดเวลา"
     },
     "law": {
-      "title": "11. Governing Law [Thai]",
-      "content": "These Terms are governed by the laws of the jurisdiction where AI Square operates, without regard to conflict of law principles. [Thai]"
+      "title": "11. กฎหมายที่ใช้บังคับ",
+      "content": "เงื่อนไขเหล่านี้ถูกควบคุมโดยกฎหมายของเขตอำนาจศาลที่ AI Square ดำเนินการ โดยไม่คำนึงถึงหลักการความขัดแย้งของกฎหมาย"
     },
     "contact": {
-      "title": "12. Contact Information [Thai]",
-      "intro": "For questions about these Terms, please contact us: [Thai]"
+      "title": "12. ข้อมูลการติดต่อ",
+      "intro": "หากมีคำถามเกี่ยวกับเงื่อนไขเหล่านี้ กรุณาติดต่อเรา:"
     },
-    "agreement": "By using AI Square, you acknowledge that you have read and agree to these Terms of Service. [Thai]"
+    "agreement": "การใช้ AI Square แสดงว่าคุณรับทราบว่าคุณได้อ่านและตกลงตามเงื่อนไขการบริการเหล่านี้"
   },
   "common": {
-    "backToHome": "Back to Home [Thai]"
+    "backToHome": "กลับหน้าหลัก"
   }
 }

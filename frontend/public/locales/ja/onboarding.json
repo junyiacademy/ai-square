@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "Welcome, {{name}}! [Japanese]",
-    "subtitle": "Let's get you started on your AI literacy journey [Japanese]",
+    "greeting": "ようこそ、{{name}}さん！",
+    "subtitle": "AIリテラシーの旅を始めましょう",
     "step1": {
-      "title": "Discover Your Path [Japanese]",
-      "description": "AI Square helps you understand and master AI literacy [Japanese]",
-      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [Japanese]",
-      "assessment": "Smart Assessment [Japanese]",
-      "assessmentDesc": "Discover your current AI knowledge level [Japanese]",
-      "learning": "Personalized Learning [Japanese]",
-      "learningDesc": "Get tailored recommendations based on your goals [Japanese]"
+      "title": "あなたの道を発見する",
+      "description": "AI SquareがAIリテラシーの理解と習得をサポートします",
+      "content": "パーソナライズされた評価とガイド付き学習体験を通じて、あなたの強みと成長領域を特定するお手伝いをします。",
+      "assessment": "スマート評価",
+      "assessmentDesc": "現在のAI知識レベルを発見する",
+      "learning": "パーソナライズド学習",
+      "learningDesc": "目標に基づいたオーダーメイドの推奨を受ける"
     },
     "step2": {
-      "title": "Four Core Domains [Japanese]",
-      "description": "Master the essential areas of AI literacy [Japanese]",
-      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [Japanese]",
-      "domains": "AI Literacy Domains [Japanese]",
-      "engaging": "Engaging with AI [Japanese]",
-      "creating": "Creating with AI [Japanese]",
-      "managing": "Managing with AI [Japanese]",
-      "designing": "Designing with AI [Japanese]"
+      "title": "4つのコア領域",
+      "description": "AIリテラシーの重要な領域をマスターする",
+      "content": "私たちの包括的なフレームワークは、AIを効果的かつ責任を持って活用するために必要なすべてをカバーしています。",
+      "domains": "AIリテラシー領域",
+      "engaging": "AIとの関わり",
+      "creating": "AIでの創造",
+      "managing": "AIでの管理",
+      "designing": "AIでの設計"
     },
     "step3": {
-      "title": "Start Your Journey [Japanese]",
-      "description": "Begin with an assessment and unlock your potential [Japanese]",
-      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [Japanese]",
-      "ready": "What you'll get: [Japanese]",
-      "benefit1": "Detailed assessment of your AI knowledge [Japanese]",
-      "benefit2": "Personalized learning path recommendations [Japanese]",
-      "benefit3": "Interactive scenarios and practical exercises [Japanese]"
+      "title": "旅を始める",
+      "description": "評価から始めてあなたの可能性を解き放つ",
+      "content": "AIリテラシーレベルを発見し、パーソナライズされた学習推奨を受ける準備はできていますか？",
+      "ready": "得られるもの：",
+      "benefit1": "AI知識の詳細な評価",
+      "benefit2": "パーソナライズされた学習パス推奨",
+      "benefit3": "インタラクティブなシナリオと実践的な演習"
     },
-    "startJourney": "Start Your Journey [Japanese]"
+    "startJourney": "旅を始める"
   },
   "goals": {
-    "title": "What would you like to achieve? [Japanese]",
-    "subtitle": "Select your learning goals to get personalized recommendations [Japanese]",
+    "title": "何を達成したいですか？",
+    "subtitle": "学習目標を選択してパーソナライズされた推奨を受けてください",
     "understand": {
-      "title": "Understand AI Fundamentals [Japanese]",
-      "description": "Learn the basics of AI, machine learning, and how AI systems work [Japanese]"
+      "title": "AI基礎の理解",
+      "description": "AI、機械学習、AIシステムの仕組みの基本を学ぶ"
     },
     "create": {
-      "title": "Create Content with AI [Japanese]",
-      "description": "Use AI tools for writing, design, art, and creative projects [Japanese]"
+      "title": "AIでコンテンツ作成",
+      "description": "執筆、デザイン、アート、クリエイティブプロジェクトにAIツールを使用する"
     },
     "analyze": {
-      "title": "Analyze Data with AI [Japanese]",
-      "description": "Apply AI for data analysis, insights, and decision-making [Japanese]"
+      "title": "AIでデータ分析",
+      "description": "データ分析、インサイト、意思決定にAIを適用する"
     },
     "build": {
-      "title": "Build AI Solutions [Japanese]",
-      "description": "Develop and implement AI systems and applications [Japanese]"
+      "title": "AIソリューション構築",
+      "description": "AIシステムとアプリケーションを開発・実装する"
     },
     "teach": {
-      "title": "Teach AI to Others [Japanese]",
-      "description": "Educate and guide others in understanding and using AI [Japanese]"
+      "title": "他者にAIを教える",
+      "description": "AIの理解と使用について他者を教育し指導する"
     },
     "ethical": {
-      "title": "Ensure Ethical AI Use [Japanese]",
-      "description": "Understand and implement responsible AI practices [Japanese]"
+      "title": "倫理的AI使用の確保",
+      "description": "責任あるAI実践を理解し実装する"
     },
-    "recommendedDomains": "Recommended domains [Japanese]",
-    "selected": "{{count}} goals selected",
-    "selectAtLeastOne": "Please select at least one learning goal [Japanese]",
-    "continue": "Continue to Assessment [Japanese]",
-    "skipForNow": "Skip for now [Japanese]",
-    "helpText": "Don't worry, you can always change these later in your profile settings. [Japanese]"
+    "recommendedDomains": "推奨領域",
+    "selected": "{{count}}つの目標が選択されました",
+    "selectAtLeastOne": "少なくとも1つの学習目標を選択してください",
+    "continue": "評価に進む",
+    "skipForNow": "今はスキップ",
+    "helpText": "ご心配なく、これらは後でプロフィール設定でいつでも変更できます。"
   },
   "progress": {
-    "welcome": "Welcome [Japanese]",
-    "identity": "Identity [Japanese]",
-    "goals": "Goals [Japanese]"
+    "welcome": "ようこそ",
+    "identity": "アイデンティティ",
+    "goals": "目標"
   },
   "identity": {
-    "title": "Who are you? [Japanese]",
-    "subtitle": "Help us personalize your AI learning journey [Japanese]",
+    "title": "あなたは誰ですか？",
+    "subtitle": "AI学習の旅をパーソナライズするためにお手伝いください",
     "student": {
-      "title": "Student [Japanese]",
-      "description": "I'm studying and want to learn AI for my academic and future career [Japanese]"
+      "title": "学生",
+      "description": "勉強中で、学術と将来のキャリアのためにAIを学びたい"
     },
     "teacher": {
-      "title": "Educator [Japanese]",
-      "description": "I teach others and want to integrate AI into my curriculum [Japanese]"
+      "title": "教育者",
+      "description": "他者を教えており、カリキュラムにAIを統合したい"
     },
     "professional": {
-      "title": "Professional [Japanese]",
-      "description": "I work in industry and want to leverage AI in my role [Japanese]"
+      "title": "専門職",
+      "description": "業界で働いており、自分の役割でAIを活用したい"
     },
     "learner": {
-      "title": "Lifelong Learner [Japanese]",
-      "description": "I'm curious about AI and want to explore its possibilities [Japanese]"
+      "title": "生涯学習者",
+      "description": "AIに興味があり、その可能性を探求したい"
     }
   },
   "button": {
-    "back": "Back [Japanese]",
-    "continue": "Continue [Japanese]",
-    "saving": "Saving... [Japanese]"
+    "back": "戻る",
+    "continue": "続ける",
+    "saving": "保存中..."
   }
 }
