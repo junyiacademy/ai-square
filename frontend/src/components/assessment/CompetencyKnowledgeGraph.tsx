@@ -31,6 +31,7 @@ interface GraphNode extends d3.SimulationNodeDatum {
     correct?: number;
     total?: number;
     questions?: string[];
+    theme?: string;
   };
 }
 
@@ -165,9 +166,11 @@ export default function CompetencyKnowledgeGraph({
         ksaType,
         details: { 
           summary: ksaInfo.summary,
+          explanation: ksaInfo.explanation,
           correct: data.correct,
           total: data.total,
-          questions: data.questions
+          questions: data.questions,
+          theme: ksaInfo.theme
         }
       });
       
@@ -519,6 +522,13 @@ export default function CompetencyKnowledgeGraph({
                   </button>
                 </>
               )}
+            </div>
+          )}
+          {selectedNode.details?.theme && (
+            <div className="mb-2">
+              <span className="text-sm font-semibold text-gray-800">
+                {t(selectedNode.details.theme.replace(/ /g, '_'))}
+              </span>
             </div>
           )}
           {selectedNode.details?.summary && (
