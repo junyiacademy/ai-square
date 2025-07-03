@@ -1,0 +1,43 @@
+{
+  "title": "[JA] translation needed",
+  "subtitle": "[JA] translation needed",
+  "yourProgress": "[JA] translation needed",
+  "currentScore": "[JA] translation needed",
+  "targetScore": "[JA] translation needed",
+  "completed": "[JA] translation needed",
+  "recommendedPath": "[JA] translation needed",
+  "startLearning": "[JA] translation needed",
+  "estimatedTime": "[JA] translation needed",
+  "weakDomainReason": "[JA] translation needed",
+  "difficulty": {
+    "beginner": "[JA] translation needed",
+    "intermediate": "[JA] translation needed",
+    "advanced": "[JA] translation needed"
+  },
+  "noAssessment": {
+    "title": "[JA] translation needed",
+    "description": "[JA] translation needed",
+    "button": "[JA] translation needed"
+  },
+  "domains": {
+    "Engaging_with_AI": "[JA] translation needed",
+    "Creating_with_AI": "[JA] translation needed",
+    "Managing_with_AI": "[JA] translation needed",
+    "Designing_with_AI": "[JA] translation needed"
+  },
+  "strongDomainReason": "[JA] translation needed",
+  "averageDomainReason": "[JA] translation needed",
+  "learningPath": {
+    "filteringBy": "[JA] translation needed",
+    "clearFilter": "[JA] translation needed",
+    "recommendedPath": "[JA] translation needed",
+    "estimatedTime": "[JA] translation needed",
+    "startLearning": "[JA] translation needed",
+    "progress": "[JA] translation needed",
+    "goToDashboard": "[JA] translation needed",
+    "dashboardHint": "[JA] translation needed"
+  },
+  "showAll": "[JA] translation needed",
+  "focusOnWeakAreas": "[JA] translation needed",
+  "backToDashboard": "[JA] translation needed"
+}

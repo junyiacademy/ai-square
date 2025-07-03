@@ -1,0 +1,73 @@
+{
+  "title": "[Indonesian] translation needed",
+  "subtitle": "[Indonesian] translation needed",
+  "getStarted": "[Indonesian] translation needed",
+  "pathOverview": "[Indonesian] translation needed",
+  "nextPath": "[Indonesian] translation needed",
+  "tryFeature": "[Indonesian] translation needed",
+  "paths": {
+    "dashboard": {
+      "title": "[Indonesian] translation needed",
+      "subtitle": "[Indonesian] translation needed",
+      "description": "[Indonesian] translation needed",
+      "userNeed": "[Indonesian] translation needed",
+      "features": [
+        "[Indonesian] translation needed",
+        "[Indonesian] translation needed",
+        "[Indonesian] translation needed",
+        "[Indonesian] translation needed"
+      ]
+    },
+    "assessment": {
+      "title": "[Indonesian] translation needed",
+      "subtitle": "[Indonesian] translation needed",
+      "description": "[Indonesian] translation needed",
+      "userNeed": "[Indonesian] translation needed",
+      "features": [
+        "[Indonesian] translation needed",
+        "[Indonesian] translation needed",
+        "[Indonesian] translation needed",
+        "[Indonesian] translation needed"
+      ]
+    },
+    "learningPath": {
+      "title": "[Indonesian] translation needed",
+      "subtitle": "[Indonesian] translation needed",
+      "description": "[Indonesian] translation needed",
+      "userNeed": "[Indonesian] translation needed",
+      "features": [
+        "[Indonesian] translation needed",
+        "[Indonesian] translation needed",
+        "[Indonesian] translation needed",
+        "[Indonesian] translation needed"
+      ]
+    },
+    "pbl": {
+      "title": "[Indonesian] translation needed",
+      "subtitle": "[Indonesian] translation needed",
+      "description": "[Indonesian] translation needed",
+      "userNeed": "[Indonesian] translation needed",
+      "features": [
+        "[Indonesian] translation needed",
+        "[Indonesian] translation needed",
+        "[Indonesian] translation needed",
+        "[Indonesian] translation needed"
+      ]
+    },
+    "chat": {
+      "title": "[Indonesian] translation needed",
+      "subtitle": "[Indonesian] translation needed",
+      "description": "[Indonesian] translation needed",
+      "userNeed": "[Indonesian] translation needed",
+      "features": [
+        "[Indonesian] translation needed",
+        "[Indonesian] translation needed",
+        "[Indonesian] translation needed",
+        "[Indonesian] translation needed"
+      ]
+    }
+  },
+  "keyFeatures": "[Indonesian] translation needed",
+  "solvedNeed": "[Indonesian] translation needed",
+  "completeJourney": "[Indonesian] translation needed"
+}

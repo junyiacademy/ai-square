@@ -1,0 +1,73 @@
+{
+  "title": "[Thai] translation needed",
+  "subtitle": "[Thai] translation needed",
+  "getStarted": "[Thai] translation needed",
+  "pathOverview": "[Thai] translation needed",
+  "nextPath": "[Thai] translation needed",
+  "tryFeature": "[Thai] translation needed",
+  "paths": {
+    "dashboard": {
+      "title": "[Thai] translation needed",
+      "subtitle": "[Thai] translation needed",
+      "description": "[Thai] translation needed",
+      "userNeed": "[Thai] translation needed",
+      "features": [
+        "[Thai] translation needed",
+        "[Thai] translation needed",
+        "[Thai] translation needed",
+        "[Thai] translation needed"
+      ]
+    },
+    "assessment": {
+      "title": "[Thai] translation needed",
+      "subtitle": "[Thai] translation needed",
+      "description": "[Thai] translation needed",
+      "userNeed": "[Thai] translation needed",
+      "features": [
+        "[Thai] translation needed",
+        "[Thai] translation needed",
+        "[Thai] translation needed",
+        "[Thai] translation needed"
+      ]
+    },
+    "learningPath": {
+      "title": "[Thai] translation needed",
+      "subtitle": "[Thai] translation needed",
+      "description": "[Thai] translation needed",
+      "userNeed": "[Thai] translation needed",
+      "features": [
+        "[Thai] translation needed",
+        "[Thai] translation needed",
+        "[Thai] translation needed",
+        "[Thai] translation needed"
+      ]
+    },
+    "pbl": {
+      "title": "[Thai] translation needed",
+      "subtitle": "[Thai] translation needed",
+      "description": "[Thai] translation needed",
+      "userNeed": "[Thai] translation needed",
+      "features": [
+        "[Thai] translation needed",
+        "[Thai] translation needed",
+        "[Thai] translation needed",
+        "[Thai] translation needed"
+      ]
+    },
+    "chat": {
+      "title": "[Thai] translation needed",
+      "subtitle": "[Thai] translation needed",
+      "description": "[Thai] translation needed",
+      "userNeed": "[Thai] translation needed",
+      "features": [
+        "[Thai] translation needed",
+        "[Thai] translation needed",
+        "[Thai] translation needed",
+        "[Thai] translation needed"
+      ]
+    }
+  },
+  "keyFeatures": "[Thai] translation needed",
+  "solvedNeed": "[Thai] translation needed",
+  "completeJourney": "[Thai] translation needed"
+}

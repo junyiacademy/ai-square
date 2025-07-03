@@ -1,0 +1,171 @@
+{
+  "privacy": {
+    "title": "[KO] translation needed",
+    "lastUpdated": "[KO] translation needed",
+    "intro": "[KO] translation needed",
+    "infoCollect": {
+      "title": "[KO] translation needed",
+      "personal": "[KO] translation needed",
+      "email": "[KO] translation needed",
+      "name": "[KO] translation needed",
+      "role": "[KO] translation needed",
+      "language": "[KO] translation needed",
+      "usage": "[KO] translation needed",
+      "learning": "[KO] translation needed",
+      "interactions": "[KO] translation needed",
+      "scenarios": "[KO] translation needed",
+      "analytics": "[KO] translation needed",
+      "technical": "[KO] translation needed",
+      "browser": "[KO] translation needed",
+      "device": "[KO] translation needed",
+      "ip": "[KO] translation needed",
+      "timezone": "[KO] translation needed"
+    },
+    "howUse": {
+      "title": "[KO] translation needed",
+      "provide": "[KO] translation needed",
+      "personalize": "[KO] translation needed",
+      "communicate": "[KO] translation needed",
+      "improve": "[KO] translation needed",
+      "analyze": "[KO] translation needed",
+      "security": "[KO] translation needed"
+    },
+    "storage": {
+      "title": "[KO] translation needed",
+      "location": "[KO] translation needed",
+      "encryption": "[KO] translation needed",
+      "access": "[KO] translation needed",
+      "monitoring": "[KO] translation needed",
+      "backup": "[KO] translation needed"
+    },
+    "sharing": {
+      "title": "[KO] translation needed",
+      "intro": "[KO] translation needed",
+      "consent": "[KO] translation needed",
+      "legal": "[KO] translation needed",
+      "protect": "[KO] translation needed",
+      "service": "[KO] translation needed"
+    },
+    "rights": {
+      "title": "[KO] translation needed",
+      "intro": "[KO] translation needed",
+      "access": "[KO] translation needed",
+      "correct": "[KO] translation needed",
+      "delete": "[KO] translation needed",
+      "export": "[KO] translation needed",
+      "restrict": "[KO] translation needed",
+      "withdraw": "[KO] translation needed"
+    },
+    "cookies": {
+      "title": "[KO] translation needed",
+      "intro": "[KO] translation needed"
+    },
+    "children": {
+      "title": "[KO] translation needed",
+      "content": "[KO] translation needed"
+    },
+    "international": {
+      "title": "[KO] translation needed",
+      "content": "[KO] translation needed"
+    },
+    "changes": {
+      "title": "[KO] translation needed",
+      "content": "[KO] translation needed"
+    },
+    "contact": {
+      "title": "[KO] translation needed",
+      "intro": "[KO] translation needed"
+    }
+  },
+  "terms": {
+    "title": "[KO] translation needed",
+    "effectiveDate": "[KO] translation needed",
+    "lastUpdated": "[KO] translation needed",
+    "intro": "[KO] translation needed",
+    "acceptance": {
+      "title": "[KO] translation needed",
+      "content": "[KO] translation needed",
+      "capacity": "[KO] translation needed"
+    },
+    "service": {
+      "title": "[KO] translation needed",
+      "intro": "[KO] translation needed",
+      "literacy": "[KO] translation needed",
+      "pbl": "[KO] translation needed",
+      "ai": "[KO] translation needed",
+      "tracking": "[KO] translation needed",
+      "multi": "[KO] translation needed"
+    },
+    "accounts": {
+      "title": "[KO] translation needed",
+      "registration": "[KO] translation needed",
+      "accurate": "[KO] translation needed",
+      "maintain": "[KO] translation needed",
+      "secure": "[KO] translation needed",
+      "responsible": "[KO] translation needed",
+      "types": "[KO] translation needed",
+      "student": "[KO] translation needed",
+      "teacher": "[KO] translation needed",
+      "admin": "[KO] translation needed"
+    },
+    "use": {
+      "title": "[KO] translation needed",
+      "permitted": "[KO] translation needed",
+      "educational": "[KO] translation needed",
+      "share": "[KO] translation needed",
+      "feedback": "[KO] translation needed",
+      "prohibited": "[KO] translation needed",
+      "misuse": "[KO] translation needed",
+      "share_credentials": "[KO] translation needed",
+      "cheat": "[KO] translation needed",
+      "harm": "[KO] translation needed",
+      "illegal": "[KO] translation needed",
+      "scrape": "[KO] translation needed"
+    },
+    "ip": {
+      "title": "[KO] translation needed",
+      "platform": "[KO] translation needed",
+      "ownership": "[KO] translation needed",
+      "user": "[KO] translation needed",
+      "retain": "[KO] translation needed",
+      "open": "[KO] translation needed",
+      "git": "[KO] translation needed"
+    },
+    "privacy": {
+      "title": "[KO] translation needed",
+      "content": "[KO] translation needed"
+    },
+    "ai": {
+      "title": "[KO] translation needed",
+      "disclaimer": "[KO] translation needed",
+      "educational": "[KO] translation needed",
+      "verify": "[KO] translation needed",
+      "improve": "[KO] translation needed"
+    },
+    "disclaimers": {
+      "title": "[KO] translation needed",
+      "asis": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND.",
+      "liability": "[KO] translation needed"
+    },
+    "modifications": {
+      "title": "[KO] translation needed",
+      "content": "[KO] translation needed"
+    },
+    "termination": {
+      "title": "[KO] translation needed",
+      "rights": "[KO] translation needed"
+    },
+    "law": {
+      "title": "[KO] translation needed",
+      "content": "[KO] translation needed"
+    },
+    "contact": {
+      "title": "[KO] translation needed",
+      "intro": "[KO] translation needed"
+    },
+    "agreement": "[KO] translation needed"
+  },
+  "common": {
+    "backToHome": "[KO] translation needed"
+  }
+}

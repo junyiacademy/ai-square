@@ -57,8 +57,8 @@ const mockYaml = yaml as jest.Mocked<typeof yaml>;
 describe('/api/ksa route', () => {
   const mockYamlData = {
     knowledge_codes: {
-      desciption: 'Knowledge description',
-      desciption_zhTW: '知識描述',
+      description: 'Knowledge description',
+      description_zhTW: '知識描述',
       themes: {
         'Theme1': {
           explanation: 'Theme explanation',
@@ -73,8 +73,8 @@ describe('/api/ksa route', () => {
       }
     },
     skill_codes: {
-      desciption: 'Skills description',
-      desciption_zhTW: '技能描述',
+      description: 'Skills description',
+      description_zhTW: '技能描述',
       themes: {
         'SkillTheme': {
           explanation: 'Skill explanation',
@@ -91,8 +91,8 @@ describe('/api/ksa route', () => {
       }
     },
     attitude_codes: {
-      desciption: 'Attitudes description',
-      desciption_zhTW: '態度描述',
+      description: 'Attitudes description',
+      description_zhTW: '態度描述',
       themes: {
         'AttitudeTheme': {
           explanation: 'Attitude explanation',

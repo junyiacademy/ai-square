@@ -1,0 +1,99 @@
+{
+  "welcome": {
+    "greeting": "[Chinese Simplified] translation needed",
+    "subtitle": "[Chinese Simplified] translation needed",
+    "step1": {
+      "title": "[Chinese Simplified] translation needed",
+      "description": "[Chinese Simplified] translation needed",
+      "content": "[Chinese Simplified] translation needed",
+      "assessment": "[Chinese Simplified] translation needed",
+      "assessmentDesc": "[Chinese Simplified] translation needed",
+      "learning": "[Chinese Simplified] translation needed",
+      "learningDesc": "[Chinese Simplified] translation needed"
+    },
+    "step2": {
+      "title": "[Chinese Simplified] translation needed",
+      "description": "[Chinese Simplified] translation needed",
+      "content": "[Chinese Simplified] translation needed",
+      "domains": "[Chinese Simplified] translation needed",
+      "engaging": "[Chinese Simplified] translation needed",
+      "creating": "[Chinese Simplified] translation needed",
+      "managing": "[Chinese Simplified] translation needed",
+      "designing": "[Chinese Simplified] translation needed"
+    },
+    "step3": {
+      "title": "[Chinese Simplified] translation needed",
+      "description": "[Chinese Simplified] translation needed",
+      "content": "[Chinese Simplified] translation needed",
+      "ready": "[Chinese Simplified] translation needed",
+      "benefit1": "[Chinese Simplified] translation needed",
+      "benefit2": "[Chinese Simplified] translation needed",
+      "benefit3": "[Chinese Simplified] translation needed"
+    },
+    "startJourney": "[Chinese Simplified] translation needed"
+  },
+  "goals": {
+    "title": "[Chinese Simplified] translation needed",
+    "subtitle": "[Chinese Simplified] translation needed",
+    "understand": {
+      "title": "[Chinese Simplified] translation needed",
+      "description": "[Chinese Simplified] translation needed"
+    },
+    "create": {
+      "title": "[Chinese Simplified] translation needed",
+      "description": "[Chinese Simplified] translation needed"
+    },
+    "analyze": {
+      "title": "[Chinese Simplified] translation needed",
+      "description": "[Chinese Simplified] translation needed"
+    },
+    "build": {
+      "title": "[Chinese Simplified] translation needed",
+      "description": "[Chinese Simplified] translation needed"
+    },
+    "teach": {
+      "title": "[Chinese Simplified] translation needed",
+      "description": "[Chinese Simplified] translation needed"
+    },
+    "ethical": {
+      "title": "[Chinese Simplified] translation needed",
+      "description": "[Chinese Simplified] translation needed"
+    },
+    "recommendedDomains": "[Chinese Simplified] translation needed",
+    "selected": "[Chinese Simplified] translation needed",
+    "selectAtLeastOne": "[Chinese Simplified] translation needed",
+    "continue": "[Chinese Simplified] translation needed",
+    "skipForNow": "[Chinese Simplified] translation needed",
+    "helpText": "[Chinese Simplified] translation needed"
+  },
+  "progress": {
+    "welcome": "[Chinese Simplified] translation needed",
+    "identity": "[Chinese Simplified] translation needed",
+    "goals": "[Chinese Simplified] translation needed"
+  },
+  "identity": {
+    "title": "[Chinese Simplified] translation needed",
+    "subtitle": "[Chinese Simplified] translation needed",
+    "student": {
+      "title": "[Chinese Simplified] translation needed",
+      "description": "[Chinese Simplified] translation needed"
+    },
+    "teacher": {
+      "title": "[Chinese Simplified] translation needed",
+      "description": "[Chinese Simplified] translation needed"
+    },
+    "professional": {
+      "title": "[Chinese Simplified] translation needed",
+      "description": "[Chinese Simplified] translation needed"
+    },
+    "learner": {
+      "title": "[Chinese Simplified] translation needed",
+      "description": "[Chinese Simplified] translation needed"
+    }
+  },
+  "button": {
+    "back": "[Chinese Simplified] translation needed",
+    "continue": "[Chinese Simplified] translation needed",
+    "saving": "[Chinese Simplified] translation needed"
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "privacy": {
+    "title": "[Portuguese] translation needed",
+    "lastUpdated": "[Portuguese] translation needed",
+    "intro": "[Portuguese] translation needed",
+    "infoCollect": {
+      "title": "[Portuguese] translation needed",
+      "personal": "[Portuguese] translation needed",
+      "email": "[Portuguese] translation needed",
+      "name": "[Portuguese] translation needed",
+      "role": "[Portuguese] translation needed",
+      "language": "[Portuguese] translation needed",
+      "usage": "[Portuguese] translation needed",
+      "learning": "[Portuguese] translation needed",
+      "interactions": "[Portuguese] translation needed",
+      "scenarios": "[Portuguese] translation needed",
+      "analytics": "[Portuguese] translation needed",
+      "technical": "[Portuguese] translation needed",
+      "browser": "[Portuguese] translation needed",
+      "device": "[Portuguese] translation needed",
+      "ip": "[Portuguese] translation needed",
+      "timezone": "[Portuguese] translation needed"
+    },
+    "howUse": {
+      "title": "[Portuguese] translation needed",
+      "provide": "[Portuguese] translation needed",
+      "personalize": "[Portuguese] translation needed",
+      "communicate": "[Portuguese] translation needed",
+      "improve": "[Portuguese] translation needed",
+      "analyze": "[Portuguese] translation needed",
+      "security": "[Portuguese] translation needed"
+    },
+    "storage": {
+      "title": "[Portuguese] translation needed",
+      "location": "[Portuguese] translation needed",
+      "encryption": "[Portuguese] translation needed",
+      "access": "[Portuguese] translation needed",
+      "monitoring": "[Portuguese] translation needed",
+      "backup": "[Portuguese] translation needed"
+    },
+    "sharing": {
+      "title": "[Portuguese] translation needed",
+      "intro": "[Portuguese] translation needed",
+      "consent": "[Portuguese] translation needed",
+      "legal": "[Portuguese] translation needed",
+      "protect": "[Portuguese] translation needed",
+      "service": "[Portuguese] translation needed"
+    },
+    "rights": {
+      "title": "[Portuguese] translation needed",
+      "intro": "[Portuguese] translation needed",
+      "access": "[Portuguese] translation needed",
+      "correct": "[Portuguese] translation needed",
+      "delete": "[Portuguese] translation needed",
+      "export": "[Portuguese] translation needed",
+      "restrict": "[Portuguese] translation needed",
+      "withdraw": "[Portuguese] translation needed"
+    },
+    "cookies": {
+      "title": "[Portuguese] translation needed",
+      "intro": "[Portuguese] translation needed"
+    },
+    "children": {
+      "title": "[Portuguese] translation needed",
+      "content": "[Portuguese] translation needed"
+    },
+    "international": {
+      "title": "[Portuguese] translation needed",
+      "content": "[Portuguese] translation needed"
+    },
+    "changes": {
+      "title": "[Portuguese] translation needed",
+      "content": "[Portuguese] translation needed"
+    },
+    "contact": {
+      "title": "[Portuguese] translation needed",
+      "intro": "[Portuguese] translation needed"
+    }
+  },
+  "terms": {
+    "title": "[Portuguese] translation needed",
+    "effectiveDate": "[Portuguese] translation needed",
+    "lastUpdated": "[Portuguese] translation needed",
+    "intro": "[Portuguese] translation needed",
+    "acceptance": {
+      "title": "[Portuguese] translation needed",
+      "content": "[Portuguese] translation needed",
+      "capacity": "[Portuguese] translation needed"
+    },
+    "service": {
+      "title": "[Portuguese] translation needed",
+      "intro": "[Portuguese] translation needed",
+      "literacy": "[Portuguese] translation needed",
+      "pbl": "[Portuguese] translation needed",
+      "ai": "[Portuguese] translation needed",
+      "tracking": "[Portuguese] translation needed",
+      "multi": "[Portuguese] translation needed"
+    },
+    "accounts": {
+      "title": "[Portuguese] translation needed",
+      "registration": "[Portuguese] translation needed",
+      "accurate": "[Portuguese] translation needed",
+      "maintain": "[Portuguese] translation needed",
+      "secure": "[Portuguese] translation needed",
+      "responsible": "[Portuguese] translation needed",
+      "types": "[Portuguese] translation needed",
+      "student": "[Portuguese] translation needed",
+      "teacher": "[Portuguese] translation needed",
+      "admin": "[Portuguese] translation needed"
+    },
+    "use": {
+      "title": "[Portuguese] translation needed",
+      "permitted": "[Portuguese] translation needed",
+      "educational": "[Portuguese] translation needed",
+      "share": "[Portuguese] translation needed",
+      "feedback": "[Portuguese] translation needed",
+      "prohibited": "[Portuguese] translation needed",
+      "misuse": "[Portuguese] translation needed",
+      "share_credentials": "[Portuguese] translation needed",
+      "cheat": "[Portuguese] translation needed",
+      "harm": "[Portuguese] translation needed",
+      "illegal": "[Portuguese] translation needed",
+      "scrape": "[Portuguese] translation needed"
+    },
+    "ip": {
+      "title": "[Portuguese] translation needed",
+      "platform": "[Portuguese] translation needed",
+      "ownership": "[Portuguese] translation needed",
+      "user": "[Portuguese] translation needed",
+      "retain": "[Portuguese] translation needed",
+      "open": "[Portuguese] translation needed",
+      "git": "[Portuguese] translation needed"
+    },
+    "privacy": {
+      "title": "[Portuguese] translation needed",
+      "content": "[Portuguese] translation needed"
+    },
+    "ai": {
+      "title": "[Portuguese] translation needed",
+      "disclaimer": "[Portuguese] translation needed",
+      "educational": "[Portuguese] translation needed",
+      "verify": "[Portuguese] translation needed",
+      "improve": "[Portuguese] translation needed"
+    },
+    "disclaimers": {
+      "title": "[Portuguese] translation needed",
+      "asis": "[Portuguese] translation needed",
+      "liability": "[Portuguese] translation needed"
+    },
+    "modifications": {
+      "title": "[Portuguese] translation needed",
+      "content": "[Portuguese] translation needed"
+    },
+    "termination": {
+      "title": "[Portuguese] translation needed",
+      "rights": "[Portuguese] translation needed"
+    },
+    "law": {
+      "title": "[Portuguese] translation needed",
+      "content": "[Portuguese] translation needed"
+    },
+    "contact": {
+      "title": "[Portuguese] translation needed",
+      "intro": "[Portuguese] translation needed"
+    },
+    "agreement": "[Portuguese] translation needed"
+  },
+  "common": {
+    "backToHome": "[Portuguese] translation needed"
+  }
+}

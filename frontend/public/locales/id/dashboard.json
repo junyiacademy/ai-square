@@ -1,0 +1,49 @@
+{
+  "welcome": "[Indonesian] translation needed",
+  "subtitle": "[Indonesian] translation needed",
+  "aiLiteracyProgress": "[Indonesian] translation needed",
+  "domains": {
+    "engaging_with_ai": "[Indonesian] translation needed",
+    "creating_with_ai": "[Indonesian] translation needed",
+    "managing_with_ai": "[Indonesian] translation needed",
+    "designing_with_ai": "[Indonesian] translation needed"
+  },
+  "viewDetailedProgress": "[Indonesian] translation needed",
+  "learningStatistics": "[Indonesian] translation needed",
+  "completedScenarios": "[Indonesian] translation needed",
+  "inProgress": "[Indonesian] translation needed",
+  "learningHours": "[Indonesian] translation needed",
+  "dayStreak": "[Indonesian] translation needed",
+  "recentActivities": "[Indonesian] translation needed",
+  "noRecentActivities": "[Indonesian] translation needed",
+  "activities": {
+    "completedAssessment": "[Indonesian] translation needed",
+    "assessmentDesc": "[Indonesian] translation needed"
+  },
+  "recommendedActions": "[Indonesian] translation needed",
+  "nextActions": {
+    "takeAssessment": "[Indonesian] translation needed",
+    "assessmentDesc": "[Indonesian] translation needed",
+    "viewLearningPath": "[Indonesian] translation needed",
+    "learningPathDesc": "[Indonesian] translation needed",
+    "startPBL": "[Indonesian] translation needed",
+    "pblDesc": "[Indonesian] translation needed"
+  },
+  "priority": {
+    "high": "[Indonesian] translation needed",
+    "medium": "[Indonesian] translation needed",
+    "low": "[Indonesian] translation needed"
+  },
+  "quickLinks": "[Indonesian] translation needed",
+  "explorePBL": "[Indonesian] translation needed",
+  "viewCompetencies": "[Indonesian] translation needed",
+  "viewHistory": "[Indonesian] translation needed",
+  "exploreKSA": "[Indonesian] translation needed",
+  "yourGoals": "[Indonesian] translation needed",
+  "updateGoals": "[Indonesian] translation needed",
+  "learningPathQuickAccess": "[Indonesian] translation needed",
+  "learningPathDescription": "[Indonesian] translation needed",
+  "viewAllPaths": "[Indonesian] translation needed",
+  "focusOnWeakAreas": "[Indonesian] translation needed",
+  "aiAdvisor": "[Indonesian] translation needed"
+}

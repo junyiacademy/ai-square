@@ -1,0 +1,99 @@
+{
+  "welcome": {
+    "greeting": "[ZHTW] translation needed",
+    "subtitle": "[ZHTW] translation needed",
+    "step1": {
+      "title": "[ZHTW] translation needed",
+      "description": "[ZHTW] translation needed",
+      "content": "[ZHTW] translation needed",
+      "assessment": "[ZHTW] translation needed",
+      "assessmentDesc": "[ZHTW] translation needed",
+      "learning": "[ZHTW] translation needed",
+      "learningDesc": "[ZHTW] translation needed"
+    },
+    "step2": {
+      "title": "[ZHTW] translation needed",
+      "description": "[ZHTW] translation needed",
+      "content": "[ZHTW] translation needed",
+      "domains": "[ZHTW] translation needed",
+      "engaging": "[ZHTW] translation needed",
+      "creating": "[ZHTW] translation needed",
+      "managing": "[ZHTW] translation needed",
+      "designing": "[ZHTW] translation needed"
+    },
+    "step3": {
+      "title": "[ZHTW] translation needed",
+      "description": "[ZHTW] translation needed",
+      "content": "[ZHTW] translation needed",
+      "ready": "[ZHTW] translation needed",
+      "benefit1": "[ZHTW] translation needed",
+      "benefit2": "[ZHTW] translation needed",
+      "benefit3": "[ZHTW] translation needed"
+    },
+    "startJourney": "[ZHTW] translation needed"
+  },
+  "goals": {
+    "title": "[ZHTW] translation needed",
+    "subtitle": "[ZHTW] translation needed",
+    "understand": {
+      "title": "[ZHTW] translation needed",
+      "description": "[ZHTW] translation needed"
+    },
+    "create": {
+      "title": "[ZHTW] translation needed",
+      "description": "[ZHTW] translation needed"
+    },
+    "analyze": {
+      "title": "[ZHTW] translation needed",
+      "description": "[ZHTW] translation needed"
+    },
+    "build": {
+      "title": "[ZHTW] translation needed",
+      "description": "[ZHTW] translation needed"
+    },
+    "teach": {
+      "title": "[ZHTW] translation needed",
+      "description": "[ZHTW] translation needed"
+    },
+    "ethical": {
+      "title": "[ZHTW] translation needed",
+      "description": "[ZHTW] translation needed"
+    },
+    "recommendedDomains": "[ZHTW] translation needed",
+    "selected": "{{count}} goals selected",
+    "selectAtLeastOne": "[ZHTW] translation needed",
+    "continue": "[ZHTW] translation needed",
+    "skipForNow": "[ZHTW] translation needed",
+    "helpText": "[ZHTW] translation needed"
+  },
+  "progress": {
+    "welcome": "[ZHTW] translation needed",
+    "identity": "[ZHTW] translation needed",
+    "goals": "[ZHTW] translation needed"
+  },
+  "identity": {
+    "title": "[ZHTW] translation needed",
+    "subtitle": "[ZHTW] translation needed",
+    "student": {
+      "title": "[ZHTW] translation needed",
+      "description": "[ZHTW] translation needed"
+    },
+    "teacher": {
+      "title": "[ZHTW] translation needed",
+      "description": "[ZHTW] translation needed"
+    },
+    "professional": {
+      "title": "[ZHTW] translation needed",
+      "description": "[ZHTW] translation needed"
+    },
+    "learner": {
+      "title": "[ZHTW] translation needed",
+      "description": "[ZHTW] translation needed"
+    }
+  },
+  "button": {
+    "back": "[ZHTW] translation needed",
+    "continue": "[ZHTW] translation needed",
+    "saving": "[ZHTW] translation needed"
+  }
+}

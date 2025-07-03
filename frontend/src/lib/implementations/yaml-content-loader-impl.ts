@@ -17,7 +17,7 @@ export interface KSATheme {
 }
 
 export interface KSASection {
-  desciption: string; // Note: typo in original YAML
+  description: string; // Note: typo in original YAML
   themes: Record<string, KSATheme>;
 }
 
@@ -64,7 +64,7 @@ export class KSACodesLoader extends BaseYAMLLoader<KSAData> {
 
   protected isTranslatableField(fieldName: string): boolean {
     // KSA 特定的可翻譯欄位
-    return ['summary', 'explanation', 'desciption', 'questions'].includes(fieldName);
+    return ['summary', 'explanation', 'description', 'questions'].includes(fieldName);
   }
 }
 

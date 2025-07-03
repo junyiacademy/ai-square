@@ -1,0 +1,27 @@
+{
+  "skip": "[KO] translation needed",
+  "next": "[KO] translation needed",
+  "back": "[KO] translation needed",
+  "continue": "[KO] translation needed",
+  "loading": "[KO] translation needed",
+  "save": "[KO] translation needed",
+  "cancel": "[KO] translation needed",
+  "submit": "[KO] translation needed",
+  "delete": "[KO] translation needed",
+  "edit": "[KO] translation needed",
+  "close": "[KO] translation needed",
+  "error": "[KO] translation needed",
+  "success": "[KO] translation needed",
+  "warning": "[KO] translation needed",
+  "info": "[KO] translation needed",
+  "backToDashboard": "[KO] translation needed",
+  "minutes": "[KO] translation needed",
+  "hours": "[KO] translation needed",
+  "days": "[KO] translation needed",
+  "view": "[KO] translation needed",
+  "difficulty": {
+    "beginner": "[KO] translation needed",
+    "intermediate": "[KO] translation needed",
+    "advanced": "[KO] translation needed"
+  }
+}

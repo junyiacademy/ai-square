@@ -1,0 +1,43 @@
+{
+  "title": "[Arabic] translation needed",
+  "subtitle": "[Arabic] translation needed",
+  "loading": "[Arabic] translation needed",
+  "loadError": "[Arabic] translation needed",
+  "searchPlaceholder": "[Arabic] translation needed",
+  "sections": {
+    "knowledge": "[Arabic] translation needed",
+    "skills": "[Arabic] translation needed",
+    "attitudes": "[Arabic] translation needed",
+    "knowledgeShort": "[Arabic] translation needed",
+    "skillsShort": "[Arabic] translation needed",
+    "attitudesShort": "[Arabic] translation needed"
+  },
+  "results": {
+    "themesFound": "[Arabic] translation needed",
+    "themesFoundFor": "[Arabic] translation needed",
+    "noResults": "[Arabic] translation needed",
+    "noResultsHint": "[Arabic] translation needed"
+  },
+  "codes": "[Arabic] translation needed",
+  "codesPlural": "[Arabic] translation needed",
+  "reflectionQuestions": "[Arabic] translation needed",
+  "themes": {
+    "The_Nature_of_AI": "[Arabic] translation needed",
+    "AI_Reflects_Human_Choices_and_Perspectives": "[Arabic] translation needed",
+    "AI_Reshapes_Work_and_Human_Roles": "[Arabic] translation needed",
+    "AIs_Capabilities_and_Limitations": "[Arabic] translation needed",
+    "AIs_Role_in_Society": "[Arabic] translation needed",
+    "Critical_Thinking": "[Arabic] translation needed",
+    "Creativity": "[Arabic] translation needed",
+    "Computational_Thinking": "[Arabic] translation needed",
+    "Collaboration": "[Arabic] translation needed",
+    "Problem_Solving": "[Arabic] translation needed",
+    "Self_and_Social_Awareness": "[Arabic] translation needed",
+    "Communication": "[Arabic] translation needed",
+    "Responsible": "[Arabic] translation needed",
+    "Curious": "[Arabic] translation needed",
+    "Innovative": "[Arabic] translation needed",
+    "Adaptable": "[Arabic] translation needed",
+    "Empathetic": "[Arabic] translation needed"
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "welcome": {
+    "greeting": "[Indonesian] translation needed",
+    "subtitle": "[Indonesian] translation needed",
+    "step1": {
+      "title": "[Indonesian] translation needed",
+      "description": "[Indonesian] translation needed",
+      "content": "[Indonesian] translation needed",
+      "assessment": "[Indonesian] translation needed",
+      "assessmentDesc": "[Indonesian] translation needed",
+      "learning": "[Indonesian] translation needed",
+      "learningDesc": "[Indonesian] translation needed"
+    },
+    "step2": {
+      "title": "[Indonesian] translation needed",
+      "description": "[Indonesian] translation needed",
+      "content": "[Indonesian] translation needed",
+      "domains": "[Indonesian] translation needed",
+      "engaging": "[Indonesian] translation needed",
+      "creating": "[Indonesian] translation needed",
+      "managing": "[Indonesian] translation needed",
+      "designing": "[Indonesian] translation needed"
+    },
+    "step3": {
+      "title": "[Indonesian] translation needed",
+      "description": "[Indonesian] translation needed",
+      "content": "[Indonesian] translation needed",
+      "ready": "[Indonesian] translation needed",
+      "benefit1": "[Indonesian] translation needed",
+      "benefit2": "[Indonesian] translation needed",
+      "benefit3": "[Indonesian] translation needed"
+    },
+    "startJourney": "[Indonesian] translation needed"
+  },
+  "goals": {
+    "title": "[Indonesian] translation needed",
+    "subtitle": "[Indonesian] translation needed",
+    "understand": {
+      "title": "[Indonesian] translation needed",
+      "description": "[Indonesian] translation needed"
+    },
+    "create": {
+      "title": "[Indonesian] translation needed",
+      "description": "[Indonesian] translation needed"
+    },
+    "analyze": {
+      "title": "[Indonesian] translation needed",
+      "description": "[Indonesian] translation needed"
+    },
+    "build": {
+      "title": "[Indonesian] translation needed",
+      "description": "[Indonesian] translation needed"
+    },
+    "teach": {
+      "title": "[Indonesian] translation needed",
+      "description": "[Indonesian] translation needed"
+    },
+    "ethical": {
+      "title": "[Indonesian] translation needed",
+      "description": "[Indonesian] translation needed"
+    },
+    "recommendedDomains": "[Indonesian] translation needed",
+    "selected": "[Indonesian] translation needed",
+    "selectAtLeastOne": "[Indonesian] translation needed",
+    "continue": "[Indonesian] translation needed",
+    "skipForNow": "[Indonesian] translation needed",
+    "helpText": "[Indonesian] translation needed"
+  },
+  "progress": {
+    "welcome": "[Indonesian] translation needed",
+    "identity": "[Indonesian] translation needed",
+    "goals": "[Indonesian] translation needed"
+  },
+  "identity": {
+    "title": "[Indonesian] translation needed",
+    "subtitle": "[Indonesian] translation needed",
+    "student": {
+      "title": "[Indonesian] translation needed",
+      "description": "[Indonesian] translation needed"
+    },
+    "teacher": {
+      "title": "[Indonesian] translation needed",
+      "description": "[Indonesian] translation needed"
+    },
+    "professional": {
+      "title": "[Indonesian] translation needed",
+      "description": "[Indonesian] translation needed"
+    },
+    "learner": {
+      "title": "[Indonesian] translation needed",
+      "description": "[Indonesian] translation needed"
+    }
+  },
+  "button": {
+    "back": "[Indonesian] translation needed",
+    "continue": "[Indonesian] translation needed",
+    "saving": "[Indonesian] translation needed"
+  }
+}

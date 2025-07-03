@@ -1,0 +1,73 @@
+{
+  "title": "[Arabic] translation needed",
+  "subtitle": "[Arabic] translation needed",
+  "getStarted": "[Arabic] translation needed",
+  "pathOverview": "[Arabic] translation needed",
+  "nextPath": "[Arabic] translation needed",
+  "tryFeature": "[Arabic] translation needed",
+  "paths": {
+    "dashboard": {
+      "title": "[Arabic] translation needed",
+      "subtitle": "[Arabic] translation needed",
+      "description": "[Arabic] translation needed",
+      "userNeed": "[Arabic] translation needed",
+      "features": [
+        "[Arabic] translation needed",
+        "[Arabic] translation needed",
+        "[Arabic] translation needed",
+        "[Arabic] translation needed"
+      ]
+    },
+    "assessment": {
+      "title": "[Arabic] translation needed",
+      "subtitle": "[Arabic] translation needed",
+      "description": "[Arabic] translation needed",
+      "userNeed": "[Arabic] translation needed",
+      "features": [
+        "[Arabic] translation needed",
+        "[Arabic] translation needed",
+        "[Arabic] translation needed",
+        "[Arabic] translation needed"
+      ]
+    },
+    "learningPath": {
+      "title": "[Arabic] translation needed",
+      "subtitle": "[Arabic] translation needed",
+      "description": "[Arabic] translation needed",
+      "userNeed": "[Arabic] translation needed",
+      "features": [
+        "[Arabic] translation needed",
+        "[Arabic] translation needed",
+        "[Arabic] translation needed",
+        "[Arabic] translation needed"
+      ]
+    },
+    "pbl": {
+      "title": "[Arabic] translation needed",
+      "subtitle": "[Arabic] translation needed",
+      "description": "[Arabic] translation needed",
+      "userNeed": "[Arabic] translation needed",
+      "features": [
+        "[Arabic] translation needed",
+        "[Arabic] translation needed",
+        "[Arabic] translation needed",
+        "[Arabic] translation needed"
+      ]
+    },
+    "chat": {
+      "title": "[Arabic] translation needed",
+      "subtitle": "[Arabic] translation needed",
+      "description": "[Arabic] translation needed",
+      "userNeed": "[Arabic] translation needed",
+      "features": [
+        "[Arabic] translation needed",
+        "[Arabic] translation needed",
+        "[Arabic] translation needed",
+        "[Arabic] translation needed"
+      ]
+    }
+  },
+  "keyFeatures": "[Arabic] translation needed",
+  "solvedNeed": "[Arabic] translation needed",
+  "completeJourney": "[Arabic] translation needed"
+}

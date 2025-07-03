@@ -18,43 +18,19 @@ const themeSchema = z.object({
 
 // Schema for knowledge codes section
 const knowledgeCodesSchema = z.object({
-  desciption: z.string().min(1), // Note: typo in actual YAML file
-  desciption_zhTW: z.string().min(1),
-  desciption_es: z.string().min(1),
-  desciption_ja: z.string().min(1),
-  desciption_ko: z.string().min(1),
-  desciption_fr: z.string().min(1),
-  desciption_de: z.string().min(1),
-  desciption_ru: z.string().min(1),
-  desciption_it: z.string().min(1),
+  ...multilingualFieldSchema('description').shape,
   themes: z.record(z.string(), themeSchema)
 })
 
 // Schema for skills codes section
 const skillsCodesSchema = z.object({
-  desciption: z.string().min(1), // Note: typo in actual YAML file
-  desciption_zhTW: z.string().min(1),
-  desciption_es: z.string().min(1),
-  desciption_ja: z.string().min(1),
-  desciption_ko: z.string().min(1),
-  desciption_fr: z.string().min(1),
-  desciption_de: z.string().min(1),
-  desciption_ru: z.string().min(1),
-  desciption_it: z.string().min(1),
+  ...multilingualFieldSchema('description').shape,
   themes: z.record(z.string(), themeSchema)
 })
 
 // Schema for attitudes codes section
 const attitudesCodesSchema = z.object({
-  desciption: z.string().min(1), // Note: typo in actual YAML file
-  desciption_zhTW: z.string().min(1),
-  desciption_es: z.string().min(1),
-  desciption_ja: z.string().min(1),
-  desciption_ko: z.string().min(1),
-  desciption_fr: z.string().min(1),
-  desciption_de: z.string().min(1),
-  desciption_ru: z.string().min(1),
-  desciption_it: z.string().min(1),
+  ...multilingualFieldSchema('description').shape,
   themes: z.record(z.string(), themeSchema)
 })
 

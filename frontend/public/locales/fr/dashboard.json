@@ -1,0 +1,49 @@
+{
+  "welcome": "[FR] translation needed",
+  "subtitle": "[FR] translation needed",
+  "aiLiteracyProgress": "[FR] translation needed",
+  "domains": {
+    "engaging_with_ai": "[FR] translation needed",
+    "creating_with_ai": "[FR] translation needed",
+    "managing_with_ai": "[FR] translation needed",
+    "designing_with_ai": "[FR] translation needed"
+  },
+  "viewDetailedProgress": "[FR] translation needed",
+  "learningStatistics": "[FR] translation needed",
+  "completedScenarios": "[FR] translation needed",
+  "inProgress": "[FR] translation needed",
+  "learningHours": "[FR] translation needed",
+  "dayStreak": "[FR] translation needed",
+  "recentActivities": "[FR] translation needed",
+  "noRecentActivities": "[FR] translation needed",
+  "activities": {
+    "completedAssessment": "[FR] translation needed",
+    "assessmentDesc": "[FR] translation needed"
+  },
+  "recommendedActions": "[FR] translation needed",
+  "nextActions": {
+    "takeAssessment": "[FR] translation needed",
+    "assessmentDesc": "[FR] translation needed",
+    "viewLearningPath": "[FR] translation needed",
+    "learningPathDesc": "[FR] translation needed",
+    "startPBL": "[FR] translation needed",
+    "pblDesc": "[FR] translation needed"
+  },
+  "priority": {
+    "high": "[FR] translation needed",
+    "medium": "[FR] translation needed",
+    "low": "[FR] translation needed"
+  },
+  "quickLinks": "[FR] translation needed",
+  "explorePBL": "[FR] translation needed",
+  "viewCompetencies": "[FR] translation needed",
+  "viewHistory": "[FR] translation needed",
+  "exploreKSA": "[FR] translation needed",
+  "yourGoals": "[FR] translation needed",
+  "updateGoals": "[FR] translation needed",
+  "learningPathQuickAccess": "[FR] translation needed",
+  "learningPathDescription": "[FR] translation needed",
+  "viewAllPaths": "[FR] translation needed",
+  "focusOnWeakAreas": "[FR] translation needed",
+  "aiAdvisor": "[FR] translation needed"
+}

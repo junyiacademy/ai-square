@@ -1,0 +1,43 @@
+{
+  "title": "[Indonesian] translation needed",
+  "subtitle": "[Indonesian] translation needed",
+  "loading": "[Indonesian] translation needed",
+  "loadError": "[Indonesian] translation needed",
+  "searchPlaceholder": "[Indonesian] translation needed",
+  "sections": {
+    "knowledge": "[Indonesian] translation needed",
+    "skills": "[Indonesian] translation needed",
+    "attitudes": "[Indonesian] translation needed",
+    "knowledgeShort": "[Indonesian] translation needed",
+    "skillsShort": "[Indonesian] translation needed",
+    "attitudesShort": "[Indonesian] translation needed"
+  },
+  "results": {
+    "themesFound": "[Indonesian] translation needed",
+    "themesFoundFor": "[Indonesian] translation needed",
+    "noResults": "[Indonesian] translation needed",
+    "noResultsHint": "[Indonesian] translation needed"
+  },
+  "codes": "[Indonesian] translation needed",
+  "codesPlural": "[Indonesian] translation needed",
+  "reflectionQuestions": "[Indonesian] translation needed",
+  "themes": {
+    "The_Nature_of_AI": "[Indonesian] translation needed",
+    "AI_Reflects_Human_Choices_and_Perspectives": "[Indonesian] translation needed",
+    "AI_Reshapes_Work_and_Human_Roles": "[Indonesian] translation needed",
+    "AIs_Capabilities_and_Limitations": "[Indonesian] translation needed",
+    "AIs_Role_in_Society": "[Indonesian] translation needed",
+    "Critical_Thinking": "[Indonesian] translation needed",
+    "Creativity": "[Indonesian] translation needed",
+    "Computational_Thinking": "[Indonesian] translation needed",
+    "Collaboration": "[Indonesian] translation needed",
+    "Problem_Solving": "[Indonesian] translation needed",
+    "Self_and_Social_Awareness": "[Indonesian] translation needed",
+    "Communication": "[Indonesian] translation needed",
+    "Responsible": "[Indonesian] translation needed",
+    "Curious": "[Indonesian] translation needed",
+    "Innovative": "[Indonesian] translation needed",
+    "Adaptable": "[Indonesian] translation needed",
+    "Empathetic": "[Indonesian] translation needed"
+  }
+}

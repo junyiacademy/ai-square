@@ -1,0 +1,171 @@
+{
+  "privacy": {
+    "title": "[Indonesian] translation needed",
+    "lastUpdated": "[Indonesian] translation needed",
+    "intro": "[Indonesian] translation needed",
+    "infoCollect": {
+      "title": "[Indonesian] translation needed",
+      "personal": "[Indonesian] translation needed",
+      "email": "[Indonesian] translation needed",
+      "name": "[Indonesian] translation needed",
+      "role": "[Indonesian] translation needed",
+      "language": "[Indonesian] translation needed",
+      "usage": "[Indonesian] translation needed",
+      "learning": "[Indonesian] translation needed",
+      "interactions": "[Indonesian] translation needed",
+      "scenarios": "[Indonesian] translation needed",
+      "analytics": "[Indonesian] translation needed",
+      "technical": "[Indonesian] translation needed",
+      "browser": "[Indonesian] translation needed",
+      "device": "[Indonesian] translation needed",
+      "ip": "[Indonesian] translation needed",
+      "timezone": "[Indonesian] translation needed"
+    },
+    "howUse": {
+      "title": "[Indonesian] translation needed",
+      "provide": "[Indonesian] translation needed",
+      "personalize": "[Indonesian] translation needed",
+      "communicate": "[Indonesian] translation needed",
+      "improve": "[Indonesian] translation needed",
+      "analyze": "[Indonesian] translation needed",
+      "security": "[Indonesian] translation needed"
+    },
+    "storage": {
+      "title": "[Indonesian] translation needed",
+      "location": "[Indonesian] translation needed",
+      "encryption": "[Indonesian] translation needed",
+      "access": "[Indonesian] translation needed",
+      "monitoring": "[Indonesian] translation needed",
+      "backup": "[Indonesian] translation needed"
+    },
+    "sharing": {
+      "title": "[Indonesian] translation needed",
+      "intro": "[Indonesian] translation needed",
+      "consent": "[Indonesian] translation needed",
+      "legal": "[Indonesian] translation needed",
+      "protect": "[Indonesian] translation needed",
+      "service": "[Indonesian] translation needed"
+    },
+    "rights": {
+      "title": "[Indonesian] translation needed",
+      "intro": "[Indonesian] translation needed",
+      "access": "[Indonesian] translation needed",
+      "correct": "[Indonesian] translation needed",
+      "delete": "[Indonesian] translation needed",
+      "export": "[Indonesian] translation needed",
+      "restrict": "[Indonesian] translation needed",
+      "withdraw": "[Indonesian] translation needed"
+    },
+    "cookies": {
+      "title": "[Indonesian] translation needed",
+      "intro": "[Indonesian] translation needed"
+    },
+    "children": {
+      "title": "[Indonesian] translation needed",
+      "content": "[Indonesian] translation needed"
+    },
+    "international": {
+      "title": "[Indonesian] translation needed",
+      "content": "[Indonesian] translation needed"
+    },
+    "changes": {
+      "title": "[Indonesian] translation needed",
+      "content": "[Indonesian] translation needed"
+    },
+    "contact": {
+      "title": "[Indonesian] translation needed",
+      "intro": "[Indonesian] translation needed"
+    }
+  },
+  "terms": {
+    "title": "[Indonesian] translation needed",
+    "effectiveDate": "[Indonesian] translation needed",
+    "lastUpdated": "[Indonesian] translation needed",
+    "intro": "[Indonesian] translation needed",
+    "acceptance": {
+      "title": "[Indonesian] translation needed",
+      "content": "[Indonesian] translation needed",
+      "capacity": "[Indonesian] translation needed"
+    },
+    "service": {
+      "title": "[Indonesian] translation needed",
+      "intro": "[Indonesian] translation needed",
+      "literacy": "[Indonesian] translation needed",
+      "pbl": "[Indonesian] translation needed",
+      "ai": "[Indonesian] translation needed",
+      "tracking": "[Indonesian] translation needed",
+      "multi": "[Indonesian] translation needed"
+    },
+    "accounts": {
+      "title": "[Indonesian] translation needed",
+      "registration": "[Indonesian] translation needed",
+      "accurate": "[Indonesian] translation needed",
+      "maintain": "[Indonesian] translation needed",
+      "secure": "[Indonesian] translation needed",
+      "responsible": "[Indonesian] translation needed",
+      "types": "[Indonesian] translation needed",
+      "student": "[Indonesian] translation needed",
+      "teacher": "[Indonesian] translation needed",
+      "admin": "[Indonesian] translation needed"
+    },
+    "use": {
+      "title": "[Indonesian] translation needed",
+      "permitted": "[Indonesian] translation needed",
+      "educational": "[Indonesian] translation needed",
+      "share": "[Indonesian] translation needed",
+      "feedback": "[Indonesian] translation needed",
+      "prohibited": "[Indonesian] translation needed",
+      "misuse": "[Indonesian] translation needed",
+      "share_credentials": "[Indonesian] translation needed",
+      "cheat": "[Indonesian] translation needed",
+      "harm": "[Indonesian] translation needed",
+      "illegal": "[Indonesian] translation needed",
+      "scrape": "[Indonesian] translation needed"
+    },
+    "ip": {
+      "title": "[Indonesian] translation needed",
+      "platform": "[Indonesian] translation needed",
+      "ownership": "[Indonesian] translation needed",
+      "user": "[Indonesian] translation needed",
+      "retain": "[Indonesian] translation needed",
+      "open": "[Indonesian] translation needed",
+      "git": "[Indonesian] translation needed"
+    },
+    "privacy": {
+      "title": "[Indonesian] translation needed",
+      "content": "[Indonesian] translation needed"
+    },
+    "ai": {
+      "title": "[Indonesian] translation needed",
+      "disclaimer": "[Indonesian] translation needed",
+      "educational": "[Indonesian] translation needed",
+      "verify": "[Indonesian] translation needed",
+      "improve": "[Indonesian] translation needed"
+    },
+    "disclaimers": {
+      "title": "[Indonesian] translation needed",
+      "asis": "[Indonesian] translation needed",
+      "liability": "[Indonesian] translation needed"
+    },
+    "modifications": {
+      "title": "[Indonesian] translation needed",
+      "content": "[Indonesian] translation needed"
+    },
+    "termination": {
+      "title": "[Indonesian] translation needed",
+      "rights": "[Indonesian] translation needed"
+    },
+    "law": {
+      "title": "[Indonesian] translation needed",
+      "content": "[Indonesian] translation needed"
+    },
+    "contact": {
+      "title": "[Indonesian] translation needed",
+      "intro": "[Indonesian] translation needed"
+    },
+    "agreement": "[Indonesian] translation needed"
+  },
+  "common": {
+    "backToHome": "[Indonesian] translation needed"
+  }
+}

@@ -20,7 +20,14 @@
     "test:all": "npm run test:ci && npm run test:e2e",
     "quality-check": "npm run lint && npm run test:all",
     "validate-content": "tsx scripts/validate-content.ts",
-    "validate": "tsx scripts/validate-content-simple.ts"
+    "validate": "tsx scripts/validate-content-simple.ts",
+    "translation:setup": "node scripts/batch-translation-setup.js",
+    "translation:batch": "node scripts/batch-translate-with-service.js",
+    "data:sync": "node scripts/sync-yaml-json.js y2j",
+    "data:reverse-sync": "node scripts/sync-yaml-json.js j2y",
+    "data:watch": "node scripts/sync-yaml-json.js watch",
+    "data:setup": "node scripts/setup-hybrid-data-workflow.js",
+    "prebuild": "npm run data:sync"
   },
   "dependencies": {
     "@google-cloud/storage": "^7.16.0",

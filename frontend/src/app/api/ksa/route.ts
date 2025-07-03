@@ -16,7 +16,7 @@ interface YAMLTheme {
 }
 
 interface YAMLSection {
-  desciption: string; // Note: typo in original YAML
+  description: string; // Note: typo in original YAML
   themes: Record<string, YAMLTheme>;
   [key: string]: unknown;
 }
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
     // Process each section (knowledge_codes, skill_codes, attitude_codes)
     const processSection = (sectionData: YAMLSection, lang: string) => {
       const processedSection = {
-        description: getTranslatedField(sectionData, 'desciption', lang) as string, // Note: typo in original YAML
+        description: getTranslatedField(sectionData, 'description', lang) as string, // Note: typo in original YAML
         themes: {} as Record<string, { explanation: string; codes: Record<string, { summary: string; questions?: string[] }> }>
       };
 

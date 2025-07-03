@@ -49,8 +49,8 @@ async function validateContent() {
     console.log(`✅ Found ${ksaIds.attitudeIds.length} attitude codes`)
 
     // Check for typos
-    if (ksaData.knowledge_codes?.desciption) {
-      addIssue('warning', 'ksa_codes.yaml', 'Typo: "desciption" should be "description"')
+    if (ksaData.knowledge_codes?.description) {
+      addIssue('warning', 'ksa_codes.yaml', 'Typo: "description" should be "description"')
     }
   } catch (error) {
     addIssue('error', 'ksa_codes.yaml', `Failed to load: ${error}`)

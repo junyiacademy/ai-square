@@ -1,0 +1,99 @@
+{
+  "welcome": {
+    "greeting": "[Arabic] translation needed",
+    "subtitle": "[Arabic] translation needed",
+    "step1": {
+      "title": "[Arabic] translation needed",
+      "description": "[Arabic] translation needed",
+      "content": "[Arabic] translation needed",
+      "assessment": "[Arabic] translation needed",
+      "assessmentDesc": "[Arabic] translation needed",
+      "learning": "[Arabic] translation needed",
+      "learningDesc": "[Arabic] translation needed"
+    },
+    "step2": {
+      "title": "[Arabic] translation needed",
+      "description": "[Arabic] translation needed",
+      "content": "[Arabic] translation needed",
+      "domains": "[Arabic] translation needed",
+      "engaging": "[Arabic] translation needed",
+      "creating": "[Arabic] translation needed",
+      "managing": "[Arabic] translation needed",
+      "designing": "[Arabic] translation needed"
+    },
+    "step3": {
+      "title": "[Arabic] translation needed",
+      "description": "[Arabic] translation needed",
+      "content": "[Arabic] translation needed",
+      "ready": "[Arabic] translation needed",
+      "benefit1": "[Arabic] translation needed",
+      "benefit2": "[Arabic] translation needed",
+      "benefit3": "[Arabic] translation needed"
+    },
+    "startJourney": "[Arabic] translation needed"
+  },
+  "goals": {
+    "title": "[Arabic] translation needed",
+    "subtitle": "[Arabic] translation needed",
+    "understand": {
+      "title": "[Arabic] translation needed",
+      "description": "[Arabic] translation needed"
+    },
+    "create": {
+      "title": "[Arabic] translation needed",
+      "description": "[Arabic] translation needed"
+    },
+    "analyze": {
+      "title": "[Arabic] translation needed",
+      "description": "[Arabic] translation needed"
+    },
+    "build": {
+      "title": "[Arabic] translation needed",
+      "description": "[Arabic] translation needed"
+    },
+    "teach": {
+      "title": "[Arabic] translation needed",
+      "description": "[Arabic] translation needed"
+    },
+    "ethical": {
+      "title": "[Arabic] translation needed",
+      "description": "[Arabic] translation needed"
+    },
+    "recommendedDomains": "[Arabic] translation needed",
+    "selected": "[Arabic] translation needed",
+    "selectAtLeastOne": "[Arabic] translation needed",
+    "continue": "[Arabic] translation needed",
+    "skipForNow": "[Arabic] translation needed",
+    "helpText": "[Arabic] translation needed"
+  },
+  "progress": {
+    "welcome": "[Arabic] translation needed",
+    "identity": "[Arabic] translation needed",
+    "goals": "[Arabic] translation needed"
+  },
+  "identity": {
+    "title": "[Arabic] translation needed",
+    "subtitle": "[Arabic] translation needed",
+    "student": {
+      "title": "[Arabic] translation needed",
+      "description": "[Arabic] translation needed"
+    },
+    "teacher": {
+      "title": "[Arabic] translation needed",
+      "description": "[Arabic] translation needed"
+    },
+    "professional": {
+      "title": "[Arabic] translation needed",
+      "description": "[Arabic] translation needed"
+    },
+    "learner": {
+      "title": "[Arabic] translation needed",
+      "description": "[Arabic] translation needed"
+    }
+  },
+  "button": {
+    "back": "[Arabic] translation needed",
+    "continue": "[Arabic] translation needed",
+    "saving": "[Arabic] translation needed"
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "privacy": {
+    "title": "[IT] translation needed",
+    "lastUpdated": "[IT] translation needed",
+    "intro": "[IT] translation needed",
+    "infoCollect": {
+      "title": "[IT] translation needed",
+      "personal": "[IT] translation needed",
+      "email": "[IT] translation needed",
+      "name": "[IT] translation needed",
+      "role": "[IT] translation needed",
+      "language": "[IT] translation needed",
+      "usage": "[IT] translation needed",
+      "learning": "[IT] translation needed",
+      "interactions": "[IT] translation needed",
+      "scenarios": "[IT] translation needed",
+      "analytics": "[IT] translation needed",
+      "technical": "[IT] translation needed",
+      "browser": "[IT] translation needed",
+      "device": "[IT] translation needed",
+      "ip": "[IT] translation needed",
+      "timezone": "[IT] translation needed"
+    },
+    "howUse": {
+      "title": "[IT] translation needed",
+      "provide": "[IT] translation needed",
+      "personalize": "[IT] translation needed",
+      "communicate": "[IT] translation needed",
+      "improve": "[IT] translation needed",
+      "analyze": "[IT] translation needed",
+      "security": "[IT] translation needed"
+    },
+    "storage": {
+      "title": "[IT] translation needed",
+      "location": "[IT] translation needed",
+      "encryption": "[IT] translation needed",
+      "access": "[IT] translation needed",
+      "monitoring": "[IT] translation needed",
+      "backup": "[IT] translation needed"
+    },
+    "sharing": {
+      "title": "[IT] translation needed",
+      "intro": "[IT] translation needed",
+      "consent": "[IT] translation needed",
+      "legal": "[IT] translation needed",
+      "protect": "[IT] translation needed",
+      "service": "[IT] translation needed"
+    },
+    "rights": {
+      "title": "[IT] translation needed",
+      "intro": "[IT] translation needed",
+      "access": "[IT] translation needed",
+      "correct": "[IT] translation needed",
+      "delete": "[IT] translation needed",
+      "export": "[IT] translation needed",
+      "restrict": "[IT] translation needed",
+      "withdraw": "[IT] translation needed"
+    },
+    "cookies": {
+      "title": "[IT] translation needed",
+      "intro": "[IT] translation needed"
+    },
+    "children": {
+      "title": "[IT] translation needed",
+      "content": "[IT] translation needed"
+    },
+    "international": {
+      "title": "[IT] translation needed",
+      "content": "[IT] translation needed"
+    },
+    "changes": {
+      "title": "[IT] translation needed",
+      "content": "[IT] translation needed"
+    },
+    "contact": {
+      "title": "[IT] translation needed",
+      "intro": "[IT] translation needed"
+    }
+  },
+  "terms": {
+    "title": "[IT] translation needed",
+    "effectiveDate": "[IT] translation needed",
+    "lastUpdated": "[IT] translation needed",
+    "intro": "[IT] translation needed",
+    "acceptance": {
+      "title": "[IT] translation needed",
+      "content": "[IT] translation needed",
+      "capacity": "[IT] translation needed"
+    },
+    "service": {
+      "title": "[IT] translation needed",
+      "intro": "[IT] translation needed",
+      "literacy": "[IT] translation needed",
+      "pbl": "[IT] translation needed",
+      "ai": "[IT] translation needed",
+      "tracking": "[IT] translation needed",
+      "multi": "[IT] translation needed"
+    },
+    "accounts": {
+      "title": "[IT] translation needed",
+      "registration": "[IT] translation needed",
+      "accurate": "[IT] translation needed",
+      "maintain": "[IT] translation needed",
+      "secure": "[IT] translation needed",
+      "responsible": "[IT] translation needed",
+      "types": "[IT] translation needed",
+      "student": "[IT] translation needed",
+      "teacher": "[IT] translation needed",
+      "admin": "[IT] translation needed"
+    },
+    "use": {
+      "title": "[IT] translation needed",
+      "permitted": "[IT] translation needed",
+      "educational": "[IT] translation needed",
+      "share": "[IT] translation needed",
+      "feedback": "[IT] translation needed",
+      "prohibited": "[IT] translation needed",
+      "misuse": "[IT] translation needed",
+      "share_credentials": "[IT] translation needed",
+      "cheat": "[IT] translation needed",
+      "harm": "[IT] translation needed",
+      "illegal": "[IT] translation needed",
+      "scrape": "[IT] translation needed"
+    },
+    "ip": {
+      "title": "[IT] translation needed",
+      "platform": "[IT] translation needed",
+      "ownership": "[IT] translation needed",
+      "user": "[IT] translation needed",
+      "retain": "[IT] translation needed",
+      "open": "[IT] translation needed",
+      "git": "[IT] translation needed"
+    },
+    "privacy": {
+      "title": "[IT] translation needed",
+      "content": "[IT] translation needed"
+    },
+    "ai": {
+      "title": "[IT] translation needed",
+      "disclaimer": "[IT] translation needed",
+      "educational": "[IT] translation needed",
+      "verify": "[IT] translation needed",
+      "improve": "[IT] translation needed"
+    },
+    "disclaimers": {
+      "title": "[IT] translation needed",
+      "asis": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND.",
+      "liability": "[IT] translation needed"
+    },
+    "modifications": {
+      "title": "[IT] translation needed",
+      "content": "[IT] translation needed"
+    },
+    "termination": {
+      "title": "[IT] translation needed",
+      "rights": "[IT] translation needed"
+    },
+    "law": {
+      "title": "[IT] translation needed",
+      "content": "[IT] translation needed"
+    },
+    "contact": {
+      "title": "[IT] translation needed",
+      "intro": "[IT] translation needed"
+    },
+    "agreement": "[IT] translation needed"
+  },
+  "common": {
+    "backToHome": "[IT] translation needed"
+  }
+}

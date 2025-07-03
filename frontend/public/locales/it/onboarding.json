@@ -1,0 +1,99 @@
+{
+  "welcome": {
+    "greeting": "[IT] translation needed",
+    "subtitle": "[IT] translation needed",
+    "step1": {
+      "title": "[IT] translation needed",
+      "description": "[IT] translation needed",
+      "content": "[IT] translation needed",
+      "assessment": "[IT] translation needed",
+      "assessmentDesc": "[IT] translation needed",
+      "learning": "[IT] translation needed",
+      "learningDesc": "[IT] translation needed"
+    },
+    "step2": {
+      "title": "[IT] translation needed",
+      "description": "[IT] translation needed",
+      "content": "[IT] translation needed",
+      "domains": "[IT] translation needed",
+      "engaging": "[IT] translation needed",
+      "creating": "[IT] translation needed",
+      "managing": "[IT] translation needed",
+      "designing": "[IT] translation needed"
+    },
+    "step3": {
+      "title": "[IT] translation needed",
+      "description": "[IT] translation needed",
+      "content": "[IT] translation needed",
+      "ready": "[IT] translation needed",
+      "benefit1": "[IT] translation needed",
+      "benefit2": "[IT] translation needed",
+      "benefit3": "[IT] translation needed"
+    },
+    "startJourney": "[IT] translation needed"
+  },
+  "goals": {
+    "title": "[IT] translation needed",
+    "subtitle": "[IT] translation needed",
+    "understand": {
+      "title": "[IT] translation needed",
+      "description": "[IT] translation needed"
+    },
+    "create": {
+      "title": "[IT] translation needed",
+      "description": "[IT] translation needed"
+    },
+    "analyze": {
+      "title": "[IT] translation needed",
+      "description": "[IT] translation needed"
+    },
+    "build": {
+      "title": "[IT] translation needed",
+      "description": "[IT] translation needed"
+    },
+    "teach": {
+      "title": "[IT] translation needed",
+      "description": "[IT] translation needed"
+    },
+    "ethical": {
+      "title": "[IT] translation needed",
+      "description": "[IT] translation needed"
+    },
+    "recommendedDomains": "[IT] translation needed",
+    "selected": "{{count}} goals selected",
+    "selectAtLeastOne": "[IT] translation needed",
+    "continue": "[IT] translation needed",
+    "skipForNow": "[IT] translation needed",
+    "helpText": "[IT] translation needed"
+  },
+  "progress": {
+    "welcome": "[IT] translation needed",
+    "identity": "[IT] translation needed",
+    "goals": "[IT] translation needed"
+  },
+  "identity": {
+    "title": "[IT] translation needed",
+    "subtitle": "[IT] translation needed",
+    "student": {
+      "title": "[IT] translation needed",
+      "description": "[IT] translation needed"
+    },
+    "teacher": {
+      "title": "[IT] translation needed",
+      "description": "[IT] translation needed"
+    },
+    "professional": {
+      "title": "[IT] translation needed",
+      "description": "[IT] translation needed"
+    },
+    "learner": {
+      "title": "[IT] translation needed",
+      "description": "[IT] translation needed"
+    }
+  },
+  "button": {
+    "back": "[IT] translation needed",
+    "continue": "[IT] translation needed",
+    "saving": "[IT] translation needed"
+  }
+}

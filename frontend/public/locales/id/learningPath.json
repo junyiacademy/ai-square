@@ -1,0 +1,43 @@
+{
+  "title": "[Indonesian] translation needed",
+  "subtitle": "[Indonesian] translation needed",
+  "yourProgress": "[Indonesian] translation needed",
+  "currentScore": "[Indonesian] translation needed",
+  "targetScore": "[Indonesian] translation needed",
+  "completed": "[Indonesian] translation needed",
+  "recommendedPath": "[Indonesian] translation needed",
+  "startLearning": "[Indonesian] translation needed",
+  "estimatedTime": "[Indonesian] translation needed",
+  "weakDomainReason": "[Indonesian] translation needed",
+  "difficulty": {
+    "beginner": "[Indonesian] translation needed",
+    "intermediate": "[Indonesian] translation needed",
+    "advanced": "[Indonesian] translation needed"
+  },
+  "noAssessment": {
+    "title": "[Indonesian] translation needed",
+    "description": "[Indonesian] translation needed",
+    "button": "[Indonesian] translation needed"
+  },
+  "domains": {
+    "Engaging_with_AI": "[Indonesian] translation needed",
+    "Creating_with_AI": "[Indonesian] translation needed",
+    "Managing_with_AI": "[Indonesian] translation needed",
+    "Designing_with_AI": "[Indonesian] translation needed"
+  },
+  "strongDomainReason": "[Indonesian] translation needed",
+  "averageDomainReason": "[Indonesian] translation needed",
+  "learningPath": {
+    "filteringBy": "[Indonesian] translation needed",
+    "clearFilter": "[Indonesian] translation needed",
+    "recommendedPath": "[Indonesian] translation needed",
+    "estimatedTime": "[Indonesian] translation needed",
+    "startLearning": "[Indonesian] translation needed",
+    "progress": "[Indonesian] translation needed",
+    "goToDashboard": "[Indonesian] translation needed",
+    "dashboardHint": "[Indonesian] translation needed"
+  },
+  "showAll": "[Indonesian] translation needed",
+  "focusOnWeakAreas": "[Indonesian] translation needed",
+  "backToDashboard": "[Indonesian] translation needed"
+}

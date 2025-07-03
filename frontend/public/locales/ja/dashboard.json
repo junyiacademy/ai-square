@@ -1,0 +1,49 @@
+{
+  "welcome": "[JA] translation needed",
+  "subtitle": "[JA] translation needed",
+  "aiLiteracyProgress": "[JA] translation needed",
+  "domains": {
+    "engaging_with_ai": "[JA] translation needed",
+    "creating_with_ai": "[JA] translation needed",
+    "managing_with_ai": "[JA] translation needed",
+    "designing_with_ai": "[JA] translation needed"
+  },
+  "viewDetailedProgress": "[JA] translation needed",
+  "learningStatistics": "[JA] translation needed",
+  "completedScenarios": "[JA] translation needed",
+  "inProgress": "[JA] translation needed",
+  "learningHours": "[JA] translation needed",
+  "dayStreak": "[JA] translation needed",
+  "recentActivities": "[JA] translation needed",
+  "noRecentActivities": "[JA] translation needed",
+  "activities": {
+    "completedAssessment": "[JA] translation needed",
+    "assessmentDesc": "[JA] translation needed"
+  },
+  "recommendedActions": "[JA] translation needed",
+  "nextActions": {
+    "takeAssessment": "[JA] translation needed",
+    "assessmentDesc": "[JA] translation needed",
+    "viewLearningPath": "[JA] translation needed",
+    "learningPathDesc": "[JA] translation needed",
+    "startPBL": "[JA] translation needed",
+    "pblDesc": "[JA] translation needed"
+  },
+  "priority": {
+    "high": "[JA] translation needed",
+    "medium": "[JA] translation needed",
+    "low": "[JA] translation needed"
+  },
+  "quickLinks": "[JA] translation needed",
+  "explorePBL": "[JA] translation needed",
+  "viewCompetencies": "[JA] translation needed",
+  "viewHistory": "[JA] translation needed",
+  "exploreKSA": "[JA] translation needed",
+  "yourGoals": "[JA] translation needed",
+  "updateGoals": "[JA] translation needed",
+  "learningPathQuickAccess": "[JA] translation needed",
+  "learningPathDescription": "[JA] translation needed",
+  "viewAllPaths": "[JA] translation needed",
+  "focusOnWeakAreas": "[JA] translation needed",
+  "aiAdvisor": "[JA] translation needed"
+}

@@ -1,0 +1,73 @@
+{
+  "title": "[Chinese Simplified] translation needed",
+  "subtitle": "[Chinese Simplified] translation needed",
+  "getStarted": "[Chinese Simplified] translation needed",
+  "pathOverview": "[Chinese Simplified] translation needed",
+  "nextPath": "[Chinese Simplified] translation needed",
+  "tryFeature": "[Chinese Simplified] translation needed",
+  "paths": {
+    "dashboard": {
+      "title": "[Chinese Simplified] translation needed",
+      "subtitle": "[Chinese Simplified] translation needed",
+      "description": "[Chinese Simplified] translation needed",
+      "userNeed": "[Chinese Simplified] translation needed",
+      "features": [
+        "[Chinese Simplified] translation needed",
+        "[Chinese Simplified] translation needed",
+        "[Chinese Simplified] translation needed",
+        "[Chinese Simplified] translation needed"
+      ]
+    },
+    "assessment": {
+      "title": "[Chinese Simplified] translation needed",
+      "subtitle": "[Chinese Simplified] translation needed",
+      "description": "[Chinese Simplified] translation needed",
+      "userNeed": "[Chinese Simplified] translation needed",
+      "features": [
+        "[Chinese Simplified] translation needed",
+        "[Chinese Simplified] translation needed",
+        "[Chinese Simplified] translation needed",
+        "[Chinese Simplified] translation needed"
+      ]
+    },
+    "learningPath": {
+      "title": "[Chinese Simplified] translation needed",
+      "subtitle": "[Chinese Simplified] translation needed",
+      "description": "[Chinese Simplified] translation needed",
+      "userNeed": "[Chinese Simplified] translation needed",
+      "features": [
+        "[Chinese Simplified] translation needed",
+        "[Chinese Simplified] translation needed",
+        "[Chinese Simplified] translation needed",
+        "[Chinese Simplified] translation needed"
+      ]
+    },
+    "pbl": {
+      "title": "[Chinese Simplified] translation needed",
+      "subtitle": "[Chinese Simplified] translation needed",
+      "description": "[Chinese Simplified] translation needed",
+      "userNeed": "[Chinese Simplified] translation needed",
+      "features": [
+        "[Chinese Simplified] translation needed",
+        "[Chinese Simplified] translation needed",
+        "[Chinese Simplified] translation needed",
+        "[Chinese Simplified] translation needed"
+      ]
+    },
+    "chat": {
+      "title": "[Chinese Simplified] translation needed",
+      "subtitle": "[Chinese Simplified] translation needed",
+      "description": "[Chinese Simplified] translation needed",
+      "userNeed": "[Chinese Simplified] translation needed",
+      "features": [
+        "[Chinese Simplified] translation needed",
+        "[Chinese Simplified] translation needed",
+        "[Chinese Simplified] translation needed",
+        "[Chinese Simplified] translation needed"
+      ]
+    }
+  },
+  "keyFeatures": "[Chinese Simplified] translation needed",
+  "solvedNeed": "[Chinese Simplified] translation needed",
+  "completeJourney": "[Chinese Simplified] translation needed"
+}

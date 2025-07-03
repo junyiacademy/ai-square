@@ -1,0 +1,171 @@
+{
+  "privacy": {
+    "title": "[Chinese Simplified] translation needed",
+    "lastUpdated": "[Chinese Simplified] translation needed",
+    "intro": "[Chinese Simplified] translation needed",
+    "infoCollect": {
+      "title": "[Chinese Simplified] translation needed",
+      "personal": "[Chinese Simplified] translation needed",
+      "email": "[Chinese Simplified] translation needed",
+      "name": "[Chinese Simplified] translation needed",
+      "role": "[Chinese Simplified] translation needed",
+      "language": "[Chinese Simplified] translation needed",
+      "usage": "[Chinese Simplified] translation needed",
+      "learning": "[Chinese Simplified] translation needed",
+      "interactions": "[Chinese Simplified] translation needed",
+      "scenarios": "[Chinese Simplified] translation needed",
+      "analytics": "[Chinese Simplified] translation needed",
+      "technical": "[Chinese Simplified] translation needed",
+      "browser": "[Chinese Simplified] translation needed",
+      "device": "[Chinese Simplified] translation needed",
+      "ip": "[Chinese Simplified] translation needed",
+      "timezone": "[Chinese Simplified] translation needed"
+    },
+    "howUse": {
+      "title": "[Chinese Simplified] translation needed",
+      "provide": "[Chinese Simplified] translation needed",
+      "personalize": "[Chinese Simplified] translation needed",
+      "communicate": "[Chinese Simplified] translation needed",
+      "improve": "[Chinese Simplified] translation needed",
+      "analyze": "[Chinese Simplified] translation needed",
+      "security": "[Chinese Simplified] translation needed"
+    },
+    "storage": {
+      "title": "[Chinese Simplified] translation needed",
+      "location": "[Chinese Simplified] translation needed",
+      "encryption": "[Chinese Simplified] translation needed",
+      "access": "[Chinese Simplified] translation needed",
+      "monitoring": "[Chinese Simplified] translation needed",
+      "backup": "[Chinese Simplified] translation needed"
+    },
+    "sharing": {
+      "title": "[Chinese Simplified] translation needed",
+      "intro": "[Chinese Simplified] translation needed",
+      "consent": "[Chinese Simplified] translation needed",
+      "legal": "[Chinese Simplified] translation needed",
+      "protect": "[Chinese Simplified] translation needed",
+      "service": "[Chinese Simplified] translation needed"
+    },
+    "rights": {
+      "title": "[Chinese Simplified] translation needed",
+      "intro": "[Chinese Simplified] translation needed",
+      "access": "[Chinese Simplified] translation needed",
+      "correct": "[Chinese Simplified] translation needed",
+      "delete": "[Chinese Simplified] translation needed",
+      "export": "[Chinese Simplified] translation needed",
+      "restrict": "[Chinese Simplified] translation needed",
+      "withdraw": "[Chinese Simplified] translation needed"
+    },
+    "cookies": {
+      "title": "[Chinese Simplified] translation needed",
+      "intro": "[Chinese Simplified] translation needed"
+    },
+    "children": {
+      "title": "[Chinese Simplified] translation needed",
+      "content": "[Chinese Simplified] translation needed"
+    },
+    "international": {
+      "title": "[Chinese Simplified] translation needed",
+      "content": "[Chinese Simplified] translation needed"
+    },
+    "changes": {
+      "title": "[Chinese Simplified] translation needed",
+      "content": "[Chinese Simplified] translation needed"
+    },
+    "contact": {
+      "title": "[Chinese Simplified] translation needed",
+      "intro": "[Chinese Simplified] translation needed"
+    }
+  },
+  "terms": {
+    "title": "[Chinese Simplified] translation needed",
+    "effectiveDate": "[Chinese Simplified] translation needed",
+    "lastUpdated": "[Chinese Simplified] translation needed",
+    "intro": "[Chinese Simplified] translation needed",
+    "acceptance": {
+      "title": "[Chinese Simplified] translation needed",
+      "content": "[Chinese Simplified] translation needed",
+      "capacity": "[Chinese Simplified] translation needed"
+    },
+    "service": {
+      "title": "[Chinese Simplified] translation needed",
+      "intro": "[Chinese Simplified] translation needed",
+      "literacy": "[Chinese Simplified] translation needed",
+      "pbl": "[Chinese Simplified] translation needed",
+      "ai": "[Chinese Simplified] translation needed",
+      "tracking": "[Chinese Simplified] translation needed",
+      "multi": "[Chinese Simplified] translation needed"
+    },
+    "accounts": {
+      "title": "[Chinese Simplified] translation needed",
+      "registration": "[Chinese Simplified] translation needed",
+      "accurate": "[Chinese Simplified] translation needed",
+      "maintain": "[Chinese Simplified] translation needed",
+      "secure": "[Chinese Simplified] translation needed",
+      "responsible": "[Chinese Simplified] translation needed",
+      "types": "[Chinese Simplified] translation needed",
+      "student": "[Chinese Simplified] translation needed",
+      "teacher": "[Chinese Simplified] translation needed",
+      "admin": "[Chinese Simplified] translation needed"
+    },
+    "use": {
+      "title": "[Chinese Simplified] translation needed",
+      "permitted": "[Chinese Simplified] translation needed",
+      "educational": "[Chinese Simplified] translation needed",
+      "share": "[Chinese Simplified] translation needed",
+      "feedback": "[Chinese Simplified] translation needed",
+      "prohibited": "[Chinese Simplified] translation needed",
+      "misuse": "[Chinese Simplified] translation needed",
+      "share_credentials": "[Chinese Simplified] translation needed",
+      "cheat": "[Chinese Simplified] translation needed",
+      "harm": "[Chinese Simplified] translation needed",
+      "illegal": "[Chinese Simplified] translation needed",
+      "scrape": "[Chinese Simplified] translation needed"
+    },
+    "ip": {
+      "title": "[Chinese Simplified] translation needed",
+      "platform": "[Chinese Simplified] translation needed",
+      "ownership": "[Chinese Simplified] translation needed",
+      "user": "[Chinese Simplified] translation needed",
+      "retain": "[Chinese Simplified] translation needed",
+      "open": "[Chinese Simplified] translation needed",
+      "git": "[Chinese Simplified] translation needed"
+    },
+    "privacy": {
+      "title": "[Chinese Simplified] translation needed",
+      "content": "[Chinese Simplified] translation needed"
+    },
+    "ai": {
+      "title": "[Chinese Simplified] translation needed",
+      "disclaimer": "[Chinese Simplified] translation needed",
+      "educational": "[Chinese Simplified] translation needed",
+      "verify": "[Chinese Simplified] translation needed",
+      "improve": "[Chinese Simplified] translation needed"
+    },
+    "disclaimers": {
+      "title": "[Chinese Simplified] translation needed",
+      "asis": "[Chinese Simplified] translation needed",
+      "liability": "[Chinese Simplified] translation needed"
+    },
+    "modifications": {
+      "title": "[Chinese Simplified] translation needed",
+      "content": "[Chinese Simplified] translation needed"
+    },
+    "termination": {
+      "title": "[Chinese Simplified] translation needed",
+      "rights": "[Chinese Simplified] translation needed"
+    },
+    "law": {
+      "title": "[Chinese Simplified] translation needed",
+      "content": "[Chinese Simplified] translation needed"
+    },
+    "contact": {
+      "title": "[Chinese Simplified] translation needed",
+      "intro": "[Chinese Simplified] translation needed"
+    },
+    "agreement": "[Chinese Simplified] translation needed"
+  },
+  "common": {
+    "backToHome": "[Chinese Simplified] translation needed"
+  }
+}

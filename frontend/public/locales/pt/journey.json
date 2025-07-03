@@ -1,0 +1,73 @@
+{
+  "title": "[Portuguese] translation needed",
+  "subtitle": "[Portuguese] translation needed",
+  "getStarted": "[Portuguese] translation needed",
+  "pathOverview": "[Portuguese] translation needed",
+  "nextPath": "[Portuguese] translation needed",
+  "tryFeature": "[Portuguese] translation needed",
+  "paths": {
+    "dashboard": {
+      "title": "[Portuguese] translation needed",
+      "subtitle": "[Portuguese] translation needed",
+      "description": "[Portuguese] translation needed",
+      "userNeed": "[Portuguese] translation needed",
+      "features": [
+        "[Portuguese] translation needed",
+        "[Portuguese] translation needed",
+        "[Portuguese] translation needed",
+        "[Portuguese] translation needed"
+      ]
+    },
+    "assessment": {
+      "title": "[Portuguese] translation needed",
+      "subtitle": "[Portuguese] translation needed",
+      "description": "[Portuguese] translation needed",
+      "userNeed": "[Portuguese] translation needed",
+      "features": [
+        "[Portuguese] translation needed",
+        "[Portuguese] translation needed",
+        "[Portuguese] translation needed",
+        "[Portuguese] translation needed"
+      ]
+    },
+    "learningPath": {
+      "title": "[Portuguese] translation needed",
+      "subtitle": "[Portuguese] translation needed",
+      "description": "[Portuguese] translation needed",
+      "userNeed": "[Portuguese] translation needed",
+      "features": [
+        "[Portuguese] translation needed",
+        "[Portuguese] translation needed",
+        "[Portuguese] translation needed",
+        "[Portuguese] translation needed"
+      ]
+    },
+    "pbl": {
+      "title": "[Portuguese] translation needed",
+      "subtitle": "[Portuguese] translation needed",
+      "description": "[Portuguese] translation needed",
+      "userNeed": "[Portuguese] translation needed",
+      "features": [
+        "[Portuguese] translation needed",
+        "[Portuguese] translation needed",
+        "[Portuguese] translation needed",
+        "[Portuguese] translation needed"
+      ]
+    },
+    "chat": {
+      "title": "[Portuguese] translation needed",
+      "subtitle": "[Portuguese] translation needed",
+      "description": "[Portuguese] translation needed",
+      "userNeed": "[Portuguese] translation needed",
+      "features": [
+        "[Portuguese] translation needed",
+        "[Portuguese] translation needed",
+        "[Portuguese] translation needed",
+        "[Portuguese] translation needed"
+      ]
+    }
+  },
+  "keyFeatures": "[Portuguese] translation needed",
+  "solvedNeed": "[Portuguese] translation needed",
+  "completeJourney": "[Portuguese] translation needed"
+}

@@ -1,0 +1,43 @@
+{
+  "title": "[Chinese Simplified] translation needed",
+  "subtitle": "[Chinese Simplified] translation needed",
+  "yourProgress": "[Chinese Simplified] translation needed",
+  "currentScore": "[Chinese Simplified] translation needed",
+  "targetScore": "[Chinese Simplified] translation needed",
+  "completed": "[Chinese Simplified] translation needed",
+  "recommendedPath": "[Chinese Simplified] translation needed",
+  "startLearning": "[Chinese Simplified] translation needed",
+  "estimatedTime": "[Chinese Simplified] translation needed",
+  "weakDomainReason": "[Chinese Simplified] translation needed",
+  "difficulty": {
+    "beginner": "[Chinese Simplified] translation needed",
+    "intermediate": "[Chinese Simplified] translation needed",
+    "advanced": "[Chinese Simplified] translation needed"
+  },
+  "noAssessment": {
+    "title": "[Chinese Simplified] translation needed",
+    "description": "[Chinese Simplified] translation needed",
+    "button": "[Chinese Simplified] translation needed"
+  },
+  "domains": {
+    "Engaging_with_AI": "[Chinese Simplified] translation needed",
+    "Creating_with_AI": "[Chinese Simplified] translation needed",
+    "Managing_with_AI": "[Chinese Simplified] translation needed",
+    "Designing_with_AI": "[Chinese Simplified] translation needed"
+  },
+  "strongDomainReason": "[Chinese Simplified] translation needed",
+  "averageDomainReason": "[Chinese Simplified] translation needed",
+  "learningPath": {
+    "filteringBy": "[Chinese Simplified] translation needed",
+    "clearFilter": "[Chinese Simplified] translation needed",
+    "recommendedPath": "[Chinese Simplified] translation needed",
+    "estimatedTime": "[Chinese Simplified] translation needed",
+    "startLearning": "[Chinese Simplified] translation needed",
+    "progress": "[Chinese Simplified] translation needed",
+    "goToDashboard": "[Chinese Simplified] translation needed",
+    "dashboardHint": "[Chinese Simplified] translation needed"
+  },
+  "showAll": "[Chinese Simplified] translation needed",
+  "focusOnWeakAreas": "[Chinese Simplified] translation needed",
+  "backToDashboard": "[Chinese Simplified] translation needed"
+}

@@ -1,0 +1,43 @@
+{
+  "title": "[Thai] translation needed",
+  "subtitle": "[Thai] translation needed",
+  "loading": "[Thai] translation needed",
+  "loadError": "[Thai] translation needed",
+  "searchPlaceholder": "[Thai] translation needed",
+  "sections": {
+    "knowledge": "[Thai] translation needed",
+    "skills": "[Thai] translation needed",
+    "attitudes": "[Thai] translation needed",
+    "knowledgeShort": "[Thai] translation needed",
+    "skillsShort": "[Thai] translation needed",
+    "attitudesShort": "[Thai] translation needed"
+  },
+  "results": {
+    "themesFound": "[Thai] translation needed",
+    "themesFoundFor": "[Thai] translation needed",
+    "noResults": "[Thai] translation needed",
+    "noResultsHint": "[Thai] translation needed"
+  },
+  "codes": "[Thai] translation needed",
+  "codesPlural": "[Thai] translation needed",
+  "reflectionQuestions": "[Thai] translation needed",
+  "themes": {
+    "The_Nature_of_AI": "[Thai] translation needed",
+    "AI_Reflects_Human_Choices_and_Perspectives": "[Thai] translation needed",
+    "AI_Reshapes_Work_and_Human_Roles": "[Thai] translation needed",
+    "AIs_Capabilities_and_Limitations": "[Thai] translation needed",
+    "AIs_Role_in_Society": "[Thai] translation needed",
+    "Critical_Thinking": "[Thai] translation needed",
+    "Creativity": "[Thai] translation needed",
+    "Computational_Thinking": "[Thai] translation needed",
+    "Collaboration": "[Thai] translation needed",
+    "Problem_Solving": "[Thai] translation needed",
+    "Self_and_Social_Awareness": "[Thai] translation needed",
+    "Communication": "[Thai] translation needed",
+    "Responsible": "[Thai] translation needed",
+    "Curious": "[Thai] translation needed",
+    "Innovative": "[Thai] translation needed",
+    "Adaptable": "[Thai] translation needed",
+    "Empathetic": "[Thai] translation needed"
+  }
+}

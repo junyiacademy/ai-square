@@ -1,0 +1,49 @@
+{
+  "welcome": "[ZHTW] translation needed",
+  "subtitle": "[ZHTW] translation needed",
+  "aiLiteracyProgress": "[ZHTW] translation needed",
+  "domains": {
+    "engaging_with_ai": "[ZHTW] translation needed",
+    "creating_with_ai": "[ZHTW] translation needed",
+    "managing_with_ai": "[ZHTW] translation needed",
+    "designing_with_ai": "[ZHTW] translation needed"
+  },
+  "viewDetailedProgress": "[ZHTW] translation needed",
+  "learningStatistics": "[ZHTW] translation needed",
+  "completedScenarios": "[ZHTW] translation needed",
+  "inProgress": "[ZHTW] translation needed",
+  "learningHours": "[ZHTW] translation needed",
+  "dayStreak": "[ZHTW] translation needed",
+  "recentActivities": "[ZHTW] translation needed",
+  "noRecentActivities": "[ZHTW] translation needed",
+  "activities": {
+    "completedAssessment": "[ZHTW] translation needed",
+    "assessmentDesc": "[ZHTW] translation needed"
+  },
+  "recommendedActions": "[ZHTW] translation needed",
+  "nextActions": {
+    "takeAssessment": "[ZHTW] translation needed",
+    "assessmentDesc": "[ZHTW] translation needed",
+    "viewLearningPath": "[ZHTW] translation needed",
+    "learningPathDesc": "[ZHTW] translation needed",
+    "startPBL": "[ZHTW] translation needed",
+    "pblDesc": "[ZHTW] translation needed"
+  },
+  "priority": {
+    "high": "[ZHTW] translation needed",
+    "medium": "[ZHTW] translation needed",
+    "low": "[ZHTW] translation needed"
+  },
+  "quickLinks": "[ZHTW] translation needed",
+  "explorePBL": "[ZHTW] translation needed",
+  "viewCompetencies": "[ZHTW] translation needed",
+  "viewHistory": "[ZHTW] translation needed",
+  "exploreKSA": "[ZHTW] translation needed",
+  "yourGoals": "[ZHTW] translation needed",
+  "updateGoals": "[ZHTW] translation needed",
+  "learningPathQuickAccess": "[ZHTW] translation needed",
+  "learningPathDescription": "[ZHTW] translation needed",
+  "viewAllPaths": "[ZHTW] translation needed",
+  "focusOnWeakAreas": "[ZHTW] translation needed",
+  "aiAdvisor": "[ZHTW] translation needed"
+}

@@ -1,0 +1,99 @@
+{
+  "welcome": {
+    "greeting": "[RU] translation needed",
+    "subtitle": "[RU] translation needed",
+    "step1": {
+      "title": "[RU] translation needed",
+      "description": "[RU] translation needed",
+      "content": "[RU] translation needed",
+      "assessment": "[RU] translation needed",
+      "assessmentDesc": "[RU] translation needed",
+      "learning": "[RU] translation needed",
+      "learningDesc": "[RU] translation needed"
+    },
+    "step2": {
+      "title": "[RU] translation needed",
+      "description": "[RU] translation needed",
+      "content": "[RU] translation needed",
+      "domains": "[RU] translation needed",
+      "engaging": "[RU] translation needed",
+      "creating": "[RU] translation needed",
+      "managing": "[RU] translation needed",
+      "designing": "[RU] translation needed"
+    },
+    "step3": {
+      "title": "[RU] translation needed",
+      "description": "[RU] translation needed",
+      "content": "[RU] translation needed",
+      "ready": "[RU] translation needed",
+      "benefit1": "[RU] translation needed",
+      "benefit2": "[RU] translation needed",
+      "benefit3": "[RU] translation needed"
+    },
+    "startJourney": "[RU] translation needed"
+  },
+  "goals": {
+    "title": "[RU] translation needed",
+    "subtitle": "[RU] translation needed",
+    "understand": {
+      "title": "[RU] translation needed",
+      "description": "[RU] translation needed"
+    },
+    "create": {
+      "title": "[RU] translation needed",
+      "description": "[RU] translation needed"
+    },
+    "analyze": {
+      "title": "[RU] translation needed",
+      "description": "[RU] translation needed"
+    },
+    "build": {
+      "title": "[RU] translation needed",
+      "description": "[RU] translation needed"
+    },
+    "teach": {
+      "title": "[RU] translation needed",
+      "description": "[RU] translation needed"
+    },
+    "ethical": {
+      "title": "[RU] translation needed",
+      "description": "[RU] translation needed"
+    },
+    "recommendedDomains": "[RU] translation needed",
+    "selected": "{{count}} goals selected",
+    "selectAtLeastOne": "[RU] translation needed",
+    "continue": "[RU] translation needed",
+    "skipForNow": "[RU] translation needed",
+    "helpText": "[RU] translation needed"
+  },
+  "progress": {
+    "welcome": "[RU] translation needed",
+    "identity": "[RU] translation needed",
+    "goals": "[RU] translation needed"
+  },
+  "identity": {
+    "title": "[RU] translation needed",
+    "subtitle": "[RU] translation needed",
+    "student": {
+      "title": "[RU] translation needed",
+      "description": "[RU] translation needed"
+    },
+    "teacher": {
+      "title": "[RU] translation needed",
+      "description": "[RU] translation needed"
+    },
+    "professional": {
+      "title": "[RU] translation needed",
+      "description": "[RU] translation needed"
+    },
+    "learner": {
+      "title": "[RU] translation needed",
+      "description": "[RU] translation needed"
+    }
+  },
+  "button": {
+    "back": "[RU] translation needed",
+    "continue": "[RU] translation needed",
+    "saving": "[RU] translation needed"
+  }
+}

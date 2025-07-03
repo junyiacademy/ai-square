@@ -1,0 +1,49 @@
+{
+  "welcome": "[Chinese Simplified] translation needed",
+  "subtitle": "[Chinese Simplified] translation needed",
+  "aiLiteracyProgress": "[Chinese Simplified] translation needed",
+  "domains": {
+    "engaging_with_ai": "[Chinese Simplified] translation needed",
+    "creating_with_ai": "[Chinese Simplified] translation needed",
+    "managing_with_ai": "[Chinese Simplified] translation needed",
+    "designing_with_ai": "[Chinese Simplified] translation needed"
+  },
+  "viewDetailedProgress": "[Chinese Simplified] translation needed",
+  "learningStatistics": "[Chinese Simplified] translation needed",
+  "completedScenarios": "[Chinese Simplified] translation needed",
+  "inProgress": "[Chinese Simplified] translation needed",
+  "learningHours": "[Chinese Simplified] translation needed",
+  "dayStreak": "[Chinese Simplified] translation needed",
+  "recentActivities": "[Chinese Simplified] translation needed",
+  "noRecentActivities": "[Chinese Simplified] translation needed",
+  "activities": {
+    "completedAssessment": "[Chinese Simplified] translation needed",
+    "assessmentDesc": "[Chinese Simplified] translation needed"
+  },
+  "recommendedActions": "[Chinese Simplified] translation needed",
+  "nextActions": {
+    "takeAssessment": "[Chinese Simplified] translation needed",
+    "assessmentDesc": "[Chinese Simplified] translation needed",
+    "viewLearningPath": "[Chinese Simplified] translation needed",
+    "learningPathDesc": "[Chinese Simplified] translation needed",
+    "startPBL": "[Chinese Simplified] translation needed",
+    "pblDesc": "[Chinese Simplified] translation needed"
+  },
+  "priority": {
+    "high": "[Chinese Simplified] translation needed",
+    "medium": "[Chinese Simplified] translation needed",
+    "low": "[Chinese Simplified] translation needed"
+  },
+  "quickLinks": "[Chinese Simplified] translation needed",
+  "explorePBL": "[Chinese Simplified] translation needed",
+  "viewCompetencies": "[Chinese Simplified] translation needed",
+  "viewHistory": "[Chinese Simplified] translation needed",
+  "exploreKSA": "[Chinese Simplified] translation needed",
+  "yourGoals": "[Chinese Simplified] translation needed",
+  "updateGoals": "[Chinese Simplified] translation needed",
+  "learningPathQuickAccess": "[Chinese Simplified] translation needed",
+  "learningPathDescription": "[Chinese Simplified] translation needed",
+  "viewAllPaths": "[Chinese Simplified] translation needed",
+  "focusOnWeakAreas": "[Chinese Simplified] translation needed",
+  "aiAdvisor": "[Chinese Simplified] translation needed"
+}

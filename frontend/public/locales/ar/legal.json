@@ -1,0 +1,171 @@
+{
+  "privacy": {
+    "title": "[Arabic] translation needed",
+    "lastUpdated": "[Arabic] translation needed",
+    "intro": "[Arabic] translation needed",
+    "infoCollect": {
+      "title": "[Arabic] translation needed",
+      "personal": "[Arabic] translation needed",
+      "email": "[Arabic] translation needed",
+      "name": "[Arabic] translation needed",
+      "role": "[Arabic] translation needed",
+      "language": "[Arabic] translation needed",
+      "usage": "[Arabic] translation needed",
+      "learning": "[Arabic] translation needed",
+      "interactions": "[Arabic] translation needed",
+      "scenarios": "[Arabic] translation needed",
+      "analytics": "[Arabic] translation needed",
+      "technical": "[Arabic] translation needed",
+      "browser": "[Arabic] translation needed",
+      "device": "[Arabic] translation needed",
+      "ip": "[Arabic] translation needed",
+      "timezone": "[Arabic] translation needed"
+    },
+    "howUse": {
+      "title": "[Arabic] translation needed",
+      "provide": "[Arabic] translation needed",
+      "personalize": "[Arabic] translation needed",
+      "communicate": "[Arabic] translation needed",
+      "improve": "[Arabic] translation needed",
+      "analyze": "[Arabic] translation needed",
+      "security": "[Arabic] translation needed"
+    },
+    "storage": {
+      "title": "[Arabic] translation needed",
+      "location": "[Arabic] translation needed",
+      "encryption": "[Arabic] translation needed",
+      "access": "[Arabic] translation needed",
+      "monitoring": "[Arabic] translation needed",
+      "backup": "[Arabic] translation needed"
+    },
+    "sharing": {
+      "title": "[Arabic] translation needed",
+      "intro": "[Arabic] translation needed",
+      "consent": "[Arabic] translation needed",
+      "legal": "[Arabic] translation needed",
+      "protect": "[Arabic] translation needed",
+      "service": "[Arabic] translation needed"
+    },
+    "rights": {
+      "title": "[Arabic] translation needed",
+      "intro": "[Arabic] translation needed",
+      "access": "[Arabic] translation needed",
+      "correct": "[Arabic] translation needed",
+      "delete": "[Arabic] translation needed",
+      "export": "[Arabic] translation needed",
+      "restrict": "[Arabic] translation needed",
+      "withdraw": "[Arabic] translation needed"
+    },
+    "cookies": {
+      "title": "[Arabic] translation needed",
+      "intro": "[Arabic] translation needed"
+    },
+    "children": {
+      "title": "[Arabic] translation needed",
+      "content": "[Arabic] translation needed"
+    },
+    "international": {
+      "title": "[Arabic] translation needed",
+      "content": "[Arabic] translation needed"
+    },
+    "changes": {
+      "title": "[Arabic] translation needed",
+      "content": "[Arabic] translation needed"
+    },
+    "contact": {
+      "title": "[Arabic] translation needed",
+      "intro": "[Arabic] translation needed"
+    }
+  },
+  "terms": {
+    "title": "[Arabic] translation needed",
+    "effectiveDate": "[Arabic] translation needed",
+    "lastUpdated": "[Arabic] translation needed",
+    "intro": "[Arabic] translation needed",
+    "acceptance": {
+      "title": "[Arabic] translation needed",
+      "content": "[Arabic] translation needed",
+      "capacity": "[Arabic] translation needed"
+    },
+    "service": {
+      "title": "[Arabic] translation needed",
+      "intro": "[Arabic] translation needed",
+      "literacy": "[Arabic] translation needed",
+      "pbl": "[Arabic] translation needed",
+      "ai": "[Arabic] translation needed",
+      "tracking": "[Arabic] translation needed",
+      "multi": "[Arabic] translation needed"
+    },
+    "accounts": {
+      "title": "[Arabic] translation needed",
+      "registration": "[Arabic] translation needed",
+      "accurate": "[Arabic] translation needed",
+      "maintain": "[Arabic] translation needed",
+      "secure": "[Arabic] translation needed",
+      "responsible": "[Arabic] translation needed",
+      "types": "[Arabic] translation needed",
+      "student": "[Arabic] translation needed",
+      "teacher": "[Arabic] translation needed",
+      "admin": "[Arabic] translation needed"
+    },
+    "use": {
+      "title": "[Arabic] translation needed",
+      "permitted": "[Arabic] translation needed",
+      "educational": "[Arabic] translation needed",
+      "share": "[Arabic] translation needed",
+      "feedback": "[Arabic] translation needed",
+      "prohibited": "[Arabic] translation needed",
+      "misuse": "[Arabic] translation needed",
+      "share_credentials": "[Arabic] translation needed",
+      "cheat": "[Arabic] translation needed",
+      "harm": "[Arabic] translation needed",
+      "illegal": "[Arabic] translation needed",
+      "scrape": "[Arabic] translation needed"
+    },
+    "ip": {
+      "title": "[Arabic] translation needed",
+      "platform": "[Arabic] translation needed",
+      "ownership": "[Arabic] translation needed",
+      "user": "[Arabic] translation needed",
+      "retain": "[Arabic] translation needed",
+      "open": "[Arabic] translation needed",
+      "git": "[Arabic] translation needed"
+    },
+    "privacy": {
+      "title": "[Arabic] translation needed",
+      "content": "[Arabic] translation needed"
+    },
+    "ai": {
+      "title": "[Arabic] translation needed",
+      "disclaimer": "[Arabic] translation needed",
+      "educational": "[Arabic] translation needed",
+      "verify": "[Arabic] translation needed",
+      "improve": "[Arabic] translation needed"
+    },
+    "disclaimers": {
+      "title": "[Arabic] translation needed",
+      "asis": "[Arabic] translation needed",
+      "liability": "[Arabic] translation needed"
+    },
+    "modifications": {
+      "title": "[Arabic] translation needed",
+      "content": "[Arabic] translation needed"
+    },
+    "termination": {
+      "title": "[Arabic] translation needed",
+      "rights": "[Arabic] translation needed"
+    },
+    "law": {
+      "title": "[Arabic] translation needed",
+      "content": "[Arabic] translation needed"
+    },
+    "contact": {
+      "title": "[Arabic] translation needed",
+      "intro": "[Arabic] translation needed"
+    },
+    "agreement": "[Arabic] translation needed"
+  },
+  "common": {
+    "backToHome": "[Arabic] translation needed"
+  }
+}

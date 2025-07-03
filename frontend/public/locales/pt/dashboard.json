@@ -1,0 +1,49 @@
+{
+  "welcome": "[Portuguese] translation needed",
+  "subtitle": "[Portuguese] translation needed",
+  "aiLiteracyProgress": "[Portuguese] translation needed",
+  "domains": {
+    "engaging_with_ai": "[Portuguese] translation needed",
+    "creating_with_ai": "[Portuguese] translation needed",
+    "managing_with_ai": "[Portuguese] translation needed",
+    "designing_with_ai": "[Portuguese] translation needed"
+  },
+  "viewDetailedProgress": "[Portuguese] translation needed",
+  "learningStatistics": "[Portuguese] translation needed",
+  "completedScenarios": "[Portuguese] translation needed",
+  "inProgress": "[Portuguese] translation needed",
+  "learningHours": "[Portuguese] translation needed",
+  "dayStreak": "[Portuguese] translation needed",
+  "recentActivities": "[Portuguese] translation needed",
+  "noRecentActivities": "[Portuguese] translation needed",
+  "activities": {
+    "completedAssessment": "[Portuguese] translation needed",
+    "assessmentDesc": "[Portuguese] translation needed"
+  },
+  "recommendedActions": "[Portuguese] translation needed",
+  "nextActions": {
+    "takeAssessment": "[Portuguese] translation needed",
+    "assessmentDesc": "[Portuguese] translation needed",
+    "viewLearningPath": "[Portuguese] translation needed",
+    "learningPathDesc": "[Portuguese] translation needed",
+    "startPBL": "[Portuguese] translation needed",
+    "pblDesc": "[Portuguese] translation needed"
+  },
+  "priority": {
+    "high": "[Portuguese] translation needed",
+    "medium": "[Portuguese] translation needed",
+    "low": "[Portuguese] translation needed"
+  },
+  "quickLinks": "[Portuguese] translation needed",
+  "explorePBL": "[Portuguese] translation needed",
+  "viewCompetencies": "[Portuguese] translation needed",
+  "viewHistory": "[Portuguese] translation needed",
+  "exploreKSA": "[Portuguese] translation needed",
+  "yourGoals": "[Portuguese] translation needed",
+  "updateGoals": "[Portuguese] translation needed",
+  "learningPathQuickAccess": "[Portuguese] translation needed",
+  "learningPathDescription": "[Portuguese] translation needed",
+  "viewAllPaths": "[Portuguese] translation needed",
+  "focusOnWeakAreas": "[Portuguese] translation needed",
+  "aiAdvisor": "[Portuguese] translation needed"
+}

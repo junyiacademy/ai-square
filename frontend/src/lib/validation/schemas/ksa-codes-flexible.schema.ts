@@ -163,7 +163,7 @@ export function validateKSAStructure(data: FlexibleKSAData): {
     const sectionData = data[section]
     if (sectionData && typeof sectionData === 'object') {
       Object.keys(sectionData).forEach(key => {
-        if (key.startsWith('desciption')) {
+        if (key.startsWith('description')) {
           warnings.push(`Typo found in ${section}: '${key}' should be 'description${key.substring(10)}'`)
         }
       })

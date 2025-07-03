@@ -1,0 +1,99 @@
+{
+  "welcome": {
+    "greeting": "[Portuguese] translation needed",
+    "subtitle": "[Portuguese] translation needed",
+    "step1": {
+      "title": "[Portuguese] translation needed",
+      "description": "[Portuguese] translation needed",
+      "content": "[Portuguese] translation needed",
+      "assessment": "[Portuguese] translation needed",
+      "assessmentDesc": "[Portuguese] translation needed",
+      "learning": "[Portuguese] translation needed",
+      "learningDesc": "[Portuguese] translation needed"
+    },
+    "step2": {
+      "title": "[Portuguese] translation needed",
+      "description": "[Portuguese] translation needed",
+      "content": "[Portuguese] translation needed",
+      "domains": "[Portuguese] translation needed",
+      "engaging": "[Portuguese] translation needed",
+      "creating": "[Portuguese] translation needed",
+      "managing": "[Portuguese] translation needed",
+      "designing": "[Portuguese] translation needed"
+    },
+    "step3": {
+      "title": "[Portuguese] translation needed",
+      "description": "[Portuguese] translation needed",
+      "content": "[Portuguese] translation needed",
+      "ready": "[Portuguese] translation needed",
+      "benefit1": "[Portuguese] translation needed",
+      "benefit2": "[Portuguese] translation needed",
+      "benefit3": "[Portuguese] translation needed"
+    },
+    "startJourney": "[Portuguese] translation needed"
+  },
+  "goals": {
+    "title": "[Portuguese] translation needed",
+    "subtitle": "[Portuguese] translation needed",
+    "understand": {
+      "title": "[Portuguese] translation needed",
+      "description": "[Portuguese] translation needed"
+    },
+    "create": {
+      "title": "[Portuguese] translation needed",
+      "description": "[Portuguese] translation needed"
+    },
+    "analyze": {
+      "title": "[Portuguese] translation needed",
+      "description": "[Portuguese] translation needed"
+    },
+    "build": {
+      "title": "[Portuguese] translation needed",
+      "description": "[Portuguese] translation needed"
+    },
+    "teach": {
+      "title": "[Portuguese] translation needed",
+      "description": "[Portuguese] translation needed"
+    },
+    "ethical": {
+      "title": "[Portuguese] translation needed",
+      "description": "[Portuguese] translation needed"
+    },
+    "recommendedDomains": "[Portuguese] translation needed",
+    "selected": "[Portuguese] translation needed",
+    "selectAtLeastOne": "[Portuguese] translation needed",
+    "continue": "[Portuguese] translation needed",
+    "skipForNow": "[Portuguese] translation needed",
+    "helpText": "[Portuguese] translation needed"
+  },
+  "progress": {
+    "welcome": "[Portuguese] translation needed",
+    "identity": "[Portuguese] translation needed",
+    "goals": "[Portuguese] translation needed"
+  },
+  "identity": {
+    "title": "[Portuguese] translation needed",
+    "subtitle": "[Portuguese] translation needed",
+    "student": {
+      "title": "[Portuguese] translation needed",
+      "description": "[Portuguese] translation needed"
+    },
+    "teacher": {
+      "title": "[Portuguese] translation needed",
+      "description": "[Portuguese] translation needed"
+    },
+    "professional": {
+      "title": "[Portuguese] translation needed",
+      "description": "[Portuguese] translation needed"
+    },
+    "learner": {
+      "title": "[Portuguese] translation needed",
+      "description": "[Portuguese] translation needed"
+    }
+  },
+  "button": {
+    "back": "[Portuguese] translation needed",
+    "continue": "[Portuguese] translation needed",
+    "saving": "[Portuguese] translation needed"
+  }
+}

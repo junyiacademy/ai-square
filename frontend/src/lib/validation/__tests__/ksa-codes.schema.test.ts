@@ -10,15 +10,15 @@ describe('KSA Codes Schema Validation', () => {
     it('應該驗證有效的 KSA codes 檔案結構', () => {
       const validKSAFile = {
         knowledge_codes: {
-          desciption: 'Knowledge codes description',
-          desciption_zhTW: '知識代碼描述',
-          desciption_es: 'Descripción de códigos de conocimiento',
-          desciption_ja: '知識コードの説明',
-          desciption_ko: '지식 코드 설명',
-          desciption_fr: 'Description des codes de connaissance',
-          desciption_de: 'Beschreibung der Wissenscodes',
-          desciption_ru: 'Описание кодов знаний',
-          desciption_it: 'Descrizione dei codici di conoscenza',
+          description: 'Knowledge codes description',
+          description_zhTW: '知識代碼描述',
+          description_es: 'Descripción de códigos de conocimiento',
+          description_ja: '知識コードの説明',
+          description_ko: '지식 코드 설명',
+          description_fr: 'Description des codes de connaissance',
+          description_de: 'Beschreibung der Wissenscodes',
+          description_ru: 'Описание кодов знаний',
+          description_it: 'Descrizione dei codici di conoscenza',
           themes: {
             'Theme_1': {
               codes: {
@@ -49,15 +49,15 @@ describe('KSA Codes Schema Validation', () => {
           }
         },
         skills_codes: {
-          desciption: 'Skills codes description',
-          desciption_zhTW: '技能代碼描述',
-          desciption_es: 'Descripción de códigos de habilidades',
-          desciption_ja: 'スキルコードの説明',
-          desciption_ko: '기술 코드 설명',
-          desciption_fr: 'Description des codes de compétences',
-          desciption_de: 'Beschreibung der Fertigkeitscodes',
-          desciption_ru: 'Описание кодов навыков',
-          desciption_it: 'Descrizione dei codici di competenze',
+          description: 'Skills codes description',
+          description_zhTW: '技能代碼描述',
+          description_es: 'Descripción de códigos de habilidades',
+          description_ja: 'スキルコードの説明',
+          description_ko: '기술 코드 설명',
+          description_fr: 'Description des codes de compétences',
+          description_de: 'Beschreibung der Fertigkeitscodes',
+          description_ru: 'Описание кодов навыков',
+          description_it: 'Descrizione dei codici di competenze',
           themes: {
             'Theme_1': {
               codes: {
@@ -77,15 +77,15 @@ describe('KSA Codes Schema Validation', () => {
           }
         },
         attitudes_codes: {
-          desciption: 'Attitudes codes description',
-          desciption_zhTW: '態度代碼描述',
-          desciption_es: 'Descripción de códigos de actitudes',
-          desciption_ja: '態度コードの説明',
-          desciption_ko: '태도 코드 설명',
-          desciption_fr: 'Description des codes d\'attitudes',
-          desciption_de: 'Beschreibung der Einstellungscodes',
-          desciption_ru: 'Описание кодов отношений',
-          desciption_it: 'Descrizione dei codici di atteggiamenti',
+          description: 'Attitudes codes description',
+          description_zhTW: '態度代碼描述',
+          description_es: 'Descripción de códigos de actitudes',
+          description_ja: '態度コードの説明',
+          description_ko: '태도 코드 설명',
+          description_fr: 'Description des codes d\'attitudes',
+          description_de: 'Beschreibung der Einstellungscodes',
+          description_ru: 'Описание кодов отношений',
+          description_it: 'Descrizione dei codici di atteggiamenti',
           themes: {
             'Theme_1': {
               codes: {
@@ -113,20 +113,20 @@ describe('KSA Codes Schema Validation', () => {
     it('應該拒絕缺少必要欄位的檔案', () => {
       const invalidFile = {
         knowledge_codes: {
-          desciption: 'Knowledge codes description',
+          description: 'Knowledge codes description',
           // Missing other language descriptions
           themes: {}
         },
         skills_codes: {
-          desciption: 'Skills codes description',
-          desciption_zhTW: '技能代碼描述',
-          desciption_es: 'Descripción',
-          desciption_ja: '説明',
-          desciption_ko: '설명',
-          desciption_fr: 'Description',
-          desciption_de: 'Beschreibung',
-          desciption_ru: 'Описание',
-          desciption_it: 'Descrizione',
+          description: 'Skills codes description',
+          description_zhTW: '技能代碼描述',
+          description_es: 'Descripción',
+          description_ja: '説明',
+          description_ko: '설명',
+          description_fr: 'Description',
+          description_de: 'Beschreibung',
+          description_ru: 'Описание',
+          description_it: 'Descrizione',
           themes: {}
         }
         // Missing attitudes_codes
@@ -139,15 +139,15 @@ describe('KSA Codes Schema Validation', () => {
     it('應該驗證 KSA code ID 格式', () => {
       const fileWithInvalidIds = {
         knowledge_codes: {
-          desciption: 'Knowledge codes description',
-          desciption_zhTW: '知識代碼描述',
-          desciption_es: 'Descripción',
-          desciption_ja: '説明',
-          desciption_ko: '설명',
-          desciption_fr: 'Description',
-          desciption_de: 'Beschreibung',
-          desciption_ru: 'Описание',
-          desciption_it: 'Descrizione',
+          description: 'Knowledge codes description',
+          description_zhTW: '知識代碼描述',
+          description_es: 'Descripción',
+          description_ja: '説明',
+          description_ko: '설명',
+          description_fr: 'Description',
+          description_de: 'Beschreibung',
+          description_ru: 'Описание',
+          description_it: 'Descrizione',
           themes: {
             'Theme_1': {
               codes: {
@@ -167,27 +167,27 @@ describe('KSA Codes Schema Validation', () => {
           }
         },
         skills_codes: {
-          desciption: 'Skills codes description',
-          desciption_zhTW: '技能代碼描述',
-          desciption_es: 'Descripción',
-          desciption_ja: '説明',
-          desciption_ko: '설명',
-          desciption_fr: 'Description',
-          desciption_de: 'Beschreibung',
-          desciption_ru: 'Описание',
-          desciption_it: 'Descrizione',
+          description: 'Skills codes description',
+          description_zhTW: '技能代碼描述',
+          description_es: 'Descripción',
+          description_ja: '説明',
+          description_ko: '설명',
+          description_fr: 'Description',
+          description_de: 'Beschreibung',
+          description_ru: 'Описание',
+          description_it: 'Descrizione',
           themes: {}
         },
         attitudes_codes: {
-          desciption: 'Attitudes codes description',
-          desciption_zhTW: '態度代碼描述',
-          desciption_es: 'Descripción',
-          desciption_ja: '説明',
-          desciption_ko: '설명',
-          desciption_fr: 'Description',
-          desciption_de: 'Beschreibung',
-          desciption_ru: 'Описание',
-          desciption_it: 'Descrizione',
+          description: 'Attitudes codes description',
+          description_zhTW: '態度代碼描述',
+          description_es: 'Descripción',
+          description_ja: '説明',
+          description_ko: '설명',
+          description_fr: 'Description',
+          description_de: 'Beschreibung',
+          description_ru: 'Описание',
+          description_it: 'Descrizione',
           themes: {}
         }
       };
@@ -199,15 +199,15 @@ describe('KSA Codes Schema Validation', () => {
     it('應該允許多個主題和多個代碼', () => {
       const fileWithMultipleThemes = {
         knowledge_codes: {
-          desciption: 'Knowledge codes description',
-          desciption_zhTW: '知識代碼描述',
-          desciption_es: 'Descripción',
-          desciption_ja: '説明',
-          desciption_ko: '설명',
-          desciption_fr: 'Description',
-          desciption_de: 'Beschreibung',
-          desciption_ru: 'Описание',
-          desciption_it: 'Descrizione',
+          description: 'Knowledge codes description',
+          description_zhTW: '知識代碼描述',
+          description_es: 'Descripción',
+          description_ja: '説明',
+          description_ko: '설명',
+          description_fr: 'Description',
+          description_de: 'Beschreibung',
+          description_ru: 'Описание',
+          description_it: 'Descrizione',
           themes: {
             'Theme_1': {
               codes: {
@@ -253,15 +253,15 @@ describe('KSA Codes Schema Validation', () => {
           }
         },
         skills_codes: {
-          desciption: 'Skills codes description',
-          desciption_zhTW: '技能代碼描述',
-          desciption_es: 'Descripción',
-          desciption_ja: '説明',
-          desciption_ko: '설명',
-          desciption_fr: 'Description',
-          desciption_de: 'Beschreibung',
-          desciption_ru: 'Описание',
-          desciption_it: 'Descrizione',
+          description: 'Skills codes description',
+          description_zhTW: '技能代碼描述',
+          description_es: 'Descripción',
+          description_ja: '説明',
+          description_ko: '설명',
+          description_fr: 'Description',
+          description_de: 'Beschreibung',
+          description_ru: 'Описание',
+          description_it: 'Descrizione',
           themes: {
             'Theme_1': {
               codes: {
@@ -281,15 +281,15 @@ describe('KSA Codes Schema Validation', () => {
           }
         },
         attitudes_codes: {
-          desciption: 'Attitudes codes description',
-          desciption_zhTW: '態度代碼描述',
-          desciption_es: 'Descripción',
-          desciption_ja: '説明',
-          desciption_ko: '설명',
-          desciption_fr: 'Description',
-          desciption_de: 'Beschreibung',
-          desciption_ru: 'Описание',
-          desciption_it: 'Descrizione',
+          description: 'Attitudes codes description',
+          description_zhTW: '態度代碼描述',
+          description_es: 'Descripción',
+          description_ja: '説明',
+          description_ko: '설명',
+          description_fr: 'Description',
+          description_de: 'Beschreibung',
+          description_ru: 'Описание',
+          description_it: 'Descrizione',
           themes: {
             'Theme_1': {
               codes: {
@@ -318,15 +318,15 @@ describe('KSA Codes Schema Validation', () => {
   describe('extractKSAIds', () => {
     const createValidKSAFile = (): KSACodesFile => ({
       knowledge_codes: {
-        desciption: 'Knowledge codes',
-        desciption_zhTW: '知識代碼',
-        desciption_es: 'Códigos de conocimiento',
-        desciption_ja: '知識コード',
-        desciption_ko: '지식 코드',
-        desciption_fr: 'Codes de connaissance',
-        desciption_de: 'Wissenscodes',
-        desciption_ru: 'Коды знаний',
-        desciption_it: 'Codici di conoscenza',
+        description: 'Knowledge codes',
+        description_zhTW: '知識代碼',
+        description_es: 'Códigos de conocimiento',
+        description_ja: '知識コード',
+        description_ko: '지식 코드',
+        description_fr: 'Codes de connaissance',
+        description_de: 'Wissenscodes',
+        description_ru: 'Коды знаний',
+        description_it: 'Codici di conoscenza',
         themes: {
           'Theme_1': {
             codes: {
@@ -372,15 +372,15 @@ describe('KSA Codes Schema Validation', () => {
         }
       },
       skills_codes: {
-        desciption: 'Skills codes',
-        desciption_zhTW: '技能代碼',
-        desciption_es: 'Códigos de habilidades',
-        desciption_ja: 'スキルコード',
-        desciption_ko: '기술 코드',
-        desciption_fr: 'Codes de compétences',
-        desciption_de: 'Fertigkeitscodes',
-        desciption_ru: 'Коды навыков',
-        desciption_it: 'Codici di competenze',
+        description: 'Skills codes',
+        description_zhTW: '技能代碼',
+        description_es: 'Códigos de habilidades',
+        description_ja: 'スキルコード',
+        description_ko: '기술 코드',
+        description_fr: 'Codes de compétences',
+        description_de: 'Fertigkeitscodes',
+        description_ru: 'Коды навыков',
+        description_it: 'Codici di competenze',
         themes: {
           'Theme_1': {
             codes: {
@@ -411,15 +411,15 @@ describe('KSA Codes Schema Validation', () => {
         }
       },
       attitudes_codes: {
-        desciption: 'Attitudes codes',
-        desciption_zhTW: '態度代碼',
-        desciption_es: 'Códigos de actitudes',
-        desciption_ja: '態度コード',
-        desciption_ko: '태도 코드',
-        desciption_fr: 'Codes d\'attitudes',
-        desciption_de: 'Einstellungscodes',
-        desciption_ru: 'Коды отношений',
-        desciption_it: 'Codici di atteggiamenti',
+        description: 'Attitudes codes',
+        description_zhTW: '態度代碼',
+        description_es: 'Códigos de actitudes',
+        description_ja: '態度コード',
+        description_ko: '태도 코드',
+        description_fr: 'Codes d\'attitudes',
+        description_de: 'Einstellungscodes',
+        description_ru: 'Коды отношений',
+        description_it: 'Codici di atteggiamenti',
         themes: {
           'Theme_1': {
             codes: {
@@ -467,39 +467,39 @@ describe('KSA Codes Schema Validation', () => {
     it('應該處理空的主題', () => {
       const ksaFile: KSACodesFile = {
         knowledge_codes: {
-          desciption: 'Knowledge codes',
-          desciption_zhTW: '知識代碼',
-          desciption_es: 'Códigos',
-          desciption_ja: 'コード',
-          desciption_ko: '코드',
-          desciption_fr: 'Codes',
-          desciption_de: 'Codes',
-          desciption_ru: 'Коды',
-          desciption_it: 'Codici',
+          description: 'Knowledge codes',
+          description_zhTW: '知識代碼',
+          description_es: 'Códigos',
+          description_ja: 'コード',
+          description_ko: '코드',
+          description_fr: 'Codes',
+          description_de: 'Codes',
+          description_ru: 'Коды',
+          description_it: 'Codici',
           themes: {}
         },
         skills_codes: {
-          desciption: 'Skills codes',
-          desciption_zhTW: '技能代碼',
-          desciption_es: 'Códigos',
-          desciption_ja: 'コード',
-          desciption_ko: '코드',
-          desciption_fr: 'Codes',
-          desciption_de: 'Codes',
-          desciption_ru: 'Коды',
-          desciption_it: 'Codici',
+          description: 'Skills codes',
+          description_zhTW: '技能代碼',
+          description_es: 'Códigos',
+          description_ja: 'コード',
+          description_ko: '코드',
+          description_fr: 'Codes',
+          description_de: 'Codes',
+          description_ru: 'Коды',
+          description_it: 'Codici',
           themes: {}
         },
         attitudes_codes: {
-          desciption: 'Attitudes codes',
-          desciption_zhTW: '態度代碼',
-          desciption_es: 'Códigos',
-          desciption_ja: 'コード',
-          desciption_ko: '코드',
-          desciption_fr: 'Codes',
-          desciption_de: 'Codes',
-          desciption_ru: 'Коды',
-          desciption_it: 'Codici',
+          description: 'Attitudes codes',
+          description_zhTW: '態度代碼',
+          description_es: 'Códigos',
+          description_ja: 'コード',
+          description_ko: '코드',
+          description_fr: 'Codes',
+          description_de: 'Codes',
+          description_ru: 'Коды',
+          description_it: 'Codici',
           themes: {}
         }
       };

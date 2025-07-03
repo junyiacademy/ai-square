@@ -1,0 +1,27 @@
+{
+  "skip": "[ZHTW] translation needed",
+  "next": "[ZHTW] translation needed",
+  "back": "[ZHTW] translation needed",
+  "continue": "[ZHTW] translation needed",
+  "loading": "[ZHTW] translation needed",
+  "save": "[ZHTW] translation needed",
+  "cancel": "[ZHTW] translation needed",
+  "submit": "[ZHTW] translation needed",
+  "delete": "[ZHTW] translation needed",
+  "edit": "[ZHTW] translation needed",
+  "close": "[ZHTW] translation needed",
+  "error": "[ZHTW] translation needed",
+  "success": "[ZHTW] translation needed",
+  "warning": "[ZHTW] translation needed",
+  "info": "[ZHTW] translation needed",
+  "backToDashboard": "[ZHTW] translation needed",
+  "minutes": "[ZHTW] translation needed",
+  "hours": "[ZHTW] translation needed",
+  "days": "[ZHTW] translation needed",
+  "view": "[ZHTW] translation needed",
+  "difficulty": {
+    "beginner": "[ZHTW] translation needed",
+    "intermediate": "[ZHTW] translation needed",
+    "advanced": "[ZHTW] translation needed"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "welcome": "[Arabic] translation needed",
+  "subtitle": "[Arabic] translation needed",
+  "aiLiteracyProgress": "[Arabic] translation needed",
+  "domains": {
+    "engaging_with_ai": "[Arabic] translation needed",
+    "creating_with_ai": "[Arabic] translation needed",
+    "managing_with_ai": "[Arabic] translation needed",
+    "designing_with_ai": "[Arabic] translation needed"
+  },
+  "viewDetailedProgress": "[Arabic] translation needed",
+  "learningStatistics": "[Arabic] translation needed",
+  "completedScenarios": "[Arabic] translation needed",
+  "inProgress": "[Arabic] translation needed",
+  "learningHours": "[Arabic] translation needed",
+  "dayStreak": "[Arabic] translation needed",
+  "recentActivities": "[Arabic] translation needed",
+  "noRecentActivities": "[Arabic] translation needed",
+  "activities": {
+    "completedAssessment": "[Arabic] translation needed",
+    "assessmentDesc": "[Arabic] translation needed"
+  },
+  "recommendedActions": "[Arabic] translation needed",
+  "nextActions": {
+    "takeAssessment": "[Arabic] translation needed",
+    "assessmentDesc": "[Arabic] translation needed",
+    "viewLearningPath": "[Arabic] translation needed",
+    "learningPathDesc": "[Arabic] translation needed",
+    "startPBL": "[Arabic] translation needed",
+    "pblDesc": "[Arabic] translation needed"
+  },
+  "priority": {
+    "high": "[Arabic] translation needed",
+    "medium": "[Arabic] translation needed",
+    "low": "[Arabic] translation needed"
+  },
+  "quickLinks": "[Arabic] translation needed",
+  "explorePBL": "[Arabic] translation needed",
+  "viewCompetencies": "[Arabic] translation needed",
+  "viewHistory": "[Arabic] translation needed",
+  "exploreKSA": "[Arabic] translation needed",
+  "yourGoals": "[Arabic] translation needed",
+  "updateGoals": "[Arabic] translation needed",
+  "learningPathQuickAccess": "[Arabic] translation needed",
+  "learningPathDescription": "[Arabic] translation needed",
+  "viewAllPaths": "[Arabic] translation needed",
+  "focusOnWeakAreas": "[Arabic] translation needed",
+  "aiAdvisor": "[Arabic] translation needed"
+}

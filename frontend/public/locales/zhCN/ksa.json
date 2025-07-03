@@ -1,0 +1,43 @@
+{
+  "title": "[Chinese Simplified] translation needed",
+  "subtitle": "[Chinese Simplified] translation needed",
+  "loading": "[Chinese Simplified] translation needed",
+  "loadError": "[Chinese Simplified] translation needed",
+  "searchPlaceholder": "[Chinese Simplified] translation needed",
+  "sections": {
+    "knowledge": "[Chinese Simplified] translation needed",
+    "skills": "[Chinese Simplified] translation needed",
+    "attitudes": "[Chinese Simplified] translation needed",
+    "knowledgeShort": "[Chinese Simplified] translation needed",
+    "skillsShort": "[Chinese Simplified] translation needed",
+    "attitudesShort": "[Chinese Simplified] translation needed"
+  },
+  "results": {
+    "themesFound": "[Chinese Simplified] translation needed",
+    "themesFoundFor": "[Chinese Simplified] translation needed",
+    "noResults": "[Chinese Simplified] translation needed",
+    "noResultsHint": "[Chinese Simplified] translation needed"
+  },
+  "codes": "[Chinese Simplified] translation needed",
+  "codesPlural": "[Chinese Simplified] translation needed",
+  "reflectionQuestions": "[Chinese Simplified] translation needed",
+  "themes": {
+    "The_Nature_of_AI": "[Chinese Simplified] translation needed",
+    "AI_Reflects_Human_Choices_and_Perspectives": "[Chinese Simplified] translation needed",
+    "AI_Reshapes_Work_and_Human_Roles": "[Chinese Simplified] translation needed",
+    "AIs_Capabilities_and_Limitations": "[Chinese Simplified] translation needed",
+    "AIs_Role_in_Society": "[Chinese Simplified] translation needed",
+    "Critical_Thinking": "[Chinese Simplified] translation needed",
+    "Creativity": "[Chinese Simplified] translation needed",
+    "Computational_Thinking": "[Chinese Simplified] translation needed",
+    "Collaboration": "[Chinese Simplified] translation needed",
+    "Problem_Solving": "[Chinese Simplified] translation needed",
+    "Self_and_Social_Awareness": "[Chinese Simplified] translation needed",
+    "Communication": "[Chinese Simplified] translation needed",
+    "Responsible": "[Chinese Simplified] translation needed",
+    "Curious": "[Chinese Simplified] translation needed",
+    "Innovative": "[Chinese Simplified] translation needed",
+    "Adaptable": "[Chinese Simplified] translation needed",
+    "Empathetic": "[Chinese Simplified] translation needed"
+  }
+}

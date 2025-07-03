@@ -1,0 +1,43 @@
+{
+  "title": "[Arabic] translation needed",
+  "subtitle": "[Arabic] translation needed",
+  "yourProgress": "[Arabic] translation needed",
+  "currentScore": "[Arabic] translation needed",
+  "targetScore": "[Arabic] translation needed",
+  "completed": "[Arabic] translation needed",
+  "recommendedPath": "[Arabic] translation needed",
+  "startLearning": "[Arabic] translation needed",
+  "estimatedTime": "[Arabic] translation needed",
+  "weakDomainReason": "[Arabic] translation needed",
+  "difficulty": {
+    "beginner": "[Arabic] translation needed",
+    "intermediate": "[Arabic] translation needed",
+    "advanced": "[Arabic] translation needed"
+  },
+  "noAssessment": {
+    "title": "[Arabic] translation needed",
+    "description": "[Arabic] translation needed",
+    "button": "[Arabic] translation needed"
+  },
+  "domains": {
+    "Engaging_with_AI": "[Arabic] translation needed",
+    "Creating_with_AI": "[Arabic] translation needed",
+    "Managing_with_AI": "[Arabic] translation needed",
+    "Designing_with_AI": "[Arabic] translation needed"
+  },
+  "strongDomainReason": "[Arabic] translation needed",
+  "averageDomainReason": "[Arabic] translation needed",
+  "learningPath": {
+    "filteringBy": "[Arabic] translation needed",
+    "clearFilter": "[Arabic] translation needed",
+    "recommendedPath": "[Arabic] translation needed",
+    "estimatedTime": "[Arabic] translation needed",
+    "startLearning": "[Arabic] translation needed",
+    "progress": "[Arabic] translation needed",
+    "goToDashboard": "[Arabic] translation needed",
+    "dashboardHint": "[Arabic] translation needed"
+  },
+  "showAll": "[Arabic] translation needed",
+  "focusOnWeakAreas": "[Arabic] translation needed",
+  "backToDashboard": "[Arabic] translation needed"
+}

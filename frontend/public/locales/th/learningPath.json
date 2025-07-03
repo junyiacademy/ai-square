@@ -1,0 +1,43 @@
+{
+  "title": "[Thai] translation needed",
+  "subtitle": "[Thai] translation needed",
+  "yourProgress": "[Thai] translation needed",
+  "currentScore": "[Thai] translation needed",
+  "targetScore": "[Thai] translation needed",
+  "completed": "[Thai] translation needed",
+  "recommendedPath": "[Thai] translation needed",
+  "startLearning": "[Thai] translation needed",
+  "estimatedTime": "[Thai] translation needed",
+  "weakDomainReason": "[Thai] translation needed",
+  "difficulty": {
+    "beginner": "[Thai] translation needed",
+    "intermediate": "[Thai] translation needed",
+    "advanced": "[Thai] translation needed"
+  },
+  "noAssessment": {
+    "title": "[Thai] translation needed",
+    "description": "[Thai] translation needed",
+    "button": "[Thai] translation needed"
+  },
+  "domains": {
+    "Engaging_with_AI": "[Thai] translation needed",
+    "Creating_with_AI": "[Thai] translation needed",
+    "Managing_with_AI": "[Thai] translation needed",
+    "Designing_with_AI": "[Thai] translation needed"
+  },
+  "strongDomainReason": "[Thai] translation needed",
+  "averageDomainReason": "[Thai] translation needed",
+  "learningPath": {
+    "filteringBy": "[Thai] translation needed",
+    "clearFilter": "[Thai] translation needed",
+    "recommendedPath": "[Thai] translation needed",
+    "estimatedTime": "[Thai] translation needed",
+    "startLearning": "[Thai] translation needed",
+    "progress": "[Thai] translation needed",
+    "goToDashboard": "[Thai] translation needed",
+    "dashboardHint": "[Thai] translation needed"
+  },
+  "showAll": "[Thai] translation needed",
+  "focusOnWeakAreas": "[Thai] translation needed",
+  "backToDashboard": "[Thai] translation needed"
+}

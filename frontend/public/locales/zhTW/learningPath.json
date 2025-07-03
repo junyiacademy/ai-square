@@ -1,0 +1,43 @@
+{
+  "title": "[ZHTW] translation needed",
+  "subtitle": "[ZHTW] translation needed",
+  "yourProgress": "[ZHTW] translation needed",
+  "currentScore": "[ZHTW] translation needed",
+  "targetScore": "[ZHTW] translation needed",
+  "completed": "[ZHTW] translation needed",
+  "recommendedPath": "[ZHTW] translation needed",
+  "startLearning": "[ZHTW] translation needed",
+  "estimatedTime": "[ZHTW] translation needed",
+  "weakDomainReason": "[ZHTW] translation needed",
+  "difficulty": {
+    "beginner": "[ZHTW] translation needed",
+    "intermediate": "[ZHTW] translation needed",
+    "advanced": "[ZHTW] translation needed"
+  },
+  "noAssessment": {
+    "title": "[ZHTW] translation needed",
+    "description": "[ZHTW] translation needed",
+    "button": "[ZHTW] translation needed"
+  },
+  "domains": {
+    "Engaging_with_AI": "[ZHTW] translation needed",
+    "Creating_with_AI": "[ZHTW] translation needed",
+    "Managing_with_AI": "[ZHTW] translation needed",
+    "Designing_with_AI": "[ZHTW] translation needed"
+  },
+  "strongDomainReason": "[ZHTW] translation needed",
+  "averageDomainReason": "[ZHTW] translation needed",
+  "learningPath": {
+    "filteringBy": "[ZHTW] translation needed",
+    "clearFilter": "[ZHTW] translation needed",
+    "recommendedPath": "[ZHTW] translation needed",
+    "estimatedTime": "[ZHTW] translation needed",
+    "startLearning": "[ZHTW] translation needed",
+    "progress": "[ZHTW] translation needed",
+    "goToDashboard": "[ZHTW] translation needed",
+    "dashboardHint": "[ZHTW] translation needed"
+  },
+  "showAll": "[ZHTW] translation needed",
+  "focusOnWeakAreas": "[ZHTW] translation needed",
+  "backToDashboard": "[ZHTW] translation needed"
+}

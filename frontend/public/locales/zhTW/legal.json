@@ -1,0 +1,171 @@
+{
+  "privacy": {
+    "title": "[ZHTW] translation needed",
+    "lastUpdated": "[ZHTW] translation needed",
+    "intro": "[ZHTW] translation needed",
+    "infoCollect": {
+      "title": "[ZHTW] translation needed",
+      "personal": "[ZHTW] translation needed",
+      "email": "[ZHTW] translation needed",
+      "name": "[ZHTW] translation needed",
+      "role": "[ZHTW] translation needed",
+      "language": "[ZHTW] translation needed",
+      "usage": "[ZHTW] translation needed",
+      "learning": "[ZHTW] translation needed",
+      "interactions": "[ZHTW] translation needed",
+      "scenarios": "[ZHTW] translation needed",
+      "analytics": "[ZHTW] translation needed",
+      "technical": "[ZHTW] translation needed",
+      "browser": "[ZHTW] translation needed",
+      "device": "[ZHTW] translation needed",
+      "ip": "[ZHTW] translation needed",
+      "timezone": "[ZHTW] translation needed"
+    },
+    "howUse": {
+      "title": "[ZHTW] translation needed",
+      "provide": "[ZHTW] translation needed",
+      "personalize": "[ZHTW] translation needed",
+      "communicate": "[ZHTW] translation needed",
+      "improve": "[ZHTW] translation needed",
+      "analyze": "[ZHTW] translation needed",
+      "security": "[ZHTW] translation needed"
+    },
+    "storage": {
+      "title": "[ZHTW] translation needed",
+      "location": "[ZHTW] translation needed",
+      "encryption": "[ZHTW] translation needed",
+      "access": "[ZHTW] translation needed",
+      "monitoring": "[ZHTW] translation needed",
+      "backup": "[ZHTW] translation needed"
+    },
+    "sharing": {
+      "title": "[ZHTW] translation needed",
+      "intro": "[ZHTW] translation needed",
+      "consent": "[ZHTW] translation needed",
+      "legal": "[ZHTW] translation needed",
+      "protect": "[ZHTW] translation needed",
+      "service": "[ZHTW] translation needed"
+    },
+    "rights": {
+      "title": "[ZHTW] translation needed",
+      "intro": "[ZHTW] translation needed",
+      "access": "[ZHTW] translation needed",
+      "correct": "[ZHTW] translation needed",
+      "delete": "[ZHTW] translation needed",
+      "export": "[ZHTW] translation needed",
+      "restrict": "[ZHTW] translation needed",
+      "withdraw": "[ZHTW] translation needed"
+    },
+    "cookies": {
+      "title": "[ZHTW] translation needed",
+      "intro": "[ZHTW] translation needed"
+    },
+    "children": {
+      "title": "[ZHTW] translation needed",
+      "content": "[ZHTW] translation needed"
+    },
+    "international": {
+      "title": "[ZHTW] translation needed",
+      "content": "[ZHTW] translation needed"
+    },
+    "changes": {
+      "title": "[ZHTW] translation needed",
+      "content": "[ZHTW] translation needed"
+    },
+    "contact": {
+      "title": "[ZHTW] translation needed",
+      "intro": "[ZHTW] translation needed"
+    }
+  },
+  "terms": {
+    "title": "[ZHTW] translation needed",
+    "effectiveDate": "[ZHTW] translation needed",
+    "lastUpdated": "[ZHTW] translation needed",
+    "intro": "[ZHTW] translation needed",
+    "acceptance": {
+      "title": "[ZHTW] translation needed",
+      "content": "[ZHTW] translation needed",
+      "capacity": "[ZHTW] translation needed"
+    },
+    "service": {
+      "title": "[ZHTW] translation needed",
+      "intro": "[ZHTW] translation needed",
+      "literacy": "[ZHTW] translation needed",
+      "pbl": "[ZHTW] translation needed",
+      "ai": "[ZHTW] translation needed",
+      "tracking": "[ZHTW] translation needed",
+      "multi": "[ZHTW] translation needed"
+    },
+    "accounts": {
+      "title": "[ZHTW] translation needed",
+      "registration": "[ZHTW] translation needed",
+      "accurate": "[ZHTW] translation needed",
+      "maintain": "[ZHTW] translation needed",
+      "secure": "[ZHTW] translation needed",
+      "responsible": "[ZHTW] translation needed",
+      "types": "[ZHTW] translation needed",
+      "student": "[ZHTW] translation needed",
+      "teacher": "[ZHTW] translation needed",
+      "admin": "[ZHTW] translation needed"
+    },
+    "use": {
+      "title": "[ZHTW] translation needed",
+      "permitted": "[ZHTW] translation needed",
+      "educational": "[ZHTW] translation needed",
+      "share": "[ZHTW] translation needed",
+      "feedback": "[ZHTW] translation needed",
+      "prohibited": "[ZHTW] translation needed",
+      "misuse": "[ZHTW] translation needed",
+      "share_credentials": "[ZHTW] translation needed",
+      "cheat": "[ZHTW] translation needed",
+      "harm": "[ZHTW] translation needed",
+      "illegal": "[ZHTW] translation needed",
+      "scrape": "[ZHTW] translation needed"
+    },
+    "ip": {
+      "title": "[ZHTW] translation needed",
+      "platform": "[ZHTW] translation needed",
+      "ownership": "[ZHTW] translation needed",
+      "user": "[ZHTW] translation needed",
+      "retain": "[ZHTW] translation needed",
+      "open": "[ZHTW] translation needed",
+      "git": "[ZHTW] translation needed"
+    },
+    "privacy": {
+      "title": "[ZHTW] translation needed",
+      "content": "[ZHTW] translation needed"
+    },
+    "ai": {
+      "title": "[ZHTW] translation needed",
+      "disclaimer": "[ZHTW] translation needed",
+      "educational": "[ZHTW] translation needed",
+      "verify": "[ZHTW] translation needed",
+      "improve": "[ZHTW] translation needed"
+    },
+    "disclaimers": {
+      "title": "[ZHTW] translation needed",
+      "asis": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND.",
+      "liability": "[ZHTW] translation needed"
+    },
+    "modifications": {
+      "title": "[ZHTW] translation needed",
+      "content": "[ZHTW] translation needed"
+    },
+    "termination": {
+      "title": "[ZHTW] translation needed",
+      "rights": "[ZHTW] translation needed"
+    },
+    "law": {
+      "title": "[ZHTW] translation needed",
+      "content": "[ZHTW] translation needed"
+    },
+    "contact": {
+      "title": "[ZHTW] translation needed",
+      "intro": "[ZHTW] translation needed"
+    },
+    "agreement": "[ZHTW] translation needed"
+  },
+  "common": {
+    "backToHome": "[ZHTW] translation needed"
+  }
+}

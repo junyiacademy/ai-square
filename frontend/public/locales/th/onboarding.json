@@ -1,0 +1,99 @@
+{
+  "welcome": {
+    "greeting": "[Thai] translation needed",
+    "subtitle": "[Thai] translation needed",
+    "step1": {
+      "title": "[Thai] translation needed",
+      "description": "[Thai] translation needed",
+      "content": "[Thai] translation needed",
+      "assessment": "[Thai] translation needed",
+      "assessmentDesc": "[Thai] translation needed",
+      "learning": "[Thai] translation needed",
+      "learningDesc": "[Thai] translation needed"
+    },
+    "step2": {
+      "title": "[Thai] translation needed",
+      "description": "[Thai] translation needed",
+      "content": "[Thai] translation needed",
+      "domains": "[Thai] translation needed",
+      "engaging": "[Thai] translation needed",
+      "creating": "[Thai] translation needed",
+      "managing": "[Thai] translation needed",
+      "designing": "[Thai] translation needed"
+    },
+    "step3": {
+      "title": "[Thai] translation needed",
+      "description": "[Thai] translation needed",
+      "content": "[Thai] translation needed",
+      "ready": "[Thai] translation needed",
+      "benefit1": "[Thai] translation needed",
+      "benefit2": "[Thai] translation needed",
+      "benefit3": "[Thai] translation needed"
+    },
+    "startJourney": "[Thai] translation needed"
+  },
+  "goals": {
+    "title": "[Thai] translation needed",
+    "subtitle": "[Thai] translation needed",
+    "understand": {
+      "title": "[Thai] translation needed",
+      "description": "[Thai] translation needed"
+    },
+    "create": {
+      "title": "[Thai] translation needed",
+      "description": "[Thai] translation needed"
+    },
+    "analyze": {
+      "title": "[Thai] translation needed",
+      "description": "[Thai] translation needed"
+    },
+    "build": {
+      "title": "[Thai] translation needed",
+      "description": "[Thai] translation needed"
+    },
+    "teach": {
+      "title": "[Thai] translation needed",
+      "description": "[Thai] translation needed"
+    },
+    "ethical": {
+      "title": "[Thai] translation needed",
+      "description": "[Thai] translation needed"
+    },
+    "recommendedDomains": "[Thai] translation needed",
+    "selected": "[Thai] translation needed",
+    "selectAtLeastOne": "[Thai] translation needed",
+    "continue": "[Thai] translation needed",
+    "skipForNow": "[Thai] translation needed",
+    "helpText": "[Thai] translation needed"
+  },
+  "progress": {
+    "welcome": "[Thai] translation needed",
+    "identity": "[Thai] translation needed",
+    "goals": "[Thai] translation needed"
+  },
+  "identity": {
+    "title": "[Thai] translation needed",
+    "subtitle": "[Thai] translation needed",
+    "student": {
+      "title": "[Thai] translation needed",
+      "description": "[Thai] translation needed"
+    },
+    "teacher": {
+      "title": "[Thai] translation needed",
+      "description": "[Thai] translation needed"
+    },
+    "professional": {
+      "title": "[Thai] translation needed",
+      "description": "[Thai] translation needed"
+    },
+    "learner": {
+      "title": "[Thai] translation needed",
+      "description": "[Thai] translation needed"
+    }
+  },
+  "button": {
+    "back": "[Thai] translation needed",
+    "continue": "[Thai] translation needed",
+    "saving": "[Thai] translation needed"
+  }
+}
