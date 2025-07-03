@@ -166,18 +166,8 @@ export default function RelationsClient() {
     );
   }
 
-  // 假插圖區塊
-  const fakeIllustration = (
-    <div className="w-full flex justify-center mb-6">
-      <div className="w-[320px] h-[120px] bg-gradient-to-r from-blue-200 to-purple-200 rounded-2xl flex items-center justify-center text-3xl text-blue-500 font-bold">
-        Fake Illustration
-      </div>
-    </div>
-  );
-
   return (
     <main className="p-8 bg-gray-50 min-h-screen">
-      {fakeIllustration}
       <h1 className="mb-2 text-xl sm:text-2xl md:text-3xl font-bold text-center px-4 break-words">{t('pageTitle')}</h1>
       <p className="text-center text-gray-500 mb-8 px-4">{t('pageSubtitle')}</p>
       <div className="max-w-3xl mx-auto">{tree.domains.map((domain) => (
