@@ -25,14 +25,14 @@ domains:
         description_ru: Распознавать роль и влияние ИИ в различных контекстах.
         description_it: Riconoscere il ruolo e l'influenza dell'IA in diversi contesti.
         knowledge:
-        - K1.4
-        - K5.1
+          - K1.4
+          - K5.1
         skills:
-        - S6.1
+          - S6.1
         attitudes:
-        - A2.1
-        - A1.1
-        content: 'Learners identify the presence of AI in everyday tools and systems and consider its purpose in various situations, such as content recommendations or adaptive learning. They reflect on how AI influences their choices, learning, and perceptions. '
+          - A2.1
+          - A1.1
+        content: "Learners identify the presence of AI in everyday tools and systems and consider its purpose in various situations, such as content recommendations or adaptive learning. They reflect on how AI influences their choices, learning, and perceptions. "
         content_es: Los estudiantes identifican la presencia de IA en herramientas y sistemas cotidianos y consideran su propósito en varias situaciones, como recomendaciones de contenido o aprendizaje adaptativo. Reflexionan sobre cómo la IA influye en sus decisiones, aprendizaje y percepciones.
         content_ja: 学習者は日常的なツールやシステムにおけるAIの存在を識別し、コンテンツ推薦や適応学習などの様々な状況での目的を考えます。AIが自分の選択、学習、認識にどのように影響するかを振り返ります。
         content_ko: 학습자는 일상적인 도구와 시스템에서 AI의 존재를 식별하고 콘텐츠 추천이나 적응형 학습과 같은 다양한 상황에서의 목적을 고려합니다. AI가 자신의 선택, 학습, 인식에 어떻게 영향을 미치는지 반성합니다.
@@ -41,29 +41,29 @@ domains:
         content_ru: Учащиеся выявляют присутствие ИИ в повседневных инструментах и системах и рассматривают его цель в различных ситуациях, таких как рекомендации контента или адаптивное обучение. Они размышляют о том, как ИИ влияет на их выбор, обучение и восприятие.
         content_it: Gli studenti identificano la presenza dell'IA negli strumenti e sistemi quotidiani e considerano il suo scopo in varie situazioni, come raccomandazioni di contenuti o apprendimento adattivo. Riflettono su come l'IA influenza le loro scelte, l'apprendimento e le percezioni.
         scenarios:
-        - List familiar digital interactions (e.g., using a web camera, video recommendations) and discuss if and how each uses AI.
-        - Explore how an online math platform uses real-time data to present content at different levels of difficulty.
+          - List familiar digital interactions (e.g., using a web camera, video recommendations) and discuss if and how each uses AI.
+          - Explore how an online math platform uses real-time data to present content at different levels of difficulty.
         scenarios_es:
-        - Enumerar interacciones digitales familiares (por ejemplo, usar una cámara web, recomendaciones de videos) y discutir si y cómo cada una utiliza IA.
-        - Explorar cómo una plataforma de matemáticas en línea utiliza datos en tiempo real para presentar contenido en diferentes niveles de dificultad.
+          - Enumerar interacciones digitales familiares (por ejemplo, usar una cámara web, recomendaciones de videos) y discutir si y cómo cada una utiliza IA.
+          - Explorar cómo una plataforma de matemáticas en línea utiliza datos en tiempo real para presentar contenido en diferentes niveles de dificultad.
         scenarios_ja:
-        - 身近なデジタル相互作用（ウェブカメラの使用、動画推薦など）をリストアップし、それぞれがAIを使用しているかどうか、どのように使用しているかを議論する。
-        - オンライン数学プラットフォームがリアルタイムデータを使用して、異なる難易度レベルのコンテンツを提示する方法を探る。
+          - 身近なデジタル相互作用（ウェブカメラの使用、動画推薦など）をリストアップし、それぞれがAIを使用しているかどうか、どのように使用しているかを議論する。
+          - オンライン数学プラットフォームがリアルタイムデータを使用して、異なる難易度レベルのコンテンツを提示する方法を探る。
         scenarios_ko:
-        - '친숙한 디지털 상호작용(예: 웹 카메라 사용, 비디오 추천)을 나열하고 각각이 AI를 사용하는지 여부와 방법을 토론한다.'
-        - 온라인 수학 플랫폼이 실시간 데이터를 활용하여 다양한 난이도 수준의 콘텐츠를 제시하는 방법을 탐구한다.
+          - "친숙한 디지털 상호작용(예: 웹 카메라 사용, 비디오 추천)을 나열하고 각각이 AI를 사용하는지 여부와 방법을 토론한다."
+          - 온라인 수학 플랫폼이 실시간 데이터를 활용하여 다양한 난이도 수준의 콘텐츠를 제시하는 방법을 탐구한다.
         scenarios_fr:
-        - Énumérer les interactions numériques familières (par exemple, utiliser une webcam, recommandations vidéo) et discuter si et comment chacune utilise l'IA.
-        - Explorer comment une plateforme de mathématiques en ligne utilise des données en temps réel pour présenter du contenu à différents niveaux de difficulté.
+          - Énumérer les interactions numériques familières (par exemple, utiliser une webcam, recommandations vidéo) et discuter si et comment chacune utilise l'IA.
+          - Explorer comment une plateforme de mathématiques en ligne utilise des données en temps réel pour présenter du contenu à différents niveaux de difficulté.
         scenarios_de:
-        - Vertraute digitale Interaktionen (z.B. Verwendung einer Webcam, Videoempfehlungen) auflisten und diskutieren, ob und wie jede KI verwendet.
-        - Erforschen, wie eine Online-Mathematikplattform Echtzeitdaten nutzt, um Inhalte auf verschiedenen Schwierigkeitsebenen zu präsentieren.
+          - Vertraute digitale Interaktionen (z.B. Verwendung einer Webcam, Videoempfehlungen) auflisten und diskutieren, ob und wie jede KI verwendet.
+          - Erforschen, wie eine Online-Mathematikplattform Echtzeitdaten nutzt, um Inhalte auf verschiedenen Schwierigkeitsebenen zu präsentieren.
         scenarios_ru:
-        - Перечислить знакомые цифровые взаимодействия (например, использование веб-камеры, рекомендации видео) и обсудить, использует ли каждое из них ИИ и как.
-        - Изучить, как онлайн-платформа математики использует данные в реальном времени для представления контента на разных уровнях сложности.
+          - Перечислить знакомые цифровые взаимодействия (например, использование веб-камеры, рекомендации видео) и обсудить, использует ли каждое из них ИИ и как.
+          - Изучить, как онлайн-платформа математики использует данные в реальном времени для представления контента на разных уровнях сложности.
         scenarios_it:
-        - Elencare interazioni digitali familiari (ad esempio, utilizzo di una webcam, raccomandazioni video) e discutere se e come ognuna utilizza l'IA.
-        - Esplorare come una piattaforma di matematica online utilizza dati in tempo reale per presentare contenuti a diversi livelli di difficoltà.
+          - Elencare interazioni digitali familiari (ad esempio, utilizzo di una webcam, raccomandazioni video) e discutere se e come ognuna utilizza l'IA.
+          - Esplorare come una piattaforma di matematica online utilizza dati in tempo reale per presentare contenuti a diversi livelli di difficoltà.
         description_zhCN: 识别AI在不同情境中的角色与影响力。
         description_pt: Reconhecer o papel e a influência da IA em diferentes contextos.
         description_ar: التعرف على دور الذكاء الاصطناعي وتأثيره في سياقات مختلفة.
@@ -77,8 +77,8 @@ domains:
         description_zhTW: 辨識AI在不同情境中的角色與影響力。
         content_zhTW: 學習者能辨識日常工具與系統中AI的存在，並思考其在各種情境（如內容推薦、適應性學習）中的用途。他們會反思AI如何影響自己的選擇、學習與觀點。
         scenarios_zhTW:
-        - 列舉熟悉的數位互動（如使用網路攝影機、影片推薦），並討論每一項是否以及如何運用AI。
-        - 探索線上數學平台如何利用即時資料，呈現不同難度層級的內容。
+          - 列舉熟悉的數位互動（如使用網路攝影機、影片推薦），並討論每一項是否以及如何運用AI。
+          - 探索線上數學平台如何利用即時資料，呈現不同難度層級的內容。
       E2:
         description: Evaluate whether AI outputs should be accepted, revised, or rejected.
         description_es: Evaluar si los resultados de la IA deben ser aceptados, revisados o rechazados.
@@ -89,12 +89,12 @@ domains:
         description_ru: Оценивать, следует ли принимать, пересматривать или отклонять выходные данные ИИ.
         description_it: Valutare se gli output dell'IA dovrebbero essere accettati, rivisti o rifiutati.
         knowledge:
-        - K4.1
-        - K4.3
+          - K4.1
+          - K4.3
         skills:
-        - S1.1
+          - S1.1
         attitudes:
-        - A1.1
+          - A1.1
         content: Learners critically assess the accuracy and fairness of AI-generated content, recognizing that AI can generate misinformation or biased outputs. They decide whether to trust, modify, or override AI outputs by considering their potential impact on themselves and others.
         content_es: Los estudiantes evalúan críticamente la precisión y equidad del contenido generado por IA, reconociendo que la IA puede generar desinformación o resultados sesgados. Deciden si confiar, modificar o anular los resultados de la IA considerando su impacto potencial en ellos mismos y en otros.
         content_ja: 学習者はAI生成コンテンツの正確性と公平性を批判的に評価し、AIが誤った情報や偏見のある出力を生成する可能性があることを認識します。自分自身や他者への潜在的な影響を考慮して、AI出力を信頼する、修正する、または却下するかを決定します。
@@ -104,29 +104,29 @@ domains:
         content_ru: Учащиеся критически оценивают точность и справедливость контента, созданного ИИ, признавая, что ИИ может генерировать дезинформацию или предвзятые результаты. Они решают, доверять ли результатам ИИ, изменять их или отклонять, учитывая их потенциальное влияние на себя и других.
         content_it: Gli studenti valutano criticamente l'accuratezza e l'equità del contenuto generato dall'IA, riconoscendo che l'IA può generare disinformazione o output distorti. Decidono se fidarsi, modificare o scartare gli output dell'IA considerando il loro impatto potenziale su se stessi e sugli altri.
         scenarios:
-        - Compare an AI tool's step-by-step math solution to a learner's explanation to determine if the AI's process aligns with techniques that students have already learned.
-        - Prompt a language model with questions about historical events and evaluate the accuracy and bias of its responses by cross-referencing with reliable sources.
+          - Compare an AI tool's step-by-step math solution to a learner's explanation to determine if the AI's process aligns with techniques that students have already learned.
+          - Prompt a language model with questions about historical events and evaluate the accuracy and bias of its responses by cross-referencing with reliable sources.
         scenarios_es:
-        - Comparar la solución matemática paso a paso de una herramienta de IA con la explicación de un estudiante para determinar si el proceso de la IA se alinea con las técnicas que los estudiantes ya han aprendido.
-        - Preguntar a un modelo de lenguaje sobre eventos históricos y evaluar la precisión y sesgo de sus respuestas mediante referencias cruzadas con fuentes confiables.
+          - Comparar la solución matemática paso a paso de una herramienta de IA con la explicación de un estudiante para determinar si el proceso de la IA se alinea con las técnicas que los estudiantes ya han aprendido.
+          - Preguntar a un modelo de lenguaje sobre eventos históricos y evaluar la precisión y sesgo de sus respuestas mediante referencias cruzadas con fuentes confiables.
         scenarios_ja:
-        - AIツールの段階的な数学解法と学習者の説明を比較して、AIのプロセスが学生がすでに学んだ技術と一致するかを判断する。
-        - 言語モデルに歴史的出来事について質問し、信頼できる情報源との相互参照によってその回答の正確性と偏見を評価する。
+          - AIツールの段階的な数学解法と学習者の説明を比較して、AIのプロセスが学生がすでに学んだ技術と一致するかを判断する。
+          - 言語モデルに歴史的出来事について質問し、信頼できる情報源との相互参照によってその回答の正確性と偏見を評価する。
         scenarios_ko:
-        - AI 도구의 단계별 수학 해법을 학습자의 설명과 비교하여 AI의 과정이 학생들이 이미 배운 기법과 일치하는지 판단한다.
-        - 언어 모델에 역사적 사건에 대해 질문하고 신뢰할 수 있는 출처와의 교차 참조를 통해 응답의 정확성과 편견을 평가한다.
+          - AI 도구의 단계별 수학 해법을 학습자의 설명과 비교하여 AI의 과정이 학생들이 이미 배운 기법과 일치하는지 판단한다.
+          - 언어 모델에 역사적 사건에 대해 질문하고 신뢰할 수 있는 출처와의 교차 참조를 통해 응답의 정확성과 편견을 평가한다.
         scenarios_fr:
-        - Comparer la solution mathématique étape par étape d'un outil d'IA avec l'explication d'un apprenant pour déterminer si le processus de l'IA s'aligne avec les techniques que les étudiants ont déjà apprises.
-        - Interroger un modèle de langage sur des événements historiques et évaluer la précision et les biais de ses réponses en les recoupant avec des sources fiables.
+          - Comparer la solution mathématique étape par étape d'un outil d'IA avec l'explication d'un apprenant pour déterminer si le processus de l'IA s'aligne avec les techniques que les étudiants ont déjà apprises.
+          - Interroger un modèle de langage sur des événements historiques et évaluer la précision et les biais de ses réponses en les recoupant avec des sources fiables.
         scenarios_de:
-        - Die schrittweise mathematische Lösung eines KI-Tools mit der Erklärung eines Lernenden vergleichen, um zu bestimmen, ob der KI-Prozess mit den bereits erlernten Techniken übereinstimmt.
-        - Ein Sprachmodell zu historischen Ereignissen befragen und die Genauigkeit und Voreingenommenheit seiner Antworten durch Querverweise mit zuverlässigen Quellen bewerten.
+          - Die schrittweise mathematische Lösung eines KI-Tools mit der Erklärung eines Lernenden vergleichen, um zu bestimmen, ob der KI-Prozess mit den bereits erlernten Techniken übereinstimmt.
+          - Ein Sprachmodell zu historischen Ereignissen befragen und die Genauigkeit und Voreingenommenheit seiner Antworten durch Querverweise mit zuverlässigen Quellen bewerten.
         scenarios_ru:
-        - Сравнить пошаговое математическое решение ИИ-инструмента с объяснением учащегося, чтобы определить, соответствует ли процесс ИИ уже изученным студентами техникам.
-        - Задавать языковой модели вопросы об исторических событиях и оценивать точность и предвзятость ее ответов путем перекрестных ссылок с надежными источниками.
+          - Сравнить пошаговое математическое решение ИИ-инструмента с объяснением учащегося, чтобы определить, соответствует ли процесс ИИ уже изученным студентами техникам.
+          - Задавать языковой модели вопросы об исторических событиях и оценивать точность и предвзятость ее ответов путем перекрестных ссылок с надежными источниками.
         scenarios_it:
-        - Confrontare la soluzione matematica passo dopo passo di uno strumento IA con la spiegazione di uno studente per determinare se il processo dell'IA si allinea con le tecniche già apprese dagli studenti.
-        - Interrogare un modello linguistico su eventi storici e valutare l'accuratezza e i pregiudizi delle sue risposte mediante riferimenti incrociati con fonti affidabili.
+          - Confrontare la soluzione matematica passo dopo passo di uno strumento IA con la spiegazione di uno studente per determinare se il processo dell'IA si allinea con le tecniche già apprese dagli studenti.
+          - Interrogare un modello linguistico su eventi storici e valutare l'accuratezza e i pregiudizi delle sue risposte mediante riferimenti incrociati con fonti affidabili.
         description_zhCN: 评估是否应该接受、修改或拒绝AI的输出。
         description_pt: Avaliar se os resultados da IA devem ser aceitos, revisados ou rejeitados.
         description_ar: تقييم ما إذا كان ينبغي قبول مخرجات الذكاء الاصطناعي أو مراجعتها أو رفضها.
@@ -140,8 +140,8 @@ domains:
         description_zhTW: 評估AI輸出應該被接受、修改或拒絕。
         content_zhTW: 學習者批判性地評估AI生成內容的準確性和公平性，認識到AI可能產生錯誤資訊或偏見輸出。他們透過考慮AI輸出對自己和他人的潛在影響，決定是否要信任、修改或推翻AI的輸出。
         scenarios_zhTW:
-        - 比較AI工具的數學解題步驟與學習者的解釋，以判斷AI的解題過程是否符合學生已學過的技巧。
-        - 向語言模型詢問有關歷史事件的問題，並透過與可靠來源交叉比對來評估其回應的準確性和偏見。
+          - 比較AI工具的數學解題步驟與學習者的解釋，以判斷AI的解題過程是否符合學生已學過的技巧。
+          - 向語言模型詢問有關歷史事件的問題，並透過與可靠來源交叉比對來評估其回應的準確性和偏見。
       E3:
         description: Examine how predictive AI systems provide recommendations that can inform and limit perspectives.
         description_es: Examinar cómo los sistemas de IA predictivos proporcionan recomendaciones que pueden informar y limitar perspectivas.
@@ -152,59 +152,59 @@ domains:
         description_ru: Изучать, как прогностические системы ИИ предоставляют рекомендации, которые могут информировать и ограничивать перспективы.
         description_it: Esaminare come i sistemi di IA predittivi forniscono raccomandazioni che possono informare e limitare le prospettive.
         knowledge:
-        - K1.1
-        - K4.3
+          - K1.1
+          - K4.3
         skills:
-        - S6.1
+          - S6.1
         attitudes:
-        - A2.1
+          - A2.1
         content: Learners explore how AI uses data patterns to offer suggestions (e.g., what to watch, buy, or read) and consider how those recommendations may both support learning or decision-making and reinforce narrow viewpoints or biases.
         content_es: Los estudiantes exploran cómo la IA usa patrones de datos para ofrecer sugerencias (por ejemplo, qué ver, comprar o leer) y consideran cómo esas recomendaciones pueden tanto apoyar el aprendizaje o la toma de decisiones como reforzar puntos de vista estrechos o sesgos.
         content_ja: 学習者は、AIがデータパターンを使用して提案（例：何を視聴、購入、読書するか）を提供する方法を探求し、これらの推奨事項が学習や意思決定を支援すると同時に、狭い視点や偏見を強化する可能性についても考慮します。
-        content_ko: '학습자는 AI가 데이터 패턴을 사용하여 제안(예: 무엇을 시청, 구매 또는 읽을지)을 제공하는 방법을 탐구하고, 이러한 추천이 학습이나 의사결정을 지원함과 동시에 편협한 관점이나 편견을 강화할 수 있는지를 고려합니다.'
+        content_ko: "학습자는 AI가 데이터 패턴을 사용하여 제안(예: 무엇을 시청, 구매 또는 읽을지)을 제공하는 방법을 탐구하고, 이러한 추천이 학습이나 의사결정을 지원함과 동시에 편협한 관점이나 편견을 강화할 수 있는지를 고려합니다."
         content_fr: Les apprenants explorent comment l'IA utilise des modèles de données pour offrir des suggestions (par exemple, quoi regarder, acheter ou lire) et considèrent comment ces recommandations peuvent à la fois soutenir l'apprentissage ou la prise de décision et renforcer des points de vue étroits ou des biais.
         content_de: Lernende erforschen, wie KI Datenmuster verwendet, um Vorschläge zu machen (z.B. was zu sehen, kaufen oder lesen ist) und betrachten, wie diese Empfehlungen sowohl das Lernen oder die Entscheidungsfindung unterstützen als auch enge Sichtweisen oder Vorurteile verstärken können.
         content_ru: Учащиеся исследуют, как ИИ использует паттерны данных для предложения рекомендаций (например, что смотреть, покупать или читать) и рассматривают, как эти рекомендации могут как поддерживать обучение или принятие решений, так и усиливать узкие точки зрения или предрассудки.
         content_it: Gli studenti esplorano come l'IA utilizza i modelli di dati per offrire suggerimenti (ad esempio, cosa guardare, comprare o leggere) e considerano come queste raccomandazioni possano sia supportare l'apprendimento o il processo decisionale sia rafforzare punti di vista ristretti o pregiudizi.
         scenarios:
-        - Count by 2s, 5s, and 10s to introduce how humans recognize and predict sequences, then explore how AI generates recommendations based on patterns.
-        - Examine how social media algorithms can contribute to spreading disinformation or misinformation about a public health issue and compare the responsibilities of individuals and platforms in addressing the harm.
+          - Count by 2s, 5s, and 10s to introduce how humans recognize and predict sequences, then explore how AI generates recommendations based on patterns.
+          - Examine how social media algorithms can contribute to spreading disinformation or misinformation about a public health issue and compare the responsibilities of individuals and platforms in addressing the harm.
         scenarios_es:
-        - Contar de 2 en 2, de 5 en 5 y de 10 en 10 para introducir cómo los humanos reconocen y predicen secuencias, luego explorar cómo la IA genera recomendaciones basadas en patrones.
-        - Examinar cómo los algoritmos de redes sociales pueden contribuir a difundir desinformación o información errónea sobre un tema de salud pública y comparar las responsabilidades de individuos y plataformas para abordar el daño.
+          - Contar de 2 en 2, de 5 en 5 y de 10 en 10 para introducir cómo los humanos reconocen y predicen secuencias, luego explorar cómo la IA genera recomendaciones basadas en patrones.
+          - Examinar cómo los algoritmos de redes sociales pueden contribuir a difundir desinformación o información errónea sobre un tema de salud pública y comparar las responsabilidades de individuos y plataformas para abordar el daño.
         scenarios_ja:
-        - 2、5、10の倍数で数えることで、人間がどのようにシーケンスを認識し予測するかを紹介し、その後AIがパターンに基づいて推奨事項を生成する方法を探る。
-        - ソーシャルメディアアルゴリズムが公衆衛生問題に関する偽情報や誤情報の拡散にどのように寄与するかを調べ、その害に対処する際の個人とプラットフォームの責任を比較する。
+          - 2、5、10の倍数で数えることで、人間がどのようにシーケンスを認識し予測するかを紹介し、その後AIがパターンに基づいて推奨事項を生成する方法を探る。
+          - ソーシャルメディアアルゴリズムが公衆衛生問題に関する偽情報や誤情報の拡散にどのように寄与するかを調べ、その害に対処する際の個人とプラットフォームの責任を比較する。
         scenarios_ko:
-        - 2, 5, 10의 배수로 세는 것을 통해 인간이 어떻게 시퀀스를 인식하고 예측하는지 소개한 다음, AI가 패턴을 기반으로 추천을 생성하는 방법을 탐구한다.
-        - 소셜 미디어 알고리즘이 공중보건 문제에 대한 허위정보나 잘못된 정보 확산에 어떻게 기여할 수 있는지 검토하고, 그 해악을 해결하는 데 있어 개인과 플랫폼의 책임을 비교한다.
+          - 2, 5, 10의 배수로 세는 것을 통해 인간이 어떻게 시퀀스를 인식하고 예측하는지 소개한 다음, AI가 패턴을 기반으로 추천을 생성하는 방법을 탐구한다.
+          - 소셜 미디어 알고리즘이 공중보건 문제에 대한 허위정보나 잘못된 정보 확산에 어떻게 기여할 수 있는지 검토하고, 그 해악을 해결하는 데 있어 개인과 플랫폼의 책임을 비교한다.
         scenarios_fr:
-        - Compter par 2, 5 et 10 pour introduire comment les humains reconnaissent et prédisent les séquences, puis explorer comment l'IA génère des recommandations basées sur des modèles.
-        - Examiner comment les algorithmes des médias sociaux peuvent contribuer à la propagation de désinformation ou d'informations erronées sur un problème de santé publique et comparer les responsabilités des individus et des plateformes pour traiter le préjudice.
+          - Compter par 2, 5 et 10 pour introduire comment les humains reconnaissent et prédisent les séquences, puis explorer comment l'IA génère des recommandations basées sur des modèles.
+          - Examiner comment les algorithmes des médias sociaux peuvent contribuer à la propagation de désinformation ou d'informations erronées sur un problème de santé publique et comparer les responsabilités des individus et des plateformes pour traiter le préjudice.
         scenarios_de:
-        - In 2er-, 5er- und 10er-Schritten zählen, um zu zeigen, wie Menschen Sequenzen erkennen und vorhersagen, dann erforschen, wie KI Empfehlungen basierend auf Mustern generiert.
-        - Untersuchen, wie Social-Media-Algorithmen zur Verbreitung von Desinformation oder Fehlinformationen über ein öffentliches Gesundheitsproblem beitragen können und die Verantwortlichkeiten von Einzelpersonen und Plattformen bei der Bewältigung des Schadens vergleichen.
+          - In 2er-, 5er- und 10er-Schritten zählen, um zu zeigen, wie Menschen Sequenzen erkennen und vorhersagen, dann erforschen, wie KI Empfehlungen basierend auf Mustern generiert.
+          - Untersuchen, wie Social-Media-Algorithmen zur Verbreitung von Desinformation oder Fehlinformationen über ein öffentliches Gesundheitsproblem beitragen können und die Verantwortlichkeiten von Einzelpersonen und Plattformen bei der Bewältigung des Schadens vergleichen.
         scenarios_ru:
-        - Считать двойками, пятерками и десятками, чтобы показать, как люди распознают и предсказывают последовательности, затем исследовать, как ИИ генерирует рекомендации на основе паттернов.
-        - Изучить, как алгоритмы социальных сетей могут способствовать распространению дезинформации или ложной информации о проблеме общественного здравоохранения, и сравнить ответственность отдельных лиц и платформ в устранении вреда.
+          - Считать двойками, пятерками и десятками, чтобы показать, как люди распознают и предсказывают последовательности, затем исследовать, как ИИ генерирует рекомендации на основе паттернов.
+          - Изучить, как алгоритмы социальных сетей могут способствовать распространению дезинформации или ложной информации о проблеме общественного здравоохранения, и сравнить ответственность отдельных лиц и платформ в устранении вреда.
         scenarios_it:
-        - Contare per 2, per 5 e per 10 per introdurre come gli umani riconoscono e prevedono le sequenze, poi esplorare come l'IA genera raccomandazioni basate sui modelli.
-        - Esaminare come gli algoritmi dei social media possano contribuire alla diffusione di disinformazione o informazioni errate su un problema di salute pubblica e confrontare le responsabilité di individui e piattaforme nell'affrontare il danno.
-        description_zhCN: '[ZHCN translation needed]'
-        description_pt: '[PT translation needed]'
-        description_ar: '[AR translation needed]'
-        description_id: '[ID translation needed]'
-        description_th: '[TH translation needed]'
-        content_zhCN: '[ZHCN translation needed]'
-        content_pt: '[PT translation needed]'
-        content_ar: '[AR translation needed]'
-        content_id: '[ID translation needed]'
-        content_th: '[TH translation needed]'
+          - Contare per 2, per 5 e per 10 per introdurre come gli umani riconoscono e prevedono le sequenze, poi esplorare come l'IA genera raccomandazioni basate sui modelli.
+          - Esaminare come gli algoritmi dei social media possano contribuire alla diffusione di disinformazione o informazioni errate su un problema di salute pubblica e confrontare le responsabilité di individui e piattaforme nell'affrontare il danno.
+        description_zhCN: "[ZHCN translation needed]"
+        description_pt: "[PT translation needed]"
+        description_ar: "[AR translation needed]"
+        description_id: "[ID translation needed]"
+        description_th: "[TH translation needed]"
+        content_zhCN: "[ZHCN translation needed]"
+        content_pt: "[PT translation needed]"
+        content_ar: "[AR translation needed]"
+        content_id: "[ID translation needed]"
+        content_th: "[TH translation needed]"
         description_zhTW: 檢視預測性AI系統如何提供建議，這些建議既能提供資訊也可能限制觀點。
         content_zhTW: 學習者探索AI如何使用資料模式來提供建議（如觀看、購買或閱讀什麼），並考慮這些建議如何既能支持學習或決策，又可能強化狹隘的觀點或偏見。
         scenarios_zhTW:
-        - 以2、5、10的倍數計數來介紹人類如何辨識和預測序列，然後探索AI如何根據模式產生建議。
-        - 檢視社群媒體演算法如何促進公共衛生議題的假訊息或錯誤資訊傳播，並比較個人和平台在處理這些危害方面的責任。
+          - 以2、5、10的倍數計數來介紹人類如何辨識和預測序列，然後探索AI如何根據模式產生建議。
+          - 檢視社群媒體演算法如何促進公共衛生議題的假訊息或錯誤資訊傳播，並比較個人和平台在處理這些危害方面的責任。
       E4:
         description: Explain how AI could be used to amplify societal biases.
         description_es: Explicar cómo la IA podría usarse para amplificar sesgos sociales.
@@ -215,15 +215,15 @@ domains:
         description_ru: Объяснить, как ИИ может быть использован для усиления социальных предрассудков.
         description_it: Spiegare come l'IA potrebbe essere utilizzata per amplificare i pregiudizi sociali.
         knowledge:
-        - K2.1
-        - K2.5
+          - K2.1
+          - K2.5
         skills:
-        - S1.1
-        - S6.1
-        - S5.1
+          - S1.1
+          - S6.1
+          - S5.1
         attitudes:
-        - A5.1
-        - A1.1
+          - A5.1
+          - A1.1
         content: Learners investigate how AI systems, such as facial recognition or hiring algorithms, reflect human decisions and data, and identify ways that bias in data or design can lead to unfair outcomes for different groups of people.
         content_es: Los estudiantes investigan cómo los sistemas de IA, como el reconocimiento facial o algoritmos de contratación, reflejan decisiones y datos humanos, e identifican formas en que el sesgo en datos o diseño puede llevar a resultados injustos para diferentes grupos de personas.
         content_ja: 学習者は、顔認識や採用アルゴリズムなどのAIシステムが人間の決定とデータをどのように反映するかを調査し、データや設計における偏見が異なる人々のグループに対して不公平な結果をもたらす可能性がある方法を特定します。
@@ -233,44 +233,44 @@ domains:
         content_ru: Учащиеся исследуют, как системы ИИ, такие как распознавание лиц или алгоритмы найма, отражают человеческие решения и данные, и выявляют способы, которыми предвзятость в данных или дизайне может привести к несправедливым результатам для разных групп людей.
         content_it: Gli studenti indagano come i sistemi di IA, come il riconoscimento facciale o gli algoritmi di assunzione, riflettano decisioni e dati umani, e identificano modi in cui i pregiudizi nei dati o nel design possano portare a risultati ingiusti per diversi gruppi di persone.
         scenarios:
-        - Split several characters from different stories into categories, then discuss how using rules or data to group people can be useful or treat some people unfairly.
-        - Examine how an AI system was trained to recognize faces, evaluate potential sources of bias in the training data, and suggest steps developers could take to improve fairness.
+          - Split several characters from different stories into categories, then discuss how using rules or data to group people can be useful or treat some people unfairly.
+          - Examine how an AI system was trained to recognize faces, evaluate potential sources of bias in the training data, and suggest steps developers could take to improve fairness.
         scenarios_es:
-        - Dividir varios personajes de diferentes historias en categorías, luego discutir cómo usar reglas o datos para agrupar personas puede ser útil o tratar a algunas personas de manera injusta.
-        - Examinar cómo se entrenó un sistema de IA para reconocer rostros, evaluar posibles fuentes de sesgo en los datos de entrenamiento y sugerir pasos que los desarrolladores podrían tomar para mejorar la equidad.
+          - Dividir varios personajes de diferentes historias en categorías, luego discutir cómo usar reglas o datos para agrupar personas puede ser útil o tratar a algunas personas de manera injusta.
+          - Examinar cómo se entrenó un sistema de IA para reconocer rostros, evaluar posibles fuentes de sesgo en los datos de entrenamiento y sugerir pasos que los desarrolladores podrían tomar para mejorar la equidad.
         scenarios_ja:
-        - 異なる物語の複数のキャラクターをカテゴリーに分け、ルールやデータを使用して人をグループ化することが有用である場合や、一部の人を不公平に扱う場合について議論する。
-        - AIシステムが顔を認識するようにどのように訓練されたかを調べ、訓練データにおける潜在的な偏見の源を評価し、開発者が公平性を改善するために取ることができるステップを提案する。
+          - 異なる物語の複数のキャラクターをカテゴリーに分け、ルールやデータを使用して人をグループ化することが有用である場合や、一部の人を不公平に扱う場合について議論する。
+          - AIシステムが顔を認識するようにどのように訓練されたかを調べ、訓練データにおける潜在的な偏見の源を評価し、開発者が公平性を改善するために取ることができるステップを提案する。
         scenarios_ko:
-        - 다양한 이야기의 여러 캐릭터를 카테고리로 나눈 다음, 규칙이나 데이터를 사용하여 사람을 그룹화하는 것이 유용하거나 일부 사람들을 불공정하게 대우할 수 있는 방법에 대해 토론한다.
-        - AI 시스템이 얼굴을 인식하도록 어떻게 훈련되었는지 검토하고, 훈련 데이터의 잠재적 편견 소스를 평가하며, 개발자가 공정성을 개선하기 위해 취할 수 있는 단계를 제안한다.
+          - 다양한 이야기의 여러 캐릭터를 카테고리로 나눈 다음, 규칙이나 데이터를 사용하여 사람을 그룹화하는 것이 유용하거나 일부 사람들을 불공정하게 대우할 수 있는 방법에 대해 토론한다.
+          - AI 시스템이 얼굴을 인식하도록 어떻게 훈련되었는지 검토하고, 훈련 데이터의 잠재적 편견 소스를 평가하며, 개발자가 공정성을 개선하기 위해 취할 수 있는 단계를 제안한다.
         scenarios_fr:
-        - Diviser plusieurs personnages de différentes histoires en catégories, puis discuter de la façon dont l'utilisation de règles ou de données pour regrouper les gens peut être utile ou traiter certaines personnes de manière injuste.
-        - Examiner comment un système d'IA a été entraîné à reconnaître les visages, évaluer les sources potentielles de biais dans les données d'entraînement et suggérer des étapes que les développeurs pourraient prendre pour améliorer l'équité.
+          - Diviser plusieurs personnages de différentes histoires en catégories, puis discuter de la façon dont l'utilisation de règles ou de données pour regrouper les gens peut être utile ou traiter certaines personnes de manière injuste.
+          - Examiner comment un système d'IA a été entraîné à reconnaître les visages, évaluer les sources potentielles de biais dans les données d'entraînement et suggérer des étapes que les développeurs pourraient prendre pour améliorer l'équité.
         scenarios_de:
-        - Mehrere Charaktere aus verschiedenen Geschichten in Kategorien aufteilen, dann diskutieren, wie die Verwendung von Regeln oder Daten zur Gruppierung von Menschen nützlich sein oder manche Menschen unfair behandeln kann.
-        - Untersuchen, wie ein KI-System trainiert wurde, Gesichter zu erkennen, potenzielle Quellen von Voreingenommenheit in den Trainingsdaten bewerten und Schritte vorschlagen, die Entwickler unternehmen könnten, um die Fairness zu verbessern.
+          - Mehrere Charaktere aus verschiedenen Geschichten in Kategorien aufteilen, dann diskutieren, wie die Verwendung von Regeln oder Daten zur Gruppierung von Menschen nützlich sein oder manche Menschen unfair behandeln kann.
+          - Untersuchen, wie ein KI-System trainiert wurde, Gesichter zu erkennen, potenzielle Quellen von Voreingenommenheit in den Trainingsdaten bewerten und Schritte vorschlagen, die Entwickler unternehmen könnten, um die Fairness zu verbessern.
         scenarios_ru:
-        - Разделить несколько персонажей из разных историй на категории, затем обсудить, как использование правил или данных для группировки людей может быть полезным или несправедливо относиться к некоторым людям.
-        - Изучить, как система ИИ была обучена распознавать лица, оценить потенциальные источники предвзятости в обучающих данных и предложить шаги, которые разработчики могли бы предпринять для улучшения справедливости.
+          - Разделить несколько персонажей из разных историй на категории, затем обсудить, как использование правил или данных для группировки людей может быть полезным или несправедливо относиться к некоторым людям.
+          - Изучить, как система ИИ была обучена распознавать лица, оценить потенциальные источники предвзятости в обучающих данных и предложить шаги, которые разработчики могли бы предпринять для улучшения справедливости.
         scenarios_it:
-        - Dividere diversi personaggi di storie diverse in categorie, poi discutere come l'uso di regole o dati per raggruppare le persone possa essere utile o trattare alcune persone in modo ingiusto.
-        - Esaminare come un sistema di IA è stato addestrato a riconoscere i volti, valutare potenziali fonti di pregiudizio nei dati di addestramento e suggerire passi che gli sviluppatori potrebbero intraprendere per migliorare l'equità.
-        description_zhCN: '[ZHCN translation needed]'
-        description_pt: '[PT translation needed]'
-        description_ar: '[AR translation needed]'
-        description_id: '[ID translation needed]'
-        description_th: '[TH translation needed]'
-        content_zhCN: '[ZHCN translation needed]'
-        content_pt: '[PT translation needed]'
-        content_ar: '[AR translation needed]'
-        content_id: '[ID translation needed]'
-        content_th: '[TH translation needed]'
+          - Dividere diversi personaggi di storie diverse in categorie, poi discutere come l'uso di regole o dati per raggruppare le persone possa essere utile o trattare alcune persone in modo ingiusto.
+          - Esaminare come un sistema di IA è stato addestrato a riconoscere i volti, valutare potenziali fonti di pregiudizio nei dati di addestramento e suggerire passi che gli sviluppatori potrebbero intraprendere per migliorare l'equità.
+        description_zhCN: "[ZHCN translation needed]"
+        description_pt: "[PT translation needed]"
+        description_ar: "[AR translation needed]"
+        description_id: "[ID translation needed]"
+        description_th: "[TH translation needed]"
+        content_zhCN: "[ZHCN translation needed]"
+        content_pt: "[PT translation needed]"
+        content_ar: "[AR translation needed]"
+        content_id: "[ID translation needed]"
+        content_th: "[TH translation needed]"
         description_zhTW: 解釋AI如何可能被用來放大社會偏見。
         content_zhTW: 學習者研究AI系統（如臉部辨識或招聘演算法）如何反映人類決策和資料，並識別資料或設計中的偏見如何導致對不同群體的不公平結果。
         scenarios_zhTW:
-        - 將來自不同故事的角色分類，然後討論使用規則或資料對人群分組如何既有用又可能對某些人不公平。
-        - 檢視AI系統如何被訓練來辨識臉部，評估訓練資料中潛在的偏見來源，並建議開發者可以採取的改善公平性步驟。
+          - 將來自不同故事的角色分類，然後討論使用規則或資料對人群分組如何既有用又可能對某些人不公平。
+          - 檢視AI系統如何被訓練來辨識臉部，評估訓練資料中潛在的偏見來源，並建議開發者可以採取的改善公平性步驟。
       E5:
         description: Describe how AI systems consume energy and natural resources.
         description_es: Describir cómo los sistemas de IA consumen energía y recursos naturales.
@@ -281,11 +281,11 @@ domains:
         description_ru: Описывать, как системы ИИ потребляют энергию и природные ресурсы.
         description_it: Descrivere come i sistemi di IA consumano energia e risorse naturali.
         knowledge:
-        - K4.2
+          - K4.2
         skills:
-        - S6.1
+          - S6.1
         attitudes:
-        - A1.1
+          - A1.1
         content: Learners explore the environmental impact of AI, including its energy and data infrastructure, and consider how responsible design and use can support sustainability.
         content_es: Los estudiantes exploran el impacto ambiental de la IA, incluyendo su infraestructura energética y de datos, y consideran cómo el diseño y uso responsable pueden apoyar la sostenibilidad.
         content_ja: 学習者は、エネルギーとデータインフラストラクチャを含むAIの環境への影響を探求し、責任ある設計と使用が持続可能性をどのように支援できるかを考えます。
@@ -295,44 +295,44 @@ domains:
         content_ru: Учащиеся исследуют экологическое воздействие ИИ, включая его энергетическую и информационную инфраструктуру, и рассматривают, как ответственный дизайн и использование могут поддерживать устойчивость.
         content_it: Gli studenti esplorano l'impatto ambientale dell'IA, inclusa la sua infrastruttura energetica e di dati, e considerano come design e uso responsabili possano supportare la sostenibilità.
         scenarios:
-        - Create an infographic illustrating AI's environmental impacts, including the electricity it consumes, the devices it operates on, and the materials required to manufacture those devices.
-        - Compare AI's environmental costs with efforts to reduce them, then debate whether using AI in specific scenarios is environmentally responsible.
+          - Create an infographic illustrating AI's environmental impacts, including the electricity it consumes, the devices it operates on, and the materials required to manufacture those devices.
+          - Compare AI's environmental costs with efforts to reduce them, then debate whether using AI in specific scenarios is environmentally responsible.
         scenarios_es:
-        - Crear una infografía que ilustre los impactos ambientales de la IA, incluyendo la electricidad que consume, los dispositivos en los que opera y los materiales necesarios para fabricar esos dispositivos.
-        - Comparar los costos ambientales de la IA con los esfuerzos para reducirlos, luego debatir si usar IA en escenarios específicos es ambientalmente responsable.
+          - Crear una infografía que ilustre los impactos ambientales de la IA, incluyendo la electricidad que consume, los dispositivos en los que opera y los materiales necesarios para fabricar esos dispositivos.
+          - Comparar los costos ambientales de la IA con los esfuerzos para reducirlos, luego debatir si usar IA en escenarios específicos es ambientalmente responsable.
         scenarios_ja:
-        - AIの環境への影響を説明するインフォグラフィックを作成する。これには、AIが消費する電力、動作するデバイス、それらのデバイスの製造に必要な材料を含む。
-        - AIの環境コストとそれを削減する取り組みを比較し、特定のシナリオでAIを使用することが環境的に責任あることかどうかを議論する。
+          - AIの環境への影響を説明するインフォグラフィックを作成する。これには、AIが消費する電力、動作するデバイス、それらのデバイスの製造に必要な材料を含む。
+          - AIの環境コストとそれを削減する取り組みを比較し、特定のシナリオでAIを使用することが環境的に責任あることかどうかを議論する。
         scenarios_ko:
-        - AI가 소비하는 전력, 작동하는 장치, 그리고 이러한 장치를 제조하는 데 필요한 재료를 포함하여 AI의 환경 영향을 설명하는 인포그래픽을 만든다.
-        - AI의 환경 비용과 이를 줄이려는 노력을 비교한 다음, 특정 시나리오에서 AI를 사용하는 것이 환경적으로 책임감 있는지 토론한다.
+          - AI가 소비하는 전력, 작동하는 장치, 그리고 이러한 장치를 제조하는 데 필요한 재료를 포함하여 AI의 환경 영향을 설명하는 인포그래픽을 만든다.
+          - AI의 환경 비용과 이를 줄이려는 노력을 비교한 다음, 특정 시나리오에서 AI를 사용하는 것이 환경적으로 책임감 있는지 토론한다.
         scenarios_fr:
-        - Créer une infographie illustrant les impacts environnementaux de l'IA, y compris l'électricité qu'elle consomme, les appareils sur lesquels elle fonctionne et les matériaux nécessaires pour fabriquer ces appareils.
-        - Comparer les coûts environnementaux de l'IA avec les efforts pour les réduire, puis débattre de savoir si l'utilisation de l'IA dans des scénarios spécifiques est écologiquement responsable.
+          - Créer une infographie illustrant les impacts environnementaux de l'IA, y compris l'électricité qu'elle consomme, les appareils sur lesquels elle fonctionne et les matériaux nécessaires pour fabriquer ces appareils.
+          - Comparer les coûts environnementaux de l'IA avec les efforts pour les réduire, puis débattre de savoir si l'utilisation de l'IA dans des scénarios spécifiques est écologiquement responsable.
         scenarios_de:
-        - Eine Infografik erstellen, die die Umweltauswirkungen von KI veranschaulicht, einschließlich des Stroms, den sie verbraucht, der Geräte, auf denen sie läuft, und der Materialien, die zur Herstellung dieser Geräte benötigt werden.
-        - KIs Umweltkosten mit Bemühungen zu ihrer Reduzierung vergleichen, dann darüber diskutieren, ob die Verwendung von KI in bestimmten Szenarien umweltverantwortlich ist.
+          - Eine Infografik erstellen, die die Umweltauswirkungen von KI veranschaulicht, einschließlich des Stroms, den sie verbraucht, der Geräte, auf denen sie läuft, und der Materialien, die zur Herstellung dieser Geräte benötigt werden.
+          - KIs Umweltkosten mit Bemühungen zu ihrer Reduzierung vergleichen, dann darüber diskutieren, ob die Verwendung von KI in bestimmten Szenarien umweltverantwortlich ist.
         scenarios_ru:
-        - Создать инфографику, иллюстрирующую экологические воздействия ИИ, включая потребляемую им электроэнергию, устройства, на которых он работает, и материалы, необходимые для производства этих устройств.
-        - Сравнить экологические затраты ИИ с усилиями по их снижению, затем обсудить, является ли использование ИИ в конкретных сценариях экологически ответственным.
+          - Создать инфографику, иллюстрирующую экологические воздействия ИИ, включая потребляемую им электроэнергию, устройства, на которых он работает, и материалы, необходимые для производства этих устройств.
+          - Сравнить экологические затраты ИИ с усилиями по их снижению, затем обсудить, является ли использование ИИ в конкретных сценариях экологически ответственным.
         scenarios_it:
-        - Creare un'infografica che illustri gli impatti ambientali dell'IA, inclusa l'elettricità che consume, i dispositivi su cui opera e i materiali necessari per produrre quei dispositivi.
-        - Confrontare i costi ambientali dell'IA con gli sforzi per ridurli, poi dibattere se l'uso dell'IA in scenari specifici sia ambientalmente responsabile.
-        description_zhCN: '[ZHCN translation needed]'
-        description_pt: '[PT translation needed]'
-        description_ar: '[AR translation needed]'
-        description_id: '[ID translation needed]'
-        description_th: '[TH translation needed]'
-        content_zhCN: '[ZHCN translation needed]'
-        content_pt: '[PT translation needed]'
-        content_ar: '[AR translation needed]'
-        content_id: '[ID translation needed]'
-        content_th: '[TH translation needed]'
+          - Creare un'infografica che illustri gli impatti ambientali dell'IA, inclusa l'elettricità che consume, i dispositivi su cui opera e i materiali necessari per produrre quei dispositivi.
+          - Confrontare i costi ambientali dell'IA con gli sforzi per ridurli, poi dibattere se l'uso dell'IA in scenari specifici sia ambientalmente responsabile.
+        description_zhCN: "[ZHCN translation needed]"
+        description_pt: "[PT translation needed]"
+        description_ar: "[AR translation needed]"
+        description_id: "[ID translation needed]"
+        description_th: "[TH translation needed]"
+        content_zhCN: "[ZHCN translation needed]"
+        content_pt: "[PT translation needed]"
+        content_ar: "[AR translation needed]"
+        content_id: "[ID translation needed]"
+        content_th: "[TH translation needed]"
         description_zhTW: 描述AI系統如何消耗能源和自然資源。
         content_zhTW: 學習者探索AI的環境影響，包括其能源和資料基礎設施，並考慮負責任的設計和使用如何支持永續性。
         scenarios_zhTW:
-        - 製作資訊圖表，說明AI的環境影響，包括其消耗的電力、運行的設備，以及製造這些設備所需的材料。
-        - 比較AI的環境成本與減少這些成本的努力，然後辯論在特定情境下使用AI是否環境友善。
+          - 製作資訊圖表，說明AI的環境影響，包括其消耗的電力、運行的設備，以及製造這些設備所需的材料。
+          - 比較AI的環境成本與減少這些成本的努力，然後辯論在特定情境下使用AI是否環境友善。
       E6:
         description: Analyze how well the use of an AI system aligns with ethical principles and human values.
         description_es: Analizar qué tan bien el uso de un sistema de IA se alinea con principios éticos y valores humanos.
@@ -343,15 +343,15 @@ domains:
         description_ru: Анализировать, насколько хорошо использование системы ИИ соответствует этическим принципам и человеческим ценностям.
         description_it: Analizzare quanto bene l'uso di un sistema di IA si allinea con i principi etici e i valori umani.
         knowledge:
-        - K1.4
-        - K3.3
-        - K5.4
+          - K1.4
+          - K3.3
+          - K5.4
         skills:
-        - S6.1
-        - S1.1
-        - S5.1
+          - S6.1
+          - S1.1
+          - S5.1
         attitudes:
-        - A1.1
+          - A1.1
         content: Learners assess whether using AI in a given situation, such as surveillance cameras in public spaces or moderating online content, supports values such as fairness, transparency, and privacy. They reflect on whether its use is appropriate, beneficial, or potentially harmful.
         content_es: Los estudiantes evalúan si el uso de la IA en una situación dada, como las cámaras de vigilancia en espacios públicos o la moderación de contenido en línea, apoya valores como la equidad, la transparencia y la privacidad. Reflexionan sobre si su uso es apropiado, beneficioso o potencialmente dañino.
         content_ja: 学習者は、公共の場における監視カメラやオンラインコンテンツのモデレーションなど、特定の状況でAIを使用することが公平性、透明性、プライバシーなどの価値を支持しているかどうかを評価します。彼らは、その使用が適切であるか、有益であるか、または潜在的に有害であるかを反映します。
@@ -361,44 +361,44 @@ domains:
         content_ru: Учащиеся оценивают, поддерживает ли использование ИИ в данной ситуации, такой как камеры наблюдения в общественных местах или модерация онлайн-контента, такие ценности, как справедливость, прозрачность и конфиденциальность. Они размышляют о том, является ли его использование уместным, полезным или потенциально вредным.
         content_it: Gli studenti valutano se l'uso dell'IA in una determinata situazione, come le telecamere di sorveglianza negli spazi pubblici o la moderazione dei contenuti online, supporta valori come l'equità, la trasparenza e la privacy. Riflettono su se il suo uso sia appropriato, vantaggioso o potenzialmente dannoso.
         scenarios:
-        - Evaluate if AI is used kindly, fairly, and respectfully in multiple scenarios, such as editing or sharing someone's photo without permission.
-        - Use an AI writing assistant to revise a personal narrative, then reflect on whether its suggestions supported authentic voice or changed the story undesirably.
+          - Evaluate if AI is used kindly, fairly, and respectfully in multiple scenarios, such as editing or sharing someone's photo without permission.
+          - Use an AI writing assistant to revise a personal narrative, then reflect on whether its suggestions supported authentic voice or changed the story undesirably.
         scenarios_es:
-        - Evaluar si la IA se utiliza de manera amable, justa y respetuosa en múltiples escenarios, como editar o compartir la foto de alguien sin permiso.
-        - Usar un asistente de escritura de IA para revisar una narrativa personal, luego reflexionar sobre si sus sugerencias apoyaron una voz auténtica o cambiaron la historia de manera indeseable.
+          - Evaluar si la IA se utiliza de manera amable, justa y respetuosa en múltiples escenarios, como editar o compartir la foto de alguien sin permiso.
+          - Usar un asistente de escritura de IA para revisar una narrativa personal, luego reflexionar sobre si sus sugerencias apoyaron una voz auténtica o cambiaron la historia de manera indeseable.
         scenarios_ja:
-        - AIが他人の写真を無断で編集または共有するなど、複数のシナリオで親切、公平、尊重をもって使用されているか評価します。
-        - AIライティングアシスタントを使用して個人的な物語を修正し、その提案が本物の声を支持したか、物語を望ましくない形で変更したかを反映します。
+          - AIが他人の写真を無断で編集または共有するなど、複数のシナリオで親切、公平、尊重をもって使用されているか評価します。
+          - AIライティングアシスタントを使用して個人的な物語を修正し、その提案が本物の声を支持したか、物語を望ましくない形で変更したかを反映します。
         scenarios_ko:
-        - AI가 다른 사람의 사진을 무단으로 편집하거나 공유하는 것과 같은 여러 시나리오에서 친절하고 공정하며 존중하는 방식으로 사용되는지 평가합니다.
-        - AI 작문 도우미를 사용하여 개인적인 이야기를 수정한 다음, 그 제안이 진정한 목소리를 지원했는지 또는 이야기를 바람직하지 않게 변경했는지 반성합니다.
+          - AI가 다른 사람의 사진을 무단으로 편집하거나 공유하는 것과 같은 여러 시나리오에서 친절하고 공정하며 존중하는 방식으로 사용되는지 평가합니다.
+          - AI 작문 도우미를 사용하여 개인적인 이야기를 수정한 다음, 그 제안이 진정한 목소리를 지원했는지 또는 이야기를 바람직하지 않게 변경했는지 반성합니다.
         scenarios_fr:
-        - Évaluer si l'IA est utilisée de manière aimable, juste et respectueuse dans plusieurs scénarios, comme éditer ou partager la photo de quelqu'un sans permission.
-        - Utiliser un assistant d'écriture IA pour réviser un récit personnel, puis réfléchir à savoir si ses suggestions ont soutenu une voix authentique ou ont changé l'histoire de manière indésirable.
+          - Évaluer si l'IA est utilisée de manière aimable, juste et respectueuse dans plusieurs scénarios, comme éditer ou partager la photo de quelqu'un sans permission.
+          - Utiliser un assistant d'écriture IA pour réviser un récit personnel, puis réfléchir à savoir si ses suggestions ont soutenu une voix authentique ou ont changé l'histoire de manière indésirable.
         scenarios_de:
-        - Bewerten, ob KI in mehreren Szenarien freundlich, fair und respektvoll eingesetzt wird, z. B. beim Bearbeiten oder Teilen eines Fotos einer Person ohne deren Erlaubnis.
-        - Einen KI-Schreibassistenten verwenden, um eine persönliche Erzählung zu überarbeiten, und dann reflektieren, ob seine Vorschläge die authentische Stimme unterstützt oder die Geschichte unerwünscht verändert haben.
+          - Bewerten, ob KI in mehreren Szenarien freundlich, fair und respektvoll eingesetzt wird, z. B. beim Bearbeiten oder Teilen eines Fotos einer Person ohne deren Erlaubnis.
+          - Einen KI-Schreibassistenten verwenden, um eine persönliche Erzählung zu überarbeiten, und dann reflektieren, ob seine Vorschläge die authentische Stimme unterstützt oder die Geschichte unerwünscht verändert haben.
         scenarios_ru:
-        - Оценить, используется ли ИИ доброжелательно, справедливо и с уважением в нескольких сценариях, таких как редактирование или обмен фотографией кого-то без разрешения.
-        - Использовать помощника по написанию ИИ для редактирования личного повествования, а затем размышлять о том, поддерживали ли его предложения подлинный голос или изменили историю нежелательным образом.
+          - Оценить, используется ли ИИ доброжелательно, справедливо и с уважением в нескольких сценариях, таких как редактирование или обмен фотографией кого-то без разрешения.
+          - Использовать помощника по написанию ИИ для редактирования личного повествования, а затем размышлять о том, поддерживали ли его предложения подлинный голос или изменили историю нежелательным образом.
         scenarios_it:
-        - Valutare se l'IA viene utilizzata in modo gentile, equo e rispettoso in più scenari, come modificare o condividere la foto di qualcuno senza permesso.
-        - Utilizzare un assistente di scrittura IA per rivedere una narrazione personale, quindi riflettere su se i suoi suggerimenti hanno supportato una voce autentica o hanno cambiato la storia in modo indesiderato.
-        description_zhCN: '[ZHCN translation needed]'
-        description_pt: '[PT translation needed]'
-        description_ar: '[AR translation needed]'
-        description_id: '[ID translation needed]'
-        description_th: '[TH translation needed]'
-        content_zhCN: '[ZHCN translation needed]'
-        content_pt: '[PT translation needed]'
-        content_ar: '[AR translation needed]'
-        content_id: '[ID translation needed]'
-        content_th: '[TH translation needed]'
+          - Valutare se l'IA viene utilizzata in modo gentile, equo e rispettoso in più scenari, come modificare o condividere la foto di qualcuno senza permesso.
+          - Utilizzare un assistente di scrittura IA per rivedere una narrazione personale, quindi riflettere su se i suoi suggerimenti hanno supportato una voce autentica o hanno cambiato la storia in modo indesiderato.
+        description_zhCN: "[ZHCN translation needed]"
+        description_pt: "[PT translation needed]"
+        description_ar: "[AR translation needed]"
+        description_id: "[ID translation needed]"
+        description_th: "[TH translation needed]"
+        content_zhCN: "[ZHCN translation needed]"
+        content_pt: "[PT translation needed]"
+        content_ar: "[AR translation needed]"
+        content_id: "[ID translation needed]"
+        content_th: "[TH translation needed]"
         description_zhTW: 分析AI系統的使用如何與倫理原則和人類價值觀相符。
         content_zhTW: 學習者評估在特定情況下使用AI（如在公共場所設置監控攝影機或調節線上內容）是否支持公平、透明和隱私等價值觀。他們反思其使用是否適當、有益或潛在有害。
         scenarios_zhTW:
-        - 評估AI在多種情境中是否被善意、公平和尊重地使用，例如未經許可編輯或分享他人照片。
-        - 使用AI寫作助手修改個人敘述，然後反思其建議是否支持真實聲音，或是以不理想的方式改變了故事。
+          - 評估AI在多種情境中是否被善意、公平和尊重地使用，例如未經許可編輯或分享他人照片。
+          - 使用AI寫作助手修改個人敘述，然後反思其建議是否支持真實聲音，或是以不理想的方式改變了故事。
       E7:
         description: Connect AI's social & ethical impacts to technical capabilities and limitations.
         description_es: Conectar los impactos sociales y éticos de la IA con las capacidades y limitaciones técnicas.
@@ -409,15 +409,15 @@ domains:
         description_ru: Связать социальные и этические последствия ИИ с техническими возможностями и ограничениями.
         description_it: Collegare gli impatti sociali ed etici dell'IA alle capacità e limitazioni tecniche.
         knowledge:
-        - K2.1
-        - K5.2
+          - K2.1
+          - K5.2
         skills:
-        - S6.1
-        - S5.1
+          - S6.1
+          - S5.1
         attitudes:
-        - A2.1
-        - A5.1
-        - A1.1
+          - A2.1
+          - A5.1
+          - A1.1
         content: Learners explore how AI's strengths and weaknesses affect how it's used in society. They connect the design and function of AI systems to real-world impact on people, communities, and systems.
         content_es: Los estudiantes exploran cómo las fortalezas y debilidades de la IA afectan su uso en la sociedad. Conectan el diseño y la función de los sistemas de IA con el impacto en el mundo real sobre las personas, las comunidades y los sistemas.
         content_ja: 学習者は、AIの強みと弱みが社会での使用にどのように影響するかを探求します。彼らは、AIシステムの設計と機能を人々、コミュニティ、システムへの現実世界の影響に結びつけます。
@@ -427,58 +427,58 @@ domains:
         content_ru: Учащиеся исследуют, как сильные и слабые стороны ИИ влияют на его использование в обществе. Они связывают проектирование и функции систем ИИ с реальным воздействием на людей, сообщества и системы.
         content_it: Gli studenti esplorano come i punti di forza e di debolezza dell'IA influenzano il suo utilizzo nella società. Collegano il design e la funzione dei sistemi di IA all'impatto reale sulle persone, le comunità e i sistemi.
         scenarios:
-        - Discuss why a smartphone voice assistant sometimes doesn't understand commands or questions, and when to turn to another source for information.
-        - Investigate how predictive AI calculates credit scores or loan eligibility. Then explore which data is used, what bias might appear, and how mathematical models can reinforce inequality.
+          - Discuss why a smartphone voice assistant sometimes doesn't understand commands or questions, and when to turn to another source for information.
+          - Investigate how predictive AI calculates credit scores or loan eligibility. Then explore which data is used, what bias might appear, and how mathematical models can reinforce inequality.
         scenarios_es:
-        - Discutir por qué un asistente de voz de smartphone a veces no entiende comandos o preguntas, y cuándo recurrir a otra fuente de información.
-        - Investigar cómo la IA predictiva calcula puntajes de crédito o elegibilidad para préstamos. Luego, explorar qué datos se utilizan, qué sesgos pueden aparecer y cómo los modelos matemáticos pueden reforzar la desigualdad.
+          - Discutir por qué un asistente de voz de smartphone a veces no entiende comandos o preguntas, y cuándo recurrir a otra fuente de información.
+          - Investigar cómo la IA predictiva calcula puntajes de crédito o elegibilidad para préstamos. Luego, explorar qué datos se utilizan, qué sesgos pueden aparecer y cómo los modelos matemáticos pueden reforzar la desigualdad.
         scenarios_ja:
-        - スマートフォンの音声アシスタントが時々コマンドや質問を理解できない理由と、いつ他の情報源に頼るべきかを議論します。
-        - 予測AIが信用スコアやローンの適格性を計算する方法を調査します。その後、どのデータが使用され、どのようなバイアスが現れる可能性があるか、数学的モデルがどのように不平等を強化するかを探ります。
+          - スマートフォンの音声アシスタントが時々コマンドや質問を理解できない理由と、いつ他の情報源に頼るべきかを議論します。
+          - 予測AIが信用スコアやローンの適格性を計算する方法を調査します。その後、どのデータが使用され、どのようなバイアスが現れる可能性があるか、数学的モデルがどのように不平等を強化するかを探ります。
         scenarios_ko:
-        - 스마트폰 음성 비서가 때때로 명령이나 질문을 이해하지 못하는 이유와 언제 다른 정보 출처로 전환해야 하는지 논의합니다.
-        - 예측 AI가 신용 점수 또는 대출 자격을 계산하는 방법을 조사합니다. 그런 다음 어떤 데이터가 사용되는지, 어떤 편향이 나타날 수 있는지, 수학적 모델이 어떻게 불평등을 강화할 수 있는지 탐구합니다.
+          - 스마트폰 음성 비서가 때때로 명령이나 질문을 이해하지 못하는 이유와 언제 다른 정보 출처로 전환해야 하는지 논의합니다.
+          - 예측 AI가 신용 점수 또는 대출 자격을 계산하는 방법을 조사합니다. 그런 다음 어떤 데이터가 사용되는지, 어떤 편향이 나타날 수 있는지, 수학적 모델이 어떻게 불평등을 강화할 수 있는지 탐구합니다.
         scenarios_fr:
-        - Discuter des raisons pour lesquelles un assistant vocal de smartphone ne comprend parfois pas les commandes ou les questions, et quand se tourner vers une autre source d'information.
-        - Enquêter sur la façon dont l'IA prédictive calcule les scores de crédit ou l'éligibilité aux prêts. Ensuite, explorer quelles données sont utilisées, quels biais peuvent apparaître et comment les modèles mathématiques peuvent renforcer l'inégalité.
+          - Discuter des raisons pour lesquelles un assistant vocal de smartphone ne comprend parfois pas les commandes ou les questions, et quand se tourner vers une autre source d'information.
+          - Enquêter sur la façon dont l'IA prédictive calcule les scores de crédit ou l'éligibilité aux prêts. Ensuite, explorer quelles données sont utilisées, quels biais peuvent apparaître et comment les modèles mathématiques peuvent renforcer l'inégalité.
         scenarios_de:
-        - Diskutieren, warum ein Smartphone-Sprachassistent manchmal Befehle oder Fragen nicht versteht und wann man auf eine andere Informationsquelle zurückgreifen sollte.
-        - Untersuchen, wie prädiktive KI Kreditbewertungen oder die Kreditwürdigkeit berechnet. Dann erkunden, welche Daten verwendet werden, welche Vorurteile auftreten können und wie mathematische Modelle Ungleichheit verstärken können.
+          - Diskutieren, warum ein Smartphone-Sprachassistent manchmal Befehle oder Fragen nicht versteht und wann man auf eine andere Informationsquelle zurückgreifen sollte.
+          - Untersuchen, wie prädiktive KI Kreditbewertungen oder die Kreditwürdigkeit berechnet. Dann erkunden, welche Daten verwendet werden, welche Vorurteile auftreten können und wie mathematische Modelle Ungleichheit verstärken können.
         scenarios_ru:
-        - Обсудить, почему голосовой помощник смартфона иногда не понимает команды или вопросы, и когда следует обратиться к другому источнику информации.
-        - Исследовать, как предсказательный ИИ рассчитывает кредитные рейтинги или право на заем. Затем изучить, какие данные используются, какие предвзятости могут появиться и как математические модели могут укреплять неравенство.
+          - Обсудить, почему голосовой помощник смартфона иногда не понимает команды или вопросы, и когда следует обратиться к другому источнику информации.
+          - Исследовать, как предсказательный ИИ рассчитывает кредитные рейтинги или право на заем. Затем изучить, какие данные используются, какие предвзятости могут появиться и как математические модели могут укреплять неравенство.
         scenarios_it:
-        - Discutere del motivo per cui un assistente vocale per smartphone a volte non comprende comandi o domande e quando rivolgersi a un'altra fonte di informazioni.
-        - Indagare su come l'IA predittiva calcola i punteggi di credito o l'idoneità ai prestiti. Quindi esplorare quali dati vengono utilizzati, quali pregiudizi potrebbero apparire e come i modelli matematici possono rafforzare le disuguaglianze.
-        description_zhCN: '[ZHCN translation needed]'
-        description_pt: '[PT translation needed]'
-        description_ar: '[AR translation needed]'
-        description_id: '[ID translation needed]'
-        description_th: '[TH translation needed]'
-        content_zhCN: '[ZHCN translation needed]'
-        content_pt: '[PT translation needed]'
-        content_ar: '[AR translation needed]'
-        content_id: '[ID translation needed]'
-        content_th: '[TH translation needed]'
+          - Discutere del motivo per cui un assistente vocale per smartphone a volte non comprende comandi o domande e quando rivolgersi a un'altra fonte di informazioni.
+          - Indagare su come l'IA predittiva calcola i punteggi di credito o l'idoneità ai prestiti. Quindi esplorare quali dati vengono utilizzati, quali pregiudizi potrebbero apparire e come i modelli matematici possono rafforzare le disuguaglianze.
+        description_zhCN: "[ZHCN translation needed]"
+        description_pt: "[PT translation needed]"
+        description_ar: "[AR translation needed]"
+        description_id: "[ID translation needed]"
+        description_th: "[TH translation needed]"
+        content_zhCN: "[ZHCN translation needed]"
+        content_pt: "[PT translation needed]"
+        content_ar: "[AR translation needed]"
+        content_id: "[ID translation needed]"
+        content_th: "[TH translation needed]"
         description_zhTW: 將AI的社會和倫理影響與技術能力和局限性聯繫起來。
         content_zhTW: 學習者探索AI的優勢和弱點如何影響其在社會中的使用。他們將AI系統的設計和功能與對人們、社區和系統的現實世界影響聯繫起來。
         scenarios_zhTW:
-        - 討論為什麼智慧型手機語音助手有時無法理解指令或問題，以及何時應該轉向其他資訊來源。
-        - 研究預測性AI如何計算信用評分或貸款資格。然後探索使用了哪些資料、可能出現什麼偏見，以及數學模型如何可能強化不平等。
-    emoji_zhTW: '[ZHTW translation needed]'
+          - 討論為什麼智慧型手機語音助手有時無法理解指令或問題，以及何時應該轉向其他資訊來源。
+          - 研究預測性AI如何計算信用評分或貸款資格。然後探索使用了哪些資料、可能出現什麼偏見，以及數學模型如何可能強化不平等。
+    emoji_zhTW: "[ZHTW translation needed]"
     emoji_zhCN: 🎯
     emoji_pt: 🎯
     emoji_ar: 🎯
     emoji_id: 🎯
     emoji_th: 🎯
-    emoji_es: '[ES translation needed]'
-    emoji_ja: '[JA translation needed]'
-    emoji_ko: '[KO translation needed]'
-    emoji_fr: '[FR translation needed]'
-    emoji_de: '[DE translation needed]'
-    emoji_ru: '[RU translation needed]'
-    emoji_it: '[IT translation needed]'
-    overview_zhTW: '[ZHTW translation needed]'
+    emoji_es: "[ES translation needed]"
+    emoji_ja: "[JA translation needed]"
+    emoji_ko: "[KO translation needed]"
+    emoji_fr: "[FR translation needed]"
+    emoji_de: "[DE translation needed]"
+    emoji_ru: "[RU translation needed]"
+    emoji_it: "[IT translation needed]"
+    overview_zhTW: "[ZHTW translation needed]"
   Creating_with_AI:
     emoji: 🛠️
     overview: Consists of collaborating with an AI system in a creative or problem-solving process; it involves guiding and refining AI output through prompts and feedback while ensuring the content remains fair and appropriate, and it also includes ethical considerations related to content ownership, attribution, and the responsible use of existing materials.
@@ -505,12 +505,12 @@ domains:
         description_ru: Использовать системы ИИ для исследования новых перспектив и подходов, основанных на оригинальных идеях.
         description_it: Utilizzare sistemi di IA per esplorare nuove prospettive e approcci che si basano su idee originali.
         knowledge:
-        - K4.1
+          - K4.1
         skills:
-        - S2.1
+          - S2.1
         attitudes:
-        - A3.1
-        - A4.1
+          - A3.1
+          - A4.1
         content: Learners experiment with AI to expand their thinking, generate new ideas, or consider alternative viewpoints. They stay accountable for the final content while letting AI support their creative process.
         content_es: Los estudiantes experimentan con la IA para expandir su pensamiento, generar nuevas ideas o considerar puntos de vista alternativos. Se mantienen responsables del contenido final mientras permiten que la IA apoye su proceso creativo.
         content_ja: 学習者は、AIを使って思考を広げ、新しいアイデアを生み出したり、代替的な視点を考慮したりします。彼らはAIが創造的なプロセスをサポートする一方で、最終的なコンテンツに責任を持ちます。
@@ -520,44 +520,44 @@ domains:
         content_ru: Учащиеся экспериментируют с ИИ, чтобы расширить свое мышление, генерировать новые идеи или рассматривать альтернативные точки зрения. Они остаются ответственными за окончательный контент, позволяя ИИ поддерживать их творческий процесс.
         content_it: Gli studenti sperimentano con l'IA per espandere il loro pensiero, generare nuove idee o considerare punti di vista alternativi. Rimangono responsabili del contenuto finale mentre lasciano che l'IA supporti il loro processo creativo.
         scenarios:
-        - Evaluate AI-generated images to create story settings based on learner ideas (e.g., 'a jungle in space'), then write new stories inspired by unexpected results.
-        - Use AI to develop counterarguments for a class debate to anticipate and address opposing viewpoints.
+          - Evaluate AI-generated images to create story settings based on learner ideas (e.g., 'a jungle in space'), then write new stories inspired by unexpected results.
+          - Use AI to develop counterarguments for a class debate to anticipate and address opposing viewpoints.
         scenarios_es:
-        - Evaluar imágenes generadas por IA para crear escenarios de historias basadas en las ideas de los estudiantes (por ejemplo, 'una jungla en el espacio'), y luego escribir nuevas historias inspiradas en resultados inesperados.
-        - Usar IA para desarrollar contraargumentos para un debate en clase para anticipar y abordar puntos de vista opuestos.
+          - Evaluar imágenes generadas por IA para crear escenarios de historias basadas en las ideas de los estudiantes (por ejemplo, 'una jungla en el espacio'), y luego escribir nuevas historias inspiradas en resultados inesperados.
+          - Usar IA para desarrollar contraargumentos para un debate en clase para anticipar y abordar puntos de vista opuestos.
         scenarios_ja:
-        - 学習者のアイデア（例：『宇宙のジャングル』）に基づいて物語の設定を作成するためにAI生成の画像を評価し、予期しない結果に触発された新しい物語を書く。
-        - クラスの討論のために反論を展開するためにAIを使用し、対立する視点に対処する。
+          - 学習者のアイデア（例：『宇宙のジャングル』）に基づいて物語の設定を作成するためにAI生成の画像を評価し、予期しない結果に触発された新しい物語を書く。
+          - クラスの討論のために反論を展開するためにAIを使用し、対立する視点に対処する。
         scenarios_ko:
-        - '학습자의 아이디어(예: ''우주 속 정글'')에 기반하여 이야기 설정을 만들기 위해 AI가 생성한 이미지를 평가한 다음, 예상치 못한 결과에 영감을 받아 새로운 이야기를 작성합니다.'
-        - AI를 사용하여 수업 토론을 위한 반론을 개발하여 반대 관점을 예상하고 다룹니다.
+          - "학습자의 아이디어(예: '우주 속 정글')에 기반하여 이야기 설정을 만들기 위해 AI가 생성한 이미지를 평가한 다음, 예상치 못한 결과에 영감을 받아 새로운 이야기를 작성합니다."
+          - AI를 사용하여 수업 토론을 위한 반론을 개발하여 반대 관점을 예상하고 다룹니다.
         scenarios_fr:
-        - Évaluer des images générées par l'IA pour créer des décors d'histoires basés sur les idées des apprenants (par exemple, 'une jungle dans l'espace'), puis écrire de nouvelles histoires inspirées par des résultats inattendus.
-        - Utiliser l'IA pour développer des contre-arguments pour un débat en classe afin d'anticiper et de traiter des points de vue opposés.
+          - Évaluer des images générées par l'IA pour créer des décors d'histoires basés sur les idées des apprenants (par exemple, 'une jungle dans l'espace'), puis écrire de nouvelles histoires inspirées par des résultats inattendus.
+          - Utiliser l'IA pour développer des contre-arguments pour un débat en classe afin d'anticiper et de traiter des points de vue opposés.
         scenarios_de:
-        - KI-generierte Bilder bewerten, um Geschichtensettings basierend auf den Ideen der Lernenden zu erstellen (z.B. 'ein Dschungel im Weltraum'), und dann neue Geschichten schreiben, die von unerwarteten Ergebnissen inspiriert sind.
-        - KI nutzen, um Gegenargumente für eine Klassendebatte zu entwickeln, um gegensätzliche Standpunkte vorherzusehen und anzugehen.
+          - KI-generierte Bilder bewerten, um Geschichtensettings basierend auf den Ideen der Lernenden zu erstellen (z.B. 'ein Dschungel im Weltraum'), und dann neue Geschichten schreiben, die von unerwarteten Ergebnissen inspiriert sind.
+          - KI nutzen, um Gegenargumente für eine Klassendebatte zu entwickeln, um gegensätzliche Standpunkte vorherzusehen und anzugehen.
         scenarios_ru:
-        - Оценить изображения, сгенерированные ИИ, чтобы создать сценарии историй на основе идей учащихся (например, 'джунгли в космосе'), а затем написать новые истории, вдохновленные неожиданными результатами.
-        - Использовать ИИ для разработки контраргументов для классной дискуссии, чтобы предвидеть и учесть противоположные точки зрения.
+          - Оценить изображения, сгенерированные ИИ, чтобы создать сценарии историй на основе идей учащихся (например, 'джунгли в космосе'), а затем написать новые истории, вдохновленные неожиданными результатами.
+          - Использовать ИИ для разработки контраргументов для классной дискуссии, чтобы предвидеть и учесть противоположные точки зрения.
         scenarios_it:
-        - Valutare immagini generate dall'IA per creare ambientazioni di storie basate sulle idee degli studenti (ad esempio, 'una giungla nello spazio'), quindi scrivere nuove storie ispirate da risultati inaspettati.
-        - Utilizzare l'IA per sviluppare controargomentazioni per un dibattito in classe per anticipare e affrontare punti di vista opposti.
-        description_zhCN: '[ZHCN translation needed]'
-        description_pt: '[PT translation needed]'
-        description_ar: '[AR translation needed]'
-        description_id: '[ID translation needed]'
-        description_th: '[TH translation needed]'
-        content_zhCN: '[ZHCN translation needed]'
-        content_pt: '[PT translation needed]'
-        content_ar: '[AR translation needed]'
-        content_id: '[ID translation needed]'
-        content_th: '[TH translation needed]'
+          - Valutare immagini generate dall'IA per creare ambientazioni di storie basate sulle idee degli studenti (ad esempio, 'una giungla nello spazio'), quindi scrivere nuove storie ispirate da risultati inaspettati.
+          - Utilizzare l'IA per sviluppare controargomentazioni per un dibattito in classe per anticipare e affrontare punti di vista opposti.
+        description_zhCN: "[ZHCN translation needed]"
+        description_pt: "[PT translation needed]"
+        description_ar: "[AR translation needed]"
+        description_id: "[ID translation needed]"
+        description_th: "[TH translation needed]"
+        content_zhCN: "[ZHCN translation needed]"
+        content_pt: "[PT translation needed]"
+        content_ar: "[AR translation needed]"
+        content_id: "[ID translation needed]"
+        content_th: "[TH translation needed]"
         description_zhTW: 使用AI系統探索建立在原創想法基礎上的新觀點和方法。
         content_zhTW: 學習者嘗試使用AI來擴展思維、產生新想法或考慮替代觀點。他們在讓AI支持創意過程的同時，對最終內容負責。
         scenarios_zhTW:
-        - 評估AI生成的圖像，根據學習者的想法創建故事背景（如「太空中的叢林」），然後撰寫受到意外結果啟發的新故事。
-        - 使用AI為課堂辯論開發反駁論點，以預期和應對對立觀點。
+          - 評估AI生成的圖像，根據學習者的想法創建故事背景（如「太空中的叢林」），然後撰寫受到意外結果啟發的新故事。
+          - 使用AI為課堂辯論開發反駁論點，以預期和應對對立觀點。
       C2:
         description: Visualize, prototype, and combine ideas using different types of AI systems.
         description_es: Visualizar, prototipar y combinar ideas utilizando diferentes tipos de sistemas de IA.
@@ -568,13 +568,13 @@ domains:
         description_ru: Визуализировать, прототипировать и комбинировать идеи, используя различные типы систем ИИ.
         description_it: Visualizzare, prototipare e combinare idee utilizzando diversi tipi di sistemi di IA.
         knowledge:
-        - K1.4
+          - K1.4
         skills:
-        - S4.1
-        - S2.1
+          - S4.1
+          - S2.1
         attitudes:
-        - A2.1
-        - A4.1
+          - A2.1
+          - A4.1
         content: Learners try out AI tools that operate in different formats (text, images, music, etc.) to explore and refine new ideas. They combine outputs into a meaningful product or solution.
         content_es: Los estudiantes prueban herramientas de IA que operan en diferentes formatos (texto, imágenes, música, etc.) para explorar y refinar nuevas ideas. Combinan los resultados en un producto o solución significativa.
         content_ja: 学習者は、さまざまな形式（テキスト、画像、音楽など）で動作するAIツールを試して、新しいアイデアを探求し、洗練させます。彼らは出力を意味のある製品や解決策に結合します。
@@ -584,44 +584,44 @@ domains:
         content_ru: Учащиеся экспериментируют с ИИ, чтобы расширить свое мышление, генерировать новые идеи или рассматривать альтернативные точки зрения. Они остаются ответственными за окончательный контент, позволяя ИИ поддерживать их творческий процесс.
         content_it: Gli studenti sperimentano con l'IA per espandere il loro pensiero, generare nuove idee o considerare punti di vista alternativi. Rimangono responsabili del contenuto finale mentre lasciano che l'IA supporti il loro processo creativo.
         scenarios:
-        - Use an AI music tool to create a short song to describe a season, then experiment with different moods, instruments, and lyrics, and combine learners' favorite parts into a final track.
-        - Use AI tools to explore different formats (e.g., text, graphics, music) for a public awareness campaign and combine elements from each with existing ideas to create a final product.
+          - Use an AI music tool to create a short song to describe a season, then experiment with different moods, instruments, and lyrics, and combine learners' favorite parts into a final track.
+          - Use AI tools to explore different formats (e.g., text, graphics, music) for a public awareness campaign and combine elements from each with existing ideas to create a final product.
         scenarios_es:
-        - Usar una herramienta de música de IA para crear una canción corta que describa una temporada, luego experimentar con diferentes estados de ánimo, instrumentos y letras, y combinar las partes favoritas de los estudiantes en una pista final.
-        - Utilizar herramientas de IA para explorar diferentes formatos (por ejemplo, texto, gráficos, música) para una campaña de concienciación pública y combinar elementos de cada uno con ideas existentes para crear un producto final.
+          - Usar una herramienta de música de IA para crear una canción corta que describa una temporada, luego experimentar con diferentes estados de ánimo, instrumentos y letras, y combinar las partes favoritas de los estudiantes en una pista final.
+          - Utilizar herramientas de IA para explorar diferentes formatos (por ejemplo, texto, gráficos, música) para una campaña de concienciación pública y combinar elementos de cada uno con ideas existentes para crear un producto final.
         scenarios_ja:
-        - AI音楽ツールを使用して季節を説明する短い曲を作成し、さまざまなムード、楽器、歌詞を試し、学習者のお気に入りの部分を組み合わせて最終トラックを作成します。
-        - AIツールを使用して公共意識キャンペーンのさまざまな形式（テキスト、グラフィックス、音楽など）を探求し、それぞれの要素を既存のアイデアと組み合わせて最終製品を作成します。
+          - AI音楽ツールを使用して季節を説明する短い曲を作成し、さまざまなムード、楽器、歌詞を試し、学習者のお気に入りの部分を組み合わせて最終トラックを作成します。
+          - AIツールを使用して公共意識キャンペーンのさまざまな形式（テキスト、グラフィックス、音楽など）を探求し、それぞれの要素を既存のアイデアと組み合わせて最終製品を作成します。
         scenarios_ko:
-        - AI 음악 도구를 사용하여 계절을 설명하는 짧은 노래를 만들고, 다양한 분위기, 악기 및 가사를 실험한 다음, 학습자들이 가장 좋아하는 부분을 결합하여 최종 트랙을 만듭니다.
-        - 'AI 도구를 사용하여 공공 인식 캠페인을 위한 다양한 형식(예: 텍스트, 그래픽, 음악)을 탐색하고 각 형식의 요소를 기존 아이디어와 결합하여 최종 제품을 만듭니다.'
+          - AI 음악 도구를 사용하여 계절을 설명하는 짧은 노래를 만들고, 다양한 분위기, 악기 및 가사를 실험한 다음, 학습자들이 가장 좋아하는 부분을 결합하여 최종 트랙을 만듭니다.
+          - "AI 도구를 사용하여 공공 인식 캠페인을 위한 다양한 형식(예: 텍스트, 그래픽, 음악)을 탐색하고 각 형식의 요소를 기존 아이디어와 결합하여 최종 제품을 만듭니다."
         scenarios_fr:
-        - Utiliser un outil de musique IA pour créer une courte chanson décrivant une saison, puis expérimenter avec différentes ambiances, instruments et paroles, et combiner les parties préférées des apprenants en une piste finale.
-        - Utiliser des outils d'IA pour explorer différents formats (par exemple, texte, graphiques, musique) pour une campagne de sensibilisation publique et combiner des éléments de chacun avec des idées existantes pour créer un produit final.
+          - Utiliser un outil de musique IA pour créer une courte chanson décrivant une saison, puis expérimenter avec différentes ambiances, instruments et paroles, et combiner les parties préférées des apprenants en une piste finale.
+          - Utiliser des outils d'IA pour explorer différents formats (par exemple, texte, graphiques, musique) pour une campagne de sensibilisation publique et combiner des éléments de chacun avec des idées existantes pour créer un produit final.
         scenarios_de:
-        - Ein KI-Musiktool verwenden, um ein kurzes Lied zu erstellen, das eine Jahreszeit beschreibt, dann mit verschiedenen Stimmungen, Instrumenten und Texten experimentieren und die Lieblingsteile der Lernenden zu einem finalen Track kombinieren.
-        - KI-Tools verwenden, um verschiedene Formate (z. B. Text, Grafiken, Musik) für eine öffentliche Sensibilisierungskampagne zu erkunden und Elemente aus jedem mit bestehenden Ideen zu kombinieren, um ein Endprodukt zu erstellen.
+          - Ein KI-Musiktool verwenden, um ein kurzes Lied zu erstellen, das eine Jahreszeit beschreibt, dann mit verschiedenen Stimmungen, Instrumenten und Texten experimentieren und die Lieblingsteile der Lernenden zu einem finalen Track kombinieren.
+          - KI-Tools verwenden, um verschiedene Formate (z. B. Text, Grafiken, Musik) für eine öffentliche Sensibilisierungskampagne zu erkunden und Elemente aus jedem mit bestehenden Ideen zu kombinieren, um ein Endprodukt zu erstellen.
         scenarios_ru:
-        - Использовать музыкальный инструмент ИИ для создания короткой песни, описывающей сезон, затем экспериментировать с разными настроениями, инструментами и текстами, а также объединить любимые части учащихся в финальную композицию.
-        - Использовать инструменты ИИ для изучения различных форматов (например, текст, графика, музыка) для кампании по повышению общественной осведомленности и объединить элементы из каждого с существующими идеями для создания конечного продукта.
+          - Использовать музыкальный инструмент ИИ для создания короткой песни, описывающей сезон, затем экспериментировать с разными настроениями, инструментами и текстами, а также объединить любимые части учащихся в финальную композицию.
+          - Использовать инструменты ИИ для изучения различных форматов (например, текст, графика, музыка) для кампании по повышению общественной осведомленности и объединить элементы из каждого с существующими идеями для создания конечного продукта.
         scenarios_it:
-        - Utilizzare uno strumento musicale IA per creare una breve canzone che descriva una stagione, quindi sperimentare con diversi stati d'animo, strumenti e testi, e combinare le parti preferite degli studenti in una traccia finale.
-        - Utilizzare strumenti di IA per esplorare diversi formati (ad esempio, testo, grafica, musica) per una campagna di sensibilizzazione pubblica e combinare elementi di ciascuno con idee esistenti per creare un prodotto finale.
-        description_zhCN: '[ZHCN translation needed]'
-        description_pt: '[PT translation needed]'
-        description_ar: '[AR translation needed]'
-        description_id: '[ID translation needed]'
-        description_th: '[TH translation needed]'
-        content_zhCN: '[ZHCN translation needed]'
-        content_pt: '[PT translation needed]'
-        content_ar: '[AR translation needed]'
-        content_id: '[ID translation needed]'
-        content_th: '[TH translation needed]'
+          - Utilizzare uno strumento musicale IA per creare una breve canzone che descriva una stagione, quindi sperimentare con diversi stati d'animo, strumenti e testi, e combinare le parti preferite degli studenti in una traccia finale.
+          - Utilizzare strumenti di IA per esplorare diversi formati (ad esempio, testo, grafica, musica) per una campagna di sensibilizzazione pubblica e combinare elementi di ciascuno con idee esistenti per creare un prodotto finale.
+        description_zhCN: "[ZHCN translation needed]"
+        description_pt: "[PT translation needed]"
+        description_ar: "[AR translation needed]"
+        description_id: "[ID translation needed]"
+        description_th: "[TH translation needed]"
+        content_zhCN: "[ZHCN translation needed]"
+        content_pt: "[PT translation needed]"
+        content_ar: "[AR translation needed]"
+        content_id: "[ID translation needed]"
+        content_th: "[TH translation needed]"
         description_zhTW: 使用不同類型的AI系統來視覺化、原型製作和結合想法。
         content_zhTW: 學習者試用以不同格式（文字、圖像、音樂等）操作的AI工具來探索和改善新想法。他們將輸出結合成有意義的產品或解決方案。
         scenarios_zhTW:
-        - 使用AI音樂工具創作描述季節的短歌，然後嘗試不同的情緒、樂器和歌詞，並將學習者最喜歡的部分合併成最終曲目。
-        - 使用AI工具探索公共宣傳活動的不同格式（如文字、圖形、音樂），並將每種格式的元素與現有想法結合，創造最終產品。
+          - 使用AI音樂工具創作描述季節的短歌，然後嘗試不同的情緒、樂器和歌詞，並將學習者最喜歡的部分合併成最終曲目。
+          - 使用AI工具探索公共宣傳活動的不同格式（如文字、圖形、音樂），並將每種格式的元素與現有想法結合，創造最終產品。
       C3:
         description: Collaborate with generative AI systems to elicit feedback, refine results, and reflect on thought processes.
         description_es: Colaborar con sistemas de IA generativa para obtener retroalimentación, refinar resultados y reflexionar sobre los procesos de pensamiento.
@@ -632,13 +632,13 @@ domains:
         description_ru: Сотрудничать с генеративными системами ИИ, чтобы получить обратную связь, уточнить результаты и отразить мыслительные процессы.
         description_it: Collaborare con sistemi di IA generativa per ottenere feedback, affinare i risultati e riflettere sui processi di pensiero.
         knowledge:
-        - K2.3
+          - K2.3
         skills:
-        - S3.1
-        - S2.1
+          - S3.1
+          - S2.1
         attitudes:
-        - A3.1
-        - A4.1
+          - A3.1
+          - A4.1
         content: Learners engage in an iterative process with AI by testing prompts and refining AI-generated outputs, and then reflect on how the interaction shaped their thinking and choices.
         content_es: Los estudiantes participan en un proceso iterativo con la IA al probar indicaciones y refinar las salidas generadas por la IA, y luego reflexionan sobre cómo la interacción ha moldeado su pensamiento y elecciones.
         content_ja: 学習者は、プロンプトをテストし、AIが生成した出力を洗練させることで、AIとの反復プロセスに参加し、その後、相互作用がどのように彼らの思考や選択を形成したかを反映します。
@@ -648,44 +648,44 @@ domains:
         content_ru: Учащиеся участвуют в итеративном процессе с ИИ, тестируя подсказки и уточняя выходные данные, сгенерированные ИИ, а затем размышляют о том, как взаимодействие сформировало их мышление и выбор.
         content_it: Gli studenti partecipano a un processo iterativo con l'IA testando suggerimenti e affinando le uscite generate dall'IA, e poi riflettono su come l'interazione ha plasmato il loro pensiero e le loro scelte.
         scenarios:
-        - Use an AI writing tool to improve a class story, by choosing which suggestions support their creative vision, and discussing how their ideas changed through the process.
-        - Use an AI coding assistant to fix errors and modify code for a video game, then reflect on how the tool affected the debugging process.
+          - Use an AI writing tool to improve a class story, by choosing which suggestions support their creative vision, and discussing how their ideas changed through the process.
+          - Use an AI coding assistant to fix errors and modify code for a video game, then reflect on how the tool affected the debugging process.
         scenarios_es:
-        - Usar una herramienta de escritura de IA para mejorar una historia de clase, eligiendo qué sugerencias apoyan su visión creativa y discutiendo cómo cambiaron sus ideas a lo largo del proceso.
-        - Utilizar un asistente de codificación de IA para corregir errores y modificar el código de un videojuego, y luego reflexionar sobre cómo la herramienta afectó el proceso de depuración.
+          - Usar una herramienta de escritura de IA para mejorar una historia de clase, eligiendo qué sugerencias apoyan su visión creativa y discutiendo cómo cambiaron sus ideas a lo largo del proceso.
+          - Utilizar un asistente de codificación de IA para corregir errores y modificar el código de un videojuego, y luego reflexionar sobre cómo la herramienta afectó el proceso de depuración.
         scenarios_ja:
-        - AIライティングツールを使用してクラスの物語を改善し、どの提案が彼らの創造的ビジョンをサポートするかを選び、プロセスを通じて彼らのアイデアがどのように変わったかを議論します。
-        - AIコーディングアシスタントを使用してエラーを修正し、ビデオゲームのコードを変更し、その後、ツールがデバッグプロセスにどのように影響したかを反映します。
+          - AIライティングツールを使用してクラスの物語を改善し、どの提案が彼らの創造的ビジョンをサポートするかを選び、プロセスを通じて彼らのアイデアがどのように変わったかを議論します。
+          - AIコーディングアシスタントを使用してエラーを修正し、ビデオゲームのコードを変更し、その後、ツールがデバッグプロセスにどのように影響したかを反映します。
         scenarios_ko:
-        - AI 작문 도구를 사용하여 수업 이야기를 개선하고, 어떤 제안이 그들의 창의적 비전을 지원하는지 선택하며, 과정에서 그들의 아이디어가 어떻게 변화했는지 논의합니다.
-        - AI 코딩 도우미를 사용하여 오류를 수정하고 비디오 게임의 코드를 수정한 다음, 도구가 디버깅 프로세스에 어떤 영향을 미쳤는지 반성합니다.
+          - AI 작문 도구를 사용하여 수업 이야기를 개선하고, 어떤 제안이 그들의 창의적 비전을 지원하는지 선택하며, 과정에서 그들의 아이디어가 어떻게 변화했는지 논의합니다.
+          - AI 코딩 도우미를 사용하여 오류를 수정하고 비디오 게임의 코드를 수정한 다음, 도구가 디버깅 프로세스에 어떤 영향을 미쳤는지 반성합니다.
         scenarios_fr:
-        - Utiliser un outil d'écriture IA pour améliorer une histoire de classe, en choisissant quelles suggestions soutiennent leur vision créative et en discutant de la manière dont leurs idées ont évolué au cours du processus.
-        - Utiliser un assistant de codage IA pour corriger des erreurs et modifier le code d'un jeu vidéo, puis réfléchir à la manière dont l'outil a affecté le processus de débogage.
+          - Utiliser un outil d'écriture IA pour améliorer une histoire de classe, en choisissant quelles suggestions soutiennent leur vision créative et en discutant de la manière dont leurs idées ont évolué au cours du processus.
+          - Utiliser un assistant de codage IA pour corriger des erreurs et modifier le code d'un jeu vidéo, puis réfléchir à la manière dont l'outil a affecté le processus de débogage.
         scenarios_de:
-        - Ein KI-Schreibwerkzeug verwenden, um eine Klassenstory zu verbessern, indem sie auswählen, welche Vorschläge ihre kreative Vision unterstützen, und darüber diskutieren, wie sich ihre Ideen im Verlauf des Prozesses verändert haben.
-        - Ein KI-Coding-Assistent verwenden, um Fehler zu beheben und den Code für ein Videospiel zu ändern, und dann reflektieren, wie das Tool den Debugging-Prozess beeinflusst hat.
+          - Ein KI-Schreibwerkzeug verwenden, um eine Klassenstory zu verbessern, indem sie auswählen, welche Vorschläge ihre kreative Vision unterstützen, und darüber diskutieren, wie sich ihre Ideen im Verlauf des Prozesses verändert haben.
+          - Ein KI-Coding-Assistent verwenden, um Fehler zu beheben und den Code für ein Videospiel zu ändern, und dann reflektieren, wie das Tool den Debugging-Prozess beeinflusst hat.
         scenarios_ru:
-        - Использовать инструмент написания ИИ для улучшения классной истории, выбирая, какие предложения поддерживают их творческое видение, и обсуждая, как их идеи изменились в процессе.
-        - Использовать помощника по кодированию ИИ для исправления ошибок и изменения кода для видеоигры, а затем размышлять о том, как инструмент повлиял на процесс отладки.
+          - Использовать инструмент написания ИИ для улучшения классной истории, выбирая, какие предложения поддерживают их творческое видение, и обсуждая, как их идеи изменились в процессе.
+          - Использовать помощника по кодированию ИИ для исправления ошибок и изменения кода для видеоигры, а затем размышлять о том, как инструмент повлиял на процесс отладки.
         scenarios_it:
-        - Utilizzare uno strumento di scrittura IA per migliorare una storia di classe, scegliendo quali suggerimenti supportano la loro visione creativa e discutendo di come le loro idee siano cambiate nel processo.
-        - Utilizzare un assistente di codifica IA per correggere errori e modificare il codice di un videogioco, quindi riflettere su come lo strumento abbia influenzato il processo di debug.
-        description_zhCN: '[ZHCN translation needed]'
-        description_pt: '[PT translation needed]'
-        description_ar: '[AR translation needed]'
-        description_id: '[ID translation needed]'
-        description_th: '[TH translation needed]'
-        content_zhCN: '[ZHCN translation needed]'
-        content_pt: '[PT translation needed]'
-        content_ar: '[AR translation needed]'
-        content_id: '[ID translation needed]'
-        content_th: '[TH translation needed]'
+          - Utilizzare uno strumento di scrittura IA per migliorare una storia di classe, scegliendo quali suggerimenti supportano la loro visione creativa e discutendo di come le loro idee siano cambiate nel processo.
+          - Utilizzare un assistente di codifica IA per correggere errori e modificare il codice di un videogioco, quindi riflettere su come lo strumento abbia influenzato il processo di debug.
+        description_zhCN: "[ZHCN translation needed]"
+        description_pt: "[PT translation needed]"
+        description_ar: "[AR translation needed]"
+        description_id: "[ID translation needed]"
+        description_th: "[TH translation needed]"
+        content_zhCN: "[ZHCN translation needed]"
+        content_pt: "[PT translation needed]"
+        content_ar: "[AR translation needed]"
+        content_id: "[ID translation needed]"
+        content_th: "[TH translation needed]"
         description_zhTW: 與生成式AI系統協作以獲得回饋、改進結果，並反思思維過程。
         content_zhTW: 學習者透過測試提示和改進AI生成的輸出，與AI進行反覆的過程，然後反思這種互動如何塑造他們的思維和選擇。
         scenarios_zhTW:
-        - 使用AI寫作工具改進班級故事，透過選擇支持他們創意願景的建議，並討論在過程中他們的想法如何改變。
-        - 使用AI編程助手修復錯誤並修改電子遊戲的程式碼，然後反思該工具如何影響除錯過程。
+          - 使用AI寫作工具改進班級故事，透過選擇支持他們創意願景的建議，並討論在過程中他們的想法如何改變。
+          - 使用AI編程助手修復錯誤並修改電子遊戲的程式碼，然後反思該工具如何影響除錯過程。
       C4:
         description: Analyze how AI can safeguard or violate content authenticity and intellectual property.
         description_es: Analizar cómo la IA puede proteger o violar la autenticidad del contenido y la propiedad intelectual.
@@ -696,13 +696,13 @@ domains:
         description_ru: Анализировать, как ИИ может защищать или нарушать подлинность контента и интеллектуальную собственность.
         description_it: Analizzare come l'IA può proteggere o violare l'autenticità dei contenuti e la proprietà intellettuale.
         knowledge:
-        - K5.3
+          - K5.3
         skills:
-        - S5.1
-        - S6.1
+          - S5.1
+          - S6.1
         attitudes:
-        - A5.1
-        - A1.1
+          - A5.1
+          - A1.1
         content: Learners explore how AI-generated content may borrow from or replicate existing work, and consider when that use is fair, original, or in need of attribution. They reflect on the ethical implications of AI-assisted creation.
         content_es: Los estudiantes exploran cómo el contenido generado por IA puede tomar prestado o replicar trabajos existentes y consideran cuándo ese uso es justo, original o necesita atribución. Reflexionan sobre las implicaciones éticas de la creación asistida por IA.
         content_ja: 学習者は、AIが生成したコンテンツが既存の作品を借用または複製する可能性があることを探求し、その使用が公正であるか、オリジナルであるか、または帰属が必要であるかを考慮します。彼らはAI支援の創作の倫理的影響を反映します。
@@ -712,44 +712,44 @@ domains:
         content_ru: Учащиеся исследуют, как контент, созданный ИИ, может заимствовать или воспроизводить существующие работы, и рассматривают, когда это использование является справедливым, оригинальным или требует атрибуции. Они размышляют о этических последствиях создания с помощью ИИ.
         content_it: Gli studenti esplorano come i contenuti generati dall'IA possano prendere in prestito o replicare opere esistenti e considerano quando tale utilizzo è equo, originale o necessita di attribuzione. Riflettono sulle implicazioni etiche della creazione assistita dall'IA.
         scenarios:
-        - Compare original student work to AI-generated poems, then discuss what makes something 'original' and how to give credit when AI tools help create content.
-        - Research how certain artists' styles appear in AI-generated art, then debate whether the use of the artists' content is fair or requires consent.
+          - Compare original student work to AI-generated poems, then discuss what makes something 'original' and how to give credit when AI tools help create content.
+          - Research how certain artists' styles appear in AI-generated art, then debate whether the use of the artists' content is fair or requires consent.
         scenarios_es:
-        - Comparar el trabajo original de los estudiantes con poemas generados por IA, luego discutir qué hace que algo sea 'original' y cómo dar crédito cuando las herramientas de IA ayudan a crear contenido.
-        - Investigar cómo aparecen los estilos de ciertos artistas en el arte generado por IA, luego debatir si el uso del contenido de los artistas es justo o requiere consentimiento.
+          - Comparar el trabajo original de los estudiantes con poemas generados por IA, luego discutir qué hace que algo sea 'original' y cómo dar crédito cuando las herramientas de IA ayudan a crear contenido.
+          - Investigar cómo aparecen los estilos de ciertos artistas en el arte generado por IA, luego debatir si el uso del contenido de los artistas es justo o requiere consentimiento.
         scenarios_ja:
-        - 学生のオリジナル作品とAI生成の詩を比較し、何が「オリジナル」を作るのか、AIツールがコンテンツ作成を助けるときにどのようにクレジットを与えるかを議論します。
-        - 特定のアーティストのスタイルがAI生成のアートにどのように現れるかを研究し、アーティストのコンテンツの使用が公正であるか、同意が必要であるかを議論します。
+          - 学生のオリジナル作品とAI生成の詩を比較し、何が「オリジナル」を作るのか、AIツールがコンテンツ作成を助けるときにどのようにクレジットを与えるかを議論します。
+          - 特定のアーティストのスタイルがAI生成のアートにどのように現れるかを研究し、アーティストのコンテンツの使用が公正であるか、同意が必要であるかを議論します。
         scenarios_ko:
-        - 학생의 원본 작품과 AI가 생성한 시를 비교한 다음, 무엇이 '원본'을 만드는지, AI 도구가 콘텐츠 생성에 도움을 줄 때 어떻게 크레딧을 주는지 논의합니다.
-        - 특정 아티스트의 스타일이 AI 생성 아트에 어떻게 나타나는지 조사한 다음, 아티스트 콘텐츠의 사용이 공정한지 또는 동의가 필요한지 논의합니다.
+          - 학생의 원본 작품과 AI가 생성한 시를 비교한 다음, 무엇이 '원본'을 만드는지, AI 도구가 콘텐츠 생성에 도움을 줄 때 어떻게 크레딧을 주는지 논의합니다.
+          - 특정 아티스트의 스타일이 AI 생성 아트에 어떻게 나타나는지 조사한 다음, 아티스트 콘텐츠의 사용이 공정한지 또는 동의가 필요한지 논의합니다.
         scenarios_fr:
-        - Comparer le travail original des étudiants à des poèmes générés par l'IA, puis discuter de ce qui rend quelque chose 'original' et comment donner du crédit lorsque des outils d'IA aident à créer du contenu.
-        - Rechercher comment certains styles d'artistes apparaissent dans l'art généré par l'IA, puis débattre de savoir si l'utilisation du contenu des artistes est juste ou nécessite un consentement.
+          - Comparer le travail original des étudiants à des poèmes générés par l'IA, puis discuter de ce qui rend quelque chose 'original' et comment donner du crédit lorsque des outils d'IA aident à créer du contenu.
+          - Rechercher comment certains styles d'artistes apparaissent dans l'art généré par l'IA, puis débattre de savoir si l'utilisation du contenu des artistes est juste ou nécessite un consentement.
         scenarios_de:
-        - Originale Schülerarbeiten mit von KI generierten Gedichten vergleichen und dann diskutieren, was etwas 'original' macht und wie man Anerkennung gibt, wenn KI-Tools bei der Erstellung von Inhalten helfen.
-        - Untersuchen, wie bestimmte Künstlerstile in KI-generierter Kunst erscheinen, und dann debattieren, ob die Verwendung der Inhalte der Künstler fair ist oder Zustimmung erfordert.
+          - Originale Schülerarbeiten mit von KI generierten Gedichten vergleichen und dann diskutieren, was etwas 'original' macht und wie man Anerkennung gibt, wenn KI-Tools bei der Erstellung von Inhalten helfen.
+          - Untersuchen, wie bestimmte Künstlerstile in KI-generierter Kunst erscheinen, und dann debattieren, ob die Verwendung der Inhalte der Künstler fair ist oder Zustimmung erfordert.
         scenarios_ru:
-        - Сравнить оригинальные работы студентов с поэмами, сгенерированными ИИ, а затем обсудить, что делает что-то 'оригинальным' и как давать кредит, когда инструменты ИИ помогают создавать контент.
-        - Использовать ИИ для разработки контраргументов для классной дискуссии, чтобы предвидеть и учесть противоположные точки зрения.
+          - Сравнить оригинальные работы студентов с поэмами, сгенерированными ИИ, а затем обсудить, что делает что-то 'оригинальным' и как давать кредит, когда инструменты ИИ помогают создавать контент.
+          - Использовать ИИ для разработки контраргументов для классной дискуссии, чтобы предвидеть и учесть противоположные точки зрения.
         scenarios_it:
-        - Confrontare il lavoro originale degli studenti con poesie generate dall'IA, quindi discutere cosa rende qualcosa 'originale' e come dare credito quando gli strumenti IA aiutano a creare contenuti.
-        - Ricercare come gli stili di alcuni artisti appaiono nell'arte generata dall'IA, quindi dibattere se l'uso dei contenuti degli artisti sia equo o richieda consenso.
-        description_zhCN: '[ZHCN translation needed]'
-        description_pt: '[PT translation needed]'
-        description_ar: '[AR translation needed]'
-        description_id: '[ID translation needed]'
-        description_th: '[TH translation needed]'
-        content_zhCN: '[ZHCN translation needed]'
-        content_pt: '[PT translation needed]'
-        content_ar: '[AR translation needed]'
-        content_id: '[ID translation needed]'
-        content_th: '[TH translation needed]'
+          - Confrontare il lavoro originale degli studenti con poesie generate dall'IA, quindi discutere cosa rende qualcosa 'originale' e come dare credito quando gli strumenti IA aiutano a creare contenuti.
+          - Ricercare come gli stili di alcuni artisti appaiono nell'arte generata dall'IA, quindi dibattere se l'uso dei contenuti degli artisti sia equo o richieda consenso.
+        description_zhCN: "[ZHCN translation needed]"
+        description_pt: "[PT translation needed]"
+        description_ar: "[AR translation needed]"
+        description_id: "[ID translation needed]"
+        description_th: "[TH translation needed]"
+        content_zhCN: "[ZHCN translation needed]"
+        content_pt: "[PT translation needed]"
+        content_ar: "[AR translation needed]"
+        content_id: "[ID translation needed]"
+        content_th: "[TH translation needed]"
         description_zhTW: 分析AI如何保護或侵犯內容真實性和智慧財產權。
         content_zhTW: 學習者探索AI生成的內容如何可能借用或複製現有作品，並考慮何時這種使用是公平的、原創的，或需要歸屬。他們反思AI輔助創作的倫理影響。
         scenarios_zhTW:
-        - 將學生原創作品與AI生成的詩歌進行比較，然後討論什麼使某物成為『原創』，以及當AI工具幫助創造內容時如何給予信用。
-        - 研究某些藝術家的風格如何出現在AI生成的藝術中，然後辯論使用藝術家內容是否公平或需要同意。
+          - 將學生原創作品與AI生成的詩歌進行比較，然後討論什麼使某物成為『原創』，以及當AI工具幫助創造內容時如何給予信用。
+          - 研究某些藝術家的風格如何出現在AI生成的藝術中，然後辯論使用藝術家內容是否公平或需要同意。
       C5:
         description: Explain how AI systems perform tasks using precise language that avoids anthropomorphism.
         description_es: Explicar cómo los sistemas de IA realizan tareas utilizando un lenguaje preciso que evita la antropomorfización.
@@ -760,12 +760,12 @@ domains:
         description_ru: Объяснить, как системы ИИ выполняют задачи, используя точный язык, который избегает антропоморфизма.
         description_it: Spiegare come i sistemi di IA eseguono compiti utilizzando un linguaggio preciso che evita l'antropomorfismo.
         knowledge:
-        - K1.3
-        - K1.4
+          - K1.3
+          - K1.4
         skills:
-        - S7.1
+          - S7.1
         attitudes:
-        - A1.1
+          - A1.1
         content: Learners describe how AI operates in realistic, accurate terms, avoiding language that suggests AI has human feelings or understanding. They understand that their language can either clarify or perpetuate misconceptions about AI.
         content_es: Los estudiantes describen cómo opera la IA en términos realistas y precisos, evitando un lenguaje que sugiera que la IA tiene sentimientos o comprensión humanos. Comprenden que su lenguaje puede aclarar o perpetuar conceptos erróneos sobre la IA.
         content_ja: 学習者は、AIがどのように機能するかを現実的で正確な用語で説明し、AIが人間の感情や理解を持っていることを示唆する言葉を避けます。彼らは、自分の言葉がAIに関する誤解を明確にするか、永続させる可能性があることを理解します。
@@ -775,58 +775,58 @@ domains:
         content_ru: Учащиеся описывают, как ИИ работает в реалистичных и точных терминах, избегая языка, который предполагает, что ИИ имеет человеческие чувства или понимание. Они понимают, что их язык может либо прояснить, либо увековечить заблуждения о ИИ.
         content_it: Gli studenti descrivono come l'IA opera in termini realistici e precisi, evitando un linguaggio che suggerisca che l'IA abbia sentimenti o comprensione umani. Comprendono che il loro linguaggio può chiarire o perpetuare idee sbagliate sull'IA.
         scenarios:
-        - Compare art created by a human with art generated by AI, and discuss how artists express themselves while generative AI uses patterns in existing data.
-        - Describe how a generative AI system can create a song based on prompts, learned patterns, and training data, without assigning it intent, emotion, or creativity.
+          - Compare art created by a human with art generated by AI, and discuss how artists express themselves while generative AI uses patterns in existing data.
+          - Describe how a generative AI system can create a song based on prompts, learned patterns, and training data, without assigning it intent, emotion, or creativity.
         scenarios_es:
-        - Comparar el arte creado por un humano con el arte generado por IA y discutir cómo los artistas se expresan mientras que la IA generativa utiliza patrones en datos existentes.
-        - Describir cómo un sistema de IA generativa puede crear una canción basada en indicaciones, patrones aprendidos y datos de entrenamiento, sin asignarle intención, emoción o creatividad.
+          - Comparar el arte creado por un humano con el arte generado por IA y discutir cómo los artistas se expresan mientras que la IA generativa utiliza patrones en datos existentes.
+          - Describir cómo un sistema de IA generativa puede crear una canción basada en indicaciones, patrones aprendidos y datos de entrenamiento, sin asignarle intención, emoción o creatividad.
         scenarios_ja:
-        - 人間が創作したアートとAIが生成したアートを比較し、アーティストがどのように自己表現を行うか、生成AIがどのように既存データのパターンを使用するかを議論します。
-        - 生成AIシステムがどのようにプロンプト、学習したパターン、トレーニングデータに基づいて曲を作成できるかを説明し、意図、感情、創造性を与えないようにします。
+          - 人間が創作したアートとAIが生成したアートを比較し、アーティストがどのように自己表現を行うか、生成AIがどのように既存データのパターンを使用するかを議論します。
+          - 生成AIシステムがどのようにプロンプト、学習したパターン、トレーニングデータに基づいて曲を作成できるかを説明し、意図、感情、創造性を与えないようにします。
         scenarios_ko:
-        - 인간이 만든 예술과 AI가 생성한 예술을 비교하고, 예술가가 어떻게 자신을 표현하는지, 생성형 AI가 기존 데이터의 패턴을 어떻게 사용하는지 논의합니다.
-        - 생성형 AI 시스템이 프롬프트, 학습된 패턴 및 훈련 데이터를 기반으로 곡을 생성할 수 있는 방법을 설명하고, 의도, 감정 또는 창의성을 부여하지 않습니다.
+          - 인간이 만든 예술과 AI가 생성한 예술을 비교하고, 예술가가 어떻게 자신을 표현하는지, 생성형 AI가 기존 데이터의 패턴을 어떻게 사용하는지 논의합니다.
+          - 생성형 AI 시스템이 프롬프트, 학습된 패턴 및 훈련 데이터를 기반으로 곡을 생성할 수 있는 방법을 설명하고, 의도, 감정 또는 창의성을 부여하지 않습니다.
         scenarios_fr:
-        - Comparer l'art créé par un humain avec l'art généré par l'IA et discuter de la manière dont les artistes s'expriment tandis que l'IA générative utilise des motifs dans des données existantes.
-        - Décrire comment un système d'IA générative peut créer une chanson basée sur des invites, des motifs appris et des données d'entraînement, sans lui attribuer d'intention, d'émotion ou de créativité.
+          - Comparer l'art créé par un humain avec l'art généré par l'IA et discuter de la manière dont les artistes s'expriment tandis que l'IA générative utilise des motifs dans des données existantes.
+          - Décrire comment un système d'IA générative peut créer une chanson basée sur des invites, des motifs appris et des données d'entraînement, sans lui attribuer d'intention, d'émotion ou de créativité.
         scenarios_de:
-        - Kunst, die von einem Menschen geschaffen wurde, mit von KI generierter Kunst vergleichen und diskutieren, wie Künstler sich ausdrücken, während generative KI Muster in vorhandenen Daten verwendet.
-        - Beschreiben, wie ein generatives KI-System ein Lied basierend auf Eingabeaufforderungen, gelernten Mustern und Trainingsdaten erstellen kann, ohne ihm Absicht, Emotion oder Kreativität zuzuschreiben.
+          - Kunst, die von einem Menschen geschaffen wurde, mit von KI generierter Kunst vergleichen und diskutieren, wie Künstler sich ausdrücken, während generative KI Muster in vorhandenen Daten verwendet.
+          - Beschreiben, wie ein generatives KI-System ein Lied basierend auf Eingabeaufforderungen, gelernten Mustern und Trainingsdaten erstellen kann, ohne ihm Absicht, Emotion oder Kreativität zuzuschreiben.
         scenarios_ru:
-        - Сравнить искусство, созданное человеком, с искусством, сгенерированным ИИ, и обсудить, как художники выражают себя, в то время как генеративный ИИ использует шаблоны в существующих данных.
-        - Описание того, как генеративная система ИИ может создать песню на основе подсказок, изученных шаблонов и обучающих данных, не придавая ей намерения, эмоций или креативности.
+          - Сравнить искусство, созданное человеком, с искусством, сгенерированным ИИ, и обсудить, как художники выражают себя, в то время как генеративный ИИ использует шаблоны в существующих данных.
+          - Описание того, как генеративная система ИИ может создать песню на основе подсказок, изученных шаблонов и обучающих данных, не придавая ей намерения, эмоций или креативности.
         scenarios_it:
-        - Confrontare l'arte creata da un umano con l'arte generata dall'IA e discutere di come gli artisti si esprimono mentre l'IA generativa utilizza schemi nei dati esistenti.
-        - Descrivere come un sistema di IA generativa può creare una canzone basata su suggerimenti, schemi appresi e dati di addestramento, senza attribuirgli intenzioni, emozioni o creatività.
-        description_zhCN: '[ZHCN translation needed]'
-        description_pt: '[PT translation needed]'
-        description_ar: '[AR translation needed]'
-        description_id: '[ID translation needed]'
-        description_th: '[TH translation needed]'
-        content_zhCN: '[ZHCN translation needed]'
-        content_pt: '[PT translation needed]'
-        content_ar: '[AR translation needed]'
-        content_id: '[ID translation needed]'
-        content_th: '[TH translation needed]'
+          - Confrontare l'arte creata da un umano con l'arte generata dall'IA e discutere di come gli artisti si esprimono mentre l'IA generativa utilizza schemi nei dati esistenti.
+          - Descrivere come un sistema di IA generativa può creare una canzone basata su suggerimenti, schemi appresi e dati di addestramento, senza attribuirgli intenzioni, emozioni o creatività.
+        description_zhCN: "[ZHCN translation needed]"
+        description_pt: "[PT translation needed]"
+        description_ar: "[AR translation needed]"
+        description_id: "[ID translation needed]"
+        description_th: "[TH translation needed]"
+        content_zhCN: "[ZHCN translation needed]"
+        content_pt: "[PT translation needed]"
+        content_ar: "[AR translation needed]"
+        content_id: "[ID translation needed]"
+        content_th: "[TH translation needed]"
         description_zhTW: 使用避免擬人化的精確語言解釋AI系統如何執行任務。
         content_zhTW: 學習者以現實、準確的術語描述AI如何運作，避免暗示AI具有人類情感或理解的語言。他們理解自己的語言可以澄清或延續對AI的誤解。
         scenarios_zhTW:
-        - 比較人類創作的藝術與AI生成的藝術，並討論藝術家如何表達自己，而生成式AI如何使用現有資料中的模式。
-        - 描述生成式AI系統如何根據提示、學習到的模式和訓練資料創作歌曲，而不賦予其意圖、情感或創造力。
-    emoji_zhTW: '[ZHTW translation needed]'
+          - 比較人類創作的藝術與AI生成的藝術，並討論藝術家如何表達自己，而生成式AI如何使用現有資料中的模式。
+          - 描述生成式AI系統如何根據提示、學習到的模式和訓練資料創作歌曲，而不賦予其意圖、情感或創造力。
+    emoji_zhTW: "[ZHTW translation needed]"
     emoji_zhCN: ✨
     emoji_pt: ✨
     emoji_ar: ✨
     emoji_id: ✨
     emoji_th: ✨
-    emoji_es: '[ES translation needed]'
-    emoji_ja: '[JA translation needed]'
-    emoji_ko: '[KO translation needed]'
-    emoji_fr: '[FR translation needed]'
-    emoji_de: '[DE translation needed]'
-    emoji_ru: '[RU translation needed]'
-    emoji_it: '[IT translation needed]'
-    overview_zhTW: '[ZHTW translation needed]'
+    emoji_es: "[ES translation needed]"
+    emoji_ja: "[JA translation needed]"
+    emoji_ko: "[KO translation needed]"
+    emoji_fr: "[FR translation needed]"
+    emoji_de: "[DE translation needed]"
+    emoji_ru: "[RU translation needed]"
+    emoji_it: "[IT translation needed]"
+    overview_zhTW: "[ZHTW translation needed]"
   Managing_with_AI:
     emoji: 🎪
     overview: requires intentionally choosing how AI can support and enhance human work. This includes assigning structured tasks to AI, such as organizing information, so humans can focus on areas requiring creativity, empathy, and judgment. AI systems can simulate a variety of roles, acting as an analyst, debate partner, or career guide. Learners who manage AI's actions learn to delegate tasks thoughtfully, guide AI outputs with clear instructions, and assess whether AI's role aligns with their goals and values. This domain helps learners build agency, ensuring that AI works for them and that its use remains ethical and human-centered.
@@ -853,14 +853,14 @@ domains:
         description_ru: Решить, использовать ли системы ИИ в зависимости от характера задачи.
         description_it: Decidere se utilizzare sistemi di IA in base alla natura del compito.
         knowledge:
-        - K4.1
-        - K5.4
+          - K4.1
+          - K5.4
         skills:
-        - S5.1
-        - S3.1
+          - S5.1
+          - S3.1
         attitudes:
-        - A1.1
-        - A3.1
+          - A1.1
+          - A3.1
         content: Learners assess whether AI is the right tool for a specific situation. They consider factors like the complexity of the task, the need for human judgment, and the ethical implications.
         content_es: Los estudiantes evalúan si la IA es la herramienta adecuada para una situación específica. Consideran factores como la complejidad de la tarea, la necesidad de juicio humano y las implicaciones éticas.
         content_ja: 学習者は、特定の状況においてAIが適切なツールであるかどうかを評価します。彼らは、タスクの複雑さ、人間の判断の必要性、倫理的な影響などの要因を考慮します。
@@ -870,44 +870,44 @@ domains:
         content_ru: Учащиеся оценивают, является ли ИИ правильным инструментом для конкретной ситуации. Они учитывают такие факторы, как сложность задачи, необходимость человеческого суждения и этические последствия.
         content_it: Gli studenti valutano se l'IA è lo strumento giusto per una situazione specifica. Considerano fattori come la complessità del compito, la necessità di giudizio umano e le implicazioni etiche.
         scenarios:
-        - Consider everyday tasks (e.g., writing a birthday card) and assess when AI use is appropriate, considering the need for individuality, creativity, or human judgment.
-        - Determine whether specific AI systems should be avoided, or used to complete specific tasks, based on how well each option aligns with an assignment's learning objectives.
+          - Consider everyday tasks (e.g., writing a birthday card) and assess when AI use is appropriate, considering the need for individuality, creativity, or human judgment.
+          - Determine whether specific AI systems should be avoided, or used to complete specific tasks, based on how well each option aligns with an assignment's learning objectives.
         scenarios_es:
-        - Considerar tareas cotidianas (por ejemplo, escribir una tarjeta de cumpleaños) y evaluar cuándo es apropiado usar IA, considerando la necesidad de individualidad, creatividad o juicio humano.
-        - Determinar si se deben evitar sistemas de IA específicos o utilizarlos para completar tareas específicas, según qué tan bien cada opción se alinee con los objetivos de aprendizaje de una tarea.
+          - Considerar tareas cotidianas (por ejemplo, escribir una tarjeta de cumpleaños) y evaluar cuándo es apropiado usar IA, considerando la necesidad de individualidad, creatividad o juicio humano.
+          - Determinar si se deben evitar sistemas de IA específicos o utilizarlos para completar tareas específicas, según qué tan bien cada opción se alinee con los objetivos de aprendizaje de una tarea.
         scenarios_ja:
-        - 日常のタスク（例：誕生日カードを書く）を考慮し、個性、創造性、または人間の判断の必要性を考慮して、AIの使用が適切な時期を評価します。
-        - 特定のAIシステムを避けるべきか、特定のタスクを完了するために使用すべきかを判断し、各オプションが課題の学習目標にどれだけ合致しているかを考慮します。
+          - 日常のタスク（例：誕生日カードを書く）を考慮し、個性、創造性、または人間の判断の必要性を考慮して、AIの使用が適切な時期を評価します。
+          - 特定のAIシステムを避けるべきか、特定のタスクを完了するために使用すべきかを判断し、各オプションが課題の学習目標にどれだけ合致しているかを考慮します。
         scenarios_ko:
-        - '일상적인 작업(예: 생일 카드 작성)을 고려하고 개별성, 창의성 또는 인간의 판단 필요성을 고려하여 AI 사용이 적절한 시기를 평가합니다.'
-        - 특정 AI 시스템을 피해야 하는지 또는 특정 작업을 완료하는 데 사용해야 하는지를 결정하고 각 옵션이 과제의 학습 목표와 얼마나 잘 일치하는지 평가합니다.
+          - "일상적인 작업(예: 생일 카드 작성)을 고려하고 개별성, 창의성 또는 인간의 판단 필요성을 고려하여 AI 사용이 적절한 시기를 평가합니다."
+          - 특정 AI 시스템을 피해야 하는지 또는 특정 작업을 완료하는 데 사용해야 하는지를 결정하고 각 옵션이 과제의 학습 목표와 얼마나 잘 일치하는지 평가합니다.
         scenarios_fr:
-        - Considérer les tâches quotidiennes (par exemple, écrire une carte d'anniversaire) et évaluer quand l'utilisation de l'IA est appropriée, en tenant compte du besoin d'individualité, de créativité ou de jugement humain.
-        - Déterminer si des systèmes d'IA spécifiques doivent être évités ou utilisés pour accomplir des tâches spécifiques, en fonction de la mesure dans laquelle chaque option s'aligne sur les objectifs d'apprentissage d'une tâche.
+          - Considérer les tâches quotidiennes (par exemple, écrire une carte d'anniversaire) et évaluer quand l'utilisation de l'IA est appropriée, en tenant compte du besoin d'individualité, de créativité ou de jugement humain.
+          - Déterminer si des systèmes d'IA spécifiques doivent être évités ou utilisés pour accomplir des tâches spécifiques, en fonction de la mesure dans laquelle chaque option s'aligne sur les objectifs d'apprentissage d'une tâche.
         scenarios_de:
-        - Alltägliche Aufgaben (z.B. eine Geburtstagskarte schreiben) in Betracht ziehen und bewerten, wann die Verwendung von KI angemessen ist, wobei der Bedarf an Individualität, Kreativität oder menschlichem Urteil berücksichtigt wird.
-        - Bestimmen, ob bestimmte KI-Systeme vermieden oder zur Erledigung spezifischer Aufgaben verwendet werden sollten, basierend darauf, wie gut jede Option mit den Lernzielen einer Aufgabe übereinstimmt.
+          - Alltägliche Aufgaben (z.B. eine Geburtstagskarte schreiben) in Betracht ziehen und bewerten, wann die Verwendung von KI angemessen ist, wobei der Bedarf an Individualität, Kreativität oder menschlichem Urteil berücksichtigt wird.
+          - Bestimmen, ob bestimmte KI-Systeme vermieden oder zur Erledigung spezifischer Aufgaben verwendet werden sollten, basierend darauf, wie gut jede Option mit den Lernzielen einer Aufgabe übereinstimmt.
         scenarios_ru:
-        - Рассмотреть повседневные задачи (например, написание поздравительной открытки) и оценить, когда использование ИИ уместно, учитывая необходимость индивидуальности, креативности или человеческого суждения.
-        - Определить, следует ли избегать конкретных систем ИИ или использовать их для выполнения конкретных задач, исходя из того, насколько хорошо каждый вариант соответствует учебным целям задания.
+          - Рассмотреть повседневные задачи (например, написание поздравительной открытки) и оценить, когда использование ИИ уместно, учитывая необходимость индивидуальности, креативности или человеческого суждения.
+          - Определить, следует ли избегать конкретных систем ИИ или использовать их для выполнения конкретных задач, исходя из того, насколько хорошо каждый вариант соответствует учебным целям задания.
         scenarios_it:
-        - Considerare compiti quotidiani (ad esempio, scrivere un biglietto di compleanno) e valutare quando l'uso dell'IA è appropriato, considerando la necessità di individualità, creatività o giudizio umano.
-        - Determinare se specifici sistemi di IA debbano essere evitati o utilizzati per completare compiti specifici, in base a quanto bene ciascuna opzione si allinea con gli obiettivi di apprendimento di un compito.
-        description_zhCN: '[ZHCN translation needed]'
-        description_pt: '[PT translation needed]'
-        description_ar: '[AR translation needed]'
-        description_id: '[ID translation needed]'
-        description_th: '[TH translation needed]'
-        content_zhCN: '[ZHCN translation needed]'
-        content_pt: '[PT translation needed]'
-        content_ar: '[AR translation needed]'
-        content_id: '[ID translation needed]'
-        content_th: '[TH translation needed]'
+          - Considerare compiti quotidiani (ad esempio, scrivere un biglietto di compleanno) e valutare quando l'uso dell'IA è appropriato, considerando la necessità di individualità, creatività o giudizio umano.
+          - Determinare se specifici sistemi di IA debbano essere evitati o utilizzati per completare compiti specifici, in base a quanto bene ciascuna opzione si allinea con gli obiettivi di apprendimento di un compito.
+        description_zhCN: "[ZHCN translation needed]"
+        description_pt: "[PT translation needed]"
+        description_ar: "[AR translation needed]"
+        description_id: "[ID translation needed]"
+        description_th: "[TH translation needed]"
+        content_zhCN: "[ZHCN translation needed]"
+        content_pt: "[PT translation needed]"
+        content_ar: "[AR translation needed]"
+        content_id: "[ID translation needed]"
+        content_th: "[TH translation needed]"
         description_zhTW: 根據任務性質決定是否使用AI系統。
         content_zhTW: 學習者評估AI是否是特定情況下的正確工具。他們考慮任務複雜性、人類判斷需求和倫理影響等因素。
         scenarios_zhTW:
-        - 考慮日常任務（如寫生日卡片）並評估何時使用AI是適當的，考慮個人化、創造力或人類判斷的需求。
-        - 根據每個選項與作業學習目標的契合程度，決定是否應該避免使用特定AI系統，或使用它們來完成特定任務。
+          - 考慮日常任務（如寫生日卡片）並評估何時使用AI是適當的，考慮個人化、創造力或人類判斷的需求。
+          - 根據每個選項與作業學習目標的契合程度，決定是否應該避免使用特定AI系統，或使用它們來完成特定任務。
       M2:
         description: Decompose a problem based on the capabilities and limitations of both AI systems and humans.
         description_es: Descomponer un problema en función de las capacidades y limitaciones de los sistemas de IA y de los humanos.
@@ -918,14 +918,14 @@ domains:
         description_ru: Разделить проблему на основе возможностей и ограничений как систем ИИ, так и людей.
         description_it: Scomporre un problema in base alle capacità e alle limitazioni sia dei sistemi di IA che degli esseri umani.
         knowledge:
-        - K4.1
+          - K4.1
         skills:
-        - S4.1
-        - S3.1
-        - S5.1
+          - S4.1
+          - S3.1
+          - S5.1
         attitudes:
-        - A3.1
-        - A4.1
+          - A3.1
+          - A4.1
         content: Learners break down a complex task and decide which parts can be handled by AI and which require human involvement. They distribute tasks based on their nature and human and AI strengths.
         content_es: Los estudiantes descomponen una tarea compleja y deciden qué partes pueden ser manejadas por la IA y cuáles requieren la participación humana. Distribuyen las tareas según su naturaleza y las fortalezas de humanos e IA.
         content_ja: 学習者は複雑なタスクを分解し、どの部分をAIが処理でき、どの部分に人間の関与が必要かを決定します。彼らはタスクの性質と人間およびAIの強みに基づいてタスクを分配します。
@@ -935,44 +935,44 @@ domains:
         content_ru: Учащиеся разбивают сложную задачу на части и решают, какие из них могут быть выполнены ИИ, а какие требуют человеческого участия. Они распределяют задачи в зависимости от их природы и сильных сторон людей и ИИ.
         content_it: Gli studenti scompongono un compito complesso e decidono quali parti possono essere gestite dall'IA e quali richiedono il coinvolgimento umano. Distribuiscono i compiti in base alla loro natura e ai punti di forza di umani e IA.
         scenarios:
-        - Use AI to brainstorm science fair ideas and gather background information, while the class votes on the best project, designs and carries out the experiment, and interprets the results.
-        - Examine a historical question using AI to summarize primary sources and commentaries, while students assess context, detect bias, discuss resources and make new interpretations.
+          - Use AI to brainstorm science fair ideas and gather background information, while the class votes on the best project, designs and carries out the experiment, and interprets the results.
+          - Examine a historical question using AI to summarize primary sources and commentaries, while students assess context, detect bias, discuss resources and make new interpretations.
         scenarios_es:
-        - Usar IA para generar ideas para la feria de ciencias y recopilar información de fondo, mientras la clase vota por el mejor proyecto, diseña y lleva a cabo el experimento, y analiza los resultados.
-        - Examinar una pregunta histórica utilizando IA para resumir fuentes primarias y comentarios, mientras los estudiantes evalúan el contexto, detectan sesgos, discuten recursos y hacen nuevas interpretaciones.
+          - Usar IA para generar ideas para la feria de ciencias y recopilar información de fondo, mientras la clase vota por el mejor proyecto, diseña y lleva a cabo el experimento, y analiza los resultados.
+          - Examinar una pregunta histórica utilizando IA para resumir fuentes primarias y comentarios, mientras los estudiantes evalúan el contexto, detectan sesgos, discuten recursos y hacen nuevas interpretaciones.
         scenarios_ja:
-        - AIを使用して科学フェアのアイデアをブレインストーミングし、背景情報を収集しながら、クラスが最良のプロジェクトに投票し、実験を設計して実施し、結果を解釈します。
-        - AIを使用して一次資料や解説を要約しながら歴史的な質問を検討し、学生が文脈を評価し、バイアスを検出し、リソースを議論し、新しい解釈を行います。
+          - AIを使用して科学フェアのアイデアをブレインストーミングし、背景情報を収集しながら、クラスが最良のプロジェクトに投票し、実験を設計して実施し、結果を解釈します。
+          - AIを使用して一次資料や解説を要約しながら歴史的な質問を検討し、学生が文脈を評価し、バイアスを検出し、リソースを議論し、新しい解釈を行います。
         scenarios_ko:
-        - AI를 사용하여 과학 박람회 아이디어를 브레인스토밍하고 배경 정보를 수집하는 동안, 학급이 최고의 프로젝트에 투표하고 실험을 설계하고 수행하며 결과를 해석합니다.
-        - AI를 사용하여 1차 자료와 주석을 요약하여 역사적 질문을 검토하고, 학생들이 맥락을 평가하고 편향을 감지하며 자원을 논의하고 새로운 해석을 합니다.
+          - AI를 사용하여 과학 박람회 아이디어를 브레인스토밍하고 배경 정보를 수집하는 동안, 학급이 최고의 프로젝트에 투표하고 실험을 설계하고 수행하며 결과를 해석합니다.
+          - AI를 사용하여 1차 자료와 주석을 요약하여 역사적 질문을 검토하고, 학생들이 맥락을 평가하고 편향을 감지하며 자원을 논의하고 새로운 해석을 합니다.
         scenarios_fr:
-        - Utiliser l'IA pour générer des idées pour la foire scientifique et rassembler des informations de base, tandis que la classe vote pour le meilleur projet, conçoit et réalise l'expérience, et interprète les résultats.
-        - Examiner une question historique en utilisant l'IA pour résumer des sources primaires et des commentaires, tandis que les étudiants évaluent le contexte, détectent les biais, discutent des ressources et font de nouvelles interprétations.
+          - Utiliser l'IA pour générer des idées pour la foire scientifique et rassembler des informations de base, tandis que la classe vote pour le meilleur projet, conçoit et réalise l'expérience, et interprète les résultats.
+          - Examiner une question historique en utilisant l'IA pour résumer des sources primaires et des commentaires, tandis que les étudiants évaluent le contexte, détectent les biais, discutent des ressources et font de nouvelles interprétations.
         scenarios_de:
-        - KI verwenden, um Ideen für die Wissenschaftsmesse zu brainstormen und Hintergrundinformationen zu sammeln, während die Klasse für das beste Projekt abstimmt, das Experiment entwirft und durchführt und die Ergebnisse interpretiert.
-        - Eine historische Frage untersuchen, indem KI verwendet wird, um Primärquellen und Kommentare zusammenzufassen, während die Schüler den Kontext bewerten, Vorurteile erkennen, Ressourcen diskutieren und neue Interpretationen vornehmen.
+          - KI verwenden, um Ideen für die Wissenschaftsmesse zu brainstormen und Hintergrundinformationen zu sammeln, während die Klasse für das beste Projekt abstimmt, das Experiment entwirft und durchführt und die Ergebnisse interpretiert.
+          - Eine historische Frage untersuchen, indem KI verwendet wird, um Primärquellen und Kommentare zusammenzufassen, während die Schüler den Kontext bewerten, Vorurteile erkennen, Ressourcen diskutieren und neue Interpretationen vornehmen.
         scenarios_ru:
-        - Использовать ИИ для генерации идей для научной ярмарки и сбора фоновой информации, в то время как класс голосует за лучший проект, разрабатывает и проводит эксперимент и интерпретирует результаты.
-        - Изучить исторический вопрос, используя ИИ для обобщения первоисточников и комментариев, в то время как студенты оценивают контекст, выявляют предвзятости, обсуждают ресурсы и делают новые интерпретации.
+          - Использовать ИИ для генерации идей для научной ярмарки и сбора фоновой информации, в то время как класс голосует за лучший проект, разрабатывает и проводит эксперимент и интерпретирует результаты.
+          - Изучить исторический вопрос, используя ИИ для обобщения первоисточников и комментариев, в то время как студенты оценивают контекст, выявляют предвзятости, обсуждают ресурсы и делают новые интерпретации.
         scenarios_it:
-        - Utilizzare l'IA per generare idee per la fiera della scienza e raccogliere informazioni di base, mentre la classe vota per il miglior progetto, progetta e realizza l'esperimento e interpreta i risultati.
-        - Esaminare una domanda storica utilizzando l'IA per riassumere fonti primarie e commenti, mentre gli studenti valutano il contesto, rilevano pregiudizi, discutono risorse e fanno nuove interpretazioni.
-        description_zhCN: '[ZHCN translation needed]'
-        description_pt: '[PT translation needed]'
-        description_ar: '[AR translation needed]'
-        description_id: '[ID translation needed]'
-        description_th: '[TH translation needed]'
-        content_zhCN: '[ZHCN translation needed]'
-        content_pt: '[PT translation needed]'
-        content_ar: '[AR translation needed]'
-        content_id: '[ID translation needed]'
-        content_th: '[TH translation needed]'
+          - Utilizzare l'IA per generare idee per la fiera della scienza e raccogliere informazioni di base, mentre la classe vota per il miglior progetto, progetta e realizza l'esperimento e interpreta i risultati.
+          - Esaminare una domanda storica utilizzando l'IA per riassumere fonti primarie e commenti, mentre gli studenti valutano il contesto, rilevano pregiudizi, discutono risorse e fanno nuove interpretazioni.
+        description_zhCN: "[ZHCN translation needed]"
+        description_pt: "[PT translation needed]"
+        description_ar: "[AR translation needed]"
+        description_id: "[ID translation needed]"
+        description_th: "[TH translation needed]"
+        content_zhCN: "[ZHCN translation needed]"
+        content_pt: "[PT translation needed]"
+        content_ar: "[AR translation needed]"
+        content_id: "[ID translation needed]"
+        content_th: "[TH translation needed]"
         description_zhTW: 根據AI系統和人類的能力與限制來分解問題。
         content_zhTW: 學習者分解複雜任務，決定哪些部分可以由AI處理，哪些需要人類參與。他們根據任務性質以及人類和AI的優勢來分配任務。
         scenarios_zhTW:
-        - 使用AI腦力激盪科學展覽點子並收集背景資訊，同時班級投票選擇最佳專案、設計和執行實驗，並解釋結果。
-        - 使用AI總結原始資料和評論來檢視歷史問題，同時學生評估背景、偵測偏見、討論資源並做出新解釋。
+          - 使用AI腦力激盪科學展覽點子並收集背景資訊，同時班級投票選擇最佳專案、設計和執行實驗，並解釋結果。
+          - 使用AI總結原始資料和評論來檢視歷史問題，同時學生評估背景、偵測偏見、討論資源並做出新解釋。
       M3:
         description: Direct generative AI systems by providing specific instructions, appropriate context, and evaluation criteria.
         description_es: Dirigir sistemas de IA generativa proporcionando instrucciones específicas, contexto apropiado y criterios de evaluación.
@@ -983,14 +983,14 @@ domains:
         description_ru: Направлять генеративные системы ИИ, предоставляя конкретные инструкции, соответствующий контекст и критерии оценки.
         description_it: Dirigere sistemi di IA generativa fornendo istruzioni specifiche, contesto appropriato e criteri di valutazione.
         knowledge:
-        - K1.3
-        - K2.3
+          - K1.3
+          - K2.3
         skills:
-        - S4.1
-        - S3.1
+          - S4.1
+          - S3.1
         attitudes:
-        - A3.1
-        - A4.1
+          - A3.1
+          - A4.1
         content: Learners practice prompt engineering by giving AI clear, structured inputs to guide outputs that meet expectations and goals.
         content_es: Los estudiantes practican la ingeniería de prompts dando a la IA entradas claras y estructuradas para guiar salidas que cumplan las expectativas y objetivos.
         content_ja: 学習者は、期待と目標を満たす出力を導くために、AIに明確で構造化された入力を与えることでプロンプトエンジニアリングを実践します。
@@ -1000,44 +1000,44 @@ domains:
         content_ru: Учащиеся практикуют инженерию промптов, предоставляя ИИ четкие, структурированные входные данные для направления выходных данных, которые соответствуют ожиданиям и целям.
         content_it: Gli studenti praticano l'ingegneria dei prompt fornendo all'IA input chiari e strutturati per guidare output che soddisfino aspettative e obiettivi.
         scenarios:
-        - Construct a prompt that another student could use to draw a poster, including the poster topic, what not to do, and what a quality result should look like.
-        - Experiment with instructing an AI chatbot to take on the role of a debate partner by engineering prompts that define its purpose, tone, and task. Then test and evaluate how effectively it supports learning goals.
+          - Construct a prompt that another student could use to draw a poster, including the poster topic, what not to do, and what a quality result should look like.
+          - Experiment with instructing an AI chatbot to take on the role of a debate partner by engineering prompts that define its purpose, tone, and task. Then test and evaluate how effectively it supports learning goals.
         scenarios_es:
-        - Enumerar interacciones digitales familiares (por ejemplo, usar una cámara web, recomendaciones de videos) y discutir si y cómo cada una utiliza IA.
-        - Explorar cómo una plataforma de matemáticas en línea utiliza datos en tiempo real para presentar contenido en diferentes niveles de dificultad.
+          - Enumerar interacciones digitales familiares (por ejemplo, usar una cámara web, recomendaciones de videos) y discutir si y cómo cada una utiliza IA.
+          - Explorar cómo una plataforma de matemáticas en línea utiliza datos en tiempo real para presentar contenido en diferentes niveles de dificultad.
         scenarios_ja:
-        - 身近なデジタル相互作用（ウェブカメラの使用、動画推薦など）をリストアップし、それぞれがAIを使用しているかどうか、どのように使用しているかを議論する。
-        - オンライン数学プラットフォームがリアルタイムデータを使用して、異なる難易度レベルのコンテンツを提示する方法を探る。
+          - 身近なデジタル相互作用（ウェブカメラの使用、動画推薦など）をリストアップし、それぞれがAIを使用しているかどうか、どのように使用しているかを議論する。
+          - オンライン数学プラットフォームがリアルタイムデータを使用して、異なる難易度レベルのコンテンツを提示する方法を探る。
         scenarios_ko:
-        - '친숙한 디지털 상호작용(예: 웹 카메라 사용, 비디오 추천)을 나열하고 각각이 AI를 사용하는지 여부와 방법을 토론한다.'
-        - 온라인 수학 플랫폼이 실시간 데이터를 활용하여 다양한 난이도 수준의 콘텐츠를 제시하는 방법을 탐구한다.
+          - "친숙한 디지털 상호작용(예: 웹 카메라 사용, 비디오 추천)을 나열하고 각각이 AI를 사용하는지 여부와 방법을 토론한다."
+          - 온라인 수학 플랫폼이 실시간 데이터를 활용하여 다양한 난이도 수준의 콘텐츠를 제시하는 방법을 탐구한다.
         scenarios_fr:
-        - Énumérer les interactions numériques familières (par exemple, utiliser une webcam, recommandations vidéo) et discuter si et comment chacune utilise l'IA.
-        - Explorer comment une plateforme de mathématiques en ligne utilise des données en temps réel pour présenter du contenu à différents niveaux de difficulté.
+          - Énumérer les interactions numériques familières (par exemple, utiliser une webcam, recommandations vidéo) et discuter si et comment chacune utilise l'IA.
+          - Explorer comment une plateforme de mathématiques en ligne utilise des données en temps réel pour présenter du contenu à différents niveaux de difficulté.
         scenarios_de:
-        - Vertraute digitale Interaktionen (z.B. Verwendung einer Webcam, Videoempfehlungen) auflisten und diskutieren, ob und wie jede KI verwendet.
-        - Erforschen, wie eine Online-Mathematikplattform Echtzeitdaten nutzt, um Inhalte auf verschiedenen Schwierigkeitsebenen zu präsentieren.
+          - Vertraute digitale Interaktionen (z.B. Verwendung einer Webcam, Videoempfehlungen) auflisten und diskutieren, ob und wie jede KI verwendet.
+          - Erforschen, wie eine Online-Mathematikplattform Echtzeitdaten nutzt, um Inhalte auf verschiedenen Schwierigkeitsebenen zu präsentieren.
         scenarios_ru:
-        - Перечислить знакомые цифровые взаимодействия (например, использование веб-камеры, рекомендации видео) и обсудить, использует ли каждое из них ИИ и как.
-        - Изучить, как онлайн-платформа математики использует данные в реальном времени для представления контента на разных уровнях сложности.
+          - Перечислить знакомые цифровые взаимодействия (например, использование веб-камеры, рекомендации видео) и обсудить, использует ли каждое из них ИИ и как.
+          - Изучить, как онлайн-платформа математики использует данные в реальном времени для представления контента на разных уровнях сложности.
         scenarios_it:
-        - Elencare interazioni digitali familiari (ad esempio, utilizzo di una webcam, raccomandazioni video) e discutere se e come ognuna utilizza l'IA.
-        - Esplorare come una piattaforma di matematica online utilizza dati in tempo reale per presentare contenuti a diversi livelli di difficoltà.
-        description_zhCN: '[ZHCN translation needed]'
-        description_pt: '[PT translation needed]'
-        description_ar: '[AR translation needed]'
-        description_id: '[ID translation needed]'
-        description_th: '[TH translation needed]'
-        content_zhCN: '[ZHCN translation needed]'
-        content_pt: '[PT translation needed]'
-        content_ar: '[AR translation needed]'
-        content_id: '[ID translation needed]'
-        content_th: '[TH translation needed]'
+          - Elencare interazioni digitali familiari (ad esempio, utilizzo di una webcam, raccomandazioni video) e discutere se e come ognuna utilizza l'IA.
+          - Esplorare come una piattaforma di matematica online utilizza dati in tempo reale per presentare contenuti a diversi livelli di difficoltà.
+        description_zhCN: "[ZHCN translation needed]"
+        description_pt: "[PT translation needed]"
+        description_ar: "[AR translation needed]"
+        description_id: "[ID translation needed]"
+        description_th: "[TH translation needed]"
+        content_zhCN: "[ZHCN translation needed]"
+        content_pt: "[PT translation needed]"
+        content_ar: "[AR translation needed]"
+        content_id: "[ID translation needed]"
+        content_th: "[TH translation needed]"
         description_zhTW: 透過提供具體指示、適當背景和評估標準來指導生成式AI系統。
         content_zhTW: 學習者透過給予AI清晰、結構化的輸入來練習提示工程，以指導符合期望和目標的輸出。
         scenarios_zhTW:
-        - 構建一個其他學生可以用來繪製海報的提示，包括海報主題、不該做什麼，以及高品質結果應該是什麼樣子。
-        - 嘗試透過設計定義其目的、語調和任務的提示來指導AI聊天機器人扮演辯論夥伴的角色。然後測試和評估它如何有效支持學習目標。
+          - 構建一個其他學生可以用來繪製海報的提示，包括海報主題、不該做什麼，以及高品質結果應該是什麼樣子。
+          - 嘗試透過設計定義其目的、語調和任務的提示來指導AI聊天機器人扮演辯論夥伴的角色。然後測試和評估它如何有效支持學習目標。
       M4:
         description: Delegate tasks to AI systems to appropriately automate or augment human workflows.
         description_es: Delegar tareas a sistemas de IA para automatizar o aumentar adecuadamente los flujos de trabajo humanos.
@@ -1048,12 +1048,12 @@ domains:
         description_ru: Делегировать задачи системам ИИ для соответствующей автоматизации или дополнения человеческих рабочих процессов.
         description_it: Delegare compiti ai sistemi di IA per automatizzare o aumentare adeguatamente i flussi di lavoro umani.
         knowledge:
-        - K3.1
+          - K3.1
         skills:
-        - S4.1
-        - S5.1
+          - S4.1
+          - S5.1
         attitudes:
-        - A3.1
+          - A3.1
         content: Learners identify opportunities to offload repetitive or structured tasks to AI, allowing people to focus on creativity, ethics, or decision-making.
         content_es: Los estudiantes identifican oportunidades para delegar tareas repetitivas o estructuradas a la IA, permitiendo que las personas se concentren en la creatividad, la ética o la toma de decisiones.
         content_ja: 学習者は、反復的または構造化されたタスクをAIにオフロードする機会を特定し、人々が創造性、倫理、または意思決定に集中できるようにします。
@@ -1063,44 +1063,44 @@ domains:
         content_ru: Учащиеся выявляют возможности для передачи повторяющихся или структурированных задач ИИ, позволяя людям сосредоточиться на креативности, этике или принятии решений.
         content_it: Gli studenti identificano opportunità per delegare compiti ripetitivi o strutturati all'IA, consentendo alle persone di concentrarsi sulla creatività, sull'etica o sulla presa di decisioni.
         scenarios:
-        - Plan a writing process where AI helps with spelling corrections and synonym suggestions, while learners focus on storytelling, character development, and creative plot twists.
-        - Use AI to generate variations of a concept based on a group's initial ideas, while team members evaluate the options, refine the final version, and present their rationale.
+          - Plan a writing process where AI helps with spelling corrections and synonym suggestions, while learners focus on storytelling, character development, and creative plot twists.
+          - Use AI to generate variations of a concept based on a group's initial ideas, while team members evaluate the options, refine the final version, and present their rationale.
         scenarios_es:
-        - Planificar un proceso de escritura en el que la IA ayude con correcciones ortográficas y sugerencias de sinónimos, mientras que los estudiantes se centran en la narración, el desarrollo de personajes y giros creativos en la trama.
-        - Utilizar IA para generar variaciones de un concepto basado en las ideas iniciales de un grupo, mientras que los miembros del equipo evalúan las opciones, refinan la versión final y presentan su razonamiento.
+          - Planificar un proceso de escritura en el que la IA ayude con correcciones ortográficas y sugerencias de sinónimos, mientras que los estudiantes se centran en la narración, el desarrollo de personajes y giros creativos en la trama.
+          - Utilizar IA para generar variaciones de un concepto basado en las ideas iniciales de un grupo, mientras que los miembros del equipo evalúan las opciones, refinan la versión final y presentan su razonamiento.
         scenarios_ja:
-        - AIがスペル修正や同義語の提案を手伝う執筆プロセスを計画し、学習者がストーリーテリング、キャラクター開発、創造的なプロットのひねりに集中します。
-        - AIを使用してグループの初期アイデアに基づいて概念のバリエーションを生成し、チームメンバーがオプションを評価し、最終バージョンを洗練し、彼らの理由を提示します。
+          - AIがスペル修正や同義語の提案を手伝う執筆プロセスを計画し、学習者がストーリーテリング、キャラクター開発、創造的なプロットのひねりに集中します。
+          - AIを使用してグループの初期アイデアに基づいて概念のバリエーションを生成し、チームメンバーがオプションを評価し、最終バージョンを洗練し、彼らの理由を提示します。
         scenarios_ko:
-        - AI가 맞춤법 수정 및 동의어 제안을 도와주는 글쓰기 프로세스를 계획하고, 학습자는 스토리텔링, 캐릭터 개발 및 창의적인 플롯 전환에 집중합니다.
-        - AI를 사용하여 그룹의 초기 아이디어를 기반으로 개념 변형을 생성하고, 팀원들이 옵션을 평가하고 최종 버전을 개선하며 그들의 이유를 제시합니다.
+          - AI가 맞춤법 수정 및 동의어 제안을 도와주는 글쓰기 프로세스를 계획하고, 학습자는 스토리텔링, 캐릭터 개발 및 창의적인 플롯 전환에 집중합니다.
+          - AI를 사용하여 그룹의 초기 아이디어를 기반으로 개념 변형을 생성하고, 팀원들이 옵션을 평가하고 최종 버전을 개선하며 그들의 이유를 제시합니다.
         scenarios_fr:
-        - Planifier un processus d'écriture où l'IA aide avec les corrections orthographiques et les suggestions de synonymes, tandis que les apprenants se concentrent sur la narration, le développement des personnages et les rebondissements créatifs de l'intrigue.
-        - Utiliser l'IA pour générer des variations d'un concept basé sur les idées initiales d'un groupe, tandis que les membres de l'équipe évaluent les options, affinent la version finale et présentent leur raisonnement.
+          - Planifier un processus d'écriture où l'IA aide avec les corrections orthographiques et les suggestions de synonymes, tandis que les apprenants se concentrent sur la narration, le développement des personnages et les rebondissements créatifs de l'intrigue.
+          - Utiliser l'IA pour générer des variations d'un concept basé sur les idées initiales d'un groupe, tandis que les membres de l'équipe évaluent les options, affinent la version finale et présentent leur raisonnement.
         scenarios_de:
-        - Einen Schreibprozess planen, bei dem KI bei Rechtschreibkorrekturen und Synonymvorschlägen hilft, während die Lernenden sich auf Geschichtenerzählen, Charakterentwicklung und kreative Wendungen konzentrieren.
-        - KI verwenden, um Variationen eines Konzepts basierend auf den ursprünglichen Ideen einer Gruppe zu generieren, während die Teammitglieder die Optionen bewerten, die endgültige Version verfeinern und ihre Argumentation präsentieren.
+          - Einen Schreibprozess planen, bei dem KI bei Rechtschreibkorrekturen und Synonymvorschlägen hilft, während die Lernenden sich auf Geschichtenerzählen, Charakterentwicklung und kreative Wendungen konzentrieren.
+          - KI verwenden, um Variationen eines Konzepts basierend auf den ursprünglichen Ideen einer Gruppe zu generieren, während die Teammitglieder die Optionen bewerten, die endgültige Version verfeinern und ihre Argumentation präsentieren.
         scenarios_ru:
-        - Запланировать процесс написания, в котором ИИ помогает с исправлением орфографии и предложениями синонимов, в то время как учащиеся сосредотачиваются на повествовании, развитии персонажей и креативных поворотах сюжета.
-        - Использовать ИИ для генерации вариаций концепции на основе первоначальных идей группы, в то время как члены команды оценивают варианты, уточняют финальную версию и представляют свои доводы.
+          - Запланировать процесс написания, в котором ИИ помогает с исправлением орфографии и предложениями синонимов, в то время как учащиеся сосредотачиваются на повествовании, развитии персонажей и креативных поворотах сюжета.
+          - Использовать ИИ для генерации вариаций концепции на основе первоначальных идей группы, в то время как члены команды оценивают варианты, уточняют финальную версию и представляют свои доводы.
         scenarios_it:
-        - Pianificare un processo di scrittura in cui l'IA aiuta con le correzioni ortografiche e le suggerimenti di sinonimi, mentre gli studenti si concentrano sulla narrazione, lo sviluppo dei personaggi e i colpi di scena creativi.
-        - Utilizzare l'IA per generare variazioni di un concetto basato sulle idee iniziali di un gruppo, mentre i membri del team valutano le opzioni, affinano la versione finale e presentano le loro motivazioni.
-        description_zhCN: '[ZHCN translation needed]'
-        description_pt: '[PT translation needed]'
-        description_ar: '[AR translation needed]'
-        description_id: '[ID translation needed]'
-        description_th: '[TH translation needed]'
-        content_zhCN: '[ZHCN translation needed]'
-        content_pt: '[PT translation needed]'
-        content_ar: '[AR translation needed]'
-        content_id: '[ID translation needed]'
-        content_th: '[TH translation needed]'
+          - Pianificare un processo di scrittura in cui l'IA aiuta con le correzioni ortografiche e le suggerimenti di sinonimi, mentre gli studenti si concentrano sulla narrazione, lo sviluppo dei personaggi e i colpi di scena creativi.
+          - Utilizzare l'IA per generare variazioni di un concetto basato sulle idee iniziali di un gruppo, mentre i membri del team valutano le opzioni, affinano la versione finale e presentano le loro motivazioni.
+        description_zhCN: "[ZHCN translation needed]"
+        description_pt: "[PT translation needed]"
+        description_ar: "[AR translation needed]"
+        description_id: "[ID translation needed]"
+        description_th: "[TH translation needed]"
+        content_zhCN: "[ZHCN translation needed]"
+        content_pt: "[PT translation needed]"
+        content_ar: "[AR translation needed]"
+        content_id: "[ID translation needed]"
+        content_th: "[TH translation needed]"
         description_zhTW: 將任務委派給AI系統，以適當地自動化或增強人類工作流程。
         content_zhTW: 學習者識別將重複或結構化任務轉移給AI的機會，讓人們能夠專注於創造力、倫理或決策制定。
         scenarios_zhTW:
-        - 規劃一個寫作過程，其中AI協助拼字修正和同義詞建議，而學習者專注於故事敘述、角色發展和創意情節轉折。
-        - 使用AI根據小組的初始想法生成概念變化，同時團隊成員評估選項、改善最終版本並提出他們的理由。
+          - 規劃一個寫作過程，其中AI協助拼字修正和同義詞建議，而學習者專注於故事敘述、角色發展和創意情節轉折。
+          - 使用AI根據小組的初始想法生成概念變化，同時團隊成員評估選項、改善最終版本並提出他們的理由。
       M5:
         description: Develop and communicate guidelines for using AI systems that align with human values, promote fairness, and prioritize transparency.
         description_es: Desarrollar y comunicar pautas para el uso de sistemas de IA que se alineen con los valores humanos, promuevan la equidad y prioricen la transparencia.
@@ -1111,14 +1111,14 @@ domains:
         description_ru: Разработать и сообщить рекомендации по использованию систем ИИ, которые соответствуют человеческим ценностям, способствуют справедливости и придают приоритет прозрачности.
         description_it: Sviluppare e comunicare linee guida per l'uso di sistemi di IA che si allineano con i valori umani, promuovono l'equità e danno priorità alla trasparenza.
         knowledge:
-        - K5.4
+          - K5.4
         skills:
-        - S7.1
-        - S1.1
-        - S6.1
+          - S7.1
+          - S1.1
+          - S6.1
         attitudes:
-        - A1.1
-        - A5.1
+          - A1.1
+          - A5.1
         content: Learners create or reinforce responsible guidelines for AI use in academic contexts. They consider existing guidelines from local, national, or international organizations, such as the European Commission or the OECD.
         content_es: Los estudiantes crean o refuerzan pautas responsables para el uso de IA en contextos académicos. Consideran las pautas existentes de organizaciones locales, nacionales o internacionales, como la Comisión Europea o la OCDE.
         content_ja: 学習者は、学術的な文脈でのAI使用に関する責任あるガイドラインを作成または強化します。彼らは、欧州委員会やOECDなどの地方、国家、または国際的な組織からの既存のガイドラインを考慮します。
@@ -1128,58 +1128,58 @@ domains:
         content_ru: Учащиеся разрабатывают или укрепляют ответственные рекомендации по использованию ИИ в академических контекстах. Они учитывают существующие рекомендации местных, национальных или международных организаций, таких как Европейская комиссия или ОЭСР.
         content_it: Gli studenti creano o rafforzano linee guida responsabili per l'uso dell'IA in contesti accademici. Considerano le linee guida esistenti di organizzazioni locali, nazionali o internazionali, come la Commissione Europea o l'OCSE.
         scenarios:
-        - Create a classroom poster outlining fair ways to use an AI tool, such as crediting sources and seeking a teacher's approval before using it for assignments.
-        - Lead a workshop for peers on common AI tools, sharing guidelines for AI use that promote honesty, respect for intellectual property, and critical thinking.
+          - Create a classroom poster outlining fair ways to use an AI tool, such as crediting sources and seeking a teacher's approval before using it for assignments.
+          - Lead a workshop for peers on common AI tools, sharing guidelines for AI use that promote honesty, respect for intellectual property, and critical thinking.
         scenarios_es:
-        - Crear un cartel en el aula que describa formas justas de usar una herramienta de IA, como acreditar fuentes y buscar la aprobación de un maestro antes de usarla para tareas.
-        - Dirigir un taller para compañeros sobre herramientas de IA comunes, compartiendo pautas para el uso de IA que promuevan la honestidad, el respeto por la propiedad intelectual y el pensamiento crítico.
+          - Crear un cartel en el aula que describa formas justas de usar una herramienta de IA, como acreditar fuentes y buscar la aprobación de un maestro antes de usarla para tareas.
+          - Dirigir un taller para compañeros sobre herramientas de IA comunes, compartiendo pautas para el uso de IA que promuevan la honestidad, el respeto por la propiedad intelectual y el pensamiento crítico.
         scenarios_ja:
-        - AIツールの公正な使用方法を概説した教室のポスターを作成し、出典をクレジットし、課題に使用する前に教師の承認を求めることなどを含めます。
-        - 一般的なAIツールに関するワークショップを同級生に主導し、誠実さ、知的財産の尊重、批判的思考を促進するAI使用のガイドラインを共有します。
+          - AIツールの公正な使用方法を概説した教室のポスターを作成し、出典をクレジットし、課題に使用する前に教師の承認を求めることなどを含めます。
+          - 一般的なAIツールに関するワークショップを同級生に主導し、誠実さ、知的財産の尊重、批判的思考を促進するAI使用のガイドラインを共有します。
         scenarios_ko:
-        - AI 도구를 공정하게 사용하는 방법을 설명하는 교실 포스터를 만들고, 출처를 표기하고 과제에 사용하기 전에 교사의 승인을 받는 것과 같은 내용을 포함합니다.
-        - 일반적인 AI 도구에 대한 동료 워크숍을 주도하고, 정직, 지적 재산 존중 및 비판적 사고를 촉진하는 AI 사용 지침을 공유합니다.
+          - AI 도구를 공정하게 사용하는 방법을 설명하는 교실 포스터를 만들고, 출처를 표기하고 과제에 사용하기 전에 교사의 승인을 받는 것과 같은 내용을 포함합니다.
+          - 일반적인 AI 도구에 대한 동료 워크숍을 주도하고, 정직, 지적 재산 존중 및 비판적 사고를 촉진하는 AI 사용 지침을 공유합니다.
         scenarios_fr:
-        - Créer une affiche en classe décrivant des façons équitables d'utiliser un outil d'IA, comme créditer les sources et demander l'approbation d'un enseignant avant de l'utiliser pour des devoirs.
-        - Animer un atelier pour des pairs sur des outils d'IA courants, en partageant des lignes directrices pour l'utilisation de l'IA qui promeuvent l'honnêteté, le respect de la propriété intellectuelle et la pensée critique.
+          - Créer une affiche en classe décrivant des façons équitables d'utiliser un outil d'IA, comme créditer les sources et demander l'approbation d'un enseignant avant de l'utiliser pour des devoirs.
+          - Animer un atelier pour des pairs sur des outils d'IA courants, en partageant des lignes directrices pour l'utilisation de l'IA qui promeuvent l'honnêteté, le respect de la propriété intellectuelle et la pensée critique.
         scenarios_de:
-        - Ein Klassenplakat erstellen, das faire Möglichkeiten zur Nutzung eines KI-Tools umreißt, wie z.B. Quellen anzugeben und die Genehmigung eines Lehrers einzuholen, bevor es für Aufgaben verwendet wird.
-        - Einen Workshop für Gleichaltrige zu gängigen KI-Tools leiten und Richtlinien für die Nutzung von KI teilen, die Ehrlichkeit, Respekt für geistiges Eigentum und kritisches Denken fördern.
+          - Ein Klassenplakat erstellen, das faire Möglichkeiten zur Nutzung eines KI-Tools umreißt, wie z.B. Quellen anzugeben und die Genehmigung eines Lehrers einzuholen, bevor es für Aufgaben verwendet wird.
+          - Einen Workshop für Gleichaltrige zu gängigen KI-Tools leiten und Richtlinien für die Nutzung von KI teilen, die Ehrlichkeit, Respekt für geistiges Eigentum und kritisches Denken fördern.
         scenarios_ru:
-        - Создать плакат в классе, описывающий справедливые способы использования инструмента ИИ, такие как указание источников и получение одобрения учителя перед использованием его для заданий.
-        - Провести семинар для сверстников по общим инструментам ИИ, поделившись рекомендациями по использованию ИИ, которые способствуют честности, уважению к интеллектуальной собственности и критическому мышлению.
+          - Создать плакат в классе, описывающий справедливые способы использования инструмента ИИ, такие как указание источников и получение одобрения учителя перед использованием его для заданий.
+          - Провести семинар для сверстников по общим инструментам ИИ, поделившись рекомендациями по использованию ИИ, которые способствуют честности, уважению к интеллектуальной собственности и критическому мышлению.
         scenarios_it:
-        - Creare un poster in aula che descriva modi equi per utilizzare uno strumento di IA, come accreditare le fonti e cercare l'approvazione di un insegnante prima di utilizzarlo per i compiti.
-        - Condurre un workshop per i coetanei sugli strumenti di IA comuni, condividendo linee guida per l'uso dell'IA che promuovono l'onestà, il rispetto della proprietà intellettuale e il pensiero critico.
-        description_zhCN: '[ZHCN translation needed]'
-        description_pt: '[PT translation needed]'
-        description_ar: '[AR translation needed]'
-        description_id: '[ID translation needed]'
-        description_th: '[TH translation needed]'
-        content_zhCN: '[ZHCN translation needed]'
-        content_pt: '[PT translation needed]'
-        content_ar: '[AR translation needed]'
-        content_id: '[ID translation needed]'
-        content_th: '[TH translation needed]'
+          - Creare un poster in aula che descriva modi equi per utilizzare uno strumento di IA, come accreditare le fonti e cercare l'approvazione di un insegnante prima di utilizzarlo per i compiti.
+          - Condurre un workshop per i coetanei sugli strumenti di IA comuni, condividendo linee guida per l'uso dell'IA che promuovono l'onestà, il rispetto della proprietà intellettuale e il pensiero critico.
+        description_zhCN: "[ZHCN translation needed]"
+        description_pt: "[PT translation needed]"
+        description_ar: "[AR translation needed]"
+        description_id: "[ID translation needed]"
+        description_th: "[TH translation needed]"
+        content_zhCN: "[ZHCN translation needed]"
+        content_pt: "[PT translation needed]"
+        content_ar: "[AR translation needed]"
+        content_id: "[ID translation needed]"
+        content_th: "[TH translation needed]"
         description_zhTW: 制定和傳達符合人類價值觀、促進公平性和優先考慮透明度的AI系統使用指導原則。
         content_zhTW: 學習者在學術脈絡中創建或強化負責任的AI使用指導原則。他們考慮來自地方、國家或國際組織（如歐盟委員會或經濟合作暨發展組織）的現有指導原則。
         scenarios_zhTW:
-        - 製作課堂海報，概述使用AI工具的公平方式，如標註來源和在用於作業前徵求教師同意。
-        - 為同儕主持常見AI工具工作坊，分享促進誠實、尊重智慧財產權和批判性思維的AI使用指導原則。
-    emoji_zhTW: '[ZHTW translation needed]'
+          - 製作課堂海報，概述使用AI工具的公平方式，如標註來源和在用於作業前徵求教師同意。
+          - 為同儕主持常見AI工具工作坊，分享促進誠實、尊重智慧財產權和批判性思維的AI使用指導原則。
+    emoji_zhTW: "[ZHTW translation needed]"
     emoji_zhCN: ⚙️
     emoji_pt: ⚙️
     emoji_ar: ⚙️
     emoji_id: ⚙️
     emoji_th: ⚙️
-    emoji_es: '[ES translation needed]'
-    emoji_ja: '[JA translation needed]'
-    emoji_ko: '[KO translation needed]'
-    emoji_fr: '[FR translation needed]'
-    emoji_de: '[DE translation needed]'
-    emoji_ru: '[RU translation needed]'
-    emoji_it: '[IT translation needed]'
-    overview_zhTW: '[ZHTW translation needed]'
+    emoji_es: "[ES translation needed]"
+    emoji_ja: "[JA translation needed]"
+    emoji_ko: "[KO translation needed]"
+    emoji_fr: "[FR translation needed]"
+    emoji_de: "[DE translation needed]"
+    emoji_ru: "[RU translation needed]"
+    emoji_it: "[IT translation needed]"
+    overview_zhTW: "[ZHTW translation needed]"
   Designing_with_AI:
     emoji: 💡
     overview: empowers learners to understand how AI works and connect it to its social and ethical impacts by shaping how AI systems function. Through hands-on exploration in an education context, students examine how data, design choices, and model behavior influence the fairness, usefulness, and impact of AI systems. The goal is not to develop commercial products or put them into service, but to build the confidence and capacity to shape AI for human good by understanding the principles underpinning the design of AI from an early age.
@@ -1206,16 +1206,16 @@ domains:
         description_ru: Описать, как системы ИИ могут быть спроектированы для поддержки решения проблемы сообщества.
         description_it: Descrivere come i sistemi di IA possono essere progettati per supportare una soluzione a un problema della comunità.
         knowledge:
-        - K2.3
-        - K3.2
+          - K2.3
+          - K3.2
         skills:
-        - S4.1
-        - S5.1
-        - S6.1
+          - S4.1
+          - S5.1
+          - S6.1
         attitudes:
-        - A2.1
-        - A3.1
-        - A1.1
+          - A2.1
+          - A3.1
+          - A1.1
         content: Learners explore how AI can solve real-world problems by identifying a community need that could be addressed with AI, considering how to design AI to contribute to a solution, and evaluating the potential benefits, risks, and limitations.
         content_es: Los estudiantes exploran cómo la IA puede resolver problemas del mundo real identificando una necesidad comunitaria que podría abordarse con IA, considerando cómo diseñar la IA para contribuir a una solución, y evaluando los beneficios, riesgos y limitaciones potenciales.
         content_ja: 学習者は、AIで対処できる地域のニーズを特定し、解決策に貢献するためのAI設計を検討し、潜在的な利益、リスク、制限を評価することによって、AIが現実世界の問題をどのように解決できるかを探求します。
@@ -1225,44 +1225,44 @@ domains:
         content_ru: Учащиеся исследуют, как ИИ может решать реальные проблемы, выявляя потребности сообщества, которые можно решить с помощью ИИ, рассматривая способы проектирования ИИ для содействия решению и оценивая потенциальные преимущества, риски и ограничения.
         content_it: Gli studenti esplorano come l'IA può risolvere problemi del mondo reale identificando un bisogno della comunità che potrebbe essere affrontato con l'IA, considerando come progettare l'IA per contribuire a una soluzione, e valutando i potenziali benefici, rischi e limitazioni.
         scenarios:
-        - Develop a method for sorting healthy vs. unhealthy snacks for the school cafeteria by gathering images of real snack items from home or the cafeteria, labeling them, and testing how the method classifies new items.
-        - Propose how AI could help recommend after-school activities based on interests by exploring what data would be needed, how the AI would make decisions, and what parts of the solution should involve human input.
+          - Develop a method for sorting healthy vs. unhealthy snacks for the school cafeteria by gathering images of real snack items from home or the cafeteria, labeling them, and testing how the method classifies new items.
+          - Propose how AI could help recommend after-school activities based on interests by exploring what data would be needed, how the AI would make decisions, and what parts of the solution should involve human input.
         scenarios_es:
-        - Enumerar interacciones digitales familiares (por ejemplo, usar una cámara web, recomendaciones de videos) y discutir si y cómo cada una utiliza IA.
-        - Explorar cómo una plataforma de matemáticas en línea utiliza datos en tiempo real para presentar contenido en diferentes niveles de dificultad.
+          - Enumerar interacciones digitales familiares (por ejemplo, usar una cámara web, recomendaciones de videos) y discutir si y cómo cada una utiliza IA.
+          - Explorar cómo una plataforma de matemáticas en línea utiliza datos en tiempo real para presentar contenido en diferentes niveles de dificultad.
         scenarios_ja:
-        - 身近なデジタル相互作用（ウェブカメラの使用、動画推薦など）をリストアップし、それぞれがAIを使用しているかどうか、どのように使用しているかを議論する。
-        - オンライン数学プラットフォームがリアルタイムデータを使用して、異なる難易度レベルのコンテンツを提示する方法を探る。
+          - 身近なデジタル相互作用（ウェブカメラの使用、動画推薦など）をリストアップし、それぞれがAIを使用しているかどうか、どのように使用しているかを議論する。
+          - オンライン数学プラットフォームがリアルタイムデータを使用して、異なる難易度レベルのコンテンツを提示する方法を探る。
         scenarios_ko:
-        - '친숙한 디지털 상호작용(예: 웹 카메라 사용, 비디오 추천)을 나열하고 각각이 AI를 사용하는지 여부와 방법을 토론한다.'
-        - 온라인 수학 플랫폼이 실시간 데이터를 활용하여 다양한 난이도 수준의 콘텐츠를 제시하는 방법을 탐구한다.
+          - "친숙한 디지털 상호작용(예: 웹 카메라 사용, 비디오 추천)을 나열하고 각각이 AI를 사용하는지 여부와 방법을 토론한다."
+          - 온라인 수학 플랫폼이 실시간 데이터를 활용하여 다양한 난이도 수준의 콘텐츠를 제시하는 방법을 탐구한다.
         scenarios_fr:
-        - Énumérer les interactions numériques familières (par exemple, utiliser une webcam, recommandations vidéo) et discuter si et comment chacune utilise l'IA.
-        - Explorer comment une plateforme de mathématiques en ligne utilise des données en temps réel pour présenter du contenu à différents niveaux de difficulté.
+          - Énumérer les interactions numériques familières (par exemple, utiliser une webcam, recommandations vidéo) et discuter si et comment chacune utilise l'IA.
+          - Explorer comment une plateforme de mathématiques en ligne utilise des données en temps réel pour présenter du contenu à différents niveaux de difficulté.
         scenarios_de:
-        - Vertraute digitale Interaktionen (z.B. Verwendung einer Webcam, Videoempfehlungen) auflisten und diskutieren, ob und wie jede KI verwendet.
-        - Erforschen, wie eine Online-Mathematikplattform Echtzeitdaten nutzt, um Inhalte auf verschiedenen Schwierigkeitsebenen zu präsentieren.
+          - Vertraute digitale Interaktionen (z.B. Verwendung einer Webcam, Videoempfehlungen) auflisten und diskutieren, ob und wie jede KI verwendet.
+          - Erforschen, wie eine Online-Mathematikplattform Echtzeitdaten nutzt, um Inhalte auf verschiedenen Schwierigkeitsebenen zu präsentieren.
         scenarios_ru:
-        - Перечислить знакомые цифровые взаимодействия (например, использование веб-камеры, рекомендации видео) и обсудить, использует ли каждое из них ИИ и как.
-        - Изучить, как онлайн-платформа математики использует данные в реальном времени для представления контента на разных уровнях сложности.
+          - Перечислить знакомые цифровые взаимодействия (например, использование веб-камеры, рекомендации видео) и обсудить, использует ли каждое из них ИИ и как.
+          - Изучить, как онлайн-платформа математики использует данные в реальном времени для представления контента на разных уровнях сложности.
         scenarios_it:
-        - Elencare interazioni digitali familiari (ad esempio, utilizzo di una webcam, raccomandazioni video) e discutere se e come ognuna utilizza l'IA.
-        - Esplorare come una piattaforma di matematica online utilizza dati in tempo reale per presentare contenuti a diversi livelli di difficoltà.
-        description_zhCN: '[ZHCN translation needed]'
-        description_pt: '[PT translation needed]'
-        description_ar: '[AR translation needed]'
-        description_id: '[ID translation needed]'
-        description_th: '[TH translation needed]'
-        content_zhCN: '[ZHCN translation needed]'
-        content_pt: '[PT translation needed]'
-        content_ar: '[AR translation needed]'
-        content_id: '[ID translation needed]'
-        content_th: '[TH translation needed]'
+          - Elencare interazioni digitali familiari (ad esempio, utilizzo di una webcam, raccomandazioni video) e discutere se e come ognuna utilizza l'IA.
+          - Esplorare come una piattaforma di matematica online utilizza dati in tempo reale per presentare contenuti a diversi livelli di difficoltà.
+        description_zhCN: "[ZHCN translation needed]"
+        description_pt: "[PT translation needed]"
+        description_ar: "[AR translation needed]"
+        description_id: "[ID translation needed]"
+        description_th: "[TH translation needed]"
+        content_zhCN: "[ZHCN translation needed]"
+        content_pt: "[PT translation needed]"
+        content_ar: "[AR translation needed]"
+        content_id: "[ID translation needed]"
+        content_th: "[TH translation needed]"
         description_zhTW: 描述如何設計AI系統來支持社區問題的解決方案。
         content_zhTW: 學習者透過識別可以用AI解決的社區需求、考慮如何設計AI來促成解決方案，以及評估潛在的益處、風險和限制，來探索AI如何解決現實世界的問題。
         scenarios_zhTW:
-        - 透過收集來自家庭或學校餐廳的真實零食圖像、為其標記，並測試該方法如何對新項目進行分類，來開發為學校餐廳分類健康與不健康零食的方法。
-        - 透過探索需要什麼資料、AI如何做決定，以及解決方案的哪些部分應該涉及人類輸入，來提議AI如何協助根據興趣推薦課後活動。
+          - 透過收集來自家庭或學校餐廳的真實零食圖像、為其標記，並測試該方法如何對新項目進行分類，來開發為學校餐廳分類健康與不健康零食的方法。
+          - 透過探索需要什麼資料、AI如何做決定，以及解決方案的哪些部分應該涉及人類輸入，來提議AI如何協助根據興趣推薦課後活動。
       D2:
         description: Compare the capabilities and limitations of AI systems that follow algorithms created by humans with those that make predictions based on data.
         description_es: Comparar las capacidades y limitaciones de los sistemas de IA que siguen algoritmos creados por humanos con aquellos que hacen predicciones basadas en datos.
@@ -1273,13 +1273,13 @@ domains:
         description_ru: Сравнить возможности и ограничения ИИ-систем, которые следуют алгоритмам, созданным людьми, с теми, которые делают прогнозы на основе данных.
         description_it: Confrontare le capacità e le limitazioni dei sistemi di IA che seguono algoritmi creati dagli esseri umani con quelli che fanno previsioni basate sui dati.
         knowledge:
-        - K1.2
-        - K1.4
+          - K1.2
+          - K1.4
         skills:
-        - S3.1
-        - S5.1
+          - S3.1
+          - S5.1
         attitudes:
-        - A2.1
+          - A2.1
         content: Learners examine the difference between systems that follow fixed rules (or manually programmed logic) and machine learning models to understand the value of machine learning and determine when each approach is most useful or appropriate.
         content_es: Los estudiantes examinan la diferencia entre sistemas que siguen reglas fijas (o lógica programada manualmente) y modelos de aprendizaje automático para entender el valor del aprendizaje automático y determinar cuándo cada enfoque es más útil o apropiado.
         content_ja: 学習者は、固定ルール（または手動でプログラムされたロジック）に従うシステムと機械学習モデルの違いを検討し、機械学習の価値を理解し、それぞれのアプローチがいつ最も有用または適切かを判断します。
@@ -1289,44 +1289,44 @@ domains:
         content_ru: Учащиеся изучают разницу между системами, которые следуют фиксированным правилам (или вручную запрограммированной логике), и моделями машинного обучения, чтобы понять ценность машинного обучения и определить, когда каждый подход наиболее полезен или уместен.
         content_it: Gli studenti esaminano la differenza tra sistemi che seguono regole fisse (o logica programmata manualmente) e modelli di apprendimento automatico per comprendere il valore dell'apprendimento automatico e determinare quando ogni approccio è più utile o appropriato.
         scenarios:
-        - Compare a method for organizing animals based on physical characteristics with one that groups animals based on habitat and behavior, then discuss when each approach is useful.
-        - Program a simple chatbot using conditional logic (e.g., to help people select a book), and compare its capabilities to those of a machine learning–based system handling the same task.
+          - Compare a method for organizing animals based on physical characteristics with one that groups animals based on habitat and behavior, then discuss when each approach is useful.
+          - Program a simple chatbot using conditional logic (e.g., to help people select a book), and compare its capabilities to those of a machine learning–based system handling the same task.
         scenarios_es:
-        - Enumerar interacciones digitales familiares (por ejemplo, usar una cámara web, recomendaciones de videos) y discutir si y cómo cada una utiliza IA.
-        - Explorar cómo una plataforma de matemáticas en línea utiliza datos en tiempo real para presentar contenido en diferentes niveles de dificultad.
+          - Enumerar interacciones digitales familiares (por ejemplo, usar una cámara web, recomendaciones de videos) y discutir si y cómo cada una utiliza IA.
+          - Explorar cómo una plataforma de matemáticas en línea utiliza datos en tiempo real para presentar contenido en diferentes niveles de dificultad.
         scenarios_ja:
-        - 身近なデジタル相互作用（ウェブカメラの使用、動画推薦など）をリストアップし、それぞれがAIを使用しているかどうか、どのように使用しているかを議論する。
-        - オンライン数学プラットフォームがリアルタイムデータを使用して、異なる難易度レベルのコンテンツを提示する方法を探る。
+          - 身近なデジタル相互作用（ウェブカメラの使用、動画推薦など）をリストアップし、それぞれがAIを使用しているかどうか、どのように使用しているかを議論する。
+          - オンライン数学プラットフォームがリアルタイムデータを使用して、異なる難易度レベルのコンテンツを提示する方法を探る。
         scenarios_ko:
-        - '친숙한 디지털 상호작용(예: 웹 카메라 사용, 비디오 추천)을 나열하고 각각이 AI를 사용하는지 여부와 방법을 토론한다.'
-        - 온라인 수학 플랫폼이 실시간 데이터를 활용하여 다양한 난이도 수준의 콘텐츠를 제시하는 방법을 탐구한다.
+          - "친숙한 디지털 상호작용(예: 웹 카메라 사용, 비디오 추천)을 나열하고 각각이 AI를 사용하는지 여부와 방법을 토론한다."
+          - 온라인 수학 플랫폼이 실시간 데이터를 활용하여 다양한 난이도 수준의 콘텐츠를 제시하는 방법을 탐구한다.
         scenarios_fr:
-        - Énumérer les interactions numériques familières (par exemple, utiliser une webcam, recommandations vidéo) et discuter si et comment chacune utilise l'IA.
-        - Explorer comment une plateforme de mathématiques en ligne utilise des données en temps réel pour présenter du contenu à différents niveaux de difficulté.
+          - Énumérer les interactions numériques familières (par exemple, utiliser une webcam, recommandations vidéo) et discuter si et comment chacune utilise l'IA.
+          - Explorer comment une plateforme de mathématiques en ligne utilise des données en temps réel pour présenter du contenu à différents niveaux de difficulté.
         scenarios_de:
-        - Vertraute digitale Interaktionen (z.B. Verwendung einer Webcam, Videoempfehlungen) auflisten und diskutieren, ob und wie jede KI verwendet.
-        - Erforschen, wie eine Online-Mathematikplattform Echtzeitdaten nutzt, um Inhalte auf verschiedenen Schwierigkeitsebenen zu präsentieren.
+          - Vertraute digitale Interaktionen (z.B. Verwendung einer Webcam, Videoempfehlungen) auflisten und diskutieren, ob und wie jede KI verwendet.
+          - Erforschen, wie eine Online-Mathematikplattform Echtzeitdaten nutzt, um Inhalte auf verschiedenen Schwierigkeitsebenen zu präsentieren.
         scenarios_ru:
-        - Перечислить знакомые цифровые взаимодействия (например, использование веб-камеры, рекомендации видео) и обсудить, использует ли каждое из них ИИ и как.
-        - Изучить, как онлайн-платформа математики использует данные в реальном времени для представления контента на разных уровнях сложности.
+          - Перечислить знакомые цифровые взаимодействия (например, использование веб-камеры, рекомендации видео) и обсудить, использует ли каждое из них ИИ и как.
+          - Изучить, как онлайн-платформа математики использует данные в реальном времени для представления контента на разных уровнях сложности.
         scenarios_it:
-        - Elencare interazioni digitali familiari (ad esempio, utilizzo di una webcam, raccomandazioni video) e discutere se e come ognuna utilizza l'IA.
-        - Esplorare come una piattaforma di matematica online utilizza dati in tempo reale per presentare contenuti a diversi livelli di difficoltà.
-        description_zhCN: '[ZHCN translation needed]'
-        description_pt: '[PT translation needed]'
-        description_ar: '[AR translation needed]'
-        description_id: '[ID translation needed]'
-        description_th: '[TH translation needed]'
-        content_zhCN: '[ZHCN translation needed]'
-        content_pt: '[PT translation needed]'
-        content_ar: '[AR translation needed]'
-        content_id: '[ID translation needed]'
-        content_th: '[TH translation needed]'
+          - Elencare interazioni digitali familiari (ad esempio, utilizzo di una webcam, raccomandazioni video) e discutere se e come ognuna utilizza l'IA.
+          - Esplorare come una piattaforma di matematica online utilizza dati in tempo reale per presentare contenuti a diversi livelli di difficoltà.
+        description_zhCN: "[ZHCN translation needed]"
+        description_pt: "[PT translation needed]"
+        description_ar: "[AR translation needed]"
+        description_id: "[ID translation needed]"
+        description_th: "[TH translation needed]"
+        content_zhCN: "[ZHCN translation needed]"
+        content_pt: "[PT translation needed]"
+        content_ar: "[AR translation needed]"
+        content_id: "[ID translation needed]"
+        content_th: "[TH translation needed]"
         description_zhTW: 比較遵循人類創建演算法的AI系統與基於資料進行預測的AI系統的能力和限制。
         content_zhTW: 學習者檢視遵循固定規則（或手動程式化邏輯）的系統與機器學習模型之間的差異，以理解機器學習的價值並確定何時每種方法最有用或最適當。
         scenarios_zhTW:
-        - 比較基於物理特徵組織動物的方法與基於棲息地和行為分組動物的方法，然後討論何時每種方法有用。
-        - 使用條件邏輯程式設計簡單聊天機器人（如協助人們選擇書籍），並將其能力與處理相同任務的機器學習系統進行比較。
+          - 比較基於物理特徵組織動物的方法與基於棲息地和行為分組動物的方法，然後討論何時每種方法有用。
+          - 使用條件邏輯程式設計簡單聊天機器人（如協助人們選擇書籍），並將其能力與處理相同任務的機器學習系統進行比較。
       D3:
         description: Collect and curate data that could be used to train an AI model by considering relevance, representation, and potential impact.
         description_es: Recopilar y curar datos que podrían usarse para entrenar un modelo de IA considerando la relevancia, representación e impacto potencial.
@@ -1337,15 +1337,15 @@ domains:
         description_ru: Собирать и курировать данные, которые могут использоваться для обучения ИИ-модели, учитывая релевантность, репрезентативность и потенциальное воздействие.
         description_it: Raccogliere e curare dati che potrebbero essere utilizzati per addestrare un modello di IA considerando rilevanza, rappresentazione e impatto potenziale.
         knowledge:
-        - K1.2
-        - K2.2
-        - K2.4
+          - K1.2
+          - K2.2
+          - K2.4
         skills:
-        - S3.1
-        - S6.1
+          - S3.1
+          - S6.1
         attitudes:
-        - A3.1
-        - A1.1
+          - A3.1
+          - A1.1
         content: Learners discover how data is labeled, selected, and prepared to train an AI model. They learn how data quality and representation affect the model's performance and potential effect on people.
         content_es: Los estudiantes descubren cómo se etiquetan, seleccionan y preparan los datos para entrenar un modelo de IA. Aprenden cómo la calidad y representación de los datos afectan el rendimiento del modelo y su efecto potencial en las personas.
         content_ja: 学習者は、AIモデルを訓練するためにデータがどのようにラベル付け、選択、準備されるかを発見します。データの品質と代表性がモデルの性能と人々への潜在的影響にどのように影響するかを学びます。
@@ -1355,44 +1355,44 @@ domains:
         content_ru: Учащиеся узнают, как данные маркируются, отбираются и подготавливаются для обучения ИИ-модели. Они изучают, как качество и репрезентативность данных влияют на производительность модели и ее потенциальное воздействие на людей.
         content_it: Gli studenti scoprono come i dati vengono etichettati, selezionati e preparati per addestrare un modello di IA. Imparano come la qualità e la rappresentazione dei dati influenzano le prestazioni del modello e il suo effetto potenziale sulle persone.
         scenarios:
-        - Label and sort building blocks based on specific features (e.g., shape, color), then create a decision tree to categorize new blocks.
-        - Explore how a basic AI model can be trained to recognize recyclable materials from photos taken in real life or collected online, then describe the impact the data had on the model's performance.
+          - Label and sort building blocks based on specific features (e.g., shape, color), then create a decision tree to categorize new blocks.
+          - Explore how a basic AI model can be trained to recognize recyclable materials from photos taken in real life or collected online, then describe the impact the data had on the model's performance.
         scenarios_es:
-        - Enumerar interacciones digitales familiares (por ejemplo, usar una cámara web, recomendaciones de videos) y discutir si y cómo cada una utiliza IA.
-        - Explorar cómo una plataforma de matemáticas en línea utiliza datos en tiempo real para presentar contenido en diferentes niveles de dificultad.
+          - Enumerar interacciones digitales familiares (por ejemplo, usar una cámara web, recomendaciones de videos) y discutir si y cómo cada una utiliza IA.
+          - Explorar cómo una plataforma de matemáticas en línea utiliza datos en tiempo real para presentar contenido en diferentes niveles de dificultad.
         scenarios_ja:
-        - 身近なデジタル相互作用（ウェブカメラの使用、動画推薦など）をリストアップし、それぞれがAIを使用しているかどうか、どのように使用しているかを議論する。
-        - オンライン数学プラットフォームがリアルタイムデータを使用して、異なる難易度レベルのコンテンツを提示する方法を探る。
+          - 身近なデジタル相互作用（ウェブカメラの使用、動画推薦など）をリストアップし、それぞれがAIを使用しているかどうか、どのように使用しているかを議論する。
+          - オンライン数学プラットフォームがリアルタイムデータを使用して、異なる難易度レベルのコンテンツを提示する方法を探る。
         scenarios_ko:
-        - '친숙한 디지털 상호작용(예: 웹 카메라 사용, 비디오 추천)을 나열하고 각각이 AI를 사용하는지 여부와 방법을 토론한다.'
-        - 온라인 수학 플랫폼이 실시간 데이터를 활용하여 다양한 난이도 수준의 콘텐츠를 제시하는 방법을 탐구한다.
+          - "친숙한 디지털 상호작용(예: 웹 카메라 사용, 비디오 추천)을 나열하고 각각이 AI를 사용하는지 여부와 방법을 토론한다."
+          - 온라인 수학 플랫폼이 실시간 데이터를 활용하여 다양한 난이도 수준의 콘텐츠를 제시하는 방법을 탐구한다.
         scenarios_fr:
-        - Énumérer les interactions numériques familières (par exemple, utiliser une webcam, recommandations vidéo) et discuter si et comment chacune utilise l'IA.
-        - Explorer comment une plateforme de mathématiques en ligne utilise des données en temps réel pour présenter du contenu à différents niveaux de difficulté.
+          - Énumérer les interactions numériques familières (par exemple, utiliser une webcam, recommandations vidéo) et discuter si et comment chacune utilise l'IA.
+          - Explorer comment une plateforme de mathématiques en ligne utilise des données en temps réel pour présenter du contenu à différents niveaux de difficulté.
         scenarios_de:
-        - Vertraute digitale Interaktionen (z.B. Verwendung einer Webcam, Videoempfehlungen) auflisten und diskutieren, ob und wie jede KI verwendet.
-        - Erforschen, wie eine Online-Mathematikplattform Echtzeitdaten nutzt, um Inhalte auf verschiedenen Schwierigkeitsebenen zu präsentieren.
+          - Vertraute digitale Interaktionen (z.B. Verwendung einer Webcam, Videoempfehlungen) auflisten und diskutieren, ob und wie jede KI verwendet.
+          - Erforschen, wie eine Online-Mathematikplattform Echtzeitdaten nutzt, um Inhalte auf verschiedenen Schwierigkeitsebenen zu präsentieren.
         scenarios_ru:
-        - Перечислить знакомые цифровые взаимодействия (например, использование веб-камеры, рекомендации видео) и обсудить, использует ли каждое из них ИИ и как.
-        - Изучить, как онлайн-платформа математики использует данные в реальном времени для представления контента на разных уровнях сложности.
+          - Перечислить знакомые цифровые взаимодействия (например, использование веб-камеры, рекомендации видео) и обсудить, использует ли каждое из них ИИ и как.
+          - Изучить, как онлайн-платформа математики использует данные в реальном времени для представления контента на разных уровнях сложности.
         scenarios_it:
-        - Elencare interazioni digitali familiari (ad esempio, utilizzo di una webcam, raccomandazioni video) e discutere se e come ognuna utilizza l'IA.
-        - Esplorare come una piattaforma di matematica online utilizza dati in tempo reale per presentare contenuti a diversi livelli di difficoltà.
-        description_zhCN: '[ZHCN translation needed]'
-        description_pt: '[PT translation needed]'
-        description_ar: '[AR translation needed]'
-        description_id: '[ID translation needed]'
-        description_th: '[TH translation needed]'
-        content_zhCN: '[ZHCN translation needed]'
-        content_pt: '[PT translation needed]'
-        content_ar: '[AR translation needed]'
-        content_id: '[ID translation needed]'
-        content_th: '[TH translation needed]'
+          - Elencare interazioni digitali familiari (ad esempio, utilizzo di una webcam, raccomandazioni video) e discutere se e come ognuna utilizza l'IA.
+          - Esplorare come una piattaforma di matematica online utilizza dati in tempo reale per presentare contenuti a diversi livelli di difficoltà.
+        description_zhCN: "[ZHCN translation needed]"
+        description_pt: "[PT translation needed]"
+        description_ar: "[AR translation needed]"
+        description_id: "[ID translation needed]"
+        description_th: "[TH translation needed]"
+        content_zhCN: "[ZHCN translation needed]"
+        content_pt: "[PT translation needed]"
+        content_ar: "[AR translation needed]"
+        content_id: "[ID translation needed]"
+        content_th: "[TH translation needed]"
         description_zhTW: 透過考慮相關性、代表性和潛在影響來收集和策劃可用於訓練AI模型的資料。
         content_zhTW: 學習者發現資料如何被標記、選擇和準備以訓練AI模型。他們學習資料品質和代表性如何影響模型的性能和對人們的潛在影響。
         scenarios_zhTW:
-        - 根據特定特徵（如形狀、顏色）標記和分類積木，然後創建決策樹來分類新的積木。
-        - 探索如何訓練基本AI模型從現實生活中拍攝或線上收集的照片中識別可回收材料，然後描述資料對模型性能的影響。
+          - 根據特定特徵（如形狀、顏色）標記和分類積木，然後創建決策樹來分類新的積木。
+          - 探索如何訓練基本AI模型從現實生活中拍攝或線上收集的照片中識別可回收材料，然後描述資料對模型性能的影響。
       D4:
         description: Evaluate AI systems using defined criteria, expected outcomes, and user feedback.
         description_es: Evaluar sistemas de IA utilizando criterios definidos, resultados esperados y retroalimentación de los usuarios.
@@ -1403,14 +1403,14 @@ domains:
         description_ru: Оценивать ИИ-системы, используя определенные критерии, ожидаемые результаты и обратную связь пользователей.
         description_it: Valutare i sistemi di IA utilizzando criteri definiti, risultati attesi e feedback degli utenti.
         knowledge:
-        - K1.2
-        - K2.3
+          - K1.2
+          - K2.3
         skills:
-        - S4.1
-        - S3.1
+          - S4.1
+          - S3.1
         attitudes:
-        - A3.1
-        - A4.1
+          - A3.1
+          - A4.1
         content: Learners set criteria for a successful AI system, test it with various inputs, and evaluate its performance to make improvements. They use an iterative process shaped by feedback from diverse users.
         content_es: Los estudiantes establecen criterios para un sistema de IA exitoso, lo prueban con diversas entradas y evalúan su rendimiento para realizar mejoras. Utilizan un proceso iterativo formado por la retroalimentación de usuarios diversos.
         content_ja: 学習者は成功するAIシステムの基準を設定し、さまざまな入力でテストし、改善を行うためにその性能を評価します。多様なユーザーからのフィードバックによって形作られる反復的なプロセスを使用します。
@@ -1420,44 +1420,44 @@ domains:
         content_ru: Учащиеся устанавливают критерии для успешной ИИ-системы, тестируют ее с различными входными данными и оценивают ее производительность для внесения улучшений. Они используют итеративный процесс, формируемый обратной связью от разнообразных пользователей.
         content_it: Gli studenti stabiliscono criteri per un sistema di IA di successo, lo testano con vari input e valutano le sue prestazioni per apportare miglioramenti. Utilizzano un processo iterativo plasmato dal feedback di utenti diversi.
         scenarios:
-        - Use a generative AI tool to create a joke or riddle by defining what makes a good joke, rating the system's responses, and trying new prompts to improve results.
-        - Evaluate AI systems by testing different types of AI models with the same datasets for the same task, then discuss and propose ways to improve them that includes user feedback.
+          - Use a generative AI tool to create a joke or riddle by defining what makes a good joke, rating the system's responses, and trying new prompts to improve results.
+          - Evaluate AI systems by testing different types of AI models with the same datasets for the same task, then discuss and propose ways to improve them that includes user feedback.
         scenarios_es:
-        - Enumerar interacciones digitales familiares (por ejemplo, usar una cámara web, recomendaciones de videos) y discutir si y cómo cada una utiliza IA.
-        - Explorar cómo una plataforma de matemáticas en línea utiliza datos en tiempo real para presentar contenido en diferentes niveles de dificultad.
+          - Enumerar interacciones digitales familiares (por ejemplo, usar una cámara web, recomendaciones de videos) y discutir si y cómo cada una utiliza IA.
+          - Explorar cómo una plataforma de matemáticas en línea utiliza datos en tiempo real para presentar contenido en diferentes niveles de dificultad.
         scenarios_ja:
-        - 身近なデジタル相互作用（ウェブカメラの使用、動画推薦など）をリストアップし、それぞれがAIを使用しているかどうか、どのように使用しているかを議論する。
-        - オンライン数学プラットフォームがリアルタイムデータを使用して、異なる難易度レベルのコンテンツを提示する方法を探る。
+          - 身近なデジタル相互作用（ウェブカメラの使用、動画推薦など）をリストアップし、それぞれがAIを使用しているかどうか、どのように使用しているかを議論する。
+          - オンライン数学プラットフォームがリアルタイムデータを使用して、異なる難易度レベルのコンテンツを提示する方法を探る。
         scenarios_ko:
-        - '친숙한 디지털 상호작용(예: 웹 카메라 사용, 비디오 추천)을 나열하고 각각이 AI를 사용하는지 여부와 방법을 토론한다.'
-        - 온라인 수학 플랫폼이 실시간 데이터를 활용하여 다양한 난이도 수준의 콘텐츠를 제시하는 방법을 탐구한다.
+          - "친숙한 디지털 상호작용(예: 웹 카메라 사용, 비디오 추천)을 나열하고 각각이 AI를 사용하는지 여부와 방법을 토론한다."
+          - 온라인 수학 플랫폼이 실시간 데이터를 활용하여 다양한 난이도 수준의 콘텐츠를 제시하는 방법을 탐구한다.
         scenarios_fr:
-        - Énumérer les interactions numériques familières (par exemple, utiliser une webcam, recommandations vidéo) et discuter si et comment chacune utilise l'IA.
-        - Explorer comment une plateforme de mathématiques en ligne utilise des données en temps réel pour présenter du contenu à différents niveaux de difficulté.
+          - Énumérer les interactions numériques familières (par exemple, utiliser une webcam, recommandations vidéo) et discuter si et comment chacune utilise l'IA.
+          - Explorer comment une plateforme de mathématiques en ligne utilise des données en temps réel pour présenter du contenu à différents niveaux de difficulté.
         scenarios_de:
-        - Vertraute digitale Interaktionen (z.B. Verwendung einer Webcam, Videoempfehlungen) auflisten und diskutieren, ob und wie jede KI verwendet.
-        - Erforschen, wie eine Online-Mathematikplattform Echtzeitdaten nutzt, um Inhalte auf verschiedenen Schwierigkeitsebenen zu präsentieren.
+          - Vertraute digitale Interaktionen (z.B. Verwendung einer Webcam, Videoempfehlungen) auflisten und diskutieren, ob und wie jede KI verwendet.
+          - Erforschen, wie eine Online-Mathematikplattform Echtzeitdaten nutzt, um Inhalte auf verschiedenen Schwierigkeitsebenen zu präsentieren.
         scenarios_ru:
-        - Перечислить знакомые цифровые взаимодействия (например, использование веб-камеры, рекомендации видео) и обсудить, использует ли каждое из них ИИ и как.
-        - Изучить, как онлайн-платформа математики использует данные в реальном времени для представления контента на разных уровнях сложности.
+          - Перечислить знакомые цифровые взаимодействия (например, использование веб-камеры, рекомендации видео) и обсудить, использует ли каждое из них ИИ и как.
+          - Изучить, как онлайн-платформа математики использует данные в реальном времени для представления контента на разных уровнях сложности.
         scenarios_it:
-        - Elencare interazioni digitali familiari (ad esempio, utilizzo di una webcam, raccomandazioni video) e discutere se e come ognuna utilizza l'IA.
-        - Esplorare come una piattaforma di matematica online utilizza dati in tempo reale per presentare contenuti a diversi livelli di difficoltà.
-        description_zhCN: '[ZHCN translation needed]'
-        description_pt: '[PT translation needed]'
-        description_ar: '[AR translation needed]'
-        description_id: '[ID translation needed]'
-        description_th: '[TH translation needed]'
-        content_zhCN: '[ZHCN translation needed]'
-        content_pt: '[PT translation needed]'
-        content_ar: '[AR translation needed]'
-        content_id: '[ID translation needed]'
-        content_th: '[TH translation needed]'
+          - Elencare interazioni digitali familiari (ad esempio, utilizzo di una webcam, raccomandazioni video) e discutere se e come ognuna utilizza l'IA.
+          - Esplorare come una piattaforma di matematica online utilizza dati in tempo reale per presentare contenuti a diversi livelli di difficoltà.
+        description_zhCN: "[ZHCN translation needed]"
+        description_pt: "[PT translation needed]"
+        description_ar: "[AR translation needed]"
+        description_id: "[ID translation needed]"
+        description_th: "[TH translation needed]"
+        content_zhCN: "[ZHCN translation needed]"
+        content_pt: "[PT translation needed]"
+        content_ar: "[AR translation needed]"
+        content_id: "[ID translation needed]"
+        content_th: "[TH translation needed]"
         description_zhTW: 使用定義的標準、預期結果和使用者回饋來評估AI系統。
         content_zhTW: 學習者為成功的AI系統設定標準、用各種輸入測試它，並評估其性能以進行改進。他們使用由來自不同使用者回饋塑造的反覆過程。
         scenarios_zhTW:
-        - 透過定義什麼構成好笑話、評分系統的回應，並嘗試新提示來改善結果，使用生成式AI工具創造笑話或謎語。
-        - 透過用相同資料集為相同任務測試不同類型的AI模型來評估AI系統，然後討論並提出包括使用者回饋的改進方法。
+          - 透過定義什麼構成好笑話、評分系統的回應，並嘗試新提示來改善結果，使用生成式AI工具創造笑話或謎語。
+          - 透過用相同資料集為相同任務測試不同類型的AI模型來評估AI系統，然後討論並提出包括使用者回饋的改進方法。
       D5:
         description: Describe an AI model's purpose, intended users, and its limitations.
         description_es: Describir el propósito de un modelo de IA, sus usuarios previstos y sus limitaciones.
@@ -1468,15 +1468,15 @@ domains:
         description_ru: Описать назначение ИИ-модели, ее предполагаемых пользователей и ограничения.
         description_it: Descrivere lo scopo di un modello di IA, i suoi utenti previsti e le sue limitazioni.
         knowledge:
-        - K1.2
-        - K2.1
+          - K1.2
+          - K2.1
         skills:
-        - S7.1
-        - S5.1
-        - S6.1
+          - S7.1
+          - S5.1
+          - S6.1
         attitudes:
-        - A2.1
-        - A1.1
+          - A2.1
+          - A1.1
         content: Learners describe the purpose of an AI model, the data used to train it, and what it can or cannot do well. They help others develop a realistic understanding of the model's capabilities and limitations.
         content_es: Los estudiantes describen el propósito de un modelo de IA, los datos utilizados para entrenarlo, y qué puede o no puede hacer bien. Ayudan a otros a desarrollar una comprensión realista de las capacidades y limitaciones del modelo.
         content_ja: 学習者はAIモデルの目的、訓練に使用されたデータ、そして何ができて何ができないかを説明します。他の人がモデルの能力と限界について現実的な理解を深められるよう支援します。
@@ -1486,55 +1486,59 @@ domains:
         content_ru: Учащиеся описывают назначение ИИ-модели, данные, используемые для ее обучения, и то, что она может или не может делать хорошо. Они помогают другим развить реалистичное понимание возможностей и ограничений модели.
         content_it: Gli studenti descrivono lo scopo di un modello di IA, i dati utilizzati per addestrarlo, e cosa può o non può fare bene. Aiutano gli altri a sviluppare una comprensione realistica delle capacità e limitazioni del modello.
         scenarios:
-        - Direct a classmate, who is role-playing as a robot, to sort snacks or animals by color, size, or shape, and observe how changing the rules creates confusion.
-        - Create a model card (brief, structured document) to summarize how a machine learning model works, its training data, intended uses, and possible limitations.
+          - Direct a classmate, who is role-playing as a robot, to sort snacks or animals by color, size, or shape, and observe how changing the rules creates confusion.
+          - Create a model card (brief, structured document) to summarize how a machine learning model works, its training data, intended uses, and possible limitations.
         scenarios_es:
-        - Enumerar interacciones digitales familiares (por ejemplo, usar una cámara web, recomendaciones de videos) y discutir si y cómo cada una utiliza IA.
-        - Explorar cómo una plataforma de matemáticas en línea utiliza datos en tiempo real para presentar contenido en diferentes niveles de dificultad.
+          - Enumerar interacciones digitales familiares (por ejemplo, usar una cámara web, recomendaciones de videos) y discutir si y cómo cada una utiliza IA.
+          - Explorar cómo una plataforma de matemáticas en línea utiliza datos en tiempo real para presentar contenido en diferentes niveles de dificultad.
         scenarios_ja:
-        - 身近なデジタル相互作用（ウェブカメラの使用、動画推薦など）をリストアップし、それぞれがAIを使用しているかどうか、どのように使用しているかを議論する。
-        - オンライン数学プラットフォームがリアルタイムデータを使用して、異なる難易度レベルのコンテンツを提示する方法を探る。
+          - 身近なデジタル相互作用（ウェブカメラの使用、動画推薦など）をリストアップし、それぞれがAIを使用しているかどうか、どのように使用しているかを議論する。
+          - オンライン数学プラットフォームがリアルタイムデータを使用して、異なる難易度レベルのコンテンツを提示する方法を探る。
         scenarios_ko:
-        - '친숙한 디지털 상호작용(예: 웹 카메라 사용, 비디오 추천)을 나열하고 각각이 AI를 사용하는지 여부와 방법을 토론한다.'
-        - 온라인 수학 플랫폼이 실시간 데이터를 활용하여 다양한 난이도 수준의 콘텐츠를 제시하는 방법을 탐구한다.
+          - "친숙한 디지털 상호작용(예: 웹 카메라 사용, 비디오 추천)을 나열하고 각각이 AI를 사용하는지 여부와 방법을 토론한다."
+          - 온라인 수학 플랫폼이 실시간 데이터를 활용하여 다양한 난이도 수준의 콘텐츠를 제시하는 방법을 탐구한다.
         scenarios_fr:
-        - Énumérer les interactions numériques familières (par exemple, utiliser une webcam, recommandations vidéo) et discuter si et comment chacune utilise l'IA.
-        - Explorer comment une plateforme de mathématiques en ligne utilise des données en temps réel pour présenter du contenu à différents niveaux de difficulté.
+          - Énumérer les interactions numériques familières (par exemple, utiliser une webcam, recommandations vidéo) et discuter si et comment chacune utilise l'IA.
+          - Explorer comment une plateforme de mathématiques en ligne utilise des données en temps réel pour présenter du contenu à différents niveaux de difficulté.
         scenarios_de:
-        - Vertraute digitale Interaktionen (z.B. Verwendung einer Webcam, Videoempfehlungen) auflisten und diskutieren, ob und wie jede KI verwendet.
-        - Erforschen, wie eine Online-Mathematikplattform Echtzeitdaten nutzt, um Inhalte auf verschiedenen Schwierigkeitsebenen zu präsentieren.
+          - Vertraute digitale Interaktionen (z.B. Verwendung einer Webcam, Videoempfehlungen) auflisten und diskutieren, ob und wie jede KI verwendet.
+          - Erforschen, wie eine Online-Mathematikplattform Echtzeitdaten nutzt, um Inhalte auf verschiedenen Schwierigkeitsebenen zu präsentieren.
         scenarios_ru:
-        - Перечислить знакомые цифровые взаимодействия (например, использование веб-камеры, рекомендации видео) и обсудить, использует ли каждое из них ИИ и как.
-        - Изучить, как онлайн-платформа математики использует данные в реальном времени для представления контента на разных уровнях сложности.
+          - Перечислить знакомые цифровые взаимодействия (например, использование веб-камеры, рекомендации видео) и обсудить, использует ли каждое из них ИИ и как.
+          - Изучить, как онлайн-платформа математики использует данные в реальном времени для представления контента на разных уровнях сложности.
         scenarios_it:
-        - Elencare interazioni digitali familiari (ad esempio, utilizzo di una webcam, raccomandazioni video) e discutere se e come ognuna utilizza l'IA.
-        - Esplorare come una piattaforma di matematica online utilizza dati in tempo reale per presentare contenuti a diversi livelli di difficoltà.
-        description_zhCN: '[ZHCN translation needed]'
-        description_pt: '[PT translation needed]'
-        description_ar: '[AR translation needed]'
-        description_id: '[ID translation needed]'
-        description_th: '[TH translation needed]'
-        content_zhCN: '[ZHCN translation needed]'
-        content_pt: '[PT translation needed]'
-        content_ar: '[AR translation needed]'
-        content_id: '[ID translation needed]'
-        content_th: '[TH translation needed]'
+          - Elencare interazioni digitali familiari (ad esempio, utilizzo di una webcam, raccomandazioni video) e discutere se e come ognuna utilizza l'IA.
+          - Esplorare come una piattaforma di matematica online utilizza dati in tempo reale per presentare contenuti a diversi livelli di difficoltà.
+        description_zhCN: "[ZHCN translation needed]"
+        description_pt: "[PT translation needed]"
+        description_ar: "[AR translation needed]"
+        description_id: "[ID translation needed]"
+        description_th: "[TH translation needed]"
+        content_zhCN: "[ZHCN translation needed]"
+        content_pt: "[PT translation needed]"
+        content_ar: "[AR translation needed]"
+        content_id: "[ID translation needed]"
+        content_th: "[TH translation needed]"
         description_zhTW: 描述AI模型的目的、目標使用者和限制。
         content_zhTW: 學習者描述AI模型的目的、用於訓練它的資料，以及它能做得好或不好的事情。他們協助他人對模型的能力和限制發展現實的理解。
         scenarios_zhTW:
-        - 指導扮演機器人角色的同學按顏色、大小或形狀分類零食或動物，並觀察改變規則如何造成混淆。
-        - 創建模型卡片（簡要、結構化的文件）來總結機器學習模型如何運作、其訓練資料、預期用途和可能的限制。
-    emoji_zhTW: '[ZHTW translation needed]'
+          - 指導扮演機器人角色的同學按顏色、大小或形狀分類零食或動物，並觀察改變規則如何造成混淆。
+          - 創建模型卡片（簡要、結構化的文件）來總結機器學習模型如何運作、其訓練資料、預期用途和可能的限制。
+    emoji_zhTW: "[ZHTW translation needed]"
     emoji_zhCN: 🔧
     emoji_pt: 🔧
     emoji_ar: 🔧
     emoji_id: 🔧
     emoji_th: 🔧
-    emoji_es: '[ES translation needed]'
-    emoji_ja: '[JA translation needed]'
-    emoji_ko: '[KO translation needed]'
-    emoji_fr: '[FR translation needed]'
-    emoji_de: '[DE translation needed]'
-    emoji_ru: '[RU translation needed]'
-    emoji_it: '[IT translation needed]'
-    overview_zhTW: '[ZHTW translation needed]'
+    emoji_es: "[ES translation needed]"
+    emoji_ja: "[JA translation needed]"
+    emoji_ko: "[KO translation needed]"
+    emoji_fr: "[FR translation needed]"
+    emoji_de: "[DE translation needed]"
+    emoji_ru: "[RU translation needed]"
+    emoji_it: "[IT translation needed]"
+    overview_zhTW: "[ZHTW translation needed]"
+test_field: test_value
+test_entry:
+  test: true
+test_sync_field: test value

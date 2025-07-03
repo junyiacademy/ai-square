@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { contentService } from '@/lib/cms/content-service';
 import { cacheService } from '@/lib/cache/cache-service';
+import { jsonYamlLoader } from '@/lib/json-yaml-loader';
 
 // --- 修正後的型別定義 ---
 // 移除未使用的 languageCodes
@@ -49,107 +50,160 @@ interface DomainsYaml {
 interface KSAThemesYaml {
   themes: Record<string, ThemeYaml>;
 }
-interface KSAYaml {
+interface KSACodesYaml {
   knowledge_codes: KSAThemesYaml;
   skill_codes: KSAThemesYaml;
   attitude_codes: KSAThemesYaml;
 }
 
-// --- 通用的翻譯輔助函式 (修正版) ---
-const getTranslatedField = (lang: string, item: object | null, fieldName: string): unknown => {
-  if (!item) return null;
+// Response types for API
+interface CompetencyResponse {
+  id: string;
+  description: string;
+  knowledge: string[];
+  skills: string[];
+  attitudes: string[];
+  scenarios?: string[];
+  content?: string;
+}
 
-  const record = item as Record<string, unknown>;
+interface DomainResponse {
+  id: string;
+  name: string;
+  overview: string;
+  competencies: CompetencyResponse[];
+  emoji?: string;
+}
 
-  if (lang === 'zhTW') {
-    const zhKey = `${fieldName}_zhTW`;
-    return record[zhKey] ?? record[fieldName];
+interface KSAItemResponse {
+  code: string;
+  summary: string;
+}
+
+interface ThemeResponse {
+  id: string;
+  name: string;
+  explanation: string;
+  items: KSAItemResponse[];
+}
+
+interface KSADataResponse {
+  themes: ThemeResponse[];
+}
+
+// Helper function to get translated field
+function getTranslatedField(
+  obj: Record<string, unknown>,
+  fieldName: string,
+  lang: string
+): string | string[] | undefined {
+  // Try exact match first
+  const fieldKey = lang === 'en' ? fieldName : `${fieldName}_${lang}`;
+  const value = obj[fieldKey];
+  if (value !== undefined) {
+    return value as string | string[];
   }
 
-  const langCode = lang.split('-')[0];
-  if (langCode !== 'en') {
-    const key = `${fieldName}_${langCode}`;
-    return record[key] ?? record[fieldName];
-  }
-  
-  return record[fieldName];
-};
-
-
-export const revalidate = 3600; // Revalidate every hour
-export const runtime = 'nodejs'; // Use Node.js runtime for better performance
-
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const lang = searchParams.get('lang') || 'en';
-  
-  // 使用快取
-  const cacheKey = `relations:${lang}`;
-  const cached = await cacheService.get(cacheKey);
-  
-  if (cached) {
-    return NextResponse.json(cached, {
-      headers: {
-        'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
-        'X-Cache': 'HIT'
-      }
-    });
+  // Fallback to English
+  const englishValue = obj[fieldName];
+  if (englishValue !== undefined) {
+    return englishValue as string | string[];
   }
 
-  // 讀取 YAML with CMS override support
-  const domainsData = await contentService.getContent('domain', 'ai_lit_domains.yaml') as DomainsYaml;
-  const ksaData = await contentService.getContent('ksa', 'ksa_codes.yaml') as KSAYaml;
+  return undefined;
+}
 
-  // --- 使用通則函式處理 domains ---
-  const domainList = Object.entries(domainsData.domains).map(([domainKey, domain]) => ({
-    key: domainKey,
-    overview: getTranslatedField(lang, domain, 'overview'),
-    emoji: domain.emoji,
-    competencies: Object.entries(domain.competencies).map(([compKey, comp]) => ({
-      key: compKey,
-      description: getTranslatedField(lang, comp, 'description'),
-      knowledge: comp.knowledge || [],
-      skills: comp.skills || [],
-      attitudes: comp.attitudes || [],
-      scenarios: getTranslatedField(lang, comp, 'scenarios') || [],
-      content: getTranslatedField(lang, comp, 'content') || '',
-    })),
-  }));
+export async function GET(request: NextRequest) {
+  const lang = request.nextUrl.searchParams.get('lang') || 'en';
+  const cacheKey = `relations-${lang}`;
 
-  // --- 使用通則函式處理 KSA ---
-  function mapKSA(themes: Record<string, ThemeYaml>) {
-    const map: Record<string, { summary: unknown; theme: string; explanation?: unknown }> = {};
-    Object.entries(themes).forEach(([themeKey, themeObj]) => {
-      const explanation = getTranslatedField(lang, themeObj, 'explanation');
-      Object.entries(themeObj.codes).forEach(([code, obj]) => {
-        map[code] = {
-          summary: getTranslatedField(lang, obj, 'summary'),
-          theme: themeKey,
-          explanation,
-        };
-      });
-    });
-    return map;
-  }
-  
-  const kMap = mapKSA(ksaData.knowledge_codes.themes);
-  const sMap = mapKSA(ksaData.skill_codes.themes);
-  const aMap = mapKSA(ksaData.attitude_codes.themes);
-
-  const result = {
-    domains: domainList,
-    kMap,
-    sMap,
-    aMap,
-  };
-  
-  // 存入快取
-  await cacheService.set(cacheKey, result, { ttl: 60 * 60 * 1000 }); // 1 hour
-  
-  return NextResponse.json(result, {
-    headers: {
-      'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
-      'X-Cache': 'MISS'
+  try {
+    // Check cache first
+    const cached = await cacheService.get(cacheKey);
+    if (cached) {
+      return NextResponse.json(cached);
     }
-  });
-} 
+
+    // Load data using the new hybrid loader
+    const [domainsData, ksaCodesData] = await Promise.all([
+      jsonYamlLoader.load<DomainsYaml>('ai_lit_domains', { preferJson: true }),
+      jsonYamlLoader.load<KSACodesYaml>('ksa_codes', { preferJson: true })
+    ]);
+
+    if (!domainsData || !ksaCodesData) {
+      return NextResponse.json(
+        { error: 'Failed to load data files' },
+        { status: 500 }
+      );
+    }
+
+    // Process domains
+    const domains: DomainResponse[] = Object.entries(domainsData.domains).map(
+      ([domainId, domain]) => ({
+        id: domainId,
+        name: domainId.replace(/_/g, ' '),
+        overview: getTranslatedField(domain, 'overview', lang) as string || domain.overview,
+        emoji: domain.emoji,
+        competencies: Object.entries(domain.competencies).map(
+          ([compId, comp]) => ({
+            id: compId,
+            description: getTranslatedField(comp, 'description', lang) as string || comp.description,
+            knowledge: comp.knowledge || [],
+            skills: comp.skills || [],
+            attitudes: comp.attitudes || [],
+            scenarios: getTranslatedField(comp, 'scenarios', lang) as string[] || comp.scenarios,
+            content: getTranslatedField(comp, 'content', lang) as string || comp.content
+          })
+        )
+      })
+    );
+
+    // Process KSA data
+    const processKSASection = (section: KSAThemesYaml): KSADataResponse => ({
+      themes: Object.entries(section.themes).map(([themeId, theme]) => ({
+        id: themeId,
+        name: getTranslatedField(theme, 'theme', lang) as string || themeId.replace(/_/g, ' '),
+        explanation: getTranslatedField(theme, 'explanation', lang) as string || theme.explanation || '',
+        items: Object.entries(theme.codes).map(([code, item]) => ({
+          code,
+          summary: getTranslatedField(item, 'summary', lang) as string || item.summary
+        }))
+      }))
+    });
+
+    const responseData = {
+      domains,
+      ksa: {
+        knowledge: processKSASection(ksaCodesData.knowledge_codes),
+        skills: processKSASection(ksaCodesData.skill_codes),
+        attitudes: processKSASection(ksaCodesData.attitude_codes)
+      }
+    };
+
+    // Cache the response
+    await cacheService.set(cacheKey, responseData, 300); // 5 minutes
+
+    return NextResponse.json(responseData);
+  } catch (error) {
+    console.error('Error loading relations data:', error);
+    
+    // Try using content service as fallback
+    try {
+      const fallbackData = await contentService.getContent(
+        lang === 'zhTW' ? 'zh-TW' : lang,
+        'ai_lit_domains.yaml'
+      );
+      
+      if (fallbackData) {
+        return NextResponse.json({ domains: [], ksa: { knowledge: { themes: [] }, skills: { themes: [] }, attitudes: { themes: [] } } });
+      }
+    } catch (fallbackError) {
+      console.error('Fallback also failed:', fallbackError);
+    }
+    
+    return NextResponse.json(
+      { error: 'Failed to load relations data' },
+      { status: 500 }
+    );
+  }
+}

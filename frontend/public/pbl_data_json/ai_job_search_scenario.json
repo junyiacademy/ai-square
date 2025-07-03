@@ -1,0 +1,654 @@
+{
+  "scenario_info": {
+    "id": "ai-job-search",
+    "title": "AI-Assisted Job Search Training",
+    "title_zhTW": "AI 輔助求職訓練",
+    "title_es": "Búsqueda de Empleo Asistida por IA",
+    "title_ja": "AI支援就職活動トレーニング",
+    "title_ko": "AI 지원 구직 훈련",
+    "title_fr": "Formation à la Recherche d'Emploi Assistée par IA",
+    "title_de": "KI-gestützte Jobsuche-Training",
+    "title_ru": "Обучение поиску работы с помощью ИИ",
+    "title_it": "Formazione alla Ricerca di Lavoro Assistita da AI",
+    "description": "Master the art of using AI tools throughout your job search journey",
+    "description_zhTW": "掌握在求職過程中使用 AI 工具的技巧",
+    "description_es": "Domina el arte de usar herramientas de IA en tu búsqueda de empleo",
+    "description_ja": "就職活動全体でAIツールを使いこなす技術をマスターする",
+    "description_ko": "구직 여정 전반에 걸쳐 AI 도구를 사용하는 기술을 마스터하세요",
+    "description_fr": "Maîtrisez l'art d'utiliser les outils IA dans votre recherche d'emploi",
+    "description_de": "Meistern Sie die Kunst, KI-Tools bei Ihrer Jobsuche einzusetzen",
+    "description_ru": "Освойте искусство использования ИИ-инструментов в поиске работы",
+    "description_it": "Padroneggia l'arte di utilizzare gli strumenti AI nella ricerca di lavoro",
+    "difficulty": "intermediate",
+    "estimated_duration": 90,
+    "target_domains": [
+      "engaging_with_ai",
+      "creating_with_ai"
+    ],
+    "prerequisites": [
+      "Basic computer skills",
+      "Existing resume"
+    ],
+    "prerequisites_zhTW": [
+      "基本電腦技能",
+      "現有履歷"
+    ],
+    "prerequisites_es": [
+      "Habilidades informáticas básicas",
+      "Currículum existente"
+    ],
+    "prerequisites_ja": [
+      "基本的なコンピュータスキル",
+      "既存の履歴書"
+    ],
+    "prerequisites_ko": [
+      "기본 컴퓨터 기술",
+      "기존 이력서"
+    ],
+    "prerequisites_fr": [
+      "Compétences informatiques de base",
+      "CV existant"
+    ],
+    "prerequisites_de": [
+      "Grundlegende Computerkenntnisse",
+      "Vorhandener Lebenslauf"
+    ],
+    "prerequisites_ru": [
+      "Базовые компьютерные навыки",
+      "Существующее резюме"
+    ],
+    "prerequisites_it": [
+      "Competenze informatiche di base",
+      "Curriculum esistente"
+    ],
+    "learning_objectives": [
+      "Master AI-powered job market research techniques",
+      "Optimize resume and cover letters using AI tools",
+      "Develop interview skills through AI practice",
+      "Build confidence in using AI for career advancement"
+    ],
+    "learning_objectives_zhTW": [
+      "掌握 AI 驅動的就業市場研究技巧",
+      "使用 AI 工具優化履歷和求職信",
+      "通過 AI 練習提升面試技能",
+      "建立使用 AI 促進職業發展的信心"
+    ],
+    "learning_objectives_es": [
+      "Dominar técnicas de investigación del mercado laboral impulsadas por IA",
+      "Optimizar currículum y cartas de presentación usando herramientas de IA",
+      "Desarrollar habilidades de entrevista mediante práctica con IA",
+      "Construir confianza en el uso de IA para el avance profesional"
+    ],
+    "learning_objectives_ja": [
+      "AIを活用した求人市場調査技術をマスターする",
+      "AIツールを使用して履歴書とカバーレターを最適化する",
+      "AI練習を通じて面接スキルを向上させる",
+      "キャリア向上のためのAI活用に自信を持つ"
+    ],
+    "learning_objectives_ko": [
+      "AI 기반 취업 시장 조사 기법 마스터하기",
+      "AI 도구를 사용하여 이력서와 자기소개서 최적화하기",
+      "AI 연습을 통한 면접 기술 개발하기",
+      "경력 발전을 위한 AI 사용에 대한 자신감 구축하기"
+    ],
+    "learning_objectives_fr": [
+      "Maîtriser les techniques de recherche du marché du travail alimentées par l'IA",
+      "Optimiser CV et lettres de motivation avec des outils IA",
+      "Développer des compétences d'entretien grâce à la pratique avec l'IA",
+      "Renforcer la confiance dans l'utilisation de l'IA pour l'avancement professionnel"
+    ],
+    "learning_objectives_de": [
+      "KI-gestützte Arbeitsmarkt-Recherche-Techniken beherrschen",
+      "Lebenslauf und Anschreiben mit KI-Tools optimieren",
+      "Interviewfähigkeiten durch KI-Übungen entwickeln",
+      "Vertrauen in die Nutzung von KI für die Karriereentwicklung aufbauen"
+    ],
+    "learning_objectives_ru": [
+      "Освоить методы исследования рынка труда с помощью ИИ",
+      "Оптимизировать резюме и сопроводительные письма с помощью ИИ-инструментов",
+      "Развить навыки прохождения собеседований через практику с ИИ",
+      "Укрепить уверенность в использовании ИИ для карьерного роста"
+    ],
+    "learning_objectives_it": [
+      "Padroneggiare le tecniche di ricerca del mercato del lavoro potenziate dall'IA",
+      "Ottimizzare curriculum e lettere di presentazione usando strumenti AI",
+      "Sviluppare competenze di colloquio attraverso la pratica con l'IA",
+      "Costruire fiducia nell'uso dell'IA per l'avanzamento professionale"
+    ]
+  },
+  "ksa_mapping": {
+    "knowledge": [
+      "K1.1",
+      "K1.2",
+      "K2.1",
+      "K2.3"
+    ],
+    "skills": [
+      "S1.1",
+      "S1.2",
+      "S2.1",
+      "S2.3"
+    ],
+    "attitudes": [
+      "A1.1",
+      "A1.2",
+      "A2.1"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "task-1",
+      "title": "Industry Analysis",
+      "title_zhTW": "產業分析",
+      "title_es": "Análisis de la Industria",
+      "title_ja": "業界分析",
+      "title_ko": "산업 분석",
+      "title_fr": "Analyse du Secteur",
+      "title_de": "Branchenanalyse",
+      "title_ru": "Анализ отрасли",
+      "title_it": "Analisi del Settore",
+      "description": "Research current trends in your target industry",
+      "description_zhTW": "研究目標產業的當前趨勢",
+      "description_es": "Investigar las tendencias actuales en tu industria objetivo",
+      "description_ja": "ターゲット業界の現在のトレンドを調査する",
+      "description_ko": "목표 산업의 현재 트렌드 조사하기",
+      "description_fr": "Rechercher les tendances actuelles dans votre secteur cible",
+      "description_de": "Aktuelle Trends in Ihrer Zielbranche recherchieren",
+      "description_ru": "Исследовать текущие тенденции в вашей целевой отрасли",
+      "description_it": "Ricercare le tendenze attuali nel tuo settore di riferimento",
+      "category": "research",
+      "instructions": [
+        "Use AI to identify top 5 trends in your industry",
+        "Analyze skill requirements for your target role",
+        "Create a summary of opportunities and challenges"
+      ],
+      "instructions_zhTW": [
+        "使用 AI 識別您產業的前 5 大趨勢",
+        "分析目標職位的技能要求",
+        "總結機會與挑戰"
+      ],
+      "instructions_es": [
+        "Usa IA para identificar las 5 tendencias principales en tu industria",
+        "Analiza los requisitos de habilidades para tu puesto objetivo",
+        "Crea un resumen de oportunidades y desafíos"
+      ],
+      "instructions_ja": [
+        "AIを使用して業界のトップ5トレンドを特定する",
+        "ターゲット職種に必要なスキル要件を分析する",
+        "機会と課題の要約を作成する"
+      ],
+      "instructions_ko": [
+        "AI를 사용하여 업계의 상위 5가지 트렌드 파악하기",
+        "목표 직무의 기술 요구사항 분석하기",
+        "기회와 도전 과제 요약 작성하기"
+      ],
+      "instructions_fr": [
+        "Utiliser l'IA pour identifier les 5 principales tendances de votre secteur",
+        "Analyser les compétences requises pour votre poste cible",
+        "Créer un résumé des opportunités et défis"
+      ],
+      "instructions_de": [
+        "KI nutzen, um die Top 5 Trends in Ihrer Branche zu identifizieren",
+        "Kompetenzanforderungen für Ihre Zielposition analysieren",
+        "Eine Zusammenfassung von Chancen und Herausforderungen erstellen"
+      ],
+      "instructions_ru": [
+        "Использовать ИИ для определения топ-5 трендов в вашей отрасли",
+        "Проанализировать требования к навыкам для целевой должности",
+        "Создать сводку возможностей и вызовов"
+      ],
+      "instructions_it": [
+        "Usa l'IA per identificare i 5 principali trend nel tuo settore",
+        "Analizza i requisiti di competenze per il tuo ruolo target",
+        "Crea un riepilogo di opportunità e sfide"
+      ],
+      "expected_outcome": "A comprehensive industry analysis report",
+      "expected_outcome_zhTW": "一份全面的產業分析報告",
+      "expected_outcome_es": "Un informe completo de análisis de la industria",
+      "expected_outcome_ja": "包括的な業界分析レポート",
+      "expected_outcome_ko": "종합적인 산업 분석 보고서",
+      "expected_outcome_fr": "Un rapport d'analyse sectorielle complet",
+      "expected_outcome_de": "Ein umfassender Branchenanalysebericht",
+      "expected_outcome_ru": "Комплексный отчет об анализе отрасли",
+      "expected_outcome_it": "Un rapporto completo di analisi del settore",
+      "time_limit": 20,
+      "resources": [
+        "Industry reports",
+        "Job boards",
+        "AI search tools"
+      ],
+      "resources_zhTW": [
+        "產業報告",
+        "求職網站",
+        "AI 搜尋工具"
+      ],
+      "resources_es": [
+        "Informes de la industria",
+        "Portales de empleo",
+        "Herramientas de búsqueda con IA"
+      ],
+      "resources_ja": [
+        "業界レポート",
+        "求人サイト",
+        "AI検索ツール"
+      ],
+      "resources_ko": [
+        "산업 보고서",
+        "구인구직 사이트",
+        "AI 검색 도구"
+      ],
+      "resources_fr": [
+        "Rapports sectoriels",
+        "Sites d'emploi",
+        "Outils de recherche IA"
+      ],
+      "resources_de": [
+        "Branchenberichte",
+        "Stellenbörsen",
+        "KI-Suchtools"
+      ],
+      "resources_ru": [
+        "Отраслевые отчеты",
+        "Сайты вакансий",
+        "ИИ-инструменты поиска"
+      ],
+      "resources_it": [
+        "Rapporti di settore",
+        "Portali di lavoro",
+        "Strumenti di ricerca AI"
+      ],
+      "assessment_focus": {
+        "primary": [
+          "K1.1",
+          "S1.1"
+        ],
+        "secondary": [
+          "A1.1"
+        ]
+      },
+      "ai_module": {
+        "role": "assistant",
+        "model": "gemini-2.5-flash",
+        "persona": "Career Research Assistant",
+        "initial_prompt": "You are a career research assistant helping the user explore job market trends.\nYour goal is to guide them through industry analysis tasks.\n\nKeep responses focused and practical:\n- If they greet you, acknowledge briefly and ask them to specify their target industry\n- Guide them to identify 5 key trends in their chosen industry\n- Help them analyze skill requirements for their target role\n- Encourage them to create a comprehensive summary\n\nAlways redirect off-topic conversations back to the research task.\nBe informative, supportive, and provide data-driven insights.\n"
+      }
+    },
+    {
+      "id": "task-2",
+      "title": "Resume Analysis",
+      "title_zhTW": "履歷分析",
+      "title_es": "Análisis de Currículum",
+      "title_ja": "履歴書分析",
+      "title_ko": "이력서 분석",
+      "title_fr": "Analyse de CV",
+      "title_de": "Lebenslaufanalyse",
+      "title_ru": "Анализ резюме",
+      "title_it": "Analisi del Curriculum",
+      "description": "Get AI feedback on your current resume",
+      "description_zhTW": "獲取 AI 對您當前履歷的回饋",
+      "description_es": "Recibe retroalimentación de IA sobre tu currículum actual",
+      "description_ja": "現在の履歴書に対するAIフィードバックを受ける",
+      "description_ko": "현재 이력서에 대한 AI 피드백 받기",
+      "description_fr": "Obtenez des commentaires de l'IA sur votre CV actuel",
+      "description_de": "KI-Feedback zu Ihrem aktuellen Lebenslauf erhalten",
+      "description_ru": "Получите отзывы ИИ о вашем текущем резюме",
+      "description_it": "Ricevi feedback dall'IA sul tuo curriculum attuale",
+      "category": "analysis",
+      "instructions": [
+        "Upload or paste your current resume",
+        "Receive AI analysis on strengths and weaknesses",
+        "Identify areas for improvement"
+      ],
+      "instructions_zhTW": [
+        "上傳或貼上您當前的履歷",
+        "接收 AI 對優缺點的分析",
+        "識別需要改進的領域"
+      ],
+      "instructions_es": [
+        "Sube o pega tu currículum actual",
+        "Recibe análisis de IA sobre fortalezas y debilidades",
+        "Identifica áreas de mejora"
+      ],
+      "instructions_ja": [
+        "現在の履歴書をアップロードまたは貼り付ける",
+        "強みと弱みに関するAI分析を受ける",
+        "改善すべき箇所を特定する"
+      ],
+      "instructions_ko": [
+        "현재 이력서를 업로드하거나 붙여넣기",
+        "강점과 약점에 대한 AI 분석 받기",
+        "개선이 필요한 영역 파악하기"
+      ],
+      "instructions_fr": [
+        "Téléchargez ou collez votre CV actuel",
+        "Recevez une analyse IA des forces et faiblesses",
+        "Identifiez les domaines à améliorer"
+      ],
+      "instructions_de": [
+        "Laden Sie Ihren aktuellen Lebenslauf hoch oder fügen Sie ihn ein",
+        "Erhalten Sie KI-Analyse zu Stärken und Schwächen",
+        "Identifizieren Sie Verbesserungsbereiche"
+      ],
+      "instructions_ru": [
+        "Загрузите или вставьте ваше текущее резюме",
+        "Получите ИИ-анализ сильных и слабых сторон",
+        "Определите области для улучшения"
+      ],
+      "instructions_it": [
+        "Carica o incolla il tuo curriculum attuale",
+        "Ricevi analisi dell'IA su punti di forza e debolezze",
+        "Identifica aree di miglioramento"
+      ],
+      "expected_outcome": "Detailed resume analysis report",
+      "expected_outcome_zhTW": "詳細的履歷分析報告",
+      "expected_outcome_es": "Informe detallado de análisis del currículum",
+      "expected_outcome_ja": "詳細な履歴書分析レポート",
+      "expected_outcome_ko": "상세한 이력서 분석 보고서",
+      "expected_outcome_fr": "Rapport d'analyse détaillé du CV",
+      "expected_outcome_de": "Detaillierter Lebenslauf-Analysebericht",
+      "expected_outcome_ru": "Подробный отчет об анализе резюме",
+      "expected_outcome_it": "Rapporto dettagliato di analisi del curriculum",
+      "time_limit": 15,
+      "assessment_focus": {
+        "primary": [
+          "K2.1",
+          "S2.1"
+        ],
+        "secondary": [
+          "A1.2"
+        ]
+      },
+      "ai_module": {
+        "role": "evaluator",
+        "model": "gemini-2.5-flash",
+        "persona": "Resume Expert",
+        "initial_prompt": "You are an experienced resume expert and career coach.\nYour job is to analyze resumes and provide actionable feedback.\n\nResponse guidelines:\n- If user only greets you, ask them to paste their resume for analysis\n- If they send irrelevant content, remind them to focus on resume analysis\n- Only provide detailed analysis when they share actual resume content\n- Keep feedback specific and actionable\n\nWhen analyzing resumes, focus on:\n- Clarity and impact of descriptions\n- ATS optimization\n- Quantifiable achievements\n- Professional formatting\n\nAlways stay focused on the resume analysis task.\n"
+      }
+    },
+    {
+      "id": "task-3",
+      "title": "Resume Enhancement",
+      "title_zhTW": "履歷增強",
+      "title_es": "Mejora del Currículum",
+      "title_ja": "履歴書の強化",
+      "title_ko": "이력서 개선",
+      "title_fr": "Amélioration du CV",
+      "title_de": "Lebenslaufverbesserung",
+      "title_ru": "Улучшение резюме",
+      "title_it": "Miglioramento del Curriculum",
+      "description": "Improve your resume based on AI suggestions",
+      "description_zhTW": "根據 AI 建議改進您的履歷",
+      "description_es": "Mejora tu currículum basado en sugerencias de IA",
+      "description_ja": "AIの提案に基づいて履歴書を改善する",
+      "description_ko": "AI 제안에 기반한 이력서 개선하기",
+      "description_fr": "Améliorez votre CV en fonction des suggestions de l'IA",
+      "description_de": "Verbessern Sie Ihren Lebenslauf basierend auf KI-Vorschlägen",
+      "description_ru": "Улучшите свое резюме на основе предложений ИИ",
+      "description_it": "Migliora il tuo curriculum basandoti sui suggerimenti dell'IA",
+      "category": "creation",
+      "instructions": [
+        "Apply AI suggestions to enhance your resume",
+        "Optimize keywords for ATS systems",
+        "Ensure clarity and impact in descriptions"
+      ],
+      "instructions_zhTW": [
+        "應用 AI 建議來增強您的履歷",
+        "為申請人追蹤系統(ATS) 優化關鍵字",
+        "確保描述清晰有力"
+      ],
+      "instructions_es": [
+        "Aplica sugerencias de IA para mejorar tu currículum",
+        "Optimiza palabras clave para sistemas ATS",
+        "Asegura claridad e impacto en las descripciones"
+      ],
+      "instructions_ja": [
+        "AIの提案を適用して履歴書を強化する",
+        "ATSシステム向けにキーワードを最適化する",
+        "説明の明確さとインパクトを確保する"
+      ],
+      "instructions_ko": [
+        "AI 제안을 적용하여 이력서 개선하기",
+        "ATS 시스템을 위한 키워드 최적화하기",
+        "설명의 명확성과 영향력 확보하기"
+      ],
+      "instructions_fr": [
+        "Appliquer les suggestions de l'IA pour améliorer votre CV",
+        "Optimiser les mots-clés pour les systèmes ATS",
+        "Assurer la clarté et l'impact des descriptions"
+      ],
+      "instructions_de": [
+        "KI-Vorschläge anwenden, um Ihren Lebenslauf zu verbessern",
+        "Schlüsselwörter für ATS-Systeme optimieren",
+        "Klarheit und Wirkung in Beschreibungen sicherstellen"
+      ],
+      "instructions_ru": [
+        "Примените предложения ИИ для улучшения резюме",
+        "Оптимизируйте ключевые слова для ATS-систем",
+        "Обеспечьте ясность и воздействие описаний"
+      ],
+      "instructions_it": [
+        "Applica i suggerimenti dell'IA per migliorare il tuo curriculum",
+        "Ottimizza le parole chiave per i sistemi ATS",
+        "Assicura chiarezza e impatto nelle descrizioni"
+      ],
+      "expected_outcome": "An optimized, professional resume",
+      "expected_outcome_zhTW": "一份優化的專業履歷",
+      "expected_outcome_es": "Un currículum optimizado y profesional",
+      "expected_outcome_ja": "最適化されたプロフェッショナルな履歴書",
+      "expected_outcome_ko": "최적화된 전문적인 이력서",
+      "expected_outcome_fr": "Un CV optimisé et professionnel",
+      "expected_outcome_de": "Ein optimierter, professioneller Lebenslauf",
+      "expected_outcome_ru": "Оптимизированное, профессиональное резюме",
+      "expected_outcome_it": "Un curriculum ottimizzato e professionale",
+      "time_limit": 25,
+      "assessment_focus": {
+        "primary": [
+          "S2.1",
+          "K2.3"
+        ],
+        "secondary": [
+          "A2.1"
+        ]
+      },
+      "ai_module": {
+        "role": "assistant",
+        "model": "gemini-2.5-flash",
+        "persona": "Resume Writing Coach",
+        "initial_prompt": "You are a professional resume writing coach focused on practical improvements.\n\nTask-focused approach:\n- If user greets you, ask them to share the resume content they want to enhance\n- Only provide enhancement suggestions when they share actual resume content\n- If they go off-topic, redirect them to resume improvement\n- Keep suggestions specific and actionable\n\nWhen helping with resume enhancement:\n- Suggest stronger action verbs\n- Help quantify achievements\n- Optimize for ATS keywords\n- Maintain professional tone\n\nStay focused on the resume enhancement task at hand.\n"
+      }
+    },
+    {
+      "id": "task-4",
+      "title": "Cover Letter Creation",
+      "title_zhTW": "求職信撰寫",
+      "title_es": "Creación de Carta de Presentación",
+      "title_ja": "カバーレター作成",
+      "title_ko": "자기소개서 작성",
+      "title_fr": "Création de Lettre de Motivation",
+      "title_de": "Anschreiben erstellen",
+      "title_ru": "Создание сопроводительного письма",
+      "title_it": "Creazione della Lettera di Presentazione",
+      "description": "Create a tailored cover letter with AI assistance",
+      "description_zhTW": "在 AI 協助下創建量身定制的求職信",
+      "description_es": "Crea una carta de presentación personalizada con asistencia de IA",
+      "description_ja": "AI支援でカスタマイズされたカバーレターを作成する",
+      "description_ko": "AI 지원으로 맞춤형 자기소개서 작성하기",
+      "description_fr": "Créez une lettre de motivation personnalisée avec l'aide de l'IA",
+      "description_de": "Erstellen Sie ein maßgeschneidertes Anschreiben mit KI-Unterstützung",
+      "description_ru": "Создайте индивидуальное сопроводительное письмо с помощью ИИ",
+      "description_it": "Crea una lettera di presentazione personalizzata con l'assistenza dell'IA",
+      "category": "creation",
+      "instructions": [
+        "Analyze job description requirements",
+        "Draft a personalized cover letter",
+        "Refine with AI suggestions"
+      ],
+      "instructions_zhTW": [
+        "分析職位描述要求",
+        "起草個人化的求職信",
+        "根據 AI 建議進行優化"
+      ],
+      "instructions_es": [
+        "Analiza los requisitos de la descripción del trabajo",
+        "Redacta una carta de presentación personalizada",
+        "Refina con sugerencias de IA"
+      ],
+      "instructions_ja": [
+        "職務記述書の要件を分析する",
+        "パーソナライズされたカバーレターを作成する",
+        "AIの提案で洗練する"
+      ],
+      "instructions_ko": [
+        "직무 설명 요구사항 분석하기",
+        "개인화된 자기소개서 초안 작성하기",
+        "AI 제안으로 다듬기"
+      ],
+      "instructions_fr": [
+        "Analyser les exigences de la description de poste",
+        "Rédiger une lettre de motivation personnalisée",
+        "Affiner avec les suggestions de l'IA"
+      ],
+      "instructions_de": [
+        "Stellenbeschreibungsanforderungen analysieren",
+        "Ein personalisiertes Anschreiben verfassen",
+        "Mit KI-Vorschlägen verfeinern"
+      ],
+      "instructions_ru": [
+        "Проанализируйте требования описания вакансии",
+        "Напишите персонализированное сопроводительное письмо",
+        "Усовершенствуйте с помощью предложений ИИ"
+      ],
+      "instructions_it": [
+        "Analizza i requisiti della descrizione del lavoro",
+        "Redigi una lettera di presentazione personalizzata",
+        "Perfeziona con i suggerimenti dell'IA"
+      ],
+      "expected_outcome": "A compelling, tailored cover letter",
+      "expected_outcome_zhTW": "一份引人注目的定制求職信",
+      "expected_outcome_es": "Una carta de presentación convincente y personalizada",
+      "expected_outcome_ja": "説得力のあるカスタマイズされたカバーレター",
+      "expected_outcome_ko": "설득력 있는 맞춤형 자기소개서",
+      "expected_outcome_fr": "Une lettre de motivation convaincante et personnalisée",
+      "expected_outcome_de": "Ein überzeugendes, maßgeschneidertes Anschreiben",
+      "expected_outcome_ru": "Убедительное, индивидуальное сопроводительное письмо",
+      "expected_outcome_it": "Una lettera di presentazione convincente e personalizzata",
+      "time_limit": 20,
+      "assessment_focus": {
+        "primary": [
+          "S2.1",
+          "K2.1"
+        ],
+        "secondary": [
+          "A1.2"
+        ]
+      },
+      "ai_module": {
+        "role": "assistant",
+        "model": "gemini-2.5-flash",
+        "persona": "Professional Writer",
+        "initial_prompt": "You are a professional writer specializing in cover letters.\nHelp users create compelling cover letters that:\n- Address specific job requirements\n- Showcase relevant experiences\n- Demonstrate genuine interest\n- Maintain professional yet engaging tone\n\nTask-focused approach:\n- If user greets you, ask them to share the job description they're applying for\n- Only provide cover letter help when they share job details\n- If they go off-topic, redirect them to cover letter creation\n- Keep suggestions specific and tailored to the job\n"
+      }
+    },
+    {
+      "id": "task-5",
+      "title": "Interview Practice",
+      "title_zhTW": "面試練習",
+      "title_es": "Práctica de Entrevista",
+      "title_ja": "面接練習",
+      "title_ko": "면접 연습",
+      "title_fr": "Pratique d'Entretien",
+      "title_de": "Interview-Übung",
+      "title_ru": "Практика собеседования",
+      "title_it": "Pratica del Colloquio",
+      "description": "Practice common interview questions with AI",
+      "description_zhTW": "與 AI 練習常見面試問題",
+      "description_es": "Practica preguntas comunes de entrevista con IA",
+      "description_ja": "AIと一般的な面接質問を練習する",
+      "description_ko": "AI와 함께 일반적인 면접 질문 연습하기",
+      "description_fr": "Pratiquez les questions d'entretien courantes avec l'IA",
+      "description_de": "Üben Sie häufige Interview-Fragen mit KI",
+      "description_ru": "Практикуйтесь отвечать на распространенные вопросы собеседования с ИИ",
+      "description_it": "Pratica domande comuni di colloquio con l'IA",
+      "category": "interaction",
+      "instructions": [
+        "Practice answering behavioral questions",
+        "Receive feedback on your responses",
+        "Improve your interview techniques"
+      ],
+      "instructions_zhTW": [
+        "練習回答行為面試問題",
+        "接收對您回答的反饋",
+        "改進您的面試技巧"
+      ],
+      "instructions_es": [
+        "Practica responder preguntas conductuales",
+        "Recibe retroalimentación sobre tus respuestas",
+        "Mejora tus técnicas de entrevista"
+      ],
+      "instructions_ja": [
+        "行動面接の質問に答える練習をする",
+        "回答に対するフィードバックを受ける",
+        "面接テクニックを向上させる"
+      ],
+      "instructions_ko": [
+        "행동 면접 질문에 답하는 연습하기",
+        "답변에 대한 피드백 받기",
+        "면접 기술 향상시키기"
+      ],
+      "instructions_fr": [
+        "Pratiquez à répondre aux questions comportementales",
+        "Recevez des commentaires sur vos réponses",
+        "Améliorez vos techniques d'entretien"
+      ],
+      "instructions_de": [
+        "Üben Sie die Beantwortung von Verhaltensfragen",
+        "Erhalten Sie Feedback zu Ihren Antworten",
+        "Verbessern Sie Ihre Interview-Techniken"
+      ],
+      "instructions_ru": [
+        "Практикуйтесь отвечать на поведенческие вопросы",
+        "Получайте обратную связь о ваших ответах",
+        "Улучшайте свои техники собеседования"
+      ],
+      "instructions_it": [
+        "Esercitati a rispondere a domande comportamentali",
+        "Ricevi feedback sulle tue risposte",
+        "Migliora le tue tecniche di colloquio"
+      ],
+      "expected_outcome": "Improved interview skills and confidence",
+      "expected_outcome_zhTW": "提升的面試技能和信心",
+      "expected_outcome_es": "Habilidades de entrevista mejoradas y mayor confianza",
+      "expected_outcome_ja": "向上した面接スキルと自信",
+      "expected_outcome_ko": "향상된 면접 기술과 자신감",
+      "expected_outcome_fr": "Compétences d'entretien améliorées et confiance accrue",
+      "expected_outcome_de": "Verbesserte Interview-Fähigkeiten und Selbstvertrauen",
+      "expected_outcome_ru": "Улучшенные навыки собеседования и уверенность",
+      "expected_outcome_it": "Competenze di colloquio migliorate e maggiore fiducia",
+      "time_limit": 30,
+      "assessment_focus": {
+        "primary": [
+          "S1.2",
+          "K1.2"
+        ],
+        "secondary": [
+          "A1.1",
+          "A2.1"
+        ]
+      },
+      "ai_module": {
+        "role": "actor",
+        "model": "gemini-2.5-flash",
+        "persona": "Professional Interviewer",
+        "initial_prompt": "You are an experienced hiring manager conducting a professional interview.\n- Ask relevant behavioral and situational questions\n- Provide constructive feedback on answers\n- Help improve response structure using STAR method\n- Maintain a professional but encouraging tone\n\nInterview practice guidelines:\n- Start with a common interview question after brief greeting\n- Keep the conversation focused on interview practice\n- Provide specific feedback after each answer\n- Suggest improvements using STAR method\n"
+      }
+    }
+  ],
+  "completion_criteria": {
+    "min_tasks_completed": 4,
+    "required_competencies": [
+      "K1.1",
+      "S1.1"
+    ],
+    "min_overall_score": 70
+  }
+}

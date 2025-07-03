@@ -1,0 +1,725 @@
+{
+  "scenario_info": {
+    "id": "high-school-smart-city",
+    "title": "AI-Powered Smart City Solutions",
+    "title_zhTW": "AI 驅動的智慧城市解決方案",
+    "title_es": "Soluciones de Ciudad Inteligente con IA",
+    "title_ja": "AI駆動型スマートシティソリューション",
+    "title_ko": "AI 기반 스마트 시티 솔루션",
+    "title_fr": "Solutions de Ville Intelligente avec IA",
+    "title_de": "KI-gestützte Smart City Lösungen",
+    "title_ru": "Решения умного города с ИИ",
+    "title_it": "Soluzioni per Città Intelligenti con IA",
+    "description": "Design innovative AI solutions to improve urban life in your community",
+    "description_zhTW": "設計創新的 AI 解決方案來改善社區的城市生活",
+    "description_es": "Diseña soluciones innovadoras de IA para mejorar la vida urbana en tu comunidad",
+    "description_ja": "コミュニティの都市生活を改善するための革新的なAIソリューションを設計する",
+    "description_ko": "커뮤니티의 도시 생활을 개선하기 위한 혁신적인 AI 솔루션 설계",
+    "description_fr": "Concevez des solutions IA innovantes pour améliorer la vie urbaine",
+    "description_de": "Entwerfe innovative KI-Lösungen zur Verbesserung des städtischen Lebens",
+    "description_ru": "Разработайте инновационные решения ИИ для улучшения городской жизни",
+    "description_it": "Progetta soluzioni IA innovative per migliorare la vita urbana",
+    "difficulty": "intermediate",
+    "estimated_duration": 90,
+    "target_domains": [
+      "designing_with_ai",
+      "creating_with_ai",
+      "engaging_with_ai"
+    ],
+    "prerequisites": [
+      "Basic understanding of urban systems",
+      "Interest in technology and innovation"
+    ],
+    "prerequisites_zhTW": [
+      "對城市系統的基本理解",
+      "對科技和創新的興趣"
+    ],
+    "prerequisites_es": [
+      "Comprensión básica de los sistemas urbanos",
+      "Interés en tecnología e innovación"
+    ],
+    "prerequisites_ja": [
+      "都市システムの基本的な理解",
+      "技術と革新への関心"
+    ],
+    "prerequisites_ko": [
+      "도시 시스템에 대한 기본 이해",
+      "기술과 혁신에 대한 관심"
+    ],
+    "prerequisites_fr": [
+      "Compréhension de base des systèmes urbains",
+      "Intérêt pour la technologie et l'innovation"
+    ],
+    "prerequisites_de": [
+      "Grundverständnis urbaner Systeme",
+      "Interesse an Technologie und Innovation"
+    ],
+    "prerequisites_ru": [
+      "Базовое понимание городских систем",
+      "Интерес к технологиям и инновациям"
+    ],
+    "prerequisites_it": [
+      "Comprensione di base dei sistemi urbani",
+      "Interesse per la tecnologia e l'innovazione"
+    ],
+    "learning_objectives": [
+      "Identify urban challenges using AI analysis",
+      "Design AI-powered smart city features",
+      "Create prototypes and visualizations",
+      "Develop implementation strategies for urban solutions"
+    ],
+    "learning_objectives_zhTW": [
+      "使用 AI 分析識別城市挑戰",
+      "設計 AI 驅動的智慧城市功能",
+      "創建原型和視覺化",
+      "制定城市解決方案的實施策略"
+    ],
+    "learning_objectives_es": [
+      "Identificar desafíos urbanos usando análisis de IA",
+      "Diseñar características de ciudad inteligente con IA",
+      "Crear prototipos y visualizaciones",
+      "Desarrollar estrategias de implementación para soluciones urbanas"
+    ],
+    "learning_objectives_ja": [
+      "AI分析を使用して都市の課題を特定する",
+      "AI駆動型スマートシティ機能を設計する",
+      "プロトタイプと視覚化を作成する",
+      "都市ソリューションの実装戦略を開発する"
+    ],
+    "learning_objectives_ko": [
+      "AI 분석을 사용하여 도시 문제 식별",
+      "AI 기반 스마트 시티 기능 설계",
+      "프로토타입 및 시각화 생성",
+      "도시 솔루션을 위한 구현 전략 개발"
+    ],
+    "learning_objectives_fr": [
+      "Identifier les défis urbains en utilisant l'analyse IA",
+      "Concevoir des fonctionnalités de ville intelligente alimentées par l'IA",
+      "Créer des prototypes et des visualisations",
+      "Développer des stratégies de mise en œuvre pour les solutions urbaines"
+    ],
+    "learning_objectives_de": [
+      "Städtische Herausforderungen mit KI-Analyse identifizieren",
+      "KI-gestützte Smart-City-Funktionen entwerfen",
+      "Prototypen und Visualisierungen erstellen",
+      "Implementierungsstrategien für urbane Lösungen entwickeln"
+    ],
+    "learning_objectives_ru": [
+      "Выявить городские проблемы с помощью ИИ-анализа",
+      "Разработать функции умного города на основе ИИ",
+      "Создать прототипы и визуализации",
+      "Разработать стратегии внедрения городских решений"
+    ],
+    "learning_objectives_it": [
+      "Identificare le sfide urbane usando l'analisi IA",
+      "Progettare funzionalità di città intelligenti alimentate dall'IA",
+      "Creare prototipi e visualizzazioni",
+      "Sviluppare strategie di implementazione per soluzioni urbane"
+    ]
+  },
+  "ksa_mapping": {
+    "knowledge": [
+      "K1.1",
+      "K1.2",
+      "K2.1",
+      "K2.3"
+    ],
+    "skills": [
+      "S1.1",
+      "S1.2",
+      "S2.1",
+      "S2.3"
+    ],
+    "attitudes": [
+      "A1.1",
+      "A1.2",
+      "A2.1"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "task-1",
+      "title": "Urban Challenge Mapping",
+      "title_zhTW": "城市挑戰映射",
+      "title_es": "Mapeo de Desafíos Urbanos",
+      "title_ja": "都市課題マッピング",
+      "title_ko": "도시 문제 매핑",
+      "title_fr": "Cartographie des Défis Urbains",
+      "title_de": "Kartierung städtischer Herausforderungen",
+      "title_ru": "Картирование городских проблем",
+      "title_it": "Mappatura delle Sfide Urbane",
+      "description": "Use AI to identify and map urban challenges in your area",
+      "description_zhTW": "使用 AI 識別和映射你所在地區的城市挑戰",
+      "description_es": "Usa IA para identificar y mapear desafíos urbanos en tu área",
+      "description_ja": "AIを使用して地域の都市課題を特定・マッピングする",
+      "description_ko": "AI를 사용하여 지역의 도시 문제 식별 및 매핑",
+      "description_fr": "Utilisez l'IA pour identifier et cartographier les défis urbains de votre région",
+      "description_de": "Nutzen Sie KI zur Identifizierung und Kartierung städtischer Herausforderungen in Ihrer Region",
+      "description_ru": "Используйте ИИ для выявления и картирования городских проблем в вашем районе",
+      "description_it": "Usa l'IA per identificare e mappare le sfide urbane nella tua area",
+      "category": "research",
+      "instructions": [
+        "Use AI to research traffic congestion, public safety, environmental issues, and public service gaps",
+        "Create interactive maps showing problem areas",
+        "Prioritize problems by impact on community",
+        "Gather community input through surveys or interviews"
+      ],
+      "instructions_zhTW": [
+        "使用 AI 研究交通擁堵、公共安全、環境問題和公共服務缺口",
+        "創建顯示問題區域的互動地圖",
+        "根據對社區的影響優先排序問題",
+        "通過調查或訪談收集社區意見"
+      ],
+      "instructions_es": [
+        "Usa IA para investigar congestión de tráfico, seguridad pública, problemas ambientales y brechas en servicios públicos",
+        "Crea mapas interactivos que muestren áreas problemáticas",
+        "Prioriza problemas por impacto en la comunidad",
+        "Recopila opiniones de la comunidad mediante encuestas o entrevistas"
+      ],
+      "instructions_ja": [
+        "AIを使用して交通渋滞、公共安全、環境問題、公共サービスのギャップを調査",
+        "問題のある地域を示すインタラクティブマップを作成",
+        "コミュニティへの影響で問題に優先順位を付ける",
+        "調査やインタビューを通じてコミュニティの意見を収集"
+      ],
+      "instructions_ko": [
+        "AI를 사용하여 교통 혼잡, 공공 안전, 환경 문제, 공공 서비스 격차 조사",
+        "문제 지역을 보여주는 인터랙티브 지도 생성",
+        "커뮤니티에 미치는 영향에 따라 문제 우선순위 정하기",
+        "설문조사나 인터뷰를 통해 커뮤니티 의견 수집"
+      ],
+      "instructions_fr": [
+        "Utilisez l'IA pour rechercher la congestion du trafic, la sécurité publique, les problèmes environnementaux et les lacunes des services publics",
+        "Créez des cartes interactives montrant les zones problématiques",
+        "Priorisez les problèmes selon leur impact sur la communauté",
+        "Recueillez les commentaires de la communauté par des sondages ou des entretiens"
+      ],
+      "instructions_de": [
+        "Verwenden Sie KI zur Untersuchung von Verkehrsstaus, öffentlicher Sicherheit, Umweltproblemen und Lücken in öffentlichen Dienstleistungen",
+        "Erstellen Sie interaktive Karten, die Problemgebiete zeigen",
+        "Priorisieren Sie Probleme nach ihren Auswirkungen auf die Gemeinschaft",
+        "Sammeln Sie Community-Feedback durch Umfragen oder Interviews"
+      ],
+      "instructions_ru": [
+        "Используйте ИИ для исследования пробок, общественной безопасности, экологических проблем и пробелов в государственных услугах",
+        "Создайте интерактивные карты, показывающие проблемные зоны",
+        "Расставьте приоритеты проблем по их влиянию на сообщество",
+        "Соберите мнения сообщества через опросы или интервью"
+      ],
+      "instructions_it": [
+        "Usa l'IA per ricercare congestione del traffico, sicurezza pubblica, problemi ambientali e carenze nei servizi pubblici",
+        "Crea mappe interattive che mostrano le aree problematiche",
+        "Prioritizza i problemi in base all'impatto sulla comunità",
+        "Raccogli input dalla comunità tramite sondaggi o interviste"
+      ],
+      "expected_outcome": "A comprehensive urban challenge map with prioritized issues",
+      "expected_outcome_zhTW": "一份包含優先問題的全面城市挑戰地圖",
+      "expected_outcome_es": "Un mapa completo de desafíos urbanos con problemas priorizados",
+      "expected_outcome_ja": "優先順位付けされた問題を含む包括的な都市課題マップ",
+      "expected_outcome_ko": "우선순위가 정해진 문제가 포함된 포괄적인 도시 문제 지도",
+      "expected_outcome_fr": "Une carte complète des défis urbains avec des problèmes priorisés",
+      "expected_outcome_de": "Eine umfassende Karte städtischer Herausforderungen mit priorisierten Problemen",
+      "expected_outcome_ru": "Комплексная карта городских проблем с приоритетными вопросами",
+      "expected_outcome_it": "Una mappa completa delle sfide urbane con problemi prioritizzati",
+      "time_limit": 25,
+      "resources": [
+        "Urban data sources",
+        "Mapping tools",
+        "AI analysis platforms"
+      ],
+      "resources_zhTW": [
+        "城市數據來源",
+        "地圖工具",
+        "AI 分析平台"
+      ],
+      "resources_es": [
+        "Fuentes de datos urbanos",
+        "Herramientas de mapeo",
+        "Plataformas de análisis con IA"
+      ],
+      "resources_ja": [
+        "都市データソース",
+        "マッピングツール",
+        "AI分析プラットフォーム"
+      ],
+      "resources_ko": [
+        "도시 데이터 소스",
+        "매핑 도구",
+        "AI 분석 플랫폼"
+      ],
+      "resources_fr": [
+        "Sources de données urbaines",
+        "Outils de cartographie",
+        "Plateformes d'analyse IA"
+      ],
+      "resources_de": [
+        "Städtische Datenquellen",
+        "Kartierungstools",
+        "KI-Analyseplattformen"
+      ],
+      "resources_ru": [
+        "Источники городских данных",
+        "Инструменты картирования",
+        "Платформы ИИ-анализа"
+      ],
+      "resources_it": [
+        "Fonti di dati urbani",
+        "Strumenti di mappatura",
+        "Piattaforme di analisi IA"
+      ],
+      "assessment_focus": {
+        "primary": [
+          "K1.1",
+          "S2.3"
+        ],
+        "secondary": [
+          "A1.1"
+        ]
+      },
+      "ai_module": {
+        "role": "assistant",
+        "model": "gemini-2.5-flash",
+        "persona": "Urban Research Analyst",
+        "initial_prompt": "You are an urban research analyst helping students identify city challenges.\nGuide them through:\n- Researching urban problems systematically\n- Creating effective data visualizations\n- Understanding community needs\n- Prioritizing issues based on impact\n\nFocus on problems that affect young people in the community.\n"
+      }
+    },
+    {
+      "id": "task-2",
+      "title": "Smart Traffic Solution",
+      "title_zhTW": "智慧交通解決方案",
+      "title_es": "Solución de Tráfico Inteligente",
+      "title_ja": "スマート交通ソリューション",
+      "title_ko": "스마트 교통 솔루션",
+      "title_fr": "Solution de Trafic Intelligent",
+      "title_de": "Intelligente Verkehrslösung",
+      "title_ru": "Умное транспортное решение",
+      "title_it": "Soluzione di Traffico Intelligente",
+      "description": "Design an AI system to improve traffic flow and safety",
+      "description_zhTW": "設計一個 AI 系統來改善交通流量和安全",
+      "description_es": "Diseña un sistema de IA para mejorar el flujo de tráfico y la seguridad",
+      "description_ja": "交通の流れと安全性を改善するAIシステムを設計する",
+      "description_ko": "교통 흐름과 안전을 개선하는 AI 시스템 설계",
+      "description_fr": "Concevez un système IA pour améliorer le flux de trafic et la sécurité",
+      "description_de": "Entwerfen Sie ein KI-System zur Verbesserung des Verkehrsflusses und der Sicherheit",
+      "description_ru": "Разработайте ИИ-систему для улучшения транспортного потока и безопасности",
+      "description_it": "Progetta un sistema IA per migliorare il flusso del traffico e la sicurezza",
+      "category": "creation",
+      "instructions": [
+        "Design AI features for traffic light optimization, pedestrian safety, public transport routing, and parking",
+        "Create system diagrams showing how components interact",
+        "Simulate traffic improvements using data",
+        "Calculate potential time and fuel savings"
+      ],
+      "instructions_zhTW": [
+        "設計交通燈優化、行人安全、公共交通路線和停車的 AI 功能",
+        "創建顯示組件如何互動的系統圖",
+        "使用數據模擬交通改善",
+        "計算潛在的時間和燃料節省"
+      ],
+      "instructions_es": [
+        "Diseña funciones de IA para optimización de semáforos, seguridad peatonal, rutas de transporte público y estacionamiento",
+        "Crea diagramas del sistema mostrando cómo interactúan los componentes",
+        "Simula mejoras de tráfico usando datos",
+        "Calcula ahorros potenciales de tiempo y combustible"
+      ],
+      "instructions_ja": [
+        "信号機の最適化、歩行者の安全、公共交通機関のルーティング、駐車のためのAI機能を設計",
+        "コンポーネントがどのように相互作用するかを示すシステム図を作成",
+        "データを使用して交通改善をシミュレート",
+        "潜在的な時間と燃料の節約を計算"
+      ],
+      "instructions_ko": [
+        "신호등 최적화, 보행자 안전, 대중교통 경로, 주차를 위한 AI 기능 설계",
+        "구성 요소가 상호 작용하는 방법을 보여주는 시스템 다이어그램 생성",
+        "데이터를 사용하여 교통 개선 시뮬레이션",
+        "잠재적인 시간 및 연료 절약 계산"
+      ],
+      "instructions_fr": [
+        "Concevez des fonctionnalités IA pour l'optimisation des feux de circulation, la sécurité des piétons, le routage des transports publics et le stationnement",
+        "Créez des diagrammes système montrant comment les composants interagissent",
+        "Simulez les améliorations du trafic en utilisant des données",
+        "Calculez les économies potentielles de temps et de carburant"
+      ],
+      "instructions_de": [
+        "Entwerfen Sie KI-Funktionen für Ampeloptimierung, Fußgängersicherheit, öffentliche Verkehrsführung und Parken",
+        "Erstellen Sie Systemdiagramme, die zeigen, wie Komponenten interagieren",
+        "Simulieren Sie Verkehrsverbesserungen mit Daten",
+        "Berechnen Sie potenzielle Zeit- und Kraftstoffeinsparungen"
+      ],
+      "instructions_ru": [
+        "Разработайте функции ИИ для оптимизации светофоров, безопасности пешеходов, маршрутизации общественного транспорта и парковки",
+        "Создайте системные диаграммы, показывающие взаимодействие компонентов",
+        "Смоделируйте улучшения трафика с использованием данных",
+        "Рассчитайте потенциальную экономию времени и топлива"
+      ],
+      "instructions_it": [
+        "Progetta funzionalità IA per l'ottimizzazione dei semafori, la sicurezza dei pedoni, il routing dei trasporti pubblici e il parcheggio",
+        "Crea diagrammi di sistema che mostrano come interagiscono i componenti",
+        "Simula miglioramenti del traffico usando i dati",
+        "Calcola potenziali risparmi di tempo e carburante"
+      ],
+      "expected_outcome": "A comprehensive AI-powered traffic management system design",
+      "expected_outcome_zhTW": "一個全面的 AI 驅動交通管理系統設計",
+      "expected_outcome_es": "Un diseño integral de sistema de gestión de tráfico con IA",
+      "expected_outcome_ja": "包括的なAI駆動型交通管理システムの設計",
+      "expected_outcome_ko": "포괄적인 AI 기반 교통 관리 시스템 설계",
+      "expected_outcome_fr": "Une conception complète de système de gestion du trafic alimenté par l'IA",
+      "expected_outcome_de": "Ein umfassendes KI-gesteuertes Verkehrsmanagementsystem-Design",
+      "expected_outcome_ru": "Комплексный дизайн системы управления трафиком на основе ИИ",
+      "expected_outcome_it": "Una progettazione completa di sistema di gestione del traffico alimentato dall'IA",
+      "time_limit": 30,
+      "assessment_focus": {
+        "primary": [
+          "S2.1",
+          "K2.1"
+        ],
+        "secondary": [
+          "A2.1"
+        ]
+      },
+      "ai_module": {
+        "role": "assistant",
+        "model": "gemini-2.5-flash",
+        "persona": "Smart City Engineer",
+        "initial_prompt": "You are a smart city engineer helping students design traffic solutions.\nAssist them with:\n- Creating innovative traffic management features\n- Understanding system integration\n- Calculating impact metrics\n- Considering all road users including pedestrians and cyclists\n\nHelp them design solutions that are both innovative and practical.\n"
+      }
+    },
+    {
+      "id": "task-3",
+      "title": "Community Safety App",
+      "title_zhTW": "社區安全應用",
+      "title_es": "Aplicación de Seguridad Comunitaria",
+      "title_ja": "コミュニティ安全アプリ",
+      "title_ko": "커뮤니티 안전 앱",
+      "title_fr": "Application de Sécurité Communautaire",
+      "title_de": "Community-Sicherheits-App",
+      "title_ru": "Приложение безопасности сообщества",
+      "title_it": "App per la Sicurezza della Comunità",
+      "description": "Build an AI-powered app prototype for community safety",
+      "description_zhTW": "建立一個 AI 驅動的社區安全應用原型",
+      "description_es": "Construye un prototipo de aplicación con IA para la seguridad comunitaria",
+      "description_ja": "コミュニティの安全のためのAI駆動型アプリのプロトタイプを構築する",
+      "description_ko": "커뮤니티 안전을 위한 AI 기반 앱 프로토타입 구축",
+      "description_fr": "Construisez un prototype d'application alimentée par l'IA pour la sécurité communautaire",
+      "description_de": "Erstellen Sie einen KI-gestützten App-Prototyp für die Gemeinschaftssicherheit",
+      "description_ru": "Создайте прототип приложения на основе ИИ для безопасности сообщества",
+      "description_it": "Costruisci un prototipo di app alimentata dall'IA per la sicurezza della comunità",
+      "category": "interaction",
+      "instructions": [
+        "Include AI features for emergency alerts, safe route suggestions, community reporting, and real-time updates",
+        "Design user-friendly interfaces for different age groups",
+        "Create mockups and wireframes",
+        "Plan privacy protections and data security measures"
+      ],
+      "instructions_zhTW": [
+        "包含緊急警報、安全路線建議、社區報告和即時更新的 AI 功能",
+        "為不同年齡組設計用戶友好的界面",
+        "創建模型和線框圖",
+        "規劃隱私保護和數據安全措施"
+      ],
+      "instructions_es": [
+        "Incluye funciones de IA para alertas de emergencia, sugerencias de rutas seguras, informes comunitarios y actualizaciones en tiempo real",
+        "Diseña interfaces fáciles de usar para diferentes grupos de edad",
+        "Crea maquetas y wireframes",
+        "Planifica protecciones de privacidad y medidas de seguridad de datos"
+      ],
+      "instructions_ja": [
+        "緊急アラート、安全なルート提案、コミュニティレポート、リアルタイムアップデートのAI機能を含める",
+        "異なる年齢層向けのユーザーフレンドリーなインターフェースを設計",
+        "モックアップとワイヤーフレームを作成",
+        "プライバシー保護とデータセキュリティ対策を計画"
+      ],
+      "instructions_ko": [
+        "비상 경보, 안전 경로 제안, 커뮤니티 보고, 실시간 업데이트를 위한 AI 기능 포함",
+        "다양한 연령대를 위한 사용자 친화적인 인터페이스 설계",
+        "목업과 와이어프레임 생성",
+        "개인정보 보호 및 데이터 보안 조치 계획"
+      ],
+      "instructions_fr": [
+        "Incluez des fonctionnalités IA pour les alertes d'urgence, les suggestions d'itinéraires sûrs, les rapports communautaires et les mises à jour en temps réel",
+        "Concevez des interfaces conviviales pour différents groupes d'âge",
+        "Créez des maquettes et des wireframes",
+        "Planifiez les protections de la vie privée et les mesures de sécurité des données"
+      ],
+      "instructions_de": [
+        "Fügen Sie KI-Funktionen für Notfallwarnungen, sichere Routenvorschläge, Community-Berichte und Echtzeitaktualisierungen ein",
+        "Entwerfen Sie benutzerfreundliche Schnittstellen für verschiedene Altersgruppen",
+        "Erstellen Sie Mockups und Wireframes",
+        "Planen Sie Datenschutz und Datensicherheitsmaßnahmen"
+      ],
+      "instructions_ru": [
+        "Включите функции ИИ для экстренных оповещений, предложений безопасных маршрутов, отчетов сообщества и обновлений в реальном времени",
+        "Разработайте удобные интерфейсы для разных возрастных групп",
+        "Создайте макеты и каркасы",
+        "Спланируйте защиту конфиденциальности и меры безопасности данных"
+      ],
+      "instructions_it": [
+        "Includi funzionalità IA per avvisi di emergenza, suggerimenti di percorsi sicuri, segnalazioni della comunità e aggiornamenti in tempo reale",
+        "Progetta interfacce user-friendly per diversi gruppi di età",
+        "Crea mockup e wireframe",
+        "Pianifica protezioni per la privacy e misure di sicurezza dei dati"
+      ],
+      "expected_outcome": "A functional community safety app prototype with AI features",
+      "expected_outcome_zhTW": "一個具有 AI 功能的功能性社區安全應用原型",
+      "expected_outcome_es": "Un prototipo funcional de aplicación de seguridad comunitaria con funciones de IA",
+      "expected_outcome_ja": "AI機能を備えた機能的なコミュニティ安全アプリのプロトタイプ",
+      "expected_outcome_ko": "AI 기능이 있는 기능적인 커뮤니티 안전 앱 프로토타입",
+      "expected_outcome_fr": "Un prototype fonctionnel d'application de sécurité communautaire avec des fonctionnalités IA",
+      "expected_outcome_de": "Ein funktionsfähiger Community-Sicherheits-App-Prototyp mit KI-Funktionen",
+      "expected_outcome_ru": "Функциональный прототип приложения безопасности сообщества с функциями ИИ",
+      "expected_outcome_it": "Un prototipo funzionale di app per la sicurezza della comunità con funzionalità IA",
+      "time_limit": 35,
+      "assessment_focus": {
+        "primary": [
+          "K2.1",
+          "S1.2"
+        ],
+        "secondary": [
+          "A1.2",
+          "A2.1"
+        ]
+      },
+      "ai_module": {
+        "role": "evaluator",
+        "model": "gemini-2.5-flash",
+        "persona": "App Design Mentor",
+        "initial_prompt": "You are an app design mentor helping students create a community safety app.\nGuide them through:\n- Designing effective safety features\n- Creating intuitive user interfaces\n- Implementing privacy by design\n- Considering diverse user needs\n\nEnsure the app prioritizes user safety and privacy while being accessible to all.\n"
+      }
+    },
+    {
+      "id": "task-4",
+      "title": "Green Spaces Optimizer",
+      "title_zhTW": "綠色空間優化器",
+      "title_es": "Optimizador de Espacios Verdes",
+      "title_ja": "グリーンスペース最適化ツール",
+      "title_ko": "녹지 공간 최적화 도구",
+      "title_fr": "Optimiseur d'Espaces Verts",
+      "title_de": "Grünflächen-Optimierer",
+      "title_ru": "Оптимизатор зеленых зон",
+      "title_it": "Ottimizzatore di Spazi Verdi",
+      "description": "Use AI to optimize urban green spaces for community wellbeing",
+      "description_zhTW": "使用 AI 優化城市綠色空間以促進社區福祉",
+      "description_es": "Usa IA para optimizar espacios verdes urbanos para el bienestar comunitario",
+      "description_ja": "AIを使用してコミュニティの福祉のために都市の緑地を最適化する",
+      "description_ko": "AI를 사용하여 커뮤니티 웰빙을 위한 도시 녹지 공간 최적화",
+      "description_fr": "Utilisez l'IA pour optimiser les espaces verts urbains pour le bien-être communautaire",
+      "description_de": "Nutzen Sie KI zur Optimierung städtischer Grünflächen für das Gemeinwohl",
+      "description_ru": "Используйте ИИ для оптимизации городских зеленых зон для благополучия сообщества",
+      "description_it": "Usa l'IA per ottimizzare gli spazi verdi urbani per il benessere della comunità",
+      "category": "analysis",
+      "instructions": [
+        "Analyze current green space usage, community needs, environmental benefits, and accessibility",
+        "Propose improvements for existing spaces",
+        "Design new green spaces for underserved areas",
+        "Create 3D visualizations of proposed changes"
+      ],
+      "instructions_zhTW": [
+        "分析當前綠色空間使用、社區需求、環境效益和可及性",
+        "為現有空間提出改進建議",
+        "為服務不足的地區設計新的綠色空間",
+        "創建擬議變更的 3D 視覺化"
+      ],
+      "instructions_es": [
+        "Analiza el uso actual de espacios verdes, necesidades comunitarias, beneficios ambientales y accesibilidad",
+        "Propón mejoras para espacios existentes",
+        "Diseña nuevos espacios verdes para áreas desatendidas",
+        "Crea visualizaciones 3D de los cambios propuestos"
+      ],
+      "instructions_ja": [
+        "現在の緑地利用、コミュニティのニーズ、環境上の利点、アクセシビリティを分析",
+        "既存のスペースの改善を提案",
+        "サービスが不足している地域のための新しい緑地を設計",
+        "提案された変更の3D視覚化を作成"
+      ],
+      "instructions_ko": [
+        "현재 녹지 사용, 커뮤니티 요구, 환경적 이점, 접근성 분석",
+        "기존 공간에 대한 개선 사항 제안",
+        "소외된 지역을 위한 새로운 녹지 공간 설계",
+        "제안된 변경 사항의 3D 시각화 생성"
+      ],
+      "instructions_fr": [
+        "Analysez l'utilisation actuelle des espaces verts, les besoins communautaires, les avantages environnementaux et l'accessibilité",
+        "Proposez des améliorations pour les espaces existants",
+        "Concevez de nouveaux espaces verts pour les zones mal desservies",
+        "Créez des visualisations 3D des changements proposés"
+      ],
+      "instructions_de": [
+        "Analysieren Sie die aktuelle Nutzung von Grünflächen, Gemeinschaftsbedürfnisse, Umweltvorteile und Zugänglichkeit",
+        "Schlagen Sie Verbesserungen für bestehende Flächen vor",
+        "Entwerfen Sie neue Grünflächen für unterversorgte Gebiete",
+        "Erstellen Sie 3D-Visualisierungen der vorgeschlagenen Änderungen"
+      ],
+      "instructions_ru": [
+        "Проанализируйте текущее использование зеленых зон, потребности сообщества, экологические преимущества и доступность",
+        "Предложите улучшения для существующих пространств",
+        "Спроектируйте новые зеленые зоны для недостаточно обслуживаемых районов",
+        "Создайте 3D-визуализации предлагаемых изменений"
+      ],
+      "instructions_it": [
+        "Analizza l'uso attuale degli spazi verdi, i bisogni della comunità, i benefici ambientali e l'accessibilità",
+        "Proponi miglioramenti per gli spazi esistenti",
+        "Progetta nuovi spazi verdi per le aree poco servite",
+        "Crea visualizzazioni 3D dei cambiamenti proposti"
+      ],
+      "expected_outcome": "An optimized green space plan with visualizations",
+      "expected_outcome_zhTW": "一個帶有視覺化的優化綠色空間計劃",
+      "expected_outcome_es": "Un plan optimizado de espacios verdes con visualizaciones",
+      "expected_outcome_ja": "視覚化を含む最適化された緑地計画",
+      "expected_outcome_ko": "시각화가 포함된 최적화된 녹지 공간 계획",
+      "expected_outcome_fr": "Un plan d'espaces verts optimisé avec des visualisations",
+      "expected_outcome_de": "Ein optimierter Grünflächenplan mit Visualisierungen",
+      "expected_outcome_ru": "Оптимизированный план зеленых зон с визуализациями",
+      "expected_outcome_it": "Un piano ottimizzato per gli spazi verdi con visualizzazioni",
+      "time_limit": 30,
+      "assessment_focus": {
+        "primary": [
+          "K2.3",
+          "S2.3"
+        ],
+        "secondary": [
+          "A1.2"
+        ]
+      },
+      "ai_module": {
+        "role": "assistant",
+        "model": "gemini-2.5-flash",
+        "persona": "Urban Planner",
+        "initial_prompt": "You are an urban planner helping students optimize green spaces.\nGuide them through:\n- Analyzing community needs for green spaces\n- Understanding environmental benefits\n- Designing inclusive and accessible spaces\n- Creating effective visualizations\n\nFocus on creating spaces that serve diverse age groups and promote community wellbeing.\n"
+      }
+    },
+    {
+      "id": "task-5",
+      "title": "Smart City Presentation",
+      "title_zhTW": "智慧城市展示",
+      "title_es": "Presentación de Ciudad Inteligente",
+      "title_ja": "スマートシティプレゼンテーション",
+      "title_ko": "스마트 시티 프레젠테이션",
+      "title_fr": "Présentation de Ville Intelligente",
+      "title_de": "Smart City Präsentation",
+      "title_ru": "Презентация умного города",
+      "title_it": "Presentazione della Città Intelligente",
+      "description": "Present your smart city solutions to local government",
+      "description_zhTW": "向地方政府展示你的智慧城市解決方案",
+      "description_es": "Presenta tus soluciones de ciudad inteligente al gobierno local",
+      "description_ja": "地方政府にスマートシティソリューションを提示する",
+      "description_ko": "지방 정부에 스마트 시티 솔루션 발표",
+      "description_fr": "Présentez vos solutions de ville intelligente au gouvernement local",
+      "description_de": "Präsentieren Sie Ihre Smart-City-Lösungen der Stadtverwaltung",
+      "description_ru": "Представьте ваши решения умного города местному правительству",
+      "description_it": "Presenta le tue soluzioni di città intelligente al governo locale",
+      "category": "interaction",
+      "instructions": [
+        "Use AI to prepare executive summary, solution demonstrations, cost-benefit analysis, and implementation roadmap",
+        "Create compelling visuals and infographics",
+        "Prepare responses to potential questions",
+        "Practice professional presentation delivery"
+      ],
+      "instructions_zhTW": [
+        "使用 AI 準備執行摘要、解決方案演示、成本效益分析和實施路線圖",
+        "創建引人注目的視覺效果和信息圖表",
+        "準備對潛在問題的回應",
+        "練習專業的演示交付"
+      ],
+      "instructions_es": [
+        "Usa IA para preparar resumen ejecutivo, demostraciones de soluciones, análisis costo-beneficio y hoja de ruta de implementación",
+        "Crea visuales e infografías convincentes",
+        "Prepara respuestas a posibles preguntas",
+        "Practica la entrega profesional de la presentación"
+      ],
+      "instructions_ja": [
+        "AIを使用してエグゼクティブサマリー、ソリューションのデモンストレーション、費用対効果分析、実装ロードマップを準備",
+        "説得力のあるビジュアルとインフォグラフィックを作成",
+        "潜在的な質問への回答を準備",
+        "プロフェッショナルなプレゼンテーションの練習"
+      ],
+      "instructions_ko": [
+        "AI를 사용하여 경영진 요약, 솔루션 시연, 비용-편익 분석, 구현 로드맵 준비",
+        "매력적인 시각 자료와 인포그래픽 생성",
+        "잠재적인 질문에 대한 답변 준비",
+        "전문적인 프레젠테이션 전달 연습"
+      ],
+      "instructions_fr": [
+        "Utilisez l'IA pour préparer un résumé exécutif, des démonstrations de solutions, une analyse coûts-avantages et une feuille de route de mise en œuvre",
+        "Créez des visuels et infographies convaincants",
+        "Préparez des réponses aux questions potentielles",
+        "Pratiquez une présentation professionnelle"
+      ],
+      "instructions_de": [
+        "Verwenden Sie KI zur Vorbereitung von Executive Summary, Lösungsdemonstrationen, Kosten-Nutzen-Analyse und Implementierungs-Roadmap",
+        "Erstellen Sie überzeugende Visualisierungen und Infografiken",
+        "Bereiten Sie Antworten auf mögliche Fragen vor",
+        "Üben Sie eine professionelle Präsentation"
+      ],
+      "instructions_ru": [
+        "Используйте ИИ для подготовки резюме, демонстраций решений, анализа затрат и выгод и дорожной карты внедрения",
+        "Создайте убедительные визуальные материалы и инфографику",
+        "Подготовьте ответы на возможные вопросы",
+        "Практикуйте профессиональную подачу презентации"
+      ],
+      "instructions_it": [
+        "Usa l'IA per preparare riassunto esecutivo, dimostrazioni di soluzioni, analisi costi-benefici e roadmap di implementazione",
+        "Crea visuali e infografiche convincenti",
+        "Prepara risposte a potenziali domande",
+        "Pratica la presentazione professionale"
+      ],
+      "expected_outcome": "A professional presentation ready for government stakeholders",
+      "expected_outcome_zhTW": "一份準備向政府利益相關者展示的專業演示文稿",
+      "expected_outcome_es": "Una presentación profesional lista para las partes interesadas del gobierno",
+      "expected_outcome_ja": "政府の利害関係者向けの専門的なプレゼンテーション",
+      "expected_outcome_ko": "정부 이해관계자를 위한 전문적인 프레젠테이션",
+      "expected_outcome_fr": "Une présentation professionnelle prête pour les parties prenantes gouvernementales",
+      "expected_outcome_de": "Eine professionelle Präsentation für Regierungsvertreter",
+      "expected_outcome_ru": "Профессиональная презентация для правительственных заинтересованных сторон",
+      "expected_outcome_it": "Una presentazione professionale pronta per gli stakeholder governativi",
+      "time_limit": 30,
+      "assessment_focus": {
+        "primary": [
+          "S1.2",
+          "K1.2"
+        ],
+        "secondary": [
+          "A1.1",
+          "A2.1"
+        ]
+      },
+      "ai_module": {
+        "role": "actor",
+        "model": "gemini-2.5-flash",
+        "persona": "Presentation Coach",
+        "initial_prompt": "You are a presentation coach helping students prepare for government stakeholders.\nAssist them with:\n- Creating clear, data-driven narratives\n- Designing professional visuals\n- Anticipating stakeholder concerns\n- Building confidence in public speaking\n\nHelp them create a presentation that demonstrates both innovation and practical implementation.\n"
+      }
+    }
+  ],
+  "completion_criteria": {
+    "min_tasks_completed": 4,
+    "required_competencies": [
+      "K1.1",
+      "S2.1"
+    ],
+    "min_overall_score": 80
+  },
+  "resources": [
+    {
+      "name": "Smart Cities Council",
+      "name_zhTW": "智慧城市委員會",
+      "name_zhCN": "[Simplified Chinese translation needed]",
+      "name_pt": "[Portuguese translation needed]",
+      "name_ar": "[Arabic translation needed]",
+      "name_id": "[Indonesian translation needed]",
+      "name_th": "[Thai translation needed]",
+      "url": "https://smartcitiescouncil.com/",
+      "type": "reference"
+    },
+    {
+      "name": "MIT City Science",
+      "name_zhTW": "MIT 城市科學",
+      "name_zhCN": "[Simplified Chinese translation needed]",
+      "name_pt": "[Portuguese translation needed]",
+      "name_ar": "[Arabic translation needed]",
+      "name_id": "[Indonesian translation needed]",
+      "name_th": "[Thai translation needed]",
+      "url": "https://www.media.mit.edu/groups/city-science/overview/",
+      "type": "research"
+    }
+  ]
+}
