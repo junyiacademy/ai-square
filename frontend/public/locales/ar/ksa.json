@@ -1,26 +1,26 @@
 {
-  "title": "AI Literacy Framework [Arabic]",
-  "subtitle": "Knowledge, Skills, and Attitudes for AI Education [Arabic]",
-  "loading": "Loading KSA Framework... [Arabic]",
-  "loadError": "Failed to load KSA data [Arabic]",
-  "searchPlaceholder": "Search themes, codes, or content... [Arabic]",
+  "title": "إطار محو الأمية في الذكاء الاصطناعي",
+  "subtitle": "المعرفة والمهارات والمواقف لتعليم الذكاء الاصطناعي",
+  "loading": "جاري تحميل إطار KSA...",
+  "loadError": "فشل في تحميل بيانات KSA",
+  "searchPlaceholder": "البحث في المواضيع والرموز والمحتوى...",
   "sections": {
-    "knowledge": "Knowledge [Arabic]",
-    "skills": "Skills [Arabic]",
-    "attitudes": "Attitudes [Arabic]",
-    "knowledgeShort": "K [Arabic]",
-    "skillsShort": "S [Arabic]",
-    "attitudesShort": "A [Arabic]"
+    "knowledge": "المعرفة",
+    "skills": "المهارات",
+    "attitudes": "المواقف",
+    "knowledgeShort": "م",
+    "skillsShort": "ه",
+    "attitudesShort": "ق"
   },
   "results": {
-    "themesFound": "{{count}} themes found [Arabic]",
-    "themesFoundFor": "{{count}} themes found for \"{{search}}\" [Arabic]",
-    "noResults": "No results found [Arabic]",
-    "noResultsHint": "Try adjusting your search terms. [Arabic]"
+    "themesFound": "تم العثور على {{count}} موضوع",
+    "themesFoundFor": "تم العثور على {{count}} موضوع لـ \"{{search}}\"",
+    "noResults": "لم يتم العثور على نتائج",
+    "noResultsHint": "حاول تعديل مصطلحات البحث."
   },
-  "codes": "code [Arabic]",
-  "codesPlural": "codes [Arabic]",
-  "reflectionQuestions": "Reflection Questions [Arabic]",
+  "codes": "رمز",
+  "codesPlural": "رموز",
+  "reflectionQuestions": "أسئلة التفكير",
   "themes": {
     "The_Nature_of_AI": "The Nature of AI [Arabic]",
     "AI_Reflects_Human_Choices_and_Perspectives": "AI Reflects Human Choices and Perspectives [Arabic]",

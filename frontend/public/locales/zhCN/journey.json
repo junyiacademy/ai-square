@@ -1,73 +1,73 @@
 {
-  "title": "AI Square User Journey [Chinese (Simplified)]",
-  "subtitle": "Five key paths for complete AI learning experience [Chinese (Simplified)]",
-  "getStarted": "Get Started [Chinese (Simplified)]",
-  "pathOverview": "Complete Learning Cycle [Chinese (Simplified)]",
-  "nextPath": "Next Path → [Chinese (Simplified)]",
-  "tryFeature": "Experience This Feature [Chinese (Simplified)]",
+  "title": "AI Square 用户旅程",
+  "subtitle": "完整AI学习体验的五个关键路径",
+  "getStarted": "开始使用",
+  "pathOverview": "完整学习周期",
+  "nextPath": "下一个路径 →",
+  "tryFeature": "体验此功能",
   "paths": {
     "dashboard": {
-      "title": "Dashboard [Chinese (Simplified)]",
-      "subtitle": "Learning Command Center [Chinese (Simplified)]",
-      "description": "One-stop overview of your AI learning journey, track progress, view achievements, and plan next steps. [Chinese (Simplified)]",
-      "userNeed": "How is my learning progress? [Chinese (Simplified)]",
+      "title": "仪表板",
+      "subtitle": "学习指挥中心",
+      "description": "一站式概览您的AI学习旅程，跟踪进度，查看成就，规划下一步。",
+      "userNeed": "我的学习进度如何？",
       "features": [
-        "[Chinese Simplified] translation needed",
-        "[Chinese Simplified] translation needed",
-        "[Chinese Simplified] translation needed",
-        "[Chinese Simplified] translation needed"
+        "AI素养进度可视化",
+        "一目了然的学习统计",
+        "个性化推荐行动",
+        "快速功能导航"
       ]
     },
     "assessment": {
-      "title": "Assessment [Chinese (Simplified)]",
-      "subtitle": "AI Literacy Test [Chinese (Simplified)]",
-      "description": "25 professional questions to deeply understand your competency level across four AI domains. [Chinese (Simplified)]",
-      "userNeed": "What is my AI competency level? [Chinese (Simplified)]",
+      "title": "评估",
+      "subtitle": "AI素养测试",
+      "description": "25个专业问题，深入了解您在四个AI领域的能力水平。",
+      "userNeed": "我的AI能力水平如何？",
       "features": [
-        "[Chinese Simplified] translation needed",
-        "[Chinese Simplified] translation needed",
-        "[Chinese Simplified] translation needed",
-        "[Chinese Simplified] translation needed"
+        "四个AI素养领域",
+        "25个基于场景的问题",
+        "雷达图能力分析",
+        "个性化推荐报告"
       ]
     },
     "learningPath": {
-      "title": "Learning Path [Chinese (Simplified)]",
-      "subtitle": "Personalized Growth Plan [Chinese (Simplified)]",
-      "description": "Based on your assessment results, we recommend the most suitable learning content and pace. [Chinese (Simplified)]",
-      "userNeed": "What courses are right for me? [Chinese (Simplified)]",
+      "title": "学习路径",
+      "subtitle": "个性化成长计划",
+      "description": "根据您的评估结果，我们推荐最适合的学习内容和节奏。",
+      "userNeed": "什么课程适合我？",
       "features": [
-        "[Chinese Simplified] translation needed",
-        "[Chinese Simplified] translation needed",
-        "[Chinese Simplified] translation needed",
-        "[Chinese Simplified] translation needed"
+        "定制课程推荐",
+        "分级学习内容",
+        "渐进式规划",
+        "灵活学习时间表"
       ]
     },
     "pbl": {
-      "title": "PBL Practice [Chinese (Simplified)]",
-      "subtitle": "Real-world Scenarios [Chinese (Simplified)]",
-      "description": "9 practical scenarios with AI tutor guidance for learning by doing. [Chinese (Simplified)]",
-      "userNeed": "How do I apply AI in practice? [Chinese (Simplified)]",
+      "title": "PBL实践",
+      "subtitle": "真实世界场景",
+      "description": "9个实用场景，通过AI导师指导进行实践学习。",
+      "userNeed": "如何在实践中应用AI？",
       "features": [
-        "[Chinese Simplified] translation needed",
-        "[Chinese Simplified] translation needed",
-        "[Chinese Simplified] translation needed",
-        "[Chinese Simplified] translation needed"
+        "AI机器人开发",
+        "AI稳定币交易",
+        "AI求职培训",
+        "实时AI辅导"
       ]
     },
     "chat": {
-      "title": "AI Advisor [Chinese (Simplified)]",
-      "subtitle": "24/7 Support [Chinese (Simplified)]",
-      "description": "24/7 intelligent learning companion that remembers your learning context and provides personalized advice. [Chinese (Simplified)]",
-      "userNeed": "Who can I ask when I have questions? [Chinese (Simplified)]",
+      "title": "AI顾问",
+      "subtitle": "24/7支持",
+      "description": "24/7智能学习伙伴，记住您的学习上下文并提供个性化建议。",
+      "userNeed": "有问题时可以问谁？",
       "features": [
-        "[Chinese Simplified] translation needed",
-        "[Chinese Simplified] translation needed",
-        "[Chinese Simplified] translation needed",
-        "[Chinese Simplified] translation needed"
+        "持续对话记忆",
+        "个性化学习建议",
+        "多轮深度对话",
+        "学习问答支持"
       ]
     }
   },
-  "keyFeatures": "Key Features [Chinese (Simplified)]",
-  "solvedNeed": "User Need Addressed [Chinese (Simplified)]",
-  "completeJourney": "Complete Learning Journey [Chinese (Simplified)]"
+  "keyFeatures": "关键功能",
+  "solvedNeed": "解决的用户需求",
+  "completeJourney": "完整学习旅程"
 }

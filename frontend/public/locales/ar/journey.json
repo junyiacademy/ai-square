@@ -1,73 +1,73 @@
 {
-  "title": "AI Square User Journey [Arabic]",
-  "subtitle": "Five key paths for complete AI learning experience [Arabic]",
-  "getStarted": "Get Started [Arabic]",
-  "pathOverview": "Complete Learning Cycle [Arabic]",
-  "nextPath": "Next Path → [Arabic]",
-  "tryFeature": "Experience This Feature [Arabic]",
+  "title": "رحلة مستخدم AI Square",
+  "subtitle": "خمسة مسارات رئيسية لتجربة تعلم كاملة للذكاء الاصطناعي",
+  "getStarted": "ابدأ الآن",
+  "pathOverview": "دورة التعلم الكاملة",
+  "nextPath": "المسار التالي ←",
+  "tryFeature": "جرب هذه الميزة",
   "paths": {
     "dashboard": {
-      "title": "Dashboard [Arabic]",
-      "subtitle": "Learning Command Center [Arabic]",
-      "description": "One-stop overview of your AI learning journey, track progress, view achievements, and plan next steps. [Arabic]",
-      "userNeed": "How is my learning progress? [Arabic]",
+      "title": "لوحة التحكم",
+      "subtitle": "مركز قيادة التعلم",
+      "description": "نظرة شاملة على رحلة تعلم الذكاء الاصطناعي، تتبع التقدم، عرض الإنجازات، وتخطيط الخطوات التالية.",
+      "userNeed": "كيف هو تقدمي في التعلم؟",
       "features": [
-        "[Arabic] translation needed",
-        "[Arabic] translation needed",
-        "[Arabic] translation needed",
-        "[Arabic] translation needed"
+        "تصور تقدم محو الأمية في الذكاء الاصطناعي",
+        "إحصائيات التعلم في لمحة",
+        "إجراءات موصى بها مخصصة",
+        "تنقل سريع بين الميزات"
       ]
     },
     "assessment": {
-      "title": "Assessment [Arabic]",
-      "subtitle": "AI Literacy Test [Arabic]",
-      "description": "25 professional questions to deeply understand your competency level across four AI domains. [Arabic]",
-      "userNeed": "What is my AI competency level? [Arabic]",
+      "title": "التقييم",
+      "subtitle": "اختبار محو الأمية في الذكاء الاصطناعي",
+      "description": "25 سؤالاً مهنياً لفهم مستوى كفاءتك بعمق عبر أربعة مجالات للذكاء الاصطناعي.",
+      "userNeed": "ما هو مستوى كفاءتي في الذكاء الاصطناعي؟",
       "features": [
-        "[Arabic] translation needed",
-        "[Arabic] translation needed",
-        "[Arabic] translation needed",
-        "[Arabic] translation needed"
+        "أربعة مجالات لمحو الأمية في الذكاء الاصطناعي",
+        "25 سؤالاً قائماً على السيناريوهات",
+        "تحليل القدرات بمخطط الرادار",
+        "تقرير توصيات مخصص"
       ]
     },
     "learningPath": {
-      "title": "Learning Path [Arabic]",
-      "subtitle": "Personalized Growth Plan [Arabic]",
-      "description": "Based on your assessment results, we recommend the most suitable learning content and pace. [Arabic]",
-      "userNeed": "What courses are right for me? [Arabic]",
+      "title": "مسار التعلم",
+      "subtitle": "خطة نمو مخصصة",
+      "description": "بناءً على نتائج تقييمك، نوصي بالمحتوى التعليمي والوتيرة الأنسب.",
+      "userNeed": "ما هي الدورات المناسبة لي؟",
       "features": [
-        "[Arabic] translation needed",
-        "[Arabic] translation needed",
-        "[Arabic] translation needed",
-        "[Arabic] translation needed"
+        "توصيات دورات مخصصة",
+        "محتوى تعليمي متدرج",
+        "تخطيط تدريجي",
+        "جدول تعلم مرن"
       ]
     },
     "pbl": {
-      "title": "PBL Practice [Arabic]",
-      "subtitle": "Real-world Scenarios [Arabic]",
-      "description": "9 practical scenarios with AI tutor guidance for learning by doing. [Arabic]",
-      "userNeed": "How do I apply AI in practice? [Arabic]",
+      "title": "ممارسة PBL",
+      "subtitle": "سيناريوهات العالم الحقيقي",
+      "description": "9 سيناريوهات عملية مع إرشاد المعلم الذكي للتعلم من خلال الممارسة.",
+      "userNeed": "كيف أطبق الذكاء الاصطناعي عملياً؟",
       "features": [
-        "[Arabic] translation needed",
-        "[Arabic] translation needed",
-        "[Arabic] translation needed",
-        "[Arabic] translation needed"
+        "تطوير روبوت ذكي",
+        "تداول العملة المستقرة بالذكاء الاصطناعي",
+        "تدريب البحث عن عمل بالذكاء الاصطناعي",
+        "إرشاد ذكي في الوقت الفعلي"
       ]
     },
     "chat": {
-      "title": "AI Advisor [Arabic]",
-      "subtitle": "24/7 Support [Arabic]",
-      "description": "24/7 intelligent learning companion that remembers your learning context and provides personalized advice. [Arabic]",
-      "userNeed": "Who can I ask when I have questions? [Arabic]",
+      "title": "المستشار الذكي",
+      "subtitle": "دعم على مدار الساعة",
+      "description": "رفيق تعلم ذكي على مدار الساعة يتذكر سياق تعلمك ويقدم نصائح مخصصة.",
+      "userNeed": "مَن يمكنني سؤاله عندما تكون لدي أسئلة؟",
       "features": [
-        "[Arabic] translation needed",
-        "[Arabic] translation needed",
-        "[Arabic] translation needed",
-        "[Arabic] translation needed"
+        "ذاكرة محادثة مستمرة",
+        "اقتراحات تعلم مخصصة",
+        "محادثات عميقة متعددة الجولات",
+        "دعم أسئلة وأجوبة التعلم"
       ]
     }
   },
-  "keyFeatures": "Key Features [Arabic]",
-  "solvedNeed": "User Need Addressed [Arabic]",
-  "completeJourney": "Complete Learning Journey [Arabic]"
+  "keyFeatures": "الميزات الرئيسية",
+  "solvedNeed": "الحاجة المعالجة للمستخدم",
+  "completeJourney": "رحلة التعلم الكاملة"
 }

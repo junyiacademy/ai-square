@@ -1,171 +1,171 @@
 {
   "privacy": {
-    "title": "Privacy Policy [Chinese (Simplified)]",
-    "lastUpdated": "Last updated [Chinese (Simplified)]",
-    "intro": "AI Square (\"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI literacy education platform. [Chinese (Simplified)]",
+    "title": "隐私政策",
+    "lastUpdated": "最后更新",
+    "intro": "AI Square（\"我们\"、\"我们的\"或\"我们\"）致力于保护您的隐私。本隐私政策解释我们如何在您使用我们的AI素养教育平台时收集、使用、披露和保护您的信息。",
     "infoCollect": {
-      "title": "1. Information We Collect [Chinese (Simplified)]",
-      "personal": "Personal Information [Chinese (Simplified)]",
-      "email": "Email address [Chinese (Simplified)]",
-      "name": "Name (optional) [Chinese (Simplified)]",
-      "role": "User role (student, teacher, admin) [Chinese (Simplified)]",
-      "language": "Language preference [Chinese (Simplified)]",
-      "usage": "Usage Data [Chinese (Simplified)]",
-      "learning": "Learning progress and assessment results [Chinese (Simplified)]",
-      "interactions": "Interactions with AI tutors [Chinese (Simplified)]",
-      "scenarios": "PBL scenario completion data [Chinese (Simplified)]",
-      "analytics": "Platform usage analytics [Chinese (Simplified)]",
-      "technical": "Technical Data [Chinese (Simplified)]",
-      "browser": "Browser type and version [Chinese (Simplified)]",
-      "device": "Device information [Chinese (Simplified)]",
-      "ip": "IP address (anonymized) [Chinese (Simplified)]",
-      "timezone": "Time zone settings [Chinese (Simplified)]"
+      "title": "1. 我们收集的信息",
+      "personal": "个人信息",
+      "email": "电子邮件地址",
+      "name": "姓名（可选）",
+      "role": "用户角色（学生、教师、管理员）",
+      "language": "语言偏好",
+      "usage": "使用数据",
+      "learning": "学习进度和评估结果",
+      "interactions": "与AI导师的互动",
+      "scenarios": "PBL场景完成数据",
+      "analytics": "平台使用分析",
+      "technical": "技术数据",
+      "browser": "浏览器类型和版本",
+      "device": "设备信息",
+      "ip": "IP地址（匿名化）",
+      "timezone": "时区设置"
     },
     "howUse": {
-      "title": "2. How We Use Your Information [Chinese (Simplified)]",
-      "provide": "To provide and maintain our service [Chinese (Simplified)]",
-      "personalize": "To personalize your learning experience [Chinese (Simplified)]",
-      "communicate": "To communicate with you about your account [Chinese (Simplified)]",
-      "improve": "To improve our platform and develop new features [Chinese (Simplified)]",
-      "analyze": "To analyze usage patterns and optimize performance [Chinese (Simplified)]",
-      "security": "To detect and prevent security threats [Chinese (Simplified)]"
+      "title": "2. 我们如何使用您的信息",
+      "provide": "提供和维护我们的服务",
+      "personalize": "个性化您的学习体验",
+      "communicate": "就您的账户与您沟通",
+      "improve": "改善我们的平台并开发新功能",
+      "analyze": "分析使用模式并优化性能",
+      "security": "检测和预防安全威胁"
     },
     "storage": {
-      "title": "3. Data Storage and Security [Chinese (Simplified)]",
-      "location": "Your data is stored securely on Google Cloud Platform servers. We implement appropriate technical and organizational measures to protect your personal information. [Chinese (Simplified)]",
-      "encryption": "Data encryption in transit and at rest [Chinese (Simplified)]",
-      "access": "Restricted access controls [Chinese (Simplified)]",
-      "monitoring": "Regular security monitoring [Chinese (Simplified)]",
-      "backup": "Secure backup procedures [Chinese (Simplified)]"
+      "title": "3. 数据存储和安全",
+      "location": "您的数据安全存储在Google Cloud Platform服务器上。我们实施适当的技术和组织措施来保护您的个人信息。",
+      "encryption": "传输和静止状态下的数据加密",
+      "access": "受限访问控制",
+      "monitoring": "定期安全监控",
+      "backup": "安全备份程序"
     },
     "sharing": {
-      "title": "4. Data Sharing and Disclosure [Chinese (Simplified)]",
-      "intro": "We do not sell, trade, or rent your personal information. We may share your information in the following situations: [Chinese (Simplified)]",
-      "consent": "With your consent [Chinese (Simplified)]",
-      "legal": "To comply with legal obligations [Chinese (Simplified)]",
-      "protect": "To protect our rights and safety [Chinese (Simplified)]",
-      "service": "With service providers who assist our operations [Chinese (Simplified)]"
+      "title": "4. 数据共享和披露",
+      "intro": "我们不会出售、交易或出租您的个人信息。我们可能在以下情况下共享您的信息：",
+      "consent": "经您同意",
+      "legal": "遵守法律义务",
+      "protect": "保护我们的权利和安全",
+      "service": "与协助我们运营的服务提供商"
     },
     "rights": {
-      "title": "5. Your Rights [Chinese (Simplified)]",
-      "intro": "You have the following rights regarding your personal data: [Chinese (Simplified)]",
-      "access": "Access your personal information [Chinese (Simplified)]",
-      "correct": "Correct inaccurate data [Chinese (Simplified)]",
-      "delete": "Request deletion of your data [Chinese (Simplified)]",
-      "export": "Export your data in a portable format [Chinese (Simplified)]",
-      "restrict": "Restrict processing of your data [Chinese (Simplified)]",
-      "withdraw": "Withdraw consent at any time [Chinese (Simplified)]"
+      "title": "5. 您的权利",
+      "intro": "您对个人数据享有以下权利：",
+      "access": "访问您的个人信息",
+      "correct": "更正不准确的数据",
+      "delete": "请求删除您的数据",
+      "export": "以可移植格式导出您的数据",
+      "restrict": "限制对您数据的处理",
+      "withdraw": "随时撤回同意"
     },
     "cookies": {
-      "title": "6. Cookies and Tracking [Chinese (Simplified)]",
-      "intro": "We use cookies and similar tracking technologies to enhance your experience. Essential cookies are required for platform functionality, while optional cookies help us improve our service. [Chinese (Simplified)]"
+      "title": "6. Cookie和追踪",
+      "intro": "我们使用cookie和类似的追踪技术来增强您的体验。基本cookie是平台功能所需的，而可选cookie帮助我们改善服务。"
     },
     "children": {
-      "title": "7. Children's Privacy [Chinese (Simplified)]",
-      "content": "Our platform is designed for educational use by students of all ages. For users under 13, we require parental consent and limit data collection to essential information only. [Chinese (Simplified)]"
+      "title": "7. 儿童隐私",
+      "content": "我们的平台设计用于各年龄段学生的教育使用。对于13岁以下的用户，我们需要父母同意，并将数据收集限制为仅限必要信息。"
     },
     "international": {
-      "title": "8. International Data Transfers [Chinese (Simplified)]",
-      "content": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers. [Chinese (Simplified)]"
+      "title": "8. 国际数据传输",
+      "content": "您的信息可能会被传输到您所在国家以外的国家进行处理。我们确保为此类传输设置适当的保障措施。"
     },
     "changes": {
-      "title": "9. Changes to This Policy [Chinese (Simplified)]",
-      "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the \"Last Updated\" date. [Chinese (Simplified)]"
+      "title": "9. 本政策的更改",
+      "content": "我们可能会不时更新本隐私政策。我们将通过在此页面发布新政策并更新\"最后更新\"日期来通知您任何更改。"
     },
     "contact": {
-      "title": "10. Contact Us [Chinese (Simplified)]",
-      "intro": "If you have questions about this Privacy Policy, please contact us at: [Chinese (Simplified)]"
+      "title": "10. 联系我们",
+      "intro": "如果您对本隐私政策有疑问，请通过以下方式联系我们："
     }
   },
   "terms": {
-    "title": "Terms of Service [Chinese (Simplified)]",
-    "effectiveDate": "Effective Date [Chinese (Simplified)]",
-    "lastUpdated": "Last Updated [Chinese (Simplified)]",
-    "intro": "Welcome to AI Square! These Terms of Service (\"Terms\") govern your use of our AI literacy education platform. By accessing or using AI Square, you agree to be bound by these Terms. [Chinese (Simplified)]",
+    "title": "服务条款",
+    "effectiveDate": "生效日期",
+    "lastUpdated": "最后更新",
+    "intro": "欢迎使用AI Square！这些服务条款（\"条款\"）管理您对我们AI素养教育平台的使用。通过访问或使用AI Square，您同意受这些条款的约束。",
     "acceptance": {
-      "title": "1. Acceptance of Terms [Chinese (Simplified)]",
-      "content": "By creating an account or using our services, you acknowledge that you have read, understood, and agree to these Terms. If you do not agree, please do not use our platform. [Chinese (Simplified)]",
-      "capacity": "You must be at least 13 years old to use our services. If you are under 18, you must have parental consent. [Chinese (Simplified)]"
+      "title": "1. 接受条款",
+      "content": "通过创建账户或使用我们的服务，您确认已阅读、理解并同意这些条款。如果您不同意，请勿使用我们的平台。",
+      "capacity": "您必须年满13岁才能使用我们的服务。如果您未满18岁，必须获得父母同意。"
     },
     "service": {
-      "title": "2. Description of Service [Chinese (Simplified)]",
-      "intro": "AI Square provides: [Chinese (Simplified)]",
-      "literacy": "AI literacy education content and assessments [Chinese (Simplified)]",
-      "pbl": "Problem-Based Learning (PBL) scenarios [Chinese (Simplified)]",
-      "ai": "AI-powered tutoring and feedback [Chinese (Simplified)]",
-      "tracking": "Progress tracking and analytics [Chinese (Simplified)]",
-      "multi": "Multi-language support (9 languages) [Chinese (Simplified)]"
+      "title": "2. 服务描述",
+      "intro": "AI Square提供：",
+      "literacy": "AI素养教育内容和评估",
+      "pbl": "基于问题的学习（PBL）场景",
+      "ai": "AI驱动的辅导和反馈",
+      "tracking": "进度追踪和分析",
+      "multi": "多语言支持（9种语言）"
     },
     "accounts": {
-      "title": "3. User Accounts [Chinese (Simplified)]",
-      "registration": "Registration [Chinese (Simplified)]",
-      "accurate": "Provide accurate and complete information [Chinese (Simplified)]",
-      "maintain": "Maintain and update your information [Chinese (Simplified)]",
-      "secure": "Keep your account credentials secure [Chinese (Simplified)]",
-      "responsible": "You are responsible for all activities under your account [Chinese (Simplified)]",
-      "types": "Account Types [Chinese (Simplified)]",
-      "student": "Student: Access to learning content and assessments [Chinese (Simplified)]",
-      "teacher": "Teacher: Additional class management features [Chinese (Simplified)]",
-      "admin": "Administrator: Platform management capabilities [Chinese (Simplified)]"
+      "title": "3. 用户账户",
+      "registration": "注册",
+      "accurate": "提供准确和完整的信息",
+      "maintain": "维护和更新您的信息",
+      "secure": "保持您的账户凭据安全",
+      "responsible": "您对您账户下的所有活动负责",
+      "types": "账户类型",
+      "student": "学生：访问学习内容和评估",
+      "teacher": "教师：附加班级管理功能",
+      "admin": "管理员：平台管理能力"
     },
     "use": {
-      "title": "4. Acceptable Use Policy [Chinese (Simplified)]",
-      "permitted": "You may: [Chinese (Simplified)]",
-      "educational": "Use the platform for educational purposes [Chinese (Simplified)]",
-      "share": "Share your learning progress appropriately [Chinese (Simplified)]",
-      "feedback": "Provide constructive feedback [Chinese (Simplified)]",
-      "prohibited": "You may not: [Chinese (Simplified)]",
-      "misuse": "Misuse or attempt to manipulate the AI systems [Chinese (Simplified)]",
-      "share_credentials": "Share account credentials [Chinese (Simplified)]",
-      "cheat": "Engage in academic dishonesty [Chinese (Simplified)]",
-      "harm": "Harass, abuse, or harm other users [Chinese (Simplified)]",
-      "illegal": "Use the platform for illegal activities [Chinese (Simplified)]",
-      "scrape": "Scrape or copy content without permission [Chinese (Simplified)]"
+      "title": "4. 可接受使用政策",
+      "permitted": "您可以：",
+      "educational": "为教育目的使用平台",
+      "share": "适当地分享您的学习进度",
+      "feedback": "提供建设性反馈",
+      "prohibited": "您不可以：",
+      "misuse": "滥用或试图操纵AI系统",
+      "share_credentials": "共享账户凭据",
+      "cheat": "进行学术不端行为",
+      "harm": "骚扰、虐待或伤害其他用户",
+      "illegal": "将平台用于非法活动",
+      "scrape": "未经许可抓取或复制内容"
     },
     "ip": {
-      "title": "5. Intellectual Property [Chinese (Simplified)]",
-      "platform": "Platform Content [Chinese (Simplified)]",
-      "ownership": "All content on AI Square, including text, graphics, logos, and software, is owned by AI Square or its licensors and protected by intellectual property laws. [Chinese (Simplified)]",
-      "user": "User Content [Chinese (Simplified)]",
-      "retain": "You retain ownership of content you create. By submitting content, you grant us a license to use it for providing and improving our services. [Chinese (Simplified)]",
-      "open": "Open Source [Chinese (Simplified)]",
-      "git": "Educational content is managed through Git and may be subject to open-source licenses. Please check individual repositories for specific license terms. [Chinese (Simplified)]"
+      "title": "5. 知识产权",
+      "platform": "平台内容",
+      "ownership": "AI Square上的所有内容，包括文本、图形、标志和软件，均属于AI Square或其许可方所有，受知识产权法保护。",
+      "user": "用户内容",
+      "retain": "您保留所创建内容的所有权。通过提交内容，您授予我们使用许可，用于提供和改善我们的服务。",
+      "open": "开源",
+      "git": "教育内容通过Git管理，可能遵循开源许可证。请查看各个仓库的具体许可条款。"
     },
     "privacy": {
-      "title": "6. Privacy and Data Protection [Chinese (Simplified)]",
-      "content": "Your use of AI Square is also governed by our Privacy Policy. We are committed to protecting your personal information and using it only as described in our Privacy Policy. [Chinese (Simplified)]"
+      "title": "6. 隐私和数据保护",
+      "content": "您对AI Square的使用也受我们的隐私政策管理。我们致力于保护您的个人信息，并仅按我们隐私政策中所述使用。"
     },
     "ai": {
-      "title": "7. AI Services and Limitations [Chinese (Simplified)]",
-      "disclaimer": "Our AI-powered features are designed to assist learning but are not perfect. We do not guarantee the accuracy of AI-generated content or feedback. [Chinese (Simplified)]",
-      "educational": "AI responses are for educational purposes only [Chinese (Simplified)]",
-      "verify": "Always verify important information independently [Chinese (Simplified)]",
-      "improve": "We continuously work to improve AI accuracy [Chinese (Simplified)]"
+      "title": "7. AI服务和限制",
+      "disclaimer": "我们的AI驱动功能旨在协助学习，但并不完美。我们不保证AI生成内容或反馈的准确性。",
+      "educational": "AI回复仅供教育目的使用",
+      "verify": "请始终独立验证重要信息",
+      "improve": "我们持续致力于提高AI准确性"
     },
     "disclaimers": {
-      "title": "8. Disclaimers and Limitations [Chinese (Simplified)]",
-      "asis": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND. [Chinese (Simplified)]",
-      "liability": "To the fullest extent permitted by law, AI Square shall not be liable for any indirect, incidental, special, consequential, or punitive damages. [Chinese (Simplified)]"
+      "title": "8. 免责声明和限制",
+      "asis": "服务按\"现状\"提供，不提供任何形式的保证。",
+      "liability": "在法律允许的最大范围内，AI Square不对任何间接、附带、特殊、后果性或惩罚性损害承担责任。"
     },
     "modifications": {
-      "title": "9. Modifications to Terms [Chinese (Simplified)]",
-      "content": "We may modify these Terms at any time. We will notify users of material changes. Continued use after changes constitutes acceptance of the new Terms. [Chinese (Simplified)]"
+      "title": "9. 条款修改",
+      "content": "我们可能随时修改这些条款。我们将通知用户重大更改。更改后的继续使用即表示接受新条款。"
     },
     "termination": {
-      "title": "10. Termination [Chinese (Simplified)]",
-      "rights": "We reserve the right to suspend or terminate accounts that violate these Terms. You may delete your account at any time. [Chinese (Simplified)]"
+      "title": "10. 终止",
+      "rights": "我们保留暂停或终止违反这些条款的账户的权利。您可以随时删除您的账户。"
     },
     "law": {
-      "title": "11. Governing Law [Chinese (Simplified)]",
-      "content": "These Terms are governed by the laws of the jurisdiction where AI Square operates, without regard to conflict of law principles. [Chinese (Simplified)]"
+      "title": "11. 适用法律",
+      "content": "这些条款受AI Square运营所在司法管辖区的法律管理，不考虑法律冲突原则。"
     },
     "contact": {
-      "title": "12. Contact Information [Chinese (Simplified)]",
-      "intro": "For questions about these Terms, please contact us: [Chinese (Simplified)]"
+      "title": "12. 联系信息",
+      "intro": "对于这些条款的问题，请联系我们："
     },
-    "agreement": "By using AI Square, you acknowledge that you have read and agree to these Terms of Service. [Chinese (Simplified)]"
+    "agreement": "通过使用AI Square，您确认已阅读并同意这些服务条款。"
   },
   "common": {
-    "backToHome": "Back to Home [Chinese (Simplified)]"
+    "backToHome": "返回首页"
   }
 }

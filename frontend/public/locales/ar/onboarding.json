@@ -1,99 +1,99 @@
 {
   "welcome": {
-    "greeting": "Welcome, {{name}}! [Arabic]",
-    "subtitle": "Let's get you started on your AI literacy journey [Arabic]",
+    "greeting": "مرحباً، {{name}}!",
+    "subtitle": "دعنا نبدأ رحلتك في تعلم الذكاء الاصطناعي",
     "step1": {
-      "title": "Discover Your Path [Arabic]",
-      "description": "AI Square helps you understand and master AI literacy [Arabic]",
-      "content": "We'll help you identify your strengths and areas for growth through personalized assessments and guided learning experiences. [Arabic]",
-      "assessment": "Smart Assessment [Arabic]",
-      "assessmentDesc": "Discover your current AI knowledge level [Arabic]",
-      "learning": "Personalized Learning [Arabic]",
-      "learningDesc": "Get tailored recommendations based on your goals [Arabic]"
+      "title": "اكتشف مسارك",
+      "description": "AI Square يساعدك على فهم وإتقان الذكاء الاصطناعي",
+      "content": "سنساعدك في تحديد نقاط قوتك ومجالات النمو من خلال التقييمات المخصصة وتجارب التعلم الموجهة.",
+      "assessment": "التقييم الذكي",
+      "assessmentDesc": "اكتشف مستوى معرفتك الحالي بالذكاء الاصطناعي",
+      "learning": "التعلم المخصص",
+      "learningDesc": "احصل على توصيات مخصصة بناءً على أهدافك"
     },
     "step2": {
-      "title": "Four Core Domains [Arabic]",
-      "description": "Master the essential areas of AI literacy [Arabic]",
-      "content": "Our comprehensive framework covers everything you need to know about working with AI effectively and responsibly. [Arabic]",
-      "domains": "AI Literacy Domains [Arabic]",
-      "engaging": "Engaging with AI [Arabic]",
-      "creating": "Creating with AI [Arabic]",
-      "managing": "Managing with AI [Arabic]",
-      "designing": "Designing with AI [Arabic]"
+      "title": "أربعة مجالات أساسية",
+      "description": "أتقن المجالات الأساسية لمحو الأمية في الذكاء الاصطناعي",
+      "content": "إطار عملنا الشامل يغطي كل ما تحتاج إلى معرفته حول العمل مع الذكاء الاصطناعي بفعالية ومسؤولية.",
+      "domains": "مجالات محو الأمية في الذكاء الاصطناعي",
+      "engaging": "التفاعل مع الذكاء الاصطناعي",
+      "creating": "الإبداع بالذكاء الاصطناعي",
+      "managing": "إدارة الذكاء الاصطناعي",
+      "designing": "تصميم الذكاء الاصطناعي"
     },
     "step3": {
-      "title": "Start Your Journey [Arabic]",
-      "description": "Begin with an assessment and unlock your potential [Arabic]",
-      "content": "Ready to discover your AI literacy level and get personalized learning recommendations? [Arabic]",
-      "ready": "What you'll get: [Arabic]",
-      "benefit1": "Detailed assessment of your AI knowledge [Arabic]",
-      "benefit2": "Personalized learning path recommendations [Arabic]",
-      "benefit3": "Interactive scenarios and practical exercises [Arabic]"
+      "title": "ابدأ رحلتك",
+      "description": "ابدأ بالتقييم واكتشف إمكاناتك",
+      "content": "هل أنت مستعد لاكتشاف مستوى معرفتك بالذكاء الاصطناعي والحصول على توصيات تعلم مخصصة؟",
+      "ready": "ما ستحصل عليه:",
+      "benefit1": "تقييم مفصل لمعرفتك بالذكاء الاصطناعي",
+      "benefit2": "توصيات مسار تعلم مخصصة",
+      "benefit3": "سيناريوهات تفاعلية وتمارين عملية"
     },
-    "startJourney": "Start Your Journey [Arabic]"
+    "startJourney": "ابدأ رحلتك"
   },
   "goals": {
-    "title": "What would you like to achieve? [Arabic]",
-    "subtitle": "Select your learning goals to get personalized recommendations [Arabic]",
+    "title": "ماذا تريد أن تحقق؟",
+    "subtitle": "اختر أهداف التعلم للحصول على توصيات مخصصة",
     "understand": {
-      "title": "Understand AI Fundamentals [Arabic]",
-      "description": "Learn the basics of AI, machine learning, and how AI systems work [Arabic]"
+      "title": "فهم أساسيات الذكاء الاصطناعي",
+      "description": "تعلم أساسيات الذكاء الاصطناعي والتعلم الآلي وكيفية عمل أنظمة الذكاء الاصطناعي"
     },
     "create": {
-      "title": "Create Content with AI [Arabic]",
-      "description": "Use AI tools for writing, design, art, and creative projects [Arabic]"
+      "title": "إنشاء محتوى بالذكاء الاصطناعي",
+      "description": "استخدم أدوات الذكاء الاصطناعي للكتابة والتصميم والفن والمشاريع الإبداعية"
     },
     "analyze": {
-      "title": "Analyze Data with AI [Arabic]",
-      "description": "Apply AI for data analysis, insights, and decision-making [Arabic]"
+      "title": "تحليل البيانات بالذكاء الاصطناعي",
+      "description": "تطبيق الذكاء الاصطناعي لتحليل البيانات والحصول على رؤى واتخاذ القرارات"
     },
     "build": {
-      "title": "Build AI Solutions [Arabic]",
-      "description": "Develop and implement AI systems and applications [Arabic]"
+      "title": "بناء حلول الذكاء الاصطناعي",
+      "description": "تطوير وتنفيذ أنظمة وتطبيقات الذكاء الاصطناعي"
     },
     "teach": {
-      "title": "Teach AI to Others [Arabic]",
-      "description": "Educate and guide others in understanding and using AI [Arabic]"
+      "title": "تعليم الذكاء الاصطناعي للآخرين",
+      "description": "تثقيف وإرشاد الآخرين في فهم واستخدام الذكاء الاصطناعي"
     },
     "ethical": {
-      "title": "Ensure Ethical AI Use [Arabic]",
-      "description": "Understand and implement responsible AI practices [Arabic]"
+      "title": "ضمان الاستخدام الأخلاقي للذكاء الاصطناعي",
+      "description": "فهم وتنفيذ ممارسات الذكاء الاصطناعي المسؤولة"
     },
-    "recommendedDomains": "Recommended domains [Arabic]",
-    "selected": "{{count}} goals selected [Arabic]",
-    "selectAtLeastOne": "Please select at least one learning goal [Arabic]",
-    "continue": "Continue to Assessment [Arabic]",
-    "skipForNow": "Skip for now [Arabic]",
-    "helpText": "Don't worry, you can always change these later in your profile settings. [Arabic]"
+    "recommendedDomains": "المجالات الموصى بها",
+    "selected": "تم اختيار {{count}} أهداف",
+    "selectAtLeastOne": "يرجى اختيار هدف تعلم واحد على الأقل",
+    "continue": "متابعة إلى التقييم",
+    "skipForNow": "تخطي الآن",
+    "helpText": "لا تقلق، يمكنك دائماً تغيير هذه الاختيارات لاحقاً في إعدادات الملف الشخصي."
   },
   "progress": {
-    "welcome": "Welcome [Arabic]",
-    "identity": "Identity [Arabic]",
-    "goals": "Goals [Arabic]"
+    "welcome": "مرحباً",
+    "identity": "الهوية",
+    "goals": "الأهداف"
   },
   "identity": {
-    "title": "Who are you? [Arabic]",
-    "subtitle": "Help us personalize your AI learning journey [Arabic]",
+    "title": "من أنت؟",
+    "subtitle": "ساعدنا في تخصيص رحلة تعلم الذكاء الاصطناعي الخاصة بك",
     "student": {
-      "title": "Student [Arabic]",
-      "description": "I'm studying and want to learn AI for my academic and future career [Arabic]"
+      "title": "طالب",
+      "description": "أنا أدرس وأريد تعلم الذكاء الاصطناعي للأغراض الأكاديمية والمهنية المستقبلية"
     },
     "teacher": {
-      "title": "Educator [Arabic]",
-      "description": "I teach others and want to integrate AI into my curriculum [Arabic]"
+      "title": "مربي",
+      "description": "أنا أعلم الآخرين وأريد دمج الذكاء الاصطناعي في المنهج الدراسي"
     },
     "professional": {
-      "title": "Professional [Arabic]",
-      "description": "I work in industry and want to leverage AI in my role [Arabic]"
+      "title": "محترف",
+      "description": "أعمل في الصناعة وأريد الاستفادة من الذكاء الاصطناعي في دوري"
     },
     "learner": {
-      "title": "Lifelong Learner [Arabic]",
-      "description": "I'm curious about AI and want to explore its possibilities [Arabic]"
+      "title": "متعلم مدى الحياة",
+      "description": "أنا فضولي حول الذكاء الاصطناعي وأريد استكشاف إمكانياته"
     }
   },
   "button": {
-    "back": "Back [Arabic]",
-    "continue": "Continue [Arabic]",
-    "saving": "Saving... [Arabic]"
+    "back": "رجوع",
+    "continue": "متابعة",
+    "saving": "جاري الحفظ..."
   }
 }
