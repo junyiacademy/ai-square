@@ -135,13 +135,57 @@ export async function GET(request: NextRequest) {
       }))
     });
 
+    // Create the KSA structure
+    const ksa = {
+      knowledge: processKSASection(ksaCodesData.knowledge_codes),
+      skills: processKSASection(ksaCodesData.skill_codes),
+      attitudes: processKSASection(ksaCodesData.attitude_codes)
+    };
+
+    // Create legacy maps for backward compatibility
+    const kMap: Record<string, { summary: string; theme: string; explanation?: string }> = {};
+    const sMap: Record<string, { summary: string; theme: string; explanation?: string }> = {};
+    const aMap: Record<string, { summary: string; theme: string; explanation?: string }> = {};
+
+    // Convert knowledge items
+    ksa.knowledge.themes.forEach(theme => {
+      theme.items.forEach(item => {
+        kMap[item.code] = {
+          summary: item.summary,
+          theme: theme.name,
+          explanation: theme.explanation
+        };
+      });
+    });
+
+    // Convert skills items
+    ksa.skills.themes.forEach(theme => {
+      theme.items.forEach(item => {
+        sMap[item.code] = {
+          summary: item.summary,
+          theme: theme.name,
+          explanation: theme.explanation
+        };
+      });
+    });
+
+    // Convert attitudes items
+    ksa.attitudes.themes.forEach(theme => {
+      theme.items.forEach(item => {
+        aMap[item.code] = {
+          summary: item.summary,
+          theme: theme.name,
+          explanation: theme.explanation
+        };
+      });
+    });
+
     const responseData = {
       domains,
-      ksa: {
-        knowledge: processKSASection(ksaCodesData.knowledge_codes),
-        skills: processKSASection(ksaCodesData.skill_codes),
-        attitudes: processKSASection(ksaCodesData.attitude_codes)
-      }
+      ksa,
+      kMap,
+      sMap,
+      aMap
     };
 
     // Cache the response

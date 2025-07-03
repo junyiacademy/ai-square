@@ -28,8 +28,7 @@
     "data:watch": "node scripts/sync-yaml-json.js watch",
     "data:setup": "node scripts/setup-hybrid-data-workflow.js",
     "data:convert": "node scripts/yaml-json-crud-system.js convert",
-    "data:crud": "node scripts/yaml-json-crud-system.js",
-    "prebuild": "npm run data:convert"
+    "data:crud": "node scripts/yaml-json-crud-system.js"
   },
   "dependencies": {
     "@google-cloud/storage": "^7.16.0",
