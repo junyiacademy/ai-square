@@ -41,7 +41,9 @@ interface Competency {
 }
 
 interface Domain {
-  key: string;
+  id: string;
+  key?: string;
+  name?: string;
   overview: string;
   overview_zhTW?: string;
   overview_es?: string;
@@ -289,7 +291,7 @@ export default function RelationsClient() {
       <div className="max-w-3xl mx-auto">
         {tree.domains.map((domain) => (
           <DomainAccordion 
-            key={domain.key} 
+            key={domain.id || domain.key} 
             domain={domain} 
             kMap={tree.kMap || {}} 
             sMap={tree.sMap || {}} 
@@ -308,7 +310,7 @@ function DomainAccordion({ domain, kMap, sMap, aMap, lang, emoji }: { domain: Do
   const { t } = useTranslation();
   // 使用通則函式，並斷言回傳型別為 string
   const overview = getTranslatedText(lang, domain, 'overview') as string;
-  const imgSrc = `/images/${domain.key}.png`;
+  const imgSrc = `/images/${domain.id || domain.key}.png`;
   return (
     <div className="mb-6">
       <div
@@ -317,7 +319,7 @@ function DomainAccordion({ domain, kMap, sMap, aMap, lang, emoji }: { domain: Do
       >
         <div className="flex items-center">
           <span className="text-2xl mr-3">{emoji}</span>
-          <span className="text-lg sm:text-xl font-bold text-blue-800 mr-2">{t(domain.key)}</span>
+          <span className="text-lg sm:text-xl font-bold text-blue-800 mr-2">{t(domain.id || domain.key)}</span>
           <span className="text-gray-700 text-base font-medium">{open ? '▲' : '▼'}</span>
         </div>
       </div>
@@ -327,7 +329,7 @@ function DomainAccordion({ domain, kMap, sMap, aMap, lang, emoji }: { domain: Do
             <div className="w-full md:w-56 max-w-xs md:max-w-[224px] mb-2 md:mb-0 md:mr-6">
               <Image
                 src={imgSrc}
-                alt={t(domain.key)}
+                alt={t(domain.id || domain.key)}
                 width={400}
                 height={240}
                 className="rounded-xl shadow-md object-cover"
