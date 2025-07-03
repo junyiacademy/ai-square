@@ -1,9 +1,11 @@
 {
   "home": "首頁",
+  "dashboard": "儀表板",
   "relations": "關係圖",
   "ksa": "KSA 框架",
   "assessment": "AI 素養評估",
   "pbl": "PBL 學習",
+  "more": "更多",
   "assessmentHistory": "評估歷史",
   "history": "歷程",
   "signIn": "登入",
