@@ -48,7 +48,7 @@ interface NextAction {
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { t } = useTranslation(['dashboard', 'common']);
+  const { t, i18n } = useTranslation(['dashboard', 'common']);
   const [user, setUser] = useState<UserProfile | null>(null);
   const [assessmentResult, setAssessmentResult] = useState<AssessmentResult | null>(null);
   const [learningProgress, setLearningProgress] = useState<LearningProgress | null>(null);
@@ -381,7 +381,7 @@ export default function DashboardPage() {
                           {activity.description}
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                          {formatDateWithLocale(activity.date, i18n.language, {
+                          {formatDateWithLocale(new Date(activity.date), i18n.language, {
                             year: 'numeric',
                             month: 'short',
                             day: 'numeric'
