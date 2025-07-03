@@ -123,11 +123,32 @@ import enCommon from '../public/locales/en/common.json';
 import enLearningPath from '../public/locales/en/learningPath.json';
 
 // Dashboard 翻譯
+import zhCNDashboard from '../public/locales/zhCN/dashboard.json';
+import ptDashboard from '../public/locales/pt/dashboard.json';
+import arDashboard from '../public/locales/ar/dashboard.json';
+import idDashboard from '../public/locales/id/dashboard.json';
+import thDashboard from '../public/locales/th/dashboard.json';
 import enDashboard from '../public/locales/en/dashboard.json';
+import esDashboard from '../public/locales/es/dashboard.json';
+import jaDashboard from '../public/locales/ja/dashboard.json';
+import koDashboard from '../public/locales/ko/dashboard.json';
+import frDashboard from '../public/locales/fr/dashboard.json';
+import deDashboard from '../public/locales/de/dashboard.json';
+import ruDashboard from '../public/locales/ru/dashboard.json';
+import itDashboard from '../public/locales/it/dashboard.json';
 
 // Chat 翻譯
 import enChat from '../public/locales/en/chat.json';
 import zhTWChat from '../public/locales/zhTW/chat.json';
+
+// Journey 翻譯
+import enJourney from '../public/locales/en/journey.json';
+
+// Learning 翻譯  
+import enLearning from '../public/locales/en/learning.json';
+
+// Legal 翻譯
+import enLegal from '../public/locales/en/legal.json';
 
 // 在伺服器端和客戶端都使用相同的預設語言避免 hydration mismatch
 const getDefaultLng = () => {
@@ -157,7 +178,8 @@ i18n
         ksa: zhCNKsa,
         assessment: zhCNAssessment,
         homepage: zhCNHomepage,
-        pbl: zhCNPbl
+        pbl: zhCNPbl,
+        dashboard: zhCNDashboard
       },
       'pt': { 
         relations: ptRelations,
@@ -166,7 +188,8 @@ i18n
         ksa: ptKsa,
         assessment: ptAssessment,
         homepage: ptHomepage,
-        pbl: ptPbl
+        pbl: ptPbl,
+        dashboard: ptDashboard
       },
       'ar': { 
         relations: arRelations,
@@ -175,7 +198,8 @@ i18n
         ksa: arKsa,
         assessment: arAssessment,
         homepage: arHomepage,
-        pbl: arPbl
+        pbl: arPbl,
+        dashboard: arDashboard
       },
       'id': { 
         relations: idRelations,
@@ -184,7 +208,8 @@ i18n
         ksa: idKsa,
         assessment: idAssessment,
         homepage: idHomepage,
-        pbl: idPbl
+        pbl: idPbl,
+        dashboard: idDashboard
       },
       'th': { 
         relations: thRelations,
@@ -193,7 +218,8 @@ i18n
         ksa: thKsa,
         assessment: thAssessment,
         homepage: thHomepage,
-        pbl: thPbl
+        pbl: thPbl,
+        dashboard: thDashboard
       },
       en: { 
         relations: enRelations,
@@ -207,7 +233,10 @@ i18n
         common: enCommon,
         learningPath: enLearningPath,
         dashboard: enDashboard,
-        chat: enChat
+        chat: enChat,
+        journey: enJourney,
+        learning: enLearning,
+        legal: enLegal
       },
       es: { 
         relations: esRelations,
@@ -216,7 +245,8 @@ i18n
         ksa: esKsa,
         assessment: esAssessment,
         homepage: esHomepage,
-        pbl: esPbl
+        pbl: esPbl,
+        dashboard: esDashboard
       },
       ja: { 
         relations: jaRelations,
@@ -225,7 +255,8 @@ i18n
         ksa: jaKsa,
         assessment: jaAssessment,
         homepage: jaHomepage,
-        pbl: jaPbl
+        pbl: jaPbl,
+        dashboard: jaDashboard
       },
       ko: { 
         relations: koRelations,
@@ -234,7 +265,8 @@ i18n
         ksa: koKsa,
         assessment: koAssessment,
         homepage: koHomepage,
-        pbl: koPbl
+        pbl: koPbl,
+        dashboard: koDashboard
       },
       fr: { 
         relations: frRelations,
@@ -243,7 +275,8 @@ i18n
         ksa: frKsa,
         assessment: frAssessment,
         homepage: frHomepage,
-        pbl: frPbl
+        pbl: frPbl,
+        dashboard: frDashboard
       },
       de: { 
         relations: deRelations,
@@ -252,7 +285,8 @@ i18n
         ksa: deKsa,
         assessment: deAssessment,
         homepage: deHomepage,
-        pbl: dePbl
+        pbl: dePbl,
+        dashboard: deDashboard
       },
       ru: { 
         relations: ruRelations,
@@ -261,7 +295,8 @@ i18n
         ksa: ruKsa,
         assessment: ruAssessment,
         homepage: ruHomepage,
-        pbl: ruPbl
+        pbl: ruPbl,
+        dashboard: ruDashboard
       },
       it: { 
         relations: itRelations,
@@ -270,7 +305,8 @@ i18n
         ksa: itKsa,
         assessment: itAssessment,
         homepage: itHomepage,
-        pbl: itPbl
+        pbl: itPbl,
+        dashboard: itDashboard
       },
     },
     lng: getDefaultLng(),
