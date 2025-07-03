@@ -524,15 +524,16 @@ export default function CompetencyKnowledgeGraph({
               )}
             </div>
           )}
+          {selectedNode.details?.summary && (
+            <p className="text-sm text-gray-700 mb-3">{selectedNode.details.summary}</p>
+          )}
           {selectedNode.details?.theme && (
-            <div className="mb-2">
-              <span className="text-sm font-semibold text-gray-800">
+            <div className="mt-2">
+              <span className="text-xs text-gray-500">主題：</span>
+              <span className="inline-block ml-1 px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
                 {t(selectedNode.details.theme.replace(/ /g, '_'))}
               </span>
             </div>
-          )}
-          {selectedNode.details?.summary && (
-            <p className="text-sm text-gray-700">{selectedNode.details.summary}</p>
           )}
           {selectedNode.details?.explanation && (
             <p className="text-sm text-gray-600 italic mt-2">{selectedNode.details.explanation}</p>
