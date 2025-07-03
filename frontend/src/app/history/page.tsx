@@ -189,7 +189,7 @@ export default function UnifiedHistoryPage() {
   }, [currentUser, i18n.language]);
 
   const formatDate = (timestamp: string) => {
-    return formatDateWithLocale(timestamp, i18n.language);
+    return formatDateWithLocale(new Date(timestamp), i18n.language);
   };
 
   const formatDuration = (seconds: number) => {

@@ -272,7 +272,20 @@ export default function RelationsClient() {
   return (
     <main className="p-8 bg-gray-50 min-h-screen">
       <h1 className="mb-2 text-xl sm:text-2xl md:text-3xl font-bold text-center px-4 break-words">{t('pageTitle')}</h1>
-      <p className="text-center text-gray-500 mb-8 px-4">{t('pageSubtitle')}</p>
+      <p className="text-center text-gray-500 mb-4 px-4">{t('pageSubtitle')}</p>
+      <div className="text-center mb-8">
+        <a 
+          href="https://ailiteracyframework.org/wp-content/uploads/2025/05/AILitFramework_ReviewDraft.pdf" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          {t('frameworkResource')}
+        </a>
+      </div>
       <div className="max-w-3xl mx-auto">
         {tree.domains.map((domain) => (
           <DomainAccordion 
