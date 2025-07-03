@@ -170,7 +170,8 @@ export default function RelationsClient() {
     <main className="p-8 bg-gray-50 min-h-screen">
       <h1 className="mb-2 text-xl sm:text-2xl md:text-3xl font-bold text-center px-4 break-words">{t('pageTitle')}</h1>
       <p className="text-center text-gray-500 mb-8 px-4">{t('pageSubtitle')}</p>
-      <div className="max-w-3xl mx-auto">{tree.domains.map((domain) => (
+      <div className="max-w-3xl mx-auto">
+        {tree.domains.map((domain) => (
           <DomainAccordion key={domain.key} domain={domain} kMap={tree.kMap} sMap={tree.sMap} aMap={tree.aMap} lang={lang} emoji={domain.emoji || '🤖'} />
         ))}
       </div>
@@ -297,7 +298,7 @@ function KSAOverlay({ open, onClose, info, lang }: { open: boolean, onClose: () 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center md:hidden">
       <div className="absolute inset-0 bg-black bg-opacity-60" onClick={onClose}></div>
-      <div className="relative w-full max-w-md bg-white rounded-2xl shadow-lg p-4 max-h-[90vh] overflow-y-auto animate-slideup">
+      <div className="relative w-full max-w-md bg-white rounded-2xl shadow-lg p-4 max-h-[90vh] overflow-y-auto">
         <button className="absolute right-4 top-3 text-2xl text-gray-400" onClick={onClose} aria-label="關閉">✕</button>
         <KSACard info={info} lang={lang} />
       </div>
