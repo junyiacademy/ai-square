@@ -10,7 +10,8 @@ import {
   PaperAirplaneIcon,
   SparklesIcon,
   ClockIcon,
-  CpuChipIcon
+  CpuChipIcon,
+  TrophyIcon
 } from '@heroicons/react/24/outline';
 
 interface UserAchievements {
@@ -25,6 +26,7 @@ interface ExplorationWorkspaceProps {
   achievements: UserAchievements;
   onTaskComplete: (taskId: string, xpGained: number, skillsGained: string[]) => void;
   onBackToPaths: () => void;
+  onViewAchievements?: () => void;
 }
 
 interface Task {
@@ -52,7 +54,8 @@ export default function ExplorationWorkspace({
   pathId, 
   achievements, 
   onTaskComplete, 
-  onBackToPaths 
+  onBackToPaths,
+  onViewAchievements 
 }: ExplorationWorkspaceProps) {
   const { t } = useTranslation('discovery');
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
@@ -371,6 +374,19 @@ export default function ExplorationWorkspace({
                   className="flex items-center space-x-2 bg-gray-600 text-white px-6 py-3 rounded-xl font-medium"
                 >
                   <span>{t('workspace.nextTask')}</span>
+                </motion.button>
+              )}
+              
+              {/* Show achievements button when all tasks are completed */}
+              {taskProgress >= 100 && isLastTask && completedTasksCount === pathData.tasks.length && onViewAchievements && (
+                <motion.button
+                  onClick={onViewAchievements}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="flex items-center space-x-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-shadow"
+                >
+                  <TrophyIcon className="w-5 h-5" />
+                  <span>查看成就</span>
                 </motion.button>
               )}
             </div>

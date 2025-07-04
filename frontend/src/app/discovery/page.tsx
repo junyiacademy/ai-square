@@ -610,6 +610,7 @@ export default function DiscoveryPage() {
                 achievements={achievements}
                 onTaskComplete={handleTaskComplete}
                 onBackToPaths={() => setCurrentView('results')}
+                onViewAchievements={() => setCurrentView('achievements')}
               />
             </motion.div>
           )}
