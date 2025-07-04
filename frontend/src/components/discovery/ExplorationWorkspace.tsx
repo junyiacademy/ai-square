@@ -470,9 +470,9 @@ export default function ExplorationWorkspace({
       sender: 'ai',
       text: workspaceCompletedTasks.includes(currentTask.id) 
         ? taskAnswers[currentTask.id]?.answer 
-          ? '讓我們來編輯這個任務的答案。你之前的答案已經載入。'
-          : '這個任務已完成但沒有保存答案。你可以現在補充答案。'
-        : '太好了！讓我們開始這個任務。我會在旁邊協助你完成每個步驟。',
+          ? '讓我們來編輯這個關卡的答案。你之前的答案已經載入。'
+          : '這個關卡已完成但沒有保存答案。你可以現在補充答案。'
+        : '太好了！讓我們開始這個關卡。我會在旁邊協助你完成每個步驟。',
       timestamp: new Date()
     };
     setChatMessages(prev => [...prev, taskIntroMessage]);
@@ -514,7 +514,7 @@ export default function ExplorationWorkspace({
     const completionMessage: ChatMessage = {
       id: Date.now().toString(),
       sender: 'ai',
-      text: `做得好！你完成了「${currentTask.title}」任務，獲得了 ${xpGained} XP！`,
+      text: `做得好！你完成了「${currentTask.title}」關卡，獲得了 ${xpGained} XP！`,
       timestamp: new Date()
     };
     setChatMessages(prev => [...prev, completionMessage]);
@@ -526,7 +526,7 @@ export default function ExplorationWorkspace({
       const congratsMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         sender: 'ai',
-        text: `🎉 恭喜！你已經完成了所有任務！這個工作區已標記為「已完成」。`,
+        text: `🎉 恭喜！你已經完成了所有關卡！這個冒險基地已標記為「已完成」。`,
         timestamp: new Date()
       };
       setChatMessages(prev => [...prev, congratsMessage]);
@@ -841,7 +841,7 @@ export default function ExplorationWorkspace({
               className="inline-flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
             >
               <ArrowLeftIcon className="w-5 h-5" />
-              <span>返回路徑</span>
+              <span>返回副本</span>
             </button>
           </div>
         
@@ -852,7 +852,7 @@ export default function ExplorationWorkspace({
               <SparklesIcon className="w-5 h-5 text-purple-600" />
             </div>
             <div>
-              <p className="text-sm text-gray-600">目前任務</p>
+              <p className="text-sm text-gray-600">目前關卡</p>
               <p className="font-medium text-gray-900">{currentTask.title}</p>
             </div>
           </div>
@@ -861,7 +861,7 @@ export default function ExplorationWorkspace({
             <div className="text-right">
               <p className="text-sm text-gray-600">整體進度</p>
               <p className="font-medium text-purple-700">
-                {completedTasksCount}/{typedPathData.tasks.length} 任務完成
+                {completedTasksCount}/{typedPathData.tasks.length} 關卡完成
               </p>
             </div>
             <div className="w-24 bg-gray-200 rounded-full h-2">
@@ -931,7 +931,7 @@ export default function ExplorationWorkspace({
                         transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                         className="w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full"
                       />
-                      <span className="text-gray-700 font-medium">任務進行中</span>
+                      <span className="text-gray-700 font-medium">關卡進行中</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <span className="text-purple-600 font-bold">{Math.round(taskProgress)}%</span>
@@ -960,7 +960,7 @@ export default function ExplorationWorkspace({
                   <CheckCircleIcon className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
                   <div className="flex-1">
                     <h4 className="font-medium text-green-900 mb-2">
-                      {isViewMode ? '任務答案（查看模式）' : '此任務已完成'}
+                      {isViewMode ? '關卡答案（查看模式）' : '此關卡已完成'}
                     </h4>
                     <div className="bg-white p-3 rounded-lg">
                       {(() => {
@@ -1080,7 +1080,7 @@ export default function ExplorationWorkspace({
 
           {/* Task List */}
           <div className="bg-white rounded-2xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">所有任務</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">所有關卡</h3>
             <div className="space-y-2">
               {typedPathData.tasks.map((task, index) => {
                 const isCompleted = workspaceCompletedTasks.includes(task.id);
@@ -1169,7 +1169,7 @@ export default function ExplorationWorkspace({
                                   <ClockIcon className="w-4 h-4 mr-1" />
                                   {task.duration}
                                 </span>
-                                <span className="text-sm text-purple-700 font-bold">任務進行中...</span>
+                                <span className="text-sm text-purple-700 font-bold">關卡進行中...</span>
                               </div>
                             </div>
                           ) : (
@@ -1223,7 +1223,7 @@ export default function ExplorationWorkspace({
           <div className="bg-white rounded-2xl shadow-lg p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
               <ClipboardDocumentListIcon className="w-5 h-5 text-purple-600" />
-              <span>學習評估</span>
+              <span>冒險評估</span>
             </h3>
             
             {/* Evaluation Type Tabs */}
@@ -1329,16 +1329,16 @@ export default function ExplorationWorkspace({
                   <ClipboardDocumentListIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                   <h4 className="text-lg font-medium text-gray-900 mb-2">多元評估系統</h4>
                   <p className="text-gray-600 text-sm mb-4">
-                    選擇評估方式來深化學習體驗：自我反思、同儕互評或專業導師指導
+                    選擇評估方式來深化冒險體驗：自我反思、同儕互評或專業導師指導
                   </p>
                   <div className="space-y-2 text-xs text-gray-500">
                     <div className="flex items-center justify-center space-x-2">
                       <ClipboardDocumentListIcon className="w-4 h-4 text-blue-500" />
-                      <span>自我評估：反思學習過程和成果</span>
+                      <span>自我評估：反思冒險過程和成果</span>
                     </div>
                     <div className="flex items-center justify-center space-x-2">
                       <UserGroupIcon className="w-4 h-4 text-green-500" />
-                      <span>同儕互評：交流學習心得與建議</span>
+                      <span>同儕互評：交流冒險心得與建議</span>
                     </div>
                     <div className="flex items-center justify-center space-x-2">
                       <AcademicCapIcon className="w-4 h-4 text-purple-500" />

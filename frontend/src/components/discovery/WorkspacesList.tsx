@@ -64,7 +64,7 @@ export default function WorkspacesList({
           icon: PlayIcon,
           color: 'text-green-600',
           bgColor: 'bg-green-100',
-          label: '進行中'
+          label: '探索中'
         };
       case 'completed':
         return {
@@ -109,10 +109,10 @@ export default function WorkspacesList({
             <FolderOpenIcon className="w-12 h-12 text-purple-600" />
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            還沒有任何工作區
+            還沒有任何冒險基地
           </h2>
           <p className="text-gray-600 mb-8 max-w-md mx-auto">
-            開始你的第一次探索之旅！先完成興趣評估，然後選擇一個學習路徑來創建工作區。
+            開始你的第一次冒險之旅！先完成興趣評估，然後選擇一個副本來創建冒險基地。
           </p>
           <motion.button
             onClick={() => router.push('/discovery/paths')}
@@ -121,7 +121,7 @@ export default function WorkspacesList({
             className="inline-flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-shadow"
           >
             <SparklesIcon className="w-5 h-5" />
-            <span>開始興趣評估</span>
+            <span>開始冒險評估</span>
           </motion.button>
         </motion.div>
       </div>
@@ -138,10 +138,10 @@ export default function WorkspacesList({
         className="text-center mb-8"
       >
         <h2 className="text-3xl font-bold text-gray-900 mb-4">
-          我的學習工作區
+          我的冒險基地
         </h2>
         <p className="text-lg text-gray-600">
-          管理你的所有探索歷程，繼續未完成的學習或回顧已完成的成果
+          管理你的所有冒險歷程，繼續未完成的挑戰或回顧已完成的成果
         </p>
       </motion.div>
 
@@ -159,7 +159,7 @@ export default function WorkspacesList({
           `}
         >
           <PlayIcon className="w-5 h-5" />
-          <span>進行中的學習</span>
+          <span>探索中的副本</span>
           <span className="ml-2 bg-green-100 text-green-600 px-2 py-0.5 rounded-full text-sm font-bold">
             {groupedWorkspaces.active.length}
           </span>
@@ -182,7 +182,7 @@ export default function WorkspacesList({
           `}
         >
           <CheckCircleIcon className="w-5 h-5" />
-          <span>已完成的學習</span>
+          <span>已完成的副本</span>
           <span className="ml-2 bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full text-sm font-bold">
             {groupedWorkspaces.completed.length}
           </span>
@@ -221,7 +221,7 @@ export default function WorkspacesList({
               <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <PlayIcon className="w-10 h-10 text-gray-400" />
               </div>
-              <p className="text-gray-600 mb-4">目前沒有進行中的學習</p>
+              <p className="text-gray-600 mb-4">目前沒有探索中的副本</p>
               <motion.button
                 onClick={() => router.push('/discovery/paths')}
                 whileHover={{ scale: 1.05 }}
@@ -229,7 +229,7 @@ export default function WorkspacesList({
                 className="inline-flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-lg font-medium shadow-lg hover:shadow-xl transition-shadow"
               >
                 <SparklesIcon className="w-4 h-4" />
-                <span>開始新的學習</span>
+                <span>開始新的冒險</span>
               </motion.button>
             </div>
           )}
@@ -260,8 +260,8 @@ export default function WorkspacesList({
               <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircleIcon className="w-10 h-10 text-gray-400" />
               </div>
-              <p className="text-gray-600 mb-4">還沒有完成的學習</p>
-              <p className="text-sm text-gray-500">繼續努力，完成你的第一個學習工作區！</p>
+              <p className="text-gray-600 mb-4">還沒有完成的副本</p>
+              <p className="text-sm text-gray-500">繼續努力，完成你的第一個冒險副本！</p>
             </div>
           )}
         </motion.div>
@@ -281,7 +281,7 @@ export default function WorkspacesList({
           className="inline-flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-shadow"
         >
           <SparklesIcon className="w-5 h-5" />
-          <span>探索新的學習路徑</span>
+          <span>探索新的冒險副本</span>
         </motion.button>
       </motion.div>
     </div>
@@ -320,7 +320,7 @@ function WorkspaceCard({
           icon: PlayIcon,
           color: 'text-green-600',
           bgColor: 'bg-green-100',
-          label: '進行中'
+          label: '探索中'
         };
       case 'completed':
         return {
@@ -374,13 +374,13 @@ function WorkspaceCard({
             <div className="flex items-center space-x-2">
               <ChartBarIcon className="w-4 h-4 text-gray-400" />
               <span className="text-sm text-gray-600">
-                完成 {workspace.completedTasks.length} 個任務
+                完成 {workspace.completedTasks.length} 個關卡
               </span>
             </div>
             <div className="flex items-center space-x-2">
               <TrophyIcon className="w-4 h-4 text-gray-400" />
               <span className="text-sm text-gray-600">
-                獲得 {workspace.totalXP} XP
+                收穫 {workspace.totalXP} XP
               </span>
             </div>
           </div>

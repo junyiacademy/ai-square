@@ -210,10 +210,10 @@ export default function PathResults({
             <GlobeAltIcon className="w-12 h-12 text-purple-600" />
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            還沒有任何探索路徑
+            還沒有任何冒險副本
           </h2>
           <p className="text-gray-600 mb-8 max-w-md mx-auto">
-            完成興趣評估來發現適合你的學習路徑，開始你的個人化探索之旅！
+            完成興趣評估來發現適合你的冒險副本，開始你的個人化冒險之旅！
           </p>
           {onRetakeAssessment && (
             <motion.button
@@ -241,10 +241,10 @@ export default function PathResults({
         className="text-center mb-8"
       >
         <h2 className="text-3xl font-bold text-gray-900 mb-4">
-          你的探索路徑
+          你的冒險副本
         </h2>
         <p className="text-lg text-gray-600 mb-6">
-          基於你的興趣評估結果，為你推薦合適的學習路徑
+          基於你的興趣評估結果，為你推薦合適的冒險副本
         </p>
         
         {/* Personality Type */}
@@ -266,19 +266,21 @@ export default function PathResults({
           transition={{ duration: 0.5, delay: 0.1 }}
           className="mb-6 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-4"
         >
-          <h3 className="text-sm font-semibold text-gray-900 mb-3">你的傾向分析</h3>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="text-center">
-              <div className="text-xl font-bold text-blue-600">{results.tech}%</div>
-              <div className="text-xs text-gray-600">科技傾向</div>
-            </div>
-            <div className="text-center">
-              <div className="text-xl font-bold text-purple-600">{results.creative}%</div>
-              <div className="text-xs text-gray-600">創意傾向</div>
-            </div>
-            <div className="text-center">
-              <div className="text-xl font-bold text-green-600">{results.business}%</div>
-              <div className="text-xs text-gray-600">商業傾向</div>
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-gray-900">你的傾向分析</h3>
+            <div className="flex items-center space-x-6">
+              <div className="flex items-center space-x-2">
+                <span className="text-lg font-bold text-blue-600">{results.tech}%</span>
+                <span className="text-sm text-gray-600">科技傾向</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="text-lg font-bold text-purple-600">{results.creative}%</span>
+                <span className="text-sm text-gray-600">創意傾向</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="text-lg font-bold text-green-600">{results.business}%</span>
+                <span className="text-sm text-gray-600">商業傾向</span>
+              </div>
             </div>
           </div>
         </motion.div>
@@ -315,7 +317,7 @@ export default function PathResults({
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            所有路徑 ({savedPaths.length})
+            所有副本 ({savedPaths.length})
           </button>
           <button
             onClick={() => setViewMode('favorites')}
@@ -468,7 +470,7 @@ export default function PathResults({
                   {/* Workspace Status Column */}
                   <div className="md:w-64 mt-6 md:mt-0 md:ml-6 md:border-l md:pl-6">
                     <div className="mb-4">
-                      <h4 className="font-medium text-gray-900 mb-3">體驗任務預覽</h4>
+                      <h4 className="font-medium text-gray-900 mb-3">體驗關卡預覽</h4>
                       <div className="space-y-2">
                         {path.tasks.slice(0, 2).map((task) => (
                           <div key={task.id} className="flex items-center space-x-3 text-sm">
@@ -479,7 +481,7 @@ export default function PathResults({
                         ))}
                         {path.tasks.length > 2 && (
                           <div className="text-sm text-gray-400">
-                            +{path.tasks.length - 2} 更多任務...
+                            +{path.tasks.length - 2} 更多關卡...
                           </div>
                         )}
                       </div>
@@ -489,7 +491,7 @@ export default function PathResults({
                     {getPathWorkspaces(path.id).length > 0 ? (
                       <div className="bg-gray-50 rounded-xl p-4">
                         <div className="flex items-center justify-between mb-3">
-                          <h4 className="font-medium text-gray-900">我的工作區</h4>
+                          <h4 className="font-medium text-gray-900">我的冒險基地</h4>
                           <span className="text-sm text-gray-500">
                             {getPathWorkspaces(path.id).length} 個
                           </span>
@@ -507,13 +509,13 @@ export default function PathResults({
                                   workspace.status === 'completed' ? 'bg-blue-100 text-blue-700' :
                                   'bg-yellow-100 text-yellow-700'
                                 }`}>
-                                  {workspace.status === 'active' ? '進行中' :
+                                  {workspace.status === 'active' ? '探索中' :
                                    workspace.status === 'completed' ? '已完成' : '暫停中'}
                                 </span>
                                 <PlayIcon className="w-4 h-4 text-gray-400" />
                               </div>
                               <div className="mt-1 text-xs text-gray-600">
-                                {workspace.completedTasks.length} 個任務 • {workspace.totalXP} XP
+                                {workspace.completedTasks.length} 個關卡 • {workspace.totalXP} XP
                               </div>
                             </button>
                           ))}
@@ -522,8 +524,8 @@ export default function PathResults({
                     ) : (
                       <div className="bg-gray-50 rounded-xl p-4 text-center">
                         <FolderOpenIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                        <p className="text-sm text-gray-600">尚無工作區</p>
-                        <p className="text-xs text-gray-500 mt-1">開始探索來創建工作區</p>
+                        <p className="text-sm text-gray-600">尚無冒險基地</p>
+                        <p className="text-xs text-gray-500 mt-1">開始冒險來創建基地</p>
                       </div>
                     )}
                   </div>
@@ -543,7 +545,7 @@ export default function PathResults({
                     `}
                   >
                     <PlusIcon className="w-5 h-5" />
-                    <span>開始新的探索</span>
+                    <span>開始新的冒險</span>
                   </motion.button>
                 </div>
               </div>
@@ -560,19 +562,19 @@ export default function PathResults({
           transition={{ duration: 0.5, delay: 0.3 }}
           className="mt-8 bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-6"
         >
-          <h3 className="font-semibold text-gray-900 mb-4">探索統計</h3>
+          <h3 className="font-semibold text-gray-900 mb-4">冒險統計</h3>
           <div className="grid grid-cols-3 gap-4">
             <div className="text-center">
               <div className="text-2xl font-bold text-purple-600">{savedPaths.length}</div>
-              <div className="text-sm text-gray-600">發現的路徑</div>
+              <div className="text-sm text-gray-600">發現的副本</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-red-600">{savedPaths.filter(p => p.isFavorite).length}</div>
-              <div className="text-sm text-gray-600">收藏的路徑</div>
+              <div className="text-sm text-gray-600">收藏的副本</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">{workspaceSessions.length}</div>
-              <div className="text-sm text-gray-600">創建的工作區</div>
+              <div className="text-sm text-gray-600">創建的基地</div>
             </div>
           </div>
         </motion.div>

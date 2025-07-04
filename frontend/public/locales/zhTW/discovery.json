@@ -1,34 +1,34 @@
 {
-  "title": "探索世界",
-  "subtitle": "透過沉浸式體驗探索 AI 驅動的人生路徑",
-  "getStarted": "開始探索",
+  "title": "冒險世界",
+  "subtitle": "透過沉浸式體驗挑戰 AI 驅動的冒險副本",
+  "getStarted": "開始冒險",
   "backToHome": "回到首頁",
   
   "welcomeScreen": {
-    "title": "歡迎來到探索世界",
-    "subtitle": "透過 AI 驅動的體驗發現你的未來方向",
-    "description": "探索不同路徑，與 AI 助手協作，為未來建立技能。",
-    "startJourney": "開始你的旅程",
+    "title": "歡迎來到冒險世界",
+    "subtitle": "透過 AI 驅動的副本發現你的英雄之路",
+    "description": "挑戰不同副本，與 AI 夥伴並肩探索，為未來累積能力。",
+    "startJourney": "踏上征途",
     "features": {
       "explore": {
-        "title": "探索路徑",
-        "description": "在科技、創意和商業領域體驗真實工作情境"
+        "title": "挑戰副本",
+        "description": "在科技、創意和商業領域體驗真實探索情境"
       },
       "collaborate": {
-        "title": "AI 協作",
-        "description": "與 AI 助手合作完成真實的職場任務"
+        "title": "AI 夥伴",
+        "description": "與 AI 夥伴合作完成各種挑戰任務"
       },
       "develop": {
-        "title": "建立技能",
-        "description": "培養數位素養和 21 世紀職場技能"
+        "title": "提升能力",
+        "description": "累積數位素養和 21 世紀實用技能"
       }
     }
   },
   
   "interestAssessment": {
-    "title": "興趣評估",
-    "subtitle": "讓我們發現你的興趣方向",
-    "description": "回答幾個問題，幫助我們為你推薦最適合的探索體驗。",
+    "title": "英雄屬性測試",
+    "subtitle": "讓我們發現你的英雄屬性",
+    "description": "回答幾個問題，幫助我們為你推薦最適合的冒險副本。",
     "question": "第 {{current}} 題，共 {{total}} 題",
     "next": "下一題",
     "previous": "上一題",
@@ -36,68 +36,68 @@
     "questions": [
       {
         "id": "creativity",
-        "text": "以下哪項活動最吸引你？",
+        "text": "以下哪項挑戰最吸引你？",
         "options": [
           { "id": "create_content", "text": "製作影片或數位內容", "weight": { "tech": 2, "creative": 3, "business": 1 } },
-          { "id": "solve_problems", "text": "用程式碼解決複雜問題", "weight": { "tech": 3, "creative": 1, "business": 2 } },
-          { "id": "plan_strategies", "text": "規劃商業策略", "weight": { "tech": 1, "creative": 1, "business": 3 } },
-          { "id": "design_visuals", "text": "設計視覺體驗", "weight": { "tech": 2, "creative": 3, "business": 1 } }
+          { "id": "solve_problems", "text": "用程式碼解決複雜謎題", "weight": { "tech": 3, "creative": 1, "business": 2 } },
+          { "id": "plan_strategies", "text": "規劃策略探索市場", "weight": { "tech": 1, "creative": 1, "business": 3 } },
+          { "id": "design_visuals", "text": "設計視覺魔法", "weight": { "tech": 2, "creative": 3, "business": 1 } }
         ]
       },
       {
         "id": "work_style",
-        "text": "你偏好什麼樣的工作方式？",
+        "text": "你偏好什麼樣的探索方式？",
         "options": [
-          { "id": "independent", "text": "獨立工作，享有創作自由", "weight": { "tech": 2, "creative": 3, "business": 1 } },
-          { "id": "team_tech", "text": "在技術團隊中開發產品", "weight": { "tech": 3, "creative": 1, "business": 2 } },
-          { "id": "leading", "text": "領導專案和團隊", "weight": { "tech": 1, "creative": 2, "business": 3 } },
-          { "id": "collaborative", "text": "在創意專案中協作", "weight": { "tech": 2, "creative": 3, "business": 1 } }
+          { "id": "independent", "text": "單人闖關，享有自由發揮", "weight": { "tech": 2, "creative": 3, "business": 1 } },
+          { "id": "team_tech", "text": "在技術團隊中開發利器", "weight": { "tech": 3, "creative": 1, "business": 2 } },
+          { "id": "leading", "text": "領導團隊探索", "weight": { "tech": 1, "creative": 2, "business": 3 } },
+          { "id": "collaborative", "text": "在創意副本中協同探索", "weight": { "tech": 2, "creative": 3, "business": 1 } }
         ]
       },
       {
         "id": "interests",
-        "text": "你對什麼主題最感興趣？",
+        "text": "你對什麼領域最感興趣？",
         "options": [
-          { "id": "technology", "text": "最新科技和程式設計", "weight": { "tech": 3, "creative": 1, "business": 1 } },
-          { "id": "art_media", "text": "藝術、媒體和說故事", "weight": { "tech": 1, "creative": 3, "business": 1 } },
-          { "id": "business_trends", "text": "商業趨勢和市場", "weight": { "tech": 1, "creative": 1, "business": 3 } },
-          { "id": "digital_innovation", "text": "數位創新和設計", "weight": { "tech": 2, "creative": 2, "business": 2 } }
+          { "id": "technology", "text": "最新科技和程式魔法", "weight": { "tech": 3, "creative": 1, "business": 1 } },
+          { "id": "art_media", "text": "藝術、媒體和傳說故事", "weight": { "tech": 1, "creative": 3, "business": 1 } },
+          { "id": "business_trends", "text": "商業策略和市場探索", "weight": { "tech": 1, "creative": 1, "business": 3 } },
+          { "id": "digital_innovation", "text": "數位創新和設計魔法", "weight": { "tech": 2, "creative": 2, "business": 2 } }
         ]
       },
       {
         "id": "goals",
-        "text": "你的主要目標是什麼？",
+        "text": "你的終極目標是什麼？",
         "options": [
-          { "id": "build_apps", "text": "開發出色的應用程式和遊戲", "weight": { "tech": 3, "creative": 2, "business": 1 } },
-          { "id": "create_content", "text": "創作啟發他人的內容", "weight": { "tech": 1, "creative": 3, "business": 1 } },
-          { "id": "start_business", "text": "創立自己的事業", "weight": { "tech": 2, "creative": 1, "business": 3 } },
-          { "id": "make_impact", "text": "透過工作產生正面影響", "weight": { "tech": 2, "creative": 2, "business": 2 } }
+          { "id": "build_apps", "text": "打造傳奇應用程式和遊戲", "weight": { "tech": 3, "creative": 2, "business": 1 } },
+          { "id": "create_content", "text": "創作啟發他人的傳奇內容", "weight": { "tech": 1, "creative": 3, "business": 1 } },
+          { "id": "start_business", "text": "建立自己的商業帝國", "weight": { "tech": 2, "creative": 1, "business": 3 } },
+          { "id": "make_impact", "text": "透過冒險改變世界", "weight": { "tech": 2, "creative": 2, "business": 2 } }
         ]
       }
     ]
   },
   
   "results": {
-    "title": "你的探索路徑推薦",
-    "subtitle": "根據你的興趣，以下是最適合探索的方向：",
-    "exploreCareer": "探索這個方向",
-    "viewAll": "查看所有方向",
-    "personalityType": "你的性格類型",
-    "matchPercentage": "{{percentage}}% 匹配"
+    "title": "你的冒險副本推薦",
+    "subtitle": "根據你的屬性，以下是最適合挑戰的副本：",
+    "exploreCareer": "挑戰這個副本",
+    "viewAll": "查看所有副本",
+    "personalityType": "你的英雄類型",
+    "matchPercentage": "{{percentage}}% 契合度"
   },
   
   "careers": {
     "youtuber": {
       "title": "YouTuber / 內容創作者",
       "subtitle": "創作引人入勝的影片內容並建立觀眾群",
-      "description": "學習創作、編輯和推廣影片內容，同時建立個人品牌並與觀眾互動。",
+      "description": "挑戰創作、編輯和推廣影片內容的關卡，同時建立個人品牌並與觀眾互動。",
       "category": "創意",
       "skills": ["影片製作", "內容策略", "觀眾互動", "個人品牌"],
       "aiAssistants": ["創意總監", "數據分析專家", "社群經理"],
       "tasks": [
         {
           "id": "script_writing",
-          "title": "AI 輔助腳本撰寫",
+          "title": "AI 輔助腳本創作",
           "description": "與 AI 協作創作引人入勝的影片腳本",
           "duration": "15 分鐘"
         },
@@ -118,26 +118,26 @@
     "game_designer": {
       "title": "遊戲設計師",
       "subtitle": "設計沉浸式遊戲體驗和機制",
-      "description": "創作遊戲概念、設計角色，並使用現代 AI 輔助工具開發遊戲玩法機制。",
+      "description": "挑戰遊戲概念、設計角色，並使用現代 AI 輔助工具開發遊戲玩法機制。",
       "category": "科技",
       "skills": ["遊戲設計", "創意思考", "用戶體驗", "技術設計"],
       "aiAssistants": ["設計夥伴", "技術顧問", "玩家心理專家"],
       "tasks": [
         {
           "id": "character_design",
-          "title": "AI 角色創作",
+          "title": "AI 角色創作任務",
           "description": "在 AI 協助下設計獨特的遊戲角色",
           "duration": "20 分鐘"
         },
         {
           "id": "level_design",
-          "title": "關卡設計工作坊",
+          "title": "關卡設計挑戰",
           "description": "創作引人入勝的遊戲關卡和機制",
           "duration": "30 分鐘"
         },
         {
           "id": "player_feedback",
-          "title": "玩家回饋分析",
+          "title": "玩家回饋分析任務",
           "description": "分析並回應玩家回饋數據",
           "duration": "15 分鐘"
         }
@@ -146,26 +146,26 @@
     "app_developer": {
       "title": "App 開發者",
       "subtitle": "開發解決真實問題的行動應用程式",
-      "description": "學習使用 AI 驅動的開發工具設計、開發和發布行動應用程式。",
+      "description": "挑戰使用 AI 驅動的開發工具設計、開發和發布行動應用程式。",
       "category": "科技",
       "skills": ["程式設計", "問題解決", "使用者介面設計", "專案管理"],
       "aiAssistants": ["程式導師", "UI 設計師", "測試專家"],
       "tasks": [
         {
           "id": "app_concept",
-          "title": "App 概念開發",
+          "title": "App 概念開發關卡",
           "description": "與 AI 一起腦力激盪並驗證你的 App 想法",
           "duration": "20 分鐘"
         },
         {
           "id": "ui_design",
-          "title": "使用者介面設計",
+          "title": "使用者介面設計挑戰",
           "description": "設計用戶友善的 App 介面",
           "duration": "25 分鐘"
         },
         {
           "id": "user_testing",
-          "title": "用戶測試與回饋",
+          "title": "用戶測試任務",
           "description": "進行用戶測試並根據回饋進行改善",
           "duration": "20 分鐘"
         }
@@ -174,14 +174,14 @@
     "ai_developer": {
       "title": "AI 開發者",
       "subtitle": "打造智能應用程式與系統",
-      "description": "學習機器學習、深度學習和 AI 開發技術，創建智能解決方案。",
+      "description": "挑戰機器學習、深度學習和 AI 開發技術，創建智能解決方案。",
       "category": "科技",
       "skills": ["機器學習", "Python 程式設計", "資料分析", "AI 模型訓練"],
       "aiAssistants": ["AI 架構師", "資料科學家", "演算法專家"],
       "tasks": [
         {
           "id": "ai_basics",
-          "title": "AI 基礎概念",
+          "title": "AI 基礎概念關卡",
           "description": "了解機器學習和深度學習的核心概念",
           "duration": "25 分鐘"
         },
@@ -193,7 +193,7 @@
         },
         {
           "id": "ai_application",
-          "title": "AI 應用實作",
+          "title": "AI 應用實戰",
           "description": "將 AI 模型整合到實際應用中",
           "duration": "25 分鐘"
         }
@@ -202,26 +202,26 @@
     "content_creator": {
       "title": "內容創作者",
       "subtitle": "創作引人入勝的數位內容",
-      "description": "掌握各種內容創作技巧，包括影片、文字、圖像和社群媒體內容。",
+      "description": "挑戰各種內容創作關卡，包括影片、文字、圖像和社群媒體內容。",
       "category": "創意",
       "skills": ["內容策劃", "視覺設計", "文案寫作", "社群媒體行銷"],
       "aiAssistants": ["創意總監", "內容策略師", "社群經理"],
       "tasks": [
         {
           "id": "content_planning",
-          "title": "內容策劃與規劃",
+          "title": "內容策劃任務",
           "description": "制定吸引目標受眾的內容策略",
           "duration": "20 分鐘"
         },
         {
           "id": "visual_creation",
-          "title": "視覺內容創作",
+          "title": "視覺內容創作挑戰",
           "description": "使用 AI 工具創作吸睛的視覺內容",
           "duration": "25 分鐘"
         },
         {
           "id": "engagement_analysis",
-          "title": "互動分析與優化",
+          "title": "互動分析任務",
           "description": "分析內容表現並優化策略",
           "duration": "20 分鐘"
         }
@@ -229,27 +229,27 @@
     },
     "startup_founder": {
       "title": "新創創業家",
-      "subtitle": "從想法到成功創業的旅程",
-      "description": "學習創業所需的商業技能、產品開發和團隊管理能力。",
+      "subtitle": "從想法到成功創業的冒險",
+      "description": "挑戰創業所需的商業技能、產品開發和團隊管理關卡。",
       "category": "商業",
       "skills": ["商業策略", "產品管理", "團隊領導", "市場分析"],
       "aiAssistants": ["商業顧問", "市場分析師", "財務規劃師"],
       "tasks": [
         {
           "id": "business_model",
-          "title": "商業模式設計",
+          "title": "商業模式設計關卡",
           "description": "使用 AI 輔助設計可行的商業模式",
           "duration": "30 分鐘"
         },
         {
           "id": "market_research",
-          "title": "市場研究與驗證",
+          "title": "市場研究任務",
           "description": "進行市場調查和產品驗證",
           "duration": "25 分鐘"
         },
         {
           "id": "pitch_deck",
-          "title": "投資簡報製作",
+          "title": "投資簡報挑戰",
           "description": "創建吸引投資人的專業簡報",
           "duration": "25 分鐘"
         }
@@ -257,27 +257,27 @@
     },
     "data_analyst": {
       "title": "數據分析師",
-      "subtitle": "從數據中發現洞察與價值",
-      "description": "掌握數據分析技能，使用 AI 工具從複雜數據中提取有意義的見解。",
+      "subtitle": "從數據中發現洞察與寶藏",
+      "description": "挑戰數據分析關卡，使用 AI 工具從複雜數據中提取有意義的見解。",
       "category": "科技",
       "skills": ["數據分析", "統計學", "資料視覺化", "SQL"],
       "aiAssistants": ["數據科學家", "統計專家", "視覺化設計師"],
       "tasks": [
         {
           "id": "data_exploration",
-          "title": "數據探索與清理",
+          "title": "數據探索任務",
           "description": "學習如何準備和清理數據集",
           "duration": "25 分鐘"
         },
         {
           "id": "analysis_techniques",
-          "title": "分析技術應用",
+          "title": "分析技術挑戰",
           "description": "使用統計方法分析數據趨勢",
           "duration": "30 分鐘"
         },
         {
           "id": "data_visualization",
-          "title": "數據視覺化",
+          "title": "數據視覺化關卡",
           "description": "創建清晰易懂的數據圖表",
           "duration": "20 分鐘"
         }
@@ -286,26 +286,26 @@
     "ux_designer": {
       "title": "UX 設計師",
       "subtitle": "設計以用戶為中心的數位體驗",
-      "description": "學習用戶體驗設計原則，創造直觀、愉悅的數位產品體驗。",
+      "description": "挑戰用戶體驗設計關卡，創造直觀、愉悅的數位產品體驗。",
       "category": "創意",
       "skills": ["用戶研究", "原型設計", "互動設計", "可用性測試"],
       "aiAssistants": ["設計總監", "用戶研究員", "原型專家"],
       "tasks": [
         {
           "id": "user_research",
-          "title": "用戶研究與訪談",
+          "title": "用戶研究任務",
           "description": "進行用戶訪談了解需求",
           "duration": "25 分鐘"
         },
         {
           "id": "wireframing",
-          "title": "線框圖與原型設計",
+          "title": "原型設計挑戰",
           "description": "創建產品原型和線框圖",
           "duration": "30 分鐘"
         },
         {
           "id": "usability_testing",
-          "title": "可用性測試",
+          "title": "可用性測試關卡",
           "description": "測試設計並收集回饋",
           "duration": "20 分鐘"
         }
@@ -313,27 +313,27 @@
     },
     "product_manager": {
       "title": "產品經理",
-      "subtitle": "領導產品從概念到上市",
-      "description": "掌握產品管理技能，協調團隊開發成功的數位產品。",
+      "subtitle": "領導產品從概念到市場成功",
+      "description": "挑戰產品管理關卡，協調團隊開發成功的數位產品。",
       "category": "商業",
       "skills": ["產品策略", "專案管理", "數據分析", "團隊協作"],
       "aiAssistants": ["策略顧問", "數據分析師", "敏捷教練"],
       "tasks": [
         {
           "id": "product_roadmap",
-          "title": "產品路線圖規劃",
+          "title": "產品路線圖規劃任務",
           "description": "制定產品發展策略和時程",
           "duration": "30 分鐘"
         },
         {
           "id": "feature_prioritization",
-          "title": "功能優先級排序",
+          "title": "功能優先級挑戰",
           "description": "使用數據決定功能開發順序",
           "duration": "25 分鐘"
         },
         {
           "id": "stakeholder_communication",
-          "title": "利害關係人溝通",
+          "title": "利害關係人溝通關卡",
           "description": "有效溝通產品願景和進度",
           "duration": "20 分鐘"
         }
@@ -341,27 +341,27 @@
     },
     "tech_entrepreneur": {
       "title": "科技創業家",
-      "subtitle": "結合技術與商業的創新者",
-      "description": "融合技術專長與商業頭腦，創建創新的科技解決方案。",
+      "subtitle": "結合技術與商業的創新英雄",
+      "description": "融合技術專長與商業頭腦，挑戰創建創新的科技解決方案。",
       "category": "科技",
       "skills": ["技術開發", "商業策略", "創新思維", "領導力"],
       "aiAssistants": ["技術顧問", "創業導師", "創新策略師"],
       "tasks": [
         {
           "id": "tech_innovation",
-          "title": "技術創新工作坊",
+          "title": "技術創新挑戰",
           "description": "探索新技術的商業應用",
           "duration": "30 分鐘"
         },
         {
           "id": "mvp_development",
-          "title": "MVP 開發",
+          "title": "MVP 開發任務",
           "description": "快速開發最小可行產品",
           "duration": "35 分鐘"
         },
         {
           "id": "growth_hacking",
-          "title": "成長駭客策略",
+          "title": "成長駭客關卡",
           "description": "學習快速成長的技術策略",
           "duration": "25 分鐘"
         }
@@ -370,31 +370,31 @@
   },
   
   "workspace": {
-    "title": "{{career}} 工作室",
-    "aiAssistant": "AI 助手",
-    "currentTask": "當前任務",
+    "title": "{{career}} 冒險基地",
+    "aiAssistant": "AI 夥伴",
+    "currentTask": "當前關卡",
     "progress": "進度",
-    "skills": "已培養技能",
+    "skills": "累積能力",
     "achievements": "成就",
-    "startTask": "開始任務",
-    "completeTask": "完成任務",
-    "nextTask": "下一個任務",
-    "backToCareers": "回到路徑選擇",
-    "taskCompleted": "任務完成！",
+    "startTask": "開始挑戰",
+    "completeTask": "通關",
+    "nextTask": "下一關",
+    "backToCareers": "回到副本選擇",
+    "taskCompleted": "關卡通關！",
     "skillsGained": "獲得技能：",
     "experiencePoints": "+{{points}} 經驗值"
   },
   
   "aiAssistant": {
-    "greeting": "嗨！我是你的 AI {{role}}。我在這裡幫助你在 {{career}} 的旅程中成功。",
-    "taskIntro": "讓我們一起完成這個任務。我會引導你完成每一步。",
+    "greeting": "嗨！我是你的 AI {{role}}。我在這裡幫助你在 {{career}} 的冒險中取得勝利。",
+    "taskIntro": "讓我們一起征服這個關卡。我會引導你通過每一個挑戰。",
     "encouragement": [
-      "做得很好！你的進步很棒。",
+      "做得很好！你的能力提升了。",
       "這是很有創意的方法！繼續加油。",
-      "你的思考就像真正的 {{path}}！",
-      "太棒了！你正在培養真正的技能。"
+      "你的思考就像真正的 {{path}} 英雄！",
+      "太棒了！你正在累積真正的能力。"
     ],
-    "askQuestion": "有關這個任務或 {{path}} 領域的任何問題都可以問我！",
+    "askQuestion": "有關這個關卡或 {{path}} 領域的任何問題都可以問我！",
     "typeMessage": "輸入你的訊息...",
     "send": "傳送"
   },
@@ -405,33 +405,33 @@
     "level": "等級 {{level}}",
     "badges": {
       "first_task": {
-        "title": "第一步",
-        "description": "完成你的第一個探索任務"
+        "title": "初次探索",
+        "description": "完成你的第一個冒險關卡"
       },
       "creative_thinker": {
-        "title": "創意思考者",
-        "description": "在任務中展現出色的創意"
+        "title": "創意探索者",
+        "description": "在關卡中展現出色的創意"
       },
       "ai_collaborator": {
-        "title": "AI 協作者",
-        "description": "成功與 AI 助手協作"
+        "title": "AI 夥伴",
+        "description": "成功與 AI 夥伴並肩探索"
       },
       "problem_solver": {
-        "title": "問題解決者",
-        "description": "解決複雜挑戰"
+        "title": "解謎大師",
+        "description": "完成複雜挑戰"
       },
       "path_explorer": {
-        "title": "探索者",
-        "description": "探索多種人生路徑"
+        "title": "副本探索者",
+        "description": "挑戰多種冒險副本"
       }
     }
   },
   
   "navigation": {
-    "overview": "總覽",
-    "assessment": "評估",
-    "paths": "路徑",
-    "workspace": "工作室",
-    "achievements": "成就"
+    "overview": "探索總覽",
+    "assessment": "屬性測試",
+    "paths": "副本",
+    "workspace": "冒險基地",
+    "achievements": "戰績"
   }
 }

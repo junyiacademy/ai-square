@@ -51,14 +51,14 @@ export default function DiscoveryHeader({
     },
     {
       id: 'paths',
-      label: '路徑',
+      label: '副本',
       icon: GlobeAltIcon,
       href: '/discovery/paths',
       disabled: !hasAssessmentResults
     },
     {
       id: 'workspace',
-      label: '工作區',
+      label: '基地',
       icon: FolderOpenIcon,
       href: '/discovery/workspace',
       badge: workspaceCount > 0 ? workspaceCount : undefined

@@ -302,7 +302,7 @@ export default function EvaluationPage() {
                     onClick={() => window.location.href = '/discovery/paths'}
                     className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all duration-200 text-sm font-medium"
                   >
-                    查看學習路徑
+                    查看冒險副本
                   </button>
                   <button
                     onClick={handleRetakeAssessment}
@@ -445,7 +445,7 @@ export default function EvaluationPage() {
                       }
                     `}
                   >
-                    加入選擇的路徑
+                    加入選擇的副本
                   </button>
                 </div>
               </div>

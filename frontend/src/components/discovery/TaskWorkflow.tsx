@@ -330,40 +330,10 @@ export default function TaskWorkflow({ taskId, taskTitle, onComplete, onProgress
       case 'chat':
         return (
           <div className="space-y-4">
-            <div className="bg-gray-50 rounded-lg p-4 h-48 overflow-y-auto">
-              <div className="space-y-3">
-                <div className="flex items-start space-x-2">
-                  <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
-                    <SparklesIcon className="w-4 h-4 text-white" />
-                  </div>
-                  <div className="bg-white rounded-lg p-3 max-w-xs">
-                    <p className="text-sm">
-                      太好了！我了解你的目標了。讓我幫你制定執行計劃：
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-2">
-                  <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
-                    <SparklesIcon className="w-4 h-4 text-white" />
-                  </div>
-                  <div className="bg-white rounded-lg p-3 max-w-xs">
-                    <p className="text-sm font-medium mb-2">建議的執行步驟：</p>
-                    <ol className="text-sm space-y-1">
-                      <li>1. 分析任務需求</li>
-                      <li>2. 制定解決方案</li>
-                      <li>3. 逐步實施計劃</li>
-                      <li>4. 檢查和優化成果</li>
-                    </ol>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             <textarea
               value={scriptOutline}
               onChange={(e) => setScriptOutline(e.target.value)}
-              placeholder={isEditMode && !scriptOutline ? "此任務在答案保存功能實施前完成，請補充你的計劃..." : "在這裡記錄你的執行計劃和想法..."}
+              placeholder={isEditMode && !scriptOutline ? "此關卡在答案保存功能實施前完成，請補充你的計劃..." : "在這裡記錄你的執行計劃和想法..."}
               className="w-full h-32 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors resize-none"
             />
 
@@ -374,7 +344,7 @@ export default function TaskWorkflow({ taskId, taskTitle, onComplete, onProgress
               }}
               className="w-full bg-purple-600 text-white py-3 rounded-xl font-medium hover:bg-purple-700 transition-colors"
             >
-              繼續執行任務
+              繼續執行關卡
             </button>
           </div>
         );

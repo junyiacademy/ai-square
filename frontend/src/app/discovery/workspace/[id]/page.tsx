@@ -135,7 +135,7 @@ function WorkspaceDetailContent() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600">工作區不存在</p>
+          <p className="text-gray-600">冒險基地不存在</p>
         </div>
       </div>
     );
