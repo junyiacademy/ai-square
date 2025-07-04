@@ -6,16 +6,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { VertexAI } from '@google-cloud/vertexai';
 import type { DynamicTask } from '@/lib/services/user-data-service';
 
-// Initialize Vertex AI
-const vertexAI = new VertexAI({
-  project: process.env.GOOGLE_CLOUD_PROJECT!,
-  location: process.env.GOOGLE_CLOUD_LOCATION || 'us-central1',
-});
-
-const model = vertexAI.preview.getGenerativeModel({
-  model: 'gemini-2.5-flash',
-});
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -36,6 +26,16 @@ export async function POST(request: NextRequest) {
       currentTaskNumber,
       previousTaskResult,
       locale
+    });
+
+    // Initialize Vertex AI
+    const vertexAI = new VertexAI({
+      project: process.env.GOOGLE_CLOUD_PROJECT || 'ai-square-463013',
+      location: process.env.GOOGLE_CLOUD_LOCATION || 'us-central1',
+    });
+
+    const model = vertexAI.preview.getGenerativeModel({
+      model: 'gemini-2.5-flash',
     });
 
     // Generate with Vertex AI

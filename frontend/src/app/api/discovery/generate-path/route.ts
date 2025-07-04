@@ -7,16 +7,6 @@ import { VertexAI } from '@google-cloud/vertexai';
 import { DiscoveryService } from '@/lib/services/discovery-service';
 import type { SavedPathData } from '@/lib/services/user-data-service';
 
-// Initialize Vertex AI
-const vertexAI = new VertexAI({
-  project: process.env.GOOGLE_CLOUD_PROJECT!,
-  location: process.env.GOOGLE_CLOUD_LOCATION || 'us-central1',
-});
-
-const model = vertexAI.preview.getGenerativeModel({
-  model: 'gemini-2.5-flash',
-});
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -37,6 +27,16 @@ export async function POST(request: NextRequest) {
       preferences,
       conversationHistory,
       locale
+    });
+
+    // Initialize Vertex AI
+    const vertexAI = new VertexAI({
+      project: process.env.GOOGLE_CLOUD_PROJECT || 'ai-square-463013',
+      location: process.env.GOOGLE_CLOUD_LOCATION || 'us-central1',
+    });
+
+    const model = vertexAI.preview.getGenerativeModel({
+      model: 'gemini-2.5-flash',
     });
 
     // Generate with Vertex AI
@@ -235,6 +235,16 @@ async function generateInitialTasks(pathData: any, locale: string): Promise<any[
 ${locale === 'zh-TW' ? '使用繁體中文' : `使用 ${locale} 語言`}
 
 以 JSON 陣列格式返回，只返回陣列，不要其他文字。`;
+
+  // Initialize Vertex AI
+  const vertexAI = new VertexAI({
+    project: process.env.GOOGLE_CLOUD_PROJECT || 'ai-square-463013',
+    location: process.env.GOOGLE_CLOUD_LOCATION || 'us-central1',
+  });
+
+  const model = vertexAI.preview.getGenerativeModel({
+    model: 'gemini-2.5-flash',
+  });
 
   try {
     const result = await model.generateContent({

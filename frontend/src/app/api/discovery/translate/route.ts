@@ -5,16 +5,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { VertexAI } from '@google-cloud/vertexai';
 
-// Initialize Vertex AI
-const vertexAI = new VertexAI({
-  project: process.env.GOOGLE_CLOUD_PROJECT!,
-  location: process.env.GOOGLE_CLOUD_LOCATION || 'us-central1',
-});
-
-const model = vertexAI.preview.getGenerativeModel({
-  model: 'gemini-2.5-flash',
-});
-
 // Supported languages
 const SUPPORTED_LOCALES: Record<string, string> = {
   'zh-TW': '繁體中文',
@@ -58,6 +48,16 @@ export async function POST(request: NextRequest) {
       targetLocale,
       fields
     );
+
+    // Initialize Vertex AI
+    const vertexAI = new VertexAI({
+      project: process.env.GOOGLE_CLOUD_PROJECT || 'ai-square-463013',
+      location: process.env.GOOGLE_CLOUD_LOCATION || 'us-central1',
+    });
+
+    const model = vertexAI.preview.getGenerativeModel({
+      model: 'gemini-2.5-flash',
+    });
 
     // Call Vertex AI
     const result = await model.generateContent({
