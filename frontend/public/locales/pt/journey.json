@@ -1,6 +1,6 @@
 {
   "title": "Jornada do Usuário AI Square",
-  "subtitle": "Cinco caminhos principais para uma experiência completa de aprendizado de IA",
+  "subtitle": "Seis caminhos principais para uma experiência completa de aprendizado de IA",
   "getStarted": "Começar",
   "pathOverview": "Ciclo de Aprendizado Completo",
   "nextPath": "Próximo Caminho →",
@@ -64,6 +64,18 @@
         "Sugestões de aprendizado personalizadas",
         "Conversas profundas de múltiplas rodadas",
         "Suporte Q&A de aprendizado"
+      ]
+    },
+    "discovery": {
+      "title": "Discovery",
+      "subtitle": "Aventura profissional personalizada",
+      "description": "Encontre seu caminho profissional ideal através da avaliação de IA e desenvolva habilidades profissionais em aventuras gamificadas.",
+      "userNeed": "Qual carreira é adequada para mim?",
+      "features": [
+        "Avaliação de correspondência de carreira com IA",
+        "Sistema de geração infinita de tarefas",
+        "Experiência de aprendizagem gamificada",
+        "Ajuste dinâmico de dificuldade de tarefas"
       ]
     }
   },

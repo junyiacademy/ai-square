@@ -1,6 +1,6 @@
 {
   "title": "AI Square User Journey",
-  "subtitle": "Five key paths for complete AI learning experience",
+  "subtitle": "Six key paths for complete AI learning experience",
   "getStarted": "Get Started",
   "pathOverview": "Complete Learning Cycle",
   "nextPath": "Next Path →",
@@ -64,6 +64,18 @@
         "Personalized learning suggestions",
         "Multi-round deep conversations",
         "Learning Q&A support"
+      ]
+    },
+    "discovery": {
+      "title": "Discovery",
+      "subtitle": "Personalized Career Adventure",
+      "description": "Find your ideal career path through AI assessment and develop professional skills in gamified adventures.",
+      "userNeed": "Which career path suits me?",
+      "features": [
+        "AI career matching assessment",
+        "Infinite task generation system",
+        "Gamified learning experience",
+        "Dynamic task difficulty adjustment"
       ]
     }
   },

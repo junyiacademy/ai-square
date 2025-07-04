@@ -1,6 +1,6 @@
 {
   "title": "AI Square Benutzerreise",
-  "subtitle": "Fünf Schlüsselpfade für eine vollständige KI-Lernerfahrung",
+  "subtitle": "Sechs Schlüsselpfade für eine vollständige KI-Lernerfahrung",
   "getStarted": "Loslegen",
   "pathOverview": "Vollständiger Lernzyklus",
   "nextPath": "Nächster Pfad →",
@@ -64,6 +64,18 @@
         "Personalisierte Lernvorschläge",
         "Mehrrundige tiefgehende Gespräche",
         "Lern-Q&A-Unterstützung"
+      ]
+    },
+    "discovery": {
+      "title": "Discovery",
+      "subtitle": "Personalisiertes Karriere-Abenteuer",
+      "description": "Finden Sie Ihren idealen Karriereweg durch KI-Bewertung und entwickeln Sie berufliche Fähigkeiten in spielerischen Abenteuern.",
+      "userNeed": "Welche Karriere passt zu mir?",
+      "features": [
+        "KI-Karriere-Matching-Bewertung",
+        "Unendliches Aufgabengenerierungssystem",
+        "Gamifizierte Lernerfahrung",
+        "Dynamische Aufgabenschwierigkeit"
       ]
     }
   },

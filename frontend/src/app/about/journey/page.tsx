@@ -90,6 +90,21 @@ const pathData: PathItem[] = [
       '學習問題解答'
     ],
     userNeed: '遇到問題找誰問？'
+  },
+  {
+    id: 6,
+    title: 'Discovery 探索',
+    subtitle: '個人化職涯冒險',
+    description: '透過 AI 評估找到適合的職涯路徑，在遊戲化的冒險中培養專業技能。',
+    path: '/discovery',
+    screenshot: '/screenshots/6-discovery.png',
+    keyFeatures: [
+      'AI 職涯匹配評估',
+      '無限任務生成系統',
+      '遊戲化學習體驗',
+      '動態任務調整難度'
+    ],
+    userNeed: '哪個職涯方向適合我？'
   }
 ];
 
@@ -107,7 +122,7 @@ export default function JourneyPage() {
                 AI Square 用戶旅程
               </h1>
               <p className="mt-2 text-lg text-gray-600 dark:text-gray-400">
-                五大關鍵路徑，打造完整 AI 學習體驗
+                六大關鍵路徑，打造完整 AI 學習體驗
               </p>
             </div>
             <Link
@@ -209,7 +224,7 @@ export default function JourneyPage() {
                   </Link>
                   <button
                     onClick={() => {
-                      const next = path.id < 5 ? path.id + 1 : 1;
+                      const next = path.id < 6 ? path.id + 1 : 1;
                       setSelectedPath(next);
                     }}
                     className="px-8 py-4 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors font-semibold"
@@ -229,7 +244,7 @@ export default function JourneyPage() {
                   />
                 </div>
                 <div className="absolute -bottom-4 -right-4 bg-blue-600 text-white rounded-full w-20 h-20 flex items-center justify-center font-bold text-2xl shadow-lg">
-                  {path.id}/5
+                  {path.id}/6
                 </div>
               </div>
             </div>

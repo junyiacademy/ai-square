@@ -1,6 +1,6 @@
 {
   "title": "AI Square 用戶旅程",
-  "subtitle": "五大關鍵路徑，打造完整 AI 學習體驗",
+  "subtitle": "六大關鍵路徑，打造完整 AI 學習體驗",
   "getStarted": "立即體驗",
   "pathOverview": "完整學習循環",
   "nextPath": "下一個路徑 →",
@@ -64,6 +64,18 @@
         "個人化學習建議",
         "多輪深度對話",
         "學習問題解答"
+      ]
+    },
+    "discovery": {
+      "title": "Discovery 探索",
+      "subtitle": "個人化職涯冒險",
+      "description": "透過 AI 評估找到適合的職涯路徑，在遊戲化的冒險中培養專業技能。",
+      "userNeed": "哪個職涯方向適合我？",
+      "features": [
+        "AI 職涯匹配評估",
+        "無限任務生成系統",
+        "遊戲化學習體驗",
+        "動態任務調整難度"
       ]
     }
   },

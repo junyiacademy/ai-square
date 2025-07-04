@@ -1,6 +1,6 @@
 {
   "title": "Perjalanan Pengguna AI Square",
-  "subtitle": "Lima jalur utama untuk pengalaman pembelajaran AI yang lengkap",
+  "subtitle": "Enam jalur utama untuk pengalaman pembelajaran AI yang lengkap",
   "getStarted": "Mulai",
   "pathOverview": "Siklus Pembelajaran Lengkap",
   "nextPath": "Jalur Berikutnya →",
@@ -64,6 +64,18 @@
         "Saran pembelajaran yang dipersonalisasi",
         "Percakapan mendalam multi-putaran",
         "Dukungan tanya jawab pembelajaran"
+      ]
+    },
+    "discovery": {
+      "title": "Discovery",
+      "subtitle": "Petualangan Karir Personal",
+      "description": "Temukan jalur karir ideal Anda melalui penilaian AI dan kembangkan keterampilan profesional dalam petualangan gamifikasi.",
+      "userNeed": "Karir mana yang cocok untuk saya?",
+      "features": [
+        "Penilaian pencocokan karir AI",
+        "Sistem pembuatan tugas tak terbatas",
+        "Pengalaman belajar gamifikasi",
+        "Penyesuaian kesulitan tugas dinamis"
       ]
     }
   },

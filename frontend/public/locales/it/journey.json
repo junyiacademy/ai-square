@@ -1,6 +1,6 @@
 {
   "title": "Percorso Utente AI Square",
-  "subtitle": "Cinque percorsi chiave per un'esperienza completa di apprendimento IA",
+  "subtitle": "Sixue percorsi chiave per un'esperienza completa di apprendimento IA",
   "getStarted": "Inizia",
   "pathOverview": "Ciclo di Apprendimento Completo",
   "nextPath": "Percorso Successivo →",
@@ -64,6 +64,18 @@
         "Suggerimenti di apprendimento personalizzati",
         "Conversazioni approfondite multi-turno",
         "Supporto domande e risposte per l'apprendimento"
+      ]
+    },
+    "discovery": {
+      "title": "Discovery",
+      "subtitle": "Avventura professionale personalizzata",
+      "description": "Trova il tuo percorso professionale ideale attraverso la valutazione AI e sviluppa competenze professionali in avventure gamificate.",
+      "userNeed": "Quale carriera fa per me?",
+      "features": [
+        "Valutazione di corrispondenza carriera AI",
+        "Sistema di generazione infinita di compiti",
+        "Esperienza di apprendimento gamificata",
+        "Regolazione dinamica della difficoltà"
       ]
     }
   },

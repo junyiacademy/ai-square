@@ -310,7 +310,7 @@ help:
 	@echo "  $(GREEN)make check-deployment$(NC)                          - 檢查部署狀態"
 	@echo ""
 	@echo "$(YELLOW)=== 截圖與展示 ===$(NC)"
-	@echo "  $(GREEN)make build-journey$(NC)                             - 截取五大關鍵路徑畫面"
+	@echo "  $(GREEN)make build-journey$(NC)                             - 截取六大關鍵路徑畫面"
 	@echo "  $(GREEN)make logs-cms$(NC)                                   - 檢視 CMS 日誌"
 	@echo "  $(GREEN)make logs-frontend$(NC)                              - 檢視前端日誌"
 	@echo ""
@@ -670,11 +670,11 @@ deploy-backend-gcp:
 # 截圖命令
 #=============================================================================
 
-## 截取五大關鍵路徑畫面
+## 截取六大關鍵路徑畫面
 build-journey:
-	@echo "$(CYAN)📸 開始截取五大關鍵路徑畫面...$(NC)"
+	@echo "$(CYAN)📸 開始截取六大關鍵路徑畫面...$(NC)"
 	@echo "$(YELLOW)確保 dev server 正在運行 (make dev)$(NC)"
-	@cd frontend && npx tsx scripts/capture-five-paths.ts
+	@cd frontend && npx tsx scripts/capture-six-paths.ts
 	@echo "$(GREEN)✅ 截圖完成！檔案位於 frontend/public/screenshots/$(NC)"
 	@echo "$(BLUE)💡 提示: 截圖已自動更新到 /about/journey 頁面$(NC)"
 

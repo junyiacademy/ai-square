@@ -1,6 +1,6 @@
 {
   "title": "AI Square 用户旅程",
-  "subtitle": "完整AI学习体验的五个关键路径",
+  "subtitle": "完整AI学习体验的六个关键路径",
   "getStarted": "开始使用",
   "pathOverview": "完整学习周期",
   "nextPath": "下一个路径 →",
@@ -64,6 +64,18 @@
         "个性化学习建议",
         "多轮深度对话",
         "学习问答支持"
+      ]
+    },
+    "discovery": {
+      "title": "Discovery 探索",
+      "subtitle": "个性化职业冒险",
+      "description": "通过 AI 评估找到适合的职业道路，在游戏化的冒险中培养专业技能。",
+      "userNeed": "哪个职业方向适合我？",
+      "features": [
+        "AI 职业匹配评估",
+        "无限任务生成系统",
+        "游戏化学习体验",
+        "动态任务调整难度"
       ]
     }
   },
