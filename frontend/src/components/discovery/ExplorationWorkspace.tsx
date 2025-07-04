@@ -120,7 +120,7 @@ export default function ExplorationWorkspace({
     
     // Calculate XP and skills
     const xpGained = 50 + (currentTaskIndex * 10);
-    const skillsGained = careerData.skills.slice(0, 2); // Award first 2 skills
+    const skillsGained = pathData.skills.slice(0, 2); // Award first 2 skills
     
     // Call parent callback
     onTaskComplete(currentTask.id, xpGained, skillsGained);
@@ -380,7 +380,7 @@ export default function ExplorationWorkspace({
           <div className="bg-white rounded-2xl shadow-lg p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">所有任務</h3>
             <div className="space-y-3">
-              {careerData.tasks.map((task, index) => {
+              {pathData.tasks.map((task, index) => {
                 const isCompleted = achievements.completedTasks.includes(task.id);
                 const isCurrent = index === currentTaskIndex;
                 

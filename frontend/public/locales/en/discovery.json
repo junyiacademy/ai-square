@@ -174,7 +174,7 @@
   },
   
   "workspace": {
-    "title": "{{career}} Workspace",
+    "title": "{{path}} Workspace",
     "aiAssistant": "AI Assistant",
     "currentTask": "Current Task",
     "progress": "Progress",
@@ -183,22 +183,22 @@
     "startTask": "Start Task",
     "completeTask": "Complete Task",
     "nextTask": "Next Task",
-    "backToCareers": "Back to Careers",
+    "backToPaths": "Back to Paths",
     "taskCompleted": "Task Completed!",
     "skillsGained": "Skills Gained:",
     "experiencePoints": "+{{points}} XP"
   },
   
   "aiAssistant": {
-    "greeting": "Hi! I'm your AI {{role}}. I'm here to help you succeed in your {{career}} journey.",
+    "greeting": "Hi! I'm your AI {{role}}. I'm here to help you succeed in your {{path}} journey.",
     "taskIntro": "Let's work on this task together. I'll guide you through each step.",
     "encouragement": [
       "Great job! You're making excellent progress.",
       "That's a creative approach! Keep going.",
-      "You're thinking like a real {{career}}!",
+      "You're thinking like a real {{path}}!",
       "Fantastic work! You're developing real skills here."
     ],
-    "askQuestion": "Ask me anything about this task or the {{career}} field!",
+    "askQuestion": "Ask me anything about this task or the {{path}} field!",
     "typeMessage": "Type your message...",
     "send": "Send"
   },
@@ -210,7 +210,7 @@
     "badges": {
       "first_task": {
         "title": "First Steps", 
-        "description": "Completed your first career task"
+        "description": "Completed your first exploration task"
       },
       "creative_thinker": {
         "title": "Creative Thinker",
@@ -224,9 +224,9 @@
         "title": "Problem Solver",
         "description": "Solved complex challenges"
       },
-      "career_explorer": {
-        "title": "Career Explorer",
-        "description": "Explored multiple career paths"
+      "path_explorer": {
+        "title": "Path Explorer",
+        "description": "Explored multiple paths"
       }
     }
   },
@@ -234,7 +234,7 @@
   "navigation": {
     "overview": "Overview",
     "assessment": "Assessment", 
-    "careers": "Careers",
+    "paths": "Paths",
     "workspace": "Workspace",
     "achievements": "Achievements"
   }

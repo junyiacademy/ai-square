@@ -42,7 +42,7 @@ interface BadgeData {
 }
 
 export default function AchievementsView({ achievements }: AchievementsViewProps) {
-  const { t } = useTranslation('careerDiscovery');
+  const { t } = useTranslation('discovery');
 
   // Define available badges
   const allBadges: BadgeData[] = [
@@ -83,9 +83,9 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
       bgColor: 'bg-orange-100'
     },
     {
-      id: 'career_explorer',
-      title: t('achievements.badges.career_explorer.title'),
-      description: t('achievements.badges.career_explorer.description'),
+      id: 'path_explorer',
+      title: t('achievements.badges.path_explorer.title'),
+      description: t('achievements.badges.path_explorer.description'),
       icon: GlobeAltIcon,
       iconSolid: GlobeAltIconSolid,
       color: 'text-indigo-600',
