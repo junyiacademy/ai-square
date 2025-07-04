@@ -63,23 +63,7 @@ export default function PathResults({
   onRetakeAssessment
 }: PathResultsProps) {
   const { t } = useTranslation('discovery');
-  const [showWorkspaceDropdown, setShowWorkspaceDropdown] = React.useState<string | null>(null);
   const [viewMode, setViewMode] = React.useState<'latest' | 'all' | 'favorites'>('latest');
-
-  // 點擊外部關閉下拉選單
-  React.useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (showWorkspaceDropdown) {
-        const target = event.target as Element;
-        if (!target.closest('[data-workspace-dropdown]')) {
-          setShowWorkspaceDropdown(null);
-        }
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [showWorkspaceDropdown]);
 
   // Get paths to display based on view mode
   const getPathsToDisplay = () => {
@@ -417,7 +401,7 @@ export default function PathResults({
               <div className="p-6 md:p-8">
                 <div className="flex flex-col md:flex-row md:items-start md:space-x-6">
                   {/* Path Info */}
-                  <div className="flex-1">
+                  <div className="flex-1 md:pr-6">
                     <div className="flex items-center space-x-3 mb-4">
                       <div className={`inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r ${categoryColorClass} rounded-xl`}>
                         <CategoryIcon className="w-5 h-5 text-white" />
@@ -479,8 +463,11 @@ export default function PathResults({
                       </div>
                     </div>
 
-                    {/* Sample Tasks */}
-                    <div className="mb-6">
+                  </div>
+                  
+                  {/* Workspace Status Column */}
+                  <div className="md:w-64 mt-6 md:mt-0 md:ml-6 md:border-l md:pl-6">
+                    <div className="mb-4">
                       <h4 className="font-medium text-gray-900 mb-3">體驗任務預覽</h4>
                       <div className="space-y-2">
                         {path.tasks.slice(0, 2).map((task) => (
@@ -497,11 +484,53 @@ export default function PathResults({
                         )}
                       </div>
                     </div>
+
+                    {/* Workspace Info */}
+                    {getPathWorkspaces(path.id).length > 0 ? (
+                      <div className="bg-gray-50 rounded-xl p-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <h4 className="font-medium text-gray-900">我的工作區</h4>
+                          <span className="text-sm text-gray-500">
+                            {getPathWorkspaces(path.id).length} 個
+                          </span>
+                        </div>
+                        <div className="space-y-2">
+                          {getPathWorkspaces(path.id).map(workspace => (
+                            <button
+                              key={workspace.id}
+                              onClick={() => onPathSelect(path.id, workspace.id)}
+                              className="w-full text-left p-2 rounded-lg hover:bg-white transition-colors"
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className={`text-xs px-2 py-1 rounded-full ${
+                                  workspace.status === 'active' ? 'bg-green-100 text-green-700' :
+                                  workspace.status === 'completed' ? 'bg-blue-100 text-blue-700' :
+                                  'bg-yellow-100 text-yellow-700'
+                                }`}>
+                                  {workspace.status === 'active' ? '進行中' :
+                                   workspace.status === 'completed' ? '已完成' : '暫停中'}
+                                </span>
+                                <PlayIcon className="w-4 h-4 text-gray-400" />
+                              </div>
+                              <div className="mt-1 text-xs text-gray-600">
+                                {workspace.completedTasks.length} 個任務 • {workspace.totalXP} XP
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="bg-gray-50 rounded-xl p-4 text-center">
+                        <FolderOpenIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                        <p className="text-sm text-gray-600">尚無工作區</p>
+                        <p className="text-xs text-gray-500 mt-1">開始探索來創建工作區</p>
+                      </div>
+                    )}
                   </div>
                 </div>
 
-                {/* Action Buttons with Workspace Management */}
-                <div className="flex flex-col sm:flex-row gap-3">
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3 mt-6">
                   {/* Main Action Button */}
                   <motion.button
                     onClick={() => onPathSelect(path.id)}
@@ -516,67 +545,6 @@ export default function PathResults({
                     <PlusIcon className="w-5 h-5" />
                     <span>開始新的探索</span>
                   </motion.button>
-
-                  {/* Workspace Dropdown */}
-                  {getPathWorkspaces(path.id).length > 0 && (
-                    <div className="relative z-40" data-workspace-dropdown>
-                      <motion.button
-                        onClick={() => setShowWorkspaceDropdown(showWorkspaceDropdown === path.id ? null : path.id)}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="inline-flex items-center space-x-2 bg-white border-2 border-gray-300 text-gray-700 px-4 py-3 rounded-xl font-medium hover:border-gray-400 transition-colors"
-                      >
-                        <FolderOpenIcon className="w-5 h-5" />
-                        <span>{getPathWorkspaces(path.id).length} 個工作區</span>
-                        <ChevronDownIcon className={`w-4 h-4 transition-transform ${showWorkspaceDropdown === path.id ? 'rotate-180' : ''}`} />
-                      </motion.button>
-
-                      {/* Dropdown Menu */}
-                      {showWorkspaceDropdown === path.id && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          className="absolute top-full mt-2 left-0 right-0 sm:left-auto sm:right-auto sm:w-80 bg-white rounded-xl shadow-xl border border-gray-200 p-2 z-[100]"
-                        >
-                          <div className="max-h-64 overflow-y-auto">
-                            {getPathWorkspaces(path.id).map(workspace => (
-                              <button
-                                key={workspace.id}
-                                onClick={() => {
-                                  setShowWorkspaceDropdown(null);
-                                  onPathSelect(path.id, workspace.id);
-                                }}
-                                className="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors"
-                              >
-                                <div className="flex items-start justify-between">
-                                  <div className="flex-1">
-                                    <div className="flex items-center space-x-2">
-                                      <span className={`text-xs px-2 py-1 rounded-full ${
-                                        workspace.status === 'active' ? 'bg-green-100 text-green-700' :
-                                        workspace.status === 'completed' ? 'bg-blue-100 text-blue-700' :
-                                        'bg-yellow-100 text-yellow-700'
-                                      }`}>
-                                        {workspace.status === 'active' ? '進行中' :
-                                         workspace.status === 'completed' ? '已完成' : '暫停中'}
-                                      </span>
-                                      <span className="text-xs text-gray-500">
-                                        {formatRelativeTime(workspace.lastActiveAt)}
-                                      </span>
-                                    </div>
-                                    <div className="mt-1 text-sm text-gray-600">
-                                      完成 {workspace.completedTasks.length} 個任務 • 獲得 {workspace.totalXP} XP
-                                    </div>
-                                  </div>
-                                  <PlayIcon className="w-4 h-4 text-gray-400 ml-2 flex-shrink-0" />
-                                </div>
-                              </button>
-                            ))}
-                          </div>
-                        </motion.div>
-                      )}
-                    </div>
-                  )}
                 </div>
               </div>
             </motion.div>
