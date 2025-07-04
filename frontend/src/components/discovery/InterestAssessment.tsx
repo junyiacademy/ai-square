@@ -40,9 +40,9 @@ interface Question {
 export default function InterestAssessment({ onComplete }: InterestAssessmentProps) {
   const { t } = useTranslation('discovery');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [answers, setAnswers] = useState<Record<string, string[]>>({});
   const [isAnimating, setIsAnimating] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
   // Get questions from translation with proper typing
   const questionsData = t('interestAssessment.questions', { returnObjects: true }) as Question[];
@@ -50,25 +50,41 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
 
   const currentQuestion = questionsData[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === totalQuestions - 1;
-  const canGoNext = answers[currentQuestion.id];
+  const canGoNext = answers[currentQuestion.id] && answers[currentQuestion.id].length > 0;
   const canGoPrevious = currentQuestionIndex > 0;
+  
+  // Load selected options for current question
+  React.useEffect(() => {
+    setSelectedOptions(answers[currentQuestion.id] || []);
+  }, [currentQuestionIndex, currentQuestion.id, answers]);
 
   const handleOptionSelect = (optionId: string) => {
-    setSelectedOption(optionId);
-    setAnswers(prev => ({
-      ...prev,
-      [currentQuestion.id]: optionId
-    }));
-
-    // 自動進入下一題，增加互動時間
-    setTimeout(() => {
-      if (currentQuestionIndex < totalQuestions - 1) {
-        setCurrentQuestionIndex(prev => prev + 1);
-        setSelectedOption(null);
+    setSelectedOptions(prev => {
+      if (prev.includes(optionId)) {
+        // Remove if already selected
+        return prev.filter(id => id !== optionId);
       } else {
-        handleComplete();
+        // Add to selected options
+        return [...prev, optionId];
       }
-    }, 1200); // 增加延遲時間讓用戶看到動畫
+    });
+    
+    setAnswers(prev => {
+      const currentAnswers = prev[currentQuestion.id] || [];
+      if (currentAnswers.includes(optionId)) {
+        // Remove if already selected
+        return {
+          ...prev,
+          [currentQuestion.id]: currentAnswers.filter(id => id !== optionId)
+        };
+      } else {
+        // Add to selected options
+        return {
+          ...prev,
+          [currentQuestion.id]: [...currentAnswers, optionId]
+        };
+      }
+    });
   };
 
   const handleComplete = () => {
@@ -109,15 +125,15 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
     const scores = { tech: 0, creative: 0, business: 0 };
     
     questionsData.forEach(question => {
-      const selectedOptionId = answers[question.id];
-      if (selectedOptionId) {
+      const selectedOptionIds = answers[question.id] || [];
+      selectedOptionIds.forEach(selectedOptionId => {
         const selectedOption = question.options.find(opt => opt.id === selectedOptionId);
         if (selectedOption) {
           scores.tech += selectedOption.weight.tech;
           scores.creative += selectedOption.weight.creative;
           scores.business += selectedOption.weight.business;
         }
-      }
+      });
     });
 
     return scores;
@@ -126,7 +142,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
   const progressPercentage = ((currentQuestionIndex + 1) / totalQuestions) * 100;
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative h-screen overflow-hidden">
       {/* 動態背景 */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50" />
@@ -134,30 +150,28 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-200 rounded-full opacity-20 blur-3xl animate-pulse" />
       </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto px-4 py-8">
-        {/* Header */}
+      <div className="relative z-10 h-full flex flex-col max-w-4xl mx-auto px-4 py-4">
+        {/* Compact Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-4 flex-shrink-0"
         >
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-            className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full mb-6 shadow-2xl"
-          >
-            <SparklesIcon className="w-10 h-10 text-white" />
-          </motion.div>
-          
-          <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-            🔍 AI 興趣分析儀
-          </h2>
-          <p className="text-xl text-gray-600 mb-6 font-medium">
-            🎯 讓 AI 深度分析你的潛能和興趣方向
-          </p>
-          <p className="text-gray-500 max-w-2xl mx-auto">
-            透過科學化的問題設計，我們會即時分析你的回答並生成個人化的探索建議
+          <div className="flex items-center justify-center space-x-3 mb-2">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full shadow-lg"
+            >
+              <SparklesIcon className="w-6 h-6 text-white" />
+            </motion.div>
+            <h2 className="text-2xl md:text-3xl font-black text-gray-900 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              AI 興趣分析儀
+            </h2>
+          </div>
+          <p className="text-sm text-gray-600 font-medium">
+            讓 AI 深度分析你的潛能和興趣方向
           </p>
         </motion.div>
 
@@ -166,23 +180,22 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="mb-10"
+          className="mb-4 flex-shrink-0"
         >
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex justify-between items-center mb-2">
             <div className="flex items-center space-x-2">
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                className="w-6 h-6 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center shadow-lg"
+                className="w-5 h-5 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center shadow-lg"
               >
                 <span className="text-white text-xs font-bold">{currentQuestionIndex + 1}</span>
               </motion.div>
-              <span className="text-lg font-bold text-gray-800">AI 興趣分析中</span>
+              <span className="text-sm font-bold text-gray-800">AI 興趣分析中</span>
             </div>
             
             <div className="text-right">
-              <div className="text-sm text-gray-500 mb-1">進度</div>
-              <div className="text-xl font-bold text-purple-600">
+              <div className="text-lg font-bold text-purple-600">
                 {Math.round(((currentQuestionIndex + 1) / totalQuestions) * 100)}%
               </div>
             </div>
@@ -229,39 +242,26 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
             </div>
           </div>
           
-          {/* 激勵消息 */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="mt-3 text-center"
-          >
-            <span className="text-sm text-purple-600 font-medium">
-              {currentQuestionIndex === 0 && '🎆 開始你的探索之旅！'}
-              {currentQuestionIndex === 1 && '🚀 做得好！繼續探索你的興趣'}
-              {currentQuestionIndex === 2 && '✨ 很棒！AI 正在分析你的傾向'}
-              {currentQuestionIndex === 3 && '🎉 最後一題！即將揭曉你的未來方向'}
-            </span>
-          </motion.div>
         </motion.div>
 
-        {/* Question Card */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentQuestionIndex}
-            initial={{ opacity: 0, x: 50, scale: 0.95 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: -50, scale: 0.95 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl p-8 mb-10 border border-white/20"
-          >
-            {/* 動態題目顯示 */}
+        {/* Question Card - Scrollable content */}
+        <div className="flex-1 overflow-y-auto mb-4">
+          <AnimatePresence mode="wait">
             <motion.div
-              initial={{ opacity: 0, y: 30, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
+              key={currentQuestionIndex}
+              initial={{ opacity: 0, x: 50, scale: 0.95 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: -50, scale: 0.95 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="mb-10"
+              className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl p-6 border border-white/20"
             >
+              {/* 動態題目顯示 */}
+              <motion.div
+                initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className="mb-6"
+              >
               {/* 題目編號和類型 */}
               <motion.div
                 initial={{ opacity: 0 }}
@@ -277,35 +277,35 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
                 </div>
               </motion.div>
               
-              <motion.h3
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                className="text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-4"
-              >
-                {currentQuestion.text}
-              </motion.h3>
+                <motion.h3
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-2xl md:text-3xl font-black text-gray-900 leading-tight mb-3"
+                >
+                  {currentQuestion.text}
+                </motion.h3>
               
-              {/* 題目提示 */}
-              <motion.p
+                {/* 題目提示 */}
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-sm text-gray-600 font-medium"
+                >
+                  🤔 選擇所有符合你想法的選項（可多選），沒有標準答案！
+                </motion.p>
+              </motion.div>
+
+              {/* 選項列表 */}
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className="text-lg text-gray-600 font-medium"
+                transition={{ delay: 0.5 }}
+                className="space-y-3"
               >
-                🤔 選擇最符合你想法的選項，沒有標準答案！
-              </motion.p>
-            </motion.div>
-
-            {/* 選項列表 */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="space-y-4"
-            >
               {currentQuestion.options.map((option, index) => {
-                const isSelected = answers[currentQuestion.id] === option.id;
+                const isSelected = selectedOptions.includes(option.id);
                 
                 const handleAnswer = () => {
                   handleOptionSelect(option.id);
@@ -331,7 +331,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
                       }}
                       whileTap={{ scale: 0.98 }}
                       className={`
-                        relative w-full p-6 text-left rounded-2xl border-2 transition-all duration-300 group overflow-hidden
+                        relative w-full p-4 text-left rounded-xl border-2 transition-all duration-300 group overflow-hidden
                         ${isSelected
                           ? 'border-purple-500 bg-gradient-to-br from-purple-50 to-purple-100 text-purple-800 shadow-lg'
                           : 'border-gray-200 bg-white hover:border-purple-300 hover:bg-gradient-to-br hover:from-purple-25 hover:to-white'
@@ -392,90 +392,38 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
                           </motion.div>
                           
                           <div className="flex-1">
-                            <span className={`font-semibold text-lg transition-colors ${
+                            <span className={`font-semibold text-base transition-colors ${
                               isSelected ? 'text-purple-800' : 'text-gray-800 group-hover:text-purple-700'
                             }`}>
                               {option.text}
                             </span>
-                            
-                            {/* 選項的微妙特色描述 */}
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ 
-                                height: isSelected ? 'auto' : 0,
-                                opacity: isSelected ? 1 : 0
-                              }}
-                              transition={{ duration: 0.3 }}
-                              className="mt-2 text-sm text-purple-600 font-medium overflow-hidden"
-                            >
-                              ✨ 很棒的選擇！這會影響你的探索方向分析
-                            </motion.div>
                           </div>
                         </div>
                       </div>
                     </motion.button>
                   </motion.div>
                 );
-              })}
-            </motion.div>
-          </motion.div>
-        </AnimatePresence>
-
-        {/* 選擇確認反饋 */}
-        <AnimatePresence>
-          {selectedOption && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.8, y: -20 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-              className="text-center p-6 bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl border-2 border-purple-200 shadow-lg mb-8"
-            >
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                className="w-8 h-8 mx-auto mb-3 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center shadow-lg"
-              >
-                <motion.div
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                  className="text-white text-sm font-bold"
-                >
-                  AI
-                </motion.div>
+                })}
               </motion.div>
-              
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="text-purple-700 font-bold text-lg mb-2"
-              >
-                🎯 精彩的選擇！
-              </motion.p>
-              
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className="text-purple-600 font-medium"
-              >
-                AI 正在深度分析你的興趣模式和發展傾向...
-              </motion.p>
-              
-              {/* 分析進度指示 */}
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: "100%" }}
-                transition={{ duration: 1, delay: 0.6 }}
-                className="mt-4 h-2 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full mx-auto max-w-xs"
-              />
             </motion.div>
-          )}
-        </AnimatePresence>
+          </AnimatePresence>
+        </div>
+
 
         {/* Navigation Buttons */}
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center flex-shrink-0">
+          {/* 選擇提示 */}
+          {selectedOptions.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center flex-1 mx-4"
+            >
+              <p className="text-sm text-purple-600 font-medium">
+                已選擇 {selectedOptions.length} 個選項
+              </p>
+            </motion.div>
+          )}
           <motion.button
             onClick={handlePrevious}
             disabled={!canGoPrevious || isAnimating}
@@ -514,7 +462,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
         </div>
 
         {/* Question Indicators */}
-        <div className="flex justify-center space-x-2 mt-8">
+        <div className="flex justify-center space-x-2 mt-4 flex-shrink-0">
           {Array.from({ length: totalQuestions }).map((_, index) => (
             <motion.div
               key={index}

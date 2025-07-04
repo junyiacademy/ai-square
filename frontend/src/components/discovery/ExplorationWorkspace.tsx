@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import TaskWorkflow from './TaskWorkflow';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { 
@@ -11,7 +12,8 @@ import {
   SparklesIcon,
   ClockIcon,
   CpuChipIcon,
-  TrophyIcon
+  TrophyIcon,
+  ChevronRightIcon
 } from '@heroicons/react/24/outline';
 
 interface UserAchievements {
@@ -64,6 +66,7 @@ export default function ExplorationWorkspace({
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [showWorkflow, setShowWorkflow] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   // Get path data from translations
@@ -95,31 +98,22 @@ export default function ExplorationWorkspace({
 
   const handleStartTask = () => {
     setIsTaskActive(true);
+    setShowWorkflow(true);
     setTaskProgress(0);
     
     // Add AI task introduction
     const taskIntroMessage: ChatMessage = {
       id: Date.now().toString(),
       sender: 'ai',
-      text: t('aiAssistant.taskIntro'),
+      text: '太好了！讓我們開始這個任務。我會在旁邊協助你完成每個步驟。',
       timestamp: new Date()
     };
     setChatMessages(prev => [...prev, taskIntroMessage]);
-
-    // Simulate task progress
-    const progressInterval = setInterval(() => {
-      setTaskProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(progressInterval);
-          return 100;
-        }
-        return prev + 2;
-      });
-    }, 100);
   };
 
   const handleCompleteTask = () => {
     setIsTaskActive(false);
+    setShowWorkflow(false);
     
     // Calculate XP and skills
     const xpGained = 50 + (currentTaskIndex * 10);
@@ -132,21 +126,70 @@ export default function ExplorationWorkspace({
     const completionMessage: ChatMessage = {
       id: Date.now().toString(),
       sender: 'ai',
-      text: getRandomEncouragement(),
+      text: `做得好！你完成了「${currentTask.title}」任務，獲得了 ${xpGained} XP！`,
       timestamp: new Date()
     };
     setChatMessages(prev => [...prev, completionMessage]);
+    
+    // Check if all tasks are completed
+    const newCompletedCount = completedTasksCount + 1;
+    if (newCompletedCount === pathData.tasks.length) {
+      // All tasks completed, navigate to achievements after a short delay
+      setTimeout(() => {
+        if (onViewAchievements) {
+          onViewAchievements();
+        }
+      }, 1500);
+    } else {
+      // Auto move to next incomplete task
+      const nextIncompleteIndex = pathData.tasks.findIndex((task, index) => 
+        index > currentTaskIndex && !achievements.completedTasks.includes(task.id)
+      );
+      
+      if (nextIncompleteIndex !== -1) {
+        setTimeout(() => {
+          setCurrentTaskIndex(nextIncompleteIndex);
+          setTaskProgress(0);
+        }, 1000);
+      }
+    }
   };
 
   const handleNextTask = () => {
     if (!isLastTask) {
-      setCurrentTaskIndex(prev => prev + 1);
+      // Find next incomplete task
+      const nextIncompleteIndex = pathData.tasks.findIndex((task, index) => 
+        index > currentTaskIndex && !achievements.completedTasks.includes(task.id)
+      );
+      
+      if (nextIncompleteIndex !== -1) {
+        setCurrentTaskIndex(nextIncompleteIndex);
+      } else {
+        // If no incomplete tasks after current, wrap around to find any incomplete
+        const firstIncompleteIndex = pathData.tasks.findIndex((task) => 
+          !achievements.completedTasks.includes(task.id)
+        );
+        
+        if (firstIncompleteIndex !== -1 && firstIncompleteIndex !== currentTaskIndex) {
+          setCurrentTaskIndex(firstIncompleteIndex);
+        }
+      }
+      
+      setTaskProgress(0);
+      setIsTaskActive(false);
+    }
+  };
+  
+  const handleTaskClick = (index: number) => {
+    // Only allow clicking on incomplete tasks or current task
+    if (index !== currentTaskIndex) {
+      setCurrentTaskIndex(index);
       setTaskProgress(0);
       setIsTaskActive(false);
     }
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
 
     // Add user message
@@ -159,10 +202,39 @@ export default function ExplorationWorkspace({
     setChatMessages(prev => [...prev, userMessage]);
     setNewMessage('');
 
-    // Simulate AI typing
+    // Show typing indicator
     setIsTyping(true);
-    setTimeout(() => {
-      const aiResponse = generateAIResponse(newMessage);
+    
+    try {
+      // Call actual API for AI response
+      const response = await fetch('/api/discovery/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: newMessage,
+          context: {
+            pathId,
+            pathTitle: pathData.title,
+            currentTask: currentTask.title,
+            currentTaskDescription: currentTask.description,
+            taskProgress: Math.round(taskProgress),
+            taskIndex: currentTaskIndex + 1,
+            totalTasks: pathData.tasks.length,
+            completedTasks: completedTasksCount,
+            aiRole: pathData.aiAssistants[0] || 'AI Assistant',
+            skills: pathData.skills,
+            language: 'zh-TW'
+          }
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('API request failed');
+      }
+      
+      const data = await response.json();
+      const aiResponse = data.response;
+      
       const aiMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         sender: 'ai',
@@ -170,58 +242,46 @@ export default function ExplorationWorkspace({
         timestamp: new Date()
       };
       setChatMessages(prev => [...prev, aiMessage]);
+    } catch (error) {
+      console.error('Failed to get AI response:', error);
+      // Fallback to simple response if API fails
+      const simpleResponse = await generateSimpleFallbackResponse(newMessage);
+      const aiMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        sender: 'ai',
+        text: simpleResponse,
+        timestamp: new Date()
+      };
+      setChatMessages(prev => [...prev, aiMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1000 + Math.random() * 1000);
-  };
-
-  const generateAIResponse = (userMessage: string): string => {
-    const lowerMessage = userMessage.toLowerCase();
-    const taskProgress = Math.round((currentTaskIndex + 1) / pathData.tasks.length * 100);
-    
-    // 動態生成不同情境的回應
-    const responses = {
-      help: [
-        `🚀 當然！我是你的 AI 探索導師，專門負責「${currentTask.title}」這個挑戰。讓我們一起突破這個關卡！`,
-        `💡 太好了！讓我用最新的 AI 分析來幫你解決這個問題。我已經為你準備了個人化的解決方案...`,
-        `⚡ 檢測到求助信號！正在啟動專屬輔導模式...分析完成！這個任務的核心在於...`
-      ],
-      how: [
-        `🎯 讓我用 AI 數據分析來拆解這個任務：\n步驟1⃣ 理解核心概念\n步驟2⃣ 實際操作練習\n步驟3⃣ 創新應用。你想從哪裡開始？`,
-        `🧠 基於你目前 ${taskProgress}% 的進度，我建議採用「漸進式學習法」。首先我們來建立基礎認知框架...`,
-        `🔍 AI 分析顯示：這個任務最適合用「實作導向」的方法。讓我為你設計一個個人化的學習路徑...`
-      ],
-      finish: [
-        `🎉 Amazing！你剛剛完成了一個重要里程碑！這種解決問題的方式完全符合現代${pathData.title}的探索模式！`,
-        `🌟 太厲害了！你展現的思維模式讓我想到業界頂尖的${pathData.title}。繼續保持這種創新精神！`,
-        `🚀 恭喜突破！你剛才的表現已經超越了 80% 的同儕。這就是未來職場需要的能力！`
-      ],
-      encourage: [
-        `💪 你的學習速度讓我印象深刻！目前進度 ${taskProgress}%，距離成為${pathData.title}專家又近了一步！`,
-        `⭐ 這個問題很有挑戰性，但我看到你正在用正確的方法思考。${pathData.title}就是需要這種創新思維！`,
-        `🎯 很好的問題！讓我用最新的趨勢來回答你...這正是現在${pathData.title}領域最熱門的話題！`
-      ]
-    };
-    
-    if (lowerMessage.includes('help') || lowerMessage.includes('幫助')) {
-      return responses.help[Math.floor(Math.random() * responses.help.length)];
-    } else if (lowerMessage.includes('how') || lowerMessage.includes('怎麼')) {
-      return responses.how[Math.floor(Math.random() * responses.how.length)];
-    } else if (lowerMessage.includes('finish') || lowerMessage.includes('完成')) {
-      return responses.finish[Math.floor(Math.random() * responses.finish.length)];
-    } else {
-      return responses.encourage[Math.floor(Math.random() * responses.encourage.length)];
     }
   };
 
-  const getRandomEncouragement = (): string => {
-    // 使用內建的鼓勵語句，避免 translation 依賴性問題
-    const encouragements = [
-      `太棒了！你已經展現出真正的${pathData.title}思維。`,
-      `優秀！這就是專業${pathData.title}的探索方式。`,
-      `你的創意讓人印象深刻，非常適合${pathData.title}這個領域！`
-    ];
-    return encouragements[Math.floor(Math.random() * encouragements.length)];
+  // 簡單的 fallback 回應（當 API 失敗時使用）
+  const generateSimpleFallbackResponse = async (userMessage: string): Promise<string> => {
+    // 模擬處理時間
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    const lowerMessage = userMessage.toLowerCase();
+    
+    // 基本意圖識別
+    if (/(你好|哈囉|嗨|hi|hello)/i.test(lowerMessage)) {
+      return `你好！我是你的 ${pathData.aiAssistants[0] || 'AI 助手'}。雖然目前連線有些問題，但我會盡力協助你完成「${currentTask.title}」這個任務。有什麼需要幫助的嗎？`;
+    }
+    
+    if (/(謝謝|感謝|thank)/i.test(lowerMessage)) {
+      return '不客氣！很高興能幫到你。繼續加油！';
+    }
+    
+    if (/[?？]/.test(userMessage) || /(什麼|如何|怎麼|為什麼)/i.test(lowerMessage)) {
+      return `這是個好問題！雖然我現在無法提供詳細回答（連線問題），但建議你可以：\n1. 仔細閱讀任務描述\n2. 嘗試不同的方法\n3. 相信你的直覺\n\n稍後連線恢復時，我會給你更詳細的指導。`;
+    }
+    
+    // 預設回應
+    return `我了解你的訊息。目前系統連線有些問題，但別擔心！你在「${currentTask.title}」上的進度很好。請繼續探索，有任何問題都可以隨時詢問。`;
   };
+
 
   const completedTasksCount = achievements.completedTasks.filter(taskId => 
     pathData.tasks.some(task => task.id === taskId)
@@ -231,27 +291,37 @@ export default function ExplorationWorkspace({
     <div className="max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <button
-            onClick={onBackToPaths}
-            className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            <ArrowLeftIcon className="w-5 h-5" />
-            <span className="font-medium">{t('workspace.backToPaths')}</span>
-          </button>
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          {t('workspace.title', { path: pathData.title })}
+        </h1>
+        
+        {/* Current Progress Overview */}
+        <div className="flex items-center justify-between bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-4">
+          <div className="flex items-center space-x-3">
+            <div className="bg-white p-2 rounded-lg shadow-sm">
+              <SparklesIcon className="w-5 h-5 text-purple-600" />
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">目前任務</p>
+              <p className="font-medium text-gray-900">{currentTask.title}</p>
+            </div>
+          </div>
           
           <div className="flex items-center space-x-4">
-            <div className="bg-purple-100 px-3 py-1 rounded-full">
-              <span className="text-sm font-medium text-purple-700">
+            <div className="text-right">
+              <p className="text-sm text-gray-600">整體進度</p>
+              <p className="font-medium text-purple-700">
                 {completedTasksCount}/{pathData.tasks.length} 任務完成
-              </span>
+              </p>
+            </div>
+            <div className="w-24 bg-gray-200 rounded-full h-2">
+              <div 
+                className="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full transition-all duration-500"
+                style={{ width: `${(completedTasksCount / pathData.tasks.length) * 100}%` }}
+              />
             </div>
           </div>
         </div>
-        
-        <h1 className="text-3xl font-bold text-gray-900">
-          {t('workspace.title', { path: pathData.title })}
-        </h1>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
@@ -279,92 +349,72 @@ export default function ExplorationWorkspace({
               </p>
             </div>
 
-            {/* Task Progress - 遊戲化進度條 */}
-            {isTaskActive && (
+            {/* Show Workflow or Progress */}
+            {showWorkflow ? (
               <div className="mb-6">
-                <div className="flex justify-between items-center text-sm mb-3">
-                  <div className="flex items-center space-x-2">
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                      className="w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full"
-                    />
-                    <span className="text-gray-700 font-medium">任務進行中</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-purple-600 font-bold">{Math.round(taskProgress)}%</span>
-                    <span className="text-xs text-gray-500">完成度</span>
-                  </div>
-                </div>
-                
-                {/* 3D 風格進度條 */}
-                <div className="relative">
-                  <div className="w-full bg-gradient-to-r from-gray-200 to-gray-300 rounded-full h-4 shadow-inner border border-gray-300">
-                    <motion.div
-                      className="relative bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 h-full rounded-full shadow-lg border border-purple-300 overflow-hidden"
-                      animate={{ width: `${taskProgress}%` }}
-                      transition={{ duration: 0.1 }}
-                    >
-                      {/* 光效動畫 */}
+                <TaskWorkflow
+                  taskId={currentTask.id}
+                  taskTitle={currentTask.title}
+                  onComplete={handleCompleteTask}
+                  onProgressUpdate={setTaskProgress}
+                />
+              </div>
+            ) : (
+              isTaskActive && (
+                <div className="mb-6">
+                  <div className="flex justify-between items-center text-sm mb-3">
+                    <div className="flex items-center space-x-2">
                       <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30"
-                        animate={{ x: ['-100%', '100%'] }}
-                        transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                        className="w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full"
                       />
-                    </motion.div>
+                      <span className="text-gray-700 font-medium">任務進行中</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-purple-600 font-bold">{Math.round(taskProgress)}%</span>
+                      <span className="text-xs text-gray-500">完成度</span>
+                    </div>
                   </div>
                   
-                  {/* 進度里程碑 */}
-                  <div className="absolute top-0 left-0 w-full h-full flex items-center justify-between px-2">
-                    {[25, 50, 75, 100].map((milestone) => (
+                  {/* Progress bar */}
+                  <div className="relative">
+                    <div className="w-full bg-gray-200 rounded-full h-4">
                       <motion.div
-                        key={milestone}
-                        className={`w-3 h-3 rounded-full border-2 transition-all duration-300 ${
-                          taskProgress >= milestone
-                            ? 'bg-yellow-400 border-yellow-500 shadow-lg'
-                            : 'bg-gray-300 border-gray-400'
-                        }`}
-                        animate={taskProgress >= milestone ? { scale: [1, 1.3, 1] } : {}}
+                        className="bg-gradient-to-r from-purple-500 to-blue-500 h-full rounded-full"
+                        animate={{ width: `${taskProgress}%` }}
                         transition={{ duration: 0.3 }}
                       />
-                    ))}
+                    </div>
                   </div>
                 </div>
-                
-                {/* 進度獎勵提示 */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: taskProgress > 50 ? 1 : 0 }}
-                  className="mt-2 text-center"
-                >
-                  <span className="text-xs text-green-600 font-medium">🎉 超過一半了！繼續加油！</span>
-                </motion.div>
-              </div>
+              )
             )}
 
             {/* Task Actions */}
-            <div className="flex space-x-3">
-              {!isTaskActive ? (
-                <motion.button
-                  onClick={handleStartTask}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-shadow"
-                >
-                  <PlayIcon className="w-5 h-5" />
-                  <span>{t('workspace.startTask')}</span>
-                </motion.button>
-              ) : taskProgress >= 100 ? (
-                <motion.button
-                  onClick={handleCompleteTask}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="flex items-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-shadow"
-                >
-                  <CheckIcon className="w-5 h-5" />
-                  <span>{t('workspace.completeTask')}</span>
-                </motion.button>
-              ) : null}
+            {!showWorkflow && (
+              <div className="flex space-x-3">
+                {!isTaskActive ? (
+                  <motion.button
+                    onClick={handleStartTask}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-shadow"
+                  >
+                    <PlayIcon className="w-5 h-5" />
+                    <span>{t('workspace.startTask')}</span>
+                  </motion.button>
+                ) : taskProgress >= 100 ? (
+                  <motion.button
+                    onClick={handleCompleteTask}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex items-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-shadow"
+                  >
+                    <CheckIcon className="w-5 h-5" />
+                    <span>{t('workspace.completeTask')}</span>
+                  </motion.button>
+                ) : null}
 
               {taskProgress >= 100 && !isLastTask && (
                 <motion.button
@@ -377,8 +427,8 @@ export default function ExplorationWorkspace({
                 </motion.button>
               )}
               
-              {/* Show achievements button when all tasks are completed */}
-              {taskProgress >= 100 && isLastTask && completedTasksCount === pathData.tasks.length && onViewAchievements && (
+              {/* Show achievements button when current task is completed and all tasks are done */}
+              {taskProgress >= 100 && achievements.completedTasks.includes(currentTask.id) && completedTasksCount === pathData.tasks.length && onViewAchievements && (
                 <motion.button
                   onClick={onViewAchievements}
                   whileHover={{ scale: 1.02 }}
@@ -389,52 +439,123 @@ export default function ExplorationWorkspace({
                   <span>查看成就</span>
                 </motion.button>
               )}
-            </div>
+              </div>
+            )}
           </div>
 
           {/* Task List */}
           <div className="bg-white rounded-2xl shadow-lg p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">所有任務</h3>
-            <div className="space-y-3">
+            <div className="space-y-2">
               {pathData.tasks.map((task, index) => {
                 const isCompleted = achievements.completedTasks.includes(task.id);
                 const isCurrent = index === currentTaskIndex;
+                const isClickable = !isCompleted || isCurrent;
+                const isTaskRunning = isTaskActive && isCurrent;
                 
                 return (
-                  <div
+                  <motion.div
                     key={task.id}
+                    onClick={() => isClickable && handleTaskClick(index)}
+                    whileHover={isClickable && !isTaskRunning ? { scale: 1.02 } : {}}
+                    whileTap={isClickable && !isTaskRunning ? { scale: 0.98 } : {}}
+                    animate={{
+                      height: isTaskRunning ? 'auto' : 'auto',
+                      opacity: isTaskRunning ? 1 : (isCurrent && !isTaskActive) ? 1 : 0.8
+                    }}
+                    transition={{ duration: 0.3 }}
                     className={`
-                      p-4 rounded-xl border-2 transition-all duration-200
+                      relative overflow-hidden rounded-xl border-2 transition-all duration-300 group
                       ${isCurrent 
-                        ? 'border-purple-500 bg-purple-50' 
+                        ? isTaskRunning 
+                          ? 'border-purple-500 bg-gradient-to-r from-purple-50 to-blue-50 shadow-lg' 
+                          : 'border-purple-400 bg-purple-50'
                         : isCompleted
-                        ? 'border-green-500 bg-green-50'
-                        : 'border-gray-200 bg-gray-50'
+                        ? 'border-green-400 bg-green-50'
+                        : 'border-gray-200 bg-gray-50 hover:border-purple-300'
                       }
+                      ${isClickable ? 'cursor-pointer' : 'cursor-default'}
                     `}
                   >
-                    <div className="flex items-center space-x-3">
-                      <div className={`
-                        flex items-center justify-center w-6 h-6 rounded-full
-                        ${isCurrent 
-                          ? 'bg-purple-500 text-white'
-                          : isCompleted
-                          ? 'bg-green-500 text-white'
-                          : 'bg-gray-300 text-gray-600'
-                        }
-                      `}>
-                        {isCompleted ? (
-                          <CheckIcon className="w-4 h-4" />
-                        ) : (
-                          <span className="text-xs font-medium">{index + 1}</span>
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-medium text-gray-900">{task.title}</h4>
-                        <p className="text-sm text-gray-600">{task.duration}</p>
+                    <div className="p-4">
+                      <div className="flex items-center space-x-3">
+                        {/* Status Icon with Animation */}
+                        <div className="relative">
+                          <div className={`
+                            flex items-center justify-center w-8 h-8 rounded-full transition-all
+                            ${isCurrent 
+                              ? isTaskRunning
+                                ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg scale-110'
+                                : 'bg-purple-500 text-white shadow-md'
+                              : isCompleted
+                              ? 'bg-green-500 text-white'
+                              : 'bg-gray-300 text-gray-600 group-hover:bg-gray-400'
+                            }
+                          `}>
+                            {isCompleted ? (
+                              <CheckIcon className="w-5 h-5" />
+                            ) : isTaskRunning ? (
+                              <motion.div
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                              >
+                                <PlayIcon className="w-5 h-5" />
+                              </motion.div>
+                            ) : (
+                              <span className="text-sm font-bold">{index + 1}</span>
+                            )}
+                          </div>
+                          
+                          {/* Running Indicator Ring */}
+                          {isTaskRunning && (
+                            <motion.div
+                              className="absolute inset-0 rounded-full border-2 border-purple-400"
+                              animate={{ scale: [1, 1.3, 1], opacity: [1, 0, 1] }}
+                              transition={{ duration: 2, repeat: Infinity }}
+                            />
+                          )}
+                        </div>
+                        
+                        <div className="flex-1">
+                          <h4 className={`font-medium transition-all ${
+                            isTaskRunning 
+                              ? 'text-lg text-gray-900' 
+                              : 'text-base text-gray-800 group-hover:text-gray-900'
+                          }`}>
+                            {task.title}
+                          </h4>
+                          
+                          {/* Expanded content for active task */}
+                          {isTaskRunning ? (
+                            <div className="mt-2 space-y-2">
+                              <p className="text-sm text-gray-600">{task.description}</p>
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm text-purple-600 font-medium flex items-center">
+                                  <ClockIcon className="w-4 h-4 mr-1" />
+                                  {task.duration}
+                                </span>
+                                <span className="text-sm text-purple-700 font-bold">任務進行中...</span>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="flex items-center justify-between mt-1">
+                              <p className="text-sm text-gray-600">{task.duration}</p>
+                              {!isCompleted && !isCurrent && (
+                                <ChevronRightIcon className="w-4 h-4 text-gray-400" />
+                              )}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                    
+                    {/* Hover effect for non-active tasks */}
+                    {!isTaskRunning && !isCompleted && (
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+                      />
+                    )}
+                  </motion.div>
                 );
               })}
             </div>
@@ -455,67 +576,78 @@ export default function ExplorationWorkspace({
             ref={chatContainerRef}
             className="h-80 overflow-y-auto mb-4 rounded-xl p-4 bg-gradient-to-b from-slate-50 to-slate-100 border border-slate-200 shadow-inner"
           >
-            <div className="space-y-4">
+            <div className="space-y-2">
               {chatMessages.map((message, index) => (
                 <motion.div
                   key={message.id}
                   initial={{ opacity: 0, y: 15, scale: 0.9 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ delay: index * 0.1 }}
-                  className={`flex items-end space-x-2 ${message.sender === 'user' ? 'justify-end flex-row-reverse space-x-reverse' : 'justify-start'}`}
+                  className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} mb-4`}
                 >
-                  {/* AI 頭像 */}
-                  {message.sender === 'ai' && (
-                    <motion.div
-                      animate={{ rotate: [0, 5, -5, 0] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                      className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center shadow-lg"
-                    >
-                      <CpuChipIcon className="w-4 h-4 text-white" />
-                    </motion.div>
-                  )}
-                  
-                  {/* 用戶頭像 */}
-                  {message.sender === 'user' && (
-                    <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center shadow-lg">
-                      <span className="text-white text-xs font-bold">你</span>
+                  <div className={`flex items-end space-x-2 max-w-[85%] ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                    {/* 頭像 */}
+                    <div className="flex-shrink-0">
+                      {message.sender === 'ai' ? (
+                        <motion.div
+                          animate={{ rotate: [0, 5, -5, 0] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                          className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center shadow-lg"
+                        >
+                          <CpuChipIcon className="w-4 h-4 text-white" />
+                        </motion.div>
+                      ) : (
+                        <div className="w-8 h-8 bg-gradient-to-r from-gray-600 to-gray-700 rounded-full flex items-center justify-center shadow-lg">
+                          <span className="text-white text-xs font-bold">你</span>
+                        </div>
+                      )}
                     </div>
-                  )}
-                  
-                  {/* 消息氣泡 */}
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    className={`
-                      relative max-w-xs p-4 rounded-2xl text-sm font-medium shadow-lg
-                      ${message.sender === 'user' 
-                        ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white' 
-                        : 'bg-white text-gray-800 border border-gray-200'
-                      }
-                    `}
-                  >
+                    
                     {/* 消息內容 */}
-                    <div className="relative z-10">
-                      {message.text}
-                    </div>
-                    
-                    {/* AI 消息的特效 */}
-                    {message.sender === 'ai' && (
+                    <div className="flex flex-col space-y-1">
+                      {/* 消息氣泡 */}
                       <motion.div
-                        className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-100 to-purple-100 opacity-0"
-                        animate={{ opacity: [0, 0.3, 0] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      />
-                    )}
-                    
-                    {/* 消息尾巴 */}
-                    <div className={`
-                      absolute top-4 w-0 h-0
-                      ${message.sender === 'user'
-                        ? 'right-0 border-l-8 border-l-purple-600 border-t-4 border-b-4 border-t-transparent border-b-transparent'
-                        : 'left-0 border-r-8 border-r-white border-t-4 border-b-4 border-t-transparent border-b-transparent'
-                      }
-                    `} />
-                  </motion.div>
+                        whileHover={{ scale: 1.01 }}
+                        className={`relative overflow-hidden ${message.sender === 'user' ? 'ml-auto' : ''}`}
+                      >
+                        <div className={`
+                          px-4 py-3 rounded-2xl text-sm
+                          ${message.sender === 'user' 
+                            ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-br-sm shadow-md' 
+                            : 'bg-white text-gray-800 border border-gray-200 rounded-bl-sm shadow-sm'
+                          }
+                        `}>
+                          {/* 消息內容 */}
+                          <div className="whitespace-pre-wrap break-words leading-relaxed">
+                            {message.text}
+                          </div>
+                        </div>
+                        
+                        {/* AI 消息的打字機效果（僅新消息） */}
+                        {message.sender === 'ai' && index === chatMessages.length - 1 && (
+                          <motion.div
+                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0"
+                            animate={{ 
+                              opacity: [0, 0.3, 0],
+                              x: ['-100%', '100%']
+                            }}
+                            transition={{ 
+                              duration: 1.5,
+                              ease: 'easeOut'
+                            }}
+                          />
+                        )}
+                      </motion.div>
+                      
+                      {/* 時間戳 - 更小更淡 */}
+                      <div className={`text-xs text-gray-400 px-1 ${message.sender === 'user' ? 'text-right' : 'text-left'}`}>
+                        {new Date(message.timestamp).toLocaleTimeString('zh-TW', { 
+                          hour: '2-digit', 
+                          minute: '2-digit' 
+                        })}
+                      </div>
+                    </div>
+                  </div>
                 </motion.div>
               ))}
               

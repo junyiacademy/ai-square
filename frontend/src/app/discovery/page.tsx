@@ -177,7 +177,7 @@ export default function DiscoveryPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Desktop: Floating Side Navigation */}
       <div className={`
-        hidden lg:block fixed left-8 top-1/2 -translate-y-1/2 z-50
+        hidden lg:block fixed left-8 top-1/2 -translate-y-1/2 z-30
         transition-all duration-500
         ${showSideNav ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-full'}
       `}>
@@ -241,32 +241,11 @@ export default function DiscoveryPage() {
           </div>
         </div>
         
-        {/* Achievement Summary */}
-        {achievements.totalXp > 0 && (
-          <div className="mt-8 bg-white/90 backdrop-blur rounded-lg shadow-lg p-4 w-48">
-            <div className="text-sm space-y-2">
-              <div className="flex justify-between">
-                <span className="text-gray-600">等級</span>
-                <span className="font-bold text-purple-600">Lv.{achievements.level}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">經驗值</span>
-                <span className="font-bold text-blue-600">{achievements.totalXp} XP</span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2">
-                <div 
-                  className="bg-gradient-to-r from-purple-500 to-blue-500 h-1.5 rounded-full transition-all duration-500"
-                  style={{ width: `${(achievements.totalXp % 100)}%` }}
-                />
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Desktop: Right Side Quick Actions */}
       <div className={`
-        hidden lg:block fixed right-8 bottom-8 z-50
+        hidden lg:block fixed right-8 bottom-8 z-30
         transition-all duration-500
         ${showSideNav ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full'}
       `}>
@@ -282,7 +261,7 @@ export default function DiscoveryPage() {
 
       {/* Mobile: Floating Progress Circle */}
       <div className={`
-        lg:hidden fixed bottom-20 right-4 z-50
+        lg:hidden fixed bottom-20 right-4 z-30
         transition-all duration-500
         ${showSideNav ? 'opacity-100 scale-100' : 'opacity-0 scale-0'}
       `}>
