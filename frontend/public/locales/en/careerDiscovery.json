@@ -1,0 +1,241 @@
+{
+  "title": "Career Discovery World",
+  "subtitle": "Explore AI-powered careers through immersive experiences",
+  "getStarted": "Get Started",
+  "backToHome": "Back to Home",
+  
+  "welcomeScreen": {
+    "title": "Welcome to Career Discovery World",
+    "subtitle": "Discover your future career through AI-powered experiences",
+    "description": "Explore different careers, collaborate with AI assistants, and build skills for the future workplace.",
+    "startJourney": "Start Your Journey",
+    "features": {
+      "explore": {
+        "title": "Explore Careers",
+        "description": "Experience real work scenarios in tech, creative, and business fields"
+      },
+      "collaborate": {
+        "title": "AI Collaboration",
+        "description": "Work with AI assistants to complete authentic workplace tasks"
+      },
+      "develop": {
+        "title": "Build Skills",
+        "description": "Develop digital literacy and 21st-century workplace skills"
+      }
+    }
+  },
+  
+  "interestAssessment": {
+    "title": "Interest Assessment",
+    "subtitle": "Let's discover your career interests",
+    "description": "Answer a few questions to help us recommend the best career experiences for you.",
+    "question": "Question {{current}} of {{total}}",
+    "next": "Next",
+    "previous": "Previous",
+    "finish": "Get My Results",
+    "questions": [
+      {
+        "id": "creativity",
+        "text": "Which activity sounds most appealing to you?",
+        "options": [
+          { "id": "create_content", "text": "Creating videos or digital content", "weight": { "tech": 2, "creative": 3, "business": 1 } },
+          { "id": "solve_problems", "text": "Solving complex problems with code", "weight": { "tech": 3, "creative": 1, "business": 2 } },
+          { "id": "plan_strategies", "text": "Planning business strategies", "weight": { "tech": 1, "creative": 1, "business": 3 } },
+          { "id": "design_visuals", "text": "Designing visual experiences", "weight": { "tech": 2, "creative": 3, "business": 1 } }
+        ]
+      },
+      {
+        "id": "work_style",
+        "text": "How do you prefer to work?",
+        "options": [
+          { "id": "independent", "text": "Independently with creative freedom", "weight": { "tech": 2, "creative": 3, "business": 1 } },
+          { "id": "team_tech", "text": "In tech teams building products", "weight": { "tech": 3, "creative": 1, "business": 2 } },
+          { "id": "leading", "text": "Leading projects and teams", "weight": { "tech": 1, "creative": 2, "business": 3 } },
+          { "id": "collaborative", "text": "Collaborating on creative projects", "weight": { "tech": 2, "creative": 3, "business": 1 } }
+        ]
+      },
+      {
+        "id": "interests",
+        "text": "What topics interest you most?",
+        "options": [
+          { "id": "technology", "text": "Latest technology and programming", "weight": { "tech": 3, "creative": 1, "business": 1 } },
+          { "id": "art_media", "text": "Art, media, and storytelling", "weight": { "tech": 1, "creative": 3, "business": 1 } },
+          { "id": "business_trends", "text": "Business trends and markets", "weight": { "tech": 1, "creative": 1, "business": 3 } },
+          { "id": "digital_innovation", "text": "Digital innovation and design", "weight": { "tech": 2, "creative": 2, "business": 2 } }
+        ]
+      },
+      {
+        "id": "goals",
+        "text": "What's your main career goal?",
+        "options": [
+          { "id": "build_apps", "text": "Build amazing apps and games", "weight": { "tech": 3, "creative": 2, "business": 1 } },
+          { "id": "create_content", "text": "Create content that inspires others", "weight": { "tech": 1, "creative": 3, "business": 1 } },
+          { "id": "start_business", "text": "Start my own business", "weight": { "tech": 2, "creative": 1, "business": 3 } },
+          { "id": "make_impact", "text": "Make a positive impact through work", "weight": { "tech": 2, "creative": 2, "business": 2 } }
+        ]
+      }
+    ]
+  },
+  
+  "results": {
+    "title": "Your Career Recommendations",
+    "subtitle": "Based on your interests, here are the best careers to explore:",
+    "exploreCareer": "Explore This Career",
+    "viewAll": "View All Careers",
+    "personalityType": "Your Personality Type",
+    "matchPercentage": "{{percentage}}% Match"
+  },
+  
+  "careers": {
+    "youtuber": {
+      "title": "YouTuber / Content Creator",
+      "subtitle": "Create engaging video content and build an audience",
+      "description": "Learn to create, edit, and promote video content while building a personal brand and engaging with audiences.",
+      "category": "Creative",
+      "skills": ["Video Production", "Content Strategy", "Audience Engagement", "Personal Branding"],
+      "aiAssistants": ["Creative Director", "Analytics Expert", "Community Manager"],
+      "tasks": [
+        {
+          "id": "script_writing",
+          "title": "AI-Assisted Script Writing",
+          "description": "Collaborate with AI to create engaging video scripts",
+          "duration": "15 minutes"
+        },
+        {
+          "id": "thumbnail_design",
+          "title": "Thumbnail Design Challenge",
+          "description": "Design eye-catching thumbnails using AI tools",
+          "duration": "20 minutes"
+        },
+        {
+          "id": "content_strategy",
+          "title": "Content Strategy Planning",
+          "description": "Develop a content calendar with AI insights",
+          "duration": "25 minutes"
+        }
+      ]
+    },
+    "game_designer": {
+      "title": "Game Designer",
+      "subtitle": "Design immersive gaming experiences and mechanics",
+      "description": "Create game concepts, design characters, and develop gameplay mechanics using modern AI-assisted tools.",
+      "category": "Technology",
+      "skills": ["Game Design", "Creative Thinking", "User Experience", "Technical Design"],
+      "aiAssistants": ["Design Partner", "Technical Advisor", "Player Psychology Expert"],
+      "tasks": [
+        {
+          "id": "character_design",
+          "title": "AI Character Creation",
+          "description": "Design unique game characters with AI assistance",
+          "duration": "20 minutes"
+        },
+        {
+          "id": "level_design",
+          "title": "Level Design Workshop",
+          "description": "Create engaging game levels and mechanics",
+          "duration": "30 minutes"
+        },
+        {
+          "id": "player_feedback",
+          "title": "Player Feedback Analysis",
+          "description": "Analyze and respond to player feedback data",
+          "duration": "15 minutes"
+        }
+      ]
+    },
+    "app_developer": {
+      "title": "App Developer",
+      "subtitle": "Build mobile applications that solve real problems",
+      "description": "Learn to design, develop, and launch mobile applications using AI-powered development tools.",
+      "category": "Technology", 
+      "skills": ["Programming", "Problem Solving", "User Interface Design", "Project Management"],
+      "aiAssistants": ["Code Mentor", "UI Designer", "Testing Specialist"],
+      "tasks": [
+        {
+          "id": "app_concept",
+          "title": "App Concept Development",
+          "description": "Brainstorm and validate your app idea with AI",
+          "duration": "20 minutes"
+        },
+        {
+          "id": "ui_design",
+          "title": "User Interface Design",
+          "description": "Design user-friendly app interfaces",
+          "duration": "25 minutes"
+        },
+        {
+          "id": "user_testing",
+          "title": "User Testing & Feedback",
+          "description": "Conduct user testing and iterate based on feedback",
+          "duration": "20 minutes"
+        }
+      ]
+    }
+  },
+  
+  "workspace": {
+    "title": "{{career}} Workspace",
+    "aiAssistant": "AI Assistant",
+    "currentTask": "Current Task",
+    "progress": "Progress",
+    "skills": "Skills Developed",
+    "achievements": "Achievements",
+    "startTask": "Start Task",
+    "completeTask": "Complete Task",
+    "nextTask": "Next Task",
+    "backToCareers": "Back to Careers",
+    "taskCompleted": "Task Completed!",
+    "skillsGained": "Skills Gained:",
+    "experiencePoints": "+{{points}} XP"
+  },
+  
+  "aiAssistant": {
+    "greeting": "Hi! I'm your AI {{role}}. I'm here to help you succeed in your {{career}} journey.",
+    "taskIntro": "Let's work on this task together. I'll guide you through each step.",
+    "encouragement": [
+      "Great job! You're making excellent progress.",
+      "That's a creative approach! Keep going.",
+      "You're thinking like a real {{career}}!",
+      "Fantastic work! You're developing real skills here."
+    ],
+    "askQuestion": "Ask me anything about this task or the {{career}} field!",
+    "typeMessage": "Type your message...",
+    "send": "Send"
+  },
+  
+  "achievements": {
+    "title": "Your Achievements",
+    "totalXp": "Total Experience: {{xp}} XP",
+    "level": "Level {{level}}",
+    "badges": {
+      "first_task": {
+        "title": "First Steps", 
+        "description": "Completed your first career task"
+      },
+      "creative_thinker": {
+        "title": "Creative Thinker",
+        "description": "Showed excellent creativity in tasks"
+      },
+      "ai_collaborator": {
+        "title": "AI Collaborator", 
+        "description": "Successfully worked with AI assistants"
+      },
+      "problem_solver": {
+        "title": "Problem Solver",
+        "description": "Solved complex challenges"
+      },
+      "career_explorer": {
+        "title": "Career Explorer",
+        "description": "Explored multiple career paths"
+      }
+    }
+  },
+  
+  "navigation": {
+    "overview": "Overview",
+    "assessment": "Assessment", 
+    "careers": "Careers",
+    "workspace": "Workspace",
+    "achievements": "Achievements"
+  }
+}

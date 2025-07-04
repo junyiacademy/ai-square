@@ -160,6 +160,7 @@ export function Header() {
     { href: '/dashboard', label: t('dashboard') },
     { href: '/pbl', label: t('pbl') },
     { href: '/assessment', label: t('assessment') },
+    { href: '/career-discovery', label: t('careerDiscovery') },
   ]
   
   // 次要導航連結（放在「更多」選單中）
@@ -228,7 +229,7 @@ export function Header() {
                 </button>
                 
                 {/* Dropdown menu */}
-                <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                   <div className="py-1">
                     {secondaryNavLinks.map(link => (
                       <Link

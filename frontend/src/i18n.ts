@@ -241,6 +241,10 @@ import deLegal from '../public/locales/de/legal.json';
 import ruLegal from '../public/locales/ru/legal.json';
 import itLegal from '../public/locales/it/legal.json';
 
+// Career Discovery 翻譯
+import enCareerDiscovery from '../public/locales/en/careerDiscovery.json';
+import zhTWCareerDiscovery from '../public/locales/zhTW/careerDiscovery.json';
+
 // 在伺服器端和客戶端都使用相同的預設語言避免 hydration mismatch
 const getDefaultLng = () => {
   // 伺服器端總是返回英文作為預設語言
@@ -267,7 +271,8 @@ i18n
         learningPath: zhTWLearningPath,
         journey: zhTWJourney,
         learning: zhTWLearning,
-        legal: zhTWLegal
+        legal: zhTWLegal,
+        careerDiscovery: zhTWCareerDiscovery
       },
       'zhCN': { 
         relations: zhCNRelations,
@@ -369,7 +374,8 @@ i18n
         chat: enChat,
         journey: enJourney,
         learning: enLearning,
-        legal: enLegal
+        legal: enLegal,
+        careerDiscovery: enCareerDiscovery
       },
       es: { 
         relations: esRelations,

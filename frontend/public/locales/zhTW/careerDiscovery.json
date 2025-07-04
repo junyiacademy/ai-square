@@ -1,0 +1,241 @@
+{
+  "title": "職業探索世界",
+  "subtitle": "透過沉浸式體驗探索 AI 驅動的職業",
+  "getStarted": "開始探索",
+  "backToHome": "回到首頁",
+  
+  "welcomeScreen": {
+    "title": "歡迎來到職業探索世界",
+    "subtitle": "透過 AI 驅動的體驗發現你的未來職業",
+    "description": "探索不同職業，與 AI 助手協作，為未來職場建立技能。",
+    "startJourney": "開始你的旅程",
+    "features": {
+      "explore": {
+        "title": "探索職業",
+        "description": "在科技、創意和商業領域體驗真實工作情境"
+      },
+      "collaborate": {
+        "title": "AI 協作",
+        "description": "與 AI 助手合作完成真實的職場任務"
+      },
+      "develop": {
+        "title": "建立技能",
+        "description": "培養數位素養和 21 世紀職場技能"
+      }
+    }
+  },
+  
+  "interestAssessment": {
+    "title": "興趣評估",
+    "subtitle": "讓我們發現你的職業興趣",
+    "description": "回答幾個問題，幫助我們為你推薦最適合的職業體驗。",
+    "question": "第 {{current}} 題，共 {{total}} 題",
+    "next": "下一題",
+    "previous": "上一題",
+    "finish": "查看結果",
+    "questions": [
+      {
+        "id": "creativity",
+        "text": "以下哪項活動最吸引你？",
+        "options": [
+          { "id": "create_content", "text": "製作影片或數位內容", "weight": { "tech": 2, "creative": 3, "business": 1 } },
+          { "id": "solve_problems", "text": "用程式碼解決複雜問題", "weight": { "tech": 3, "creative": 1, "business": 2 } },
+          { "id": "plan_strategies", "text": "規劃商業策略", "weight": { "tech": 1, "creative": 1, "business": 3 } },
+          { "id": "design_visuals", "text": "設計視覺體驗", "weight": { "tech": 2, "creative": 3, "business": 1 } }
+        ]
+      },
+      {
+        "id": "work_style",
+        "text": "你偏好什麼樣的工作方式？",
+        "options": [
+          { "id": "independent", "text": "獨立工作，享有創作自由", "weight": { "tech": 2, "creative": 3, "business": 1 } },
+          { "id": "team_tech", "text": "在技術團隊中開發產品", "weight": { "tech": 3, "creative": 1, "business": 2 } },
+          { "id": "leading", "text": "領導專案和團隊", "weight": { "tech": 1, "creative": 2, "business": 3 } },
+          { "id": "collaborative", "text": "在創意專案中協作", "weight": { "tech": 2, "creative": 3, "business": 1 } }
+        ]
+      },
+      {
+        "id": "interests",
+        "text": "你對什麼主題最感興趣？",
+        "options": [
+          { "id": "technology", "text": "最新科技和程式設計", "weight": { "tech": 3, "creative": 1, "business": 1 } },
+          { "id": "art_media", "text": "藝術、媒體和說故事", "weight": { "tech": 1, "creative": 3, "business": 1 } },
+          { "id": "business_trends", "text": "商業趨勢和市場", "weight": { "tech": 1, "creative": 1, "business": 3 } },
+          { "id": "digital_innovation", "text": "數位創新和設計", "weight": { "tech": 2, "creative": 2, "business": 2 } }
+        ]
+      },
+      {
+        "id": "goals",
+        "text": "你的主要職業目標是什麼？",
+        "options": [
+          { "id": "build_apps", "text": "開發出色的應用程式和遊戲", "weight": { "tech": 3, "creative": 2, "business": 1 } },
+          { "id": "create_content", "text": "創作啟發他人的內容", "weight": { "tech": 1, "creative": 3, "business": 1 } },
+          { "id": "start_business", "text": "創立自己的事業", "weight": { "tech": 2, "creative": 1, "business": 3 } },
+          { "id": "make_impact", "text": "透過工作產生正面影響", "weight": { "tech": 2, "creative": 2, "business": 2 } }
+        ]
+      }
+    ]
+  },
+  
+  "results": {
+    "title": "你的職業推薦",
+    "subtitle": "根據你的興趣，以下是最適合探索的職業：",
+    "exploreCareer": "探索這個職業",
+    "viewAll": "查看所有職業",
+    "personalityType": "你的性格類型",
+    "matchPercentage": "{{percentage}}% 匹配"
+  },
+  
+  "careers": {
+    "youtuber": {
+      "title": "YouTuber / 內容創作者",
+      "subtitle": "創作引人入勝的影片內容並建立觀眾群",
+      "description": "學習創作、編輯和推廣影片內容，同時建立個人品牌並與觀眾互動。",
+      "category": "創意",
+      "skills": ["影片製作", "內容策略", "觀眾互動", "個人品牌"],
+      "aiAssistants": ["創意總監", "數據分析專家", "社群經理"],
+      "tasks": [
+        {
+          "id": "script_writing",
+          "title": "AI 輔助腳本撰寫",
+          "description": "與 AI 協作創作引人入勝的影片腳本",
+          "duration": "15 分鐘"
+        },
+        {
+          "id": "thumbnail_design",
+          "title": "縮圖設計挑戰",
+          "description": "使用 AI 工具設計吸睛的縮圖",
+          "duration": "20 分鐘"
+        },
+        {
+          "id": "content_strategy",
+          "title": "內容策略規劃",
+          "description": "運用 AI 洞察制定內容日曆",
+          "duration": "25 分鐘"
+        }
+      ]
+    },
+    "game_designer": {
+      "title": "遊戲設計師",
+      "subtitle": "設計沉浸式遊戲體驗和機制",
+      "description": "創作遊戲概念、設計角色，並使用現代 AI 輔助工具開發遊戲玩法機制。",
+      "category": "科技",
+      "skills": ["遊戲設計", "創意思考", "用戶體驗", "技術設計"],
+      "aiAssistants": ["設計夥伴", "技術顧問", "玩家心理專家"],
+      "tasks": [
+        {
+          "id": "character_design",
+          "title": "AI 角色創作",
+          "description": "在 AI 協助下設計獨特的遊戲角色",
+          "duration": "20 分鐘"
+        },
+        {
+          "id": "level_design",
+          "title": "關卡設計工作坊",
+          "description": "創作引人入勝的遊戲關卡和機制",
+          "duration": "30 分鐘"
+        },
+        {
+          "id": "player_feedback",
+          "title": "玩家回饋分析",
+          "description": "分析並回應玩家回饋數據",
+          "duration": "15 分鐘"
+        }
+      ]
+    },
+    "app_developer": {
+      "title": "App 開發者",
+      "subtitle": "開發解決真實問題的行動應用程式",
+      "description": "學習使用 AI 驅動的開發工具設計、開發和發布行動應用程式。",
+      "category": "科技",
+      "skills": ["程式設計", "問題解決", "使用者介面設計", "專案管理"],
+      "aiAssistants": ["程式導師", "UI 設計師", "測試專家"],
+      "tasks": [
+        {
+          "id": "app_concept",
+          "title": "App 概念開發",
+          "description": "與 AI 一起腦力激盪並驗證你的 App 想法",
+          "duration": "20 分鐘"
+        },
+        {
+          "id": "ui_design",
+          "title": "使用者介面設計",
+          "description": "設計用戶友善的 App 介面",
+          "duration": "25 分鐘"
+        },
+        {
+          "id": "user_testing",
+          "title": "用戶測試與回饋",
+          "description": "進行用戶測試並根據回饋進行改善",
+          "duration": "20 分鐘"
+        }
+      ]
+    }
+  },
+  
+  "workspace": {
+    "title": "{{career}} 工作室",
+    "aiAssistant": "AI 助手",
+    "currentTask": "當前任務",
+    "progress": "進度",
+    "skills": "已培養技能",
+    "achievements": "成就",
+    "startTask": "開始任務",
+    "completeTask": "完成任務",
+    "nextTask": "下一個任務",
+    "backToCareers": "回到職業選擇",
+    "taskCompleted": "任務完成！",
+    "skillsGained": "獲得技能：",
+    "experiencePoints": "+{{points}} 經驗值"
+  },
+  
+  "aiAssistant": {
+    "greeting": "嗨！我是你的 AI {{role}}。我在這裡幫助你在 {{career}} 的旅程中成功。",
+    "taskIntro": "讓我們一起完成這個任務。我會引導你完成每一步。",
+    "encouragement": [
+      "做得很好！你的進步很棒。",
+      "這是很有創意的方法！繼續加油。",
+      "你的思考就像真正的 {{career}}！",
+      "太棒了！你正在培養真正的技能。"
+    ],
+    "askQuestion": "有關這個任務或 {{career}} 領域的任何問題都可以問我！",
+    "typeMessage": "輸入你的訊息...",
+    "send": "傳送"
+  },
+  
+  "achievements": {
+    "title": "你的成就",
+    "totalXp": "總經驗值：{{xp}} XP",
+    "level": "等級 {{level}}",
+    "badges": {
+      "first_task": {
+        "title": "第一步",
+        "description": "完成你的第一個職業任務"
+      },
+      "creative_thinker": {
+        "title": "創意思考者",
+        "description": "在任務中展現出色的創意"
+      },
+      "ai_collaborator": {
+        "title": "AI 協作者",
+        "description": "成功與 AI 助手協作"
+      },
+      "problem_solver": {
+        "title": "問題解決者",
+        "description": "解決複雜挑戰"
+      },
+      "career_explorer": {
+        "title": "職業探索者",
+        "description": "探索多種職業路徑"
+      }
+    }
+  },
+  
+  "navigation": {
+    "overview": "總覽",
+    "assessment": "評估",
+    "careers": "職業",
+    "workspace": "工作室",
+    "achievements": "成就"
+  }
+}
