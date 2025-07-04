@@ -98,15 +98,20 @@ class JsonYamlLoader<T = unknown> {
       }
     }
     
-    // Fall back to YAML - default file
+    // Fall back to default language (zhTW) if no language-specific file found
+    const defaultLang = 'zhTW';
+    const defaultFileName = `${baseName}_${defaultLang}`;
+    
     try {
-      const yamlPath = path.join(process.cwd(), 'public', yamlDir, `${baseName}.yaml`);
+      const yamlPath = path.join(process.cwd(), 'public', yamlDir, baseName, `${defaultFileName}.yaml`);
       const yamlContent = await fs.readFile(yamlPath, 'utf-8');
+      console.warn(`Using default language file: ${defaultFileName}.yaml`);
       return yaml.load(yamlContent) as T;
     } catch (error) {
       // Try .yml extension
-      const ymlPath = path.join(process.cwd(), 'public', yamlDir, `${baseName}.yml`);
+      const ymlPath = path.join(process.cwd(), 'public', yamlDir, baseName, `${defaultFileName}.yml`);
       const ymlContent = await fs.readFile(ymlPath, 'utf-8');
+      console.warn(`Using default language file: ${defaultFileName}.yml`);
       return yaml.load(ymlContent) as T;
     }
   }

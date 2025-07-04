@@ -113,7 +113,7 @@ async function captureScreenshots() {
         console.log(`   ✅ Saved: ${screenshotPath}`);
         
       } catch (error) {
-        console.error(`   ❌ Error capturing ${pathInfo.title}:`, error.message);
+        console.error(`   ❌ Error capturing ${pathInfo.title}:`, error instanceof Error ? error.message : String(error));
         
         // Try to capture whatever is on the page
         const errorScreenshotPath = path.join(SCREENSHOTS_DIR, `${pathInfo.name}-error.png`);

@@ -122,6 +122,9 @@ export default function ExplorationWorkspace({
   const [showCharacterProfile, setShowCharacterProfile] = useState(false);
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Move this state to top level to avoid conditional hook calls
+  const [workspaceCompletedTasks, setWorkspaceCompletedTasks] = useState<string[]>([]);
 
   // Load path data and dynamic tasks
   useEffect(() => {
@@ -144,9 +147,54 @@ export default function ExplorationWorkspace({
     };
     
     loadPathData();
-  }, [pathId]);
+  }, [pathId, userDataService, discoveryService]);
 
-  // Enhanced character-driven career paths with rich worldbuilding
+  // Load workspace completed tasks
+  useEffect(() => {
+    const loadWorkspaceData = async () => {
+      if (workspaceId) {
+        const userData = await userDataService.loadUserData();
+        if (userData) {
+          const workspace = userData.workspaceSessions.find(ws => ws.id === workspaceId);
+          if (workspace) {
+            // Filter out empty task IDs
+            const cleanedTasks = (workspace.completedTasks || []).filter(taskId => taskId && taskId.trim() !== '');
+            setWorkspaceCompletedTasks(cleanedTasks);
+          }
+        }
+      }
+    };
+    loadWorkspaceData();
+  }, [workspaceId, userDataService]);
+
+  // Initialize AI greeting - only when pathId changes
+  useEffect(() => {
+    const greetingMessage: ChatMessage = {
+      id: '1',
+      sender: 'ai',
+      text: t('aiAssistant.greeting', {
+        role: 'Assistant',
+        path: 'Career Path'
+      }),
+      timestamp: new Date()
+    };
+    setChatMessages([greetingMessage]);
+  }, [pathId, t]);
+
+  // Auto-scroll chat to bottom
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [chatMessages]);
+
+  // Define callback functions
+  const handleProgressUpdate = React.useCallback((progress: number) => {
+    setTaskProgress(progress);
+  }, []);
+
+
+  // Defer loading until we have typedPathData  // Enhanced character-driven career paths with rich worldbuilding
   const pathDataMap: Record<string, PathData> = {
     content_creator: {
       title: "數位魔法師 - 內容創作者",
@@ -637,9 +685,98 @@ export default function ExplorationWorkspace({
         ]
       };
     }
-  }
+  }  // Effect to handle operations after typedPathData is determined
+  useEffect(() => {
+    const performOperations = async () => {
+      if (typedPathData) {
+        // Load task answers
+        if (workspaceId) {
+          // Run migration once on first load
+          const { migrateTaskAnswers } = await import('@/lib/utils/migrate-task-answers');
+          migrateTaskAnswers();
+          
+          const answers: Record<string, any> = {};
+          
+          // Load all task answers for this workspace
+          for (const task of typedPathData.tasks) {
+            const answer = await userDataService.getTaskAnswer(workspaceId, task.id);
+            if (answer) {
+              answers[task.id] = answer;
+            }
+          }
+          
+          setTaskAnswers(answers);
+          
+          // Set current task answer if exists
+          const currentTask = typedPathData.tasks[currentTaskIndex];
+          if (currentTask && answers[currentTask.id]) {
+            setCurrentTaskAnswer(answers[currentTask.id].answer);
+          } else {
+            setCurrentTaskAnswer(''); // Clear if no answer exists
+          }
+          
+          // Load workspace data and update completed tasks
+          const userData = await userDataService.loadUserData();
+          if (userData) {
+            const workspace = userData.workspaceSessions.find(ws => ws.id === workspaceId);
+            if (workspace) {
+              // Filter out empty task IDs
+              const cleanedTasks = (workspace.completedTasks || []).filter(taskId => taskId && taskId.trim() !== '');
+              setWorkspaceCompletedTasks(cleanedTasks);
+              
+              // Check and update workspace status based on task completion
+              const baseTasks = typedPathData.tasks.length;
+              const dynamicTasksCount = dynamicTasks.length;
+              const totalTasks = baseTasks + dynamicTasksCount;
+              const completedCount = cleanedTasks.length;
+              
+              // Determine the correct status
+              let newStatus = workspace.status;
+              if (completedCount === 0) {
+                newStatus = 'active';
+              } else if (completedCount >= baseTasks && dynamicTasksCount === 0) {
+                newStatus = 'completed';
+              } else if (completedCount >= totalTasks && dynamicTasksCount > 0) {
+                newStatus = 'completed';
+              } else {
+                newStatus = 'active';
+              }
+              
+              // Update status if it changed
+              if (newStatus !== workspace.status) {
+                console.log('Updating workspace status from', workspace.status, 'to', newStatus);
+                const workspaceIndex = userData.workspaceSessions.findIndex(ws => ws.id === workspaceId);
+                if (workspaceIndex !== -1) {
+                  userData.workspaceSessions[workspaceIndex].status = newStatus;
+                  userData.workspaceSessions[workspaceIndex].lastActiveAt = new Date().toISOString();
+                  await userDataService.saveUserData(userData);
+                }
+              }
+            }
+          }
+        }
+        
+        // Initialize AI greeting
+        const greetingMessage: ChatMessage = {
+          id: '1',
+          sender: 'ai',
+          text: t('aiAssistant.greeting', {
+            role: typedPathData.aiAssistants?.[0] || 'Assistant',
+            path: typedPathData.title
+          }),
+          timestamp: new Date()
+        };
+        setChatMessages([greetingMessage]);
+      }
+    };
+    
+    performOperations();
+  }, [typedPathData, workspaceId, currentTaskIndex, userDataService, t, dynamicTasks.length]);
+
+
 
   // If still no data, show error
+  // Early return case - no path data
   if (!typedPathData) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
@@ -658,63 +795,11 @@ export default function ExplorationWorkspace({
     );
   }
   
+  // TypeScript now knows typedPathData is not null after this point
   const currentTask = typedPathData.tasks[currentTaskIndex];
   const isLastTask = currentTaskIndex === typedPathData.tasks.length - 1;
 
-  // Load task answers when workspace ID is available
-  useEffect(() => {
-    const loadTaskAnswers = async () => {
-      if (workspaceId && typedPathData) {
-        // Run migration once on first load
-        const { migrateTaskAnswers } = await import('@/lib/utils/migrate-task-answers');
-        migrateTaskAnswers();
-        
-        const answers: Record<string, any> = {};
-        
-        // Load all task answers for this workspace
-        for (const task of typedPathData.tasks) {
-          const answer = await userDataService.getTaskAnswer(workspaceId, task.id);
-          if (answer) {
-            answers[task.id] = answer;
-          }
-        }
-        
-        setTaskAnswers(answers);
-        
-        // Set current task answer if exists
-        if (currentTask && answers[currentTask.id]) {
-          setCurrentTaskAnswer(answers[currentTask.id].answer);
-        } else {
-          setCurrentTaskAnswer(''); // Clear if no answer exists
-        }
-      }
-    };
-    
-    loadTaskAnswers();
-  }, [workspaceId, pathId, currentTaskIndex]);
-
-  // Initialize AI greeting - only when pathId changes
-  useEffect(() => {
-    if (typedPathData) {
-      const greetingMessage: ChatMessage = {
-        id: '1',
-        sender: 'ai',
-        text: t('aiAssistant.greeting', {
-          role: typedPathData.aiAssistants[0] || 'Assistant',
-          path: typedPathData.title
-        }),
-        timestamp: new Date()
-      };
-      setChatMessages([greetingMessage]);
-    }
-  }, [pathId, t]); // Remove typedPathData from dependencies
-
-  // Auto-scroll chat to bottom
-  useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-    }
-  }, [chatMessages]);
+  // Now we have typedPathData, so we can safely access it
 
   const handleStartTask = async () => {
     setIsTaskActive(true);
@@ -757,10 +842,6 @@ export default function ExplorationWorkspace({
     };
     setChatMessages(prev => [...prev, taskIntroMessage]);
   };
-
-  const handleProgressUpdate = React.useCallback((progress: number) => {
-    setTaskProgress(progress);
-  }, []);
 
   const generateNextTask = async () => {
     if (!workspaceId || isGeneratingTask) return;
@@ -1042,7 +1123,7 @@ export default function ExplorationWorkspace({
             taskProgress: Math.round(taskProgress),
             taskIndex: currentTaskIndex + 1,
             totalTasks: typedPathData.tasks.length,
-            completedTasks: completedTasksCount,
+            completedTasks: workspaceCompletedTasks.length,
             aiRole: typedPathData.aiAssistants[0] || 'AI Assistant',
             skills: typedPathData.skills,
             language: 'zh-TW'
@@ -1104,112 +1185,6 @@ export default function ExplorationWorkspace({
     return `我了解你的訊息。目前系統連線有些問題，但別擔心！你在「${currentTask.title}」上的進度很好。請繼續探索，有任何問題都可以隨時詢問。`;
   };
 
-
-  // Get completed tasks for this specific workspace from localStorage
-  const [workspaceCompletedTasks, setWorkspaceCompletedTasks] = useState<string[]>([]);
-  
-  useEffect(() => {
-    const loadWorkspaceData = async () => {
-      if (workspaceId) {
-        const userData = await userDataService.loadUserData();
-        if (userData) {
-          const workspace = userData.workspaceSessions.find(ws => ws.id === workspaceId);
-          if (workspace) {
-            // Filter out empty task IDs
-            const cleanedTasks = (workspace.completedTasks || []).filter(taskId => taskId && taskId.trim() !== '');
-            setWorkspaceCompletedTasks(cleanedTasks);
-            
-            // Check and update workspace status based on task completion
-            // Need to include dynamic tasks in the count
-            const baseTasks = typedPathData.tasks.length;
-            const dynamicTasksCount = dynamicTasks.length;
-            const totalTasks = baseTasks + dynamicTasksCount;
-            const completedCount = cleanedTasks.length;
-            
-            // Determine the correct status
-            let newStatus = workspace.status;
-            if (completedCount === 0) {
-              newStatus = 'active';
-            } else if (completedCount >= baseTasks && dynamicTasksCount === 0) {
-              // All base tasks completed and no dynamic tasks yet
-              newStatus = 'completed';
-            } else if (completedCount >= totalTasks && dynamicTasksCount > 0) {
-              // All tasks including dynamic ones are completed
-              newStatus = 'completed';
-            } else {
-              // Still have uncompleted tasks
-              newStatus = 'active';
-            }
-            
-            // Update status if it changed
-            if (newStatus !== workspace.status) {
-              console.log('Updating workspace status from', workspace.status, 'to', newStatus);
-              const workspaceIndex = userData.workspaceSessions.findIndex(ws => ws.id === workspaceId);
-              if (workspaceIndex !== -1) {
-                userData.workspaceSessions[workspaceIndex].status = newStatus;
-                userData.workspaceSessions[workspaceIndex].lastActiveAt = new Date().toISOString();
-                await userDataService.saveUserData(userData);
-              }
-            }
-          }
-        }
-      }
-    };
-    loadWorkspaceData();
-  }, [workspaceId, typedPathData.tasks.length]);
-  
-  // Additional check when dynamic tasks are loaded or updated
-  useEffect(() => {
-    const checkAndUpdateWorkspaceStatus = async () => {
-      if (!workspaceId) return;
-      
-      const userData = await userDataService.loadUserData();
-      if (!userData) return;
-      
-      const workspace = userData.workspaceSessions.find(ws => ws.id === workspaceId);
-      if (!workspace) return;
-      
-      // Calculate total tasks including dynamic ones
-      const baseTasks = typedPathData.tasks.length;
-      const dynamicTasksCount = dynamicTasks.length;
-      const totalTasks = baseTasks + dynamicTasksCount;
-      const completedCount = workspaceCompletedTasks.filter(taskId => taskId && taskId.trim() !== '').length;
-      
-      // Determine the correct status
-      let newStatus = workspace.status;
-      if (completedCount === 0) {
-        newStatus = 'active';
-      } else if (completedCount >= totalTasks && totalTasks > 0) {
-        // All tasks (including dynamic) are completed
-        newStatus = 'completed';
-      } else if (completedCount < totalTasks) {
-        // Still have uncompleted tasks
-        newStatus = 'active';
-      }
-      
-      // Update status if it changed
-      if (newStatus !== workspace.status) {
-        console.log('Updating workspace status based on dynamic tasks:', {
-          baseTasks,
-          dynamicTasksCount,
-          totalTasks,
-          completedCount,
-          oldStatus: workspace.status,
-          newStatus
-        });
-        
-        const workspaceIndex = userData.workspaceSessions.findIndex(ws => ws.id === workspaceId);
-        if (workspaceIndex !== -1) {
-          userData.workspaceSessions[workspaceIndex].status = newStatus;
-          userData.workspaceSessions[workspaceIndex].lastActiveAt = new Date().toISOString();
-          await userDataService.saveUserData(userData);
-        }
-      }
-    };
-    
-    checkAndUpdateWorkspaceStatus();
-  }, [workspaceId, workspaceCompletedTasks, dynamicTasks.length, typedPathData.tasks.length]);
-  
   const completedTasksCount = workspaceCompletedTasks.filter(taskId => taskId && taskId.trim() !== '').length;
 
   // Evaluation handlers
@@ -1363,13 +1338,13 @@ export default function ExplorationWorkspace({
             <div className="text-right">
               <p className="text-sm text-gray-600">整體進度</p>
               <p className="font-medium text-purple-700">
-                {completedTasksCount}/{typedPathData.tasks.length} 關卡完成
+                {workspaceCompletedTasks.length}/{typedPathData.tasks.length} 關卡完成
               </p>
             </div>
             <div className="w-24 bg-gray-200 rounded-full h-2">
               <div 
                 className="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full transition-all duration-500"
-                style={{ width: `${(completedTasksCount / typedPathData.tasks.length) * 100}%` }}
+                style={{ width: `${(workspaceCompletedTasks.length / typedPathData.tasks.length) * 100}%` }}
               />
             </div>
           </div>
@@ -1565,7 +1540,7 @@ export default function ExplorationWorkspace({
               )}
               
               {/* Show achievements button when current task is completed and all tasks are done */}
-              {taskProgress >= 100 && workspaceCompletedTasks.includes(currentTask.id) && completedTasksCount === typedPathData.tasks.length && onViewAchievements && (
+              {taskProgress >= 100 && workspaceCompletedTasks.includes(currentTask.id) && workspaceCompletedTasks.length === typedPathData.tasks.length && onViewAchievements && (
                 <motion.button
                   onClick={onViewAchievements}
                   whileHover={{ scale: 1.02 }}
@@ -1685,7 +1660,7 @@ export default function ExplorationWorkspace({
                                   }}
                                   className="text-xs px-3 py-1 rounded-full bg-green-100 text-green-700 hover:bg-green-200 transition-colors flex items-center space-x-1"
                                 >
-                                  {completedTasksCount === typedPathData.tasks.length ? (
+                                  {workspaceCompletedTasks.length === typedPathData.tasks.length ? (
                                     <>
                                       <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -1720,13 +1695,7 @@ export default function ExplorationWorkspace({
               })}
               
               {/* Generate More Tasks Button - Show when all tasks completed */}
-              {console.log('Button check:', {
-                completedTasksCount,
-                totalTasks: typedPathData.tasks.length,
-                shouldShow: completedTasksCount === typedPathData.tasks.length,
-                isGeneratingTask
-              })}
-              {completedTasksCount === typedPathData.tasks.length && !isGeneratingTask && (
+              {workspaceCompletedTasks.length === typedPathData.tasks.length && !isGeneratingTask && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}

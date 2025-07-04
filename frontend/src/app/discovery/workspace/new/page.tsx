@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ExclamationTriangleIcon, FolderOpenIcon, PlusIcon } from '@heroicons/react/24/outline';
 
-export default function NewWorkspacePage() {
+function NewWorkspaceContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathId = searchParams.get('pathId');
@@ -169,4 +169,19 @@ export default function NewWorkspacePage() {
   }
 
   return null;
+}
+
+export default function NewWorkspacePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-purple-600 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+          <p className="text-gray-600">載入中...</p>
+        </div>
+      </div>
+    }>
+      <NewWorkspaceContent />
+    </Suspense>
+  );
 }

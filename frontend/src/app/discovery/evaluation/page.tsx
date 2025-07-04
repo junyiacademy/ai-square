@@ -263,7 +263,7 @@ export default function EvaluationPage() {
                 <div className="p-4 border-b border-gray-200 max-h-64 overflow-y-auto">
                   <h3 className="text-base font-semibold text-gray-900 mb-3">你的答題紀錄</h3>
                   <div className="space-y-3">
-                    {t('interestAssessment.questions', { returnObjects: true }).map((question: any, index: number) => {
+                    {(t('interestAssessment.questions', { returnObjects: true }) as any[]).map((question: any, index: number) => {
                       const selectedOptions = assessmentAnswers[question.id] || [];
                       if (selectedOptions.length === 0) return null;
                       
