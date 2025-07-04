@@ -17,7 +17,7 @@ interface YAMLSection {
   themes: Record<string, YAMLTheme>;
 }
 
-interface YAMLData {
+type YAMLData = {
   knowledge_codes: YAMLSection;
   skill_codes: YAMLSection;
   attitude_codes: YAMLSection;
@@ -29,10 +29,10 @@ export async function GET(request: NextRequest) {
     const lang = searchParams.get('lang') || 'en';
 
     // Load language-specific KSA codes file
-    const data = await jsonYamlLoader.load<YAMLData>('ksa_codes', { 
+    const data = await jsonYamlLoader.load('ksa_codes', { 
       preferJson: true, 
       language: lang 
-    });
+    }) as YAMLData;
 
     if (!data) {
       return NextResponse.json(

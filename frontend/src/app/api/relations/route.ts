@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { contentService } from '@/lib/cms/content-service';
 import { cacheService } from '@/lib/cache/cache-service';
 import { jsonYamlLoader } from '@/lib/json-yaml-loader';
 
@@ -89,8 +88,8 @@ export async function GET(request: NextRequest) {
     }
     // Load data using the new hybrid loader with language support
     const [domainsData, ksaCodesData] = await Promise.all([
-      jsonYamlLoader.load<DomainsYaml>('ai_lit_domains', { preferJson: true, language: lang }),
-      jsonYamlLoader.load<KSACodesYaml>('ksa_codes', { preferJson: true, language: lang })
+      jsonYamlLoader.load('ai_lit_domains', { preferJson: true, language: lang }) as Promise<DomainsYaml>,
+      jsonYamlLoader.load('ksa_codes', { preferJson: true, language: lang }) as Promise<KSACodesYaml>
     ]);
 
     if (!domainsData || !ksaCodesData) {
@@ -188,25 +187,11 @@ export async function GET(request: NextRequest) {
     };
 
     // Cache the response
-    await cacheService.set(cacheKey, responseData, 300); // 5 minutes
+    await cacheService.set(cacheKey, responseData, { ttl: 5 * 60 * 1000 }); // 5 minutes
 
     return NextResponse.json(responseData);
   } catch (error) {
     console.error('Error loading relations data:', error);
-    
-    // Try using content service as fallback
-    try {
-      const fallbackData = await contentService.getContent(
-        lang === 'zhTW' ? 'zh-TW' : lang,
-        'ai_lit_domains.yaml'
-      );
-      
-      if (fallbackData) {
-        return NextResponse.json({ domains: [], ksa: { knowledge: { themes: [] }, skills: { themes: [] }, attitudes: { themes: [] } } });
-      }
-    } catch (fallbackError) {
-      console.error('Fallback also failed:', fallbackError);
-    }
     
     return NextResponse.json(
       { error: 'Failed to load relations data' },

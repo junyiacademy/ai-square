@@ -153,16 +153,17 @@ export default function RelationsClient() {
 
   // 監聽語言變化事件
   useEffect(() => {
-    const handleLanguageChange = async (event: CustomEvent) => {
-      const newLang = event.detail.language;
+    const handleLanguageChange = async (event: Event) => {
+      const customEvent = event as CustomEvent;
+      const newLang = customEvent.detail.language;
       setLang(newLang);
       // Clear cache for the old language when language changes
       await contentService.clearLanguageCache(lang);
     };
 
-    window.addEventListener('language-changed', handleLanguageChange as EventListener);
+    window.addEventListener('language-changed', handleLanguageChange);
     return () => {
-      window.removeEventListener('language-changed', handleLanguageChange as EventListener);
+      window.removeEventListener('language-changed', handleLanguageChange);
     };
   }, [lang]);
 
@@ -180,10 +181,10 @@ export default function RelationsClient() {
       if (data.ksa) {
         // Process knowledge items
         if (data.ksa.knowledge && data.ksa.knowledge.themes) {
-          data.ksa.knowledge.themes.forEach((theme: any) => {
-            if (theme.items && Array.isArray(theme.items)) {
-              theme.items.forEach((item: any) => {
-                kMap[item.code] = {
+          Object.values(data.ksa.knowledge.themes).forEach((theme: any) => {
+            if (theme.codes && typeof theme.codes === 'object') {
+              Object.entries(theme.codes).forEach(([code, item]: [string, any]) => {
+                kMap[code] = {
                   summary: item.summary,
                   theme: theme.name,
                   explanation: theme.explanation
@@ -195,10 +196,10 @@ export default function RelationsClient() {
         
         // Process skills items
         if (data.ksa.skills && data.ksa.skills.themes) {
-          data.ksa.skills.themes.forEach((theme: any) => {
-            if (theme.items && Array.isArray(theme.items)) {
-              theme.items.forEach((item: any) => {
-                sMap[item.code] = {
+          Object.values(data.ksa.skills.themes).forEach((theme: any) => {
+            if (theme.codes && typeof theme.codes === 'object') {
+              Object.entries(theme.codes).forEach(([code, item]: [string, any]) => {
+                sMap[code] = {
                   summary: item.summary,
                   theme: theme.name,
                   explanation: theme.explanation
@@ -210,10 +211,10 @@ export default function RelationsClient() {
         
         // Process attitudes items
         if (data.ksa.attitudes && data.ksa.attitudes.themes) {
-          data.ksa.attitudes.themes.forEach((theme: any) => {
-            if (theme.items && Array.isArray(theme.items)) {
-              theme.items.forEach((item: any) => {
-                aMap[item.code] = {
+          Object.values(data.ksa.attitudes.themes).forEach((theme: any) => {
+            if (theme.codes && typeof theme.codes === 'object') {
+              Object.entries(theme.codes).forEach(([code, item]: [string, any]) => {
+                aMap[code] = {
                   summary: item.summary,
                   theme: theme.name,
                   explanation: theme.explanation
@@ -230,11 +231,11 @@ export default function RelationsClient() {
       }
       
       const treeData: TreeData = {
-        domains: data.domains || [],
+        domains: (data.domains as unknown as Domain[]) || [],
         kMap,
         sMap,
         aMap,
-        ksa: data.ksa
+        ksa: data.ksa as TreeData['ksa']
       };
       
       setTree(treeData);
@@ -310,7 +311,7 @@ function DomainAccordion({ domain, kMap, sMap, aMap, lang, emoji }: { domain: Do
       >
         <div className="flex items-center">
           <span className="text-2xl mr-3">{emoji}</span>
-          <span className="text-lg sm:text-xl font-bold text-blue-800 mr-2">{t(domain.id || domain.key)}</span>
+          <span className="text-lg sm:text-xl font-bold text-blue-800 mr-2">{t(domain.id || domain.key || '')}</span>
           <span className="text-gray-700 text-base font-medium">{open ? '▲' : '▼'}</span>
         </div>
       </div>
@@ -320,7 +321,7 @@ function DomainAccordion({ domain, kMap, sMap, aMap, lang, emoji }: { domain: Do
             <div className="w-full md:w-56 max-w-xs md:max-w-[224px] mb-2 md:mb-0 md:mr-6">
               <Image
                 src={imgSrc}
-                alt={t(domain.id || domain.key)}
+                alt={t(domain.id || domain.key || '')}
                 width={400}
                 height={240}
                 className="rounded-xl shadow-md object-cover"
@@ -353,7 +354,7 @@ function CompetencyAccordion({ comp, kMap, sMap, aMap, lang }: { comp: Competenc
         className="cursor-pointer bg-gray-100 px-4 py-2 rounded flex items-center justify-between"
         onClick={() => setOpen(o => !o)}
       >
-        <span className="font-semibold text-blue-700 mr-2">{t(comp.id || comp.key)}</span>
+        <span className="font-semibold text-blue-700 mr-2">{t(comp.id || comp.key || '')}</span>
         <span className="text-gray-700 font-medium flex-1">{description}</span>
         <span className="ml-2">{open ? '▲' : '▼'}</span>
       </div>

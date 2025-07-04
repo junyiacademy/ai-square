@@ -59,6 +59,10 @@ export async function POST(request: NextRequest) {
 
     const { scenarioId, taskId, taskTitle, taskDescription, instructions, expectedOutcome, conversationHistory } = context;
 
+    // Get language from query params (default to 'en')
+    const { searchParams } = new URL(request.url);
+    const language = searchParams.get('lang') || 'en';
+
     // Load scenario data to get AI module configuration
     const scenarioFolder = scenarioId.replace(/-/g, '_');
     const fileName = `${scenarioFolder}_${language}.yaml`;

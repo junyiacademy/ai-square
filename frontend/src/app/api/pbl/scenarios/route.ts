@@ -117,7 +117,7 @@ async function loadScenariosFromYAML(lang: string): Promise<Record<string, unkno
           });
         }
       } catch (error) {
-        console.error(`Error loading scenario file ${file}:`, error);
+        console.error(`Error loading scenario file ${folder}:`, error);
       }
     }
   } catch (error) {

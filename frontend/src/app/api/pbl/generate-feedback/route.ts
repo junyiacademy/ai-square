@@ -273,7 +273,7 @@ export async function POST(request: NextRequest) {
     const path = await import('path');
     // Convert scenario ID from kebab-case to snake_case for filename
     const scenarioFolder = scenarioId.replace(/-/g, '_');
-    const fileName = `${scenarioFolder}_${language}.yaml`;
+    const fileName = `${scenarioFolder}_${currentLang}.yaml`;
     let scenarioPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', scenarioFolder, fileName);
     
     // Check if language-specific file exists, fallback to English
