@@ -10,18 +10,31 @@ import {
   PaintBrushIcon,
   GlobeAltIcon,
   ClockIcon,
-  UserGroupIcon
+  UserGroupIcon,
+  FolderOpenIcon,
+  ChevronDownIcon,
+  PlusIcon,
+  HeartIcon,
+  TrashIcon,
+  ArrowPathIcon
 } from '@heroicons/react/24/outline';
+import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 
-interface AssessmentResults {
-  tech: number;
-  creative: number;
-  business: number;
-}
+// Import types from the unified service
+import type { 
+  AssessmentResults, 
+  WorkspaceSession, 
+  SavedPathData 
+} from '@/lib/services/user-data-service';
 
 interface PathResultsProps {
-  results: AssessmentResults;
-  onPathSelect: (pathId: string) => void;
+  results: AssessmentResults | null;
+  onPathSelect: (pathId: string, workspaceId?: string) => void;
+  workspaceSessions?: WorkspaceSession[];
+  savedPaths?: SavedPathData[];
+  onToggleFavorite?: (pathId: string) => void;
+  onDeletePath?: (pathId: string) => void;
+  onRetakeAssessment?: () => void;
 }
 
 interface PathData {
@@ -40,42 +53,100 @@ interface PathData {
   }>;
 }
 
-export default function PathResults({ results, onPathSelect }: PathResultsProps) {
+export default function PathResults({ 
+  results, 
+  onPathSelect, 
+  workspaceSessions = [], 
+  savedPaths = [],
+  onToggleFavorite,
+  onDeletePath,
+  onRetakeAssessment
+}: PathResultsProps) {
   const { t } = useTranslation('discovery');
+  const [showWorkspaceDropdown, setShowWorkspaceDropdown] = React.useState<string | null>(null);
+  const [viewMode, setViewMode] = React.useState<'latest' | 'all' | 'favorites'>('latest');
 
-  // Get path data from translations
-  const pathIds = ['youtuber', 'game_designer', 'app_developer'];
-  const paths: PathData[] = pathIds.map(id => ({
-    id,
-    ...(t(`paths.${id}`, { returnObjects: true }) as Omit<PathData, 'id'>)
-  }));
+  // 點擊外部關閉下拉選單
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showWorkspaceDropdown) {
+        const target = event.target as Element;
+        if (!target.closest('[data-workspace-dropdown]')) {
+          setShowWorkspaceDropdown(null);
+        }
+      }
+    };
 
-  // Calculate match percentages
-  const calculateMatchPercentage = (pathId: string): number => {
-    const total = results.tech + results.creative + results.business;
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showWorkspaceDropdown]);
+
+  // Get paths to display based on view mode
+  const getPathsToDisplay = () => {
+    let pathsToShow = savedPaths;
     
-    switch (pathId) {
-      case 'youtuber':
-        return Math.round(((results.creative * 2 + results.business) / total) * 100);
-      case 'game_designer':
-        return Math.round(((results.tech + results.creative * 1.5) / total) * 100);
-      case 'app_developer':
-        return Math.round(((results.tech * 2 + results.business * 0.5) / total) * 100);
+    switch (viewMode) {
+      case 'latest':
+        // Show only latest assessment results
+        if (results && savedPaths.length > 0) {
+          const latestAssessmentId = savedPaths
+            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0]
+            ?.assessmentId;
+          pathsToShow = savedPaths.filter(p => p.assessmentId === latestAssessmentId);
+        }
+        break;
+      case 'favorites':
+        pathsToShow = savedPaths.filter(p => p.isFavorite);
+        break;
+      case 'all':
       default:
-        return 0;
+        pathsToShow = savedPaths;
+        break;
     }
+    
+    return pathsToShow
+      .map(savedPath => {
+        // Try to get path data from careers section in translations
+        const pathData = t(`careers.${savedPath.pathData.id}`, { returnObjects: true, defaultValue: null });
+        
+        // If translation not found, return a default structure
+        if (!pathData || typeof pathData !== 'object') {
+          return {
+            id: savedPath.pathData.id,
+            title: savedPath.pathData.id,
+            subtitle: '',
+            description: '',
+            category: 'technology',
+            skills: [],
+            aiAssistants: [],
+            tasks: [],
+            savedPathId: savedPath.id,
+            matchPercentage: savedPath.matchPercentage,
+            isFavorite: savedPath.isFavorite,
+            createdAt: savedPath.createdAt,
+            assessmentId: savedPath.assessmentId
+          };
+        }
+        
+        return {
+          ...pathData,
+          id: savedPath.pathData.id,
+          savedPathId: savedPath.id,
+          matchPercentage: savedPath.matchPercentage,
+          isFavorite: savedPath.isFavorite,
+          createdAt: savedPath.createdAt,
+          assessmentId: savedPath.assessmentId
+        };
+      })
+      .sort((a, b) => b.matchPercentage - a.matchPercentage);
   };
 
-  // Sort paths by match percentage
-  const sortedPaths = paths
-    .map(path => ({
-      ...path,
-      matchPercentage: calculateMatchPercentage(path.id)
-    }))
-    .sort((a, b) => b.matchPercentage - a.matchPercentage);
+  const displayPaths = getPathsToDisplay();
 
   // Get personality type based on highest score
   const getPersonalityType = (): string => {
+    if (!results) return '探索者';
+    
     const { tech, creative, business } = results;
     
     if (tech > creative && tech > business) {
@@ -89,7 +160,9 @@ export default function PathResults({ results, onPathSelect }: PathResultsProps)
     }
   };
 
-  const getCategoryIcon = (category: string) => {
+  const getCategoryIcon = (category: string | undefined) => {
+    if (!category) return SparklesIcon;
+    
     switch (category.toLowerCase()) {
       case 'creative':
       case '創意':
@@ -105,7 +178,9 @@ export default function PathResults({ results, onPathSelect }: PathResultsProps)
     }
   };
 
-  const getCategoryColor = (category: string) => {
+  const getCategoryColor = (category: string | undefined) => {
+    if (!category) return 'from-purple-500 to-blue-500';
+    
     switch (category.toLowerCase()) {
       case 'creative':
       case '創意':
@@ -121,6 +196,57 @@ export default function PathResults({ results, onPathSelect }: PathResultsProps)
     }
   };
 
+  // Get workspaces for a specific path
+  const getPathWorkspaces = (pathId: string) => {
+    return workspaceSessions.filter(ws => ws.pathId === pathId);
+  };
+
+  // Format date to relative time
+  const formatRelativeTime = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
+    
+    if (diffInHours < 1) return '剛剛';
+    if (diffInHours < 24) return `${diffInHours} 小時前`;
+    if (diffInHours < 168) return `${Math.floor(diffInHours / 24)} 天前`;
+    return date.toLocaleDateString('zh-TW');
+  };
+
+  // Handle empty state
+  if (savedPaths.length === 0) {
+    return (
+      <div className="max-w-4xl mx-auto text-center py-20">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="w-24 h-24 bg-gradient-to-r from-purple-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <GlobeAltIcon className="w-12 h-12 text-purple-600" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            還沒有任何探索路徑
+          </h2>
+          <p className="text-gray-600 mb-8 max-w-md mx-auto">
+            完成興趣評估來發現適合你的學習路徑，開始你的個人化探索之旅！
+          </p>
+          {onRetakeAssessment && (
+            <motion.button
+              onClick={onRetakeAssessment}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-shadow"
+            >
+              <SparklesIcon className="w-5 h-5" />
+              <span>開始興趣評估</span>
+            </motion.button>
+          )}
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-6xl mx-auto">
       {/* Header */}
@@ -131,24 +257,112 @@ export default function PathResults({ results, onPathSelect }: PathResultsProps)
         className="text-center mb-8"
       >
         <h2 className="text-3xl font-bold text-gray-900 mb-4">
-          {t('results.title')}
+          你的探索路徑
         </h2>
         <p className="text-lg text-gray-600 mb-6">
-          {t('results.subtitle')}
+          基於你的興趣評估結果，為你推薦合適的學習路徑
         </p>
         
         {/* Personality Type */}
-        <div className="inline-flex items-center space-x-3 bg-gradient-to-r from-purple-100 to-blue-100 px-6 py-3 rounded-full">
-          <SparklesIcon className="w-5 h-5 text-purple-600" />
-          <span className="font-medium text-purple-800">
-            {t('results.personalityType')}: {getPersonalityType()}
-          </span>
+        {results && (
+          <div className="inline-flex items-center space-x-3 bg-gradient-to-r from-purple-100 to-blue-100 px-6 py-3 rounded-full">
+            <SparklesIcon className="w-5 h-5 text-purple-600" />
+            <span className="font-medium text-purple-800">
+              你的類型: {getPersonalityType()}
+            </span>
+          </div>
+        )}
+      </motion.div>
+      
+      {/* Results Summary - Moved here */}
+      {results && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="mb-6 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-4"
+        >
+          <h3 className="text-sm font-semibold text-gray-900 mb-3">你的傾向分析</h3>
+          <div className="grid grid-cols-3 gap-3">
+            <div className="text-center">
+              <div className="text-xl font-bold text-blue-600">{results.tech}%</div>
+              <div className="text-xs text-gray-600">科技傾向</div>
+            </div>
+            <div className="text-center">
+              <div className="text-xl font-bold text-purple-600">{results.creative}%</div>
+              <div className="text-xs text-gray-600">創意傾向</div>
+            </div>
+            <div className="text-center">
+              <div className="text-xl font-bold text-green-600">{results.business}%</div>
+              <div className="text-xs text-gray-600">商業傾向</div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* View Mode Selector */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="flex flex-wrap items-center justify-between mb-8"
+      >
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => setViewMode('latest')}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              viewMode === 'latest' 
+                ? 'bg-purple-600 text-white' 
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            最新評估 ({savedPaths.filter(p => {
+              const latestAssessmentId = savedPaths
+                .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0]
+                ?.assessmentId;
+              return p.assessmentId === latestAssessmentId;
+            }).length})
+          </button>
+          <button
+            onClick={() => setViewMode('all')}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              viewMode === 'all' 
+                ? 'bg-purple-600 text-white' 
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            所有路徑 ({savedPaths.length})
+          </button>
+          <button
+            onClick={() => setViewMode('favorites')}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              viewMode === 'favorites' 
+                ? 'bg-purple-600 text-white' 
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            我的收藏 ({savedPaths.filter(p => p.isFavorite).length})
+          </button>
+        </div>
+
+        <div className="flex items-center space-x-3">
+          {onRetakeAssessment && (
+            <motion.button
+              onClick={onRetakeAssessment}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-flex items-center space-x-2 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+            >
+              <ArrowPathIcon className="w-4 h-4" />
+              <span>重新評估</span>
+            </motion.button>
+          )}
         </div>
       </motion.div>
 
       {/* Path Cards */}
       <div className="grid gap-6 md:gap-8">
-        {sortedPaths.map((path, index) => {
+        {displayPaths.map((path, index) => {
           const CategoryIcon = getCategoryIcon(path.category);
           const categoryColorClass = getCategoryColor(path.category);
           
@@ -163,12 +377,42 @@ export default function PathResults({ results, onPathSelect }: PathResultsProps)
                 ${index === 0 ? 'ring-2 ring-purple-500 ring-opacity-50' : ''}
               `}
             >
-              {/* Top recommended badge */}
-              {index === 0 && (
-                <div className="absolute top-4 right-4 bg-gradient-to-r from-purple-500 to-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                  🌟 最佳推薦
-                </div>
-              )}
+              {/* Top recommended badge and actions */}
+              <div className="absolute top-4 right-4 flex items-center space-x-2">
+                {index === 0 && viewMode === 'latest' && (
+                  <div className="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                    🌟 最佳推薦
+                  </div>
+                )}
+                
+                {/* Favorite Button */}
+                {onToggleFavorite && (
+                  <button
+                    onClick={() => onToggleFavorite(path.savedPathId)}
+                    className={`p-2 rounded-full transition-colors ${
+                      path.isFavorite 
+                        ? 'bg-red-100 text-red-600 hover:bg-red-200' 
+                        : 'bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-red-500'
+                    }`}
+                  >
+                    {path.isFavorite ? (
+                      <HeartIconSolid className="w-4 h-4" />
+                    ) : (
+                      <HeartIcon className="w-4 h-4" />
+                    )}
+                  </button>
+                )}
+                
+                {/* Delete Button */}
+                {onDeletePath && viewMode !== 'latest' && (
+                  <button
+                    onClick={() => onDeletePath(path.savedPathId)}
+                    className="p-2 rounded-full bg-gray-100 text-gray-400 hover:bg-red-100 hover:text-red-600 transition-colors"
+                  >
+                    <TrashIcon className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
               
               <div className="p-6 md:p-8">
                 <div className="flex flex-col md:flex-row md:items-start md:space-x-6">
@@ -256,49 +500,115 @@ export default function PathResults({ results, onPathSelect }: PathResultsProps)
                   </div>
                 </div>
 
-                {/* Action Button */}
-                <motion.button
-                  onClick={() => onPathSelect(path.id)}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`
-                    w-full md:w-auto inline-flex items-center justify-center space-x-2 
-                    bg-gradient-to-r ${categoryColorClass} text-white px-6 py-3 rounded-xl 
-                    font-medium shadow-lg hover:shadow-xl transition-shadow duration-300
-                  `}
-                >
-                  <PlayIcon className="w-5 h-5" />
-                  <span>{t('results.explorePath')}</span>
-                </motion.button>
+                {/* Action Buttons with Workspace Management */}
+                <div className="flex flex-col sm:flex-row gap-3">
+                  {/* Main Action Button */}
+                  <motion.button
+                    onClick={() => onPathSelect(path.id)}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`
+                      inline-flex items-center justify-center space-x-2 
+                      bg-gradient-to-r ${categoryColorClass} text-white px-6 py-3 rounded-xl 
+                      font-medium shadow-lg hover:shadow-xl transition-shadow duration-300
+                    `}
+                  >
+                    <PlusIcon className="w-5 h-5" />
+                    <span>開始新的探索</span>
+                  </motion.button>
+
+                  {/* Workspace Dropdown */}
+                  {getPathWorkspaces(path.id).length > 0 && (
+                    <div className="relative z-40" data-workspace-dropdown>
+                      <motion.button
+                        onClick={() => setShowWorkspaceDropdown(showWorkspaceDropdown === path.id ? null : path.id)}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="inline-flex items-center space-x-2 bg-white border-2 border-gray-300 text-gray-700 px-4 py-3 rounded-xl font-medium hover:border-gray-400 transition-colors"
+                      >
+                        <FolderOpenIcon className="w-5 h-5" />
+                        <span>{getPathWorkspaces(path.id).length} 個工作區</span>
+                        <ChevronDownIcon className={`w-4 h-4 transition-transform ${showWorkspaceDropdown === path.id ? 'rotate-180' : ''}`} />
+                      </motion.button>
+
+                      {/* Dropdown Menu */}
+                      {showWorkspaceDropdown === path.id && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          className="absolute top-full mt-2 left-0 right-0 sm:left-auto sm:right-auto sm:w-80 bg-white rounded-xl shadow-xl border border-gray-200 p-2 z-[100]"
+                        >
+                          <div className="max-h-64 overflow-y-auto">
+                            {getPathWorkspaces(path.id).map(workspace => (
+                              <button
+                                key={workspace.id}
+                                onClick={() => {
+                                  setShowWorkspaceDropdown(null);
+                                  onPathSelect(path.id, workspace.id);
+                                }}
+                                className="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                              >
+                                <div className="flex items-start justify-between">
+                                  <div className="flex-1">
+                                    <div className="flex items-center space-x-2">
+                                      <span className={`text-xs px-2 py-1 rounded-full ${
+                                        workspace.status === 'active' ? 'bg-green-100 text-green-700' :
+                                        workspace.status === 'completed' ? 'bg-blue-100 text-blue-700' :
+                                        'bg-yellow-100 text-yellow-700'
+                                      }`}>
+                                        {workspace.status === 'active' ? '進行中' :
+                                         workspace.status === 'completed' ? '已完成' : '暫停中'}
+                                      </span>
+                                      <span className="text-xs text-gray-500">
+                                        {formatRelativeTime(workspace.lastActiveAt)}
+                                      </span>
+                                    </div>
+                                    <div className="mt-1 text-sm text-gray-600">
+                                      完成 {workspace.completedTasks.length} 個任務 • 獲得 {workspace.totalXP} XP
+                                    </div>
+                                  </div>
+                                  <PlayIcon className="w-4 h-4 text-gray-400 ml-2 flex-shrink-0" />
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             </motion.div>
           );
         })}
       </div>
 
-      {/* Results Summary */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-        className="mt-8 bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-6"
-      >
-        <h3 className="font-semibold text-gray-900 mb-4">你的傾向分析</h3>
-        <div className="grid grid-cols-3 gap-4">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">{results.tech}</div>
-            <div className="text-sm text-gray-600">科技傾向</div>
+      {/* Statistics for saved paths */}
+      {!results && savedPaths.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mt-8 bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-6"
+        >
+          <h3 className="font-semibold text-gray-900 mb-4">探索統計</h3>
+          <div className="grid grid-cols-3 gap-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600">{savedPaths.length}</div>
+              <div className="text-sm text-gray-600">發現的路徑</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-red-600">{savedPaths.filter(p => p.isFavorite).length}</div>
+              <div className="text-sm text-gray-600">收藏的路徑</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600">{workspaceSessions.length}</div>
+              <div className="text-sm text-gray-600">創建的工作區</div>
+            </div>
           </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-purple-600">{results.creative}</div>
-            <div className="text-sm text-gray-600">創意傾向</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-green-600">{results.business}</div>
-            <div className="text-sm text-gray-600">商業傾向</div>
-          </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 }

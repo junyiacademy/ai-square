@@ -101,7 +101,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
   ];
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
+    <div className="relative h-screen overflow-hidden flex items-center justify-center">
       {/* 動態背景粒子 */}
       <div className="absolute inset-0 -z-10">
         {particles.map((particle) => (
@@ -133,7 +133,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
       <div className="absolute inset-0 -z-20 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900" />
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.1),transparent_70%)]" />
 
-      <div className="relative z-10 text-center text-white px-4 py-16">
+      <div className="relative z-10 text-center text-white px-4 w-full max-h-screen overflow-y-auto py-8">
         {/* 動態標語 */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -159,7 +159,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="mb-16"
+          className="mb-8"
         >
           {/* 3D 旋轉圖標 */}
           <motion.div
@@ -173,19 +173,19 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
             }}
             onHoverStart={() => setIsHovering(true)}
             onHoverEnd={() => setIsHovering(false)}
-            className="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 rounded-3xl mb-8 shadow-2xl shadow-purple-500/50"
+            className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 rounded-3xl mb-4 shadow-2xl shadow-purple-500/50"
             style={{ transformStyle: 'preserve-3d' }}
           >
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
             >
-              <SparklesIcon className="w-16 h-16 text-white" />
+              <SparklesIcon className="w-12 h-12 text-white" />
             </motion.div>
           </motion.div>
           
           <motion.h1 
-            className="text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent"
+            className="text-4xl md:text-5xl font-black mb-4 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent"
             animate={{ 
               backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] 
             }}
@@ -195,7 +195,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
           </motion.h1>
           
           <motion.p 
-            className="text-xl md:text-2xl text-gray-300 mb-6 max-w-3xl mx-auto font-light"
+            className="text-lg md:text-xl text-gray-300 mb-4 max-w-3xl mx-auto font-light"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
@@ -211,13 +211,13 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
               boxShadow: "0 0 30px rgba(168, 85, 247, 0.6)"
             }}
             whileTap={{ scale: 0.98 }}
-            className="group relative inline-flex items-center space-x-3 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 text-white px-10 py-5 rounded-2xl font-bold text-xl shadow-2xl shadow-purple-500/30 border border-purple-400/30 backdrop-blur-sm"
+            className="group relative inline-flex items-center space-x-3 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-2xl shadow-purple-500/30 border border-purple-400/30 backdrop-blur-sm"
           >
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
             >
-              <RocketLaunchIcon className="w-7 h-7" />
+              <RocketLaunchIcon className="w-6 h-6" />
             </motion.div>
             <span className="relative z-10">開始探索冒險</span>
             
@@ -279,7 +279,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
                   rotateY: 5,
                   transition: { duration: 0.2 }
                 }}
-                className={`relative group bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-lg rounded-3xl p-8 border border-gray-700/50 ${feature.glow} shadow-2xl hover:shadow-3xl transition-all duration-300`}
+                className={`relative group bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-lg rounded-2xl p-6 border border-gray-700/50 ${feature.glow} shadow-2xl hover:shadow-3xl transition-all duration-300`}
                 style={{ transformStyle: 'preserve-3d' }}
               >
                 {/* 發光邊框 */}
@@ -288,18 +288,18 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
                 {/* 圖標 */}
                 <motion.div
                   whileHover={{ scale: 1.1, rotateZ: 5 }}
-                  className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl mb-6 shadow-lg group-hover:shadow-xl transition-shadow`}
+                  className={`inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r ${feature.color} rounded-xl mb-4 shadow-lg group-hover:shadow-xl transition-shadow`}
                 >
-                  <Icon className="w-8 h-8 text-white" />
+                  <Icon className="w-6 h-6 text-white" />
                 </motion.div>
                 
-                <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-purple-200 transition-colors">
+                <h3 className="text-xl font-bold text-white mb-3 group-hover:text-purple-200 transition-colors">
                   {feature.key === 'immersive' && '🎮 沉浸式體驗'}
                   {feature.key === 'ai_powered' && '🤖 AI 驅動'}
                   {feature.key === 'real_time' && '⚡ 即時反饋'}
                 </h3>
                 
-                <p className="text-gray-300 group-hover:text-gray-200 transition-colors leading-relaxed">
+                <p className="text-sm text-gray-300 group-hover:text-gray-200 transition-colors leading-relaxed">
                   {feature.key === 'immersive' && '像玩 AAA 遊戲一樣的視覺效果和互動體驗，告別無聊的傳統學習模式'}
                   {feature.key === 'ai_powered' && '最先進的 AI 技術提供個人化指導，每個決定都會影響你的未來發展路徑'}
                   {feature.key === 'real_time' && '每個動作立即獲得智能回饋，實時調整學習策略和未來建議'}
@@ -327,21 +327,21 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
-          className="mt-16 text-center"
+          className="mt-8 text-center"
         >
-          <div className="flex items-center justify-center space-x-4 text-purple-300 mb-4">
+          <div className="flex items-center justify-center space-x-4 text-purple-300">
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
             >
-              <CircleStackIcon className="w-6 h-6" />
+              <CircleStackIcon className="w-5 h-5" />
             </motion.div>
-            <span className="text-lg">準備好重新定義你的未來了嗎？</span>
+            <span className="text-sm">準備好重新定義你的未來了嗎？</span>
             <motion.div
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ duration: 1, repeat: Infinity }}
             >
-              <FireIcon className="w-6 h-6 text-orange-400" />
+              <FireIcon className="w-5 h-5 text-orange-400" />
             </motion.div>
           </div>
         </motion.div>

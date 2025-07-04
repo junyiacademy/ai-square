@@ -9,11 +9,23 @@ import {
   TrophyIcon
 } from '@heroicons/react/24/outline';
 
-// ... 其他 imports 和 interfaces 保持不變 ...
+// Define ViewState type
+type ViewState = 'welcome' | 'assessment' | 'results' | 'paths' | 'workspace' | 'workspaces' | 'achievements';
+
+// Define navigation items
+const navigationItems = [
+  { id: 'welcome', view: 'welcome' as ViewState, icon: SparklesIcon, label: '歡迎', disabled: false },
+  { id: 'assessment', view: 'assessment' as ViewState, icon: SparklesIcon, label: '評估', disabled: false },
+  { id: 'results', view: 'results' as ViewState, icon: TrophyIcon, label: '結果', disabled: false },
+];
 
 export default function CareerDiscoveryPage() {
   const { t } = useTranslation(['careerDiscovery', 'navigation']);
   const [currentView, setCurrentView] = useState<ViewState>('welcome');
+  
+  // Mock achievements for this incomplete page
+  const achievements = { totalXp: 0, level: 1, badges: [], completedTasks: [] };
+  
   // ... 其他 state 保持不變 ...
 
   // 方案一：移除子導航，改用麵包屑 + 行動按鈕

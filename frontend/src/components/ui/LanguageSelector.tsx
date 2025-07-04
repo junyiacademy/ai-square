@@ -25,7 +25,11 @@ const languages: Language[] = [
   { code: 'it', name: 'Italiano', flag: '🇮🇹' },
 ]
 
-export function LanguageSelector() {
+interface LanguageSelectorProps {
+  className?: string
+}
+
+export function LanguageSelector({ className = '' }: LanguageSelectorProps) {
   const { i18n } = useTranslation()
   const [currentLang, setCurrentLang] = useState(i18n.language)
 
@@ -52,11 +56,11 @@ export function LanguageSelector() {
   }
 
   return (
-    <div className="relative">
+    <div className={`relative ${className}`}>
       <select
         onChange={(e) => handleLanguageChange(e.target.value)}
         value={currentLang}
-        className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm appearance-none cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors dark:text-gray-200"
+        className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm appearance-none cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors dark:text-gray-200"
         aria-label="選擇語言"
       >
         {languages.map((language) => (

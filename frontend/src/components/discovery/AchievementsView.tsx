@@ -20,12 +20,8 @@ import {
   GlobeAltIcon as GlobeAltIconSolid
 } from '@heroicons/react/24/solid';
 
-interface UserAchievements {
-  badges: string[];
-  totalXp: number;
-  level: number;
-  completedTasks: string[];
-}
+// Import types from the unified service
+import type { UserAchievements } from '@/lib/services/user-data-service';
 
 interface AchievementsViewProps {
   achievements: UserAchievements;

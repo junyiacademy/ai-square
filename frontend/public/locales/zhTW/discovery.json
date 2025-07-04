@@ -170,6 +170,202 @@
           "duration": "20 分鐘"
         }
       ]
+    },
+    "ai_developer": {
+      "title": "AI 開發者",
+      "subtitle": "打造智能應用程式與系統",
+      "description": "學習機器學習、深度學習和 AI 開發技術，創建智能解決方案。",
+      "category": "科技",
+      "skills": ["機器學習", "Python 程式設計", "資料分析", "AI 模型訓練"],
+      "aiAssistants": ["AI 架構師", "資料科學家", "演算法專家"],
+      "tasks": [
+        {
+          "id": "ai_basics",
+          "title": "AI 基礎概念",
+          "description": "了解機器學習和深度學習的核心概念",
+          "duration": "25 分鐘"
+        },
+        {
+          "id": "model_training",
+          "title": "訓練你的第一個 AI 模型",
+          "description": "使用真實數據訓練簡單的 AI 模型",
+          "duration": "30 分鐘"
+        },
+        {
+          "id": "ai_application",
+          "title": "AI 應用實作",
+          "description": "將 AI 模型整合到實際應用中",
+          "duration": "25 分鐘"
+        }
+      ]
+    },
+    "content_creator": {
+      "title": "內容創作者",
+      "subtitle": "創作引人入勝的數位內容",
+      "description": "掌握各種內容創作技巧，包括影片、文字、圖像和社群媒體內容。",
+      "category": "創意",
+      "skills": ["內容策劃", "視覺設計", "文案寫作", "社群媒體行銷"],
+      "aiAssistants": ["創意總監", "內容策略師", "社群經理"],
+      "tasks": [
+        {
+          "id": "content_planning",
+          "title": "內容策劃與規劃",
+          "description": "制定吸引目標受眾的內容策略",
+          "duration": "20 分鐘"
+        },
+        {
+          "id": "visual_creation",
+          "title": "視覺內容創作",
+          "description": "使用 AI 工具創作吸睛的視覺內容",
+          "duration": "25 分鐘"
+        },
+        {
+          "id": "engagement_analysis",
+          "title": "互動分析與優化",
+          "description": "分析內容表現並優化策略",
+          "duration": "20 分鐘"
+        }
+      ]
+    },
+    "startup_founder": {
+      "title": "新創創業家",
+      "subtitle": "從想法到成功創業的旅程",
+      "description": "學習創業所需的商業技能、產品開發和團隊管理能力。",
+      "category": "商業",
+      "skills": ["商業策略", "產品管理", "團隊領導", "市場分析"],
+      "aiAssistants": ["商業顧問", "市場分析師", "財務規劃師"],
+      "tasks": [
+        {
+          "id": "business_model",
+          "title": "商業模式設計",
+          "description": "使用 AI 輔助設計可行的商業模式",
+          "duration": "30 分鐘"
+        },
+        {
+          "id": "market_research",
+          "title": "市場研究與驗證",
+          "description": "進行市場調查和產品驗證",
+          "duration": "25 分鐘"
+        },
+        {
+          "id": "pitch_deck",
+          "title": "投資簡報製作",
+          "description": "創建吸引投資人的專業簡報",
+          "duration": "25 分鐘"
+        }
+      ]
+    },
+    "data_analyst": {
+      "title": "數據分析師",
+      "subtitle": "從數據中發現洞察與價值",
+      "description": "掌握數據分析技能，使用 AI 工具從複雜數據中提取有意義的見解。",
+      "category": "科技",
+      "skills": ["數據分析", "統計學", "資料視覺化", "SQL"],
+      "aiAssistants": ["數據科學家", "統計專家", "視覺化設計師"],
+      "tasks": [
+        {
+          "id": "data_exploration",
+          "title": "數據探索與清理",
+          "description": "學習如何準備和清理數據集",
+          "duration": "25 分鐘"
+        },
+        {
+          "id": "analysis_techniques",
+          "title": "分析技術應用",
+          "description": "使用統計方法分析數據趨勢",
+          "duration": "30 分鐘"
+        },
+        {
+          "id": "data_visualization",
+          "title": "數據視覺化",
+          "description": "創建清晰易懂的數據圖表",
+          "duration": "20 分鐘"
+        }
+      ]
+    },
+    "ux_designer": {
+      "title": "UX 設計師",
+      "subtitle": "設計以用戶為中心的數位體驗",
+      "description": "學習用戶體驗設計原則，創造直觀、愉悅的數位產品體驗。",
+      "category": "創意",
+      "skills": ["用戶研究", "原型設計", "互動設計", "可用性測試"],
+      "aiAssistants": ["設計總監", "用戶研究員", "原型專家"],
+      "tasks": [
+        {
+          "id": "user_research",
+          "title": "用戶研究與訪談",
+          "description": "進行用戶訪談了解需求",
+          "duration": "25 分鐘"
+        },
+        {
+          "id": "wireframing",
+          "title": "線框圖與原型設計",
+          "description": "創建產品原型和線框圖",
+          "duration": "30 分鐘"
+        },
+        {
+          "id": "usability_testing",
+          "title": "可用性測試",
+          "description": "測試設計並收集回饋",
+          "duration": "20 分鐘"
+        }
+      ]
+    },
+    "product_manager": {
+      "title": "產品經理",
+      "subtitle": "領導產品從概念到上市",
+      "description": "掌握產品管理技能，協調團隊開發成功的數位產品。",
+      "category": "商業",
+      "skills": ["產品策略", "專案管理", "數據分析", "團隊協作"],
+      "aiAssistants": ["策略顧問", "數據分析師", "敏捷教練"],
+      "tasks": [
+        {
+          "id": "product_roadmap",
+          "title": "產品路線圖規劃",
+          "description": "制定產品發展策略和時程",
+          "duration": "30 分鐘"
+        },
+        {
+          "id": "feature_prioritization",
+          "title": "功能優先級排序",
+          "description": "使用數據決定功能開發順序",
+          "duration": "25 分鐘"
+        },
+        {
+          "id": "stakeholder_communication",
+          "title": "利害關係人溝通",
+          "description": "有效溝通產品願景和進度",
+          "duration": "20 分鐘"
+        }
+      ]
+    },
+    "tech_entrepreneur": {
+      "title": "科技創業家",
+      "subtitle": "結合技術與商業的創新者",
+      "description": "融合技術專長與商業頭腦，創建創新的科技解決方案。",
+      "category": "科技",
+      "skills": ["技術開發", "商業策略", "創新思維", "領導力"],
+      "aiAssistants": ["技術顧問", "創業導師", "創新策略師"],
+      "tasks": [
+        {
+          "id": "tech_innovation",
+          "title": "技術創新工作坊",
+          "description": "探索新技術的商業應用",
+          "duration": "30 分鐘"
+        },
+        {
+          "id": "mvp_development",
+          "title": "MVP 開發",
+          "description": "快速開發最小可行產品",
+          "duration": "35 分鐘"
+        },
+        {
+          "id": "growth_hacking",
+          "title": "成長駭客策略",
+          "description": "學習快速成長的技術策略",
+          "duration": "25 分鐘"
+        }
+      ]
     }
   },
   

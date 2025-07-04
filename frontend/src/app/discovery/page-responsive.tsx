@@ -11,11 +11,24 @@ import {
   XMarkIcon
 } from '@heroicons/react/24/outline';
 
+// Define ViewState type
+type ViewState = 'welcome' | 'assessment' | 'results' | 'paths' | 'workspace' | 'workspaces' | 'achievements';
+
+// Define navigation items
+const navigationItems = [
+  { id: 'welcome', view: 'welcome' as ViewState, icon: SparklesIcon, label: '歡迎', disabled: false },
+  { id: 'assessment', view: 'assessment' as ViewState, icon: SparklesIcon, label: '評估', disabled: false },
+  { id: 'results', view: 'results' as ViewState, icon: TrophyIcon, label: '結果', disabled: false },
+];
+
 export default function CareerDiscoveryPageResponsive() {
   const { t } = useTranslation(['careerDiscovery', 'navigation']);
   const [currentView, setCurrentView] = useState<ViewState>('welcome');
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  
+  // Mock achievements for this incomplete page
+  const achievements = { totalXp: 0, level: 1, badges: [], completedTasks: [] };
 
   // 監聽滾動，當滾動時縮小導航欄
   useEffect(() => {

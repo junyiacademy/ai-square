@@ -2,6 +2,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import TaskWorkflow from './TaskWorkflow';
+import SelfAssessmentForm from './evaluation/SelfAssessmentForm';
+import PeerReviewForm from './evaluation/PeerReviewForm';
+import MentorFeedbackForm from './evaluation/MentorFeedbackForm';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { 
@@ -13,8 +16,22 @@ import {
   ClockIcon,
   CpuChipIcon,
   TrophyIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
+  ClipboardDocumentListIcon,
+  UserGroupIcon,
+  AcademicCapIcon,
+  PencilIcon,
+  CheckCircleIcon
 } from '@heroicons/react/24/outline';
+import DiscoveryHeader from './DiscoveryHeader';
+import { 
+  EvaluationCriteria, 
+  SelfAssessment, 
+  PeerReview, 
+  MentorFeedback,
+  DEFAULT_EVALUATION_CRITERIA 
+} from '@/types/evaluation-system';
+import { UserDataService } from '@/lib/services/user-data-service';
 
 interface UserAchievements {
   badges: string[];
@@ -25,8 +42,9 @@ interface UserAchievements {
 
 interface ExplorationWorkspaceProps {
   pathId: string;
+  workspaceId?: string; // Add workspace ID to save answers
   achievements: UserAchievements;
-  onTaskComplete: (taskId: string, xpGained: number, skillsGained: string[]) => void;
+  onTaskComplete: (taskId: string, xpGained: number, skillsGained: string[], answer?: string) => void;
   onBackToPaths: () => void;
   onViewAchievements?: () => void;
 }
@@ -54,6 +72,7 @@ interface ChatMessage {
 
 export default function ExplorationWorkspace({ 
   pathId, 
+  workspaceId,
   achievements, 
   onTaskComplete, 
   onBackToPaths,
@@ -67,27 +86,348 @@ export default function ExplorationWorkspace({
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [showWorkflow, setShowWorkflow] = useState(false);
+  const [activeEvaluationView, setActiveEvaluationView] = useState<'self' | 'peer' | 'mentor' | null>(null);
+  const [userDataService] = useState(() => new UserDataService());
+  const [taskAnswers, setTaskAnswers] = useState<Record<string, any>>({});
+  const [currentTaskAnswer, setCurrentTaskAnswer] = useState<string>('');
+  const [isViewMode, setIsViewMode] = useState(false); // True when viewing completed task in completed workspace
+  const [isLoadingAnswer, setIsLoadingAnswer] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
-  // Get path data from translations
-  const pathData = t(`paths.${pathId}`, { returnObjects: true }) as PathData;
-  const currentTask = pathData.tasks[currentTaskIndex];
-  const isLastTask = currentTaskIndex === pathData.tasks.length - 1;
+  // Temporary hardcoded data for testing
+  const pathDataMap: Record<string, PathData> = {
+    content_creator: {
+      title: "內容創作者",
+      skills: ["內容策劃", "視覺設計", "文案寫作", "社群媒體行銷"],
+      aiAssistants: ["創意總監", "內容策略師", "社群經理"],
+      tasks: [
+        {
+          id: "content_planning",
+          title: "內容策劃與規劃",
+          description: "制定吸引目標受眾的內容策略",
+          duration: "20 分鐘"
+        },
+        {
+          id: "visual_creation",
+          title: "視覺內容創作",
+          description: "使用 AI 工具創作吸睛的視覺內容",
+          duration: "25 分鐘"
+        },
+        {
+          id: "engagement_analysis",
+          title: "互動分析與優化",
+          description: "分析內容表現並優化策略",
+          duration: "20 分鐘"
+        }
+      ]
+    },
+    youtuber: {
+      title: "YouTuber",
+      skills: ["影片製作", "剪輯技巧", "觀眾互動", "頻道經營"],
+      aiAssistants: ["影片製作人", "內容顧問", "數據分析師"],
+      tasks: [
+        {
+          id: "video_planning",
+          title: "影片企劃",
+          description: "設計吸引人的影片主題和腳本",
+          duration: "20 分鐘"
+        },
+        {
+          id: "content_production",
+          title: "內容製作",
+          description: "拍攝和編輯高品質影片",
+          duration: "30 分鐘"
+        },
+        {
+          id: "audience_engagement",
+          title: "觀眾互動",
+          description: "建立和維護觀眾社群",
+          duration: "15 分鐘"
+        }
+      ]
+    },
+    app_developer: {
+      title: "應用程式開發者",
+      skills: ["程式設計", "UI/UX設計", "測試調試", "版本控制"],
+      aiAssistants: ["程式設計助手", "調試專家", "架構顧問"],
+      tasks: [
+        {
+          id: "app_planning",
+          title: "應用程式規劃",
+          description: "設計應用程式架構和功能",
+          duration: "25 分鐘"
+        },
+        {
+          id: "ui_development",
+          title: "介面開發",
+          description: "使用 AI 輔助開發使用者介面",
+          duration: "30 分鐘"
+        },
+        {
+          id: "testing",
+          title: "測試與優化",
+          description: "測試應用程式並優化效能",
+          duration: "20 分鐘"
+        }
+      ]
+    },
+    game_designer: {
+      title: "遊戲設計師",
+      skills: ["遊戲設計", "關卡設計", "平衡調整", "玩家心理"],
+      aiAssistants: ["遊戲設計師", "關卡編輯器", "測試協調員"],
+      tasks: [
+        {
+          id: "game_concept",
+          title: "遊戲概念設計",
+          description: "創造引人入勝的遊戲概念",
+          duration: "20 分鐘"
+        },
+        {
+          id: "level_design",
+          title: "關卡設計",
+          description: "設計有趣且具挑戰性的關卡",
+          duration: "25 分鐘"
+        },
+        {
+          id: "playtesting",
+          title: "遊戲測試",
+          description: "測試遊戲並收集反饋",
+          duration: "20 分鐘"
+        }
+      ]
+    },
+    tech_entrepreneur: {
+      title: "科技創業家",
+      skills: ["商業策略", "技術願景", "團隊領導", "創新思維"],
+      aiAssistants: ["商業顧問", "技術策略師", "市場分析師"],
+      tasks: [
+        {
+          id: "business_model",
+          title: "商業模式設計",
+          description: "設計可持續的商業模式",
+          duration: "25 分鐘"
+        },
+        {
+          id: "tech_planning",
+          title: "技術路線規劃",
+          description: "規劃產品的技術發展路線",
+          duration: "25 分鐘"
+        },
+        {
+          id: "pitch_deck",
+          title: "投資簡報製作",
+          description: "製作吸引投資者的簡報",
+          duration: "20 分鐘"
+        }
+      ]
+    },
+    startup_founder: {
+      title: "創業家",
+      skills: ["商業開發", "市場洞察", "資源整合", "風險管理"],
+      aiAssistants: ["創業導師", "市場專家", "財務顧問"],
+      tasks: [
+        {
+          id: "market_research",
+          title: "市場研究",
+          description: "深入了解目標市場需求",
+          duration: "20 分鐘"
+        },
+        {
+          id: "mvp_planning",
+          title: "MVP 規劃",
+          description: "設計最小可行產品",
+          duration: "25 分鐘"
+        },
+        {
+          id: "growth_strategy",
+          title: "成長策略",
+          description: "制定產品成長策略",
+          duration: "20 分鐘"
+        }
+      ]
+    },
+    data_analyst: {
+      title: "數據分析師",
+      skills: ["數據分析", "統計建模", "視覺化", "洞察發現"],
+      aiAssistants: ["數據科學家", "統計專家", "視覺化設計師"],
+      tasks: [
+        {
+          id: "data_exploration",
+          title: "數據探索",
+          description: "探索並理解數據集",
+          duration: "20 分鐘"
+        },
+        {
+          id: "analysis_design",
+          title: "分析設計",
+          description: "設計有效的分析方法",
+          duration: "25 分鐘"
+        },
+        {
+          id: "insights_presentation",
+          title: "洞察呈現",
+          description: "將分析結果轉化為洞察",
+          duration: "20 分鐘"
+        }
+      ]
+    },
+    ux_designer: {
+      title: "UX 設計師",
+      skills: ["用戶研究", "原型設計", "互動設計", "可用性測試"],
+      aiAssistants: ["設計導師", "用戶研究員", "原型工具專家"],
+      tasks: [
+        {
+          id: "user_research",
+          title: "用戶研究",
+          description: "了解用戶需求和痛點",
+          duration: "20 分鐘"
+        },
+        {
+          id: "prototype_design",
+          title: "原型設計",
+          description: "設計互動原型",
+          duration: "30 分鐘"
+        },
+        {
+          id: "usability_testing",
+          title: "可用性測試",
+          description: "測試並優化設計",
+          duration: "15 分鐘"
+        }
+      ]
+    },
+    product_manager: {
+      title: "產品經理",
+      skills: ["產品規劃", "需求分析", "專案管理", "跨部門協作"],
+      aiAssistants: ["產品策略師", "專案管理師", "數據分析師"],
+      tasks: [
+        {
+          id: "requirement_analysis",
+          title: "需求分析",
+          description: "分析並定義產品需求",
+          duration: "25 分鐘"
+        },
+        {
+          id: "roadmap_planning",
+          title: "路線圖規劃",
+          description: "制定產品發展路線圖",
+          duration: "20 分鐘"
+        },
+        {
+          id: "feature_prioritization",
+          title: "功能優先級",
+          description: "評估並排序功能優先級",
+          duration: "20 分鐘"
+        }
+      ]
+    },
+    ai_developer: {
+      title: "AI 開發者",
+      skills: ["機器學習", "深度學習", "模型優化", "AI 應用開發"],
+      aiAssistants: ["AI 研究員", "模型訓練師", "部署專家"],
+      tasks: [
+        {
+          id: "model_selection",
+          title: "模型選擇",
+          description: "選擇適合的 AI 模型",
+          duration: "20 分鐘"
+        },
+        {
+          id: "training_optimization",
+          title: "訓練優化",
+          description: "優化模型訓練過程",
+          duration: "30 分鐘"
+        },
+        {
+          id: "deployment_planning",
+          title: "部署規劃",
+          description: "規劃 AI 模型部署策略",
+          duration: "15 分鐘"
+        }
+      ]
+    }
+  };
+
+  // Get path data from hardcoded map or try translation
+  let typedPathData = pathDataMap[pathId];
+  
+  if (!typedPathData) {
+    // Try to get from translations as fallback
+    const translatedData = t(`careers.${pathId}`, { returnObjects: true });
+    if (translatedData && typeof translatedData === 'object' && translatedData.tasks) {
+      typedPathData = translatedData as PathData;
+    }
+  }
+
+  // If still no data, show error
+  if (!typedPathData) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600 mb-4">Path data not found for: {pathId}</p>
+          <p className="text-sm text-gray-500 mb-4">Available paths: content_creator, youtuber, app_developer, game_designer, tech_entrepreneur, startup_founder, data_analyst, ux_designer, product_manager, ai_developer</p>
+          <button
+            onClick={onBackToPaths}
+            className="inline-flex items-center space-x-2 text-purple-600 hover:text-purple-700 font-medium"
+          >
+            <ArrowLeftIcon className="w-5 h-5" />
+            <span>{t('workspace.backToPaths')}</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+  
+  const currentTask = typedPathData.tasks[currentTaskIndex];
+  const isLastTask = currentTaskIndex === typedPathData.tasks.length - 1;
+
+  // Load task answers when workspace ID is available
+  useEffect(() => {
+    const loadTaskAnswers = async () => {
+      if (workspaceId && typedPathData) {
+        // Run migration once on first load
+        const { migrateTaskAnswers } = await import('@/lib/utils/migrate-task-answers');
+        migrateTaskAnswers();
+        
+        const answers: Record<string, any> = {};
+        
+        // Load all task answers for this workspace
+        for (const task of typedPathData.tasks) {
+          const answer = await userDataService.getTaskAnswer(workspaceId, task.id);
+          if (answer) {
+            answers[task.id] = answer;
+          }
+        }
+        
+        setTaskAnswers(answers);
+        
+        // Set current task answer if exists
+        if (currentTask && answers[currentTask.id]) {
+          setCurrentTaskAnswer(answers[currentTask.id].answer);
+        } else {
+          setCurrentTaskAnswer(''); // Clear if no answer exists
+        }
+      }
+    };
+    
+    loadTaskAnswers();
+  }, [workspaceId, pathId, currentTaskIndex]);
 
   // Initialize AI greeting - only when pathId changes
   useEffect(() => {
-    const data = t(`paths.${pathId}`, { returnObjects: true }) as PathData;
-    const greetingMessage: ChatMessage = {
-      id: '1',
-      sender: 'ai',
-      text: t('aiAssistant.greeting', {
-        role: data.aiAssistants[0] || 'Assistant',
-        path: data.title
-      }),
-      timestamp: new Date()
-    };
-    setChatMessages([greetingMessage]);
-  }, [pathId, t]);
+    if (typedPathData) {
+      const greetingMessage: ChatMessage = {
+        id: '1',
+        sender: 'ai',
+        text: t('aiAssistant.greeting', {
+          role: typedPathData.aiAssistants[0] || 'Assistant',
+          path: typedPathData.title
+        }),
+        timestamp: new Date()
+      };
+      setChatMessages([greetingMessage]);
+    }
+  }, [pathId, t]); // Remove typedPathData from dependencies
 
   // Auto-scroll chat to bottom
   useEffect(() => {
@@ -96,31 +436,79 @@ export default function ExplorationWorkspace({
     }
   }, [chatMessages]);
 
-  const handleStartTask = () => {
+  const handleStartTask = async () => {
     setIsTaskActive(true);
-    setShowWorkflow(true);
     setTaskProgress(0);
+    
+    // For editing completed tasks, ensure we have the answer loaded
+    if (workspaceCompletedTasks.includes(currentTask.id)) {
+      // If editing a completed task, load the answer if not already loaded
+      if (!taskAnswers[currentTask.id] && workspaceId) {
+        setIsLoadingAnswer(true);
+        const answer = await userDataService.getTaskAnswer(workspaceId, currentTask.id);
+        
+        if (answer) {
+          setTaskAnswers(prev => ({
+            ...prev,
+            [currentTask.id]: answer
+          }));
+          setCurrentTaskAnswer(answer.answer);
+        } else {
+          // No saved answer, but task is completed - allow editing with empty content
+          console.log('Task is completed but no answer saved - allowing edit with empty content');
+        }
+        setIsLoadingAnswer(false);
+      }
+    }
+    
+    // Show workflow after answer is loaded
+    setShowWorkflow(true);
     
     // Add AI task introduction
     const taskIntroMessage: ChatMessage = {
       id: Date.now().toString(),
       sender: 'ai',
-      text: '太好了！讓我們開始這個任務。我會在旁邊協助你完成每個步驟。',
+      text: workspaceCompletedTasks.includes(currentTask.id) 
+        ? taskAnswers[currentTask.id]?.answer 
+          ? '讓我們來編輯這個任務的答案。你之前的答案已經載入。'
+          : '這個任務已完成但沒有保存答案。你可以現在補充答案。'
+        : '太好了！讓我們開始這個任務。我會在旁邊協助你完成每個步驟。',
       timestamp: new Date()
     };
     setChatMessages(prev => [...prev, taskIntroMessage]);
   };
 
-  const handleCompleteTask = () => {
+  const handleProgressUpdate = React.useCallback((progress: number) => {
+    setTaskProgress(progress);
+  }, []);
+
+  const handleCompleteTask = async (taskAnswer?: string) => {
     setIsTaskActive(false);
     setShowWorkflow(false);
     
+    // Save task answer if workspace ID is available
+    if (workspaceId && taskAnswer && typeof taskAnswer === 'string') {
+      const answer = {
+        taskId: currentTask.id,
+        answer: String(taskAnswer), // Ensure it's a string
+        submittedAt: new Date().toISOString()
+      };
+      
+      await userDataService.saveTaskAnswer(workspaceId, answer);
+      
+      setTaskAnswers(prev => ({
+        ...prev,
+        [currentTask.id]: answer
+      }));
+      setCurrentTaskAnswer(String(taskAnswer));
+    }
+    
     // Calculate XP and skills
     const xpGained = 50 + (currentTaskIndex * 10);
-    const skillsGained = pathData.skills.slice(0, 2); // Award first 2 skills
+    const skillsGained = typedPathData.skills.slice(0, 2); // Award first 2 skills
     
-    // Call parent callback
-    onTaskComplete(currentTask.id, xpGained, skillsGained);
+    // Call parent callback with answer
+    onTaskComplete(currentTask.id, xpGained, skillsGained, taskAnswer);
     
     // Add completion message
     const completionMessage: ChatMessage = {
@@ -133,17 +521,21 @@ export default function ExplorationWorkspace({
     
     // Check if all tasks are completed
     const newCompletedCount = completedTasksCount + 1;
-    if (newCompletedCount === pathData.tasks.length) {
-      // All tasks completed, navigate to achievements after a short delay
-      setTimeout(() => {
-        if (onViewAchievements) {
-          onViewAchievements();
-        }
-      }, 1500);
+    if (newCompletedCount === typedPathData.tasks.length) {
+      // All tasks completed
+      const congratsMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        sender: 'ai',
+        text: `🎉 恭喜！你已經完成了所有任務！這個工作區已標記為「已完成」。`,
+        timestamp: new Date()
+      };
+      setChatMessages(prev => [...prev, congratsMessage]);
+      
+      // Don't auto-navigate - let user decide when to leave
     } else {
       // Auto move to next incomplete task
-      const nextIncompleteIndex = pathData.tasks.findIndex((task, index) => 
-        index > currentTaskIndex && !achievements.completedTasks.includes(task.id)
+      const nextIncompleteIndex = typedPathData.tasks.findIndex((task, index) => 
+        index > currentTaskIndex && !workspaceCompletedTasks.includes(task.id)
       );
       
       if (nextIncompleteIndex !== -1) {
@@ -158,16 +550,16 @@ export default function ExplorationWorkspace({
   const handleNextTask = () => {
     if (!isLastTask) {
       // Find next incomplete task
-      const nextIncompleteIndex = pathData.tasks.findIndex((task, index) => 
-        index > currentTaskIndex && !achievements.completedTasks.includes(task.id)
+      const nextIncompleteIndex = typedPathData.tasks.findIndex((task, index) => 
+        index > currentTaskIndex && !workspaceCompletedTasks.includes(task.id)
       );
       
       if (nextIncompleteIndex !== -1) {
         setCurrentTaskIndex(nextIncompleteIndex);
       } else {
         // If no incomplete tasks after current, wrap around to find any incomplete
-        const firstIncompleteIndex = pathData.tasks.findIndex((task) => 
-          !achievements.completedTasks.includes(task.id)
+        const firstIncompleteIndex = typedPathData.tasks.findIndex((task) => 
+          !workspaceCompletedTasks.includes(task.id)
         );
         
         if (firstIncompleteIndex !== -1 && firstIncompleteIndex !== currentTaskIndex) {
@@ -180,12 +572,36 @@ export default function ExplorationWorkspace({
     }
   };
   
-  const handleTaskClick = (index: number) => {
-    // Only allow clicking on incomplete tasks or current task
-    if (index !== currentTaskIndex) {
+  const handleTaskClick = async (index: number) => {
+    // Allow switching to any task
+    if (index !== currentTaskIndex || !isTaskActive) {
       setCurrentTaskIndex(index);
       setTaskProgress(0);
       setIsTaskActive(false);
+      setShowWorkflow(false);
+      
+      // Always allow edit mode for any task
+      setIsViewMode(false);
+      
+      // Load previous answer if available
+      const task = typedPathData.tasks[index];
+      if (taskAnswers[task.id]) {
+        setCurrentTaskAnswer(taskAnswers[task.id].answer);
+      } else {
+        setCurrentTaskAnswer('');
+        
+        // Try to load answer from storage
+        if (workspaceId) {
+          const answer = await userDataService.getTaskAnswer(workspaceId, task.id);
+          if (answer) {
+            setTaskAnswers(prev => ({
+              ...prev,
+              [task.id]: answer
+            }));
+            setCurrentTaskAnswer(answer.answer);
+          }
+        }
+      }
     }
   };
 
@@ -214,15 +630,15 @@ export default function ExplorationWorkspace({
           message: newMessage,
           context: {
             pathId,
-            pathTitle: pathData.title,
+            pathTitle: typedPathData.title,
             currentTask: currentTask.title,
             currentTaskDescription: currentTask.description,
             taskProgress: Math.round(taskProgress),
             taskIndex: currentTaskIndex + 1,
-            totalTasks: pathData.tasks.length,
+            totalTasks: typedPathData.tasks.length,
             completedTasks: completedTasksCount,
-            aiRole: pathData.aiAssistants[0] || 'AI Assistant',
-            skills: pathData.skills,
+            aiRole: typedPathData.aiAssistants[0] || 'AI Assistant',
+            skills: typedPathData.skills,
             language: 'zh-TW'
           }
         })
@@ -267,7 +683,7 @@ export default function ExplorationWorkspace({
     
     // 基本意圖識別
     if (/(你好|哈囉|嗨|hi|hello)/i.test(lowerMessage)) {
-      return `你好！我是你的 ${pathData.aiAssistants[0] || 'AI 助手'}。雖然目前連線有些問題，但我會盡力協助你完成「${currentTask.title}」這個任務。有什麼需要幫助的嗎？`;
+      return `你好！我是你的 ${typedPathData.aiAssistants[0] || 'AI 助手'}。雖然目前連線有些問題，但我會盡力協助你完成「${currentTask.title}」這個任務。有什麼需要幫助的嗎？`;
     }
     
     if (/(謝謝|感謝|thank)/i.test(lowerMessage)) {
@@ -283,17 +699,151 @@ export default function ExplorationWorkspace({
   };
 
 
-  const completedTasksCount = achievements.completedTasks.filter(taskId => 
-    pathData.tasks.some(task => task.id === taskId)
-  ).length;
+  // Get completed tasks for this specific workspace from localStorage
+  const [workspaceCompletedTasks, setWorkspaceCompletedTasks] = useState<string[]>([]);
+  
+  useEffect(() => {
+    const loadWorkspaceData = async () => {
+      if (workspaceId) {
+        const userData = await userDataService.loadUserData();
+        if (userData) {
+          const workspace = userData.workspaceSessions.find(ws => ws.id === workspaceId);
+          if (workspace) {
+            setWorkspaceCompletedTasks(workspace.completedTasks || []);
+          }
+        }
+      }
+    };
+    loadWorkspaceData();
+  }, [workspaceId]);
+  
+  const completedTasksCount = workspaceCompletedTasks.length;
+
+  // Evaluation handlers
+  const handleSelfAssessmentSubmit = async (assessment: Omit<SelfAssessment, 'id' | 'submittedAt'>) => {
+    try {
+      const fullAssessment: SelfAssessment = {
+        ...assessment,
+        id: `${Date.now()}_self`,
+        submittedAt: new Date().toISOString()
+      };
+      
+      await userDataService.saveEvaluation('self_assessments', fullAssessment.id, fullAssessment);
+      setActiveEvaluationView(null);
+      
+      // Add success message to chat
+      const successMessage: ChatMessage = {
+        id: Date.now().toString(),
+        sender: 'ai',
+        text: '太棒了！你的自我評估已經成功提交。這個反思過程對你的學習很有價值。',
+        timestamp: new Date()
+      };
+      setChatMessages(prev => [...prev, successMessage]);
+    } catch (error) {
+      console.error('Failed to save self assessment:', error);
+    }
+  };
+
+  const handleSelfAssessmentDraft = async (assessment: Omit<SelfAssessment, 'id' | 'submittedAt'>) => {
+    try {
+      const draftAssessment: SelfAssessment = {
+        ...assessment,
+        id: `${Date.now()}_self_draft`,
+        submittedAt: new Date().toISOString()
+      };
+      
+      await userDataService.saveEvaluation('self_assessments_drafts', draftAssessment.id, draftAssessment);
+    } catch (error) {
+      console.error('Failed to save self assessment draft:', error);
+    }
+  };
+
+  const handlePeerReviewSubmit = async (review: Omit<PeerReview, 'id' | 'submittedAt'>) => {
+    try {
+      const fullReview: PeerReview = {
+        ...review,
+        id: `${Date.now()}_peer`,
+        submittedAt: new Date().toISOString()
+      };
+      
+      await userDataService.saveEvaluation('peer_reviews', fullReview.id, fullReview);
+      setActiveEvaluationView(null);
+      
+      // Add success message to chat
+      const successMessage: ChatMessage = {
+        id: Date.now().toString(),
+        sender: 'ai',
+        text: '感謝你提供的同儕評審！建設性的回饋對彼此的學習都很重要。',
+        timestamp: new Date()
+      };
+      setChatMessages(prev => [...prev, successMessage]);
+    } catch (error) {
+      console.error('Failed to save peer review:', error);
+    }
+  };
+
+  const handleMentorFeedbackSubmit = async (feedback: Omit<MentorFeedback, 'id' | 'submittedAt'>) => {
+    try {
+      const fullFeedback: MentorFeedback = {
+        ...feedback,
+        id: `${Date.now()}_mentor`,
+        submittedAt: new Date().toISOString()
+      };
+      
+      await userDataService.saveEvaluation('mentor_feedback', fullFeedback.id, fullFeedback);
+      setActiveEvaluationView(null);
+      
+      // Add success message to chat
+      const successMessage: ChatMessage = {
+        id: Date.now().toString(),
+        sender: 'ai',
+        text: '專業導師回饋已成功提交！這些深度洞察將幫助學生更好地成長。',
+        timestamp: new Date()
+      };
+      setChatMessages(prev => [...prev, successMessage]);
+    } catch (error) {
+      console.error('Failed to save mentor feedback:', error);
+    }
+  };
+
+  const handleMentorFeedbackDraft = async (feedback: Omit<MentorFeedback, 'id' | 'submittedAt'>) => {
+    try {
+      const draftFeedback: MentorFeedback = {
+        ...feedback,
+        id: `${Date.now()}_mentor_draft`,
+        submittedAt: new Date().toISOString()
+      };
+      
+      await userDataService.saveEvaluation('mentor_feedback_drafts', draftFeedback.id, draftFeedback);
+    } catch (error) {
+      console.error('Failed to save mentor feedback draft:', error);
+    }
+  };
 
   return (
-    <div className="max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          {t('workspace.title', { path: pathData.title })}
-        </h1>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      {/* Discovery Header */}
+      <DiscoveryHeader 
+        hasAssessmentResults={true}
+        workspaceCount={1}
+        achievementCount={achievements.badges.length}
+      />
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-3xl font-bold text-gray-900">
+              {typedPathData.title} Workspace
+            </h1>
+            <button
+              onClick={onBackToPaths}
+              className="inline-flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <ArrowLeftIcon className="w-5 h-5" />
+              <span>返回路徑</span>
+            </button>
+          </div>
         
         {/* Current Progress Overview */}
         <div className="flex items-center justify-between bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-4">
@@ -311,13 +861,13 @@ export default function ExplorationWorkspace({
             <div className="text-right">
               <p className="text-sm text-gray-600">整體進度</p>
               <p className="font-medium text-purple-700">
-                {completedTasksCount}/{pathData.tasks.length} 任務完成
+                {completedTasksCount}/{typedPathData.tasks.length} 任務完成
               </p>
             </div>
             <div className="w-24 bg-gray-200 rounded-full h-2">
               <div 
                 className="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full transition-all duration-500"
-                style={{ width: `${(completedTasksCount / pathData.tasks.length) * 100}%` }}
+                style={{ width: `${(completedTasksCount / typedPathData.tasks.length) * 100}%` }}
               />
             </div>
           </div>
@@ -352,12 +902,24 @@ export default function ExplorationWorkspace({
             {/* Show Workflow or Progress */}
             {showWorkflow ? (
               <div className="mb-6">
-                <TaskWorkflow
-                  taskId={currentTask.id}
-                  taskTitle={currentTask.title}
-                  onComplete={handleCompleteTask}
-                  onProgressUpdate={setTaskProgress}
-                />
+                {isLoadingAnswer ? (
+                  <div className="flex items-center justify-center p-8">
+                    <div className="text-center">
+                      <div className="w-8 h-8 border-4 border-purple-600 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                      <p className="text-gray-600">載入答案中...</p>
+                    </div>
+                  </div>
+                ) : (
+                  <TaskWorkflow
+                    key={`${currentTask.id}-${taskAnswers[currentTask.id]?.answer ? 'loaded' : 'empty'}`} // Force re-render when answer loads
+                    taskId={currentTask.id}
+                    taskTitle={currentTask.title}
+                    onComplete={handleCompleteTask}
+                    onProgressUpdate={handleProgressUpdate}
+                    previousAnswer={taskAnswers[currentTask.id]?.answer || currentTaskAnswer}
+                    isEditMode={workspaceCompletedTasks.includes(currentTask.id) && !isViewMode}
+                  />
+                )}
               </div>
             ) : (
               isTaskActive && (
@@ -391,10 +953,71 @@ export default function ExplorationWorkspace({
               )
             )}
 
+            {/* Show previous answer if task is completed */}
+            {workspaceCompletedTasks.includes(currentTask.id) && taskAnswers[currentTask.id] && !showWorkflow && (
+              <div className="mb-6 p-4 bg-green-50 rounded-xl border border-green-200">
+                <div className="flex items-start space-x-3">
+                  <CheckCircleIcon className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
+                  <div className="flex-1">
+                    <h4 className="font-medium text-green-900 mb-2">
+                      {isViewMode ? '任務答案（查看模式）' : '此任務已完成'}
+                    </h4>
+                    <div className="bg-white p-3 rounded-lg">
+                      {(() => {
+                        try {
+                          const answer = taskAnswers[currentTask.id].answer;
+                          const parsed = typeof answer === 'string' && answer.startsWith('{') ? JSON.parse(answer) : null;
+                          
+                          if (parsed && parsed.steps) {
+                            // Display structured answer - show the workflow in view mode
+                            return (
+                              <div>
+                                <p className="text-sm text-gray-600 mb-3">點擊步驟查看不同階段的答案：</p>
+                                <TaskWorkflow
+                                  key={`view-${currentTask.id}`}
+                                  taskId={currentTask.id}
+                                  taskTitle={currentTask.title}
+                                  onComplete={() => {}} // No-op in view mode
+                                  onProgressUpdate={() => {}} // No-op in view mode
+                                  previousAnswer={taskAnswers[currentTask.id]?.answer}
+                                  isEditMode={false}
+                                  isViewOnlyMode={true} // New prop for view-only mode
+                                />
+                              </div>
+                            );
+                          } else {
+                            // Display simple answer (backward compatibility)
+                            return (
+                              <>
+                                <p className="text-sm text-gray-600 mb-1">你的答案：</p>
+                                <p className="text-gray-800 whitespace-pre-wrap">{answer}</p>
+                              </>
+                            );
+                          }
+                        } catch (e) {
+                          // Fallback for non-JSON answers
+                          return (
+                            <>
+                              <p className="text-sm text-gray-600 mb-1">你的答案：</p>
+                              <p className="text-gray-800 whitespace-pre-wrap">{taskAnswers[currentTask.id].answer}</p>
+                            </>
+                          );
+                        }
+                      })()}
+                      <p className="text-xs text-gray-500 mt-3 pt-3 border-t">
+                        提交時間：{new Date(taskAnswers[currentTask.id].submittedAt).toLocaleString('zh-TW')}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Task Actions */}
             {!showWorkflow && (
               <div className="flex space-x-3">
-                {!isTaskActive ? (
+                {!isTaskActive && !workspaceCompletedTasks.includes(currentTask.id) ? (
+                  // Start button for incomplete tasks
                   <motion.button
                     onClick={handleStartTask}
                     whileHover={{ scale: 1.02 }}
@@ -404,15 +1027,27 @@ export default function ExplorationWorkspace({
                     <PlayIcon className="w-5 h-5" />
                     <span>{t('workspace.startTask')}</span>
                   </motion.button>
-                ) : taskProgress >= 100 ? (
+                ) : taskProgress >= 100 && !workspaceCompletedTasks.includes(currentTask.id) ? (
+                  // Complete button for tasks in progress
                   <motion.button
-                    onClick={handleCompleteTask}
+                    onClick={() => handleCompleteTask(currentTaskAnswer)}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     className="flex items-center space-x-2 bg-green-600 text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-shadow"
                   >
                     <CheckIcon className="w-5 h-5" />
                     <span>{t('workspace.completeTask')}</span>
+                  </motion.button>
+                ) : workspaceCompletedTasks.includes(currentTask.id) && !isViewMode ? (
+                  // Edit button for completed tasks when workspace is not completed
+                  <motion.button
+                    onClick={handleStartTask}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex items-center space-x-2 bg-yellow-600 text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-shadow"
+                  >
+                    <PencilIcon className="w-5 h-5" />
+                    <span>編輯答案</span>
                   </motion.button>
                 ) : null}
 
@@ -428,7 +1063,7 @@ export default function ExplorationWorkspace({
               )}
               
               {/* Show achievements button when current task is completed and all tasks are done */}
-              {taskProgress >= 100 && achievements.completedTasks.includes(currentTask.id) && completedTasksCount === pathData.tasks.length && onViewAchievements && (
+              {taskProgress >= 100 && workspaceCompletedTasks.includes(currentTask.id) && completedTasksCount === typedPathData.tasks.length && onViewAchievements && (
                 <motion.button
                   onClick={onViewAchievements}
                   whileHover={{ scale: 1.02 }}
@@ -447,10 +1082,10 @@ export default function ExplorationWorkspace({
           <div className="bg-white rounded-2xl shadow-lg p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">所有任務</h3>
             <div className="space-y-2">
-              {pathData.tasks.map((task, index) => {
-                const isCompleted = achievements.completedTasks.includes(task.id);
+              {typedPathData.tasks.map((task, index) => {
+                const isCompleted = workspaceCompletedTasks.includes(task.id);
                 const isCurrent = index === currentTaskIndex;
-                const isClickable = !isCompleted || isCurrent;
+                const isClickable = true; // Allow all tasks to be clickable
                 const isTaskRunning = isTaskActive && isCurrent;
                 
                 return (
@@ -540,7 +1175,30 @@ export default function ExplorationWorkspace({
                           ) : (
                             <div className="flex items-center justify-between mt-1">
                               <p className="text-sm text-gray-600">{task.duration}</p>
-                              {!isCompleted && !isCurrent && (
+                              {isCompleted ? (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleTaskClick(index);
+                                  }}
+                                  className="text-xs px-3 py-1 rounded-full bg-green-100 text-green-700 hover:bg-green-200 transition-colors flex items-center space-x-1"
+                                >
+                                  {completedTasksCount === typedPathData.tasks.length ? (
+                                    <>
+                                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                      </svg>
+                                      <span>查看</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <PencilIcon className="w-3 h-3" />
+                                      <span>編輯</span>
+                                    </>
+                                  )}
+                                </button>
+                              ) : !isCurrent && (
                                 <ChevronRightIcon className="w-4 h-4 text-gray-400" />
                               )}
                             </div>
@@ -559,6 +1217,137 @@ export default function ExplorationWorkspace({
                 );
               })}
             </div>
+          </div>
+
+          {/* Evaluation Section */}
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
+              <ClipboardDocumentListIcon className="w-5 h-5 text-purple-600" />
+              <span>學習評估</span>
+            </h3>
+            
+            {/* Evaluation Type Tabs */}
+            <div className="flex space-x-2 mb-6">
+              <button
+                onClick={() => setActiveEvaluationView(activeEvaluationView === 'self' ? null : 'self')}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+                  activeEvaluationView === 'self'
+                    ? 'bg-blue-100 text-blue-700 border-2 border-blue-300'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <ClipboardDocumentListIcon className="w-4 h-4" />
+                <span>自我評估</span>
+              </button>
+              
+              <button
+                onClick={() => setActiveEvaluationView(activeEvaluationView === 'peer' ? null : 'peer')}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+                  activeEvaluationView === 'peer'
+                    ? 'bg-green-100 text-green-700 border-2 border-green-300'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <UserGroupIcon className="w-4 h-4" />
+                <span>同儕互評</span>
+              </button>
+              
+              <button
+                onClick={() => setActiveEvaluationView(activeEvaluationView === 'mentor' ? null : 'mentor')}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+                  activeEvaluationView === 'mentor'
+                    ? 'bg-purple-100 text-purple-700 border-2 border-purple-300'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <AcademicCapIcon className="w-4 h-4" />
+                <span>導師回饋</span>
+              </button>
+            </div>
+
+            {/* Evaluation Forms */}
+            {activeEvaluationView === 'self' && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <SelfAssessmentForm
+                  taskId={currentTask.id}
+                  workspaceId={pathId}
+                  criteria={DEFAULT_EVALUATION_CRITERIA}
+                  onSubmit={handleSelfAssessmentSubmit}
+                  onSaveDraft={handleSelfAssessmentDraft}
+                  onCancel={() => setActiveEvaluationView(null)}
+                />
+              </motion.div>
+            )}
+
+            {activeEvaluationView === 'peer' && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <PeerReviewForm
+                  taskId={currentTask.id}
+                  workspaceId={pathId}
+                  revieweeId="demo-student"
+                  revieweeName="示範學生"
+                  criteria={DEFAULT_EVALUATION_CRITERIA}
+                  submissionContent="這是示範的學生作品內容，包含了任務相關的學習成果和思考過程..."
+                  onSubmit={handlePeerReviewSubmit}
+                  onCancel={() => setActiveEvaluationView(null)}
+                />
+              </motion.div>
+            )}
+
+            {activeEvaluationView === 'mentor' && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <MentorFeedbackForm
+                  taskId={currentTask.id}
+                  workspaceId={pathId}
+                  studentId="demo-student"
+                  studentName="示範學生"
+                  criteria={DEFAULT_EVALUATION_CRITERIA}
+                  submissionContent="這是示範的學生作品內容，包含了任務相關的學習成果和思考過程..."
+                  onSubmit={handleMentorFeedbackSubmit}
+                  onSaveDraft={handleMentorFeedbackDraft}
+                  onCancel={() => setActiveEvaluationView(null)}
+                />
+              </motion.div>
+            )}
+
+            {/* Evaluation Description */}
+            {!activeEvaluationView && (
+              <div className="text-center py-8">
+                <div className="max-w-md mx-auto">
+                  <ClipboardDocumentListIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <h4 className="text-lg font-medium text-gray-900 mb-2">多元評估系統</h4>
+                  <p className="text-gray-600 text-sm mb-4">
+                    選擇評估方式來深化學習體驗：自我反思、同儕互評或專業導師指導
+                  </p>
+                  <div className="space-y-2 text-xs text-gray-500">
+                    <div className="flex items-center justify-center space-x-2">
+                      <ClipboardDocumentListIcon className="w-4 h-4 text-blue-500" />
+                      <span>自我評估：反思學習過程和成果</span>
+                    </div>
+                    <div className="flex items-center justify-center space-x-2">
+                      <UserGroupIcon className="w-4 h-4 text-green-500" />
+                      <span>同儕互評：交流學習心得與建議</span>
+                    </div>
+                    <div className="flex items-center justify-center space-x-2">
+                      <AcademicCapIcon className="w-4 h-4 text-purple-500" />
+                      <span>導師回饋：專業指導與建議</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -768,10 +1557,11 @@ export default function ExplorationWorkspace({
                 transition={{ duration: 1, repeat: Infinity }}
                 className="w-2 h-2 bg-green-400 rounded-full"
               />
-              <span>AI 導師在線中 • 隨時為你解答 {pathData.title} 相關問題</span>
+              <span>AI 導師在線中 • 隨時為你解答 {typedPathData.title} 相關問題</span>
             </div>
           </motion.div>
         </div>
+      </div>
       </div>
     </div>
   );

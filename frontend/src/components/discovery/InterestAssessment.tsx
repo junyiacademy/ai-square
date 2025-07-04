@@ -18,7 +18,7 @@ interface AssessmentResults {
 }
 
 interface InterestAssessmentProps {
-  onComplete: (results: AssessmentResults) => void;
+  onComplete: (results: AssessmentResults, answers?: Record<string, string[]>) => void;
 }
 
 interface QuestionOption {
@@ -101,7 +101,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
       // Calculate results
       const results = calculateResults();
       setTimeout(() => {
-        onComplete(results);
+        onComplete(results, answers);
       }, 300);
     } else {
       setTimeout(() => {
@@ -135,6 +135,31 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
         }
       });
     });
+
+    // Calculate total score
+    const totalScore = scores.tech + scores.creative + scores.business;
+    
+    // Convert to percentages
+    if (totalScore > 0) {
+      scores.tech = Math.round((scores.tech / totalScore) * 100);
+      scores.creative = Math.round((scores.creative / totalScore) * 100);
+      scores.business = Math.round((scores.business / totalScore) * 100);
+      
+      // Ensure percentages add up to 100
+      const sum = scores.tech + scores.creative + scores.business;
+      if (sum !== 100) {
+        // Adjust the highest score to make it exactly 100
+        const maxKey = Object.keys(scores).reduce((a, b) => 
+          scores[a as keyof typeof scores] > scores[b as keyof typeof scores] ? a : b
+        ) as keyof typeof scores;
+        scores[maxKey] += (100 - sum);
+      }
+    } else {
+      // Default values if no selections
+      scores.tech = 33;
+      scores.creative = 33;
+      scores.business = 34;
+    }
 
     return scores;
   };

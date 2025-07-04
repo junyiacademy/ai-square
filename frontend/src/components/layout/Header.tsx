@@ -158,9 +158,9 @@ export function Header() {
   // 主要導航連結（顯示在導航欄）
   const primaryNavLinks = [
     { href: '/dashboard', label: t('dashboard') },
-    { href: '/pbl', label: t('pbl') },
     { href: '/assessment', label: t('assessment') },
-    { href: '/discovery', label: t('discovery') },
+    { href: '/pbl', label: t('pbl') },
+    { href: '/discovery/overview', label: t('discovery') },
   ]
   
   // 次要導航連結（放在「更多」選單中）
@@ -252,39 +252,6 @@ export function Header() {
 
           {/* 右側區域 */}
           <div className="flex items-center space-x-4">
-            {/* 語言選擇器 */}
-            <LanguageSelector />
-            
-            {/* 主題切換按鈕 */}
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-              aria-label={t('toggleTheme')}
-            >
-              {/* 在 mount 前顯示預設圖標，避免 hydration 問題 */}
-              {!mounted ? (
-                <div className="h-5 w-5" />
-              ) : theme === 'light' ? (
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-                  />
-                </svg>
-              ) : (
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-                  />
-                </svg>
-              )}
-            </button>
-            
             {/* Mobile menu button */}
             <button
               type="button"
@@ -319,48 +286,77 @@ export function Header() {
             
             {isLoggedIn && user ? (
               /* 已登入狀態 */
-              <div className="flex items-center space-x-4">
-                {/* 用戶資訊 - 簡化版本 */}
-                <div className="hidden md:flex md:items-center md:space-x-2">
-                  {/* 用戶頭像與角色 */}
-                  <div className="flex items-center space-x-2 cursor-pointer group relative">
-                    <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
-                      <span className="text-blue-600 text-sm font-medium">
-                        {user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
-                      </span>
-                    </div>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {getRoleDisplayName(user.role)}
+              <div className="relative group">
+                {/* 用戶頭像按鈕 */}
+                <button className="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                  <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span className="text-blue-600 text-sm font-medium">
+                      {user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
                     </span>
-                    
-                    {/* Hover 時顯示完整信箱 */}
-                    <div className="absolute top-full mt-2 right-0 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap">
-                      {user.email}
+                  </div>
+                  <span className="hidden md:block text-sm text-gray-600 dark:text-gray-400">
+                    {getRoleDisplayName(user.role)}
+                  </span>
+                  <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {/* Dropdown menu */}
+                <div className="absolute right-0 mt-2 w-56 rounded-lg shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  <div className="py-1">
+                    {/* User info */}
+                    <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                      <p className="text-sm text-gray-900 dark:text-white font-medium">
+                        {user.name || user.email}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                        {user.email}
+                      </p>
                     </div>
+                    
+                    {/* Language selector */}
+                    <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t('language')}</p>
+                      <LanguageSelector className="w-full" />
+                    </div>
+                    
+                    {/* Theme toggle */}
+                    <button
+                      onClick={toggleTheme}
+                      className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-between border-b border-gray-200 dark:border-gray-700"
+                    >
+                      <span>{t('theme')}</span>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                          {theme === 'light' ? t('light') : t('dark')}
+                        </span>
+                        {mounted && (
+                          theme === 'light' ? (
+                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                          ) : (
+                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                            </svg>
+                          )
+                        )}
+                      </div>
+                    </button>
+                    
+                    {/* Sign out */}
+                    <button
+                      onClick={handleLogout}
+                      className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-3"
+                    >
+                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                      </svg>
+                      <span>{t('signOut')}</span>
+                    </button>
                   </div>
                 </div>
-
-                {/* 登出按鈕 */}
-                <button
-                  onClick={handleLogout}
-                  className="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-                  aria-label={t('signOut')}
-                >
-                  <svg 
-                    className="h-5 w-5" 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
-                    stroke="currentColor"
-                  >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" 
-                    />
-                  </svg>
-                  <span className="hidden xl:inline ml-2">{t('signOut')}</span>
-                </button>
               </div>
             ) : (
               /* 未登入狀態 */
