@@ -38,7 +38,7 @@ interface Question {
 }
 
 export default function InterestAssessment({ onComplete }: InterestAssessmentProps) {
-  const { t } = useTranslation('careerDiscovery');
+  const { t } = useTranslation('discovery');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [isAnimating, setIsAnimating] = useState(false);
@@ -154,10 +154,10 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
             🔍 AI 興趣分析儀
           </h2>
           <p className="text-xl text-gray-600 mb-6 font-medium">
-            🎯 讓 AI 深度分析你的職業潛能和興趣方向
+            🎯 讓 AI 深度分析你的潛能和興趣方向
           </p>
           <p className="text-gray-500 max-w-2xl mx-auto">
-            透過科學化的問題設計，我們會即時分析你的回答並生成個人化的職業建議
+            透過科學化的問題設計，我們會即時分析你的回答並生成個人化的探索建議
           </p>
         </motion.div>
 
@@ -237,10 +237,10 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
             className="mt-3 text-center"
           >
             <span className="text-sm text-purple-600 font-medium">
-              {currentQuestionIndex === 0 && '🎆 開始你的職業探索之旅！'}
+              {currentQuestionIndex === 0 && '🎆 開始你的探索之旅！'}
               {currentQuestionIndex === 1 && '🚀 做得好！繼續探索你的興趣'}
               {currentQuestionIndex === 2 && '✨ 很棒！AI 正在分析你的傾向'}
-              {currentQuestionIndex === 3 && '🎉 最後一題！即將揭曉你的職業方向'}
+              {currentQuestionIndex === 3 && '🎉 最後一題！即將揭曉你的未來方向'}
             </span>
           </motion.div>
         </motion.div>
@@ -408,7 +408,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
                               transition={{ duration: 0.3 }}
                               className="mt-2 text-sm text-purple-600 font-medium overflow-hidden"
                             >
-                              ✨ 很棒的選擇！這會影響你的職業方向分析
+                              ✨ 很棒的選擇！這會影響你的探索方向分析
                             </motion.div>
                           </div>
                         </div>
@@ -460,7 +460,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
                 transition={{ delay: 0.4 }}
                 className="text-purple-600 font-medium"
               >
-                AI 正在深度分析你的興趣模式和職業傾向...
+                AI 正在深度分析你的興趣模式和發展傾向...
               </motion.p>
               
               {/* 分析進度指示 */}

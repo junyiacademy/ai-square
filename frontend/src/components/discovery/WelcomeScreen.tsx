@@ -30,18 +30,18 @@ interface FloatingParticle {
 }
 
 export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
-  const { t } = useTranslation('careerDiscovery');
+  const { t } = useTranslation('discovery');
   const [particles, setParticles] = useState<FloatingParticle[]>([]);
   const [currentPhrase, setCurrentPhrase] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
 
   // 動態標語輪播
   const phrases = [
-    '🚀 進入未來職業宇宙',
-    '🎮 體驗 AI 驅動的職業冒險',
-    '✨ 重新定義你的職業道路',
-    '🌟 開啟無限可能的職涯',
-    '💫 沉浸式職業探索體驗'
+    '🚀 進入無限探索',
+    '🎮 體驗 AI 驅動的探索冒險',
+    '✨ 重新定義你的探索旅程',
+    '🌟 開啟無限可能的未來',
+    '💫 沉浸式探索體驗'
   ];
 
   // 初始化浮動粒子 - 減少粒子數量避免性能問題
@@ -191,7 +191,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
             }}
             transition={{ duration: 3, repeat: Infinity }}
           >
-            職業探索宇宙
+            探索世界
           </motion.h1>
           
           <motion.p 
@@ -200,7 +200,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            🎮 像玩遊戲一樣探索你的未來職業 • AI 驅動的沉浸式體驗
+            🎮 像玩遊戲一樣探索你的未來 • AI 驅動的沉浸式體驗
           </motion.p>
           
           {/* 發光啟動按鈕 */}
@@ -219,7 +219,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
             >
               <RocketLaunchIcon className="w-7 h-7" />
             </motion.div>
-            <span className="relative z-10">開始職業冒險</span>
+            <span className="relative z-10">開始探索冒險</span>
             
             {/* 按鈕光效 */}
             <motion.div
@@ -301,8 +301,8 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
                 
                 <p className="text-gray-300 group-hover:text-gray-200 transition-colors leading-relaxed">
                   {feature.key === 'immersive' && '像玩 AAA 遊戲一樣的視覺效果和互動體驗，告別無聊的傳統學習模式'}
-                  {feature.key === 'ai_powered' && '最先進的 AI 技術提供個人化指導，每個決定都會影響你的職業發展路徑'}
-                  {feature.key === 'real_time' && '每個動作立即獲得智能回饋，實時調整學習策略和職業建議'}
+                  {feature.key === 'ai_powered' && '最先進的 AI 技術提供個人化指導，每個決定都會影響你的未來發展路徑'}
+                  {feature.key === 'real_time' && '每個動作立即獲得智能回饋，實時調整學習策略和未來建議'}
                 </p>
                 
                 {/* 裝飾元素 */}
@@ -336,7 +336,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
             >
               <CircleStackIcon className="w-6 h-6" />
             </motion.div>
-            <span className="text-lg">準備好重新定義你的職業未來了嗎？</span>
+            <span className="text-lg">準備好重新定義你的未來了嗎？</span>
             <motion.div
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ duration: 1, repeat: Infinity }}

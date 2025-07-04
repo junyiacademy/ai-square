@@ -8,7 +8,7 @@ import {
   SparklesIcon,
   CpuChipIcon,
   PaintBrushIcon,
-  BriefcaseIcon,
+  GlobeAltIcon,
   ClockIcon,
   UserGroupIcon
 } from '@heroicons/react/24/outline';
@@ -19,12 +19,12 @@ interface AssessmentResults {
   business: number;
 }
 
-interface CareerResultsProps {
+interface PathResultsProps {
   results: AssessmentResults;
-  onCareerSelect: (careerId: string) => void;
+  onPathSelect: (pathId: string) => void;
 }
 
-interface CareerData {
+interface PathData {
   id: string;
   title: string;
   subtitle: string;
@@ -40,21 +40,21 @@ interface CareerData {
   }>;
 }
 
-export default function CareerResults({ results, onCareerSelect }: CareerResultsProps) {
-  const { t } = useTranslation('careerDiscovery');
+export default function PathResults({ results, onPathSelect }: PathResultsProps) {
+  const { t } = useTranslation('discovery');
 
-  // Get career data from translations
-  const careerIds = ['youtuber', 'game_designer', 'app_developer'];
-  const careers: CareerData[] = careerIds.map(id => ({
+  // Get path data from translations
+  const pathIds = ['youtuber', 'game_designer', 'app_developer'];
+  const paths: PathData[] = pathIds.map(id => ({
     id,
-    ...(t(`careers.${id}`, { returnObjects: true }) as Omit<CareerData, 'id'>)
+    ...(t(`paths.${id}`, { returnObjects: true }) as Omit<PathData, 'id'>)
   }));
 
   // Calculate match percentages
-  const calculateMatchPercentage = (careerId: string): number => {
+  const calculateMatchPercentage = (pathId: string): number => {
     const total = results.tech + results.creative + results.business;
     
-    switch (careerId) {
+    switch (pathId) {
       case 'youtuber':
         return Math.round(((results.creative * 2 + results.business) / total) * 100);
       case 'game_designer':
@@ -66,11 +66,11 @@ export default function CareerResults({ results, onCareerSelect }: CareerResults
     }
   };
 
-  // Sort careers by match percentage
-  const sortedCareers = careers
-    .map(career => ({
-      ...career,
-      matchPercentage: calculateMatchPercentage(career.id)
+  // Sort paths by match percentage
+  const sortedPaths = paths
+    .map(path => ({
+      ...path,
+      matchPercentage: calculateMatchPercentage(path.id)
     }))
     .sort((a, b) => b.matchPercentage - a.matchPercentage);
 
@@ -99,7 +99,7 @@ export default function CareerResults({ results, onCareerSelect }: CareerResults
         return CpuChipIcon;
       case 'business':
       case '商業':
-        return BriefcaseIcon;
+        return GlobeAltIcon;
       default:
         return SparklesIcon;
     }
@@ -146,15 +146,15 @@ export default function CareerResults({ results, onCareerSelect }: CareerResults
         </div>
       </motion.div>
 
-      {/* Career Cards */}
+      {/* Path Cards */}
       <div className="grid gap-6 md:gap-8">
-        {sortedCareers.map((career, index) => {
-          const CategoryIcon = getCategoryIcon(career.category);
-          const categoryColorClass = getCategoryColor(career.category);
+        {sortedPaths.map((path, index) => {
+          const CategoryIcon = getCategoryIcon(path.category);
+          const categoryColorClass = getCategoryColor(path.category);
           
           return (
             <motion.div
-              key={career.id}
+              key={path.id}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -172,7 +172,7 @@ export default function CareerResults({ results, onCareerSelect }: CareerResults
               
               <div className="p-6 md:p-8">
                 <div className="flex flex-col md:flex-row md:items-start md:space-x-6">
-                  {/* Career Info */}
+                  {/* Path Info */}
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-4">
                       <div className={`inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r ${categoryColorClass} rounded-xl`}>
@@ -180,33 +180,33 @@ export default function CareerResults({ results, onCareerSelect }: CareerResults
                       </div>
                       <div>
                         <h3 className="text-xl font-bold text-gray-900">
-                          {career.title}
+                          {path.title}
                         </h3>
                         <p className="text-sm text-gray-500">
-                          {career.category}
+                          {path.category}
                         </p>
                       </div>
                       {/* Match percentage */}
                       <div className="ml-auto bg-green-100 px-3 py-1 rounded-full">
                         <span className="text-sm font-medium text-green-700">
-                          {t('results.matchPercentage', { percentage: career.matchPercentage })}
+                          {t('results.matchPercentage', { percentage: path.matchPercentage })}
                         </span>
                       </div>
                     </div>
                     
                     <p className="text-gray-600 mb-4">
-                      {career.subtitle}
+                      {path.subtitle}
                     </p>
                     
                     <p className="text-gray-500 mb-6">
-                      {career.description}
+                      {path.description}
                     </p>
 
                     {/* Skills */}
                     <div className="mb-6">
                       <h4 className="font-medium text-gray-900 mb-2">核心技能</h4>
                       <div className="flex flex-wrap gap-2">
-                        {career.skills.map((skill) => (
+                        {path.skills.map((skill) => (
                           <span
                             key={skill}
                             className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm"
@@ -224,7 +224,7 @@ export default function CareerResults({ results, onCareerSelect }: CareerResults
                         <span>AI 助手團隊</span>
                       </h4>
                       <div className="flex flex-wrap gap-2">
-                        {career.aiAssistants.map((assistant) => (
+                        {path.aiAssistants.map((assistant) => (
                           <span
                             key={assistant}
                             className={`bg-gradient-to-r ${categoryColorClass} text-white px-3 py-1 rounded-full text-sm`}
@@ -239,16 +239,16 @@ export default function CareerResults({ results, onCareerSelect }: CareerResults
                     <div className="mb-6">
                       <h4 className="font-medium text-gray-900 mb-3">體驗任務預覽</h4>
                       <div className="space-y-2">
-                        {career.tasks.slice(0, 2).map((task) => (
+                        {path.tasks.slice(0, 2).map((task) => (
                           <div key={task.id} className="flex items-center space-x-3 text-sm">
                             <ClockIcon className="w-4 h-4 text-gray-400" />
                             <span className="text-gray-600">{task.title}</span>
                             <span className="text-gray-400">({task.duration})</span>
                           </div>
                         ))}
-                        {career.tasks.length > 2 && (
+                        {path.tasks.length > 2 && (
                           <div className="text-sm text-gray-400">
-                            +{career.tasks.length - 2} 更多任務...
+                            +{path.tasks.length - 2} 更多任務...
                           </div>
                         )}
                       </div>
@@ -258,7 +258,7 @@ export default function CareerResults({ results, onCareerSelect }: CareerResults
 
                 {/* Action Button */}
                 <motion.button
-                  onClick={() => onCareerSelect(career.id)}
+                  onClick={() => onPathSelect(path.id)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   className={`
@@ -268,7 +268,7 @@ export default function CareerResults({ results, onCareerSelect }: CareerResults
                   `}
                 >
                   <PlayIcon className="w-5 h-5" />
-                  <span>{t('results.exploreCareer')}</span>
+                  <span>{t('results.explorePath')}</span>
                 </motion.button>
               </div>
             </motion.div>
@@ -283,7 +283,7 @@ export default function CareerResults({ results, onCareerSelect }: CareerResults
         transition={{ duration: 0.5, delay: 0.3 }}
         className="mt-8 bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-6"
       >
-        <h3 className="font-semibold text-gray-900 mb-4">你的興趣分析</h3>
+        <h3 className="font-semibold text-gray-900 mb-4">你的傾向分析</h3>
         <div className="grid grid-cols-3 gap-4">
           <div className="text-center">
             <div className="text-2xl font-bold text-blue-600">{results.tech}</div>

@@ -1,18 +1,18 @@
 {
-  "title": "Career Discovery World",
-  "subtitle": "Explore AI-powered careers through immersive experiences",
+  "title": "Discovery World",
+  "subtitle": "Explore AI-powered paths through immersive experiences",
   "getStarted": "Get Started",
   "backToHome": "Back to Home",
   
   "welcomeScreen": {
-    "title": "Welcome to Career Discovery World",
-    "subtitle": "Discover your future career through AI-powered experiences",
-    "description": "Explore different careers, collaborate with AI assistants, and build skills for the future workplace.",
+    "title": "Welcome to Discovery World",
+    "subtitle": "Discover your future path through AI-powered experiences",
+    "description": "Explore different paths, collaborate with AI assistants, and build skills for the future.",
     "startJourney": "Start Your Journey",
     "features": {
       "explore": {
-        "title": "Explore Careers",
-        "description": "Experience real work scenarios in tech, creative, and business fields"
+        "title": "Explore Paths",
+        "description": "Experience real scenarios in tech, creative, and business fields"
       },
       "collaborate": {
         "title": "AI Collaboration",
@@ -27,8 +27,8 @@
   
   "interestAssessment": {
     "title": "Interest Assessment",
-    "subtitle": "Let's discover your career interests",
-    "description": "Answer a few questions to help us recommend the best career experiences for you.",
+    "subtitle": "Let's discover your interests",
+    "description": "Answer a few questions to help us recommend the best exploration experiences for you.",
     "question": "Question {{current}} of {{total}}",
     "next": "Next",
     "previous": "Previous",
@@ -66,7 +66,7 @@
       },
       {
         "id": "goals",
-        "text": "What's your main career goal?",
+        "text": "What's your main goal?",
         "options": [
           { "id": "build_apps", "text": "Build amazing apps and games", "weight": { "tech": 3, "creative": 2, "business": 1 } },
           { "id": "create_content", "text": "Create content that inspires others", "weight": { "tech": 1, "creative": 3, "business": 1 } },
@@ -78,15 +78,15 @@
   },
   
   "results": {
-    "title": "Your Career Recommendations",
-    "subtitle": "Based on your interests, here are the best careers to explore:",
-    "exploreCareer": "Explore This Career",
-    "viewAll": "View All Careers",
+    "title": "Your Path Recommendations",
+    "subtitle": "Based on your interests, here are the best paths to explore:",
+    "explorePath": "Explore This Path",
+    "viewAll": "View All Paths",
     "personalityType": "Your Personality Type",
     "matchPercentage": "{{percentage}}% Match"
   },
   
-  "careers": {
+  "paths": {
     "youtuber": {
       "title": "YouTuber / Content Creator",
       "subtitle": "Create engaging video content and build an audience",

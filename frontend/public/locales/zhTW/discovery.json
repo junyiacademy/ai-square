@@ -1,17 +1,17 @@
 {
-  "title": "職業探索世界",
-  "subtitle": "透過沉浸式體驗探索 AI 驅動的職業",
+  "title": "探索世界",
+  "subtitle": "透過沉浸式體驗探索 AI 驅動的人生路徑",
   "getStarted": "開始探索",
   "backToHome": "回到首頁",
   
   "welcomeScreen": {
-    "title": "歡迎來到職業探索世界",
-    "subtitle": "透過 AI 驅動的體驗發現你的未來職業",
-    "description": "探索不同職業，與 AI 助手協作，為未來職場建立技能。",
+    "title": "歡迎來到探索世界",
+    "subtitle": "透過 AI 驅動的體驗發現你的未來方向",
+    "description": "探索不同路徑，與 AI 助手協作，為未來建立技能。",
     "startJourney": "開始你的旅程",
     "features": {
       "explore": {
-        "title": "探索職業",
+        "title": "探索路徑",
         "description": "在科技、創意和商業領域體驗真實工作情境"
       },
       "collaborate": {
@@ -27,8 +27,8 @@
   
   "interestAssessment": {
     "title": "興趣評估",
-    "subtitle": "讓我們發現你的職業興趣",
-    "description": "回答幾個問題，幫助我們為你推薦最適合的職業體驗。",
+    "subtitle": "讓我們發現你的興趣方向",
+    "description": "回答幾個問題，幫助我們為你推薦最適合的探索體驗。",
     "question": "第 {{current}} 題，共 {{total}} 題",
     "next": "下一題",
     "previous": "上一題",
@@ -66,7 +66,7 @@
       },
       {
         "id": "goals",
-        "text": "你的主要職業目標是什麼？",
+        "text": "你的主要目標是什麼？",
         "options": [
           { "id": "build_apps", "text": "開發出色的應用程式和遊戲", "weight": { "tech": 3, "creative": 2, "business": 1 } },
           { "id": "create_content", "text": "創作啟發他人的內容", "weight": { "tech": 1, "creative": 3, "business": 1 } },
@@ -78,10 +78,10 @@
   },
   
   "results": {
-    "title": "你的職業推薦",
-    "subtitle": "根據你的興趣，以下是最適合探索的職業：",
-    "exploreCareer": "探索這個職業",
-    "viewAll": "查看所有職業",
+    "title": "你的探索路徑推薦",
+    "subtitle": "根據你的興趣，以下是最適合探索的方向：",
+    "exploreCareer": "探索這個方向",
+    "viewAll": "查看所有方向",
     "personalityType": "你的性格類型",
     "matchPercentage": "{{percentage}}% 匹配"
   },
@@ -183,7 +183,7 @@
     "startTask": "開始任務",
     "completeTask": "完成任務",
     "nextTask": "下一個任務",
-    "backToCareers": "回到職業選擇",
+    "backToCareers": "回到路徑選擇",
     "taskCompleted": "任務完成！",
     "skillsGained": "獲得技能：",
     "experiencePoints": "+{{points}} 經驗值"
@@ -195,10 +195,10 @@
     "encouragement": [
       "做得很好！你的進步很棒。",
       "這是很有創意的方法！繼續加油。",
-      "你的思考就像真正的 {{career}}！",
+      "你的思考就像真正的 {{path}}！",
       "太棒了！你正在培養真正的技能。"
     ],
-    "askQuestion": "有關這個任務或 {{career}} 領域的任何問題都可以問我！",
+    "askQuestion": "有關這個任務或 {{path}} 領域的任何問題都可以問我！",
     "typeMessage": "輸入你的訊息...",
     "send": "傳送"
   },
@@ -210,7 +210,7 @@
     "badges": {
       "first_task": {
         "title": "第一步",
-        "description": "完成你的第一個職業任務"
+        "description": "完成你的第一個探索任務"
       },
       "creative_thinker": {
         "title": "創意思考者",
@@ -225,8 +225,8 @@
         "description": "解決複雜挑戰"
       },
       "career_explorer": {
-        "title": "職業探索者",
-        "description": "探索多種職業路徑"
+        "title": "探索者",
+        "description": "探索多種人生路徑"
       }
     }
   },
@@ -234,7 +234,7 @@
   "navigation": {
     "overview": "總覽",
     "assessment": "評估",
-    "careers": "職業",
+    "paths": "路徑",
     "workspace": "工作室",
     "achievements": "成就"
   }

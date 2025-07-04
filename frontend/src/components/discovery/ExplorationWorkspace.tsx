@@ -20,11 +20,11 @@ interface UserAchievements {
   completedTasks: string[];
 }
 
-interface CareerWorkspaceProps {
-  careerId: string;
+interface ExplorationWorkspaceProps {
+  pathId: string;
   achievements: UserAchievements;
   onTaskComplete: (taskId: string, xpGained: number, skillsGained: string[]) => void;
-  onBackToCareers: () => void;
+  onBackToPaths: () => void;
 }
 
 interface Task {
@@ -34,7 +34,7 @@ interface Task {
   duration: string;
 }
 
-interface CareerData {
+interface PathData {
   title: string;
   skills: string[];
   aiAssistants: string[];
@@ -48,13 +48,13 @@ interface ChatMessage {
   timestamp: Date;
 }
 
-export default function CareerWorkspace({ 
-  careerId, 
+export default function ExplorationWorkspace({ 
+  pathId, 
   achievements, 
   onTaskComplete, 
-  onBackToCareers 
-}: CareerWorkspaceProps) {
-  const { t } = useTranslation('careerDiscovery');
+  onBackToPaths 
+}: ExplorationWorkspaceProps) {
+  const { t } = useTranslation('discovery');
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
   const [isTaskActive, setIsTaskActive] = useState(false);
   const [taskProgress, setTaskProgress] = useState(0);
@@ -63,25 +63,25 @@ export default function CareerWorkspace({
   const [isTyping, setIsTyping] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
-  // Get career data from translations
-  const careerData = t(`careers.${careerId}`, { returnObjects: true }) as CareerData;
-  const currentTask = careerData.tasks[currentTaskIndex];
-  const isLastTask = currentTaskIndex === careerData.tasks.length - 1;
+  // Get path data from translations
+  const pathData = t(`paths.${pathId}`, { returnObjects: true }) as PathData;
+  const currentTask = pathData.tasks[currentTaskIndex];
+  const isLastTask = currentTaskIndex === pathData.tasks.length - 1;
 
-  // Initialize AI greeting - only when careerId changes
+  // Initialize AI greeting - only when pathId changes
   useEffect(() => {
-    const data = t(`careers.${careerId}`, { returnObjects: true }) as CareerData;
+    const data = t(`paths.${pathId}`, { returnObjects: true }) as PathData;
     const greetingMessage: ChatMessage = {
       id: '1',
       sender: 'ai',
       text: t('aiAssistant.greeting', {
         role: data.aiAssistants[0] || 'Assistant',
-        career: data.title
+        path: data.title
       }),
       timestamp: new Date()
     };
     setChatMessages([greetingMessage]);
-  }, [careerId, t]);
+  }, [pathId, t]);
 
   // Auto-scroll chat to bottom
   useEffect(() => {
@@ -173,12 +173,12 @@ export default function CareerWorkspace({
 
   const generateAIResponse = (userMessage: string): string => {
     const lowerMessage = userMessage.toLowerCase();
-    const taskProgress = Math.round((currentTaskIndex + 1) / careerData.tasks.length * 100);
+    const taskProgress = Math.round((currentTaskIndex + 1) / pathData.tasks.length * 100);
     
     // 動態生成不同情境的回應
     const responses = {
       help: [
-        `🚀 當然！我是你的 AI 職業導師，專門負責「${currentTask.title}」這個挑戰。讓我們一起突破這個關卡！`,
+        `🚀 當然！我是你的 AI 探索導師，專門負責「${currentTask.title}」這個挑戰。讓我們一起突破這個關卡！`,
         `💡 太好了！讓我用最新的 AI 分析來幫你解決這個問題。我已經為你準備了個人化的解決方案...`,
         `⚡ 檢測到求助信號！正在啟動專屬輔導模式...分析完成！這個任務的核心在於...`
       ],
@@ -188,14 +188,14 @@ export default function CareerWorkspace({
         `🔍 AI 分析顯示：這個任務最適合用「實作導向」的方法。讓我為你設計一個個人化的學習路徑...`
       ],
       finish: [
-        `🎉 Amazing！你剛剛完成了一個重要里程碑！這種解決問題的方式完全符合現代${careerData.title}的工作模式！`,
-        `🌟 太厲害了！你展現的思維模式讓我想到業界頂尖的${careerData.title}。繼續保持這種創新精神！`,
+        `🎉 Amazing！你剛剛完成了一個重要里程碑！這種解決問題的方式完全符合現代${pathData.title}的探索模式！`,
+        `🌟 太厲害了！你展現的思維模式讓我想到業界頂尖的${pathData.title}。繼續保持這種創新精神！`,
         `🚀 恭喜突破！你剛才的表現已經超越了 80% 的同儕。這就是未來職場需要的能力！`
       ],
       encourage: [
-        `💪 你的學習速度讓我印象深刻！目前進度 ${taskProgress}%，距離成為${careerData.title}專家又近了一步！`,
-        `⭐ 這個問題很有挑戰性，但我看到你正在用正確的方法思考。${careerData.title}就是需要這種創新思維！`,
-        `🎯 很好的問題！讓我用最新的產業趨勢來回答你...這正是現在${careerData.title}領域最熱門的話題！`
+        `💪 你的學習速度讓我印象深刻！目前進度 ${taskProgress}%，距離成為${pathData.title}專家又近了一步！`,
+        `⭐ 這個問題很有挑戰性，但我看到你正在用正確的方法思考。${pathData.title}就是需要這種創新思維！`,
+        `🎯 很好的問題！讓我用最新的趨勢來回答你...這正是現在${pathData.title}領域最熱門的話題！`
       ]
     };
     
@@ -213,15 +213,15 @@ export default function CareerWorkspace({
   const getRandomEncouragement = (): string => {
     // 使用內建的鼓勵語句，避免 translation 依賴性問題
     const encouragements = [
-      `太棒了！你已經展現出真正的${careerData.title}思維。`,
-      `優秀！這就是專業${careerData.title}的工作方式。`,
-      `你的創意讓人印象深刻，非常適合${careerData.title}這個領域！`
+      `太棒了！你已經展現出真正的${pathData.title}思維。`,
+      `優秀！這就是專業${pathData.title}的探索方式。`,
+      `你的創意讓人印象深刻，非常適合${pathData.title}這個領域！`
     ];
     return encouragements[Math.floor(Math.random() * encouragements.length)];
   };
 
   const completedTasksCount = achievements.completedTasks.filter(taskId => 
-    careerData.tasks.some(task => task.id === taskId)
+    pathData.tasks.some(task => task.id === taskId)
   ).length;
 
   return (
@@ -230,24 +230,24 @@ export default function CareerWorkspace({
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <button
-            onClick={onBackToCareers}
+            onClick={onBackToPaths}
             className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
           >
             <ArrowLeftIcon className="w-5 h-5" />
-            <span className="font-medium">{t('workspace.backToCareers')}</span>
+            <span className="font-medium">{t('workspace.backToPaths')}</span>
           </button>
           
           <div className="flex items-center space-x-4">
             <div className="bg-purple-100 px-3 py-1 rounded-full">
               <span className="text-sm font-medium text-purple-700">
-                {completedTasksCount}/{careerData.tasks.length} 任務完成
+                {completedTasksCount}/{pathData.tasks.length} 任務完成
               </span>
             </div>
           </div>
         </div>
         
         <h1 className="text-3xl font-bold text-gray-900">
-          {t('workspace.title', { career: careerData.title })}
+          {t('workspace.title', { path: pathData.title })}
         </h1>
       </div>
 
@@ -620,7 +620,7 @@ export default function CareerWorkspace({
                 transition={{ duration: 1, repeat: Infinity }}
                 className="w-2 h-2 bg-green-400 rounded-full"
               />
-              <span>AI 導師在線中 • 隨時為你解答 {careerData.title} 相關問題</span>
+              <span>AI 導師在線中 • 隨時為你解答 {pathData.title} 相關問題</span>
             </div>
           </motion.div>
         </div>

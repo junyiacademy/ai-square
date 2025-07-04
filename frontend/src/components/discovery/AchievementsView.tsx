@@ -104,7 +104,7 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
     if (level >= 2) benefits.push('解鎖進階任務');
     if (level >= 3) benefits.push('獲得專屬稱號');
     if (level >= 5) benefits.push('解鎖特殊成就');
-    if (level >= 10) benefits.push('職業大師認證');
+    if (level >= 10) benefits.push('探索大師認證');
     return benefits;
   };
 

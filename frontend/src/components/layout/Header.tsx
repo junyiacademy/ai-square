@@ -160,7 +160,7 @@ export function Header() {
     { href: '/dashboard', label: t('dashboard') },
     { href: '/pbl', label: t('pbl') },
     { href: '/assessment', label: t('assessment') },
-    { href: '/career-discovery', label: t('careerDiscovery') },
+    { href: '/discovery', label: t('discovery') },
   ]
   
   // 次要導航連結（放在「更多」選單中）
