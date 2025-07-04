@@ -59,7 +59,7 @@ function WorkspaceDetailContent() {
     loadData();
   }, [workspaceId, router]);
 
-  const handleTaskComplete = async (taskId: string, xpGained: number, skillsGained: string[]) => {
+  const handleTaskComplete = async (taskId: string, xpGained: number, skillsGained: string[], answer?: string, isLastTaskCompleted?: boolean) => {
     try {
       const { userDataService } = await import('@/lib/services/user-data-service');
       const newAchievements = { ...achievements };
@@ -98,8 +98,9 @@ function WorkspaceDetailContent() {
           ? currentWorkspace.completedTasks
           : [...currentWorkspace.completedTasks, taskId];
         
-        // Check if all tasks are completed (assume 3 tasks per path for now)
-        const isCompleted = updatedCompletedTasks.length >= 3;
+        // Only mark as completed if all tasks are done and no new tasks will be generated
+        // The user can still generate more tasks even after completion
+        const isCompleted = isLastTaskCompleted || false;
         
         await userDataService.updateWorkspaceSession(workspaceId, {
           completedTasks: updatedCompletedTasks,

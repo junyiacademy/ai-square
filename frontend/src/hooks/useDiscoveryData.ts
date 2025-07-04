@@ -51,11 +51,64 @@ export function useDiscoveryData() {
     return userData;
   };
 
+  const toggleFavorite = async (pathId: string) => {
+    try {
+      const { userDataService } = await import('@/lib/services/user-data-service');
+      const currentPaths = data?.savedPaths || [];
+      const pathIndex = currentPaths.findIndex(p => p.id === pathId);
+      
+      if (pathIndex !== -1) {
+        const updatedPaths = [...currentPaths];
+        updatedPaths[pathIndex] = {
+          ...updatedPaths[pathIndex],
+          isFavorite: !updatedPaths[pathIndex].isFavorite
+        };
+        
+        // Update local state immediately for better UX
+        setData(prev => prev ? { ...prev, savedPaths: updatedPaths } : null);
+        
+        // Save to storage
+        await userDataService.updateSavedPath(pathId, updatedPaths[pathIndex]);
+        
+        // Refresh cache
+        await refreshData();
+      }
+    } catch (error) {
+      console.error('Failed to toggle favorite:', error);
+      // Refresh to restore correct state
+      await refreshData();
+    }
+  };
+
+  const deletePath = async (pathId: string) => {
+    try {
+      const { userDataService } = await import('@/lib/services/user-data-service');
+      
+      // Update local state immediately
+      setData(prev => prev ? {
+        ...prev,
+        savedPaths: prev.savedPaths.filter(p => p.id !== pathId)
+      } : null);
+      
+      // Delete from storage
+      await userDataService.deleteSavedPath(pathId);
+      
+      // Refresh cache
+      await refreshData();
+    } catch (error) {
+      console.error('Failed to delete path:', error);
+      // Refresh to restore correct state
+      await refreshData();
+    }
+  };
+
   return { 
     data, 
     isLoading, 
     error,
     refreshData,
+    toggleFavorite,
+    deletePath,
     assessmentResults: data?.assessmentResults || null,
     achievements: data?.achievements || { badges: [], totalXp: 0, level: 1, completedTasks: [] },
     workspaceSessions: data?.workspaceSessions || [],

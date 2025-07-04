@@ -56,6 +56,60 @@ export interface SavedPathData {
   isCustom: boolean;
   createdAt: string;
   lastUpdated?: string;
+  // New fields for infinite generation
+  sourceLanguage?: string;
+  version?: number;
+  generationContext?: {
+    userPrompt: string;
+    conversationHistory?: any[];
+    preferences?: any;
+  };
+  storyContext?: {
+    worldSetting: string;
+    protagonist: any;
+    narrative: string;
+    theme?: string;
+  };
+  isPublic?: boolean;
+  publicMetadata?: {
+    authorId: string;
+    authorName: string;
+    plays: number;
+    rating: number;
+    reviews?: any[];
+    tags: string[];
+    featured: boolean;
+  };
+}
+
+// Dynamic task structure
+export interface DynamicTask {
+  id: string;
+  pathId: string;
+  sequenceNumber: number;
+  title: string;
+  description: string;
+  duration: string;
+  difficulty: number;
+  sourceLanguage?: string;
+  storyContext?: {
+    previousSummary?: string;
+    currentChallenge: string;
+    choices?: any[];
+  };
+  generationInfo?: {
+    generatedAt: string;
+    model: string;
+    previousTaskResult?: any;
+    userPerformanceScore?: number;
+  };
+  completionData?: {
+    completedAt: string;
+    userAnswer: string;
+    score: number;
+    feedback: string;
+    unlockedAchievements?: string[];
+  };
 }
 
 export interface UserData {
@@ -64,6 +118,7 @@ export interface UserData {
   workspaceSessions: WorkspaceSession[];
   assessmentSessions: AssessmentSession[];
   savedPaths: SavedPathData[];
+  generatedTasks?: DynamicTask[]; // New field for dynamic tasks
   currentView?: string;
   lastUpdated: string;
   version: string; // For future migration compatibility
@@ -136,6 +191,7 @@ class LocalStorageBackend implements StorageBackend {
         workspaceSessions: data.workspaceSessions || [],
         assessmentSessions: data.assessmentSessions || [],
         savedPaths: data.savedPaths || [],
+        generatedTasks: data.generatedTasks || [], // 加上這行！
         currentView: data.currentView,
         lastUpdated: data.lastUpdated || new Date().toISOString(),
         version: data.version || '1.0'
@@ -351,10 +407,24 @@ export class UserDataService {
     }
   }
   
+  async updateSavedPath(pathId: string, updates: SavedPathData): Promise<void> {
+    const userData = await this.loadUserData() || this.getDefaultUserData();
+    const pathIndex = userData.savedPaths.findIndex(p => p.id === pathId);
+    if (pathIndex >= 0) {
+      userData.savedPaths[pathIndex] = updates;
+      await this.saveUserData(userData);
+    }
+  }
+  
   async deletePath(pathId: string): Promise<void> {
     const userData = await this.loadUserData() || this.getDefaultUserData();
     userData.savedPaths = userData.savedPaths.filter(p => p.id !== pathId);
     await this.saveUserData(userData);
+  }
+  
+  async deleteSavedPath(pathId: string): Promise<void> {
+    // Alias for deletePath to match the hook's expectation
+    return this.deletePath(pathId);
   }
   
   // Evaluation system methods
@@ -443,6 +513,7 @@ export class UserDataService {
       workspaceSessions: [],
       assessmentSessions: [],
       savedPaths: [],
+      generatedTasks: [], // Include this field!
       lastUpdated: new Date().toISOString(),
       version: '1.0'
     };
