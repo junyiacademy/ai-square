@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pblProgramService } from '@/lib/storage/pbl-program-service';
+import { ensureServices } from '@/lib/core/services/api-helpers';
 import { promises as fs } from 'fs';
 import * as yaml from 'js-yaml';
 import path from 'path';
+import { ProgramType, ProgramStatus } from '@/lib/core/program/types';
+import { TrackType } from '@/lib/core/track/types';
 
 // Types for YAML data
 interface ScenarioInfo {
@@ -48,6 +50,7 @@ interface ProgramCompletionData {
   totalTimeSeconds: number;
   taskSummaries: TaskSummary[];
   scenarioTitle?: string;
+  currentTaskId?: string;
 }
 
 // Helper function to get localized value
@@ -100,35 +103,135 @@ export async function GET(request: NextRequest) {
     
     console.log(`Fetching PBL history for user: ${userEmail}, scenario: ${scenarioId || 'all'}, language: ${language}`);
     
-    // Get all programs for the user using completion data
-    let programs: ProgramCompletionData[] = [];
-    if (scenarioId) {
-      const completionPrograms = await pblProgramService.getUserProgramsForScenario(userEmail, scenarioId);
-      // Map CompletionData to ProgramCompletionData, ensuring userEmail is set
-      programs = completionPrograms.map(p => ({
-        ...p,
-        userEmail: p.userEmail || userEmail, // Ensure userEmail is always set
-        taskSummaries: p.taskSummaries || []
-      } as ProgramCompletionData));
-    } else {
-      // Get all scenarios and fetch programs for each
-      const scenarios = ['ai-job-search']; // Add more scenario IDs as needed
-      for (const sid of scenarios) {
-        const scenarioPrograms = await pblProgramService.getUserProgramsForScenario(userEmail, sid);
-        const mappedPrograms = scenarioPrograms.map(p => ({
-          ...p,
-          userEmail: p.userEmail || userEmail, // Ensure userEmail is always set
-          taskSummaries: p.taskSummaries || []
-        } as ProgramCompletionData));
-        programs.push(...mappedPrograms);
-      }
-    }
+    // Use new architecture
+    const services = await ensureServices();
     
-    console.log(`Found ${programs.length} programs for user ${userEmail}`);
+    // Get all PBL tracks for the user
+    const tracks = await services.trackService.queryTracks({
+      userId: userEmail,
+      type: TrackType.PBL,
+      projectId: scenarioId // This will filter by scenario if provided
+    });
+    
+    // Get all programs for these tracks
+    const programsPromises = tracks.map(track => 
+      services.programService.queryPrograms({
+        trackId: track.id,
+        userId: userEmail,
+        type: ProgramType.PBL
+      })
+    );
+    
+    const programsArrays = await Promise.all(programsPromises);
+    const allPrograms = programsArrays.flat();
+    
+    console.log(`Found ${allPrograms.length} programs for user ${userEmail}`);
+    
+    // Get evaluations for all programs
+    const evaluations = await services.evaluationService.queryEvaluations({
+      userId: userEmail,
+      entityType: 'task'
+    });
+    
+    // Build program completion data
+    const programCompletionData: ProgramCompletionData[] = [];
+    
+    for (const program of allPrograms) {
+      // Get tasks for this program
+      const tasks = await services.taskService.queryTasks({
+        programId: program.id,
+        userId: userEmail
+      });
+      
+      // Calculate task summaries and scores
+      const taskSummaries: TaskSummary[] = [];
+      const domainScores: Record<string, number> = {};
+      const domainCounts: Record<string, number> = {};
+      const ksaScores: Record<string, number> = {};
+      let overallScore = 0;
+      let evaluatedTasksCount = 0;
+      
+      for (const task of tasks) {
+        const taskEvaluations = evaluations.filter(e => e.entityId === task.id);
+        const latestEval = taskEvaluations.sort((a, b) => 
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        )[0];
+        
+        if (latestEval) {
+          evaluatedTasksCount++;
+          overallScore += latestEval.score || 0;
+          
+          taskSummaries.push({
+            taskId: task.config?.taskId || task.id,
+            title: task.title,
+            score: latestEval.score || 0,
+            completedAt: latestEval.createdAt.toISOString()
+          });
+          
+          // Aggregate domain scores
+          if (latestEval.results?.domainScores) {
+            for (const [domain, score] of Object.entries(latestEval.results.domainScores)) {
+              if (!domainScores[domain]) {
+                domainScores[domain] = 0;
+                domainCounts[domain] = 0;
+              }
+              domainScores[domain] += score;
+              domainCounts[domain]++;
+            }
+          }
+          
+          // Aggregate KSA scores
+          if (latestEval.results?.ksaScores) {
+            for (const [category, data] of Object.entries(latestEval.results.ksaScores)) {
+              if (typeof data === 'object' && 'score' in data) {
+                ksaScores[category] = (ksaScores[category] || 0) + (data.score || 0);
+              }
+            }
+          }
+        }
+      }
+      
+      // Average scores
+      if (evaluatedTasksCount > 0) {
+        overallScore = Math.round(overallScore / evaluatedTasksCount);
+        
+        for (const domain of Object.keys(domainScores)) {
+          domainScores[domain] = Math.round(domainScores[domain] / domainCounts[domain]);
+        }
+        
+        for (const category of Object.keys(ksaScores)) {
+          ksaScores[category] = Math.round(ksaScores[category] / evaluatedTasksCount);
+        }
+      }
+      
+      // Calculate time spent
+      const startTime = program.startedAt || program.createdAt;
+      const endTime = program.completedAt || new Date();
+      const totalTimeSeconds = Math.round((endTime.getTime() - startTime.getTime()) / 1000);
+      
+      programCompletionData.push({
+        programId: program.id,
+        scenarioId: program.config?.scenarioId || program.metadata?.source || '',
+        userEmail,
+        status: program.status === ProgramStatus.COMPLETED ? 'completed' : 
+                program.status === ProgramStatus.IN_PROGRESS ? 'in_progress' : 'draft',
+        startedAt: startTime.toISOString(),
+        updatedAt: program.updatedAt.toISOString(),
+        completedAt: program.completedAt?.toISOString(),
+        totalTasks: tasks.length,
+        evaluatedTasks: evaluatedTasksCount,
+        overallScore,
+        domainScores,
+        ksaScores,
+        totalTimeSeconds,
+        taskSummaries,
+        currentTaskId: program.progress?.currentTaskId
+      });
+    }
     
     // Load scenario titles from YAML files
     const scenarioTitles: Record<string, string> = {};
-    for (const program of programs) {
+    for (const program of programCompletionData) {
       if (!scenarioTitles[program.scenarioId]) {
         try {
           // Convert scenario ID format (ai-job-search -> ai_job_search)
@@ -162,7 +265,7 @@ export async function GET(request: NextRequest) {
     }
     
     // Add scenario titles to programs
-    const programsWithTitles: ProgramCompletionData[] = programs.map(program => ({
+    const programsWithTitles: ProgramCompletionData[] = programCompletionData.map(program => ({
       ...program,
       scenarioTitle: scenarioTitles[program.scenarioId] || program.scenarioId
     }));

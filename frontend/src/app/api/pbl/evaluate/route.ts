@@ -5,6 +5,7 @@ import {
   Conversation 
 } from '@/types/pbl-evaluate';
 import { ErrorResponse } from '@/types/api';
+import { getServices } from '@/lib/core/services/service-factory';
 
 interface UserCookie {
   email: string;
@@ -38,15 +39,27 @@ export async function POST(request: NextRequest) {
       task,
       targetDomains,
       focusKSA,
-      language = 'en' // eslint-disable-line @typescript-eslint/no-unused-vars
-    }: EvaluateRequestBody = await request.json();
+      language = 'en', // eslint-disable-line @typescript-eslint/no-unused-vars
+      // 新統一架構
+      trackId,
+      programId,
+      taskId
+    }: EvaluateRequestBody & {
+      trackId: string;
+      programId: string;
+      taskId: string;
+    } = await request.json();
 
-    if (!conversations || !task) {
+    if (!conversations || !task || !trackId || !programId || !taskId) {
       return NextResponse.json(
-        { success: false, error: 'Missing required fields: conversations and task are required' },
+        { success: false, error: 'Missing required fields: conversations, task, trackId, programId, and taskId are required' },
         { status: 400 }
       );
     }
+
+    // Get services (will initialize if needed)
+    const services = await ensureServices();
+    console.log(`Using unified architecture for evaluation: Track=${trackId}, Program=${programId}, Task=${taskId}`);
     
     console.log('Evaluating task:', task.id, 'with', conversations.length, 'conversations');
 
@@ -292,6 +305,56 @@ Important evaluation principles:
       taskId: task.id,
       conversationCount: conversations.filter((c: Conversation) => c.type === 'user').length
     };
+
+    // Save evaluation results to the new architecture
+    try {
+      // Update task progress with evaluation results
+      const taskData = await services.taskService.getTask(userEmail, programId, taskId);
+      if (taskData) {
+        await services.taskService.updateTaskProgress(userEmail, programId, taskId, {
+          ...taskData.progress,
+          score: evaluation.score,
+          evaluation: {
+            overallScore: evaluation.score,
+            ksaScores: evaluation.ksaScores,
+            domainScores: evaluation.domainScores,
+            rubricsScores: evaluation.rubricsScores,
+            strengths: evaluation.strengths,
+            improvements: evaluation.improvements,
+            nextSteps: evaluation.nextSteps,
+            conversationInsights: evaluation.conversationInsights,
+            evaluatedAt: new Date().toISOString(),
+            evaluatedBy: 'ai-system'
+          }
+        });
+      }
+
+      // Log the evaluation
+      await services.logService.createLog(userEmail, {
+        type: 'EVALUATION',
+        severity: 'INFO',
+        message: 'PBL Task evaluation completed',
+        details: {
+          trackId,
+          programId,
+          taskId,
+          evaluationResult,
+          conversationCount: conversations.filter((c: Conversation) => c.type === 'user').length,
+          overallScore: evaluation.score
+        },
+        metadata: {
+          targetDomains: targetDomains?.join(', '),
+          focusKSA: focusKSA?.join(', '),
+          taskTitle: task.title,
+          evaluationType: 'automated'
+        }
+      });
+
+      console.log(`Evaluation saved for task ${taskId} with score ${evaluation.score}`);
+    } catch (saveError) {
+      console.error('Failed to save evaluation results:', saveError);
+      // Continue with response even if saving fails
+    }
 
     return NextResponse.json({
       success: true,

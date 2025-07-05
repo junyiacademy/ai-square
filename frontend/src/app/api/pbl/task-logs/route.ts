@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pblProgramService } from '@/lib/storage/pbl-program-service';
+import { ensureServices } from '@/lib/core/services/api-helpers';
 import { SaveTaskLogRequest, SaveTaskProgressRequest } from '@/types/pbl';
 import { TaskEvaluation } from '@/types/pbl-completion';
 
@@ -42,55 +42,17 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // Get scenario ID from the request or find it from program
-    const scenarioId = body.scenarioId || request.headers.get('x-scenario-id');
+    // Use new architecture
+    const services = await ensureServices();
     
-    if (!scenarioId) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Scenario ID is required'
-        },
-        { status: 400 }
-      );
-    }
-    
-    // Add timestamp if not provided
-    if (!interaction.timestamp) {
-      interaction.timestamp = new Date().toISOString();
-    }
-    
-    // Check if task has been initialized, if not, initialize it first
-    const taskData = await pblProgramService.getTaskData(
+    // Log the interaction
+    await services.logService.logInteraction(
       userEmail,
-      scenarioId,
-      programId,
-      taskId
-    );
-    
-    // If task doesn't exist, initialize it
-    if (!taskData.metadata || !taskData.log || !taskData.progress) {
-      console.log(`Task ${taskId} not initialized, initializing now...`);
-      
-      // Get task title from the request or use a default
-      const taskTitle = body.taskTitle || `Task ${taskId}`;
-      
-      await pblProgramService.initializeTask(
-        userEmail,
-        scenarioId,
-        programId,
-        taskId,
-        taskTitle
-      );
-    }
-    
-    // Add interaction to task log
-    await pblProgramService.addTaskInteraction(
-      userEmail,
-      scenarioId,
       programId,
       taskId,
-      interaction
+      interaction.type,
+      interaction.action,
+      interaction.data || {}
     );
     
     return NextResponse.json({
@@ -104,7 +66,111 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to save task log'
+        error: 'Failed to save task log',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
+      { status: 500 }
+    );
+  }
+}
+
+// GET - Get task logs
+export async function GET(request: NextRequest) {
+  try {
+    // Get user info from cookie
+    let userEmail: string | undefined;
+    try {
+      const userCookie = request.cookies.get('user')?.value;
+      if (userCookie) {
+        const user = JSON.parse(userCookie);
+        userEmail = user.email;
+      }
+    } catch {
+      console.log('No user cookie found');
+    }
+    
+    if (!userEmail) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'User authentication required'
+        },
+        { status: 401 }
+      );
+    }
+    
+    const { searchParams } = new URL(request.url);
+    const programId = searchParams.get('programId');
+    const taskId = searchParams.get('taskId');
+    
+    if (!programId || !taskId) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Missing required parameters: programId, taskId'
+        },
+        { status: 400 }
+      );
+    }
+    
+    // Use new architecture
+    const services = await ensureServices();
+    
+    // Only accept UUID format for task IDs
+    const task = await services.taskService.getTask(userEmail, programId, taskId);
+    
+    if (!task) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Task not found'
+        },
+        { status: 404 }
+      );
+    }
+    
+    // Get logs for this task
+    const logs = await services.logService.queryLogs({
+      userId: userEmail,
+      programId: programId,
+      taskId: taskId
+    });
+    
+    // Transform logs to match the expected format
+    const interactionLogs = logs.filter(log => log.type === 'INTERACTION');
+    
+    const taskData = {
+      metadata: {
+        taskId: task.id,
+        taskTitle: task.title,
+        startedAt: task.createdAt.toISOString(),
+        lastUpdated: task.updatedAt.toISOString()
+      },
+      log: interactionLogs.map(log => ({
+        timestamp: log.timestamp.toISOString(),
+        type: log.data?.action || log.metadata?.type || 'unknown',
+        action: log.data?.action || log.metadata?.action || 'unknown',
+        data: log.data || log.metadata?.data || {}
+      })),
+      progress: task.progress || {
+        status: 'not_started',
+        attempts: 0
+      }
+    };
+    
+    return NextResponse.json({
+      success: true,
+      data: taskData
+    });
+    
+  } catch (error) {
+    console.error('Get task logs error:', error);
+    
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Failed to get task logs',
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     );
@@ -136,159 +202,52 @@ export async function PUT(request: NextRequest) {
       );
     }
     
-    const body = await request.json() as SaveTaskProgressRequest & { evaluation?: TaskEvaluation; scenarioId?: string };
-    const { programId, taskId, progress, evaluation } = body;
+    const body = await request.json() as SaveTaskProgressRequest;
+    const { programId, taskId, progress } = body;
     
-    // Validate required fields
-    if (!programId || !taskId) {
+    if (!programId || !taskId || !progress) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Missing required fields: programId, taskId'
+          error: 'Missing required fields: programId, taskId, progress'
         },
         { status: 400 }
       );
     }
     
-    // Get scenario ID
-    const scenarioId = body.scenarioId || request.headers.get('x-scenario-id');
+    // Use new architecture
+    const services = await ensureServices();
     
-    if (!scenarioId) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Scenario ID is required'
-        },
-        { status: 400 }
-      );
-    }
-    
-    // Update task progress if provided
-    if (progress) {
-      await pblProgramService.updateTaskProgress(
-        userEmail,
-        scenarioId,
-        programId,
-        taskId,
-        progress
-      );
-    }
-    
-    // Save evaluation if provided
-    if (evaluation) {
-      await pblProgramService.saveTaskEvaluation(
-        userEmail,
-        scenarioId,
-        programId,
-        taskId,
-        evaluation
-      );
-      
-      // Trigger feedback generation in the background (don't await)
-      // This happens after each task evaluation, but the feedback generation
-      // will check if completion.json exists and has feedback already
-      const baseUrl = request.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL;
-      if (baseUrl) {
-        // Pass the cookie header for authentication
-        const cookieHeader = request.headers.get('cookie');
-        // Get Accept-Language from original request
-        const acceptLanguage = request.headers.get('accept-language') || 'en';
-        fetch(`${baseUrl}/api/pbl/generate-feedback`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept-Language': acceptLanguage,
-            ...(cookieHeader && { 'Cookie': cookieHeader })
-          },
-          body: JSON.stringify({
-            programId,
-            scenarioId,
-          }),
-        }).catch(error => {
-          // Log error but don't block the response
-          console.error('Failed to trigger feedback generation:', error);
-        });
+    // Update task progress
+    await services.taskService.updateTask(userEmail, programId, taskId, {
+      progress: {
+        ...progress,
+        lastUpdated: new Date()
       }
-    }
-    
-    return NextResponse.json({
-      success: true,
-      message: 'Task data updated successfully'
     });
     
-  } catch (error) {
-    console.error('Task progress error:', error);
-    
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Failed to update task progress'
-      },
-      { status: 500 }
-    );
-  }
-}
-
-// GET - Get task data (metadata, log, progress)
-export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const programId = searchParams.get('programId');
-    const taskId = searchParams.get('taskId');
-    const scenarioId = searchParams.get('scenarioId');
-    
-    if (!programId || !taskId || !scenarioId) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Missing required parameters: programId, taskId, scenarioId'
-        },
-        { status: 400 }
-      );
-    }
-    
-    // Get user info from cookie
-    let userEmail: string | undefined;
-    try {
-      const userCookie = request.cookies.get('user')?.value;
-      if (userCookie) {
-        const user = JSON.parse(userCookie);
-        userEmail = user.email;
-      }
-    } catch {
-      console.log('No user cookie found');
-    }
-    
-    if (!userEmail) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'User authentication required'
-        },
-        { status: 401 }
-      );
-    }
-    
-    // Get task data from storage
-    const taskData = await pblProgramService.getTaskData(
+    // Log the progress update
+    await services.logService.logSystemEvent(
       userEmail,
-      scenarioId,
       programId,
-      taskId
+      taskId,
+      'task-progress-updated',
+      { progress }
     );
     
     return NextResponse.json({
       success: true,
-      data: taskData
+      message: 'Task progress updated successfully'
     });
     
   } catch (error) {
-    console.error('Get task data error:', error);
+    console.error('Update task progress error:', error);
     
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to get task data'
+        error: 'Failed to update task progress',
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     );

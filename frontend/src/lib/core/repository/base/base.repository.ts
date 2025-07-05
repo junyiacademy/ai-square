@@ -10,7 +10,7 @@ import {
 } from '../interfaces';
 import { IStorageProvider } from '../../storage/interfaces';
 import { v4 as uuidv4 } from 'uuid';
-import { Cacheable } from '../../storage/decorators';
+// Removed decorator imports - decorators not supported in current setup
 
 export abstract class BaseRepository<T extends IEntity<ID>, ID = string> 
   implements IRepository<T, ID> {
@@ -26,7 +26,6 @@ export abstract class BaseRepository<T extends IEntity<ID>, ID = string>
   /**
    * 根據 ID 查詢單一實體
    */
-  @Cacheable({ ttl: 300 }) // 5 分鐘快取
   async findById(id: ID): Promise<T | null> {
     const key = this.getKey(id);
     return await this.storage.get<T>(key);

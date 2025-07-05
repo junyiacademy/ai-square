@@ -1,23 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
-import yaml from 'js-yaml';
 import { VertexAI } from '@google-cloud/vertexai';
 import { ErrorResponse } from '@/types/api';
 import { ChatMessage } from '@/types/pbl-api';
-import { Scenario, AIModule, AIRole } from '@/types/pbl';
+import { AIModule, AIRole } from '@/types/pbl';
+import { ensureServices } from '@/lib/core/services/api-helpers';
+import { pblScenarioService } from '@/lib/services/pbl-scenario.service';
 
 interface ChatRequestBody {
   message: string;
-  sessionId: string;
+  // 新統一架構
+  trackId: string;
+  programId: string;
+  taskId: string;
   context: {
     scenarioId: string;
-    taskId: string;
-    taskTitle: string;
-    taskDescription: string;
-    instructions: string[];
-    expectedOutcome: string;
     conversationHistory?: ChatMessage[];
+    // 可選的額外上下文 (會從 Task 資料中獲取)
+    taskTitle?: string;
+    taskDescription?: string;
+    instructions?: string[];
+    expectedOutcome?: string;
   };
 }
 
@@ -47,55 +49,62 @@ interface AIModuleData {
 
 export async function POST(request: NextRequest) {
   try {
-    const body: ChatRequestBody = await request.json();
-    const { message, sessionId, context } = body;
-
-    if (!message || !sessionId || !context) {
+    // 獲取用戶資訊
+    let userEmail: string | undefined;
+    try {
+      const userCookie = request.cookies.get('user')?.value;
+      if (userCookie) {
+        const user = JSON.parse(userCookie);
+        userEmail = user.email;
+      }
+    } catch {
+      console.log('No user cookie found');
+    }
+    
+    if (!userEmail) {
       return NextResponse.json<ErrorResponse>(
-        { error: 'Missing required fields' },
+        { error: 'User authentication required' },
+        { status: 401 }
+      );
+    }
+
+    const body: ChatRequestBody = await request.json();
+    const { message, trackId, programId, taskId, context } = body;
+
+    if (!message || !trackId || !programId || !taskId || !context?.scenarioId) {
+      return NextResponse.json<ErrorResponse>(
+        { error: 'Missing required fields: message, trackId, programId, taskId, context.scenarioId' },
         { status: 400 }
       );
     }
 
-    const { scenarioId, taskId, taskTitle, taskDescription, instructions, expectedOutcome, conversationHistory } = context;
+    const { scenarioId, conversationHistory } = context;
 
     // Get language from query params (default to 'en')
     const { searchParams } = new URL(request.url);
     const language = searchParams.get('lang') || 'en';
 
-    // Load scenario data to get AI module configuration
-    const scenarioFolder = scenarioId.replace(/-/g, '_');
-    const fileName = `${scenarioFolder}_${language}.yaml`;
-    let yamlPath = path.join(
-      process.cwd(),
-      'public',
-      'pbl_data',
-      'scenarios',
-      scenarioFolder,
-      fileName
-    );
-    
-    // Check if language-specific file exists, fallback to English
-    try {
-      await fs.access(yamlPath);
-    } catch {
-      // Fallback to English if language-specific file doesn't exist
-      yamlPath = path.join(
-        process.cwd(),
-        'public',
-        'pbl_data',
-        'scenarios',
-        scenarioFolder,
-        `${scenarioFolder}_en.yaml`
+    // Get services (will initialize if needed)
+    const services = await ensureServices();
+    console.log(`Using unified architecture: Track=${trackId}, Program=${programId}, Task=${taskId}`);
+
+    // 獲取 Task 資料以驗證並取得詳細資訊
+    const task = await services.taskService.getTask(userEmail, programId, taskId);
+    if (!task) {
+      return NextResponse.json<ErrorResponse>(
+        { error: 'Task not found' },
+        { status: 404 }
       );
     }
-    
-    let scenarioData: Scenario;
+
+    // 使用新的 scenario service 載入資料
+    let scenarioData;
+    let taskConfig;
     try {
-      const yamlContent = await fs.readFile(yamlPath, 'utf8');
-      scenarioData = yaml.load(yamlContent) as Scenario;
+      scenarioData = await pblScenarioService.loadScenario(scenarioId, language);
+      taskConfig = await pblScenarioService.getTaskConfig(scenarioId, taskId, language);
     } catch (error) {
-      console.error(`Error loading scenario file: ${yamlPath}`, error);
+      console.error(`Error loading scenario: ${scenarioId}`, error);
       return NextResponse.json<ErrorResponse>(
         { error: `Scenario file not found: ${scenarioId}` },
         { status: 404 }
@@ -127,6 +136,12 @@ export async function POST(request: NextRequest) {
       initialPrompt: (aiModuleData as AIModuleData).initialPrompt || (aiModuleData as AIModuleData).initial_prompt
     };
     
+    // Extract task context from both sources
+    const taskTitle = context.taskTitle || taskConfig?.title || task.title;
+    const taskDescription = context.taskDescription || taskConfig?.description || task.description;
+    const instructions = context.instructions || taskConfig?.instructions || task.instructions;
+    const expectedOutcome = context.expectedOutcome || taskConfig?.expectedOutcome || task.expectedOutcome;
+
     // Build conversation context
     const conversationContext = conversationHistory?.map((entry: ChatMessage) => 
       `${entry.role === 'user' ? 'User' : 'Assistant'}: ${entry.content}`
@@ -217,6 +232,35 @@ Please respond as ${aiModule.persona} and help the user with this task.`;
 
     const response = result.response;
     const aiResponse = response.candidates?.[0]?.content?.parts?.[0]?.text || 'I apologize, but I was unable to generate a response. Please try again.';
+
+    // Log the interaction using the new architecture
+    try {
+      await services.logService.createLog(userEmail, {
+        type: 'INTERACTION',
+        severity: 'INFO',
+        message: 'PBL Chat interaction',
+        details: {
+          trackId,
+          programId,
+          taskId,
+          userMessage: message,
+          aiResponse,
+          aiModule: aiModule.role,
+          language: userLang,
+          isGreetingOnly,
+          isOffTopic
+        },
+        metadata: {
+          scenarioId,
+          taskTitle,
+          responseLength: aiResponse.length,
+          model: aiModule.model
+        }
+      });
+    } catch (logError) {
+      console.error('Failed to log chat interaction:', logError);
+      // Continue with response even if logging fails
+    }
 
     return NextResponse.json({
       success: true,

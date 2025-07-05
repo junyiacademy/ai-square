@@ -66,6 +66,8 @@ export default function ProgramLearningPage() {
   const [program, setProgram] = useState<Program | null>(null);
   const [scenario, setScenario] = useState<Scenario | null>(null);
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
+  const [programTasks, setProgramTasks] = useState<any[]>([]); // Actual tasks from the program
+  const [taskMapping, setTaskMapping] = useState<Map<string, string>>(new Map()); // Map scenario task ID to actual UUID
   const [conversations, setConversations] = useState<ConversationEntry[]>([]);
   const [userInput, setUserInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -90,14 +92,38 @@ export default function ProgramLearningPage() {
   // Load task data when taskId changes
   useEffect(() => {
     if (scenario && taskId) {
-      const task = scenario.tasks.find(t => t.id === taskId);
-      if (task) {
-        setCurrentTask(task);
-        loadTaskHistory();
+      // For temp programs, use scenario tasks directly
+      if (programId.startsWith('temp_')) {
+        const task = scenario.tasks.find(t => t.id === taskId);
+        if (task) {
+          setCurrentTask(task);
+          loadTaskHistory();
+        }
+      } else {
+        // For real programs, find task by UUID or by mapping
+        let task = null;
+        
+        // First try to find by scenario task ID (for backward compatibility)
+        for (const [scenarioTaskId, actualTaskId] of taskMapping.entries()) {
+          if (actualTaskId === taskId) {
+            task = scenario.tasks.find(t => t.id === scenarioTaskId);
+            break;
+          }
+        }
+        
+        // If not found, try direct match (in case taskId is still scenario format)
+        if (!task) {
+          task = scenario.tasks.find(t => t.id === taskId);
+        }
+        
+        if (task) {
+          setCurrentTask(task);
+          loadTaskHistory();
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [taskId, scenario]);
+  }, [taskId, scenario, taskMapping, programId]);
 
   // Scroll to bottom when conversations change
   useEffect(() => {
@@ -173,9 +199,28 @@ export default function ProgramLearningPage() {
         setProgram(mockProgram);
       }
       
-      // Load completion data to get all task evaluations (only for non-temp programs)
+      // Load actual program tasks (only for non-temp programs)
       if (!programId.startsWith('temp_')) {
         try {
+          // Load program tasks to get actual UUIDs
+          const tasksRes = await fetch(`/api/pbl/programs/${programId}/tasks`);
+          if (tasksRes.ok) {
+            const tasksData = await tasksRes.json();
+            if (tasksData.success && tasksData.tasks) {
+              setProgramTasks(tasksData.tasks);
+              
+              // Build mapping from scenario task ID to actual UUID
+              const mapping = new Map<string, string>();
+              tasksData.tasks.forEach((task: any) => {
+                if (task.config?.taskId) {
+                  mapping.set(task.config.taskId, task.id);
+                }
+              });
+              setTaskMapping(mapping);
+            }
+          }
+          
+          // Load completion data to get all task evaluations
           const completionRes = await fetch(`/api/pbl/completion?programId=${programId}&scenarioId=${scenarioId}`);
           if (completionRes.ok) {
             const completionData = await completionRes.json();
@@ -191,7 +236,7 @@ export default function ProgramLearningPage() {
             }
           }
         } catch (error) {
-          console.error('Error loading completion data:', error);
+          console.error('Error loading program data:', error);
         }
       }
       
@@ -605,8 +650,16 @@ export default function ProgramLearningPage() {
     }
   };
 
-  const switchTask = (newTaskId: string) => {
-    router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${newTaskId}/learn`);
+  const switchTask = (scenarioTaskId: string) => {
+    // For temp programs, use scenario task ID directly
+    if (programId.startsWith('temp_')) {
+      router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${scenarioTaskId}/learn`);
+      return;
+    }
+    
+    // For real programs, map scenario task ID to actual UUID
+    const actualTaskId = taskMapping.get(scenarioTaskId) || scenarioTaskId;
+    router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${actualTaskId}/learn`);
   };
 
   if (loading) {

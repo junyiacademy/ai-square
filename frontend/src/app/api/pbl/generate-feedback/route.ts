@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pblProgramService } from '@/lib/storage/pbl-program-service';
+import { ensureServices } from '@/lib/core/services/api-helpers';
 import { VertexAI, SchemaType } from '@google-cloud/vertexai';
 import type { LocalizedFeedback } from '@/types/pbl-completion';
+import { ProgramStatus } from '@/lib/core/program/types';
 
 // Types for feedback structure
 interface FeedbackStrength {
@@ -204,71 +205,117 @@ export async function POST(request: NextRequest) {
         { status: 401 }
       );
     }
+
+    // Use new architecture
+    const services = await ensureServices();
     
-    // Get completion data
-    const completionData = await pblProgramService.getProgramCompletion(
-      userEmail,
-      scenarioId,
-      programId
-    ) as CompletionData | null;
-    
-    if (!completionData) {
+    // Get program
+    const program = await services.programService.getProgram(userEmail, programId);
+    if (!program) {
       return NextResponse.json(
-        { success: false, error: 'Completion data not found' },
+        { success: false, error: 'Program not found' },
         { status: 404 }
       );
     }
-    
+
     // Get current language
     const currentLang = request.headers.get('accept-language')?.split(',')[0]?.split('-')[0] || 'en';
     
-    // If forceRegenerate, delete existing feedback for current language
-    if (forceRegenerate && completionData.qualitativeFeedback) {
-      // Remove the current language feedback
-      if (typeof completionData.qualitativeFeedback === 'object' && 
-          !('overallAssessment' in completionData.qualitativeFeedback)) {
-        // Multi-language format - cast to LocalizedFeedback
-        const localizedFeedback = completionData.qualitativeFeedback as LocalizedFeedback;
-        delete localizedFeedback[currentLang];
-        
-        // Update the completion data to remove this language's feedback
-        await pblProgramService.updateProgramCompletionFeedback(
-          userEmail,
-          scenarioId,
-          programId,
-          null, // Pass null to remove
-          currentLang
+    // Check if feedback already exists (unless forceRegenerate)
+    const existingFeedback = program.metadata?.qualitativeFeedback as LocalizedFeedback | undefined;
+    
+    if (!forceRegenerate && existingFeedback && existingFeedback[currentLang]) {
+      return NextResponse.json({
+        success: true,
+        feedback: existingFeedback[currentLang],
+        cached: true
+      });
+    }
+
+    // Get all tasks for this program
+    const tasks = await services.taskService.queryTasks({
+      programId: program.id,
+      userId: userEmail
+    });
+
+    // Get evaluations for all tasks
+    const evaluations = await services.evaluationService.queryEvaluations({
+      userId: userEmail,
+      entityType: 'task'
+    });
+
+    // Get logs for tasks
+    const allLogs = await services.logService.queryLogs({
+      userId: userEmail,
+      programId: program.id
+    });
+
+    // Build completion data for AI analysis
+    const taskSummaries: TaskSummary[] = [];
+    const domainScores: Record<string, number> = {};
+    const domainCounts: Record<string, number> = {};
+    let overallScore = 0;
+    let evaluatedTasks = 0;
+
+    for (const task of tasks) {
+      const taskEvaluations = evaluations.filter(e => e.entityId === task.id);
+      const latestEval = taskEvaluations.sort((a, b) => 
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )[0];
+
+      if (latestEval) {
+        evaluatedTasks++;
+        overallScore += latestEval.score || 0;
+
+        // Get task logs (interactions)
+        const taskLogs = allLogs.filter(log => 
+          log.metadata?.taskId === task.id && 
+          log.type === 'INTERACTION'
         );
+
+        const conversations = taskLogs
+          .filter(log => log.metadata?.role === 'user')
+          .map(log => log.metadata?.content || '')
+          .filter(content => content.length > 0);
+
+        taskSummaries.push({
+          taskId: task.config?.taskId || task.id,
+          score: latestEval.score || 0,
+          conversations,
+          feedback: latestEval.feedback || '',
+          strengths: latestEval.results?.strengths || [],
+          improvements: latestEval.results?.improvements || []
+        });
+
+        // Aggregate domain scores
+        if (latestEval.results?.domainScores) {
+          for (const [domain, score] of Object.entries(latestEval.results.domainScores)) {
+            if (!domainScores[domain]) {
+              domainScores[domain] = 0;
+              domainCounts[domain] = 0;
+            }
+            domainScores[domain] += score;
+            domainCounts[domain]++;
+          }
+        }
       }
     }
-    
-    // Check if feedback already exists for current language (skip if forceRegenerate)
-    if (!forceRegenerate && completionData.qualitativeFeedback) {
-      // Check if it's single-language format (has overallAssessment property)
-      if ('overallAssessment' in completionData.qualitativeFeedback) {
-        // This is old format, check if it matches current language
-        const feedbackLang = completionData.feedbackLanguage || 'en';
-        if (feedbackLang === currentLang) {
-          return NextResponse.json({
-            success: true,
-            feedback: completionData.qualitativeFeedback,
-            cached: true
-          });
-        }
-      } else {
-        // New multi-language format - cast to LocalizedFeedback
-        const localizedFeedback = completionData.qualitativeFeedback as LocalizedFeedback;
-        if (localizedFeedback[currentLang]) {
-          return NextResponse.json({
-            success: true,
-            feedback: localizedFeedback[currentLang],
-            cached: true
-          });
-        }
-      }
+
+    // Average scores
+    if (evaluatedTasks > 0) {
+      overallScore = Math.round(overallScore / evaluatedTasks);
     }
     
-    // Get scenario data - read directly from file system instead of API call
+    for (const domain of Object.keys(domainScores)) {
+      domainScores[domain] = Math.round(domainScores[domain] / domainCounts[domain]);
+    }
+
+    // Calculate time spent
+    const totalTimeSeconds = Math.round(
+      (new Date().getTime() - new Date(program.startedAt || program.createdAt).getTime()) / 1000
+    );
+
+    // Get scenario data - read directly from file system
     const fs = await import('fs/promises');
     const path = await import('path');
     // Convert scenario ID from kebab-case to snake_case for filename
@@ -293,28 +340,17 @@ export async function POST(request: NextRequest) {
       console.error('Error reading scenario data:', error);
     }
     
-    // Prepare task summaries for AI analysis
-    const taskSummaries: TaskSummary[] = completionData.tasks?.map((task) => ({
-      taskId: task.taskId,
-      score: task.evaluation?.score || 0,
-      conversations: task.log?.interactions?.filter((i) => i.role === 'user')
-        .map((i) => i.content) || [],
-      feedback: task.evaluation?.feedback || '',
-      strengths: task.evaluation?.strengths || [],
-      improvements: task.evaluation?.improvements || []
-    })) || [];
-    
     // Generate prompt
     const prompt = `
-Analyze this learner's performance in the "${scenarioData.title}" scenario.
+Analyze this learner's performance in the "${scenarioData.title || program.title}" scenario.
 
 Scenario Objectives:
 ${scenarioData.learning_objectives?.join('\n') || 'General AI literacy improvement'}
 
 Overall Performance:
-- Overall Score: ${completionData.overallScore}%
-- Tasks Completed: ${completionData.evaluatedTasks}/${completionData.totalTasks}
-- Total Time: ${Math.round((completionData.totalTimeSeconds || 0) / 60)} minutes
+- Overall Score: ${overallScore}%
+- Tasks Completed: ${evaluatedTasks}/${tasks.length}
+- Total Time: ${Math.round(totalTimeSeconds / 60)} minutes
 
 Task Performance:
 ${taskSummaries.map((task, index) => `
@@ -324,7 +360,7 @@ Feedback: ${task.feedback}
 `).join('\n')}
 
 Domain Scores:
-${Object.entries(completionData.domainScores || {}).map(([domain, score]) => 
+${Object.entries(domainScores).map(([domain, score]) => 
   `${domain}: ${score}%`
 ).join('\n')}
 
@@ -438,13 +474,27 @@ Do not mix languages. The entire response must be in ${languageMap[currentLang] 
       };
     }
     
-    // Save feedback to completion data with language info
-    await pblProgramService.updateProgramCompletionFeedback(
+    // Save feedback to program metadata
+    const updatedFeedback = {
+      ...(existingFeedback || {}),
+      [currentLang]: feedback
+    };
+
+    await services.programService.updateProgram(userEmail, programId, {
+      metadata: {
+        ...program.metadata,
+        qualitativeFeedback: updatedFeedback,
+        feedbackLanguage: currentLang
+      }
+    });
+
+    // Log feedback generation
+    await services.logService.logSystemEvent(
       userEmail,
-      scenarioId,
       programId,
-      feedback,
-      currentLang
+      undefined,
+      'feedback-generated',
+      { language: currentLang, forceRegenerate }
     );
     
     return NextResponse.json({

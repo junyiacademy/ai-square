@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pblProgramService } from '@/lib/storage/pbl-program-service';
+import { ensureServices } from '@/lib/core/services/api-helpers';
 
 export async function GET(request: NextRequest) {
   try {
@@ -26,38 +26,76 @@ export async function GET(request: NextRequest) {
       );
     }
     
-    // Get programs for this user
-    // If scenarioId is provided, get programs for that scenario only
-    // If not provided, get all programs for all scenarios
-    const programs = await pblProgramService.getUserPrograms(userEmail, scenarioId || undefined);
+    // Get services (will initialize if needed)
+    const services = await ensureServices();
+
+    // Get all tracks for this user
+    const tracks = await services.trackService.queryTracks({ userId: userEmail });
     
-    // Map ProgramSummary data to expected format
-    const programsWithInfo = programs.map(summary => {
-      // Calculate evaluated tasks based on completion rate if tasks array is empty
-      const evaluatedTasks = summary.tasks.length > 0 
-        ? summary.tasks.filter(task => task.progress.completedAt).length
-        : Math.floor((summary.completionRate / 100) * summary.program.totalTasks);
+    // Filter PBL tracks and match scenarioId if provided
+    const pblTracks = tracks.filter(track => {
+      if (track.type !== 'PBL') return false;
+      if (scenarioId && track.context?.scenarioId !== scenarioId) return false;
+      return true;
+    });
+
+    // Convert tracks to the expected format
+    const programsWithInfo = await Promise.all(pblTracks.map(async track => {
+      // Get programs for this track
+      const programs = await services.programService.queryPrograms({ 
+        userId: userEmail, 
+        trackId: track.trackId 
+      });
+      const program = programs[0]; // Assuming one program per track for PBL
       
+      if (!program) {
+        return {
+          id: track.trackId,
+          programId: track.trackId,
+          scenarioId: track.context?.scenarioId || '',
+          scenarioTitle: track.metadata?.title || track.context?.scenarioId || '',
+          status: track.status === 'ACTIVE' ? 'in_progress' : track.status === 'COMPLETED' ? 'completed' : 'draft',
+          startedAt: track.createdAt,
+          updatedAt: track.updatedAt,
+          totalTasks: 0,
+          evaluatedTasks: 0,
+          overallScore: 0,
+          taskCount: 0,
+          lastActivity: track.updatedAt,
+          progress: {
+            completedTasks: 0,
+            totalTasks: 0
+          }
+        };
+      }
+
+      // Get tasks for this program
+      const tasks = await services.taskService.queryTasks({ 
+        userId: userEmail, 
+        programId: program.programId 
+      });
+      const evaluatedTasks = tasks.filter(task => task.progress?.completed).length;
+      const overallScore = tasks.reduce((sum, task) => sum + (task.progress?.score || 0), 0) / (tasks.length || 1);
+
       return {
-        id: summary.program.id,  // Use id property from Program interface
-        programId: summary.program.id,
-        scenarioId: summary.program.scenarioId,
-        scenarioTitle: summary.program.scenarioTitle || summary.program.scenarioId,
-        status: summary.program.status,
-        startedAt: summary.program.startedAt,
-        updatedAt: summary.program.updatedAt,
-        totalTasks: summary.program.totalTasks,
+        id: program.programId,
+        programId: program.programId,
+        scenarioId: program.metadata?.scenarioId || track.context?.scenarioId || '',
+        scenarioTitle: program.metadata?.title || track.metadata?.title || '',
+        status: program.status === 'ACTIVE' ? 'in_progress' : program.status === 'COMPLETED' ? 'completed' : 'draft',
+        startedAt: program.createdAt,
+        updatedAt: program.updatedAt,
+        totalTasks: tasks.length,
         evaluatedTasks: evaluatedTasks,
-        overallScore: summary.overallScore,
-        taskCount: summary.program.totalTasks,
-        lastActivity: summary.program.updatedAt,
-        // Add the progress field that the frontend expects
+        overallScore: Math.round(overallScore),
+        taskCount: tasks.length,
+        lastActivity: program.updatedAt,
         progress: {
           completedTasks: evaluatedTasks,
-          totalTasks: summary.program.totalTasks
+          totalTasks: tasks.length
         }
       };
-    });
+    }));
     
     // Sort by startedAt descending (newest first)
     programsWithInfo.sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime());

@@ -150,6 +150,7 @@ export default function UnifiedHistoryPage() {
                   logId: program.programId || program.id,
                   scenarioId: program.scenarioId,
                   scenarioTitle: program.scenarioTitle || program.scenarioId,
+                  currentTaskId: program.currentTaskId,
                   status: program.status,
                   startedAt: program.startedAt,
                   completedAt: program.completedAt,
@@ -638,9 +639,12 @@ export default function UnifiedHistoryPage() {
                           {session.status === 'in_progress' && (
                             <button
                               onClick={() => {
-                                // Need to get the current task ID, assuming it's the first task or stored in session
-                                const taskId = session.currentTaskId || 'task-1';
-                                router.push(`/pbl/scenarios/${session.scenarioId}/program/${session.id}/tasks/${taskId}/learn`);
+                                // Need to get the current task ID from session
+                                if (!session.currentTaskId) {
+                                  console.error('No current task ID found for session');
+                                  return;
+                                }
+                                router.push(`/pbl/scenarios/${session.scenarioId}/program/${session.id}/tasks/${session.currentTaskId}/learn`);
                               }}
                               className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
                             >

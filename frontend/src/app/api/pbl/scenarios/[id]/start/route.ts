@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pblProgramService } from '@/lib/storage/pbl-program-service';
+import { ensureServices } from '@/lib/core/services/api-helpers';
 import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 import { Scenario, CreateProgramResponse, DomainType, DifficultyLevel, KSAMapping, TaskCategory, AIModule } from '@/types/pbl';
-
+import { TrackType } from '@/lib/core/track/types';
+import { ProgramType, ProgramStatus } from '@/lib/core/program/types';
+import { TaskType } from '@/lib/core/task/types';
 
 // Load scenario data from YAML file
 async function loadScenario(scenarioId: string, lang: string = 'en'): Promise<Scenario | null> {
@@ -144,51 +146,129 @@ export async function POST(
       );
     }
     
-    // Create new program
-    console.log('   Creating program...');
-    const program = await pblProgramService.createProgram(
-      userEmail,
-      scenarioId,
-      language === 'zhTW' ? (scenario.title_zhTW || scenario.title) : scenario.title,
-      scenario.tasks.length,
-      language
-    );
+    // Use new architecture
+    const services = await ensureServices();
+    
+    console.log('   Creating program with new architecture...');
+    
+    // 1. Create Track
+    const track = await services.trackService.createTrack({
+      userId: userEmail,
+      projectId: scenarioId,
+      type: TrackType.PBL,
+      metadata: {
+        title: language === 'zhTW' ? (scenario.title_zhTW || scenario.title) : scenario.title,
+        language,
+        version: '1.0'
+      },
+      context: {
+        type: 'pbl',
+        scenarioId,
+        programId: '',  // Will be updated after program creation
+        completedTaskIds: [],
+        taskProgress: {}
+      }
+    });
+    
+    console.log('   ✅ Track created:', track.id);
+    
+    // 2. Create Program
+    const program = await services.programService.createProgram({
+      trackId: track.id,
+      userId: userEmail,
+      type: ProgramType.PBL,
+      title: language === 'zhTW' ? (scenario.title_zhTW || scenario.title) : scenario.title,
+      config: {
+        scenarioId,
+        scenarioTitle: scenario.title,
+        totalTasks: scenario.tasks.length,
+        tasksOrder: scenario.tasks.map(t => t.id),
+        language
+      },
+      metadata: {
+        scenarioId,
+        language
+      }
+    });
     
     console.log('   ✅ Program created:', program.id);
     
-    // Initialize first task
-    const firstTask = scenario.tasks[0];
-    if (firstTask) {
-      await pblProgramService.initializeTask(
-        userEmail,
-        scenarioId,
-        program.id,
-        firstTask.id,
-        language === 'zhTW' ? (firstTask.title_zhTW || firstTask.title) : firstTask.title
-      );
-      
-      // Update program with current task
-      await pblProgramService.updateProgram(userEmail, scenarioId, program.id, {
-        currentTaskId: firstTask.id
-      });
-    }
+    // Update track context with the actual program ID
+    await services.trackService.updateTrack(track.id, {
+      context: {
+        ...track.context,
+        programId: program.id
+      }
+    });
+    
+    // 3. Create Tasks
+    const tasks = await services.taskService.createTasks(
+      scenario.tasks.map((task, index) => ({
+        programId: program.id,
+        userId: userEmail,
+        type: TaskType.PBL_TASK,
+        title: language === 'zhTW' ? (task.title_zhTW || task.title) : task.title,
+        description: language === 'zhTW' ? (task.description_zhTW || task.description) : task.description,
+        order: index + 1,
+        config: {
+          taskId: task.id,
+          category: task.category,
+          instructions: language === 'zhTW' ? (task.instructions_zhTW || task.instructions) : task.instructions,
+          expectedOutcome: language === 'zhTW' ? (task.expectedOutcome_zhTW || task.expectedOutcome) : task.expectedOutcome,
+          timeLimit: task.timeLimit,
+          aiModule: task.aiModule
+        }
+      }))
+    );
+    
+    console.log('   ✅ Tasks created:', tasks.length);
+    
+    // Update program status to IN_PROGRESS
+    // Use the actual created task ID, not the scenario task ID
+    const firstTaskId = tasks[0]?.id;
+    
+    await services.programService.updateProgram(userEmail, program.id, {
+      status: ProgramStatus.IN_PROGRESS,
+      startedAt: new Date(),
+      progress: {
+        ...program.progress,
+        currentTaskId: firstTaskId,
+        lastActivityAt: new Date()
+      }
+    });
+    
+    // Log the program start
+    await services.logService.logSystemEvent(
+      userEmail,
+      program.id,
+      undefined,
+      'program-started',
+      { scenarioId, language, trackId: track.id }
+    );
     
     const response: CreateProgramResponse = {
       success: true,
       programId: program.id,
       program: {
         id: program.id,
-        scenarioId: program.scenarioId,
-        userId: program.userId,
-        userEmail: program.userEmail,
-        startedAt: program.startedAt,
-        updatedAt: program.updatedAt,
-        status: program.status,
-        totalTasks: program.totalTasks,
-        currentTaskId: firstTask?.id,
-        language: program.language
+        scenarioId: scenarioId,
+        userId: userEmail,
+        userEmail: userEmail,
+        startedAt: program.startedAt?.toISOString() || new Date().toISOString(),
+        updatedAt: program.updatedAt.toISOString(),
+        status: 'in_progress',
+        totalTasks: scenario.tasks.length,
+        currentTaskId: firstTaskId || '', // Use the actual UUID
+        language: language
       },
-      firstTaskId: firstTask?.id || ''
+      firstTaskId: firstTaskId || '', // Use the actual UUID
+      trackId: track.id, // Include trackId in response for client tracking
+      // Add task mapping for frontend to use
+      taskMapping: tasks.map((task, index) => ({
+        taskId: task.id,
+        scenarioTaskId: scenario.tasks[index]?.id,
+        order: task.order
+      }))
     };
     
     return NextResponse.json(response);

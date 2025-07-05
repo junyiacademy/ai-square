@@ -18,7 +18,7 @@ import {
   StoragePermissionError,
   StorageQuotaExceededError 
 } from '../../errors';
-import { Retryable, RetryConditions } from '../decorators/retry.decorator';
+// Removed decorator imports - decorators not supported in current setup
 
 interface GCSMetadata {
   ttl?: number;
@@ -50,10 +50,6 @@ export class GCSStorageProvider implements IStorageProvider {
   /**
    * 取得資料
    */
-  @Retryable({ 
-    maxAttempts: 3, 
-    retryIf: RetryConditions.onNetworkError 
-  })
   async get<T>(key: string): Promise<T | null> {
     const filePath = this.getFilePath(key);
     
@@ -87,10 +83,6 @@ export class GCSStorageProvider implements IStorageProvider {
   /**
    * 設定資料
    */
-  @Retryable({ 
-    maxAttempts: 3, 
-    retryIf: RetryConditions.onNetworkError 
-  })
   async set<T>(key: string, value: T, options?: StorageOptions): Promise<void> {
     const filePath = this.getFilePath(key);
     
@@ -126,10 +118,6 @@ export class GCSStorageProvider implements IStorageProvider {
   /**
    * 刪除資料
    */
-  @Retryable({ 
-    maxAttempts: 3, 
-    retryIf: RetryConditions.onNetworkError 
-  })
   async delete(key: string): Promise<void> {
     const filePath = this.getFilePath(key);
     

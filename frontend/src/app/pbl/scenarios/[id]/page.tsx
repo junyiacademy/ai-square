@@ -162,19 +162,44 @@ export default function ScenarioDetailsPage() {
     setIsStarting(true);
     try {
       if (programId) {
-        // Continue existing program
-        const program = userPrograms.find(p => p.id === programId);
-        if (program) {
-          // Navigate to the learning page with existing program
-          const firstTaskId = scenario.tasks[0]?.id || 'task-1';
-          router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${firstTaskId}/learn`);
+        // Continue existing program - need to get actual task IDs
+        try {
+          const tasksResponse = await fetch(`/api/pbl/programs/${programId}/tasks`);
+          if (!tasksResponse.ok) throw new Error('Failed to get program tasks');
+          
+          const tasksData = await tasksResponse.json();
+          if (!tasksData.success || !tasksData.currentTaskId) {
+            throw new Error('No current task found');
+          }
+          
+          // Navigate to the current task or first task
+          router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${tasksData.currentTaskId}/learn`);
+        } catch (error) {
+          console.error('Error getting program tasks:', error);
+          alert(t('details.errorLoadingProgram'));
+          setIsStarting(false);
+          return;
         }
       } else {
         // Start new program - use draft if available, otherwise create new one
         if (draftProgram) {
-          // Use existing draft program directly
-          const firstTaskId = scenario.tasks[0]?.id || 'task-1';
-          router.push(`/pbl/scenarios/${scenarioId}/program/${draftProgram.id}/tasks/${firstTaskId}/learn`);
+          // Use existing draft program - need to get actual task IDs
+          try {
+            const tasksResponse = await fetch(`/api/pbl/programs/${draftProgram.id}/tasks`);
+            if (!tasksResponse.ok) throw new Error('Failed to get draft program tasks');
+            
+            const tasksData = await tasksResponse.json();
+            if (!tasksData.success || !tasksData.firstTaskId) {
+              throw new Error('No tasks found in draft program');
+            }
+            
+            router.push(`/pbl/scenarios/${scenarioId}/program/${draftProgram.id}/tasks/${tasksData.firstTaskId}/learn`);
+          } catch (error) {
+            console.error('Error getting draft program tasks:', error);
+            alert(t('details.errorLoadingProgram'));
+            setIsStarting(false);
+            return;
+          }
         } else {
           // Create new draft program
           try {
@@ -196,15 +221,16 @@ export default function ScenarioDetailsPage() {
             }
             
             // Navigate to the learning page with new draft
-            const firstTaskId = scenario.tasks[0]?.id || 'task-1';
+            const firstTaskId = createData.firstTaskId;
+            if (!firstTaskId) throw new Error('No first task ID returned');
             router.push(`/pbl/scenarios/${scenarioId}/program/${createData.programId}/tasks/${firstTaskId}/learn`);
             
           } catch (error) {
             console.error('Error creating draft program:', error);
-            // Fallback to old temp ID method
-            const tempProgramId = `temp_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
-            const firstTaskId = scenario.tasks[0]?.id || 'task-1';
-            router.push(`/pbl/scenarios/${scenarioId}/program/${tempProgramId}/tasks/${firstTaskId}/learn?isNew=true`);
+            // Show error to user
+            alert(t('details.errorCreatingProgram'));
+            setIsStarting(false);
+            return;
           }
         }
       }
