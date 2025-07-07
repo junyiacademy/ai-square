@@ -38,24 +38,60 @@ interface LearningProject {
   metadata: ProjectMetadata;
 }
 
-// 2. 學習會話 (統一所有學習活動)
-interface LearningSession {
-  id: string;
-  projectId: string;
-  userId: string;
-  type: SessionType;
-  status: SessionStatus;
+// 2. 學習軌跡 (統一所有學習活動)
+interface LearningTrack {
+  id: string;  // Primary Key
+  projectId: string;  // Foreign Key to LearningProject
+  userId: string;  // Foreign Key to User
+  type: TrackType;
+  status: TrackStatus;
   startedAt: Date;
   lastActiveAt: Date;
   completedAt?: Date;
-  progress: SessionProgress;
-  context: SessionContext;
+  metadata: TrackMetadata;
 }
 
-// 3. 評估系統 (統一所有評估活動)
+// 3. 學習方案 (Track 下的學習方案)
+interface Program {
+  id: string;  // Primary Key
+  trackId: string;  // Foreign Key to LearningTrack
+  title: string;
+  description: string;
+  order: number;
+  status: ProgramStatus;
+  startedAt?: Date;
+  completedAt?: Date;
+}
+
+// 4. 學習任務 (Program 下的具體任務)
+interface Task {
+  id: string;  // Primary Key
+  programId: string;  // Foreign Key to Program
+  title: string;
+  description: string;
+  order: number;
+  type: TaskType;
+  requiredKSA: string[];  // Required competencies
+  status: TaskStatus;
+  startedAt?: Date;
+  completedAt?: Date;
+}
+
+// 5. 任務日誌 (記錄任務執行過程)
+interface TaskLog {
+  id: string;  // Primary Key
+  taskId: string;  // Foreign Key to Task
+  userId: string;  // Foreign Key to User
+  type: LogType;  // 'attempt', 'submission', 'interaction', 'feedback'
+  data: any;  // JSON data
+  createdAt: Date;
+}
+
+// 6. 評估系統 (統一所有評估活動)
 interface Evaluation {
-  id: string;
-  sessionId: string;
+  id: string;  // Primary Key
+  trackId: string;  // Foreign Key to LearningTrack
+  taskId?: string;  // Foreign Key to Task (optional, for task-level evaluations)
   type: EvaluationType;
   input: EvaluationInput;
   result: EvaluationResult;
@@ -63,20 +99,47 @@ interface Evaluation {
   createdAt: Date;
 }
 
-// 4. 能力模型 (統一追蹤所有能力)
+// 7. 能力模型 (統一追蹤所有能力)
 interface Competency {
-  id: string;
+  id: string;  // Primary Key
   domain: string;
   name: string;
   description: string;
+  ksaCode: string;  // K001, S002, A003, etc.
+}
+
+// 8. 用戶能力進展
+interface UserCompetencyProgress {
+  id: string;  // Primary Key
+  userId: string;  // Foreign Key to User
+  competencyId: string;  // Foreign Key to Competency
   level: CompetencyLevel;
   evidence: Evidence[];
+  lastUpdated: Date;
 }
 ```
 
-## 2. 統一 Session 架構
+## 2. 統一 Track 架構
 
-### 2.1 Session 生命週期
+### 2.1 Track 層級結構
+```
+LearningTrack (學習軌跡)
+├── Program 1 (方案 1)
+│   ├── Task 1.1 (任務 1.1)
+│   │   └── TaskLog[] (任務日誌)
+│   ├── Task 1.2
+│   │   └── TaskLog[]
+│   └── Task 1.3
+│       └── TaskLog[]
+├── Program 2
+│   ├── Task 2.1
+│   │   └── TaskLog[]
+│   └── Task 2.2
+│       └── TaskLog[]
+└── Evaluations[] (評估記錄)
+```
+
+### 2.2 Track 生命週期
 ```
 ┌─────────┐     ┌─────────┐     ┌──────────┐     ┌───────────┐
 │ Created │ --> │ Active  │ --> │ Paused   │ --> │ Completed │
@@ -86,67 +149,58 @@ interface Competency {
                           可暫停/繼續
 ```
 
-### 2.2 Session 類型層次
+### 2.3 Track 類型層次
 ```typescript
-abstract class BaseSession {
+abstract class BaseTrack {
   abstract id: string;
   abstract userId: string;
   abstract projectId: string;
-  abstract status: SessionStatus;
+  abstract status: TrackStatus;
   
   // 共同行為
   abstract start(): Promise<void>;
   abstract pause(): Promise<void>;
   abstract resume(): Promise<void>;
   abstract complete(): Promise<CompletionResult>;
-  abstract saveProgress(): Promise<void>;
+  abstract getProgress(): Promise<TrackProgress>;
 }
 
-// Assessment Session
-class AssessmentSession extends BaseSession {
-  questions: Question[];
-  currentQuestionIndex: number;
-  answers: Answer[];
-  timeSpent: TimeTracking;
+// Assessment Track
+class AssessmentTrack extends BaseTrack {
+  programs: AssessmentProgram[];  // 測驗模組
   
-  async submitAnswer(answer: Answer): Promise<void> {
-    // Assessment 特定邏輯
+  async createProgram(config: AssessmentConfig): Promise<Program> {
+    // 創建測驗方案
   }
 }
 
-// PBL Session
-class PBLSession extends BaseSession {
-  program: Program;
-  currentTaskId: string;
-  taskResponses: TaskResponse[];
-  ksaProgress: KSAProgress;
+// PBL Track
+class PBLTrack extends BaseTrack {
+  scenario: PBLScenario;
+  programs: PBLProgram[];  // PBL 方案
   
-  async submitTaskResponse(response: TaskResponse): Promise<void> {
-    // PBL 特定邏輯
+  async createProgram(config: PBLProgramConfig): Promise<Program> {
+    // 創建 PBL 方案
   }
 }
 
-// Discovery Session
-class DiscoverySession extends BaseSession {
+// Discovery Track
+class DiscoveryTrack extends BaseTrack {
   workspace: Workspace;
-  currentTask: Task;
-  completedTasks: string[];
-  achievements: Achievement[];
-  totalXP: number;
+  programs: DiscoveryProgram[];  // 探索路徑
   
-  async completeTask(evaluation: TaskEvaluation): Promise<void> {
-    // Discovery 特定邏輯
+  async createProgram(path: DiscoveryPath): Promise<Program> {
+    // 創建探索方案
   }
 }
 
-// Chat Session
-class ChatSession extends BaseSession {
-  conversationId: string;
-  messages: Message[];
-  context: ChatContext;
+// Chat Track
+class ChatTrack extends BaseTrack {
+  topic: string;
+  programs: ChatProgram[];  // 對話主題
   
-  async sendMessage(message: string): Promise<AIResponse> {
-    // Chat 特定邏輯
+  async createProgram(topic: ChatTopic): Promise<Program> {
+    // 創建對話方案
   }
 }
 ```
@@ -179,7 +233,8 @@ type EvaluationInput =
 
 // 評估結果類型
 interface EvaluationResult {
-  sessionId: string;
+  trackId: string;  // Foreign Key to Track
+  taskId?: string;  // Foreign Key to Task (optional)
   evaluationType: string;
   scores: ScoreBreakdown;
   competencies: CompetencyScore[];
@@ -288,17 +343,40 @@ abstract class BaseRepository<T extends { id: string }>
 }
 
 // 具體 Repository
-class SessionRepository extends BaseRepository<LearningSession> {
-  async findActiveByUser(userId: string): Promise<LearningSession[]> {
+class TrackRepository extends BaseRepository<LearningTrack> {
+  async findActiveByUser(userId: string): Promise<LearningTrack[]> {
     const all = await this.findAll();
-    return all.filter(s => 
-      s.userId === userId && s.status === 'active'
+    return all.filter(t => 
+      t.userId === userId && t.status === 'active'
     );
   }
   
-  async findByProject(projectId: string): Promise<LearningSession[]> {
+  async findByProject(projectId: string): Promise<LearningTrack[]> {
     const all = await this.findAll();
-    return all.filter(s => s.projectId === projectId);
+    return all.filter(t => t.projectId === projectId);
+  }
+}
+
+class ProgramRepository extends BaseRepository<Program> {
+  async findByTrack(trackId: string): Promise<Program[]> {
+    const all = await this.findAll();
+    return all.filter(p => p.trackId === trackId);
+  }
+}
+
+class TaskRepository extends BaseRepository<Task> {
+  async findByProgram(programId: string): Promise<Task[]> {
+    const all = await this.findAll();
+    return all.filter(t => t.programId === programId)
+      .sort((a, b) => a.order - b.order);
+  }
+}
+
+class TaskLogRepository extends BaseRepository<TaskLog> {
+  async findByTask(taskId: string): Promise<TaskLog[]> {
+    const all = await this.findAll();
+    return all.filter(l => l.taskId === taskId)
+      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
   }
 }
 ```
@@ -306,9 +384,13 @@ class SessionRepository extends BaseRepository<LearningSession> {
 ### 4.2 Unit of Work 模式
 ```typescript
 interface IUnitOfWork {
-  sessions: ISessionRepository;
+  tracks: ITrackRepository;
+  programs: IProgramRepository;
+  tasks: ITaskRepository;
+  taskLogs: ITaskLogRepository;
   evaluations: IEvaluationRepository;
   competencies: ICompetencyRepository;
+  userProgress: IUserCompetencyProgressRepository;
   projects: IProjectRepository;
   
   beginTransaction(): Promise<void>;
@@ -321,9 +403,13 @@ class UnitOfWork implements IUnitOfWork {
   
   constructor(
     private storage: IStorageProvider,
-    public sessions: ISessionRepository,
+    public tracks: ITrackRepository,
+    public programs: IProgramRepository,
+    public tasks: ITaskRepository,
+    public taskLogs: ITaskLogRepository,
     public evaluations: IEvaluationRepository,
     public competencies: ICompetencyRepository,
+    public userProgress: IUserCompetencyProgressRepository,
     public projects: IProjectRepository
   ) {}
   
@@ -361,44 +447,58 @@ abstract class BaseLearningService {
   async startLearning(
     userId: string, 
     projectId: string
-  ): Promise<LearningSession> {
+  ): Promise<LearningTrack> {
     await this.uow.beginTransaction();
     
     try {
       // 檢查先決條件
       await this.checkPrerequisites(userId, projectId);
       
-      // 創建 Session
-      const session = await this.createSession(userId, projectId);
+      // 創建 Track
+      const track = await this.createTrack(userId, projectId);
       
       // 初始化學習內容
-      await this.initializeContent(session);
+      await this.initializeContent(track);
       
       await this.uow.commit();
-      return session;
+      return track;
     } catch (error) {
       await this.uow.rollback();
       throw error;
     }
   }
   
-  // 提交學習成果
-  async submitProgress(
-    sessionId: string,
+  // 提交任務成果
+  async submitTaskProgress(
+    taskId: string,
+    userId: string,
     progress: any
   ): Promise<EvaluationResult> {
-    const session = await this.uow.sessions.findById(sessionId);
-    if (!session) throw new Error('Session not found');
+    const task = await this.uow.tasks.findById(taskId);
+    if (!task) throw new Error('Task not found');
+    
+    const program = await this.uow.programs.findById(task.programId);
+    if (!program) throw new Error('Program not found');
+    
+    // 記錄任務日誌
+    await this.uow.taskLogs.create({
+      taskId,
+      userId,
+      type: 'submission',
+      data: progress,
+      createdAt: new Date()
+    });
     
     // 評估成果
     const evaluation = await this.evaluationService.evaluate({
       type: this.getEvaluationType(),
-      sessionId,
+      trackId: program.trackId,
+      taskId,
       input: progress
     });
     
     // 更新能力
-    await this.updateCompetencies(session.userId, evaluation);
+    await this.updateCompetencies(userId, evaluation);
     
     // 儲存評估結果
     await this.uow.evaluations.create(evaluation);
@@ -407,8 +507,8 @@ abstract class BaseLearningService {
   }
   
   protected abstract getEvaluationType(): EvaluationType;
-  protected abstract createSession(userId: string, projectId: string): Promise<LearningSession>;
-  protected abstract initializeContent(session: LearningSession): Promise<void>;
+  protected abstract createTrack(userId: string, projectId: string): Promise<LearningTrack>;
+  protected abstract initializeContent(track: LearningTrack): Promise<void>;
 }
 ```
 
@@ -416,19 +516,37 @@ abstract class BaseLearningService {
 
 ### 6.1 RESTful API
 ```typescript
-// Session API
-POST   /api/sessions                    // 創建新 Session
-GET    /api/sessions/:id                // 獲取 Session 詳情
-PUT    /api/sessions/:id                // 更新 Session
-DELETE /api/sessions/:id                // 刪除 Session
-POST   /api/sessions/:id/pause          // 暫停 Session
-POST   /api/sessions/:id/resume         // 繼續 Session
-POST   /api/sessions/:id/complete       // 完成 Session
+// Track API
+POST   /api/tracks                      // 創建新 Track
+GET    /api/tracks/:id                  // 獲取 Track 詳情
+PUT    /api/tracks/:id                  // 更新 Track
+DELETE /api/tracks/:id                  // 刪除 Track
+POST   /api/tracks/:id/pause            // 暫停 Track
+POST   /api/tracks/:id/resume           // 繼續 Track
+POST   /api/tracks/:id/complete         // 完成 Track
+
+// Program API
+GET    /api/tracks/:trackId/programs    // 獲取 Track 的所有 Program
+POST   /api/tracks/:trackId/programs    // 創建新 Program
+GET    /api/programs/:id                // 獲取 Program 詳情
+PUT    /api/programs/:id                // 更新 Program
+
+// Task API
+GET    /api/programs/:programId/tasks   // 獲取 Program 的所有 Task
+POST   /api/programs/:programId/tasks   // 創建新 Task
+GET    /api/tasks/:id                   // 獲取 Task 詳情
+PUT    /api/tasks/:id                   // 更新 Task
+POST   /api/tasks/:id/submit            // 提交 Task 成果
+
+// Task Log API
+GET    /api/tasks/:taskId/logs          // 獲取 Task 的所有日誌
+POST   /api/tasks/:taskId/logs          // 創建新日誌
 
 // Evaluation API
 POST   /api/evaluations                 // 創建評估
 GET    /api/evaluations/:id             // 獲取評估結果
-GET    /api/sessions/:id/evaluations    // 獲取 Session 的所有評估
+GET    /api/tracks/:id/evaluations      // 獲取 Track 的所有評估
+GET    /api/tasks/:id/evaluations       // 獲取 Task 的所有評估
 
 // Competency API
 GET    /api/users/:id/competencies      // 獲取用戶能力
@@ -437,38 +555,78 @@ GET    /api/competencies/:id/progress   // 獲取能力進展
 
 ### 6.2 GraphQL Schema (Alternative)
 ```graphql
-type LearningSession {
+type LearningTrack {
   id: ID!
   project: LearningProject!
   user: User!
-  status: SessionStatus!
-  progress: SessionProgress!
+  status: TrackStatus!
+  programs: [Program!]!
   evaluations: [Evaluation!]!
   createdAt: DateTime!
   completedAt: DateTime
 }
 
+type Program {
+  id: ID!
+  track: LearningTrack!
+  title: String!
+  description: String!
+  order: Int!
+  status: ProgramStatus!
+  tasks: [Task!]!
+  startedAt: DateTime
+  completedAt: DateTime
+}
+
+type Task {
+  id: ID!
+  program: Program!
+  title: String!
+  description: String!
+  order: Int!
+  type: TaskType!
+  requiredKSA: [String!]!
+  status: TaskStatus!
+  logs: [TaskLog!]!
+  startedAt: DateTime
+  completedAt: DateTime
+}
+
+type TaskLog {
+  id: ID!
+  task: Task!
+  user: User!
+  type: LogType!
+  data: JSON!
+  createdAt: DateTime!
+}
+
 type Query {
-  session(id: ID!): LearningSession
-  userSessions(userId: ID!, status: SessionStatus): [LearningSession!]!
-  projectSessions(projectId: ID!): [LearningSession!]!
+  track(id: ID!): LearningTrack
+  userTracks(userId: ID!, status: TrackStatus): [LearningTrack!]!
+  projectTracks(projectId: ID!): [LearningTrack!]!
+  program(id: ID!): Program
+  task(id: ID!): Task
+  taskLogs(taskId: ID!): [TaskLog!]!
 }
 
 type Mutation {
-  createSession(input: CreateSessionInput!): LearningSession!
-  updateSession(id: ID!, input: UpdateSessionInput!): LearningSession!
-  submitProgress(sessionId: ID!, progress: ProgressInput!): EvaluationResult!
+  createTrack(input: CreateTrackInput!): LearningTrack!
+  updateTrack(id: ID!, input: UpdateTrackInput!): LearningTrack!
+  createProgram(trackId: ID!, input: CreateProgramInput!): Program!
+  createTask(programId: ID!, input: CreateTaskInput!): Task!
+  submitTaskProgress(taskId: ID!, progress: ProgressInput!): EvaluationResult!
 }
 ```
 
 ## 7. 技術決策記錄 (ADR)
 
-### ADR-001: 採用 Session 為核心概念
-**決策**: 所有學習活動都基於 Session
+### ADR-001: 採用 Track 為核心概念
+**決策**: 所有學習活動都基於 Track > Program > Task > Log 層級結構
 **原因**: 
-- 統一用戶體驗
-- 支援暫停/繼續
-- 完整的學習追蹤
+- 更清晰的學習路徑結構
+- 支援多層次的學習組織
+- 更細粒度的進度追蹤
 
 ### ADR-002: 使用策略模式處理評估
 **決策**: 不同評估類型使用不同策略
@@ -486,22 +644,24 @@ type Mutation {
 
 ## 8. 實施優先順序
 
-1. **Phase 1**: 建立基礎設施
+1. **Phase 1**: 建立基礎設施 [✓ 已完成]
    - 實作 Storage Provider 介面
    - 建立 Base Repository
    - 實作 Unit of Work
 
-2. **Phase 2**: 統一 Session 管理
-   - 實作 BaseSession
-   - 遷移 Assessment 到 Session
-   - 統一 PBL/Discovery Session
+2. **Phase 2**: 統一 Track 管理 [當前目標]
+   - 實作 BaseTrack
+   - 實作 Program/Task/TaskLog 實體
+   - 遷移 Assessment 到 Track 架構
+   - 統一 PBL/Discovery Track
 
-3. **Phase 3**: 統一評估系統
-   - 實作評估策略
-   - 整合現有評估邏輯
+3. **Phase 3**: 統一評佰系統
+   - 實作評佰策略
+   - 整合現有評佰邏輯
    - 建立統一的能力追蹤
 
 4. **Phase 4**: 資料遷移
+   - 設計關聯式資料庫 schema
    - 遷移現有資料到新結構
    - 實作資料庫 Storage Provider
    - 漸進式切換到資料庫
