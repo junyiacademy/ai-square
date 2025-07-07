@@ -34,7 +34,7 @@ ksa_mapping:
     - A3.1
     - A4.1
 tasks:
-  - id: perception-system
+  - id: ard_initial_research
     category: creation
     time_limit: 60
     assessment_focus:
@@ -71,7 +71,7 @@ tasks:
       - Erstellen Sie maschinelle Lernmodelle mit KI-Plattformen wie Roboflow oder Edge Impulse für Paketerkennung
       - Entwickeln Sie Echtzeit-KI-Inferenzsysteme, die für eingebettete Robotik-Hardware optimiert sind
     expected_outcome: Ein funktionierendes Wahrnehmungssystem, das Pakete unter verschiedenen Beleuchtungs- und Umgebungsbedingungen zuverlässig identifizieren und klassifizieren kann, mit dokumentierten Leistungsmetriken
-  - id: navigation-intelligence
+  - id: ard_planning
     category: creation
     time_limit: 50
     assessment_focus:
@@ -108,7 +108,7 @@ tasks:
       - Erstellen Sie intelligente Verhaltensbäume mit KI-Unterstützung für Aufgabenpriorisierung und Notfallreaktion
       - Entwickeln Sie prädiktive Navigation mit KI zur Vorhersage menschlicher Bewegungsmuster und Einrichtungsworkflows
     expected_outcome: Ein vollständiges autonomes Navigationssystem, das mehrere gleichzeitige Aufgaben effizient bewältigen kann, während es Sicherheit gewährleistet und sich an Umgebungsänderungen anpasst
-  - id: human-interaction
+  - id: ard_implementation
     category: interaction
     time_limit: 40
     assessment_focus:

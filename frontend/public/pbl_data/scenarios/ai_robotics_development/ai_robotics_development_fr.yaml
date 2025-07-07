@@ -34,7 +34,7 @@ ksa_mapping:
     - A3.1
     - A4.1
 tasks:
-  - id: perception-system
+  - id: ard_initial_research
     category: creation
     time_limit: 60
     assessment_focus:
@@ -71,7 +71,7 @@ tasks:
       - Créez des modèles d'apprentissage automatique utilisant des plateformes IA comme Roboflow ou Edge Impulse pour la reconnaissance de colis
       - Développez des systèmes d'inférence IA en temps réel optimisés pour le matériel robotique embarqué
     expected_outcome: Un système de perception fonctionnel capable d'identifier et classifier de manière fiable les colis dans diverses conditions d'éclairage et environnementales, avec des métriques de performance documentées
-  - id: navigation-intelligence
+  - id: ard_planning
     category: creation
     time_limit: 50
     assessment_focus:
@@ -108,7 +108,7 @@ tasks:
       - Créez des arbres de comportement intelligents utilisant l'assistance IA pour la priorisation des tâches et la réponse d'urgence
       - Développez une navigation prédictive utilisant l'IA pour anticiper les modèles de mouvement humain et les flux de travail des installations
     expected_outcome: Un système complet de navigation autonome capable de gérer efficacement plusieurs tâches simultanées tout en maintenant la sécurité et en s'adaptant aux changements environnementaux
-  - id: human-interaction
+  - id: ard_implementation
     category: interaction
     time_limit: 40
     assessment_focus:

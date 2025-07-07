@@ -30,7 +30,7 @@ ksa_mapping:
     - A2.1
     - A3.1
 tasks:
-  - id: task-1
+  - id: hsca_initial_research
     category: research
     time_limit: 25
     assessment_focus:
@@ -68,7 +68,7 @@ tasks:
       - 記錄並比較結果
       - 選擇 3-4 種與你創意願景共鳴的風格
     expected_outcome: 展示不同風格的 AI 生成藝術作品集
-  - id: task-2
+  - id: hsca_design_creation
     category: creation
     time_limit: 35
     assessment_focus:
@@ -106,7 +106,7 @@ tasks:
       - 生成多次迭代並完善你的提示詞
       - 為你的展覽創作 5-8 件最終作品
     expected_outcome: 準備好展覽的個人藝術作品集
-  - id: task-3
+  - id: hsca_implementation
     category: creation
     time_limit: 30
     assessment_focus:

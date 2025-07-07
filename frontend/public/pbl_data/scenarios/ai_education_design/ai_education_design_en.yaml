@@ -31,7 +31,7 @@ ksa_mapping:
     - A2.2
     - A3.1
 tasks:
-  - id: task-1
+  - id: aed_learner_profile
     category: analysis
     time_limit: 20
     assessment_focus:
@@ -69,7 +69,7 @@ tasks:
       - Create comprehensive learner profiles with AI assistance
       - Design personalized learning recommendations based on profiles
     expected_outcome: Comprehensive learner profiles with AI-generated insights and personalization recommendations
-  - id: task-2
+  - id: aed_adaptive_content
     category: creation
     time_limit: 25
     assessment_focus:
@@ -107,7 +107,7 @@ tasks:
       - Create content for different language proficiencies and accessibility needs
       - Implement adaptive pathways and test content effectiveness
     expected_outcome: Adaptive learning content with multiple variations addressing diverse learner needs
-  - id: task-3
+  - id: aed_assessment_system
     category: creation
     time_limit: 30
     assessment_focus:
@@ -145,7 +145,7 @@ tasks:
       - Implement AI-driven feedback mechanisms that provide actionable insights
       - Design progress tracking and ensure fairness in assessment
     expected_outcome: Comprehensive AI-powered assessment system with fair and meaningful feedback mechanisms
-  - id: task-4
+  - id: aed_analytics_dashboard
     category: creation
     time_limit: 25
     assessment_focus:

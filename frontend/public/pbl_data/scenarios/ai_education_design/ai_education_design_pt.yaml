@@ -31,7 +31,7 @@ ksa_mapping:
     - A2.2
     - A3.1
 tasks:
-  - id: task-1
+  - id: aed_initial_research
     category: analysis
     time_limit: 20
     assessment_focus:
@@ -69,7 +69,7 @@ tasks:
       - Crie perfis de aprendiz abrangentes com assistência de IA
       - Projete recomendações de aprendizagem personalizadas baseadas nos perfis
     expected_outcome: Perfis de aprendiz abrangentes com insights gerados por IA e recomendações de personalização
-  - id: task-2
+  - id: aed_design_creation
     category: creation
     time_limit: 25
     assessment_focus:
@@ -107,7 +107,7 @@ tasks:
       - Crie conteúdo para diferentes proficiências linguísticas e necessidades de acessibilidade
       - Implemente caminhos adaptativos e teste a eficácia do conteúdo
     expected_outcome: Conteúdo de aprendizagem adaptativo com múltiplas variações atendendo às diversas necessidades dos aprendizes
-  - id: task-3
+  - id: aed_content_creation
     category: creation
     time_limit: 30
     assessment_focus:
@@ -145,7 +145,7 @@ tasks:
       - Implemente mecanismos de feedback impulsionados por IA que forneçam insights acionáveis
       - Projete acompanhamento de progresso e garanta justiça na avaliação
     expected_outcome: Sistema de avaliação abrangente alimentado por IA com mecanismos de feedback justos e significativos
-  - id: task-4
+  - id: aed_evaluation
     category: creation
     time_limit: 25
     assessment_focus:
@@ -192,13 +192,13 @@ completion_criteria:
 resources:
   - url: https://www.unesco.org/en/digital-education/ai-future-learning
     type: guide
-    name: 'Guia UNESCO IA e Futuro da Aprendizagem'
+    name: Guia UNESCO IA e Futuro da Aprendizagem
   - url: https://solaresearch.org/core/learning-analytics/
     type: reference
-    name: 'Referência SoLAR de Análise de Aprendizagem'
+    name: Referência SoLAR de Análise de Aprendizagem
   - url: https://unesdoc.unesco.org/ark:/48223/pf0000376709
     type: framework
-    name: 'Estrutura de Políticas de IA na Educação da UNESCO'
+    name: Estrutura de Políticas de IA na Educação da UNESCO
 metadata:
   language: pt
   version: '1.0'

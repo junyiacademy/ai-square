@@ -32,7 +32,7 @@ ksa_mapping:
     - A1.2
     - A2.1
 tasks:
-  - id: task-1
+  - id: hscc_climate_analysis
     category: research
     time_limit: 20
     assessment_focus:
@@ -64,7 +64,7 @@ tasks:
       - Organize data in spreadsheets
       - Identify key patterns and trends
     expected_outcome: A comprehensive climate data collection for your area
-  - id: task-2
+  - id: hscc_data_analysis
     category: analysis
     time_limit: 25
     assessment_focus:
@@ -94,7 +94,7 @@ tasks:
       - Generate predictions for future trends
       - Identify areas requiring intervention
     expected_outcome: Comprehensive analysis with clear insights and predictions
-  - id: task-3
+  - id: hscc_content_creation
     category: creation
     time_limit: 30
     assessment_focus:
@@ -124,7 +124,7 @@ tasks:
       - Create detailed implementation plans
       - Calculate potential carbon savings
     expected_outcome: A portfolio of practical, implementable climate solutions
-  - id: task-4
+  - id: hscc_planning
     category: interaction
     time_limit: 25
     assessment_focus:

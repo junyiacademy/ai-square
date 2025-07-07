@@ -34,7 +34,7 @@ ksa_mapping:
     - A3.1
     - A4.1
 tasks:
-  - id: perception-system
+  - id: ard_initial_research
     category: creation
     time_limit: 60
     assessment_focus:
@@ -71,7 +71,7 @@ tasks:
       - Roboflow 또는 Edge Impulse와 같은 AI 플랫폼을 사용하여 패키지 인식을 위한 머신러닝 모델 생성하기
       - 임베디드 로보틱스 하드웨어에 최적화된 실시간 AI 추론 시스템 개발하기
     expected_outcome: 다양한 조명 및 환경 조건에서 패키지를 안정적으로 식별하고 분류할 수 있는 작동하는 인지 시스템, 문서화된 성능 지표 포함
-  - id: navigation-intelligence
+  - id: ard_design_creation
     category: creation
     time_limit: 50
     assessment_focus:
@@ -108,7 +108,7 @@ tasks:
       - 작업 우선순위 지정 및 응급 대응을 위해 AI 지원을 사용하여 지능형 행동 트리 생성하기
       - 인간 이동 패턴과 시설 워크플로우를 예측하기 위해 AI를 사용한 예측 내비게이션 개발하기
     expected_outcome: 안전을 유지하고 환경 변화에 적응하면서 여러 동시 작업을 효율적으로 처리할 수 있는 완전한 자율 내비게이션 시스템
-  - id: human-interaction
+  - id: ard_implementation
     category: interaction
     time_limit: 40
     assessment_focus:

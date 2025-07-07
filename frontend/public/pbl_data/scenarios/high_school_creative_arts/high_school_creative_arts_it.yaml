@@ -30,7 +30,7 @@ ksa_mapping:
     - A2.1
     - A3.1
 tasks:
-  - id: task-1
+  - id: hsca_creative_project
     category: research
     time_limit: 25
     assessment_focus:
@@ -68,7 +68,7 @@ tasks:
       - Documenta e confronta i risultati
       - Seleziona 3-4 stili che risuonano con la tua visione creativa
     expected_outcome: Un portfolio di opere d'arte generate dall'IA che mostrano diversi stili
-  - id: task-2
+  - id: hsca_creative_project_1
     category: creation
     time_limit: 35
     assessment_focus:
@@ -106,7 +106,7 @@ tasks:
       - Genera più iterazioni e affina i tuoi prompt
       - Crea 5-8 pezzi finali per la tua mostra
     expected_outcome: Una collezione di opere d'arte personali pronte per la mostra
-  - id: task-3
+  - id: hsca_implementation
     category: creation
     time_limit: 30
     assessment_focus:

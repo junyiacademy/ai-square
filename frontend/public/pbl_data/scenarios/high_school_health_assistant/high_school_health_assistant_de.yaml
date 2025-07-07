@@ -30,7 +30,7 @@ ksa_mapping:
     - A2.2
     - A3.1
 tasks:
-  - id: task-1
+  - id: hsha_initial_research
     category: research
     time_limit: 30
     assessment_focus:
@@ -68,7 +68,7 @@ tasks:
       - Analysieren Sie aktuelle Lösungen und ihre Grenzen
       - Befragen Sie Gleichaltrige zu ihren Gesundheitssorgen und -bedürfnissen
     expected_outcome: Umfassender Bericht über Gesundheitsherausforderungen bei Jugendlichen mit Umfragedaten
-  - id: task-2
+  - id: hsha_content_creation
     category: creation
     time_limit: 35
     assessment_focus:
@@ -106,7 +106,7 @@ tasks:
       - Erstelle eine angemessene Persönlichkeit und einen Ton für jugendliche Benutzer
       - Entwickle Datenschutz- und Sicherheitsmaßnahmen
     expected_outcome: Vollständige Designspezifikation für den KI-Gesundheitsassistenten
-  - id: task-3
+  - id: hsha_implementation
     category: creation
     time_limit: 40
     assessment_focus:
@@ -144,7 +144,7 @@ tasks:
       - Erstelle Beispielgespräche für verschiedene Gesundheitsszenarien
       - Teste den Prototyp mit grundlegender Funktionalität
     expected_outcome: Funktionsfähiger Prototyp, der Kernfunktionen des Gesundheitsassistenten demonstriert
-  - id: task-4
+  - id: hsha_testing
     category: interaction
     time_limit: 25
     assessment_focus:

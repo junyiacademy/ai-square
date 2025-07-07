@@ -31,7 +31,7 @@ ksa_mapping:
     - A2.2
     - A3.1
 tasks:
-  - id: task-1
+  - id: aed_initial_research
     category: analysis
     time_limit: 20
     assessment_focus:
@@ -69,7 +69,7 @@ tasks:
       - Buat profil pembelajar yang komprehensif dengan bantuan AI
       - Rancang rekomendasi pembelajaran yang dipersonalisasi berdasarkan profil
     expected_outcome: Profil pembelajar yang komprehensif dengan wawasan yang dihasilkan AI dan rekomendasi personalisasi
-  - id: task-2
+  - id: aed_design_creation
     category: creation
     time_limit: 25
     assessment_focus:
@@ -107,7 +107,7 @@ tasks:
       - Buat konten untuk kemampuan bahasa dan kebutuhan aksesibilitas yang berbeda
       - Implementasikan jalur adaptif dan uji efektivitas konten
     expected_outcome: Konten pembelajaran adaptif dengan beberapa variasi yang memenuhi kebutuhan pembelajar yang beragam
-  - id: task-3
+  - id: aed_implementation
     category: creation
     time_limit: 30
     assessment_focus:
@@ -145,7 +145,7 @@ tasks:
       - Implementasikan mekanisme umpan balik berbasis AI yang memberikan wawasan yang dapat ditindaklanjuti
       - Rancang pelacakan kemajuan dan pastikan keadilan dalam penilaian
     expected_outcome: Sistem penilaian bertenaga AI yang komprehensif dengan mekanisme umpan balik yang adil dan bermakna
-  - id: task-4
+  - id: aed_evaluation
     category: creation
     time_limit: 25
     assessment_focus:
@@ -192,13 +192,13 @@ completion_criteria:
 resources:
   - url: https://www.unesco.org/en/digital-education/ai-future-learning
     type: guide
-    name: 'Panduan UNESCO AI dan Masa Depan Pembelajaran'
+    name: Panduan UNESCO AI dan Masa Depan Pembelajaran
   - url: https://solaresearch.org/core/learning-analytics/
     type: reference
-    name: 'Referensi Analitik Pembelajaran SoLAR'
+    name: Referensi Analitik Pembelajaran SoLAR
   - url: https://unesdoc.unesco.org/ark:/48223/pf0000376709
     type: framework
-    name: 'Kerangka Kebijakan AI dalam Pendidikan UNESCO'
+    name: Kerangka Kebijakan AI dalam Pendidikan UNESCO
 metadata:
   language: id
   version: '1.0'

@@ -31,7 +31,7 @@ ksa_mapping:
     - A2.2
     - A3.1
 tasks:
-  - id: task-1
+  - id: aed_initial_research
     category: analysis
     time_limit: 20
     assessment_focus:
@@ -69,7 +69,7 @@ tasks:
       - 在 AI 協助下創建全面的學習者檔案
       - 基於檔案設計個人化學習建議
     expected_outcome: 具有 AI 生成洞察和個性化建議的全面學習者檔案
-  - id: task-2
+  - id: aed_design_creation
     category: creation
     time_limit: 25
     assessment_focus:
@@ -107,7 +107,7 @@ tasks:
       - 為不同語言熟練度和無障礙需求創建內容
       - 實施適應性路徑並測試內容有效性
     expected_outcome: 具有多種變化的適應性學習內容，滿足不同學習者需求
-  - id: task-3
+  - id: aed_implementation
     category: creation
     time_limit: 30
     assessment_focus:
@@ -145,7 +145,7 @@ tasks:
       - 實施提供可操作見解的 AI 驅動反饋機制
       - 設計進度追蹤並確保評估的公平性
     expected_outcome: 具有公平和有意義反饋機制的全面 AI 驅動評估系統
-  - id: task-4
+  - id: aed_evaluation
     category: creation
     time_limit: 25
     assessment_focus:

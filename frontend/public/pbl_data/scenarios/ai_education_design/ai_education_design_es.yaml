@@ -31,7 +31,7 @@ ksa_mapping:
     - A2.2
     - A3.1
 tasks:
-  - id: task-1
+  - id: aed_initial_research
     category: analysis
     time_limit: 20
     assessment_focus:
@@ -69,7 +69,7 @@ tasks:
       - Crear perfiles completos de estudiantes con asistencia de IA
       - Diseñar recomendaciones de aprendizaje personalizadas basadas en perfiles
     expected_outcome: Perfiles completos de estudiantes con insights generados por IA y recomendaciones de personalización
-  - id: task-2
+  - id: aed_design_creation
     category: creation
     time_limit: 25
     assessment_focus:
@@ -107,7 +107,7 @@ tasks:
       - Crear contenido para diferentes competencias lingüísticas y necesidades de accesibilidad
       - Implementar rutas adaptativas y probar la efectividad del contenido
     expected_outcome: Contenido de aprendizaje adaptativo con múltiples variaciones que abordan diversas necesidades de estudiantes
-  - id: task-3
+  - id: aed_implementation
     category: creation
     time_limit: 30
     assessment_focus:
@@ -145,7 +145,7 @@ tasks:
       - Implementar mecanismos de retroalimentación impulsados por IA que proporcionen insights accionables
       - Diseñar seguimiento de progreso y asegurar justicia en la evaluación
     expected_outcome: Sistema de evaluación integral impulsado por IA con mecanismos de retroalimentación justos y significativos
-  - id: task-4
+  - id: aed_evaluation
     category: creation
     time_limit: 25
     assessment_focus:

@@ -32,7 +32,7 @@ ksa_mapping:
     - A1.2
     - A2.1
 tasks:
-  - id: task-1
+  - id: hscc_initial_research
     category: research
     time_limit: 20
     assessment_focus:
@@ -64,7 +64,7 @@ tasks:
       - スプレッドシートでデータを整理
       - 主要なパターンとトレンドを特定
     expected_outcome: あなたの地域の包括的な気候データ収集
-  - id: task-2
+  - id: hscc_design_creation
     category: analysis
     time_limit: 25
     assessment_focus:
@@ -94,7 +94,7 @@ tasks:
       - 将来の傾向の予測を生成
       - 介入が必要な領域を特定
     expected_outcome: 明確な洞察と予測を含む包括的な分析
-  - id: task-3
+  - id: hscc_implementation
     category: creation
     time_limit: 30
     assessment_focus:
@@ -124,7 +124,7 @@ tasks:
       - 詳細な実施計画を作成
       - 潜在的な炭素削減量を計算
     expected_outcome: 実用的で実施可能な気候ソリューションのポートフォリオ
-  - id: task-4
+  - id: hscc_evaluation
     category: interaction
     time_limit: 25
     assessment_focus:

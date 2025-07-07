@@ -31,7 +31,7 @@ ksa_mapping:
     - A2.2
     - A3.1
 tasks:
-  - id: task-1
+  - id: aed_initial_research
     category: analysis
     time_limit: 20
     assessment_focus:
@@ -69,7 +69,7 @@ tasks:
       - AIの支援で包括的な学習者プロファイルを作成する
       - プロファイルに基づいた個別化学習推奨を設計する
     expected_outcome: AIが生成したインサイトと個別化推奨を含む包括的な学習者プロファイル
-  - id: task-2
+  - id: aed_design_creation
     category: creation
     time_limit: 25
     assessment_focus:
@@ -107,7 +107,7 @@ tasks:
       - 異なる言語能力とアクセシビリティニーズのためのコンテンツを作成する
       - 適応経路を実装しコンテンツの有効性をテストする
     expected_outcome: 多様な学習者のニーズに対応する複数のバリエーションを持つ適応型学習コンテンツ
-  - id: task-3
+  - id: aed_implementation
     category: creation
     time_limit: 30
     assessment_focus:
@@ -145,7 +145,7 @@ tasks:
       - 実行可能な洞察を提供するAI駆動型フィードバックメカニズムを実装する
       - 進捗追跡を設計し評価の公平性を確保する
     expected_outcome: 公平で意味のあるフィードバックメカニズムを持つ包括的なAI駆動型評価システム
-  - id: task-4
+  - id: aed_evaluation
     category: creation
     time_limit: 25
     assessment_focus:

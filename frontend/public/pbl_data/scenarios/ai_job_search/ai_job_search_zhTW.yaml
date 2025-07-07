@@ -31,7 +31,7 @@ ksa_mapping:
     - A1.2
     - A2.1
 tasks:
-  - id: task-1
+  - id: ajs_initial_research
     category: research
     time_limit: 20
     assessment_focus:
@@ -63,7 +63,7 @@ tasks:
       - 分析目標職位的技能要求
       - 總結機會與挑戰
     expected_outcome: 一份全面的產業分析報告
-  - id: task-2
+  - id: ajs_design_creation
     category: analysis
     time_limit: 15
     assessment_focus:
@@ -100,7 +100,7 @@ tasks:
       - 接收 AI 對優缺點的分析
       - 識別需要改進的領域
     expected_outcome: 詳細的履歷分析報告
-  - id: task-3
+  - id: ajs_implementation
     category: creation
     time_limit: 25
     assessment_focus:
@@ -136,7 +136,7 @@ tasks:
       - 為申請人追蹤系統(ATS) 優化關鍵字
       - 確保描述清晰有力
     expected_outcome: 一份優化的專業履歷
-  - id: task-4
+  - id: ajs_cover_letter
     category: creation
     time_limit: 20
     assessment_focus:
@@ -169,7 +169,7 @@ tasks:
       - 起草個人化的求職信
       - 根據 AI 建議進行優化
     expected_outcome: 一份引人注目的定制求職信
-  - id: task-5
+  - id: ajs_task_5
     category: interaction
     time_limit: 30
     assessment_focus:

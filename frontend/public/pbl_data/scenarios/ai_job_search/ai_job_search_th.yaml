@@ -31,7 +31,7 @@ ksa_mapping:
     - A1.2
     - A2.1
 tasks:
-  - id: task-1
+  - id: ajs_industry_analysis
     category: research
     time_limit: 20
     assessment_focus:
@@ -63,7 +63,7 @@ tasks:
       - Analyze skill requirements for your target role
       - Create a summary of opportunities and challenges
     expected_outcome: A comprehensive industry analysis report
-  - id: task-2
+  - id: ajs_resume_analysis
     category: analysis
     time_limit: 15
     assessment_focus:
@@ -100,7 +100,7 @@ tasks:
       - Receive AI analysis on strengths and weaknesses
       - Identify areas for improvement
     expected_outcome: Detailed resume analysis report
-  - id: task-3
+  - id: ajs_resume_enhancement
     category: creation
     time_limit: 25
     assessment_focus:
@@ -136,7 +136,7 @@ tasks:
       - Optimize keywords for ATS systems
       - Ensure clarity and impact in descriptions
     expected_outcome: An optimized, professional resume
-  - id: task-4
+  - id: ajs_cover_letter
     category: creation
     time_limit: 20
     assessment_focus:
@@ -169,7 +169,7 @@ tasks:
       - Draft a personalized cover letter
       - Refine with AI suggestions
     expected_outcome: A compelling, tailored cover letter
-  - id: task-5
+  - id: ajs_interview_practice
     category: interaction
     time_limit: 30
     assessment_focus:

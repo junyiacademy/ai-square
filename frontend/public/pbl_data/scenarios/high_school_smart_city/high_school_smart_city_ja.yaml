@@ -32,7 +32,7 @@ ksa_mapping:
     - A1.2
     - A2.1
 tasks:
-  - id: task-1
+  - id: hssc_initial_research
     category: research
     time_limit: 25
     assessment_focus:
@@ -62,7 +62,7 @@ tasks:
       - コミュニティへの影響で問題に優先順位を付ける
       - 調査やインタビューを通じてコミュニティの意見を収集
     expected_outcome: 優先順位付けされた問題を含む包括的な都市課題マップ
-  - id: task-2
+  - id: hssc_design_creation
     category: creation
     time_limit: 30
     assessment_focus:
@@ -92,7 +92,7 @@ tasks:
       - データを使用して交通改善をシミュレート
       - 潜在的な時間と燃料の節約を計算
     expected_outcome: 包括的なAI駆動型交通管理システムの設計
-  - id: task-3
+  - id: hssc_implementation
     category: interaction
     time_limit: 35
     assessment_focus:
@@ -123,7 +123,7 @@ tasks:
       - モックアップとワイヤーフレームを作成
       - プライバシー保護とデータセキュリティ対策を計画
     expected_outcome: AI機能を備えた機能的なコミュニティ安全アプリのプロトタイプ
-  - id: task-4
+  - id: hssc_evaluation
     category: analysis
     time_limit: 30
     assessment_focus:
@@ -153,7 +153,7 @@ tasks:
       - サービスが不足している地域のための新しい緑地を設計
       - 提案された変更の3D視覚化を作成
     expected_outcome: 視覚化を含む最適化された緑地計画
-  - id: task-5
+  - id: hssc_task_5
     category: interaction
     time_limit: 30
     assessment_focus:

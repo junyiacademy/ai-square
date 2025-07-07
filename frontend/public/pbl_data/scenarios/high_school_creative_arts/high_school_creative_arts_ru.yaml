@@ -30,7 +30,7 @@ ksa_mapping:
     - A2.1
     - A3.1
 tasks:
-  - id: task-1
+  - id: hsca_initial_research
     category: research
     time_limit: 25
     assessment_focus:
@@ -68,7 +68,7 @@ tasks:
       - Документируйте и сравнивайте результаты
       - Выберите 3-4 стиля, которые резонируют с вашим творческим видением
     expected_outcome: Портфолио художественных работ, созданных ИИ, демонстрирующих разные стили
-  - id: task-2
+  - id: hsca_design_creation
     category: creation
     time_limit: 35
     assessment_focus:
@@ -106,7 +106,7 @@ tasks:
       - Создайте несколько итераций и улучшите промпты
       - Создайте 5-8 финальных работ для выставки
     expected_outcome: Коллекция личных художественных работ, готовых к выставке
-  - id: task-3
+  - id: hsca_implementation
     category: creation
     time_limit: 30
     assessment_focus:

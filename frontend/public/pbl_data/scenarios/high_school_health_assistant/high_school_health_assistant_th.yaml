@@ -30,7 +30,7 @@ ksa_mapping:
     - A2.2
     - A3.1
 tasks:
-  - id: task-1
+  - id: hsha_research_analysis
     category: research
     time_limit: 30
     assessment_focus:
@@ -68,7 +68,7 @@ tasks:
       - Analyze current solutions and their limitations
       - Survey peers about their health concerns and needs
     expected_outcome: Comprehensive report on teenage health challenges with survey data
-  - id: task-2
+  - id: hsha_content_creation
     category: creation
     time_limit: 35
     assessment_focus:
@@ -106,7 +106,7 @@ tasks:
       - Create an appropriate personality and tone for teenage users
       - Develop privacy protection and safety measures
     expected_outcome: Complete design specification for the AI health assistant
-  - id: task-3
+  - id: hsha_implementation
     category: creation
     time_limit: 40
     assessment_focus:
@@ -144,7 +144,7 @@ tasks:
       - Create sample conversations for different health scenarios
       - Test the prototype with basic functionality
     expected_outcome: Working prototype demonstrating core health assistant features
-  - id: task-4
+  - id: hsha_testing
     category: interaction
     time_limit: 25
     assessment_focus:

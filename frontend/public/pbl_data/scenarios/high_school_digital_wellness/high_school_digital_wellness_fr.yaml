@@ -32,7 +32,7 @@ ksa_mapping:
     - A1.2
     - A2.1
 tasks:
-  - id: task-1
+  - id: hsdw_initial_research
     category: research
     time_limit: 20
     assessment_focus:
@@ -62,7 +62,7 @@ tasks:
       - Analysez les réponses avec l'aide de l'IA
       - Identifiez les domaines problématiques clés et les modèles
     expected_outcome: Un rapport d'enquête complet avec des insights basés sur les données
-  - id: task-2
+  - id: hsdw_design_creation
     category: creation
     time_limit: 25
     assessment_focus:
@@ -92,7 +92,7 @@ tasks:
       - Concevez des scripts vidéo pour des conseils de bien-être
       - Créez des quiz interactifs sur le bien-être numérique
     expected_outcome: Un portfolio de contenu engageant sur le bien-être numérique
-  - id: task-3
+  - id: hsdw_implementation
     category: interaction
     time_limit: 30
     assessment_focus:
@@ -123,7 +123,7 @@ tasks:
       - Testez avec des camarades et recueillez des commentaires
       - Affinez en fonction de l'expérience utilisateur
     expected_outcome: Un prototype fonctionnel de chatbot de bien-être
-  - id: task-4
+  - id: hsdw_planning
     category: creation
     time_limit: 25
     assessment_focus:
@@ -153,7 +153,7 @@ tasks:
       - Identifiez des partenaires comme des clubs et des enseignants
       - Fixez des objectifs mesurables et des indicateurs de succès
     expected_outcome: Un plan de lancement de campagne détaillé et réalisable
-  - id: task-5
+  - id: hsdw_task_5
     category: analysis
     time_limit: 20
     assessment_focus:

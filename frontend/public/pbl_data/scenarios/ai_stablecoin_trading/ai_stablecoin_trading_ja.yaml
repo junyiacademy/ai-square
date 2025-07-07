@@ -31,7 +31,7 @@ ksa_mapping:
     - A2.1
     - A3.1
 tasks:
-  - id: market-analysis
+  - id: ast_initial_research
     category: analysis
     time_limit: 45
     assessment_focus:
@@ -64,7 +64,7 @@ tasks:
       - AI市場分析を使用して潜在的なデペッグリスクとアービトラージ機会を特定する
       - 実行可能な取引推奨事項を含むAI生成のエグゼクティブサマリーを作成する
     expected_outcome: 具体的な取引機会、リスク評価、およびステーブルコインポートフォリオ配分のためのAI支援推奨事項を含む包括的な市場分析レポート
-  - id: strategy-development
+  - id: ast_design_creation
     category: creation
     time_limit: 40
     assessment_focus:
@@ -101,7 +101,7 @@ tasks:
       - AIを使用して最適なポジションサイズとストップロスを計算するリスク管理ルールを作成する
       - AI支援でバックテストフレームワークを開発して戦略パフォーマンスを検証する
     expected_outcome: AI最適化パラメータ、包括的なバックテスト結果、明確な実装ガイドラインを持つ機能的な取引ボットプロトタイプ
-  - id: risk-management
+  - id: ast_implementation
     category: interaction
     time_limit: 35
     assessment_focus:

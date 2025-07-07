@@ -34,7 +34,7 @@ ksa_mapping:
     - A3.1
     - A4.1
 tasks:
-  - id: perception-system
+  - id: ard_initial_research
     category: creation
     time_limit: 60
     assessment_focus:
@@ -71,7 +71,7 @@ tasks:
       - Crea modelos de aprendizaje automático usando plataformas de IA como Roboflow o Edge Impulse para reconocimiento de paquetes
       - Desarrolla sistemas de inferencia IA en tiempo real optimizados para hardware robótico embebido
     expected_outcome: Un sistema de percepción funcional que puede identificar y clasificar paquetes de manera confiable en varias condiciones de iluminación y ambientales, con métricas de rendimiento documentadas
-  - id: navigation-intelligence
+  - id: ard_planning
     category: creation
     time_limit: 50
     assessment_focus:
@@ -108,7 +108,7 @@ tasks:
       - Crea árboles de comportamiento inteligentes usando asistencia IA para priorización de tareas y respuesta de emergencia
       - Desarrolla navegación predictiva usando IA para anticipar patrones de movimiento humano y flujos de trabajo de instalaciones
     expected_outcome: Un sistema completo de navegación autónoma que puede manejar eficientemente múltiples tareas concurrentes mientras mantiene la seguridad y se adapta a cambios ambientales
-  - id: human-interaction
+  - id: ard_implementation
     category: interaction
     time_limit: 40
     assessment_focus:

@@ -32,7 +32,7 @@ ksa_mapping:
     - A1.2
     - A2.1
 tasks:
-  - id: task-1
+  - id: hscc_initial_research
     category: research
     time_limit: 20
     assessment_focus:
@@ -64,7 +64,7 @@ tasks:
       - 스프레드시트에 데이터 정리
       - 주요 패턴과 추세 식별
     expected_outcome: 지역의 포괄적인 기후 데이터 수집
-  - id: task-2
+  - id: hscc_design_creation
     category: analysis
     time_limit: 25
     assessment_focus:
@@ -94,7 +94,7 @@ tasks:
       - 미래 트렌드 예측 생성
       - 개입이 필요한 영역 식별
     expected_outcome: 명확한 통찰력과 예측을 포함한 포괄적인 분석
-  - id: task-3
+  - id: hscc_implementation
     category: creation
     time_limit: 30
     assessment_focus:
@@ -124,7 +124,7 @@ tasks:
       - 상세한 실행 계획 작성
       - 잠재적 탄소 절감량 계산
     expected_outcome: 실용적이고 구현 가능한 기후 솔루션 포트폴리오
-  - id: task-4
+  - id: hscc_evaluation
     category: interaction
     time_limit: 25
     assessment_focus:

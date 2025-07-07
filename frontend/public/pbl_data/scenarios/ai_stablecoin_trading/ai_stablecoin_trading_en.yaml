@@ -31,7 +31,7 @@ ksa_mapping:
     - A2.1
     - A3.1
 tasks:
-  - id: market-analysis
+  - id: ast_initial_research
     category: analysis
     time_limit: 45
     assessment_focus:
@@ -64,7 +64,7 @@ tasks:
       - Identify potential depeg risks and arbitrage opportunities using AI market analysis
       - Create an AI-generated executive summary with actionable trading recommendations
     expected_outcome: A comprehensive market analysis report with specific trading opportunities, risk assessments, and AI-backed recommendations for stablecoin portfolio allocation
-  - id: strategy-development
+  - id: ast_trading_strategy
     category: creation
     time_limit: 40
     assessment_focus:
@@ -101,7 +101,7 @@ tasks:
       - Create risk management rules using AI to calculate optimal position sizes and stop-losses
       - Develop backtesting framework with AI assistance to validate strategy performance
     expected_outcome: A functional trading bot prototype with AI-optimized parameters, comprehensive backtesting results, and clear implementation guidelines
-  - id: risk-management
+  - id: ast_assessment_design
     category: interaction
     time_limit: 35
     assessment_focus:

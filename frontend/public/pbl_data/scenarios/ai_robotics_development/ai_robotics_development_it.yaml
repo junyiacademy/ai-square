@@ -34,7 +34,7 @@ ksa_mapping:
     - A3.1
     - A4.1
 tasks:
-  - id: perception-system
+  - id: ard_initial_research
     category: creation
     time_limit: 60
     assessment_focus:
@@ -71,7 +71,7 @@ tasks:
       - Crea modelli di machine learning usando piattaforme AI come Roboflow o Edge Impulse per riconoscimento pacchi
       - Sviluppa sistemi di inferenza AI in tempo reale ottimizzati per hardware robotico embedded
     expected_outcome: Un sistema di percezione funzionante che può identificare e classificare in modo affidabile i pacchi in varie condizioni di illuminazione e ambientali, con metriche di prestazioni documentate
-  - id: navigation-intelligence
+  - id: ard_design_creation
     category: creation
     time_limit: 50
     assessment_focus:
@@ -108,7 +108,7 @@ tasks:
       - Crea alberi comportamentali intelligenti usando assistenza AI per prioritizzazione dei compiti e risposta di emergenza
       - Sviluppa navigazione predittiva usando AI per anticipare i modelli di movimento umano e i flussi di lavoro delle strutture
     expected_outcome: Un sistema completo di navigazione autonoma che può gestire efficientemente compiti multipli concorrenti mantenendo la sicurezza e adattandosi ai cambiamenti ambientali
-  - id: human-interaction
+  - id: ard_implementation
     category: interaction
     time_limit: 40
     assessment_focus:

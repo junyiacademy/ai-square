@@ -32,7 +32,7 @@ ksa_mapping:
     - A1.2
     - A2.1
 tasks:
-  - id: task-1
+  - id: hssc_initial_research
     category: research
     time_limit: 25
     assessment_focus:
@@ -62,7 +62,7 @@ tasks:
       - 커뮤니티에 미치는 영향에 따라 문제 우선순위 정하기
       - 설문조사나 인터뷰를 통해 커뮤니티 의견 수집
     expected_outcome: 우선순위가 정해진 문제가 포함된 포괄적인 도시 문제 지도
-  - id: task-2
+  - id: hssc_design_creation
     category: creation
     time_limit: 30
     assessment_focus:
@@ -92,7 +92,7 @@ tasks:
       - 데이터를 사용하여 교통 개선 시뮬레이션
       - 잠재적인 시간 및 연료 절약 계산
     expected_outcome: 포괄적인 AI 기반 교통 관리 시스템 설계
-  - id: task-3
+  - id: hssc_implementation
     category: interaction
     time_limit: 35
     assessment_focus:
@@ -123,7 +123,7 @@ tasks:
       - 목업과 와이어프레임 생성
       - 개인정보 보호 및 데이터 보안 조치 계획
     expected_outcome: AI 기능이 있는 기능적인 커뮤니티 안전 앱 프로토타입
-  - id: task-4
+  - id: hssc_evaluation
     category: analysis
     time_limit: 30
     assessment_focus:
@@ -153,7 +153,7 @@ tasks:
       - 소외된 지역을 위한 새로운 녹지 공간 설계
       - 제안된 변경 사항의 3D 시각화 생성
     expected_outcome: 시각화가 포함된 최적화된 녹지 공간 계획
-  - id: task-5
+  - id: hssc_task_5
     category: interaction
     time_limit: 30
     assessment_focus:

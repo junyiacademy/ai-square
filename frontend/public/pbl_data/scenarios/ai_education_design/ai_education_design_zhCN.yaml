@@ -31,7 +31,7 @@ ksa_mapping:
     - A2.2
     - A3.1
 tasks:
-  - id: task-1
+  - id: aed_initial_research
     category: analysis
     time_limit: 20
     assessment_focus:
@@ -69,7 +69,7 @@ tasks:
       - 在 AI 协助下创建全面的学习者档案
       - 基于档案设计个人化学习建议
     expected_outcome: 具有 AI 生成洞察和个性化建议的全面学习者档案
-  - id: task-2
+  - id: aed_design_creation
     category: creation
     time_limit: 25
     assessment_focus:
@@ -107,7 +107,7 @@ tasks:
       - 为不同的语言熟练度和无障碍需求创建内容
       - 实施适应性路径并测试内容效果
     expected_outcome: 具有多种变体、满足多样化学习者需求的适应性学习内容
-  - id: task-3
+  - id: aed_implementation
     category: creation
     time_limit: 30
     assessment_focus:
@@ -145,7 +145,7 @@ tasks:
       - 实施提供可操作见解的 AI 驱动反馈机制
       - 设计进度跟踪并确保评估的公平性
     expected_outcome: 具有公平且有意义反馈机制的全面 AI 驱动评估系统
-  - id: task-4
+  - id: aed_evaluation
     category: creation
     time_limit: 25
     assessment_focus:
@@ -192,13 +192,13 @@ completion_criteria:
 resources:
   - url: https://www.unesco.org/en/digital-education/ai-future-learning
     type: guide
-    name: 'UNESCO AI 与未来学习指南'
+    name: UNESCO AI 与未来学习指南
   - url: https://solaresearch.org/core/learning-analytics/
     type: reference
-    name: 'SoLAR 学习分析参考资料'
+    name: SoLAR 学习分析参考资料
   - url: https://unesdoc.unesco.org/ark:/48223/pf0000376709
     type: framework
-    name: 'UNESCO AI 教育政策框架'
+    name: UNESCO AI 教育政策框架
 metadata:
   language: zhCN
   version: '1.0'

@@ -31,7 +31,7 @@ ksa_mapping:
     - A2.2
     - A3.1
 tasks:
-  - id: task-1
+  - id: aed_initial_research
     category: analysis
     time_limit: 20
     assessment_focus:
@@ -69,7 +69,7 @@ tasks:
       - สร้างโปรไฟล์ผู้เรียนที่ครอบคลุมด้วยความช่วยเหลือของ AI
       - ออกแบบคำแนะนำการเรียนรู้ที่ปรับตามโปรไฟล์
     expected_outcome: โปรไฟล์ผู้เรียนที่ครอบคลุมพร้อมข้อเสนอแนะที่สร้างโดย AI และคำแนะนำการปรับแต่ง
-  - id: task-2
+  - id: aed_design_creation
     category: creation
     time_limit: 25
     assessment_focus:
@@ -107,7 +107,7 @@ tasks:
       - สร้างเนื้อหาสำหรับความชำนาญทางภาษาและความต้องการการเข้าถึงที่แตกต่างกัน
       - ใช้เส้นทางการเรียนรู้แบบปรับตัวและทดสอบประสิทธิภาพของเนื้อหา
     expected_outcome: เนื้อหาการเรียนรู้แบบปรับตัวที่มีความหลากหลายเพื่อตอบสนองความต้องการของผู้เรียนที่หลากหลาย
-  - id: task-3
+  - id: aed_implementation
     category: creation
     time_limit: 30
     assessment_focus:
@@ -145,7 +145,7 @@ tasks:
       - ใช้กลไกข้อเสนอแนะที่ขับเคลื่อนด้วย AI ที่ให้ข้อเสนอแนะที่นำไปปฏิบัติได้
       - ออกแบบการติดตามความก้าวหน้าและรับรองความยุติธรรมในการประเมิน
     expected_outcome: ระบบการประเมินที่ขับเคลื่อนด้วย AI ที่ครอบคลุมพร้อมกลไกข้อเสนอแนะที่ยุติธรรมและมีความหมาย
-  - id: task-4
+  - id: aed_evaluation
     category: creation
     time_limit: 25
     assessment_focus:
@@ -192,13 +192,13 @@ completion_criteria:
 resources:
   - url: https://www.unesco.org/en/digital-education/ai-future-learning
     type: guide
-    name: 'คู่มือ UNESCO AI และอนาคตการเรียนรู้'
+    name: คู่มือ UNESCO AI และอนาคตการเรียนรู้
   - url: https://solaresearch.org/core/learning-analytics/
     type: reference
-    name: 'เอกสารอ้างอิงการวิเคราะห์การเรียนรู้ SoLAR'
+    name: เอกสารอ้างอิงการวิเคราะห์การเรียนรู้ SoLAR
   - url: https://unesdoc.unesco.org/ark:/48223/pf0000376709
     type: framework
-    name: 'กรอบนโยบาย AI ในการศึกษาของ UNESCO'
+    name: กรอบนโยบาย AI ในการศึกษาของ UNESCO
 metadata:
   language: th
   version: '1.0'

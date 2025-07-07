@@ -34,7 +34,7 @@ ksa_mapping:
     - A3.1
     - A4.1
 tasks:
-  - id: perception-system
+  - id: ard_initial_research
     category: creation
     time_limit: 60
     assessment_focus:
@@ -71,7 +71,7 @@ tasks:
       - 使用 Roboflow 或 Edge Impulse 等 AI 平台創建用於包裹識別的機器學習模型
       - 開發針對嵌入式機器人硬體優化的即時 AI 推理系統
     expected_outcome: 一個能夠在各種照明和環境條件下可靠識別和分類包裹的感知系統，並有記錄的性能指標
-  - id: navigation-intelligence
+  - id: ard_design_creation
     category: creation
     time_limit: 50
     assessment_focus:
@@ -108,7 +108,7 @@ tasks:
       - 使用 AI 協助創建智能行為樹進行任務優先排序和緊急響應
       - 使用 AI 開發預測性導航以預測人類移動模式和設施工作流程
     expected_outcome: 一個能夠高效處理多個同時任務同時保持安全並適應環境變化的完整自主導航系統
-  - id: human-interaction
+  - id: ard_implementation
     category: interaction
     time_limit: 40
     assessment_focus:

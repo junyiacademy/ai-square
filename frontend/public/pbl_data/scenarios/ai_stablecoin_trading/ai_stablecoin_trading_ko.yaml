@@ -31,7 +31,7 @@ ksa_mapping:
     - A2.1
     - A3.1
 tasks:
-  - id: market-analysis
+  - id: ast_initial_research
     category: analysis
     time_limit: 45
     assessment_focus:
@@ -64,7 +64,7 @@ tasks:
       - AI 시장 분석을 사용하여 잠재적 디페그 위험과 차익거래 기회 식별하기
       - 실행 가능한 거래 권장사항이 포함된 AI 생성 경영진 요약서 작성하기
     expected_outcome: 구체적인 거래 기회, 위험 평가, 그리고 스테이블코인 포트폴리오 할당을 위한 AI 지원 권장사항이 포함된 종합적인 시장 분석 보고서
-  - id: strategy-development
+  - id: ast_design_creation
     category: creation
     time_limit: 40
     assessment_focus:
@@ -101,7 +101,7 @@ tasks:
       - AI를 사용하여 최적의 포지션 크기와 손절매를 계산하는 위험 관리 규칙 만들기
       - AI 도움으로 전략 성능을 검증하기 위한 백테스팅 프레임워크 개발하기
     expected_outcome: AI 최적화된 매개변수, 포괄적인 백테스팅 결과, 명확한 구현 가이드라인을 갖춘 기능적인 트레이딩 봇 프로토타입
-  - id: risk-management
+  - id: ast_implementation
     category: interaction
     time_limit: 35
     assessment_focus:

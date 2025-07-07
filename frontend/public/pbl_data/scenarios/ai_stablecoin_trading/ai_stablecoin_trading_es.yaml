@@ -31,7 +31,7 @@ ksa_mapping:
     - A2.1
     - A3.1
 tasks:
-  - id: market-analysis
+  - id: ast_initial_research
     category: analysis
     time_limit: 45
     assessment_focus:
@@ -64,7 +64,7 @@ tasks:
       - Identifica riesgos potenciales de depeg y oportunidades de arbitraje usando análisis de mercado de IA
       - Crea un resumen ejecutivo generado por IA con recomendaciones comerciales accionables
     expected_outcome: Un informe completo de análisis de mercado con oportunidades comerciales específicas, evaluaciones de riesgo y recomendaciones respaldadas por IA para la asignación de cartera de stablecoins
-  - id: strategy-development
+  - id: ast_design_creation
     category: creation
     time_limit: 40
     assessment_focus:
@@ -101,7 +101,7 @@ tasks:
       - Crea reglas de gestión de riesgos usando IA para calcular tamaños de posición óptimos y stop-losses
       - Desarrolla un framework de backtesting con asistencia de IA para validar el rendimiento de la estrategia
     expected_outcome: Un prototipo de bot de trading funcional con parámetros optimizados por IA, resultados completos de backtesting y pautas claras de implementación
-  - id: risk-management
+  - id: ast_creative_project
     category: interaction
     time_limit: 35
     assessment_focus:

@@ -30,7 +30,7 @@ ksa_mapping:
     - A2.1
     - A3.1
 tasks:
-  - id: task-1
+  - id: hsca_initial_research
     category: research
     time_limit: 25
     assessment_focus:
@@ -68,7 +68,7 @@ tasks:
       - 결과 기록 및 비교
       - 창의적 비전과 공명하는 3-4가지 스타일 선택
     expected_outcome: 다양한 스타일을 보여주는 AI 생성 아트워크 포트폴리오
-  - id: task-2
+  - id: hsca_design_creation
     category: creation
     time_limit: 35
     assessment_focus:
@@ -106,7 +106,7 @@ tasks:
       - 여러 번 반복 생성하고 프롬프트 개선
       - 전시회를 위한 5-8개의 최종 작품 만들기
     expected_outcome: 전시 준비가 완료된 개인 예술 작품 컬렉션
-  - id: task-3
+  - id: hsca_implementation
     category: creation
     time_limit: 30
     assessment_focus:

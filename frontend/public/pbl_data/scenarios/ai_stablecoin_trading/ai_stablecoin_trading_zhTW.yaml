@@ -31,7 +31,7 @@ ksa_mapping:
     - A2.1
     - A3.1
 tasks:
-  - id: market-analysis
+  - id: ast_initial_research
     category: analysis
     time_limit: 45
     assessment_focus:
@@ -64,7 +64,7 @@ tasks:
       - 使用 AI 市場分析識別潛在的脫鉤風險和套利機會
       - 創建一份包含可行交易建議的 AI 生成執行摘要
     expected_outcome: 一份包含具體交易機會、風險評估和 AI 支持的穩定幣投資組合配置建議的綜合市場分析報告
-  - id: strategy-development
+  - id: ast_design_creation
     category: creation
     time_limit: 40
     assessment_focus:
@@ -101,7 +101,7 @@ tasks:
       - 使用 AI 創建風險管理規則來計算最佳倉位大小和止損
       - 在 AI 協助下開發回測框架來驗證策略績效
     expected_outcome: 一個具有 AI 優化參數、全面回測結果和清晰實施指導的功能性交易機器人原型
-  - id: risk-management
+  - id: ast_implementation
     category: interaction
     time_limit: 35
     assessment_focus:

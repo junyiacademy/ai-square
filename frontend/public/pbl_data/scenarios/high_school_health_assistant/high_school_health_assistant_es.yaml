@@ -30,7 +30,7 @@ ksa_mapping:
     - A2.2
     - A3.1
 tasks:
-  - id: task-1
+  - id: hsha_initial_research
     category: research
     time_limit: 30
     assessment_focus:
@@ -68,7 +68,7 @@ tasks:
       - Analiza soluciones actuales y sus limitaciones
       - Encuesta a compañeros sobre sus preocupaciones y necesidades de salud
     expected_outcome: Informe integral sobre desafíos de salud adolescente con datos de encuesta
-  - id: task-2
+  - id: hsha_design_creation
     category: creation
     time_limit: 35
     assessment_focus:
@@ -106,7 +106,7 @@ tasks:
       - Crea una personalidad y tono apropiados para usuarios adolescentes
       - Desarrolla medidas de protección de privacidad y seguridad
     expected_outcome: Especificación de diseño completa para el asistente de salud IA
-  - id: task-3
+  - id: hsha_implementation
     category: creation
     time_limit: 40
     assessment_focus:
@@ -144,7 +144,7 @@ tasks:
       - Crea conversaciones de muestra para diferentes escenarios de salud
       - Prueba el prototipo con funcionalidad básica
     expected_outcome: Prototipo funcional demostrando características principales del asistente de salud
-  - id: task-4
+  - id: hsha_evaluation
     category: interaction
     time_limit: 25
     assessment_focus:

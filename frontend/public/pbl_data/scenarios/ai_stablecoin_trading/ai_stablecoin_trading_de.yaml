@@ -31,7 +31,7 @@ ksa_mapping:
     - A2.1
     - A3.1
 tasks:
-  - id: market-analysis
+  - id: ast_initial_research
     category: analysis
     time_limit: 45
     assessment_focus:
@@ -64,7 +64,7 @@ tasks:
       - Identifizieren Sie potenzielle Depeg-Risiken und Arbitrage-Möglichkeiten mit KI-Marktanalyse
       - Erstellen Sie eine KI-generierte Zusammenfassung mit umsetzbaren Handelsempfehlungen
     expected_outcome: Ein umfassender Marktanalysebericht mit spezifischen Handelsmöglichkeiten, Risikobewertungen und KI-gestützten Empfehlungen für die Stablecoin-Portfolio-Allokation
-  - id: strategy-development
+  - id: ast_design_creation
     category: creation
     time_limit: 40
     assessment_focus:
@@ -101,7 +101,7 @@ tasks:
       - Erstellen Sie Risikomanagement-Regeln mit KI zur Berechnung optimaler Positionsgrößen und Stop-Losses
       - Entwickeln Sie ein Backtesting-Framework mit KI-Unterstützung zur Validierung der Strategieleistung
     expected_outcome: Ein funktionaler Trading-Bot-Prototyp mit KI-optimierten Parametern, umfassenden Backtesting-Ergebnissen und klaren Implementierungsrichtlinien
-  - id: risk-management
+  - id: ast_portfolio_design
     category: interaction
     time_limit: 35
     assessment_focus:

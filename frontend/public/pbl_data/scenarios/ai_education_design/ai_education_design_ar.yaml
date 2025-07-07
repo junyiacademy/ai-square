@@ -31,7 +31,7 @@ ksa_mapping:
     - A2.2
     - A3.1
 tasks:
-  - id: task-1
+  - id: aed_initial_research
     category: analysis
     time_limit: 20
     assessment_focus:
@@ -69,7 +69,7 @@ tasks:
       - إنشاء ملفات شاملة للمتعلمين بمساعدة الذكاء الاصطناعي
       - تصميم توصيات تعلم مخصصة بناءً على الملفات
     expected_outcome: ملفات شاملة للمتعلمين مع رؤى مولدة بالذكاء الاصطناعي وتوصيات التخصيص
-  - id: task-2
+  - id: aed_design_creation
     category: creation
     time_limit: 25
     assessment_focus:
@@ -107,7 +107,7 @@ tasks:
       - إنشاء محتوى لمستويات إتقان لغوية مختلفة واحتياجات إمكانية الوصول
       - تنفيذ مسارات تكيفية واختبار فعالية المحتوى
     expected_outcome: محتوى تعليمي تكيفي مع تنوعات متعددة تلبي احتياجات المتعلمين المتنوعة
-  - id: task-3
+  - id: aed_implementation
     category: creation
     time_limit: 30
     assessment_focus:
@@ -145,7 +145,7 @@ tasks:
       - تنفيذ آليات تغذية راجعة مدفوعة بالذكاء الاصطناعي توفر رؤى قابلة للتنفيذ
       - تصميم تتبع التقدم وضمان العدالة في التقييم
     expected_outcome: نظام تقييم شامل مدعوم بالذكاء الاصطناعي مع آليات تغذية راجعة عادلة وذات معنى
-  - id: task-4
+  - id: aed_evaluation
     category: creation
     time_limit: 25
     assessment_focus:
@@ -192,13 +192,13 @@ completion_criteria:
 resources:
   - url: https://www.unesco.org/en/digital-education/ai-future-learning
     type: guide
-    name: 'دليل اليونسكو للذكاء الاصطناعي ومستقبل التعلم'
+    name: دليل اليونسكو للذكاء الاصطناعي ومستقبل التعلم
   - url: https://solaresearch.org/core/learning-analytics/
     type: reference
-    name: 'مرجع SoLAR لتحليلات التعلم'
+    name: مرجع SoLAR لتحليلات التعلم
   - url: https://unesdoc.unesco.org/ark:/48223/pf0000376709
     type: framework
-    name: 'إطار سياسات اليونسكو للذكاء الاصطناعي في التعليم'
+    name: إطار سياسات اليونسكو للذكاء الاصطناعي في التعليم
 metadata:
   language: ar
   version: '1.0'

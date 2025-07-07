@@ -32,7 +32,7 @@ ksa_mapping:
     - A1.2
     - A2.1
 tasks:
-  - id: task-1
+  - id: hsdw_initial_research
     category: research
     time_limit: 20
     assessment_focus:
@@ -62,7 +62,7 @@ tasks:
       - Analyze responses with AI assistance
       - Identify key problem areas and patterns
     expected_outcome: A comprehensive survey report with data-driven insights
-  - id: task-2
+  - id: hsdw_wellness_plan
     category: creation
     time_limit: 25
     assessment_focus:
@@ -92,7 +92,7 @@ tasks:
       - Design video scripts for wellness tips
       - Create interactive quizzes about digital wellness
     expected_outcome: A portfolio of engaging digital wellness content
-  - id: task-3
+  - id: hsdw_wellness_plan_1
     category: interaction
     time_limit: 30
     assessment_focus:
@@ -123,7 +123,7 @@ tasks:
       - Test with classmates and gather feedback
       - Refine based on user experience
     expected_outcome: A functional wellness chatbot prototype
-  - id: task-4
+  - id: hsdw_planning
     category: creation
     time_limit: 25
     assessment_focus:
@@ -153,7 +153,7 @@ tasks:
       - Identify partners like clubs and teachers
       - Set measurable goals and success metrics
     expected_outcome: A detailed, actionable campaign launch plan
-  - id: task-5
+  - id: hsdw_task_5
     category: analysis
     time_limit: 20
     assessment_focus:

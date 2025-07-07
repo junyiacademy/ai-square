@@ -30,7 +30,7 @@ ksa_mapping:
     - A2.2
     - A3.1
 tasks:
-  - id: task-1
+  - id: hsha_initial_research
     category: research
     time_limit: 30
     assessment_focus:
@@ -68,7 +68,7 @@ tasks:
       - 현재 솔루션과 그 한계 분석
       - 동료들의 건강 관심사와 요구사항 조사
     expected_outcome: 설문 데이터가 포함된 청소년 건강 문제에 대한 종합 보고서
-  - id: task-2
+  - id: hsha_design_creation
     category: creation
     time_limit: 35
     assessment_focus:
@@ -106,7 +106,7 @@ tasks:
       - 청소년 사용자에게 적합한 성격과 톤 만들기
       - 개인정보 보호 및 안전 조치 개발
     expected_outcome: AI 건강 도우미의 완전한 설계 사양
-  - id: task-3
+  - id: hsha_implementation
     category: creation
     time_limit: 40
     assessment_focus:
@@ -144,7 +144,7 @@ tasks:
       - 다양한 건강 시나리오를 위한 샘플 대화 만들기
       - 기본 기능으로 프로토타입 테스트
     expected_outcome: 핵심 건강 도우미 기능을 보여주는 작동 프로토타입
-  - id: task-4
+  - id: hsha_evaluation
     category: interaction
     time_limit: 25
     assessment_focus:

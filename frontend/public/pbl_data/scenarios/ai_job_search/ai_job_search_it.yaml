@@ -31,7 +31,7 @@ ksa_mapping:
     - A1.2
     - A2.1
 tasks:
-  - id: task-1
+  - id: ajs_initial_research
     category: research
     time_limit: 20
     assessment_focus:
@@ -63,7 +63,7 @@ tasks:
       - Analizza i requisiti di competenze per il tuo ruolo target
       - Crea un riepilogo di opportunità e sfide
     expected_outcome: Un rapporto completo di analisi del settore
-  - id: task-2
+  - id: ajs_design_creation
     category: analysis
     time_limit: 15
     assessment_focus:
@@ -100,7 +100,7 @@ tasks:
       - Ricevi analisi dell'IA su punti di forza e debolezze
       - Identifica aree di miglioramento
     expected_outcome: Rapporto dettagliato di analisi del curriculum
-  - id: task-3
+  - id: ajs_implementation
     category: creation
     time_limit: 25
     assessment_focus:
@@ -136,7 +136,7 @@ tasks:
       - Ottimizza le parole chiave per i sistemi ATS
       - Assicura chiarezza e impatto nelle descrizioni
     expected_outcome: Un curriculum ottimizzato e professionale
-  - id: task-4
+  - id: ajs_cover_letter
     category: creation
     time_limit: 20
     assessment_focus:
@@ -169,7 +169,7 @@ tasks:
       - Redigi una lettera di presentazione personalizzata
       - Perfeziona con i suggerimenti dell'IA
     expected_outcome: Una lettera di presentazione convincente e personalizzata
-  - id: task-5
+  - id: ajs_task_5
     category: interaction
     time_limit: 30
     assessment_focus:

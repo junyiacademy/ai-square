@@ -34,7 +34,7 @@ ksa_mapping:
     - A3.1
     - A4.1
 tasks:
-  - id: perception-system
+  - id: ard_initial_research
     category: creation
     time_limit: 60
     assessment_focus:
@@ -71,7 +71,7 @@ tasks:
       - Create machine learning models using AI platforms like Roboflow or Edge Impulse for package recognition
       - Develop real-time AI inference systems optimized for embedded robotics hardware
     expected_outcome: A working perception system that can reliably identify and classify packages in various lighting and environmental conditions, with documented performance metrics
-  - id: navigation-intelligence
+  - id: ard_planning
     category: creation
     time_limit: 50
     assessment_focus:
@@ -108,7 +108,7 @@ tasks:
       - Create intelligent behavior trees using AI assistance for task prioritization and emergency response
       - Develop predictive navigation using AI to anticipate human movement patterns and facility workflows
     expected_outcome: A complete autonomous navigation system that can efficiently handle multiple concurrent tasks while maintaining safety and adapting to environmental changes
-  - id: human-interaction
+  - id: ard_implementation
     category: interaction
     time_limit: 40
     assessment_focus:

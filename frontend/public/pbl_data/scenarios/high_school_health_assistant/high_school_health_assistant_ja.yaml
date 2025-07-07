@@ -30,7 +30,7 @@ ksa_mapping:
     - A2.2
     - A3.1
 tasks:
-  - id: task-1
+  - id: hsha_initial_research
     category: research
     time_limit: 30
     assessment_focus:
@@ -68,7 +68,7 @@ tasks:
       - 現在の解決策とその限界を分析する
       - 仲間の健康上の懸念とニーズについて調査する
     expected_outcome: 調査データを含む十代の健康課題に関する包括的レポート
-  - id: task-2
+  - id: hsha_design_creation
     category: creation
     time_limit: 35
     assessment_focus:
@@ -106,7 +106,7 @@ tasks:
       - 十代のユーザーに適した個性とトーンを作成する
       - プライバシー保護と安全対策を開発する
     expected_outcome: AI健康アシスタントの完全な設計仕様
-  - id: task-3
+  - id: hsha_implementation
     category: creation
     time_limit: 40
     assessment_focus:
@@ -144,7 +144,7 @@ tasks:
       - 異なる健康シナリオのサンプル会話を作成する
       - 基本機能でプロトタイプをテストする
     expected_outcome: コア健康アシスタント機能を実証する動作プロトタイプ
-  - id: task-4
+  - id: hsha_evaluation
     category: interaction
     time_limit: 25
     assessment_focus:

@@ -30,7 +30,7 @@ ksa_mapping:
     - A2.2
     - A3.1
 tasks:
-  - id: task-1
+  - id: hsha_initial_research
     category: research
     time_limit: 30
     assessment_focus:
@@ -68,7 +68,7 @@ tasks:
       - 分析現有解決方案及其局限性
       - 調查同儕的健康擔憂和需求
     expected_outcome: 包含調查數據的青少年健康挑戰綜合報告
-  - id: task-2
+  - id: hsha_design_creation
     category: creation
     time_limit: 35
     assessment_focus:
@@ -106,7 +106,7 @@ tasks:
       - 為青少年用戶創建合適的個性和語調
       - 開發隱私保護和安全措施
     expected_outcome: AI 健康助手的完整設計規格
-  - id: task-3
+  - id: hsha_implementation
     category: creation
     time_limit: 40
     assessment_focus:
@@ -144,7 +144,7 @@ tasks:
       - 為不同健康情境創建示例對話
       - 測試原型的基本功能
     expected_outcome: 展示核心健康助手功能的工作原型
-  - id: task-4
+  - id: hsha_evaluation
     category: interaction
     time_limit: 25
     assessment_focus:
