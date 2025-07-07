@@ -14,6 +14,8 @@ import {
 } from '@/types/pbl';
 import { TaskEvaluation } from '@/types/pbl-completion';
 import { formatDateWithLocale } from '@/utils/locale';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface ConversationEntry {
   id: string;
@@ -440,10 +442,10 @@ export default function ProgramLearningPage() {
         },
         body: JSON.stringify({
           message: userMessage,
-          sessionId: actualProgramId,
+          programId: actualProgramId,  // Use new format
+          taskId: taskId,               // Use actual UUID taskId
           context: {
             scenarioId,
-            taskId: currentTask.id,
             taskTitle: getLocalizedField(currentTask as unknown as Record<string, unknown>, 'title', i18n.language),
             taskDescription: getLocalizedField(currentTask as unknown as Record<string, unknown>, 'description', i18n.language),
             instructions: getLocalizedArrayField(currentTask as unknown as Record<string, unknown>, 'instructions', i18n.language),
@@ -553,7 +555,11 @@ export default function ProgramLearningPage() {
             ...(currentTask.assessmentFocus?.primary || []),
             ...(currentTask.assessmentFocus?.secondary || [])
           ],
-          language: i18n.language
+          language: i18n.language,
+          // New unified architecture parameters
+          trackId: program?.trackId || '',
+          programId: programId,
+          taskId: taskId
         })
       });
       
@@ -589,8 +595,12 @@ export default function ProgramLearningPage() {
             body: JSON.stringify({
               programId,
               taskId: currentTask.id,
-              scenarioId,
-              evaluation: data.evaluation
+              progress: {
+                score: data.evaluation.score,
+                evaluation: data.evaluation,
+                completedAt: new Date().toISOString(),
+                status: 'completed'
+              }
             })
           });
           
@@ -913,36 +923,44 @@ export default function ProgramLearningPage() {
                       {t('pbl:learn.overallScore')}
                     </span>
                     <span className={`text-2xl font-bold ${
-                      evaluation.score >= 75 ? 'text-green-600' :
-                      evaluation.score >= 60 ? 'text-blue-600' :
-                      evaluation.score >= 40 ? 'text-yellow-600' :
+                      (evaluation.score || evaluation.overallScore || 0) >= 75 ? 'text-green-600' :
+                      (evaluation.score || evaluation.overallScore || 0) >= 60 ? 'text-blue-600' :
+                      (evaluation.score || evaluation.overallScore || 0) >= 40 ? 'text-yellow-600' :
                       'text-red-600'
                     }`}>
-                      {evaluation.score}%
+                      {evaluation.score || evaluation.overallScore || 0}%
                     </span>
                   </div>
                   
                   {/* KSA Scores */}
                   {evaluation.ksaScores && (
                   <div className="space-y-2">
-                    {Object.entries(evaluation.ksaScores).map(([key, value]) => (
-                      <div key={key} className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600 dark:text-gray-400 capitalize">
-                          {t(`pbl:complete.${key}`)}
-                        </span>
-                        <div className="flex items-center">
-                          <div className="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                            <div 
-                              className="bg-purple-600 h-2 rounded-full"
-                              style={{ width: `${Number(value)}%` }}
-                            />
-                          </div>
-                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                            {Number(value)}%
+                    {(() => {
+                      // Define the correct order: Knowledge, Skills, Attitudes
+                      const ksaOrder = ['knowledge', 'skills', 'attitudes'];
+                      const orderedKSA = ksaOrder
+                        .filter(key => key in evaluation.ksaScores)
+                        .map(key => [key, evaluation.ksaScores[key]]);
+                      
+                      return orderedKSA.map(([key, value]) => (
+                        <div key={key} className="flex items-center justify-between">
+                          <span className="text-sm text-gray-600 dark:text-gray-400 capitalize">
+                            {t(`pbl:complete.${key}`)}
                           </span>
+                          <div className="flex items-center">
+                            <div className="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
+                              <div 
+                                className="bg-purple-600 h-2 rounded-full"
+                                style={{ width: `${typeof value === 'object' && value !== null ? (value.score || 0) : (Number(value) || 0)}%` }}
+                              />
+                            </div>
+                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                              {typeof value === 'object' && value !== null ? (value.score || 0) : (Number(value) || 0)}%
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ));
+                    })()}
                   </div>
                   )}
                 </div>
@@ -953,24 +971,32 @@ export default function ProgramLearningPage() {
                     {t('pbl:complete.domainScores')}
                   </h4>
                   <div className="space-y-2">
-                    {evaluation.domainScores && Object.entries(evaluation.domainScores).map(([domain, score]) => (
-                      <div key={domain} className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600 dark:text-gray-400">
-                          {t(`assessment:domains.${domain}`)}
-                        </span>
-                        <div className="flex items-center">
-                          <div className="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                            <div 
-                              className="bg-purple-600 h-2 rounded-full"
-                              style={{ width: `${Number(score)}%` }}
-                            />
-                          </div>
-                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                            {Number(score)}%
+                    {evaluation.domainScores && (() => {
+                      // Define the correct order: engage, create, manage, design
+                      const domainOrder = ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai'];
+                      const orderedDomains = domainOrder
+                        .filter(domain => domain in evaluation.domainScores)
+                        .map(domain => [domain, evaluation.domainScores[domain]]);
+                      
+                      return orderedDomains.map(([domain, score]) => (
+                        <div key={domain} className="flex items-center justify-between">
+                          <span className="text-sm text-gray-600 dark:text-gray-400">
+                            {t(`assessment:domains.${domain}`)}
                           </span>
+                          <div className="flex items-center">
+                            <div className="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
+                              <div 
+                                className="bg-purple-600 h-2 rounded-full"
+                                style={{ width: `${Number(score)}%` }}
+                              />
+                            </div>
+                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                              {Number(score)}%
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ));
+                    })()}
                   </div>
                 </div>
                 
@@ -1096,7 +1122,58 @@ export default function ProgramLearningPage() {
                         : 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 mr-12'
                     }`}
                   >
-                    <p className="whitespace-pre-wrap">{entry.content}</p>
+                    <div className={`prose prose-sm max-w-none ${
+                      entry.type === 'user' 
+                        ? 'prose-invert prose-p:text-white prose-headings:text-white prose-strong:text-white prose-a:text-blue-200' 
+                        : 'dark:prose-invert'
+                    }`}>
+                    <ReactMarkdown 
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        // Override default styles for better chat appearance
+                        p: ({children}) => <p className="mb-2 last:mb-0">{children}</p>,
+                        ul: ({children}) => <ul className="list-disc list-inside mb-2">{children}</ul>,
+                        ol: ({children}) => <ol className="list-decimal list-inside mb-2">{children}</ol>,
+                        li: ({children}) => <li className="mb-1">{children}</li>,
+                        h1: ({children}) => <h1 className="text-xl font-bold mb-2">{children}</h1>,
+                        h2: ({children}) => <h2 className="text-lg font-bold mb-2">{children}</h2>,
+                        h3: ({children}) => <h3 className="text-base font-bold mb-2">{children}</h3>,
+                        h4: ({children}) => <h4 className="text-sm font-bold mb-2">{children}</h4>,
+                        code: ({inline, children}) => 
+                          inline ? (
+                            <code className={`px-1 py-0.5 rounded text-sm ${
+                              entry.type === 'user' 
+                                ? 'bg-purple-500 bg-opacity-50' 
+                                : 'bg-gray-200 dark:bg-gray-600'
+                            }`}>{children}</code>
+                          ) : (
+                            <code className="block p-2 bg-gray-200 dark:bg-gray-600 rounded text-sm overflow-x-auto">{children}</code>
+                          ),
+                        pre: ({children}) => <pre className="mb-2 overflow-x-auto">{children}</pre>,
+                        blockquote: ({children}) => (
+                          <blockquote className={`border-l-4 pl-3 my-2 ${
+                            entry.type === 'user' 
+                              ? 'border-purple-400' 
+                              : 'border-gray-300 dark:border-gray-500'
+                          }`}>{children}</blockquote>
+                        ),
+                        table: ({children}) => (
+                          <div className="overflow-x-auto mb-2">
+                            <table className="min-w-full divide-y divide-gray-300 dark:divide-gray-600">{children}</table>
+                          </div>
+                        ),
+                        th: ({children}) => <th className="px-3 py-2 text-left text-sm font-medium">{children}</th>,
+                        td: ({children}) => <td className="px-3 py-2 text-sm">{children}</td>,
+                        a: ({href, children}) => (
+                          <a href={href} target="_blank" rel="noopener noreferrer" className="underline hover:opacity-80">{children}</a>
+                        ),
+                        strong: ({children}) => <strong className="font-bold">{children}</strong>,
+                        em: ({children}) => <em className="italic">{children}</em>,
+                      }}
+                    >
+                      {entry.content}
+                    </ReactMarkdown>
+                    </div>
                     <p className="text-xs mt-1 opacity-70">
                       {formatDateWithLocale(new Date(entry.timestamp), i18n.language, { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                     </p>

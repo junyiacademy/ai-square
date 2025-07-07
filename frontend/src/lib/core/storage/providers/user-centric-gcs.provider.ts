@@ -57,6 +57,17 @@ export class UserCentricGCSProvider implements IStorageProvider {
     }
     
     const [type, userId, ...idParts] = parts;
+    
+    // Special handling for tasks which have format: task:userId:programId:taskId
+    if (type === 'task' && idParts.length >= 2) {
+      // For tasks, we need to keep programId:taskId as the ID
+      return {
+        userId,
+        type: 'tasks',
+        id: idParts.join(':') // This will be "programId:taskId"
+      };
+    }
+    
     return {
       userId,
       type: `${type}s`, // track -> tracks, program -> programs
@@ -112,6 +123,9 @@ export class UserCentricGCSProvider implements IStorageProvider {
         }
         if (result.completedAt && typeof result.completedAt === 'string') {
           result.completedAt = new Date(result.completedAt);
+        }
+        if (result.timestamp && typeof result.timestamp === 'string') {
+          result.timestamp = new Date(result.timestamp);
         }
         
         // Also convert nested date fields like progress.lastActivityAt
@@ -265,6 +279,9 @@ export class UserCentricGCSProvider implements IStorageProvider {
                 }
                 if (result.completedAt && typeof result.completedAt === 'string') {
                   result.completedAt = new Date(result.completedAt);
+                }
+                if (result.timestamp && typeof result.timestamp === 'string') {
+                  result.timestamp = new Date(result.timestamp);
                 }
                 
                 // Also convert nested date fields like progress.lastActivityAt

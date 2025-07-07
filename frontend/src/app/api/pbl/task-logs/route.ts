@@ -45,14 +45,18 @@ export async function POST(request: NextRequest) {
     // Use new architecture
     const services = await ensureServices();
     
-    // Log the interaction
+    // Log the interaction with content
     await services.logService.logInteraction(
       userEmail,
       programId,
       taskId,
       interaction.type,
-      interaction.action,
-      interaction.data || {}
+      interaction.content || '', // Add content field
+      {
+        ...interaction.data,
+        timestamp: interaction.timestamp,
+        content: interaction.content // Also include in data for backward compatibility
+      }
     );
     
     return NextResponse.json({
@@ -129,15 +133,22 @@ export async function GET(request: NextRequest) {
       );
     }
     
-    // Get logs for this task
+    // Get logs for this task, ordered by timestamp ascending (oldest first)
     const logs = await services.logService.queryLogs({
       userId: userEmail,
       programId: programId,
-      taskId: taskId
+      taskId: taskId,
+      orderBy: 'timestamp:asc'
     });
     
     // Transform logs to match the expected format
-    const interactionLogs = logs.filter(log => log.type === 'INTERACTION');
+    const interactionLogs = logs
+      .filter(log => log.type === 'INTERACTION')
+      .sort((a, b) => {
+        const timeA = a.timestamp instanceof Date ? a.timestamp.getTime() : new Date(a.timestamp).getTime();
+        const timeB = b.timestamp instanceof Date ? b.timestamp.getTime() : new Date(b.timestamp).getTime();
+        return timeA - timeB; // Sort ascending (oldest first)
+      });
     
     const taskData = {
       metadata: {
@@ -146,16 +157,28 @@ export async function GET(request: NextRequest) {
         startedAt: task.createdAt.toISOString(),
         lastUpdated: task.updatedAt.toISOString()
       },
-      log: interactionLogs.map(log => ({
-        timestamp: log.timestamp.toISOString(),
-        type: log.data?.action || log.metadata?.type || 'unknown',
-        action: log.data?.action || log.metadata?.action || 'unknown',
-        data: log.data || log.metadata?.data || {}
-      })),
+      log: {
+        interactions: interactionLogs.map(log => ({
+          timestamp: log.timestamp instanceof Date 
+            ? log.timestamp.toISOString() 
+            : typeof log.timestamp === 'string' 
+              ? log.timestamp 
+              : new Date(log.timestamp).toISOString(),
+          type: log.metadata?.type || log.data?.type || 'unknown',
+          content: log.message || log.data?.content || log.metadata?.content || '', // Extract content from message or data
+          metadata: {
+            action: log.data?.action || log.metadata?.action,
+            ...log.data,
+            ...log.metadata
+          }
+        }))
+      },
       progress: task.progress || {
         status: 'not_started',
         attempts: 0
-      }
+      },
+      // Include evaluation if it exists in progress
+      evaluation: task.progress?.evaluation || null
     };
     
     return NextResponse.json({

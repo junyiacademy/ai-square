@@ -25,6 +25,40 @@ export class EvaluationRepository extends SoftDeletableRepository<ISoftDeletable
   }
 
   /**
+   * Query evaluations based on options
+   */
+  async query(options: EvaluationQueryOptions): Promise<ISoftDeletableEvaluation[]> {
+    let evaluations: ISoftDeletableEvaluation[] = [];
+    
+    // Get evaluations based on query criteria
+    if (options.userId) {
+      evaluations = await this.findByUser(options.userId, options);
+    } else if (options.trackId) {
+      evaluations = await this.findByTrack(options.trackId);
+    } else {
+      // If no specific criteria, get all evaluations (not recommended for production)
+      evaluations = await this.findMany({});
+    }
+    
+    // Apply additional filters
+    if (options.entityType) {
+      evaluations = evaluations.filter(e => 
+        e.evaluationData?.entityType === options.entityType || 
+        e.metadata?.entityType === options.entityType
+      );
+    }
+    
+    if (options.entityId) {
+      evaluations = evaluations.filter(e => 
+        e.evaluationData?.entityId === options.entityId || 
+        e.metadata?.entityId === options.entityId
+      );
+    }
+    
+    return evaluations;
+  }
+
+  /**
    * 創建新的 Evaluation
    */
   async createEvaluation(params: CreateEvaluationParams): Promise<ISoftDeletableEvaluation> {

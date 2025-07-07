@@ -5,7 +5,7 @@ import {
   Conversation 
 } from '@/types/pbl-evaluate';
 import { ErrorResponse } from '@/types/api';
-import { getServices } from '@/lib/core/services/service-factory';
+import { ensureServices } from '@/lib/core/services/api-helpers';
 
 interface UserCookie {
   email: string;
@@ -45,23 +45,37 @@ export async function POST(request: NextRequest) {
       programId,
       taskId
     }: EvaluateRequestBody & {
-      trackId: string;
+      trackId?: string;
       programId: string;
       taskId: string;
     } = await request.json();
 
-    if (!conversations || !task || !trackId || !programId || !taskId) {
+    if (!conversations || !task || !programId || !taskId) {
       return NextResponse.json(
-        { success: false, error: 'Missing required fields: conversations, task, trackId, programId, and taskId are required' },
+        { success: false, error: 'Missing required fields: conversations, task, programId, and taskId are required' },
         { status: 400 }
       );
     }
 
     // Get services (will initialize if needed)
     const services = await ensureServices();
-    console.log(`Using unified architecture for evaluation: Track=${trackId}, Program=${programId}, Task=${taskId}`);
     
-    console.log('Evaluating task:', task.id, 'with', conversations.length, 'conversations');
+    // If trackId not provided, fetch from program
+    let actualTrackId = trackId;
+    if (!actualTrackId) {
+      const program = await services.programService.getProgram(userEmail, programId);
+      if (!program) {
+        return NextResponse.json(
+          { success: false, error: 'Program not found' },
+          { status: 404 }
+        );
+      }
+      actualTrackId = program.trackId;
+    }
+    
+    console.log(`Using unified architecture for evaluation: Track=${actualTrackId}, Program=${programId}, Task=${taskId}`);
+    
+    console.log('Evaluating task:', taskId, 'with', conversations.length, 'conversations');
 
     // Prepare the evaluation prompt
     const evaluationPrompt = `
@@ -302,7 +316,7 @@ Important evaluation principles:
     const evaluationResult = {
       ...evaluation,
       evaluatedAt: new Date().toISOString(),
-      taskId: task.id,
+      taskId: taskId, // Use the actual UUID taskId, not the task.id from frontend
       conversationCount: conversations.filter((c: Conversation) => c.type === 'user').length
     };
 
@@ -311,7 +325,7 @@ Important evaluation principles:
       // Update task progress with evaluation results
       const taskData = await services.taskService.getTask(userEmail, programId, taskId);
       if (taskData) {
-        await services.taskService.updateTaskProgress(userEmail, programId, taskId, {
+        await services.taskService.updateProgress(userEmail, programId, taskId, {
           ...taskData.progress,
           score: evaluation.score,
           evaluation: {
@@ -335,7 +349,7 @@ Important evaluation principles:
         severity: 'INFO',
         message: 'PBL Task evaluation completed',
         details: {
-          trackId,
+          trackId: actualTrackId,
           programId,
           taskId,
           evaluationResult,

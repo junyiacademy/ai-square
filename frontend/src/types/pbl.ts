@@ -140,6 +140,7 @@ export interface Program {
   totalTasks: number;
   currentTaskId?: string;
   language: string;
+  trackId?: string; // New unified architecture - reference to parent track
 }
 
 // Program Metadata (stored in program folder)
@@ -255,11 +256,6 @@ export interface CreateProgramResponse {
   program: Program;
   firstTaskId: string;
   trackId?: string; // Optional Track ID for unified tracking
-  taskMapping?: Array<{  // Mapping between scenario task IDs and actual UUIDs
-    taskId: string;      // Actual UUID in the new architecture
-    scenarioTaskId: string; // Original task ID from YAML (e.g., 'task-1')
-    order: number;       // Task order (1-based)
-  }>;
 }
 
 export interface SaveTaskLogRequest {

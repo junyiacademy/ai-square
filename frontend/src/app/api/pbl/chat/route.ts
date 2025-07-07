@@ -4,12 +4,11 @@ import { ErrorResponse } from '@/types/api';
 import { ChatMessage } from '@/types/pbl-api';
 import { AIModule, AIRole } from '@/types/pbl';
 import { ensureServices } from '@/lib/core/services/api-helpers';
-import { pblScenarioService } from '@/lib/services/pbl-scenario.service';
 
 interface ChatRequestBody {
   message: string;
   // 新統一架構
-  trackId: string;
+  trackId?: string;
   programId: string;
   taskId: string;
   context: {
@@ -23,29 +22,6 @@ interface ChatRequestBody {
   };
 }
 
-interface TaskWithAIModule {
-  id: string;
-  aiModule?: {
-    role: string;
-    model: string;
-    persona?: string;
-    initialPrompt?: string;
-  };
-  ai_module?: {
-    role: string;
-    model: string;
-    persona?: string;
-    initial_prompt?: string;
-  };
-}
-
-interface AIModuleData {
-  role: string;
-  model: string;
-  persona: string;
-  initialPrompt?: string;
-  initial_prompt?: string;
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -69,11 +45,11 @@ export async function POST(request: NextRequest) {
     }
 
     const body: ChatRequestBody = await request.json();
-    const { message, trackId, programId, taskId, context } = body;
+    let { message, trackId, programId, taskId, context } = body;
 
-    if (!message || !trackId || !programId || !taskId || !context?.scenarioId) {
+    if (!message || !programId || !taskId || !context?.scenarioId) {
       return NextResponse.json<ErrorResponse>(
-        { error: 'Missing required fields: message, trackId, programId, taskId, context.scenarioId' },
+        { error: 'Missing required fields: message, programId, taskId, context.scenarioId' },
         { status: 400 }
       );
     }
@@ -86,61 +62,72 @@ export async function POST(request: NextRequest) {
 
     // Get services (will initialize if needed)
     const services = await ensureServices();
+    
+    // 獲取 Task 資料以驗證並取得詳細資訊
+    console.log(`[Chat API] Looking for task: user=${userEmail}, program=${programId}, task=${taskId}`);
+    
+    // Debug: Try to query tasks first
+    try {
+      console.log(`[Chat API] Querying all tasks for program ${programId}...`);
+      const allTasks = await services.taskService.queryTasks({
+        userId: userEmail,
+        programId: programId
+      });
+      console.log(`[Chat API] Found ${allTasks.length} tasks:`, allTasks.map(t => ({ id: t.id, title: t.title })));
+    } catch (e) {
+      console.error('[Chat API] Failed to query tasks:', e);
+    }
+    
+    console.log(`[Chat API] Now calling getTask...`);
+    const task = await services.taskService.getTask(userEmail, programId, taskId);
+    console.log(`[Chat API] getTask result:`, task ? { id: task.id, title: task.title } : 'null');
+    
+    if (!task) {
+      console.error(`[Chat API] Task not found: user=${userEmail}, program=${programId}, task=${taskId}`);
+      
+      return NextResponse.json<ErrorResponse>(
+        { error: 'Task not found' },
+        { status: 404 }
+      );
+    }
+    
+    // If trackId not provided, fetch from program
+    if (!trackId) {
+      const program = await services.programService.getProgram(userEmail, programId);
+      if (!program) {
+        return NextResponse.json<ErrorResponse>(
+          { error: 'Program not found' },
+          { status: 404 }
+        );
+      }
+      trackId = program.trackId;
+    }
+    
     console.log(`Using unified architecture: Track=${trackId}, Program=${programId}, Task=${taskId}`);
 
-    // 獲取 Task 資料以驗證並取得詳細資訊
-    const task = await services.taskService.getTask(userEmail, programId, taskId);
-    if (!task) {
-      return NextResponse.json<ErrorResponse>(
-        { error: 'Task not found' },
-        { status: 404 }
-      );
-    }
-
-    // 使用新的 scenario service 載入資料
-    let scenarioData;
-    let taskConfig;
-    try {
-      scenarioData = await pblScenarioService.loadScenario(scenarioId, language);
-      taskConfig = await pblScenarioService.getTaskConfig(scenarioId, taskId, language);
-    } catch (error) {
-      console.error(`Error loading scenario: ${scenarioId}`, error);
-      return NextResponse.json<ErrorResponse>(
-        { error: `Scenario file not found: ${scenarioId}` },
-        { status: 404 }
-      );
-    }
-    
-    // Find the current task
-    const currentTask = scenarioData.tasks?.find((t: TaskWithAIModule) => t.id === taskId);
-    if (!currentTask) {
-      return NextResponse.json<ErrorResponse>(
-        { error: 'Task not found' },
-        { status: 404 }
-      );
-    }
-    
-    // Handle both camelCase and snake_case for aiModule
-    const aiModuleData = currentTask.aiModule || (currentTask as TaskWithAIModule).ai_module;
+    // Get AI module configuration directly from task config
+    const aiModuleData = task.config?.aiModule;
     if (!aiModuleData) {
+      console.error(`[Chat API] AI module not found in task config`);
       return NextResponse.json<ErrorResponse>(
-        { error: 'AI module not found for this task' },
+        { error: 'AI module configuration not found for this task' },
         { status: 404 }
       );
     }
 
+    // Convert to AIModule type
     const aiModule: AIModule = {
       role: aiModuleData.role as AIRole,
-      model: aiModuleData.model,
-      persona: aiModuleData.persona,
-      initialPrompt: (aiModuleData as AIModuleData).initialPrompt || (aiModuleData as AIModuleData).initial_prompt
+      model: aiModuleData.model || 'gemini-2.5-flash',
+      persona: aiModuleData.persona || 'AI Assistant',
+      initialPrompt: aiModuleData.initialPrompt || aiModuleData.initial_prompt || ''
     };
     
-    // Extract task context from both sources
-    const taskTitle = context.taskTitle || taskConfig?.title || task.title;
-    const taskDescription = context.taskDescription || taskConfig?.description || task.description;
-    const instructions = context.instructions || taskConfig?.instructions || task.instructions;
-    const expectedOutcome = context.expectedOutcome || taskConfig?.expectedOutcome || task.expectedOutcome;
+    // Extract task context from task data and optional context
+    const taskTitle = context.taskTitle || task.title;
+    const taskDescription = context.taskDescription || task.description;
+    const instructions = context.instructions || task.config?.instructions || [];
+    const expectedOutcome = context.expectedOutcome || task.config?.expectedOutcome || '';
 
     // Build conversation context
     const conversationContext = conversationHistory?.map((entry: ChatMessage) => 

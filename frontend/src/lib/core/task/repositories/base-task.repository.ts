@@ -28,6 +28,28 @@ export abstract class BaseTaskRepository<T extends ISoftDeletableTask = ISoftDel
   }
 
   /**
+   * 獲取單一 Task
+   */
+  async getByIds(userId: string, programId: string, taskId: string): Promise<T | null> {
+    const key = this.getTaskKey(userId, programId, taskId);
+    console.log(`[TaskRepo] Getting task with key: ${key}`);
+    const task = await this.storageProvider.get<T>(key);
+    if (!task) {
+      console.log(`[TaskRepo] Task not found with key: ${key}`);
+      // Try to list all tasks for this program to debug
+      const prefix = `task:${userId}:${programId}:`;
+      const allTasks = await this.storageProvider.list<T>(prefix);
+      console.log(`[TaskRepo] Found ${allTasks.length} tasks with prefix ${prefix}`);
+      if (allTasks.length > 0) {
+        console.log(`[TaskRepo] Available tasks:`, allTasks.map(t => ({ id: t.id, key: `task:${userId}:${programId}:${t.id}` })));
+      }
+    } else {
+      console.log(`[TaskRepo] Found task:`, { id: task.id, title: task.title });
+    }
+    return task;
+  }
+
+  /**
    * 創建 Task
    */
   async create(params: CreateTaskParams): Promise<T> {

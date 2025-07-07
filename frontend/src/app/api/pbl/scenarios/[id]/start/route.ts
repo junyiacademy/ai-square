@@ -222,6 +222,7 @@ export async function POST(
     );
     
     console.log('   ✅ Tasks created:', tasks.length);
+    console.log('   Task IDs:', tasks.map(t => ({ id: t.id, title: t.title, order: t.order })));
     
     // Update program status to IN_PROGRESS
     // Use the actual created task ID, not the scenario task ID
@@ -262,13 +263,7 @@ export async function POST(
         language: language
       },
       firstTaskId: firstTaskId || '', // Use the actual UUID
-      trackId: track.id, // Include trackId in response for client tracking
-      // Add task mapping for frontend to use
-      taskMapping: tasks.map((task, index) => ({
-        taskId: task.id,
-        scenarioTaskId: scenario.tasks[index]?.id,
-        order: task.order
-      }))
+      trackId: track.id // Include trackId in response for client tracking
     };
     
     return NextResponse.json(response);
