@@ -717,9 +717,9 @@ export default function ProgramLearningPage() {
       </header>
 
       {/* Main Content */}
-      <div className="flex-1 flex relative">
+      <div className="flex-1 flex relative overflow-hidden">
         {/* Desktop Layout */}
-        <div className="hidden md:flex w-full">
+        <div className="hidden md:flex w-full h-full" style={{ height: 'calc(90vh - 4rem)' }}>
           {/* Left Sidebar - Progress (Collapsible) */}
           <div className={`bg-white dark:bg-gray-800 shadow-lg transition-all duration-300 relative ${
             isProgressCollapsed ? 'w-16' : 'w-64'
@@ -870,7 +870,7 @@ export default function ProgramLearningPage() {
         </div>
 
         {/* Middle Panel - Task Info */}
-        <div className="w-96 bg-white dark:bg-gray-800 border-l border-r border-gray-200 dark:border-gray-700 overflow-y-auto">
+        <div className="w-96 bg-white dark:bg-gray-800 border-l border-r border-gray-200 dark:border-gray-700 overflow-y-auto flex-shrink-0">
           <div className="p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
               {t('pbl:learn.task')} {taskIndex + 1}: {getLocalizedField(currentTask as unknown as Record<string, unknown>, 'title', i18n.language)}
@@ -1104,9 +1104,9 @@ export default function ProgramLearningPage() {
         </div>
 
         {/* Right Panel - Chatbot */}
-        <div className="flex-1 bg-white dark:bg-gray-800 flex flex-col border-l border-gray-200 dark:border-gray-700">
-          {/* Conversation Area */}
-          <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 bg-white dark:bg-gray-800 flex flex-col relative min-w-0 pb-8">
+          {/* Conversation Area - with padding bottom for input */}
+          <div className="flex-1 overflow-y-auto p-6" style={{ paddingBottom: '220px' }}>
             <div className="space-y-4">
               {conversations.map((entry) => (
                 <div
@@ -1203,40 +1203,42 @@ export default function ProgramLearningPage() {
             </div>
           </div>
 
-          {/* Evaluate Button */}
-          {showEvaluateButton && !isEvaluating && (
-            <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-              <button
-                onClick={handleEvaluate}
-                disabled={isEvaluateDisabled}
-                className={`w-full px-4 py-2 rounded-lg transition-colors font-medium ${
-                  isEvaluateDisabled 
-                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
-                }`}
-              >
-                {isEvaluateDisabled 
-                  ? t('pbl:learn.evaluationUpToDate', 'Evaluation Up to Date') 
-                  : t('pbl:learn.evaluate', 'Evaluate Performance')}
-              </button>
-            </div>
-          )}
-          
-          {/* Evaluating indicator */}
-          {isEvaluating && (
-            <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-              <div className="flex items-center justify-center space-x-2">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
-                <span className="text-gray-600 dark:text-gray-400">
-                  {t('pbl:learn.evaluating', 'Evaluating...')}
-                </span>
+          {/* Fixed Bottom Area */}
+          <div className="absolute bottom-4 left-4 right-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg z-10 shadow-xl">
+            {/* Evaluate Button */}
+            {showEvaluateButton && !isEvaluating && (
+              <div className="px-6 py-4 bg-gray-50 dark:bg-gray-800/50 rounded-t-lg">
+                <button
+                  onClick={handleEvaluate}
+                  disabled={isEvaluateDisabled}
+                  className={`w-full px-4 py-2 rounded-lg transition-colors font-medium ${
+                    isEvaluateDisabled 
+                      ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
+                      : 'bg-blue-600 text-white hover:bg-blue-700'
+                  }`}
+                >
+                  {isEvaluateDisabled 
+                    ? t('pbl:learn.evaluationUpToDate', 'Evaluation Up to Date') 
+                    : t('pbl:learn.evaluate', 'Evaluate Performance')}
+                </button>
               </div>
-            </div>
-          )}
+            )}
+            
+            {/* Evaluating indicator */}
+            {isEvaluating && (
+              <div className="px-6 py-4 bg-gray-50 dark:bg-gray-800/50 rounded-t-lg">
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+                  <span className="text-gray-600 dark:text-gray-400">
+                    {t('pbl:learn.evaluating', 'Evaluating...')}
+                  </span>
+                </div>
+              </div>
+            )}
 
-          {/* Input Area */}
-          <div className="p-6 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex gap-4">
+            {/* Input Area */}
+            <div className="p-4">
+              <div className="flex gap-3">
               <textarea
                 ref={inputRef}
                 value={userInput}
@@ -1249,7 +1251,7 @@ export default function ProgramLearningPage() {
                 }}
                 placeholder={t('pbl:learn.inputPlaceholder')}
                 className="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                rows={3}
+                rows={2}
                 disabled={isProcessing}
               />
               <button
@@ -1259,6 +1261,7 @@ export default function ProgramLearningPage() {
               >
                 {isProcessing ? t('pbl:learn.sending') : t('pbl:learn.send')}
               </button>
+              </div>
             </div>
           </div>
         </div>
