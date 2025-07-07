@@ -55,9 +55,9 @@ export async function GET(request: NextRequest) {
           overallScore: 0,
           domainScores: {},
           ksaScores: {
-            knowledge: { score: 0, codes: [] },
-            skills: { score: 0, codes: [] },
-            attitudes: { score: 0, codes: [] }
+            knowledge: 0,
+            skills: 0,
+            attitudes: 0
           },
           completedTasks: 0,
           totalTasks: 0,
@@ -81,26 +81,79 @@ export async function GET(request: NextRequest) {
       entityType: 'task'
     });
 
+    // Get all logs for the program once
+    const allLogs = await services.logService.queryLogs({
+      userId: userEmail,
+      programId: program.id,
+      orderBy: 'timestamp:asc'
+    });
+    
     // Build task completion data
     const taskCompletionMap = new Map<string, CompletionTask>();
     
     for (const task of tasks) {
+      // Filter logs for this specific task
+      const taskLogs = allLogs.filter(log => log.taskId === task.id);
+      
+      // Transform logs to interactions
+      const interactions = taskLogs
+        .filter(log => log.type === 'INTERACTION')
+        .map(log => ({
+          type: log.metadata?.type || log.data?.type || 'unknown',
+          message: log.message || log.data?.content || log.metadata?.content || '',
+          timestamp: log.timestamp instanceof Date 
+            ? log.timestamp.toISOString() 
+            : typeof log.timestamp === 'string' 
+              ? log.timestamp 
+              : new Date(log.timestamp).toISOString()
+        }));
       const taskEvaluations = evaluations.filter(e => e.entityId === task.id);
       const latestEval = taskEvaluations.sort((a, b) => 
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       )[0];
 
-      if (latestEval) {
-        taskCompletionMap.set(task.id, {
-          taskId: task.config?.taskId || task.id,
-          taskTitle: task.title,
-          status: 'completed',
+      // Check if we have evaluation from evaluationService or from task progress
+      if (latestEval || task.progress?.evaluation) {
+        // Get task progress data
+        const progress: any = {
+          timeSpentSeconds: task.progress?.timeSpent || 0,
+          status: 'completed'
+        };
+
+        // Use evaluation from evaluationService if available, otherwise use from task progress
+        const evalData = latestEval ? {
           score: latestEval.score || 0,
           domainScores: latestEval.results?.domainScores || {},
           ksaScores: latestEval.results?.ksaScores || {},
-          feedback: latestEval.feedback || '',
-          evaluatedAt: latestEval.createdAt.toISOString(),
-          attempts: taskEvaluations.length
+          conversationInsights: latestEval.results?.conversationInsights,
+          strengths: latestEval.results?.strengths || [],
+          improvements: latestEval.results?.improvements || [],
+          evaluatedAt: latestEval.createdAt.toISOString()
+        } : {
+          score: task.progress?.evaluation?.overallScore || task.progress?.score || 0,
+          domainScores: task.progress?.evaluation?.domainScores || {},
+          ksaScores: task.progress?.evaluation?.ksaScores || {},
+          conversationInsights: task.progress?.evaluation?.conversationInsights,
+          strengths: task.progress?.evaluation?.strengths || [],
+          improvements: task.progress?.evaluation?.improvements || [],
+          evaluatedAt: task.progress?.evaluation?.evaluatedAt || new Date().toISOString()
+        };
+
+        taskCompletionMap.set(task.id, {
+          taskId: task.config?.taskId || task.id,
+          taskTitle: task.title,
+          evaluation: evalData,
+          log: {
+            interactions: interactions
+          },
+          progress: progress,
+          // For backward compatibility
+          score: evalData.score,
+          domainScores: evalData.domainScores,
+          ksaScores: evalData.ksaScores,
+          feedback: latestEval?.feedback || '',
+          evaluatedAt: evalData.evaluatedAt,
+          attempts: taskEvaluations.length || 1
         });
       }
     }
@@ -143,21 +196,21 @@ export async function GET(request: NextRequest) {
     
     for (const task of completedTasks) {
       if (task.ksaScores) {
-        for (const [category, data] of Object.entries(task.ksaScores)) {
-          if (category in ksaScores && typeof data === 'object' && 'score' in data) {
-            ksaScores[category as keyof typeof ksaScores].score += data.score || 0;
+        for (const [category, score] of Object.entries(task.ksaScores)) {
+          if (category in ksaScores && typeof score === 'number') {
+            ksaScores[category as keyof typeof ksaScores].score += score;
             ksaScores[category as keyof typeof ksaScores].count++;
           }
         }
       }
     }
     
-    // Average KSA scores
+    // Average KSA scores - return as simple numbers for compatibility
     const avgKsaScores: any = {};
     for (const [category, data] of Object.entries(ksaScores)) {
       avgKsaScores[category] = data.count > 0 
-        ? { score: Math.round(data.score / data.count), codes: [] }
-        : { score: 0, codes: [] };
+        ? Math.round(data.score / data.count)
+        : 0;
     }
 
     // Build completion data

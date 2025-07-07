@@ -343,6 +343,33 @@ Important evaluation principles:
         });
       }
 
+      // Create evaluation record
+      await services.evaluationService.createEvaluation({
+        userId: userEmail,
+        entityType: 'task',
+        entityId: taskId,
+        evaluationType: 'automated',
+        score: evaluation.score,
+        results: {
+          domainScores: evaluation.domainScores,
+          ksaScores: evaluation.ksaScores,
+          rubricsScores: evaluation.rubricsScores,
+          conversationInsights: evaluation.conversationInsights,
+          strengths: evaluation.strengths,
+          improvements: evaluation.improvements,
+          nextSteps: evaluation.nextSteps
+        },
+        feedback: `Overall Score: ${evaluation.score}%`,
+        metadata: {
+          programId,
+          trackId: actualTrackId,
+          taskTitle: task.title,
+          targetDomains: targetDomains?.join(', '),
+          focusKSA: focusKSA?.join(', '),
+          conversationCount: conversations.filter((c: Conversation) => c.type === 'user').length
+        }
+      });
+
       // Log the evaluation
       await services.logService.createLog(userEmail, {
         type: 'EVALUATION',

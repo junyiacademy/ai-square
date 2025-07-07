@@ -564,60 +564,69 @@ export default function ProgramCompletePage() {
           </h2>
           
           <div className="space-y-6">
-            {completionData.tasks?.map((task, index) => {
-              const matchedTask = scenarioData?.tasks?.find((t) => t.id === task.taskId);
-              const taskTitle = matchedTask?.title || task.taskId;
-              const taskTitleLocalized = matchedTask ? (
-                i18n.language === 'zhTW' 
-                  ? (matchedTask.title_zhTW || taskTitle)
-                  : taskTitle
-              ) : taskTitle;
+            {scenarioData?.tasks?.map((scenarioTask, index) => {
+              // Find the completion data for this task
+              const taskCompletion = completionData.tasks?.find((t) => 
+                t.taskId === scenarioTask.id || 
+                t.taskId === `task-${index + 1}` // Support old format
+              );
+              
+              const taskTitle = scenarioTask.title;
+              const taskTitleLocalized = i18n.language === 'zhTW' 
+                ? (scenarioTask.title_zhTW || taskTitle)
+                : taskTitle;
               
               return (
-                <div key={task.taskId} className="border-l-4 border-purple-600 pl-6">
+                <div key={scenarioTask.id} className={`border-l-4 ${taskCompletion ? 'border-purple-600' : 'border-gray-300 dark:border-gray-600'} pl-6`}>
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
                         {index + 1}. {taskTitleLocalized}
                       </h3>
                       
-                      {/* Task Metadata */}
-                      <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400 mb-3">
-                        <span className="flex items-center">
-                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          {formatDuration(task.progress?.timeSpentSeconds || 0)}
-                        </span>
-                        <span className="flex items-center">
-                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                          </svg>
-                          {task.log?.interactions?.filter((i) => i.type === 'user').length || 0} {t('pbl:complete.conversations')}
-                        </span>
-                        {task.evaluation && (
-                          <span className={`font-medium ${getScoreColor(task.evaluation.score)}`}>
-                            {t('pbl:learn.overallScore')}: {task.evaluation.score}%
+                      {/* Task Metadata - Show if task was completed */}
+                      {taskCompletion ? (
+                        <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400 mb-3">
+                          <span className="flex items-center">
+                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            {formatDuration(taskCompletion.progress?.timeSpentSeconds || 0)}
                           </span>
-                        )}
-                      </div>
+                          <span className="flex items-center">
+                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                            </svg>
+                            {taskCompletion.log?.interactions?.filter((i) => i.type === 'user').length || 0} {t('pbl:complete.conversations')}
+                          </span>
+                          {taskCompletion.evaluation && (
+                            <span className={`font-medium ${getScoreColor(taskCompletion.evaluation.score)}`}>
+                              {t('pbl:learn.overallScore')}: {taskCompletion.evaluation.score}%
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="text-sm text-gray-500 dark:text-gray-400 italic mb-3">
+                          {t('pbl:complete.taskNotStarted', 'Task not started')}
+                        </div>
+                      )}
                       
                       {/* Task Evaluation Details */}
-                      {task.evaluation && (
+                      {taskCompletion?.evaluation && (
                         <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 space-y-4">
                           {/* Two Column Layout for Domain & KSA Scores */}
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* Domain Scores Column */}
-                            {task.evaluation.domainScores && (
+                            {taskCompletion.evaluation.domainScores && (
                               <div>
                                 <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                                   {t('pbl:complete.domainScores')}:
                                 </div>
                                 <div className="space-y-3">
                                   {['creating_with_ai', 'designing_with_ai', 'engaging_with_ai', 'managing_with_ai']
-                                    .filter(domain => task.evaluation?.domainScores?.[domain] !== undefined)
+                                    .filter(domain => taskCompletion.evaluation?.domainScores?.[domain] !== undefined)
                                     .map((domain) => {
-                                      const score = task.evaluation?.domainScores?.[domain] || 0;
+                                      const score = taskCompletion.evaluation?.domainScores?.[domain] || 0;
                                       return (
                                         <div key={domain}>
                                           <div className="flex items-center justify-between mb-1">
@@ -647,7 +656,7 @@ export default function ProgramCompletePage() {
                             )}
                             
                             {/* KSA Scores Column */}
-                            {task.evaluation.ksaScores && (
+                            {taskCompletion.evaluation.ksaScores && (
                               <div>
                                 <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                                   {t('pbl:complete.ksa')}:
@@ -658,14 +667,14 @@ export default function ProgramCompletePage() {
                                       <span className="text-sm text-gray-600 dark:text-gray-400">
                                         {t('pbl:complete.knowledge')}
                                       </span>
-                                      <span className={`text-sm font-bold ${getScoreColor(task.evaluation.ksaScores.knowledge)}`}>
-                                        {task.evaluation.ksaScores.knowledge}%
+                                      <span className={`text-sm font-bold ${getScoreColor(taskCompletion.evaluation.ksaScores.knowledge)}`}>
+                                        {taskCompletion.evaluation.ksaScores.knowledge}%
                                       </span>
                                     </div>
                                     <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                                       <div 
                                         className="bg-blue-500 h-2 rounded-full"
-                                        style={{ width: `${task.evaluation.ksaScores.knowledge}%` }}
+                                        style={{ width: `${taskCompletion.evaluation.ksaScores.knowledge}%` }}
                                       />
                                     </div>
                                   </div>
@@ -675,14 +684,14 @@ export default function ProgramCompletePage() {
                                       <span className="text-sm text-gray-600 dark:text-gray-400">
                                         {t('pbl:complete.skills')}
                                       </span>
-                                      <span className={`text-sm font-bold ${getScoreColor(task.evaluation.ksaScores.skills)}`}>
-                                        {task.evaluation.ksaScores.skills}%
+                                      <span className={`text-sm font-bold ${getScoreColor(taskCompletion.evaluation.ksaScores.skills)}`}>
+                                        {taskCompletion.evaluation.ksaScores.skills}%
                                       </span>
                                     </div>
                                     <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                                       <div 
                                         className="bg-green-500 h-2 rounded-full"
-                                        style={{ width: `${task.evaluation.ksaScores.skills}%` }}
+                                        style={{ width: `${taskCompletion.evaluation.ksaScores.skills}%` }}
                                       />
                                     </div>
                                   </div>
@@ -692,14 +701,14 @@ export default function ProgramCompletePage() {
                                       <span className="text-sm text-gray-600 dark:text-gray-400">
                                         {t('pbl:complete.attitudes')}
                                       </span>
-                                      <span className={`text-sm font-bold ${getScoreColor(task.evaluation.ksaScores.attitudes)}`}>
-                                        {task.evaluation.ksaScores.attitudes}%
+                                      <span className={`text-sm font-bold ${getScoreColor(taskCompletion.evaluation.ksaScores.attitudes)}`}>
+                                        {taskCompletion.evaluation.ksaScores.attitudes}%
                                       </span>
                                     </div>
                                     <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                                       <div 
                                         className="bg-purple-500 h-2 rounded-full"
-                                        style={{ width: `${task.evaluation.ksaScores.attitudes}%` }}
+                                        style={{ width: `${taskCompletion.evaluation.ksaScores.attitudes}%` }}
                                       />
                                     </div>
                                   </div>
@@ -709,21 +718,21 @@ export default function ProgramCompletePage() {
                           </div>
                           
                           {/* Conversation Insights */}
-                          {task.evaluation.conversationInsights && (
+                          {taskCompletion.evaluation.conversationInsights && (
                             <div className="mb-3">
                               <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 {t('pbl:learn.conversationInsights')}
                               </h4>
                               <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
                                 {/* Effective Examples */}
-                                {task.evaluation?.conversationInsights?.effectiveExamples && 
-                                 Array.isArray(task.evaluation.conversationInsights.effectiveExamples) &&
-                                 task.evaluation.conversationInsights.effectiveExamples.length > 0 && (
+                                {taskCompletion.evaluation?.conversationInsights?.effectiveExamples && 
+                                 Array.isArray(taskCompletion.evaluation.conversationInsights.effectiveExamples) &&
+                                 taskCompletion.evaluation.conversationInsights.effectiveExamples.length > 0 && (
                                   <div>
                                     <p className="text-xs font-medium text-green-700 dark:text-green-300 mb-1">
                                       {t('pbl:learn.effectiveExamples')}
                                     </p>
-                                    {task.evaluation.conversationInsights.effectiveExamples.map((example, idx) => (
+                                    {taskCompletion.evaluation.conversationInsights.effectiveExamples.map((example, idx) => (
                                       <div key={idx} className="bg-green-50 dark:bg-green-900/20 rounded p-2 mb-1">
                                         <p className="text-xs italic border-l-2 border-green-300 dark:border-green-500 pl-2 mb-1">
                                           &ldquo;{example.quote}&rdquo;
@@ -735,14 +744,14 @@ export default function ProgramCompletePage() {
                                 )}
                                 
                                 {/* Improvement Areas */}
-                                {task.evaluation.conversationInsights.improvementAreas && 
-                                 Array.isArray(task.evaluation.conversationInsights.improvementAreas) &&
-                                 task.evaluation.conversationInsights.improvementAreas.length > 0 && (
+                                {taskCompletion.evaluation.conversationInsights.improvementAreas && 
+                                 Array.isArray(taskCompletion.evaluation.conversationInsights.improvementAreas) &&
+                                 taskCompletion.evaluation.conversationInsights.improvementAreas.length > 0 && (
                                   <div>
                                     <p className="text-xs font-medium text-yellow-700 dark:text-yellow-300 mb-1">
                                       {t('pbl:learn.improvementExamples')}
                                     </p>
-                                    {task.evaluation.conversationInsights.improvementAreas.map((area, idx) => (
+                                    {taskCompletion.evaluation.conversationInsights.improvementAreas.map((area, idx) => (
                                       <div key={idx} className="bg-yellow-50 dark:bg-yellow-900/20 rounded p-2 mb-1">
                                         <p className="text-xs italic border-l-2 border-yellow-300 dark:border-yellow-500 pl-2 mb-1">
                                           &ldquo;{area.quote}&rdquo;
@@ -757,15 +766,15 @@ export default function ProgramCompletePage() {
                           )}
                           
                           {/* Strengths */}
-                          {task.evaluation.strengths && 
-                           Array.isArray(task.evaluation.strengths) &&
-                           task.evaluation.strengths.length > 0 && (
+                          {taskCompletion.evaluation.strengths && 
+                           Array.isArray(taskCompletion.evaluation.strengths) &&
+                           taskCompletion.evaluation.strengths.length > 0 && (
                             <div>
                               <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 {t('pbl:complete.strengths')}
                               </h4>
                               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                                {task.evaluation.strengths.map((strength, idx) => (
+                                {taskCompletion.evaluation.strengths.map((strength, idx) => (
                                   <li key={idx} className="flex items-start">
                                     <span className="text-green-500 mr-2">✓</span>
                                     {strength}
@@ -776,15 +785,15 @@ export default function ProgramCompletePage() {
                           )}
                           
                           {/* Areas for Improvement */}
-                          {task.evaluation.improvements && 
-                           Array.isArray(task.evaluation.improvements) &&
-                           task.evaluation.improvements.length > 0 && (
+                          {taskCompletion.evaluation.improvements && 
+                           Array.isArray(taskCompletion.evaluation.improvements) &&
+                           taskCompletion.evaluation.improvements.length > 0 && (
                             <div>
                               <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 {t('pbl:complete.improvements')}
                               </h4>
                               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                                {task.evaluation.improvements.map((improvement, idx) => (
+                                {taskCompletion.evaluation.improvements.map((improvement, idx) => (
                                   <li key={idx} className="flex items-start">
                                     <span className="text-yellow-500 mr-2">•</span>
                                     {improvement}

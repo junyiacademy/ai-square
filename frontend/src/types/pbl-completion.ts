@@ -76,6 +76,14 @@ export interface TaskProgress {
 // Task data in completion
 export interface CompletionTask {
   taskId: string;
+  taskTitle?: string;
+  status?: string;
+  score?: number;
+  domainScores?: Record<string, number>;
+  ksaScores?: Record<string, number>;
+  feedback?: string;
+  evaluatedAt?: string;
+  attempts?: number;
   evaluation?: TaskEvaluation;
   log?: TaskLog;
   progress?: TaskProgress;
