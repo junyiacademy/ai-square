@@ -121,6 +121,8 @@ interface AssessmentCompletionData {
     weaknesses: string[];
     opportunities: string[];
   };
+  assessmentId?: string; // For navigation
+  sessionId?: string; // For navigation
 }
 
 interface PBLCompletionData {

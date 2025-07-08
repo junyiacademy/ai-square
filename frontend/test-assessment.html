@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assessment Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    .status {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    .info {
+      background-color: #d1ecf1;
+      color: #0c5460;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px 0;
+      cursor: pointer;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Assessment API Test</h1>
+  
+  <button onclick="testSession()">Test Session Creation</button>
+  <button onclick="testQuestions()">Test Questions Loading</button>
+  <button onclick="fullAssessmentFlow()">Full Assessment Flow</button>
+  
+  <div id="results"></div>
+
+  <script>
+    const BASE_URL = 'http://localhost:3000';
+    const resultsDiv = document.getElementById('results');
+
+    function addResult(message, type = 'info') {
+      const div = document.createElement('div');
+      div.className = `status ${type}`;
+      div.innerHTML = message;
+      resultsDiv.appendChild(div);
+    }
+
+    async function testSession() {
+      resultsDiv.innerHTML = '';
+      addResult('Testing session creation...');
+      
+      try {
+        const response = await fetch(`${BASE_URL}/api/v2/assessment/session`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionType: 'comprehensive',
+            language: 'en'
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          addResult(`✅ Session created: ${data.sessionId}`, 'success');
+          addResult(`<pre>${JSON.stringify(data, null, 2)}</pre>`, 'info');
+        } else {
+          addResult(`❌ Error: ${data.error}\n${data.details || ''}`, 'error');
+        }
+      } catch (error) {
+        addResult(`❌ Fetch error: ${error.message}`, 'error');
+      }
+    }
+
+    async function testQuestions() {
+      resultsDiv.innerHTML = '';
+      addResult('Testing questions loading...');
+      
+      try {
+        const response = await fetch(`${BASE_URL}/api/v2/assessment/questions`);
+        const data = await response.json();
+        
+        if (response.ok) {
+          addResult(`✅ Loaded ${data.questions.length} questions`, 'success');
+          addResult(`Domains: ${Object.keys(data.domains).join(', ')}`, 'info');
+          addResult(`First question: <pre>${JSON.stringify(data.questions[0], null, 2)}</pre>`, 'info');
+        } else {
+          addResult(`❌ Error: ${data.error}`, 'error');
+        }
+      } catch (error) {
+        addResult(`❌ Fetch error: ${error.message}`, 'error');
+      }
+    }
+
+    async function fullAssessmentFlow() {
+      resultsDiv.innerHTML = '';
+      addResult('<h3>Running Full Assessment Flow</h3>', 'info');
+      
+      try {
+        // 1. Create session
+        addResult('1. Creating session...');
+        const sessionResponse = await fetch(`${BASE_URL}/api/v2/assessment/session`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionType: 'comprehensive', language: 'en' })
+        });
+        
+        if (!sessionResponse.ok) throw new Error('Session creation failed');
+        const { sessionId } = await sessionResponse.json();
+        addResult(`✅ Session created: ${sessionId}`, 'success');
+        
+        // 2. Load questions
+        addResult('2. Loading questions...');
+        const questionsResponse = await fetch(`${BASE_URL}/api/v2/assessment/questions`);
+        if (!questionsResponse.ok) throw new Error('Questions loading failed');
+        
+        const { questions } = await questionsResponse.json();
+        addResult(`✅ Loaded ${questions.length} questions`, 'success');
+        
+        // 3. Simulate answers
+        addResult('3. Simulating answers...');
+        const responses = questions.map(q => ({
+          questionId: q.id,
+          answer: ['a', 'b', 'c', 'd'][Math.floor(Math.random() * 4)],
+          timeSpent: 30
+        }));
+        
+        // 4. Submit assessment
+        addResult('4. Submitting assessment...');
+        const submitResponse = await fetch(`${BASE_URL}/api/v2/assessment/submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionId,
+            responses,
+            totalTimeSpent: 600,
+            completedAt: new Date().toISOString()
+          })
+        });
+        
+        if (!submitResponse.ok) throw new Error('Submit failed');
+        const results = await submitResponse.json();
+        
+        addResult(`✅ Assessment completed!`, 'success');
+        addResult(`Overall Score: ${results.overallScore}%`, 'success');
+        addResult(`<pre>${JSON.stringify(results, null, 2)}</pre>`, 'info');
+        
+      } catch (error) {
+        addResult(`❌ Error: ${error.message}`, 'error');
+      }
+    }
+  </script>
+</body>
+</html>

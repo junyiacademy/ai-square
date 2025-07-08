@@ -6,23 +6,27 @@ The V2 architecture is a complete rewrite of AI Square's backend, designed with 
 
 ## Core Architecture
 
-### TRACK → PROGRAM → TASK → LOG
+### SCENARIO → PROGRAM → TASK → LOG
 
 The V2 system follows a hierarchical learning structure with flexible patterns:
 
-1. **Track**: High-level learning paths (e.g., "AI Literacy", "Prompt Engineering")
-   - `structure_type`: Controls how programs and tasks are organized
-     - `standard`: Traditional multi-program structure (PBL scenarios)
-     - `single_program`: One program per track (Discovery mode)
-     - `direct_task`: Virtual program with direct tasks (Assessments)
+1. **Scenario**: User's learning journey for a specific project/exam/career
+   - Each user has one active scenario per learning project
+   - Tracks the overall progress and status
+   - Examples:
+     - PBL: "John's AI Job Search Learning Journey"
+     - Discovery: "Exploring AI PM Career Path"
+     - Assessment: "Mary's AI Literacy Assessment Journey"
      
-2. **Program**: Specific courses within a track (e.g., "Beginner", "Intermediate")
-   - `is_virtual`: Indicates auto-generated programs
-   - `auto_generated`: True for system-created programs
+2. **Program**: Specific phases or attempts within a scenario
+   - PBL: Learning stages (Foundation → Advanced)
+   - Discovery: Different career scenarios (Daily → Crisis → Growth)
+   - Assessment: Test attempts (Practice 1 → Practice 2 → Formal)
    
 3. **Task**: Individual learning activities within a program
-   - `task_type`: Core type (learning, practice, assessment)
-   - `task_variant`: Specific implementation (standard, question, exploration, assessment)
+   - PBL: Learning tasks with AI evaluation
+   - Discovery: Experience tasks (can be dynamically added)
+   - Assessment: Quiz questions with standard answers
    
 4. **Log**: Detailed activity logs for each task (chat, submissions, evaluations)
 
@@ -37,10 +41,10 @@ v2/
 ├── types/               # TypeScript type definitions
 │   └── index.ts
 ├── repositories/        # Data access layer
-│   ├── track-repository.ts
+│   ├── scenario-repository.ts
 │   ├── program-repository.ts
 │   ├── task-repository.ts
-│   └── user-repository.ts
+│   └── log-repository.ts
 ├── services/           # Business logic layer
 │   ├── storage-service.ts
 │   ├── base-learning-service.ts
@@ -85,36 +89,48 @@ v2/
 
 The V2 architecture implements a flexible learning structure that accommodates different learning patterns:
 
-### Structure Types
+### Learning Patterns
 
-1. **Standard Structure** (PBL Scenarios)
+1. **PBL Structure** (Multi-stage learning)
    ```
-   Track (AI Literacy)
-   ├── Program 1 (Beginner)
-   │   ├── Task 1
-   │   ├── Task 2
-   │   └── Task 3
-   └── Program 2 (Intermediate)
-       ├── Task 1
-       └── Task 2
-   ```
-
-2. **Single Program Structure** (Discovery Mode)
-   ```
-   Track (Exploring AI Ethics)
-   └── Program (Auto-generated)
-       ├── Task 1 (Explore basics)
-       ├── Task 2 (Hands-on practice)
-       └── Task 3 (Reflection)
+   Project: "AI-Powered Job Search"
+   └── Scenario: "John's Learning Journey"
+       ├── Program 1: "Foundation"
+       │   ├── Task 1: Understanding AI Tools
+       │   ├── Task 2: Resume Optimization
+       │   └── Task 3: Job Matching
+       └── Program 2: "Advanced"
+           ├── Task 1: Advanced AI Tools
+           ├── Task 2: Portfolio Building
+           └── Task 3: Interview Preparation
    ```
 
-3. **Direct Task Structure** (Quick Assessments)
+2. **Discovery Structure** (Dynamic exploration)
    ```
-   Track (AI Knowledge Assessment)
-   └── Program (Virtual)
-       ├── Question 1
-       ├── Question 2
-       └── Question 3
+   Career: "AI Product Manager"
+   └── Scenario: "Exploring AI PM Career"
+       ├── Program 1: "Day in the Life"
+       │   ├── Task 1: Morning Briefing
+       │   ├── Task 2: Feature Planning
+       │   └── Task 3: Stakeholder Meeting
+       └── Program 2: "Crisis Management"
+           ├── Task 1: Problem Analysis
+           ├── Task 2: Solution Design
+           └── Task 3: Crisis Communication
+   ```
+
+3. **Assessment Structure** (Multiple attempts)
+   ```
+   Exam: "AI Literacy Assessment"
+   └── Scenario: "Mary's Assessment Journey"
+       ├── Program 1: "Practice Round 1"
+       │   ├── Question 1: Score 80%
+       │   ├── Question 2: Score 60%
+       │   └── Question 3: Score 100%
+       └── Program 2: "Formal Assessment"
+           ├── Question 1: Score 100%
+           ├── Question 2: Score 90%
+           └── Question 3: Score 100%
    ```
 
 ### Service Architecture
@@ -236,62 +252,96 @@ The V2 system is designed to run alongside V1 during the migration period:
 
 ## Database Schema
 
-### tracks_v2
+### learning_projects_v2
 ```sql
-CREATE TABLE tracks_v2 (
-  id VARCHAR(255) PRIMARY KEY,
+CREATE TABLE learning_projects_v2 (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  type VARCHAR(50) NOT NULL, -- 'pbl', 'discovery', 'assessment'
   code VARCHAR(100) UNIQUE NOT NULL,
-  title VARCHAR(255) NOT NULL,
+  title VARCHAR(500) NOT NULL,
   description TEXT,
-  order_index INTEGER NOT NULL,
+  objectives JSONB NOT NULL DEFAULT '[]',
+  prerequisites JSONB DEFAULT '[]',
+  metadata JSONB NOT NULL DEFAULT '{}',
   is_active BOOLEAN DEFAULT true,
-  structure_type VARCHAR(50) NOT NULL DEFAULT 'standard',
-  metadata JSONB,
-  created_at TIMESTAMP NOT NULL,
-  updated_at TIMESTAMP NOT NULL
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### scenarios_v2
+```sql
+CREATE TABLE scenarios_v2 (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  project_id UUID NOT NULL REFERENCES learning_projects_v2(id) ON DELETE CASCADE,
+  type VARCHAR(50) NOT NULL, -- 'pbl', 'discovery', 'assessment'
+  title VARCHAR(500) NOT NULL,
+  status VARCHAR(50) NOT NULL DEFAULT 'created',
+  metadata JSONB DEFAULT '{}',
+  started_at TIMESTAMP WITH TIME ZONE,
+  completed_at TIMESTAMP WITH TIME ZONE,
+  last_active_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 ```
 
 ### programs_v2
 ```sql
 CREATE TABLE programs_v2 (
-  id VARCHAR(255) PRIMARY KEY,
-  track_id VARCHAR(255) REFERENCES tracks_v2(id),
-  code VARCHAR(100) NOT NULL,
-  title VARCHAR(255) NOT NULL,
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  scenario_id UUID NOT NULL REFERENCES scenarios_v2(id) ON DELETE CASCADE,
+  title VARCHAR(500) NOT NULL,
   description TEXT,
-  duration_hours INTEGER,
-  difficulty_level VARCHAR(50),
-  order_index INTEGER NOT NULL,
-  is_active BOOLEAN DEFAULT true,
-  is_virtual BOOLEAN DEFAULT false,
-  auto_generated BOOLEAN DEFAULT false,
-  metadata JSONB,
-  created_at TIMESTAMP NOT NULL,
-  updated_at TIMESTAMP NOT NULL,
-  UNIQUE(track_id, code)
+  program_order INTEGER NOT NULL,
+  status VARCHAR(50) NOT NULL DEFAULT 'pending',
+  config JSONB DEFAULT '{}',
+  metadata JSONB DEFAULT '{}',
+  started_at TIMESTAMP WITH TIME ZONE,
+  completed_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(scenario_id, program_order)
 );
 ```
 
 ### tasks_v2
 ```sql
 CREATE TABLE tasks_v2 (
-  id VARCHAR(255) PRIMARY KEY,
-  program_id VARCHAR(255) REFERENCES programs_v2(id),
-  code VARCHAR(100) NOT NULL,
-  title VARCHAR(255) NOT NULL,
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  program_id UUID REFERENCES programs_v2(id) ON DELETE CASCADE,
+  title VARCHAR(500) NOT NULL,
   description TEXT,
   instructions TEXT,
-  evaluation_criteria TEXT[],
-  order_index INTEGER NOT NULL,
-  is_active BOOLEAN DEFAULT true,
-  task_type VARCHAR(50) NOT NULL,
-  task_variant VARCHAR(50) DEFAULT 'standard',
-  estimated_minutes INTEGER,
-  metadata JSONB,
-  created_at TIMESTAMP NOT NULL,
-  updated_at TIMESTAMP NOT NULL,
-  UNIQUE(program_id, code)
+  task_order INTEGER NOT NULL,
+  type VARCHAR(50) NOT NULL,
+  required_ksa TEXT[] DEFAULT '{}',
+  config JSONB DEFAULT '{}',
+  metadata JSONB DEFAULT '{}',
+  status VARCHAR(50) NOT NULL DEFAULT 'pending',
+  started_at TIMESTAMP WITH TIME ZONE,
+  completed_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(program_id, task_order)
+);
+```
+
+### logs_v2
+```sql
+CREATE TABLE logs_v2 (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  scenario_id UUID NOT NULL REFERENCES scenarios_v2(id) ON DELETE CASCADE,
+  program_id UUID REFERENCES programs_v2(id) ON DELETE CASCADE,
+  task_id UUID REFERENCES tasks_v2(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  log_type VARCHAR(50) NOT NULL,
+  activity VARCHAR(100) NOT NULL,
+  data JSONB NOT NULL DEFAULT '{}',
+  metadata JSONB DEFAULT '{}',
+  duration_seconds INTEGER,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 ```
 
@@ -307,10 +357,14 @@ CREATE TABLE tasks_v2 (
 
 ## API Endpoints
 
-### Track Management
-- `POST /api/v2/tracks` - Create a new track with flexible structure
-- `GET /api/v2/tracks` - List all tracks (supports filtering by structure_type)
-- `GET /api/v2/tracks/[id]` - Get track with full hierarchy
+### Scenario Management
+- `POST /api/v2/scenarios` - Start a new scenario for a project
+- `GET /api/v2/scenarios` - List user's active scenarios
+- `GET /api/v2/scenarios/[id]` - Get scenario with full hierarchy
+
+### Task Management
+- `POST /api/v2/tasks/[taskId]/submit` - Submit task response
+- `GET /api/v2/tasks/[taskId]/logs` - Get task activity logs
 
 ### Quick Actions
 - `POST /api/v2/quick-assessment` - Create a quick assessment
