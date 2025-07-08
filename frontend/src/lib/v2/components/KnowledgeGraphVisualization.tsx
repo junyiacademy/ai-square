@@ -144,15 +144,15 @@ export function KnowledgeGraphVisualization({ overallScore, ksaDemonstrated, tas
     nodes.push({
       id: 'center',
       type: 'center',
-      label: 'AI Literacy Profile',
+      label: 'AI Literacy',
       score: overallScore
     });
 
     // Add KSA type nodes
     const ksaTypes = [
-      { id: 'knowledge', label: 'Knowledge', color: '#3b82f6' },
-      { id: 'skills', label: 'Skills', color: '#10b981' },
-      { id: 'attitudes', label: 'Attitudes', color: '#a855f7' }
+      { id: 'knowledge', label: 'K', color: '#3b82f6' },
+      { id: 'skills', label: 'S', color: '#10b981' },
+      { id: 'attitudes', label: 'A', color: '#a855f7' }
     ];
 
     ksaTypes.forEach(ksaType => {
@@ -435,7 +435,7 @@ export function KnowledgeGraphVisualization({ overallScore, ksaDemonstrated, tas
         return '#374151';
       })
       .attr('font-size', (d) => {
-        if (d.type === 'center') return '16px';
+        if (d.type === 'center') return '14px';
         if (d.type === 'ksa-type') return '13px';
         if (d.type === 'ksa-theme') return '11px';
         return '10px';
@@ -569,8 +569,8 @@ export function KnowledgeGraphVisualization({ overallScore, ksaDemonstrated, tas
               <svg ref={svgRef} className="w-full" />
             </div>
 
-            {/* Legend */}
-            <div className="absolute top-4 left-4 bg-white rounded-lg shadow-md p-3 text-xs">
+            {/* Legend - Hidden on small screens or when TaskReview is open */}
+            <div className={`${showTaskReview ? 'hidden' : 'hidden lg:block'} absolute top-4 left-4 bg-white rounded-lg shadow-md p-3 text-xs`}>
               <div className="font-semibold mb-2">Legend</div>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
@@ -595,10 +595,21 @@ export function KnowledgeGraphVisualization({ overallScore, ksaDemonstrated, tas
                 </div>
               </div>
             </div>
+            
+            {/* Compact Legend for small screens or when TaskReview is open */}
+            <div className={`${showTaskReview ? 'block' : 'lg:hidden'} absolute top-2 left-2 bg-white/90 rounded px-2 py-1 text-xs`}>
+              <div className="flex items-center gap-1">
+                <Circle className="w-2 h-2 text-red-500 fill-red-500" />
+                <Circle className="w-2 h-2 text-yellow-500 fill-yellow-500" />
+                <Circle className="w-2 h-2 text-green-500 fill-green-500" />
+                <span className="ml-1 text-gray-600">Mastery</span>
+              </div>
+            </div>
 
             {/* Instructions */}
-            <div className="absolute bottom-4 left-4 bg-white/90 rounded px-2 py-1 text-xs text-gray-600">
-              Click nodes for details • Drag to rearrange • Scroll to zoom
+            <div className="absolute bottom-2 left-2 bg-white/90 rounded px-2 py-1 text-xs text-gray-600">
+              <span className={`${showTaskReview ? 'hidden' : 'hidden sm:inline'}`}>Click nodes for details • Drag to rearrange • Scroll to zoom</span>
+              <span className={`${showTaskReview ? 'inline' : 'sm:hidden'}`}>Tap nodes • Drag • Zoom</span>
             </div>
           </div>
 
