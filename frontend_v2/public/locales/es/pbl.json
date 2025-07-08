@@ -1,0 +1,13 @@
+{
+  "title": "Problem-Based Learning",
+  "subtitle": "Learn through real-world scenarios",
+  "description": "Apply your knowledge to solve practical problems",
+  "scenarios": "Scenarios",
+  "startScenario": "Start Scenario",
+  "continueScenario": "Continue Scenario",
+  "scenarioProgress": "Scenario Progress",
+  "tasks": "Tasks",
+  "completed": "Completed",
+  "inProgress": "In Progress",
+  "notStarted": "Not Started"
+}

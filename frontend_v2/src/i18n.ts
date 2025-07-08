@@ -244,6 +244,34 @@ import itLegal from '../public/locales/it/legal.json';
 // Discovery 翻譯
 import enDiscovery from '../public/locales/en/discovery.json';
 import zhTWDiscovery from '../public/locales/zhTW/discovery.json';
+import zhCNDiscovery from '../public/locales/zhCN/discovery.json';
+import ptDiscovery from '../public/locales/pt/discovery.json';
+import arDiscovery from '../public/locales/ar/discovery.json';
+import idDiscovery from '../public/locales/id/discovery.json';
+import thDiscovery from '../public/locales/th/discovery.json';
+import esDiscovery from '../public/locales/es/discovery.json';
+import jaDiscovery from '../public/locales/ja/discovery.json';
+import koDiscovery from '../public/locales/ko/discovery.json';
+import frDiscovery from '../public/locales/fr/discovery.json';
+import deDiscovery from '../public/locales/de/discovery.json';
+import ruDiscovery from '../public/locales/ru/discovery.json';
+import itDiscovery from '../public/locales/it/discovery.json';
+
+// V2 翻譯
+import enV2 from '../public/locales/en/v2.json';
+import zhTWV2 from '../public/locales/zhTW/v2.json';
+import zhCNV2 from '../public/locales/zhCN/v2.json';
+import ptV2 from '../public/locales/pt/v2.json';
+import arV2 from '../public/locales/ar/v2.json';
+import idV2 from '../public/locales/id/v2.json';
+import thV2 from '../public/locales/th/v2.json';
+import esV2 from '../public/locales/es/v2.json';
+import jaV2 from '../public/locales/ja/v2.json';
+import koV2 from '../public/locales/ko/v2.json';
+import frV2 from '../public/locales/fr/v2.json';
+import deV2 from '../public/locales/de/v2.json';
+import ruV2 from '../public/locales/ru/v2.json';
+import itV2 from '../public/locales/it/v2.json';
 
 // 在伺服器端和客戶端都使用相同的預設語言避免 hydration mismatch
 const getDefaultLng = () => {
@@ -272,7 +300,8 @@ i18n
         journey: zhTWJourney,
         learning: zhTWLearning,
         legal: zhTWLegal,
-        discovery: zhTWDiscovery
+        discovery: zhTWDiscovery,
+        v2: zhTWV2
       },
       'zhCN': { 
         relations: zhCNRelations,
@@ -289,7 +318,9 @@ i18n
         learningPath: zhCNLearningPath,
         journey: zhCNJourney,
         learning: zhCNLearning,
-        legal: zhCNLegal
+        legal: zhCNLegal,
+        discovery: zhCNDiscovery,
+        v2: zhCNV2
       },
       'pt': { 
         relations: ptRelations,
@@ -306,7 +337,9 @@ i18n
         learningPath: ptLearningPath,
         journey: ptJourney,
         learning: ptLearning,
-        legal: ptLegal
+        legal: ptLegal,
+        discovery: ptDiscovery,
+        v2: ptV2
       },
       'ar': { 
         relations: arRelations,
@@ -323,7 +356,9 @@ i18n
         learningPath: arLearningPath,
         journey: arJourney,
         learning: arLearning,
-        legal: arLegal
+        legal: arLegal,
+        discovery: arDiscovery,
+        v2: arV2
       },
       'id': { 
         relations: idRelations,
@@ -340,7 +375,9 @@ i18n
         learningPath: idLearningPath,
         journey: idJourney,
         learning: idLearning,
-        legal: idLegal
+        legal: idLegal,
+        discovery: idDiscovery,
+        v2: idV2
       },
       'th': { 
         relations: thRelations,
@@ -357,7 +394,9 @@ i18n
         learningPath: thLearningPath,
         journey: thJourney,
         learning: thLearning,
-        legal: thLegal
+        legal: thLegal,
+        discovery: thDiscovery,
+        v2: thV2
       },
       en: { 
         relations: enRelations,
@@ -375,7 +414,8 @@ i18n
         journey: enJourney,
         learning: enLearning,
         legal: enLegal,
-        discovery: enDiscovery
+        discovery: enDiscovery,
+        v2: enV2
       },
       es: { 
         relations: esRelations,
@@ -392,7 +432,9 @@ i18n
         learningPath: esLearningPath,
         journey: esJourney,
         learning: esLearning,
-        legal: esLegal
+        legal: esLegal,
+        discovery: esDiscovery,
+        v2: esV2
       },
       ja: { 
         relations: jaRelations,
@@ -409,7 +451,9 @@ i18n
         learningPath: jaLearningPath,
         journey: jaJourney,
         learning: jaLearning,
-        legal: jaLegal
+        legal: jaLegal,
+        discovery: jaDiscovery,
+        v2: jaV2
       },
       ko: { 
         relations: koRelations,
@@ -426,7 +470,9 @@ i18n
         learningPath: koLearningPath,
         journey: koJourney,
         learning: koLearning,
-        legal: koLegal
+        legal: koLegal,
+        discovery: koDiscovery,
+        v2: koV2
       },
       fr: { 
         relations: frRelations,
@@ -443,7 +489,9 @@ i18n
         learningPath: frLearningPath,
         journey: frJourney,
         learning: frLearning,
-        legal: frLegal
+        legal: frLegal,
+        discovery: frDiscovery,
+        v2: frV2
       },
       de: { 
         relations: deRelations,
@@ -460,7 +508,9 @@ i18n
         learningPath: deLearningPath,
         journey: deJourney,
         learning: deLearning,
-        legal: deLegal
+        legal: deLegal,
+        discovery: deDiscovery,
+        v2: deV2
       },
       ru: { 
         relations: ruRelations,
@@ -477,7 +527,9 @@ i18n
         learningPath: ruLearningPath,
         journey: ruJourney,
         learning: ruLearning,
-        legal: ruLegal
+        legal: ruLegal,
+        discovery: ruDiscovery,
+        v2: ruV2
       },
       it: { 
         relations: itRelations,
@@ -494,7 +546,9 @@ i18n
         learningPath: itLearningPath,
         journey: itJourney,
         learning: itLearning,
-        legal: itLegal
+        legal: itLegal,
+        discovery: itDiscovery,
+        v2: itV2
       },
     },
     lng: getDefaultLng(),

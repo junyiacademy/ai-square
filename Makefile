@@ -338,7 +338,7 @@ run-frontend:
 
 run-frontend-v2:
 	@echo "$(GREEN)🚀 啟動前端開發伺服器 v2 $(NC)"
-	cd frontend && npm run dev
+	cd frontend_v2 && npm run dev
 
 ## 後端開發
 run-backend:
