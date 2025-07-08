@@ -1,0 +1,49 @@
+{
+  "welcome": "ยินดีต้อนรับกลับมา {{name}}!",
+  "subtitle": "นี่คือภาพรวมความก้าวหน้าด้านการรู้เท่าทัน AI ของคุณ",
+  "aiLiteracyProgress": "ความก้าวหน้าการรู้เท่าทัน AI",
+  "domains": {
+    "engaging_with_ai": "การมีปฏิสัมพันธ์กับ AI",
+    "creating_with_ai": "การสร้างสรรค์ด้วย AI",
+    "managing_with_ai": "การจัดการด้วย AI",
+    "designing_with_ai": "การออกแบบด้วย AI"
+  },
+  "viewDetailedProgress": "ดูเส้นทางการเรียนรู้โดยละเอียด",
+  "learningStatistics": "สถิติการเรียนรู้",
+  "completedScenarios": "เสร็จสิ้น",
+  "inProgress": "กำลังดำเนินการ",
+  "learningHours": "ชั่วโมง",
+  "dayStreak": "วันต่อเนื่อง",
+  "recentActivities": "กิจกรรมล่าสุด",
+  "noRecentActivities": "ไม่มีกิจกรรมล่าสุด เริ่มเรียนรู้เพื่อดูความก้าวหน้าของคุณที่นี่!",
+  "activities": {
+    "completedAssessment": "เสร็จสิ้นการประเมินการรู้เท่าทัน AI",
+    "assessmentDesc": "ค้นพบพื้นฐานความรู้ AI ของคุณ"
+  },
+  "recommendedActions": "ขั้นตอนต่อไปที่แนะนำ",
+  "nextActions": {
+    "takeAssessment": "ทำการประเมินการรู้เท่าทัน AI",
+    "assessmentDesc": "ค้นพบระดับความรู้ AI ปัจจุบันของคุณและรับคำแนะนำเฉพาะบุคคล",
+    "viewLearningPath": "ดูเส้นทางการเรียนรู้ของคุณ",
+    "learningPathDesc": "ดูคำแนะนำเฉพาะบุคคลตามผลการประเมินของคุณ",
+    "startPBL": "เริ่มสถานการณ์ PBL",
+    "pblDesc": "ฝึกฝนทักษะ AI ในโลกแห่งความเป็นจริงด้วยสถานการณ์แบบโต้ตอบ"
+  },
+  "priority": {
+    "high": "สูง",
+    "medium": "ปานกลาง",
+    "low": "ต่ำ"
+  },
+  "quickLinks": "ลิงก์ด่วน",
+  "explorePBL": "สำรวจสถานการณ์ PBL",
+  "viewCompetencies": "ดูสมรรถนะ AI",
+  "viewHistory": "ดูประวัติการเรียนรู้",
+  "exploreKSA": "สำรวจแผนที่ความรู้",
+  "yourGoals": "เป้าหมายการเรียนรู้ของคุณ",
+  "updateGoals": "อัปเดตเป้าหมายของคุณ",
+  "learningPathQuickAccess": "คำแนะนำการเรียนรู้เฉพาะบุคคล",
+  "learningPathDescription": "สำรวจสถานการณ์การเรียนรู้ AI ที่ปรับแต่งให้เหมาะกับผลการประเมินและความสนใจของคุณ เลือกพื้นที่ที่เหมาะสมกับความต้องการของคุณมากที่สุด",
+  "viewAllPaths": "ดูเส้นทางการเรียนรู้ทั้งหมด",
+  "focusOnWeakAreas": "มุ่งเน้นจุดอ่อน",
+  "aiAdvisor": "ที่ปรึกษาการเรียนรู้ AI"
+}

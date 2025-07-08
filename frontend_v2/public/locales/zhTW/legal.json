@@ -1,0 +1,171 @@
+{
+  "privacy": {
+    "title": "Privacy Policy [Chinese (Traditional)]",
+    "lastUpdated": "Last updated [Chinese (Traditional)]",
+    "intro": "AI Square (\"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI literacy education platform. [Chinese (Traditional)]",
+    "infoCollect": {
+      "title": "1. Information We Collect [Chinese (Traditional)]",
+      "personal": "Personal Information [Chinese (Traditional)]",
+      "email": "Email address [Chinese (Traditional)]",
+      "name": "Name (optional) [Chinese (Traditional)]",
+      "role": "User role (student, teacher, admin) [Chinese (Traditional)]",
+      "language": "Language preference [Chinese (Traditional)]",
+      "usage": "Usage Data [Chinese (Traditional)]",
+      "learning": "Learning progress and assessment results [Chinese (Traditional)]",
+      "interactions": "Interactions with AI tutors [Chinese (Traditional)]",
+      "scenarios": "PBL scenario completion data [Chinese (Traditional)]",
+      "analytics": "Platform usage analytics [Chinese (Traditional)]",
+      "technical": "Technical Data [Chinese (Traditional)]",
+      "browser": "Browser type and version [Chinese (Traditional)]",
+      "device": "Device information [Chinese (Traditional)]",
+      "ip": "IP address (anonymized) [Chinese (Traditional)]",
+      "timezone": "Time zone settings [Chinese (Traditional)]"
+    },
+    "howUse": {
+      "title": "2. How We Use Your Information [Chinese (Traditional)]",
+      "provide": "To provide and maintain our service [Chinese (Traditional)]",
+      "personalize": "To personalize your learning experience [Chinese (Traditional)]",
+      "communicate": "To communicate with you about your account [Chinese (Traditional)]",
+      "improve": "To improve our platform and develop new features [Chinese (Traditional)]",
+      "analyze": "To analyze usage patterns and optimize performance [Chinese (Traditional)]",
+      "security": "To detect and prevent security threats [Chinese (Traditional)]"
+    },
+    "storage": {
+      "title": "3. Data Storage and Security [Chinese (Traditional)]",
+      "location": "Your data is stored securely on Google Cloud Platform servers. We implement appropriate technical and organizational measures to protect your personal information. [Chinese (Traditional)]",
+      "encryption": "Data encryption in transit and at rest [Chinese (Traditional)]",
+      "access": "Restricted access controls [Chinese (Traditional)]",
+      "monitoring": "Regular security monitoring [Chinese (Traditional)]",
+      "backup": "Secure backup procedures [Chinese (Traditional)]"
+    },
+    "sharing": {
+      "title": "4. Data Sharing and Disclosure [Chinese (Traditional)]",
+      "intro": "We do not sell, trade, or rent your personal information. We may share your information in the following situations: [Chinese (Traditional)]",
+      "consent": "With your consent [Chinese (Traditional)]",
+      "legal": "To comply with legal obligations [Chinese (Traditional)]",
+      "protect": "To protect our rights and safety [Chinese (Traditional)]",
+      "service": "With service providers who assist our operations [Chinese (Traditional)]"
+    },
+    "rights": {
+      "title": "5. Your Rights [Chinese (Traditional)]",
+      "intro": "You have the following rights regarding your personal data: [Chinese (Traditional)]",
+      "access": "Access your personal information [Chinese (Traditional)]",
+      "correct": "Correct inaccurate data [Chinese (Traditional)]",
+      "delete": "Request deletion of your data [Chinese (Traditional)]",
+      "export": "Export your data in a portable format [Chinese (Traditional)]",
+      "restrict": "Restrict processing of your data [Chinese (Traditional)]",
+      "withdraw": "Withdraw consent at any time [Chinese (Traditional)]"
+    },
+    "cookies": {
+      "title": "6. Cookies and Tracking [Chinese (Traditional)]",
+      "intro": "We use cookies and similar tracking technologies to enhance your experience. Essential cookies are required for platform functionality, while optional cookies help us improve our service. [Chinese (Traditional)]"
+    },
+    "children": {
+      "title": "7. Children's Privacy [Chinese (Traditional)]",
+      "content": "Our platform is designed for educational use by students of all ages. For users under 13, we require parental consent and limit data collection to essential information only. [Chinese (Traditional)]"
+    },
+    "international": {
+      "title": "8. International Data Transfers [Chinese (Traditional)]",
+      "content": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers. [Chinese (Traditional)]"
+    },
+    "changes": {
+      "title": "9. Changes to This Policy [Chinese (Traditional)]",
+      "content": "We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the \"Last Updated\" date. [Chinese (Traditional)]"
+    },
+    "contact": {
+      "title": "10. Contact Us [Chinese (Traditional)]",
+      "intro": "If you have questions about this Privacy Policy, please contact us at: [Chinese (Traditional)]"
+    }
+  },
+  "terms": {
+    "title": "Terms of Service [Chinese (Traditional)]",
+    "effectiveDate": "Effective Date [Chinese (Traditional)]",
+    "lastUpdated": "Last Updated [Chinese (Traditional)]",
+    "intro": "Welcome to AI Square! These Terms of Service (\"Terms\") govern your use of our AI literacy education platform. By accessing or using AI Square, you agree to be bound by these Terms. [Chinese (Traditional)]",
+    "acceptance": {
+      "title": "1. Acceptance of Terms [Chinese (Traditional)]",
+      "content": "By creating an account or using our services, you acknowledge that you have read, understood, and agree to these Terms. If you do not agree, please do not use our platform. [Chinese (Traditional)]",
+      "capacity": "You must be at least 13 years old to use our services. If you are under 18, you must have parental consent. [Chinese (Traditional)]"
+    },
+    "service": {
+      "title": "2. Description of Service [Chinese (Traditional)]",
+      "intro": "AI Square provides: [Chinese (Traditional)]",
+      "literacy": "AI literacy education content and assessments [Chinese (Traditional)]",
+      "pbl": "Problem-Based Learning (PBL) scenarios [Chinese (Traditional)]",
+      "ai": "AI-powered tutoring and feedback [Chinese (Traditional)]",
+      "tracking": "Progress tracking and analytics [Chinese (Traditional)]",
+      "multi": "Multi-language support (9 languages) [Chinese (Traditional)]"
+    },
+    "accounts": {
+      "title": "3. User Accounts [Chinese (Traditional)]",
+      "registration": "Registration [Chinese (Traditional)]",
+      "accurate": "Provide accurate and complete information [Chinese (Traditional)]",
+      "maintain": "Maintain and update your information [Chinese (Traditional)]",
+      "secure": "Keep your account credentials secure [Chinese (Traditional)]",
+      "responsible": "You are responsible for all activities under your account [Chinese (Traditional)]",
+      "types": "Account Types [Chinese (Traditional)]",
+      "student": "Student: Access to learning content and assessments [Chinese (Traditional)]",
+      "teacher": "Teacher: Additional class management features [Chinese (Traditional)]",
+      "admin": "Administrator: Platform management capabilities [Chinese (Traditional)]"
+    },
+    "use": {
+      "title": "4. Acceptable Use Policy [Chinese (Traditional)]",
+      "permitted": "You may: [Chinese (Traditional)]",
+      "educational": "Use the platform for educational purposes [Chinese (Traditional)]",
+      "share": "Share your learning progress appropriately [Chinese (Traditional)]",
+      "feedback": "Provide constructive feedback [Chinese (Traditional)]",
+      "prohibited": "You may not: [Chinese (Traditional)]",
+      "misuse": "Misuse or attempt to manipulate the AI systems [Chinese (Traditional)]",
+      "share_credentials": "Share account credentials [Chinese (Traditional)]",
+      "cheat": "Engage in academic dishonesty [Chinese (Traditional)]",
+      "harm": "Harass, abuse, or harm other users [Chinese (Traditional)]",
+      "illegal": "Use the platform for illegal activities [Chinese (Traditional)]",
+      "scrape": "Scrape or copy content without permission [Chinese (Traditional)]"
+    },
+    "ip": {
+      "title": "5. Intellectual Property [Chinese (Traditional)]",
+      "platform": "Platform Content [Chinese (Traditional)]",
+      "ownership": "All content on AI Square, including text, graphics, logos, and software, is owned by AI Square or its licensors and protected by intellectual property laws. [Chinese (Traditional)]",
+      "user": "User Content [Chinese (Traditional)]",
+      "retain": "You retain ownership of content you create. By submitting content, you grant us a license to use it for providing and improving our services. [Chinese (Traditional)]",
+      "open": "Open Source [Chinese (Traditional)]",
+      "git": "Educational content is managed through Git and may be subject to open-source licenses. Please check individual repositories for specific license terms. [Chinese (Traditional)]"
+    },
+    "privacy": {
+      "title": "6. Privacy and Data Protection [Chinese (Traditional)]",
+      "content": "Your use of AI Square is also governed by our Privacy Policy. We are committed to protecting your personal information and using it only as described in our Privacy Policy. [Chinese (Traditional)]"
+    },
+    "ai": {
+      "title": "7. AI Services and Limitations [Chinese (Traditional)]",
+      "disclaimer": "Our AI-powered features are designed to assist learning but are not perfect. We do not guarantee the accuracy of AI-generated content or feedback. [Chinese (Traditional)]",
+      "educational": "AI responses are for educational purposes only [Chinese (Traditional)]",
+      "verify": "Always verify important information independently [Chinese (Traditional)]",
+      "improve": "We continuously work to improve AI accuracy [Chinese (Traditional)]"
+    },
+    "disclaimers": {
+      "title": "8. Disclaimers and Limitations [Chinese (Traditional)]",
+      "asis": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND.",
+      "liability": "To the fullest extent permitted by law, AI Square shall not be liable for any indirect, incidental, special, consequential, or punitive damages. [Chinese (Traditional)]"
+    },
+    "modifications": {
+      "title": "9. Modifications to Terms [Chinese (Traditional)]",
+      "content": "We may modify these Terms at any time. We will notify users of material changes. Continued use after changes constitutes acceptance of the new Terms. [Chinese (Traditional)]"
+    },
+    "termination": {
+      "title": "10. Termination [Chinese (Traditional)]",
+      "rights": "We reserve the right to suspend or terminate accounts that violate these Terms. You may delete your account at any time. [Chinese (Traditional)]"
+    },
+    "law": {
+      "title": "11. Governing Law [Chinese (Traditional)]",
+      "content": "These Terms are governed by the laws of the jurisdiction where AI Square operates, without regard to conflict of law principles. [Chinese (Traditional)]"
+    },
+    "contact": {
+      "title": "12. Contact Information [Chinese (Traditional)]",
+      "intro": "For questions about these Terms, please contact us: [Chinese (Traditional)]"
+    },
+    "agreement": "By using AI Square, you acknowledge that you have read and agree to these Terms of Service. [Chinese (Traditional)]"
+  },
+  "common": {
+    "backToHome": "Back to Home [Chinese (Traditional)]"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "aiAdvisor": "AI 학습 어드바이저",
+  "newChat": "새 채팅",
+  "history": "채팅 기록",
+  "welcomeTitle": "안녕하세요! 저는 당신의 AI 학습 어드바이저입니다",
+  "welcomeMessage": "AI 리터러시 여정을 도와드리기 위해 여기 있습니다. 학습 경로, PBL 시나리오 또는 더 잘 이해하고 싶은 AI 개념에 대해 물어보세요.",
+  "inputPlaceholder": "여기에 메시지를 입력하세요... (Enter로 전송)",
+  "suggestedTopic1": "어떤 PBL 시나리오로 시작해야 할까요?",
+  "suggestedTopic2": "평가 결과를 이해하도록 도와주세요",
+  "suggestedTopic3": "제 약점은 무엇이고 어떻게 개선할 수 있나요?",
+  "suggestedTopic4": "AI 개념을 간단한 용어로 설명해주세요"
+}

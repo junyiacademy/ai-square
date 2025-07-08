@@ -1,0 +1,99 @@
+{
+  "welcome": {
+    "greeting": "Willkommen, {{name}}!",
+    "subtitle": "Lassen Sie uns gemeinsam Ihre KI-Kompetenz-Reise beginnen",
+    "step1": {
+      "title": "Entdecken Sie Ihren Weg",
+      "description": "AI Square hilft Ihnen, KI-Kompetenz zu verstehen und zu meistern",
+      "content": "Wir helfen Ihnen dabei, Ihre Stärken und Entwicklungsbereiche durch personalisierte Bewertungen und geführte Lernerfahrungen zu identifizieren.",
+      "assessment": "Intelligente Bewertung",
+      "assessmentDesc": "Entdecken Sie Ihr aktuelles KI-Wissensniveau",
+      "learning": "Personalisiertes Lernen",
+      "learningDesc": "Erhalten Sie maßgeschneiderte Empfehlungen basierend auf Ihren Zielen"
+    },
+    "step2": {
+      "title": "Vier Kernbereiche",
+      "description": "Meistern Sie die wesentlichen Bereiche der KI-Kompetenz",
+      "content": "Unser umfassendes Framework deckt alles ab, was Sie über den effektiven und verantwortungsvollen Umgang mit KI wissen müssen.",
+      "domains": "KI-Kompetenz-Bereiche",
+      "engaging": "Interaktion mit KI",
+      "creating": "Erstellen mit KI",
+      "managing": "Verwalten mit KI",
+      "designing": "Gestalten mit KI"
+    },
+    "step3": {
+      "title": "Beginnen Sie Ihre Reise",
+      "description": "Starten Sie mit einer Bewertung und entfalten Sie Ihr Potenzial",
+      "content": "Bereit, Ihr KI-Kompetenzniveau zu entdecken und personalisierte Lernempfehlungen zu erhalten?",
+      "ready": "Was Sie erhalten:",
+      "benefit1": "Detaillierte Bewertung Ihres KI-Wissens",
+      "benefit2": "Personalisierte Lernweg-Empfehlungen",
+      "benefit3": "Interaktive Szenarien und praktische Übungen"
+    },
+    "startJourney": "Beginnen Sie Ihre Reise"
+  },
+  "goals": {
+    "title": "Was möchten Sie erreichen?",
+    "subtitle": "Wählen Sie Ihre Lernziele aus, um personalisierte Empfehlungen zu erhalten",
+    "understand": {
+      "title": "KI-Grundlagen verstehen",
+      "description": "Lernen Sie die Grundlagen von KI, maschinellem Lernen und wie KI-Systeme funktionieren"
+    },
+    "create": {
+      "title": "Inhalte mit KI erstellen",
+      "description": "Nutzen Sie KI-Tools für Schreiben, Design, Kunst und kreative Projekte"
+    },
+    "analyze": {
+      "title": "Daten mit KI analysieren",
+      "description": "Wenden Sie KI für Datenanalyse, Erkenntnisse und Entscheidungsfindung an"
+    },
+    "build": {
+      "title": "KI-Lösungen entwickeln",
+      "description": "Entwickeln und implementieren Sie KI-Systeme und -Anwendungen"
+    },
+    "teach": {
+      "title": "KI anderen beibringen",
+      "description": "Bilden Sie andere im Verständnis und der Nutzung von KI aus und leiten Sie sie an"
+    },
+    "ethical": {
+      "title": "Ethische KI-Nutzung sicherstellen",
+      "description": "Verstehen und implementieren Sie verantwortungsvolle KI-Praktiken"
+    },
+    "recommendedDomains": "Empfohlene Bereiche",
+    "selected": "{{count}} Ziele ausgewählt",
+    "selectAtLeastOne": "Bitte wählen Sie mindestens ein Lernziel aus",
+    "continue": "Weiter zur Bewertung",
+    "skipForNow": "Vorerst überspringen",
+    "helpText": "Keine Sorge, Sie können diese später in Ihren Profileinstellungen ändern."
+  },
+  "progress": {
+    "welcome": "Willkommen",
+    "identity": "Identität",
+    "goals": "Ziele"
+  },
+  "identity": {
+    "title": "Wer sind Sie?",
+    "subtitle": "Helfen Sie uns, Ihre KI-Lernreise zu personalisieren",
+    "student": {
+      "title": "Student",
+      "description": "Ich studiere und möchte KI für mein Studium und meine zukünftige Karriere lernen"
+    },
+    "teacher": {
+      "title": "Pädagoge",
+      "description": "Ich unterrichte andere und möchte KI in meinen Lehrplan integrieren"
+    },
+    "professional": {
+      "title": "Berufstätiger",
+      "description": "Ich arbeite in der Industrie und möchte KI in meiner Rolle nutzen"
+    },
+    "learner": {
+      "title": "Lebenslanger Lerner",
+      "description": "Ich bin neugierig auf KI und möchte ihre Möglichkeiten erkunden"
+    }
+  },
+  "button": {
+    "back": "Zurück",
+    "continue": "Weiter",
+    "saving": "Wird gespeichert..."
+  }
+}

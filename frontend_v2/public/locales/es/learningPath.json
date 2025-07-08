@@ -1,0 +1,43 @@
+{
+  "title": "Tu Ruta de Aprendizaje",
+  "subtitle": "Recomendaciones personalizadas basadas en tu evaluación",
+  "yourProgress": "Tu Progreso",
+  "currentScore": "Puntuación Actual",
+  "targetScore": "Puntuación Objetivo",
+  "completed": "completado",
+  "recommendedPath": "Ruta de Aprendizaje Recomendada",
+  "startLearning": "Comenzar Aprendizaje",
+  "estimatedTime": "Tiempo estimado",
+  "weakDomainReason": "Esta es tu área más débil con {{score}}% de puntuación",
+  "difficulty": {
+    "beginner": "Principiante",
+    "intermediate": "Intermedio",
+    "advanced": "Avanzado"
+  },
+  "noAssessment": {
+    "title": "No se Encontró Evaluación",
+    "description": "Por favor completa la evaluación primero para obtener recomendaciones personalizadas",
+    "button": "Hacer Evaluación"
+  },
+  "domains": {
+    "Engaging_with_AI": "Interactuar con IA",
+    "Creating_with_AI": "Crear con IA",
+    "Managing_with_AI": "Gestionar con IA",
+    "Designing_with_AI": "Diseñar con IA"
+  },
+  "strongDomainReason": "Avanza tus habilidades en {{domain}} (actual: {{score}}%)",
+  "averageDomainReason": "Mejora tus habilidades de {{domain}} (actual: {{score}}%)",
+  "learningPath": {
+    "filteringBy": "Mostrando elementos para {{domain}}",
+    "clearFilter": "Limpiar filtro",
+    "recommendedPath": "Ruta de Aprendizaje Recomendada",
+    "estimatedTime": "Tiempo total: {{hours}}h {{minutes}}m",
+    "startLearning": "Comenzar Aprendizaje",
+    "progress": "Progreso",
+    "goToDashboard": "Ir al Tablero",
+    "dashboardHint": "Sigue tu progreso general y logros en el tablero"
+  },
+  "showAll": "Mostrar Todo",
+  "focusOnWeakAreas": "Enfocarse en Áreas Débiles",
+  "backToDashboard": "Volver al Tablero"
+}

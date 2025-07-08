@@ -1,0 +1,171 @@
+{
+  "privacy": {
+    "title": "Política de Privacidade",
+    "lastUpdated": "Última atualização",
+    "intro": "A AI Square (\"nós\", \"nosso\" ou \"nossa\") está comprometida em proteger sua privacidade. Esta Política de Privacidade explica como coletamos, usamos, divulgamos e protegemos suas informações quando você usa nossa plataforma de educação em literacia de IA.",
+    "infoCollect": {
+      "title": "1. Informações que Coletamos",
+      "personal": "Informações Pessoais",
+      "email": "Endereço de email",
+      "name": "Nome (opcional)",
+      "role": "Função do usuário (estudante, professor, administrador)",
+      "language": "Preferência de idioma",
+      "usage": "Dados de Uso",
+      "learning": "Progresso de aprendizagem e resultados de avaliação",
+      "interactions": "Interações com tutores de IA",
+      "scenarios": "Dados de conclusão de cenários PBL",
+      "analytics": "Análises de uso da plataforma",
+      "technical": "Dados Técnicos",
+      "browser": "Tipo e versão do navegador",
+      "device": "Informações do dispositivo",
+      "ip": "Endereço IP (anonimizado)",
+      "timezone": "Configurações de fuso horário"
+    },
+    "howUse": {
+      "title": "2. Como Usamos Suas Informações",
+      "provide": "Para fornecer e manter nosso serviço",
+      "personalize": "Para personalizar sua experiência de aprendizagem",
+      "communicate": "Para nos comunicarmos com você sobre sua conta",
+      "improve": "Para melhorar nossa plataforma e desenvolver novos recursos",
+      "analyze": "Para analisar padrões de uso e otimizar o desempenho",
+      "security": "Para detectar e prevenir ameaças de segurança"
+    },
+    "storage": {
+      "title": "3. Armazenamento de Dados e Segurança",
+      "location": "Seus dados são armazenados com segurança nos servidores do Google Cloud Platform. Implementamos medidas técnicas e organizacionais apropriadas para proteger suas informações pessoais.",
+      "encryption": "Criptografia de dados em trânsito e em repouso",
+      "access": "Controles de acesso restrito",
+      "monitoring": "Monitoramento regular de segurança",
+      "backup": "Procedimentos seguros de backup"
+    },
+    "sharing": {
+      "title": "4. Compartilhamento e Divulgação de Dados",
+      "intro": "Não vendemos, comercializamos ou alugamos suas informações pessoais. Podemos compartilhar suas informações nas seguintes situações:",
+      "consent": "Com seu consentimento",
+      "legal": "Para cumprir obrigações legais",
+      "protect": "Para proteger nossos direitos e segurança",
+      "service": "Com prestadores de serviços que auxiliam nossas operações"
+    },
+    "rights": {
+      "title": "5. Seus Direitos",
+      "intro": "Você tem os seguintes direitos em relação aos seus dados pessoais:",
+      "access": "Acessar suas informações pessoais",
+      "correct": "Corrigir dados imprecisos",
+      "delete": "Solicitar a exclusão de seus dados",
+      "export": "Exportar seus dados em formato portátil",
+      "restrict": "Restringir o processamento de seus dados",
+      "withdraw": "Retirar o consentimento a qualquer momento"
+    },
+    "cookies": {
+      "title": "6. Cookies e Rastreamento",
+      "intro": "Usamos cookies e tecnologias de rastreamento similares para melhorar sua experiência. Cookies essenciais são necessários para a funcionalidade da plataforma, enquanto cookies opcionais nos ajudam a melhorar nosso serviço."
+    },
+    "children": {
+      "title": "7. Privacidade de Crianças",
+      "content": "Nossa plataforma é projetada para uso educacional por estudantes de todas as idades. Para usuários com menos de 13 anos, exigimos consentimento dos pais e limitamos a coleta de dados apenas às informações essenciais."
+    },
+    "international": {
+      "title": "8. Transferências Internacionais de Dados",
+      "content": "Suas informações podem ser transferidas e processadas em países diferentes do seu. Garantimos que salvaguardas apropriadas estejam em vigor para tais transferências."
+    },
+    "changes": {
+      "title": "9. Alterações a Esta Política",
+      "content": "Podemos atualizar esta Política de Privacidade periodicamente. Notificaremos você sobre quaisquer alterações publicando a nova política nesta página e atualizando a data de \"Última Atualização\"."
+    },
+    "contact": {
+      "title": "10. Entre em Contato Conosco",
+      "intro": "Se você tiver dúvidas sobre esta Política de Privacidade, entre em contato conosco em:"
+    }
+  },
+  "terms": {
+    "title": "Termos de Serviço",
+    "effectiveDate": "Data de Vigência",
+    "lastUpdated": "Última Atualização",
+    "intro": "Bem-vindo ao AI Square! Estes Termos de Serviço (\"Termos\") regem o uso de nossa plataforma de educação em literacia de IA. Ao acessar ou usar o AI Square, você concorda em estar vinculado a estes Termos.",
+    "acceptance": {
+      "title": "1. Aceitação dos Termos",
+      "content": "Ao criar uma conta ou usar nossos serviços, você reconhece que leu, compreendeu e concorda com estes Termos. Se você não concordar, por favor não use nossa plataforma.",
+      "capacity": "Você deve ter pelo menos 13 anos para usar nossos serviços. Se você tem menos de 18 anos, deve ter consentimento dos pais."
+    },
+    "service": {
+      "title": "2. Descrição do Serviço",
+      "intro": "O AI Square fornece:",
+      "literacy": "Conteúdo educacional de literacia de IA e avaliações",
+      "pbl": "Cenários de Aprendizagem Baseada em Problemas (PBL)",
+      "ai": "Tutoria e feedback alimentados por IA",
+      "tracking": "Acompanhamento de progresso e análises",
+      "multi": "Suporte a múltiplos idiomas (9 idiomas)"
+    },
+    "accounts": {
+      "title": "3. Contas de Usuário",
+      "registration": "Registro",
+      "accurate": "Forneça informações precisas e completas",
+      "maintain": "Mantenha e atualize suas informações",
+      "secure": "Mantenha suas credenciais de conta seguras",
+      "responsible": "Você é responsável por todas as atividades em sua conta",
+      "types": "Tipos de Conta",
+      "student": "Estudante: Acesso a conteúdo de aprendizagem e avaliações",
+      "teacher": "Professor: Recursos adicionais de gerenciamento de turma",
+      "admin": "Administrador: Capacidades de gerenciamento da plataforma"
+    },
+    "use": {
+      "title": "4. Política de Uso Aceitável",
+      "permitted": "Você pode:",
+      "educational": "Usar a plataforma para fins educacionais",
+      "share": "Compartilhar seu progresso de aprendizagem adequadamente",
+      "feedback": "Fornecer feedback construtivo",
+      "prohibited": "Você não pode:",
+      "misuse": "Usar indevidamente ou tentar manipular os sistemas de IA",
+      "share_credentials": "Compartilhar credenciais de conta",
+      "cheat": "Envolver-se em desonestidade acadêmica",
+      "harm": "Assediar, abusar ou prejudicar outros usuários",
+      "illegal": "Usar a plataforma para atividades ilegais",
+      "scrape": "Extrair ou copiar conteúdo sem permissão"
+    },
+    "ip": {
+      "title": "5. Propriedade Intelectual",
+      "platform": "Conteúdo da Plataforma",
+      "ownership": "Todo o conteúdo no AI Square, incluindo texto, gráficos, logotipos e software, é de propriedade do AI Square ou de seus licenciadores e protegido por leis de propriedade intelectual.",
+      "user": "Conteúdo do Usuário",
+      "retain": "Você mantém a propriedade do conteúdo que cria. Ao enviar conteúdo, você nos concede uma licença para usá-lo para fornecer e melhorar nossos serviços.",
+      "open": "Código Aberto",
+      "git": "O conteúdo educacional é gerenciado através do Git e pode estar sujeito a licenças de código aberto. Verifique repositórios individuais para termos específicos de licença."
+    },
+    "privacy": {
+      "title": "6. Privacidade e Proteção de Dados",
+      "content": "Seu uso do AI Square também é regido por nossa Política de Privacidade. Estamos comprometidos em proteger suas informações pessoais e usá-las apenas conforme descrito em nossa Política de Privacidade."
+    },
+    "ai": {
+      "title": "7. Serviços de IA e Limitações",
+      "disclaimer": "Nossos recursos alimentados por IA são projetados para auxiliar o aprendizado, mas não são perfeitos. Não garantimos a precisão do conteúdo ou feedback gerado por IA.",
+      "educational": "Respostas de IA são apenas para fins educacionais",
+      "verify": "Sempre verifique informações importantes independentemente",
+      "improve": "Trabalhamos continuamente para melhorar a precisão da IA"
+    },
+    "disclaimers": {
+      "title": "8. Isenções de Responsabilidade e Limitações",
+      "asis": "O SERVIÇO É FORNECIDO \"COMO ESTÁ\" SEM GARANTIAS DE QUALQUER TIPO.",
+      "liability": "Na extensão máxima permitida por lei, o AI Square não será responsável por danos indiretos, incidentais, especiais, consequenciais ou punitivos."
+    },
+    "modifications": {
+      "title": "9. Modificações dos Termos",
+      "content": "Podemos modificar estes Termos a qualquer momento. Notificaremos os usuários sobre alterações importantes. O uso continuado após as alterações constitui aceitação dos novos Termos."
+    },
+    "termination": {
+      "title": "10. Rescisão",
+      "rights": "Reservamo-nos o direito de suspender ou encerrar contas que violem estes Termos. Você pode excluir sua conta a qualquer momento."
+    },
+    "law": {
+      "title": "11. Lei Aplicável",
+      "content": "Estes Termos são regidos pelas leis da jurisdição onde o AI Square opera, sem consideração aos princípios de conflito de leis."
+    },
+    "contact": {
+      "title": "12. Informações de Contato",
+      "intro": "Para dúvidas sobre estes Termos, entre em contato conosco:"
+    },
+    "agreement": "Ao usar o AI Square, você reconhece que leu e concorda com estes Termos de Serviço."
+  },
+  "common": {
+    "backToHome": "Voltar ao Início"
+  }
+}

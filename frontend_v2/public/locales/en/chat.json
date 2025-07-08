@@ -1,0 +1,12 @@
+{
+  "aiAdvisor": "AI Learning Advisor",
+  "newChat": "New Chat",
+  "history": "Chat History",
+  "welcomeTitle": "Hello! I'm your AI Learning Advisor",
+  "welcomeMessage": "I'm here to help you navigate your AI literacy journey. Ask me about learning paths, PBL scenarios, or any AI concepts you'd like to understand better.",
+  "inputPlaceholder": "Type your message here... (Press Enter to send)",
+  "suggestedTopic1": "Which PBL scenario should I start with?",
+  "suggestedTopic2": "Help me understand my assessment results",
+  "suggestedTopic3": "What are my weak areas and how can I improve?",
+  "suggestedTopic4": "Explain AI concepts in simple terms"
+}

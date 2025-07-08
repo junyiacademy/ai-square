@@ -1,0 +1,85 @@
+{
+  "title": "AI Square 사용자 여정",
+  "subtitle": "완전한 AI 학습 경험을 위한 5가지 핵심 경로",
+  "getStarted": "시작하기",
+  "pathOverview": "완전한 학습 사이클",
+  "nextPath": "다음 경로 →",
+  "tryFeature": "이 기능 체험하기",
+  "paths": {
+    "dashboard": {
+      "title": "대시보드",
+      "subtitle": "학습 지휘 센터",
+      "description": "AI 학습 여정의 한눈에 보는 개요, 진행 상황 추적, 성과 확인 및 다음 단계 계획.",
+      "userNeed": "내 학습 진행 상황은 어떤가요?",
+      "features": [
+        "AI 리터러시 진행 상황 시각화",
+        "한눈에 보는 학습 통계",
+        "개인화된 추천 행동",
+        "빠른 기능 탐색"
+      ]
+    },
+    "assessment": {
+      "title": "평가",
+      "subtitle": "AI 리터러시 테스트",
+      "description": "4개 AI 영역에 걸친 역량 수준을 깊이 이해하기 위한 25개의 전문적인 질문.",
+      "userNeed": "내 AI 역량 수준은 어떤가요?",
+      "features": [
+        "4개 AI 리터러시 영역",
+        "25개 시나리오 기반 질문",
+        "레이더 차트 역량 분석",
+        "개인화된 추천 보고서"
+      ]
+    },
+    "learningPath": {
+      "title": "학습 경로",
+      "subtitle": "개인화된 성장 계획",
+      "description": "평가 결과를 바탕으로 가장 적합한 학습 콘텐츠와 속도를 추천합니다.",
+      "userNeed": "어떤 과정이 나에게 맞나요?",
+      "features": [
+        "맞춤형 과정 추천",
+        "단계별 학습 콘텐츠",
+        "점진적 계획",
+        "유연한 학습 일정"
+      ]
+    },
+    "pbl": {
+      "title": "PBL 실습",
+      "subtitle": "실제 시나리오",
+      "description": "AI 튜터 지도로 실습을 통해 학습하는 9개의 실용적인 시나리오.",
+      "userNeed": "AI를 실제로 어떻게 적용하나요?",
+      "features": [
+        "AI 로보틱스 개발",
+        "AI 스테이블코인 트레이딩",
+        "AI 구직 훈련",
+        "실시간 AI 튜터링"
+      ]
+    },
+    "chat": {
+      "title": "AI 어드바이저",
+      "subtitle": "24/7 지원",
+      "description": "학습 맥락을 기억하고 개인화된 조언을 제공하는 24/7 지능형 학습 동반자.",
+      "userNeed": "질문이 있을 때 누구에게 물어볼까요?",
+      "features": [
+        "지속적인 대화 메모리",
+        "개인화된 학습 제안",
+        "다중 라운드 심층 대화",
+        "학습 Q&A 지원"
+      ]
+    },
+    "discovery": {
+      "title": "Discovery 탐색",
+      "subtitle": "개인화된 경력 모험",
+      "description": "AI 평가를 통해 이상적인 경력 경로를 찾고 게임화된 모험에서 전문 기술을 개발하세요.",
+      "userNeed": "어떤 경력이 나에게 맞을까요?",
+      "features": [
+        "AI 경력 매칭 평가",
+        "무한 작업 생성 시스템",
+        "게임화된 학습 경험",
+        "동적 작업 난이도 조정"
+      ]
+    }
+  },
+  "keyFeatures": "주요 기능",
+  "solvedNeed": "해결된 사용자 니즈",
+  "completeJourney": "완전한 학습 여정"
+}

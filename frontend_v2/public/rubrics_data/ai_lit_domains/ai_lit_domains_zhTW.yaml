@@ -1,0 +1,322 @@
+domains:
+  Engaging_with_AI:
+    emoji: 🎯
+    overview: 涉及使用AI作為工具來存取新內容、資訊或推薦。這些情況要求學習者首先識別AI的存在，然後評估AI輸出的準確性和相關性。學習者必須對AI的技術基礎建立基本理解，以便批判性地分析其能力和限制。
+    competencies:
+      E1:
+        description: 識別AI在不同情境中的作用和影響。
+        knowledge:
+          - K1.4
+          - K5.1
+        skills:
+          - S6.1
+        attitudes:
+          - A2.1
+          - A1.1
+        content: 學習者識別日常工具和系統中AI的存在，並考慮其在各種情況下的目的，如內容推薦或自適應學習。他們反思AI如何影響他們的選擇、學習和認知。
+        scenarios:
+          - 列舉熟悉的數位互動（例如使用網路攝影機、影片推薦），並討論每種互動是否以及如何使用AI。
+          - 探索線上數學平台如何使用即時資料來呈現不同難度等級的內容。
+      E2:
+        description: 分析AI輸出的準確性和相關性。
+        knowledge:
+          - K1.1
+          - K1.3
+          - K4.1
+        skills:
+          - S1.1
+        attitudes:
+          - A1.1
+          - A2.1
+        content: 學習者評估AI生成的內容是否準確、相關和適用。他們學會識別AI的優勢和限制，並在做出決定時考慮多種資訊來源。
+        scenarios:
+          - 比較AI生成的新聞摘要與原始文章，識別準確性和偏見。
+          - 評估AI語言翻譯的品質，並考慮文化背景和語意細微差別。
+      E3:
+        description: 認識AI系統的能力和限制。
+        knowledge:
+          - K1.2
+          - K1.3
+          - K4.1
+        skills:
+          - S1.1
+        attitudes:
+          - A2.1
+        content: 學習者理解AI系統的技術能力和邊界，包括其在不同任務中的表現差異。他們學會區分AI擅長的領域和需要人類判斷的領域。
+        scenarios:
+          - 測試AI聊天機器人在不同類型問題上的表現，比較其在事實性問題與創造性問題上的差異。
+          - 分析AI影像識別系統在不同條件下的準確性。
+      E4:
+        description: 評估AI使用的適當性和倫理影響。
+        knowledge:
+          - K5.4
+          - K2.1
+        skills:
+          - S5.1
+          - S6.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: 學習者考慮在特定情況下使用AI是否合適、有益或可能有害。他們評估AI使用的倫理影響，包括隱私、偏見和公平性問題。
+        scenarios:
+          - 討論在招募過程中使用AI篩選履歷的倫理影響。
+          - 分析AI推薦系統可能如何影響使用者的選擇和觀點。
+      E5:
+        description: 在使用AI時實踐負責任的行為。
+        knowledge:
+          - K5.4
+          - K2.1
+        skills:
+          - S7.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: 學習者在與AI系統互動時展現負責任和倫理的行為。他們考慮自己行為的影響，並在使用AI時遵循最佳實務。
+        scenarios:
+          - 制定使用AI工具完成學術作業的指導原則。
+          - 設計策略來驗證AI生成資訊的準確性，然後再分享給他人。
+
+  Creating_with_AI:
+    emoji: 🎨
+    overview: 涉及與AI系統協作生成新內容、想法或解決方案。這些情況要求學習者理解AI作為創造性夥伴的能力，同時保持對人類創造力、原創性和智慧財產權的尊重。
+    competencies:
+      C1:
+        description: 使用AI工具增強創造力和生產力。
+        knowledge:
+          - K1.4
+          - K5.3
+        skills:
+          - S2.1
+          - S3.1
+        attitudes:
+          - A3.1
+          - A4.1
+        content: 學習者使用AI工具來增強他們的創造性工作，如寫作、設計或解決問題。他們學會如何有效地與AI協作，同時保持自己的創造性願景和控制權。
+        scenarios:
+          - 使用AI寫作助手來改進論文結構，同時保持自己的觀點和論證。
+          - 與AI藝術生成器合作創作視覺作品，探索不同的風格和概念。
+      C2:
+        description: 在AI輔助的創作過程中保持原創性和真實性。
+        knowledge:
+          - K5.3
+          - K2.1
+        skills:
+          - S2.1
+          - S7.1
+        attitudes:
+          - A1.1
+          - A3.1
+        content: 學習者理解如何在使用AI工具的同時保持創作的原創性和個人聲音。他們學會區分AI輔助創作與完全依賴AI生成的內容。
+        scenarios:
+          - 創建一個專案，明確標識哪些部分是AI輔助的，哪些是原創的。
+          - 討論使用AI生成的內容在學術和商業環境中的適當歸屬。
+      C3:
+        description: 理解AI創作中的版權和智慧財產權問題。
+        knowledge:
+          - K5.3
+          - K2.1
+        skills:
+          - S1.1
+          - S7.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: 學習者了解AI生成內容的版權和智慧財產權含義。他們學會負責任地使用AI創作工具，並理解相關的法律和倫理問題。
+        scenarios:
+          - 研究不同AI平台的使用條款和版權政策。
+          - 創建一個關於AI生成內容使用的最佳實務指南。
+      C4:
+        description: 評估和改進AI生成的內容。
+        knowledge:
+          - K1.3
+          - K4.1
+        skills:
+          - S1.1
+          - S2.1
+        attitudes:
+          - A2.1
+          - A4.1
+        content: 學習者學會評估AI生成內容的品質，並通過迭代過程進行改進。他們發展批判性思維技能來識別和解決AI輸出中的問題。
+        scenarios:
+          - 通過多次迭代改進AI生成的故事或文章。
+          - 評估AI生成的程式碼並進行必要的修改和最佳化。
+      C5:
+        description: 在創作過程中平衡AI輔助與人類判斷。
+        knowledge:
+          - K3.2
+          - K4.1
+        skills:
+          - S2.1
+          - S5.1
+        attitudes:
+          - A4.1
+          - A5.1
+        content: 學習者學會在創作過程中恰當地結合AI工具和人類判斷。他們理解何時依賴AI，何時需要人類的創造力和判斷力。
+        scenarios:
+          - 設計一個創作工作流程，明確定義AI和人類在不同階段的角色。
+          - 分析不同類型的創作任務，確定AI輔助的適當程度。
+
+  Managing_with_AI:
+    emoji: 📊
+    overview: 涉及在組織和管理任務中策略性地使用AI。這些情況要求學習者了解AI如何改變工作流程、決策過程和組織結構，同時考慮人類監督和責任的重要性。
+    competencies:
+      M1:
+        description: 評估AI在工作流程中的整合機會。
+        knowledge:
+          - K3.1
+          - K3.2
+        skills:
+          - S5.1
+          - S3.1
+        attitudes:
+          - A3.1
+          - A4.1
+        content: 學習者識別組織中可以有效整合AI的領域，評估潛在的好處和風險。他們學會分析現有工作流程並確定AI可以增加價值的地方。
+        scenarios:
+          - 分析學校管理系統，識別可以通過AI自動化或改進的流程。
+          - 評估在客戶服務中使用AI聊天機器人的可行性和影響。
+      M2:
+        description: 在AI輔助的決策過程中保持人類監督。
+        knowledge:
+          - K3.3
+          - K5.1
+        skills:
+          - S1.1
+          - S6.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: 學習者理解在AI輔助決策中人類監督的重要性。他們學會設計決策過程，確保人類保持最終控制權和責任。
+        scenarios:
+          - 設計一個AI輔助的學生評估系統，包含人類審查和干預機制。
+          - 創建使用AI進行資料分析的決策框架，確保人類驗證和解釋。
+      M3:
+        description: 管理AI實施的組織變革。
+        knowledge:
+          - K3.1
+          - K3.2
+        skills:
+          - S4.1
+          - S7.1
+        attitudes:
+          - A4.1
+          - A5.1
+        content: 學習者理解AI實施如何影響組織文化和工作方式。他們學會管理變革過程，包括培訓、溝通和變革管理。
+        scenarios:
+          - 制定計畫，幫助團隊適應新的AI工具和工作流程。
+          - 設計培訓計畫，提高組織成員的AI素養。
+      M4:
+        description: 評估和緩解AI使用的風險。
+        knowledge:
+          - K4.1
+          - K5.4
+        skills:
+          - S1.1
+          - S6.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: 學習者識別AI使用中的潛在風險，包括偏見、錯誤和安全問題。他們學會制定策略來緩解這些風險並確保負責任的AI使用。
+        scenarios:
+          - 進行AI系統的風險評估，識別潛在的偏見和錯誤。
+          - 制定AI使用的治理政策和最佳實務指南。
+      M5:
+        description: 衡量AI實施的效果和影響。
+        knowledge:
+          - K3.1
+          - K5.1
+        skills:
+          - S1.1
+          - S6.1
+        attitudes:
+          - A2.1
+          - A4.1
+        content: 學習者學會評估AI實施的成功程度，包括效率提升、成本節約和使用者滿意度。他們發展衡量和改進AI系統效能的技能。
+        scenarios:
+          - 設計指標來評估AI客服系統的效果。
+          - 分析AI工具對工作效率和品質的影響。
+
+  Designing_with_AI:
+    emoji: 🔧
+    overview: 涉及設計和開發AI系統或AI增強的解決方案。這些情況要求學習者理解AI開發的技術和倫理考量，包括資料、演算法和使用者體驗的設計。
+    competencies:
+      D1:
+        description: 設計考慮倫理和公平性的AI系統。
+        knowledge:
+          - K2.1
+          - K5.4
+        skills:
+          - S1.1
+          - S3.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: 學習者理解如何設計公平、透明和負責任的AI系統。他們學會考慮不同使用者群體的需求，並在設計過程中嵌入倫理考量。
+        scenarios:
+          - 設計一個AI招募工具，確保消除性別和種族偏見。
+          - 創建一個AI教育系統，為不同學習需求的學生提供公平的機會。
+      D2:
+        description: 理解AI系統的資料需求和品質。
+        knowledge:
+          - K1.1
+          - K2.2
+        skills:
+          - S3.1
+          - S1.1
+        attitudes:
+          - A1.1
+          - A2.1
+        content: 學習者了解AI系統對資料的依賴，包括資料收集、清理和品質保證。他們學會識別和解決資料品質問題。
+        scenarios:
+          - 分析訓練資料集，識別潛在的偏見和品質問題。
+          - 設計資料收集策略，確保資料的代表性和品質。
+      D3:
+        description: 設計使用者友善的AI介面和體驗。
+        knowledge:
+          - K1.2
+          - K4.1
+        skills:
+          - S3.1
+          - S7.1
+        attitudes:
+          - A3.1
+          - A5.1
+        content: 學習者學會設計直覺、透明的AI使用者介面。他們理解如何讓使用者理解和信任AI系統，並提供適當的使用者控制。
+        scenarios:
+          - 設計一個AI推薦系統的使用者介面，讓使用者理解推薦的依據。
+          - 創建一個AI助理，提供清晰的反饋和解釋。
+      D4:
+        description: 實施AI系統的測試和驗證。
+        knowledge:
+          - K1.1
+          - K4.1
+        skills:
+          - S1.1
+          - S3.1
+        attitudes:
+          - A1.1
+          - A2.1
+        content: 學習者學會測試和驗證AI系統的效能、準確性和可靠性。他們了解如何識別和解決AI系統中的問題。
+        scenarios:
+          - 設計測試方案來評估AI模型的準確性和穩健性。
+          - 進行使用者測試，收集關於AI系統可用性的反饋。
+      D5:
+        description: 考慮AI系統的長期影響和永續性。
+        knowledge:
+          - K3.1
+          - K5.1
+        skills:
+          - S6.1
+          - S1.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: 學習者考慮AI系統對社會、環境和經濟的長期影響。他們學會設計永續、可擴展的AI解決方案。
+        scenarios:
+          - 評估AI系統的環境影響，包括能源使用和碳足跡。
+          - 分析AI實施對就業和社會結構的長期影響。
+
+metadata:
+  language: zhTW
+  version: "1.0"
+  last_updated: "2025-07-03"

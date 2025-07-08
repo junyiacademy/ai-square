@@ -1,0 +1,43 @@
+{
+  "title": "Your Learning Path [Chinese (Traditional)]",
+  "subtitle": "Personalized recommendations based on your assessment [Chinese (Traditional)]",
+  "yourProgress": "Your Progress [Chinese (Traditional)]",
+  "currentScore": "Current Score [Chinese (Traditional)]",
+  "targetScore": "Target Score [Chinese (Traditional)]",
+  "completed": "completed [Chinese (Traditional)]",
+  "recommendedPath": "Recommended Learning Path [Chinese (Traditional)]",
+  "startLearning": "Start Learning [Chinese (Traditional)]",
+  "estimatedTime": "Estimated time [Chinese (Traditional)]",
+  "weakDomainReason": "This is your weakest area with {{score}}% score [Chinese (Traditional)]",
+  "difficulty": {
+    "beginner": "Beginner [Chinese (Traditional)]",
+    "intermediate": "Intermediate [Chinese (Traditional)]",
+    "advanced": "Advanced [Chinese (Traditional)]"
+  },
+  "noAssessment": {
+    "title": "No Assessment Found [Chinese (Traditional)]",
+    "description": "Please complete the assessment first to get personalized recommendations [Chinese (Traditional)]",
+    "button": "Take Assessment [Chinese (Traditional)]"
+  },
+  "domains": {
+    "Engaging_with_AI": "Engaging with AI [Chinese (Traditional)]",
+    "Creating_with_AI": "Creating with AI [Chinese (Traditional)]",
+    "Managing_with_AI": "Managing with AI [Chinese (Traditional)]",
+    "Designing_with_AI": "Designing with AI [Chinese (Traditional)]"
+  },
+  "strongDomainReason": "Advance your skills in {{domain}} (current: {{score}}%) [Chinese (Traditional)]",
+  "averageDomainReason": "Improve your {{domain}} skills (current: {{score}}%) [Chinese (Traditional)]",
+  "learningPath": {
+    "filteringBy": "Showing items for {{domain}} [Chinese (Traditional)]",
+    "clearFilter": "Clear filter [Chinese (Traditional)]",
+    "recommendedPath": "Recommended Learning Path [Chinese (Traditional)]",
+    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [Chinese (Traditional)]",
+    "startLearning": "Start Learning [Chinese (Traditional)]",
+    "progress": "Progress [Chinese (Traditional)]",
+    "goToDashboard": "Go to Dashboard [Chinese (Traditional)]",
+    "dashboardHint": "Track your overall progress and achievements in the dashboard [Chinese (Traditional)]"
+  },
+  "showAll": "Show All [Chinese (Traditional)]",
+  "focusOnWeakAreas": "Focus on Weak Areas [Chinese (Traditional)]",
+  "backToDashboard": "Back to Dashboard [Chinese (Traditional)]"
+}

@@ -1,0 +1,27 @@
+{
+  "skip": "ข้าม",
+  "next": "ถัดไป",
+  "back": "กลับ",
+  "continue": "ดำเนินการต่อ",
+  "loading": "กำลังโหลด...",
+  "save": "บันทึก",
+  "cancel": "ยกเลิก",
+  "submit": "ส่ง",
+  "delete": "ลบ",
+  "edit": "แก้ไข",
+  "close": "ปิด",
+  "error": "ข้อผิดพลาด",
+  "success": "สำเร็จ",
+  "warning": "คำเตือน",
+  "info": "ข้อมูล",
+  "backToDashboard": "กลับไปยังแดชบอร์ด",
+  "minutes": "นาที",
+  "hours": "ชั่วโมง",
+  "days": "วัน",
+  "view": "ดู",
+  "difficulty": {
+    "beginner": "เริ่มต้น",
+    "intermediate": "ระดับกลาง",
+    "advanced": "ขั้นสูง"
+  }
+}

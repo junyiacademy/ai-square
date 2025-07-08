@@ -1,0 +1,21 @@
+{
+  "learningPath": {
+    "title": "あなたのパーソナライズされた学習パス",
+    "subtitle": "評価結果に基づいて、推奨される学習の旅はこちらです",
+    "yourProgress": "進捗状況の概要",
+    "currentScore": "現在",
+    "target": "目標",
+    "completed": "完了",
+    "filteringBy": "{{domain}}の推奨事項を表示中",
+    "clearFilter": "すべての推奨事項を表示",
+    "recommendedPath": "推奨学習パス",
+    "estimatedTime": "合計時間: {{hours}}時間{{minutes}}分",
+    "startLearning": "学習を開始",
+    "progress": "進捗",
+    "weakDomainReason": "{{domain}}を強化することを推奨（現在: {{score}}%）",
+    "strongDomainReason": "あなたの強い{{domain}}スキル（{{score}}%）への高度な挑戦",
+    "averageDomainReason": "{{domain}}の専門知識を構築し続ける（現在: {{score}}%）",
+    "goToDashboard": "ダッシュボードへ",
+    "dashboardHint": "全体的な進捗を追跡し、学習の旅を続けましょう"
+  }
+}

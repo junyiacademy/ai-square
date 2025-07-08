@@ -1,0 +1,85 @@
+{
+  "title": "Percorso Utente AI Square",
+  "subtitle": "Sixue percorsi chiave per un'esperienza completa di apprendimento IA",
+  "getStarted": "Inizia",
+  "pathOverview": "Ciclo di Apprendimento Completo",
+  "nextPath": "Percorso Successivo →",
+  "tryFeature": "Prova Questa Funzione",
+  "paths": {
+    "dashboard": {
+      "title": "Cruscotto",
+      "subtitle": "Centro di Comando dell'Apprendimento",
+      "description": "Panoramica completa del tuo percorso di apprendimento IA, monitoraggio dei progressi, visualizzazione dei risultati e pianificazione dei prossimi passi.",
+      "userNeed": "Come sta procedendo il mio apprendimento?",
+      "features": [
+        "Visualizzazione del progresso nell'alfabetizzazione IA",
+        "Statistiche di apprendimento a colpo d'occhio",
+        "Azioni consigliate personalizzate",
+        "Navigazione rapida delle funzioni"
+      ]
+    },
+    "assessment": {
+      "title": "Valutazione",
+      "subtitle": "Test di Alfabetizzazione IA",
+      "description": "25 domande professionali per comprendere in profondità il tuo livello di competenza in quattro domini dell'IA.",
+      "userNeed": "Qual è il mio livello di competenza in IA?",
+      "features": [
+        "Quattro domini di alfabetizzazione IA",
+        "25 domande basate su scenari",
+        "Analisi delle capacità con grafico radar",
+        "Rapporto di raccomandazioni personalizzato"
+      ]
+    },
+    "learningPath": {
+      "title": "Percorso di Apprendimento",
+      "subtitle": "Piano di Crescita Personalizzato",
+      "description": "Basato sui risultati della tua valutazione, raccomandiamo i contenuti e il ritmo di apprendimento più adatti.",
+      "userNeed": "Quali corsi sono adatti a me?",
+      "features": [
+        "Raccomandazioni di corsi personalizzate",
+        "Contenuti di apprendimento graduali",
+        "Pianificazione progressiva",
+        "Programma di apprendimento flessibile"
+      ]
+    },
+    "pbl": {
+      "title": "Pratica PBL",
+      "subtitle": "Scenari del Mondo Reale",
+      "description": "9 scenari pratici con guida del tutor IA per imparare facendo.",
+      "userNeed": "Come applico l'IA nella pratica?",
+      "features": [
+        "Sviluppo Robotica IA",
+        "Trading Stablecoin con IA",
+        "Formazione Ricerca Lavoro con IA",
+        "Tutoraggio IA in tempo reale"
+      ]
+    },
+    "chat": {
+      "title": "Consulente IA",
+      "subtitle": "Supporto 24/7",
+      "description": "Compagno di apprendimento intelligente 24/7 che ricorda il tuo contesto di apprendimento e fornisce consigli personalizzati.",
+      "userNeed": "A chi posso chiedere quando ho domande?",
+      "features": [
+        "Memoria continua delle conversazioni",
+        "Suggerimenti di apprendimento personalizzati",
+        "Conversazioni approfondite multi-turno",
+        "Supporto domande e risposte per l'apprendimento"
+      ]
+    },
+    "discovery": {
+      "title": "Discovery",
+      "subtitle": "Avventura professionale personalizzata",
+      "description": "Trova il tuo percorso professionale ideale attraverso la valutazione AI e sviluppa competenze professionali in avventure gamificate.",
+      "userNeed": "Quale carriera fa per me?",
+      "features": [
+        "Valutazione di corrispondenza carriera AI",
+        "Sistema di generazione infinita di compiti",
+        "Esperienza di apprendimento gamificata",
+        "Regolazione dinamica della difficoltà"
+      ]
+    }
+  },
+  "keyFeatures": "Funzioni Chiave",
+  "solvedNeed": "Esigenza Utente Risolta",
+  "completeJourney": "Percorso di Apprendimento Completo"
+}

@@ -1,0 +1,107 @@
+{
+  "hero": {
+    "title": "KI-Kompetenz mit AI Square meistern",
+    "subtitle": "Ihre personalisierte Reise zum Verständnis und zur Nutzung künstlicher Intelligenz",
+    "description": "AI Square ist eine revolutionäre Multi-Agent-Lernplattform, die Sie befähigt, wesentliche KI-Kompetenzen durch interaktive Bewertungen, personalisierte Lernpfade und Echtzeit-KI-Unterstützung zu entwickeln.",
+    "cta": {
+      "getStarted": "Starten Sie Ihre Reise",
+      "explore": "KI-Domänen erkunden",
+      "assessment": "Bewertung durchführen"
+    }
+  },
+  "features": {
+    "title": "Warum AI Square wählen?",
+    "subtitle": "Umfassende KI-Bildung für die moderne Welt",
+    "items": {
+      "personalizedLearning": {
+        "title": "Personalisierte Lernpfade",
+        "description": "KI-gestützte Empfehlungen passen sich Ihrem Lernstil und Tempo an"
+      },
+      "multilingualSupport": {
+        "title": "Mehrsprachige Unterstützung",
+        "description": "Lernen Sie in Ihrer bevorzugten Sprache mit vollständig mehrsprachigen Inhalten"
+      },
+      "realTimeAI": {
+        "title": "24/7 KI-Nachhilfe",
+        "description": "Erhalten Sie sofortiges Feedback und Anleitung von fortgeschrittenen KI-Assistenten"
+      },
+      "comprehensiveAssessment": {
+        "title": "Umfassende Bewertung",
+        "description": "Bewerten Sie Ihre KI-Kompetenz in vier Kernbereichen mit detaillierten Einblicken"
+      },
+      "interactiveTasks": {
+        "title": "Interaktive Lernaufgaben",
+        "description": "Praktische Projekte und realistische Szenarien zur Anwendung Ihres Wissens"
+      },
+      "progressTracking": {
+        "title": "Visuelle Fortschrittsverfolgung",
+        "description": "Verfolgen Sie Ihr Wachstum mit intuitiven Radardiagrammen und Erfolgsabzeichen"
+      }
+    }
+  },
+  "domains": {
+    "title": "Vier zentrale KI-Kompetenz-Domänen",
+    "subtitle": "Beherrschen Sie jeden Aspekt der KI-Interaktion und -Erstellung",
+    "viewDetails": "Details anzeigen",
+    "items": {
+      "engaging": {
+        "name": "Mit KI interagieren"
+      },
+      "creating": {
+        "name": "Mit KI erstellen"
+      },
+      "managing": {
+        "name": "Mit KI verwalten"
+      },
+      "designing": {
+        "name": "Mit KI entwerfen"
+      }
+    }
+  },
+  "howItWorks": {
+    "title": "So funktioniert's",
+    "subtitle": "Ihre Reise zur KI-Beherrschung in einfachen Schritten",
+    "steps": {
+      "assessment": {
+        "title": "1. Anfangsbewertung durchführen",
+        "description": "Bewerten Sie Ihr aktuelles KI-Kompetenzniveau in vier Bereichen"
+      },
+      "personalized": {
+        "title": "2. Personalisierten Pfad erhalten",
+        "description": "Erhalten Sie eine maßgeschneiderte Lernreise basierend auf Ihren Ergebnissen"
+      },
+      "learn": {
+        "title": "3. Lernen und üben",
+        "description": "Arbeiten Sie mit interaktiven Inhalten und KI-unterstützten Aufgaben"
+      },
+      "track": {
+        "title": "4. Fortschritt verfolgen",
+        "description": "Überwachen Sie Ihr Wachstum und sammeln Sie Erfolge"
+      }
+    }
+  },
+  "target": {
+    "title": "Für wen ist AI Square?",
+    "subtitle": "Entwickelt für Lernende auf allen Ebenen",
+    "audiences": {
+      "individuals": {
+        "title": "Einzelne Lernende",
+        "description": "Entwickeln Sie wesentliche KI-Fähigkeiten für persönliches und berufliches Wachstum"
+      },
+      "educators": {
+        "title": "Pädagogen",
+        "description": "Zugriff auf umfassende Ressourcen für den Unterricht in KI-Kompetenz"
+      },
+      "organizations": {
+        "title": "Organisationen",
+        "description": "Schulen Sie Ihr Team mit unternehmenstauglichen KI-Bildungslösungen"
+      }
+    }
+  },
+  "cta": {
+    "title": "Bereit, Ihre KI-Lernreise zu beginnen?",
+    "subtitle": "Schließen Sie sich Tausenden von Lernenden an, die KI-Kompetenz meistern",
+    "button": "Kostenlos starten",
+    "login": "Haben Sie bereits ein Konto? Anmelden"
+  }
+}

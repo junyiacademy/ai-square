@@ -1,0 +1,171 @@
+{
+  "privacy": {
+    "title": "Kebijakan Privasi",
+    "lastUpdated": "Terakhir diperbarui",
+    "intro": "AI Square (\"kami\", \"milik kami\", atau \"kita\") berkomitmen untuk melindungi privasi Anda. Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, mengungkapkan, dan melindungi informasi Anda saat Anda menggunakan platform edukasi literasi AI kami.",
+    "infoCollect": {
+      "title": "1. Informasi yang Kami Kumpulkan",
+      "personal": "Informasi Pribadi",
+      "email": "Alamat email",
+      "name": "Nama (opsional)",
+      "role": "Peran pengguna (siswa, guru, admin)",
+      "language": "Preferensi bahasa",
+      "usage": "Data Penggunaan",
+      "learning": "Kemajuan belajar dan hasil penilaian",
+      "interactions": "Interaksi dengan tutor AI",
+      "scenarios": "Data penyelesaian skenario PBL",
+      "analytics": "Analitik penggunaan platform",
+      "technical": "Data Teknis",
+      "browser": "Jenis dan versi browser",
+      "device": "Informasi perangkat",
+      "ip": "Alamat IP (anonim)",
+      "timezone": "Pengaturan zona waktu"
+    },
+    "howUse": {
+      "title": "2. Bagaimana Kami Menggunakan Informasi Anda",
+      "provide": "Untuk menyediakan dan memelihara layanan kami",
+      "personalize": "Untuk mempersonalisasi pengalaman belajar Anda",
+      "communicate": "Untuk berkomunikasi dengan Anda tentang akun Anda",
+      "improve": "Untuk meningkatkan platform kami dan mengembangkan fitur baru",
+      "analyze": "Untuk menganalisis pola penggunaan dan mengoptimalkan kinerja",
+      "security": "Untuk mendeteksi dan mencegah ancaman keamanan"
+    },
+    "storage": {
+      "title": "3. Penyimpanan Data dan Keamanan",
+      "location": "Data Anda disimpan dengan aman di server Google Cloud Platform. Kami menerapkan langkah-langkah teknis dan organisasi yang tepat untuk melindungi informasi pribadi Anda.",
+      "encryption": "Enkripsi data saat transit dan saat disimpan",
+      "access": "Kontrol akses yang terbatas",
+      "monitoring": "Pemantauan keamanan reguler",
+      "backup": "Prosedur pencadangan yang aman"
+    },
+    "sharing": {
+      "title": "4. Berbagi dan Pengungkapan Data",
+      "intro": "Kami tidak menjual, memperdagangkan, atau menyewakan informasi pribadi Anda. Kami dapat membagikan informasi Anda dalam situasi berikut:",
+      "consent": "Dengan persetujuan Anda",
+      "legal": "Untuk mematuhi kewajiban hukum",
+      "protect": "Untuk melindungi hak dan keselamatan kami",
+      "service": "Dengan penyedia layanan yang membantu operasi kami"
+    },
+    "rights": {
+      "title": "5. Hak Anda",
+      "intro": "Anda memiliki hak-hak berikut terkait data pribadi Anda:",
+      "access": "Mengakses informasi pribadi Anda",
+      "correct": "Memperbaiki data yang tidak akurat",
+      "delete": "Meminta penghapusan data Anda",
+      "export": "Mengekspor data Anda dalam format portabel",
+      "restrict": "Membatasi pemrosesan data Anda",
+      "withdraw": "Menarik persetujuan kapan saja"
+    },
+    "cookies": {
+      "title": "6. Cookie dan Pelacakan",
+      "intro": "Kami menggunakan cookie dan teknologi pelacakan serupa untuk meningkatkan pengalaman Anda. Cookie esensial diperlukan untuk fungsionalitas platform, sementara cookie opsional membantu kami meningkatkan layanan."
+    },
+    "children": {
+      "title": "7. Privasi Anak",
+      "content": "Platform kami dirancang untuk penggunaan edukasi oleh siswa dari segala usia. Untuk pengguna di bawah 13 tahun, kami memerlukan persetujuan orang tua dan membatasi pengumpulan data hanya pada informasi penting."
+    },
+    "international": {
+      "title": "8. Transfer Data Internasional",
+      "content": "Informasi Anda dapat ditransfer dan diproses di negara selain negara Anda sendiri. Kami memastikan perlindungan yang tepat tersedia untuk transfer tersebut."
+    },
+    "changes": {
+      "title": "9. Perubahan pada Kebijakan Ini",
+      "content": "Kami dapat memperbarui Kebijakan Privasi ini dari waktu ke waktu. Kami akan memberi tahu Anda tentang perubahan apa pun dengan memposting kebijakan baru di halaman ini dan memperbarui tanggal \"Terakhir Diperbarui\"."
+    },
+    "contact": {
+      "title": "10. Hubungi Kami",
+      "intro": "Jika Anda memiliki pertanyaan tentang Kebijakan Privasi ini, silakan hubungi kami di:"
+    }
+  },
+  "terms": {
+    "title": "Syarat Layanan",
+    "effectiveDate": "Tanggal Berlaku",
+    "lastUpdated": "Terakhir Diperbarui",
+    "intro": "Selamat datang di AI Square! Syarat Layanan (\"Syarat\") ini mengatur penggunaan Anda atas platform edukasi literasi AI kami. Dengan mengakses atau menggunakan AI Square, Anda setuju untuk terikat oleh Syarat ini.",
+    "acceptance": {
+      "title": "1. Penerimaan Syarat",
+      "content": "Dengan membuat akun atau menggunakan layanan kami, Anda mengakui bahwa Anda telah membaca, memahami, dan setuju dengan Syarat ini. Jika Anda tidak setuju, mohon jangan gunakan platform kami.",
+      "capacity": "Anda harus berusia minimal 13 tahun untuk menggunakan layanan kami. Jika Anda berusia di bawah 18 tahun, Anda harus memiliki persetujuan orang tua."
+    },
+    "service": {
+      "title": "2. Deskripsi Layanan",
+      "intro": "AI Square menyediakan:",
+      "literacy": "Konten edukasi literasi AI dan penilaian",
+      "pbl": "Skenario Problem-Based Learning (PBL)",
+      "ai": "Tutorial dan umpan balik berbasis AI",
+      "tracking": "Pelacakan kemajuan dan analitik",
+      "multi": "Dukungan multi-bahasa (9 bahasa)"
+    },
+    "accounts": {
+      "title": "3. Akun Pengguna",
+      "registration": "Pendaftaran",
+      "accurate": "Berikan informasi yang akurat dan lengkap",
+      "maintain": "Pelihara dan perbarui informasi Anda",
+      "secure": "Jaga keamanan kredensial akun Anda",
+      "responsible": "Anda bertanggung jawab atas semua aktivitas di bawah akun Anda",
+      "types": "Jenis Akun",
+      "student": "Siswa: Akses ke konten pembelajaran dan penilaian",
+      "teacher": "Guru: Fitur manajemen kelas tambahan",
+      "admin": "Administrator: Kemampuan manajemen platform"
+    },
+    "use": {
+      "title": "4. Kebijakan Penggunaan yang Dapat Diterima",
+      "permitted": "Anda dapat:",
+      "educational": "Menggunakan platform untuk tujuan edukasi",
+      "share": "Membagikan kemajuan belajar Anda dengan tepat",
+      "feedback": "Memberikan umpan balik yang konstruktif",
+      "prohibited": "Anda tidak dapat:",
+      "misuse": "Menyalahgunakan atau mencoba memanipulasi sistem AI",
+      "share_credentials": "Membagikan kredensial akun",
+      "cheat": "Terlibat dalam ketidakjujuran akademik",
+      "harm": "Melecehkan, menyalahgunakan, atau merugikan pengguna lain",
+      "illegal": "Menggunakan platform untuk aktivitas ilegal",
+      "scrape": "Mengambil atau menyalin konten tanpa izin"
+    },
+    "ip": {
+      "title": "5. Kekayaan Intelektual",
+      "platform": "Konten Platform",
+      "ownership": "Semua konten di AI Square, termasuk teks, grafik, logo, dan perangkat lunak, dimiliki oleh AI Square atau pemberi lisensinya dan dilindungi oleh hukum kekayaan intelektual.",
+      "user": "Konten Pengguna",
+      "retain": "Anda mempertahankan kepemilikan konten yang Anda buat. Dengan mengirimkan konten, Anda memberikan kami lisensi untuk menggunakannya dalam menyediakan dan meningkatkan layanan kami.",
+      "open": "Sumber Terbuka",
+      "git": "Konten edukasi dikelola melalui Git dan mungkin tunduk pada lisensi sumber terbuka. Silakan periksa repositori individual untuk syarat lisensi spesifik."
+    },
+    "privacy": {
+      "title": "6. Privasi dan Perlindungan Data",
+      "content": "Penggunaan AI Square Anda juga diatur oleh Kebijakan Privasi kami. Kami berkomitmen untuk melindungi informasi pribadi Anda dan menggunakannya hanya sebagaimana dijelaskan dalam Kebijakan Privasi kami."
+    },
+    "ai": {
+      "title": "7. Layanan AI dan Batasan",
+      "disclaimer": "Fitur berbasis AI kami dirancang untuk membantu pembelajaran tetapi tidak sempurna. Kami tidak menjamin akurasi konten atau umpan balik yang dihasilkan AI.",
+      "educational": "Respons AI hanya untuk tujuan edukasi",
+      "verify": "Selalu verifikasi informasi penting secara independen",
+      "improve": "Kami terus bekerja untuk meningkatkan akurasi AI"
+    },
+    "disclaimers": {
+      "title": "8. Penyangkalan dan Batasan",
+      "asis": "LAYANAN DISEDIAKAN \"SEBAGAIMANA ADANYA\" TANPA JAMINAN APA PUN.",
+      "liability": "Sejauh yang diizinkan oleh hukum, AI Square tidak bertanggung jawab atas kerusakan tidak langsung, insidental, khusus, konsekuensial, atau punitif."
+    },
+    "modifications": {
+      "title": "9. Modifikasi Syarat",
+      "content": "Kami dapat mengubah Syarat ini kapan saja. Kami akan memberi tahu pengguna tentang perubahan material. Penggunaan berkelanjutan setelah perubahan merupakan penerimaan atas Syarat baru."
+    },
+    "termination": {
+      "title": "10. Penghentian",
+      "rights": "Kami berhak untuk menangguhkan atau menghentikan akun yang melanggar Syarat ini. Anda dapat menghapus akun Anda kapan saja."
+    },
+    "law": {
+      "title": "11. Hukum yang Berlaku",
+      "content": "Syarat ini diatur oleh hukum yurisdiksi tempat AI Square beroperasi, tanpa memperhatikan prinsip konflik hukum."
+    },
+    "contact": {
+      "title": "12. Informasi Kontak",
+      "intro": "Untuk pertanyaan tentang Syarat ini, silakan hubungi kami:"
+    },
+    "agreement": "Dengan menggunakan AI Square, Anda mengakui bahwa Anda telah membaca dan setuju dengan Syarat Layanan ini."
+  },
+  "common": {
+    "backToHome": "Kembali ke Beranda"
+  }
+}

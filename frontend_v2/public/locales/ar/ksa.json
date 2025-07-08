@@ -1,0 +1,43 @@
+{
+  "title": "إطار محو الأمية في الذكاء الاصطناعي",
+  "subtitle": "المعرفة والمهارات والمواقف لتعليم الذكاء الاصطناعي",
+  "loading": "جاري تحميل إطار KSA...",
+  "loadError": "فشل في تحميل بيانات KSA",
+  "searchPlaceholder": "البحث في المواضيع والرموز والمحتوى...",
+  "sections": {
+    "knowledge": "المعرفة",
+    "skills": "المهارات",
+    "attitudes": "المواقف",
+    "knowledgeShort": "م",
+    "skillsShort": "ه",
+    "attitudesShort": "ق"
+  },
+  "results": {
+    "themesFound": "تم العثور على {{count}} موضوع",
+    "themesFoundFor": "تم العثور على {{count}} موضوع لـ \"{{search}}\"",
+    "noResults": "لم يتم العثور على نتائج",
+    "noResultsHint": "حاول تعديل مصطلحات البحث."
+  },
+  "codes": "رمز",
+  "codesPlural": "رموز",
+  "reflectionQuestions": "أسئلة التفكير",
+  "themes": {
+    "The_Nature_of_AI": "طبيعة الذكاء الاصطناعي",
+    "AI_Reflects_Human_Choices_and_Perspectives": "الذكاء الاصطناعي يعكس الاختيارات والمنظورات البشرية",
+    "AI_Reshapes_Work_and_Human_Roles": "الذكاء الاصطناعي يعيد تشكيل العمل والأدوار البشرية",
+    "AIs_Capabilities_and_Limitations": "قدرات وحدود الذكاء الاصطناعي",
+    "AIs_Role_in_Society": "دور الذكاء الاصطناعي في المجتمع",
+    "Critical_Thinking": "التفكير النقدي",
+    "Creativity": "الإبداع",
+    "Computational_Thinking": "التفكير الحاسوبي",
+    "Collaboration": "التعاون",
+    "Problem_Solving": "حل المشكلات",
+    "Self_and_Social_Awareness": "الوعي الذاتي والاجتماعي",
+    "Communication": "التواصل",
+    "Responsible": "المسؤولية",
+    "Curious": "الفضول",
+    "Innovative": "الابتكار",
+    "Adaptable": "القدرة على التكيف",
+    "Empathetic": "التعاطف"
+  }
+}

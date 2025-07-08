@@ -1,0 +1,21 @@
+{
+  "learningPath": {
+    "title": "您的个性化学习路径",
+    "subtitle": "根据您的评估结果，这是您推荐的学习旅程",
+    "yourProgress": "您的进度概览",
+    "currentScore": "当前",
+    "target": "目标",
+    "completed": "已完成",
+    "filteringBy": "显示推荐项目：{{domain}}",
+    "clearFilter": "显示所有推荐",
+    "recommendedPath": "推荐学习路径",
+    "estimatedTime": "总时间：{{hours}}小时{{minutes}}分钟",
+    "startLearning": "开始学习",
+    "progress": "进度",
+    "weakDomainReason": "推荐加强{{domain}}（当前：{{score}}%）",
+    "strongDomainReason": "挑战您强项{{domain}}技能的高级内容（{{score}}%）",
+    "averageDomainReason": "继续构建{{domain}}专业知识（当前：{{score}}%）",
+    "goToDashboard": "前往仪表板",
+    "dashboardHint": "跟踪您的整体进度并继续您的学习旅程"
+  }
+}

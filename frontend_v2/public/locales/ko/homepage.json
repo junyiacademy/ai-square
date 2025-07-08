@@ -1,0 +1,107 @@
+{
+  "hero": {
+    "title": "AI Square로 AI 리터러시 마스터하기",
+    "subtitle": "인공지능을 이해하고 활용하기 위한 개인 맞춤형 여정",
+    "description": "AI Square는 대화형 평가, 개인화된 학습 경로, 실시간 AI 지원을 통해 필수적인 AI 역량을 개발할 수 있도록 지원하는 혁신적인 다중 에이전트 학습 플랫폼입니다.",
+    "cta": {
+      "getStarted": "여정 시작하기",
+      "explore": "AI 도메인 탐색",
+      "assessment": "평가 받기"
+    }
+  },
+  "features": {
+    "title": "왜 AI Square를 선택해야 할까요?",
+    "subtitle": "현대 세계를 위해 설계된 포괄적인 AI 교육",
+    "items": {
+      "personalizedLearning": {
+        "title": "개인화된 학습 경로",
+        "description": "AI 기반 추천이 학습 스타일과 속도에 맞춰 조정됩니다"
+      },
+      "multilingualSupport": {
+        "title": "다국어 지원",
+        "description": "완전한 다국어 콘텐츠로 선호하는 언어로 학습하세요"
+      },
+      "realTimeAI": {
+        "title": "연중무휴 AI 튜터링",
+        "description": "고급 AI 어시스턴트로부터 즉각적인 피드백과 안내를 받으세요"
+      },
+      "comprehensiveAssessment": {
+        "title": "포괄적인 평가",
+        "description": "상세한 통찰력으로 4개 핵심 도메인에 걸친 AI 리터러시를 평가합니다"
+      },
+      "interactiveTasks": {
+        "title": "대화형 학습 과제",
+        "description": "실습 프로젝트와 실제 시나리오를 통해 지식을 적용하세요"
+      },
+      "progressTracking": {
+        "title": "시각적 진도 추적",
+        "description": "직관적인 레이더 차트와 성취 배지로 성장을 추적하세요"
+      }
+    }
+  },
+  "domains": {
+    "title": "4개의 핵심 AI 리터러시 도메인",
+    "subtitle": "AI 상호작용과 창조의 모든 측면을 마스터하세요",
+    "viewDetails": "자세히 보기",
+    "items": {
+      "engaging": {
+        "name": "AI와의 상호작용"
+      },
+      "creating": {
+        "name": "AI와 함께 창조하기"
+      },
+      "managing": {
+        "name": "AI 관리"
+      },
+      "designing": {
+        "name": "AI로 설계하기"
+      }
+    }
+  },
+  "howItWorks": {
+    "title": "작동 방식",
+    "subtitle": "간단한 단계로 AI 마스터리를 향한 여정",
+    "steps": {
+      "assessment": {
+        "title": "1. 초기 평가 받기",
+        "description": "4개 도메인에 걸친 현재 AI 리터러시 수준을 평가합니다"
+      },
+      "personalized": {
+        "title": "2. 개인화된 경로 받기",
+        "description": "결과에 기반한 맞춤형 학습 여정을 받습니다"
+      },
+      "learn": {
+        "title": "3. 학습 및 연습",
+        "description": "대화형 콘텐츠와 AI 지원 과제에 참여합니다"
+      },
+      "track": {
+        "title": "4. 진도 추적",
+        "description": "성장을 모니터링하고 성취를 획득합니다"
+      }
+    }
+  },
+  "target": {
+    "title": "AI Square는 누구를 위한 것인가요?",
+    "subtitle": "모든 수준의 학습자를 위해 설계되었습니다",
+    "audiences": {
+      "individuals": {
+        "title": "개인 학습자",
+        "description": "개인적 및 전문적 성장을 위한 필수 AI 기술 개발"
+      },
+      "educators": {
+        "title": "교육자",
+        "description": "AI 리터러시 교육을 위한 포괄적인 리소스에 접근"
+      },
+      "organizations": {
+        "title": "조직",
+        "description": "엔터프라이즈급 AI 교육 솔루션으로 팀 교육"
+      }
+    }
+  },
+  "cta": {
+    "title": "AI 학습 여정을 시작할 준비가 되셨나요?",
+    "subtitle": "AI 리터러시를 마스터하고 있는 수천 명의 학습자와 함께하세요",
+    "button": "무료로 시작하기",
+    "login": "이미 계정이 있으신가요? 로그인"
+  }
+}

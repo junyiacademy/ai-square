@@ -1,0 +1,43 @@
+{
+  "title": "Jalur Pembelajaran Anda",
+  "subtitle": "Rekomendasi yang dipersonalisasi berdasarkan penilaian Anda",
+  "yourProgress": "Kemajuan Anda",
+  "currentScore": "Skor Saat Ini",
+  "targetScore": "Skor Target",
+  "completed": "selesai",
+  "recommendedPath": "Jalur Pembelajaran yang Direkomendasikan",
+  "startLearning": "Mulai Belajar",
+  "estimatedTime": "Perkiraan waktu",
+  "weakDomainReason": "Ini adalah area terlemah Anda dengan skor {{score}}%",
+  "difficulty": {
+    "beginner": "Pemula",
+    "intermediate": "Menengah",
+    "advanced": "Lanjutan"
+  },
+  "noAssessment": {
+    "title": "Tidak Ditemukan Penilaian",
+    "description": "Silakan selesaikan penilaian terlebih dahulu untuk mendapatkan rekomendasi yang dipersonalisasi",
+    "button": "Ambil Penilaian"
+  },
+  "domains": {
+    "Engaging_with_AI": "Berinteraksi dengan AI",
+    "Creating_with_AI": "Berkreasi dengan AI",
+    "Managing_with_AI": "Mengelola dengan AI",
+    "Designing_with_AI": "Mendesain dengan AI"
+  },
+  "strongDomainReason": "Tingkatkan keterampilan Anda di {{domain}} (saat ini: {{score}}%)",
+  "averageDomainReason": "Perbaiki keterampilan {{domain}} Anda (saat ini: {{score}}%)",
+  "learningPath": {
+    "filteringBy": "Menampilkan item untuk {{domain}}",
+    "clearFilter": "Hapus filter",
+    "recommendedPath": "Jalur Pembelajaran yang Direkomendasikan",
+    "estimatedTime": "Total waktu: {{hours}}j {{minutes}}m",
+    "startLearning": "Mulai Belajar",
+    "progress": "Kemajuan",
+    "goToDashboard": "Ke Dashboard",
+    "dashboardHint": "Lacak kemajuan keseluruhan dan pencapaian Anda di dashboard"
+  },
+  "showAll": "Tampilkan Semua",
+  "focusOnWeakAreas": "Fokus pada Area Lemah",
+  "backToDashboard": "Kembali ke Dashboard"
+}

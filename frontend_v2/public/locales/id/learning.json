@@ -1,0 +1,21 @@
+{
+  "learningPath": {
+    "title": "Jalur Pembelajaran Personal Anda",
+    "subtitle": "Berdasarkan hasil penilaian Anda, berikut adalah perjalanan pembelajaran yang disarankan",
+    "yourProgress": "Ringkasan Kemajuan Anda",
+    "currentScore": "Saat Ini",
+    "target": "Target",
+    "completed": "selesai",
+    "filteringBy": "Menampilkan rekomendasi untuk: {{domain}}",
+    "clearFilter": "Tampilkan semua rekomendasi",
+    "recommendedPath": "Jalur Pembelajaran yang Disarankan",
+    "estimatedTime": "Total waktu: {{hours}}j {{minutes}}m",
+    "startLearning": "Mulai Belajar",
+    "progress": "Kemajuan",
+    "weakDomainReason": "Disarankan untuk memperkuat {{domain}} (saat ini: {{score}}%)",
+    "strongDomainReason": "Tantangan lanjutan untuk keterampilan {{domain}} yang kuat ({{score}}%)",
+    "averageDomainReason": "Lanjutkan membangun keahlian {{domain}} (saat ini: {{score}}%)",
+    "goToDashboard": "Ke Dashboard",
+    "dashboardHint": "Lacak kemajuan keseluruhan Anda dan lanjutkan perjalanan pembelajaran"
+  }
+}

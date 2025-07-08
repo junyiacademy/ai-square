@@ -1,0 +1,85 @@
+{
+  "title": "AI Square User Journey",
+  "subtitle": "Six key paths for complete AI learning experience",
+  "getStarted": "Get Started",
+  "pathOverview": "Complete Learning Cycle",
+  "nextPath": "Next Path →",
+  "tryFeature": "Experience This Feature",
+  "paths": {
+    "dashboard": {
+      "title": "Dashboard",
+      "subtitle": "Learning Command Center",
+      "description": "One-stop overview of your AI learning journey, track progress, view achievements, and plan next steps.",
+      "userNeed": "How is my learning progress?",
+      "features": [
+        "AI literacy progress visualization",
+        "Learning statistics at a glance",
+        "Personalized recommended actions",
+        "Quick feature navigation"
+      ]
+    },
+    "assessment": {
+      "title": "Assessment",
+      "subtitle": "AI Literacy Test",
+      "description": "25 professional questions to deeply understand your competency level across four AI domains.",
+      "userNeed": "What is my AI competency level?",
+      "features": [
+        "Four AI literacy domains",
+        "25 scenario-based questions",
+        "Radar chart capability analysis",
+        "Personalized recommendation report"
+      ]
+    },
+    "learningPath": {
+      "title": "Learning Path",
+      "subtitle": "Personalized Growth Plan",
+      "description": "Based on your assessment results, we recommend the most suitable learning content and pace.",
+      "userNeed": "What courses are right for me?",
+      "features": [
+        "Customized course recommendations",
+        "Graded learning content",
+        "Progressive planning",
+        "Flexible learning schedule"
+      ]
+    },
+    "pbl": {
+      "title": "PBL Practice",
+      "subtitle": "Real-world Scenarios",
+      "description": "9 practical scenarios with AI tutor guidance for learning by doing.",
+      "userNeed": "How do I apply AI in practice?",
+      "features": [
+        "AI Robotics Development",
+        "AI Stablecoin Trading",
+        "AI Job Search Training",
+        "Real-time AI tutoring"
+      ]
+    },
+    "chat": {
+      "title": "AI Advisor",
+      "subtitle": "24/7 Support",
+      "description": "24/7 intelligent learning companion that remembers your learning context and provides personalized advice.",
+      "userNeed": "Who can I ask when I have questions?",
+      "features": [
+        "Continuous conversation memory",
+        "Personalized learning suggestions",
+        "Multi-round deep conversations",
+        "Learning Q&A support"
+      ]
+    },
+    "discovery": {
+      "title": "Discovery",
+      "subtitle": "Personalized Career Adventure",
+      "description": "Find your ideal career path through AI assessment and develop professional skills in gamified adventures.",
+      "userNeed": "Which career path suits me?",
+      "features": [
+        "AI career matching assessment",
+        "Infinite task generation system",
+        "Gamified learning experience",
+        "Dynamic task difficulty adjustment"
+      ]
+    }
+  },
+  "keyFeatures": "Key Features",
+  "solvedNeed": "User Need Addressed",
+  "completeJourney": "Complete Learning Journey"
+}

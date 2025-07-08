@@ -1,0 +1,172 @@
+assessment_config:
+  total_questions: 12
+  time_limit_minutes: 15
+  passing_score: 60
+  domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - managing_with_ai
+    - designing_with_ai
+domains:
+  engaging_with_ai:
+    description: Compreender e comunicar eficazmente com sistemas de IA
+    questions: 3
+  creating_with_ai:
+    description: Usar ferramentas de IA para melhorar a criatividade e produtividade
+    questions: 3
+  managing_with_ai:
+    description: Compreender as limitações da IA, privacidade e considerações éticas
+    questions: 3
+  designing_with_ai:
+    description: Pensamento estratégico sobre implementação e inovação de IA
+    questions: 3
+questions:
+  - id: E001
+    domain: engaging_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: Qual é a forma mais eficaz de obter melhores resultados de um chatbot de IA?
+    options:
+      a: Fazer perguntas muito gerais
+      b: Fornecer instruções claras e específicas com contexto
+      c: Usar apenas perguntas de sim/não
+      d: Sempre fazer múltiplas perguntas de uma vez
+    explanation: Instruções claras e específicas com contexto ajudam a IA a entender exatamente o que você precisa e fornecer respostas mais precisas e úteis.
+  - id: E002
+    domain: engaging_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: Quando uma IA lhe dá uma resposta incorreta, qual deveria ser sua primeira resposta?
+    options:
+      a: Confiar imediatamente na IA e usar a informação
+      b: Verificar a informação através de outras fontes confiáveis
+      c: Parar de usar IA completamente
+      d: Reportar a IA como defeituosa
+    explanation: O pensamento crítico requer verificar as saídas da IA contra fontes confiáveis, já que a IA pode cometer erros ou fornecer informação desatualizada.
+  - id: E003
+    domain: engaging_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: Qual é o fator mais importante ao avaliar o viés em conteúdo gerado por IA?
+    options:
+      a: A velocidade de geração
+      b: As fontes de dados de treinamento e sua representação
+      c: O comprimento da saída
+      d: A complexidade técnica
+    explanation: O viés da IA frequentemente provém de dados de treinamento que carecem de diversidade ou contêm preconceitos históricos, tornando as fontes de dados cruciais para a avaliação.
+  - id: C001
+    domain: creating_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: Qual abordagem é mais eficaz ao usar IA para escrita criativa?
+    options:
+      a: Deixar que a IA escreva tudo sem contribuição humana
+      b: Usar a IA como parceiro colaborativo para brainstorming e refinamento
+      c: Usar IA apenas para corrigir gramática e ortografia
+      d: Evitar completamente a IA em processos criativos
+    explanation: A IA funciona melhor como parceiro criativo, ajudando com ideação, feedback e refinamento enquanto mantém a criatividade e supervisão humana.
+  - id: C002
+    domain: creating_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: Ao usar geradores de imagens de IA, qual é a consideração ética mais importante?
+    options:
+      a: Fazer imagens o mais realistas possível
+      b: Respeitar os direitos autorais e evitar deepfakes de pessoas reais
+      c: Usar a configuração de geração mais rápida
+      d: Criar tantas imagens quanto possível
+    explanation: Respeitar os direitos de propriedade intelectual e evitar o mau uso para criar semelhanças não autorizadas ou conteúdo enganoso é crucial para o uso ético da IA.
+  - id: C003
+    domain: creating_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: Como você deveria abordar a geração de código assistida por IA para um projeto de software crítico?
+    options:
+      a: Usar código de IA diretamente sem revisão
+      b: Revisar, testar e validar completamente todo código gerado por IA
+      c: Usar IA apenas para comentários e documentação
+      d: Substituir todos os desenvolvedores por ferramentas de IA
+    explanation: Software crítico requer supervisão humana, testes completos e validação do código gerado por IA para garantir segurança, confiabilidade e correção.
+  - id: M001
+    domain: managing_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: O que você deveria fazer com informação pessoal sensível ao usar ferramentas de IA?
+    options:
+      a: Compartilhar livremente para obter melhores respostas da IA
+      b: Nunca inserir informação sensível em sistemas de IA
+      c: Compartilhar apenas com empresas de IA confiáveis
+      d: Criptografar antes de compartilhar com IA
+    explanation: Informação pessoal sensível nunca deve ser inserida em sistemas de IA, pois pode ser armazenada, processada ou potencialmente exposta.
+  - id: M002
+    domain: managing_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: Como você deveria gerenciar o uso de ferramentas de IA em um ambiente de equipe?
+    options:
+      a: Deixar todos usarem qualquer ferramenta de IA sem diretrizes
+      b: Estabelecer políticas claras e treinamento para uso de ferramentas de IA
+      c: Proibir todas as ferramentas de IA para evitar riscos
+      d: Permitir apenas que gerentes usem ferramentas de IA
+    explanation: Políticas claras e treinamento garantem o uso responsável, eficaz e consistente de ferramentas de IA em toda a equipe, maximizando benefícios e minimizando riscos.
+  - id: M003
+    domain: managing_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: Qual é o fator mais crítico ao implementar IA em processos empresariais?
+    options:
+      a: Escolher a tecnologia de IA mais avançada
+      b: Entender limitações e manter supervisão humana
+      c: Implementar IA o mais rápido possível
+      d: Substituir o máximo possível de trabalhadores humanos
+    explanation: Entender as limitações da IA e manter supervisão humana apropriada garante implementação bem-sucedida, responsável e sustentável de IA nos negócios.
+  - id: D001
+    domain: designing_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: Ao projetar um recurso alimentado por IA para usuários, qual deveria ser o foco principal?
+    options:
+      a: Exibir as capacidades de IA mais avançadas
+      b: Resolver problemas reais do usuário e melhorar a experiência do usuário
+      c: Tornar a IA o mais complexa possível
+      d: Esconder o fato de que IA está sendo usada
+    explanation: Design centrado no usuário foca em resolver problemas reais e melhorar experiências, não em exibir tecnologia por si só.
+  - id: D002
+    domain: designing_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: Como você deveria lidar com falhas do sistema de IA em aplicações voltadas ao usuário?
+    options:
+      a: Esconder erros e fingir que tudo está funcionando
+      b: Projetar alternativas elegantes e comunicação clara de erros
+      c: Desligar imediatamente toda a aplicação
+      d: Culpar o usuário pelo erro
+    explanation: Bom design de IA inclui planejar para falhas com alternativas elegantes e comunicação clara para manter a confiança e experiência do usuário.
+  - id: D003
+    domain: designing_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: Qual é a consideração mais importante ao projetar sistemas de IA para audiências globais diversas?
+    options:
+      a: Usar o mesmo design para todos para garantir consistência
+      b: Entender contextos culturais e evitar viés algorítmico
+      c: Focar apenas nos maiores segmentos de mercado
+      d: Implementar as tecnologias de IA mais recentes em todos os lugares
+    explanation: Design inclusivo de IA requer entender diversos contextos culturais e trabalhar ativamente para prevenir viés algorítmico que poderia prejudicar diferentes grupos.
+metadata:
+  language: pt
+  language_name: Portuguese
+  generated_from: ai_literacy_questions.yaml
+  generated_at: '2025-07-03T10:07:41.117Z'

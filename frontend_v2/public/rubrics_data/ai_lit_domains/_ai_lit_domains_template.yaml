@@ -1,0 +1,46 @@
+# AI Literacy Domains Template
+# This template defines the structure for language-specific domain files
+# Each language file should follow this structure and translate all [TRANSLATE] values
+
+domains:
+  # Domain IDs (Engaging_with_AI, Creating_with_AI, Managing_with_AI, Designing_with_AI) 
+  # should remain in English - DO NOT TRANSLATE
+  [DOMAIN_ID]:  # e.g., Engaging_with_AI
+    emoji: [KEEP_SAME]  # Keep emoji same across all languages
+    overview: "[TRANSLATE: Domain overview description in target language]"
+    competencies:
+      # Competency IDs (E1, E2, C1, C2, etc.) should remain in English - DO NOT TRANSLATE
+      [COMPETENCY_ID]:  # e.g., E1, E2, C1, C2, M1, M2, D1, D2
+        description: "[TRANSLATE: Competency description in target language]"
+        knowledge:  # Keep same across all languages
+          - [K_CODE]  # e.g., K1.1, K1.2
+          - [K_CODE]
+        skills:  # Keep same across all languages
+          - [S_CODE]  # e.g., S1.1, S2.1
+          - [S_CODE]
+        attitudes:  # Keep same across all languages
+          - [A_CODE]  # e.g., A1.1, A2.1
+          - [A_CODE]
+        content: "[TRANSLATE: Detailed content description explaining what learners do in target language]"
+        scenarios:
+          - "[TRANSLATE: Scenario example 1 in target language]"
+          - "[TRANSLATE: Scenario example 2 in target language]"
+
+metadata:
+  language: [LANGUAGE_CODE]  # e.g., en, zhCN, pt, ar, id, th
+  version: "1.0"
+  last_updated: [YYYY-MM-DD]
+
+# Translation Guidelines:
+# 1. Domain IDs must remain in English (Engaging_with_AI, Creating_with_AI, etc.)
+# 2. Competency IDs must remain in English (E1, E2, C1, C2, M1, M2, D1, D2, etc.)
+# 3. KSA codes must remain unchanged (K1.1, S2.1, A3.1, etc.)
+# 4. Emojis should remain the same across all languages
+# 5. All descriptive text marked with [TRANSLATE] must be translated
+# 6. Scenarios should be culturally adapted while maintaining the educational intent
+
+# Structure Overview:
+# - 4 domains total: Engaging_with_AI, Creating_with_AI, Managing_with_AI, Designing_with_AI
+# - Each domain has multiple competencies (5-6 per domain)
+# - Each competency maps to specific Knowledge, Skills, and Attitudes codes
+# - Each competency includes practical scenario examples

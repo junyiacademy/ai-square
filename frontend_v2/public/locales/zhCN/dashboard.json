@@ -1,0 +1,49 @@
+{
+  "welcome": "欢迎回来，{{name}}！",
+  "subtitle": "这是您的 AI 素养进度概览",
+  "aiLiteracyProgress": "AI 素养进度",
+  "domains": {
+    "engaging_with_ai": "AI 互动",
+    "creating_with_ai": "AI 创作",
+    "managing_with_ai": "AI 管理",
+    "designing_with_ai": "AI 设计"
+  },
+  "viewDetailedProgress": "查看详细学习路径",
+  "learningStatistics": "学习统计",
+  "completedScenarios": "已完成",
+  "inProgress": "进行中",
+  "learningHours": "学习时数",
+  "dayStreak": "连续天数",
+  "recentActivities": "最近活动",
+  "noRecentActivities": "暂无最近活动。开始学习即可在此查看您的进度！",
+  "activities": {
+    "completedAssessment": "已完成 AI 素养评估",
+    "assessmentDesc": "发现了您的 AI 知识基准"
+  },
+  "recommendedActions": "推荐的下一步",
+  "nextActions": {
+    "takeAssessment": "进行 AI 素养评估",
+    "assessmentDesc": "发现您当前的 AI 知识水平并获得个性化推荐",
+    "viewLearningPath": "查看您的学习路径",
+    "learningPathDesc": "基于您的评估结果查看个性化推荐",
+    "startPBL": "开始 PBL 场景",
+    "pblDesc": "通过互动场景练习真实世界的 AI 技能"
+  },
+  "priority": {
+    "high": "高",
+    "medium": "中",
+    "low": "低"
+  },
+  "quickLinks": "快速链接",
+  "explorePBL": "探索 PBL 场景",
+  "viewCompetencies": "查看 AI 能力",
+  "viewHistory": "查看学习历史",
+  "exploreKSA": "探索知识地图",
+  "yourGoals": "您的学习目标",
+  "updateGoals": "更新您的目标",
+  "learningPathQuickAccess": "个性化学习推荐",
+  "learningPathDescription": "探索根据您的评估结果和兴趣量身定制的 AI 学习场景。选择最适合您需求的领域。",
+  "viewAllPaths": "查看所有学习路径",
+  "focusOnWeakAreas": "专注薄弱领域",
+  "aiAdvisor": "AI 学习顾问"
+}

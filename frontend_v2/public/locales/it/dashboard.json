@@ -1,0 +1,49 @@
+{
+  "welcome": "Bentornato, {{name}}!",
+  "subtitle": "Ecco il tuo riepilogo dei progressi nell'alfabetizzazione IA",
+  "aiLiteracyProgress": "Progressi nell'Alfabetizzazione IA",
+  "domains": {
+    "engaging_with_ai": "Interagire con l'IA",
+    "creating_with_ai": "Creare con l'IA",
+    "managing_with_ai": "Gestire con l'IA",
+    "designing_with_ai": "Progettare con l'IA"
+  },
+  "viewDetailedProgress": "Visualizza percorso di apprendimento dettagliato",
+  "learningStatistics": "Statistiche di Apprendimento",
+  "completedScenarios": "Completati",
+  "inProgress": "In Corso",
+  "learningHours": "Ore",
+  "dayStreak": "Serie di Giorni",
+  "recentActivities": "Attività Recenti",
+  "noRecentActivities": "Nessuna attività recente. Inizia ad imparare per vedere i tuoi progressi qui!",
+  "activities": {
+    "completedAssessment": "Valutazione di Alfabetizzazione IA completata",
+    "assessmentDesc": "Scoperto il tuo livello di base di conoscenza IA"
+  },
+  "recommendedActions": "Prossimi Passi Consigliati",
+  "nextActions": {
+    "takeAssessment": "Fai la Valutazione di Alfabetizzazione IA",
+    "assessmentDesc": "Scopri il tuo livello attuale di conoscenza IA e ottieni raccomandazioni personalizzate",
+    "viewLearningPath": "Visualizza il Tuo Percorso di Apprendimento",
+    "learningPathDesc": "Vedi raccomandazioni personalizzate basate sui tuoi risultati di valutazione",
+    "startPBL": "Inizia uno Scenario PBL",
+    "pblDesc": "Pratica competenze IA del mondo reale con scenari interattivi"
+  },
+  "priority": {
+    "high": "Alta",
+    "medium": "Media",
+    "low": "Bassa"
+  },
+  "quickLinks": "Collegamenti Rapidi",
+  "explorePBL": "Esplora Scenari PBL",
+  "viewCompetencies": "Visualizza Competenze IA",
+  "viewHistory": "Visualizza Cronologia Apprendimento",
+  "exploreKSA": "Esplora Mappa delle Conoscenze",
+  "yourGoals": "I Tuoi Obiettivi di Apprendimento",
+  "updateGoals": "Aggiorna i tuoi obiettivi",
+  "learningPathQuickAccess": "Raccomandazioni di Apprendimento Personalizzate",
+  "learningPathDescription": "Esplora scenari di apprendimento IA adattati ai tuoi risultati di valutazione e interessi. Scegli le aree che meglio si adattano alle tue esigenze.",
+  "viewAllPaths": "Visualizza Tutti i Percorsi di Apprendimento",
+  "focusOnWeakAreas": "Concentrati sulle Aree Deboli",
+  "aiAdvisor": "Consulente di Apprendimento IA"
+}

@@ -1,0 +1,107 @@
+{
+  "hero": {
+    "title": "AI SquareでAIリテラシーをマスター",
+    "subtitle": "人工知能を理解し活用するためのパーソナライズされた旅",
+    "description": "AI Squareは、インタラクティブな評価、パーソナライズされた学習パス、リアルタイムAI支援を通じて、必要不可欠なAIコンピテンシーを開発できる革新的なマルチエージェント学習プラットフォームです。",
+    "cta": {
+      "getStarted": "旅を始める",
+      "explore": "AIドメインを探索",
+      "assessment": "評価を受ける"
+    }
+  },
+  "features": {
+    "title": "なぜAI Squareを選ぶのか？",
+    "subtitle": "現代世界のために設計された包括的なAI教育",
+    "items": {
+      "personalizedLearning": {
+        "title": "パーソナライズされた学習パス",
+        "description": "AI駆動の推奨が学習スタイルとペースに適応"
+      },
+      "multilingualSupport": {
+        "title": "多言語サポート",
+        "description": "完全な多言語コンテンツで好みの言語で学習"
+      },
+      "realTimeAI": {
+        "title": "24時間365日AIチュータリング",
+        "description": "高度なAIアシスタントから即座にフィードバックとガイダンスを取得"
+      },
+      "comprehensiveAssessment": {
+        "title": "包括的な評価",
+        "description": "詳細な洞察で4つのコアドメインにわたるAIリテラシーを評価"
+      },
+      "interactiveTasks": {
+        "title": "インタラクティブな学習タスク",
+        "description": "実践的なプロジェクトと実世界のシナリオで知識を応用"
+      },
+      "progressTracking": {
+        "title": "視覚的な進捗追跡",
+        "description": "直感的なレーダーチャートと達成バッジで成長を追跡"
+      }
+    }
+  },
+  "domains": {
+    "title": "4つのコアAIリテラシードメイン",
+    "subtitle": "AI相互作用と創造のあらゆる側面をマスター",
+    "viewDetails": "詳細を見る",
+    "items": {
+      "engaging": {
+        "name": "AIとの関わり"
+      },
+      "creating": {
+        "name": "AIとの創造"
+      },
+      "managing": {
+        "name": "AIの管理"
+      },
+      "designing": {
+        "name": "AIによる設計"
+      }
+    }
+  },
+  "howItWorks": {
+    "title": "仕組み",
+    "subtitle": "簡単なステップでAIマスタリーへの旅",
+    "steps": {
+      "assessment": {
+        "title": "1. 初期評価を受ける",
+        "description": "4つのドメインにわたる現在のAIリテラシーレベルを評価"
+      },
+      "personalized": {
+        "title": "2. パーソナライズされたパスを取得",
+        "description": "結果に基づいてカスタマイズされた学習の旅を受け取る"
+      },
+      "learn": {
+        "title": "3. 学習と練習",
+        "description": "インタラクティブなコンテンツとAI支援タスクに従事"
+      },
+      "track": {
+        "title": "4. 進捗を追跡",
+        "description": "成長を監視し、達成を獲得"
+      }
+    }
+  },
+  "target": {
+    "title": "AI Squareは誰のため？",
+    "subtitle": "あらゆるレベルの学習者のために設計",
+    "audiences": {
+      "individuals": {
+        "title": "個人学習者",
+        "description": "個人的および専門的な成長のための必須AIスキルを開発"
+      },
+      "educators": {
+        "title": "教育者",
+        "description": "AIリテラシーを教えるための包括的なリソースにアクセス"
+      },
+      "organizations": {
+        "title": "組織",
+        "description": "エンタープライズグレードのAI教育ソリューションでチームを訓練"
+      }
+    }
+  },
+  "cta": {
+    "title": "AI学習の旅を始める準備はできましたか？",
+    "subtitle": "AIリテラシーをマスターしている何千人もの学習者に参加",
+    "button": "無料で始める",
+    "login": "すでにアカウントをお持ちですか？サインイン"
+  }
+}

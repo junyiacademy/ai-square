@@ -1,0 +1,322 @@
+domains:
+  Engaging_with_AI:
+    emoji: 🎯
+    overview: 涉及使用AI作为工具来访问新内容、信息或推荐。这些情况要求学习者首先识别AI的存在，然后评估AI输出的准确性和相关性。学习者必须对AI的技术基础建立基本理解，以便批判性地分析其能力和局限性。
+    competencies:
+      E1:
+        description: 识别AI在不同情境中的作用和影响。
+        knowledge:
+          - K1.4
+          - K5.1
+        skills:
+          - S6.1
+        attitudes:
+          - A2.1
+          - A1.1
+        content: 学习者识别日常工具和系统中AI的存在，并考虑其在各种情况下的目的，如内容推荐或自适应学习。他们反思AI如何影响他们的选择、学习和认知。
+        scenarios:
+          - 列举熟悉的数字交互（例如使用网络摄像头、视频推荐），并讨论每种交互是否以及如何使用AI。
+          - 探索在线数学平台如何使用实时数据来呈现不同难度级别的内容。
+      E2:
+        description: 分析AI输出的准确性和相关性。
+        knowledge:
+          - K1.1
+          - K1.3
+          - K4.1
+        skills:
+          - S1.1
+        attitudes:
+          - A1.1
+          - A2.1
+        content: 学习者评估AI生成的内容是否准确、相关和适用。他们学会识别AI的优势和局限性，并在做出决定时考虑多种信息源。
+        scenarios:
+          - 比较AI生成的新闻摘要与原始文章，识别准确性和偏见。
+          - 评估AI语言翻译的质量，并考虑文化背景和语义细微差别。
+      E3:
+        description: 认识AI系统的能力和局限性。
+        knowledge:
+          - K1.2
+          - K1.3
+          - K4.1
+        skills:
+          - S1.1
+        attitudes:
+          - A2.1
+        content: 学习者理解AI系统的技术能力和边界，包括其在不同任务中的表现差异。他们学会区分AI擅长的领域和需要人类判断的领域。
+        scenarios:
+          - 测试AI聊天机器人在不同类型问题上的表现，比较其在事实性问题与创造性问题上的差异。
+          - 分析AI图像识别系统在不同条件下的准确性。
+      E4:
+        description: 评估AI使用的适当性和伦理影响。
+        knowledge:
+          - K5.4
+          - K2.1
+        skills:
+          - S5.1
+          - S6.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: 学习者考虑在特定情况下使用AI是否合适、有益或可能有害。他们评估AI使用的伦理影响，包括隐私、偏见和公平性问题。
+        scenarios:
+          - 讨论在招聘过程中使用AI筛选简历的伦理影响。
+          - 分析AI推荐系统可能如何影响用户的选择和观点。
+      E5:
+        description: 在使用AI时实践负责任的行为。
+        knowledge:
+          - K5.4
+          - K2.1
+        skills:
+          - S7.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: 学习者在与AI系统互动时展现负责任和伦理的行为。他们考虑自己行为的影响，并在使用AI时遵循最佳实践。
+        scenarios:
+          - 制定使用AI工具完成学术作业的指导原则。
+          - 设计策略来验证AI生成信息的准确性，然后再分享给他人。
+
+  Creating_with_AI:
+    emoji: 🎨
+    overview: 涉及与AI系统协作生成新内容、想法或解决方案。这些情况要求学习者理解AI作为创造性伙伴的能力，同时保持对人类创造力、原创性和知识产权的尊重。
+    competencies:
+      C1:
+        description: 使用AI工具增强创造力和生产力。
+        knowledge:
+          - K1.4
+          - K5.3
+        skills:
+          - S2.1
+          - S3.1
+        attitudes:
+          - A3.1
+          - A4.1
+        content: 学习者使用AI工具来增强他们的创造性工作，如写作、设计或解决问题。他们学会如何有效地与AI协作，同时保持自己的创造性愿景和控制权。
+        scenarios:
+          - 使用AI写作助手来改进论文结构，同时保持自己的观点和论证。
+          - 与AI艺术生成器合作创作视觉作品，探索不同的风格和概念。
+      C2:
+        description: 在AI辅助的创作过程中保持原创性和真实性。
+        knowledge:
+          - K5.3
+          - K2.1
+        skills:
+          - S2.1
+          - S7.1
+        attitudes:
+          - A1.1
+          - A3.1
+        content: 学习者理解如何在使用AI工具的同时保持创作的原创性和个人声音。他们学会区分AI辅助创作与完全依赖AI生成的内容。
+        scenarios:
+          - 创建一个项目，明确标识哪些部分是AI辅助的，哪些是原创的。
+          - 讨论使用AI生成的内容在学术和商业环境中的适当归属。
+      C3:
+        description: 理解AI创作中的版权和知识产权问题。
+        knowledge:
+          - K5.3
+          - K2.1
+        skills:
+          - S1.1
+          - S7.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: 学习者了解AI生成内容的版权和知识产权含义。他们学会负责任地使用AI创作工具，并理解相关的法律和伦理问题。
+        scenarios:
+          - 研究不同AI平台的使用条款和版权政策。
+          - 创建一个关于AI生成内容使用的最佳实践指南。
+      C4:
+        description: 评估和改进AI生成的内容。
+        knowledge:
+          - K1.3
+          - K4.1
+        skills:
+          - S1.1
+          - S2.1
+        attitudes:
+          - A2.1
+          - A4.1
+        content: 学习者学会评估AI生成内容的质量，并通过迭代过程进行改进。他们发展批判性思维技能来识别和解决AI输出中的问题。
+        scenarios:
+          - 通过多次迭代改进AI生成的故事或文章。
+          - 评估AI生成的代码并进行必要的修改和优化。
+      C5:
+        description: 在创作过程中平衡AI辅助与人类判断。
+        knowledge:
+          - K3.2
+          - K4.1
+        skills:
+          - S2.1
+          - S5.1
+        attitudes:
+          - A4.1
+          - A5.1
+        content: 学习者学会在创作过程中恰当地结合AI工具和人类判断。他们理解何时依赖AI，何时需要人类的创造力和判断力。
+        scenarios:
+          - 设计一个创作工作流程，明确定义AI和人类在不同阶段的角色。
+          - 分析不同类型的创作任务，确定AI辅助的适当程度。
+
+  Managing_with_AI:
+    emoji: 📊
+    overview: 涉及在组织和管理任务中战略性地使用AI。这些情况要求学习者了解AI如何改变工作流程、决策过程和组织结构，同时考虑人类监督和责任的重要性。
+    competencies:
+      M1:
+        description: 评估AI在工作流程中的整合机会。
+        knowledge:
+          - K3.1
+          - K3.2
+        skills:
+          - S5.1
+          - S3.1
+        attitudes:
+          - A3.1
+          - A4.1
+        content: 学习者识别组织中可以有效整合AI的领域，评估潜在的好处和风险。他们学会分析现有工作流程并确定AI可以增加价值的地方。
+        scenarios:
+          - 分析学校管理系统，识别可以通过AI自动化或改进的流程。
+          - 评估在客户服务中使用AI聊天机器人的可行性和影响。
+      M2:
+        description: 在AI辅助的决策过程中保持人类监督。
+        knowledge:
+          - K3.3
+          - K5.1
+        skills:
+          - S1.1
+          - S6.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: 学习者理解在AI辅助决策中人类监督的重要性。他们学会设计决策过程，确保人类保持最终控制权和责任。
+        scenarios:
+          - 设计一个AI辅助的学生评估系统，包含人类审查和干预机制。
+          - 创建使用AI进行数据分析的决策框架，确保人类验证和解释。
+      M3:
+        description: 管理AI实施的组织变革。
+        knowledge:
+          - K3.1
+          - K3.2
+        skills:
+          - S4.1
+          - S7.1
+        attitudes:
+          - A4.1
+          - A5.1
+        content: 学习者理解AI实施如何影响组织文化和工作方式。他们学会管理变革过程，包括培训、沟通和变革管理。
+        scenarios:
+          - 制定计划，帮助团队适应新的AI工具和工作流程。
+          - 设计培训计划，提高组织成员的AI素养。
+      M4:
+        description: 评估和缓解AI使用的风险。
+        knowledge:
+          - K4.1
+          - K5.4
+        skills:
+          - S1.1
+          - S6.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: 学习者识别AI使用中的潜在风险，包括偏见、错误和安全问题。他们学会制定策略来缓解这些风险并确保负责任的AI使用。
+        scenarios:
+          - 进行AI系统的风险评估，识别潜在的偏见和错误。
+          - 制定AI使用的治理政策和最佳实践指南。
+      M5:
+        description: 衡量AI实施的效果和影响。
+        knowledge:
+          - K3.1
+          - K5.1
+        skills:
+          - S1.1
+          - S6.1
+        attitudes:
+          - A2.1
+          - A4.1
+        content: 学习者学会评估AI实施的成功程度，包括效率提升、成本节约和用户满意度。他们发展衡量和改进AI系统性能的技能。
+        scenarios:
+          - 设计指标来评估AI客服系统的效果。
+          - 分析AI工具对工作效率和质量的影响。
+
+  Designing_with_AI:
+    emoji: 🔧
+    overview: 涉及设计和开发AI系统或AI增强的解决方案。这些情况要求学习者理解AI开发的技术和伦理考虑，包括数据、算法和用户体验的设计。
+    competencies:
+      D1:
+        description: 设计考虑伦理和公平性的AI系统。
+        knowledge:
+          - K2.1
+          - K5.4
+        skills:
+          - S1.1
+          - S3.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: 学习者理解如何设计公平、透明和负责任的AI系统。他们学会考虑不同用户群体的需求，并在设计过程中嵌入伦理考虑。
+        scenarios:
+          - 设计一个AI招聘工具，确保消除性别和种族偏见。
+          - 创建一个AI教育系统，为不同学习需求的学生提供公平的机会。
+      D2:
+        description: 理解AI系统的数据需求和质量。
+        knowledge:
+          - K1.1
+          - K2.2
+        skills:
+          - S3.1
+          - S1.1
+        attitudes:
+          - A1.1
+          - A2.1
+        content: 学习者了解AI系统对数据的依赖，包括数据收集、清理和质量保证。他们学会识别和解决数据质量问题。
+        scenarios:
+          - 分析训练数据集，识别潜在的偏见和质量问题。
+          - 设计数据收集策略，确保数据的代表性和质量。
+      D3:
+        description: 设计用户友好的AI界面和体验。
+        knowledge:
+          - K1.2
+          - K4.1
+        skills:
+          - S3.1
+          - S7.1
+        attitudes:
+          - A3.1
+          - A5.1
+        content: 学习者学会设计直观、透明的AI用户界面。他们理解如何让用户理解和信任AI系统，并提供适当的用户控制。
+        scenarios:
+          - 设计一个AI推荐系统的用户界面，让用户理解推荐的依据。
+          - 创建一个AI助手，提供清晰的反馈和解释。
+      D4:
+        description: 实施AI系统的测试和验证。
+        knowledge:
+          - K1.1
+          - K4.1
+        skills:
+          - S1.1
+          - S3.1
+        attitudes:
+          - A1.1
+          - A2.1
+        content: 学习者学会测试和验证AI系统的性能、准确性和可靠性。他们了解如何识别和解决AI系统中的问题。
+        scenarios:
+          - 设计测试方案来评估AI模型的准确性和鲁棒性。
+          - 进行用户测试，收集关于AI系统可用性的反馈。
+      D5:
+        description: 考虑AI系统的长期影响和可持续性。
+        knowledge:
+          - K3.1
+          - K5.1
+        skills:
+          - S6.1
+          - S1.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: 学习者考虑AI系统对社会、环境和经济的长期影响。他们学会设计可持续、可扩展的AI解决方案。
+        scenarios:
+          - 评估AI系统的环境影响，包括能源使用和碳足迹。
+          - 分析AI实施对就业和社会结构的长期影响。
+
+metadata:
+  language: zhCN
+  version: "1.0"
+  last_updated: "2025-07-03"

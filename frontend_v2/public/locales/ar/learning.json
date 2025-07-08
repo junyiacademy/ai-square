@@ -1,0 +1,21 @@
+{
+  "learningPath": {
+    "title": "مسار التعلم المخصص الخاص بك",
+    "subtitle": "بناءً على نتائج تقييمك، إليك رحلة التعلم الموصى بها",
+    "yourProgress": "نظرة عامة على تقدمك",
+    "currentScore": "الحالي",
+    "target": "الهدف",
+    "completed": "مكتمل",
+    "filteringBy": "إظهار التوصيات لـ: {{domain}}",
+    "clearFilter": "إظهار جميع التوصيات",
+    "recommendedPath": "مسار التعلم الموصى به",
+    "estimatedTime": "إجمالي الوقت: {{hours}}س {{minutes}}د",
+    "startLearning": "ابدأ التعلم",
+    "progress": "التقدم",
+    "weakDomainReason": "موصى به لتقوية {{domain}} (الحالي: {{score}}%)",
+    "strongDomainReason": "تحدي متقدم لمهاراتك القوية في {{domain}} ({{score}}%)",
+    "averageDomainReason": "تابع بناء خبرة {{domain}} (الحالي: {{score}}%)",
+    "goToDashboard": "انتقل إلى لوحة التحكم",
+    "dashboardHint": "تتبع تقدمك الإجمالي وتابع رحلة التعلم"
+  }
+}

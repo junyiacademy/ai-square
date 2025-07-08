@@ -1,0 +1,21 @@
+{
+  "learningPath": {
+    "title": "您的個人化學習路徑",
+    "subtitle": "根據您的評估結果，這是您的推薦學習之旅",
+    "yourProgress": "您的進度概覽",
+    "currentScore": "目前",
+    "target": "目標",
+    "completed": "已完成",
+    "filteringBy": "顯示推薦項目：{{domain}}",
+    "clearFilter": "顯示所有推薦",
+    "recommendedPath": "推薦學習路徑",
+    "estimatedTime": "總時間：{{hours}} 小時 {{minutes}} 分鐘",
+    "startLearning": "開始學習",
+    "progress": "進度",
+    "weakDomainReason": "建議加強 {{domain}}（目前：{{score}}%）",
+    "strongDomainReason": "針對您優秀的 {{domain}} 技能的進階挑戰（{{score}}%）",
+    "averageDomainReason": "繼續建構 {{domain}} 專業知識（目前：{{score}}%）",
+    "goToDashboard": "前往儀表板",
+    "dashboardHint": "追蹤您的整體進度並繼續您的學習之旅"
+  }
+}

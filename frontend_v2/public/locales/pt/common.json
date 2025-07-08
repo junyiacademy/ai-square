@@ -1,0 +1,27 @@
+{
+  "skip": "Pular",
+  "next": "Próximo",
+  "back": "Voltar",
+  "continue": "Continuar",
+  "loading": "Carregando...",
+  "save": "Salvar",
+  "cancel": "Cancelar",
+  "submit": "Enviar",
+  "delete": "Excluir",
+  "edit": "Editar",
+  "close": "Fechar",
+  "error": "Erro",
+  "success": "Sucesso",
+  "warning": "Aviso",
+  "info": "Informação",
+  "backToDashboard": "Voltar ao Painel",
+  "minutes": "minutos",
+  "hours": "horas",
+  "days": "dias",
+  "view": "Visualizar",
+  "difficulty": {
+    "beginner": "Iniciante",
+    "intermediate": "Intermediário",
+    "advanced": "Avançado"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "welcome": "다시 오신 것을 환영합니다, {{name}}님!",
+  "subtitle": "AI 리터러시 진행 상황 개요입니다",
+  "aiLiteracyProgress": "AI 리터러시 진행 상황",
+  "domains": {
+    "engaging_with_ai": "AI와 상호작용",
+    "creating_with_ai": "AI로 창작",
+    "managing_with_ai": "AI로 관리",
+    "designing_with_ai": "AI로 설계"
+  },
+  "viewDetailedProgress": "상세 학습 경로 보기",
+  "learningStatistics": "학습 통계",
+  "completedScenarios": "완료됨",
+  "inProgress": "진행 중",
+  "learningHours": "시간",
+  "dayStreak": "일 연속",
+  "recentActivities": "최근 활동",
+  "noRecentActivities": "최근 활동이 없습니다. 학습을 시작하여 진행 상황을 확인하세요!",
+  "activities": {
+    "completedAssessment": "AI 리터러시 평가 완료",
+    "assessmentDesc": "AI 지식 수준을 발견했습니다"
+  },
+  "recommendedActions": "추천 다음 단계",
+  "nextActions": {
+    "takeAssessment": "AI 리터러시 평가 받기",
+    "assessmentDesc": "현재 AI 지식 수준을 파악하고 맞춤형 추천을 받으세요",
+    "viewLearningPath": "학습 경로 보기",
+    "learningPathDesc": "평가 결과를 바탕으로 한 맞춤형 추천 보기",
+    "startPBL": "PBL 시나리오 시작",
+    "pblDesc": "대화형 시나리오로 실제 AI 기술 연습"
+  },
+  "priority": {
+    "high": "높음",
+    "medium": "중간",
+    "low": "낮음"
+  },
+  "quickLinks": "빠른 링크",
+  "explorePBL": "PBL 시나리오 탐색",
+  "viewCompetencies": "AI 역량 보기",
+  "viewHistory": "학습 기록 보기",
+  "exploreKSA": "지식 맵 탐색",
+  "yourGoals": "학습 목표",
+  "updateGoals": "목표 업데이트",
+  "learningPathQuickAccess": "맞춤형 학습 추천",
+  "learningPathDescription": "평가 결과와 관심사에 맞춘 AI 학습 시나리오를 탐색하세요. 필요에 가장 적합한 영역을 선택하세요.",
+  "viewAllPaths": "모든 학습 경로 보기",
+  "focusOnWeakAreas": "약점에 집중",
+  "aiAdvisor": "AI 학습 어드바이저"
+}

@@ -1,0 +1,12 @@
+{
+  "aiAdvisor": "Conseiller d'Apprentissage IA",
+  "newChat": "Nouveau Chat",
+  "history": "Historique du Chat",
+  "welcomeTitle": "Bonjour ! Je suis votre Conseiller d'Apprentissage IA",
+  "welcomeMessage": "Je suis ici pour vous aider dans votre parcours de littératie IA. Posez-moi des questions sur les parcours d'apprentissage, les scénarios PBL ou tout concept IA que vous souhaitez mieux comprendre.",
+  "inputPlaceholder": "Tapez votre message ici... (Appuyez sur Entrée pour envoyer)",
+  "suggestedTopic1": "Par quel scénario PBL devrais-je commencer ?",
+  "suggestedTopic2": "Aidez-moi à comprendre mes résultats d'évaluation",
+  "suggestedTopic3": "Quels sont mes points faibles et comment puis-je m'améliorer ?",
+  "suggestedTopic4": "Expliquez les concepts IA en termes simples"
+}

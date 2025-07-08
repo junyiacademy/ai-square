@@ -1,0 +1,49 @@
+{
+  "welcome": "Selamat datang kembali, {{name}}!",
+  "subtitle": "Berikut gambaran kemajuan literasi AI Anda",
+  "aiLiteracyProgress": "Kemajuan Literasi AI",
+  "domains": {
+    "engaging_with_ai": "Berinteraksi dengan AI",
+    "creating_with_ai": "Berkreasi dengan AI",
+    "managing_with_ai": "Mengelola dengan AI",
+    "designing_with_ai": "Mendesain dengan AI"
+  },
+  "viewDetailedProgress": "Lihat jalur pembelajaran terperinci",
+  "learningStatistics": "Statistik Pembelajaran",
+  "completedScenarios": "Selesai",
+  "inProgress": "Sedang Berlangsung",
+  "learningHours": "Jam",
+  "dayStreak": "Hari Berturut-turut",
+  "recentActivities": "Aktivitas Terkini",
+  "noRecentActivities": "Tidak ada aktivitas terkini. Mulai belajar untuk melihat kemajuan Anda di sini!",
+  "activities": {
+    "completedAssessment": "Menyelesaikan Penilaian Literasi AI",
+    "assessmentDesc": "Menemukan dasar pengetahuan AI Anda"
+  },
+  "recommendedActions": "Langkah Selanjutnya yang Direkomendasikan",
+  "nextActions": {
+    "takeAssessment": "Ikuti Penilaian Literasi AI",
+    "assessmentDesc": "Temukan tingkat pengetahuan AI Anda saat ini dan dapatkan rekomendasi yang dipersonalisasi",
+    "viewLearningPath": "Lihat Jalur Pembelajaran Anda",
+    "learningPathDesc": "Lihat rekomendasi yang dipersonalisasi berdasarkan hasil penilaian Anda",
+    "startPBL": "Mulai Skenario PBL",
+    "pblDesc": "Praktikkan keterampilan AI dunia nyata dengan skenario interaktif"
+  },
+  "priority": {
+    "high": "Tinggi",
+    "medium": "Sedang",
+    "low": "Rendah"
+  },
+  "quickLinks": "Tautan Cepat",
+  "explorePBL": "Jelajahi Skenario PBL",
+  "viewCompetencies": "Lihat Kompetensi AI",
+  "viewHistory": "Lihat Riwayat Pembelajaran",
+  "exploreKSA": "Jelajahi Peta Pengetahuan",
+  "yourGoals": "Tujuan Pembelajaran Anda",
+  "updateGoals": "Perbarui tujuan Anda",
+  "learningPathQuickAccess": "Rekomendasi Pembelajaran yang Dipersonalisasi",
+  "learningPathDescription": "Jelajahi skenario pembelajaran AI yang disesuaikan dengan hasil penilaian dan minat Anda. Pilih area yang paling sesuai dengan kebutuhan Anda.",
+  "viewAllPaths": "Lihat Semua Jalur Pembelajaran",
+  "focusOnWeakAreas": "Fokus pada Area Lemah",
+  "aiAdvisor": "Penasihat Pembelajaran AI"
+}

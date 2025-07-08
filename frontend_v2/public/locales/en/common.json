@@ -1,0 +1,27 @@
+{
+  "skip": "Skip",
+  "next": "Next",
+  "back": "Back",
+  "continue": "Continue",
+  "loading": "Loading...",
+  "save": "Save",
+  "cancel": "Cancel",
+  "submit": "Submit",
+  "delete": "Delete",
+  "edit": "Edit",
+  "close": "Close",
+  "error": "Error",
+  "success": "Success",
+  "warning": "Warning",
+  "info": "Info",
+  "backToDashboard": "Back to Dashboard",
+  "minutes": "minutes",
+  "hours": "hours",
+  "days": "days",
+  "view": "View",
+  "difficulty": {
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced"
+  }
+}

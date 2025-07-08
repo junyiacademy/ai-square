@@ -1,0 +1,43 @@
+{
+  "title": "เส้นทางการเรียนรู้ของคุณ",
+  "subtitle": "คำแนะนำส่วนบุคคลตามการประเมินของคุณ",
+  "yourProgress": "ความก้าวหน้าของคุณ",
+  "currentScore": "คะแนนปัจจุบัน",
+  "targetScore": "คะแนนเป้าหมาย",
+  "completed": "เสร็จสิ้น",
+  "recommendedPath": "เส้นทางการเรียนรู้ที่แนะนำ",
+  "startLearning": "เริ่มการเรียนรู้",
+  "estimatedTime": "เวลาโดยประมาณ",
+  "weakDomainReason": "นี่คือพื้นที่ที่อ่อนแอที่สุดของคุณด้วยคะแนน {{score}}%",
+  "difficulty": {
+    "beginner": "ผู้เริ่มต้น",
+    "intermediate": "ระดับกลาง",
+    "advanced": "ระดับสูง"
+  },
+  "noAssessment": {
+    "title": "ไม่พบการประเมิน",
+    "description": "กรุณาทำการประเมินก่อนเพื่อรับคำแนะนำส่วนบุคคล",
+    "button": "ทำการประเมิน"
+  },
+  "domains": {
+    "Engaging_with_AI": "การมีส่วนร่วมกับ AI",
+    "Creating_with_AI": "การสร้างสรรค์กับ AI",
+    "Managing_with_AI": "การจัดการกับ AI",
+    "Designing_with_AI": "การออกแบบกับ AI"
+  },
+  "strongDomainReason": "พัฒนาทักษะของคุณใน {{domain}} (ปัจจุบัน: {{score}}%)",
+  "averageDomainReason": "ปรับปรุงทักษะ {{domain}} ของคุณ (ปัจจุบัน: {{score}}%)",
+  "learningPath": {
+    "filteringBy": "แสดงรายการสำหรับ {{domain}}",
+    "clearFilter": "ล้างตัวกรอง",
+    "recommendedPath": "เส้นทางการเรียนรู้ที่แนะนำ",
+    "estimatedTime": "เวลารวม: {{hours}} ชั่วโมง {{minutes}} นาที",
+    "startLearning": "เริ่มการเรียนรู้",
+    "progress": "ความก้าวหน้า",
+    "goToDashboard": "ไปที่แดชบอร์ด",
+    "dashboardHint": "ติดตามความก้าวหน้าโดยรวมและความสำเร็จของคุณในแดชบอร์ด"
+  },
+  "showAll": "แสดงทั้งหมด",
+  "focusOnWeakAreas": "มุ่งเน้นที่พื้นที่อ่อนแอ",
+  "backToDashboard": "กลับไปแดชบอร์ด"
+}

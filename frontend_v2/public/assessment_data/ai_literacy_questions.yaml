@@ -1,0 +1,727 @@
+assessment_config:
+  total_questions: 12
+  time_limit_minutes: 15
+  passing_score: 60
+  domains:
+  - engaging_with_ai
+  - creating_with_ai
+  - managing_with_ai
+  - designing_with_ai
+domains:
+  engaging_with_ai:
+    description: Understanding and effectively communicating with AI systems
+    questions: 3
+  creating_with_ai:
+    description: Using AI tools to enhance creativity and productivity
+    questions: 3
+  managing_with_ai:
+    description: Understanding AI limitations, privacy, and ethical considerations
+    questions: 3
+  designing_with_ai:
+    description: Strategic thinking about AI implementation and innovation
+    questions: 3
+questions:
+- id: E001
+  domain: engaging_with_ai
+  difficulty: basic
+  type: multiple_choice
+  question: What is the most effective way to get better results from an AI chatbot?
+  question_zhTW: 如何才能從 AI 聊天機器人獲得更好的結果？
+  question_es: ¿Cuál es la forma más efectiva de obtener mejores resultados de un chatbot de IA?
+  question_ja: AI チャットボットからより良い結果を得る最も効果的な方法は何ですか？
+  question_ko: AI 챗봇에서 더 나은 결과를 얻는 가장 효과적인 방법은 무엇입니까？
+  question_fr: Quelle est la façon la plus efficace d'obtenir de meilleurs résultats d'un chatbot IA ?
+  question_de: Was ist der effektivste Weg, um bessere Ergebnisse von einem KI-Chatbot zu erhalten?
+  question_ru: Какой самый эффективный способ получить лучшие результаты от ИИ-чатбота?
+  question_it: Qual è il modo più efficace per ottenere risultati migliori da un chatbot IA?
+  options:
+    a: Ask very general questions
+    b: Provide clear, specific prompts with context
+    c: Use only yes/no questions
+    d: Always ask multiple questions at once
+  options_zhTW:
+    a: 問非常籠統的問題
+    b: 提供清晰、具體且有背景的提示
+    c: 只使用是/否問題
+    d: 總是一次問多個問題
+  options_es:
+    a: Hacer preguntas muy generales
+    b: Proporcionar indicaciones claras y específicas con contexto
+    c: Usar solo preguntas de sí/no
+    d: Siempre hacer múltiples preguntas a la vez
+  options_ja:
+    a: 非常に一般的な質問をする
+    b: 文脈を含む明確で具体的なプロンプトを提供する
+    c: はい/いいえの質問のみを使用する
+    d: 常に一度に複数の質問をする
+  options_ko:
+    a: 매우 일반적인 질문하기
+    b: 맥락이 포함된 명확하고 구체적인 프롬프트 제공하기
+    c: 예/아니오 질문만 사용하기
+    d: 항상 한 번에 여러 질문하기
+  options_fr:
+    a: Poser des questions très générales
+    b: Fournir des invites claires et spécifiques avec du contexte
+    c: Utiliser uniquement des questions oui/non
+    d: Toujours poser plusieurs questions à la fois
+  options_de:
+    a: Sehr allgemeine Fragen stellen
+    b: Klare, spezifische Aufforderungen mit Kontext bereitstellen
+    c: Nur Ja/Nein-Fragen verwenden
+    d: Immer mehrere Fragen gleichzeitig stellen
+  options_ru:
+    a: Задавать очень общие вопросы
+    b: Предоставлять четкие, конкретные подсказки с контекстом
+    c: Использовать только вопросы да/нет
+    d: Всегда задавать несколько вопросов одновременно
+  options_it:
+    a: Fare domande molto generali
+    b: Fornire indicazioni chiare e specifiche con contesto
+    c: Usare solo domande sì/no
+    d: Fare sempre più domande contemporaneamente
+  correct_answer: b
+  explanation: Clear, specific prompts with context help AI understand exactly what you need and provide more accurate, useful
+    responses.
+  explanation_zhTW: 清晰、具體且有背景的提示有助於 AI 準確理解您的需求，並提供更準確、有用的回應。
+  explanation_es: Las indicaciones claras y específicas con contexto ayudan a la IA a entender exactamente lo que necesitas
+    y proporcionar respuestas más precisas y útiles.
+  explanation_ja: 文脈を含む明確で具体的なプロンプトは、AI があなたのニーズを正確に理解し、より正確で有用な応答を提供するのに役立ちます。
+  explanation_ko: 맥락이 포함된 명확하고 구체적인 프롬프트는 AI가 정확히 무엇이 필요한지 이해하고 더 정확하고 유용한 응답을 제공하는 데 도움이 됩니다.
+  explanation_fr: Des invites claires et spécifiques avec du contexte aident l'IA à comprendre exactement ce dont vous avez
+    besoin et à fournir des réponses plus précises et utiles.
+  explanation_de: Klare, spezifische Aufforderungen mit Kontext helfen der KI, genau zu verstehen, was Sie benötigen, und
+    genauere, nützlichere Antworten zu liefern.
+  explanation_ru: Четкие, конкретные подсказки с контекстом помогают ИИ точно понять, что вам нужно, и предоставить более
+    точные и полезные ответы.
+  explanation_it: Indicazioni chiare e specifiche con contesto aiutano l'IA a capire esattamente cosa ti serve e fornire risposte
+    più accurate e utili.
+  ksa_mapping:
+    knowledge:
+    - K1.1
+    - K1.2
+    skills:
+    - S1.1
+    attitudes:
+    - A1.1
+- id: E002
+  domain: engaging_with_ai
+  difficulty: intermediate
+  type: multiple_choice
+  question: When an AI gives you an incorrect answer, what should be your first response?
+  question_zhTW: 當 AI 給出錯誤答案時，你的第一反應應該是什麼？
+  question_es: Cuando una IA te da una respuesta incorrecta, ¿cuál debería ser tu primera respuesta?
+  question_ja: AI が間違った回答をした場合、最初にすべきことは何ですか？
+  question_ko: AI가 잘못된 답변을 제공했을 때, 첫 번째 대응은 무엇이어야 합니까？
+  question_fr: Quand une IA vous donne une réponse incorrecte, quelle devrait être votre première réaction ?
+  question_de: Wenn eine KI Ihnen eine falsche Antwort gibt, was sollte Ihre erste Reaktion sein?
+  question_ru: Когда ИИ дает вам неправильный ответ, какой должна быть ваша первая реакция?
+  question_it: Quando un'IA ti dà una risposta sbagliata, quale dovrebbe essere la tua prima reazione?
+  options:
+    a: Immediately trust the AI and use the information
+    b: Verify the information through other reliable sources
+    c: Stop using AI altogether
+    d: Report the AI as broken
+  options_zhTW:
+    a: 立即相信 AI 並使用該信息
+    b: 通過其他可靠來源驗證信息
+    c: 完全停止使用 AI
+    d: 報告 AI 故障
+  options_es:
+    a: Confiar inmediatamente en la IA y usar la información
+    b: Verificar la información a través de otras fuentes confiables
+    c: Dejar de usar IA por completo
+    d: Reportar la IA como defectuosa
+  options_ja:
+    a: すぐに AI を信頼して情報を使用する
+    b: 他の信頼できる情報源を通じて情報を検証する
+    c: AI の使用を完全にやめる
+    d: AI を故障として報告する
+  options_ko:
+    a: 즉시 AI를 신뢰하고 정보를 사용하기
+    b: 다른 신뢰할 수 있는 출처를 통해 정보 확인하기
+    c: AI 사용을 완전히 중단하기
+    d: AI를 고장으로 신고하기
+  options_fr:
+    a: Faire immédiatement confiance à l'IA et utiliser l'information
+    b: Vérifier l'information à travers d'autres sources fiables
+    c: Arrêter complètement d'utiliser l'IA
+    d: Signaler l'IA comme défectueuse
+  options_de:
+    a: Der KI sofort vertrauen und die Informationen verwenden
+    b: Die Informationen über andere zuverlässige Quellen verifizieren
+    c: Die Verwendung von KI vollständig einstellen
+    d: Die KI als defekt melden
+  options_ru:
+    a: Немедленно доверять ИИ и использовать информацию
+    b: Проверить информацию через другие надежные источники
+    c: Полностью прекратить использование ИИ
+    d: Сообщить о неисправности ИИ
+  options_it:
+    a: Fidarsi immediatamente dell'IA e usare le informazioni
+    b: Verificare le informazioni attraverso altre fonti affidabili
+    c: Smettere completamente di usare l'IA
+    d: Segnalare l'IA come guasta
+  correct_answer: b
+  explanation: Critical thinking requires verifying AI outputs against reliable sources, as AI can make mistakes or provide
+    outdated information.
+  explanation_zhTW: 批判性思維需要透過可靠的來源驗證 AI 的輸出，因為 AI 可能會出錯或提供過時的信息。
+  explanation_es: El pensamiento crítico requiere verificar las salidas de la IA contra fuentes confiables, ya que la IA puede
+    cometer errores o proporcionar información desactualizada.
+  explanation_ja: 批判的思考には、AI が間違いを犯したり古い情報を提供したりする可能性があるため、信頼できる情報源に対して AI の出力を検証する必要があります。
+  explanation_ko: 비판적 사고는 AI가 실수를 하거나 오래된 정보를 제공할 수 있으므로 신뢰할 수 있는 출처에 대해 AI 출력을 확인해야 합니다.
+  explanation_fr: La pensée critique nécessite de vérifier les résultats de l'IA auprès de sources fiables, car l'IA peut
+    faire des erreurs ou fournir des informations obsolètes.
+  explanation_de: Kritisches Denken erfordert die Überprüfung von KI-Ausgaben anhand zuverlässiger Quellen, da KI Fehler machen
+    oder veraltete Informationen liefern kann.
+  explanation_ru: Критическое мышление требует проверки результатов ИИ с помощью надежных источников, так как ИИ может ошибаться
+    или предоставлять устаревшую информацию.
+  explanation_it: Il pensiero critico richiede di verificare gli output dell'IA con fonti affidabili, poiché l'IA può commettere
+    errori o fornire informazioni obsolete.
+  ksa_mapping:
+    knowledge:
+    - K2.1
+    - K2.2
+    skills:
+    - S1.1
+    - S2.1
+    attitudes:
+    - A2.1
+- id: E003
+  domain: engaging_with_ai
+  difficulty: advanced
+  type: multiple_choice
+  question: What is the most important factor when evaluating AI-generated content for bias?
+  question_zhTW: 評估 AI 生成內容的偏見時，最重要的因素是什麼？
+  question_es: ¿Cuál es el factor más importante al evaluar el sesgo en contenido generado por IA?
+  question_ja: AI が生成したコンテンツのバイアスを評価する際の最も重要な要因は何ですか？
+  question_ko: AI가 생성한 콘텐츠의 편향을 평가할 때 가장 중요한 요소는 무엇입니까？
+  question_fr: Quel est le facteur le plus important lors de l'évaluation des biais dans le contenu généré par IA ?
+  question_de: Was ist der wichtigste Faktor bei der Bewertung von Voreingenommenheit in KI-generierten Inhalten?
+  question_ru: Какой самый важный фактор при оценке предвзятости в контенте, созданном ИИ?
+  question_it: Qual è il fattore più importante nel valutare i pregiudizi nei contenuti generati dall'IA?
+  options:
+    a: The speed of generation
+    b: The training data sources and representation
+    c: The length of the output
+    d: The technical complexity
+  options_zhTW:
+    a: 生成速度
+    b: 訓練數據來源和代表性
+    c: 輸出長度
+    d: 技術複雜性
+  options_es:
+    a: La velocidad de generación
+    b: Las fuentes de datos de entrenamiento y su representación
+    c: La longitud de la salida
+    d: La complejidad técnica
+  options_ja:
+    a: 生成速度
+    b: 訓練データのソースと代表性
+    c: 出力の長さ
+    d: 技術的複雑性
+  options_ko:
+    a: 생성 속도
+    b: 훈련 데이터 소스와 대표성
+    c: 출력 길이
+    d: 기술적 복잡성
+  options_fr:
+    a: La vitesse de génération
+    b: Les sources de données d'entraînement et leur représentation
+    c: La longueur de la sortie
+    d: La complexité technique
+  options_de:
+    a: Die Geschwindigkeit der Generierung
+    b: Die Trainingsdatenquellen und deren Repräsentation
+    c: Die Länge der Ausgabe
+    d: Die technische Komplexität
+  options_ru:
+    a: Скорость генерации
+    b: Источники обучающих данных и их представительность
+    c: Длина вывода
+    d: Техническая сложность
+  options_it:
+    a: La velocità di generazione
+    b: Le fonti dei dati di addestramento e la loro rappresentazione
+    c: La lunghezza dell'output
+    d: La complessità tecnica
+  correct_answer: b
+  explanation: AI bias often stems from training data that lacks diversity or contains historical biases, making data sources
+    crucial for evaluation.
+  explanation_zhTW: AI 偏見通常源於缺乏多樣性或含有歷史偏見的訓練數據，使得數據來源對於評估至關重要。
+  explanation_es: El sesgo de la IA a menudo proviene de datos de entrenamiento que carecen de diversidad o contienen sesgos
+    históricos, lo que hace que las fuentes de datos sean cruciales para la evaluación.
+  explanation_ja: AI のバイアスは、多様性が不足していたり歴史的バイアスを含んでいたりする訓練データから生じることが多く、データソースが評価において重要となります。
+  explanation_ko: AI 편향은 종종 다양성이 부족하거나 역사적 편향을 포함하는 훈련 데이터에서 비롯되어 데이터 소스가 평가에 중요합니다.
+  explanation_fr: Le biais de l'IA provient souvent de données d'entraînement qui manquent de diversité ou contiennent des
+    biais historiques, rendant les sources de données cruciales pour l'évaluation.
+  explanation_de: KI-Voreingenommenheit stammt oft aus Trainingsdaten, denen es an Vielfalt mangelt oder die historische Vorurteile
+    enthalten, was Datenquellen für die Bewertung entscheidend macht.
+  explanation_ru: Предвзятость ИИ часто происходит из обучающих данных, которым не хватает разнообразия или которые содержат
+    исторические предрассудки, что делает источники данных решающими для оценки.
+  explanation_it: Il pregiudizio dell'IA spesso deriva da dati di addestramento che mancano di diversità o contengono pregiudizi
+    storici, rendendo le fonti di dati cruciali per la valutazione.
+  ksa_mapping:
+    knowledge:
+    - K3.1
+    - K3.2
+    skills:
+    - S2.1
+    - S2.2
+    attitudes:
+    - A2.1
+    - A3.1
+- id: C001
+  domain: creating_with_ai
+  difficulty: basic
+  type: multiple_choice
+  question: Which approach is most effective when using AI for creative writing?
+  question_zhTW: 使用 AI 進行創意寫作時，哪種方法最有效？
+  question_es: ¿Qué enfoque es más efectivo al usar IA para escritura creativa?
+  question_ja: 創造的な文章作成で AI を使用する際、最も効果的なアプローチは何ですか？
+  question_ko: 창의적 글쓰기에 AI를 사용할 때 가장 효과적인 접근법은 무엇입니까？
+  question_fr: Quelle approche est la plus efficace lors de l'utilisation de l'IA pour l'écriture créative ?
+  question_de: Welcher Ansatz ist am effektivsten bei der Verwendung von KI für kreatives Schreiben?
+  question_ru: Какой подход наиболее эффективен при использовании ИИ для творческого письма?
+  question_it: Quale approccio è più efficace quando si usa l'IA per la scrittura creativa?
+  options:
+    a: Let AI write everything without human input
+    b: Use AI as a collaborative partner for brainstorming and refinement
+    c: Only use AI to fix grammar and spelling
+    d: Avoid AI completely in creative processes
+  options_zhTW:
+    a: 讓 AI 在沒有人類輸入的情況下寫所有內容
+    b: 將 AI 作為腦力激盪和完善的協作夥伴
+    c: 只使用 AI 來修正語法和拼寫
+    d: 在創意過程中完全避免使用 AI
+  options_es:
+    a: Dejar que la IA escriba todo sin aporte humano
+    b: Usar la IA como socio colaborativo para lluvia de ideas y refinamiento
+    c: Solo usar IA para corregir gramática y ortografía
+    d: Evitar completamente la IA en procesos creativos
+  options_ja:
+    a: 人間の入力なしで AI にすべてを書かせる
+    b: ブレインストーミングと洗練のための協力パートナーとして AI を使用する
+    c: 文法とスペルの修正にのみ AI を使用する
+    d: クリエイティブプロセスで AI を完全に避ける
+  options_ko:
+    a: 인간의 입력 없이 AI가 모든 것을 작성하게 하기
+    b: 브레인스토밍과 개선을 위한 협력 파트너로 AI 사용하기
+    c: 문법과 철자 수정에만 AI 사용하기
+    d: 창의적 프로세스에서 AI를 완전히 피하기
+  options_fr:
+    a: Laisser l'IA tout écrire sans apport humain
+    b: Utiliser l'IA comme partenaire collaboratif pour le brainstorming et le perfectionnement
+    c: Utiliser l'IA uniquement pour corriger la grammaire et l'orthographe
+    d: Éviter complètement l'IA dans les processus créatifs
+  options_de:
+    a: Die KI alles ohne menschliche Eingabe schreiben lassen
+    b: KI als kollaborativen Partner für Brainstorming und Verfeinerung nutzen
+    c: KI nur zur Korrektur von Grammatik und Rechtschreibung verwenden
+    d: KI in kreativen Prozessen vollständig vermeiden
+  options_ru:
+    a: Позволить ИИ писать все без участия человека
+    b: Использовать ИИ как партнера для мозгового штурма и совершенствования
+    c: Использовать ИИ только для исправления грамматики и орфографии
+    d: Полностью избегать ИИ в творческих процессах
+  options_it:
+    a: Lasciare che l'IA scriva tutto senza input umano
+    b: Usare l'IA come partner collaborativo per brainstorming e perfezionamento
+    c: Usare l'IA solo per correggere grammatica e ortografia
+    d: Evitare completamente l'IA nei processi creativi
+  correct_answer: b
+  explanation: AI works best as a creative partner, helping with ideation, feedback, and refinement while maintaining human
+    creativity and oversight.
+  explanation_zhTW: AI 作為創意夥伴效果最佳，可以幫助構思、提供反饋和精煉想法，同時保持人類的創造力和監督。
+  explanation_es: La IA funciona mejor como socio creativo, ayudando con la ideación, retroalimentación y refinamiento mientras
+    mantiene la creatividad y supervisión humana.
+  explanation_ja: AI はクリエイティブパートナーとして最もよく機能し、人間の創造性と監督を維持しながら、アイデア出し、フィードバック、洗練を支援します。
+  explanation_ko: AI는 인간의 창의성과 감독을 유지하면서 아이디어 발상, 피드백, 개선을 돕는 창의적 파트너로서 가장 잘 작동합니다.
+  explanation_fr: L'IA fonctionne mieux comme partenaire créatif, aidant à l'idéation, aux retours et au perfectionnement
+    tout en maintenant la créativité et la supervision humaines.
+  explanation_de: KI funktioniert am besten als kreativer Partner, der bei Ideenfindung, Feedback und Verfeinerung hilft,
+    während menschliche Kreativität und Überwachung erhalten bleiben.
+  explanation_ru: ИИ лучше всего работает как творческий партнер, помогая с генерацией идей, обратной связью и совершенствованием,
+    сохраняя при этом человеческую креативность и контроль.
+  explanation_it: L'IA funziona meglio come partner creativo, aiutando con l'ideazione, il feedback e il perfezionamento mantenendo
+    la creatività e la supervisione umana.
+  ksa_mapping:
+    knowledge:
+    - K1.3
+    - K2.1
+    skills:
+    - S1.2
+    - S1.3
+    attitudes:
+    - A1.2
+- id: C002
+  domain: creating_with_ai
+  difficulty: intermediate
+  type: multiple_choice
+  question: When using AI image generators, what is the most important ethical consideration?
+  question_zhTW: 使用 AI 圖像生成器時，最重要的道德考量是什麼？
+  question_es: Al usar generadores de imágenes de IA, ¿cuál es la consideración ética más importante?
+  question_ja: AI 画像生成ツールを使用する際、最も重要な倫理的考慮事項は何ですか？
+  question_ko: AI 이미지 생성기를 사용할 때 가장 중요한 윤리적 고려사항은 무엇입니까？
+  question_fr: Lors de l'utilisation de générateurs d'images IA, quelle est la considération éthique la plus importante ?
+  question_de: Bei der Verwendung von KI-Bildgeneratoren, was ist die wichtigste ethische Überlegung?
+  question_ru: При использовании генераторов изображений ИИ, какое самое важное этическое соображение?
+  question_it: Quando si usano generatori di immagini IA, qual è la considerazione etica più importante?
+  options:
+    a: Making images as realistic as possible
+    b: Respecting copyright and avoiding deepfakes of real people
+    c: Using the fastest generation settings
+    d: Creating as many images as possible
+  options_zhTW:
+    a: 讓圖像盡可能真實
+    b: 尊重版權並避免真人的深偽造像
+    c: 使用最快的生成設置
+    d: 創建盡可能多的圖像
+  options_es:
+    a: Hacer imágenes lo más realistas posible
+    b: Respetar los derechos de autor y evitar deepfakes de personas reales
+    c: Usar la configuración de generación más rápida
+    d: Crear tantas imágenes como sea posible
+  options_ja:
+    a: 画像をできるだけリアルにする
+    b: 著作権を尊重し、実在の人物のディープフェイクを避ける
+    c: 最速の生成設定を使用する
+    d: できるだけ多くの画像を作成する
+  options_ko:
+    a: 이미지를 최대한 사실적으로 만들기
+    b: 저작권을 존중하고 실제 인물의 딥페이크 피하기
+    c: 가장 빠른 생성 설정 사용하기
+    d: 가능한 한 많은 이미지 만들기
+  options_fr:
+    a: Rendre les images aussi réalistes que possible
+    b: Respecter les droits d'auteur et éviter les deepfakes de personnes réelles
+    c: Utiliser les paramètres de génération les plus rapides
+    d: Créer autant d'images que possible
+  options_de:
+    a: Bilder so realistisch wie möglich machen
+    b: Urheberrechte respektieren und Deepfakes echter Personen vermeiden
+    c: Die schnellsten Generierungseinstellungen verwenden
+    d: So viele Bilder wie möglich erstellen
+  options_ru:
+    a: Делать изображения максимально реалистичными
+    b: Уважать авторские права и избегать дипфейков реальных людей
+    c: Использовать самые быстрые настройки генерации
+    d: Создавать как можно больше изображений
+  options_it:
+    a: Rendere le immagini il più realistiche possibile
+    b: Rispettare i diritti d'autore ed evitare deepfake di persone reali
+    c: Usare le impostazioni di generazione più veloci
+    d: Creare quante più immagini possibile
+  correct_answer: b
+  explanation: Respecting intellectual property rights and avoiding misuse for creating unauthorized likenesses or misleading
+    content is crucial for ethical AI use.
+  explanation_zhTW: 尊重智慧財產權，避免濫用來創建未經授權的肖像或誤導性內容，對於道德使用 AI 至關重要。
+  explanation_es: Respetar los derechos de propiedad intelectual y evitar el mal uso para crear semejanzas no autorizadas
+    o contenido engañoso es crucial para el uso ético de la IA.
+  explanation_ja: 知的財産権を尊重し、無許可の肖像や誤解を招くコンテンツの作成のための誤用を避けることは、倫理的な AI 使用に不可欠です。
+  explanation_ko: 지적 재산권을 존중하고 무단 초상권이나 오해의 소지가 있는 콘텐츠 생성을 위한 오용을 피하는 것은 윤리적인 AI 사용에 중요합니다.
+  explanation_fr: Respecter les droits de propriété intellectuelle et éviter l'utilisation abusive pour créer des ressemblances
+    non autorisées ou du contenu trompeur est crucial pour l'utilisation éthique de l'IA.
+  explanation_de: Die Achtung von Rechten des geistigen Eigentums und die Vermeidung von Missbrauch zur Erstellung nicht autorisierter
+    Ähnlichkeiten oder irreführender Inhalte ist für die ethische Nutzung von KI entscheidend.
+  explanation_ru: Уважение прав интеллектуальной собственности и избежание злоупотребления для создания несанкционированных
+    изображений или вводящего в заблуждение контента имеет решающее значение для этичного использования ИИ.
+  explanation_it: Rispettare i diritti di proprietà intellettuale ed evitare l'uso improprio per creare somiglianze non autorizzate
+    o contenuti fuorvianti è cruciale per l'uso etico dell'IA.
+  ksa_mapping:
+    knowledge:
+    - K3.1
+    - K3.2
+    skills:
+    - S2.2
+    attitudes:
+    - A3.1
+    - A3.2
+- id: C003
+  domain: creating_with_ai
+  difficulty: advanced
+  type: multiple_choice
+  question: How should you approach AI-assisted code generation for a critical software project?
+  question_zhTW: 對於關鍵軟件項目，你應該如何處理 AI 輔助代碼生成？
+  question_es: ¿Cómo deberías abordar la generación de código asistida por IA para un proyecto de software crítico?
+  question_ja: 重要なソフトウェアプロジェクトで AI 支援コード生成にどのようにアプローチすべきですか？
+  question_ko: 중요한 소프트웨어 프로젝트에서 AI 지원 코드 생성에 어떻게 접근해야 합니까？
+  question_fr: Comment devriez-vous aborder la génération de code assistée par IA pour un projet logiciel critique ?
+  question_de: Wie sollten Sie KI-unterstützte Codegenerierung für ein kritisches Softwareprojekt angehen?
+  question_ru: Как следует подходить к генерации кода с помощью ИИ для критически важного программного проекта?
+  question_it: Come dovresti affrontare la generazione di codice assistita dall'IA per un progetto software critico?
+  options:
+    a: Use AI code directly without review
+    b: Thoroughly review, test, and validate all AI-generated code
+    c: Only use AI for comments and documentation
+    d: Replace all developers with AI tools
+  options_zhTW:
+    a: 直接使用 AI 代碼而不進行審查
+    b: 徹底審查、測試和驗證所有 AI 生成的代碼
+    c: 只將 AI 用於註釋和文檔
+    d: 用 AI 工具取代所有開發人員
+  options_zhCN: '[Simplified Chinese translation needed]'
+  options_pt: '[Portuguese translation needed]'
+  options_ar: '[Arabic translation needed]'
+  options_id: '[Indonesian translation needed]'
+  options_th: '[Thai translation needed]'
+  correct_answer: b
+  explanation: Critical software requires human oversight, thorough testing, and validation of AI-generated code to ensure
+    security, reliability, and correctness.
+  ksa_mapping:
+    knowledge:
+    - K2.2
+    - K3.1
+    skills:
+    - S2.1
+    - S2.2
+    attitudes:
+    - A2.1
+    - A3.1
+- id: M001
+  domain: managing_with_ai
+  difficulty: basic
+  type: multiple_choice
+  question: What should you do with sensitive personal information when using AI tools?
+  question_zhTW: 使用 AI 工具時，應該如何處理敏感的個人信息？
+  question_es: ¿Qué deberías hacer con información personal sensible al usar herramientas de IA?
+  question_ja: AI ツールを使用する際、機密の個人情報をどのように扱うべきですか？
+  question_ko: AI 도구를 사용할 때 민감한 개인정보를 어떻게 처리해야 합니까？
+  question_fr: Que devriez-vous faire avec les informations personnelles sensibles lors de l'utilisation d'outils IA ?
+  question_de: Was sollten Sie mit sensiblen persönlichen Informationen tun, wenn Sie KI-Tools verwenden?
+  question_ru: Что следует делать с конфиденциальной личной информацией при использовании инструментов ИИ?
+  question_it: Cosa dovresti fare con le informazioni personali sensibili quando usi strumenti IA?
+  options:
+    a: Share it freely to get better AI responses
+    b: Never input sensitive information into AI systems
+    c: Only share it with trusted AI companies
+    d: Encrypt it before sharing with AI
+  options_zhTW:
+    a: 自由分享以獲得更好的 AI 回應
+    b: 絕不將敏感信息輸入 AI 系統
+    c: 只與可信的 AI 公司分享
+    d: 在與 AI 分享前加密
+  options_zhCN: '[Simplified Chinese translation needed]'
+  options_pt: '[Portuguese translation needed]'
+  options_ar: '[Arabic translation needed]'
+  options_id: '[Indonesian translation needed]'
+  options_th: '[Thai translation needed]'
+  correct_answer: b
+  explanation: Sensitive personal information should never be inputted into AI systems as it may be stored, processed, or
+    potentially exposed.
+  ksa_mapping:
+    knowledge:
+    - K3.1
+    - K3.2
+    skills:
+    - S3.1
+    attitudes:
+    - A3.1
+    - A3.2
+- id: M002
+  domain: managing_with_ai
+  difficulty: intermediate
+  type: multiple_choice
+  question: How should you manage AI tool usage in a team environment?
+  question_zhTW: 在團隊環境中應該如何管理 AI 工具的使用？
+  question_es: ¿Cómo deberías gestionar el uso de herramientas de IA en un entorno de equipo?
+  question_ja: チーム環境で AI ツールの使用をどのように管理すべきですか？
+  question_ko: 팀 환경에서 AI 도구 사용을 어떻게 관리해야 합니까？
+  question_fr: Comment devriez-vous gérer l'utilisation d'outils IA dans un environnement d'équipe ?
+  question_de: Wie sollten Sie den Einsatz von KI-Tools in einer Teamumgebung verwalten?
+  question_ru: Как следует управлять использованием инструментов ИИ в командной среде?
+  question_it: Come dovresti gestire l'uso di strumenti IA in un ambiente di squadra?
+  options:
+    a: Let everyone use any AI tool without guidelines
+    b: Establish clear policies and training for AI tool usage
+    c: Ban all AI tools to avoid risks
+    d: Only allow managers to use AI tools
+  options_zhTW:
+    a: 讓每個人在沒有指導方針的情況下使用任何 AI 工具
+    b: 為 AI 工具使用建立明確的政策和培訓
+    c: 禁止所有 AI 工具以避免風險
+    d: 只允許管理人員使用 AI 工具
+  options_zhCN: '[Simplified Chinese translation needed]'
+  options_pt: '[Portuguese translation needed]'
+  options_ar: '[Arabic translation needed]'
+  options_id: '[Indonesian translation needed]'
+  options_th: '[Thai translation needed]'
+  correct_answer: b
+  explanation: Clear policies and training ensure responsible, effective, and consistent AI tool usage across the team while
+    maximizing benefits and minimizing risks.
+  ksa_mapping:
+    knowledge:
+    - K3.1
+    - K3.2
+    skills:
+    - S3.1
+    - S3.2
+    attitudes:
+    - A3.1
+    - A2.1
+- id: M003
+  domain: managing_with_ai
+  difficulty: advanced
+  type: multiple_choice
+  question: What is the most critical factor when implementing AI in business processes?
+  question_zhTW: 在業務流程中實施 AI 時，最關鍵的因素是什麼？
+  question_es: ¿Cuál es el factor más crítico al implementar IA en procesos empresariales?
+  question_ja: ビジネスプロセスに AI を実装する際の最も重要な要因は何ですか？
+  question_ko: 비즈니스 프로세스에 AI를 구현할 때 가장 중요한 요소는 무엇입니까？
+  question_fr: Quel est le facteur le plus critique lors de l'implémentation de l'IA dans les processus métier ?
+  question_de: Was ist der kritischste Faktor bei der Implementierung von KI in Geschäftsprozessen?
+  question_ru: Какой самый критический фактор при внедрении ИИ в бизнес-процессы?
+  question_it: Qual è il fattore più critico nell'implementare l'IA nei processi aziendali?
+  options:
+    a: Choosing the most advanced AI technology
+    b: Understanding limitations and maintaining human oversight
+    c: Implementing AI as quickly as possible
+    d: Replacing as many human workers as possible
+  options_zhTW:
+    a: 選擇最先進的 AI 技術
+    b: 理解局限性並保持人類監督
+    c: 盡快實施 AI
+    d: 盡可能替換更多人類工作者
+  options_zhCN: '[Simplified Chinese translation needed]'
+  options_pt: '[Portuguese translation needed]'
+  options_ar: '[Arabic translation needed]'
+  options_id: '[Indonesian translation needed]'
+  options_th: '[Thai translation needed]'
+  correct_answer: b
+  explanation: Understanding AI limitations and maintaining appropriate human oversight ensures successful, responsible, and
+    sustainable AI implementation in business.
+  ksa_mapping:
+    knowledge:
+    - K2.2
+    - K3.1
+    - K3.2
+    skills:
+    - S3.1
+    - S3.2
+    attitudes:
+    - A2.1
+    - A3.1
+- id: D001
+  domain: designing_with_ai
+  difficulty: basic
+  type: multiple_choice
+  question: When designing an AI-powered feature for users, what should be the primary focus?
+  question_zhTW: 為用戶設計 AI 功能時，主要關注點應該是什麼？
+  question_es: Al diseñar una característica impulsada por IA para usuarios, ¿cuál debería ser el enfoque principal?
+  question_ja: ユーザー向けの AI 機能を設計する際、主な焦点は何であるべきですか？
+  question_ko: 사용자를 위한 AI 기반 기능을 설계할 때 주요 초점은 무엇이어야 합니까？
+  question_fr: Lors de la conception d'une fonctionnalité alimentée par IA pour les utilisateurs, quel devrait être l'objectif
+    principal ?
+  question_de: Bei der Gestaltung einer KI-basierten Funktion für Benutzer, was sollte der Hauptfokus sein?
+  question_ru: При разработке функции на основе ИИ для пользователей, на чем должен быть основной фокус?
+  question_it: Quando si progetta una funzionalità basata sull'IA per gli utenti, quale dovrebbe essere l'obiettivo principale?
+  options:
+    a: Showcasing the most advanced AI capabilities
+    b: Solving real user problems and improving user experience
+    c: Making the AI as complex as possible
+    d: Hiding the fact that AI is being used
+  options_zhTW:
+    a: 展示最先進的 AI 能力
+    b: 解決真正的用戶問題並改善用戶體驗
+    c: 讓 AI 盡可能複雜
+    d: 隱藏正在使用 AI 的事實
+  options_zhCN: '[Simplified Chinese translation needed]'
+  options_pt: '[Portuguese translation needed]'
+  options_ar: '[Arabic translation needed]'
+  options_id: '[Indonesian translation needed]'
+  options_th: '[Thai translation needed]'
+  correct_answer: b
+  explanation: User-centered design focuses on solving real problems and improving experiences, not on displaying technology
+    for its own sake.
+  ksa_mapping:
+    knowledge:
+    - K1.1
+    - K1.3
+    skills:
+    - S1.3
+    - S3.1
+    attitudes:
+    - A1.1
+    - A1.2
+- id: D002
+  domain: designing_with_ai
+  difficulty: intermediate
+  type: multiple_choice
+  question: How should you handle AI system failures in user-facing applications?
+  question_zhTW: 在面向用戶的應用程序中，應該如何處理 AI 系統故障？
+  question_es: ¿Cómo deberías manejar las fallas del sistema de IA en aplicaciones de cara al usuario?
+  question_ja: ユーザー向けアプリケーションで AI システムの障害をどのように処理すべきですか？
+  question_ko: 사용자 대면 애플리케이션에서 AI 시스템 오류를 어떻게 처리해야 합니까？
+  question_fr: Comment devriez-vous gérer les échecs du système IA dans les applications orientées utilisateur ?
+  question_de: Wie sollten Sie KI-Systemausfälle in benutzerorientierten Anwendungen handhaben?
+  question_ru: Как следует обрабатывать сбои системы ИИ в пользовательских приложениях?
+  question_it: Come dovresti gestire i guasti del sistema IA nelle applicazioni rivolte agli utenti?
+  options:
+    a: Hide errors and pretend everything is working
+    b: Design graceful fallbacks and clear error communication
+    c: Immediately shut down the entire application
+    d: Blame the user for the error
+  options_zhTW:
+    a: 隱藏錯誤並假裝一切正常
+    b: 設計優雅的後備方案和清晰的錯誤溝通
+    c: 立即關閉整個應用程序
+    d: 將錯誤歸咎於用戶
+  options_zhCN: '[Simplified Chinese translation needed]'
+  options_pt: '[Portuguese translation needed]'
+  options_ar: '[Arabic translation needed]'
+  options_id: '[Indonesian translation needed]'
+  options_th: '[Thai translation needed]'
+  correct_answer: b
+  explanation: Good AI design includes planning for failures with graceful fallbacks and clear communication to maintain user
+    trust and experience.
+  ksa_mapping:
+    knowledge:
+    - K2.1
+    - K2.2
+    skills:
+    - S1.3
+    - S3.1
+    attitudes:
+    - A1.2
+    - A2.1
+- id: D003
+  domain: designing_with_ai
+  difficulty: advanced
+  type: multiple_choice
+  question: What is the most important consideration when designing AI systems for diverse global audiences?
+  question_zhTW: 為多元化的全球受眾設計 AI 系統時，最重要的考量是什麼？
+  question_es: ¿Cuál es la consideración más importante al diseñar sistemas de IA para audiencias globales diversas?
+  question_ja: 多様なグローバルオーディエンス向けの AI システムを設計する際の最も重要な考慮事項は何ですか？
+  question_ko: 다양한 글로벌 사용자를 위한 AI 시스템을 설계할 때 가장 중요한 고려사항은 무엇입니까？
+  question_fr: Quelle est la considération la plus importante lors de la conception de systèmes IA pour des publics mondiaux
+    divers ?
+  question_de: Was ist die wichtigste Überlegung bei der Gestaltung von KI-Systemen für vielfältige globale Zielgruppen?
+  question_ru: Какое самое важное соображение при разработке систем ИИ для разнообразной глобальной аудитории?
+  question_it: Qual è la considerazione più importante nel progettare sistemi IA per pubblici globali diversi?
+  options:
+    a: Using the same design for everyone to ensure consistency
+    b: Understanding cultural contexts and avoiding algorithmic bias
+    c: Focusing only on the largest market segments
+    d: Implementing the latest AI technologies everywhere
+  options_zhTW:
+    a: 為每個人使用相同的設計以確保一致性
+    b: 理解文化背景並避免算法偏見
+    c: 只關注最大的市場細分
+    d: 在所有地方實施最新的 AI 技術
+  options_zhCN: '[Simplified Chinese translation needed]'
+  options_pt: '[Portuguese translation needed]'
+  options_ar: '[Arabic translation needed]'
+  options_id: '[Indonesian translation needed]'
+  options_th: '[Thai translation needed]'
+  correct_answer: b
+  explanation: Inclusive AI design requires understanding diverse cultural contexts and actively working to prevent algorithmic
+    bias that could harm different groups.
+  ksa_mapping:
+    knowledge:
+    - K3.1
+    - K3.2
+    skills:
+    - S2.2
+    - S3.2
+    attitudes:
+    - A3.1
+    - A3.2

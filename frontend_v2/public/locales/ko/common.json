@@ -1,0 +1,27 @@
+{
+  "skip": "건너뛰기",
+  "next": "다음",
+  "back": "뒤로",
+  "continue": "계속",
+  "loading": "로딩 중...",
+  "save": "저장",
+  "cancel": "취소",
+  "submit": "제출",
+  "delete": "삭제",
+  "edit": "편집",
+  "close": "닫기",
+  "error": "오류",
+  "success": "성공",
+  "warning": "경고",
+  "info": "정보",
+  "backToDashboard": "대시보드로 돌아가기",
+  "minutes": "분",
+  "hours": "시간",
+  "days": "일",
+  "view": "보기",
+  "difficulty": {
+    "beginner": "초급",
+    "intermediate": "중급",
+    "advanced": "고급"
+  }
+}

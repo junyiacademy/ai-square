@@ -1,0 +1,43 @@
+{
+  "title": "مسار التعلم الخاص بك",
+  "subtitle": "توصيات مخصصة بناءً على تقييمك",
+  "yourProgress": "تقدمك",
+  "currentScore": "النقاط الحالية",
+  "targetScore": "النقاط المستهدفة",
+  "completed": "مكتمل",
+  "recommendedPath": "مسار التعلم الموصى به",
+  "startLearning": "بدء التعلم",
+  "estimatedTime": "الوقت المقدر",
+  "weakDomainReason": "هذا هو أضعف مجال لديك بنسبة {{score}}%",
+  "difficulty": {
+    "beginner": "مبتدئ",
+    "intermediate": "متوسط",
+    "advanced": "متقدم"
+  },
+  "noAssessment": {
+    "title": "لم يتم العثور على تقييم",
+    "description": "يرجى إكمال التقييم أولاً للحصول على توصيات مخصصة",
+    "button": "خذ التقييم"
+  },
+  "domains": {
+    "Engaging_with_AI": "التفاعل مع الذكاء الاصطناعي",
+    "Creating_with_AI": "الإبداع مع الذكاء الاصطناعي",
+    "Managing_with_AI": "الإدارة مع الذكاء الاصطناعي",
+    "Designing_with_AI": "التصميم مع الذكاء الاصطناعي"
+  },
+  "strongDomainReason": "قم بتطوير مهاراتك في {{domain}} (الحالي: {{score}}%)",
+  "averageDomainReason": "حسّن مهاراتك في {{domain}} (الحالي: {{score}}%)",
+  "learningPath": {
+    "filteringBy": "عرض العناصر لـ {{domain}}",
+    "clearFilter": "مسح المرشح",
+    "recommendedPath": "مسار التعلم الموصى به",
+    "estimatedTime": "إجمالي الوقت: {{hours}} ساعة {{minutes}} دقيقة",
+    "startLearning": "بدء التعلم",
+    "progress": "التقدم",
+    "goToDashboard": "اذهب إلى لوحة التحكم",
+    "dashboardHint": "تتبع تقدمك العام وإنجازاتك في لوحة التحكم"
+  },
+  "showAll": "إظهار الكل",
+  "focusOnWeakAreas": "التركيز على المناطق الضعيفة",
+  "backToDashboard": "العودة إلى لوحة التحكم"
+}

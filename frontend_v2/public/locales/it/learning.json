@@ -1,0 +1,21 @@
+{
+  "learningPath": {
+    "title": "Il Tuo Percorso di Apprendimento Personalizzato",
+    "subtitle": "Basato sui tuoi risultati di valutazione, ecco il tuo percorso di apprendimento consigliato",
+    "yourProgress": "Il Tuo Riepilogo dei Progressi",
+    "currentScore": "Attuale",
+    "target": "Obiettivo",
+    "completed": "completato",
+    "filteringBy": "Mostrando raccomandazioni per: {{domain}}",
+    "clearFilter": "Mostra tutte le raccomandazioni",
+    "recommendedPath": "Percorso di Apprendimento Consigliato",
+    "estimatedTime": "Tempo totale: {{hours}}h {{minutes}}m",
+    "startLearning": "Inizia ad Apprendere",
+    "progress": "Progresso",
+    "weakDomainReason": "Consigliato per rafforzare {{domain}} (attuale: {{score}}%)",
+    "strongDomainReason": "Sfida avanzata per le tue forti competenze in {{domain}} ({{score}}%)",
+    "averageDomainReason": "Continua a costruire competenze in {{domain}} (attuale: {{score}}%)",
+    "goToDashboard": "Vai alla Dashboard",
+    "dashboardHint": "Monitora i tuoi progressi complessivi e continua il tuo percorso di apprendimento"
+  }
+}

@@ -1,0 +1,172 @@
+assessment_config:
+  total_questions: 12
+  time_limit_minutes: 15
+  passing_score: 60
+  domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - managing_with_ai
+    - designing_with_ai
+domains:
+  engaging_with_ai:
+    description: AI 시스템을 이해하고 효과적으로 소통하기
+    questions: 3
+  creating_with_ai:
+    description: AI 도구를 사용하여 창의성과 생산성 향상하기
+    questions: 3
+  managing_with_ai:
+    description: AI의 한계, 개인정보 보호 및 윤리적 고려사항 이해하기
+    questions: 3
+  designing_with_ai:
+    description: AI 구현 및 혁신에 대한 전략적 사고
+    questions: 3
+questions:
+  - id: E001
+    domain: engaging_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: AI 챗봇에서 더 나은 결과를 얻는 가장 효과적인 방법은 무엇입니까？
+    options:
+      a: 매우 일반적인 질문하기
+      b: 맥락이 포함된 명확하고 구체적인 프롬프트 제공하기
+      c: 예/아니오 질문만 사용하기
+      d: 항상 한 번에 여러 질문하기
+    explanation: 맥락이 포함된 명확하고 구체적인 프롬프트는 AI가 정확히 무엇이 필요한지 이해하고 더 정확하고 유용한 응답을 제공하는 데 도움이 됩니다.
+  - id: E002
+    domain: engaging_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: AI가 잘못된 답변을 제공했을 때, 첫 번째 대응은 무엇이어야 합니까？
+    options:
+      a: 즉시 AI를 신뢰하고 정보를 사용하기
+      b: 다른 신뢰할 수 있는 출처를 통해 정보 확인하기
+      c: AI 사용을 완전히 중단하기
+      d: AI를 고장으로 신고하기
+    explanation: 비판적 사고는 AI가 실수를 하거나 오래된 정보를 제공할 수 있으므로 신뢰할 수 있는 출처에 대해 AI 출력을 확인해야 합니다.
+  - id: E003
+    domain: engaging_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: AI가 생성한 콘텐츠의 편향을 평가할 때 가장 중요한 요소는 무엇입니까？
+    options:
+      a: 생성 속도
+      b: 훈련 데이터 소스와 대표성
+      c: 출력 길이
+      d: 기술적 복잡성
+    explanation: AI 편향은 종종 다양성이 부족하거나 역사적 편향을 포함하는 훈련 데이터에서 비롯되어 데이터 소스가 평가에 중요합니다.
+  - id: C001
+    domain: creating_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: 창의적 글쓰기에 AI를 사용할 때 가장 효과적인 접근법은 무엇입니까？
+    options:
+      a: 인간의 입력 없이 AI가 모든 것을 작성하게 하기
+      b: 브레인스토밍과 개선을 위한 협력 파트너로 AI 사용하기
+      c: 문법과 철자 수정에만 AI 사용하기
+      d: 창의적 프로세스에서 AI를 완전히 피하기
+    explanation: AI는 인간의 창의성과 감독을 유지하면서 아이디어 발상, 피드백, 개선을 돕는 창의적 파트너로서 가장 잘 작동합니다.
+  - id: C002
+    domain: creating_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: AI 이미지 생성기를 사용할 때 가장 중요한 윤리적 고려사항은 무엇입니까？
+    options:
+      a: 이미지를 최대한 사실적으로 만들기
+      b: 저작권을 존중하고 실제 인물의 딥페이크 피하기
+      c: 가장 빠른 생성 설정 사용하기
+      d: 가능한 한 많은 이미지 만들기
+    explanation: 지적 재산권을 존중하고 무단 초상권이나 오해의 소지가 있는 콘텐츠 생성을 위한 오용을 피하는 것은 윤리적인 AI 사용에 중요합니다.
+  - id: C003
+    domain: creating_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: 중요한 소프트웨어 프로젝트에서 AI 지원 코드 생성에 어떻게 접근해야 합니까？
+    options:
+      a: '[KO: Use AI code directly without review]'
+      b: '[KO: Thoroughly review, test, and validate all AI-generated code]'
+      c: '[KO: Only use AI for comments and documentation]'
+      d: '[KO: Replace all developers with AI tools]'
+    explanation: '[KO translation needed]'
+  - id: M001
+    domain: managing_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: AI 도구를 사용할 때 민감한 개인정보를 어떻게 처리해야 합니까？
+    options:
+      a: '[KO: Share it freely to get better AI responses]'
+      b: '[KO: Never input sensitive information into AI systems]'
+      c: '[KO: Only share it with trusted AI companies]'
+      d: '[KO: Encrypt it before sharing with AI]'
+    explanation: '[KO translation needed]'
+  - id: M002
+    domain: managing_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: 팀 환경에서 AI 도구 사용을 어떻게 관리해야 합니까？
+    options:
+      a: '[KO: Let everyone use any AI tool without guidelines]'
+      b: '[KO: Establish clear policies and training for AI tool usage]'
+      c: '[KO: Ban all AI tools to avoid risks]'
+      d: '[KO: Only allow managers to use AI tools]'
+    explanation: '[KO translation needed]'
+  - id: M003
+    domain: managing_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: 비즈니스 프로세스에 AI를 구현할 때 가장 중요한 요소는 무엇입니까？
+    options:
+      a: '[KO: Choosing the most advanced AI technology]'
+      b: '[KO: Understanding limitations and maintaining human oversight]'
+      c: '[KO: Implementing AI as quickly as possible]'
+      d: '[KO: Replacing as many human workers as possible]'
+    explanation: '[KO translation needed]'
+  - id: D001
+    domain: designing_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: 사용자를 위한 AI 기반 기능을 설계할 때 주요 초점은 무엇이어야 합니까？
+    options:
+      a: '[KO: Showcasing the most advanced AI capabilities]'
+      b: '[KO: Solving real user problems and improving user experience]'
+      c: '[KO: Making the AI as complex as possible]'
+      d: '[KO: Hiding the fact that AI is being used]'
+    explanation: '[KO translation needed]'
+  - id: D002
+    domain: designing_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: 사용자 대면 애플리케이션에서 AI 시스템 오류를 어떻게 처리해야 합니까？
+    options:
+      a: '[KO: Hide errors and pretend everything is working]'
+      b: '[KO: Design graceful fallbacks and clear error communication]'
+      c: '[KO: Immediately shut down the entire application]'
+      d: '[KO: Blame the user for the error]'
+    explanation: '[KO translation needed]'
+  - id: D003
+    domain: designing_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: 다양한 글로벌 사용자를 위한 AI 시스템을 설계할 때 가장 중요한 고려사항은 무엇입니까？
+    options:
+      a: '[KO: Using the same design for everyone to ensure consistency]'
+      b: '[KO: Understanding cultural contexts and avoiding algorithmic bias]'
+      c: '[KO: Focusing only on the largest market segments]'
+      d: '[KO: Implementing the latest AI technologies everywhere]'
+    explanation: '[KO translation needed]'
+metadata:
+  language: ko
+  language_name: Korean
+  generated_from: ai_literacy_questions.yaml
+  generated_at: '2025-07-03T10:07:41.112Z'

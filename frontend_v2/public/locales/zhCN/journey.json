@@ -1,0 +1,85 @@
+{
+  "title": "AI Square 用户旅程",
+  "subtitle": "完整AI学习体验的六个关键路径",
+  "getStarted": "开始使用",
+  "pathOverview": "完整学习周期",
+  "nextPath": "下一个路径 →",
+  "tryFeature": "体验此功能",
+  "paths": {
+    "dashboard": {
+      "title": "仪表板",
+      "subtitle": "学习指挥中心",
+      "description": "一站式概览您的AI学习旅程，跟踪进度，查看成就，规划下一步。",
+      "userNeed": "我的学习进度如何？",
+      "features": [
+        "AI素养进度可视化",
+        "一目了然的学习统计",
+        "个性化推荐行动",
+        "快速功能导航"
+      ]
+    },
+    "assessment": {
+      "title": "评估",
+      "subtitle": "AI素养测试",
+      "description": "25个专业问题，深入了解您在四个AI领域的能力水平。",
+      "userNeed": "我的AI能力水平如何？",
+      "features": [
+        "四个AI素养领域",
+        "25个基于场景的问题",
+        "雷达图能力分析",
+        "个性化推荐报告"
+      ]
+    },
+    "learningPath": {
+      "title": "学习路径",
+      "subtitle": "个性化成长计划",
+      "description": "根据您的评估结果，我们推荐最适合的学习内容和节奏。",
+      "userNeed": "什么课程适合我？",
+      "features": [
+        "定制课程推荐",
+        "分级学习内容",
+        "渐进式规划",
+        "灵活学习时间表"
+      ]
+    },
+    "pbl": {
+      "title": "PBL实践",
+      "subtitle": "真实世界场景",
+      "description": "9个实用场景，通过AI导师指导进行实践学习。",
+      "userNeed": "如何在实践中应用AI？",
+      "features": [
+        "AI机器人开发",
+        "AI稳定币交易",
+        "AI求职培训",
+        "实时AI辅导"
+      ]
+    },
+    "chat": {
+      "title": "AI顾问",
+      "subtitle": "24/7支持",
+      "description": "24/7智能学习伙伴，记住您的学习上下文并提供个性化建议。",
+      "userNeed": "有问题时可以问谁？",
+      "features": [
+        "持续对话记忆",
+        "个性化学习建议",
+        "多轮深度对话",
+        "学习问答支持"
+      ]
+    },
+    "discovery": {
+      "title": "Discovery 探索",
+      "subtitle": "个性化职业冒险",
+      "description": "通过 AI 评估找到适合的职业道路，在游戏化的冒险中培养专业技能。",
+      "userNeed": "哪个职业方向适合我？",
+      "features": [
+        "AI 职业匹配评估",
+        "无限任务生成系统",
+        "游戏化学习体验",
+        "动态任务调整难度"
+      ]
+    }
+  },
+  "keyFeatures": "关键功能",
+  "solvedNeed": "解决的用户需求",
+  "completeJourney": "完整学习旅程"
+}

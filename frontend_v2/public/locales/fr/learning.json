@@ -1,0 +1,21 @@
+{
+  "learningPath": {
+    "title": "Votre Parcours d'Apprentissage Personnalisé",
+    "subtitle": "Basé sur vos résultats d'évaluation, voici votre parcours d'apprentissage recommandé",
+    "yourProgress": "Votre Aperçu de Progression",
+    "currentScore": "Actuel",
+    "target": "Objectif",
+    "completed": "complété",
+    "filteringBy": "Affichage des recommandations pour : {{domain}}",
+    "clearFilter": "Afficher toutes les recommandations",
+    "recommendedPath": "Parcours d'Apprentissage Recommandé",
+    "estimatedTime": "Temps total : {{hours}}h {{minutes}}m",
+    "startLearning": "Commencer l'Apprentissage",
+    "progress": "Progression",
+    "weakDomainReason": "Recommandé pour renforcer {{domain}} (actuel : {{score}}%)",
+    "strongDomainReason": "Défi avancé pour vos fortes compétences en {{domain}} ({{score}}%)",
+    "averageDomainReason": "Continuer à développer l'expertise en {{domain}} (actuel : {{score}}%)",
+    "goToDashboard": "Aller au Tableau de Bord",
+    "dashboardHint": "Suivez votre progression globale et continuez votre parcours d'apprentissage"
+  }
+}

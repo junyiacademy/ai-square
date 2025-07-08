@@ -1,0 +1,107 @@
+{
+  "hero": {
+    "title": "Maîtrisez la littératie IA avec AI Square",
+    "subtitle": "Votre parcours personnalisé pour comprendre et exploiter l'intelligence artificielle",
+    "description": "AI Square est une plateforme d'apprentissage multi-agents révolutionnaire qui vous permet de développer des compétences IA essentielles grâce à des évaluations interactives, des parcours d'apprentissage personnalisés et une assistance IA en temps réel.",
+    "cta": {
+      "getStarted": "Commencez votre parcours",
+      "explore": "Explorer les domaines IA",
+      "assessment": "Passer l'évaluation"
+    }
+  },
+  "features": {
+    "title": "Pourquoi choisir AI Square ?",
+    "subtitle": "Une éducation IA complète conçue pour le monde moderne",
+    "items": {
+      "personalizedLearning": {
+        "title": "Parcours d'apprentissage personnalisés",
+        "description": "Les recommandations alimentées par l'IA s'adaptent à votre style et rythme d'apprentissage"
+      },
+      "multilingualSupport": {
+        "title": "Support multilingue",
+        "description": "Apprenez dans votre langue préférée avec du contenu multilingue complet"
+      },
+      "realTimeAI": {
+        "title": "Tutorat IA 24h/24 et 7j/7",
+        "description": "Obtenez des retours et des conseils instantanés d'assistants IA avancés"
+      },
+      "comprehensiveAssessment": {
+        "title": "Évaluation complète",
+        "description": "Évaluez votre littératie IA dans quatre domaines principaux avec des informations détaillées"
+      },
+      "interactiveTasks": {
+        "title": "Tâches d'apprentissage interactives",
+        "description": "Projets pratiques et scénarios du monde réel pour appliquer vos connaissances"
+      },
+      "progressTracking": {
+        "title": "Suivi visuel des progrès",
+        "description": "Suivez votre croissance avec des graphiques radar intuitifs et des badges de réussite"
+      }
+    }
+  },
+  "domains": {
+    "title": "Quatre domaines principaux de littératie IA",
+    "subtitle": "Maîtrisez tous les aspects de l'interaction et de la création avec l'IA",
+    "viewDetails": "Voir les détails",
+    "items": {
+      "engaging": {
+        "name": "Interagir avec l'IA"
+      },
+      "creating": {
+        "name": "Créer avec l'IA"
+      },
+      "managing": {
+        "name": "Gérer avec l'IA"
+      },
+      "designing": {
+        "name": "Concevoir avec l'IA"
+      }
+    }
+  },
+  "howItWorks": {
+    "title": "Comment ça marche",
+    "subtitle": "Votre parcours vers la maîtrise de l'IA en étapes simples",
+    "steps": {
+      "assessment": {
+        "title": "1. Passez l'évaluation initiale",
+        "description": "Évaluez votre niveau actuel de littératie IA dans quatre domaines"
+      },
+      "personalized": {
+        "title": "2. Obtenez un parcours personnalisé",
+        "description": "Recevez un parcours d'apprentissage personnalisé basé sur vos résultats"
+      },
+      "learn": {
+        "title": "3. Apprenez et pratiquez",
+        "description": "Engagez-vous avec du contenu interactif et des tâches assistées par IA"
+      },
+      "track": {
+        "title": "4. Suivez vos progrès",
+        "description": "Surveillez votre croissance et gagnez des réalisations"
+      }
+    }
+  },
+  "target": {
+    "title": "À qui s'adresse AI Square ?",
+    "subtitle": "Conçu pour les apprenants de tous niveaux",
+    "audiences": {
+      "individuals": {
+        "title": "Apprenants individuels",
+        "description": "Développez des compétences IA essentielles pour la croissance personnelle et professionnelle"
+      },
+      "educators": {
+        "title": "Éducateurs",
+        "description": "Accédez à des ressources complètes pour enseigner la littératie IA"
+      },
+      "organizations": {
+        "title": "Organisations",
+        "description": "Formez votre équipe avec des solutions d'éducation IA de niveau entreprise"
+      }
+    }
+  },
+  "cta": {
+    "title": "Prêt à commencer votre parcours d'apprentissage IA ?",
+    "subtitle": "Rejoignez des milliers d'apprenants qui maîtrisent la littératie IA",
+    "button": "Commencer gratuitement",
+    "login": "Vous avez déjà un compte ? Connectez-vous"
+  }
+}

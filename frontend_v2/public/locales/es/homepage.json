@@ -1,0 +1,107 @@
+{
+  "hero": {
+    "title": "Domina la Alfabetización en IA con AI Square",
+    "subtitle": "Tu viaje personalizado para comprender y aprovechar la inteligencia artificial",
+    "description": "AI Square es una plataforma de aprendizaje multi-agente revolucionaria que te capacita para desarrollar competencias esenciales en IA a través de evaluaciones interactivas, rutas de aprendizaje personalizadas y asistencia de IA en tiempo real.",
+    "cta": {
+      "getStarted": "Comienza tu Viaje",
+      "explore": "Explora Dominios de IA",
+      "assessment": "Realiza la Evaluación"
+    }
+  },
+  "features": {
+    "title": "¿Por qué elegir AI Square?",
+    "subtitle": "Educación integral en IA diseñada para el mundo moderno",
+    "items": {
+      "personalizedLearning": {
+        "title": "Rutas de Aprendizaje Personalizadas",
+        "description": "Las recomendaciones impulsadas por IA se adaptan a tu estilo y ritmo de aprendizaje"
+      },
+      "multilingualSupport": {
+        "title": "Soporte Multilingüe",
+        "description": "Aprende en tu idioma preferido con contenido multilingüe completo"
+      },
+      "realTimeAI": {
+        "title": "Tutoría de IA 24/7",
+        "description": "Obtén retroalimentación y orientación instantánea de asistentes de IA avanzados"
+      },
+      "comprehensiveAssessment": {
+        "title": "Evaluación Integral",
+        "description": "Evalúa tu alfabetización en IA en cuatro dominios principales con información detallada"
+      },
+      "interactiveTasks": {
+        "title": "Tareas de Aprendizaje Interactivas",
+        "description": "Proyectos prácticos y escenarios del mundo real para aplicar tus conocimientos"
+      },
+      "progressTracking": {
+        "title": "Seguimiento Visual del Progreso",
+        "description": "Rastrea tu crecimiento con gráficos de radar intuitivos y insignias de logros"
+      }
+    }
+  },
+  "domains": {
+    "title": "Cuatro Dominios Principales de Alfabetización en IA",
+    "subtitle": "Domina todos los aspectos de la interacción y creación con IA",
+    "viewDetails": "Ver Detalles",
+    "items": {
+      "engaging": {
+        "name": "Interactuar con IA"
+      },
+      "creating": {
+        "name": "Crear con IA"
+      },
+      "managing": {
+        "name": "Gestionar con IA"
+      },
+      "designing": {
+        "name": "Diseñar con IA"
+      }
+    }
+  },
+  "howItWorks": {
+    "title": "Cómo Funciona",
+    "subtitle": "Tu viaje hacia el dominio de la IA en pasos simples",
+    "steps": {
+      "assessment": {
+        "title": "1. Realiza la Evaluación Inicial",
+        "description": "Evalúa tu nivel actual de alfabetización en IA en cuatro dominios"
+      },
+      "personalized": {
+        "title": "2. Obtén una Ruta Personalizada",
+        "description": "Recibe un viaje de aprendizaje personalizado basado en tus resultados"
+      },
+      "learn": {
+        "title": "3. Aprende y Practica",
+        "description": "Participa con contenido interactivo y tareas asistidas por IA"
+      },
+      "track": {
+        "title": "4. Rastrea el Progreso",
+        "description": "Monitorea tu crecimiento y gana logros"
+      }
+    }
+  },
+  "target": {
+    "title": "¿Para quién es AI Square?",
+    "subtitle": "Diseñado para estudiantes de todos los niveles",
+    "audiences": {
+      "individuals": {
+        "title": "Estudiantes Individuales",
+        "description": "Desarrolla habilidades esenciales de IA para el crecimiento personal y profesional"
+      },
+      "educators": {
+        "title": "Educadores",
+        "description": "Accede a recursos integrales para enseñar alfabetización en IA"
+      },
+      "organizations": {
+        "title": "Organizaciones",
+        "description": "Capacita a tu equipo con soluciones de educación en IA de nivel empresarial"
+      }
+    }
+  },
+  "cta": {
+    "title": "¿Listo para comenzar tu viaje de aprendizaje en IA?",
+    "subtitle": "Únete a miles de estudiantes que dominan la alfabetización en IA",
+    "button": "Comienza Gratis",
+    "login": "¿Ya tienes una cuenta? Inicia sesión"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "title": "Framework di Alfabetizzazione IA",
+  "subtitle": "Conoscenze, Competenze e Attitudini per l'Educazione all'IA",
+  "loading": "Caricamento del framework KSA...",
+  "loadError": "Impossibile caricare i dati KSA",
+  "searchPlaceholder": "Cerca temi, codici o contenuti...",
+  "sections": {
+    "knowledge": "Conoscenze",
+    "skills": "Competenze",
+    "attitudes": "Attitudini",
+    "knowledgeShort": "C",
+    "skillsShort": "C",
+    "attitudesShort": "A"
+  },
+  "results": {
+    "themesFound": "{{count}} temi trovati",
+    "themesFoundFor": "{{count}} temi trovati per \"{{search}}\"",
+    "noResults": "Nessun risultato trovato",
+    "noResultsHint": "Prova a modificare i termini di ricerca."
+  },
+  "codes": "codice",
+  "codesPlural": "codici",
+  "reflectionQuestions": "Domande di Riflessione",
+  "themes": {
+    "The_Nature_of_AI": "La Natura dell'IA",
+    "AI_Reflects_Human_Choices_and_Perspectives": "L'IA Riflette le Scelte e le Prospettive Umane",
+    "AI_Reshapes_Work_and_Human_Roles": "L'IA Ridefinisce il Lavoro e i Ruoli Umani",
+    "AIs_Capabilities_and_Limitations": "Capacità e Limiti dell'IA",
+    "AIs_Role_in_Society": "Il Ruolo dell'IA nella Società",
+    "Critical_Thinking": "Pensiero Critico",
+    "Creativity": "Creatività",
+    "Computational_Thinking": "Pensiero Computazionale",
+    "Collaboration": "Collaborazione",
+    "Problem_Solving": "Risoluzione dei Problemi",
+    "Self_and_Social_Awareness": "Consapevolezza di Sé e Sociale",
+    "Communication": "Comunicazione",
+    "Responsible": "Responsabile",
+    "Curious": "Curioso",
+    "Innovative": "Innovativo",
+    "Adaptable": "Adattabile",
+    "Empathetic": "Empatico"
+  }
+}

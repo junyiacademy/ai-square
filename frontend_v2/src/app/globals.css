@@ -1,0 +1,111 @@
+@import "../../app.css";
+
+/* Custom animations for KSA page */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Line clamp utility for responsive text */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Dark mode styles for Tailwind v4 */
+.dark .dark\:bg-slate-800 {
+  background-color: rgb(30 41 59);
+}
+
+.dark .dark\:bg-slate-900 {
+  background-color: rgb(15 23 42);
+}
+
+.dark .dark\:bg-slate-700 {
+  background-color: rgb(51 65 85);
+}
+
+.dark .dark\:text-white {
+  color: rgb(255 255 255);
+}
+
+.dark .dark\:text-gray-300 {
+  color: rgb(209 213 219);
+}
+
+.dark .dark\:text-gray-400 {
+  color: rgb(156 163 175);
+}
+
+.dark .dark\:border-slate-700 {
+  border-color: rgb(51 65 85);
+}
+
+.dark .dark\:hover\:bg-slate-700:hover {
+  background-color: rgb(51 65 85);
+}
+
+.dark .dark\:hover\:bg-slate-600:hover {
+  background-color: rgb(71 85 105);
+}
+
+.dark .dark\:hover\:text-white:hover {
+  color: rgb(255 255 255);
+}
+
+.dark .dark\:bg-gray-800 {
+  background-color: rgb(31 41 55);
+}
+
+.dark .dark\:bg-gray-700 {
+  background-color: rgb(55 65 81);
+}
+
+.dark .dark\:bg-gray-900 {
+  background-color: rgb(17 24 39);
+}
+
+.dark .dark\:text-gray-200 {
+  color: rgb(229 231 235);
+}
+
+.dark .dark\:border-gray-600 {
+  border-color: rgb(75 85 99);
+}
+
+.dark .dark\:hover\:bg-gray-600:hover {
+  background-color: rgb(75 85 99);
+}
+
+/* Completion UI Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}

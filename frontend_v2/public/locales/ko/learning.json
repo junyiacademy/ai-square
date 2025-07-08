@@ -1,0 +1,21 @@
+{
+  "learningPath": {
+    "title": "개인 맞춤형 학습 경로",
+    "subtitle": "평가 결과를 바탕으로 추천하는 학습 여정입니다",
+    "yourProgress": "진행 상황 개요",
+    "currentScore": "현재",
+    "target": "목표",
+    "completed": "완료됨",
+    "filteringBy": "{{domain}}에 대한 추천 표시 중",
+    "clearFilter": "모든 추천 표시",
+    "recommendedPath": "추천 학습 경로",
+    "estimatedTime": "총 시간: {{hours}}시간 {{minutes}}분",
+    "startLearning": "학습 시작",
+    "progress": "진행률",
+    "weakDomainReason": "{{domain}} 강화 추천 (현재: {{score}}%)",
+    "strongDomainReason": "강력한 {{domain}} 기술({{score}}%)을 위한 고급 과제",
+    "averageDomainReason": "{{domain}} 전문성 계속 구축 (현재: {{score}}%)",
+    "goToDashboard": "대시보드로 이동",
+    "dashboardHint": "전체 진행 상황을 추적하고 학습 여정을 계속하세요"
+  }
+}

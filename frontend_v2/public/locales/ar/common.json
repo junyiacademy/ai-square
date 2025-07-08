@@ -1,0 +1,27 @@
+{
+  "skip": "تخطي",
+  "next": "التالي",
+  "back": "رجوع",
+  "continue": "استمرار",
+  "loading": "جار التحميل...",
+  "save": "حفظ",
+  "cancel": "إلغاء",
+  "submit": "إرسال",
+  "delete": "حذف",
+  "edit": "تعديل",
+  "close": "إغلاق",
+  "error": "خطأ",
+  "success": "نجاح",
+  "warning": "تحذير",
+  "info": "معلومات",
+  "backToDashboard": "العودة إلى لوحة التحكم",
+  "minutes": "دقائق",
+  "hours": "ساعات",
+  "days": "أيام",
+  "view": "عرض",
+  "difficulty": {
+    "beginner": "مبتدئ",
+    "intermediate": "متوسط",
+    "advanced": "متقدم"
+  }
+}

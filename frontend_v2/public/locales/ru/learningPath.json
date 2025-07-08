@@ -1,0 +1,43 @@
+{
+  "title": "Ваш Путь Обучения",
+  "subtitle": "Персонализированные рекомендации на основе вашей оценки",
+  "yourProgress": "Ваш Прогресс",
+  "currentScore": "Текущий Балл",
+  "targetScore": "Целевой Балл",
+  "completed": "завершено",
+  "recommendedPath": "Рекомендуемый Путь Обучения",
+  "startLearning": "Начать Обучение",
+  "estimatedTime": "Примерное время",
+  "weakDomainReason": "Это ваша самая слабая область с {{score}}% баллов",
+  "difficulty": {
+    "beginner": "Начинающий",
+    "intermediate": "Средний",
+    "advanced": "Продвинутый"
+  },
+  "noAssessment": {
+    "title": "Оценка Не Найдена",
+    "description": "Пожалуйста, сначала пройдите оценку, чтобы получить персонализированные рекомендации",
+    "button": "Пройти Оценку"
+  },
+  "domains": {
+    "Engaging_with_AI": "Взаимодействие с ИИ",
+    "Creating_with_AI": "Создание с ИИ",
+    "Managing_with_AI": "Управление с ИИ",
+    "Designing_with_AI": "Проектирование с ИИ"
+  },
+  "strongDomainReason": "Развивайте ваши навыки в {{domain}} (текущий: {{score}}%)",
+  "averageDomainReason": "Улучшите ваши навыки {{domain}} (текущий: {{score}}%)",
+  "learningPath": {
+    "filteringBy": "Показаны элементы для {{domain}}",
+    "clearFilter": "Очистить фильтр",
+    "recommendedPath": "Рекомендуемый Путь Обучения",
+    "estimatedTime": "Общее время: {{hours}}ч {{minutes}}м",
+    "startLearning": "Начать Обучение",
+    "progress": "Прогресс",
+    "goToDashboard": "Перейти к Панели",
+    "dashboardHint": "Отслеживайте ваш общий прогресс и достижения на панели"
+  },
+  "showAll": "Показать Все",
+  "focusOnWeakAreas": "Сосредоточиться на Слабых Областях",
+  "backToDashboard": "Назад к Панели"
+}

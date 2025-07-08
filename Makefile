@@ -10,7 +10,7 @@ FILES ?= ""
 DESC ?= ""
 
 .PHONY: ai-new ai-start ai-save ai-done ai-fix ai-review ai-report ai-log help \
-        dev run-frontend run-backend run-cms \
+        dev run-frontend run-frontend-v2 run-backend run-cms \
         dev-setup dev-install dev-update \
         dev-workflow-check dev-secret-check dev-tdd-check dev-tdd-enforce \
         build-frontend build-docker-image check-deploy-size \
@@ -334,6 +334,10 @@ help:
 ## 前端開發
 run-frontend:
 	@echo "$(GREEN)🚀 啟動前端開發伺服器$(NC)"
+	cd frontend && npm run dev
+
+run-frontend-v2:
+	@echo "$(GREEN)🚀 啟動前端開發伺服器 v2 $(NC)"
 	cd frontend && npm run dev
 
 ## 後端開發

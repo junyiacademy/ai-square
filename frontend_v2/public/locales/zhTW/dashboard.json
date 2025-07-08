@@ -1,0 +1,49 @@
+{
+  "welcome": "歡迎回來，{{name}}！",
+  "subtitle": "這是您的 AI 素養進度概覽",
+  "aiLiteracyProgress": "AI 素養進度",
+  "domains": {
+    "engaging_with_ai": "與 AI 互動",
+    "creating_with_ai": "與 AI 共創",
+    "managing_with_ai": "與 AI 管理",
+    "designing_with_ai": "與 AI 設計"
+  },
+  "viewDetailedProgress": "查看詳細學習路徑",
+  "learningStatistics": "學習統計",
+  "completedScenarios": "已完成",
+  "inProgress": "進行中",
+  "learningHours": "學習時數",
+  "dayStreak": "連續天數",
+  "recentActivities": "最近活動",
+  "noRecentActivities": "暫無最近活動。開始學習即可在此查看您的進度！",
+  "activities": {
+    "completedAssessment": "已完成 AI 素養評估",
+    "assessmentDesc": "發現了您的 AI 知識基準"
+  },
+  "recommendedActions": "推薦的下一步",
+  "nextActions": {
+    "takeAssessment": "進行 AI 素養評估",
+    "assessmentDesc": "發現您目前的 AI 知識水平並獲得個人化推薦",
+    "viewLearningPath": "查看您的學習路徑",
+    "learningPathDesc": "基於您的評估結果查看個人化推薦",
+    "startPBL": "開始 PBL 情境",
+    "pblDesc": "透過互動情境練習真實世界的 AI 技能"
+  },
+  "priority": {
+    "high": "高",
+    "medium": "中",
+    "low": "低"
+  },
+  "quickLinks": "快速連結",
+  "explorePBL": "探索 PBL 情境",
+  "viewCompetencies": "查看 AI 能力",
+  "viewHistory": "查看學習歷史",
+  "exploreKSA": "探索知識地圖",
+  "yourGoals": "您的學習目標",
+  "updateGoals": "更新您的目標",
+  "learningPathQuickAccess": "個人化學習推薦",
+  "learningPathDescription": "探索根據您的評估結果和興趣量身定制的 AI 學習情境。選擇最適合您需求的領域。",
+  "viewAllPaths": "查看所有學習路徑",
+  "focusOnWeakAreas": "專注薄弱領域",
+  "aiAdvisor": "AI 學習顧問"
+}

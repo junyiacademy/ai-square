@@ -1,0 +1,12 @@
+{
+  "aiAdvisor": "Penasihat Pembelajaran AI",
+  "newChat": "Obrolan Baru",
+  "history": "Riwayat Obrolan",
+  "welcomeTitle": "Halo! Saya adalah Penasihat Pembelajaran AI Anda",
+  "welcomeMessage": "Saya di sini untuk membantu Anda menjelajahi perjalanan literasi AI Anda. Tanyakan kepada saya tentang jalur pembelajaran, skenario PBL, atau konsep AI apa pun yang ingin Anda pahami lebih baik.",
+  "inputPlaceholder": "Ketik pesan Anda di sini... (Tekan Enter untuk mengirim)",
+  "suggestedTopic1": "Skenario PBL mana yang harus saya mulai?",
+  "suggestedTopic2": "Bantu saya memahami hasil penilaian saya",
+  "suggestedTopic3": "Apa area lemah saya dan bagaimana saya bisa memperbaikinya?",
+  "suggestedTopic4": "Jelaskan konsep AI dengan istilah sederhana"
+}

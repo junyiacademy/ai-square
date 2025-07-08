@@ -1,0 +1,85 @@
+{
+  "title": "AI Square Benutzerreise",
+  "subtitle": "Sechs Schlüsselpfade für eine vollständige KI-Lernerfahrung",
+  "getStarted": "Loslegen",
+  "pathOverview": "Vollständiger Lernzyklus",
+  "nextPath": "Nächster Pfad →",
+  "tryFeature": "Diese Funktion Erleben",
+  "paths": {
+    "dashboard": {
+      "title": "Dashboard",
+      "subtitle": "Lernkommandozentrale",
+      "description": "Umfassende Übersicht über Ihre KI-Lernreise, Fortschrittsverfolgung, Erfolgsvisualisierung und Planung der nächsten Schritte.",
+      "userNeed": "Wie ist mein Lernfortschritt?",
+      "features": [
+        "KI-Kompetenz-Fortschrittsvisualisierung",
+        "Lernstatistiken auf einen Blick",
+        "Personalisierte empfohlene Aktionen",
+        "Schnelle Funktionsnavigation"
+      ]
+    },
+    "assessment": {
+      "title": "Bewertung",
+      "subtitle": "KI-Kompetenztest",
+      "description": "25 professionelle Fragen zum tiefgreifenden Verständnis Ihres Kompetenzniveaus in vier KI-Bereichen.",
+      "userNeed": "Was ist mein KI-Kompetenzniveau?",
+      "features": [
+        "Vier KI-Kompetenzbereiche",
+        "25 szenariobasierte Fragen",
+        "Radardiagramm-Fähigkeitsanalyse",
+        "Personalisierter Empfehlungsbericht"
+      ]
+    },
+    "learningPath": {
+      "title": "Lernpfad",
+      "subtitle": "Personalisierter Wachstumsplan",
+      "description": "Basierend auf Ihren Bewertungsergebnissen empfehlen wir die am besten geeigneten Lerninhalte und das passende Tempo.",
+      "userNeed": "Welche Kurse passen zu mir?",
+      "features": [
+        "Maßgeschneiderte Kursempfehlungen",
+        "Abgestufte Lerninhalte",
+        "Progressive Planung",
+        "Flexibler Lernzeitplan"
+      ]
+    },
+    "pbl": {
+      "title": "PBL-Praxis",
+      "subtitle": "Realweltszenarien",
+      "description": "9 praktische Szenarien mit KI-Tutor-Anleitung zum Lernen durch Handeln.",
+      "userNeed": "Wie wende ich KI in der Praxis an?",
+      "features": [
+        "KI-Robotik-Entwicklung",
+        "KI-Stablecoin-Handel",
+        "KI-Jobsuche-Training",
+        "Echtzeit-KI-Tutoring"
+      ]
+    },
+    "chat": {
+      "title": "KI-Berater",
+      "subtitle": "24/7 Support",
+      "description": "24/7 intelligenter Lernbegleiter, der Ihren Lernkontext speichert und personalisierte Ratschläge gibt.",
+      "userNeed": "Wen kann ich fragen, wenn ich Fragen habe?",
+      "features": [
+        "Kontinuierliches Gesprächsgedächtnis",
+        "Personalisierte Lernvorschläge",
+        "Mehrrundige tiefgehende Gespräche",
+        "Lern-Q&A-Unterstützung"
+      ]
+    },
+    "discovery": {
+      "title": "Discovery",
+      "subtitle": "Personalisiertes Karriere-Abenteuer",
+      "description": "Finden Sie Ihren idealen Karriereweg durch KI-Bewertung und entwickeln Sie berufliche Fähigkeiten in spielerischen Abenteuern.",
+      "userNeed": "Welche Karriere passt zu mir?",
+      "features": [
+        "KI-Karriere-Matching-Bewertung",
+        "Unendliches Aufgabengenerierungssystem",
+        "Gamifizierte Lernerfahrung",
+        "Dynamische Aufgabenschwierigkeit"
+      ]
+    }
+  },
+  "keyFeatures": "Hauptfunktionen",
+  "solvedNeed": "Gelöstes Benutzerbedürfnis",
+  "completeJourney": "Vollständige Lernreise"
+}

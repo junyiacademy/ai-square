@@ -1,0 +1,99 @@
+{
+  "welcome": {
+    "greeting": "欢迎，{{name}}！",
+    "subtitle": "让我们开始您的AI素养学习之旅",
+    "step1": {
+      "title": "发现您的路径",
+      "description": "AI Square帮助您理解和掌握AI素养",
+      "content": "我们将通过个性化评估和引导式学习体验，帮助您识别自己的优势和成长领域。",
+      "assessment": "智能评估",
+      "assessmentDesc": "了解您当前的AI知识水平",
+      "learning": "个性化学习",
+      "learningDesc": "基于您的目标获得量身定制的建议"
+    },
+    "step2": {
+      "title": "四大核心领域",
+      "description": "掌握AI素养的核心要素",
+      "content": "我们的综合框架涵盖了您需要了解的关于有效和负责任地使用AI的一切。",
+      "domains": "AI素养领域",
+      "engaging": "与AI互动",
+      "creating": "用AI创作",
+      "managing": "用AI管理",
+      "designing": "用AI设计"
+    },
+    "step3": {
+      "title": "开始您的旅程",
+      "description": "从评估开始，释放您的潜力",
+      "content": "准备好发现您的AI素养水平并获得个性化学习建议了吗？",
+      "ready": "您将获得：",
+      "benefit1": "详细的AI知识评估",
+      "benefit2": "个性化学习路径建议",
+      "benefit3": "互动场景和实践练习"
+    },
+    "startJourney": "开始您的旅程"
+  },
+  "goals": {
+    "title": "您希望实现什么目标？",
+    "subtitle": "选择您的学习目标以获得个性化建议",
+    "understand": {
+      "title": "理解AI基础",
+      "description": "学习AI、机器学习和AI系统工作原理的基础知识"
+    },
+    "create": {
+      "title": "用AI创作内容",
+      "description": "使用AI工具进行写作、设计、艺术和创意项目"
+    },
+    "analyze": {
+      "title": "用AI分析数据",
+      "description": "应用AI进行数据分析、洞察和决策制定"
+    },
+    "build": {
+      "title": "构建AI解决方案",
+      "description": "开发和实施AI系统和应用程序"
+    },
+    "teach": {
+      "title": "向他人传授AI",
+      "description": "教育和指导他人理解和使用AI"
+    },
+    "ethical": {
+      "title": "确保AI道德使用",
+      "description": "理解和实施负责任的AI实践"
+    },
+    "recommendedDomains": "推荐领域",
+    "selected": "已选择 {{count}} 个目标",
+    "selectAtLeastOne": "请至少选择一个学习目标",
+    "continue": "继续评估",
+    "skipForNow": "暂时跳过",
+    "helpText": "别担心，您随时可以在个人资料设置中更改这些选择。"
+  },
+  "progress": {
+    "welcome": "欢迎",
+    "identity": "身份",
+    "goals": "目标"
+  },
+  "identity": {
+    "title": "您是谁？",
+    "subtitle": "帮助我们个性化您的AI学习旅程",
+    "student": {
+      "title": "学生",
+      "description": "我正在学习，希望为我的学术和未来职业学习AI"
+    },
+    "teacher": {
+      "title": "教育工作者",
+      "description": "我教授他人，希望将AI融入我的课程"
+    },
+    "professional": {
+      "title": "专业人士",
+      "description": "我在行业中工作，希望在我的角色中运用AI"
+    },
+    "learner": {
+      "title": "终身学习者",
+      "description": "我对AI很好奇，想要探索它的可能性"
+    }
+  },
+  "button": {
+    "back": "返回",
+    "continue": "继续",
+    "saving": "保存中..."
+  }
+}

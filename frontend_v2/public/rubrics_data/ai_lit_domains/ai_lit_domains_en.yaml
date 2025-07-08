@@ -1,0 +1,322 @@
+domains:
+  Engaging_with_AI:
+    emoji: 🎯
+    overview: Involves using AI as a tool to access new content, information, or recommendations. These situations require learners to first recognize the presence of AI, then evaluate the accuracy and relevance of AI outputs. Learners must develop a fundamental understanding of AI's technical foundations in order to critically analyze its capabilities and limitations.
+    competencies:
+      E1:
+        description: Recognize the role and influence of AI in different contexts.
+        knowledge:
+          - K1.4
+          - K5.1
+        skills:
+          - S6.1
+        attitudes:
+          - A2.1
+          - A1.1
+        content: Learners identify the presence of AI in everyday tools and systems and consider its purpose in various situations, such as content recommendations or adaptive learning. They reflect on how AI influences their choices, learning, and perceptions.
+        scenarios:
+          - List familiar digital interactions (e.g., using a webcam, video recommendations) and discuss whether and how each uses AI.
+          - Explore how an online math platform uses real-time data to present content at different difficulty levels.
+      E2:
+        description: Analyze the accuracy and relevance of AI outputs.
+        knowledge:
+          - K1.1
+          - K1.3
+          - K4.1
+        skills:
+          - S1.1
+        attitudes:
+          - A1.1
+          - A2.1
+        content: Learners evaluate whether AI-generated content is accurate, relevant, and applicable. They learn to identify AI's strengths and limitations and consider multiple sources of information when making decisions.
+        scenarios:
+          - Compare AI-generated news summaries with original articles, identifying accuracy and bias.
+          - Evaluate the quality of AI language translation, considering cultural context and semantic nuances.
+      E3:
+        description: Recognize the capabilities and limitations of AI systems.
+        knowledge:
+          - K1.2
+          - K1.3
+          - K4.1
+        skills:
+          - S1.1
+        attitudes:
+          - A2.1
+        content: Learners understand the technical capabilities and boundaries of AI systems, including their performance differences across different tasks. They learn to distinguish areas where AI excels from those requiring human judgment.
+        scenarios:
+          - Test AI chatbot performance on different types of questions, comparing effectiveness on factual versus creative questions.
+          - Analyze the accuracy of AI image recognition systems under different conditions.
+      E4:
+        description: Evaluate the appropriateness and ethical implications of AI use.
+        knowledge:
+          - K5.4
+          - K2.1
+        skills:
+          - S5.1
+          - S6.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Learners consider whether AI use in specific situations is appropriate, beneficial, or potentially harmful. They evaluate the ethical implications of AI use, including privacy, bias, and fairness issues.
+        scenarios:
+          - Discuss the ethical implications of using AI in CV screening in recruitment processes.
+          - Analyze how AI recommendation systems might influence user choices and opinions.
+      E5:
+        description: Practice responsible behavior when using AI.
+        knowledge:
+          - K5.4
+          - K2.1
+        skills:
+          - S7.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Learners demonstrate responsible and ethical behavior when interacting with AI systems. They consider the impact of their actions and follow best practices when using AI.
+        scenarios:
+          - Develop guidelines for using AI tools in academic work.
+          - Create strategies for verifying the accuracy of AI-generated information before sharing with others.
+
+  Creating_with_AI:
+    emoji: 🎨
+    overview: Involves collaborating with AI systems to generate new content, ideas, or solutions. These situations require learners to understand AI's capabilities as a creative partner while maintaining respect for human creativity, originality, and intellectual property.
+    competencies:
+      C1:
+        description: Use AI tools to enhance creativity and productivity.
+        knowledge:
+          - K1.4
+          - K5.3
+        skills:
+          - S2.1
+          - S3.1
+        attitudes:
+          - A3.1
+          - A4.1
+        content: Learners use AI tools to enhance their creative work, such as writing, design, or problem-solving. They learn how to collaborate effectively with AI while maintaining their creative vision and control.
+        scenarios:
+          - Use an AI writing assistant to improve essay structure while maintaining own viewpoints and arguments.
+          - Collaborate with AI art generators to create visual works, exploring different styles and concepts.
+      C2:
+        description: Maintain originality and authenticity in AI-assisted creative processes.
+        knowledge:
+          - K5.3
+          - K2.1
+        skills:
+          - S2.1
+          - S7.1
+        attitudes:
+          - A1.1
+          - A3.1
+        content: Learners understand how to maintain originality and personal voice when using AI tools. They learn to distinguish between AI-assisted creation and content completely reliant on AI.
+        scenarios:
+          - Create a project that clearly identifies which parts are AI-assisted and which are original.
+          - Discuss appropriate attribution for AI-generated content in academic and commercial contexts.
+      C3:
+        description: Understand copyright and intellectual property issues in AI creation.
+        knowledge:
+          - K5.3
+          - K2.1
+        skills:
+          - S1.1
+          - S7.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Learners understand the copyright and intellectual property implications of AI-generated content. They learn to use AI creation tools responsibly and understand related legal and ethical issues.
+        scenarios:
+          - Research the terms of use and copyright policies of different AI platforms.
+          - Create a best practices guide for using AI-generated content.
+      C4:
+        description: Evaluate and improve AI-generated content.
+        knowledge:
+          - K1.3
+          - K4.1
+        skills:
+          - S1.1
+          - S2.1
+        attitudes:
+          - A2.1
+          - A4.1
+        content: Learners learn to evaluate the quality of AI-generated content and improve it through iterative processes. They develop critical thinking skills to identify and solve problems in AI outputs.
+        scenarios:
+          - Improve an AI-generated story or article through multiple iterations.
+          - Evaluate AI-generated code and make necessary modifications and optimizations.
+      C5:
+        description: Balance AI assistance with human judgment in creative processes.
+        knowledge:
+          - K3.2
+          - K4.1
+        skills:
+          - S2.1
+          - S5.1
+        attitudes:
+          - A4.1
+          - A5.1
+        content: Learners learn to appropriately combine AI tools and human judgment in creative processes. They understand when to rely on AI and when human creativity and judgment are necessary.
+        scenarios:
+          - Design a creative workflow that clearly defines AI and human roles at different stages.
+          - Analyze different types of creative tasks, determining the appropriate degree of AI assistance.
+
+  Managing_with_AI:
+    emoji: 📊
+    overview: Involves strategically using AI in organizational and management tasks. These situations require learners to understand how AI changes workflows, decision-making processes, and organizational structures while considering the importance of human oversight and responsibility.
+    competencies:
+      M1:
+        description: Evaluate opportunities for AI integration in workflows.
+        knowledge:
+          - K3.1
+          - K3.2
+        skills:
+          - S5.1
+          - S3.1
+        attitudes:
+          - A3.1
+          - A4.1
+        content: Learners identify areas in organizations where AI can be effectively integrated, evaluating potential benefits and risks. They learn to analyze existing workflows and determine where AI can add value.
+        scenarios:
+          - Analyze school management systems, identifying processes that can be automated or improved through AI.
+          - Evaluate the feasibility and impact of using AI chatbots in customer service.
+      M2:
+        description: Maintain human oversight in AI-assisted decision-making processes.
+        knowledge:
+          - K3.3
+          - K5.1
+        skills:
+          - S1.1
+          - S6.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Learners understand the importance of human oversight in AI-assisted decision-making. They learn to design decision-making processes that ensure humans maintain final control and responsibility.
+        scenarios:
+          - Design an AI-assisted student evaluation system including human review and intervention mechanisms.
+          - Create a decision framework using AI for data analysis, ensuring human validation and interpretation.
+      M3:
+        description: Manage organizational change in AI implementation.
+        knowledge:
+          - K3.1
+          - K3.2
+        skills:
+          - S4.1
+          - S7.1
+        attitudes:
+          - A4.1
+          - A5.1
+        content: Learners understand how AI implementation affects organizational culture and working methods. They learn to manage change processes, including training, communication, and change management.
+        scenarios:
+          - Develop a plan to help teams adapt to new AI tools and workflows.
+          - Design training programs to improve organizational members' AI literacy.
+      M4:
+        description: Evaluate and mitigate risks of AI use.
+        knowledge:
+          - K4.1
+          - K5.4
+        skills:
+          - S1.1
+          - S6.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Learners identify potential risks in AI use, including bias, errors, and security issues. They learn to develop strategies to mitigate these risks and ensure responsible AI use.
+        scenarios:
+          - Conduct risk assessment of AI systems, identifying potential biases and errors.
+          - Develop governance policies and best practice guidelines for AI use.
+      M5:
+        description: Measure the effectiveness and impact of AI implementation.
+        knowledge:
+          - K3.1
+          - K5.1
+        skills:
+          - S1.1
+          - S6.1
+        attitudes:
+          - A2.1
+          - A4.1
+        content: Learners learn to evaluate the success of AI implementation, including efficiency improvements, cost savings, and user satisfaction. They develop skills to measure and improve AI system performance.
+        scenarios:
+          - Design metrics to evaluate the effectiveness of AI customer service systems.
+          - Analyze the impact of AI tools on work efficiency and quality.
+
+  Designing_with_AI:
+    emoji: 🔧
+    overview: Involves designing and developing AI systems or AI-enhanced solutions. These situations require learners to understand the technical and ethical considerations of AI development, including data, algorithm, and user experience design.
+    competencies:
+      D1:
+        description: Design AI systems considering ethics and fairness.
+        knowledge:
+          - K2.1
+          - K5.4
+        skills:
+          - S1.1
+          - S3.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Learners understand how to design fair, transparent, and responsible AI systems. They learn to consider the needs of different user groups and embed ethical considerations in the design process.
+        scenarios:
+          - Design an AI recruitment tool ensuring elimination of gender and racial bias.
+          - Create an AI education system providing fair opportunities for students with different learning needs.
+      D2:
+        description: Understand data requirements and quality for AI systems.
+        knowledge:
+          - K1.1
+          - K2.2
+        skills:
+          - S3.1
+          - S1.1
+        attitudes:
+          - A1.1
+          - A2.1
+        content: Learners understand AI systems' dependence on data, including data collection, cleaning, and quality assurance. They learn to identify and resolve data quality issues.
+        scenarios:
+          - Analyze training datasets, identifying potential biases and quality issues.
+          - Design data collection strategies ensuring representativeness and quality.
+      D3:
+        description: Design user-friendly AI interfaces and experiences.
+        knowledge:
+          - K1.2
+          - K4.1
+        skills:
+          - S3.1
+          - S7.1
+        attitudes:
+          - A3.1
+          - A5.1
+        content: Learners learn to design intuitive and transparent AI user interfaces. They understand how to make users understand and trust AI systems while providing appropriate user control.
+        scenarios:
+          - Design a user interface for an AI recommendation system, allowing users to understand the basis of recommendations.
+          - Create an AI assistant providing clear feedback and explanations.
+      D4:
+        description: Implement testing and validation of AI systems.
+        knowledge:
+          - K1.1
+          - K4.1
+        skills:
+          - S1.1
+          - S3.1
+        attitudes:
+          - A1.1
+          - A2.1
+        content: Learners learn to test and validate AI system performance, accuracy, and reliability. They understand how to identify and resolve problems in AI systems.
+        scenarios:
+          - Design testing schemes to evaluate AI model accuracy and robustness.
+          - Conduct user testing to gather feedback on AI system usability.
+      D5:
+        description: Consider long-term impact and sustainability of AI systems.
+        knowledge:
+          - K3.1
+          - K5.1
+        skills:
+          - S6.1
+          - S1.1
+        attitudes:
+          - A1.1
+          - A5.1
+        content: Learners consider the long-term impact of AI systems on society, environment, and economy. They learn to design sustainable and scalable AI solutions.
+        scenarios:
+          - Evaluate the environmental impact of AI systems, including energy use and carbon footprint.
+          - Analyze the long-term impact of AI implementation on employment and social structures.
+
+metadata:
+  language: en
+  version: "1.0"
+  last_updated: "2025-07-03"

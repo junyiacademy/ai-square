@@ -1,0 +1,43 @@
+{
+  "title": "Ihr Lernpfad",
+  "subtitle": "Personalisierte Empfehlungen basierend auf Ihrer Bewertung",
+  "yourProgress": "Ihr Fortschritt",
+  "currentScore": "Aktuelle Punktzahl",
+  "targetScore": "Ziel-Punktzahl",
+  "completed": "abgeschlossen",
+  "recommendedPath": "Empfohlener Lernpfad",
+  "startLearning": "Lernen beginnen",
+  "estimatedTime": "Geschätzte Zeit",
+  "weakDomainReason": "Dies ist Ihr schwächster Bereich mit {{score}}% Punktzahl",
+  "difficulty": {
+    "beginner": "Anfänger",
+    "intermediate": "Fortgeschrittene",
+    "advanced": "Experte"
+  },
+  "noAssessment": {
+    "title": "Keine Bewertung gefunden",
+    "description": "Bitte schließen Sie zuerst die Bewertung ab, um personalisierte Empfehlungen zu erhalten",
+    "button": "Bewertung durchführen"
+  },
+  "domains": {
+    "Engaging_with_AI": "Interaktion mit KI",
+    "Creating_with_AI": "Kreativität mit KI",
+    "Managing_with_AI": "Management mit KI",
+    "Designing_with_AI": "Design mit KI"
+  },
+  "strongDomainReason": "Verbessern Sie Ihre Fähigkeiten in {{domain}} (aktuell: {{score}}%)",
+  "averageDomainReason": "Verbessern Sie Ihre {{domain}}-Fähigkeiten (aktuell: {{score}}%)",
+  "learningPath": {
+    "filteringBy": "Anzeige von Elementen für {{domain}}",
+    "clearFilter": "Filter löschen",
+    "recommendedPath": "Empfohlener Lernpfad",
+    "estimatedTime": "Gesamtzeit: {{hours}}h {{minutes}}m",
+    "startLearning": "Lernen beginnen",
+    "progress": "Fortschritt",
+    "goToDashboard": "Zum Dashboard",
+    "dashboardHint": "Verfolgen Sie Ihren Gesamtfortschritt und Ihre Erfolge im Dashboard"
+  },
+  "showAll": "Alle anzeigen",
+  "focusOnWeakAreas": "Fokus auf schwache Bereiche",
+  "backToDashboard": "Zurück zum Dashboard"
+}

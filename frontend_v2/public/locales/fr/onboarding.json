@@ -1,0 +1,99 @@
+{
+  "welcome": {
+    "greeting": "Bienvenue, {{name}} !",
+    "subtitle": "Commençons votre parcours vers la littératie en IA",
+    "step1": {
+      "title": "Découvrez votre Chemin",
+      "description": "AI Square vous aide à comprendre et maîtriser la littératie en IA",
+      "content": "Nous vous aiderons à identifier vos forces et zones de croissance grâce à des évaluations personnalisées et des expériences d'apprentissage guidées.",
+      "assessment": "Évaluation Intelligente",
+      "assessmentDesc": "Découvrez votre niveau actuel de connaissances en IA",
+      "learning": "Apprentissage Personnalisé",
+      "learningDesc": "Obtenez des recommandations adaptées basées sur vos objectifs"
+    },
+    "step2": {
+      "title": "Quatre Domaines Fondamentaux",
+      "description": "Maîtrisez les domaines essentiels de la littératie en IA",
+      "content": "Notre cadre complet couvre tout ce que vous devez savoir sur le travail avec l'IA de manière efficace et responsable.",
+      "domains": "Domaines de Littératie en IA",
+      "engaging": "Interagir avec l'IA",
+      "creating": "Créer avec l'IA",
+      "managing": "Gérer avec l'IA",
+      "designing": "Concevoir avec l'IA"
+    },
+    "step3": {
+      "title": "Commencez votre Parcours",
+      "description": "Commencez par une évaluation et libérez votre potentiel",
+      "content": "Prêt à découvrir votre niveau de littératie en IA et obtenir des recommandations d'apprentissage personnalisées ?",
+      "ready": "Ce que vous obtiendrez :",
+      "benefit1": "Évaluation détaillée de vos connaissances en IA",
+      "benefit2": "Recommandations de parcours d'apprentissage personnalisées",
+      "benefit3": "Scénarios interactifs et exercices pratiques"
+    },
+    "startJourney": "Commencer votre Parcours"
+  },
+  "goals": {
+    "title": "Que souhaiteriez-vous accomplir ?",
+    "subtitle": "Sélectionnez vos objectifs d'apprentissage pour obtenir des recommandations personnalisées",
+    "understand": {
+      "title": "Comprendre les Fondamentaux de l'IA",
+      "description": "Apprenez les bases de l'IA, l'apprentissage automatique et le fonctionnement des systèmes d'IA"
+    },
+    "create": {
+      "title": "Créer du Contenu avec l'IA",
+      "description": "Utilisez les outils d'IA pour l'écriture, le design, l'art et les projets créatifs"
+    },
+    "analyze": {
+      "title": "Analyser des Données avec l'IA",
+      "description": "Appliquez l'IA pour l'analyse de données, les insights et la prise de décision"
+    },
+    "build": {
+      "title": "Construire des Solutions d'IA",
+      "description": "Développez et implémentez des systèmes et applications d'IA"
+    },
+    "teach": {
+      "title": "Enseigner l'IA aux Autres",
+      "description": "Éduquez et guidez les autres dans la compréhension et l'utilisation de l'IA"
+    },
+    "ethical": {
+      "title": "Assurer l'Utilisation Éthique de l'IA",
+      "description": "Comprenez et implémentez des pratiques d'IA responsables"
+    },
+    "recommendedDomains": "Domaines recommandés",
+    "selected": "{{count}} objectifs sélectionnés",
+    "selectAtLeastOne": "Veuillez sélectionner au moins un objectif d'apprentissage",
+    "continue": "Continuer vers l'Évaluation",
+    "skipForNow": "Ignorer pour l'instant",
+    "helpText": "Ne vous inquiétez pas, vous pourrez toujours modifier cela plus tard dans les paramètres de votre profil."
+  },
+  "progress": {
+    "welcome": "Bienvenue",
+    "identity": "Identité",
+    "goals": "Objectifs"
+  },
+  "identity": {
+    "title": "Qui êtes-vous ?",
+    "subtitle": "Aidez-nous à personnaliser votre parcours d'apprentissage en IA",
+    "student": {
+      "title": "Étudiant",
+      "description": "J'étudie et je veux apprendre l'IA pour mes études et ma future carrière"
+    },
+    "teacher": {
+      "title": "Éducateur",
+      "description": "J'enseigne aux autres et je veux intégrer l'IA dans mon programme"
+    },
+    "professional": {
+      "title": "Professionnel",
+      "description": "Je travaille dans l'industrie et je veux exploiter l'IA dans mon rôle"
+    },
+    "learner": {
+      "title": "Apprenant à Vie",
+      "description": "Je suis curieux de l'IA et je veux explorer ses possibilités"
+    }
+  },
+  "button": {
+    "back": "Retour",
+    "continue": "Continuer",
+    "saving": "Enregistrement..."
+  }
+}

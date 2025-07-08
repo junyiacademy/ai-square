@@ -1,0 +1,21 @@
+{
+  "learningPath": {
+    "title": "Tu Ruta de Aprendizaje Personalizada",
+    "subtitle": "Basado en tus resultados de evaluación, aquí está tu viaje de aprendizaje recomendado",
+    "yourProgress": "Tu Resumen de Progreso",
+    "currentScore": "Actual",
+    "target": "Objetivo",
+    "completed": "completado",
+    "filteringBy": "Mostrando recomendaciones para: {{domain}}",
+    "clearFilter": "Mostrar todas las recomendaciones",
+    "recommendedPath": "Ruta de Aprendizaje Recomendada",
+    "estimatedTime": "Tiempo total: {{hours}}h {{minutes}}m",
+    "startLearning": "Comenzar a Aprender",
+    "progress": "Progreso",
+    "weakDomainReason": "Recomendado para fortalecer {{domain}} (actual: {{score}}%)",
+    "strongDomainReason": "Desafío avanzado para tus fuertes habilidades de {{domain}} ({{score}}%)",
+    "averageDomainReason": "Continuar construyendo experiencia en {{domain}} (actual: {{score}}%)",
+    "goToDashboard": "Ir al Panel",
+    "dashboardHint": "Rastrea tu progreso general y continúa tu viaje de aprendizaje"
+  }
+}

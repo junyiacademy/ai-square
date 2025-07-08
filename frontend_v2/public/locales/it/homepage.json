@@ -1,0 +1,107 @@
+{
+  "hero": {
+    "title": "Padroneggia l'alfabetizzazione AI con AI Square",
+    "subtitle": "Il tuo percorso personalizzato per comprendere e sfruttare l'intelligenza artificiale",
+    "description": "AI Square è una piattaforma di apprendimento multi-agente rivoluzionaria che ti consente di sviluppare competenze AI essenziali attraverso valutazioni interattive, percorsi di apprendimento personalizzati e assistenza AI in tempo reale.",
+    "cta": {
+      "getStarted": "Inizia il tuo percorso",
+      "explore": "Esplora i domini AI",
+      "assessment": "Fai la valutazione"
+    }
+  },
+  "features": {
+    "title": "Perché scegliere AI Square?",
+    "subtitle": "Educazione AI completa progettata per il mondo moderno",
+    "items": {
+      "personalizedLearning": {
+        "title": "Percorsi di apprendimento personalizzati",
+        "description": "Le raccomandazioni basate su AI si adattano al tuo stile e ritmo di apprendimento"
+      },
+      "multilingualSupport": {
+        "title": "Supporto multilingue",
+        "description": "Impara nella tua lingua preferita con contenuti multilingue completi"
+      },
+      "realTimeAI": {
+        "title": "Tutoraggio AI 24/7",
+        "description": "Ottieni feedback e guida istantanei da assistenti AI avanzati"
+      },
+      "comprehensiveAssessment": {
+        "title": "Valutazione completa",
+        "description": "Valuta la tua alfabetizzazione AI in quattro domini principali con approfondimenti dettagliati"
+      },
+      "interactiveTasks": {
+        "title": "Attività di apprendimento interattive",
+        "description": "Progetti pratici e scenari del mondo reale per applicare le tue conoscenze"
+      },
+      "progressTracking": {
+        "title": "Monitoraggio visivo dei progressi",
+        "description": "Traccia la tua crescita con grafici radar intuitivi e badge di risultati"
+      }
+    }
+  },
+  "domains": {
+    "title": "Quattro domini principali di alfabetizzazione AI",
+    "subtitle": "Padroneggia ogni aspetto dell'interazione e creazione con l'AI",
+    "viewDetails": "Vedi dettagli",
+    "items": {
+      "engaging": {
+        "name": "Interagire con l'AI"
+      },
+      "creating": {
+        "name": "Creare con l'AI"
+      },
+      "managing": {
+        "name": "Gestire con l'AI"
+      },
+      "designing": {
+        "name": "Progettare con l'AI"
+      }
+    }
+  },
+  "howItWorks": {
+    "title": "Come funziona",
+    "subtitle": "Il tuo percorso verso la padronanza dell'AI in semplici passi",
+    "steps": {
+      "assessment": {
+        "title": "1. Fai la valutazione iniziale",
+        "description": "Valuta il tuo attuale livello di alfabetizzazione AI in quattro domini"
+      },
+      "personalized": {
+        "title": "2. Ottieni un percorso personalizzato",
+        "description": "Ricevi un percorso di apprendimento personalizzato basato sui tuoi risultati"
+      },
+      "learn": {
+        "title": "3. Impara e pratica",
+        "description": "Interagisci con contenuti interattivi e attività assistite da AI"
+      },
+      "track": {
+        "title": "4. Monitora i progressi",
+        "description": "Controlla la tua crescita e ottieni risultati"
+      }
+    }
+  },
+  "target": {
+    "title": "Per chi è AI Square?",
+    "subtitle": "Progettato per studenti di ogni livello",
+    "audiences": {
+      "individuals": {
+        "title": "Studenti individuali",
+        "description": "Sviluppa competenze AI essenziali per la crescita personale e professionale"
+      },
+      "educators": {
+        "title": "Educatori",
+        "description": "Accedi a risorse complete per insegnare l'alfabetizzazione AI"
+      },
+      "organizations": {
+        "title": "Organizzazioni",
+        "description": "Forma il tuo team con soluzioni di educazione AI di livello aziendale"
+      }
+    }
+  },
+  "cta": {
+    "title": "Pronto per iniziare il tuo percorso di apprendimento AI?",
+    "subtitle": "Unisciti a migliaia di studenti che stanno padroneggiando l'alfabetizzazione AI",
+    "button": "Inizia gratis",
+    "login": "Hai già un account? Accedi"
+  }
+}

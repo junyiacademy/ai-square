@@ -1,0 +1,43 @@
+{
+  "title": "Il Tuo Percorso di Apprendimento",
+  "subtitle": "Raccomandazioni personalizzate basate sulla tua valutazione",
+  "yourProgress": "Il Tuo Progresso",
+  "currentScore": "Punteggio Attuale",
+  "targetScore": "Punteggio Obiettivo",
+  "completed": "completato",
+  "recommendedPath": "Percorso di Apprendimento Raccomandato",
+  "startLearning": "Inizia a Imparare",
+  "estimatedTime": "Tempo stimato",
+  "weakDomainReason": "Questa è la tua area più debole con {{score}}% di punteggio",
+  "difficulty": {
+    "beginner": "Principiante",
+    "intermediate": "Intermedio",
+    "advanced": "Avanzato"
+  },
+  "noAssessment": {
+    "title": "Nessuna Valutazione Trovata",
+    "description": "Per favore completa prima la valutazione per ottenere raccomandazioni personalizzate",
+    "button": "Fai la Valutazione"
+  },
+  "domains": {
+    "Engaging_with_AI": "Interagire con l'IA",
+    "Creating_with_AI": "Creare con l'IA",
+    "Managing_with_AI": "Gestire con l'IA",
+    "Designing_with_AI": "Progettare con l'IA"
+  },
+  "strongDomainReason": "Avanza le tue competenze in {{domain}} (attuale: {{score}}%)",
+  "averageDomainReason": "Migliora le tue competenze {{domain}} (attuale: {{score}}%)",
+  "learningPath": {
+    "filteringBy": "Mostrando elementi per {{domain}}",
+    "clearFilter": "Cancella filtro",
+    "recommendedPath": "Percorso di Apprendimento Raccomandato",
+    "estimatedTime": "Tempo totale: {{hours}}h {{minutes}}m",
+    "startLearning": "Inizia a Imparare",
+    "progress": "Progresso",
+    "goToDashboard": "Vai alla Dashboard",
+    "dashboardHint": "Traccia il tuo progresso complessivo e i tuoi risultati nella dashboard"
+  },
+  "showAll": "Mostra Tutto",
+  "focusOnWeakAreas": "Concentrati sulle Aree Deboli",
+  "backToDashboard": "Torna alla Dashboard"
+}

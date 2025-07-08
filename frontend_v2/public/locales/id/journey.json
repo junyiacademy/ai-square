@@ -1,0 +1,85 @@
+{
+  "title": "Perjalanan Pengguna AI Square",
+  "subtitle": "Enam jalur utama untuk pengalaman pembelajaran AI yang lengkap",
+  "getStarted": "Mulai",
+  "pathOverview": "Siklus Pembelajaran Lengkap",
+  "nextPath": "Jalur Berikutnya →",
+  "tryFeature": "Coba Fitur Ini",
+  "paths": {
+    "dashboard": {
+      "title": "Dashboard",
+      "subtitle": "Pusat Kendali Pembelajaran",
+      "description": "Gambaran lengkap perjalanan pembelajaran AI Anda, lacak kemajuan, lihat pencapaian, dan rencanakan langkah selanjutnya.",
+      "userNeed": "Bagaimana kemajuan pembelajaran saya?",
+      "features": [
+        "Visualisasi kemajuan literasi AI",
+        "Statistik pembelajaran sekilas",
+        "Rekomendasi tindakan yang dipersonalisasi",
+        "Navigasi fitur cepat"
+      ]
+    },
+    "assessment": {
+      "title": "Penilaian",
+      "subtitle": "Tes Literasi AI",
+      "description": "25 pertanyaan profesional untuk memahami secara mendalam tingkat kompetensi Anda di empat domain AI.",
+      "userNeed": "Berapa tingkat kompetensi AI saya?",
+      "features": [
+        "Empat domain literasi AI",
+        "25 pertanyaan berbasis skenario",
+        "Analisis kemampuan grafik radar",
+        "Laporan rekomendasi yang dipersonalisasi"
+      ]
+    },
+    "learningPath": {
+      "title": "Jalur Pembelajaran",
+      "subtitle": "Rencana Pertumbuhan Pribadi",
+      "description": "Berdasarkan hasil penilaian Anda, kami merekomendasikan konten pembelajaran dan kecepatan yang paling sesuai.",
+      "userNeed": "Kursus apa yang tepat untuk saya?",
+      "features": [
+        "Rekomendasi kursus yang disesuaikan",
+        "Konten pembelajaran bertingkat",
+        "Perencanaan progresif",
+        "Jadwal pembelajaran fleksibel"
+      ]
+    },
+    "pbl": {
+      "title": "Praktik PBL",
+      "subtitle": "Skenario Dunia Nyata",
+      "description": "9 skenario praktis dengan bimbingan tutor AI untuk belajar sambil melakukan.",
+      "userNeed": "Bagaimana cara menerapkan AI dalam praktik?",
+      "features": [
+        "Pengembangan Robotika AI",
+        "Trading Stablecoin AI",
+        "Pelatihan Pencarian Kerja AI",
+        "Bimbingan AI real-time"
+      ]
+    },
+    "chat": {
+      "title": "Penasihat AI",
+      "subtitle": "Dukungan 24/7",
+      "description": "Teman belajar cerdas 24/7 yang mengingat konteks pembelajaran Anda dan memberikan saran yang dipersonalisasi.",
+      "userNeed": "Siapa yang bisa saya tanya saat ada pertanyaan?",
+      "features": [
+        "Memori percakapan berkelanjutan",
+        "Saran pembelajaran yang dipersonalisasi",
+        "Percakapan mendalam multi-putaran",
+        "Dukungan tanya jawab pembelajaran"
+      ]
+    },
+    "discovery": {
+      "title": "Discovery",
+      "subtitle": "Petualangan Karir Personal",
+      "description": "Temukan jalur karir ideal Anda melalui penilaian AI dan kembangkan keterampilan profesional dalam petualangan gamifikasi.",
+      "userNeed": "Karir mana yang cocok untuk saya?",
+      "features": [
+        "Penilaian pencocokan karir AI",
+        "Sistem pembuatan tugas tak terbatas",
+        "Pengalaman belajar gamifikasi",
+        "Penyesuaian kesulitan tugas dinamis"
+      ]
+    }
+  },
+  "keyFeatures": "Fitur Utama",
+  "solvedNeed": "Kebutuhan Pengguna yang Dipenuhi",
+  "completeJourney": "Perjalanan Pembelajaran Lengkap"
+}

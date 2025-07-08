@@ -1,0 +1,99 @@
+{
+  "welcome": {
+    "greeting": "¡Bienvenido, {{name}}!",
+    "subtitle": "Comencemos tu viaje hacia la alfabetización en IA",
+    "step1": {
+      "title": "Descubre tu Camino",
+      "description": "AI Square te ayuda a entender y dominar la alfabetización en IA",
+      "content": "Te ayudaremos a identificar tus fortalezas y áreas de crecimiento a través de evaluaciones personalizadas y experiencias de aprendizaje guiadas.",
+      "assessment": "Evaluación Inteligente",
+      "assessmentDesc": "Descubre tu nivel actual de conocimiento en IA",
+      "learning": "Aprendizaje Personalizado",
+      "learningDesc": "Obtén recomendaciones adaptadas basadas en tus objetivos"
+    },
+    "step2": {
+      "title": "Cuatro Dominios Fundamentales",
+      "description": "Domina las áreas esenciales de la alfabetización en IA",
+      "content": "Nuestro marco integral cubre todo lo que necesitas saber sobre trabajar con IA de manera efectiva y responsable.",
+      "domains": "Dominios de Alfabetización en IA",
+      "engaging": "Interactuar con IA",
+      "creating": "Crear con IA",
+      "managing": "Gestionar con IA",
+      "designing": "Diseñar con IA"
+    },
+    "step3": {
+      "title": "Inicia tu Viaje",
+      "description": "Comienza con una evaluación y desbloquea tu potencial",
+      "content": "¿Listo para descubrir tu nivel de alfabetización en IA y obtener recomendaciones de aprendizaje personalizadas?",
+      "ready": "Lo que obtendrás:",
+      "benefit1": "Evaluación detallada de tu conocimiento en IA",
+      "benefit2": "Recomendaciones de rutas de aprendizaje personalizadas",
+      "benefit3": "Escenarios interactivos y ejercicios prácticos"
+    },
+    "startJourney": "Inicia tu Viaje"
+  },
+  "goals": {
+    "title": "¿Qué te gustaría lograr?",
+    "subtitle": "Selecciona tus objetivos de aprendizaje para obtener recomendaciones personalizadas",
+    "understand": {
+      "title": "Entender los Fundamentos de IA",
+      "description": "Aprende los conceptos básicos de IA, aprendizaje automático y cómo funcionan los sistemas de IA"
+    },
+    "create": {
+      "title": "Crear Contenido con IA",
+      "description": "Usa herramientas de IA para escritura, diseño, arte y proyectos creativos"
+    },
+    "analyze": {
+      "title": "Analizar Datos con IA",
+      "description": "Aplica IA para análisis de datos, perspectivas y toma de decisiones"
+    },
+    "build": {
+      "title": "Construir Soluciones de IA",
+      "description": "Desarrolla e implementa sistemas y aplicaciones de IA"
+    },
+    "teach": {
+      "title": "Enseñar IA a Otros",
+      "description": "Educa y guía a otros en la comprensión y uso de IA"
+    },
+    "ethical": {
+      "title": "Asegurar el Uso Ético de IA",
+      "description": "Comprende e implementa prácticas responsables de IA"
+    },
+    "recommendedDomains": "Dominios recomendados",
+    "selected": "{{count}} objetivos seleccionados",
+    "selectAtLeastOne": "Por favor selecciona al menos un objetivo de aprendizaje",
+    "continue": "Continuar a la Evaluación",
+    "skipForNow": "Omitir por ahora",
+    "helpText": "No te preocupes, siempre puedes cambiar estos más tarde en la configuración de tu perfil."
+  },
+  "progress": {
+    "welcome": "Bienvenida",
+    "identity": "Identidad",
+    "goals": "Objetivos"
+  },
+  "identity": {
+    "title": "¿Quién eres?",
+    "subtitle": "Ayúdanos a personalizar tu viaje de aprendizaje en IA",
+    "student": {
+      "title": "Estudiante",
+      "description": "Estoy estudiando y quiero aprender IA para mi carrera académica y futura"
+    },
+    "teacher": {
+      "title": "Educador",
+      "description": "Enseño a otros y quiero integrar IA en mi currículo"
+    },
+    "professional": {
+      "title": "Profesional",
+      "description": "Trabajo en la industria y quiero aprovechar IA en mi rol"
+    },
+    "learner": {
+      "title": "Aprendiz de por Vida",
+      "description": "Tengo curiosidad sobre IA y quiero explorar sus posibilidades"
+    }
+  },
+  "button": {
+    "back": "Atrás",
+    "continue": "Continuar",
+    "saving": "Guardando..."
+  }
+}

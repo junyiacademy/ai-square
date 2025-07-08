@@ -1,0 +1,172 @@
+assessment_config:
+  total_questions: 12
+  time_limit_minutes: 15
+  passing_score: 60
+  domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - managing_with_ai
+    - designing_with_ai
+domains:
+  engaging_with_ai:
+    description: 理解並有效地與AI系統溝通
+    questions: 3
+  creating_with_ai:
+    description: 使用AI工具提升創造力和生產力
+    questions: 3
+  managing_with_ai:
+    description: 理解AI的局限性、隱私和倫理考量
+    questions: 3
+  designing_with_ai:
+    description: 關於AI實施和創新的戰略思考
+    questions: 3
+questions:
+  - id: E001
+    domain: engaging_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: 如何才能從 AI 聊天機器人獲得更好的結果？
+    options:
+      a: 問非常籠統的問題
+      b: 提供清晰、具體且有背景的提示
+      c: 只使用是/否問題
+      d: 總是一次問多個問題
+    explanation: 清晰、具體且有背景的提示有助於 AI 準確理解您的需求，並提供更準確、有用的回應。
+  - id: E002
+    domain: engaging_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: 當 AI 給出錯誤答案時，你的第一反應應該是什麼？
+    options:
+      a: 立即相信 AI 並使用該信息
+      b: 通過其他可靠來源驗證信息
+      c: 完全停止使用 AI
+      d: 報告 AI 故障
+    explanation: 批判性思維需要透過可靠的來源驗證 AI 的輸出，因為 AI 可能會出錯或提供過時的信息。
+  - id: E003
+    domain: engaging_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: 評估 AI 生成內容的偏見時，最重要的因素是什麼？
+    options:
+      a: 生成速度
+      b: 訓練數據來源和代表性
+      c: 輸出長度
+      d: 技術複雜性
+    explanation: AI 偏見通常源於缺乏多樣性或含有歷史偏見的訓練數據，使得數據來源對於評估至關重要。
+  - id: C001
+    domain: creating_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: 使用 AI 進行創意寫作時，哪種方法最有效？
+    options:
+      a: 讓 AI 在沒有人類輸入的情況下寫所有內容
+      b: 將 AI 作為腦力激盪和完善的協作夥伴
+      c: 只使用 AI 來修正語法和拼寫
+      d: 在創意過程中完全避免使用 AI
+    explanation: AI 作為創意夥伴效果最佳，可以幫助構思、提供反饋和精煉想法，同時保持人類的創造力和監督。
+  - id: C002
+    domain: creating_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: 使用 AI 圖像生成器時，最重要的道德考量是什麼？
+    options:
+      a: 讓圖像盡可能真實
+      b: 尊重版權並避免真人的深偽造像
+      c: 使用最快的生成設置
+      d: 創建盡可能多的圖像
+    explanation: 尊重智慧財產權，避免濫用來創建未經授權的肖像或誤導性內容，對於道德使用 AI 至關重要。
+  - id: C003
+    domain: creating_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: 對於關鍵軟件項目，你應該如何處理 AI 輔助代碼生成？
+    options:
+      a: 直接使用 AI 代碼而不進行審查
+      b: 徹底審查、測試和驗證所有 AI 生成的代碼
+      c: 只將 AI 用於註釋和文檔
+      d: 用 AI 工具取代所有開發人員
+    explanation: '[ZHTW translation needed]'
+  - id: M001
+    domain: managing_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: 使用 AI 工具時，應該如何處理敏感的個人信息？
+    options:
+      a: 自由分享以獲得更好的 AI 回應
+      b: 絕不將敏感信息輸入 AI 系統
+      c: 只與可信的 AI 公司分享
+      d: 在與 AI 分享前加密
+    explanation: '[ZHTW translation needed]'
+  - id: M002
+    domain: managing_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: 在團隊環境中應該如何管理 AI 工具的使用？
+    options:
+      a: 讓每個人在沒有指導方針的情況下使用任何 AI 工具
+      b: 為 AI 工具使用建立明確的政策和培訓
+      c: 禁止所有 AI 工具以避免風險
+      d: 只允許管理人員使用 AI 工具
+    explanation: '[ZHTW translation needed]'
+  - id: M003
+    domain: managing_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: 在業務流程中實施 AI 時，最關鍵的因素是什麼？
+    options:
+      a: 選擇最先進的 AI 技術
+      b: 理解局限性並保持人類監督
+      c: 盡快實施 AI
+      d: 盡可能替換更多人類工作者
+    explanation: '[ZHTW translation needed]'
+  - id: D001
+    domain: designing_with_ai
+    difficulty: basic
+    type: multiple_choice
+    correct_answer: b
+    question: 為用戶設計 AI 功能時，主要關注點應該是什麼？
+    options:
+      a: 展示最先進的 AI 能力
+      b: 解決真正的用戶問題並改善用戶體驗
+      c: 讓 AI 盡可能複雜
+      d: 隱藏正在使用 AI 的事實
+    explanation: '[ZHTW translation needed]'
+  - id: D002
+    domain: designing_with_ai
+    difficulty: intermediate
+    type: multiple_choice
+    correct_answer: b
+    question: 在面向用戶的應用程序中，應該如何處理 AI 系統故障？
+    options:
+      a: 隱藏錯誤並假裝一切正常
+      b: 設計優雅的後備方案和清晰的錯誤溝通
+      c: 立即關閉整個應用程序
+      d: 將錯誤歸咎於用戶
+    explanation: '[ZHTW translation needed]'
+  - id: D003
+    domain: designing_with_ai
+    difficulty: advanced
+    type: multiple_choice
+    correct_answer: b
+    question: 為多元化的全球受眾設計 AI 系統時，最重要的考量是什麼？
+    options:
+      a: 為每個人使用相同的設計以確保一致性
+      b: 理解文化背景並避免算法偏見
+      c: 只關注最大的市場細分
+      d: 在所有地方實施最新的 AI 技術
+    explanation: '[ZHTW translation needed]'
+metadata:
+  language: zhTW
+  language_name: Traditional Chinese
+  generated_from: ai_literacy_questions.yaml
+  generated_at: '2025-07-03T10:07:41.107Z'

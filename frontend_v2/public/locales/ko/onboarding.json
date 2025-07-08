@@ -1,0 +1,99 @@
+{
+  "welcome": {
+    "greeting": "환영합니다, {{name}}님!",
+    "subtitle": "AI 리터러시 여정을 시작해보세요",
+    "step1": {
+      "title": "당신의 길을 발견하세요",
+      "description": "AI Square는 AI 리터러시를 이해하고 마스터하는 데 도움을 줍니다",
+      "content": "개인화된 평가와 가이드된 학습 경험을 통해 당신의 강점과 성장 영역을 식별하는 데 도움을 드리겠습니다.",
+      "assessment": "스마트 평가",
+      "assessmentDesc": "현재 AI 지식 수준을 발견하세요",
+      "learning": "개인화된 학습",
+      "learningDesc": "목표에 기반한 맞춤형 추천을 받으세요"
+    },
+    "step2": {
+      "title": "네 가지 핵심 영역",
+      "description": "AI 리터러시의 필수 영역을 마스터하세요",
+      "content": "우리의 포괄적인 프레임워크는 AI와 효과적이고 책임감 있게 일하는 데 필요한 모든 것을 다룹니다.",
+      "domains": "AI 리터러시 영역",
+      "engaging": "AI와 소통하기",
+      "creating": "AI로 창조하기",
+      "managing": "AI로 관리하기",
+      "designing": "AI로 설계하기"
+    },
+    "step3": {
+      "title": "여정을 시작하세요",
+      "description": "평가로 시작하여 당신의 잠재력을 발휘하세요",
+      "content": "AI 리터러시 수준을 발견하고 개인화된 학습 추천을 받을 준비가 되셨나요?",
+      "ready": "얻게 될 것:",
+      "benefit1": "AI 지식에 대한 자세한 평가",
+      "benefit2": "개인화된 학습 경로 추천",
+      "benefit3": "대화형 시나리오와 실습 연습"
+    },
+    "startJourney": "여정 시작하기"
+  },
+  "goals": {
+    "title": "무엇을 달성하고 싶으신가요?",
+    "subtitle": "개인화된 추천을 받기 위해 학습 목표를 선택하세요",
+    "understand": {
+      "title": "AI 기초 이해하기",
+      "description": "AI, 머신러닝, AI 시스템 작동 방식의 기본을 배우세요"
+    },
+    "create": {
+      "title": "AI로 콘텐츠 생성하기",
+      "description": "글쓰기, 디자인, 예술, 창의적 프로젝트에 AI 도구를 사용하세요"
+    },
+    "analyze": {
+      "title": "AI로 데이터 분석하기",
+      "description": "데이터 분석, 인사이트, 의사결정에 AI를 적용하세요"
+    },
+    "build": {
+      "title": "AI 솔루션 구축하기",
+      "description": "AI 시스템과 애플리케이션을 개발하고 구현하세요"
+    },
+    "teach": {
+      "title": "다른 사람에게 AI 가르치기",
+      "description": "AI 이해와 사용에 대해 다른 사람들을 교육하고 안내하세요"
+    },
+    "ethical": {
+      "title": "윤리적 AI 사용 보장하기",
+      "description": "책임감 있는 AI 관행을 이해하고 구현하세요"
+    },
+    "recommendedDomains": "추천 영역",
+    "selected": "{{count}}개 목표 선택됨",
+    "selectAtLeastOne": "최소 하나의 학습 목표를 선택해주세요",
+    "continue": "평가로 계속하기",
+    "skipForNow": "지금은 건너뛰기",
+    "helpText": "걱정하지 마세요. 나중에 프로필 설정에서 언제든지 변경할 수 있습니다."
+  },
+  "progress": {
+    "welcome": "환영",
+    "identity": "정체성",
+    "goals": "목표"
+  },
+  "identity": {
+    "title": "누구신가요?",
+    "subtitle": "AI 학습 여정을 개인화하는 데 도움을 주세요",
+    "student": {
+      "title": "학생",
+      "description": "공부 중이며 학업과 미래 커리어를 위해 AI를 배우고 싶어요"
+    },
+    "teacher": {
+      "title": "교육자",
+      "description": "다른 사람들을 가르치며 커리큘럼에 AI를 통합하고 싶어요"
+    },
+    "professional": {
+      "title": "전문가",
+      "description": "업계에서 일하며 내 역할에서 AI를 활용하고 싶어요"
+    },
+    "learner": {
+      "title": "평생 학습자",
+      "description": "AI에 대해 궁금하며 그 가능성을 탐구하고 싶어요"
+    }
+  },
+  "button": {
+    "back": "뒤로",
+    "continue": "계속하기",
+    "saving": "저장 중..."
+  }
+}

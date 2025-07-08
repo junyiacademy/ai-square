@@ -1,0 +1,12 @@
+{
+  "aiAdvisor": "AI 學習顧問",
+  "newChat": "新對話",
+  "history": "對話歷史",
+  "welcomeTitle": "你好！我是你的 AI 學習顧問",
+  "welcomeMessage": "我在這裡幫助你規劃 AI 素養學習之旅。你可以問我關於學習路徑、PBL 情境，或任何你想了解的 AI 概念。",
+  "inputPlaceholder": "在這裡輸入訊息... (按 Enter 發送)",
+  "suggestedTopic1": "我應該從哪個 PBL 情境開始？",
+  "suggestedTopic2": "幫我了解我的評估結果",
+  "suggestedTopic3": "我的弱項是什麼？如何改進？",
+  "suggestedTopic4": "用簡單的方式解釋 AI 概念"
+}

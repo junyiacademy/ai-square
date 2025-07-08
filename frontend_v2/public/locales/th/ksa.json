@@ -1,0 +1,43 @@
+{
+  "title": "กรอบความรู้ด้าน AI",
+  "subtitle": "ความรู้ ทักษะ และทัศนคติสำหรับการศึกษา AI",
+  "loading": "กำลังโหลดกรอบ KSA...",
+  "loadError": "ไม่สามารถโหลดข้อมูล KSA ได้",
+  "searchPlaceholder": "ค้นหาธีม โค้ด หรือเนื้อหา...",
+  "sections": {
+    "knowledge": "ความรู้",
+    "skills": "ทักษะ",
+    "attitudes": "ทัศนคติ",
+    "knowledgeShort": "ค",
+    "skillsShort": "ท",
+    "attitudesShort": "ศ"
+  },
+  "results": {
+    "themesFound": "พบ {{count}} ธีม",
+    "themesFoundFor": "พบ {{count}} ธีมสำหรับ \"{{search}}\"",
+    "noResults": "ไม่พบผลลัพธ์",
+    "noResultsHint": "ลองปรับเปลี่ยนคำค้นหา"
+  },
+  "codes": "โค้ด",
+  "codesPlural": "โค้ด",
+  "reflectionQuestions": "คำถามสำหรับการสะท้อนความคิด",
+  "themes": {
+    "The_Nature_of_AI": "ธรรมชาติของ AI",
+    "AI_Reflects_Human_Choices_and_Perspectives": "AI สะท้อนการเลือกและมุมมองของมนุษย์",
+    "AI_Reshapes_Work_and_Human_Roles": "AI เปลี่ยนแปลงงานและบทบาทของมนุษย์",
+    "AIs_Capabilities_and_Limitations": "ความสามารถและข้อจำกัดของ AI",
+    "AIs_Role_in_Society": "บทบาทของ AI ในสังคม",
+    "Critical_Thinking": "การคิดเชิงวิพากษ์",
+    "Creativity": "ความคิดสร้างสรรค์",
+    "Computational_Thinking": "การคิดเชิงคำนวณ",
+    "Collaboration": "การร่วมมือ",
+    "Problem_Solving": "การแก้ปัญหา",
+    "Self_and_Social_Awareness": "การตระหนักรู้ในตนเองและสังคม",
+    "Communication": "การสื่อสาร",
+    "Responsible": "ความรับผิดชอบ",
+    "Curious": "ความอยากรู้อยากเห็น",
+    "Innovative": "นวัตกรรม",
+    "Adaptable": "การปรับตัว",
+    "Empathetic": "ความเห็นอกเห็นใจ"
+  }
+}

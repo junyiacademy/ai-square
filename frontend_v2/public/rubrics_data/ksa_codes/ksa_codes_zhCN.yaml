@@ -1,0 +1,146 @@
+knowledge_codes:
+  description: "理解AI基础概念和社会影响的知识要素"
+  themes:
+    The_Nature_of_AI:
+      codes:
+        K1.1:
+          summary: AI系统通过算法处理数据以识别模式、进行预测并生成输出，无需为每个特定任务进行明确编程。
+        K1.2:
+          summary: AI系统的复杂度和能力各不相同，从简单的规则型系统到能通过经验适应和改进的高级机器学习模型。
+        K1.3:
+          summary: AI输出是概率性而非确定性的，意味着它们基于数据中的模式提供可能的答案，而非保证正确的解决方案。
+        K1.4:
+          summary: AI系统嵌入在许多日常技术和服务中，通常在无形中运作以增强功能和用户体验。
+      explanation: 理解AI的基本性质对于知情互动至关重要。AI系统是以不同于人类的方式处理信息的运算工具，使用统计模式而非真正的理解。它们的范围从简单的自动化规则到复杂的神经网络，但都共享基于训练数据做出概率判断的特征。认识AI在日常生活中的普遍存在——从搜索引擎到推荐系统——有助于学习者识别何时与AI互动，并了解其对体验的影响。
+    AI_Reflects_Human_Choices_and_Perspectives:
+      codes:
+        K2.1:
+          summary: 建構與维护AI系统仰賴人類设计算法、蒐集與標註数据，以及管理有害內容。這些系统反映人類的選擇、假設與勞動实践，並受全球不平等条件所塑造。
+        K2.2:
+          summary: AI以龐大数据集進行训练，來源包括公開信息、使用者产生內容、精選数据庫與透過感測器、互動及數位系统蒐集的真實世界数据。
+        K2.3:
+          summary: AI系统會從與使用者的互動中收集新数据；决策、流程與输出可能即时受到输入的直接影响。
+        K2.4:
+          summary: AI系统被训练來識別人類所選擇、分类與排序的数据元素間的模式。
+        K2.5:
+          summary: AI系统本質上存在偏見，也可能反映嵌入在训练数据或算法设计中的社會偏見。人類可在设计、开发或测试过程中延續或減緩AI系统中的有害偏見。
+      explanation: "AI系统并非中立工具，而是反映创造它们的人类的价值观、偏见和决策。从数据收集到算法设计，每个阶段都涉及塑造AI行为和输出的人类选择。理解这种人类影响对于批判性评估AI系统和认识到它们可能延续或放大现有偏见至关重要。这包括认识到训练AI的劳动、管理有害内容的工作，以及影响谁的观点被代表或边缘化的权力动态。"
+    AI_Reshapes_Work_and_Human_Roles:
+      codes:
+        K3.1:
+          summary: AI系统自动化结构化任务、輔助决策並转型产业，要求人類适应、再学习與提升技能。
+        K3.2:
+          summary: AI整合要求個人判断哪些任务最適合机器执行，哪些需要人類介入或专业知识。
+        K3.3:
+          summary: 雖然AI可协助分析與预测，但人類必須對反映人類判断與伦理考量的决策负责。
+      explanation: "AI正在改变工作的性质，创造新的角色，同时自动化其他角色。这种转变需要持续的适应和学习。工人必须发展新技能以有效地与AI协作，了解如何利用AI的优势，同时认识到人类专业知识仍然不可或缺的地方。关键挑战在于确定AI和人类之间的适当任务分工，并确保人类在道德和法律重要的决策中保持监督和责任。"
+    AIs_Capabilities_and_Limitations:
+      codes:
+        K4.1:
+          summary: AI擅長模式識別與自动化，但缺乏情感、伦理推理、情境理解與原創性。
+        K4.2:
+          summary: AI需要大量运算能力與数据，消耗能源並需求有限的自然资源，增加碳排放。AI的長期永續影响（無論正面或負面）很大程度取決於如何实施與利用。
+        K4.3:
+          summary: 生成式AI（特別是大型语言模型）产生類人內容的能力，可能導致事實與虛構難以分辨，增加产生錯誤信息、深度偽造或操弄材料的可能性。
+      explanation: "理解AI的能力和局限性对于有效和负责任地使用它至关重要。虽然AI在某些任务上表现出色，如模式识别和大规模数据处理，但它缺乏人类的品质，如真正的理解、同理心和创造性直觉。AI系统还带来环境成本和社会风险，包括错误信息的潜在传播。认识到这些限制有助于用户为特定任务选择适当的工具，并保持对AI输出的批判性视角。"
+    AIs_Role_in_Society:
+      codes:
+        K5.1:
+          summary: AI在影响人類的决策中扮演日益重要的角色，從招聘實務到醫療保健到刑事司法。
+        K5.2:
+          summary: AI系统必須被理解、稽核與规范，以確保其使用對個人與社會帶來更多益處而非傷害。
+        K5.3:
+          summary: 生成式AI與大型语言模型根據训练数据中的既有材料創造內容，其中包括受著作權保护的作品，因此引發真實性、作者身分與所有權的问题。
+        K5.4:
+          summary: 伦理AI设计涵蓋公平性、透明度、可解释性、問責制、隱私尊重與法规遵循。
+      explanation: "AI越来越多地融入社会系统，影响从个人决策到全球政策的一切。这种整合带来了机遇和挑战。虽然AI可以提高效率和提供新的见解，但它也引发了关于公平、透明度和问责制的重要问题。确保AI造福社会需要仔细考虑伦理设计原则、监管框架和持续监督。了解AI在社会中的作用使个人能够倡导负责任的AI使用并参与有关其发展和部署的知情讨论。"
+skill_codes:
+  description: "与AI有效互动和合作所需的实践技能"
+  themes:
+    Critical_Thinking:
+      codes:
+        S1.1:
+          summary: 评估AI生成內容的准确性、公平性與偏見，以做出明智且符合伦理的决策。
+          questions:
+            - How can I check the accuracy of AI-generated outputs and reduce the risk of harmful bias?
+            - How do I know if AI is relevant or appropriate?
+      explanation: "批判性思维在AI时代至关重要。随着AI生成越来越复杂的内容，区分准确、公平和有偏见或误导性信息的能力变得更加重要。这项技能涉及质疑AI输出、验证多个来源的信息，并了解可能影响AI行为的潜在偏见。批判性思维者不会盲目接受AI建议，而是将其作为需要人类判断和背景理解评估的输入。"
+    Creativity:
+      codes:
+        S2.1:
+          summary: 與AI协作創造與精煉原創想法，同時考量所有權、歸屬與負责任使用等議題。
+          questions:
+            - How can I use AI responsibly to bring my creative visions to life?
+      explanation: "创造力涉及使用AI作为创新过程中的合作伙伴，同时保持人类的独创性和愿景。这项技能需要了解如何利用AI的生成能力来增强创造性工作，同时认识到归属、所有权和原创性的重要性。创造性的AI使用涉及知道何时使用AI进行灵感激发或迭代，以及何时依赖人类创造力来获得真正新颖的想法。"
+    Computational_Thinking:
+      codes:
+        S3.1:
+          summary: 將问题分解並提供指示，使AI系统能有效促成解决方案。
+          questions:
+            - How do I frame my problem so that AI can help solve it?
+      explanation: "计算思维使个人能够以AI系统可以处理的方式构建问题。这涉及将复杂任务分解为更小的组件，识别模式，并创建AI可以遵循的清晰指令。这项技能不需要编程知识，而是需要逻辑思维和理解如何与AI有效沟通以实现期望的结果。"
+    Collaboration:
+      codes:
+        S4.1:
+          summary: 透過清楚沟通、提供反馈與协调共同任务，有效與AI及人類合作。
+          questions:
+            - How can I collaborate transparently and ethically with AI to accomplish a goal?
+      explanation: "与AI的协作需要新形式的团队合作，其中人类和AI系统共同努力实现共同目标。这项技能涉及理解如何在人类和AI之间有效分配任务，提供清晰的反馈，并协调努力。它还包括与他人就AI使用进行透明沟通，确保所有利益相关者了解AI在协作过程中的作用。"
+    Problem_Solving:
+      codes:
+        S5.1:
+          summary: 透過评估AI的能力、风险與伦理影响，決定何時及如何將AI用於任务。
+          questions:
+            - How do I choose the right type of tool for the task at hand?
+      explanation: "问题解决涉及知道何时以及如何将AI纳入解决方案。这项技能需要评估AI对特定任务的适用性，权衡收益与风险，并考虑伦理影响。有效的问题解决者可以确定AI最能增加价值的地方，同时认识到人类专业知识必不可少的情况。"
+    Self_and_Social_Awareness:
+      codes:
+        S6.1:
+          summary: 认识AI如何影响個人選擇、關係與社群，並反思其更廣泛的社會與环境影响。
+          questions:
+            - How does AI impact me and others?
+      explanation: "自我和社会意识涉及理解AI如何影响个人行为、关系和更广泛的社会动态。这项技能包括反思AI如何塑造个人选择和感知，以及考虑其对不同社区和环境的更广泛影响。它需要意识到AI的个人和集体影响。"
+    Communication:
+      codes:
+        S7.1:
+          summary: 以促進透明度、避免擬人化並鼓励負责任使用的方式说明AI的使用。
+          questions:
+            - How do I describe AI use for myself and others?
+      explanation: "沟通涉及清晰准确地描述AI的使用和能力。这项技能包括避免拟人化AI，对其使用保持透明，并帮助他人了解AI在各种情境中的作用。有效的沟通者可以解释AI的好处和局限性，促进对其适当使用的知情讨论。"
+attitude_codes:
+  description: "支持负责任和有效AI使用的价值观和心态"
+  themes:
+    Responsible:
+      codes:
+        A1.1:
+          summary: 負起责任；致力於防止AI使用帶來的傷害。
+          questions: []
+      explanation: "责任涉及承认使用AI的伦理义务。这种态度包括致力于防止伤害，考虑AI使用的后果，并确保AI应用符合伦理原则和社会价值观。负责任的用户会积极努力减轻潜在的负面影响，并促进AI的有益使用。"
+    Curious:
+      codes:
+        A2.1:
+          summary: 以开放态度探索AI的能力與限制。
+          questions: []
+      explanation: "好奇心驱使对AI能力和局限性的探索。这种态度涉及开放地学习AI的工作原理、它能做什么和不能做什么，以及它如何不断发展。好奇的用户会提出问题，尝试不同的方法，并寻求加深对AI技术及其影响的理解。"
+    Innovative:
+      codes:
+        A3.1:
+          summary: 追求AI的新穎且正面的应用。
+          questions: []
+      explanation: "创新涉及寻求AI的新颖和积极应用。这种态度鼓励创造性思考如何使用AI来解决问题、改善流程或创造新的可能性。创新用户将AI视为积极变革的工具，同时注意确保新应用是有益和合乎道德的。"
+    Adaptable:
+      codes:
+        A4.1:
+          summary: 能彈性回應反馈與新情境，靈活地反覆调整。
+          questions: []
+      explanation: "适应性涉及灵活应对AI带来的变化。这种态度包括愿意学习新技能、调整工作流程，并根据反馈和新情况进行迭代。适应性强的用户接受AI技术的不断发展，并准备相应地调整他们的方法。"
+    Empathetic:
+      codes:
+        A5.1:
+          summary: 考量AI對不同人群與环境的多元影响。
+          questions: []
+      explanation: "同理心涉及考虑AI对不同人群和环境的多样化影响。这种态度包括认识到AI可能对各个群体产生不同的影响，并努力确保AI应用考虑到所有利益相关者的需求和关切。有同理心的用户会考虑更广泛的社会和环境影响。"
+metadata:
+  language: zhCN
+  version: "1.0"
+  last_updated: "2025-07-03"

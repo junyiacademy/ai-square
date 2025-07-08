@@ -1,0 +1,12 @@
+{
+  "aiAdvisor": "Asesor de Aprendizaje IA",
+  "newChat": "Nuevo Chat",
+  "history": "Historial de Chat",
+  "welcomeTitle": "¡Hola! Soy tu Asesor de Aprendizaje IA",
+  "welcomeMessage": "Estoy aquí para ayudarte en tu viaje de alfabetización de IA. Pregúntame sobre rutas de aprendizaje, escenarios PBL o cualquier concepto de IA que quieras entender mejor.",
+  "inputPlaceholder": "Escribe tu mensaje aquí... (Presiona Enter para enviar)",
+  "suggestedTopic1": "¿Con qué escenario PBL debería comenzar?",
+  "suggestedTopic2": "Ayúdame a entender mis resultados de evaluación",
+  "suggestedTopic3": "¿Cuáles son mis áreas débiles y cómo puedo mejorar?",
+  "suggestedTopic4": "Explica conceptos de IA en términos simples"
+}

@@ -1,0 +1,43 @@
+{
+  "title": "당신의 학습 경로",
+  "subtitle": "평가를 바탕으로 한 개인화된 추천",
+  "yourProgress": "당신의 진행상황",
+  "currentScore": "현재 점수",
+  "targetScore": "목표 점수",
+  "completed": "완료됨",
+  "recommendedPath": "추천 학습 경로",
+  "startLearning": "학습 시작하기",
+  "estimatedTime": "예상 시간",
+  "weakDomainReason": "이것은 {{score}}% 점수로 가장 약한 영역입니다",
+  "difficulty": {
+    "beginner": "초급",
+    "intermediate": "중급",
+    "advanced": "고급"
+  },
+  "noAssessment": {
+    "title": "평가를 찾을 수 없음",
+    "description": "개인화된 추천을 받으려면 먼저 평가를 완료해주세요",
+    "button": "평가 받기"
+  },
+  "domains": {
+    "Engaging_with_AI": "AI와 상호작용",
+    "Creating_with_AI": "AI로 창작하기",
+    "Managing_with_AI": "AI로 관리하기",
+    "Designing_with_AI": "AI로 설계하기"
+  },
+  "strongDomainReason": "{{domain}} 기술을 발전시키세요 (현재: {{score}}%)",
+  "averageDomainReason": "{{domain}} 기술을 향상시키세요 (현재: {{score}}%)",
+  "learningPath": {
+    "filteringBy": "{{domain}}의 항목 표시 중",
+    "clearFilter": "필터 지우기",
+    "recommendedPath": "추천 학습 경로",
+    "estimatedTime": "총 시간: {{hours}}시간 {{minutes}}분",
+    "startLearning": "학습 시작하기",
+    "progress": "진행상황",
+    "goToDashboard": "대시보드로 가기",
+    "dashboardHint": "대시보드에서 전체 진행상황과 성취를 추적하세요"
+  },
+  "showAll": "모두 보기",
+  "focusOnWeakAreas": "약한 영역에 집중하기",
+  "backToDashboard": "대시보드로 돌아가기"
+}

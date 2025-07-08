@@ -1,0 +1,43 @@
+{
+  "title": "あなたの学習パス",
+  "subtitle": "評価に基づく個人向けの推奨事項",
+  "yourProgress": "あなたの進歩",
+  "currentScore": "現在のスコア",
+  "targetScore": "目標スコア",
+  "completed": "完了",
+  "recommendedPath": "推奨学習パス",
+  "startLearning": "学習を始める",
+  "estimatedTime": "推定時間",
+  "weakDomainReason": "これは{{score}}%のスコアで最も弱い分野です",
+  "difficulty": {
+    "beginner": "初心者",
+    "intermediate": "中級者",
+    "advanced": "上級者"
+  },
+  "noAssessment": {
+    "title": "評価が見つかりません",
+    "description": "個人向けの推奨事項を取得するために、まず評価を完了してください",
+    "button": "評価を受ける"
+  },
+  "domains": {
+    "Engaging_with_AI": "AIとの関わり",
+    "Creating_with_AI": "AIでの創造",
+    "Managing_with_AI": "AIでの管理",
+    "Designing_with_AI": "AIでの設計"
+  },
+  "strongDomainReason": "{{domain}}のスキルを向上させましょう（現在：{{score}}%）",
+  "averageDomainReason": "{{domain}}スキルを改善しましょう（現在：{{score}}%）",
+  "learningPath": {
+    "filteringBy": "{{domain}}のアイテムを表示中",
+    "clearFilter": "フィルターをクリア",
+    "recommendedPath": "推奨学習パス",
+    "estimatedTime": "合計時間：{{hours}}時間{{minutes}}分",
+    "startLearning": "学習を始める",
+    "progress": "進歩",
+    "goToDashboard": "ダッシュボードへ",
+    "dashboardHint": "ダッシュボードで全体的な進歩と成果を追跡しましょう"
+  },
+  "showAll": "すべて表示",
+  "focusOnWeakAreas": "弱い分野に焦点を当てる",
+  "backToDashboard": "ダッシュボードに戻る"
+}

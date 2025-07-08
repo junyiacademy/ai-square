@@ -1,0 +1,99 @@
+{
+  "welcome": {
+    "greeting": "Selamat datang, {{name}}!",
+    "subtitle": "Mari memulai perjalanan literasi AI Anda",
+    "step1": {
+      "title": "Temukan Jalan Anda",
+      "description": "AI Square membantu Anda memahami dan menguasai literasi AI",
+      "content": "Kami akan membantu Anda mengidentifikasi kekuatan dan area pertumbuhan melalui penilaian yang dipersonalisasi dan pengalaman belajar terpandu.",
+      "assessment": "Penilaian Cerdas",
+      "assessmentDesc": "Temukan tingkat pengetahuan AI Anda saat ini",
+      "learning": "Pembelajaran yang Dipersonalisasi",
+      "learningDesc": "Dapatkan rekomendasi yang disesuaikan berdasarkan tujuan Anda"
+    },
+    "step2": {
+      "title": "Empat Domain Inti",
+      "description": "Kuasai bidang-bidang penting dari literasi AI",
+      "content": "Kerangka komprehensif kami mencakup semua yang perlu Anda ketahui tentang bekerja dengan AI secara efektif dan bertanggung jawab.",
+      "domains": "Domain Literasi AI",
+      "engaging": "Berinteraksi dengan AI",
+      "creating": "Menciptakan dengan AI",
+      "managing": "Mengelola dengan AI",
+      "designing": "Merancang dengan AI"
+    },
+    "step3": {
+      "title": "Mulai Perjalanan Anda",
+      "description": "Mulai dengan penilaian dan buka potensi Anda",
+      "content": "Siap untuk menemukan tingkat literasi AI Anda dan mendapatkan rekomendasi pembelajaran yang dipersonalisasi?",
+      "ready": "Yang akan Anda dapatkan:",
+      "benefit1": "Penilaian detail pengetahuan AI Anda",
+      "benefit2": "Rekomendasi jalur pembelajaran yang dipersonalisasi",
+      "benefit3": "Skenario interaktif dan latihan praktis"
+    },
+    "startJourney": "Mulai Perjalanan Anda"
+  },
+  "goals": {
+    "title": "Apa yang ingin Anda capai?",
+    "subtitle": "Pilih tujuan pembelajaran Anda untuk mendapatkan rekomendasi yang dipersonalisasi",
+    "understand": {
+      "title": "Memahami Dasar-dasar AI",
+      "description": "Pelajari dasar-dasar AI, pembelajaran mesin, dan cara kerja sistem AI"
+    },
+    "create": {
+      "title": "Membuat Konten dengan AI",
+      "description": "Gunakan alat AI untuk menulis, desain, seni, dan proyek kreatif"
+    },
+    "analyze": {
+      "title": "Menganalisis Data dengan AI",
+      "description": "Terapkan AI untuk analisis data, wawasan, dan pengambilan keputusan"
+    },
+    "build": {
+      "title": "Membangun Solusi AI",
+      "description": "Kembangkan dan implementasikan sistem dan aplikasi AI"
+    },
+    "teach": {
+      "title": "Mengajar AI kepada Orang Lain",
+      "description": "Mendidik dan membimbing orang lain dalam memahami dan menggunakan AI"
+    },
+    "ethical": {
+      "title": "Memastikan Penggunaan AI yang Etis",
+      "description": "Memahami dan menerapkan praktik AI yang bertanggung jawab"
+    },
+    "recommendedDomains": "Domain yang direkomendasikan",
+    "selected": "{{count}} tujuan dipilih",
+    "selectAtLeastOne": "Silakan pilih setidaknya satu tujuan pembelajaran",
+    "continue": "Lanjutkan ke Penilaian",
+    "skipForNow": "Lewati untuk sekarang",
+    "helpText": "Jangan khawatir, Anda selalu dapat mengubah ini nanti di pengaturan profil Anda."
+  },
+  "progress": {
+    "welcome": "Selamat datang",
+    "identity": "Identitas",
+    "goals": "Tujuan"
+  },
+  "identity": {
+    "title": "Siapakah Anda?",
+    "subtitle": "Bantu kami mempersonalisasi perjalanan pembelajaran AI Anda",
+    "student": {
+      "title": "Mahasiswa",
+      "description": "Saya sedang belajar dan ingin mempelajari AI untuk akademik dan karir masa depan saya"
+    },
+    "teacher": {
+      "title": "Pendidik",
+      "description": "Saya mengajar orang lain dan ingin mengintegrasikan AI ke dalam kurikulum saya"
+    },
+    "professional": {
+      "title": "Profesional",
+      "description": "Saya bekerja di industri dan ingin memanfaatkan AI dalam peran saya"
+    },
+    "learner": {
+      "title": "Pembelajar Seumur Hidup",
+      "description": "Saya penasaran tentang AI dan ingin menjelajahi kemungkinannya"
+    }
+  },
+  "button": {
+    "back": "Kembali",
+    "continue": "Lanjutkan",
+    "saving": "Menyimpan..."
+  }
+}
