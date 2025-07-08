@@ -32,7 +32,7 @@ export class AssessmentStorageService {
     
     // Save to user's assessment folder
     const userPath = `${this.ASSESSMENT_PREFIX}/${session.userEmail}/${session.id}.json`;
-    await this.storage.save(userPath, validatedSession);
+    await this.storage.set(userPath, validatedSession);
     
     // Update user history
     await this.updateUserHistory(session.userEmail, validatedSession);
@@ -58,20 +58,20 @@ export class AssessmentStorageService {
   async getUserAssessments(userEmail: string): Promise<AssessmentSession[]> {
     try {
       const prefix = `${this.ASSESSMENT_PREFIX}/${userEmail}/`;
-      const files = await this.storage.list({ prefix });
+      const sessions = await this.storage.list<AssessmentSession>(prefix);
       
-      const sessions: AssessmentSession[] = [];
-      for (const file of files) {
+      // Validate each session
+      const validatedSessions: AssessmentSession[] = [];
+      for (const session of sessions) {
         try {
-          const data = await this.storage.get(file.name);
-          sessions.push(validateAssessmentSession(data));
+          validatedSessions.push(validateAssessmentSession(session));
         } catch (error) {
-          console.error(`Failed to load assessment ${file.name}:`, error);
+          console.error(`Failed to validate assessment:`, error);
         }
       }
       
       // Sort by completedAt descending
-      return sessions.sort((a, b) => {
+      return validatedSessions.sort((a, b) => {
         const dateA = a.completedAt || a.startedAt;
         const dateB = b.completedAt || b.startedAt;
         return new Date(dateB).getTime() - new Date(dateA).getTime();
@@ -103,7 +103,7 @@ export class AssessmentStorageService {
     
     const validated = validateAssessmentSession(updated);
     const path = `${this.ASSESSMENT_PREFIX}/${userEmail}/${sessionId}.json`;
-    await this.storage.save(path, validated);
+    await this.storage.set(path, validated);
   }
 
   /**
@@ -210,7 +210,7 @@ export class AssessmentStorageService {
     // Save updated history
     const validatedHistory = validateUserHistory(history);
     const path = `${this.USER_HISTORY_PREFIX}/${userEmail}.json`;
-    await this.storage.save(path, validatedHistory);
+    await this.storage.set(path, validatedHistory);
   }
 
   /**

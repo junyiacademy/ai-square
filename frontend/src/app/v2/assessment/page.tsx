@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import { 
   Brain, 
   Clock, 
@@ -45,8 +46,8 @@ const mockAssessments: Assessment[] = [
     type: 'comprehensive',
     title: 'Comprehensive AI Literacy Assessment',
     description: 'An in-depth evaluation covering all aspects of AI literacy with detailed feedback.',
-    duration: 45,
-    questionCount: 30,
+    duration: 15,
+    questionCount: 12,
     difficulty: 'mixed',
     domains: ['Engaging_with_AI', 'Creating_with_AI', 'Managing_with_AI', 'Designing_with_AI'],
     icon: <Brain className="w-6 h-6" />,
@@ -175,11 +176,64 @@ const mockAssessments: Assessment[] = [
 
 export default function AssessmentListPage() {
   const router = useRouter();
+  const { i18n } = useTranslation();
   const [selectedAssessment, setSelectedAssessment] = useState<Assessment | null>(null);
   const [showDetails, setShowDetails] = useState(false);
   const [filter, setFilter] = useState<'all' | 'quick' | 'comprehensive' | 'domain' | 'adaptive'>('all');
+  const [comprehensiveAssessment, setComprehensiveAssessment] = useState<Assessment | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const filteredAssessments = mockAssessments.filter(assessment => 
+  // Fetch real assessment config
+  useEffect(() => {
+    const fetchAssessmentConfig = async () => {
+      try {
+        const response = await fetch(`/api/v2/assessment/config?lang=${i18n.language}`);
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+          const config = result.data;
+          // Update comprehensive assessment with real data
+          const updatedAssessment: Assessment = {
+            id: config.id,
+            type: config.type,
+            title: config.title,
+            description: config.description,
+            duration: config.duration,
+            questionCount: config.questionCount,
+            difficulty: config.difficulty,
+            domains: config.domains.map((d: any) => d.name),
+            icon: <Brain className="w-6 h-6" />,
+            color: 'purple',
+            prerequisites: ['Basic understanding of AI concepts'],
+            outcomes: [
+              'Complete AI literacy profile',
+              'Detailed competency breakdown',
+              'Personalized learning pathway',
+              'Certificate of completion'
+            ],
+            badge: config.badge,
+            popularity: config.popularity,
+            completionRate: config.completionRate,
+            isAvailable: config.isAvailable
+          };
+          setComprehensiveAssessment(updatedAssessment);
+        }
+      } catch (error) {
+        console.error('Error fetching assessment config:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAssessmentConfig();
+  }, [i18n.language]);
+
+  // Combine real comprehensive assessment with other mock assessments
+  const allAssessments = comprehensiveAssessment 
+    ? [comprehensiveAssessment, ...mockAssessments.filter(a => a.id !== 'comprehensive')]
+    : mockAssessments;
+
+  const filteredAssessments = allAssessments.filter(assessment => 
     filter === 'all' || assessment.type === filter
   );
 
@@ -283,8 +337,24 @@ export default function AssessmentListPage() {
         </div>
 
         {/* Assessment Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredAssessments.map((assessment) => (
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 animate-pulse">
+                <div className="h-12 w-12 bg-gray-200 rounded-lg mb-4"></div>
+                <div className="h-6 bg-gray-200 rounded mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                <div className="flex justify-between mb-4">
+                  <div className="h-4 bg-gray-200 rounded w-20"></div>
+                  <div className="h-4 bg-gray-200 rounded w-20"></div>
+                </div>
+                <div className="h-10 bg-gray-200 rounded"></div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredAssessments.map((assessment) => (
             <div
               key={assessment.id}
               className={`bg-white rounded-xl shadow-sm transition-shadow p-6 border ${
@@ -398,7 +468,8 @@ export default function AssessmentListPage() {
               )}
             </div>
           ))}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Details Modal */}
