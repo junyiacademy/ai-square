@@ -1,32 +1,32 @@
 /**
- * Track Service
- * Handles business logic for learning tracks
+ * Scenario Service
+ * Handles business logic for learning scenarios
  */
 
 import { 
-  Track, 
+  Scenario, 
   Program, 
   Task, 
   Project,
-  UserTrackProgress,
+  UserScenarioProgress,
   UserProgramProgress,
   UserTaskProgress,
   ApiResponse
 } from '../types';
-import { TrackRepositoryV2 } from '../repositories/track-repository';
+import { ScenarioRepositoryV2 } from '../repositories/scenario-repository';
 import { ProjectRepositoryV2 } from '../repositories/project-repository';
 import { ProgramRepositoryV2 } from '../repositories/program-repository';
 import { TaskRepositoryV2 } from '../repositories/task-repository';
 import { LogRepositoryV2 } from '../repositories/log-repository';
 import { DatabaseConnection, DatabaseFactory } from '../utils/database';
 
-export interface CreateTrackFromProjectOptions {
+export interface CreateScenarioFromProjectOptions {
   projectId: string;
   userId: string;
   language?: string;
 }
 
-export interface TrackWithDetails extends Track {
+export interface ScenarioWithDetails extends Scenario {
   programs: ProgramWithTasks[];
   project?: Project;
 }
@@ -35,8 +35,8 @@ export interface ProgramWithTasks extends Program {
   tasks: Task[];
 }
 
-export class TrackService {
-  private trackRepo: TrackRepositoryV2;
+export class ScenarioService {
+  private scenarioRepo: ScenarioRepositoryV2;
   private projectRepo: ProjectRepositoryV2;
   private programRepo: ProgramRepositoryV2;
   private taskRepo: TaskRepositoryV2;
@@ -45,7 +45,7 @@ export class TrackService {
 
   constructor(db?: DatabaseConnection) {
     this.db = db || new DatabaseFactory().create({ database: 'ai-square-v2' });
-    this.trackRepo = new TrackRepositoryV2(this.db);
+    this.scenarioRepo = new ScenarioRepositoryV2(this.db);
     this.projectRepo = new ProjectRepositoryV2(this.db);
     this.programRepo = new ProgramRepositoryV2(this.db);
     this.taskRepo = new TaskRepositoryV2(this.db);
@@ -53,9 +53,9 @@ export class TrackService {
   }
 
   /**
-   * Create a new track from a project (scenario)
+   * Create a new scenario from a project
    */
-  async createTrackFromProject(options: CreateTrackFromProjectOptions): Promise<ApiResponse<TrackWithDetails>> {
+  async createScenarioFromProject(options: CreateScenarioFromProjectOptions): Promise<ApiResponse<ScenarioWithDetails>> {
     try {
       const { projectId, userId, language = 'en' } = options;
 
@@ -68,8 +68,8 @@ export class TrackService {
         };
       }
 
-      // Create the track
-      const track = await this.trackRepo.create({
+      // Create the scenario
+      const scenario = await this.scenarioRepo.create({
         code: `${project.code}-${userId}-${Date.now()}`,
         title: project.title,
         description: project.description,
@@ -86,7 +86,7 @@ export class TrackService {
       });
 
       // Create programs based on difficulty
-      const programs = await this.createProgramsForTrack(track.id, project);
+      const programs = await this.createProgramsForScenario(scenario.id, project);
 
       // Create tasks for each program
       const programsWithTasks: ProgramWithTasks[] = [];
@@ -99,21 +99,21 @@ export class TrackService {
       }
 
       // Create initial progress records
-      await this.createInitialProgress(userId, track.id, programsWithTasks);
+      await this.createInitialProgress(userId, scenario.id, programsWithTasks);
 
       return {
         success: true,
         data: {
-          ...track,
+          ...scenario,
           programs: programsWithTasks,
           project
         }
       };
     } catch (error) {
-      console.error('Error creating track from project:', error);
+      console.error('Error creating scenario from project:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Failed to create track'
+        error: error instanceof Error ? error.message : 'Failed to create scenario'
       };
     }
   }
@@ -214,11 +214,11 @@ export class TrackService {
   }
 
   /**
-   * Get user's tracks
+   * Get user's scenarios
    */
-  async getUserTracks(userId: string): Promise<ApiResponse<Track[]>> {
+  async getUserScenarios(userId: string): Promise<ApiResponse<Scenario[]>> {
     try {
-      const tracks = await this.trackRepo.findMany({
+      const scenarios = await this.scenarioRepo.findMany({
         filters: {
           'metadata->user_id': userId
         }
@@ -226,32 +226,32 @@ export class TrackService {
       
       return {
         success: true,
-        data: tracks.data || []
+        data: scenarios.data || []
       };
     } catch (error) {
-      console.error('Error getting user tracks:', error);
+      console.error('Error getting user scenarios:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Failed to get user tracks'
+        error: error instanceof Error ? error.message : 'Failed to get user scenarios'
       };
     }
   }
 
   /**
-   * Get track details with programs and tasks
+   * Get scenario details with programs and tasks
    */
-  async getTrackDetails(trackId: string): Promise<ApiResponse<TrackWithDetails>> {
+  async getScenarioDetails(scenarioId: string): Promise<ApiResponse<ScenarioWithDetails>> {
     try {
-      const track = await this.trackRepo.findById(trackId);
-      if (!track) {
+      const scenario = await this.scenarioRepo.findById(scenarioId);
+      if (!scenario) {
         return {
           success: false,
-          error: 'Track not found'
+          error: 'Scenario not found'
         };
       }
 
       // Get programs
-      const programs = await this.programRepo.findByTrack(trackId);
+      const programs = await this.programRepo.findByScenario(scenarioId);
       
       // Get tasks for each program
       const programsWithTasks: ProgramWithTasks[] = [];
@@ -265,8 +265,8 @@ export class TrackService {
 
       // Get project if available
       let project: Project | undefined;
-      if (track.metadata?.project_id) {
-        const projectData = await this.projectRepo.findById(track.metadata.project_id);
+      if (scenario.metadata?.project_id) {
+        const projectData = await this.projectRepo.findById(scenario.metadata.project_id);
         if (projectData) {
           project = projectData;
         }
@@ -275,30 +275,30 @@ export class TrackService {
       return {
         success: true,
         data: {
-          ...track,
+          ...scenario,
           programs: programsWithTasks,
           project
         }
       };
     } catch (error) {
-      console.error('Error getting track details:', error);
+      console.error('Error getting scenario details:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Failed to get track details'
+        error: error instanceof Error ? error.message : 'Failed to get scenario details'
       };
     }
   }
 
   /**
-   * Create programs for a track based on project difficulty
+   * Create programs for a scenario based on project difficulty
    */
-  private async createProgramsForTrack(trackId: string, project: Project): Promise<Program[]> {
+  private async createProgramsForScenario(scenarioId: string, project: Project): Promise<Program[]> {
     const programs: Program[] = [];
     
     // Create programs based on difficulty
     if (project.difficulty === 'beginner') {
       programs.push(await this.programRepo.create({
-        track_id: trackId,
+        scenario_id: scenarioId,
         code: 'foundation',
         title: 'Foundation',
         description: 'Learn the basics and fundamentals',
@@ -309,7 +309,7 @@ export class TrackService {
       }));
     } else if (project.difficulty === 'intermediate') {
       programs.push(await this.programRepo.create({
-        track_id: trackId,
+        scenario_id: scenarioId,
         code: 'foundation',
         title: 'Foundation',
         description: 'Review fundamentals and core concepts',
@@ -320,7 +320,7 @@ export class TrackService {
       }));
       
       programs.push(await this.programRepo.create({
-        track_id: trackId,
+        scenario_id: scenarioId,
         code: 'application',
         title: 'Application',
         description: 'Apply knowledge to real scenarios',
@@ -331,7 +331,7 @@ export class TrackService {
       }));
     } else {
       programs.push(await this.programRepo.create({
-        track_id: trackId,
+        scenario_id: scenarioId,
         code: 'foundation',
         title: 'Foundation Review',
         description: 'Quick review of fundamentals',
@@ -342,7 +342,7 @@ export class TrackService {
       }));
       
       programs.push(await this.programRepo.create({
-        track_id: trackId,
+        scenario_id: scenarioId,
         code: 'advanced-concepts',
         title: 'Advanced Concepts',
         description: 'Master advanced techniques',
@@ -353,7 +353,7 @@ export class TrackService {
       }));
       
       programs.push(await this.programRepo.create({
-        track_id: trackId,
+        scenario_id: scenarioId,
         code: 'mastery',
         title: 'Mastery',
         description: 'Expert-level challenges and projects',
@@ -433,14 +433,14 @@ export class TrackService {
    */
   private async createInitialProgress(
     userId: string, 
-    trackId: string, 
+    scenarioId: string, 
     programsWithTasks: ProgramWithTasks[]
   ): Promise<void> {
     // Note: In a real implementation, these would be created in separate progress repositories
     // For now, we're just logging the intent
     console.log('Creating initial progress for:', {
       userId,
-      trackId,
+      scenarioId,
       programCount: programsWithTasks.length,
       totalTasks: programsWithTasks.reduce((sum, p) => sum + p.tasks.length, 0)
     });

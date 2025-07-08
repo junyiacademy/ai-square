@@ -1,8 +1,8 @@
-# 統一 TRACK 架構設計 V2
+# 統一 SCENARIO 架構設計 V2
 
 ## 概述
 
-本文檔定義 AI Square V2 的統一學習架構，採用 TRACK → PROGRAM → TASK → LOG 的層級結構，可兼容 PBL、Discovery 和 Assessment 三種學習模式。
+本文檔定義 AI Square V2 的統一學習架構，採用 SCENARIO → PROGRAM → TASK → LOG 的層級結構，可兼容 PBL、Discovery 和 Assessment 三種學習模式。
 
 ## 核心設計原則
 
@@ -11,29 +11,45 @@
 3. **增量式遷移**：新舊系統並存，逐步遷移
 4. **環境隔離**：使用 GCS_BUCKET_NAME_V2 確保資料隔離
 
-## 統一層級結構
+## 統一架構的三種實現
 
+### 1. 來源（Project）層
 ```
-Learning Project (Scenario/Path/Domain)
-    ↓
-TRACK (學習軌跡)
-    ↓
-PROGRAM (學習項目)
-    ↓
-TASK (學習任務)
-    ↓
-LOG (活動記錄)
+PBL:       Scenario (情境卡片) → 定義學習目標和任務
+Discovery: Career Card (職業卡片) → 定義職業和可能場景
+Assessment: Exam (考卷) → 定義題目和評分標準
 ```
 
-### 各層級對應關係
+### 2. 結構層（完全相同）
+```
+所有模式：Scenario → Programs → Tasks → Logs
+```
+
+### 3. 語義層（用途不同）
 
 | 層級 | PBL | Discovery | Assessment |
 |------|-----|-----------|------------|
-| Project | Scenario | Path | Domain/KSA |
-| Track | 從 Scenario 建立的學習軌跡 | 從 Path 建立的學習軌跡 | 從 Domain 建立的測驗軌跡 |
-| Program | Program (多任務組合) | Workspace (任務工作區) | Exam (測驗實例) |
-| Task | Task (學習任務) | Task (探索任務) | Question (測驗題目) |
-| Log | 對話、評估、完成記錄 | 對話、評估、XP 記錄 | 答案、評分、能力映射 |
+| **Scenario** | 學習歷程 | 職業探索歷程 | 測驗歷程 |
+| **Program** | 學習階段<br>(基礎→進階) | 劇本場景<br>(日常→挑戰→成長) | 測驗回合<br>(練習1→練習2→正式) |
+| **Task** | 學習任務 | 體驗任務 | 考題 |
+| **Log** | 對話記錄 | 互動記錄 | 答題記錄 |
+
+### 4. Task 特性對比
+
+| 特性 | PBL | Discovery | Assessment |
+|------|-----|-----------|------------|
+| **評估方式** | AI 對話評估 | 多元彈性評估 | 標準答案 |
+| **Task 數量** | 固定（由 Scenario 定義） | 動態（可無限增加） | 固定（由 Exam 定義） |
+| **Task 內容** | 預設任務 | AI 生成或動態添加 | 預設題目 |
+| **重複性** | 可重複練習 | 每個都是新體驗 | 可重複作答 |
+
+### 5. Program 設計理念
+
+| 模式 | Program 用途 | 特點 |
+|------|-------------|------|
+| **PBL** | 學習階段分組 | 任務可能重複或遞進，強調練習和掌握 |
+| **Discovery** | 不同情境體驗 | 每個 Program 是獨立場景，任務集互不重複 |
+| **Assessment** | 測驗回合記錄 | 相同題目集的多次嘗試，追蹤進步 |
 
 ## 資料庫 Schema (V2)
 
@@ -58,17 +74,17 @@ CREATE INDEX idx_projects_v2_type ON learning_projects_v2(type);
 CREATE INDEX idx_projects_v2_code ON learning_projects_v2(code);
 ```
 
-### 2. 學習軌跡表 (tracks_v2)
+### 2. 學習情境表 (scenarios_v2)
 
 ```sql
-CREATE TABLE tracks_v2 (
+CREATE TABLE scenarios_v2 (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     project_id UUID NOT NULL REFERENCES learning_projects_v2(id) ON DELETE CASCADE,
     type VARCHAR(50) NOT NULL, -- 'pbl', 'discovery', 'assessment'
     title VARCHAR(500) NOT NULL,
     status VARCHAR(50) NOT NULL DEFAULT 'created', -- 'created', 'active', 'paused', 'completed', 'abandoned'
-    metadata JSONB DEFAULT '{}', -- Track 特定資料
+    metadata JSONB DEFAULT '{}', -- Scenario 特定資料
     started_at TIMESTAMP WITH TIME ZONE,
     completed_at TIMESTAMP WITH TIME ZONE,
     last_active_at TIMESTAMP WITH TIME ZONE,
@@ -76,13 +92,13 @@ CREATE TABLE tracks_v2 (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_tracks_v2_user_id ON tracks_v2(user_id);
-CREATE INDEX idx_tracks_v2_project_id ON tracks_v2(project_id);
-CREATE INDEX idx_tracks_v2_status ON tracks_v2(status);
-CREATE INDEX idx_tracks_v2_type ON tracks_v2(type);
+CREATE INDEX idx_scenarios_v2_user_id ON scenarios_v2(user_id);
+CREATE INDEX idx_scenarios_v2_project_id ON scenarios_v2(project_id);
+CREATE INDEX idx_scenarios_v2_status ON scenarios_v2(status);
+CREATE INDEX idx_scenarios_v2_type ON scenarios_v2(type);
 
--- 確保用戶在同一個專案只有一個活躍的 track
-CREATE UNIQUE INDEX unique_active_track_v2 ON tracks_v2(user_id, project_id) 
+-- 確保用戶在同一個專案只有一個活躍的 scenario
+CREATE UNIQUE INDEX unique_active_scenario_v2 ON scenarios_v2(user_id, project_id) 
 WHERE status IN ('active', 'paused');
 ```
 
@@ -91,7 +107,7 @@ WHERE status IN ('active', 'paused');
 ```sql
 CREATE TABLE programs_v2 (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    track_id UUID NOT NULL REFERENCES tracks_v2(id) ON DELETE CASCADE,
+    scenario_id UUID NOT NULL REFERENCES scenarios_v2(id) ON DELETE CASCADE,
     title VARCHAR(500) NOT NULL,
     description TEXT,
     program_order INTEGER NOT NULL,
@@ -104,9 +120,9 @@ CREATE TABLE programs_v2 (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_programs_v2_track_id ON programs_v2(track_id);
+CREATE INDEX idx_programs_v2_scenario_id ON programs_v2(scenario_id);
 CREATE INDEX idx_programs_v2_status ON programs_v2(status);
-CREATE UNIQUE INDEX unique_program_order_v2 ON programs_v2(track_id, program_order);
+CREATE UNIQUE INDEX unique_program_order_v2 ON programs_v2(scenario_id, program_order);
 ```
 
 ### 4. 學習任務表 (tasks_v2)
@@ -141,7 +157,7 @@ CREATE UNIQUE INDEX unique_task_order_v2 ON tasks_v2(program_id, task_order);
 ```sql
 CREATE TABLE logs_v2 (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    track_id UUID NOT NULL REFERENCES tracks_v2(id) ON DELETE CASCADE,
+    scenario_id UUID NOT NULL REFERENCES scenarios_v2(id) ON DELETE CASCADE,
     program_id UUID REFERENCES programs_v2(id) ON DELETE CASCADE,
     task_id UUID REFERENCES tasks_v2(id) ON DELETE CASCADE,
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -153,7 +169,7 @@ CREATE TABLE logs_v2 (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_logs_v2_track_id ON logs_v2(track_id);
+CREATE INDEX idx_logs_v2_scenario_id ON logs_v2(scenario_id);
 CREATE INDEX idx_logs_v2_program_id ON logs_v2(program_id);
 CREATE INDEX idx_logs_v2_task_id ON logs_v2(task_id);
 CREATE INDEX idx_logs_v2_user_id ON logs_v2(user_id);
@@ -167,7 +183,7 @@ CREATE INDEX idx_logs_v2_created_at ON logs_v2(created_at DESC);
 CREATE TABLE evaluations_v2 (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     log_id UUID NOT NULL REFERENCES logs_v2(id) ON DELETE CASCADE,
-    track_id UUID NOT NULL REFERENCES tracks_v2(id) ON DELETE CASCADE,
+    scenario_id UUID NOT NULL REFERENCES scenarios_v2(id) ON DELETE CASCADE,
     task_id UUID REFERENCES tasks_v2(id) ON DELETE CASCADE,
     evaluation_type VARCHAR(50) NOT NULL, -- 'ai', 'rubric', 'quiz', 'peer', 'self'
     input JSONB NOT NULL, -- 評估輸入
@@ -180,9 +196,66 @@ CREATE TABLE evaluations_v2 (
 );
 
 CREATE INDEX idx_evaluations_v2_log_id ON evaluations_v2(log_id);
-CREATE INDEX idx_evaluations_v2_track_id ON evaluations_v2(track_id);
+CREATE INDEX idx_evaluations_v2_scenario_id ON evaluations_v2(scenario_id);
 CREATE INDEX idx_evaluations_v2_task_id ON evaluations_v2(task_id);
 CREATE INDEX idx_evaluations_v2_type ON evaluations_v2(evaluation_type);
+```
+
+## 具體實作範例
+
+### PBL 範例：AI-Powered Job Search
+```
+Scenario: "AI-Powered Job Search"
+└── Scenario: "John's AI Job Search Learning Journey"
+    ├── Program 1: "Foundation" (基礎階段)
+    │   ├── Task A: Understanding AI Tools
+    │   ├── Task B: Resume Optimization
+    │   └── Task C: Job Matching
+    │
+    └── Program 2: "Advanced" (進階階段)
+        ├── Task A': Advanced AI Tools (深化 Task A)
+        ├── Task B': Portfolio Building (延伸 Task B)
+        └── Task D: Interview Preparation (新任務)
+```
+
+### Discovery 範例：AI Product Manager Career
+```
+Career Card: "AI Product Manager"
+└── Scenario: "Exploring AI PM Career Path"
+    ├── Program 1: "Day in the Life" (日常場景)
+    │   ├── Task: Morning Team Briefing
+    │   ├── Task: Feature Planning
+    │   └── Task: Stakeholder Meeting
+    │
+    ├── Program 2: "Crisis Management" (挑戰場景)
+    │   ├── Task: Problem Analysis
+    │   ├── Task: Solution Design
+    │   └── Task: Crisis Communication
+    │
+    └── Program 3: "Career Growth" (成長場景)
+        ├── Task: Skill Assessment
+        ├── Task: Career Planning
+        └── Task: Decision Making
+```
+
+### Assessment 範例：AI Literacy Certification
+```
+Exam: "AI Literacy Foundation Assessment"
+└── Scenario: "Mary's AI Literacy Assessment Journey"
+    ├── Program 1: "Practice Round 1" (2025-01-08)
+    │   ├── Question 1: Score 80%
+    │   ├── Question 2: Score 60%
+    │   └── Question 3: Score 100%
+    │
+    ├── Program 2: "Practice Round 2" (2025-01-09)
+    │   ├── Question 1: Score 100%
+    │   ├── Question 2: Score 80%
+    │   └── Question 3: Score 100%
+    │
+    └── Program 3: "Formal Assessment" (2025-01-10)
+        ├── Question 1: Score 100%
+        ├── Question 2: Score 90%
+        └── Question 3: Score 100%
 ```
 
 ## 實作架構
@@ -209,7 +282,7 @@ export interface ILearningProject extends ITrackableEntity {
   is_active: boolean;
 }
 
-export interface ITrack extends ITrackableEntity {
+export interface IScenario extends ITrackableEntity {
   user_id: string;
   project_id: string;
   type: 'pbl' | 'discovery' | 'assessment';
@@ -222,7 +295,7 @@ export interface ITrack extends ITrackableEntity {
 }
 
 export interface IProgram extends ITrackableEntity {
-  track_id: string;
+  scenario_id: string;
   title: string;
   description?: string;
   program_order: number;
@@ -249,7 +322,7 @@ export interface ITask extends ITrackableEntity {
 }
 
 export interface ILog extends ITrackableEntity {
-  track_id: string;
+  scenario_id: string;
   program_id?: string;
   task_id?: string;
   user_id: string;
@@ -262,7 +335,7 @@ export interface ILog extends ITrackableEntity {
 
 export interface IEvaluation extends ITrackableEntity {
   log_id: string;
-  track_id: string;
+  scenario_id: string;
   task_id?: string;
   evaluation_type: 'ai' | 'rubric' | 'quiz' | 'peer' | 'self';
   input: Record<string, any>;
@@ -311,7 +384,7 @@ export abstract class BaseRepository<T extends ITrackableEntity> {
 export abstract class BaseLearningService {
   constructor(
     protected projectRepo: IProjectRepository,
-    protected trackRepo: ITrackRepository,
+    protected scenarioRepo: IScenarioRepository,
     protected programRepo: IProgramRepository,
     protected taskRepo: ITaskRepository,
     protected logRepo: ILogRepository,
@@ -320,19 +393,19 @@ export abstract class BaseLearningService {
     protected aiService: IAIService
   ) {}
 
-  // 開始新的學習軌跡
-  async startTrack(userId: string, projectId: string): Promise<ITrack> {
+  // 開始新的學習情境
+  async startScenario(userId: string, projectId: string): Promise<IScenario> {
     const project = await this.projectRepo.findById(projectId);
     if (!project) throw new Error('Project not found');
 
-    // 檢查是否已有活躍的 track
-    const existingTrack = await this.trackRepo.findActiveByUserAndProject(userId, projectId);
-    if (existingTrack) {
-      return existingTrack;
+    // 檢查是否已有活躍的 scenario
+    const existingScenario = await this.scenarioRepo.findActiveByUserAndProject(userId, projectId);
+    if (existingScenario) {
+      return existingScenario;
     }
 
-    // 建立新 track
-    const track = await this.trackRepo.create({
+    // 建立新 scenario
+    const scenario = await this.scenarioRepo.create({
       user_id: userId,
       project_id: projectId,
       type: project.type,
@@ -343,15 +416,15 @@ export abstract class BaseLearningService {
     });
 
     // 建立初始 programs
-    await this.createInitialPrograms(track, project);
+    await this.createInitialPrograms(scenario, project);
 
     // 記錄開始 log
-    await this.logActivity(track.id, null, null, userId, 'track_started', {
+    await this.logActivity(scenario.id, null, null, userId, 'scenario_started', {
       project_id: projectId,
       project_title: project.title
     });
 
-    return track;
+    return scenario;
   }
 
   // 提交任務回應
@@ -368,7 +441,7 @@ export abstract class BaseLearningService {
 
     // 記錄提交 log
     const log = await this.logActivity(
-      program.track_id,
+      program.scenario_id,
       program.id,
       taskId,
       userId,
@@ -393,7 +466,7 @@ export abstract class BaseLearningService {
 
   // 記錄活動
   protected async logActivity(
-    trackId: string,
+    scenarioId: string,
     programId: string | null,
     taskId: string | null,
     userId: string,
@@ -404,7 +477,7 @@ export abstract class BaseLearningService {
     const logType = this.getLogType(activity);
     
     return this.logRepo.create({
-      track_id: trackId,
+      scenario_id: scenarioId,
       program_id: programId,
       task_id: taskId,
       user_id: userId,
@@ -416,105 +489,270 @@ export abstract class BaseLearningService {
   }
 
   // 子類別需要實作的方法
-  protected abstract createInitialPrograms(track: ITrack, project: ILearningProject): Promise<void>;
+  protected abstract createInitialPrograms(scenario: IScenario, project: ILearningProject): Promise<void>;
   protected abstract evaluateResponse(task: ITask, response: any, log: ILog): Promise<IEvaluation>;
   protected abstract getLogType(activity: string): ILog['log_type'];
 }
 ```
 
+### 4. Discovery 的獨特能力
+
+```typescript
+class DiscoveryServiceV2 {
+  // Discovery 可以動態新增任務
+  async addDynamicTask(programId: string, context: string) {
+    const newTask = await this.aiService.generateTask(context);
+    return this.taskRepo.create({
+      program_id: programId,
+      ...newTask,
+      metadata: { 
+        generated: true,
+        generation_context: context 
+      }
+    });
+  }
+  
+  // Discovery 可以分支探索
+  async branchExploration(scenarioId: string, newDirection: string) {
+    // 在現有 scenario 中創建新的探索 program
+    return this.createProgram({
+      scenario_id: scenarioId,
+      title: `Exploring: ${newDirection}`,
+      metadata: { 
+        branch_type: 'user_initiated',
+        parent_program: currentProgramId
+      }
+    });
+  }
+  
+  // Discovery 可以無限增加任務
+  async continueExploration(programId: string, userInterest: string) {
+    const program = await this.programRepo.findById(programId);
+    const existingTasks = await this.taskRepo.findByProgram(programId);
+    
+    // AI 根據用戶興趣和已完成任務生成新任務
+    const newTasks = await this.aiService.generateFollowUpTasks({
+      career: program.metadata.career,
+      scenario: program.metadata.scenario_type,
+      completed_tasks: existingTasks,
+      user_interest: userInterest
+    });
+    
+    // 添加新任務到現有 program
+    for (const task of newTasks) {
+      await this.taskRepo.create({
+        program_id: programId,
+        ...task,
+        order_index: existingTasks.length + 1
+      });
+    }
+  }
+}
+```
+
 ## 具體實作範例
 
-### PBL V2 Service
+### PBL V2 Service - 學習階段分組
 
 ```typescript
 // src/lib/v2/services/pbl.service.ts
 
 export class PBLServiceV2 extends BaseLearningService {
-  protected async createInitialPrograms(track: ITrack, project: ILearningProject): Promise<void> {
-    // 從 project metadata 取得 PBL programs
+  protected async createInitialPrograms(scenario: IScenario, project: ILearningProject): Promise<void> {
+    // PBL 的 Programs 代表學習階段（基礎、進階等）
     const pblPrograms = project.metadata.programs || [];
     
     for (let i = 0; i < pblPrograms.length; i++) {
       const pblProgram = pblPrograms[i];
       
       const program = await this.programRepo.create({
-        track_id: track.id,
-        title: pblProgram.title,
+        scenario_id: scenario.id,
+        title: pblProgram.title,  // 例如："Foundation", "Advanced"
         description: pblProgram.description,
         program_order: i,
         status: i === 0 ? 'active' : 'pending',
-        config: {
-          ai_modules: pblProgram.ai_modules || []
-        },
-        metadata: {}
+        metadata: {
+          stage: pblProgram.stage,  // 'foundation', 'advanced'
+          prerequisites: pblProgram.prerequisites
+        }
       });
 
-      // 建立 tasks
+      // 建立該階段的所有任務
       for (let j = 0; j < pblProgram.tasks.length; j++) {
         const pblTask = pblProgram.tasks[j];
         
         await this.taskRepo.create({
           program_id: program.id,
           title: pblTask.title,
-          description: pblTask.description,
-          instructions: pblTask.instructions,
-          task_order: j,
-          type: this.mapTaskType(pblTask.type),
+          task_type: 'standard',  // PBL 任務是標準學習任務
+          task_variant: 'standard',
           required_ksa: pblTask.required_ksa || [],
-          config: {
-            estimated_duration: pblTask.estimated_duration,
-            ai_assistance: pblTask.ai_assistance
-          },
-          metadata: {},
-          status: j === 0 && i === 0 ? 'active' : 'pending'
+          metadata: {
+            can_repeat: true,  // PBL 任務可重複練習
+            difficulty: pblTask.difficulty
+          }
         });
       }
     }
   }
 
   protected async evaluateResponse(task: ITask, response: any, log: ILog): Promise<IEvaluation> {
-    // PBL 使用 AI 評估
-    const rubric = task.config.rubric || {};
-    const aiResponse = await this.aiService.evaluate({
+    // PBL 使用 AI 對話評估
+    const evaluation = await this.aiService.evaluateConversation({
       task: task,
-      response: response,
-      rubric: rubric,
+      conversation: response,
+      rubric: task.config.rubric,
       required_ksa: task.required_ksa
     });
 
     return this.evaluationRepo.create({
       log_id: log.id,
-      track_id: log.track_id,
-      task_id: task.id,
       evaluation_type: 'ai',
-      input: { response, rubric },
-      result: aiResponse,
-      scores: aiResponse.scores,
-      feedback: aiResponse.feedback,
-      ksa_mapping: aiResponse.ksa_mapping,
-      evaluated_by: `ai:${aiResponse.model}`
+      input: { conversation: response },
+      result: evaluation,
+      feedback: evaluation.feedback,
+      ksa_mapping: evaluation.ksa_achievement
     });
   }
+}
+```
 
-  private mapTaskType(pblType: string): ITask['type'] {
-    const typeMap: Record<string, ITask['type']> = {
-      'conversation': 'chat',
-      'coding': 'code',
-      'quiz': 'quiz',
-      'submission': 'submission'
-    };
-    return typeMap[pblType] || 'chat';
+### Discovery V2 Service - 職業場景體驗
+
+```typescript
+// src/lib/v2/services/discovery.service.ts
+
+export class DiscoveryServiceV2 extends BaseLearningService {
+  protected async createInitialPrograms(scenario: IScenario, project: ILearningProject): Promise<void> {
+    // Discovery 的 Programs 代表不同的職業場景
+    const career = project.metadata.career;
+    const scenarios = [
+      { type: 'daily_routine', title: `Day in the Life of ${career}` },
+      { type: 'challenge', title: `${career} Challenge Scenario` },
+      { type: 'career_growth', title: `${career} Career Growth` }
+    ];
+    
+    for (const scenario of scenarios) {
+      const program = await this.programRepo.create({
+        scenario_id: scenario.id,
+        title: scenario.title,
+        metadata: {
+          scenario_type: scenario.type,
+          career: career,
+          is_expandable: true  // Discovery programs 可以無限擴展
+        }
+      });
+
+      // 為每個場景生成初始任務
+      const tasks = await this.generateScenarioTasks(career, scenario.type);
+      for (const task of tasks) {
+        await this.taskRepo.create({
+          program_id: program.id,
+          ...task,
+          task_variant: 'exploration',  // Discovery 任務是探索性的
+          metadata: {
+            ...task.metadata,
+            can_branch: true  // 可以從這個任務分支出新方向
+          }
+        });
+      }
+    }
   }
 
-  protected getLogType(activity: string): ILog['log_type'] {
-    const typeMap: Record<string, ILog['log_type']> = {
-      'track_started': 'chat',
-      'task_submitted': 'submission',
-      'task_evaluated': 'evaluation',
-      'program_completed': 'completion',
-      'feedback_generated': 'feedback'
-    };
-    return typeMap[activity] || 'chat';
+  // Discovery 特有：動態增加任務
+  async addTaskToScenario(programId: string, userRequest: string) {
+    const newTask = await this.aiService.generateContextualTask({
+      program_id: programId,
+      user_request: userRequest,
+      existing_tasks: await this.taskRepo.findByProgram(programId)
+    });
+    
+    return this.taskRepo.create({
+      program_id: programId,
+      ...newTask,
+      metadata: {
+        generated_from: userRequest,
+        generated_at: new Date().toISOString()
+      }
+    });
+  }
+}
+```
+
+### Assessment V2 Service - 測驗回合管理
+
+```typescript
+// src/lib/v2/services/assessment.service.ts
+
+export class AssessmentServiceV2 extends BaseLearningService {
+  async createNewAssessmentRound(
+    userId: string,
+    examId: string,
+    roundType: 'practice' | 'formal'
+  ) {
+    // 找到或創建 Scenario
+    let scenario = await this.findActiveScenario(userId, examId);
+    if (!scenario) {
+      scenario = await this.createScenarioFromExam(userId, examId);
+    }
+
+    // Assessment 的每個 Program 代表一次測驗回合
+    const roundNumber = scenario.programs.length + 1;
+    const program = await this.programRepo.create({
+      scenario_id: scenario.id,
+      title: roundType === 'practice' 
+        ? `Practice Round ${roundNumber}` 
+        : `Formal Assessment`,
+      metadata: {
+        round_type: roundType,
+        attempt_number: roundNumber,
+        started_at: new Date().toISOString()
+      }
+    });
+
+    // 從考卷定義創建題目（相同題目，新的嘗試）
+    const exam = await this.loadExam(examId);
+    for (const question of exam.questions) {
+      await this.taskRepo.create({
+        program_id: program.id,
+        title: question.text,
+        task_type: 'quiz',
+        task_variant: 'question',  // Assessment 任務是題目
+        config: {
+          question_id: question.id,
+          options: question.options,
+          correct_answer: question.correct_answer,
+          points: question.points
+        },
+        metadata: {
+          can_skip: exam.allow_skip,
+          time_limit: question.time_limit
+        }
+      });
+    }
+
+    return { scenario, program };
+  }
+
+  protected async evaluateResponse(task: ITask, response: any, log: ILog): Promise<IEvaluation> {
+    // Assessment 使用標準答案評估
+    const isCorrect = response.answer === task.config.correct_answer;
+    const score = isCorrect ? task.config.points : 0;
+
+    return this.evaluationRepo.create({
+      log_id: log.id,
+      evaluation_type: 'quiz',
+      input: { answer: response.answer },
+      result: { 
+        is_correct: isCorrect,
+        correct_answer: task.config.correct_answer
+      },
+      scores: { points: score, percentage: isCorrect ? 100 : 0 },
+      feedback: {
+        message: isCorrect ? 'Correct!' : 'Incorrect',
+        explanation: task.config.explanation
+      }
+    });
   }
 }
 ```
@@ -535,22 +773,22 @@ export class GCSServiceV2 {
   }
 
   // V2 的存儲路徑結構
-  private getPath(type: string, userId: string, trackId: string): string {
-    return `v2/${type}/${userId}/${trackId}`;
+  private getPath(type: string, userId: string, scenarioId: string): string {
+    return `v2/${type}/${userId}/${scenarioId}`;
   }
 
-  async saveTrackData(userId: string, trackId: string, data: any): Promise<void> {
-    const path = `${this.getPath('tracks', userId, trackId)}/data.json`;
+  async saveScenarioData(userId: string, scenarioId: string, data: any): Promise<void> {
+    const path = `${this.getPath('scenarios', userId, scenarioId)}/data.json`;
     await this.uploadJSON(path, data);
   }
 
-  async saveLog(userId: string, trackId: string, logId: string, data: any): Promise<void> {
-    const path = `${this.getPath('logs', userId, trackId)}/${logId}.json`;
+  async saveLog(userId: string, scenarioId: string, logId: string, data: any): Promise<void> {
+    const path = `${this.getPath('logs', userId, scenarioId)}/${logId}.json`;
     await this.uploadJSON(path, data);
   }
 
-  async saveEvaluation(userId: string, trackId: string, evalId: string, data: any): Promise<void> {
-    const path = `${this.getPath('evaluations', userId, trackId)}/${evalId}.json`;
+  async saveEvaluation(userId: string, scenarioId: string, evalId: string, data: any): Promise<void> {
+    const path = `${this.getPath('evaluations', userId, scenarioId)}/${evalId}.json`;
     await this.uploadJSON(path, data);
   }
 
@@ -563,16 +801,16 @@ export class GCSServiceV2 {
 ## API Routes V2
 
 ```typescript
-// src/app/api/v2/tracks/route.ts
+// src/app/api/v2/scenarios/route.ts
 
 export async function POST(request: Request) {
   const { projectId } = await request.json();
   const userId = await getUserId(request);
 
   const service = getServiceForProject(projectId);
-  const track = await service.startTrack(userId, projectId);
+  const scenario = await service.startScenario(userId, projectId);
 
-  return NextResponse.json(track);
+  return NextResponse.json(scenario);
 }
 
 // src/app/api/v2/tasks/[taskId]/submit/route.ts
@@ -617,13 +855,13 @@ export async function POST(
 ## 測試策略
 
 ```typescript
-// src/lib/v2/__tests__/track.service.test.ts
+// src/lib/v2/__tests__/scenario.service.test.ts
 
-describe('TrackService V2', () => {
-  it('should create a new track', async () => {
-    const track = await service.startTrack(userId, projectId);
-    expect(track.status).toBe('active');
-    expect(track.project_id).toBe(projectId);
+describe('ScenarioService V2', () => {
+  it('should create a new scenario', async () => {
+    const scenario = await service.startScenario(userId, projectId);
+    expect(scenario.status).toBe('active');
+    expect(scenario.project_id).toBe(projectId);
   });
 
   it('should handle task submission', async () => {
@@ -638,7 +876,7 @@ describe('TrackService V2', () => {
 
 這個 V2 架構提供了：
 
-1. **統一的資料模型**：TRACK → PROGRAM → TASK → LOG
+1. **統一的資料模型**：SCENARIO → PROGRAM → TASK → LOG
 2. **完整的關聯性**：所有資料透過 UUID 連結
 3. **增量式遷移**：新舊系統可並存
 4. **環境隔離**：使用獨立的 GCS bucket

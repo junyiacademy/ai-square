@@ -1,21 +1,21 @@
 /**
- * Track Repository
- * Handles data persistence for learning tracks
+ * Scenario Repository
+ * Handles data persistence for learning scenarios
  */
 
 import { BaseRepository } from '../core/base-repository';
-import { Track, QueryFilters, PaginatedResponse } from '../types';
+import { Scenario, QueryFilters, PaginatedResponse } from '../types';
 import { DatabaseConnection, QueryBuilder } from '../utils/database';
 
-export class TrackRepositoryV2 extends BaseRepository<Track> {
-  protected tableName = 'tracks_v2';
-  protected entityName = 'track';
+export class ScenarioRepositoryV2 extends BaseRepository<Scenario> {
+  protected tableName = 'scenarios_v2';
+  protected entityName = 'scenario';
   
   constructor(private db: DatabaseConnection) {
     super();
   }
 
-  async create(data: Omit<Track, 'id' | 'created_at' | 'updated_at'>): Promise<Track> {
+  async create(data: Omit<Scenario, 'id' | 'created_at' | 'updated_at'>): Promise<Scenario> {
     const id = this.generateId();
     const now = this.getCurrentTimestamp();
     
@@ -26,36 +26,36 @@ export class TrackRepositoryV2 extends BaseRepository<Track> {
       updated_at: now
     });
     
-    const result = await this.db.query<Track>(sql, params);
+    const result = await this.db.query<Scenario>(sql, params);
     return result.rows[0];
   }
 
-  async createMany(data: Omit<Track, 'id' | 'created_at' | 'updated_at'>[]): Promise<Track[]> {
-    const tracks = await Promise.all(data.map(item => this.create(item)));
-    return tracks;
+  async createMany(data: Omit<Scenario, 'id' | 'created_at' | 'updated_at'>[]): Promise<Scenario[]> {
+    const scenarios = await Promise.all(data.map(item => this.create(item)));
+    return scenarios;
   }
 
-  async findById(id: string): Promise<Track | null> {
+  async findById(id: string): Promise<Scenario | null> {
     const query = new QueryBuilder(this.tableName)
       .where('id', '=', id)
       .build();
     
-    const result = await this.db.query<Track>(query.sql, query.params);
+    const result = await this.db.query<Scenario>(query.sql, query.params);
     return result.rows[0] || null;
   }
 
-  async findByIds(ids: string[]): Promise<Track[]> {
+  async findByIds(ids: string[]): Promise<Scenario[]> {
     if (ids.length === 0) return [];
     
     const query = new QueryBuilder(this.tableName)
       .whereIn('id', ids)
       .build();
     
-    const result = await this.db.query<Track>(query.sql, query.params);
+    const result = await this.db.query<Scenario>(query.sql, query.params);
     return result.rows;
   }
 
-  async findOne(filters: Partial<Track>): Promise<Track | null> {
+  async findOne(filters: Partial<Scenario>): Promise<Scenario | null> {
     const query = new QueryBuilder(this.tableName);
     
     Object.entries(filters).forEach(([key, value]) => {
@@ -67,11 +67,11 @@ export class TrackRepositoryV2 extends BaseRepository<Track> {
     query.limit(1);
     const { sql, params } = query.build();
     
-    const result = await this.db.query<Track>(sql, params);
+    const result = await this.db.query<Scenario>(sql, params);
     return result.rows[0] || null;
   }
 
-  async findMany(filters: QueryFilters): Promise<PaginatedResponse<Track>> {
+  async findMany(filters: QueryFilters): Promise<PaginatedResponse<Scenario>> {
     const { page, pageSize, orderBy, orderDirection, search, filters: customFilters } = this.applyDefaultFilters(filters);
     
     // Build count query
@@ -119,17 +119,17 @@ export class TrackRepositoryV2 extends BaseRepository<Track> {
       .offset((page - 1) * pageSize);
     
     const { sql, params } = dataQuery.build();
-    const result = await this.db.query<Track>(sql, params);
+    const result = await this.db.query<Scenario>(sql, params);
     
     return this.buildPaginationMetadata(result.rows, totalItems, page, pageSize);
   }
 
-  async findAll(): Promise<Track[]> {
+  async findAll(): Promise<Scenario[]> {
     const query = new QueryBuilder(this.tableName)
       .orderBy('order_index', 'ASC')
       .build();
     
-    const result = await this.db.query<Track>(query.sql, query.params);
+    const result = await this.db.query<Scenario>(query.sql, query.params);
     return result.rows;
   }
 
@@ -144,7 +144,7 @@ export class TrackRepositoryV2 extends BaseRepository<Track> {
     return result.rowCount > 0;
   }
 
-  async count(filters?: Partial<Track>): Promise<number> {
+  async count(filters?: Partial<Scenario>): Promise<number> {
     const query = new QueryBuilder(this.tableName);
     
     if (filters) {
@@ -162,23 +162,23 @@ export class TrackRepositoryV2 extends BaseRepository<Track> {
     return parseInt(result.rows[0]?.count || '0');
   }
 
-  async update(id: string, data: Partial<Omit<Track, 'id' | 'created_at' | 'updated_at'>>): Promise<Track> {
+  async update(id: string, data: Partial<Omit<Scenario, 'id' | 'created_at' | 'updated_at'>>): Promise<Scenario> {
     const updateData = {
       ...data,
       updated_at: this.getCurrentTimestamp()
     };
     
     const { sql, params } = QueryBuilder.update(this.tableName, id, updateData);
-    const result = await this.db.query<Track>(sql, params);
+    const result = await this.db.query<Scenario>(sql, params);
     
     if (result.rowCount === 0) {
-      throw new Error(`Track not found with id: ${id}`);
+      throw new Error(`Scenario not found with id: ${id}`);
     }
     
     return result.rows[0];
   }
 
-  async updateMany(ids: string[], data: Partial<Omit<Track, 'id' | 'created_at' | 'updated_at'>>): Promise<Track[]> {
+  async updateMany(ids: string[], data: Partial<Omit<Scenario, 'id' | 'created_at' | 'updated_at'>>): Promise<Scenario[]> {
     const updates = await Promise.all(ids.map(id => this.update(id, data)));
     return updates;
   }
@@ -219,25 +219,25 @@ export class TrackRepositoryV2 extends BaseRepository<Track> {
   }
 
   /**
-   * Custom methods for Track entity
+   * Custom methods for Scenario entity
    */
-  async findByCode(code: string): Promise<Track | null> {
+  async findByCode(code: string): Promise<Scenario | null> {
     return this.findOne({ code });
   }
 
-  async findActiveTracksInOrder(): Promise<Track[]> {
+  async findActiveScenariosInOrder(): Promise<Scenario[]> {
     const query = new QueryBuilder(this.tableName)
       .where('is_active', '=', true)
       .orderBy('order_index', 'ASC')
       .build();
     
-    const result = await this.db.query<Track>(query.sql, query.params);
+    const result = await this.db.query<Scenario>(query.sql, query.params);
     return result.rows;
   }
 
-  async reorderTracks(trackOrders: { id: string; order_index: number }[]): Promise<void> {
+  async reorderScenarios(scenarioOrders: { id: string; order_index: number }[]): Promise<void> {
     await this.transaction(async () => {
-      for (const { id, order_index } of trackOrders) {
+      for (const { id, order_index } of scenarioOrders) {
         await this.update(id, { order_index });
       }
     });
@@ -246,23 +246,23 @@ export class TrackRepositoryV2 extends BaseRepository<Track> {
   /**
    * V2 Architecture specific methods
    */
-  async findByStructureType(structureType: 'standard' | 'direct_task' | 'single_program'): Promise<Track[]> {
+  async findByStructureType(structureType: 'standard' | 'direct_task' | 'single_program'): Promise<Scenario[]> {
     const query = new QueryBuilder(this.tableName)
       .where('structure_type', '=', structureType)
       .where('is_active', '=', true)
       .orderBy('order_index', 'ASC')
       .build();
     
-    const result = await this.db.query<Track>(query.sql, query.params);
+    const result = await this.db.query<Scenario>(query.sql, query.params);
     return result.rows;
   }
 
   async createWithStructure(
-    trackData: Omit<Track, 'id' | 'created_at' | 'updated_at'>,
+    scenarioData: Omit<Scenario, 'id' | 'created_at' | 'updated_at'>,
     structure: { programs?: any[], tasks?: any[] }
-  ): Promise<Track> {
+  ): Promise<Scenario> {
     // This would be implemented with proper transaction support
-    // For now, just create the track
-    return this.create(trackData);
+    // For now, just create the scenario
+    return this.create(scenarioData);
   }
 }

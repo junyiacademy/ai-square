@@ -12,7 +12,7 @@ export { BaseService } from './core/base-service';
 export { BaseApiHandler } from './core/base-api-handler';
 
 // Repositories
-export { TrackRepositoryV2 } from './repositories/track-repository';
+export { ScenarioRepositoryV2 } from './repositories/scenario-repository';
 export { ProgramRepositoryV2 } from './repositories/program-repository';
 export { TaskRepositoryV2 } from './repositories/task-repository';
 export { ProjectRepositoryV2 } from './repositories/project-repository';
@@ -21,6 +21,7 @@ export { LogRepositoryV2 } from './repositories/log-repository';
 // Services
 export { StorageService } from './services/storage-service';
 export { BaseLearningServiceV2 } from './services/base-learning-service';
+export { ScenarioService } from './services/scenario-service';
 export { PBLServiceV2 } from './services/pbl-service';
 export { DiscoveryServiceV2 } from './services/discovery-service';
 export { AssessmentServiceV2 } from './services/assessment-service';

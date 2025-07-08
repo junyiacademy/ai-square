@@ -4,7 +4,7 @@
  */
 
 import { 
-  Track, 
+  ScenarioWithHierarchy, 
   Program, 
   Task, 
   Project,
@@ -189,13 +189,13 @@ export function mockApiResponse<T>(data: T, delay = 500): Promise<{ success: boo
   });
 }
 
-// Mock Track Creation Results
-export const mockTrackResults = {
+// Mock Scenario Creation Results
+export const mockScenarioResults = {
   pbl: {
-    id: 'track_pbl_mock',
+    id: 'scenario_pbl_mock',
     code: 'pbl-ai-job-search',
     title: 'AI-Powered Job Search Mastery',
-    description: 'Standard PBL track with multiple programs',
+    description: 'Standard PBL scenario with multiple programs',
     structure_type: 'standard' as const,
     order_index: 0,
     is_active: true,
@@ -204,7 +204,7 @@ export const mockTrackResults = {
     programs: [
       {
         id: 'prog_foundation',
-        track_id: 'track_pbl_mock',
+        scenario_id: 'scenario_pbl_mock',
         code: 'foundation',
         title: 'Foundation',
         description: 'Learn the basics of AI in job searching',
@@ -244,7 +244,7 @@ export const mockTrackResults = {
       },
       {
         id: 'prog_advanced',
-        track_id: 'track_pbl_mock',
+        scenario_id: 'scenario_pbl_mock',
         code: 'advanced',
         title: 'Advanced Techniques',
         description: 'Master advanced AI job search strategies',
@@ -272,7 +272,7 @@ export const mockTrackResults = {
     ]
   },
   discovery: {
-    id: 'track_discovery_mock',
+    id: 'scenario_discovery_mock',
     code: 'discovery-ai-pm',
     title: 'Exploring AI Product Manager Career',
     description: 'Multiple scenario-based programs for career exploration',
@@ -284,7 +284,7 @@ export const mockTrackResults = {
     programs: [
       {
         id: 'prog_daily',
-        track_id: 'track_discovery_mock',
+        scenario_id: 'scenario_discovery_mock',
         code: 'daily_routine',
         title: 'Day in the Life of an AI Product Manager',
         description: 'Experience typical daily activities and responsibilities',
@@ -326,7 +326,7 @@ export const mockTrackResults = {
       },
       {
         id: 'prog_challenge',
-        track_id: 'track_discovery_mock',
+        scenario_id: 'scenario_discovery_mock',
         code: 'challenge',
         title: 'AI PM Challenge Scenario',
         description: 'Handle a challenging situation that tests your skills',
@@ -368,7 +368,7 @@ export const mockTrackResults = {
       },
       {
         id: 'prog_growth',
-        track_id: 'track_discovery_mock',
+        scenario_id: 'scenario_discovery_mock',
         code: 'career_growth',
         title: 'AI PM Career Growth',
         description: 'Explore advancement opportunities and career decisions',
@@ -411,10 +411,10 @@ export const mockTrackResults = {
     ]
   },
   assessment: {
-    id: 'track_assessment_mock',
+    id: 'scenario_assessment_mock',
     code: 'assessment-ai-literacy',
     title: 'AI Literacy Foundation Assessment',
-    description: 'Direct-task assessment track',
+    description: 'Direct-task assessment scenario',
     structure_type: 'direct_task' as const,
     order_index: 0,
     is_active: true,
@@ -423,7 +423,7 @@ export const mockTrackResults = {
     programs: [
       {
         id: 'prog_assessment',
-        track_id: 'track_assessment_mock',
+        scenario_id: 'scenario_assessment_mock',
         code: 'tasks',
         title: 'Tasks',
         description: 'Direct tasks',

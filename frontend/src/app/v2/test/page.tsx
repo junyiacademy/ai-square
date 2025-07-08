@@ -8,21 +8,21 @@ import {
   mockAdaptiveAssessmentOptions,
   mockCertificationOptions,
   generateMockUser,
-  mockTrackResults
+  mockScenarioResults
 } from '@/lib/v2/utils/mock-data';
-import { TrackHierarchyView } from './components/TrackHierarchyView';
-import { TrackWithHierarchy, Project } from '@/lib/v2/types';
+import { ScenarioHierarchyView } from './components/ScenarioHierarchyView';
+import { ScenarioWithHierarchy, Project } from '@/lib/v2/types';
 import { Plus, RefreshCw, Layers, Search, FileCheck, Zap } from 'lucide-react';
 
 // Mock services for demonstration
-import { TrackService } from '@/lib/v2/services/track-service';
+import { ScenarioService } from '@/lib/v2/services/scenario-service';
 import { PBLServiceV2 } from '@/lib/v2/services/pbl-service';
 import { DiscoveryServiceV2 } from '@/lib/v2/services/discovery-service';
 import { AssessmentServiceV2 } from '@/lib/v2/services/assessment-service';
 import { DatabaseFactory } from '@/lib/v2/utils/database';
 
 export default function V2TestPage() {
-  const [tracks, setTracks] = useState<TrackWithHierarchy[]>([]);
+  const [scenarios, setScenarios] = useState<ScenarioWithHierarchy[]>([]);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,26 +30,26 @@ export default function V2TestPage() {
 
   // Initialize mock database connection
   const db = new DatabaseFactory().create({ database: 'ai-square-v2-test' });
-  const trackService = new TrackService(db);
+  const scenarioService = new ScenarioService(db);
   const pblService = new PBLServiceV2(db);
   const discoveryService = new DiscoveryServiceV2(db);
   const assessmentService = new AssessmentServiceV2(db);
 
-  // Load existing tracks on mount
+  // Load existing scenarios on mount
   useEffect(() => {
-    loadMockTracks();
+    loadMockScenarios();
   }, []);
 
-  const loadMockTracks = () => {
-    // For demonstration, we'll use the mock track results
-    setTracks([
-      mockTrackResults.pbl,
-      mockTrackResults.discovery,
-      mockTrackResults.assessment
+  const loadMockScenarios = () => {
+    // For demonstration, we'll use the mock scenario results
+    setScenarios([
+      mockScenarioResults.pbl,
+      mockScenarioResults.discovery,
+      mockScenarioResults.assessment
     ]);
   };
 
-  const createPBLTrack = async () => {
+  const createPBLScenario = async () => {
     if (!selectedProject) {
       setError('Please select a project first');
       return;
@@ -59,66 +59,66 @@ export default function V2TestPage() {
     setError(null);
 
     try {
-      // Simulate PBL track creation
-      const newTrack = await pblService.createTrackFromProject({
+      // Simulate PBL scenario creation
+      const newScenario = await pblService.createTrackFromProject({
         project: selectedProject,
         userId: generateMockUser().id,
         language: 'en'
       });
 
       // For demo purposes, use mock data
-      const mockTrack = {
-        ...mockTrackResults.pbl,
-        id: `track_pbl_${Date.now()}`,
+      const mockScenario = {
+        ...mockScenarioResults.pbl,
+        id: `scenario_pbl_${Date.now()}`,
         title: selectedProject.title,
         description: selectedProject.description,
         created_at: new Date(),
         updated_at: new Date()
       };
 
-      setTracks([...tracks, mockTrack]);
+      setScenarios([...scenarios, mockScenario]);
       setSelectedProject(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create PBL track');
+      setError(err instanceof Error ? err.message : 'Failed to create PBL scenario');
     } finally {
       setLoading(false);
     }
   };
 
-  const createDiscoveryTrack = async () => {
+  const createDiscoveryScenario = async () => {
     setLoading(true);
     setError(null);
 
     try {
-      // Simulate Discovery track creation
-      const mockTrack = {
-        ...mockTrackResults.discovery,
-        id: `track_discovery_${Date.now()}`,
+      // Simulate Discovery scenario creation
+      const mockScenario = {
+        ...mockScenarioResults.discovery,
+        id: `scenario_discovery_${Date.now()}`,
         title: `Exploring ${mockDiscoveryOptions.topic}`,
         created_at: new Date(),
         updated_at: new Date()
       };
 
-      setTracks([...tracks, mockTrack]);
+      setScenarios([...scenarios, mockScenario]);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create Discovery track');
+      setError(err instanceof Error ? err.message : 'Failed to create Discovery scenario');
     } finally {
       setLoading(false);
     }
   };
 
-  const createAssessmentTrack = async (type: 'quick' | 'adaptive' | 'certification') => {
+  const createAssessmentScenario = async (type: 'quick' | 'adaptive' | 'certification') => {
     setLoading(true);
     setError(null);
 
     try {
-      let mockTrack: TrackWithHierarchy;
+      let mockScenario: ScenarioWithHierarchy;
       
       switch (type) {
         case 'quick':
-          mockTrack = {
-            ...mockTrackResults.assessment,
-            id: `track_assessment_${Date.now()}`,
+          mockScenario = {
+            ...mockScenarioResults.assessment,
+            id: `scenario_assessment_${Date.now()}`,
             title: mockAssessmentOptions.title,
             description: mockAssessmentOptions.description,
             created_at: new Date(),
@@ -126,9 +126,9 @@ export default function V2TestPage() {
           };
           break;
         case 'adaptive':
-          mockTrack = {
-            ...mockTrackResults.assessment,
-            id: `track_adaptive_${Date.now()}`,
+          mockScenario = {
+            ...mockScenarioResults.assessment,
+            id: `scenario_adaptive_${Date.now()}`,
             title: mockAdaptiveAssessmentOptions.title,
             description: mockAdaptiveAssessmentOptions.description,
             created_at: new Date(),
@@ -140,9 +140,9 @@ export default function V2TestPage() {
           };
           break;
         case 'certification':
-          mockTrack = {
-            ...mockTrackResults.assessment,
-            id: `track_cert_${Date.now()}`,
+          mockScenario = {
+            ...mockScenarioResults.assessment,
+            id: `scenario_cert_${Date.now()}`,
             title: `${mockCertificationOptions.certification_type} Certification`,
             description: 'Comprehensive certification assessment',
             created_at: new Date(),
@@ -157,16 +157,16 @@ export default function V2TestPage() {
           throw new Error('Unknown assessment type');
       }
 
-      setTracks([...tracks, mockTrack]);
+      setScenarios([...scenarios, mockScenario]);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create Assessment track');
+      setError(err instanceof Error ? err.message : 'Failed to create Assessment scenario');
     } finally {
       setLoading(false);
     }
   };
 
-  const clearTracks = () => {
-    setTracks([]);
+  const clearScenarios = () => {
+    setScenarios([]);
     setError(null);
   };
 
@@ -182,7 +182,7 @@ export default function V2TestPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">V2 System Test Page</h1>
           <p className="text-gray-600">
-            Test the flexible track architecture with PBL, Discovery, and Assessment structures
+            Test the flexible scenario architecture with PBL, Discovery, and Assessment structures
           </p>
         </div>
 
@@ -195,7 +195,7 @@ export default function V2TestPage() {
 
         {/* Creation Controls */}
         <div className="mb-8 bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold mb-4">Create New Tracks</h2>
+          <h2 className="text-xl font-semibold mb-4">Create New Scenarios</h2>
           
           {/* Tabs */}
           <div className="flex gap-2 mb-6 border-b">
@@ -239,7 +239,7 @@ export default function V2TestPage() {
             {activeTab === 'pbl' && (
               <div>
                 <h3 className="text-sm font-semibold text-gray-700 mb-2">
-                  Standard PBL Structure (Track → Programs → Tasks)
+                  Standard PBL Structure (Scenario → Programs → Tasks)
                 </h3>
                 <p className="text-sm text-gray-600 mb-4">
                   Creates a traditional learning path with multiple programs containing various tasks.
@@ -278,12 +278,12 @@ export default function V2TestPage() {
                 )}
 
                 <button
-                  onClick={createPBLTrack}
+                  onClick={createPBLScenario}
                   disabled={loading || !selectedProject}
                   className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  Create PBL Track
+                  Create PBL Scenario
                 </button>
               </div>
             )}
@@ -291,7 +291,7 @@ export default function V2TestPage() {
             {activeTab === 'discovery' && (
               <div>
                 <h3 className="text-sm font-semibold text-gray-700 mb-2">
-                  Discovery Structure (Track → Multiple Scenario Programs → Tasks)
+                  Discovery Structure (Scenario → Multiple Scenario Programs → Tasks)
                 </h3>
                 <p className="text-sm text-gray-600 mb-4">
                   Experience different career scenarios through role-playing programs.
@@ -310,12 +310,12 @@ export default function V2TestPage() {
                 </div>
 
                 <button
-                  onClick={createDiscoveryTrack}
+                  onClick={createDiscoveryScenario}
                   disabled={loading}
                   className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  Start Discovery Track
+                  Start Discovery Scenario
                 </button>
               </div>
             )}
@@ -323,7 +323,7 @@ export default function V2TestPage() {
             {activeTab === 'assessment' && (
               <div>
                 <h3 className="text-sm font-semibold text-gray-700 mb-2">
-                  Assessment Structure (Track → Virtual Program → Question Tasks)
+                  Assessment Structure (Scenario → Virtual Program → Question Tasks)
                 </h3>
                 <p className="text-sm text-gray-600 mb-4">
                   Creates assessments with direct task access for quick evaluation.
@@ -331,7 +331,7 @@ export default function V2TestPage() {
                 
                 <div className="space-y-3">
                   <button
-                    onClick={() => createAssessmentTrack('quick')}
+                    onClick={() => createAssessmentScenario('quick')}
                     disabled={loading}
                     className="w-full inline-flex items-center justify-center px-4 py-3 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
@@ -340,7 +340,7 @@ export default function V2TestPage() {
                   </button>
                   
                   <button
-                    onClick={() => createAssessmentTrack('adaptive')}
+                    onClick={() => createAssessmentScenario('adaptive')}
                     disabled={loading}
                     className="w-full inline-flex items-center justify-center px-4 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
@@ -349,7 +349,7 @@ export default function V2TestPage() {
                   </button>
                   
                   <button
-                    onClick={() => createAssessmentTrack('certification')}
+                    onClick={() => createAssessmentScenario('certification')}
                     disabled={loading}
                     className="w-full inline-flex items-center justify-center px-4 py-3 bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
@@ -362,19 +362,19 @@ export default function V2TestPage() {
           </div>
         </div>
 
-        {/* Track List Controls */}
+        {/* Scenario List Controls */}
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Created Tracks ({tracks.length})</h2>
+          <h2 className="text-xl font-semibold">Created Scenarios ({scenarios.length})</h2>
           <div className="flex gap-2">
             <button
-              onClick={loadMockTracks}
+              onClick={loadMockScenarios}
               className="inline-flex items-center px-3 py-1.5 text-sm bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
             >
               <RefreshCw className="w-4 h-4 mr-1" />
               Reset to Defaults
             </button>
             <button
-              onClick={clearTracks}
+              onClick={clearScenarios}
               className="inline-flex items-center px-3 py-1.5 text-sm bg-red-100 text-red-700 rounded-md hover:bg-red-200"
             >
               Clear All
@@ -382,17 +382,17 @@ export default function V2TestPage() {
           </div>
         </div>
 
-        {/* Track Display */}
+        {/* Scenario Display */}
         <div className="space-y-6">
-          {tracks.length === 0 ? (
+          {scenarios.length === 0 ? (
             <div className="bg-white rounded-lg shadow-md p-12 text-center text-gray-500">
-              <p>No tracks created yet. Use the controls above to create different track types.</p>
+              <p>No scenarios created yet. Use the controls above to create different scenario types.</p>
             </div>
           ) : (
-            tracks.map((track) => (
-              <TrackHierarchyView 
-                key={track.id} 
-                track={track} 
+            scenarios.map((scenario) => (
+              <ScenarioHierarchyView 
+                key={scenario.id} 
+                scenario={scenario} 
                 onTaskClick={handleTaskClick}
               />
             ))
@@ -404,7 +404,7 @@ export default function V2TestPage() {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-6 flex items-center">
               <RefreshCw className="w-6 h-6 animate-spin text-blue-600 mr-3" />
-              <span className="text-gray-700">Creating track...</span>
+              <span className="text-gray-700">Creating scenario...</span>
             </div>
           </div>
         )}

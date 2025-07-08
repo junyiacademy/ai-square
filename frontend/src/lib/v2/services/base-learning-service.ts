@@ -4,53 +4,53 @@
  */
 
 import {
-  Track,
+  Scenario,
   Program,
   Task,
-  CreateTrackOptions,
+  CreateScenarioOptions,
   CreateProgramOptions,
   CreateTaskOptions,
-  TrackWithHierarchy,
+  ScenarioWithHierarchy,
   ProgramWithTasks
 } from '../types';
-import { TrackRepositoryV2 } from '../repositories/track-repository';
+import { ScenarioRepositoryV2 } from '../repositories/scenario-repository';
 import { ProgramRepositoryV2 } from '../repositories/program-repository';
 import { TaskRepositoryV2 } from '../repositories/task-repository';
 import { DatabaseConnection } from '../utils/database';
 
 export abstract class BaseLearningServiceV2 {
-  protected trackRepo: TrackRepositoryV2;
+  protected scenarioRepo: ScenarioRepositoryV2;
   protected programRepo: ProgramRepositoryV2;
   protected taskRepo: TaskRepositoryV2;
 
   constructor(protected db: DatabaseConnection) {
-    this.trackRepo = new TrackRepositoryV2(db);
+    this.scenarioRepo = new ScenarioRepositoryV2(db);
     this.programRepo = new ProgramRepositoryV2(db);
     this.taskRepo = new TaskRepositoryV2(db);
   }
 
   /**
-   * Create a track with flexible structure
+   * Create a scenario with flexible structure
    */
-  async createTrack(
-    trackData: Omit<Track, 'id' | 'created_at' | 'updated_at'>,
-    options?: CreateTrackOptions
-  ): Promise<TrackWithHierarchy> {
+  async createScenario(
+    scenarioData: Omit<Scenario, 'id' | 'created_at' | 'updated_at'>,
+    options?: CreateScenarioOptions
+  ): Promise<ScenarioWithHierarchy> {
     // Set structure type from options or default
-    const track = await this.trackRepo.create({
-      ...trackData,
+    const scenario = await this.scenarioRepo.create({
+      ...scenarioData,
       structure_type: options?.structure_type || 'standard'
     });
 
     const programs: ProgramWithTasks[] = [];
 
     // Handle different structure types
-    switch (track.structure_type) {
+    switch (scenario.structure_type) {
       case 'standard':
         // Standard structure: create programs if provided
         if (options?.programs) {
           for (const programData of options.programs) {
-            const program = await this.createProgram(track.id, programData);
+            const program = await this.createProgram(scenario.id, programData);
             programs.push(program);
           }
         }
@@ -58,9 +58,9 @@ export abstract class BaseLearningServiceV2 {
 
       case 'single_program':
         // Single program structure: create one virtual program
-        const virtualProgram = await this.createVirtualProgram(track.id, {
-          title: `${track.title} Program`,
-          description: track.description,
+        const virtualProgram = await this.createVirtualProgram(scenario.id, {
+          title: `${scenario.title} Program`,
+          description: scenario.description,
           tasks: options?.tasks
         });
         programs.push(virtualProgram);
@@ -68,7 +68,7 @@ export abstract class BaseLearningServiceV2 {
 
       case 'direct_task':
         // Direct task structure: create virtual program with tasks
-        const taskProgram = await this.createVirtualProgram(track.id, {
+        const taskProgram = await this.createVirtualProgram(scenario.id, {
           title: 'Tasks',
           description: 'Direct tasks',
           tasks: options?.tasks
@@ -78,7 +78,7 @@ export abstract class BaseLearningServiceV2 {
     }
 
     return {
-      ...track,
+      ...scenario,
       programs
     };
   }
@@ -87,13 +87,13 @@ export abstract class BaseLearningServiceV2 {
    * Create a program with optional tasks
    */
   async createProgram(
-    trackId: string,
-    programData: Omit<Program, 'id' | 'created_at' | 'updated_at' | 'track_id'>,
+    scenarioId: string,
+    programData: Omit<Program, 'id' | 'created_at' | 'updated_at' | 'scenario_id'>,
     options?: CreateProgramOptions
   ): Promise<ProgramWithTasks> {
     const program = await this.programRepo.create({
       ...programData,
-      track_id: trackId,
+      scenario_id: scenarioId,
       is_virtual: options?.is_virtual,
       auto_generated: options?.auto_generated
     });
@@ -118,14 +118,14 @@ export abstract class BaseLearningServiceV2 {
    * Create a virtual program (for flexible architectures)
    */
   async createVirtualProgram(
-    trackId: string,
+    scenarioId: string,
     options: {
       title?: string;
       description?: string;
       tasks?: Omit<Task, 'id' | 'created_at' | 'updated_at' | 'program_id'>[];
     }
   ): Promise<ProgramWithTasks> {
-    const program = await this.programRepo.createVirtualProgram(trackId, {
+    const program = await this.programRepo.createVirtualProgram(scenarioId, {
       title: options.title,
       description: options.description
     });
@@ -189,13 +189,13 @@ export abstract class BaseLearningServiceV2 {
   }
 
   /**
-   * Get track with full hierarchy
+   * Get scenario with full hierarchy
    */
-  async getTrackWithHierarchy(trackId: string): Promise<TrackWithHierarchy | null> {
-    const track = await this.trackRepo.findById(trackId);
-    if (!track) return null;
+  async getScenarioWithHierarchy(scenarioId: string): Promise<ScenarioWithHierarchy | null> {
+    const scenario = await this.scenarioRepo.findById(scenarioId);
+    if (!scenario) return null;
 
-    const programs = await this.programRepo.findByTrack(trackId);
+    const programs = await this.programRepo.findByScenario(scenarioId);
     const programsWithTasks: ProgramWithTasks[] = [];
 
     for (const program of programs) {
@@ -207,18 +207,18 @@ export abstract class BaseLearningServiceV2 {
     }
 
     return {
-      ...track,
+      ...scenario,
       programs: programsWithTasks
     };
   }
 
   /**
-   * Get tracks by structure type
+   * Get scenarios by structure type
    */
-  async getTracksByStructureType(
+  async getScenariosByStructureType(
     structureType: 'standard' | 'direct_task' | 'single_program'
-  ): Promise<Track[]> {
-    return this.trackRepo.findByStructureType(structureType);
+  ): Promise<Scenario[]> {
+    return this.scenarioRepo.findByStructureType(structureType);
   }
 
   /**

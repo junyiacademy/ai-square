@@ -1,15 +1,15 @@
 'use client';
 
-import { TrackWithHierarchy } from '@/lib/v2/types';
+import { ScenarioWithHierarchy } from '@/lib/v2/types';
 import { ChevronRight, ChevronDown, FileText, Folder, FolderOpen, CheckCircle, PlayCircle, BookOpen } from 'lucide-react';
 import { useState } from 'react';
 
-interface TrackHierarchyViewProps {
-  track: TrackWithHierarchy;
+interface ScenarioHierarchyViewProps {
+  scenario: ScenarioWithHierarchy;
   onTaskClick?: (taskId: string) => void;
 }
 
-export function TrackHierarchyView({ track, onTaskClick }: TrackHierarchyViewProps) {
+export function ScenarioHierarchyView({ scenario, onTaskClick }: ScenarioHierarchyViewProps) {
   const [expandedPrograms, setExpandedPrograms] = useState<Set<string>>(new Set());
 
   const toggleProgram = (programId: string) => {
@@ -23,7 +23,7 @@ export function TrackHierarchyView({ track, onTaskClick }: TrackHierarchyViewPro
   };
 
   const getStructureLabel = () => {
-    switch (track.structure_type) {
+    switch (scenario.structure_type) {
       case 'standard':
         return 'Standard (Multiple Programs)';
       case 'single_program':
@@ -31,7 +31,7 @@ export function TrackHierarchyView({ track, onTaskClick }: TrackHierarchyViewPro
       case 'direct_task':
         return 'Direct Tasks (Assessment)';
       default:
-        return track.structure_type;
+        return scenario.structure_type;
     }
   };
 
@@ -53,20 +53,20 @@ export function TrackHierarchyView({ track, onTaskClick }: TrackHierarchyViewPro
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      {/* Track Header */}
+      {/* Scenario Header */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="text-xl font-semibold text-gray-900">{track.title}</h3>
+          <h3 className="text-xl font-semibold text-gray-900">{scenario.title}</h3>
           <span className="px-3 py-1 text-sm font-medium bg-blue-100 text-blue-800 rounded-full">
             {getStructureLabel()}
           </span>
         </div>
-        <p className="text-gray-600 text-sm">{track.description}</p>
+        <p className="text-gray-600 text-sm">{scenario.description}</p>
         <div className="mt-2 flex items-center gap-4 text-xs text-gray-500">
-          <span>Code: {track.code}</span>
-          <span>Created: {new Date(track.created_at).toLocaleDateString()}</span>
-          {track.metadata?.difficulty && (
-            <span className="capitalize">Difficulty: {track.metadata.difficulty}</span>
+          <span>Code: {scenario.code}</span>
+          <span>Created: {new Date(scenario.created_at).toLocaleDateString()}</span>
+          {scenario.metadata?.difficulty && (
+            <span className="capitalize">Difficulty: {scenario.metadata.difficulty}</span>
           )}
         </div>
       </div>
@@ -76,7 +76,7 @@ export function TrackHierarchyView({ track, onTaskClick }: TrackHierarchyViewPro
         <h4 className="text-sm font-semibold text-gray-700 mb-3">Structure Hierarchy</h4>
         
         {/* Programs */}
-        {track.programs.map((program) => {
+        {scenario.programs.map((program) => {
           const isExpanded = expandedPrograms.has(program.id);
           const isVirtual = program.is_virtual;
           
@@ -137,12 +137,12 @@ export function TrackHierarchyView({ track, onTaskClick }: TrackHierarchyViewPro
       </div>
 
       {/* Metadata Display */}
-      {track.metadata && Object.keys(track.metadata).length > 0 && (
+      {scenario.metadata && Object.keys(scenario.metadata).length > 0 && (
         <div className="mt-6 pt-4 border-t">
-          <h4 className="text-sm font-semibold text-gray-700 mb-2">Track Metadata</h4>
+          <h4 className="text-sm font-semibold text-gray-700 mb-2">Scenario Metadata</h4>
           <div className="bg-gray-50 rounded p-3">
             <pre className="text-xs text-gray-600 overflow-x-auto">
-              {JSON.stringify(track.metadata, null, 2)}
+              {JSON.stringify(scenario.metadata, null, 2)}
             </pre>
           </div>
         </div>

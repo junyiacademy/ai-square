@@ -1,6 +1,6 @@
 /**
- * V2 Track by ID API
- * GET /api/v2/tracks/[id] - Get track with full hierarchy
+ * V2 Scenario by ID API
+ * GET /api/v2/scenarios/[id] - Get scenario with full hierarchy
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -12,28 +12,28 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const trackId = params.id;
+    const scenarioId = params.id;
     
     const db = getMockDatabase();
     const service = new PBLServiceV2(db);
     
-    const track = await service.getTrackWithHierarchy(trackId);
+    const scenario = await service.getScenarioWithHierarchy(scenarioId);
     
-    if (!track) {
+    if (!scenario) {
       return NextResponse.json(
-        { error: 'Track not found' },
+        { error: 'Scenario not found' },
         { status: 404 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      data: track
+      data: scenario
     });
   } catch (error) {
-    console.error('Error fetching track:', error);
+    console.error('Error fetching scenario:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch track' },
+      { error: 'Failed to fetch scenario' },
       { status: 500 }
     );
   }

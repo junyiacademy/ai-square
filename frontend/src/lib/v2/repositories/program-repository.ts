@@ -1,6 +1,6 @@
 /**
  * Program Repository
- * Handles data persistence for programs within tracks
+ * Handles data persistence for programs within scenarios
  */
 
 import { BaseRepository } from '../core/base-repository';
@@ -213,9 +213,9 @@ export class ProgramRepositoryV2 extends BaseRepository<Program> {
   /**
    * Custom methods for Program entity
    */
-  async findByTrack(trackId: string): Promise<Program[]> {
+  async findByScenario(scenarioId: string): Promise<Program[]> {
     const query = new QueryBuilder(this.tableName)
-      .where('track_id', '=', trackId)
+      .where('scenario_id', '=', scenarioId)
       .where('is_active', '=', true)
       .orderBy('order_index', 'ASC')
       .build();
@@ -224,8 +224,8 @@ export class ProgramRepositoryV2 extends BaseRepository<Program> {
     return result.rows;
   }
 
-  async findByTrackAndCode(trackId: string, code: string): Promise<Program | null> {
-    return this.findOne({ track_id: trackId, code });
+  async findByScenarioAndCode(scenarioId: string, code: string): Promise<Program | null> {
+    return this.findOne({ scenario_id: scenarioId, code });
   }
 
   async reorderPrograms(programOrders: { id: string; order_index: number }[]): Promise<void> {
@@ -239,9 +239,9 @@ export class ProgramRepositoryV2 extends BaseRepository<Program> {
   /**
    * V2 Architecture specific methods
    */
-  async findVirtualPrograms(trackId: string): Promise<Program[]> {
+  async findVirtualPrograms(scenarioId: string): Promise<Program[]> {
     const query = new QueryBuilder(this.tableName)
-      .where('track_id', '=', trackId)
+      .where('scenario_id', '=', scenarioId)
       .where('is_virtual', '=', true)
       .orderBy('created_at', 'DESC')
       .build();
@@ -251,11 +251,11 @@ export class ProgramRepositoryV2 extends BaseRepository<Program> {
   }
 
   async createVirtualProgram(
-    trackId: string,
-    data: Partial<Omit<Program, keyof BaseEntity | 'track_id'>>
+    scenarioId: string,
+    data: Partial<Omit<Program, keyof BaseEntity | 'scenario_id'>>
   ): Promise<Program> {
     return this.create({
-      track_id: trackId,
+      scenario_id: scenarioId,
       code: `virtual_${Date.now()}`,
       title: data.title || 'Virtual Program',
       description: data.description || '',

@@ -1,6 +1,6 @@
 /**
  * V2 Core Types and Interfaces
- * Following TRACK → PROGRAM → TASK → LOG architecture
+ * Following SCENARIO → PROGRAM → TASK → LOG architecture
  */
 
 // Base entity interface
@@ -38,8 +38,8 @@ export interface Project extends BaseEntity {
   metadata?: Record<string, any>;
 }
 
-// Track types
-export interface Track extends BaseEntity {
+// Scenario types
+export interface Scenario extends BaseEntity {
   code: string; // e.g., 'ai-literacy', 'prompt-engineering'
   title: string;
   description: string;
@@ -51,7 +51,7 @@ export interface Track extends BaseEntity {
 
 // Program types
 export interface Program extends BaseEntity {
-  track_id: string;
+  scenario_id: string;
   code: string; // e.g., 'beginner', 'intermediate'
   title: string;
   description: string;
@@ -76,14 +76,26 @@ export interface Task extends BaseEntity {
   is_active: boolean;
   task_type: 'learning' | 'practice' | 'assessment';
   task_variant?: 'standard' | 'question' | 'exploration' | 'assessment'; // New field for flexible task types
+  
+  // 模組化設計
+  module_type?: string;  // 'multiple_choice', 'conversation', 'code_writing', etc.
+  module_config?: Record<string, any>;  // 模組特定配置
+  evaluation_method?: string;  // 'exact_match', 'ai_evaluation', 'rubric_based', etc.
+  
+  // 動態任務相關
+  is_dynamic?: boolean;  // 是否為動態生成
+  can_branch?: boolean;  // 是否可以分支
+  prerequisites?: string[];  // 前置任務 IDs
+  unlock_condition?: Record<string, any>;  // 解鎖條件
+  
   estimated_minutes?: number;
   metadata?: Record<string, any>;
 }
 
 // User Progress types
-export interface UserTrackProgress extends BaseEntity {
+export interface UserScenarioProgress extends BaseEntity {
   user_id: string;
-  track_id: string;
+  scenario_id: string;
   status: 'not_started' | 'in_progress' | 'completed';
   started_at?: Date;
   completed_at?: Date;
@@ -94,7 +106,7 @@ export interface UserTrackProgress extends BaseEntity {
 export interface UserProgramProgress extends BaseEntity {
   user_id: string;
   program_id: string;
-  track_progress_id: string;
+  scenario_progress_id: string;
   status: 'not_started' | 'in_progress' | 'completed';
   started_at?: Date;
   completed_at?: Date;
@@ -189,9 +201,9 @@ export interface StorageObject {
 }
 
 // Flexible architecture creation types
-export interface CreateTrackOptions {
+export interface CreateScenarioOptions {
   structure_type: 'standard' | 'direct_task' | 'single_program';
-  programs?: Omit<Program, 'id' | 'created_at' | 'updated_at' | 'track_id'>[];
+  programs?: Omit<Program, 'id' | 'created_at' | 'updated_at' | 'scenario_id'>[];
   tasks?: Omit<Task, 'id' | 'created_at' | 'updated_at' | 'program_id'>[];
 }
 
@@ -208,7 +220,7 @@ export interface CreateTaskOptions {
 }
 
 // Service response types
-export interface TrackWithHierarchy extends Track {
+export interface ScenarioWithHierarchy extends Scenario {
   programs: ProgramWithTasks[];
 }
 
