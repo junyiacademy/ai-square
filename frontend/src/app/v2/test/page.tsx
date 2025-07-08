@@ -60,7 +60,7 @@ export default function V2TestPage() {
 
     try {
       // Simulate PBL scenario creation
-      const newScenario = await pblService.createTrackFromProject({
+      const newScenario = await pblService.createScenarioFromProject({
         project: selectedProject,
         userId: generateMockUser().id,
         language: 'en'
@@ -219,7 +219,7 @@ export default function V2TestPage() {
               onClick={() => setActiveTab('discovery')}
             >
               <Search className="w-4 h-4 inline-block mr-2" />
-              Discovery (Single Program)
+              Discovery (Career Scenarios)
             </button>
             <button
               className={`px-4 py-2 font-medium border-b-2 transition-colors ${

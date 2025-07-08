@@ -4,7 +4,7 @@
  */
 
 import { BaseLearningServiceV2 } from './base-learning-service';
-import { TrackWithHierarchy, QuickAssessmentOptions, Task } from '../types';
+import { ScenarioWithHierarchy, QuickAssessmentOptions, Task } from '../types';
 import { DatabaseConnection } from '../utils/database';
 
 export class AssessmentServiceV2 extends BaseLearningServiceV2 {
@@ -25,7 +25,7 @@ export class AssessmentServiceV2 extends BaseLearningServiceV2 {
    */
   async createQuickAssessment(
     options: QuickAssessmentOptions
-  ): Promise<TrackWithHierarchy> {
+  ): Promise<ScenarioWithHierarchy> {
     // Generate tasks from questions
     const tasks = options.questions.map((q, index) => ({
       code: `q${index + 1}`,
@@ -45,8 +45,8 @@ export class AssessmentServiceV2 extends BaseLearningServiceV2 {
       }
     }));
 
-    // Create track with direct task structure
-    const track = await this.createTrack(
+    // Create scenario with direct task structure
+    const scenario = await this.createScenario(
       {
         code: `assessment_${Date.now()}`,
         title: options.title,
@@ -68,7 +68,7 @@ export class AssessmentServiceV2 extends BaseLearningServiceV2 {
       }
     );
 
-    return track;
+    return scenario;
   }
 
   /**
@@ -82,7 +82,7 @@ export class AssessmentServiceV2 extends BaseLearningServiceV2 {
       initial_difficulty: 'beginner' | 'intermediate' | 'advanced';
       max_questions: number;
     }
-  ): Promise<TrackWithHierarchy> {
+  ): Promise<ScenarioWithHierarchy> {
     // Start with initial questions
     const initialTasks = await this.generateAdaptiveQuestions(
       options.domain,
@@ -90,7 +90,7 @@ export class AssessmentServiceV2 extends BaseLearningServiceV2 {
       3 // Start with 3 questions
     );
 
-    const track = await this.createTrack(
+    const scenario = await this.createScenario(
       {
         code: `adaptive_${Date.now()}`,
         title: options.title,
@@ -116,27 +116,27 @@ export class AssessmentServiceV2 extends BaseLearningServiceV2 {
       }
     );
 
-    return track;
+    return scenario;
   }
 
   /**
    * Add next question to adaptive assessment based on performance
    */
   async addAdaptiveQuestion(
-    trackId: string,
+    scenarioId: string,
     previousPerformance: {
       questionId: string;
       correct: boolean;
       timeSpent: number;
     }
   ): Promise<Task | null> {
-    const track = await this.getTrackWithHierarchy(trackId);
-    if (!track || !track.metadata?.adaptive_state) {
+    const scenario = await this.getScenarioWithHierarchy(scenarioId);
+    if (!scenario || !scenario.metadata?.adaptive_state) {
       throw new Error('Not an adaptive assessment');
     }
 
-    const state = track.metadata.adaptive_state;
-    const program = track.programs[0]; // Direct task structure
+    const state = scenario.metadata.adaptive_state;
+    const program = scenario.programs[0]; // Direct task structure
 
     // Update adaptive state
     state.questions_answered++;
@@ -146,7 +146,7 @@ export class AssessmentServiceV2 extends BaseLearningServiceV2 {
     );
 
     // Check if assessment is complete
-    if (state.questions_answered >= track.metadata.max_questions) {
+    if (state.questions_answered >= scenario.metadata.max_questions) {
       return null; // Assessment complete
     }
 
@@ -159,7 +159,7 @@ export class AssessmentServiceV2 extends BaseLearningServiceV2 {
 
     // Generate next question
     const nextQuestions = await this.generateAdaptiveQuestions(
-      track.metadata.domain,
+      scenario.metadata.domain,
       newDifficulty,
       1
     );
@@ -172,10 +172,10 @@ export class AssessmentServiceV2 extends BaseLearningServiceV2 {
       order_index: state.questions_answered
     });
 
-    // Update track metadata
-    await this.trackRepo.update(trackId, {
+    // Update scenario metadata
+    await this.scenarioRepo.update(scenarioId, {
       metadata: {
-        ...track.metadata,
+        ...scenario.metadata,
         adaptive_state: state
       }
     });
@@ -193,7 +193,7 @@ export class AssessmentServiceV2 extends BaseLearningServiceV2 {
       passing_score: number;
       time_limit: number;
     }
-  ): Promise<TrackWithHierarchy> {
+  ): Promise<ScenarioWithHierarchy> {
     // Generate comprehensive assessment covering all domains
     const tasks: any[] = [];
     
@@ -202,7 +202,7 @@ export class AssessmentServiceV2 extends BaseLearningServiceV2 {
       tasks.push(...domainQuestions);
     }
 
-    const track = await this.createTrack(
+    const scenario = await this.createScenario(
       {
         code: `cert_${options.certification_type}_${Date.now()}`,
         title: `${options.certification_type} Certification Assessment`,
@@ -226,14 +226,14 @@ export class AssessmentServiceV2 extends BaseLearningServiceV2 {
       }
     );
 
-    return track;
+    return scenario;
   }
 
   /**
    * Calculate assessment results
    */
   async calculateAssessmentResults(
-    trackId: string,
+    scenarioId: string,
     responses: Array<{
       taskId: string;
       answer: any;
@@ -251,10 +251,10 @@ export class AssessmentServiceV2 extends BaseLearningServiceV2 {
       feedback: string;
     }>;
   }> {
-    const track = await this.getTrackWithHierarchy(trackId);
-    if (!track) throw new Error('Assessment not found');
+    const scenario = await this.getScenarioWithHierarchy(scenarioId);
+    if (!scenario) throw new Error('Assessment not found');
 
-    const program = track.programs[0];
+    const program = scenario.programs[0];
     const tasks = program.tasks;
     const detailedResults: any[] = [];
     let totalScore = 0;
@@ -283,7 +283,7 @@ export class AssessmentServiceV2 extends BaseLearningServiceV2 {
     }
 
     const percentage = (totalScore / maxScore) * 100;
-    const passingScore = track.metadata?.passing_score || 70;
+    const passingScore = scenario.metadata?.passing_score || 70;
     const passed = percentage >= passingScore;
 
     return {

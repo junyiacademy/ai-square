@@ -4,7 +4,7 @@
  */
 
 import { BaseLearningServiceV2 } from './base-learning-service';
-import { TrackWithHierarchy, DiscoveryStartOptions, Task } from '../types';
+import { ScenarioWithHierarchy, DiscoveryStartOptions, Task, Scenario } from '../types';
 import { DatabaseConnection } from '../utils/database';
 
 export class DiscoveryServiceV2 extends BaseLearningServiceV2 {
@@ -21,11 +21,11 @@ export class DiscoveryServiceV2 extends BaseLearningServiceV2 {
   }
 
   /**
-   * Start a discovery track with career exploration scenarios
+   * Start a discovery scenario with career exploration programs
    */
-  async startDiscovery(options: DiscoveryStartOptions): Promise<TrackWithHierarchy> {
-    // Create track with multiple program structure for different scenarios
-    const track = await this.createTrack(
+  async startDiscovery(options: DiscoveryStartOptions): Promise<ScenarioWithHierarchy> {
+    // Create scenario with multiple program structure for different career experiences
+    const scenario = await this.createScenario(
       {
         code: `discovery_${Date.now()}`,
         title: `Exploring ${options.topic} Career`,
@@ -48,7 +48,7 @@ export class DiscoveryServiceV2 extends BaseLearningServiceV2 {
       }
     );
 
-    return track;
+    return scenario;
   }
 
   /**
@@ -176,19 +176,19 @@ Share your thoughts and get personalized recommendations.`,
    * Continue discovery with new topic branch
    */
   async branchDiscovery(
-    trackId: string,
+    scenarioId: string,
     newTopic: string,
     context?: string
-  ): Promise<TrackWithHierarchy> {
-    const originalTrack = await this.getTrackWithHierarchy(trackId);
-    if (!originalTrack) throw new Error('Original track not found');
+  ): Promise<ScenarioWithHierarchy> {
+    const originalScenario = await this.getScenarioWithHierarchy(scenarioId);
+    if (!originalScenario) throw new Error('Original scenario not found');
 
     // Create a new discovery branch
     return this.startDiscovery({
       topic: newTopic,
-      language: originalTrack.metadata?.language || 'en',
-      difficulty: originalTrack.metadata?.difficulty,
-      user_context: context || `Branching from exploration of ${originalTrack.metadata?.topic}`
+      language: originalScenario.metadata?.language || 'en',
+      difficulty: originalScenario.metadata?.difficulty,
+      user_context: context || `Branching from exploration of ${originalScenario.metadata?.topic}`
     });
   }
 
@@ -304,29 +304,29 @@ Share your thoughts and get personalized recommendations.`,
   /**
    * Get all discovery sessions for a user
    */
-  async getUserDiscoverySessions(userId: string): Promise<Track[]> {
-    const tracks = await this.getTracksByStructureType('standard');
+  async getUserDiscoverySessions(userId: string): Promise<Scenario[]> {
+    const scenarios = await this.getScenariosByStructureType('standard');
     // In a real implementation, filter by user
-    return tracks.filter(t => t.metadata?.discovery_type === 'career_exploration');
+    return scenarios.filter(s => s.metadata?.discovery_type === 'career_exploration');
   }
 
   /**
    * Add a follow-up task to existing discovery
    */
   async addFollowUpTask(
-    trackId: string,
+    scenarioId: string,
     taskData: {
       title: string;
       description: string;
       type: 'deeper_dive' | 'related_topic' | 'challenge';
     }
   ): Promise<Task> {
-    const track = await this.getTrackWithHierarchy(trackId);
-    if (!track || track.programs.length === 0) {
-      throw new Error('Track or program not found');
+    const scenario = await this.getScenarioWithHierarchy(scenarioId);
+    if (!scenario || scenario.programs.length === 0) {
+      throw new Error('Scenario or program not found');
     }
 
-    const program = track.programs[0]; // Single program structure
+    const program = scenario.programs[0]; // Single program structure
     const existingTaskCount = program.tasks.length;
 
     return this.createTask(program.id, {

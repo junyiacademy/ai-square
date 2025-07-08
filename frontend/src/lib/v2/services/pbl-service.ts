@@ -4,7 +4,7 @@
  */
 
 import { BaseLearningServiceV2 } from './base-learning-service';
-import { Track, Program, Task, TrackWithHierarchy } from '../types';
+import { Scenario, Program, Task, ScenarioWithHierarchy } from '../types';
 import { DatabaseConnection } from '../utils/database';
 
 export class PBLServiceV2 extends BaseLearningServiceV2 {
@@ -45,9 +45,9 @@ export class PBLServiceV2 extends BaseLearningServiceV2 {
         }>;
       }>;
     }
-  ): Promise<TrackWithHierarchy> {
-    // Create the track with standard structure
-    const track = await this.createTrack(
+  ): Promise<ScenarioWithHierarchy> {
+    // Create the scenario with standard structure
+    const scenario = await this.createScenario(
       {
         code: scenarioData.code,
         title: scenarioData.title,
@@ -69,7 +69,7 @@ export class PBLServiceV2 extends BaseLearningServiceV2 {
     for (let i = 0; i < scenarioData.programs.length; i++) {
       const programData = scenarioData.programs[i];
       const program = await this.createProgram(
-        track.id,
+        scenario.id,
         {
           code: programData.code,
           title: programData.title,
@@ -94,16 +94,16 @@ export class PBLServiceV2 extends BaseLearningServiceV2 {
           }))
         }
       );
-      track.programs.push(program);
+      scenario.programs.push(program);
     }
 
-    return track;
+    return scenario;
   }
 
   /**
    * Import PBL scenario from YAML data
    */
-  async importFromYAML(yamlData: any): Promise<TrackWithHierarchy> {
+  async importFromYAML(yamlData: any): Promise<ScenarioWithHierarchy> {
     return this.createPBLScenario({
       code: yamlData.scenario_id,
       title: yamlData.title,
@@ -128,13 +128,13 @@ export class PBLServiceV2 extends BaseLearningServiceV2 {
   }
 
   /**
-   * Create a track from a project (for compatibility with test page)
+   * Create a scenario from a project (for compatibility with test page)
    */
-  async createTrackFromProject(options: {
+  async createScenarioFromProject(options: {
     project: any;
     userId: string;
     language?: string;
-  }): Promise<TrackWithHierarchy> {
+  }): Promise<ScenarioWithHierarchy> {
     const { project, userId, language = 'en' } = options;
     
     // Map project to PBL scenario format
@@ -239,38 +239,38 @@ export class PBLServiceV2 extends BaseLearningServiceV2 {
   /**
    * Get all PBL scenarios
    */
-  async getAllPBLScenarios(): Promise<Track[]> {
-    return this.getTracksByStructureType('standard');
+  async getAllPBLScenarios(): Promise<Scenario[]> {
+    return this.getScenariosByStructureType('standard');
   }
 
   /**
    * Get PBL scenario by code
    */
-  async getPBLScenarioByCode(code: string): Promise<TrackWithHierarchy | null> {
-    const track = await this.trackRepo.findByCode(code);
-    if (!track || track.structure_type !== 'standard') return null;
+  async getPBLScenarioByCode(code: string): Promise<ScenarioWithHierarchy | null> {
+    const scenario = await this.scenarioRepo.findByCode(code);
+    if (!scenario || scenario.structure_type !== 'standard') return null;
 
-    return this.getTrackWithHierarchy(track.id);
+    return this.getScenarioWithHierarchy(scenario.id);
   }
 
   /**
    * Update PBL scenario metadata
    */
   async updatePBLScenarioMetadata(
-    trackId: string,
+    scenarioId: string,
     metadata: {
       difficulty?: 'beginner' | 'intermediate' | 'advanced';
       domains?: string[];
       prerequisites?: string[];
       learning_objectives?: string[];
     }
-  ): Promise<Track> {
-    const track = await this.trackRepo.findById(trackId);
-    if (!track) throw new Error('Track not found');
+  ): Promise<Scenario> {
+    const scenario = await this.scenarioRepo.findById(scenarioId);
+    if (!scenario) throw new Error('Scenario not found');
 
-    return this.trackRepo.update(trackId, {
+    return this.scenarioRepo.update(scenarioId, {
       metadata: {
-        ...track.metadata,
+        ...scenario.metadata,
         ...metadata
       }
     });
