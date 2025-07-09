@@ -14,12 +14,13 @@ interface AssessmentQuizProps {
   };
   onComplete: (answers: UserAnswer[]) => void;
   timeLimit: number; // in minutes
+  initialAnswers?: UserAnswer[]; // For resuming assessment
 }
 
-export default function AssessmentQuiz({ questions, onComplete, timeLimit }: AssessmentQuizProps) {
+export default function AssessmentQuiz({ questions, onComplete, timeLimit, initialAnswers = [] }: AssessmentQuizProps) {
   const { t } = useTranslation('assessment');
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<UserAnswer[]>([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(initialAnswers.length || 0);
+  const [answers, setAnswers] = useState<UserAnswer[]>(initialAnswers);
   const [selectedAnswer, setSelectedAnswer] = useState<'a' | 'b' | 'c' | 'd' | null>(null);
   const [timeLeft, setTimeLeft] = useState(timeLimit * 60); // convert to seconds
   const [questionStartTime, setQuestionStartTime] = useState<Date>(new Date());
@@ -28,6 +29,22 @@ export default function AssessmentQuiz({ questions, onComplete, timeLimit }: Ass
 
   const currentQuestion = questions[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
+
+  // Check if current question is already answered
+  useEffect(() => {
+    if (!currentQuestion) return;
+    
+    const existingAnswer = answers.find(a => a.questionId === currentQuestion.id);
+    if (existingAnswer) {
+      setSelectedAnswer(existingAnswer.selectedAnswer);
+      setHasAnswered(true);
+      setShowExplanation(true);
+    } else {
+      setSelectedAnswer(null);
+      setHasAnswered(false);
+      setShowExplanation(false);
+    }
+  }, [currentQuestionIndex, currentQuestion, answers]);
 
   // Create handleComplete with useCallback to avoid dependency issues
   const handleComplete = useCallback(() => {
