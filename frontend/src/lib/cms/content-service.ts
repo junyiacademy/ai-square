@@ -365,7 +365,7 @@ export class ContentService {
   private getRepoPath(type: ContentType): string {
     const mapping: Record<ContentType, string> = {
       domain: 'rubrics_data',
-      question: 'assessment_data',
+      question: 'assessment_data/ai_literacy',
       rubric: 'rubrics_data',
       ksa: 'rubrics_data'
     };
