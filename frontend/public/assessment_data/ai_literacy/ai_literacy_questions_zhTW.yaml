@@ -1,4 +1,6 @@
 assessment_config:
+  id: ai_literacy
+  description: 評估您對 AI 系統的理解，涵蓋四個核心領域：與 AI 互動、運用 AI 創作、管理 AI 風險，以及設計 AI 解決方案。此評估有助於識別您目前的 AI 知識水平並找出改進方向。
   total_questions: 12
   time_limit_minutes: 15
   passing_score: 60
