@@ -59,13 +59,38 @@ interface AssessmentData {
 
 export async function GET(request: NextRequest) {
   try {
-    // Get language from query params
+    // Get parameters from query
     const searchParams = request.nextUrl.searchParams;
     const lang = searchParams.get('lang') || 'en';
+    const assessmentId = searchParams.get('id') || 'ai_literacy';
+    const type = searchParams.get('type') || 'assessment';
+    const limit = parseInt(searchParams.get('limit') || '0');
     
-    // Load assessment questions from YAML
-    const yamlPath = path.join(process.cwd(), 'public', 'assessment_data', 'ai_literacy_questions.yaml');
-    const yamlContent = await fs.readFile(yamlPath, 'utf8');
+    // Load assessment questions from the specific assessment folder
+    const yamlPath = path.join(
+      process.cwd(), 
+      'public', 
+      'assessment_data', 
+      assessmentId,
+      `${assessmentId}_questions_${lang}.yaml`
+    );
+    
+    // Check if file exists, fallback to English if not
+    let finalPath = yamlPath;
+    try {
+      await fs.access(yamlPath);
+    } catch {
+      // Fallback to English
+      finalPath = path.join(
+        process.cwd(), 
+        'public', 
+        'assessment_data', 
+        assessmentId,
+        `${assessmentId}_questions_en.yaml`
+      );
+    }
+    
+    const yamlContent = await fs.readFile(finalPath, 'utf8');
     const data = yaml.load(yamlContent) as AssessmentData;
     
     // Filter questions based on assessment config
@@ -89,29 +114,14 @@ export async function GET(request: NextRequest) {
       selectedQuestions.push(remainingQuestions[randomIndex]);
     }
     
-    // Translate questions based on language
-    const translatedQuestions = selectedQuestions.map(q => {
-      const langSuffix = lang === 'en' ? '' : `_${lang}`;
-      const questionKey = `question${langSuffix}` as keyof AssessmentQuestion;
-      const optionsKey = `options${langSuffix}` as keyof AssessmentQuestion;
-      const explanationKey = `explanation${langSuffix}` as keyof AssessmentQuestion;
-      
-      return {
-        id: q.id,
-        domain: q.domain,
-        difficulty: q.difficulty,
-        type: q.type,
-        question: (q[questionKey] as string) || q.question,
-        options: (q[optionsKey] as Record<string, string>) || q.options,
-        correct_answer: q.correct_answer,
-        explanation: (q[explanationKey] as string) || q.explanation,
-        ksa_mapping: q.ksa_mapping
-      };
-    });
+    // Apply limit if specified
+    const finalQuestions = limit > 0 
+      ? selectedQuestions.slice(0, limit)
+      : selectedQuestions;
     
     return NextResponse.json({
       config: assessment_config,
-      questions: translatedQuestions,
+      questions: finalQuestions,
       domains: data.domains
     });
   } catch (error) {

@@ -1,0 +1,26 @@
+# AI Literacy Assessment Configuration
+id: ai_literacy
+title:
+  en: "AI Literacy Assessment"
+  zh: "AI 素養評估"
+description:
+  en: "Test your understanding of AI concepts and applications"
+  zh: "測試您對 AI 概念和應用的理解"
+assessmentType: comprehensive
+totalQuestions: 30
+passingScore: 70
+estimatedMinutes: 30
+domains:
+  - engaging_with_ai
+  - creating_with_ai
+  - managing_with_ai
+  - designing_with_ai
+competencies:
+  - AI.1.1
+  - AI.1.2
+  - AI.2.1
+  - AI.2.2
+  - AI.3.1
+  - AI.3.2
+  - AI.4.1
+  - AI.4.2

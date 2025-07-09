@@ -7,16 +7,33 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const lang = searchParams.get('lang') || 'en';
+    const assessmentId = searchParams.get('id') || 'ai_literacy';
     
     // Load assessment configuration from YAML
     const yamlPath = path.join(
       process.cwd(),
       'public',
       'assessment_data',
-      `ai_literacy_questions_${lang}.yaml`
+      assessmentId,
+      `${assessmentId}_questions_${lang}.yaml`
     );
     
-    const yamlContent = await fs.readFile(yamlPath, 'utf8');
+    // Check if file exists, fallback to English if not
+    let finalPath = yamlPath;
+    try {
+      await fs.access(yamlPath);
+    } catch {
+      // Fallback to English
+      finalPath = path.join(
+        process.cwd(),
+        'public',
+        'assessment_data',
+        assessmentId,
+        `${assessmentId}_questions_en.yaml`
+      );
+    }
+    
+    const yamlContent = await fs.readFile(finalPath, 'utf8');
     const data = yaml.load(yamlContent) as any;
     
     // Extract configuration
@@ -26,10 +43,10 @@ export async function GET(request: NextRequest) {
     
     // Build assessment info
     const assessmentInfo = {
-      id: 'comprehensive',
-      type: 'comprehensive',
-      title: 'Comprehensive AI Literacy Assessment',
-      description: 'An in-depth evaluation covering all aspects of AI literacy with detailed feedback.',
+      id: config.id || assessmentId,
+      type: 'assessment',
+      title: config.title || 'AI Literacy Assessment',
+      description: config.description || 'An evaluation covering key aspects of AI literacy with detailed feedback.',
       duration: config.time_limit_minutes,
       questionCount: questionCount,
       passingScore: config.passing_score,

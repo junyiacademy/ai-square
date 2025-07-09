@@ -20,19 +20,27 @@ import {
   BarChart3
 } from 'lucide-react';
 
+interface DomainInfo {
+  id: string;
+  name: string;
+  description: string;
+  questionCount: number;
+}
+
 interface Assessment {
   id: string;
-  type: 'quick' | 'comprehensive' | 'domain' | 'adaptive' | 'certification';
+  type: 'assessment' | 'quick' | 'comprehensive' | 'domain' | 'adaptive' | 'certification';
   title: string;
   description: string;
   duration: number; // in minutes
   questionCount: number;
+  passingScore?: number;
   difficulty: 'beginner' | 'intermediate' | 'advanced' | 'mixed';
-  domains: string[];
-  icon: React.ReactNode;
-  color: string;
+  domains: DomainInfo[] | string[];
+  icon?: React.ReactNode;
+  color?: string;
   prerequisites?: string[];
-  outcomes: string[];
+  outcomes?: string[];
   badge?: string;
   popularity?: number;
   completionRate?: number;
@@ -40,200 +48,58 @@ interface Assessment {
   comingSoon?: boolean;
 }
 
-const mockAssessments: Assessment[] = [
-  {
-    id: 'comprehensive',
-    type: 'comprehensive',
-    title: 'Comprehensive AI Literacy Assessment',
-    description: 'An in-depth evaluation covering all aspects of AI literacy with detailed feedback.',
-    duration: 15,
-    questionCount: 12,
-    difficulty: 'mixed',
-    domains: ['Engaging_with_AI', 'Creating_with_AI', 'Managing_with_AI', 'Designing_with_AI'],
-    icon: <Brain className="w-6 h-6" />,
-    color: 'purple',
-    prerequisites: ['Basic understanding of AI concepts'],
-    outcomes: [
-      'Complete AI literacy profile',
-      'Detailed competency breakdown',
-      'Personalized learning pathway',
-      'Certificate of completion'
-    ],
-    badge: 'AI Literacy Foundation',
-    popularity: 78,
-    completionRate: 72,
-    isAvailable: true
-  },
-  {
-    id: 'quick-literacy',
-    type: 'quick',
-    title: 'Quick AI Literacy Check',
-    description: 'A brief assessment to gauge your current AI literacy level across all domains.',
-    duration: 15,
-    questionCount: 10,
-    difficulty: 'mixed',
-    domains: ['Engaging_with_AI', 'Creating_with_AI', 'Managing_with_AI', 'Designing_with_AI'],
-    icon: <Zap className="w-6 h-6" />,
-    color: 'blue',
-    outcomes: [
-      'Identify your AI literacy strengths',
-      'Discover areas for improvement',
-      'Get personalized learning recommendations'
-    ],
-    popularity: 95,
-    completionRate: 89,
-    isAvailable: false,
-    comingSoon: true
-  },
-  {
-    id: 'engaging-domain',
-    type: 'domain',
-    title: 'Engaging with AI - Domain Assessment',
-    description: 'Focus on your ability to interact with and understand AI systems effectively.',
-    duration: 20,
-    questionCount: 15,
-    difficulty: 'intermediate',
-    domains: ['Engaging_with_AI'],
-    icon: <Sparkles className="w-6 h-6" />,
-    color: 'green',
-    outcomes: [
-      'Assess AI interaction skills',
-      'Understand AI system capabilities',
-      'Learn best practices for AI engagement'
-    ],
-    popularity: 82,
-    completionRate: 85,
-    isAvailable: false,
-    comingSoon: true
-  },
-  {
-    id: 'creating-domain',
-    type: 'domain',
-    title: 'Creating with AI - Domain Assessment',
-    description: 'Evaluate your skills in using AI tools for creative and productive tasks.',
-    duration: 25,
-    questionCount: 18,
-    difficulty: 'intermediate',
-    domains: ['Creating_with_AI'],
-    icon: <Rocket className="w-6 h-6" />,
-    color: 'orange',
-    outcomes: [
-      'Measure AI creation capabilities',
-      'Discover new AI tools and techniques',
-      'Improve prompt engineering skills'
-    ],
-    popularity: 88,
-    completionRate: 80,
-    isAvailable: false,
-    comingSoon: true
-  },
-  {
-    id: 'managing-domain',
-    type: 'domain',
-    title: 'Managing with AI - Domain Assessment',
-    description: 'Test your knowledge of AI governance, ethics, and responsible use.',
-    duration: 20,
-    questionCount: 15,
-    difficulty: 'advanced',
-    domains: ['Managing_with_AI'],
-    icon: <Shield className="w-6 h-6" />,
-    color: 'red',
-    prerequisites: ['Understanding of AI ethics', 'Basic AI implementation knowledge'],
-    outcomes: [
-      'Evaluate AI governance understanding',
-      'Learn ethical AI practices',
-      'Understand risk management in AI'
-    ],
-    popularity: 65,
-    completionRate: 68,
-    isAvailable: false,
-    comingSoon: true
-  },
-  {
-    id: 'adaptive-personalized',
-    type: 'adaptive',
-    title: 'Adaptive AI Literacy Assessment',
-    description: 'A smart assessment that adjusts difficulty based on your responses for optimal evaluation.',
-    duration: 30,
-    questionCount: 20,
-    difficulty: 'mixed',
-    domains: ['Engaging_with_AI', 'Creating_with_AI', 'Managing_with_AI', 'Designing_with_AI'],
-    icon: <ChartBar className="w-6 h-6" />,
-    color: 'indigo',
-    outcomes: [
-      'Personalized difficulty adjustment',
-      'Accurate skill level measurement',
-      'Targeted learning recommendations',
-      'Adaptive learning pathway'
-    ],
-    badge: 'Adaptive Learner',
-    popularity: 70,
-    completionRate: 76,
-    isAvailable: false,
-    comingSoon: true
-  }
-];
+// Mock assessments removed - now loading from assessment_data folders
 
 export default function AssessmentListPage() {
   const router = useRouter();
   const { i18n } = useTranslation();
   const [selectedAssessment, setSelectedAssessment] = useState<Assessment | null>(null);
   const [showDetails, setShowDetails] = useState(false);
-  const [filter, setFilter] = useState<'all' | 'quick' | 'comprehensive' | 'domain' | 'adaptive'>('all');
-  const [comprehensiveAssessment, setComprehensiveAssessment] = useState<Assessment | null>(null);
+  const [filter, setFilter] = useState<'all' | 'assessment'>('all');
+  const [assessments, setAssessments] = useState<Assessment[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch real assessment config
+  // Fetch all assessments from folders
   useEffect(() => {
-    const fetchAssessmentConfig = async () => {
+    const fetchAssessments = async () => {
       try {
-        const response = await fetch(`/api/v2/assessment/config?lang=${i18n.language}`);
+        const response = await fetch(`/api/v2/assessment/list?lang=${i18n.language}`);
         const result = await response.json();
         
         if (result.success && result.data) {
-          const config = result.data;
-          // Update comprehensive assessment with real data
-          const updatedAssessment: Assessment = {
-            id: config.id,
-            type: config.type,
-            title: config.title,
-            description: config.description,
-            duration: config.duration,
-            questionCount: config.questionCount,
-            difficulty: config.difficulty,
-            domains: config.domains.map((d: any) => d.name),
+          // Add icons and colors to assessments
+          const assessmentsWithUI = result.data.map((assessment: Assessment) => ({
+            ...assessment,
             icon: <Brain className="w-6 h-6" />,
-            color: 'purple',
+            color: getAssessmentColor(assessment.id),
             prerequisites: ['Basic understanding of AI concepts'],
             outcomes: [
-              'Complete AI literacy profile',
-              'Detailed competency breakdown',
+              'Complete competency profile',
+              'Detailed skill breakdown',
               'Personalized learning pathway',
               'Certificate of completion'
-            ],
-            badge: config.badge,
-            popularity: config.popularity,
-            completionRate: config.completionRate,
-            isAvailable: config.isAvailable
-          };
-          setComprehensiveAssessment(updatedAssessment);
+            ]
+          }));
+          setAssessments(assessmentsWithUI);
         }
       } catch (error) {
-        console.error('Error fetching assessment config:', error);
+        console.error('Error fetching assessments:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAssessmentConfig();
+    fetchAssessments();
   }, [i18n.language]);
 
-  // Combine real comprehensive assessment with other mock assessments
-  const allAssessments = comprehensiveAssessment 
-    ? [comprehensiveAssessment, ...mockAssessments.filter(a => a.id !== 'comprehensive')]
-    : mockAssessments;
+  // Helper function to assign colors
+  const getAssessmentColor = (id: string) => {
+    const colors = ['purple', 'blue', 'green', 'orange', 'red', 'indigo'];
+    const index = id.charCodeAt(0) % colors.length;
+    return colors[index];
+  };
 
-  const filteredAssessments = allAssessments.filter(assessment => 
+  const filteredAssessments = assessments.filter(assessment => 
     filter === 'all' || assessment.type === filter
   );
 
@@ -282,7 +148,7 @@ export default function AssessmentListPage() {
           <p className="text-gray-600">Choose an assessment to evaluate and improve your AI literacy skills</p>
         </div>
 
-        {/* Filter Tabs */}
+        {/* Filter Tabs - simplified for now */}
         <div className="mb-6 flex flex-wrap gap-2">
           <button
             onClick={() => setFilter('all')}
@@ -293,46 +159,6 @@ export default function AssessmentListPage() {
             }`}
           >
             All Assessments
-          </button>
-          <button
-            onClick={() => setFilter('quick')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              filter === 'quick' 
-                ? 'bg-gray-900 text-white' 
-                : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
-            }`}
-          >
-            Quick
-          </button>
-          <button
-            onClick={() => setFilter('comprehensive')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              filter === 'comprehensive' 
-                ? 'bg-gray-900 text-white' 
-                : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
-            }`}
-          >
-            Comprehensive
-          </button>
-          <button
-            onClick={() => setFilter('domain')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              filter === 'domain' 
-                ? 'bg-gray-900 text-white' 
-                : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
-            }`}
-          >
-            Domain-Specific
-          </button>
-          <button
-            onClick={() => setFilter('adaptive')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              filter === 'adaptive' 
-                ? 'bg-gray-900 text-white' 
-                : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
-            }`}
-          >
-            Adaptive
           </button>
         </div>
 
@@ -417,13 +243,18 @@ export default function AssessmentListPage() {
               {/* Domains */}
               <div className="mb-4">
                 <div className="flex flex-wrap gap-1">
-                  {assessment.domains.slice(0, 2).map((domain, index) => (
-                    <span key={index} className={`text-xs px-2 py-1 rounded ${
-                      assessment.isAvailable !== false ? 'text-gray-600 bg-gray-100' : 'text-gray-400 bg-gray-50'
-                    }`}>
-                      {domain.replace(/_/g, ' ')}
-                    </span>
-                  ))}
+                  {assessment.domains.slice(0, 2).map((domain, index) => {
+                    const domainName = typeof domain === 'string' 
+                      ? domain.replace(/_/g, ' ')
+                      : domain.name;
+                    return (
+                      <span key={index} className={`text-xs px-2 py-1 rounded ${
+                        assessment.isAvailable !== false ? 'text-gray-600 bg-gray-100' : 'text-gray-400 bg-gray-50'
+                      }`}>
+                        {domainName}
+                      </span>
+                    );
+                  })}
                   {assessment.domains.length > 2 && (
                     <span className={`text-xs ${assessment.isAvailable !== false ? 'text-gray-500' : 'text-gray-400'}`}>
                       +{assessment.domains.length - 2} more
@@ -533,12 +364,22 @@ export default function AssessmentListPage() {
               <div className="mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">Domains Covered</h3>
                 <div className="space-y-2">
-                  {selectedAssessment.domains.map((domain, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <Target className="w-4 h-4 text-gray-500" />
-                      <span className="text-gray-700">{domain.replace(/_/g, ' ')}</span>
-                    </div>
-                  ))}
+                  {selectedAssessment.domains.map((domain, index) => {
+                    const domainInfo = typeof domain === 'string' 
+                      ? { name: domain.replace(/_/g, ' '), description: '' }
+                      : domain;
+                    return (
+                      <div key={index} className="flex items-start gap-2">
+                        <Target className="w-4 h-4 text-gray-500 mt-0.5" />
+                        <div>
+                          <span className="text-gray-700 font-medium">{domainInfo.name}</span>
+                          {domainInfo.description && (
+                            <p className="text-sm text-gray-500">{domainInfo.description}</p>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
