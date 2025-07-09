@@ -3,13 +3,13 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 import { getScenarioRepository } from '@/lib/implementations/gcs-v2';
-import { getUserFromRequest } from '@/lib/auth/auth-utils';
+import { getAuthFromRequest } from '@/lib/auth/auth-utils';
 
 interface AssessmentConfig {
   title?: string;
   description?: string;
   total_questions?: number;
-  time_limit?: number;
+  time_limit_minutes?: number;
   passing_score?: number;
   domains?: string[];
 }
@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
-    const user = await getUserFromRequest(request);
+    const user = await getAuthFromRequest(request);
     
     // Scan assessment_data directory for folders
     const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
@@ -30,6 +30,7 @@ export async function GET(request: NextRequest) {
       folders = items
         .filter(item => item.isDirectory())
         .map(item => item.name);
+      console.log('Found assessment folders:', folders);
     } catch (error) {
       console.error('Error reading assessment directory:', error);
     }
@@ -41,20 +42,37 @@ export async function GET(request: NextRequest) {
     const scenarios = await Promise.all(
       folders.map(async (folderName) => {
         try {
-          // Look for config file in the folder
-          const configPath = path.join(assessmentDir, folderName, `${folderName}_questions.yaml`);
+          // Look for language-specific config file first, then fallback to English
+          let configPath = path.join(assessmentDir, folderName, `${folderName}_questions_${lang}.yaml`);
+          let fallbackPath = path.join(assessmentDir, folderName, `${folderName}_questions_en.yaml`);
           let config: AssessmentConfig = {};
+          let yamlPath = '';
           
           try {
-            const configContent = await fs.readFile(configPath, 'utf-8');
-            const yamlData = yaml.load(configContent) as any;
-            config = yamlData.config || {};
+            // Try language-specific file first
+            try {
+              const configContent = await fs.readFile(configPath, 'utf-8');
+              const yamlData = yaml.load(configContent) as any;
+              config = yamlData.config || yamlData.assessment_config || {};
+              yamlPath = `assessment_data/${folderName}/${folderName}_questions_${lang}.yaml`;
+              console.log(`Loaded ${lang} config for ${folderName}:`, config);
+            } catch (error) {
+              // Fallback to English if language-specific file doesn't exist
+              console.log(`No ${lang} config found, trying English fallback`);
+              const configContent = await fs.readFile(fallbackPath, 'utf-8');
+              const yamlData = yaml.load(configContent) as any;
+              config = yamlData.config || yamlData.assessment_config || {};
+              yamlPath = `assessment_data/${folderName}/${folderName}_questions_en.yaml`;
+              console.log(`Loaded English config for ${folderName}:`, config);
+            }
           } catch (error) {
-            console.warn(`No config found for ${folderName}`);
+            console.warn(`No config found for ${folderName} in any language:`, error);
+            // If no config files exist, skip this folder
+            return null;
           }
           
-          // Check if scenario already exists
-          let scenario = await scenarioRepo.findByYamlPath(`assessment_data/${folderName}/${folderName}_questions.yaml`);
+          // Check if scenario already exists using the actual yaml path
+          let scenario = await scenarioRepo.findByYamlPath(yamlPath);
           
           // Create scenario if it doesn't exist
           if (!scenario) {
@@ -66,7 +84,7 @@ export async function GET(request: NextRequest) {
                 metadata: {
                   assessmentType: 'standard',
                   folderName,
-                  configPath: `assessment_data/${folderName}/${folderName}_questions.yaml`
+                  configPath: yamlPath
                 }
               },
               title: config.title || `${folderName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Assessment`,

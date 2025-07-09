@@ -1,5 +1,6 @@
 assessment_config:
   id: ai_literacy
+  title: Avaliação de Literacia em IA
   description: Avalie sua compreensão dos sistemas de IA em quatro áreas principais: interação com IA, criação com IA, gestão de riscos de IA e design de soluções de IA. Esta avaliação ajuda a identificar seu nível atual de conhecimento em IA e áreas para melhoria.
   total_questions: 12
   time_limit_minutes: 15

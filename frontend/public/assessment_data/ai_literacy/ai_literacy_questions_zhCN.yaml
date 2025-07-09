@@ -1,5 +1,6 @@
 assessment_config:
   id: ai_literacy
+  title: AI 素养评估
   description: 评估您对 AI 系统的理解，涵盖四个核心领域：与 AI 互动、运用 AI 创作、管理 AI 风险，以及设计 AI 解决方案。此评估有助于识别您目前的 AI 知识水平并找出改进方向。
   total_questions: 12
   time_limit_minutes: 15

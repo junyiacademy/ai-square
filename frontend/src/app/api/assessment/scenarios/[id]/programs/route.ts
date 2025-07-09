@@ -4,7 +4,7 @@ import {
   getProgramRepository, 
   getTaskRepository 
 } from '@/lib/implementations/gcs-v2';
-import { getUserFromRequest } from '@/lib/auth/auth-utils';
+import { getAuthFromRequest } from '@/lib/auth/auth-utils';
 import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
@@ -14,7 +14,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const user = await getUserFromRequest(request);
+    const user = await getAuthFromRequest(request);
     if (!user) {
       return NextResponse.json(
         { error: 'Authentication required' },
@@ -73,7 +73,7 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const user = await getUserFromRequest(request);
+    const user = await getAuthFromRequest(request);
     if (!user) {
       return NextResponse.json(
         { error: 'Authentication required' },

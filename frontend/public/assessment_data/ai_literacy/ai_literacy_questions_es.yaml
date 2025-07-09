@@ -1,6 +1,7 @@
 assessment_config:
   id: ai_literacy
-  description: Evalúe su comprensión de los sistemas de IA en cuatro áreas clave: interacción con IA, creación con IA, gestión de riesgos de IA y diseño de soluciones de IA. Esta evaluación ayuda a identificar su nivel actual de conocimiento de IA y las áreas de mejora.
+  title: Evaluación de Alfabetización en IA
+  description: Evalúe su comprensión de los sistemas de IA en cuatro áreas clave: interacción con IA, creación con IA, gestión de riesgos de IA y diseño de soluciones de IA. Esta evaluación ayuda a identificar su nivel actual de conocimiento en IA y áreas de mejora.
   total_questions: 12
   time_limit_minutes: 15
   passing_score: 60

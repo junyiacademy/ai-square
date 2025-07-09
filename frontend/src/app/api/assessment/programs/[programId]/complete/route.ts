@@ -4,7 +4,7 @@ import {
   getTaskRepository,
   getEvaluationRepository 
 } from '@/lib/implementations/gcs-v2';
-import { getUserFromRequest } from '@/lib/auth/auth-utils';
+import { getAuthFromRequest } from '@/lib/auth/auth-utils';
 
 interface DomainScore {
   domain: string;
@@ -24,7 +24,7 @@ export async function POST(
   { params }: { params: { programId: string } }
 ) {
   try {
-    const user = await getUserFromRequest(request);
+    const user = await getAuthFromRequest(request);
     if (!user) {
       return NextResponse.json(
         { error: 'Authentication required' },

@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { FileQuestion, Clock, Target, ChevronLeft, Play, RotateCcw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { formatDistanceToNow } from 'date-fns';
+// Remove date-fns import - will use custom formatting
 
 interface AssessmentScenario {
   id: string;
@@ -200,7 +200,7 @@ export default function AssessmentScenarioDetailPage({
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <span className="text-sm text-gray-600">
-                        Started {formatDistanceToNow(new Date(program.startedAt), { addSuffix: true })}
+                        Started {new Date(program.startedAt).toLocaleDateString()}
                       </span>
                       {program.status === 'completed' && (
                         <Badge variant="default" className="bg-green-600">Completed</Badge>

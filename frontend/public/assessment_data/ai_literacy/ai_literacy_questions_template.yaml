@@ -3,6 +3,9 @@
 # Fields marked with [TRANSLATE] need to be translated for each language version
 
 assessment_config:
+  id: ai_literacy
+  title: [TRANSLATE] AI Literacy Assessment
+  description: [TRANSLATE] Evaluate your understanding of AI systems across four key domains - engaging with AI, creating with AI, managing AI risks, and designing AI solutions. This assessment helps identify your current AI knowledge level and areas for improvement.
   total_questions: 12
   time_limit_minutes: 15
   passing_score: 60

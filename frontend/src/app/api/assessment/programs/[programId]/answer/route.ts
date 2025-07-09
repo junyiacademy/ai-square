@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTaskRepository } from '@/lib/implementations/gcs-v2';
-import { getUserFromRequest } from '@/lib/auth/auth-utils';
+import { getAuthFromRequest } from '@/lib/auth/auth-utils';
 
 export async function POST(
   request: NextRequest,
   { params }: { params: { programId: string } }
 ) {
   try {
-    const user = await getUserFromRequest(request);
+    const user = await getAuthFromRequest(request);
     if (!user) {
       return NextResponse.json(
         { error: 'Authentication required' },

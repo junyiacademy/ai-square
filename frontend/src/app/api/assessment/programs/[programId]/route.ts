@@ -3,14 +3,14 @@ import {
   getProgramRepository, 
   getTaskRepository 
 } from '@/lib/implementations/gcs-v2';
-import { getUserFromRequest } from '@/lib/auth/auth-utils';
+import { getAuthFromRequest } from '@/lib/auth/auth-utils';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { programId: string } }
 ) {
   try {
-    const user = await getUserFromRequest(request);
+    const user = await getAuthFromRequest(request);
     if (!user) {
       return NextResponse.json(
         { error: 'Authentication required' },
