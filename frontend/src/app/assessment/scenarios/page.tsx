@@ -40,9 +40,10 @@ export default function AssessmentScenariosPage() {
     try {
       const res = await fetch(`/api/assessment/scenarios?lang=${i18n.language}`);
       const data = await res.json();
-      setScenarios(data.scenarios);
+      setScenarios(data.scenarios || []);
     } catch (error) {
       console.error('Failed to load scenarios:', error);
+      setScenarios([]);
     } finally {
       setLoading(false);
     }
