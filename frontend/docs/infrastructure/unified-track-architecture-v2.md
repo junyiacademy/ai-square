@@ -7,9 +7,13 @@
 ## 核心設計原則
 
 1. **統一的資料模型**：所有學習活動都遵循相同的層級結構
-2. **關聯式資料庫**：使用 UUID 連結所有相關資料
-3. **增量式遷移**：新舊系統並存，逐步遷移
-4. **環境隔離**：使用 GCS_BUCKET_NAME_V2 確保資料隔離
+2. **關聯式資料庫思維（RDB）**：
+   - 使用 UUID 作為所有實體的唯一識別碼
+   - 扁平化資料結構，避免巢狀儲存
+   - 透過 ID 列表建立實體間的關聯（Foreign Keys）
+   - 每個實體都包含上下游的 ID 參照
+3. **資料來源追蹤**：從 YAML 建立資料時保留原始來源資訊
+4. **GCS 實現 RDB 模式**：使用 Google Cloud Storage 實現關聯式資料庫的儲存模式
 
 ## 統一架構的三種實現
 
@@ -51,6 +55,94 @@ Assessment: Exam (考卷) → 定義題目和評分標準
 | **Discovery** | 不同情境體驗 | 每個 Program 是獨立場景，任務集互不重複 |
 | **Assessment** | 測驗回合記錄 | 相同題目集的多次嘗試，追蹤進步 |
 
+## GCS 儲存架構優化策略
+
+### 優化方案（暫時性，未來遷移至 RDB）
+
+1. **簡單記憶體快取**
+   - 5 分鐘 TTL 的記憶體快取
+   - 減少重複的 GCS 讀取操作
+
+2. **批次讀取**
+   - 一次載入相關聯的資料
+   - 使用 Promise.all 平行處理
+
+3. **Task 內嵌 Log**
+   - 對話記錄和答題歷程直接儲存在 Task JSON 中
+   - 避免額外的 Log 查詢開銷
+
+4. **簡化索引結構**
+   ```
+   v2/
+   ├── scenarios/
+   │   └── {scenarioId}.json
+   ├── programs/
+   │   └── {programId}.json  
+   ├── tasks/
+   │   └── {taskId}.json     # 包含所有 logs
+   ├── evaluations/
+   │   └── {evaluationId}.json
+   ├── completions/
+   │   └── {completionId}.json
+   └── indexes/
+       └── users/
+           └── {userEmail}/
+               ├── programs.json   # 程式 ID 列表
+               └── scenarios.json  # 情境 ID 列表
+   ```
+
+5. **延遲載入策略**
+   - 列表頁只載入摘要資訊
+   - 詳細內容按需載入
+
+### Task Log 設計
+
+**重要決定**：將 Log 直接嵌入 Task JSON 中，而非分開儲存
+
+優點：
+1. 減少查詢次數 - 一次讀取即可獲得完整歷程
+2. 原子性更新 - 確保 Task 狀態與 Log 的一致性
+3. 簡化架構 - 不需要額外的 Log 索引和關聯
+
+```typescript
+// Assessment Task 包含完整答題歷程
+answerHistory: [
+  {
+    timestamp: "2024-01-01T10:00:00Z",
+    action: "view",       // 查看題目
+    timeSpent: 0
+  },
+  {
+    timestamp: "2024-01-01T10:00:30Z",
+    action: "answer",    // 首次作答
+    answer: "b",
+    timeSpent: 30
+  },
+  {
+    timestamp: "2024-01-01T10:01:00Z",
+    action: "change",    // 修改答案
+    answer: "a",
+    timeSpent: 30
+  },
+  {
+    timestamp: "2024-01-01T10:01:30Z",
+    action: "submit",    // 提交答案
+    answer: "a",
+    timeSpent: 30
+  }
+]
+
+// PBL Task 包含對話記錄
+aiInteractions: [
+  {
+    timestamp: "2024-01-01T10:00:00Z",
+    userMessage: "我不太理解這個概念",
+    aiResponse: "讓我用簡單的例子解釋...",
+    tokensUsed: 150
+  }
+]
+```
+
 ## 資料庫 Schema (V2)
 
 ### 1. 學習專案表 (learning_projects_v2)
@@ -79,7 +171,7 @@ CREATE INDEX idx_projects_v2_code ON learning_projects_v2(code);
 ```sql
 CREATE TABLE scenarios_v2 (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_email VARCHAR(255) NOT NULL,
     project_id UUID NOT NULL REFERENCES learning_projects_v2(id) ON DELETE CASCADE,
     type VARCHAR(50) NOT NULL, -- 'pbl', 'discovery', 'assessment'
     title VARCHAR(500) NOT NULL,
@@ -92,13 +184,13 @@ CREATE TABLE scenarios_v2 (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_scenarios_v2_user_id ON scenarios_v2(user_id);
+CREATE INDEX idx_scenarios_v2_user_email ON scenarios_v2(user_email);
 CREATE INDEX idx_scenarios_v2_project_id ON scenarios_v2(project_id);
 CREATE INDEX idx_scenarios_v2_status ON scenarios_v2(status);
 CREATE INDEX idx_scenarios_v2_type ON scenarios_v2(type);
 
 -- 確保用戶在同一個專案只有一個活躍的 scenario
-CREATE UNIQUE INDEX unique_active_scenario_v2 ON scenarios_v2(user_id, project_id) 
+CREATE UNIQUE INDEX unique_active_scenario_v2 ON scenarios_v2(user_email, project_id) 
 WHERE status IN ('active', 'paused');
 ```
 
@@ -160,7 +252,7 @@ CREATE TABLE logs_v2 (
     scenario_id UUID NOT NULL REFERENCES scenarios_v2(id) ON DELETE CASCADE,
     program_id UUID REFERENCES programs_v2(id) ON DELETE CASCADE,
     task_id UUID REFERENCES tasks_v2(id) ON DELETE CASCADE,
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_email VARCHAR(255) NOT NULL,
     log_type VARCHAR(50) NOT NULL, -- 'chat', 'submission', 'evaluation', 'completion', 'feedback', 'achievement'
     activity VARCHAR(100) NOT NULL, -- 具體活動名稱
     data JSONB NOT NULL DEFAULT '{}', -- 活動資料
@@ -172,7 +264,7 @@ CREATE TABLE logs_v2 (
 CREATE INDEX idx_logs_v2_scenario_id ON logs_v2(scenario_id);
 CREATE INDEX idx_logs_v2_program_id ON logs_v2(program_id);
 CREATE INDEX idx_logs_v2_task_id ON logs_v2(task_id);
-CREATE INDEX idx_logs_v2_user_id ON logs_v2(user_id);
+CREATE INDEX idx_logs_v2_user_email ON logs_v2(user_email);
 CREATE INDEX idx_logs_v2_log_type ON logs_v2(log_type);
 CREATE INDEX idx_logs_v2_created_at ON logs_v2(created_at DESC);
 ```
@@ -283,7 +375,7 @@ export interface ILearningProject extends ITrackableEntity {
 }
 
 export interface IScenario extends ITrackableEntity {
-  user_id: string;
+  user_email: string;
   project_id: string;
   type: 'pbl' | 'discovery' | 'assessment';
   title: string;
@@ -325,7 +417,7 @@ export interface ILog extends ITrackableEntity {
   scenario_id: string;
   program_id?: string;
   task_id?: string;
-  user_id: string;
+  user_email: string;
   log_type: 'chat' | 'submission' | 'evaluation' | 'completion' | 'feedback' | 'achievement';
   activity: string;
   data: Record<string, any>;
@@ -550,6 +642,82 @@ class DiscoveryServiceV2 {
 }
 ```
 
+## V2 Assessment Storage 實作完成
+
+### 已實作功能
+
+1. **完整的 Assessment 儲存服務**
+   - `AssessmentStorageV2Service` - 主要服務類別
+   - 支援 Scenario、Program、Task、Evaluation、Completion 的完整 CRUD
+   - 遵循統一架構設計
+
+2. **效能優化**
+   - 5 分鐘 TTL 的記憶體快取
+   - 批次載入相關資料（`getProgramWithDetails`）
+   - 簡化的索引結構
+
+3. **Task Log 內嵌設計**
+   - `answerHistory` - 記錄所有答題動作
+   - `aiInteractions` - AI 互動記錄
+   - 自動計算每個動作的時間間隔
+
+4. **測試覆蓋**
+   - 單元測試：13 個測試案例全部通過
+   - 整合測試：完整流程測試通過
+   - 測試覆蓋：Scenario、Program、Task、Evaluation、Completion
+
+### 使用範例
+
+```typescript
+// 1. 建立測驗情境
+const scenario = await storage.saveScenario({
+  sourceFile: 'ai_literacy.yaml',
+  sourceId: 'ai_literacy',
+  type: 'assessment',
+  title: { en: 'AI Literacy Test' },
+  // ...
+});
+
+// 2. 用戶開始測驗
+const program = await storage.createProgram(
+  'user@example.com',
+  scenario.id,
+  { language: 'zh' }
+);
+
+// 3. 載入題目
+const tasks = await storage.createTasksForProgram(
+  program.id,
+  questions
+);
+
+// 4. 記錄答題歷程
+await storage.addAnswerToHistory(taskId, 'view');
+await storage.addAnswerToHistory(taskId, 'answer', 'a');
+await storage.addAnswerToHistory(taskId, 'submit', 'a');
+
+// 5. 評分
+await storage.createEvaluation(taskId, true, 100);
+
+// 6. 完成測驗
+const completion = await storage.createCompletion(programId);
+```
+
+### 檔案結構
+
+```
+src/lib/v2/
+├── schemas/
+│   ├── assessment-v2.schema.ts    # Assessment 專用 Schema
+│   └── pbl.schema.ts              # PBL 專用 Schema
+├── services/
+│   ├── assessment-storage-v2.service.ts  # Assessment 儲存服務
+│   ├── pbl-storage.service.ts           # PBL 儲存服務
+│   └── __tests__/
+│       ├── assessment-storage-v2.test.ts
+│       └── assessment-v2-integration.test.ts
+```
+
 ## 具體實作範例
 
 ### PBL V2 Service - 學習階段分組
@@ -757,7 +925,96 @@ export class AssessmentServiceV2 extends BaseLearningService {
 }
 ```
 
-## GCS V2 存儲架構
+## GCS V2 存儲架構（實現 RDB 模式）
+
+### 核心概念：扁平化儲存 + ID 關聯
+
+不同於傳統的巢狀資料夾結構，V2 採用扁平化儲存，透過 UUID 建立關聯：
+
+```
+ai-square-db-v2/
+├── scenarios/
+│   └── {scenario_uuid}.json
+│       {
+│         "id": "scenario_uuid",
+│         "user_email": "user@example.com",
+│         "source_type": "assessment",
+│         "source_id": "ai_literacy",
+│         "program_ids": ["program_uuid_1", "program_uuid_2"],
+│         "created_at": "2025-01-08T10:00:00Z"
+│       }
+├── programs/
+│   └── {program_uuid}.json
+│       {
+│         "id": "program_uuid",
+│         "scenario_id": "scenario_uuid",
+│         "title": "Practice Round 1",
+│         "task_ids": ["task_uuid_1", "task_uuid_2", ...],
+│         "created_at": "2025-01-08T10:00:00Z"
+│       }
+├── tasks/
+│   └── {task_uuid}.json
+│       {
+│         "id": "task_uuid",
+│         "program_id": "program_uuid",
+│         "source_id": "E001",  // 原始題目 ID
+│         "title": "What is the most effective way...",
+│         "created_at": "2025-01-08T10:00:00Z"
+│       }
+├── evaluations/
+│   └── {evaluation_uuid}.json
+│       {
+│         "id": "evaluation_uuid",
+│         "task_id": "task_uuid",
+│         "user_answer": "b",
+│         "is_correct": true,
+│         "score": 100,
+│         "created_at": "2025-01-08T10:05:00Z"
+│       }
+├── completions/
+│   └── {completion_uuid}.json
+│       {
+│         "id": "completion_uuid",
+│         "program_id": "program_uuid",
+│         "overall_score": 85,
+│         "passed": true,
+│         "completed_at": "2025-01-08T10:30:00Z"
+│       }
+└── logs/
+    └── {log_uuid}.json
+        {
+          "id": "log_uuid",
+          "scenario_id": "scenario_uuid",
+          "program_id": "program_uuid",
+          "task_id": "task_uuid",
+          "action": "answer_submitted",
+          "data": { "answer": "b", "time_spent": 45 },
+          "created_at": "2025-01-08T10:05:00Z"
+        }
+```
+
+### 索引檔案（實現查詢效率）
+
+為了提高查詢效率，使用索引檔案：
+
+```
+indexes/
+├── user_scenarios/
+│   └── {user_email}.json
+│       {
+│         "scenario_ids": ["scenario_uuid_1", "scenario_uuid_2", ...]
+│       }
+├── scenario_programs/
+│   └── {scenario_uuid}.json
+│       {
+│         "program_ids": ["program_uuid_1", "program_uuid_2", ...]
+│       }
+└── program_tasks/
+    └── {program_uuid}.json
+        {
+          "task_ids": ["task_uuid_1", "task_uuid_2", ...]
+        }
+```
 
 ```typescript
 // src/lib/v2/storage/gcs.service.ts
