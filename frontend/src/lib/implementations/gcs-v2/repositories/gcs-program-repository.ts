@@ -117,4 +117,11 @@ export class GCSProgramRepository<T extends IProgram = IProgram>
     
     return userScenarioPrograms[0] || null;
   }
+
+  /**
+   * 列出所有 Programs
+   */
+  async listAll(): Promise<T[]> {
+    return this.listAllEntities();
+  }
 }

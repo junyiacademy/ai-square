@@ -123,4 +123,11 @@ export class GCSEvaluationRepository<T extends IEvaluation = IEvaluation>
   async delete(id: string): Promise<boolean> {
     return this.deleteEntity(id);
   }
+
+  /**
+   * 列出所有 Evaluations
+   */
+  async listAll(): Promise<T[]> {
+    return this.listAllEntities();
+  }
 }

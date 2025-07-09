@@ -86,4 +86,11 @@ export class GCSScenarioRepository<T extends IScenario = IScenario>
   async delete(id: string): Promise<boolean> {
     return this.deleteEntity(id);
   }
+
+  /**
+   * 列出所有 Scenarios
+   */
+  async listAll(): Promise<T[]> {
+    return this.listAllEntities();
+  }
 }

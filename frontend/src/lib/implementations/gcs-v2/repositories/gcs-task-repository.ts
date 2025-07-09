@@ -127,4 +127,11 @@ export class GCSTaskRepository<T extends ITask = ITask>
   async findByIds(ids: string[]): Promise<T[]> {
     return this.loadEntities(ids);
   }
+
+  /**
+   * 列出所有 Tasks
+   */
+  async listAll(): Promise<T[]> {
+    return this.listAllEntities();
+  }
 }
