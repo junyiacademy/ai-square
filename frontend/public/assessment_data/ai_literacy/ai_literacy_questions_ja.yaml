@@ -1,4 +1,6 @@
 assessment_config:
+  id: ai_literacy
+  description: AI との関わり、AI による創作、AI の管理、AI の設計という 4 つの主要領域における AI システムの理解度を評価します。この評価により、現在の AI 知識レベルと改善すべき分野を特定できます。
   total_questions: 12
   time_limit_minutes: 15
   passing_score: 60

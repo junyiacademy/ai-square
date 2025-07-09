@@ -1,4 +1,6 @@
 assessment_config:
+  id: ai_literacy
+  description: Évaluez votre compréhension des systèmes d'IA dans quatre domaines clés : interaction avec l'IA, création avec l'IA, gestion des risques de l'IA et conception de solutions IA. Cette évaluation aide à identifier votre niveau actuel de connaissances en IA et les domaines d'amélioration.
   total_questions: 12
   time_limit_minutes: 15
   passing_score: 60

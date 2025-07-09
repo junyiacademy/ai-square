@@ -1,4 +1,6 @@
 assessment_config:
+  id: ai_literacy
+  description: Valuta la tua comprensione dei sistemi di IA in quattro aree chiave: interazione con l'IA, creazione con l'IA, gestione dei rischi dell'IA e progettazione di soluzioni IA. Questa valutazione aiuta a identificare il tuo livello attuale di conoscenza dell'IA e le aree di miglioramento.
   total_questions: 12
   time_limit_minutes: 15
   passing_score: 60
