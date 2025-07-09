@@ -1,7 +1,11 @@
 assessment_config:
   id: ai_literacy
   title: Valutazione dell'Alfabetizzazione IA
-  description: Valutate la vostra comprensione dei sistemi di IA in quattro aree chiave: interazione con l'IA, creazione con l'IA, gestione dei rischi dell'IA e progettazione di soluzioni IA. Questa valutazione aiuta a identificare il vostro livello attuale di conoscenza dell'IA e le aree di miglioramento.
+  description: >
+    Valutate la vostra comprensione dei sistemi di IA in quattro aree chiave:
+    interazione con l'IA, creazione con l'IA, gestione dei rischi dell'IA e
+    progettazione di soluzioni IA. Questa valutazione aiuta a identificare il
+    vostro livello attuale di conoscenza dell'IA e le aree di miglioramento.
   total_questions: 12
   time_limit_minutes: 15
   passing_score: 60
@@ -29,6 +33,10 @@ questions:
     difficulty: basic
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K1.1, K1.2]
+      skills: [S1.1]
+      attitudes: [A1.1]
     question: Qual è il modo più efficace per ottenere risultati migliori da un chatbot IA?
     options:
       a: Fare domande molto generali
@@ -41,6 +49,10 @@ questions:
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K2.1, K2.2]
+      skills: [S1.1, S2.1]
+      attitudes: [A2.1]
     question: Quando un'IA ti dà una risposta sbagliata, quale dovrebbe essere la tua prima reazione?
     options:
       a: Fidarsi immediatamente dell'IA e usare le informazioni
@@ -53,6 +65,10 @@ questions:
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.1, K3.2]
+      skills: [S2.1, S2.2]
+      attitudes: [A2.1, A3.1]
     question: Qual è il fattore più importante nel valutare i pregiudizi nei contenuti generati dall'IA?
     options:
       a: La velocità di generazione
@@ -65,6 +81,10 @@ questions:
     difficulty: basic
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K1.4, K2.1]
+      skills: [S3.1, S3.2]
+      attitudes: [A3.1]
     question: Quale approccio è più efficace quando si usa l'IA per la scrittura creativa?
     options:
       a: Lasciare che l'IA scriva tutto senza input umano
@@ -77,6 +97,10 @@ questions:
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.2, K5.1]
+      skills: [S2.1]
+      attitudes: [A1.1]
     question: Quando si usano generatori di immagini IA, qual è la considerazione etica più importante?
     options:
       a: Rendere le immagini il più realistiche possibile
@@ -89,6 +113,10 @@ questions:
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K2.1, K4.1]
+      skills: [S3.1, S6.1]
+      attitudes: [A3.1, A4.1]
     question: Come dovresti affrontare la generazione di codice assistita dall'IA per un progetto software critico?
     options:
       a: '[IT: Use AI code directly without review]'
@@ -101,6 +129,10 @@ questions:
     difficulty: basic
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.3, K5.2]
+      skills: [S2.2]
+      attitudes: [A1.1]
     question: Cosa dovresti fare con le informazioni personali sensibili quando usi strumenti IA?
     options:
       a: '[IT: Share it freely to get better AI responses]'
@@ -113,6 +145,10 @@ questions:
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K4.1, K4.2]
+      skills: [S2.1, S5.1]
+      attitudes: [A1.1, A2.1]
     question: Come dovresti gestire l'uso di strumenti IA in un ambiente di squadra?
     options:
       a: '[IT: Let everyone use any AI tool without guidelines]'
@@ -125,6 +161,10 @@ questions:
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.1, K3.2, K5.1]
+      skills: [S2.1, S6.2]
+      attitudes: [A1.1, A2.1]
     question: Qual è il fattore più critico nell'implementare l'IA nei processi aziendali?
     options:
       a: '[IT: Choosing the most advanced AI technology]'
@@ -137,6 +177,10 @@ questions:
     difficulty: basic
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K4.2, K5.3]
+      skills: [S5.1, S6.1]
+      attitudes: [A2.1]
     question: Quando si progetta una funzionalità basata sull'IA per gli utenti, quale dovrebbe essere l'obiettivo principale?
     options:
       a: '[IT: Showcasing the most advanced AI capabilities]'
@@ -149,6 +193,10 @@ questions:
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.2, K5.1]
+      skills: [S4.1, S6.2]
+      attitudes: [A1.1, A5.1]
     question: Come dovresti gestire i guasti del sistema IA nelle applicazioni rivolte agli utenti?
     options:
       a: '[IT: Hide errors and pretend everything is working]'
@@ -161,6 +209,10 @@ questions:
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.3, K5.3]
+      skills: [S4.1, S6.1]
+      attitudes: [A4.1, A5.1]
     question: Qual è la considerazione più importante nel progettare sistemi IA per pubblici globali diversi?
     options:
       a: '[IT: Using the same design for everyone to ensure consistency]'

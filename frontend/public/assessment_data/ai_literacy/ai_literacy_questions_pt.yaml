@@ -1,7 +1,11 @@
 assessment_config:
   id: ai_literacy
   title: Avaliação de Literacia em IA
-  description: Avalie sua compreensão dos sistemas de IA em quatro áreas principais: interação com IA, criação com IA, gestão de riscos de IA e design de soluções de IA. Esta avaliação ajuda a identificar seu nível atual de conhecimento em IA e áreas para melhoria.
+  description: >
+    Avalie sua compreensão dos sistemas de IA em quatro áreas principais:
+    interação com IA, criação com IA, gestão de riscos de IA e design de
+    soluções de IA. Esta avaliação ajuda a identificar seu nível atual de
+    conhecimento em IA e áreas para melhoria.
   total_questions: 12
   time_limit_minutes: 15
   passing_score: 60
@@ -29,6 +33,10 @@ questions:
     difficulty: basic
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K1.1, K1.2]
+      skills: [S1.1]
+      attitudes: [A1.1]
     question: Qual é a forma mais eficaz de obter melhores resultados de um chatbot de IA?
     options:
       a: Fazer perguntas muito gerais
@@ -41,6 +49,10 @@ questions:
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K2.1, K2.2]
+      skills: [S1.1, S2.1]
+      attitudes: [A2.1]
     question: Quando uma IA lhe dá uma resposta incorreta, qual deveria ser sua primeira resposta?
     options:
       a: Confiar imediatamente na IA e usar a informação
@@ -53,6 +65,10 @@ questions:
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.1, K3.2]
+      skills: [S2.1, S2.2]
+      attitudes: [A2.1, A3.1]
     question: Qual é o fator mais importante ao avaliar o viés em conteúdo gerado por IA?
     options:
       a: A velocidade de geração
@@ -65,6 +81,10 @@ questions:
     difficulty: basic
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K1.4, K2.1]
+      skills: [S3.1, S3.2]
+      attitudes: [A3.1]
     question: Qual abordagem é mais eficaz ao usar IA para escrita criativa?
     options:
       a: Deixar que a IA escreva tudo sem contribuição humana
@@ -77,6 +97,10 @@ questions:
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.2, K5.1]
+      skills: [S2.1]
+      attitudes: [A1.1]
     question: Ao usar geradores de imagens de IA, qual é a consideração ética mais importante?
     options:
       a: Fazer imagens o mais realistas possível
@@ -89,6 +113,10 @@ questions:
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K2.1, K4.1]
+      skills: [S3.1, S6.1]
+      attitudes: [A3.1, A4.1]
     question: Como você deveria abordar a geração de código assistida por IA para um projeto de software crítico?
     options:
       a: Usar código de IA diretamente sem revisão
@@ -101,6 +129,10 @@ questions:
     difficulty: basic
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.3, K5.2]
+      skills: [S2.2]
+      attitudes: [A1.1]
     question: O que você deveria fazer com informação pessoal sensível ao usar ferramentas de IA?
     options:
       a: Compartilhar livremente para obter melhores respostas da IA
@@ -113,6 +145,10 @@ questions:
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K4.1, K4.2]
+      skills: [S2.1, S5.1]
+      attitudes: [A1.1, A2.1]
     question: Como você deveria gerenciar o uso de ferramentas de IA em um ambiente de equipe?
     options:
       a: Deixar todos usarem qualquer ferramenta de IA sem diretrizes
@@ -125,6 +161,10 @@ questions:
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.1, K3.2, K5.1]
+      skills: [S2.1, S6.2]
+      attitudes: [A1.1, A2.1]
     question: Qual é o fator mais crítico ao implementar IA em processos empresariais?
     options:
       a: Escolher a tecnologia de IA mais avançada
@@ -137,6 +177,10 @@ questions:
     difficulty: basic
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K4.2, K5.3]
+      skills: [S5.1, S6.1]
+      attitudes: [A2.1]
     question: Ao projetar um recurso alimentado por IA para usuários, qual deveria ser o foco principal?
     options:
       a: Exibir as capacidades de IA mais avançadas
@@ -149,6 +193,10 @@ questions:
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.2, K5.1]
+      skills: [S4.1, S6.2]
+      attitudes: [A1.1, A5.1]
     question: Como você deveria lidar com falhas do sistema de IA em aplicações voltadas ao usuário?
     options:
       a: Esconder erros e fingir que tudo está funcionando
@@ -161,6 +209,10 @@ questions:
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.3, K5.3]
+      skills: [S4.1, S6.1]
+      attitudes: [A4.1, A5.1]
     question: Qual é a consideração mais importante ao projetar sistemas de IA para audiências globais diversas?
     options:
       a: Usar o mesmo design para todos para garantir consistência

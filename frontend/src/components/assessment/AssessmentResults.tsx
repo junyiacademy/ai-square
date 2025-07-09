@@ -203,6 +203,7 @@ export default function AssessmentResults({ result, domains, onRetake, questions
       userEmail: currentUser.email,
       language: i18n.language,
       answers: userAnswers,
+      questions: questions, // Include questions for KSA mapping
       result: {
         ...result,
         timeSpentSeconds: result.timeSpentSeconds,

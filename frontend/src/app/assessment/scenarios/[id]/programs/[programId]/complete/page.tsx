@@ -2,15 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { CheckCircle, XCircle, ChevronRight, Download, Share2, Home } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { RadarChart } from '@/components/charts/RadarChart';
-
+import AssessmentResults from '@/components/assessment/AssessmentResults';
+import { AssessmentResult, AssessmentData, UserAnswer } from '@/types/assessment';
 interface Evaluation {
   id: string;
   score: number;
@@ -66,6 +60,18 @@ export default function AssessmentCompletePage({
       const res = await fetch(`/api/assessment/programs/${progId}/evaluation`);
       const data = await res.json();
       setEvaluation(data.evaluation);
+      
+      // Also load the task to get questions and answers
+      const programRes = await fetch(`/api/assessment/programs/${progId}`);
+      const programData = await programRes.json();
+      
+      if (programData.currentTask) {
+        // Store task data for later use
+        localStorage.setItem('assessmentTaskData', JSON.stringify({
+          questions: programData.currentTask.content.questions || [],
+          interactions: programData.currentTask.interactions || []
+        }));
+      }
     } catch (error) {
       console.error('Failed to load evaluation:', error);
     } finally {
@@ -73,32 +79,13 @@ export default function AssessmentCompletePage({
     }
   };
 
-  const formatTime = (seconds?: number) => {
-    if (!seconds) return '0:00';
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    return 'text-red-600';
-  };
-
-  const getScoreBgColor = (score: number) => {
-    if (score >= 80) return 'bg-green-50 border-green-200';
-    if (score >= 60) return 'bg-yellow-50 border-yellow-200';
-    return 'bg-red-50 border-red-200';
-  };
 
   if (loading) {
     return (
-      <div className="container mx-auto py-8 max-w-4xl">
-        <div className="animate-pulse">
-          <div className="h-16 bg-gray-200 rounded-full w-16 mx-auto mb-4"></div>
-          <div className="h-8 bg-gray-200 rounded w-1/2 mx-auto mb-8"></div>
-          <div className="h-40 bg-gray-200 rounded mb-8"></div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">{t('loading')}</p>
         </div>
       </div>
     );
@@ -106,185 +93,92 @@ export default function AssessmentCompletePage({
 
   if (!evaluation) {
     return (
-      <div className="container mx-auto py-8 max-w-4xl">
-        <Card className="p-8 text-center">
-          <p className="text-gray-600 mb-4">Evaluation not found.</p>
-          <Button variant="outline" onClick={() => router.push('/assessment/scenarios')}>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">Evaluation not found.</p>
+          <button 
+            onClick={() => router.push('/assessment/scenarios')}
+            className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700"
+          >
             Back to Assessments
-          </Button>
-        </Card>
+          </button>
+        </div>
       </div>
     );
   }
 
-  const isPassed = evaluation.score >= 60;
+  // Get task data from localStorage
+  const taskDataStr = localStorage.getItem('assessmentTaskData');
+  const taskData = taskDataStr ? JSON.parse(taskDataStr) : { questions: [], interactions: [] };
+
+  // Convert evaluation to AssessmentResult format
+  const assessmentResult: AssessmentResult = {
+    overallScore: evaluation.score,
+    domainScores: evaluation.metadata?.domainScores || {
+      engaging_with_ai: 0,
+      creating_with_ai: 0,
+      managing_with_ai: 0,
+      designing_with_ai: 0
+    },
+    totalQuestions: evaluation.metadata?.totalQuestions || 0,
+    correctAnswers: evaluation.metadata?.correctAnswers || 0,
+    timeSpentSeconds: evaluation.metadata?.completionTime || 0,
+    completedAt: new Date(),
+    level: (evaluation.metadata?.level || 'beginner') as 'beginner' | 'intermediate' | 'advanced' | 'expert',
+    recommendations: evaluation.metadata?.recommendations || []
+  };
+
+  // Convert interactions to UserAnswer format
+  const userAnswers: UserAnswer[] = taskData.interactions
+    .filter((i: any) => i.type === 'assessment_answer')
+    .map((interaction: any) => ({
+      questionId: interaction.content.questionId,
+      selectedAnswer: interaction.content.selectedAnswer as 'a' | 'b' | 'c' | 'd',
+      timeSpent: interaction.content.timeSpent || 0,
+      isCorrect: interaction.content.isCorrect || false
+    }));
+
+  // Create assessment data structure for domains
+  const assessmentData: AssessmentData = {
+    assessment_config: {
+      total_questions: 12,
+      time_limit_minutes: 15,
+      passing_score: 60,
+      domains: ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai']
+    },
+    domains: {
+      engaging_with_ai: {
+        name: 'Engaging with AI',
+        description: 'Understanding and effectively communicating with AI systems',
+        questions: 3
+      },
+      creating_with_ai: {
+        name: 'Creating with AI',
+        description: 'Using AI tools to enhance creativity and productivity',
+        questions: 3
+      },
+      managing_with_ai: {
+        name: 'Managing with AI',
+        description: 'Understanding AI limitations, privacy, and ethical considerations',
+        questions: 3
+      },
+      designing_with_ai: {
+        name: 'Designing with AI',
+        description: 'Strategic thinking about AI implementation and innovation',
+        questions: 3
+      }
+    },
+    questions: taskData.questions || []
+  };
 
   return (
-    <div className="container mx-auto py-8 max-w-4xl">
-      {/* Success Header */}
-      <div className="text-center mb-8">
-        {isPassed ? (
-          <>
-            <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-            <h1 className="text-3xl font-bold mb-2">Congratulations!</h1>
-            <p className="text-gray-600">You've completed the assessment</p>
-          </>
-        ) : (
-          <>
-            <XCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
-            <h1 className="text-3xl font-bold mb-2">Assessment Complete</h1>
-            <p className="text-gray-600">Keep learning and try again!</p>
-          </>
-        )}
-      </div>
-
-      {/* Overall Score */}
-      <Card className={`mb-8 p-8 text-center border-2 ${getScoreBgColor(evaluation.score)}`}>
-        <div className={`text-5xl font-bold mb-2 ${getScoreColor(evaluation.score)}`}>
-          {evaluation.score}%
-        </div>
-        <p className="text-lg text-gray-700 mb-4">{evaluation.feedback}</p>
-        {evaluation.metadata?.level && (
-          <Badge variant="default" className="text-base px-4 py-1">
-            {evaluation.metadata.level.charAt(0).toUpperCase() + evaluation.metadata.level.slice(1)} Level
-          </Badge>
-        )}
-      </Card>
-
-      {/* Quick Stats */}
-      {evaluation.metadata && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <Card className="p-4 text-center">
-            <p className="text-sm text-gray-600">Questions</p>
-            <p className="text-2xl font-bold">
-              {evaluation.metadata.correctAnswers}/{evaluation.metadata.totalQuestions}
-            </p>
-          </Card>
-          <Card className="p-4 text-center">
-            <p className="text-sm text-gray-600">Accuracy</p>
-            <p className="text-2xl font-bold">
-              {Math.round((evaluation.metadata.correctAnswers || 0) / (evaluation.metadata.totalQuestions || 1) * 100)}%
-            </p>
-          </Card>
-          <Card className="p-4 text-center">
-            <p className="text-sm text-gray-600">Time Taken</p>
-            <p className="text-2xl font-bold">{formatTime(evaluation.metadata.completionTime)}</p>
-          </Card>
-          <Card className="p-4 text-center">
-            <p className="text-sm text-gray-600">Status</p>
-            <p className="text-2xl font-bold">{isPassed ? 'Passed' : 'Not Passed'}</p>
-          </Card>
-        </div>
-      )}
-
-      {/* Domain Scores */}
-      {evaluation.dimensions.length > 0 && (
-        <div className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Domain Performance</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              {evaluation.dimensions.map((dim) => (
-                <Card key={dim.name} className="p-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="font-medium">{dim.name.replace(/_/g, ' ')}</h3>
-                    <span className={`font-bold ${getScoreColor(dim.score)}`}>
-                      {dim.score}%
-                    </span>
-                  </div>
-                  <Progress value={dim.score} className="h-2 mb-2" />
-                  <p className="text-sm text-gray-600">{dim.feedback}</p>
-                </Card>
-              ))}
-            </div>
-            
-            {/* Radar Chart */}
-            {evaluation.metadata?.domainScores && (
-              <Card className="p-4">
-                <h3 className="font-medium mb-4 text-center">Skills Overview</h3>
-                <RadarChart 
-                  data={Object.entries(evaluation.metadata.domainScores).map(([domain, score]) => ({
-                    domain: domain.replace(/_/g, ' '),
-                    score
-                  }))}
-                />
-              </Card>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* KSA Analysis */}
-      {evaluation.metadata?.ksaAnalysis && (
-        <div className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Competency Analysis</h2>
-          <div className="grid md:grid-cols-3 gap-4">
-            {Object.entries(evaluation.metadata.ksaAnalysis).map(([key, data]) => (
-              <Card key={key} className="p-4">
-                <h3 className="font-medium mb-2 capitalize">{key}</h3>
-                <div className="text-2xl font-bold mb-2">{data.score}%</div>
-                {data.strong.length > 0 && (
-                  <div className="mb-2">
-                    <p className="text-sm text-green-600 font-medium">Strong:</p>
-                    <p className="text-sm">{data.strong.join(', ')}</p>
-                  </div>
-                )}
-                {data.weak.length > 0 && (
-                  <div>
-                    <p className="text-sm text-red-600 font-medium">Needs Work:</p>
-                    <p className="text-sm">{data.weak.join(', ')}</p>
-                  </div>
-                )}
-              </Card>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Recommendations */}
-      {evaluation.metadata?.recommendations && evaluation.metadata.recommendations.length > 0 && (
-        <Card className="p-6 mb-8">
-          <h3 className="font-semibold mb-4">Personalized Recommendations</h3>
-          <ul className="space-y-2">
-            {evaluation.metadata.recommendations.map((rec, idx) => (
-              <li key={idx} className="flex items-start gap-2">
-                <ChevronRight className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
-                <span>{rec}</span>
-              </li>
-            ))}
-          </ul>
-        </Card>
-      )}
-
-      {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-center">
-        <Button 
-          variant="outline"
-          onClick={() => router.push(`/assessment/scenarios/${scenarioId}`)}
-        >
-          Back to Assessment
-        </Button>
-        <Button 
-          onClick={() => router.push('/pbl/scenarios')}
-        >
-          Explore Learning Scenarios
-        </Button>
-        <Button 
-          variant="secondary"
-          onClick={() => router.push('/')}
-        >
-          <Home className="h-4 w-4 mr-2" />
-          Home
-        </Button>
-      </div>
-
-      {/* Certificate Notice */}
-      {evaluation.metadata?.certificateEligible && (
-        <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg text-center">
-          <p className="text-blue-800">
-            🎉 You're eligible for a certificate! Contact your instructor for more information.
-          </p>
-        </div>
-      )}
-    </div>
+    <AssessmentResults
+      result={assessmentResult}
+      domains={assessmentData.domains}
+      onRetake={() => router.push(`/assessment/scenarios/${scenarioId}`)}
+      questions={assessmentData.questions}
+      userAnswers={userAnswers}
+      isReview={true}
+    />
   );
 }

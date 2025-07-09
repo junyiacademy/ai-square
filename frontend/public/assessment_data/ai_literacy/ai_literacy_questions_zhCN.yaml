@@ -36,6 +36,14 @@ questions:
       c: 只使用是/否问题
       d: 总是一次问多个问题
     explanation: 清晰、具体且有背景的提示有助于 AI 准确理解您的需求，并提供更准确、有用的回应。
+    ksa_mapping:
+      knowledge:
+        - K1.1
+        - K1.2
+      skills:
+        - S1.1
+      attitudes:
+        - A1.1
   - id: E002
     domain: engaging_with_ai
     difficulty: intermediate
@@ -48,6 +56,15 @@ questions:
       c: 完全停止使用 AI
       d: 报告 AI 故障
     explanation: 批判性思维需要通过可靠的来源验证 AI 的输出，因为 AI 可能会出错或提供过时的信息。
+    ksa_mapping:
+      knowledge:
+        - K2.1
+        - K2.2
+      skills:
+        - S1.1
+        - S2.1
+      attitudes:
+        - A2.1
   - id: E003
     domain: engaging_with_ai
     difficulty: advanced
@@ -60,6 +77,16 @@ questions:
       c: 输出长度
       d: 技术复杂性
     explanation: AI 偏见通常源于缺乏多样性或含有历史偏见的训练数据，使得数据来源对于评估至关重要。
+    ksa_mapping:
+      knowledge:
+        - K3.1
+        - K3.2
+      skills:
+        - S2.1
+        - S2.2
+      attitudes:
+        - A2.1
+        - A3.1
   - id: C001
     domain: creating_with_ai
     difficulty: basic
@@ -72,6 +99,15 @@ questions:
       c: 只使用 AI 来修正语法和拼写
       d: 在创意过程中完全避免使用 AI
     explanation: AI 作为创意伙伴效果最佳，可以帮助构思、提供反馈和精炼想法，同时保持人类的创造力和监督。
+    ksa_mapping:
+      knowledge:
+        - K1.4
+        - K2.1
+      skills:
+        - S3.1
+        - S3.2
+      attitudes:
+        - A3.1
   - id: C002
     domain: creating_with_ai
     difficulty: intermediate
@@ -84,6 +120,14 @@ questions:
       c: 使用最快的生成设置
       d: 创建尽可能多的图像
     explanation: 尊重知识产权，避免滥用来创建未经授权的肖像或误导性内容，对于道德使用 AI 至关重要。
+    ksa_mapping:
+      knowledge:
+        - K3.2
+        - K5.1
+      skills:
+        - S2.1
+      attitudes:
+        - A1.1
   - id: C003
     domain: creating_with_ai
     difficulty: advanced
@@ -96,6 +140,16 @@ questions:
       c: 只将 AI 用于注释和文档
       d: 用 AI 工具取代所有开发人员
     explanation: 关键软件需要人工监督、彻底测试和验证 AI 生成的代码，以确保安全性、可靠性和正确性。
+    ksa_mapping:
+      knowledge:
+        - K2.1
+        - K4.1
+      skills:
+        - S3.1
+        - S6.1
+      attitudes:
+        - A3.1
+        - A4.1
   - id: M001
     domain: managing_with_ai
     difficulty: basic
@@ -108,6 +162,14 @@ questions:
       c: 只与可信的 AI 公司分享
       d: 在与 AI 分享前加密
     explanation: 关键软件需要人工监督、彻底测试和验证 AI 生成的代码，以确保安全性、可靠性和正确性。
+    ksa_mapping:
+      knowledge:
+        - K3.3
+        - K5.2
+      skills:
+        - S2.2
+      attitudes:
+        - A1.1
   - id: M002
     domain: managing_with_ai
     difficulty: intermediate
@@ -120,6 +182,16 @@ questions:
       c: 禁止所有 AI 工具以避免风险
       d: 只允许管理人员使用 AI 工具
     explanation: 关键软件需要人工监督、彻底测试和验证 AI 生成的代码，以确保安全性、可靠性和正确性。
+    ksa_mapping:
+      knowledge:
+        - K4.1
+        - K4.2
+      skills:
+        - S2.1
+        - S5.1
+      attitudes:
+        - A1.1
+        - A2.1
   - id: M003
     domain: managing_with_ai
     difficulty: advanced
@@ -132,6 +204,17 @@ questions:
       c: 尽快实施 AI
       d: 尽可能替换更多人类工作者
     explanation: 关键软件需要人工监督、彻底测试和验证 AI 生成的代码，以确保安全性、可靠性和正确性。
+    ksa_mapping:
+      knowledge:
+        - K3.1
+        - K3.2
+        - K5.1
+      skills:
+        - S2.1
+        - S6.2
+      attitudes:
+        - A1.1
+        - A2.1
   - id: D001
     domain: designing_with_ai
     difficulty: basic
@@ -144,6 +227,15 @@ questions:
       c: 让 AI 尽可能复杂
       d: 隐藏正在使用 AI 的事实
     explanation: 关键软件需要人工监督、彻底测试和验证 AI 生成的代码，以确保安全性、可靠性和正确性。
+    ksa_mapping:
+      knowledge:
+        - K4.2
+        - K5.3
+      skills:
+        - S5.1
+        - S6.1
+      attitudes:
+        - A2.1
   - id: D002
     domain: designing_with_ai
     difficulty: intermediate
@@ -156,6 +248,16 @@ questions:
       c: 立即关闭整个应用程序
       d: 将错误归咎于用户
     explanation: 关键软件需要人工监督、彻底测试和验证 AI 生成的代码，以确保安全性、可靠性和正确性。
+    ksa_mapping:
+      knowledge:
+        - K3.2
+        - K5.1
+      skills:
+        - S4.1
+        - S6.2
+      attitudes:
+        - A1.1
+        - A5.1
   - id: D003
     domain: designing_with_ai
     difficulty: advanced
@@ -168,6 +270,16 @@ questions:
       c: 只关注最大的市场细分
       d: 在所有地方实施最新的 AI 技术
     explanation: 关键软件需要人工监督、彻底测试和验证 AI 生成的代码，以确保安全性、可靠性和正确性。
+    ksa_mapping:
+      knowledge:
+        - K3.3
+        - K5.3
+      skills:
+        - S4.1
+        - S6.1
+      attitudes:
+        - A4.1
+        - A5.1
 metadata:
   language: zhCN
   language_name: Simplified Chinese

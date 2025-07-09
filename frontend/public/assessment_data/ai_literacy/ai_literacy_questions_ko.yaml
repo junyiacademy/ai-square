@@ -36,6 +36,14 @@ questions:
       c: 예/아니오 질문만 사용하기
       d: 항상 한 번에 여러 질문하기
     explanation: 맥락이 포함된 명확하고 구체적인 프롬프트는 AI가 정확히 무엇이 필요한지 이해하고 더 정확하고 유용한 응답을 제공하는 데 도움이 됩니다.
+    ksa_mapping:
+      knowledge:
+        - K1.1
+        - K1.2
+      skills:
+        - S1.1
+      attitudes:
+        - A1.1
   - id: E002
     domain: engaging_with_ai
     difficulty: intermediate
@@ -48,6 +56,15 @@ questions:
       c: AI 사용을 완전히 중단하기
       d: AI를 고장으로 신고하기
     explanation: 비판적 사고는 AI가 실수를 하거나 오래된 정보를 제공할 수 있으므로 신뢰할 수 있는 출처에 대해 AI 출력을 확인해야 합니다.
+    ksa_mapping:
+      knowledge:
+        - K2.1
+        - K2.2
+      skills:
+        - S1.1
+        - S2.1
+      attitudes:
+        - A2.1
   - id: E003
     domain: engaging_with_ai
     difficulty: advanced
@@ -60,6 +77,16 @@ questions:
       c: 출력 길이
       d: 기술적 복잡성
     explanation: AI 편향은 종종 다양성이 부족하거나 역사적 편향을 포함하는 훈련 데이터에서 비롯되어 데이터 소스가 평가에 중요합니다.
+    ksa_mapping:
+      knowledge:
+        - K3.1
+        - K3.2
+      skills:
+        - S2.1
+        - S2.2
+      attitudes:
+        - A2.1
+        - A3.1
   - id: C001
     domain: creating_with_ai
     difficulty: basic
@@ -72,6 +99,15 @@ questions:
       c: 문법과 철자 수정에만 AI 사용하기
       d: 창의적 프로세스에서 AI를 완전히 피하기
     explanation: AI는 인간의 창의성과 감독을 유지하면서 아이디어 발상, 피드백, 개선을 돕는 창의적 파트너로서 가장 잘 작동합니다.
+    ksa_mapping:
+      knowledge:
+        - K1.4
+        - K2.1
+      skills:
+        - S3.1
+        - S3.2
+      attitudes:
+        - A3.1
   - id: C002
     domain: creating_with_ai
     difficulty: intermediate
@@ -84,6 +120,14 @@ questions:
       c: 가장 빠른 생성 설정 사용하기
       d: 가능한 한 많은 이미지 만들기
     explanation: 지적 재산권을 존중하고 무단 초상권이나 오해의 소지가 있는 콘텐츠 생성을 위한 오용을 피하는 것은 윤리적인 AI 사용에 중요합니다.
+    ksa_mapping:
+      knowledge:
+        - K3.2
+        - K5.1
+      skills:
+        - S2.1
+      attitudes:
+        - A1.1
   - id: C003
     domain: creating_with_ai
     difficulty: advanced
@@ -96,6 +140,16 @@ questions:
       c: '[KO: Only use AI for comments and documentation]'
       d: '[KO: Replace all developers with AI tools]'
     explanation: '[KO translation needed]'
+    ksa_mapping:
+      knowledge:
+        - K2.1
+        - K4.1
+      skills:
+        - S3.1
+        - S6.1
+      attitudes:
+        - A3.1
+        - A4.1
   - id: M001
     domain: managing_with_ai
     difficulty: basic
@@ -108,6 +162,14 @@ questions:
       c: '[KO: Only share it with trusted AI companies]'
       d: '[KO: Encrypt it before sharing with AI]'
     explanation: '[KO translation needed]'
+    ksa_mapping:
+      knowledge:
+        - K3.3
+        - K5.2
+      skills:
+        - S2.2
+      attitudes:
+        - A1.1
   - id: M002
     domain: managing_with_ai
     difficulty: intermediate
@@ -120,6 +182,16 @@ questions:
       c: '[KO: Ban all AI tools to avoid risks]'
       d: '[KO: Only allow managers to use AI tools]'
     explanation: '[KO translation needed]'
+    ksa_mapping:
+      knowledge:
+        - K4.1
+        - K4.2
+      skills:
+        - S2.1
+        - S5.1
+      attitudes:
+        - A1.1
+        - A2.1
   - id: M003
     domain: managing_with_ai
     difficulty: advanced
@@ -132,6 +204,17 @@ questions:
       c: '[KO: Implementing AI as quickly as possible]'
       d: '[KO: Replacing as many human workers as possible]'
     explanation: '[KO translation needed]'
+    ksa_mapping:
+      knowledge:
+        - K3.1
+        - K3.2
+        - K5.1
+      skills:
+        - S2.1
+        - S6.2
+      attitudes:
+        - A1.1
+        - A2.1
   - id: D001
     domain: designing_with_ai
     difficulty: basic
@@ -144,6 +227,15 @@ questions:
       c: '[KO: Making the AI as complex as possible]'
       d: '[KO: Hiding the fact that AI is being used]'
     explanation: '[KO translation needed]'
+    ksa_mapping:
+      knowledge:
+        - K4.2
+        - K5.3
+      skills:
+        - S5.1
+        - S6.1
+      attitudes:
+        - A2.1
   - id: D002
     domain: designing_with_ai
     difficulty: intermediate
@@ -156,6 +248,16 @@ questions:
       c: '[KO: Immediately shut down the entire application]'
       d: '[KO: Blame the user for the error]'
     explanation: '[KO translation needed]'
+    ksa_mapping:
+      knowledge:
+        - K3.2
+        - K5.1
+      skills:
+        - S4.1
+        - S6.2
+      attitudes:
+        - A1.1
+        - A5.1
   - id: D003
     domain: designing_with_ai
     difficulty: advanced
@@ -168,6 +270,16 @@ questions:
       c: '[KO: Focusing only on the largest market segments]'
       d: '[KO: Implementing the latest AI technologies everywhere]'
     explanation: '[KO translation needed]'
+    ksa_mapping:
+      knowledge:
+        - K3.3
+        - K5.3
+      skills:
+        - S4.1
+        - S6.1
+      attitudes:
+        - A4.1
+        - A5.1
 metadata:
   language: ko
   language_name: Korean

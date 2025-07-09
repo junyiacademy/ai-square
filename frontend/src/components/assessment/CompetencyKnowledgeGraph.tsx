@@ -20,11 +20,12 @@ interface CompetencyKnowledgeGraphProps {
 
 interface GraphNode extends d3.SimulationNodeDatum {
   id: string;
-  type: 'domain' | 'competency' | 'ksa-theme' | 'ksa-code';
+  type: 'domain' | 'competency' | 'ksa-theme' | 'ksa-code' | 'ksa-subcode';
   name: string;
   score?: number;
   mastery?: number; // For KSA codes: 0=red, 1=yellow, 2=green
   ksaType?: 'knowledge' | 'skills' | 'attitudes';
+  parentCode?: string; // For subcodes like K1.1, parent would be K1
   details?: {
     summary?: string;
     explanation?: string;
@@ -143,6 +144,27 @@ export default function CompetencyKnowledgeGraph({
       });
     });
 
+    // Group codes by parent (e.g., K1, K1.1, K1.2 -> K1 is parent)
+    const parentCodes = new Map<string, string[]>();
+    const allCodes = Object.keys(ksaMastery);
+    
+    allCodes.forEach(code => {
+      // Check if this is a subcode (e.g., K1.1)
+      const match = code.match(/^([KSA]\d+)\.(\d+)$/);
+      if (match) {
+        const parentCode = match[1];
+        if (!parentCodes.has(parentCode)) {
+          parentCodes.set(parentCode, []);
+        }
+        parentCodes.get(parentCode)!.push(code);
+      } else {
+        // This is a parent code (e.g., K1)
+        if (!parentCodes.has(code)) {
+          parentCodes.set(code, []);
+        }
+      }
+    });
+
     // Add all KSA code nodes grouped by type
     Object.entries(ksaMastery).forEach(([code, data]) => {
       const ksaMap = code.startsWith('K') ? ksaMaps?.kMap : 
@@ -157,13 +179,19 @@ export default function CompetencyKnowledgeGraph({
       
       const masteryStatus = getMasteryStatus(data.correct, data.total);
       
+      // Check if this is a subcode
+      const isSubcode = code.includes('.');
+      const parentMatch = code.match(/^([KSA]\d+)\.(\d+)$/);
+      const parentCode = parentMatch ? parentMatch[1] : null;
+      
       // Add code node
       nodes.push({
         id: `code-${code}`,
-        type: 'ksa-code',
+        type: isSubcode ? 'ksa-subcode' : 'ksa-code',
         name: code,
         mastery: masteryStatus,
         ksaType,
+        parentCode,
         details: { 
           summary: ksaInfo.summary,
           explanation: ksaInfo.explanation,
@@ -174,12 +202,22 @@ export default function CompetencyKnowledgeGraph({
         }
       });
       
-      // Link to parent KSA type
-      links.push({
-        source: ksaType,
-        target: `code-${code}`,
-        value: 0.8
-      });
+      // Link to parent - either KSA type or parent code
+      if (isSubcode && parentCode) {
+        // Subcode links to parent code (e.g., K1.1 -> K1)
+        links.push({
+          source: `code-${parentCode}`,
+          target: `code-${code}`,
+          value: 0.6
+        });
+      } else {
+        // Parent code links to KSA type (e.g., K1 -> knowledge)
+        links.push({
+          source: ksaType,
+          target: `code-${code}`,
+          value: 0.8
+        });
+      }
     });
 
     return { nodes, links };
@@ -202,7 +240,8 @@ export default function CompetencyKnowledgeGraph({
       case 'domain': return node.id === 'center' ? 40 : 30;
       case 'competency': return 20;
       case 'ksa-theme': return 15;
-      case 'ksa-code': return 10;
+      case 'ksa-code': return 12;
+      case 'ksa-subcode': return 8;
       default: return 10;
     }
   };
@@ -237,23 +276,26 @@ export default function CompetencyKnowledgeGraph({
         .distance((d) => {
           // Shorter distance for code nodes to group them better
           const target = d.target as GraphNode;
+          if (target.type === 'ksa-subcode') return 40;
           if (target.type === 'ksa-code') return 60;
           return 120;
         }))
       .force('charge', d3.forceManyBody<GraphNode>()
         .strength((d) => {
           // Stronger repulsion for code nodes to prevent overlap
+          if (d.type === 'ksa-subcode') return -100;
           if (d.type === 'ksa-code') return -150;
           if (d.type === 'ksa-theme') return -400;
           return -500;
         }))
       .force('center', d3.forceCenter(dimensions.width / 2, dimensions.height / 2))
       .force('collision', d3.forceCollide<GraphNode>()
-        .radius((d) => getNodeRadius(d) + 10))
+        .radius((d) => getNodeRadius(d) + 8))
       .force('radial', d3.forceRadial<GraphNode>((d) => {
         // Position nodes in circles based on type
         if (d.type === 'ksa-theme') return 150;
         if (d.type === 'ksa-code') return 250;
+        if (d.type === 'ksa-subcode') return 320;
         return 0;
       }, dimensions.width / 2, dimensions.height / 2).strength(0.8));
 
@@ -280,8 +322,8 @@ export default function CompetencyKnowledgeGraph({
     node.append('circle')
       .attr('r', (d) => getNodeRadius(d))
       .attr('fill', (d) => {
-        // For KSA code nodes, use traffic light colors
-        if (d.type === 'ksa-code' && d.mastery !== undefined) {
+        // For KSA code and subcode nodes, use traffic light colors
+        if ((d.type === 'ksa-code' || d.type === 'ksa-subcode') && d.mastery !== undefined) {
           return getTrafficLightColor(d.mastery);
         }
         // For center node, use score-based color
@@ -316,8 +358,8 @@ export default function CompetencyKnowledgeGraph({
       .style('cursor', 'pointer')
       .on('click', (event, d) => {
         setSelectedNode(d);
-        // If clicking on a KSA code node, show related questions
-        if (d.type === 'ksa-code' && d.details?.questions) {
+        // If clicking on a KSA code or subcode node, show related questions
+        if ((d.type === 'ksa-code' || d.type === 'ksa-subcode') && d.details?.questions) {
           setSelectedQuestionIds(d.details.questions);
           setShowQuestionReview(true);
         } else {
@@ -336,6 +378,7 @@ export default function CompetencyKnowledgeGraph({
           case 'competency': return '12px';
           case 'ksa-theme': return '11px';
           case 'ksa-code': return '10px';
+          case 'ksa-subcode': return '9px';
           default: return '10px';
         }
       })
@@ -358,8 +401,8 @@ export default function CompetencyKnowledgeGraph({
         tooltip.transition().duration(200).style('opacity', .9);
         let content = `<strong>${d.name}</strong><br/>`;
         
-        // For KSA code nodes, show correct/total
-        if (d.type === 'ksa-code' && d.details) {
+        // For KSA code and subcode nodes, show correct/total
+        if ((d.type === 'ksa-code' || d.type === 'ksa-subcode') && d.details) {
           const status = d.mastery === 2 ? '✅ 全對' : 
                         d.mastery === 1 ? '⚠️ 部分正確' : 
                         '❌ 完全錯誤';
@@ -368,7 +411,7 @@ export default function CompetencyKnowledgeGraph({
           if (d.details.summary) {
             content += `<br/>${d.details.summary}`;
           }
-        } else if (d.mastery !== undefined && d.type !== 'ksa-code') {
+        } else if (d.mastery !== undefined && d.type !== 'ksa-code' && d.type !== 'ksa-subcode') {
           content += `${t('results.knowledgeGraph.mastery')}: ${d.score || 0}%<br/>`;
         }
         
@@ -499,7 +542,7 @@ export default function CompetencyKnowledgeGraph({
           {selectedNode.details?.summary && (
             <p className="text-sm text-gray-700 mb-3">{selectedNode.details.summary}</p>
           )}
-          {selectedNode.type === 'ksa-code' && selectedNode.details && (
+          {(selectedNode.type === 'ksa-code' || selectedNode.type === 'ksa-subcode') && selectedNode.details && (
             <div className="mb-3">
               <div className="flex items-center gap-2 mb-2">
                 {selectedNode.mastery === 2 && <span className="text-green-600 text-lg">✅ 全對</span>}

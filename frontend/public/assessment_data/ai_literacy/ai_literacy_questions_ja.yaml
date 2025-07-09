@@ -36,6 +36,14 @@ questions:
       c: はい/いいえの質問のみを使用する
       d: 常に一度に複数の質問をする
     explanation: 文脈を含む明確で具体的なプロンプトは、AI があなたのニーズを正確に理解し、より正確で有用な応答を提供するのに役立ちます。
+    ksa_mapping:
+      knowledge:
+        - K1.1
+        - K1.2
+      skills:
+        - S1.1
+      attitudes:
+        - A1.1
   - id: E002
     domain: engaging_with_ai
     difficulty: intermediate
@@ -48,6 +56,15 @@ questions:
       c: AI の使用を完全にやめる
       d: AI を故障として報告する
     explanation: 批判的思考には、AI が間違いを犯したり古い情報を提供したりする可能性があるため、信頼できる情報源に対して AI の出力を検証する必要があります。
+    ksa_mapping:
+      knowledge:
+        - K2.1
+        - K2.2
+      skills:
+        - S1.1
+        - S2.1
+      attitudes:
+        - A2.1
   - id: E003
     domain: engaging_with_ai
     difficulty: advanced
@@ -60,6 +77,16 @@ questions:
       c: 出力の長さ
       d: 技術的複雑性
     explanation: AI のバイアスは、多様性が不足していたり歴史的バイアスを含んでいたりする訓練データから生じることが多く、データソースが評価において重要となります。
+    ksa_mapping:
+      knowledge:
+        - K3.1
+        - K3.2
+      skills:
+        - S2.1
+        - S2.2
+      attitudes:
+        - A2.1
+        - A3.1
   - id: C001
     domain: creating_with_ai
     difficulty: basic
@@ -72,6 +99,15 @@ questions:
       c: 文法とスペルの修正にのみ AI を使用する
       d: クリエイティブプロセスで AI を完全に避ける
     explanation: AI はクリエイティブパートナーとして最もよく機能し、人間の創造性と監督を維持しながら、アイデア出し、フィードバック、洗練を支援します。
+    ksa_mapping:
+      knowledge:
+        - K1.4
+        - K2.1
+      skills:
+        - S3.1
+        - S3.2
+      attitudes:
+        - A3.1
   - id: C002
     domain: creating_with_ai
     difficulty: intermediate
@@ -84,6 +120,14 @@ questions:
       c: 最速の生成設定を使用する
       d: できるだけ多くの画像を作成する
     explanation: 知的財産権を尊重し、無許可の肖像や誤解を招くコンテンツの作成のための誤用を避けることは、倫理的な AI 使用に不可欠です。
+    ksa_mapping:
+      knowledge:
+        - K3.2
+        - K5.1
+      skills:
+        - S2.1
+      attitudes:
+        - A1.1
   - id: C003
     domain: creating_with_ai
     difficulty: advanced
@@ -96,6 +140,16 @@ questions:
       c: '[JA: Only use AI for comments and documentation]'
       d: '[JA: Replace all developers with AI tools]'
     explanation: '[JA translation needed]'
+    ksa_mapping:
+      knowledge:
+        - K2.1
+        - K4.1
+      skills:
+        - S3.1
+        - S6.1
+      attitudes:
+        - A3.1
+        - A4.1
   - id: M001
     domain: managing_with_ai
     difficulty: basic
@@ -108,6 +162,14 @@ questions:
       c: '[JA: Only share it with trusted AI companies]'
       d: '[JA: Encrypt it before sharing with AI]'
     explanation: '[JA translation needed]'
+    ksa_mapping:
+      knowledge:
+        - K3.3
+        - K5.2
+      skills:
+        - S2.2
+      attitudes:
+        - A1.1
   - id: M002
     domain: managing_with_ai
     difficulty: intermediate
@@ -120,6 +182,16 @@ questions:
       c: '[JA: Ban all AI tools to avoid risks]'
       d: '[JA: Only allow managers to use AI tools]'
     explanation: '[JA translation needed]'
+    ksa_mapping:
+      knowledge:
+        - K4.1
+        - K4.2
+      skills:
+        - S2.1
+        - S5.1
+      attitudes:
+        - A1.1
+        - A2.1
   - id: M003
     domain: managing_with_ai
     difficulty: advanced
@@ -132,6 +204,17 @@ questions:
       c: '[JA: Implementing AI as quickly as possible]'
       d: '[JA: Replacing as many human workers as possible]'
     explanation: '[JA translation needed]'
+    ksa_mapping:
+      knowledge:
+        - K3.1
+        - K3.2
+        - K5.1
+      skills:
+        - S2.1
+        - S6.2
+      attitudes:
+        - A1.1
+        - A2.1
   - id: D001
     domain: designing_with_ai
     difficulty: basic
@@ -144,6 +227,15 @@ questions:
       c: '[JA: Making the AI as complex as possible]'
       d: '[JA: Hiding the fact that AI is being used]'
     explanation: '[JA translation needed]'
+    ksa_mapping:
+      knowledge:
+        - K4.2
+        - K5.3
+      skills:
+        - S5.1
+        - S6.1
+      attitudes:
+        - A2.1
   - id: D002
     domain: designing_with_ai
     difficulty: intermediate
@@ -156,6 +248,16 @@ questions:
       c: '[JA: Immediately shut down the entire application]'
       d: '[JA: Blame the user for the error]'
     explanation: '[JA translation needed]'
+    ksa_mapping:
+      knowledge:
+        - K3.2
+        - K5.1
+      skills:
+        - S4.1
+        - S6.2
+      attitudes:
+        - A1.1
+        - A5.1
   - id: D003
     domain: designing_with_ai
     difficulty: advanced
@@ -168,6 +270,16 @@ questions:
       c: '[JA: Focusing only on the largest market segments]'
       d: '[JA: Implementing the latest AI technologies everywhere]'
     explanation: '[JA translation needed]'
+    ksa_mapping:
+      knowledge:
+        - K3.3
+        - K5.3
+      skills:
+        - S4.1
+        - S6.1
+      attitudes:
+        - A4.1
+        - A5.1
 metadata:
   language: ja
   language_name: Japanese

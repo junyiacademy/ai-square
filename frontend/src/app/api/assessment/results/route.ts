@@ -86,12 +86,18 @@ export async function POST(request: NextRequest) {
         selectedAnswer: string; 
         isCorrect: boolean; 
         timeSpent?: number 
-      }) => ({
-        question_id: answer.questionId,
-        selected: answer.selectedAnswer,
-        correct: answer.isCorrect ? answer.selectedAnswer : 'n/a',
-        time_spent: answer.timeSpent || 0,
-      })),
+      }) => {
+        // Find the question to get KSA mapping
+        const question = body.questions?.find((q: any) => q.id === answer.questionId);
+        
+        return {
+          question_id: answer.questionId,
+          selected: answer.selectedAnswer,
+          correct: answer.isCorrect ? answer.selectedAnswer : 'n/a',
+          time_spent: answer.timeSpent || 0,
+          ksa_mapping: question?.ksa_mapping || undefined,
+        };
+      }),
     };
 
     // 儲存結果

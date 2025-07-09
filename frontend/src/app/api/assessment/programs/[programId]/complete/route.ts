@@ -171,17 +171,17 @@ export async function POST(
         ),
         ksaAnalysis: {
           knowledge: {
-            score: Math.round((1 - weakKnowledge.size / allKnowledge.size) * 100),
+            score: allKnowledge.size > 0 ? Math.round((1 - weakKnowledge.size / allKnowledge.size) * 100) : 0,
             strong: Array.from(allKnowledge).filter(k => !weakKnowledge.has(k)).slice(0, 3),
             weak: Array.from(weakKnowledge).slice(0, 3)
           },
           skills: {
-            score: Math.round((1 - weakSkills.size / allSkills.size) * 100),
+            score: allSkills.size > 0 ? Math.round((1 - weakSkills.size / allSkills.size) * 100) : 0,
             strong: Array.from(allSkills).filter(s => !weakSkills.has(s)).slice(0, 3),
             weak: Array.from(weakSkills).slice(0, 3)
           },
           attitudes: {
-            score: Math.round((1 - weakAttitudes.size / allAttitudes.size) * 100),
+            score: allAttitudes.size > 0 ? Math.round((1 - weakAttitudes.size / allAttitudes.size) * 100) : 0,
             strong: Array.from(allAttitudes).filter(a => !weakAttitudes.has(a)).slice(0, 3),
             weak: Array.from(weakAttitudes).slice(0, 3)
           }

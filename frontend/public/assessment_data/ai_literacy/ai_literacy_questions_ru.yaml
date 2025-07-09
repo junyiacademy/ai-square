@@ -1,7 +1,11 @@
 assessment_config:
   id: ai_literacy
   title: Оценка ИИ-грамотности
-  description: Оцените ваше понимание ИИ-систем в четырех ключевых областях: взаимодействие с ИИ, создание с помощью ИИ, управление рисками ИИ и проектирование ИИ-решений. Эта оценка поможет определить ваш текущий уровень знаний в области ИИ и области для улучшения.
+  description: >
+    Оцените ваше понимание ИИ-систем в четырех ключевых областях:
+    взаимодействие с ИИ, создание с помощью ИИ, управление рисками ИИ
+    и проектирование ИИ-решений. Эта оценка поможет определить ваш
+    текущий уровень знаний в области ИИ и области для улучшения.
   total_questions: 12
   time_limit_minutes: 15
   passing_score: 60
@@ -29,6 +33,10 @@ questions:
     difficulty: basic
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K1.1, K1.2]
+      skills: [S1.1]
+      attitudes: [A1.1]
     question: Какой самый эффективный способ получить лучшие результаты от ИИ-чатбота?
     options:
       a: Задавать очень общие вопросы
@@ -41,6 +49,10 @@ questions:
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K2.1, K2.2]
+      skills: [S1.1, S2.1]
+      attitudes: [A2.1]
     question: Когда ИИ дает вам неправильный ответ, какой должна быть ваша первая реакция?
     options:
       a: Немедленно доверять ИИ и использовать информацию
@@ -53,6 +65,10 @@ questions:
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.1, K3.2]
+      skills: [S2.1, S2.2]
+      attitudes: [A2.1, A3.1]
     question: Какой самый важный фактор при оценке предвзятости в контенте, созданном ИИ?
     options:
       a: Скорость генерации
@@ -65,6 +81,10 @@ questions:
     difficulty: basic
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K1.4, K2.1]
+      skills: [S3.1, S3.2]
+      attitudes: [A3.1]
     question: Какой подход наиболее эффективен при использовании ИИ для творческого письма?
     options:
       a: Позволить ИИ писать все без участия человека
@@ -77,6 +97,10 @@ questions:
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.2, K5.1]
+      skills: [S2.1]
+      attitudes: [A1.1]
     question: При использовании генераторов изображений ИИ, какое самое важное этическое соображение?
     options:
       a: Делать изображения максимально реалистичными
@@ -89,6 +113,10 @@ questions:
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K2.1, K4.1]
+      skills: [S3.1, S6.1]
+      attitudes: [A3.1, A4.1]
     question: Как следует подходить к генерации кода с помощью ИИ для критически важного программного проекта?
     options:
       a: '[RU: Use AI code directly without review]'
@@ -101,6 +129,10 @@ questions:
     difficulty: basic
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.3, K5.2]
+      skills: [S2.2]
+      attitudes: [A1.1]
     question: Что следует делать с конфиденциальной личной информацией при использовании инструментов ИИ?
     options:
       a: '[RU: Share it freely to get better AI responses]'
@@ -113,6 +145,10 @@ questions:
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K4.1, K4.2]
+      skills: [S2.1, S5.1]
+      attitudes: [A1.1, A2.1]
     question: Как следует управлять использованием инструментов ИИ в командной среде?
     options:
       a: '[RU: Let everyone use any AI tool without guidelines]'
@@ -125,6 +161,10 @@ questions:
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.1, K3.2, K5.1]
+      skills: [S2.1, S6.2]
+      attitudes: [A1.1, A2.1]
     question: Какой самый критический фактор при внедрении ИИ в бизнес-процессы?
     options:
       a: '[RU: Choosing the most advanced AI technology]'
@@ -137,6 +177,10 @@ questions:
     difficulty: basic
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K4.2, K5.3]
+      skills: [S5.1, S6.1]
+      attitudes: [A2.1]
     question: При разработке функции на основе ИИ для пользователей, на чем должен быть основной фокус?
     options:
       a: '[RU: Showcasing the most advanced AI capabilities]'
@@ -149,6 +193,10 @@ questions:
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.2, K5.1]
+      skills: [S4.1, S6.2]
+      attitudes: [A1.1, A5.1]
     question: Как следует обрабатывать сбои системы ИИ в пользовательских приложениях?
     options:
       a: '[RU: Hide errors and pretend everything is working]'
@@ -161,6 +209,10 @@ questions:
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.3, K5.3]
+      skills: [S4.1, S6.1]
+      attitudes: [A4.1, A5.1]
     question: Какое самое важное соображение при разработке систем ИИ для разнообразной глобальной аудитории?
     options:
       a: '[RU: Using the same design for everyone to ensure consistency]'

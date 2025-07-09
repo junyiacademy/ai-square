@@ -32,6 +32,11 @@ export interface AssessmentResultGCS {
     selected: string;
     correct: string;
     time_spent: number;
+    ksa_mapping?: {
+      knowledge: string[];
+      skills: string[];
+      attitudes: string[];
+    };
   }>;
 }
 

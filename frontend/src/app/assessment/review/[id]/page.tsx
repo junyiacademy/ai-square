@@ -32,6 +32,11 @@ interface StoredAssessment {
     selected: string;
     correct: string;
     time_spent: number;
+    ksa_mapping?: {
+      knowledge: string[];
+      skills: string[];
+      attitudes: string[];
+    };
   }>;
 }
 
@@ -154,6 +159,18 @@ export default function AssessmentReviewPage() {
     isCorrect: answer.selected === answer.correct
   }));
 
+  // Rebuild questions with KSA mapping from stored data
+  const questionsWithKSA = assessmentData.questions.map(question => {
+    const storedAnswer = storedResult.answers.find(a => a.question_id === question.id);
+    if (storedAnswer?.ksa_mapping) {
+      return {
+        ...question,
+        ksa_mapping: storedAnswer.ksa_mapping
+      };
+    }
+    return question;
+  });
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -183,7 +200,7 @@ export default function AssessmentReviewPage() {
         result={assessmentResult}
         domains={assessmentData.domains}
         onRetake={() => router.push('/assessment')}
-        questions={assessmentData.questions}
+        questions={questionsWithKSA}
         userAnswers={userAnswers}
         isReview={true}
       />

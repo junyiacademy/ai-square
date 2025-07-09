@@ -1,7 +1,10 @@
 assessment_config:
   id: ai_literacy
   title: تقييم محو الأمية في الذكاء الاصطناعي
-  description: قيم فهمك لأنظمة الذكاء الاصطناعي في أربعة مجالات رئيسية: التفاعل مع الذكاء الاصطناعي، والإبداع بالذكاء الاصطناعي، وإدارة مخاطر الذكاء الاصطناعي، وتصميم حلول الذكاء الاصطناعي. يساعد هذا التقييم في تحديد مستواك الحالي من معرفة الذكاء الاصطناعي ومجالات التحسين.
+  description: >
+    قيم فهمك لأنظمة الذكاء الاصطناعي في أربعة مجالات رئيسية: التفاعل مع الذكاء الاصطناعي،
+    والإبداع بالذكاء الاصطناعي، وإدارة مخاطر الذكاء الاصطناعي، وتصميم حلول الذكاء الاصطناعي.
+    يساعد هذا التقييم في تحديد مستواك الحالي من معرفة الذكاء الاصطناعي ومجالات التحسين.
   total_questions: 12
   time_limit_minutes: 15
   passing_score: 60
@@ -29,6 +32,10 @@ questions:
     difficulty: basic
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K1.1, K1.2]
+      skills: [S1.1]
+      attitudes: [A1.1]
     question: 'ما هي الطريقة الأكثر فعالية للحصول على نتائج أفضل من روبوت الدردشة بالذكاء الاصطناعي؟'
     options:
       a: 'طرح أسئلة عامة جداً'
@@ -41,6 +48,10 @@ questions:
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K2.1, K2.2]
+      skills: [S1.1, S2.1]
+      attitudes: [A2.1]
     question: 'عندما يعطيك الذكاء الاصطناعي إجابة خاطئة، ما الذي يجب أن يكون ردك الأول؟'
     options:
       a: 'الثقة فوراً بالذكاء الاصطناعي واستخدام المعلومات'
@@ -53,6 +64,10 @@ questions:
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.1, K3.2]
+      skills: [S2.1, S2.2]
+      attitudes: [A2.1, A3.1]
     question: 'ما هو العامل الأكثر أهمية عند تقييم المحتوى الذي ينتجه الذكاء الاصطناعي للتحيز؟'
     options:
       a: 'سرعة التوليد'
@@ -65,6 +80,10 @@ questions:
     difficulty: basic
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K1.4, K2.1]
+      skills: [S3.1, S3.2]
+      attitudes: [A3.1]
     question: 'أي نهج هو الأكثر فعالية عند استخدام الذكاء الاصطناعي في الكتابة الإبداعية؟'
     options:
       a: 'دع الذكاء الاصطناعي يكتب كل شيء دون مدخلات بشرية'
@@ -77,6 +96,10 @@ questions:
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.2, K5.1]
+      skills: [S2.1]
+      attitudes: [A1.1]
     question: 'عند استخدام مولدات صور الذكاء الاصطناعي، ما هو الاعتبار الأخلاقي الأكثر أهمية؟'
     options:
       a: 'جعل الصور واقعية قدر الإمكان'
@@ -89,6 +112,10 @@ questions:
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K2.1, K4.1]
+      skills: [S3.1, S6.1]
+      attitudes: [A3.1, A4.1]
     question: 'كيف يجب أن تتعامل مع توليد الكود بمساعدة الذكاء الاصطناعي لمشروع برمجي حرج؟'
     options:
       a: 'استخدم كود الذكاء الاصطناعي مباشرة دون مراجعة'
@@ -101,6 +128,10 @@ questions:
     difficulty: basic
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.3, K5.2]
+      skills: [S2.2]
+      attitudes: [A1.1]
     question: 'ماذا يجب أن تفعل بالمعلومات الشخصية الحساسة عند استخدام أدوات الذكاء الاصطناعي؟'
     options:
       a: 'شاركها بحرية للحصول على ردود أفضل من الذكاء الاصطناعي'
@@ -113,6 +144,10 @@ questions:
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K4.1, K4.2]
+      skills: [S2.1, S5.1]
+      attitudes: [A1.1, A2.1]
     question: 'كيف يجب إدارة استخدام أدوات الذكاء الاصطناعي في بيئة الفريق؟'
     options:
       a: 'دع الجميع يستخدم أي أداة ذكاء اصطناعي دون إرشادات'
@@ -125,6 +160,10 @@ questions:
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.1, K3.2, K5.1]
+      skills: [S2.1, S6.2]
+      attitudes: [A1.1, A2.1]
     question: 'ما هو العامل الأكثر أهمية عند تطبيق الذكاء الاصطناعي في العمليات التجارية؟'
     options:
       a: 'اختيار أحدث تقنية للذكاء الاصطناعي'
@@ -137,6 +176,10 @@ questions:
     difficulty: basic
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K4.2, K5.3]
+      skills: [S5.1, S6.1]
+      attitudes: [A2.1]
     question: 'عند تصميم ميزة تعمل بالذكاء الاصطناعي للمستخدمين، ما الذي يجب أن يكون التركيز الأساسي؟'
     options:
       a: 'عرض أحدث قدرات الذكاء الاصطناعي'
@@ -149,6 +192,10 @@ questions:
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.2, K5.1]
+      skills: [S4.1, S6.2]
+      attitudes: [A1.1, A5.1]
     question: 'كيف يجب التعامل مع فشل نظام الذكاء الاصطناعي في التطبيقات التي تواجه المستخدمين؟'
     options:
       a: 'إخفاء الأخطاء والتظاهر بأن كل شيء يعمل'
@@ -161,6 +208,10 @@ questions:
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.3, K5.3]
+      skills: [S4.1, S6.1]
+      attitudes: [A4.1, A5.1]
     question: 'ما هو الاعتبار الأكثر أهمية عند تصميم أنظمة الذكاء الاصطناعي لجماهير عالمية متنوعة؟'
     options:
       a: 'استخدام نفس التصميم للجميع لضمان الاتساق'

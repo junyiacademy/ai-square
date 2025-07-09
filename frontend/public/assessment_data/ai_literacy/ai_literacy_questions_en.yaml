@@ -36,6 +36,14 @@ questions:
       c: Use only yes/no questions
       d: Always ask multiple questions at once
     explanation: Clear, specific prompts with context help AI understand exactly what you need and provide more accurate, useful responses.
+    ksa_mapping:
+      knowledge:
+        - K1.1
+        - K1.2
+      skills:
+        - S1.1
+      attitudes:
+        - A1.1
   - id: E002
     domain: engaging_with_ai
     difficulty: intermediate
@@ -48,6 +56,15 @@ questions:
       c: Stop using AI altogether
       d: Report the AI as broken
     explanation: Critical thinking requires verifying AI outputs against reliable sources, as AI can make mistakes or provide outdated information.
+    ksa_mapping:
+      knowledge:
+        - K2.1
+        - K2.2
+      skills:
+        - S1.1
+        - S2.1
+      attitudes:
+        - A2.1
   - id: E003
     domain: engaging_with_ai
     difficulty: advanced
@@ -60,6 +77,16 @@ questions:
       c: The length of the output
       d: The technical complexity
     explanation: AI bias often stems from training data that lacks diversity or contains historical biases, making data sources crucial for evaluation.
+    ksa_mapping:
+      knowledge:
+        - K3.1
+        - K3.2
+      skills:
+        - S2.1
+        - S2.2
+      attitudes:
+        - A2.1
+        - A3.1
   - id: C001
     domain: creating_with_ai
     difficulty: basic
@@ -72,6 +99,15 @@ questions:
       c: Only use AI to fix grammar and spelling
       d: Avoid AI completely in creative processes
     explanation: AI works best as a creative partner, helping with ideation, feedback, and refinement while maintaining human creativity and oversight.
+    ksa_mapping:
+      knowledge:
+        - K1.4
+        - K2.1
+      skills:
+        - S3.1
+        - S3.2
+      attitudes:
+        - A3.1
   - id: C002
     domain: creating_with_ai
     difficulty: intermediate
@@ -84,6 +120,14 @@ questions:
       c: Using the fastest generation settings
       d: Creating as many images as possible
     explanation: Respecting intellectual property rights and avoiding misuse for creating unauthorized likenesses or misleading content is crucial for ethical AI use.
+    ksa_mapping:
+      knowledge:
+        - K3.2
+        - K5.1
+      skills:
+        - S2.1
+      attitudes:
+        - A1.1
   - id: C003
     domain: creating_with_ai
     difficulty: advanced
@@ -96,6 +140,16 @@ questions:
       c: Only use AI for comments and documentation
       d: Replace all developers with AI tools
     explanation: Critical software requires human oversight, thorough testing, and validation of AI-generated code to ensure security, reliability, and correctness.
+    ksa_mapping:
+      knowledge:
+        - K2.1
+        - K4.1
+      skills:
+        - S3.1
+        - S6.1
+      attitudes:
+        - A3.1
+        - A4.1
   - id: M001
     domain: managing_with_ai
     difficulty: basic
@@ -108,6 +162,14 @@ questions:
       c: Only share it with trusted AI companies
       d: Encrypt it before sharing with AI
     explanation: Sensitive personal information should never be inputted into AI systems as it may be stored, processed, or potentially exposed.
+    ksa_mapping:
+      knowledge:
+        - K3.3
+        - K5.2
+      skills:
+        - S2.2
+      attitudes:
+        - A1.1
   - id: M002
     domain: managing_with_ai
     difficulty: intermediate
@@ -120,6 +182,16 @@ questions:
       c: Ban all AI tools to avoid risks
       d: Only allow managers to use AI tools
     explanation: Clear policies and training ensure responsible, effective, and consistent AI tool usage across the team while maximizing benefits and minimizing risks.
+    ksa_mapping:
+      knowledge:
+        - K4.1
+        - K4.2
+      skills:
+        - S2.1
+        - S5.1
+      attitudes:
+        - A1.1
+        - A2.1
   - id: M003
     domain: managing_with_ai
     difficulty: advanced
@@ -132,6 +204,17 @@ questions:
       c: Implementing AI as quickly as possible
       d: Replacing as many human workers as possible
     explanation: Understanding AI limitations and maintaining appropriate human oversight ensures successful, responsible, and sustainable AI implementation in business.
+    ksa_mapping:
+      knowledge:
+        - K3.1
+        - K3.2
+        - K5.1
+      skills:
+        - S2.1
+        - S6.2
+      attitudes:
+        - A1.1
+        - A2.1
   - id: D001
     domain: designing_with_ai
     difficulty: basic
@@ -144,6 +227,15 @@ questions:
       c: Making the AI as complex as possible
       d: Hiding the fact that AI is being used
     explanation: User-centered design focuses on solving real problems and improving experiences, not on displaying technology for its own sake.
+    ksa_mapping:
+      knowledge:
+        - K4.2
+        - K5.3
+      skills:
+        - S5.1
+        - S6.1
+      attitudes:
+        - A2.1
   - id: D002
     domain: designing_with_ai
     difficulty: intermediate
@@ -156,6 +248,16 @@ questions:
       c: Immediately shut down the entire application
       d: Blame the user for the error
     explanation: Good AI design includes planning for failures with graceful fallbacks and clear communication to maintain user trust and experience.
+    ksa_mapping:
+      knowledge:
+        - K3.2
+        - K5.1
+      skills:
+        - S4.1
+        - S6.2
+      attitudes:
+        - A1.1
+        - A5.1
   - id: D003
     domain: designing_with_ai
     difficulty: advanced
@@ -168,6 +270,16 @@ questions:
       c: Focusing only on the largest market segments
       d: Implementing the latest AI technologies everywhere
     explanation: Inclusive AI design requires understanding diverse cultural contexts and actively working to prevent algorithmic bias that could harm different groups.
+    ksa_mapping:
+      knowledge:
+        - K3.3
+        - K5.3
+      skills:
+        - S4.1
+        - S6.1
+      attitudes:
+        - A4.1
+        - A5.1
 metadata:
   language: en
   language_name: English

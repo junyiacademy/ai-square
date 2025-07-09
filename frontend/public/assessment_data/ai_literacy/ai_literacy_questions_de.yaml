@@ -1,7 +1,10 @@
 assessment_config:
   id: ai_literacy
   title: KI-Kompetenz-Bewertung
-  description: Bewerten Sie Ihr Verständnis von KI-Systemen in vier Kernbereichen: Interaktion mit KI, Kreation mit KI, Management von KI-Risiken und Design von KI-Lösungen. Diese Bewertung hilft dabei, Ihr aktuelles KI-Wissen und Verbesserungsbereiche zu identifizieren.
+  description: >
+    Bewerten Sie Ihr Verständnis von KI-Systemen in vier Kernbereichen: Interaktion mit KI,
+    Kreation mit KI, Management von KI-Risiken und Design von KI-Lösungen.
+    Diese Bewertung hilft dabei, Ihr aktuelles KI-Wissen und Verbesserungsbereiche zu identifizieren.
   total_questions: 12
   time_limit_minutes: 15
   passing_score: 60
@@ -29,6 +32,10 @@ questions:
     difficulty: basic
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K1.1, K1.2]
+      skills: [S1.1]
+      attitudes: [A1.1]
     question: Was ist der effektivste Weg, um bessere Ergebnisse von einem KI-Chatbot zu erhalten?
     options:
       a: Sehr allgemeine Fragen stellen
@@ -41,6 +48,10 @@ questions:
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K2.1, K2.2]
+      skills: [S1.1, S2.1]
+      attitudes: [A2.1]
     question: Wenn eine KI Ihnen eine falsche Antwort gibt, was sollte Ihre erste Reaktion sein?
     options:
       a: Der KI sofort vertrauen und die Informationen verwenden
@@ -53,6 +64,10 @@ questions:
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.1, K3.2]
+      skills: [S2.1, S2.2]
+      attitudes: [A2.1, A3.1]
     question: Was ist der wichtigste Faktor bei der Bewertung von Voreingenommenheit in KI-generierten Inhalten?
     options:
       a: Die Geschwindigkeit der Generierung
@@ -65,6 +80,10 @@ questions:
     difficulty: basic
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K1.4, K2.1]
+      skills: [S3.1, S3.2]
+      attitudes: [A3.1]
     question: Welcher Ansatz ist am effektivsten bei der Verwendung von KI für kreatives Schreiben?
     options:
       a: Die KI alles ohne menschliche Eingabe schreiben lassen
@@ -77,6 +96,10 @@ questions:
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.2, K5.1]
+      skills: [S2.1]
+      attitudes: [A1.1]
     question: Bei der Verwendung von KI-Bildgeneratoren, was ist die wichtigste ethische Überlegung?
     options:
       a: Bilder so realistisch wie möglich machen
@@ -89,6 +112,10 @@ questions:
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K2.1, K4.1]
+      skills: [S3.1, S6.1]
+      attitudes: [A3.1, A4.1]
     question: Wie sollten Sie KI-unterstützte Codegenerierung für ein kritisches Softwareprojekt angehen?
     options:
       a: '[DE: Use AI code directly without review]'
@@ -101,6 +128,10 @@ questions:
     difficulty: basic
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.3, K5.2]
+      skills: [S2.2]
+      attitudes: [A1.1]
     question: Was sollten Sie mit sensiblen persönlichen Informationen tun, wenn Sie KI-Tools verwenden?
     options:
       a: '[DE: Share it freely to get better AI responses]'
@@ -113,6 +144,10 @@ questions:
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K4.1, K4.2]
+      skills: [S2.1, S5.1]
+      attitudes: [A1.1, A2.1]
     question: Wie sollten Sie den Einsatz von KI-Tools in einer Teamumgebung verwalten?
     options:
       a: '[DE: Let everyone use any AI tool without guidelines]'
@@ -125,6 +160,10 @@ questions:
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.1, K3.2, K5.1]
+      skills: [S2.1, S6.2]
+      attitudes: [A1.1, A2.1]
     question: Was ist der kritischste Faktor bei der Implementierung von KI in Geschäftsprozessen?
     options:
       a: '[DE: Choosing the most advanced AI technology]'
@@ -137,6 +176,10 @@ questions:
     difficulty: basic
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K4.2, K5.3]
+      skills: [S5.1, S6.1]
+      attitudes: [A2.1]
     question: Bei der Gestaltung einer KI-basierten Funktion für Benutzer, was sollte der Hauptfokus sein?
     options:
       a: '[DE: Showcasing the most advanced AI capabilities]'
@@ -149,6 +192,10 @@ questions:
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.2, K5.1]
+      skills: [S4.1, S6.2]
+      attitudes: [A1.1, A5.1]
     question: Wie sollten Sie KI-Systemausfälle in benutzerorientierten Anwendungen handhaben?
     options:
       a: '[DE: Hide errors and pretend everything is working]'
@@ -161,6 +208,10 @@ questions:
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
+    ksa_mapping:
+      knowledge: [K3.3, K5.3]
+      skills: [S4.1, S6.1]
+      attitudes: [A4.1, A5.1]
     question: Was ist die wichtigste Überlegung bei der Gestaltung von KI-Systemen für vielfältige globale Zielgruppen?
     options:
       a: '[DE: Using the same design for everyone to ensure consistency]'

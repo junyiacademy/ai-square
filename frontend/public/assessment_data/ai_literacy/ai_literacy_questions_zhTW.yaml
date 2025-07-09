@@ -36,6 +36,14 @@ questions:
       c: 只使用是/否問題
       d: 總是一次問多個問題
     explanation: 清晰、具體且有背景的提示有助於 AI 準確理解您的需求，並提供更準確、有用的回應。
+    ksa_mapping:
+      knowledge:
+        - K1.1
+        - K1.2
+      skills:
+        - S1.1
+      attitudes:
+        - A1.1
   - id: E002
     domain: engaging_with_ai
     difficulty: intermediate
@@ -48,6 +56,15 @@ questions:
       c: 完全停止使用 AI
       d: 報告 AI 故障
     explanation: 批判性思維需要透過可靠的來源驗證 AI 的輸出，因為 AI 可能會出錯或提供過時的信息。
+    ksa_mapping:
+      knowledge:
+        - K2.1
+        - K2.2
+      skills:
+        - S1.1
+        - S2.1
+      attitudes:
+        - A2.1
   - id: E003
     domain: engaging_with_ai
     difficulty: advanced
@@ -60,6 +77,16 @@ questions:
       c: 輸出長度
       d: 技術複雜性
     explanation: AI 偏見通常源於缺乏多樣性或含有歷史偏見的訓練數據，使得數據來源對於評估至關重要。
+    ksa_mapping:
+      knowledge:
+        - K3.1
+        - K3.2
+      skills:
+        - S2.1
+        - S2.2
+      attitudes:
+        - A2.1
+        - A3.1
   - id: C001
     domain: creating_with_ai
     difficulty: basic
@@ -72,6 +99,15 @@ questions:
       c: 只使用 AI 來修正語法和拼寫
       d: 在創意過程中完全避免使用 AI
     explanation: AI 作為創意夥伴效果最佳，可以幫助構思、提供反饋和精煉想法，同時保持人類的創造力和監督。
+    ksa_mapping:
+      knowledge:
+        - K1.4
+        - K2.1
+      skills:
+        - S3.1
+        - S3.2
+      attitudes:
+        - A3.1
   - id: C002
     domain: creating_with_ai
     difficulty: intermediate
@@ -84,6 +120,14 @@ questions:
       c: 使用最快的生成設置
       d: 創建盡可能多的圖像
     explanation: 尊重智慧財產權，避免濫用來創建未經授權的肖像或誤導性內容，對於道德使用 AI 至關重要。
+    ksa_mapping:
+      knowledge:
+        - K3.2
+        - K5.1
+      skills:
+        - S2.1
+      attitudes:
+        - A1.1
   - id: C003
     domain: creating_with_ai
     difficulty: advanced
@@ -96,6 +140,16 @@ questions:
       c: 只將 AI 用於註釋和文檔
       d: 用 AI 工具取代所有開發人員
     explanation: '[ZHTW translation needed]'
+    ksa_mapping:
+      knowledge:
+        - K2.1
+        - K4.1
+      skills:
+        - S3.1
+        - S6.1
+      attitudes:
+        - A3.1
+        - A4.1
   - id: M001
     domain: managing_with_ai
     difficulty: basic
@@ -108,6 +162,14 @@ questions:
       c: 只與可信的 AI 公司分享
       d: 在與 AI 分享前加密
     explanation: '[ZHTW translation needed]'
+    ksa_mapping:
+      knowledge:
+        - K3.3
+        - K5.2
+      skills:
+        - S2.2
+      attitudes:
+        - A1.1
   - id: M002
     domain: managing_with_ai
     difficulty: intermediate
@@ -120,6 +182,16 @@ questions:
       c: 禁止所有 AI 工具以避免風險
       d: 只允許管理人員使用 AI 工具
     explanation: '[ZHTW translation needed]'
+    ksa_mapping:
+      knowledge:
+        - K4.1
+        - K4.2
+      skills:
+        - S2.1
+        - S5.1
+      attitudes:
+        - A1.1
+        - A2.1
   - id: M003
     domain: managing_with_ai
     difficulty: advanced
@@ -132,6 +204,17 @@ questions:
       c: 盡快實施 AI
       d: 盡可能替換更多人類工作者
     explanation: '[ZHTW translation needed]'
+    ksa_mapping:
+      knowledge:
+        - K3.1
+        - K3.2
+        - K5.1
+      skills:
+        - S2.1
+        - S6.2
+      attitudes:
+        - A1.1
+        - A2.1
   - id: D001
     domain: designing_with_ai
     difficulty: basic
@@ -144,6 +227,15 @@ questions:
       c: 讓 AI 盡可能複雜
       d: 隱藏正在使用 AI 的事實
     explanation: '[ZHTW translation needed]'
+    ksa_mapping:
+      knowledge:
+        - K4.2
+        - K5.3
+      skills:
+        - S5.1
+        - S6.1
+      attitudes:
+        - A2.1
   - id: D002
     domain: designing_with_ai
     difficulty: intermediate
@@ -156,6 +248,16 @@ questions:
       c: 立即關閉整個應用程序
       d: 將錯誤歸咎於用戶
     explanation: '[ZHTW translation needed]'
+    ksa_mapping:
+      knowledge:
+        - K3.2
+        - K5.1
+      skills:
+        - S4.1
+        - S6.2
+      attitudes:
+        - A1.1
+        - A5.1
   - id: D003
     domain: designing_with_ai
     difficulty: advanced
@@ -168,6 +270,16 @@ questions:
       c: 只關注最大的市場細分
       d: 在所有地方實施最新的 AI 技術
     explanation: '[ZHTW translation needed]'
+    ksa_mapping:
+      knowledge:
+        - K3.3
+        - K5.3
+      skills:
+        - S4.1
+        - S6.1
+      attitudes:
+        - A4.1
+        - A5.1
 metadata:
   language: zhTW
   language_name: Traditional Chinese
