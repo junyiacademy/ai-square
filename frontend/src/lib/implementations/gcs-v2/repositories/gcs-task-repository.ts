@@ -73,6 +73,22 @@ export class GCSTaskRepository<T extends ITask = ITask>
     return updated;
   }
 
+  async updateStatus(id: string, status: 'pending' | 'active' | 'completed'): Promise<T> {
+    const updates: Partial<T> = { status } as Partial<T>;
+    
+    if (status === 'completed') {
+      updates.completedAt = new Date().toISOString();
+    }
+    
+    const updated = await this.updateEntity(id, updates);
+    
+    if (!updated) {
+      throw new Error(`Task not found: ${id}`);
+    }
+    
+    return updated;
+  }
+
   /**
    * 新增單一互動記錄
    */

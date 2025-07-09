@@ -119,6 +119,19 @@ export class GCSProgramRepository<T extends IProgram = IProgram>
   }
 
   /**
+   * 更新 Program
+   */
+  async update(id: string, updates: Partial<T>): Promise<T> {
+    const updated = await this.updateEntity(id, updates);
+    
+    if (!updated) {
+      throw new Error(`Program not found: ${id}`);
+    }
+    
+    return updated;
+  }
+
+  /**
    * 列出所有 Programs
    */
   async listAll(): Promise<T[]> {

@@ -158,7 +158,7 @@ export function Header() {
   // 主要導航連結（顯示在導航欄）
   const primaryNavLinks = [
     { href: '/dashboard', label: t('dashboard') },
-    { href: '/assessment', label: t('assessment') },
+    { href: '/assessment/scenarios', label: t('assessment') },
     { href: '/pbl', label: t('pbl') },
     { href: '/discovery/overview', label: t('discovery') },
   ]

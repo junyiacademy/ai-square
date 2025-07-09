@@ -1,0 +1,77 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { getTaskRepository } from '@/lib/implementations/gcs-v2';
+import { getUserFromRequest } from '@/lib/auth/auth-utils';
+
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { programId: string } }
+) {
+  try {
+    const user = await getUserFromRequest(request);
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+    
+    const body = await request.json();
+    const { taskId, questionId, answer, questionIndex, timeSpent } = body;
+    
+    if (!taskId || !questionId || !answer) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+    
+    const taskRepo = getTaskRepository();
+    
+    // Get task
+    const task = await taskRepo.findById(taskId);
+    if (!task) {
+      return NextResponse.json(
+        { error: 'Task not found' },
+        { status: 404 }
+      );
+    }
+    
+    // Find the question to get correct answer
+    const question = task.content.questions?.find((q: any) => q.id === questionId);
+    const isCorrect = question ? question.correct_answer === answer : false;
+    
+    // Add interaction
+    await taskRepo.addInteraction(taskId, {
+      timestamp: new Date().toISOString(),
+      type: 'assessment_answer',
+      content: {
+        questionId,
+        questionIndex,
+        selectedAnswer: answer,
+        correctAnswer: question?.correct_answer,
+        isCorrect,
+        timeSpent,
+        domain: question?.domain,
+        ksa_mapping: question?.ksa_mapping
+      }
+    });
+    
+    // Update task status if first answer
+    const answers = task.interactions.filter(i => i.type === 'assessment_answer');
+    if (answers.length === 0) {
+      await taskRepo.updateStatus(taskId, 'active');
+    }
+    
+    return NextResponse.json({ 
+      success: true,
+      isCorrect,
+      correctAnswer: question?.correct_answer
+    });
+  } catch (error) {
+    console.error('Error submitting answer:', error);
+    return NextResponse.json(
+      { error: 'Failed to submit answer' },
+      { status: 500 }
+    );
+  }
+}
