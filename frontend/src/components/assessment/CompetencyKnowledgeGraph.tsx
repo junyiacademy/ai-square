@@ -165,8 +165,56 @@ export default function CompetencyKnowledgeGraph({
       }
     });
 
-    // Add all KSA code nodes grouped by type
+    // First, add all parent nodes (e.g., K1, S2, A3)
+    parentCodes.forEach((subcodes, parentCode) => {
+      if (!ksaMastery[parentCode]) {
+        // Parent code doesn't have its own data, skip it
+        return;
+      }
+      
+      const ksaMap = parentCode.startsWith('K') ? ksaMaps?.kMap : 
+                     parentCode.startsWith('S') ? ksaMaps?.sMap : 
+                     ksaMaps?.aMap;
+      
+      const ksaInfo = ksaMap?.[parentCode];
+      if (!ksaInfo) return;
+      
+      const ksaType = parentCode.startsWith('K') ? 'knowledge' : 
+                      parentCode.startsWith('S') ? 'skills' : 'attitudes';
+      
+      const data = ksaMastery[parentCode];
+      const masteryStatus = getMasteryStatus(data.correct, data.total);
+      
+      nodes.push({
+        id: `code-${parentCode}`,
+        type: 'ksa-code',
+        name: parentCode,
+        mastery: masteryStatus,
+        ksaType,
+        parentCode: null,
+        details: { 
+          summary: ksaInfo.summary,
+          explanation: ksaInfo.explanation,
+          correct: data.correct,
+          total: data.total,
+          questions: data.questions,
+          theme: ksaInfo.theme
+        }
+      });
+      
+      // Link to KSA type
+      links.push({
+        source: ksaType,
+        target: `code-${parentCode}`,
+        value: 0.8
+      });
+    });
+    
+    // Then add all nodes (including subcodes)
     Object.entries(ksaMastery).forEach(([code, data]) => {
+      // Skip if already added as parent
+      if (nodes.some(n => n.id === `code-${code}`)) return;
+      
       const ksaMap = code.startsWith('K') ? ksaMaps?.kMap : 
                      code.startsWith('S') ? ksaMaps?.sMap : 
                      ksaMaps?.aMap;
@@ -204,12 +252,23 @@ export default function CompetencyKnowledgeGraph({
       
       // Link to parent - either KSA type or parent code
       if (isSubcode && parentCode) {
-        // Subcode links to parent code (e.g., K1.1 -> K1)
-        links.push({
-          source: `code-${parentCode}`,
-          target: `code-${code}`,
-          value: 0.6
-        });
+        // Check if parent node exists
+        const parentNodeExists = nodes.some(n => n.id === `code-${parentCode}`);
+        if (parentNodeExists) {
+          // Subcode links to parent code (e.g., K1.1 -> K1)
+          links.push({
+            source: `code-${parentCode}`,
+            target: `code-${code}`,
+            value: 0.6
+          });
+        } else {
+          // If parent doesn't exist, link directly to KSA type
+          links.push({
+            source: ksaType,
+            target: `code-${code}`,
+            value: 0.8
+          });
+        }
       } else {
         // Parent code links to KSA type (e.g., K1 -> knowledge)
         links.push({

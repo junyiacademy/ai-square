@@ -89,16 +89,25 @@ export default function AssessmentProgramPage({
 
   const handleQuizComplete = async (answers: UserAnswer[]) => {
     try {
-      // Save all answers to server
-      for (const answer of answers) {
-        await fetch(`/api/assessment/programs/${programId}/answer`, {
+      // Filter out already submitted answers
+      const existingAnswerIds = currentTask?.interactions
+        .filter((i: any) => i.type === 'assessment_answer')
+        .map((i: any) => i.content.questionId) || [];
+      
+      const newAnswers = answers.filter(a => !existingAnswerIds.includes(a.questionId));
+      
+      // Batch submit new answers
+      if (newAnswers.length > 0) {
+        await fetch(`/api/assessment/programs/${programId}/batch-answers`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             taskId: currentTask?.id,
-            questionId: answer.questionId,
-            answer: answer.selectedAnswer,
-            timeSpent: answer.timeSpent
+            answers: newAnswers.map(a => ({
+              questionId: a.questionId,
+              answer: a.selectedAnswer,
+              timeSpent: a.timeSpent
+            }))
           })
         });
       }
