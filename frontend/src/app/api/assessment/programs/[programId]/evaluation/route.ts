@@ -7,7 +7,7 @@ import { getAuthFromRequest } from '@/lib/auth/auth-utils';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { programId: string } }
+  { params }: { params: Promise<{ programId: string }> }
 ) {
   try {
     const user = await getAuthFromRequest(request);
@@ -18,11 +18,14 @@ export async function GET(
       );
     }
     
+    // Await params before using
+    const { programId } = await params;
+    
     const programRepo = getProgramRepository();
     const evaluationRepo = getEvaluationRepository();
     
     // Get program
-    const program = await programRepo.findById(params.programId);
+    const program = await programRepo.findById(programId);
     if (!program || program.userId !== user.email) {
       return NextResponse.json(
         { error: 'Program not found or access denied' },
@@ -31,7 +34,7 @@ export async function GET(
     }
     
     // Get evaluation for this program
-    const evaluations = await evaluationRepo.findByTarget('program', params.programId);
+    const evaluations = await evaluationRepo.findByTarget('program', programId);
     const evaluation = evaluations.find(e => e.evaluationType === 'assessment_complete');
     
     if (!evaluation) {

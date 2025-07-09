@@ -4,7 +4,7 @@ import { getAuthFromRequest } from '@/lib/auth/auth-utils';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { programId: string } }
+  { params }: { params: Promise<{ programId: string }> }
 ) {
   try {
     const user = await getAuthFromRequest(request);

@@ -44,20 +44,26 @@ interface Evaluation {
 export default function AssessmentCompletePage({ 
   params 
 }: { 
-  params: { id: string; programId: string } 
+  params: Promise<{ id: string; programId: string }> 
 }) {
   const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
   const [loading, setLoading] = useState(true);
+  const [programId, setProgramId] = useState<string>('');
+  const [scenarioId, setScenarioId] = useState<string>('');
   const router = useRouter();
   const { t } = useTranslation();
 
   useEffect(() => {
-    loadEvaluation();
-  }, [params.programId]);
+    params.then(p => {
+      setProgramId(p.programId);
+      setScenarioId(p.id);
+      loadEvaluation(p.programId);
+    });
+  }, [params]);
 
-  const loadEvaluation = async () => {
+  const loadEvaluation = async (progId: string) => {
     try {
-      const res = await fetch(`/api/assessment/programs/${params.programId}/evaluation`);
+      const res = await fetch(`/api/assessment/programs/${progId}/evaluation`);
       const data = await res.json();
       setEvaluation(data.evaluation);
     } catch (error) {
@@ -253,7 +259,7 @@ export default function AssessmentCompletePage({
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Button 
           variant="outline"
-          onClick={() => router.push(`/assessment/scenarios/${params.id}`)}
+          onClick={() => router.push(`/assessment/scenarios/${scenarioId}`)}
         >
           Back to Assessment
         </Button>

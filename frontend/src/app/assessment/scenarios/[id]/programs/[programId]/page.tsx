@@ -51,7 +51,7 @@ interface Program {
 export default function AssessmentProgramPage({ 
   params 
 }: { 
-  params: { id: string; programId: string } 
+  params: Promise<{ id: string; programId: string }> 
 }) {
   const [program, setProgram] = useState<Program | null>(null);
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
@@ -60,13 +60,19 @@ export default function AssessmentProgramPage({
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [programId, setProgramId] = useState<string>('');
+  const [scenarioId, setScenarioId] = useState<string>('');
   const router = useRouter();
   const { t } = useTranslation();
 
   // Load program state
   useEffect(() => {
-    loadProgramState();
-  }, [params.programId]);
+    params.then(p => {
+      setProgramId(p.programId);
+      setScenarioId(p.id);
+      loadProgramState(p.programId);
+    });
+  }, [params]);
 
   // Timer effect
   useEffect(() => {
@@ -88,9 +94,9 @@ export default function AssessmentProgramPage({
     return () => clearInterval(timer);
   }, [timeRemaining]);
 
-  const loadProgramState = async () => {
+  const loadProgramState = async (progId: string) => {
     try {
-      const res = await fetch(`/api/assessment/programs/${params.programId}`);
+      const res = await fetch(`/api/assessment/programs/${progId}`);
       const data = await res.json();
       
       setProgram(data.program);
@@ -127,7 +133,7 @@ export default function AssessmentProgramPage({
       setAnswers({ ...answers, [questionId]: answer });
       
       // Submit to server
-      await fetch(`/api/assessment/programs/${params.programId}/answer`, {
+      await fetch(`/api/assessment/programs/${programId}/answer`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -159,7 +165,7 @@ export default function AssessmentProgramPage({
     
     setSubmitting(true);
     try {
-      await fetch(`/api/assessment/programs/${params.programId}/complete`, {
+      await fetch(`/api/assessment/programs/${programId}/complete`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -167,7 +173,7 @@ export default function AssessmentProgramPage({
         })
       });
       
-      router.push(`/assessment/scenarios/${params.id}/programs/${params.programId}/complete`);
+      router.push(`/assessment/scenarios/${scenarioId}/programs/${programId}/complete`);
     } catch (error) {
       console.error('Failed to complete assessment:', error);
       setSubmitting(false);

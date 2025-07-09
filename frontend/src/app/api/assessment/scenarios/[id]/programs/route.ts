@@ -11,7 +11,7 @@ import yaml from 'js-yaml';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getAuthFromRequest(request);
@@ -22,8 +22,11 @@ export async function GET(
       );
     }
     
+    // Await params before using
+    const { id } = await params;
+    
     const programRepo = getProgramRepository();
-    const programs = await programRepo.findByScenario(params.id);
+    const programs = await programRepo.findByScenario(id);
     
     // Filter to user's programs
     const userPrograms = programs.filter(p => p.userId === user.email);
@@ -70,7 +73,7 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getAuthFromRequest(request);
@@ -91,13 +94,16 @@ export async function POST(
       );
     }
     
+    // Await params before using
+    const { id } = await params;
+    
     // Get repositories
     const scenarioRepo = getScenarioRepository();
     const programRepo = getProgramRepository();
     const taskRepo = getTaskRepository();
     
     // Get scenario
-    const scenario = await scenarioRepo.findById(params.id);
+    const scenario = await scenarioRepo.findById(id);
     if (!scenario) {
       return NextResponse.json(
         { error: 'Scenario not found' },
@@ -107,7 +113,7 @@ export async function POST(
     
     // Create new program
     const program = await programRepo.create({
-      scenarioId: params.id,
+      scenarioId: id,
       userId: user.email,
       metadata: {
         language,

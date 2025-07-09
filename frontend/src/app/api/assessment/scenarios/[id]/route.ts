@@ -6,14 +6,17 @@ import yaml from 'js-yaml';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
     
+    // Await params before using
+    const { id } = await params;
+    
     const scenarioRepo = getScenarioRepository();
-    const scenario = await scenarioRepo.findById(params.id);
+    const scenario = await scenarioRepo.findById(id);
     
     if (!scenario) {
       return NextResponse.json(

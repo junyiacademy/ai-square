@@ -7,7 +7,7 @@ import { getAuthFromRequest } from '@/lib/auth/auth-utils';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { programId: string } }
+  { params }: { params: Promise<{ programId: string }> }
 ) {
   try {
     const user = await getAuthFromRequest(request);
@@ -18,11 +18,14 @@ export async function GET(
       );
     }
     
+    // Await params before using
+    const { programId } = await params;
+    
     const programRepo = getProgramRepository();
     const taskRepo = getTaskRepository();
     
     // Get program
-    const program = await programRepo.findById(params.programId);
+    const program = await programRepo.findById(programId);
     if (!program) {
       return NextResponse.json(
         { error: 'Program not found' },
@@ -39,7 +42,7 @@ export async function GET(
     }
     
     // Get current task (assessment usually has only one task)
-    const tasks = await taskRepo.findByProgram(params.programId);
+    const tasks = await taskRepo.findByProgram(programId);
     const currentTask = tasks[0]; // Assessment typically has one task
     
     if (!currentTask) {

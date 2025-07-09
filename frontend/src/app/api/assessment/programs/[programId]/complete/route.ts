@@ -21,7 +21,7 @@ interface DomainScore {
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { programId: string } }
+  { params }: { params: Promise<{ programId: string }> }
 ) {
   try {
     const user = await getAuthFromRequest(request);
@@ -35,12 +35,15 @@ export async function POST(
     const body = await request.json();
     const { taskId } = body;
     
+    // Await params before using
+    const { programId } = await params;
+    
     const programRepo = getProgramRepository();
     const taskRepo = getTaskRepository();
     const evaluationRepo = getEvaluationRepository();
     
     // Get program and task
-    const program = await programRepo.findById(params.programId);
+    const program = await programRepo.findById(programId);
     if (!program || program.userId !== user.email) {
       return NextResponse.json(
         { error: 'Program not found or access denied' },
@@ -142,7 +145,7 @@ export async function POST(
     // Create evaluation
     const evaluation = await evaluationRepo.create({
       targetType: 'program',
-      targetId: params.programId,
+      targetId: programId,
       evaluationType: 'assessment_complete',
       score: overallScore,
       feedback: generateOverallFeedback(overallScore, level),
@@ -187,7 +190,7 @@ export async function POST(
     });
     
     // Update program score and complete it
-    await programRepo.update(params.programId, { 
+    await programRepo.update(programId, { 
       score: overallScore,
       metadata: {
         ...program.metadata,
@@ -195,7 +198,7 @@ export async function POST(
         evaluationId: evaluation.id
       }
     });
-    await programRepo.complete(params.programId);
+    await programRepo.complete(programId);
     
     return NextResponse.json({ 
       success: true,

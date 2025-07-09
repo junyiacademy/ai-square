@@ -38,30 +38,45 @@ interface Program {
 export default function AssessmentScenarioDetailPage({ 
   params 
 }: { 
-  params: { id: string } 
+  params: Promise<{ id: string }> 
 }) {
   const [scenario, setScenario] = useState<AssessmentScenario | null>(null);
   const [programs, setPrograms] = useState<Program[]>([]);
   const [loading, setLoading] = useState(true);
   const [startingProgram, setStartingProgram] = useState(false);
+  const [scenarioId, setScenarioId] = useState<string>('');
   const router = useRouter();
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
-    loadScenarioAndPrograms();
-  }, [params.id]);
+    // Unwrap the params Promise
+    params.then(p => {
+      setScenarioId(p.id);
+      loadScenarioAndPrograms(p.id);
+    });
+  }, [params, i18n.language]);
 
-  const loadScenarioAndPrograms = async () => {
+  const loadScenarioAndPrograms = async (id: string) => {
     try {
       // Load scenario details
-      const scenarioRes = await fetch(`/api/assessment/scenarios/${params.id}?lang=${i18n.language}`);
+      const scenarioRes = await fetch(`/api/assessment/scenarios/${id}?lang=${i18n.language}`);
       const scenarioData = await scenarioRes.json();
       setScenario(scenarioData);
 
-      // Load user's programs
-      const programsRes = await fetch(`/api/assessment/scenarios/${params.id}/programs`);
-      const programsData = await programsRes.json();
-      setPrograms(programsData.programs || []);
+      // Load user's programs - only if authenticated
+      try {
+        const programsRes = await fetch(`/api/assessment/scenarios/${id}/programs`);
+        if (programsRes.ok) {
+          const programsData = await programsRes.json();
+          setPrograms(programsData.programs || []);
+        } else if (programsRes.status === 401) {
+          // User not authenticated, that's ok - they can still view the scenario
+          setPrograms([]);
+        }
+      } catch (error) {
+        // Silently handle programs loading error
+        setPrograms([]);
+      }
     } catch (error) {
       console.error('Failed to load data:', error);
     } finally {
@@ -72,7 +87,7 @@ export default function AssessmentScenarioDetailPage({
   const startNewProgram = async () => {
     setStartingProgram(true);
     try {
-      const res = await fetch(`/api/assessment/scenarios/${params.id}/programs`, {
+      const res = await fetch(`/api/assessment/scenarios/${scenarioId}/programs`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -81,8 +96,18 @@ export default function AssessmentScenarioDetailPage({
         })
       });
       
+      if (res.status === 401) {
+        // Redirect to login if not authenticated
+        router.push('/login?redirect=' + encodeURIComponent(window.location.pathname));
+        return;
+      }
+      
+      if (!res.ok) {
+        throw new Error('Failed to start program');
+      }
+      
       const { program } = await res.json();
-      router.push(`/assessment/scenarios/${params.id}/programs/${program.id}`);
+      router.push(`/assessment/scenarios/${scenarioId}/programs/${program.id}`);
     } catch (error) {
       console.error('Failed to start program:', error);
       setStartingProgram(false);
@@ -90,11 +115,11 @@ export default function AssessmentScenarioDetailPage({
   };
 
   const continueProgram = (programId: string) => {
-    router.push(`/assessment/scenarios/${params.id}/programs/${programId}`);
+    router.push(`/assessment/scenarios/${scenarioId}/programs/${programId}`);
   };
 
   const viewResults = (programId: string) => {
-    router.push(`/assessment/scenarios/${params.id}/programs/${programId}/complete`);
+    router.push(`/assessment/scenarios/${scenarioId}/programs/${programId}/complete`);
   };
 
   if (loading) {
