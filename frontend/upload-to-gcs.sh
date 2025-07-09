@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 設定 GCS bucket 名稱
-BUCKET_NAME="ai-square-db"
+BUCKET_NAME="ai-square-db-v2"
 
 # 上傳 YAML 檔案到 GCS 的 cms/overrides 目錄
 echo "上傳 YAML 檔案到 GCS..."

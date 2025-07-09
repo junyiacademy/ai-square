@@ -1,23 +1,10 @@
 import { Storage } from '@google-cloud/storage';
+import { GCS_CONFIG, getStorageConfig } from '@/lib/config/gcs.config';
 
 // Initialize GCS client
-// 在 GCP 環境會自動使用預設認證（Cloud Run 服務帳號）
-// 在本地開發需要設定 GOOGLE_APPLICATION_CREDENTIALS
-const storageConfig: {
-  projectId?: string;
-  keyFilename?: string;
-} = {
-  projectId: process.env.GOOGLE_CLOUD_PROJECT,
-};
+const storage = new Storage(getStorageConfig());
 
-// 只在本地開發時使用金鑰檔案
-if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
-  storageConfig.keyFilename = process.env.GOOGLE_APPLICATION_CREDENTIALS;
-}
-
-const storage = new Storage(storageConfig);
-
-const BUCKET_NAME = process.env.GCS_BUCKET_NAME || 'ai-square-assessments';
+const BUCKET_NAME = GCS_CONFIG.bucketName;
 
 export interface AssessmentResultGCS {
   assessment_id: string;

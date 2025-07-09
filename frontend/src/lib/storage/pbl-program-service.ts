@@ -11,6 +11,7 @@ import {
 import type { TaskEvaluation } from '@/types/pbl-completion';
 import type { CompletionData, QualitativeFeedback } from '@/types/pbl-completion';
 import { cacheService } from '@/lib/cache/cache-service';
+import { GCS_CONFIG, getStorageConfig } from '@/lib/config/gcs.config';
 
 // GCS File interface
 interface GCSFile {
@@ -19,23 +20,11 @@ interface GCSFile {
 }
 
 // Initialize GCS client
-const storageConfig: {
-  projectId?: string;
-  keyFilename?: string;
-} = {
-  projectId: process.env.GOOGLE_CLOUD_PROJECT,
-};
-
-// Only use key file in local development
-if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
-  storageConfig.keyFilename = process.env.GOOGLE_APPLICATION_CREDENTIALS;
-}
-
-const storage = new Storage(storageConfig);
-const BUCKET_NAME = process.env.GCS_BUCKET_NAME || 'ai-square-db';
+const storage = new Storage(getStorageConfig());
+const BUCKET_NAME = GCS_CONFIG.bucketName;
 
 // Base path for PBL data
-const PBL_BASE_PATH = 'user_pbl_logs';
+const PBL_BASE_PATH = GCS_CONFIG.paths.pblLogs;
 
 class PBLProgramService {
   private bucket = storage.bucket(BUCKET_NAME);

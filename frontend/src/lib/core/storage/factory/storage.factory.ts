@@ -8,6 +8,7 @@ import { LocalStorageProvider } from '../providers/local-storage.provider';
 import { GCSStorageProvider } from '../providers/gcs-storage.provider';
 import { MockStorageProvider } from '../providers/mock-storage.provider';
 import { StorageError } from '../../errors';
+import { GCS_CONFIG, PUBLIC_GCS_BUCKET } from '@/lib/config/gcs.config';
 
 export type StorageType = 'local' | 'gcs' | 'mock';
 
@@ -79,7 +80,7 @@ export class StorageFactory {
     };
     
     if (storageType === 'gcs') {
-      config.bucketName = process.env.NEXT_PUBLIC_GCS_BUCKET || 'ai-square-storage';
+      config.bucketName = PUBLIC_GCS_BUCKET;
     }
     
     return this.create(config);

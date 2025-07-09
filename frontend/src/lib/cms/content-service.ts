@@ -4,6 +4,7 @@ import path from 'path';
 import yaml from 'js-yaml';
 import { ContentItem, ContentType, ContentHistory, ContentStatus } from '@/types/cms';
 import { yamlLoader } from '@/lib/yaml-loader';
+import { GCS_CONFIG, getStorageConfig } from '@/lib/config/gcs.config';
 
 interface ContentMetadata {
   version: number;
@@ -17,13 +18,8 @@ interface ContentMetadata {
   published_by?: string;
 }
 
-// GCS paths structure
-const GCS_PATHS = {
-  overrides: 'cms/overrides/',      // Active overrides
-  drafts: 'cms/drafts/',           // Work in progress
-  history: 'cms/history/',         // Version history
-  metadata: 'cms/metadata/'        // Content metadata
-};
+// GCS paths structure - use from config
+const GCS_PATHS = GCS_CONFIG.paths.cms;
 
 export class ContentService {
   private storage?: Storage;
@@ -35,13 +31,10 @@ export class ContentService {
   constructor() {
     this.isProduction = process.env.NODE_ENV === 'production';
     
-    if (process.env.GCS_BUCKET_NAME) {
+    if (GCS_CONFIG.bucketName) {
       try {
-        this.storage = new Storage({
-          projectId: process.env.GOOGLE_CLOUD_PROJECT,
-          keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS
-        });
-        this.bucket = this.storage.bucket(process.env.GCS_BUCKET_NAME);
+        this.storage = new Storage(getStorageConfig());
+        this.bucket = this.storage.bucket(GCS_CONFIG.bucketName);
       } catch (error) {
         console.error('ContentService: Failed to initialize GCS:', error);
       }
