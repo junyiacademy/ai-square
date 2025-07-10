@@ -1,0 +1,216 @@
+# 科技創業家探索路徑 - 繁體中文
+path_id: tech_entrepreneur
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "次元商業旅行者 - 科技創業家"
+  short_description: "在多重宇宙中建立科技商業帝國"
+  long_description: |
+    你是跨次元商業聯盟的新晉旅行者，擁有在不同時空建立科技企業的能力。
+    每個平行宇宙都有獨特的科技發展水平，你必須適應各種環境來建立成功的
+    商業帝國。
+  
+  estimated_hours: 65
+  skill_focus:
+    - dimensional_business_insight
+    - cross_tech_integration
+    - team_summoning
+    - innovation_prophecy
+
+world_setting:
+  name: "多元商業宇宙"
+  description: |
+    多元商業宇宙由無數個平行時空構成的廣大商業網絡。科技創業家在次元間
+    旅行，將一個宇宙的創新帶到另一個宇宙解決問題，同時對抗試圖控制所有
+    現實的壟斷勢力。
+  
+  atmosphere: "futuristic_dynamic"
+  visual_theme: "interdimensional_tech"
+
+starting_scenario:
+  title: "次元傳送門啟動"
+  description: |
+    商業導師 Atlas 在次元樞紐迎接你，解釋你新獲得的宇宙間旅行能力。但
+    Monopoly Corp 的 CEO Greed 正在使用不公平手段打壓所有次元的新創企業。
+    你必須用創新和合作來對抗他的壟斷計劃。
+  
+  initial_tasks:
+    - understand_multiverse
+    - identify_opportunity
+    - assemble_team
+
+skill_tree:
+  core_skills:
+    - id: opportunity_sensing
+      name: "機會雷達"
+      description: "偵測跨次元的商業機會"
+      max_level: 10
+      unlocks:
+        - market_gaps
+        - trend_prediction
+    
+    - id: tech_fusion
+      name: "科技融合"
+      description: "結合不同現實的技術"
+      max_level: 10
+      unlocks:
+        - innovation_synthesis
+        - cross_platform_tech
+    
+    - id: venture_building
+      name: "創業架構"
+      description: "建立可擴展的科技企業"
+      max_level: 10
+      unlocks:
+        - business_models
+        - growth_hacking
+    
+    - id: dimensional_networking
+      name: "多元宇宙連結"
+      description: "建立跨次元網絡"
+      max_level: 10
+      unlocks:
+        - investor_portals
+        - talent_summoning
+
+  advanced_skills:
+    - id: disruption_mastery
+      name: "顛覆工程"
+      description: "創造改變產業的創新"
+      max_level: 15
+      requires: [opportunity_sensing, tech_fusion]
+    
+    - id: unicorn_creation
+      name: "獨角獸召喚"
+      description: "建立十億美元科技公司"
+      max_level: 15
+      requires: [venture_building, dimensional_networking]
+    
+    - id: ecosystem_architecture
+      name: "生態系建構"
+      description: "創造繁榮的科技生態系"
+      max_level: 15
+      requires: [dimensional_networking, tech_fusion]
+
+milestone_quests:
+  - id: first_startup
+    name: "次元首秀"
+    description: "啟動你的第一個跨次元新創"
+    required_level: 5
+    skills_tested: [opportunity_sensing, venture_building]
+    xp_reward: 700
+    unlocks:
+      - dimension_traveler_badge
+      - investor_interest
+  
+  - id: monopoly_breaker
+    name: "壟斷破壞者"
+    description: "在一個次元顛覆 Greed 的壟斷"
+    required_level: 10
+    skills_tested: [disruption_mastery, tech_fusion]
+    xp_reward: 1500
+    unlocks:
+      - freedom_fighter_title
+      - resistance_network
+  
+  - id: multiverse_empire
+    name: "多元宇宙帝國"
+    description: "在 5 個次元建立成功企業"
+    required_level: 20
+    skills_tested: [unicorn_creation, ecosystem_architecture]
+    xp_reward: 3500
+    unlocks:
+      - dimension_master_title
+      - alliance_leadership
+
+achievements:
+  - id: first_funding
+    name: "種子水晶"
+    description: "籌集你的第一筆投資"
+    xp_reward: 150
+    badge_type: bronze
+  
+  - id: tech_innovator
+    name: "創新催化劑"
+    description: "創造 5 項突破性技術"
+    xp_reward: 400
+    badge_type: silver
+  
+  - id: exit_success
+    name: "次元退場"
+    description: "成功退出一家新創公司"
+    xp_reward: 800
+    badge_type: gold
+  
+  - id: serial_legend
+    name: "連續次元跳躍者"
+    description: "完成所有創業挑戰"
+    xp_reward: 1500
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: market_validation
+      type: analysis
+      title: "次元市場掃描"
+      description: "跨次元驗證商業想法"
+      skills_improved: [opportunity_sensing, dimensional_business_insight]
+      xp_reward: 80
+    
+    - id: mvp_launch
+      type: creation
+      title: "原型傳送門"
+      description: "建立並推出 MVP"
+      skills_improved: [venture_building, tech_fusion]
+      xp_reward: 90
+  
+  intermediate:
+    - id: team_assembly
+      type: chat
+      title: "多元宇宙團隊建立"
+      description: "從不同次元招募人才"
+      skills_improved: [dimensional_networking, team_summoning]
+      xp_reward: 200
+    
+    - id: product_scaling
+      type: creation
+      title: "次元擴展"
+      description: "將產品擴展到多個宇宙"
+      skills_improved: [growth_hacking, venture_building]
+      xp_reward: 250
+  
+  advanced:
+    - id: industry_disruption
+      type: creation
+      title: "現實重塑者"
+      description: "創造改變產業的技術"
+      skills_improved: [disruption_mastery, innovation_prophecy]
+      xp_reward: 450
+    
+    - id: ecosystem_creation
+      type: creation
+      title: "次元生態系"
+      description: "建立繁榮的科技生態系"
+      skills_improved: [ecosystem_architecture, dimensional_networking]
+      xp_reward: 500
+
+learning_objectives:
+  - "識別不同市場和次元的機會"
+  - "從想法到退出建立並擴展科技公司"
+  - "精通募資和投資者關係"
+  - "創造解決真實問題的創新產品"
+  - "建立並領導高績效分散式團隊"
+  - "應對法規和文化差異"
+  - "發展可持續的競爭優勢"
+  - "培育創新生態系統"
+
+career_outcomes:
+  - "科技新創創辦人"
+  - "連續創業家"
+  - "創投合夥人"
+  - "創新總監"
+  - "新創生態系建構者"
+  - "科技策略師"
+  - "企業創新主管"
+  - "天使投資人"

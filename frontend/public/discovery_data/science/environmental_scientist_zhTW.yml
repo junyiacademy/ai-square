@@ -1,0 +1,217 @@
+# 環境科學家探索路徑 - 繁體中文
+path_id: environmental_scientist
+category: science
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "星球守護者 - 環境科學家"
+  short_description: "透過數據驅動的環境解決方案保護地球"
+  long_description: |
+    你是「全球氣候應對中心」的初級科學家，這裡的 AI 監測系統即時追蹤地球
+    健康狀況。配備尖端科技和環境科學知識，你將努力理解並逆轉氣候損害，
+    同時為未來開發永續解決方案。
+  
+  estimated_hours: 60
+  skill_focus:
+    - climate_modeling
+    - ecosystem_analysis
+    - pollution_tracking
+    - sustainable_solutions
+    - data_visualization
+
+world_setting:
+  name: "全球氣候應對中心"
+  description: |
+    全球氣候應對中心是一個高科技設施，環境科學家在此使用 AI、衛星數據和
+    實地研究來監測和保護地球生態系統。科學家們與時間賽跑，在達到關鍵臨界
+    點之前開發解決方案。
+  
+  atmosphere: "urgent_hopeful"
+  visual_theme: "eco_tech_fusion"
+
+starting_scenario:
+  title: "紅色警報：氣候危機"
+  description: |
+    蓋亞博士帶來令人震驚的消息：多個環境系統正接近關鍵臨界值。同時，
+    MegaCorp 的 CEO Polluto 繼續為了利潤進行破壞性行為。你必須運用科學
+    和創新拯救生態系統，同時揭露企業環境犯罪。
+  
+  initial_tasks:
+    - analyze_climate_data
+    - identify_hotspots
+    - propose_solutions
+
+skill_tree:
+  core_skills:
+    - id: climate_science
+      name: "氣候動力學"
+      description: "理解地球氣候系統"
+      max_level: 10
+      unlocks:
+        - weather_prediction
+        - carbon_cycle_analysis
+    
+    - id: ecosystem_monitoring
+      name: "生命系統"
+      description: "追蹤和分析生態系統"
+      max_level: 10
+      unlocks:
+        - biodiversity_assessment
+        - habitat_mapping
+    
+    - id: pollution_detection
+      name: "污染追蹤"
+      description: "識別和追溯污染物"
+      max_level: 10
+      unlocks:
+        - water_quality_analysis
+        - air_monitoring
+    
+    - id: sustainable_tech
+      name: "綠色創新"
+      description: "開發環保科技"
+      max_level: 10
+      unlocks:
+        - renewable_energy
+        - circular_economy
+
+  advanced_skills:
+    - id: climate_modeling
+      name: "未來預測"
+      description: "用 AI 預測氣候情境"
+      max_level: 15
+      requires: [climate_science, ecosystem_monitoring]
+    
+    - id: restoration_ecology
+      name: "生態系修復"
+      description: "恢復受損環境"
+      max_level: 15
+      requires: [ecosystem_monitoring, sustainable_tech]
+    
+    - id: policy_influence
+      name: "環境倡議"
+      description: "影響環境政策"
+      max_level: 15
+      requires: [pollution_detection, climate_science]
+
+milestone_quests:
+  - id: first_discovery
+    name: "污染揭露"
+    description: "發現重大環境違規"
+    required_level: 5
+    skills_tested: [pollution_detection, ecosystem_monitoring]
+    xp_reward: 700
+    unlocks:
+      - whistleblower_badge
+      - media_attention
+  
+  - id: ecosystem_save
+    name: "棲地英雄"
+    description: "拯救瀕危生態系統"
+    required_level: 10
+    skills_tested: [restoration_ecology, sustainable_tech]
+    xp_reward: 1400
+    unlocks:
+      - conservation_champion_title
+      - wildlife_alliance
+  
+  - id: climate_solution
+    name: "全球改變者"
+    description: "開發突破性氣候解決方案"
+    required_level: 20
+    skills_tested: [climate_modeling, policy_influence]
+    xp_reward: 2800
+    unlocks:
+      - earth_defender_title
+      - un_recognition
+
+achievements:
+  - id: first_sample
+    name: "野外研究員"
+    description: "收集並分析第一個環境樣本"
+    xp_reward: 100
+    badge_type: bronze
+  
+  - id: data_detective
+    name: "模式發現者"
+    description: "識別 10 個環境異常"
+    xp_reward: 350
+    badge_type: silver
+  
+  - id: solution_provider
+    name: "創新冠軍"
+    description: "實施 5 個永續解決方案"
+    xp_reward: 650
+    badge_type: gold
+  
+  - id: planet_protector
+    name: "地球守護者"
+    description: "完成所有環境挑戰"
+    xp_reward: 1300
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: water_testing
+      type: analysis
+      title: "水質分析"
+      description: "測試當地河流水質"
+      skills_improved: [pollution_detection, data_visualization]
+      xp_reward: 65
+    
+    - id: carbon_footprint
+      type: analysis
+      title: "碳足跡計算器"
+      description: "測量碳排放"
+      skills_improved: [climate_science, sustainable_solutions]
+      xp_reward: 75
+  
+  intermediate:
+    - id: habitat_restoration
+      type: creation
+      title: "生態系復甦"
+      description: "設計棲地修復計畫"
+      skills_improved: [restoration_ecology, ecosystem_analysis]
+      xp_reward: 190
+    
+    - id: pollution_tracking
+      type: analysis
+      title: "污染追蹤"
+      description: "追蹤污染至源頭"
+      skills_improved: [pollution_detection, data_visualization]
+      xp_reward: 220
+  
+  advanced:
+    - id: climate_model
+      type: creation
+      title: "未來模擬器"
+      description: "建立 AI 氣候預測模型"
+      skills_improved: [climate_modeling, data_visualization]
+      xp_reward: 420
+    
+    - id: policy_proposal
+      type: creation
+      title: "大地之法"
+      description: "草擬環境保護政策"
+      skills_improved: [policy_influence, sustainable_solutions]
+      xp_reward: 470
+
+learning_objectives:
+  - "精通環境監測技術"
+  - "使用 AI 和數據科學進行環境分析"
+  - "開發永續科技解決方案"
+  - "理解氣候系統和預測"
+  - "設計生態系修復專案"
+  - "影響環境政策和法規"
+  - "向公眾和決策者傳達科學"
+  - "平衡人類需求與環境保護"
+
+career_outcomes:
+  - "環境科學家"
+  - "氣候研究員"
+  - "保育生物學家"
+  - "環境顧問"
+  - "永續發展總監"
+  - "環境政策分析師"
+  - "生態修復專家"
+  - "首席永續發展官"

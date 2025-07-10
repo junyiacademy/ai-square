@@ -1,0 +1,219 @@
+# Tech Entrepreneur Discovery Path - English
+path_id: tech_entrepreneur
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Dimension Business Traveler - Tech Entrepreneur"
+  short_description: "Build technology business empires across multiverses"
+  long_description: |
+    You are a newly inducted traveler of the Cross-Dimensional Business Alliance, 
+    possessing the ability to establish technology enterprises across different 
+    spacetimes. Each parallel universe has unique technological development levels, 
+    and you must adapt to various environments to build successful business empires.
+  
+  estimated_hours: 65
+  skill_focus:
+    - dimensional_business_insight
+    - cross_tech_integration
+    - team_summoning
+    - innovation_prophecy
+
+world_setting:
+  name: "Multiverse Business Network"
+  description: |
+    The Multiverse Business Network consists of countless parallel spacetimes forming 
+    a vast commercial web. Tech entrepreneurs travel between dimensions, bringing 
+    innovations from one universe to solve problems in another, while competing against 
+    monopolistic forces that seek to control all realities.
+  
+  atmosphere: "futuristic_dynamic"
+  visual_theme: "interdimensional_tech"
+
+starting_scenario:
+  title: "Dimensional Gateway Activation"
+  description: |
+    Business Mentor Atlas greets you at the dimensional hub, explaining your newfound 
+    ability to travel between universes. But CEO Greed of Monopoly Corp is using unfair 
+    tactics to crush startups across all dimensions. You must use innovation and 
+    collaboration to fight his monopolistic plans.
+  
+  initial_tasks:
+    - understand_multiverse
+    - identify_opportunity
+    - assemble_team
+
+skill_tree:
+  core_skills:
+    - id: opportunity_sensing
+      name: "Opportunity Radar"
+      description: "Detect business opportunities across dimensions"
+      max_level: 10
+      unlocks:
+        - market_gaps
+        - trend_prediction
+    
+    - id: tech_fusion
+      name: "Technology Fusion"
+      description: "Combine technologies from different realities"
+      max_level: 10
+      unlocks:
+        - innovation_synthesis
+        - cross_platform_tech
+    
+    - id: venture_building
+      name: "Venture Architecture"
+      description: "Build scalable tech businesses"
+      max_level: 10
+      unlocks:
+        - business_models
+        - growth_hacking
+    
+    - id: dimensional_networking
+      name: "Multiverse Connections"
+      description: "Build networks across dimensions"
+      max_level: 10
+      unlocks:
+        - investor_portals
+        - talent_summoning
+
+  advanced_skills:
+    - id: disruption_mastery
+      name: "Disruption Engineering"
+      description: "Create industry-changing innovations"
+      max_level: 15
+      requires: [opportunity_sensing, tech_fusion]
+    
+    - id: unicorn_creation
+      name: "Unicorn Summoning"
+      description: "Build billion-dollar tech companies"
+      max_level: 15
+      requires: [venture_building, dimensional_networking]
+    
+    - id: ecosystem_architecture
+      name: "Ecosystem Building"
+      description: "Create thriving tech ecosystems"
+      max_level: 15
+      requires: [dimensional_networking, tech_fusion]
+
+milestone_quests:
+  - id: first_startup
+    name: "Dimensional Debut"
+    description: "Launch your first cross-dimensional startup"
+    required_level: 5
+    skills_tested: [opportunity_sensing, venture_building]
+    xp_reward: 700
+    unlocks:
+      - dimension_traveler_badge
+      - investor_interest
+  
+  - id: monopoly_breaker
+    name: "Monopoly Breaker"
+    description: "Disrupt Greed's monopoly in one dimension"
+    required_level: 10
+    skills_tested: [disruption_mastery, tech_fusion]
+    xp_reward: 1500
+    unlocks:
+      - freedom_fighter_title
+      - resistance_network
+  
+  - id: multiverse_empire
+    name: "Multiverse Empire"
+    description: "Build successful ventures in 5 dimensions"
+    required_level: 20
+    skills_tested: [unicorn_creation, ecosystem_architecture]
+    xp_reward: 3500
+    unlocks:
+      - dimension_master_title
+      - alliance_leadership
+
+achievements:
+  - id: first_funding
+    name: "Seed Crystal"
+    description: "Raise your first investment"
+    xp_reward: 150
+    badge_type: bronze
+  
+  - id: tech_innovator
+    name: "Innovation Catalyst"
+    description: "Create 5 breakthrough technologies"
+    xp_reward: 400
+    badge_type: silver
+  
+  - id: exit_success
+    name: "Dimensional Exit"
+    description: "Successfully exit a startup"
+    xp_reward: 800
+    badge_type: gold
+  
+  - id: serial_legend
+    name: "Serial Dimension Hopper"
+    description: "Complete all entrepreneurial challenges"
+    xp_reward: 1500
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: market_validation
+      type: analysis
+      title: "Dimensional Market Scan"
+      description: "Validate a business idea across dimensions"
+      skills_improved: [opportunity_sensing, dimensional_business_insight]
+      xp_reward: 80
+    
+    - id: mvp_launch
+      type: creation
+      title: "Prototype Portal"
+      description: "Build and launch an MVP"
+      skills_improved: [venture_building, tech_fusion]
+      xp_reward: 90
+  
+  intermediate:
+    - id: team_assembly
+      type: chat
+      title: "Multiverse Team Building"
+      description: "Recruit talent from different dimensions"
+      skills_improved: [dimensional_networking, team_summoning]
+      xp_reward: 200
+    
+    - id: product_scaling
+      type: creation
+      title: "Dimensional Scaling"
+      description: "Scale product across multiple universes"
+      skills_improved: [growth_hacking, venture_building]
+      xp_reward: 250
+  
+  advanced:
+    - id: industry_disruption
+      type: creation
+      title: "Reality Reshaper"
+      description: "Create technology that changes an industry"
+      skills_improved: [disruption_mastery, innovation_prophecy]
+      xp_reward: 450
+    
+    - id: ecosystem_creation
+      type: creation
+      title: "Dimensional Ecosystem"
+      description: "Build a thriving tech ecosystem"
+      skills_improved: [ecosystem_architecture, dimensional_networking]
+      xp_reward: 500
+
+learning_objectives:
+  - "Identify opportunities across different markets and dimensions"
+  - "Build and scale technology companies from idea to exit"
+  - "Master fundraising and investor relations"
+  - "Create innovative products that solve real problems"
+  - "Build and lead high-performing distributed teams"
+  - "Navigate regulatory and cultural differences"
+  - "Develop sustainable competitive advantages"
+  - "Foster innovation ecosystems"
+
+career_outcomes:
+  - "Tech Startup Founder"
+  - "Serial Entrepreneur"
+  - "Venture Partner"
+  - "Innovation Director"
+  - "Startup Ecosystem Builder"
+  - "Technology Strategist"
+  - "Corporate Innovation Lead"
+  - "Angel Investor"

@@ -1,0 +1,218 @@
+# 生技研究員探索路徑 - 繁體中文
+path_id: biotech_researcher
+category: science
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "生命密碼建築師 - 生技研究員"
+  short_description: "透過 AI 和生物科技解開生命的秘密"
+  long_description: |
+    你是「生物合成研究院」的初級研究員，這裡是生物學與人工智慧界限模糊
+    的地方。配備 AI 工具和基因工程技術，你將探索生命的基本密碼，創造
+    可能革新醫學、農業和人類增強的解決方案。
+  
+  estimated_hours: 70
+  skill_focus:
+    - genetic_engineering
+    - ai_bio_modeling
+    - lab_techniques
+    - ethical_biotech
+    - data_driven_discovery
+
+world_setting:
+  name: "生物合成研究院"
+  description: |
+    生物合成研究院是一個尖端研究設施，生物學在此與人工智慧相遇。研究員
+    使用 AI 解碼基因謎團、設計新生物，在應對深刻倫理問題的同時，推動
+    生物科技可能性的界限。
+  
+  atmosphere: "scientific_innovative"
+  visual_theme: "biotech_laboratory"
+
+starting_scenario:
+  title: "活體演算法"
+  description: |
+    Elena Helix 博士歡迎你來到研究院，並交給你一個緊急任務：發現了一個
+    神秘的基因序列，似乎會對 AI 演算法產生反應。但來自競爭對手 BioCorp 
+    的 Splice 博士正在競相將基因改造武器化。你必須負責任地解開生命的
+    秘密，同時防止災難性的濫用。
+  
+  initial_tasks:
+    - understand_crispr
+    - learn_ai_modeling
+    - first_experiment
+
+skill_tree:
+  core_skills:
+    - id: molecular_biology
+      name: "分子精通"
+      description: "掌握基礎分子生物學概念"
+      max_level: 10
+      unlocks:
+        - gene_editing
+        - protein_design
+    
+    - id: bioinformatics
+      name: "生物數據融合"
+      description: "用 AI 分析生物數據"
+      max_level: 10
+      unlocks:
+        - sequence_analysis
+        - structure_prediction
+    
+    - id: synthetic_biology
+      name: "生命設計"
+      description: "工程化新的生物系統"
+      max_level: 10
+      unlocks:
+        - organism_engineering
+        - metabolic_pathways
+    
+    - id: ai_integration
+      name: "AI-生物介面"
+      description: "將 AI 整合到生物研究中"
+      max_level: 10
+      unlocks:
+        - ml_drug_discovery
+        - ai_protein_folding
+
+  advanced_skills:
+    - id: gene_therapy
+      name: "治療工程"
+      description: "在基因層面設計治療方法"
+      max_level: 15
+      requires: [molecular_biology, synthetic_biology]
+    
+    - id: biocomputing
+      name: "生物電腦"
+      description: "創造生物計算系統"
+      max_level: 15
+      requires: [bioinformatics, ai_integration]
+    
+    - id: enhancement_tech
+      name: "人類增強"
+      description: "開發道德的增強技術"
+      max_level: 15
+      requires: [gene_therapy, ethical_biotech]
+
+milestone_quests:
+  - id: first_cure
+    name: "疾病解碼器"
+    description: "開發基因疾病的治療方法"
+    required_level: 5
+    skills_tested: [molecular_biology, bioinformatics]
+    xp_reward: 800
+    unlocks:
+      - medical_breakthrough_badge
+      - patient_testimonials
+  
+  - id: splice_confrontation
+    name: "倫理對抗利益"
+    description: "阻止 Splice 博士的危險實驗"
+    required_level: 10
+    skills_tested: [synthetic_biology, ethical_biotech]
+    xp_reward: 1500
+    unlocks:
+      - ethical_guardian_title
+      - regulatory_influence
+  
+  - id: life_creation
+    name: "創世計畫"
+    description: "創造有益的合成生物"
+    required_level: 20
+    skills_tested: [biocomputing, enhancement_tech]
+    xp_reward: 3000
+    unlocks:
+      - master_biotechnologist_title
+      - nobel_consideration
+
+achievements:
+  - id: first_sequence
+    name: "密碼解讀者"
+    description: "成功定序你的第一個基因組"
+    xp_reward: 100
+    badge_type: bronze
+  
+  - id: publication_success
+    name: "發表研究員"
+    description: "發表 5 篇同行評審論文"
+    xp_reward: 400
+    badge_type: silver
+  
+  - id: patent_holder
+    name: "創新先鋒"
+    description: "申請突破性生技專利"
+    xp_reward: 700
+    badge_type: gold
+  
+  - id: biotech_legend
+    name: "生命密碼大師"
+    description: "完成所有生技挑戰"
+    xp_reward: 1500
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: dna_extraction
+      type: analysis
+      title: "基因藍圖"
+      description: "提取並分析 DNA 樣本"
+      skills_improved: [molecular_biology, lab_techniques]
+      xp_reward: 70
+    
+    - id: ai_sequence_analysis
+      type: analysis
+      title: "模式識別"
+      description: "使用 AI 在基因數據中尋找模式"
+      skills_improved: [bioinformatics, ai_bio_modeling]
+      xp_reward: 80
+  
+  intermediate:
+    - id: crispr_edit
+      type: creation
+      title: "基因編輯器"
+      description: "執行定向基因編輯"
+      skills_improved: [gene_editing, synthetic_biology]
+      xp_reward: 200
+    
+    - id: drug_design
+      type: creation
+      title: "分子醫學"
+      description: "使用 AI 設計新藥"
+      skills_improved: [ml_drug_discovery, bioinformatics]
+      xp_reward: 250
+  
+  advanced:
+    - id: synthetic_life
+      type: creation
+      title: "生命建築師"
+      description: "設計合成生物"
+      skills_improved: [organism_engineering, biocomputing]
+      xp_reward: 450
+    
+    - id: enhancement_protocol
+      type: creation
+      title: "進化加速器"
+      description: "開發道德的增強技術"
+      skills_improved: [enhancement_tech, gene_therapy]
+      xp_reward: 500
+
+learning_objectives:
+  - "精通分子生物學和基因工程"
+  - "將 AI 應用於生物研究和發現"
+  - "設計和工程化生物系統"
+  - "開發基因疾病的治療方法"
+  - "應對生物科技的倫理考量"
+  - "進行嚴謹的科學實驗"
+  - "參與跨學科研究合作"
+  - "將研究轉化為實際應用"
+
+career_outcomes:
+  - "生物科技研究科學家"
+  - "生物資訊專家"
+  - "合成生物學工程師"
+  - "製藥研究員"
+  - "遺傳諮詢師"
+  - "生技新創創辦人"
+  - "研究總監"
+  - "科學政策顧問"

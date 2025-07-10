@@ -1,0 +1,216 @@
+# 產品經理探索路徑 - 繁體中文
+path_id: product_manager
+category: society
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "產品煉金術師 - 產品經理"
+  short_description: "在市場熔爐中鍛造完美產品"
+  long_description: |
+    你是「產品煉金工坊」的新晉煉金術師，擅長將用戶需求、技術能力和商業
+    目標融合成強大的產品。在這個充滿創新火花的工坊中，每一次迭代都是一
+    次煉金實驗，你的目標是創造能改變世界的完美產品。
+  
+  estimated_hours: 55
+  skill_focus:
+    - requirement_alchemy
+    - roadmap_prophecy
+    - team_coordination_magic
+    - user_resonance
+
+world_setting:
+  name: "產品煉金工坊"
+  description: |
+    產品煉金工坊是一個神奇的熔爐，將想法轉化為實際產品。在這裡，產品經
+    理學習平衡用戶渴望、技術限制和商業目標的古老藝術，創造能與數百萬人
+    產生共鳴的產品。
+  
+  atmosphere: "dynamic_creative"
+  visual_theme: "innovation_forge"
+
+starting_scenario:
+  title: "煉金術師的挑戰"
+  description: |
+    策略大師歡迎你來到工坊，並發出警告：時間暴君 Deadline 正在迫使團隊
+    為了速度犧牲產品品質。同時，用戶之聲帶著互相衝突的需求越來越響亮。
+    你必須找到產品管理的賢者之石 - 平衡品質、速度和用戶滿意度。
+  
+  initial_tasks:
+    - understand_users
+    - analyze_market
+    - define_vision
+
+skill_tree:
+  core_skills:
+    - id: user_research
+      name: "用戶心靈讀取"
+      description: "深入理解用戶需求和行為"
+      max_level: 10
+      unlocks:
+        - persona_creation
+        - journey_mapping
+    
+    - id: product_strategy
+      name: "戰略視野"
+      description: "制定致勝的產品策略"
+      max_level: 10
+      unlocks:
+        - competitive_analysis
+        - positioning_mastery
+    
+    - id: feature_prioritization
+      name: "優先順序煉金術"
+      description: "掌握功能優先排序的藝術"
+      max_level: 10
+      unlocks:
+        - roadmap_planning
+        - mvp_design
+    
+    - id: stakeholder_management
+      name: "和諧指揮"
+      description: "協調不同利害關係人的利益"
+      max_level: 10
+      unlocks:
+        - executive_communication
+        - cross_team_collaboration
+
+  advanced_skills:
+    - id: growth_hacking
+      name: "成長魔法"
+      description: "推動產品指數級成長"
+      max_level: 15
+      requires: [product_strategy, user_research]
+    
+    - id: data_driven_decisions
+      name: "指標精通"
+      description: "基於數據洞察做決策"
+      max_level: 15
+      requires: [feature_prioritization, user_research]
+    
+    - id: platform_thinking
+      name: "生態系架構"
+      description: "建立產品平台和生態系統"
+      max_level: 15
+      requires: [product_strategy, stakeholder_management]
+
+milestone_quests:
+  - id: first_launch
+    name: "產品創世"
+    description: "成功推出你的第一個產品"
+    required_level: 5
+    skills_tested: [user_research, feature_prioritization]
+    xp_reward: 600
+    unlocks:
+      - launch_specialist_badge
+      - user_testimonials
+  
+  - id: deadline_balance
+    name: "時間與品質"
+    description: "在時間壓力下交付高品質產品"
+    required_level: 10
+    skills_tested: [stakeholder_management, product_strategy]
+    xp_reward: 1200
+    unlocks:
+      - balance_master_title
+      - deadline_immunity
+  
+  - id: unicorn_product
+    name: "億級用戶產品"
+    description: "創造被數百萬人使用的產品"
+    required_level: 20
+    skills_tested: [growth_hacking, platform_thinking]
+    xp_reward: 2500
+    unlocks:
+      - legendary_pm_title
+      - industry_influence
+
+achievements:
+  - id: first_spec
+    name: "規格撰寫者"
+    description: "撰寫你的第一份產品規格"
+    xp_reward: 100
+    badge_type: bronze
+  
+  - id: user_champion
+    name: "用戶代言人"
+    description: "實現 20 個用戶要求的功能"
+    xp_reward: 300
+    badge_type: silver
+  
+  - id: revenue_generator
+    name: "營收煉金師"
+    description: "推動產品創造 100 萬美元營收"
+    xp_reward: 600
+    badge_type: gold
+  
+  - id: pm_legend
+    name: "產品賢者"
+    description: "完成所有產品挑戰"
+    xp_reward: 1200
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: user_interviews
+      type: analysis
+      title: "聲音收集"
+      description: "進行用戶訪談收集洞察"
+      skills_improved: [user_research, user_resonance]
+      xp_reward: 60
+    
+    - id: competitive_analysis
+      type: analysis
+      title: "市場掃描"
+      description: "分析競爭對手產品"
+      skills_improved: [product_strategy, requirement_alchemy]
+      xp_reward: 70
+  
+  intermediate:
+    - id: roadmap_creation
+      type: creation
+      title: "未來路徑設計"
+      description: "創建產品路線圖"
+      skills_improved: [roadmap_planning, roadmap_prophecy]
+      xp_reward: 180
+    
+    - id: feature_launch
+      type: creation
+      title: "功能煉金"
+      description: "推出主要產品功能"
+      skills_improved: [feature_prioritization, stakeholder_management]
+      xp_reward: 200
+  
+  advanced:
+    - id: platform_design
+      type: creation
+      title: "生態系創造"
+      description: "設計產品平台"
+      skills_improved: [platform_thinking, product_strategy]
+      xp_reward: 400
+    
+    - id: growth_experiment
+      type: analysis
+      title: "成長公式"
+      description: "執行成長實驗擴展產品"
+      skills_improved: [growth_hacking, data_driven_decisions]
+      xp_reward: 350
+
+learning_objectives:
+  - "精通用戶研究和同理心技巧"
+  - "發展戰略性產品思維"
+  - "學習有效地排序功能優先級"
+  - "在不同利害關係人之間建立共識"
+  - "使用數據驅動產品決策"
+  - "創造並傳達產品願景"
+  - "平衡商業目標與用戶需求"
+  - "將產品從初創擴展到成熟"
+
+career_outcomes:
+  - "產品經理"
+  - "高級產品經理"
+  - "產品總監"
+  - "首席產品官"
+  - "產品策略顧問"
+  - "新創產品負責人"
+  - "成長產品經理"
+  - "平台產品經理"

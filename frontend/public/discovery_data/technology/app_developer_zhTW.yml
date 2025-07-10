@@ -1,0 +1,216 @@
+# 應用程式開發者探索路徑 - 繁體中文
+path_id: app_developer
+category: technology
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "數位工匠 - 應用程式開發者"
+  short_description: "在程式碼的世界中打造改變生活的應用"
+  long_description: |
+    你是「數位工匠聯盟」的新晉成員，擅長用程式碼編織出實用且美觀的應用
+    程式。在這個充滿邏輯與創意的工坊中，每一行程式碼都是一個咒語，而你
+    的目標是創造出能夠讓人們生活更便利、更美好的數位工具。
+  
+  estimated_hours: 60
+  skill_focus:
+    - code_weaving
+    - interface_sculpting
+    - logic_architecture
+    - user_experience_magic
+
+world_setting:
+  name: "數位工匠聯盟"
+  description: |
+    數位工匠聯盟是一個聚集頂尖應用開發者的神秘組織。在這裡，程式碼被視為
+    一種藝術形式，開發者學習創造不僅功能完美，還能為用戶日常生活帶來歡樂
+    的應用程式。
+  
+  atmosphere: "innovative_collaborative"
+  visual_theme: "tech_workshop"
+
+starting_scenario:
+  title: "加入聯盟"
+  description: |
+    程式大師 Code 歡迎你來到聯盟，但警告你一個持續的威脅：混亂惡魔 Bug 
+    在程式碼中散布錯誤和漏洞。同時，Design 和 Code 經常因優先順序而發生
+    衝突。你必須用智慧在保持應用穩定的同時平衡技術與美學。
+  
+  initial_tasks:
+    - learn_fundamentals
+    - choose_platform
+    - build_first_app
+
+skill_tree:
+  core_skills:
+    - id: programming_fundamentals
+      name: "程式基礎"
+      description: "掌握核心程式設計概念"
+      max_level: 10
+      unlocks:
+        - advanced_patterns
+        - clean_code
+    
+    - id: ui_development
+      name: "介面雕琢"
+      description: "建造美觀的使用者介面"
+      max_level: 10
+      unlocks:
+        - responsive_design
+        - animation_magic
+    
+    - id: backend_architecture
+      name: "邏輯工程"
+      description: "設計穩固的後端系統"
+      max_level: 10
+      unlocks:
+        - api_design
+        - database_mastery
+    
+    - id: mobile_development
+      name: "行動巫術"
+      description: "創造原生行動體驗"
+      max_level: 10
+      unlocks:
+        - cross_platform
+        - device_features
+
+  advanced_skills:
+    - id: performance_optimization
+      name: "速度魔法"
+      description: "優化應用達到最佳效能"
+      max_level: 15
+      requires: [programming_fundamentals, backend_architecture]
+    
+    - id: security_mastery
+      name: "防護咒語"
+      description: "保護應用免受威脅"
+      max_level: 15
+      requires: [backend_architecture, mobile_development]
+    
+    - id: ai_integration
+      name: "智慧注入"
+      description: "將 AI 功能整合到應用中"
+      max_level: 15
+      requires: [programming_fundamentals, ui_development]
+
+milestone_quests:
+  - id: first_release
+    name: "應用商店首秀"
+    description: "發布你的第一個應用給用戶"
+    required_level: 5
+    skills_tested: [programming_fundamentals, ui_development]
+    xp_reward: 600
+    unlocks:
+      - publisher_badge
+      - user_feedback_access
+  
+  - id: bug_hunter
+    name: "臭蟲剋星"
+    description: "創造無錯誤且完美穩定的應用"
+    required_level: 10
+    skills_tested: [security_mastery, performance_optimization]
+    xp_reward: 1200
+    unlocks:
+      - stability_master_title
+      - advanced_debugging_tools
+  
+  - id: million_users
+    name: "百萬用戶應用"
+    description: "創造被百萬人使用的應用"
+    required_level: 20
+    skills_tested: [ai_integration, mobile_development]
+    xp_reward: 3000
+    unlocks:
+      - legendary_developer_title
+      - alliance_hall_of_fame
+
+achievements:
+  - id: hello_world
+    name: "第一個咒語"
+    description: "寫出你的第一個運作應用"
+    xp_reward: 100
+    badge_type: bronze
+  
+  - id: five_star_app
+    name: "用戶最愛"
+    description: "在應用商店獲得五星評價"
+    xp_reward: 300
+    badge_type: silver
+  
+  - id: polyglot_developer
+    name: "程式通才"
+    description: "精通 5 種程式語言"
+    xp_reward: 600
+    badge_type: gold
+  
+  - id: app_legend
+    name: "傳奇工匠"
+    description: "完成所有開發挑戰"
+    xp_reward: 1200
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: todo_app
+      type: creation
+      title: "任務管理器"
+      description: "建立簡單的待辦事項應用"
+      skills_improved: [programming_fundamentals, ui_development]
+      xp_reward: 70
+    
+    - id: calculator_app
+      type: creation
+      title: "數位計算機"
+      description: "創建功能完整的計算機"
+      skills_improved: [programming_fundamentals, logic_architecture]
+      xp_reward: 60
+  
+  intermediate:
+    - id: social_app
+      type: creation
+      title: "社群連接器"
+      description: "建立社交網路應用"
+      skills_improved: [backend_architecture, mobile_development]
+      xp_reward: 200
+    
+    - id: game_app
+      type: creation
+      title: "娛樂咒語"
+      description: "創造引人入勝的手機遊戲"
+      skills_improved: [ui_development, performance_optimization]
+      xp_reward: 220
+  
+  advanced:
+    - id: ai_assistant
+      type: creation
+      title: "智慧夥伴"
+      description: "建立 AI 驅動的助理應用"
+      skills_improved: [ai_integration, backend_architecture]
+      xp_reward: 400
+    
+    - id: ar_experience
+      type: creation
+      title: "現實增強器"
+      description: "創造擴增實境應用"
+      skills_improved: [mobile_development, performance_optimization]
+      xp_reward: 450
+
+learning_objectives:
+  - "精通多種程式語言和框架"
+  - "設計直觀且美觀的使用者介面"
+  - "建立可擴展且易維護的後端系統"
+  - "創建原生和跨平台行動應用"
+  - "實施安全最佳實踐"
+  - "優化應用效能和用戶體驗"
+  - "整合 AI 和 AR 等尖端技術"
+  - "部署和維護生產環境應用"
+
+career_outcomes:
+  - "行動應用開發者"
+  - "全端開發者"
+  - "iOS/Android 開發者"
+  - "軟體工程師"
+  - "技術主管"
+  - "應用開發顧問"
+  - "新創技術長"
+  - "自由應用開發者"
