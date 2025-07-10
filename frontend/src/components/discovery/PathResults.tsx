@@ -26,6 +26,7 @@ import type {
   WorkspaceSession, 
   SavedPathData 
 } from '@/lib/services/user-data-service';
+import { DiscoveryYAMLLoader } from '@/lib/services/discovery-yaml-loader';
 
 interface PathResultsProps {
   results: AssessmentResults | null;

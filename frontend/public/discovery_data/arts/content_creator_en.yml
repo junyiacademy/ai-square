@@ -1,0 +1,217 @@
+# Content Creator Discovery Path - English
+path_id: content_creator
+category: arts
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "Digital Magician - Content Creator"
+  short_description: "Weave captivating stories in the virtual kingdom"
+  long_description: |
+    You are a newly minted magician in the "Creative Empire," possessing the mystical power 
+    to transform ideas into viral content. In this digital kingdom, every like and share 
+    is proof of your magic, and your mentor Luna will teach you the secrets of the algorithm.
+  
+  estimated_hours: 45
+  skill_focus:
+    - content_magic
+    - visual_spells
+    - text_alchemy
+    - social_summoning
+
+world_setting:
+  name: "Creative Empire"
+  description: |
+    The Creative Empire is a digital kingdom powered by creative energy. Here, content 
+    creators are revered as magicians who can influence millions with their spells. 
+    The kingdom thrives on originality, authenticity, and the ability to connect with audiences.
+  
+  atmosphere: "vibrant_energetic"
+  visual_theme: "digital_fantasy"
+
+starting_scenario:
+  title: "Arrival at the Creative Empire"
+  description: |
+    As a newcomer from the real world, you've just crossed into the Creative Empire. 
+    Master Luna greets you at the gates, warning you about Shadow, a fallen magician 
+    who spreads fake news using forbidden magic. Your first test: create content that 
+    can counter Shadow's dark influence.
+  
+  initial_tasks:
+    - learn_content_basics
+    - understand_algorithms
+    - create_first_spell
+
+skill_tree:
+  core_skills:
+    - id: content_planning
+      name: "Content Planning Magic"
+      description: "Master the art of planning engaging content"
+      max_level: 10
+      unlocks:
+        - viral_formulas
+        - audience_analysis
+    
+    - id: visual_creation
+      name: "Visual Spell Casting"
+      description: "Create stunning visuals that captivate audiences"
+      max_level: 10
+      unlocks:
+        - photo_magic
+        - video_sorcery
+    
+    - id: storytelling
+      name: "Narrative Weaving"
+      description: "Craft stories that resonate with hearts"
+      max_level: 10
+      unlocks:
+        - emotional_hooks
+        - plot_twists
+    
+    - id: platform_mastery
+      name: "Platform Algorithm Studies"
+      description: "Understand and work with platform algorithms"
+      max_level: 10
+      unlocks:
+        - trend_surfing
+        - hashtag_magic
+
+  advanced_skills:
+    - id: viral_engineering
+      name: "Viral Content Engineering"
+      description: "Create content with viral potential"
+      max_level: 15
+      requires: [content_planning, platform_mastery]
+    
+    - id: brand_building
+      name: "Personal Brand Sorcery"
+      description: "Build a powerful personal brand"
+      max_level: 15
+      requires: [visual_creation, storytelling]
+    
+    - id: community_magic
+      name: "Community Cultivation"
+      description: "Build and nurture loyal communities"
+      max_level: 15
+      requires: [storytelling, platform_mastery]
+
+milestone_quests:
+  - id: first_viral
+    name: "First Viral Spell"
+    description: "Create content that reaches 10,000 people"
+    required_level: 5
+    skills_tested: [content_planning, platform_mastery]
+    xp_reward: 500
+    unlocks:
+      - advanced_analytics
+      - brand_partnerships
+  
+  - id: shadow_battle
+    name: "Battle Against Shadow"
+    description: "Counter Shadow's misinformation campaign"
+    required_level: 10
+    skills_tested: [storytelling, community_magic]
+    xp_reward: 1000
+    unlocks:
+      - truth_warrior_badge
+      - advanced_fact_checking
+  
+  - id: empire_influencer
+    name: "Empire's Top Influencer"
+    description: "Become the most influential creator in the Empire"
+    required_level: 20
+    skills_tested: [viral_engineering, brand_building]
+    xp_reward: 2500
+    unlocks:
+      - royal_creator_title
+      - empire_council_seat
+
+achievements:
+  - id: first_post
+    name: "First Magic Cast"
+    description: "Publish your first piece of content"
+    xp_reward: 100
+    badge_type: bronze
+  
+  - id: consistent_creator
+    name: "Consistency Master"
+    description: "Post daily for 30 days"
+    xp_reward: 250
+    badge_type: silver
+  
+  - id: engagement_wizard
+    name: "Engagement Wizard"
+    description: "Achieve 90% engagement rate"
+    xp_reward: 500
+    badge_type: gold
+  
+  - id: content_legend
+    name: "Legend of the Empire"
+    description: "Complete all content challenges"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: content_recipe
+      type: creation
+      title: "Magic Recipe Development"
+      description: "Create a content formula that touches hearts"
+      skills_improved: [content_planning, storytelling]
+      xp_reward: 50
+    
+    - id: first_visual
+      type: creation
+      title: "Visual Spell Practice"
+      description: "Create your first visual content piece"
+      skills_improved: [visual_creation]
+      xp_reward: 60
+  
+  intermediate:
+    - id: trend_riding
+      type: analysis
+      title: "Trend Wave Surfing"
+      description: "Identify and ride a trending topic"
+      skills_improved: [platform_mastery, viral_engineering]
+      xp_reward: 150
+    
+    - id: community_event
+      type: chat
+      title: "Community Gathering"
+      description: "Host a live session with your audience"
+      skills_improved: [community_magic, storytelling]
+      xp_reward: 200
+  
+  advanced:
+    - id: viral_campaign
+      type: creation
+      title: "Viral Campaign Launch"
+      description: "Design and execute a viral campaign"
+      skills_improved: [viral_engineering, brand_building]
+      xp_reward: 300
+    
+    - id: shadow_counter
+      type: creation
+      title: "Truth Spell Mastery"
+      description: "Create content that defeats misinformation"
+      skills_improved: [storytelling, community_magic]
+      xp_reward: 400
+
+learning_objectives:
+  - "Master content planning and strategy"
+  - "Develop unique visual and written content styles"
+  - "Build and engage authentic communities"
+  - "Understand platform algorithms and trends"
+  - "Create content with positive social impact"
+  - "Develop a sustainable content creation workflow"
+  - "Build a recognizable personal brand"
+  - "Combat misinformation with truth and creativity"
+
+career_outcomes:
+  - "Social Media Influencer"
+  - "Brand Content Strategist"
+  - "Digital Marketing Manager"
+  - "YouTube Creator"
+  - "Content Marketing Specialist"
+  - "Community Manager"
+  - "Creative Director"
+  - "Digital Storyteller"

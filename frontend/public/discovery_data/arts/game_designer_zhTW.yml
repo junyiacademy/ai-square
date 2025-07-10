@@ -1,0 +1,215 @@
+# 遊戲設計師探索路徑 - 繁體中文
+path_id: game_designer
+category: arts
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "夢境建築師 - 遊戲設計師"
+  short_description: "在虛擬世界中創造無限可能的夢境"
+  long_description: |
+    你是「夢境建築學院」的天才設計師，擁有將想像力轉化為互動體驗的魔法。
+    在這個充滿創意與樂趣的學院中，每一個遊戲機制都是一扇通往新世界的門，
+    而你的使命就是創造讓人沉浸其中、樂此不疲的數位夢境。
+  
+  estimated_hours: 55
+  skill_focus:
+    - world_building
+    - mechanics_design
+    - emotion_manipulation
+    - fun_summoning
+
+world_setting:
+  name: "夢境建築學院"
+  description: |
+    夢境建築學院是一個專門培養遊戲設計師的魔法學院。在這裡，想像力沒有
+    極限，每個學生都學習如何打造能將玩家帶到充滿驚奇和挑戰的非凡世界的體驗。
+  
+  atmosphere: "playful_imaginative"
+  visual_theme: "fantasy_colorful"
+
+starting_scenario:
+  title: "歡迎來到夢境學院"
+  description: |
+    創意之神 Dream 歡迎你來到學院，但警告你一個威脅：無趣之王 Grind 
+    正在將所有遊戲變成無意義的數值農場。你的任務是恢復遊戲的樂趣和
+    創意，證明有意義的遊戲比單純的效率更重要。
+  
+  initial_tasks:
+    - explore_game_genres
+    - understand_player_psychology
+    - design_first_mechanic
+
+skill_tree:
+  core_skills:
+    - id: game_mechanics
+      name: "機制鍛造"
+      description: "設計吸引人的遊戲機制"
+      max_level: 10
+      unlocks:
+        - balance_mastery
+        - progression_systems
+    
+    - id: narrative_design
+      name: "故事編織"
+      description: "創造引人入勝的遊戲敘事"
+      max_level: 10
+      unlocks:
+        - character_development
+        - world_lore
+    
+    - id: level_design
+      name: "空間建築"
+      description: "建造令人難忘的遊戲關卡"
+      max_level: 10
+      unlocks:
+        - puzzle_creation
+        - combat_arenas
+    
+    - id: player_experience
+      name: "體驗工程"
+      description: "打造最佳玩家旅程"
+      max_level: 10
+      unlocks:
+        - difficulty_curves
+        - reward_systems
+
+  advanced_skills:
+    - id: systems_design
+      name: "系統交響曲"
+      description: "創造複雜的互連系統"
+      max_level: 15
+      requires: [game_mechanics, player_experience]
+    
+    - id: monetization_ethics
+      name: "道德經濟"
+      description: "設計公平的營利系統"
+      max_level: 15
+      requires: [player_experience, game_mechanics]
+    
+    - id: multiplayer_dynamics
+      name: "社交建築"
+      description: "設計吸引人的多人遊戲體驗"
+      max_level: 15
+      requires: [level_design, systems_design]
+
+milestone_quests:
+  - id: first_prototype
+    name: "夢境種子"
+    description: "創造你的第一個可玩遊戲原型"
+    required_level: 5
+    skills_tested: [game_mechanics, level_design]
+    xp_reward: 600
+    unlocks:
+      - prototype_badge
+      - playtesting_access
+  
+  - id: fun_restoration
+    name: "樂趣復興"
+    description: "設計一個擊敗 Grind 無聊機制的遊戲"
+    required_level: 10
+    skills_tested: [narrative_design, player_experience]
+    xp_reward: 1200
+    unlocks:
+      - fun_guardian_title
+      - creative_freedom
+  
+  - id: dream_masterpiece
+    name: "夢境傑作"
+    description: "創造一個重新定義媒介的遊戲"
+    required_level: 20
+    skills_tested: [systems_design, multiplayer_dynamics]
+    xp_reward: 3000
+    unlocks:
+      - dream_master_title
+      - academy_hall_of_fame
+
+achievements:
+  - id: first_mechanic
+    name: "機制誕生"
+    description: "設計你的第一個遊戲機制"
+    xp_reward: 100
+    badge_type: bronze
+  
+  - id: playtester_favorite
+    name: "玩家之選"
+    description: "獲得 50 次正面遊戲測試回饋"
+    xp_reward: 300
+    badge_type: silver
+  
+  - id: systems_master
+    name: "系統大師"
+    description: "創造 5 個完美平衡的遊戲系統"
+    xp_reward: 600
+    badge_type: gold
+  
+  - id: dream_legend
+    name: "夢境傳奇"
+    description: "完成所有遊戲設計挑戰"
+    xp_reward: 1200
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: core_loop
+      type: creation
+      title: "核心循環設計"
+      description: "創造吸引人的核心遊戲循環"
+      skills_improved: [game_mechanics, player_experience]
+      xp_reward: 70
+    
+    - id: world_concept
+      type: creation
+      title: "世界藍圖"
+      description: "設計遊戲世界觀和背景故事"
+      skills_improved: [narrative_design, world_building]
+      xp_reward: 60
+  
+  intermediate:
+    - id: level_sequence
+      type: creation
+      title: "關卡交響曲"
+      description: "設計一系列漸進挑戰的關卡"
+      skills_improved: [level_design, difficulty_curves]
+      xp_reward: 200
+    
+    - id: monetization_design
+      type: analysis
+      title: "公平遊戲經濟"
+      description: "設計尊重玩家的道德營利模式"
+      skills_improved: [monetization_ethics, player_experience]
+      xp_reward: 180
+  
+  advanced:
+    - id: multiplayer_system
+      type: creation
+      title: "社交遊樂場"
+      description: "設計吸引人的多人遊戲機制"
+      skills_improved: [multiplayer_dynamics, systems_design]
+      xp_reward: 350
+    
+    - id: emergent_gameplay
+      type: creation
+      title: "湧現魔法"
+      description: "創造能產生湧現式玩法的系統"
+      skills_improved: [systems_design, game_mechanics]
+      xp_reward: 400
+
+learning_objectives:
+  - "精通核心遊戲設計原則"
+  - "創造吸引人且平衡的遊戲機制"
+  - "設計引人入勝的敘事和世界"
+  - "建造引導和挑戰玩家的關卡"
+  - "理解玩家心理和動機"
+  - "開發道德的營利策略"
+  - "為不同類型和技能的玩家設計"
+  - "創造帶來歡樂和意義的遊戲"
+
+career_outcomes:
+  - "遊戲設計師"
+  - "關卡設計師"
+  - "系統設計師"
+  - "敘事設計師"
+  - "遊戲總監"
+  - "獨立遊戲開發者"
+  - "遊戲設計顧問"
+  - "遊戲設計教育者"

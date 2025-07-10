@@ -1,0 +1,216 @@
+# 內容創作者探索路徑 - 繁體中文
+path_id: content_creator
+category: arts
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "數位魔法師 - 內容創作者"
+  short_description: "在虛擬王國中編織引人入勝的故事"
+  long_description: |
+    你是「創意帝國」的新晉魔法師，擁有將想法轉化為病毒式內容的神秘力量。
+    在這個數位王國中，每個讚數和分享都是魔力的證明，而你的導師 Luna 將
+    教你掌握演算法的奧秘。
+  
+  estimated_hours: 45
+  skill_focus:
+    - content_magic
+    - visual_spells
+    - text_alchemy
+    - social_summoning
+
+world_setting:
+  name: "創意帝國"
+  description: |
+    創意帝國是一個由創意能量驅動的數位王國。在這裡，內容創作者被尊為能夠
+    用魔法影響數百萬人的魔法師。這個王國以原創性、真實性和與觀眾連結的
+    能力為繁榮的基礎。
+  
+  atmosphere: "vibrant_energetic"
+  visual_theme: "digital_fantasy"
+
+starting_scenario:
+  title: "抵達創意帝國"
+  description: |
+    作為剛從現實世界穿越而來的新人，你來到了創意帝國的大門。大師 Luna 
+    在門口迎接你，並警告你關於 Shadow 的存在——一個使用禁忌魔法散布假
+    消息的墮落魔法師。你的第一個考驗：創造能夠對抗 Shadow 黑暗影響力的內容。
+  
+  initial_tasks:
+    - learn_content_basics
+    - understand_algorithms
+    - create_first_spell
+
+skill_tree:
+  core_skills:
+    - id: content_planning
+      name: "內容規劃魔法"
+      description: "掌握規劃吸引人內容的藝術"
+      max_level: 10
+      unlocks:
+        - viral_formulas
+        - audience_analysis
+    
+    - id: visual_creation
+      name: "視覺咒語施展"
+      description: "創造令人著迷的視覺效果"
+      max_level: 10
+      unlocks:
+        - photo_magic
+        - video_sorcery
+    
+    - id: storytelling
+      name: "敘事編織術"
+      description: "編織觸動人心的故事"
+      max_level: 10
+      unlocks:
+        - emotional_hooks
+        - plot_twists
+    
+    - id: platform_mastery
+      name: "平台演算法研究"
+      description: "理解並運用平台演算法"
+      max_level: 10
+      unlocks:
+        - trend_surfing
+        - hashtag_magic
+
+  advanced_skills:
+    - id: viral_engineering
+      name: "病毒內容工程"
+      description: "創造具有病毒傳播潛力的內容"
+      max_level: 15
+      requires: [content_planning, platform_mastery]
+    
+    - id: brand_building
+      name: "個人品牌巫術"
+      description: "建立強大的個人品牌"
+      max_level: 15
+      requires: [visual_creation, storytelling]
+    
+    - id: community_magic
+      name: "社群培育術"
+      description: "建立並培養忠實社群"
+      max_level: 15
+      requires: [storytelling, platform_mastery]
+
+milestone_quests:
+  - id: first_viral
+    name: "第一個病毒咒語"
+    description: "創造觸及 10,000 人的內容"
+    required_level: 5
+    skills_tested: [content_planning, platform_mastery]
+    xp_reward: 500
+    unlocks:
+      - advanced_analytics
+      - brand_partnerships
+  
+  - id: shadow_battle
+    name: "對抗 Shadow 之戰"
+    description: "反擊 Shadow 的錯誤資訊攻勢"
+    required_level: 10
+    skills_tested: [storytelling, community_magic]
+    xp_reward: 1000
+    unlocks:
+      - truth_warrior_badge
+      - advanced_fact_checking
+  
+  - id: empire_influencer
+    name: "帝國頂尖影響者"
+    description: "成為帝國中最具影響力的創作者"
+    required_level: 20
+    skills_tested: [viral_engineering, brand_building]
+    xp_reward: 2500
+    unlocks:
+      - royal_creator_title
+      - empire_council_seat
+
+achievements:
+  - id: first_post
+    name: "初次施法"
+    description: "發布你的第一個內容"
+    xp_reward: 100
+    badge_type: bronze
+  
+  - id: consistent_creator
+    name: "持續大師"
+    description: "連續 30 天每日發文"
+    xp_reward: 250
+    badge_type: silver
+  
+  - id: engagement_wizard
+    name: "互動巫師"
+    description: "達到 90% 的互動率"
+    xp_reward: 500
+    badge_type: gold
+  
+  - id: content_legend
+    name: "帝國傳奇"
+    description: "完成所有內容挑戰"
+    xp_reward: 1000
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: content_recipe
+      type: creation
+      title: "魔法配方研發"
+      description: "研發能夠觸動人心的內容魔法配方"
+      skills_improved: [content_planning, storytelling]
+      xp_reward: 50
+    
+    - id: first_visual
+      type: creation
+      title: "視覺咒語練習"
+      description: "創造你的第一個視覺內容"
+      skills_improved: [visual_creation]
+      xp_reward: 60
+  
+  intermediate:
+    - id: trend_riding
+      type: analysis
+      title: "趨勢浪潮衝浪"
+      description: "識別並駕馭熱門話題"
+      skills_improved: [platform_mastery, viral_engineering]
+      xp_reward: 150
+    
+    - id: community_event
+      type: chat
+      title: "社群聚會"
+      description: "與觀眾舉辦直播互動"
+      skills_improved: [community_magic, storytelling]
+      xp_reward: 200
+  
+  advanced:
+    - id: viral_campaign
+      type: creation
+      title: "病毒行銷發動"
+      description: "設計並執行病毒式行銷活動"
+      skills_improved: [viral_engineering, brand_building]
+      xp_reward: 300
+    
+    - id: shadow_counter
+      type: creation
+      title: "真相咒語精通"
+      description: "創造擊敗錯誤資訊的內容"
+      skills_improved: [storytelling, community_magic]
+      xp_reward: 400
+
+learning_objectives:
+  - "精通內容規劃與策略"
+  - "發展獨特的視覺和文字內容風格"
+  - "建立並經營真實的社群"
+  - "理解平台演算法和趨勢"
+  - "創造具有正面社會影響的內容"
+  - "發展可持續的內容創作工作流程"
+  - "建立可識別的個人品牌"
+  - "用真相和創意對抗錯誤資訊"
+
+career_outcomes:
+  - "社群媒體影響者"
+  - "品牌內容策略師"
+  - "數位行銷經理"
+  - "YouTube 創作者"
+  - "內容行銷專員"
+  - "社群經理"
+  - "創意總監"
+  - "數位說書人"
