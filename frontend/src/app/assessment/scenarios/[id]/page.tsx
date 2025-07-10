@@ -59,13 +59,17 @@ export default function AssessmentScenarioDetailPage({
   const loadScenarioAndPrograms = async (id: string) => {
     try {
       // Load scenario details
-      const scenarioRes = await fetch(`/api/assessment/scenarios/${id}?lang=${i18n.language}`);
+      const scenarioRes = await fetch(`/api/assessment/scenarios/${id}?lang=${i18n.language}`, {
+        credentials: 'include' // Include cookies for authentication
+      });
       const scenarioData = await scenarioRes.json();
       setScenario(scenarioData);
 
       // Load user's programs - only if authenticated
       try {
-        const programsRes = await fetch(`/api/assessment/scenarios/${id}/programs`);
+        const programsRes = await fetch(`/api/assessment/scenarios/${id}/programs`, {
+          credentials: 'include' // Include cookies for authentication
+        });
         if (programsRes.ok) {
           const programsData = await programsRes.json();
           setPrograms(programsData.programs || []);
@@ -90,6 +94,7 @@ export default function AssessmentScenarioDetailPage({
       const res = await fetch(`/api/assessment/scenarios/${scenarioId}/programs`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // Include cookies for authentication
         body: JSON.stringify({
           action: 'start',
           language: i18n.language

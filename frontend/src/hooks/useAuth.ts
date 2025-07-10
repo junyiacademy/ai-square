@@ -37,7 +37,9 @@ export function useAuth(): UseAuthReturn {
   const checkAuth = useCallback(async () => {
     setIsLoading(true)
     try {
-      const response = await fetch('/api/auth/check')
+      const response = await fetch('/api/auth/check', {
+        credentials: 'include' // Include cookies for authentication
+      })
       const data = await response.json()
       
       if (data.authenticated && data.user) {
@@ -79,6 +81,7 @@ export function useAuth(): UseAuthReturn {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Include cookies for authentication
         body: JSON.stringify(credentials),
       })
 
@@ -104,6 +107,7 @@ export function useAuth(): UseAuthReturn {
     try {
       await fetch('/api/auth/logout', {
         method: 'POST',
+        credentials: 'include' // Include cookies for authentication
       })
     } catch (error) {
       console.error('Logout error:', error)
@@ -117,6 +121,7 @@ export function useAuth(): UseAuthReturn {
     try {
       const response = await fetch('/api/auth/refresh', {
         method: 'POST',
+        credentials: 'include' // Include cookies for authentication
       })
       
       if (response.ok) {

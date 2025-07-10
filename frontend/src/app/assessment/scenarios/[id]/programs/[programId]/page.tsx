@@ -58,7 +58,9 @@ export default function AssessmentProgramPage({
   useEffect(() => {
     const fetchDomains = async () => {
       try {
-        const response = await fetch(`/api/assessment?lang=${i18n.language}`);
+        const response = await fetch(`/api/assessment?lang=${i18n.language}`, {
+          credentials: 'include' // Include cookies for authentication
+        });
         const data = await response.json();
         setDomains(data.domains || {});
       } catch (error) {
@@ -70,7 +72,9 @@ export default function AssessmentProgramPage({
 
   const loadProgramState = async (progId: string) => {
     try {
-      const res = await fetch(`/api/assessment/programs/${progId}`);
+      const res = await fetch(`/api/assessment/programs/${progId}`, {
+        credentials: 'include' // Include cookies for authentication
+      });
       const data = await res.json();
       
       setProgram(data.program);
@@ -101,6 +105,7 @@ export default function AssessmentProgramPage({
         await fetch(`/api/assessment/programs/${programId}/batch-answers`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'include', // Include cookies for authentication
           body: JSON.stringify({
             taskId: currentTask?.id,
             answers: newAnswers.map(a => ({
@@ -116,6 +121,7 @@ export default function AssessmentProgramPage({
       await fetch(`/api/assessment/programs/${programId}/complete`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // Include cookies for authentication
         body: JSON.stringify({
           taskId: currentTask?.id
         })
