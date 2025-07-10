@@ -2,7 +2,7 @@
   "home": "Startseite",
   "relations": "Beziehungen",
   "ksa": "KSA-Rahmenwerk",
-  "assessment": "KI-Bewertung",
+  "assessment": "Bewertung",
   "pbl": "PBL-Lernen",
   "assessmentHistory": "Bewertungsverlauf",
   "history": "Verlauf",
@@ -20,7 +20,7 @@
   "totalActivities": "Gesamtaktivitäten",
   "filterAll": "Alle",
   "noHistory": "Noch keine Lernaufzeichnungen",
-  "startAssessment": "KI-Kompetenz-Bewertung starten",
+  "startAssessment": "Bewertung starten",
   "startPBL": "PBL-Lernen starten",
   "startNewPBL": "Neues PBL-Lernen starten",
   "footer": {

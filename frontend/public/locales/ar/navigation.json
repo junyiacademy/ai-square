@@ -3,7 +3,7 @@
   "dashboard": "لوحة التحكم",
   "relations": "العلاقات",
   "ksa": "إطار KSA",
-  "assessment": "تقييم الذكاء الاصطناعي",
+  "assessment": "تقييم",
   "pbl": "التعلم بالمشاريع",
   "assessmentHistory": "سجل التقييمات",
   "history": "السجل",
@@ -21,7 +21,7 @@
   "totalActivities": "إجمالي الأنشطة",
   "filterAll": "الكل",
   "noHistory": "لا توجد سجلات تعلم حتى الآن",
-  "startAssessment": "بدء تقييم الذكاء الاصطناعي",
+  "startAssessment": "بدء التقييم",
   "startPBL": "بدء التعلم بالمشاريع",
   "startNewPBL": "بدء تعلم جديد بالمشاريع",
   "footer": {

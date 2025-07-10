@@ -3,7 +3,7 @@
   "dashboard": "Painel",
   "relations": "Relações",
   "ksa": "Framework KSA",
-  "assessment": "Avaliação de IA",
+  "assessment": "Avaliação",
   "pbl": "Aprendizagem PBL",
   "assessmentHistory": "Histórico de Avaliações",
   "history": "Histórico",
@@ -21,7 +21,7 @@
   "totalActivities": "Total de Atividades",
   "filterAll": "Todos",
   "noHistory": "Ainda não há registros de aprendizagem",
-  "startAssessment": "Iniciar Avaliação de IA",
+  "startAssessment": "Iniciar Avaliação",
   "startPBL": "Iniciar Aprendizagem PBL",
   "startNewPBL": "Iniciar Nova Aprendizagem PBL",
   "footer": {

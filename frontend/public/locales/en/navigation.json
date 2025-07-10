@@ -3,7 +3,7 @@
   "dashboard": "Dashboard",
   "relations": "Relations",
   "ksa": "KSA Framework",
-  "assessment": "AI Assessment",
+  "assessment": "Assessment",
   "pbl": "PBL",
   "discovery": "Discovery",
   "more": "More",
@@ -27,7 +27,7 @@
   "totalActivities": "Total Activities",
   "filterAll": "All",
   "noHistory": "No learning records yet",
-  "startAssessment": "Start AI Assessment",
+  "startAssessment": "Start Assessment",
   "startPBL": "Start PBL Learning",
   "startNewPBL": "Start New PBL Learning",
   "footer": {

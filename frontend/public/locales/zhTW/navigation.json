@@ -3,7 +3,7 @@
   "dashboard": "儀表板",
   "relations": "關係圖",
   "ksa": "KSA 框架",
-  "assessment": "AI 素養評估",
+  "assessment": "評估",
   "pbl": "PBL",
   "discovery": "探索",
   "more": "更多",
@@ -27,7 +27,7 @@
   "totalActivities": "總活動數",
   "filterAll": "全部",
   "noHistory": "尚無學習記錄",
-  "startAssessment": "開始 AI 素養評估",
+  "startAssessment": "開始評估",
   "startPBL": "開始 PBL 學習",
   "startNewPBL": "開始新的 PBL 學習",
   "footer": {

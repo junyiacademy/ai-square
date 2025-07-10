@@ -3,7 +3,7 @@
   "dashboard": "Dasbor",
   "relations": "Relasi",
   "ksa": "Kerangka KSA",
-  "assessment": "Penilaian AI",
+  "assessment": "Penilaian",
   "pbl": "Pembelajaran PBL",
   "assessmentHistory": "Riwayat Penilaian",
   "history": "Riwayat",
@@ -21,7 +21,7 @@
   "totalActivities": "Total Aktivitas",
   "filterAll": "Semua",
   "noHistory": "Belum ada catatan pembelajaran",
-  "startAssessment": "Mulai Penilaian AI",
+  "startAssessment": "Mulai Penilaian",
   "startPBL": "Mulai Pembelajaran PBL",
   "startNewPBL": "Mulai Pembelajaran PBL Baru",
   "footer": {

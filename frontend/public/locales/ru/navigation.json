@@ -2,7 +2,7 @@
   "home": "Главная",
   "relations": "Связи",
   "ksa": "Структура KSA",
-  "assessment": "Оценка ИИ",
+  "assessment": "Оценка",
   "pbl": "PBL обучение",
   "assessmentHistory": "История оценок",
   "history": "История",
@@ -20,7 +20,7 @@
   "totalActivities": "Всего активностей",
   "filterAll": "Все",
   "noHistory": "Пока нет записей об обучении",
-  "startAssessment": "Начать оценку ИИ-грамотности",
+  "startAssessment": "Начать оценку",
   "startPBL": "Начать PBL обучение",
   "startNewPBL": "Начать новое PBL обучение",
   "footer": {

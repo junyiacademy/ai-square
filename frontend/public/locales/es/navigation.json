@@ -2,7 +2,7 @@
   "home": "Inicio",
   "relations": "Relaciones",
   "ksa": "Marco KSA",
-  "assessment": "Evaluación de IA",
+  "assessment": "Evaluación",
   "pbl": "Aprendizaje PBL",
   "assessmentHistory": "Historial de evaluación",
   "history": "Historial",
@@ -20,7 +20,7 @@
   "totalActivities": "Actividades totales",
   "filterAll": "Todos",
   "noHistory": "Aún no hay registros de aprendizaje",
-  "startAssessment": "Iniciar evaluación de alfabetización en IA",
+  "startAssessment": "Iniciar evaluación",
   "startPBL": "Iniciar aprendizaje PBL",
   "startNewPBL": "Iniciar nuevo aprendizaje PBL",
   "footer": {

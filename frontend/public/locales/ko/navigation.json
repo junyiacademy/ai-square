@@ -2,7 +2,7 @@
   "home": "홈",
   "relations": "관계도",
   "ksa": "KSA 프레임워크",
-  "assessment": "AI 평가",
+  "assessment": "평가",
   "pbl": "PBL 학습",
   "assessmentHistory": "평가 기록",
   "history": "기록",
@@ -20,7 +20,7 @@
   "totalActivities": "총 활동 수",
   "filterAll": "전체",
   "noHistory": "아직 학습 기록이 없습니다",
-  "startAssessment": "AI 리터러시 평가 시작",
+  "startAssessment": "평가 시작",
   "startPBL": "PBL 학습 시작",
   "startNewPBL": "새로운 PBL 학습 시작",
   "footer": {

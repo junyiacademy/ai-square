@@ -3,7 +3,7 @@
   "dashboard": "仪表板",
   "relations": "关系图谱",
   "ksa": "KSA 框架",
-  "assessment": "AI 评估",
+  "assessment": "评估",
   "pbl": "PBL 学习",
   "more": "更多",
   "assessmentHistory": "评估历史",
@@ -22,7 +22,7 @@
   "totalActivities": "总活动数",
   "filterAll": "全部",
   "noHistory": "暂无学习记录",
-  "startAssessment": "开始 AI 评估",
+  "startAssessment": "开始评估",
   "startPBL": "开始 PBL 学习",
   "startNewPBL": "开始新的 PBL 学习",
   "footer": {

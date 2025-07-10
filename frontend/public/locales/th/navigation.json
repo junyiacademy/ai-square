@@ -3,7 +3,7 @@
   "dashboard": "แดชบอร์ด",
   "relations": "ความสัมพันธ์",
   "ksa": "กรอบ KSA",
-  "assessment": "การประเมิน AI",
+  "assessment": "การประเมิน",
   "pbl": "การเรียนรู้ PBL",
   "assessmentHistory": "ประวัติการประเมิน",
   "history": "ประวัติ",
@@ -21,7 +21,7 @@
   "totalActivities": "กิจกรรมทั้งหมด",
   "filterAll": "ทั้งหมด",
   "noHistory": "ยังไม่มีบันทึกการเรียนรู้",
-  "startAssessment": "เริ่มการประเมิน AI",
+  "startAssessment": "เริ่มการประเมิน",
   "startPBL": "เริ่มการเรียนรู้ PBL",
   "startNewPBL": "เริ่มการเรียนรู้ PBL ใหม่",
   "footer": {
