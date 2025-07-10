@@ -32,6 +32,10 @@ interface Program {
   metadata?: {
     timeSpent?: number;
     questionsAnswered?: number;
+    totalQuestions?: number;
+    correctAnswers?: number;
+    level?: string;
+    domainScores?: Record<string, number>;
   };
 }
 
@@ -65,11 +69,24 @@ export default function AssessmentScenarioDetailPage({
       const scenarioData = await scenarioRes.json();
       setScenario(scenarioData);
 
-      // Load user's programs - only if authenticated
+      // Load user's programs - check localStorage for user info
       try {
-        const programsRes = await fetch(`/api/assessment/scenarios/${id}/programs`, {
+        // Check if user is logged in via localStorage
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        const userData = localStorage.getItem('user');
+        
+        let programsUrl = `/api/assessment/scenarios/${id}/programs`;
+        
+        if (isLoggedIn === 'true' && userData) {
+          const user = JSON.parse(userData);
+          // Add user info as query params
+          programsUrl += `?userEmail=${encodeURIComponent(user.email)}&userId=${user.id}`;
+        }
+        
+        const programsRes = await fetch(programsUrl, {
           credentials: 'include' // Include cookies for authentication
         });
+        
         if (programsRes.ok) {
           const programsData = await programsRes.json();
           setPrograms(programsData.programs || []);
@@ -79,6 +96,7 @@ export default function AssessmentScenarioDetailPage({
         }
       } catch (error) {
         // Silently handle programs loading error
+        console.error('Error loading programs:', error);
         setPrograms([]);
       }
     } catch (error) {
@@ -244,14 +262,29 @@ export default function AssessmentScenarioDetailPage({
                     </div>
                     
                     {program.score !== undefined && (
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-2xl font-bold text-green-600">
-                          {program.score}%
-                        </span>
-                        {program.score >= scenario.config.passingScore ? (
-                          <span className="text-sm text-green-600">Passed</span>
-                        ) : (
-                          <span className="text-sm text-red-600">Not Passed</span>
+                      <div className="space-y-2">
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-2xl font-bold text-green-600">
+                            {program.score}%
+                          </span>
+                          {program.score >= scenario.config.passingScore ? (
+                            <span className="text-sm text-green-600">Passed</span>
+                          ) : (
+                            <span className="text-sm text-red-600">Not Passed</span>
+                          )}
+                          {program.metadata?.level && (
+                            <Badge variant="outline" className="ml-2">
+                              {program.metadata.level}
+                            </Badge>
+                          )}
+                        </div>
+                        {program.metadata?.correctAnswers !== undefined && (
+                          <p className="text-sm text-gray-600">
+                            {program.metadata.correctAnswers} of {program.metadata.totalQuestions} correct
+                            {program.metadata.timeSpent && (
+                              <span> • {Math.floor(program.metadata.timeSpent / 60)} minutes</span>
+                            )}
+                          </p>
                         )}
                       </div>
                     )}
