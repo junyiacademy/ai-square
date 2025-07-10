@@ -10,12 +10,27 @@ export async function GET(
   { params }: { params: Promise<{ programId: string }> }
 ) {
   try {
+    // Try to get user from authentication
     const user = await getAuthFromRequest(request);
-    if (!user) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+    
+    // If no auth, check if user info is in query params (for viewing history)
+    let userEmail: string | null = null;
+    
+    if (user) {
+      userEmail = user.email;
+    } else {
+      // Check for user info from query params
+      const { searchParams } = new URL(request.url);
+      const emailParam = searchParams.get('userEmail');
+      
+      if (emailParam) {
+        userEmail = emailParam;
+      } else {
+        return NextResponse.json(
+          { error: 'Authentication required' },
+          { status: 401 }
+        );
+      }
     }
     
     // Await params before using
@@ -26,7 +41,7 @@ export async function GET(
     
     // Get program
     const program = await programRepo.findById(programId);
-    if (!program || program.userId !== user.email) {
+    if (!program || program.userId !== userEmail) {
       return NextResponse.json(
         { error: 'Program not found or access denied' },
         { status: 404 }

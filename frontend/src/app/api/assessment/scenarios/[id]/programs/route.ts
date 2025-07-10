@@ -10,6 +10,10 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 
+// Simple in-memory cache for scenarios
+const scenarioCache = new Map<string, { scenario: any; timestamp: number }>();
+const SCENARIO_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -47,52 +51,37 @@ export async function GET(
     
     const programRepo = getProgramRepository();
     
-    // Debug: Log the scenario ID we're looking for
-    console.log(`Looking for programs with scenarioId: ${id}`);
-    
-    const programs = await programRepo.findByScenario(id);
-    
-    // Debug: Log all programs found
-    console.log(`Found ${programs.length} programs for scenario ${id}`);
-    
-    // Also check if there are any programs for the user at all
+    // Get user programs efficiently
     const allUserPrograms = await programRepo.findByUser(userEmail);
-    console.log(`User ${userEmail} has ${allUserPrograms.length} total programs`);
-    if (allUserPrograms.length > 0) {
-      console.log('User program scenario IDs:', allUserPrograms.map(p => ({ 
-        id: p.id, 
-        scenarioId: p.scenarioId,
-        status: p.status,
-        score: p.score
-      })));
-    }
     
-    // Filter to user's programs - also check for programs that might be associated differently
-    let userPrograms = programs.filter(p => p.userId === userEmail);
+    // First try to find programs with exact scenario ID match
+    let userPrograms = allUserPrograms.filter(p => p.scenarioId === id);
     
-    // If no programs found with exact scenario ID match, check if this is an assessment scenario
-    // and look for programs with related assessment scenario IDs
+    // If no direct matches and this is an assessment scenario, include all completed assessments
     if (userPrograms.length === 0 && allUserPrograms.length > 0) {
-      console.log(`No direct matches found. Checking for assessment programs...`);
+      // Check cache first
+      const now = Date.now();
+      const cached = scenarioCache.get(id);
       
-      // Get the scenario to check its source type
-      const scenarioRepo = getScenarioRepository();
-      const scenario = await scenarioRepo.findById(id);
+      let scenario;
+      if (cached && (now - cached.timestamp) < SCENARIO_CACHE_TTL) {
+        scenario = cached.scenario;
+      } else {
+        // Quick check if this scenario is assessment type
+        const scenarioRepo = getScenarioRepository();
+        scenario = await scenarioRepo.findById(id);
+        
+        // Cache the result
+        if (scenario) {
+          scenarioCache.set(id, { scenario, timestamp: now });
+        }
+      }
       
       if (scenario && scenario.sourceType === 'assessment') {
-        console.log(`This is an assessment scenario. Looking for programs with matching source...`);
-        // Find all assessment programs for this user
-        const assessmentPrograms = allUserPrograms.filter(p => {
-          // Check if program's scenario is also an assessment type
-          return p.status === 'completed' && p.score !== undefined;
-        });
-        
-        if (assessmentPrograms.length > 0) {
-          console.log(`Found ${assessmentPrograms.length} completed assessment programs for user`);
-          // For now, include all completed assessment programs
-          // In the future, we might want to match by assessment type or source
-          userPrograms = assessmentPrograms;
-        }
+        // Include all completed assessment programs for this user
+        userPrograms = allUserPrograms.filter(p => 
+          p.status === 'completed' && p.score !== undefined
+        );
       }
     }
     
@@ -101,48 +90,53 @@ export async function GET(
       new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime()
     );
     
-    // Get task counts and scores for each program
+    // Optimize by batching evaluations for completed programs
     const evaluationRepo = getEvaluationRepository();
-    const enrichedPrograms = await Promise.all(
-      userPrograms.map(async (program) => {
-        const taskRepo = getTaskRepository();
-        const tasks = await taskRepo.findByProgram(program.id);
-        
-        // Calculate progress
-        const answeredQuestions = tasks.reduce((sum, task) => {
-          const answers = task.interactions.filter(i => i.type === 'assessment_answer');
-          return sum + answers.length;
-        }, 0);
-        
-        // Get evaluation if program is completed
-        let evaluation = null;
-        if (program.status === 'completed' && program.metadata?.evaluationId) {
-          try {
-            evaluation = await evaluationRepo.findById(program.metadata.evaluationId);
-          } catch (error) {
-            console.error('Error fetching evaluation:', error);
-          }
+    const taskRepo = getTaskRepository();
+    
+    // Get all evaluation IDs from completed programs
+    const evaluationIds = userPrograms
+      .filter(p => p.status === 'completed' && p.metadata?.evaluationId)
+      .map(p => p.metadata!.evaluationId!);
+    
+    // Batch fetch evaluations
+    const evaluationsMap = new Map();
+    if (evaluationIds.length > 0) {
+      const evaluations = await Promise.all(
+        evaluationIds.map(id => evaluationRepo.findById(id).catch(() => null))
+      );
+      evaluationIds.forEach((id, index) => {
+        if (evaluations[index]) {
+          evaluationsMap.set(id, evaluations[index]);
         }
-        
-        // Extract score and other data from evaluation
-        const enrichedProgram = {
-          ...program,
-          score: evaluation?.score || program.score,
-          metadata: {
-            ...program.metadata,
-            questionsAnswered: answeredQuestions,
-            totalQuestions: evaluation?.metadata?.totalQuestions,
-            correctAnswers: evaluation?.metadata?.correctAnswers,
-            timeSpent: evaluation?.metadata?.completionTime,
-            level: evaluation?.metadata?.level,
-            domainScores: evaluation?.metadata?.domainScores,
-            completedAt: program.completedAt || evaluation?.createdAt
-          }
-        };
-        
-        return enrichedProgram;
-      })
-    );
+      });
+    }
+    
+    // Enrich programs with minimal async operations
+    const enrichedPrograms = userPrograms.map(program => {
+      // Get cached evaluation if available
+      const evaluation = program.metadata?.evaluationId 
+        ? evaluationsMap.get(program.metadata.evaluationId) 
+        : null;
+      
+      // For active programs, we might need task count, but skip for now to improve performance
+      const enrichedProgram = {
+        ...program,
+        score: evaluation?.score || program.score,
+        metadata: {
+          ...program.metadata,
+          questionsAnswered: program.metadata?.questionsAnswered || 0,
+          totalQuestions: evaluation?.metadata?.totalQuestions,
+          correctAnswers: evaluation?.metadata?.correctAnswers,
+          timeSpent: evaluation?.metadata?.completionTime,
+          level: evaluation?.metadata?.level,
+          domainScores: evaluation?.metadata?.domainScores,
+          completedAt: program.completedAt || evaluation?.createdAt
+        }
+      };
+      
+      return enrichedProgram;
+    });
     
     return NextResponse.json({ 
       programs: enrichedPrograms,

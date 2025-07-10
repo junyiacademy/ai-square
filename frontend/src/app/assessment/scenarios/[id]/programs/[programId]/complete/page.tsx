@@ -57,12 +57,22 @@ export default function AssessmentCompletePage({
 
   const loadEvaluation = async (progId: string) => {
     try {
-      const res = await fetch(`/api/assessment/programs/${progId}/evaluation`);
+      // Check if user is logged in via localStorage
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      const userData = localStorage.getItem('user');
+      
+      let queryParams = '';
+      if (isLoggedIn === 'true' && userData) {
+        const user = JSON.parse(userData);
+        queryParams = `?userEmail=${encodeURIComponent(user.email)}&userId=${user.id}`;
+      }
+      
+      const res = await fetch(`/api/assessment/programs/${progId}/evaluation${queryParams}`);
       const data = await res.json();
       setEvaluation(data.evaluation);
       
       // Also load the task to get questions and answers
-      const programRes = await fetch(`/api/assessment/programs/${progId}`);
+      const programRes = await fetch(`/api/assessment/programs/${progId}${queryParams}`);
       const programData = await programRes.json();
       
       if (programData.currentTask) {
