@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -26,26 +26,65 @@ interface AssessmentScenario {
   };
 }
 
+// Client-side cache
+const scenariosCache: Record<string, {
+  data: AssessmentScenario[];
+  timestamp: number;
+}> = {};
+
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
 export default function AssessmentScenariosPage() {
   const [scenarios, setScenarios] = useState<AssessmentScenario[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const { t, i18n } = useTranslation();
+  const loadingRef = useRef(false);
 
   useEffect(() => {
-    loadAssessmentScenarios();
+    // Prevent multiple simultaneous loads
+    if (!loadingRef.current) {
+      loadAssessmentScenarios();
+    }
   }, [i18n.language]);
 
   const loadAssessmentScenarios = async () => {
+    const cacheKey = i18n.language;
+    const now = Date.now();
+    
+    // Check client-side cache
+    if (scenariosCache[cacheKey] && (now - scenariosCache[cacheKey].timestamp) < CACHE_TTL) {
+      console.log('Using cached scenarios');
+      setScenarios(scenariosCache[cacheKey].data);
+      setLoading(false);
+      return;
+    }
+    
+    // Prevent concurrent requests
+    if (loadingRef.current) {
+      console.log('Already loading scenarios, skipping...');
+      return;
+    }
+    
+    loadingRef.current = true;
     try {
       const res = await fetch(`/api/assessment/scenarios?lang=${i18n.language}`);
       const data = await res.json();
-      setScenarios(data.scenarios || []);
+      const loadedScenarios = data.scenarios || [];
+      
+      // Update cache
+      scenariosCache[cacheKey] = {
+        data: loadedScenarios,
+        timestamp: now
+      };
+      
+      setScenarios(loadedScenarios);
     } catch (error) {
       console.error('Failed to load scenarios:', error);
       setScenarios([]);
     } finally {
       setLoading(false);
+      loadingRef.current = false;
     }
   };
 
@@ -90,8 +129,7 @@ export default function AssessmentScenariosPage() {
           {scenarios.map((scenario) => (
             <Card 
               key={scenario.id}
-              className="hover:shadow-lg transition-shadow cursor-pointer"
-              onClick={() => router.push(`/assessment/scenarios/${scenario.id}`)}
+              className="hover:shadow-lg transition-shadow"
             >
               <CardHeader>
                 <div className="flex items-start justify-between">
@@ -108,26 +146,42 @@ export default function AssessmentScenariosPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2 text-sm text-gray-600">
-                  <div className="flex items-center gap-2">
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center gap-2 text-gray-600">
                     <Target className="h-4 w-4" />
                     <span>{scenario.config.totalQuestions} questions</span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 text-gray-600">
                     <Clock className="h-4 w-4" />
                     <span>{scenario.config.timeLimit} minutes</span>
                   </div>
-                  {scenario.userProgress && scenario.userProgress.completedPrograms > 0 && (
-                    <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4" />
-                      <span>{scenario.userProgress.completedPrograms} attempts</span>
-                    </div>
-                  )}
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <Users className="h-4 w-4" />
+                    <span>Pass: {scenario.config.passingScore}%</span>
+                  </div>
                 </div>
                 
-                <Button className="w-full mt-4" variant="outline">
-                  View Details
-                </Button>
+                {scenario.userProgress && scenario.userProgress.completedPrograms > 0 && (
+                  <div className="mt-4 pt-4 border-t text-sm text-gray-600">
+                    <div className="flex items-center justify-between">
+                      <span>{scenario.userProgress.completedPrograms} attempts</span>
+                      {scenario.userProgress.lastAttempt && (
+                        <span>
+                          Last: {new Date(scenario.userProgress.lastAttempt).toLocaleDateString()}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+                
+                <div className="mt-4 pt-4 border-t">
+                  <Button 
+                    className="w-full"
+                    onClick={() => router.push(`/assessment/scenarios/${scenario.id}`)}
+                  >
+                    View Details
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           ))}

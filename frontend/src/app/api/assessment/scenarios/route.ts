@@ -14,11 +14,45 @@ interface AssessmentConfig {
   domains?: string[];
 }
 
+// In-memory cache for scenarios
+let scenariosCache: {
+  data: any[] | null;
+  timestamp: number;
+} = {
+  data: null,
+  timestamp: 0
+};
+
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
     const user = await getAuthFromRequest(request);
+    
+    // Check cache first
+    const now = Date.now();
+    if (scenariosCache.data && (now - scenariosCache.timestamp) < CACHE_TTL) {
+      console.log('Returning cached scenarios');
+      
+      // Add user progress if authenticated
+      const scenariosWithProgress = scenariosCache.data.map(scenario => ({
+        ...scenario,
+        userProgress: user ? {
+          completedPrograms: 0,
+          lastAttempt: undefined,
+          bestScore: undefined
+        } : undefined
+      }));
+      
+      return NextResponse.json({ 
+        scenarios: scenariosWithProgress,
+        totalCount: scenariosWithProgress.length 
+      });
+    }
+    
+    console.log('Cache miss, loading scenarios from disk');
     
     // Scan assessment_data directory for folders
     const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
@@ -37,6 +71,12 @@ export async function GET(request: NextRequest) {
     
     // Get scenario repository
     const scenarioRepo = getScenarioRepository();
+    
+    // Get all existing scenarios in one batch query
+    const existingScenarios = await scenarioRepo.findAll();
+    const scenariosByPath = new Map(
+      existingScenarios.map(s => [s.sourceRef?.metadata?.configPath, s])
+    );
     
     // Process each folder
     const scenarios = await Promise.all(
@@ -71,11 +111,12 @@ export async function GET(request: NextRequest) {
             return null;
           }
           
-          // Check if scenario already exists using the actual yaml path
-          let scenario = await scenarioRepo.findByYamlPath(yamlPath);
+          // Check if scenario already exists using the cached map
+          let scenario = scenariosByPath.get(yamlPath);
           
           // Create scenario if it doesn't exist
           if (!scenario) {
+            console.log(`Creating new scenario for ${folderName}`);
             scenario = await scenarioRepo.create({
               sourceType: 'assessment',
               sourceRef: {
@@ -102,18 +143,6 @@ export async function GET(request: NextRequest) {
             });
           }
           
-          // Get user progress if authenticated
-          let userProgress = undefined;
-          if (user) {
-            // This would query program repository for user's attempts
-            // For now, returning mock data
-            userProgress = {
-              completedPrograms: 0,
-              lastAttempt: undefined,
-              bestScore: undefined
-            };
-          }
-          
           return {
             id: scenario.id,
             title: scenario.title,
@@ -121,11 +150,10 @@ export async function GET(request: NextRequest) {
             folderName,
             config: {
               totalQuestions: config.total_questions || 12,
-              timeLimit: config.time_limit || 15,
+              timeLimit: config.time_limit_minutes || 15,
               passingScore: config.passing_score || 60,
               domains: config.domains || []
-            },
-            userProgress
+            }
           };
         } catch (error) {
           console.error(`Error processing folder ${folderName}:`, error);
@@ -137,9 +165,25 @@ export async function GET(request: NextRequest) {
     // Filter out any null results
     const validScenarios = scenarios.filter(s => s !== null);
     
+    // Update cache
+    scenariosCache = {
+      data: validScenarios,
+      timestamp: now
+    };
+    
+    // Add user progress if authenticated
+    const scenariosWithProgress = validScenarios.map(scenario => ({
+      ...scenario,
+      userProgress: user ? {
+        completedPrograms: 0,
+        lastAttempt: undefined,
+        bestScore: undefined
+      } : undefined
+    }));
+    
     return NextResponse.json({ 
-      scenarios: validScenarios,
-      totalCount: validScenarios.length 
+      scenarios: scenariosWithProgress,
+      totalCount: scenariosWithProgress.length 
     });
   } catch (error) {
     console.error('Error in assessment scenarios API:', error);

@@ -47,6 +47,17 @@ export class GCSScenarioRepository<T extends IScenario = IScenario>
     });
   }
 
+  async findAll(): Promise<T[]> {
+    return this.listAllEntities();
+  }
+
+  async findByYamlPath(yamlPath: string): Promise<T | null> {
+    const allScenarios = await this.listAllEntities();
+    return allScenarios.find(scenario => 
+      scenario.sourceRef?.metadata?.configPath === yamlPath
+    ) || null;
+  }
+
   async update(id: string, updates: Partial<T>): Promise<T> {
     const updated = await this.updateEntity(id, {
       ...updates,
