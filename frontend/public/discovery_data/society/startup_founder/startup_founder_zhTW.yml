@@ -1,0 +1,216 @@
+# 創業家探索路徑 - 繁體中文
+path_id: startup_founder
+category: society
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "商業冒險家 - 創業家"
+  short_description: "在商業荒野中開拓新的貿易路線"
+  long_description: |
+    你是「新商業大陸」的探險家，肩負著在未知商業領域建立新據點的使命。
+    在這片充滿機會與危險的荒野中，每個決策都可能改變你的命運，而忠實的
+    夥伴們將與你共同面對挑戰。
+  
+  estimated_hours: 60
+  skill_focus:
+    - business_intuition
+    - market_exploration
+    - resource_alchemy
+    - risk_navigation
+
+world_setting:
+  name: "新商業大陸"
+  description: |
+    新商業大陸是一片廣闊未開發的商業荒野，勇敢的創業者在此冒險建立新的
+    貿易路線和商業帝國。成功需要智慧、勇氣，以及將稀缺資源轉化為黃金的
+    能力。
+  
+  atmosphere: "adventurous_challenging"
+  visual_theme: "frontier_exploration"
+
+starting_scenario:
+  title: "男爵的封鎖"
+  description: |
+    探險夥伴 Scout 帶來嚴峻消息：Baron Greed 控制了大部分資源，正在打壓
+    新商人。同時，供應商 Lily 在關鍵時刻反悔。你必須找到創新的方法突破
+    封鎖，建立你的貿易站。
+  
+  initial_tasks:
+    - survey_market
+    - find_resources
+    - build_alliances
+
+skill_tree:
+  core_skills:
+    - id: market_analysis
+      name: "市場感知"
+      description: "偵測商業機會"
+      max_level: 10
+      unlocks:
+        - trend_spotting
+        - competitor_analysis
+    
+    - id: resource_management
+      name: "資源煉金術"
+      description: "將有限資源轉化為價值"
+      max_level: 10
+      unlocks:
+        - bootstrap_mastery
+        - efficiency_optimization
+    
+    - id: team_building
+      name: "盟友召喚"
+      description: "建立強大的創始團隊"
+      max_level: 10
+      unlocks:
+        - talent_attraction
+        - culture_creation
+    
+    - id: product_development
+      name: "創新鍛造"
+      description: "創造市場致勝產品"
+      max_level: 10
+      unlocks:
+        - mvp_design
+        - iteration_mastery
+
+  advanced_skills:
+    - id: fundraising
+      name: "資本魔法"
+      description: "精通募資藝術"
+      max_level: 15
+      requires: [market_analysis, resource_management]
+    
+    - id: scaling_operations
+      name: "帝國建設"
+      description: "有效擴展業務規模"
+      max_level: 15
+      requires: [team_building, product_development]
+    
+    - id: strategic_pivoting
+      name: "適應藝術"
+      description: "需要時策略性轉型"
+      max_level: 15
+      requires: [market_analysis, product_development]
+
+milestone_quests:
+  - id: first_customer
+    name: "第一桶金"
+    description: "獲得你的第一個付費客戶"
+    required_level: 5
+    skills_tested: [market_analysis, product_development]
+    xp_reward: 650
+    unlocks:
+      - merchant_badge
+      - market_credibility
+  
+  - id: baron_challenge
+    name: "打破壟斷"
+    description: "克服 Baron Greed 的市場控制"
+    required_level: 10
+    skills_tested: [resource_management, strategic_pivoting]
+    xp_reward: 1300
+    unlocks:
+      - freedom_trader_title
+      - supplier_network
+  
+  - id: empire_established
+    name: "貿易帝國"
+    description: "建立永續的商業帝國"
+    required_level: 20
+    skills_tested: [scaling_operations, fundraising]
+    xp_reward: 2600
+    unlocks:
+      - empire_builder_title
+      - legacy_founder
+
+achievements:
+  - id: first_sale
+    name: "首次交易"
+    description: "完成你的第一筆成功銷售"
+    xp_reward: 75
+    badge_type: bronze
+  
+  - id: team_assembled
+    name: "團隊成立"
+    description: "建立 5 人以上的團隊"
+    xp_reward: 300
+    badge_type: silver
+  
+  - id: profitable_quarter
+    name: "黃金流動"
+    description: "達成首個獲利季度"
+    xp_reward: 550
+    badge_type: gold
+  
+  - id: startup_legend
+    name: "傳奇創業家"
+    description: "完成所有創業家挑戰"
+    xp_reward: 1100
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: market_research
+      type: analysis
+      title: "荒野市場探勘"
+      description: "深入了解目標市場需求"
+      skills_improved: [market_analysis, business_intuition]
+      xp_reward: 65
+    
+    - id: prototype_creation
+      type: creation
+      title: "首個貿易站"
+      description: "建立最小可行產品"
+      skills_improved: [product_development, resource_alchemy]
+      xp_reward: 75
+  
+  intermediate:
+    - id: customer_interviews
+      type: chat
+      title: "商人談判"
+      description: "驗證產品市場契合度"
+      skills_improved: [market_exploration, business_intuition]
+      xp_reward: 175
+    
+    - id: growth_planning
+      type: creation
+      title: "帝國擴張計畫"
+      description: "制定成長策略"
+      skills_improved: [scaling_operations, risk_navigation]
+      xp_reward: 195
+  
+  advanced:
+    - id: series_a_prep
+      type: creation
+      title: "資本任務"
+      description: "準備大型募資"
+      skills_improved: [fundraising, resource_alchemy]
+      xp_reward: 370
+    
+    - id: market_expansion
+      type: creation
+      title: "大陸征服"
+      description: "擴展到新市場"
+      skills_improved: [strategic_pivoting, market_exploration]
+      xp_reward: 410
+
+learning_objectives:
+  - "識別並驗證商業機會"
+  - "建立客戶喜愛的產品"
+  - "精通精實創業方法"
+  - "發展領導技能"
+  - "駕馭不確定性和風險"
+  - "建立強大的公司文化"
+  - "獲得資金並管理財務"
+  - "永續地擴展業務規模"
+
+career_outcomes:
+  - "新創創辦人/執行長"
+  - "連續創業家"
+  - "創投合夥人"
+  - "創新顧問"
+  - "新創顧問"
+  - "企業內創業家"
+  - "加速器總監"
+  - "天使投資人"

@@ -1,0 +1,214 @@
+# YouTuber 探索路徑 - 繁體中文
+path_id: youtuber
+category: arts
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "影像吟遊詩人 - YouTuber"
+  short_description: "在數位舞台上演繹精彩的影像故事"
+  long_description: |
+    你是「影像吟遊詩人公會」的新成員，擁有透過鏡頭說故事、娛樂觀眾的天賦。
+    在這個充滿創意與技術的數位王國中，每一支影片都是一場表演，每一個訂閱者
+    都是你的觀眾，而你的使命就是創造出能夠感動人心、引起共鳴的影像內容。
+  
+  estimated_hours: 55
+  skill_focus:
+    - storytelling_arts
+    - video_magic
+    - audience_resonance
+    - algorithm_studies
+
+world_setting:
+  name: "影像吟遊詩人公會"
+  description: |
+    影像吟遊詩人公會是一個培養頂尖內容創作者的藝術公會。在這裡，創作者學習
+    平衡創意與演算法需求、真實性與觀眾期待，建立能啟發和娛樂數百萬人的頻道。
+  
+  atmosphere: "creative_dynamic"
+  visual_theme: "digital_stage"
+
+starting_scenario:
+  title: "演算法變遷"
+  description: |
+    創意導演帶來令人擔憂的消息：演算法君王 Algorithm 的喜好突然改變，許多
+    創作者的作品被埋沒。你必須在保持創作初心和迎合演算法之間找到平衡。
+  
+  initial_tasks:
+    - understand_youtube
+    - learn_video_basics
+    - create_first_video
+
+skill_tree:
+  core_skills:
+    - id: content_planning
+      name: "故事編織"
+      description: "規劃引人入勝的影片內容"
+      max_level: 10
+      unlocks:
+        - series_planning
+        - content_calendar
+    
+    - id: video_production
+      name: "視覺工藝"
+      description: "精通影片拍攝技巧"
+      max_level: 10
+      unlocks:
+        - camera_mastery
+        - lighting_magic
+    
+    - id: video_editing
+      name: "時間雕塑"
+      description: "剪輯引人入勝的影片"
+      max_level: 10
+      unlocks:
+        - pacing_rhythm
+        - effects_wizardry
+    
+    - id: audience_growth
+      name: "社群建設"
+      description: "增長並經營觀眾群"
+      max_level: 10
+      unlocks:
+        - engagement_tactics
+        - collaboration_networks
+
+  advanced_skills:
+    - id: algorithm_optimization
+      name: "演算法低語"
+      description: "掌握 YouTube 演算法"
+      max_level: 15
+      requires: [content_planning, audience_growth]
+    
+    - id: monetization_mastery
+      name: "收益流程"
+      description: "多元化收入來源"
+      max_level: 15
+      requires: [audience_growth, video_production]
+    
+    - id: brand_partnerships
+      name: "聯盟鍛造"
+      description: "建立策略合作夥伴關係"
+      max_level: 15
+      requires: [algorithm_optimization, audience_growth]
+
+milestone_quests:
+  - id: first_viral
+    name: "病毒式首秀"
+    description: "創造你的第一支病毒影片"
+    required_level: 5
+    skills_tested: [content_planning, video_editing]
+    xp_reward: 600
+    unlocks:
+      - viral_creator_badge
+      - algorithm_favor
+  
+  - id: algorithm_mastery
+    name: "馴服演算法"
+    description: "在演算法變化中保持穩定成長"
+    required_level: 10
+    skills_tested: [algorithm_optimization, audience_growth]
+    xp_reward: 1200
+    unlocks:
+      - algorithm_tamer_title
+      - stable_growth
+  
+  - id: channel_empire
+    name: "數位帝國"
+    description: "建立擁有百萬訂閱的頻道"
+    required_level: 20
+    skills_tested: [brand_partnerships, monetization_mastery]
+    xp_reward: 2400
+    unlocks:
+      - youtube_legend_title
+      - creator_influence
+
+achievements:
+  - id: first_upload
+    name: "首次演出"
+    description: "上傳你的第一支影片"
+    xp_reward: 60
+    badge_type: bronze
+  
+  - id: engagement_king
+    name: "觀眾最愛"
+    description: "10 支影片達到 90% 喜歡率"
+    xp_reward: 280
+    badge_type: silver
+  
+  - id: consistency_master
+    name: "可靠詩人"
+    description: "連續 6 個月每週上傳"
+    xp_reward: 480
+    badge_type: gold
+  
+  - id: youtube_sage
+    name: "內容賢者"
+    description: "完成所有創作者挑戰"
+    xp_reward: 960
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: content_planning
+      type: creation
+      title: "故事腳本創作"
+      description: "規劃影片內容和腳本"
+      skills_improved: [content_planning, storytelling_arts]
+      xp_reward: 65
+    
+    - id: basic_filming
+      type: creation
+      title: "首次錄製"
+      description: "拍攝你的第一支影片"
+      skills_improved: [video_production, video_magic]
+      xp_reward: 75
+  
+  intermediate:
+    - id: video_production
+      type: creation
+      title: "影像魔法製作"
+      description: "拍攝和剪輯影片"
+      skills_improved: [video_editing, audience_resonance]
+      xp_reward: 185
+    
+    - id: thumbnail_design
+      type: creation
+      title: "點擊魔法"
+      description: "設計吸引人的縮圖"
+      skills_improved: [visual_craft, algorithm_studies]
+      xp_reward: 160
+  
+  advanced:
+    - id: series_creation
+      type: creation
+      title: "史詩傳奇"
+      description: "創造成功的影片系列"
+      skills_improved: [series_planning, audience_growth]
+      xp_reward: 360
+    
+    - id: live_streaming
+      type: chat
+      title: "即時演出"
+      description: "主持引人入勝的直播"
+      skills_improved: [community_building, monetization_mastery]
+      xp_reward: 400
+
+learning_objectives:
+  - "精通影片製作技巧"
+  - "發展獨特的內容風格"
+  - "理解 YouTube 演算法"
+  - "建立互動的社群"
+  - "創造一致的內容"
+  - "優化影片以便被發現"
+  - "有效地將內容變現"
+  - "平衡創意與策略"
+
+career_outcomes:
+  - "全職 YouTuber"
+  - "內容創作者"
+  - "影片製作人"
+  - "創意總監"
+  - "社群媒體經理"
+  - "品牌合作經理"
+  - "媒體公司創辦人"
+  - "數位影響者"

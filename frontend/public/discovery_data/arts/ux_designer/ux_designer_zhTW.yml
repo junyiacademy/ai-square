@@ -1,0 +1,215 @@
+# UX 設計師探索路徑 - 繁體中文
+path_id: ux_designer
+category: arts
+difficulty_range: beginner_to_expert
+
+metadata:
+  title: "體驗建築師 - UX 設計師"
+  short_description: "在數位空間中建造完美的體驗世界"
+  long_description: |
+    你是「體驗設計學院」的見習建築師，擅長在數位世界中建造讓人難忘的體驗
+    空間。每一次點擊、每一次滑動都是一段精心設計的旅程，而你的使命就是讓
+    用戶在這些空間中感到快樂和滿足。
+  
+  estimated_hours: 55
+  skill_focus:
+    - user_psychology
+    - experience_magic
+    - prototype_sculpting
+    - communication_arts
+
+world_setting:
+  name: "體驗設計學院"
+  description: |
+    體驗設計學院是一個專門研究人類體驗的神秘學院。設計師在此學習平衡美學
+    與功能性、情感與效率，創造能夠治癒和啟發人心的數位空間。
+  
+  atmosphere: "harmonious_innovative"
+  visual_theme: "minimalist_magic"
+
+starting_scenario:
+  title: "冷漠危機"
+  description: |
+    設計智者 Maya 帶著緊急任務歡迎你：冷漠巨頭 Indifference 正在將所有
+    設計標準化，消除個性化體驗。你必須用心靈設計來對抗機械化，讓數位互動
+    重新充滿人性。
+  
+  initial_tasks:
+    - understand_users
+    - learn_design_principles
+    - create_first_prototype
+
+skill_tree:
+  core_skills:
+    - id: user_research
+      name: "心靈讀取"
+      description: "深入理解用戶需求"
+      max_level: 10
+      unlocks:
+        - empathy_mapping
+        - user_interviews
+    
+    - id: interaction_design
+      name: "觸碰魔法"
+      description: "設計直觀的互動"
+      max_level: 10
+      unlocks:
+        - gesture_design
+        - microinteractions
+    
+    - id: visual_design
+      name: "美學煉金"
+      description: "創造美麗的介面"
+      max_level: 10
+      unlocks:
+        - color_theory
+        - typography_mastery
+    
+    - id: prototyping
+      name: "現實塑造"
+      description: "建立互動原型"
+      max_level: 10
+      unlocks:
+        - rapid_prototyping
+        - high_fidelity_design
+
+  advanced_skills:
+    - id: design_systems
+      name: "系統和諧"
+      description: "創造可擴展的設計系統"
+      max_level: 15
+      requires: [visual_design, interaction_design]
+    
+    - id: accessibility_design
+      name: "通用魔法"
+      description: "為所有用戶設計"
+      max_level: 15
+      requires: [user_research, interaction_design]
+    
+    - id: strategic_design
+      name: "商業同理心"
+      description: "將設計與商業目標對齊"
+      max_level: 15
+      requires: [user_research, prototyping]
+
+milestone_quests:
+  - id: first_design
+    name: "心靈觸動"
+    description: "創造你的第一個用戶喜愛的設計"
+    required_level: 5
+    skills_tested: [user_research, visual_design]
+    xp_reward: 550
+    unlocks:
+      - empathy_designer_badge
+      - user_testimonials
+  
+  - id: indifference_challenge
+    name: "人性復甦"
+    description: "用個性化設計擊敗 Indifference"
+    required_level: 10
+    skills_tested: [interaction_design, accessibility_design]
+    xp_reward: 1100
+    unlocks:
+      - humanity_champion_title
+      - emotional_resonance
+  
+  - id: design_legacy
+    name: "體驗革命"
+    description: "創造被數百萬人使用的設計"
+    required_level: 20
+    skills_tested: [design_systems, strategic_design]
+    xp_reward: 2200
+    unlocks:
+      - master_architect_title
+      - design_philosophy
+
+achievements:
+  - id: first_prototype
+    name: "初次創造"
+    description: "建立你的第一個互動原型"
+    xp_reward: 70
+    badge_type: bronze
+  
+  - id: user_advocate
+    name: "用戶冠軍"
+    description: "進行 50 次用戶研究"
+    xp_reward: 250
+    badge_type: silver
+  
+  - id: pixel_perfect
+    name: "完美達成"
+    description: "創造無瑕的高保真設計"
+    xp_reward: 450
+    badge_type: gold
+  
+  - id: design_master
+    name: "體驗賢者"
+    description: "完成所有設計挑戰"
+    xp_reward: 900
+    badge_type: platinum
+
+example_tasks:
+  beginner:
+    - id: user_research
+      type: analysis
+      title: "心靈挖掘任務"
+      description: "了解用戶需求和痛點"
+      skills_improved: [user_research, user_psychology]
+      xp_reward: 60
+    
+    - id: wireframe_creation
+      type: creation
+      title: "藍圖魔法"
+      description: "創造你的第一個線框圖"
+      skills_improved: [interaction_design, prototype_sculpting]
+      xp_reward: 70
+  
+  intermediate:
+    - id: prototype_design
+      type: creation
+      title: "溫暖原型建造"
+      description: "設計互動原型"
+      skills_improved: [prototyping, experience_magic]
+      xp_reward: 170
+    
+    - id: design_system
+      type: creation
+      title: "和諧框架"
+      description: "創造一致的設計系統"
+      skills_improved: [design_systems, visual_design]
+      xp_reward: 190
+  
+  advanced:
+    - id: accessibility_audit
+      type: analysis
+      title: "通用門戶"
+      description: "確保設計適合所有人"
+      skills_improved: [accessibility_design, user_psychology]
+      xp_reward: 340
+    
+    - id: strategic_redesign
+      type: creation
+      title: "商業心靈融合"
+      description: "重新設計以實現用戶和商業成功"
+      skills_improved: [strategic_design, communication_arts]
+      xp_reward: 380
+
+learning_objectives:
+  - "精通用戶研究技巧"
+  - "創造直觀的用戶介面"
+  - "設計美麗的視覺體驗"
+  - "建立互動原型"
+  - "理解人類心理學"
+  - "實施無障礙標準"
+  - "開發設計系統"
+  - "平衡用戶需求與商業目標"
+
+career_outcomes:
+  - "UX 設計師"
+  - "UI 設計師"
+  - "產品設計師"
+  - "設計系統主管"
+  - "UX 研究經理"
+  - "設計總監"
+  - "首席設計官"
+  - "設計顧問"
