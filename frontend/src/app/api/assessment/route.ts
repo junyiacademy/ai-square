@@ -24,8 +24,17 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Read the assessment data with CMS override support
-    const assessmentData = await contentService.getContent('question', 'ai_literacy_questions.yaml') as AssessmentData;
+    // Read the language-specific assessment data with CMS override support
+    const fileName = `ai_literacy_questions_${lang}.yaml`;
+    const assessmentData = await contentService.getContent('question', fileName) as AssessmentData;
+    
+    if (!assessmentData || !assessmentData.domains) {
+      console.error('Invalid assessment data structure:', assessmentData);
+      return NextResponse.json(
+        { error: 'Invalid assessment data' },
+        { status: 500 }
+      );
+    }
 
     // Utility function to get translated field
     const getTranslatedField = (obj: Record<string, unknown>, fieldName: string, language: string): string => {

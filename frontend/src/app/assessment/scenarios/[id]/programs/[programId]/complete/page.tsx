@@ -57,22 +57,29 @@ export default function AssessmentCompletePage({
 
   const loadEvaluation = async (progId: string) => {
     try {
-      // Check if user is logged in via localStorage
-      const isLoggedIn = localStorage.getItem('isLoggedIn');
-      const userData = localStorage.getItem('user');
+      // Get session token for authentication
+      const sessionToken = localStorage.getItem('ai_square_session');
       
-      let queryParams = '';
-      if (isLoggedIn === 'true' && userData) {
-        const user = JSON.parse(userData);
-        queryParams = `?userEmail=${encodeURIComponent(user.email)}&userId=${user.id}`;
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (sessionToken) {
+        headers['x-session-token'] = sessionToken;
       }
       
-      const res = await fetch(`/api/assessment/programs/${progId}/evaluation${queryParams}`);
+      const res = await fetch(`/api/assessment/programs/${progId}/evaluation`, {
+        credentials: 'include',
+        headers
+      });
       const data = await res.json();
       setEvaluation(data.evaluation);
       
       // Also load the task to get questions and answers
-      const programRes = await fetch(`/api/assessment/programs/${progId}${queryParams}`);
+      const programRes = await fetch(`/api/assessment/programs/${progId}`, {
+        credentials: 'include',
+        headers
+      });
       const programData = await programRes.json();
       
       if (programData.currentTask) {
@@ -104,14 +111,30 @@ export default function AssessmentCompletePage({
   if (!evaluation) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-600 mb-4">Evaluation not found.</p>
-          <button 
-            onClick={() => router.push('/assessment/scenarios')}
-            className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700"
-          >
-            Back to Assessments
-          </button>
+        <div className="text-center max-w-md">
+          <div className="mb-6">
+            <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Assessment Not Completed</h3>
+          <p className="text-gray-600 mb-6">
+            This assessment hasn't been completed yet. Please complete all questions and submit your answers to view the results.
+          </p>
+          <div className="space-y-3">
+            <button 
+              onClick={() => router.push(`/assessment/scenarios/${scenarioId}/programs/${programId}`)}
+              className="w-full bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700"
+            >
+              Continue Assessment
+            </button>
+            <button 
+              onClick={() => router.push(`/assessment/scenarios/${scenarioId}`)}
+              className="w-full bg-gray-100 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-200"
+            >
+              Back to Scenario
+            </button>
+          </div>
         </div>
       </div>
     );

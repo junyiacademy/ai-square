@@ -69,29 +69,39 @@ export default function AssessmentScenarioDetailPage({
       const scenarioData = await scenarioRes.json();
       setScenario(scenarioData);
 
-      // Load user's programs - check localStorage for user info
+      // Load user's programs
       try {
         // Check if user is logged in via localStorage
         const isLoggedIn = localStorage.getItem('isLoggedIn');
         const userData = localStorage.getItem('user');
         
-        let programsUrl = `/api/assessment/scenarios/${id}/programs`;
-        
         if (isLoggedIn === 'true' && userData) {
           const user = JSON.parse(userData);
-          // Add user info as query params
-          programsUrl += `?userEmail=${encodeURIComponent(user.email)}&userId=${user.id}`;
-        }
-        
-        const programsRes = await fetch(programsUrl, {
-          credentials: 'include' // Include cookies for authentication
-        });
-        
-        if (programsRes.ok) {
-          const programsData = await programsRes.json();
-          setPrograms(programsData.programs || []);
-        } else if (programsRes.status === 401) {
-          // User not authenticated, that's ok - they can still view the scenario
+          
+          // Use session token in header instead of query params for security
+          const sessionToken = localStorage.getItem('ai_square_session');
+          const headers: HeadersInit = {
+            'Content-Type': 'application/json',
+          };
+          
+          if (sessionToken) {
+            headers['x-session-token'] = sessionToken;
+          }
+          
+          const programsRes = await fetch(`/api/assessment/scenarios/${id}/programs`, {
+            credentials: 'include', // Include cookies for authentication
+            headers
+          });
+          
+          if (programsRes.ok) {
+            const programsData = await programsRes.json();
+            setPrograms(programsData.programs || []);
+          } else if (programsRes.status === 401) {
+            // User not authenticated, that's ok - they can still view the scenario
+            setPrograms([]);
+          }
+        } else {
+          // User not logged in, no programs to load
           setPrograms([]);
         }
       } catch (error) {
@@ -109,9 +119,33 @@ export default function AssessmentScenarioDetailPage({
   const startNewProgram = async () => {
     setStartingProgram(true);
     try {
+      // Check if user is logged in via localStorage
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      const userData = localStorage.getItem('user');
+      
+      if (isLoggedIn !== 'true' || !userData) {
+        // Redirect to login if not authenticated
+        router.push('/login?redirect=' + encodeURIComponent(window.location.pathname));
+        setStartingProgram(false);
+        return;
+      }
+      
+      const user = JSON.parse(userData);
+      
+      // Get session token for authentication
+      const sessionToken = localStorage.getItem('ai_square_session');
+      
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (sessionToken) {
+        headers['x-session-token'] = sessionToken;
+      }
+      
       const res = await fetch(`/api/assessment/scenarios/${scenarioId}/programs`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         credentials: 'include', // Include cookies for authentication
         body: JSON.stringify({
           action: 'start',
@@ -120,7 +154,7 @@ export default function AssessmentScenarioDetailPage({
       });
       
       if (res.status === 401) {
-        // Redirect to login if not authenticated
+        // Redirect to login if still not authenticated
         router.push('/login?redirect=' + encodeURIComponent(window.location.pathname));
         return;
       }

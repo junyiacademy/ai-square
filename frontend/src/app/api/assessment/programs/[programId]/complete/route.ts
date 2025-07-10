@@ -24,12 +24,27 @@ export async function POST(
   { params }: { params: Promise<{ programId: string }> }
 ) {
   try {
-    const user = await getAuthFromRequest(request);
-    if (!user) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+    // Try to get user from authentication
+    const authUser = await getAuthFromRequest(request);
+    
+    // If no auth, check if user info is in query params
+    let user: { email: string; id?: string } | null = null;
+    
+    if (authUser) {
+      user = authUser;
+    } else {
+      const { searchParams } = new URL(request.url);
+      const emailParam = searchParams.get('userEmail');
+      const idParam = searchParams.get('userId');
+      
+      if (emailParam) {
+        user = { email: emailParam, id: idParam || undefined };
+      } else {
+        return NextResponse.json(
+          { error: 'Authentication required' },
+          { status: 401 }
+        );
+      }
     }
     
     const body = await request.json();

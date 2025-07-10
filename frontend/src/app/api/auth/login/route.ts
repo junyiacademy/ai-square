@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAccessToken, createRefreshToken } from '@/lib/auth/jwt'
+import { createSessionToken } from '@/lib/auth/session-token'
 import { Storage } from '@google-cloud/storage'
 
 // 假資料 - 測試用戶
@@ -250,11 +251,15 @@ export async function POST(request: NextRequest) {
       
       const refreshToken = await createRefreshToken(userId, rememberMe)
       
+      // Create session token for frontend
+      const sessionToken = createSessionToken(userId.toString(), user.email);
+      
       // Create response with cookies
       const response = NextResponse.json({
         success: true,
         user: userWithoutPassword,
-        message: 'Login successful'
+        message: 'Login successful',
+        sessionToken // Include session token in response
       })
       
       // Determine cookie expiration based on Remember Me

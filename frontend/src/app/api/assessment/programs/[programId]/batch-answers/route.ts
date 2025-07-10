@@ -7,12 +7,26 @@ export async function POST(
   { params }: { params: Promise<{ programId: string }> }
 ) {
   try {
+    // Try to get user from authentication
     const user = await getAuthFromRequest(request);
-    if (!user) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+    
+    // If no auth, check if user info is in query params
+    let userEmail: string | null = null;
+    
+    if (user) {
+      userEmail = user.email;
+    } else {
+      const { searchParams } = new URL(request.url);
+      const emailParam = searchParams.get('userEmail');
+      
+      if (emailParam) {
+        userEmail = emailParam;
+      } else {
+        return NextResponse.json(
+          { error: 'Authentication required' },
+          { status: 401 }
+        );
+      }
     }
     
     const body = await request.json();

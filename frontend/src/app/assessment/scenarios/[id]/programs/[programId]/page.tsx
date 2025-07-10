@@ -73,17 +73,38 @@ export default function AssessmentProgramPage({
 
   const loadProgramState = async (progId: string) => {
     try {
+      // Check if user is logged in via localStorage
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      const sessionToken = localStorage.getItem('ai_square_session');
+      
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (sessionToken) {
+        headers['x-session-token'] = sessionToken;
+      }
+      
       const res = await fetch(`/api/assessment/programs/${progId}`, {
-        credentials: 'include' // Include cookies for authentication
+        credentials: 'include', // Include cookies for authentication
+        headers
       });
+      
+      if (!res.ok) {
+        console.error('Failed to load program:', res.status);
+        return;
+      }
+      
       const data = await res.json();
       
-      setProgram(data.program);
-      setCurrentTask(data.currentTask);
-      
-      // Update language if program has language metadata
-      if (data.program.metadata?.language && data.program.metadata.language !== i18n.language) {
-        await i18n.changeLanguage(data.program.metadata.language);
+      if (data.program) {
+        setProgram(data.program);
+        setCurrentTask(data.currentTask);
+        
+        // Update language if program has language metadata
+        if (data.program.metadata?.language && data.program.metadata.language !== i18n.language) {
+          await i18n.changeLanguage(data.program.metadata.language);
+        }
       }
     } catch (error) {
       console.error('Failed to load program:', error);
@@ -95,6 +116,17 @@ export default function AssessmentProgramPage({
   const handleQuizComplete = async (answers: UserAnswer[]) => {
     setSubmitting(true); // Show loading state
     try {
+      // Get session token for authentication
+      const sessionToken = localStorage.getItem('ai_square_session');
+      
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (sessionToken) {
+        headers['x-session-token'] = sessionToken;
+      }
+      
       // Filter out already submitted answers
       const existingAnswerIds = currentTask?.interactions
         .filter((i: any) => i.type === 'assessment_answer')
@@ -106,7 +138,7 @@ export default function AssessmentProgramPage({
       if (newAnswers.length > 0) {
         await fetch(`/api/assessment/programs/${programId}/batch-answers`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers,
           credentials: 'include', // Include cookies for authentication
           body: JSON.stringify({
             taskId: currentTask?.id,
@@ -122,7 +154,7 @@ export default function AssessmentProgramPage({
       // Complete the assessment
       await fetch(`/api/assessment/programs/${programId}/complete`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         credentials: 'include', // Include cookies for authentication
         body: JSON.stringify({
           taskId: currentTask?.id

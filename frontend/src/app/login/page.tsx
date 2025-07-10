@@ -40,6 +40,11 @@ function LoginContent() {
         localStorage.setItem('user', JSON.stringify(data.user))
         localStorage.setItem('isLoggedIn', 'true')
         
+        // Store session token if provided
+        if (data.sessionToken) {
+          localStorage.setItem('ai_square_session', data.sessionToken)
+        }
+        
         // 觸發自定義事件通知 Header 更新
         window.dispatchEvent(new CustomEvent('auth-changed'))
         

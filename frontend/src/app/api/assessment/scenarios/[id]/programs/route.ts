@@ -22,29 +22,15 @@ export async function GET(
     // Try to get user from authentication
     const user = await getAuthFromRequest(request);
     
-    // If no auth, check if user info is in localStorage/query params (for viewing history)
-    let userEmail: string | null = null;
-    
-    if (user) {
-      userEmail = user.email;
-    } else {
-      // Check for user info from query params (used by history view)
-      const { searchParams } = new URL(request.url);
-      const emailParam = searchParams.get('userEmail');
-      const userIdParam = searchParams.get('userId');
-      
-      // For now, allow unauthenticated access if email is provided
-      // In production, you might want to add additional security checks
-      if (emailParam) {
-        userEmail = emailParam;
-      } else {
-        // If no user info at all, return 401
-        return NextResponse.json(
-          { error: 'Authentication required' },
-          { status: 401 }
-        );
-      }
+    if (!user) {
+      // For security: require proper authentication
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
     }
+    
+    const userEmail = user.email;
     
     // Await params before using
     const { id } = await params;
@@ -54,35 +40,33 @@ export async function GET(
     // Get user programs efficiently
     const allUserPrograms = await programRepo.findByUser(userEmail);
     
-    // First try to find programs with exact scenario ID match
-    let userPrograms = allUserPrograms.filter(p => p.scenarioId === id);
+    // Check if this is an assessment scenario
+    const now = Date.now();
+    const cached = scenarioCache.get(id);
     
-    // If no direct matches and this is an assessment scenario, include all completed assessments
-    if (userPrograms.length === 0 && allUserPrograms.length > 0) {
-      // Check cache first
-      const now = Date.now();
-      const cached = scenarioCache.get(id);
+    let scenario;
+    if (cached && (now - cached.timestamp) < SCENARIO_CACHE_TTL) {
+      scenario = cached.scenario;
+    } else {
+      // Quick check if this scenario is assessment type
+      const scenarioRepo = getScenarioRepository();
+      scenario = await scenarioRepo.findById(id);
       
-      let scenario;
-      if (cached && (now - cached.timestamp) < SCENARIO_CACHE_TTL) {
-        scenario = cached.scenario;
-      } else {
-        // Quick check if this scenario is assessment type
-        const scenarioRepo = getScenarioRepository();
-        scenario = await scenarioRepo.findById(id);
-        
-        // Cache the result
-        if (scenario) {
-          scenarioCache.set(id, { scenario, timestamp: now });
-        }
+      // Cache the result
+      if (scenario) {
+        scenarioCache.set(id, { scenario, timestamp: now });
       }
-      
-      if (scenario && scenario.sourceType === 'assessment') {
-        // Include all completed assessment programs for this user
-        userPrograms = allUserPrograms.filter(p => 
-          p.status === 'completed' && p.score !== undefined
-        );
-      }
+    }
+    
+    let userPrograms;
+    if (scenario && scenario.sourceType === 'assessment') {
+      // For assessment scenarios, show all completed assessments from this user
+      userPrograms = allUserPrograms.filter(p => 
+        p.status === 'completed' && p.score !== undefined
+      );
+    } else {
+      // For non-assessment scenarios, only show programs for this specific scenario
+      userPrograms = allUserPrograms.filter(p => p.scenarioId === id);
     }
     
     // Sort by startedAt (newest first)
@@ -156,16 +140,20 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const user = await getAuthFromRequest(request);
-    if (!user) {
+    const body = await request.json();
+    const { action, language = 'en' } = body;
+    
+    // Try to get user from authentication
+    const authUser = await getAuthFromRequest(request);
+    
+    if (!authUser) {
       return NextResponse.json(
         { error: 'Authentication required' },
         { status: 401 }
       );
     }
     
-    const body = await request.json();
-    const { action, language = 'en' } = body;
+    const email = authUser.email;
     
     if (action !== 'start') {
       return NextResponse.json(
@@ -194,12 +182,12 @@ export async function POST(
     // Create new program
     const program = await programRepo.create({
       scenarioId: id,
-      userId: user.email,
+      userId: email,
       metadata: {
         language,
         startTime: Date.now(),
         timeLimit: 900, // 15 minutes default
-        userName: user.name || user.email
+        userName: authUser?.name || email
       }
     });
     
@@ -220,6 +208,7 @@ export async function POST(
           options: q[`options_${language}`] || q.options,
           difficulty: q.difficulty,
           correct_answer: q.correct_answer,
+          explanation: q[`explanation_${language}`] || q.explanation,
           ksa_mapping: q.ksa_mapping
         })) || [];
       } catch (error) {

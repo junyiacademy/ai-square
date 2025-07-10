@@ -29,6 +29,7 @@ export function useAuth(): UseAuthReturn {
   const clearAuthState = useCallback(() => {
     localStorage.removeItem('isLoggedIn')
     localStorage.removeItem('user')
+    localStorage.removeItem('ai_square_session')
     setUser(null)
     setIsLoggedIn(false)
     window.dispatchEvent(new CustomEvent('auth-changed'))
@@ -92,6 +93,12 @@ export function useAuth(): UseAuthReturn {
         setIsLoggedIn(true)
         localStorage.setItem('user', JSON.stringify(data.user))
         localStorage.setItem('isLoggedIn', 'true')
+        
+        // Store session token if provided
+        if (data.sessionToken) {
+          localStorage.setItem('ai_square_session', data.sessionToken)
+        }
+        
         window.dispatchEvent(new CustomEvent('auth-changed'))
         return { success: true }
       } else {
