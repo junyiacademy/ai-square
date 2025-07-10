@@ -200,10 +200,79 @@ export async function POST(
     });
     await programRepo.complete(programId);
     
+    // Also save to assessment results for history page
+    // Create assessment result data compatible with history
+    const assessmentResult = {
+      overallScore,
+      domainScores: Object.fromEntries(
+        Array.from(domainScores.entries()).map(([domain, ds]) => [domain, ds.score])
+      ),
+      totalQuestions,
+      correctAnswers,
+      level,
+      recommendations,
+      completedAt: new Date().toISOString(),
+      timeSpentSeconds: completionTime
+    };
+    
+    // Save to assessment results storage
+    const assessmentId = `asmt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const resultData = {
+      assessment_id: assessmentId,
+      user_id: user.id || user.email,
+      user_email: user.email,
+      timestamp: new Date().toISOString(),
+      duration_seconds: completionTime,
+      language: program.metadata?.language || 'en',
+      scores: {
+        overall: overallScore,
+        domains: assessmentResult.domainScores,
+      },
+      summary: {
+        total_questions: totalQuestions,
+        correct_answers: correctAnswers,
+        level: level,
+      },
+      answers: answers.map((answer: any) => ({
+        question_id: answer.content.questionId,
+        selected: answer.content.selectedAnswer,
+        correct: answer.content.isCorrect ? answer.content.selectedAnswer : 'n/a',
+        time_spent: answer.content.timeSpent || 0,
+        ksa_mapping: answer.content.ksa_mapping || undefined,
+      })),
+    };
+    
+    // Save using the assessment results API
+    const saveResponse = await fetch(`${request.nextUrl.origin}/api/assessment/results`, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Cookie': request.headers.get('cookie') || ''
+      },
+      body: JSON.stringify({
+        userId: user.id || user.email,
+        userEmail: user.email,
+        language: program.metadata?.language || 'en',
+        answers: answers.map((a: any) => ({
+          questionId: a.content.questionId,
+          selectedAnswer: a.content.selectedAnswer,
+          isCorrect: a.content.isCorrect,
+          timeSpent: a.content.timeSpent
+        })),
+        questions: task.content.questions || [],
+        result: assessmentResult
+      })
+    });
+    
+    if (!saveResponse.ok) {
+      console.error('Failed to save assessment result:', await saveResponse.text());
+    }
+    
     return NextResponse.json({ 
       success: true,
       evaluationId: evaluation.id,
-      score: overallScore
+      score: overallScore,
+      assessmentId
     });
   } catch (error) {
     console.error('Error completing assessment:', error);

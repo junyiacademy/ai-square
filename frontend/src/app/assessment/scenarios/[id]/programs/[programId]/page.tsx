@@ -39,6 +39,7 @@ export default function AssessmentProgramPage({
   const [program, setProgram] = useState<Program | null>(null);
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [programId, setProgramId] = useState<string>('');
   const [scenarioId, setScenarioId] = useState<string>('');
   const [domains, setDomains] = useState<Record<string, AssessmentDomain>>({});
@@ -92,6 +93,7 @@ export default function AssessmentProgramPage({
   };
 
   const handleQuizComplete = async (answers: UserAnswer[]) => {
+    setSubmitting(true); // Show loading state
     try {
       // Filter out already submitted answers
       const existingAnswerIds = currentTask?.interactions
@@ -131,6 +133,7 @@ export default function AssessmentProgramPage({
       router.push(`/assessment/scenarios/${scenarioId}/programs/${programId}/complete`);
     } catch (error) {
       console.error('Failed to complete assessment:', error);
+      setSubmitting(false); // Hide loading on error
     }
   };
 
@@ -160,24 +163,34 @@ export default function AssessmentProgramPage({
 
   return (
     <main className="min-h-screen bg-gray-50">
-      <AssessmentQuiz
-        questions={currentTask.content.questions}
-        domains={domains}
-        onComplete={handleQuizComplete}
-        timeLimit={timeLimit}
-        // Pass saved answers from interactions
-        initialAnswers={currentTask.interactions
-          .filter((i: any) => i.type === 'assessment_answer')
-          .reduce((acc: any, i: any) => {
-            acc.push({
-              questionId: i.content.questionId,
-              selectedAnswer: i.content.selectedAnswer,
-              timeSpent: i.content.timeSpent || 0,
-              isCorrect: i.content.isCorrect || false
-            });
-            return acc;
-          }, [])}
-      />
+      {submitting ? (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto mb-4"></div>
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">{t('submittingAssessment', 'Submitting your assessment...')}</h2>
+            <p className="text-gray-600">{t('pleaseWait', 'Please wait while we process your results')}</p>
+          </div>
+        </div>
+      ) : (
+        <AssessmentQuiz
+          questions={currentTask.content.questions}
+          domains={domains}
+          onComplete={handleQuizComplete}
+          timeLimit={timeLimit}
+          // Pass saved answers from interactions
+          initialAnswers={currentTask.interactions
+            .filter((i: any) => i.type === 'assessment_answer')
+            .reduce((acc: any, i: any) => {
+              acc.push({
+                questionId: i.content.questionId,
+                selectedAnswer: i.content.selectedAnswer,
+                timeSpent: i.content.timeSpent || 0,
+                isCorrect: i.content.isCorrect || false
+              });
+              return acc;
+            }, [])}
+        />
+      )}
     </main>
   );
 }

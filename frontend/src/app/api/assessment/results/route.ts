@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { gcsStorage, AssessmentResultGCS } from '@/lib/storage/gcs-service';
+import { getEvaluationRepository, getProgramRepository } from '@/lib/implementations/gcs-v2';
 
 // 如果沒有 GCS 設定，使用本地儲存作為後備
 const USE_GCS = process.env.GOOGLE_CLOUD_PROJECT && process.env.GCS_BUCKET_NAME;
@@ -146,21 +147,82 @@ export async function GET(request: NextRequest) {
     }
 
     // 獲取使用者的結果
-    let userResults: AssessmentResultGCS[];
+    let userResults: AssessmentResultGCS[] = [];
     
     if (USE_GCS) {
       // Use userEmail for GCS path if available, otherwise use userId
       const gcsUserId = userEmail || userId;
-      userResults = await gcsStorage.getUserAssessments(gcsUserId);
+      
+      // 1. Get results from assessment results storage
+      const directResults = await gcsStorage.getUserAssessments(gcsUserId);
+      userResults.push(...directResults);
+      
+      // 2. Also get results from evaluations (for program-based assessments)
+      if (userEmail) {
+        try {
+          const evaluationRepo = getEvaluationRepository();
+          const programRepo = getProgramRepository();
+          
+          // Get all programs for the user
+          const programs = await programRepo.findByUser(userEmail);
+          
+          // Filter completed assessment programs
+          const assessmentPrograms = programs.filter(p => 
+            p.status === 'completed' && 
+            p.metadata?.evaluationId
+          );
+          
+          // Get evaluations for completed programs
+          for (const program of assessmentPrograms) {
+            if (program.metadata?.evaluationId) {
+              const evaluation = await evaluationRepo.findById(program.metadata.evaluationId);
+              if (evaluation && evaluation.evaluationType === 'assessment_complete') {
+                // Convert evaluation to assessment result format
+                const assessmentResult: AssessmentResultGCS = {
+                  assessment_id: `eval_${evaluation.id}`,
+                  user_id: userId,
+                  user_email: userEmail,
+                  timestamp: evaluation.createdAt,
+                  duration_seconds: evaluation.metadata?.completionTime || 0,
+                  language: program.metadata?.language || 'en',
+                  scores: {
+                    overall: evaluation.score,
+                    domains: evaluation.metadata?.domainScores || {},
+                  },
+                  summary: {
+                    total_questions: evaluation.metadata?.totalQuestions || 0,
+                    correct_answers: evaluation.metadata?.correctAnswers || 0,
+                    level: evaluation.metadata?.level || 'beginner',
+                  },
+                  answers: [] // Answers are stored in task interactions, not in evaluation
+                };
+                
+                userResults.push(assessmentResult);
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching evaluations:', error);
+          // Continue with direct results even if evaluation fetch fails
+        }
+      }
     } else {
       userResults = await getAllResultsLocal(userId);
     }
     
-    // 結果已經在服務層排序過了
+    // Remove duplicates (in case same assessment is stored in both places)
+    const uniqueResults = Array.from(
+      new Map(userResults.map(r => [r.timestamp, r])).values()
+    );
+    
+    // Sort by timestamp (newest first)
+    uniqueResults.sort((a, b) => 
+      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    );
 
     return NextResponse.json({
-      results: userResults,
-      total: userResults.length,
+      results: uniqueResults,
+      total: uniqueResults.length,
       storage: USE_GCS ? 'gcs' : 'local',
     });
   } catch (error) {
