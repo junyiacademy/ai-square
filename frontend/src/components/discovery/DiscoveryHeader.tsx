@@ -9,7 +9,8 @@ import {
   ChartBarIcon,
   TrophyIcon,
   FolderOpenIcon,
-  SparklesIcon
+  SparklesIcon,
+  RocketLaunchIcon
 } from '@heroicons/react/24/outline';
 
 interface NavigationItem {
@@ -50,11 +51,10 @@ export default function DiscoveryHeader({
       href: '/discovery/evaluation'
     },
     {
-      id: 'paths',
-      label: '副本',
-      icon: GlobeAltIcon,
-      href: '/discovery/paths',
-      disabled: !hasAssessmentResults
+      id: 'scenarios',
+      label: '職業冒險',
+      icon: RocketLaunchIcon,
+      href: '/discovery/scenarios'
     },
     {
       id: 'workspace',

@@ -31,13 +31,25 @@ export class UserDataServiceClient {
     }
 
     try {
+      // Get session token from localStorage
+      const sessionToken = localStorage.getItem('ai_square_session');
+      
+      const headers: HeadersInit = {};
+      
+      // Add session token to headers if available
+      if (sessionToken) {
+        headers['x-session-token'] = sessionToken;
+      }
+      
       const response = await fetch('/api/user-data', {
+        headers,
         credentials: 'include'
       });
 
       if (!response.ok) {
         if (response.status === 401) {
-          console.log('User not authenticated');
+          console.log('User not authenticated for user data API');
+          console.log('Session token present:', !!sessionToken);
           return null;
         }
         throw new Error(`Failed to load user data: ${response.status}`);
@@ -72,11 +84,21 @@ export class UserDataServiceClient {
    */
   async saveUserData(data: UserData): Promise<void> {
     try {
+      // Get session token from localStorage
+      const sessionToken = localStorage.getItem('ai_square_session');
+      
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json'
+      };
+      
+      // Add session token to headers if available
+      if (sessionToken) {
+        headers['x-session-token'] = sessionToken;
+      }
+      
       const response = await fetch('/api/user-data', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers,
         credentials: 'include',
         body: JSON.stringify({ data })
       });

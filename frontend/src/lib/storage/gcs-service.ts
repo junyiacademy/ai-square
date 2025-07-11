@@ -49,7 +49,7 @@ export class GCSStorageService {
 
   async saveAssessmentResult(userId: string, result: AssessmentResultGCS): Promise<string> {
     const assessmentId = result.assessment_id;
-    const filePath = `user_assessment_logs/${userId}/${assessmentId}.json`;
+    const filePath = `v2/assessments/${userId}/${assessmentId}.json`;
     
     const file = this.bucket.file(filePath);
     const contents = JSON.stringify(result, null, 2);
@@ -78,7 +78,7 @@ export class GCSStorageService {
   }
 
   async getUserAssessments(userId: string): Promise<AssessmentResultGCS[]> {
-    const prefix = `user_assessment_logs/${userId}/`;
+    const prefix = `v2/assessments/${userId}/`;
     
     try {
       const [files] = await this.bucket.getFiles({ prefix });
@@ -104,7 +104,7 @@ export class GCSStorageService {
   }
 
   async getAssessmentById(userId: string, assessmentId: string): Promise<AssessmentResultGCS | null> {
-    const filePath = `user_assessment_logs/${userId}/${assessmentId}.json`;
+    const filePath = `v2/assessments/${userId}/${assessmentId}.json`;
     const file = this.bucket.file(filePath);
     
     try {

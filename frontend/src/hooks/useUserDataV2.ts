@@ -100,12 +100,17 @@ export function useUserDataV2(): UseUserDataV2Return {
       setUserData(data);
       
       // If no data exists, try to migrate from localStorage
-      if (!data) {
+      if (!data && isLoggedIn) {
         console.log('No GCS data found, attempting migration...');
-        const migrated = await service.migrateFromLocalStorage();
-        if (migrated) {
-          const migratedData = await service.loadUserData();
-          setUserData(migratedData);
+        try {
+          const migrated = await service.migrateFromLocalStorage();
+          if (migrated) {
+            const migratedData = await service.loadUserData();
+            setUserData(migratedData);
+          }
+        } catch (migrationError) {
+          console.error('Migration failed:', migrationError);
+          // Continue without migration - user data will be created fresh
         }
       }
     } catch (err) {
@@ -124,7 +129,7 @@ export function useUserDataV2(): UseUserDataV2Return {
       setUserData(null);
       setIsLoading(false);
     }
-  }, [isLoggedIn, user, loadUserData]);
+  }, [isLoggedIn, user?.email]); // Use user.email instead of loadUserData to avoid loops
   
   // Wrap all service methods to handle errors and update local state
   const wrapServiceMethod = useCallback(<T extends any[], R>(
@@ -133,14 +138,15 @@ export function useUserDataV2(): UseUserDataV2Return {
     return async (...args: T): Promise<R> => {
       const service = getService();
       if (!service) {
+        console.warn('User not authenticated - skipping user data operation');
         throw new Error('User not authenticated');
       }
       
       try {
         const result = await method(service, ...args);
         
-        // Reload user data after any modification
-        await loadUserData();
+        // Don't reload data after operations - let components handle this
+        // to avoid cascading API calls
         
         return result;
       } catch (err) {
@@ -152,9 +158,23 @@ export function useUserDataV2(): UseUserDataV2Return {
   }, [getService, loadUserData]);
   
   // Service methods
-  const saveUserData = wrapServiceMethod((service, data: UserData) => 
-    service.saveUserData(data)
-  );
+  const saveUserData = useCallback(async (data: UserData): Promise<void> => {
+    const service = getService();
+    if (!service) {
+      console.warn('User not authenticated - skipping user data operation');
+      throw new Error('User not authenticated');
+    }
+    
+    try {
+      await service.saveUserData(data);
+      // Update local state to avoid reload
+      setUserData(data);
+    } catch (err) {
+      console.error('Service method error:', err);
+      setError(err instanceof Error ? err.message : 'Operation failed');
+      throw err;
+    }
+  }, [getService]);
   
   const saveAssessmentResults = wrapServiceMethod((service, results: AssessmentResults) => 
     service.saveAssessmentResults(results)

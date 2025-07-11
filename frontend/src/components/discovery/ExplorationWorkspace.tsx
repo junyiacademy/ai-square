@@ -34,6 +34,7 @@ import {
   DEFAULT_EVALUATION_CRITERIA 
 } from '@/types/evaluation-system';
 import { useUserDataV2 } from '@/hooks/useUserDataV2';
+import { useAuth } from '@/hooks/useAuth';
 import { DiscoveryService } from '@/lib/services/discovery-service';
 import type { SavedPathData, DynamicTask } from '@/lib/services/user-data-service';
 
@@ -110,6 +111,7 @@ export default function ExplorationWorkspace({
   const [isTyping, setIsTyping] = useState(false);
   const [showWorkflow, setShowWorkflow] = useState(false);
   const [activeEvaluationView, setActiveEvaluationView] = useState<'self' | 'peer' | 'mentor' | null>(null);
+  const { isLoggedIn } = useAuth();
   const { 
     userData,
     loadUserData,
@@ -137,13 +139,10 @@ export default function ExplorationWorkspace({
   useEffect(() => {
     const loadPathData = async () => {
       // Check if this is a custom path (starts with 'path_')
-      if (pathId.startsWith('path_')) {
-        await loadUserData();
-        if (userData) {
-          const customPath = userData.savedPaths.find(p => p.id === pathId);
-          if (customPath) {
-            setPathData(customPath);
-          }
+      if (pathId.startsWith('path_') && isLoggedIn && userData) {
+        const customPath = userData.savedPaths.find(p => p.id === pathId);
+        if (customPath) {
+          setPathData(customPath);
         }
       }
       
@@ -154,25 +153,19 @@ export default function ExplorationWorkspace({
     };
     
     loadPathData();
-  }, [pathId, loadUserData, userData, discoveryService]);
+  }, [pathId, userData, discoveryService, isLoggedIn]);
 
   // Load workspace completed tasks
   useEffect(() => {
-    const loadWorkspaceData = async () => {
-      if (workspaceId) {
-        await loadUserData();
-        if (userData) {
-          const workspace = userData.workspaceSessions.find(ws => ws.id === workspaceId);
-          if (workspace) {
-            // Filter out empty task IDs
-            const cleanedTasks = (workspace.completedTasks || []).filter(taskId => taskId && taskId.trim() !== '');
-            setWorkspaceCompletedTasks(cleanedTasks);
-          }
-        }
+    if (workspaceId && isLoggedIn && userData) {
+      const workspace = userData.workspaceSessions.find(ws => ws.id === workspaceId);
+      if (workspace) {
+        // Filter out empty task IDs
+        const cleanedTasks = (workspace.completedTasks || []).filter(taskId => taskId && taskId.trim() !== '');
+        setWorkspaceCompletedTasks(cleanedTasks);
       }
-    };
-    loadWorkspaceData();
-  }, [workspaceId, loadUserData, userData]);
+    }
+  }, [workspaceId, userData, isLoggedIn]);
 
   // Initialize AI greeting - only when pathId changes
   useEffect(() => {
@@ -692,93 +685,92 @@ export default function ExplorationWorkspace({
         ]
       };
     }
-  }  // Effect to handle operations after typedPathData is determined
+  }  // Run migration once when component mounts
   useEffect(() => {
-    const performOperations = async () => {
-      if (typedPathData) {
-        // Load task answers
-        if (workspaceId) {
-          // Run migration once on first load
-          const { migrateTaskAnswers } = await import('@/lib/utils/migrate-task-answers');
-          migrateTaskAnswers();
-          
-          const answers: Record<string, any> = {};
-          
-          // Load all task answers for this workspace
-          for (const task of typedPathData.tasks) {
-            const answer = await getTaskAnswer(workspaceId, task.id);
-            if (answer) {
-              answers[task.id] = answer;
-            }
-          }
-          
-          setTaskAnswers(answers);
-          
-          // Set current task answer if exists
-          const currentTask = typedPathData.tasks[currentTaskIndex];
-          if (currentTask && answers[currentTask.id]) {
-            setCurrentTaskAnswer(answers[currentTask.id].answer);
-          } else {
-            setCurrentTaskAnswer(''); // Clear if no answer exists
-          }
-          
-          // Load workspace data and update completed tasks
-          await loadUserData();
-          if (userData) {
-            const workspace = userData.workspaceSessions.find(ws => ws.id === workspaceId);
-            if (workspace) {
-              // Filter out empty task IDs
-              const cleanedTasks = (workspace.completedTasks || []).filter(taskId => taskId && taskId.trim() !== '');
-              setWorkspaceCompletedTasks(cleanedTasks);
-              
-              // Check and update workspace status based on task completion
-              const baseTasks = typedPathData.tasks.length;
-              const dynamicTasksCount = dynamicTasks.length;
-              const totalTasks = baseTasks + dynamicTasksCount;
-              const completedCount = cleanedTasks.length;
-              
-              // Determine the correct status
-              let newStatus = workspace.status;
-              if (completedCount === 0) {
-                newStatus = 'active';
-              } else if (completedCount >= baseTasks && dynamicTasksCount === 0) {
-                newStatus = 'completed';
-              } else if (completedCount >= totalTasks && dynamicTasksCount > 0) {
-                newStatus = 'completed';
-              } else {
-                newStatus = 'active';
-              }
-              
-              // Update status if it changed
-              if (newStatus !== workspace.status) {
-                console.log('Updating workspace status from', workspace.status, 'to', newStatus);
-                const workspaceIndex = userData.workspaceSessions.findIndex(ws => ws.id === workspaceId);
-                if (workspaceIndex !== -1) {
-                  userData.workspaceSessions[workspaceIndex].status = newStatus;
-                  userData.workspaceSessions[workspaceIndex].lastActiveAt = new Date().toISOString();
-                  await saveUserData(userData);
-                }
-              }
-            }
-          }
+    if (workspaceId) {
+      import('@/lib/utils/migrate-task-answers').then(({ migrateTaskAnswers }) => {
+        migrateTaskAnswers();
+      });
+    }
+  }, [workspaceId]); // Only run when workspaceId changes
+
+  // Load task answers when workspace or tasks change
+  useEffect(() => {
+    if (!typedPathData || !workspaceId) return;
+    
+    const loadAnswers = async () => {
+      const answers: Record<string, any> = {};
+      
+      for (const task of typedPathData.tasks) {
+        const answer = await getTaskAnswer(workspaceId, task.id);
+        if (answer) {
+          answers[task.id] = answer;
         }
-        
-        // Initialize AI greeting
-        const greetingMessage: ChatMessage = {
-          id: '1',
-          sender: 'ai',
-          text: t('aiAssistant.greeting', {
-            role: typedPathData.aiAssistants?.[0] || 'Assistant',
-            path: typedPathData.title
-          }),
-          timestamp: new Date()
-        };
-        setChatMessages([greetingMessage]);
       }
+      
+      setTaskAnswers(answers);
     };
     
-    performOperations();
-  }, [typedPathData, workspaceId, currentTaskIndex, loadUserData, userData, saveUserData, getTaskAnswer, t, dynamicTasks.length]);
+    loadAnswers();
+  }, [workspaceId, typedPathData?.tasks.length, getTaskAnswer]);
+
+  // Update current task answer when task index or answers change
+  useEffect(() => {
+    if (!typedPathData) return;
+    
+    const currentTask = typedPathData.tasks[currentTaskIndex];
+    if (currentTask && taskAnswers[currentTask.id]) {
+      setCurrentTaskAnswer(taskAnswers[currentTask.id].answer);
+    } else {
+      setCurrentTaskAnswer('');
+    }
+  }, [currentTaskIndex, taskAnswers, typedPathData]);
+
+  // Update workspace status when completed tasks change
+  useEffect(() => {
+    if (!userData || !workspaceId || !typedPathData || !isLoggedIn) return;
+    
+    const workspace = userData.workspaceSessions.find(ws => ws.id === workspaceId);
+    if (!workspace) return;
+    
+    const baseTasks = typedPathData.tasks.length;
+    const completedCount = workspaceCompletedTasks.length;
+    
+    let newStatus = workspace.status;
+    if (completedCount === 0) {
+      newStatus = 'active';
+    } else if (completedCount >= baseTasks) {
+      newStatus = 'completed';
+    } else {
+      newStatus = 'active';
+    }
+    
+    if (newStatus !== workspace.status) {
+      const updatedUserData = { ...userData };
+      const workspaceIndex = updatedUserData.workspaceSessions.findIndex(ws => ws.id === workspaceId);
+      if (workspaceIndex !== -1) {
+        updatedUserData.workspaceSessions[workspaceIndex].status = newStatus;
+        updatedUserData.workspaceSessions[workspaceIndex].lastActiveAt = new Date().toISOString();
+        saveUserData(updatedUserData);
+      }
+    }
+  }, [workspaceCompletedTasks.length, userData?.workspaceSessions.length, workspaceId, typedPathData?.tasks.length, isLoggedIn, saveUserData]);
+
+  // Initialize AI greeting once when path data is loaded
+  useEffect(() => {
+    if (!typedPathData) return;
+    
+    const greetingMessage: ChatMessage = {
+      id: '1',
+      sender: 'ai',
+      text: t('aiAssistant.greeting', {
+        role: typedPathData.aiAssistants?.[0] || 'Assistant',
+        path: typedPathData.title
+      }),
+      timestamp: new Date()
+    };
+    setChatMessages([greetingMessage]);
+  }, [typedPathData?.title, t]);
 
 
 
@@ -913,13 +905,13 @@ export default function ExplorationWorkspace({
       console.log('Task saved successfully');
       
       // Update workspace status back to 'active' since we have new tasks
-      await loadUserData();
-      if (userData && workspaceId) {
-        const workspaceIndex = userData.workspaceSessions.findIndex(ws => ws.id === workspaceId);
+      if (userData && workspaceId && isLoggedIn) {
+        const updatedUserData = { ...userData };
+        const workspaceIndex = updatedUserData.workspaceSessions.findIndex(ws => ws.id === workspaceId);
         if (workspaceIndex !== -1) {
-          userData.workspaceSessions[workspaceIndex].status = 'active';
-          userData.workspaceSessions[workspaceIndex].lastActiveAt = new Date().toISOString();
-          await saveUserData(userData);
+          updatedUserData.workspaceSessions[workspaceIndex].status = 'active';
+          updatedUserData.workspaceSessions[workspaceIndex].lastActiveAt = new Date().toISOString();
+          await saveUserData(updatedUserData);
         }
       }
       
@@ -961,8 +953,8 @@ export default function ExplorationWorkspace({
     setIsTaskActive(false);
     setShowWorkflow(false);
     
-    // Save task answer if workspace ID is available
-    if (workspaceId && taskAnswer && typeof taskAnswer === 'string') {
+    // Save task answer if workspace ID is available and user is logged in
+    if (workspaceId && taskAnswer && typeof taskAnswer === 'string' && isLoggedIn) {
       const answer = {
         taskId: currentTask.id,
         answer: String(taskAnswer), // Ensure it's a string
@@ -1196,6 +1188,11 @@ export default function ExplorationWorkspace({
 
   // Evaluation handlers
   const handleSelfAssessmentSubmit = async (assessment: Omit<SelfAssessment, 'id' | 'submittedAt'>) => {
+    if (!isLoggedIn) {
+      console.warn('User not logged in - cannot save self assessment');
+      return;
+    }
+    
     try {
       const fullAssessment: SelfAssessment = {
         ...assessment,
@@ -1220,6 +1217,11 @@ export default function ExplorationWorkspace({
   };
 
   const handleSelfAssessmentDraft = async (assessment: Omit<SelfAssessment, 'id' | 'submittedAt'>) => {
+    if (!isLoggedIn) {
+      console.warn('User not logged in - cannot save self assessment draft');
+      return;
+    }
+    
     try {
       const draftAssessment: SelfAssessment = {
         ...assessment,
@@ -1234,6 +1236,11 @@ export default function ExplorationWorkspace({
   };
 
   const handlePeerReviewSubmit = async (review: Omit<PeerReview, 'id' | 'submittedAt'>) => {
+    if (!isLoggedIn) {
+      console.warn('User not logged in - cannot save peer review');
+      return;
+    }
+    
     try {
       const fullReview: PeerReview = {
         ...review,
@@ -1258,6 +1265,11 @@ export default function ExplorationWorkspace({
   };
 
   const handleMentorFeedbackSubmit = async (feedback: Omit<MentorFeedback, 'id' | 'submittedAt'>) => {
+    if (!isLoggedIn) {
+      console.warn('User not logged in - cannot save mentor feedback');
+      return;
+    }
+    
     try {
       const fullFeedback: MentorFeedback = {
         ...feedback,
@@ -1282,6 +1294,11 @@ export default function ExplorationWorkspace({
   };
 
   const handleMentorFeedbackDraft = async (feedback: Omit<MentorFeedback, 'id' | 'submittedAt'>) => {
+    if (!isLoggedIn) {
+      console.warn('User not logged in - cannot save mentor feedback draft');
+      return;
+    }
+    
     try {
       const draftFeedback: MentorFeedback = {
         ...feedback,
