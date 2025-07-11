@@ -83,6 +83,62 @@ export default function PathResults({
   const [pathDataCache, setPathDataCache] = React.useState<Record<string, any>>({});
   const [isLoadingPathData, setIsLoadingPathData] = React.useState(false);
 
+  // Preload path data for all saved paths
+  React.useEffect(() => {
+    if (!savedPaths || savedPaths.length === 0) return;
+
+    const loadAllPathData = async () => {
+      setIsLoadingPathData(true);
+      const uniquePathIds = [...new Set(savedPaths.map(sp => sp.pathData?.id).filter(Boolean))];
+      
+      // Load all path data in parallel
+      const loadPromises = uniquePathIds.map(async (pathId) => {
+        if (!pathDataCache[pathId]) {
+          try {
+            const pathData = await DiscoveryYAMLLoader.loadPath(pathId, 'zhTW');
+            if (pathData) {
+              return {
+                pathId,
+                data: {
+                  id: pathId,
+                  title: pathData.metadata.title,
+                  subtitle: pathData.metadata.short_description,
+                  description: pathData.metadata.long_description,
+                  category: pathData.category,
+                  skills: pathData.metadata.skill_focus || [],
+                  aiAssistants: [],
+                  tasks: pathData.example_tasks?.beginner?.map((task: any) => ({
+                    id: task.id,
+                    title: task.title,
+                    description: task.description,
+                    duration: "20分鐘"
+                  })) || []
+                }
+              };
+            }
+          } catch (error) {
+            console.error(`Failed to load path data for ${pathId}:`, error);
+          }
+        }
+        return null;
+      });
+
+      const results = await Promise.all(loadPromises);
+      const newCache: Record<string, any> = { ...pathDataCache };
+      
+      results.forEach(result => {
+        if (result) {
+          newCache[result.pathId] = result.data;
+        }
+      });
+
+      setPathDataCache(newCache);
+      setIsLoadingPathData(false);
+    };
+
+    loadAllPathData();
+  }, [savedPaths]); // Don't include pathDataCache in dependencies to avoid infinite loop
+
   const getEnhancedPathData = React.useCallback(async (pathId: string) => {
     // Check cache first
     if (pathDataCache[pathId]) {
@@ -224,16 +280,19 @@ export default function PathResults({
           };
         }
         
-        // Final fallback for missing data
+        // Final fallback - trigger async load
+        // Return basic structure but trigger load in background
+        getEnhancedPathData(savedPath.pathData.id);
+        
         return {
           id: savedPath.pathData.id,
-          title: savedPath.pathData.id,
-          subtitle: '',
-          description: '',
-          category: 'technology',
-          skills: [],
-          aiAssistants: [],
-          tasks: [],
+          title: savedPath.pathData.title || savedPath.pathData.id, // Use title if available
+          subtitle: savedPath.pathData.subtitle || '',
+          description: savedPath.pathData.description || '',
+          category: savedPath.pathData.category || 'technology',
+          skills: savedPath.pathData.skills || [],
+          aiAssistants: savedPath.pathData.aiAssistants || [],
+          tasks: savedPath.pathData.tasks || [],
           savedPathId: savedPath.id,
           matchPercentage: savedPath.matchPercentage,
           isFavorite: savedPath.isFavorite,
