@@ -16,15 +16,15 @@ Content Source → Scenario → Program → Task → Evaluation
 
 ### 1.2 三大模組對應
 ```
-PBL:       YAML → Scenario → Program → Tasks → Evaluations
-Discovery: Path → Scenario → Workspace(Program) → Tasks → Evaluations  
-Assessment: YAML → Scenario(Config) → Program → Tasks(Questions) → Evaluations
+PBL:       YAML → Scenario → Program → Task → Evaluations
+Discovery: Path → Scenario → Workspace(Program) → Task → Evaluations  
+Assessment: YAML → Scenario(Config) → Program → Task(All Questions) → Evaluations
 ```
 
 各模組特點：
-- **PBL**：從YAML載入情境，每個Program包含多個Task，有Task和Program兩層評估
-- **Discovery**：動態生成Scenario，Workspace即為Program，需遷移localStorage
-- **Assessment**：Assessment config作為Scenario，Questions作為Tasks
+- **PBL**：從YAML載入情境，每個Program包含一個Task（整個學習會話），有Task和Program兩層評估
+- **Discovery**：動態生成Scenario，Workspace即為Program，一個工作階段為一個Task
+- **Assessment**：Assessment config作為Scenario，一個Task包含所有Questions及其互動記錄
 
 ## 2. 統一架構設計
 
@@ -86,7 +86,7 @@ interface ITask {
 // Interaction - 互動記錄（存在Task內）
 interface IInteraction {
   timestamp: string;
-  type: 'user_input' | 'ai_response' | 'system_event';
+  type: 'user_input' | 'ai_response' | 'system_event' | 'assessment_answer';
   content: unknown;
   metadata?: Record<string, unknown>;
 }
@@ -158,12 +158,19 @@ interface PBLScenario extends IScenario {
   }[];
 }
 
-// PBL Task
+// PBL Task (整個學習會話)
 interface PBLTask extends ITask {
   type: 'chat';  // PBL主要是AI對話
-  ksaCodes: string[];  // 關聯的KSA代碼
-  aiModules: string[];  // 使用的AI模組
-  interactions: PBLInteraction[];  // AI對話記錄
+  content: {
+    instructions?: string;
+    context: {
+      ksaCodes: string[];     // 關聯的KSA代碼
+      aiModules: string[];    // 使用的AI模組
+      taskTemplates: any[];   // 原YAML中的任務定義
+      language?: string;
+    };
+  };
+  interactions: PBLInteraction[];  // 所有AI對話記錄
 }
 
 // PBL Interaction
@@ -222,13 +229,20 @@ interface DiscoveryProgram extends IProgram {
   };
 }
 
-// Discovery Task
+// Discovery Task (工作階段)
 interface DiscoveryTask extends ITask {
   type: 'creation' | 'analysis' | 'chat';
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  xpReward: number;
-  requiredSkills: string[];
-  interactions: DiscoveryInteraction[];
+  content: {
+    instructions?: string;
+    context: {
+      difficulty: 'beginner' | 'intermediate' | 'advanced';
+      xpReward: number;
+      requiredSkills: string[];
+      worldSetting?: string;
+      currentChallenge?: any;
+    };
+  };
+  interactions: DiscoveryInteraction[];  // 整個工作階段的互動
 }
 
 // Discovery Evaluation  
@@ -273,25 +287,29 @@ interface AssessmentProgram extends IProgram {
   };
 }
 
-// Assessment Task (即單一題目)
+// Assessment Task (包含所有題目的測驗會話)
 interface AssessmentTask extends ITask {
   type: 'question';
   content: {
-    question: string;
-    options: string[];
-    correctAnswer: number;
-    domain: string;
-    competencyCode: string;
+    instructions?: string;
+    context: {
+      questions: AssessmentQuestion[];  // 所有題目
+      timeLimit?: number;
+      language?: string;
+    };
   };
-  interactions: AssessmentInteraction[];  // 答題記錄
+  interactions: AssessmentInteraction[];  // 所有答題記錄
 }
 
 // Assessment Interaction
 interface AssessmentInteraction extends IInteraction {
-  type: 'user_input';
+  type: 'assessment_answer';
   content: {
-    selectedOption: number;
-    timeSpent: number;
+    questionId: string;      // 題目ID
+    selectedAnswer: string;  // 選擇的答案
+    isCorrect: boolean;      // 是否正確
+    timeSpent: number;       // 花費時間
+    ksa_mapping?: any;       // KSA映射
   };
 }
 
@@ -601,29 +619,26 @@ class AssessmentLearningService extends BaseLearningService<
       q => program.metadata.selectedQuestions.includes(q.id)
     );
     
-    const tasks: AssessmentTask[] = [];
-    for (let i = 0; i < selectedQuestions.length; i++) {
-      const question = selectedQuestions[i];
-      const task = await this.taskRepo.create({
-        programId: program.id,
-        scenarioTaskIndex: i,
-        title: `Question ${i + 1}`,
-        type: 'question',
-        content: {
-          question: question.question,
-          options: question.options,
-          correctAnswer: question.correct_answer,
-          domain: question.domain,
-          competencyCode: question.competency_code
-        },
-        interactions: [],
-        startedAt: new Date().toISOString(),
-        status: 'pending'
-      });
-      tasks.push(task);
-    }
+    // 創建一個包含所有題目的 Task
+    const task = await this.taskRepo.create({
+      programId: program.id,
+      scenarioTaskIndex: 0,
+      title: 'Assessment Questions',
+      type: 'question',
+      content: {
+        instructions: 'Complete the assessment questions',
+        context: {
+          questions: selectedQuestions,
+          timeLimit: scenario.assessmentConfig.timeLimit,
+          language: program.metadata.language || 'en'
+        }
+      },
+      interactions: [],
+      startedAt: new Date().toISOString(),
+      status: 'pending'
+    });
     
-    return tasks;
+    return [task];
   }
   
   protected shouldEvaluate(task: AssessmentTask, interaction: IInteraction): boolean {
@@ -632,26 +647,61 @@ class AssessmentLearningService extends BaseLearningService<
   }
   
   protected async evaluateTask(task: AssessmentTask): Promise<AssessmentEvaluation> {
-    const lastInteraction = task.interactions[task.interactions.length - 1];
-    const isCorrect = lastInteraction.content.selectedOption === task.content.correctAnswer;
+    // 計算所有題目的總分
+    const questions = task.content.context.questions;
+    const correctCount = task.interactions.filter(i => 
+      i.type === 'assessment_answer' && i.content.isCorrect
+    ).length;
+    
+    const score = (correctCount / questions.length) * 100;
     
     const evaluation: AssessmentEvaluation = {
       id: this.generateUUID(),
       targetType: 'task',
       targetId: task.id,
-      evaluationType: 'assessment_question',
-      isCorrect,
-      score: isCorrect ? 1 : 0,
+      evaluationType: 'assessment_complete',
+      score,
       createdAt: new Date().toISOString(),
       metadata: {
-        domain: task.content.domain,
-        competencyCode: task.content.competencyCode,
-        timeSpent: lastInteraction.content.timeSpent
+        totalQuestions: questions.length,
+        correctAnswers: correctCount,
+        completionTime: this.calculateCompletionTime(task),
+        interactions: task.interactions
       }
     };
     
     await this.evaluationRepo.create(evaluation);
     return evaluation;
+  }
+  
+  // 批次提交答案
+  async submitBatchAnswers(taskId: string, answers: AssessmentAnswer[]): Promise<void> {
+    const task = await this.taskRepo.findById(taskId);
+    if (!task) throw new Error('Task not found');
+    
+    const questions = task.content.context.questions;
+    
+    // 將所有答案轉換為 interactions
+    const interactions: AssessmentInteraction[] = answers.map(answer => {
+      const question = questions.find(q => q.id === answer.questionId);
+      const isCorrect = question && 
+        String(answer.answer) === String(question.correct_answer);
+      
+      return {
+        timestamp: new Date().toISOString(),
+        type: 'assessment_answer',
+        content: {
+          questionId: answer.questionId,
+          selectedAnswer: answer.answer,
+          isCorrect,
+          timeSpent: answer.timeSpent || 0,
+          ksa_mapping: question?.ksa_mapping
+        }
+      };
+    });
+    
+    // 一次更新所有互動
+    await this.taskRepo.updateInteractions(taskId, interactions);
   }
   
   // Assessment特有：計算領域分數
@@ -853,7 +903,215 @@ CREATE TABLE competency_progress (
 2. 優化UUID檔案讀寫
 3. 效能測試與調整
 
-## 8. 結論
+## 8. 設計原理與最佳實踐
+
+### 8.1 統一設計：所有模組都是 Multiple Tasks
+
+#### 核心原則：Program → Multiple Tasks
+
+```
+// 統一的架構
+任何學習模式 → Program → Multiple Tasks → Evaluations
+```
+
+#### 現狀 vs 未來
+
+**現在的 Assessment**
+```typescript
+Assessment Program {
+  id: "assessment-001",
+  taskIds: ["task-1"]  // 目前只有一個題組
+}
+
+Task {
+  id: "task-1",
+  title: "AI 素養測驗",
+  content: {
+    questions: [20題]  // 所有題目在一個 task
+  }
+}
+```
+
+**未來的 Assessment**
+```typescript
+Assessment Program {
+  id: "assessment-002",
+  taskIds: [
+    "task-A",  // A卷：10題基礎題
+    "task-B",  // B卷：5題進階題  
+    "task-C"   // C卷：4題應用題
+  ]
+}
+
+Task A {
+  id: "task-A",
+  title: "基礎概念測驗",
+  content: {
+    questions: [10題基礎題]
+  }
+}
+
+Task B {
+  id: "task-B", 
+  title: "進階理解測驗",
+  content: {
+    questions: [5題進階題]
+  }
+}
+```
+
+**PBL（本來就是 Multiple Tasks）**
+```typescript
+PBL Program {
+  id: "pbl-001",
+  taskIds: [
+    "task-1",  // 理解問題
+    "task-2",  // 研究方案
+    "task-3"   // 實作原型
+  ]
+}
+```
+
+**Discovery（本來就是 Multiple Tasks）**
+```typescript
+Discovery Program {
+  id: "discovery-001",
+  taskIds: [
+    "task-1",  // 探索世界
+    "task-2",  // 解決挑戰
+    "task-3"   // 獲得成就
+  ]
+}
+```
+
+#### 實作統一介面
+
+```typescript
+// 所有 Repository 都遵循相同模式
+interface IProgramRepository {
+  create(program: Omit<IProgram, 'id'>): Promise<IProgram>;
+  findById(id: string): Promise<IProgram | null>;
+  findByUser(userId: string): Promise<IProgram[]>;
+  update(id: string, updates: Partial<IProgram>): Promise<IProgram>;
+  addTask(programId: string, taskId: string): Promise<void>;
+}
+
+interface ITaskRepository {
+  create(task: Omit<ITask, 'id'>): Promise<ITask>;
+  findById(id: string): Promise<ITask | null>;
+  findByProgram(programId: string): Promise<ITask[]>;
+  updateInteractions(id: string, interactions: IInteraction[]): Promise<ITask>;
+}
+```
+
+#### 簡化的 Task 定義
+
+```typescript
+interface ITask {
+  id: string;
+  programId: string;
+  type: 'question' | 'chat' | 'creation' | 'analysis';
+  title: string;
+  content: {
+    // 根據 type 可以包含不同內容
+    questions?: Question[];      // for assessment
+    objectives?: string[];       // for pbl
+    instructions?: string;       // for any
+    context?: any;              // 其他需要的資料
+  };
+  interactions: IInteraction[];  // 統一的互動記錄
+  status: 'pending' | 'active' | 'completed';
+  startedAt: string;
+  completedAt?: string;
+}
+```
+
+#### 優勢
+
+1. **統一簡單**：所有模組都是 Program → Tasks 結構
+2. **向後相容**：現有的單一 task assessment 仍然運作
+3. **易於擴展**：未來要分卷很容易
+4. **概念清晰**：不需要特殊處理不同模組
+
+#### 實際應用
+
+```typescript
+// 創建任何類型的學習都是一樣的流程
+class UnifiedLearningService {
+  async startLearning(userId: string, scenarioId: string) {
+    // 1. 創建 Program
+    const program = await this.programRepo.create({
+      scenarioId,
+      userId,
+      status: 'active',
+      taskIds: []
+    });
+    
+    // 2. 根據 Scenario 創建 Tasks
+    const tasks = await this.createTasksForScenario(scenarioId);
+    
+    // 3. 關聯 Tasks 到 Program
+    for (const task of tasks) {
+      await this.programRepo.addTask(program.id, task.id);
+    }
+    
+    return program;
+  }
+  
+  private async createTasksForScenario(scenarioId: string) {
+    const scenario = await this.scenarioRepo.findById(scenarioId);
+    
+    switch (scenario.sourceType) {
+      case 'assessment':
+        // 目前創建 1 個 task，未來可能創建多個
+        return this.createAssessmentTasks(scenario);
+      
+      case 'pbl':
+        // 創建多個 tasks（每個子任務一個）
+        return this.createPBLTasks(scenario);
+        
+      case 'discovery':
+        // 創建多個 tasks（每個階段一個）
+        return this.createDiscoveryTasks(scenario);
+    }
+  }
+}
+```
+
+#### Task 粒度設計原則
+
+1. **Assessment**: 
+   - 現在：一個 Task 包含一個完整題組
+   - 未來：可按 domain 或難度分成多個 Tasks
+
+2. **PBL**: 
+   - 每個學習目標一個 Task
+   - 避免單一 Task 過大（控制在 30-60 分鐘）
+
+3. **Discovery**: 
+   - 每個探索階段一個 Task
+   - 自然斷點處切割（如完成挑戰、獲得成就）
+
+### 8.2 實作準則
+
+1. **創建新 Program 的時機**
+   - 每次用戶開始新的學習會話
+   - 不重用已完成或放棄的 Program
+
+2. **Task 的生命週期**
+   ```
+   pending → active → completed
+   ```
+   - pending: 已創建但未開始
+   - active: 正在進行中
+   - completed: 已完成
+
+3. **Interaction 記錄原則**
+   - 保留所有用戶輸入和系統回應
+   - 包含時間戳記和元數據
+   - 支援重播學習過程
+
+## 9. 結論
 
 這個 Content Source → Scenario → Program → Task → Evaluation 的統一架構為 AI Square 平台提供了：
 
