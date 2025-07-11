@@ -206,38 +206,103 @@ Return your evaluation as a JSON object:
         
         await taskRepo.addInteraction(taskId, aiInteraction);
         
-        // Only mark task as completed if AI says so
-        if (evaluationResult.completed) {
-          await taskRepo.complete(taskId);
-          
-          // Update program XP
-          const currentXP = (program.metadata?.totalXP as number) || 0;
-          await programRepo.update(programId, {
-            metadata: {
-              ...program.metadata,
-              totalXP: currentXP + (evaluationResult.xpEarned || 0)
-            }
-          });
-        }
-        
-        // Create evaluation record
-        const evaluation = await evaluationRepo.create({
-          targetType: 'task',
-          targetId: taskId,
-          evaluationType: 'discovery_task',
-          score: evaluationResult.xpEarned || 0,
+        // Don't create evaluation or mark complete yet - wait for user confirmation
+        // Just return the result
+        return NextResponse.json({
+          success: true,
+          completed: evaluationResult.completed,
           feedback: evaluationResult.feedback,
-          dimensions: [],
-          metadata: {
-            completed: evaluationResult.completed,
-            xpEarned: evaluationResult.xpEarned || 0,
-            completionTime: content.timeSpent,
-            strengths: evaluationResult.strengths || [],
-            improvements: evaluationResult.improvements || [],
-            skillsImproved: evaluationResult.skillsImproved || []
-          },
-          createdAt: new Date().toISOString()
+          strengths: evaluationResult.strengths || [],
+          improvements: evaluationResult.improvements || [],
+          xpEarned: evaluationResult.xpEarned || 0,
+          canComplete: evaluationResult.completed // Indicate task can be completed
         });
+      } catch (aiError) {
+        console.error('AI evaluation error:', aiError);
+        // Return error response without creating evaluation
+        return NextResponse.json({
+          success: false,
+          error: 'AI evaluation failed',
+          feedback: '評估時發生錯誤，請稍後再試。',
+          canComplete: false
+        });
+      }
+    } else if (action === 'confirm-complete') {
+      // User confirms task completion
+      // First check if task has any passed interactions
+      const hasPassedInteraction = task.interactions.some(
+        i => i.type === 'ai_response' && i.content.completed === true
+      );
+      
+      if (!hasPassedInteraction) {
+        return NextResponse.json(
+          { error: 'Task has not been passed yet' },
+          { status: 400 }
+        );
+      }
+      
+      // Create comprehensive evaluation based on all interactions
+      const userAttempts = task.interactions.filter(i => i.type === 'user_input').length;
+      const passedAttempts = task.interactions.filter(
+        i => i.type === 'ai_response' && i.content.completed
+      ).length;
+      
+      // Get all feedback for comprehensive review
+      const allFeedback = task.interactions
+        .filter(i => i.type === 'ai_response')
+        .map(i => i.content);
+      
+      // Calculate total XP from best attempt
+      const bestXP = Math.max(
+        ...allFeedback.map(f => f.xpEarned || 0),
+        task.content.context?.xp || 100
+      );
+      
+      // Generate comprehensive feedback
+      const comprehensiveFeedback = `經過 ${userAttempts} 次嘗試，你成功完成了這個任務！${
+        userAttempts > 1 
+          ? `\n\n學習歷程回顧：\n- 從第一次嘗試到最後，你展現了持續改進的精神\n- 共有 ${passedAttempts} 次達到通過標準\n- 最終掌握了任務所需的核心能力`
+          : '\n\n一次就成功完成任務，展現了良好的理解能力！'
+      }`;
+      
+      // Collect all skills improved across attempts
+      const allSkillsImproved = new Set<string>();
+      allFeedback.forEach(f => {
+        if (f.skillsImproved) {
+          f.skillsImproved.forEach((skill: string) => allSkillsImproved.add(skill));
+        }
+      });
+      
+      // Create formal evaluation record
+      const evaluation = await evaluationRepo.create({
+        targetType: 'task',
+        targetId: taskId,
+        evaluationType: 'discovery_task',
+        score: bestXP,
+        feedback: comprehensiveFeedback,
+        dimensions: [],
+        metadata: {
+          completed: true,
+          xpEarned: bestXP,
+          totalAttempts: userAttempts,
+          passedAttempts: passedAttempts,
+          skillsImproved: Array.from(allSkillsImproved),
+          learningJourney: allFeedback
+        },
+        createdAt: new Date().toISOString()
+      });
+      
+      // Mark task as completed
+      await taskRepo.complete(taskId);
+      
+      // Update program XP
+      const currentXP = (program.metadata?.totalXP as number) || 0;
+      await programRepo.update(programId, {
+        metadata: {
+          ...program.metadata,
+          totalXP: currentXP + bestXP
+        }
+      });
       
       // Update program progress
       const tasks = await taskRepo.findByProgram(programId);
@@ -245,9 +310,11 @@ Return your evaluation as a JSON object:
       const nextTaskIndex = completedTasks;
       
       // Activate next task if available
+      let nextTaskId = null;
       if (nextTaskIndex < tasks.length) {
         const nextTask = tasks[nextTaskIndex];
         await taskRepo.updateStatus(nextTask.id, 'active');
+        nextTaskId = nextTask.id;
       }
       
       // Update program current task index
@@ -263,77 +330,28 @@ Return your evaluation as a JSON object:
           targetId: programId,
           evaluationType: 'discovery_completion',
           score: 100,
-          feedback: 'Congratulations! You have completed all tasks.',
+          feedback: 'Congratulations! You have completed all learning tasks in this program.',
           dimensions: [],
           metadata: {
-            totalXP: program.metadata?.totalXP || 0,
+            totalXP: currentXP + bestXP,
             tasksCompleted: tasks.length
           },
           createdAt: new Date().toISOString()
         });
       }
-        
-        return NextResponse.json({
-          success: true,
-          completed: evaluationResult.completed,
-          feedback: evaluationResult.feedback,
-          strengths: evaluationResult.strengths || [],
-          improvements: evaluationResult.improvements || [],
-          xpEarned: evaluationResult.xpEarned || 0,
-          evaluation: {
-            id: evaluation.id,
-            score: evaluation.score,
-            xpEarned: evaluation.metadata?.xpEarned || 0
-          },
-          nextTaskId: evaluationResult.completed && nextTaskIndex < tasks.length ? tasks[nextTaskIndex].id : null
-        });
-      } catch (aiError) {
-        console.error('AI evaluation error:', aiError);
-        // Fallback to simple completion without AI evaluation
-        await taskRepo.complete(taskId);
-        
-        const evaluation = await evaluationRepo.create({
-          targetType: 'task',
-          targetId: taskId,
-          evaluationType: 'discovery_task',
-          score: task.content.context?.xp || 100,
-          feedback: '任務已完成！',
-          dimensions: [],
-          metadata: {
-            xpEarned: task.content.context?.xp || 100,
-            completionTime: content.timeSpent,
-            aiError: true
-          },
-          createdAt: new Date().toISOString()
-        });
-        
-        // Update program progress
-        const tasks = await taskRepo.findByProgram(programId);
-        const completedTasks = tasks.filter(t => t.status === 'completed').length;
-        const nextTaskIndex = completedTasks;
-        
-        // Activate next task if available
-        if (nextTaskIndex < tasks.length) {
-          const nextTask = tasks[nextTaskIndex];
-          await taskRepo.updateStatus(nextTask.id, 'active');
-        }
-        
-        // Update program current task index
-        await programRepo.updateProgress(programId, nextTaskIndex);
-        
-        return NextResponse.json({
-          success: true,
-          completed: true,
-          feedback: '任務已完成！繼續努力！',
-          xpEarned: task.content.context?.xp || 100,
-          evaluation: {
-            id: evaluation.id,
-            score: evaluation.score,
-            xpEarned: evaluation.metadata?.xpEarned || 0
-          },
-          nextTaskId: nextTaskIndex < tasks.length ? tasks[nextTaskIndex].id : null
-        });
-      }
+      
+      return NextResponse.json({
+        success: true,
+        taskCompleted: true,
+        evaluation: {
+          id: evaluation.id,
+          score: evaluation.score,
+          xpEarned: bestXP,
+          feedback: comprehensiveFeedback
+        },
+        nextTaskId,
+        programCompleted: completedTasks === tasks.length
+      });
     } else if (action === 'start') {
       // Mark task as active
       await taskRepo.updateStatus(taskId, 'active');

@@ -309,11 +309,13 @@ export default function ProgramDetailPage() {
                   bg-white rounded-xl shadow-md border transition-all
                   ${(task.status === 'available' || task.status === 'active')
                     ? 'border-purple-200 hover:shadow-lg cursor-pointer' 
+                    : task.status === 'completed'
+                    ? 'border-green-100 hover:shadow-lg cursor-pointer'
                     : 'border-gray-100'
                   }
                   ${task.status === 'completed' ? 'bg-gray-50' : ''}
                 `}
-                onClick={() => (task.status === 'available' || task.status === 'active') && handleStartTask(task.id)}
+                onClick={() => (task.status === 'available' || task.status === 'active' || task.status === 'completed') && handleStartTask(task.id)}
               >
                 <div className="p-6">
                   <div className="flex items-start justify-between">
@@ -360,6 +362,19 @@ export default function ProgramDetailPage() {
                             <span className="text-gray-600">{task.xp} XP</span>
                           </div>
                           
+                          {task.status === 'completed' && (
+                            <>
+                              <div className="flex items-center space-x-1">
+                                <span className="text-gray-600">📊</span>
+                                <span className="text-gray-600">6次嘗試</span>
+                              </div>
+                              <div className="flex items-center space-x-1">
+                                <span className="text-gray-600">⭐</span>
+                                <span className="text-gray-600">2次通過</span>
+                              </div>
+                            </>
+                          )}
+                          
                           {task.completedAt && (
                             <span className="text-green-600">
                               完成於 {new Date(task.completedAt).toLocaleDateString('zh-TW')}
@@ -374,6 +389,12 @@ export default function ProgramDetailPage() {
                       <button className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
                         <PlayIcon className="w-4 h-4" />
                         <span>{task.status === 'active' ? '繼續' : '開始'}</span>
+                      </button>
+                    )}
+                    {task.status === 'completed' && (
+                      <button className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                        <CheckCircleIcon className="w-4 h-4" />
+                        <span>檢視</span>
                       </button>
                     )}
                   </div>
