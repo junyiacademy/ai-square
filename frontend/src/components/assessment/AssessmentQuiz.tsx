@@ -22,7 +22,7 @@ export default function AssessmentQuiz({ questions, onComplete, timeLimit, initi
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(initialAnswers.length || 0);
   const [answers, setAnswers] = useState<UserAnswer[]>(initialAnswers);
   const [selectedAnswer, setSelectedAnswer] = useState<'a' | 'b' | 'c' | 'd' | null>(null);
-  const [timeLeft, setTimeLeft] = useState(timeLimit * 60); // convert to seconds
+  const [timeLeft, setTimeLeft] = useState(() => (timeLimit || 15) * 60); // convert to seconds with default
   const [questionStartTime, setQuestionStartTime] = useState<Date>(new Date());
   const [showExplanation, setShowExplanation] = useState(false);
   const [hasAnswered, setHasAnswered] = useState(false);
@@ -30,14 +30,15 @@ export default function AssessmentQuiz({ questions, onComplete, timeLimit, initi
   const currentQuestion = questions[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
 
+  // Track previous questions to detect task changes
+  const [prevQuestionIds, setPrevQuestionIds] = useState<string>('');
+  
   // Reset state when questions change (new task)
   useEffect(() => {
-    // Check if this is a different set of questions (new task)
-    const firstQuestionId = questions[0]?.id;
-    const isNewTask = firstQuestionId && answers.length > 0 && !answers.some(a => a.questionId === firstQuestionId);
+    const currentQuestionIds = questions.map(q => q.id).join(',');
     
-    if (isNewTask || (questions.length > 0 && currentQuestionIndex >= questions.length)) {
-      console.log('Resetting quiz state for new task');
+    if (prevQuestionIds && prevQuestionIds !== currentQuestionIds) {
+      console.log('New task detected, resetting quiz state');
       setCurrentQuestionIndex(0);
       setAnswers([]);
       setSelectedAnswer(null);
@@ -46,7 +47,9 @@ export default function AssessmentQuiz({ questions, onComplete, timeLimit, initi
       setQuestionStartTime(new Date());
       setTimeLeft(timeLimit * 60);
     }
-  }, [questions]); // Remove timeLimit to avoid unnecessary resets
+    
+    setPrevQuestionIds(currentQuestionIds);
+  }, [questions, prevQuestionIds, timeLimit]);
 
   // Check if current question is already answered
   useEffect(() => {

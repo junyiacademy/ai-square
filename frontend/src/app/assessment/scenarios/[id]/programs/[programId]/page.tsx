@@ -191,6 +191,14 @@ export default function AssessmentProgramPage({
           questionsInContext: nextTaskData.nextTask?.content?.context?.questions?.length || 0,
           questionsDirectly: nextTaskData.nextTask?.content?.questions?.length || 0
         });
+        
+        // Prevent loading the same task
+        if (nextTaskData.nextTask?.id === currentTask?.id) {
+          console.error('Same task returned, preventing infinite loop');
+          setSubmitting(false);
+          return;
+        }
+        
         setCurrentTask(nextTaskData.nextTask);
         setCurrentTaskIndex(nextTaskData.currentTaskIndex);
         setSubmitting(false);
