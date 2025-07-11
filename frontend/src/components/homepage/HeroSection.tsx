@@ -99,18 +99,6 @@ export default function HeroSection() {
               </svg>
             </Link>
           </div>
-
-          {/* 測試新導航頁面 - 臨時添加 */}
-          <div className="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <p className="text-sm text-yellow-700 mb-3 font-semibold">🧪 測試 Discovery 子頁面（臨時）</p>
-            <div className="flex flex-wrap gap-2 justify-center">
-              <Link href="/discovery/overview" className="px-3 py-1 bg-blue-100 text-blue-700 rounded text-sm hover:bg-blue-200">總覽</Link>
-              <Link href="/discovery/evaluation" className="px-3 py-1 bg-green-100 text-green-700 rounded text-sm hover:bg-green-200">評估</Link>
-              <Link href="/discovery/paths" className="px-3 py-1 bg-purple-100 text-purple-700 rounded text-sm hover:bg-purple-200">路徑</Link>
-              <Link href="/discovery/workspace" className="px-3 py-1 bg-orange-100 text-orange-700 rounded text-sm hover:bg-orange-200">工作區</Link>
-              <Link href="/discovery/achievements" className="px-3 py-1 bg-red-100 text-red-700 rounded text-sm hover:bg-red-200">成就</Link>
-            </div>
-          </div>
         </div>
 
         {/* Visual representation */}
