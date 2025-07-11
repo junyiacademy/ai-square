@@ -95,6 +95,13 @@ export default function AssessmentProgramPage({
       
       const data = await res.json();
       console.log('Loaded program data:', data);
+      console.log('Current task structure:', {
+        hasTask: !!data.currentTask,
+        hasContent: !!data.currentTask?.content,
+        hasContext: !!data.currentTask?.content?.context,
+        questionsLocation: data.currentTask?.content?.context?.questions ? 'context' : 'direct',
+        questionsCount: data.currentTask?.content?.context?.questions?.length || data.currentTask?.content?.questions?.length || 0
+      });
       
       if (data.program) {
         setProgram(data.program);

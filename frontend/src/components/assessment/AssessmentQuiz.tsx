@@ -141,7 +141,29 @@ export default function AssessmentQuiz({ questions, onComplete, timeLimit, initi
     return t(`domains.${domainKey}`);
   };
 
+  // Guard against missing questions
+  if (!questions || questions.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600">{t('error.noQuestions', 'No questions available')}</p>
+        </div>
+      </div>
+    );
+  }
+
   const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
+
+  // Guard against missing current question
+  if (!currentQuestion) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600">{t('error.questionNotFound', 'Question not found')}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
