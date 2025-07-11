@@ -44,6 +44,7 @@ export default function AssessmentCompletePage({
   const [loading, setLoading] = useState(true);
   const [programId, setProgramId] = useState<string>('');
   const [scenarioId, setScenarioId] = useState<string>('');
+  const [taskData, setTaskData] = useState<{ questions: any[]; interactions: any[] } | null>(null);
   const router = useRouter();
   const { t } = useTranslation();
 
@@ -57,16 +58,9 @@ export default function AssessmentCompletePage({
 
   const loadEvaluation = async (progId: string) => {
     try {
-      // Get session token for authentication
-      const sessionToken = localStorage.getItem('ai_square_session');
-      
       const headers: HeadersInit = {
         'Content-Type': 'application/json',
       };
-      
-      if (sessionToken) {
-        headers['x-session-token'] = sessionToken;
-      }
       
       const res = await fetch(`/api/assessment/programs/${progId}/evaluation`, {
         credentials: 'include',
@@ -83,11 +77,11 @@ export default function AssessmentCompletePage({
       const programData = await programRes.json();
       
       if (programData.currentTask) {
-        // Store task data for later use
-        localStorage.setItem('assessmentTaskData', JSON.stringify({
+        // Store task data in state instead of localStorage
+        setTaskData({
           questions: programData.currentTask.content.questions || [],
           interactions: programData.currentTask.interactions || []
-        }));
+        });
       }
     } catch (error) {
       console.error('Failed to load evaluation:', error);
@@ -140,9 +134,17 @@ export default function AssessmentCompletePage({
     );
   }
 
-  // Get task data from localStorage
-  const taskDataStr = localStorage.getItem('assessmentTaskData');
-  const taskData = taskDataStr ? JSON.parse(taskDataStr) : { questions: [], interactions: [] };
+  // Use task data from state
+  if (!taskData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">{t('loading')}</p>
+        </div>
+      </div>
+    );
+  }
 
   // Convert evaluation to AssessmentResult format
   const assessmentResult: AssessmentResult = {

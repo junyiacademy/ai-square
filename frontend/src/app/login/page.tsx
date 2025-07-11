@@ -36,14 +36,8 @@ function LoginContent() {
       const data = await response.json()
 
       if (data.success) {
-        // 儲存用戶資訊到 localStorage
-        localStorage.setItem('user', JSON.stringify(data.user))
-        localStorage.setItem('isLoggedIn', 'true')
-        
-        // Store session token if provided
-        if (data.sessionToken) {
-          localStorage.setItem('ai_square_session', data.sessionToken)
-        }
+        // Authentication is now handled by cookies set in the API response
+        // No need to store in localStorage
         
         // 觸發自定義事件通知 Header 更新
         window.dispatchEvent(new CustomEvent('auth-changed'))

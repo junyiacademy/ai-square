@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import DiscoveryNavigation from '@/components/layout/DiscoveryNavigation';
 import DiscoveryHeader from '@/components/discovery/DiscoveryHeader';
+import { useUserData } from '@/hooks/useUserData';
 import type { UserAchievements, WorkspaceSession } from '@/lib/services/user-data-service';
 
 // Dynamic imports to avoid SSR issues
@@ -21,35 +22,17 @@ function WorkspaceListContent() {
   const { t } = useTranslation(['discovery', 'navigation']);
   const router = useRouter();
   
-  const [achievements, setAchievements] = useState<UserAchievements>({
+  const { userData, isLoading, clearAllData } = useUserData();
+  
+  // Extract data from userData
+  const achievements = userData?.achievements || {
     badges: [],
     totalXp: 0,
     level: 1,
     completedTasks: []
-  });
-  const [workspaceSessions, setWorkspaceSessions] = useState<WorkspaceSession[]>([]);
-  const [hasAssessmentResults, setHasAssessmentResults] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Load data
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const { userDataService } = await import('@/lib/services/user-data-service');
-        const userData = await userDataService.loadUserData();
-        if (userData) {
-          setAchievements(userData.achievements);
-          setWorkspaceSessions(userData.workspaceSessions);
-          setHasAssessmentResults(!!userData.assessmentResults);
-        }
-      } catch (error) {
-        console.error('Failed to load workspace data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    loadData();
-  }, []);
+  };
+  const workspaceSessions = userData?.workspaceSessions || [];
+  const hasAssessmentResults = !!userData?.assessmentResults;
 
   // Navigate to specific workspace
   const handleWorkspaceSelect = (workspaceId: string) => {
@@ -83,16 +66,16 @@ function WorkspaceListContent() {
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Debug button to clear localStorage */}
+        {/* Debug button to clear data */}
         <div className="mb-4 text-center">
           <button
-            onClick={() => {
-              localStorage.clear();
+            onClick={async () => {
+              await clearAllData();
               window.location.reload();
             }}
             className="text-xs text-gray-500 hover:text-gray-700 underline"
           >
-            Clear localStorage (Debug)
+            Clear All Data (Debug)
           </button>
         </div>
         

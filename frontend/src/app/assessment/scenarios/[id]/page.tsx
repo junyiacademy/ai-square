@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { FileQuestion, Clock, Target, ChevronLeft, Play, RotateCcw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '@/hooks/useAuth';
 // Remove date-fns import - will use custom formatting
 
 interface AssessmentScenario {
@@ -51,6 +52,7 @@ export default function AssessmentScenarioDetailPage({
   const [scenarioId, setScenarioId] = useState<string>('');
   const router = useRouter();
   const { t, i18n } = useTranslation();
+  const { isLoggedIn, user } = useAuth();
 
   useEffect(() => {
     // Unwrap the params Promise
@@ -71,37 +73,18 @@ export default function AssessmentScenarioDetailPage({
 
       // Load user's programs
       try {
-        // Check if user is logged in via localStorage
-        const isLoggedIn = localStorage.getItem('isLoggedIn');
-        const userData = localStorage.getItem('user');
-        
-        if (isLoggedIn === 'true' && userData) {
-          const user = JSON.parse(userData);
-          
-          // Use session token in header instead of query params for security
-          const sessionToken = localStorage.getItem('ai_square_session');
-          const headers: HeadersInit = {
+        const programsRes = await fetch(`/api/assessment/scenarios/${id}/programs`, {
+          credentials: 'include', // Include cookies for authentication
+          headers: {
             'Content-Type': 'application/json',
-          };
-          
-          if (sessionToken) {
-            headers['x-session-token'] = sessionToken;
           }
-          
-          const programsRes = await fetch(`/api/assessment/scenarios/${id}/programs`, {
-            credentials: 'include', // Include cookies for authentication
-            headers
-          });
-          
-          if (programsRes.ok) {
-            const programsData = await programsRes.json();
-            setPrograms(programsData.programs || []);
-          } else if (programsRes.status === 401) {
-            // User not authenticated, that's ok - they can still view the scenario
-            setPrograms([]);
-          }
-        } else {
-          // User not logged in, no programs to load
+        });
+        
+        if (programsRes.ok) {
+          const programsData = await programsRes.json();
+          setPrograms(programsData.programs || []);
+        } else if (programsRes.status === 401) {
+          // User not authenticated, that's ok - they can still view the scenario
           setPrograms([]);
         }
       } catch (error) {
@@ -119,33 +102,18 @@ export default function AssessmentScenarioDetailPage({
   const startNewProgram = async () => {
     setStartingProgram(true);
     try {
-      // Check if user is logged in via localStorage
-      const isLoggedIn = localStorage.getItem('isLoggedIn');
-      const userData = localStorage.getItem('user');
-      
-      if (isLoggedIn !== 'true' || !userData) {
+      if (!isLoggedIn || !user) {
         // Redirect to login if not authenticated
         router.push('/login?redirect=' + encodeURIComponent(window.location.pathname));
         setStartingProgram(false);
         return;
       }
       
-      const user = JSON.parse(userData);
-      
-      // Get session token for authentication
-      const sessionToken = localStorage.getItem('ai_square_session');
-      
-      const headers: HeadersInit = {
-        'Content-Type': 'application/json',
-      };
-      
-      if (sessionToken) {
-        headers['x-session-token'] = sessionToken;
-      }
-      
       const res = await fetch(`/api/assessment/scenarios/${scenarioId}/programs`, {
         method: 'POST',
-        headers,
+        headers: {
+          'Content-Type': 'application/json',
+        },
         credentials: 'include', // Include cookies for authentication
         body: JSON.stringify({
           action: 'start',

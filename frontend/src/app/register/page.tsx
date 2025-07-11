@@ -86,8 +86,7 @@ export default function RegisterPage() {
         const loginData = await loginResponse.json();
 
         if (loginData.success) {
-          localStorage.setItem('isLoggedIn', 'true');
-          localStorage.setItem('user', JSON.stringify(loginData.user));
+          // Authentication is now handled by cookies set in the API response
           window.dispatchEvent(new CustomEvent('auth-changed'));
           router.push('/onboarding/welcome');
         }

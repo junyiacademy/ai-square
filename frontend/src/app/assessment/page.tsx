@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '@/hooks/useAuth';
 import AssessmentQuiz from '../../components/assessment/AssessmentQuiz';
 import AssessmentResults from '../../components/assessment/AssessmentResults';
 import { AssessmentData, UserAnswer, AssessmentResult } from '../../types/assessment';
@@ -69,13 +70,8 @@ export default function AssessmentPage() {
       setAssessmentResult(result);
       setCurrentStep('results');
       
-      // Update user's assessment completion status
-      const userStr = localStorage.getItem('user');
-      if (userStr) {
-        const user = JSON.parse(userStr);
-        user.hasCompletedAssessment = true;
-        localStorage.setItem('user', JSON.stringify(user));
-      }
+      // Note: User's assessment completion is now tracked in GCS via assessment results
+      // The assessment results are saved when the user views the results page
     }
   };
 

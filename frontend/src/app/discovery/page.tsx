@@ -21,61 +21,44 @@ import PathResults from '@/components/discovery/PathResults';
 import ExplorationWorkspace from '@/components/discovery/ExplorationWorkspace';
 import AchievementsView from '@/components/discovery/AchievementsView';
 
+// Hooks
+import { useUserData } from '@/hooks/useUserData';
+import type { AssessmentResults, UserAchievements } from '@/hooks/useUserData';
+
 // Types
-interface AssessmentResults {
-  tech: number;
-  creative: number;
-  business: number;
-}
-
-interface UserAchievements {
-  badges: string[];
-  totalXp: number;
-  level: number;
-  completedTasks: string[];
-}
-
 type ViewState = 'welcome' | 'assessment' | 'results' | 'workspace' | 'achievements';
 
 export default function DiscoveryPage() {
   const { t } = useTranslation(['discovery', 'navigation']);
   const [currentView, setCurrentView] = useState<ViewState>('welcome');
-  const [assessmentResults, setAssessmentResults] = useState<AssessmentResults | null>(null);
   const [selectedPath, setSelectedPath] = useState<string | null>(null);
-  const [achievements, setAchievements] = useState<UserAchievements>({
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [showSideNav, setShowSideNav] = useState(false);
+  const [showMobileNav, setShowMobileNav] = useState(false);
+  
+  // Use GCS-backed user data service
+  const { 
+    userData, 
+    isLoading,
+    saveAssessmentResults,
+    updateAchievements 
+  } = useUserData();
+  
+  // Extract data from userData
+  const assessmentResults = userData?.assessmentResults || null;
+  const achievements = userData?.achievements || {
     badges: [],
     totalXp: 0,
     level: 1,
     completedTasks: []
-  });
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [showSideNav, setShowSideNav] = useState(false);
-  const [showMobileNav, setShowMobileNav] = useState(false);
-
-  // Load user data from localStorage
+  };
+  
+  // Load saved view state
   useEffect(() => {
-    const savedData = localStorage.getItem('discoveryData');
-    if (savedData) {
-      try {
-        const data = JSON.parse(savedData);
-        if (data.assessmentResults) setAssessmentResults(data.assessmentResults);
-        if (data.achievements) setAchievements(data.achievements);
-        if (data.currentView) setCurrentView(data.currentView);
-      } catch (error) {
-        console.error('Failed to load saved data:', error);
-      }
+    if (userData?.currentView && userData.currentView !== 'workspace') {
+      setCurrentView(userData.currentView as ViewState);
     }
-  }, []);
-
-  // Save user data to localStorage
-  useEffect(() => {
-    const dataToSave = {
-      assessmentResults,
-      achievements,
-      currentView: currentView !== 'workspace' ? currentView : 'results'
-    };
-    localStorage.setItem('discoveryData', JSON.stringify(dataToSave));
-  }, [assessmentResults, achievements, currentView]);
+  }, [userData]);
 
   // Handle scroll for progress tracking
   useEffect(() => {
@@ -93,18 +76,19 @@ export default function DiscoveryPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleAssessmentComplete = (results: AssessmentResults) => {
-    setAssessmentResults(results);
+  const handleAssessmentComplete = async (results: AssessmentResults) => {
     setCurrentView('results');
+    
+    // Save assessment results to GCS
+    await saveAssessmentResults(results);
     
     // Award first assessment badge
     if (!achievements.badges.includes('first_assessment')) {
-      setAchievements(prev => ({
-        ...prev,
-        badges: [...prev.badges, 'first_assessment'],
-        totalXp: prev.totalXp + 50,
-        level: Math.floor((prev.totalXp + 50) / 100) + 1
-      }));
+      await updateAchievements({
+        badges: [...achievements.badges, 'first_assessment'],
+        totalXp: achievements.totalXp + 50,
+        level: Math.floor((achievements.totalXp + 50) / 100) + 1
+      });
     }
   };
 
@@ -113,36 +97,35 @@ export default function DiscoveryPage() {
     setCurrentView('workspace');
   };
 
-  const handleTaskComplete = (taskId: string, xpGained: number, _skillsGained: string[]) => {
-    setAchievements(prev => {
-      const newAchievements = { ...prev };
-      
-      // Add XP and update level
-      newAchievements.totalXp += xpGained;
-      newAchievements.level = Math.floor(newAchievements.totalXp / 100) + 1;
-      
-      // Mark task as completed
-      if (!newAchievements.completedTasks.includes(taskId)) {
-        newAchievements.completedTasks.push(taskId);
-      }
-      
-      // Award badges based on achievements
-      const totalTasks = newAchievements.completedTasks.length;
-      
-      if (totalTasks >= 1 && !newAchievements.badges.includes('first_task')) {
-        newAchievements.badges.push('first_task');
-      }
-      
-      if (totalTasks >= 3 && !newAchievements.badges.includes('problem_solver')) {
-        newAchievements.badges.push('problem_solver');
-      }
-      
-      if (totalTasks >= 5 && !newAchievements.badges.includes('ai_collaborator')) {
-        newAchievements.badges.push('ai_collaborator');
-      }
-      
-      return newAchievements;
-    });
+  const handleTaskComplete = async (taskId: string, xpGained: number, _skillsGained: string[]) => {
+    const newAchievements = { ...achievements };
+    
+    // Add XP and update level
+    newAchievements.totalXp += xpGained;
+    newAchievements.level = Math.floor(newAchievements.totalXp / 100) + 1;
+    
+    // Mark task as completed
+    if (!newAchievements.completedTasks.includes(taskId)) {
+      newAchievements.completedTasks.push(taskId);
+    }
+    
+    // Award badges based on achievements
+    const totalTasks = newAchievements.completedTasks.length;
+    
+    if (totalTasks >= 1 && !newAchievements.badges.includes('first_task')) {
+      newAchievements.badges.push('first_task');
+    }
+    
+    if (totalTasks >= 3 && !newAchievements.badges.includes('problem_solver')) {
+      newAchievements.badges.push('problem_solver');
+    }
+    
+    if (totalTasks >= 5 && !newAchievements.badges.includes('ai_collaborator')) {
+      newAchievements.badges.push('ai_collaborator');
+    }
+    
+    // Save achievements to GCS
+    await updateAchievements(newAchievements);
   };
 
   const navigationItems = [

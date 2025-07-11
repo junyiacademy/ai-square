@@ -116,17 +116,6 @@ export default function AssessmentProgramPage({
   const handleQuizComplete = async (answers: UserAnswer[]) => {
     setSubmitting(true); // Show loading state
     try {
-      // Get session token for authentication
-      const sessionToken = localStorage.getItem('ai_square_session');
-      
-      const headers: HeadersInit = {
-        'Content-Type': 'application/json',
-      };
-      
-      if (sessionToken) {
-        headers['x-session-token'] = sessionToken;
-      }
-      
       // Filter out already submitted answers
       const existingAnswerIds = currentTask?.interactions
         .filter((i: any) => i.type === 'assessment_answer')
@@ -138,7 +127,9 @@ export default function AssessmentProgramPage({
       if (newAnswers.length > 0) {
         await fetch(`/api/assessment/programs/${programId}/batch-answers`, {
           method: 'POST',
-          headers,
+          headers: {
+            'Content-Type': 'application/json',
+          },
           credentials: 'include', // Include cookies for authentication
           body: JSON.stringify({
             taskId: currentTask?.id,

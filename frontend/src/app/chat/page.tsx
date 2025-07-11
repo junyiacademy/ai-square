@@ -9,6 +9,7 @@ import { Header } from '@/components/layout/Header';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { formatDateWithLocale } from '@/utils/locale';
+import { useUserData } from '@/hooks/useUserData';
 
 interface ChatSession {
   id: string;
@@ -68,6 +69,7 @@ interface RecommendedScenario {
 
 function ChatPageContent() {
   const searchParams = useSearchParams();
+  const { userData } = useUserData();
   const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false);
   const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false);
   const [message, setMessage] = useState('');
@@ -107,7 +109,14 @@ function ChatPageContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, currentUser]);
   
-  // Load assessment and progress when user is loaded
+  // Load assessment result from userData
+  useEffect(() => {
+    if (userData?.assessmentResults) {
+      setAssessmentResult(userData.assessmentResults);
+    }
+  }, [userData]);
+
+  // Load PBL history when user is loaded
   useEffect(() => {
     if (currentUser) {
       loadUserAssessmentAndProgress();
@@ -168,12 +177,8 @@ function ChatPageContent() {
   
   const loadUserAssessmentAndProgress = async () => {
     try {
-      // Load assessment result from localStorage
-      const resultStr = localStorage.getItem('assessmentResult');
-      if (resultStr) {
-        const result = JSON.parse(resultStr) as AssessmentResult;
-        setAssessmentResult(result);
-      }
+      // Assessment result is now loaded from userData hook
+      // This function now only loads PBL history
       
       // Load PBL history if user is logged in
       if (currentUser) {

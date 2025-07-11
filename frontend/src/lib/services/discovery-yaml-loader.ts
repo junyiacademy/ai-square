@@ -143,7 +143,7 @@ export class DiscoveryYAMLLoader {
     }
 
     const filename = language === 'zhTW' ? `${pathId}_zhTW.yml` : `${pathId}_en.yml`;
-    const url = `/discovery_data/${category}/${filename}`;
+    const url = `/discovery_data/${category}/${pathId}/${filename}`;
 
     try {
       const response = await fetch(url);
