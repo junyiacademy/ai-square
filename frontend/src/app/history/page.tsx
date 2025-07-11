@@ -429,12 +429,12 @@ export default function UnifiedHistoryPage() {
                           </svg>
                           {t('assessment:history.duration')}: {formatDuration(assessment.duration_seconds)}
                         </div>
-                        <Link
-                          href={`/assessment/review/${assessment.assessment_id}`}
+                        <button
+                          onClick={() => router.push(`/assessment`)}
                           className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
                         >
-                          {t('assessment:history.viewDetails')} →
-                        </Link>
+                          {t('assessment:history.takeNewAssessment')} →
+                        </button>
                       </div>
                     </div>
                   </div>

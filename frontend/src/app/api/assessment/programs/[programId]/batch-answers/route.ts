@@ -50,19 +50,26 @@ export async function POST(
       );
     }
     
+    // Get questions from task to check correct answers
+    const questions = task.content?.context?.questions || task.content?.questions || [];
+    
     // Prepare all interactions
     const interactions = answers.map((answer: any) => {
-      // Assessment tasks don't have predefined correct answers
-      const isCorrect = false;
+      // Find the question to check the correct answer
+      const question = questions.find((q: any) => q.id === answer.questionId);
+      const isCorrect = question && question.correct_answer !== undefined
+        ? String(answer.answer) === String(question.correct_answer)
+        : false;
       
       return {
         timestamp: new Date().toISOString(),
-        type: 'user_input' as const,
+        type: 'assessment_answer' as const,
         content: {
           questionId: answer.questionId,
           selectedAnswer: answer.answer,
           isCorrect,
-          timeSpent: answer.timeSpent || 0
+          timeSpent: answer.timeSpent || 0,
+          ksa_mapping: question?.ksa_mapping || undefined
         }
       };
     });

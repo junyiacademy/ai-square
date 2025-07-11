@@ -5,7 +5,6 @@
 
 // 需要延遲載入的路由
 export const LAZY_ROUTES = [
-  '/assessment/history',
   '/pbl/history',
   '/admin',
   '/settings',

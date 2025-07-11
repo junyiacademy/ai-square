@@ -10,7 +10,14 @@ interface Task {
   id: string;
   title: string;
   content: {
-    questions: AssessmentQuestion[];
+    instructions?: string;
+    context?: {
+      questions: AssessmentQuestion[];
+      timeLimit?: number;
+      language?: string;
+    };
+    // Legacy support
+    questions?: AssessmentQuestion[];
     timeLimit?: number;
   };
   interactions: Array<{
@@ -85,6 +92,7 @@ export default function AssessmentProgramPage({
       }
       
       const data = await res.json();
+      console.log('Loaded program data:', data);
       
       if (data.program) {
         setProgram(data.program);
@@ -94,6 +102,8 @@ export default function AssessmentProgramPage({
         if (data.program.metadata?.language && data.program.metadata.language !== i18n.language) {
           await i18n.changeLanguage(data.program.metadata.language);
         }
+      } else {
+        console.error('No program in response:', data);
       }
     } catch (error) {
       console.error('Failed to load program:', error);
@@ -162,11 +172,28 @@ export default function AssessmentProgramPage({
     );
   }
 
-  if (!currentTask || !currentTask.content.questions || currentTask.content.questions.length === 0) {
+  // Get questions from either location (new structure or legacy)
+  const questions = currentTask?.content?.context?.questions || currentTask?.content?.questions || [];
+  
+  if (!currentTask || questions.length === 0) {
+    console.error('Task validation failed:', {
+      hasTask: !!currentTask,
+      hasContent: !!currentTask?.content,
+      hasContext: !!currentTask?.content?.context,
+      contextQuestions: currentTask?.content?.context?.questions?.length || 0,
+      directQuestions: currentTask?.content?.questions?.length || 0,
+      taskStructure: currentTask
+    });
+    
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600">{t('errorLoading')}</p>
+          <p className="mt-2 text-gray-600 text-sm">
+            {!currentTask ? 'No task found' : 
+             questions.length === 0 ? 'No questions available' :
+             'Unknown error'}
+          </p>
         </div>
       </div>
     );
@@ -187,7 +214,7 @@ export default function AssessmentProgramPage({
         </div>
       ) : (
         <AssessmentQuiz
-          questions={currentTask.content.questions}
+          questions={questions}
           domains={domains}
           onComplete={handleQuizComplete}
           timeLimit={timeLimit}

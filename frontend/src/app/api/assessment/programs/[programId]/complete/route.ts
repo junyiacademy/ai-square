@@ -78,22 +78,29 @@ export async function POST(
     await taskRepo.complete(taskId);
     
     // Calculate scores
-    const answers = task.interactions.filter(i => i.type === 'user_input');
-    const totalQuestions = 20; // Assessment has 20 questions
-    const correctAnswers = answers.filter(a => (a.content as any).isCorrect).length;
-    const overallScore = Math.round((correctAnswers / totalQuestions) * 100);
+    const answers = task.interactions.filter(i => i.type === 'assessment_answer');
     
-    // Calculate domain scores - simplified for now as assessment answers don't have domain info
+    // Get actual number of questions from task content
+    const questions = task.content?.context?.questions || task.content?.questions || [];
+    const totalQuestions = questions.length > 0 ? questions.length : answers.length;
+    
+    const correctAnswers = answers.filter(a => {
+      return a.content.isCorrect === true;
+    }).length;
+    
+    const overallScore = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+    
+    // Calculate domain scores based on actual questions and answers
     const domainScores: Map<string, DomainScore> = new Map();
     
-    // Initialize four domains with equal distribution
-    const domains = ['Engaging_with_AI', 'Creating_with_AI', 'Managing_with_AI', 'Designing_with_AI'];
+    // Initialize four domains
+    const domains = ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai'];
     domains.forEach(domain => {
       domainScores.set(domain, {
         domain,
-        totalQuestions: 5, // 20 questions / 4 domains
-        correctAnswers: Math.floor(correctAnswers / 4),
-        score: overallScore,
+        totalQuestions: 0,
+        correctAnswers: 0,
+        score: 0,
         competencies: new Set(),
         ksa: {
           knowledge: new Set(),
@@ -103,9 +110,40 @@ export async function POST(
       });
     });
     
+    // Process each answer to calculate domain scores and collect KSA mappings
+    answers.forEach((answer: any) => {
+      const questionId = answer.content.questionId;
+      const question = questions.find((q: any) => q.id === questionId);
+      
+      if (question && question.domain) {
+        const domainScore = domainScores.get(question.domain);
+        if (domainScore) {
+          domainScore.totalQuestions++;
+          if (answer.content.isCorrect) {
+            domainScore.correctAnswers++;
+          }
+          
+          // Collect KSA mappings from question
+          if (question.ksa_mapping) {
+            if (question.ksa_mapping.knowledge) {
+              question.ksa_mapping.knowledge.forEach((k: string) => domainScore.ksa.knowledge.add(k));
+            }
+            if (question.ksa_mapping.skills) {
+              question.ksa_mapping.skills.forEach((s: string) => domainScore.ksa.skills.add(s));
+            }
+            if (question.ksa_mapping.attitudes) {
+              question.ksa_mapping.attitudes.forEach((a: string) => domainScore.ksa.attitudes.add(a));
+            }
+          }
+        }
+      }
+    });
+    
     // Calculate domain scores
     domainScores.forEach(domainScore => {
-      domainScore.score = Math.round((domainScore.correctAnswers / domainScore.totalQuestions) * 100);
+      if (domainScore.totalQuestions > 0) {
+        domainScore.score = Math.round((domainScore.correctAnswers / domainScore.totalQuestions) * 100);
+      }
     });
     
     // Calculate time spent
@@ -121,24 +159,56 @@ export async function POST(
     // Generate recommendations
     const recommendations = generateRecommendations(domainScores, overallScore);
     
-    // KSA Analysis
-    const allKnowledge = new Set<string>();
-    const allSkills = new Set<string>();
-    const allAttitudes = new Set<string>();
+    // KSA Analysis - track correct and incorrect KSA mappings
+    const correctKSA = {
+      knowledge: new Set<string>(),
+      skills: new Set<string>(),
+      attitudes: new Set<string>()
+    };
+    const incorrectKSA = {
+      knowledge: new Set<string>(),
+      skills: new Set<string>(),
+      attitudes: new Set<string>()
+    };
+    
+    // Analyze each answer to determine KSA performance
+    answers.forEach((answer: any) => {
+      const questionId = answer.content.questionId;
+      const question = questions.find((q: any) => q.id === questionId);
+      
+      if (question && question.ksa_mapping) {
+        const targetKSA = answer.content.isCorrect ? correctKSA : incorrectKSA;
+        
+        if (question.ksa_mapping.knowledge) {
+          question.ksa_mapping.knowledge.forEach((k: string) => targetKSA.knowledge.add(k));
+        }
+        if (question.ksa_mapping.skills) {
+          question.ksa_mapping.skills.forEach((s: string) => targetKSA.skills.add(s));
+        }
+        if (question.ksa_mapping.attitudes) {
+          question.ksa_mapping.attitudes.forEach((a: string) => targetKSA.attitudes.add(a));
+        }
+      }
+    });
+    
+    // Calculate KSA scores
+    const allKnowledge = new Set([...correctKSA.knowledge, ...incorrectKSA.knowledge]);
+    const allSkills = new Set([...correctKSA.skills, ...incorrectKSA.skills]);
+    const allAttitudes = new Set([...correctKSA.attitudes, ...incorrectKSA.attitudes]);
+    
+    // Identify weak areas (more incorrect than correct)
     const weakKnowledge = new Set<string>();
     const weakSkills = new Set<string>();
     const weakAttitudes = new Set<string>();
     
-    domainScores.forEach(ds => {
-      ds.ksa.knowledge.forEach(k => allKnowledge.add(k));
-      ds.ksa.skills.forEach(s => allSkills.add(s));
-      ds.ksa.attitudes.forEach(a => allAttitudes.add(a));
-      
-      if (ds.score < 60) {
-        ds.ksa.knowledge.forEach(k => weakKnowledge.add(k));
-        ds.ksa.skills.forEach(s => weakSkills.add(s));
-        ds.ksa.attitudes.forEach(a => weakAttitudes.add(a));
-      }
+    incorrectKSA.knowledge.forEach(k => {
+      if (!correctKSA.knowledge.has(k)) weakKnowledge.add(k);
+    });
+    incorrectKSA.skills.forEach(s => {
+      if (!correctKSA.skills.has(s)) weakSkills.add(s);
+    });
+    incorrectKSA.attitudes.forEach(a => {
+      if (!correctKSA.attitudes.has(a)) weakAttitudes.add(a);
     });
     
     // Create evaluation
@@ -171,18 +241,18 @@ export async function POST(
         ),
         ksaAnalysis: {
           knowledge: {
-            score: allKnowledge.size > 0 ? Math.round((1 - weakKnowledge.size / allKnowledge.size) * 100) : 0,
-            strong: Array.from(allKnowledge).filter(k => !weakKnowledge.has(k)).slice(0, 3),
+            score: allKnowledge.size > 0 ? Math.round((correctKSA.knowledge.size / allKnowledge.size) * 100) : 0,
+            strong: Array.from(correctKSA.knowledge).slice(0, 3),
             weak: Array.from(weakKnowledge).slice(0, 3)
           },
           skills: {
-            score: allSkills.size > 0 ? Math.round((1 - weakSkills.size / allSkills.size) * 100) : 0,
-            strong: Array.from(allSkills).filter(s => !weakSkills.has(s)).slice(0, 3),
+            score: allSkills.size > 0 ? Math.round((correctKSA.skills.size / allSkills.size) * 100) : 0,
+            strong: Array.from(correctKSA.skills).slice(0, 3),
             weak: Array.from(weakSkills).slice(0, 3)
           },
           attitudes: {
-            score: allAttitudes.size > 0 ? Math.round((1 - weakAttitudes.size / allAttitudes.size) * 100) : 0,
-            strong: Array.from(allAttitudes).filter(a => !weakAttitudes.has(a)).slice(0, 3),
+            score: allAttitudes.size > 0 ? Math.round((correctKSA.attitudes.size / allAttitudes.size) * 100) : 0,
+            strong: Array.from(correctKSA.attitudes).slice(0, 3),
             weak: Array.from(weakAttitudes).slice(0, 3)
           }
         }
@@ -201,79 +271,15 @@ export async function POST(
     });
     await programRepo.complete(programId);
     
-    // Also save to assessment results for history page
-    // Create assessment result data compatible with history
-    const assessmentResult = {
-      overallScore,
-      domainScores: Object.fromEntries(
-        Array.from(domainScores.entries()).map(([domain, ds]) => [domain, ds.score])
-      ),
-      totalQuestions,
-      correctAnswers,
-      level,
-      recommendations,
-      completedAt: new Date().toISOString(),
-      timeSpentSeconds: completionTime
-    };
-    
-    // Save to assessment results storage
-    const assessmentId = `asmt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const resultData = {
-      assessment_id: assessmentId,
-      user_id: user.id || user.email,
-      user_email: user.email,
-      timestamp: new Date().toISOString(),
-      duration_seconds: completionTime,
-      language: program.metadata?.language || 'en',
-      scores: {
-        overall: overallScore,
-        domains: assessmentResult.domainScores,
-      },
-      summary: {
-        total_questions: totalQuestions,
-        correct_answers: correctAnswers,
-        level: level,
-      },
-      answers: answers.map((answer: any) => ({
-        question_id: answer.content.questionId,
-        selected: answer.content.selectedAnswer,
-        correct: answer.content.isCorrect ? answer.content.selectedAnswer : 'n/a',
-        time_spent: answer.content.timeSpent || 0,
-        ksa_mapping: answer.content.ksa_mapping || undefined,
-      })),
-    };
-    
-    // Save using the assessment results API
-    const saveResponse = await fetch(`${request.nextUrl.origin}/api/assessment/results`, {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Cookie': request.headers.get('cookie') || ''
-      },
-      body: JSON.stringify({
-        userId: user.id || user.email,
-        userEmail: user.email,
-        language: program.metadata?.language || 'en',
-        answers: answers.map((a: any) => ({
-          questionId: a.content.questionId,
-          selectedAnswer: a.content.selectedAnswer,
-          isCorrect: a.content.isCorrect,
-          timeSpent: a.content.timeSpent
-        })),
-        questions: [], // Assessment questions are dynamically generated
-        result: assessmentResult
-      })
-    });
-    
-    if (!saveResponse.ok) {
-      console.error('Failed to save assessment result:', await saveResponse.text());
-    }
+    // REMOVED: Duplicate save to v2/assessments/
+    // Following unified learning architecture, we only save to evaluations
+    // The assessment results API (GET /api/assessment/results) already knows
+    // how to fetch results from evaluations (see lines 162-213 of that file)
     
     return NextResponse.json({ 
       success: true,
       evaluationId: evaluation.id,
-      score: overallScore,
-      assessmentId
+      score: overallScore
     });
   } catch (error) {
     console.error('Error completing assessment:', error);

@@ -16,7 +16,6 @@ import {
 const PROTECTED_ROUTES = [
   '/relations',
   '/assessment',
-  '/assessment/history',
   '/pbl',
   '/pbl/scenarios/job-search',
   '/pbl/history'
@@ -104,7 +103,6 @@ test.describe('受保護路由測試', () => {
     const teacherRoutes = [
       '/relations',
       '/assessment',
-      '/assessment/history', // 可能可以看所有學生的歷史
       '/pbl'
     ]
 
@@ -128,7 +126,6 @@ test.describe('受保護路由測試', () => {
     // 未登入狀態
     const deepRoutes = [
       '/pbl/scenarios/job-search/stage/1',
-      '/assessment/results/123',
       '/relations/domain/engaging-with-ai'
     ]
 

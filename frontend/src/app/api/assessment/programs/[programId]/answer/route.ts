@@ -36,25 +36,29 @@ export async function POST(
       );
     }
     
-    // For assessment tasks, the question ID is usually the task ID itself
-    // The correct answer would be stored in task metadata or content
-    const isCorrect = false; // Assessment tasks don't have predefined correct answers
+    // Get questions from task to check correct answer
+    const questions = task.content?.context?.questions || task.content?.questions || [];
+    const question = questions.find((q: any) => q.id === questionId);
+    const isCorrect = question && question.correct_answer !== undefined
+      ? String(answer) === String(question.correct_answer)
+      : false;
     
     // Add interaction
     await taskRepo.addInteraction(taskId, {
       timestamp: new Date().toISOString(),
-      type: 'user_input',
+      type: 'assessment_answer',
       content: {
         questionId,
         questionIndex,
         selectedAnswer: answer,
         isCorrect,
-        timeSpent
+        timeSpent,
+        ksa_mapping: question?.ksa_mapping || undefined
       }
     });
     
     // Update task status if first answer
-    const answers = task.interactions.filter(i => i.type === 'user_input');
+    const answers = task.interactions.filter(i => i.type === 'assessment_answer');
     if (answers.length === 0) {
       await taskRepo.updateStatus(taskId, 'active');
     }
