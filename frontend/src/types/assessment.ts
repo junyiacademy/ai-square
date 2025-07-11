@@ -130,21 +130,39 @@ export interface AssessmentDomain {
 }
 
 export interface AssessmentConfig {
+  id: string;
+  title: string;
+  description: string;
   total_questions: number;
   time_limit_minutes: number;
   passing_score: number;
-  domains: string[];
+  domains: {
+    [key: string]: {
+      description: string;
+      questions: number;
+    };
+  };
+}
+
+export interface AssessmentTask {
+  id: string;
+  title: string;
+  description: string;
+  time_limit_minutes: number;
+  questions: AssessmentQuestion[];
 }
 
 export interface AssessmentData {
   assessment_config: AssessmentConfig;
-  domains: {
+  tasks: AssessmentTask[];
+  // Legacy support - will be removed
+  domains?: {
     engaging_with_ai: AssessmentDomain;
     creating_with_ai: AssessmentDomain;
     managing_with_ai: AssessmentDomain;
     designing_with_ai: AssessmentDomain;
   };
-  questions: AssessmentQuestion[];
+  questions?: AssessmentQuestion[];
 }
 
 export interface UserAnswer {

@@ -48,7 +48,6 @@ export async function POST(
     }
     
     const body = await request.json();
-    const { taskId } = body;
     
     // Await params before using
     const { programId } = await params;
@@ -57,7 +56,7 @@ export async function POST(
     const taskRepo = getTaskRepository();
     const evaluationRepo = getEvaluationRepository();
     
-    // Get program and task
+    // Get program
     const program = await programRepo.findById(programId);
     if (!program || program.userId !== user.email) {
       return NextResponse.json(
@@ -66,28 +65,33 @@ export async function POST(
       );
     }
     
-    const task = await taskRepo.findById(taskId);
-    if (!task) {
-      return NextResponse.json(
-        { error: 'Task not found' },
-        { status: 404 }
-      );
+    // Get all tasks for this program
+    const tasks = await Promise.all(
+      program.taskIds.map(id => taskRepo.findById(id))
+    );
+    
+    // Filter out null tasks and complete all pending tasks
+    const validTasks = tasks.filter(t => t !== null);
+    for (const task of validTasks) {
+      if (task.status !== 'completed') {
+        await taskRepo.complete(task.id);
+      }
     }
     
-    // Complete the task
-    await taskRepo.complete(taskId);
+    // Collect all answers and questions from all tasks
+    let allAnswers: any[] = [];
+    let allQuestions: any[] = [];
     
-    // Calculate scores
-    const answers = task.interactions.filter(i => i.type === 'assessment_answer');
+    for (const task of validTasks) {
+      const taskAnswers = task.interactions.filter(i => i.type === 'assessment_answer');
+      const taskQuestions = task.content?.context?.questions || task.content?.questions || [];
+      
+      allAnswers = [...allAnswers, ...taskAnswers];
+      allQuestions = [...allQuestions, ...taskQuestions];
+    }
     
-    // Get actual number of questions from task content
-    const questions = task.content?.context?.questions || task.content?.questions || [];
-    const totalQuestions = questions.length > 0 ? questions.length : answers.length;
-    
-    const correctAnswers = answers.filter(a => {
-      return a.content.isCorrect === true;
-    }).length;
-    
+    const totalQuestions = allQuestions.length;
+    const correctAnswers = allAnswers.filter(a => a.content.isCorrect === true).length;
     const overallScore = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
     
     // Calculate domain scores based on actual questions and answers
@@ -111,9 +115,9 @@ export async function POST(
     });
     
     // Process each answer to calculate domain scores and collect KSA mappings
-    answers.forEach((answer: any) => {
+    allAnswers.forEach((answer: any) => {
       const questionId = answer.content.questionId;
-      const question = questions.find((q: any) => q.id === questionId);
+      const question = allQuestions.find((q: any) => q.id === questionId);
       
       if (question && question.domain) {
         const domainScore = domainScores.get(question.domain);
@@ -172,9 +176,9 @@ export async function POST(
     };
     
     // Analyze each answer to determine KSA performance
-    answers.forEach((answer: any) => {
+    allAnswers.forEach((answer: any) => {
       const questionId = answer.content.questionId;
-      const question = questions.find((q: any) => q.id === questionId);
+      const question = allQuestions.find((q: any) => q.id === questionId);
       
       if (question && question.ksa_mapping) {
         const targetKSA = answer.content.isCorrect ? correctKSA : incorrectKSA;

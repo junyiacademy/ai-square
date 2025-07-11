@@ -209,8 +209,8 @@ export async function POST(
       }
     });
     
-    // Load questions from YAML
-    let questions = [];
+    // Load questions from YAML and create tasks
+    const tasks = [];
     if (scenario.sourceRef.metadata?.configPath) {
       try {
         const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
@@ -218,48 +218,91 @@ export async function POST(
         const configContent = await fs.readFile(configPath, 'utf-8');
         const yamlData = yaml.load(configContent) as any;
         
-        // Get language-specific questions
-        questions = yamlData.questions?.map((q: any) => ({
-          id: q.id,
-          domain: q.domain,
-          question: q[`question_${language}`] || q.question,
-          options: q[`options_${language}`] || q.options,
-          difficulty: q.difficulty,
-          correct_answer: q.correct_answer,
-          explanation: q[`explanation_${language}`] || q.explanation,
-          ksa_mapping: q.ksa_mapping
-        })) || [];
+        // Check if new format with tasks
+        if (yamlData.tasks) {
+          // New format: Multiple tasks based on domains
+          for (let i = 0; i < yamlData.tasks.length; i++) {
+            const taskData = yamlData.tasks[i];
+            
+            // Get language-specific questions for this task
+            const taskQuestions = taskData.questions?.map((q: any) => ({
+              id: q.id,
+              domain: q.domain,
+              question: q[`question_${language}`] || q.question,
+              options: q[`options_${language}`] || q.options,
+              difficulty: q.difficulty,
+              correct_answer: q.correct_answer,
+              explanation: q[`explanation_${language}`] || q.explanation,
+              ksa_mapping: q.ksa_mapping
+            })) || [];
+            
+            // Create task for this domain
+            const task = await taskRepo.create({
+              programId: program.id,
+              scenarioTaskIndex: i,
+              title: taskData[`title_${language}`] || taskData.title || `Task ${i + 1}`,
+              type: 'question',
+              content: {
+                instructions: taskData[`description_${language}`] || taskData.description || 'Complete the assessment questions',
+                context: {
+                  questions: taskQuestions,
+                  timeLimit: taskData.time_limit_minutes ? taskData.time_limit_minutes * 60 : 240, // Convert to seconds
+                  language,
+                  domainId: taskData.id
+                }
+              },
+              status: i === 0 ? 'pending' : 'not_started',
+              startedAt: i === 0 ? new Date().toISOString() : undefined,
+              interactions: []
+            });
+            
+            tasks.push(task);
+          }
+        } else {
+          // Legacy format: Single task with all questions
+          const questions = yamlData.questions?.map((q: any) => ({
+            id: q.id,
+            domain: q.domain,
+            question: q[`question_${language}`] || q.question,
+            options: q[`options_${language}`] || q.options,
+            difficulty: q.difficulty,
+            correct_answer: q.correct_answer,
+            explanation: q[`explanation_${language}`] || q.explanation,
+            ksa_mapping: q.ksa_mapping
+          })) || [];
+          
+          const task = await taskRepo.create({
+            programId: program.id,
+            scenarioTaskIndex: 0,
+            title: 'Assessment Questions',
+            type: 'question',
+            content: {
+              instructions: 'Complete the assessment questions',
+              context: {
+                questions,
+                timeLimit: 900,
+                language
+              }
+            },
+            status: 'pending',
+            startedAt: new Date().toISOString(),
+            interactions: []
+          });
+          
+          tasks.push(task);
+        }
       } catch (error) {
         console.error('Error loading questions:', error);
       }
     }
     
-    // Create assessment task
-    const task = await taskRepo.create({
-      programId: program.id,
-      scenarioTaskIndex: 0,
-      title: 'Assessment Questions',
-      type: 'question',
-      content: {
-        instructions: 'Complete the assessment questions',
-        context: {
-          questions,
-          timeLimit: 900,
-          language
-        }
-      },
-      status: 'pending',
-      startedAt: new Date().toISOString(),
-      interactions: []
-    });
-    
-    // Update program with task ID
-    await programRepo.updateTaskIds(program.id, [task.id]);
+    // Update program with task IDs
+    await programRepo.updateTaskIds(program.id, tasks.map(t => t.id));
     
     return NextResponse.json({ 
       program,
-      task,
-      questionsCount: questions.length
+      tasks,
+      questionsCount: tasks.reduce((sum, t) => sum + (t.content.context?.questions?.length || 0), 0)
     });
   } catch (error) {
     console.error('Error creating program:', error);

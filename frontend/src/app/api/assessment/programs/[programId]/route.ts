@@ -56,20 +56,40 @@ export async function GET(
       );
     }
     
-    // Get current task (assessment usually has only one task)
+    // Get all tasks for the program
     const tasks = await taskRepo.findByProgram(programId);
-    const currentTask = tasks[0]; // Assessment typically has one task
     
-    if (!currentTask) {
+    if (!tasks || tasks.length === 0) {
       return NextResponse.json(
-        { error: 'No task found' },
+        { error: 'No tasks found' },
         { status: 404 }
       );
     }
     
+    // Find the current task based on currentTaskIndex
+    const currentTaskIndex = program.currentTaskIndex || 0;
+    const currentTask = tasks[currentTaskIndex] || tasks[0];
+    
+    // For backward compatibility, if there's only one task, return it as before
+    if (tasks.length === 1) {
+      return NextResponse.json({
+        program,
+        currentTask,
+        totalTasks: tasks.length
+      });
+    }
+    
+    // For multiple tasks, return more information
     return NextResponse.json({
       program,
       currentTask,
+      currentTaskIndex,
+      tasks: tasks.map(t => ({
+        id: t.id,
+        title: t.title,
+        status: t.status,
+        questionsCount: t.content?.context?.questions?.length || t.content?.questions?.length || 0
+      })),
       totalTasks: tasks.length
     });
   } catch (error) {

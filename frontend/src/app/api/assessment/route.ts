@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     const fileName = `ai_literacy_questions_${lang}.yaml`;
     const assessmentData = await contentService.getContent('question', fileName) as AssessmentData;
     
-    if (!assessmentData || !assessmentData.domains) {
+    if (!assessmentData || !assessmentData.assessment_config) {
       console.error('Invalid assessment data structure:', assessmentData);
       return NextResponse.json(
         { error: 'Invalid assessment data' },
@@ -59,31 +59,66 @@ export async function GET(request: NextRequest) {
       return translatedOptions || defaultOptions;
     };
 
-    // Process domains - names are now handled by i18n on frontend
-    const processedDomains = Object.entries(assessmentData.domains).reduce((acc, [key, domain]) => {
-      acc[key as keyof typeof assessmentData.domains] = {
-        ...domain,
-        // Domain names are now handled by i18n in frontend
-        // Using the key for consistency
-        name: key,
-        description: domain.description,
+    // Check if we have the new tasks structure
+    if (assessmentData.tasks) {
+      // New format with tasks
+      const processedTasks = assessmentData.tasks.map(task => ({
+        ...task,
+        title: getTranslatedField(task as unknown as Record<string, unknown>, 'title', lang),
+        description: getTranslatedField(task as unknown as Record<string, unknown>, 'description', lang),
+        questions: task.questions.map(question => ({
+          ...question,
+          question: getTranslatedField(question as unknown as Record<string, unknown>, 'question', lang),
+          options: getTranslatedOptions(question as unknown as Record<string, unknown>, lang),
+          explanation: getTranslatedField(question as unknown as Record<string, unknown>, 'explanation', lang),
+        }))
+      }));
+
+      const result = {
+        assessment_config: assessmentData.assessment_config,
+        tasks: processedTasks,
       };
-      return acc;
-    }, {} as typeof assessmentData.domains);
+      
+      // Store in cache
+      await cacheService.set(cacheKey, result, { ttl: 60 * 60 * 1000 }); // 1 hour
+      
+      return NextResponse.json(result, {
+        headers: {
+          'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
+          'X-Cache': 'MISS'
+        }
+      });
+    }
+    
+    // Legacy format fallback (for backward compatibility)
+    const allQuestions: any[] = [];
+    const processedDomains: any = {};
+    
+    // If old format with domains and questions at root
+    if ('domains' in assessmentData && 'questions' in assessmentData) {
+      Object.entries(assessmentData.domains).forEach(([key, domain]) => {
+        processedDomains[key] = {
+          ...domain,
+          name: key,
+          description: domain.description,
+        };
+      });
+      
+      assessmentData.questions.forEach(q => {
+        allQuestions.push({
+          ...q,
+          question: getTranslatedField(q as unknown as Record<string, unknown>, 'question', lang),
+          options: getTranslatedOptions(q as unknown as Record<string, unknown>, lang),
+          explanation: getTranslatedField(q as unknown as Record<string, unknown>, 'explanation', lang),
+        });
+      });
+    }
 
-    // Process questions with translations
-    const processedQuestions = assessmentData.questions.map(question => ({
-      ...question,
-      question: getTranslatedField(question as unknown as Record<string, unknown>, 'question', lang),
-      options: getTranslatedOptions(question as unknown as Record<string, unknown>, lang),
-      explanation: getTranslatedField(question as unknown as Record<string, unknown>, 'explanation', lang),
-    }));
-
-    // Return processed data
+    // Return legacy format
     const result = {
       assessment_config: assessmentData.assessment_config,
       domains: processedDomains,
-      questions: processedQuestions,
+      questions: allQuestions,
     };
     
     // Store in cache

@@ -6,38 +6,13 @@
 import dynamic from 'next/dynamic'
 import React from 'react'
 
-// 圖表元件 - 延遲載入
-export const DynamicRadarChart = dynamic(
-  () => import('recharts').then(mod => mod.RadarChart),
+// Domain Radar Chart - 動態載入整個組件
+export const DynamicDomainRadarChart = dynamic(
+  () => import('@/components/assessment/DomainRadarChart'),
   { 
     ssr: false,
     loading: () => <div className="h-64 flex items-center justify-center">載入圖表中...</div>
   }
-)
-
-export const DynamicPolarGrid = dynamic(
-  () => import('recharts').then(mod => mod.PolarGrid),
-  { ssr: false }
-)
-
-export const DynamicPolarAngleAxis = dynamic(
-  () => import('recharts').then(mod => mod.PolarAngleAxis),
-  { ssr: false }
-)
-
-export const DynamicPolarRadiusAxis = dynamic(
-  () => import('recharts').then(mod => mod.PolarRadiusAxis),
-  { ssr: false }
-)
-
-export const DynamicRadar = dynamic(
-  () => import('recharts').then(mod => mod.Radar),
-  { ssr: false }
-)
-
-export const DynamicResponsiveContainer = dynamic(
-  () => import('recharts').then(mod => mod.ResponsiveContainer),
-  { ssr: false }
 )
 
 // DynamicLegend - 已移除 (類型問題)

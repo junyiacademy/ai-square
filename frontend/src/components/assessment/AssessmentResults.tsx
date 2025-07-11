@@ -3,14 +3,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AssessmentResult, AssessmentDomain, RadarChartData, AssessmentQuestion, UserAnswer } from '../../types/assessment';
-import {
-  DynamicRadar as Radar,
-  DynamicRadarChart as RadarChart,
-  DynamicPolarGrid as PolarGrid,
-  DynamicPolarAngleAxis as PolarAngleAxis,
-  DynamicPolarRadiusAxis as PolarRadiusAxis,
-  DynamicResponsiveContainer as ResponsiveContainer
-} from '@/lib/dynamic-imports';
+import { DynamicDomainRadarChart } from '@/lib/dynamic-imports';
 import CompetencyKnowledgeGraph from './CompetencyKnowledgeGraph';
 import { contentService } from '@/services/content-service';
 import { formatDateWithLocale } from '@/utils/locale';
@@ -375,25 +368,7 @@ export default function AssessmentResults({ result, domains, onRetake, questions
                     {t('results.skillRadar')}
                   </h3>
                   <div className="bg-gray-50 rounded-lg p-6">
-                    <ResponsiveContainer width="100%" height={400}>
-                      <RadarChart data={radarData}>
-                        <PolarGrid />
-                        <PolarAngleAxis dataKey="domain" tick={{ fontSize: 12 }} reversed={false} scale="auto" />
-                        <PolarRadiusAxis 
-                          angle={90} 
-                          domain={[0, 100]} 
-                          tick={{ fontSize: 10 }}
-                        />
-                        <Radar
-                          name={t('results.yourScore')}
-                          dataKey="score"
-                          stroke="#4f46e5"
-                          fill="#4f46e5"
-                          fillOpacity={0.3}
-                          strokeWidth={2}
-                        />
-                      </RadarChart>
-                    </ResponsiveContainer>
+                    <DynamicDomainRadarChart data={radarData} />
                   </div>
                 </div>
 

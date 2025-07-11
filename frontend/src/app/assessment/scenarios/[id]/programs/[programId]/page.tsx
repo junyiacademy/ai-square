@@ -49,6 +49,8 @@ export default function AssessmentProgramPage({
   const [submitting, setSubmitting] = useState(false);
   const [programId, setProgramId] = useState<string>('');
   const [scenarioId, setScenarioId] = useState<string>('');
+  const [tasks, setTasks] = useState<any[]>([]);
+  const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
   const domains = {
     engaging_with_ai: { name: 'Engaging with AI', description: '', questions: 0 },
     creating_with_ai: { name: 'Creating with AI', description: '', questions: 0 },
@@ -98,6 +100,12 @@ export default function AssessmentProgramPage({
         setProgram(data.program);
         setCurrentTask(data.currentTask);
         
+        // Set tasks if available
+        if (data.tasks) {
+          setTasks(data.tasks);
+          setCurrentTaskIndex(data.currentTaskIndex || 0);
+        }
+        
         // Update language if program has language metadata
         if (data.program.metadata?.language && data.program.metadata.language !== i18n.language) {
           await i18n.changeLanguage(data.program.metadata.language);
@@ -141,20 +149,38 @@ export default function AssessmentProgramPage({
         });
       }
       
-      // Complete the assessment
-      await fetch(`/api/assessment/programs/${programId}/complete`, {
+      // Check if there are more tasks
+      const nextTaskRes = await fetch(`/api/assessment/programs/${programId}/next-task`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // Include cookies for authentication
+        credentials: 'include',
         body: JSON.stringify({
-          taskId: currentTask?.id
+          currentTaskId: currentTask?.id
         })
       });
       
-      // Navigate to complete page
-      router.push(`/assessment/scenarios/${scenarioId}/programs/${programId}/complete`);
+      const nextTaskData = await nextTaskRes.json();
+      
+      if (nextTaskData.complete) {
+        // All tasks complete, finish the assessment
+        await fetch(`/api/assessment/programs/${programId}/complete`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include'
+        });
+        
+        // Navigate to complete page
+        router.push(`/assessment/scenarios/${scenarioId}/programs/${programId}/complete`);
+      } else {
+        // Load next task
+        setCurrentTask(nextTaskData.nextTask);
+        setCurrentTaskIndex(nextTaskData.currentTaskIndex);
+        setSubmitting(false);
+      }
     } catch (error) {
       console.error('Failed to complete assessment:', error);
       setSubmitting(false); // Hide loading on error
@@ -213,14 +239,45 @@ export default function AssessmentProgramPage({
           </div>
         </div>
       ) : (
-        <AssessmentQuiz
-          questions={questions}
-          domains={domains}
-          onComplete={handleQuizComplete}
-          timeLimit={timeLimit}
-          // Pass saved answers from interactions
-          initialAnswers={currentTask.interactions
-            .filter((i: any) => i.type === 'assessment_answer')
+        <div>
+          {/* Task Progress Indicator */}
+          {tasks.length > 1 && (
+            <div className="bg-white border-b px-4 py-3">
+              <div className="max-w-4xl mx-auto">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-medium text-gray-700">
+                    Task {currentTaskIndex + 1} of {tasks.length}: {currentTask?.title}
+                  </h3>
+                  <span className="text-sm text-gray-500">
+                    {tasks[currentTaskIndex]?.questionsCount || 0} questions
+                  </span>
+                </div>
+                <div className="flex space-x-2">
+                  {tasks.map((task, index) => (
+                    <div
+                      key={task.id}
+                      className={`flex-1 h-2 rounded-full ${
+                        index < currentTaskIndex
+                          ? 'bg-green-500'
+                          : index === currentTaskIndex
+                          ? 'bg-blue-500'
+                          : 'bg-gray-200'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+          
+          <AssessmentQuiz
+            questions={questions}
+            domains={domains}
+            onComplete={handleQuizComplete}
+            timeLimit={currentTask?.content?.context?.timeLimit || timeLimit}
+            // Pass saved answers from interactions
+            initialAnswers={currentTask.interactions
+              .filter((i: any) => i.type === 'assessment_answer')
             .reduce((acc: any, i: any) => {
               acc.push({
                 questionId: i.content.questionId,
@@ -230,7 +287,8 @@ export default function AssessmentProgramPage({
               });
               return acc;
             }, [])}
-        />
+          />
+        </div>
       )}
     </main>
   );
