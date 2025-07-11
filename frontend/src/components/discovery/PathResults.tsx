@@ -91,40 +91,40 @@ export default function PathResults({
       setIsLoadingPathData(true);
       const uniquePathIds = [...new Set(savedPaths.map(sp => sp.pathData?.id).filter(Boolean))];
       
+      // Create a new cache object to avoid referencing stale state
+      const newCache: Record<string, any> = {};
+      
       // Load all path data in parallel
       const loadPromises = uniquePathIds.map(async (pathId) => {
-        if (!pathDataCache[pathId]) {
-          try {
-            const pathData = await DiscoveryYAMLLoader.loadPath(pathId, 'zhTW');
-            if (pathData) {
-              return {
-                pathId,
-                data: {
-                  id: pathId,
-                  title: pathData.metadata.title,
-                  subtitle: pathData.metadata.short_description,
-                  description: pathData.metadata.long_description,
-                  category: pathData.category,
-                  skills: pathData.metadata.skill_focus || [],
-                  aiAssistants: [],
-                  tasks: pathData.example_tasks?.beginner?.map((task: any) => ({
-                    id: task.id,
-                    title: task.title,
-                    description: task.description,
-                    duration: "20分鐘"
-                  })) || []
-                }
-              };
-            }
-          } catch (error) {
-            console.error(`Failed to load path data for ${pathId}:`, error);
+        try {
+          const pathData = await DiscoveryYAMLLoader.loadPath(pathId, 'zhTW');
+          if (pathData) {
+            return {
+              pathId,
+              data: {
+                id: pathId,
+                title: pathData.metadata.title,
+                subtitle: pathData.metadata.short_description,
+                description: pathData.metadata.long_description,
+                category: pathData.category,
+                skills: pathData.metadata.skill_focus || [],
+                aiAssistants: [],
+                tasks: pathData.example_tasks?.beginner?.map((task: any) => ({
+                  id: task.id,
+                  title: task.title,
+                  description: task.description,
+                  duration: "20分鐘"
+                })) || []
+              }
+            };
           }
+        } catch (error) {
+          console.error(`Failed to load path data for ${pathId}:`, error);
         }
         return null;
       });
 
       const results = await Promise.all(loadPromises);
-      const newCache: Record<string, any> = { ...pathDataCache };
       
       results.forEach(result => {
         if (result) {
@@ -280,10 +280,7 @@ export default function PathResults({
           };
         }
         
-        // Final fallback - trigger async load
-        // Return basic structure but trigger load in background
-        getEnhancedPathData(savedPath.pathData.id);
-        
+        // Final fallback - use saved data if available
         return {
           id: savedPath.pathData.id,
           title: savedPath.pathData.title || savedPath.pathData.id, // Use title if available
