@@ -312,7 +312,7 @@ export default function PathResults({
       otherPaths: standardPaths.slice(3),
       customPaths
     };
-  }, [savedPaths, viewMode, results]);
+  }, [savedPaths, viewMode, results, pathDataCache]);
 
   // Handle custom path generation
   const handleGenerateCustomPath = async () => {
@@ -335,7 +335,7 @@ export default function PathResults({
     }
   };
 
-  const displayPaths = getPathsToDisplay();
+  const displayPaths = React.useMemo(() => getPathsToDisplay(), [savedPaths, viewMode, pathDataCache]);
 
   // Get personality type based on highest score
   const getPersonalityType = (): string => {
@@ -648,7 +648,7 @@ export default function PathResults({
                           </div>
                           <div>
                             <h3 className="text-xl font-bold text-gray-900">
-                              {path.title}
+                              {path.title || '載入中...'}
                             </h3>
                             <p className="text-sm text-gray-500">
                               {path.category}

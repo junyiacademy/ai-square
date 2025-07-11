@@ -52,6 +52,7 @@ export default function DiscoveryPage() {
     level: 1,
     completedTasks: []
   };
+  const savedPaths = userData?.savedPaths || [];
   
   // Load saved view state
   useEffect(() => {
@@ -555,6 +556,7 @@ export default function DiscoveryPage() {
               <PathResults 
                 results={assessmentResults} 
                 onPathSelect={handlePathSelect}
+                savedPaths={savedPaths}
               />
             </motion.div>
           )}
