@@ -132,7 +132,7 @@ export default function ScenariosPage() {
   const { userData, loadUserData, addWorkspaceSession } = useUserDataV2();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [workspacesByPath, setWorkspacesByPath] = useState<Record<string, any[]>>({});
-  const [activeTab, setActiveTab] = useState<'all' | 'my'>('my');
+  const [activeTab, setActiveTab] = useState<'all' | 'my'>('all'); // Default to 'all' since v2 doesn't track discovery in userData
 
   // Load user data on mount
   useEffect(() => {
@@ -155,29 +155,15 @@ export default function ScenariosPage() {
     }
   }, [userData?.workspaceSessions]);
 
-  // Get my scenarios (from assessment results or active workspaces)
+  // Get my scenarios - in v2 architecture, discovery scenarios are tracked separately
   const getMyScenarios = () => {
-    const myScenarioIds = new Set<string>();
+    // Discovery scenarios use the unified learning architecture (v2) with Programs/Tasks
+    // They are NOT tracked in userData's savedPaths or workspaceSessions
+    // savedPaths are for assessment results, which is a different system
     
-    // Add scenarios from saved paths (assessment results)
-    if (userData?.savedPaths) {
-      userData.savedPaths.forEach(path => {
-        if (path.pathData?.id) {
-          myScenarioIds.add(path.pathData.id);
-        }
-      });
-    }
-    
-    // Add scenarios with active workspaces
-    if (userData?.workspaceSessions) {
-      userData.workspaceSessions.forEach(ws => {
-        if (ws.status === 'active' || ws.status === 'completed') {
-          myScenarioIds.add(ws.pathId);
-        }
-      });
-    }
-    
-    return careerScenarios.filter(s => myScenarioIds.has(s.id));
+    // TODO: Implement proper v2 discovery scenario tracking through Program repository
+    // For now, return empty array since v2 doesn't track discovery in userData
+    return [];
   };
 
   const myScenarios = getMyScenarios();
@@ -217,11 +203,33 @@ export default function ScenariosPage() {
       console.error('Error checking existing scenario:', error);
     }
 
-    // Generate a new UUID for the scenario (no prefix needed)
-    const scenarioUUID = crypto.randomUUID();
+    // Create a new scenario via API
+    try {
+      const sessionToken = localStorage.getItem('ai_square_session');
+      const createResponse = await fetch(`/api/discovery/scenarios`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-session-token': sessionToken || ''
+        },
+        body: JSON.stringify({ careerType, language: 'zhTW' })
+      });
+
+      if (createResponse.ok) {
+        const data = await createResponse.json();
+        if (data.scenarioId) {
+          // Navigate to the scenario created by backend
+          router.push(`/discovery/scenarios/${data.scenarioId}`);
+          return;
+        }
+      }
+    } catch (error) {
+      console.error('Error creating scenario:', error);
+    }
     
-    // Navigate to scenario detail page with UUID and pass the career type as a query param
-    router.push(`/discovery/scenarios/${scenarioUUID}?career=${careerType}`);
+    // If creation failed, show error
+    alert('Failed to create scenario. Please try again.');
   };
 
   return (
@@ -237,42 +245,8 @@ export default function ScenariosPage() {
           </p>
         </div>
 
-        {/* Tab Switcher */}
-        <div className="flex justify-center mb-6">
-          <div className="inline-flex rounded-lg p-1 bg-gray-100">
-            <button
-              onClick={() => setActiveTab('my')}
-              className={`
-                flex items-center space-x-2 px-6 py-2 rounded-md text-sm font-medium transition-all
-                ${activeTab === 'my'
-                  ? 'bg-white text-purple-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-                }
-              `}
-            >
-              <SparklesIcon className="w-4 h-4" />
-              <span>我的副本</span>
-              {myScenarios.length > 0 && (
-                <span className="ml-2 px-2 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full">
-                  {myScenarios.length}
-                </span>
-              )}
-            </button>
-            <button
-              onClick={() => setActiveTab('all')}
-              className={`
-                flex items-center space-x-2 px-6 py-2 rounded-md text-sm font-medium transition-all
-                ${activeTab === 'all'
-                  ? 'bg-white text-purple-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-                }
-              `}
-            >
-              <SparklesIcon className="w-4 h-4" />
-              <span>全部</span>
-            </button>
-          </div>
-        </div>
+        {/* Tab Switcher - Hidden for now since v2 doesn't track discovery scenarios in userData */}
+        {/* TODO: Implement proper v2 discovery scenario tracking through Program repository */}
 
         {/* Category Filters - Only show when viewing all */}
         {activeTab === 'all' && (
@@ -305,13 +279,10 @@ export default function ScenariosPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredScenarios.map((scenario, index) => {
             const Icon = scenario.icon;
-            const workspaces = workspacesByPath[scenario.id] || [];
-            const activeWorkspace = workspaces.find(ws => ws.status === 'active');
-            const completedWorkspaces = workspaces.filter(ws => ws.status === 'completed');
-            
-            // Get match percentage from saved paths
-            const savedPath = userData?.savedPaths?.find(p => p.pathData?.id === scenario.id);
-            const matchPercentage = savedPath?.matchPercentage;
+            // v2 architecture doesn't track discovery scenarios in userData
+            const activeWorkspace = null;
+            const completedWorkspaces = [];
+            const matchPercentage = null;
 
             return (
               <motion.div
@@ -373,28 +344,12 @@ export default function ScenariosPage() {
                       )}
                     </div>
 
-                    {/* Progress Info */}
-                    {workspaces.length > 0 && (
-                      <div className="pt-4 border-t border-gray-100">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-600">
-                            {completedWorkspaces.length > 0 && `${completedWorkspaces.length} 次完成`}
-                          </span>
-                          <button className="text-purple-600 hover:text-purple-700 font-medium">
-                            {activeWorkspace ? '繼續冒險' : '開始冒險'} →
-                          </button>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Start Button for New Users */}
-                    {workspaces.length === 0 && (
-                      <div className="pt-4 border-t border-gray-100">
-                        <button className="w-full py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all">
-                          開始冒險
-                        </button>
-                      </div>
-                    )}
+                    {/* Start Button */}
+                    <div className="pt-4 border-t border-gray-100">
+                      <button className="w-full py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all">
+                        開始冒險
+                      </button>
+                    </div>
                   </div>
                 </div>
               </motion.div>

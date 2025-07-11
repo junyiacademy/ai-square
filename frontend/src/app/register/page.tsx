@@ -88,6 +88,12 @@ function RegisterContent() {
 
         if (loginData.success) {
           // Authentication is now handled by cookies set in the API response
+          
+          // Store session token if provided
+          if (loginData.sessionToken) {
+            localStorage.setItem('ai_square_session', loginData.sessionToken);
+          }
+          
           window.dispatchEvent(new CustomEvent('auth-changed'));
           
           // Check if there's a redirect URL

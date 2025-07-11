@@ -33,6 +33,7 @@ export class UserDataServiceClient {
     try {
       // Get session token from localStorage
       const sessionToken = localStorage.getItem('ai_square_session');
+      console.log('[UserDataService] Loading user data, session token:', sessionToken ? 'present' : 'missing');
       
       const headers: HeadersInit = {};
       
@@ -86,6 +87,7 @@ export class UserDataServiceClient {
     try {
       // Get session token from localStorage
       const sessionToken = localStorage.getItem('ai_square_session');
+      console.log('[UserDataService] Saving user data, session token:', sessionToken ? 'present' : 'missing');
       
       const headers: HeadersInit = {
         'Content-Type': 'application/json'

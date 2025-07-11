@@ -4,9 +4,13 @@ import { gcsUserDataRepository } from '@/lib/implementations/gcs-v2/repositories
 
 export async function GET(request: NextRequest) {
   try {
+    const sessionToken = request.headers.get('x-session-token');
+    console.log('[API] GET /api/user-data - session token:', sessionToken ? 'present' : 'missing');
+    
     const user = await getAuthFromRequest(request);
     
     if (!user) {
+      console.log('[API] GET /api/user-data - authentication failed');
       return NextResponse.json(
         { error: 'Authentication required' },
         { status: 401 }
@@ -30,9 +34,13 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const sessionToken = request.headers.get('x-session-token');
+    console.log('[API] POST /api/user-data - session token:', sessionToken ? 'present' : 'missing');
+    
     const user = await getAuthFromRequest(request);
     
     if (!user) {
+      console.log('[API] POST /api/user-data - authentication failed');
       return NextResponse.json(
         { error: 'Authentication required' },
         { status: 401 }

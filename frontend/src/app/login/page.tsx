@@ -39,6 +39,11 @@ function LoginContent() {
         // Authentication is now handled by cookies set in the API response
         // No need to store in localStorage
         
+        // Store session token if provided
+        if (data.sessionToken) {
+          localStorage.setItem('ai_square_session', data.sessionToken);
+        }
+        
         // 觸發自定義事件通知 Header 更新
         window.dispatchEvent(new CustomEvent('auth-changed'))
         

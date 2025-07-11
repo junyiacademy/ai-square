@@ -14,7 +14,16 @@ import {
   LockClosedIcon,
   PlayIcon,
   ClockIcon,
-  TrophyIcon
+  TrophyIcon,
+  BriefcaseIcon,
+  CodeBracketIcon,
+  PaintBrushIcon,
+  ChartBarIcon,
+  RocketLaunchIcon,
+  CpuChipIcon,
+  VideoCameraIcon,
+  CubeIcon,
+  UserGroupIcon
 } from '@heroicons/react/24/outline';
 
 interface Task {
@@ -36,13 +45,15 @@ interface ProgramData {
   tasks: Task[];
   createdAt: string;
   lastActiveAt: string;
+  careerType?: string;
+  scenarioTitle?: string;
 }
 
 export default function ProgramDetailPage() {
   const router = useRouter();
   const params = useParams();
   const { t } = useTranslation();
-  const { user, isLoggedIn } = useAuth();
+  const { user, isLoggedIn, isLoading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const [programData, setProgramData] = useState<ProgramData | null>(null);
 
@@ -50,6 +61,11 @@ export default function ProgramDetailPage() {
   const programId = params.programId as string;
 
   useEffect(() => {
+    // Don't redirect while auth is still loading
+    if (authLoading) {
+      return;
+    }
+
     if (!isLoggedIn) {
       router.push('/login?redirect=/discovery/scenarios');
       return;
@@ -58,13 +74,17 @@ export default function ProgramDetailPage() {
     if (scenarioId && programId) {
       loadProgramData();
     }
-  }, [scenarioId, programId, isLoggedIn]);
+  }, [scenarioId, programId, isLoggedIn, authLoading]);
 
   const loadProgramData = async () => {
     try {
       setLoading(true);
+      const sessionToken = localStorage.getItem('ai_square_session');
       const response = await fetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}`, {
-        credentials: 'include'
+        credentials: 'include',
+        headers: {
+          'x-session-token': sessionToken || ''
+        }
       });
 
       if (!response.ok) {
@@ -85,7 +105,7 @@ export default function ProgramDetailPage() {
     router.push(`/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`);
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <DiscoveryPageLayout>
         <div className="max-w-4xl mx-auto px-4 py-16 text-center">
@@ -118,6 +138,78 @@ export default function ProgramDetailPage() {
     ? Math.round((programData.completedTasks / programData.totalTasks) * 100)
     : 0;
 
+  // Career info mapping
+  const careerInfo: Record<string, { title: string; icon: any; color: string; skills: string[] }> = {
+    'content_creator': {
+      title: '數位魔法師 - 內容創作者',
+      icon: PaintBrushIcon,
+      color: 'from-purple-500 to-pink-500',
+      skills: ['內容魔法', '視覺咒語', '文字煉金術', '社群召喚術']
+    },
+    'youtuber': {
+      title: '星際廣播員 - YouTuber',
+      icon: VideoCameraIcon,
+      color: 'from-red-500 to-orange-500',
+      skills: ['星際剪輯術', '觀眾心理學', '宇宙趨勢預測', '跨星系傳播']
+    },
+    'app_developer': {
+      title: '數碼建築師 - 應用程式開發者',
+      icon: CodeBracketIcon,
+      color: 'from-blue-500 to-cyan-500',
+      skills: ['程式魔法', '介面雕塑', '邏輯工程', '系統煉金術']
+    },
+    'game_designer': {
+      title: '夢境織夢師 - 遊戲設計師',
+      icon: CubeIcon,
+      color: 'from-indigo-500 to-purple-500',
+      skills: ['夢境編織', '情感調律', '平衡法則', '心理煉金術']
+    },
+    'tech_entrepreneur': {
+      title: '時空商業旅行者 - 科技創業家',
+      icon: RocketLaunchIcon,
+      color: 'from-yellow-500 to-red-500',
+      skills: ['時空商業洞察', '跨維度技術整合', '團隊召喚術', '創新預言術']
+    },
+    'startup_founder': {
+      title: '商業冒險家 - 創業家',
+      icon: BriefcaseIcon,
+      color: 'from-green-500 to-teal-500',
+      skills: ['商業嗅覺', '市場探勘', '資源煉金術', '風險航海術']
+    },
+    'data_analyst': {
+      title: '數位考古學家 - 數據分析師',
+      icon: ChartBarIcon,
+      color: 'from-teal-500 to-blue-500',
+      skills: ['數位考古術', '模式識別術', '視覺化魔法', '洞察預言術']
+    },
+    'ux_designer': {
+      title: '体驗建築師 - UX 設計師',
+      icon: SparklesIcon,
+      color: 'from-pink-500 to-purple-500',
+      skills: ['用户心理学', '体験魔法', '原型雕塑', '沟通艺术']
+    },
+    'product_manager': {
+      title: '產品指揮官 - 產品經理',
+      icon: UserGroupIcon,
+      color: 'from-orange-500 to-yellow-500',
+      skills: ['策略视野', '需求洞察', '資源配置', '團隊协調']
+    },
+    'ai_developer': {
+      title: '機器靈魂鍛造師 - AI 開發者',
+      icon: CpuChipIcon,
+      color: 'from-violet-500 to-purple-500',
+      skills: ['靈魂編碼術', '神經網絡魔法', '智慧藝術', '未來部署術']
+    }
+  };
+
+  const currentCareer = careerInfo[programData.careerType || 'unknown'] || {
+    title: programData.scenarioTitle || 'Discovery Scenario',
+    icon: SparklesIcon,
+    color: 'from-gray-500 to-gray-600',
+    skills: []
+  };
+  const CareerIcon = currentCareer.icon;
+
   return (
     <DiscoveryPageLayout>
       <div className="max-w-4xl mx-auto px-4 py-8">
@@ -129,6 +221,27 @@ export default function ProgramDetailPage() {
           <ArrowLeftIcon className="w-5 h-5" />
           <span>返回職業詳情</span>
         </button>
+
+        {/* Career Info Card */}
+        <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-6 mb-6 border border-purple-100">
+          <div className="flex items-start space-x-4">
+            <div className={`w-16 h-16 bg-gradient-to-br ${currentCareer.color} rounded-xl flex items-center justify-center flex-shrink-0`}>
+              <CareerIcon className="w-8 h-8 text-white" />
+            </div>
+            <div className="flex-1">
+              <h2 className="text-xl font-bold text-gray-900 mb-2">{currentCareer.title}</h2>
+              {currentCareer.skills.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {currentCareer.skills.map((skill, i) => (
+                    <span key={i} className="px-2 py-1 bg-white/70 text-gray-700 text-xs rounded-md">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
 
         {/* Program Header */}
         <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
@@ -194,13 +307,13 @@ export default function ProgramDetailPage() {
                 transition={{ delay: index * 0.1 }}
                 className={`
                   bg-white rounded-xl shadow-md border transition-all
-                  ${task.status === 'available' 
+                  ${(task.status === 'available' || task.status === 'active')
                     ? 'border-purple-200 hover:shadow-lg cursor-pointer' 
                     : 'border-gray-100'
                   }
                   ${task.status === 'completed' ? 'bg-gray-50' : ''}
                 `}
-                onClick={() => task.status === 'available' && handleStartTask(task.id)}
+                onClick={() => (task.status === 'available' || task.status === 'active') && handleStartTask(task.id)}
               >
                 <div className="p-6">
                   <div className="flex items-start justify-between">
@@ -210,7 +323,7 @@ export default function ProgramDetailPage() {
                         p-3 rounded-full
                         ${task.status === 'completed' 
                           ? 'bg-green-100' 
-                          : task.status === 'available'
+                          : (task.status === 'available' || task.status === 'active')
                           ? 'bg-purple-100'
                           : 'bg-gray-100'
                         }
@@ -218,10 +331,10 @@ export default function ProgramDetailPage() {
                         {task.status === 'completed' && (
                           <CheckCircleIcon className="w-6 h-6 text-green-600" />
                         )}
-                        {task.status === 'available' && (
+                        {(task.status === 'available' || task.status === 'active') && (
                           <SparklesIcon className="w-6 h-6 text-purple-600" />
                         )}
-                        {task.status === 'locked' && (
+                        {(task.status === 'locked' || task.status === 'pending') && (
                           <LockClosedIcon className="w-6 h-6 text-gray-400" />
                         )}
                       </div>
@@ -257,10 +370,10 @@ export default function ProgramDetailPage() {
                     </div>
                     
                     {/* Action Button */}
-                    {task.status === 'available' && (
+                    {(task.status === 'available' || task.status === 'active') && (
                       <button className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
                         <PlayIcon className="w-4 h-4" />
-                        <span>開始</span>
+                        <span>{task.status === 'active' ? '繼續' : '開始'}</span>
                       </button>
                     )}
                   </div>

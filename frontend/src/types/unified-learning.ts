@@ -26,6 +26,7 @@ export interface IScenario {
   description: string;
   objectives: string[];
   taskTemplates: ITaskTemplate[];  // 任務模板
+  metadata?: Record<string, unknown>;  // 儲存額外資料（如完整的 YAML 內容）
   createdAt: string;
   updatedAt: string;
 }

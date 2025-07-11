@@ -137,4 +137,14 @@ export class GCSProgramRepository<T extends IProgram = IProgram>
   async listAll(): Promise<T[]> {
     return this.listAllEntities();
   }
+
+  /**
+   * 查找特定使用者在特定場景的所有 Programs
+   */
+  async findByScenarioAndUser(scenarioId: string, userId: string): Promise<T[]> {
+    const allPrograms = await this.listAllEntities();
+    return allPrograms.filter(
+      program => program.scenarioId === scenarioId && program.userId === userId
+    );
+  }
 }

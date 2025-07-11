@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
-import { googleCloudStorageService } from '@/services/googleCloudStorage';
-import { v4 as uuidv4 } from 'uuid';
+import { 
+  getScenarioRepository,
+  getProgramRepository 
+} from '@/lib/implementations/gcs-v2';
+import { IScenario } from '@/types/unified-learning';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check session token from header first
@@ -17,138 +20,76 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const scenarioId = params.id;
+    const { id: scenarioId } = await params;
     const userEmail = session.user.email;
     
-    // Get career type from query params
-    const { searchParams } = new URL(request.url);
-    const careerType = searchParams.get('career');
+    // Get repositories
+    const scenarioRepo = getScenarioRepository();
+    const programRepo = getProgramRepository();
     
-    // First, check if this user has a scenario mapping
-    const userScenarioMappingPath = `v2/users/${userEmail}/scenario-mappings.json`;
-    let userScenarioMappings: Record<string, string> = {};
+    // Check if scenario exists
+    const scenario = await scenarioRepo.findById(scenarioId);
     
-    try {
-      const mappingData = await googleCloudStorageService.readFile(userScenarioMappingPath);
-      userScenarioMappings = JSON.parse(mappingData);
-    } catch (error) {
-      // No mapping file exists yet, that's ok
-      console.log('No user scenario mappings found, will create if needed');
-    }
-    
-    // Check if scenario data exists in GCS (flat structure)
-    const scenarioPath = `v2/scenarios/${scenarioId}.json`;
-    
-    let scenarioData;
-    
-    try {
-      // Try to read existing scenario
-      const existingData = await googleCloudStorageService.readFile(scenarioPath);
-      scenarioData = JSON.parse(existingData);
-      
-      // If career type is provided in query params and different from stored, update it
-      if (careerType && scenarioData.careerType !== careerType) {
-        scenarioData.careerType = careerType;
-        if (scenarioData.sourceRef?.metadata) {
-          scenarioData.sourceRef.metadata.careerType = careerType;
-        }
-        await googleCloudStorageService.saveFile(
-          scenarioPath,
-          JSON.stringify(scenarioData, null, 2)
-        );
-      }
-    } catch (error) {
-      // If scenario doesn't exist, create initial structure
-      console.log('Creating new scenario data for:', scenarioId);
-      
-      // Use career type from query params or try to get from user mapping
-      const resolvedCareerType = careerType || userScenarioMappings[scenarioId] || undefined;
-      
-      // Following unified learning architecture
-      scenarioData = {
-        id: scenarioId,
-        userEmail: userEmail,  // Add user ownership
-        sourceType: 'discovery',  // As per unified architecture
-        sourceRef: {
-          type: 'career',
-          sourceId: resolvedCareerType || 'unknown',
-          metadata: {
-            careerType: resolvedCareerType
-          }
-        },
-        title: `Discovery Scenario - ${resolvedCareerType || 'Unknown'}`,
-        description: `Learning scenario for ${resolvedCareerType} career path`,
-        careerType: resolvedCareerType,  // Keep for backward compatibility
-        createdAt: new Date().toISOString(),
-        lastActiveAt: new Date().toISOString()
-      };
-      
-      // Save scenario
-      await googleCloudStorageService.saveFile(
-        scenarioPath,
-        JSON.stringify(scenarioData, null, 2)
+    if (!scenario) {
+      return NextResponse.json(
+        { error: 'Scenario not found' },
+        { status: 404 }
       );
     }
     
-    // Update user scenario mapping if career type is provided
-    if (careerType && userScenarioMappings[scenarioId] !== careerType) {
-      userScenarioMappings[scenarioId] = careerType;
-      await googleCloudStorageService.saveFile(
-        userScenarioMappingPath,
-        JSON.stringify(userScenarioMappings, null, 2)
-      );
-    }
+    // Note: In v2 architecture, scenario metadata is stored in the scenario itself,
+    // not in user-specific mapping files
     
-    // If no career type in scenario data, try to get from user mapping
-    if (!scenarioData.careerType && userScenarioMappings[scenarioId]) {
-      scenarioData.careerType = userScenarioMappings[scenarioId];
-    }
+    // Load programs for this scenario and user
+    const userPrograms = await programRepo.findByScenarioAndUser(scenarioId, userEmail);
     
-    // Load programs for this user using flat structure
-    const userPrograms: any[] = [];
+    // Calculate progress for each program
+    const programsWithProgress = await Promise.all(
+      userPrograms.map(async (program) => {
+        const taskCount = program.taskIds.length;
+        const completedCount = program.status === 'completed' 
+          ? taskCount 
+          : program.currentTaskIndex;
+        
+        const progress = taskCount > 0 
+          ? Math.round((completedCount / taskCount) * 100)
+          : 0;
+        
+        return {
+          id: program.id,
+          scenarioId: program.scenarioId,
+          userId: program.userId,
+          status: program.status,
+          createdAt: program.startedAt,
+          lastActiveAt: program.completedAt || program.startedAt,
+          currentTaskIndex: program.currentTaskIndex,
+          totalTasks: taskCount,
+          completedTasks: completedCount,
+          progress,
+          totalXP: program.metadata?.totalXP || 0,
+          metadata: program.metadata
+        };
+      })
+    );
     
-    // Query all programs belonging to this scenario and user
-    try {
-      // List all program files
-      const programFiles = await googleCloudStorageService.listFiles('v2/programs/');
-      
-      // Filter and load programs for this scenario and user
-      for (const fileName of programFiles) {
-        if (fileName.endsWith('.json')) {
-          try {
-            const programData = await googleCloudStorageService.readFile(fileName);
-            const program = JSON.parse(programData);
-            
-            // Check if program belongs to this scenario and user
-            if (program.scenarioId === scenarioId && program.userEmail === userEmail) {
-              // Calculate progress
-              const progress = program.totalTasks > 0 
-                ? Math.round((program.completedTasks / program.totalTasks) * 100)
-                : 0;
-              
-              userPrograms.push({
-                ...program,
-                progress
-              });
-            }
-          } catch (error) {
-            console.error('Error loading program:', fileName, error);
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Error listing programs:', error);
-      // Continue without programs if listing fails
-    }
-    
-    // Sort programs by lastActiveAt (most recent first)
-    userPrograms.sort((a, b) => 
+    // Sort programs by most recent first
+    programsWithProgress.sort((a, b) => 
       new Date(b.lastActiveAt).getTime() - new Date(a.lastActiveAt).getTime()
     );
     
+    // Return scenario data with programs for backward compatibility
     return NextResponse.json({
-      ...scenarioData,
-      programs: userPrograms
+      id: scenario.id,
+      sourceType: scenario.sourceType,
+      sourceRef: scenario.sourceRef,
+      title: scenario.title,
+      description: scenario.description,
+      careerType: scenario.sourceRef.metadata?.careerType || 'unknown',
+      objectives: scenario.objectives,
+      metadata: scenario.metadata, // Include all YAML data stored in metadata
+      createdAt: scenario.createdAt,
+      updatedAt: scenario.updatedAt,
+      programs: programsWithProgress
     });
   } catch (error) {
     console.error('Error in GET /api/discovery/scenarios/[id]:', error);

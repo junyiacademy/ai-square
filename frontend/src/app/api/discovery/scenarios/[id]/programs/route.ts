@@ -1,103 +1,266 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
-import { googleCloudStorageService } from '@/services/googleCloudStorage';
-import { v4 as uuidv4 } from 'uuid';
+import { 
+  getProgramRepository, 
+  getTaskRepository,
+  getScenarioRepository 
+} from '@/lib/implementations/gcs-v2';
+import { IProgram, ITask } from '@/types/unified-learning';
+import { DiscoveryYAMLLoader } from '@/lib/services/discovery-yaml-loader';
+
+// Task templates for discovery scenarios
+const DISCOVERY_TASK_TEMPLATES = [
+  {
+    title: '認識你的職業角色',
+    description: '了解這個職業的核心技能、工作內容和發展前景',
+    xp: 100,
+    type: 'analysis' as const,
+    content: {
+      instructions: '研究並分析你選擇的職業角色',
+      objectives: [
+        '研究這個職業的主要工作內容',
+        '了解所需的核心技能和工具',
+        '探索職業發展的可能路徑',
+        '思考這個職業如何運用 AI 技術'
+      ],
+      completionCriteria: [
+        '描述這個職業的三個核心職責',
+        '列出五個必備技能',
+        '說明 AI 如何改變這個職業'
+      ],
+      hints: [
+        '想想這個職業在未來 5-10 年會如何演變',
+        '考慮 AI 工具如何幫助提升工作效率',
+        '思考需要哪些軟技能來補充技術能力'
+      ]
+    }
+  },
+  {
+    title: '基礎技能訓練',
+    description: '學習這個職業所需的基礎知識和工具',
+    xp: 150,
+    type: 'creation' as const,
+    content: {
+      instructions: '掌握基礎技能並完成練習',
+      objectives: [
+        '學習基本概念和術語',
+        '熟悉常用工具和平台',
+        '完成基礎練習任務'
+      ]
+    }
+  },
+  {
+    title: '實戰專案：初級挑戰',
+    description: '完成你的第一個小型專案，運用所學知識',
+    xp: 200,
+    type: 'creation' as const,
+    content: {
+      instructions: '獨立完成一個小型專案',
+      objectives: [
+        '規劃專案目標和步驟',
+        '運用所學知識實作',
+        '記錄遇到的問題和解決方案'
+      ]
+    }
+  },
+  {
+    title: '進階技能學習',
+    description: '深入學習更高級的概念和技術',
+    xp: 250,
+    type: 'analysis' as const,
+    content: {
+      instructions: '探索進階主題和技術',
+      objectives: [
+        '研究進階概念',
+        '分析實際案例',
+        '提出改進建議'
+      ]
+    }
+  },
+  {
+    title: '團隊協作任務',
+    description: '學習如何在團隊中有效溝通和協作',
+    xp: 200,
+    type: 'chat' as const,
+    content: {
+      instructions: '模擬團隊協作場景',
+      objectives: [
+        '練習溝通技巧',
+        '學習協作工具',
+        '解決團隊衝突'
+      ]
+    }
+  }
+];
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Check session token from header
-    const sessionToken = request.headers.get('x-session-token');
-    
     const session = await getServerSession();
     if (!session?.user?.email) {
-      console.log('No session found in programs POST, token:', sessionToken ? 'present' : 'missing');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const scenarioId = params.id;
+    const { id: scenarioId } = await params;
     const userEmail = session.user.email;
     
-    // Generate new program ID (no prefix needed per unified architecture)
-    const programId = uuidv4();
+    // Get repositories
+    const programRepo = getProgramRepository();
+    const taskRepo = getTaskRepository();
+    const scenarioRepo = getScenarioRepository();
     
-    // Create program metadata
-    const programData = {
-      id: programId,
+    // Verify scenario exists
+    const scenario = await scenarioRepo.findById(scenarioId);
+    if (!scenario) {
+      return NextResponse.json({ error: 'Scenario not found' }, { status: 404 });
+    }
+    
+    // Create program following unified architecture
+    const program = await programRepo.create({
       scenarioId: scenarioId,
-      userEmail: userEmail,
-      createdAt: new Date().toISOString(),
-      lastActiveAt: new Date().toISOString(),
-      status: 'active' as const,
+      userId: userEmail,
+      status: 'active',
+      startedAt: new Date().toISOString(),
+      taskIds: [],
+      currentTaskIndex: 0,
+      metadata: {
+        totalXP: 0,
+        achievements: [],
+        skillProgress: []
+      }
+    });
+    
+    // Get language from request body
+    let language = 'zhTW';
+    try {
+      const body = await request.json();
+      language = body.language || 'zhTW';
+    } catch (error) {
+      // If no body is provided, use default language
+      console.log('No body provided, using default language:', language);
+    }
+    
+    // Load YAML data based on career type and language
+    const careerType = scenario.sourceRef.metadata?.careerType;
+    let yamlData = null;
+    
+    if (careerType) {
+      yamlData = await DiscoveryYAMLLoader.loadPath(careerType, language as 'en' | 'zhTW');
+    }
+    
+    // Create tasks based on YAML data
+    const createdTasks: ITask[] = [];
+    
+    // Use YAML data if available, otherwise fall back to templates
+    if (yamlData?.example_tasks) {
+      // Get initial tasks from starting scenario
+      const startingTasks = yamlData.starting_scenario?.initial_tasks || [];
+      const beginnerTasks = yamlData.example_tasks.beginner || [];
+      const intermediateTasks = yamlData.example_tasks.intermediate || [];
+      
+      // Create tasks based on starting scenario and example tasks
+      let taskIndex = 0;
+      
+      // First, create tasks from starting scenario
+      for (const taskTitle of startingTasks.slice(0, 2)) {
+        const task = await taskRepo.create({
+          programId: program.id,
+          scenarioTaskIndex: taskIndex++,
+          title: taskTitle,
+          type: 'analysis',
+          content: {
+            instructions: yamlData.starting_scenario?.description || '',
+            context: {
+              description: yamlData.starting_scenario?.description || '',
+              xp: 100,
+              difficulty: 'beginner',
+              worldSetting: yamlData.world_setting,
+              skillFocus: yamlData.metadata.skill_focus
+            }
+          },
+          interactions: [],
+          status: taskIndex === 1 ? 'active' : 'pending'
+        });
+        createdTasks.push(task);
+      }
+      
+      // Then add some beginner and intermediate tasks
+      const selectedTasks = [
+        ...beginnerTasks.slice(0, 2),
+        ...intermediateTasks.slice(0, 1)
+      ];
+      
+      for (const exampleTask of selectedTasks) {
+        const task = await taskRepo.create({
+          programId: program.id,
+          scenarioTaskIndex: taskIndex++,
+          title: exampleTask.title,
+          type: exampleTask.type as ITask['type'],
+          content: {
+            instructions: exampleTask.description,
+            context: {
+              description: exampleTask.description,
+              xp: exampleTask.xp_reward,
+              skillsImproved: exampleTask.skills_improved,
+              difficulty: taskIndex <= 2 ? 'beginner' : 'intermediate',
+              worldSetting: yamlData.world_setting
+            }
+          },
+          interactions: [],
+          status: 'pending'
+        });
+        createdTasks.push(task);
+      }
+    } else {
+      // Fallback to default templates if no YAML data
+      for (let i = 0; i < DISCOVERY_TASK_TEMPLATES.length; i++) {
+        const template = DISCOVERY_TASK_TEMPLATES[i];
+        const task = await taskRepo.create({
+          programId: program.id,
+          scenarioTaskIndex: i,
+          title: template.title,
+          type: template.type,
+          content: {
+            instructions: template.content.instructions,
+            context: {
+              description: template.description,
+              xp: template.xp,
+              objectives: template.content.objectives,
+              completionCriteria: template.content.completionCriteria,
+              difficulty: i < 3 ? 'beginner' : i < 7 ? 'intermediate' : 'advanced'
+            }
+          },
+          interactions: [],
+          status: i === 0 ? 'active' : 'pending'
+        });
+        createdTasks.push(task);
+      }
+    }
+    
+    // Update program with task IDs
+    await programRepo.update(program.id, {
+      taskIds: createdTasks.map(t => t.id)
+    });
+    
+    // Return program data with tasks info for backward compatibility
+    const programWithTasks = {
+      ...program,
+      taskIds: createdTasks.map(t => t.id),
+      tasks: createdTasks.map(t => ({
+        id: t.id,
+        title: t.title,
+        description: t.content.context?.description || '',
+        xp: t.content.context?.xp || 0,
+        status: t.status
+      })),
+      totalTasks: createdTasks.length,
       completedTasks: 0,
-      totalTasks: 10, // Default number of tasks
-      totalXP: 0,
-      tasks: []
+      totalXP: 0
     };
     
-    // Save program in flat structure
-    await googleCloudStorageService.saveFile(
-      `v2/programs/${programId}.json`,
-      JSON.stringify(programData, null, 2)
-    );
-    
-    // Update scenario's lastActiveAt (scenarios no longer store program arrays in flat structure)
-    try {
-      const scenarioPath = `v2/scenarios/${scenarioId}.json`;
-      const scenarioDataStr = await googleCloudStorageService.readFile(scenarioPath);
-      const scenarioData = JSON.parse(scenarioDataStr);
-      
-      scenarioData.lastActiveAt = new Date().toISOString();
-      
-      await googleCloudStorageService.saveFile(
-        scenarioPath,
-        JSON.stringify(scenarioData, null, 2)
-      );
-    } catch (error) {
-      console.error('Error updating scenario lastActiveAt:', error);
-      // Continue even if scenario update fails
-    }
-    
-    // Also update user's v2 data to track this program
-    try {
-      const userPath = `v2/users/${userEmail}/discovery.json`;
-      let userDiscoveryData;
-      
-      try {
-        const existingData = await googleCloudStorageService.readFile(userPath);
-        userDiscoveryData = JSON.parse(existingData);
-      } catch {
-        userDiscoveryData = {
-          activePrograms: [],
-          completedPrograms: [],
-          totalXP: 0,
-          achievements: []
-        };
-      }
-      
-      // Add to active programs
-      if (!userDiscoveryData.activePrograms) {
-        userDiscoveryData.activePrograms = [];
-      }
-      
-      userDiscoveryData.activePrograms.push({
-        programId: programId,
-        scenarioId: scenarioId,
-        startedAt: new Date().toISOString()
-      });
-      
-      await googleCloudStorageService.saveFile(
-        userPath,
-        JSON.stringify(userDiscoveryData, null, 2)
-      );
-    } catch (error) {
-      console.error('Error updating user discovery data:', error);
-      // Continue even if user data update fails
-    }
-    
-    return NextResponse.json(programData);
+    return NextResponse.json(programWithTasks);
   } catch (error) {
     console.error('Error in POST /api/discovery/scenarios/[id]/programs:', error);
     return NextResponse.json(

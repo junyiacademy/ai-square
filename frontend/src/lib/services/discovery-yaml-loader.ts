@@ -1,4 +1,6 @@
 import yaml from 'js-yaml';
+import { promises as fs } from 'fs';
+import path from 'path';
 
 export interface DiscoveryPath {
   path_id: string;
@@ -120,21 +122,36 @@ export class DiscoveryYAMLLoader {
   private static async loadPathInternal(pathId: string, language: 'en' | 'zhTW'): Promise<DiscoveryPath | null> {
     // Simplified structure: discovery_data/{profession}/{profession}_{lang}.yml
     const filename = language === 'zhTW' ? `${pathId}_zhTW.yml` : `${pathId}_en.yml`;
-    const url = `/discovery_data/${pathId}/${filename}`;
-
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        console.warn(`Failed to load Discovery path: ${url}`);
+    
+    // Check if we're in a Node.js environment (server-side)
+    if (typeof window === 'undefined') {
+      // Server-side: read from file system
+      try {
+        const filePath = path.join(process.cwd(), 'public', 'discovery_data', pathId, filename);
+        const text = await fs.readFile(filePath, 'utf-8');
+        const data = yaml.load(text) as DiscoveryPath;
+        return data;
+      } catch (error) {
+        console.error(`Error loading Discovery path ${pathId} from filesystem:`, error);
         return null;
       }
+    } else {
+      // Client-side: fetch from public URL
+      const url = `/discovery_data/${pathId}/${filename}`;
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          console.warn(`Failed to load Discovery path: ${url}`);
+          return null;
+        }
 
-      const text = await response.text();
-      const data = yaml.load(text) as DiscoveryPath;
-      return data;
-    } catch (error) {
-      console.error(`Error loading Discovery path ${pathId}:`, error);
-      return null;
+        const text = await response.text();
+        const data = yaml.load(text) as DiscoveryPath;
+        return data;
+      } catch (error) {
+        console.error(`Error loading Discovery path ${pathId}:`, error);
+        return null;
+      }
     }
   }
 

@@ -18,7 +18,8 @@ export async function getAuthFromRequest(request: NextRequest): Promise<TokenPay
   }
 
   // Check cookies as fallback
-  const accessToken = request.cookies.get('accessToken')?.value;
+  const cookieStore = request.cookies;
+  const accessToken = cookieStore.get('accessToken')?.value;
   if (accessToken) {
     const payload = await verifyAccessToken(accessToken);
     if (payload) {
@@ -29,8 +30,10 @@ export async function getAuthFromRequest(request: NextRequest): Promise<TokenPay
   // Check for session token in header (more secure than query params)
   const sessionToken = request.headers.get('x-session-token');
   if (sessionToken) {
+    console.log('[Auth] Verifying session token...');
     const sessionData = verifySessionToken(sessionToken);
     if (sessionData) {
+      console.log('[Auth] Session token valid for user:', sessionData.email);
       // Convert session data to TokenPayload format
       return {
         userId: parseInt(sessionData.userId) || 0,
@@ -38,6 +41,27 @@ export async function getAuthFromRequest(request: NextRequest): Promise<TokenPay
         role: 'student', // Default role for session-based auth
         name: sessionData.email.split('@')[0]
       };
+    } else {
+      console.log('[Auth] Session token verification failed');
+    }
+  }
+
+  // Fallback to legacy cookies if no token authentication succeeded
+  const isLoggedIn = cookieStore.get('isLoggedIn')?.value;
+  const userCookie = cookieStore.get('user')?.value;
+  
+  if (isLoggedIn === 'true' && userCookie) {
+    try {
+      const user = JSON.parse(userCookie);
+      console.log('[Auth] Using legacy cookie auth for user:', user.email);
+      return {
+        userId: user.id || 0,
+        email: user.email,
+        role: user.role || 'student',
+        name: user.name || user.email.split('@')[0]
+      };
+    } catch (error) {
+      console.error('[Auth] Failed to parse user cookie:', error);
     }
   }
 

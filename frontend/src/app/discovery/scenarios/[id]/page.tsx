@@ -235,7 +235,8 @@ export default function ScenarioDetailPage() {
           'Content-Type': 'application/json',
           'x-session-token': sessionToken || ''
         },
-        credentials: 'include'
+        credentials: 'include',
+        body: JSON.stringify({ language: 'zhTW' })
       });
 
       if (response.status === 401) {
