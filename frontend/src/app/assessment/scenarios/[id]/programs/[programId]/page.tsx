@@ -42,7 +42,12 @@ export default function AssessmentProgramPage({
   const [submitting, setSubmitting] = useState(false);
   const [programId, setProgramId] = useState<string>('');
   const [scenarioId, setScenarioId] = useState<string>('');
-  const [domains, setDomains] = useState<Record<string, AssessmentDomain>>({});
+  const domains = {
+    engaging_with_ai: { name: 'Engaging with AI', description: '', questions: 0 },
+    creating_with_ai: { name: 'Creating with AI', description: '', questions: 0 },
+    managing_with_ai: { name: 'Managing with AI', description: '', questions: 0 },
+    designing_with_ai: { name: 'Designing with AI', description: '', questions: 0 }
+  };
   const router = useRouter();
   const { t, i18n } = useTranslation('assessment');
 
@@ -54,22 +59,6 @@ export default function AssessmentProgramPage({
       loadProgramState(p.programId);
     });
   }, [params]);
-
-  // Load assessment domains
-  useEffect(() => {
-    const fetchDomains = async () => {
-      try {
-        const response = await fetch(`/api/assessment?lang=${i18n.language}`, {
-          credentials: 'include' // Include cookies for authentication
-        });
-        const data = await response.json();
-        setDomains(data.domains || {});
-      } catch (error) {
-        console.error('Failed to fetch domains:', error);
-      }
-    };
-    fetchDomains();
-  }, [i18n.language]);
 
   const loadProgramState = async (progId: string) => {
     try {
@@ -145,7 +134,9 @@ export default function AssessmentProgramPage({
       // Complete the assessment
       await fetch(`/api/assessment/programs/${programId}/complete`, {
         method: 'POST',
-        headers,
+        headers: {
+          'Content-Type': 'application/json',
+        },
         credentials: 'include', // Include cookies for authentication
         body: JSON.stringify({
           taskId: currentTask?.id

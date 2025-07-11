@@ -191,7 +191,7 @@ export default function CompetencyKnowledgeGraph({
         name: parentCode,
         mastery: masteryStatus,
         ksaType,
-        parentCode: null,
+        parentCode: undefined,
         details: { 
           summary: ksaInfo.summary,
           explanation: ksaInfo.explanation,
@@ -230,7 +230,7 @@ export default function CompetencyKnowledgeGraph({
       // Check if this is a subcode
       const isSubcode = code.includes('.');
       const parentMatch = code.match(/^([KSA]\d+)\.(\d+)$/);
-      const parentCode = parentMatch ? parentMatch[1] : null;
+      const parentCode = parentMatch ? parentMatch[1] : undefined;
       
       // Add code node
       nodes.push({

@@ -15,10 +15,10 @@ export async function GET() {
         isConfigured: !!process.env.GOOGLE_CLOUD_PROJECT,
       },
       data: {
-        scenarios: [],
-        programs: [],
-        tasks: [],
-        evaluations: [],
+        scenarios: [] as any[],
+        programs: [] as any[],
+        tasks: [] as any[],
+        evaluations: [] as any[],
       },
       operations: {
         listScenarios: false,
@@ -91,6 +91,8 @@ export async function POST(request: Request) {
             type: 'chat',
           }
         ],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       });
       testResults.scenario = scenario;
 
@@ -99,6 +101,10 @@ export async function POST(request: Request) {
       const program = await programRepo.create({
         scenarioId: scenario.id,
         userId: 'test-user@example.com',
+        status: 'active',
+        startedAt: new Date().toISOString(),
+        taskIds: [],
+        currentTaskIndex: 0,
         metadata: { 
           testRun: true,
           createdAt: new Date().toISOString(),
@@ -115,8 +121,13 @@ export async function POST(request: Request) {
         type: 'chat',
         content: {
           instructions: 'This is a test task',
-          testData: true,
+          context: {
+            testData: true,
+          },
         },
+        status: 'pending',
+        startedAt: new Date().toISOString(),
+        interactions: []
       });
       testResults.task = task;
 
@@ -140,6 +151,7 @@ export async function POST(request: Request) {
           programId: program.id,
           automated: true,
         },
+        createdAt: new Date().toISOString(),
       });
       testResults.evaluation = evaluation;
 

@@ -29,7 +29,7 @@ export async function GET(
     if (scenario.sourceRef.metadata?.configPath) {
       try {
         const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
-        const configPath = path.join(baseDir, 'public', scenario.sourceRef.metadata.configPath);
+        const configPath = path.join(baseDir, 'public', scenario.sourceRef.metadata.configPath as string);
         const configContent = await fs.readFile(configPath, 'utf-8');
         const yamlData = yaml.load(configContent) as any;
         

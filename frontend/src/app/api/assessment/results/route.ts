@@ -175,7 +175,7 @@ export async function GET(request: NextRequest) {
           // Get evaluations for completed programs
           for (const program of assessmentPrograms) {
             if (program.metadata?.evaluationId) {
-              const evaluation = await evaluationRepo.findById(program.metadata.evaluationId);
+              const evaluation = await evaluationRepo.findById(program.metadata.evaluationId as string);
               if (evaluation && evaluation.evaluationType === 'assessment_complete') {
                 // Convert evaluation to assessment result format
                 const assessmentResult: AssessmentResultGCS = {
@@ -183,16 +183,21 @@ export async function GET(request: NextRequest) {
                   user_id: userId,
                   user_email: userEmail,
                   timestamp: evaluation.createdAt,
-                  duration_seconds: evaluation.metadata?.completionTime || 0,
-                  language: program.metadata?.language || 'en',
+                  duration_seconds: (evaluation.metadata?.completionTime as number) || 0,
+                  language: (program.metadata?.language as string) || 'en',
                   scores: {
-                    overall: evaluation.score,
-                    domains: evaluation.metadata?.domainScores || {},
+                    overall: evaluation.score || 0,
+                    domains: {
+                      engaging_with_ai: ((evaluation.metadata?.domainScores as any)?.Engaging_with_AI as number) || 0,
+                      creating_with_ai: ((evaluation.metadata?.domainScores as any)?.Creating_with_AI as number) || 0,
+                      managing_with_ai: ((evaluation.metadata?.domainScores as any)?.Managing_with_AI as number) || 0,
+                      designing_with_ai: ((evaluation.metadata?.domainScores as any)?.Designing_with_AI as number) || 0,
+                    },
                   },
                   summary: {
-                    total_questions: evaluation.metadata?.totalQuestions || 0,
-                    correct_answers: evaluation.metadata?.correctAnswers || 0,
-                    level: evaluation.metadata?.level || 'beginner',
+                    total_questions: (evaluation.metadata?.totalQuestions as number) || 0,
+                    correct_answers: (evaluation.metadata?.correctAnswers as number) || 0,
+                    level: (evaluation.metadata?.level as string) || 'beginner',
                   },
                   answers: [] // Answers are stored in task interactions, not in evaluation
                 };

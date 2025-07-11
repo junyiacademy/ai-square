@@ -62,7 +62,7 @@ export async function GET(
     if (scenario && scenario.sourceType === 'assessment') {
       // For assessment scenarios, show all completed assessments from this user
       userPrograms = allUserPrograms.filter(p => 
-        p.status === 'completed' && p.score !== undefined
+        p.status === 'completed' && p.metadata?.score !== undefined
       );
     } else {
       // For non-assessment scenarios, only show programs for this specific scenario
@@ -87,7 +87,7 @@ export async function GET(
     const evaluationsMap = new Map();
     if (evaluationIds.length > 0) {
       const evaluations = await Promise.all(
-        evaluationIds.map(id => evaluationRepo.findById(id).catch(() => null))
+        evaluationIds.map(id => evaluationRepo.findById(id as string).catch(() => null))
       );
       evaluationIds.forEach((id, index) => {
         if (evaluations[index]) {
@@ -106,7 +106,7 @@ export async function GET(
       // For active programs, we might need task count, but skip for now to improve performance
       const enrichedProgram = {
         ...program,
-        score: evaluation?.score || program.score,
+        score: evaluation?.score || program.metadata?.score || 0,
         metadata: {
           ...program.metadata,
           questionsAnswered: program.metadata?.questionsAnswered || 0,
@@ -183,6 +183,10 @@ export async function POST(
     const program = await programRepo.create({
       scenarioId: id,
       userId: email,
+      status: 'active',
+      startedAt: new Date().toISOString(),
+      taskIds: [],
+      currentTaskIndex: 0,
       metadata: {
         language,
         startTime: Date.now(),
@@ -196,7 +200,7 @@ export async function POST(
     if (scenario.sourceRef.metadata?.configPath) {
       try {
         const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
-        const configPath = path.join(baseDir, 'public', scenario.sourceRef.metadata.configPath);
+        const configPath = path.join(baseDir, 'public', scenario.sourceRef.metadata.configPath as string);
         const configContent = await fs.readFile(configPath, 'utf-8');
         const yamlData = yaml.load(configContent) as any;
         
@@ -221,12 +225,18 @@ export async function POST(
       programId: program.id,
       scenarioTaskIndex: 0,
       title: 'Assessment Questions',
-      type: 'assessment',
+      type: 'question',
       content: {
-        questions,
-        timeLimit: 900,
-        language
-      }
+        instructions: 'Complete the assessment questions',
+        context: {
+          questions,
+          timeLimit: 900,
+          language
+        }
+      },
+      status: 'pending',
+      startedAt: new Date().toISOString(),
+      interactions: []
     });
     
     // Update program with task ID

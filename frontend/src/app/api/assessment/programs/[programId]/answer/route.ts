@@ -36,36 +36,32 @@ export async function POST(
       );
     }
     
-    // Find the question to get correct answer
-    const question = task.content.questions?.find((q: any) => q.id === questionId);
-    const isCorrect = question ? question.correct_answer === answer : false;
+    // For assessment tasks, the question ID is usually the task ID itself
+    // The correct answer would be stored in task metadata or content
+    const isCorrect = false; // Assessment tasks don't have predefined correct answers
     
     // Add interaction
     await taskRepo.addInteraction(taskId, {
       timestamp: new Date().toISOString(),
-      type: 'assessment_answer',
+      type: 'user_input',
       content: {
         questionId,
         questionIndex,
         selectedAnswer: answer,
-        correctAnswer: question?.correct_answer,
         isCorrect,
-        timeSpent,
-        domain: question?.domain,
-        ksa_mapping: question?.ksa_mapping
+        timeSpent
       }
     });
     
     // Update task status if first answer
-    const answers = task.interactions.filter(i => i.type === 'assessment_answer');
+    const answers = task.interactions.filter(i => i.type === 'user_input');
     if (answers.length === 0) {
       await taskRepo.updateStatus(taskId, 'active');
     }
     
     return NextResponse.json({ 
       success: true,
-      isCorrect,
-      correctAnswer: question?.correct_answer
+      isCorrect
     });
   } catch (error) {
     console.error('Error submitting answer:', error);

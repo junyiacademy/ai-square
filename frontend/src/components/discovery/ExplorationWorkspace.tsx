@@ -33,7 +33,7 @@ import {
   MentorFeedback,
   DEFAULT_EVALUATION_CRITERIA 
 } from '@/types/evaluation-system';
-import { UserDataService } from '@/lib/services/user-data-service';
+import { useUserDataV2 } from '@/hooks/useUserDataV2';
 import { DiscoveryService } from '@/lib/services/discovery-service';
 import type { SavedPathData, DynamicTask } from '@/lib/services/user-data-service';
 
@@ -110,7 +110,14 @@ export default function ExplorationWorkspace({
   const [isTyping, setIsTyping] = useState(false);
   const [showWorkflow, setShowWorkflow] = useState(false);
   const [activeEvaluationView, setActiveEvaluationView] = useState<'self' | 'peer' | 'mentor' | null>(null);
-  const [userDataService] = useState(() => new UserDataService());
+  const { 
+    userData,
+    loadUserData,
+    saveUserData,
+    getTaskAnswer,
+    saveTaskAnswer,
+    saveEvaluation 
+  } = useUserDataV2();
   const [discoveryService] = useState(() => new DiscoveryService());
   const [taskAnswers, setTaskAnswers] = useState<Record<string, any>>({});
   const [currentTaskAnswer, setCurrentTaskAnswer] = useState<string>('');
@@ -131,7 +138,7 @@ export default function ExplorationWorkspace({
     const loadPathData = async () => {
       // Check if this is a custom path (starts with 'path_')
       if (pathId.startsWith('path_')) {
-        const userData = await userDataService.loadUserData();
+        await loadUserData();
         if (userData) {
           const customPath = userData.savedPaths.find(p => p.id === pathId);
           if (customPath) {
@@ -147,13 +154,13 @@ export default function ExplorationWorkspace({
     };
     
     loadPathData();
-  }, [pathId, userDataService, discoveryService]);
+  }, [pathId, loadUserData, userData, discoveryService]);
 
   // Load workspace completed tasks
   useEffect(() => {
     const loadWorkspaceData = async () => {
       if (workspaceId) {
-        const userData = await userDataService.loadUserData();
+        await loadUserData();
         if (userData) {
           const workspace = userData.workspaceSessions.find(ws => ws.id === workspaceId);
           if (workspace) {
@@ -165,7 +172,7 @@ export default function ExplorationWorkspace({
       }
     };
     loadWorkspaceData();
-  }, [workspaceId, userDataService]);
+  }, [workspaceId, loadUserData, userData]);
 
   // Initialize AI greeting - only when pathId changes
   useEffect(() => {
@@ -699,7 +706,7 @@ export default function ExplorationWorkspace({
           
           // Load all task answers for this workspace
           for (const task of typedPathData.tasks) {
-            const answer = await userDataService.getTaskAnswer(workspaceId, task.id);
+            const answer = await getTaskAnswer(workspaceId, task.id);
             if (answer) {
               answers[task.id] = answer;
             }
@@ -716,7 +723,7 @@ export default function ExplorationWorkspace({
           }
           
           // Load workspace data and update completed tasks
-          const userData = await userDataService.loadUserData();
+          await loadUserData();
           if (userData) {
             const workspace = userData.workspaceSessions.find(ws => ws.id === workspaceId);
             if (workspace) {
@@ -749,7 +756,7 @@ export default function ExplorationWorkspace({
                 if (workspaceIndex !== -1) {
                   userData.workspaceSessions[workspaceIndex].status = newStatus;
                   userData.workspaceSessions[workspaceIndex].lastActiveAt = new Date().toISOString();
-                  await userDataService.saveUserData(userData);
+                  await saveUserData(userData);
                 }
               }
             }
@@ -771,7 +778,7 @@ export default function ExplorationWorkspace({
     };
     
     performOperations();
-  }, [typedPathData, workspaceId, currentTaskIndex, userDataService, t, dynamicTasks.length]);
+  }, [typedPathData, workspaceId, currentTaskIndex, loadUserData, userData, saveUserData, getTaskAnswer, t, dynamicTasks.length]);
 
 
 
@@ -810,7 +817,7 @@ export default function ExplorationWorkspace({
       // If editing a completed task, load the answer if not already loaded
       if (!taskAnswers[currentTask.id] && workspaceId) {
         setIsLoadingAnswer(true);
-        const answer = await userDataService.getTaskAnswer(workspaceId, currentTask.id);
+        const answer = await getTaskAnswer(workspaceId, currentTask.id);
         
         if (answer) {
           setTaskAnswers(prev => ({
@@ -906,13 +913,13 @@ export default function ExplorationWorkspace({
       console.log('Task saved successfully');
       
       // Update workspace status back to 'active' since we have new tasks
-      const userData = await userDataService.loadUserData();
+      await loadUserData();
       if (userData && workspaceId) {
         const workspaceIndex = userData.workspaceSessions.findIndex(ws => ws.id === workspaceId);
         if (workspaceIndex !== -1) {
           userData.workspaceSessions[workspaceIndex].status = 'active';
           userData.workspaceSessions[workspaceIndex].lastActiveAt = new Date().toISOString();
-          await userDataService.saveUserData(userData);
+          await saveUserData(userData);
         }
       }
       
@@ -962,7 +969,7 @@ export default function ExplorationWorkspace({
         submittedAt: new Date().toISOString()
       };
       
-      await userDataService.saveTaskAnswer(workspaceId, answer);
+      await saveTaskAnswer(workspaceId, answer);
       
       setTaskAnswers(prev => ({
         ...prev,
@@ -1079,7 +1086,7 @@ export default function ExplorationWorkspace({
         
         // Try to load answer from storage
         if (workspaceId) {
-          const answer = await userDataService.getTaskAnswer(workspaceId, task.id);
+          const answer = await getTaskAnswer(workspaceId, task.id);
           if (answer) {
             setTaskAnswers(prev => ({
               ...prev,
@@ -1196,7 +1203,7 @@ export default function ExplorationWorkspace({
         submittedAt: new Date().toISOString()
       };
       
-      await userDataService.saveEvaluation('self_assessments', fullAssessment.id, fullAssessment);
+      await saveEvaluation('self_assessments', fullAssessment.id, fullAssessment);
       setActiveEvaluationView(null);
       
       // Add success message to chat
@@ -1220,7 +1227,7 @@ export default function ExplorationWorkspace({
         submittedAt: new Date().toISOString()
       };
       
-      await userDataService.saveEvaluation('self_assessments_drafts', draftAssessment.id, draftAssessment);
+      await saveEvaluation('self_assessments_drafts', draftAssessment.id, draftAssessment);
     } catch (error) {
       console.error('Failed to save self assessment draft:', error);
     }
@@ -1234,7 +1241,7 @@ export default function ExplorationWorkspace({
         submittedAt: new Date().toISOString()
       };
       
-      await userDataService.saveEvaluation('peer_reviews', fullReview.id, fullReview);
+      await saveEvaluation('peer_reviews', fullReview.id, fullReview);
       setActiveEvaluationView(null);
       
       // Add success message to chat
@@ -1258,7 +1265,7 @@ export default function ExplorationWorkspace({
         submittedAt: new Date().toISOString()
       };
       
-      await userDataService.saveEvaluation('mentor_feedback', fullFeedback.id, fullFeedback);
+      await saveEvaluation('mentor_feedback', fullFeedback.id, fullFeedback);
       setActiveEvaluationView(null);
       
       // Add success message to chat
@@ -1282,7 +1289,7 @@ export default function ExplorationWorkspace({
         submittedAt: new Date().toISOString()
       };
       
-      await userDataService.saveEvaluation('mentor_feedback_drafts', draftFeedback.id, draftFeedback);
+      await saveEvaluation('mentor_feedback_drafts', draftFeedback.id, draftFeedback);
     } catch (error) {
       console.error('Failed to save mentor feedback draft:', error);
     }
@@ -2262,13 +2269,13 @@ export default function ExplorationWorkspace({
                   onClick={async () => {
                     setShowCompletionDialog(false);
                     // Ensure workspace status stays active when generating new tasks
-                    const userData = await userDataService.loadUserData();
+                    await loadUserData();
                     if (userData && workspaceId) {
                       const workspaceIndex = userData.workspaceSessions.findIndex(ws => ws.id === workspaceId);
                       if (workspaceIndex !== -1) {
                         userData.workspaceSessions[workspaceIndex].status = 'active';
                         userData.workspaceSessions[workspaceIndex].lastActiveAt = new Date().toISOString();
-                        await userDataService.saveUserData(userData);
+                        await saveUserData(userData);
                       }
                     }
                     generateNextTask();

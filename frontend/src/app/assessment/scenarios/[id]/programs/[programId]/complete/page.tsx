@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import AssessmentResults from '@/components/assessment/AssessmentResults';
-import { AssessmentResult, AssessmentData, UserAnswer } from '@/types/assessment';
+import { AssessmentResult, AssessmentData, UserAnswer, DomainScores } from '@/types/assessment';
 interface Evaluation {
   id: string;
   score: number;
@@ -147,14 +147,25 @@ export default function AssessmentCompletePage({
   }
 
   // Convert evaluation to AssessmentResult format
+  const defaultDomainScores: DomainScores = {
+    engaging_with_ai: 0,
+    creating_with_ai: 0,
+    managing_with_ai: 0,
+    designing_with_ai: 0
+  };
+  
+  const domainScores = evaluation.metadata?.domainScores 
+    ? {
+        engaging_with_ai: evaluation.metadata.domainScores.engaging_with_ai || 0,
+        creating_with_ai: evaluation.metadata.domainScores.creating_with_ai || 0,
+        managing_with_ai: evaluation.metadata.domainScores.managing_with_ai || 0,
+        designing_with_ai: evaluation.metadata.domainScores.designing_with_ai || 0
+      }
+    : defaultDomainScores;
+    
   const assessmentResult: AssessmentResult = {
     overallScore: evaluation.score,
-    domainScores: evaluation.metadata?.domainScores || {
-      engaging_with_ai: 0,
-      creating_with_ai: 0,
-      managing_with_ai: 0,
-      designing_with_ai: 0
-    },
+    domainScores,
     totalQuestions: evaluation.metadata?.totalQuestions || 0,
     correctAnswers: evaluation.metadata?.correctAnswers || 0,
     timeSpentSeconds: evaluation.metadata?.completionTime || 0,

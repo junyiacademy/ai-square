@@ -7,7 +7,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from './useAuth';
-import { UserDataServiceV2, createUserDataService } from '@/lib/services/user-data-service-v2';
+import { UserDataServiceClient, createUserDataServiceClient } from '@/lib/services/user-data-service-client';
 import type { 
   UserData, 
   AssessmentResults, 
@@ -67,7 +67,7 @@ export function useUserDataV2(): UseUserDataV2Return {
   const [error, setError] = useState<string | null>(null);
   
   // Keep reference to current service
-  const serviceRef = useRef<UserDataServiceV2 | null>(null);
+  const serviceRef = useRef<UserDataServiceClient | null>(null);
   
   // Get or create service
   const getService = useCallback(() => {
@@ -75,9 +75,9 @@ export function useUserDataV2(): UseUserDataV2Return {
       return null;
     }
     
-    // Create new service if user changed or doesn't exist
-    if (!serviceRef.current || serviceRef.current['userId'] !== user.id.toString()) {
-      serviceRef.current = createUserDataService(user.id.toString(), user.email);
+    // Create new service if doesn't exist (client service doesn't need userId)
+    if (!serviceRef.current) {
+      serviceRef.current = createUserDataServiceClient();
     }
     
     return serviceRef.current;
@@ -128,7 +128,7 @@ export function useUserDataV2(): UseUserDataV2Return {
   
   // Wrap all service methods to handle errors and update local state
   const wrapServiceMethod = useCallback(<T extends any[], R>(
-    method: (service: UserDataServiceV2, ...args: T) => Promise<R>
+    method: (service: UserDataServiceClient, ...args: T) => Promise<R>
   ) => {
     return async (...args: T): Promise<R> => {
       const service = getService();

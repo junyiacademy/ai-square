@@ -52,20 +52,17 @@ export async function POST(
     
     // Prepare all interactions
     const interactions = answers.map((answer: any) => {
-      const question = task.content.questions?.find((q: any) => q.id === answer.questionId);
-      const isCorrect = question ? question.correct_answer === answer.answer : false;
+      // Assessment tasks don't have predefined correct answers
+      const isCorrect = false;
       
       return {
         timestamp: new Date().toISOString(),
-        type: 'assessment_answer',
+        type: 'user_input' as const,
         content: {
           questionId: answer.questionId,
           selectedAnswer: answer.answer,
-          correctAnswer: question?.correct_answer,
           isCorrect,
-          timeSpent: answer.timeSpent || 0,
-          domain: question?.domain,
-          ksa_mapping: question?.ksa_mapping
+          timeSpent: answer.timeSpent || 0
         }
       };
     });

@@ -120,7 +120,7 @@ export async function GET(request: NextRequest) {
             scenario = await scenarioRepo.create({
               sourceType: 'assessment',
               sourceRef: {
-                type: 'structured',
+                type: 'yaml',
                 sourceId: `assessment-${folderName}`,
                 metadata: {
                   assessmentType: 'standard',
@@ -138,8 +138,10 @@ export async function GET(request: NextRequest) {
               taskTemplates: [{
                 id: 'assessment-task',
                 title: 'Complete Assessment',
-                type: 'assessment',
-              }]
+                type: 'question',
+              }],
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
             });
           }
           
