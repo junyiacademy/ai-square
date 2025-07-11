@@ -184,6 +184,13 @@ export default function AssessmentProgramPage({
         router.push(`/assessment/scenarios/${scenarioId}/programs/${programId}/complete`);
       } else {
         // Load next task
+        console.log('Next task data:', nextTaskData.nextTask);
+        console.log('Next task questions:', {
+          hasContent: !!nextTaskData.nextTask?.content,
+          hasContext: !!nextTaskData.nextTask?.content?.context,
+          questionsInContext: nextTaskData.nextTask?.content?.context?.questions?.length || 0,
+          questionsDirectly: nextTaskData.nextTask?.content?.questions?.length || 0
+        });
         setCurrentTask(nextTaskData.nextTask);
         setCurrentTaskIndex(nextTaskData.currentTaskIndex);
         setSubmitting(false);

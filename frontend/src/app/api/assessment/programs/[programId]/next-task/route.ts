@@ -48,6 +48,9 @@ export async function POST(
     const currentIndex = program.currentTaskIndex || 0;
     const nextIndex = currentIndex + 1;
     
+    console.log('Tasks loaded:', tasks.length);
+    console.log('Moving from task', currentIndex, 'to', nextIndex);
+    
     // Check if there are more tasks
     if (nextIndex >= tasks.length) {
       // No more tasks, assessment is complete
@@ -63,13 +66,22 @@ export async function POST(
     });
     
     // Start the next task
-    const nextTask = tasks[nextIndex];
+    let nextTask = tasks[nextIndex];
     if (nextTask && nextTask.status === 'not_started') {
       await taskRepo.update(nextTask.id, {
         status: 'pending',
         startedAt: new Date().toISOString()
       });
+      // Re-fetch to get updated task
+      nextTask = await taskRepo.findById(nextTask.id);
     }
+    
+    console.log('Next task details:', {
+      id: nextTask?.id,
+      title: nextTask?.title,
+      hasContent: !!nextTask?.content,
+      questionsCount: nextTask?.content?.context?.questions?.length || nextTask?.content?.questions?.length || 0
+    });
     
     return NextResponse.json({
       complete: false,

@@ -30,6 +30,24 @@ export default function AssessmentQuiz({ questions, onComplete, timeLimit, initi
   const currentQuestion = questions[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
 
+  // Reset state when questions change (new task)
+  useEffect(() => {
+    // Check if this is a different set of questions (new task)
+    const firstQuestionId = questions[0]?.id;
+    const isNewTask = firstQuestionId && answers.length > 0 && !answers.some(a => a.questionId === firstQuestionId);
+    
+    if (isNewTask || (questions.length > 0 && currentQuestionIndex >= questions.length)) {
+      console.log('Resetting quiz state for new task');
+      setCurrentQuestionIndex(0);
+      setAnswers([]);
+      setSelectedAnswer(null);
+      setShowExplanation(false);
+      setHasAnswered(false);
+      setQuestionStartTime(new Date());
+      setTimeLeft(timeLimit * 60);
+    }
+  }, [questions]); // Remove timeLimit to avoid unnecessary resets
+
   // Check if current question is already answered
   useEffect(() => {
     if (!currentQuestion) return;
