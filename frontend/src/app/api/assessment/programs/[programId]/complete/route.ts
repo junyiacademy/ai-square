@@ -71,6 +71,49 @@ export async function POST(
       );
     }
     
+    // Check if program is already completed
+    if (program.status === 'completed' && program.metadata?.evaluationId) {
+      console.log('Program already completed with evaluation:', program.metadata.evaluationId);
+      
+      // Return existing evaluation instead of creating a new one
+      const existingEvaluation = await evaluationRepo.findById(program.metadata.evaluationId);
+      if (existingEvaluation) {
+        return NextResponse.json({ 
+          success: true,
+          evaluationId: existingEvaluation.id,
+          score: existingEvaluation.score,
+          alreadyCompleted: true
+        });
+      }
+    }
+    
+    // Also check if there's already an evaluation for this program
+    const existingEvaluations = await evaluationRepo.findByTarget('program', programId);
+    const existingAssessmentEval = existingEvaluations.find(e => e.evaluationType === 'assessment_complete');
+    
+    if (existingAssessmentEval) {
+      console.log('Found existing evaluation for program:', existingAssessmentEval.id);
+      
+      // Update program to mark as completed if not already
+      if (program.status !== 'completed') {
+        await programRepo.update(programId, { 
+          metadata: {
+            ...program.metadata,
+            evaluationId: existingAssessmentEval.id,
+            score: existingAssessmentEval.score
+          }
+        });
+        await programRepo.complete(programId);
+      }
+      
+      return NextResponse.json({ 
+        success: true,
+        evaluationId: existingAssessmentEval.id,
+        score: existingAssessmentEval.score,
+        alreadyCompleted: true
+      });
+    }
+    
     // Get all tasks for this program
     const tasks = await Promise.all(
       program.taskIds.map(id => taskRepo.findById(id))
