@@ -42,7 +42,19 @@ function LoginContent() {
         // 觸發自定義事件通知 Header 更新
         window.dispatchEvent(new CustomEvent('auth-changed'))
         
-        // Check onboarding status from user data (from GCS via login response)
+        // Check if there's a redirect URL
+        const redirectUrl = searchParams.get('redirect')
+        
+        if (redirectUrl) {
+          // Validate redirect URL to prevent open redirect vulnerabilities
+          const isValidRedirect = redirectUrl.startsWith('/') && !redirectUrl.startsWith('//')
+          if (isValidRedirect) {
+            router.push(redirectUrl)
+            return
+          }
+        }
+        
+        // Default navigation based on onboarding status
         const onboarding = data.user.onboarding || {};
         const hasAssessment = data.user.assessmentCompleted || false;
         
@@ -102,7 +114,10 @@ function LoginContent() {
         <div className="bg-blue-50 rounded-lg p-4 text-center">
           <p className="text-sm text-gray-700">
             {t('dontHaveAccount', "Don't have an account?")}{' '}
-            <a href="/register" className="font-semibold text-blue-600 hover:text-blue-700 underline">
+            <a 
+              href={searchParams.get('redirect') ? `/register?redirect=${encodeURIComponent(searchParams.get('redirect')!)}` : '/register'} 
+              className="font-semibold text-blue-600 hover:text-blue-700 underline"
+            >
               {t('createAccount', 'Create one')}
             </a>
           </p>

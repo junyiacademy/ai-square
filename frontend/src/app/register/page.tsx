@@ -1,13 +1,14 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import Image from 'next/image';
 
-export default function RegisterPage() {
+function RegisterContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { t } = useTranslation(['auth', 'common']);
   const [formData, setFormData] = useState({
     name: '',
@@ -88,6 +89,20 @@ export default function RegisterPage() {
         if (loginData.success) {
           // Authentication is now handled by cookies set in the API response
           window.dispatchEvent(new CustomEvent('auth-changed'));
+          
+          // Check if there's a redirect URL
+          const redirectUrl = searchParams.get('redirect');
+          
+          if (redirectUrl) {
+            // Validate redirect URL to prevent open redirect vulnerabilities
+            const isValidRedirect = redirectUrl.startsWith('/') && !redirectUrl.startsWith('//');
+            if (isValidRedirect) {
+              router.push(redirectUrl);
+              return;
+            }
+          }
+          
+          // Default to onboarding
           router.push('/onboarding/welcome');
         }
       } else {
@@ -131,7 +146,10 @@ export default function RegisterPage() {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
             {t('auth:register.subtitle')}{' '}
-            <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
+            <Link 
+              href={searchParams.get('redirect') ? `/login?redirect=${encodeURIComponent(searchParams.get('redirect')!)}` : '/login'} 
+              className="font-medium text-blue-600 hover:text-blue-500"
+            >
               {t('auth:register.signIn')}
             </Link>
           </p>
@@ -321,5 +339,13 @@ export default function RegisterPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100" />}>
+      <RegisterContent />
+    </Suspense>
   );
 }
