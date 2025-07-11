@@ -10,311 +10,323 @@ assessment_config:
   time_limit_minutes: 15
   passing_score: 60
   domains:
-    - engaging_with_ai
-    - creating_with_ai
-    - managing_with_ai
-    - designing_with_ai
+    engaging_with_ai:
+      description: "[TRANSLATE] Understanding and effectively communicating with AI systems"
+      questions: 3
+    creating_with_ai:
+      description: "[TRANSLATE] Using AI tools to enhance creativity and productivity"
+      questions: 3
+    managing_with_ai:
+      description: "[TRANSLATE] Understanding AI limitations, privacy, and ethical considerations"
+      questions: 3
+    designing_with_ai:
+      description: "[TRANSLATE] Strategic thinking about AI implementation and innovation"
+      questions: 3
 
-domains:
-  engaging_with_ai:
+tasks:
+  - id: engaging_with_ai
+    title: "[TRANSLATE] Engaging with AI Systems"
     description: "[TRANSLATE] Understanding and effectively communicating with AI systems"
-    questions: 3
-  creating_with_ai:
+    time_limit_minutes: 4
+    questions:
+      # ENGAGING WITH AI - Question 1
+      - id: E001
+        domain: engaging_with_ai
+        difficulty: basic
+        type: multiple_choice
+        correct_answer: b
+        question: "[TRANSLATE] What is the most effective way to get better results from an AI chatbot?"
+        options:
+          a: "[TRANSLATE] Ask very general questions"
+          b: "[TRANSLATE] Provide clear, specific prompts with context"
+          c: "[TRANSLATE] Use only yes/no questions"
+          d: "[TRANSLATE] Always ask multiple questions at once"
+        explanation: "[TRANSLATE] Clear, specific prompts with context help AI understand your request accurately and provide more accurate, useful responses."
+        ksa_mapping:
+          knowledge:
+            - K1.1
+            - K1.2
+          skills:
+            - S1.1
+          attitudes:
+            - A1.1
+
+      # ENGAGING WITH AI - Question 2
+      - id: E002
+        domain: engaging_with_ai
+        difficulty: intermediate
+        type: multiple_choice
+        correct_answer: b
+        question: "[TRANSLATE] When an AI gives you an incorrect answer, what should be your first response?"
+        options:
+          a: "[TRANSLATE] Immediately trust the AI and use the information"
+          b: "[TRANSLATE] Verify the information through other reliable sources"
+          c: "[TRANSLATE] Stop using AI altogether"
+          d: "[TRANSLATE] Report the AI as broken"
+        explanation: "[TRANSLATE] Critical thinking requires verifying AI outputs against reliable sources, as AI can make mistakes or provide outdated information."
+        ksa_mapping:
+          knowledge:
+            - K2.1
+            - K2.2
+          skills:
+            - S1.1
+            - S2.1
+          attitudes:
+            - A2.1
+
+      # ENGAGING WITH AI - Question 3
+      - id: E003
+        domain: engaging_with_ai
+        difficulty: advanced
+        type: multiple_choice
+        correct_answer: b
+        question: "[TRANSLATE] What is the most important factor when evaluating AI-generated content for bias?"
+        options:
+          a: "[TRANSLATE] The speed of generation"
+          b: "[TRANSLATE] The training data sources and representation"
+          c: "[TRANSLATE] The length of the output"
+          d: "[TRANSLATE] The technical complexity"
+        explanation: "[TRANSLATE] AI bias often stems from training data that lacks diversity or contains historical biases, making data sources crucial for evaluation."
+        ksa_mapping:
+          knowledge:
+            - K3.1
+            - K3.2
+          skills:
+            - S2.1
+            - S2.2
+          attitudes:
+            - A2.1
+            - A3.1
+
+  - id: creating_with_ai
+    title: "[TRANSLATE] Creating with AI Tools"
     description: "[TRANSLATE] Using AI tools to enhance creativity and productivity"
-    questions: 3
-  managing_with_ai:
+    time_limit_minutes: 4
+    questions:
+      # CREATING WITH AI - Question 1
+      - id: C001
+        domain: creating_with_ai
+        difficulty: basic
+        type: multiple_choice
+        correct_answer: b
+        question: "[TRANSLATE] Which approach is most effective when using AI for creative writing?"
+        options:
+          a: "[TRANSLATE] Let AI write everything without human input"
+          b: "[TRANSLATE] Use AI as a collaborative partner for brainstorming and refinement"
+          c: "[TRANSLATE] Only use AI to fix grammar and spelling"
+          d: "[TRANSLATE] Avoid AI completely in creative processes"
+        explanation: "[TRANSLATE] AI works best as a creative partner, offering ideas and perspectives while human judgment guides the creative vision."
+        ksa_mapping:
+          knowledge:
+            - K1.4
+            - K2.1
+          skills:
+            - S3.1
+            - S3.2
+          attitudes:
+            - A3.1
+
+      # CREATING WITH AI - Question 2
+      - id: C002
+        domain: creating_with_ai
+        difficulty: intermediate
+        type: multiple_choice
+        correct_answer: c
+        question: "[TRANSLATE] When using AI to generate images for a project, what ethical consideration is most important?"
+        options:
+          a: "[TRANSLATE] The processing speed"
+          b: "[TRANSLATE] The file format"
+          c: "[TRANSLATE] Copyright and attribution of training data"
+          d: "[TRANSLATE] The color scheme"
+        explanation: "[TRANSLATE] AI-generated images may incorporate elements from copyrighted works in training data, raising ethical and legal concerns."
+        ksa_mapping:
+          knowledge:
+            - K3.2
+            - K5.1
+          skills:
+            - S2.1
+          attitudes:
+            - A1.1
+
+      # CREATING WITH AI - Question 3
+      - id: C003
+        domain: creating_with_ai
+        difficulty: advanced
+        type: multiple_choice
+        correct_answer: b
+        question: "[TRANSLATE] How can you best maintain your unique creative voice when using AI tools?"
+        options:
+          a: "[TRANSLATE] Accept all AI suggestions without modification"
+          b: "[TRANSLATE] Review and adapt AI outputs to match your style and intent"
+          c: "[TRANSLATE] Never use AI for any creative work"
+          d: "[TRANSLATE] Only use AI for technical tasks"
+        explanation: "[TRANSLATE] Maintaining creative authenticity requires actively curating and adapting AI outputs to align with your personal vision and style."
+        ksa_mapping:
+          knowledge:
+            - K2.1
+            - K4.1
+          skills:
+            - S3.1
+            - S6.1
+          attitudes:
+            - A3.1
+            - A4.1
+
+  - id: managing_with_ai
+    title: "[TRANSLATE] Managing AI Risks"
     description: "[TRANSLATE] Understanding AI limitations, privacy, and ethical considerations"
-    questions: 3
-  designing_with_ai:
+    time_limit_minutes: 4
+    questions:
+      # MANAGING WITH AI - Question 1
+      - id: M001
+        domain: managing_with_ai
+        difficulty: basic
+        type: multiple_choice
+        correct_answer: c
+        question: "[TRANSLATE] What is the primary privacy concern when using AI chatbots?"
+        options:
+          a: "[TRANSLATE] They use too much electricity"
+          b: "[TRANSLATE] They respond too slowly"
+          c: "[TRANSLATE] Your conversations may be used to train the AI model"
+          d: "[TRANSLATE] They require internet connection"
+        explanation: "[TRANSLATE] Data shared with AI chatbots can be stored and potentially used for model training, making it important to avoid sharing sensitive information."
+        ksa_mapping:
+          knowledge:
+            - K3.3
+            - K5.2
+          skills:
+            - S2.2
+          attitudes:
+            - A1.1
+
+      # MANAGING WITH AI - Question 2
+      - id: M002
+        domain: managing_with_ai
+        difficulty: intermediate
+        type: multiple_choice
+        correct_answer: b
+        question: "[TRANSLATE] When should you NOT rely on AI for decision-making?"
+        options:
+          a: "[TRANSLATE] When writing emails"
+          b: "[TRANSLATE] When making critical health or financial decisions"
+          c: "[TRANSLATE] When researching general topics"
+          d: "[TRANSLATE] When brainstorming ideas"
+        explanation: "[TRANSLATE] High-stakes decisions require human expertise, professional advice, and consideration of factors AI may not fully understand."
+        ksa_mapping:
+          knowledge:
+            - K4.1
+            - K4.2
+          skills:
+            - S2.1
+            - S5.1
+          attitudes:
+            - A1.1
+            - A2.1
+
+      # MANAGING WITH AI - Question 3
+      - id: M003
+        domain: managing_with_ai
+        difficulty: advanced
+        type: multiple_choice
+        correct_answer: a
+        question: "[TRANSLATE] What is algorithmic transparency and why is it important?"
+        options:
+          a: "[TRANSLATE] Understanding how AI makes decisions to identify potential biases"
+          b: "[TRANSLATE] Making AI code open source"
+          c: "[TRANSLATE] Using clear fonts in AI interfaces"
+          d: "[TRANSLATE] Having fast internet connection"
+        explanation: "[TRANSLATE] Algorithmic transparency helps users understand AI decision-making processes, enabling better evaluation of fairness and reliability."
+        ksa_mapping:
+          knowledge:
+            - K3.1
+            - K3.2
+            - K5.1
+          skills:
+            - S2.1
+            - S6.2
+          attitudes:
+            - A1.1
+            - A2.1
+
+  - id: designing_with_ai
+    title: "[TRANSLATE] Designing AI Solutions"
     description: "[TRANSLATE] Strategic thinking about AI implementation and innovation"
-    questions: 3
+    time_limit_minutes: 3
+    questions:
+      # DESIGNING WITH AI - Question 1
+      - id: D001
+        domain: designing_with_ai
+        difficulty: basic
+        type: multiple_choice
+        correct_answer: c
+        question: "[TRANSLATE] What is the first step in designing an AI solution for a problem?"
+        options:
+          a: "[TRANSLATE] Choose the most advanced AI model available"
+          b: "[TRANSLATE] Start coding immediately"
+          c: "[TRANSLATE] Clearly define the problem and desired outcomes"
+          d: "[TRANSLATE] Buy expensive hardware"
+        explanation: "[TRANSLATE] Successful AI implementation starts with understanding the problem thoroughly and defining clear, measurable objectives."
+        ksa_mapping:
+          knowledge:
+            - K4.2
+            - K5.3
+          skills:
+            - S5.1
+            - S6.1
+          attitudes:
+            - A2.1
 
-questions:
-  # ENGAGING WITH AI - Question 1
-  - id: E001
-    domain: engaging_with_ai
-    difficulty: basic
-    type: multiple_choice
-    correct_answer: b
-    question: "[TRANSLATE] What is the most effective way to get better results from an AI chatbot?"
-    options:
-      a: "[TRANSLATE] Ask very general questions"
-      b: "[TRANSLATE] Provide clear, specific prompts with context"
-      c: "[TRANSLATE] Use only yes/no questions"
-      d: "[TRANSLATE] Always ask multiple questions at once"
-    explanation: "[TRANSLATE] Clear, specific prompts with context help AI understand your request accurately and provide more accurate, useful responses."
-    ksa_mapping:
-      knowledge:
-        - K1.1
-        - K1.2
-      skills:
-        - S1.1
-      attitudes:
-        - A1.1
+      # DESIGNING WITH AI - Question 2
+      - id: D002
+        domain: designing_with_ai
+        difficulty: intermediate
+        type: multiple_choice
+        correct_answer: b
+        question: "[TRANSLATE] How can AI systems be designed to be more inclusive?"
+        options:
+          a: "[TRANSLATE] Use only English language data"
+          b: "[TRANSLATE] Include diverse data sources and test with varied user groups"
+          c: "[TRANSLATE] Make the interface more colorful"
+          d: "[TRANSLATE] Focus only on technical users"
+        explanation: "[TRANSLATE] Inclusive AI design requires diverse training data and testing across different demographics to ensure fair and equitable outcomes."
+        ksa_mapping:
+          knowledge:
+            - K3.2
+            - K5.1
+          skills:
+            - S4.1
+            - S6.2
+          attitudes:
+            - A1.1
+            - A5.1
 
-  # ENGAGING WITH AI - Question 2
-  - id: E002
-    domain: engaging_with_ai
-    difficulty: intermediate
-    type: multiple_choice
-    correct_answer: b
-    question: "[TRANSLATE] When an AI gives you an incorrect answer, what should be your first response?"
-    options:
-      a: "[TRANSLATE] Immediately trust the AI and use the information"
-      b: "[TRANSLATE] Verify the information through other reliable sources"
-      c: "[TRANSLATE] Stop using AI altogether"
-      d: "[TRANSLATE] Report the AI as broken"
-    explanation: "[TRANSLATE] Critical thinking requires verifying AI outputs against reliable sources, as AI can make mistakes or provide outdated information."
-    ksa_mapping:
-      knowledge:
-        - K2.1
-        - K2.2
-      skills:
-        - S1.1
-        - S2.1
-      attitudes:
-        - A2.1
+      # DESIGNING WITH AI - Question 3
+      - id: D003
+        domain: designing_with_ai
+        difficulty: advanced
+        type: multiple_choice
+        correct_answer: a
+        question: "[TRANSLATE] What is the most important consideration for sustainable AI development?"
+        options:
+          a: "[TRANSLATE] Balancing innovation with ethical considerations and environmental impact"
+          b: "[TRANSLATE] Maximizing profits at any cost"
+          c: "[TRANSLATE] Using the newest technology regardless of need"
+          d: "[TRANSLATE] Ignoring user feedback"
+        explanation: "[TRANSLATE] Sustainable AI development requires considering long-term impacts on society, environment, and ethical implications alongside technical innovation."
+        ksa_mapping:
+          knowledge:
+            - K3.3
+            - K5.3
+          skills:
+            - S4.1
+            - S6.1
+          attitudes:
+            - A4.1
+            - A5.1
 
-  # ENGAGING WITH AI - Question 3
-  - id: E003
-    domain: engaging_with_ai
-    difficulty: advanced
-    type: multiple_choice
-    correct_answer: b
-    question: "[TRANSLATE] What is the most important factor when evaluating AI-generated content for bias?"
-    options:
-      a: "[TRANSLATE] The speed of generation"
-      b: "[TRANSLATE] The training data sources and representation"
-      c: "[TRANSLATE] The length of the output"
-      d: "[TRANSLATE] The technical complexity"
-    explanation: "[TRANSLATE] AI bias often stems from training data that lacks diversity or contains historical biases, making data sources crucial for evaluation."
-    ksa_mapping:
-      knowledge:
-        - K3.1
-        - K3.2
-      skills:
-        - S2.1
-        - S2.2
-      attitudes:
-        - A2.1
-        - A3.1
-
-  # CREATING WITH AI - Question 1
-  - id: C001
-    domain: creating_with_ai
-    difficulty: basic
-    type: multiple_choice
-    correct_answer: b
-    question: "[TRANSLATE] Which approach is most effective when using AI for creative writing?"
-    options:
-      a: "[TRANSLATE] Let AI write everything without human input"
-      b: "[TRANSLATE] Use AI as a collaborative partner for brainstorming and refinement"
-      c: "[TRANSLATE] Only use AI to fix grammar and spelling"
-      d: "[TRANSLATE] Avoid AI completely in creative processes"
-    explanation: "[TRANSLATE] AI works best as a creative partner, offering ideas and perspectives while human judgment guides the creative vision."
-    ksa_mapping:
-      knowledge:
-        - K1.4
-        - K2.1
-      skills:
-        - S3.1
-        - S3.2
-      attitudes:
-        - A3.1
-
-  # CREATING WITH AI - Question 2
-  - id: C002
-    domain: creating_with_ai
-    difficulty: intermediate
-    type: multiple_choice
-    correct_answer: c
-    question: "[TRANSLATE] When using AI to generate images for a project, what ethical consideration is most important?"
-    options:
-      a: "[TRANSLATE] The processing speed"
-      b: "[TRANSLATE] The file format"
-      c: "[TRANSLATE] Copyright and attribution of training data"
-      d: "[TRANSLATE] The color scheme"
-    explanation: "[TRANSLATE] AI-generated images may incorporate elements from copyrighted works in training data, raising ethical and legal concerns."
-    ksa_mapping:
-      knowledge:
-        - K3.2
-        - K5.1
-      skills:
-        - S2.1
-      attitudes:
-        - A1.1
-
-  # CREATING WITH AI - Question 3
-  - id: C003
-    domain: creating_with_ai
-    difficulty: advanced
-    type: multiple_choice
-    correct_answer: b
-    question: "[TRANSLATE] How can you best maintain your unique creative voice when using AI tools?"
-    options:
-      a: "[TRANSLATE] Accept all AI suggestions without modification"
-      b: "[TRANSLATE] Review and adapt AI outputs to match your style and intent"
-      c: "[TRANSLATE] Never use AI for any creative work"
-      d: "[TRANSLATE] Only use AI for technical tasks"
-    explanation: "[TRANSLATE] Maintaining creative authenticity requires actively curating and adapting AI outputs to align with your personal vision and style."
-    ksa_mapping:
-      knowledge:
-        - K2.1
-        - K4.1
-      skills:
-        - S3.1
-        - S6.1
-      attitudes:
-        - A3.1
-        - A4.1
-
-  # MANAGING WITH AI - Question 1
-  - id: M001
-    domain: managing_with_ai
-    difficulty: basic
-    type: multiple_choice
-    correct_answer: c
-    question: "[TRANSLATE] What is the primary privacy concern when using AI chatbots?"
-    options:
-      a: "[TRANSLATE] They use too much electricity"
-      b: "[TRANSLATE] They respond too slowly"
-      c: "[TRANSLATE] Your conversations may be used to train the AI model"
-      d: "[TRANSLATE] They require internet connection"
-    explanation: "[TRANSLATE] Data shared with AI chatbots can be stored and potentially used for model training, making it important to avoid sharing sensitive information."
-    ksa_mapping:
-      knowledge:
-        - K3.3
-        - K5.2
-      skills:
-        - S2.2
-      attitudes:
-        - A1.1
-
-  # MANAGING WITH AI - Question 2
-  - id: M002
-    domain: managing_with_ai
-    difficulty: intermediate
-    type: multiple_choice
-    correct_answer: b
-    question: "[TRANSLATE] When should you NOT rely on AI for decision-making?"
-    options:
-      a: "[TRANSLATE] When writing emails"
-      b: "[TRANSLATE] When making critical health or financial decisions"
-      c: "[TRANSLATE] When researching general topics"
-      d: "[TRANSLATE] When brainstorming ideas"
-    explanation: "[TRANSLATE] High-stakes decisions require human expertise, professional advice, and consideration of factors AI may not fully understand."
-    ksa_mapping:
-      knowledge:
-        - K4.1
-        - K4.2
-      skills:
-        - S2.1
-        - S5.1
-      attitudes:
-        - A1.1
-        - A2.1
-
-  # MANAGING WITH AI - Question 3
-  - id: M003
-    domain: managing_with_ai
-    difficulty: advanced
-    type: multiple_choice
-    correct_answer: a
-    question: "[TRANSLATE] What is algorithmic transparency and why is it important?"
-    options:
-      a: "[TRANSLATE] Understanding how AI makes decisions to identify potential biases"
-      b: "[TRANSLATE] Making AI code open source"
-      c: "[TRANSLATE] Using clear fonts in AI interfaces"
-      d: "[TRANSLATE] Having fast internet connection"
-    explanation: "[TRANSLATE] Algorithmic transparency helps users understand AI decision-making processes, enabling better evaluation of fairness and reliability."
-    ksa_mapping:
-      knowledge:
-        - K3.1
-        - K3.2
-        - K5.1
-      skills:
-        - S2.1
-        - S6.2
-      attitudes:
-        - A1.1
-        - A2.1
-
-  # DESIGNING WITH AI - Question 1
-  - id: D001
-    domain: designing_with_ai
-    difficulty: basic
-    type: multiple_choice
-    correct_answer: b
-    question: "[TRANSLATE] What should be the first step when planning to integrate AI into a business process?"
-    options:
-      a: "[TRANSLATE] Buy the most expensive AI tool"
-      b: "[TRANSLATE] Identify specific problems AI can solve"
-      c: "[TRANSLATE] Replace all human workers"
-      d: "[TRANSLATE] Implement AI everywhere immediately"
-    explanation: "[TRANSLATE] Successful AI integration starts with identifying clear use cases where AI can add value and solve specific problems."
-    ksa_mapping:
-      knowledge:
-        - K4.2
-        - K5.3
-      skills:
-        - S5.1
-        - S6.1
-      attitudes:
-        - A2.1
-
-  # DESIGNING WITH AI - Question 2
-  - id: D002
-    domain: designing_with_ai
-    difficulty: intermediate
-    type: multiple_choice
-    correct_answer: c
-    question: "[TRANSLATE] What is a key consideration for inclusive AI design?"
-    options:
-      a: "[TRANSLATE] Using the latest technology"
-      b: "[TRANSLATE] Minimizing costs"
-      c: "[TRANSLATE] Ensuring diverse representation in development and testing"
-      d: "[TRANSLATE] Focusing only on majority users"
-    explanation: "[TRANSLATE] Inclusive AI design requires diverse perspectives throughout development to avoid biases and ensure the system works for all users."
-    ksa_mapping:
-      knowledge:
-        - K3.2
-        - K5.1
-      skills:
-        - S4.1
-        - S6.2
-      attitudes:
-        - A1.1
-        - A5.1
-
-  # DESIGNING WITH AI - Question 3
-  - id: D003
-    domain: designing_with_ai
-    difficulty: advanced
-    type: multiple_choice
-    correct_answer: b
-    question: "[TRANSLATE] How can organizations best prepare their workforce for AI adoption?"
-    options:
-      a: "[TRANSLATE] Keep AI implementation secret from employees"
-      b: "[TRANSLATE] Provide training and reskilling opportunities"
-      c: "[TRANSLATE] Only hire AI experts"
-      d: "[TRANSLATE] Automate everything at once"
-    explanation: "[TRANSLATE] Successful AI adoption requires investing in employee education and creating opportunities for workers to develop complementary skills."
-    ksa_mapping:
-      knowledge:
-        - K3.3
-        - K5.3
-      skills:
-        - S4.1
-        - S6.1
-      attitudes:
-        - A4.1
-        - A5.1
-
-# Translation Guidelines:
-# 1. All fields marked with [TRANSLATE] should be translated to the target language
-# 2. Keep the YAML structure and keys unchanged
-# 3. Maintain the same meaning and educational intent
-# 4. Adapt cultural references where appropriate
-# 5. Ensure technical terms are accurately translated
-# 6. Keep the correct_answer field unchanged (letter only)
-# 7. Keep all id fields and mapping structures unchanged
+metadata:
+  language: template
+  language_name: Template
+  note: This is a template file showing the structure for translations
+  generated_from: ai_literacy_questions.yaml
+  generated_at: '2024-01-01T00:00:00.000Z'

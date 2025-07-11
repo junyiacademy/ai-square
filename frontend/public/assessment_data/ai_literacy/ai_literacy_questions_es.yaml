@@ -9,24 +9,25 @@ assessment_config:
   time_limit_minutes: 15
   passing_score: 60
   domains:
-    - engaging_with_ai
-    - creating_with_ai
-    - managing_with_ai
-    - designing_with_ai
-domains:
-  engaging_with_ai:
+    engaging_with_ai:
+      description: Comprender y comunicarse eficazmente con sistemas de IA
+      questions: 3
+    creating_with_ai:
+      description: Usar herramientas de IA para mejorar la creatividad y productividad
+      questions: 3
+    managing_with_ai:
+      description: Comprender las limitaciones de la IA, privacidad y consideraciones éticas
+      questions: 3
+    designing_with_ai:
+      description: Pensamiento estratégico sobre implementación e innovación de IA
+      questions: 3
+
+tasks:
+  - id: engaging_with_ai
+    title: Interacción con Sistemas de IA
     description: Comprender y comunicarse eficazmente con sistemas de IA
-    questions: 3
-  creating_with_ai:
-    description: Usar herramientas de IA para mejorar la creatividad y productividad
-    questions: 3
-  managing_with_ai:
-    description: Comprender las limitaciones de la IA, privacidad y consideraciones éticas
-    questions: 3
-  designing_with_ai:
-    description: Pensamiento estratégico sobre implementación e innovación de IA
-    questions: 3
-questions:
+    time_limit_minutes: 4
+    questions:
   - id: E001
     domain: engaging_with_ai
     difficulty: basic
@@ -75,7 +76,13 @@ questions:
       c: La longitud de la salida
       d: La complejidad técnica
     explanation: El sesgo de la IA a menudo proviene de datos de entrenamiento que carecen de diversidad o contienen sesgos históricos, lo que hace que las fuentes de datos sean cruciales para la evaluación.
-  - id: C001
+
+  - id: creating_with_ai
+    title: Creación con Herramientas de IA
+    description: Usar herramientas de IA para mejorar la creatividad y productividad
+    time_limit_minutes: 4
+    questions:
+      - id: C001
     domain: creating_with_ai
     difficulty: basic
     type: multiple_choice
@@ -118,12 +125,18 @@ questions:
       attitudes: [A3.1, A4.1]
     question: ¿Cómo deberías abordar la generación de código asistida por IA para un proyecto de software crítico?
     options:
-      a: '[ES: Use AI code directly without review]'
-      b: '[ES: Thoroughly review, test, and validate all AI-generated code]'
-      c: '[ES: Only use AI for comments and documentation]'
-      d: '[ES: Replace all developers with AI tools]'
-    explanation: '[ES translation needed]'
-  - id: M001
+      a: Usar el código de IA directamente sin revisión
+      b: Revisar, probar y validar exhaustivamente todo el código generado por IA
+      c: Solo usar IA para comentarios y documentación
+      d: Reemplazar a todos los desarrolladores con herramientas de IA
+    explanation: El software crítico requiere supervisión humana, pruebas exhaustivas y validación del código generado por IA para garantizar seguridad, confiabilidad y corrección.
+
+  - id: managing_with_ai
+    title: Gestión de Riesgos de IA
+    description: Comprender las limitaciones de la IA, privacidad y consideraciones éticas
+    time_limit_minutes: 4
+    questions:
+      - id: M001
     domain: managing_with_ai
     difficulty: basic
     type: multiple_choice
@@ -134,11 +147,11 @@ questions:
       attitudes: [A1.1]
     question: ¿Qué deberías hacer con información personal sensible al usar herramientas de IA?
     options:
-      a: '[ES: Share it freely to get better AI responses]'
-      b: '[ES: Never input sensitive information into AI systems]'
-      c: '[ES: Only share it with trusted AI companies]'
-      d: '[ES: Encrypt it before sharing with AI]'
-    explanation: '[ES translation needed]'
+      a: Compartirla libremente para obtener mejores respuestas de IA
+      b: Nunca ingresar información sensible en sistemas de IA
+      c: Solo compartirla con empresas de IA confiables
+      d: Cifrarla antes de compartirla con IA
+    explanation: La información personal sensible nunca debe ingresarse en sistemas de IA ya que puede ser almacenada, procesada o potencialmente expuesta.
   - id: M002
     domain: managing_with_ai
     difficulty: intermediate
@@ -150,11 +163,11 @@ questions:
       attitudes: [A1.1, A2.1]
     question: ¿Cómo deberías gestionar el uso de herramientas de IA en un entorno de equipo?
     options:
-      a: '[ES: Let everyone use any AI tool without guidelines]'
-      b: '[ES: Establish clear policies and training for AI tool usage]'
-      c: '[ES: Ban all AI tools to avoid risks]'
-      d: '[ES: Only allow managers to use AI tools]'
-    explanation: '[ES translation needed]'
+      a: Dejar que todos usen cualquier herramienta de IA sin pautas
+      b: Establecer políticas claras y capacitación para el uso de herramientas de IA
+      c: Prohibir todas las herramientas de IA para evitar riesgos
+      d: Solo permitir que los gerentes usen herramientas de IA
+    explanation: Las políticas claras y la capacitación garantizan un uso responsable, efectivo y consistente de las herramientas de IA en todo el equipo, maximizando los beneficios y minimizando los riesgos.
   - id: M003
     domain: managing_with_ai
     difficulty: advanced
@@ -166,12 +179,18 @@ questions:
       attitudes: [A1.1, A2.1]
     question: ¿Cuál es el factor más crítico al implementar IA en procesos empresariales?
     options:
-      a: '[ES: Choosing the most advanced AI technology]'
-      b: '[ES: Understanding limitations and maintaining human oversight]'
-      c: '[ES: Implementing AI as quickly as possible]'
-      d: '[ES: Replacing as many human workers as possible]'
-    explanation: '[ES translation needed]'
-  - id: D001
+      a: Elegir la tecnología de IA más avanzada
+      b: Comprender las limitaciones y mantener la supervisión humana
+      c: Implementar IA lo más rápido posible
+      d: Reemplazar tantos trabajadores humanos como sea posible
+    explanation: Comprender las limitaciones de la IA y mantener la supervisión humana adecuada garantiza una implementación exitosa, responsable y sostenible de la IA en los negocios.
+
+  - id: designing_with_ai
+    title: Diseño de Soluciones de IA
+    description: Pensamiento estratégico sobre implementación e innovación de IA
+    time_limit_minutes: 3
+    questions:
+      - id: D001
     domain: designing_with_ai
     difficulty: basic
     type: multiple_choice
@@ -182,11 +201,11 @@ questions:
       attitudes: [A2.1]
     question: Al diseñar una característica impulsada por IA para usuarios, ¿cuál debería ser el enfoque principal?
     options:
-      a: '[ES: Showcasing the most advanced AI capabilities]'
-      b: '[ES: Solving real user problems and improving user experience]'
-      c: '[ES: Making the AI as complex as possible]'
-      d: '[ES: Hiding the fact that AI is being used]'
-    explanation: '[ES translation needed]'
+      a: Mostrar las capacidades de IA más avanzadas
+      b: Resolver problemas reales de los usuarios y mejorar la experiencia del usuario
+      c: Hacer que la IA sea lo más compleja posible
+      d: Ocultar el hecho de que se está usando IA
+    explanation: El diseño centrado en el usuario se enfoca en resolver problemas reales y mejorar experiencias, no en mostrar tecnología por sí misma.
   - id: D002
     domain: designing_with_ai
     difficulty: intermediate
@@ -198,11 +217,11 @@ questions:
       attitudes: [A1.1, A5.1]
     question: ¿Cómo deberías manejar las fallas del sistema de IA en aplicaciones de cara al usuario?
     options:
-      a: '[ES: Hide errors and pretend everything is working]'
-      b: '[ES: Design graceful fallbacks and clear error communication]'
-      c: '[ES: Immediately shut down the entire application]'
-      d: '[ES: Blame the user for the error]'
-    explanation: '[ES translation needed]'
+      a: Ocultar errores y fingir que todo funciona
+      b: Diseñar alternativas elegantes y comunicación clara de errores
+      c: Cerrar inmediatamente toda la aplicación
+      d: Culpar al usuario por el error
+    explanation: El buen diseño de IA incluye planificar para fallas con alternativas elegantes y comunicación clara para mantener la confianza y experiencia del usuario.
   - id: D003
     domain: designing_with_ai
     difficulty: advanced
@@ -214,11 +233,11 @@ questions:
       attitudes: [A4.1, A5.1]
     question: ¿Cuál es la consideración más importante al diseñar sistemas de IA para audiencias globales diversas?
     options:
-      a: '[ES: Using the same design for everyone to ensure consistency]'
-      b: '[ES: Understanding cultural contexts and avoiding algorithmic bias]'
-      c: '[ES: Focusing only on the largest market segments]'
-      d: '[ES: Implementing the latest AI technologies everywhere]'
-    explanation: '[ES translation needed]'
+      a: Usar el mismo diseño para todos para garantizar consistencia
+      b: Comprender los contextos culturales y evitar el sesgo algorítmico
+      c: Enfocarse solo en los segmentos de mercado más grandes
+      d: Implementar las últimas tecnologías de IA en todas partes
+    explanation: El diseño inclusivo de IA requiere comprender diversos contextos culturales y trabajar activamente para prevenir sesgos algorítmicos que puedan dañar a diferentes grupos.
 metadata:
   language: es
   language_name: Spanish

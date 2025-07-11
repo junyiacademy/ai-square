@@ -1,139 +1,203 @@
 assessment_config:
   id: ai_literacy
   title: Valutazione dell'Alfabetizzazione IA
-  description: >
-    Valutate la vostra comprensione dei sistemi di IA in quattro aree chiave:
-    interazione con l'IA, creazione con l'IA, gestione dei rischi dell'IA e
-    progettazione di soluzioni IA. Questa valutazione aiuta a identificare il
-    vostro livello attuale di conoscenza dell'IA e le aree di miglioramento.
+  description: 'Valutate la vostra comprensione dei sistemi di IA in quattro aree
+    chiave: interazione con l''IA, creazione con l''IA, gestione dei rischi dell''IA
+    e progettazione di soluzioni IA. Questa valutazione aiuta a identificare il vostro
+    livello attuale di conoscenza dell''IA e le aree di miglioramento.
+
+    '
   total_questions: 12
   time_limit_minutes: 15
   passing_score: 60
   domains:
-    - engaging_with_ai
-    - creating_with_ai
-    - managing_with_ai
-    - designing_with_ai
-domains:
-  engaging_with_ai:
-    description: Comprendere e comunicare efficacemente con i sistemi di IA
-    questions: 3
-  creating_with_ai:
-    description: Utilizzare strumenti di IA per migliorare creatività e produttività
-    questions: 3
-  managing_with_ai:
-    description: Comprendere i limiti dell'IA, la privacy e le considerazioni etiche
-    questions: 3
-  designing_with_ai:
-    description: Pensiero strategico sull'implementazione e innovazione dell'IA
-    questions: 3
-questions:
+    engaging_with_ai:
+      description: Comprendere e comunicare efficacemente con i sistemi di IA
+      questions: 3
+    creating_with_ai:
+      description: Utilizzare strumenti di IA per migliorare creatività e produttività
+      questions: 3
+    managing_with_ai:
+      description: Comprendere i limiti dell'IA, la privacy e le considerazioni etiche
+      questions: 3
+    designing_with_ai:
+      description: Pensiero strategico sull'implementazione e innovazione dell'IA
+      questions: 3
+metadata:
+  language: it
+  language_name: Italian
+  generated_from: ai_literacy_questions.yaml
+  generated_at: '2025-07-03T10:07:41.116Z'
+tasks:
+- id: engaging_with_ai
+  title: Interazione con i sistemi IA
+  description: Comprendere e comunicare efficacemente con i sistemi di IA
+  time_limit_minutes: 4
+  questions:
   - id: E001
     domain: engaging_with_ai
     difficulty: basic
     type: multiple_choice
     correct_answer: b
     ksa_mapping:
-      knowledge: [K1.1, K1.2]
-      skills: [S1.1]
-      attitudes: [A1.1]
-    question: Qual è il modo più efficace per ottenere risultati migliori da un chatbot IA?
+      knowledge:
+      - K1.1
+      - K1.2
+      skills:
+      - S1.1
+      attitudes:
+      - A1.1
+    question: Qual è il modo più efficace per ottenere risultati migliori da un chatbot
+      IA?
     options:
       a: Fare domande molto generali
       b: Fornire indicazioni chiare e specifiche con contesto
       c: Usare solo domande sì/no
       d: Fare sempre più domande contemporaneamente
-    explanation: Indicazioni chiare e specifiche con contesto aiutano l'IA a capire esattamente cosa ti serve e fornire risposte più accurate e utili.
+    explanation: Indicazioni chiare e specifiche con contesto aiutano l'IA a capire
+      esattamente cosa ti serve e fornire risposte più accurate e utili.
   - id: E002
     domain: engaging_with_ai
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
     ksa_mapping:
-      knowledge: [K2.1, K2.2]
-      skills: [S1.1, S2.1]
-      attitudes: [A2.1]
-    question: Quando un'IA ti dà una risposta sbagliata, quale dovrebbe essere la tua prima reazione?
+      knowledge:
+      - K2.1
+      - K2.2
+      skills:
+      - S1.1
+      - S2.1
+      attitudes:
+      - A2.1
+    question: Quando un'IA ti dà una risposta sbagliata, quale dovrebbe essere la
+      tua prima reazione?
     options:
       a: Fidarsi immediatamente dell'IA e usare le informazioni
       b: Verificare le informazioni attraverso altre fonti affidabili
       c: Smettere completamente di usare l'IA
       d: Segnalare l'IA come guasta
-    explanation: Il pensiero critico richiede di verificare gli output dell'IA con fonti affidabili, poiché l'IA può commettere errori o fornire informazioni obsolete.
+    explanation: Il pensiero critico richiede di verificare gli output dell'IA con
+      fonti affidabili, poiché l'IA può commettere errori o fornire informazioni obsolete.
   - id: E003
     domain: engaging_with_ai
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
     ksa_mapping:
-      knowledge: [K3.1, K3.2]
-      skills: [S2.1, S2.2]
-      attitudes: [A2.1, A3.1]
-    question: Qual è il fattore più importante nel valutare i pregiudizi nei contenuti generati dall'IA?
+      knowledge:
+      - K3.1
+      - K3.2
+      skills:
+      - S2.1
+      - S2.2
+      attitudes:
+      - A2.1
+      - A3.1
+    question: Qual è il fattore più importante nel valutare i pregiudizi nei contenuti
+      generati dall'IA?
     options:
       a: La velocità di generazione
       b: Le fonti dei dati di addestramento e la loro rappresentazione
       c: La lunghezza dell'output
       d: La complessità tecnica
-    explanation: Il pregiudizio dell'IA spesso deriva da dati di addestramento che mancano di diversità o contengono pregiudizi storici, rendendo le fonti di dati cruciali per la valutazione.
+    explanation: Il pregiudizio dell'IA spesso deriva da dati di addestramento che
+      mancano di diversità o contengono pregiudizi storici, rendendo le fonti di dati
+      cruciali per la valutazione.
+- id: creating_with_ai
+  title: Creazione con strumenti IA
+  description: Utilizzare strumenti di IA per migliorare creatività e produttività
+  time_limit_minutes: 4
+  questions:
   - id: C001
     domain: creating_with_ai
     difficulty: basic
     type: multiple_choice
     correct_answer: b
     ksa_mapping:
-      knowledge: [K1.4, K2.1]
-      skills: [S3.1, S3.2]
-      attitudes: [A3.1]
+      knowledge:
+      - K1.4
+      - K2.1
+      skills:
+      - S3.1
+      - S3.2
+      attitudes:
+      - A3.1
     question: Quale approccio è più efficace quando si usa l'IA per la scrittura creativa?
     options:
       a: Lasciare che l'IA scriva tutto senza input umano
       b: Usare l'IA come partner collaborativo per brainstorming e perfezionamento
       c: Usare l'IA solo per correggere grammatica e ortografia
       d: Evitare completamente l'IA nei processi creativi
-    explanation: L'IA funziona meglio come partner creativo, aiutando con l'ideazione, il feedback e il perfezionamento mantenendo la creatività e la supervisione umana.
+    explanation: L'IA funziona meglio come partner creativo, aiutando con l'ideazione,
+      il feedback e il perfezionamento mantenendo la creatività e la supervisione
+      umana.
   - id: C002
     domain: creating_with_ai
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
     ksa_mapping:
-      knowledge: [K3.2, K5.1]
-      skills: [S2.1]
-      attitudes: [A1.1]
-    question: Quando si usano generatori di immagini IA, qual è la considerazione etica più importante?
+      knowledge:
+      - K3.2
+      - K5.1
+      skills:
+      - S2.1
+      attitudes:
+      - A1.1
+    question: Quando si usano generatori di immagini IA, qual è la considerazione
+      etica più importante?
     options:
       a: Rendere le immagini il più realistiche possibile
       b: Rispettare i diritti d'autore ed evitare deepfake di persone reali
       c: Usare le impostazioni di generazione più veloci
       d: Creare quante più immagini possibile
-    explanation: Rispettare i diritti di proprietà intellettuale ed evitare l'uso improprio per creare somiglianze non autorizzate o contenuti fuorvianti è cruciale per l'uso etico dell'IA.
+    explanation: Rispettare i diritti di proprietà intellettuale ed evitare l'uso
+      improprio per creare somiglianze non autorizzate o contenuti fuorvianti è cruciale
+      per l'uso etico dell'IA.
   - id: C003
     domain: creating_with_ai
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
     ksa_mapping:
-      knowledge: [K2.1, K4.1]
-      skills: [S3.1, S6.1]
-      attitudes: [A3.1, A4.1]
-    question: Come dovresti affrontare la generazione di codice assistita dall'IA per un progetto software critico?
+      knowledge:
+      - K2.1
+      - K4.1
+      skills:
+      - S3.1
+      - S6.1
+      attitudes:
+      - A3.1
+      - A4.1
+    question: Come dovresti affrontare la generazione di codice assistita dall'IA
+      per un progetto software critico?
     options:
       a: '[IT: Use AI code directly without review]'
       b: '[IT: Thoroughly review, test, and validate all AI-generated code]'
       c: '[IT: Only use AI for comments and documentation]'
       d: '[IT: Replace all developers with AI tools]'
     explanation: '[IT translation needed]'
+- id: managing_with_ai
+  title: Gestione dei rischi IA
+  description: Comprendere i limiti dell'IA, la privacy e le considerazioni etiche
+  time_limit_minutes: 4
+  questions:
   - id: M001
     domain: managing_with_ai
     difficulty: basic
     type: multiple_choice
     correct_answer: b
     ksa_mapping:
-      knowledge: [K3.3, K5.2]
-      skills: [S2.2]
-      attitudes: [A1.1]
-    question: Cosa dovresti fare con le informazioni personali sensibili quando usi strumenti IA?
+      knowledge:
+      - K3.3
+      - K5.2
+      skills:
+      - S2.2
+      attitudes:
+      - A1.1
+    question: Cosa dovresti fare con le informazioni personali sensibili quando usi
+      strumenti IA?
     options:
       a: '[IT: Share it freely to get better AI responses]'
       b: '[IT: Never input sensitive information into AI systems]'
@@ -146,9 +210,15 @@ questions:
     type: multiple_choice
     correct_answer: b
     ksa_mapping:
-      knowledge: [K4.1, K4.2]
-      skills: [S2.1, S5.1]
-      attitudes: [A1.1, A2.1]
+      knowledge:
+      - K4.1
+      - K4.2
+      skills:
+      - S2.1
+      - S5.1
+      attitudes:
+      - A1.1
+      - A2.1
     question: Come dovresti gestire l'uso di strumenti IA in un ambiente di squadra?
     options:
       a: '[IT: Let everyone use any AI tool without guidelines]'
@@ -162,9 +232,16 @@ questions:
     type: multiple_choice
     correct_answer: b
     ksa_mapping:
-      knowledge: [K3.1, K3.2, K5.1]
-      skills: [S2.1, S6.2]
-      attitudes: [A1.1, A2.1]
+      knowledge:
+      - K3.1
+      - K3.2
+      - K5.1
+      skills:
+      - S2.1
+      - S6.2
+      attitudes:
+      - A1.1
+      - A2.1
     question: Qual è il fattore più critico nell'implementare l'IA nei processi aziendali?
     options:
       a: '[IT: Choosing the most advanced AI technology]'
@@ -172,16 +249,27 @@ questions:
       c: '[IT: Implementing AI as quickly as possible]'
       d: '[IT: Replacing as many human workers as possible]'
     explanation: '[IT translation needed]'
+- id: designing_with_ai
+  title: Progettazione di soluzioni IA
+  description: Pensiero strategico sull'implementazione e innovazione dell'IA
+  time_limit_minutes: 3
+  questions:
   - id: D001
     domain: designing_with_ai
     difficulty: basic
     type: multiple_choice
     correct_answer: b
     ksa_mapping:
-      knowledge: [K4.2, K5.3]
-      skills: [S5.1, S6.1]
-      attitudes: [A2.1]
-    question: Quando si progetta una funzionalità basata sull'IA per gli utenti, quale dovrebbe essere l'obiettivo principale?
+      knowledge:
+      - K4.2
+      - K5.3
+      skills:
+      - S5.1
+      - S6.1
+      attitudes:
+      - A2.1
+    question: Quando si progetta una funzionalità basata sull'IA per gli utenti, quale
+      dovrebbe essere l'obiettivo principale?
     options:
       a: '[IT: Showcasing the most advanced AI capabilities]'
       b: '[IT: Solving real user problems and improving user experience]'
@@ -194,10 +282,17 @@ questions:
     type: multiple_choice
     correct_answer: b
     ksa_mapping:
-      knowledge: [K3.2, K5.1]
-      skills: [S4.1, S6.2]
-      attitudes: [A1.1, A5.1]
-    question: Come dovresti gestire i guasti del sistema IA nelle applicazioni rivolte agli utenti?
+      knowledge:
+      - K3.2
+      - K5.1
+      skills:
+      - S4.1
+      - S6.2
+      attitudes:
+      - A1.1
+      - A5.1
+    question: Come dovresti gestire i guasti del sistema IA nelle applicazioni rivolte
+      agli utenti?
     options:
       a: '[IT: Hide errors and pretend everything is working]'
       b: '[IT: Design graceful fallbacks and clear error communication]'
@@ -210,18 +305,20 @@ questions:
     type: multiple_choice
     correct_answer: b
     ksa_mapping:
-      knowledge: [K3.3, K5.3]
-      skills: [S4.1, S6.1]
-      attitudes: [A4.1, A5.1]
-    question: Qual è la considerazione più importante nel progettare sistemi IA per pubblici globali diversi?
+      knowledge:
+      - K3.3
+      - K5.3
+      skills:
+      - S4.1
+      - S6.1
+      attitudes:
+      - A4.1
+      - A5.1
+    question: Qual è la considerazione più importante nel progettare sistemi IA per
+      pubblici globali diversi?
     options:
       a: '[IT: Using the same design for everyone to ensure consistency]'
       b: '[IT: Understanding cultural contexts and avoiding algorithmic bias]'
       c: '[IT: Focusing only on the largest market segments]'
       d: '[IT: Implementing the latest AI technologies everywhere]'
     explanation: '[IT translation needed]'
-metadata:
-  language: it
-  language_name: Italian
-  generated_from: ai_literacy_questions.yaml
-  generated_at: '2025-07-03T10:07:41.116Z'

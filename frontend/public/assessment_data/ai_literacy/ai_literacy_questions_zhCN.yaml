@@ -6,24 +6,25 @@ assessment_config:
   time_limit_minutes: 15
   passing_score: 60
   domains:
-    - engaging_with_ai
-    - creating_with_ai
-    - managing_with_ai
-    - designing_with_ai
-domains:
-  engaging_with_ai:
+    engaging_with_ai:
+      description: 理解并有效地与AI系统沟通
+      questions: 3
+    creating_with_ai:
+      description: 使用AI工具提升创造力和生产力
+      questions: 3
+    managing_with_ai:
+      description: 理解AI的局限性、隐私和伦理考量
+      questions: 3
+    designing_with_ai:
+      description: 关于AI实施和创新的战略思考
+      questions: 3
+
+tasks:
+  - id: engaging_with_ai
+    title: 与 AI 系统互动
     description: 理解并有效地与AI系统沟通
-    questions: 3
-  creating_with_ai:
-    description: 使用AI工具提升创造力和生产力
-    questions: 3
-  managing_with_ai:
-    description: 理解AI的局限性、隐私和伦理考量
-    questions: 3
-  designing_with_ai:
-    description: 关于AI实施和创新的战略思考
-    questions: 3
-questions:
+    time_limit_minutes: 4
+    questions:
   - id: E001
     domain: engaging_with_ai
     difficulty: basic
@@ -87,7 +88,13 @@ questions:
       attitudes:
         - A2.1
         - A3.1
-  - id: C001
+
+  - id: creating_with_ai
+    title: 运用 AI 工具创作
+    description: 使用AI工具提升创造力和生产力
+    time_limit_minutes: 4
+    questions:
+      - id: C001
     domain: creating_with_ai
     difficulty: basic
     type: multiple_choice
@@ -150,19 +157,25 @@ questions:
       attitudes:
         - A3.1
         - A4.1
-  - id: M001
-    domain: managing_with_ai
-    difficulty: basic
+
+  - id: managing_with_ai
+    title: 管理 AI 风险
+    description: 理解AI的局限性、隐私和伦理考量
+    time_limit_minutes: 4
+    questions:
+      - id: M001
+        domain: managing_with_ai
+        difficulty: basic
     type: multiple_choice
     correct_answer: b
-    question: 使用 AI 工具时，应该如何处理敏感的个人信息？
-    options:
-      a: 自由分享以获得更好的 AI 回应
-      b: 绝不将敏感信息输入 AI 系统
-      c: 只与可信的 AI 公司分享
-      d: 在与 AI 分享前加密
-    explanation: 关键软件需要人工监督、彻底测试和验证 AI 生成的代码，以确保安全性、可靠性和正确性。
-    ksa_mapping:
+        question: 使用 AI 工具时，应该如何处理敏感的个人信息？
+        options:
+          a: 自由分享以获得更好的 AI 回应
+          b: 绝不将敏感信息输入 AI 系统
+          c: 只与可信的 AI 公司分享
+          d: 在与 AI 分享前加密
+        explanation: 敏感的个人信息绝不应该输入 AI 系统，因为它可能会被储存、处理或暴露。
+        ksa_mapping:
       knowledge:
         - K3.3
         - K5.2
@@ -170,19 +183,19 @@ questions:
         - S2.2
       attitudes:
         - A1.1
-  - id: M002
-    domain: managing_with_ai
-    difficulty: intermediate
+      - id: M002
+        domain: managing_with_ai
+        difficulty: intermediate
     type: multiple_choice
     correct_answer: b
-    question: 在团队环境中应该如何管理 AI 工具的使用？
-    options:
-      a: 让每个人在没有指导方针的情况下使用任何 AI 工具
-      b: 为 AI 工具使用建立明确的政策和培训
-      c: 禁止所有 AI 工具以避免风险
-      d: 只允许管理人员使用 AI 工具
-    explanation: 关键软件需要人工监督、彻底测试和验证 AI 生成的代码，以确保安全性、可靠性和正确性。
-    ksa_mapping:
+        question: 在团队环境中应该如何管理 AI 工具的使用？
+        options:
+          a: 让每个人在没有指导方针的情况下使用任何 AI 工具
+          b: 为 AI 工具使用建立明确的政策和培训
+          c: 禁止所有 AI 工具以避免风险
+          d: 只允许管理人员使用 AI 工具
+        explanation: 明确的政策和培训确保团队能负责、有效且一致地使用 AI 工具，同时最大化效益并最小化风险。
+        ksa_mapping:
       knowledge:
         - K4.1
         - K4.2
@@ -192,19 +205,19 @@ questions:
       attitudes:
         - A1.1
         - A2.1
-  - id: M003
-    domain: managing_with_ai
-    difficulty: advanced
+      - id: M003
+        domain: managing_with_ai
+        difficulty: advanced
     type: multiple_choice
     correct_answer: b
-    question: 在业务流程中实施 AI 时，最关键的因素是什么？
-    options:
-      a: 选择最先进的 AI 技术
-      b: 理解局限性并保持人类监督
-      c: 尽快实施 AI
-      d: 尽可能替换更多人类工作者
-    explanation: 关键软件需要人工监督、彻底测试和验证 AI 生成的代码，以确保安全性、可靠性和正确性。
-    ksa_mapping:
+        question: 在业务流程中实施 AI 时，最关键的因素是什么？
+        options:
+          a: 选择最先进的 AI 技术
+          b: 理解局限性并保持人类监督
+          c: 尽快实施 AI
+          d: 尽可能替换更多人类工作者
+        explanation: 理解 AI 的局限性并保持适当的人类监督，确保业务中 AI 的成功、负责和可持续实施。
+        ksa_mapping:
       knowledge:
         - K3.1
         - K3.2
@@ -215,19 +228,25 @@ questions:
       attitudes:
         - A1.1
         - A2.1
-  - id: D001
-    domain: designing_with_ai
-    difficulty: basic
+
+  - id: designing_with_ai
+    title: 设计 AI 解决方案
+    description: 关于AI实施和创新的战略思考
+    time_limit_minutes: 3
+    questions:
+      - id: D001
+        domain: designing_with_ai
+        difficulty: basic
     type: multiple_choice
     correct_answer: b
-    question: 为用户设计 AI 功能时，主要关注点应该是什么？
-    options:
-      a: 展示最先进的 AI 能力
-      b: 解决真正的用户问题并改善用户体验
-      c: 让 AI 尽可能复杂
-      d: 隐藏正在使用 AI 的事实
-    explanation: 关键软件需要人工监督、彻底测试和验证 AI 生成的代码，以确保安全性、可靠性和正确性。
-    ksa_mapping:
+        question: 为用户设计 AI 功能时，主要关注点应该是什么？
+        options:
+          a: 展示最先进的 AI 能力
+          b: 解决真正的用户问题并改善用户体验
+          c: 让 AI 尽可能复杂
+          d: 隐藏正在使用 AI 的事实
+        explanation: 以用户为中心的设计专注于解决真正的问题和改善体验，而不是为了展示技术本身。
+        ksa_mapping:
       knowledge:
         - K4.2
         - K5.3
@@ -236,19 +255,19 @@ questions:
         - S6.1
       attitudes:
         - A2.1
-  - id: D002
-    domain: designing_with_ai
-    difficulty: intermediate
+      - id: D002
+        domain: designing_with_ai
+        difficulty: intermediate
     type: multiple_choice
     correct_answer: b
-    question: 在面向用户的应用程序中，应该如何处理 AI 系统故障？
-    options:
-      a: 隐藏错误并假装一切正常
-      b: 设计优雅的后备方案和清晰的错误沟通
-      c: 立即关闭整个应用程序
-      d: 将错误归咎于用户
-    explanation: 关键软件需要人工监督、彻底测试和验证 AI 生成的代码，以确保安全性、可靠性和正确性。
-    ksa_mapping:
+        question: 在面向用户的应用程序中，应该如何处理 AI 系统故障？
+        options:
+          a: 隐藏错误并假装一切正常
+          b: 设计优雅的后备方案和清晰的错误沟通
+          c: 立即关闭整个应用程序
+          d: 将错误归咎于用户
+        explanation: 良好的 AI 设计包括规划故障时的优雅后备方案和清晰沟通，以维持用户信任和体验。
+        ksa_mapping:
       knowledge:
         - K3.2
         - K5.1
@@ -258,19 +277,19 @@ questions:
       attitudes:
         - A1.1
         - A5.1
-  - id: D003
-    domain: designing_with_ai
-    difficulty: advanced
+      - id: D003
+        domain: designing_with_ai
+        difficulty: advanced
     type: multiple_choice
     correct_answer: b
-    question: 为多元化的全球受众设计 AI 系统时，最重要的考量是什么？
-    options:
-      a: 为每个人使用相同的设计以确保一致性
-      b: 理解文化背景并避免算法偏见
-      c: 只关注最大的市场细分
-      d: 在所有地方实施最新的 AI 技术
-    explanation: 关键软件需要人工监督、彻底测试和验证 AI 生成的代码，以确保安全性、可靠性和正确性。
-    ksa_mapping:
+        question: 为多元化的全球受众设计 AI 系统时，最重要的考量是什么？
+        options:
+          a: 为每个人使用相同的设计以确保一致性
+          b: 理解文化背景并避免算法偏见
+          c: 只关注最大的市场细分
+          d: 在所有地方实施最新的 AI 技术
+        explanation: 包容性 AI 设计需要理解多元的文化背景，并积极预防可能伤害不同群体的算法偏见。
+        ksa_mapping:
       knowledge:
         - K3.3
         - K5.3

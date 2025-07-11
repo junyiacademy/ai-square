@@ -1,29 +1,35 @@
 assessment_config:
   id: ai_literacy
   title: AI リテラシー評価
-  description: AI との関わり、AI による創作、AI の管理、AI の設計という 4 つの主要領域における AI システムの理解度を評価します。この評価により、現在の AI 知識レベルと改善すべき分野を特定できます。
+  description: AI との関わり、AI による創作、AI の管理、AI の設計という 4 つの主要領域における AI システムの理解度を評価します。この評価により、現在の
+    AI 知識レベルと改善すべき分野を特定できます。
   total_questions: 12
   time_limit_minutes: 15
   passing_score: 60
   domains:
-    - engaging_with_ai
-    - creating_with_ai
-    - managing_with_ai
-    - designing_with_ai
-domains:
-  engaging_with_ai:
-    description: AIシステムを理解し、効果的にコミュニケーションを取る
-    questions: 3
-  creating_with_ai:
-    description: AIツールを使用して創造性と生産性を向上させる
-    questions: 3
-  managing_with_ai:
-    description: AIの制限、プライバシー、倫理的考慮事項を理解する
-    questions: 3
-  designing_with_ai:
-    description: AIの実装とイノベーションに関する戦略的思考
-    questions: 3
-questions:
+    engaging_with_ai:
+      description: AIシステムを理解し、効果的にコミュニケーションを取る
+      questions: 3
+    creating_with_ai:
+      description: AIツールを使用して創造性と生産性を向上させる
+      questions: 3
+    managing_with_ai:
+      description: AIの制限、プライバシー、倫理的考慮事項を理解する
+      questions: 3
+    designing_with_ai:
+      description: AIの実装とイノベーションに関する戦略的思考
+      questions: 3
+metadata:
+  language: ja
+  language_name: Japanese
+  generated_from: ai_literacy_questions.yaml
+  generated_at: '2025-07-03T10:07:41.110Z'
+tasks:
+- id: engaging_with_ai
+  title: AIシステムとの対話
+  description: AIシステムを理解し、効果的にコミュニケーションを取る
+  time_limit_minutes: 4
+  questions:
   - id: E001
     domain: engaging_with_ai
     difficulty: basic
@@ -38,12 +44,12 @@ questions:
     explanation: 文脈を含む明確で具体的なプロンプトは、AI があなたのニーズを正確に理解し、より正確で有用な応答を提供するのに役立ちます。
     ksa_mapping:
       knowledge:
-        - K1.1
-        - K1.2
+      - K1.1
+      - K1.2
       skills:
-        - S1.1
+      - S1.1
       attitudes:
-        - A1.1
+      - A1.1
   - id: E002
     domain: engaging_with_ai
     difficulty: intermediate
@@ -58,13 +64,13 @@ questions:
     explanation: 批判的思考には、AI が間違いを犯したり古い情報を提供したりする可能性があるため、信頼できる情報源に対して AI の出力を検証する必要があります。
     ksa_mapping:
       knowledge:
-        - K2.1
-        - K2.2
+      - K2.1
+      - K2.2
       skills:
-        - S1.1
-        - S2.1
+      - S1.1
+      - S2.1
       attitudes:
-        - A2.1
+      - A2.1
   - id: E003
     domain: engaging_with_ai
     difficulty: advanced
@@ -79,14 +85,19 @@ questions:
     explanation: AI のバイアスは、多様性が不足していたり歴史的バイアスを含んでいたりする訓練データから生じることが多く、データソースが評価において重要となります。
     ksa_mapping:
       knowledge:
-        - K3.1
-        - K3.2
+      - K3.1
+      - K3.2
       skills:
-        - S2.1
-        - S2.2
+      - S2.1
+      - S2.2
       attitudes:
-        - A2.1
-        - A3.1
+      - A2.1
+      - A3.1
+- id: creating_with_ai
+  title: AIツールでの創作
+  description: AIツールを使用して創造性と生産性を向上させる
+  time_limit_minutes: 4
+  questions:
   - id: C001
     domain: creating_with_ai
     difficulty: basic
@@ -101,13 +112,13 @@ questions:
     explanation: AI はクリエイティブパートナーとして最もよく機能し、人間の創造性と監督を維持しながら、アイデア出し、フィードバック、洗練を支援します。
     ksa_mapping:
       knowledge:
-        - K1.4
-        - K2.1
+      - K1.4
+      - K2.1
       skills:
-        - S3.1
-        - S3.2
+      - S3.1
+      - S3.2
       attitudes:
-        - A3.1
+      - A3.1
   - id: C002
     domain: creating_with_ai
     difficulty: intermediate
@@ -122,12 +133,12 @@ questions:
     explanation: 知的財産権を尊重し、無許可の肖像や誤解を招くコンテンツの作成のための誤用を避けることは、倫理的な AI 使用に不可欠です。
     ksa_mapping:
       knowledge:
-        - K3.2
-        - K5.1
+      - K3.2
+      - K5.1
       skills:
-        - S2.1
+      - S2.1
       attitudes:
-        - A1.1
+      - A1.1
   - id: C003
     domain: creating_with_ai
     difficulty: advanced
@@ -135,21 +146,26 @@ questions:
     correct_answer: b
     question: 重要なソフトウェアプロジェクトで AI 支援コード生成にどのようにアプローチすべきですか？
     options:
-      a: '[JA: Use AI code directly without review]'
-      b: '[JA: Thoroughly review, test, and validate all AI-generated code]'
-      c: '[JA: Only use AI for comments and documentation]'
-      d: '[JA: Replace all developers with AI tools]'
-    explanation: '[JA translation needed]'
+      a: レビューなしで AI コードを直接使用する
+      b: AI が生成したすべてのコードを徹底的にレビュー、テスト、検証する
+      c: コメントとドキュメントにのみ AI を使用する
+      d: すべての開発者を AI ツールに置き換える
+    explanation: 重要なソフトウェアには、セキュリティ、信頼性、正確性を確保するため、人間による監督、徹底的なテスト、AI 生成コードの検証が必要です。
     ksa_mapping:
       knowledge:
-        - K2.1
-        - K4.1
+      - K2.1
+      - K4.1
       skills:
-        - S3.1
-        - S6.1
+      - S3.1
+      - S6.1
       attitudes:
-        - A3.1
-        - A4.1
+      - A3.1
+      - A4.1
+- id: managing_with_ai
+  title: AIリスクの管理
+  description: AIの制限、プライバシー、倫理的考慮事項を理解する
+  time_limit_minutes: 4
+  questions:
   - id: M001
     domain: managing_with_ai
     difficulty: basic
@@ -157,19 +173,19 @@ questions:
     correct_answer: b
     question: AI ツールを使用する際、機密の個人情報をどのように扱うべきですか？
     options:
-      a: '[JA: Share it freely to get better AI responses]'
-      b: '[JA: Never input sensitive information into AI systems]'
-      c: '[JA: Only share it with trusted AI companies]'
-      d: '[JA: Encrypt it before sharing with AI]'
-    explanation: '[JA translation needed]'
+      a: より良い AI の応答を得るために自由に共有する
+      b: 機密情報を AI システムに入力しない
+      c: 信頼できる AI 企業とのみ共有する
+      d: AI と共有する前に暗号化する
+    explanation: 機密の個人情報は、保存、処理、または潜在的に公開される可能性があるため、AI システムに入力してはいけません。
     ksa_mapping:
       knowledge:
-        - K3.3
-        - K5.2
+      - K3.3
+      - K5.2
       skills:
-        - S2.2
+      - S2.2
       attitudes:
-        - A1.1
+      - A1.1
   - id: M002
     domain: managing_with_ai
     difficulty: intermediate
@@ -177,21 +193,21 @@ questions:
     correct_answer: b
     question: チーム環境で AI ツールの使用をどのように管理すべきですか？
     options:
-      a: '[JA: Let everyone use any AI tool without guidelines]'
-      b: '[JA: Establish clear policies and training for AI tool usage]'
-      c: '[JA: Ban all AI tools to avoid risks]'
-      d: '[JA: Only allow managers to use AI tools]'
-    explanation: '[JA translation needed]'
+      a: ガイドラインなしで誰でも AI ツールを使用できるようにする
+      b: AI ツール使用に関する明確な方針と研修を確立する
+      c: リスクを避けるためにすべての AI ツールを禁止する
+      d: 管理者のみが AI ツールを使用できるようにする
+    explanation: 明確な方針と研修により、チーム全体で責任ある、効果的で一貫した AI ツールの使用が保証され、利益を最大化し、リスクを最小化できます。
     ksa_mapping:
       knowledge:
-        - K4.1
-        - K4.2
+      - K4.1
+      - K4.2
       skills:
-        - S2.1
-        - S5.1
+      - S2.1
+      - S5.1
       attitudes:
-        - A1.1
-        - A2.1
+      - A1.1
+      - A2.1
   - id: M003
     domain: managing_with_ai
     difficulty: advanced
@@ -199,22 +215,27 @@ questions:
     correct_answer: b
     question: ビジネスプロセスに AI を実装する際の最も重要な要因は何ですか？
     options:
-      a: '[JA: Choosing the most advanced AI technology]'
-      b: '[JA: Understanding limitations and maintaining human oversight]'
-      c: '[JA: Implementing AI as quickly as possible]'
-      d: '[JA: Replacing as many human workers as possible]'
-    explanation: '[JA translation needed]'
+      a: 最も高度な AI 技術を選択する
+      b: 制限を理解し、人間による監督を維持する
+      c: できるだけ早く AI を実装する
+      d: できるだけ多くの人間の労働者を置き換える
+    explanation: AI の制限を理解し、適切な人間による監督を維持することで、ビジネスにおける AI の成功した、責任ある、持続可能な実装が保証されます。
     ksa_mapping:
       knowledge:
-        - K3.1
-        - K3.2
-        - K5.1
+      - K3.1
+      - K3.2
+      - K5.1
       skills:
-        - S2.1
-        - S6.2
+      - S2.1
+      - S6.2
       attitudes:
-        - A1.1
-        - A2.1
+      - A1.1
+      - A2.1
+- id: designing_with_ai
+  title: AIソリューションの設計
+  description: AIの実装とイノベーションに関する戦略的思考
+  time_limit_minutes: 3
+  questions:
   - id: D001
     domain: designing_with_ai
     difficulty: basic
@@ -222,20 +243,20 @@ questions:
     correct_answer: b
     question: ユーザー向けの AI 機能を設計する際、主な焦点は何であるべきですか？
     options:
-      a: '[JA: Showcasing the most advanced AI capabilities]'
-      b: '[JA: Solving real user problems and improving user experience]'
-      c: '[JA: Making the AI as complex as possible]'
-      d: '[JA: Hiding the fact that AI is being used]'
-    explanation: '[JA translation needed]'
+      a: 最も高度な AI 機能を披露する
+      b: 実際のユーザーの問題を解決し、ユーザー体験を改善する
+      c: AI をできるだけ複雑にする
+      d: AI が使用されている事実を隠す
+    explanation: ユーザー中心のデザインは、技術そのものを見せるためではなく、実際の問題を解決し、体験を改善することに焦点を当てています。
     ksa_mapping:
       knowledge:
-        - K4.2
-        - K5.3
+      - K4.2
+      - K5.3
       skills:
-        - S5.1
-        - S6.1
+      - S5.1
+      - S6.1
       attitudes:
-        - A2.1
+      - A2.1
   - id: D002
     domain: designing_with_ai
     difficulty: intermediate
@@ -243,21 +264,21 @@ questions:
     correct_answer: b
     question: ユーザー向けアプリケーションで AI システムの障害をどのように処理すべきですか？
     options:
-      a: '[JA: Hide errors and pretend everything is working]'
-      b: '[JA: Design graceful fallbacks and clear error communication]'
-      c: '[JA: Immediately shut down the entire application]'
-      d: '[JA: Blame the user for the error]'
-    explanation: '[JA translation needed]'
+      a: エラーを隠してすべてが動作しているふりをする
+      b: 優雅なフォールバックと明確なエラー通信を設計する
+      c: すぐにアプリケーション全体をシャットダウンする
+      d: エラーをユーザーのせいにする
+    explanation: 優れた AI デザインには、ユーザーの信頼と体験を維持するための優雅なフォールバックと明確なコミュニケーションを含む障害計画が含まれています。
     ksa_mapping:
       knowledge:
-        - K3.2
-        - K5.1
+      - K3.2
+      - K5.1
       skills:
-        - S4.1
-        - S6.2
+      - S4.1
+      - S6.2
       attitudes:
-        - A1.1
-        - A5.1
+      - A1.1
+      - A5.1
   - id: D003
     domain: designing_with_ai
     difficulty: advanced
@@ -265,23 +286,18 @@ questions:
     correct_answer: b
     question: 多様なグローバルオーディエンス向けの AI システムを設計する際の最も重要な考慮事項は何ですか？
     options:
-      a: '[JA: Using the same design for everyone to ensure consistency]'
-      b: '[JA: Understanding cultural contexts and avoiding algorithmic bias]'
-      c: '[JA: Focusing only on the largest market segments]'
-      d: '[JA: Implementing the latest AI technologies everywhere]'
-    explanation: '[JA translation needed]'
+      a: 一貫性を確保するために全員に同じデザインを使用する
+      b: 文化的文脈を理解し、アルゴリズムのバイアスを避ける
+      c: 最大の市場セグメントにのみ焦点を当てる
+      d: あらゆる場所で最新の AI 技術を実装する
+    explanation: 包括的な AI デザインには、多様な文化的文脈を理解し、異なるグループに害を与える可能性のあるアルゴリズムのバイアスを積極的に防ぐことが必要です。
     ksa_mapping:
       knowledge:
-        - K3.3
-        - K5.3
+      - K3.3
+      - K5.3
       skills:
-        - S4.1
-        - S6.1
+      - S4.1
+      - S6.1
       attitudes:
-        - A4.1
-        - A5.1
-metadata:
-  language: ja
-  language_name: Japanese
-  generated_from: ai_literacy_questions.yaml
-  generated_at: '2025-07-03T10:07:41.110Z'
+      - A4.1
+      - A5.1

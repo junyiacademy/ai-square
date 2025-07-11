@@ -6,24 +6,25 @@ assessment_config:
   time_limit_minutes: 15
   passing_score: 60
   domains:
-    - engaging_with_ai
-    - creating_with_ai
-    - managing_with_ai
-    - designing_with_ai
-domains:
-  engaging_with_ai:
+    engaging_with_ai:
+      description: 理解並有效地與AI系統溝通
+      questions: 3
+    creating_with_ai:
+      description: 使用AI工具提升創造力和生產力
+      questions: 3
+    managing_with_ai:
+      description: 理解AI的局限性、隱私和倫理考量
+      questions: 3
+    designing_with_ai:
+      description: 關於AI實施和創新的戰略思考
+      questions: 3
+
+tasks:
+  - id: engaging_with_ai
+    title: 與 AI 系統互動
     description: 理解並有效地與AI系統溝通
-    questions: 3
-  creating_with_ai:
-    description: 使用AI工具提升創造力和生產力
-    questions: 3
-  managing_with_ai:
-    description: 理解AI的局限性、隱私和倫理考量
-    questions: 3
-  designing_with_ai:
-    description: 關於AI實施和創新的戰略思考
-    questions: 3
-questions:
+    time_limit_minutes: 4
+    questions:
   - id: E001
     domain: engaging_with_ai
     difficulty: basic
@@ -87,7 +88,13 @@ questions:
       attitudes:
         - A2.1
         - A3.1
-  - id: C001
+
+  - id: creating_with_ai
+    title: 運用 AI 工具創作
+    description: 使用AI工具提升創造力和生產力
+    time_limit_minutes: 4
+    questions:
+      - id: C001
     domain: creating_with_ai
     difficulty: basic
     type: multiple_choice
@@ -139,7 +146,7 @@ questions:
       b: 徹底審查、測試和驗證所有 AI 生成的代碼
       c: 只將 AI 用於註釋和文檔
       d: 用 AI 工具取代所有開發人員
-    explanation: '[ZHTW translation needed]'
+    explanation: 關鍵軟件需要人類監督、徹底測試和驗證 AI 生成的代碼，以確保安全性、可靠性和正確性。
     ksa_mapping:
       knowledge:
         - K2.1
@@ -150,19 +157,25 @@ questions:
       attitudes:
         - A3.1
         - A4.1
-  - id: M001
-    domain: managing_with_ai
-    difficulty: basic
+
+  - id: managing_with_ai
+    title: 管理 AI 風險
+    description: 理解AI的局限性、隱私和倫理考量
+    time_limit_minutes: 4
+    questions:
+      - id: M001
+        domain: managing_with_ai
+        difficulty: basic
     type: multiple_choice
     correct_answer: b
-    question: 使用 AI 工具時，應該如何處理敏感的個人信息？
-    options:
-      a: 自由分享以獲得更好的 AI 回應
-      b: 絕不將敏感信息輸入 AI 系統
-      c: 只與可信的 AI 公司分享
-      d: 在與 AI 分享前加密
-    explanation: '[ZHTW translation needed]'
-    ksa_mapping:
+        question: 使用 AI 工具時，應該如何處理敏感的個人信息？
+        options:
+          a: 自由分享以獲得更好的 AI 回應
+          b: 絕不將敏感信息輸入 AI 系綔
+          c: 只與可信的 AI 公司分享
+          d: 在與 AI 分享前加密
+        explanation: 敏感的個人信息絕不應該輸入 AI 系統，因為它可能會被儲存、處理或暴露。
+        ksa_mapping:
       knowledge:
         - K3.3
         - K5.2
@@ -170,19 +183,19 @@ questions:
         - S2.2
       attitudes:
         - A1.1
-  - id: M002
-    domain: managing_with_ai
-    difficulty: intermediate
+      - id: M002
+        domain: managing_with_ai
+        difficulty: intermediate
     type: multiple_choice
     correct_answer: b
-    question: 在團隊環境中應該如何管理 AI 工具的使用？
-    options:
-      a: 讓每個人在沒有指導方針的情況下使用任何 AI 工具
-      b: 為 AI 工具使用建立明確的政策和培訓
-      c: 禁止所有 AI 工具以避免風險
-      d: 只允許管理人員使用 AI 工具
-    explanation: '[ZHTW translation needed]'
-    ksa_mapping:
+        question: 在團隊環境中應該如何管理 AI 工具的使用？
+        options:
+          a: 讓每個人在沒有指導方針的情況下使用任何 AI 工具
+          b: 為 AI 工具使用建立明確的政策和培訓
+          c: 禁止所有 AI 工具以避免風險
+          d: 只允許管理人員使用 AI 工具
+        explanation: 明確的政策和培訓確保團隊能負責、有效且一致地使用 AI 工具，同時最大化效益並最小化風險。
+        ksa_mapping:
       knowledge:
         - K4.1
         - K4.2
@@ -192,19 +205,19 @@ questions:
       attitudes:
         - A1.1
         - A2.1
-  - id: M003
-    domain: managing_with_ai
-    difficulty: advanced
+      - id: M003
+        domain: managing_with_ai
+        difficulty: advanced
     type: multiple_choice
     correct_answer: b
-    question: 在業務流程中實施 AI 時，最關鍵的因素是什麼？
-    options:
-      a: 選擇最先進的 AI 技術
-      b: 理解局限性並保持人類監督
-      c: 盡快實施 AI
-      d: 盡可能替換更多人類工作者
-    explanation: '[ZHTW translation needed]'
-    ksa_mapping:
+        question: 在業務流程中實施 AI 時，最關鍵的因素是什麼？
+        options:
+          a: 選擇最先進的 AI 技術
+          b: 理解局限性並保持人類監督
+          c: 盡快實施 AI
+          d: 盡可能替換更多人類工作者
+        explanation: 理解 AI 的局限性並保持適當的人類監督，確保業務中 AI 的成功、負責和可持續實施。
+        ksa_mapping:
       knowledge:
         - K3.1
         - K3.2
@@ -215,19 +228,25 @@ questions:
       attitudes:
         - A1.1
         - A2.1
-  - id: D001
-    domain: designing_with_ai
-    difficulty: basic
+
+  - id: designing_with_ai
+    title: 設計 AI 解決方案
+    description: 關於AI實施和創新的戰略思考
+    time_limit_minutes: 3
+    questions:
+      - id: D001
+        domain: designing_with_ai
+        difficulty: basic
     type: multiple_choice
     correct_answer: b
-    question: 為用戶設計 AI 功能時，主要關注點應該是什麼？
-    options:
-      a: 展示最先進的 AI 能力
-      b: 解決真正的用戶問題並改善用戶體驗
-      c: 讓 AI 盡可能複雜
-      d: 隱藏正在使用 AI 的事實
-    explanation: '[ZHTW translation needed]'
-    ksa_mapping:
+        question: 為用戶設計 AI 功能時，主要關注點應該是什麼？
+        options:
+          a: 展示最先進的 AI 能力
+          b: 解決真正的用戶問題並改善用戶體驗
+          c: 讓 AI 盡可能複雜
+          d: 隱藏正在使用 AI 的事實
+        explanation: 以用戶為中心的設計專注於解決真正的問題和改善體驗，而不是為了展示技術本身。
+        ksa_mapping:
       knowledge:
         - K4.2
         - K5.3
@@ -236,19 +255,19 @@ questions:
         - S6.1
       attitudes:
         - A2.1
-  - id: D002
-    domain: designing_with_ai
-    difficulty: intermediate
-    type: multiple_choice
-    correct_answer: b
-    question: 在面向用戶的應用程序中，應該如何處理 AI 系統故障？
-    options:
-      a: 隱藏錯誤並假裝一切正常
-      b: 設計優雅的後備方案和清晰的錯誤溝通
-      c: 立即關閉整個應用程序
-      d: 將錯誤歸咎於用戶
-    explanation: '[ZHTW translation needed]'
-    ksa_mapping:
+      - id: D002
+        domain: designing_with_ai
+        difficulty: intermediate
+        type: multiple_choice
+        correct_answer: b
+        question: 在面向用戶的應用程序中，應該如何處理 AI 系統故障？
+        options:
+          a: 隱藏錯誤並假裝一切正常
+          b: 設計優雅的後備方案和清晰的錯誤溝通
+          c: 立即關閉整個應用程序
+          d: 將錯誤歸咎於用戶
+        explanation: 良好的 AI 設計包括規劃故障時的優雅後備方案和清晰溝通，以維持用戶信任和體驗。
+        ksa_mapping:
       knowledge:
         - K3.2
         - K5.1
@@ -258,19 +277,19 @@ questions:
       attitudes:
         - A1.1
         - A5.1
-  - id: D003
-    domain: designing_with_ai
-    difficulty: advanced
-    type: multiple_choice
-    correct_answer: b
-    question: 為多元化的全球受眾設計 AI 系統時，最重要的考量是什麼？
-    options:
-      a: 為每個人使用相同的設計以確保一致性
-      b: 理解文化背景並避免算法偏見
-      c: 只關注最大的市場細分
-      d: 在所有地方實施最新的 AI 技術
-    explanation: '[ZHTW translation needed]'
-    ksa_mapping:
+      - id: D003
+        domain: designing_with_ai
+        difficulty: advanced
+        type: multiple_choice
+        correct_answer: b
+        question: 為多元化的全球受眾設計 AI 系統時，最重要的考量是什麼？
+        options:
+          a: 為每個人使用相同的設計以確保一致性
+          b: 理解文化背景並避免算法偏見
+          c: 只關注最大的市場細分
+          d: 在所有地方實施最新的 AI 技術
+        explanation: 包容性 AI 設計需要理解多元的文化背景，並積極預防可能傷害不同群體的算法偏見。
+        ksa_mapping:
       knowledge:
         - K3.3
         - K5.3

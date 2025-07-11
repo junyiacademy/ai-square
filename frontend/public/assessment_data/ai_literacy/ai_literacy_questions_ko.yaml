@@ -1,29 +1,35 @@
 assessment_config:
   id: ai_literacy
   title: AI 리터러시 평가
-  description: AI와의 상호작용, AI를 활용한 창작, AI 위험 관리, AI 솔루션 설계라는 네 가지 핵심 영역에서 AI 시스템에 대한 이해도를 평가합니다. 이 평가를 통해 현재 AI 지식 수준과 개선이 필요한 영역을 파악할 수 있습니다.
+  description: AI와의 상호작용, AI를 활용한 창작, AI 위험 관리, AI 솔루션 설계라는 네 가지 핵심 영역에서 AI 시스템에 대한
+    이해도를 평가합니다. 이 평가를 통해 현재 AI 지식 수준과 개선이 필요한 영역을 파악할 수 있습니다.
   total_questions: 12
   time_limit_minutes: 15
   passing_score: 60
   domains:
-    - engaging_with_ai
-    - creating_with_ai
-    - managing_with_ai
-    - designing_with_ai
-domains:
-  engaging_with_ai:
-    description: AI 시스템을 이해하고 효과적으로 소통하기
-    questions: 3
-  creating_with_ai:
-    description: AI 도구를 사용하여 창의성과 생산성 향상하기
-    questions: 3
-  managing_with_ai:
-    description: AI의 한계, 개인정보 보호 및 윤리적 고려사항 이해하기
-    questions: 3
-  designing_with_ai:
-    description: AI 구현 및 혁신에 대한 전략적 사고
-    questions: 3
-questions:
+    engaging_with_ai:
+      description: AI 시스템을 이해하고 효과적으로 소통하기
+      questions: 3
+    creating_with_ai:
+      description: AI 도구를 사용하여 창의성과 생산성 향상하기
+      questions: 3
+    managing_with_ai:
+      description: AI의 한계, 개인정보 보호 및 윤리적 고려사항 이해하기
+      questions: 3
+    designing_with_ai:
+      description: AI 구현 및 혁신에 대한 전략적 사고
+      questions: 3
+metadata:
+  language: ko
+  language_name: Korean
+  generated_from: ai_literacy_questions.yaml
+  generated_at: '2025-07-03T10:07:41.112Z'
+tasks:
+- id: engaging_with_ai
+  title: AI 시스템과의 상호작용
+  description: AI 시스템을 이해하고 효과적으로 소통하기
+  time_limit_minutes: 4
+  questions:
   - id: E001
     domain: engaging_with_ai
     difficulty: basic
@@ -35,15 +41,16 @@ questions:
       b: 맥락이 포함된 명확하고 구체적인 프롬프트 제공하기
       c: 예/아니오 질문만 사용하기
       d: 항상 한 번에 여러 질문하기
-    explanation: 맥락이 포함된 명확하고 구체적인 프롬프트는 AI가 정확히 무엇이 필요한지 이해하고 더 정확하고 유용한 응답을 제공하는 데 도움이 됩니다.
+    explanation: 맥락이 포함된 명확하고 구체적인 프롬프트는 AI가 정확히 무엇이 필요한지 이해하고 더 정확하고 유용한 응답을 제공하는
+      데 도움이 됩니다.
     ksa_mapping:
       knowledge:
-        - K1.1
-        - K1.2
+      - K1.1
+      - K1.2
       skills:
-        - S1.1
+      - S1.1
       attitudes:
-        - A1.1
+      - A1.1
   - id: E002
     domain: engaging_with_ai
     difficulty: intermediate
@@ -55,16 +62,17 @@ questions:
       b: 다른 신뢰할 수 있는 출처를 통해 정보 확인하기
       c: AI 사용을 완전히 중단하기
       d: AI를 고장으로 신고하기
-    explanation: 비판적 사고는 AI가 실수를 하거나 오래된 정보를 제공할 수 있으므로 신뢰할 수 있는 출처에 대해 AI 출력을 확인해야 합니다.
+    explanation: 비판적 사고는 AI가 실수를 하거나 오래된 정보를 제공할 수 있으므로 신뢰할 수 있는 출처에 대해 AI 출력을 확인해야
+      합니다.
     ksa_mapping:
       knowledge:
-        - K2.1
-        - K2.2
+      - K2.1
+      - K2.2
       skills:
-        - S1.1
-        - S2.1
+      - S1.1
+      - S2.1
       attitudes:
-        - A2.1
+      - A2.1
   - id: E003
     domain: engaging_with_ai
     difficulty: advanced
@@ -79,14 +87,19 @@ questions:
     explanation: AI 편향은 종종 다양성이 부족하거나 역사적 편향을 포함하는 훈련 데이터에서 비롯되어 데이터 소스가 평가에 중요합니다.
     ksa_mapping:
       knowledge:
-        - K3.1
-        - K3.2
+      - K3.1
+      - K3.2
       skills:
-        - S2.1
-        - S2.2
+      - S2.1
+      - S2.2
       attitudes:
-        - A2.1
-        - A3.1
+      - A2.1
+      - A3.1
+- id: creating_with_ai
+  title: AI 도구로 창작하기
+  description: AI 도구를 사용하여 창의성과 생산성 향상하기
+  time_limit_minutes: 4
+  questions:
   - id: C001
     domain: creating_with_ai
     difficulty: basic
@@ -101,13 +114,13 @@ questions:
     explanation: AI는 인간의 창의성과 감독을 유지하면서 아이디어 발상, 피드백, 개선을 돕는 창의적 파트너로서 가장 잘 작동합니다.
     ksa_mapping:
       knowledge:
-        - K1.4
-        - K2.1
+      - K1.4
+      - K2.1
       skills:
-        - S3.1
-        - S3.2
+      - S3.1
+      - S3.2
       attitudes:
-        - A3.1
+      - A3.1
   - id: C002
     domain: creating_with_ai
     difficulty: intermediate
@@ -119,15 +132,16 @@ questions:
       b: 저작권을 존중하고 실제 인물의 딥페이크 피하기
       c: 가장 빠른 생성 설정 사용하기
       d: 가능한 한 많은 이미지 만들기
-    explanation: 지적 재산권을 존중하고 무단 초상권이나 오해의 소지가 있는 콘텐츠 생성을 위한 오용을 피하는 것은 윤리적인 AI 사용에 중요합니다.
+    explanation: 지적 재산권을 존중하고 무단 초상권이나 오해의 소지가 있는 콘텐츠 생성을 위한 오용을 피하는 것은 윤리적인 AI 사용에
+      중요합니다.
     ksa_mapping:
       knowledge:
-        - K3.2
-        - K5.1
+      - K3.2
+      - K5.1
       skills:
-        - S2.1
+      - S2.1
       attitudes:
-        - A1.1
+      - A1.1
   - id: C003
     domain: creating_with_ai
     difficulty: advanced
@@ -142,14 +156,19 @@ questions:
     explanation: '[KO translation needed]'
     ksa_mapping:
       knowledge:
-        - K2.1
-        - K4.1
+      - K2.1
+      - K4.1
       skills:
-        - S3.1
-        - S6.1
+      - S3.1
+      - S6.1
       attitudes:
-        - A3.1
-        - A4.1
+      - A3.1
+      - A4.1
+- id: managing_with_ai
+  title: AI 위험 관리
+  description: AI의 한계, 개인정보 보호 및 윤리적 고려사항 이해하기
+  time_limit_minutes: 4
+  questions:
   - id: M001
     domain: managing_with_ai
     difficulty: basic
@@ -164,12 +183,12 @@ questions:
     explanation: '[KO translation needed]'
     ksa_mapping:
       knowledge:
-        - K3.3
-        - K5.2
+      - K3.3
+      - K5.2
       skills:
-        - S2.2
+      - S2.2
       attitudes:
-        - A1.1
+      - A1.1
   - id: M002
     domain: managing_with_ai
     difficulty: intermediate
@@ -184,14 +203,14 @@ questions:
     explanation: '[KO translation needed]'
     ksa_mapping:
       knowledge:
-        - K4.1
-        - K4.2
+      - K4.1
+      - K4.2
       skills:
-        - S2.1
-        - S5.1
+      - S2.1
+      - S5.1
       attitudes:
-        - A1.1
-        - A2.1
+      - A1.1
+      - A2.1
   - id: M003
     domain: managing_with_ai
     difficulty: advanced
@@ -206,15 +225,20 @@ questions:
     explanation: '[KO translation needed]'
     ksa_mapping:
       knowledge:
-        - K3.1
-        - K3.2
-        - K5.1
+      - K3.1
+      - K3.2
+      - K5.1
       skills:
-        - S2.1
-        - S6.2
+      - S2.1
+      - S6.2
       attitudes:
-        - A1.1
-        - A2.1
+      - A1.1
+      - A2.1
+- id: designing_with_ai
+  title: AI 솔루션 설계
+  description: AI 구현 및 혁신에 대한 전략적 사고
+  time_limit_minutes: 3
+  questions:
   - id: D001
     domain: designing_with_ai
     difficulty: basic
@@ -229,13 +253,13 @@ questions:
     explanation: '[KO translation needed]'
     ksa_mapping:
       knowledge:
-        - K4.2
-        - K5.3
+      - K4.2
+      - K5.3
       skills:
-        - S5.1
-        - S6.1
+      - S5.1
+      - S6.1
       attitudes:
-        - A2.1
+      - A2.1
   - id: D002
     domain: designing_with_ai
     difficulty: intermediate
@@ -250,14 +274,14 @@ questions:
     explanation: '[KO translation needed]'
     ksa_mapping:
       knowledge:
-        - K3.2
-        - K5.1
+      - K3.2
+      - K5.1
       skills:
-        - S4.1
-        - S6.2
+      - S4.1
+      - S6.2
       attitudes:
-        - A1.1
-        - A5.1
+      - A1.1
+      - A5.1
   - id: D003
     domain: designing_with_ai
     difficulty: advanced
@@ -272,16 +296,11 @@ questions:
     explanation: '[KO translation needed]'
     ksa_mapping:
       knowledge:
-        - K3.3
-        - K5.3
+      - K3.3
+      - K5.3
       skills:
-        - S4.1
-        - S6.1
+      - S4.1
+      - S6.1
       attitudes:
-        - A4.1
-        - A5.1
-metadata:
-  language: ko
-  language_name: Korean
-  generated_from: ai_literacy_questions.yaml
-  generated_at: '2025-07-03T10:07:41.112Z'
+      - A4.1
+      - A5.1

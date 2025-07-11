@@ -1,175 +1,211 @@
 assessment_config:
   id: ai_literacy
   title: Evaluasi Literasi AI
-  description: Evaluasi pemahaman Anda tentang sistem AI dalam empat bidang utama berinteraksi dengan AI, berkreasi dengan AI, mengelola risiko AI, dan merancang solusi AI. Evaluasi ini membantu mengidentifikasi tingkat pengetahuan AI Anda saat ini dan area untuk perbaikan.
+  description: Evaluasi pemahaman Anda tentang sistem AI dalam empat bidang utama
+    berinteraksi dengan AI, berkreasi dengan AI, mengelola risiko AI, dan merancang
+    solusi AI. Evaluasi ini membantu mengidentifikasi tingkat pengetahuan AI Anda
+    saat ini dan area untuk perbaikan.
   total_questions: 12
   time_limit_minutes: 15
   passing_score: 60
   domains:
-    - engaging_with_ai
-    - creating_with_ai
-    - managing_with_ai
-    - designing_with_ai
-domains:
-  engaging_with_ai:
-    description: Memahami dan berkomunikasi secara efektif dengan sistem AI
-    questions: 3
-  creating_with_ai:
-    description: Menggunakan alat AI untuk meningkatkan kreativitas dan produktivitas
-    questions: 3
-  managing_with_ai:
-    description: Memahami keterbatasan AI, privasi, dan pertimbangan etis
-    questions: 3
-  designing_with_ai:
-    description: Pemikiran strategis tentang implementasi dan inovasi AI
-    questions: 3
-questions:
+    engaging_with_ai:
+      description: Memahami dan berkomunikasi secara efektif dengan sistem AI
+      questions: 3
+    creating_with_ai:
+      description: Menggunakan alat AI untuk meningkatkan kreativitas dan produktivitas
+      questions: 3
+    managing_with_ai:
+      description: Memahami keterbatasan AI, privasi, dan pertimbangan etis
+      questions: 3
+    designing_with_ai:
+      description: Pemikiran strategis tentang implementasi dan inovasi AI
+      questions: 3
+metadata:
+  language: id
+  language_name: Indonesian
+  generated_from: ai_literacy_questions.yaml
+  generated_at: '2025-07-03T10:07:41.118Z'
+tasks:
+- id: engaging_with_ai
+  title: Berinteraksi dengan Sistem AI
+  description: Memahami dan berkomunikasi secara efektif dengan sistem AI
+  time_limit_minutes: 4
+  questions:
   - id: E001
     domain: engaging_with_ai
     difficulty: basic
     type: multiple_choice
     correct_answer: b
-    question: Apa cara paling efektif untuk mendapatkan hasil yang lebih baik dari chatbot AI?
+    question: Apa cara paling efektif untuk mendapatkan hasil yang lebih baik dari
+      chatbot AI?
     options:
       a: Ajukan pertanyaan yang sangat umum
       b: Berikan petunjuk yang jelas dan spesifik dengan konteks
       c: Gunakan hanya pertanyaan ya/tidak
       d: Selalu ajukan beberapa pertanyaan sekaligus
-    explanation: Petunjuk yang jelas dan spesifik dengan konteks membantu AI memahami persis apa yang Anda butuhkan dan memberikan respons yang lebih akurat dan berguna.
+    explanation: Petunjuk yang jelas dan spesifik dengan konteks membantu AI memahami
+      persis apa yang Anda butuhkan dan memberikan respons yang lebih akurat dan berguna.
     ksa_mapping:
       knowledge:
-        - K1.1
-        - K1.2
+      - K1.1
+      - K1.2
       skills:
-        - S1.1
+      - S1.1
       attitudes:
-        - A1.1
+      - A1.1
   - id: E002
     domain: engaging_with_ai
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
-    question: Ketika AI memberikan jawaban yang salah, apa yang harus menjadi respons pertama Anda?
+    question: Ketika AI memberikan jawaban yang salah, apa yang harus menjadi respons
+      pertama Anda?
     options:
       a: Langsung percaya pada AI dan gunakan informasinya
       b: Verifikasi informasi melalui sumber terpercaya lainnya
       c: Berhenti menggunakan AI sama sekali
       d: Laporkan AI sebagai rusak
-    explanation: Pemikiran kritis memerlukan verifikasi output AI terhadap sumber terpercaya, karena AI dapat membuat kesalahan atau memberikan informasi yang sudah usang.
+    explanation: Pemikiran kritis memerlukan verifikasi output AI terhadap sumber
+      terpercaya, karena AI dapat membuat kesalahan atau memberikan informasi yang
+      sudah usang.
     ksa_mapping:
       knowledge:
-        - K2.1
-        - K2.2
+      - K2.1
+      - K2.2
       skills:
-        - S1.1
-        - S2.1
+      - S1.1
+      - S2.1
       attitudes:
-        - A2.1
+      - A2.1
   - id: E003
     domain: engaging_with_ai
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
-    question: Apa faktor terpenting saat mengevaluasi konten yang dihasilkan AI untuk bias?
+    question: Apa faktor terpenting saat mengevaluasi konten yang dihasilkan AI untuk
+      bias?
     options:
       a: Kecepatan pembuatan
       b: Sumber data pelatihan dan representasinya
       c: Panjang output
       d: Kompleksitas teknis
-    explanation: Bias AI sering berasal dari data pelatihan yang kurang keberagaman atau mengandung bias historis, membuat sumber data menjadi krusial untuk evaluasi.
+    explanation: Bias AI sering berasal dari data pelatihan yang kurang keberagaman
+      atau mengandung bias historis, membuat sumber data menjadi krusial untuk evaluasi.
     ksa_mapping:
       knowledge:
-        - K3.1
-        - K3.2
+      - K3.1
+      - K3.2
       skills:
-        - S2.1
-        - S2.2
+      - S2.1
+      - S2.2
       attitudes:
-        - A2.1
-        - A3.1
+      - A2.1
+      - A3.1
+- id: creating_with_ai
+  title: Berkreasi dengan Alat AI
+  description: Menggunakan alat AI untuk meningkatkan kreativitas dan produktivitas
+  time_limit_minutes: 4
+  questions:
   - id: C001
     domain: creating_with_ai
     difficulty: basic
     type: multiple_choice
     correct_answer: b
-    question: Pendekatan mana yang paling efektif saat menggunakan AI untuk penulisan kreatif?
+    question: Pendekatan mana yang paling efektif saat menggunakan AI untuk penulisan
+      kreatif?
     options:
       a: Biarkan AI menulis semuanya tanpa input manusia
       b: Gunakan AI sebagai mitra kolaboratif untuk brainstorming dan penyempurnaan
       c: Hanya gunakan AI untuk memperbaiki tata bahasa dan ejaan
       d: Hindari AI sepenuhnya dalam proses kreatif
-    explanation: AI bekerja paling baik sebagai mitra kreatif, membantu dengan ideasi, umpan balik, dan penyempurnaan sambil mempertahankan kreativitas dan pengawasan manusia.
+    explanation: AI bekerja paling baik sebagai mitra kreatif, membantu dengan ideasi,
+      umpan balik, dan penyempurnaan sambil mempertahankan kreativitas dan pengawasan
+      manusia.
     ksa_mapping:
       knowledge:
-        - K1.4
-        - K2.1
+      - K1.4
+      - K2.1
       skills:
-        - S3.1
-        - S3.2
+      - S3.1
+      - S3.2
       attitudes:
-        - A3.1
+      - A3.1
   - id: C002
     domain: creating_with_ai
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
-    question: Saat menggunakan generator gambar AI, apa pertimbangan etis yang paling penting?
+    question: Saat menggunakan generator gambar AI, apa pertimbangan etis yang paling
+      penting?
     options:
       a: Membuat gambar serealistis mungkin
       b: Menghormati hak cipta dan menghindari deepfake orang nyata
       c: Menggunakan pengaturan generasi tercepat
       d: Membuat gambar sebanyak mungkin
-    explanation: Menghormati hak kekayaan intelektual dan menghindari penyalahgunaan untuk membuat kemiripan yang tidak sah atau konten yang menyesatkan sangat penting untuk penggunaan AI yang etis.
+    explanation: Menghormati hak kekayaan intelektual dan menghindari penyalahgunaan
+      untuk membuat kemiripan yang tidak sah atau konten yang menyesatkan sangat penting
+      untuk penggunaan AI yang etis.
     ksa_mapping:
       knowledge:
-        - K3.2
-        - K5.1
+      - K3.2
+      - K5.1
       skills:
-        - S2.1
+      - S2.1
       attitudes:
-        - A1.1
+      - A1.1
   - id: C003
     domain: creating_with_ai
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
-    question: Bagaimana Anda harus mendekati pembuatan kode dengan bantuan AI untuk proyek perangkat lunak kritis?
+    question: Bagaimana Anda harus mendekati pembuatan kode dengan bantuan AI untuk
+      proyek perangkat lunak kritis?
     options:
       a: Gunakan kode AI langsung tanpa review
       b: Tinjau, uji, dan validasi semua kode yang dihasilkan AI secara menyeluruh
       c: Hanya gunakan AI untuk komentar dan dokumentasi
       d: Ganti semua pengembang dengan alat AI
-    explanation: Perangkat lunak kritis memerlukan pengawasan manusia, pengujian menyeluruh, dan validasi kode yang dihasilkan AI untuk memastikan keamanan, keandalan, dan kebenaran.
+    explanation: Perangkat lunak kritis memerlukan pengawasan manusia, pengujian menyeluruh,
+      dan validasi kode yang dihasilkan AI untuk memastikan keamanan, keandalan, dan
+      kebenaran.
     ksa_mapping:
       knowledge:
-        - K2.1
-        - K4.1
+      - K2.1
+      - K4.1
       skills:
-        - S3.1
-        - S6.1
+      - S3.1
+      - S6.1
       attitudes:
-        - A3.1
-        - A4.1
+      - A3.1
+      - A4.1
+- id: managing_with_ai
+  title: Mengelola Risiko AI
+  description: Memahami keterbatasan AI, privasi, dan pertimbangan etis
+  time_limit_minutes: 4
+  questions:
   - id: M001
     domain: managing_with_ai
     difficulty: basic
     type: multiple_choice
     correct_answer: b
-    question: Apa yang harus Anda lakukan dengan informasi pribadi sensitif saat menggunakan alat AI?
+    question: Apa yang harus Anda lakukan dengan informasi pribadi sensitif saat menggunakan
+      alat AI?
     options:
       a: Bagikan dengan bebas untuk mendapatkan respons AI yang lebih baik
       b: Jangan pernah memasukkan informasi sensitif ke sistem AI
       c: Hanya bagikan dengan perusahaan AI terpercaya
       d: Enkripsi sebelum berbagi dengan AI
-    explanation: Informasi pribadi sensitif tidak boleh dimasukkan ke sistem AI karena dapat disimpan, diproses, atau berpotensi terekspos.
+    explanation: Informasi pribadi sensitif tidak boleh dimasukkan ke sistem AI karena
+      dapat disimpan, diproses, atau berpotensi terekspos.
     ksa_mapping:
       knowledge:
-        - K3.3
-        - K5.2
+      - K3.3
+      - K5.2
       skills:
-        - S2.2
+      - S2.2
       attitudes:
-        - A1.1
+      - A1.1
   - id: M002
     domain: managing_with_ai
     difficulty: intermediate
@@ -181,17 +217,19 @@ questions:
       b: Tetapkan kebijakan dan pelatihan yang jelas untuk penggunaan alat AI
       c: Larang semua alat AI untuk menghindari risiko
       d: Hanya izinkan manajer menggunakan alat AI
-    explanation: Kebijakan dan pelatihan yang jelas memastikan penggunaan alat AI yang bertanggung jawab, efektif, dan konsisten di seluruh tim sambil memaksimalkan manfaat dan meminimalkan risiko.
+    explanation: Kebijakan dan pelatihan yang jelas memastikan penggunaan alat AI
+      yang bertanggung jawab, efektif, dan konsisten di seluruh tim sambil memaksimalkan
+      manfaat dan meminimalkan risiko.
     ksa_mapping:
       knowledge:
-        - K4.1
-        - K4.2
+      - K4.1
+      - K4.2
       skills:
-        - S2.1
-        - S5.1
+      - S2.1
+      - S5.1
       attitudes:
-        - A1.1
-        - A2.1
+      - A1.1
+      - A2.1
   - id: M003
     domain: managing_with_ai
     difficulty: advanced
@@ -203,85 +241,96 @@ questions:
       b: Memahami keterbatasan dan mempertahankan pengawasan manusia
       c: Mengimplementasikan AI secepat mungkin
       d: Mengganti sebanyak mungkin pekerja manusia
-    explanation: Memahami keterbatasan AI dan mempertahankan pengawasan manusia yang tepat memastikan implementasi AI yang sukses, bertanggung jawab, dan berkelanjutan dalam bisnis.
+    explanation: Memahami keterbatasan AI dan mempertahankan pengawasan manusia yang
+      tepat memastikan implementasi AI yang sukses, bertanggung jawab, dan berkelanjutan
+      dalam bisnis.
     ksa_mapping:
       knowledge:
-        - K3.1
-        - K3.2
-        - K5.1
+      - K3.1
+      - K3.2
+      - K5.1
       skills:
-        - S2.1
-        - S6.2
+      - S2.1
+      - S6.2
       attitudes:
-        - A1.1
-        - A2.1
+      - A1.1
+      - A2.1
+- id: designing_with_ai
+  title: Merancang Solusi AI
+  description: Pemikiran strategis tentang implementasi dan inovasi AI
+  time_limit_minutes: 3
+  questions:
   - id: D001
     domain: designing_with_ai
     difficulty: basic
     type: multiple_choice
     correct_answer: b
-    question: Saat merancang fitur bertenaga AI untuk pengguna, apa yang harus menjadi fokus utama?
+    question: Saat merancang fitur bertenaga AI untuk pengguna, apa yang harus menjadi
+      fokus utama?
     options:
       a: Menampilkan kemampuan AI paling canggih
       b: Memecahkan masalah pengguna nyata dan meningkatkan pengalaman pengguna
       c: Membuat AI sekompleks mungkin
       d: Menyembunyikan fakta bahwa AI sedang digunakan
-    explanation: Desain yang berpusat pada pengguna berfokus pada pemecahan masalah nyata dan peningkatan pengalaman, bukan pada menampilkan teknologi demi teknologi itu sendiri.
+    explanation: Desain yang berpusat pada pengguna berfokus pada pemecahan masalah
+      nyata dan peningkatan pengalaman, bukan pada menampilkan teknologi demi teknologi
+      itu sendiri.
     ksa_mapping:
       knowledge:
-        - K4.2
-        - K5.3
+      - K4.2
+      - K5.3
       skills:
-        - S5.1
-        - S6.1
+      - S5.1
+      - S6.1
       attitudes:
-        - A2.1
+      - A2.1
   - id: D002
     domain: designing_with_ai
     difficulty: intermediate
     type: multiple_choice
     correct_answer: b
-    question: Bagaimana Anda harus menangani kegagalan sistem AI dalam aplikasi yang berhadapan dengan pengguna?
+    question: Bagaimana Anda harus menangani kegagalan sistem AI dalam aplikasi yang
+      berhadapan dengan pengguna?
     options:
       a: Sembunyikan kesalahan dan berpura-pura semuanya berfungsi
       b: Rancang fallback yang elegan dan komunikasi kesalahan yang jelas
       c: Segera matikan seluruh aplikasi
       d: Salahkan pengguna atas kesalahan tersebut
-    explanation: Desain AI yang baik mencakup perencanaan untuk kegagalan dengan fallback yang elegan dan komunikasi yang jelas untuk mempertahankan kepercayaan dan pengalaman pengguna.
+    explanation: Desain AI yang baik mencakup perencanaan untuk kegagalan dengan fallback
+      yang elegan dan komunikasi yang jelas untuk mempertahankan kepercayaan dan pengalaman
+      pengguna.
     ksa_mapping:
       knowledge:
-        - K3.2
-        - K5.1
+      - K3.2
+      - K5.1
       skills:
-        - S4.1
-        - S6.2
+      - S4.1
+      - S6.2
       attitudes:
-        - A1.1
-        - A5.1
+      - A1.1
+      - A5.1
   - id: D003
     domain: designing_with_ai
     difficulty: advanced
     type: multiple_choice
     correct_answer: b
-    question: Apa pertimbangan terpenting saat merancang sistem AI untuk audiens global yang beragam?
+    question: Apa pertimbangan terpenting saat merancang sistem AI untuk audiens global
+      yang beragam?
     options:
       a: Menggunakan desain yang sama untuk semua orang demi konsistensi
       b: Memahami konteks budaya dan menghindari bias algoritmik
       c: Fokus hanya pada segmen pasar terbesar
       d: Menerapkan teknologi AI terbaru di mana-mana
-    explanation: Desain AI inklusif memerlukan pemahaman konteks budaya yang beragam dan bekerja secara aktif untuk mencegah bias algoritmik yang dapat merugikan kelompok yang berbeda.
+    explanation: Desain AI inklusif memerlukan pemahaman konteks budaya yang beragam
+      dan bekerja secara aktif untuk mencegah bias algoritmik yang dapat merugikan
+      kelompok yang berbeda.
     ksa_mapping:
       knowledge:
-        - K3.3
-        - K5.3
+      - K3.3
+      - K5.3
       skills:
-        - S4.1
-        - S6.1
+      - S4.1
+      - S6.1
       attitudes:
-        - A4.1
-        - A5.1
-metadata:
-  language: id
-  language_name: Indonesian
-  generated_from: ai_literacy_questions.yaml
-  generated_at: '2025-07-03T10:07:41.118Z'
+      - A4.1
+      - A5.1
