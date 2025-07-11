@@ -118,32 +118,9 @@ export class DiscoveryYAMLLoader {
   }
 
   private static async loadPathInternal(pathId: string, language: 'en' | 'zhTW'): Promise<DiscoveryPath | null> {
-    // Map path IDs to folder structure
-    const pathCategoryMap: Record<string, string> = {
-      'ai_engineer': 'technology',
-      'ai_artist': 'arts',
-      'ai_researcher': 'science',
-      'ai_ethicist': 'society',
-      'content_creator': 'arts',
-      'startup_founder': 'society',
-      'ai_developer': 'technology',
-      'tech_entrepreneur': 'technology',
-      'ux_designer': 'arts',
-      'data_analyst': 'technology',
-      'product_manager': 'society',
-      'game_designer': 'arts',
-      'app_developer': 'technology',
-      'youtuber': 'arts'
-    };
-
-    const category = pathCategoryMap[pathId];
-    if (!category) {
-      console.warn(`Unknown path ID: ${pathId}`);
-      return null;
-    }
-
+    // Simplified structure: discovery_data/{profession}/{profession}_{lang}.yml
     const filename = language === 'zhTW' ? `${pathId}_zhTW.yml` : `${pathId}_en.yml`;
-    const url = `/discovery_data/${category}/${pathId}/${filename}`;
+    const url = `/discovery_data/${pathId}/${filename}`;
 
     try {
       const response = await fetch(url);
@@ -162,11 +139,24 @@ export class DiscoveryYAMLLoader {
   }
 
   static async loadAllPaths(language: 'en' | 'zhTW' = 'zhTW'): Promise<DiscoveryPath[]> {
+    // All available profession paths
     const pathIds = [
-      'ai_engineer',
-      'ai_artist',
-      'ai_researcher',
-      'ai_ethicist'
+      // Technology
+      'app_developer',
+      'cybersecurity_specialist',
+      'data_analyst',
+      'tech_entrepreneur',
+      // Arts
+      'content_creator',
+      'game_designer',
+      'ux_designer',
+      'youtuber',
+      // Science
+      'biotech_researcher',
+      'environmental_scientist',
+      // Society
+      'product_manager',
+      'startup_founder'
     ];
 
     const promises = pathIds.map(id => this.loadPath(id, language));
