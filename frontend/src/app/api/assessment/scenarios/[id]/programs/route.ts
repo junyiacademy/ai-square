@@ -236,6 +236,13 @@ export async function POST(
               ksa_mapping: q.ksa_mapping
             })) || [];
             
+            console.log(`Creating task ${i + 1}:`, {
+              taskId: taskData.id,
+              title: taskData.title,
+              questionsCount: taskQuestions.length,
+              firstQuestion: taskQuestions[0]?.question?.substring(0, 50)
+            });
+            
             // Create task for this domain
             const task = await taskRepo.create({
               programId: program.id,

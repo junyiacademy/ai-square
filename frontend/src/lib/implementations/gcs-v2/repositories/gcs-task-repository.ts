@@ -23,7 +23,22 @@ export class GCSTaskRepository<T extends ITask = ITask>
       interactions: [],
     } as T;
     
-    return this.saveEntity(newTask);
+    console.log('Creating task:', {
+      taskId: newTask.id,
+      programId: newTask.programId,
+      title: newTask.title,
+      hasContent: !!newTask.content,
+      questionsCount: newTask.content?.context?.questions?.length || newTask.content?.questions?.length || 0
+    });
+    
+    try {
+      const savedTask = await this.saveEntity(newTask);
+      console.log('Task created successfully:', savedTask.id);
+      return savedTask;
+    } catch (error) {
+      console.error('Failed to create task:', error);
+      throw error;
+    }
   }
 
   async createBatch(tasks: Omit<T, 'id'>[]): Promise<T[]> {
@@ -43,6 +58,12 @@ export class GCSTaskRepository<T extends ITask = ITask>
 
   async findByProgram(programId: string): Promise<T[]> {
     const allTasks = await this.listAllEntities();
+    console.log('Finding tasks for program', programId, {
+      totalTasks: allTasks.length,
+      taskProgramIds: allTasks.map(t => t.programId),
+      matchingTasks: allTasks.filter(task => task.programId === programId).length
+    });
+    
     return allTasks.filter(task => task.programId === programId)
       .sort((a, b) => a.scenarioTaskIndex - b.scenarioTaskIndex);
   }

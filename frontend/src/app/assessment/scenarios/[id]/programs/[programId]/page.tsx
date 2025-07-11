@@ -127,6 +127,23 @@ export default function AssessmentProgramPage({
     }
   };
 
+  // Enhanced debugging for Task 4 issue - must be at top level before any returns
+  useEffect(() => {
+    if (currentTask) {
+      console.log('Current Task Debug:', {
+        taskId: currentTask.id,
+        taskTitle: currentTask.title,
+        taskIndex: currentTaskIndex,
+        totalTasks: tasks.length,
+        hasContent: !!currentTask.content,
+        hasContext: !!currentTask.content?.context,
+        questionsInContext: currentTask.content?.context?.questions?.length || 0,
+        questionsDirectly: currentTask.content?.questions?.length || 0,
+        contentStructure: currentTask.content
+      });
+    }
+  }, [currentTask, currentTaskIndex, tasks.length]);
+
   const handleQuizComplete = async (answers: UserAnswer[]) => {
     setSubmitting(true); // Show loading state
     try {
@@ -177,7 +194,8 @@ export default function AssessmentProgramPage({
           headers: {
             'Content-Type': 'application/json',
           },
-          credentials: 'include'
+          credentials: 'include',
+          body: JSON.stringify({})
         });
         
         // Navigate to complete page
@@ -224,14 +242,15 @@ export default function AssessmentProgramPage({
   const questions = currentTask?.content?.context?.questions || currentTask?.content?.questions || [];
   
   if (!currentTask || questions.length === 0) {
-    console.error('Task validation failed:', {
+    const debugInfo = {
       hasTask: !!currentTask,
       hasContent: !!currentTask?.content,
       hasContext: !!currentTask?.content?.context,
       contextQuestions: currentTask?.content?.context?.questions?.length || 0,
       directQuestions: currentTask?.content?.questions?.length || 0,
       taskStructure: currentTask
-    });
+    };
+    console.error('Task validation failed:', JSON.stringify(debugInfo, null, 2));
     
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">

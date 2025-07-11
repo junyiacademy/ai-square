@@ -76,9 +76,41 @@ export default function AssessmentCompletePage({
       });
       const programData = await programRes.json();
       
-      if (programData.currentTask) {
-        // Store task data in state instead of localStorage
-        // Check both locations for questions (context.questions or direct questions)
+      // For completed assessments, we need to load ALL tasks data
+      // Let's fetch detailed program data with all tasks
+      const detailedRes = await fetch(`/api/assessment/programs/${progId}?includeAllTasks=true`, {
+        credentials: 'include',
+        headers
+      });
+      const detailedData = await detailedRes.json();
+      
+      if (detailedData.allTasks && detailedData.allTasks.length > 0) {
+        // Collect questions and interactions from ALL tasks
+        let allQuestions: any[] = [];
+        let allInteractions: any[] = [];
+        
+        detailedData.allTasks.forEach((task: any) => {
+          const taskQuestions = task.content?.context?.questions || 
+                               task.content?.questions || 
+                               [];
+          const taskInteractions = task.interactions || [];
+          
+          allQuestions = [...allQuestions, ...taskQuestions];
+          allInteractions = [...allInteractions, ...taskInteractions];
+        });
+        
+        console.log('Loaded all tasks data:', {
+          tasksCount: detailedData.allTasks.length,
+          totalQuestions: allQuestions.length,
+          totalInteractions: allInteractions.length
+        });
+        
+        setTaskData({
+          questions: allQuestions,
+          interactions: allInteractions
+        });
+      } else if (programData.currentTask) {
+        // Fallback to single task (legacy support)
         const questions = programData.currentTask.content?.context?.questions || 
                          programData.currentTask.content?.questions || 
                          [];

@@ -47,7 +47,13 @@ export async function POST(
       }
     }
     
-    const body = await request.json();
+    let body = {};
+    try {
+      body = await request.json();
+    } catch (error) {
+      // No JSON body provided, that's fine
+      console.log('No JSON body provided for complete request');
+    }
     
     // Await params before using
     const { programId } = await params;
@@ -82,13 +88,32 @@ export async function POST(
     let allAnswers: any[] = [];
     let allQuestions: any[] = [];
     
+    console.log('Collecting answers and questions from', validTasks.length, 'tasks');
+    
     for (const task of validTasks) {
       const taskAnswers = task.interactions.filter(i => i.type === 'assessment_answer');
       const taskQuestions = task.content?.context?.questions || task.content?.questions || [];
       
+      console.log(`Task ${task.title}:`, {
+        taskId: task.id,
+        answersCount: taskAnswers.length,
+        questionsCount: taskQuestions.length,
+        questionsKSA: taskQuestions.map((q: any) => ({
+          id: q.id,
+          domain: q.domain,
+          ksa: q.ksa_mapping
+        }))
+      });
+      
       allAnswers = [...allAnswers, ...taskAnswers];
       allQuestions = [...allQuestions, ...taskQuestions];
     }
+    
+    console.log('Total collected:', {
+      allAnswersCount: allAnswers.length,
+      allQuestionsCount: allQuestions.length,
+      allKSAMappings: allQuestions.map((q: any) => q.ksa_mapping).filter(Boolean)
+    });
     
     const totalQuestions = allQuestions.length;
     const correctAnswers = allAnswers.filter(a => a.content.isCorrect === true).length;
@@ -176,9 +201,19 @@ export async function POST(
     };
     
     // Analyze each answer to determine KSA performance
-    allAnswers.forEach((answer: any) => {
+    console.log('Analyzing KSA performance for', allAnswers.length, 'answers');
+    
+    allAnswers.forEach((answer: any, index: number) => {
       const questionId = answer.content.questionId;
       const question = allQuestions.find((q: any) => q.id === questionId);
+      
+      console.log(`Answer ${index + 1}:`, {
+        questionId,
+        isCorrect: answer.content.isCorrect,
+        hasQuestion: !!question,
+        hasKSAMapping: !!(question?.ksa_mapping),
+        ksa: question?.ksa_mapping
+      });
       
       if (question && question.ksa_mapping) {
         const targetKSA = answer.content.isCorrect ? correctKSA : incorrectKSA;
@@ -192,6 +227,19 @@ export async function POST(
         if (question.ksa_mapping.attitudes) {
           question.ksa_mapping.attitudes.forEach((a: string) => targetKSA.attitudes.add(a));
         }
+      }
+    });
+    
+    console.log('Final KSA analysis:', {
+      correctKSA: {
+        knowledge: Array.from(correctKSA.knowledge),
+        skills: Array.from(correctKSA.skills),
+        attitudes: Array.from(correctKSA.attitudes)
+      },
+      incorrectKSA: {
+        knowledge: Array.from(incorrectKSA.knowledge),
+        skills: Array.from(incorrectKSA.skills),
+        attitudes: Array.from(incorrectKSA.attitudes)
       }
     });
     
@@ -216,6 +264,17 @@ export async function POST(
     });
     
     // Create evaluation
+    console.log('Creating evaluation with data:', {
+      targetType: 'program',
+      targetId: programId,
+      evaluationType: 'assessment_complete',
+      score: overallScore,
+      totalQuestions,
+      correctAnswers,
+      level,
+      completionTime
+    });
+    
     const evaluation = await evaluationRepo.create({
       targetType: 'program',
       targetId: programId,
@@ -262,6 +321,12 @@ export async function POST(
         }
       },
       createdAt: new Date().toISOString()
+    });
+    
+    console.log('Evaluation created successfully:', {
+      evaluationId: evaluation.id,
+      score: evaluation.score,
+      targetId: evaluation.targetId
     });
     
     // Update program score and complete it

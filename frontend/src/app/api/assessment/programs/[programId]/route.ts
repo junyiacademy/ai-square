@@ -56,10 +56,31 @@ export async function GET(
       );
     }
     
+    // Check if we should include all tasks (for complete page)
+    const { searchParams } = new URL(request.url);
+    const includeAllTasks = searchParams.get('includeAllTasks') === 'true';
+    
     // Get all tasks for the program
     const tasks = await taskRepo.findByProgram(programId);
     
+    console.log('Debug: Tasks loaded for program', programId, {
+      tasksCount: tasks?.length || 0,
+      programTaskIds: program.taskIds || [],
+      includeAllTasks,
+      tasks: tasks?.map(t => ({
+        id: t.id,
+        title: t.title,
+        status: t.status,
+        hasContent: !!t.content,
+        hasQuestions: !!(t.content?.context?.questions?.length || t.content?.questions?.length)
+      })) || []
+    });
+    
     if (!tasks || tasks.length === 0) {
+      console.error('No tasks found for program', programId, {
+        programData: program,
+        allTasksInRepo: await taskRepo.listAll()
+      });
       return NextResponse.json(
         { error: 'No tasks found' },
         { status: 404 }
@@ -75,6 +96,23 @@ export async function GET(
       return NextResponse.json({
         program,
         currentTask,
+        totalTasks: tasks.length
+      });
+    }
+    
+    // If includeAllTasks is true, return full task data
+    if (includeAllTasks) {
+      return NextResponse.json({
+        program,
+        currentTask,
+        currentTaskIndex,
+        allTasks: tasks, // Return full task objects with all content
+        tasks: tasks.map(t => ({
+          id: t.id,
+          title: t.title,
+          status: t.status,
+          questionsCount: t.content?.context?.questions?.length || t.content?.questions?.length || 0
+        })),
         totalTasks: tasks.length
       });
     }

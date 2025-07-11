@@ -50,9 +50,16 @@ export async function GET(
     
     // Get evaluation for this program
     const evaluations = await evaluationRepo.findByTarget('program', programId);
+    console.log('Found evaluations for program', programId, {
+      evaluationsCount: evaluations.length,
+      evaluationTypes: evaluations.map(e => e.evaluationType),
+      evaluationIds: evaluations.map(e => e.id)
+    });
+    
     const evaluation = evaluations.find(e => e.evaluationType === 'assessment_complete');
     
     if (!evaluation) {
+      console.error('No assessment_complete evaluation found for program', programId);
       return NextResponse.json(
         { error: 'Evaluation not found' },
         { status: 404 }

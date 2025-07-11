@@ -80,7 +80,11 @@ export async function POST(
       id: nextTask?.id,
       title: nextTask?.title,
       hasContent: !!nextTask?.content,
-      questionsCount: nextTask?.content?.context?.questions?.length || nextTask?.content?.questions?.length || 0
+      hasContext: !!nextTask?.content?.context,
+      questionsInContext: nextTask?.content?.context?.questions?.length || 0,
+      questionsDirect: nextTask?.content?.questions?.length || 0,
+      contentKeys: nextTask?.content ? Object.keys(nextTask.content) : [],
+      contextKeys: nextTask?.content?.context ? Object.keys(nextTask.content.context) : []
     });
     
     return NextResponse.json({
