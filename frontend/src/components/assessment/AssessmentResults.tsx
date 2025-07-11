@@ -186,7 +186,24 @@ export default function AssessmentResults({ result, domains, onRetake, questions
     return analysis;
   }, [questions, userAnswers]);
 
-  const ksaAnalysis = analyzeKSA();
+  // Use KSA analysis from result if available, otherwise calculate from questions/answers
+  const ksaAnalysis = result.ksaAnalysis ? {
+    knowledge: result.ksaAnalysis.knowledge.strong.map(code => ({
+      code,
+      count: 1,
+      competencies: []
+    })),
+    skills: result.ksaAnalysis.skills.strong.map(code => ({
+      code,
+      count: 1,
+      competencies: []
+    })),
+    attitudes: result.ksaAnalysis.attitudes.strong.map(code => ({
+      code,
+      count: 1,
+      competencies: []
+    }))
+  } : analyzeKSA();
 
   const handleSaveResults = useCallback(async () => {
     console.log('=== Save button clicked ===');

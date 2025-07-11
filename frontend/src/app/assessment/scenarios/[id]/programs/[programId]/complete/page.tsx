@@ -78,8 +78,12 @@ export default function AssessmentCompletePage({
       
       if (programData.currentTask) {
         // Store task data in state instead of localStorage
+        // Check both locations for questions (context.questions or direct questions)
+        const questions = programData.currentTask.content?.context?.questions || 
+                         programData.currentTask.content?.questions || 
+                         [];
         setTaskData({
-          questions: programData.currentTask.content.questions || [],
+          questions: questions,
           interactions: programData.currentTask.interactions || []
         });
       }
@@ -171,7 +175,8 @@ export default function AssessmentCompletePage({
     timeSpentSeconds: evaluation.metadata?.completionTime || 0,
     completedAt: new Date(),
     level: (evaluation.metadata?.level || 'beginner') as 'beginner' | 'intermediate' | 'advanced' | 'expert',
-    recommendations: evaluation.metadata?.recommendations || []
+    recommendations: evaluation.metadata?.recommendations || [],
+    ksaAnalysis: evaluation.metadata?.ksaAnalysis
   };
 
   // Convert interactions to UserAnswer format

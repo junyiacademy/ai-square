@@ -179,6 +179,20 @@ export async function POST(
       );
     }
     
+    // Check if user already has an active program for this scenario
+    const existingPrograms = await programRepo.findByUser(email);
+    const activeProgram = existingPrograms.find(p => 
+      p.scenarioId === id && p.status === 'active'
+    );
+    
+    if (activeProgram) {
+      console.log(`User ${email} already has an active program for scenario ${id}, returning existing`);
+      return NextResponse.json({ 
+        program: activeProgram,
+        existing: true
+      });
+    }
+    
     // Create new program
     const program = await programRepo.create({
       scenarioId: id,

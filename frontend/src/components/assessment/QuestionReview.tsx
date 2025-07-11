@@ -12,27 +12,56 @@ interface QuestionReviewProps {
 }
 
 export default function QuestionReview({ 
-  questions, 
-  userAnswers, 
-  selectedQuestionIds,
+  questions = [], 
+  userAnswers = [], 
+  selectedQuestionIds = [],
   onClose 
 }: QuestionReviewProps) {
   const { t } = useTranslation('assessment');
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Filter questions based on selected IDs
-  const selectedQuestions = questions.filter(q => selectedQuestionIds.includes(q.id));
+  // Filter questions based on selected IDs (with safety check)
+  const selectedQuestions = questions.filter(q => q && q.id && selectedQuestionIds.includes(q.id));
   
   if (selectedQuestions.length === 0) {
+    return (
+      <div className="bg-white rounded-lg shadow-lg p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold text-gray-900">
+            {t('results.questionReview.title')}
+          </h3>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-500 transition-colors"
+          >
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div className="text-center text-gray-500 py-8">
+          <p>{t('results.questionReview.noQuestions')}</p>
+          {selectedQuestionIds.length > 0 && (
+            <p className="text-sm mt-2 text-gray-400">
+              {t('results.questionReview.questionsNotFound')}
+            </p>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  const currentQuestion = selectedQuestions[currentIndex];
+  const userAnswer = currentQuestion ? userAnswers.find(a => a && a.questionId === currentQuestion.id) : undefined;
+
+  // If no current question, show empty state
+  if (!currentQuestion) {
     return (
       <div className="p-4 text-center text-gray-500">
         {t('results.questionReview.noQuestions')}
       </div>
     );
   }
-
-  const currentQuestion = selectedQuestions[currentIndex];
-  const userAnswer = userAnswers.find(a => a.questionId === currentQuestion.id);
 
   const handleNext = () => {
     if (currentIndex < selectedQuestions.length - 1) {

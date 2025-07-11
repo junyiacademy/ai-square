@@ -8,8 +8,8 @@ import QuestionReview from './QuestionReview';
 
 interface CompetencyKnowledgeGraphProps {
   result: AssessmentResult;
-  questions: AssessmentQuestion[];
-  userAnswers: UserAnswer[];
+  questions?: AssessmentQuestion[];
+  userAnswers?: UserAnswer[];
   domainsData?: unknown[] | null; // Domain competency data from API
   ksaMaps?: {
     kMap: Record<string, { summary: string; theme: string; explanation?: string }>;
@@ -42,8 +42,8 @@ interface GraphLink extends d3.SimulationLinkDatum<GraphNode> {
 
 export default function CompetencyKnowledgeGraph({ 
   result, 
-  questions, 
-  userAnswers,
+  questions = [], 
+  userAnswers = [],
   domainsData,
   ksaMaps 
 }: CompetencyKnowledgeGraphProps) {
@@ -60,18 +60,20 @@ export default function CompetencyKnowledgeGraph({
 
     // First pass: collect all KSA codes from all questions (not just answered ones)
     questions.forEach(question => {
-      if (question.ksa_mapping) {
+      if (question && question.ksa_mapping) {
         const allCodes = [
-          ...question.ksa_mapping.knowledge,
-          ...question.ksa_mapping.skills,
-          ...question.ksa_mapping.attitudes
+          ...(question.ksa_mapping.knowledge || []),
+          ...(question.ksa_mapping.skills || []),
+          ...(question.ksa_mapping.attitudes || [])
         ];
         
         allCodes.forEach(code => {
           if (!ksaMastery[code]) {
             ksaMastery[code] = { correct: 0, total: 0, questions: [] };
           }
-          ksaMastery[code].questions.push(question.id);
+          if (question.id) {
+            ksaMastery[code].questions.push(question.id);
+          }
           ksaMastery[code].total++;
         });
       }
@@ -79,14 +81,14 @@ export default function CompetencyKnowledgeGraph({
 
     // Second pass: count correct answers
     userAnswers.forEach(answer => {
-      const question = questions.find(q => q.id === answer.questionId);
+      const question = questions.find(q => q && q.id === answer.questionId);
       if (!question || !question.ksa_mapping) return;
 
       if (answer.isCorrect) {
         const allCodes = [
-          ...question.ksa_mapping.knowledge,
-          ...question.ksa_mapping.skills,
-          ...question.ksa_mapping.attitudes
+          ...(question.ksa_mapping.knowledge || []),
+          ...(question.ksa_mapping.skills || []),
+          ...(question.ksa_mapping.attitudes || [])
         ];
         
         allCodes.forEach(code => {
@@ -418,7 +420,7 @@ export default function CompetencyKnowledgeGraph({
       .on('click', (event, d) => {
         setSelectedNode(d);
         // If clicking on a KSA code or subcode node, show related questions
-        if ((d.type === 'ksa-code' || d.type === 'ksa-subcode') && d.details?.questions) {
+        if ((d.type === 'ksa-code' || d.type === 'ksa-subcode') && d.details?.questions && d.details.questions.length > 0) {
           setSelectedQuestionIds(d.details.questions);
           setShowQuestionReview(true);
         } else {

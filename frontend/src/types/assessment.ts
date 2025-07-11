@@ -170,6 +170,23 @@ export interface AssessmentResult {
   completedAt: Date;
   level: 'beginner' | 'intermediate' | 'advanced' | 'expert';
   recommendations: string[];
+  ksaAnalysis?: {
+    knowledge: {
+      score: number;
+      strong: string[];
+      weak: string[];
+    };
+    skills: {
+      score: number;
+      strong: string[];
+      weak: string[];
+    };
+    attitudes: {
+      score: number;
+      strong: string[];
+      weak: string[];
+    };
+  };
 }
 
 export interface RadarChartData {

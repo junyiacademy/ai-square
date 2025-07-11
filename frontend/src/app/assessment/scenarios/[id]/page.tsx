@@ -100,6 +100,12 @@ export default function AssessmentScenarioDetailPage({
   };
 
   const startNewProgram = async () => {
+    // Prevent double-clicking
+    if (startingProgram) {
+      console.log('Already starting a program, ignoring click');
+      return;
+    }
+    
     setStartingProgram(true);
     try {
       if (!isLoggedIn || !user) {
