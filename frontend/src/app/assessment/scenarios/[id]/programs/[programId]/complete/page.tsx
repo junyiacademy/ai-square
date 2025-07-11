@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import AssessmentResults from '@/components/assessment/AssessmentResults';
-import { AssessmentResult, AssessmentData, UserAnswer, DomainScores } from '@/types/assessment';
+import { AssessmentResult, AssessmentData, UserAnswer, DomainScores, AssessmentQuestion } from '@/types/assessment';
 interface Evaluation {
   id: string;
   score: number;
@@ -44,7 +44,16 @@ export default function AssessmentCompletePage({
   const [loading, setLoading] = useState(true);
   const [programId, setProgramId] = useState<string>('');
   const [scenarioId, setScenarioId] = useState<string>('');
-  const [taskData, setTaskData] = useState<{ questions: any[]; interactions: any[] } | null>(null);
+  const [taskData, setTaskData] = useState<{ questions: AssessmentQuestion[]; interactions: Array<{
+    type: string;
+    content: {
+      questionId: string;
+      selectedAnswer: string;
+      timeSpent: number;
+      isCorrect: boolean;
+    };
+    timestamp: string;
+  }> } | null>(null);
   const router = useRouter();
   const { t } = useTranslation();
 
@@ -86,10 +95,34 @@ export default function AssessmentCompletePage({
       
       if (detailedData.allTasks && detailedData.allTasks.length > 0) {
         // Collect questions and interactions from ALL tasks
-        let allQuestions: any[] = [];
-        let allInteractions: any[] = [];
+        let allQuestions: AssessmentQuestion[] = [];
+        let allInteractions: Array<{
+          type: string;
+          content: {
+            questionId: string;
+            selectedAnswer: string;
+            timeSpent: number;
+            isCorrect: boolean;
+          };
+          timestamp: string;
+        }> = [];
         
-        detailedData.allTasks.forEach((task: any) => {
+        detailedData.allTasks.forEach((task: {
+          content?: {
+            context?: { questions?: AssessmentQuestion[] };
+            questions?: AssessmentQuestion[];
+          };
+          interactions?: Array<{
+            type: string;
+            content: {
+              questionId: string;
+              selectedAnswer: string;
+              timeSpent: number;
+              isCorrect: boolean;
+            };
+            timestamp: string;
+          }>;
+        }) => {
           const taskQuestions = task.content?.context?.questions || 
                                task.content?.questions || 
                                [];

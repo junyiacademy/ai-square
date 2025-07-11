@@ -47,10 +47,9 @@ export async function POST(
       }
     }
     
-    let body = {};
     try {
-      body = await request.json();
-    } catch (error) {
+      await request.json();
+    } catch {
       // No JSON body provided, that's fine
       console.log('No JSON body provided for complete request');
     }
@@ -128,8 +127,29 @@ export async function POST(
     }
     
     // Collect all answers and questions from all tasks
-    let allAnswers: any[] = [];
-    let allQuestions: any[] = [];
+    let allAnswers: Array<{
+      type: string;
+      content: {
+        questionId: string;
+        selectedAnswer: string;
+        timeSpent: number;
+        isCorrect: boolean;
+      };
+    }> = [];
+    let allQuestions: Array<{
+      id: string;
+      domain: string;
+      question: string;
+      options: Record<string, string>;
+      difficulty: string;
+      correct_answer: string;
+      explanation: string;
+      ksa_mapping: {
+        knowledge?: string[];
+        skills?: string[];
+        attitudes?: string[];
+      };
+    }> = [];
     
     console.log('Collecting answers and questions from', validTasks.length, 'tasks');
     
@@ -141,7 +161,7 @@ export async function POST(
         taskId: task.id,
         answersCount: taskAnswers.length,
         questionsCount: taskQuestions.length,
-        questionsKSA: taskQuestions.map((q: any) => ({
+        questionsKSA: taskQuestions.map((q) => ({
           id: q.id,
           domain: q.domain,
           ksa: q.ksa_mapping
@@ -155,7 +175,7 @@ export async function POST(
     console.log('Total collected:', {
       allAnswersCount: allAnswers.length,
       allQuestionsCount: allQuestions.length,
-      allKSAMappings: allQuestions.map((q: any) => q.ksa_mapping).filter(Boolean)
+      allKSAMappings: allQuestions.map((q) => q.ksa_mapping).filter(Boolean)
     });
     
     const totalQuestions = allQuestions.length;
@@ -246,9 +266,9 @@ export async function POST(
     // Analyze each answer to determine KSA performance
     console.log('Analyzing KSA performance for', allAnswers.length, 'answers');
     
-    allAnswers.forEach((answer: any, index: number) => {
+    allAnswers.forEach((answer, index) => {
       const questionId = answer.content.questionId;
-      const question = allQuestions.find((q: any) => q.id === questionId);
+      const question = allQuestions.find((q) => q.id === questionId);
       
       console.log(`Answer ${index + 1}:`, {
         questionId,
