@@ -109,20 +109,59 @@ export default function ProgramLearningPage() {
       setLoading(true);
       
       // Load scenario data with language parameter
-      const scenarioRes = await fetch(`/api/pbl/scenarios/${scenarioId}?lang=${i18n.language}`);
+      const scenarioRes = await fetch(`/api/discovery/scenarios/${scenarioId}?lang=${i18n.language}`);
       if (!scenarioRes.ok) throw new Error('Failed to load scenario');
       const scenarioData = await scenarioRes.json();
-      setScenario(scenarioData.data);
+      // Handle unified architecture response structure
+      if (scenarioData.success && scenarioData.data) {
+        setScenario(scenarioData.data);
+      } else if (scenarioData.id) {
+        // Direct scenario object
+        setScenario(scenarioData);
+      }
       
-      // Load program data (skip for temp programs)
+      // Load program and task data using unified architecture
       let loadedProgram: Program | null = null;
+      let loadedTask: Task | null = null;
+      
       if (!programId.startsWith('temp_')) {
         try {
-          const programRes = await fetch(`/api/pbl/programs/${programId}?scenarioId=${scenarioId}`);
+          // Use unified architecture API to get program
+          const programRes = await fetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}`);
           if (programRes.ok) {
             const programData = await programRes.json();
-            if (programData.success && programData.program) {
-              loadedProgram = programData.program;
+            if (programData) {
+              loadedProgram = {
+                id: programData.id,
+                scenario_id: scenarioId,
+                status: programData.status,
+                created_at: programData.startedAt,
+                tasks: programData.tasks || [],
+                taskIds: programData.taskIds || []
+              } as Program;
+              
+              // Load task data using unified architecture
+              if (taskId) {
+                try {
+                  const taskRes = await fetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`);
+                  if (taskRes.ok) {
+                    const taskData = await taskRes.json();
+                    if (taskData) {
+                      loadedTask = {
+                        id: taskData.id,
+                        title: taskData.title,
+                        type: taskData.type,
+                        content: taskData.content,
+                        interactions: taskData.interactions || [],
+                        status: taskData.status
+                      } as Task;
+                      setCurrentTask(loadedTask);
+                    }
+                  }
+                } catch (error) {
+                  console.error('Error loading task:', error);
+                }
+              }
               
               // If this is a draft program being accessed, update its timestamps
               if (loadedProgram && loadedProgram.status === 'draft') {
