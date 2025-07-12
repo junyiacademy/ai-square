@@ -108,11 +108,11 @@ export default function ProgramLearningPage() {
     try {
       setLoading(true);
       
-      // Load scenario data with language parameter
-      const scenarioRes = await fetch(`/api/discovery/scenarios/${scenarioId}?lang=${i18n.language}`);
+      // Load scenario data with language parameter using PBL API
+      const scenarioRes = await fetch(`/api/pbl/scenarios/${scenarioId}?lang=${i18n.language}`);
       if (!scenarioRes.ok) throw new Error('Failed to load scenario');
       const scenarioData = await scenarioRes.json();
-      // Handle unified architecture response structure
+      // Handle PBL API response structure
       if (scenarioData.success && scenarioData.data) {
         setScenario(scenarioData.data);
       } else if (scenarioData.id) {
@@ -126,8 +126,8 @@ export default function ProgramLearningPage() {
       
       if (!programId.startsWith('temp_')) {
         try {
-          // Use unified architecture API to get program
-          const programRes = await fetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}`);
+          // Use PBL unified architecture API to get program
+          const programRes = await fetch(`/api/pbl/scenarios/${scenarioId}/programs/${programId}`);
           if (programRes.ok) {
             const programData = await programRes.json();
             if (programData) {
@@ -140,10 +140,10 @@ export default function ProgramLearningPage() {
                 taskIds: programData.taskIds || []
               } as Program;
               
-              // Load task data using unified architecture
+              // Load task data using PBL unified architecture
               if (taskId) {
                 try {
-                  const taskRes = await fetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`);
+                  const taskRes = await fetch(`/api/pbl/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`);
                   if (taskRes.ok) {
                     const taskData = await taskRes.json();
                     if (taskData) {

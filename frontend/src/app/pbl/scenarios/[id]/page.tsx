@@ -21,17 +21,34 @@ export default function ScenarioDetailPage() {
     const fetchData = async () => {
       try {
         // Fetch scenario details
-        const scenarioResponse = await fetch(`/api/discovery/scenarios/${params.id}`);
+        const scenarioResponse = await fetch(`/api/pbl/scenarios/${params.id}?lang=${i18n.language}`);
         if (scenarioResponse.ok) {
-          const scenarioData = await scenarioResponse.json();
-          console.log('Scenario data received:', scenarioData);
-          setScenario(scenarioData);
+          const response = await scenarioResponse.json();
+          if (response.success && response.data) {
+            console.log('Scenario data received:', response.data);
+            // Transform PBL API response to match expected format
+            const scenarioData = {
+              ...response.data,
+              objectives: response.data.learningObjectives || [],
+              metadata: {
+                difficulty: response.data.difficulty,
+                estimatedDuration: response.data.estimatedDuration,
+                prerequisites: response.data.prerequisites || [],
+                targetDomains: response.data.targetDomain || [],
+                tasks: response.data.tasks || [],
+                ksaMapping: response.data.ksaMapping
+              }
+            };
+            setScenario(scenarioData);
+          } else {
+            console.error('Invalid PBL API response:', response);
+          }
         } else {
           console.error('Failed to fetch scenario:', scenarioResponse.status, scenarioResponse.statusText);
         }
 
         // Fetch user's programs for this scenario
-        const programsResponse = await fetch(`/api/discovery/scenarios/${params.id}/programs`);
+        const programsResponse = await fetch(`/api/pbl/scenarios/${params.id}/programs`);
         if (programsResponse.ok) {
           const programsData = await programsResponse.json();
           setUserPrograms(programsData);
@@ -48,7 +65,7 @@ export default function ScenarioDetailPage() {
 
   // Helper function to get data from scenario metadata
   const getScenarioData = (key: string, fallback: any = null) => {
-    return scenario?.metadata?.[key] || fallback;
+    return scenario?.metadata?.[key] || scenario?.[key] || fallback;
   };
 
   const handleStartProgram = async (programId?: string) => {

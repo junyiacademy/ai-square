@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pblProgramService } from '@/lib/storage/pbl-program-service';
 import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 import { Scenario, CreateProgramResponse, DomainType, DifficultyLevel, KSAMapping, TaskCategory, AIModule } from '@/types/pbl';
+import { IScenario, IProgram, ITask } from '@/types/unified-learning';
 
 
 // Load scenario data from YAML file
@@ -144,51 +144,80 @@ export async function POST(
       );
     }
     
-    // Create new program
-    console.log('   Creating program...');
-    const program = await pblProgramService.createProgram(
-      userEmail,
+    // Use unified architecture - get repositories
+    const { getProgramRepository, getTaskRepository } = await import('@/lib/implementations/gcs-v2');
+    const programRepo = getProgramRepository();
+    const taskRepo = getTaskRepository();
+    
+    console.log('   Creating program using unified architecture...');
+    
+    // Create Program following unified architecture
+    const program: IProgram = await programRepo.create({
       scenarioId,
-      language === 'zhTW' ? (scenario.title_zhTW || scenario.title) : scenario.title,
-      scenario.tasks.length,
-      language
-    );
+      userId: userEmail,
+      status: 'active',
+      startedAt: new Date().toISOString(),
+      taskIds: [],
+      currentTaskIndex: 0,
+      metadata: {
+        language,
+        title: language === 'zhTW' ? (scenario.title_zhTW || scenario.title) : scenario.title,
+        totalTasks: scenario.tasks.length
+      }
+    });
     
-    console.log('   ✅ Program created:', program.id);
+    console.log('   ✅ Program created with UUID:', program.id);
     
-    // Initialize first task
-    const firstTask = scenario.tasks[0];
-    if (firstTask) {
-      await pblProgramService.initializeTask(
-        userEmail,
-        scenarioId,
-        program.id,
-        firstTask.id,
-        language === 'zhTW' ? (firstTask.title_zhTW || firstTask.title) : firstTask.title
-      );
+    // Create Tasks from scenario task templates
+    const createdTasks: ITask[] = [];
+    
+    for (let i = 0; i < scenario.tasks.length; i++) {
+      const taskTemplate = scenario.tasks[i];
       
-      // Update program with current task
-      await pblProgramService.updateProgram(userEmail, scenarioId, program.id, {
-        currentTaskId: firstTask.id
+      const task: ITask = await taskRepo.create({
+        programId: program.id,
+        scenarioTaskIndex: i,
+        title: language === 'zhTW' ? (taskTemplate.title_zhTW || taskTemplate.title) : taskTemplate.title,
+        type: 'chat', // PBL tasks are primarily chat-based
+        content: {
+          instructions: language === 'zhTW' ? (taskTemplate.description_zhTW || taskTemplate.description) : taskTemplate.description,
+          context: {
+            taskTemplate,
+            ksaFocus: taskTemplate.assessmentFocus,
+            aiModule: taskTemplate.aiModule,
+            language
+          }
+        },
+        interactions: [],
+        startedAt: new Date().toISOString(),
+        status: i === 0 ? 'active' : 'pending'
       });
+      
+      createdTasks.push(task);
     }
     
-    const response: CreateProgramResponse = {
+    // Update program with task IDs
+    await programRepo.updateTaskIds(program.id, createdTasks.map(t => t.id));
+    
+    console.log('   ✅ Created', createdTasks.length, 'tasks with UUIDs:', createdTasks.map(t => t.id));
+    
+    const response = {
       success: true,
+      id: program.id, // For compatibility with UI expectations
       programId: program.id,
+      tasks: createdTasks,
+      taskIds: createdTasks.map(t => t.id),
+      firstTaskId: createdTasks[0]?.id || '',
       program: {
         id: program.id,
         scenarioId: program.scenarioId,
         userId: program.userId,
-        userEmail: program.userEmail,
         startedAt: program.startedAt,
-        updatedAt: program.updatedAt,
         status: program.status,
-        totalTasks: program.totalTasks,
-        currentTaskId: firstTask?.id,
-        language: program.language
-      },
-      firstTaskId: firstTask?.id || ''
+        taskIds: createdTasks.map(t => t.id),
+        currentTaskIndex: 0,
+        metadata: program.metadata
+      }
     };
     
     return NextResponse.json(response);

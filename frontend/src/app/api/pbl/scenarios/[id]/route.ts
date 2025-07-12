@@ -193,28 +193,9 @@ export async function GET(
     
     console.log('Loading scenario:', scenarioId, 'with lang:', lang);
     
-    // First, get scenario from database to get the correct source path
-    const { getScenarioRepository } = await import('@/lib/implementations/gcs-v2');
-    const scenarioRepo = getScenarioRepository();
-    const scenario = await scenarioRepo.findById(scenarioId);
-    
-    if (!scenario) {
-      return NextResponse.json(
-        { success: false, error: 'Scenario not found' },
-        { status: 404 }
-      );
-    }
-    
-    // Extract the actual folder name from sourceRef.path
-    let scenarioFolder: string;
-    if (scenario.sourceRef?.path) {
-      // sourceRef.path is like "pbl_data/scenarios/ai_job_search"
-      const pathParts = scenario.sourceRef.path.split('/');
-      scenarioFolder = pathParts[pathParts.length - 1]; // Get the last part
-    } else {
-      // Fallback to converting UUID (shouldn't happen with new data)
-      scenarioFolder = scenarioId.replace(/-/g, '_');
-    }
+    // Convert scenario ID to folder name
+    // Handle both dash-style IDs (ai-job-search) and underscore folders (ai_job_search)
+    const scenarioFolder = scenarioId.replace(/-/g, '_');
     
     const fileName = `${scenarioFolder}_${lang}.yaml`;
     let yamlPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', scenarioFolder, fileName);
@@ -225,6 +206,14 @@ export async function GET(
     } catch {
       // Fallback to English if language-specific file doesn't exist
       yamlPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', scenarioFolder, `${scenarioFolder}_en.yaml`);
+      try {
+        await fs.access(yamlPath);
+      } catch {
+        return NextResponse.json(
+          { success: false, error: 'Scenario not found' },
+          { status: 404 }
+        );
+      }
     }
     
     const yamlContent = await fs.readFile(yamlPath, 'utf8');
