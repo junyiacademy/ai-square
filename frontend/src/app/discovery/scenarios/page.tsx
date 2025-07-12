@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import dynamic from 'next/dynamic';
 import DiscoveryPageLayout from '@/components/discovery/DiscoveryPageLayout';
-import { useUserDataV2 } from '@/hooks/useUserDataV2';
+import { useUserData } from '@/hooks/useUserData';
 import { useAuth } from '@/hooks/useAuth';
 import { motion } from 'framer-motion';
 import { 
@@ -129,7 +129,7 @@ export default function ScenariosPage() {
   const router = useRouter();
   const { t } = useTranslation();
   const { isLoggedIn } = useAuth();
-  const { userData, loadUserData } = useUserDataV2();
+  const { userData, loadUserData } = useUserData();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [activeTab, setActiveTab] = useState<'all' | 'my'>('all'); // Default to 'all' since v2 doesn't track discovery in userData
 

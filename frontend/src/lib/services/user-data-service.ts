@@ -1,39 +1,27 @@
 /**
- * 統一的用戶數據存儲服務
+ * User Data Service - LocalStorage Implementation
  * 
- * 目前使用 localStorage，未來可以輕鬆遷移到 GCS
- * 提供統一的 API 來管理所有用戶數據
+ * This service provides a localStorage-based implementation of user data storage
+ * Used primarily for development and as a fallback option
  */
 
-// Data types
-export interface AssessmentResults {
-  tech: number;
-  creative: number;
-  business: number;
-}
+import type { 
+  UserData, 
+  AssessmentResults, 
+  UserAchievements, 
+  AssessmentSession,
+  UserDataOperations
+} from '@/lib/types/user-data';
 
-export interface UserAchievements {
-  badges: string[];
-  totalXp: number;
-  level: number;
-  completedTasks: string[];
-}
-
-export interface AssessmentSession {
-  id: string;
-  createdAt: string;
-  results: AssessmentResults;
-  answers?: Record<string, string[]>;
-}
-
-export interface UserData {
-  assessmentResults?: AssessmentResults | null;
-  achievements: UserAchievements;
-  assessmentSessions: AssessmentSession[];
-  currentView?: string;
-  lastUpdated: string;
-  version: string; // For future migration compatibility
-}
+// Re-export types for backward compatibility
+export type { 
+  UserData, 
+  AssessmentResults, 
+  UserAchievements, 
+  AssessmentSession,
+  Badge,
+  Achievement
+} from '@/lib/types/user-data';
 
 // Storage interface for different backends
 interface StorageBackend {
@@ -51,13 +39,8 @@ class LocalStorageBackend implements StorageBackend {
     const seen = new WeakSet();
     return JSON.stringify(obj, (key, value) => {
       if (typeof value === 'object' && value !== null) {
-        // Skip DOM elements and window objects
-        if (value instanceof Window || value instanceof HTMLElement) {
-          return undefined;
-        }
-        // Handle circular references
         if (seen.has(value)) {
-          return '[Circular Reference]';
+          return '[Circular]';
         }
         seen.add(value);
       }
@@ -67,13 +50,8 @@ class LocalStorageBackend implements StorageBackend {
   
   async save(userId: string, data: UserData): Promise<void> {
     try {
-      const dataWithMetadata = {
-        ...data,
-        lastUpdated: new Date().toISOString(),
-        version: '1.0'
-      };
-      console.log('Saving data to localStorage:', dataWithMetadata);
-      localStorage.setItem(this.STORAGE_KEY, this.safeStringify(dataWithMetadata));
+      const storageKey = this.getStorageKey(userId);
+      localStorage.setItem(storageKey, this.safeStringify(data));
     } catch (error) {
       console.error('Failed to save to localStorage:', error);
       throw error;
@@ -82,28 +60,24 @@ class LocalStorageBackend implements StorageBackend {
   
   async load(userId: string): Promise<UserData | null> {
     try {
-      const savedData = localStorage.getItem(this.STORAGE_KEY);
-      console.log('Loading data from localStorage:', savedData);
+      const storageKey = this.getStorageKey(userId);
+      const data = localStorage.getItem(storageKey);
       
-      if (!savedData) return null;
+      if (!data) {
+        // Try legacy key for backward compatibility
+        const legacyData = localStorage.getItem(this.STORAGE_KEY);
+        if (legacyData) {
+          const parsed = JSON.parse(legacyData);
+          // Migrate to new key
+          await this.save(userId, parsed);
+          // Clean up legacy key
+          localStorage.removeItem(this.STORAGE_KEY);
+          return parsed;
+        }
+        return null;
+      }
       
-      const data = JSON.parse(savedData);
-      console.log('Parsed localStorage data:', data);
-      
-      // Ensure data has the required structure
-      return {
-        assessmentResults: data.assessmentResults || null,
-        achievements: data.achievements || {
-          badges: [],
-          totalXp: 0,
-          level: 1,
-          completedTasks: []
-        },
-        assessmentSessions: data.assessmentSessions || [],
-        currentView: data.currentView,
-        lastUpdated: data.lastUpdated || new Date().toISOString(),
-        version: data.version || '1.0'
-      };
+      return JSON.parse(data);
     } catch (error) {
       console.error('Failed to load from localStorage:', error);
       return null;
@@ -111,30 +85,32 @@ class LocalStorageBackend implements StorageBackend {
   }
   
   async exists(userId: string): Promise<boolean> {
-    return localStorage.getItem(this.STORAGE_KEY) !== null;
+    const storageKey = this.getStorageKey(userId);
+    return localStorage.getItem(storageKey) !== null || 
+           localStorage.getItem(this.STORAGE_KEY) !== null;
+  }
+  
+  private getStorageKey(userId: string): string {
+    return `${this.STORAGE_KEY}_${userId}`;
   }
 }
 
-// Future GCS implementation placeholder
+// Placeholder for future GCS implementation
 class GCSBackend implements StorageBackend {
   async save(userId: string, data: UserData): Promise<void> {
-    // TODO: Implement GCS save
-    throw new Error('GCS backend not implemented yet');
+    throw new Error('GCS backend not implemented - use UserDataServiceV2');
   }
   
   async load(userId: string): Promise<UserData | null> {
-    // TODO: Implement GCS load
-    throw new Error('GCS backend not implemented yet');
+    throw new Error('GCS backend not implemented - use UserDataServiceV2');
   }
   
   async exists(userId: string): Promise<boolean> {
-    // TODO: Implement GCS exists check
-    throw new Error('GCS backend not implemented yet');
+    throw new Error('GCS backend not implemented - use UserDataServiceV2');
   }
 }
 
-// Main service class
-export class UserDataService {
+export class UserDataService implements UserDataOperations {
   private backend: StorageBackend;
   private userId: string;
   
@@ -155,100 +131,42 @@ export class UserDataService {
     return await this.backend.exists(this.userId);
   }
   
-  // Convenience methods for specific data types
+  // Convenience methods
   async saveAssessmentResults(results: AssessmentResults): Promise<void> {
     const userData = await this.loadUserData() || this.getDefaultUserData();
     userData.assessmentResults = results;
+    userData.lastUpdated = new Date().toISOString();
     await this.saveUserData(userData);
   }
   
   async saveAchievements(achievements: UserAchievements): Promise<void> {
     const userData = await this.loadUserData() || this.getDefaultUserData();
     userData.achievements = achievements;
+    userData.lastUpdated = new Date().toISOString();
     await this.saveUserData(userData);
   }
   
   async addAssessmentSession(session: AssessmentSession): Promise<void> {
     const userData = await this.loadUserData() || this.getDefaultUserData();
     
-    // Add assessment session
+    // Add new session
     userData.assessmentSessions.push(session);
     
-    // Update assessment results
+    // Update current results
     userData.assessmentResults = session.results;
     
+    userData.lastUpdated = new Date().toISOString();
     await this.saveUserData(userData);
   }
   
   async updateAchievements(updates: Partial<UserAchievements>): Promise<void> {
     const userData = await this.loadUserData() || this.getDefaultUserData();
     userData.achievements = { ...userData.achievements, ...updates };
+    userData.lastUpdated = new Date().toISOString();
     await this.saveUserData(userData);
   }
   
-  // Evaluation system methods
-  async saveEvaluation(type: string, id: string, data: any): Promise<void> {
-    try {
-      const key = `${this.userId}_${type}_${id}`;
-      localStorage.setItem(key, JSON.stringify({
-        ...data,
-        savedAt: new Date().toISOString()
-      }));
-      console.log(`Saved ${type} evaluation:`, data);
-    } catch (error) {
-      console.error(`Failed to save ${type} evaluation:`, error);
-      throw error;
-    }
-  }
-  
-  async loadEvaluation(type: string, id: string): Promise<any | null> {
-    try {
-      const key = `${this.userId}_${type}_${id}`;
-      const data = localStorage.getItem(key);
-      return data ? JSON.parse(data) : null;
-    } catch (error) {
-      console.error(`Failed to load ${type} evaluation:`, error);
-      return null;
-    }
-  }
-  
-  async loadEvaluationsByType(type: string): Promise<any[]> {
-    try {
-      const prefix = `${this.userId}_${type}_`;
-      const evaluations: any[] = [];
-      
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && key.startsWith(prefix)) {
-          const data = localStorage.getItem(key);
-          if (data) {
-            evaluations.push(JSON.parse(data));
-          }
-        }
-      }
-      
-      return evaluations.sort((a, b) => 
-        new Date(b.submittedAt || b.savedAt).getTime() - 
-        new Date(a.submittedAt || a.savedAt).getTime()
-      );
-    } catch (error) {
-      console.error(`Failed to load ${type} evaluations:`, error);
-      return [];
-    }
-  }
-  
-  async deleteEvaluation(type: string, id: string): Promise<void> {
-    try {
-      const key = `${this.userId}_${type}_${id}`;
-      localStorage.removeItem(key);
-      console.log(`Deleted ${type} evaluation: ${id}`);
-    } catch (error) {
-      console.error(`Failed to delete ${type} evaluation:`, error);
-      throw error;
-    }
-  }
-  
-  // Migration utilities
+  // Utility methods
   async exportData(): Promise<UserData | null> {
     return await this.loadUserData();
   }
@@ -271,31 +189,15 @@ export class UserDataService {
       },
       assessmentSessions: [],
       lastUpdated: new Date().toISOString(),
-      version: '1.0'
+      version: '2.0'
     };
   }
-  
-  // Switch storage backend (for migration)
-  switchToGCS(): void {
-    this.backend = new GCSBackend();
-  }
-  
-  switchToLocalStorage(): void {
-    this.backend = new LocalStorageBackend();
-  }
 }
 
-// Singleton instance
+// Factory function
+export function createUserDataService(userId: string = 'default', useGCS: boolean = false): UserDataService {
+  return new UserDataService(userId, useGCS);
+}
+
+// Singleton instance for backward compatibility
 export const userDataService = new UserDataService();
-
-// Migration helper
-export async function migrateToGCS(userId: string): Promise<void> {
-  const localService = new UserDataService(userId, false);
-  const gcsService = new UserDataService(userId, true);
-  
-  const data = await localService.loadUserData();
-  if (data) {
-    await gcsService.saveUserData(data);
-    console.log('Data migrated to GCS successfully');
-  }
-}

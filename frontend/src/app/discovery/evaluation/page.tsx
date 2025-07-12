@@ -17,7 +17,7 @@ const InterestAssessment = dynamic(
 );
 
 // Import types only
-import type { AssessmentResults, AssessmentSession } from '@/lib/services/user-data-service';
+import type { AssessmentResults, AssessmentSession } from '@/lib/types/user-data';
 import DiscoveryHeader from '@/components/discovery/DiscoveryHeader';
 
 export default function EvaluationPage() {

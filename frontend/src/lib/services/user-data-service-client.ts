@@ -10,7 +10,7 @@ import type {
   AssessmentResults, 
   UserAchievements,
   AssessmentSession
-} from './user-data-service';
+} from '@/lib/types/user-data';
 
 export class UserDataServiceClient {
   private cache: UserData | null = null;

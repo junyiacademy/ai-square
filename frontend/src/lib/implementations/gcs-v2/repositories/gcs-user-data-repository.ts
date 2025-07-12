@@ -9,7 +9,7 @@ import type {
   AssessmentResults, 
   UserAchievements,
   AssessmentSession
-} from '@/lib/services/user-data-service';
+} from '@/lib/types/user-data';
 
 export interface GCSUserData extends UserData {
   userId: string;

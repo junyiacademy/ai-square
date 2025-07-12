@@ -1,8 +1,8 @@
 /**
- * User Data Service V2 - GCS Implementation
+ * User Data Service - GCS Implementation
  * 
- * This service uses Google Cloud Storage instead of localStorage
- * for better scalability and data persistence
+ * This service uses Google Cloud Storage for persistent data storage
+ * Used by the backend API routes for server-side operations
  */
 
 import { gcsUserDataRepository } from '@/lib/implementations/gcs-v2/repositories/gcs-user-data-repository';
@@ -12,9 +12,9 @@ import type {
   AssessmentResults, 
   UserAchievements,
   AssessmentSession
-} from './user-data-service';
+} from '@/lib/types/user-data';
 
-export class UserDataServiceV2 {
+export class UserDataServiceGCS {
   private userId: string;
   private userEmail?: string;
   private cache: UserData | null = null;
@@ -249,12 +249,12 @@ export class UserDataServiceV2 {
 }
 
 // Factory function to create service with proper user context
-export function createUserDataService(userId: string, userEmail?: string): UserDataServiceV2 {
-  return new UserDataServiceV2(userId, userEmail);
+export function createUserDataServiceGCS(userId: string, userEmail?: string): UserDataServiceGCS {
+  return new UserDataServiceGCS(userId, userEmail);
 }
 
 // Migration helper
 export async function migrateUserToGCS(userId: string, userEmail?: string): Promise<boolean> {
-  const service = new UserDataServiceV2(userId, userEmail);
+  const service = new UserDataServiceGCS(userId, userEmail);
   return await service.migrateFromLocalStorage();
 }
