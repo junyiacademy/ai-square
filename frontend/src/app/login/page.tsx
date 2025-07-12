@@ -36,16 +36,14 @@ function LoginContent() {
       const data = await response.json()
 
       if (data.success) {
-        // Authentication is now handled by cookies set in the API response
-        // No need to store in localStorage
+        // Store auth data in localStorage for Header component
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('user', JSON.stringify(data.user));
         
         // Store session token if provided
         if (data.sessionToken) {
           localStorage.setItem('ai_square_session', data.sessionToken);
         }
-        
-        // 觸發自定義事件通知 Header 更新
-        window.dispatchEvent(new CustomEvent('auth-changed'))
         
         // Check if there's a redirect URL
         const redirectUrl = searchParams.get('redirect')

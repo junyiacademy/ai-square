@@ -14,8 +14,19 @@ import yaml from 'js-yaml';
  * GET /api/pbl/unified/scenarios
  * 獲取所有 PBL Scenarios
  */
+// 簡單的記憶體快取
+let cachedScenarios: IScenario[] | null = null;
+let cacheTimestamp: number = 0;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 分鐘
+
 export async function GET() {
   try {
+    // 檢查快取
+    const now = Date.now();
+    if (cachedScenarios && (now - cacheTimestamp) < CACHE_DURATION) {
+      return NextResponse.json(cachedScenarios);
+    }
+    
     const scenarioRepo = getScenarioRepository();
     
     // 先嘗試從儲存庫獲取現有的 scenarios
@@ -26,6 +37,10 @@ export async function GET() {
       console.log('No PBL scenarios found, creating from YAML files...');
       scenarios = await createScenariosFromYAML();
     }
+    
+    // 更新快取
+    cachedScenarios = scenarios;
+    cacheTimestamp = now;
     
     return NextResponse.json(scenarios);
   } catch (error) {

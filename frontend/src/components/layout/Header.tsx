@@ -20,24 +20,12 @@ export function Header() {
   const pathname = usePathname()
   const { t } = useTranslation(['navigation'])
   const { theme, toggleTheme } = useTheme()
-  const [user, setUser] = useState<User | null>(null)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const [isCheckingAuth, setIsCheckingAuth] = useState(false)
-
-  // 使用 useCallback 確保函數引用穩定，避免 hooks 順序問題
-  const clearAuthState = useCallback((skipEvent = false) => {
-    // 清除 localStorage (為了相容性)
-    localStorage.removeItem('isLoggedIn')
-    localStorage.removeItem('user')
-    setUser(null)
-    setIsLoggedIn(false)
-    // 只在需要時觸發自定義事件，避免無限循環
-    if (!skipEvent) {
-      window.dispatchEvent(new CustomEvent('auth-changed'))
-    }
-  }, [])
+  
+  // 從 localStorage 讀取初始狀態，避免 hydration mismatch
+  const [user, setUser] = useState<User | null>(null)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   const handleLogout = useCallback(async () => {
     // Call logout API to clear cookies
@@ -50,104 +38,62 @@ export function Header() {
     }
     
     // Clear local state
-    clearAuthState()
+    localStorage.removeItem('isLoggedIn')
+    localStorage.removeItem('user')
+    setUser(null)
+    setIsLoggedIn(false)
     router.push('/login')
-  }, [clearAuthState, router])
+  }, [router])
 
   const handleLogin = useCallback(() => {
     router.push('/login')
   }, [router])
 
-  // 檢查登入狀態的函數
-  const checkAuthStatus = useCallback(async () => {
-    // Prevent multiple simultaneous checks
-    setIsCheckingAuth((prev) => {
-      if (prev) return true; // Already checking
-      return true;
-    });
-    
-    try {
-      // 先從服務器檢查認證狀態
-      const response = await fetch('/api/auth/check')
-      const data = await response.json()
-      
-      if (data.authenticated && data.user) {
-        setUser(data.user)
-        setIsLoggedIn(true)
-        // 同步到 localStorage (為了相容性)
-        localStorage.setItem('isLoggedIn', 'true')
-        localStorage.setItem('user', JSON.stringify(data.user))
-      } else {
-        // 未認證，清除狀態
-        clearAuthState(true) // Skip event to avoid loop
-      }
-    } catch (error) {
-      console.error('Error checking auth status:', error)
-      // 發生錯誤時，fallback 到 localStorage
-      const loggedInStatus = localStorage.getItem('isLoggedIn')
-      const userData = localStorage.getItem('user')
-
-      if (loggedInStatus === 'true' && userData) {
-        try {
-          const parsedUser = JSON.parse(userData)
-          setUser(parsedUser)
-          setIsLoggedIn(true)
-        } catch (parseError) {
-          console.error('Error parsing user data:', parseError)
-          clearAuthState(true) // Skip event to avoid loop
-        }
-      } else {
-        clearAuthState(true) // Skip event to avoid loop
-      }
-    } finally {
-      setIsCheckingAuth(false)
-    }
-  }, [clearAuthState])
-
+  // 簡化的 auth 狀態管理 - 只從 localStorage 讀取，不做 API 檢查
   useEffect(() => {
-    // Initial check on mount
-    checkAuthStatus()
+    // 只在 mount 時從 localStorage 讀取一次
+    const loggedInStatus = localStorage.getItem('isLoggedIn')
+    const userData = localStorage.getItem('user')
 
-    // Throttle event handlers to prevent excessive calls
-    let lastCall = 0
-    const throttleDelay = 1000 // 1 second
-
-    const throttledCheckAuth = () => {
-      const now = Date.now()
-      if (now - lastCall >= throttleDelay) {
-        lastCall = now
-        checkAuthStatus()
+    if (loggedInStatus === 'true' && userData) {
+      try {
+        const parsedUser = JSON.parse(userData)
+        setUser(parsedUser)
+        setIsLoggedIn(true)
+      } catch (parseError) {
+        console.error('Error parsing user data:', parseError)
       }
     }
 
     // 監聽 storage 變化 (當其他 tab 登入/登出時)
-    const handleStorageChange = () => {
-      throttledCheckAuth()
-    }
-
-    // 監聽自定義的登入狀態變化事件 (同一 tab 內)
-    const handleAuthChange = () => {
-      throttledCheckAuth()
-    }
-
-    // 監聽 token 過期事件
-    const handleAuthExpired = () => {
-      console.log('Auth token expired, clearing auth state')
-      clearAuthState()
-      router.push('/login?expired=true')
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'isLoggedIn' || e.key === 'user') {
+        const newLoggedInStatus = localStorage.getItem('isLoggedIn')
+        const newUserData = localStorage.getItem('user')
+        
+        if (newLoggedInStatus === 'true' && newUserData) {
+          try {
+            const parsedUser = JSON.parse(newUserData)
+            setUser(parsedUser)
+            setIsLoggedIn(true)
+          } catch (parseError) {
+            console.error('Error parsing user data:', parseError)
+            setUser(null)
+            setIsLoggedIn(false)
+          }
+        } else {
+          setUser(null)
+          setIsLoggedIn(false)
+        }
+      }
     }
 
     window.addEventListener('storage', handleStorageChange)
-    window.addEventListener('auth-changed', handleAuthChange)
-    window.addEventListener('auth:expired', handleAuthExpired)
     
     return () => {
       window.removeEventListener('storage', handleStorageChange)
-      window.removeEventListener('auth-changed', handleAuthChange)
-      window.removeEventListener('auth:expired', handleAuthExpired)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []) // Remove dependencies to prevent re-registration
+  }, [])
 
   const getRoleDisplayName = (role: string) => {
     return t(`userRole.${role}`)
