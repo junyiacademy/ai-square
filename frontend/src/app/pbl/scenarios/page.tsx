@@ -23,14 +23,19 @@ export default function PBLScenariosPage() {
   useEffect(() => {
     const fetchScenarios = async () => {
       try {
-        const response = await fetch('/api/discovery/scenarios');
+        const response = await fetch(`/api/pbl/scenarios?lang=${i18n.language}`);
         
         if (!response.ok) {
-          throw new Error(`Scenarios API failed: ${response.status}`);
+          throw new Error(`PBL Scenarios API failed: ${response.status}`);
         }
         
-        const data = await response.json();
-        setScenarios(data);
+        const result = await response.json();
+        // Handle PBL API response structure
+        if (result.success && result.data?.scenarios) {
+          setScenarios(result.data.scenarios);
+        } else {
+          setScenarios([]);
+        }
       } catch (error) {
         console.error('Error fetching PBL scenarios:', error);
       } finally {

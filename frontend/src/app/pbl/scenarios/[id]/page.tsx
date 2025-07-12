@@ -70,7 +70,7 @@ export default function ScenarioDetailPage() {
         }
       } else {
         // Create new program
-        const response = await fetch(`/api/discovery/scenarios/${scenarioId}/programs`, {
+        const response = await fetch(`/api/pbl/scenarios/${scenarioId}/start`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
