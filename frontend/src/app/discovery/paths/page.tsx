@@ -7,7 +7,7 @@ import dynamic from 'next/dynamic';
 import DiscoveryPageLayout from '@/components/discovery/DiscoveryPageLayout';
 import { useDiscoveryData } from '@/hooks/useDiscoveryData';
 import { DiscoveryService } from '@/lib/services/discovery-service';
-import type { SavedPathData } from '@/lib/services/user-data-service';
+// Remove unused import
 
 // Dynamic import to avoid SSR issues
 const PathResults = dynamic(
@@ -50,7 +50,12 @@ export default function PathsPage() {
     }
   };
 
-  const handleGenerateCustomPath = async (preferences: any) => {
+  const handleGenerateCustomPath = async (preferences: {
+    preference?: string;
+    learningStyle?: string;
+    customPrompt?: string;
+    [key: string]: unknown;
+  }) => {
     if (!assessmentResults) {
       console.error('請先完成評估');
       alert('請先完成評估');
@@ -125,6 +130,7 @@ export default function PathsPage() {
         onDeletePath={deletePath}
         onRetakeAssessment={handleBackToAssessment}
         onGenerateCustomPath={handleGenerateCustomPath}
+        isGenerating={isGenerating}
       />
     </DiscoveryPageLayout>
   );

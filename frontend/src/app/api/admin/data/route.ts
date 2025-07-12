@@ -237,7 +237,7 @@ export async function DELETE(request: NextRequest) {
 }
 
 // Helper: Deep merge objects
-function deepMerge(target: any, source: any): any {
+function deepMerge(target: Record<string, unknown>, source: Record<string, unknown>): Record<string, unknown> {
   const output = { ...target };
   
   if (isObject(target) && isObject(source)) {
@@ -246,7 +246,7 @@ function deepMerge(target: any, source: any): any {
         if (!(key in target)) {
           Object.assign(output, { [key]: source[key] });
         } else {
-          output[key] = deepMerge(target[key], source[key]);
+          output[key] = deepMerge(target[key] as Record<string, unknown>, source[key] as Record<string, unknown>);
         }
       } else {
         Object.assign(output, { [key]: source[key] });
@@ -257,12 +257,12 @@ function deepMerge(target: any, source: any): any {
   return output;
 }
 
-function isObject(item: any): boolean {
-  return item && typeof item === 'object' && !Array.isArray(item);
+function isObject(item: unknown): item is Record<string, unknown> {
+  return item !== null && typeof item === 'object' && !Array.isArray(item);
 }
 
 // Helper: Sync JSON to YAML
-async function syncJsonToYaml(jsonPath: string, yamlPath: string): Promise<void> {
+async function syncJsonToYaml(jsonPath: string, _yamlPath: string): Promise<void> {
   try {
     // Use the yaml-json-crud-system.js script
     const scriptPath = path.join(process.cwd(), 'scripts', 'yaml-json-crud-system.js');

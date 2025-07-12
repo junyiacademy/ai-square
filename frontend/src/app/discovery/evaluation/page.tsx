@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/navigation';
-import { ChartBarIcon, CheckCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { CheckCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import dynamic from 'next/dynamic';
 import DiscoveryNavigation from '@/components/layout/DiscoveryNavigation';
 
@@ -17,7 +17,7 @@ const InterestAssessment = dynamic(
 );
 
 // Import types only
-import type { AssessmentResults, AssessmentSession, SavedPathData } from '@/lib/services/user-data-service';
+import type { AssessmentResults, SavedPathData } from '@/lib/services/user-data-service';
 import DiscoveryHeader from '@/components/discovery/DiscoveryHeader';
 
 export default function EvaluationPage() {
@@ -263,7 +263,7 @@ export default function EvaluationPage() {
                 <div className="p-4 border-b border-gray-200 max-h-64 overflow-y-auto">
                   <h3 className="text-base font-semibold text-gray-900 mb-3">你的答題紀錄</h3>
                   <div className="space-y-3">
-                    {(t('interestAssessment.questions', { returnObjects: true }) as any[]).map((question: any, index: number) => {
+                    {(t('interestAssessment.questions', { returnObjects: true }) as Array<{id: string; text: string; options: Array<{id: string; text: string}>}>).map((question, index: number) => {
                       const selectedOptions = assessmentAnswers[question.id] || [];
                       if (selectedOptions.length === 0) return null;
                       
@@ -277,7 +277,7 @@ export default function EvaluationPage() {
                               <p className="font-medium text-gray-900 text-sm mb-1">{question.text}</p>
                               <div className="space-y-0.5">
                                 {selectedOptions.map(optionId => {
-                                  const option = question.options.find((opt: any) => opt.id === optionId);
+                                  const option = question.options.find(opt => opt.id === optionId);
                                   return option ? (
                                     <div key={optionId} className="flex items-center space-x-1">
                                       <CheckCircleIcon className="w-3 h-3 text-green-500 flex-shrink-0" />
@@ -347,7 +347,7 @@ export default function EvaluationPage() {
                   <p className="text-center text-gray-500">沒有推薦的路徑</p>
                 )}
                 {newPaths.map(path => {
-                  const pathData = t(`careers.${path.pathData.id}`, { returnObjects: true, defaultValue: null }) as any;
+                  const pathData = t(`careers.${path.pathData.id}`, { returnObjects: true, defaultValue: null }) as Record<string, unknown> | null;
                   const isSelected = selectedPaths.has(path.id);
                   
                   // Fallback data if translation not found
@@ -363,8 +363,9 @@ export default function EvaluationPage() {
                     tech_entrepreneur: { title: '科技創業家', subtitle: '結合技術與商業的創新' }
                   };
                   
-                  const displayData = pathData && typeof pathData === 'object' 
-                    ? pathData 
+                  const displayData = pathData && typeof pathData === 'object' && 
+                    'title' in pathData && typeof pathData.title === 'string'
+                    ? pathData as { title: string; subtitle: string; category?: string }
                     : fallbackData[path.pathData.id as keyof typeof fallbackData] || { 
                         title: path.pathData.id, 
                         subtitle: '探索新的可能性' 
@@ -408,7 +409,7 @@ export default function EvaluationPage() {
                             <span className="text-sm text-purple-600 font-medium">
                               {path.matchPercentage}% 匹配度
                             </span>
-                            {displayData.category && (
+                            {'category' in displayData && typeof displayData.category === 'string' && (
                               <span className="text-sm text-gray-500">
                                 {displayData.category}
                               </span>

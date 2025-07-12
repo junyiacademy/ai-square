@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const {
-      userId,
+      userId: _userId,
       assessmentResults,
       userPrompt,
       preferences,
@@ -143,11 +143,30 @@ export async function POST(request: NextRequest) {
   }
 }
 
+interface AssessmentResults {
+  tech: number;
+  creative: number;
+  business: number;
+}
+
+interface PathGenerationPreferences {
+  type?: string;
+  learningStyle?: string;
+  [key: string]: unknown;
+}
+
+interface ConversationMessage {
+  role: string;
+  content: string;
+  timestamp?: string;
+  [key: string]: unknown;
+}
+
 function buildPathGenerationPrompt(params: {
-  assessmentResults: any;
+  assessmentResults: AssessmentResults;
   userPrompt?: string;
-  preferences?: any;
-  conversationHistory?: any[];
+  preferences?: PathGenerationPreferences;
+  conversationHistory?: ConversationMessage[];
   locale: string;
 }): string {
   const { assessmentResults, userPrompt, preferences, locale } = params;
@@ -214,7 +233,26 @@ ${languageInstructions}
 }`;
 }
 
-async function generateInitialTasks(pathData: any, locale: string): Promise<any[]> {
+interface GeneratedPathData {
+  title: string;
+  worldSetting: string;
+  narrative: string;
+  skills: string[];
+  category: string;
+  [key: string]: unknown;
+}
+
+interface GeneratedTask {
+  id: string;
+  title: string;
+  description: string;
+  duration: string;
+  difficulty: number;
+  objective: string;
+  scenario: string;
+}
+
+async function generateInitialTasks(pathData: GeneratedPathData, locale: string): Promise<GeneratedTask[]> {
   // Generate 3 initial tasks based on the path
   const taskPrompt = `基於以下職涯路徑，生成前 3 個循序漸進的任務：
 
@@ -310,8 +348,8 @@ ${locale === 'zh-TW' ? '使用繁體中文' : `使用 ${locale} 語言`}
 }
 
 function calculateMatchPercentage(
-  assessmentResults: any,
-  generatedData: any
+  assessmentResults: AssessmentResults,
+  generatedData: GeneratedPathData
 ): number {
   // Calculate match based on category alignment
   const categoryWeights: Record<string, { tech: number; creative: number; business: number }> = {

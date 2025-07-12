@@ -36,6 +36,7 @@ interface PathResultsProps {
   onDeletePath?: (pathId: string) => void;
   onRetakeAssessment?: () => void;
   onGenerateCustomPath?: (preferences: any) => Promise<void>;
+  isGenerating?: boolean;
 }
 
 interface PathData {

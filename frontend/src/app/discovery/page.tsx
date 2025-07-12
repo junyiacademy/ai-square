@@ -10,8 +10,7 @@ import {
   ArrowLeftIcon,
   ArrowUpIcon,
   SparklesIcon,
-  TrophyIcon,
-  ChatBubbleLeftRightIcon
+  TrophyIcon
 } from '@heroicons/react/24/outline';
 
 // Components
@@ -113,7 +112,7 @@ export default function DiscoveryPage() {
     setCurrentView('workspace');
   };
 
-  const handleTaskComplete = (taskId: string, xpGained: number, _skillsGained: string[]) => {
+  const handleTaskComplete = (taskId: string, xpGained: number) => {
     setAchievements(prev => {
       const newAchievements = { ...prev };
       

@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const {
-      userId,
+      userId: _userId,
       pathId,
       pathContext,
       storyContext,
@@ -159,11 +159,30 @@ export async function POST(request: NextRequest) {
   }
 }
 
+interface PathContext {
+  title: string;
+  [key: string]: unknown;
+}
+
+interface StoryContext {
+  worldSetting: string;
+  narrative: string;
+  [key: string]: unknown;
+}
+
+interface PreviousTaskResult {
+  taskTitle?: string;
+  score?: number;
+  choices?: unknown[];
+  timeSpent?: string;
+  [key: string]: unknown;
+}
+
 function buildNextTaskPrompt(params: {
-  pathContext: any;
-  storyContext: any;
+  pathContext: PathContext;
+  storyContext: StoryContext;
   currentTaskNumber: number;
-  previousTaskResult: any;
+  previousTaskResult: PreviousTaskResult;
   locale: string;
 }): string {
   const { pathContext, storyContext, currentTaskNumber, previousTaskResult, locale } = params;
@@ -176,9 +195,10 @@ function buildNextTaskPrompt(params: {
 
   // Adjust difficulty based on performance
   let difficultyAdjustment = '';
-  if (previousTaskResult?.score >= 90) {
+  const score = previousTaskResult?.score ?? 0;
+  if (score >= 90) {
     difficultyAdjustment = '用戶表現優異，請提高挑戰難度。';
-  } else if (previousTaskResult?.score <= 60) {
+  } else if (score <= 60) {
     difficultyAdjustment = '用戶需要更多練習，請降低難度並提供更多引導。';
   } else {
     difficultyAdjustment = '用戶表現良好，保持適中的挑戰性。';
@@ -194,7 +214,7 @@ function buildNextTaskPrompt(params: {
 
 前一個任務結果：
 - 任務名稱：${previousTaskResult?.taskTitle || '未知'}
-- 完成分數：${previousTaskResult?.score || 0}/100
+- 完成分數：${score}/100
 - 用戶選擇：${JSON.stringify(previousTaskResult?.choices || [])}
 - 花費時間：${previousTaskResult?.timeSpent || '未知'}
 
