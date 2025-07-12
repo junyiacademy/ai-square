@@ -8,6 +8,14 @@ export async function GET(
   try {
     const { id: scenarioId } = await params;
     
+    // Only accept UUID format for scenario ID
+    if (!scenarioId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid scenario ID format. UUID required.' },
+        { status: 400 }
+      );
+    }
+    
     // Get user session
     const session = await getServerSession();
     if (!session?.user?.email) {

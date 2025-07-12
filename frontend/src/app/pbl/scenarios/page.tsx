@@ -6,9 +6,12 @@ import Link from 'next/link';
 import { PBLScenariosListSkeleton } from '@/components/pbl/loading-skeletons';
 import { IScenario } from '@/types/unified-learning';
 
+// Flexible scenario type for API responses that may not fully match unified architecture
+type FlexibleScenario = IScenario | any;
+
 export default function PBLScenariosPage() {
   const { t, i18n } = useTranslation(['pbl', 'assessment']);
-  const [scenarios, setScenarios] = useState<IScenario[]>([]);
+  const [scenarios, setScenarios] = useState<FlexibleScenario[]>([]);
   const [loading, setLoading] = useState(true);
 
   const getDifficultyStars = (difficulty: string) => {
@@ -46,24 +49,47 @@ export default function PBLScenariosPage() {
     fetchScenarios();
   }, []);
 
-  // Extract domains from sourceRef metadata
-  const getScenarioDomains = (scenario: IScenario): string[] => {
-    const domain = scenario.sourceRef.metadata?.domain;
-    if (domain && typeof domain === 'string') {
-      return [domain];
+  // Extract domains from scenario data (handle both unified architecture and direct API response)
+  const getScenarioDomains = (scenario: any): string[] => {
+    // Try unified architecture format first
+    if (scenario.sourceRef?.metadata?.domain) {
+      const domain = scenario.sourceRef.metadata.domain;
+      if (domain && typeof domain === 'string') {
+        return [domain];
+      }
+    }
+    // Fall back to direct API response format
+    if (scenario.domains && Array.isArray(scenario.domains)) {
+      return scenario.domains;
+    }
+    if (scenario.targetDomains && Array.isArray(scenario.targetDomains)) {
+      return scenario.targetDomains;
+    }
+    if (scenario.targetDomain && Array.isArray(scenario.targetDomain)) {
+      return scenario.targetDomain;
     }
     return [];
   };
 
-  // Get difficulty from metadata
-  const getScenarioDifficulty = (scenario: IScenario): string => {
-    return scenario.sourceRef.metadata?.difficulty || 'intermediate';
+  // Get difficulty from scenario data (handle both formats)
+  const getScenarioDifficulty = (scenario: any): string => {
+    // Try unified architecture format first
+    if (scenario.sourceRef?.metadata?.difficulty) {
+      return scenario.sourceRef.metadata.difficulty;
+    }
+    // Fall back to direct API response format
+    return scenario.difficulty || 'intermediate';
   };
 
-  // Calculate estimated duration from task templates
-  const getEstimatedDuration = (scenario: IScenario): number => {
+  // Calculate estimated duration (handle both formats)
+  const getEstimatedDuration = (scenario: any): number => {
+    // Try direct API response format first
+    if (scenario.estimatedDuration && typeof scenario.estimatedDuration === 'number') {
+      return scenario.estimatedDuration;
+    }
+    // Fall back to task templates calculation
     if (scenario.taskTemplates && scenario.taskTemplates.length > 0) {
-      return scenario.taskTemplates.reduce((total, task) => total + (task.estimatedTime || 30), 0);
+      return scenario.taskTemplates.reduce((total: number, task: any) => total + (task.estimatedTime || 30), 0);
     }
     return 60; // Default to 60 minutes
   };
@@ -154,7 +180,7 @@ export default function PBLScenariosPage() {
 
                     {/* Task Count */}
                     <div className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                      {scenario.taskTemplates.length} tasks available
+                      {scenario.taskTemplates?.length || scenario.taskCount || 0} tasks available
                     </div>
 
                     <Link

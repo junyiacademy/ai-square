@@ -4,6 +4,7 @@ import path from 'path';
 import yaml from 'js-yaml';
 import { Scenario, CreateProgramResponse, DomainType, DifficultyLevel, KSAMapping, TaskCategory, AIModule } from '@/types/pbl';
 import { IScenario, IProgram, ITask } from '@/types/unified-learning';
+import { pblScenarioService } from '@/lib/services/pbl-scenario-service';
 
 
 // Load scenario data from YAML file
@@ -132,8 +133,23 @@ export async function POST(
     const body = await request.json();
     const language = body.language || 'en';
     
-    // Load scenario
-    const scenario = await loadScenario(scenarioId, language);
+    // Use unified architecture to get scenario by UUID only
+    const { getScenarioRepository } = await import('@/lib/implementations/gcs-v2');
+    const scenarioRepo = getScenarioRepository();
+    
+    // Only accept UUID format
+    if (!scenarioId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Invalid scenario ID format. UUID required.'
+        },
+        { status: 400 }
+      );
+    }
+    
+    const scenario = await scenarioRepo.findById(scenarioId);
+    
     if (!scenario) {
       return NextResponse.json(
         {
@@ -144,6 +160,9 @@ export async function POST(
       );
     }
     
+    // Extract tasks from taskTemplates
+    const tasks = scenario.taskTemplates || [];
+    
     // Use unified architecture - get repositories
     const { getProgramRepository, getTaskRepository } = await import('@/lib/implementations/gcs-v2');
     const programRepo = getProgramRepository();
@@ -153,7 +172,7 @@ export async function POST(
     
     // Create Program following unified architecture
     const program: IProgram = await programRepo.create({
-      scenarioId,
+      scenarioId: scenario.id, // Use scenario UUID
       userId: userEmail,
       status: 'active',
       startedAt: new Date().toISOString(),
@@ -161,8 +180,9 @@ export async function POST(
       currentTaskIndex: 0,
       metadata: {
         language,
-        title: language === 'zhTW' ? (scenario.title_zhTW || scenario.title) : scenario.title,
-        totalTasks: scenario.tasks.length
+        title: scenario.title,
+        totalTasks: tasks.length,
+        yamlId: scenario.sourceRef.metadata?.yamlId // Keep original yaml ID for reference
       }
     });
     
@@ -171,20 +191,19 @@ export async function POST(
     // Create Tasks from scenario task templates
     const createdTasks: ITask[] = [];
     
-    for (let i = 0; i < scenario.tasks.length; i++) {
-      const taskTemplate = scenario.tasks[i];
+    for (let i = 0; i < tasks.length; i++) {
+      const taskTemplate = tasks[i];
       
       const task: ITask = await taskRepo.create({
         programId: program.id,
         scenarioTaskIndex: i,
-        title: language === 'zhTW' ? (taskTemplate.title_zhTW || taskTemplate.title) : taskTemplate.title,
-        type: 'chat', // PBL tasks are primarily chat-based
+        title: taskTemplate.title,
+        type: taskTemplate.type,
         content: {
-          instructions: language === 'zhTW' ? (taskTemplate.description_zhTW || taskTemplate.description) : taskTemplate.description,
+          instructions: taskTemplate.description,
           context: {
             taskTemplate,
-            ksaFocus: taskTemplate.assessmentFocus,
-            aiModule: taskTemplate.aiModule,
+            originalTaskData: taskTemplate.metadata?.originalTaskData,
             language
           }
         },

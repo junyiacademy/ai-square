@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
+import { pblScenarioService } from '@/lib/services/pbl-scenario-service';
 
 // Type definitions for KSA mapping
 interface KSAItem {
@@ -193,88 +194,63 @@ export async function GET(
     
     console.log('Loading scenario:', scenarioId, 'with lang:', lang);
     
-    // Convert scenario ID to folder name
-    // Handle both dash-style IDs (ai-job-search) and underscore folders (ai_job_search)
-    const scenarioFolder = scenarioId.replace(/-/g, '_');
+    // Use unified architecture to get scenario by UUID only
+    const { getScenarioRepository } = await import('@/lib/implementations/gcs-v2');
+    const scenarioRepo = getScenarioRepository();
     
-    const fileName = `${scenarioFolder}_${lang}.yaml`;
-    let yamlPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', scenarioFolder, fileName);
-    
-    // Check if language-specific file exists, fallback to English
-    try {
-      await fs.access(yamlPath);
-    } catch {
-      // Fallback to English if language-specific file doesn't exist
-      yamlPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', scenarioFolder, `${scenarioFolder}_en.yaml`);
-      try {
-        await fs.access(yamlPath);
-      } catch {
-        return NextResponse.json(
-          { success: false, error: 'Scenario not found' },
-          { status: 404 }
-        );
-      }
+    // Only accept UUID format
+    if (!scenarioId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid scenario ID format. UUID required.' },
+        { status: 400 }
+      );
     }
     
-    const yamlContent = await fs.readFile(yamlPath, 'utf8');
-    interface ScenarioYAML {
-      scenario_info: {
-        id: string;
-        title: string;
-        title_zhTW?: string;
-        description: string;
-        description_zhTW?: string;
-        difficulty: string;
-        estimated_duration: number;
-        target_domains: string[];
-        prerequisites?: string[];
-        learning_objectives?: string[];
-      };
-      ksa_mapping?: {
-        knowledge?: string[];
-        skills?: string[];
-        attitudes?: string[];
-      };
-      tasks?: Array<{
-        id: string;
-        title: string;
-        title_zhTW?: string;
-        description: string;
-        description_zhTW?: string;
-        category?: string;
-        instructions?: string[];
-        instructions_zhTW?: string[];
-        expected_outcome?: string;
-        expected_outcome_zhTW?: string;
-        time_limit?: number;
-      }>;
+    const scenario = await scenarioRepo.findById(scenarioId);
+    
+    if (!scenario) {
+      return NextResponse.json(
+        { success: false, error: 'Scenario not found' },
+        { status: 404 }
+      );
     }
-    const yamlData = yaml.load(yamlContent) as ScenarioYAML;
+    
+    // Get YAML data from scenario metadata
+    const yamlData = scenario.metadata?.yamlData;
+    
+    if (!yamlData) {
+      return NextResponse.json(
+        { success: false, error: 'Scenario YAML data not found' },
+        { status: 404 }
+      );
+    }
     
     // Load KSA codes
     const ksaData = await loadKSACodes(lang);
     
-    console.log('YAML data loaded: success');
+    console.log('Scenario loaded from unified architecture: success');
     
-    // Transform to API response format (new structure without stages)
+    // Transform to API response format using unified architecture data
     const scenarioResponse: ScenarioResponse = {
-      id: yamlData.scenario_info.id,
-      title: getLocalizedValue(yamlData.scenario_info, 'title', lang) as string,
-      description: getLocalizedValue(yamlData.scenario_info, 'description', lang) as string,
-      difficulty: yamlData.scenario_info.difficulty,
-      estimatedDuration: yamlData.scenario_info.estimated_duration,
-      targetDomain: yamlData.scenario_info.target_domains,
-      prerequisites: (getLocalizedValue(yamlData.scenario_info, 'prerequisites', lang) as string[] | undefined) || yamlData.scenario_info.prerequisites || [],
-      learningObjectives: (getLocalizedValue(yamlData.scenario_info, 'learning_objectives', lang) as string[] | undefined) || yamlData.scenario_info.learning_objectives || [],
+      id: scenario.id, // Use UUID
+      yamlId: scenario.sourceRef.metadata?.yamlId, // Include original yaml ID for compatibility
+      sourceType: scenario.sourceType,
+      title: scenario.title,
+      description: scenario.description,
+      difficulty: scenario.metadata?.difficulty || 'intermediate',
+      estimatedDuration: scenario.metadata?.estimatedDuration || 60,
+      targetDomain: scenario.metadata?.targetDomains || [],
+      prerequisites: scenario.metadata?.prerequisites || [],
+      learningObjectives: scenario.objectives || [],
       ksaMapping: buildKSAMapping(yamlData as unknown as YAMLData, ksaData, lang),
-      tasks: (yamlData.tasks || []).map((task) => ({
-        id: task.id,
-        title: getLocalizedValue(task, 'title', lang) as string,
-        description: getLocalizedValue(task, 'description', lang) as string,
-        category: task.category || 'general',
-        instructions: (getLocalizedValue(task, 'instructions', lang) as string[] | undefined) || task.instructions || [],
-        expectedOutcome: (getLocalizedValue(task, 'expected_outcome', lang) || getLocalizedValue(task, 'expectedOutcome', lang)) as string,
-        timeLimit: task.time_limit
+      tasks: scenario.taskTemplates.map((template, index) => ({
+        id: template.id,
+        title: template.title,
+        description: template.description || '',
+        category: template.metadata?.category || 'general',
+        instructions: template.metadata?.instructions || [],
+        expectedOutcome: template.metadata?.expectedOutcome || '',
+        timeLimit: template.metadata?.timeLimit
       }))
     };
     

@@ -3,6 +3,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import * as yaml from 'js-yaml';
 import { cacheService } from '@/lib/cache/cache-service';
+import { pblScenarioService } from '@/lib/services/pbl-scenario-service';
 
 // Types for YAML data
 interface ScenarioInfo {
@@ -50,74 +51,49 @@ function getLocalizedValue(data: LocalizedField, fieldName: string, lang: string
   return data[localizedField] || data[fieldName] || '';
 }
 
-// Load scenarios from YAML files
-async function loadScenariosFromYAML(lang: string): Promise<Record<string, unknown>[]> {
+// Load scenarios using unified architecture
+async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Record<string, unknown>[]> {
   const scenarios: Record<string, unknown>[] = [];
   
   try {
-    // List of available scenario folders
-    const scenarioFolders = [
-      'ai_job_search',
-      'ai_education_design',
-      'ai_stablecoin_trading',
-      'ai_robotics_development',
-      'high_school_climate_change',
-      'high_school_digital_wellness',
-      'high_school_smart_city',
-      'high_school_creative_arts',
-      'high_school_health_assistant',
-      // Add more scenario folders here as they become available
-    ];
+    // Get available YAML IDs
+    const yamlIds = await pblScenarioService.listAvailableYAMLIds();
     
-    for (const folder of scenarioFolders) {
+    for (const yamlId of yamlIds) {
       try {
-        // Construct the path to the language-specific file
-        const fileName = `${folder}_${lang}.yaml`;
-        const yamlPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', folder, fileName);
+        // 創建或取得 Scenario UUID
+        const scenario = await pblScenarioService.findOrCreateScenarioByYAMLId(yamlId, lang);
         
-        // Check if language-specific file exists, fallback to English
-        let finalPath = yamlPath;
-        try {
-          await fs.access(yamlPath);
-        } catch {
-          // Fallback to English if language-specific file doesn't exist
-          const englishPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', folder, `${folder}_en.yaml`);
-          finalPath = englishPath;
-        }
+        // Choose emoji based on yaml ID
+        const emojiMap: Record<string, string> = {
+          'ai-job-search': '💼',
+          'ai-education-design': '🎓',
+          'ai-stablecoin-trading': '₿',
+          'ai-robotics-development': '🤖',
+          'high-school-climate-change': '🌍',
+          'high-school-digital-wellness': '📱',
+          'high-school-smart-city': '🏙️',
+          'high-school-creative-arts': '🎨',
+          'high-school-health-assistant': '💗'
+        };
         
-        const yamlContent = await fs.readFile(finalPath, 'utf8');
-        const yamlData = yaml.load(yamlContent) as ScenarioYAML;
-        
-        if (yamlData && yamlData.scenario_info) {
-          const info = yamlData.scenario_info;
-          // Choose emoji based on scenario ID
-          const emojiMap: Record<string, string> = {
-            'ai-job-search': '💼',
-            'ai-education-design': '🎓',
-            'ai-stablecoin-trading': '₿',
-            'ai-robotics-development': '🤖',
-            'high-school-climate-change': '🌍',
-            'high-school-digital-wellness': '📱',
-            'high-school-smart-city': '🏙️',
-            'high-school-creative-arts': '🎨',
-            'high-school-health-assistant': '💗'
-          };
-          scenarios.push({
-            id: info.id,
-            title: getLocalizedValue(info as LocalizedField, 'title', lang),
-            description: getLocalizedValue(info as LocalizedField, 'description', lang),
-            difficulty: info.difficulty,
-            estimatedDuration: info.estimated_duration,
-            targetDomains: info.target_domains,
-            targetDomain: info.target_domains, // for compatibility
-            domains: info.target_domains, // for compatibility 
-            taskCount: Array.isArray(info.tasks) ? info.tasks.length : 0,
-            isAvailable: true,
-            thumbnailEmoji: emojiMap[info.id] || '🤖'
-          });
-        }
+        scenarios.push({
+          id: scenario.id, // UUID
+          yamlId: yamlId, // 原始 yaml ID for compatibility
+          sourceType: 'pbl',
+          title: scenario.title,
+          description: scenario.description,
+          difficulty: scenario.metadata?.difficulty,
+          estimatedDuration: scenario.metadata?.estimatedDuration,
+          targetDomains: scenario.metadata?.targetDomains,
+          targetDomain: scenario.metadata?.targetDomains, // for compatibility
+          domains: scenario.metadata?.targetDomains, // for compatibility 
+          taskCount: scenario.taskTemplates?.length || 0,
+          isAvailable: true,
+          thumbnailEmoji: emojiMap[yamlId] || '🤖'
+        });
       } catch (error) {
-        console.error(`Error loading scenario file ${folder}:`, error);
+        console.error(`Error loading scenario ${yamlId}:`, error);
       }
     }
   } catch (error) {
@@ -219,8 +195,8 @@ export async function GET(request: Request) {
       });
     }
 
-    // Load scenarios from YAML files with proper translations
-    const scenarios = await loadScenariosFromYAML(lang);
+    // Load scenarios using unified architecture
+    const scenarios = await loadScenariosFromUnifiedArchitecture(lang);
 
     const result = {
       success: true,
