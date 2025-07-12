@@ -9,17 +9,17 @@ jest.mock('next/navigation', () => ({
   usePathname: jest.fn(),
 }));
 
-// Mock Link component
-jest.mock('next/link', () => {
-  return ({ children, href }: { children: React.ReactNode; href: string }) => {
-    return <a href={href}>{children}</a>;
-  };
-});
-
 // Mock react-i18next
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string) => key,
+    t: (key: string) => {
+      const translations: Record<string, string> = {
+        'title': '探索世界',
+        'subtitle': '發現你的 AI 學習路徑',
+        'navigation:home': '首頁'
+      };
+      return translations[key] || key;
+    },
   }),
 }));
 
@@ -36,72 +36,81 @@ describe('DiscoveryHeader', () => {
     (usePathname as jest.Mock).mockReturnValue('/discovery/overview');
   });
 
-  it('should render header with default props', () => {
+  it('should render header with title and subtitle', () => {
     render(<DiscoveryHeader />);
 
-    expect(screen.getByText('探索世界')).toBeInTheDocument();
+    // Title appears twice (breadcrumb and main title)
+    const titles = screen.getAllByText('探索世界');
+    expect(titles).toHaveLength(2);
+    expect(titles[0]).toBeInTheDocument(); // breadcrumb
+    expect(titles[1]).toBeInTheDocument(); // main title
+    
     expect(screen.getByText('發現你的 AI 學習路徑')).toBeInTheDocument();
   });
 
   it('should render navigation items', () => {
     render(<DiscoveryHeader />);
 
-    // Check navigation items
-    expect(screen.getByText('總覽')).toBeInTheDocument();
+    // Navigation items appear in both desktop and mobile views
+    const overviewButtons = screen.getAllByText('總覽');
+    expect(overviewButtons.length).toBeGreaterThanOrEqual(1);
+    
     expect(screen.getByText('評估')).toBeInTheDocument();
     expect(screen.getByText('職業冒險')).toBeInTheDocument();
   });
 
-  it('should render achievement count when provided', () => {
-    render(<DiscoveryHeader achievementCount={5} />);
-
-    expect(screen.getByText('5')).toBeInTheDocument();
-  });
-
-  it('should render assessment status when results are available', () => {
-    render(<DiscoveryHeader hasAssessmentResults={true} />);
-
-    expect(screen.getByText('已完成評估')).toBeInTheDocument();
-  });
-
-  it('should render assessment prompt when no results', () => {
-    render(<DiscoveryHeader hasAssessmentResults={false} />);
-
-    expect(screen.getByText('開始評估')).toBeInTheDocument();
-  });
-
-  it('should handle back button click', () => {
+  it('should highlight active navigation item', () => {
     render(<DiscoveryHeader />);
 
-    const backButton = screen.getByRole('button');
-    fireEvent.click(backButton);
-
-    expect(mockBack).toHaveBeenCalledTimes(1);
+    const overviewButton = screen.getByRole('button', { name: /總覽/i });
+    expect(overviewButton).toHaveClass('bg-purple-600');
   });
 
-  it('should have correct navigation links', () => {
+  it('should navigate when clicking navigation items', () => {
     render(<DiscoveryHeader />);
 
-    const overviewLink = screen.getByText('總覽').closest('a');
-    const evaluationLink = screen.getByText('評估').closest('a');
-    const scenariosLink = screen.getByText('職業冒險').closest('a');
+    const evaluationButton = screen.getByRole('button', { name: /評估/i });
+    fireEvent.click(evaluationButton);
 
-    expect(overviewLink).toHaveAttribute('href', '/discovery/overview');
-    expect(evaluationLink).toHaveAttribute('href', '/discovery/evaluation');
-    expect(scenariosLink).toHaveAttribute('href', '/discovery/scenarios');
+    expect(mockPush).toHaveBeenCalledWith('/discovery/evaluation');
   });
 
-  it('should render workspace count when provided', () => {
-    render(<DiscoveryHeader workspaceCount={3} />);
+  it('should navigate home when clicking breadcrumb', () => {
+    render(<DiscoveryHeader />);
 
-    expect(screen.getByText('3')).toBeInTheDocument();
+    const homeButton = screen.getByRole('button', { name: /首頁/i });
+    fireEvent.click(homeButton);
+
+    expect(mockPush).toHaveBeenCalledWith('/');
   });
 
-  it('should not render counts when they are zero', () => {
+  it('should show different active state based on pathname', () => {
+    (usePathname as jest.Mock).mockReturnValue('/discovery/scenarios');
+    render(<DiscoveryHeader />);
+
+    const scenariosButton = screen.getByRole('button', { name: /職業冒險/i });
+    expect(scenariosButton).toHaveClass('bg-purple-600');
+  });
+
+  it('should not show badges when counts are zero', () => {
     render(<DiscoveryHeader achievementCount={0} workspaceCount={0} />);
 
-    // Check that badge elements are not rendered when count is 0
-    const badges = screen.queryAllByText('0');
+    // Since workspace and achievements are removed, no badges should exist
+    const badges = screen.queryAllByText(/^\d+$/);
     expect(badges).toHaveLength(0);
+  });
+
+  it('should handle disabled navigation items', () => {
+    render(<DiscoveryHeader />);
+
+    // All items should be enabled by default
+    // Get navigation buttons (excluding breadcrumb home button)
+    const overviewButton = screen.getByRole('button', { name: /總覽/i });
+    const evaluationButton = screen.getByRole('button', { name: /評估/i });
+    const scenariosButton = screen.getByRole('button', { name: /職業冒險/i });
+    
+    expect(overviewButton).not.toBeDisabled();
+    expect(evaluationButton).not.toBeDisabled();
+    expect(scenariosButton).not.toBeDisabled();
   });
 });

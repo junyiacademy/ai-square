@@ -175,10 +175,6 @@ function MockNextResponse(body, init) {
 // Add static methods
 MockNextResponse.json = createMockResponse
 
-jest.mock('next/server', () => ({
-  NextResponse: MockNextResponse,
-}))
-
 // Clean up after each test
 afterEach(() => {
   jest.clearAllMocks()

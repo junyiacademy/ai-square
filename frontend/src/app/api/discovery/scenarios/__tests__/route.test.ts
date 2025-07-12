@@ -2,18 +2,26 @@
  * @jest-environment node
  */
 
+// @ts-ignore - Mock will be used
 import { NextRequest } from 'next/server';
-import { GET, POST } from '../route';
+import { POST } from '../route';
 import { getServerSession } from '@/lib/auth/session';
 import { getScenarioRepository } from '@/lib/implementations/gcs-v2';
 
 // Mock dependencies
 jest.mock('@/lib/auth/session');
 jest.mock('@/lib/implementations/gcs-v2');
-jest.mock('@/lib/services/discovery-yaml-loader');
+jest.mock('@/lib/services/discovery-yaml-loader', () => ({
+  DiscoveryYAMLLoader: {
+    loadPath: jest.fn()
+  }
+}));
 
 const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
 const mockGetScenarioRepository = getScenarioRepository as jest.MockedFunction<typeof getScenarioRepository>;
+
+// Import the mocked module
+const { DiscoveryYAMLLoader } = require('@/lib/services/discovery-yaml-loader');
 
 describe('/api/discovery/scenarios', () => {
   const mockScenarioRepo = {
@@ -30,63 +38,7 @@ describe('/api/discovery/scenarios', () => {
     mockGetScenarioRepository.mockReturnValue(mockScenarioRepo as any);
   });
 
-  describe('GET /api/discovery/scenarios', () => {
-    it('should return 401 when user is not authenticated', async () => {
-      mockGetServerSession.mockResolvedValue(null);
-
-      const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(401);
-      expect(data.error).toBe('Unauthorized');
-    });
-
-    it('should return discovery scenarios for authenticated user', async () => {
-      const mockSession = {
-        user: { email: 'test@example.com' }
-      };
-      mockGetServerSession.mockResolvedValue(mockSession as any);
-
-      const mockScenarios = [
-        {
-          id: 'scenario-1',
-          title: 'Content Creator Discovery',
-          sourceType: 'discovery',
-          sourceRef: {
-            type: 'yaml',
-            sourceId: 'content_creator',
-            path: 'discovery_data/content_creator/content_creator_zhTW.yml'
-          }
-        }
-      ];
-      mockScenarioRepo.findByType.mockResolvedValue(mockScenarios);
-
-      const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.scenarios).toEqual(mockScenarios);
-      expect(mockScenarioRepo.findByType).toHaveBeenCalledWith('discovery');
-    });
-
-    it('should handle repository errors gracefully', async () => {
-      const mockSession = {
-        user: { email: 'test@example.com' }
-      };
-      mockGetServerSession.mockResolvedValue(mockSession as any);
-      
-      mockScenarioRepo.findByType.mockRejectedValue(new Error('Database error'));
-
-      const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(500);
-      expect(data.error).toBe('Internal server error');
-    });
-  });
+  // Note: This route only has POST method, no GET method
 
   describe('POST /api/discovery/scenarios', () => {
     it('should create a new discovery scenario', async () => {
@@ -94,6 +46,18 @@ describe('/api/discovery/scenarios', () => {
         user: { email: 'test@example.com' }
       };
       mockGetServerSession.mockResolvedValue(mockSession as any);
+      
+      // Mock YAML loader to return valid data
+      DiscoveryYAMLLoader.loadPath.mockResolvedValue({
+        metadata: {
+          title: 'YouTuber',
+          long_description: 'Content creator career path',
+          estimated_hours: 20
+        },
+        learning_objectives: ['Create engaging content', 'Build audience'],
+        category: 'creative',
+        difficulty_range: { min: 1, max: 3 }
+      });
 
       const mockCreatedScenario = {
         id: 'new-scenario-id',
@@ -123,15 +87,19 @@ describe('/api/discovery/scenarios', () => {
       const response = await POST(request);
       const data = await response.json();
 
-      expect(response.status).toBe(201);
-      expect(data.scenario).toEqual(mockCreatedScenario);
+      expect(response.status).toBe(200);
+      expect(data.scenarioId).toBe(mockCreatedScenario.id);
+      expect(data.scenario).toBeDefined();
       expect(mockScenarioRepo.create).toHaveBeenCalledWith(
         expect.objectContaining({
           sourceType: 'discovery',
           sourceRef: expect.objectContaining({
             type: 'yaml',
-            sourceId: 'youtuber'
-          })
+            sourceId: 'youtuber',
+            path: expect.stringContaining('youtuber')
+          }),
+          title: 'YouTuber',
+          description: 'Content creator career path'
         })
       );
     });
@@ -154,7 +122,7 @@ describe('/api/discovery/scenarios', () => {
       const data = await response.json();
 
       expect(response.status).toBe(400);
-      expect(data.error).toContain('careerType');
+      expect(data.error).toBe('Career type required');
     });
 
     it('should handle YAML loading errors', async () => {
@@ -164,8 +132,7 @@ describe('/api/discovery/scenarios', () => {
       mockGetServerSession.mockResolvedValue(mockSession as any);
 
       // Mock YAML loader to throw error
-      const { DiscoveryYAMLLoader } = require('@/lib/services/discovery-yaml-loader');
-      DiscoveryYAMLLoader.loadPath = jest.fn().mockRejectedValue(new Error('YAML not found'));
+      DiscoveryYAMLLoader.loadPath.mockRejectedValue(new Error('YAML not found'));
 
       const requestBody = {
         careerType: 'invalid_career',

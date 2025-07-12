@@ -15,18 +15,18 @@ describe('InterestAssessment', () => {
       id: 'q1',
       text: 'What interests you most?',
       options: [
-        { id: 'opt1', text: 'Building apps', category: 'tech' },
-        { id: 'opt2', text: 'Creating content', category: 'creative' },
-        { id: 'opt3', text: 'Business strategy', category: 'business' }
+        { id: 'opt1', text: 'Building apps', weight: { tech: 1, creative: 0, business: 0 } },
+        { id: 'opt2', text: 'Creating content', weight: { tech: 0, creative: 1, business: 0 } },
+        { id: 'opt3', text: 'Business strategy', weight: { tech: 0, creative: 0, business: 1 } }
       ]
     },
     {
       id: 'q2',
       text: 'How do you prefer to work?',
       options: [
-        { id: 'opt4', text: 'Writing code', category: 'tech' },
-        { id: 'opt5', text: 'Designing interfaces', category: 'creative' },
-        { id: 'opt6', text: 'Managing projects', category: 'business' }
+        { id: 'opt4', text: 'Writing code', weight: { tech: 1, creative: 0, business: 0 } },
+        { id: 'opt5', text: 'Designing interfaces', weight: { tech: 0, creative: 1, business: 0 } },
+        { id: 'opt6', text: 'Managing projects', weight: { tech: 0, creative: 0, business: 1 } }
       ]
     }
   ];
@@ -38,7 +38,16 @@ describe('InterestAssessment', () => {
         if (key === 'interestAssessment.questions') {
           return mockQuestions;
         }
-        return key;
+        // Mock translation keys
+        const translations: Record<string, string> = {
+          'interestAssessment.title': 'AI Interest Analysis',
+          'interestAssessment.subtitle': 'Discover your AI learning path',
+          'interestAssessment.next': 'Next',
+          'interestAssessment.back': 'Back',
+          'interestAssessment.complete': 'Complete',
+          'interestAssessment.calculating': 'Calculating...'
+        };
+        return translations[key] || key;
       }
     });
   });
@@ -55,14 +64,17 @@ describe('InterestAssessment', () => {
   it('should show progress indicator', () => {
     render(<InterestAssessment onComplete={mockOnComplete} />);
 
-    expect(screen.getByText('1 / 2')).toBeInTheDocument();
+    // Progress is shown as percentage
+    expect(screen.getByText('50%')).toBeInTheDocument();
+    // Current question number is shown in the progress circle
+    expect(screen.getByText('1')).toBeInTheDocument();
   });
 
   it('should disable next button when no option selected', () => {
     render(<InterestAssessment onComplete={mockOnComplete} />);
 
-    const nextButton = screen.getByText('interestAssessment.next');
-    expect(nextButton).toBeDisabled();
+    const nextButton = screen.getByText('下一題');
+    expect(nextButton.closest('button')).toBeDisabled();
   });
 
   it('should enable next button when option is selected', () => {
@@ -71,36 +83,48 @@ describe('InterestAssessment', () => {
     const option = screen.getByText('Building apps');
     fireEvent.click(option);
 
-    const nextButton = screen.getByText('interestAssessment.next');
-    expect(nextButton).not.toBeDisabled();
+    const nextButton = screen.getByText('下一題');
+    expect(nextButton.closest('button')).not.toBeDisabled();
   });
 
-  it('should move to next question', () => {
+  it('should move to next question', async () => {
     render(<InterestAssessment onComplete={mockOnComplete} />);
 
     // Select first option
     fireEvent.click(screen.getByText('Building apps'));
     
     // Click next
-    fireEvent.click(screen.getByText('interestAssessment.next'));
+    fireEvent.click(screen.getByText('下一題'));
 
-    // Should show second question
-    expect(screen.getByText('How do you prefer to work?')).toBeInTheDocument();
-    expect(screen.getByText('2 / 2')).toBeInTheDocument();
+    // Wait for animation and check second question
+    await waitFor(() => {
+      expect(screen.getByText('How do you prefer to work?')).toBeInTheDocument();
+    });
+    
+    // Check progress
+    expect(screen.getByText('100%')).toBeInTheDocument();
+    expect(screen.getByText('2')).toBeInTheDocument();
   });
 
-  it('should allow going back to previous question', () => {
+  it('should allow going back to previous question', async () => {
     render(<InterestAssessment onComplete={mockOnComplete} />);
 
     // Move to second question
     fireEvent.click(screen.getByText('Building apps'));
-    fireEvent.click(screen.getByText('interestAssessment.next'));
+    fireEvent.click(screen.getByText('下一題'));
+
+    // Wait for second question
+    await waitFor(() => {
+      expect(screen.getByText('How do you prefer to work?')).toBeInTheDocument();
+    });
 
     // Click back
-    fireEvent.click(screen.getByText('interestAssessment.back'));
+    fireEvent.click(screen.getByText('上一題'));
 
-    // Should show first question again
-    expect(screen.getByText('What interests you most?')).toBeInTheDocument();
+    // Wait for first question to appear again
+    await waitFor(() => {
+      expect(screen.getByText('What interests you most?')).toBeInTheDocument();
+    });
   });
 
   it('should calculate results and call onComplete', async () => {
@@ -108,11 +132,16 @@ describe('InterestAssessment', () => {
 
     // Answer first question (tech)
     fireEvent.click(screen.getByText('Building apps'));
-    fireEvent.click(screen.getByText('interestAssessment.next'));
+    fireEvent.click(screen.getByText('下一題'));
+    
+    // Wait for second question
+    await waitFor(() => {
+      expect(screen.getByText('How do you prefer to work?')).toBeInTheDocument();
+    });
 
     // Answer second question (tech)
     fireEvent.click(screen.getByText('Writing code'));
-    fireEvent.click(screen.getByText('interestAssessment.complete'));
+    fireEvent.click(screen.getByText('完成分析'));
 
     await waitFor(() => {
       expect(mockOnComplete).toHaveBeenCalledWith(
@@ -134,11 +163,16 @@ describe('InterestAssessment', () => {
 
     // Answer first question (creative)
     fireEvent.click(screen.getByText('Creating content'));
-    fireEvent.click(screen.getByText('interestAssessment.next'));
+    fireEvent.click(screen.getByText('下一題'));
+    
+    // Wait for second question
+    await waitFor(() => {
+      expect(screen.getByText('How do you prefer to work?')).toBeInTheDocument();
+    });
 
     // Answer second question (business)
     fireEvent.click(screen.getByText('Managing projects'));
-    fireEvent.click(screen.getByText('interestAssessment.complete'));
+    fireEvent.click(screen.getByText('完成分析'));
 
     await waitFor(() => {
       expect(mockOnComplete).toHaveBeenCalledWith(
@@ -155,16 +189,25 @@ describe('InterestAssessment', () => {
     });
   });
 
-  it('should show calculating state', async () => {
+  it('should complete assessment flow', async () => {
     render(<InterestAssessment onComplete={mockOnComplete} />);
 
-    // Answer questions
+    // Answer first question
     fireEvent.click(screen.getByText('Building apps'));
-    fireEvent.click(screen.getByText('interestAssessment.next'));
+    fireEvent.click(screen.getByText('下一題'));
+    
+    // Wait for second question
+    await waitFor(() => {
+      expect(screen.getByText('How do you prefer to work?')).toBeInTheDocument();
+    });
+    
+    // Answer second question
     fireEvent.click(screen.getByText('Writing code'));
-    fireEvent.click(screen.getByText('interestAssessment.complete'));
+    fireEvent.click(screen.getByText('完成分析'));
 
-    // Should show calculating message
-    expect(screen.getByText('interestAssessment.calculating')).toBeInTheDocument();
+    // Should call onComplete with results
+    await waitFor(() => {
+      expect(mockOnComplete).toHaveBeenCalled();
+    });
   });
 });

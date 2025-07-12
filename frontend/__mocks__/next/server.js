@@ -41,6 +41,9 @@ class NextResponse extends Response {
   }
 }
 
+// Export both as CommonJS and ES6 modules
+exports.NextRequest = NextRequest;
+exports.NextResponse = NextResponse;
 module.exports = {
   NextRequest,
   NextResponse
