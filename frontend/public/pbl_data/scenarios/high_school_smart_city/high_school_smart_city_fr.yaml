@@ -35,7 +35,7 @@ tasks:
   - id: task-1
     category: research
     time_limit: 25
-    assessment_focus:
+    KSA_focus:
       primary:
         - K1.1
         - S2.3
@@ -65,7 +65,7 @@ tasks:
   - id: task-2
     category: creation
     time_limit: 30
-    assessment_focus:
+    KSA_focus:
       primary:
         - S2.1
         - K2.1
@@ -95,7 +95,7 @@ tasks:
   - id: task-3
     category: interaction
     time_limit: 35
-    assessment_focus:
+    KSA_focus:
       primary:
         - K2.1
         - S1.2
@@ -126,7 +126,7 @@ tasks:
   - id: task-4
     category: analysis
     time_limit: 30
-    assessment_focus:
+    KSA_focus:
       primary:
         - K2.3
         - S2.3
@@ -156,7 +156,7 @@ tasks:
   - id: task-5
     category: interaction
     time_limit: 30
-    assessment_focus:
+    KSA_focus:
       primary:
         - S1.2
         - K1.2

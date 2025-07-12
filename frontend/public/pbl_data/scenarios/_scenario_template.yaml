@@ -45,7 +45,7 @@ tasks:
       - "[TRANSLATE: Instruction 4 in target language]"
     expected_outcome: "[TRANSLATE: Expected outcome description in target language]"
     time_limit: [MINUTES]  # Keep same (e.g., 20)
-    assessment_focus:  # Keep same across all languages
+    KSA_focus:  # Keep same across all languages
       primary:
         - [PRIMARY_KSA_1]
         - [PRIMARY_KSA_2]

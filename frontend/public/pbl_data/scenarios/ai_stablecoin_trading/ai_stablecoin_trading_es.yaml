@@ -34,7 +34,7 @@ tasks:
   - id: market-analysis
     category: analysis
     time_limit: 45
-    assessment_focus:
+    KSA_focus:
       primary:
         - engaging_with_ai
         - creating_with_ai
@@ -67,7 +67,7 @@ tasks:
   - id: strategy-development
     category: creation
     time_limit: 40
-    assessment_focus:
+    KSA_focus:
       primary:
         - creating_with_ai
         - managing_with_ai
@@ -104,7 +104,7 @@ tasks:
   - id: risk-management
     category: interaction
     time_limit: 35
-    assessment_focus:
+    KSA_focus:
       primary:
         - managing_with_ai
         - engaging_with_ai

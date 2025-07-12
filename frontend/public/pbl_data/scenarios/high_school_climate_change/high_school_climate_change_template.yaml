@@ -45,7 +45,7 @@ tasks:
       - [INSTRUCTION_4]
     expected_outcome: [EXPECTED_OUTCOME]
     time_limit: [MINUTES]  # e.g., 20
-    assessment_focus:
+    KSA_focus:
       primary:
         - [PRIMARY_KSA_1]
         - [PRIMARY_KSA_2]
