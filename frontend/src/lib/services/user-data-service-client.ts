@@ -8,12 +8,8 @@
 import type { 
   UserData, 
   AssessmentResults, 
-  WorkspaceSession, 
-  SavedPathData, 
   UserAchievements,
-  AssessmentSession,
-  TaskAnswer,
-  DynamicTask
+  AssessmentSession
 } from './user-data-service';
 
 export class UserDataServiceClient {
@@ -148,112 +144,17 @@ export class UserDataServiceClient {
     await this.saveUserData(userData);
   }
 
-  async saveWorkspaceSessions(sessions: WorkspaceSession[]): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
-    userData.workspaceSessions = sessions;
-    await this.saveUserData(userData);
-  }
 
-  async savePaths(paths: SavedPathData[]): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
-    userData.savedPaths = paths;
-    await this.saveUserData(userData);
-  }
 
-  async addWorkspaceSession(session: WorkspaceSession): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
-    userData.workspaceSessions.push(session);
-    await this.saveUserData(userData);
-  }
 
-  async updateWorkspaceSession(sessionId: string, updates: Partial<WorkspaceSession>): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
-    const sessionIndex = userData.workspaceSessions.findIndex(s => s.id === sessionId);
-    if (sessionIndex >= 0) {
-      userData.workspaceSessions[sessionIndex] = {
-        ...userData.workspaceSessions[sessionIndex],
-        ...updates,
-        lastActiveAt: new Date().toISOString()
-      };
-      await this.saveUserData(userData);
-    }
-  }
 
-  async saveTaskAnswer(sessionId: string, taskAnswer: TaskAnswer): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
-    const sessionIndex = userData.workspaceSessions.findIndex(s => s.id === sessionId);
-    
-    if (sessionIndex >= 0) {
-      const session = userData.workspaceSessions[sessionIndex];
-      
-      if (!session.taskAnswers) {
-        session.taskAnswers = [];
-      }
-      
-      const existingAnswerIndex = session.taskAnswers.findIndex(a => a.taskId === taskAnswer.taskId);
-      
-      if (existingAnswerIndex >= 0) {
-        session.taskAnswers[existingAnswerIndex] = taskAnswer;
-      } else {
-        session.taskAnswers.push(taskAnswer);
-      }
-      
-      session.lastActiveAt = new Date().toISOString();
-      
-      await this.saveUserData(userData);
-    }
-  }
 
-  async getTaskAnswer(sessionId: string, taskId: string): Promise<TaskAnswer | null> {
-    const userData = await this.loadUserData();
-    if (!userData) return null;
-    
-    const session = userData.workspaceSessions.find(s => s.id === sessionId);
-    if (!session || !session.taskAnswers) return null;
-    
-    return session.taskAnswers.find(a => a.taskId === taskId) || null;
-  }
 
-  async addAssessmentSession(session: AssessmentSession, paths: SavedPathData[]): Promise<void> {
+  async addAssessmentSession(session: AssessmentSession): Promise<void> {
     const userData = await this.loadUserData() || this.getDefaultUserData();
     
     userData.assessmentSessions.push(session);
     userData.assessmentResults = session.results;
-    
-    // Handle duplicate paths
-    const existingPathIds = new Set(
-      userData.savedPaths.map(p => p.pathData?.id).filter(Boolean)
-    );
-    
-    const newPaths = paths.filter(path => {
-      const pathId = path.pathData?.id;
-      return !pathId || !existingPathIds.has(pathId);
-    });
-    
-    // Update existing paths with better match percentage
-    paths.forEach(newPath => {
-      const pathId = newPath.pathData?.id;
-      if (pathId && existingPathIds.has(pathId)) {
-        const existingPathIndex = userData.savedPaths.findIndex(
-          p => p.pathData?.id === pathId
-        );
-        
-        if (existingPathIndex >= 0) {
-          const existingPath = userData.savedPaths[existingPathIndex];
-          if (newPath.matchPercentage > existingPath.matchPercentage) {
-            userData.savedPaths[existingPathIndex] = {
-              ...existingPath,
-              matchPercentage: newPath.matchPercentage,
-              assessmentId: newPath.assessmentId,
-              lastUpdated: new Date().toISOString()
-            };
-          }
-        }
-      }
-    });
-    
-    userData.savedPaths.push(...newPaths);
-    session.generatedPaths = newPaths.map(p => p.id);
     
     await this.saveUserData(userData);
   }
@@ -264,29 +165,8 @@ export class UserDataServiceClient {
     await this.saveUserData(userData);
   }
 
-  async togglePathFavorite(pathId: string): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
-    const pathIndex = userData.savedPaths.findIndex(p => p.id === pathId);
-    if (pathIndex >= 0) {
-      userData.savedPaths[pathIndex].isFavorite = !userData.savedPaths[pathIndex].isFavorite;
-      await this.saveUserData(userData);
-    }
-  }
 
-  async updateSavedPath(pathId: string, updates: SavedPathData): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
-    const pathIndex = userData.savedPaths.findIndex(p => p.id === pathId);
-    if (pathIndex >= 0) {
-      userData.savedPaths[pathIndex] = updates;
-      await this.saveUserData(userData);
-    }
-  }
 
-  async deleteSavedPath(pathId: string): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
-    userData.savedPaths = userData.savedPaths.filter(p => p.id !== pathId);
-    await this.saveUserData(userData);
-  }
 
   // Evaluation system methods (delegated to API)
   
@@ -379,10 +259,7 @@ export class UserDataServiceClient {
         level: 1,
         completedTasks: []
       },
-      workspaceSessions: [],
       assessmentSessions: [],
-      savedPaths: [],
-      generatedTasks: [],
       lastUpdated: new Date().toISOString(),
       version: '2.0'
     };

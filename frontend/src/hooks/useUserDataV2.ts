@@ -11,11 +11,8 @@ import { UserDataServiceClient, createUserDataServiceClient } from '@/lib/servic
 import type { 
   UserData, 
   AssessmentResults, 
-  WorkspaceSession, 
-  SavedPathData, 
   UserAchievements,
-  AssessmentSession,
-  TaskAnswer
+  AssessmentSession
 } from '@/lib/services/user-data-service';
 
 interface UseUserDataV2Return {
@@ -31,23 +28,10 @@ interface UseUserDataV2Return {
   // Specific operations
   saveAssessmentResults: (results: AssessmentResults) => Promise<void>;
   saveAchievements: (achievements: UserAchievements) => Promise<void>;
-  saveWorkspaceSessions: (sessions: WorkspaceSession[]) => Promise<void>;
-  savePaths: (paths: SavedPathData[]) => Promise<void>;
-  
-  // Session operations
-  addWorkspaceSession: (session: WorkspaceSession) => Promise<void>;
-  updateWorkspaceSession: (sessionId: string, updates: Partial<WorkspaceSession>) => Promise<void>;
-  saveTaskAnswer: (sessionId: string, taskAnswer: TaskAnswer) => Promise<void>;
-  getTaskAnswer: (sessionId: string, taskId: string) => Promise<TaskAnswer | null>;
   
   // Assessment operations
-  addAssessmentSession: (session: AssessmentSession, paths: SavedPathData[]) => Promise<void>;
+  addAssessmentSession: (session: AssessmentSession) => Promise<void>;
   updateAchievements: (updates: Partial<UserAchievements>) => Promise<void>;
-  
-  // Path operations
-  togglePathFavorite: (pathId: string) => Promise<void>;
-  updateSavedPath: (pathId: string, updates: SavedPathData) => Promise<void>;
-  deleteSavedPath: (pathId: string) => Promise<void>;
   
   // Evaluation operations
   saveEvaluation: (type: string, id: string, data: any) => Promise<void>;
@@ -184,57 +168,14 @@ export function useUserDataV2(): UseUserDataV2Return {
     service.saveAchievements(achievements)
   );
   
-  const saveWorkspaceSessions = wrapServiceMethod((service, sessions: WorkspaceSession[]) => 
-    service.saveWorkspaceSessions(sessions)
-  );
-  
-  const savePaths = wrapServiceMethod((service, paths: SavedPathData[]) => 
-    service.savePaths(paths)
-  );
-  
-  const addWorkspaceSession = wrapServiceMethod((service, session: WorkspaceSession) => 
-    service.addWorkspaceSession(session)
-  );
-  
-  const updateWorkspaceSession = wrapServiceMethod((service, sessionId: string, updates: Partial<WorkspaceSession>) => 
-    service.updateWorkspaceSession(sessionId, updates)
-  );
-  
-  const saveTaskAnswer = wrapServiceMethod((service, sessionId: string, taskAnswer: TaskAnswer) => 
-    service.saveTaskAnswer(sessionId, taskAnswer)
-  );
-  
-  const getTaskAnswer = useCallback(async (sessionId: string, taskId: string): Promise<TaskAnswer | null> => {
-    const service = getService();
-    if (!service) return null;
-    
-    try {
-      return await service.getTaskAnswer(sessionId, taskId);
-    } catch (err) {
-      console.error('Failed to get task answer:', err);
-      return null;
-    }
-  }, [getService]);
-  
-  const addAssessmentSession = wrapServiceMethod((service, session: AssessmentSession, paths: SavedPathData[]) => 
-    service.addAssessmentSession(session, paths)
+  const addAssessmentSession = wrapServiceMethod((service, session: AssessmentSession) => 
+    service.addAssessmentSession(session)
   );
   
   const updateAchievements = wrapServiceMethod((service, updates: Partial<UserAchievements>) => 
     service.updateAchievements(updates)
   );
   
-  const togglePathFavorite = wrapServiceMethod((service, pathId: string) => 
-    service.togglePathFavorite(pathId)
-  );
-  
-  const updateSavedPath = wrapServiceMethod((service, pathId: string, updates: SavedPathData) => 
-    service.updateSavedPath(pathId, updates)
-  );
-  
-  const deleteSavedPath = wrapServiceMethod((service, pathId: string) => 
-    service.deleteSavedPath(pathId)
-  );
   
   // Evaluation methods
   const saveEvaluation = useCallback(async (type: string, id: string, data: any): Promise<void> => {
@@ -314,23 +255,10 @@ export function useUserDataV2(): UseUserDataV2Return {
     // Specific operations
     saveAssessmentResults,
     saveAchievements,
-    saveWorkspaceSessions,
-    savePaths,
-    
-    // Session operations
-    addWorkspaceSession,
-    updateWorkspaceSession,
-    saveTaskAnswer,
-    getTaskAnswer,
     
     // Assessment operations
     addAssessmentSession,
     updateAchievements,
-    
-    // Path operations
-    togglePathFavorite,
-    updateSavedPath,
-    deleteSavedPath,
     
     // Evaluation operations
     saveEvaluation,

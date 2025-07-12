@@ -10,12 +10,8 @@ import { gcsEvaluationRepository } from '@/lib/implementations/gcs-v2/repositori
 import type { 
   UserData, 
   AssessmentResults, 
-  WorkspaceSession, 
-  SavedPathData, 
   UserAchievements,
-  AssessmentSession,
-  TaskAnswer,
-  DynamicTask
+  AssessmentSession
 } from './user-data-service';
 
 export class UserDataServiceV2 {
@@ -47,10 +43,7 @@ export class UserDataServiceV2 {
         const userData: UserData = {
           assessmentResults: gcsData.assessmentResults,
           achievements: gcsData.achievements,
-          workspaceSessions: gcsData.workspaceSessions,
           assessmentSessions: gcsData.assessmentSessions,
-          savedPaths: gcsData.savedPaths,
-          generatedTasks: gcsData.generatedTasks,
           currentView: gcsData.currentView,
           lastUpdated: gcsData.lastUpdated,
           version: gcsData.version
@@ -116,130 +109,15 @@ export class UserDataServiceV2 {
     await this.saveUserData(userData);
   }
 
-  async saveWorkspaceSessions(sessions: WorkspaceSession[]): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
-    userData.workspaceSessions = sessions;
-    await this.saveUserData(userData);
-  }
 
-  async savePaths(paths: SavedPathData[]): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
-    userData.savedPaths = paths;
-    await this.saveUserData(userData);
-  }
-
-  async addWorkspaceSession(session: WorkspaceSession): Promise<void> {
-    const success = await gcsUserDataRepository.addWorkspaceSession(this.userId, session);
-    if (!success) {
-      // Fallback: load all data, modify, and save
-      const userData = await this.loadUserData() || this.getDefaultUserData();
-      userData.workspaceSessions.push(session);
-      await this.saveUserData(userData);
-    }
-    this.clearCache();
-  }
-
-  async updateWorkspaceSession(sessionId: string, updates: Partial<WorkspaceSession>): Promise<void> {
-    const success = await gcsUserDataRepository.updateWorkspaceSession(this.userId, sessionId, updates);
-    if (!success) {
-      // Fallback: load all data, modify, and save
-      const userData = await this.loadUserData() || this.getDefaultUserData();
-      const sessionIndex = userData.workspaceSessions.findIndex(s => s.id === sessionId);
-      if (sessionIndex >= 0) {
-        userData.workspaceSessions[sessionIndex] = {
-          ...userData.workspaceSessions[sessionIndex],
-          ...updates,
-          lastActiveAt: new Date().toISOString()
-        };
-        await this.saveUserData(userData);
-      }
-    }
-    this.clearCache();
-  }
-
-  async saveTaskAnswer(sessionId: string, taskAnswer: TaskAnswer): Promise<void> {
-    const success = await gcsUserDataRepository.saveTaskAnswer(this.userId, sessionId, taskAnswer);
-    if (!success) {
-      // Fallback: load all data, modify, and save
-      const userData = await this.loadUserData() || this.getDefaultUserData();
-      const sessionIndex = userData.workspaceSessions.findIndex(s => s.id === sessionId);
-      
-      if (sessionIndex >= 0) {
-        const session = userData.workspaceSessions[sessionIndex];
-        
-        if (!session.taskAnswers) {
-          session.taskAnswers = [];
-        }
-        
-        const existingAnswerIndex = session.taskAnswers.findIndex(a => a.taskId === taskAnswer.taskId);
-        
-        if (existingAnswerIndex >= 0) {
-          session.taskAnswers[existingAnswerIndex] = taskAnswer;
-        } else {
-          session.taskAnswers.push(taskAnswer);
-        }
-        
-        session.lastActiveAt = new Date().toISOString();
-        
-        await this.saveUserData(userData);
-      }
-    }
-    this.clearCache();
-  }
-
-  async getTaskAnswer(sessionId: string, taskId: string): Promise<TaskAnswer | null> {
-    const userData = await this.loadUserData();
-    if (!userData) return null;
-    
-    const session = userData.workspaceSessions.find(s => s.id === sessionId);
-    if (!session || !session.taskAnswers) return null;
-    
-    return session.taskAnswers.find(a => a.taskId === taskId) || null;
-  }
-
-  async addAssessmentSession(session: AssessmentSession, paths: SavedPathData[]): Promise<void> {
-    const success = await gcsUserDataRepository.addAssessmentSession(this.userId, session, paths);
+  async addAssessmentSession(session: AssessmentSession): Promise<void> {
+    const success = await gcsUserDataRepository.addAssessmentSession(this.userId, session);
     if (!success) {
       // Fallback: load all data, modify, and save
       const userData = await this.loadUserData() || this.getDefaultUserData();
       
       userData.assessmentSessions.push(session);
       userData.assessmentResults = session.results;
-      
-      // Handle duplicate paths
-      const existingPathIds = new Set(
-        userData.savedPaths.map(p => p.pathData?.id).filter(Boolean)
-      );
-      
-      const newPaths = paths.filter(path => {
-        const pathId = path.pathData?.id;
-        return !pathId || !existingPathIds.has(pathId);
-      });
-      
-      // Update existing paths with better match percentage
-      paths.forEach(newPath => {
-        const pathId = newPath.pathData?.id;
-        if (pathId && existingPathIds.has(pathId)) {
-          const existingPathIndex = userData.savedPaths.findIndex(
-            p => p.pathData?.id === pathId
-          );
-          
-          if (existingPathIndex >= 0) {
-            const existingPath = userData.savedPaths[existingPathIndex];
-            if (newPath.matchPercentage > existingPath.matchPercentage) {
-              userData.savedPaths[existingPathIndex] = {
-                ...existingPath,
-                matchPercentage: newPath.matchPercentage,
-                assessmentId: newPath.assessmentId,
-                lastUpdated: new Date().toISOString()
-              };
-            }
-          }
-        }
-      });
-      
-      userData.savedPaths.push(...newPaths);
-      session.generatedPaths = newPaths.map(p => p.id);
       
       await this.saveUserData(userData);
     }
@@ -252,43 +130,6 @@ export class UserDataServiceV2 {
     await this.saveUserData(userData);
   }
 
-  async togglePathFavorite(pathId: string): Promise<void> {
-    const success = await gcsUserDataRepository.togglePathFavorite(this.userId, pathId);
-    if (!success) {
-      // Fallback: load all data, modify, and save
-      const userData = await this.loadUserData() || this.getDefaultUserData();
-      const pathIndex = userData.savedPaths.findIndex(p => p.id === pathId);
-      if (pathIndex >= 0) {
-        userData.savedPaths[pathIndex].isFavorite = !userData.savedPaths[pathIndex].isFavorite;
-        await this.saveUserData(userData);
-      }
-    }
-    this.clearCache();
-  }
-
-  async updateSavedPath(pathId: string, updates: SavedPathData): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
-    const pathIndex = userData.savedPaths.findIndex(p => p.id === pathId);
-    if (pathIndex >= 0) {
-      userData.savedPaths[pathIndex] = updates;
-      await this.saveUserData(userData);
-    }
-  }
-
-  async deletePath(pathId: string): Promise<void> {
-    const success = await gcsUserDataRepository.deletePath(this.userId, pathId);
-    if (!success) {
-      // Fallback: load all data, modify, and save
-      const userData = await this.loadUserData() || this.getDefaultUserData();
-      userData.savedPaths = userData.savedPaths.filter(p => p.id !== pathId);
-      await this.saveUserData(userData);
-    }
-    this.clearCache();
-  }
-
-  async deleteSavedPath(pathId: string): Promise<void> {
-    return this.deletePath(pathId);
-  }
 
   // Evaluation system methods (using GCS evaluation repository)
   
@@ -400,10 +241,7 @@ export class UserDataServiceV2 {
         level: 1,
         completedTasks: []
       },
-      workspaceSessions: [],
       assessmentSessions: [],
-      savedPaths: [],
-      generatedTasks: [],
       lastUpdated: new Date().toISOString(),
       version: '2.0'
     };

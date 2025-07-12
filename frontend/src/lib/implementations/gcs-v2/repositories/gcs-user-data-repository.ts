@@ -7,12 +7,8 @@ import { GCSRepositoryBase } from '../base/gcs-repository-base';
 import type { 
   UserData, 
   AssessmentResults, 
-  WorkspaceSession, 
-  SavedPathData, 
   UserAchievements,
-  AssessmentSession,
-  TaskAnswer,
-  DynamicTask
+  AssessmentSession
 } from '@/lib/services/user-data-service';
 
 export interface GCSUserData extends UserData {
@@ -168,37 +164,8 @@ export class GCSUserDataRepository extends GCSRepositoryBase<GCSUserData> {
     return result !== null;
   }
 
-  async addWorkspaceSession(userId: string, session: WorkspaceSession): Promise<boolean> {
-    const userData = await this.getUserData(userId);
-    if (!userData) return false;
 
-    const workspaceSessions = [...(userData.workspaceSessions || []), session];
-    const updates = { workspaceSessions };
-    const result = await this.updateUserData(userId, updates);
-    return result !== null;
-  }
-
-  async updateWorkspaceSession(userId: string, sessionId: string, sessionUpdates: Partial<WorkspaceSession>): Promise<boolean> {
-    const userData = await this.getUserData(userId);
-    if (!userData) return false;
-
-    const workspaceSessions = userData.workspaceSessions || [];
-    const sessionIndex = workspaceSessions.findIndex(s => s.id === sessionId);
-    
-    if (sessionIndex === -1) return false;
-
-    workspaceSessions[sessionIndex] = {
-      ...workspaceSessions[sessionIndex],
-      ...sessionUpdates,
-      lastActiveAt: new Date().toISOString()
-    };
-
-    const updates = { workspaceSessions };
-    const result = await this.updateUserData(userId, updates);
-    return result !== null;
-  }
-
-  async addAssessmentSession(userId: string, session: AssessmentSession, paths: SavedPathData[]): Promise<boolean> {
+  async addAssessmentSession(userId: string, session: AssessmentSession): Promise<boolean> {
     const userData = await this.getUserData(userId);
     if (!userData) return false;
 
@@ -207,109 +174,16 @@ export class GCSUserDataRepository extends GCSRepositoryBase<GCSUserData> {
     
     // Update assessment results
     const assessmentResults = session.results;
-    
-    // Handle saved paths (avoid duplicates)
-    const existingPaths = userData.savedPaths || [];
-    const existingPathIds = new Set(existingPaths.map(p => p.pathData?.id).filter(Boolean));
-    
-    const newPaths = paths.filter(path => {
-      const pathId = path.pathData?.id;
-      return !pathId || !existingPathIds.has(pathId);
-    });
-
-    // Update existing paths with better match percentages
-    const updatedPaths = existingPaths.map(existingPath => {
-      const pathId = existingPath.pathData?.id;
-      if (!pathId) return existingPath;
-
-      const newPath = paths.find(p => p.pathData?.id === pathId);
-      if (newPath && newPath.matchPercentage > existingPath.matchPercentage) {
-        return {
-          ...existingPath,
-          matchPercentage: newPath.matchPercentage,
-          assessmentId: newPath.assessmentId,
-          lastUpdated: new Date().toISOString()
-        };
-      }
-      return existingPath;
-    });
-
-    const savedPaths = [...updatedPaths, ...newPaths];
 
     const updates = {
       assessmentSessions,
-      assessmentResults,
-      savedPaths
+      assessmentResults
     };
 
     const result = await this.updateUserData(userId, updates);
     return result !== null;
   }
 
-  async saveTaskAnswer(userId: string, sessionId: string, taskAnswer: TaskAnswer): Promise<boolean> {
-    const userData = await this.getUserData(userId);
-    if (!userData) return false;
-
-    const workspaceSessions = userData.workspaceSessions || [];
-    const sessionIndex = workspaceSessions.findIndex(s => s.id === sessionId);
-    
-    if (sessionIndex === -1) return false;
-
-    const session = workspaceSessions[sessionIndex];
-    const taskAnswers = session.taskAnswers || [];
-    
-    // Update or add task answer
-    const existingIndex = taskAnswers.findIndex(a => a.taskId === taskAnswer.taskId);
-    if (existingIndex >= 0) {
-      taskAnswers[existingIndex] = taskAnswer;
-    } else {
-      taskAnswers.push(taskAnswer);
-    }
-
-    session.taskAnswers = taskAnswers;
-    session.lastActiveAt = new Date().toISOString();
-
-    const updates = { workspaceSessions };
-    const result = await this.updateUserData(userId, updates);
-    return result !== null;
-  }
-
-  async togglePathFavorite(userId: string, pathId: string): Promise<boolean> {
-    const userData = await this.getUserData(userId);
-    if (!userData) return false;
-
-    const savedPaths = userData.savedPaths || [];
-    const pathIndex = savedPaths.findIndex(p => p.id === pathId);
-    
-    if (pathIndex === -1) return false;
-
-    savedPaths[pathIndex].isFavorite = !savedPaths[pathIndex].isFavorite;
-
-    const updates = { savedPaths };
-    const result = await this.updateUserData(userId, updates);
-    return result !== null;
-  }
-
-  async deletePath(userId: string, pathId: string): Promise<boolean> {
-    const userData = await this.getUserData(userId);
-    if (!userData) return false;
-
-    const savedPaths = (userData.savedPaths || []).filter(p => p.id !== pathId);
-
-    const updates = { savedPaths };
-    const result = await this.updateUserData(userId, updates);
-    return result !== null;
-  }
-
-  async addGeneratedTask(userId: string, task: DynamicTask): Promise<boolean> {
-    const userData = await this.getUserData(userId);
-    if (!userData) return false;
-
-    const generatedTasks = [...(userData.generatedTasks || []), task];
-    const updates = { generatedTasks };
-    const result = await this.updateUserData(userId, updates);
-    return result !== null;
-  }
 }
 
 // Singleton instance

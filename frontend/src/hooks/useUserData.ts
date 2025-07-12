@@ -9,10 +9,6 @@ export { useUserDataV2 as useUserData } from './useUserDataV2';
 export type { 
   UserData, 
   AssessmentResults, 
-  WorkspaceSession, 
-  SavedPathData, 
   UserAchievements,
-  AssessmentSession,
-  TaskAnswer,
-  DynamicTask 
+  AssessmentSession
 } from '@/lib/services/user-data-service';
