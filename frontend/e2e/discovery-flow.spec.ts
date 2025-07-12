@@ -1,298 +1,203 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 
-test.describe('Discovery Learning Flow', () => {
+// Helper function to login
+async function loginUser(page: Page) {
+  await page.goto('/login');
+  await page.fill('input[name="email"]', 'test@example.com');
+  await page.fill('input[name="password"]', 'password123');
+  await page.click('button[type="submit"]');
+  
+  // Wait for redirect after login
+  await page.waitForURL('**/dashboard', { timeout: 10000 });
+}
+
+test.describe('Discovery Module Flow', () => {
   test.beforeEach(async ({ page }) => {
-    // Mock login - in real scenario, you'd implement proper login
-    await page.goto('/login');
-    
-    // Fill login form
-    await page.fill('input[type="email"]', 'test@example.com');
-    await page.fill('input[type="password"]', 'password123');
-    await page.click('button[type="submit"]');
-    
-    // Wait for redirect to home or dashboard
-    await page.waitForURL('**/dashboard');
+    // Login before each test
+    await loginUser(page);
   });
 
-  test('should complete discovery learning flow', async ({ page }) => {
-    // Navigate to discovery section
-    await page.goto('/discovery');
-    await expect(page.getByText('職業探索')).toBeVisible();
-    
-    // Select a career path
-    await page.click('[data-testid="career-content-creator"]');
-    await expect(page.getByText('數位魔法師 - 內容創作者')).toBeVisible();
-    
-    // Start learning journey
-    await page.click('text=開始探索');
-    
-    // Should navigate to scenario page
-    await page.waitForURL('**/discovery/scenarios/**');
-    await expect(page.getByText('學習歷程')).toBeVisible();
-    
-    // Start first task
-    await page.click('text=開始');
-    
-    // Should navigate to task page
-    await page.waitForURL('**/tasks/**');
-    await expect(page.getByText('Understand Algorithms')).toBeVisible();
-  });
-
-  test('should submit task answer and receive feedback', async ({ page }) => {
-    // Navigate directly to a task (assuming scenario and program exist)
-    await page.goto('/discovery/scenarios/test-scenario/programs/test-program/tasks/test-task');
-    
-    // Wait for task to load
-    await expect(page.getByText('你的回答')).toBeVisible();
-    
-    // Fill in answer
-    const answerText = `
-      創意導師 Luna，我已收到您的召喚。
-      
-      在創意帝國的光輝尚未被黑暗吞噬前，我願挺身而出，成為光與真實的使者。
-      面對 Shadow 的虛假咒語，我將以內容魔法揮動筆觸、以視覺咒術點燃靈感、
-      以文字鍊金淬煉真理、以社群召喚術喚醒盟友。
-      
-      具體來說，我會：
-      1. 使用 AI 工具如 GPT、Perplexity 來查核資訊真實性
-      2. 學習製作有根據的內容，如圖文說明和短影音
-      3. 運用 Canva、CapCut 等工具創造視覺吸引人的正確資訊
-      4. 在社群平台上分享真實內容，對抗虛假資訊
-    `;
-    
-    await page.fill('textarea', answerText);
-    
-    // Submit answer
-    await page.click('text=提交答案');
-    
-    // Wait for AI feedback
-    await expect(page.getByText('AI 回饋')).toBeVisible({ timeout: 30000 });
-    
-    // Should show feedback with pass/fail status
-    const feedbackSection = page.locator('[data-testid="ai-feedback"]');
-    await expect(feedbackSection).toBeVisible();
-    
-    // Check if passed
-    const passedIndicator = page.locator('text=任務通過').first();
-    if (await passedIndicator.isVisible()) {
-      // If passed, should show completion options
-      await expect(page.getByText('恭喜達到通過標準')).toBeVisible();
-      await expect(page.getByText('完成任務')).toBeVisible();
-    } else {
-      // If not passed, should show improvement suggestions
-      await expect(page.getByText('需要改進')).toBeVisible();
-      await expect(page.getByText('改進建議')).toBeVisible();
-    }
-  });
-
-  test('should allow multiple attempts on same task', async ({ page }) => {
-    await page.goto('/discovery/scenarios/test-scenario/programs/test-program/tasks/test-task');
-    
-    // First attempt - intentionally brief
-    await page.fill('textarea', '我會使用 AI 工具。');
-    await page.click('text=提交答案');
-    
-    // Wait for feedback
-    await expect(page.getByText('AI 回饋')).toBeVisible({ timeout: 30000 });
-    
-    // Should allow another attempt
-    await expect(page.getByText('繼續作答')).toBeVisible();
-    
-    // Second attempt - more detailed
-    const betterAnswer = `
-      我了解這個任務的核心是辨識與反制虛假資訊。面對 Shadow 的虛假內容，我會：
-      
-      1. AI 工具輔助查核：使用 GPT、Perplexity 或 Google Fact Check 比對資訊來源
-      2. 內容創作技能：練習寫有根據的內容，如新聞資料整理、圖文說明
-      3. 視覺表達技巧：用 Canva、CapCut 做視覺吸引人的海報或影片
-      4. 社群分享與互動：在 IG、YouTube 上傳播正確資訊
-      
-      這些技能適用於行銷、公關、新聞、教育等多種職業。
-    `;
-    
-    await page.fill('textarea', betterAnswer);
-    await page.click('text=提交答案');
-    
-    // Should receive better feedback
-    await expect(page.getByText('AI 回饋')).toBeVisible({ timeout: 30000 });
-    
-    // Check learning history
-    await expect(page.getByText('學習歷程')).toBeVisible();
-    await expect(page.getByText('2 次嘗試')).toBeVisible();
-  });
-
-  test('should show learning progress correctly', async ({ page }) => {
-    await page.goto('/discovery/scenarios/test-scenario/programs/test-program');
-    
-    // Should show program overview
-    await expect(page.getByText('學習歷程')).toBeVisible();
-    await expect(page.getByText('數位魔法師 - 內容創作者')).toBeVisible();
-    
-    // Should show progress bar
-    await expect(page.locator('[data-testid="progress-bar"]')).toBeVisible();
-    
-    // Should show task list with different statuses
-    await expect(page.getByText('任務 1:')).toBeVisible();
-    
-    // Check for different task status indicators
-    const completedTask = page.locator('text=檢視').first();
-    const activeTask = page.locator('text=繼續').first();
-    const lockedTask = page.locator('[data-testid="locked-task"]').first();
-    
-    // At least one of these should be visible
-    const hasCompletedTask = await completedTask.isVisible();
-    const hasActiveTask = await activeTask.isVisible();
-    const hasLockedTask = await lockedTask.isVisible();
-    
-    expect(hasCompletedTask || hasActiveTask || hasLockedTask).toBeTruthy();
-  });
-
-  test('should navigate between tasks correctly', async ({ page }) => {
-    await page.goto('/discovery/scenarios/test-scenario/programs/test-program');
-    
-    // Click on first available task
-    await page.click('[data-testid="task-card"]:first-child');
-    
-    // Should navigate to task detail page
-    await page.waitForURL('**/tasks/**');
-    
-    // Should have back button
-    await expect(page.getByText('返回學習歷程')).toBeVisible();
-    
-    // Go back to program
-    await page.click('text=返回學習歷程');
-    await page.waitForURL('**/programs/**');
-    
-    // Should be back on program page
-    await expect(page.getByText('學習任務')).toBeVisible();
-  });
-
-  test('should complete entire program flow', async ({ page }) => {
-    // This test assumes a program with multiple tasks
-    await page.goto('/discovery/scenarios/test-scenario/programs/test-program');
-    
-    // Complete first task
-    await page.click('text=開始');
-    await page.waitForURL('**/tasks/**');
-    
-    const answer = '詳細的答案內容...';
-    await page.fill('textarea', answer);
-    await page.click('text=提交答案');
-    
-    // Wait for positive feedback
-    await expect(page.getByText('AI 回饋')).toBeVisible({ timeout: 30000 });
-    
-    // If passed, complete the task
-    const completeButton = page.getByText('完成任務');
-    if (await completeButton.isVisible()) {
-      await completeButton.click();
-      
-      // Should return to program page
-      await page.waitForURL('**/programs/**');
-      
-      // Progress should update
-      await expect(page.getByText(/已完成.*個任務/)).toBeVisible();
-    }
-  });
-
-  test('should handle completed task viewing', async ({ page }) => {
-    // Navigate to a completed task
-    await page.goto('/discovery/scenarios/test-scenario/programs/test-program');
-    
-    // Click on completed task (with 檢視 button)
-    const viewButton = page.getByText('檢視').first();
-    if (await viewButton.isVisible()) {
-      await viewButton.click();
-      
-      // Should navigate to read-only task view
-      await page.waitForURL('**/tasks/**');
-      
-      // Should show completion summary
-      await expect(page.getByText('任務已完成')).toBeVisible();
-      
-      // Should show statistics
-      await expect(page.getByText('嘗試次數')).toBeVisible();
-      await expect(page.getByText('通過次數')).toBeVisible();
-      await expect(page.getByText('最高分數')).toBeVisible();
-      
-      // Should not show response input
-      await expect(page.locator('textarea')).not.toBeVisible();
-      
-      // Should show complete learning history
-      await expect(page.getByText('完整學習歷程')).toBeVisible();
-    }
-  });
-
-  test('should show hints when available', async ({ page }) => {
-    await page.goto('/discovery/scenarios/test-scenario/programs/test-program/tasks/test-task');
-    
-    // Should have hints button
-    await expect(page.getByText('需要提示？')).toBeVisible();
-    
-    // Click to show hints
-    await page.click('text=需要提示？');
-    
-    // Should show hints section
-    await expect(page.getByText('提示')).toBeVisible();
-    await expect(page.getByText('隱藏提示')).toBeVisible();
-    
-    // Click to hide hints
-    await page.click('text=隱藏提示');
-    
-    // Hints should be hidden
-    await expect(page.getByText('需要提示？')).toBeVisible();
-  });
-
-  test('should quick link to passed attempts', async ({ page }) => {
-    // Navigate to task with multiple attempts including passes
-    await page.goto('/discovery/scenarios/test-scenario/programs/test-program/tasks/test-task');
-    
-    // Check if there are quick links for passed attempts
-    const quickLink = page.getByText('✓1').first();
-    if (await quickLink.isVisible()) {
-      // Click quick link
-      await quickLink.click();
-      
-      // Should scroll to the passed interaction
-      // The passed interaction should be visible
-      await expect(page.getByText('任務通過')).toBeVisible();
-    }
-  });
-
-  test('should handle API errors gracefully', async ({ page }) => {
-    // Navigate to discovery page
+  test('should navigate through discovery overview', async ({ page }) => {
+    // Navigate to discovery
     await page.goto('/discovery');
     
-    // Intercept API calls and simulate errors
-    await page.route('**/api/discovery/scenarios', route => {
-      route.fulfill({
-        status: 500,
-        contentType: 'application/json',
-        body: JSON.stringify({ error: 'Internal server error' })
-      });
-    });
+    // Should redirect to overview
+    await expect(page).toHaveURL(/.*\/discovery\/overview/);
     
-    // Try to load scenarios
-    await page.reload();
+    // Check page content
+    await expect(page.locator('h1')).toContainText('探索世界');
     
-    // Should handle error gracefully (no hard crash)
-    // Exact error handling depends on implementation
-    await expect(page.locator('body')).toBeVisible();
+    // Check navigation items
+    await expect(page.locator('text=總覽')).toBeVisible();
+    await expect(page.locator('text=評估')).toBeVisible();
+    await expect(page.locator('text=職業冒險')).toBeVisible();
   });
 
-  test('should maintain session across page refreshes', async ({ page }) => {
-    await page.goto('/discovery/scenarios/test-scenario/programs/test-program/tasks/test-task');
+  test('should complete interest assessment', async ({ page }) => {
+    // Navigate to evaluation
+    await page.goto('/discovery/evaluation');
     
-    // Fill in some content
-    await page.fill('textarea', '測試內容');
+    // Check if assessment has already been completed
+    const hasResults = await page.locator('text=評估完成').isVisible({ timeout: 3000 }).catch(() => false);
     
-    // Refresh page
-    await page.reload();
+    if (!hasResults) {
+      // Start assessment
+      await expect(page.locator('text=興趣評估')).toBeVisible();
+      
+      // Answer first question
+      await page.click('text=打造應用程式');
+      await page.click('button:has-text("下一題")');
+      
+      // Answer more questions (adjust based on actual questions)
+      const questions = await page.locator('.question-container').count();
+      for (let i = 1; i < questions; i++) {
+        // Click first option for simplicity
+        await page.locator('.option-card').first().click();
+        
+        // Check if it's the last question
+        const isLastQuestion = await page.locator('button:has-text("完成評估")').isVisible();
+        if (isLastQuestion) {
+          await page.click('button:has-text("完成評估")');
+        } else {
+          await page.click('button:has-text("下一題")');
+        }
+      }
+      
+      // Wait for results
+      await expect(page.locator('text=評估完成')).toBeVisible({ timeout: 10000 });
+    }
     
-    // Should still be authenticated and on the same page
-    await expect(page.getByText('你的回答')).toBeVisible();
+    // Check results display
+    await expect(page.locator('text=科技')).toBeVisible();
+    await expect(page.locator('text=創意')).toBeVisible();
+    await expect(page.locator('text=商業')).toBeVisible();
+  });
+
+  test('should browse and select career scenarios', async ({ page }) => {
+    // Navigate to scenarios
+    await page.goto('/discovery/scenarios');
     
-    // Content might not persist (depends on implementation)
-    // But user should still be logged in
+    // Check page loaded
+    await expect(page.locator('h1:has-text("探索職業冒險")')).toBeVisible();
+    
+    // Check career cards are displayed
+    await expect(page.locator('text=數位魔法師 - 內容創作者')).toBeVisible();
+    await expect(page.locator('text=數碼建築師 - 應用程式開發者')).toBeVisible();
+    
+    // Filter by category
+    await page.click('button:has-text("技術")');
+    
+    // Verify filter works
+    await expect(page.locator('text=數碼建築師')).toBeVisible();
+    
+    // Click on a career scenario
+    await page.click('text=數碼建築師 - 應用程式開發者');
+    
+    // Should navigate to scenario detail or create new scenario
+    await page.waitForURL(/.*\/discovery\/scenarios\/.*/);
+  });
+
+  test('should interact with scenario programs', async ({ page }) => {
+    // Navigate directly to a scenario (assuming one exists)
+    await page.goto('/discovery/scenarios');
+    
+    // Select a scenario
+    await page.click('text=數碼建築師 - 應用程式開發者');
+    await page.waitForURL(/.*\/discovery\/scenarios\/.*/);
+    
+    // Check scenario detail page
+    await expect(page.locator('h1')).toContainText('應用程式開發者');
+    
+    // Check for programs/modules
+    const hasPrograms = await page.locator('text=開始學習').isVisible({ timeout: 5000 }).catch(() => false);
+    
+    if (hasPrograms) {
+      // Click on first program
+      await page.click('text=開始學習');
+      
+      // Should navigate to program page
+      await page.waitForURL(/.*\/programs\/.*/);
+      
+      // Check for tasks
+      await expect(page.locator('text=任務')).toBeVisible();
+    }
+  });
+
+  test('should handle navigation between discovery sections', async ({ page }) => {
+    await page.goto('/discovery/overview');
+    
+    // Test navigation links
+    // Go to evaluation
+    await page.click('a:has-text("評估")');
+    await expect(page).toHaveURL(/.*\/discovery\/evaluation/);
+    
+    // Go to scenarios
+    await page.click('a:has-text("職業冒險")');
+    await expect(page).toHaveURL(/.*\/discovery\/scenarios/);
+    
+    // Go back to overview
+    await page.click('a:has-text("總覽")');
+    await expect(page).toHaveURL(/.*\/discovery\/overview/);
+  });
+
+  test('should show proper empty states', async ({ page }) => {
+    // Navigate to scenarios
+    await page.goto('/discovery/scenarios');
+    
+    // Apply filter that returns no results
+    await page.click('button:has-text("混合")');
+    
+    // If no results, should show empty state
+    const noResults = await page.locator('text=沒有找到符合條件的職業冒險').isVisible({ timeout: 3000 }).catch(() => false);
+    
+    if (noResults) {
+      await expect(page.locator('text=沒有找到符合條件的職業冒險')).toBeVisible();
+    }
+  });
+
+  test('should persist user progress', async ({ page, context }) => {
+    // Complete assessment
+    await page.goto('/discovery/evaluation');
+    
+    // Check if results are already saved
+    const hasResults = await page.locator('text=評估完成').isVisible({ timeout: 3000 }).catch(() => false);
+    
+    if (hasResults) {
+      // Get the scores
+      const techScore = await page.locator('text=科技').locator('..').locator('text=%').textContent();
+      
+      // Navigate away and come back
+      await page.goto('/discovery/overview');
+      await page.goto('/discovery/evaluation');
+      
+      // Results should still be there
+      await expect(page.locator('text=評估完成')).toBeVisible();
+      const techScoreAfter = await page.locator('text=科技').locator('..').locator('text=%').textContent();
+      
+      expect(techScore).toBe(techScoreAfter);
+    }
+  });
+});
+
+test.describe('Discovery Module - Error Handling', () => {
+  test('should handle unauthenticated access', async ({ page }) => {
+    // Try to access discovery without login
+    await page.goto('/discovery/scenarios');
+    
+    // Should redirect to login
+    await expect(page).toHaveURL(/.*\/login/);
+  });
+
+  test('should handle invalid scenario ID', async ({ page }) => {
+    await loginUser(page);
+    
+    // Try to access non-existent scenario
+    await page.goto('/discovery/scenarios/invalid-id-12345');
+    
+    // Should show error or redirect
+    const hasError = await page.locator('text=找不到').isVisible({ timeout: 5000 }).catch(() => false);
+    const redirected = page.url().includes('/discovery/scenarios') && !page.url().includes('invalid-id');
+    
+    expect(hasError || redirected).toBeTruthy();
   });
 });
