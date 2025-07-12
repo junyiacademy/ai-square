@@ -22,8 +22,8 @@
   "domains": {
     "Engaging_with_AI": "Engaging with AI",
     "Creating_with_AI": "Creating with AI",
-    "Managing_with_AI": "Managing with AI",
-    "Designing_with_AI": "Designing with AI"
+    "Managing_AI": "Managing AI",
+    "Designing_AI": "Designing AI"
   },
   "weakDomainReason": "This is your weakest area with {{score}}% score",
   "strongDomainReason": "Advance your skills in {{domain}} (current: {{score}}%)",

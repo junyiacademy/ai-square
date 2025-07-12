@@ -221,8 +221,8 @@ describe('ChatPage', () => {
           domainScores: {
             Engaging_with_AI: 80,
             Creating_with_AI: 70,
-            Managing_with_AI: 75,
-            Designing_with_AI: 75,
+            Managing_AI: 75,
+            Designing_AI: 75,
           },
         });
       }

@@ -85,8 +85,8 @@
     "domains": {
       "engaging_with_ai": "Engaging with AI",
       "creating_with_ai": "Creating with AI",
-      "managing_with_ai": "Managing with AI",
-      "designing_with_ai": "Designing with AI"
+      "managing_with_ai": "Managing AI",
+      "designing_with_ai": "Designing AI"
     }
   },
   "learn": {

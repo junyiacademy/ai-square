@@ -57,8 +57,8 @@
       "focusOn": "Focus on improving",
       "engaging_with_ai": "Focus on improving Engaging with AI: Understanding AI limitations, privacy concerns, and ethical considerations when interacting with AI systems",
       "creating_with_ai": "Focus on improving Creating with AI: Learning prompting techniques, content generation best practices, and creative collaboration with AI tools",
-      "managing_with_ai": "Focus on improving Managing with AI: Developing skills for AI-assisted decision making, workflow automation, and team collaboration",
-      "designing_with_ai": "Focus on improving Designing with AI: Building AI literacy curriculum, creating learning materials, and designing AI-enhanced experiences"
+      "managing_with_ai": "Focus on improving Managing AI: Developing skills for AI-assisted decision making, workflow automation, and team collaboration",
+      "designing_with_ai": "Focus on improving Designing AI: Building AI literacy curriculum, creating learning materials, and designing AI-enhanced experiences"
     },
     "nextSteps": "Recommended Next Steps",
     "nextStep1": "Focus on your lowest scoring domains",
@@ -122,8 +122,8 @@
   "domains": {
     "engaging_with_ai": "Engaging with AI",
     "creating_with_ai": "Creating with AI",
-    "managing_with_ai": "Managing with AI",
-    "designing_with_ai": "Designing with AI"
+    "managing_with_ai": "Managing AI",
+    "designing_with_ai": "Designing AI"
   },
   "history": {
     "title": "Assessment History",

@@ -22,8 +22,8 @@
   "domains": {
     "Engaging_with_AI": "Berinteraksi dengan AI",
     "Creating_with_AI": "Berkreasi dengan AI",
-    "Managing_with_AI": "Mengelola dengan AI",
-    "Designing_with_AI": "Mendesain dengan AI"
+    "Managing_AI": "Mengelola dengan AI",
+    "Designing_AI": "Mendesain dengan AI"
   },
   "strongDomainReason": "Tingkatkan keterampilan Anda di {{domain}} (saat ini: {{score}}%)",
   "averageDomainReason": "Perbaiki keterampilan {{domain}} Anda (saat ini: {{score}}%)",

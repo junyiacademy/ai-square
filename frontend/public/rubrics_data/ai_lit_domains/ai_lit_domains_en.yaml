@@ -156,7 +156,7 @@ domains:
           - Design a creative workflow that clearly defines AI and human roles at different stages.
           - Analyze different types of creative tasks, determining the appropriate degree of AI assistance.
 
-  Managing_with_AI:
+  Managing_AI:
     emoji: 📊
     overview: Involves strategically using AI in organizational and management tasks. These situations require learners to understand how AI changes workflows, decision-making processes, and organizational structures while considering the importance of human oversight and responsibility.
     competencies:
@@ -236,7 +236,7 @@ domains:
           - Design metrics to evaluate the effectiveness of AI customer service systems.
           - Analyze the impact of AI tools on work efficiency and quality.
 
-  Designing_with_AI:
+  Designing_AI:
     emoji: 🔧
     overview: Involves designing and developing AI systems or AI-enhanced solutions. These situations require learners to understand the technical and ethical considerations of AI development, including data, algorithm, and user experience design.
     competencies:

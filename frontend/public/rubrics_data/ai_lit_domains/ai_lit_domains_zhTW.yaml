@@ -156,7 +156,7 @@ domains:
           - 設計一個創作工作流程，明確定義AI和人類在不同階段的角色。
           - 分析不同類型的創作任務，確定AI輔助的適當程度。
 
-  Managing_with_AI:
+  Managing_AI:
     emoji: 📊
     overview: 涉及在組織和管理任務中策略性地使用AI。這些情況要求學習者了解AI如何改變工作流程、決策過程和組織結構，同時考慮人類監督和責任的重要性。
     competencies:
@@ -236,7 +236,7 @@ domains:
           - 設計指標來評估AI客服系統的效果。
           - 分析AI工具對工作效率和品質的影響。
 
-  Designing_with_AI:
+  Designing_AI:
     emoji: 🔧
     overview: 涉及設計和開發AI系統或AI增強的解決方案。這些情況要求學習者理解AI開發的技術和倫理考量，包括資料、演算法和使用者體驗的設計。
     competencies:

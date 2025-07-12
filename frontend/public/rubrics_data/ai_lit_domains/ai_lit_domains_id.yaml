@@ -156,7 +156,7 @@ domains:
           - Merancang alur kerja kreatif yang dengan jelas mendefinisikan peran AI dan manusia di berbagai tahap.
           - Menganalisis berbagai jenis tugas kreatif, menentukan tingkat bantuan AI yang tepat.
 
-  Managing_with_AI:
+  Managing_AI:
     emoji: 📊
     overview: Melibatkan penggunaan strategis AI dalam tugas organisasi dan manajemen. Situasi ini mengharuskan peserta didik memahami bagaimana AI mengubah alur kerja, proses pengambilan keputusan, dan struktur organisasi, sambil mempertimbangkan pentingnya pengawasan dan tanggung jawab manusia.
     competencies:
@@ -236,7 +236,7 @@ domains:
           - Merancang metrik untuk mengevaluasi efektivitas sistem layanan pelanggan AI.
           - Menganalisis dampak alat AI pada efisiensi dan kualitas kerja.
 
-  Designing_with_AI:
+  Designing_AI:
     emoji: 🔧
     overview: Melibatkan perancangan dan pengembangan sistem AI atau solusi yang ditingkatkan AI. Situasi ini mengharuskan peserta didik memahami pertimbangan teknis dan etis pengembangan AI, termasuk desain data, algoritma, dan pengalaman pengguna.
     competencies:

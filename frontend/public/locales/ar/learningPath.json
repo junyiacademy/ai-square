@@ -22,8 +22,8 @@
   "domains": {
     "Engaging_with_AI": "التفاعل مع الذكاء الاصطناعي",
     "Creating_with_AI": "الإبداع مع الذكاء الاصطناعي",
-    "Managing_with_AI": "الإدارة مع الذكاء الاصطناعي",
-    "Designing_with_AI": "التصميم مع الذكاء الاصطناعي"
+    "Managing_AI": "الإدارة مع الذكاء الاصطناعي",
+    "Designing_AI": "التصميم مع الذكاء الاصطناعي"
   },
   "strongDomainReason": "قم بتطوير مهاراتك في {{domain}} (الحالي: {{score}}%)",
   "averageDomainReason": "حسّن مهاراتك في {{domain}} (الحالي: {{score}}%)",

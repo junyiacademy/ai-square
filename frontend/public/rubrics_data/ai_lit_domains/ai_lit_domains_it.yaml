@@ -156,7 +156,7 @@ domains:
           - Progettare un flusso di lavoro creativo che definisca chiaramente i ruoli dell'IA e dell'uomo in diverse fasi.
           - Analizzare diversi tipi di compiti creativi per determinare il livello appropriato di assistenza IA.
 
-  Managing_with_AI:
+  Managing_AI:
     emoji: 📊
     overview: Riguarda l'uso strategico dell'IA nelle attività organizzative e gestionali. Queste situazioni richiedono che gli studenti comprendano come l'IA possa trasformare i flussi di lavoro, i processi decisionali e le strutture organizzative, considerando al contempo l'importanza della supervisione umana e della responsabilità.
     competencies:
@@ -236,7 +236,7 @@ domains:
           - Progettare metriche per valutare l'efficacia di un sistema di assistenza clienti IA.
           - Analizzare l'impatto degli strumenti IA sull'efficienza e la qualità del lavoro.
 
-  Designing_with_AI:
+  Designing_AI:
     emoji: 🔧
     overview: Riguarda la progettazione e lo sviluppo di sistemi IA o soluzioni potenziate dall'IA. Queste situazioni richiedono che gli studenti comprendano le considerazioni tecniche ed etiche dello sviluppo dell'IA, inclusa la progettazione di dati, algoritmi ed esperienza utente.
     competencies:

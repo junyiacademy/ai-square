@@ -156,7 +156,7 @@ domains:
           - Projetar um fluxo de trabalho criativo definindo claramente os papéis da IA e dos humanos em diferentes estágios.
           - Analisar diferentes tipos de tarefas criativas, determinando o grau apropriado de assistência por IA.
 
-  Managing_with_AI:
+  Managing_AI:
     emoji: 📊
     overview: Envolve o uso estratégico da IA em tarefas organizacionais e de gestão. Essas situações exigem que os alunos compreendam como a IA altera fluxos de trabalho, processos de decisão e estruturas organizacionais, considerando a importância da supervisão e responsabilidade humanas.
     competencies:
@@ -236,7 +236,7 @@ domains:
           - Projetar métricas para avaliar a eficácia de sistemas de atendimento ao cliente por IA.
           - Analisar o impacto de ferramentas de IA na eficiência e qualidade do trabalho.
 
-  Designing_with_AI:
+  Designing_AI:
     emoji: 🔧
     overview: Envolve projetar e desenvolver sistemas de IA ou soluções aprimoradas por IA. Essas situações exigem que os alunos compreendam considerações técnicas e éticas do desenvolvimento de IA, incluindo design de dados, algoritmos e experiência do utilizador.
     competencies:

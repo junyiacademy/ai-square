@@ -22,8 +22,8 @@
   "domains": {
     "Engaging_with_AI": "Interaktion mit KI",
     "Creating_with_AI": "Kreativität mit KI",
-    "Managing_with_AI": "Management mit KI",
-    "Designing_with_AI": "Design mit KI"
+    "Managing_AI": "Management mit KI",
+    "Designing_AI": "Design mit KI"
   },
   "strongDomainReason": "Verbessern Sie Ihre Fähigkeiten in {{domain}} (aktuell: {{score}}%)",
   "averageDomainReason": "Verbessern Sie Ihre {{domain}}-Fähigkeiten (aktuell: {{score}}%)",

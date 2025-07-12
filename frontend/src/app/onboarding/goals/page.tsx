@@ -42,7 +42,7 @@ export default function OnboardingGoalsPage() {
       description: t('onboarding:goals.analyze.description'),
       icon: '📊',
       category: 'analytical',
-      recommendedDomains: ['Managing_with_AI']
+      recommendedDomains: ['Managing_AI']
     },
     {
       id: 'build-solutions',
@@ -50,7 +50,7 @@ export default function OnboardingGoalsPage() {
       description: t('onboarding:goals.build.description'),
       icon: '🔧',
       category: 'technical',
-      recommendedDomains: ['Designing_with_AI']
+      recommendedDomains: ['Designing_AI']
     },
     {
       id: 'teach-others',
@@ -58,7 +58,7 @@ export default function OnboardingGoalsPage() {
       description: t('onboarding:goals.teach.description'),
       icon: '👩‍🏫',
       category: 'educational',
-      recommendedDomains: ['Engaging_with_AI', 'Managing_with_AI']
+      recommendedDomains: ['Engaging_with_AI', 'Managing_AI']
     },
     {
       id: 'ethical-ai',
@@ -66,7 +66,7 @@ export default function OnboardingGoalsPage() {
       description: t('onboarding:goals.ethical.description'),
       icon: '⚖️',
       category: 'ethical',
-      recommendedDomains: ['Managing_with_AI', 'Designing_with_AI']
+      recommendedDomains: ['Managing_AI', 'Designing_AI']
     }
   ];
 

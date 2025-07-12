@@ -22,8 +22,8 @@
   "domains": {
     "Engaging_with_AI": "การมีส่วนร่วมกับ AI",
     "Creating_with_AI": "การสร้างสรรค์กับ AI",
-    "Managing_with_AI": "การจัดการกับ AI",
-    "Designing_with_AI": "การออกแบบกับ AI"
+    "Managing_AI": "การจัดการกับ AI",
+    "Designing_AI": "การออกแบบกับ AI"
   },
   "strongDomainReason": "พัฒนาทักษะของคุณใน {{domain}} (ปัจจุบัน: {{score}}%)",
   "averageDomainReason": "ปรับปรุงทักษะ {{domain}} ของคุณ (ปัจจุบัน: {{score}}%)",
