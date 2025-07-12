@@ -44,7 +44,7 @@ interface Competency {
 interface Domain {
   id: string;
   key?: string;
-  name?: string;
+  name: string;
   overview: string;
   overview_zhTW?: string;
   overview_es?: string;
@@ -311,7 +311,7 @@ function DomainAccordion({ domain, kMap, sMap, aMap, lang, emoji }: { domain: Do
       >
         <div className="flex items-center">
           <span className="text-2xl mr-3">{emoji}</span>
-          <span className="text-lg sm:text-xl font-bold text-blue-800 mr-2">{t(domain.id || domain.key || '')}</span>
+          <span className="text-lg sm:text-xl font-bold text-blue-800 mr-2">{domain.name || t(domain.id || domain.key || '')}</span>
           <span className="text-gray-700 text-base font-medium">{open ? '▲' : '▼'}</span>
         </div>
       </div>
@@ -321,7 +321,7 @@ function DomainAccordion({ domain, kMap, sMap, aMap, lang, emoji }: { domain: Do
             <div className="w-full md:w-56 max-w-xs md:max-w-[224px] mb-2 md:mb-0 md:mr-6">
               <Image
                 src={imgSrc}
-                alt={t(domain.id || domain.key || '')}
+                alt={domain.name || t(domain.id || domain.key || '')}
                 width={400}
                 height={240}
                 className="rounded-xl shadow-md object-cover"
@@ -354,7 +354,7 @@ function CompetencyAccordion({ comp, kMap, sMap, aMap, lang }: { comp: Competenc
         className="cursor-pointer bg-gray-100 px-4 py-2 rounded flex items-center justify-between"
         onClick={() => setOpen(o => !o)}
       >
-        <span className="font-semibold text-blue-700 mr-2">{t(comp.id || comp.key || '')}</span>
+        <span className="font-semibold text-blue-700 mr-2">{comp.id || comp.key || ''}</span>
         <span className="text-gray-700 font-medium flex-1">{description}</span>
         <span className="ml-2">{open ? '▲' : '▼'}</span>
       </div>
