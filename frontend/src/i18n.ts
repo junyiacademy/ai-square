@@ -247,9 +247,9 @@ import zhTWDiscovery from '../public/locales/zhTW/discovery.json';
 
 // 在伺服器端和客戶端都使用相同的預設語言避免 hydration mismatch
 const getDefaultLng = () => {
-  // 伺服器端總是返回繁體中文作為預設語言，與 HTML lang="zh-TW" 保持一致
+  // 伺服器端總是返回英文作為預設語言
   // 客戶端的語言偵測會在 I18nProvider 中處理
-  return 'zhTW';
+  return 'en';
 };
 
 i18n

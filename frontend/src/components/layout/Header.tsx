@@ -252,6 +252,11 @@ export function Header() {
 
           {/* 右側區域 */}
           <div className="flex items-center space-x-4">
+            {/* Language Selector - Always visible */}
+            <div className="hidden sm:block">
+              <LanguageSelector />
+            </div>
+            
             {/* Mobile menu button */}
             <button
               type="button"
@@ -313,12 +318,6 @@ export function Header() {
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                         {user.email}
                       </p>
-                    </div>
-                    
-                    {/* Language selector */}
-                    <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t('language')}</p>
-                      <LanguageSelector className="w-full" />
                     </div>
                     
                     {/* Theme toggle */}
@@ -390,6 +389,12 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
+            
+            {/* Language Selector for Mobile */}
+            <div className="px-3 py-3 border-t border-gray-200 dark:border-gray-700">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t('language')}</p>
+              <LanguageSelector className="w-full" />
+            </div>
           </div>
         </nav>
       )}
