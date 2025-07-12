@@ -1,6 +1,6 @@
 domains:
   Engaging_with_AI:
-    emoji: 🎯
+    title: Mit KI interagieren    emoji: 🎯
     overview: Umfasst die Nutzung von KI als Werkzeug zum Zugriff auf neue Inhalte, Informationen oder Empfehlungen. Diese Situationen erfordern, dass Lernende zunächst die Präsenz von KI erkennen und dann die Genauigkeit und Relevanz der KI-Ausgaben bewerten. Die Lernenden müssen ein grundlegendes Verständnis der technischen Grundlagen von KI entwickeln, um deren Fähigkeiten und Grenzen kritisch analysieren zu können.
     competencies:
       E1:
@@ -77,7 +77,7 @@ domains:
           - Strategien zur Überprüfung der Genauigkeit KI-generierter Informationen entwerfen, bevor diese mit anderen geteilt werden.
 
   Creating_with_AI:
-    emoji: 🎨
+    title: Mit KI schaffen    emoji: 🎨
     overview: Umfasst die Zusammenarbeit mit KI-Systemen zur Generierung neuer Inhalte, Ideen oder Lösungen. Diese Situationen erfordern, dass Lernende die Fähigkeiten von KI als kreativen Partner verstehen und gleichzeitig den Respekt für menschliche Kreativität, Originalität und geistiges Eigentum wahren.
     competencies:
       C1:
@@ -156,8 +156,8 @@ domains:
           - Einen kreativen Workflow entwerfen, der die Rollen von KI und Menschen in verschiedenen Phasen klar definiert.
           - Verschiedene Arten kreativer Aufgaben analysieren und den angemessenen Grad der KI-Unterstützung bestimmen.
 
-  Managing_with_AI:
-    emoji: 📊
+  Managing_AI:
+    title: KI verwalten    emoji: 📊
     overview: Umfasst den strategischen Einsatz von KI bei Organisations- und Verwaltungsaufgaben. Diese Situationen erfordern, dass Lernende verstehen, wie KI Arbeitsabläufe, Entscheidungsprozesse und Organisationsstrukturen verändert, während sie die Bedeutung menschlicher Aufsicht und Verantwortung berücksichtigen.
     competencies:
       M1:
@@ -236,8 +236,8 @@ domains:
           - Metriken zur Bewertung der Effektivität eines KI-Kundenservice-Systems entwerfen.
           - Die Auswirkungen von KI-Werkzeugen auf Arbeitseffizienz und -qualität analysieren.
 
-  Designing_with_AI:
-    emoji: 🔧
+  Designing_AI:
+    title: KI gestalten    emoji: 🔧
     overview: Umfasst das Design und die Entwicklung von KI-Systemen oder KI-erweiterten Lösungen. Diese Situationen erfordern, dass Lernende die technischen und ethischen Überlegungen der KI-Entwicklung verstehen, einschließlich des Designs von Daten, Algorithmen und Benutzererfahrungen.
     competencies:
       D1:

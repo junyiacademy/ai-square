@@ -22,8 +22,8 @@
   "domains": {
     "Engaging_with_AI": "Interagir avec l'IA",
     "Creating_with_AI": "Créer avec l'IA",
-    "Managing_with_AI": "Gérer avec l'IA",
-    "Designing_with_AI": "Concevoir avec l'IA"
+    "Managing_AI": "Gérer avec l'IA",
+    "Designing_AI": "Concevoir avec l'IA"
   },
   "strongDomainReason": "Avancez vos compétences en {{domain}} (actuel: {{score}}%)",
   "averageDomainReason": "Améliorez vos compétences {{domain}} (actuel: {{score}}%)",

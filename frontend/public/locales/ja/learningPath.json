@@ -22,8 +22,8 @@
   "domains": {
     "Engaging_with_AI": "AIとの関わり",
     "Creating_with_AI": "AIでの創造",
-    "Managing_with_AI": "AIでの管理",
-    "Designing_with_AI": "AIでの設計"
+    "Managing_AI": "AIでの管理",
+    "Designing_AI": "AIでの設計"
   },
   "strongDomainReason": "{{domain}}のスキルを向上させましょう（現在：{{score}}%）",
   "averageDomainReason": "{{domain}}スキルを改善しましょう（現在：{{score}}%）",

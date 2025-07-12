@@ -38,6 +38,11 @@ export interface IStorageProvider {
    * 清空儲存（危險操作）
    */
   clear(prefix?: string): Promise<void>;
+  
+  /**
+   * 獲取儲存空間資訊
+   */
+  getStorageInfo(): Promise<StorageInfo>;
 }
 
 export interface StorageOptions {
@@ -77,4 +82,13 @@ export interface StorageMetadata {
   timestamp: number;
   ttl?: number;
   tags?: string[];
+}
+
+/**
+ * Storage 空間資訊
+ */
+export interface StorageInfo {
+  used: number;      // 已使用空間（bytes）
+  quota: number;     // 配額（bytes）
+  available: number; // 可用空間（bytes）
 }

@@ -35,8 +35,8 @@ export const domainsFileSchema = z.object({
   domains: z.object({
     Engaging_with_AI: domainSchema,
     Creating_with_AI: domainSchema,
-    Managing_with_AI: domainSchema,
-    Designing_with_AI: domainSchema
+    Managing_AI: domainSchema,
+    Designing_AI: domainSchema
   })
 })
 

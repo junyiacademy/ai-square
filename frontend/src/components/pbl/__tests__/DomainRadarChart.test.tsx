@@ -39,14 +39,14 @@ describe('DomainRadarChart', () => {
       color: '#10b981',
     },
     {
-      domain: 'Managing_with_AI',
-      displayName: 'Managing with AI',
+      domain: 'Managing_AI',
+      displayName: 'Managing AI',
       score: 90,
       color: '#f59e0b',
     },
     {
-      domain: 'Designing_with_AI',
-      displayName: 'Designing with AI',
+      domain: 'Designing_AI',
+      displayName: 'Designing AI',
       score: 68,
       color: '#ef4444',
     },

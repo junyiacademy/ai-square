@@ -1,6 +1,6 @@
 domains:
   Engaging_with_AI:
-    emoji: 🎯
+    title: Interagire con l'IA    emoji: 🎯
     overview: Riguarda l'uso dell'IA come strumento per accedere a nuovi contenuti, informazioni o raccomandazioni. Queste situazioni richiedono che gli studenti identifichino prima la presenza dell'IA e poi valutino l'accuratezza e la pertinenza degli output dell'IA. Gli studenti devono sviluppare una comprensione fondamentale delle basi tecniche dell'IA per analizzare criticamente le sue capacità e limitazioni.
     competencies:
       E1:
@@ -77,7 +77,7 @@ domains:
           - Progettare strategie per verificare l'accuratezza delle informazioni generate dall'IA prima di condividerle con altri.
 
   Creating_with_AI:
-    emoji: 🎨
+    title: Creare con l'IA    emoji: 🎨
     overview: Riguarda la collaborazione con sistemi di IA per generare nuovi contenuti, idee o soluzioni. Queste situazioni richiedono che gli studenti comprendano le capacità dell'IA come partner creativo, mantenendo al contempo il rispetto per la creatività umana, l'originalità e la proprietà intellettuale.
     competencies:
       C1:
@@ -156,8 +156,8 @@ domains:
           - Progettare un flusso di lavoro creativo che definisca chiaramente i ruoli dell'IA e dell'uomo in diverse fasi.
           - Analizzare diversi tipi di compiti creativi per determinare il livello appropriato di assistenza IA.
 
-  Managing_with_AI:
-    emoji: 📊
+  Managing_AI:
+    title: Gestire l'IA    emoji: 📊
     overview: Riguarda l'uso strategico dell'IA nelle attività organizzative e gestionali. Queste situazioni richiedono che gli studenti comprendano come l'IA possa trasformare i flussi di lavoro, i processi decisionali e le strutture organizzative, considerando al contempo l'importanza della supervisione umana e della responsabilità.
     competencies:
       M1:
@@ -236,8 +236,8 @@ domains:
           - Progettare metriche per valutare l'efficacia di un sistema di assistenza clienti IA.
           - Analizzare l'impatto degli strumenti IA sull'efficienza e la qualità del lavoro.
 
-  Designing_with_AI:
-    emoji: 🔧
+  Designing_AI:
+    title: Progettare l'IA    emoji: 🔧
     overview: Riguarda la progettazione e lo sviluppo di sistemi IA o soluzioni potenziate dall'IA. Queste situazioni richiedono che gli studenti comprendano le considerazioni tecniche ed etiche dello sviluppo dell'IA, inclusa la progettazione di dati, algoritmi ed esperienza utente.
     competencies:
       D1:

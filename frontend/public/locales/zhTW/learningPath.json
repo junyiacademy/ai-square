@@ -22,8 +22,8 @@
   "domains": {
     "Engaging_with_AI": "Engaging with AI [Chinese (Traditional)]",
     "Creating_with_AI": "Creating with AI [Chinese (Traditional)]",
-    "Managing_with_AI": "Managing with AI [Chinese (Traditional)]",
-    "Designing_with_AI": "Designing with AI [Chinese (Traditional)]"
+    "Managing_AI": "Managing AI [Chinese (Traditional)]",
+    "Designing_AI": "Designing AI [Chinese (Traditional)]"
   },
   "strongDomainReason": "Advance your skills in {{domain}} (current: {{score}}%) [Chinese (Traditional)]",
   "averageDomainReason": "Improve your {{domain}} skills (current: {{score}}%) [Chinese (Traditional)]",

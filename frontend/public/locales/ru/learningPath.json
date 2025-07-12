@@ -22,8 +22,8 @@
   "domains": {
     "Engaging_with_AI": "Взаимодействие с ИИ",
     "Creating_with_AI": "Создание с ИИ",
-    "Managing_with_AI": "Управление с ИИ",
-    "Designing_with_AI": "Проектирование с ИИ"
+    "Managing_AI": "Управление с ИИ",
+    "Designing_AI": "Проектирование с ИИ"
   },
   "strongDomainReason": "Развивайте ваши навыки в {{domain}} (текущий: {{score}}%)",
   "averageDomainReason": "Улучшите ваши навыки {{domain}} (текущий: {{score}}%)",

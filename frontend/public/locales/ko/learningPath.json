@@ -22,8 +22,8 @@
   "domains": {
     "Engaging_with_AI": "AI와 상호작용",
     "Creating_with_AI": "AI로 창작하기",
-    "Managing_with_AI": "AI로 관리하기",
-    "Designing_with_AI": "AI로 설계하기"
+    "Managing_AI": "AI로 관리하기",
+    "Designing_AI": "AI로 설계하기"
   },
   "strongDomainReason": "{{domain}} 기술을 발전시키세요 (현재: {{score}}%)",
   "averageDomainReason": "{{domain}} 기술을 향상시키세요 (현재: {{score}}%)",

@@ -1,6 +1,6 @@
 domains:
   Engaging_with_AI:
-    emoji: 🎯
+    title: Interagindo com IA    emoji: 🎯
     overview: Envolve usar IA como ferramenta para acessar novos conteúdos, informações ou recomendações. Essas situações exigem que os alunos primeiro reconheçam a presença da IA e depois avaliem a precisão e relevância dos resultados da IA. Os alunos devem desenvolver uma compreensão fundamental das bases técnicas da IA para analisar criticamente suas capacidades e limitações.
     competencies:
       E1:
@@ -77,7 +77,7 @@ domains:
           - Criar estratégias para verificar a precisão de informações geradas por IA antes de as partilhar com outros.
 
   Creating_with_AI:
-    emoji: 🎨
+    title: Criando com IA    emoji: 🎨
     overview: Envolve colaborar com sistemas de IA para gerar novos conteúdos, ideias ou soluções. Essas situações exigem que os alunos compreendam as capacidades da IA como parceiro criativo, mantendo o respeito pela criatividade humana, originalidade e propriedade intelectual.
     competencies:
       C1:
@@ -156,8 +156,8 @@ domains:
           - Projetar um fluxo de trabalho criativo definindo claramente os papéis da IA e dos humanos em diferentes estágios.
           - Analisar diferentes tipos de tarefas criativas, determinando o grau apropriado de assistência por IA.
 
-  Managing_with_AI:
-    emoji: 📊
+  Managing_AI:
+    title: Gerenciando IA    emoji: 📊
     overview: Envolve o uso estratégico da IA em tarefas organizacionais e de gestão. Essas situações exigem que os alunos compreendam como a IA altera fluxos de trabalho, processos de decisão e estruturas organizacionais, considerando a importância da supervisão e responsabilidade humanas.
     competencies:
       M1:
@@ -236,8 +236,8 @@ domains:
           - Projetar métricas para avaliar a eficácia de sistemas de atendimento ao cliente por IA.
           - Analisar o impacto de ferramentas de IA na eficiência e qualidade do trabalho.
 
-  Designing_with_AI:
-    emoji: 🔧
+  Designing_AI:
+    title: Projetando IA    emoji: 🔧
     overview: Envolve projetar e desenvolver sistemas de IA ou soluções aprimoradas por IA. Essas situações exigem que os alunos compreendam considerações técnicas e éticas do desenvolvimento de IA, incluindo design de dados, algoritmos e experiência do utilizador.
     competencies:
       D1:

@@ -247,7 +247,7 @@ describe('Content Integration Tests', () => {
             overview_it: 'Panoramica',
             competencies: {}
           },
-          Managing_with_AI: {
+          Managing_AI: {
             emoji: '📊',
             overview: 'Overview',
             overview_zhTW: '概覽',
@@ -260,7 +260,7 @@ describe('Content Integration Tests', () => {
             overview_it: 'Panoramica',
             competencies: {}
           },
-          Designing_with_AI: {
+          Designing_AI: {
             emoji: '🏗️',
             overview: 'Overview',
             overview_zhTW: '概覽',

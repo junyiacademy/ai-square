@@ -59,8 +59,8 @@ const mockT = jest.fn((key) => {
     'assessment.error.retry': 'Try Again',
     'domains.engaging_with_ai': 'Engaging with AI',
     'domains.creating_with_ai': 'Creating with AI',
-    'domains.managing_with_ai': 'Managing with AI',
-    'domains.designing_with_ai': 'Designing with AI'
+    'domains.managing_with_ai': 'Managing AI',
+    'domains.designing_with_ai': 'Designing AI'
   };
   return translations[key] || key;
 });
@@ -94,12 +94,12 @@ describe('AssessmentPage', () => {
             questions: 3
           },
           managing_with_ai: {
-            name: 'Managing with AI',
+            name: 'Managing AI',
             description: 'Understanding AI limitations, privacy, and ethical considerations',
             questions: 3
           },
           designing_with_ai: {
-            name: 'Designing with AI',
+            name: 'Designing AI',
             description: 'Strategic thinking about AI implementation and innovation',
             questions: 3
           }

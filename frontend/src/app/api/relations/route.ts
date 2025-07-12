@@ -13,6 +13,7 @@ interface CompetencyYaml {
 }
 
 interface DomainYaml {
+  title?: string;
   overview: string;
   competencies: Record<string, CompetencyYaml>;
   emoji?: string;
@@ -99,11 +100,11 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Process domains - no translation needed as we're loading language-specific files
+    // Process domains - use title field if available, fallback to formatted domainId
     const domains: DomainResponse[] = Object.entries(domainsData.domains).map(
       ([domainId, domain]) => ({
         id: domainId,
-        name: domainId.replace(/_/g, ' '),
+        name: domain.title || domainId.replace(/_/g, ' '),
         overview: domain.overview,
         emoji: domain.emoji,
         competencies: Object.entries(domain.competencies).map(

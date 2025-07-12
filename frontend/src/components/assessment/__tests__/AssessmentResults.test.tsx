@@ -81,8 +81,8 @@ const mockT = jest.fn((key, options) => {
     'results.downloadReport': 'Download Report',
     'domains.engaging_with_ai': 'Engaging with AI',
     'domains.creating_with_ai': 'Creating with AI',
-    'domains.managing_with_ai': 'Managing with AI',
-    'domains.designing_with_ai': 'Designing with AI',
+    'domains.managing_with_ai': 'Managing AI',
+    'domains.designing_with_ai': 'Designing AI',
   };
   
   if (key === 'results.summaryText') {
@@ -109,7 +109,7 @@ const mockResult: AssessmentResult = {
   level: 'expert',
   recommendations: [
     'Focus on improving Creating with AI: Using AI tools to enhance creativity and productivity',
-    'Focus on improving Managing with AI: Understanding AI limitations, privacy, and ethical considerations'
+    'Focus on improving Managing AI: Understanding AI limitations, privacy, and ethical considerations'
   ]
 };
 
@@ -125,12 +125,12 @@ const mockDomains = {
     questions: 3
   },
   managing_with_ai: {
-    name: 'Managing with AI',
+    name: 'Managing AI',
     description: 'Understanding AI limitations, privacy, and ethical considerations',
     questions: 3
   },
   designing_with_ai: {
-    name: 'Designing with AI',
+    name: 'Designing AI',
     description: 'Strategic thinking about AI implementation and innovation',
     questions: 3
   }
@@ -228,7 +228,7 @@ describe('AssessmentResults', () => {
     fireEvent.click(screen.getByText('Recommendations'));
 
     expect(screen.getByText(/Focus on improving Creating with AI/)).toBeInTheDocument();
-    expect(screen.getByText(/Focus on improving Managing with AI/)).toBeInTheDocument();
+    expect(screen.getByText(/Focus on improving Managing AI/)).toBeInTheDocument();
     expect(screen.getByText('• Take advanced AI courses')).toBeInTheDocument();
   });
 

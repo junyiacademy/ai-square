@@ -22,8 +22,8 @@
   "domains": {
     "Engaging_with_AI": "与AI互动",
     "Creating_with_AI": "用AI创作",
-    "Managing_with_AI": "用AI管理",
-    "Designing_with_AI": "用AI设计"
+    "Managing_AI": "用AI管理",
+    "Designing_AI": "用AI设计"
   },
   "weakDomainReason": "这是您最薄弱的领域，得分为{{score}}%",
   "strongDomainReason": "在{{domain}}中提升您的技能（当前：{{score}}%）",

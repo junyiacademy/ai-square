@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
 }
 
 function buildTranslationPrompt(
-  content: any,
+  content: Record<string, unknown>,
   sourceLocale: string,
   targetLocale: string,
   fields?: string[]

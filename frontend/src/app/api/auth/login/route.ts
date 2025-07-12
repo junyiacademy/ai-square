@@ -73,7 +73,7 @@ const MOCK_USERS = [
       level: 'beginner',
       recommendations: [
         'Focus on improving Engaging with AI: Understanding AI limitations, privacy concerns, and ethical considerations when interacting with AI systems',
-        'Focus on improving Managing with AI: Developing skills for AI-assisted decision making, workflow automation, and team collaboration'
+        'Focus on improving Managing AI: Developing skills for AI-assisted decision making, workflow automation, and team collaboration'
       ]
     }
   },

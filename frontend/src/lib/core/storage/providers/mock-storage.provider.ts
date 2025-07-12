@@ -51,7 +51,7 @@ export class MockStorageProvider implements IStorageProvider {
     await this.simulateDelay();
     
     if (this.errorMode) {
-      throw new StorageError('Mock error: get failed');
+      throw new StorageError('Mock error: get failed', 'MOCK_ERROR');
     }
     
     const entry = this.storage.get(key);
@@ -76,7 +76,7 @@ export class MockStorageProvider implements IStorageProvider {
     await this.simulateDelay();
     
     if (this.errorMode) {
-      throw new StorageError('Mock error: set failed');
+      throw new StorageError('Mock error: set failed', 'MOCK_ERROR');
     }
     
     // 檢查配額
@@ -107,7 +107,7 @@ export class MockStorageProvider implements IStorageProvider {
     await this.simulateDelay();
     
     if (this.errorMode) {
-      throw new StorageError('Mock error: delete failed');
+      throw new StorageError('Mock error: delete failed', 'MOCK_ERROR');
     }
     
     this.storage.delete(key);
@@ -120,7 +120,7 @@ export class MockStorageProvider implements IStorageProvider {
     await this.simulateDelay();
     
     if (this.errorMode) {
-      throw new StorageError('Mock error: exists failed');
+      throw new StorageError('Mock error: exists failed', 'MOCK_ERROR');
     }
     
     const entry = this.storage.get(key);
@@ -145,7 +145,7 @@ export class MockStorageProvider implements IStorageProvider {
     await this.simulateDelay();
     
     if (this.errorMode) {
-      throw new StorageError('Mock error: list failed');
+      throw new StorageError('Mock error: list failed', 'MOCK_ERROR');
     }
     
     // 過濾符合前綴的項目
@@ -223,7 +223,7 @@ export class MockStorageProvider implements IStorageProvider {
     await this.simulateDelay();
     
     if (this.errorMode) {
-      throw new StorageError('Mock error: clear failed');
+      throw new StorageError('Mock error: clear failed', 'MOCK_ERROR');
     }
     
     if (!prefix) {
@@ -245,7 +245,7 @@ export class MockStorageProvider implements IStorageProvider {
     await this.simulateDelay();
     
     if (this.errorMode) {
-      throw new StorageError('Mock error: getStorageInfo failed');
+      throw new StorageError('Mock error: getStorageInfo failed', 'MOCK_ERROR');
     }
     
     const used = this.getCurrentSize();

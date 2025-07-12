@@ -69,7 +69,7 @@ describe('Domains Schema Validation', () => {
             overview_it: 'Panoramica della creazione',
             competencies: {}
           },
-          Managing_with_AI: {
+          Managing_AI: {
             emoji: '📊',
             overview: 'Managing overview',
             overview_zhTW: '管理概覽',
@@ -82,7 +82,7 @@ describe('Domains Schema Validation', () => {
             overview_it: 'Panoramica della gestione',
             competencies: {}
           },
-          Designing_with_AI: {
+          Designing_AI: {
             emoji: '🏗️',
             overview: 'Designing overview',
             overview_zhTW: '設計概覽',
@@ -194,7 +194,7 @@ describe('Domains Schema Validation', () => {
             overview_it: 'Panoramica',
             competencies: {}
           },
-          Managing_with_AI: {
+          Managing_AI: {
             emoji: '📊',
             overview: 'Overview',
             overview_zhTW: '概覽',
@@ -207,7 +207,7 @@ describe('Domains Schema Validation', () => {
             overview_it: 'Panoramica',
             competencies: {}
           },
-          Designing_with_AI: {
+          Designing_AI: {
             emoji: '🏗️',
             overview: 'Overview',
             overview_zhTW: '概覽',
@@ -289,7 +289,7 @@ describe('Domains Schema Validation', () => {
             overview_it: 'Panoramica',
             competencies: {}
           },
-          Managing_with_AI: {
+          Managing_AI: {
             emoji: '📊',
             overview: 'Overview',
             overview_zhTW: '概覽',
@@ -302,7 +302,7 @@ describe('Domains Schema Validation', () => {
             overview_it: 'Panoramica',
             competencies: {}
           },
-          Designing_with_AI: {
+          Designing_AI: {
             emoji: '🏗️',
             overview: 'Overview',
             overview_zhTW: '概覽',
@@ -400,7 +400,7 @@ describe('Domains Schema Validation', () => {
           overview_it: 'Panoramica',
           competencies: {}
         },
-        Managing_with_AI: {
+        Managing_AI: {
           emoji: '📊',
           overview: 'Overview',
           overview_zhTW: '概覽',
@@ -413,7 +413,7 @@ describe('Domains Schema Validation', () => {
           overview_it: 'Panoramica',
           competencies: {}
         },
-        Designing_with_AI: {
+        Designing_AI: {
           emoji: '🏗️',
           overview: 'Overview',
           overview_zhTW: '概覽',
