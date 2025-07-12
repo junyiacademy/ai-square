@@ -95,8 +95,25 @@ async function createScenariosFromYAML(): Promise<IScenario[]> {
           },
           title: info.title || dir.replace(/_/g, ' '),
           description: info.description || '',
-          objectives: info.objectives || [],
+          objectives: info.learning_objectives || info.objectives || [],
           taskTemplates: extractTaskTemplates(yamlData),
+          metadata: {
+            // Store complete YAML data in metadata for page display
+            ...yamlData,
+            // Flattened scenario info for easier access
+            scenario_info: info,
+            difficulty: info.difficulty || 'intermediate',
+            estimatedDuration: info.estimated_duration || 60,
+            targetDomains: info.target_domains || [],
+            prerequisites: info.prerequisites || [],
+            learningObjectives: info.learning_objectives || [],
+            ksaMapping: yamlData.ksa_mapping || {},
+            tasks: yamlData.tasks || [],
+            // Ensure compatibility with existing page expectations
+            ksa_mapping: yamlData.ksa_mapping || {},
+            estimated_duration: info.estimated_duration || 60,
+            target_domains: info.target_domains || []
+          },
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
         };
@@ -129,12 +146,18 @@ function extractTaskTemplates(yamlData: any): any[] {
         id: task.id || `task-${index + 1}`,
         title: task.title || `Task ${index + 1}`,
         description: task.description || '',
-        estimatedTime: task.time_limit || 30,
-        category: task.category || 'general',
-        assessmentFocus: task.assessment_focus || {},
+        instructions: task.instructions || [],
+        expectedOutcome: task.expected_outcome || task.expected_outcomes || '',
+        timeLimit: task.time_limit || 30,
+        category: task.category || task.type || 'general',
+        type: task.type || task.category || 'general',
+        ksaFocus: task.KSA_focus || {},
         aiModule: task.ai_module || {},
         objectives: task.objectives || [],
-        expectedOutcomes: task.expected_outcomes || []
+        metadata: {
+          // Store complete task data
+          ...task
+        }
       });
     });
   }

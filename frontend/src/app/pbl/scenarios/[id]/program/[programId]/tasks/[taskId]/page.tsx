@@ -198,7 +198,7 @@ export default function ProgramLearningPage() {
       // If no taskId provided, use the first task
       if (!taskId && scenarioData.data.tasks.length > 0) {
         const firstTaskId = scenarioData.data.tasks[0].id;
-        router.replace(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${firstTaskId}/learn`);
+        router.replace(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${firstTaskId}`);
       }
       
     } catch (error) {
@@ -322,7 +322,7 @@ export default function ProgramLearningPage() {
           setProgramId(actualProgramId);
           
           // Update URL without navigation
-          const newUrl = `/pbl/scenarios/${scenarioId}/program/${actualProgramId}/tasks/${taskId}/learn`;
+          const newUrl = `/pbl/scenarios/${scenarioId}/program/${actualProgramId}/tasks/${taskId}`;
           window.history.replaceState({}, '', newUrl);
           
           // Force update the params to ensure consistency
@@ -595,7 +595,7 @@ export default function ProgramLearningPage() {
       const currentIndex = scenario?.tasks.findIndex(t => t.id === currentTask.id) || 0;
       if (scenario && currentIndex < scenario.tasks.length - 1) {
         const nextTask = scenario.tasks[currentIndex + 1];
-        router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${nextTask.id}/learn`);
+        router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${nextTask.id}`);
       } else {
         // All tasks completed
         router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/complete`);
@@ -606,7 +606,7 @@ export default function ProgramLearningPage() {
   };
 
   const switchTask = (newTaskId: string) => {
-    router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${newTaskId}/learn`);
+    router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${newTaskId}`);
   };
 
   if (loading) {

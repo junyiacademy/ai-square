@@ -1,163 +1,58 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useParams, useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
-import { PBLScenarioDetailsSkeleton } from '@/components/pbl/loading-skeletons';
-import { formatDateWithLocale } from '@/utils/locale';
+import { IScenario, IProgram } from '@/types/unified-learning';
+import { formatDateWithLocale } from '@/lib/utils/date';
 
-interface KSAItem {
-  code: string;
-  name: string;
-  description: string;
-}
-
-interface KSAMapping {
-  knowledge: KSAItem[];
-  skills: KSAItem[];
-  attitudes: KSAItem[];
-}
-
-interface ScenarioDetails {
-  id: string;
-  title: string;
-  description: string;
-  difficulty: string;
-  estimatedDuration: number;
-  targetDomain: string[];
-  prerequisites: string[];
-  learningObjectives: string[];
-  ksaMapping?: KSAMapping;
-  tasks: Array<{
-    id: string;
-    title: string;
-    description: string;
-    category: string;
-    instructions: string[];
-    expectedOutcome: string;
-    timeLimit?: number;
-  }>;
-}
-
-interface UserProgram {
-  id: string;
-  scenarioId: string;
-  scenarioTitle: string;
-  status: 'draft' | 'in_progress' | 'completed';
-  startedAt: string;
-  updatedAt: string;
-  totalTasks: number;
-  evaluatedTasks: number;
-  overallScore?: number;
-  taskCount?: number;
-  completedTaskCount?: number;
-  lastActivity?: string;
-}
-
-export default function ScenarioDetailsPage() {
-  const { t, i18n } = useTranslation(['pbl']);
+export default function ScenarioDetailPage() {
   const params = useParams();
-  const scenarioId = params.id as string;
-  
-  const [scenario, setScenario] = useState<ScenarioDetails | null>(null);
+  const router = useRouter();
+  const { t, i18n } = useTranslation(['pbl', 'common']);
+  const [scenario, setScenario] = useState<IScenario | null>(null);
+  const [userPrograms, setUserPrograms] = useState<IProgram[]>([]);
   const [loading, setLoading] = useState(true);
   const [isStarting, setIsStarting] = useState(false);
-  const [userPrograms, setUserPrograms] = useState<UserProgram[]>([]);
-  // const [selectedProgramId, setSelectedProgramId] = useState<string | null>(null);
-  const [draftProgram, setDraftProgram] = useState<UserProgram | null>(null);
-  const router = useRouter();
+  const scenarioId = params.id as string;
 
   useEffect(() => {
-    const fetchScenarioDetails = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch(`/api/pbl/scenarios/${scenarioId}?lang=${i18n.language}`);
-        const data = await response.json();
-        
-        if (data.success) {
-          setScenario(data.data);
+        // Fetch scenario details
+        const scenarioResponse = await fetch(`/api/discovery/scenarios/${params.id}`);
+        if (scenarioResponse.ok) {
+          const scenarioData = await scenarioResponse.json();
+          console.log('Scenario data received:', scenarioData);
+          setScenario(scenarioData);
+        } else {
+          console.error('Failed to fetch scenario:', scenarioResponse.status, scenarioResponse.statusText);
+        }
+
+        // Fetch user's programs for this scenario
+        const programsResponse = await fetch(`/api/discovery/scenarios/${params.id}/programs`);
+        if (programsResponse.ok) {
+          const programsData = await programsResponse.json();
+          setUserPrograms(programsData);
         }
       } catch (error) {
-        console.error('Error fetching scenario details:', error);
+        console.error('Error fetching scenario data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    const fetchUserPrograms = async () => {
-      try {
-        const response = await fetch(`/api/pbl/user-programs?scenarioId=${scenarioId}&lang=${i18n.language}`);
-        const data = await response.json();
-        
-        if (data.success && data.programs) {
-          setUserPrograms(data.programs);
-          // Most recent program is available in data.programs[0]
-        }
-      } catch (error) {
-        console.error('Error fetching user programs:', error);
-      }
-    };
+    fetchData();
+  }, [params.id]);
 
-    const checkForDraftProgram = async () => {
-      try {
-        const response = await fetch(`/api/pbl/draft-program?scenarioId=${scenarioId}`);
-        const data = await response.json();
-        
-        if (data.success && data.program) {
-          // Convert program metadata to UserProgram format
-          const draftUserProgram: UserProgram = {
-            id: data.program.id,
-            scenarioId: data.program.scenarioId,
-            scenarioTitle: data.program.scenarioTitle,
-            status: data.program.status,
-            startedAt: data.program.startedAt,
-            updatedAt: data.program.updatedAt,
-            totalTasks: data.program.totalTasks,
-            evaluatedTasks: 0,
-            overallScore: 0
-          };
-          setDraftProgram(draftUserProgram);
-        }
-      } catch (error) {
-        console.error('Error checking for draft program:', error);
-      }
-    };
-
-    fetchScenarioDetails();
-    fetchUserPrograms();
-    checkForDraftProgram();
-  }, [scenarioId, i18n.language]);
-
-  const getDifficultyBadge = (difficulty: string) => {
-    const colors = {
-      beginner: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
-      intermediate: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-      advanced: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
-    };
-    return colors[difficulty as keyof typeof colors] || colors.intermediate;
+  // Helper function to get data from scenario metadata
+  const getScenarioData = (key: string, fallback: any = null) => {
+    return scenario?.metadata?.[key] || fallback;
   };
-
-  const getCategoryIcon = (category: string) => {
-    const icons = {
-      research: '🔍',
-      analysis: '📊',
-      creation: '✏️',
-      interaction: '💬',
-      general: '📚'
-    };
-    return icons[category as keyof typeof icons] || '📚';
-  };
-
-  const getDomainTranslation = (domain: string) => {
-    // Use the domain translation from pbl namespace
-    return t(`details.domains.${domain}`, { 
-      defaultValue: domain.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
-    });
-  };
-
 
   const handleStartProgram = async (programId?: string) => {
-    if (!scenario || isStarting) return;
+    if (!scenario) return;
     
     setIsStarting(true);
     try {
@@ -165,54 +60,76 @@ export default function ScenarioDetailsPage() {
         // Continue existing program
         const program = userPrograms.find(p => p.id === programId);
         if (program) {
-          // Navigate to the learning page with existing program
-          const firstTaskId = scenario.tasks[0]?.id || 'task-1';
-          router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${firstTaskId}/learn`);
+          // Navigate to the first incomplete task or the first task
+          const tasks = getScenarioData('tasks', []);
+          const firstIncompleteTask = tasks.find((task: any) => 
+            !program.taskLogs?.some((log: any) => log.taskId === task.id && log.isCompleted)
+          );
+          const targetTaskId = firstIncompleteTask?.id || tasks[0]?.id || 'task-1';
+          router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${targetTaskId}`);
         }
       } else {
-        // Start new program - use draft if available, otherwise create new one
-        if (draftProgram) {
-          // Use existing draft program directly
-          const firstTaskId = scenario.tasks[0]?.id || 'task-1';
-          router.push(`/pbl/scenarios/${scenarioId}/program/${draftProgram.id}/tasks/${firstTaskId}/learn`);
-        } else {
-          // Create new draft program
-          try {
-            const createResponse = await fetch(`/api/pbl/scenarios/${scenarioId}/create-draft`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                language: i18n.language
-              })
-            });
-            
-            if (!createResponse.ok) throw new Error('Failed to create draft program');
-            
-            const createData = await createResponse.json();
-            if (!createData.success || !createData.programId) {
-              throw new Error('Failed to create draft program');
-            }
-            
-            // Navigate to the learning page with new draft
-            const firstTaskId = scenario.tasks[0]?.id || 'task-1';
-            router.push(`/pbl/scenarios/${scenarioId}/program/${createData.programId}/tasks/${firstTaskId}/learn`);
-            
-          } catch (error) {
-            console.error('Error creating draft program:', error);
-            // Fallback to old temp ID method
-            const tempProgramId = `temp_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
-            const firstTaskId = scenario.tasks[0]?.id || 'task-1';
-            router.push(`/pbl/scenarios/${scenarioId}/program/${tempProgramId}/tasks/${firstTaskId}/learn?isNew=true`);
-          }
+        // Create new program
+        const response = await fetch(`/api/discovery/scenarios/${scenarioId}/programs`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            language: i18n.language
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to create program');
+        }
+        
+        const data = await response.json();
+        if (data.id) {
+          // Navigate to the first task
+          const tasks = getScenarioData('tasks', []);
+          const firstTaskId = tasks[0]?.id || 'task-1';
+          router.push(`/pbl/scenarios/${scenarioId}/program/${data.id}/tasks/${firstTaskId}`);
         }
       }
     } catch (error) {
       console.error('Error starting program:', error);
-      alert(t('details.errorStarting'));
+      alert(t('details.errorStarting', 'Error starting program'));
     } finally {
       setIsStarting(false);
+    }
+  };
+
+  // Helper functions
+  const getDifficultyBadge = (difficulty: string) => {
+    switch (difficulty) {
+      case 'beginner':
+        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+      case 'intermediate':
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+      case 'advanced':
+        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+      default:
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
+    }
+  };
+
+  const getDomainTranslation = (domain: string) => {
+    return t(`domains.${domain}`, domain);
+  };
+
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'analysis':
+        return '📊';
+      case 'creation':
+        return '✨';
+      case 'evaluation':
+        return '🔍';
+      case 'application':
+        return '🚀';
+      default:
+        return '📝';
     }
   };
 
@@ -220,7 +137,11 @@ export default function ScenarioDetailsPage() {
     return (
       <main className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <PBLScenarioDetailsSkeleton />
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
+            <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
+            <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+          </div>
         </div>
       </main>
     );
@@ -230,9 +151,9 @@ export default function ScenarioDetailsPage() {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600 dark:text-gray-400 mb-4">{t('details.scenarioNotFound')}</p>
-          <Link href="/pbl" className="text-blue-600 hover:text-blue-700">
-            {t('details.backToPBL')}
+          <p className="text-gray-600 dark:text-gray-400 mb-4">{t('details.scenarioNotFound', 'Scenario not found')}</p>
+          <Link href="/pbl/scenarios" className="text-blue-600 hover:text-blue-700">
+            {t('details.backToScenarios', 'Back to Scenarios')}
           </Link>
         </div>
       </div>
@@ -246,8 +167,8 @@ export default function ScenarioDetailsPage() {
         <nav className="mb-8">
           <ol className="flex items-center space-x-2 text-sm">
             <li>
-              <Link href="/pbl" className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                {t('details.breadcrumb.pbl')}
+              <Link href="/pbl/scenarios" className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                {t('pbl', 'PBL')}
               </Link>
             </li>
             <li className="text-gray-400 dark:text-gray-600">/</li>
@@ -269,15 +190,15 @@ export default function ScenarioDetailsPage() {
               {/* Metadata */}
               <div className="flex flex-wrap gap-4 mb-6">
                 <div className="flex items-center">
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${getDifficultyBadge(scenario.difficulty)}`}>
-                    {t(`level.${scenario.difficulty}`)}
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${getDifficultyBadge(getScenarioData('difficulty', 'beginner'))}`}>
+                    {t(`difficulty.${getScenarioData('difficulty', 'beginner')}`, getScenarioData('difficulty', 'beginner'))}
                   </span>
                 </div>
                 <div className="flex items-center text-gray-600 dark:text-gray-400">
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <span>{scenario.estimatedDuration} {t('details.minutes')}</span>
+                  <span>{getScenarioData('estimatedDuration', 30)} {t('common:minutes', 'minutes')}</span>
                 </div>
               </div>
 
@@ -285,7 +206,7 @@ export default function ScenarioDetailsPage() {
               {userPrograms.length > 0 && (
                 <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                   <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                    {t('details.existingPrograms')}
+                    {t('details.yourPrograms', 'Your Programs')}
                   </h3>
                   <div className="space-y-2">
                     {userPrograms.map((program, index) => (
@@ -296,7 +217,7 @@ export default function ScenarioDetailsPage() {
                         <div className="flex items-start justify-between mb-3">
                           <div>
                             <span className="font-medium text-gray-900 dark:text-white">
-                              {index === 0 ? t('details.latestProgram') : `${t('details.program')} ${index + 1}`}
+                              {index === 0 ? t('details.latestProgram', 'Latest Program') : `${t('common:program', 'Program')} ${index + 1}`}
                             </span>
                             <span className={`ml-3 text-xs px-2 py-1 rounded-full ${
                               program.status === 'completed' 
@@ -305,28 +226,30 @@ export default function ScenarioDetailsPage() {
                                 ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
                                 : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                             }`}>
-                              {t(`history.status.${program.status}`)}
+                              {t(`status.${program.status}`, program.status)}
                             </span>
                           </div>
                         </div>
                         <div className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                           <div>
-                            {t('details.progress')}: {program.evaluatedTasks}/{program.taskCount || program.totalTasks} {t('details.tasks')}
-                            {program.overallScore && program.overallScore > 0 && (
+                            {t('common:progress', 'Progress')}: {program.evaluations?.length || 0}/{getScenarioData('tasks', []).length || 0} {t('common:tasks', 'tasks')}
+                            {program.evaluations && program.evaluations.length > 0 && (
                               <>
                                 <span className="mx-2">•</span>
                                 <span className="font-medium">
-                                  {t('pbl:learn.overallScore')}: {program.overallScore}%
+                                  {t('averageScore', 'Average Score')}: {Math.round(
+                                    program.evaluations.reduce((sum, e) => sum + e.score, 0) / program.evaluations.length
+                                  )}%
                                 </span>
                               </>
                             )}
                           </div>
                           <div>
-                            {t('details.started')}: {formatDateWithLocale(new Date(program.startedAt), i18n.language)}
-                            {program.evaluatedTasks > 0 && (
+                            {t('common:startedAt', 'Started')}: {formatDateWithLocale(new Date(program.createdAt), i18n.language)}
+                            {program.updatedAt && (
                               <>
                                 <span className="mx-2">•</span>
-                                {t('pbl:history.tasksEvaluated')}: {program.evaluatedTasks}
+                                {t('common:lastUpdated', 'Last updated')}: {formatDateWithLocale(new Date(program.updatedAt), i18n.language)}
                               </>
                             )}
                           </div>
@@ -336,14 +259,14 @@ export default function ScenarioDetailsPage() {
                             onClick={() => handleStartProgram(program.id)}
                             className="text-sm px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium"
                           >
-                            {t('details.continue')}
+                            {t('common:continue', 'Continue')}
                           </button>
-                          {(program.evaluatedTasks > 0 || program.status === 'completed') && (
+                          {(program.evaluations && program.evaluations.length > 0 || program.status === 'completed') && (
                             <button
                               onClick={() => router.push(`/pbl/scenarios/${scenarioId}/program/${program.id}/complete`)}
                               className="text-sm px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors font-medium"
                             >
-                              {t('details.goToCompletion')}
+                              {t('viewResults', 'View Results')}
                             </button>
                           )}
                         </div>
@@ -361,17 +284,15 @@ export default function ScenarioDetailsPage() {
                   className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isStarting 
-                    ? t('details.starting') 
-                    : draftProgram 
-                    ? t('details.continueDraft')
-                    : t('details.startNewProgram')
+                    ? t('common:loading', 'Loading...') 
+                    : t('startNewProgram', 'Start New Program')
                   }
                 </button>
                 <Link
-                  href="/pbl"
+                  href="/pbl/scenarios"
                   className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
-                  {t('details.backToScenarios')}
+                  {t('backToScenarios', 'Back to Scenarios')}
                 </Link>
               </div>
             </div>
@@ -384,10 +305,10 @@ export default function ScenarioDetailsPage() {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
               <span className="text-2xl mr-2">🎯</span>
-              {t('details.learningObjectives')}
+              {t('learningObjectives', 'Learning Objectives')}
             </h2>
             <ul className="space-y-2">
-              {scenario.learningObjectives.map((objective, index) => (
+              {(scenario.objectives || []).map((objective, index) => (
                 <li key={index} className="flex items-start">
                   <svg className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -395,6 +316,9 @@ export default function ScenarioDetailsPage() {
                   <span className="text-gray-600 dark:text-gray-300">{objective}</span>
                 </li>
               ))}
+              {(!scenario.objectives || scenario.objectives.length === 0) && (
+                <li className="text-gray-500 dark:text-gray-400">No objectives specified</li>
+              )}
             </ul>
           </div>
 
@@ -402,15 +326,18 @@ export default function ScenarioDetailsPage() {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
               <span className="text-2xl mr-2">📋</span>
-              {t('details.prerequisites')}
+              {t('prerequisites', 'Prerequisites')}
             </h2>
             <ul className="space-y-2">
-              {scenario.prerequisites.map((prereq, index) => (
+              {getScenarioData('prerequisites', []).map((prereq: string, index: number) => (
                 <li key={index} className="flex items-start">
                   <span className="text-blue-500 mr-2">•</span>
                   <span className="text-gray-600 dark:text-gray-300">{prereq}</span>
                 </li>
               ))}
+              {getScenarioData('prerequisites', []).length === 0 && (
+                <li className="text-gray-500 dark:text-gray-400">No prerequisites</li>
+              )}
             </ul>
           </div>
         </div>
@@ -419,90 +346,73 @@ export default function ScenarioDetailsPage() {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
             <span className="text-2xl mr-2">🌐</span>
-            {t('details.targetDomains')}
+            {t('targetDomains', 'Target Domains')}
           </h2>
           <div className="flex flex-wrap gap-2">
-            {scenario.targetDomain.map((domain, index) => (
+            {getScenarioData('targetDomains', []).map((domain: string, index: number) => (
               <span key={index} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                 {getDomainTranslation(domain)}
               </span>
             ))}
+            {getScenarioData('targetDomains', []).length === 0 && (
+              <span className="text-gray-500 dark:text-gray-400">No target domains specified</span>
+            )}
           </div>
         </div>
 
-        {/* KSA Mapping */}
-        {scenario.ksaMapping && (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-              <span className="text-2xl mr-2">🧠</span>
-              {t('details.ksaCompetencies')}
-            </h2>
-            <div className="space-y-4">
-              {/* Knowledge */}
-              {scenario.ksaMapping.knowledge.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-semibold text-green-700 dark:text-green-300 mb-2">{t('details.knowledge')}</h3>
-                  <div className="space-y-2">
-                    {scenario.ksaMapping.knowledge.map((item, index) => (
-                      <div key={index} className="p-2 bg-green-50 dark:bg-green-900/20 rounded">
-                        <div className="text-sm font-medium text-green-800 dark:text-green-300">{item.code}</div>
-                        <div className="text-xs text-green-600 dark:text-green-400">{item.description}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-              
-              {/* Skills */}
-              {scenario.ksaMapping.skills.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-semibold text-blue-700 dark:text-blue-300 mb-2">{t('details.skills')}</h3>
-                  <div className="space-y-2">
-                    {scenario.ksaMapping.skills.map((item, index) => (
-                      <div key={index} className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded">
-                        <div className="text-sm font-medium text-blue-800 dark:text-blue-300">{item.code}</div>
-                        <div className="text-xs text-blue-600 dark:text-blue-400">{item.description}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-              
-              {/* Attitudes */}
-              {scenario.ksaMapping.attitudes.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-semibold text-purple-700 dark:text-purple-300 mb-2">{t('details.attitudes')}</h3>
-                  <div className="space-y-2">
-                    {scenario.ksaMapping.attitudes.map((item, index) => (
-                      <div key={index} className="p-2 bg-purple-50 dark:bg-purple-900/20 rounded">
-                        <div className="text-sm font-medium text-purple-800 dark:text-purple-300">{item.code}</div>
-                        <div className="text-xs text-purple-600 dark:text-purple-400">{item.description}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
 
         {/* Learning Tasks */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
-            {t('details.learningTasks')}
+            {t('learningTasks', 'Learning Tasks')}
           </h2>
+
+          {/* Scenario KSA Overview */}
+          {getScenarioData('ksaMapping') && (
+            <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center">
+                🧠 KSA Competencies Covered in This Scenario
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                {getScenarioData('ksaMapping').knowledge && getScenarioData('ksaMapping').knowledge.length > 0 && (
+                  <div>
+                    <span className="font-medium text-green-700 dark:text-green-300">Knowledge: </span>
+                    <span className="text-green-600 dark:text-green-400">
+                      {getScenarioData('ksaMapping').knowledge.join(', ')}
+                    </span>
+                  </div>
+                )}
+                {getScenarioData('ksaMapping').skills && getScenarioData('ksaMapping').skills.length > 0 && (
+                  <div>
+                    <span className="font-medium text-blue-700 dark:text-blue-300">Skills: </span>
+                    <span className="text-blue-600 dark:text-blue-400">
+                      {getScenarioData('ksaMapping').skills.join(', ')}
+                    </span>
+                  </div>
+                )}
+                {getScenarioData('ksaMapping').attitudes && getScenarioData('ksaMapping').attitudes.length > 0 && (
+                  <div>
+                    <span className="font-medium text-purple-700 dark:text-purple-300">Attitudes: </span>
+                    <span className="text-purple-600 dark:text-purple-400">
+                      {getScenarioData('ksaMapping').attitudes.join(', ')}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Tasks List */}
           <div className="space-y-4">
-            {scenario.tasks.map((task, taskIndex) => (
-              <div key={task.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            {getScenarioData('tasks', []).map((task: any, taskIndex: number) => (
+              <div key={task.id || taskIndex} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                 <div className="flex items-start justify-between mb-2">
                   <h5 className="font-medium text-gray-900 dark:text-white">
                     {taskIndex + 1}. {task.title}
                   </h5>
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-gray-500 dark:text-gray-400">
-                      {getCategoryIcon(task.category)}
+                      {getCategoryIcon(task.category || task.type)}
                     </span>
                     {task.timeLimit && (
                       <span className="text-sm text-gray-500 dark:text-gray-400">
@@ -516,31 +426,67 @@ export default function ScenarioDetailsPage() {
                 </p>
                 
                 {/* Instructions */}
-                <div className="mb-3">
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                    {t('details.instructions')}
-                  </p>
-                  <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-                    {task.instructions.map((instruction, i) => (
-                      <li key={i} className="flex items-start">
-                        <span className="text-gray-400 mr-2">•</span>
-                        {instruction}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                {task.instructions && task.instructions.length > 0 && (
+                  <div className="mb-3">
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+                      {t('instructions', 'Instructions')}
+                    </p>
+                    <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
+                      {task.instructions.map((instruction: string, i: number) => (
+                        <li key={i} className="flex items-start">
+                          <span className="text-gray-400 mr-2">•</span>
+                          {instruction}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                {/* KSA Focus */}
+                {task.KSA_focus && (
+                  <div className="bg-purple-50 dark:bg-purple-900/20 rounded p-3 mb-3">
+                    <p className="text-sm font-medium text-purple-700 dark:text-purple-300 mb-2">
+                      🧠 KSA
+                    </p>
+                    <div className="space-y-1">
+                      {task.KSA_focus.primary && task.KSA_focus.primary.length > 0 && (
+                        <div>
+                          <span className="text-xs font-medium text-purple-600 dark:text-purple-400">Primary: </span>
+                          <span className="text-xs text-purple-600 dark:text-purple-400">
+                            {task.KSA_focus.primary.join(', ')}
+                          </span>
+                        </div>
+                      )}
+                      {task.KSA_focus.secondary && task.KSA_focus.secondary.length > 0 && (
+                        <div>
+                          <span className="text-xs font-medium text-purple-600 dark:text-purple-400">Secondary: </span>
+                          <span className="text-xs text-purple-600 dark:text-purple-400">
+                            {task.KSA_focus.secondary.join(', ')}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
                 
                 {/* Expected Outcome */}
-                <div className="bg-blue-50 dark:bg-blue-900/20 rounded p-3">
-                  <p className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">
-                    {t('details.expectedOutcome')}
-                  </p>
-                  <p className="text-sm text-blue-600 dark:text-blue-400">
-                    {task.expectedOutcome}
-                  </p>
-                </div>
+                {task.expectedOutcome && (
+                  <div className="bg-blue-50 dark:bg-blue-900/20 rounded p-3">
+                    <p className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">
+                      {t('expectedOutcome', 'Expected Outcome')}
+                    </p>
+                    <p className="text-sm text-blue-600 dark:text-blue-400">
+                      {task.expectedOutcome}
+                    </p>
+                  </div>
+                )}
               </div>
             ))}
+            {getScenarioData('tasks', []).length === 0 && (
+              <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+                No tasks defined for this scenario
+              </div>
+            )}
           </div>
         </div>
 

@@ -269,3 +269,69 @@ export async function POST(
     );
   }
 }
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await getServerSession();
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { id: scenarioId } = await params;
+    const userEmail = session.user.email;
+    
+    // Get repositories
+    const programRepo = getProgramRepository();
+    const taskRepo = getTaskRepository();
+    
+    // Find programs for this user and scenario
+    const programs = await programRepo.findByScenarioAndUser(scenarioId, userEmail);
+    
+    // For each program, load task details and evaluations
+    const programsWithDetails = await Promise.all(
+      programs.map(async (program) => {
+        // Load tasks for this program
+        const tasks = await Promise.all(
+          program.taskIds.map(taskId => taskRepo.findById(taskId))
+        );
+        
+        // Filter out any null tasks and get evaluations
+        const validTasks = tasks.filter(Boolean) as ITask[];
+        const evaluations = validTasks
+          .filter(task => task.evaluation?.score !== undefined)
+          .map(task => ({
+            taskId: task.id,
+            score: task.evaluation?.score || 0,
+            feedback: task.evaluation?.feedback || '',
+            completedAt: task.evaluation?.evaluatedAt || task.updatedAt
+          }));
+        
+        return {
+          ...program,
+          evaluations,
+          taskLogs: validTasks.map(task => ({
+            taskId: task.id,
+            isCompleted: task.status === 'completed',
+            completedAt: task.status === 'completed' ? task.updatedAt : undefined
+          }))
+        };
+      })
+    );
+    
+    // Sort by creation date (newest first)
+    programsWithDetails.sort((a, b) => 
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+    
+    return NextResponse.json(programsWithDetails);
+  } catch (error) {
+    console.error('Error in GET /api/discovery/scenarios/[id]/programs:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
