@@ -244,28 +244,29 @@ export async function POST(
           createdTasks.push(task);
         }
       } else {
-      // Fallback to default templates if no YAML data
-      for (let i = 0; i < DISCOVERY_TASK_TEMPLATES.length; i++) {
-        const template = DISCOVERY_TASK_TEMPLATES[i];
-        const task = await taskRepo.create({
-          programId: program.id,
-          scenarioTaskIndex: i,
-          title: template.title,
-          type: template.type,
-          content: {
-            instructions: template.content.instructions,
-            context: {
-              description: template.description,
-              xp: template.xp,
-              objectives: template.content.objectives,
-              completionCriteria: template.content.completionCriteria,
-              difficulty: i < 3 ? 'beginner' : i < 7 ? 'intermediate' : 'advanced'
-            }
-          },
-          interactions: [],
-          status: i === 0 ? 'active' : 'pending'
-        });
-        createdTasks.push(task);
+        // Fallback to default templates if no YAML data
+        for (let i = 0; i < DISCOVERY_TASK_TEMPLATES.length; i++) {
+          const template = DISCOVERY_TASK_TEMPLATES[i];
+          const task = await taskRepo.create({
+            programId: program.id,
+            scenarioTaskIndex: i,
+            title: template.title,
+            type: template.type,
+            content: {
+              instructions: template.content.instructions,
+              context: {
+                description: template.description,
+                xp: template.xp,
+                objectives: template.content.objectives,
+                completionCriteria: template.content.completionCriteria,
+                difficulty: i < 3 ? 'beginner' : i < 7 ? 'intermediate' : 'advanced'
+              }
+            },
+            interactions: [],
+            status: i === 0 ? 'active' : 'pending'
+          });
+          createdTasks.push(task);
+        }
       }
     }
     

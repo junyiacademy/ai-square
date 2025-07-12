@@ -84,13 +84,17 @@ function getLocalizedValue<T = unknown>(data: Record<string, T>, fieldName: stri
 }
 
 // Helper function to load and parse KSA codes
-async function loadKSACodes(): Promise<KSAData | null> {
+async function loadKSACodes(lang: string = 'en'): Promise<KSAData | null> {
   try {
-    const ksaPath = path.join(process.cwd(), 'public', 'rubrics_data', 'ksa_codes.yaml');
+    const ksaPath = path.join(process.cwd(), 'public', 'rubrics_data', 'ksa_codes', `ksa_codes_${lang}.yaml`);
     const ksaContent = await fs.readFile(ksaPath, 'utf8');
     return yaml.load(ksaContent) as KSAData;
   } catch (error) {
     console.error('Error loading KSA codes:', error);
+    // Fallback to English if specific language not found
+    if (lang !== 'en') {
+      return loadKSACodes('en');
+    }
     return null;
   }
 }
@@ -259,7 +263,7 @@ export async function GET(
     const yamlData = yaml.load(yamlContent) as ScenarioYAML;
     
     // Load KSA codes
-    const ksaData = await loadKSACodes();
+    const ksaData = await loadKSACodes(lang);
     
     console.log('YAML data loaded: success');
     
