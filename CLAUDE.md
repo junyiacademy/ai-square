@@ -432,7 +432,7 @@ make gcloud-build-and-deploy-frontend
   - Program metadata, task logs, evaluations, completion data
   - Organized by user email and scenario
 - **Translation System**: Suffix-based field naming (e.g., `description_zh`, `description_es`)
-- **Domain Structure**: Engaging_with_AI, Creating_with_AI, Managing_with_AI, Designing_with_AI
+- **Domain Structure**: Engaging_with_AI, Creating_with_AI, Managing_AI, Designing_AI
 
 #### Component Architecture
 - **Client-side rendering** with useState/useEffect patterns
