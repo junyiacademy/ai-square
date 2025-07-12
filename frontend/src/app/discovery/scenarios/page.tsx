@@ -129,9 +129,8 @@ export default function ScenariosPage() {
   const router = useRouter();
   const { t } = useTranslation();
   const { isLoggedIn } = useAuth();
-  const { userData, loadUserData, addWorkspaceSession } = useUserDataV2();
+  const { userData, loadUserData } = useUserDataV2();
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [workspacesByPath, setWorkspacesByPath] = useState<Record<string, any[]>>({});
   const [activeTab, setActiveTab] = useState<'all' | 'my'>('all'); // Default to 'all' since v2 doesn't track discovery in userData
 
   // Load user data on mount
@@ -141,19 +140,6 @@ export default function ScenariosPage() {
     }
   }, [isLoggedIn]);
 
-  // Group workspaces by path
-  useEffect(() => {
-    if (userData?.workspaceSessions) {
-      const grouped = userData.workspaceSessions.reduce((acc, ws) => {
-        if (!acc[ws.pathId]) {
-          acc[ws.pathId] = [];
-        }
-        acc[ws.pathId].push(ws);
-        return acc;
-      }, {} as Record<string, any[]>);
-      setWorkspacesByPath(grouped);
-    }
-  }, [userData?.workspaceSessions]);
 
   // Get my scenarios - in v2 architecture, discovery scenarios are tracked separately
   const getMyScenarios = () => {

@@ -93,11 +93,11 @@ export default function EvaluationPage() {
       // Filter paths based on selection
       const pathsToAdd = newPaths.filter(p => selectedPaths.has(p.id));
       
-      // Add assessment session with selected paths
-      await userDataService.addAssessmentSession(assessmentSession, pathsToAdd);
+      // Add assessment session
+      await userDataService.addAssessmentSession(assessmentSession);
       
-      // Navigate to paths page
-      router.push('/discovery/paths');
+      // Navigate to scenarios page
+      router.push('/discovery/scenarios');
     } catch (error) {
       console.error('Failed to save assessment results:', error);
     }
@@ -299,7 +299,7 @@ export default function EvaluationPage() {
               <div className="p-3 bg-gray-50">
                 <div className="flex gap-2 justify-center">
                   <button
-                    onClick={() => window.location.href = '/discovery/paths'}
+                    onClick={() => window.location.href = '/discovery/scenarios'}
                     className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all duration-200 text-sm font-medium"
                   >
                     查看冒險副本

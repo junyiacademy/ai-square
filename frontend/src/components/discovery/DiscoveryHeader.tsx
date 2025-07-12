@@ -5,10 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { 
   AcademicCapIcon, 
-  GlobeAltIcon,
   ChartBarIcon,
-  TrophyIcon,
-  FolderOpenIcon,
   SparklesIcon,
   RocketLaunchIcon
 } from '@heroicons/react/24/outline';
@@ -55,20 +52,6 @@ export default function DiscoveryHeader({
       label: '職業冒險',
       icon: RocketLaunchIcon,
       href: '/discovery/scenarios'
-    },
-    {
-      id: 'workspace',
-      label: '基地',
-      icon: FolderOpenIcon,
-      href: '/discovery/workspace',
-      badge: workspaceCount > 0 ? workspaceCount : undefined
-    },
-    {
-      id: 'achievements',
-      label: '成就',
-      icon: TrophyIcon,
-      href: '/discovery/achievements',
-      badge: achievementCount > 0 ? achievementCount : undefined
     }
   ];
 

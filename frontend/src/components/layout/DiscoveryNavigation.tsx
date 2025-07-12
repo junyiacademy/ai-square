@@ -6,11 +6,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   AcademicCapIcon, 
   GlobeAltIcon,
-  ChartBarIcon,
-  TrophyIcon,
-  FolderOpenIcon
+  ChartBarIcon
 } from '@heroicons/react/24/outline';
-import { userDataService, type UserAchievements, type WorkspaceSession } from '@/lib/services/user-data-service';
+import { userDataService, type UserAchievements } from '@/lib/services/user-data-service';
 
 export default function DiscoveryNavigation() {
   const router = useRouter();
@@ -24,7 +22,6 @@ export default function DiscoveryNavigation() {
     level: 1,
     completedTasks: []
   });
-  const [workspaceSessions, setWorkspaceSessions] = useState<WorkspaceSession[]>([]);
   const [hasAssessmentResults, setHasAssessmentResults] = useState(false);
 
   // Load user data
@@ -34,7 +31,6 @@ export default function DiscoveryNavigation() {
         const userData = await userDataService.loadUserData();
         if (userData) {
           setAchievements(userData.achievements);
-          setWorkspaceSessions(userData.workspaceSessions);
           setHasAssessmentResults(!!userData.assessmentResults);
         }
       } catch (error) {
@@ -75,28 +71,11 @@ export default function DiscoveryNavigation() {
       path: '/discovery/evaluation'
     },
     {
-      id: 'paths',
-      label: '路徑',
+      id: 'scenarios',
+      label: '職業冒險',
       icon: GlobeAltIcon,
-      href: '/discovery/paths',
-      path: '/discovery/paths',
-      disabled: !hasAssessmentResults
-    },
-    {
-      id: 'workspace',
-      label: '工作區',
-      icon: FolderOpenIcon,
-      href: '/discovery/workspace',
-      path: '/discovery/workspace',
-      badge: workspaceSessions.length > 0 ? workspaceSessions.length : undefined
-    },
-    {
-      id: 'achievements',
-      label: '成就',
-      icon: TrophyIcon,
-      href: '/discovery/achievements',
-      path: '/discovery/achievements',
-      badge: achievements.totalXp > 0 ? achievements.badges.length || 2 : undefined
+      href: '/discovery/scenarios',
+      path: '/discovery/scenarios'
     }
   ];
 

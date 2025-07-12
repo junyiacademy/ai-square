@@ -19,106 +19,17 @@ export interface UserAchievements {
   completedTasks: string[];
 }
 
-export interface TaskAnswer {
-  taskId: string;
-  answer: string;
-  submittedAt: string;
-  feedback?: string;
-  score?: number;
-}
-
-export interface WorkspaceSession {
-  id: string;
-  pathId: string;
-  createdAt: string;
-  lastActiveAt: string;
-  status: 'active' | 'paused' | 'completed';
-  completedTasks: string[];
-  totalXP: number;
-  chatHistory?: any[];
-  taskAnswers?: TaskAnswer[]; // Store task answers
-}
-
 export interface AssessmentSession {
   id: string;
   createdAt: string;
   results: AssessmentResults;
   answers?: Record<string, string[]>;
-  generatedPaths?: string[];
-}
-
-export interface SavedPathData {
-  id: string;
-  assessmentId: string;
-  pathData: any;
-  matchPercentage: number;
-  isFavorite: boolean;
-  isCustom: boolean;
-  createdAt: string;
-  lastUpdated?: string;
-  // New fields for infinite generation
-  sourceLanguage?: string;
-  version?: number;
-  generationContext?: {
-    userPrompt: string;
-    conversationHistory?: any[];
-    preferences?: any;
-  };
-  storyContext?: {
-    worldSetting: string;
-    protagonist: any;
-    narrative: string;
-    theme?: string;
-  };
-  isPublic?: boolean;
-  publicMetadata?: {
-    authorId: string;
-    authorName: string;
-    plays: number;
-    rating: number;
-    reviews?: any[];
-    tags: string[];
-    featured: boolean;
-  };
-}
-
-// Dynamic task structure
-export interface DynamicTask {
-  id: string;
-  pathId: string;
-  sequenceNumber: number;
-  title: string;
-  description: string;
-  duration: string;
-  difficulty: number;
-  sourceLanguage?: string;
-  storyContext?: {
-    previousSummary?: string;
-    currentChallenge: string;
-    choices?: any[];
-  };
-  generationInfo?: {
-    generatedAt: string;
-    model: string;
-    previousTaskResult?: any;
-    userPerformanceScore?: number;
-  };
-  completionData?: {
-    completedAt: string;
-    userAnswer: string;
-    score: number;
-    feedback: string;
-    unlockedAchievements?: string[];
-  };
 }
 
 export interface UserData {
   assessmentResults?: AssessmentResults | null;
   achievements: UserAchievements;
-  workspaceSessions: WorkspaceSession[];
   assessmentSessions: AssessmentSession[];
-  savedPaths: SavedPathData[];
-  generatedTasks?: DynamicTask[]; // New field for dynamic tasks
   currentView?: string;
   lastUpdated: string;
   version: string; // For future migration compatibility
@@ -188,10 +99,7 @@ class LocalStorageBackend implements StorageBackend {
           level: 1,
           completedTasks: []
         },
-        workspaceSessions: data.workspaceSessions || [],
         assessmentSessions: data.assessmentSessions || [],
-        savedPaths: data.savedPaths || [],
-        generatedTasks: data.generatedTasks || [], // 加上這行！
         currentView: data.currentView,
         lastUpdated: data.lastUpdated || new Date().toISOString(),
         version: data.version || '1.0'
@@ -260,78 +168,7 @@ export class UserDataService {
     await this.saveUserData(userData);
   }
   
-  async saveWorkspaceSessions(sessions: WorkspaceSession[]): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
-    userData.workspaceSessions = sessions;
-    await this.saveUserData(userData);
-  }
-  
-  async savePaths(paths: SavedPathData[]): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
-    userData.savedPaths = paths;
-    await this.saveUserData(userData);
-  }
-  
-  async addWorkspaceSession(session: WorkspaceSession): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
-    userData.workspaceSessions.push(session);
-    await this.saveUserData(userData);
-  }
-  
-  async updateWorkspaceSession(sessionId: string, updates: Partial<WorkspaceSession>): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
-    const sessionIndex = userData.workspaceSessions.findIndex(s => s.id === sessionId);
-    if (sessionIndex >= 0) {
-      userData.workspaceSessions[sessionIndex] = {
-        ...userData.workspaceSessions[sessionIndex],
-        ...updates,
-        lastActiveAt: new Date().toISOString()
-      };
-      await this.saveUserData(userData);
-    }
-  }
-  
-  async saveTaskAnswer(sessionId: string, taskAnswer: TaskAnswer): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
-    const sessionIndex = userData.workspaceSessions.findIndex(s => s.id === sessionId);
-    
-    if (sessionIndex >= 0) {
-      const session = userData.workspaceSessions[sessionIndex];
-      
-      // Initialize taskAnswers if not exists
-      if (!session.taskAnswers) {
-        session.taskAnswers = [];
-      }
-      
-      // Check if answer already exists for this task
-      const existingAnswerIndex = session.taskAnswers.findIndex(a => a.taskId === taskAnswer.taskId);
-      
-      if (existingAnswerIndex >= 0) {
-        // Update existing answer
-        session.taskAnswers[existingAnswerIndex] = taskAnswer;
-      } else {
-        // Add new answer
-        session.taskAnswers.push(taskAnswer);
-      }
-      
-      // Update last active time
-      session.lastActiveAt = new Date().toISOString();
-      
-      await this.saveUserData(userData);
-    }
-  }
-  
-  async getTaskAnswer(sessionId: string, taskId: string): Promise<TaskAnswer | null> {
-    const userData = await this.loadUserData();
-    if (!userData) return null;
-    
-    const session = userData.workspaceSessions.find(s => s.id === sessionId);
-    if (!session || !session.taskAnswers) return null;
-    
-    return session.taskAnswers.find(a => a.taskId === taskId) || null;
-  }
-  
-  async addAssessmentSession(session: AssessmentSession, paths: SavedPathData[]): Promise<void> {
+  async addAssessmentSession(session: AssessmentSession): Promise<void> {
     const userData = await this.loadUserData() || this.getDefaultUserData();
     
     // Add assessment session
@@ -340,55 +177,6 @@ export class UserDataService {
     // Update assessment results
     userData.assessmentResults = session.results;
     
-    // Filter out duplicate paths before appending
-    const existingPathIds = new Set(
-      userData.savedPaths.map(p => p.pathData?.id).filter(Boolean)
-    );
-    
-    // Only add paths that don't already exist
-    const newPaths = paths.filter(path => {
-      const pathId = path.pathData?.id;
-      if (!pathId) return true; // Keep paths without ID (custom paths)
-      
-      // Check if this path ID already exists
-      if (existingPathIds.has(pathId)) {
-        console.log(`Path ${pathId} already exists, skipping...`);
-        return false;
-      }
-      
-      return true;
-    });
-    
-    // Update existing paths with better match percentage if new one is higher
-    paths.forEach(newPath => {
-      const pathId = newPath.pathData?.id;
-      if (pathId && existingPathIds.has(pathId)) {
-        const existingPathIndex = userData.savedPaths.findIndex(
-          p => p.pathData?.id === pathId
-        );
-        
-        if (existingPathIndex >= 0) {
-          const existingPath = userData.savedPaths[existingPathIndex];
-          // Update if new match percentage is higher
-          if (newPath.matchPercentage > existingPath.matchPercentage) {
-            userData.savedPaths[existingPathIndex] = {
-              ...existingPath,
-              matchPercentage: newPath.matchPercentage,
-              assessmentId: newPath.assessmentId,
-              lastUpdated: new Date().toISOString()
-            };
-            console.log(`Updated path ${pathId} with higher match percentage: ${newPath.matchPercentage}%`);
-          }
-        }
-      }
-    });
-    
-    // Append new paths
-    userData.savedPaths.push(...newPaths);
-    
-    // Store generated path IDs in the assessment session
-    session.generatedPaths = newPaths.map(p => p.id);
-    
     await this.saveUserData(userData);
   }
   
@@ -396,35 +184,6 @@ export class UserDataService {
     const userData = await this.loadUserData() || this.getDefaultUserData();
     userData.achievements = { ...userData.achievements, ...updates };
     await this.saveUserData(userData);
-  }
-  
-  async togglePathFavorite(pathId: string): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
-    const pathIndex = userData.savedPaths.findIndex(p => p.id === pathId);
-    if (pathIndex >= 0) {
-      userData.savedPaths[pathIndex].isFavorite = !userData.savedPaths[pathIndex].isFavorite;
-      await this.saveUserData(userData);
-    }
-  }
-  
-  async updateSavedPath(pathId: string, updates: SavedPathData): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
-    const pathIndex = userData.savedPaths.findIndex(p => p.id === pathId);
-    if (pathIndex >= 0) {
-      userData.savedPaths[pathIndex] = updates;
-      await this.saveUserData(userData);
-    }
-  }
-  
-  async deletePath(pathId: string): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
-    userData.savedPaths = userData.savedPaths.filter(p => p.id !== pathId);
-    await this.saveUserData(userData);
-  }
-  
-  async deleteSavedPath(pathId: string): Promise<void> {
-    // Alias for deletePath to match the hook's expectation
-    return this.deletePath(pathId);
   }
   
   // Evaluation system methods
@@ -510,10 +269,7 @@ export class UserDataService {
         level: 1,
         completedTasks: []
       },
-      workspaceSessions: [],
       assessmentSessions: [],
-      savedPaths: [],
-      generatedTasks: [], // Include this field!
       lastUpdated: new Date().toISOString(),
       version: '1.0'
     };
