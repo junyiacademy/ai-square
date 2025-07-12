@@ -47,7 +47,7 @@ export class StorageFactory {
         
       case 'gcs':
         if (!config.bucketName) {
-          throw new StorageError('Bucket name is required for GCS storage');
+          throw new StorageError('Bucket name is required for GCS storage', 'STORAGE_CONFIG_ERROR');
         }
         provider = new GCSStorageProvider(config.bucketName, config.prefix || '');
         break;
@@ -57,7 +57,7 @@ export class StorageFactory {
         break;
         
       default:
-        throw new StorageError(`Unknown storage type: ${config.type}`);
+        throw new StorageError(`Unknown storage type: ${config.type}`, 'STORAGE_CONFIG_ERROR');
     }
     
     // 快取實例

@@ -18,7 +18,7 @@ import {
   StoragePermissionError,
   StorageQuotaExceededError 
 } from '../../errors';
-import { Retryable, RetryConditions } from '../decorators/retry.decorator';
+// import { Retryable, RetryConditions } from '../decorators/retry.decorator'; // Temporarily disabled
 
 interface GCSMetadata {
   ttl?: number;
@@ -50,10 +50,7 @@ export class GCSStorageProvider implements IStorageProvider {
   /**
    * 取得資料
    */
-  @Retryable({ 
-    maxAttempts: 3, 
-    retryIf: RetryConditions.onNetworkError 
-  })
+  // @Retryable({ maxAttempts: 3, retryIf: RetryConditions.onNetworkError }) - Temporarily disabled
   async get<T>(key: string): Promise<T | null> {
     const filePath = this.getFilePath(key);
     
@@ -80,17 +77,14 @@ export class GCSStorageProvider implements IStorageProvider {
       if (error instanceof Error && error.message.includes('No such object')) {
         return null;
       }
-      throw new StorageError(`Failed to get ${key}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new StorageError(`Failed to get ${key}: ${error instanceof Error ? error.message : 'Unknown error'}`, 'STORAGE_READ_ERROR');
     }
   }
 
   /**
    * 設定資料
    */
-  @Retryable({ 
-    maxAttempts: 3, 
-    retryIf: RetryConditions.onNetworkError 
-  })
+  // @Retryable({ maxAttempts: 3, retryIf: RetryConditions.onNetworkError }) - Temporarily disabled
   async set<T>(key: string, value: T, options?: StorageOptions): Promise<void> {
     const filePath = this.getFilePath(key);
     
@@ -119,17 +113,14 @@ export class GCSStorageProvider implements IStorageProvider {
       if (error instanceof Error && error.message.includes('quota')) {
         throw new StorageQuotaExceededError('GCS quota exceeded');
       }
-      throw new StorageError(`Failed to set ${key}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new StorageError(`Failed to set ${key}: ${error instanceof Error ? error.message : 'Unknown error'}`, 'STORAGE_WRITE_ERROR');
     }
   }
 
   /**
    * 刪除資料
    */
-  @Retryable({ 
-    maxAttempts: 3, 
-    retryIf: RetryConditions.onNetworkError 
-  })
+  // @Retryable({ maxAttempts: 3, retryIf: RetryConditions.onNetworkError }) - Temporarily disabled
   async delete(key: string): Promise<void> {
     const filePath = this.getFilePath(key);
     
@@ -139,7 +130,7 @@ export class GCSStorageProvider implements IStorageProvider {
     } catch (error) {
       // 忽略檔案不存在的錯誤
       if (!(error instanceof Error && error.message.includes('No such object'))) {
-        throw new StorageError(`Failed to delete ${key}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        throw new StorageError(`Failed to delete ${key}: ${error instanceof Error ? error.message : 'Unknown error'}`, 'STORAGE_DELETE_ERROR');
       }
     }
   }
@@ -219,7 +210,7 @@ export class GCSStorageProvider implements IStorageProvider {
       
       return results;
     } catch (error) {
-      throw new StorageError(`Failed to list ${prefix}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new StorageError(`Failed to list ${prefix}: ${error instanceof Error ? error.message : 'Unknown error'}`, 'STORAGE_LIST_ERROR');
     }
   }
 
@@ -270,11 +261,11 @@ export class GCSStorageProvider implements IStorageProvider {
       });
       
       // 批次刪除
-      const deletePromises = files.map(file => file.delete());
+      const deletePromises = files.map((file: any) => file.delete());
       await Promise.all(deletePromises);
       
     } catch (error) {
-      throw new StorageError(`Failed to clear ${prefix || 'all'}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new StorageError(`Failed to clear ${prefix || 'all'}: ${error instanceof Error ? error.message : 'Unknown error'}`, 'STORAGE_CLEAR_ERROR');
     }
   }
 
@@ -303,7 +294,7 @@ export class GCSStorageProvider implements IStorageProvider {
         available: Math.max(0, quota - totalSize)
       };
     } catch (error) {
-      throw new StorageError(`Failed to get storage info: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new StorageError(`Failed to get storage info: ${error instanceof Error ? error.message : 'Unknown error'}`, 'STORAGE_INFO_ERROR');
     }
   }
 
