@@ -142,78 +142,108 @@ export async function POST(
       console.log('No body provided, using default language:', language);
     }
     
-    // Load YAML data based on career type and language
-    const careerType = scenario.sourceRef.metadata?.careerType;
-    let yamlData = null;
-    
-    if (careerType) {
-      yamlData = await DiscoveryYAMLLoader.loadPath(careerType, language as 'en' | 'zhTW');
-    }
-    
-    // Create tasks based on YAML data
+    // Create tasks based on scenario type
     const createdTasks: ITask[] = [];
     
-    // Use YAML data if available, otherwise fall back to templates
-    if (yamlData?.example_tasks) {
-      // Get initial tasks from starting scenario
-      const startingTasks = yamlData.starting_scenario?.initial_tasks || [];
-      const beginnerTasks = yamlData.example_tasks.beginner || [];
-      const intermediateTasks = yamlData.example_tasks.intermediate || [];
-      
-      // Create tasks based on starting scenario and example tasks
-      let taskIndex = 0;
-      
-      // First, create tasks from starting scenario
-      for (const taskTitle of startingTasks.slice(0, 2)) {
-        const task = await taskRepo.create({
-          programId: program.id,
-          scenarioTaskIndex: taskIndex++,
-          title: taskTitle,
-          type: 'analysis',
-          content: {
-            instructions: yamlData.starting_scenario?.description || '',
-            context: {
-              description: yamlData.starting_scenario?.description || '',
-              xp: 100,
-              difficulty: 'beginner',
-              worldSetting: yamlData.world_setting,
-              skillFocus: yamlData.metadata.skill_focus
-            }
-          },
-          interactions: [],
-          status: taskIndex === 1 ? 'active' : 'pending'
-        });
-        createdTasks.push(task);
-      }
-      
-      // Then add some beginner and intermediate tasks
-      const selectedTasks = [
-        ...beginnerTasks.slice(0, 2),
-        ...intermediateTasks.slice(0, 1)
-      ];
-      
-      for (const exampleTask of selectedTasks) {
-        const task = await taskRepo.create({
-          programId: program.id,
-          scenarioTaskIndex: taskIndex++,
-          title: exampleTask.title,
-          type: exampleTask.type as ITask['type'],
-          content: {
-            instructions: exampleTask.description,
-            context: {
-              description: exampleTask.description,
-              xp: exampleTask.xp_reward,
-              skillsImproved: exampleTask.skills_improved,
-              difficulty: taskIndex <= 2 ? 'beginner' : 'intermediate',
-              worldSetting: yamlData.world_setting
-            }
-          },
-          interactions: [],
-          status: 'pending'
-        });
-        createdTasks.push(task);
+    if (scenario.sourceType === 'pbl') {
+      // For PBL scenarios, create tasks from taskTemplates
+      if (scenario.taskTemplates && scenario.taskTemplates.length > 0) {
+        // Create tasks from PBL taskTemplates
+        for (let i = 0; i < scenario.taskTemplates.length; i++) {
+          const template = scenario.taskTemplates[i];
+          const task = await taskRepo.create({
+            programId: program.id,
+            scenarioTaskIndex: i,
+            title: template.title,
+            type: 'chat', // PBL tasks are primarily chat-based
+            content: {
+              instructions: template.description,
+              context: {
+                description: template.description,
+                instructions: template.instructions || [],
+                expectedOutcome: template.expectedOutcome,
+                timeLimit: template.timeLimit,
+                category: template.category,
+                ksaFocus: template.ksaFocus || template.assessmentFocus,
+                aiModule: template.aiModule,
+                language: language
+              }
+            },
+            interactions: [],
+            status: i === 0 ? 'active' : 'pending'
+          });
+          createdTasks.push(task);
+        }
       }
     } else {
+      // For Discovery scenarios, load YAML data
+      const careerType = scenario.sourceRef.metadata?.careerType;
+      let yamlData = null;
+      
+      if (careerType) {
+        yamlData = await DiscoveryYAMLLoader.loadPath(careerType, language as 'en' | 'zhTW');
+      }
+      
+      if (yamlData?.example_tasks) {
+        // Get initial tasks from starting scenario
+        const startingTasks = yamlData.starting_scenario?.initial_tasks || [];
+        const beginnerTasks = yamlData.example_tasks.beginner || [];
+        const intermediateTasks = yamlData.example_tasks.intermediate || [];
+        
+        // Create tasks based on starting scenario and example tasks
+        let taskIndex = 0;
+        
+        // First, create tasks from starting scenario
+        for (const taskTitle of startingTasks.slice(0, 2)) {
+          const task = await taskRepo.create({
+            programId: program.id,
+            scenarioTaskIndex: taskIndex++,
+            title: taskTitle,
+            type: 'analysis',
+            content: {
+              instructions: yamlData.starting_scenario?.description || '',
+              context: {
+                description: yamlData.starting_scenario?.description || '',
+                xp: 100,
+                difficulty: 'beginner',
+                worldSetting: yamlData.world_setting,
+                skillFocus: yamlData.metadata.skill_focus
+              }
+            },
+            interactions: [],
+            status: taskIndex === 1 ? 'active' : 'pending'
+          });
+          createdTasks.push(task);
+        }
+        
+        // Then add some beginner and intermediate tasks
+        const selectedTasks = [
+          ...beginnerTasks.slice(0, 2),
+          ...intermediateTasks.slice(0, 1)
+        ];
+        
+        for (const exampleTask of selectedTasks) {
+          const task = await taskRepo.create({
+            programId: program.id,
+            scenarioTaskIndex: taskIndex++,
+            title: exampleTask.title,
+            type: exampleTask.type as ITask['type'],
+            content: {
+              instructions: exampleTask.description,
+              context: {
+                description: exampleTask.description,
+                xp: exampleTask.xp_reward,
+                skillsImproved: exampleTask.skills_improved,
+                difficulty: taskIndex <= 2 ? 'beginner' : 'intermediate',
+                worldSetting: yamlData.world_setting
+              }
+            },
+            interactions: [],
+            status: 'pending'
+          });
+          createdTasks.push(task);
+        }
+      } else {
       // Fallback to default templates if no YAML data
       for (let i = 0; i < DISCOVERY_TASK_TEMPLATES.length; i++) {
         const template = DISCOVERY_TASK_TEMPLATES[i];

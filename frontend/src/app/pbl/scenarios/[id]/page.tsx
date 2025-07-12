@@ -86,9 +86,8 @@ export default function ScenarioDetailPage() {
         
         const data = await response.json();
         if (data.id) {
-          // Navigate to the first task
-          const tasks = getScenarioData('tasks', []);
-          const firstTaskId = tasks[0]?.id || 'task-1';
+          // Navigate to the first task using the UUID from created tasks
+          const firstTaskId = data.tasks?.[0]?.id || data.taskIds?.[0] || 'task-1';
           router.push(`/pbl/scenarios/${scenarioId}/program/${data.id}/tasks/${firstTaskId}`);
         }
       }

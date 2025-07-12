@@ -264,7 +264,7 @@ export async function GET(
     console.log('YAML data loaded: success');
     
     // Transform to API response format (new structure without stages)
-    const scenario: ScenarioResponse = {
+    const scenarioResponse: ScenarioResponse = {
       id: yamlData.scenario_info.id,
       title: getLocalizedValue(yamlData.scenario_info, 'title', lang) as string,
       description: getLocalizedValue(yamlData.scenario_info, 'description', lang) as string,
@@ -287,7 +287,7 @@ export async function GET(
     
     return NextResponse.json({
       success: true,
-      data: scenario
+      data: scenarioResponse
     });
     
   } catch (error) {
