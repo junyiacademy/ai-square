@@ -1,6 +1,6 @@
 domains:
   Engaging_with_AI:
-    emoji: 🎯
+    title: Berinteraksi dengan AI    emoji: 🎯
     overview: Melibatkan penggunaan AI sebagai alat untuk mengakses konten, informasi, atau rekomendasi baru. Situasi ini mengharuskan peserta didik untuk terlebih dahulu mengenali keberadaan AI, kemudian mengevaluasi akurasi dan relevansi output AI. Peserta didik harus mengembangkan pemahaman fundamental tentang dasar-dasar teknis AI untuk menganalisis kemampuan dan keterbatasannya secara kritis.
     competencies:
       E1:
@@ -77,7 +77,7 @@ domains:
           - Menciptakan strategi untuk memverifikasi akurasi informasi yang dihasilkan AI sebelum membagikannya kepada orang lain.
 
   Creating_with_AI:
-    emoji: 🎨
+    title: Berkreasi dengan AI    emoji: 🎨
     overview: Melibatkan kolaborasi dengan sistem AI untuk menghasilkan konten, ide, atau solusi baru. Situasi ini mengharuskan peserta didik memahami kemampuan AI sebagai mitra kreatif, sambil mempertahankan penghargaan terhadap kreativitas manusia, orisinalitas, dan kekayaan intelektual.
     competencies:
       C1:
@@ -157,7 +157,7 @@ domains:
           - Menganalisis berbagai jenis tugas kreatif, menentukan tingkat bantuan AI yang tepat.
 
   Managing_AI:
-    emoji: 📊
+    title: Mengelola AI    emoji: 📊
     overview: Melibatkan penggunaan strategis AI dalam tugas organisasi dan manajemen. Situasi ini mengharuskan peserta didik memahami bagaimana AI mengubah alur kerja, proses pengambilan keputusan, dan struktur organisasi, sambil mempertimbangkan pentingnya pengawasan dan tanggung jawab manusia.
     competencies:
       M1:
@@ -237,7 +237,7 @@ domains:
           - Menganalisis dampak alat AI pada efisiensi dan kualitas kerja.
 
   Designing_AI:
-    emoji: 🔧
+    title: Merancang AI    emoji: 🔧
     overview: Melibatkan perancangan dan pengembangan sistem AI atau solusi yang ditingkatkan AI. Situasi ini mengharuskan peserta didik memahami pertimbangan teknis dan etis pengembangan AI, termasuk desain data, algoritma, dan pengalaman pengguna.
     competencies:
       D1:

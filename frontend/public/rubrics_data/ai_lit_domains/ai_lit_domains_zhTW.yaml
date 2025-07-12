@@ -1,5 +1,6 @@
 domains:
   Engaging_with_AI:
+    title: 與 AI 互動
     emoji: 🎯
     overview: 涉及使用AI作為工具來存取新內容、資訊或推薦。這些情況要求學習者首先識別AI的存在，然後評估AI輸出的準確性和相關性。學習者必須對AI的技術基礎建立基本理解，以便批判性地分析其能力和限制。
     competencies:
@@ -77,6 +78,7 @@ domains:
           - 設計策略來驗證AI生成資訊的準確性，然後再分享給他人。
 
   Creating_with_AI:
+    title: 與 AI 共創
     emoji: 🎨
     overview: 涉及與AI系統協作生成新內容、想法或解決方案。這些情況要求學習者理解AI作為創造性夥伴的能力，同時保持對人類創造力、原創性和智慧財產權的尊重。
     competencies:
@@ -157,6 +159,7 @@ domains:
           - 分析不同類型的創作任務，確定AI輔助的適當程度。
 
   Managing_AI:
+    title: 管理 AI
     emoji: 📊
     overview: 涉及在組織和管理任務中策略性地使用AI。這些情況要求學習者了解AI如何改變工作流程、決策過程和組織結構，同時考慮人類監督和責任的重要性。
     competencies:
@@ -237,6 +240,7 @@ domains:
           - 分析AI工具對工作效率和品質的影響。
 
   Designing_AI:
+    title: 設計 AI
     emoji: 🔧
     overview: 涉及設計和開發AI系統或AI增強的解決方案。這些情況要求學習者理解AI開發的技術和倫理考量，包括資料、演算法和使用者體驗的設計。
     competencies:

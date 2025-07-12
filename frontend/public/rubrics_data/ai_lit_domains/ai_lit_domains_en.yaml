@@ -1,5 +1,6 @@
 domains:
   Engaging_with_AI:
+    title: Engaging with AI
     emoji: 🎯
     overview: Involves using AI as a tool to access new content, information, or recommendations. These situations require learners to first recognize the presence of AI, then evaluate the accuracy and relevance of AI outputs. Learners must develop a fundamental understanding of AI's technical foundations in order to critically analyze its capabilities and limitations.
     competencies:
@@ -77,6 +78,7 @@ domains:
           - Create strategies for verifying the accuracy of AI-generated information before sharing with others.
 
   Creating_with_AI:
+    title: Creating with AI
     emoji: 🎨
     overview: Involves collaborating with AI systems to generate new content, ideas, or solutions. These situations require learners to understand AI's capabilities as a creative partner while maintaining respect for human creativity, originality, and intellectual property.
     competencies:
@@ -157,6 +159,7 @@ domains:
           - Analyze different types of creative tasks, determining the appropriate degree of AI assistance.
 
   Managing_AI:
+    title: Managing AI
     emoji: 📊
     overview: Involves strategically using AI in organizational and management tasks. These situations require learners to understand how AI changes workflows, decision-making processes, and organizational structures while considering the importance of human oversight and responsibility.
     competencies:
@@ -237,6 +240,7 @@ domains:
           - Analyze the impact of AI tools on work efficiency and quality.
 
   Designing_AI:
+    title: Designing AI
     emoji: 🔧
     overview: Involves designing and developing AI systems or AI-enhanced solutions. These situations require learners to understand the technical and ethical considerations of AI development, including data, algorithm, and user experience design.
     competencies:
