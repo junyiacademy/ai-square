@@ -61,9 +61,11 @@ export function Header() {
   // 檢查登入狀態的函數
   const checkAuthStatus = useCallback(async () => {
     // Prevent multiple simultaneous checks
-    if (isCheckingAuth) return
+    setIsCheckingAuth((prev) => {
+      if (prev) return true; // Already checking
+      return true;
+    });
     
-    setIsCheckingAuth(true)
     try {
       // 先從服務器檢查認證狀態
       const response = await fetch('/api/auth/check')
@@ -100,7 +102,7 @@ export function Header() {
     } finally {
       setIsCheckingAuth(false)
     }
-  }, [clearAuthState, isCheckingAuth])
+  }, [clearAuthState])
 
   useEffect(() => {
     // Initial check on mount
@@ -159,7 +161,7 @@ export function Header() {
   const primaryNavLinks = [
     { href: '/dashboard', label: t('dashboard') },
     { href: '/assessment/scenarios', label: t('assessment') },
-    { href: '/pbl', label: t('pbl') },
+    { href: '/pbl/scenarios', label: t('pbl') },
     { href: '/discovery/overview', label: t('discovery') },
   ]
   
