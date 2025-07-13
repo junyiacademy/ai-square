@@ -130,4 +130,15 @@ export class GCSEvaluationRepository<T extends IEvaluation = IEvaluation>
   async listAll(): Promise<T[]> {
     return this.listAllEntities();
   }
+
+  /**
+   * 更新評估資料
+   */
+  async update(id: string, updates: Partial<T>): Promise<T> {
+    const updated = await this.updateEntity(id, updates);
+    if (!updated) {
+      throw new Error(`Evaluation not found: ${id}`);
+    }
+    return updated;
+  }
 }

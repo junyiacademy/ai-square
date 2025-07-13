@@ -219,25 +219,26 @@ export default function ProgramLearningPage() {
         setProgram(mockProgram);
       }
       
-      // Load completion data to get all task evaluations (only for non-temp programs)
+      // Load all task evaluations for this program (only for non-temp programs)
       if (!programId.startsWith('temp_')) {
         try {
-          const completionRes = await fetch(`/api/pbl/completion?programId=${programId}&scenarioId=${scenarioId}`);
-          if (completionRes.ok) {
-            const completionData = await completionRes.json();
-            if (completionData.success && completionData.data) {
+          // Get evaluations for all tasks in this program
+          const evaluationsRes = await fetch(`/api/pbl/evaluations?programId=${programId}&targetType=task`);
+          if (evaluationsRes.ok) {
+            const evaluationsData = await evaluationsRes.json();
+            if (evaluationsData.success && evaluationsData.data) {
               // Build a map of task evaluations
               const evaluations: Record<string, TaskEvaluation> = {};
-              completionData.data.tasks?.forEach((task: { taskId: string; evaluation?: TaskEvaluation }) => {
-                if (task.evaluation) {
-                  evaluations[task.taskId] = task.evaluation;
+              evaluationsData.data.forEach((evaluation: any) => {
+                if (evaluation.targetType === 'task' && evaluation.targetId) {
+                  evaluations[evaluation.targetId] = evaluation;
                 }
               });
               setTaskEvaluations(evaluations);
             }
           }
         } catch (error) {
-          console.error('Error loading completion data:', error);
+          console.error('Error loading task evaluations:', error);
         }
       }
       
@@ -308,14 +309,14 @@ export default function ProgramLearningPage() {
       console.log('Loading task history for:', { programId, taskId, scenarioId });
       
       // Load task conversation history and evaluation
-      const res = await fetch(`/api/pbl/task-logs?programId=${programId}&taskId=${taskId}&scenarioId=${scenarioId}`);
+      const res = await fetch(`/api/pbl/tasks/${taskId}/interactions`);
       if (res.ok) {
         const data = await res.json();
         console.log('Task history response:', data);
         
-        if (data.data?.log?.interactions) {
-          const loadedConversations = data.data.log.interactions.map((interaction: TaskInteraction, index: number): ConversationEntry => ({
-            id: `${index}`,
+        if (data.data?.interactions) {
+          const loadedConversations = data.data.interactions.map((interaction: any): ConversationEntry => ({
+            id: interaction.id || `${interaction.timestamp}_${interaction.type}`,
             type: interaction.type,
             content: interaction.content,
             timestamp: interaction.timestamp
@@ -328,21 +329,29 @@ export default function ProgramLearningPage() {
             setShowEvaluateButton(true);
           }
           
-          // Check if evaluation exists and is up to date
-          if (data.data?.evaluation) {
-            console.log('Loaded existing evaluation:', data.data.evaluation);
-            setEvaluation(data.data.evaluation);
-            
-            const currentUserMessageCount = loadedConversations.filter((c: ConversationEntry) => c.type === 'user').length;
-            const evaluationUserMessageCount = data.data.evaluation.conversationCount || 0;
-            
-            console.log('User message count:', currentUserMessageCount, 'Evaluation count:', evaluationUserMessageCount);
-            
-            // If evaluation is up to date (same or more conversations evaluated), disable button
-            if (evaluationUserMessageCount >= currentUserMessageCount) {
-              setIsEvaluateDisabled(true);
-            } else {
-              setIsEvaluateDisabled(false);
+          // Check if task has an evaluation
+          if (data.data?.evaluationId) {
+            console.log('Task has evaluationId:', data.data.evaluationId);
+            // Fetch the evaluation details
+            const evalRes = await fetch(`/api/pbl/tasks/${taskId}/evaluate`);
+            if (evalRes.ok) {
+              const evalData = await evalRes.json();
+              if (evalData.data?.evaluation) {
+                console.log('Loaded existing evaluation:', evalData.data.evaluation);
+                setEvaluation(evalData.data.evaluation);
+                
+                const currentUserMessageCount = loadedConversations.filter((c: ConversationEntry) => c.type === 'user').length;
+                const evaluationUserMessageCount = evalData.data.evaluation.metadata?.conversationCount || 0;
+                
+                console.log('User message count:', currentUserMessageCount, 'Evaluation count:', evaluationUserMessageCount);
+                
+                // If evaluation is up to date (same or more conversations evaluated), disable button
+                if (evaluationUserMessageCount >= currentUserMessageCount) {
+                  setIsEvaluateDisabled(true);
+                } else {
+                  setIsEvaluateDisabled(false);
+                }
+              }
             }
           }
         } else {
@@ -441,18 +450,13 @@ export default function ProgramLearningPage() {
       }
       
       // Save user interaction
-      const saveUserRes = await fetch('/api/pbl/task-logs', {
+      const saveUserRes = await fetch(`/api/pbl/tasks/${currentTask.id}/interactions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept-Language': i18n.language,
-          'x-scenario-id': scenarioId
+          'Accept-Language': i18n.language
         },
         body: JSON.stringify({
-          programId: actualProgramId,
-          taskId: currentTask.id,
-          scenarioId,
-          taskTitle: getLocalizedField(currentTask as unknown as Record<string, unknown>, 'title', i18n.language),
           interaction: {
             type: 'user',
             content: userMessage,
@@ -526,18 +530,13 @@ export default function ProgramLearningPage() {
       }
       
       // Save AI interaction
-      await fetch('/api/pbl/task-logs', {
+      await fetch(`/api/pbl/tasks/${currentTask.id}/interactions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept-Language': i18n.language,
-          'x-scenario-id': scenarioId
+          'Accept-Language': i18n.language
         },
         body: JSON.stringify({
-          programId: actualProgramId,
-          taskId: currentTask.id,
-          scenarioId,
-          taskTitle: getLocalizedField(currentTask as unknown as Record<string, unknown>, 'title', i18n.language),
           interaction: {
             type: 'ai',
             content: aiMessage,
@@ -616,23 +615,29 @@ export default function ProgramLearningPage() {
         
         // Save evaluation to GCS
         try {
-          const saveResponse = await fetch('/api/pbl/task-logs', {
-            method: 'PUT',
+          const saveResponse = await fetch(`/api/pbl/tasks/${currentTask.id}/evaluate`, {
+            method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Accept-Language': i18n.language,
-              'x-scenario-id': scenarioId
+              'Accept-Language': i18n.language
             },
             body: JSON.stringify({
               programId,
-              taskId: currentTask.id,
-              scenarioId,
               evaluation: data.evaluation
             })
           });
           
           if (!saveResponse.ok) {
             console.error('Failed to save evaluation to GCS');
+          } else {
+            const saveData = await saveResponse.json();
+            if (saveData.success && saveData.data?.evaluationId) {
+              // Update the evaluation with the ID from backend
+              setEvaluation({
+                ...data.evaluation,
+                id: saveData.data.evaluationId
+              });
+            }
           }
         } catch (saveError) {
           console.error('Error saving evaluation:', saveError);

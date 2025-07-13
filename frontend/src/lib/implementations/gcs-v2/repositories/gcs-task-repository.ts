@@ -171,4 +171,15 @@ export class GCSTaskRepository<T extends ITask = ITask>
   async listAll(): Promise<T[]> {
     return this.listAllEntities();
   }
+
+  /**
+   * 更新任務資料
+   */
+  async update(id: string, updates: Partial<T>): Promise<T> {
+    const updated = await this.updateEntity(id, updates);
+    if (!updated) {
+      throw new Error(`Task not found: ${id}`);
+    }
+    return updated;
+  }
 }

@@ -76,6 +76,7 @@ export interface ITask {
   startedAt: string;
   completedAt?: string;
   status: 'pending' | 'active' | 'completed';
+  evaluationId?: string;  // 關聯的評估 UUID
 }
 
 /**
