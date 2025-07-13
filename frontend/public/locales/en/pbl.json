@@ -137,6 +137,8 @@
     "allTasks": "All Tasks",
     "current": "Current",
     "completeTask": "Complete Task",
+    "nextTask": "Next Task",
+    "completeProgram": "Complete Program",
     "errorProcessing": "Error processing message. Please try again.",
     "noTaskFound": "No task found",
     "goToCompletion": "Go to Completion Report",

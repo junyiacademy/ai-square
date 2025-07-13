@@ -652,38 +652,15 @@ export default function ProgramLearningPage() {
   const handleCompleteTask = async () => {
     if (!currentTask || !program) return;
     
-    try {
-      // Update task progress
-      await fetch('/api/pbl/task-logs', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept-Language': i18n.language,
-          'x-scenario-id': scenarioId
-        },
-        body: JSON.stringify({
-          programId,
-          taskId: currentTask.id,
-          scenarioId,
-          progress: {
-            status: 'completed',
-            completedAt: new Date().toISOString(),
-            timeSpentSeconds: Math.floor((Date.now() - new Date(program.startedAt).getTime()) / 1000)
-          } as Partial<TaskProgress>
-        })
-      });
-      
-      // Move to next task or complete
-      const currentIndex = scenario?.tasks.findIndex(t => t.id === currentTask.id) || 0;
-      if (scenario && currentIndex < scenario.tasks.length - 1) {
-        const nextTask = scenario.tasks[currentIndex + 1];
-        router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${nextTask.id}`);
-      } else {
-        // All tasks completed
-        router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/complete`);
-      }
-    } catch (error) {
-      console.error('Error completing task:', error);
+    // Simply navigate to next task or complete page
+    const currentIndex = scenario?.tasks.findIndex(t => t.id === currentTask.id) || 0;
+    if (scenario && currentIndex < scenario.tasks.length - 1) {
+      const nextTask = scenario.tasks[currentIndex + 1];
+      const nextTaskId = program?.taskIds?.[currentIndex + 1] || nextTask.id;
+      router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${nextTaskId}`);
+    } else {
+      // All tasks completed
+      router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/complete`);
     }
   };
 
@@ -1104,7 +1081,9 @@ export default function ProgramLearningPage() {
                 onClick={handleCompleteTask}
                 className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
               >
-                {t('pbl:learn.completeTask')}
+                {scenario && taskIndex < scenario.tasks.length - 1 
+                  ? t('pbl:learn.nextTask', 'Next Task')
+                  : t('pbl:learn.completeProgram', 'Complete Program')}
               </button>
             </div>
           </div>
@@ -1342,7 +1321,9 @@ export default function ProgramLearningPage() {
                     onClick={handleCompleteTask}
                     className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
                   >
-                    {t('pbl:learn.completeTask')}
+                    {scenario && taskIndex < scenario.tasks.length - 1 
+                      ? t('pbl:learn.nextTask', 'Next Task')
+                      : t('pbl:learn.completeProgram', 'Complete Program')}
                   </button>
                 </div>
               </div>

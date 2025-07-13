@@ -137,6 +137,8 @@
     "allTasks": "所有任務",
     "current": "當前",
     "completeTask": "完成任務",
+    "nextTask": "下一個任務",
+    "completeProgram": "完成課程",
     "errorProcessing": "處理訊息時發生錯誤，請重試。",
     "noTaskFound": "找不到任務",
     "goToCompletion": "前往完成報告",
