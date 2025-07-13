@@ -16,9 +16,6 @@ export const GCS_CONFIG = {
   
   // 資料路徑前綴
   paths: {
-    // 用戶 PBL 學習記錄
-    pblLogs: 'user_pbl_logs',
-    
     // 評估結果
     assessments: 'assessments',
     

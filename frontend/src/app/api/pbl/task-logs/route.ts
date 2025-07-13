@@ -1,295 +1,198 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pblProgramService } from '@/lib/storage/pbl-program-service';
-import { SaveTaskLogRequest, SaveTaskProgressRequest } from '@/types/pbl';
-import { TaskEvaluation } from '@/types/pbl-completion';
+import { getServerSession } from '@/lib/auth/session';
+import { IInteraction } from '@/types/unified-learning';
 
-// POST - Add interaction to task log
+// POST - Add interaction to task
 export async function POST(request: NextRequest) {
   try {
-    // Get user info from cookie
-    let userEmail: string | undefined;
-    try {
-      const userCookie = request.cookies.get('user')?.value;
-      if (userCookie) {
-        const user = JSON.parse(userCookie);
-        userEmail = user.email;
-      }
-    } catch {
-      console.log('No user cookie found');
-    }
-    
-    if (!userEmail) {
+    // Get user session
+    const session = await getServerSession();
+    if (!session?.user?.email) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'User authentication required'
-        },
+        { success: false, error: 'Authentication required' },
         { status: 401 }
       );
     }
-    
-    const body = await request.json() as SaveTaskLogRequest;
+
+    const body = await request.json();
     const { programId, taskId, interaction } = body;
-    
+
     // Validate required fields
     if (!programId || !taskId || !interaction) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Missing required fields: programId, taskId, interaction'
-        },
+        { success: false, error: 'Missing required fields' },
         { status: 400 }
       );
     }
-    
-    // Get scenario ID from the request or find it from program
-    const scenarioId = body.scenarioId || request.headers.get('x-scenario-id');
-    
-    if (!scenarioId) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Scenario ID is required'
-        },
-        { status: 400 }
-      );
-    }
-    
-    // Add timestamp if not provided
-    if (!interaction.timestamp) {
-      interaction.timestamp = new Date().toISOString();
-    }
-    
-    // Check if task has been initialized, if not, initialize it first
-    const taskData = await pblProgramService.getTaskData(
-      userEmail,
-      scenarioId,
-      programId,
-      taskId
-    );
-    
-    // If task doesn't exist, initialize it
-    if (!taskData.metadata || !taskData.log || !taskData.progress) {
-      console.log(`Task ${taskId} not initialized, initializing now...`);
-      
-      // Get task title from the request or use a default
-      const taskTitle = body.taskTitle || `Task ${taskId}`;
-      
-      await pblProgramService.initializeTask(
-        userEmail,
-        scenarioId,
-        programId,
-        taskId,
-        taskTitle
-      );
-    }
-    
-    // Add interaction to task log
-    await pblProgramService.addTaskInteraction(
-      userEmail,
-      scenarioId,
-      programId,
-      taskId,
-      interaction
-    );
-    
+
+    // Use unified architecture
+    const { getTaskRepository } = await import('@/lib/implementations/gcs-v2');
+    const taskRepo = getTaskRepository();
+
+    // Create interaction in unified format
+    const newInteraction: IInteraction = {
+      timestamp: new Date().toISOString(),
+      type: interaction.type === 'user' ? 'user_input' : 
+            interaction.type === 'ai' ? 'ai_response' : 'system_event',
+      content: interaction.content,
+      metadata: {
+        role: interaction.role || interaction.type,
+        originalType: interaction.type
+      }
+    };
+
+    // Add interaction to task
+    await taskRepo.addInteraction(taskId, newInteraction);
+
     return NextResponse.json({
       success: true,
-      message: 'Interaction added successfully'
+      message: 'Interaction saved successfully'
     });
-    
+
   } catch (error) {
-    console.error('Task log error:', error);
-    
+    console.error('Error saving task interaction:', error);
     return NextResponse.json(
-      {
-        success: false,
-        error: 'Failed to save task log'
-      },
+      { success: false, error: 'Failed to save interaction' },
       { status: 500 }
     );
   }
 }
 
-// PUT - Update task progress
-export async function PUT(request: NextRequest) {
-  try {
-    // Get user info from cookie
-    let userEmail: string | undefined;
-    try {
-      const userCookie = request.cookies.get('user')?.value;
-      if (userCookie) {
-        const user = JSON.parse(userCookie);
-        userEmail = user.email;
-      }
-    } catch {
-      console.log('No user cookie found');
-    }
-    
-    if (!userEmail) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'User authentication required'
-        },
-        { status: 401 }
-      );
-    }
-    
-    const body = await request.json() as SaveTaskProgressRequest & { evaluation?: TaskEvaluation; scenarioId?: string };
-    const { programId, taskId, progress, evaluation } = body;
-    
-    // Validate required fields
-    if (!programId || !taskId) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Missing required fields: programId, taskId'
-        },
-        { status: 400 }
-      );
-    }
-    
-    // Get scenario ID
-    const scenarioId = body.scenarioId || request.headers.get('x-scenario-id');
-    
-    if (!scenarioId) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Scenario ID is required'
-        },
-        { status: 400 }
-      );
-    }
-    
-    // Update task progress if provided
-    if (progress) {
-      await pblProgramService.updateTaskProgress(
-        userEmail,
-        scenarioId,
-        programId,
-        taskId,
-        progress
-      );
-    }
-    
-    // Save evaluation if provided
-    if (evaluation) {
-      await pblProgramService.saveTaskEvaluation(
-        userEmail,
-        scenarioId,
-        programId,
-        taskId,
-        evaluation
-      );
-      
-      // Trigger feedback generation in the background (don't await)
-      // This happens after each task evaluation, but the feedback generation
-      // will check if completion.json exists and has feedback already
-      const baseUrl = request.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL;
-      if (baseUrl) {
-        // Pass the cookie header for authentication
-        const cookieHeader = request.headers.get('cookie');
-        // Get Accept-Language from original request
-        const acceptLanguage = request.headers.get('accept-language') || 'en';
-        fetch(`${baseUrl}/api/pbl/generate-feedback`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept-Language': acceptLanguage,
-            ...(cookieHeader && { 'Cookie': cookieHeader })
-          },
-          body: JSON.stringify({
-            programId,
-            scenarioId,
-          }),
-        }).catch(error => {
-          // Log error but don't block the response
-          console.error('Failed to trigger feedback generation:', error);
-        });
-      }
-    }
-    
-    return NextResponse.json({
-      success: true,
-      message: 'Task data updated successfully'
-    });
-    
-  } catch (error) {
-    console.error('Task progress error:', error);
-    
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Failed to update task progress'
-      },
-      { status: 500 }
-    );
-  }
-}
-
-// GET - Get task data (metadata, log, progress)
+// GET - Get task logs and evaluation
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const programId = searchParams.get('programId');
     const taskId = searchParams.get('taskId');
-    const scenarioId = searchParams.get('scenarioId');
-    
-    if (!programId || !taskId || !scenarioId) {
+
+    if (!taskId) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Missing required parameters: programId, taskId, scenarioId'
-        },
+        { success: false, error: 'taskId is required' },
         { status: 400 }
       );
     }
-    
-    // Get user info from cookie
-    let userEmail: string | undefined;
-    try {
-      const userCookie = request.cookies.get('user')?.value;
-      if (userCookie) {
-        const user = JSON.parse(userCookie);
-        userEmail = user.email;
-      }
-    } catch {
-      console.log('No user cookie found');
-    }
-    
-    if (!userEmail) {
+
+    // Get user session
+    const session = await getServerSession();
+    if (!session?.user?.email) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'User authentication required'
-        },
+        { success: false, error: 'Authentication required' },
         { status: 401 }
       );
     }
-    
-    // Get task data from storage
-    const taskData = await pblProgramService.getTaskData(
-      userEmail,
-      scenarioId,
-      programId,
-      taskId
-    );
-    
+
+    // Use unified architecture
+    const { getTaskRepository, getEvaluationRepository } = await import('@/lib/implementations/gcs-v2');
+    const taskRepo = getTaskRepository();
+    const evalRepo = getEvaluationRepository();
+
+    // Get task with interactions
+    const task = await taskRepo.findById(taskId);
+    if (!task) {
+      return NextResponse.json({
+        success: true,
+        data: {
+          log: { interactions: [] },
+          evaluation: null
+        }
+      });
+    }
+
+    // Get evaluation if exists
+    let evaluation = null;
+    try {
+      const evaluations = await evalRepo.findByTask(taskId);
+      if (evaluations.length > 0) {
+        // Get the latest evaluation
+        evaluation = evaluations.sort((a, b) => 
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        )[0];
+      }
+    } catch (error) {
+      console.log('No evaluation found for task:', taskId);
+    }
+
+    // Transform interactions to match old format for compatibility
+    const transformedInteractions = task.interactions.map(interaction => ({
+      type: interaction.type === 'user_input' ? 'user' : 
+            interaction.type === 'ai_response' ? 'ai' : 'system',
+      content: interaction.content,
+      timestamp: interaction.timestamp,
+      role: interaction.metadata?.role || interaction.type
+    }));
+
     return NextResponse.json({
       success: true,
-      data: taskData
+      data: {
+        log: {
+          interactions: transformedInteractions
+        },
+        evaluation: evaluation
+      }
     });
-    
+
   } catch (error) {
-    console.error('Get task data error:', error);
-    
+    console.error('Error fetching task logs:', error);
     return NextResponse.json(
-      {
-        success: false,
-        error: 'Failed to get task data'
+      { success: false, error: 'Failed to fetch task logs' },
+      { status: 500 }
+    );
+  }
+}
+
+// PUT - Update task evaluation
+export async function PUT(request: NextRequest) {
+  try {
+    // Get user session
+    const session = await getServerSession();
+    if (!session?.user?.email) {
+      return NextResponse.json(
+        { success: false, error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    const body = await request.json();
+    const { programId, taskId, evaluation } = body;
+
+    if (!taskId || !evaluation) {
+      return NextResponse.json(
+        { success: false, error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+
+    // Use unified architecture
+    const { getEvaluationRepository } = await import('@/lib/implementations/gcs-v2');
+    const evalRepo = getEvaluationRepository();
+
+    // Create evaluation
+    await evalRepo.create({
+      taskId,
+      programId: programId || '',
+      type: 'task',
+      score: evaluation.score,
+      rubric: evaluation,
+      metadata: {
+        ksaScores: evaluation.ksaScores,
+        domainScores: evaluation.domainScores,
+        strengths: evaluation.strengths,
+        improvements: evaluation.improvements,
+        conversationInsights: evaluation.conversationInsights,
+        conversationCount: evaluation.conversationCount
       },
+      createdAt: new Date().toISOString()
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: 'Evaluation saved successfully'
+    });
+
+  } catch (error) {
+    console.error('Error saving evaluation:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to save evaluation' },
       { status: 500 }
     );
   }
