@@ -127,13 +127,23 @@ export default function ProgramLearningPage() {
           const programRes = await fetch(`/api/pbl/scenarios/${scenarioId}/programs/${programId}`);
           if (programRes.ok) {
             const programData = await programRes.json();
+            console.log('Loaded program data:', {
+              id: programData.id,
+              taskIds: programData.taskIds,
+              currentTaskIndex: programData.currentTaskIndex
+            });
             if (programData) {
               loadedProgram = {
                 id: programData.id,
-                scenario_id: scenarioId,
+                scenarioId: scenarioId,
+                userId: programData.userId,
+                userEmail: programData.userId, // Using userId as userEmail for now
+                startedAt: programData.startedAt,
+                updatedAt: programData.startedAt, // Using startedAt as updatedAt fallback
                 status: programData.status,
-                created_at: programData.startedAt,
-                tasks: programData.tasks || [],
+                totalTasks: programData.taskIds?.length || 0,
+                currentTaskId: programData.taskIds?.[programData.currentTaskIndex] || taskId,
+                language: i18n.language,
                 taskIds: programData.taskIds || []
               } as Program;
               
@@ -214,7 +224,8 @@ export default function ProgramLearningPage() {
           status: programId.startsWith('temp_') ? 'in_progress' : 'draft',
           totalTasks: scenarioData.data.tasks.length,
           currentTaskId: taskId || scenarioData.data.tasks[0]?.id,
-          language: i18n.language
+          language: i18n.language,
+          taskIds: scenarioData.data.tasks.map((t: any) => t.id) // Map task IDs from scenario
         };
         setProgram(mockProgram);
       }
@@ -655,16 +666,30 @@ export default function ProgramLearningPage() {
   };
 
   const handleCompleteTask = async () => {
-    if (!currentTask || !program) return;
+    if (!currentTask || !program) {
+      console.log('handleCompleteTask: Missing currentTask or program', { currentTask, program });
+      return;
+    }
     
-    // Simply navigate to next task or complete page
-    const currentIndex = scenario?.tasks.findIndex(t => t.id === currentTask.id) || 0;
-    if (scenario && currentIndex < scenario.tasks.length - 1) {
-      const nextTask = scenario.tasks[currentIndex + 1];
-      const nextTaskId = program?.taskIds?.[currentIndex + 1] || nextTask.id;
+    // Use program.taskIds to find the current and next task
+    const taskIds = program.taskIds || [];
+    const currentIndex = taskIds.findIndex(id => id === currentTask.id);
+    
+    console.log('handleCompleteTask:', {
+      currentTaskId: currentTask.id,
+      taskIds,
+      currentIndex,
+      hasNextTask: currentIndex !== -1 && currentIndex < taskIds.length - 1
+    });
+    
+    if (currentIndex !== -1 && currentIndex < taskIds.length - 1) {
+      // Navigate to next task
+      const nextTaskId = taskIds[currentIndex + 1];
+      console.log('Navigating to next task:', nextTaskId);
       router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${nextTaskId}`);
     } else {
-      // All tasks completed
+      // All tasks completed or current task not found in taskIds
+      console.log('All tasks completed or task not found, going to complete page');
       router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/complete`);
     }
   };
@@ -755,9 +780,9 @@ export default function ProgramLearningPage() {
                     {scenario.tasks.map((task, index) => {
                       // Get the actual task UUID from program taskIds
                       const actualTaskId = program?.taskIds?.[index] || task.id;
-                      const isEvaluated = !!taskEvaluations[task.id];
-                      const isCurrent = currentTask && (index === (currentTask as any).scenarioTaskIndex);
-                      const taskEval = taskEvaluations[task.id];
+                      const isEvaluated = !!taskEvaluations[actualTaskId];
+                      const isCurrent = currentTask && currentTask.id === actualTaskId;
+                      const taskEval = taskEvaluations[actualTaskId];
                       
                       return (
                         <button
@@ -820,9 +845,9 @@ export default function ProgramLearningPage() {
                   {scenario.tasks.map((task, index) => {
                     // Get the actual task UUID from program taskIds
                     const actualTaskId = program?.taskIds?.[index] || task.id;
-                    const isEvaluated = !!taskEvaluations[task.id];
-                    const isCurrent = currentTask && (index === (currentTask as any).scenarioTaskIndex);
-                    const taskEval = taskEvaluations[task.id];
+                    const isEvaluated = !!taskEvaluations[actualTaskId];
+                    const isCurrent = currentTask && currentTask.id === actualTaskId;
+                    const taskEval = taskEvaluations[actualTaskId];
                     
                     return (
                       <button
@@ -1086,7 +1111,7 @@ export default function ProgramLearningPage() {
                 onClick={handleCompleteTask}
                 className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
               >
-                {scenario && taskIndex < scenario.tasks.length - 1 
+                {program && currentTask && program.taskIds && program.taskIds.indexOf(currentTask.id) < program.taskIds.length - 1
                   ? t('pbl:learn.nextTask', 'Next Task')
                   : t('pbl:learn.completeProgram', 'Complete Program')}
               </button>
@@ -1221,7 +1246,7 @@ export default function ProgramLearningPage() {
                       // Get the actual task UUID from program taskIds
                       const actualTaskId = program?.taskIds?.[index] || task.id;
                       const isCompleted = index < taskIndex;
-                      const isCurrent = currentTask && (index === (currentTask as any).scenarioTaskIndex);
+                      const isCurrent = currentTask && currentTask.id === actualTaskId;
                       
                       return (
                         <button
