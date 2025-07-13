@@ -89,12 +89,9 @@ export default function ProgramLearningPage() {
 
   // Load task data when taskId changes
   useEffect(() => {
-    if (scenario && taskId) {
-      const task = scenario.tasks.find(t => t.id === taskId);
-      if (task) {
-        setCurrentTask(task);
-        loadTaskHistory();
-      }
+    if (scenario && taskId && currentTask?.id !== taskId) {
+      // For unified architecture, we need to fetch the task data
+      loadTaskData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [taskId, scenario]);
@@ -147,13 +144,23 @@ export default function ProgramLearningPage() {
                   if (taskRes.ok) {
                     const taskData = await taskRes.json();
                     if (taskData) {
+                      // Extract task template data from unified architecture format
+                      const taskTemplate = taskData.content?.context?.taskTemplate || {};
+                      const originalTaskData = taskData.content?.context?.originalTaskData || {};
+                      
                       loadedTask = {
                         id: taskData.id,
                         title: taskData.title,
                         type: taskData.type,
                         content: taskData.content,
                         interactions: taskData.interactions || [],
-                        status: taskData.status
+                        status: taskData.status,
+                        // Add fields from task template for rendering
+                        description: taskTemplate.description || originalTaskData.description || taskData.content?.instructions || '',
+                        instructions: originalTaskData.instructions || taskTemplate.instructions || [],
+                        expectedOutcome: originalTaskData.expectedOutcome || taskTemplate.expectedOutcome || '',
+                        // Store the scenario task index for matching
+                        scenarioTaskIndex: taskData.scenarioTaskIndex
                       } as Task;
                       setCurrentTask(loadedTask);
                     }
@@ -244,6 +251,42 @@ export default function ProgramLearningPage() {
       console.error('Error loading program data:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadTaskData = async () => {
+    if (!taskId || !scenarioId || !programId) return;
+    
+    try {
+      const taskRes = await fetch(`/api/pbl/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`);
+      if (taskRes.ok) {
+        const taskData = await taskRes.json();
+        if (taskData) {
+          // Extract task template data from unified architecture format
+          const taskTemplate = taskData.content?.context?.taskTemplate || {};
+          const originalTaskData = taskData.content?.context?.originalTaskData || {};
+          
+          const loadedTask = {
+            id: taskData.id,
+            title: taskData.title,
+            type: taskData.type,
+            content: taskData.content,
+            interactions: taskData.interactions || [],
+            status: taskData.status,
+            // Add fields from task template for rendering
+            description: taskTemplate.description || originalTaskData.description || taskData.content?.instructions || '',
+            instructions: originalTaskData.instructions || taskTemplate.instructions || [],
+            expectedOutcome: originalTaskData.expectedOutcome || taskTemplate.expectedOutcome || '',
+            // Store the scenario task index for matching
+            scenarioTaskIndex: taskData.scenarioTaskIndex
+          } as Task;
+          
+          setCurrentTask(loadedTask);
+          loadTaskHistory();
+        }
+      }
+    } catch (error) {
+      console.error('Error loading task data:', error);
     }
   };
 
@@ -729,7 +772,7 @@ export default function ProgramLearningPage() {
                   <div className="space-y-6 relative">
                     {scenario.tasks.map((task, index) => {
                       const isEvaluated = !!taskEvaluations[task.id];
-                      const isCurrent = index === taskIndex;
+                      const isCurrent = currentTask && (index === (currentTask as any).scenarioTaskIndex);
                       const taskEval = taskEvaluations[task.id];
                       
                       return (
@@ -792,7 +835,7 @@ export default function ProgramLearningPage() {
                 <div className="space-y-4">
                   {scenario.tasks.map((task, index) => {
                     const isEvaluated = !!taskEvaluations[task.id];
-                    const isCurrent = index === taskIndex;
+                    const isCurrent = currentTask && (index === (currentTask as any).scenarioTaskIndex);
                     const taskEval = taskEvaluations[task.id];
                     
                     return (
@@ -1188,7 +1231,7 @@ export default function ProgramLearningPage() {
                   <div className="space-y-6 relative">
                     {scenario.tasks.map((task, index) => {
                       const isCompleted = index < taskIndex;
-                      const isCurrent = index === taskIndex;
+                      const isCurrent = currentTask && (index === (currentTask as any).scenarioTaskIndex);
                       
                       return (
                         <button

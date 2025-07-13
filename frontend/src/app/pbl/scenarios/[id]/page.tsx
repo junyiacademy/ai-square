@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { IScenario, IProgram } from '@/types/unified-learning';
-import { formatDateWithLocale } from '@/lib/utils/date';
+import { formatDateSafely } from '@/lib/utils/date';
 
 export default function ScenarioDetailPage() {
   const params = useParams();
@@ -261,11 +261,11 @@ export default function ScenarioDetailPage() {
                             )}
                           </div>
                           <div>
-                            {t('common:startedAt', 'Started')}: {formatDateWithLocale(new Date(program.createdAt), i18n.language)}
-                            {program.updatedAt && (
+                            {t('common:startedAt', 'Started')}: {formatDateSafely(program.startedAt, i18n.language)}
+                            {program.completedAt && (
                               <>
                                 <span className="mx-2">•</span>
-                                {t('common:lastUpdated', 'Last updated')}: {formatDateWithLocale(new Date(program.updatedAt), i18n.language)}
+                                {t('common:completedAt', 'Completed')}: {formatDateSafely(program.completedAt, i18n.language)}
                               </>
                             )}
                           </div>
@@ -394,7 +394,9 @@ export default function ScenarioDetailPage() {
                   <div>
                     <span className="font-medium text-green-700 dark:text-green-300">Knowledge: </span>
                     <span className="text-green-600 dark:text-green-400">
-                      {getScenarioData('ksaMapping').knowledge.join(', ')}
+                      {getScenarioData('ksaMapping').knowledge.map((item: any) => 
+                        typeof item === 'string' ? item : item.code
+                      ).join(', ')}
                     </span>
                   </div>
                 )}
@@ -402,7 +404,9 @@ export default function ScenarioDetailPage() {
                   <div>
                     <span className="font-medium text-blue-700 dark:text-blue-300">Skills: </span>
                     <span className="text-blue-600 dark:text-blue-400">
-                      {getScenarioData('ksaMapping').skills.join(', ')}
+                      {getScenarioData('ksaMapping').skills.map((item: any) => 
+                        typeof item === 'string' ? item : item.code
+                      ).join(', ')}
                     </span>
                   </div>
                 )}
@@ -410,7 +414,9 @@ export default function ScenarioDetailPage() {
                   <div>
                     <span className="font-medium text-purple-700 dark:text-purple-300">Attitudes: </span>
                     <span className="text-purple-600 dark:text-purple-400">
-                      {getScenarioData('ksaMapping').attitudes.join(', ')}
+                      {getScenarioData('ksaMapping').attitudes.map((item: any) => 
+                        typeof item === 'string' ? item : item.code
+                      ).join(', ')}
                     </span>
                   </div>
                 )}
@@ -469,7 +475,9 @@ export default function ScenarioDetailPage() {
                         <div>
                           <span className="text-xs font-medium text-purple-600 dark:text-purple-400">Primary: </span>
                           <span className="text-xs text-purple-600 dark:text-purple-400">
-                            {task.KSA_focus.primary.join(', ')}
+                            {task.KSA_focus.primary.map((item: any) => 
+                              typeof item === 'string' ? item : item.code || item
+                            ).join(', ')}
                           </span>
                         </div>
                       )}
@@ -477,7 +485,9 @@ export default function ScenarioDetailPage() {
                         <div>
                           <span className="text-xs font-medium text-purple-600 dark:text-purple-400">Secondary: </span>
                           <span className="text-xs text-purple-600 dark:text-purple-400">
-                            {task.KSA_focus.secondary.join(', ')}
+                            {task.KSA_focus.secondary.map((item: any) => 
+                              typeof item === 'string' ? item : item.code || item
+                            ).join(', ')}
                           </span>
                         </div>
                       )}
