@@ -140,6 +140,7 @@ export interface Program {
   totalTasks: number;
   currentTaskId?: string;
   language: string;
+  taskIds?: string[]; // Array of task UUIDs for unified architecture
 }
 
 // Program Metadata (stored in program folder)

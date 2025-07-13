@@ -771,6 +771,8 @@ export default function ProgramLearningPage() {
                   <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600"></div>
                   <div className="space-y-6 relative">
                     {scenario.tasks.map((task, index) => {
+                      // Get the actual task UUID from program taskIds
+                      const actualTaskId = program?.taskIds?.[index] || task.id;
                       const isEvaluated = !!taskEvaluations[task.id];
                       const isCurrent = currentTask && (index === (currentTask as any).scenarioTaskIndex);
                       const taskEval = taskEvaluations[task.id];
@@ -778,7 +780,7 @@ export default function ProgramLearningPage() {
                       return (
                         <button
                           key={task.id}
-                          onClick={() => switchTask(task.id)}
+                          onClick={() => switchTask(actualTaskId)}
                           className="flex items-center w-full text-left hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors"
                         >
                           <div className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full border-2 bg-white dark:bg-gray-800 flex-shrink-0 ${
@@ -834,6 +836,8 @@ export default function ProgramLearningPage() {
               {isProgressCollapsed && (
                 <div className="space-y-4">
                   {scenario.tasks.map((task, index) => {
+                    // Get the actual task UUID from program taskIds
+                    const actualTaskId = program?.taskIds?.[index] || task.id;
                     const isEvaluated = !!taskEvaluations[task.id];
                     const isCurrent = currentTask && (index === (currentTask as any).scenarioTaskIndex);
                     const taskEval = taskEvaluations[task.id];
@@ -841,7 +845,7 @@ export default function ProgramLearningPage() {
                     return (
                       <button
                         key={task.id}
-                        onClick={() => switchTask(task.id)}
+                        onClick={() => switchTask(actualTaskId)}
                         className={`flex h-8 w-8 items-center justify-center rounded-full border-2 bg-white dark:bg-gray-800 mx-auto ${
                           isEvaluated 
                             ? 'border-green-600 dark:border-green-500' 
@@ -1230,6 +1234,8 @@ export default function ProgramLearningPage() {
                   <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600"></div>
                   <div className="space-y-6 relative">
                     {scenario.tasks.map((task, index) => {
+                      // Get the actual task UUID from program taskIds
+                      const actualTaskId = program?.taskIds?.[index] || task.id;
                       const isCompleted = index < taskIndex;
                       const isCurrent = currentTask && (index === (currentTask as any).scenarioTaskIndex);
                       
@@ -1237,7 +1243,7 @@ export default function ProgramLearningPage() {
                         <button
                           key={task.id}
                           onClick={() => {
-                            switchTask(task.id);
+                            switchTask(actualTaskId);
                             setMobileView('chat');
                           }}
                           className="flex items-center w-full text-left hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors"
