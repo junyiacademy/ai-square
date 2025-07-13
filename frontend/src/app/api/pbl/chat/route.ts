@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
-import yaml from 'js-yaml';
 import { VertexAI } from '@google-cloud/vertexai';
 import { ErrorResponse } from '@/types/api';
 import { ChatMessage } from '@/types/pbl-api';
-import { Scenario, AIModule, AIRole } from '@/types/pbl';
+import { getServerSession } from '@/lib/auth/session';
 
 interface ChatRequestBody {
   message: string;
@@ -19,30 +16,6 @@ interface ChatRequestBody {
     expectedOutcome: string;
     conversationHistory?: ChatMessage[];
   };
-}
-
-interface TaskWithAIModule {
-  id: string;
-  aiModule?: {
-    role: string;
-    model: string;
-    persona?: string;
-    initialPrompt?: string;
-  };
-  ai_module?: {
-    role: string;
-    model: string;
-    persona?: string;
-    initial_prompt?: string;
-  };
-}
-
-interface AIModuleData {
-  role: string;
-  model: string;
-  persona: string;
-  initialPrompt?: string;
-  initial_prompt?: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -59,179 +32,157 @@ export async function POST(request: NextRequest) {
 
     const { scenarioId, taskId, taskTitle, taskDescription, instructions, expectedOutcome, conversationHistory } = context;
 
+    // Get user session
+    const session = await getServerSession();
+    if (!session?.user?.email) {
+      return NextResponse.json<ErrorResponse>(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
     // Get language from query params (default to 'en')
     const { searchParams } = new URL(request.url);
     const language = searchParams.get('lang') || 'en';
 
-    // Load scenario data to get AI module configuration
-    const scenarioFolder = scenarioId.replace(/-/g, '_');
-    const fileName = `${scenarioFolder}_${language}.yaml`;
-    let yamlPath = path.join(
-      process.cwd(),
-      'public',
-      'pbl_data',
-      'scenarios',
-      scenarioFolder,
-      fileName
-    );
-    
-    // Check if language-specific file exists, fallback to English
-    try {
-      await fs.access(yamlPath);
-    } catch {
-      // Fallback to English if language-specific file doesn't exist
-      yamlPath = path.join(
-        process.cwd(),
-        'public',
-        'pbl_data',
-        'scenarios',
-        scenarioFolder,
-        `${scenarioFolder}_en.yaml`
-      );
-    }
-    
-    let scenarioData: Scenario;
-    try {
-      const yamlContent = await fs.readFile(yamlPath, 'utf8');
-      scenarioData = yaml.load(yamlContent) as Scenario;
-    } catch (error) {
-      console.error(`Error loading scenario file: ${yamlPath}`, error);
+    // Use unified architecture to get scenario and task data
+    const { getScenarioRepository, getTaskRepository } = await import('@/lib/implementations/gcs-v2');
+    const scenarioRepo = getScenarioRepository();
+    const taskRepo = getTaskRepository();
+
+    // Get scenario to access AI module configuration from metadata
+    const scenario = await scenarioRepo.findById(scenarioId);
+    if (!scenario) {
       return NextResponse.json<ErrorResponse>(
-        { error: `Scenario file not found: ${scenarioId}` },
+        { error: `Scenario not found: ${scenarioId}` },
         { status: 404 }
       );
     }
-    
-    // Find the current task
-    const currentTask = scenarioData.tasks?.find((t: TaskWithAIModule) => t.id === taskId);
-    if (!currentTask) {
+
+    // Get task for AI module info
+    const task = await taskRepo.findById(taskId);
+    if (!task) {
       return NextResponse.json<ErrorResponse>(
         { error: 'Task not found' },
         { status: 404 }
       );
     }
-    
-    // Handle both camelCase and snake_case for aiModule
-    const aiModuleData = currentTask.aiModule || (currentTask as TaskWithAIModule).ai_module;
-    if (!aiModuleData) {
+
+    // Extract AI module configuration from task metadata
+    const taskTemplate = task.content?.context?.taskTemplate || {};
+    const aiModule = taskTemplate.aiModule || taskTemplate.ai_module || 
+                    task.content?.context?.originalTaskData?.aiModule ||
+                    task.content?.context?.originalTaskData?.ai_module;
+
+    if (!aiModule) {
       return NextResponse.json<ErrorResponse>(
         { error: 'AI module not found for this task' },
         { status: 404 }
       );
     }
 
-    const aiModule: AIModule = {
-      role: aiModuleData.role as AIRole,
-      model: aiModuleData.model,
-      persona: aiModuleData.persona,
-      initialPrompt: (aiModuleData as AIModuleData).initialPrompt || (aiModuleData as AIModuleData).initial_prompt
-    };
-    
     // Build conversation context
     const conversationContext = conversationHistory?.map((entry: ChatMessage) => 
       `${entry.role === 'user' ? 'User' : 'Assistant'}: ${entry.content}`
     ).join('\n');
 
-    // Get language from Accept-Language header
-    const acceptLanguage = request.headers.get('accept-language') || 'en';
-    let userLang = acceptLanguage.split('-')[0] || 'en';
-    
-    // Map zh to zhTW for Traditional Chinese
-    if (userLang === 'zh') {
-      userLang = 'zhTW';
-    }
-    
-    // Language mapping for AI instructions
-    const languageInstructions: Record<string, string> = {
-      'zhTW': 'IMPORTANT: You must respond ONLY in Traditional Chinese (繁體中文). All your responses must be in 繁體中文.',
-      'ja': 'IMPORTANT: You must respond ONLY in Japanese (日本語). All your responses must be in 日本語.',
-      'ko': 'IMPORTANT: You must respond ONLY in Korean (한국어). All your responses must be in 한국어.',
-      'es': 'IMPORTANT: You must respond ONLY in Spanish (Español). All your responses must be in Español.',
-      'fr': 'IMPORTANT: You must respond ONLY in French (Français). All your responses must be in Français.',
-      'de': 'IMPORTANT: You must respond ONLY in German (Deutsch). All your responses must be in Deutsch.',
-      'ru': 'IMPORTANT: You must respond ONLY in Russian (Русский). All your responses must be in Русский.',
-      'it': 'IMPORTANT: You must respond ONLY in Italian (Italiano). All your responses must be in Italiano.',
-      'en': 'IMPORTANT: You must respond in English.'
-    };
-    
-    // Analyze user message for relevance
-    const isGreetingOnly = /^(hi|hello|hey|good morning|good afternoon|good evening|how are you|what's up|thanks|thank you|bye|goodbye)[\s\.,!?]*$/i.test(message.trim());
-    const isOffTopic = !/(?:resume|cv|job|career|work|experience|skill|education|analysis|industry|trends|hiring|employer|application|interview|professional)/i.test(message) && message.length > 10;
-    
-    // Create the prompt with message filtering
-    let systemPrompt = `${aiModule.initialPrompt || ''}
-
-Current Task: ${taskTitle}
-Task Description: ${taskDescription}
-Instructions: ${Array.isArray(instructions) ? instructions.join(', ') : instructions}
-Expected Outcome: ${expectedOutcome}
-
-Previous conversation:
-${conversationContext || 'No previous conversation'}
-
-IMPORTANT GUIDELINES:
-1. Stay focused on the current task and learning objectives
-2. If the user sends only greetings or off-topic messages, politely redirect them to the task
-3. Keep responses concise and task-focused
-4. Encourage meaningful engagement with the learning material
-
-${languageInstructions[userLang] || languageInstructions['en']}
-
-Please respond as ${aiModule.persona} and help the user with this task.`;
-
-    // Handle low-value messages
-    if (isGreetingOnly) {
-      systemPrompt += `\n\nNOTE: The user sent only a greeting. Respond briefly and immediately guide them to start working on the task.`;
-    } else if (isOffTopic) {
-      systemPrompt += `\n\nNOTE: The user's message appears off-topic. Politely redirect them to focus on the current task.`;
-    }
-
     // Initialize Vertex AI
     const vertexAI = new VertexAI({
-      project: process.env.GOOGLE_CLOUD_PROJECT || 'ai-square-463013',
+      project: process.env.GOOGLE_CLOUD_PROJECT || '',
       location: 'us-central1',
     });
-    
-    // Get the generative model
-    const model = vertexAI.getGenerativeModel({
-      model: aiModule.model || 'gemini-2.5-flash',
-    });
 
-    // Generate content
-    const result = await model.generateContent({
-      contents: [
-        {
-          role: 'user',
-          parts: [
-            {
-              text: systemPrompt + '\n\nUser: ' + message
-            }
-          ]
-        }
-      ],
+    const model = vertexAI.preview.getGenerativeModel({
+      model: 'gemini-2.5-flash',
       generationConfig: {
+        maxOutputTokens: 8192,
         temperature: 0.7,
-        maxOutputTokens: 2048,
-      }
+        topP: 0.95,
+      },
     });
 
+    // Build the prompt based on AI module configuration
+    const systemPrompt = buildSystemPrompt(
+      aiModule,
+      taskTitle,
+      taskDescription,
+      instructions,
+      expectedOutcome,
+      language
+    );
+
+    const fullPrompt = conversationContext 
+      ? `${systemPrompt}\n\nPrevious conversation:\n${conversationContext}\n\nUser: ${message}`
+      : `${systemPrompt}\n\nUser: ${message}`;
+
+    // Generate response
+    const result = await model.generateContent(fullPrompt);
     const response = result.response;
-    const aiResponse = response.candidates?.[0]?.content?.parts?.[0]?.text || 'I apologize, but I was unable to generate a response. Please try again.';
+    const text = response.candidates?.[0]?.content?.parts?.[0]?.text || 'I apologize, but I was unable to generate a response.';
 
     return NextResponse.json({
-      success: true,
-      response: aiResponse
+      response: text,
+      sessionId,
     });
 
   } catch (error) {
-    console.error('PBL chat error:', error);
-    return NextResponse.json(
-      { 
-        success: false, 
-        error: 'Failed to process chat request',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      },
+    console.error('Chat API error:', error);
+    return NextResponse.json<ErrorResponse>(
+      { error: 'Failed to process chat request' },
       { status: 500 }
     );
   }
+}
+
+function buildSystemPrompt(
+  aiModule: any,
+  taskTitle: string,
+  taskDescription: string,
+  instructions: string[],
+  expectedOutcome: string,
+  language: string
+): string {
+  const role = aiModule.role || 'assistant';
+  const persona = aiModule.persona || 'helpful AI assistant';
+  const initialPrompt = aiModule.initialPrompt || aiModule.initial_prompt || '';
+
+  // Language-specific instructions
+  const langInstructions = getLanguageInstructions(language);
+
+  return `You are acting as a ${persona} with the role of ${role}.
+
+${initialPrompt}
+
+Current Task: ${taskTitle}
+Description: ${taskDescription}
+
+Task Instructions:
+${instructions.map((inst, i) => `${i + 1}. ${inst}`).join('\n')}
+
+Expected Outcome: ${expectedOutcome}
+
+${langInstructions}
+
+Please help the user complete this task while staying in character as the ${persona}. Guide them towards achieving the expected outcome through meaningful interaction and feedback.`;
+}
+
+function getLanguageInstructions(language: string): string {
+  const languageMap: Record<string, string> = {
+    'en': 'Please respond in English.',
+    'zhTW': '請用繁體中文回應。',
+    'zhCN': '请用简体中文回应。',
+    'es': 'Por favor responde en español.',
+    'ja': '日本語で応答してください。',
+    'ko': '한국어로 응답해 주세요.',
+    'fr': 'Veuillez répondre en français.',
+    'de': 'Bitte antworten Sie auf Deutsch.',
+    'ru': 'Пожалуйста, отвечайте на русском языке.',
+    'it': 'Si prega di rispondere in italiano.',
+    'pt': 'Por favor, responda em português.',
+    'ar': 'يرجى الرد باللغة العربية.',
+    'id': 'Harap balas dalam bahasa Indonesia.',
+    'th': 'กรุณาตอบเป็นภาษาไทย'
+  };
+
+  return languageMap[language] || languageMap['en'];
 }
