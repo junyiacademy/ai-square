@@ -711,7 +711,7 @@ export default function ProgramLearningPage() {
     );
   }
 
-  const taskIndex = scenario.tasks.findIndex(t => t.id === currentTask.id);
+  const taskIndex = (currentTask as any)?.scenarioTaskIndex ?? scenario.tasks.findIndex(t => t.id === currentTask.id);
   // const progress = ((taskIndex + 1) / scenario.tasks.length) * 100;
 
   return (
