@@ -323,13 +323,13 @@ export default function CompetencyKnowledgeGraph({
     // Add zoom behavior
     const g = svg.append('g');
     
-    svg.call(
-      d3.zoom<SVGSVGElement, unknown>()
-        .scaleExtent([0.3, 3])
-        .on('zoom', (event) => {
-          g.attr('transform', event.transform);
-        })
-    );
+    const zoom = d3.zoom<SVGSVGElement, unknown>()
+      .scaleExtent([0.3, 3])
+      .on('zoom', (event) => {
+        g.attr('transform', event.transform);
+      });
+    
+    svg.call(zoom);
 
     // Set up force simulation with better spacing for KSA codes
     const simulation = d3.forceSimulation<GraphNode>(nodes)
@@ -419,7 +419,25 @@ export default function CompetencyKnowledgeGraph({
       })
       .style('cursor', 'pointer')
       .on('click', (event, d) => {
+        event.stopPropagation();
         setSelectedNode(d);
+        
+        // Zoom and center on the clicked node
+        const scale = 2.0; // Zoom level
+        const x = d.x || 0;
+        const y = d.y || 0;
+        
+        // Calculate transform to center the node
+        const transform = d3.zoomIdentity
+          .translate(dimensions.width / 2, dimensions.height / 2)
+          .scale(scale)
+          .translate(-x, -y);
+        
+        // Apply smooth transition
+        svg.transition()
+          .duration(750)
+          .call(zoom.transform, transform);
+        
         // If clicking on a KSA code or subcode node, show related questions
         if ((d.type === 'ksa-code' || d.type === 'ksa-subcode') && d.details?.questions && d.details.questions.length > 0) {
           setSelectedQuestionIds(d.details.questions);
