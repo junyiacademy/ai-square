@@ -50,7 +50,7 @@ export default function CompetencyKnowledgeGraph({
   const { t, i18n } = useTranslation('assessment');
   const svgRef = useRef<SVGSVGElement>(null);
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
-  const [dimensions, setDimensions] = useState({ width: 1200, height: 800 });
+  const [dimensions, setDimensions] = useState({ width: 1400, height: 900 });
   const [showQuestionReview, setShowQuestionReview] = useState(false);
   const [selectedQuestionIds, setSelectedQuestionIds] = useState<string[]>([]);
 
@@ -295,15 +295,15 @@ export default function CompetencyKnowledgeGraph({
     }
   };
 
-  // Node size based on type
+  // Node size based on type - made larger for better visibility
   const getNodeRadius = (node: GraphNode) => {
     switch (node.type) {
-      case 'domain': return node.id === 'center' ? 40 : 30;
-      case 'competency': return 20;
-      case 'ksa-theme': return 15;
-      case 'ksa-code': return 12;
-      case 'ksa-subcode': return 8;
-      default: return 10;
+      case 'domain': return node.id === 'center' ? 50 : 35;
+      case 'competency': return 25;
+      case 'ksa-theme': return 35;
+      case 'ksa-code': return 18;
+      case 'ksa-subcode': return 12;
+      default: return 15;
     }
   };
 
@@ -335,30 +335,31 @@ export default function CompetencyKnowledgeGraph({
     const simulation = d3.forceSimulation<GraphNode>(nodes)
       .force('link', d3.forceLink<GraphNode, GraphLink>(links).id((d) => d.id)
         .distance((d) => {
-          // Shorter distance for code nodes to group them better
+          // Increased distances for better spacing
           const target = d.target as GraphNode;
-          if (target.type === 'ksa-subcode') return 40;
-          if (target.type === 'ksa-code') return 60;
-          return 120;
+          if (target.type === 'ksa-subcode') return 80;
+          if (target.type === 'ksa-code') return 120;
+          if (target.type === 'ksa-theme') return 180;
+          return 200;
         }))
       .force('charge', d3.forceManyBody<GraphNode>()
         .strength((d) => {
-          // Stronger repulsion for code nodes to prevent overlap
-          if (d.type === 'ksa-subcode') return -100;
-          if (d.type === 'ksa-code') return -150;
-          if (d.type === 'ksa-theme') return -400;
-          return -500;
+          // Much stronger repulsion to spread nodes apart
+          if (d.type === 'ksa-subcode') return -300;
+          if (d.type === 'ksa-code') return -500;
+          if (d.type === 'ksa-theme') return -800;
+          return -1000;
         }))
       .force('center', d3.forceCenter(dimensions.width / 2, dimensions.height / 2))
       .force('collision', d3.forceCollide<GraphNode>()
-        .radius((d) => getNodeRadius(d) + 8))
+        .radius((d) => getNodeRadius(d) + 20))
       .force('radial', d3.forceRadial<GraphNode>((d) => {
-        // Position nodes in circles based on type
-        if (d.type === 'ksa-theme') return 150;
-        if (d.type === 'ksa-code') return 250;
-        if (d.type === 'ksa-subcode') return 320;
+        // Larger radial distances for better spacing
+        if (d.type === 'ksa-theme') return 200;
+        if (d.type === 'ksa-code') return 350;
+        if (d.type === 'ksa-subcode') return 450;
         return 0;
-      }, dimensions.width / 2, dimensions.height / 2).strength(0.8));
+      }, dimensions.width / 2, dimensions.height / 2).strength(0.6));
 
     // Add links
     const link = g.append('g')
@@ -429,21 +430,27 @@ export default function CompetencyKnowledgeGraph({
         }
       });
 
-    // Add labels
+    // Add labels with better positioning
     node.append('text')
-      .attr('dy', '.35em')
-      .attr('x', (d) => getNodeRadius(d as GraphNode) + 5)
+      .attr('dy', (d) => d.type === 'domain' && d.id === 'center' ? '.35em' : '-.8em')
+      .attr('text-anchor', 'middle')
       .style('font-size', (d) => {
         switch (d.type) {
-          case 'domain': return '14px';
-          case 'competency': return '12px';
-          case 'ksa-theme': return '11px';
-          case 'ksa-code': return '10px';
-          case 'ksa-subcode': return '9px';
-          default: return '10px';
+          case 'domain': return d.id === 'center' ? '16px' : '14px';
+          case 'competency': return '13px';
+          case 'ksa-theme': return '14px';
+          case 'ksa-code': return '12px';
+          case 'ksa-subcode': return '11px';
+          default: return '12px';
         }
       })
-      .style('font-weight', (d) => d.type === 'domain' ? 'bold' : 'normal')
+      .style('font-weight', (d) => (d.type === 'domain' || d.type === 'ksa-theme') ? 'bold' : 'normal')
+      .style('fill', (d) => {
+        // Use contrasting colors for better readability
+        if (d.type === 'ksa-theme') return '#1f2937';
+        if (d.type === 'ksa-code' || d.type === 'ksa-subcode') return '#374151';
+        return '#111827';
+      })
       .text((d) => d.name);
 
     // Add tooltips
@@ -592,7 +599,7 @@ export default function CompetencyKnowledgeGraph({
         </div>
       </div>
 
-      <div className="bg-gray-50 rounded-lg overflow-hidden touch-none">
+      <div className="bg-gray-50 rounded-lg overflow-hidden touch-none" style={{ height: '900px' }}>
         <svg ref={svgRef} className="w-full h-full"></svg>
       </div>
 
