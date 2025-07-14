@@ -54,6 +54,7 @@ export async function GET(
       interactions: task.interactions,
       startedAt: task.startedAt,
       completedAt: task.completedAt,
+      evaluation: task.evaluation,
       // Add career info
       careerType: scenario?.sourceRef.metadata?.careerType || 'unknown',
       scenarioTitle: scenario?.title || 'Discovery Scenario'
@@ -306,8 +307,17 @@ Return your evaluation as a JSON object:
         createdAt: new Date().toISOString()
       });
       
-      // Mark task as completed
-      await taskRepo.complete(taskId);
+      // Mark task as completed and save evaluation ID
+      await taskRepo.update(taskId, {
+        status: 'completed' as const,
+        completedAt: new Date().toISOString(),
+        evaluation: {
+          id: evaluation.id,
+          score: evaluation.score,
+          feedback: evaluation.feedback,
+          evaluatedAt: evaluation.createdAt
+        }
+      });
       
       // Update program XP
       const currentXP = (program.metadata?.totalXP as number) || 0;

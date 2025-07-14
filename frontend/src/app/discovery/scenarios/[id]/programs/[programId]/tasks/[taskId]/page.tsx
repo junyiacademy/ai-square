@@ -42,6 +42,12 @@ interface TaskData {
   }>;
   startedAt: string;
   completedAt?: string;
+  evaluation?: {
+    id: string;
+    score: number;
+    feedback: string;
+    evaluatedAt: string;
+  };
 }
 
 export default function TaskDetailPage() {
@@ -435,19 +441,30 @@ export default function TaskDetailPage() {
                 <span>技能成長</span>
               </h4>
               <div className="flex flex-wrap gap-2">
-                {/* Mock skills - replace with actual data */}
-                {[
-                  '內容魔法',
-                  '視覺咒術', 
-                  '文字鍊金',
-                  '社群召喚術',
-                  '批判性思維',
-                  '數位素養'
-                ].map((skill, index) => (
-                  <span key={index} className="px-3 py-1 bg-purple-100 text-purple-700 text-sm rounded-full">
-                    {skill}
-                  </span>
-                ))}
+                {(() => {
+                  // Collect all skills from AI responses
+                  const allSkills = new Set<string>();
+                  taskData.interactions
+                    .filter(i => i.type === 'ai_response' && i.content?.skillsImproved)
+                    .forEach(i => {
+                      i.content.skillsImproved.forEach((skill: string) => allSkills.add(skill));
+                    });
+                  
+                  const skillsArray = Array.from(allSkills);
+                  
+                  // If no skills found, show default message
+                  if (skillsArray.length === 0) {
+                    return (
+                      <p className="text-gray-500 text-sm">完成任務時將顯示獲得的技能</p>
+                    );
+                  }
+                  
+                  return skillsArray.map((skill, index) => (
+                    <span key={index} className="px-3 py-1 bg-purple-100 text-purple-700 text-sm rounded-full">
+                      {skill}
+                    </span>
+                  ));
+                })()}
               </div>
             </div>
             
@@ -458,13 +475,8 @@ export default function TaskDetailPage() {
                 <span>綜合評價</span>
               </h4>
               <div className="bg-blue-50 rounded-lg p-4">
-                <p className="text-gray-700 leading-relaxed">
-                  經過 6 次嘗試，你成功完成了這個任務！
-                  <br /><br />
-                  <strong>學習歷程回顧：</strong>
-                  <br />• 從第一次嘗試到最後，你展現了持續改進的精神
-                  <br />• 共有 2 次達到通過標準
-                  <br />• 最終掌握了任務所需的核心能力
+                <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                  {taskData.evaluation?.feedback || `經過 ${taskData.interactions.filter(i => i.type === 'user_input').length} 次嘗試，你成功完成了這個任務！`}
                 </p>
               </div>
             </div>
