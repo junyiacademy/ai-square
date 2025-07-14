@@ -243,8 +243,22 @@ Return your evaluation as a JSON object:
       
       // Create comprehensive evaluation based on all interactions
       const userAttempts = task.interactions.filter(i => i.type === 'user_input').length;
-      const passedAttempts = task.interactions.filter(
-        i => i.type === 'ai_response' && i.content.completed
+      const aiResponses = task.interactions.filter(i => i.type === 'ai_response');
+      
+      // Debug log
+      console.log('Task interactions for completion:', {
+        taskId,
+        userAttempts,
+        aiResponseCount: aiResponses.length,
+        aiResponseDetails: aiResponses.map(r => ({
+          timestamp: r.timestamp,
+          completed: r.content?.completed,
+          content: r.content
+        }))
+      });
+      
+      const passedAttempts = aiResponses.filter(
+        i => i.content?.completed === true
       ).length;
       
       // Get all feedback for comprehensive review
