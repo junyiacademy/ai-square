@@ -80,7 +80,8 @@ export default function DiscoveryNavigation() {
   ];
 
   const isActive = (item: typeof navigationItems[0]) => {
-    return pathname === item.path;
+    // Check if current path starts with the item path (for nested routes)
+    return pathname === item.path || pathname.startsWith(item.path + '/');
   };
 
   return (
