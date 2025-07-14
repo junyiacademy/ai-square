@@ -171,9 +171,9 @@ export default function DiscoveryScenarioDetailPage() {
         throw new Error(errorData.error || 'Failed to create program');
       }
 
-      const { programId } = await response.json();
-      // Navigate to the first task of the new program
-      router.push(`/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/0`);
+      const program = await response.json();
+      // Navigate to the new program page
+      router.push(`/discovery/scenarios/${scenarioId}/programs/${program.id}`);
     } catch (error) {
       console.error('Error creating program:', error);
       setError(error instanceof Error ? error.message : 'Failed to create program');
