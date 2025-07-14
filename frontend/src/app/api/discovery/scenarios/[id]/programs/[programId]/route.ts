@@ -5,6 +5,7 @@ import {
   getTaskRepository,
   getScenarioRepository 
 } from '@/lib/implementations/gcs-v2';
+import { ITask } from '@/types/unified-learning';
 
 export async function GET(
   request: NextRequest,
@@ -37,7 +38,13 @@ export async function GET(
     }
     
     // Load all tasks for this program
-    const tasks = await taskRepo.findByProgram(programId);
+    const allTasks = await taskRepo.findByProgram(programId);
+    const taskMap = new Map(allTasks.map(t => [t.id, t]));
+    
+    // Get tasks in the correct order based on program.taskIds
+    const tasks = program.taskIds
+      .map(id => taskMap.get(id))
+      .filter(Boolean) as ITask[];
     
     // Calculate completed tasks and total XP
     let completedCount = 0;

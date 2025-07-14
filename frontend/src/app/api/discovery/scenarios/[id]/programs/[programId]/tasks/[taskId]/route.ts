@@ -6,7 +6,7 @@ import {
   getEvaluationRepository,
   getScenarioRepository 
 } from '@/lib/implementations/gcs-v2';
-import { IInteraction } from '@/types/unified-learning';
+import { IInteraction, ITask } from '@/types/unified-learning';
 import { VertexAIService } from '@/lib/ai/vertex-ai-service';
 import { DiscoveryYAMLLoader } from '@/lib/services/discovery-yaml-loader';
 
@@ -305,14 +305,22 @@ Return your evaluation as a JSON object:
       });
       
       // Update program progress
-      const tasks = await taskRepo.findByProgram(programId);
-      const completedTasks = tasks.filter(t => t.status === 'completed').length;
+      // Use the task order from program.taskIds to ensure correct sequence
+      const allTasks = await taskRepo.findByProgram(programId);
+      const taskMap = new Map(allTasks.map(t => [t.id, t]));
+      
+      // Get tasks in the correct order based on program.taskIds
+      const orderedTasks = program.taskIds
+        .map(id => taskMap.get(id))
+        .filter(Boolean) as ITask[];
+      
+      const completedTasks = orderedTasks.filter(t => t.status === 'completed').length;
       const nextTaskIndex = completedTasks;
       
       // Activate next task if available
       let nextTaskId = null;
-      if (nextTaskIndex < tasks.length) {
-        const nextTask = tasks[nextTaskIndex];
+      if (nextTaskIndex < orderedTasks.length) {
+        const nextTask = orderedTasks[nextTaskIndex];
         await taskRepo.updateStatus(nextTask.id, 'active');
         nextTaskId = nextTask.id;
       }
