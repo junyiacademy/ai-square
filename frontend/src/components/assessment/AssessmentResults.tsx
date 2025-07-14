@@ -343,7 +343,7 @@ export default function AssessmentResults({ result, domains, onRetake, questions
         <div className="bg-white rounded-lg shadow-sm mb-8">
           <div className="border-b border-gray-200">
             <nav className="flex space-x-8 px-6 overflow-x-auto">
-              {['overview', 'domains', 'recommendations', 'ksa', 'knowledge-graph'].map((tab) => (
+              {['overview', 'recommendations', 'knowledge-graph'].map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab as typeof activeTab)}
@@ -387,43 +387,42 @@ export default function AssessmentResults({ result, domains, onRetake, questions
                     </p>
                   </div>
                 </div>
-              </div>
-            )}
 
-            {/* Domains Tab */}
-            {activeTab === 'domains' && (
-              <div className="space-y-6">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  {t('results.domainBreakdown')}
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {Object.entries(result.domainScores).map(([domainKey, score]) => {
-                    const domain = domains[domainKey as keyof typeof domains];
-                    return (
-                      <div key={domainKey} className="border border-gray-200 rounded-lg p-6">
-                        <div className="flex justify-between items-start mb-3">
-                          <h4 className="font-semibold text-gray-900">
-                            {getDomainName(domainKey)}
-                          </h4>
-                          <span className={`text-2xl font-bold ${getScoreColor(score)}`}>
-                            {score}%
-                          </span>
+                {/* Domain Breakdown - merged from domains tab */}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    {t('results.domainBreakdown')}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {Object.entries(result.domainScores).map(([domainKey, score]) => {
+                      const domain = domains[domainKey as keyof typeof domains];
+                      return (
+                        <div key={domainKey} className="border border-gray-200 rounded-lg p-6">
+                          <div className="flex justify-between items-start mb-3">
+                            <h4 className="font-semibold text-gray-900">
+                              {getDomainName(domainKey)}
+                            </h4>
+                            <span className={`text-2xl font-bold ${getScoreColor(score)}`}>
+                              {score}%
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600 mb-4">
+                            {domain.description}
+                          </p>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
+                              style={{ width: `${score}%` }}
+                            ></div>
+                          </div>
                         </div>
-                        <p className="text-sm text-gray-600 mb-4">
-                          {domain.description}
-                        </p>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div
-                            className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
-                            style={{ width: `${score}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             )}
+
 
             {/* Recommendations Tab */}
             {activeTab === 'recommendations' && (
@@ -461,133 +460,6 @@ export default function AssessmentResults({ result, domains, onRetake, questions
               </div>
             )}
 
-            {/* KSA Analysis Tab */}
-            {activeTab === 'ksa' && (
-              <div className="space-y-8">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    {t('results.ksaAnalysis.title')}
-                  </h3>
-                  <p className="text-gray-600 mb-6">
-                    {t('results.ksaAnalysis.description')}
-                  </p>
-                </div>
-
-                {/* Knowledge Section */}
-                <div>
-                  <h4 className="text-md font-semibold text-gray-800 mb-3 flex items-center">
-                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-md mr-2">
-                      {t('quiz.knowledge')}
-                    </span>
-                    <span className="text-sm font-normal text-gray-600">
-                      ({ksaAnalysis.knowledge.length} {t('results.ksaAnalysis.competenciesDemonstrated')})
-                    </span>
-                  </h4>
-                  {ksaAnalysis.knowledge.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {ksaAnalysis.knowledge.map((item) => (
-                        <div key={item.code} className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                          <div className="flex justify-between items-start mb-2">
-                            <span className="font-mono text-blue-900 font-semibold">{item.code}</span>
-                            <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded-full">
-                              {item.count} {t('results.ksaAnalysis.times')}
-                            </span>
-                          </div>
-                          <p className="text-sm text-blue-700">
-                            {t('results.ksaAnalysis.demonstratedIn', { count: item.count })}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-gray-500 italic">{t('results.ksaAnalysis.noCompetencies')}</p>
-                  )}
-                </div>
-
-                {/* Skills Section */}
-                <div>
-                  <h4 className="text-md font-semibold text-gray-800 mb-3 flex items-center">
-                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-md mr-2">
-                      {t('quiz.skills')}
-                    </span>
-                    <span className="text-sm font-normal text-gray-600">
-                      ({ksaAnalysis.skills.length} {t('results.ksaAnalysis.competenciesDemonstrated')})
-                    </span>
-                  </h4>
-                  {ksaAnalysis.skills.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {ksaAnalysis.skills.map((item) => (
-                        <div key={item.code} className="bg-green-50 border border-green-200 rounded-lg p-4">
-                          <div className="flex justify-between items-start mb-2">
-                            <span className="font-mono text-green-900 font-semibold">{item.code}</span>
-                            <span className="bg-green-600 text-white text-xs px-2 py-1 rounded-full">
-                              {item.count} {t('results.ksaAnalysis.times')}
-                            </span>
-                          </div>
-                          <p className="text-sm text-green-700">
-                            {t('results.ksaAnalysis.demonstratedIn', { count: item.count })}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-gray-500 italic">{t('results.ksaAnalysis.noCompetencies')}</p>
-                  )}
-                </div>
-
-                {/* Attitudes Section */}
-                <div>
-                  <h4 className="text-md font-semibold text-gray-800 mb-3 flex items-center">
-                    <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-md mr-2">
-                      {t('quiz.attitudes')}
-                    </span>
-                    <span className="text-sm font-normal text-gray-600">
-                      ({ksaAnalysis.attitudes.length} {t('results.ksaAnalysis.competenciesDemonstrated')})
-                    </span>
-                  </h4>
-                  {ksaAnalysis.attitudes.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {ksaAnalysis.attitudes.map((item) => (
-                        <div key={item.code} className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                          <div className="flex justify-between items-start mb-2">
-                            <span className="font-mono text-purple-900 font-semibold">{item.code}</span>
-                            <span className="bg-purple-600 text-white text-xs px-2 py-1 rounded-full">
-                              {item.count} {t('results.ksaAnalysis.times')}
-                            </span>
-                          </div>
-                          <p className="text-sm text-purple-700">
-                            {t('results.ksaAnalysis.demonstratedIn', { count: item.count })}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-gray-500 italic">{t('results.ksaAnalysis.noCompetencies')}</p>
-                  )}
-                </div>
-
-                {/* Summary */}
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
-                  <h4 className="font-semibold text-gray-900 mb-3">
-                    {t('results.ksaAnalysis.summary')}
-                  </h4>
-                  <div className="grid grid-cols-3 gap-4 text-center">
-                    <div>
-                      <div className="text-2xl font-bold text-blue-600">{ksaAnalysis.knowledge.length}</div>
-                      <div className="text-sm text-gray-600">{t('results.ksaAnalysis.knowledgeAreas')}</div>
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold text-green-600">{ksaAnalysis.skills.length}</div>
-                      <div className="text-sm text-gray-600">{t('results.ksaAnalysis.skillsAreas')}</div>
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold text-purple-600">{ksaAnalysis.attitudes.length}</div>
-                      <div className="text-sm text-gray-600">{t('results.ksaAnalysis.attitudesAreas')}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
 
             {/* Knowledge Graph Tab */}
             {activeTab === 'knowledge-graph' && (
