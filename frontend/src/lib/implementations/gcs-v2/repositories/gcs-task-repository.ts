@@ -58,10 +58,12 @@ export class GCSTaskRepository<T extends ITask = ITask>
 
   async findByProgram(programId: string): Promise<T[]> {
     const allTasks = await this.listAllEntities();
+    const matchingTasks = allTasks.filter(task => task.programId === programId);
     console.log('Finding tasks for program', programId, {
-      totalTasks: allTasks.length,
-      taskProgramIds: allTasks.map(t => t.programId),
-      matchingTasks: allTasks.filter(task => task.programId === programId).length
+      totalTasksInSystem: allTasks.length,
+      tasksForThisProgram: matchingTasks.length,
+      taskIds: matchingTasks.map(t => t.id),
+      scenarioTaskIndices: matchingTasks.map(t => t.scenarioTaskIndex)
     });
     
     return allTasks.filter(task => task.programId === programId)
