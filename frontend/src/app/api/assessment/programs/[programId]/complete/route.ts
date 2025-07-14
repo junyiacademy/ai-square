@@ -75,7 +75,7 @@ export async function POST(
       console.log('Program already completed with evaluation:', program.metadata.evaluationId);
       
       // Return existing evaluation instead of creating a new one
-      const existingEvaluation = await evaluationRepo.findById(program.metadata.evaluationId);
+      const existingEvaluation = await evaluationRepo.findById(program.metadata.evaluationId as string);
       if (existingEvaluation) {
         return NextResponse.json({ 
           success: true,
@@ -154,32 +154,32 @@ export async function POST(
     console.log('Collecting answers and questions from', validTasks.length, 'tasks');
     
     for (const task of validTasks) {
-      const taskAnswers = task.interactions.filter(i => i.type === 'assessment_answer');
-      const taskQuestions = task.content?.context?.questions || task.content?.questions || [];
+      const taskAnswers = task.interactions.filter(i => i.type === 'system_event' && (i.content as any)?.eventType === 'assessment_answer');
+      const taskQuestions = (task.content?.context as any)?.questions || [];
       
       console.log(`Task ${task.title}:`, {
         taskId: task.id,
         answersCount: taskAnswers.length,
         questionsCount: taskQuestions.length,
-        questionsKSA: taskQuestions.map((q) => ({
+        questionsKSA: taskQuestions.map((q: any) => ({
           id: q.id,
           domain: q.domain,
           ksa: q.ksa_mapping
         }))
       });
       
-      allAnswers = [...allAnswers, ...taskAnswers];
+      allAnswers = [...allAnswers, ...taskAnswers as any];
       allQuestions = [...allQuestions, ...taskQuestions];
     }
     
     console.log('Total collected:', {
       allAnswersCount: allAnswers.length,
       allQuestionsCount: allQuestions.length,
-      allKSAMappings: allQuestions.map((q) => q.ksa_mapping).filter(Boolean)
+      allKSAMappings: allQuestions.map((q: any) => q.ksa_mapping).filter(Boolean)
     });
     
     const totalQuestions = allQuestions.length;
-    const correctAnswers = allAnswers.filter(a => a.content.isCorrect === true).length;
+    const correctAnswers = allAnswers.filter(a => (a.content as any).isCorrect === true).length;
     const overallScore = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
     
     // Calculate domain scores based on actual questions and answers
@@ -204,14 +204,15 @@ export async function POST(
     
     // Process each answer to calculate domain scores and collect KSA mappings
     allAnswers.forEach((answer: any) => {
-      const questionId = answer.content.questionId;
+      const answerContent = answer.content as any;
+      const questionId = answerContent.questionId;
       const question = allQuestions.find((q: any) => q.id === questionId);
       
       if (question && question.domain) {
         const domainScore = domainScores.get(question.domain);
         if (domainScore) {
           domainScore.totalQuestions++;
-          if (answer.content.isCorrect) {
+          if (answerContent.isCorrect) {
             domainScore.correctAnswers++;
           }
           
@@ -267,19 +268,20 @@ export async function POST(
     console.log('Analyzing KSA performance for', allAnswers.length, 'answers');
     
     allAnswers.forEach((answer, index) => {
-      const questionId = answer.content.questionId;
-      const question = allQuestions.find((q) => q.id === questionId);
+      const answerContent = (answer as any).content;
+      const questionId = answerContent.questionId;
+      const question = allQuestions.find((q: any) => q.id === questionId);
       
       console.log(`Answer ${index + 1}:`, {
         questionId,
-        isCorrect: answer.content.isCorrect,
+        isCorrect: answerContent.isCorrect,
         hasQuestion: !!question,
         hasKSAMapping: !!(question?.ksa_mapping),
         ksa: question?.ksa_mapping
       });
       
       if (question && question.ksa_mapping) {
-        const targetKSA = answer.content.isCorrect ? correctKSA : incorrectKSA;
+        const targetKSA = answerContent.isCorrect ? correctKSA : incorrectKSA;
         
         if (question.ksa_mapping.knowledge) {
           question.ksa_mapping.knowledge.forEach((k: string) => targetKSA.knowledge.add(k));

@@ -77,6 +77,7 @@ export default defineConfig({
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 60000,
+    port: 3002, // Use port 3002 if 3000 is in use
     stdout: 'pipe',
     stderr: 'pipe',
   },

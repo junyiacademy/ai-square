@@ -51,7 +51,7 @@ export async function POST(
     }
     
     // Get questions from task to check correct answers
-    const questions = task.content?.context?.questions || task.content?.questions || [];
+    const questions = (task.content?.context as any)?.questions || [];
     
     // Prepare all interactions
     const interactions = answers.map((answer: any) => {
@@ -63,8 +63,9 @@ export async function POST(
       
       return {
         timestamp: new Date().toISOString(),
-        type: 'assessment_answer' as const,
+        type: 'system_event' as const,
         content: {
+          eventType: 'assessment_answer',
           questionId: answer.questionId,
           selectedAnswer: answer.answer,
           isCorrect,

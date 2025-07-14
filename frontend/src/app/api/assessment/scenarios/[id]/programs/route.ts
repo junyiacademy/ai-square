@@ -258,8 +258,8 @@ export async function POST(
                   domainId: taskData.id
                 }
               },
-              status: i === 0 ? 'pending' : 'not_started',
-              startedAt: i === 0 ? new Date().toISOString() : undefined,
+              status: 'pending',
+              startedAt: '',
               interactions: []
             });
             
@@ -309,7 +309,7 @@ export async function POST(
     return NextResponse.json({ 
       program,
       tasks,
-      questionsCount: tasks.reduce((sum, t) => sum + (t.content.context?.questions?.length || 0), 0)
+      questionsCount: tasks.reduce((sum, t) => sum + ((t.content.context as any)?.questions?.length || 0), 0)
     });
   } catch (error) {
     console.error('Error creating program:', error);

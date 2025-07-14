@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTaskRepository } from '@/lib/implementations/gcs-v2';
 import { getAuthFromRequest } from '@/lib/auth/auth-utils';
+import { hasQuestions, AssessmentQuestion, AssessmentAnswerContent } from '@/types/task-content';
 
 export async function POST(
   request: NextRequest,
@@ -37,28 +38,39 @@ export async function POST(
     }
     
     // Get questions from task to check correct answer
-    const questions = task.content?.context?.questions || task.content?.questions || [];
-    const question = questions.find((q: any) => q.id === questionId);
+    const questions: AssessmentQuestion[] = hasQuestions(task.content?.context) 
+      ? task.content.context.questions as AssessmentQuestion[]
+      : [];
+    const question = questions.find((q) => q.id === questionId);
     const isCorrect = question && question.correct_answer !== undefined
       ? String(answer) === String(question.correct_answer)
       : false;
     
     // Add interaction
+    const answerContent: AssessmentAnswerContent = {
+      eventType: 'assessment_answer',
+      questionId,
+      questionIndex,
+      selectedAnswer: answer,
+      isCorrect,
+      timeSpent,
+      ksa_mapping: question?.ksa_mapping
+    };
+    
     await taskRepo.addInteraction(taskId, {
       timestamp: new Date().toISOString(),
-      type: 'assessment_answer',
-      content: {
-        questionId,
-        questionIndex,
-        selectedAnswer: answer,
-        isCorrect,
-        timeSpent,
-        ksa_mapping: question?.ksa_mapping || undefined
-      }
+      type: 'system_event',
+      content: answerContent
     });
     
     // Update task status if first answer
-    const answers = task.interactions.filter(i => i.type === 'assessment_answer');
+    const answers = task.interactions.filter(i => 
+      i.type === 'system_event' && 
+      i.content && 
+      typeof i.content === 'object' && 
+      'eventType' in i.content && 
+      (i.content as Record<string, unknown>).eventType === 'assessment_answer'
+    );
     if (answers.length === 0) {
       await taskRepo.updateStatus(taskId, 'active');
     }

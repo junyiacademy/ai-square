@@ -72,7 +72,7 @@ export async function GET(
         title: t.title,
         status: t.status,
         hasContent: !!t.content,
-        hasQuestions: !!(t.content?.context?.questions?.length || t.content?.questions?.length)
+        hasQuestions: !!((t.content?.context as any)?.questions?.length)
       })) || []
     });
     
@@ -111,7 +111,7 @@ export async function GET(
           id: t.id,
           title: t.title,
           status: t.status,
-          questionsCount: t.content?.context?.questions?.length || t.content?.questions?.length || 0
+          questionsCount: (t.content?.context as any)?.questions?.length || 0
         })),
         totalTasks: tasks.length
       });
@@ -126,7 +126,7 @@ export async function GET(
         id: t.id,
         title: t.title,
         status: t.status,
-        questionsCount: t.content?.context?.questions?.length || t.content?.questions?.length || 0
+        questionsCount: (t.content?.context as any)?.questions?.length || 0
       })),
       totalTasks: tasks.length
     });

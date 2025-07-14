@@ -11,6 +11,7 @@ import type {
   QualitativeFeedback,
   LocalizedFeedback
 } from '@/types/pbl-completion';
+import { normalizeLanguageCode } from '@/lib/utils/language';
 
 export default function ProgramCompletePage() {
   const params = useParams();
@@ -50,12 +51,25 @@ export default function ProgramCompletePage() {
     if (!completionData || generatingFeedback || feedbackGeneratingRef.current) return;
     
     // Check if feedback exists for current language
-    const currentLang = i18n.language.split('-')[0] || 'en';
-    const hasFeedbackForLang = completionData.qualitativeFeedback && 
-      (typeof completionData.qualitativeFeedback === 'object' &&
-       ((completionData.qualitativeFeedback as LocalizedFeedback)[currentLang] || 
-        ('overallAssessment' in completionData.qualitativeFeedback && 
-         completionData.feedbackLanguage === currentLang)));
+    const currentLang = normalizeLanguageCode(i18n.language);
+    let hasFeedbackForLang = false;
+    
+    if (completionData.qualitativeFeedback && typeof completionData.qualitativeFeedback === 'object') {
+      // Check if it's multi-language format (has language keys but no direct overallAssessment)
+      const feedbackObj = completionData.qualitativeFeedback as any;
+      const hasLanguageKeys = Object.keys(feedbackObj).some(key => 
+        ['en', 'zhTW', 'ja', 'ko', 'es', 'fr', 'de', 'ru', 'it'].includes(key)
+      );
+      
+      if (hasLanguageKeys) {
+        // Multi-language format
+        const langFeedback = feedbackObj[currentLang];
+        hasFeedbackForLang = langFeedback?.content?.overallAssessment || langFeedback?.overallAssessment;
+      } else if (feedbackObj.overallAssessment) {
+        // Old single-language format
+        hasFeedbackForLang = completionData.feedbackLanguage === currentLang;
+      }
+    }
     
     // Generate feedback for new language if not exists
     if (!hasFeedbackForLang) {
@@ -112,7 +126,7 @@ export default function ProgramCompletePage() {
           setCompletionData(data.data);
           
           // Check if qualitative feedback exists for current language
-          const currentLang = i18n.language.split('-')[0] || 'en';
+          const currentLang = normalizeLanguageCode(i18n.language);
           const hasFeedbackForLang = data.data.qualitativeFeedback && 
             (typeof data.data.qualitativeFeedback === 'object' &&
              (data.data.qualitativeFeedback[currentLang] || 
@@ -139,6 +153,7 @@ export default function ProgramCompletePage() {
     try {
       setGeneratingFeedback(true);
       
+      const currentLang = normalizeLanguageCode(i18n.language);
       const response = await fetch('/api/pbl/generate-feedback', {
         method: 'POST',
         headers: {
@@ -149,6 +164,7 @@ export default function ProgramCompletePage() {
           programId,
           scenarioId,
           forceRegenerate,
+          language: currentLang,
         }),
       });
       
@@ -156,7 +172,7 @@ export default function ProgramCompletePage() {
       
       if (result.success && result.feedback) {
         // Update completion data with the new feedback
-        const currentLang = i18n.language.split('-')[0] || 'en';
+        const currentLang = normalizeLanguageCode(i18n.language);
         setCompletionData((prev) => {
           if (!prev) return null;
           
@@ -278,16 +294,27 @@ export default function ProgramCompletePage() {
         {/* Qualitative Feedback Section */}
         {(() => {
           // Get feedback for current language
-          const currentLang = i18n.language.split('-')[0] || 'en';
+          const currentLang = normalizeLanguageCode(i18n.language);
           let feedback: QualitativeFeedback | undefined;
           
-          if (completionData?.qualitativeFeedback) {
-            if ('overallAssessment' in completionData.qualitativeFeedback) {
+          if (completionData?.qualitativeFeedback && typeof completionData.qualitativeFeedback === 'object') {
+            const feedbackObj = completionData.qualitativeFeedback as any;
+            
+            // Check if it's multi-language format (has language keys)
+            const hasLanguageKeys = Object.keys(feedbackObj).some(key => 
+              ['en', 'zhTW', 'ja', 'ko', 'es', 'fr', 'de', 'ru', 'it'].includes(key)
+            );
+            
+            if (hasLanguageKeys) {
+              // Multi-language format - get feedback for current language
+              const langFeedback = feedbackObj[currentLang];
+              if (langFeedback) {
+                // Check if it's wrapped in content property or direct
+                feedback = langFeedback.content || langFeedback;
+              }
+            } else if (feedbackObj.overallAssessment) {
               // Old format - single language feedback
-              feedback = completionData.qualitativeFeedback as QualitativeFeedback;
-            } else {
-              // New format - multi-language feedback
-              feedback = (completionData.qualitativeFeedback as LocalizedFeedback)[currentLang];
+              feedback = feedbackObj;
             }
           }
           
@@ -565,20 +592,14 @@ export default function ProgramCompletePage() {
           
           <div className="space-y-6">
             {completionData.tasks?.map((task, index) => {
-              const matchedTask = scenarioData?.tasks?.find((t) => t.id === task.taskId);
-              const taskTitle = matchedTask?.title || task.taskId;
-              const taskTitleLocalized = matchedTask ? (
-                i18n.language === 'zhTW' 
-                  ? (matchedTask.title_zhTW || taskTitle)
-                  : taskTitle
-              ) : taskTitle;
+              const taskTitle = task.taskTitle || task.taskId;
               
               return (
                 <div key={task.taskId} className="border-l-4 border-purple-600 pl-6">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                        {index + 1}. {taskTitleLocalized}
+                        {index + 1}. {taskTitle}
                       </h3>
                       
                       {/* Task Metadata */}

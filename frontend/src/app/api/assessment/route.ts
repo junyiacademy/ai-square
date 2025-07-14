@@ -95,7 +95,7 @@ export async function GET(request: NextRequest) {
     const processedDomains: any = {};
     
     // If old format with domains and questions at root
-    if ('domains' in assessmentData && 'questions' in assessmentData) {
+    if ('domains' in assessmentData && 'questions' in assessmentData && assessmentData.domains) {
       Object.entries(assessmentData.domains).forEach(([key, domain]) => {
         processedDomains[key] = {
           ...domain,
@@ -104,7 +104,7 @@ export async function GET(request: NextRequest) {
         };
       });
       
-      assessmentData.questions.forEach(q => {
+      assessmentData.questions?.forEach(q => {
         allQuestions.push({
           ...q,
           question: getTranslatedField(q as unknown as Record<string, unknown>, 'question', lang),

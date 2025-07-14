@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
+import { getLanguageFromHeader } from '@/lib/utils/language';
 
 interface ScenarioData {
   id: string;
@@ -55,7 +56,7 @@ export async function POST(request: NextRequest) {
     const folders = await fs.readdir(scenariosDir);
     
     // Get language from request headers or default to 'en'
-    const lang = request.headers.get('Accept-Language')?.split(',')[0]?.split('-')[0] || 'en';
+    const lang = getLanguageFromHeader(request.headers.get('Accept-Language'));
 
     const scenarios: ScenarioData[] = [];
     for (const folder of folders) {

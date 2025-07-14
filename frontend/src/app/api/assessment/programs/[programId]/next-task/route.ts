@@ -65,15 +65,18 @@ export async function POST(
       currentTaskIndex: nextIndex
     });
     
-    // Start the next task
+    // Start the next task if it's still pending
     let nextTask = tasks[nextIndex];
-    if (nextTask && nextTask.status === 'not_started') {
+    if (nextTask && nextTask.status === 'pending' && !nextTask.startedAt) {
       await taskRepo.update(nextTask.id, {
-        status: 'pending',
+        status: 'active',
         startedAt: new Date().toISOString()
       });
       // Re-fetch to get updated task
-      nextTask = await taskRepo.findById(nextTask.id);
+      const updatedTask = await taskRepo.findById(nextTask.id);
+      if (updatedTask) {
+        nextTask = updatedTask;
+      }
     }
     
     console.log('Next task details:', {
@@ -81,8 +84,8 @@ export async function POST(
       title: nextTask?.title,
       hasContent: !!nextTask?.content,
       hasContext: !!nextTask?.content?.context,
-      questionsInContext: nextTask?.content?.context?.questions?.length || 0,
-      questionsDirect: nextTask?.content?.questions?.length || 0,
+      questionsInContext: (nextTask?.content?.context as any)?.questions?.length || 0,
+      questionsDirect: 0,
       contentKeys: nextTask?.content ? Object.keys(nextTask.content) : [],
       contextKeys: nextTask?.content?.context ? Object.keys(nextTask.content.context) : []
     });

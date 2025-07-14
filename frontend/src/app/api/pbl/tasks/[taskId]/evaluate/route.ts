@@ -108,6 +108,29 @@ export async function POST(
         completedAt: task?.completedAt || new Date().toISOString()
       });
     }
+    
+    // Mark program evaluation as outdated (async)
+    setImmediate(async () => {
+      try {
+        const { getProgramRepository } = await import('@/lib/implementations/gcs-v2');
+        const programRepo = getProgramRepository();
+        const program = await programRepo.findById(programId);
+        
+        if (program?.evaluationId) {
+          const { getEvaluationRepository } = await import('@/lib/implementations/gcs-v2');
+          const evalRepo = getEvaluationRepository();
+          
+          await evalRepo.update(program.evaluationId, {
+            metadata: {
+              isLatest: false,
+              lastTaskEvaluationAt: new Date().toISOString()
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Failed to mark program evaluation as outdated:', error);
+      }
+    });
 
     // Transform evaluation to match frontend expectations
     const transformedEvaluation = {

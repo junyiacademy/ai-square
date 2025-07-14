@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pblProgramService } from '@/lib/storage/pbl-program-service';
 import { VertexAI, SchemaType } from '@google-cloud/vertexai';
 import type { LocalizedFeedback } from '@/types/pbl-completion';
+import { getServerSession } from '@/lib/auth/session';
+import { getLanguageFromHeader, LANGUAGE_NAMES, normalizeLanguageCode } from '@/lib/utils/language';
 
 // Types for feedback structure
 interface FeedbackStrength {
@@ -62,6 +63,7 @@ interface GenerateFeedbackBody {
   programId: string;
   scenarioId: string;
   forceRegenerate?: boolean;
+  language?: string;
 }
 
 interface ScenarioYAML {
@@ -73,18 +75,7 @@ interface ScenarioYAML {
   };
 }
 
-// Language mapping
-const languageMap: Record<string, string> = {
-  'zhTW': 'Traditional Chinese (繁體中文)',
-  'ja': 'Japanese (日本語)',
-  'ko': 'Korean (한국어)',
-  'es': 'Spanish (Español)',
-  'fr': 'French (Français)',
-  'de': 'German (Deutsch)',
-  'ru': 'Russian (Русский)',
-  'it': 'Italian (Italiano)',
-  'en': 'English'
-};
+// Use language names from the unified utility
 
 // Define the feedback JSON schema
 const feedbackSchema = {
@@ -177,7 +168,7 @@ You must always respond with a valid JSON object following the exact schema prov
 
 export async function POST(request: NextRequest) {
   try {
-    const { programId, scenarioId, forceRegenerate = false }: GenerateFeedbackBody = await request.json();
+    const { programId, scenarioId, forceRegenerate = false, language }: GenerateFeedbackBody = await request.json();
     
     if (!programId || !scenarioId) {
       return NextResponse.json(
@@ -186,109 +177,164 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // Get user info from cookie
-    let userEmail: string | undefined;
-    try {
-      const userCookie = request.cookies.get('user')?.value;
-      if (userCookie) {
-        const user = JSON.parse(userCookie);
-        userEmail = user.email;
-      }
-    } catch {
-      console.log('No user cookie found');
-    }
-    
-    if (!userEmail) {
+    // Get user session
+    const session = await getServerSession();
+    if (!session?.user?.email) {
       return NextResponse.json(
-        { success: false, error: 'User authentication required' },
+        { success: false, error: 'Authentication required' },
         { status: 401 }
       );
     }
+    const userEmail = session.user.email;
     
-    // Get completion data
-    const completionData = await pblProgramService.getProgramCompletion(
-      userEmail,
-      scenarioId,
-      programId
-    ) as CompletionData | null;
+    // Get repositories
+    const { getProgramRepository, getEvaluationRepository, getTaskRepository } = await import('@/lib/implementations/gcs-v2');
+    const programRepo = getProgramRepository();
+    const evalRepo = getEvaluationRepository();
+    const taskRepo = getTaskRepository();
     
-    if (!completionData) {
+    // Get program and verify ownership
+    const program = await programRepo.findById(programId);
+    if (!program) {
       return NextResponse.json(
-        { success: false, error: 'Completion data not found' },
+        { success: false, error: 'Program not found' },
         { status: 404 }
       );
     }
     
-    // Get current language
-    const currentLang = request.headers.get('accept-language')?.split(',')[0]?.split('-')[0] || 'en';
+    if (program.userId !== userEmail) {
+      return NextResponse.json(
+        { success: false, error: 'Access denied' },
+        { status: 403 }
+      );
+    }
     
-    // If forceRegenerate, delete existing feedback for current language
-    if (forceRegenerate && completionData.qualitativeFeedback) {
-      // Remove the current language feedback
-      if (typeof completionData.qualitativeFeedback === 'object' && 
-          !('overallAssessment' in completionData.qualitativeFeedback)) {
-        // Multi-language format - cast to LocalizedFeedback
-        const localizedFeedback = completionData.qualitativeFeedback as LocalizedFeedback;
-        delete localizedFeedback[currentLang];
-        
-        // Update the completion data to remove this language's feedback
-        await pblProgramService.updateProgramCompletionFeedback(
-          userEmail,
-          scenarioId,
-          programId,
-          null, // Pass null to remove
-          currentLang
+    // Get or create program evaluation
+    let evaluation;
+    if (program.evaluationId) {
+      evaluation = await evalRepo.findById(program.evaluationId);
+    }
+    
+    if (!evaluation) {
+      // Trigger evaluation calculation if needed
+      const completeUrl = new URL(`/api/pbl/programs/${programId}/complete`, request.url);
+      const completeRes = await fetch(completeUrl.toString(), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          cookie: request.headers.get('cookie') || '',
+        },
+        body: JSON.stringify({})
+      });
+      
+      if (!completeRes.ok) {
+        return NextResponse.json(
+          { success: false, error: 'Failed to create program evaluation' },
+          { status: 500 }
         );
       }
+      
+      const completeData = await completeRes.json();
+      evaluation = completeData.evaluation;
     }
     
-    // Check if feedback already exists for current language (skip if forceRegenerate)
-    if (!forceRegenerate && completionData.qualitativeFeedback) {
-      // Check if it's single-language format (has overallAssessment property)
-      if ('overallAssessment' in completionData.qualitativeFeedback) {
-        // This is old format, check if it matches current language
-        const feedbackLang = completionData.feedbackLanguage || 'en';
-        if (feedbackLang === currentLang) {
-          return NextResponse.json({
-            success: true,
-            feedback: completionData.qualitativeFeedback,
-            cached: true
-          });
+    if (!evaluation) {
+      return NextResponse.json(
+        { success: false, error: 'Evaluation not found' },
+        { status: 404 }
+      );
+    }
+    
+    // Build completion data from evaluation for backward compatibility
+    const tasks = await taskRepo.findByProgram(programId);
+    const taskEvaluations = await Promise.all(
+      tasks.map(async (task) => {
+        if (task.evaluationId) {
+          const taskEval = await evalRepo.findById(task.evaluationId);
+          return { task, evaluation: taskEval };
         }
-      } else {
-        // New multi-language format - cast to LocalizedFeedback
-        const localizedFeedback = completionData.qualitativeFeedback as LocalizedFeedback;
-        if (localizedFeedback[currentLang]) {
-          return NextResponse.json({
-            success: true,
-            feedback: localizedFeedback[currentLang],
-            cached: true
-          });
+        return { task, evaluation: null };
+      })
+    );
+    
+    const completionData: CompletionData = {
+      overallScore: evaluation.score || 0,
+      evaluatedTasks: evaluation.metadata?.evaluatedTasks || 0,
+      totalTasks: evaluation.metadata?.totalTasks || tasks.length,
+      totalTimeSeconds: evaluation.metadata?.totalTimeSeconds || 0,
+      domainScores: evaluation.metadata?.domainScores || {},
+      tasks: taskEvaluations.map(({ task, evaluation: taskEval }) => ({
+        taskId: task.id,
+        evaluation: taskEval ? {
+          score: taskEval.score || 0,
+          feedback: taskEval.metadata?.feedback || '',
+          strengths: taskEval.metadata?.strengths || [],
+          improvements: taskEval.metadata?.improvements || []
+        } : undefined,
+        log: {
+          interactions: task.interactions?.map(i => ({
+            role: i.type === 'user_input' ? 'user' : 'assistant',
+            content: i.content.message || i.content
+          })) || []
         }
-      }
+      })),
+      qualitativeFeedback: evaluation.metadata?.qualitativeFeedback,
+      feedbackLanguage: evaluation.metadata?.feedbackLanguage
+    };
+    
+    // Get current language - prioritize explicit language parameter
+    const currentLang = language || getLanguageFromHeader(request.headers.get('accept-language'));
+    
+    // If forceRegenerate, mark existing feedback for current language as invalid
+    if (forceRegenerate && evaluation.metadata?.qualitativeFeedback?.[currentLang]) {
+      // Mark the feedback as invalid to trigger regeneration
+      const updatedMetadata = {
+        ...evaluation.metadata,
+        qualitativeFeedback: {
+          ...evaluation.metadata.qualitativeFeedback,
+          [currentLang]: {
+            ...evaluation.metadata.qualitativeFeedback[currentLang],
+            isValid: false
+          }
+        }
+      };
+      
+      await evalRepo.update(evaluation.id, {
+        metadata: updatedMetadata
+      });
+      
+      // Update local evaluation object
+      evaluation.metadata = updatedMetadata;
     }
     
-    // Get scenario data - read directly from file system instead of API call
-    const fs = await import('fs/promises');
-    const path = await import('path');
-    // Convert scenario ID from kebab-case to snake_case for filename
-    const scenarioFolder = scenarioId.replace(/-/g, '_');
-    const fileName = `${scenarioFolder}_${currentLang}.yaml`;
-    let scenarioPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', scenarioFolder, fileName);
-    
-    // Check if language-specific file exists, fallback to English
-    try {
-      await fs.access(scenarioPath);
-    } catch {
-      // Fallback to English if language-specific file doesn't exist
-      scenarioPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', scenarioFolder, `${scenarioFolder}_en.yaml`);
+    // Check if valid feedback already exists for current language
+    const existingFeedback = evaluation.metadata?.qualitativeFeedback?.[currentLang];
+    if (!forceRegenerate && existingFeedback?.isValid && existingFeedback?.content) {
+      return NextResponse.json({
+        success: true,
+        feedback: existingFeedback.content,
+        cached: true,
+        language: currentLang
+      });
     }
+    
+    // Get scenario data from unified architecture
+    const { getScenarioRepository } = await import('@/lib/implementations/gcs-v2');
+    const scenarioRepo = getScenarioRepository();
     
     let scenarioData: ScenarioYAML = {};
     try {
-      const yaml = await import('yaml');
-      const fileContent = await fs.readFile(scenarioPath, 'utf-8');
-      scenarioData = yaml.parse(fileContent) as ScenarioYAML;
+      const scenario = await scenarioRepo.findById(scenarioId);
+      if (scenario) {
+        scenarioData = {
+          title: scenario.title,
+          learning_objectives: scenario.metadata?.learningObjectives as string[] || [],
+          scenario_info: {
+            title: scenario.title,
+            learning_objectives: scenario.metadata?.learningObjectives as string[] || []
+          }
+        };
+      }
     } catch (error) {
       console.error('Error reading scenario data:', error);
     }
@@ -337,8 +383,8 @@ The feedback should:
 - Suggest 2-3 specific next steps for continued learning
 - End with a personalized encouraging message
 
-IMPORTANT: You MUST provide ALL feedback in ${languageMap[currentLang] || languageMap['en']} language. 
-Do not mix languages. The entire response must be in ${languageMap[currentLang] || languageMap['en']}.
+IMPORTANT: You MUST provide ALL feedback in ${LANGUAGE_NAMES[currentLang as keyof typeof LANGUAGE_NAMES] || LANGUAGE_NAMES['en']} language. 
+Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLang as keyof typeof LANGUAGE_NAMES] || LANGUAGE_NAMES['en']}.
 `;
     
     // Generate feedback with JSON schema
@@ -438,19 +484,33 @@ Do not mix languages. The entire response must be in ${languageMap[currentLang] 
       };
     }
     
-    // Save feedback to completion data with language info
-    await pblProgramService.updateProgramCompletionFeedback(
-      userEmail,
-      scenarioId,
-      programId,
-      feedback,
-      currentLang
-    );
+    // Save feedback to evaluation with language info
+    const updatedQualitativeFeedback = {
+      ...evaluation.metadata?.qualitativeFeedback,
+      [currentLang]: {
+        content: feedback,
+        generatedAt: new Date().toISOString(),
+        isValid: true
+      }
+    };
+    
+    await evalRepo.update(evaluation.id, {
+      metadata: {
+        ...evaluation.metadata,
+        qualitativeFeedback: updatedQualitativeFeedback,
+        generatedLanguages: [
+          ...(evaluation.metadata?.generatedLanguages || []).filter(l => l !== currentLang),
+          currentLang
+        ]
+      }
+    });
     
     return NextResponse.json({
       success: true,
       feedback,
-      cached: false
+      cached: false,
+      language: currentLang,
+      evaluationId: evaluation.id
     });
     
   } catch (error) {

@@ -1,33 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getProgramRepository, getEvaluationRepository, getTaskRepository } from '@/lib/implementations/gcs-v2';
-import { IEvaluation } from '@/types/unified-learning';
+import { getServerSession } from '@/lib/auth/session';
+import { getLanguageFromHeader } from '@/lib/utils/language';
 
 export async function GET(request: NextRequest) {
   try {
-    // Get user info from cookie
-    let userEmail: string | undefined;
-    try {
-      const userCookie = request.cookies.get('user')?.value;
-      if (userCookie) {
-        const user = JSON.parse(userCookie);
-        userEmail = user.email;
-      }
-    } catch {
-      console.log('No user cookie found');
-    }
-    
-    if (!userEmail) {
+    // Get user session
+    const session = await getServerSession();
+    if (!session?.user?.email) {
       return NextResponse.json(
-        { success: false, error: 'User authentication required' },
+        { success: false, error: 'Authentication required' },
         { status: 401 }
       );
     }
+    const userEmail = session.user.email;
 
     // Get query parameters
     const searchParams = request.nextUrl.searchParams;
     const programId = searchParams.get('programId');
     const scenarioId = searchParams.get('scenarioId');
-    const taskId = searchParams.get('taskId');
+    const language = getLanguageFromHeader(request.headers.get('Accept-Language'));
 
     if (!programId || !scenarioId) {
       return NextResponse.json(
@@ -37,11 +28,12 @@ export async function GET(request: NextRequest) {
     }
 
     // Get repositories
+    const { getProgramRepository, getEvaluationRepository, getTaskRepository } = await import('@/lib/implementations/gcs-v2');
     const programRepo = getProgramRepository();
-    const evaluationRepo = getEvaluationRepository();
+    const evalRepo = getEvaluationRepository();
     const taskRepo = getTaskRepository();
     
-    // Get program to check if it exists
+    // Get program
     const program = await programRepo.findById(programId);
     if (!program) {
       return NextResponse.json(
@@ -49,145 +41,103 @@ export async function GET(request: NextRequest) {
         { status: 404 }
       );
     }
+
+    // Use the new complete API to ensure evaluation is calculated
+    const completeUrl = new URL(`/api/pbl/programs/${programId}/complete`, request.url);
+    completeUrl.searchParams.set('language', language);
     
-    // Check if we already have a program-level evaluation
-    const programEvaluations = await evaluationRepo.findByTarget('program', programId);
-    let programEvaluation = programEvaluations.find(e => e.evaluationType === 'pbl_completion');
+    const completeRes = await fetch(completeUrl.toString(), {
+      headers: {
+        cookie: request.headers.get('cookie') || '',
+      },
+    });
     
-    // If no program evaluation exists, or if we need to update it
-    if (!programEvaluation || !program.completedAt) {
-      // Get all task evaluations
-      const taskEvaluations = await evaluationRepo.findByProgram(programId);
-      const taskEvaluationsFiltered = taskEvaluations.filter(e => e.targetType === 'task');
-      
-      // Get task details
-      const taskDetails = await Promise.all(
-        (program.taskIds || []).map(async (taskId) => {
-          const task = await taskRepo.findById(taskId);
-          const evaluation = taskEvaluationsFiltered.find(e => e.targetId === taskId);
-          return {
-            taskId,
-            task,
-            evaluation,
-            completed: task?.status === 'completed'
-          };
-        })
+    if (!completeRes.ok) {
+      console.error('Failed to get program evaluation');
+      return NextResponse.json(
+        { success: false, error: 'Failed to get program evaluation' },
+        { status: 500 }
       );
-      
-      // Calculate aggregated scores
-      const evaluatedTasks = taskDetails.filter(t => t.evaluation).length;
-      const completedTasks = taskDetails.filter(t => t.completed).length;
-      const totalTasks = program.taskIds?.length || 0;
-      
-      if (evaluatedTasks > 0) {
-        // Calculate averages from task evaluations
-        let totalScore = 0;
-        const domainScores: Record<string, number[]> = {};
-        const ksaScores = { knowledge: [] as number[], skills: [] as number[], attitudes: [] as number[] };
-        
-        taskEvaluationsFiltered.forEach(evaluation => {
-          if (evaluation.score !== undefined) {
-            totalScore += evaluation.score;
-          }
-          
-          // Collect domain scores
-          if (evaluation.metadata?.domainScores) {
-            Object.entries(evaluation.metadata.domainScores).forEach(([domain, score]) => {
-              if (!domainScores[domain]) domainScores[domain] = [];
-              domainScores[domain].push(score as number);
-            });
-          }
-          
-          // Collect KSA scores
-          if (evaluation.metadata?.ksaScores) {
-            const ksa = evaluation.metadata.ksaScores as any;
-            if (ksa.knowledge !== undefined) ksaScores.knowledge.push(ksa.knowledge);
-            if (ksa.skills !== undefined) ksaScores.skills.push(ksa.skills);
-            if (ksa.attitudes !== undefined) ksaScores.attitudes.push(ksa.attitudes);
-          }
-        });
-        
-        // Calculate averages
-        const avgScore = Math.round(totalScore / evaluatedTasks);
-        const avgDomainScores: Record<string, number> = {};
-        Object.entries(domainScores).forEach(([domain, scores]) => {
-          avgDomainScores[domain] = scores.length > 0 
-            ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
-            : 0;
-        });
-        
-        const avgKsaScores = {
-          knowledge: ksaScores.knowledge.length > 0 
-            ? Math.round(ksaScores.knowledge.reduce((a, b) => a + b, 0) / ksaScores.knowledge.length)
-            : 0,
-          skills: ksaScores.skills.length > 0
-            ? Math.round(ksaScores.skills.reduce((a, b) => a + b, 0) / ksaScores.skills.length)
-            : 0,
-          attitudes: ksaScores.attitudes.length > 0
-            ? Math.round(ksaScores.attitudes.reduce((a, b) => a + b, 0) / ksaScores.attitudes.length)
-            : 0
-        };
-        
-        // Create or update program evaluation
-        const newProgramEvaluation: Omit<IEvaluation, 'id'> = {
-          targetType: 'program',
-          targetId: programId,
-          evaluationType: 'pbl_completion',
-          score: avgScore,
-          createdAt: new Date().toISOString(),
-          metadata: {
-            scenarioId,
-            userId: userEmail,
-            totalTasks,
-            completedTasks,
-            evaluatedTasks,
-            domainScores: avgDomainScores,
-            ksaScores: avgKsaScores,
-            taskEvaluations: taskEvaluationsFiltered.map(e => e.id)
-          }
-        };
-        
-        // Save the program evaluation
-        programEvaluation = await evaluationRepo.create(newProgramEvaluation);
-      }
     }
     
-    // Build response data
+    const completeData = await completeRes.json();
+    const evaluation = completeData.evaluation;
+    
+    // Get all tasks for detailed information
+    const tasks = await taskRepo.findByProgram(programId);
+    
+    // Build tasks array with evaluations and progress
+    const tasksWithDetails = await Promise.all(
+      tasks.map(async (task) => {
+        const taskEvaluation = task.evaluationId 
+          ? await evalRepo.findById(task.evaluationId)
+          : null;
+        
+        // Calculate time spent
+        let timeSpentSeconds = 0;
+        if (task.interactions && task.interactions.length > 0) {
+          const firstInteraction = task.interactions[0];
+          const lastInteraction = task.interactions[task.interactions.length - 1];
+          timeSpentSeconds = Math.floor(
+            (new Date(lastInteraction.timestamp).getTime() - new Date(firstInteraction.timestamp).getTime()) / 1000
+          );
+        }
+        
+        return {
+          taskId: task.id,
+          taskTitle: task.title,
+          evaluation: taskEvaluation ? {
+            score: taskEvaluation.score || 0,
+            domainScores: taskEvaluation.metadata?.domainScores,
+            ksaScores: taskEvaluation.metadata?.ksaScores,
+            conversationInsights: taskEvaluation.metadata?.conversationInsights,
+            strengths: taskEvaluation.metadata?.strengths,
+            improvements: taskEvaluation.metadata?.improvements,
+            evaluatedAt: taskEvaluation.createdAt
+          } : undefined,
+          log: {
+            interactions: task.interactions.map(i => ({
+              type: i.type === 'user_input' ? 'user' : 'assistant',
+              message: i.content.message || i.content,
+              timestamp: i.timestamp
+            })),
+            startedAt: task.startedAt,
+            completedAt: task.completedAt
+          },
+          progress: {
+            timeSpentSeconds,
+            status: task.status
+          }
+        };
+      })
+    );
+    
+    // Build completion data in old format
     const completionData = {
       programId,
       scenarioId,
       userEmail,
-      status: program.completedAt ? 'completed' : 'in_progress',
+      status: program.status === 'completed' ? 'completed' : 'in_progress',
       startedAt: program.startedAt,
-      updatedAt: program.updatedAt || program.startedAt,
+      updatedAt: evaluation?.metadata?.lastUpdatedAt || program.startedAt,
       completedAt: program.completedAt,
-      totalTasks: program.taskIds?.length || 0,
-      completedTasks: programEvaluation?.metadata?.completedTasks || 0,
-      evaluatedTasks: programEvaluation?.metadata?.evaluatedTasks || 0,
-      overallScore: programEvaluation?.score || 0,
-      domainScores: programEvaluation?.metadata?.domainScores || {},
-      ksaScores: programEvaluation?.metadata?.ksaScores || {},
-      programEvaluationId: programEvaluation?.id
+      totalTasks: evaluation?.metadata?.totalTasks || tasks.length,
+      completedTasks: tasks.filter(t => t.status === 'completed').length,
+      evaluatedTasks: evaluation?.metadata?.evaluatedTasks || 0,
+      overallScore: evaluation?.score || 0,
+      domainScores: evaluation?.metadata?.domainScores || {},
+      ksaScores: evaluation?.metadata?.ksaScores || {},
+      totalTimeSeconds: evaluation?.metadata?.totalTimeSeconds || 0,
+      tasks: tasksWithDetails,
+      // Always return the full multi-language feedback structure
+      // This allows the UI to detect which languages have feedback
+      qualitativeFeedback: evaluation?.metadata?.qualitativeFeedback || null,
+      feedbackLanguage: language,
+      feedbackLanguages: evaluation?.metadata?.generatedLanguages || [],
+      feedbackGeneratedAt: evaluation?.metadata?.qualitativeFeedback?.[language]?.generatedAt,
+      programEvaluationId: evaluation?.id
     };
 
-    // If taskId is provided, add task-specific data
-    if (taskId) {
-      const taskEvaluations = await evaluationRepo.findByTarget('task', taskId);
-      const taskEvaluation = taskEvaluations[0];
-      
-      return NextResponse.json({
-        success: true,
-        data: {
-          task: {
-            taskId,
-            evaluation: taskEvaluation
-          },
-          program: completionData
-        }
-      });
-    }
-
-    // Return full completion data
     return NextResponse.json({
       success: true,
       data: completionData
@@ -202,145 +152,42 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// PUT - Trigger program completion evaluation
+// PUT - Trigger program completion evaluation (redirect to new API)
 export async function PUT(request: NextRequest) {
   try {
-    // Get user info from cookie
-    let userEmail: string | undefined;
-    try {
-      const userCookie = request.cookies.get('user')?.value;
-      if (userCookie) {
-        const user = JSON.parse(userCookie);
-        userEmail = user.email;
-      }
-    } catch {
-      console.log('No user cookie found');
-    }
-    
-    if (!userEmail) {
-      return NextResponse.json(
-        { success: false, error: 'User authentication required' },
-        { status: 401 }
-      );
-    }
-
     const body = await request.json();
-    const { programId, scenarioId } = body;
+    const { programId } = body;
 
-    if (!programId || !scenarioId) {
+    if (!programId) {
       return NextResponse.json(
-        { success: false, error: 'Missing required fields' },
+        { success: false, error: 'Missing programId' },
         { status: 400 }
       );
     }
 
-    // Get repositories
-    const programRepo = getProgramRepository();
-    const evaluationRepo = getEvaluationRepository();
+    // Redirect to new API
+    const completeUrl = new URL(`/api/pbl/programs/${programId}/complete`, request.url);
+    const completeRes = await fetch(completeUrl.toString(), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        cookie: request.headers.get('cookie') || '',
+      },
+      body: JSON.stringify({})
+    });
     
-    // Force recalculation of program evaluation
-    const program = await programRepo.findById(programId);
-    if (!program) {
+    if (!completeRes.ok) {
       return NextResponse.json(
-        { success: false, error: 'Program not found' },
-        { status: 404 }
+        { success: false, error: 'Failed to trigger program completion' },
+        { status: 500 }
       );
     }
     
-    // Get all task evaluations
-    const taskEvaluations = await evaluationRepo.findByProgram(programId);
-    const taskEvaluationsFiltered = taskEvaluations.filter(e => e.targetType === 'task');
-    
-    if (taskEvaluationsFiltered.length === 0) {
-      return NextResponse.json({
-        success: true,
-        message: 'No task evaluations to aggregate yet'
-      });
-    }
-    
-    // Calculate aggregated scores
-    let totalScore = 0;
-    const domainScores: Record<string, number[]> = {};
-    const ksaScores = { knowledge: [] as number[], skills: [] as number[], attitudes: [] as number[] };
-    
-    taskEvaluationsFiltered.forEach(evaluation => {
-      if (evaluation.score !== undefined) {
-        totalScore += evaluation.score;
-      }
-      
-      // Collect domain scores
-      if (evaluation.metadata?.domainScores) {
-        Object.entries(evaluation.metadata.domainScores).forEach(([domain, score]) => {
-          if (!domainScores[domain]) domainScores[domain] = [];
-          domainScores[domain].push(score as number);
-        });
-      }
-      
-      // Collect KSA scores
-      if (evaluation.metadata?.ksaScores) {
-        const ksa = evaluation.metadata.ksaScores as any;
-        if (ksa.knowledge !== undefined) ksaScores.knowledge.push(ksa.knowledge);
-        if (ksa.skills !== undefined) ksaScores.skills.push(ksa.skills);
-        if (ksa.attitudes !== undefined) ksaScores.attitudes.push(ksa.attitudes);
-      }
-    });
-    
-    // Calculate averages
-    const evaluatedTasks = taskEvaluationsFiltered.length;
-    const avgScore = Math.round(totalScore / evaluatedTasks);
-    const avgDomainScores: Record<string, number> = {};
-    Object.entries(domainScores).forEach(([domain, scores]) => {
-      avgDomainScores[domain] = scores.length > 0 
-        ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
-        : 0;
-    });
-    
-    const avgKsaScores = {
-      knowledge: ksaScores.knowledge.length > 0 
-        ? Math.round(ksaScores.knowledge.reduce((a, b) => a + b, 0) / ksaScores.knowledge.length)
-        : 0,
-      skills: ksaScores.skills.length > 0
-        ? Math.round(ksaScores.skills.reduce((a, b) => a + b, 0) / ksaScores.skills.length)
-        : 0,
-      attitudes: ksaScores.attitudes.length > 0
-        ? Math.round(ksaScores.attitudes.reduce((a, b) => a + b, 0) / ksaScores.attitudes.length)
-        : 0
-    };
-    
-    // Create program evaluation
-    const programEvaluation: Omit<IEvaluation, 'id'> = {
-      targetType: 'program',
-      targetId: programId,
-      evaluationType: 'pbl_completion',
-      score: avgScore,
-      createdAt: new Date().toISOString(),
-      metadata: {
-        scenarioId,
-        userId: userEmail,
-        totalTasks: program.taskIds?.length || 0,
-        completedTasks: program.taskIds?.length || 0,
-        evaluatedTasks,
-        domainScores: avgDomainScores,
-        ksaScores: avgKsaScores,
-        taskEvaluations: taskEvaluationsFiltered.map(e => e.id)
-      }
-    };
-    
-    // Save the program evaluation
-    const saved = await evaluationRepo.create(programEvaluation);
-    
-    // Update program status to completed if all tasks are evaluated
-    if (evaluatedTasks >= (program.taskIds?.length || 0)) {
-      await programRepo.update(programId, {
-        status: 'completed',
-        completedAt: new Date().toISOString()
-      });
-    }
-
+    const data = await completeRes.json();
     return NextResponse.json({
       success: true,
       message: 'Program evaluation created successfully',
-      evaluationId: saved.id
+      evaluationId: data.evaluation?.id
     });
 
   } catch (error) {

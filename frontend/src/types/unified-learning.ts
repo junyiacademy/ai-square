@@ -54,6 +54,7 @@ export interface IProgram {
   completedAt?: string;
   taskIds: string[];  // Task UUID列表
   currentTaskIndex: number;
+  evaluationId?: string;  // Program Evaluation UUID
   metadata: Record<string, unknown>;  // 特定類型的額外資料
 }
 

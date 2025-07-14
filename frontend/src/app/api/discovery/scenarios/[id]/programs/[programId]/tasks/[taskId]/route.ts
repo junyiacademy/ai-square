@@ -119,7 +119,7 @@ export async function PATCH(
       
       // Get scenario for context
       const scenario = await scenarioRepo.findById(program.scenarioId);
-      const careerType = scenario?.sourceRef.metadata?.careerType || 'unknown';
+      const careerType = (scenario?.sourceRef.metadata?.careerType as string) || 'unknown';
       const language = program.metadata?.language || 'zhTW';
       
       // Load YAML data for world setting context
@@ -231,7 +231,7 @@ Return your evaluation as a JSON object:
       // User confirms task completion
       // First check if task has any passed interactions
       const hasPassedInteraction = task.interactions.some(
-        i => i.type === 'ai_response' && i.content.completed === true
+        i => i.type === 'ai_response' && (i.content as any).completed === true
       );
       
       if (!hasPassedInteraction) {

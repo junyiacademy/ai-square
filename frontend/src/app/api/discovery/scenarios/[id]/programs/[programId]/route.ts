@@ -44,7 +44,7 @@ export async function GET(
     let totalXP = 0;
     
     const tasksSummary = tasks.map((task, index) => {
-      const xp = task.content.context?.xp || 0;
+      const xp = (task.content.context as any)?.xp || 0;
       
       if (task.status === 'completed') {
         completedCount++;
@@ -52,7 +52,7 @@ export async function GET(
       }
       
       // Determine display status for UI
-      let displayStatus = task.status;
+      let displayStatus: string = task.status;
       if (task.status === 'pending' && index === completedCount) {
         displayStatus = 'available'; // Next task after completed ones
       } else if (task.status === 'pending' && index > completedCount) {
