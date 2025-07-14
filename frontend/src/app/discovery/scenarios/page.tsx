@@ -8,6 +8,7 @@ import DiscoveryPageLayout from '@/components/discovery/DiscoveryPageLayout';
 import { useUserData } from '@/hooks/useUserData';
 import { useAuth } from '@/hooks/useAuth';
 import { motion } from 'framer-motion';
+import { normalizeLanguageCode } from '@/lib/utils/language';
 import { 
   BriefcaseIcon,
   CodeBracketIcon,
@@ -87,7 +88,7 @@ export default function ScenariosPage() {
   useEffect(() => {
     const fetchScenarios = async () => {
       try {
-        const lang = i18n.language === 'zh-TW' ? 'zhTW' : i18n.language;
+        const lang = normalizeLanguageCode(i18n.language);
         const response = await fetch(`/api/discovery/scenarios?lang=${lang}`);
         if (response.ok) {
           const data = await response.json();
