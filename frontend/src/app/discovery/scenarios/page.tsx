@@ -23,115 +23,100 @@ import {
   UserGroupIcon
 } from '@heroicons/react/24/outline';
 
-// Career data with icons
-const careerScenarios = [
-  {
-    id: 'content_creator',
-    title: '數位魔法師 - 內容創作者',
-    subtitle: '在虛擬王國中編織引人入勝的故事',
-    category: 'creative',
-    icon: PaintBrushIcon,
-    color: 'from-purple-500 to-pink-500',
-    skills: ['內容魔法', '視覺咒語', '文字煉金術', '社群召喚術']
-  },
-  {
-    id: 'youtuber',
-    title: '星際廣播員 - YouTuber',
-    subtitle: '在宇宙頻道中傳播知識與歡樂',
-    category: 'creative',
-    icon: VideoCameraIcon,
-    color: 'from-red-500 to-orange-500',
-    skills: ['星際剪輯術', '觀眾心理學', '宇宙趨勢預測', '跨星系傳播']
-  },
-  {
-    id: 'app_developer',
-    title: '數碼建築師 - 應用程式開發者',
-    subtitle: '在賽博城市中建造夢想的數位建築',
-    category: 'technology',
-    icon: CodeBracketIcon,
-    color: 'from-blue-500 to-cyan-500',
-    skills: ['程式魔法', '介面雕塑', '邏輯工程', '系統煉金術']
-  },
-  {
-    id: 'game_designer',
-    title: '夢境織夢師 - 遊戲設計師',
-    subtitle: '在幻想世界中編織互動式夢境',
-    category: 'creative',
-    icon: CubeIcon,
-    color: 'from-indigo-500 to-purple-500',
-    skills: ['夢境編織', '情感調律', '平衡法則', '心理煉金術']
-  },
-  {
-    id: 'tech_entrepreneur',
-    title: '時空商業旅行者 - 科技創業家',
-    subtitle: '在多元宇宙中建立科技商業帝國',
-    category: 'hybrid',
-    icon: RocketLaunchIcon,
-    color: 'from-yellow-500 to-red-500',
-    skills: ['時空商業洞察', '跨維度技術整合', '團隊召喚術', '創新預言術']
-  },
-  {
-    id: 'startup_founder',
-    title: '商業冒險家 - 創業家',
-    subtitle: '在商業荒野中開拓新的貿易路線',
-    category: 'business',
-    icon: BriefcaseIcon,
-    color: 'from-green-500 to-teal-500',
-    skills: ['商業嗅覺', '市場探勘', '資源煉金術', '風險航海術']
-  },
-  {
-    id: 'data_analyst',
-    title: '數位考古學家 - 數據分析師',
-    subtitle: '在數位遺跡中挖掘珍貴的智慧寶石',
-    category: 'technology',
-    icon: ChartBarIcon,
-    color: 'from-teal-500 to-blue-500',
-    skills: ['數位考古術', '模式識別術', '視覺化魔法', '洞察預言術']
-  },
-  {
-    id: 'ux_designer',
-    title: '体驗建築師 - UX 設計師',
-    subtitle: '在数位空间中建造完美的体験世界',
-    category: 'creative',
-    icon: SparklesIcon,
-    color: 'from-pink-500 to-purple-500',
-    skills: ['用户心理学', '体验魔法', '原型雕塑', '沟通艺术']
-  },
-  {
-    id: 'product_manager',
-    title: '產品指揮官 - 產品經理',
-    subtitle: '在產品戰場上統筹策略和資源',
-    category: 'business',
-    icon: UserGroupIcon,
-    color: 'from-orange-500 to-yellow-500',
-    skills: ['策略视野', '需求洞察', '資源配置', '團隊协調']
-  },
-  {
-    id: 'ai_developer',
-    title: '機器靈魂鍛造師 - AI 開發者',
-    subtitle: '在未來實驗室中創造有意識的機器生命',
-    category: 'technology',
-    icon: CpuChipIcon,
-    color: 'from-violet-500 to-purple-500',
-    skills: ['靈魂編碼術', '神經網絡魔法', '智慧藝術', '未來部署術']
-  }
-];
+// Icon mapping for career types
+const careerIcons: Record<string, any> = {
+  content_creator: PaintBrushIcon,
+  youtuber: VideoCameraIcon,
+  app_developer: CodeBracketIcon,
+  game_designer: CubeIcon,
+  tech_entrepreneur: RocketLaunchIcon,
+  startup_founder: BriefcaseIcon,
+  data_analyst: ChartBarIcon,
+  ux_designer: SparklesIcon,
+  ai_engineer: CpuChipIcon,
+  ai_developer: CpuChipIcon,
+  digital_marketer: MegaphoneIcon,
+  social_media_manager: UserGroupIcon,
+  product_manager: UserGroupIcon,
+  biotech_researcher: LightBulbIcon,
+  cybersecurity_specialist: CodeBracketIcon,
+  environmental_scientist: ChartBarIcon
+};
+
+// Color mapping for career types
+const careerColors: Record<string, string> = {
+  content_creator: 'from-purple-500 to-pink-500',
+  youtuber: 'from-red-500 to-orange-500',
+  app_developer: 'from-blue-500 to-cyan-500',
+  game_designer: 'from-indigo-500 to-purple-500',
+  tech_entrepreneur: 'from-yellow-500 to-red-500',
+  startup_founder: 'from-green-500 to-teal-500',
+  data_analyst: 'from-teal-500 to-blue-500',
+  ux_designer: 'from-pink-500 to-purple-500',
+  ai_engineer: 'from-violet-500 to-purple-500',
+  ai_developer: 'from-violet-500 to-purple-500',
+  digital_marketer: 'from-orange-500 to-red-500',
+  social_media_manager: 'from-blue-500 to-indigo-500',
+  product_manager: 'from-orange-500 to-yellow-500',
+  biotech_researcher: 'from-green-500 to-emerald-500',
+  cybersecurity_specialist: 'from-gray-600 to-gray-800',
+  environmental_scientist: 'from-green-600 to-teal-600'
+};
+
 
 const categoryFilters = [
   { id: 'all', name: '全部', icon: SparklesIcon },
-  { id: 'creative', name: '創意', icon: PaintBrushIcon },
+  { id: 'arts', name: '創意', icon: PaintBrushIcon },
   { id: 'technology', name: '技術', icon: CodeBracketIcon },
   { id: 'business', name: '商業', icon: BriefcaseIcon },
-  { id: 'hybrid', name: '混合', icon: LightBulbIcon }
+  { id: 'society', name: '社會', icon: UserGroupIcon },
+  { id: 'science', name: '科學', icon: LightBulbIcon }
 ];
 
 export default function ScenariosPage() {
   const router = useRouter();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { isLoggedIn } = useAuth();
   const { userData, loadUserData } = useUserData();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [activeTab, setActiveTab] = useState<'all' | 'my'>('all'); // Default to 'all' since v2 doesn't track discovery in userData
+  const [scenarios, setScenarios] = useState<any[]>([]);
+  const [isLoadingScenarios, setIsLoadingScenarios] = useState(true);
+
+  // Load scenarios from API
+  useEffect(() => {
+    const fetchScenarios = async () => {
+      try {
+        const lang = i18n.language === 'zh-TW' ? 'zhTW' : i18n.language;
+        const response = await fetch(`/api/discovery/scenarios?lang=${lang}`);
+        if (response.ok) {
+          const data = await response.json();
+          // Transform the scenarios to match the expected format
+          const transformedScenarios = data.map((scenario: any) => ({
+            id: scenario.sourceRef?.metadata?.careerType || scenario.id,
+            scenarioId: scenario.id, // Store the actual scenario UUID
+            title: scenario.title,
+            subtitle: scenario.description,
+            category: scenario.metadata?.category || 'general',
+            icon: careerIcons[scenario.sourceRef?.metadata?.careerType] || SparklesIcon,
+            color: careerColors[scenario.sourceRef?.metadata?.careerType] || 'from-gray-500 to-gray-600',
+            skills: scenario.metadata?.skillFocus || []
+          }));
+          setScenarios(transformedScenarios);
+        } else {
+          console.error('Failed to fetch scenarios from API');
+          setScenarios([]);
+        }
+      } catch (error) {
+        console.error('Failed to fetch scenarios:', error);
+        setScenarios([]);
+      } finally {
+        setIsLoadingScenarios(false);
+      }
+    };
+
+    fetchScenarios();
+  }, [i18n.language]);
 
   // Load user data on mount
   useEffect(() => {
@@ -157,65 +142,32 @@ export default function ScenariosPage() {
   const filteredScenarios = activeTab === 'my' 
     ? myScenarios
     : selectedCategory === 'all' 
-      ? careerScenarios 
-      : careerScenarios.filter(s => s.category === selectedCategory);
+      ? scenarios 
+      : scenarios.filter(s => s.category === selectedCategory);
 
-  const handleScenarioSelect = async (careerType: string) => {
+  const handleScenarioSelect = async (scenarioOrCareer: any) => {
     if (!isLoggedIn) {
       // Redirect to login
       router.push('/login?redirect=/discovery/scenarios');
       return;
     }
 
-    try {
-      // Check if user already has a scenario for this career type
-      const sessionToken = localStorage.getItem('ai_square_session');
-      const response = await fetch(`/api/discovery/scenarios/find-by-career?career=${careerType}`, {
-        credentials: 'include',
-        headers: {
-          'x-session-token': sessionToken || ''
-        }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        if (data.scenarioId) {
-          // User already has a scenario for this career, navigate to it
-          router.push(`/discovery/scenarios/${data.scenarioId}`);
-          return;
-        }
+    // Check if we have a scenario object (from API) or just a career string (from fallback)
+    if (typeof scenarioOrCareer === 'object' && scenarioOrCareer.scenarioId) {
+      // We have a scenario from the API, navigate directly to it
+      router.push(`/discovery/scenarios/${scenarioOrCareer.scenarioId}`);
+    } else {
+      // Fallback: try to find the scenario by career type
+      const careerType = typeof scenarioOrCareer === 'string' ? scenarioOrCareer : scenarioOrCareer.id;
+      const scenario = scenarios.find(s => s.id === careerType);
+      
+      if (scenario && scenario.scenarioId) {
+        router.push(`/discovery/scenarios/${scenario.scenarioId}`);
+      } else {
+        // Old behavior for fallback
+        alert('Scenario not found. Please refresh the page and try again.');
       }
-    } catch (error) {
-      console.error('Error checking existing scenario:', error);
     }
-
-    // Create a new scenario via API
-    try {
-      const sessionToken = localStorage.getItem('ai_square_session');
-      const createResponse = await fetch(`/api/discovery/scenarios`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-session-token': sessionToken || ''
-        },
-        body: JSON.stringify({ careerType, language: 'zhTW' })
-      });
-
-      if (createResponse.ok) {
-        const data = await createResponse.json();
-        if (data.scenarioId) {
-          // Navigate to the scenario created by backend
-          router.push(`/discovery/scenarios/${data.scenarioId}`);
-          return;
-        }
-      }
-    } catch (error) {
-      console.error('Error creating scenario:', error);
-    }
-    
-    // If creation failed, show error
-    alert('Failed to create scenario. Please try again.');
   };
 
   return (
@@ -261,9 +213,18 @@ export default function ScenariosPage() {
           </div>
         )}
 
+        {/* Loading State */}
+        {isLoadingScenarios && (
+          <div className="text-center py-16">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+            <p className="text-gray-500">載入職業冒險中...</p>
+          </div>
+        )}
+
         {/* Scenarios Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredScenarios.map((scenario, index) => {
+        {!isLoadingScenarios && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredScenarios.map((scenario, index) => {
             const Icon = scenario.icon;
             // v2 architecture doesn't track discovery scenarios in userData
             const activeWorkspace = null;
@@ -279,7 +240,7 @@ export default function ScenariosPage() {
                 className="group relative"
               >
                 <div
-                  onClick={() => handleScenarioSelect(scenario.id)}
+                  onClick={() => handleScenarioSelect(scenario)}
                   className="cursor-pointer h-full bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-purple-200"
                 >
                   {/* Gradient Background */}
@@ -341,7 +302,8 @@ export default function ScenariosPage() {
               </motion.div>
             );
           })}
-        </div>
+          </div>
+        )}
 
         {/* Empty State */}
         {filteredScenarios.length === 0 && (
