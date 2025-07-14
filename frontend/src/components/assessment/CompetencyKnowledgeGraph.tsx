@@ -532,6 +532,16 @@ export default function CompetencyKnowledgeGraph({
         .attr('stroke-width', (d) => (d as GraphNode).id === selectedNode.id ? 4 : 2);
     }
 
+    // Add click handler to SVG background to reset zoom
+    svg.on('click', () => {
+      // Reset zoom when clicking on background
+      svg.transition()
+        .duration(750)
+        .call(zoom.transform, d3.zoomIdentity);
+      setSelectedNode(null);
+      setShowQuestionReview(false);
+    });
+
     // Cleanup
     return () => {
       tooltip.remove();
