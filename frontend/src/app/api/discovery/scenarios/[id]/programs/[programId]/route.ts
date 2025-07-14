@@ -12,6 +12,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string; programId: string }> }
 ) {
   try {
+    // Set no-cache headers
+    const headers = new Headers();
+    headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+    headers.set('Pragma', 'no-cache');
+    headers.set('Expires', '0');
     const session = await getServerSession();
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -45,6 +50,13 @@ export async function GET(
     const tasks = program.taskIds
       .map(id => taskMap.get(id))
       .filter(Boolean) as ITask[];
+    
+    // Debug logging
+    console.log('Program task order:', {
+      programId: program.id,
+      taskIds: program.taskIds,
+      orderedTaskTitles: tasks.map(t => ({ id: t.id, title: t.title, status: t.status, index: t.scenarioTaskIndex }))
+    });
     
     // Calculate completed tasks and total XP
     let completedCount = 0;
@@ -109,7 +121,7 @@ export async function GET(
       scenarioTitle: scenario?.title || 'Discovery Scenario'
     };
     
-    return NextResponse.json(responseData);
+    return NextResponse.json(responseData, { headers });
   } catch (error) {
     console.error('Error in GET /api/discovery/scenarios/[id]/programs/[programId]:', error);
     return NextResponse.json(

@@ -80,10 +80,11 @@ export default function ProgramDetailPage() {
     try {
       setLoading(true);
       const sessionToken = localStorage.getItem('ai_square_session');
-      const response = await fetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}`, {
+      const response = await fetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}?t=${Date.now()}`, {
         credentials: 'include',
         headers: {
-          'x-session-token': sessionToken || ''
+          'x-session-token': sessionToken || '',
+          'Cache-Control': 'no-cache'
         }
       });
 
