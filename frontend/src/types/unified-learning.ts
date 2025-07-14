@@ -91,7 +91,7 @@ export interface IInteraction {
 }
 
 /**
- * Evaluation - 評估結果
+ * Evaluation - 評估結果（多語言支援）
  */
 export interface IEvaluation {
   id: string;  // UUID
@@ -99,7 +99,8 @@ export interface IEvaluation {
   targetId: string;  // Task UUID 或 Program UUID
   evaluationType: string;  // 評估類型標識
   score?: number;
-  feedback?: string;
+  feedback?: string;  // 預設語言版本（通常是 en）
+  feedbackVersions?: Record<string, string>;  // 多語言版本 { "en": "...", "zhTW": "...", "es": "..." }
   dimensions?: IDimensionScore[];
   createdAt: string;
   metadata: Record<string, unknown>;

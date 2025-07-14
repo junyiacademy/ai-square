@@ -48,6 +48,7 @@ interface TaskData {
     id: string;
     score: number;
     feedback: string;
+    feedbackVersions?: Record<string, string>;
     evaluatedAt: string;
   };
 }
@@ -91,7 +92,8 @@ export default function TaskDetailPage() {
 
     const fetchTaskData = async () => {
       try {
-        const res = await fetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`, {
+        const currentLanguage = i18n.language || 'en';
+        const res = await fetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}?lang=${currentLanguage}`, {
           credentials: 'include',
           headers: {
             'x-session-token': localStorage.getItem('ai_square_session') || ''
@@ -130,7 +132,7 @@ export default function TaskDetailPage() {
     };
 
     fetchTaskData();
-  }, [taskId, programId, scenarioId, isLoggedIn, authLoading, router]);
+  }, [taskId, programId, scenarioId, isLoggedIn, authLoading, router, i18n.language]);
 
   const handleSubmit = async () => {
     if (!userResponse.trim()) return;

@@ -9,6 +9,7 @@ import {
 import { IInteraction, ITask } from '@/types/unified-learning';
 import { VertexAIService } from '@/lib/ai/vertex-ai-service';
 import { DiscoveryYAMLLoader } from '@/lib/services/discovery-yaml-loader';
+import { TranslationService } from '@/lib/services/translation-service';
 
 // System prompt for AI - keep in English as it's for the AI model
 function getSystemPromptForLanguage(language: string): string {
@@ -99,10 +100,21 @@ export async function GET(
     const { id: scenarioId, programId, taskId } = await params;
     const userEmail = session.user.email;
     
+    // Get language from query params
+    const url = new URL(request.url);
+    const requestedLanguage = url.searchParams.get('lang') || 'en';
+    
+    // Debug log language request
+    console.log('=== GET TASK LANGUAGE DEBUG ===');
+    console.log('Requested URL:', request.url);
+    console.log('Language parameter:', requestedLanguage);
+    console.log('==============================');
+    
     // Get repositories
     const programRepo = getProgramRepository();
     const taskRepo = getTaskRepository();
     const scenarioRepo = getScenarioRepository();
+    const evaluationRepo = getEvaluationRepository();
     
     // Verify program ownership
     const program = await programRepo.findById(programId);
@@ -119,6 +131,121 @@ export async function GET(
     // Load scenario for career info
     const scenario = await scenarioRepo.findById(program.scenarioId);
     
+    // Handle multilingual evaluation if task is completed
+    let processedEvaluation = task.evaluation;
+    
+    if (task.evaluation && task.status === 'completed') {
+      // Get full evaluation record
+      const fullEvaluation = await evaluationRepo.findById(task.evaluation.id);
+      
+      if (fullEvaluation) {
+        const existingVersions = fullEvaluation.feedbackVersions || {};
+        
+        // Debug log existing versions
+        console.log('=== EVALUATION VERSIONS DEBUG ===');
+        console.log('Requested language:', requestedLanguage);
+        console.log('Existing versions:', Object.keys(existingVersions));
+        console.log('Full evaluation feedback:', fullEvaluation.feedback?.substring(0, 100) + '...');
+        console.log('=================================');
+        
+        // Check if we need the requested language version
+        if (!existingVersions[requestedLanguage]) {
+          try {
+            // Need to translate - determine source language and content
+            let sourceFeedback: string;
+            let sourceLanguage: string;
+            
+            if (existingVersions['en']) {
+              // Prefer English as source for translation
+              sourceFeedback = existingVersions['en'];
+              sourceLanguage = 'en';
+            } else if (fullEvaluation.feedback) {
+              // Use default feedback (might be in another language)
+              sourceFeedback = fullEvaluation.feedback;
+              sourceLanguage = 'en'; // Assume default is English unless we track source language
+            } else {
+              throw new Error('No source feedback available for translation');
+            }
+            
+            console.log(`Translating evaluation from ${sourceLanguage} to ${requestedLanguage}`);
+            console.log('Source feedback preview:', sourceFeedback.substring(0, 100) + '...');
+            
+            const translationService = new TranslationService();
+            const careerType = scenario?.sourceRef.metadata?.careerType as string;
+            
+            // Special handling: if requesting English and source is English, no translation needed
+            if (requestedLanguage === 'en' && sourceLanguage === 'en') {
+              processedEvaluation = {
+                ...task.evaluation,
+                feedback: sourceFeedback,
+                feedbackVersions: { ...existingVersions, 'en': sourceFeedback }
+              };
+            } else {
+              const translatedFeedback = await translationService.translateFeedback(
+                sourceFeedback,
+                requestedLanguage,
+                careerType
+              );
+              
+              // Update evaluation with new translation
+              const updatedVersions = {
+                ...existingVersions,
+                [requestedLanguage]: translatedFeedback
+              };
+              
+              await evaluationRepo.update(fullEvaluation.id, {
+                feedbackVersions: updatedVersions
+              });
+              
+              // Also update task reference
+              await taskRepo.update(taskId, {
+                evaluation: {
+                  ...task.evaluation,
+                  feedbackVersions: updatedVersions
+                }
+              });
+              
+              // Use translated version for response
+              processedEvaluation = {
+                ...task.evaluation,
+                feedback: translatedFeedback,
+                feedbackVersions: updatedVersions
+              };
+            }
+          } catch (error) {
+            console.error('Translation failed:', error);
+            // Fall back to available version
+            const fallbackFeedback = TranslationService.getFeedbackByLanguage(
+              existingVersions,
+              requestedLanguage,
+              'en'
+            );
+            if (fallbackFeedback) {
+              processedEvaluation = {
+                ...task.evaluation,
+                feedback: fallbackFeedback,
+                feedbackVersions: existingVersions
+              };
+            }
+          }
+        } else {
+          // Use existing version
+          const feedbackByLanguage = TranslationService.getFeedbackByLanguage(
+            existingVersions,
+            requestedLanguage,
+            'en'
+          );
+          if (feedbackByLanguage) {
+            processedEvaluation = {
+              ...task.evaluation,
+              feedback: feedbackByLanguage,
+              feedbackVersions: existingVersions
+            };
+          }
+        }
+      }
+    }
+    
     // Return task data
     return NextResponse.json({
       id: task.id,
@@ -129,7 +256,7 @@ export async function GET(
       interactions: task.interactions,
       startedAt: task.startedAt,
       completedAt: task.completedAt,
-      evaluation: task.evaluation,
+      evaluation: processedEvaluation,
       // Add career info
       careerType: scenario?.sourceRef.metadata?.careerType || 'unknown',
       scenarioTitle: scenario?.title || 'Discovery Scenario'
@@ -486,13 +613,40 @@ Return your evaluation as a JSON object:
         }
       });
       
-      // Create formal evaluation record
+      // Prepare multilingual feedback versions
+      // Always store English version first, then current language if different
+      const feedbackVersions: Record<string, string> = {};
+      
+      if (userLanguage === 'en') {
+        // Generated feedback is already in English
+        feedbackVersions['en'] = comprehensiveFeedback;
+      } else {
+        // Generated feedback is in user's language, need English version
+        try {
+          console.log('Generating English version for storage...');
+          const translationService = new TranslationService();
+          const englishFeedback = await translationService.translateFeedback(
+            comprehensiveFeedback,
+            'en',
+            careerType
+          );
+          feedbackVersions['en'] = englishFeedback;
+          feedbackVersions[userLanguage] = comprehensiveFeedback;
+        } catch (error) {
+          console.error('Failed to generate English version:', error);
+          // Fallback: store current feedback as English
+          feedbackVersions['en'] = comprehensiveFeedback;
+        }
+      }
+      
+      // Create formal evaluation record with multilingual support
       const evaluation = await evaluationRepo.create({
         targetType: 'task',
         targetId: taskId,
         evaluationType: 'discovery_task',
         score: bestXP,
-        feedback: comprehensiveFeedback,
+        feedback: feedbackVersions['en'], // Default to English
+        feedbackVersions: feedbackVersions,
         dimensions: [],
         metadata: {
           completed: true,
@@ -500,7 +654,8 @@ Return your evaluation as a JSON object:
           totalAttempts: userAttempts,
           passedAttempts: passedAttempts,
           skillsImproved: Array.from(allSkillsImproved),
-          learningJourney: allFeedback
+          learningJourney: allFeedback,
+          originalLanguage: userLanguage
         },
         createdAt: new Date().toISOString()
       });
@@ -512,7 +667,8 @@ Return your evaluation as a JSON object:
         evaluation: {
           id: evaluation.id,
           score: evaluation.score,
-          feedback: evaluation.feedback,
+          feedback: feedbackVersions[userLanguage] || evaluation.feedback, // Return in user's language
+          feedbackVersions: feedbackVersions,
           evaluatedAt: evaluation.createdAt
         }
       });
