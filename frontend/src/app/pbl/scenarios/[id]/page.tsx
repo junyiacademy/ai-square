@@ -18,17 +18,19 @@ export default function ScenarioDetailPage() {
   const scenarioId = params.id as string;
 
   useEffect(() => {
-    let isMounted = true;
-    const abortController = new AbortController();
+    let ignore = false;
     
     const fetchData = async () => {
       try {
-        // Fetch scenario details
-        const scenarioResponse = await fetch(`/api/pbl/scenarios/${params.id}?lang=${i18n.language}`, {
-          signal: abortController.signal
-        });
+        setLoading(true);
         
-        if (!isMounted) return;
+        // Fetch scenario details
+        const [scenarioResponse, programsResponse] = await Promise.all([
+          fetch(`/api/pbl/scenarios/${params.id}?lang=${i18n.language}`),
+          fetch(`/api/pbl/scenarios/${params.id}/programs`)
+        ]);
+        
+        if (ignore) return;
         
         if (scenarioResponse.ok) {
           const response = await scenarioResponse.json();
@@ -46,38 +48,24 @@ export default function ScenarioDetailPage() {
                 ksaMapping: response.data.ksaMapping
               }
             };
-            if (isMounted) {
-              setScenario(scenarioData);
-            }
+            setScenario(scenarioData);
           } else {
             console.error('Invalid PBL API response:', response);
           }
         } else {
           console.error('Failed to fetch scenario:', scenarioResponse.status, scenarioResponse.statusText);
         }
-
-        // Fetch user's programs for this scenario
-        const programsResponse = await fetch(`/api/pbl/scenarios/${params.id}/programs`, {
-          signal: abortController.signal
-        });
-        
-        if (!isMounted) return;
         
         if (programsResponse.ok) {
           const programsData = await programsResponse.json();
-          if (isMounted) {
-            setUserPrograms(programsData);
-          }
+          setUserPrograms(programsData);
         }
       } catch (error) {
-        if (error instanceof Error && error.name === 'AbortError') {
-          // This is expected when component unmounts, don't log
-          return;
-        } else {
+        if (!ignore) {
           console.error('Error fetching scenario data:', error);
         }
       } finally {
-        if (isMounted) {
+        if (!ignore) {
           setLoading(false);
         }
       }
@@ -86,9 +74,7 @@ export default function ScenarioDetailPage() {
     fetchData();
     
     return () => {
-      isMounted = false;
-      // Abort with a reason to avoid the "aborted without reason" error
-      abortController.abort(new DOMException('Component unmounted', 'AbortError'));
+      ignore = true;
     };
   }, [params.id, i18n.language]);
 
