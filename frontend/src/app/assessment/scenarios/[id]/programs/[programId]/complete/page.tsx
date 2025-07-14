@@ -246,13 +246,24 @@ export default function AssessmentCompletePage({
 
   // Convert interactions to UserAnswer format
   const userAnswers: UserAnswer[] = taskData.interactions
-    .filter((i: any) => i.type === 'assessment_answer')
+    .filter((i: any) => i.type === 'system_event' && i.content?.eventType === 'assessment_answer')
     .map((interaction: any) => ({
       questionId: interaction.content.questionId,
       selectedAnswer: interaction.content.selectedAnswer as 'a' | 'b' | 'c' | 'd',
       timeSpent: interaction.content.timeSpent || 0,
-      isCorrect: interaction.content.isCorrect || false
+      isCorrect: interaction.content.isCorrect ?? false
     }));
+  
+  // Debug logging
+  console.log('Assessment Complete - User Answers:', {
+    totalAnswers: userAnswers.length,
+    correctAnswers: userAnswers.filter(a => a.isCorrect).length,
+    answers: userAnswers.map(a => ({ 
+      questionId: a.questionId, 
+      isCorrect: a.isCorrect,
+      selectedAnswer: a.selectedAnswer 
+    }))
+  });
 
   // Create assessment data structure for domains
   const assessmentData: AssessmentData = {

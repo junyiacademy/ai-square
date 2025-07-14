@@ -30,7 +30,7 @@ interface KSAAnalysis {
 
 export default function AssessmentResults({ result, domains, onRetake, questions = [], userAnswers = [], isReview = false }: AssessmentResultsProps) {
   const { t, i18n } = useTranslation('assessment');
-  const [activeTab, setActiveTab] = useState<'overview' | 'domains' | 'recommendations' | 'ksa' | 'knowledge-graph'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'recommendations' | 'ksa' | 'knowledge-graph'>('overview');
   const [domainsData, setDomainsData] = useState<unknown[] | null>(null);
   const [ksaMaps, setKsaMaps] = useState<{
     kMap: Record<string, { summary: string; theme: string; explanation?: string }>;
