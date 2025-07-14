@@ -33,6 +33,9 @@ interface Task {
   xp: number;
   status: 'locked' | 'available' | 'completed';
   completedAt?: string;
+  actualXP?: number;  // Actual XP earned (from evaluation)
+  attempts?: number;  // Total attempts
+  passCount?: number;  // Number of successful attempts
 }
 
 interface ProgramData {
@@ -360,19 +363,25 @@ export default function ProgramDetailPage() {
                         <div className="flex items-center space-x-4 text-sm">
                           <div className="flex items-center space-x-1">
                             <TrophyIcon className="w-4 h-4 text-yellow-500" />
-                            <span className="text-gray-600">{task.xp} XP</span>
+                            <span className="text-gray-600">
+                              {task.status === 'completed' && task.actualXP 
+                                ? `${task.actualXP} XP (獲得)` 
+                                : `${task.xp} XP`}
+                            </span>
                           </div>
                           
-                          {task.status === 'completed' && (
+                          {task.status === 'completed' && task.attempts && (
                             <>
                               <div className="flex items-center space-x-1">
                                 <span className="text-gray-600">📊</span>
-                                <span className="text-gray-600">6次嘗試</span>
+                                <span className="text-gray-600">{task.attempts}次嘗試</span>
                               </div>
-                              <div className="flex items-center space-x-1">
-                                <span className="text-gray-600">⭐</span>
-                                <span className="text-gray-600">2次通過</span>
-                              </div>
+                              {task.passCount && task.passCount > 0 && (
+                                <div className="flex items-center space-x-1">
+                                  <span className="text-gray-600">⭐</span>
+                                  <span className="text-gray-600">{task.passCount}次通過</span>
+                                </div>
+                              )}
                             </>
                           )}
                           

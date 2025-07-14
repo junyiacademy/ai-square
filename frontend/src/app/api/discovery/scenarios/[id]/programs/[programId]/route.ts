@@ -65,9 +65,35 @@ export async function GET(
     const tasksSummary = tasks.map((task, index) => {
       const xp = (task.content.context as any)?.xp || 0;
       
+      // Calculate statistics from interactions
+      let actualXP = 0;
+      let attempts = 0;
+      let passCount = 0;
+      
+      if (task.interactions && task.interactions.length > 0) {
+        // Count user attempts
+        attempts = task.interactions.filter(i => i.type === 'user_input').length;
+        
+        // Count successful attempts and find highest XP
+        const aiResponses = task.interactions.filter(i => i.type === 'ai_response');
+        aiResponses.forEach(response => {
+          if (response.content?.completed === true) {
+            passCount++;
+            if (response.content?.xpEarned) {
+              actualXP = Math.max(actualXP, response.content.xpEarned);
+            }
+          }
+        });
+        
+        // If task is completed but actualXP is 0, use the evaluation score or default XP
+        if (task.status === 'completed' && actualXP === 0) {
+          actualXP = task.evaluation?.score || xp;
+        }
+      }
+      
       if (task.status === 'completed') {
         completedCount++;
-        totalXP += xp;
+        totalXP += actualXP || xp; // Use actual XP if available, otherwise default
       }
       
       // Determine display status for UI
@@ -84,7 +110,11 @@ export async function GET(
         description: task.content.context?.description || '',
         xp: xp,
         status: displayStatus,
-        completedAt: task.completedAt
+        completedAt: task.completedAt,
+        // Add real statistics
+        actualXP: task.status === 'completed' ? actualXP : undefined,
+        attempts: attempts > 0 ? attempts : undefined,
+        passCount: passCount > 0 ? passCount : undefined
       };
     });
     

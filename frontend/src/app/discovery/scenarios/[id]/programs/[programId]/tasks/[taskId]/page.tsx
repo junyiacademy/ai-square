@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import DiscoveryPageLayout from '@/components/discovery/DiscoveryPageLayout';
 import { useAuth } from '@/hooks/useAuth';
+import ReactMarkdown from 'react-markdown';
 import { 
   ArrowLeftIcon,
   SparklesIcon,
@@ -16,7 +17,8 @@ import {
   ExclamationCircleIcon,
   ClockIcon,
   ChevronUpIcon,
-  ChevronDownIcon
+  ChevronDownIcon,
+  ArrowPathIcon
 } from '@heroicons/react/24/outline';
 
 interface TaskData {
@@ -53,7 +55,7 @@ interface TaskData {
 export default function TaskDetailPage() {
   const router = useRouter();
   const params = useParams();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user, isLoggedIn, isLoading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const [taskData, setTaskData] = useState<TaskData | null>(null);
@@ -70,6 +72,7 @@ export default function TaskDetailPage() {
   const [showHistory, setShowHistory] = useState(true);
   const [showCompleteDialog, setShowCompleteDialog] = useState(false);
   const [completingTask, setCompletingTask] = useState(false);
+  const [regeneratingEvaluation, setRegeneratingEvaluation] = useState(false);
 
   const scenarioId = params.id as string;
   const programId = params.programId as string;
@@ -224,6 +227,46 @@ export default function TaskDetailPage() {
     } catch (error) {
       console.error('Error completing task:', error);
       setCompletingTask(false);
+    }
+  };
+
+  const handleRegenerateEvaluation = async () => {
+    setRegeneratingEvaluation(true);
+    try {
+      const res = await fetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-session-token': localStorage.getItem('ai_square_session') || '',
+          'Accept-Language': i18n.language || 'zhTW'
+        },
+        body: JSON.stringify({
+          action: 'regenerate-evaluation'
+        })
+      });
+      
+      if (!res.ok) {
+        throw new Error('Failed to regenerate evaluation');
+      }
+      
+      const result = await res.json();
+      
+      // Update task data with new evaluation
+      if (result.evaluation && taskData) {
+        setTaskData({
+          ...taskData,
+          evaluation: {
+            id: result.evaluation.id,
+            score: result.evaluation.score,
+            feedback: result.evaluation.feedback,
+            evaluatedAt: new Date().toISOString()
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error regenerating evaluation:', error);
+    } finally {
+      setRegeneratingEvaluation(false);
     }
   };
 
@@ -470,14 +513,30 @@ export default function TaskDetailPage() {
             
             {/* Final Evaluation */}
             <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
-                <ChatBubbleLeftRightIcon className="w-5 h-5 text-blue-600" />
-                <span>綜合評價</span>
-              </h4>
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
+                  <ChatBubbleLeftRightIcon className="w-5 h-5 text-blue-600" />
+                  <span>綜合評價</span>
+                </h4>
+                {/* Refresh button - only show in localhost */}
+                {typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && (
+                  <button
+                    onClick={handleRegenerateEvaluation}
+                    disabled={regeneratingEvaluation}
+                    className="flex items-center space-x-1 px-3 py-1 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors disabled:opacity-50"
+                    title="重新生成評價 (僅限開發環境)"
+                  >
+                    <ArrowPathIcon className={`w-4 h-4 ${regeneratingEvaluation ? 'animate-spin' : ''}`} />
+                    <span>{regeneratingEvaluation ? '生成中...' : '重新生成'}</span>
+                  </button>
+                )}
+              </div>
               <div className="bg-blue-50 rounded-lg p-4">
-                <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                  {taskData.evaluation?.feedback || `經過 ${taskData.interactions.filter(i => i.type === 'user_input').length} 次嘗試，你成功完成了這個任務！`}
-                </p>
+                <div className="text-gray-700 leading-relaxed prose prose-sm max-w-none prose-headings:text-gray-900 prose-strong:text-gray-900 prose-p:text-gray-700 prose-ul:text-gray-700 prose-ol:text-gray-700">
+                  <ReactMarkdown>
+                    {taskData.evaluation?.feedback || `經過 ${taskData.interactions.filter(i => i.type === 'user_input').length} 次嘗試，你成功完成了這個任務！`}
+                  </ReactMarkdown>
+                </div>
               </div>
             </div>
             
@@ -786,7 +845,9 @@ export default function TaskDetailPage() {
             <div className="space-y-4">
               {/* Main Feedback */}
               <div>
-                <p className="text-gray-700 leading-relaxed">{feedback.feedback}</p>
+                <div className="text-gray-700 leading-relaxed prose prose-sm max-w-none prose-headings:text-gray-900 prose-strong:text-gray-900 prose-p:text-gray-700 prose-ul:text-gray-700 prose-ol:text-gray-700">
+                  <ReactMarkdown>{feedback.feedback}</ReactMarkdown>
+                </div>
               </div>
 
               {/* Strengths */}

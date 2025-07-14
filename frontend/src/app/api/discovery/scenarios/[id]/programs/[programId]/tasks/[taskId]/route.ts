@@ -10,6 +10,81 @@ import { IInteraction, ITask } from '@/types/unified-learning';
 import { VertexAIService } from '@/lib/ai/vertex-ai-service';
 import { DiscoveryYAMLLoader } from '@/lib/services/discovery-yaml-loader';
 
+// System prompt for AI - keep in English as it's for the AI model
+function getSystemPromptForLanguage(language: string): string {
+  return 'You are an expert educational psychologist and learning coach.';
+}
+
+function generateComprehensiveFeedbackPrompt(
+  language: string,
+  careerType: string,
+  taskTitle: string,
+  taskInstructions: string,
+  taskContext: any,
+  yamlData: any,
+  learningJourney: any[]
+): string {
+  // Debug log language detection
+  console.log('Language detection for feedback:', {
+    inputLanguage: language,
+    careerType,
+    taskTitle
+  });
+
+  return `
+You are an experienced mentor from the ${careerType} field. Based on the world setting context and the learner's complete journey, provide a concise but meaningful qualitative assessment.
+
+Context & Setting:
+- Career Field: ${careerType}
+- Task: ${taskTitle}
+- Objective: ${taskInstructions}
+${yamlData ? `- World Setting: ${yamlData.world_setting.description}` : ''}
+${yamlData ? `- Atmosphere: ${yamlData.world_setting.atmosphere}` : ''}
+
+Learning Journey:
+${JSON.stringify(learningJourney, null, 2)}
+
+As a seasoned expert in this field, provide a personalized assessment that:
+
+1. **Highlights key growth moments** - What specific breakthroughs did you observe?
+2. **Identifies unique strengths** - What made their approach stand out?
+3. **Offers practical next steps** - What should they focus on developing next?
+
+Guidelines:
+- Write as an authoritative but approachable mentor in this specific field
+- Keep it concise (2-3 short paragraphs maximum)
+- Be specific about what they did well, not generic praise
+- Include 1-2 concrete suggestions for improvement
+- Sign off with an appropriate authority figure name based on the career field:
+  * For biotech/life sciences: Use historical figures like "Dr. Fleming" (Alexander Fleming), "Dr. Watson" (James Watson), or "Dr. McClintock" (Barbara McClintock)
+  * For technology/AI: Use figures like "Dr. Turing" (Alan Turing), "Prof. McCarthy" (John McCarthy), or "Dr. Hinton" (Geoffrey Hinton) 
+  * For creative fields: Use figures like "Prof. Jobs" (Steve Jobs), "Master da Vinci" (Leonardo da Vinci), or "Sensei Miyazaki" (Hayao Miyazaki)
+  * For business/entrepreneurship: Use figures like "Prof. Drucker" (Peter Drucker), "Mr. Carnegie" (Andrew Carnegie), or "Ms. Graham" (Katherine Graham)
+  * For data/analytics: Use figures like "Prof. Tukey" (John Tukey), "Dr. Fisher" (Ronald Fisher), or "Prof. Nightingale" (Florence Nightingale)
+  * For other fields: Choose appropriate historical authority figures or create fitting fictional expert names
+- Focus on growth and potential rather than perfect performance
+- Use markdown formatting with **bold** for emphasis and clear structure
+- Use bullet points or numbered lists where appropriate for clarity
+
+Write in language code: ${language} with an encouraging but professional tone that reflects expertise in the ${careerType} domain.`;
+}
+
+// TODO: Replace with i18n translations in the future
+function getStatsSection(language: string, attempts: number, passCount: number, bestXP: number): string {
+  // For now, use simple format - will be replaced with i18n
+  return `\n\n📊 Learning Statistics Summary:\n- Total attempts: ${attempts}\n- Passed times: ${passCount}\n- Highest score: ${bestXP} XP`;
+}
+
+function getSkillsSection(language: string, skills: string[]): string {
+  // For now, use simple format - will be replaced with i18n
+  return `\n- Demonstrated abilities: ${skills.join(', ')}`;
+}
+
+function getFallbackMessage(language: string): string {
+  // For now, use simple message - will be replaced with i18n
+  return 'Congratulations on successfully completing this task! Your effort and persistence are commendable.';
+}
+
 // GET a specific task
 export async function GET(
   request: NextRequest,
@@ -273,12 +348,135 @@ Return your evaluation as a JSON object:
         task.content.context?.xp || 100
       );
       
-      // Generate comprehensive feedback
-      const comprehensiveFeedback = `經過 ${userAttempts} 次嘗試，你成功完成了這個任務！${
-        userAttempts > 1 
-          ? `\n\n學習歷程回顧：\n- 從第一次嘗試到最後，你展現了持續改進的精神\n- 共有 ${passedAttempts} 次達到通過標準\n- 最終掌握了任務所需的核心能力`
-          : '\n\n一次就成功完成任務，展現了良好的理解能力！'
-      }`;
+      // Generate comprehensive qualitative feedback using LLM based on full learning journey
+      let comprehensiveFeedback = '成功完成任務！';
+      
+      try {
+        // Prepare all user responses and AI feedback for comprehensive analysis
+        const learningJourney = task.interactions.map((interaction, index) => {
+          if (interaction.type === 'user_input') {
+            return {
+              type: 'user_response',
+              attempt: Math.floor(index / 2) + 1,
+              content: interaction.content.response,
+              timeSpent: interaction.content.timeSpent
+            };
+          } else if (interaction.type === 'ai_response') {
+            return {
+              type: 'ai_feedback',
+              attempt: Math.floor(index / 2) + 1,
+              passed: interaction.content.completed,
+              feedback: interaction.content.feedback,
+              strengths: interaction.content.strengths || [],
+              improvements: interaction.content.improvements || [],
+              xpEarned: interaction.content.xpEarned
+            };
+          }
+          return null;
+        }).filter(Boolean);
+        
+        // Get scenario and task context
+        const scenarioRepo = getScenarioRepository();
+        const scenario = await scenarioRepo.findById(program.scenarioId);
+        const careerType = (scenario?.sourceRef.metadata?.careerType as string) || 'unknown';
+        const language = program.metadata?.language || 'zhTW';
+        
+        // Get current user language preference from request headers or use program language
+        const acceptLanguage = request.headers.get('accept-language')?.split(',')[0];
+        const userLanguage = acceptLanguage || language;
+        
+        // Debug log language detection
+        console.log('=== LANGUAGE DETECTION DEBUG ===');
+        console.log('1. Raw headers:', {
+          acceptLanguage: request.headers.get('accept-language'),
+          allHeaders: Object.fromEntries(request.headers.entries())
+        });
+        console.log('2. Language processing:', {
+          rawAcceptLanguage: acceptLanguage,
+          programLanguage: language,
+          beforeProcessing: acceptLanguage || language,
+          afterProcessing: userLanguage
+        });
+        console.log('3. Final language for AI:', {
+          finalUserLanguage: userLanguage,
+          careerType,
+          taskTitle: task.title
+        });
+        console.log('================================');
+        
+        // Load YAML data for world setting context
+        let yamlData = null;
+        if (careerType !== 'unknown') {
+          yamlData = await DiscoveryYAMLLoader.loadPath(careerType, language as 'en' | 'zhTW');
+        }
+        
+        // Generate multilingual comprehensive qualitative feedback
+        const comprehensivePrompt = generateComprehensiveFeedbackPrompt(
+          userLanguage,
+          careerType,
+          task.title,
+          task.content.instructions,
+          task.content.context || {},
+          yamlData,
+          learningJourney
+        );
+        
+        // Debug log the generated prompt
+        console.log('=== GENERATED PROMPT DEBUG ===');
+        console.log('Prompt language setting:', userLanguage);
+        console.log('Full prompt to AI:');
+        console.log(comprehensivePrompt);
+        console.log('==============================');
+        
+        // Use AI to generate comprehensive qualitative feedback
+        const aiService = new VertexAIService({
+          systemPrompt: getSystemPromptForLanguage(userLanguage),
+          temperature: 0.8,
+          model: 'gemini-2.5-flash'
+        });
+        
+        const aiResponse = await aiService.sendMessage(comprehensivePrompt);
+        comprehensiveFeedback = aiResponse.content;
+        
+        // Debug log AI response (confirm-complete)
+        console.log('=== AI RESPONSE DEBUG (CONFIRM-COMPLETE) ===');
+        console.log('AI response received:');
+        console.log(comprehensiveFeedback);
+        console.log('Response length:', comprehensiveFeedback.length);
+        console.log('==========================================');
+        
+        // Add learning statistics at the end
+        if (userAttempts > 1) {
+          const statsSection = getStatsSection(userLanguage, userAttempts, passedAttempts, bestXP);
+          comprehensiveFeedback += statsSection;
+          
+          // Add skills summary if available
+          const allSkills = new Set<string>();
+          allFeedback.forEach(f => {
+            if (f.skillsImproved) {
+              f.skillsImproved.forEach((skill: string) => allSkills.add(skill));
+            }
+          });
+          
+          if (allSkills.size > 0) {
+            const skillsSection = getSkillsSection(userLanguage, Array.from(allSkills));
+            comprehensiveFeedback += skillsSection;
+          }
+        }
+      } catch (error) {
+        console.error('Error generating comprehensive feedback:', error);
+        // Fallback to simple feedback if AI generation fails
+        const lastSuccessfulFeedback = task.interactions
+          .filter(i => i.type === 'ai_response' && i.content?.completed === true)
+          .slice(-1)[0]?.content;
+        
+        comprehensiveFeedback = lastSuccessfulFeedback?.feedback || getFallbackMessage(userLanguage);
+        
+        if (userAttempts > 1) {
+          const statsSection = getStatsSection(userLanguage, userAttempts, passedAttempts, bestXP);
+          comprehensiveFeedback += statsSection;
+        }
+      }
       
       // Collect all skills improved across attempts
       const allSkillsImproved = new Set<string>();
@@ -383,6 +581,170 @@ Return your evaluation as a JSON object:
         },
         nextTaskId,
         programCompleted: completedTasks === orderedTasks.length
+      });
+    } else if (action === 'regenerate-evaluation') {
+      // Only allow in localhost environment
+      if (process.env.NODE_ENV !== 'development') {
+        return NextResponse.json(
+          { error: 'Not allowed in production' },
+          { status: 403 }
+        );
+      }
+      
+      // Check if task is completed
+      if (task.status !== 'completed') {
+        return NextResponse.json(
+          { error: 'Task must be completed to regenerate evaluation' },
+          { status: 400 }
+        );
+      }
+      
+      // Regenerate comprehensive feedback using the same logic as confirm-complete
+      const userAttempts = task.interactions.filter(i => i.type === 'user_input').length;
+      const aiResponses = task.interactions.filter(i => i.type === 'ai_response');
+      const passedAttempts = aiResponses.filter(i => i.content?.completed === true).length;
+      const allFeedback = task.interactions.filter(i => i.type === 'ai_response').map(i => i.content);
+      const bestXP = Math.max(...allFeedback.map(f => f.xpEarned || 0), task.content.context?.xp || 100);
+      
+      let comprehensiveFeedback = 'Successfully regenerated task evaluation!';
+      
+      try {
+        // Same logic as in confirm-complete for generating comprehensive feedback
+        const learningJourney = task.interactions.map((interaction, index) => {
+          if (interaction.type === 'user_input') {
+            return {
+              type: 'user_response',
+              attempt: Math.floor(index / 2) + 1,
+              content: interaction.content.response,
+              timeSpent: interaction.content.timeSpent
+            };
+          } else if (interaction.type === 'ai_response') {
+            return {
+              type: 'ai_feedback',
+              attempt: Math.floor(index / 2) + 1,
+              passed: interaction.content.completed,
+              feedback: interaction.content.feedback,
+              strengths: interaction.content.strengths || [],
+              improvements: interaction.content.improvements || [],
+              xpEarned: interaction.content.xpEarned
+            };
+          }
+          return null;
+        }).filter(Boolean);
+        
+        const scenarioRepo = getScenarioRepository();
+        const scenario = await scenarioRepo.findById(program.scenarioId);
+        const careerType = (scenario?.sourceRef.metadata?.careerType as string) || 'unknown';
+        const language = program.metadata?.language || 'zhTW';
+        const acceptLanguage = request.headers.get('accept-language')?.split(',')[0];
+        const userLanguage = acceptLanguage || language;
+        
+        // Debug log language detection for regenerate-evaluation
+        console.log('=== REGENERATE: LANGUAGE DETECTION DEBUG ===');
+        console.log('1. Raw headers:', {
+          acceptLanguage: request.headers.get('accept-language'),
+          allHeaders: Object.fromEntries(request.headers.entries())
+        });
+        console.log('2. Language processing (regenerate):', {
+          rawAcceptLanguage: acceptLanguage,
+          programLanguage: language,
+          beforeProcessing: acceptLanguage || language,
+          afterProcessing: userLanguage
+        });
+        console.log('==========================================');
+        
+        let yamlData = null;
+        if (careerType !== 'unknown') {
+          yamlData = await DiscoveryYAMLLoader.loadPath(careerType, language as 'en' | 'zhTW');
+        }
+        
+        const comprehensivePrompt = generateComprehensiveFeedbackPrompt(
+          userLanguage,
+          careerType,
+          task.title,
+          task.content.instructions,
+          task.content.context || {},
+          yamlData,
+          learningJourney
+        );
+        
+        // Debug log for regenerate-evaluation
+        console.log('=== REGENERATE EVALUATION DEBUG ===');
+        console.log('Language for regeneration:', userLanguage);
+        console.log('Full prompt:');
+        console.log(comprehensivePrompt);
+        console.log('==================================');
+        
+        const aiService = new VertexAIService({
+          systemPrompt: getSystemPromptForLanguage(userLanguage),
+          temperature: 0.8,
+          model: 'gemini-2.5-flash'
+        });
+        
+        const aiResponse = await aiService.sendMessage(comprehensivePrompt);
+        comprehensiveFeedback = aiResponse.content;
+        
+        // Debug log AI response (regenerate-evaluation)
+        console.log('=== AI RESPONSE DEBUG (REGENERATE) ===');
+        console.log('AI response received:');
+        console.log(comprehensiveFeedback);
+        console.log('Response length:', comprehensiveFeedback.length);
+        console.log('=====================================');
+        
+        if (userAttempts > 1) {
+          const statsSection = getStatsSection(userLanguage, userAttempts, passedAttempts, bestXP);
+          comprehensiveFeedback += statsSection;
+          
+          const allSkills = new Set<string>();
+          allFeedback.forEach(f => {
+            if (f.skillsImproved) {
+              f.skillsImproved.forEach((skill: string) => allSkills.add(skill));
+            }
+          });
+          
+          if (allSkills.size > 0) {
+            const skillsSection = getSkillsSection(userLanguage, Array.from(allSkills));
+            comprehensiveFeedback += skillsSection;
+          }
+        }
+      } catch (error) {
+        console.error('Error regenerating comprehensive feedback:', error);
+        comprehensiveFeedback = 'Failed to regenerate feedback. Please try again.';
+      }
+      
+      // Update the existing evaluation
+      if (task.evaluation?.id) {
+        const evaluationRepo = getEvaluationRepository();
+        await evaluationRepo.update(task.evaluation.id, {
+          feedback: comprehensiveFeedback,
+          metadata: {
+            completed: true,
+            xpEarned: bestXP,
+            totalAttempts: userAttempts,
+            passedAttempts: passedAttempts,
+            regeneratedAt: new Date().toISOString()
+          }
+        });
+        
+        // Update task evaluation reference
+        await taskRepo.update(taskId, {
+          evaluation: {
+            id: task.evaluation.id,
+            score: bestXP,
+            feedback: comprehensiveFeedback,
+            evaluatedAt: new Date().toISOString()
+          }
+        });
+      }
+      
+      return NextResponse.json({
+        success: true,
+        evaluation: {
+          id: task.evaluation?.id,
+          score: bestXP,
+          feedback: comprehensiveFeedback,
+          regenerated: true
+        }
       });
     } else if (action === 'start') {
       // Mark task as active
