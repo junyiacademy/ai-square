@@ -143,8 +143,8 @@ export class GCSProgramRepository<T extends IProgram = IProgram>
    */
   async findByScenarioAndUser(scenarioId: string, userId: string): Promise<T[]> {
     const allPrograms = await this.listAllEntities();
-    return allPrograms.filter(
-      program => program.scenarioId === scenarioId && program.userId === userId
-    );
+    return allPrograms
+      .filter(program => program.scenarioId === scenarioId && program.userId === userId)
+      .sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime());
   }
 }

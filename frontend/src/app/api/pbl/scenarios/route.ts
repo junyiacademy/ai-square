@@ -59,10 +59,26 @@ async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Recor
     // Get available YAML IDs
     const yamlIds = await pblScenarioService.listAvailableYAMLIds();
     
+    // First, get all existing scenarios in one batch to avoid multiple GCS calls
+    const { getScenarioRepository } = await import('@/lib/implementations/gcs-v2');
+    const scenarioRepo = getScenarioRepository();
+    const existingScenarios = await scenarioRepo.findBySource('pbl');
+    
+    // Create a map for quick lookup
+    const existingScenariosMap = new Map(
+      existingScenarios.map(s => [s.sourceRef.metadata?.yamlId, s])
+    );
+    
+    // Process each YAML ID
     for (const yamlId of yamlIds) {
       try {
-        // 創建或取得 Scenario UUID
-        const scenario = await pblScenarioService.findOrCreateScenarioByYAMLId(yamlId, lang);
+        // Check if scenario already exists
+        let scenario = existingScenariosMap.get(yamlId);
+        
+        // If not, create it
+        if (!scenario) {
+          scenario = await pblScenarioService.createScenarioFromYAML(yamlId, lang);
+        }
         
         // Choose emoji based on yaml ID
         const emojiMap: Record<string, string> = {

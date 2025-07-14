@@ -11,6 +11,8 @@ export abstract class GCSRepositoryBase<T extends { id: string }> {
   protected storage: Storage;
   protected bucket: ReturnType<Storage['bucket']>;
   protected basePath: string;
+  private listCache: { data: T[]; timestamp: number } | null = null;
+  private readonly CACHE_TTL = 5 * 60 * 1000; // 5 minutes cache
 
   constructor(basePath: string) {
     this.storage = new Storage(getStorageConfig());
@@ -118,6 +120,14 @@ export abstract class GCSRepositoryBase<T extends { id: string }> {
    * 列出所有實體
    */
   protected async listAllEntities(): Promise<T[]> {
+    // Check cache first
+    if (this.listCache && (Date.now() - this.listCache.timestamp) < this.CACHE_TTL) {
+      console.log(`[Cache HIT] Returning cached list for ${this.basePath}`);
+      return this.listCache.data;
+    }
+    
+    console.log(`[Cache MISS] Loading from GCS for ${this.basePath}`);
+    
     try {
       const [files] = await this.bucket.getFiles({
         prefix: this.basePath,
@@ -136,6 +146,12 @@ export abstract class GCSRepositoryBase<T extends { id: string }> {
           }
         }
       }
+      
+      // Update cache
+      this.listCache = {
+        data: entities,
+        timestamp: Date.now()
+      };
       
       return entities;
     } catch (error) {

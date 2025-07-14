@@ -18,14 +18,21 @@ export default function ScenarioDetailPage() {
   const scenarioId = params.id as string;
 
   useEffect(() => {
+    let isMounted = true;
+    const abortController = new AbortController();
+    
     const fetchData = async () => {
       try {
         // Fetch scenario details
-        const scenarioResponse = await fetch(`/api/pbl/scenarios/${params.id}?lang=${i18n.language}`);
+        const scenarioResponse = await fetch(`/api/pbl/scenarios/${params.id}?lang=${i18n.language}`, {
+          signal: abortController.signal
+        });
+        
+        if (!isMounted) return;
+        
         if (scenarioResponse.ok) {
           const response = await scenarioResponse.json();
           if (response.success && response.data) {
-            console.log('Scenario data received:', response.data);
             // Transform PBL API response to match expected format
             const scenarioData = {
               ...response.data,
@@ -39,7 +46,9 @@ export default function ScenarioDetailPage() {
                 ksaMapping: response.data.ksaMapping
               }
             };
-            setScenario(scenarioData);
+            if (isMounted) {
+              setScenario(scenarioData);
+            }
           } else {
             console.error('Invalid PBL API response:', response);
           }
@@ -48,20 +57,40 @@ export default function ScenarioDetailPage() {
         }
 
         // Fetch user's programs for this scenario
-        const programsResponse = await fetch(`/api/pbl/scenarios/${params.id}/programs`);
+        const programsResponse = await fetch(`/api/pbl/scenarios/${params.id}/programs`, {
+          signal: abortController.signal
+        });
+        
+        if (!isMounted) return;
+        
         if (programsResponse.ok) {
           const programsData = await programsResponse.json();
-          setUserPrograms(programsData);
+          if (isMounted) {
+            setUserPrograms(programsData);
+          }
         }
       } catch (error) {
-        console.error('Error fetching scenario data:', error);
+        if (error instanceof Error && error.name === 'AbortError') {
+          // This is expected when component unmounts, don't log
+          return;
+        } else {
+          console.error('Error fetching scenario data:', error);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchData();
-  }, [params.id]);
+    
+    return () => {
+      isMounted = false;
+      // Abort with a reason to avoid the "aborted without reason" error
+      abortController.abort(new DOMException('Component unmounted', 'AbortError'));
+    };
+  }, [params.id, i18n.language]);
 
   // Helper function to get data from scenario metadata
   const getScenarioData = (key: string, fallback: any = null) => {
@@ -77,12 +106,16 @@ export default function ScenarioDetailPage() {
         // Continue existing program
         const program = userPrograms.find(p => p.id === programId);
         if (program) {
-          // Navigate to the first incomplete task or the first task
-          const tasks = getScenarioData('tasks', []);
-          const firstIncompleteTask = tasks.find((task: any) => 
-            !program.taskLogs?.some((log: any) => log.taskId === task.id && log.isCompleted)
-          );
-          const targetTaskId = firstIncompleteTask?.id || tasks[0]?.id || 'task-1';
+          // Get the current task or the first task
+          const currentTaskIndex = program.currentTaskIndex || 0;
+          const targetTaskId = program.taskIds?.[currentTaskIndex] || program.taskIds?.[0];
+          
+          if (!targetTaskId) {
+            console.error('No task ID found for navigation in program:', program);
+            alert(t('details.errorStarting', 'Error starting program - no tasks found'));
+            setIsStarting(false);
+            return;
+          }
           router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${targetTaskId}`);
         }
       } else {
@@ -104,7 +137,13 @@ export default function ScenarioDetailPage() {
         const data = await response.json();
         if (data.id) {
           // Navigate to the first task using the UUID from created tasks
-          const firstTaskId = data.tasks?.[0]?.id || data.taskIds?.[0] || 'task-1';
+          const firstTaskId = data.tasks?.[0]?.id || data.taskIds?.[0];
+          if (!firstTaskId) {
+            console.error('No task ID found in created program:', data);
+            alert(t('details.errorStarting', 'Error starting program - no tasks created'));
+            setIsStarting(false);
+            return;
+          }
           router.push(`/pbl/scenarios/${scenarioId}/program/${data.id}/tasks/${firstTaskId}`);
         }
       }
@@ -233,7 +272,7 @@ export default function ScenarioDetailPage() {
                         <div className="flex items-start justify-between mb-3">
                           <div>
                             <span className="font-medium text-gray-900 dark:text-white">
-                              {index === 0 ? t('details.latestProgram', 'Latest Program') : `${t('common:program', 'Program')} ${index + 1}`}
+                              {index === 0 ? t('details.latestProgram', 'Latest Program') : `${t('common:program', 'Program')} ${userPrograms.length - index}`}
                             </span>
                             <span className={`ml-3 text-xs px-2 py-1 rounded-full ${
                               program.status === 'completed' 
@@ -248,14 +287,12 @@ export default function ScenarioDetailPage() {
                         </div>
                         <div className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                           <div>
-                            {t('common:progress', 'Progress')}: {program.evaluations?.length || 0}/{getScenarioData('tasks', []).length || 0} {t('common:tasks', 'tasks')}
-                            {program.evaluations && program.evaluations.length > 0 && (
+                            {t('common:progress', 'Progress')}: {program.completedTaskCount || 0}/{program.totalTaskCount || 0} {t('common:tasks', 'tasks')}
+                            {program.completedTaskCount > 0 && program.evaluationId && (
                               <>
                                 <span className="mx-2">•</span>
                                 <span className="font-medium">
-                                  {t('averageScore', 'Average Score')}: {Math.round(
-                                    program.evaluations.reduce((sum, e) => sum + e.score, 0) / program.evaluations.length
-                                  )}%
+                                  {t('hasEvaluation', 'Has Evaluation')}
                                 </span>
                               </>
                             )}
@@ -277,7 +314,7 @@ export default function ScenarioDetailPage() {
                           >
                             {t('common:continue', 'Continue')}
                           </button>
-                          {(program.evaluations && program.evaluations.length > 0 || program.status === 'completed') && (
+                          {(program.completedTaskCount > 0 || program.status === 'completed' || program.evaluationId) && (
                             <button
                               onClick={() => router.push(`/pbl/scenarios/${scenarioId}/program/${program.id}/complete`)}
                               className="text-sm px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors font-medium"
