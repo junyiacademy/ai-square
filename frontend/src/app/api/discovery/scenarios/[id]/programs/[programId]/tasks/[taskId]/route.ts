@@ -329,7 +329,7 @@ Return your evaluation as a JSON object:
       await programRepo.updateProgress(programId, nextTaskIndex);
       
       // If all tasks completed, complete the program
-      if (completedTasks === tasks.length) {
+      if (completedTasks === orderedTasks.length) {
         await programRepo.complete(programId);
         
         // Create program completion evaluation
@@ -342,7 +342,7 @@ Return your evaluation as a JSON object:
           dimensions: [],
           metadata: {
             totalXP: currentXP + bestXP,
-            tasksCompleted: tasks.length
+            tasksCompleted: orderedTasks.length
           },
           createdAt: new Date().toISOString()
         });
@@ -358,7 +358,7 @@ Return your evaluation as a JSON object:
           feedback: comprehensiveFeedback
         },
         nextTaskId,
-        programCompleted: completedTasks === tasks.length
+        programCompleted: completedTasks === orderedTasks.length
       });
     } else if (action === 'start') {
       // Mark task as active
