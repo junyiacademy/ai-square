@@ -106,6 +106,7 @@ export async function POST(request: Request) {
         taskIds: [],
         currentTaskIndex: 0,
         metadata: { 
+          sourceType: 'discovery',
           testRun: true,
           createdAt: new Date().toISOString(),
         },

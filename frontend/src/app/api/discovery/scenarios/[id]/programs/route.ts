@@ -126,6 +126,8 @@ export async function POST(
       taskIds: [],
       currentTaskIndex: 0,
       metadata: {
+        sourceType: 'discovery',
+        careerType: scenario.sourceRef.metadata?.careerType || 'unknown',
         totalXP: 0,
         achievements: [],
         skillProgress: []

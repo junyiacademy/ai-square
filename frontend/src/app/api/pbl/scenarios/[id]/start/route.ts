@@ -179,6 +179,7 @@ export async function POST(
       taskIds: [],
       currentTaskIndex: 0,
       metadata: {
+        sourceType: 'pbl',
         language,
         title: scenario.title,
         totalTasks: tasks.length,

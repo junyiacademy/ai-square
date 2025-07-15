@@ -202,6 +202,7 @@ export async function POST(
       taskIds: [],
       currentTaskIndex: 0,
       metadata: {
+        sourceType: 'assessment',
         language,
         startTime: Date.now(),
         timeLimit: 900, // 15 minutes default

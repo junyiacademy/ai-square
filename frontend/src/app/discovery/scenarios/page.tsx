@@ -82,7 +82,9 @@ export default function ScenariosPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [activeTab, setActiveTab] = useState<'all' | 'my'>('all'); // Default to 'all' since v2 doesn't track discovery in userData
   const [scenarios, setScenarios] = useState<any[]>([]);
+  const [myScenarios, setMyScenarios] = useState<any[]>([]);
   const [isLoadingScenarios, setIsLoadingScenarios] = useState(true);
+  const [isLoadingMyScenarios, setIsLoadingMyScenarios] = useState(false);
 
   // Load scenarios from API
   useEffect(() => {
@@ -127,18 +129,50 @@ export default function ScenariosPage() {
   }, [isLoggedIn]);
 
 
-  // Get my scenarios - in v2 architecture, discovery scenarios are tracked separately
-  const getMyScenarios = () => {
-    // Discovery scenarios use the unified learning architecture (v2) with Programs/Tasks
-    // They are NOT tracked in userData (programs are stored in GCS in v2 architecture)
-    // savedPaths are for assessment results, which is a different system
-    
-    // TODO: Implement proper v2 discovery scenario tracking through Program repository
-    // For now, return empty array since v2 doesn't track discovery in userData
-    return [];
-  };
+  // Load user's Discovery scenarios
+  useEffect(() => {
+    const loadMyScenarios = async () => {
+      if (!isLoggedIn || activeTab !== 'my') return;
+      
+      setIsLoadingMyScenarios(true);
+      try {
+        const response = await fetch('/api/discovery/my-programs');
+        if (response.ok) {
+          const data = await response.json();
+          
+          // Transform the data to match the expected format
+          const transformedScenarios = data.map((scenario: any) => ({
+            id: scenario.sourceRef?.metadata?.careerType || scenario.id,
+            scenarioId: scenario.id,
+            title: scenario.title,
+            subtitle: scenario.description,
+            category: scenario.metadata?.category || 'general',
+            icon: careerIcons[scenario.sourceRef?.metadata?.careerType] || SparklesIcon,
+            color: careerColors[scenario.sourceRef?.metadata?.careerType] || 'from-gray-500 to-gray-600',
+            skills: scenario.metadata?.skillFocus || [],
+            // Add user-specific data
+            userPrograms: scenario.userPrograms,
+            progress: scenario.userPrograms?.active?.progress || 0,
+            isActive: !!scenario.userPrograms?.active,
+            completedCount: scenario.userPrograms?.completed || 0,
+            lastActivity: scenario.userPrograms?.lastActivity
+          }));
+          
+          setMyScenarios(transformedScenarios);
+        } else {
+          console.error('Failed to fetch my scenarios');
+          setMyScenarios([]);
+        }
+      } catch (error) {
+        console.error('Error loading my scenarios:', error);
+        setMyScenarios([]);
+      } finally {
+        setIsLoadingMyScenarios(false);
+      }
+    };
 
-  const myScenarios = getMyScenarios();
+    loadMyScenarios();
+  }, [isLoggedIn, activeTab]);
   
   const filteredScenarios = activeTab === 'my' 
     ? myScenarios
@@ -184,8 +218,43 @@ export default function ScenariosPage() {
           </p>
         </div>
 
-        {/* Tab Switcher - Hidden for now since v2 doesn't track discovery scenarios in userData */}
-        {/* TODO: Implement proper v2 discovery scenario tracking through Program repository */}
+        {/* Tab Switcher */}
+        <div className="flex justify-center mb-8">
+          <div className="inline-flex rounded-lg border border-gray-200 bg-white p-1">
+            <button
+              onClick={() => setActiveTab('all')}
+              className={`
+                px-6 py-2 rounded-md text-sm font-medium transition-all
+                ${activeTab === 'all'
+                  ? 'bg-purple-600 text-white shadow-sm'
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                }
+              `}
+            >
+              <div className="flex items-center space-x-2">
+                <SparklesIcon className="w-4 h-4" />
+                <span>全部</span>
+              </div>
+            </button>
+            {isLoggedIn && (
+              <button
+                onClick={() => setActiveTab('my')}
+                className={`
+                  px-6 py-2 rounded-md text-sm font-medium transition-all
+                  ${activeTab === 'my'
+                    ? 'bg-purple-600 text-white shadow-sm'
+                    : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }
+                `}
+              >
+                <div className="flex items-center space-x-2">
+                  <RocketLaunchIcon className="w-4 h-4" />
+                  <span>我的冒險</span>
+                </div>
+              </button>
+            )}
+          </div>
+        </div>
 
         {/* Category Filters - Only show when viewing all */}
         {activeTab === 'all' && (
@@ -215,22 +284,25 @@ export default function ScenariosPage() {
         )}
 
         {/* Loading State */}
-        {isLoadingScenarios && (
+        {(isLoadingScenarios || (activeTab === 'my' && isLoadingMyScenarios)) && (
           <div className="text-center py-16">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-            <p className="text-gray-500">載入職業冒險中...</p>
+            <p className="text-gray-500">
+              {activeTab === 'my' ? '載入我的學習歷程...' : '載入職業冒險中...'}
+            </p>
           </div>
         )}
 
         {/* Scenarios Grid */}
-        {!isLoadingScenarios && (
+        {!isLoadingScenarios && !(activeTab === 'my' && isLoadingMyScenarios) && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredScenarios.map((scenario, index) => {
             const Icon = scenario.icon;
-            // v2 architecture doesn't track discovery scenarios in userData
-            const activeProgram = null;
-            const completedPrograms = [];
-            const matchPercentage = null;
+            // Use data from API for 'my' tab, null for 'all' tab
+            const isMyScenario = activeTab === 'my';
+            const activeProgram = isMyScenario && scenario.isActive ? scenario.userPrograms?.active : null;
+            const completedCount = isMyScenario ? scenario.completedCount : 0;
+            const progress = isMyScenario ? scenario.progress : 0;
 
             return (
               <motion.div
@@ -254,14 +326,18 @@ export default function ScenariosPage() {
                     {/* Status Badge */}
                     {activeProgram && (
                       <div className="absolute top-3 right-3 px-3 py-1 bg-white/90 backdrop-blur rounded-full">
-                        <span className="text-xs font-medium text-purple-700">進行中</span>
+                        <span className="text-xs font-medium text-purple-700">
+                          進行中 - {progress}%
+                        </span>
                       </div>
                     )}
                     
-                    {/* Match Percentage Badge */}
-                    {matchPercentage && !activeProgram && (
+                    {/* Completed Badge */}
+                    {!activeProgram && completedCount > 0 && (
                       <div className="absolute top-3 right-3 px-3 py-1 bg-white/90 backdrop-blur rounded-full">
-                        <span className="text-xs font-medium text-green-700">{matchPercentage}% 匹配</span>
+                        <span className="text-xs font-medium text-green-700">
+                          已完成 {completedCount} 次
+                        </span>
                       </div>
                     )}
                   </div>
@@ -292,10 +368,33 @@ export default function ScenariosPage() {
                       )}
                     </div>
 
-                    {/* Start Button */}
+                    {/* Progress Bar for Active Scenarios */}
+                    {activeProgram && (
+                      <div className="mb-4">
+                        <div className="flex justify-between text-xs text-gray-600 mb-1">
+                          <span>學習進度</span>
+                          <span>{activeProgram.completedTasks}/{activeProgram.totalTasks} 任務</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="bg-gradient-to-r from-purple-600 to-blue-600 h-2 rounded-full transition-all duration-300"
+                            style={{ width: `${progress}%` }}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Last Activity for My Scenarios */}
+                    {isMyScenario && scenario.lastActivity && (
+                      <div className="text-xs text-gray-500 mb-4">
+                        上次活動：{new Date(scenario.lastActivity).toLocaleDateString('zh-TW')}
+                      </div>
+                    )}
+
+                    {/* Action Button */}
                     <div className="pt-4 border-t border-gray-100">
                       <button className="w-full py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all">
-                        開始冒險
+                        {activeProgram ? '繼續學習' : (completedCount > 0 ? '重新開始' : '開始冒險')}
                       </button>
                     </div>
                   </div>
@@ -307,18 +406,18 @@ export default function ScenariosPage() {
         )}
 
         {/* Empty State */}
-        {filteredScenarios.length === 0 && (
+        {filteredScenarios.length === 0 && !isLoadingScenarios && !(activeTab === 'my' && isLoadingMyScenarios) && (
           <div className="text-center py-16">
             {activeTab === 'my' ? (
               <div>
                 <SparklesIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500 mb-4">還沒有屬於你的職業副本</p>
-                <p className="text-sm text-gray-400 mb-6">完成評估測驗，發現最適合你的職業冒險</p>
+                <p className="text-gray-500 mb-4">還沒有開始任何學習歷程</p>
+                <p className="text-sm text-gray-400 mb-6">選擇一個職業路徑，開始你的探索之旅</p>
                 <button
-                  onClick={() => router.push('/discovery/evaluation')}
+                  onClick={() => setActiveTab('all')}
                   className="inline-flex items-center px-6 py-3 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors"
                 >
-                  開始評估
+                  瀏覽所有職業
                 </button>
               </div>
             ) : (

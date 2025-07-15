@@ -477,6 +477,8 @@ Return your evaluation as a JSON object:
       
       // Generate comprehensive qualitative feedback using LLM based on full learning journey
       let comprehensiveFeedback = '成功完成任務！';
+      let userLanguage = 'zhTW'; // Default language
+      let careerType = 'unknown'; // Default career type
       
       try {
         // Prepare all user responses and AI feedback for comprehensive analysis
@@ -505,12 +507,12 @@ Return your evaluation as a JSON object:
         // Get scenario and task context
         const scenarioRepo = getScenarioRepository();
         const scenario = await scenarioRepo.findById(program.scenarioId);
-        const careerType = (scenario?.sourceRef.metadata?.careerType as string) || 'unknown';
+        careerType = (scenario?.sourceRef.metadata?.careerType as string) || 'unknown';
         const language = program.metadata?.language || 'zhTW';
         
         // Get current user language preference from request headers or use program language
         const acceptLanguage = request.headers.get('accept-language')?.split(',')[0];
-        const userLanguage = acceptLanguage || language;
+        userLanguage = acceptLanguage || language;
         
         // Debug log language detection
         console.log('=== LANGUAGE DETECTION DEBUG ===');
@@ -793,7 +795,7 @@ Return your evaluation as a JSON object:
         const careerType = (scenario?.sourceRef.metadata?.careerType as string) || 'unknown';
         const language = program.metadata?.language || 'zhTW';
         const acceptLanguage = request.headers.get('accept-language')?.split(',')[0];
-        const userLanguage = acceptLanguage || language;
+        userLanguage = acceptLanguage || language;
         
         // Debug log language detection for regenerate-evaluation
         console.log('=== REGENERATE: LANGUAGE DETECTION DEBUG ===');
