@@ -174,7 +174,7 @@
   },
   
   "workspace": {
-    "title": "{{path}} Workspace",
+    "title": "{{path}} Program",
     "aiAssistant": "AI Assistant",
     "currentTask": "Current Task",
     "progress": "Progress",
@@ -235,7 +235,7 @@
     "overview": "Overview",
     "assessment": "Assessment", 
     "paths": "Paths",
-    "workspace": "Workspace",
+    "program": "Program",
     "achievements": "Achievements"
   }
 }

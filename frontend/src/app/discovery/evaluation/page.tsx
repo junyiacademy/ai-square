@@ -27,7 +27,7 @@ export default function EvaluationPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [achievementCount, setAchievementCount] = useState(0);
   const [assessmentAnswers, setAssessmentAnswers] = useState<Record<string, string[]>>({});
-  const [workspaceCount, setWorkspaceCount] = useState(0);
+  const [programCount, setProgramCount] = useState(0);
 
   // Load existing assessment results
   useEffect(() => {
@@ -40,7 +40,8 @@ export default function EvaluationPage() {
           setAssessmentResults(userData.assessmentResults);
         }
         setAchievementCount(userData?.achievements?.badges?.length || 0);
-        setWorkspaceCount(userData?.workspaceSessions?.length || 0);
+        // Programs are stored in GCS in v2 architecture, not in userData
+        setProgramCount(0); // TODO: Query from GCS if needed
         
         // Load the latest assessment session's answers
         if (userData?.assessmentSessions && userData.assessmentSessions.length > 0) {

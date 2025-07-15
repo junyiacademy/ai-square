@@ -470,6 +470,23 @@ make gcloud-build-and-deploy-frontend
 
 ### Architecture
 
+#### Unified Learning Architecture
+AI Square 採用統一學習架構，所有模組（Assessment、PBL、Discovery）都遵循相同的資料流程：
+
+**統一資料流程**：
+```
+YAML/API → Content Source → Scenario (UUID) → Program (UUID) → Tasks (UUID) → Evaluations (UUID)
+```
+
+**共同 Pattern**：
+1. **Repository Pattern**: 所有模組都使用 GCS Repository 抽象層
+2. **UUID 識別**: 所有實體都有唯一 UUID
+3. **狀態管理**: pending → active → completed
+4. **多語言支援**: 統一的翻譯機制
+5. **快取策略**: 多層快取提升效能
+
+詳細架構說明請參考：`frontend/docs/infrastructure/unified-learning-architecture.md`
+
 #### Frontend Structure
 - **Framework**: Next.js 15 with App Router, TypeScript, Tailwind CSS
 - **Internationalization**: react-i18next with 9 language support (en, zhTW, es, ja, ko, fr, de, ru, it)

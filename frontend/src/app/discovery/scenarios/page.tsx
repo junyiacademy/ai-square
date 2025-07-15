@@ -130,7 +130,7 @@ export default function ScenariosPage() {
   // Get my scenarios - in v2 architecture, discovery scenarios are tracked separately
   const getMyScenarios = () => {
     // Discovery scenarios use the unified learning architecture (v2) with Programs/Tasks
-    // They are NOT tracked in userData's savedPaths or workspaceSessions
+    // They are NOT tracked in userData (programs are stored in GCS in v2 architecture)
     // savedPaths are for assessment results, which is a different system
     
     // TODO: Implement proper v2 discovery scenario tracking through Program repository
@@ -228,8 +228,8 @@ export default function ScenariosPage() {
             {filteredScenarios.map((scenario, index) => {
             const Icon = scenario.icon;
             // v2 architecture doesn't track discovery scenarios in userData
-            const activeWorkspace = null;
-            const completedWorkspaces = [];
+            const activeProgram = null;
+            const completedPrograms = [];
             const matchPercentage = null;
 
             return (
@@ -252,14 +252,14 @@ export default function ScenariosPage() {
                     </div>
                     
                     {/* Status Badge */}
-                    {activeWorkspace && (
+                    {activeProgram && (
                       <div className="absolute top-3 right-3 px-3 py-1 bg-white/90 backdrop-blur rounded-full">
                         <span className="text-xs font-medium text-purple-700">進行中</span>
                       </div>
                     )}
                     
                     {/* Match Percentage Badge */}
-                    {matchPercentage && !activeWorkspace && (
+                    {matchPercentage && !activeProgram && (
                       <div className="absolute top-3 right-3 px-3 py-1 bg-white/90 backdrop-blur rounded-full">
                         <span className="text-xs font-medium text-green-700">{matchPercentage}% 匹配</span>
                       </div>

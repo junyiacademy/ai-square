@@ -14,17 +14,51 @@ Content Source → Scenario → Program → Task → Evaluation
 - **Task**：具體的學習任務（向下隸屬於Program UUID）
 - **Evaluation**：評估結果（Task級別和Program級別）
 
-### 1.2 三大模組對應
+### 1.2 統一資料流程與共同模式
+
+#### 統一資料流程
+```
+YAML/API → Content Source → Scenario (UUID) → Program (UUID) → Tasks (UUID) → Evaluations (UUID)
+```
+
+#### 共同 Pattern（所有模組共享）
+1. **Repository Pattern**: 所有模組都使用 GCS Repository 抽象層
+   - 統一的 CRUD 操作介面
+   - 一致的錯誤處理機制
+   - 標準化的查詢方法
+
+2. **UUID 識別**: 所有實體都有唯一 UUID
+   - 全域唯一性保證
+   - 便於跨模組引用
+   - 支援分散式系統擴展
+
+3. **狀態管理**: pending → active → completed
+   - 標準化的生命週期
+   - 統一的狀態轉換規則
+   - 清晰的進度追蹤
+
+4. **多語言支援**: 統一的翻譯機制
+   - 14 種語言支援
+   - 按需翻譯與快取
+   - 統一的語言代碼處理
+
+5. **快取策略**: 多層快取提升效能
+   - Memory 快取（短期）
+   - localStorage 快取（中期）
+   - GCS 持久化（長期）
+   - 智能快取失效機制
+
+### 1.3 三大模組對應
 ```
 PBL:       YAML → Scenario → Program → Task → Evaluations
-Discovery: Path → Scenario → Workspace(Program) → Task → Evaluations  
+Discovery: Path → Scenario → Program → Task → Evaluations  
 Assessment: YAML → Scenario(Config) → Program → Task(All Questions) → Evaluations
 ```
 
 各模組特點：
 - **PBL**：從YAML載入情境，每個Program包含一個Task（整個學習會話），有Task和Program兩層評估
-- **Discovery**：動態生成Scenario，Workspace即為Program，一個工作階段為一個Task
-- **Assessment**：Assessment config作為Scenario，一個Task包含所有Questions及其互動記錄
+- **Discovery**：動態生成Scenario，一個Program代表一次學習歷程，包含多個Tasks
+- **Assessment**：Assessment config作為Scenario，可以有多個Tasks，每個Task包含一組Questions及其互動記錄
 
 ## 2. 統一架構設計
 
