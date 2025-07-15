@@ -174,23 +174,48 @@ export abstract class BaseYAMLLoader<T = unknown> {
    * 輔助方法
    */
   protected getFilePath(fileName: string, basePath: string, language?: string): string {
+    // If fileName already contains full path structure, use it directly
+    if (fileName.includes(path.sep)) {
+      const fullPath = path.join(basePath, fileName);
+      // Add extension if not present
+      if (!fullPath.endsWith('.yaml') && !fullPath.endsWith('.yml')) {
+        // Check which extension exists
+        if (fs.existsSync(fullPath + '.yml')) {
+          return fullPath + '.yml';
+        }
+        return fullPath + '.yaml';
+      }
+      return fullPath;
+    }
+    
     // Remove extension if present
     const baseFileName = fileName.replace(/\.(yaml|yml)$/, '');
     
     // For language-specific files
     if (language) {
-      const langFileName = `${baseFileName}_${language}.yaml`;
-      const langFilePath = path.join(basePath, baseFileName, langFileName);
+      // Try .yml first (Discovery uses .yml)
+      const langFileNameYml = `${baseFileName}_${language}.yml`;
+      const langFilePathYml = path.join(basePath, baseFileName, langFileNameYml);
+      if (fs.existsSync(langFilePathYml)) {
+        return langFilePathYml;
+      }
       
-      // Check if language-specific file exists
-      if (fs.existsSync(langFilePath)) {
-        return langFilePath;
+      // Then try .yaml
+      const langFileNameYaml = `${baseFileName}_${language}.yaml`;
+      const langFilePathYaml = path.join(basePath, baseFileName, langFileNameYaml);
+      if (fs.existsSync(langFilePathYaml)) {
+        return langFilePathYaml;
       }
       
       // Fallback to main directory with language suffix
-      const altLangPath = path.join(basePath, langFileName);
-      if (fs.existsSync(altLangPath)) {
-        return altLangPath;
+      const altLangPathYml = path.join(basePath, langFileNameYml);
+      if (fs.existsSync(altLangPathYml)) {
+        return altLangPathYml;
+      }
+      
+      const altLangPathYaml = path.join(basePath, langFileNameYaml);
+      if (fs.existsSync(altLangPathYaml)) {
+        return altLangPathYaml;
       }
     }
     

@@ -904,12 +904,163 @@ CREATE TABLE competency_progress (
 - **減少程式碼重複**：共用基礎類別和服務
 - **更好的可維護性**：清晰的責任劃分和資料流
 
-## 7. 實施路線圖
+## 7. YAML to Scenarios 初始化機制
+
+### 7.1 統一初始化架構
+
+所有模組（PBL、Discovery、Assessment）都遵循相同的初始化流程：
+
+```
+YAML Files → YAML Loader → Scenario Initialization Service → Scenario Repository → GCS
+```
+
+#### 核心組件
+
+1. **BaseYAMLLoader**：提供統一的 YAML 載入機制
+   - 多語言支援
+   - 快取機制
+   - 錯誤處理
+   - Schema 驗證
+
+2. **Module-specific YAML Loaders**：各模組專用的載入器
+   - `AssessmentYAMLLoader`：處理 Assessment YAML 格式
+   - `PBLYAMLLoader`：處理 PBL Scenario YAML
+   - `DiscoveryYAMLLoader`：處理 Discovery Path YAML
+
+3. **ScenarioInitializationService**：統一的初始化服務
+   - 掃描 YAML 檔案
+   - 轉換為 Scenario 格式
+   - 檢查重複並更新
+   - 批次處理
+
+### 7.2 初始化流程
+
+#### Step 1: 掃描 YAML 檔案
+```typescript
+// 各模組的 YAML 檔案位置
+const yamlPaths = {
+  pbl: 'public/pbl_data/scenarios/**/*.yaml',
+  discovery: 'public/discovery_data/paths/**/*.yaml',
+  assessment: 'public/assessment_data/**/questions_*.yaml'
+};
+```
+
+#### Step 2: 載入並轉換
+```typescript
+// 使用專用的 YAML Loader
+const yamlData = await assessmentYAMLLoader.loadAssessment(name, language);
+
+// 轉換為 Scenario 格式
+const scenario: IScenario = {
+  sourceType: 'assessment',
+  sourceRef: {
+    type: 'yaml',
+    path: yamlPath,
+    lastSync: new Date().toISOString()
+  },
+  title: yamlData.config.title,
+  // ... 其他欄位
+};
+```
+
+#### Step 3: 建立或更新 Scenario
+```typescript
+// 檢查是否已存在
+const existing = await scenarioRepo.findBySource('assessment', yamlPath);
+
+if (existing) {
+  // 更新現有 Scenario（如果 YAML 有變更）
+  await scenarioRepo.update(existing.id, scenario);
+} else {
+  // 創建新 Scenario
+  await scenarioRepo.create(scenario);
+}
+```
+
+### 7.3 執行初始化
+
+#### 手動執行（開發/部署時）
+```bash
+# 初始化所有 Scenarios
+npm run init:scenarios
+
+# 只初始化特定模組
+npm run init:scenarios -- --assessment
+npm run init:scenarios -- --pbl
+npm run init:scenarios -- --discovery
+
+# Dry run（預覽不實際執行）
+npm run init:scenarios -- --dry-run
+
+# 強制更新已存在的 Scenarios
+npm run init:scenarios -- --force
+```
+
+#### 自動執行時機
+1. **部署時**：CI/CD pipeline 中執行
+2. **開發時**：偵測 YAML 變更自動更新
+3. **定期排程**：每日檢查並同步
+
+### 7.4 YAML 變更處理策略
+
+#### 1. 版本控制模式
+```typescript
+interface IScenario {
+  sourceRef: {
+    version?: string;  // 追蹤 YAML 版本
+    checksum?: string; // 檔案 checksum
+    lastSync?: string; // 最後同步時間
+  }
+}
+```
+
+#### 2. 更新策略
+- **內容更新**（錯字、翻譯）：直接更新現有 Scenario
+- **結構變更**：通知管理員審核
+- **破壞性變更**：創建新版本，保留舊版
+
+#### 3. 智能同步
+```typescript
+class ScenarioSyncService {
+  async checkForUpdates() {
+    const scenarios = await scenarioRepo.findAll();
+    
+    for (const scenario of scenarios) {
+      if (scenario.sourceRef.type === 'yaml') {
+        const yamlChanged = await this.hasYAMLChanged(scenario);
+        if (yamlChanged) {
+          await this.syncScenario(scenario);
+        }
+      }
+    }
+  }
+}
+```
+
+### 7.5 最佳實踐
+
+1. **初始化優先順序**
+   - Assessment：題庫穩定，優先初始化
+   - PBL：情境固定，其次初始化
+   - Discovery：動態生成，最後處理
+
+2. **錯誤處理**
+   - 單一 YAML 錯誤不影響其他檔案
+   - 詳細錯誤日誌便於除錯
+   - 提供 rollback 機制
+
+3. **效能考量**
+   - 批次處理減少 GCS 操作
+   - 使用快取避免重複載入
+   - 支援增量更新
+
+## 8. 實施路線圖
 
 ### Phase 1: 建立核心架構（Week 1-2）
 1. 定義所有核心介面（IScenario, IProgram, ITask, IEvaluation）
 2. 實作基礎 Repository 和 Service 類別
 3. 設計UUID檔案儲存結構
+4. **實作統一的 YAML to Scenarios 初始化機制**
 
 ### Phase 2: 遷移 Discovery（Week 3-4）
 1. 從localStorage遷移到統一儲存
@@ -937,9 +1088,9 @@ CREATE TABLE competency_progress (
 2. 優化UUID檔案讀寫
 3. 效能測試與調整
 
-## 8. 設計原理與最佳實踐
+## 9. 設計原理與最佳實踐
 
-### 8.1 統一設計：所有模組都是 Multiple Tasks
+### 9.1 統一設計：所有模組都是 Multiple Tasks
 
 #### 核心原則：Program → Multiple Tasks
 
@@ -1145,7 +1296,7 @@ class UnifiedLearningService {
    - 包含時間戳記和元數據
    - 支援重播學習過程
 
-## 9. 結論
+## 10. 結論
 
 這個 Content Source → Scenario → Program → Task → Evaluation 的統一架構為 AI Square 平台提供了：
 

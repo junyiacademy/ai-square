@@ -1,81 +1,91 @@
-import yaml from 'js-yaml';
-import { promises as fs } from 'fs';
+/**
+ * Discovery YAML Loader
+ * 繼承自 BaseYAMLLoader，專門處理 Discovery Path YAML 檔案
+ */
+
+import { BaseYAMLLoader, YAMLLoaderOptions } from '@/lib/abstractions/base-yaml-loader';
 import path from 'path';
+
+export interface DiscoveryMetadata {
+  title: string;
+  short_description: string;
+  long_description: string;
+  estimated_hours: number;
+  skill_focus: string[];
+}
+
+export interface WorldSetting {
+  name: string;
+  description: string;
+  atmosphere: string;
+  visual_theme: string;
+}
+
+export interface SkillTreeSkill {
+  id: string;
+  name: string;
+  description: string;
+  max_level: number;
+  requires?: string[];
+  unlocks?: string[];
+}
+
+export interface MilestoneQuest {
+  id: string;
+  name: string;
+  description: string;
+  required_level: number;
+  skills_tested: string[];
+  xp_reward: number;
+  rewards?: {
+    skills?: string[];
+    achievements?: string[];
+  };
+}
 
 export interface DiscoveryPath {
   path_id: string;
   category: string;
   difficulty_range: string;
-  metadata: {
-    title: string;
-    short_description: string;
-    long_description: string;
-    estimated_hours: number;
-    skill_focus: string[];
-  };
-  world_setting: {
-    name: string;
-    description: string;
-    atmosphere: string;
-    visual_theme: string;
-  };
+  metadata: DiscoveryMetadata;
+  world_setting: WorldSetting;
   starting_scenario: {
     title: string;
     description: string;
     initial_tasks: string[];
   };
   skill_tree: {
-    core_skills: Array<{
+    core_skills: SkillTreeSkill[];
+    advanced_skills: SkillTreeSkill[];
+  };
+  milestone_quests: MilestoneQuest[];
+  achievements?: {
+    exploration: Array<{
       id: string;
       name: string;
       description: string;
-      max_level: number;
-      requires?: string[];
-      unlocks?: string[];
+      condition: string;
+      xp_bonus: number;
     }>;
-    advanced_skills: Array<{
+    mastery: Array<{
       id: string;
       name: string;
       description: string;
-      max_level: number;
-      requires?: string[];
+      skills_required: string[];
+      level_required: number;
+      xp_bonus: number;
+    }>;
+    special: Array<{
+      id: string;
+      name: string;
+      description: string;
+      hidden: boolean;
+      hint?: string;
+      xp_bonus: number;
     }>;
   };
-  milestone_quests: Array<{
-    id: string;
-    name: string;
-    description: string;
-    required_level: number;
-    skills_tested: string[];
-    xp_reward: number;
-    unlocks: string[];
-  }>;
-  achievements: Array<{
-    id: string;
-    name: string;
-    description: string;
-    xp_reward: number;
-    badge_type: string;
-  }>;
-  example_tasks: {
-    beginner: Array<{
-      id: string;
-      type: string;
-      title: string;
-      description: string;
-      skills_improved: string[];
-      xp_reward: number;
-    }>;
-    intermediate: Array<{
-      id: string;
-      type: string;
-      title: string;
-      description: string;
-      skills_improved: string[];
-      xp_reward: number;
-    }>;
-    advanced: Array<{
-      id: string;
+  daily_challenges?: {
+    categories: Array<{
       type: string;
       title: string;
       description: string;
@@ -83,163 +93,146 @@ export interface DiscoveryPath {
       xp_reward: number;
     }>;
   };
-  learning_objectives: string[];
-  career_outcomes: string[];
+  learning_objectives?: string[];
+  career_outcomes?: string[];
 }
 
-export class DiscoveryYAMLLoader {
-  private static cache: Map<string, DiscoveryPath> = new Map();
-  private static loadingPromises: Map<string, Promise<DiscoveryPath | null>> = new Map();
+export class DiscoveryYAMLLoader extends BaseYAMLLoader<DiscoveryPath> {
+  protected readonly loaderName = 'DiscoveryYAMLLoader';
 
-  static async loadPath(pathId: string, language: 'en' | 'zhTW' = 'zhTW'): Promise<DiscoveryPath | null> {
-    const cacheKey = `${pathId}_${language}`;
+  constructor() {
+    super();
+    // Override default base path for discovery data
+    this.defaultOptions.basePath = path.join(process.cwd(), 'public', 'discovery_data');
+  }
+
+  /**
+   * Load discovery path YAML file
+   */
+  async loadPath(
+    careerType: string,
+    language: string = 'en',
+    options?: YAMLLoaderOptions
+  ): Promise<DiscoveryPath | null> {
+    // Discovery paths use format: careertype/careertype_lang.yml
+    const langCode = language === 'zh-TW' ? 'zhTW' : language;
+    const fileName = `${careerType}/${careerType}_${langCode}`;
+    const result = await this.load(fileName, language, {
+      ...options,
+      basePath: this.defaultOptions.basePath
+    });
+
+    if (result.success && result.data) {
+      return result.data;
+    }
+
+    // Fallback to English if language not found
+    if (language !== 'en') {
+      const fallbackFileName = `${careerType}/${careerType}_en`;
+      const fallbackResult = await this.load(fallbackFileName, 'en', {
+        ...options,
+        basePath: this.defaultOptions.basePath
+      });
+      
+      if (fallbackResult.success && fallbackResult.data) {
+        return fallbackResult.data;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Scan all available discovery paths
+   */
+  async scanPaths(): Promise<string[]> {
+    const fs = await import('fs/promises');
+    const pathsDir = this.defaultOptions.basePath!;
     
-    // Check cache first
-    if (this.cache.has(cacheKey)) {
-      return this.cache.get(cacheKey)!;
-    }
-
-    // Check if already loading
-    if (this.loadingPromises.has(cacheKey)) {
-      return this.loadingPromises.get(cacheKey)!;
-    }
-
-    // Start loading
-    const loadingPromise = this.loadPathInternal(pathId, language);
-    this.loadingPromises.set(cacheKey, loadingPromise);
-
     try {
-      const result = await loadingPromise;
-      if (result) {
-        this.cache.set(cacheKey, result);
-      }
-      return result;
-    } finally {
-      this.loadingPromises.delete(cacheKey);
+      const items = await fs.readdir(pathsDir, { withFileTypes: true });
+      // Return directories that are career types
+      return items
+        .filter(item => item.isDirectory())
+        .map(item => item.name);
+    } catch (error) {
+      console.error('Error scanning Discovery paths:', error);
+      return [];
     }
   }
 
-  private static async loadPathInternal(pathId: string, language: 'en' | 'zhTW'): Promise<DiscoveryPath | null> {
-    // Simplified structure: discovery_data/{profession}/{profession}_{lang}.yml
-    const filename = language === 'zhTW' ? `${pathId}_zhTW.yml` : `${pathId}_en.yml`;
+  /**
+   * Get path metadata without loading full content
+   */
+  async getPathMetadata(careerType: string): Promise<DiscoveryMetadata | null> {
+    const data = await this.loadPath(careerType);
+    return data?.metadata || null;
+  }
+
+  /**
+   * Override to handle Discovery-specific validation
+   */
+  protected async validateData(): Promise<{ valid: boolean; error?: string }> {
+    // Discovery-specific validation can be added here
+    return { valid: true };
+  }
+
+  /**
+   * Override to handle Discovery-specific post-processing
+   */
+  protected async postProcess(data: DiscoveryPath): Promise<DiscoveryPath> {
+    // Ensure path_id exists
+    if (!data.path_id && data.metadata) {
+      // Try to infer from other fields
+      data.path_id = 'discovery_path';
+    }
+
+    // Ensure all skills have IDs
+    if (data.skill_tree) {
+      const processSkills = (skills: SkillTreeSkill[]) => {
+        return skills.map((skill, index) => ({
+          ...skill,
+          id: skill.id || `skill_${index + 1}`
+        }));
+      };
+
+      data.skill_tree.core_skills = processSkills(data.skill_tree.core_skills || []);
+      data.skill_tree.advanced_skills = processSkills(data.skill_tree.advanced_skills || []);
+    }
+
+    return data;
+  }
+
+  /**
+   * Get all skills in a path
+   */
+  extractAllSkills(data: DiscoveryPath): SkillTreeSkill[] {
+    const skills: SkillTreeSkill[] = [];
     
-    // Check if we're in a Node.js environment (server-side)
-    if (typeof window === 'undefined') {
-      // Server-side: read from file system
-      try {
-        const filePath = path.join(process.cwd(), 'public', 'discovery_data', pathId, filename);
-        const text = await fs.readFile(filePath, 'utf-8');
-        const data = yaml.load(text) as DiscoveryPath;
-        return data;
-      } catch (error) {
-        console.error(`Error loading Discovery path ${pathId} from filesystem:`, error);
-        return null;
-      }
-    } else {
-      // Client-side: fetch from public URL
-      const url = `/discovery_data/${pathId}/${filename}`;
-      try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          console.warn(`Failed to load Discovery path: ${url}`);
-          return null;
-        }
-
-        const text = await response.text();
-        const data = yaml.load(text) as DiscoveryPath;
-        return data;
-      } catch (error) {
-        console.error(`Error loading Discovery path ${pathId}:`, error);
-        return null;
-      }
+    if (data.skill_tree) {
+      skills.push(...(data.skill_tree.core_skills || []));
+      skills.push(...(data.skill_tree.advanced_skills || []));
     }
+    
+    return skills;
   }
 
-  static async loadAllPaths(language: 'en' | 'zhTW' = 'zhTW'): Promise<DiscoveryPath[]> {
-    // All available profession paths
-    const pathIds = [
-      // Technology
-      'app_developer',
-      'cybersecurity_specialist',
-      'data_analyst',
-      'tech_entrepreneur',
-      // Arts
-      'content_creator',
-      'game_designer',
-      'ux_designer',
-      'youtuber',
-      // Science
-      'biotech_researcher',
-      'environmental_scientist',
-      // Society
-      'product_manager',
-      'startup_founder'
-    ];
-
-    const promises = pathIds.map(id => this.loadPath(id, language));
-    const results = await Promise.all(promises);
-    return results.filter((path): path is DiscoveryPath => path !== null);
-  }
-
-  static clearCache(): void {
-    this.cache.clear();
-  }
-
-  // Helper method to convert YAML data to the format expected by PathResults
-  static convertToPathData(yamlData: DiscoveryPath): any {
-    const firstBeginnerTask = yamlData.example_tasks.beginner[0];
-    const firstIntermediateTask = yamlData.example_tasks.intermediate[0];
-    const firstAdvancedTask = yamlData.example_tasks.advanced[0];
-
-    return {
-      id: yamlData.path_id,
-      title: yamlData.metadata.title,
-      subtitle: yamlData.metadata.short_description,
-      description: yamlData.metadata.long_description,
-      category: yamlData.category,
-      skills: yamlData.metadata.skill_focus,
-      aiAssistants: yamlData.skill_tree.core_skills.slice(0, 3).map(skill => skill.name),
-      worldSetting: yamlData.world_setting.description,
-      atmosphere: yamlData.world_setting.atmosphere,
-      visualTheme: yamlData.world_setting.visual_theme,
-      startingScenario: yamlData.starting_scenario,
-      protagonist: {
-        name: yamlData.metadata.title.split(' - ')[0],
-        background: yamlData.starting_scenario.description.split('。')[0]
-      },
-      storyContext: {
-        keyCharacters: yamlData.milestone_quests.map(quest => ({
-          name: quest.name,
-          role: quest.description.split('，')[0],
-          personality: quest.description
-        })),
-        currentConflict: yamlData.starting_scenario.description
-      },
-      tasks: [
-        firstBeginnerTask && {
-          id: firstBeginnerTask.id,
-          title: firstBeginnerTask.title,
-          description: firstBeginnerTask.description,
-          duration: `${firstBeginnerTask.xp_reward / 2}分鐘`
-        },
-        firstIntermediateTask && {
-          id: firstIntermediateTask.id,
-          title: firstIntermediateTask.title,
-          description: firstIntermediateTask.description,
-          duration: `${firstIntermediateTask.xp_reward / 4}分鐘`
-        },
-        firstAdvancedTask && {
-          id: firstAdvancedTask.id,
-          title: firstAdvancedTask.title,
-          description: firstAdvancedTask.description,
-          duration: `${firstAdvancedTask.xp_reward / 10}分鐘`
-        }
-      ].filter(Boolean),
-      milestoneQuests: yamlData.milestone_quests,
-      achievements: yamlData.achievements,
-      learningObjectives: yamlData.learning_objectives,
-      careerOutcomes: yamlData.career_outcomes,
-      estimatedHours: yamlData.metadata.estimated_hours
-    };
+  /**
+   * Get skill dependencies
+   */
+  getSkillDependencies(data: DiscoveryPath): Map<string, string[]> {
+    const dependencies = new Map<string, string[]>();
+    const allSkills = this.extractAllSkills(data);
+    
+    allSkills.forEach(skill => {
+      if (skill.requires && skill.requires.length > 0) {
+        dependencies.set(skill.id, skill.requires);
+      }
+    });
+    
+    return dependencies;
   }
 }
+
+// Export singleton instance
+export const discoveryYAMLLoader = new DiscoveryYAMLLoader();

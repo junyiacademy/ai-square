@@ -30,7 +30,8 @@
     "data:convert": "node scripts/yaml-json-crud-system.js convert",
     "data:crud": "node scripts/yaml-json-crud-system.js",
     "test:all-modes": "tsx src/scripts/test-all-modes-e2e.ts",
-    "verify:gcs": "tsx src/scripts/verify-gcs-data.ts"
+    "verify:gcs": "tsx src/scripts/verify-gcs-data.ts",
+    "init:scenarios": "tsx src/scripts/initialize-scenarios.ts"
   },
   "dependencies": {
     "@google-cloud/storage": "^7.16.0",
@@ -42,7 +43,9 @@
     "@tailwindcss/typography": "^0.5.16",
     "@types/d3": "^7.4.3",
     "@types/uuid": "^10.0.0",
+    "chalk": "^5.4.1",
     "chart.js": "^4.5.0",
+    "commander": "^14.0.0",
     "d3": "^7.9.0",
     "framer-motion": "^12.23.0",
     "google-auth-library": "^10.1.0",
