@@ -3,7 +3,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 import { getScenarioRepository } from '@/lib/implementations/gcs-v2';
-import { getAuthFromRequest } from '@/lib/auth/auth-utils';
+import { getServerSession } from '@/lib/auth/session';
 
 interface AssessmentConfig {
   title?: string;
@@ -29,7 +29,8 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
-    const user = await getAuthFromRequest(request);
+    const session = await getServerSession();
+    const user = session?.user;
     
     // Check cache first
     const now = Date.now();
@@ -47,8 +48,11 @@ export async function GET(request: NextRequest) {
       }));
       
       return NextResponse.json({ 
-        scenarios: scenariosWithProgress,
-        totalCount: scenariosWithProgress.length 
+        success: true,
+        data: {
+          scenarios: scenariosWithProgress,
+          totalCount: scenariosWithProgress.length
+        }
       });
     }
     
@@ -184,13 +188,16 @@ export async function GET(request: NextRequest) {
     }));
     
     return NextResponse.json({ 
-      scenarios: scenariosWithProgress,
-      totalCount: scenariosWithProgress.length 
+      success: true,
+      data: {
+        scenarios: scenariosWithProgress,
+        totalCount: scenariosWithProgress.length
+      }
     });
   } catch (error) {
     console.error('Error in assessment scenarios API:', error);
     return NextResponse.json(
-      { error: 'Failed to load assessment scenarios' },
+      { success: false, error: 'Failed to load assessment scenarios' },
       { status: 500 }
     );
   }

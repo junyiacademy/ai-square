@@ -18,7 +18,7 @@ export class GCSTaskRepository<T extends ITask = ITask>
     const newTask = {
       ...task,
       id: this.generateId(),
-      startedAt: new Date().toISOString(),
+      createdAt: task.createdAt || new Date().toISOString(),
       status: 'pending' as const,
       interactions: [],
     } as T;
@@ -67,7 +67,7 @@ export class GCSTaskRepository<T extends ITask = ITask>
     });
     
     return allTasks.filter(task => task.programId === programId)
-      .sort((a, b) => a.scenarioTaskIndex - b.scenarioTaskIndex);
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
   }
 
   async updateInteractions(id: string, interactions: IInteraction[]): Promise<T> {
@@ -99,9 +99,30 @@ export class GCSTaskRepository<T extends ITask = ITask>
   async updateStatus(id: string, status: 'pending' | 'active' | 'completed'): Promise<T> {
     const updates: Partial<T> = { status } as Partial<T>;
     
-    if (status === 'completed') {
+    if (status === 'active') {
+      updates.startedAt = new Date().toISOString();
+    } else if (status === 'completed') {
       updates.completedAt = new Date().toISOString();
     }
+    
+    const updated = await this.updateEntity(id, updates);
+    
+    if (!updated) {
+      throw new Error(`Task not found: ${id}`);
+    }
+    
+    return updated;
+  }
+
+  /**
+   * 保存用戶回應並完成任務
+   */
+  async saveResponse(id: string, response: any): Promise<T> {
+    const updates: Partial<T> = { 
+      response,
+      status: 'completed' as const,
+      completedAt: new Date().toISOString()
+    } as Partial<T>;
     
     const updated = await this.updateEntity(id, updates);
     
@@ -123,25 +144,6 @@ export class GCSTaskRepository<T extends ITask = ITask>
     
     const updatedInteractions = [...task.interactions, interaction];
     return this.updateInteractions(id, updatedInteractions);
-  }
-
-  /**
-   * 更新任務狀態
-   */
-  async updateStatus(id: string, status: 'pending' | 'active' | 'completed'): Promise<T> {
-    const updates: Partial<T> = { status } as Partial<T>;
-    
-    if (status === 'completed') {
-      updates.completedAt = new Date().toISOString();
-    }
-    
-    const updated = await this.updateEntity(id, updates);
-    
-    if (!updated) {
-      throw new Error(`Task not found: ${id}`);
-    }
-    
-    return updated;
   }
 
   /**

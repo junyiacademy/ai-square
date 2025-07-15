@@ -18,7 +18,7 @@ export class GCSEvaluationRepository<T extends IEvaluation = IEvaluation>
     const newEvaluation = {
       ...evaluation,
       id: this.generateId(),
-      createdAt: new Date().toISOString(),
+      createdAt: evaluation.createdAt || new Date().toISOString(),
     } as T;
     
     return this.saveEntity(newEvaluation);
@@ -28,31 +28,16 @@ export class GCSEvaluationRepository<T extends IEvaluation = IEvaluation>
     return this.loadEntity(id);
   }
 
-  async findByTarget(targetType: string, targetId: string): Promise<T[]> {
+  async findByEntity(entityType: string, entityId: string): Promise<T[]> {
     const allEvaluations = await this.listAllEntities();
     return allEvaluations.filter(
-      evaluation => evaluation.targetType === targetType && evaluation.targetId === targetId
+      evaluation => evaluation.entityType === entityType && evaluation.entityId === entityId
     );
   }
 
   async findByProgram(programId: string): Promise<T[]> {
-    // 需要先取得 Program 的所有 Task IDs
-    // 然後找出所有相關的評估（包括 Task 和 Program 級別）
     const allEvaluations = await this.listAllEntities();
-    
-    // 找出所有 Program 級別的評估
-    const programEvaluations = allEvaluations.filter(
-      evaluation => evaluation.targetType === 'program' && evaluation.targetId === programId
-    );
-    
-    // 這裡我們假設 Task 評估會在 metadata 中包含 programId
-    // 實際實作時可能需要調整這個邏輯
-    const taskEvaluations = allEvaluations.filter(
-      evaluation => evaluation.targetType === 'task' && 
-                   evaluation.metadata?.programId === programId
-    );
-    
-    return [...programEvaluations, ...taskEvaluations];
+    return allEvaluations.filter(evaluation => evaluation.programId === programId);
   }
 
   /**
@@ -81,16 +66,14 @@ export class GCSEvaluationRepository<T extends IEvaluation = IEvaluation>
    */
   async findByUser(userId: string): Promise<T[]> {
     const allEvaluations = await this.listAllEntities();
-    return allEvaluations.filter(
-      evaluation => evaluation.metadata?.userId === userId
-    );
+    return allEvaluations.filter(evaluation => evaluation.userId === userId);
   }
 
   /**
    * 取得最新的評估
    */
-  async findLatestByTarget(targetType: string, targetId: string): Promise<T | null> {
-    const evaluations = await this.findByTarget(targetType, targetId);
+  async findLatestByEntity(entityType: string, entityId: string): Promise<T | null> {
+    const evaluations = await this.findByEntity(entityType, entityId);
     
     if (evaluations.length === 0) {
       return null;
@@ -129,16 +112,5 @@ export class GCSEvaluationRepository<T extends IEvaluation = IEvaluation>
    */
   async listAll(): Promise<T[]> {
     return this.listAllEntities();
-  }
-
-  /**
-   * 更新評估資料
-   */
-  async update(id: string, updates: Partial<T>): Promise<T> {
-    const updated = await this.updateEntity(id, updates);
-    if (!updated) {
-      throw new Error(`Evaluation not found: ${id}`);
-    }
-    return updated;
   }
 }

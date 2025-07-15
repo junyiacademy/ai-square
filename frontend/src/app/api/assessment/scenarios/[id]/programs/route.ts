@@ -5,7 +5,7 @@ import {
   getTaskRepository,
   getEvaluationRepository 
 } from '@/lib/implementations/gcs-v2';
-import { getAuthFromRequest } from '@/lib/auth/auth-utils';
+import { getServerSession } from '@/lib/auth/session';
 import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
@@ -20,17 +20,17 @@ export async function GET(
 ) {
   try {
     // Try to get user from authentication
-    const user = await getAuthFromRequest(request);
+    const session = await getServerSession();
     
-    if (!user) {
+    if (!session?.user?.email) {
       // For security: require proper authentication
       return NextResponse.json(
-        { error: 'Authentication required' },
+        { success: false, error: 'Authentication required' },
         { status: 401 }
       );
     }
     
-    const userEmail = user.email;
+    const userEmail = session.user.email;
     
     // Await params before using
     const { id } = await params;
