@@ -39,5 +39,12 @@
     "Innovative": "Innovative",
     "Adaptable": "Adaptable",
     "Empathetic": "Empathetic"
-  }
+  },
+  "excellent": "Excellent",
+  "good": "Good", 
+  "needsWork": "Needs Work",
+  "graphInstructions": "Click nodes to see details • Drag to rearrange • Scroll to zoom • Double-click to reset",
+  "knowledgeComponent": "Knowledge Component",
+  "skillsComponent": "Skills Component",
+  "attitudesComponent": "Attitudes Component"
 }

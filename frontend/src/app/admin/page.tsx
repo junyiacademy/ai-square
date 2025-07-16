@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 
 interface ContentStats {
   domains: number;
@@ -11,6 +12,7 @@ interface ContentStats {
 }
 
 export default function AdminDashboard() {
+  const { t } = useTranslation('admin');
   const [stats, setStats] = useState<ContentStats>({
     domains: 0,
     questions: 0,
@@ -39,7 +41,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="px-4 py-8 sm:px-0">
-      <h1 className="text-2xl font-semibold text-gray-900 mb-8">CMS Dashboard</h1>
+      <h1 className="text-2xl font-semibold text-gray-900 mb-8">{t('dashboard.title')}</h1>
       
       {/* Stats Grid */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
@@ -53,7 +55,7 @@ export default function AdminDashboard() {
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Domains</dt>
+                  <dt className="text-sm font-medium text-gray-500 truncate">{t('dashboard.domains')}</dt>
                   <dd className="text-lg font-medium text-gray-900">{loading ? '...' : stats.domains}</dd>
                 </dl>
               </div>
@@ -71,7 +73,7 @@ export default function AdminDashboard() {
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Questions</dt>
+                  <dt className="text-sm font-medium text-gray-500 truncate">{t('dashboard.questions')}</dt>
                   <dd className="text-lg font-medium text-gray-900">{loading ? '...' : stats.questions}</dd>
                 </dl>
               </div>
@@ -89,7 +91,7 @@ export default function AdminDashboard() {
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Overrides</dt>
+                  <dt className="text-sm font-medium text-gray-500 truncate">{t('dashboard.overrides')}</dt>
                   <dd className="text-lg font-medium text-gray-900">{loading ? '...' : stats.overrides}</dd>
                 </dl>
               </div>
@@ -107,7 +109,7 @@ export default function AdminDashboard() {
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Drafts</dt>
+                  <dt className="text-sm font-medium text-gray-500 truncate">{t('dashboard.drafts')}</dt>
                   <dd className="text-lg font-medium text-gray-900">{loading ? '...' : stats.drafts}</dd>
                 </dl>
               </div>
@@ -118,7 +120,7 @@ export default function AdminDashboard() {
 
       {/* Quick Actions */}
       <div className="bg-white shadow rounded-lg p-6">
-        <h2 className="text-lg font-medium text-gray-900 mb-4">Quick Actions</h2>
+        <h2 className="text-lg font-medium text-gray-900 mb-4">{t('dashboard.quickActions')}</h2>
         <div className="space-y-4">
           <Link 
             href="/admin/content?type=domain"
@@ -126,8 +128,8 @@ export default function AdminDashboard() {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-900">Manage Domains</p>
-                <p className="text-sm text-gray-500">Edit AI literacy domains and competencies</p>
+                <p className="text-sm font-medium text-gray-900">{t('content.domains')}</p>
+                <p className="text-sm text-gray-500">{t('content.domainsDesc')}</p>
               </div>
               <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -141,8 +143,8 @@ export default function AdminDashboard() {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-900">Manage Questions</p>
-                <p className="text-sm text-gray-500">Edit assessment questions and answers</p>
+                <p className="text-sm font-medium text-gray-900">{t('content.assessment')}</p>
+                <p className="text-sm text-gray-500">{t('content.assessmentDesc')}</p>
               </div>
               <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -156,8 +158,8 @@ export default function AdminDashboard() {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-900">View History</p>
-                <p className="text-sm text-gray-500">Track all content changes and versions</p>
+                <p className="text-sm font-medium text-gray-900">{t('history.title')}</p>
+                <p className="text-sm text-gray-500">{t('history.changeLog')}</p>
               </div>
               <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

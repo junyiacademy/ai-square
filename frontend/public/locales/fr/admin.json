@@ -1,0 +1,59 @@
+{
+  "title": "Admin CMS",
+  "dashboard": {
+    "title": "CMS Dashboard",
+    "domains": "Domains",
+    "questions": "Questions", 
+    "overrides": "Overrides",
+    "drafts": "Drafts",
+    "recentActivity": "Recent Activity",
+    "editedBy": "Edited by {{editor}}",
+    "daysAgo": "{{days}} days ago",
+    "noActivity": "No recent activity"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "content": "Content",
+    "history": "History",
+    "backToSite": "Back to Site"
+  },
+  "content": {
+    "title": "Content Management",
+    "selectType": "Select content type to manage",
+    "domains": "AI Literacy Domains",
+    "domainsDesc": "Manage AI literacy framework domains and competencies",
+    "ksa": "KSA Codes", 
+    "ksaDesc": "Manage Knowledge, Skills, and Attitudes codes",
+    "scenarios": "PBL Scenarios",
+    "scenariosDesc": "Manage Problem-Based Learning scenarios",
+    "assessment": "Assessment Questions",
+    "assessmentDesc": "Manage assessment questions and answers",
+    "manage": "Manage"
+  },
+  "history": {
+    "title": "Content History",
+    "changeLog": "Change Log",
+    "filter": "Filter",
+    "allTypes": "All Types",
+    "allUsers": "All Users",
+    "export": "Export",
+    "date": "Date",
+    "user": "User",
+    "type": "Type",
+    "action": "Action",
+    "details": "Details",
+    "viewDetails": "View Details",
+    "revert": "Revert",
+    "noHistory": "No history records found"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  }
+}

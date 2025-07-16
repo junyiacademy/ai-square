@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
+import { useTranslation } from 'react-i18next';
 
 interface KSAKnowledgeGraphProps {
   ksaScores: {
@@ -37,6 +38,7 @@ interface Link extends d3.SimulationLinkDatum<Node> {
 }
 
 export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAKnowledgeGraphProps) {
+  const { t } = useTranslation(['common', 'ksa']);
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const zoomRef = useRef<d3.ZoomBehavior<SVGSVGElement, unknown> | null>(null);
@@ -352,7 +354,7 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
                   }
                 }}
                 className="p-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
-                title="Zoom in"
+                title={t('common:zoomIn')}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -366,7 +368,7 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
                   }
                 }}
                 className="p-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
-                title="Zoom out"
+                title={t('common:zoomOut')}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
@@ -380,7 +382,7 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
                   }
                 }}
                 className="p-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
-                title="Reset zoom"
+                title={t('common:resetZoom')}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
@@ -394,15 +396,15 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
             <div className="flex flex-wrap justify-center gap-4 text-sm">
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 bg-green-500 rounded-full"></div>
-                <span className="text-gray-600 dark:text-gray-400">≥80% Excellent</span>
+                <span className="text-gray-600 dark:text-gray-400">≥80% {t('ksa:excellent')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 bg-amber-500 rounded-full"></div>
-                <span className="text-gray-600 dark:text-gray-400">60-79% Good</span>
+                <span className="text-gray-600 dark:text-gray-400">60-79% {t('ksa:good')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 bg-red-500 rounded-full"></div>
-                <span className="text-gray-600 dark:text-gray-400">&lt;60% Needs Work</span>
+                <span className="text-gray-600 dark:text-gray-400">&lt;60% {t('ksa:needsWork')}</span>
               </div>
             </div>
             <div className="text-center text-xs text-gray-500 dark:text-gray-400">
@@ -410,7 +412,7 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Click nodes to see details • Drag to rearrange • Scroll to zoom • Double-click to reset
+                {t('ksa:graphInstructions')}
               </span>
             </div>
           </div>
@@ -426,9 +428,9 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
                     {selectedNode.id}
                   </h4>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    {selectedNode.category === 'knowledge' && 'Knowledge Component'}
-                    {selectedNode.category === 'skills' && 'Skills Component'}
-                    {selectedNode.category === 'attitudes' && 'Attitudes Component'}
+                    {selectedNode.category === 'knowledge' && t('ksa:knowledgeComponent')}
+                    {selectedNode.category === 'skills' && t('ksa:skillsComponent')}
+                    {selectedNode.category === 'attitudes' && t('ksa:attitudesComponent')}
                   </p>
                 </div>
                 <button

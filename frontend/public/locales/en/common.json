@@ -23,5 +23,15 @@
     "beginner": "Beginner",
     "intermediate": "Intermediate",
     "advanced": "Advanced"
-  }
+  },
+  "send": "Send",
+  "new": "New",
+  "zoomIn": "Zoom in",
+  "zoomOut": "Zoom out",
+  "resetZoom": "Reset zoom",
+  "noData": "No data available",
+  "pleaseLogin": "Please log in",
+  "start": "Start",
+  "reset": "Reset",
+  "confirm": "Confirm"
 }
