@@ -5,6 +5,12 @@ import {
   getTaskRepository,
   getEvaluationRepository,
 } from '@/lib/implementations/gcs-v2';
+import type { 
+  IScenario, 
+  IProgram, 
+  ITask, 
+  IEvaluation 
+} from '@/types/unified-learning';
 
 export async function GET() {
   try {
@@ -15,10 +21,10 @@ export async function GET() {
         isConfigured: !!process.env.GOOGLE_CLOUD_PROJECT,
       },
       data: {
-        scenarios: [] as any[],
-        programs: [] as any[],
-        tasks: [] as any[],
-        evaluations: [] as any[],
+        scenarios: [] as IScenario[],
+        programs: [] as IProgram[],
+        tasks: [] as ITask[],
+        evaluations: [] as IEvaluation[],
       },
       operations: {
         listScenarios: false,
@@ -63,13 +69,22 @@ export async function POST(request: Request) {
     const body = await request.json().catch(() => ({}));
     const action = body.action || 'create-test';
 
+    // Validate action parameter
+    const validActions = ['create-test', 'cleanup'];
+    if (!validActions.includes(action)) {
+      return NextResponse.json({
+        success: false,
+        error: `Invalid action. Must be one of: ${validActions.join(', ')}`,
+      }, { status: 400 });
+    }
+
     if (action === 'create-test') {
       // 創建完整的測試流程
       const testResults = {
-        scenario: null as any,
-        program: null as any,
-        task: null as any,
-        evaluation: null as any,
+        scenario: null as IScenario | null,
+        program: null as IProgram | null,
+        task: null as ITask | null,
+        evaluation: null as IEvaluation | null,
       };
 
       // 1. 創建 Scenario
@@ -106,9 +121,8 @@ export async function POST(request: Request) {
         taskIds: [],
         currentTaskIndex: 0,
         metadata: { 
-          sourceType: 'discovery',
+          sourceType: 'pbl',
           testRun: true,
-          createdAt: new Date().toISOString(),
         },
       });
       testResults.program = program;
@@ -117,18 +131,14 @@ export async function POST(request: Request) {
       const taskRepo = getTaskRepository();
       const task = await taskRepo.create({
         programId: program.id,
-        scenarioTaskIndex: 0,
+        templateId: 'template-1',
         title: 'Test Task Instance',
+        description: '',
         type: 'chat',
-        content: {
-          instructions: 'This is a test task',
-          context: {
-            testData: true,
-          },
-        },
+        order: 1,
         status: 'pending',
-        startedAt: new Date().toISOString(),
-        interactions: []
+        createdAt: new Date().toISOString(),
+        metadata: {}
       });
       testResults.task = task;
 
@@ -142,17 +152,17 @@ export async function POST(request: Request) {
       // 5. 創建評估
       const evaluationRepo = getEvaluationRepository();
       const evaluation = await evaluationRepo.create({
-        targetType: 'task',
-        targetId: task.id,
-        evaluationType: 'api_test',
-        score: 95,
-        feedback: 'Test evaluation created successfully',
-        dimensions: [],
-        metadata: {
-          programId: program.id,
-          automated: true,
-        },
+        entityType: 'task',
+        entityId: task.id,
+        programId: program.id,
+        userId: 'test-user@example.com',
+        type: 'api_test',
         createdAt: new Date().toISOString(),
+        metadata: {
+          score: 95,
+          feedback: 'Test evaluation created successfully',
+          automated: true,
+        }
       });
       testResults.evaluation = evaluation;
 
@@ -174,11 +184,6 @@ export async function POST(request: Request) {
         message: 'Cleanup not implemented yet',
       });
     }
-
-    return NextResponse.json({
-      success: false,
-      error: 'Invalid action. Use "create-test" or "cleanup"',
-    }, { status: 400 });
 
   } catch (error) {
     return NextResponse.json({

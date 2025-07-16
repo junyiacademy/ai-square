@@ -28,6 +28,7 @@ const customJestConfig = {
     '^jose$': '<rootDir>/__mocks__/jose.js',
     '^next/server$': '<rootDir>/__mocks__/next/server.js',
     '^d3$': '<rootDir>/__mocks__/d3.js',
+    '^@/lib/implementations/gcs-v2$': '<rootDir>/src/lib/implementations/__mocks__/gcs-v2.ts',
     '^@/(.*)$': '<rootDir>/src/$1',
   },
 }
