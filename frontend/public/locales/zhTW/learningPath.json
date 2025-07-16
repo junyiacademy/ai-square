@@ -1,43 +1,44 @@
 {
-  "title": "Your Learning Path [Chinese (Traditional)]",
-  "subtitle": "Personalized recommendations based on your assessment [Chinese (Traditional)]",
-  "yourProgress": "Your Progress [Chinese (Traditional)]",
-  "currentScore": "Current Score [Chinese (Traditional)]",
-  "targetScore": "Target Score [Chinese (Traditional)]",
-  "completed": "completed [Chinese (Traditional)]",
-  "recommendedPath": "Recommended Learning Path [Chinese (Traditional)]",
-  "startLearning": "Start Learning [Chinese (Traditional)]",
-  "estimatedTime": "Estimated time [Chinese (Traditional)]",
-  "weakDomainReason": "This is your weakest area with {{score}}% score [Chinese (Traditional)]",
+  "title": "您的學習路徑",
+  "subtitle": "根據您的評估結果提供個人化建議",
+  "yourProgress": "您的進度",
+  "currentScore": "目前分數",
+  "targetScore": "目標分數",
+  "completed": "已完成",
+  "recommendedPath": "建議學習路徑",
+  "startLearning": "開始學習",
+  "estimatedTime": "預估時間",
+  "weakDomainReason": "建議此項目是因為這是您最薄弱的領域",
   "difficulty": {
-    "beginner": "Beginner [Chinese (Traditional)]",
-    "intermediate": "Intermediate [Chinese (Traditional)]",
-    "advanced": "Advanced [Chinese (Traditional)]"
+    "beginner": "初階",
+    "intermediate": "中階",
+    "advanced": "進階"
   },
   "noAssessment": {
-    "title": "No Assessment Found [Chinese (Traditional)]",
-    "description": "Please complete the assessment first to get personalized recommendations [Chinese (Traditional)]",
-    "button": "Take Assessment [Chinese (Traditional)]"
+    "title": "未找到評估結果",
+    "description": "請先完成評估以取得個人化建議",
+    "button": "進行評估"
   },
   "domains": {
-    "Engaging_with_AI": "Engaging with AI [Chinese (Traditional)]",
-    "Creating_with_AI": "Creating with AI [Chinese (Traditional)]",
-    "Managing_AI": "Managing AI [Chinese (Traditional)]",
-    "Designing_AI": "Designing AI [Chinese (Traditional)]"
+    "Engaging_with_AI": "與 AI 互動",
+    "Creating_with_AI": "利用 AI 創作",
+    "Managing_AI": "管理 AI",
+    "Designing_AI": "設計 AI"
   },
-  "strongDomainReason": "Advance your skills in {{domain}} (current: {{score}}%) [Chinese (Traditional)]",
-  "averageDomainReason": "Improve your {{domain}} skills (current: {{score}}%) [Chinese (Traditional)]",
+  "weakDomainReason": "這是您最薄弱的領域，分數為 {{score}}%",
+  "strongDomainReason": "提升您在 {{domain}} 的技能（目前：{{score}}%）",
+  "averageDomainReason": "改善您的 {{domain}} 技能（目前：{{score}}%）",
   "learningPath": {
-    "filteringBy": "Showing items for {{domain}} [Chinese (Traditional)]",
-    "clearFilter": "Clear filter [Chinese (Traditional)]",
-    "recommendedPath": "Recommended Learning Path [Chinese (Traditional)]",
-    "estimatedTime": "Total time: {{hours}}h {{minutes}}m [Chinese (Traditional)]",
-    "startLearning": "Start Learning [Chinese (Traditional)]",
-    "progress": "Progress [Chinese (Traditional)]",
-    "goToDashboard": "Go to Dashboard [Chinese (Traditional)]",
-    "dashboardHint": "Track your overall progress and achievements in the dashboard [Chinese (Traditional)]"
+    "filteringBy": "顯示 {{domain}} 相關項目",
+    "clearFilter": "清除篩選",
+    "recommendedPath": "建議學習路徑",
+    "estimatedTime": "總時間：{{hours}} 小時 {{minutes}} 分鐘",
+    "startLearning": "開始學習",
+    "progress": "進度",
+    "goToDashboard": "前往控制台",
+    "dashboardHint": "在控制台追蹤您的整體進度和成就"
   },
-  "showAll": "Show All [Chinese (Traditional)]",
-  "focusOnWeakAreas": "Focus on Weak Areas [Chinese (Traditional)]",
-  "backToDashboard": "Back to Dashboard [Chinese (Traditional)]"
+  "showAll": "顯示全部",
+  "focusOnWeakAreas": "專注於薄弱領域",
+  "backToDashboard": "返回控制台"
 }
