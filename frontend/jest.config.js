@@ -15,10 +15,29 @@ const customJestConfig = {
   ],
   coverageThreshold: {
     global: {
-      branches: 25,
-      functions: 25,
-      lines: 35,
-      statements: 35,
+      // Phase 1: Current (too low)
+      // branches: 25,
+      // functions: 25,
+      // lines: 35,
+      // statements: 35,
+      
+      // Phase 2: Q1 2025 Target (提升到 40%)
+      branches: 40,
+      functions: 40,
+      lines: 40,
+      statements: 40,
+      
+      // Phase 3: Q2 2025 Target (提升到 60%)
+      // branches: 60,
+      // functions: 60,
+      // lines: 60,
+      // statements: 60,
+      
+      // Phase 4: Final Target (70%+)
+      // branches: 70,
+      // functions: 70,
+      // lines: 70,
+      // statements: 70,
     },
   },
   transformIgnorePatterns: [

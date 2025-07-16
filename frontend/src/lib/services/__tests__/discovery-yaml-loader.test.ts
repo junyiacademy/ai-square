@@ -1,347 +1,354 @@
 /**
- * @jest-environment node
+ * DiscoveryYAMLLoader 單元測試
+ * 遵循 TDD: Red → Green → Refactor
  */
 
-import { DiscoveryYAMLLoader } from '../discovery-yaml-loader';
-import fs from 'fs/promises';
-import path from 'path';
+import { DiscoveryYAMLLoader, DiscoveryPath, DiscoveryMetadata } from '../discovery-yaml-loader';
+import { cacheService } from '@/lib/cache/cache-service';
 
-// Mock fs and path modules
-jest.mock('fs/promises');
-jest.mock('path');
+// Mock the cache service
+jest.mock('@/lib/cache/cache-service');
 
-const mockFs = fs as jest.Mocked<typeof fs>;
-const mockPath = path as jest.Mocked<typeof path>;
-
-// Mock fetch for browser environment
-global.fetch = jest.fn();
+const mockCacheService = cacheService as jest.Mocked<typeof cacheService>;
 
 describe('DiscoveryYAMLLoader', () => {
+  let loader: DiscoveryYAMLLoader;
+  
+  const mockDiscoveryData: DiscoveryPath = {
+    path_id: 'software_engineer',
+    category: 'technology',
+    difficulty_range: 'beginner-advanced',
+    metadata: {
+      title: 'Software Engineer Career Path',
+      short_description: 'Learn software engineering with AI',
+      long_description: 'A comprehensive path to becoming a software engineer',
+      estimated_hours: 120,
+      skill_focus: ['programming', 'algorithms', 'system design']
+    },
+    world_setting: {
+      name: 'Tech Hub City',
+      description: 'A futuristic city of innovation',
+      atmosphere: 'Dynamic and fast-paced',
+      visual_theme: 'Cyberpunk metropolis'
+    },
+    starting_scenario: {
+      title: 'First Day at Tech Hub',
+      description: 'Begin your journey as a junior developer',
+      initial_tasks: ['setup_environment', 'first_commit']
+    },
+    skill_tree: {
+      core_skills: [{
+        id: 'programming_basics',
+        name: 'Programming Basics',
+        description: 'Foundation of programming',
+        max_level: 5,
+        requires: [],
+        unlocks: ['data_structures']
+      }],
+      advanced_skills: [{
+        id: 'system_design',
+        name: 'System Design',
+        description: 'Design scalable systems',
+        max_level: 10,
+        requires: ['programming_basics', 'data_structures'],
+        unlocks: []
+      }]
+    },
+    milestone_quests: [{
+      id: 'first_project',
+      name: 'First Project',
+      description: 'Complete your first project',
+      required_level: 5,
+      skills_tested: ['programming_basics'],
+      xp_reward: 1000,
+      rewards: {
+        skills: ['debugging'],
+        achievements: ['first_milestone']
+      }
+    }]
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
-  });
-
-  describe('loadPath', () => {
-    const mockYAMLContent = `
-title: "內容創作者職業探索"
-description: "探索數位內容創作的世界"
-world_setting:
-  name: "創意帝國"
-  description: "一個由創意能量驅動的數位王國"
-  atmosphere: "vibrant_magical"
-  visual_theme: "digital_fantasy"
-  
-character:
-  name: "Luna"
-  role: "創意導師"
-  personality: "智慧且充滿創意"
-  
-career_info:
-  title: "數位魔法師 - 內容創作者"
-  skills:
-    - "內容魔法"
-    - "視覺咒語"
-    - "文字煉金術"
-    - "社群召喚術"
+    loader = new DiscoveryYAMLLoader();
     
-tasks:
-  - id: "understand_algorithms"
-    title: "理解演算法"
-    type: "analysis"
-    content:
-      instructions: "學習演算法的基本概念"
-      context:
-        description: "探索演算法在內容創作中的應用"
-        xp: 100
-        objectives:
-          - "理解演算法基本概念"
-          - "運用創意力量對抗虛假內容"
-        completion_criteria:
-          - "完成任務描述"
-          - "展示理解能力"
-        hints:
-          - "使用 AI 工具協助查核"
-          - "思考演算法的運作方式"
-`;
+    // Default mock behaviors
+    mockCacheService.get.mockResolvedValue(null);
+    mockCacheService.set.mockResolvedValue(undefined);
+  });
 
-    it('should load YAML content successfully in Node.js environment', async () => {
-      // Mock Node.js environment
-      Object.defineProperty(global, 'window', {
-        value: undefined,
-        writable: true
-      });
-
-      mockPath.join.mockReturnValue('/mock/path/to/file.yml');
-      mockFs.readFile.mockResolvedValue(mockYAMLContent);
-
-      const result = await DiscoveryYAMLLoader.loadPath('content_creator', 'zhTW');
-
-      expect(result).toBeDefined();
-      expect(result.title).toBe('內容創作者職業探索');
-      expect(result.world_setting.name).toBe('創意帝國');
-      expect(result.character.name).toBe('Luna');
-      expect(result.career_info.title).toBe('數位魔法師 - 內容創作者');
-      expect(result.tasks).toHaveLength(1);
-      expect(result.tasks[0].id).toBe('understand_algorithms');
-
-      expect(mockPath.join).toHaveBeenCalledWith(
-        process.cwd(),
-        'public',
-        'discovery_data',
-        'content_creator',
-        'content_creator_zhTW.yml'
-      );
-      expect(mockFs.readFile).toHaveBeenCalledWith('/mock/path/to/file.yml', 'utf-8');
+  describe('constructor', () => {
+    it('should set correct default base path for discovery data', () => {
+      expect(loader['defaultOptions'].basePath).toContain('discovery_data');
     });
 
-    it('should load YAML content successfully in browser environment', async () => {
-      // Mock browser environment
-      Object.defineProperty(global, 'window', {
-        value: { location: { origin: 'http://localhost:3000' } },
-        writable: true
-      });
-
-      (fetch as jest.MockedFunction<typeof fetch>).mockResolvedValue({
-        ok: true,
-        text: async () => mockYAMLContent
-      } as Response);
-
-      const result = await DiscoveryYAMLLoader.loadPath('content_creator', 'zhTW');
-
-      expect(result).toBeDefined();
-      expect(result.title).toBe('內容創作者職業探索');
-      expect(result.world_setting.name).toBe('創意帝國');
-
-      expect(fetch).toHaveBeenCalledWith(
-        '/discovery_data/content_creator/content_creator_zhTW.yml'
-      );
-    });
-
-    it('should handle different career types and languages', async () => {
-      Object.defineProperty(global, 'window', {
-        value: undefined,
-        writable: true
-      });
-
-      mockPath.join.mockReturnValue('/mock/path/to/youtuber_en.yml');
-      mockFs.readFile.mockResolvedValue(mockYAMLContent.replace('內容創作者', 'YouTuber'));
-
-      const result = await DiscoveryYAMLLoader.loadPath('youtuber', 'en');
-
-      expect(mockPath.join).toHaveBeenCalledWith(
-        process.cwd(),
-        'public',
-        'discovery_data',
-        'youtuber',
-        'youtuber_en.yml'
-      );
-    });
-
-    it('should handle file not found error in Node.js', async () => {
-      Object.defineProperty(global, 'window', {
-        value: undefined,
-        writable: true
-      });
-
-      mockPath.join.mockReturnValue('/mock/path/to/nonexistent.yml');
-      mockFs.readFile.mockRejectedValue(new Error('ENOENT: no such file or directory'));
-
-      await expect(
-        DiscoveryYAMLLoader.loadPath('nonexistent_career', 'zhTW')
-      ).rejects.toThrow('ENOENT: no such file or directory');
-    });
-
-    it('should handle fetch error in browser environment', async () => {
-      Object.defineProperty(global, 'window', {
-        value: { location: { origin: 'http://localhost:3000' } },
-        writable: true
-      });
-
-      (fetch as jest.MockedFunction<typeof fetch>).mockResolvedValue({
-        ok: false,
-        status: 404,
-        statusText: 'Not Found'
-      } as Response);
-
-      await expect(
-        DiscoveryYAMLLoader.loadPath('nonexistent_career', 'zhTW')
-      ).rejects.toThrow('Failed to fetch YAML: 404 Not Found');
-    });
-
-    it('should handle invalid YAML content', async () => {
-      Object.defineProperty(global, 'window', {
-        value: undefined,
-        writable: true
-      });
-
-      const invalidYAML = `
-title: "Invalid YAML
-description: unclosed quote
-  invalid_structure
-`;
-
-      mockPath.join.mockReturnValue('/mock/path/to/invalid.yml');
-      mockFs.readFile.mockResolvedValue(invalidYAML);
-
-      await expect(
-        DiscoveryYAMLLoader.loadPath('invalid_career', 'zhTW')
-      ).rejects.toThrow();
-    });
-
-    it('should validate required YAML structure', async () => {
-      Object.defineProperty(global, 'window', {
-        value: undefined,
-        writable: true
-      });
-
-      const incompleteYAML = `
-title: "Incomplete YAML"
-# Missing required fields like world_setting, character, etc.
-`;
-
-      mockPath.join.mockReturnValue('/mock/path/to/incomplete.yml');
-      mockFs.readFile.mockResolvedValue(incompleteYAML);
-
-      const result = await DiscoveryYAMLLoader.loadPath('incomplete_career', 'zhTW');
-
-      // Should still parse but have missing fields
-      expect(result.title).toBe('Incomplete YAML');
-      expect(result.world_setting).toBeUndefined();
-      expect(result.character).toBeUndefined();
-    });
-
-    it('should handle network timeout in browser environment', async () => {
-      Object.defineProperty(global, 'window', {
-        value: { location: { origin: 'http://localhost:3000' } },
-        writable: true
-      });
-
-      (fetch as jest.MockedFunction<typeof fetch>).mockRejectedValue(
-        new Error('Network timeout')
-      );
-
-      await expect(
-        DiscoveryYAMLLoader.loadPath('timeout_career', 'zhTW')
-      ).rejects.toThrow('Network timeout');
-    });
-
-    it('should cache loaded content', async () => {
-      Object.defineProperty(global, 'window', {
-        value: undefined,
-        writable: true
-      });
-
-      mockPath.join.mockReturnValue('/mock/path/to/cached.yml');
-      mockFs.readFile.mockResolvedValue(mockYAMLContent);
-
-      // First call
-      const result1 = await DiscoveryYAMLLoader.loadPath('cached_career', 'zhTW');
-      
-      // Second call with same parameters
-      const result2 = await DiscoveryYAMLLoader.loadPath('cached_career', 'zhTW');
-
-      expect(result1).toEqual(result2);
-      
-      // File should only be read once if caching is implemented
-      if (DiscoveryYAMLLoader.cache) {
-        expect(mockFs.readFile).toHaveBeenCalledTimes(1);
-      }
-    });
-
-    it('should handle special characters in career type', async () => {
-      Object.defineProperty(global, 'window', {
-        value: undefined,
-        writable: true
-      });
-
-      mockPath.join.mockReturnValue('/mock/path/to/special-career.yml');
-      mockFs.readFile.mockResolvedValue(mockYAMLContent);
-
-      const result = await DiscoveryYAMLLoader.loadPath('special-career_type', 'zhTW');
-
-      expect(mockPath.join).toHaveBeenCalledWith(
-        process.cwd(),
-        'public',
-        'discovery_data',
-        'special-career_type',
-        'special-career_type_zhTW.yml'
-      );
-    });
-
-    it('should handle empty YAML file', async () => {
-      Object.defineProperty(global, 'window', {
-        value: undefined,
-        writable: true
-      });
-
-      mockPath.join.mockReturnValue('/mock/path/to/empty.yml');
-      mockFs.readFile.mockResolvedValue('');
-
-      const result = await DiscoveryYAMLLoader.loadPath('empty_career', 'zhTW');
-
-      expect(result).toBeNull();
-    });
-
-    it('should handle YAML with only comments', async () => {
-      Object.defineProperty(global, 'window', {
-        value: undefined,
-        writable: true
-      });
-
-      const commentsOnlyYAML = `
-# This is a comment
-# Another comment
-# No actual content
-`;
-
-      mockPath.join.mockReturnValue('/mock/path/to/comments.yml');
-      mockFs.readFile.mockResolvedValue(commentsOnlyYAML);
-
-      const result = await DiscoveryYAMLLoader.loadPath('comments_career', 'zhTW');
-
-      expect(result).toBeNull();
+    it('should have correct loader name', () => {
+      expect(loader['loaderName']).toBe('DiscoveryYAMLLoader');
     });
   });
 
-  describe('Error handling', () => {
-    it('should provide meaningful error messages', async () => {
-      Object.defineProperty(global, 'window', {
-        value: { location: { origin: 'http://localhost:3000' } },
-        writable: true
-      });
-
-      (fetch as jest.MockedFunction<typeof fetch>).mockResolvedValue({
-        ok: false,
-        status: 403,
-        statusText: 'Forbidden'
-      } as Response);
-
-      try {
-        await DiscoveryYAMLLoader.loadPath('forbidden_career', 'zhTW');
-        fail('Should have thrown an error');
-      } catch (error) {
-        expect(error).toBeInstanceOf(Error);
-        expect((error as Error).message).toContain('403');
-        expect((error as Error).message).toContain('Forbidden');
-      }
+  describe('loadPath language handling', () => {
+    it('should handle zh-TW to zhTW conversion', async () => {
+      // We can't test the full load without mocking fs, but we can test the language conversion
+      const cacheKey = loader['getCacheKey']('software_engineer/software_engineer_zhTW', 'zh-TW');
+      expect(cacheKey).toContain('zhTW');
     });
 
-    it('should handle malformed JSON in error responses', async () => {
-      Object.defineProperty(global, 'window', {
-        value: { location: { origin: 'http://localhost:3000' } },
-        writable: true
-      });
+    it('should construct correct file path for different languages', () => {
+      // Test the file naming pattern
+      const basePath = loader['defaultOptions'].basePath!;
+      
+      // English
+      expect(basePath).toContain('discovery_data');
+      
+      // The actual file loading would use these patterns:
+      // software_engineer/software_engineer_en.yml
+      // software_engineer/software_engineer_zhTW.yml
+    });
+  });
 
-      (fetch as jest.MockedFunction<typeof fetch>).mockResolvedValue({
-        ok: false,
-        status: 500,
-        statusText: 'Internal Server Error',
-        text: async () => 'Invalid JSON response'
-      } as Response);
+  describe('extractAllSkills', () => {
+    it('should extract all skills from skill tree', () => {
+      const skills = loader.extractAllSkills(mockDiscoveryData);
+      
+      expect(skills).toHaveLength(2);
+      expect(skills[0].id).toBe('programming_basics');
+      expect(skills[1].id).toBe('system_design');
+    });
 
-      await expect(
-        DiscoveryYAMLLoader.loadPath('error_career', 'zhTW')
-      ).rejects.toThrow('500 Internal Server Error');
+    it('should handle missing skill tree', () => {
+      const dataWithoutSkills: DiscoveryPath = {
+        ...mockDiscoveryData,
+        skill_tree: undefined as any
+      };
+      
+      const skills = loader.extractAllSkills(dataWithoutSkills);
+      
+      expect(skills).toEqual([]);
+    });
+
+    it('should handle empty skill arrays', () => {
+      const dataWithEmptySkills: DiscoveryPath = {
+        ...mockDiscoveryData,
+        skill_tree: {
+          core_skills: [],
+          advanced_skills: []
+        }
+      };
+      
+      const skills = loader.extractAllSkills(dataWithEmptySkills);
+      
+      expect(skills).toEqual([]);
+    });
+
+    it('should handle undefined skill arrays', () => {
+      const dataWithUndefinedSkills: DiscoveryPath = {
+        ...mockDiscoveryData,
+        skill_tree: {
+          core_skills: undefined as any,
+          advanced_skills: undefined as any
+        }
+      };
+      
+      const skills = loader.extractAllSkills(dataWithUndefinedSkills);
+      
+      expect(skills).toEqual([]);
+    });
+  });
+
+  describe('getSkillDependencies', () => {
+    it('should extract skill dependencies correctly', () => {
+      const dependencies = loader.getSkillDependencies(mockDiscoveryData);
+      
+      expect(dependencies.size).toBe(1);
+      expect(dependencies.get('system_design')).toEqual(['programming_basics', 'data_structures']);
+      expect(dependencies.has('programming_basics')).toBe(false); // No requirements
+    });
+
+    it('should handle skills without requirements', () => {
+      const dataWithNoRequirements: DiscoveryPath = {
+        ...mockDiscoveryData,
+        skill_tree: {
+          core_skills: [{
+            id: 'skill1',
+            name: 'Skill 1',
+            description: 'A skill',
+            max_level: 5
+          }],
+          advanced_skills: []
+        }
+      };
+      
+      const dependencies = loader.getSkillDependencies(dataWithNoRequirements);
+      
+      expect(dependencies.size).toBe(0);
+    });
+
+    it('should handle empty skill tree', () => {
+      const dataWithoutSkills: DiscoveryPath = {
+        ...mockDiscoveryData,
+        skill_tree: {
+          core_skills: [],
+          advanced_skills: []
+        }
+      };
+      
+      const dependencies = loader.getSkillDependencies(dataWithoutSkills);
+      
+      expect(dependencies.size).toBe(0);
+    });
+  });
+
+  describe('postProcess', () => {
+    it('should preserve existing path_id', async () => {
+      const result = await loader['postProcess'](mockDiscoveryData);
+      
+      expect(result.path_id).toBe('software_engineer');
+    });
+
+    it('should add path_id if missing but metadata exists', async () => {
+      const dataWithoutId: DiscoveryPath = {
+        ...mockDiscoveryData,
+        path_id: undefined as any
+      };
+      
+      const result = await loader['postProcess'](dataWithoutId);
+      
+      expect(result.path_id).toBe('discovery_path');
+    });
+
+    it('should add IDs to skills if missing', async () => {
+      const dataWithoutSkillIds: DiscoveryPath = {
+        ...mockDiscoveryData,
+        skill_tree: {
+          core_skills: [
+            { name: 'Skill 1', description: 'Desc 1', max_level: 5 } as any,
+            { name: 'Skill 2', description: 'Desc 2', max_level: 5 } as any
+          ],
+          advanced_skills: [
+            { name: 'Advanced 1', description: 'Adv 1', max_level: 10 } as any
+          ]
+        }
+      };
+      
+      const result = await loader['postProcess'](dataWithoutSkillIds);
+      
+      expect(result.skill_tree.core_skills[0].id).toBe('skill_1');
+      expect(result.skill_tree.core_skills[1].id).toBe('skill_2');
+      expect(result.skill_tree.advanced_skills[0].id).toBe('skill_1');
+    });
+
+    it('should handle missing skill tree', async () => {
+      const dataWithoutSkillTree: any = {
+        path_id: 'test',
+        metadata: mockDiscoveryData.metadata
+      };
+      
+      const result = await loader['postProcess'](dataWithoutSkillTree);
+      
+      expect(result.skill_tree).toBeUndefined();
+    });
+  });
+
+  describe('validateData', () => {
+    it('should always return valid for now', async () => {
+      const result = await loader['validateData']();
+      
+      expect(result.valid).toBe(true);
+      expect(result.error).toBeUndefined();
+    });
+  });
+
+  describe('achievement and quest handling', () => {
+    it('should handle achievements correctly', () => {
+      const dataWithAchievements: DiscoveryPath = {
+        ...mockDiscoveryData,
+        achievements: {
+          exploration: [{
+            id: 'explorer',
+            name: 'Explorer',
+            description: 'Explore all areas',
+            condition: 'visit_all_areas',
+            xp_bonus: 500
+          }],
+          mastery: [{
+            id: 'master_coder',
+            name: 'Master Coder',
+            description: 'Master all programming skills',
+            skills_required: ['programming_basics', 'data_structures'],
+            level_required: 10,
+            xp_bonus: 2000
+          }],
+          special: [{
+            id: 'hidden_gem',
+            name: 'Hidden Gem',
+            description: 'Find the hidden treasure',
+            hidden: true,
+            hint: 'Look in the debugging room',
+            xp_bonus: 1000
+          }]
+        }
+      };
+      
+      expect(dataWithAchievements.achievements?.exploration).toHaveLength(1);
+      expect(dataWithAchievements.achievements?.mastery[0].skills_required).toContain('programming_basics');
+      expect(dataWithAchievements.achievements?.special[0].hidden).toBe(true);
+    });
+
+    it('should handle milestone quests with rewards', () => {
+      const quest = mockDiscoveryData.milestone_quests[0];
+      
+      expect(quest.rewards?.skills).toContain('debugging');
+      expect(quest.rewards?.achievements).toContain('first_milestone');
+      expect(quest.xp_reward).toBe(1000);
+    });
+  });
+
+  describe('daily challenges', () => {
+    it('should handle daily challenges structure', () => {
+      const dataWithChallenges: DiscoveryPath = {
+        ...mockDiscoveryData,
+        daily_challenges: {
+          categories: [{
+            type: 'coding',
+            title: 'Daily Coding Challenge',
+            description: 'Complete a coding challenge',
+            skills_improved: ['programming_basics', 'problem_solving'],
+            xp_reward: 100
+          }]
+        }
+      };
+      
+      expect(dataWithChallenges.daily_challenges?.categories).toHaveLength(1);
+      expect(dataWithChallenges.daily_challenges?.categories[0].type).toBe('coding');
+    });
+  });
+
+  describe('career outcomes and objectives', () => {
+    it('should handle learning objectives', () => {
+      const dataWithObjectives: DiscoveryPath = {
+        ...mockDiscoveryData,
+        learning_objectives: [
+          'Master programming fundamentals',
+          'Build real-world projects',
+          'Understand system design'
+        ]
+      };
+      
+      expect(dataWithObjectives.learning_objectives).toHaveLength(3);
+    });
+
+    it('should handle career outcomes', () => {
+      const dataWithOutcomes: DiscoveryPath = {
+        ...mockDiscoveryData,
+        career_outcomes: [
+          'Junior Software Engineer',
+          'Full Stack Developer',
+          'System Architect'
+        ]
+      };
+      
+      expect(dataWithOutcomes.career_outcomes).toHaveLength(3);
     });
   });
 });

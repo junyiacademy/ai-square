@@ -95,15 +95,13 @@ export interface IInteraction {
  */
 export interface IEvaluation {
   id: string;  // UUID
-  targetType: 'task' | 'program';
-  targetId: string;  // Task UUID 或 Program UUID
-  evaluationType: string;  // 評估類型標識
-  score?: number;
-  feedback?: string;  // 預設語言版本（通常是 en）
-  feedbackVersions?: Record<string, string>;  // 多語言版本 { "en": "...", "zhTW": "...", "es": "..." }
-  dimensions?: IDimensionScore[];
+  entityType: 'task' | 'program';
+  entityId: string;  // Task UUID 或 Program UUID
+  programId: string;  // 關聯的 Program ID
+  userId: string;  // 用戶 ID
+  type: string;  // 評估類型標識
   createdAt: string;
-  metadata: Record<string, unknown>;
+  metadata: Record<string, unknown>;  // 包含 score, feedback, dimensions 等額外資料
 }
 
 /**
@@ -158,8 +156,9 @@ export abstract class BaseTaskRepository<T extends ITask> {
 export abstract class BaseEvaluationRepository<T extends IEvaluation> {
   abstract create(evaluation: Omit<T, 'id'>): Promise<T>;
   abstract findById(id: string): Promise<T | null>;
-  abstract findByTarget(targetType: string, targetId: string): Promise<T[]>;
+  abstract findByEntity(entityType: 'task' | 'program', entityId: string): Promise<T[]>;
   abstract findByProgram(programId: string): Promise<T[]>;
+  abstract findByUser(userId: string): Promise<T[]>;
 }
 
 // ===== Service Interfaces =====
