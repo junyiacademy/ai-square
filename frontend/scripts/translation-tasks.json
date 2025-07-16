@@ -1,0 +1,252 @@
+[
+  {
+    "file": "chat.json",
+    "language": "zhTW",
+    "targetPath": "./public/locales/zhTW/chat.json"
+  },
+  {
+    "file": "ksa.json",
+    "language": "zhTW",
+    "targetPath": "./public/locales/zhTW/ksa.json"
+  },
+  {
+    "file": "chat.json",
+    "language": "zhCN",
+    "targetPath": "./public/locales/zhCN/chat.json"
+  },
+  {
+    "file": "common.json",
+    "language": "zhCN",
+    "targetPath": "./public/locales/zhCN/common.json"
+  },
+  {
+    "file": "discovery.json",
+    "language": "zhCN",
+    "targetPath": "./public/locales/zhCN/discovery.json"
+  },
+  {
+    "file": "ksa.json",
+    "language": "zhCN",
+    "targetPath": "./public/locales/zhCN/ksa.json"
+  },
+  {
+    "file": "chat.json",
+    "language": "pt",
+    "targetPath": "./public/locales/pt/chat.json"
+  },
+  {
+    "file": "common.json",
+    "language": "pt",
+    "targetPath": "./public/locales/pt/common.json"
+  },
+  {
+    "file": "discovery.json",
+    "language": "pt",
+    "targetPath": "./public/locales/pt/discovery.json"
+  },
+  {
+    "file": "ksa.json",
+    "language": "pt",
+    "targetPath": "./public/locales/pt/ksa.json"
+  },
+  {
+    "file": "chat.json",
+    "language": "ar",
+    "targetPath": "./public/locales/ar/chat.json"
+  },
+  {
+    "file": "common.json",
+    "language": "ar",
+    "targetPath": "./public/locales/ar/common.json"
+  },
+  {
+    "file": "discovery.json",
+    "language": "ar",
+    "targetPath": "./public/locales/ar/discovery.json"
+  },
+  {
+    "file": "ksa.json",
+    "language": "ar",
+    "targetPath": "./public/locales/ar/ksa.json"
+  },
+  {
+    "file": "chat.json",
+    "language": "id",
+    "targetPath": "./public/locales/id/chat.json"
+  },
+  {
+    "file": "common.json",
+    "language": "id",
+    "targetPath": "./public/locales/id/common.json"
+  },
+  {
+    "file": "discovery.json",
+    "language": "id",
+    "targetPath": "./public/locales/id/discovery.json"
+  },
+  {
+    "file": "ksa.json",
+    "language": "id",
+    "targetPath": "./public/locales/id/ksa.json"
+  },
+  {
+    "file": "chat.json",
+    "language": "th",
+    "targetPath": "./public/locales/th/chat.json"
+  },
+  {
+    "file": "common.json",
+    "language": "th",
+    "targetPath": "./public/locales/th/common.json"
+  },
+  {
+    "file": "discovery.json",
+    "language": "th",
+    "targetPath": "./public/locales/th/discovery.json"
+  },
+  {
+    "file": "ksa.json",
+    "language": "th",
+    "targetPath": "./public/locales/th/ksa.json"
+  },
+  {
+    "file": "chat.json",
+    "language": "es",
+    "targetPath": "./public/locales/es/chat.json"
+  },
+  {
+    "file": "common.json",
+    "language": "es",
+    "targetPath": "./public/locales/es/common.json"
+  },
+  {
+    "file": "discovery.json",
+    "language": "es",
+    "targetPath": "./public/locales/es/discovery.json"
+  },
+  {
+    "file": "ksa.json",
+    "language": "es",
+    "targetPath": "./public/locales/es/ksa.json"
+  },
+  {
+    "file": "chat.json",
+    "language": "ja",
+    "targetPath": "./public/locales/ja/chat.json"
+  },
+  {
+    "file": "common.json",
+    "language": "ja",
+    "targetPath": "./public/locales/ja/common.json"
+  },
+  {
+    "file": "discovery.json",
+    "language": "ja",
+    "targetPath": "./public/locales/ja/discovery.json"
+  },
+  {
+    "file": "ksa.json",
+    "language": "ja",
+    "targetPath": "./public/locales/ja/ksa.json"
+  },
+  {
+    "file": "chat.json",
+    "language": "ko",
+    "targetPath": "./public/locales/ko/chat.json"
+  },
+  {
+    "file": "common.json",
+    "language": "ko",
+    "targetPath": "./public/locales/ko/common.json"
+  },
+  {
+    "file": "discovery.json",
+    "language": "ko",
+    "targetPath": "./public/locales/ko/discovery.json"
+  },
+  {
+    "file": "ksa.json",
+    "language": "ko",
+    "targetPath": "./public/locales/ko/ksa.json"
+  },
+  {
+    "file": "chat.json",
+    "language": "fr",
+    "targetPath": "./public/locales/fr/chat.json"
+  },
+  {
+    "file": "common.json",
+    "language": "fr",
+    "targetPath": "./public/locales/fr/common.json"
+  },
+  {
+    "file": "discovery.json",
+    "language": "fr",
+    "targetPath": "./public/locales/fr/discovery.json"
+  },
+  {
+    "file": "ksa.json",
+    "language": "fr",
+    "targetPath": "./public/locales/fr/ksa.json"
+  },
+  {
+    "file": "chat.json",
+    "language": "de",
+    "targetPath": "./public/locales/de/chat.json"
+  },
+  {
+    "file": "common.json",
+    "language": "de",
+    "targetPath": "./public/locales/de/common.json"
+  },
+  {
+    "file": "discovery.json",
+    "language": "de",
+    "targetPath": "./public/locales/de/discovery.json"
+  },
+  {
+    "file": "ksa.json",
+    "language": "de",
+    "targetPath": "./public/locales/de/ksa.json"
+  },
+  {
+    "file": "chat.json",
+    "language": "ru",
+    "targetPath": "./public/locales/ru/chat.json"
+  },
+  {
+    "file": "common.json",
+    "language": "ru",
+    "targetPath": "./public/locales/ru/common.json"
+  },
+  {
+    "file": "discovery.json",
+    "language": "ru",
+    "targetPath": "./public/locales/ru/discovery.json"
+  },
+  {
+    "file": "ksa.json",
+    "language": "ru",
+    "targetPath": "./public/locales/ru/ksa.json"
+  },
+  {
+    "file": "chat.json",
+    "language": "it",
+    "targetPath": "./public/locales/it/chat.json"
+  },
+  {
+    "file": "common.json",
+    "language": "it",
+    "targetPath": "./public/locales/it/common.json"
+  },
+  {
+    "file": "discovery.json",
+    "language": "it",
+    "targetPath": "./public/locales/it/discovery.json"
+  },
+  {
+    "file": "ksa.json",
+    "language": "it",
+    "targetPath": "./public/locales/it/ksa.json"
+  }
+]

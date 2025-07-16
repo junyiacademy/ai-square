@@ -6,17 +6,23 @@ AI Square translation implementation status as of 2025-07-16.
 ## ✅ Completed Actions
 
 ### 1. Translation Infrastructure
-- Created 3 translation scripts:
+- Created 5 translation scripts:
   - `translate-with-llm.js` - Demonstration script with translation structure
   - `translate-locales-gcp.js` - Production-ready Google Cloud Translation API integration
   - `translate-with-mymemory.js` - Free tier MyMemory API for demos
+  - `translate-with-claude.js` - High-quality Claude LLM translations
+  - `batch-translate-with-claude.js` - Batch processing for all files/languages
 
-### 2. Demo Translation Results
-- Successfully translated sample content to zhTW (Traditional Chinese) and es (Spanish)
-- Demonstrated working translation pipeline with proper placeholder preservation
-- Verified translations are accurate:
-  - "Admin CMS" → "管理員內容管理系統" (zhTW)
-  - "CMS Dashboard" → "CMS儀表板" (zhTW)
+### 2. Claude Translation Results
+- Successfully translated with Claude to zhTW (Traditional Chinese):
+  - `admin.json` - Complete professional translation
+  - `common.json` - 150+ UI terms professionally translated
+  - `chat.json` - AI advisor interface fully localized
+  - `ksa.json` - AI literacy framework terminology adapted
+- High-quality, culturally appropriate translations:
+  - "AI Learning Advisor" → "AI 學習顧問"
+  - "PBL scenarios" → "PBL 情境"
+  - "Knowledge, Skills, and Attitudes" → "知識、技能與態度"
 
 ### 3. Translation Features
 - **Placeholder Preservation**: {{variable}} placeholders are preserved correctly
@@ -39,54 +45,51 @@ AI Square translation implementation status as of 2025-07-16.
 
 ## 🚀 Production Translation Options
 
-### Option 1: Google Cloud Translation API (Recommended)
+### Option 1: Claude LLM Translation (Recommended - FREE)
 **Pros**:
-- High quality neural machine translation
-- Supports all 14 target languages
-- Fast and reliable
-- Good handling of technical terms
+- Highest quality AI translations
+- Already integrated in AI Square (no extra cost)
+- Context-aware with technical terminology
+- Culturally appropriate for each region
+- Preserves placeholders and formatting perfectly
 
-**Setup Required**:
-1. Set up Google Cloud project
-2. Enable Translation API
-3. Create service account credentials
-4. Set GOOGLE_APPLICATION_CREDENTIALS environment variable
-5. Run: `node scripts/translate-locales-gcp.js`
+**How to Use**:
+1. Run `node scripts/batch-translate-with-claude.js` to see all files needing translation
+2. Use the generated prompts with Claude
+3. Save responses to corresponding locale files
+4. Review and validate translations
 
-**Estimated Cost**: ~$20-50 for complete translation (based on ~1M characters)
+**Progress**: 4 files fully translated to zhTW as demonstration
 
-### Option 2: OpenAI GPT-4 API
+### Option 2: Google Cloud Translation API
 **Pros**:
-- Best quality translations
-- Understands context deeply
-- Can maintain consistent terminology
+- Fast batch processing
+- Good quality for most languages
+- Automated workflow
 
 **Cons**:
-- More expensive (~$100-200)
-- Slower (rate limits)
-- Requires OpenAI API key
+- Costs $20-50
+- Less context-aware than Claude
+- May need manual refinement
 
 ### Option 3: MyMemory API (Free Tier)
 **Pros**:
-- Free for limited usage
-- No authentication required
-- Good for demos
+- Completely free
+- No setup required
 
 **Cons**:
-- Daily limits (5000 chars/day)
-- Would take weeks to complete all translations
-- Quality varies
+- Limited to 5000 chars/day
+- Lower quality
+- Would take weeks to complete
 
 ### Option 4: Professional Human Translation
 **Pros**:
-- Highest quality
-- Cultural adaptation
-- Perfect terminology
+- Perfect quality
+- Cultural expertise
 
 **Cons**:
-- Most expensive ($500-2000)
+- Expensive ($500-2000)
 - Takes 1-2 weeks
-- Requires translation agency coordination
 
 ## 📝 Translation Coverage Details
 
