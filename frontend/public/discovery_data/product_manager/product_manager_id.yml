@@ -1,0 +1,220 @@
+# Product Manager Discovery Path - Indonesian
+# PLACEHOLDER FILE - Perlu diterjemahkan
+path_id: product_manager
+category: society
+difficulty_range: beginner_to_expert
+metadata:
+  title: Product Alchemist - Product Manager
+  short_description: Forge perfect products in the market crucible
+  long_description: |
+    You are a newly minted alchemist at the "Product Alchemy Workshop," skilled at 
+    fusing user needs, technical capabilities, and business goals into powerful products. 
+    In this workshop filled with innovation sparks, every iteration is an alchemical 
+    experiment, and your goal is to create perfect products that can change the world.
+  estimated_hours: 55
+  skill_focus:
+    - requirement_alchemy
+    - roadmap_prophecy
+    - team_coordination_magic
+    - user_resonance
+  translation_notice: Perlu diterjemahkan - This is a placeholder file
+  original_language: en
+  target_language: id
+  generated_date: "2025-07-16T07:00:56.523Z"
+world_setting:
+  name: Product Alchemy Workshop
+  description: |
+    The Product Alchemy Workshop is a magical forge where ideas are transformed into 
+    actual products. Here, product managers learn the ancient art of balancing user 
+    desires, technical constraints, and business objectives to create products that 
+    resonate with millions.
+  atmosphere: dynamic_creative
+  visual_theme: innovation_forge
+starting_scenario:
+  title: The Alchemist's Challenge
+  description: |
+    Strategy Master welcomes you to the workshop with a warning: Deadline, the Time 
+    Tyrant, is forcing teams to sacrifice product quality for speed. Meanwhile, Voice 
+    of Users grows louder with conflicting demands. You must find the philosopher's 
+    stone of product management - balancing quality, speed, and user satisfaction.
+  initial_tasks:
+    - understand_users
+    - analyze_market
+    - define_vision
+skill_tree:
+  core_skills:
+    - id: user_research
+      name: User Mind Reading
+      description: Deeply understand user needs and behaviors
+      max_level: 10
+      unlocks:
+        - persona_creation
+        - journey_mapping
+    - id: product_strategy
+      name: Strategic Vision
+      description: Craft winning product strategies
+      max_level: 10
+      unlocks:
+        - competitive_analysis
+        - positioning_mastery
+    - id: feature_prioritization
+      name: Priority Alchemy
+      description: Master the art of feature prioritization
+      max_level: 10
+      unlocks:
+        - roadmap_planning
+        - mvp_design
+    - id: stakeholder_management
+      name: Harmony Orchestration
+      description: Align diverse stakeholder interests
+      max_level: 10
+      unlocks:
+        - executive_communication
+        - cross_team_collaboration
+  advanced_skills:
+    - id: growth_hacking
+      name: Growth Sorcery
+      description: Drive exponential product growth
+      max_level: 15
+      requires:
+        - product_strategy
+        - user_research
+    - id: data_driven_decisions
+      name: Metrics Mastery
+      description: Make decisions based on data insights
+      max_level: 15
+      requires:
+        - feature_prioritization
+        - user_research
+    - id: platform_thinking
+      name: Ecosystem Architecture
+      description: Build product platforms and ecosystems
+      max_level: 15
+      requires:
+        - product_strategy
+        - stakeholder_management
+milestone_quests:
+  - id: first_launch
+    name: Product Genesis
+    description: Successfully launch your first product
+    required_level: 5
+    skills_tested:
+      - user_research
+      - feature_prioritization
+    xp_reward: 600
+    unlocks:
+      - launch_specialist_badge
+      - user_testimonials
+  - id: deadline_balance
+    name: Time vs Quality
+    description: Deliver quality product despite time pressure
+    required_level: 10
+    skills_tested:
+      - stakeholder_management
+      - product_strategy
+    xp_reward: 1200
+    unlocks:
+      - balance_master_title
+      - deadline_immunity
+  - id: unicorn_product
+    name: Billion User Product
+    description: Create a product used by millions
+    required_level: 20
+    skills_tested:
+      - growth_hacking
+      - platform_thinking
+    xp_reward: 2500
+    unlocks:
+      - legendary_pm_title
+      - industry_influence
+achievements:
+  - id: first_spec
+    name: Spec Writer
+    description: Write your first product specification
+    xp_reward: 100
+    badge_type: bronze
+  - id: user_champion
+    name: User Advocate
+    description: Implement 20 user-requested features
+    xp_reward: 300
+    badge_type: silver
+  - id: revenue_generator
+    name: Revenue Alchemist
+    description: Drive $1M in product revenue
+    xp_reward: 600
+    badge_type: gold
+  - id: pm_legend
+    name: Product Sage
+    description: Complete all product challenges
+    xp_reward: 1200
+    badge_type: platinum
+example_tasks:
+  beginner:
+    - id: user_interviews
+      type: analysis
+      title: Voice Collection
+      description: Conduct user interviews to gather insights
+      skills_improved:
+        - user_research
+        - user_resonance
+      xp_reward: 60
+    - id: competitive_analysis
+      type: analysis
+      title: Market Scanning
+      description: Analyze competitor products
+      skills_improved:
+        - product_strategy
+        - requirement_alchemy
+      xp_reward: 70
+  intermediate:
+    - id: roadmap_creation
+      type: creation
+      title: Future Path Design
+      description: Create a product roadmap
+      skills_improved:
+        - roadmap_planning
+        - roadmap_prophecy
+      xp_reward: 180
+    - id: feature_launch
+      type: creation
+      title: Feature Alchemy
+      description: Launch a major product feature
+      skills_improved:
+        - feature_prioritization
+        - stakeholder_management
+      xp_reward: 200
+  advanced:
+    - id: platform_design
+      type: creation
+      title: Ecosystem Creation
+      description: Design a product platform
+      skills_improved:
+        - platform_thinking
+        - product_strategy
+      xp_reward: 400
+    - id: growth_experiment
+      type: analysis
+      title: Growth Formula
+      description: Run growth experiments to scale product
+      skills_improved:
+        - growth_hacking
+        - data_driven_decisions
+      xp_reward: 350
+learning_objectives:
+  - Master user research and empathy techniques
+  - Develop strategic product thinking
+  - Learn to prioritize features effectively
+  - Build consensus among diverse stakeholders
+  - Use data to drive product decisions
+  - Create and communicate product vision
+  - Balance business goals with user needs
+  - Scale products from inception to maturity
+career_outcomes:
+  - Product Manager
+  - Senior Product Manager
+  - Product Director
+  - Chief Product Officer
+  - Product Strategy Consultant
+  - Startup Product Lead
+  - Growth Product Manager
+  - Platform Product Manager

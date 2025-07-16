@@ -1,0 +1,218 @@
+# Game Designer Discovery Path - German
+# PLACEHOLDER FILE - Übersetzung erforderlich
+path_id: game_designer
+category: arts
+difficulty_range: beginner_to_expert
+metadata:
+  title: Dream Architect - Game Designer
+  short_description: Create infinite possibilities in virtual worlds
+  long_description: |
+    You are a talented designer at the "Dream Architecture Academy," possessing the 
+    magic to transform imagination into interactive experiences. In this academy filled 
+    with creativity and fun, every game mechanic is a door to new worlds, and your 
+    mission is to create immersive digital dreams that captivate players.
+  estimated_hours: 60
+  skill_focus:
+    - world_building
+    - mechanics_design
+    - emotional_manipulation
+    - fun_summoning
+  translation_notice: Übersetzung erforderlich - This is a placeholder file
+  original_language: en
+  target_language: de
+  generated_date: "2025-07-16T07:00:56.512Z"
+world_setting:
+  name: Dream Architecture Academy
+  description: |
+    The Dream Architecture Academy is a magical institution dedicated to training game 
+    designers. Here, students learn to balance creativity with technical constraints, 
+    fun with challenge, and create experiences that resonate with players worldwide.
+  atmosphere: playful_creative
+  visual_theme: fantasy_academy
+starting_scenario:
+  title: The Grind Invasion
+  description: |
+    Creative God Dream welcomes you with troubling news: Grind, the King of Boredom, 
+    is turning all games into mindless number farms, pursuing efficiency over fun. 
+    You must use creativity and joy to combat the mechanization of gaming experiences.
+  initial_tasks:
+    - understand_game_design
+    - learn_player_psychology
+    - create_first_prototype
+skill_tree:
+  core_skills:
+    - id: game_mechanics
+      name: Mechanics Mastery
+      description: Design engaging game mechanics
+      max_level: 10
+      unlocks:
+        - combat_systems
+        - puzzle_design
+    - id: level_design
+      name: World Crafting
+      description: Create immersive game levels
+      max_level: 10
+      unlocks:
+        - environment_storytelling
+        - difficulty_curves
+    - id: narrative_design
+      name: Story Architecture
+      description: Weave compelling game narratives
+      max_level: 10
+      unlocks:
+        - character_development
+        - branching_stories
+    - id: player_experience
+      name: Experience Engineering
+      description: Optimize player enjoyment
+      max_level: 10
+      unlocks:
+        - flow_states
+        - reward_systems
+  advanced_skills:
+    - id: systems_design
+      name: System Symphony
+      description: Create complex interconnected systems
+      max_level: 15
+      requires:
+        - game_mechanics
+        - level_design
+    - id: monetization_design
+      name: Ethical Economics
+      description: Design fair monetization systems
+      max_level: 15
+      requires:
+        - player_experience
+        - game_mechanics
+    - id: multiplayer_design
+      name: Social Architecture
+      description: Design engaging multiplayer experiences
+      max_level: 15
+      requires:
+        - systems_design
+        - player_experience
+milestone_quests:
+  - id: first_game
+    name: Prototype Pioneer
+    description: Create your first playable game
+    required_level: 5
+    skills_tested:
+      - game_mechanics
+      - level_design
+    xp_reward: 600
+    unlocks:
+      - game_creator_badge
+      - player_feedback
+  - id: grind_battle
+    name: Fun vs Formula
+    description: Create a game that defeats Grind's boring mechanics
+    required_level: 10
+    skills_tested:
+      - narrative_design
+      - player_experience
+    xp_reward: 1200
+    unlocks:
+      - fun_guardian_title
+      - creative_freedom
+  - id: dream_masterpiece
+    name: Digital Dream
+    description: Create a game played by millions
+    required_level: 20
+    skills_tested:
+      - systems_design
+      - multiplayer_design
+    xp_reward: 2400
+    unlocks:
+      - dream_master_title
+      - industry_legend
+achievements:
+  - id: first_mechanic
+    name: Mechanics Birth
+    description: Design your first game mechanic
+    xp_reward: 80
+    badge_type: bronze
+  - id: playtester_favorite
+    name: Player's Choice
+    description: Receive positive feedback from 100 playtesters
+    xp_reward: 300
+    badge_type: silver
+  - id: innovation_award
+    name: Innovation Master
+    description: Create a truly original game concept
+    xp_reward: 500
+    badge_type: gold
+  - id: design_legend
+    name: Legendary Designer
+    description: Complete all design challenges
+    xp_reward: 1000
+    badge_type: platinum
+example_tasks:
+  beginner:
+    - id: world_building
+      type: creation
+      title: Dream World Construction
+      description: Design game world and backstory
+      skills_improved:
+        - world_building
+        - narrative_design
+      xp_reward: 70
+    - id: core_loop
+      type: creation
+      title: Fun Formula
+      description: Design the core game loop
+      skills_improved:
+        - game_mechanics
+        - fun_summoning
+      xp_reward: 80
+  intermediate:
+    - id: mechanics_design
+      type: creation
+      title: Joy Mechanics Forge
+      description: Design core game mechanics
+      skills_improved:
+        - mechanics_design
+        - player_experience
+      xp_reward: 180
+    - id: level_creation
+      type: creation
+      title: Experience Sculpting
+      description: Create engaging game levels
+      skills_improved:
+        - level_design
+        - emotional_manipulation
+      xp_reward: 200
+  advanced:
+    - id: systems_integration
+      type: creation
+      title: System Orchestra
+      description: Design interconnected game systems
+      skills_improved:
+        - systems_design
+        - game_mechanics
+      xp_reward: 380
+    - id: multiplayer_experience
+      type: creation
+      title: Social Playground
+      description: Design multiplayer features
+      skills_improved:
+        - multiplayer_design
+        - player_experience
+      xp_reward: 420
+learning_objectives:
+  - Master game design fundamentals
+  - Create engaging game mechanics
+  - Design immersive game worlds
+  - Understand player psychology
+  - Balance challenge and fun
+  - Develop unique gameplay experiences
+  - Implement fair monetization
+  - Build games that bring joy
+career_outcomes:
+  - Game Designer
+  - Level Designer
+  - Systems Designer
+  - Narrative Designer
+  - Game Director
+  - Design Lead
+  - Creative Director
+  - Studio Founder

@@ -1,0 +1,221 @@
+# Biotech Researcher Discovery Path - Korean
+# PLACEHOLDER FILE - 번역이 필요합니다
+path_id: biotech_researcher
+category: science
+difficulty_range: beginner_to_expert
+metadata:
+  title: Life Code Architect - Biotech Researcher
+  short_description: Unlock the secrets of life through AI and biotechnology
+  long_description: |
+    You are a junior researcher at the "BioSynthesis Institute," where the boundaries 
+    between biology and artificial intelligence blur. Armed with AI tools and genetic 
+    engineering techniques, you'll explore the fundamental codes of life and create 
+    solutions that could revolutionize medicine, agriculture, and human enhancement.
+  estimated_hours: 70
+  skill_focus:
+    - genetic_engineering
+    - ai_bio_modeling
+    - lab_techniques
+    - ethical_biotech
+    - data_driven_discovery
+  translation_notice: 번역이 필요합니다 - This is a placeholder file
+  original_language: en
+  target_language: ko
+  generated_date: "2025-07-16T07:00:56.471Z"
+world_setting:
+  name: BioSynthesis Institute
+  description: |
+    The BioSynthesis Institute is a cutting-edge research facility where biology meets 
+    artificial intelligence. Researchers here use AI to decode genetic mysteries, design 
+    new organisms, and push the boundaries of what's possible in biotechnology while 
+    grappling with profound ethical questions.
+  atmosphere: scientific_innovative
+  visual_theme: biotech_laboratory
+starting_scenario:
+  title: The Living Algorithm
+  description: |
+    Dr. Elena Helix welcomes you to the institute with an urgent mission: a mysterious 
+    genetic sequence has been discovered that seems to respond to AI algorithms. But 
+    Dr. Splice from the rival BioCorp is racing to weaponize genetic modifications. 
+    You must unlock life's secrets responsibly while preventing catastrophic misuse.
+  initial_tasks:
+    - understand_crispr
+    - learn_ai_modeling
+    - first_experiment
+skill_tree:
+  core_skills:
+    - id: molecular_biology
+      name: Molecular Mastery
+      description: Master fundamental molecular biology concepts
+      max_level: 10
+      unlocks:
+        - gene_editing
+        - protein_design
+    - id: bioinformatics
+      name: Bio-Data Fusion
+      description: Analyze biological data with AI
+      max_level: 10
+      unlocks:
+        - sequence_analysis
+        - structure_prediction
+    - id: synthetic_biology
+      name: Life Design
+      description: Engineer new biological systems
+      max_level: 10
+      unlocks:
+        - organism_engineering
+        - metabolic_pathways
+    - id: ai_integration
+      name: AI-Bio Interface
+      description: Integrate AI with biological research
+      max_level: 10
+      unlocks:
+        - ml_drug_discovery
+        - ai_protein_folding
+  advanced_skills:
+    - id: gene_therapy
+      name: Therapeutic Engineering
+      description: Design treatments at the genetic level
+      max_level: 15
+      requires:
+        - molecular_biology
+        - synthetic_biology
+    - id: biocomputing
+      name: Living Computers
+      description: Create biological computing systems
+      max_level: 15
+      requires:
+        - bioinformatics
+        - ai_integration
+    - id: enhancement_tech
+      name: Human Augmentation
+      description: Develop ethical enhancement technologies
+      max_level: 15
+      requires:
+        - gene_therapy
+        - ethical_biotech
+milestone_quests:
+  - id: first_cure
+    name: Disease Decoder
+    description: Develop a cure for a genetic disease
+    required_level: 5
+    skills_tested:
+      - molecular_biology
+      - bioinformatics
+    xp_reward: 800
+    unlocks:
+      - medical_breakthrough_badge
+      - patient_testimonials
+  - id: splice_confrontation
+    name: Ethics vs Profit
+    description: Stop Dr. Splice's dangerous experiments
+    required_level: 10
+    skills_tested:
+      - synthetic_biology
+      - ethical_biotech
+    xp_reward: 1500
+    unlocks:
+      - ethical_guardian_title
+      - regulatory_influence
+  - id: life_creation
+    name: Genesis Project
+    description: Create a beneficial synthetic organism
+    required_level: 20
+    skills_tested:
+      - biocomputing
+      - enhancement_tech
+    xp_reward: 3000
+    unlocks:
+      - master_biotechnologist_title
+      - nobel_consideration
+achievements:
+  - id: first_sequence
+    name: Code Reader
+    description: Successfully sequence your first genome
+    xp_reward: 100
+    badge_type: bronze
+  - id: publication_success
+    name: Published Researcher
+    description: Publish 5 peer-reviewed papers
+    xp_reward: 400
+    badge_type: silver
+  - id: patent_holder
+    name: Innovation Pioneer
+    description: File a breakthrough biotech patent
+    xp_reward: 700
+    badge_type: gold
+  - id: biotech_legend
+    name: Life Code Master
+    description: Complete all biotech challenges
+    xp_reward: 1500
+    badge_type: platinum
+example_tasks:
+  beginner:
+    - id: dna_extraction
+      type: analysis
+      title: Genetic Blueprint
+      description: Extract and analyze DNA samples
+      skills_improved:
+        - molecular_biology
+        - lab_techniques
+      xp_reward: 70
+    - id: ai_sequence_analysis
+      type: analysis
+      title: Pattern Recognition
+      description: Use AI to find patterns in genetic data
+      skills_improved:
+        - bioinformatics
+        - ai_bio_modeling
+      xp_reward: 80
+  intermediate:
+    - id: crispr_edit
+      type: creation
+      title: Gene Editor
+      description: Perform targeted gene editing
+      skills_improved:
+        - gene_editing
+        - synthetic_biology
+      xp_reward: 200
+    - id: drug_design
+      type: creation
+      title: Molecular Medicine
+      description: Design a new drug using AI
+      skills_improved:
+        - ml_drug_discovery
+        - bioinformatics
+      xp_reward: 250
+  advanced:
+    - id: synthetic_life
+      type: creation
+      title: Life Architect
+      description: Design a synthetic organism
+      skills_improved:
+        - organism_engineering
+        - biocomputing
+      xp_reward: 450
+    - id: enhancement_protocol
+      type: creation
+      title: Evolution Accelerator
+      description: Develop ethical enhancement technology
+      skills_improved:
+        - enhancement_tech
+        - gene_therapy
+      xp_reward: 500
+learning_objectives:
+  - Master molecular biology and genetic engineering
+  - Apply AI to biological research and discovery
+  - Design and engineer biological systems
+  - Develop treatments for genetic diseases
+  - Navigate ethical considerations in biotechnology
+  - Conduct rigorous scientific experiments
+  - Collaborate on interdisciplinary research
+  - Translate research into real-world applications
+career_outcomes:
+  - Biotechnology Research Scientist
+  - Bioinformatics Specialist
+  - Synthetic Biology Engineer
+  - Pharmaceutical Researcher
+  - Genetic Counselor
+  - Biotech Startup Founder
+  - Research Director
+  - Science Policy Advisor

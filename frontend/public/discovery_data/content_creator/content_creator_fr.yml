@@ -1,0 +1,219 @@
+# Content Creator Discovery Path - French
+# PLACEHOLDER FILE - Traduction nécessaire
+path_id: content_creator
+category: arts
+difficulty_range: beginner_to_expert
+metadata:
+  title: Digital Wizard - Content Creator
+  short_description: Weave captivating stories in the virtual kingdom
+  long_description: |
+    You are a newly ordained wizard of the "Creative Empire," possessing the mysterious 
+    power to transform ideas into viral content. In this digital kingdom, every like 
+    and share is proof of your magic, and your mentor Luna will teach you to master 
+    the secrets of algorithms.
+  estimated_hours: 50
+  skill_focus:
+    - content_magic
+    - visual_spells
+    - word_alchemy
+    - community_summoning
+  translation_notice: Traduction nécessaire - This is a placeholder file
+  original_language: en
+  target_language: fr
+  generated_date: "2025-07-16T07:00:56.478Z"
+world_setting:
+  name: Creative Empire
+  description: |
+    The Creative Empire is a digital kingdom powered by creative energy. Content creators 
+    here learn to harness the mysterious forces of algorithms, engagement, and viral 
+    mechanics to build their influence and impact millions of lives.
+  atmosphere: vibrant_magical
+  visual_theme: digital_fantasy
+starting_scenario:
+  title: The Shadow's Challenge
+  description: |
+    Creative Mentor Luna welcomes you to the empire with urgent news: Shadow, a fallen 
+    wizard, is spreading false content using forbidden magic, threatening the harmony 
+    of the Creative Empire. You must use the power of authentic creativity to combat 
+    his dark influence.
+  initial_tasks:
+    - understand_algorithms
+    - learn_content_basics
+    - create_first_spell
+skill_tree:
+  core_skills:
+    - id: content_strategy
+      name: Strategic Vision
+      description: Master content planning and strategy
+      max_level: 10
+      unlocks:
+        - trend_analysis
+        - audience_targeting
+    - id: visual_creation
+      name: Visual Sorcery
+      description: Create compelling visual content
+      max_level: 10
+      unlocks:
+        - photo_magic
+        - video_enchantment
+    - id: storytelling
+      name: Narrative Weaving
+      description: Craft engaging stories
+      max_level: 10
+      unlocks:
+        - emotional_resonance
+        - viral_mechanics
+    - id: community_building
+      name: Tribe Summoning
+      description: Build and engage communities
+      max_level: 10
+      unlocks:
+        - engagement_rituals
+        - loyalty_spells
+  advanced_skills:
+    - id: algorithm_mastery
+      name: Algorithm Whisperer
+      description: Understand and work with platform algorithms
+      max_level: 15
+      requires:
+        - content_strategy
+        - community_building
+    - id: monetization_magic
+      name: Revenue Alchemy
+      description: Transform content into income
+      max_level: 15
+      requires:
+        - community_building
+        - visual_creation
+    - id: brand_building
+      name: Empire Construction
+      description: Build a powerful personal brand
+      max_level: 15
+      requires:
+        - storytelling
+        - content_strategy
+milestone_quests:
+  - id: first_viral
+    name: Viral Breakthrough
+    description: Create your first viral content
+    required_level: 5
+    skills_tested:
+      - content_strategy
+      - visual_creation
+    xp_reward: 500
+    unlocks:
+      - viral_creator_badge
+      - algorithm_insights
+  - id: shadow_confrontation
+    name: Truth vs Deception
+    description: Defeat Shadow's misinformation campaign
+    required_level: 10
+    skills_tested:
+      - storytelling
+      - community_building
+    xp_reward: 1000
+    unlocks:
+      - truth_guardian_title
+      - authentic_voice
+  - id: empire_builder
+    name: Creative Empire
+    description: Build a content empire with 1M followers
+    required_level: 20
+    skills_tested:
+      - algorithm_mastery
+      - brand_building
+    xp_reward: 2000
+    unlocks:
+      - empire_ruler_title
+      - legacy_creator
+achievements:
+  - id: first_post
+    name: First Spell
+    description: Create your first piece of content
+    xp_reward: 50
+    badge_type: bronze
+  - id: engagement_master
+    name: Community Champion
+    description: Achieve 10K total engagements
+    xp_reward: 200
+    badge_type: silver
+  - id: consistency_king
+    name: Daily Wizard
+    description: Post consistently for 30 days
+    xp_reward: 400
+    badge_type: gold
+  - id: content_legend
+    name: Legendary Creator
+    description: Complete all content challenges
+    xp_reward: 800
+    badge_type: platinum
+example_tasks:
+  beginner:
+    - id: content_planning
+      type: creation
+      title: Magic Recipe Development
+      description: Develop content formulas that touch hearts
+      skills_improved:
+        - content_strategy
+        - storytelling
+      xp_reward: 50
+    - id: visual_basics
+      type: creation
+      title: Visual Spell Practice
+      description: Create your first visual content
+      skills_improved:
+        - visual_creation
+        - content_magic
+      xp_reward: 60
+  intermediate:
+    - id: engagement_analysis
+      type: analysis
+      title: Oracle's Trial
+      description: Analyze content performance and audience behavior
+      skills_improved:
+        - algorithm_mastery
+        - community_building
+      xp_reward: 150
+    - id: series_creation
+      type: creation
+      title: Saga Weaving
+      description: Create a content series
+      skills_improved:
+        - storytelling
+        - brand_building
+      xp_reward: 180
+  advanced:
+    - id: viral_campaign
+      type: creation
+      title: Empire Expansion
+      description: Launch a viral content campaign
+      skills_improved:
+        - algorithm_mastery
+        - viral_mechanics
+      xp_reward: 350
+    - id: monetization_setup
+      type: creation
+      title: Gold Transmutation
+      description: Set up multiple revenue streams
+      skills_improved:
+        - monetization_magic
+        - brand_building
+      xp_reward: 400
+learning_objectives:
+  - Master content strategy and planning
+  - Create engaging visual and written content
+  - Build and nurture online communities
+  - Understand platform algorithms and trends
+  - Develop a unique creative voice
+  - Monetize content effectively
+  - Combat misinformation with truth
+  - Build a sustainable content business
+career_outcomes:
+  - Social Media Influencer
+  - Content Strategist
+  - Brand Ambassador
+  - Digital Marketing Manager
+  - Creative Director
+  - Community Manager
+  - Content Marketing Lead
+  - Chief Content Officer

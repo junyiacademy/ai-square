@@ -1,0 +1,219 @@
+# Startup Founder Discovery Path - Portuguese
+# PLACEHOLDER FILE - Precisa de tradução
+path_id: startup_founder
+category: society
+difficulty_range: beginner_to_expert
+metadata:
+  title: Business Adventurer - Startup Founder
+  short_description: Pioneer new trade routes in the business wilderness
+  long_description: |
+    You are an explorer of the "New Business Continent," tasked with establishing 
+    new outposts in unknown business territories. In this wilderness full of opportunities 
+    and dangers, every decision could change your destiny, and loyal companions will 
+    face challenges alongside you.
+  estimated_hours: 60
+  skill_focus:
+    - business_intuition
+    - market_exploration
+    - resource_alchemy
+    - risk_navigation
+  translation_notice: Precisa de tradução - This is a placeholder file
+  original_language: en
+  target_language: pt
+  generated_date: "2025-07-16T07:00:56.535Z"
+world_setting:
+  name: New Business Continent
+  description: |
+    The New Business Continent is a vast unexplored business wilderness where brave 
+    entrepreneurs venture to establish new trade routes and build empires. Success 
+    requires cunning, courage, and the ability to turn scarce resources into gold.
+  atmosphere: adventurous_challenging
+  visual_theme: frontier_exploration
+starting_scenario:
+  title: The Baron's Blockade
+  description: |
+    Scout, your expedition partner, brings dire news: Baron Greed controls most 
+    resources and is crushing new merchants. Meanwhile, supplier Lily has backed 
+    out at a crucial moment. You must find creative ways to break through and 
+    establish your trading post.
+  initial_tasks:
+    - survey_market
+    - find_resources
+    - build_alliances
+skill_tree:
+  core_skills:
+    - id: market_analysis
+      name: Market Sensing
+      description: Detect business opportunities
+      max_level: 10
+      unlocks:
+        - trend_spotting
+        - competitor_analysis
+    - id: resource_management
+      name: Resource Alchemy
+      description: Transform limited resources into value
+      max_level: 10
+      unlocks:
+        - bootstrap_mastery
+        - efficiency_optimization
+    - id: team_building
+      name: Ally Summoning
+      description: Build strong founding teams
+      max_level: 10
+      unlocks:
+        - talent_attraction
+        - culture_creation
+    - id: product_development
+      name: Innovation Forge
+      description: Create market-winning products
+      max_level: 10
+      unlocks:
+        - mvp_design
+        - iteration_mastery
+  advanced_skills:
+    - id: fundraising
+      name: Capital Magic
+      description: Master the art of raising funds
+      max_level: 15
+      requires:
+        - market_analysis
+        - resource_management
+    - id: scaling_operations
+      name: Empire Building
+      description: Scale businesses efficiently
+      max_level: 15
+      requires:
+        - team_building
+        - product_development
+    - id: strategic_pivoting
+      name: Adaptation Arts
+      description: Pivot strategically when needed
+      max_level: 15
+      requires:
+        - market_analysis
+        - product_development
+milestone_quests:
+  - id: first_customer
+    name: First Gold
+    description: Acquire your first paying customer
+    required_level: 5
+    skills_tested:
+      - market_analysis
+      - product_development
+    xp_reward: 650
+    unlocks:
+      - merchant_badge
+      - market_credibility
+  - id: baron_challenge
+    name: Breaking the Monopoly
+    description: Overcome Baron Greed's market control
+    required_level: 10
+    skills_tested:
+      - resource_management
+      - strategic_pivoting
+    xp_reward: 1300
+    unlocks:
+      - freedom_trader_title
+      - supplier_network
+  - id: empire_established
+    name: Trade Empire
+    description: Build a sustainable business empire
+    required_level: 20
+    skills_tested:
+      - scaling_operations
+      - fundraising
+    xp_reward: 2600
+    unlocks:
+      - empire_builder_title
+      - legacy_founder
+achievements:
+  - id: first_sale
+    name: First Trade
+    description: Make your first successful sale
+    xp_reward: 75
+    badge_type: bronze
+  - id: team_assembled
+    name: Fellowship Formed
+    description: Build a team of 5+ members
+    xp_reward: 300
+    badge_type: silver
+  - id: profitable_quarter
+    name: Gold Flow
+    description: Achieve first profitable quarter
+    xp_reward: 550
+    badge_type: gold
+  - id: startup_legend
+    name: Legendary Founder
+    description: Complete all founder challenges
+    xp_reward: 1100
+    badge_type: platinum
+example_tasks:
+  beginner:
+    - id: market_research
+      type: analysis
+      title: Wilderness Market Survey
+      description: Deeply understand target market needs
+      skills_improved:
+        - market_analysis
+        - business_intuition
+      xp_reward: 65
+    - id: prototype_creation
+      type: creation
+      title: First Trading Post
+      description: Build minimum viable product
+      skills_improved:
+        - product_development
+        - resource_alchemy
+      xp_reward: 75
+  intermediate:
+    - id: customer_interviews
+      type: chat
+      title: Merchant Negotiations
+      description: Validate product-market fit
+      skills_improved:
+        - market_exploration
+        - business_intuition
+      xp_reward: 175
+    - id: growth_planning
+      type: creation
+      title: Empire Expansion Plans
+      description: Develop growth strategies
+      skills_improved:
+        - scaling_operations
+        - risk_navigation
+      xp_reward: 195
+  advanced:
+    - id: series_a_prep
+      type: creation
+      title: Capital Quest
+      description: Prepare for major fundraising
+      skills_improved:
+        - fundraising
+        - resource_alchemy
+      xp_reward: 370
+    - id: market_expansion
+      type: creation
+      title: Continental Conquest
+      description: Expand to new markets
+      skills_improved:
+        - strategic_pivoting
+        - market_exploration
+      xp_reward: 410
+learning_objectives:
+  - Identify and validate business opportunities
+  - Build products customers love
+  - Master lean startup methodology
+  - Develop leadership skills
+  - Navigate uncertainty and risk
+  - Build strong company culture
+  - Secure funding and manage finances
+  - Scale businesses sustainably
+career_outcomes:
+  - Startup Founder/CEO
+  - Serial Entrepreneur
+  - Venture Partner
+  - Innovation Consultant
+  - Startup Advisor
+  - Corporate Entrepreneur
+  - Accelerator Director
+  - Angel Investor

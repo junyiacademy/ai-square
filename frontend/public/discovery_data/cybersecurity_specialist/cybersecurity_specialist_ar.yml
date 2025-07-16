@@ -1,0 +1,221 @@
+# Cybersecurity Specialist Discovery Path - Arabic
+# PLACEHOLDER FILE - يحتاج إلى ترجمة
+path_id: cybersecurity_specialist
+category: technology
+difficulty_range: beginner_to_expert
+metadata:
+  title: Digital Fortress Guardian - Cybersecurity Specialist
+  short_description: Defend the digital realm from cyber threats
+  long_description: |
+    You are a recruit at the "Cyber Defense Academy," an elite training ground for 
+    digital warriors. In a world where data is the new gold and hackers lurk in 
+    every shadow of the internet, you'll learn to protect critical infrastructure, 
+    hunt cyber criminals, and build impenetrable digital fortresses.
+  estimated_hours: 65
+  skill_focus:
+    - threat_detection
+    - encryption_mastery
+    - network_defense
+    - ethical_hacking
+    - incident_response
+  translation_notice: يحتاج إلى ترجمة - This is a placeholder file
+  original_language: en
+  target_language: ar
+  generated_date: "2025-07-16T07:00:56.485Z"
+world_setting:
+  name: Cyber Defense Academy
+  description: |
+    The Cyber Defense Academy exists in both physical and virtual realms. Students 
+    navigate through simulated cyber attacks, learn from legendary white hat hackers, 
+    and prepare for real-world threats that could cripple nations or corporations 
+    in seconds.
+  atmosphere: high_stakes_tactical
+  visual_theme: matrix_fortress
+starting_scenario:
+  title: The Dark Web Rising
+  description: |
+    Commander Firewall briefs you on an urgent situation: the notorious hacker 
+    collective "Shadow Byte" led by the mysterious Zero Day is planning a massive 
+    attack on global infrastructure. You must master cybersecurity skills quickly 
+    to join the defense force and prevent digital apocalypse.
+  initial_tasks:
+    - understand_threats
+    - setup_defenses
+    - learn_tools
+skill_tree:
+  core_skills:
+    - id: network_security
+      name: Network Shield
+      description: Secure network infrastructure
+      max_level: 10
+      unlocks:
+        - firewall_configuration
+        - intrusion_detection
+    - id: cryptography
+      name: Code Cipher
+      description: Master encryption and decryption
+      max_level: 10
+      unlocks:
+        - advanced_encryption
+        - blockchain_security
+    - id: ethical_hacking
+      name: White Hat Arsenal
+      description: Think like an attacker to defend
+      max_level: 10
+      unlocks:
+        - penetration_testing
+        - vulnerability_assessment
+    - id: security_analysis
+      name: Threat Intelligence
+      description: Analyze and predict cyber threats
+      max_level: 10
+      unlocks:
+        - malware_analysis
+        - forensics
+  advanced_skills:
+    - id: zero_day_hunting
+      name: Vulnerability Oracle
+      description: Discover unknown vulnerabilities
+      max_level: 15
+      requires:
+        - ethical_hacking
+        - security_analysis
+    - id: ai_security
+      name: AI Defense Matrix
+      description: Use AI to enhance security
+      max_level: 15
+      requires:
+        - network_security
+        - cryptography
+    - id: cyber_warfare
+      name: Digital Battlefield
+      description: Defend against nation-state attacks
+      max_level: 15
+      requires:
+        - security_analysis
+        - network_security
+milestone_quests:
+  - id: first_defense
+    name: Firewall Rising
+    description: Successfully defend against first attack
+    required_level: 5
+    skills_tested:
+      - network_security
+      - security_analysis
+    xp_reward: 750
+    unlocks:
+      - defender_badge
+      - security_clearance_1
+  - id: shadow_byte_hack
+    name: Into the Shadows
+    description: Infiltrate Shadow Byte and prevent attack
+    required_level: 10
+    skills_tested:
+      - ethical_hacking
+      - cryptography
+    xp_reward: 1600
+    unlocks:
+      - ghost_hacker_title
+      - dark_web_access
+  - id: zero_day_showdown
+    name: Final Firewall
+    description: Defeat Zero Day in cyber combat
+    required_level: 20
+    skills_tested:
+      - zero_day_hunting
+      - cyber_warfare
+    xp_reward: 3200
+    unlocks:
+      - cyber_legend_title
+      - global_recognition
+achievements:
+  - id: first_patch
+    name: Bug Squasher
+    description: Fix your first vulnerability
+    xp_reward: 120
+    badge_type: bronze
+  - id: threat_hunter
+    name: Malware Hunter
+    description: Detect and neutralize 20 threats
+    xp_reward: 380
+    badge_type: silver
+  - id: fortress_builder
+    name: Impenetrable
+    description: Build unhackable security system
+    xp_reward: 720
+    badge_type: gold
+  - id: cyber_guardian
+    name: Digital Savior
+    description: Complete all security challenges
+    xp_reward: 1400
+    badge_type: platinum
+example_tasks:
+  beginner:
+    - id: password_audit
+      type: analysis
+      title: Credential Check
+      description: Audit and improve password security
+      skills_improved:
+        - cryptography
+        - security_analysis
+      xp_reward: 70
+    - id: phishing_detection
+      type: analysis
+      title: Bait Detector
+      description: Identify phishing attempts
+      skills_improved:
+        - threat_detection
+        - security_analysis
+      xp_reward: 80
+  intermediate:
+    - id: penetration_test
+      type: creation
+      title: Breach Simulation
+      description: Conduct penetration testing
+      skills_improved:
+        - ethical_hacking
+        - network_defense
+      xp_reward: 210
+    - id: incident_response
+      type: chat
+      title: Crisis Command
+      description: Lead incident response team
+      skills_improved:
+        - incident_response
+        - network_security
+      xp_reward: 240
+  advanced:
+    - id: zero_day_discovery
+      type: analysis
+      title: Unknown Unknown
+      description: Find zero-day vulnerability
+      skills_improved:
+        - zero_day_hunting
+        - ethical_hacking
+      xp_reward: 460
+    - id: ai_defense_system
+      type: creation
+      title: Sentient Shield
+      description: Build AI-powered defense system
+      skills_improved:
+        - ai_security
+        - network_defense
+      xp_reward: 510
+learning_objectives:
+  - Master network security fundamentals
+  - Understand cryptography and encryption
+  - Learn ethical hacking techniques
+  - Develop incident response capabilities
+  - Analyze malware and cyber threats
+  - Build secure systems and architectures
+  - Stay ahead of emerging threats
+  - Balance security with usability
+career_outcomes:
+  - Cybersecurity Analyst
+  - Penetration Tester
+  - Security Architect
+  - Incident Response Manager
+  - Chief Information Security Officer
+  - Cybersecurity Consultant
+  - Threat Intelligence Analyst
+  - Security Operations Center Lead

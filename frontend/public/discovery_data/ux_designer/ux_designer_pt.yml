@@ -1,0 +1,219 @@
+# Ux Designer Discovery Path - Portuguese
+# PLACEHOLDER FILE - Precisa de tradução
+path_id: ux_designer
+category: arts
+difficulty_range: beginner_to_expert
+metadata:
+  title: Experience Architect - UX Designer
+  short_description: Build perfect experience worlds in digital spaces
+  long_description: |
+    You are an apprentice architect at the "Experience Design Academy," skilled at 
+    building unforgettable experience spaces in the digital world. Every click and 
+    swipe is a carefully designed journey, and your mission is to make users feel 
+    joy and satisfaction in these spaces.
+  estimated_hours: 55
+  skill_focus:
+    - user_psychology
+    - experience_magic
+    - prototype_sculpting
+    - communication_arts
+  translation_notice: Precisa de tradução - This is a placeholder file
+  original_language: en
+  target_language: pt
+  generated_date: "2025-07-16T07:00:56.553Z"
+world_setting:
+  name: Experience Design Academy
+  description: |
+    The Experience Design Academy is a mysterious institution dedicated to studying 
+    human experiences. Designers here learn to balance aesthetics with functionality, 
+    emotion with efficiency, creating digital spaces that heal and inspire.
+  atmosphere: harmonious_innovative
+  visual_theme: minimalist_magic
+starting_scenario:
+  title: The Indifference Crisis
+  description: |
+    Design Sage Maya welcomes you with an urgent mission: Indifference, the cold 
+    corporate giant, is standardizing all designs, eliminating personalized experiences. 
+    You must use soulful design to combat mechanization and restore humanity to 
+    digital interactions.
+  initial_tasks:
+    - understand_users
+    - learn_design_principles
+    - create_first_prototype
+skill_tree:
+  core_skills:
+    - id: user_research
+      name: Mind Reading
+      description: Understand user needs deeply
+      max_level: 10
+      unlocks:
+        - empathy_mapping
+        - user_interviews
+    - id: interaction_design
+      name: Touch Magic
+      description: Design intuitive interactions
+      max_level: 10
+      unlocks:
+        - gesture_design
+        - microinteractions
+    - id: visual_design
+      name: Aesthetic Alchemy
+      description: Create beautiful interfaces
+      max_level: 10
+      unlocks:
+        - color_theory
+        - typography_mastery
+    - id: prototyping
+      name: Reality Shaping
+      description: Build interactive prototypes
+      max_level: 10
+      unlocks:
+        - rapid_prototyping
+        - high_fidelity_design
+  advanced_skills:
+    - id: design_systems
+      name: System Harmony
+      description: Create scalable design systems
+      max_level: 15
+      requires:
+        - visual_design
+        - interaction_design
+    - id: accessibility_design
+      name: Universal Magic
+      description: Design for all users
+      max_level: 15
+      requires:
+        - user_research
+        - interaction_design
+    - id: strategic_design
+      name: Business Empathy
+      description: Align design with business goals
+      max_level: 15
+      requires:
+        - user_research
+        - prototyping
+milestone_quests:
+  - id: first_design
+    name: Soul Touch
+    description: Create your first user-loved design
+    required_level: 5
+    skills_tested:
+      - user_research
+      - visual_design
+    xp_reward: 550
+    unlocks:
+      - empathy_designer_badge
+      - user_testimonials
+  - id: indifference_challenge
+    name: Humanity Restored
+    description: Defeat Indifference with personalized design
+    required_level: 10
+    skills_tested:
+      - interaction_design
+      - accessibility_design
+    xp_reward: 1100
+    unlocks:
+      - humanity_champion_title
+      - emotional_resonance
+  - id: design_legacy
+    name: Experience Revolution
+    description: Create design used by millions
+    required_level: 20
+    skills_tested:
+      - design_systems
+      - strategic_design
+    xp_reward: 2200
+    unlocks:
+      - master_architect_title
+      - design_philosophy
+achievements:
+  - id: first_prototype
+    name: First Creation
+    description: Build your first interactive prototype
+    xp_reward: 70
+    badge_type: bronze
+  - id: user_advocate
+    name: User Champion
+    description: Conduct 50 user research sessions
+    xp_reward: 250
+    badge_type: silver
+  - id: pixel_perfect
+    name: Perfection Achieved
+    description: Create flawless high-fidelity designs
+    xp_reward: 450
+    badge_type: gold
+  - id: design_master
+    name: Experience Sage
+    description: Complete all design challenges
+    xp_reward: 900
+    badge_type: platinum
+example_tasks:
+  beginner:
+    - id: user_research
+      type: analysis
+      title: Soul Mining Mission
+      description: Understand user needs and pain points
+      skills_improved:
+        - user_research
+        - user_psychology
+      xp_reward: 60
+    - id: wireframe_creation
+      type: creation
+      title: Blueprint Magic
+      description: Create your first wireframes
+      skills_improved:
+        - interaction_design
+        - prototype_sculpting
+      xp_reward: 70
+  intermediate:
+    - id: prototype_design
+      type: creation
+      title: Warm Prototype Building
+      description: Design interactive prototype
+      skills_improved:
+        - prototyping
+        - experience_magic
+      xp_reward: 170
+    - id: design_system
+      type: creation
+      title: Harmony Framework
+      description: Create cohesive design system
+      skills_improved:
+        - design_systems
+        - visual_design
+      xp_reward: 190
+  advanced:
+    - id: accessibility_audit
+      type: analysis
+      title: Universal Gateway
+      description: Ensure design works for everyone
+      skills_improved:
+        - accessibility_design
+        - user_psychology
+      xp_reward: 340
+    - id: strategic_redesign
+      type: creation
+      title: Business Soul Fusion
+      description: Redesign for user and business success
+      skills_improved:
+        - strategic_design
+        - communication_arts
+      xp_reward: 380
+learning_objectives:
+  - Master user research techniques
+  - Create intuitive user interfaces
+  - Design beautiful visual experiences
+  - Build interactive prototypes
+  - Understand human psychology
+  - Implement accessibility standards
+  - Develop design systems
+  - Balance user needs with business goals
+career_outcomes:
+  - UX Designer
+  - UI Designer
+  - Product Designer
+  - Design System Lead
+  - UX Research Manager
+  - Design Director
+  - Chief Design Officer
+  - Design Consultant

@@ -1,0 +1,221 @@
+# Environmental Scientist Discovery Path - Thai
+# PLACEHOLDER FILE - ต้องการการแปล
+path_id: environmental_scientist
+category: science
+difficulty_range: beginner_to_expert
+metadata:
+  title: Planet Guardian - Environmental Scientist
+  short_description: Protect Earth through data-driven environmental solutions
+  long_description: |
+    You are a junior scientist at the "Global Climate Response Center," where AI-powered 
+    monitoring systems track planetary health in real-time. Armed with cutting-edge 
+    technology and environmental science knowledge, you'll work to understand and 
+    reverse climate damage while developing sustainable solutions for the future.
+  estimated_hours: 60
+  skill_focus:
+    - climate_modeling
+    - ecosystem_analysis
+    - pollution_tracking
+    - sustainable_solutions
+    - data_visualization
+  translation_notice: ต้องการการแปล - This is a placeholder file
+  original_language: en
+  target_language: th
+  generated_date: "2025-07-16T07:00:56.509Z"
+world_setting:
+  name: Global Climate Response Center
+  description: |
+    The Global Climate Response Center is a high-tech facility where environmental 
+    scientists use AI, satellite data, and field research to monitor and protect 
+    Earth's ecosystems. Scientists here race against time to develop solutions 
+    before critical tipping points are reached.
+  atmosphere: urgent_hopeful
+  visual_theme: eco_tech_fusion
+starting_scenario:
+  title: "Code Red: Climate Crisis"
+  description: |
+    Dr. Gaia Earth welcomes you with alarming news: multiple environmental systems 
+    are approaching critical thresholds. Meanwhile, CEO Polluto of MegaCorp continues 
+    destructive practices for profit. You must use science and innovation to save 
+    ecosystems while exposing corporate environmental crimes.
+  initial_tasks:
+    - analyze_climate_data
+    - identify_hotspots
+    - propose_solutions
+skill_tree:
+  core_skills:
+    - id: climate_science
+      name: Climate Dynamics
+      description: Understand Earth's climate systems
+      max_level: 10
+      unlocks:
+        - weather_prediction
+        - carbon_cycle_analysis
+    - id: ecosystem_monitoring
+      name: Living Systems
+      description: Track and analyze ecosystems
+      max_level: 10
+      unlocks:
+        - biodiversity_assessment
+        - habitat_mapping
+    - id: pollution_detection
+      name: Contamination Tracking
+      description: Identify and trace pollutants
+      max_level: 10
+      unlocks:
+        - water_quality_analysis
+        - air_monitoring
+    - id: sustainable_tech
+      name: Green Innovation
+      description: Develop eco-friendly technologies
+      max_level: 10
+      unlocks:
+        - renewable_energy
+        - circular_economy
+  advanced_skills:
+    - id: climate_modeling
+      name: Future Forecasting
+      description: Predict climate scenarios with AI
+      max_level: 15
+      requires:
+        - climate_science
+        - ecosystem_monitoring
+    - id: restoration_ecology
+      name: Ecosystem Healing
+      description: Restore damaged environments
+      max_level: 15
+      requires:
+        - ecosystem_monitoring
+        - sustainable_tech
+    - id: policy_influence
+      name: Environmental Advocacy
+      description: Shape environmental policies
+      max_level: 15
+      requires:
+        - pollution_detection
+        - climate_science
+milestone_quests:
+  - id: first_discovery
+    name: Pollution Exposed
+    description: Uncover major environmental violation
+    required_level: 5
+    skills_tested:
+      - pollution_detection
+      - ecosystem_monitoring
+    xp_reward: 700
+    unlocks:
+      - whistleblower_badge
+      - media_attention
+  - id: ecosystem_save
+    name: Habitat Hero
+    description: Save an endangered ecosystem
+    required_level: 10
+    skills_tested:
+      - restoration_ecology
+      - sustainable_tech
+    xp_reward: 1400
+    unlocks:
+      - conservation_champion_title
+      - wildlife_alliance
+  - id: climate_solution
+    name: Global Game Changer
+    description: Develop breakthrough climate solution
+    required_level: 20
+    skills_tested:
+      - climate_modeling
+      - policy_influence
+    xp_reward: 2800
+    unlocks:
+      - earth_defender_title
+      - un_recognition
+achievements:
+  - id: first_sample
+    name: Field Researcher
+    description: Collect and analyze first environmental sample
+    xp_reward: 100
+    badge_type: bronze
+  - id: data_detective
+    name: Pattern Finder
+    description: Identify 10 environmental anomalies
+    xp_reward: 350
+    badge_type: silver
+  - id: solution_provider
+    name: Innovation Champion
+    description: Implement 5 sustainable solutions
+    xp_reward: 650
+    badge_type: gold
+  - id: planet_protector
+    name: Earth's Guardian
+    description: Complete all environmental challenges
+    xp_reward: 1300
+    badge_type: platinum
+example_tasks:
+  beginner:
+    - id: water_testing
+      type: analysis
+      title: Aqua Analysis
+      description: Test water quality in local rivers
+      skills_improved:
+        - pollution_detection
+        - data_visualization
+      xp_reward: 65
+    - id: carbon_footprint
+      type: analysis
+      title: Carbon Calculator
+      description: Measure carbon emissions
+      skills_improved:
+        - climate_science
+        - sustainable_solutions
+      xp_reward: 75
+  intermediate:
+    - id: habitat_restoration
+      type: creation
+      title: Ecosystem Revival
+      description: Design habitat restoration plan
+      skills_improved:
+        - restoration_ecology
+        - ecosystem_analysis
+      xp_reward: 190
+    - id: pollution_tracking
+      type: analysis
+      title: Contamination Hunt
+      description: Track pollution to its source
+      skills_improved:
+        - pollution_detection
+        - data_visualization
+      xp_reward: 220
+  advanced:
+    - id: climate_model
+      type: creation
+      title: Future Simulator
+      description: Build AI climate prediction model
+      skills_improved:
+        - climate_modeling
+        - data_visualization
+      xp_reward: 420
+    - id: policy_proposal
+      type: creation
+      title: Law of the Land
+      description: Draft environmental protection policy
+      skills_improved:
+        - policy_influence
+        - sustainable_solutions
+      xp_reward: 470
+learning_objectives:
+  - Master environmental monitoring techniques
+  - Use AI and data science for environmental analysis
+  - Develop sustainable technology solutions
+  - Understand climate systems and predictions
+  - Design ecosystem restoration projects
+  - Influence environmental policy and regulation
+  - Communicate science to public and policymakers
+  - Balance human needs with environmental protection
+career_outcomes:
+  - Environmental Scientist
+  - Climate Researcher
+  - Conservation Biologist
+  - Environmental Consultant
+  - Sustainability Director
+  - Environmental Policy Analyst
+  - Ecological Restoration Specialist
+  - Chief Sustainability Officer
