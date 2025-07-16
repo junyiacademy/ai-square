@@ -55,3 +55,16 @@ tmp
 
 /playwright-report
 /test-results
+
+# Security - service account keys
+ai-square-key.json
+*-key.json
+*.key.json
+
+# Test files
+cookies.txt
+dev.log
+
+# Temporary documentation
+debug-*.md
+test-*.md
