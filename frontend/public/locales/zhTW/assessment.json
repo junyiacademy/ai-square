@@ -2,7 +2,15 @@
   "loading": "載入評估中...",
   "errorLoading": "無法載入評估資料，請重試。",
   "title": "AI 素養評估",
-  "description": "評估您在四個關鍵領域的 AI 素養技能",
+  "description": "選擇評估來評估您的 AI 素養技能",
+  "noAssessmentsAvailable": "目前沒有可用的評估項目。",
+  "best": "最佳",
+  "questions": "題",
+  "minutes": "分鐘",
+  "pass": "及格",
+  "attempts": "次嘗試",
+  "last": "最近",
+  "viewDetails": "查看詳情",
   "assessmentInfo": {
     "title": "評估詳情",
     "questions": "{{count}} 道全面性題目",
@@ -57,8 +65,8 @@
       "focusOn": "重點加強",
       "engaging_with_ai": "重點加強與 AI 互動：了解 AI 的限制、隱私議題，以及與 AI 系統互動時的倫理考量",
       "creating_with_ai": "重點加強與 AI 共創：學習提示技巧、內容生成最佳實踐，以及與 AI 工具的創意協作",
-      "managing_with_ai": "重點加強與 AI 管理：發展 AI 輔助決策、工作流程自動化，以及團隊協作的技能",
-      "designing_with_ai": "重點加強與 AI 設計：建立 AI 素養課程、創建學習材料，以及設計 AI 增強體驗"
+      "managing_with_ai": "重點加強與管理 AI：發展 AI 輔助決策、工作流程自動化，以及團隊協作的技能",
+      "designing_with_ai": "重點加強與設計 AI：建立 AI 素養課程、創建學習材料，以及設計 AI 增強體驗"
     },
     "nextSteps": "建議下一步",
     "nextStep1": "專注於得分較低的領域",
@@ -121,8 +129,8 @@
   "domains": {
     "engaging_with_ai": "與 AI 互動",
     "creating_with_ai": "與 AI 共創",
-    "managing_with_ai": "與 AI 管理",
-    "designing_with_ai": "與 AI 設計"
+    "managing_with_ai": "管理 AI",
+    "designing_with_ai": "設計 AI"
   },
   "history": {
     "title": "評估歷史記錄",

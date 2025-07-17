@@ -31,13 +31,13 @@ const mockAssessmentData = {
     },
     managing_with_ai: {
       name: 'Managing AI',
-      name_zhTW: '與 AI 管理',
+      name_zhTW: '管理 AI',
       description: 'Understanding AI limitations, privacy, and ethical considerations',
       questions: 3
     },
     designing_with_ai: {
       name: 'Designing AI',
-      name_zhTW: '與 AI 設計',
+      name_zhTW: '設計 AI',
       description: 'Strategic thinking about AI implementation and innovation',
       questions: 3
     }
