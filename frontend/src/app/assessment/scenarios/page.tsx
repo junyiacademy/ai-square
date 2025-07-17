@@ -70,7 +70,7 @@ export default function AssessmentScenariosPage() {
     try {
       const res = await fetch(`/api/assessment/scenarios?lang=${i18n.language}`);
       const data = await res.json();
-      const loadedScenarios = data.scenarios || [];
+      const loadedScenarios = data.data?.scenarios || [];
       
       // Update cache
       scenariosCache[cacheKey] = {
