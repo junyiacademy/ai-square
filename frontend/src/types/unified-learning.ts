@@ -64,9 +64,12 @@ export interface IProgram {
 export interface ITask {
   id: string;  // UUID
   programId: string;  // 關聯Program UUID
+  templateId: string;  // 新增: 關聯的任務模板ID
   scenarioTaskIndex: number;  // 在Scenario中的任務索引
   title: string;
+  description: string;  // 新增: 任務描述
   type: 'question' | 'chat' | 'creation' | 'analysis';
+  order: number;  // 新增: 任務順序
   content: {
     instructions?: string;
     question?: string;
@@ -78,6 +81,7 @@ export interface ITask {
   completedAt?: string;
   status: 'pending' | 'active' | 'completed';
   evaluationId?: string;  // 關聯的評估 UUID
+  metadata?: Record<string, unknown>;  // 新增: 額外資料
 }
 
 /**
@@ -95,13 +99,16 @@ export interface IInteraction {
  */
 export interface IEvaluation {
   id: string;  // UUID
-  entityType: 'task' | 'program';
-  entityId: string;  // Task UUID 或 Program UUID
+  targetType: 'task' | 'program';  // 修正: entityType → targetType
+  targetId: string;  // 修正: entityId → targetId (Task UUID 或 Program UUID)
   programId: string;  // 關聯的 Program ID
   userId: string;  // 用戶 ID
   type: string;  // 評估類型標識
+  score?: number;  // 新增: 評分
+  feedback?: string;  // 新增: 文字回饋
+  dimensions?: IDimensionScore[];  // 新增: 各維度分數
   createdAt: string;
-  metadata: Record<string, unknown>;  // 包含 score, feedback, dimensions 等額外資料
+  metadata: Record<string, unknown>;  // 其他額外資料
 }
 
 /**
@@ -156,7 +163,7 @@ export abstract class BaseTaskRepository<T extends ITask> {
 export abstract class BaseEvaluationRepository<T extends IEvaluation> {
   abstract create(evaluation: Omit<T, 'id'>): Promise<T>;
   abstract findById(id: string): Promise<T | null>;
-  abstract findByEntity(entityType: 'task' | 'program', entityId: string): Promise<T[]>;
+  abstract findByTarget(targetType: 'task' | 'program', targetId: string): Promise<T[]>;  // 修正: findByEntity → findByTarget
   abstract findByProgram(programId: string): Promise<T[]>;
   abstract findByUser(userId: string): Promise<T[]>;
 }

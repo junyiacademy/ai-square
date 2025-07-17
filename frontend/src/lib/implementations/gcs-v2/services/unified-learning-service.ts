@@ -3,23 +3,31 @@
  * Coordinates repositories to implement complete learning workflows
  */
 
-import { IScenario, IProgram, ITask, IEvaluation } from '@/types/unified-learning';
+import { IScenario, IProgram, ITask, IEvaluation, IEvaluationSystem, IEvaluationContext } from '@/types/unified-learning';
 import { GCSScenarioRepository } from '../repositories/gcs-scenario-repository';
 import { GCSProgramRepository } from '../repositories/gcs-program-repository';
 import { GCSTaskRepository } from '../repositories/gcs-task-repository';
 import { GCSEvaluationRepository } from '../repositories/gcs-evaluation-repository';
+import { UnifiedEvaluationSystem } from '@/lib/services/evaluation/unified-evaluation-system';
+import { BaseAIService } from '@/lib/abstractions/base-ai-service';
 
 export class UnifiedLearningService {
   private scenarioRepo: GCSScenarioRepository;
   private programRepo: GCSProgramRepository;
   private taskRepo: GCSTaskRepository;
   private evaluationRepo: GCSEvaluationRepository;
+  private evaluationSystem: IEvaluationSystem;
 
-  constructor() {
+  constructor(aiService?: BaseAIService) {
     this.scenarioRepo = new GCSScenarioRepository();
     this.programRepo = new GCSProgramRepository();
     this.taskRepo = new GCSTaskRepository();
     this.evaluationRepo = new GCSEvaluationRepository();
+    
+    // 如果提供了 AI 服務，使用評估系統
+    if (aiService) {
+      this.evaluationSystem = new UnifiedEvaluationSystem(aiService);
+    }
   }
 
   /**
@@ -120,20 +128,38 @@ export class UnifiedLearningService {
       completedTask = await this.taskRepo.updateStatus(taskId, 'completed');
     }
 
-    // Create evaluation
-    const evaluation = await this.evaluationRepo.create({
-      entityType: 'task',
-      entityId: taskId,
-      programId: task.programId,
-      userId,
-      type: 'ai_feedback',
-      createdAt: new Date().toISOString(),
-      metadata: {
-        sourceType: task.metadata?.sourceType || 'unknown',
-        ...evaluationData?.metadata
-      },
-      ...evaluationData
-    });
+    // Create evaluation - 使用評估系統或直接創建
+    let evaluation: IEvaluation;
+    
+    if (this.evaluationSystem) {
+      // 使用評估系統進行智能評估
+      const program = await this.programRepo.findById(task.programId);
+      const scenario = await this.scenarioRepo.findById(program!.scenarioId);
+      
+      const context: IEvaluationContext = {
+        scenario: scenario!,
+        program: program!,
+        previousEvaluations: await this.evaluationRepo.findByProgram(task.programId)
+      };
+      
+      evaluation = await this.evaluationSystem.evaluateTask(completedTask, context);
+      evaluation = await this.evaluationRepo.create(evaluation);
+    } else {
+      // 沒有評估系統時的簡單評估
+      evaluation = await this.evaluationRepo.create({
+        targetType: 'task',
+        targetId: taskId,
+        programId: task.programId,
+        userId,
+        type: 'ai_feedback',
+        createdAt: new Date().toISOString(),
+        metadata: {
+          sourceType: task.metadata?.sourceType || 'unknown',
+          ...evaluationData?.metadata
+        },
+        ...evaluationData
+      });
+    }
 
     // Get program and update progress
     const program = await this.programRepo.findById(task.programId);
@@ -182,26 +208,35 @@ export class UnifiedLearningService {
       throw new Error(`Program not found: ${programId}`);
     }
 
+    // Get all task evaluations first
+    const taskEvaluations = await this.evaluationRepo.findByProgram(programId);
+
     // Complete program
     const completedProgram = await this.programRepo.complete(programId);
 
-    // Create program evaluation
-    const evaluation = await this.evaluationRepo.create({
-      entityType: 'program',
-      entityId: programId,
-      programId,
-      userId,
-      type: 'program_completion',
-      createdAt: new Date().toISOString(),
-      metadata: {
-        sourceType: program.metadata?.sourceType || 'unknown',
-        ...evaluationData?.metadata
-      },
-      ...evaluationData
-    });
-
-    // Get all task evaluations
-    const taskEvaluations = await this.evaluationRepo.findByProgram(programId);
+    // Create program evaluation - 使用評估系統或直接創建
+    let evaluation: IEvaluation;
+    
+    if (this.evaluationSystem) {
+      // 使用評估系統進行總結評估
+      evaluation = await this.evaluationSystem.evaluateProgram(completedProgram, taskEvaluations);
+      evaluation = await this.evaluationRepo.create(evaluation);
+    } else {
+      // 沒有評估系統時的簡單評估
+      evaluation = await this.evaluationRepo.create({
+        targetType: 'program',
+        targetId: programId,
+        programId,
+        userId,
+        type: 'program_completion',
+        createdAt: new Date().toISOString(),
+        metadata: {
+          sourceType: program.metadata?.sourceType || 'unknown',
+          ...evaluationData?.metadata
+        },
+        ...evaluationData
+      });
+    }
 
     return {
       program: completedProgram,
@@ -230,20 +265,11 @@ export class UnifiedLearningService {
     
     // Calculate average score if available
     let averageScore: number | undefined;
-    const scoresWithScores = evaluations.filter(e => 
-      e.metadata?.performance?.qualityScore || 
-      e.metadata?.grading?.points
-    );
+    const evaluationsWithScores = evaluations.filter(e => e.score !== undefined);
     
-    if (scoresWithScores.length > 0) {
-      const totalScore = scoresWithScores.reduce((sum, e) => {
-        return sum + (
-          e.metadata?.performance?.qualityScore || 
-          e.metadata?.grading?.points || 
-          0
-        );
-      }, 0);
-      averageScore = totalScore / scoresWithScores.length;
+    if (evaluationsWithScores.length > 0) {
+      const totalScore = evaluationsWithScores.reduce((sum, e) => sum + (e.score || 0), 0);
+      averageScore = totalScore / evaluationsWithScores.length;
     }
 
     return {

@@ -28,10 +28,10 @@ export class GCSEvaluationRepository<T extends IEvaluation = IEvaluation>
     return this.loadEntity(id);
   }
 
-  async findByEntity(entityType: string, entityId: string): Promise<T[]> {
+  async findByTarget(targetType: 'task' | 'program', targetId: string): Promise<T[]> {
     const allEvaluations = await this.listAllEntities();
     return allEvaluations.filter(
-      evaluation => evaluation.entityType === entityType && evaluation.entityId === entityId
+      evaluation => evaluation.targetType === targetType && evaluation.targetId === targetId
     );
   }
 
@@ -57,7 +57,7 @@ export class GCSEvaluationRepository<T extends IEvaluation = IEvaluation>
   async findByType(evaluationType: string): Promise<T[]> {
     const allEvaluations = await this.listAllEntities();
     return allEvaluations.filter(
-      evaluation => evaluation.evaluationType === evaluationType
+      evaluation => evaluation.type === evaluationType
     );
   }
 
@@ -72,8 +72,8 @@ export class GCSEvaluationRepository<T extends IEvaluation = IEvaluation>
   /**
    * 取得最新的評估
    */
-  async findLatestByEntity(entityType: string, entityId: string): Promise<T | null> {
-    const evaluations = await this.findByEntity(entityType, entityId);
+  async findLatestByTarget(targetType: 'task' | 'program', targetId: string): Promise<T | null> {
+    const evaluations = await this.findByTarget(targetType, targetId);
     
     if (evaluations.length === 0) {
       return null;
