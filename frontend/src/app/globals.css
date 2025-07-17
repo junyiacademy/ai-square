@@ -1,5 +1,26 @@
 @import "../../app.css";
 
+/* CSS Variables for colors */
+:root {
+  --background: 255 255 255;
+  --foreground: 0 0 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: 0 0 0;
+    --foreground: 255 255 255;
+  }
+}
+
+/* Base styles */
+body {
+  background-color: rgb(var(--background));
+  color: rgb(var(--foreground));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 /* Custom animations for KSA page */
 @keyframes fadeIn {
   from {
