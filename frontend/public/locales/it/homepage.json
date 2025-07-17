@@ -6,7 +6,9 @@
     "cta": {
       "getStarted": "Inizia il tuo percorso",
       "explore": "Esplora i domini AI",
-      "assessment": "Fai la valutazione"
+      "assessment": "Fai la valutazione",
+      "continueLearning": "Continua ad apprendere",
+      "takeAssessment": "Fai la valutazione"
     }
   },
   "features": {

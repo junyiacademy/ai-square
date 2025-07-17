@@ -63,7 +63,8 @@
       "overview": "Resumen",
       "domains": "Dominios",
       "recommendations": "Recomendaciones",
-      "ksa": "Análisis KSA"
+      "ksa": "Análisis KSA",
+      "knowledge-graph": "Grafo de conocimiento"
     },
     "ksaAnalysis": {
       "title": "Análisis de Competencias KSA",
@@ -84,7 +85,33 @@
     "saveSuccess": "¡Resultados guardados exitosamente! ID: {{assessmentId}}",
     "saveError": "Error al guardar los resultados: {{error}}",
     "autoSaving": "Guardando automáticamente tus resultados...",
-    "autoSaved": "Resultados guardados automáticamente"
+    "autoSaved": "Resultados guardados automáticamente",
+    "recommendations": {
+      "focusOn": "Enfocarse en mejorar",
+      "engaging_with_ai": "Enfocarse en mejorar la Interacción con IA: Comprensión de las limitaciones de la IA, preocupaciones de privacidad y consideraciones éticas al interactuar con sistemas de IA",
+      "creating_with_ai": "Enfocarse en mejorar la Creación con IA: Aprendizaje de técnicas de prompts, mejores prácticas de generación de contenido y colaboración creativa con herramientas de IA",
+      "managing_with_ai": "Enfocarse en mejorar la Gestión con IA: Desarrollo de habilidades para la toma de decisiones asistida por IA, automatización de flujos de trabajo y colaboración en equipo",
+      "designing_with_ai": "Enfocarse en mejorar el Diseño con IA: Construcción de currículum de alfabetización en IA, creación de materiales de aprendizaje y diseño de experiencias mejoradas con IA"
+    },
+    "knowledgeGraph": {
+      "title": "Grafo de competencias",
+      "description": "Visualización interactiva de sus competencias de alfabetización en IA mostrando niveles detallados de dominio",
+      "yourProfile": "Su perfil de alfabetización en IA",
+      "mastery": "Dominio",
+      "masteryLevel": "Nivel de dominio (0-100%)"
+    },
+    "questionReview": {
+      "title": "Revisión de preguntas",
+      "noQuestions": "No hay preguntas disponibles para revisión",
+      "questionNumber": "Pregunta {{current}} de {{total}}",
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "correct": "¡Su respuesta fue correcta!",
+      "incorrect": "Su respuesta fue incorrecta",
+      "practicePrompt": "Revise esta pregunta e intente comprender mejor el concepto",
+      "practiceAgain": "Practicar preguntas similares",
+      "closeReview": "Cerrar revisión"
+    }
   },
   "level": {
     "beginner": "Principiante",

@@ -149,7 +149,8 @@
     "evaluationFailed": "Valutazione Fallita",
     "unknownError": "Errore Sconosciuto",
     "taskInfo": "Info Compito",
-    "chat": "Chat"
+    "chat": "Chat",
+    "completeProgram": "Completa il programma"
   },
   "history": {
     "title": "Percorso di Apprendimento",

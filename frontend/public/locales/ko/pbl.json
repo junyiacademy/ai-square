@@ -149,7 +149,8 @@
     "evaluationFailed": "평가 실패",
     "unknownError": "알 수 없는 오류",
     "taskInfo": "과제 정보",
-    "chat": "채팅"
+    "chat": "채팅",
+    "completeProgram": "프로그램 완료"
   },
   "history": {
     "title": "학습 여정",

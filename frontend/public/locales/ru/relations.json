@@ -32,5 +32,7 @@
   "Curious": "Любопытный",
   "Innovative": "Инновационный",
   "Adaptable": "Адаптивный",
-  "Empathetic": "Эмпатичный"
+  "Empathetic": "Эмпатичный",
+  "loading": "Загрузка связей...",
+  "frameworkResource": "Просмотреть структуру ИИ-грамотности (PDF)"
 }

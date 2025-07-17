@@ -63,7 +63,8 @@
       "overview": "概要",
       "domains": "分野",
       "recommendations": "推奨事項",
-      "ksa": "KSA分析"
+      "ksa": "KSA分析",
+      "knowledge-graph": "ナレッジグラフ"
     },
     "ksaAnalysis": {
       "title": "KSAコンピテンシー分析",
@@ -91,7 +92,26 @@
     "saveSuccess": "結果が正常に保存されました！ID: {{assessmentId}}",
     "saveError": "結果の保存に失敗しました: {{error}}",
     "autoSaving": "結果を自動保存しています...",
-    "autoSaved": "結果が自動保存されました"
+    "autoSaved": "結果が自動保存されました",
+    "knowledgeGraph": {
+      "title": "コンピテンシーナレッジグラフ",
+      "description": "AIリテラシーコンピテンシーの詳細な習熟度を示すインタラクティブな可視化",
+      "yourProfile": "あなたのAIリテラシープロファイル",
+      "mastery": "習熟度",
+      "masteryLevel": "習熟レベル (0-100%)"
+    },
+    "questionReview": {
+      "title": "問題レビュー",
+      "noQuestions": "レビュー可能な問題がありません",
+      "questionNumber": "問題 {{current}} / {{total}}",
+      "previous": "前へ",
+      "next": "次へ",
+      "correct": "正解です！",
+      "incorrect": "不正解です",
+      "practicePrompt": "この問題を復習して、概念をよりよく理解してください",
+      "practiceAgain": "類似問題を練習",
+      "closeReview": "レビューを閉じる"
+    }
   },
   "level": {
     "beginner": "初心者",

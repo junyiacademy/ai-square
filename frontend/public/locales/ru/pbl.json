@@ -149,7 +149,8 @@
     "evaluationFailed": "Ошибка оценки",
     "unknownError": "Неизвестная ошибка",
     "taskInfo": "Информация о задаче",
-    "chat": "Чат"
+    "chat": "Чат",
+    "completeProgram": "Завершить программу"
   },
   "history": {
     "title": "Учебное путешествие",

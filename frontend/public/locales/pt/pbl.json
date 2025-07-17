@@ -149,7 +149,8 @@
     "evaluationFailed": "Avaliação Falhou",
     "unknownError": "Erro Desconhecido",
     "taskInfo": "Info da Tarefa",
-    "chat": "Chat"
+    "chat": "Chat",
+    "completeProgram": "Concluir Programa"
   },
   "history": {
     "title": "Jornada de Aprendizagem",

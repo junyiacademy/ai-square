@@ -149,7 +149,8 @@
     "evaluationFailed": "การประเมินล้มเหลว",
     "unknownError": "ข้อผิดพลาดที่ไม่ทราบสาเหตุ",
     "taskInfo": "ข้อมูลงาน",
-    "chat": "แชท"
+    "chat": "แชท",
+    "completeProgram": "เสร็จสิ้นโปรแกรม"
   },
   "history": {
     "title": "เส้นทางการเรียนรู้",

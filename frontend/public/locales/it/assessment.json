@@ -31,7 +31,10 @@
     "ksaMapping": "Competenze Correlate",
     "knowledge": "Conoscenze",
     "skills": "Abilità",
-    "attitudes": "Attitudini"
+    "attitudes": "Attitudini",
+    "correct": "Corretto!",
+    "incorrect": "Errato",
+    "selectAnswerToSeeExplanation": "Seleziona una risposta per vedere la spiegazione"
   },
   "difficulty": {
     "basic": "Base",
@@ -60,7 +63,8 @@
       "overview": "Panoramica",
       "domains": "Domini",
       "recommendations": "Raccomandazioni",
-      "ksa": "Analisi KSA"
+      "ksa": "Analisi KSA",
+      "knowledge-graph": "Grafo delle conoscenze"
     },
     "ksaAnalysis": {
       "title": "Analisi delle Competenze KSA",
@@ -73,6 +77,40 @@
       "knowledgeAreas": "Aree di Conoscenza",
       "skillsAreas": "Aree di Abilità",
       "attitudesAreas": "Aree di Attitudini"
+    },
+    "recommendations": {
+      "focusOn": "Concentrati sul miglioramento",
+      "engaging_with_ai": "Concentrati sul miglioramento dell'Interazione con l'IA: Comprendere i limiti dell'IA, le preoccupazioni sulla privacy e le considerazioni etiche nell'interazione con i sistemi IA",
+      "creating_with_ai": "Concentrati sul miglioramento della Creazione con l'IA: Apprendere tecniche di prompting, best practice per la generazione di contenuti e collaborazione creativa con strumenti IA",
+      "managing_with_ai": "Concentrati sul miglioramento della Gestione con l'IA: Sviluppare competenze per il processo decisionale assistito dall'IA, l'automazione del flusso di lavoro e la collaborazione in team",
+      "designing_with_ai": "Concentrati sul miglioramento della Progettazione con l'IA: Costruire curriculum di alfabetizzazione IA, creare materiali didattici e progettare esperienze potenziate dall'IA"
+    },
+    "saveResults": "Salva risultati",
+    "viewLearningPath": "Visualizza percorso di apprendimento",
+    "saving": "Salvataggio...",
+    "saved": "Salvato",
+    "saveSuccess": "Risultati salvati con successo! ID: {{assessmentId}}",
+    "saveError": "Errore nel salvataggio dei risultati: {{error}}",
+    "autoSaving": "Salvataggio automatico dei risultati...",
+    "autoSaved": "Risultati salvati automaticamente",
+    "knowledgeGraph": {
+      "title": "Grafo delle competenze",
+      "description": "Visualizzazione interattiva delle tue competenze di alfabetizzazione IA con livelli di padronanza dettagliati",
+      "yourProfile": "Il tuo profilo di alfabetizzazione IA",
+      "mastery": "Padronanza",
+      "masteryLevel": "Livello di padronanza (0-100%)"
+    },
+    "questionReview": {
+      "title": "Revisione domande",
+      "noQuestions": "Nessuna domanda disponibile per la revisione",
+      "questionNumber": "Domanda {{current}} di {{total}}",
+      "previous": "Precedente",
+      "next": "Successiva",
+      "correct": "La tua risposta era corretta!",
+      "incorrect": "La tua risposta era errata",
+      "practicePrompt": "Rivedi questa domanda e cerca di comprendere meglio il concetto",
+      "practiceAgain": "Pratica domande simili",
+      "closeReview": "Chiudi revisione"
     }
   },
   "level": {

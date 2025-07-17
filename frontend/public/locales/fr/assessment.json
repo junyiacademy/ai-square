@@ -63,7 +63,8 @@
       "overview": "Aperçu",
       "domains": "Domaines",
       "recommendations": "Recommandations",
-      "ksa": "Analyse KSA"
+      "ksa": "Analyse KSA",
+      "knowledge-graph": "Graphe de connaissances"
     },
     "ksaAnalysis": {
       "title": "Analyse des Compétences KSA",
@@ -91,7 +92,26 @@
     "saveSuccess": "Résultats enregistrés avec succès ! ID : {{assessmentId}}",
     "saveError": "Échec de l'enregistrement des résultats : {{error}}",
     "autoSaving": "Sauvegarde automatique de vos résultats...",
-    "autoSaved": "Résultats sauvegardés automatiquement"
+    "autoSaved": "Résultats sauvegardés automatiquement",
+    "knowledgeGraph": {
+      "title": "Graphe de compétences",
+      "description": "Visualisation interactive de vos compétences en IA avec des niveaux de maîtrise détaillés",
+      "yourProfile": "Votre profil de compétences IA",
+      "mastery": "Maîtrise",
+      "masteryLevel": "Niveau de maîtrise (0-100%)"
+    },
+    "questionReview": {
+      "title": "Révision des questions",
+      "noQuestions": "Aucune question disponible pour la révision",
+      "questionNumber": "Question {{current}} sur {{total}}",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "correct": "Votre réponse était correcte !",
+      "incorrect": "Votre réponse était incorrecte",
+      "practicePrompt": "Révisez cette question et essayez de mieux comprendre le concept",
+      "practiceAgain": "Pratiquer des questions similaires",
+      "closeReview": "Fermer la révision"
+    }
   },
   "level": {
     "beginner": "Débutant",

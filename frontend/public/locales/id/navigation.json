@@ -41,5 +41,11 @@
     "domains": "Domain AI",
     "competencies": "Kompetensi",
     "madeWith": "Dibuat dengan ❤️ untuk pendidikan literasi AI"
-  }
+  },
+  "discovery": "Penemuan",
+  "more": "Lainnya",
+  "language": "Bahasa",
+  "theme": "Tema",
+  "light": "Terang",
+  "dark": "Gelap"
 }

@@ -31,7 +31,10 @@
     "ksaMapping": "관련 역량",
     "knowledge": "지식",
     "skills": "기술",
-    "attitudes": "태도"
+    "attitudes": "태도",
+    "correct": "정답입니다!",
+    "incorrect": "오답입니다",
+    "selectAnswerToSeeExplanation": "설명을 보려면 답변을 선택하세요"
   },
   "difficulty": {
     "basic": "기초",
@@ -60,7 +63,8 @@
       "overview": "개요",
       "domains": "영역",
       "recommendations": "권장사항",
-      "ksa": "KSA 분석"
+      "ksa": "KSA 분석",
+      "knowledge-graph": "지식 그래프"
     },
     "ksaAnalysis": {
       "title": "KSA 역량 분석",
@@ -73,6 +77,40 @@
       "knowledgeAreas": "지식 영역",
       "skillsAreas": "기술 영역",
       "attitudesAreas": "태도 영역"
+    },
+    "recommendations": {
+      "focusOn": "개선에 집중",
+      "engaging_with_ai": "AI와의 상호작용 개선에 집중: AI 시스템과 상호작용할 때 AI의 한계, 개인정보 보호 문제 및 윤리적 고려사항 이해",
+      "creating_with_ai": "AI로 창작하기 개선에 집중: 프롬프트 기법, 콘텐츠 생성 모범 사례 및 AI 도구와의 창의적 협업 학습",
+      "managing_with_ai": "AI로 관리하기 개선에 집중: AI 지원 의사결정, 워크플로 자동화 및 팀 협업을 위한 기술 개발",
+      "designing_with_ai": "AI로 설계하기 개선에 집중: AI 리터러시 커리큘럼 구축, 학습 자료 작성 및 AI 강화 경험 설계"
+    },
+    "saveResults": "결과 저장",
+    "viewLearningPath": "학습 경로 보기",
+    "saving": "저장 중...",
+    "saved": "저장됨",
+    "saveSuccess": "결과가 성공적으로 저장되었습니다! ID: {{assessmentId}}",
+    "saveError": "결과 저장 실패: {{error}}",
+    "autoSaving": "결과를 자동 저장하는 중...",
+    "autoSaved": "결과가 자동 저장되었습니다",
+    "knowledgeGraph": {
+      "title": "역량 지식 그래프",
+      "description": "상세한 숙련도를 보여주는 AI 리터러시 역량의 대화형 시각화",
+      "yourProfile": "당신의 AI 리터러시 프로필",
+      "mastery": "숙련도",
+      "masteryLevel": "숙련도 수준 (0-100%)"
+    },
+    "questionReview": {
+      "title": "문제 검토",
+      "noQuestions": "검토할 수 있는 문제가 없습니다",
+      "questionNumber": "문제 {{current}} / {{total}}",
+      "previous": "이전",
+      "next": "다음",
+      "correct": "정답입니다!",
+      "incorrect": "오답입니다",
+      "practicePrompt": "이 문제를 검토하고 개념을 더 잘 이해해 보세요",
+      "practiceAgain": "유사한 문제 연습하기",
+      "closeReview": "검토 닫기"
     }
   },
   "level": {

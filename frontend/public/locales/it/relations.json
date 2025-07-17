@@ -32,5 +32,7 @@
   "Empathetic": "Empatico",
   "pageSubtitle": "Esplora le Quattro Competenze Chiave dell'Alfabetizzazione IA",
   "ksaTitle": "Conoscenze, Abilità e Attitudini",
-  "ksaDescription": "Queste sono le conoscenze, abilità e attitudini (KSA) dettagliate che supportano questa competenza. Clicca su un codice per visualizzare i dettagli."
+  "ksaDescription": "Queste sono le conoscenze, abilità e attitudini (KSA) dettagliate che supportano questa competenza. Clicca su un codice per visualizzare i dettagli.",
+  "loading": "Caricamento relazioni...",
+  "frameworkResource": "Visualizza il framework di competenze IA (PDF)"
 }

@@ -9,7 +9,8 @@
     "recentActivity": "Recent Activity",
     "editedBy": "Edited by {{editor}}",
     "daysAgo": "{{days}} days ago",
-    "noActivity": "No recent activity"
+    "noActivity": "No recent activity",
+    "quickActions": "Ações Rápidas"
   },
   "navigation": {
     "dashboard": "Dashboard",

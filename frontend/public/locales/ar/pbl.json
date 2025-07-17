@@ -149,7 +149,8 @@
     "evaluationFailed": "فشل التقييم",
     "unknownError": "خطأ غير معروف",
     "taskInfo": "معلومات المهمة",
-    "chat": "محادثة"
+    "chat": "محادثة",
+    "completeProgram": "إكمال البرنامج"
   },
   "history": {
     "title": "رحلة التعلم",

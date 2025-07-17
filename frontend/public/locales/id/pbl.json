@@ -149,7 +149,8 @@
     "evaluationFailed": "Evaluasi Gagal",
     "unknownError": "Kesalahan Tidak Dikenal",
     "taskInfo": "Info Tugas",
-    "chat": "Obrolan"
+    "chat": "Obrolan",
+    "completeProgram": "Selesaikan Program"
   },
   "history": {
     "title": "Perjalanan Pembelajaran",

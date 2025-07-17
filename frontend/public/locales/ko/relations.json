@@ -32,5 +32,7 @@
   "Empathetic": "공감하는",
   "pageSubtitle": "AI 리터러시의 네 가지 핵심 역량 탐색",
   "ksaTitle": "지식, 기술, 태도",
-  "ksaDescription": "이는 이 역량을 뒷받침하는 상세한 지식, 기술 및 태도(KSA)입니다. 코드를 클릭하여 세부 정보를 확인하십시오."
+  "ksaDescription": "이는 이 역량을 뒷받침하는 상세한 지식, 기술 및 태도(KSA)입니다. 코드를 클릭하여 세부 정보를 확인하십시오.",
+  "loading": "관계 로딩 중...",
+  "frameworkResource": "AI 리터러시 프레임워크 보기 (PDF)"
 }

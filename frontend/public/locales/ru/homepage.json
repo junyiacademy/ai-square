@@ -6,7 +6,9 @@
     "cta": {
       "getStarted": "Начать путешествие",
       "explore": "Исследовать домены ИИ",
-      "assessment": "Пройти оценку"
+      "assessment": "Пройти оценку",
+      "continueLearning": "Продолжить обучение",
+      "takeAssessment": "Пройти оценку"
     }
   },
   "features": {

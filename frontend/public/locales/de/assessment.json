@@ -63,7 +63,8 @@
       "overview": "Übersicht",
       "domains": "Bereiche",
       "recommendations": "Empfehlungen",
-      "ksa": "KSA-Analyse"
+      "ksa": "KSA-Analyse",
+      "knowledge-graph": "Wissensgraph"
     },
     "ksaAnalysis": {
       "title": "KSA-Kompetenzanalyse",
@@ -91,7 +92,26 @@
     "saveSuccess": "Ergebnisse erfolgreich gespeichert! ID: {{assessmentId}}",
     "saveError": "Fehler beim Speichern der Ergebnisse: {{error}}",
     "autoSaving": "Ihre Ergebnisse werden automatisch gespeichert...",
-    "autoSaved": "Ergebnisse automatisch gespeichert"
+    "autoSaved": "Ergebnisse automatisch gespeichert",
+    "knowledgeGraph": {
+      "title": "Kompetenz-Wissensgraph",
+      "description": "Interaktive Visualisierung Ihrer KI-Kompetenzen mit detaillierten Beherrschungsgraden",
+      "yourProfile": "Ihr KI-Kompetenzprofil",
+      "mastery": "Beherrschung",
+      "masteryLevel": "Beherrschungsgrad (0-100%)"
+    },
+    "questionReview": {
+      "title": "Fragenüberprüfung",
+      "noQuestions": "Keine Fragen zur Überprüfung verfügbar",
+      "questionNumber": "Frage {{current}} von {{total}}",
+      "previous": "Zurück",
+      "next": "Weiter",
+      "correct": "Ihre Antwort war richtig!",
+      "incorrect": "Ihre Antwort war falsch",
+      "practicePrompt": "Überprüfen Sie diese Frage und versuchen Sie, das Konzept besser zu verstehen",
+      "practiceAgain": "Ähnliche Fragen üben",
+      "closeReview": "Überprüfung schließen"
+    }
   },
   "level": {
     "beginner": "Anfänger",
