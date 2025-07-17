@@ -17,8 +17,8 @@
 AI 素養的核心架構，包含：
 - **Engaging with AI** (與 AI 互動): 使用 AI 獲取資訊和建議的能力
 - **Creating with AI** (與 AI 創作): 運用 AI 工具進行內容創作和問題解決
-- **Managing with AI** (與 AI 管理): 管理 AI 系統和相關風險的能力  
-- **Designing with AI** (與 AI 設計): 設計包含 AI 的系統和體驗
+- **Managing AI** (管理 AI): 管理 AI 系統和相關風險的能力  
+- **Designing AI** (設計 AI): 設計包含 AI 的系統和體驗
 
 #### Competency (能力指標)
 > **定義**: 特定領域內可觀察、可評估的學習成果，以編碼表示 (如 E1, C2, M3, D4)。
