@@ -4,6 +4,7 @@ import path from 'path';
 import * as yaml from 'js-yaml';
 import { cacheService } from '@/lib/cache/cache-service';
 import { pblScenarioService } from '@/lib/services/pbl-scenario-service';
+import { HybridTranslationService } from '@/lib/services/hybrid-translation-service';
 
 // Types for YAML data
 interface ScenarioInfo {
@@ -51,6 +52,23 @@ function getLocalizedValue(data: LocalizedField, fieldName: string, lang: string
   return data[localizedField] || data[fieldName] || '';
 }
 
+// Helper function to get scenario emoji
+function getScenarioEmoji(scenarioId: string): string {
+  const emojiMap: Record<string, string> = {
+    'ai-job-search': '💼',
+    'ai-education-design': '🎓',
+    'ai-stablecoin-trading': '₿',
+    'ai-robotics-development': '🤖',
+    'high-school-climate-change': '🌍',
+    'high-school-digital-wellness': '📱',
+    'high-school-smart-city': '🏙️',
+    'high-school-creative-arts': '🎨',
+    'high-school-health-assistant': '💗'
+  };
+  
+  return emojiMap[scenarioId] || '🤖';
+}
+
 // Load scenarios using unified architecture
 async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Record<string, unknown>[]> {
   const scenarios: Record<string, unknown>[] = [];
@@ -80,19 +98,6 @@ async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Recor
           scenario = await pblScenarioService.createScenarioFromYAML(yamlId, lang);
         }
         
-        // Choose emoji based on yaml ID
-        const emojiMap: Record<string, string> = {
-          'ai-job-search': '💼',
-          'ai-education-design': '🎓',
-          'ai-stablecoin-trading': '₿',
-          'ai-robotics-development': '🤖',
-          'high-school-climate-change': '🌍',
-          'high-school-digital-wellness': '📱',
-          'high-school-smart-city': '🏙️',
-          'high-school-creative-arts': '🎨',
-          'high-school-health-assistant': '💗'
-        };
-        
         scenarios.push({
           id: scenario.id, // UUID
           yamlId: yamlId, // 原始 yaml ID for compatibility
@@ -106,7 +111,7 @@ async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Recor
           domains: scenario.metadata?.targetDomains, // for compatibility 
           taskCount: scenario.taskTemplates?.length || 0,
           isAvailable: true,
-          thumbnailEmoji: emojiMap[yamlId] || '🤖'
+          thumbnailEmoji: getScenarioEmoji(yamlId)
         });
       } catch (error) {
         console.error(`Error loading scenario ${yamlId}:`, error);
@@ -194,12 +199,13 @@ export const dynamic = 'force-dynamic'; // Force dynamic rendering
 
 export async function GET(request: Request) {
   try {
-    // Get language from query params
+    // Get language and source from query params
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
+    const source = searchParams.get('source') || 'unified'; // 'unified', 'hybrid', 'yaml'
     
-    // Use cache
-    const cacheKey = `pbl:scenarios:${lang}`;
+    // Use cache with source-specific key
+    const cacheKey = source === 'hybrid' ? `pbl:scenarios:hybrid:${lang}` : `pbl:scenarios:${lang}`;
     const cached = await cacheService.get(cacheKey);
     
     if (cached) {
@@ -211,8 +217,39 @@ export async function GET(request: Request) {
       });
     }
 
-    // Load scenarios using unified architecture
-    const scenarios = await loadScenariosFromUnifiedArchitecture(lang);
+    // Load scenarios based on source parameter
+    let scenarios: Record<string, unknown>[];
+    let metaSource = source;
+    
+    if (source === 'hybrid') {
+      try {
+        // Use hybrid translation service
+        const hybridService = new HybridTranslationService();
+        const hybridScenarios = await hybridService.listScenarios(lang);
+        
+        // Transform to match expected format
+        scenarios = hybridScenarios.map(scenario => ({
+          ...scenario,
+          yamlId: scenario.id,
+          sourceType: 'pbl',
+          estimatedDuration: scenario.estimated_duration || scenario.estimatedDuration,
+          targetDomain: scenario.target_domains || scenario.targetDomains,
+          domains: scenario.target_domains || scenario.targetDomains,
+          taskCount: scenario.stages?.length || 0,
+          isAvailable: true,
+          thumbnailEmoji: getScenarioEmoji(scenario.id)
+        }));
+        
+        metaSource = 'hybrid';
+      } catch (error) {
+        console.error('Hybrid service failed, falling back to unified:', error);
+        scenarios = await loadScenariosFromUnifiedArchitecture(lang);
+        metaSource = 'unified-fallback';
+      }
+    } else {
+      // Default to unified architecture
+      scenarios = await loadScenariosFromUnifiedArchitecture(lang);
+    }
 
     const result = {
       success: true,
@@ -223,7 +260,9 @@ export async function GET(request: Request) {
       },
       meta: {
         timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        version: '1.0.0',
+        language: lang,
+        source: metaSource
       }
     };
     
