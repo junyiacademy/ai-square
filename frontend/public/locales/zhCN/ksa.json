@@ -14,7 +14,7 @@
   },
   "results": {
     "themesFound": "找到 {{count}} 个主题",
-    "themesFoundFor": "为"{{search}}"找到 {{count}} 个主题",
+    "themesFoundFor": "为「{{search}}」找到 {{count}} 个主题",
     "noResults": "未找到结果",
     "noResultsHint": "请尝试调整搜索关键词。"
   },
