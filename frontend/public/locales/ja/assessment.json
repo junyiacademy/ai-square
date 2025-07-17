@@ -31,7 +31,10 @@
     "ksaMapping": "関連コンピテンシー",
     "knowledge": "知識",
     "skills": "スキル",
-    "attitudes": "態度"
+    "attitudes": "態度",
+    "correct": "正解！",
+    "incorrect": "不正解",
+    "selectAnswerToSeeExplanation": "解説を見るには回答を選択してください"
   },
   "difficulty": {
     "basic": "基礎",
@@ -73,7 +76,22 @@
       "knowledgeAreas": "知識領域",
       "skillsAreas": "スキル領域",
       "attitudesAreas": "態度領域"
-    }
+    },
+    "recommendations": {
+      "focusOn": "改善に焦点を当てる",
+      "engaging_with_ai": "AIとの関わり方の改善に焦点を当てる：AIシステムと対話する際のAIの限界、プライバシーの懸念、倫理的考慮事項の理解",
+      "creating_with_ai": "AIでの創造の改善に焦点を当てる：プロンプト技術、コンテンツ生成のベストプラクティス、AIツールとの創造的な協力の学習",
+      "managing_with_ai": "AIでの管理の改善に焦点を当てる：AI支援による意思決定、ワークフロー自動化、チームコラボレーションのスキル開発",
+      "designing_with_ai": "AIでの設計の改善に焦点を当てる：AIリテラシーカリキュラムの構築、学習教材の作成、AI拡張体験の設計"
+    },
+    "saveResults": "結果を保存",
+    "viewLearningPath": "学習パスを表示",
+    "saving": "保存中...",
+    "saved": "保存済み",
+    "saveSuccess": "結果が正常に保存されました！ID: {{assessmentId}}",
+    "saveError": "結果の保存に失敗しました: {{error}}",
+    "autoSaving": "結果を自動保存しています...",
+    "autoSaved": "結果が自動保存されました"
   },
   "level": {
     "beginner": "初心者",

@@ -118,7 +118,8 @@
       "knowledgeAreas": "知識領域",
       "skillsAreas": "技能領域",
       "attitudesAreas": "態度領域"
-    }
+    },
+    "viewLearningPath": "查看學習路徑"
   },
   "level": {
     "beginner": "初學者",

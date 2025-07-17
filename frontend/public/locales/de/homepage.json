@@ -6,7 +6,9 @@
     "cta": {
       "getStarted": "Starten Sie Ihre Reise",
       "explore": "KI-Domänen erkunden",
-      "assessment": "Bewertung durchführen"
+      "assessment": "Bewertung durchführen",
+      "continueLearning": "Weiter lernen",
+      "takeAssessment": "Bewertung durchführen"
     }
   },
   "features": {

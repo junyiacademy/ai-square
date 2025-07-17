@@ -40,5 +40,12 @@
     "domains": "Domaines IA",
     "competencies": "Compétences",
     "madeWith": "Fait avec ❤️ pour l'éducation à l'alphabétisation en IA"
-  }
+  },
+  "dashboard": "Tableau de bord",
+  "discovery": "Découverte",
+  "more": "Plus",
+  "language": "Langue",
+  "theme": "Thème",
+  "light": "Clair",
+  "dark": "Sombre"
 }

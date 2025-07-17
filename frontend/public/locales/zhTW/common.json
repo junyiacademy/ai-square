@@ -141,5 +141,26 @@
   "maybe": "可能",
   "agree": "同意",
   "disagree": "不同意",
-  "neutral": "中立"
+  "neutral": "中立",
+  "skip": "跳過",
+  "warning": "警告",
+  "info": "資訊",
+  "backToDashboard": "返回儀表板",
+  "minutes": "分鐘",
+  "hours": "小時",
+  "days": "天",
+  "view": "檢視",
+  "difficulty": {
+    "beginner": "初級",
+    "intermediate": "中級",
+    "advanced": "高級"
+  },
+  "send": "發送",
+  "new": "新增",
+  "zoomIn": "放大",
+  "zoomOut": "縮小",
+  "resetZoom": "重置縮放",
+  "noData": "無可用資料",
+  "pleaseLogin": "請登入",
+  "start": "開始"
 }

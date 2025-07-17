@@ -132,7 +132,6 @@
     "reanalyzeAvailable": "Re-análisis disponible",
     "task": "Tarea",
     "description": "Descripción",
-    "progress": "Progreso",
     "switchTask": "Cambiar Tarea",
     "allTasks": "Todas las Tareas",
     "current": "Actual",
@@ -150,7 +149,8 @@
     "evaluationFailed": "Evaluación Fallida",
     "unknownError": "Error Desconocido",
     "taskInfo": "Información de Tarea",
-    "chat": "Chat"
+    "chat": "Chat",
+    "completeProgram": "Completar programa"
   },
   "history": {
     "title": "Viaje de Aprendizaje",
@@ -203,7 +203,7 @@
     "errorLoading": "Error al cargar los datos de finalización",
     "noDataFound": "No se encontraron datos de finalización",
     "score": "Puntuación",
-    "strengths": "Fortalezas",
+    "strengths": "Tus Fortalezas",
     "improvements": "Áreas de Mejora",
     "ksaSummary": "Resumen de Logros KSA",
     "knowledge": "Conocimiento",
@@ -217,7 +217,7 @@
     "ksaDiagnosticReport": "Informe Diagnóstico KSA",
     "diagnosticInsights": "Perspectivas Diagnósticas",
     "strongestAreas": "Áreas Más Fuertes",
-    "areasForImprovement": "Áreas para Mejorar",
+    "areasForImprovement": "Oportunidades de Crecimiento",
     "stageTasks": "Tareas de la Etapa",
     "stageObjectives": "Objetivos de Aprendizaje",
     "targetedKSA": "KSA Objetivo",
@@ -242,8 +242,6 @@
     "viewReport": "Ver Informe",
     "generatingFeedback": "Generando retroalimentación personalizada...",
     "qualitativeFeedback": "Retroalimentación Personalizada",
-    "strengths": "Tus Fortalezas",
-    "areasForImprovement": "Oportunidades de Crecimiento",
     "nextSteps": "Próximos Pasos Recomendados",
     "ksa": "KSA",
     "print": "Imprimir"

@@ -6,7 +6,9 @@
     "cta": {
       "getStarted": "Comienza tu Viaje",
       "explore": "Explora Dominios de IA",
-      "assessment": "Realiza la Evaluación"
+      "assessment": "Realiza la Evaluación",
+      "continueLearning": "Continuar aprendiendo",
+      "takeAssessment": "Realizar evaluación"
     }
   },
   "features": {

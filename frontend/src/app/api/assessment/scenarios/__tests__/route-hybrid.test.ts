@@ -99,11 +99,11 @@ describe('Hybrid Scenarios API Route', () => {
 
     it('should load translations from YAML for non-English languages', async () => {
       // Arrange
-      mockGetScenarioRepository.mockReturnValue({
+      (getScenarioRepository as jest.Mock).mockReturnValue({
         findBySourceType: jest.fn().mockResolvedValue(mockScenarios)
-      } as any);
+      });
 
-      mockGetServerSession.mockResolvedValue({
+      (getServerSession as jest.Mock).mockResolvedValue({
         user: { id: 'user-123', email: 'test@example.com' }
       });
 
@@ -174,11 +174,11 @@ assessment_config:
 
     it('should fall back to English when translation is not found', async () => {
       // Arrange
-      mockGetScenarioRepository.mockReturnValue({
+      (getScenarioRepository as jest.Mock).mockReturnValue({
         findBySourceType: jest.fn().mockResolvedValue(mockScenarios)
-      } as any);
+      });
 
-      mockGetServerSession.mockResolvedValue(null);
+      (getServerSession as jest.Mock).mockResolvedValue(null);
 
       // Mock file not found
       mockFs.readFile.mockRejectedValue(new Error('File not found'));
@@ -200,11 +200,11 @@ assessment_config:
 
     it('should include user progress when authenticated', async () => {
       // Arrange
-      mockGetScenarioRepository.mockReturnValue({
+      (getScenarioRepository as jest.Mock).mockReturnValue({
         findBySourceType: jest.fn().mockResolvedValue(mockScenarios)
-      } as any);
+      });
 
-      mockGetServerSession.mockResolvedValue({
+      (getServerSession as jest.Mock).mockResolvedValue({
         user: { id: 'user-123', email: 'test@example.com' }
       });
 
@@ -221,11 +221,11 @@ assessment_config:
 
     it('should not include user progress when not authenticated', async () => {
       // Arrange
-      mockGetScenarioRepository.mockReturnValue({
+      (getScenarioRepository as jest.Mock).mockReturnValue({
         findBySourceType: jest.fn().mockResolvedValue(mockScenarios)
-      } as any);
+      });
 
-      mockGetServerSession.mockResolvedValue(null);
+      (getServerSession as jest.Mock).mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost/api/assessment/scenarios?lang=en');
 
@@ -239,9 +239,9 @@ assessment_config:
 
     it('should handle repository errors gracefully', async () => {
       // Arrange
-      mockGetScenarioRepository.mockReturnValue({
+      (getScenarioRepository as jest.Mock).mockReturnValue({
         findBySourceType: jest.fn().mockRejectedValue(new Error('Repository error'))
-      } as any);
+      });
 
       const request = new NextRequest('http://localhost/api/assessment/scenarios?lang=en');
 
@@ -260,11 +260,11 @@ assessment_config:
       const { GET: freshGET } = await import('../route-hybrid');
       
       // Arrange
-      mockGetScenarioRepository.mockReturnValue({
+      (getScenarioRepository as jest.Mock).mockReturnValue({
         findBySourceType: jest.fn().mockResolvedValue(mockScenarios.slice(0, 1))
-      } as any);
+      });
 
-      mockGetServerSession.mockResolvedValue(null);
+      (getServerSession as jest.Mock).mockResolvedValue(null);
 
       mockFs.readFile.mockResolvedValue(`
 assessment_config:
@@ -301,11 +301,11 @@ assessment_config:
 
     it('should handle default language when not specified', async () => {
       // Arrange
-      mockGetScenarioRepository.mockReturnValue({
+      (getScenarioRepository as jest.Mock).mockReturnValue({
         findBySourceType: jest.fn().mockResolvedValue(mockScenarios)
-      } as any);
+      });
 
-      mockGetServerSession.mockResolvedValue(null);
+      (getServerSession as jest.Mock).mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost/api/assessment/scenarios');
 

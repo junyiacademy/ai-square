@@ -31,7 +31,10 @@
     "ksaMapping": "Zugehörige Kompetenzen",
     "knowledge": "Wissen",
     "skills": "Fähigkeiten",
-    "attitudes": "Einstellungen"
+    "attitudes": "Einstellungen",
+    "correct": "Richtig!",
+    "incorrect": "Falsch",
+    "selectAnswerToSeeExplanation": "Wählen Sie eine Antwort, um die Erklärung zu sehen"
   },
   "difficulty": {
     "basic": "Grundlegend",
@@ -73,7 +76,22 @@
       "knowledgeAreas": "Wissensbereiche",
       "skillsAreas": "Fähigkeitsbereiche",
       "attitudesAreas": "Einstellungsbereiche"
-    }
+    },
+    "recommendations": {
+      "focusOn": "Fokus auf Verbesserung",
+      "engaging_with_ai": "Fokus auf Verbesserung von KI-Interaktion: Verständnis von KI-Grenzen, Datenschutzbedenken und ethischen Überlegungen bei der Interaktion mit KI-Systemen",
+      "creating_with_ai": "Fokus auf Verbesserung von KI-Erstellung: Erlernen von Prompt-Techniken, Best Practices für Inhaltsgenerierung und kreative Zusammenarbeit mit KI-Tools",
+      "managing_with_ai": "Fokus auf Verbesserung von KI-Management: Entwicklung von Fähigkeiten für KI-unterstützte Entscheidungsfindung, Workflow-Automatisierung und Teamzusammenarbeit",
+      "designing_with_ai": "Fokus auf Verbesserung von KI-Design: Aufbau von KI-Kompetenz-Lehrplänen, Erstellung von Lernmaterialien und Gestaltung von KI-erweiterten Erfahrungen"
+    },
+    "saveResults": "Ergebnisse speichern",
+    "viewLearningPath": "Lernpfad anzeigen",
+    "saving": "Speichern...",
+    "saved": "Gespeichert",
+    "saveSuccess": "Ergebnisse erfolgreich gespeichert! ID: {{assessmentId}}",
+    "saveError": "Fehler beim Speichern der Ergebnisse: {{error}}",
+    "autoSaving": "Ihre Ergebnisse werden automatisch gespeichert...",
+    "autoSaved": "Ergebnisse automatisch gespeichert"
   },
   "level": {
     "beginner": "Anfänger",

@@ -132,7 +132,6 @@
     "reanalyzeAvailable": "可重新分析",
     "task": "任务",
     "description": "描述",
-    "progress": "进度",
     "switchTask": "切换任务",
     "allTasks": "所有任务",
     "current": "当前",
@@ -150,7 +149,8 @@
     "evaluationFailed": "评估失败",
     "unknownError": "未知错误",
     "taskInfo": "任务信息",
-    "chat": "聊天"
+    "chat": "聊天",
+    "completeProgram": "完成项目"
   },
   "history": {
     "title": "学习历程",
@@ -203,7 +203,7 @@
     "errorLoading": "加载完成数据时出错",
     "noDataFound": "未找到完成数据",
     "score": "分数",
-    "strengths": "优势",
+    "strengths": "您的优势",
     "improvements": "改进领域",
     "ksaSummary": "KSA成就总结",
     "knowledge": "知识",
@@ -217,7 +217,7 @@
     "ksaDiagnosticReport": "KSA诊断报告",
     "diagnosticInsights": "诊断洞察",
     "strongestAreas": "最强领域",
-    "areasForImprovement": "改进领域",
+    "areasForImprovement": "成长机会",
     "stageTasks": "阶段任务",
     "stageObjectives": "学习目标",
     "targetedKSA": "目标KSA",
@@ -242,8 +242,6 @@
     "viewReport": "查看报告",
     "generatingFeedback": "生成个性化反馈中...",
     "qualitativeFeedback": "个性化反馈",
-    "strengths": "您的优势",
-    "areasForImprovement": "成长机会",
     "nextSteps": "推荐的下一步",
     "ksa": "KSA",
     "print": "打印"

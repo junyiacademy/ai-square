@@ -132,7 +132,6 @@
     "reanalyzeAvailable": "Réanalyse disponible",
     "task": "Tâche",
     "description": "Description",
-    "progress": "Progrès",
     "switchTask": "Changer de Tâche",
     "allTasks": "Toutes les Tâches",
     "current": "Actuelle",
@@ -150,7 +149,8 @@
     "evaluationFailed": "Échec de l'Évaluation",
     "unknownError": "Erreur Inconnue",
     "taskInfo": "Info Tâche",
-    "chat": "Chat"
+    "chat": "Chat",
+    "completeProgram": "Terminer le programme"
   },
   "history": {
     "title": "Parcours d'Apprentissage",
@@ -203,7 +203,7 @@
     "errorLoading": "Erreur lors du chargement des données de fin",
     "noDataFound": "Aucune donnée de fin trouvée",
     "score": "Score",
-    "strengths": "Points Forts",
+    "strengths": "Vos Points Forts",
     "improvements": "Points à Améliorer",
     "ksaSummary": "Résumé des Réalisations KSA",
     "knowledge": "Connaissances",
@@ -217,7 +217,7 @@
     "ksaDiagnosticReport": "Rapport Diagnostique KSA",
     "diagnosticInsights": "Aperçus Diagnostiques",
     "strongestAreas": "Domaines les Plus Forts",
-    "areasForImprovement": "Domaines à Améliorer",
+    "areasForImprovement": "Opportunités de Croissance",
     "stageTasks": "Tâches de l'Étape",
     "stageObjectives": "Objectifs d'Apprentissage",
     "targetedKSA": "KSA Ciblé",
@@ -242,8 +242,6 @@
     "viewReport": "Voir le Rapport",
     "generatingFeedback": "Génération de rétroaction personnalisée...",
     "qualitativeFeedback": "Rétroaction Personnalisée",
-    "strengths": "Vos Points Forts",
-    "areasForImprovement": "Opportunités de Croissance",
     "nextSteps": "Prochaines Étapes Recommandées",
     "ksa": "KSA",
     "print": "Imprimer"

@@ -6,7 +6,9 @@
     "cta": {
       "getStarted": "Commencez votre parcours",
       "explore": "Explorer les domaines IA",
-      "assessment": "Passer l'évaluation"
+      "assessment": "Passer l'évaluation",
+      "continueLearning": "Continuer l'apprentissage",
+      "takeAssessment": "Passer l'évaluation"
     }
   },
   "features": {

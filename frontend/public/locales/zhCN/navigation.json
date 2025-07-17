@@ -42,5 +42,10 @@
     "domains": "AI 领域",
     "competencies": "能力",
     "madeWith": "为 AI 素养教育倾心打造 ❤️"
-  }
+  },
+  "discovery": "探索",
+  "language": "语言",
+  "theme": "主题",
+  "light": "浅色",
+  "dark": "深色"
 }

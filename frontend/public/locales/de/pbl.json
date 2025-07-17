@@ -132,7 +132,6 @@
     "reanalyzeAvailable": "Erneute Analyse verfügbar",
     "task": "Aufgabe",
     "description": "Beschreibung",
-    "progress": "Fortschritt",
     "switchTask": "Aufgabe wechseln",
     "allTasks": "Alle Aufgaben",
     "current": "Aktuell",
@@ -150,7 +149,8 @@
     "evaluationFailed": "Bewertung fehlgeschlagen",
     "unknownError": "Unbekannter Fehler",
     "taskInfo": "Aufgabeninfo",
-    "chat": "Chat"
+    "chat": "Chat",
+    "completeProgram": "Programm abschließen"
   },
   "history": {
     "title": "Lernreise",
@@ -203,7 +203,7 @@
     "errorLoading": "Fehler beim Laden der Abschlussdaten",
     "noDataFound": "Keine Abschlussdaten gefunden",
     "score": "Punktzahl",
-    "strengths": "Stärken",
+    "strengths": "Ihre Stärken",
     "improvements": "Verbesserungsbereiche",
     "ksaSummary": "KSA-Leistungsübersicht",
     "knowledge": "Wissen",
@@ -217,7 +217,7 @@
     "ksaDiagnosticReport": "KSA-Diagnosebericht",
     "diagnosticInsights": "Diagnostische Einblicke",
     "strongestAreas": "Stärkste Bereiche",
-    "areasForImprovement": "Verbesserungsbereiche",
+    "areasForImprovement": "Wachstumschancen",
     "stageTasks": "Stufenaufgaben",
     "stageObjectives": "Lernziele",
     "targetedKSA": "Zielgerichtete KSA",
@@ -242,8 +242,6 @@
     "viewReport": "Bericht anzeigen",
     "generatingFeedback": "Personalisiertes Feedback wird generiert...",
     "qualitativeFeedback": "Personalisiertes Feedback",
-    "strengths": "Ihre Stärken",
-    "areasForImprovement": "Wachstumschancen",
     "nextSteps": "Empfohlene nächste Schritte",
     "ksa": "KSA",
     "print": "Drucken"

@@ -132,7 +132,6 @@
     "reanalyzeAvailable": "再分析可能",
     "task": "タスク",
     "description": "説明",
-    "progress": "進捗",
     "switchTask": "タスクを切り替え",
     "allTasks": "すべてのタスク",
     "current": "現在",
@@ -150,7 +149,8 @@
     "evaluationFailed": "評価に失敗しました",
     "unknownError": "不明なエラー",
     "taskInfo": "タスク情報",
-    "chat": "チャット"
+    "chat": "チャット",
+    "completeProgram": "プログラムを完了"
   },
   "history": {
     "title": "学習の旅",
@@ -203,7 +203,7 @@
     "errorLoading": "完了データの読み込みエラー",
     "noDataFound": "完了データが見つかりません",
     "score": "スコア",
-    "strengths": "強み",
+    "strengths": "あなたの強み",
     "improvements": "改善点",
     "ksaSummary": "KSA達成概要",
     "knowledge": "知識",
@@ -217,7 +217,7 @@
     "ksaDiagnosticReport": "KSA診断レポート",
     "diagnosticInsights": "診断的洞察",
     "strongestAreas": "最も強い領域",
-    "areasForImprovement": "改善が必要な領域",
+    "areasForImprovement": "成長の機会",
     "stageTasks": "ステージタスク",
     "stageObjectives": "学習目標",
     "targetedKSA": "ターゲットKSA",
@@ -242,8 +242,6 @@
     "viewReport": "レポートを表示",
     "generatingFeedback": "パーソナライズされたフィードバックを生成中...",
     "qualitativeFeedback": "パーソナライズされたフィードバック",
-    "strengths": "あなたの強み",
-    "areasForImprovement": "成長の機会",
     "nextSteps": "推奨される次のステップ",
     "ksa": "KSA",
     "print": "印刷"

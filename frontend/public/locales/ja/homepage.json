@@ -6,7 +6,9 @@
     "cta": {
       "getStarted": "旅を始める",
       "explore": "AIドメインを探索",
-      "assessment": "評価を受ける"
+      "assessment": "評価を受ける",
+      "continueLearning": "学習を続ける",
+      "takeAssessment": "評価を受ける"
     }
   },
   "features": {

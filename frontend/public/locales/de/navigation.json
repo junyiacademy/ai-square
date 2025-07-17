@@ -40,5 +40,12 @@
     "domains": "KI-Domänen",
     "competencies": "Kompetenzen",
     "madeWith": "Mit ❤️ für die KI-Kompetenzbildung entwickelt"
-  }
+  },
+  "dashboard": "Dashboard",
+  "discovery": "Entdeckung",
+  "more": "Mehr",
+  "language": "Sprache",
+  "theme": "Thema",
+  "light": "Hell",
+  "dark": "Dunkel"
 }

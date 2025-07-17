@@ -32,5 +32,7 @@
   "Empathetic": "Einfühlsam",
   "pageSubtitle": "Entdecken Sie die vier Kernkompetenzen der KI-Kompetenz",
   "ksaTitle": "Wissen, Fähigkeiten und Einstellungen",
-  "ksaDescription": "Dies sind die detaillierten Kenntnisse, Fähigkeiten und Einstellungen (KSA), die diese Kompetenz untermauern. Klicken Sie auf einen Code, um die Details anzuzeigen."
+  "ksaDescription": "Dies sind die detaillierten Kenntnisse, Fähigkeiten und Einstellungen (KSA), die diese Kompetenz untermauern. Klicken Sie auf einen Code, um die Details anzuzeigen.",
+  "loading": "Beziehungen werden geladen...",
+  "frameworkResource": "KI-Kompetenzrahmen anzeigen (PDF)"
 }

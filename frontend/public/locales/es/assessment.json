@@ -31,7 +31,10 @@
     "ksaMapping": "Competencias Relacionadas",
     "knowledge": "Conocimiento",
     "skills": "Habilidades",
-    "attitudes": "Actitudes"
+    "attitudes": "Actitudes",
+    "correct": "¡Correcto!",
+    "incorrect": "Incorrecto",
+    "selectAnswerToSeeExplanation": "Selecciona una respuesta para ver la explicación"
   },
   "difficulty": {
     "basic": "Básico",
@@ -73,7 +76,15 @@
       "knowledgeAreas": "Áreas de Conocimiento",
       "skillsAreas": "Áreas de Habilidades",
       "attitudesAreas": "Áreas de Actitudes"
-    }
+    },
+    "saveResults": "Guardar resultados",
+    "viewLearningPath": "Ver ruta de aprendizaje",
+    "saving": "Guardando...",
+    "saved": "Guardado",
+    "saveSuccess": "¡Resultados guardados exitosamente! ID: {{assessmentId}}",
+    "saveError": "Error al guardar los resultados: {{error}}",
+    "autoSaving": "Guardando automáticamente tus resultados...",
+    "autoSaved": "Resultados guardados automáticamente"
   },
   "level": {
     "beginner": "Principiante",

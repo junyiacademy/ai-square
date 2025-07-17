@@ -32,5 +32,7 @@
   "Empathetic": "Empático",
   "pageSubtitle": "Explora las Cuatro Competencias Centrales de la Alfabetización en IA",
   "ksaTitle": "Conocimientos, Habilidades y Actitudes",
-  "ksaDescription": "Estos son los conocimientos, habilidades y actitudes (KSA) detallados que sustentan esta competencia. Haz clic en un código para ver los detalles."
+  "ksaDescription": "Estos son los conocimientos, habilidades y actitudes (KSA) detallados que sustentan esta competencia. Haz clic en un código para ver los detalles.",
+  "loading": "Cargando relaciones...",
+  "frameworkResource": "Ver marco de competencias de IA (PDF)"
 }

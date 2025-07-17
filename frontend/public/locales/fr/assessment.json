@@ -31,7 +31,10 @@
     "ksaMapping": "Compétences Associées",
     "knowledge": "Connaissances",
     "skills": "Compétences",
-    "attitudes": "Attitudes"
+    "attitudes": "Attitudes",
+    "correct": "Correct !",
+    "incorrect": "Incorrect",
+    "selectAnswerToSeeExplanation": "Sélectionnez une réponse pour voir l'explication"
   },
   "difficulty": {
     "basic": "Basique",
@@ -73,7 +76,22 @@
       "knowledgeAreas": "Domaines de Connaissances",
       "skillsAreas": "Domaines de Compétences",
       "attitudesAreas": "Domaines d'Attitudes"
-    }
+    },
+    "recommendations": {
+      "focusOn": "Se concentrer sur l'amélioration",
+      "engaging_with_ai": "Se concentrer sur l'amélioration de l'interaction avec l'IA : Comprendre les limites de l'IA, les préoccupations de confidentialité et les considérations éthiques lors de l'interaction avec les systèmes d'IA",
+      "creating_with_ai": "Se concentrer sur l'amélioration de la création avec l'IA : Apprendre les techniques de prompt, les meilleures pratiques de génération de contenu et la collaboration créative avec les outils d'IA",
+      "managing_with_ai": "Se concentrer sur l'amélioration de la gestion avec l'IA : Développer des compétences pour la prise de décision assistée par l'IA, l'automatisation des flux de travail et la collaboration en équipe",
+      "designing_with_ai": "Se concentrer sur l'amélioration de la conception avec l'IA : Construire un programme de compétences en IA, créer du matériel d'apprentissage et concevoir des expériences améliorées par l'IA"
+    },
+    "saveResults": "Enregistrer les résultats",
+    "viewLearningPath": "Voir le parcours d'apprentissage",
+    "saving": "Enregistrement...",
+    "saved": "Enregistré",
+    "saveSuccess": "Résultats enregistrés avec succès ! ID : {{assessmentId}}",
+    "saveError": "Échec de l'enregistrement des résultats : {{error}}",
+    "autoSaving": "Sauvegarde automatique de vos résultats...",
+    "autoSaved": "Résultats sauvegardés automatiquement"
   },
   "level": {
     "beginner": "Débutant",
