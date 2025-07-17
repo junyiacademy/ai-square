@@ -151,8 +151,8 @@ export async function GET(request: NextRequest) {
           
           return {
             id: scenario.id,
-            title: scenario.title,
-            description: scenario.description,
+            title: config.title || scenario.title,
+            description: config.description || scenario.description,
             folderName,
             config: {
               totalQuestions: config.total_questions || 12,

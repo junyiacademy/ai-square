@@ -495,29 +495,34 @@ export default function ProgramCompletePage() {
             </h3>
             {completionData.domainScores && (
               <div className="space-y-4">
-                {Object.entries(completionData.domainScores).map(([domain, score]) => (
-                  <div key={domain}>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">
-                        {t(`assessment:domains.${domain}`)}
-                      </span>
-                      <span className={`text-sm font-medium ${getScoreColor(score)}`}>
-                        {score}%
-                      </span>
-                    </div>
-                    <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                      <div 
-                        className={`h-2 rounded-full ${
-                          domain === 'engaging_with_ai' ? 'bg-blue-600' :
-                          domain === 'creating_with_ai' ? 'bg-green-600' :
-                          domain === 'managing_with_ai' ? 'bg-yellow-600' :
-                          'bg-purple-600'
-                        }`}
-                        style={{ width: `${score}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
+                {['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai']
+                  .filter(domain => completionData.domainScores?.[domain] !== undefined)
+                  .map((domain) => {
+                    const score = completionData.domainScores?.[domain] || 0;
+                    return (
+                      <div key={domain}>
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-sm text-gray-600 dark:text-gray-400">
+                            {t(`assessment:domains.${domain}`)}
+                          </span>
+                          <span className={`text-sm font-medium ${getScoreColor(score)}`}>
+                            {score}%
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                          <div 
+                            className={`h-2 rounded-full ${
+                              domain === 'engaging_with_ai' ? 'bg-blue-600' :
+                              domain === 'creating_with_ai' ? 'bg-green-600' :
+                              domain === 'managing_with_ai' ? 'bg-yellow-600' :
+                              'bg-purple-600'
+                            }`}
+                            style={{ width: `${score}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
               </div>
             )}
           </div>
@@ -635,7 +640,7 @@ export default function ProgramCompletePage() {
                                   {t('pbl:complete.domainScores')}:
                                 </div>
                                 <div className="space-y-3">
-                                  {['creating_with_ai', 'designing_with_ai', 'engaging_with_ai', 'managing_with_ai']
+                                  {['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai']
                                     .filter(domain => task.evaluation?.domainScores?.[domain] !== undefined)
                                     .map((domain) => {
                                       const score = task.evaluation?.domainScores?.[domain] || 0;

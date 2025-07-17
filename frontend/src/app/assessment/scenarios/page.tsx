@@ -38,7 +38,7 @@ export default function AssessmentScenariosPage() {
   const [scenarios, setScenarios] = useState<AssessmentScenario[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(['assessment', 'common']);
   const loadingRef = useRef(false);
 
   useEffect(() => {
@@ -108,20 +108,20 @@ export default function AssessmentScenariosPage() {
     <div className="container mx-auto py-8 max-w-6xl">
       <div className="mb-8">
         <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
-          <Link href="/" className="hover:text-gray-900">Home</Link>
+          <Link href="/" className="hover:text-gray-900">{t('common:home')}</Link>
           <span>/</span>
-          <span>Assessments</span>
+          <span>{t('assessment:title')}</span>
         </div>
-        <h1 className="text-3xl font-bold mb-2">AI Literacy Assessments</h1>
-        <p className="text-gray-600">Choose an assessment to evaluate your AI literacy skills</p>
+        <h1 className="text-3xl font-bold mb-2">{t('assessment:title')}</h1>
+        <p className="text-gray-600">{t('assessment:description')}</p>
       </div>
 
       {scenarios.length === 0 ? (
         <Card className="p-12 text-center">
           <BookOpen className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-          <p className="text-gray-600 mb-4">No assessments available at the moment.</p>
+          <p className="text-gray-600 mb-4">{t('assessment:noAssessmentsAvailable', 'No assessments available at the moment.')}</p>
           <Button variant="outline" onClick={() => router.push('/')}>
-            Back to Home
+            {t('common:backToHome', 'Back to Home')}
           </Button>
         </Card>
       ) : (
@@ -136,7 +136,7 @@ export default function AssessmentScenariosPage() {
                   <FileQuestion className="h-8 w-8 text-blue-500" />
                   {scenario.userProgress?.bestScore !== undefined && (
                     <div className="text-sm text-green-600 font-semibold">
-                      Best: {scenario.userProgress.bestScore}%
+                      {t('assessment:best', 'Best')}: {scenario.userProgress.bestScore}%
                     </div>
                   )}
                 </div>
@@ -149,25 +149,25 @@ export default function AssessmentScenariosPage() {
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center gap-2 text-gray-600">
                     <Target className="h-4 w-4" />
-                    <span>{scenario.config.totalQuestions} questions</span>
+                    <span>{scenario.config.totalQuestions} {t('assessment:questions', 'questions')}</span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-600">
                     <Clock className="h-4 w-4" />
-                    <span>{scenario.config.timeLimit} minutes</span>
+                    <span>{scenario.config.timeLimit} {t('assessment:minutes', 'minutes')}</span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-600">
                     <Users className="h-4 w-4" />
-                    <span>Pass: {scenario.config.passingScore}%</span>
+                    <span>{t('assessment:pass', 'Pass')}: {scenario.config.passingScore}%</span>
                   </div>
                 </div>
                 
                 {scenario.userProgress && scenario.userProgress.completedPrograms > 0 && (
                   <div className="mt-4 pt-4 border-t text-sm text-gray-600">
                     <div className="flex items-center justify-between">
-                      <span>{scenario.userProgress.completedPrograms} attempts</span>
+                      <span>{scenario.userProgress.completedPrograms} {t('assessment:attempts', 'attempts')}</span>
                       {scenario.userProgress.lastAttempt && (
                         <span>
-                          Last: {new Date(scenario.userProgress.lastAttempt).toLocaleDateString()}
+                          {t('assessment:last', 'Last')}: {new Date(scenario.userProgress.lastAttempt).toLocaleDateString()}
                         </span>
                       )}
                     </div>
@@ -179,7 +179,7 @@ export default function AssessmentScenariosPage() {
                     className="w-full"
                     onClick={() => router.push(`/assessment/scenarios/${scenario.id}`)}
                   >
-                    View Details
+                    {t('assessment:viewDetails', 'View Details')}
                   </Button>
                 </div>
               </CardContent>

@@ -1,0 +1,133 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { promises as fs } from 'fs';
+import path from 'path';
+import yaml from 'js-yaml';
+import { getScenarioRepository } from '@/lib/implementations/gcs-v2';
+import { getServerSession } from '@/lib/auth/session';
+
+// 記憶體快取
+const translationCache = new Map<string, {
+  data: any;
+  timestamp: number;
+}>();
+
+const CACHE_TTL = 10 * 60 * 1000; // 10 分鐘
+
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const lang = searchParams.get('lang') || 'en';
+    const session = await getServerSession();
+    const user = session?.user;
+    
+    // 從 GCS 獲取基本資訊（英文版）
+    const scenarioRepo = getScenarioRepository();
+    const scenarios = await scenarioRepo.findBySourceType('assessment');
+    
+    // 處理每個 scenario
+    const responseScenarios = await Promise.all(
+      scenarios.map(async (scenario) => {
+        // 如果是英文，直接使用 GCS 資料
+        if (lang === 'en') {
+          return {
+            id: scenario.id,
+            title: scenario.title,
+            description: scenario.description,
+            folderName: scenario.sourceRef?.metadata?.folderName,
+            config: scenario.sourceRef?.metadata?.config || {},
+            userProgress: user ? await getUserProgress(scenario.id, user.id) : undefined
+          };
+        }
+        
+        // 非英文：從 YAML 載入
+        const translation = await loadTranslation(
+          scenario.sourceRef?.metadata?.basePath || scenario.sourceRef?.metadata?.folderName,
+          lang,
+          scenario
+        );
+        
+        return {
+          id: scenario.id,
+          title: translation?.title || scenario.title,
+          description: translation?.description || scenario.description,
+          folderName: scenario.sourceRef?.metadata?.folderName,
+          config: translation?.config || scenario.sourceRef?.metadata?.config || {},
+          userProgress: user ? await getUserProgress(scenario.id, user.id) : undefined
+        };
+      })
+    );
+    
+    return NextResponse.json({
+      success: true,
+      data: {
+        scenarios: responseScenarios,
+        totalCount: responseScenarios.length,
+        language: lang,
+        source: lang === 'en' ? 'gcs' : 'yaml'
+      }
+    });
+  } catch (error) {
+    console.error('Error in hybrid scenarios API:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to load scenarios' },
+      { status: 500 }
+    );
+  }
+}
+
+async function loadTranslation(
+  folderPath: string,
+  language: string,
+  fallbackScenario: any
+) {
+  // 檢查快取
+  const cacheKey = `${folderPath}-${language}`;
+  const cached = translationCache.get(cacheKey);
+  
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+    return cached.data;
+  }
+  
+  try {
+    // 建構檔案路徑
+    const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
+    const folderName = path.basename(folderPath);
+    const filePath = path.join(baseDir, 'public', 'assessment_data', folderName, `${folderName}_questions_${language}.yaml`);
+    
+    // 讀取 YAML
+    const content = await fs.readFile(filePath, 'utf-8');
+    const yamlData = yaml.load(content) as any;
+    const config = yamlData.config || yamlData.assessment_config || {};
+    
+    const translation = {
+      title: config.title,
+      description: config.description,
+      config: {
+        totalQuestions: config.total_questions || 12,
+        timeLimit: config.time_limit_minutes || 15,
+        passingScore: config.passing_score || 60,
+        domains: config.domains || []
+      }
+    };
+    
+    // 更新快取
+    translationCache.set(cacheKey, {
+      data: translation,
+      timestamp: Date.now()
+    });
+    
+    return translation;
+  } catch (error) {
+    console.log(`Failed to load ${language} translation for ${folderPath}:`, error);
+    return null;
+  }
+}
+
+async function getUserProgress(scenarioId: string, userId: string) {
+  // TODO: 實作從 GCS 獲取用戶進度
+  return {
+    completedPrograms: 0,
+    lastAttempt: undefined,
+    bestScore: undefined
+  };
+}
