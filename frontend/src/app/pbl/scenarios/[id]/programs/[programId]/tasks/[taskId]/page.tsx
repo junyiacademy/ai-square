@@ -722,9 +722,9 @@ export default function ProgramLearningPage() {
   // const progress = ((taskIndex + 1) / scenario.tasks.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
+    <div className="h-screen bg-gray-50 dark:bg-gray-900 flex flex-col overflow-hidden">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm">
+      <header className="bg-white dark:bg-gray-800 shadow-sm flex-shrink-0">
         <div className="px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -1170,7 +1170,7 @@ export default function ProgramLearningPage() {
 
           {/* Evaluate Button */}
           {showEvaluateButton && !isEvaluating && (
-            <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+            <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex-shrink-0">
               <button
                 onClick={handleEvaluate}
                 disabled={isEvaluateDisabled}
@@ -1189,7 +1189,7 @@ export default function ProgramLearningPage() {
           
           {/* Evaluating indicator */}
           {isEvaluating && (
-            <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+            <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex-shrink-0">
               <div className="flex items-center justify-center space-x-2">
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
                 <span className="text-gray-600 dark:text-gray-400">
@@ -1200,7 +1200,7 @@ export default function ProgramLearningPage() {
           )}
 
           {/* Input Area */}
-          <div className="p-6 border-t border-gray-200 dark:border-gray-700">
+          <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
             <div className="flex gap-4">
               <textarea
                 ref={inputRef}
