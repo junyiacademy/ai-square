@@ -233,7 +233,8 @@
   
   "navigation": {
     "overview": "總覽",
-    "assessment": "評估",
+    "evaluation": "評估",
+    "scenarios": "職業冒險",
     "paths": "路徑",
     "program": "課程",
     "achievements": "成就"
