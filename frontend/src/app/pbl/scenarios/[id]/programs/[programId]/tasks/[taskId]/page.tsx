@@ -1120,7 +1120,7 @@ export default function ProgramLearningPage() {
         </div>
 
         {/* Right Panel - Chatbot */}
-        <div className="flex-1 bg-white dark:bg-gray-800 flex flex-col border-l border-gray-200 dark:border-gray-700 h-full overflow-hidden">
+        <div className="flex-1 bg-gray-50 dark:bg-gray-900 flex flex-col border-l border-gray-200 dark:border-gray-700 h-full overflow-hidden">
           {/* Conversation Area */}
           <div className="flex-1 overflow-y-auto p-6 min-h-0">
             <div className="space-y-4">
@@ -1200,7 +1200,7 @@ export default function ProgramLearningPage() {
           )}
 
           {/* Input Area */}
-          <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
+          <div className="p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 flex-shrink-0 bg-white dark:bg-gray-800">
             <div className="flex gap-4">
               <textarea
                 ref={inputRef}
@@ -1213,8 +1213,8 @@ export default function ProgramLearningPage() {
                   }
                 }}
                 placeholder={t('pbl:learn.inputPlaceholder')}
-                className="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                rows={3}
+                className="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                rows={2}
                 disabled={isProcessing}
               />
               <button
@@ -1225,6 +1225,8 @@ export default function ProgramLearningPage() {
                 {isProcessing ? t('pbl:learn.sending') : t('pbl:learn.send')}
               </button>
             </div>
+            {/* Bottom safe area */}
+            <div className="h-4 sm:h-6"></div>
           </div>
         </div>
         </div>
@@ -1410,7 +1412,7 @@ export default function ProgramLearningPage() {
                 </div>
 
                 {/* Input Area */}
-                <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+                <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex-shrink-0">
                   <div className="flex gap-2">
                     <textarea
                       ref={inputRef}
@@ -1423,7 +1425,7 @@ export default function ProgramLearningPage() {
                         }
                       }}
                       placeholder={t('pbl:learn.inputPlaceholder')}
-                      className="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                       rows={2}
                       disabled={isProcessing}
                     />
@@ -1435,6 +1437,8 @@ export default function ProgramLearningPage() {
                       {isProcessing ? t('pbl:learn.sending') : t('pbl:learn.send')}
                     </button>
                   </div>
+                  {/* Bottom safe area */}
+                  <div className="h-4"></div>
                 </div>
               </div>
             )}
