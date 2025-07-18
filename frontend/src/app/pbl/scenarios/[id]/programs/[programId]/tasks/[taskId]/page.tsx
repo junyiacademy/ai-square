@@ -1200,7 +1200,7 @@ export default function ProgramLearningPage() {
           )}
 
           {/* Input Area */}
-          <div className="p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 flex-shrink-0 bg-white dark:bg-gray-800">
+          <div className="p-6 sm:p-8 border-t border-gray-200 dark:border-gray-700 flex-shrink-0 bg-white dark:bg-gray-800">
             <div className="flex gap-4">
               <textarea
                 ref={inputRef}
@@ -1225,8 +1225,8 @@ export default function ProgramLearningPage() {
                 {isProcessing ? t('pbl:learn.sending') : t('pbl:learn.send')}
               </button>
             </div>
-            {/* Bottom safe area */}
-            <div className="h-4 sm:h-6"></div>
+            {/* Bottom safe area - accounting for header and visual balance */}
+            <div className="h-8 sm:h-12 md:h-16"></div>
           </div>
         </div>
         </div>
@@ -1412,7 +1412,7 @@ export default function ProgramLearningPage() {
                 </div>
 
                 {/* Input Area */}
-                <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex-shrink-0">
+                <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex-shrink-0">
                   <div className="flex gap-2">
                     <textarea
                       ref={inputRef}
@@ -1437,8 +1437,8 @@ export default function ProgramLearningPage() {
                       {isProcessing ? t('pbl:learn.sending') : t('pbl:learn.send')}
                     </button>
                   </div>
-                  {/* Bottom safe area */}
-                  <div className="h-4"></div>
+                  {/* Bottom safe area - accounting for header and visual balance */}
+                  <div className="h-8"></div>
                 </div>
               </div>
             )}
