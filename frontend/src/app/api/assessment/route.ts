@@ -87,9 +87,13 @@ export async function GET(request: NextRequest) {
         }))
       }));
 
+      // Flatten all questions from tasks for compatibility
+      const allQuestions = processedTasks.flatMap(task => task.questions);
+      
       const result = {
         assessment_config: assessmentData.assessment_config,
         tasks: processedTasks,
+        questions: allQuestions, // Add flattened questions for backward compatibility
       };
       
       // Store in cache
