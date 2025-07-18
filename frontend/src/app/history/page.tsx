@@ -61,18 +61,53 @@ interface PBLSession {
   };
 }
 
+interface DiscoverySession {
+  id: string;
+  programId: string;
+  scenarioId: string;
+  scenarioTitle: string;
+  careerType: string;
+  currentTaskId?: string;
+  currentTaskTitle?: string;
+  status: 'completed' | 'active' | 'inactive';
+  startedAt: string;
+  completedAt?: string;
+  duration: number; // in seconds
+  progress: {
+    percentage: number;
+    completedTasks: number;
+    totalTasks: number;
+  };
+  totalInteractions?: number;
+  averageScore?: number;
+  domainScores?: {
+    engaging_with_ai: number;
+    creating_with_ai: number;
+    managing_with_ai: number;
+    designing_with_ai: number;
+  };
+  ksaScores?: {
+    knowledge: number;
+    skills: number;
+    attitudes: number;
+  };
+}
+
 type HistoryItem = {
-  type: 'assessment' | 'pbl';
+  type: 'assessment' | 'pbl' | 'discovery';
   timestamp: string;
-  data: AssessmentHistoryItem | PBLSession;
+  data: AssessmentHistoryItem | PBLSession | DiscoverySession;
 };
+
+type ViewMode = 'list' | 'calendar' | 'timeline';
 
 export default function UnifiedHistoryPage() {
   const { t, i18n } = useTranslation(['navigation', 'assessment', 'pbl']);
   const router = useRouter();
   const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | 'assessment' | 'pbl'>('all');
+  const [filter, setFilter] = useState<'all' | 'assessment' | 'pbl' | 'discovery'>('all');
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [currentUser, setCurrentUser] = useState<{ id: string; email?: string } | null>(null);
 
   // Get current user
@@ -81,11 +116,15 @@ export default function UnifiedHistoryPage() {
     const userData = localStorage.getItem('user');
     
     if (isLoggedIn === 'true' && userData) {
-      const user = JSON.parse(userData);
-      setCurrentUser({
-        id: String(user.id),
-        email: user.email
-      });
+      try {
+        const user = JSON.parse(userData);
+        setCurrentUser({
+          id: String(user.id),
+          email: user.email
+        });
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+      }
     }
     // If not logged in, don't set any user
   }, []);
@@ -93,7 +132,10 @@ export default function UnifiedHistoryPage() {
   // Fetch both assessment and PBL history
   useEffect(() => {
     const fetchAllHistory = async () => {
-      if (!currentUser) return;
+      if (!currentUser) {
+        setLoading(false);
+        return;
+      }
       
       setLoading(true);
       
@@ -101,7 +143,7 @@ export default function UnifiedHistoryPage() {
         // Fetch assessment history
         const assessmentResponse = await fetch(`/api/assessment/results?userId=${currentUser.id}&userEmail=${encodeURIComponent(currentUser.email || currentUser.id)}`);
         const assessmentData = await assessmentResponse.json();
-        const assessmentItems: HistoryItem[] = (assessmentData.results || []).map((item: AssessmentHistoryItem) => ({
+        const assessmentItems: HistoryItem[] = ((assessmentData.data || assessmentData.results) || []).map((item: AssessmentHistoryItem) => ({
           type: 'assessment' as const,
           timestamp: item.timestamp,
           data: item
@@ -126,7 +168,11 @@ export default function UnifiedHistoryPage() {
                 totalTimeSeconds?: number;
                 evaluatedTasks: number;
                 totalTasks: number;
-                tasks?: Array<{ log?: { interactions?: unknown[] } }>;
+                tasks?: Array<{ 
+                  id?: string;
+                  title?: string;
+                  log?: { interactions?: unknown[] } 
+                }>;
                 overallScore?: number;
                 domainScores?: {
                   engaging_with_ai: number;
@@ -140,40 +186,161 @@ export default function UnifiedHistoryPage() {
                   attitudes: number;
                 };
                 program?: { startedAt: string };
+                currentTaskIndex?: number;
               }
               
-              pblItems = pblData.programs.map((program: ProgramData) => ({
-                type: 'pbl' as const,
-                timestamp: program.startedAt || program.program?.startedAt,
-                data: {
-                  id: program.programId || program.id,
-                  logId: program.programId || program.id,
-                  scenarioId: program.scenarioId,
-                  scenarioTitle: program.scenarioTitle || program.scenarioId,
-                  status: program.status,
-                  startedAt: program.startedAt,
-                  completedAt: program.completedAt,
-                  duration: program.totalTimeSeconds || 0,
-                  progress: {
-                    percentage: Math.round((program.evaluatedTasks / program.totalTasks) * 100),
-                    completedTasks: program.evaluatedTasks,
-                    totalTasks: program.totalTasks
-                  },
-                  totalInteractions: program.tasks?.reduce((sum, task) => 
-                    sum + (task.log?.interactions?.length || 0), 0) || 0,
-                  averageScore: program.overallScore,
-                  domainScores: program.domainScores,
-                  ksaScores: program.ksaScores
-                } as PBLSession
-              }));
+              pblItems = (pblData.programs || []).map((program: ProgramData) => {
+                // Find current task info
+                const currentTask = program.tasks?.[program.currentTaskIndex || 0];
+                
+                return {
+                  type: 'pbl' as const,
+                  timestamp: program.completedAt || program.startedAt || program.program?.startedAt,
+                  data: {
+                    id: program.programId || program.id,
+                    logId: program.programId || program.id,
+                    scenarioId: program.scenarioId,
+                    scenarioTitle: program.scenarioTitle || program.scenarioId,
+                    currentTaskId: currentTask?.id,
+                    currentTaskTitle: currentTask?.title,
+                    status: program.status,
+                    startedAt: program.startedAt || program.program?.startedAt,
+                    completedAt: program.completedAt,
+                    duration: program.totalTimeSeconds || 0,
+                    progress: {
+                      percentage: Math.round((program.evaluatedTasks / program.totalTasks) * 100),
+                      completedTasks: program.evaluatedTasks,
+                      totalTasks: program.totalTasks
+                    },
+                    totalInteractions: program.tasks?.reduce((sum, task) => 
+                      sum + (task.log?.interactions?.length || 0), 0) || 0,
+                    averageScore: program.overallScore,
+                    domainScores: program.domainScores,
+                    ksaScores: program.ksaScores
+                  } as PBLSession
+                };
+              });
             }
           }
         } catch (error) {
           console.error('Error fetching PBL history:', error);
         }
 
+        // Fetch Discovery history
+        let discoveryItems: HistoryItem[] = [];
+        try {
+          const discoveryResponse = await fetch(`/api/discovery/my-programs?t=${Date.now()}`);
+          if (discoveryResponse.ok) {
+            const discoveryScenarios = await discoveryResponse.json();
+            
+            // Check if we have scenarios
+            if (!Array.isArray(discoveryScenarios)) {
+              console.log('No discovery scenarios found');
+            } else {
+              // For each scenario with programs, get the program details
+              for (const scenario of discoveryScenarios) {
+                if (scenario.userPrograms?.total > 0) {
+                // Get all programs for this scenario
+                const programsResponse = await fetch(`/api/discovery/scenarios/${scenario.id}/programs?t=${Date.now()}`);
+                if (programsResponse.ok) {
+                  const programs = await programsResponse.json();
+                  
+                  // Check if we have programs array
+                  if (!Array.isArray(programs)) {
+                    console.error('Unexpected programs data format:', programs);
+                    continue;
+                  }
+                  
+                  console.log('Discovery programs for scenario', scenario.id, ':', programs);
+                  
+                  if (programs.length === 0) {
+                    console.log('No programs found for scenario', scenario.id);
+                    continue;
+                  }
+                  
+                  // Create history items for each program
+                  const scenarioItems = programs.map((program: any) => {
+                    const isCompleted = program.status === 'completed';
+                    
+                    // Get task info from taskLogs if available, otherwise use taskIds
+                    const taskLogs = program.taskLogs || [];
+                    const completedTasks = taskLogs.filter((log: any) => log.isCompleted).length || 0;
+                    const totalTasks = program.taskIds?.length || taskLogs.length || 0;
+                    
+                    // For current task, we need to use currentTaskIndex with taskIds
+                    const currentTaskIndex = program.currentTaskIndex || 0;
+                    const currentTaskId = program.taskIds?.[currentTaskIndex] || program.metadata?.currentTaskId;
+                    const currentTask = {
+                      id: currentTaskId,
+                      title: `Task ${currentTaskIndex + 1}` // We'll need to load task details separately if needed
+                    };
+                    
+                    // Calculate duration
+                    let duration = 0;
+                    if (program.startedAt) {
+                      const endTime = program.completedAt ? new Date(program.completedAt) : new Date();
+                      duration = Math.round((endTime.getTime() - new Date(program.startedAt).getTime()) / 1000);
+                    }
+                    
+                    // Get scores from completion data if available
+                    let scores = {};
+                    if (isCompleted && program.completionData) {
+                      scores = {
+                        averageScore: program.completionData.overallScore,
+                        domainScores: program.completionData.domainScores,
+                        ksaScores: program.completionData.ksaScores
+                      };
+                    }
+                    
+                    // Log program structure to debug
+                    console.log('Discovery program structure:', {
+                      id: program.id,
+                      status: program.status,
+                      tasks: program.tasks?.length,
+                      taskIds: program.taskIds?.length,
+                      currentTaskIndex: program.currentTaskIndex
+                    });
+                    
+                    return {
+                      type: 'discovery' as const,
+                      timestamp: program.completedAt || program.startedAt || program.createdAt || new Date().toISOString(),
+                      data: {
+                        id: scenario.id,
+                        programId: program.id,
+                        scenarioId: scenario.id,
+                        scenarioTitle: scenario.title,
+                        careerType: scenario.metadata?.careerType || 'unknown',
+                        currentTaskId: currentTask?.id,
+                        currentTaskTitle: currentTask?.title,
+                        status: program.status === 'active' ? 'active' : program.status === 'completed' ? 'completed' : 'inactive',
+                        startedAt: program.startedAt || new Date().toISOString(),
+                        completedAt: program.completedAt,
+                        duration,
+                        progress: {
+                          percentage: totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0,
+                          completedTasks,
+                          totalTasks
+                        },
+                        totalInteractions: program.evaluations?.length || 0,
+                        ...scores
+                      } as DiscoverySession
+                    };
+                  });
+                  
+                  discoveryItems.push(...scenarioItems);
+                }
+              }
+            }
+          }
+        } else {
+          console.log('Discovery API returned non-OK status:', discoveryResponse.status);
+        }
+      } catch (error) {
+        console.error('Error fetching Discovery history:', error);
+      }
+
         // Combine and sort by timestamp
-        const allItems = [...assessmentItems, ...pblItems].sort((a, b) => 
+        const allItems = [...assessmentItems, ...pblItems, ...discoveryItems].sort((a, b) => 
           new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
         );
         
@@ -185,7 +352,9 @@ export default function UnifiedHistoryPage() {
       }
     };
     
-    fetchAllHistory();
+    if (currentUser || currentUser === null) {
+      fetchAllHistory();
+    }
   }, [currentUser, i18n.language]);
 
   const formatDate = (timestamp: string) => {
@@ -309,6 +478,16 @@ export default function UnifiedHistoryPage() {
             >
               {t('pbl:title')} ({historyItems.filter(item => item.type === 'pbl').length})
             </button>
+            <button
+              onClick={() => setFilter('discovery')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                filter === 'discovery'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+              }`}
+            >
+              {t('navigation:discovery')} ({historyItems.filter(item => item.type === 'discovery').length})
+            </button>
           </div>
         </div>
 
@@ -334,6 +513,13 @@ export default function UnifiedHistoryPage() {
                 className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
               >
                 {t('navigation:startPBL')}
+              </Link>
+              <span className="text-gray-400">|</span>
+              <Link
+                href="/discovery"
+                className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+              >
+                {t('navigation:startDiscovery')}
               </Link>
             </div>
           </div>
@@ -439,7 +625,7 @@ export default function UnifiedHistoryPage() {
                     </div>
                   </div>
                 );
-              } else {
+              } else if (item.type === 'pbl') {
                 const session = item.data as PBLSession;
                 console.log('PBL Session:', {
                   id: session.id,
@@ -640,7 +826,7 @@ export default function UnifiedHistoryPage() {
                               onClick={() => {
                                 // Need to get the current task ID, assuming it's the first task or stored in session
                                 const taskId = session.currentTaskId || 'task-1';
-                                router.push(`/pbl/scenarios/${session.scenarioId}/programs/${session.id}/tasks/${taskId}/learn`);
+                                router.push(`/pbl/scenarios/${session.scenarioId}/programs/${session.id}/tasks/${taskId}`);
                               }}
                               className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
                             >
@@ -648,7 +834,228 @@ export default function UnifiedHistoryPage() {
                             </button>
                           )}
                           <Link
-                            href={`/pbl/scenarios/${session.scenarioId}/programs/${session.id}/complete`}
+                            href={`/pbl/programs/${session.id}/complete`}
+                            className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
+                          >
+                            {t('pbl:complete.viewReport')} →
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              } else if (item.type === 'discovery') {
+                const session = item.data as DiscoverySession;
+                return (
+                  <div key={`discovery-${session.programId}`} className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                    <div className="p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1">
+                          <div className="flex items-center mb-2">
+                            <span className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300 text-xs font-medium px-2.5 py-0.5 rounded mr-2">
+                              {t('navigation:discovery')}
+                            </span>
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mr-3">
+                              {session.scenarioTitle}
+                            </h3>
+                          </div>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            Program ID: {session.programId}
+                          </p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                            {t('discovery:careerType')}: {session.careerType}
+                          </p>
+                          {session.currentTaskTitle && (
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                              {t('pbl:currentTask', { ns: 'pbl' })}: {session.currentTaskTitle}
+                            </p>
+                          )}
+                          
+                          {/* Date and Time Info */}
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-gray-600 dark:text-gray-400 mt-3">
+                            <div>
+                              <span className="font-medium">{t('assessment:history.startTime')}:</span>
+                              <p>{formatDate(session.startedAt)}</p>
+                            </div>
+                            <div>
+                              <span className="font-medium">{t('assessment:history.endTime')}:</span>
+                              <p>{session.completedAt ? formatDate(session.completedAt) : '-'}</p>
+                            </div>
+                          </div>
+                        </div>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          session.status === 'completed' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' :
+                          session.status === 'active' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300' :
+                          'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                        }`}>
+                          {t(`discovery:status.${session.status}`)}
+                        </span>
+                      </div>
+
+                      {/* Three Column Stats - Similar to PBL */}
+                      {session.averageScore !== undefined && session.domainScores && session.ksaScores ? (
+                        <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 mt-4">
+                          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            {/* Left Column - Overall Score */}
+                            <div>
+                              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                                {t('pbl:complete.overallScore')}
+                              </h4>
+                              <div className="mb-3">
+                                <span className={`text-3xl font-bold ${getScoreColor(session.averageScore)}`}>
+                                  {session.averageScore}%
+                                </span>
+                              </div>
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
+                                {session.progress.completedTasks}/{session.progress.totalTasks} {t('pbl:history.tasksEvaluated')}
+                              </p>
+                              {session.totalInteractions !== undefined && (
+                                <div className="mt-3 space-y-2">
+                                  <div>
+                                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('pbl:history.conversationCount')}</span>
+                                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                                      {session.totalInteractions} {t('pbl:history.times')}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                            
+                            {/* Middle Column - Domain Scores */}
+                            <div>
+                              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                                {t('pbl:complete.domainScores')}
+                              </h4>
+                              <div className="space-y-3">
+                                <div>
+                                  <div className="flex items-center justify-between mb-1">
+                                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('assessment:domains.engaging_with_ai')}</span>
+                                    <span className={`text-sm font-medium ${getScoreColor(session.domainScores.engaging_with_ai)}`}>
+                                      {session.domainScores.engaging_with_ai}%
+                                    </span>
+                                  </div>
+                                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                    <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${session.domainScores.engaging_with_ai}%` }} />
+                                  </div>
+                                </div>
+                                <div>
+                                  <div className="flex items-center justify-between mb-1">
+                                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('assessment:domains.creating_with_ai')}</span>
+                                    <span className={`text-sm font-medium ${getScoreColor(session.domainScores.creating_with_ai)}`}>
+                                      {session.domainScores.creating_with_ai}%
+                                    </span>
+                                  </div>
+                                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                    <div className="bg-green-600 h-2 rounded-full" style={{ width: `${session.domainScores.creating_with_ai}%` }} />
+                                  </div>
+                                </div>
+                                <div>
+                                  <div className="flex items-center justify-between mb-1">
+                                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('assessment:domains.managing_with_ai')}</span>
+                                    <span className={`text-sm font-medium ${getScoreColor(session.domainScores.managing_with_ai)}`}>
+                                      {session.domainScores.managing_with_ai}%
+                                    </span>
+                                  </div>
+                                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                    <div className="bg-yellow-600 h-2 rounded-full" style={{ width: `${session.domainScores.managing_with_ai}%` }} />
+                                  </div>
+                                </div>
+                                <div>
+                                  <div className="flex items-center justify-between mb-1">
+                                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('assessment:domains.designing_with_ai')}</span>
+                                    <span className={`text-sm font-medium ${getScoreColor(session.domainScores.designing_with_ai)}`}>
+                                      {session.domainScores.designing_with_ai}%
+                                    </span>
+                                  </div>
+                                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                    <div className="bg-purple-600 h-2 rounded-full" style={{ width: `${session.domainScores.designing_with_ai}%` }} />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {/* Right Column - KSA Scores */}
+                            <div>
+                              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                                {t('pbl:complete.ksaSummary')}
+                              </h4>
+                              <div className="space-y-3">
+                                <div>
+                                  <div className="flex items-center justify-between mb-1">
+                                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('pbl:complete.knowledge')}</span>
+                                    <span className={`text-sm font-medium ${getScoreColor(session.ksaScores.knowledge)}`}>
+                                      {session.ksaScores.knowledge}%
+                                    </span>
+                                  </div>
+                                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                    <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${session.ksaScores.knowledge}%` }} />
+                                  </div>
+                                </div>
+                                <div>
+                                  <div className="flex items-center justify-between mb-1">
+                                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('pbl:complete.skills')}</span>
+                                    <span className={`text-sm font-medium ${getScoreColor(session.ksaScores.skills)}`}>
+                                      {session.ksaScores.skills}%
+                                    </span>
+                                  </div>
+                                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                    <div className="bg-green-600 h-2 rounded-full" style={{ width: `${session.ksaScores.skills}%` }} />
+                                  </div>
+                                </div>
+                                <div>
+                                  <div className="flex items-center justify-between mb-1">
+                                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('pbl:complete.attitudes')}</span>
+                                    <span className={`text-sm font-medium ${getScoreColor(session.ksaScores.attitudes)}`}>
+                                      {session.ksaScores.attitudes}%
+                                    </span>
+                                  </div>
+                                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                    <div className="bg-purple-600 h-2 rounded-full" style={{ width: `${session.ksaScores.attitudes}%` }} />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        /* Fallback for sessions without scores */
+                        <div className="mt-4">
+                          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('pbl:history.progress')}</p>
+                            <p className="text-lg font-bold text-gray-900 dark:text-white">
+                              {session.progress.completedTasks}/{session.progress.totalTasks} {t('pbl:history.tasks')}
+                            </p>
+                            {session.totalInteractions !== undefined && (
+                              <div className="mt-3">
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{t('pbl:history.conversationCount')}</p>
+                                <p className="font-semibold text-gray-900 dark:text-white">{session.totalInteractions} {t('pbl:history.times')}</p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                        <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                          <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          {t('assessment:history.duration')}: {formatDuration(session.duration)}
+                        </div>
+                        <div className="flex items-center space-x-4">
+                          {session.status === 'active' && (
+                            <button
+                              onClick={() => {
+                                const taskId = session.currentTaskId || 'task-1';
+                                router.push(`/discovery/scenarios/${session.scenarioId}/programs/${session.programId}/tasks/${taskId}`);
+                              }}
+                              className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
+                            >
+                              {t('pbl:history.continueStudy')} →
+                            </button>
+                          )}
+                          <Link
+                            href={`/discovery/programs/${session.programId}/complete`}
                             className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
                           >
                             {t('pbl:complete.viewReport')} →
@@ -676,6 +1083,12 @@ export default function UnifiedHistoryPage() {
             className="bg-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors inline-block"
           >
             {t('navigation:startNewPBL')}
+          </Link>
+          <Link
+            href="/discovery"
+            className="bg-emerald-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-emerald-700 transition-colors inline-block"
+          >
+            {t('navigation:startNewDiscovery')}
           </Link>
         </div>
       </div>
