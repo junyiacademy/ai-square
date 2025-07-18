@@ -102,7 +102,7 @@ export default function ScenarioDetailPage() {
             setIsStarting(false);
             return;
           }
-          router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${targetTaskId}`);
+          router.push(`/pbl/scenarios/${scenarioId}/programs/${programId}/tasks/${targetTaskId}`);
         }
       } else {
         // Create new program
@@ -130,7 +130,7 @@ export default function ScenarioDetailPage() {
             setIsStarting(false);
             return;
           }
-          router.push(`/pbl/scenarios/${scenarioId}/program/${data.id}/tasks/${firstTaskId}`);
+          router.push(`/pbl/scenarios/${scenarioId}/programs/${data.id}/tasks/${firstTaskId}`);
         }
       }
     } catch (error) {

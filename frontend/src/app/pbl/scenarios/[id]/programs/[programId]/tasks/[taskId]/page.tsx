@@ -885,7 +885,7 @@ export default function ProgramLearningPage() {
               {!isProgressCollapsed && Object.keys(taskEvaluations).length > 0 && (
                 <div className="mt-6 px-4">
                   <Link
-                    href={`/pbl/scenarios/${scenarioId}/program/${programId}/complete`}
+                    href={`/pbl/scenarios/${scenarioId}/programs/${programId}/complete`}
                     className="flex items-center justify-center w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
                   >
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

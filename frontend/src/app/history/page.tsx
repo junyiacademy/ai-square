@@ -640,7 +640,7 @@ export default function UnifiedHistoryPage() {
                               onClick={() => {
                                 // Need to get the current task ID, assuming it's the first task or stored in session
                                 const taskId = session.currentTaskId || 'task-1';
-                                router.push(`/pbl/scenarios/${session.scenarioId}/program/${session.id}/tasks/${taskId}/learn`);
+                                router.push(`/pbl/scenarios/${session.scenarioId}/programs/${session.id}/tasks/${taskId}/learn`);
                               }}
                               className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
                             >
@@ -648,7 +648,7 @@ export default function UnifiedHistoryPage() {
                             </button>
                           )}
                           <Link
-                            href={`/pbl/scenarios/${session.scenarioId}/program/${session.id}/complete`}
+                            href={`/pbl/scenarios/${session.scenarioId}/programs/${session.id}/complete`}
                             className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm font-medium"
                           >
                             {t('pbl:complete.viewReport')} →
