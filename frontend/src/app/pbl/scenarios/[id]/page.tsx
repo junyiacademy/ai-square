@@ -302,7 +302,7 @@ export default function ScenarioDetailPage() {
                           </button>
                           {(program.completedTaskCount > 0 || program.status === 'completed' || program.evaluationId) && (
                             <button
-                              onClick={() => router.push(`/pbl/scenarios/${scenarioId}/program/${program.id}/complete`)}
+                              onClick={() => router.push(`/pbl/scenarios/${scenarioId}/programs/${program.id}/complete`)}
                               className="text-sm px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors font-medium"
                             >
                               {t('viewResults', 'View Results')}
