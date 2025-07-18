@@ -8,13 +8,13 @@ export async function POST(
 ) {
   try {
     // Try to get user from authentication
-    const user = await getServerSession();
+    const session = await getServerSession();
     
     // If no auth, check if user info is in query params
     let userEmail: string | null = null;
     
-    if (user) {
-      userEmail = user.email;
+    if (session?.user?.email) {
+      userEmail = session.user.email;
     } else {
       const { searchParams } = new URL(request.url);
       const emailParam = searchParams.get('userEmail');

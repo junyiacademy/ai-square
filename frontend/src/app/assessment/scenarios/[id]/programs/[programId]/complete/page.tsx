@@ -71,10 +71,66 @@ export default function AssessmentCompletePage({
         'Content-Type': 'application/json',
       };
       
+      // First check if evaluation exists
       const res = await fetch(`/api/assessment/programs/${progId}/evaluation`, {
         credentials: 'include',
         headers
       });
+      
+      if (res.status === 404) {
+        console.log('Evaluation not found, checking program status...');
+        
+        // Check program status
+        const programRes = await fetch(`/api/assessment/programs/${progId}`, {
+          credentials: 'include',
+          headers
+        });
+        
+        if (programRes.status === 403) {
+          // Try to get program with user email from URL or localStorage
+          console.error('Access denied to program, user mismatch');
+          setLoading(false);
+          return;
+        }
+        
+        if (programRes.ok) {
+          const programData = await programRes.json();
+          const program = programData.program || programData;
+          
+          // If program is not completed, show appropriate message
+          if (program.status !== 'completed') {
+            console.log('Program not completed yet, status:', program.status);
+            setLoading(false);
+            return;
+          }
+          
+          // Try to complete the program if not done
+          console.log('Attempting to complete the program...');
+          const completeRes = await fetch(`/api/assessment/programs/${progId}/complete`, {
+            method: 'POST',
+            credentials: 'include',
+            headers
+          });
+          
+          if (completeRes.ok) {
+            const completeData = await completeRes.json();
+            if (completeData.evaluation) {
+              setEvaluation(completeData.evaluation);
+              // Continue to load task data
+            }
+          }
+        }
+        
+        setLoading(false);
+        return;
+      }
+      
+      if (!res.ok) {
+        console.error('Failed to load evaluation:', res.status);
+        setLoading(false);
+        return;
+      }
+      
       const data = await res.json();
       setEvaluation(data.evaluation);
       
@@ -180,22 +236,22 @@ export default function AssessmentCompletePage({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Assessment Not Completed</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">{t('assessmentNotCompleted', 'Assessment Not Completed')}</h3>
           <p className="text-gray-600 mb-6">
-            This assessment hasn't been completed yet. Please complete all questions and submit your answers to view the results.
+            {t('assessmentNotCompletedDesc', 'This assessment hasn\'t been completed yet. Please complete all questions and submit your answers to view the results.')}
           </p>
           <div className="space-y-3">
             <button 
               onClick={() => router.push(`/assessment/scenarios/${scenarioId}/programs/${programId}`)}
               className="w-full bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700"
             >
-              Continue Assessment
+              {t('continueAssessment', 'Continue Assessment')}
             </button>
             <button 
               onClick={() => router.push(`/assessment/scenarios/${scenarioId}`)}
               className="w-full bg-gray-100 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-200"
             >
-              Back to Scenario
+              {t('backToScenario', 'Back to Scenario')}
             </button>
           </div>
         </div>

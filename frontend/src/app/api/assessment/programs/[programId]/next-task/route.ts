@@ -11,9 +11,9 @@ export async function POST(
 ) {
   try {
     // Get user from authentication
-    const user = await getServerSession();
+    const session = await getServerSession();
     
-    if (!user) {
+    if (!session?.user?.email) {
       return NextResponse.json(
         { error: 'Authentication required' },
         { status: 401 }
@@ -31,7 +31,7 @@ export async function POST(
     
     // Get program
     const program = await programRepo.findById(programId);
-    if (!program || program.userId !== user.email) {
+    if (!program || program.userId !== session.user.email) {
       return NextResponse.json(
         { error: 'Program not found or access denied' },
         { status: 404 }

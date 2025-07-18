@@ -47,6 +47,10 @@ export abstract class GCSRepositoryBase<T extends { id: string }> {
           contentType: 'application/json',
         },
       });
+      
+      // Invalidate cache after saving
+      this.listCache = null;
+      
       return entity;
     } catch (error) {
       console.error(`Failed to save entity to GCS: ${filePath}`, error);
@@ -84,6 +88,8 @@ export abstract class GCSRepositoryBase<T extends { id: string }> {
     
     try {
       await file.delete();
+      // Invalidate cache after deleting
+      this.listCache = null;
       return true;
     } catch (error) {
       console.error(`Failed to delete entity from GCS: ${filePath}`, error);
@@ -175,6 +181,7 @@ export abstract class GCSRepositoryBase<T extends { id: string }> {
       id, // 確保 ID 不被覆蓋
     };
     
+    // saveEntity will invalidate the cache
     return this.saveEntity(updated);
   }
 }

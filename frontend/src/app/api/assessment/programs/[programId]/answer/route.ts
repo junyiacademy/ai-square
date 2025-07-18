@@ -8,8 +8,8 @@ export async function POST(
   { params }: { params: Promise<{ programId: string }> }
 ) {
   try {
-    const user = await getServerSession();
-    if (!user) {
+    const session = await getServerSession();
+    if (!session?.user?.email) {
       return NextResponse.json(
         { error: 'Authentication required' },
         { status: 401 }
