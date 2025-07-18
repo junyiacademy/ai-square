@@ -686,16 +686,16 @@ export default function ProgramLearningPage() {
       // Navigate to next task
       const nextTaskId = taskIds[currentIndex + 1];
       console.log('Navigating to next task:', nextTaskId);
-      router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${nextTaskId}`);
+      router.push(`/pbl/scenarios/${scenarioId}/programs/${programId}/tasks/${nextTaskId}`);
     } else {
       // All tasks completed or current task not found in taskIds
       console.log('All tasks completed or task not found, going to complete page');
-      router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/complete`);
+      router.push(`/pbl/scenarios/${scenarioId}/programs/${programId}/complete`);
     }
   };
 
   const switchTask = (newTaskId: string) => {
-    router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${newTaskId}`);
+    router.push(`/pbl/scenarios/${scenarioId}/programs/${programId}/tasks/${newTaskId}`);
   };
 
   if (loading) {
