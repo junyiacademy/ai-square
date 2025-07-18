@@ -3,7 +3,7 @@ import {
   getProgramRepository, 
   getTaskRepository 
 } from '@/lib/implementations/gcs-v2';
-import { getAuthFromRequest } from '@/lib/auth/auth-utils';
+import { getServerSession } from '@/lib/auth/session';
 
 export async function POST(
   request: NextRequest,
@@ -11,7 +11,7 @@ export async function POST(
 ) {
   try {
     // Get user from authentication
-    const user = await getAuthFromRequest(request);
+    const user = await getServerSession();
     
     if (!user) {
       return NextResponse.json(

@@ -6,6 +6,7 @@ import {
   getEvaluationRepository 
 } from '@/lib/implementations/gcs-v2';
 import { getServerSession } from '@/lib/auth/session';
+import { getAuthFromRequest } from '@/lib/auth/auth-utils';
 import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
@@ -143,17 +144,16 @@ export async function POST(
     const body = await request.json();
     const { action, language = 'en' } = body;
     
-    // Try to get user from authentication
-    const authUser = await getAuthFromRequest(request);
-    
-    if (!authUser) {
+    // Get user session using consistent method
+    const session = await getServerSession();
+    if (!session?.user?.email) {
       return NextResponse.json(
         { error: 'Authentication required' },
         { status: 401 }
       );
     }
     
-    const email = authUser.email;
+    const email = session.user.email;
     
     if (action !== 'start') {
       return NextResponse.json(
@@ -206,18 +206,23 @@ export async function POST(
         language,
         startTime: Date.now(),
         timeLimit: 900, // 15 minutes default
-        userName: authUser?.name || email
+        userName: email.split('@')[0]
       }
     });
     
     // Load questions from YAML and create tasks
     const tasks = [];
+    console.log('Scenario sourceRef:', JSON.stringify(scenario.sourceRef, null, 2));
+    
     if (scenario.sourceRef.metadata?.configPath) {
       try {
         const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
         const configPath = path.join(baseDir, 'public', scenario.sourceRef.metadata.configPath as string);
+        console.log('Loading assessment config from:', configPath);
+        
         const configContent = await fs.readFile(configPath, 'utf-8');
         const yamlData = yaml.load(configContent) as any;
+        console.log('YAML data loaded, has tasks:', !!yamlData.tasks);
         
         // Check if new format with tasks
         if (yamlData.tasks) {

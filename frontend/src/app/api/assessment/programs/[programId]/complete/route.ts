@@ -4,7 +4,7 @@ import {
   getTaskRepository,
   getEvaluationRepository 
 } from '@/lib/implementations/gcs-v2';
-import { getAuthFromRequest } from '@/lib/auth/auth-utils';
+import { getServerSession } from '@/lib/auth/session';
 
 interface DomainScore {
   domain: string;
@@ -25,7 +25,7 @@ export async function POST(
 ) {
   try {
     // Try to get user from authentication
-    const authUser = await getAuthFromRequest(request);
+    const authUser = await getServerSession();
     
     // If no auth, check if user info is in query params
     let user: { email: string; id?: string } | null = null;

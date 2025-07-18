@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTaskRepository } from '@/lib/implementations/gcs-v2';
-import { getAuthFromRequest } from '@/lib/auth/auth-utils';
+import { getServerSession } from '@/lib/auth/session';
 
 export async function POST(
   request: NextRequest,
@@ -8,7 +8,7 @@ export async function POST(
 ) {
   try {
     // Try to get user from authentication
-    const user = await getAuthFromRequest(request);
+    const user = await getServerSession();
     
     // If no auth, check if user info is in query params
     let userEmail: string | null = null;

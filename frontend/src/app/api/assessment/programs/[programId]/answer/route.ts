@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTaskRepository } from '@/lib/implementations/gcs-v2';
-import { getAuthFromRequest } from '@/lib/auth/auth-utils';
+import { getServerSession } from '@/lib/auth/session';
 import { hasQuestions, AssessmentQuestion, AssessmentAnswerContent } from '@/types/task-content';
 
 export async function POST(
@@ -8,7 +8,7 @@ export async function POST(
   { params }: { params: Promise<{ programId: string }> }
 ) {
   try {
-    const user = await getAuthFromRequest(request);
+    const user = await getServerSession();
     if (!user) {
       return NextResponse.json(
         { error: 'Authentication required' },
