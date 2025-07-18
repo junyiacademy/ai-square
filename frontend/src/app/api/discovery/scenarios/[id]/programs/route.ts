@@ -183,7 +183,8 @@ export async function POST(
       let yamlData = null;
       
       if (careerType) {
-        yamlData = await DiscoveryYAMLLoader.loadPath(careerType, language as 'en' | 'zhTW');
+        const loader = new DiscoveryYAMLLoader();
+        yamlData = await loader.loadPath(careerType, language);
       }
       
       if (yamlData?.example_tasks) {

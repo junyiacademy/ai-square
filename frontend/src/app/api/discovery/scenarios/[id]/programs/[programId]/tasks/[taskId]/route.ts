@@ -328,7 +328,8 @@ export async function PATCH(
       // Load YAML data for world setting context
       let yamlData = null;
       if (careerType !== 'unknown') {
-        yamlData = await DiscoveryYAMLLoader.loadPath(careerType, language as 'en' | 'zhTW');
+        const loader = new DiscoveryYAMLLoader();
+        yamlData = await loader.loadPath(careerType, language);
       }
       
       // Use AI to evaluate the response
@@ -536,7 +537,8 @@ Return your evaluation as a JSON object:
         // Load YAML data for world setting context
         let yamlData = null;
         if (careerType !== 'unknown') {
-          yamlData = await DiscoveryYAMLLoader.loadPath(careerType, language as 'en' | 'zhTW');
+          const loader = new DiscoveryYAMLLoader();
+          yamlData = await loader.loadPath(careerType, language);
         }
         
         // Generate multilingual comprehensive qualitative feedback
@@ -813,7 +815,8 @@ Return your evaluation as a JSON object:
         
         let yamlData = null;
         if (careerType !== 'unknown') {
-          yamlData = await DiscoveryYAMLLoader.loadPath(careerType, language as 'en' | 'zhTW');
+          const loader = new DiscoveryYAMLLoader();
+          yamlData = await loader.loadPath(careerType, language);
         }
         
         const comprehensivePrompt = generateComprehensiveFeedbackPrompt(

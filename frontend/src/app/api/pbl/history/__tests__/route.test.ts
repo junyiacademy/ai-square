@@ -1,501 +1,278 @@
-/**
- * Tests for PBL History API
- * This API provides paginated history of user's PBL programs across scenarios
- */
-
-import { GET } from '../route';
 import { NextRequest } from 'next/server';
-import { pblProgramService } from '@/lib/storage/pbl-program-service';
-import { promises as fs } from 'fs';
-import * as yaml from 'js-yaml';
-import type { CompletionData } from '@/types/pbl-completion';
+import { GET } from '../route';
+import { getServerSession } from '@/lib/auth/session';
+import { 
+  getScenarioRepository,
+  getProgramRepository,
+  getEvaluationRepository
+} from '@/lib/implementations/gcs-v2';
 
 // Mock dependencies
-jest.mock('@/lib/storage/pbl-program-service');
-jest.mock('fs', () => ({
-  promises: {
-    access: jest.fn(),
-    readFile: jest.fn(),
-    readdir: jest.fn()
-  }
-}));
-jest.mock('js-yaml');
-jest.mock('@/lib/cache/cache-service', () => ({
-  cacheService: {
-    get: jest.fn().mockResolvedValue(null),
-    set: jest.fn().mockResolvedValue(undefined),
-    delete: jest.fn().mockResolvedValue(undefined)
-  }
-}));
-jest.mock('@/lib/cache/distributed-cache-service', () => ({
-  distributedCacheService: {
-    get: jest.fn().mockResolvedValue(null),
-    set: jest.fn().mockResolvedValue(undefined),
-    getWithRevalidation: jest.fn(async (key, handler) => handler())
-  }
-}));
-jest.mock('@/lib/monitoring/performance-monitor', () => ({
-  withPerformanceTracking: jest.fn((handler) => handler())
-}));
+jest.mock('@/lib/auth/session');
+jest.mock('@/lib/implementations/gcs-v2');
+jest.mock('@/lib/services/pbl-yaml-loader');
 
-const mockFs = fs as jest.Mocked<typeof fs>;
-const mockYaml = yaml as jest.Mocked<typeof yaml>;
-const mockPblProgramService = pblProgramService as jest.Mocked<typeof pblProgramService>;
+const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
+const mockGetScenarioRepository = getScenarioRepository as jest.MockedFunction<typeof getScenarioRepository>;
+const mockGetProgramRepository = getProgramRepository as jest.MockedFunction<typeof getProgramRepository>;
+const mockGetEvaluationRepository = getEvaluationRepository as jest.MockedFunction<typeof getEvaluationRepository>;
 
-describe('GET /api/pbl/history', () => {
-  const mockUserEmail = 'test@example.com';
-  const mockUser = { email: mockUserEmail };
+describe('PBL History API Route', () => {
+  const mockUser = { email: 'test@example.com', name: 'Test User' };
   
-  const mockProgram1: CompletionData = {
-    programId: 'prog_123',
-    scenarioId: 'ai-job-search',
-    userEmail: mockUserEmail,
-    status: 'completed',
-    startedAt: '2024-01-15T10:00:00Z',
-    updatedAt: '2024-01-15T11:00:00Z',
-    completedAt: '2024-01-15T11:00:00Z',
-    totalTasks: 3,
-    evaluatedTasks: 3,
-    overallScore: 85,
-    domainScores: {
-      'Engaging_with_AI': 90,
-      'Creating_with_AI': 80
-    },
-    ksaScores: {
-      'K-AIF-01': 85,
-      'S-AIA-02': 90
-    },
-    totalTimeSeconds: 3600,
-    taskSummaries: [
-      {
-        taskId: 'task_1',
-        title: 'Introduction',
-        score: 90,
-        completedAt: '2024-01-15T10:20:00Z'
-      },
-      {
-        taskId: 'task_2',
-        title: 'AI Resume Review',
-        score: 85,
-        completedAt: '2024-01-15T10:40:00Z'
-      },
-      {
-        taskId: 'task_3',
-        title: 'Interview Preparation',
-        score: 80,
-        completedAt: '2024-01-15T11:00:00Z'
-      }
-    ]
-  };
-
-  const mockProgram2: CompletionData = {
-    programId: 'prog_456',
-    scenarioId: 'health-ai-diagnosis',
-    userEmail: mockUserEmail,
-    status: 'active',
-    startedAt: '2024-01-16T09:00:00Z',
-    updatedAt: '2024-01-16T10:00:00Z',
-    totalTasks: 4,
-    evaluatedTasks: 2,
-    overallScore: 0,
-    domainScores: {},
-    ksaScores: {},
-    totalTimeSeconds: 1800,
-    taskSummaries: [
-      {
-        taskId: 'task_1',
-        title: 'Understanding AI in Healthcare',
-        score: 88,
-        completedAt: '2024-01-16T09:30:00Z'
-      },
-      {
-        taskId: 'task_2',
-        title: 'Evaluating AI Diagnoses',
-        score: 92,
-        completedAt: '2024-01-16T10:00:00Z'
-      }
-    ]
-  };
-
-  const mockScenarioData = {
-    scenario_info: {
-      title: 'AI Job Search Assistant',
-      title_zhTW: 'AI 求職助理',
-      title_ja: 'AI就職活動アシスタント',
-      title_ko: 'AI 구직 도우미',
-      title_es: 'Asistente de búsqueda de empleo con IA',
-      title_fr: 'Assistant de recherche d\'emploi IA',
-      title_de: 'KI-Jobsuche-Assistent',
-      title_ru: 'ИИ помощник по поиску работы',
-      title_it: 'Assistente di ricerca lavoro AI'
-    }
-  };
-
   beforeEach(() => {
     jest.clearAllMocks();
-    
-    // Mock YAML loading
-    mockYaml.load.mockReturnValue(mockScenarioData);
-    
-    // Mock file system
-    mockFs.access.mockResolvedValue(undefined);
-    mockFs.readFile.mockResolvedValue(Buffer.from(JSON.stringify(mockScenarioData)));
-    mockFs.readdir.mockResolvedValue(['ai_job_search', 'health_ai_diagnosis'] as any);
-    
-    // Reset service mocks to default behavior
-    mockPblProgramService.getUserProgramsForScenario.mockResolvedValue([]);
   });
 
-  const createRequest = (url: string, cookies: Record<string, string> = {}) => {
-    const request = new NextRequest(url, {
-      headers: {
-        cookie: Object.entries(cookies)
-          .map(([key, value]) => `${key}=${value}`)
-          .join('; ')
-      }
-    });
+  describe('GET /api/pbl/history', () => {
+    it('should return 401 when user is not authenticated', async () => {
+      mockGetServerSession.mockResolvedValueOnce(null);
 
-    // Mock cookies.get method
-    Object.defineProperty(request, 'cookies', {
-      value: {
-        get: jest.fn((name: string) => {
-          return cookies[name] ? { value: cookies[name] } : undefined;
-        })
-      },
-      writable: true
-    });
-
-    return request;
-  };
-
-  describe('Authentication', () => {
-    it('should return 401 when no user cookie is present', async () => {
-      const request = createRequest('http://localhost:3000/api/pbl/history');
-      
+      const request = new NextRequest('http://localhost:3000/api/pbl/history');
       const response = await GET(request);
-      const data = await response.json();
-
+      
       expect(response.status).toBe(401);
-      expect(data).toEqual({
-        success: false,
-        error: 'User authentication required'
-      });
+      const data = await response.json();
+      expect(data.error).toBe('Unauthorized');
     });
 
-    it('should return 401 when user cookie is invalid', async () => {
-      const request = createRequest('http://localhost:3000/api/pbl/history', {
-        user: 'invalid-json'
-      });
+    it('should return empty array when user has no history', async () => {
+      mockGetServerSession.mockResolvedValueOnce({ user: mockUser });
       
+      const mockProgramRepo = {
+        findByUser: jest.fn().mockResolvedValue([])
+      };
+      mockGetProgramRepository.mockReturnValue(mockProgramRepo as any);
+
+      const request = new NextRequest('http://localhost:3000/api/pbl/history');
       const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(401);
-      expect(data).toEqual({
-        success: false,
-        error: 'User authentication required'
-      });
-    });
-  });
-
-  describe('Fetching user programs', () => {
-    it('should return all programs for a user across all scenarios', async () => {
-      const request = createRequest('http://localhost:3000/api/pbl/history', {
-        user: JSON.stringify(mockUser)
-      });
-
-      mockPblProgramService.getUserProgramsForScenario
-        .mockResolvedValueOnce([mockProgram1])
-        .mockResolvedValueOnce([mockProgram2]);
-
-      const response = await GET(request);
-      const data = await response.json();
-
+      
       expect(response.status).toBe(200);
+      const data = await response.json();
       expect(data.success).toBe(true);
-      expect(data.data).toHaveLength(2);
-      expect(data.data[0].programId).toBe('prog_456'); // More recent first
-      expect(data.data[1].programId).toBe('prog_123');
-      expect(data.totalPrograms).toBe(2);
+      expect(data.programs).toEqual([]);
+      expect(data.count).toBe(0);
+    });
+
+    it('should return user programs with scenario details', async () => {
+      mockGetServerSession.mockResolvedValueOnce({ user: mockUser });
       
-      // Verify scenario titles were loaded
-      expect(data.data[0].scenarioTitle).toBe('AI Job Search Assistant');
-      expect(data.data[1].scenarioTitle).toBe('AI Job Search Assistant');
-      
-      // Verify service was called for each scenario
-      expect(mockPblProgramService.getUserProgramsForScenario).toHaveBeenCalledTimes(2);
-      expect(mockPblProgramService.getUserProgramsForScenario).toHaveBeenCalledWith(mockUserEmail, 'ai-job-search');
-      expect(mockPblProgramService.getUserProgramsForScenario).toHaveBeenCalledWith(mockUserEmail, 'health-ai-diagnosis');
-    });
+      const mockPrograms = [
+        {
+          id: 'prog-1',
+          scenarioId: 'scenario-1',
+          userId: mockUser.email,
+          status: 'active',
+          startedAt: new Date('2025-01-01'),
+          completedAt: null,
+          metadata: { language: 'en' }
+        },
+        {
+          id: 'prog-2',
+          scenarioId: 'scenario-2',
+          userId: mockUser.email,
+          status: 'completed',
+          startedAt: new Date('2025-01-02'),
+          completedAt: new Date('2025-01-03'),
+          metadata: { language: 'en' }
+        }
+      ];
 
-    it('should return programs for a specific scenario when scenarioId is provided', async () => {
-      const request = createRequest('http://localhost:3000/api/pbl/history?scenarioId=ai-job-search', {
-        user: JSON.stringify(mockUser)
-      });
+      const mockScenarios = {
+        'scenario-1': {
+          id: 'scenario-1',
+          title: 'AI App Developer',
+          description: 'Learn to build AI applications',
+          ksa: { knowledgeComponents: ['K1'], skillComponents: ['S1'], attitudeComponents: ['A1'] }
+        },
+        'scenario-2': {
+          id: 'scenario-2',
+          title: 'Data Analyst',
+          description: 'Master data analysis',
+          ksa: { knowledgeComponents: ['K2'], skillComponents: ['S2'], attitudeComponents: ['A2'] }
+        }
+      };
 
-      mockPblProgramService.getUserProgramsForScenario.mockResolvedValueOnce([mockProgram1]);
-
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.success).toBe(true);
-      expect(data.data).toHaveLength(1);
-      expect(data.data[0].programId).toBe('prog_123');
-      expect(data.totalPrograms).toBe(1);
-      
-      // Verify service was called only for the specific scenario
-      expect(mockPblProgramService.getUserProgramsForScenario).toHaveBeenCalledTimes(1);
-      expect(mockPblProgramService.getUserProgramsForScenario).toHaveBeenCalledWith(mockUserEmail, 'ai-job-search');
-    });
-
-    it('should handle empty program list', async () => {
-      const request = createRequest('http://localhost:3000/api/pbl/history', {
-        user: JSON.stringify(mockUser)
-      });
-
-      mockPblProgramService.getUserProgramsForScenario.mockResolvedValue([]);
-
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.success).toBe(true);
-      expect(data.data).toHaveLength(0);
-      expect(data.totalPrograms).toBe(0);
-    });
-  });
-
-  describe('Language support', () => {
-    it('should return scenario titles in the requested language', async () => {
-      const request = createRequest('http://localhost:3000/api/pbl/history?lang=zhTW', {
-        user: JSON.stringify(mockUser)
-      });
-
-      mockPblProgramService.getUserProgramsForScenario.mockResolvedValueOnce([mockProgram1]);
-
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.data[0].scenarioTitle).toBe('AI 求職助理');
-    });
-
-    it('should fallback to English when language-specific file is not found', async () => {
-      const request = createRequest('http://localhost:3000/api/pbl/history?lang=pt', {
-        user: JSON.stringify(mockUser)
-      });
-
-      mockPblProgramService.getUserProgramsForScenario.mockResolvedValueOnce([mockProgram1]);
-      
-      // Mock file access to throw error for Portuguese file
-      mockFs.access.mockRejectedValueOnce(new Error('File not found'));
-
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.data[0].scenarioTitle).toBe('AI Job Search Assistant');
-    });
-
-    it('should handle scenario title loading errors gracefully', async () => {
-      // Create a new program with different scenario to avoid memoization
-      const programWithBadScenario = {
-        ...mockProgram1,
-        scenarioId: 'non-existent-scenario'
+      const mockProgramRepo = {
+        findByUser: jest.fn().mockResolvedValue(mockPrograms)
       };
       
-      const request = createRequest('http://localhost:3000/api/pbl/history', {
-        user: JSON.stringify(mockUser)
-      });
+      const mockScenarioRepo = {
+        findById: jest.fn((id) => Promise.resolve(mockScenarios[id]))
+      };
 
-      mockPblProgramService.getUserProgramsForScenario.mockResolvedValueOnce([programWithBadScenario]);
+      mockGetProgramRepository.mockReturnValue(mockProgramRepo as any);
+      mockGetScenarioRepository.mockReturnValue(mockScenarioRepo as any);
+
+      const request = new NextRequest('http://localhost:3000/api/pbl/history');
+      const response = await GET(request);
       
-      // Mock file operations to fail completely
-      mockFs.access.mockRejectedValue(new Error('File not found'));
-      mockFs.readFile.mockRejectedValue(new Error('Read error'));
-
-      const response = await GET(request);
-      const data = await response.json();
-
       expect(response.status).toBe(200);
-      expect(data.data[0].scenarioTitle).toBe('non-existent-scenario'); // Falls back to scenario ID
-    });
-  });
-
-  describe('Pagination', () => {
-    const createMultiplePrograms = (count: number): CompletionData[] => {
-      return Array.from({ length: count }, (_, i) => ({
-        ...mockProgram1,
-        programId: `prog_${i}`,
-        startedAt: new Date(2024, 0, i + 1).toISOString()
-      }));
-    };
-
-    it('should support pagination with default limit of 20', async () => {
-      const programs = createMultiplePrograms(25);
-      const request = createRequest('http://localhost:3000/api/pbl/history', {
-        user: JSON.stringify(mockUser)
-      });
-
-      mockPblProgramService.getUserProgramsForScenario.mockResolvedValueOnce(programs);
-
-      const response = await GET(request);
       const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.data).toHaveLength(20);
-      expect(data.pagination).toEqual({
-        page: 1,
-        limit: 20,
-        total: 25,
-        totalPages: 2,
-        hasNext: true,
-        hasPrev: false
-      });
-    });
-
-    it('should support custom page and limit parameters', async () => {
-      const programs = createMultiplePrograms(50);
-      const request = createRequest('http://localhost:3000/api/pbl/history?page=2&limit=10', {
-        user: JSON.stringify(mockUser)
-      });
-
-      mockPblProgramService.getUserProgramsForScenario.mockResolvedValueOnce(programs);
-
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.data).toHaveLength(10);
-      expect(data.pagination).toEqual({
-        page: 2,
-        limit: 10,
-        total: 50,
-        totalPages: 5,
-        hasNext: true,
-        hasPrev: true
-      });
-    });
-
-    it('should support offset parameter', async () => {
-      const programs = createMultiplePrograms(30);
-      const request = createRequest('http://localhost:3000/api/pbl/history?offset=10&limit=5', {
-        user: JSON.stringify(mockUser)
-      });
-
-      mockPblProgramService.getUserProgramsForScenario.mockResolvedValueOnce(programs);
-
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.data).toHaveLength(5);
-      expect(data.totalPrograms).toBe(30);
-    });
-  });
-
-  describe('Sorting', () => {
-    it('should sort programs by most recent first', async () => {
-      const oldProgram = { ...mockProgram1, startedAt: '2024-01-10T10:00:00Z' };
-      const newProgram = { ...mockProgram2, startedAt: '2024-01-20T10:00:00Z' };
-      
-      const request = createRequest('http://localhost:3000/api/pbl/history', {
-        user: JSON.stringify(mockUser)
-      });
-
-      mockPblProgramService.getUserProgramsForScenario
-        .mockResolvedValueOnce([oldProgram, newProgram]);
-
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.data[0].startedAt).toBe('2024-01-20T10:00:00Z');
-      expect(data.data[1].startedAt).toBe('2024-01-10T10:00:00Z');
-    });
-  });
-
-  describe('Caching', () => {
-    it('should include appropriate cache headers', async () => {
-      const request = createRequest('http://localhost:3000/api/pbl/history', {
-        user: JSON.stringify(mockUser)
-      });
-
-      mockPblProgramService.getUserProgramsForScenario.mockResolvedValueOnce([mockProgram1]);
-
-      const response = await GET(request);
-
-      // The response is a NextResponse object, check the data for cache info
-      const data = await response.json();
-      expect(data.cacheHit).toBeDefined();
-      // Ensure the response was successful
-      expect(response.status).toBe(200);
-    });
-  });
-
-  describe('Error handling', () => {
-    it.skip('should handle service errors gracefully', async () => {
-      const request = createRequest('http://localhost:3000/api/pbl/history', {
-        user: JSON.stringify(mockUser)
-      });
-
-      // Create error outside of mock to avoid Jest issues
-      const serviceError = new Error('Service error');
-      
-      // Mock the scenarios directory reading to pass
-      mockFs.readdir.mockResolvedValueOnce(['ai_job_search'] as any);
-      
-      // Mock the service to reject only for this test
-      mockPblProgramService.getUserProgramsForScenario.mockRejectedValueOnce(serviceError);
-
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(500);
-      expect(data.error).toBe('Service error');
-    });
-
-    it('should handle missing scenario directories gracefully', async () => {
-      const request = createRequest('http://localhost:3000/api/pbl/history', {
-        user: JSON.stringify(mockUser)
-      });
-
-      mockFs.readdir.mockRejectedValueOnce(new Error('Directory not found'));
-      mockPblProgramService.getUserProgramsForScenario.mockResolvedValueOnce([mockProgram1]);
-
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      // Should fallback to known scenarios
-      expect(mockPblProgramService.getUserProgramsForScenario).toHaveBeenCalledWith(
-        mockUserEmail, 
-        'ai-job-search'
-      );
-    });
-  });
-
-  describe('Data integrity', () => {
-    it('should ensure all programs have required fields', async () => {
-      const incompleteProgram = {
-        ...mockProgram1,
-        taskSummaries: undefined
-      } as any;
-
-      const request = createRequest('http://localhost:3000/api/pbl/history', {
-        user: JSON.stringify(mockUser)
+      expect(data.count).toBe(2);
+      expect(data.programs).toHaveLength(2);
+      
+      // Check first program
+      expect(data.programs[0]).toMatchObject({
+        id: 'prog-1',
+        scenarioId: 'scenario-1',
+        status: 'active',
+        scenario: {
+          title: 'AI App Developer',
+          description: 'Learn to build AI applications'
+        }
       });
 
-      mockPblProgramService.getUserProgramsForScenario.mockResolvedValueOnce([incompleteProgram]);
+      // Check second program
+      expect(data.programs[1]).toMatchObject({
+        id: 'prog-2',
+        scenarioId: 'scenario-2',
+        status: 'completed',
+        scenario: {
+          title: 'Data Analyst',
+          description: 'Master data analysis'
+        }
+      });
+    });
 
+    it('should handle language parameter correctly', async () => {
+      mockGetServerSession.mockResolvedValueOnce({ user: mockUser });
+      
+      const mockPrograms = [{
+        id: 'prog-1',
+        scenarioId: 'scenario-1',
+        userId: mockUser.email,
+        status: 'active',
+        metadata: { language: 'zhTW' }
+      }];
+
+      const mockScenario = {
+        id: 'scenario-1',
+        title: 'AI App Developer',
+        description: 'Learn AI',
+        ksa: { knowledgeComponents: [], skillComponents: [], attitudeComponents: [] }
+      };
+
+      const mockProgramRepo = {
+        findByUser: jest.fn().mockResolvedValue(mockPrograms)
+      };
+      
+      const mockScenarioRepo = {
+        findById: jest.fn().mockResolvedValue(mockScenario)
+      };
+
+      mockGetProgramRepository.mockReturnValue(mockProgramRepo as any);
+      mockGetScenarioRepository.mockReturnValue(mockScenarioRepo as any);
+
+      const request = new NextRequest('http://localhost:3000/api/pbl/history?lang=zhTW');
       const response = await GET(request);
-      const data = await response.json();
-
+      
       expect(response.status).toBe(200);
-      expect(data.data[0].taskSummaries).toEqual([]); // Should default to empty array
-      expect(data.data[0].userEmail).toBe(mockUserEmail); // Should ensure userEmail is set
+      const data = await response.json();
+      expect(data.success).toBe(true);
+      expect(data.programs[0].metadata.language).toBe('zhTW');
+    });
+
+    it('should apply pagination correctly', async () => {
+      mockGetServerSession.mockResolvedValueOnce({ user: mockUser });
+      
+      // Create 25 mock programs
+      const mockPrograms = Array.from({ length: 25 }, (_, i) => ({
+        id: `prog-${i}`,
+        scenarioId: `scenario-${i % 5}`, // Reuse 5 scenarios
+        userId: mockUser.email,
+        status: i % 3 === 0 ? 'completed' : 'active',
+        startedAt: new Date(`2025-01-${i + 1}`),
+        metadata: { language: 'en' }
+      }));
+
+      const mockProgramRepo = {
+        findByUser: jest.fn().mockResolvedValue(mockPrograms)
+      };
+      
+      const mockScenarioRepo = {
+        findById: jest.fn().mockResolvedValue({
+          id: 'scenario-0',
+          title: 'Test Scenario',
+          description: 'Test Description',
+          ksa: { knowledgeComponents: [], skillComponents: [], attitudeComponents: [] }
+        })
+      };
+
+      mockGetProgramRepository.mockReturnValue(mockProgramRepo as any);
+      mockGetScenarioRepository.mockReturnValue(mockScenarioRepo as any);
+
+      // Test default pagination (limit 20)
+      const request1 = new NextRequest('http://localhost:3000/api/pbl/history');
+      const response1 = await GET(request1);
+      const data1 = await response1.json();
+      
+      expect(data1.programs).toHaveLength(20);
+      expect(data1.count).toBe(25);
+      expect(data1.page).toBe(1);
+      expect(data1.totalPages).toBe(2);
+      expect(data1.hasNext).toBe(true);
+      expect(data1.hasPrev).toBe(false);
+
+      // Test page 2
+      const request2 = new NextRequest('http://localhost:3000/api/pbl/history?page=2');
+      const response2 = await GET(request2);
+      const data2 = await response2.json();
+      
+      expect(data2.programs).toHaveLength(5);
+      expect(data2.page).toBe(2);
+      expect(data2.hasNext).toBe(false);
+      expect(data2.hasPrev).toBe(true);
+    });
+
+    it('should handle errors gracefully', async () => {
+      mockGetServerSession.mockResolvedValueOnce({ user: mockUser });
+      
+      const mockProgramRepo = {
+        findByUser: jest.fn().mockRejectedValue(new Error('Database error'))
+      };
+      
+      mockGetProgramRepository.mockReturnValue(mockProgramRepo as any);
+
+      const request = new NextRequest('http://localhost:3000/api/pbl/history');
+      const response = await GET(request);
+      
+      expect(response.status).toBe(500);
+      const data = await response.json();
+      expect(data.error).toBe('Failed to fetch history');
+      expect(data.details).toBe('Database error');
+    });
+
+    it('should handle missing scenario gracefully', async () => {
+      mockGetServerSession.mockResolvedValueOnce({ user: mockUser });
+      
+      const mockPrograms = [{
+        id: 'prog-1',
+        scenarioId: 'missing-scenario',
+        userId: mockUser.email,
+        status: 'active',
+        metadata: { language: 'en' }
+      }];
+
+      const mockProgramRepo = {
+        findByUser: jest.fn().mockResolvedValue(mockPrograms)
+      };
+      
+      const mockScenarioRepo = {
+        findById: jest.fn().mockResolvedValue(null)
+      };
+
+      mockGetProgramRepository.mockReturnValue(mockProgramRepo as any);
+      mockGetScenarioRepository.mockReturnValue(mockScenarioRepo as any);
+
+      const request = new NextRequest('http://localhost:3000/api/pbl/history');
+      const response = await GET(request);
+      
+      expect(response.status).toBe(200);
+      const data = await response.json();
+      expect(data.success).toBe(true);
+      expect(data.programs[0].scenario).toBeNull();
     });
   });
 });
