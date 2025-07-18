@@ -5,22 +5,31 @@
   "backToHome": "Back to Home",
   
   "welcomeScreen": {
-    "title": "Welcome to Discovery World",
-    "subtitle": "Discover your future path through AI-powered experiences",
+    "title": "Discovery World",
+    "subtitle": "🎮 Adventure Your Future Like Playing a Game • AI-Powered Immersive Experience",
     "description": "Explore different paths, collaborate with AI assistants, and build skills for the future.",
-    "startJourney": "Start Your Journey",
+    "startJourney": "Start Your Adventure",
+    "readyToRedefine": "Ready to redefine your future?",
+    "instantFeedback": "Real-time AI feedback • Personalized experience • No traditional exams",
+    "phrases": [
+      "🚀 Enter Infinite Adventures",
+      "🎮 Experience AI-Powered Adventure Quests",
+      "✨ Redefine Your Adventure Journey",
+      "🌟 Unlock Unlimited Future Possibilities",
+      "💫 Immersive Adventure Experience"
+    ],
     "features": {
-      "explore": {
-        "title": "Explore Paths",
-        "description": "Experience real scenarios in tech, creative, and business fields"
+      "immersive": {
+        "title": "🎮 Immersive Experience",
+        "description": "AAA game-like visual effects and interactive experience, say goodbye to boring traditional modes"
       },
-      "collaborate": {
-        "title": "AI Collaboration",
-        "description": "Work with AI assistants to complete authentic workplace tasks"
+      "ai_powered": {
+        "title": "🤖 AI Powered",
+        "description": "State-of-the-art AI provides personalized guidance, every decision shapes your future path"
       },
-      "develop": {
-        "title": "Build Skills",
-        "description": "Develop digital literacy and 21st-century workplace skills"
+      "real_time": {
+        "title": "⚡ Real-time Feedback",
+        "description": "Get intelligent feedback instantly, adjust your adventure strategy and future suggestions in real-time"
       }
     }
   },
@@ -98,144 +107,102 @@
         {
           "id": "script_writing",
           "title": "AI-Assisted Script Writing",
-          "description": "Collaborate with AI to create engaging video scripts",
-          "duration": "15 minutes"
+          "description": "Work with an AI creative director to develop compelling video scripts",
+          "xp": 100
         },
         {
           "id": "thumbnail_design",
           "title": "Thumbnail Design Challenge",
-          "description": "Design eye-catching thumbnails using AI tools",
-          "duration": "20 minutes"
+          "description": "Create eye-catching thumbnails that maximize click-through rates",
+          "xp": 150
         },
         {
-          "id": "content_strategy",
-          "title": "Content Strategy Planning",
-          "description": "Develop a content calendar with AI insights",
-          "duration": "25 minutes"
-        }
-      ]
-    },
-    "game_designer": {
-      "title": "Game Designer",
-      "subtitle": "Design immersive gaming experiences and mechanics",
-      "description": "Create game concepts, design characters, and develop gameplay mechanics using modern AI-assisted tools.",
-      "category": "Technology",
-      "skills": ["Game Design", "Creative Thinking", "User Experience", "Technical Design"],
-      "aiAssistants": ["Design Partner", "Technical Advisor", "Player Psychology Expert"],
-      "tasks": [
-        {
-          "id": "character_design",
-          "title": "AI Character Creation",
-          "description": "Design unique game characters with AI assistance",
-          "duration": "20 minutes"
-        },
-        {
-          "id": "level_design",
-          "title": "Level Design Workshop",
-          "description": "Create engaging game levels and mechanics",
-          "duration": "30 minutes"
-        },
-        {
-          "id": "player_feedback",
-          "title": "Player Feedback Analysis",
-          "description": "Analyze and respond to player feedback data",
-          "duration": "15 minutes"
+          "id": "audience_analytics",
+          "title": "Audience Analytics Deep Dive",
+          "description": "Analyze viewer data to optimize content strategy",
+          "xp": 200
         }
       ]
     },
     "app_developer": {
       "title": "App Developer",
-      "subtitle": "Build mobile applications that solve real problems",
-      "description": "Learn to design, develop, and launch mobile applications using AI-powered development tools.",
-      "category": "Technology", 
-      "skills": ["Programming", "Problem Solving", "User Interface Design", "Project Management"],
-      "aiAssistants": ["Code Mentor", "UI Designer", "Testing Specialist"],
+      "subtitle": "Build innovative mobile and web applications",
+      "description": "Master modern development frameworks, work with AI coding assistants, and launch real applications.",
+      "category": "Technology",
+      "skills": ["Programming", "UI/UX Design", "Problem Solving", "Project Management"],
+      "aiAssistants": ["Code Reviewer", "Debug Assistant", "Architecture Advisor"],
       "tasks": [
         {
-          "id": "app_concept",
-          "title": "App Concept Development",
-          "description": "Brainstorm and validate your app idea with AI",
-          "duration": "20 minutes"
+          "id": "hello_world_plus",
+          "title": "Hello World Plus",
+          "description": "Build your first interactive app with AI assistance",
+          "xp": 100
         },
         {
-          "id": "ui_design",
-          "title": "User Interface Design",
-          "description": "Design user-friendly app interfaces",
-          "duration": "25 minutes"
+          "id": "api_integration",
+          "title": "API Integration Challenge",
+          "description": "Connect your app to real-world data sources",
+          "xp": 200
         },
         {
-          "id": "user_testing",
-          "title": "User Testing & Feedback",
-          "description": "Conduct user testing and iterate based on feedback",
-          "duration": "20 minutes"
+          "id": "app_launch",
+          "title": "Launch Your App",
+          "description": "Deploy your creation and get user feedback",
+          "xp": 300
+        }
+      ]
+    },
+    "entrepreneur": {
+      "title": "Entrepreneur / Startup Founder",
+      "subtitle": "Launch and grow your own business",
+      "description": "Learn to validate ideas, build MVPs, and scale startups with AI-powered business mentors.",
+      "category": "Business",
+      "skills": ["Business Strategy", "Product Development", "Marketing", "Financial Planning"],
+      "aiAssistants": ["Business Mentor", "Market Analyst", "Pitch Coach"],
+      "tasks": [
+        {
+          "id": "idea_validation",
+          "title": "Idea Validation Workshop",
+          "description": "Test your business idea with AI market analysis",
+          "xp": 150
+        },
+        {
+          "id": "mvp_development",
+          "title": "Build Your MVP",
+          "description": "Create a minimum viable product with AI guidance",
+          "xp": 250
+        },
+        {
+          "id": "pitch_perfect",
+          "title": "Perfect Your Pitch",
+          "description": "Craft and practice your investor pitch",
+          "xp": 200
         }
       ]
     }
   },
   
-  "workspace": {
-    "title": "{{path}} Program",
-    "aiAssistant": "AI Assistant",
-    "currentTask": "Current Task",
-    "progress": "Progress",
-    "skills": "Skills Developed",
-    "achievements": "Achievements",
-    "startTask": "Start Task",
-    "completeTask": "Complete Task",
-    "nextTask": "Next Task",
-    "backToPaths": "Back to Paths",
-    "taskCompleted": "Task Completed!",
-    "skillsGained": "Skills Gained:",
-    "experiencePoints": "+{{points}} XP"
-  },
-  
-  "aiAssistant": {
-    "greeting": "Hi! I'm your AI {{role}}. I'm here to help you succeed in your {{path}} journey.",
-    "taskIntro": "Let's work on this task together. I'll guide you through each step.",
-    "encouragement": [
-      "Great job! You're making excellent progress.",
-      "That's a creative approach! Keep going.",
-      "You're thinking like a real {{path}}!",
-      "Fantastic work! You're developing real skills here."
-    ],
-    "askQuestion": "Ask me anything about this task or the {{path}} field!",
-    "typeMessage": "Type your message...",
-    "send": "Send"
-  },
-  
-  "achievements": {
-    "title": "Your Achievements",
-    "totalXp": "Total Experience: {{xp}} XP",
-    "level": "Level {{level}}",
-    "badges": {
-      "first_task": {
-        "title": "First Steps", 
-        "description": "Completed your first exploration task"
-      },
-      "creative_thinker": {
-        "title": "Creative Thinker",
-        "description": "Showed excellent creativity in tasks"
-      },
-      "ai_collaborator": {
-        "title": "AI Collaborator", 
-        "description": "Successfully worked with AI assistants"
-      },
-      "problem_solver": {
-        "title": "Problem Solver",
-        "description": "Solved complex challenges"
-      },
-      "path_explorer": {
-        "title": "Path Explorer",
-        "description": "Explored multiple paths"
-      }
-    }
-  },
-  
   "navigation": {
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish",
+    "skip": "Skip",
+    "continue": "Continue",
     "overview": "Overview",
-    "assessment": "Assessment", 
-    "paths": "Paths",
-    "program": "Program",
-    "achievements": "Achievements"
+    "evaluation": "Assessment",
+    "scenarios": "Career Adventures"
+  },
+  
+  "status": {
+    "loading": "Loading...",
+    "saving": "Saving...",
+    "error": "Something went wrong",
+    "success": "Success!"
+  },
+  
+  "errors": {
+    "loadingFailed": "Failed to load content",
+    "savingFailed": "Failed to save progress",
+    "networkError": "Network error, please try again"
   }
 }

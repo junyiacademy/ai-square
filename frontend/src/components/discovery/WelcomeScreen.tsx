@@ -35,14 +35,8 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
   const [currentPhrase, setCurrentPhrase] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
 
-  // 動態標語輪播
-  const phrases = [
-    '🚀 進入無限冒險',
-    '🎮 體驗 AI 驅動的冒險副本',
-    '✨ 重新定義你的冒險旅程',
-    '🌟 開啟無限可能的未來',
-    '💫 沉浸式冒險體驗'
-  ];
+  // Dynamic phrases from i18n
+  const phrases = t('welcomeScreen.phrases', { returnObjects: true }) as string[];
 
   // 初始化浮動粒子 - 減少粒子數量避免性能問題
   useEffect(() => {
@@ -191,7 +185,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
             }}
             transition={{ duration: 3, repeat: Infinity }}
           >
-            冒險世界
+            {t('welcomeScreen.title')}
           </motion.h1>
           
           <motion.p 
@@ -200,7 +194,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            🎮 像玩遊戲一樣冒險你的未來 • AI 驅動的沉浸式體驗
+            {t('welcomeScreen.subtitle')}
           </motion.p>
           
           {/* 發光啟動按鈕 */}
@@ -219,7 +213,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
             >
               <RocketLaunchIcon className="w-6 h-6" />
             </motion.div>
-            <span className="relative z-10">開始冒險之旅</span>
+            <span className="relative z-10">{t('welcomeScreen.startJourney')}</span>
             
             {/* 按鈕光效 */}
             <motion.div
@@ -248,7 +242,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
             >
               <StarIcon className="w-4 h-4" />
             </motion.div>
-            <span className="text-sm">即時 AI 回饋 • 個人化體驗 • 零傳統考試</span>
+            <span className="text-sm">{t('welcomeScreen.instantFeedback')}</span>
             <motion.div
               animate={{ y: [0, -4, 0] }}
               transition={{ duration: 1.5, repeat: Infinity, delay: 0.3 }}
@@ -294,15 +288,11 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
                 </motion.div>
                 
                 <h3 className="text-xl font-bold text-white mb-3 group-hover:text-purple-200 transition-colors">
-                  {feature.key === 'immersive' && '🎮 沉浸式體驗'}
-                  {feature.key === 'ai_powered' && '🤖 AI 驅動'}
-                  {feature.key === 'real_time' && '⚡ 即時反饋'}
+                  {t(`welcomeScreen.features.${feature.key}.title`)}
                 </h3>
                 
                 <p className="text-sm text-gray-300 group-hover:text-gray-200 transition-colors leading-relaxed">
-                  {feature.key === 'immersive' && '像玩 AAA 遊戲一樣的視覺效果和互動體驗，告別無聊的傳統模式'}
-                  {feature.key === 'ai_powered' && '最先進的 AI 技術提供個人化指導，每個決定都會影響你的未來發展路徑'}
-                  {feature.key === 'real_time' && '每個動作立即獲得智能回饋，實時調整冒險策略和未來建議'}
+                  {t(`welcomeScreen.features.${feature.key}.description`)}
                 </p>
                 
                 {/* 裝飾元素 */}
@@ -336,7 +326,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
             >
               <CircleStackIcon className="w-5 h-5" />
             </motion.div>
-            <span className="text-sm">準備好重新定義你的未來了嗎？</span>
+            <span className="text-sm">{t('welcomeScreen.readyToRedefine')}</span>
             <motion.div
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ duration: 1, repeat: Infinity }}

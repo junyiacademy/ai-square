@@ -37,19 +37,19 @@ export default function DiscoveryHeader({
   const navigationItems: NavigationItem[] = [
     {
       id: 'overview',
-      label: '總覽',
+      label: t('navigation.overview'),
       icon: AcademicCapIcon,
       href: '/discovery/overview'
     },
     {
       id: 'evaluation',
-      label: '評估',
+      label: t('navigation.evaluation'),
       icon: ChartBarIcon,
       href: '/discovery/evaluation'
     },
     {
       id: 'scenarios',
-      label: '職業冒險',
+      label: t('navigation.scenarios'),
       icon: RocketLaunchIcon,
       href: '/discovery/scenarios'
     }
