@@ -604,7 +604,7 @@ export default function ProgramCompletePage() {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                        {index + 1}. {taskTitle}
+                        {task.taskIndex || index + 1}. {taskTitle}
                       </h3>
                       
                       {/* Task Metadata */}

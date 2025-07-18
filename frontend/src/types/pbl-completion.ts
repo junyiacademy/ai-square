@@ -77,6 +77,7 @@ export interface TaskProgress {
 export interface CompletionTask {
   taskId: string;
   taskTitle?: string;
+  taskIndex?: number;
   evaluation?: TaskEvaluation;
   log?: TaskLog;
   progress?: TaskProgress;

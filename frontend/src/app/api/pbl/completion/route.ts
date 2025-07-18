@@ -68,9 +68,17 @@ export async function GET(request: NextRequest) {
     // Get all tasks for detailed information
     const tasks = await taskRepo.findByProgram(programId);
     
+    // Sort tasks by their position in the program's taskIds array
+    const sortedTasks = program.taskIds ? 
+      tasks.sort((a, b) => {
+        const indexA = program.taskIds!.indexOf(a.id);
+        const indexB = program.taskIds!.indexOf(b.id);
+        return indexA - indexB;
+      }) : tasks;
+    
     // Build tasks array with evaluations and progress
     const tasksWithDetails = await Promise.all(
-      tasks.map(async (task) => {
+      sortedTasks.map(async (task, index) => {
         const taskEvaluation = task.evaluationId 
           ? await evalRepo.findById(task.evaluationId)
           : null;
@@ -88,6 +96,7 @@ export async function GET(request: NextRequest) {
         return {
           taskId: task.id,
           taskTitle: task.title,
+          taskIndex: index + 1,
           evaluation: taskEvaluation ? {
             score: taskEvaluation.score || 0,
             domainScores: taskEvaluation.metadata?.domainScores,
