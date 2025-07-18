@@ -2,7 +2,6 @@
 
 import React from 'react';
 import DiscoveryHeader from '@/components/discovery/DiscoveryHeader';
-import DiscoveryNavigation from '@/components/layout/DiscoveryNavigation';
 import { useDiscoveryData } from '@/hooks/useDiscoveryData';
 
 interface DiscoveryPageLayoutProps {
@@ -48,7 +47,6 @@ export default function DiscoveryPageLayout({
             </button>
           </div>
         </div>
-        <DiscoveryNavigation />
       </div>
     );
   }
@@ -64,8 +62,6 @@ export default function DiscoveryPageLayout({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {children}
       </div>
-
-      <DiscoveryNavigation />
     </div>
   );
 }
