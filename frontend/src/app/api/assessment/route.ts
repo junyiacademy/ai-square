@@ -26,7 +26,20 @@ export async function GET(request: NextRequest) {
 
     // Read the language-specific assessment data with CMS override support
     const fileName = `ai_literacy_questions_${lang}.yaml`;
-    const assessmentData = await contentService.getContent('question', fileName) as AssessmentData;
+    console.log(`Loading assessment data: ${fileName} for language: ${lang}`);
+    
+    let assessmentData: AssessmentData;
+    try {
+      assessmentData = await contentService.getContent('question', fileName) as AssessmentData;
+      console.log('Assessment data loaded successfully');
+      
+      if (!assessmentData) {
+        throw new Error('No data returned from contentService');
+      }
+    } catch (loadError) {
+      console.error('Error loading content from contentService:', loadError);
+      throw loadError;
+    }
     
     if (!assessmentData || !assessmentData.assessment_config) {
       console.error('Invalid assessment data structure:', assessmentData);
@@ -134,7 +147,11 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error loading assessment data:', error);
     return NextResponse.json(
-      { error: 'Failed to load assessment data' },
+      { 
+        error: 'Failed to load assessment data',
+        details: error instanceof Error ? error.message : 'Unknown error',
+        stack: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.stack : undefined) : undefined
+      },
       { status: 500 }
     );
   }

@@ -281,12 +281,13 @@ export class ContentService {
     // In Next.js, we need to ensure we're looking in the right directory
     const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
     const filePath = path.join(baseDir, 'public', this.getRepoPath(type), fileName);
+    console.log(`[ContentService] Reading from repo: ${filePath}, cwd: ${process.cwd()}`);
     
     try {
       const content = await fs.readFile(filePath, 'utf-8');
       return yaml.load(content);
-    } catch {
-      console.warn(`File not found: ${filePath}`);
+    } catch (error) {
+      console.warn(`File not found: ${filePath}`, error);
       return null;
     }
   }
