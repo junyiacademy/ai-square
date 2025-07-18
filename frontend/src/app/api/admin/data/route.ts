@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import { cachedGET, memoize } from '@/lib/api/optimization-utils';
 
 const execAsync = promisify(exec);
 
@@ -18,24 +19,29 @@ function getDataPaths(dataType: string, filename: string) {
   };
 }
 
+// Memoized file reader
+const readJSONFile = memoize(async (filePath: string) => {
+  return JSON.parse(await fs.readFile(filePath, 'utf-8'));
+}, 10 * 60 * 1000); // 10 minutes cache
+
 // GET - Read JSON data
 export async function GET(request: NextRequest) {
-  try {
-    const dataType = request.nextUrl.searchParams.get('type');
-    const filename = request.nextUrl.searchParams.get('filename');
-    const jsonPath = request.nextUrl.searchParams.get('path');
-    
-    if (!dataType || !filename) {
-      return NextResponse.json(
-        { error: 'Missing required parameters: type and filename' },
-        { status: 400 }
-      );
-    }
-    
+  const dataType = request.nextUrl.searchParams.get('type');
+  const filename = request.nextUrl.searchParams.get('filename');
+  const jsonPath = request.nextUrl.searchParams.get('path');
+  
+  if (!dataType || !filename) {
+    return NextResponse.json(
+      { error: 'Missing required parameters: type and filename' },
+      { status: 400 }
+    );
+  }
+  
+  return cachedGET(request, async () => {
     const { jsonPath: filePath } = getDataPaths(dataType, filename);
     
-    // Read JSON file
-    const data = JSON.parse(await fs.readFile(filePath, 'utf-8'));
+    // Read JSON file with memoization
+    const data = await readJSONFile(filePath);
     
     // If specific path requested, navigate to it
     if (jsonPath) {
@@ -45,24 +51,18 @@ export async function GET(request: NextRequest) {
       for (const key of keys) {
         result = result[key];
         if (result === undefined) {
-          return NextResponse.json(
-            { error: `Path not found: ${jsonPath}` },
-            { status: 404 }
-          );
+          throw new Error(`Path not found: ${jsonPath}`);
         }
       }
       
-      return NextResponse.json({ data: result, path: jsonPath });
+      return { data: result, path: jsonPath };
     }
     
-    return NextResponse.json({ data, filename });
-  } catch (error) {
-    console.error('Error reading data:', error);
-    return NextResponse.json(
-      { error: 'Failed to read data', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    );
-  }
+    return { data, filename };
+  }, {
+    ttl: 600, // 10 minutes cache
+    staleWhileRevalidate: 3600 // 1 hour
+  });
 }
 
 // PUT - Update JSON data (partial update)

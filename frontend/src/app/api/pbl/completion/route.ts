@@ -1,31 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { getLanguageFromHeader } from '@/lib/utils/language';
+import { cachedGET } from '@/lib/api/optimization-utils';
 
 export async function GET(request: NextRequest) {
-  try {
-    // Get user session
-    const session = await getServerSession();
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { success: false, error: 'Authentication required' },
-        { status: 401 }
-      );
-    }
-    const userEmail = session.user.email;
+  // Get user session
+  const session = await getServerSession();
+  if (!session?.user?.email) {
+    return NextResponse.json(
+      { success: false, error: 'Authentication required' },
+      { status: 401 }
+    );
+  }
+  const userEmail = session.user.email;
 
-    // Get query parameters
-    const searchParams = request.nextUrl.searchParams;
-    const programId = searchParams.get('programId');
-    const scenarioId = searchParams.get('scenarioId');
-    const language = getLanguageFromHeader(request.headers.get('Accept-Language'));
+  // Get query parameters
+  const searchParams = request.nextUrl.searchParams;
+  const programId = searchParams.get('programId');
+  const scenarioId = searchParams.get('scenarioId');
+  const language = getLanguageFromHeader(request.headers.get('Accept-Language'));
 
-    if (!programId || !scenarioId) {
-      return NextResponse.json(
-        { success: false, error: 'Missing required parameters' },
-        { status: 400 }
-      );
-    }
+  if (!programId || !scenarioId) {
+    return NextResponse.json(
+      { success: false, error: 'Missing required parameters' },
+      { status: 400 }
+    );
+  }
+
+  return cachedGET(request, async () => {
 
     // Get repositories
     const { getProgramRepository, getEvaluationRepository, getTaskRepository } = await import('@/lib/implementations/gcs-v2');
@@ -138,18 +140,14 @@ export async function GET(request: NextRequest) {
       programEvaluationId: evaluation?.id
     };
 
-    return NextResponse.json({
+    return {
       success: true,
       data: completionData
-    });
-
-  } catch (error) {
-    console.error('Error getting completion data:', error);
-    return NextResponse.json(
-      { success: false, error: 'Failed to get completion data' },
-      { status: 500 }
-    );
-  }
+    };
+  }, {
+    ttl: 60, // 1 minute cache (completion data)
+    staleWhileRevalidate: 300 // 5 minutes
+  });
 }
 
 // PUT - Trigger program completion evaluation (redirect to new API)

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { IInteraction } from '@/types/unified-learning';
+import { cachedGET, parallel } from '@/lib/api/optimization-utils';
 
 // POST - Add interaction to task
 export async function POST(
@@ -68,18 +69,18 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ taskId: string }> }
 ) {
-  try {
-    // Get user session
-    const session = await getServerSession();
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { success: false, error: 'Authentication required' },
-        { status: 401 }
-      );
-    }
+  // Get user session
+  const session = await getServerSession();
+  if (!session?.user?.email) {
+    return NextResponse.json(
+      { success: false, error: 'Authentication required' },
+      { status: 401 }
+    );
+  }
 
-    const { taskId } = await params;
+  const { taskId } = await params;
 
+  return cachedGET(request, async () => {
     // Use unified architecture
     const { getTaskRepository } = await import('@/lib/implementations/gcs-v2');
     const taskRepo = getTaskRepository();
@@ -87,12 +88,12 @@ export async function GET(
     // Get task with interactions
     const task = await taskRepo.findById(taskId);
     if (!task) {
-      return NextResponse.json({
+      return {
         success: true,
         data: {
           interactions: []
         }
-      });
+      };
     }
 
     // Transform interactions for frontend compatibility
@@ -105,20 +106,16 @@ export async function GET(
       role: i.metadata?.role || i.type
     }));
 
-    return NextResponse.json({
+    return {
       success: true,
       data: {
         interactions: transformedInteractions,
         taskStatus: task.status,
         evaluationId: task.evaluationId
       }
-    });
-
-  } catch (error) {
-    console.error('Error fetching task interactions:', error);
-    return NextResponse.json(
-      { success: false, error: 'Failed to fetch interactions' },
-      { status: 500 }
-    );
-  }
+    };
+  }, {
+    ttl: 120, // 2 minutes cache (interactions change frequently)
+    staleWhileRevalidate: 600 // 10 minutes
+  });
 }

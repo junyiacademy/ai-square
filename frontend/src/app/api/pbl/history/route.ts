@@ -3,6 +3,14 @@ import { pblProgramService } from '@/lib/storage/pbl-program-service';
 import { promises as fs } from 'fs';
 import * as yaml from 'js-yaml';
 import path from 'path';
+import { 
+  cachedGET, 
+  getPaginationParams, 
+  createPaginatedResponse,
+  parallel,
+  batchQueries,
+  memoize
+} from '@/lib/api/optimization-utils';
 
 // Types for YAML data
 interface ScenarioInfo {
@@ -50,144 +58,172 @@ interface ProgramCompletionData {
   scenarioTitle?: string;
 }
 
-// Helper function to get localized value
-function getLocalizedValue(data: ScenarioInfo | ScenarioYAML, fieldName: string, lang: string): string {
-  // Convert language code to suffix - must match YAML field suffixes exactly
-  
-  // Use language code directly as suffix
+// Memoized helper functions
+const getLocalizedValue = memoize((
+  data: ScenarioInfo | ScenarioYAML, 
+  fieldName: string, 
+  lang: string
+): string => {
   const mappedSuffix = lang;
-  
-  // Try language-specific field first
   const localizedField = `${fieldName}_${mappedSuffix}`;
   const value = data[localizedField];
   if (value !== undefined && value !== null && typeof value === 'string') {
     return value;
   }
-  
-  // Fall back to default field (no suffix)
   const defaultValue = data[fieldName];
   return typeof defaultValue === 'string' ? defaultValue : '';
-}
+});
+
+// Cache scenario titles in memory (30 minutes)
+const loadScenarioTitle = memoize(async (
+  scenarioId: string, 
+  language: string
+): Promise<string> => {
+  try {
+    const scenarioFolder = scenarioId.replace(/-/g, '_');
+    const fileName = `${scenarioFolder}_${language}.yaml`;
+    let yamlPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', scenarioFolder, fileName);
+    
+    // Check if language-specific file exists
+    try {
+      await fs.access(yamlPath);
+    } catch {
+      // Fallback to English
+      yamlPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', scenarioFolder, `${scenarioFolder}_en.yaml`);
+    }
+    
+    const yamlContent = await fs.readFile(yamlPath, 'utf8');
+    const scenarioData = yaml.load(yamlContent) as ScenarioYAML;
+    
+    if (scenarioData.scenario_info) {
+      return getLocalizedValue(scenarioData.scenario_info, 'title', language);
+    } else {
+      return getLocalizedValue(scenarioData, 'title', language);
+    }
+  } catch (error) {
+    console.error(`Error loading scenario ${scenarioId}:`, error);
+    return scenarioId;
+  }
+}, 30 * 60 * 1000);
+
+// Get available scenario IDs (cached)
+const getAvailableScenarios = memoize(async (): Promise<string[]> => {
+  try {
+    const scenariosPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios');
+    const folders = await fs.readdir(scenariosPath);
+    return folders
+      .filter(folder => !folder.startsWith('.'))
+      .map(folder => folder.replace(/_/g, '-'));
+  } catch {
+    // Fallback to known scenarios
+    return ['ai-job-search'];
+  }
+}, 60 * 60 * 1000); // 1 hour cache
 
 export async function GET(request: NextRequest) {
+  // Extract user info
+  let userEmail: string | undefined;
   try {
-    // Get user info from cookie
-    let userEmail: string | undefined;
-    try {
-      const userCookie = request.cookies.get('user')?.value;
-      if (userCookie) {
-        const user = JSON.parse(userCookie);
-        userEmail = user.email;
-      }
-    } catch {
-      console.log('No user cookie found');
+    const userCookie = request.cookies.get('user')?.value;
+    if (userCookie) {
+      const user = JSON.parse(userCookie);
+      userEmail = user.email;
     }
-    
-    if (!userEmail) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'User authentication required'
-        },
-        { status: 401 }
-      );
-    }
-    
-    // Get query parameters
-    const { searchParams } = new URL(request.url);
-    const scenarioId = searchParams.get('scenarioId') || undefined;
-    const language = searchParams.get('lang') || 'en';
-    
-    console.log(`Fetching PBL history for user: ${userEmail}, scenario: ${scenarioId || 'all'}, language: ${language}`);
-    
-    // Get all programs for the user using completion data
-    let programs: ProgramCompletionData[] = [];
-    if (scenarioId) {
-      const completionPrograms = await pblProgramService.getUserProgramsForScenario(userEmail, scenarioId);
-      // Map CompletionData to ProgramCompletionData, ensuring userEmail is set
-      programs = completionPrograms.map(p => ({
-        ...p,
-        userEmail: p.userEmail || userEmail, // Ensure userEmail is always set
-        taskSummaries: p.taskSummaries || []
-      } as ProgramCompletionData));
-    } else {
-      // Get all scenarios and fetch programs for each
-      const scenarios = ['ai-job-search']; // Add more scenario IDs as needed
-      for (const sid of scenarios) {
-        const scenarioPrograms = await pblProgramService.getUserProgramsForScenario(userEmail, sid);
-        const mappedPrograms = scenarioPrograms.map(p => ({
-          ...p,
-          userEmail: p.userEmail || userEmail, // Ensure userEmail is always set
-          taskSummaries: p.taskSummaries || []
-        } as ProgramCompletionData));
-        programs.push(...mappedPrograms);
-      }
-    }
-    
-    console.log(`Found ${programs.length} programs for user ${userEmail}`);
-    
-    // Load scenario titles from YAML files
-    const scenarioTitles: Record<string, string> = {};
-    for (const program of programs) {
-      if (!scenarioTitles[program.scenarioId]) {
-        try {
-          // Convert scenario ID format (ai-job-search -> ai_job_search)
-          const scenarioFolder = program.scenarioId.replace(/-/g, '_');
-          const fileName = `${scenarioFolder}_${language}.yaml`;
-          let yamlPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', scenarioFolder, fileName);
-          
-          // Check if language-specific file exists, fallback to English
-          try {
-            await fs.access(yamlPath);
-          } catch {
-            // Fallback to English if language-specific file doesn't exist
-            yamlPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', scenarioFolder, `${scenarioFolder}_en.yaml`);
-          }
-          
-          const yamlContent = await fs.readFile(yamlPath, 'utf8');
-          const scenarioData = yaml.load(yamlContent) as ScenarioYAML;
-          
-          // Access the scenario_info section which contains the title fields
-          if (scenarioData.scenario_info) {
-            scenarioTitles[program.scenarioId] = getLocalizedValue(scenarioData.scenario_info, 'title', language);
-          } else {
-            // Fallback if structure is different
-            scenarioTitles[program.scenarioId] = getLocalizedValue(scenarioData, 'title', language);
-          }
-        } catch (error) {
-          console.error(`Error loading scenario ${program.scenarioId}:`, error);
-          scenarioTitles[program.scenarioId] = program.scenarioId;
-        }
-      }
-    }
-    
-    // Add scenario titles to programs
-    const programsWithTitles: ProgramCompletionData[] = programs.map(program => ({
-      ...program,
-      scenarioTitle: scenarioTitles[program.scenarioId] || program.scenarioId
-    }));
-    
-    // Sort by most recent first
-    programsWithTitles.sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime());
-    
-    // Transform to API response format
-    const response = {
-      success: true,
-      programs: programsWithTitles,
-      totalPrograms: programsWithTitles.length
-    };
-    
-    return NextResponse.json(response);
-    
-  } catch (error) {
-    console.error('History API error:', error);
-    
+  } catch {
+    console.log('No user cookie found');
+  }
+  
+  if (!userEmail) {
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to fetch learning history'
+        error: 'User authentication required'
       },
-      { status: 500 }
+      { status: 401 }
     );
   }
+
+  // Get parameters
+  const { searchParams } = new URL(request.url);
+  const scenarioId = searchParams.get('scenarioId') || undefined;
+  const language = searchParams.get('lang') || 'en';
+  const paginationParams = getPaginationParams(request);
+
+  // Use cached response for authenticated user
+  return cachedGET(request, async () => {
+    console.log(`Fetching PBL history for user: ${userEmail}, scenario: ${scenarioId || 'all'}, language: ${language}`);
+    
+    let allPrograms: ProgramCompletionData[] = [];
+    
+    if (scenarioId) {
+      // Single scenario
+      const completionPrograms = await pblProgramService.getUserProgramsForScenario(userEmail!, scenarioId);
+      allPrograms = completionPrograms.map(p => ({
+        ...p,
+        userEmail: p.userEmail || userEmail!,
+        taskSummaries: p.taskSummaries || []
+      } as ProgramCompletionData));
+    } else {
+      // All scenarios - fetch in parallel
+      const scenarios = await getAvailableScenarios();
+      
+      // Batch fetch programs for all scenarios in parallel
+      const programBatches = await parallel(
+        ...scenarios.map(sid => 
+          pblProgramService.getUserProgramsForScenario(userEmail!, sid)
+        )
+      );
+      
+      // Flatten and map programs
+      allPrograms = programBatches.flat().map(p => ({
+        ...p,
+        userEmail: p.userEmail || userEmail!,
+        taskSummaries: p.taskSummaries || []
+      } as ProgramCompletionData));
+    }
+    
+    console.log(`Found ${allPrograms.length} programs for user ${userEmail}`);
+    
+    // Sort by most recent first
+    allPrograms.sort((a, b) => 
+      new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime()
+    );
+    
+    // Apply pagination
+    const { offset = 0, limit = 20 } = paginationParams;
+    const paginatedPrograms = allPrograms.slice(offset, offset + limit);
+    
+    // Load scenario titles in parallel for paginated results only
+    const uniqueScenarioIds = [...new Set(paginatedPrograms.map(p => p.scenarioId))];
+    const scenarioTitles = await parallel(
+      ...uniqueScenarioIds.map(id => loadScenarioTitle(id, language))
+    );
+    
+    // Create title map
+    const titleMap = Object.fromEntries(
+      uniqueScenarioIds.map((id, index) => [id, scenarioTitles[index]])
+    );
+    
+    // Add titles to programs
+    const programsWithTitles = paginatedPrograms.map(program => ({
+      ...program,
+      scenarioTitle: titleMap[program.scenarioId] || program.scenarioId
+    }));
+    
+    // Create paginated response
+    const paginatedResponse = createPaginatedResponse(
+      programsWithTitles,
+      allPrograms.length,
+      paginationParams
+    );
+    
+    return {
+      success: true,
+      ...paginatedResponse,
+      totalPrograms: allPrograms.length
+    };
+  }, {
+    ttl: 60, // 1 minute cache (short because user-specific)
+    staleWhileRevalidate: 300 // 5 minutes
+  });
 }

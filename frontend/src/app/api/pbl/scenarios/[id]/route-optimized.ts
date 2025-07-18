@@ -5,7 +5,7 @@ import yaml from 'js-yaml';
 import { pblScenarioService } from '@/lib/services/pbl-scenario-service';
 import { cachedGET, parallel, memoize } from '@/lib/api/optimization-utils';
 
-// Type definitions for KSA mapping
+// Type definitions remain the same
 interface KSAItem {
   code: string;
   name: string;
@@ -18,7 +18,6 @@ interface KSAMapping {
   attitudes: KSAItem[];
 }
 
-// Type definitions for KSA data structure
 interface KSACode {
   summary: string;
   summary_zhTW?: string;
@@ -54,7 +53,6 @@ interface YAMLData {
   [key: string]: unknown;
 }
 
-// Simplified type definitions for API response
 interface ScenarioResponse {
   id: string;
   title: string;

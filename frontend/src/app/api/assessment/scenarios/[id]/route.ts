@@ -3,42 +3,45 @@ import { getScenarioRepository } from '@/lib/implementations/gcs-v2';
 import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
+import { cachedGET, memoize } from '@/lib/api/optimization-utils';
+
+// Memoized YAML loader
+const loadConfigYAML = memoize(async (configPath: string) => {
+  const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
+  const fullPath = path.join(baseDir, 'public', configPath);
+  const configContent = await fs.readFile(fullPath, 'utf-8');
+  return yaml.load(configContent) as any;
+}, 10 * 60 * 1000); // 10 minutes cache
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const lang = searchParams.get('lang') || 'en';
-    
-    // Await params before using
-    const { id } = await params;
-    
+  const { searchParams } = new URL(request.url);
+  const lang = searchParams.get('lang') || 'en';
+  
+  // Await params before using
+  const { id } = await params;
+
+  return cachedGET(request, async () => {
     const scenarioRepo = getScenarioRepository();
     const scenario = await scenarioRepo.findById(id);
     
     if (!scenario) {
-      return NextResponse.json(
-        { error: 'Scenario not found' },
-        { status: 404 }
-      );
+      throw new Error('Scenario not found');
     }
     
     // Load config from YAML file if available
     if (scenario.sourceRef.metadata?.configPath) {
       try {
-        const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
-        const configPath = path.join(baseDir, 'public', scenario.sourceRef.metadata.configPath as string);
-        const configContent = await fs.readFile(configPath, 'utf-8');
-        const yamlData = yaml.load(configContent) as any;
+        const yamlData = await loadConfigYAML(scenario.sourceRef.metadata.configPath as string);
         
         // Extract language-specific content
         const config = yamlData.config || {};
         const title = yamlData[`title_${lang}`] || yamlData.title || scenario.title;
         const description = yamlData[`description_${lang}`] || yamlData.description || scenario.description;
         
-        return NextResponse.json({
+        return {
           ...scenario,
           title,
           description,
@@ -48,14 +51,14 @@ export async function GET(
             passingScore: config.passing_score || 60,
             domains: config.domains || []
           }
-        });
+        };
       } catch (error) {
         console.error('Error loading config:', error);
       }
     }
     
     // Return scenario with default config if YAML loading fails
-    return NextResponse.json({
+    return {
       ...scenario,
       config: {
         totalQuestions: 12,
@@ -63,12 +66,9 @@ export async function GET(
         passingScore: 60,
         domains: []
       }
-    });
-  } catch (error) {
-    console.error('Error getting scenario:', error);
-    return NextResponse.json(
-      { error: 'Failed to load scenario' },
-      { status: 500 }
-    );
-  }
+    };
+  }, {
+    ttl: 600, // 10 minutes cache
+    staleWhileRevalidate: 3600 // 1 hour
+  });
 }

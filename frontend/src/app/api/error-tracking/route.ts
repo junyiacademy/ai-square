@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ErrorReport } from '@/lib/error-tracking/error-tracker';
+import { cachedGET, getPaginationParams, createPaginatedResponse } from '@/lib/api/optimization-utils';
 
 // In-memory storage for errors (in production, use a database)
 const errorStore: ErrorReport[] = [];
@@ -36,10 +37,9 @@ export async function POST(request: NextRequest) {
     }
 
     // In production, you might want to:
-    // 1. Send to external monitoring service (Sentry, LogRocket, etc.)
-    // 2. Store in database
-    // 3. Send alerts for critical errors
-    // 4. Aggregate and analyze patterns
+    // 1. Store in database
+    // 2. Send alerts for critical errors
+    // 3. Aggregate and analyze patterns
 
     return NextResponse.json(
       { 
@@ -59,12 +59,12 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const limit = parseInt(searchParams.get('limit') || '50');
-    const severity = searchParams.get('severity');
-    const component = searchParams.get('component');
+  const { searchParams } = new URL(request.url);
+  const severity = searchParams.get('severity');
+  const component = searchParams.get('component');
+  const paginationParams = getPaginationParams(request);
 
+  return cachedGET(request, async () => {
     let filteredErrors = [...errorStore];
 
     // Filter by severity
@@ -78,9 +78,6 @@ export async function GET(request: NextRequest) {
         error.context.component === component
       );
     }
-
-    // Limit results
-    const limitedErrors = filteredErrors.slice(0, limit);
 
     // Calculate metrics
     const metrics = {
@@ -98,21 +95,24 @@ export async function GET(request: NextRequest) {
       recentErrors: errorStore.slice(0, 10)
     };
 
-    return NextResponse.json({
+    // Apply pagination
+    const paginatedResponse = createPaginatedResponse(
+      filteredErrors,
+      filteredErrors.length,
+      paginationParams
+    );
+
+    return {
       success: true,
       data: {
-        errors: limitedErrors,
+        ...paginatedResponse,
         metrics
       }
-    });
-
-  } catch (error) {
-    console.error('Failed to fetch error reports:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch error reports' },
-      { status: 500 }
-    );
-  }
+    };
+  }, {
+    ttl: 30, // 30 seconds cache (error data changes frequently)
+    staleWhileRevalidate: 120 // 2 minutes
+  });
 }
 
 export async function DELETE(request: NextRequest) {

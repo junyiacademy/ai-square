@@ -1,0 +1,12 @@
+{
+  "name": "redis-dependencies",
+  "description": "Redis dependencies for distributed caching",
+  "dependencies": {
+    "ioredis": "^5.3.2",
+    "@sentry/node": "^7.70.0",
+    "dd-trace": "^4.12.0"
+  },
+  "devDependencies": {
+    "@types/ioredis": "^4.28.10"
+  }
+}

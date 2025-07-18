@@ -38,15 +38,18 @@ YAML/API → Content Source → Scenario (UUID) → Program (UUID) → Tasks (UU
    - 清晰的進度追蹤
 
 4. **多語言支援**: 統一的翻譯機制
-   - 14 種語言支援
-   - 按需翻譯與快取
+   - 14 種語言支援 (100% 覆蓋率)
+   - 混合式翻譯架構 (YAML suffix + 獨立檔案)
+   - LLM 自動化翻譯整合
    - 統一的語言代碼處理
 
 5. **快取策略**: 多層快取提升效能
-   - Memory 快取（短期）
+   - Memory 快取（短期，60秒）
    - localStorage 快取（中期）
+   - Redis 分散式快取（配置化，自動 fallback）
    - GCS 持久化（長期）
    - 智能快取失效機制
+   - 5-10x 效能提升
 
 ### 1.3 三大模組對應
 ```

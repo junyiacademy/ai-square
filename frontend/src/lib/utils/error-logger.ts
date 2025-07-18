@@ -1,6 +1,6 @@
 /**
  * 簡單的錯誤記錄器（MVP 版本）
- * 之後可以升級成 Sentry 或其他服務
+ * 提供基本的錯誤追蹤功能
  */
 
 interface ErrorContext {

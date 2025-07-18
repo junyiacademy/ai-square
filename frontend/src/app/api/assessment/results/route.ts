@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { gcsStorage, AssessmentResultGCS } from '@/lib/storage/gcs-service';
 import { getEvaluationRepository, getProgramRepository } from '@/lib/implementations/gcs-v2';
+import { cachedGET, getPaginationParams, createPaginatedResponse, parallel } from '@/lib/api/optimization-utils';
 
 // 如果沒有 GCS 設定，使用本地儲存作為後備
 const USE_GCS = process.env.GOOGLE_CLOUD_PROJECT && process.env.GCS_BUCKET_NAME;
@@ -134,18 +135,19 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('userId');
-    const userEmail = searchParams.get('userEmail');
+  const { searchParams } = new URL(request.url);
+  const userId = searchParams.get('userId');
+  const userEmail = searchParams.get('userEmail');
+  const paginationParams = getPaginationParams(request);
 
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'userId is required' },
-        { status: 400 }
-      );
-    }
+  if (!userId) {
+    return NextResponse.json(
+      { error: 'userId is required' },
+      { status: 400 }
+    );
+  }
 
+  return cachedGET(request, async () => {
     // 獲取使用者的結果
     let userResults: AssessmentResultGCS[] = [];
     
@@ -153,64 +155,71 @@ export async function GET(request: NextRequest) {
       // Use userEmail for GCS path if available, otherwise use userId
       const gcsUserId = userEmail || userId;
       
-      // 1. Get results from assessment results storage
-      const directResults = await gcsStorage.getUserAssessments(gcsUserId);
-      userResults.push(...directResults);
-      
-      // 2. Also get results from evaluations (for program-based assessments)
-      if (userEmail) {
-        try {
-          const evaluationRepo = getEvaluationRepository();
-          const programRepo = getProgramRepository();
-          
-          // Get all programs for the user
-          const programs = await programRepo.findByUser(userEmail);
-          
-          // Filter completed assessment programs
-          const assessmentPrograms = programs.filter(p => 
-            p.status === 'completed' && 
-            p.metadata?.evaluationId
-          );
-          
-          // Get evaluations for completed programs
-          for (const program of assessmentPrograms) {
-            if (program.metadata?.evaluationId) {
-              const evaluation = await evaluationRepo.findById(program.metadata.evaluationId as string);
-              if (evaluation && evaluation.evaluationType === 'assessment_complete') {
-                // Convert evaluation to assessment result format
-                const assessmentResult: AssessmentResultGCS = {
-                  assessment_id: `eval_${evaluation.id}`,
-                  user_id: userId,
-                  user_email: userEmail,
-                  timestamp: evaluation.createdAt,
-                  duration_seconds: (evaluation.metadata?.completionTime as number) || 0,
-                  language: (program.metadata?.language as string) || 'en',
-                  scores: {
-                    overall: evaluation.score || 0,
-                    domains: {
-                      engaging_with_ai: ((evaluation.metadata?.domainScores as any)?.Engaging_with_AI as number) || 0,
-                      creating_with_ai: ((evaluation.metadata?.domainScores as any)?.Creating_with_AI as number) || 0,
-                      managing_with_ai: ((evaluation.metadata?.domainScores as any)?.Managing_with_AI as number) || 0,
-                      designing_with_ai: ((evaluation.metadata?.domainScores as any)?.Designing_with_AI as number) || 0,
-                    },
-                  },
-                  summary: {
-                    total_questions: (evaluation.metadata?.totalQuestions as number) || 0,
-                    correct_answers: (evaluation.metadata?.correctAnswers as number) || 0,
-                    level: (evaluation.metadata?.level as string) || 'beginner',
-                  },
-                  answers: [] // Answers are stored in task interactions, not in evaluation
-                };
-                
-                userResults.push(assessmentResult);
-              }
-            }
+      // Parallel fetch of direct results and evaluation results
+      const [directResults, evaluationResults] = await parallel(
+        gcsStorage.getUserAssessments(gcsUserId),
+        userEmail ? (async () => {
+          try {
+            const evaluationRepo = getEvaluationRepository();
+            const programRepo = getProgramRepository();
+            
+            // Get all programs for the user
+            const programs = await programRepo.findByUser(userEmail);
+            
+            // Filter completed assessment programs
+            const assessmentPrograms = programs.filter(p => 
+              p.status === 'completed' && 
+              p.metadata?.evaluationId
+            );
+            
+            // Get evaluations for completed programs in parallel
+            const evaluations = await parallel(
+              ...assessmentPrograms.map(async (program) => {
+                if (program.metadata?.evaluationId) {
+                  const evaluation = await evaluationRepo.findById(program.metadata.evaluationId as string);
+                  if (evaluation && evaluation.evaluationType === 'assessment_complete') {
+                    // Convert evaluation to assessment result format
+                    const assessmentResult: AssessmentResultGCS = {
+                      assessment_id: `eval_${evaluation.id}`,
+                      user_id: userId,
+                      user_email: userEmail,
+                      timestamp: evaluation.createdAt,
+                      duration_seconds: (evaluation.metadata?.completionTime as number) || 0,
+                      language: (program.metadata?.language as string) || 'en',
+                      scores: {
+                        overall: evaluation.score || 0,
+                        domains: {
+                          engaging_with_ai: ((evaluation.metadata?.domainScores as any)?.Engaging_with_AI as number) || 0,
+                          creating_with_ai: ((evaluation.metadata?.domainScores as any)?.Creating_with_AI as number) || 0,
+                          managing_with_ai: ((evaluation.metadata?.domainScores as any)?.Managing_with_AI as number) || 0,
+                          designing_with_ai: ((evaluation.metadata?.domainScores as any)?.Designing_with_AI as number) || 0,
+                        },
+                      },
+                      summary: {
+                        total_questions: (evaluation.metadata?.totalQuestions as number) || 0,
+                        correct_answers: (evaluation.metadata?.correctAnswers as number) || 0,
+                        level: (evaluation.metadata?.level as string) || 'beginner',
+                      },
+                      answers: [] // Answers are stored in task interactions, not in evaluation
+                    };
+                    
+                    return assessmentResult;
+                  }
+                }
+                return null;
+              })
+            );
+            
+            return evaluations.filter(Boolean) as AssessmentResultGCS[];
+          } catch (error) {
+            console.error('Error fetching evaluations:', error);
+            return [];
           }
-        } catch (error) {
-          console.error('Error fetching evaluations:', error);
-          // Continue with direct results even if evaluation fetch fails
-        }
-      }
+        })() : Promise.resolve([])
+      );
+      
+      userResults.push(...directResults);
+      userResults.push(...evaluationResults);
     } else {
       userResults = await getAllResultsLocal(userId);
     }
@@ -225,16 +234,19 @@ export async function GET(request: NextRequest) {
       new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
 
-    return NextResponse.json({
-      results: uniqueResults,
-      total: uniqueResults.length,
-      storage: USE_GCS ? 'gcs' : 'local',
-    });
-  } catch (error) {
-    console.error('Error fetching assessment results:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch assessment results' },
-      { status: 500 }
+    // Apply pagination
+    const paginatedResponse = createPaginatedResponse(
+      uniqueResults,
+      uniqueResults.length,
+      paginationParams
     );
-  }
+
+    return {
+      ...paginatedResponse,
+      storage: USE_GCS ? 'gcs' : 'local',
+    };
+  }, {
+    ttl: 300, // 5 minutes cache
+    staleWhileRevalidate: 1800 // 30 minutes
+  });
 }

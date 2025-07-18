@@ -1,35 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pblProgramService } from '@/lib/storage/pbl-program-service';
+import { cachedGET, getPaginationParams, createPaginatedResponse } from '@/lib/api/optimization-utils';
 
 export async function GET(request: NextRequest) {
+  // Get user info from cookie
+  let userEmail: string | undefined;
   try {
-    const { searchParams } = new URL(request.url);
-    const scenarioId = searchParams.get('scenarioId');
-    // const lang = searchParams.get('lang') || 'en';
-    
-    // Get user info from cookie
-    let userEmail: string | undefined;
-    try {
-      const userCookie = request.cookies.get('user')?.value;
-      if (userCookie) {
-        const user = JSON.parse(userCookie);
-        userEmail = user.email;
-      }
-    } catch {
-      console.log('No user cookie found');
+    const userCookie = request.cookies.get('user')?.value;
+    if (userCookie) {
+      const user = JSON.parse(userCookie);
+      userEmail = user.email;
     }
-    
-    if (!userEmail) {
-      return NextResponse.json(
-        { success: false, error: 'User authentication required' },
-        { status: 401 }
-      );
-    }
-    
+  } catch {
+    console.log('No user cookie found');
+  }
+  
+  if (!userEmail) {
+    return NextResponse.json(
+      { success: false, error: 'User authentication required' },
+      { status: 401 }
+    );
+  }
+
+  const { searchParams } = new URL(request.url);
+  const scenarioId = searchParams.get('scenarioId');
+  const paginationParams = getPaginationParams(request);
+
+  return cachedGET(request, async () => {
     // Get programs for this user
-    // If scenarioId is provided, get programs for that scenario only
-    // If not provided, get all programs for all scenarios
-    const programs = await pblProgramService.getUserPrograms(userEmail, scenarioId || undefined);
+    const programs = await pblProgramService.getUserPrograms(userEmail!, scenarioId || undefined);
     
     // Map ProgramSummary data to expected format
     const programsWithInfo = programs.map(summary => {
@@ -61,22 +60,20 @@ export async function GET(request: NextRequest) {
     
     // Sort by startedAt descending (newest first)
     programsWithInfo.sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime());
-    
-    return NextResponse.json({
-      success: true,
-      programs: programsWithInfo,
-      total: programsWithInfo.length
-    });
-    
-  } catch (error) {
-    console.error('Error fetching user programs:', error);
-    return NextResponse.json(
-      { 
-        success: false, 
-        error: 'Failed to fetch user programs',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      },
-      { status: 500 }
+
+    // Apply pagination
+    const paginatedResponse = createPaginatedResponse(
+      programsWithInfo,
+      programsWithInfo.length,
+      paginationParams
     );
-  }
+    
+    return {
+      success: true,
+      ...paginatedResponse
+    };
+  }, {
+    ttl: 120, // 2 minutes cache (user-specific data)
+    staleWhileRevalidate: 600 // 10 minutes
+  });
 }

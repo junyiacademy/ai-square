@@ -55,7 +55,6 @@ const nextConfig: NextConfig = {
       'recharts',
       'd3',
       'react-i18next',
-      '@sentry/nextjs',
       'react-markdown',
     ],
   },
@@ -121,10 +120,6 @@ const nextConfig: NextConfig = {
       ...(config.ignoreWarnings || []),
       {
         module: /node_modules\/@opentelemetry\/instrumentation/,
-        message: /Critical dependency/,
-      },
-      {
-        module: /node_modules\/@sentry\/node/,
         message: /Critical dependency/,
       },
     ];

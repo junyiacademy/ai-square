@@ -209,14 +209,18 @@ make ai-report
 
 ```
 frontend/           # Next.js + TypeScript + Tailwind
+├── docs/           # Frontend 專屬文檔
+│   ├── AI-QUICK-REFERENCE.md   # MVP 開發快速參考
+│   ├── handbook/               # 技術規範文件
+│   ├── infrastructure/         # 架構文件
+│   └── testing/               # 測試指南
 backend/            # FastAPI + Python  
 docs/
 ├── tickets/        
 │   └── archive/    # 已完成的票券（平面結構）
-├── handbook/       # 開發指南文件
-│   ├── AI-QUICK-REFERENCE.md  # 實用開發模式
-│   └── proposals/  # 提案和設計文件
-└── *.md            # 項目級文檔（如 content-validation-report.md）
+├── handbook/       # 全專案開發指南
+│   └── technical-specs/  # 技術規範
+└── reports/        # 專案報告
 ```
 
 ### 📁 檔案結構原則
@@ -297,9 +301,13 @@ AI: [執行: make ai-done]
 
 ### 文檔結構管理
 - **CLAUDE.md** (本文件) - AI 行為準則與項目概覽
-- **docs/handbook/** - 開發指南文件
-  - `AI-QUICK-REFERENCE.md` - 實用開發模式與技巧
-  - `proposals/` - 設計提案與架構文件
+- **frontend/docs/** - Frontend 專屬文檔
+  - `AI-QUICK-REFERENCE.md` - MVP 開發快速參考指南
+  - `handbook/` - Frontend 技術規範
+  - `infrastructure/` - 架構設計文件
+  - `testing/` - 測試相關文檔
+- **docs/handbook/** - 全專案開發指南
+  - `technical-specs/` - 系統技術規範
 - **docs/tickets/** - 工作票券管理
   - `archive/` - 已完成的票券
 
@@ -385,14 +393,15 @@ AI Square 是一個「用 AI 學 AI 素養」的創新學習平台，基於國�
 - 統一抽象層架構：確保系統可擴展性
 
 ### 技術棧
-- **Frontend**: Next.js 15, TypeScript, Tailwind CSS, react-i18next, Monaco Editor
+- **Frontend**: Next.js 15, TypeScript, Tailwind CSS v4, react-i18next, Monaco Editor
 - **Backend**: FastAPI, Python 3.x, Vertex AI SDK
-- **AI Services**: Google Vertex AI (Gemini models), 規劃中: OpenAI
-- **Storage**: Google Cloud Storage (用戶數據), GitHub (內容版本控制), Local Cache
-- **Caching**: 多層快取系統 (memory + localStorage)
+- **AI Services**: Google Vertex AI (Gemini 2.5 Flash), Claude API (翻譯), 規劃中: OpenAI
+- **Storage**: Google Cloud Storage (用戶數據), GitHub (內容版本控制), Redis (分散式快取)
+- **Caching**: 多層快取系統 (memory + localStorage + Redis with fallback)
 - **Deployment**: Google Cloud Run, Docker, GitHub Actions CI/CD
 - **Testing**: Jest (80%+ 覆蓋率), React Testing Library, Playwright
 - **CMS**: GitHub API 整合, YAML 處理, AI Quick Actions
+- **Translation**: 14 語言支援, LLM 自動化翻譯, 混合式架構
 
 ### Development Commands
 
@@ -488,8 +497,8 @@ YAML/API → Content Source → Scenario (UUID) → Program (UUID) → Tasks (UU
 詳細架構說明請參考：`frontend/docs/infrastructure/unified-learning-architecture.md`
 
 #### Frontend Structure
-- **Framework**: Next.js 15 with App Router, TypeScript, Tailwind CSS
-- **Internationalization**: react-i18next with 9 language support (en, zhTW, es, ja, ko, fr, de, ru, it)
+- **Framework**: Next.js 15 with App Router, TypeScript, Tailwind CSS v4
+- **Internationalization**: react-i18next with 14 language support (en, zhTW, zhCN, pt, ar, id, th, es, ja, ko, fr, de, ru, it)
 - **Key Pages**:
   - `/` - Home page
   - `/relations` - AI literacy competency visualization interface
@@ -497,12 +506,18 @@ YAML/API → Content Source → Scenario (UUID) → Program (UUID) → Tasks (UU
   - `/pbl/scenarios/[id]` - Scenario details with KSA mapping
   - `/pbl/scenarios/[id]/program/[programId]/tasks/[taskId]/learn` - Interactive learning with AI tutor
   - `/pbl/scenarios/[id]/program/[programId]/complete` - Completion page with AI feedback
+  - `/assessment/scenarios` - Assessment scenarios list
+  - `/discovery` - Discovery career exploration
+  - `/admin` - Admin dashboard for content management
 - **API Routes**: 
   - `/api/relations` - Competency data with translations
-  - `/api/pbl/scenarios` - PBL scenario management
+  - `/api/pbl/scenarios` - PBL scenario management (hybrid translation support)
   - `/api/pbl/chat` - AI tutor conversation
   - `/api/pbl/evaluate` - Task performance evaluation
   - `/api/pbl/generate-feedback` - Multi-language feedback generation
+  - `/api/assessment/scenarios` - Assessment scenarios with hybrid translation
+  - `/api/monitoring/performance` - Real-time performance metrics
+  - `/api/monitoring/cache` - Cache management and statistics
 
 #### Backend Structure  
 - **Framework**: FastAPI with Python 3.x
@@ -534,14 +549,26 @@ YAML/API → Content Source → Scenario (UUID) → Program (UUID) → Tasks (UU
 - **BaseStorageService**: Abstracted storage interface supporting GCS and local storage
 - **BaseAIService**: Unified AI service interface for multiple providers
 - **BaseYAMLLoader**: YAML content loading with validation and caching
+- **BaseLearningService**: Unified learning service interface for all modules
 - **Implementations**: Concrete implementations in `/implementations` directory
+
+#### Service Layer Architecture (`frontend/src/lib/services/`)
+- **UnifiedEvaluationSystem**: Centralized evaluation system with strategy pattern
+- **HybridTranslationService**: Dual-track YAML + JSON translation system
+- **ScenarioTranslationService**: Dynamic scenario content translation
+- **EvaluationStrategies**: Module-specific evaluation implementations
+- **Redis/DistributedCache**: Multi-level caching with automatic fallback
 
 ### Key Implementation Details
 
 #### Translation System
-The app uses a dual translation approach:
+The app uses a hybrid translation architecture:
 1. **UI Labels**: react-i18next with JSON files in `public/locales/`
-2. **Content Data**: YAML field suffixes processed by `getTranslatedField()` utility
+2. **Content Data**: 
+   - YAML field suffixes for legacy content (e.g., `description_zh`)
+   - Separate YAML files per language for new content (e.g., `scenario_ko.yml`)
+3. **LLM Integration**: Claude API for automated translations
+4. **Coverage**: 14 languages with 100% translation coverage
 
 #### YAML Data Processing
 - Domains contain competencies with KSA code references
@@ -560,11 +587,15 @@ The app uses a dual translation approach:
 - `next-i18next.config.js` - Internationalization setup
 - `tsconfig.json` - TypeScript configuration
 
-### 最近成就 (2025/07)
+### 最近成就 (2025/01)
 - ✅ **TypeScript 型別安全**: 消除所有生產代碼的 any 類型 (102 → 0)
 - ✅ **測試覆蓋率**: 核心模組達到 80%+ 覆蓋率
-- ✅ **CMS 系統增強**: 分支管理、現代化 UI/UX、AI Quick Actions
-- ✅ **安全性更新**: Next.js 升級到 14.2.30
+- ✅ **多語言支援完整度**: 14 種語言達到 100% 翻譯覆蓋率
+- ✅ **混合式翻譯架構**: 實現 YAML + JSON 雙軌翻譯系統
+- ✅ **API 效能優化**: 實現 5-10x 效能提升，含 Redis 快取支援
+- ✅ **統一學習架構**: 完成 Assessment、PBL、Discovery 模組整合
+- ✅ **LLM 翻譯系統**: 整合 Claude API 自動化翻譯流程
+- ✅ **Tailwind CSS v4**: 升級並優化樣式系統
 
 ### 接下來的優先事項
 1. **OAuth2 社交登入** (Google, GitHub) - 降低註冊門檻
