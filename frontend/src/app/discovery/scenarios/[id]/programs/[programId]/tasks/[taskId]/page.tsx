@@ -145,7 +145,8 @@ export default function TaskDetailPage() {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'x-session-token': localStorage.getItem('ai_square_session') || ''
+          'x-session-token': localStorage.getItem('ai_square_session') || '',
+          'Accept-Language': i18n.language || 'zhTW'
         },
         body: JSON.stringify({
           action: 'submit',
@@ -663,16 +664,30 @@ export default function TaskDetailPage() {
                       <p className="whitespace-pre-wrap">{interaction.content.response}</p>
                     ) : (
                       <div className="space-y-3">
-                        {/* Pass/Fail Status */}
-                        <div className="flex items-center space-x-2">
-                          {interaction.content.completed ? (
+                        {(() => {
+                          // Parse content if it's a string
+                          let content = interaction.content;
+                          if (typeof content === 'string') {
+                            try {
+                              content = JSON.parse(content);
+                            } catch (e) {
+                              console.error('Failed to parse interaction content:', e);
+                              return <p className="text-gray-700">{interaction.content}</p>;
+                            }
+                          }
+                          
+                          return (
+                            <>
+                              {/* Pass/Fail Status */}
+                              <div className="flex items-center space-x-2">
+                                {content.completed ? (
                             <>
                               <CheckCircleIcon className="w-5 h-5 text-green-600" />
                               <span className="text-sm font-medium text-green-700">任務通過</span>
-                              {interaction.content.xpEarned > 0 && (
+                              {content.xpEarned > 0 && (
                                 <div className="flex items-center space-x-1 text-purple-600 font-medium ml-2">
                                   <TrophyIcon className="w-4 h-4" />
-                                  <span>+{interaction.content.xpEarned} XP</span>
+                                  <span>+{content.xpEarned} XP</span>
                                 </div>
                               )}
                             </>
@@ -685,14 +700,14 @@ export default function TaskDetailPage() {
                         </div>
                         
                         {/* Feedback */}
-                        <p className="text-gray-700">{interaction.content.feedback}</p>
+                        <p className="text-gray-700">{content.feedback}</p>
                         
                         {/* Strengths */}
-                        {interaction.content.strengths && interaction.content.strengths.length > 0 && (
+                        {content.strengths && content.strengths.length > 0 && (
                           <div className="bg-green-50 rounded-md p-3">
                             <p className="text-sm font-medium text-green-800 mb-1">優點：</p>
                             <ul className="text-sm text-green-700 space-y-1">
-                              {interaction.content.strengths.map((strength, idx) => (
+                              {content.strengths.map((strength, idx) => (
                                 <li key={idx} className="flex items-start">
                                   <span className="mr-2">•</span>
                                   <span>{strength}</span>
@@ -703,11 +718,11 @@ export default function TaskDetailPage() {
                         )}
                         
                         {/* Improvements */}
-                        {interaction.content.improvements && interaction.content.improvements.length > 0 && (
+                        {content.improvements && content.improvements.length > 0 && (
                           <div className="bg-orange-50 rounded-md p-3">
                             <p className="text-sm font-medium text-orange-800 mb-1">改進建議：</p>
                             <ul className="text-sm text-orange-700 space-y-1">
-                              {interaction.content.improvements.map((improvement, idx) => (
+                              {content.improvements.map((improvement, idx) => (
                                 <li key={idx} className="flex items-start">
                                   <span className="mr-2">•</span>
                                   <span>{improvement}</span>
@@ -718,15 +733,18 @@ export default function TaskDetailPage() {
                         )}
                         
                         {/* Skills Improved */}
-                        {interaction.content.skillsImproved && interaction.content.skillsImproved.length > 0 && (
+                        {content.skillsImproved && content.skillsImproved.length > 0 && (
                           <div className="flex flex-wrap gap-2 mt-2">
-                            {interaction.content.skillsImproved.map((skill, idx) => (
+                            {content.skillsImproved.map((skill, idx) => (
                               <span key={idx} className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-md">
                                 {skill}
                               </span>
                             ))}
                           </div>
                         )}
+                            </>
+                          );
+                        })()}
                       </div>
                     )}
                   </div>

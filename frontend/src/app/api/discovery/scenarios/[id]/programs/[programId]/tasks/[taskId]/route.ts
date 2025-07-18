@@ -325,6 +325,10 @@ export async function PATCH(
       const careerType = (scenario?.sourceRef.metadata?.careerType as string) || 'unknown';
       const language = program.metadata?.language || 'en';
       
+      // Get user's preferred language from request header
+      const acceptLanguage = request.headers.get('accept-language')?.split(',')[0];
+      const userLanguage = acceptLanguage || language;
+      
       // Load YAML data for world setting context
       let yamlData = null;
       if (careerType !== 'unknown') {
@@ -359,7 +363,24 @@ Please evaluate this response considering:
 4. Practical application of concepts
 5. Evidence of learning and growth
 
-Provide your evaluation in Traditional Chinese (繁體中文) with:
+${userLanguage === 'zhTW' ? 
+`請用繁體中文提供評估，包含：
+- 詳細說明做得好的地方和需要改進的地方
+- 任務是否圓滿完成
+- 獲得的經驗值（0-${task.content.context?.xp || 100}）
+- 展現或提升的技能
+
+請以 JSON 格式返回評估結果：
+{
+  "feedback": "詳細的中文回饋",
+  "strengths": ["優點1", "優點2"],
+  "improvements": ["改進建議1", "改進建議2"],
+  "completed": true/false,
+  "xpEarned": number (0-${task.content.context?.xp || 100}),
+  "skillsImproved": ["技能1（例如：創意思考）", "技能2（例如：市場分析）"]
+}
+請確保所有內容都是繁體中文，包括技能名稱。` : 
+`Provide your evaluation in English with:
 - Detailed feedback explaining what was done well and areas for improvement
 - Whether the task is completed satisfactorily
 - XP points earned (0-${task.content.context?.xp || 100})
@@ -367,13 +388,13 @@ Provide your evaluation in Traditional Chinese (繁體中文) with:
 
 Return your evaluation as a JSON object:
 {
-  "feedback": "詳細的中文回饋",
-  "strengths": ["優點1", "優點2"],
-  "improvements": ["改進建議1", "改進建議2"],
+  "feedback": "Detailed feedback in English",
+  "strengths": ["Strength 1", "Strength 2"],
+  "improvements": ["Improvement area 1", "Improvement area 2"],
   "completed": true/false,
   "xpEarned": number (0-${task.content.context?.xp || 100}),
-  "skillsImproved": ["技能1", "技能2"]
-}`;
+  "skillsImproved": ["Skill 1", "Skill 2"]
+}`}`;
 
       try {
         const aiResponse = await aiService.sendMessage(evaluationPrompt);
