@@ -237,5 +237,44 @@
     "paths": "路徑",
     "program": "課程",
     "achievements": "成就"
+  },
+  
+  "complete": {
+    "congratulations": "恭喜你！🎉",
+    "completedProgram": "你已完成 {{title}}",
+    "totalXP": "總經驗值",
+    "overallScore": "總分",
+    "tasksCompleted": "完成任務",
+    "timeSpent": "花費時間",
+    "hoursMinutes": "{{hours}}小時 {{minutes}}分鐘",
+    "minutes": "{{minutes}} 分鐘",
+    "achievementsUnlocked": "解鎖成就",
+    "skillImprovements": "技能提升",
+    "previousLevel": "之前",
+    "currentLevel": "現在",
+    "taskBreakdown": "任務表現",
+    "task": "任務",
+    "type": "類型",
+    "score": "分數",
+    "xpEarned": "獲得經驗值",
+    "attempts": "嘗試次數",
+    "aiFeedback": "AI 導師回饋",
+    "overallAssessment": "整體評估",
+    "careerAlignment": "職涯路徑契合度",
+    "strengths": "優勢",
+    "growthAreas": "成長領域",
+    "nextSteps": "建議下一步",
+    "backToScenario": "返回情境",
+    "exploreMore": "探索更多路徑",
+    "printResults": "列印結果",
+    "errorLoading": "載入結果時發生錯誤",
+    "noData": "找不到完成資料"
+  },
+  
+  "taskTypes": {
+    "question": "問答",
+    "chat": "AI 對話",
+    "creation": "創作",
+    "analysis": "分析"
   }
 }

@@ -424,13 +424,22 @@ export default function ProgramDetailPage() {
             <p className="text-gray-600 mb-6">
               你已經完成了這個學習歷程的所有任務，獲得了 {programData.totalXP} XP！
             </p>
-            <button
-              onClick={() => router.push(`/discovery/scenarios/${scenarioId}`)}
-              className="inline-flex items-center space-x-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-            >
-              <SparklesIcon className="w-5 h-5" />
-              <span>開始新的歷程</span>
-            </button>
+            <div className="flex justify-center space-x-4">
+              <button
+                onClick={() => router.push(`/discovery/scenarios/${scenarioId}/programs/${programId}/complete`)}
+                className="inline-flex items-center space-x-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              >
+                <CheckCircleIcon className="w-5 h-5" />
+                <span>查看完整結果</span>
+              </button>
+              <button
+                onClick={() => router.push(`/discovery/scenarios/${scenarioId}`)}
+                className="inline-flex items-center space-x-2 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+              >
+                <SparklesIcon className="w-5 h-5" />
+                <span>開始新的歷程</span>
+              </button>
+            </div>
           </div>
         )}
       </div>

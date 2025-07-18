@@ -204,5 +204,44 @@
     "loadingFailed": "Failed to load content",
     "savingFailed": "Failed to save progress",
     "networkError": "Network error, please try again"
+  },
+  
+  "complete": {
+    "congratulations": "Congratulations! 🎉",
+    "completedProgram": "You've completed {{title}}",
+    "totalXP": "Total XP Earned",
+    "overallScore": "Overall Score",
+    "tasksCompleted": "Tasks Completed",
+    "timeSpent": "Time Spent",
+    "hoursMinutes": "{{hours}}h {{minutes}}m",
+    "minutes": "{{minutes}} minutes",
+    "achievementsUnlocked": "Achievements Unlocked",
+    "skillImprovements": "Skill Improvements",
+    "previousLevel": "Previous",
+    "currentLevel": "Current",
+    "taskBreakdown": "Task Performance",
+    "task": "Task",
+    "type": "Type",
+    "score": "Score",
+    "xpEarned": "XP Earned",
+    "attempts": "Attempts",
+    "aiFeedback": "AI Mentor Feedback",
+    "overallAssessment": "Overall Assessment",
+    "careerAlignment": "Career Path Alignment",
+    "strengths": "Strengths",
+    "growthAreas": "Areas for Growth",
+    "nextSteps": "Recommended Next Steps",
+    "backToScenario": "Back to Scenario",
+    "exploreMore": "Explore More Paths",
+    "printResults": "Print Results",
+    "errorLoading": "Error Loading Results",
+    "noData": "No completion data found"
+  },
+  
+  "taskTypes": {
+    "question": "Question",
+    "chat": "AI Chat",
+    "creation": "Creation",
+    "analysis": "Analysis"
   }
 }

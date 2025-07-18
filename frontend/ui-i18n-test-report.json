@@ -1,0 +1,413 @@
+{
+  "timestamp": "2025-07-18T15:13:26.404Z",
+  "languages": {},
+  "stages": {
+    "pbl": {
+      "list": {
+        "exists": true,
+        "i18n": {
+          "hasI18n": false,
+          "translationKeys": [],
+          "transKeys": []
+        }
+      },
+      "detail": {
+        "exists": true,
+        "i18n": {
+          "hasI18n": true,
+          "translationKeys": [],
+          "transKeys": []
+        }
+      },
+      "learn": {
+        "exists": true,
+        "i18n": {
+          "hasI18n": true,
+          "translationKeys": [
+            "isNew",
+            "pbl:learn.errorProcessing",
+            "pbl:learn.evaluationFailed",
+            "pbl:learn.unknownError",
+            "pbl:learn.noTaskFound",
+            "pbl:details.goToCompletion",
+            "pbl:learn.progress",
+            "pbl:learn.task",
+            "pbl:learn.description",
+            "pbl:learn.instructions",
+            "pbl:details.expectedOutcome",
+            "pbl:learn.overallScore",
+            "pbl:complete.${key}",
+            "pbl:complete.domainScores",
+            "assessment:domains.${domain}",
+            "pbl:complete.strengths",
+            "pbl:complete.improvements",
+            "pbl:learn.thinking",
+            "pbl:learn.inputPlaceholder",
+            "pbl:learn.sending",
+            "pbl:learn.send",
+            "pbl:learn.progress",
+            "pbl:learn.task",
+            "pbl:learn.description",
+            "pbl:learn.instructions",
+            "pbl:details.expectedOutcome",
+            "pbl:learn.thinking",
+            "pbl:learn.inputPlaceholder",
+            "pbl:learn.sending",
+            "pbl:learn.send",
+            "pbl:learn.progress",
+            "pbl:learn.taskInfo",
+            "pbl:learn.chat"
+          ],
+          "transKeys": []
+        }
+      },
+      "complete": {
+        "exists": true,
+        "i18n": {
+          "hasI18n": true,
+          "translationKeys": [
+            "pbl:complete.noDataFound",
+            "pbl:complete.backToPBL",
+            "pbl:complete.congratulations",
+            "pbl:complete.overallScore",
+            "pbl:history.tasksEvaluated",
+            "pbl:complete.conversationCount",
+            "pbl:history.times",
+            "pbl:complete.totalTimeSpent",
+            "pbl:complete.domainScores",
+            "assessment:domains.${domain}",
+            "pbl:complete.ksaSummary",
+            "pbl:complete.knowledge",
+            "pbl:complete.skills",
+            "pbl:complete.attitudes",
+            "pbl:complete.taskSummary",
+            "pbl:complete.conversations",
+            "pbl:learn.overallScore",
+            "pbl:complete.domainScores",
+            "assessment:domains.${domain}",
+            "pbl:complete.ksa",
+            "pbl:complete.knowledge",
+            "pbl:complete.skills",
+            "pbl:complete.attitudes",
+            "pbl:learn.conversationInsights",
+            "pbl:learn.effectiveExamples",
+            "pbl:learn.improvementExamples",
+            "pbl:complete.strengths",
+            "pbl:complete.improvements",
+            "pbl:complete.retryScenario",
+            "pbl:complete.viewHistory",
+            "pbl:complete.print"
+          ],
+          "transKeys": []
+        }
+      },
+      "history": {
+        "exists": false
+      },
+      "api": {
+        "src/app/api/pbl/scenarios/route.ts": {
+          "exists": true,
+          "hasLanguageSupport": true,
+          "patterns": {
+            "langParam": true,
+            "translationFunction": false
+          }
+        },
+        "src/app/api/pbl/chat/route.ts": {
+          "exists": true,
+          "hasLanguageSupport": true,
+          "patterns": {
+            "langParam": true,
+            "translationFunction": false
+          }
+        }
+      }
+    },
+    "assessment": {
+      "list": {
+        "exists": true,
+        "i18n": {
+          "hasI18n": true,
+          "translationKeys": [
+            "results.recommendations.focusOn",
+            "-",
+            "loading",
+            "errorLoading",
+            "errorLoading",
+            "title",
+            "description",
+            "assessmentInfo.title",
+            "assessmentInfo.immediate",
+            "benefits.title",
+            "benefits.personalized",
+            "benefits.skillGaps",
+            "benefits.radarChart",
+            "benefits.recommendations",
+            "startAssessment"
+          ],
+          "transKeys": []
+        }
+      },
+      "detail": {
+        "exists": true,
+        "i18n": {
+          "hasI18n": true,
+          "translationKeys": [],
+          "transKeys": []
+        }
+      },
+      "learn": {
+        "exists": true,
+        "i18n": {
+          "hasI18n": true,
+          "translationKeys": [
+            "loading",
+            "errorLoading"
+          ],
+          "transKeys": []
+        }
+      },
+      "complete": {
+        "exists": true,
+        "i18n": {
+          "hasI18n": true,
+          "translationKeys": [
+            "loading",
+            "loading"
+          ],
+          "transKeys": []
+        }
+      },
+      "history": {
+        "exists": false
+      },
+      "api": {
+        "src/app/api/assessment/scenarios/route.ts": {
+          "exists": true,
+          "hasLanguageSupport": true,
+          "patterns": {
+            "langParam": true,
+            "translationFunction": false
+          }
+        },
+        "src/app/api/assessment/programs/[programId]/route.ts": {
+          "exists": true,
+          "hasLanguageSupport": false,
+          "patterns": {
+            "langParam": false,
+            "translationFunction": false
+          }
+        }
+      }
+    },
+    "discovery": {
+      "list": {
+        "exists": true,
+        "i18n": {
+          "hasI18n": false,
+          "translationKeys": [],
+          "transKeys": []
+        }
+      },
+      "detail": {
+        "exists": true,
+        "i18n": {
+          "hasI18n": true,
+          "translationKeys": [],
+          "transKeys": []
+        }
+      },
+      "learn": {
+        "exists": true,
+        "i18n": {
+          "hasI18n": true,
+          "translationKeys": [],
+          "transKeys": []
+        }
+      },
+      "complete": {
+        "exists": false
+      },
+      "history": {
+        "exists": false
+      },
+      "api": {
+        "src/app/api/discovery/scenarios/route.ts": {
+          "exists": true,
+          "hasLanguageSupport": true,
+          "patterns": {
+            "langParam": true,
+            "translationFunction": false
+          }
+        },
+        "src/app/api/discovery/generate-report/route.ts": {
+          "exists": false,
+          "error": "ENOENT: no such file or directory, open '/Users/young/project/ai-square/frontend/src/app/api/discovery/generate-report/route.ts'"
+        }
+      }
+    }
+  },
+  "errors": [
+    "Missing page: pbl/history",
+    "Missing page: assessment/history",
+    "Missing page: discovery/complete",
+    "Missing page: discovery/history"
+  ],
+  "warnings": [],
+  "translations": {
+    "en": {
+      "exists": true,
+      "keyCount": 31,
+      "sampleKeys": [
+        "skip",
+        "next",
+        "back",
+        "continue",
+        "loading"
+      ]
+    },
+    "zhTW": {
+      "exists": true,
+      "keyCount": 160,
+      "sampleKeys": [
+        "appName",
+        "loading",
+        "error",
+        "success",
+        "save"
+      ]
+    },
+    "zhCN": {
+      "exists": true,
+      "keyCount": 31,
+      "sampleKeys": [
+        "skip",
+        "next",
+        "back",
+        "continue",
+        "loading"
+      ]
+    },
+    "es": {
+      "exists": true,
+      "keyCount": 31,
+      "sampleKeys": [
+        "skip",
+        "next",
+        "back",
+        "continue",
+        "loading"
+      ]
+    },
+    "ja": {
+      "exists": true,
+      "keyCount": 31,
+      "sampleKeys": [
+        "skip",
+        "next",
+        "back",
+        "continue",
+        "loading"
+      ]
+    },
+    "ko": {
+      "exists": true,
+      "keyCount": 31,
+      "sampleKeys": [
+        "skip",
+        "next",
+        "back",
+        "continue",
+        "loading"
+      ]
+    },
+    "fr": {
+      "exists": true,
+      "keyCount": 31,
+      "sampleKeys": [
+        "skip",
+        "next",
+        "back",
+        "continue",
+        "loading"
+      ]
+    },
+    "de": {
+      "exists": true,
+      "keyCount": 31,
+      "sampleKeys": [
+        "skip",
+        "next",
+        "back",
+        "continue",
+        "loading"
+      ]
+    },
+    "ru": {
+      "exists": true,
+      "keyCount": 31,
+      "sampleKeys": [
+        "skip",
+        "next",
+        "back",
+        "continue",
+        "loading"
+      ]
+    },
+    "it": {
+      "exists": true,
+      "keyCount": 31,
+      "sampleKeys": [
+        "skip",
+        "next",
+        "back",
+        "continue",
+        "loading"
+      ]
+    },
+    "pt": {
+      "exists": true,
+      "keyCount": 31,
+      "sampleKeys": [
+        "skip",
+        "next",
+        "back",
+        "continue",
+        "loading"
+      ]
+    },
+    "ar": {
+      "exists": true,
+      "keyCount": 31,
+      "sampleKeys": [
+        "skip",
+        "next",
+        "back",
+        "continue",
+        "loading"
+      ]
+    },
+    "id": {
+      "exists": true,
+      "keyCount": 31,
+      "sampleKeys": [
+        "skip",
+        "next",
+        "back",
+        "continue",
+        "loading"
+      ]
+    },
+    "th": {
+      "exists": true,
+      "keyCount": 31,
+      "sampleKeys": [
+        "skip",
+        "next",
+        "back",
+        "continue",
+        "loading"
+      ]
+    }
+  }
+}
