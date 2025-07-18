@@ -135,10 +135,10 @@ export async function POST(
     });
     
     // Get language from request body
-    let language = 'zhTW';
+    let language = 'en';
     try {
       const body = await request.json();
-      language = body.language || 'zhTW';
+      language = body.language || 'en';
     } catch (error) {
       // If no body is provided, use default language
       console.log('No body provided, using default language:', language);

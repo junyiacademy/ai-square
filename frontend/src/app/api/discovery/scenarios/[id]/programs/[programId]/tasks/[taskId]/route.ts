@@ -323,7 +323,7 @@ export async function PATCH(
       // Get scenario for context
       const scenario = await scenarioRepo.findById(program.scenarioId);
       const careerType = (scenario?.sourceRef.metadata?.careerType as string) || 'unknown';
-      const language = program.metadata?.language || 'zhTW';
+      const language = program.metadata?.language || 'en';
       
       // Load YAML data for world setting context
       let yamlData = null;
@@ -477,8 +477,8 @@ Return your evaluation as a JSON object:
       );
       
       // Generate comprehensive qualitative feedback using LLM based on full learning journey
-      let comprehensiveFeedback = '成功完成任務！';
-      let userLanguage = 'zhTW'; // Default language
+      let comprehensiveFeedback = 'Task completed successfully!';
+      let userLanguage = 'en'; // Default language
       let careerType = 'unknown'; // Default career type
       
       try {
@@ -509,7 +509,7 @@ Return your evaluation as a JSON object:
         const scenarioRepo = getScenarioRepository();
         const scenario = await scenarioRepo.findById(program.scenarioId);
         careerType = (scenario?.sourceRef.metadata?.careerType as string) || 'unknown';
-        const language = program.metadata?.language || 'zhTW';
+        const language = program.metadata?.language || 'en';
         
         // Get current user language preference from request headers or use program language
         const acceptLanguage = request.headers.get('accept-language')?.split(',')[0];
@@ -795,7 +795,7 @@ Return your evaluation as a JSON object:
         const scenarioRepo = getScenarioRepository();
         const scenario = await scenarioRepo.findById(program.scenarioId);
         const careerType = (scenario?.sourceRef.metadata?.careerType as string) || 'unknown';
-        const language = program.metadata?.language || 'zhTW';
+        const language = program.metadata?.language || 'en';
         const acceptLanguage = request.headers.get('accept-language')?.split(',')[0];
         userLanguage = acceptLanguage || language;
         
