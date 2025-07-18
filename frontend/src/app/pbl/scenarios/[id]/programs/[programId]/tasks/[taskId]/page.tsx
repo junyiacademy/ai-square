@@ -743,9 +743,9 @@ export default function ProgramLearningPage() {
       </header>
 
       {/* Main Content */}
-      <div className="flex-1 flex relative">
+      <div className="flex-1 flex relative overflow-hidden">
         {/* Desktop Layout */}
-        <div className="hidden md:flex w-full">
+        <div className="hidden md:flex w-full h-full">
           {/* Left Sidebar - Progress (Collapsible) */}
           <div className={`bg-white dark:bg-gray-800 shadow-lg transition-all duration-300 relative ${
             isProgressCollapsed ? 'w-16' : 'w-64'
@@ -900,7 +900,7 @@ export default function ProgramLearningPage() {
         </div>
 
         {/* Middle Panel - Task Info */}
-        <div className="w-96 bg-white dark:bg-gray-800 border-l border-r border-gray-200 dark:border-gray-700 overflow-y-auto">
+        <div className="w-96 bg-white dark:bg-gray-800 border-l border-r border-gray-200 dark:border-gray-700 overflow-y-auto flex-shrink-0">
           <div className="p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
               {t('pbl:learn.task')} {taskIndex + 1}: {getLocalizedField(currentTask as unknown as Record<string, unknown>, 'title', i18n.language)}
@@ -1120,9 +1120,9 @@ export default function ProgramLearningPage() {
         </div>
 
         {/* Right Panel - Chatbot */}
-        <div className="flex-1 bg-white dark:bg-gray-800 flex flex-col border-l border-gray-200 dark:border-gray-700">
+        <div className="flex-1 bg-white dark:bg-gray-800 flex flex-col border-l border-gray-200 dark:border-gray-700 h-full overflow-hidden">
           {/* Conversation Area */}
-          <div className="flex-1 overflow-y-auto p-6">
+          <div className="flex-1 overflow-y-auto p-6 min-h-0">
             <div className="space-y-4">
               {conversations.map((entry) => (
                 <div
@@ -1361,9 +1361,9 @@ export default function ProgramLearningPage() {
 
             {/* Chat View */}
             {mobileView === 'chat' && (
-              <div className="h-full bg-white dark:bg-gray-800 flex flex-col">
+              <div className="h-full bg-white dark:bg-gray-800 flex flex-col overflow-hidden">
                 {/* Conversation Area */}
-                <div className="flex-1 overflow-y-auto p-4">
+                <div className="flex-1 overflow-y-auto p-4 min-h-0">
                   <div className="space-y-4">
                     {conversations.map((entry) => (
                       <div
