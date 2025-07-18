@@ -1,5 +1,5 @@
 import { cookies, headers } from 'next/headers';
-import { verifySessionToken } from './session-token';
+import { verifySessionToken } from './session-simple';
 
 export interface Session {
   user: {

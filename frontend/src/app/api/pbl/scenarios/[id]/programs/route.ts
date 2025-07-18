@@ -11,12 +11,29 @@ export async function GET(
   try {
     const { id: scenarioId } = await params;
     
-    // Only accept UUID format for scenario ID
-    if (!scenarioId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid scenario ID format. UUID required.' },
-        { status: 400 }
-      );
+    // Check if it's a UUID or a YAML ID
+    const isUUID = scenarioId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
+    let actualScenarioId = scenarioId;
+    
+    // If it's not a UUID, use index for fast lookup
+    if (!isUUID) {
+      const { scenarioIndexService } = await import('@/lib/services/scenario-index-service');
+      const { scenarioIndexBuilder } = await import('@/lib/services/scenario-index-builder');
+      
+      // Ensure index exists
+      await scenarioIndexBuilder.ensureIndex();
+      
+      // Look up UUID by YAML ID
+      const uuid = await scenarioIndexService.getUuidByYamlId(scenarioId);
+      
+      if (!uuid) {
+        return NextResponse.json(
+          { success: false, error: 'Scenario not found' },
+          { status: 404 }
+        );
+      }
+      
+      actualScenarioId = uuid;
     }
     
     // Get user session
@@ -36,7 +53,7 @@ export async function GET(
     const taskRepo = getTaskRepository();
     
     // Get user's programs for this scenario
-    const programs = await programRepo.findByScenarioAndUser(scenarioId, userEmail);
+    const programs = await programRepo.findByScenarioAndUser(actualScenarioId, userEmail);
     
     // Enrich programs with task completion data
     const enrichedPrograms = await Promise.all(

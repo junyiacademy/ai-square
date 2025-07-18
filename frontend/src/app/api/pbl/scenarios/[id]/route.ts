@@ -202,27 +202,42 @@ export async function GET(
 ) {
   const { id: scenarioId } = await params;
   
-  // Validate UUID format early
-  if (!scenarioId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
-    return NextResponse.json(
-      { success: false, error: 'Invalid scenario ID format. UUID required.' },
-      { status: 400 }
-    );
-  }
+  // Check if it's a UUID or a YAML ID
+  const isUUID = scenarioId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
   
   // Use cached GET wrapper with 5 minute TTL
   return cachedGET(request, async () => {
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
     
-    console.log('Loading scenario:', scenarioId, 'with lang:', lang);
+    console.log('Loading scenario:', scenarioId, 'with lang:', lang, 'isUUID:', isUUID);
     
     // Load scenario and KSA data in parallel
     const [scenarioResult, ksaData] = await parallel(
       (async () => {
         const { getScenarioRepository } = await import('@/lib/implementations/gcs-v2');
         const scenarioRepo = getScenarioRepository();
-        return scenarioRepo.findById(scenarioId);
+        
+        if (isUUID) {
+          // Direct lookup by UUID
+          return scenarioRepo.findById(scenarioId);
+        } else {
+          // Use index for fast lookup
+          const { scenarioIndexService } = await import('@/lib/services/scenario-index-service');
+          const { scenarioIndexBuilder } = await import('@/lib/services/scenario-index-builder');
+          
+          // Ensure index exists
+          await scenarioIndexBuilder.ensureIndex();
+          
+          // Look up UUID by YAML ID
+          const uuid = await scenarioIndexService.getUuidByYamlId(scenarioId);
+          if (!uuid) {
+            return null;
+          }
+          
+          // Fetch scenario by UUID
+          return scenarioRepo.findById(uuid);
+        }
       })(),
       loadKSACodes(lang)
     );

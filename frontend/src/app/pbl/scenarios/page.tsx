@@ -24,30 +24,48 @@ export default function PBLScenariosPage() {
   };
 
   useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+
     const fetchScenarios = async () => {
       try {
-        const response = await fetch(`/api/pbl/scenarios?lang=${i18n.language}`);
+        setLoading(true);
+        const response = await fetch(`/api/pbl/scenarios?lang=${i18n.language}`, {
+          signal: controller.signal
+        });
         
         if (!response.ok) {
           throw new Error(`PBL Scenarios API failed: ${response.status}`);
         }
         
         const result = await response.json();
-        // Handle PBL API response structure
-        if (result.success && result.data?.scenarios) {
-          setScenarios(result.data.scenarios);
-        } else {
-          setScenarios([]);
+        
+        if (isMounted) {
+          // Handle PBL API response structure
+          if (result.success && result.data?.scenarios) {
+            setScenarios(result.data.scenarios);
+          } else {
+            setScenarios([]);
+          }
         }
       } catch (error) {
-        console.error('Error fetching PBL scenarios:', error);
+        if (error instanceof Error && error.name !== 'AbortError') {
+          console.error('Error fetching PBL scenarios:', error);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchScenarios();
-  }, []);
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [i18n.language]);
 
   // Extract domains from scenario data (handle both unified architecture and direct API response)
   const getScenarioDomains = (scenario: any): string[] => {
@@ -129,15 +147,21 @@ export default function PBLScenariosPage() {
               const difficulty = getScenarioDifficulty(scenario);
               const duration = getEstimatedDuration(scenario);
               
+              const isAvailable = scenario.isAvailable !== false;
+              
               return (
                 <div 
                   key={scenario.id}
-                  className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                  className={`bg-white dark:bg-gray-800 rounded-lg shadow-md ${
+                    isAvailable ? 'hover:shadow-lg transition-shadow' : 'opacity-60'
+                  }`}
                 >
                   <div className="p-6">
                     <div className="flex items-center mb-4">
-                      <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
-                        <span className="text-2xl">📚</span>
+                      <div className={`w-12 h-12 ${
+                        isAvailable ? 'bg-blue-100 dark:bg-blue-900' : 'bg-gray-200 dark:bg-gray-700'
+                      } rounded-lg flex items-center justify-center`}>
+                        <span className="text-2xl">{scenario.thumbnailEmoji || '📚'}</span>
                       </div>
                       <h2 className="ml-4 text-xl font-semibold text-gray-900 dark:text-white pr-16">
                         {scenario.title}
@@ -183,12 +207,18 @@ export default function PBLScenariosPage() {
                       {scenario.taskTemplates?.length || scenario.taskCount || 0} tasks available
                     </div>
 
-                    <Link
-                      href={`/pbl/scenarios/${scenario.id}`}
-                      className="block w-full bg-blue-600 text-white text-center px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      {t('viewDetails')}
-                    </Link>
+                    {isAvailable ? (
+                      <Link
+                        href={`/pbl/scenarios/${scenario.id}`}
+                        className="block w-full bg-blue-600 text-white text-center px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                      >
+                        {t('viewDetails')}
+                      </Link>
+                    ) : (
+                      <div className="text-center text-gray-500 dark:text-gray-400">
+                        {t('comingSoon')}
+                      </div>
+                    )}
                   </div>
                 </div>
               );

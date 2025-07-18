@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { getServerSession } from '@/lib/auth/session';
 import { UnifiedLearningService } from '@/lib/implementations/gcs-v2/services/unified-learning-service';
 
 export async function GET(request: NextRequest) {

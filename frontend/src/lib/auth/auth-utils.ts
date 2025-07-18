@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { verifyAccessToken } from './jwt';
 import type { TokenPayload } from './jwt';
-import { verifySessionToken } from './session-token';
+import { verifySessionToken } from './session-simple';
 
 /**
  * Extract and verify access token from request

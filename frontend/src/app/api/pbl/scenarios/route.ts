@@ -82,6 +82,10 @@ async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Recor
     const scenarioRepo = getScenarioRepository();
     const existingScenarios = await scenarioRepo.findBySource('pbl');
     
+    // Build/update the index with PBL scenarios
+    const { scenarioIndexService } = await import('@/lib/services/scenario-index-service');
+    await scenarioIndexService.buildIndex(existingScenarios);
+    
     // Create a map for quick lookup
     const existingScenariosMap = new Map(
       existingScenarios.map(s => [s.sourceRef.metadata?.yamlId, s])
@@ -96,6 +100,11 @@ async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Recor
         // If not, create it
         if (!scenario) {
           scenario = await pblScenarioService.createScenarioFromYAML(yamlId, lang);
+          
+          // Update index with new scenario
+          if (scenario) {
+            await scenarioIndexService.buildIndex([...existingScenarios, scenario]);
+          }
         }
         
         scenarios.push({

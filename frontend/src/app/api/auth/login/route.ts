@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAccessToken, createRefreshToken } from '@/lib/auth/jwt'
-import { createSessionToken } from '@/lib/auth/session-token'
+import { createSessionToken } from '@/lib/auth/session-simple'
 import { Storage } from '@google-cloud/storage'
 
 // 假資料 - 測試用戶
