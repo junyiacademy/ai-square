@@ -698,14 +698,8 @@ Return your evaluation as a JSON object:
         }
       });
       
-      // Update program XP
+      // Get current XP (will be updated later with currentTaskId)
       const currentXP = (program.metadata?.totalXP as number) || 0;
-      await programRepo.update(programId, {
-        metadata: {
-          ...program.metadata,
-          totalXP: currentXP + bestXP
-        }
-      });
       
       // Update program progress
       // Use the task order from program.taskIds to ensure correct sequence
@@ -728,8 +722,18 @@ Return your evaluation as a JSON object:
         nextTaskId = nextTask.id;
       }
       
-      // Update program current task index
+      // Update program current task index and currentTaskId
       await programRepo.updateProgress(programId, nextTaskIndex);
+      
+      // Update currentTaskId in metadata
+      await programRepo.update(programId, {
+        metadata: {
+          ...program.metadata,
+          currentTaskId: nextTaskId,
+          currentTaskIndex: nextTaskIndex,
+          totalXP: currentXP + bestXP
+        }
+      });
       
       // If all tasks completed, complete the program
       if (completedTasks === orderedTasks.length) {
