@@ -308,16 +308,16 @@ export default function DiscoveryScenarioDetailPage() {
                       <div className="flex-1">
                         <div className="flex items-center space-x-3 mb-2">
                           <h3 className="text-lg font-semibold text-gray-900">
-                            學習歷程 #{index + 1}
+                            {t('discovery:programCard.title')} #{index + 1}
                           </h3>
                           {program.status === 'active' && (
                             <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
-                              進行中
+                              {t('discovery:programCard.statusActive')}
                             </span>
                           )}
                           {program.status === 'completed' && (
                             <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
-                              已完成
+                              {t('discovery:programCard.statusCompleted')}
                             </span>
                           )}
                         </div>
@@ -325,18 +325,18 @@ export default function DiscoveryScenarioDetailPage() {
                         <div className="flex items-center space-x-4 text-sm text-gray-600">
                           <div className="flex items-center space-x-1">
                             <ClockIcon className="w-4 h-4" />
-                            <span>開始於 {new Date(program.createdAt).toLocaleDateString('zh-TW')}</span>
+                            <span>{t('discovery:programCard.startedOn')} {new Date(program.createdAt).toLocaleDateString()}</span>
                           </div>
                           <div className="flex items-center space-x-1">
                             <TrophyIcon className="w-4 h-4" />
-                            <span>{program.totalXP} XP</span>
+                            <span>{program.totalXP || 0} XP</span>
                           </div>
                         </div>
                         
                         {/* Progress Bar */}
                         <div className="mt-4">
                           <div className="flex items-center justify-between text-sm mb-1">
-                            <span className="text-gray-600">完成進度</span>
+                            <span className="text-gray-600">{t('discovery:programCard.progress')}</span>
                             <span className="text-gray-900 font-medium">{program.progress}%</span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
@@ -346,7 +346,7 @@ export default function DiscoveryScenarioDetailPage() {
                             />
                           </div>
                           <p className="mt-1 text-xs text-gray-500">
-                            {program.completedTasks} / {program.totalTasks} 個任務完成
+                            {t('discovery:programCard.tasksCompleted', { completed: program.completedTasks, total: program.totalTasks })}
                           </p>
                         </div>
                       </div>
@@ -355,7 +355,18 @@ export default function DiscoveryScenarioDetailPage() {
                         {program.status === 'active' ? (
                           <button className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
                             <PlayIcon className="w-4 h-4" />
-                            <span>繼續</span>
+                            <span>{t('discovery:programCard.continue')}</span>
+                          </button>
+                        ) : program.status === 'completed' ? (
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              router.push(`/discovery/scenarios/${scenarioId}/programs/${program.id}/complete`);
+                            }}
+                            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                          >
+                            <TrophyIcon className="w-4 h-4" />
+                            <span>{t('discovery:programCard.viewResults')}</span>
                           </button>
                         ) : (
                           <ChevronRightIcon className="w-5 h-5 text-gray-400" />
@@ -370,7 +381,7 @@ export default function DiscoveryScenarioDetailPage() {
             <div className="bg-gray-50 rounded-xl p-12 text-center">
               <RocketLaunchIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <p className="text-gray-600 mb-6">
-                還沒有開始任何學習歷程
+                {t('discovery:scenarioDetail.noProgramsYet')}
               </p>
               <button
                 onClick={createNewProgram}
@@ -378,7 +389,7 @@ export default function DiscoveryScenarioDetailPage() {
                 className="inline-flex items-center space-x-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
               >
                 <SparklesIcon className="w-5 h-5" />
-                <span>{creatingProgram ? '創建中...' : '開始第一個歷程'}</span>
+                <span>{creatingProgram ? t('discovery:scenarioDetail.creating') : t('discovery:scenarioDetail.startFirstProgram')}</span>
               </button>
             </div>
           )}

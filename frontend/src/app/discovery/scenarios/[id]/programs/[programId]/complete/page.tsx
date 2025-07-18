@@ -8,6 +8,7 @@ import { ClockIcon, BeakerIcon, ChatBubbleBottomCenterTextIcon, DocumentTextIcon
 import Link from 'next/link';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
+import DiscoveryPageLayout from '@/components/discovery/DiscoveryPageLayout';
 
 interface SkillImprovement {
   skillId: string;
@@ -290,7 +291,8 @@ export default function DiscoveryCompletePage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
+    <DiscoveryPageLayout>
+      <div className="max-w-6xl mx-auto px-4 py-8">
       {/* Success Header */}
       <div className="text-center mb-8">
         <div className="flex justify-center mb-4">
@@ -555,12 +557,6 @@ export default function DiscoveryCompletePage() {
           {t('discovery:complete.backToScenario')}
         </Link>
         
-        <Link
-          href="/discovery/overview"
-          className="inline-flex items-center px-6 py-3 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
-        >
-          {t('discovery:complete.exploreMore')}
-        </Link>
 
         <button
           onClick={() => window.print()}
@@ -582,5 +578,6 @@ export default function DiscoveryCompletePage() {
         )}
       </div>
     </div>
+    </DiscoveryPageLayout>
   );
 }

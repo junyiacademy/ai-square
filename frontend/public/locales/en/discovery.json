@@ -245,5 +245,22 @@
     "chat": "AI Chat",
     "creation": "Creation",
     "analysis": "Analysis"
+  },
+  
+  "programCard": {
+    "title": "Learning Journey",
+    "statusActive": "In Progress",
+    "statusCompleted": "Completed",
+    "startedOn": "Started on",
+    "progress": "Progress",
+    "tasksCompleted": "{{completed}} / {{total}} tasks completed",
+    "continue": "Continue",
+    "viewResults": "View Results"
+  },
+  
+  "scenarioDetail": {
+    "noProgramsYet": "No learning journeys started yet",
+    "creating": "Creating...",
+    "startFirstProgram": "Start Your First Journey"
   }
 }
