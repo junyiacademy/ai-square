@@ -192,7 +192,7 @@ export default function DiscoveryScenarioDetailPage() {
         <div className="max-w-4xl mx-auto px-4 py-16 text-center">
           <div className="inline-flex items-center space-x-2 text-gray-500">
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-600"></div>
-            <span>載入中...</span>
+            <span>{t('discovery:scenarioDetail.loading')}</span>
           </div>
         </div>
       </DiscoveryPageLayout>
@@ -203,12 +203,12 @@ export default function DiscoveryScenarioDetailPage() {
     return (
       <DiscoveryPageLayout>
         <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-          <p className="text-gray-500">找不到此職業冒險</p>
+          <p className="text-gray-500">{t('discovery:scenarioDetail.notFound')}</p>
           <button
             onClick={() => router.push('/discovery/scenarios')}
             className="mt-4 text-purple-600 hover:text-purple-700"
           >
-            返回職業列表
+            {t('discovery:scenarioDetail.backToList')}
           </button>
         </div>
       </DiscoveryPageLayout>
@@ -229,7 +229,7 @@ export default function DiscoveryScenarioDetailPage() {
           className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 mb-6"
         >
           <ArrowLeftIcon className="w-5 h-5" />
-          <span>返回職業列表</span>
+          <span>{t('discovery:scenarioDetail.backToList')}</span>
         </button>
 
         {/* Career Header */}
@@ -279,7 +279,7 @@ export default function DiscoveryScenarioDetailPage() {
         <div>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-900">
-              我的學習歷程
+              {t('discovery:scenarioDetail.myPrograms')}
             </h2>
             <button
               onClick={createNewProgram}
@@ -287,7 +287,7 @@ export default function DiscoveryScenarioDetailPage() {
               className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50"
             >
               <PlusIcon className="w-5 h-5" />
-              <span>{creatingProgram ? '創建中...' : '開始新歷程'}</span>
+              <span>{creatingProgram ? t('discovery:scenarioDetail.creating') : t('discovery:scenarioDetail.startNewProgram')}</span>
             </button>
           </div>
 

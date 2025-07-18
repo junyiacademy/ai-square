@@ -246,6 +246,7 @@
     "overallScore": "總分",
     "tasksCompleted": "完成任務",
     "timeSpent": "花費時間",
+    "daysUsed": "使用天數",
     "hoursMinutes": "{{hours}}小時 {{minutes}}分鐘",
     "minutes": "{{minutes}} 分鐘",
     "achievementsUnlocked": "解鎖成就",
@@ -276,5 +277,29 @@
     "chat": "AI 對話",
     "creation": "創作",
     "analysis": "分析"
+  },
+  
+  "programCard": {
+    "title": "學習歷程",
+    "statusActive": "進行中",
+    "statusCompleted": "已完成",
+    "startedOn": "開始於",
+    "progress": "進度",
+    "tasksCompleted": "已完成 {{completed}} / {{total}} 個任務",
+    "continue": "繼續",
+    "viewResults": "查看結果"
+  },
+  
+  "scenarioDetail": {
+    "backToList": "返回職業列表",
+    "myPrograms": "我的學習歷程",
+    "startNewProgram": "開始新歷程",
+    "creating": "創建中...",
+    "noProgramsYet": "尚未開始任何學習歷程",
+    "startFirstProgram": "開始你的第一個歷程",
+    "loading": "載入中...",
+    "notFound": "找不到此職業冒險",
+    "daysUsed": "使用天數",
+    "translating": "翻譯中"
   }
 }
