@@ -7,6 +7,7 @@ import { CheckCircleIcon, StarIcon, TrophyIcon, LightBulbIcon, ChartBarIcon } fr
 import { ClockIcon, BeakerIcon, ChatBubbleBottomCenterTextIcon, DocumentTextIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import Image from 'next/image';
+import ReactMarkdown from 'react-markdown';
 
 interface SkillImprovement {
   skillId: string;
@@ -56,6 +57,13 @@ interface DiscoveryCompletionData {
     growthAreas: string[];
     nextSteps: string[];
   };
+  qualitativeFeedbackVersions?: Record<string, {
+    overallAssessment: string;
+    careerAlignment: string;
+    strengths: string[];
+    growthAreas: string[];
+    nextSteps: string[];
+  }>;
 }
 
 export default function DiscoveryCompletePage() {
@@ -67,10 +75,71 @@ export default function DiscoveryCompletePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [regenerating, setRegenerating] = useState(false);
+  const [translatingFeedback, setTranslatingFeedback] = useState(false);
 
   useEffect(() => {
     loadCompletionData();
   }, [params.programId]);
+
+  // Handle language change for qualitative feedback
+  useEffect(() => {
+    if (!completionData || !completionData.qualitativeFeedback) return;
+    
+    const handleLanguageChange = async () => {
+      const versions = completionData.qualitativeFeedbackVersions || {};
+      const currentLang = i18n.language === 'zh-TW' ? 'zhTW' : i18n.language;
+      
+      // Check if we have this language version
+      if (versions[currentLang]) {
+        // Use existing version
+        setCompletionData(prev => ({
+          ...prev!,
+          qualitativeFeedback: versions[currentLang]
+        }));
+      } else {
+        // Need to generate translation
+        await generateTranslation(currentLang);
+      }
+    };
+    
+    handleLanguageChange();
+  }, [i18n.language]); // Only depend on language change
+
+  const generateTranslation = async (targetLang: string) => {
+    // Prevent multiple concurrent translations
+    if (translatingFeedback) return;
+    
+    try {
+      setTranslatingFeedback(true);
+      
+      // Call API to translate feedback
+      const response = await fetch(`/api/discovery/programs/${params.programId}/translate-feedback`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ targetLanguage: targetLang })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.translatedFeedback) {
+          setCompletionData(prev => ({
+            ...prev!,
+            qualitativeFeedback: data.translatedFeedback,
+            qualitativeFeedbackVersions: {
+              ...prev!.qualitativeFeedbackVersions,
+              [targetLang]: data.translatedFeedback
+            }
+          }));
+        }
+      }
+    } catch (error) {
+      console.error('Failed to translate feedback:', error);
+    } finally {
+      setTranslatingFeedback(false);
+    }
+  };
 
   const loadCompletionData = async (regenerate = false) => {
     try {
@@ -121,7 +190,8 @@ export default function DiscoveryCompletePage() {
         completedTasks: evalData.evaluation.completedTasks || programData.completedTasks || 0,
         timeSpentSeconds: evalData.evaluation.timeSpentSeconds || 0,
         daysUsed: evalData.evaluation.daysUsed || 0,
-        taskEvaluations: evalData.evaluation.taskEvaluations || []
+        taskEvaluations: evalData.evaluation.taskEvaluations || [],
+        qualitativeFeedbackVersions: evalData.evaluation.qualitativeFeedbackVersions || {}
       });
     } catch (err) {
       console.error('Error loading completion data:', err);
@@ -395,21 +465,30 @@ export default function DiscoveryCompletePage() {
           <h2 className="text-xl font-semibold mb-4 flex items-center">
             <LightBulbIcon className="h-6 w-6 text-yellow-500 mr-2" />
             {t('discovery:complete.aiFeedback')}
+            {translatingFeedback && (
+              <span className="ml-2 text-sm text-gray-500 animate-pulse">
+                {t('discovery:complete.translating')}...
+              </span>
+            )}
           </h2>
           
-          <div className="space-y-4">
+          <div className={`space-y-4 ${translatingFeedback ? 'opacity-50' : ''}`}>
             <div>
               <h3 className="font-semibold text-gray-900 mb-2">
                 {t('discovery:complete.overallAssessment')}
               </h3>
-              <p className="text-gray-700">{completionData.qualitativeFeedback.overallAssessment}</p>
+              <div className="text-gray-700 prose prose-sm max-w-none">
+                <ReactMarkdown>{completionData.qualitativeFeedback.overallAssessment}</ReactMarkdown>
+              </div>
             </div>
 
             <div>
               <h3 className="font-semibold text-gray-900 mb-2">
                 {t('discovery:complete.careerAlignment')}
               </h3>
-              <p className="text-gray-700">{completionData.qualitativeFeedback.careerAlignment}</p>
+              <div className="text-gray-700 prose prose-sm max-w-none">
+                <ReactMarkdown>{completionData.qualitativeFeedback.careerAlignment}</ReactMarkdown>
+              </div>
             </div>
 
             {completionData.qualitativeFeedback.strengths.length > 0 && (
@@ -419,7 +498,11 @@ export default function DiscoveryCompletePage() {
                 </h3>
                 <ul className="list-disc list-inside space-y-1">
                   {completionData.qualitativeFeedback.strengths.map((strength, idx) => (
-                    <li key={idx} className="text-gray-700">{strength}</li>
+                    <li key={idx} className="text-gray-700">
+                      <span className="prose prose-sm max-w-none inline">
+                        <ReactMarkdown>{strength}</ReactMarkdown>
+                      </span>
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -432,7 +515,11 @@ export default function DiscoveryCompletePage() {
                 </h3>
                 <ul className="list-disc list-inside space-y-1">
                   {completionData.qualitativeFeedback.growthAreas.map((area, idx) => (
-                    <li key={idx} className="text-gray-700">{area}</li>
+                    <li key={idx} className="text-gray-700">
+                      <span className="prose prose-sm max-w-none inline">
+                        <ReactMarkdown>{area}</ReactMarkdown>
+                      </span>
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -445,7 +532,11 @@ export default function DiscoveryCompletePage() {
                 </h3>
                 <ul className="list-disc list-inside space-y-1">
                   {completionData.qualitativeFeedback.nextSteps.map((step, idx) => (
-                    <li key={idx} className="text-gray-700">{step}</li>
+                    <li key={idx} className="text-gray-700">
+                      <span className="prose prose-sm max-w-none inline">
+                        <ReactMarkdown>{step}</ReactMarkdown>
+                      </span>
+                    </li>
                   ))}
                 </ul>
               </div>

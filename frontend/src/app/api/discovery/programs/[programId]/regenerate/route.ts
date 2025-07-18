@@ -7,6 +7,7 @@ import {
 } from '@/lib/implementations/gcs-v2';
 import { getServerSession } from '@/lib/auth/session';
 import { VertexAIService } from '@/lib/ai/vertex-ai-service';
+import { TranslationService } from '@/lib/services/translation-service';
 
 export async function POST(
   request: NextRequest,
@@ -109,8 +110,14 @@ export async function POST(
     const scenario = await scenarioRepo.findById(program.scenarioId);
     const careerType = program.metadata?.careerType || scenario?.metadata?.careerType || 'general';
     
+    // Get user's preferred language from request or program
+    const acceptLanguage = request.headers.get('accept-language')?.split(',')[0];
+    const userLanguage = acceptLanguage || program.metadata?.language || 'en';
+    
     // Generate qualitative feedback based on all task completions
     let qualitativeFeedback = null;
+    let qualitativeFeedbackVersions = {};
+    
     try {
       const aiService = new VertexAIService({
         systemPrompt: 'You are an educational psychologist specializing in career development and AI-powered learning.',
@@ -148,6 +155,8 @@ Please provide a structured assessment with the following sections:
 4. **Growth Areas** (2-3 bullet points): Areas for improvement
 5. **Next Steps** (2-3 bullet points): Specific recommendations for continued learning
 
+${userLanguage === 'zhTW' ? 'Please provide your response in Traditional Chinese (繁體中文).' : 'Please provide your response in English.'}
+
 Return your response in JSON format:
 {
   "overallAssessment": "...",
@@ -163,6 +172,44 @@ Return your response in JSON format:
         const jsonMatch = aiResponse.content.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
           qualitativeFeedback = JSON.parse(jsonMatch[0]);
+          
+          // Store the generated feedback in the user's language
+          qualitativeFeedbackVersions[userLanguage] = qualitativeFeedback;
+          
+          // If not English, also generate English version for storage
+          if (userLanguage !== 'en') {
+            try {
+              const translationService = new TranslationService();
+              const englishFeedback = {
+                overallAssessment: await translationService.translateFeedback(
+                  qualitativeFeedback.overallAssessment, 'en', careerType
+                ),
+                careerAlignment: await translationService.translateFeedback(
+                  qualitativeFeedback.careerAlignment, 'en', careerType
+                ),
+                strengths: await Promise.all(
+                  qualitativeFeedback.strengths.map((s: string) => 
+                    translationService.translateFeedback(s, 'en', careerType)
+                  )
+                ),
+                growthAreas: await Promise.all(
+                  qualitativeFeedback.growthAreas.map((g: string) => 
+                    translationService.translateFeedback(g, 'en', careerType)
+                  )
+                ),
+                nextSteps: await Promise.all(
+                  qualitativeFeedback.nextSteps.map((n: string) => 
+                    translationService.translateFeedback(n, 'en', careerType)
+                  )
+                )
+              };
+              qualitativeFeedbackVersions['en'] = englishFeedback;
+            } catch (translationError) {
+              console.error('Failed to generate English version:', translationError);
+              // Fallback: store current version as English too
+              qualitativeFeedbackVersions['en'] = qualitativeFeedback;
+            }
+          }
         }
       } catch (parseError) {
         console.error('Failed to parse AI feedback:', parseError);
@@ -193,7 +240,8 @@ Return your response in JSON format:
           timeSpentSeconds,
           daysUsed,
           taskEvaluations,
-          qualitativeFeedback,
+          qualitativeFeedback: qualitativeFeedbackVersions['en'] || qualitativeFeedback,
+          qualitativeFeedbackVersions,
           regeneratedAt: new Date().toISOString()
         }
       });
@@ -240,7 +288,8 @@ Return your response in JSON format:
           timeSpentSeconds,
           daysUsed,
           taskEvaluations,
-          qualitativeFeedback,
+          qualitativeFeedback: qualitativeFeedbackVersions['en'] || qualitativeFeedback,
+          qualitativeFeedbackVersions,
           completedAt: new Date().toISOString()
         }
       });

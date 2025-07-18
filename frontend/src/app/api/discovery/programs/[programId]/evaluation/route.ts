@@ -191,7 +191,8 @@ export async function GET(
       taskEvaluations: evaluation.metadata?.taskEvaluations || [],
       skillImprovements: evaluation.metadata?.skillImprovements || [],
       achievementsUnlocked: evaluation.metadata?.achievementsUnlocked || [],
-      qualitativeFeedback: evaluation.metadata?.qualitativeFeedback || null
+      qualitativeFeedback: evaluation.metadata?.qualitativeFeedback || null,
+      qualitativeFeedbackVersions: evaluation.metadata?.qualitativeFeedbackVersions || {}
     };
     
     return NextResponse.json({ 

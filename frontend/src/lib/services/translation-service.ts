@@ -27,30 +27,64 @@ export class TranslationService {
     targetLanguage: string,
     careerField?: string
   ): Promise<string> {
+    // Map language codes to proper names
+    const languageMap: Record<string, string> = {
+      'zhTW': 'Traditional Chinese (繁體中文)',
+      'zh-TW': 'Traditional Chinese (繁體中文)',
+      'zhCN': 'Simplified Chinese (简体中文)',
+      'zh-CN': 'Simplified Chinese (简体中文)',
+      'en': 'English',
+      'es': 'Spanish',
+      'ja': 'Japanese',
+      'ko': 'Korean',
+      'fr': 'French',
+      'de': 'German',
+      'ru': 'Russian',
+      'it': 'Italian',
+      'pt': 'Portuguese',
+      'ar': 'Arabic',
+      'id': 'Indonesian',
+      'th': 'Thai'
+    };
+    
+    const targetLanguageName = languageMap[targetLanguage] || targetLanguage;
+    
     const prompt = `
-You are translating educational feedback from English to language code: ${targetLanguage}.
+Translate the following educational feedback to ${targetLanguageName}.
 
-Context:
-${careerField ? `- Career Field: ${careerField}` : ''}
-- Content Type: Educational evaluation feedback
-- Style: Professional, encouraging, mentor-like tone
-
-Original Feedback (English):
+Original Text:
 ${originalFeedback}
 
-Translation Requirements:
-1. Maintain the same tone and style as the original
-2. Preserve all formatting (markdown, bold text, bullet points, etc.)
-3. Keep the authority figure name and signature in original form
-4. Translate technical terms appropriately for the career field
-5. Ensure the encouraging and professional tone is preserved
-6. Keep the same structure and paragraph organization
+Important:
+- Provide ONLY the translation, no explanations or labels
+- Maintain all formatting (markdown, **bold**, bullet points)
+- Keep proper names and signatures unchanged
+- Preserve the encouraging and professional tone
+${careerField ? `- Use appropriate terminology for the ${careerField} field` : ''}
 
-Please provide the translation in language code: ${targetLanguage}`;
+Translate now:`;
 
     try {
       const response = await this.aiService.sendMessage(prompt);
-      return response.content;
+      
+      // Clean up the response - remove any translation labels
+      let content = response.content;
+      
+      // Remove common translation labels/headers
+      content = content.replace(/^Translation.*?:\s*/gim, '');
+      content = content.replace(/^Translated.*?:\s*/gim, '');
+      content = content.replace(/^.*?Translation:\s*/gim, '');
+      content = content.replace(/^.*?Snippet \d+:\s*/gim, '');
+      
+      // Remove bullet points that might be added
+      if (content.startsWith('• ')) {
+        content = content.substring(2);
+      }
+      
+      // Trim any extra whitespace
+      content = content.trim();
+      
+      return content;
     } catch (error) {
       console.error('Translation failed:', error);
       throw new Error(`Failed to translate feedback to ${targetLanguage}`);
