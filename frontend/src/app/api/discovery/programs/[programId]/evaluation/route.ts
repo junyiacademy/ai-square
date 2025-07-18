@@ -33,6 +33,7 @@ export async function GET(
       }
     }
     
+    
     // Await params before using
     const { programId } = await params;
     
@@ -49,51 +50,106 @@ export async function GET(
       );
     }
     
+    // 1. 先追 program 底下的 task 有哪些
+    const tasks = await taskRepo.findByProgram(programId);
+    console.log(`1. Program ${programId} has ${tasks.length} tasks:`, tasks.map(t => ({
+      id: t.id,
+      title: t.title,
+      status: t.status,
+      hasEvaluation: !!t.evaluation
+    })));
+    
+    // 2. 這些 task 的 evaluation 有誰？
+    const completedTasks = tasks.filter(t => t.status === 'completed');
+    console.log(`2. Completed tasks (${completedTasks.length}):`, completedTasks.map(t => ({
+      taskId: t.id,
+      evaluationId: t.evaluation?.id,
+      score: t.evaluation?.score,
+      metadata: t.evaluation?.metadata
+    })));
+    
     // Get evaluations for this program
     const evaluations = await evaluationRepo.findByTarget('program', programId);
-    console.log('Found evaluations for Discovery program', programId, {
-      evaluationsCount: evaluations.length,
-      evaluationTypes: evaluations.map(e => e.evaluationType),
-      evaluationIds: evaluations.map(e => e.id)
+    console.log('Existing program evaluations:', {
+      count: evaluations.length,
+      types: evaluations.map(e => e.evaluationType),
+      ids: evaluations.map(e => e.id)
     });
     
     // Find the discovery_complete evaluation
-    const evaluation = evaluations.find(e => e.evaluationType === 'discovery_complete');
+    let evaluation = evaluations.find(e => e.evaluationType === 'discovery_complete');
     
+    // If no evaluation exists
     if (!evaluation) {
-      // If no evaluation exists yet, create a basic one from task data
-      const tasks = await taskRepo.findByProgram(programId);
-      const completedTasks = tasks.filter(t => t.status === 'completed');
+      console.log('No evaluation found, creating synthetic one...');
       
-      // Calculate basic metrics
-      const totalXP = completedTasks.reduce((sum, task) => {
-        const xp = task.metadata?.xpEarned || 0;
-        return sum + xp;
-      }, 0);
+      // 3. 根據這些 log 跟 evaluation 建立 completion evaluation
+      // Calculate metrics from task evaluations
+      let totalXP = 0;
+      let totalScore = 0;
+      let validScoreCount = 0;
       
-      const totalScore = completedTasks.reduce((sum, task) => {
-        const score = task.metadata?.score || 0;
-        return sum + score;
-      }, 0);
+      // Create task evaluations array
+      const taskEvaluations = completedTasks.map(task => {
+        const score = task.evaluation?.score || 0;
+        const xp = task.evaluation?.score || 0; // Using score as XP
+        const attempts = task.interactions?.filter(i => i.type === 'user_input').length || 1;
+        const skills = task.evaluation?.metadata?.skillsImproved || [];
+        
+        if (score > 0) {
+          totalXP += xp;
+          totalScore += score;
+          validScoreCount++;
+        }
+        
+        console.log(`Task ${task.title}: score=${score}, xp=${xp}, attempts=${attempts}`);
+        
+        return {
+          taskId: task.id,
+          taskTitle: task.title || 'Task',
+          taskType: task.type || 'question',
+          score: score,
+          xpEarned: xp,
+          attempts: attempts,
+          skillsImproved: skills
+        };
+      });
       
-      const avgScore = completedTasks.length > 0 ? Math.round(totalScore / completedTasks.length) : 0;
+      const avgScore = validScoreCount > 0 ? Math.round(totalScore / validScoreCount) : 0;
       
-      // Create task evaluations
-      const taskEvaluations = completedTasks.map(task => ({
-        taskId: task.id,
-        taskTitle: task.title || 'Task',
-        taskType: task.metadata?.taskType || 'question',
-        score: task.metadata?.score || 0,
-        xpEarned: task.metadata?.xpEarned || 0,
-        attempts: task.metadata?.attempts || 1,
-        skillsImproved: task.metadata?.skillsImproved || []
-      }));
-      
-      // Calculate time spent (sum of all task times)
+      // Calculate time spent from interactions
       const timeSpentSeconds = completedTasks.reduce((sum, task) => {
-        const time = task.metadata?.timeSpent || 0;
+        const interactions = task.interactions || [];
+        const time = interactions.reduce((taskTime, interaction) => {
+          const t = interaction.content?.timeSpent || 0;
+          return taskTime + t;
+        }, 0);
         return sum + time;
       }, 0);
+      
+      // Calculate days used from program start to last task completion
+      let daysUsed = 0;
+      if (program.createdAt && completedTasks.length > 0) {
+        const startDate = new Date(program.createdAt);
+        const lastCompletionDate = completedTasks.reduce((latest, task) => {
+          if (task.completedAt) {
+            const taskDate = new Date(task.completedAt);
+            return taskDate > latest ? taskDate : latest;
+          }
+          return latest;
+        }, startDate);
+        
+        const timeDiff = lastCompletionDate.getTime() - startDate.getTime();
+        daysUsed = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // Convert to days
+      }
+      
+      console.log('Calculated metrics:', {
+        totalXP,
+        avgScore,
+        timeSpentSeconds,
+        daysUsed,
+        taskEvaluations: taskEvaluations.length
+      });
       
       // Return synthetic evaluation data
       return NextResponse.json({
@@ -106,17 +162,40 @@ export async function GET(
           totalTasks: tasks.length,
           completedTasks: completedTasks.length,
           timeSpentSeconds,
+          daysUsed,
           taskEvaluations,
           skillImprovements: [],
           achievementsUnlocked: [],
-          createdAt: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          isNew: true
         },
-        program
+        program,
+        debug: {
+          tasksFound: tasks.length,
+          completedTasks: completedTasks.length,
+          taskDetails: taskEvaluations
+        }
       });
     }
     
+    // Return existing evaluation with metadata properly exposed
+    const evaluationData = {
+      ...evaluation,
+      // Expose metadata fields at top level for compatibility
+      overallScore: evaluation.metadata?.overallScore || evaluation.score || 0,
+      totalXP: evaluation.metadata?.totalXP || 0,
+      totalTasks: evaluation.metadata?.totalTasks || 0,
+      completedTasks: evaluation.metadata?.completedTasks || 0,
+      timeSpentSeconds: evaluation.metadata?.timeSpentSeconds || 0,
+      daysUsed: evaluation.metadata?.daysUsed || 0,
+      taskEvaluations: evaluation.metadata?.taskEvaluations || [],
+      skillImprovements: evaluation.metadata?.skillImprovements || [],
+      achievementsUnlocked: evaluation.metadata?.achievementsUnlocked || [],
+      qualitativeFeedback: evaluation.metadata?.qualitativeFeedback || null
+    };
+    
     return NextResponse.json({ 
-      evaluation,
+      evaluation: evaluationData,
       program
     });
   } catch (error) {

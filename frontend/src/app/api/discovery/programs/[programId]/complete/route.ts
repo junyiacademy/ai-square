@@ -62,22 +62,44 @@ export async function POST(
     const tasks = await taskRepo.findByProgram(programId);
     const completedTasks = tasks.filter(t => t.status === 'completed');
     
-    // Calculate metrics
-    const totalXP = completedTasks.reduce((sum, task) => {
-      return sum + (task.metadata?.xpEarned || 0);
-    }, 0);
+    // Calculate metrics from interactions
+    let totalXP = 0;
+    let totalScore = 0;
+    let validScoreCount = 0;
     
-    const totalScore = completedTasks.reduce((sum, task) => {
-      return sum + (task.metadata?.score || 0);
-    }, 0);
+    completedTasks.forEach(task => {
+      const interactions = task.interactions || [];
+      // Find the last successful AI response for this task
+      const successfulResponses = interactions.filter(i => 
+        i.type === 'ai_response' && i.content?.completed === true
+      );
+      
+      if (successfulResponses.length > 0) {
+        const lastSuccess = successfulResponses[successfulResponses.length - 1];
+        const content = typeof lastSuccess.content === 'string' 
+          ? JSON.parse(lastSuccess.content) 
+          : lastSuccess.content;
+        
+        const xpEarned = content.xpEarned || 0;
+        const score = content.score || (content.completed ? 100 : 0);
+        
+        totalXP += xpEarned;
+        totalScore += score;
+        validScoreCount++;
+      }
+    });
     
-    const avgScore = completedTasks.length > 0 ? Math.round(totalScore / completedTasks.length) : 0;
+    const avgScore = validScoreCount > 0 ? Math.round(totalScore / validScoreCount) : 0;
     
     // Calculate time spent
     const timeSpentSeconds = completedTasks.reduce((sum, task) => {
       const interactions = task.interactions || [];
       const timeSpent = interactions.reduce((taskTime, interaction) => {
-        return taskTime + (interaction.metadata?.timeSpent || 0);
+        // Check different possible locations for timeSpent
+        const time = interaction.metadata?.timeSpent || 
+                    interaction.content?.timeSpent || 
+                    0;
+        return taskTime + time;
       }, 0);
       return sum + timeSpent;
     }, 0);
@@ -86,19 +108,35 @@ export async function POST(
     const taskEvaluations = completedTasks.map(task => {
       const interactions = task.interactions || [];
       const attempts = interactions.filter(i => i.type === 'user_input').length;
-      const passCount = interactions.filter(i => 
-        i.type === 'ai_response' && i.content?.completed
-      ).length;
+      const aiResponses = interactions.filter(i => i.type === 'ai_response');
+      const passCount = aiResponses.filter(r => r.content?.completed === true).length;
+      
+      // Get the last successful response for XP and score
+      let taskXP = 0;
+      let taskScore = 0;
+      let skillsImproved = [];
+      
+      const successfulResponses = aiResponses.filter(r => r.content?.completed === true);
+      if (successfulResponses.length > 0) {
+        const lastSuccess = successfulResponses[successfulResponses.length - 1];
+        const content = typeof lastSuccess.content === 'string' 
+          ? JSON.parse(lastSuccess.content) 
+          : lastSuccess.content;
+        
+        taskXP = content.xpEarned || 0;
+        taskScore = content.score || (content.completed ? 100 : 0);
+        skillsImproved = content.skillsImproved || [];
+      }
       
       return {
         taskId: task.id,
         taskTitle: task.title || 'Task',
         taskType: task.metadata?.taskType || 'question',
-        score: task.metadata?.score || 0,
-        xpEarned: task.metadata?.xpEarned || 0,
+        score: taskScore,
+        xpEarned: taskXP,
         attempts,
         passCount,
-        skillsImproved: task.metadata?.skillsImproved || []
+        skillsImproved
       };
     });
     
@@ -114,7 +152,10 @@ export async function POST(
       score: avgScore,
       totalXP,
       totalTasks: tasks.length,
-      completedTasks: completedTasks.length
+      completedTasks: completedTasks.length,
+      timeSpentSeconds,
+      taskEvaluationsCount: taskEvaluations.length,
+      taskEvaluationsSample: taskEvaluations[0]
     });
     
     const evaluation = await evaluationRepo.create({

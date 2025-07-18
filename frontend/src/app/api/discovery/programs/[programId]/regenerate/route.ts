@@ -1,0 +1,277 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { 
+  getProgramRepository,
+  getTaskRepository,
+  getEvaluationRepository,
+  getScenarioRepository
+} from '@/lib/implementations/gcs-v2';
+import { getServerSession } from '@/lib/auth/session';
+import { VertexAIService } from '@/lib/ai/vertex-ai-service';
+
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ programId: string }> }
+) {
+  try {
+    const session = await getServerSession();
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    
+    const { programId } = await params;
+    
+    const programRepo = getProgramRepository();
+    const taskRepo = getTaskRepository();
+    const evaluationRepo = getEvaluationRepository();
+    const scenarioRepo = getScenarioRepository();
+    
+    // Get program
+    const program = await programRepo.findById(programId);
+    if (!program || program.userId !== session.user.email) {
+      return NextResponse.json(
+        { error: 'Program not found or access denied' },
+        { status: 404 }
+      );
+    }
+    
+    // Get all tasks
+    const tasks = await taskRepo.findByProgram(programId);
+    const completedTasks = tasks.filter(t => t.status === 'completed');
+    
+    console.log('Regenerating evaluation for program:', programId);
+    console.log('Tasks found:', tasks.length, 'Completed:', completedTasks.length);
+    
+    // Calculate metrics from task evaluations
+    let totalXP = 0;
+    let totalScore = 0;
+    let validScoreCount = 0;
+    
+    // Create task evaluations array
+    const taskEvaluations = completedTasks.map(task => {
+      const score = task.evaluation?.score || 0;
+      const xp = task.evaluation?.score || 0; // Using score as XP
+      const attempts = task.interactions?.filter(i => i.type === 'user_input').length || 1;
+      const skills = task.evaluation?.metadata?.skillsImproved || [];
+      
+      if (score > 0) {
+        totalXP += xp;
+        totalScore += score;
+        validScoreCount++;
+      }
+      
+      return {
+        taskId: task.id,
+        taskTitle: task.title || 'Task',
+        taskType: task.type || 'question',
+        score: score,
+        xpEarned: xp,
+        attempts: attempts,
+        skillsImproved: skills
+      };
+    });
+    
+    const avgScore = validScoreCount > 0 ? Math.round(totalScore / validScoreCount) : 0;
+    
+    // Calculate time spent from interactions
+    const timeSpentSeconds = completedTasks.reduce((sum, task) => {
+      const interactions = task.interactions || [];
+      const time = interactions.reduce((taskTime, interaction) => {
+        const t = interaction.content?.timeSpent || 0;
+        return taskTime + t;
+      }, 0);
+      return sum + time;
+    }, 0);
+    
+    // Calculate days used
+    let daysUsed = 0;
+    if (program.createdAt && completedTasks.length > 0) {
+      const startDate = new Date(program.createdAt);
+      const lastCompletionDate = completedTasks.reduce((latest, task) => {
+        if (task.completedAt) {
+          const taskDate = new Date(task.completedAt);
+          return taskDate > latest ? taskDate : latest;
+        }
+        return latest;
+      }, startDate);
+      
+      const timeDiff = lastCompletionDate.getTime() - startDate.getTime();
+      daysUsed = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+    }
+    
+    console.log('Calculated metrics:', {
+      totalXP,
+      avgScore,
+      timeSpentSeconds,
+      daysUsed
+    });
+    
+    // Get scenario info
+    const scenario = await scenarioRepo.findById(program.scenarioId);
+    const careerType = program.metadata?.careerType || scenario?.metadata?.careerType || 'general';
+    
+    // Generate qualitative feedback based on all task completions
+    let qualitativeFeedback = null;
+    try {
+      const aiService = new VertexAIService({
+        systemPrompt: 'You are an educational psychologist specializing in career development and AI-powered learning.',
+        temperature: 0.8,
+        model: 'gemini-2.5-flash'
+      });
+      
+      // Prepare learning journey summary
+      const learningJourney = completedTasks.map(task => ({
+        taskTitle: task.title,
+        taskType: task.type,
+        score: task.evaluation?.score || 0,
+        feedback: task.evaluation?.feedback || '',
+        attempts: task.interactions?.filter(i => i.type === 'user_input').length || 0,
+        skills: task.evaluation?.metadata?.skillsImproved || []
+      }));
+      
+      const feedbackPrompt = `
+Based on the following Discovery learning journey in the ${careerType} career path, provide a comprehensive qualitative assessment:
+
+Scenario: ${scenario?.title || 'Discovery Program'}
+Career Path: ${careerType}
+Overall Score: ${avgScore}
+Total XP Earned: ${totalXP}
+Days Used: ${daysUsed}
+
+Task Performance:
+${JSON.stringify(learningJourney, null, 2)}
+
+Please provide a structured assessment with the following sections:
+
+1. **Overall Assessment** (2-3 sentences): Summarize the learner's performance and key achievements
+2. **Career Alignment** (2-3 sentences): How well their performance aligns with the ${careerType} career path
+3. **Strengths** (2-3 bullet points): Key strengths demonstrated
+4. **Growth Areas** (2-3 bullet points): Areas for improvement
+5. **Next Steps** (2-3 bullet points): Specific recommendations for continued learning
+
+Return your response in JSON format:
+{
+  "overallAssessment": "...",
+  "careerAlignment": "...",
+  "strengths": ["...", "..."],
+  "growthAreas": ["...", "..."],
+  "nextSteps": ["...", "..."]
+}`;
+
+      const aiResponse = await aiService.sendMessage(feedbackPrompt);
+      
+      try {
+        const jsonMatch = aiResponse.content.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          qualitativeFeedback = JSON.parse(jsonMatch[0]);
+        }
+      } catch (parseError) {
+        console.error('Failed to parse AI feedback:', parseError);
+      }
+    } catch (error) {
+      console.error('Error generating qualitative feedback:', error);
+    }
+    
+    // Find existing evaluations
+    const evaluations = await evaluationRepo.findByTarget('program', programId);
+    const existingEvaluation = evaluations.find(e => e.evaluationType === 'discovery_complete');
+    
+    if (existingEvaluation) {
+      // Update existing evaluation
+      console.log('Updating existing evaluation:', existingEvaluation.id);
+      
+      await evaluationRepo.update(existingEvaluation.id, {
+        score: avgScore,
+        metadata: {
+          programId,
+          scenarioId: program.scenarioId,
+          scenarioTitle: scenario?.title,
+          careerType,
+          overallScore: avgScore,
+          totalXP,
+          totalTasks: tasks.length,
+          completedTasks: completedTasks.length,
+          timeSpentSeconds,
+          daysUsed,
+          taskEvaluations,
+          qualitativeFeedback,
+          regeneratedAt: new Date().toISOString()
+        }
+      });
+      
+      // Update program metadata
+      await programRepo.update(programId, {
+        metadata: {
+          ...program.metadata,
+          totalXP,
+          finalScore: avgScore
+        }
+      });
+      
+      return NextResponse.json({
+        success: true,
+        message: 'Evaluation regenerated successfully',
+        evaluationId: existingEvaluation.id,
+        metrics: {
+          totalXP,
+          avgScore,
+          daysUsed,
+          completedTasks: completedTasks.length
+        }
+      });
+    } else {
+      // Create new evaluation if none exists
+      console.log('Creating new evaluation (none exists)');
+      
+      const evaluation = await evaluationRepo.create({
+        targetType: 'program',
+        targetId: programId,
+        evaluationType: 'discovery_complete',
+        score: avgScore,
+        userId: session.user.email,
+        metadata: {
+          programId,
+          scenarioId: program.scenarioId,
+          scenarioTitle: scenario?.title,
+          careerType,
+          overallScore: avgScore,
+          totalXP,
+          totalTasks: tasks.length,
+          completedTasks: completedTasks.length,
+          timeSpentSeconds,
+          daysUsed,
+          taskEvaluations,
+          qualitativeFeedback,
+          completedAt: new Date().toISOString()
+        }
+      });
+      
+      // Update program to reference the new evaluation
+      await programRepo.update(programId, {
+        metadata: {
+          ...program.metadata,
+          evaluationId: evaluation.id,
+          totalXP,
+          finalScore: avgScore
+        }
+      });
+      
+      return NextResponse.json({
+        success: true,
+        message: 'Evaluation created successfully',
+        evaluationId: evaluation.id,
+        metrics: {
+          totalXP,
+          avgScore,
+          daysUsed,
+          completedTasks: completedTasks.length
+        }
+      });
+    }
+  } catch (error) {
+    console.error('Error regenerating evaluation:', error);
+    return NextResponse.json(
+      { error: 'Failed to regenerate evaluation' },
+      { status: 500 }
+    );
+  }
+}

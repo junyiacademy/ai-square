@@ -213,6 +213,7 @@
     "overallScore": "Overall Score",
     "tasksCompleted": "Tasks Completed",
     "timeSpent": "Time Spent",
+    "daysUsed": "Days Used",
     "hoursMinutes": "{{hours}}h {{minutes}}m",
     "minutes": "{{minutes}} minutes",
     "achievementsUnlocked": "Achievements Unlocked",

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { CheckCircleIcon, StarIcon, TrophyIcon, LightBulbIcon, ChartBarIcon } from '@heroicons/react/24/solid';
-import { ClockIcon, BeakerIcon, ChatBubbleBottomCenterTextIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
+import { ClockIcon, BeakerIcon, ChatBubbleBottomCenterTextIcon, DocumentTextIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -45,6 +45,7 @@ interface DiscoveryCompletionData {
   totalTasks: number;
   completedTasks: number;
   timeSpentSeconds: number;
+  daysUsed?: number;
   skillImprovements: SkillImprovement[];
   achievementsUnlocked: Achievement[];
   taskEvaluations: TaskEvaluation[];
@@ -65,14 +66,16 @@ export default function DiscoveryCompletePage() {
   const [completionData, setCompletionData] = useState<DiscoveryCompletionData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [regenerating, setRegenerating] = useState(false);
 
   useEffect(() => {
     loadCompletionData();
   }, [params.programId]);
 
-  const loadCompletionData = async () => {
+  const loadCompletionData = async (regenerate = false) => {
     try {
       setLoading(true);
+      setError(null);
       
       // First, trigger completion if not already done
       const completeResponse = await fetch(`/api/discovery/programs/${params.programId}/complete`, {
@@ -93,12 +96,18 @@ export default function DiscoveryCompletePage() {
       }
       const programData = await programResponse.json();
 
-      // Get the evaluation data
-      const evalResponse = await fetch(`/api/discovery/programs/${params.programId}/evaluation`);
+      // Get the evaluation data (with regenerate flag if needed)
+      const evalUrl = `/api/discovery/programs/${params.programId}/evaluation${regenerate ? '?regenerate=true' : ''}`;
+      const evalResponse = await fetch(evalUrl);
       if (!evalResponse.ok) {
         throw new Error('Failed to load evaluation data');
       }
       const evalData = await evalResponse.json();
+
+      // Log debug info if available
+      if (evalData.debug) {
+        console.log('Evaluation debug info:', evalData.debug);
+      }
 
       // Combine the data
       setCompletionData({
@@ -111,6 +120,7 @@ export default function DiscoveryCompletePage() {
         totalTasks: evalData.evaluation.totalTasks || programData.totalTasks || 0,
         completedTasks: evalData.evaluation.completedTasks || programData.completedTasks || 0,
         timeSpentSeconds: evalData.evaluation.timeSpentSeconds || 0,
+        daysUsed: evalData.evaluation.daysUsed || 0,
         taskEvaluations: evalData.evaluation.taskEvaluations || []
       });
     } catch (err) {
@@ -118,6 +128,35 @@ export default function DiscoveryCompletePage() {
       setError(err instanceof Error ? err.message : 'Failed to load completion data');
     } finally {
       setLoading(false);
+      setRegenerating(false);
+    }
+  };
+
+  const handleRegenerate = async () => {
+    setRegenerating(true);
+    try {
+      // Call regenerate API
+      const regenerateResponse = await fetch(`/api/discovery/programs/${params.programId}/regenerate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!regenerateResponse.ok) {
+        throw new Error('Failed to regenerate evaluation');
+      }
+      
+      const result = await regenerateResponse.json();
+      console.log('Regeneration result:', result);
+      
+      // Reload the data
+      await loadCompletionData(false);
+    } catch (error) {
+      console.error('Error regenerating evaluation:', error);
+      setError('Failed to regenerate evaluation');
+    } finally {
+      setRegenerating(false);
     }
   };
 
@@ -206,7 +245,7 @@ export default function DiscoveryCompletePage() {
         
         <div className="bg-white rounded-lg shadow p-6 text-center">
           <div className={`text-3xl font-bold mb-2 ${getScoreColor(completionData.overallScore)}`}>
-            {completionData.overallScore}%
+            {completionData.overallScore}
           </div>
           <div className="text-sm text-gray-600">{t('discovery:complete.overallScore')}</div>
         </div>
@@ -222,10 +261,10 @@ export default function DiscoveryCompletePage() {
           <div className="flex justify-center items-center text-gray-700 mb-2">
             <ClockIcon className="h-6 w-6 mr-2" />
             <span className="text-xl font-semibold">
-              {formatTime(completionData.timeSpentSeconds)}
+              {completionData.daysUsed || 'N/A'}
             </span>
           </div>
-          <div className="text-sm text-gray-600">{t('discovery:complete.timeSpent')}</div>
+          <div className="text-sm text-gray-600">{t('discovery:complete.daysUsed')}</div>
         </div>
       </div>
 
@@ -334,7 +373,7 @@ export default function DiscoveryCompletePage() {
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap text-sm text-center">
                     <span className={`font-semibold ${getScoreColor(task.score)}`}>
-                      {task.score}%
+                      {task.score}
                     </span>
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap text-sm text-center text-indigo-600 font-medium">
@@ -438,6 +477,18 @@ export default function DiscoveryCompletePage() {
         >
           {t('discovery:complete.printResults')}
         </button>
+
+        {/* Development mode only: Regenerate button */}
+        {process.env.NODE_ENV === 'development' && (
+          <button
+            onClick={handleRegenerate}
+            disabled={regenerating}
+            className="inline-flex items-center px-6 py-3 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 transition-colors disabled:opacity-50"
+          >
+            <ArrowPathIcon className={`h-5 w-5 mr-2 ${regenerating ? 'animate-spin' : ''}`} />
+            {regenerating ? 'Regenerating...' : 'Regenerate Evaluation'}
+          </button>
+        )}
       </div>
     </div>
   );
