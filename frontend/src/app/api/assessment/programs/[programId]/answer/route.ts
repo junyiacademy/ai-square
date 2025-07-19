@@ -40,7 +40,7 @@ export async function POST(
     
     // Get questions from task to check correct answer
     const questions: AssessmentQuestion[] = hasQuestions(task.content) 
-      ? task.content.questions
+      ? task.content.questions as AssessmentQuestion[]
       : [];
     const question = questions.find((q) => q.id === questionId);
     const isCorrect = question && question.correct_answer !== undefined

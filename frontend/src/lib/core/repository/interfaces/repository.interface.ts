@@ -4,7 +4,7 @@
  */
 
 export interface QueryOptions {
-  where?: Record<string, any>;
+  where?: Record<string, unknown>;
   orderBy?: string;
   orderDirection?: 'asc' | 'desc';
   limit?: number;

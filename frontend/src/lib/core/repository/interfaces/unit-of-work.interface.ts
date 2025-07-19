@@ -9,7 +9,7 @@ import { IRepository } from './repository.interface';
  * Repository 註冊表
  */
 export interface RepositoryRegistry {
-  [key: string]: IRepository<any, any>;
+  [key: string]: IRepository<unknown, unknown>;
 }
 
 /**
@@ -24,7 +24,7 @@ export interface IUnitOfWork {
   /**
    * 註冊 Repository
    */
-  registerRepository(name: string, repository: IRepository<any, any>): void;
+  registerRepository(name: string, repository: IRepository<unknown, unknown>): void;
   
   /**
    * 開始交易

@@ -146,14 +146,14 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
     mockRepositoryFactory.getTaskRepository = jest.fn().mockReturnValue(mockTaskRepo);
     mockRepositoryFactory.getEvaluationRepository = jest.fn().mockReturnValue(mockEvaluationRepo);
     mockGetAuthFromRequest.mockResolvedValue({ 
-      userId: mockUser.id, 
+      userId: 1, 
       email: mockUser.email, 
       role: 'user',
       name: 'Test User'
     });
   });
 
-  const createRequest = (body: any = {}) => {
+  const createRequest = (body: unknown = {}) => {
     const MockedNextRequest = NextRequest as jest.MockedClass<typeof NextRequest>;
     return new MockedNextRequest('http://localhost:3000/api/assessment/programs/program123/complete', {
       method: 'POST',
@@ -247,7 +247,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
       .mockResolvedValueOnce(mockTasks[0])
       .mockResolvedValueOnce(mockTasks[1]);
     
-    mockEvaluationRepo.create.mockImplementation((evalData) => {
+    mockEvaluationRepo.create.mockImplementation((evalData: { metadata: { totalQuestions: number; correctAnswers: number }; score: number }) => {
       // Verify that evaluation includes data from both tasks
       expect(evalData.metadata.totalQuestions).toBe(2);
       expect(evalData.metadata.correctAnswers).toBe(1);

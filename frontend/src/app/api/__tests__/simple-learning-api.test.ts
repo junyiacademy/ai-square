@@ -7,13 +7,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { jest } from '@jest/globals';
 
 // Mock the unified learning service
+type MockServiceFunction = (...args: unknown[]) => Promise<unknown>;
+
 const mockUnifiedLearningService = {
-  createLearningProgram: jest.fn(),
-  completeTask: jest.fn(),
-  completeProgram: jest.fn(),
-  getLearningProgress: jest.fn(),
-  getProgramStatus: jest.fn(),
-  getLearningAnalytics: jest.fn()
+  createLearningProgram: jest.fn<MockServiceFunction>(),
+  completeTask: jest.fn<MockServiceFunction>(),
+  completeProgram: jest.fn<MockServiceFunction>(),
+  getLearningProgress: jest.fn<MockServiceFunction>(),
+  getProgramStatus: jest.fn<MockServiceFunction>(),
+  getLearningAnalytics: jest.fn<MockServiceFunction>()
 };
 
 jest.mock('@/lib/implementations/gcs-v2/services/unified-learning-service', () => ({

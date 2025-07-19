@@ -6,7 +6,8 @@ import yaml from 'js-yaml';
 import { cachedGET, memoize } from '@/lib/api/optimization-utils';
 
 // Memoized YAML loader
-const loadConfigYAML = memoize(async (configPath: string) => {
+const loadConfigYAML = memoize(async (...args: unknown[]) => {
+  const configPath = args[0] as string;
   const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
   const fullPath = path.join(baseDir, 'public', configPath);
   const configContent = await fs.readFile(fullPath, 'utf-8');
@@ -32,9 +33,9 @@ export async function GET(
     }
     
     // Load config from YAML file if available
-    if (scenario.sourceRef.metadata?.configPath) {
+    if (scenario.sourceRef?.metadata?.configPath) {
       try {
-        const yamlData = await loadConfigYAML(scenario.sourceRef.metadata.configPath as string) as {
+        const yamlData = await loadConfigYAML(scenario.sourceRef?.metadata?.configPath as string) as {
     config?: {
       total_questions?: number;
       time_limit?: number;

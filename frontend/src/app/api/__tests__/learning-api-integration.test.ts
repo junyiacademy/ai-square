@@ -18,12 +18,12 @@ jest.mock('@/lib/auth', () => ({
 
 // Mock the unified learning service
 const mockUnifiedLearningService = {
-  createLearningProgram: jest.fn(),
-  completeTask: jest.fn(),
-  completeProgram: jest.fn(),
-  getLearningProgress: jest.fn(),
-  getProgramStatus: jest.fn(),
-  getLearningAnalytics: jest.fn()
+  createLearningProgram: jest.fn<() => Promise<unknown>>(),
+  completeTask: jest.fn<() => Promise<unknown>>(),
+  completeProgram: jest.fn<() => Promise<unknown>>(),
+  getLearningProgress: jest.fn<() => Promise<unknown>>(),
+  getProgramStatus: jest.fn<() => Promise<unknown>>(),
+  getLearningAnalytics: jest.fn<() => Promise<unknown>>()
 };
 
 jest.mock('@/lib/implementations/gcs-v2/services/unified-learning-service', () => ({
@@ -31,7 +31,7 @@ jest.mock('@/lib/implementations/gcs-v2/services/unified-learning-service', () =
 }));
 
 // Mock Next.js request
-const createMockRequest = (method: string, url: string, body?: any): NextRequest => {
+const createMockRequest = (method: string, url: string, body?: unknown): NextRequest => {
   const request = {
     method,
     url,
@@ -256,8 +256,7 @@ describe('Learning API Integration Tests', () => {
 
   describe('Authentication', () => {
     it('should require authentication for protected routes', async () => {
-      const { getServerSession } = await import('next-auth');
-      (getServerSession as jest.Mock).mockResolvedValue(null);
+      mockGetServerSession.mockResolvedValue(null);
 
       const { GET } = await import('@/app/api/learning/progress/route');
       const request = createMockRequest('GET', '/api/learning/progress');

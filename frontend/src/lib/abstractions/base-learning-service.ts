@@ -56,23 +56,23 @@ export abstract class BaseLearningService {
     return data;
   }
 
-  protected async afterProgramCreate(_program: IProgram): Promise<void> {
+  protected async afterProgramCreate({}: IProgram): Promise<void> {
     // Default: no-op
   }
 
-  protected async beforeTaskComplete(_task: ITask): Promise<void> {
+  protected async beforeTaskComplete({}: ITask): Promise<void> {
     // Default: no-op
   }
 
-  protected async afterTaskComplete(_task: ITask, _evaluation: IEvaluation): Promise<void> {
+  protected async afterTaskComplete({}: ITask, {}: IEvaluation): Promise<void> {
     // Default: no-op
   }
 
-  protected async beforeProgramComplete(_program: IProgram): Promise<void> {
+  protected async beforeProgramComplete({}: IProgram): Promise<void> {
     // Default: no-op
   }
 
-  protected async afterProgramComplete(_program: IProgram, _evaluation: IEvaluation): Promise<void> {
+  protected async afterProgramComplete({}: IProgram, {}: IEvaluation): Promise<void> {
     // Default: no-op
   }
 

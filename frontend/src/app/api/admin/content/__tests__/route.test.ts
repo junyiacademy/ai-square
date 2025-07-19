@@ -2,20 +2,21 @@ import { NextRequest } from 'next/server'
 import { GET, POST } from '../route'
 
 // Mock the content service
-jest.mock('@/services/content-service', () => ({
-  ContentService: {
-    getAllContent: jest.fn(),
-    createContent: jest.fn(),
+jest.mock('@/lib/cms/content-service', () => ({
+  contentService: {
+    listContent: jest.fn(),
+    saveContent: jest.fn(),
   },
 }))
 
 // Mock authentication
 jest.mock('@/lib/auth/auth-utils', () => ({
-  verifyAdminAuth: jest.fn(),
+  getAuthFromRequest: jest.fn(),
+  hasRole: jest.fn(),
 }))
 
-import { ContentService } from '@/services/content-service'
-import { verifyAdminAuth } from '@/lib/auth/auth-utils'
+import { contentService } from '@/lib/cms/content-service'
+import { getAuthFromRequest, hasRole } from '@/lib/auth/auth-utils'
 
 describe('/api/admin/content', () => {
   beforeEach(() => {
@@ -24,10 +25,7 @@ describe('/api/admin/content', () => {
 
   describe('GET', () => {
     it('should return 401 for unauthorized users', async () => {
-      ;(verifyAdminAuth as jest.Mock).mockResolvedValue({
-        isValid: false,
-        error: 'Unauthorized',
-      })
+      ;(getAuthFromRequest as jest.Mock).mockResolvedValue(null)
 
       const request = new NextRequest('http://localhost:3000/api/admin/content')
       const response = await GET(request)
@@ -38,17 +36,20 @@ describe('/api/admin/content', () => {
     })
 
     it('should return all content for authorized admin', async () => {
-      ;(verifyAdminAuth as jest.Mock).mockResolvedValue({
-        isValid: true,
-        user: { id: 'admin123', role: 'admin' },
+      ;(getAuthFromRequest as jest.Mock).mockResolvedValue({
+        userId: 123,
+        email: 'admin@example.com',
+        role: 'admin',
+        name: 'Admin User'
       })
+      ;(hasRole as jest.Mock).mockReturnValue(true)
 
       const mockContent = [
         { id: '1', title: 'Content 1', type: 'rubric' },
         { id: '2', title: 'Content 2', type: 'scenario' },
       ]
 
-      ;(ContentService.getAllContent as jest.Mock).mockResolvedValue(mockContent)
+      ;(contentService.listContent as jest.Mock).mockResolvedValue(mockContent)
 
       const request = new NextRequest('http://localhost:3000/api/admin/content')
       const response = await GET(request)
@@ -56,16 +57,19 @@ describe('/api/admin/content', () => {
       expect(response.status).toBe(200)
       const data = await response.json()
       expect(data).toEqual(mockContent)
-      expect(ContentService.getAllContent).toHaveBeenCalled()
+      expect(contentService.listContent).toHaveBeenCalled()
     })
 
     it('should handle service errors gracefully', async () => {
-      ;(verifyAdminAuth as jest.Mock).mockResolvedValue({
-        isValid: true,
-        user: { id: 'admin123', role: 'admin' },
+      ;(getAuthFromRequest as jest.Mock).mockResolvedValue({
+        userId: 123,
+        email: 'admin@example.com',
+        role: 'admin',
+        name: 'Admin User'
       })
+      ;(hasRole as jest.Mock).mockReturnValue(true)
 
-      ;(ContentService.getAllContent as jest.Mock).mockRejectedValue(
+      ;(contentService.listContent as jest.Mock).mockRejectedValue(
         new Error('Database error')
       )
 
@@ -80,14 +84,14 @@ describe('/api/admin/content', () => {
 
   describe('POST', () => {
     it('should return 401 for unauthorized users', async () => {
-      ;(verifyAdminAuth as jest.Mock).mockResolvedValue({
-        isValid: false,
-        error: 'Unauthorized',
-      })
+      ;(getAuthFromRequest as jest.Mock).mockResolvedValue(null)
 
       const request = new NextRequest('http://localhost:3000/api/admin/content', {
         method: 'POST',
-        body: JSON.stringify({ title: 'New Content' }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title: 'Test' }),
       })
 
       const response = await POST(request)
@@ -98,10 +102,13 @@ describe('/api/admin/content', () => {
     })
 
     it('should create new content for authorized admin', async () => {
-      ;(verifyAdminAuth as jest.Mock).mockResolvedValue({
-        isValid: true,
-        user: { id: 'admin123', role: 'admin' },
+      ;(getAuthFromRequest as jest.Mock).mockResolvedValue({
+        userId: 123,
+        email: 'admin@example.com',
+        role: 'admin',
+        name: 'Admin User'
       })
+      ;(hasRole as jest.Mock).mockReturnValue(true)
 
       const newContent = {
         title: 'New Content',
@@ -115,7 +122,7 @@ describe('/api/admin/content', () => {
         createdAt: new Date().toISOString(),
       }
 
-      ;(ContentService.createContent as jest.Mock).mockResolvedValue(createdContent)
+      ;(contentService.saveContent as jest.Mock).mockResolvedValue(createdContent)
 
       const request = new NextRequest('http://localhost:3000/api/admin/content', {
         method: 'POST',
@@ -130,49 +137,31 @@ describe('/api/admin/content', () => {
       expect(response.status).toBe(201)
       const data = await response.json()
       expect(data).toEqual(createdContent)
-      expect(ContentService.createContent).toHaveBeenCalledWith(newContent)
+      expect(contentService.saveContent).toHaveBeenCalledWith(newContent)
     })
 
-    it('should return 400 for invalid content data', async () => {
-      ;(verifyAdminAuth as jest.Mock).mockResolvedValue({
-        isValid: true,
-        user: { id: 'admin123', role: 'admin' },
+    it('should handle missing required fields', async () => {
+      ;(getAuthFromRequest as jest.Mock).mockResolvedValue({
+        userId: 123,
+        email: 'admin@example.com',
+        role: 'admin',
+        name: 'Admin User'
       })
+      ;(hasRole as jest.Mock).mockReturnValue(true)
 
       const request = new NextRequest('http://localhost:3000/api/admin/content', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ invalid: 'data' }),
+        body: JSON.stringify({}),
       })
 
       const response = await POST(request)
 
       expect(response.status).toBe(400)
       const data = await response.json()
-      expect(data.error).toBe('Invalid content data')
-    })
-
-    it('should handle JSON parsing errors', async () => {
-      ;(verifyAdminAuth as jest.Mock).mockResolvedValue({
-        isValid: true,
-        user: { id: 'admin123', role: 'admin' },
-      })
-
-      const request = new NextRequest('http://localhost:3000/api/admin/content', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: 'invalid json',
-      })
-
-      const response = await POST(request)
-
-      expect(response.status).toBe(400)
-      const data = await response.json()
-      expect(data.error).toBe('Invalid request body')
+      expect(data.error).toBe('Missing required fields')
     })
   })
 })

@@ -209,9 +209,9 @@ export async function GET(request: NextRequest) {
             }
           },
           summary: {
-            total_questions: (assessmentEvaluation.aiAnalysis?.totalQuestions as number) || 0,
-            correct_answers: (assessmentEvaluation.aiAnalysis?.correctAnswers as number) || 0,
-            level: (assessmentEvaluation.aiAnalysis?.level as string) || 'beginner'
+            total_questions: (assessmentEvaluation.metadata?.totalQuestions as number) || 0,
+            correct_answers: (assessmentEvaluation.metadata?.correctAnswers as number) || 0,
+            level: (assessmentEvaluation.metadata?.level as string) || 'beginner'
           },
           answers: (assessmentEvaluation.metadata?.answers as AssessmentResult['answers']) || []
         };

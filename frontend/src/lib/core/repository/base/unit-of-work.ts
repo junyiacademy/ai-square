@@ -30,7 +30,7 @@ export class UnitOfWork implements IUnitOfWork {
   /**
    * 註冊 Repository
    */
-  registerRepository(name: string, repository: IRepository<any, any>): void {
+  registerRepository(name: string, repository: IRepository<unknown, unknown>): void {
     if (this.repositories[name]) {
       throw new Error(`Repository '${name}' already registered`);
     }
@@ -135,12 +135,12 @@ export class UnitOfWork implements IUnitOfWork {
  * Unit of Work Factory
  */
 export class UnitOfWorkFactory {
-  private repositoryFactories: Map<string, () => IRepository<any, any>> = new Map();
+  private repositoryFactories: Map<string, () => IRepository<unknown, unknown>> = new Map();
   
   /**
    * 註冊 Repository Factory
    */
-  registerRepositoryFactory(name: string, factory: () => IRepository<any, any>): void {
+  registerRepositoryFactory(name: string, factory: () => IRepository<unknown, unknown>): void {
     this.repositoryFactories.set(name, factory);
   }
   

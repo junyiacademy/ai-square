@@ -110,11 +110,11 @@ export async function GET(
     const evaluationsMap = new Map<string, Evaluation>();
     if (evaluationIds.length > 0) {
       const evaluations = await Promise.all(
-        evaluationIds.map((id: string) => evaluationRepo.findById(id).catch(() => null))
+        evaluationIds.map((id: unknown) => evaluationRepo.findById(id as string).catch(() => null))
       );
-      evaluationIds.forEach((id, index) => {
+      evaluationIds.forEach((id: unknown, index: number) => {
         if (evaluations[index]) {
-          evaluationsMap.set(id, evaluations[index]!);
+          evaluationsMap.set(id as string, evaluations[index]!);
         }
       });
     }
@@ -309,15 +309,13 @@ export async function POST(
               programId: program.id,
               taskIndex: i,
               type: 'question',
+              title: taskData[`title_${language}`] || taskData.title || `Task ${i + 1}`,
+              instructions: taskData[`description_${language}`] || taskData.description || 'Complete the assessment questions',
               context: {
-                title: taskData[`title_${language}`] || taskData.title || `Task ${i + 1}`,
-                instructions: taskData[`description_${language}`] || taskData.description || 'Complete the assessment questions',
-                context: {
-                  questions: taskQuestions,
-                  timeLimit: taskData.time_limit_minutes ? taskData.time_limit_minutes * 60 : 240, // Convert to seconds
-                  language,
-                  domainId: taskData.id
-                }
+                questions: taskQuestions,
+                timeLimit: taskData.time_limit_minutes ? taskData.time_limit_minutes * 60 : 240, // Convert to seconds
+                language,
+                domainId: taskData.id
               }
             });
             
@@ -340,14 +338,12 @@ export async function POST(
             programId: program.id,
             taskIndex: 0,
             type: 'question',
+            title: 'Assessment Questions',
+            instructions: 'Complete the assessment questions',
             context: {
-              title: 'Assessment Questions',
-              instructions: 'Complete the assessment questions',
-              context: {
-                questions,
-                timeLimit: 900,
-                language
-              }
+              questions,
+              timeLimit: 900,
+              language
             }
           });
           

@@ -44,15 +44,15 @@ export async function GET(request: NextRequest) {
             id: scenario.id,
             title: scenario.title,
             description: scenario.description,
-            folderName: scenario.sourceRef?.metadata?.folderName,
-            config: scenario.sourceRef?.metadata?.config || {},
+            folderName: (scenario.sourceRef as { metadata?: { folderName?: string } })?.metadata?.folderName,
+            config: (scenario.sourceRef as { metadata?: { config?: Record<string, unknown> } })?.metadata?.config || {},
             userProgress: user ? await getUserProgress(scenario.id, user.id) : undefined
           };
         }
         
         // 非英文：從 YAML 載入
         const translation = await loadTranslation(
-          scenario.sourceRef?.metadata?.basePath || scenario.sourceRef?.metadata?.folderName,
+          (scenario.sourceRef as { metadata?: { basePath?: string; folderName?: string } })?.metadata?.basePath || (scenario.sourceRef as { metadata?: { folderName?: string } })?.metadata?.folderName,
           lang
         );
         
@@ -60,8 +60,8 @@ export async function GET(request: NextRequest) {
           id: scenario.id,
           title: translation?.title || scenario.title,
           description: translation?.description || scenario.description,
-          folderName: scenario.sourceRef?.metadata?.folderName,
-          config: translation?.config || scenario.sourceRef?.metadata?.config || {},
+          folderName: (scenario.sourceRef as { metadata?: { folderName?: string } })?.metadata?.folderName,
+          config: translation?.config || (scenario.sourceRef as { metadata?: { config?: Record<string, unknown> } })?.metadata?.config || {},
           userProgress: user ? await getUserProgress(scenario.id, user.id) : undefined
         };
       })

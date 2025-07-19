@@ -23,13 +23,17 @@ interface AssessmentInteraction {
 
 interface Question {
   id: string;
-  domain?: string;
+  domain: string;
+  question: string;
+  options: Record<string, string>;
+  difficulty: string;
+  correct_answer: string;
+  explanation: string;
   ksa_mapping?: {
     knowledge?: string[];
     skills?: string[];
     attitudes?: string[];
   };
-  correct_answer?: string;
 }
 
 export async function POST(
@@ -167,7 +171,17 @@ export async function POST(
     console.log('Collecting answers and questions from', validTasks.length, 'tasks');
     
     for (const task of validTasks) {
-      const taskAnswers = task.interactions.filter(i => i.type === 'system_event' && (i.content as { eventType?: string })?.eventType === 'assessment_answer') as AssessmentInteraction[];
+      const taskAnswers = task.interactions
+        .filter(i => i.type === 'system_event' && (i.content as { eventType?: string })?.eventType === 'assessment_answer')
+        .map(i => ({
+          type: i.type,
+          context: {
+            questionId: (i.content as { questionId?: string })?.questionId || '',
+            selectedAnswer: (i.content as { selectedAnswer?: string })?.selectedAnswer || '',
+            timeSpent: (i.content as { timeSpent?: number })?.timeSpent || 0,
+            isCorrect: (i.content as { isCorrect?: boolean })?.isCorrect || false
+          }
+        }));
       const taskQuestions = (task.metadata as { questions?: Question[] })?.questions || [];
       
       console.log(`Task ${task.title}:`, {
@@ -182,7 +196,7 @@ export async function POST(
       });
       
       allAnswers = [...allAnswers, ...taskAnswers];
-      allQuestions = [...allQuestions, ...taskQuestions];
+      allQuestions = [...allQuestions, ...taskQuestions] as typeof allQuestions;
     }
     
     console.log('Total collected:', {

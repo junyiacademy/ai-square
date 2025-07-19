@@ -39,7 +39,7 @@ export abstract class BaseRepository<T extends IEntity<ID>, ID = string>
     const items = await this.storage.list<T>(this.collectionName + '/', {
       limit: options?.limit,
       offset: options?.offset,
-      orderBy: options?.orderBy as any,
+      orderBy: options?.orderBy as string | undefined,
       orderDirection: options?.orderDirection
     });
     
@@ -213,10 +213,10 @@ export abstract class BaseRepository<T extends IEntity<ID>, ID = string>
   /**
    * 根據條件過濾
    */
-  protected filterByWhere(items: T[], where: Record<string, any>): T[] {
+  protected filterByWhere(items: T[], where: Record<string, unknown>): T[] {
     return items.filter(item => {
       for (const [key, value] of Object.entries(where)) {
-        if ((item as any)[key] !== value) {
+        if ((item as Record<string, unknown>)[key] !== value) {
           return false;
         }
       }
