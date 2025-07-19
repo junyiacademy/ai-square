@@ -3,21 +3,8 @@
  * Unified Abstraction Layer Exports
  */
 
-// API Handler
-export { BaseApiHandler } from './base-api-handler';
-export type { ApiResponse, RequestContext } from './base-api-handler';
-
-// Storage Service
-export { BaseStorageService } from './base-storage-service';
-export type { StorageOptions, StorageResult } from './base-storage-service';
-
-// AI Service
-export { BaseAIService } from './base-ai-service';
-export type { AIServiceOptions, AIResponse, ChatMessage } from './base-ai-service';
-
-// YAML Loader
-export { BaseYAMLLoader } from './base-yaml-loader';
-export type { YAMLLoaderOptions, LoadResult } from './base-yaml-loader';
+// Learning Service
+export { BaseLearningService } from './base-learning-service';
 
 // Re-export commonly used services
 export { cacheService } from '@/lib/cache/cache-service';
