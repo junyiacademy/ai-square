@@ -20,7 +20,8 @@ function getDataPaths(dataType: string, filename: string) {
 }
 
 // Memoized file reader
-const readJSONFile = memoize(async (filePath: string) => {
+const readJSONFile = memoize(async (...args: unknown[]) => {
+  const filePath = args[0] as string;
   return JSON.parse(await fs.readFile(filePath, 'utf-8'));
 }, 10 * 60 * 1000); // 10 minutes cache
 
@@ -91,7 +92,7 @@ export async function PUT(request: NextRequest) {
     
     // Sync to YAML if requested
     if (syncToYaml) {
-      await syncJsonToYaml(jsonPath, yamlPath);
+      await syncJsonToYaml(jsonPath);
     }
     
     return NextResponse.json({ 
@@ -153,7 +154,7 @@ export async function POST(request: NextRequest) {
     
     // Sync to YAML if requested
     if (syncToYaml) {
-      await syncJsonToYaml(jsonPath, yamlPath);
+      await syncJsonToYaml(jsonPath);
     }
     
     return NextResponse.json({ 
@@ -218,7 +219,7 @@ export async function DELETE(request: NextRequest) {
     
     // Sync to YAML if requested
     if (syncToYaml) {
-      await syncJsonToYaml(jsonPath, yamlPath);
+      await syncJsonToYaml(jsonPath);
     }
     
     return NextResponse.json({ 
@@ -262,7 +263,7 @@ function isObject(item: unknown): item is Record<string, unknown> {
 }
 
 // Helper: Sync JSON to YAML
-async function syncJsonToYaml(jsonPath: string, _yamlPath: string): Promise<void> {
+async function syncJsonToYaml(jsonPath: string): Promise<void> {
   try {
     // Use the yaml-json-crud-system.js script
     const scriptPath = path.join(process.cwd(), 'scripts', 'yaml-json-crud-system.js');

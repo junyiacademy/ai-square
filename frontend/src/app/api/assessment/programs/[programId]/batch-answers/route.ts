@@ -4,24 +4,18 @@ import { getServerSession } from '@/lib/auth/session';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ programId: string }> }
+  _props: { params: Promise<{ programId: string }> }
 ) {
   try {
     // Try to get user from authentication
     const session = await getServerSession();
     
     // If no auth, check if user info is in query params
-    let userEmail: string | null = null;
-    
-    if (session?.user?.email) {
-      userEmail = session.user.email;
-    } else {
+    if (!session?.user?.email) {
       const { searchParams } = new URL(request.url);
       const emailParam = searchParams.get('userEmail');
       
-      if (emailParam) {
-        userEmail = emailParam;
-      } else {
+      if (!emailParam) {
         return NextResponse.json(
           { error: 'Authentication required' },
           { status: 401 }
@@ -51,12 +45,12 @@ export async function POST(
     }
     
     // Get questions from task to check correct answers
-    const questions = (task.content as any)?.questions || [];
+    const questions = (task.content as { questions?: Array<{ id: string; correct_answer?: string; ksa_mapping?: unknown }> })?.questions || [];
     
     // Prepare all interactions
-    const interactions = answers.map((answer: any) => {
+    const interactions = answers.map((answer: { questionId: string; answer: string; timeSpent?: number }) => {
       // Find the question to check the correct answer
-      const question = questions.find((q: any) => q.id === answer.questionId);
+      const question = questions.find((q) => q.id === answer.questionId);
       const isCorrect = question && question.correct_answer !== undefined
         ? String(answer.answer) === String(question.correct_answer)
         : false;

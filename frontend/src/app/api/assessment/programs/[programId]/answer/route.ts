@@ -5,7 +5,7 @@ import { hasQuestions, AssessmentQuestion, AssessmentAnswerContent } from '@/typ
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ programId: string }> }
+  _props: { params: Promise<{ programId: string }> }
 ) {
   try {
     const session = await getServerSession();
@@ -40,7 +40,7 @@ export async function POST(
     
     // Get questions from task to check correct answer
     const questions: AssessmentQuestion[] = hasQuestions(task.content) 
-      ? (task.content as any).questions as AssessmentQuestion[]
+      ? task.content.questions
       : [];
     const question = questions.find((q) => q.id === questionId);
     const isCorrect = question && question.correct_answer !== undefined

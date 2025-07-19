@@ -91,10 +91,10 @@ export async function POST(request: NextRequest) {
       aiAnalysis: {
         insights: [`You achieved ${body.result.level} level with ${body.result.correctAnswers}/${body.result.totalQuestions} correct answers`],
         strengths: body.result.domainScores ? Object.entries(body.result.domainScores)
-          .filter(([_, score]) => (score as number) >= 70)
+          .filter(([, score]) => (score as number) >= 70)
           .map(([domain]) => `Strong performance in ${domain}`) : [],
         improvements: body.result.domainScores ? Object.entries(body.result.domainScores)
-          .filter(([_, score]) => (score as number) < 70)
+          .filter(([, score]) => (score as number) < 70)
           .map(([domain]) => `Could improve in ${domain}`) : []
       },
       ksaScores: body.result.domainScores,

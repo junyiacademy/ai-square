@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface PathItem {
   id: number;
@@ -236,9 +237,11 @@ export default function JourneyPage() {
               {/* Screenshot */}
               <div className="relative">
                 <div className="rounded-xl overflow-hidden shadow-2xl">
-                  <img 
+                  <Image 
                     src={path.screenshot}
                     alt={`${path.title} 截圖`}
+                    width={800}
+                    height={600}
                     className="w-full h-auto"
                   />
                 </div>

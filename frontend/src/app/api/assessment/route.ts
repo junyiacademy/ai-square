@@ -108,8 +108,8 @@ export async function GET(request: NextRequest) {
     }
     
     // Legacy format fallback (for backward compatibility)
-    const allQuestions: any[] = [];
-    const processedDomains: any = {};
+    const allQuestions: Array<{ domain: string; [key: string]: unknown }> = [];
+    const processedDomains: Record<string, { name: string; description: string; [key: string]: unknown }> = {};
     
     // If old format with domains and questions at root
     if ('domains' in assessmentData && 'questions' in assessmentData && assessmentData.domains) {

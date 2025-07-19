@@ -3,7 +3,7 @@ import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { ScenarioType, ScenarioStatus } from '@/lib/repositories/interfaces';
 
 // This endpoint is for staging environment only
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   // Only allow in staging environment
   if (process.env.ENVIRONMENT !== 'staging') {
     return NextResponse.json(

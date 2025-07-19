@@ -15,6 +15,23 @@ interface DomainScore {
   };
 }
 
+interface AssessmentInteraction {
+  type: string;
+  content?: { eventType?: string };
+  context?: { isCorrect?: boolean; questionId?: string; ksa_mapping?: unknown };
+}
+
+interface Question {
+  id: string;
+  domain?: string;
+  ksa_mapping?: {
+    knowledge?: string[];
+    skills?: string[];
+    attitudes?: string[];
+  };
+  correct_answer?: string;
+}
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ programId: string }> }
@@ -150,32 +167,32 @@ export async function POST(
     console.log('Collecting answers and questions from', validTasks.length, 'tasks');
     
     for (const task of validTasks) {
-      const taskAnswers = task.interactions.filter(i => i.type === 'system_event' && (i.content as any)?.eventType === 'assessment_answer');
-      const taskQuestions = (task.metadata as any)?.questions || [];
+      const taskAnswers = task.interactions.filter(i => i.type === 'system_event' && (i.content as { eventType?: string })?.eventType === 'assessment_answer') as AssessmentInteraction[];
+      const taskQuestions = (task.metadata as { questions?: Question[] })?.questions || [];
       
       console.log(`Task ${task.title}:`, {
         taskId: task.id,
         answersCount: taskAnswers.length,
         questionsCount: taskQuestions.length,
-        questionsKSA: taskQuestions.map((q: any) => ({
+        questionsKSA: taskQuestions.map((q) => ({
           id: q.id,
           domain: q.domain,
           ksa: q.ksa_mapping
         }))
       });
       
-      allAnswers = [...allAnswers, ...taskAnswers as any];
+      allAnswers = [...allAnswers, ...taskAnswers];
       allQuestions = [...allQuestions, ...taskQuestions];
     }
     
     console.log('Total collected:', {
       allAnswersCount: allAnswers.length,
       allQuestionsCount: allQuestions.length,
-      allKSAMappings: allQuestions.map((q: any) => q.ksa_mapping).filter(Boolean)
+      allKSAMappings: allQuestions.map((q) => q.ksa_mapping).filter(Boolean)
     });
     
     const totalQuestions = allQuestions.length;
-    const correctAnswers = allAnswers.filter(a => (a.context as any).isCorrect === true).length;
+    const correctAnswers = allAnswers.filter(a => (a.context as { isCorrect?: boolean })?.isCorrect === true).length;
     const overallScore = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
     
     // Calculate domain scores based on actual questions and answers
@@ -199,10 +216,10 @@ export async function POST(
     });
     
     // Process each answer to calculate domain scores and collect KSA mappings
-    allAnswers.forEach((answer: any) => {
-      const answerContent = answer.content as any;
+    allAnswers.forEach((answer) => {
+      const answerContent = answer.context as { questionId?: string; isCorrect?: boolean };
       const questionId = answerContent.questionId;
-      const question = allQuestions.find((q: any) => q.id === questionId);
+      const question = allQuestions.find((q) => q.id === questionId);
       
       if (question && question.domain) {
         const domainScore = domainScores.get(question.domain);
@@ -264,9 +281,9 @@ export async function POST(
     console.log('Analyzing KSA performance for', allAnswers.length, 'answers');
     
     allAnswers.forEach((answer, index) => {
-      const answerContent = (answer as any).content;
+      const answerContent = (answer as AssessmentInteraction).context || {};
       const questionId = answerContent.questionId;
-      const question = allQuestions.find((q: any) => q.id === questionId);
+      const question = allQuestions.find((q) => q.id === questionId);
       
       console.log(`Answer ${index + 1}:`, {
         questionId,
@@ -280,13 +297,13 @@ export async function POST(
         const targetKSA = answerContent.isCorrect ? correctKSA : incorrectKSA;
         
         if (question.ksa_mapping.knowledge) {
-          question.ksa_mapping.knowledge.forEach((k: string) => targetKSA.knowledge.add(k));
+          question.ksa_mapping.knowledge.forEach((k) => targetKSA.knowledge.add(k));
         }
         if (question.ksa_mapping.skills) {
-          question.ksa_mapping.skills.forEach((s: string) => targetKSA.skills.add(s));
+          question.ksa_mapping.skills.forEach((s) => targetKSA.skills.add(s));
         }
         if (question.ksa_mapping.attitudes) {
-          question.ksa_mapping.attitudes.forEach((a: string) => targetKSA.attitudes.add(a));
+          question.ksa_mapping.attitudes.forEach((a) => targetKSA.attitudes.add(a));
         }
       }
     });
