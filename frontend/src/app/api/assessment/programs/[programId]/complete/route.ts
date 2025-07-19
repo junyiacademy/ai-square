@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { 
-  getProgramRepository, 
-  getTaskRepository,
-  getEvaluationRepository 
-} from '@/lib/implementations/gcs-v2';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
 
 interface DomainScore {
@@ -57,9 +53,9 @@ export async function POST(
     // Await params before using
     const { programId } = await params;
     
-    const programRepo = getProgramRepository();
-    const taskRepo = getTaskRepository();
-    const evaluationRepo = getEvaluationRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
+    const evaluationRepo = repositoryFactory.getEvaluationRepository();
     
     // Get program
     const program = await programRepo.findById(programId);
@@ -87,7 +83,7 @@ export async function POST(
     }
     
     // Also check if there's already an evaluation for this program
-    const existingEvaluations = await evaluationRepo.findByTarget('program', programId);
+    const existingEvaluations = await evaluationRepo.findByProgram(programId);
     const existingAssessmentEval = existingEvaluations.find(e => e.evaluationType === 'assessment_complete');
     
     if (existingAssessmentEval) {
