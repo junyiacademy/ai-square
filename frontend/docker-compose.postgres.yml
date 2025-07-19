@@ -1,0 +1,65 @@
+# Docker Compose for local PostgreSQL development
+# This provides a local PostgreSQL instance that matches Cloud SQL configuration
+
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: ai-square-postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ai_square_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../docs/infrastructure/postgresql-migration-schema-docker-v3.5.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ../docs/infrastructure/performance-indexes.sql:/docker-entrypoint-initdb.d/02-indexes.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ai-square-network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: ai-square-pgadmin
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@ai-square.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - ai-square-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: ai-square-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ai-square-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  ai-square-network:
+    driver: bridge

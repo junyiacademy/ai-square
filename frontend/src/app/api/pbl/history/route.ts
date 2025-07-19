@@ -1,37 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pblProgramService } from '@/lib/storage/pbl-program-service';
-import { promises as fs } from 'fs';
-import * as yaml from 'js-yaml';
-import path from 'path';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { 
   cachedGET, 
   getPaginationParams, 
   createPaginatedResponse,
   parallel,
-  batchQueries,
   memoize
 } from '@/lib/api/optimization-utils';
-
-// Types for YAML data
-interface ScenarioInfo {
-  title: string;
-  title_zhTW?: string;
-  title_ja?: string;
-  title_ko?: string;
-  title_es?: string;
-  title_fr?: string;
-  title_de?: string;
-  title_ru?: string;
-  title_it?: string;
-  [key: string]: string | undefined;
-}
-
-interface ScenarioYAML {
-  scenario_info?: ScenarioInfo;
-  title?: string;
-  title_zhTW?: string;
-  [key: string]: unknown;
-}
 
 interface TaskSummary {
   taskId: string;
@@ -57,68 +32,6 @@ interface ProgramCompletionData {
   taskSummaries: TaskSummary[];
   scenarioTitle?: string;
 }
-
-// Memoized helper functions
-const getLocalizedValue = memoize((
-  data: ScenarioInfo | ScenarioYAML, 
-  fieldName: string, 
-  lang: string
-): string => {
-  const mappedSuffix = lang;
-  const localizedField = `${fieldName}_${mappedSuffix}`;
-  const value = data[localizedField];
-  if (value !== undefined && value !== null && typeof value === 'string') {
-    return value;
-  }
-  const defaultValue = data[fieldName];
-  return typeof defaultValue === 'string' ? defaultValue : '';
-});
-
-// Cache scenario titles in memory (30 minutes)
-const loadScenarioTitle = memoize(async (
-  scenarioId: string, 
-  language: string
-): Promise<string> => {
-  try {
-    const scenarioFolder = scenarioId.replace(/-/g, '_');
-    const fileName = `${scenarioFolder}_${language}.yaml`;
-    let yamlPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', scenarioFolder, fileName);
-    
-    // Check if language-specific file exists
-    try {
-      await fs.access(yamlPath);
-    } catch {
-      // Fallback to English
-      yamlPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', scenarioFolder, `${scenarioFolder}_en.yaml`);
-    }
-    
-    const yamlContent = await fs.readFile(yamlPath, 'utf8');
-    const scenarioData = yaml.load(yamlContent) as ScenarioYAML;
-    
-    if (scenarioData.scenario_info) {
-      return getLocalizedValue(scenarioData.scenario_info, 'title', language);
-    } else {
-      return getLocalizedValue(scenarioData, 'title', language);
-    }
-  } catch (error) {
-    console.error(`Error loading scenario ${scenarioId}:`, error);
-    return scenarioId;
-  }
-}, 30 * 60 * 1000);
-
-// Get available scenario IDs (cached)
-const getAvailableScenarios = memoize(async (): Promise<string[]> => {
-  try {
-    const scenariosPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios');
-    const folders = await fs.readdir(scenariosPath);
-    return folders
-      .filter(folder => !folder.startsWith('.'))
-      .map(folder => folder.replace(/_/g, '-'));
-  } catch {
-    // Fallback to known scenarios
-    return ['ai-job-search'];
-  }
-}, 60 * 60 * 1000); // 1 hour cache
 
 export async function GET(request: NextRequest) {
   // Extract user info
@@ -149,38 +62,111 @@ export async function GET(request: NextRequest) {
   const language = searchParams.get('lang') || 'en';
   const paginationParams = getPaginationParams(request);
 
-  // Use cached response for authenticated user
+  // Use cached response
   return cachedGET(request, async () => {
     console.log(`Fetching PBL history for user: ${userEmail}, scenario: ${scenarioId || 'all'}, language: ${language}`);
     
-    let allPrograms: ProgramCompletionData[] = [];
+    const userRepo = repositoryFactory.getUserRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
+    const evaluationRepo = repositoryFactory.getEvaluationRepository();
+    const contentRepo = repositoryFactory.getContentRepository();
     
+    // Get user
+    const user = await userRepo.findByEmail(userEmail!);
+    if (!user) {
+      return {
+        success: false,
+        error: 'User not found'
+      };
+    }
+    
+    // Get all programs for user
+    let programs = await programRepo.findByUser(user.id);
+    
+    // Filter by scenario if specified
     if (scenarioId) {
-      // Single scenario
-      const completionPrograms = await pblProgramService.getUserProgramsForScenario(userEmail!, scenarioId);
-      allPrograms = completionPrograms.map(p => ({
-        ...p,
-        userEmail: p.userEmail || userEmail!,
-        taskSummaries: p.taskSummaries || []
-      } as ProgramCompletionData));
-    } else {
-      // All scenarios - fetch in parallel
-      const scenarios = await getAvailableScenarios();
-      
-      // Batch fetch programs for all scenarios in parallel
-      const programBatches = await parallel(
-        ...scenarios.map(sid => 
-          pblProgramService.getUserProgramsForScenario(userEmail!, sid)
-        )
+      programs = programs.filter(p => p.scenarioId === scenarioId);
+    }
+    
+    // Convert to completion data format
+    const completionDataPromises = programs.map(async (program) => {
+      // Get tasks and evaluations in parallel
+      const [tasks, evaluations] = await parallel(
+        taskRepo.findByProgram(program.id),
+        evaluationRepo.findByProgram(program.id)
       );
       
-      // Flatten and map programs
-      allPrograms = programBatches.flat().map(p => ({
-        ...p,
-        userEmail: p.userEmail || userEmail!,
-        taskSummaries: p.taskSummaries || []
-      } as ProgramCompletionData));
-    }
+      const completedTasks = tasks.filter(t => t.status === 'completed');
+      
+      // Calculate scores
+      const overallScore = evaluations.length > 0
+        ? evaluations.reduce((sum, e) => sum + e.score, 0) / evaluations.length
+        : 0;
+      
+      // Aggregate domain scores from evaluations
+      const domainScores: Record<string, number> = {};
+      const ksaScores: Record<string, number> = {};
+      
+      evaluations.forEach(evaluation => {
+        if (evaluation.ksaScores) {
+          Object.entries(evaluation.ksaScores).forEach(([key, value]) => {
+            if (key.includes('_')) {
+              domainScores[key] = (domainScores[key] || 0) + (value as number);
+            } else {
+              ksaScores[key] = (ksaScores[key] || 0) + (value as number);
+            }
+          });
+        }
+      });
+      
+      // Average the scores
+      Object.keys(domainScores).forEach(key => {
+        domainScores[key] = domainScores[key] / evaluations.length;
+      });
+      Object.keys(ksaScores).forEach(key => {
+        ksaScores[key] = ksaScores[key] / evaluations.length;
+      });
+      
+      // Create task summaries
+      const taskSummaries: TaskSummary[] = completedTasks.map(task => ({
+        taskId: task.id,
+        title: `Task ${task.taskIndex + 1}`,
+        score: task.score,
+        completedAt: task.completedAt?.toISOString()
+      }));
+      
+      // Get scenario title
+      let scenarioTitle = program.scenarioId;
+      try {
+        const scenarioContent = await contentRepo.getScenarioContent(program.scenarioId, language);
+        scenarioTitle = scenarioContent.title[language] || scenarioContent.title['en'] || program.scenarioId;
+      } catch (error) {
+        console.warn(`Failed to load scenario title for ${program.scenarioId}`);
+      }
+      
+      const completionData: ProgramCompletionData = {
+        programId: program.id,
+        scenarioId: program.scenarioId,
+        userEmail: user.email,
+        status: program.status,
+        startedAt: program.startTime.toISOString(),
+        updatedAt: program.lastActivityAt.toISOString(),
+        completedAt: program.endTime?.toISOString(),
+        totalTasks: program.totalTasks,
+        evaluatedTasks: completedTasks.length,
+        overallScore,
+        domainScores,
+        ksaScores,
+        totalTimeSeconds: program.timeSpentSeconds,
+        taskSummaries,
+        scenarioTitle
+      };
+      
+      return completionData;
+    });
+    
+    const allPrograms = await Promise.all(completionDataPromises);
     
     console.log(`Found ${allPrograms.length} programs for user ${userEmail}`);
     
@@ -190,29 +176,8 @@ export async function GET(request: NextRequest) {
     );
     
     // Apply pagination
-    const { offset = 0, limit = 20 } = paginationParams;
-    const paginatedPrograms = allPrograms.slice(offset, offset + limit);
-    
-    // Load scenario titles in parallel for paginated results only
-    const uniqueScenarioIds = [...new Set(paginatedPrograms.map(p => p.scenarioId))];
-    const scenarioTitles = await parallel(
-      ...uniqueScenarioIds.map(id => loadScenarioTitle(id, language))
-    );
-    
-    // Create title map
-    const titleMap = Object.fromEntries(
-      uniqueScenarioIds.map((id, index) => [id, scenarioTitles[index]])
-    );
-    
-    // Add titles to programs
-    const programsWithTitles = paginatedPrograms.map(program => ({
-      ...program,
-      scenarioTitle: titleMap[program.scenarioId] || program.scenarioId
-    }));
-    
-    // Create paginated response
     const paginatedResponse = createPaginatedResponse(
-      programsWithTitles,
+      allPrograms,
       allPrograms.length,
       paginationParams
     );

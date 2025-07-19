@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pblProgramService } from '@/lib/storage/pbl-program-service';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
 export async function GET(
   request: NextRequest,
@@ -7,15 +7,6 @@ export async function GET(
 ) {
   try {
     const { programId } = await params;
-    const { searchParams } = new URL(request.url);
-    const scenarioId = searchParams.get('scenarioId');
-    
-    if (!scenarioId) {
-      return NextResponse.json(
-        { success: false, error: 'Scenario ID is required' },
-        { status: 400 }
-      );
-    }
     
     // Get user info from cookie
     let userEmail: string | undefined;
@@ -36,19 +27,54 @@ export async function GET(
       );
     }
     
-    // Get program metadata
-    const program = await pblProgramService.getProgram(userEmail, scenarioId, programId);
+    // Get repositories
+    const userRepo = repositoryFactory.getUserRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
     
-    if (!program) {
+    // Get user by email
+    const user = await userRepo.findByEmail(userEmail);
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: 'User not found' },
+        { status: 404 }
+      );
+    }
+    
+    // Get program
+    const program = await programRepo.findById(programId);
+    
+    if (!program || program.userId !== user.id) {
       return NextResponse.json(
         { success: false, error: 'Program not found' },
         { status: 404 }
       );
     }
     
+    // Get tasks for the program
+    const tasks = await taskRepo.findByProgram(programId);
+    
+    // Sort tasks by index
+    tasks.sort((a, b) => a.taskIndex - b.taskIndex);
+    
     return NextResponse.json({
       success: true,
-      program
+      program: {
+        id: program.id,
+        scenarioId: program.scenarioId,
+        userEmail: userEmail,
+        status: program.status,
+        currentTaskIndex: program.currentTaskIndex,
+        completedTasks: program.completedTasks,
+        totalTasks: program.totalTasks,
+        totalScore: program.totalScore,
+        ksaScores: program.ksaScores,
+        startedAt: program.startTime.toISOString(),
+        updatedAt: program.lastActivityAt.toISOString(),
+        completedAt: program.endTime?.toISOString(),
+        taskIds: tasks.map(t => t.id),
+        metadata: program.metadata
+      }
     });
     
   } catch (error) {

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pblProgramService } from '@/lib/storage/pbl-program-service';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(
   request: NextRequest,
@@ -38,42 +39,65 @@ export async function POST(
       );
     }
     
-    // Update program status from draft to in_progress
-    const updatedProgram = await pblProgramService.updateProgram(
-      userEmail,
-      scenarioId,
-      programId,
-      {
-        status: 'in_progress',
-        updatedAt: new Date().toISOString(),
-        currentTaskId: taskId
-      }
-    );
+    // Get repositories
+    const userRepo = repositoryFactory.getUserRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
     
-    if (!updatedProgram) {
+    // Get user by email
+    const user = await userRepo.findByEmail(userEmail);
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: 'User not found' },
+        { status: 404 }
+      );
+    }
+    
+    // Get program
+    const program = await programRepo.findById(programId);
+    if (!program || program.userId !== user.id) {
       return NextResponse.json(
         { success: false, error: 'Program not found' },
         { status: 404 }
       );
     }
     
+    // Update program status from pending to active
+    await programRepo.updateStatus(programId, 'active');
+    
     // Initialize the first task if not already initialized
-    try {
-      await pblProgramService.initializeTask(
-        userEmail,
-        scenarioId,
-        programId,
-        taskId,
-        taskTitle
-      );
-    } catch (error) {
-      // Task might already exist, that's ok
-      console.log('Task already initialized or error:', error);
+    const existingTasks = await taskRepo.findByProgram(programId);
+    const taskExists = existingTasks.some(t => t.taskIndex === 0);
+    
+    if (!taskExists) {
+      // Create the first task
+      await taskRepo.create({
+        programId: programId,
+        taskIndex: 0,
+        type: 'task',
+        context: {
+          taskId: taskId,
+          title: taskTitle,
+          scenarioId: scenarioId
+        }
+      });
     }
+    
+    // Get updated program
+    const updatedProgram = await programRepo.findById(programId);
     
     return NextResponse.json({
       success: true,
-      program: updatedProgram
+      program: {
+        id: updatedProgram!.id,
+        scenarioId: updatedProgram!.scenarioId,
+        status: updatedProgram!.status,
+        currentTaskIndex: updatedProgram!.currentTaskIndex,
+        completedTasks: updatedProgram!.completedTasks,
+        totalTasks: updatedProgram!.totalTasks,
+        startedAt: updatedProgram!.startTime.toISOString(),
+        updatedAt: updatedProgram!.lastActivityAt.toISOString()
+      }
     });
     
   } catch (error) {

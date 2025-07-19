@@ -1,51 +1,39 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { gcsStorage, AssessmentResultGCS } from '@/lib/storage/gcs-service';
-import { getEvaluationRepository, getProgramRepository } from '@/lib/implementations/gcs-v2';
-import { cachedGET, getPaginationParams, createPaginatedResponse, parallel } from '@/lib/api/optimization-utils';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { cachedGET, getPaginationParams, createPaginatedResponse } from '@/lib/api/optimization-utils';
 
-// 如果沒有 GCS 設定，使用本地儲存作為後備
-const USE_GCS = process.env.GOOGLE_CLOUD_PROJECT && process.env.GCS_BUCKET_NAME;
-
-// 本地儲存後備方案
-import { writeFile, readFile, mkdir } from 'fs/promises';
-import { existsSync } from 'fs';
-import path from 'path';
-
-const RESULTS_DIR = path.join(process.cwd(), 'data', 'assessment-results');
-const RESULTS_FILE = path.join(RESULTS_DIR, 'results.json');
-
-// 本地儲存函數（後備方案）
-async function ensureDir() {
-  if (!USE_GCS && !existsSync(RESULTS_DIR)) {
-    await mkdir(RESULTS_DIR, { recursive: true });
-  }
-  if (!USE_GCS && !existsSync(RESULTS_FILE)) {
-    await writeFile(RESULTS_FILE, JSON.stringify({ results: [] }, null, 2));
-  }
-}
-
-async function getAllResultsLocal(userId: string): Promise<AssessmentResultGCS[]> {
-  await ensureDir();
-  const data = await readFile(RESULTS_FILE, 'utf-8');
-  const parsed = JSON.parse(data);
-  const results = parsed.results || [];
-  return results.filter((r: AssessmentResultGCS) => r.user_id === userId);
-}
-
-async function saveResultLocal(result: AssessmentResultGCS): Promise<void> {
-  await ensureDir();
-  const data = await readFile(RESULTS_FILE, 'utf-8');
-  const parsed = JSON.parse(data);
-  const results = parsed.results || [];
-  results.push(result);
-  await writeFile(RESULTS_FILE, JSON.stringify({ results }, null, 2));
+interface AssessmentResult {
+  assessment_id: string;
+  user_id: string;
+  user_email: string;
+  timestamp: string;
+  duration_seconds: number;
+  language: string;
+  scores: {
+    overall: number;
+    domains: {
+      engaging_with_ai: number;
+      creating_with_ai: number;
+      managing_with_ai: number;
+      designing_with_ai: number;
+    };
+  };
+  summary: {
+    total_questions: number;
+    correct_answers: number;
+    level: string;
+  };
+  answers: Array<{
+    question_id: string;
+    selected: string;
+    correct: string;
+    time_spent: number;
+    ksa_mapping?: any;
+  }>;
 }
 
 export async function POST(request: NextRequest) {
   console.log('=== Assessment Save API Called ===');
-  console.log('USE_GCS:', USE_GCS);
-  console.log('GOOGLE_CLOUD_PROJECT:', process.env.GOOGLE_CLOUD_PROJECT);
-  console.log('GCS_BUCKET_NAME:', process.env.GCS_BUCKET_NAME);
   
   try {
     const body = await request.json();
@@ -55,7 +43,7 @@ export async function POST(request: NextRequest) {
       hasResult: !!body.result
     });
     
-    // 簡單的驗證
+    // Simple validation
     if (!body.userId || !body.answers || !body.result) {
       return NextResponse.json(
         { error: 'Missing required fields' },
@@ -63,67 +51,83 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 生成唯一 ID
-    const assessmentId = `asmt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
-    // 準備儲存的資料（符合 GCS schema）
-    const resultData: AssessmentResultGCS = {
-      assessment_id: assessmentId,
-      user_id: body.userId,
-      user_email: body.userEmail,
-      timestamp: new Date().toISOString(),
-      duration_seconds: body.result.timeSpentSeconds || 0,
-      language: body.language || 'en',
-      scores: {
-        overall: body.result.overallScore,
-        domains: body.result.domainScores,
-      },
-      summary: {
-        total_questions: body.result.totalQuestions,
-        correct_answers: body.result.correctAnswers,
-        level: body.result.level,
-      },
-      answers: body.answers.map((answer: { 
-        questionId: string; 
-        selectedAnswer: string; 
-        isCorrect: boolean; 
-        timeSpent?: number 
-      }) => {
-        // Find the question to get KSA mapping
-        const question = body.questions?.find((q: any) => q.id === answer.questionId);
-        
-        return {
-          question_id: answer.questionId,
-          selected: answer.selectedAnswer,
-          correct: answer.isCorrect ? answer.selectedAnswer : 'n/a',
-          time_spent: answer.timeSpent || 0,
-          ksa_mapping: question?.ksa_mapping || undefined,
-        };
-      }),
-    };
+    const userRepo = repositoryFactory.getUserRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const evaluationRepo = repositoryFactory.getEvaluationRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
 
-    // 儲存結果
-    console.log('Attempting to save with resultData:', {
-      assessment_id: resultData.assessment_id,
-      user_id: resultData.user_id,
-      storage_type: USE_GCS ? 'GCS' : 'Local'
-    });
-    
-    if (USE_GCS) {
-      console.log('Using GCS storage...');
-      // Use userEmail for GCS path if available, otherwise use userId
-      const gcsUserId = body.userEmail || body.userId;
-      await gcsStorage.saveAssessmentResult(gcsUserId, resultData);
-    } else {
-      console.log('Using local storage...');
-      await saveResultLocal(resultData);
+    // Get user
+    const user = await userRepo.findByEmail(body.userEmail || body.userId);
+    if (!user) {
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 404 }
+      );
     }
+
+    // Find or create assessment program
+    const programs = await programRepo.findByUser(user.id);
+    let assessmentProgram = programs.find(p => 
+      p.scenarioId === body.scenarioId && 
+      p.status === 'active'
+    );
+
+    if (!assessmentProgram) {
+      // Create new assessment program
+      assessmentProgram = await programRepo.create({
+        userId: user.id,
+        scenarioId: body.scenarioId || 'assessment-default',
+        totalTasks: body.result.totalQuestions || body.answers.length
+      });
+    }
+
+    // Create evaluation record
+    const evaluation = await evaluationRepo.create({
+      userId: user.id,
+      programId: assessmentProgram.id,
+      evaluationType: 'assessment_complete',
+      score: body.result.overallScore,
+      maxScore: 100,
+      feedback: `Assessment completed. Level: ${body.result.level}`,
+      aiAnalysis: {
+        domainScores: body.result.domainScores,
+        level: body.result.level,
+        totalQuestions: body.result.totalQuestions,
+        correctAnswers: body.result.correctAnswers
+      },
+      ksaScores: body.result.domainScores,
+      timeTakenSeconds: body.result.timeSpentSeconds || 0,
+      metadata: {
+        language: body.language || 'en',
+        answers: body.answers,
+        completionTime: body.result.timeSpentSeconds || 0
+      }
+    });
+
+    // Update program status
+    await programRepo.update(assessmentProgram.id, {
+      status: 'completed',
+      completedTasks: body.result.totalQuestions,
+      totalScore: body.result.overallScore,
+      endTime: new Date(),
+      metadata: {
+        ...assessmentProgram.metadata,
+        evaluationId: evaluation.id
+      }
+    });
+
+    // Update user XP
+    const xpReward = Math.round(body.result.overallScore * 10); // 10 XP per score point
+    await userRepo.update(user.id, {
+      totalXp: user.totalXp + xpReward
+    });
 
     return NextResponse.json({
       success: true,
-      assessmentId,
+      assessmentId: evaluation.id,
+      programId: assessmentProgram.id,
       message: 'Assessment result saved successfully',
-      storage: USE_GCS ? 'gcs' : 'local',
+      xpEarned: xpReward
     });
   } catch (error) {
     console.error('Error saving assessment result:', error);
@@ -140,110 +144,95 @@ export async function GET(request: NextRequest) {
   const userEmail = searchParams.get('userEmail');
   const paginationParams = getPaginationParams(request);
 
-  if (!userId) {
+  if (!userId && !userEmail) {
     return NextResponse.json(
-      { error: 'userId is required' },
+      { error: 'userId or userEmail is required' },
       { status: 400 }
     );
   }
 
   return cachedGET(request, async () => {
-    // 獲取使用者的結果
-    let userResults: AssessmentResultGCS[] = [];
-    
-    if (USE_GCS) {
-      // Use userEmail for GCS path if available, otherwise use userId
-      const gcsUserId = userEmail || userId;
-      
-      // Parallel fetch of direct results and evaluation results
-      const [directResults, evaluationResults] = await parallel(
-        gcsStorage.getUserAssessments(gcsUserId),
-        userEmail ? (async () => {
-          try {
-            const evaluationRepo = getEvaluationRepository();
-            const programRepo = getProgramRepository();
-            
-            // Get all programs for the user
-            const programs = await programRepo.findByUser(userEmail);
-            
-            // Filter completed assessment programs
-            const assessmentPrograms = programs.filter(p => 
-              p.status === 'completed' && 
-              p.metadata?.evaluationId
-            );
-            
-            // Get evaluations for completed programs in parallel
-            const evaluations = await parallel(
-              ...assessmentPrograms.map(async (program) => {
-                if (program.metadata?.evaluationId) {
-                  const evaluation = await evaluationRepo.findById(program.metadata.evaluationId as string);
-                  if (evaluation && evaluation.evaluationType === 'assessment_complete') {
-                    // Convert evaluation to assessment result format
-                    const assessmentResult: AssessmentResultGCS = {
-                      assessment_id: `eval_${evaluation.id}`,
-                      user_id: userId,
-                      user_email: userEmail,
-                      timestamp: evaluation.createdAt,
-                      duration_seconds: (evaluation.metadata?.completionTime as number) || 0,
-                      language: (program.metadata?.language as string) || 'en',
-                      scores: {
-                        overall: evaluation.score || 0,
-                        domains: {
-                          engaging_with_ai: ((evaluation.metadata?.domainScores as any)?.Engaging_with_AI as number) || 0,
-                          creating_with_ai: ((evaluation.metadata?.domainScores as any)?.Creating_with_AI as number) || 0,
-                          managing_with_ai: ((evaluation.metadata?.domainScores as any)?.Managing_with_AI as number) || 0,
-                          designing_with_ai: ((evaluation.metadata?.domainScores as any)?.Designing_with_AI as number) || 0,
-                        },
-                      },
-                      summary: {
-                        total_questions: (evaluation.metadata?.totalQuestions as number) || 0,
-                        correct_answers: (evaluation.metadata?.correctAnswers as number) || 0,
-                        level: (evaluation.metadata?.level as string) || 'beginner',
-                      },
-                      answers: [] // Answers are stored in task interactions, not in evaluation
-                    };
-                    
-                    return assessmentResult;
-                  }
-                }
-                return null;
-              })
-            );
-            
-            return evaluations.filter(Boolean) as AssessmentResultGCS[];
-          } catch (error) {
-            console.error('Error fetching evaluations:', error);
-            return [];
-          }
-        })() : Promise.resolve([])
-      );
-      
-      userResults.push(...directResults);
-      userResults.push(...evaluationResults);
-    } else {
-      userResults = await getAllResultsLocal(userId);
+    const userRepo = repositoryFactory.getUserRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const evaluationRepo = repositoryFactory.getEvaluationRepository();
+
+    // Get user
+    let user;
+    if (userEmail) {
+      user = await userRepo.findByEmail(userEmail);
+    } else if (userId) {
+      user = await userRepo.findById(userId);
     }
-    
-    // Remove duplicates (in case same assessment is stored in both places)
-    const uniqueResults = Array.from(
-      new Map(userResults.map(r => [r.timestamp, r])).values()
+
+    if (!user) {
+      return {
+        data: [],
+        total: 0,
+        page: 1,
+        totalPages: 1
+      };
+    }
+
+    // Get all completed assessment programs
+    const programs = await programRepo.getCompletedPrograms(user.id);
+    const assessmentPrograms = programs.filter(p => 
+      p.scenarioId?.includes('assessment') || 
+      p.metadata?.type === 'assessment'
     );
+
+    // Get evaluations for assessment programs
+    const assessmentResults: AssessmentResult[] = [];
     
+    for (const program of assessmentPrograms) {
+      const evaluations = await evaluationRepo.findByProgram(program.id);
+      const assessmentEvaluation = evaluations.find(e => 
+        e.evaluationType === 'assessment_complete'
+      );
+
+      if (assessmentEvaluation) {
+        const result: AssessmentResult = {
+          assessment_id: assessmentEvaluation.id,
+          user_id: user.id,
+          user_email: user.email,
+          timestamp: assessmentEvaluation.createdAt.toISOString(),
+          duration_seconds: assessmentEvaluation.timeTakenSeconds,
+          language: (assessmentEvaluation.metadata?.language as string) || 'en',
+          scores: {
+            overall: assessmentEvaluation.score,
+            domains: {
+              engaging_with_ai: (assessmentEvaluation.ksaScores?.Engaging_with_AI as number) || 0,
+              creating_with_ai: (assessmentEvaluation.ksaScores?.Creating_with_AI as number) || 0,
+              managing_with_ai: (assessmentEvaluation.ksaScores?.Managing_with_AI as number) || 0,
+              designing_with_ai: (assessmentEvaluation.ksaScores?.Designing_with_AI as number) || 0,
+            }
+          },
+          summary: {
+            total_questions: (assessmentEvaluation.aiAnalysis?.totalQuestions as number) || 0,
+            correct_answers: (assessmentEvaluation.aiAnalysis?.correctAnswers as number) || 0,
+            level: (assessmentEvaluation.aiAnalysis?.level as string) || 'beginner'
+          },
+          answers: (assessmentEvaluation.metadata?.answers as any[]) || []
+        };
+
+        assessmentResults.push(result);
+      }
+    }
+
     // Sort by timestamp (newest first)
-    uniqueResults.sort((a, b) => 
+    assessmentResults.sort((a, b) => 
       new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
 
     // Apply pagination
     const paginatedResponse = createPaginatedResponse(
-      uniqueResults,
-      uniqueResults.length,
+      assessmentResults,
+      assessmentResults.length,
       paginationParams
     );
 
     return {
       ...paginatedResponse,
-      storage: USE_GCS ? 'gcs' : 'local',
+      storage: 'postgresql'
     };
   }, {
     ttl: 300, // 5 minutes cache

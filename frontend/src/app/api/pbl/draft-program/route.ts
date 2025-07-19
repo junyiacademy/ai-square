@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pblProgramService } from '@/lib/storage/pbl-program-service';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
 export async function GET(request: NextRequest) {
   try {
@@ -32,13 +32,39 @@ export async function GET(request: NextRequest) {
       );
     }
     
-    // Find existing draft program
-    const draftProgram = await pblProgramService.findUserDraftProgram(userEmail, scenarioId);
+    // Get repositories
+    const userRepo = repositoryFactory.getUserRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    
+    // Get user by email
+    const user = await userRepo.findByEmail(userEmail);
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: 'User not found' },
+        { status: 404 }
+      );
+    }
+    
+    // Find active programs for user in this scenario
+    const userPrograms = await programRepo.findByUser(user.id);
+    const draftProgram = userPrograms.find(
+      p => p.scenarioId === scenarioId && p.status === 'active'
+    );
     
     if (draftProgram) {
       return NextResponse.json({
         success: true,
-        program: draftProgram
+        program: {
+          id: draftProgram.id,
+          scenarioId: draftProgram.scenarioId,
+          userEmail: userEmail,
+          status: draftProgram.status,
+          currentTaskIndex: draftProgram.currentTaskIndex,
+          completedTasks: draftProgram.completedTasks,
+          totalTasks: draftProgram.totalTasks,
+          startedAt: draftProgram.startTime.toISOString(),
+          updatedAt: draftProgram.lastActivityAt.toISOString()
+        }
       });
     } else {
       return NextResponse.json({
