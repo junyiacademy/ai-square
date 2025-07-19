@@ -450,14 +450,15 @@ AI Square 是一個「用 AI 學 AI 素養」的創新學習平台，基於國�
 - AI 素養能力視覺化：KSA (Knowledge, Skills, Attitudes) 映射
 - 即時 AI 反饋：個人化評估與質性回饋
 - CMS 內容管理：Git-based 版本控制、AI 輔助編輯、分支管理
-- 學習進度追蹤：Google Cloud Storage 儲存用戶數據
+- 學習進度追蹤：PostgreSQL 資料庫儲存用戶數據
 - 統一抽象層架構：確保系統可擴展性
 
 ### 技術棧
 - **Frontend**: Next.js 15, TypeScript, Tailwind CSS v4, react-i18next, Monaco Editor
 - **Backend**: FastAPI, Python 3.x, Vertex AI SDK
 - **AI Services**: Google Vertex AI (Gemini 2.5 Flash), Claude API (翻譯), 規劃中: OpenAI
-- **Storage**: Google Cloud Storage (用戶數據), GitHub (內容版本控制), Redis (分散式快取)
+- **Database**: PostgreSQL (用戶數據、學習記錄)
+- **Storage**: Google Cloud Storage (靜態檔案、圖片), GitHub (內容版本控制), Redis (分散式快取)
 - **Caching**: 多層快取系統 (memory + localStorage + Redis with fallback)
 - **Deployment**: Google Cloud Run, Docker, GitHub Actions CI/CD
 - **Testing**: Jest (80%+ 覆蓋率), React Testing Library, Playwright
@@ -549,7 +550,7 @@ YAML/API → Content Source → Scenario (UUID) → Program (UUID) → Tasks (UU
 ```
 
 **共同 Pattern**：
-1. **Repository Pattern**: 所有模組都使用 GCS Repository 抽象層
+1. **Repository Pattern**: 所有模組都使用 PostgreSQL Repository 抽象層
 2. **UUID 識別**: 所有實體都有唯一 UUID
 3. **狀態管理**: pending → active → completed
 4. **多語言支援**: 統一的翻譯機制
@@ -593,9 +594,12 @@ YAML/API → Content Source → Scenario (UUID) → Program (UUID) → Tasks (UU
   - **PBL Scenarios**: YAML files in `frontend/public/pbl_data/`
     - `*_scenario.yaml` - Scenario definitions with tasks and AI modules
     - Multi-language support through field suffixes
-- **User Data**: Google Cloud Storage (`ai-square-db` bucket)
-  - Program metadata, task logs, evaluations, completion data
-  - Organized by user email and scenario
+- **User Data**: PostgreSQL Database
+  - Users, Programs, Tasks, Evaluations, Achievements tables
+  - Relational data model with foreign key constraints
+- **Static Files**: Google Cloud Storage
+  - Images, documents, and other media files
+  - Public bucket for static assets
 - **Translation System**: Suffix-based field naming (e.g., `description_zh`, `description_es`)
 - **Domain Structure**: Engaging_with_AI, Creating_with_AI, Managing_AI, Designing_AI
 
@@ -607,7 +611,7 @@ YAML/API → Content Source → Scenario (UUID) → Program (UUID) → Tasks (UU
 
 #### Abstraction Layer Architecture (`frontend/src/lib/abstractions/`)
 - **BaseApiHandler**: Unified API route handling with caching, error handling, and i18n
-- **BaseStorageService**: Abstracted storage interface supporting GCS and local storage
+- **BaseStorageService**: Abstracted storage interface for file operations
 - **BaseAIService**: Unified AI service interface for multiple providers
 - **BaseYAMLLoader**: YAML content loading with validation and caching
 - **BaseLearningService**: Unified learning service interface for all modules
@@ -640,6 +644,29 @@ The app uses a hybrid translation architecture:
 - **Tailwind CSS** for utility-first styling
 - **Gradient backgrounds** and **responsive design** patterns
 - **Custom animations** with CSS-in-JS for mobile interactions
+
+### Database Architecture
+AI Square 現在使用 **PostgreSQL** 作為主要資料庫：
+
+#### 資料表結構
+- **users**: 用戶資料、學習偏好、語言設定
+- **scenarios**: 學習情境定義（從 YAML 同步）
+- **programs**: 用戶的學習計劃實例
+- **tasks**: 任務進度與互動記錄
+- **evaluations**: AI 評估結果與回饋
+- **achievements**: 用戶成就與里程碑
+- **user_achievements**: 用戶與成就的關聯
+
+#### 資料儲存策略
+- **PostgreSQL**: 所有動態用戶資料、學習記錄、進度追蹤
+- **YAML 檔案**: 靜態內容定義（情境、任務、KSA 映射）
+- **Google Cloud Storage**: 僅用於靜態檔案（圖片、文件、媒體）
+- **Redis**: 快取層，提升查詢效能
+
+#### 重要提醒
+- **不再使用 GCS 作為資料庫**: 所有用戶資料都存在 PostgreSQL
+- **Repository Pattern**: 使用 PostgreSQL repositories 而非 GCS repositories
+- **事務支援**: 利用 PostgreSQL 的 ACID 特性確保資料一致性
 
 ### Configuration Files
 - `eslint.config.mjs` - Next.js + TypeScript ESLint setup
