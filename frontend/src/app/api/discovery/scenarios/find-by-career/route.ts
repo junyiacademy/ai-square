@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
-import { getScenarioRepository, getProgramRepository } from '@/lib/implementations/gcs-v2';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
 export async function GET(request: NextRequest) {
   try {
@@ -18,8 +18,8 @@ export async function GET(request: NextRequest) {
     }
     
     // In v2 architecture, we search scenarios by their metadata
-    const scenarioRepo = getScenarioRepository();
-    const programRepo = getProgramRepository();
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
     
     // Find all discovery scenarios
     const allScenarios = await scenarioRepo.listAll();

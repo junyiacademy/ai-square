@@ -71,7 +71,7 @@ export async function GET(
         programId: task.programId,
         title: task.title,
         type: task.type,
-        content: task.content,
+        context: task.content,
         interactions: task.interactions,
         status: task.status,
         startedAt: task.startedAt,
@@ -174,7 +174,7 @@ export async function PATCH(
         }
         
         // Process answers and create interactions
-        const questions = task.content.context?.questions || [];
+        const questions = task.context.context?.questions || [];
         const interactions = answers.map((answer: any) => {
           const question = questions.find((q: any) => q.id === answer.questionId);
           const isCorrect = question && 
@@ -183,7 +183,7 @@ export async function PATCH(
           return {
             timestamp: new Date().toISOString(),
             type: 'assessment_answer',
-            content: {
+            context: {
               questionId: answer.questionId,
               selectedAnswer: answer.answer,
               isCorrect,
@@ -197,7 +197,7 @@ export async function PATCH(
         await taskRepo.updateInteractions(taskId, interactions);
         
         // Calculate score
-        const correctCount = interactions.filter(i => i.content.isCorrect).length;
+        const correctCount = interactions.filter(i => i.context.isCorrect).length;
         const totalQuestions = questions.length;
         const score = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
         

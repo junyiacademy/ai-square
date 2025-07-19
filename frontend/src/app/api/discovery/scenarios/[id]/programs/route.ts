@@ -15,7 +15,7 @@ const DISCOVERY_TASK_TEMPLATES = [
     description: '了解這個職業的核心技能、工作內容和發展前景',
     xp: 100,
     type: 'analysis' as const,
-    content: {
+    context: {
       instructions: '研究並分析你選擇的職業角色',
       objectives: [
         '研究這個職業的主要工作內容',
@@ -40,7 +40,7 @@ const DISCOVERY_TASK_TEMPLATES = [
     description: '學習這個職業所需的基礎知識和工具',
     xp: 150,
     type: 'creation' as const,
-    content: {
+    context: {
       instructions: '掌握基礎技能並完成練習',
       objectives: [
         '學習基本概念和術語',
@@ -54,7 +54,7 @@ const DISCOVERY_TASK_TEMPLATES = [
     description: '完成你的第一個小型專案，運用所學知識',
     xp: 200,
     type: 'creation' as const,
-    content: {
+    context: {
       instructions: '獨立完成一個小型專案',
       objectives: [
         '規劃專案目標和步驟',
@@ -68,7 +68,7 @@ const DISCOVERY_TASK_TEMPLATES = [
     description: '深入學習更高級的概念和技術',
     xp: 250,
     type: 'analysis' as const,
-    content: {
+    context: {
       instructions: '探索進階主題和技術',
       objectives: [
         '研究進階概念',
@@ -82,7 +82,7 @@ const DISCOVERY_TASK_TEMPLATES = [
     description: '學習如何在團隊中有效溝通和協作',
     xp: 200,
     type: 'chat' as const,
-    content: {
+    context: {
       instructions: '模擬團隊協作場景',
       objectives: [
         '練習溝通技巧',
@@ -107,9 +107,9 @@ export async function POST(
     const userEmail = session.user.email;
     
     // Get repositories
-    const programRepo = getProgramRepository();
-    const taskRepo = getTaskRepository();
-    const scenarioRepo = getScenarioRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
     
     // Verify scenario exists
     const scenario = await scenarioRepo.findById(scenarioId);
@@ -158,7 +158,7 @@ export async function POST(
             scenarioTaskIndex: i,
             title: template.title,
             type: 'chat', // PBL tasks are primarily chat-based
-            content: {
+            context: {
               instructions: template.description,
               context: {
                 description: template.description,
@@ -203,7 +203,7 @@ export async function POST(
             scenarioTaskIndex: taskIndex++,
             title: taskTitle,
             type: 'analysis',
-            content: {
+            context: {
               instructions: yamlData.starting_scenario?.description || '',
               context: {
                 description: yamlData.starting_scenario?.description || '',
@@ -231,7 +231,7 @@ export async function POST(
             scenarioTaskIndex: taskIndex++,
             title: exampleTask.title,
             type: exampleTask.type as ITask['type'],
-            content: {
+            context: {
               instructions: exampleTask.description,
               context: {
                 description: exampleTask.description,
@@ -255,13 +255,13 @@ export async function POST(
             scenarioTaskIndex: i,
             title: template.title,
             type: template.type,
-            content: {
-              instructions: template.content.instructions,
+            context: {
+              instructions: template.context.instructions,
               context: {
                 description: template.description,
                 xp: template.xp,
-                objectives: template.content.objectives,
-                completionCriteria: template.content.completionCriteria,
+                objectives: template.context.objectives,
+                completionCriteria: template.context.completionCriteria,
                 difficulty: i < 3 ? 'beginner' : i < 7 ? 'intermediate' : 'advanced'
               }
             },
@@ -291,8 +291,8 @@ export async function POST(
       tasks: createdTasks.map(t => ({
         id: t.id,
         title: t.title,
-        description: t.content.context?.description || '',
-        xp: t.content.context?.xp || 0,
+        description: t.context.context?.description || '',
+        xp: t.context.context?.xp || 0,
         status: t.status
       })),
       totalTasks: createdTasks.length,
@@ -324,8 +324,8 @@ export async function GET(
     const userEmail = session.user.email;
     
     // Get repositories
-    const programRepo = getProgramRepository();
-    const taskRepo = getTaskRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
     
     // Find programs for this user and scenario
     const programs = await programRepo.findByScenarioAndUser(scenarioId, userEmail);

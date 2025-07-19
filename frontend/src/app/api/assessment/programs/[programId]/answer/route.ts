@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getTaskRepository } from '@/lib/implementations/gcs-v2';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
 import { hasQuestions, AssessmentQuestion, AssessmentAnswerContent } from '@/types/task-content';
 
@@ -26,7 +26,7 @@ export async function POST(
       );
     }
     
-    const taskRepo = getTaskRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
     
     // Get task
     const task = await taskRepo.findById(taskId);
@@ -38,8 +38,8 @@ export async function POST(
     }
     
     // Get questions from task to check correct answer
-    const questions: AssessmentQuestion[] = hasQuestions(task.content?.context) 
-      ? task.content.context.questions as AssessmentQuestion[]
+    const questions: AssessmentQuestion[] = hasQuestions(task.context?.context) 
+      ? task.context.context.questions as AssessmentQuestion[]
       : [];
     const question = questions.find((q) => q.id === questionId);
     const isCorrect = question && question.correct_answer !== undefined
@@ -60,7 +60,7 @@ export async function POST(
     await taskRepo.addInteraction(taskId, {
       timestamp: new Date().toISOString(),
       type: 'system_event',
-      content: answerContent
+      context: answerContent
     });
     
     // Update task status if first answer

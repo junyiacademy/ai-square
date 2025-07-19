@@ -26,8 +26,8 @@ export async function POST(
     // Await params before using
     const { programId } = await params;
     
-    const programRepo = getProgramRepository();
-    const taskRepo = getTaskRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
     
     // Get program
     const program = await programRepo.findById(programId);
@@ -83,11 +83,11 @@ export async function POST(
       id: nextTask?.id,
       title: nextTask?.title,
       hasContent: !!nextTask?.content,
-      hasContext: !!nextTask?.content?.context,
-      questionsInContext: (nextTask?.content?.context as any)?.questions?.length || 0,
+      hasContext: !!nextTask?.context?.context,
+      questionsInContext: (nextTask?.context?.context as any)?.questions?.length || 0,
       questionsDirect: 0,
       contentKeys: nextTask?.content ? Object.keys(nextTask.content) : [],
-      contextKeys: nextTask?.content?.context ? Object.keys(nextTask.content.context) : []
+      contextKeys: nextTask?.context?.context ? Object.keys(nextTask.context.context) : []
     });
     
     return NextResponse.json({

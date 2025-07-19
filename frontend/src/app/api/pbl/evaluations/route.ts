@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getEvaluationRepository } from '@/lib/implementations/gcs-v2';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
 export async function GET(request: NextRequest) {
   try {
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     const taskId = searchParams.get('taskId');
     const targetType = searchParams.get('targetType');
 
-    const evaluationRepo = getEvaluationRepository();
+    const evaluationRepo = repositoryFactory.getEvaluationRepository();
     
     let evaluations;
     

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
-import { getScenarioRepository } from '@/lib/implementations/gcs-v2';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
 
 // 記憶體快取
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     const user = session?.user;
     
     // 從 GCS 獲取基本資訊（英文版）
-    const scenarioRepo = getScenarioRepository();
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
     const scenarios = await scenarioRepo.findBySourceType('assessment');
     
     // 處理每個 scenario

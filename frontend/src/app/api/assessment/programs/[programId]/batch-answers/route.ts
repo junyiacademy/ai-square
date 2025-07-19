@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getTaskRepository } from '@/lib/implementations/gcs-v2';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
 
 export async function POST(
@@ -39,7 +39,7 @@ export async function POST(
       );
     }
     
-    const taskRepo = getTaskRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
     
     // Get task
     const task = await taskRepo.findById(taskId);
@@ -51,7 +51,7 @@ export async function POST(
     }
     
     // Get questions from task to check correct answers
-    const questions = (task.content?.context as any)?.questions || [];
+    const questions = (task.context?.context as any)?.questions || [];
     
     // Prepare all interactions
     const interactions = answers.map((answer: any) => {
@@ -64,7 +64,7 @@ export async function POST(
       return {
         timestamp: new Date().toISOString(),
         type: 'system_event' as const,
-        content: {
+        context: {
           eventType: 'assessment_answer',
           questionId: answer.questionId,
           selectedAnswer: answer.answer,

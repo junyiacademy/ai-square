@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
-import { getScenarioRepository } from '@/lib/implementations/gcs-v2';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
 
 interface AssessmentConfig {
@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
     }
     
     // Get scenario repository
-    const scenarioRepo = getScenarioRepository();
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
     
     // Get all existing scenarios in one batch query
     const existingScenarios = await scenarioRepo.findAll();

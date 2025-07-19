@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getScenarioRepository } from '@/lib/implementations/gcs-v2';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { IScenario } from '@/types/unified-learning';
 import { discoveryScenarioService } from '@/lib/services/discovery-scenario-service';
 
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const language = searchParams.get('lang') || 'en';
     
-    const scenarioRepo = getScenarioRepository();
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
     
     // 先嘗試從儲存庫獲取現有的 scenarios
     let scenarios = await scenarioRepo.findBySource('discovery');

@@ -109,7 +109,7 @@ export async function GET(request: NextRequest) {
           log: {
             interactions: task.interactions.map(i => ({
               type: i.type === 'user_input' ? 'user' : 'assistant',
-              message: i.content.message || i.content,
+              message: i.context.message || i.content,
               timestamp: i.timestamp
             })),
             startedAt: task.startedAt,

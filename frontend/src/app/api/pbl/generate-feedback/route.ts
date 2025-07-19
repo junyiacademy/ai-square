@@ -42,7 +42,7 @@ interface CompletionData {
     log?: {
       interactions?: Array<{
         role: string;
-        content: string;
+        context: string;
       }>;
     };
   }>;
@@ -274,7 +274,7 @@ export async function POST(request: NextRequest) {
         log: {
           interactions: task.interactions?.map(i => ({
             role: i.type === 'user_input' ? 'user' : 'assistant',
-            content: i.content.message || i.content
+            context: i.context.message || i.content
           })) || []
         }
       })),
@@ -399,7 +399,7 @@ Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLan
     });
     
     const response = result.response;
-    const feedbackText = response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+    const feedbackText = response.candidates?.[0]?.context?.parts?.[0]?.text || '{}';
     
     let feedback: QualitativeFeedback | undefined;
     try {
@@ -488,7 +488,7 @@ Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLan
     const updatedQualitativeFeedback = {
       ...evaluation.metadata?.qualitativeFeedback,
       [currentLang]: {
-        content: feedback,
+        context: feedback,
         generatedAt: new Date().toISOString(),
         isValid: true
       }

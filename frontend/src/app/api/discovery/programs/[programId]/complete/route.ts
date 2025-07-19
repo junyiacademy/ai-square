@@ -29,10 +29,10 @@ export async function POST(
     // Await params before using
     const { programId } = await params;
     
-    const programRepo = getProgramRepository();
-    const taskRepo = getTaskRepository();
-    const evaluationRepo = getEvaluationRepository();
-    const scenarioRepo = getScenarioRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
+    const evaluationRepo = repositoryFactory.getEvaluationRepository();
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
     
     // Get program
     const program = await programRepo.findById(programId);
@@ -71,7 +71,7 @@ export async function POST(
       const interactions = task.interactions || [];
       // Find the last successful AI response for this task
       const successfulResponses = interactions.filter(i => 
-        i.type === 'ai_response' && i.content?.completed === true
+        i.type === 'ai_response' && i.context?.completed === true
       );
       
       if (successfulResponses.length > 0) {
@@ -97,7 +97,7 @@ export async function POST(
       const timeSpent = interactions.reduce((taskTime, interaction) => {
         // Check different possible locations for timeSpent
         const time = interaction.metadata?.timeSpent || 
-                    interaction.content?.timeSpent || 
+                    interaction.context?.timeSpent || 
                     0;
         return taskTime + time;
       }, 0);
@@ -109,14 +109,14 @@ export async function POST(
       const interactions = task.interactions || [];
       const attempts = interactions.filter(i => i.type === 'user_input').length;
       const aiResponses = interactions.filter(i => i.type === 'ai_response');
-      const passCount = aiResponses.filter(r => r.content?.completed === true).length;
+      const passCount = aiResponses.filter(r => r.context?.completed === true).length;
       
       // Get the last successful response for XP and score
       let taskXP = 0;
       let taskScore = 0;
       let skillsImproved = [];
       
-      const successfulResponses = aiResponses.filter(r => r.content?.completed === true);
+      const successfulResponses = aiResponses.filter(r => r.context?.completed === true);
       if (successfulResponses.length > 0) {
         const lastSuccess = successfulResponses[successfulResponses.length - 1];
         const content = typeof lastSuccess.content === 'string' 

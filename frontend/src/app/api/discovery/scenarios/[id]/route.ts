@@ -24,8 +24,8 @@ export async function GET(
     const userEmail = session.user.email;
     
     // Get repositories
-    const scenarioRepo = getScenarioRepository();
-    const programRepo = getProgramRepository();
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
     
     // Check if scenario exists
     const scenario = await scenarioRepo.findById(scenarioId);

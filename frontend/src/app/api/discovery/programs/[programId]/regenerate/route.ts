@@ -21,10 +21,10 @@ export async function POST(
     
     const { programId } = await params;
     
-    const programRepo = getProgramRepository();
-    const taskRepo = getTaskRepository();
-    const evaluationRepo = getEvaluationRepository();
-    const scenarioRepo = getScenarioRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
+    const evaluationRepo = repositoryFactory.getEvaluationRepository();
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
     
     // Get program
     const program = await programRepo.findById(programId);
@@ -77,7 +77,7 @@ export async function POST(
     const timeSpentSeconds = completedTasks.reduce((sum, task) => {
       const interactions = task.interactions || [];
       const time = interactions.reduce((taskTime, interaction) => {
-        const t = interaction.content?.timeSpent || 0;
+        const t = interaction.context?.timeSpent || 0;
         return taskTime + t;
       }, 0);
       return sum + time;
@@ -169,7 +169,7 @@ Return your response in JSON format:
       const aiResponse = await aiService.sendMessage(feedbackPrompt);
       
       try {
-        const jsonMatch = aiResponse.content.match(/\{[\s\S]*\}/);
+        const jsonMatch = aiResponse.context.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
           qualitativeFeedback = JSON.parse(jsonMatch[0]);
           

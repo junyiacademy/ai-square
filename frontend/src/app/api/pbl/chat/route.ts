@@ -69,10 +69,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Extract AI module configuration from task metadata
-    const taskTemplate = task.content?.context?.taskTemplate || {};
+    const taskTemplate = task.context?.context?.taskTemplate || {};
     const aiModule = taskTemplate.aiModule || taskTemplate.ai_module || 
-                    task.content?.context?.originalTaskData?.aiModule ||
-                    task.content?.context?.originalTaskData?.ai_module;
+                    task.context?.context?.originalTaskData?.aiModule ||
+                    task.context?.context?.originalTaskData?.ai_module;
 
     if (!aiModule) {
       return NextResponse.json<ErrorResponse>(
@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
     // Generate response
     const result = await model.generateContent(fullPrompt);
     const response = result.response;
-    const text = response.candidates?.[0]?.content?.parts?.[0]?.text || 'I apologize, but I was unable to generate a response.';
+    const text = response.candidates?.[0]?.context?.parts?.[0]?.text || 'I apologize, but I was unable to generate a response.';
 
     return NextResponse.json({
       response: text,

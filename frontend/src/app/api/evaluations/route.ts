@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
 
     const result = await model.generateContent(evaluationPrompt);
     const response = result.response;
-    const aiEvaluation = JSON.parse(response.candidates?.[0]?.content?.parts?.[0]?.text || '{}');
+    const aiEvaluation = JSON.parse(response.candidates?.[0]?.context?.parts?.[0]?.text || '{}');
 
     // Create evaluation record
     const evaluation = await evaluationRepo.create({

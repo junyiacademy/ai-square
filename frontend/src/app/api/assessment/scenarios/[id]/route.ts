@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getScenarioRepository } from '@/lib/implementations/gcs-v2';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
@@ -24,7 +24,7 @@ export async function GET(
   const { id } = await params;
 
   return cachedGET(request, async () => {
-    const scenarioRepo = getScenarioRepository();
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
     const scenario = await scenarioRepo.findById(id);
     
     if (!scenario) {

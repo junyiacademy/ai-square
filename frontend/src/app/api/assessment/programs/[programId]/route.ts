@@ -36,8 +36,8 @@ export async function GET(
     // Await params before using
     const { programId } = await params;
     
-    const programRepo = getProgramRepository();
-    const taskRepo = getTaskRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
     
     // Get program
     const program = await programRepo.findById(programId);
@@ -72,7 +72,7 @@ export async function GET(
         title: t.title,
         status: t.status,
         hasContent: !!t.content,
-        hasQuestions: !!((t.content?.context as any)?.questions?.length)
+        hasQuestions: !!((t.context?.context as any)?.questions?.length)
       })) || []
     });
     
@@ -111,7 +111,7 @@ export async function GET(
           id: t.id,
           title: t.title,
           status: t.status,
-          questionsCount: (t.content?.context as any)?.questions?.length || 0
+          questionsCount: (t.context?.context as any)?.questions?.length || 0
         })),
         totalTasks: tasks.length
       });
@@ -126,7 +126,7 @@ export async function GET(
         id: t.id,
         title: t.title,
         status: t.status,
-        questionsCount: (t.content?.context as any)?.questions?.length || 0
+        questionsCount: (t.context?.context as any)?.questions?.length || 0
       })),
       totalTasks: tasks.length
     });

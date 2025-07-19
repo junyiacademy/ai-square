@@ -132,7 +132,7 @@ async function getUserContext(userEmail: string) {
   }
 }
 
-async function saveMessage(userEmail: string, sessionId: string, message: { role: string; content: string; timestamp: string }) {
+async function saveMessage(userEmail: string, sessionId: string, message: { role: string; context: string; timestamp: string }) {
   initializeServices();
   if (!bucket) {
     throw new Error('Storage service not initialized');
@@ -150,7 +150,7 @@ async function saveMessage(userEmail: string, sessionId: string, message: { role
       const [data] = await sessionFile.download();
       session = JSON.parse(data.toString());
       session.messages.push(message);
-      session.last_message = message.content.substring(0, 100);
+      session.last_message = message.context.substring(0, 100);
       session.message_count = session.messages.length;
       session.updated_at = new Date().toISOString();
     } else {
@@ -160,7 +160,7 @@ async function saveMessage(userEmail: string, sessionId: string, message: { role
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         messages: [message],
-        last_message: message.content.substring(0, 100),
+        last_message: message.context.substring(0, 100),
         message_count: 1,
         tags: []
       };
@@ -224,7 +224,7 @@ async function updateChatIndex(userEmail: string, sessionId: string, session: { 
   }
 }
 
-async function generateChatTitle(messages: { role: string; content: string }[]) {
+async function generateChatTitle(messages: { role: string; context: string }[]) {
   if (messages.length < 2) return 'New Chat';
   
   initializeServices();
@@ -244,7 +244,7 @@ async function generateChatTitle(messages: { role: string; content: string }[]) 
   const conversationContext = messages.slice(0, 6) // user, assistant, user (if exists)
     .map((msg) => {
       const role = msg.role === 'user' ? 'User' : 'Assistant';
-      return `${role}: ${msg.content.substring(0, 150)}`;
+      return `${role}: ${msg.context.substring(0, 150)}`;
     })
     .join('\n');
   
@@ -263,7 +263,7 @@ Title:`;
   try {
     const result = await model.generateContent(prompt);
     const response = result.response;
-    const text = response.candidates?.[0]?.content?.parts?.[0]?.text || '學習討論';
+    const text = response.candidates?.[0]?.context?.parts?.[0]?.text || '學習討論';
     return text.trim().replace(/['"「」]/g, '');
   } catch (error) {
     console.error('Error generating title:', error);
@@ -348,7 +348,7 @@ Guidelines:
     
     const result = await chat.sendMessage(message);
     const response = result.response;
-    const aiResponse = response.candidates?.[0]?.content?.parts?.[0]?.text || 'I apologize, but I was unable to generate a response.';
+    const aiResponse = response.candidates?.[0]?.context?.parts?.[0]?.text || 'I apologize, but I was unable to generate a response.';
     
     // Create or use session ID
     const currentSessionId = sessionId || uuidv4();
@@ -357,14 +357,14 @@ Guidelines:
     const userMessage = {
       id: `${Date.now()}-user`,
       role: 'user',
-      content: message,
+      context: message,
       timestamp: new Date().toISOString()
     };
     
     const assistantMessage = {
       id: `${Date.now() + 1}-assistant`,
       role: 'assistant',
-      content: aiResponse,
+      context: aiResponse,
       timestamp: new Date().toISOString(),
       context_used: ['assessment_score', 'user_identity', 'weak_domains']
     };

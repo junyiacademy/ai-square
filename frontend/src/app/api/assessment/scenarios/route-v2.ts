@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ScenarioSyncService } from '@/lib/services/scenario-sync-service';
-import { getScenarioRepository } from '@/lib/implementations/gcs-v2';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
 
 export async function GET(request: NextRequest) {
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const user = session?.user;
     
     // 獲取 Scenario Repository
-    const scenarioRepo = getScenarioRepository();
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
     
     // 獲取所有 assessment scenarios
     const scenarios = await scenarioRepo.findBySourceType('assessment');

@@ -37,9 +37,9 @@ export async function GET(
     // Await params before using
     const { programId } = await params;
     
-    const programRepo = getProgramRepository();
-    const evaluationRepo = getEvaluationRepository();
-    const taskRepo = getTaskRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const evaluationRepo = repositoryFactory.getEvaluationRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
     
     // Get program
     const program = await programRepo.findById(programId);
@@ -121,7 +121,7 @@ export async function GET(
       const timeSpentSeconds = completedTasks.reduce((sum, task) => {
         const interactions = task.interactions || [];
         const time = interactions.reduce((taskTime, interaction) => {
-          const t = interaction.content?.timeSpent || 0;
+          const t = interaction.context?.timeSpent || 0;
           return taskTime + t;
         }, 0);
         return sum + time;

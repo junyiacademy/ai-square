@@ -111,10 +111,10 @@ export async function GET(
     console.log('==============================');
     
     // Get repositories
-    const programRepo = getProgramRepository();
-    const taskRepo = getTaskRepository();
-    const scenarioRepo = getScenarioRepository();
-    const evaluationRepo = getEvaluationRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
+    const evaluationRepo = repositoryFactory.getEvaluationRepository();
     
     // Verify program ownership
     const program = await programRepo.findById(programId);
@@ -252,7 +252,7 @@ export async function GET(
       title: task.title,
       type: task.type,
       status: task.status,
-      content: task.content,
+      context: task.content,
       interactions: task.interactions,
       startedAt: task.startedAt,
       completedAt: task.completedAt,
@@ -288,9 +288,9 @@ export async function PATCH(
     const { action, content } = body;
     
     // Get repositories
-    const programRepo = getProgramRepository();
-    const taskRepo = getTaskRepository();
-    const evaluationRepo = getEvaluationRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
+    const evaluationRepo = repositoryFactory.getEvaluationRepository();
     
     // Verify program ownership
     const program = await programRepo.findById(programId);
@@ -309,7 +309,7 @@ export async function PATCH(
       const userInteraction: IInteraction = {
         timestamp: new Date().toISOString(),
         type: 'user_input',
-        content: {
+        context: {
           response: content.response,
           timeSpent: content.timeSpent
         }
@@ -318,7 +318,7 @@ export async function PATCH(
       await taskRepo.addInteraction(taskId, userInteraction);
       
       // Get repositories for scenario lookup
-      const scenarioRepo = getScenarioRepository();
+      const scenarioRepo = repositoryFactory.getScenarioRepository();
       
       // Get scenario for context
       const scenario = await scenarioRepo.findById(program.scenarioId);
@@ -349,8 +349,8 @@ You are an AI learning evaluator in a discovery-based learning environment.
 
 Career Path: ${careerType}
 Task Title: ${task.title}
-Task Instructions: ${task.content.instructions}
-Task Context: ${JSON.stringify(task.content.context || {})}
+Task Instructions: ${task.context.instructions}
+Task Context: ${JSON.stringify(task.context.context || {})}
 ${yamlData ? `World Setting: ${yamlData.world_setting.description}\nAtmosphere: ${yamlData.world_setting.atmosphere}` : ''}
 
 Learner's Response:
@@ -367,7 +367,7 @@ ${userLanguage === 'zhTW' ?
 `請用繁體中文提供評估，包含：
 - 詳細說明做得好的地方和需要改進的地方
 - 任務是否圓滿完成
-- 獲得的經驗值（0-${task.content.context?.xp || 100}）
+- 獲得的經驗值（0-${task.context.context?.xp || 100}）
 - 展現或提升的技能
 
 請以 JSON 格式返回評估結果：
@@ -376,14 +376,14 @@ ${userLanguage === 'zhTW' ?
   "strengths": ["優點1", "優點2"],
   "improvements": ["改進建議1", "改進建議2"],
   "completed": true/false,
-  "xpEarned": number (0-${task.content.context?.xp || 100}),
+  "xpEarned": number (0-${task.context.context?.xp || 100}),
   "skillsImproved": ["技能1（例如：創意思考）", "技能2（例如：市場分析）"]
 }
 請確保所有內容都是繁體中文，包括技能名稱。` : 
 `Provide your evaluation in English with:
 - Detailed feedback explaining what was done well and areas for improvement
 - Whether the task is completed satisfactorily
-- XP points earned (0-${task.content.context?.xp || 100})
+- XP points earned (0-${task.context.context?.xp || 100})
 - Skills that were demonstrated or improved
 
 Return your evaluation as a JSON object:
@@ -392,7 +392,7 @@ Return your evaluation as a JSON object:
   "strengths": ["Strength 1", "Strength 2"],
   "improvements": ["Improvement area 1", "Improvement area 2"],
   "completed": true/false,
-  "xpEarned": number (0-${task.content.context?.xp || 100}),
+  "xpEarned": number (0-${task.context.context?.xp || 100}),
   "skillsImproved": ["Skill 1", "Skill 2"]
 }`}`;
 
@@ -403,7 +403,7 @@ Return your evaluation as a JSON object:
         let evaluationResult;
         try {
           // Extract JSON from the response (AI might include markdown code blocks)
-          const jsonMatch = aiResponse.content.match(/\{[\s\S]*\}/);
+          const jsonMatch = aiResponse.context.match(/\{[\s\S]*\}/);
           if (jsonMatch) {
             evaluationResult = JSON.parse(jsonMatch[0]);
           } else {
@@ -415,7 +415,7 @@ Return your evaluation as a JSON object:
           evaluationResult = {
             feedback: aiResponse.content,
             completed: true,
-            xpEarned: task.content.context?.xp || 100,
+            xpEarned: task.context.context?.xp || 100,
             strengths: [],
             improvements: [],
             skillsImproved: []
@@ -426,7 +426,7 @@ Return your evaluation as a JSON object:
         const aiInteraction: IInteraction = {
           timestamp: new Date().toISOString(),
           type: 'ai_response',
-          content: evaluationResult
+          context: evaluationResult
         };
         
         await taskRepo.addInteraction(taskId, aiInteraction);
@@ -477,13 +477,13 @@ Return your evaluation as a JSON object:
         aiResponseCount: aiResponses.length,
         aiResponseDetails: aiResponses.map(r => ({
           timestamp: r.timestamp,
-          completed: r.content?.completed,
-          content: r.content
+          completed: r.context?.completed,
+          context: r.content
         }))
       });
       
       const passedAttempts = aiResponses.filter(
-        i => i.content?.completed === true
+        i => i.context?.completed === true
       ).length;
       
       // Get all feedback for comprehensive review
@@ -494,7 +494,7 @@ Return your evaluation as a JSON object:
       // Calculate total XP from best attempt
       const bestXP = Math.max(
         ...allFeedback.map(f => f.xpEarned || 0),
-        task.content.context?.xp || 100
+        task.context.context?.xp || 100
       );
       
       // Generate comprehensive qualitative feedback using LLM based on full learning journey
@@ -509,25 +509,25 @@ Return your evaluation as a JSON object:
             return {
               type: 'user_response',
               attempt: Math.floor(index / 2) + 1,
-              content: interaction.content.response,
-              timeSpent: interaction.content.timeSpent
+              context: interaction.context.response,
+              timeSpent: interaction.context.timeSpent
             };
           } else if (interaction.type === 'ai_response') {
             return {
               type: 'ai_feedback',
               attempt: Math.floor(index / 2) + 1,
-              passed: interaction.content.completed,
-              feedback: interaction.content.feedback,
-              strengths: interaction.content.strengths || [],
-              improvements: interaction.content.improvements || [],
-              xpEarned: interaction.content.xpEarned
+              passed: interaction.context.completed,
+              feedback: interaction.context.feedback,
+              strengths: interaction.context.strengths || [],
+              improvements: interaction.context.improvements || [],
+              xpEarned: interaction.context.xpEarned
             };
           }
           return null;
         }).filter(Boolean);
         
         // Get scenario and task context
-        const scenarioRepo = getScenarioRepository();
+        const scenarioRepo = repositoryFactory.getScenarioRepository();
         const scenario = await scenarioRepo.findById(program.scenarioId);
         careerType = (scenario?.sourceRef.metadata?.careerType as string) || 'unknown';
         const language = program.metadata?.language || 'en';
@@ -567,8 +567,8 @@ Return your evaluation as a JSON object:
           userLanguage,
           careerType,
           task.title,
-          task.content.instructions,
-          task.content.context || {},
+          task.context.instructions,
+          task.context.context || {},
           yamlData,
           learningJourney
         );
@@ -619,7 +619,7 @@ Return your evaluation as a JSON object:
         console.error('Error generating comprehensive feedback:', error);
         // Fallback to simple feedback if AI generation fails
         const lastSuccessfulFeedback = task.interactions
-          .filter(i => i.type === 'ai_response' && i.content?.completed === true)
+          .filter(i => i.type === 'ai_response' && i.context?.completed === true)
           .slice(-1)[0]?.content;
         
         comprehensiveFeedback = lastSuccessfulFeedback?.feedback || getFallbackMessage(userLanguage);
@@ -787,9 +787,9 @@ Return your evaluation as a JSON object:
       // Regenerate comprehensive feedback using the same logic as confirm-complete
       const userAttempts = task.interactions.filter(i => i.type === 'user_input').length;
       const aiResponses = task.interactions.filter(i => i.type === 'ai_response');
-      const passedAttempts = aiResponses.filter(i => i.content?.completed === true).length;
+      const passedAttempts = aiResponses.filter(i => i.context?.completed === true).length;
       const allFeedback = task.interactions.filter(i => i.type === 'ai_response').map(i => i.content);
-      const bestXP = Math.max(...allFeedback.map(f => f.xpEarned || 0), task.content.context?.xp || 100);
+      const bestXP = Math.max(...allFeedback.map(f => f.xpEarned || 0), task.context.context?.xp || 100);
       
       let comprehensiveFeedback = 'Successfully regenerated task evaluation!';
       
@@ -800,24 +800,24 @@ Return your evaluation as a JSON object:
             return {
               type: 'user_response',
               attempt: Math.floor(index / 2) + 1,
-              content: interaction.content.response,
-              timeSpent: interaction.content.timeSpent
+              context: interaction.context.response,
+              timeSpent: interaction.context.timeSpent
             };
           } else if (interaction.type === 'ai_response') {
             return {
               type: 'ai_feedback',
               attempt: Math.floor(index / 2) + 1,
-              passed: interaction.content.completed,
-              feedback: interaction.content.feedback,
-              strengths: interaction.content.strengths || [],
-              improvements: interaction.content.improvements || [],
-              xpEarned: interaction.content.xpEarned
+              passed: interaction.context.completed,
+              feedback: interaction.context.feedback,
+              strengths: interaction.context.strengths || [],
+              improvements: interaction.context.improvements || [],
+              xpEarned: interaction.context.xpEarned
             };
           }
           return null;
         }).filter(Boolean);
         
-        const scenarioRepo = getScenarioRepository();
+        const scenarioRepo = repositoryFactory.getScenarioRepository();
         const scenario = await scenarioRepo.findById(program.scenarioId);
         const careerType = (scenario?.sourceRef.metadata?.careerType as string) || 'unknown';
         const language = program.metadata?.language || 'en';
@@ -848,8 +848,8 @@ Return your evaluation as a JSON object:
           userLanguage,
           careerType,
           task.title,
-          task.content.instructions,
-          task.content.context || {},
+          task.context.instructions,
+          task.context.context || {},
           yamlData,
           learningJourney
         );
@@ -900,7 +900,7 @@ Return your evaluation as a JSON object:
       
       // Update the existing evaluation
       if (task.evaluation?.id) {
-        const evaluationRepo = getEvaluationRepository();
+        const evaluationRepo = repositoryFactory.getEvaluationRepository();
         await evaluationRepo.update(task.evaluation.id, {
           feedback: comprehensiveFeedback,
           metadata: {

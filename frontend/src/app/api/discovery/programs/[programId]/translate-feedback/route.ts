@@ -23,8 +23,8 @@ export async function POST(
       return NextResponse.json({ error: 'Target language required' }, { status: 400 });
     }
     
-    const programRepo = getProgramRepository();
-    const evaluationRepo = getEvaluationRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const evaluationRepo = repositoryFactory.getEvaluationRepository();
     
     // Get program
     const program = await programRepo.findById(programId);

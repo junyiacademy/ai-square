@@ -39,7 +39,7 @@ export async function POST(
       timestamp: interaction.timestamp || new Date().toISOString(),
       type: interaction.type === 'user' ? 'user_input' : 
             interaction.type === 'ai' ? 'ai_response' : 'system_event',
-      content: interaction.content,
+      context: interaction.content,
       metadata: {
         role: interaction.role || interaction.type,
         originalType: interaction.type,
@@ -101,7 +101,7 @@ export async function GET(
       id: `${task.id}_${i.timestamp}`,
       type: i.type === 'user_input' ? 'user' : 
             i.type === 'ai_response' ? 'ai' : 'system',
-      content: i.content,
+      context: i.content,
       timestamp: i.timestamp,
       role: i.metadata?.role || i.type
     }));

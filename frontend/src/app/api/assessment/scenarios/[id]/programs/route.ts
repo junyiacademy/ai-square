@@ -36,7 +36,7 @@ export async function GET(
     // Await params before using
     const { id } = await params;
     
-    const programRepo = getProgramRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
     
     // Get user programs efficiently
     const allUserPrograms = await programRepo.findByUser(userEmail);
@@ -50,7 +50,7 @@ export async function GET(
       scenario = cached.scenario;
     } else {
       // Quick check if this scenario is assessment type
-      const scenarioRepo = getScenarioRepository();
+      const scenarioRepo = repositoryFactory.getScenarioRepository();
       scenario = await scenarioRepo.findById(id);
       
       // Cache the result
@@ -76,8 +76,8 @@ export async function GET(
     );
     
     // Optimize by batching evaluations for completed programs
-    const evaluationRepo = getEvaluationRepository();
-    const taskRepo = getTaskRepository();
+    const evaluationRepo = repositoryFactory.getEvaluationRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
     
     // Get all evaluation IDs from completed programs
     const evaluationIds = userPrograms
@@ -166,9 +166,9 @@ export async function POST(
     const { id } = await params;
     
     // Get repositories
-    const scenarioRepo = getScenarioRepository();
-    const programRepo = getProgramRepository();
-    const taskRepo = getTaskRepository();
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
     
     // Get scenario
     const scenario = await scenarioRepo.findById(id);
@@ -255,7 +255,7 @@ export async function POST(
               scenarioTaskIndex: i,
               title: taskData[`title_${language}`] || taskData.title || `Task ${i + 1}`,
               type: 'question',
-              content: {
+              context: {
                 instructions: taskData[`description_${language}`] || taskData.description || 'Complete the assessment questions',
                 context: {
                   questions: taskQuestions,
@@ -289,7 +289,7 @@ export async function POST(
             scenarioTaskIndex: 0,
             title: 'Assessment Questions',
             type: 'question',
-            content: {
+            context: {
               instructions: 'Complete the assessment questions',
               context: {
                 questions,
@@ -315,7 +315,7 @@ export async function POST(
     return NextResponse.json({ 
       program,
       tasks,
-      questionsCount: tasks.reduce((sum, t) => sum + ((t.content.context as any)?.questions?.length || 0), 0)
+      questionsCount: tasks.reduce((sum, t) => sum + ((t.context.context as any)?.questions?.length || 0), 0)
     });
   } catch (error) {
     console.error('Error creating program:', error);

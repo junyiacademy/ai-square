@@ -26,9 +26,9 @@ export async function GET(
     const userEmail = session.user.email;
     
     // Get repositories
-    const programRepo = getProgramRepository();
-    const taskRepo = getTaskRepository();
-    const scenarioRepo = getScenarioRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
     
     // Load program from repository
     const program = await programRepo.findById(programId);
@@ -63,7 +63,7 @@ export async function GET(
     let totalXP = 0;
     
     const tasksSummary = tasks.map((task, index) => {
-      const xp = (task.content.context as any)?.xp || 0;
+      const xp = (task.context.context as any)?.xp || 0;
       
       // Calculate statistics from interactions
       let actualXP = 0;
@@ -77,10 +77,10 @@ export async function GET(
         // Count successful attempts and find highest XP
         const aiResponses = task.interactions.filter(i => i.type === 'ai_response');
         aiResponses.forEach(response => {
-          if (response.content?.completed === true) {
+          if (response.context?.completed === true) {
             passCount++;
-            if (response.content?.xpEarned) {
-              actualXP = Math.max(actualXP, response.content.xpEarned);
+            if (response.context?.xpEarned) {
+              actualXP = Math.max(actualXP, response.context.xpEarned);
             }
           }
         });
@@ -107,7 +107,7 @@ export async function GET(
       return {
         id: task.id,
         title: task.title,
-        description: task.content.context?.description || '',
+        description: task.context.context?.description || '',
         xp: xp,
         status: displayStatus,
         completedAt: task.completedAt,

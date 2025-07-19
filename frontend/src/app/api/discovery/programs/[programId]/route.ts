@@ -36,9 +36,9 @@ export async function GET(
     // Await params before using
     const { programId } = await params;
     
-    const programRepo = getProgramRepository();
-    const taskRepo = getTaskRepository();
-    const scenarioRepo = getScenarioRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
     
     // Get program
     const program = await programRepo.findById(programId);

@@ -63,7 +63,7 @@ Task Information:
 - Focus KSA: ${focusKSA?.join(', ') || 'All KSA'}
 
 User Messages (learner's input only):
-${conversations.filter((conv: Conversation) => conv.type === 'user').slice(-10).map((conv: Conversation, index: number) => `${index + 1}. ${conv.content.substring(0, 200)}`).join('\n')}
+${conversations.filter((conv: Conversation) => conv.type === 'user').slice(-10).map((conv: Conversation, index: number) => `${index + 1}. ${conv.context.substring(0, 200)}`).join('\n')}
 
 Evaluation Guidelines:
 - No meaningful engagement (only greetings like "hi", "hello"): 10-25 points
@@ -238,7 +238,7 @@ Important evaluation principles:
     });
     
     const response = result.response;
-    const text = response.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const text = response.candidates?.[0]?.context?.parts?.[0]?.text || '';
     
     // Parse JSON response - should be clean JSON due to responseSchema
     let evaluation;

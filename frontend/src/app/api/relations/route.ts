@@ -115,7 +115,7 @@ export async function GET(request: NextRequest) {
             skills: comp.skills || [],
             attitudes: comp.attitudes || [],
             scenarios: comp.scenarios,
-            content: comp.content
+            context: comp.content
           })
         )
       })

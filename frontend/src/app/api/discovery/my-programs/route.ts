@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthFromRequest } from '@/lib/auth/auth-utils';
-import { getProgramRepository, getScenarioRepository, getTaskRepository } from '@/lib/implementations/gcs-v2';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { cacheService } from '@/lib/cache/cache-service';
 
 export async function GET(request: NextRequest) {
@@ -28,9 +28,9 @@ export async function GET(request: NextRequest) {
     }
 
     // Get repositories
-    const programRepo = getProgramRepository();
-    const scenarioRepo = getScenarioRepository();
-    const taskRepo = getTaskRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
 
     // Find all user's programs
     const allPrograms = await programRepo.findByUser(user.email);

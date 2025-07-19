@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     });
 
     const response = result.response;
-    const translatedText = response.candidates?.[0]?.content?.parts?.[0]?.text;
+    const translatedText = response.candidates?.[0]?.context?.parts?.[0]?.text;
 
     if (!translatedText) {
       throw new Error('No translation generated');
@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
 }
 
 function buildTranslationPrompt(
-  content: Record<string, unknown>,
+  context: Record<string, unknown>,
   sourceLocale: string,
   targetLocale: string,
   fields?: string[]

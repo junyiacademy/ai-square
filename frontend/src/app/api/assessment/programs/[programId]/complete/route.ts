@@ -125,7 +125,7 @@ export async function POST(
     // Collect all answers and questions from all tasks
     let allAnswers: Array<{
       type: string;
-      content: {
+      context: {
         questionId: string;
         selectedAnswer: string;
         timeSpent: number;
@@ -151,7 +151,7 @@ export async function POST(
     
     for (const task of validTasks) {
       const taskAnswers = task.interactions.filter(i => i.type === 'system_event' && (i.content as any)?.eventType === 'assessment_answer');
-      const taskQuestions = (task.content?.context as any)?.questions || [];
+      const taskQuestions = (task.context?.context as any)?.questions || [];
       
       console.log(`Task ${task.title}:`, {
         taskId: task.id,
