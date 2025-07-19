@@ -135,16 +135,17 @@ export async function POST(request: NextRequest) {
 }
 
 function buildSystemPrompt(
-  aiModule: any,
+  aiModule: unknown,
   taskTitle: string,
   taskDescription: string,
   instructions: string[],
   expectedOutcome: string,
   language: string
 ): string {
-  const role = aiModule.role || 'assistant';
-  const persona = aiModule.persona || 'helpful AI assistant';
-  const initialPrompt = aiModule.initialPrompt || aiModule.initial_prompt || '';
+  const aiModuleData = aiModule as { role?: string; persona?: string; initialPrompt?: string; initial_prompt?: string };
+  const role = aiModuleData.role || 'assistant';
+  const persona = aiModuleData.persona || 'helpful AI assistant';
+  const initialPrompt = aiModuleData.initialPrompt || aiModuleData.initial_prompt || '';
 
   // Language-specific instructions
   const langInstructions = getLanguageInstructions(language);

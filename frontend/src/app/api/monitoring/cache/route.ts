@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
 import { redisCacheService } from '@/lib/cache/redis-cache-service';
-import { cacheService } from '@/lib/cache/cache-service';
 
 export async function GET(request: NextRequest) {
   try {

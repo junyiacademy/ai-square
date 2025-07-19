@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { VertexAI, SchemaType } from '@google-cloud/vertexai';
-import type { LocalizedFeedback } from '@/types/pbl-completion';
 import { getServerSession } from '@/lib/auth/session';
-import { getLanguageFromHeader, LANGUAGE_NAMES, normalizeLanguageCode } from '@/lib/utils/language';
+import { getLanguageFromHeader, LANGUAGE_NAMES } from '@/lib/utils/language';
 
 // Types for feedback structure
 interface FeedbackStrength {

@@ -3,11 +3,11 @@
  * GET /api/learning/progress - Get user learning progress
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { postgresqlLearningService } from '@/lib/services/postgresql-learning-service';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Check authentication
     const session = await getServerSession();
