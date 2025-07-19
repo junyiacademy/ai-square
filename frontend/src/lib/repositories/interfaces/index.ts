@@ -302,6 +302,13 @@ export interface CreateTaskDto {
   programId: string;
   taskIndex: number;
   type: string;
+  title?: string;
+  content?: {
+    description?: string;
+    instructions?: string;
+    hints?: string[];
+    resources?: Array<{ type: string; url: string; title?: string }>;
+  };
   context: {
     scenarioId?: string;
     taskType?: string;
@@ -310,6 +317,7 @@ export interface CreateTaskDto {
     ksaCodes?: string[];
   };
   allowedAttempts?: number;
+  metadata?: Record<string, unknown>;
 }
 
 export interface UpdateTaskDto {

@@ -11,7 +11,7 @@
  *   npm run init:scenarios -- --force      # Force update existing scenarios
  */
 
-import { scenarioInitService } from '@/lib/services/scenario-initialization-service';
+import { scenarioInitService, type InitializationResult } from '@/lib/services/scenario-initialization-service';
 import { program } from 'commander';
 import chalk from 'chalk';
 
@@ -31,7 +31,7 @@ async function main() {
   console.log(chalk.gray('================================'));
 
   try {
-    let results = [];
+    const results = [];
 
     // Determine which scenarios to initialize
     const initAll = !options.pbl && !options.discovery && !options.assessment;
@@ -71,7 +71,7 @@ async function main() {
   }
 }
 
-function printResult(result: any) {
+function printResult(result: InitializationResult) {
   console.log(chalk.green(`✓ Total: ${result.total}`));
   console.log(chalk.green(`✓ Created: ${result.created}`));
   console.log(chalk.yellow(`✓ Updated: ${result.updated}`));
@@ -85,7 +85,7 @@ function printResult(result: any) {
   }
 }
 
-function printSummary(results: any[]) {
+function printSummary(results: InitializationResult[]) {
   console.log(chalk.blue('\n📊 Summary'));
   console.log(chalk.gray('================================'));
   

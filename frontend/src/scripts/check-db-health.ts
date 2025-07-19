@@ -47,8 +47,8 @@ async function checkHealth() {
       const programRepo = repositoryFactory.getProgramRepository();
       const scenarioRepo = repositoryFactory.getScenarioRepository();
       
-      const users = await userRepo.findAll({ limit: 1 });
-      const programs = await programRepo.findByUser('dummy'); // Just to test connection
+      await userRepo.findAll({ limit: 1 });
+      await programRepo.findByUser('dummy'); // Just to test connection
       const scenarios = await scenarioRepo.findActive();
       
       console.log(chalk.gray(`  Active Scenarios: ${scenarios.length}`));

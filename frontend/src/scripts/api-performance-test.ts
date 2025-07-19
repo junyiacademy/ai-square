@@ -7,17 +7,14 @@
 import { performance } from 'perf_hooks';
 import fs from 'fs/promises';
 import path from 'path';
-import { exec } from 'child_process';
-import { promisify } from 'util';
-
-const execAsync = promisify(exec);
+// Utilities for API performance testing
 
 interface APIEndpoint {
   path: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   requiresAuth?: boolean;
   requiresParams?: string[];
-  testPayload?: any;
+  testPayload?: Record<string, unknown>;
 }
 
 interface TestResult {
@@ -116,7 +113,7 @@ class APIPerformanceTester {
       } else {
         console.log('⚠️  Authentication failed, continuing without auth\n');
       }
-    } catch (error) {
+    } catch {
       console.log('⚠️  Authentication error, continuing without auth\n');
     }
   }
@@ -304,9 +301,9 @@ async function main() {
   
   try {
     // Check if dev server is running
-    const response = await fetch('http://localhost:3000');
+    await fetch('http://localhost:3000');
     await tester.runTests();
-  } catch (error) {
+  } catch {
     console.error('❌ Error: Dev server is not running. Please start it with "npm run dev"');
     process.exit(1);
   }

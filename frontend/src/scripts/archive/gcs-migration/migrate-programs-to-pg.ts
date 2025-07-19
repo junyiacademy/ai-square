@@ -50,9 +50,9 @@ interface ProgramData {
   totalXpEarned?: number;
   xpEarned?: number;
   taskIds?: string[];
-  tasks?: any[];
-  evaluations?: any[];
-  metadata?: any;
+  tasks?: Array<Record<string, unknown>>;
+  evaluations?: Array<Record<string, unknown>>;
+  metadata?: Record<string, unknown>;
 }
 
 async function getUserIdByEmail(email: string): Promise<string | null> {
@@ -63,7 +63,7 @@ async function getUserIdByEmail(email: string): Promise<string | null> {
   return rows[0]?.id || null;
 }
 
-async function ensureScenarioExists(scenarioData: any): Promise<string> {
+async function ensureScenarioExists(scenarioData: Record<string, unknown>): Promise<string> {
   const scenarioId = scenarioData.id || scenarioData.scenarioId || `imported-${Date.now()}`;
   
   // Validate scenario type
@@ -108,7 +108,7 @@ async function processSingleProgram(
   programId: string, 
   programData: ProgramData, 
   userId: string, 
-  stats: any
+  stats: Record<string, unknown>
 ) {
   try {
     console.log(chalk.gray(`    Processing program: ${programId}`));
@@ -390,7 +390,7 @@ async function migratePrograms() {
           JSON.stringify(evaluation.metadata || {})
         ]);
         stats.evaluations_migrated++;
-      } catch (evalError) {
+      } catch {
         console.warn(chalk.yellow(`  ⚠️  Failed to migrate evaluation`));
       }
     }

@@ -115,8 +115,9 @@ export async function GET(
     // Enrich programs with minimal async operations
     const enrichedPrograms = userPrograms.map((program: ProgramWithExtras) => {
       // Get cached evaluation if available
-      const evaluation = program.metadata?.evaluationId 
-        ? evaluationsMap.get(program.metadata.evaluationId) 
+      const evaluationId = program.metadata?.evaluationId;
+      const evaluation = (typeof evaluationId === 'string' && evaluationId)
+        ? evaluationsMap.get(evaluationId) 
         : null;
       
       // For active programs, we might need task count, but skip for now to improve performance
@@ -231,10 +232,11 @@ export async function POST(
     const tasks: Task[] = [];
     console.log('Scenario sourceRef:', JSON.stringify(scenario.sourceRef, null, 2));
     
-    if (scenario.sourceRef?.metadata?.configPath) {
+    const sourceRef = scenario.sourceRef as unknown as { metadata?: { configPath?: string } };
+    if (sourceRef?.metadata?.configPath) {
       try {
         const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
-        const configPath = path.join(baseDir, 'public', scenario.sourceRef.metadata.configPath as string);
+        const configPath = path.join(baseDir, 'public', sourceRef.metadata.configPath);
         console.log('Loading assessment config from:', configPath);
         
         const configContent = await fs.readFile(configPath, 'utf-8');
@@ -302,11 +304,19 @@ export async function POST(
               programId: program.id,
               taskIndex: i,
               type: 'question',
-              title: taskData[`title_${language}`] || taskData.title || `Task ${i + 1}`,
-              instructions: taskData[`description_${language}`] || taskData.description || 'Complete the assessment questions',
+              title: String(taskData[`title_${language}`] || taskData.title || `Task ${i + 1}`),
+              content: {
+                instructions: String(taskData[`description_${language}`] || taskData.description || 'Complete the assessment questions')
+              },
               context: {
+                scenarioId: scenario.id,
+                taskType: 'assessment',
+                difficulty: (typeof taskData.difficulty === 'string' ? taskData.difficulty : 'medium'),
+                estimatedTime: taskData.time_limit_minutes ? taskData.time_limit_minutes * 60 : 240
+              },
+              metadata: {
                 questions: taskQuestions,
-                timeLimit: taskData.time_limit_minutes ? taskData.time_limit_minutes * 60 : 240, // Convert to seconds
+                timeLimit: taskData.time_limit_minutes ? taskData.time_limit_minutes * 60 : 240,
                 language,
                 domainId: taskData.id
               }
@@ -332,8 +342,16 @@ export async function POST(
             taskIndex: 0,
             type: 'question',
             title: 'Assessment Questions',
-            instructions: 'Complete the assessment questions',
+            content: {
+              instructions: 'Complete the assessment questions'
+            },
             context: {
+              scenarioId: scenario.id,
+              taskType: 'assessment',
+              difficulty: 'medium',
+              estimatedTime: 900
+            },
+            metadata: {
               questions,
               timeLimit: 900,
               language
@@ -356,8 +374,8 @@ export async function POST(
       program,
       tasks,
       questionsCount: tasks.reduce((sum, t) => {
-        const context = t.context?.context as { questions?: unknown[] } | undefined;
-        return sum + (context?.questions?.length || 0);
+        const metadata = t.metadata as { questions?: unknown[] } | undefined;
+        return sum + (metadata?.questions?.length || 0);
       }, 0)
     });
   } catch (error) {

@@ -51,10 +51,9 @@ export async function GET(request: NextRequest) {
         }
         
         // 非英文：從 YAML 載入
-        const translation = await loadTranslation(
-          (scenario.sourceRef as { metadata?: { basePath?: string; folderName?: string } })?.metadata?.basePath || (scenario.sourceRef as { metadata?: { folderName?: string } })?.metadata?.folderName,
-          lang
-        );
+        const sourceRef = scenario.sourceRef as { metadata?: { basePath?: string; folderName?: string } };
+        const folderName = sourceRef?.metadata?.basePath || sourceRef?.metadata?.folderName || '';
+        const translation = await loadTranslation(folderName, lang);
         
         return {
           id: scenario.id,

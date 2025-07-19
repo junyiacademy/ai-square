@@ -113,7 +113,7 @@ async function listGCSUserDataFiles(): Promise<string[]> {
   } catch (error) {
     console.error('❌ Error listing GCS files:', error);
     // Check if bucket exists
-    if ((error as any).code === 404) {
+    if ((error as { code: number }).code === 404) {
       console.log('   Bucket does not exist or no access');
       console.log('   This is expected if GCS was never used for user data');
     }

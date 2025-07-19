@@ -5,7 +5,6 @@
  */
 
 import fs from 'fs/promises';
-import path from 'path';
 import { glob } from 'glob';
 
 interface OptimizationOpportunity {
@@ -97,13 +96,11 @@ class APIOptimizationAnalyzer {
 
   private checkNPlusOne(filePath: string, lines: string[]) {
     let inLoop = false;
-    let loopStartLine = 0;
 
     lines.forEach((line, index) => {
       // Detect loop start
       if (line.includes('for (') || line.includes('forEach') || line.includes('.map(')) {
         inLoop = true;
-        loopStartLine = index;
       }
 
       // Detect loop end

@@ -279,7 +279,7 @@ const translations = {
   }
 };
 
-function setValueByPath(obj: any, path: string, value: string): void {
+function setValueByPath(obj: Record<string, unknown>, path: string, value: string): void {
   const keys = path.split('.');
   let current = obj;
   
@@ -307,7 +307,7 @@ async function updateTranslationFile(
   try {
     const content = await fs.readFile(filePath, 'utf-8');
     existingContent = JSON.parse(content);
-  } catch (error) {
+  } catch {
     console.log(`Creating new file: ${filePath}`);
   }
   

@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     // 處理回應資料
     const responseScenarios = scenarios.map(scenario => {
       // 如果 scenario 有 translations 在 metadata 中
-      const translations = scenario.metadata?.translations;
+      const translations = scenario.metadata?.translations as Record<string, { title?: string; description?: string; content?: unknown }> | undefined;
       if (translations) {
         const translation = translations[lang] || 
                           translations.en || 

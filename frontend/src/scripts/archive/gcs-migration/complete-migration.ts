@@ -75,8 +75,8 @@ async function migrateAll() {
 
     console.log(chalk.green('\n✅ Migration completed successfully!\n'));
 
-  } catch (error) {
-    console.error(chalk.red('\n❌ Migration failed:'), error);
+  } catch (migrationError) {
+    console.error(chalk.red('\n❌ Migration failed:'), migrationError);
     process.exit(1);
   } finally {
     await pool.end();
@@ -156,18 +156,18 @@ async function migrateUsers(stats: MigrationStats) {
         stats.users.migrated++;
         console.log(chalk.gray(`  ✓ Migrated user: ${userData.email}`));
 
-      } catch (error) {
+      } catch (userMigrationError) {
         stats.users.failed++;
-        console.error(chalk.red(`  ✗ Failed to migrate ${file.name}:`), error.message);
+        console.error(chalk.red(`  ✗ Failed to migrate ${file.name}:`), userMigrationError.message);
       }
     }
-  } catch (error) {
+  } catch (userError) {
     spinner.fail('User migration failed');
-    throw error;
+    throw userError;
   }
 }
 
-async function createUserIndexes(stats: MigrationStats) {
+async function createUserIndexes({}: MigrationStats) {
   const spinner = ora('Creating user indexes...').start();
   
   try {
@@ -188,13 +188,13 @@ async function createUserIndexes(stats: MigrationStats) {
             WHERE email = $2 AND id != $1
           `, [userId, index.email.toLowerCase()]);
         }
-      } catch (error) {
+      } catch {
         console.warn(chalk.yellow(`  ⚠️  Failed to process index ${file.name}`));
       }
     }
     
     spinner.succeed('User indexes created');
-  } catch (error) {
+  } catch {
     spinner.fail('Failed to create user indexes');
   }
 }
@@ -269,9 +269,9 @@ async function migrateProgramsWithRelatedData(stats: MigrationStats) {
           await migrateTasks(programId, program.taskIds, stats);
         }
 
-      } catch (error) {
+      } catch (programMigrationError) {
         stats.programs.failed++;
-        console.error(chalk.red(`  ✗ Failed to migrate program ${file.name}:`), error.message);
+        console.error(chalk.red(`  ✗ Failed to migrate program ${file.name}:`), programMigrationError.message);
       }
     }
 
@@ -279,9 +279,9 @@ async function migrateProgramsWithRelatedData(stats: MigrationStats) {
     await migrateEvaluations(stats);
     
     spinner.succeed(`Migrated ${stats.programs.migrated} programs`);
-  } catch (error) {
+  } catch (programError) {
     spinner.fail('Program migration failed');
-    throw error;
+    throw programError;
   }
 }
 
@@ -339,7 +339,7 @@ async function migrateTasks(programId: string, taskIds: string[], stats: Migrati
         }
       }
 
-    } catch (error) {
+    } catch {
       stats.tasks.failed++;
       console.warn(chalk.yellow(`    ⚠️  Failed to migrate task ${taskId}`));
     }
@@ -379,11 +379,11 @@ async function migrateEvaluations(stats: MigrationStats) {
         ]);
 
         stats.evaluations.migrated++;
-      } catch (error) {
+      } catch {
         stats.evaluations.failed++;
       }
     }
-  } catch (error) {
+  } catch {
     console.warn(chalk.yellow('  ⚠️  Failed to migrate some evaluations'));
   }
 }
@@ -428,7 +428,7 @@ async function verifyDataIntegrity() {
     }
 
     spinner.succeed('Data integrity verified');
-  } catch (error) {
+  } catch {
     spinner.fail('Data integrity check failed');
   }
 }
@@ -475,7 +475,7 @@ async function generateMigrationReport(stats: MigrationStats) {
 
 async function getDatabaseSummary() {
   const tables = ['users', 'programs', 'tasks', 'evaluations', 'scenarios'];
-  const summary: any = {};
+  const summary: Record<string, number> = {};
 
   for (const table of tables) {
     const { rows } = await pool.query(`SELECT COUNT(*) FROM ${table}`);

@@ -19,7 +19,7 @@ interface TranslationReport {
   overallCompleteness: number;
 }
 
-async function getJsonKeys(obj: any, prefix = ''): Promise<string[]> {
+async function getJsonKeys(obj: Record<string, unknown>, prefix = ''): Promise<string[]> {
   const keys: string[] = [];
   
   for (const [key, value] of Object.entries(obj)) {
@@ -141,7 +141,7 @@ async function generateMissingTranslations(reports: TranslationReport[]) {
   return needsTranslation;
 }
 
-function getValueByPath(obj: any, path: string): string | null {
+function getValueByPath(obj: Record<string, unknown>, path: string): string | null {
   const keys = path.split('.');
   let current = obj;
   
