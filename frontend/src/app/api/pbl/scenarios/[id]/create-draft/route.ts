@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pblProgramService } from '@/lib/storage/pbl-program-service';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { v4 as uuidv4 } from 'uuid';
 import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
@@ -131,14 +132,20 @@ export async function POST(
     }
     
     // Create new draft program
-    const program = await pblProgramService.createProgram(
-      userEmail,
+    const programRepo = repositoryFactory.getProgramRepository();
+    const program = await programRepo.create({
       scenarioId,
-      language === 'zhTW' ? (scenario.title_zhTW || scenario.title) : scenario.title,
-      scenario.tasks.length,
+      userId: userEmail,
+      status: 'draft',
+      title: language === 'zhTW' ? (scenario.title_zhTW || scenario.title) : scenario.title,
+      taskCount: scenario.tasks.length,
       language,
-      'draft' // Create as draft status
-    );
+      startedAt: new Date(),
+      metadata: {
+        sourceType: 'pbl',
+        language
+      }
+    });
     
     return NextResponse.json({
       success: true,

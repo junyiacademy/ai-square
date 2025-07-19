@@ -77,9 +77,10 @@ async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Recor
     // Get available YAML IDs
     const yamlIds = await pblScenarioService.listAvailableYAMLIds();
     
-    // First, get all existing scenarios in one batch to avoid multiple GCS calls
-    const { getScenarioRepository } = await import('@/lib/implementations/gcs-v2');
-    const scenarioRepo = getScenarioRepository();
+    // First, get all existing scenarios in one batch to avoid multiple DB calls
+    const { createRepositoryFactory } = await import('@/lib/db/repositories/factory');
+    const repositoryFactory = createRepositoryFactory();
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
     const existingScenarios = await scenarioRepo.findBySource('pbl');
     
     // Build/update the index with PBL scenarios

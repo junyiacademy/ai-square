@@ -215,8 +215,8 @@ export async function GET(
     // Load scenario and KSA data in parallel
     const [scenarioResult, ksaData] = await parallel(
       (async () => {
-        const { getScenarioRepository } = await import('@/lib/implementations/gcs-v2');
-        const scenarioRepo = getScenarioRepository();
+        const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
+        const scenarioRepo = repositoryFactory.getScenarioRepository();
         
         if (isUUID) {
           // Direct lookup by UUID

@@ -30,10 +30,11 @@ export async function GET(request: NextRequest) {
   return cachedGET(request, async () => {
 
     // Get repositories
-    const { getProgramRepository, getEvaluationRepository, getTaskRepository } = await import('@/lib/implementations/gcs-v2');
-    const programRepo = getProgramRepository();
-    const evalRepo = getEvaluationRepository();
-    const taskRepo = getTaskRepository();
+    const { createRepositoryFactory } = await import('@/lib/db/repositories/factory');
+    const repositoryFactory = createRepositoryFactory();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const evalRepo = repositoryFactory.getEvaluationRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
     
     // Get program
     const program = await programRepo.findById(programId);

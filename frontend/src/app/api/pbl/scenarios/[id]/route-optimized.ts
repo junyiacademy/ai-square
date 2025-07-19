@@ -218,8 +218,9 @@ export async function GET(
     // Load scenario and KSA data in parallel
     const [scenarioResult, ksaData] = await parallel(
       (async () => {
-        const { getScenarioRepository } = await import('@/lib/implementations/gcs-v2');
-        const scenarioRepo = getScenarioRepository();
+        const { createRepositoryFactory } = await import('@/lib/db/repositories/factory');
+        const repositoryFactory = createRepositoryFactory();
+        const scenarioRepo = repositoryFactory.getScenarioRepository();
         return scenarioRepo.findById(scenarioId);
       })(),
       loadKSACodes(lang)

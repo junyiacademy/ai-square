@@ -188,10 +188,11 @@ export async function POST(request: NextRequest) {
     const userEmail = session.user.email;
     
     // Get repositories
-    const { getProgramRepository, getEvaluationRepository, getTaskRepository } = await import('@/lib/implementations/gcs-v2');
-    const programRepo = getProgramRepository();
-    const evalRepo = getEvaluationRepository();
-    const taskRepo = getTaskRepository();
+    const { createRepositoryFactory } = await import('@/lib/db/repositories/factory');
+    const repositoryFactory = createRepositoryFactory();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const evalRepo = repositoryFactory.getEvaluationRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
     
     // Get program and verify ownership
     const program = await programRepo.findById(programId);
@@ -319,8 +320,7 @@ export async function POST(request: NextRequest) {
     }
     
     // Get scenario data from unified architecture
-    const { getScenarioRepository } = await import('@/lib/implementations/gcs-v2');
-    const scenarioRepo = getScenarioRepository();
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
     
     let scenarioData: ScenarioYAML = {};
     try {

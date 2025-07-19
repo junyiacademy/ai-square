@@ -48,9 +48,9 @@ export async function GET(
     const userEmail = session.user.email;
     
     // Get repositories
-    const { getProgramRepository, getTaskRepository } = await import('@/lib/implementations/gcs-v2');
-    const programRepo = getProgramRepository();
-    const taskRepo = getTaskRepository();
+    const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
+    const programRepo = repositoryFactory.getProgramRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
     
     // Get user's programs for this scenario
     const programs = await programRepo.findByScenarioAndUser(actualScenarioId, userEmail);

@@ -33,8 +33,9 @@ export async function GET(
     }
     
     // Use unified architecture to get program
-    const { getProgramRepository } = await import('@/lib/implementations/gcs-v2');
-    const programRepo = getProgramRepository();
+    const { createRepositoryFactory } = await import('@/lib/db/repositories/factory');
+    const repositoryFactory = createRepositoryFactory();
+    const programRepo = repositoryFactory.getProgramRepository();
     const program = await programRepo.findById(programId);
     
     if (!program) {

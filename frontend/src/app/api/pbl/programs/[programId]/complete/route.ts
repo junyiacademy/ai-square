@@ -38,10 +38,10 @@ export async function POST(
     }
     
     // Use unified architecture
-    const { getProgramRepository, getTaskRepository, getEvaluationRepository } = await import('@/lib/implementations/gcs-v2');
-    const programRepo = getProgramRepository();
-    const taskRepo = getTaskRepository();
-    const evalRepo = getEvaluationRepository();
+    const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
+    const programRepo = repositoryFactory.getProgramRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
+    const evalRepo = repositoryFactory.getEvaluationRepository();
     
     // Get program
     const program = await programRepo.findById(programId);
@@ -213,7 +213,7 @@ export async function POST(
     if (!programEvaluation) {
       // Create new evaluation
       programEvaluation = await evalRepo.create({
-        userId: user!.email,
+        userId: session.user.email,
         targetType: 'program',
         targetId: program.id,
         evaluationType: 'pbl_completion',
@@ -355,10 +355,10 @@ export async function GET(
     }
     
     // Use unified architecture
-    const { getProgramRepository, getEvaluationRepository, getTaskRepository } = await import('@/lib/implementations/gcs-v2');
-    const programRepo = getProgramRepository();
-    const evalRepo = getEvaluationRepository();
-    const taskRepo = getTaskRepository();
+    const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
+    const programRepo = repositoryFactory.getProgramRepository();
+    const evalRepo = repositoryFactory.getEvaluationRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
     
     // Get program
     const program = await programRepo.findById(programId);

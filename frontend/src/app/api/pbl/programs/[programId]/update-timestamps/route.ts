@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pblProgramService } from '@/lib/storage/pbl-program-service';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
 export async function POST(
   request: NextRequest,
@@ -38,23 +38,23 @@ export async function POST(
       );
     }
     
-    // Update program timestamps (reuse logic for draft programs)
-    const updatedProgram = await pblProgramService.updateProgram(
-      userEmail,
-      scenarioId,
-      programId,
-      {
-        startedAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-    );
+    // Update program timestamps
+    const programRepo = repositoryFactory.getProgramRepository();
     
-    if (!updatedProgram) {
+    // First check if program exists
+    const existingProgram = await programRepo.findById(programId);
+    if (!existingProgram || existingProgram.scenarioId !== scenarioId) {
       return NextResponse.json(
         { success: false, error: 'Program not found' },
         { status: 404 }
       );
     }
+    
+    const updatedProgram = await programRepo.update(programId, {
+      startedAt: new Date(),
+      updatedAt: new Date()
+    });
+    
     
     return NextResponse.json({
       success: true,

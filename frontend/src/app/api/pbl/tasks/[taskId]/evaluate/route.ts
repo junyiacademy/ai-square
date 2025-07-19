@@ -28,9 +28,10 @@ export async function POST(
     }
 
     // Use unified architecture
-    const { getEvaluationRepository, getTaskRepository } = await import('@/lib/implementations/gcs-v2');
-    const evalRepo = getEvaluationRepository();
-    const taskRepo = getTaskRepository();
+    const { createRepositoryFactory } = await import('@/lib/db/repositories/factory');
+    const repositoryFactory = createRepositoryFactory();
+    const evalRepo = repositoryFactory.getEvaluationRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
 
     // Check if task already has an evaluation
     const task = await taskRepo.findById(taskId);
@@ -112,13 +113,13 @@ export async function POST(
     // Mark program evaluation as outdated (async)
     setImmediate(async () => {
       try {
-        const { getProgramRepository } = await import('@/lib/implementations/gcs-v2');
-        const programRepo = getProgramRepository();
+        const { createRepositoryFactory } = await import('@/lib/db/repositories/factory');
+        const repositoryFactory = createRepositoryFactory();
+        const programRepo = repositoryFactory.getProgramRepository();
         const program = await programRepo.findById(programId);
         
         if (program?.evaluationId) {
-          const { getEvaluationRepository } = await import('@/lib/implementations/gcs-v2');
-          const evalRepo = getEvaluationRepository();
+          const evalRepo = repositoryFactory.getEvaluationRepository();
           
           await evalRepo.update(program.evaluationId, {
             metadata: {
@@ -184,9 +185,10 @@ export async function GET(
     const { taskId } = await params;
 
     // Use unified architecture
-    const { getTaskRepository, getEvaluationRepository } = await import('@/lib/implementations/gcs-v2');
-    const taskRepo = getTaskRepository();
-    const evalRepo = getEvaluationRepository();
+    const { createRepositoryFactory } = await import('@/lib/db/repositories/factory');
+    const repositoryFactory = createRepositoryFactory();
+    const taskRepo = repositoryFactory.getTaskRepository();
+    const evalRepo = repositoryFactory.getEvaluationRepository();
 
     // Get task to check if it has evaluationId
     const task = await taskRepo.findById(taskId);

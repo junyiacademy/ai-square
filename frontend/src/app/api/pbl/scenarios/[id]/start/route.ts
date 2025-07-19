@@ -134,8 +134,8 @@ export async function POST(
     const language = body.language || 'en';
     
     // Use unified architecture to get scenario by UUID only
-    const { getScenarioRepository } = await import('@/lib/implementations/gcs-v2');
-    const scenarioRepo = getScenarioRepository();
+    const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
     
     // Only accept UUID format
     if (!scenarioId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
@@ -164,9 +164,8 @@ export async function POST(
     const tasks = scenario.taskTemplates || [];
     
     // Use unified architecture - get repositories
-    const { getProgramRepository, getTaskRepository } = await import('@/lib/implementations/gcs-v2');
-    const programRepo = getProgramRepository();
-    const taskRepo = getTaskRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
     
     console.log('   Creating program using unified architecture...');
     

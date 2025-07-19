@@ -46,9 +46,9 @@ export async function POST(request: NextRequest) {
     const language = searchParams.get('lang') || 'en';
 
     // Use unified architecture to get scenario and task data
-    const { getScenarioRepository, getTaskRepository } = await import('@/lib/implementations/gcs-v2');
-    const scenarioRepo = getScenarioRepository();
-    const taskRepo = getTaskRepository();
+    const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
 
     // Get scenario to access AI module configuration from metadata
     const scenario = await scenarioRepo.findById(scenarioId);
