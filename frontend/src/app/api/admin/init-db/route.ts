@@ -29,8 +29,7 @@ export async function POST(request: NextRequest) {
       await userRepo.create({
         email: 'staging-test@ai-square.com',
         name: 'Staging Test User',
-        preferredLanguage: 'en',
-        onboardingCompleted: true
+        preferredLanguage: 'en'
       });
     } catch (error) {
       // User might already exist
