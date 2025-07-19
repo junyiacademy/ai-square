@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthFromRequest } from '@/lib/auth/auth-utils';
+// TODO: Migrate user data to PostgreSQL when user data schema is finalized
+// For now, keeping GCS for backward compatibility with assessment results and achievements
 import { gcsUserDataRepository } from '@/lib/implementations/gcs-v2/repositories/gcs-user-data-repository';
 
 export async function GET(request: NextRequest) {

@@ -1,14 +1,9 @@
 /**
  * E2E Test Script for All Learning Modes
- * Tests PBL, Discovery, and Assessment modes with real GCS storage
+ * Tests PBL, Discovery, and Assessment modes with PostgreSQL database
  */
 
-import {
-  getScenarioRepository,
-  getProgramRepository,
-  getTaskRepository,
-  getEvaluationRepository,
-} from '@/lib/implementations/gcs-v2';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
 // Color codes for console output
 const colors = {
@@ -42,49 +37,65 @@ function log(message: string, type: 'info' | 'success' | 'error' | 'header' = 'i
 async function testPBLMode() {
   log('Testing PBL Mode', 'header');
   
-  const scenarioRepo = getScenarioRepository();
-  const programRepo = getProgramRepository();
-  const taskRepo = getTaskRepository();
-  const evaluationRepo = getEvaluationRepository();
+  const userRepo = repositoryFactory.getUserRepository();
+  const scenarioRepo = repositoryFactory.getScenarioRepository();
+  const programRepo = repositoryFactory.getProgramRepository();
+  const taskRepo = repositoryFactory.getTaskRepository();
+  const evaluationRepo = repositoryFactory.getEvaluationRepository();
   
   try {
+    // Create test user
+    log('Creating test user...', 'info');
+    const user = await userRepo.create({
+      email: 'pbl-test@example.com',
+      name: 'PBL Test User',
+      preferredLanguage: 'en'
+    });
+    log(`Created user: ${user.id}`, 'success');
     // 1. Create PBL Scenario
     log('Creating PBL scenario...', 'info');
     const scenario = await scenarioRepo.create({
-      sourceType: 'pbl',
-      sourceRef: {
-        type: 'yaml',
-        path: 'pbl_data/smart-city-sustainability_scenario.yaml',
-        metadata: {
-          originalTitle: 'Smart City Sustainability Project',
-          domain: 'Designing_with_AI',
-        },
+      type: 'pbl',
+      difficultyLevel: 'intermediate',
+      estimatedMinutes: 180,
+      prerequisites: ['Basic AI understanding', 'Problem-solving skills'],
+      xpRewards: {
+        completion: 500,
+        mastery: 200,
+        bonus: 100,
       },
-      title: 'Smart City Sustainability Project',
-      description: 'Work with AI to design sustainable smart city solutions that address urban challenges',
-      objectives: [
-        'Understand AI applications in urban planning',
-        'Learn about sustainability metrics and KPIs',
-        'Design AI-powered solutions for city challenges',
-        'Evaluate the impact of AI on urban sustainability',
-      ],
-      taskTemplates: [
+      tasks: [
         {
           id: 'research-phase',
-          title: 'Research Current Smart City Technologies',
           type: 'chat',
+          title: 'Research Current Smart City Technologies',
+          description: 'Explore AI applications in urban planning',
         },
         {
           id: 'design-phase',
-          title: 'Design AI Solution for Traffic Management',
           type: 'chat',
+          title: 'Design AI Solution for Traffic Management',
+          description: 'Create an AI-powered traffic optimization system',
         },
         {
           id: 'evaluation-phase',
-          title: 'Evaluate Environmental Impact',
           type: 'chat',
+          title: 'Evaluate Environmental Impact',
+          description: 'Assess the sustainability of your solution',
         },
       ],
+      metadata: {
+        title: 'Smart City Sustainability Project',
+        description: 'Work with AI to design sustainable smart city solutions that address urban challenges',
+        originalTitle: 'Smart City Sustainability Project',
+        domain: 'Designing_with_AI',
+        objectives: [
+          'Understand AI applications in urban planning',
+          'Learn about sustainability metrics and KPIs',
+          'Design AI-powered solutions for city challenges',
+          'Evaluate the impact of AI on urban sustainability',
+        ],
+      },
     });
     log(`Created PBL scenario: ${scenario.id}`, 'success');
     
@@ -92,15 +103,8 @@ async function testPBLMode() {
     log('User starting PBL program...', 'info');
     const program = await programRepo.create({
       scenarioId: scenario.id,
-      userId: 'test-user@example.com',
-      metadata: {
-        userProfile: {
-          level: 'intermediate',
-          interests: ['sustainability', 'urban planning'],
-        },
-        startReason: 'Learning about AI in urban planning for my city project',
-        estimatedDuration: '3 hours',
-      },
+      userId: user.id,
+      totalTasks: 3,
     });
     log(`Created program: ${program.id}`, 'success');
     
@@ -108,77 +112,56 @@ async function testPBLMode() {
     log('Creating tasks for the program...', 'info');
     const taskIds: string[] = [];
     
-    for (let i = 0; i < scenario.taskTemplates.length; i++) {
-      const template = scenario.taskTemplates[i];
-      const task = await taskRepo.create({
-        programId: program.id,
-        scenarioTaskIndex: i,
-        title: template.title,
-        type: 'chat',
-        content: {
-          instructions: `Complete ${template.title} with AI assistance`,
-          rubrics: ['critical-thinking', 'problem-solving', 'ai-collaboration'],
-          resources: [
-            'https://example.com/smart-cities-guide',
-            'https://example.com/ai-sustainability',
-          ],
-        },
-      });
-      taskIds.push(task.id);
-      log(`Created task ${i + 1}: ${task.id}`, 'success');
-    }
+    // Tasks are pre-created by the database schema, we just need to find them
+    const tasks = await taskRepo.findByProgram(program.id);
     
-    // Update program with task IDs
-    await programRepo.updateTaskIds(program.id, taskIds);
+    if (tasks.length === 0) {
+      // Create tasks if they don't exist
+      for (let i = 0; i < 3; i++) {
+        const task = await taskRepo.create({
+          programId: program.id,
+          taskIndex: i,
+          type: 'chat',
+          context: {
+            scenarioId: scenario.id,
+            taskType: 'pbl',
+            difficulty: 'intermediate',
+            estimatedTime: 60,
+          },
+          allowedAttempts: 3,
+        });
+        taskIds.push(task.id);
+        log(`Created task ${i + 1}: ${task.id}`, 'success');
+      }
+    } else {
+      tasks.forEach(task => taskIds.push(task.id));
+      log(`Found ${tasks.length} existing tasks`, 'success');
+    }
     
     // 4. Simulate task interactions
     log('Simulating user interactions with first task...', 'info');
     const firstTaskId = taskIds[0];
     
-    // User asks question
-    await taskRepo.addInteraction(firstTaskId, {
-      timestamp: new Date().toISOString(),
-      type: 'user_input',
-      content: {
-        message: 'What are the current AI technologies being used in smart cities for sustainability?',
-      },
-    });
-    
-    // AI responds
-    await taskRepo.addInteraction(firstTaskId, {
-      timestamp: new Date().toISOString(),
-      type: 'ai_response',
-      content: {
-        message: `Smart cities are leveraging various AI technologies for sustainability:
+    // Record a task attempt
+    await taskRepo.recordAttempt(firstTaskId, {
+      startTime: new Date(),
+      endTime: new Date(Date.now() + 600000), // 10 minutes later
+      score: 88,
+      passed: true,
+      response: {
+        userQuestions: [
+          'What are the current AI technologies being used in smart cities for sustainability?',
+          'Can you give me a specific example of AI reducing energy consumption in buildings?'
+        ],
+        aiResponses: [
+          `Smart cities are leveraging various AI technologies for sustainability:
 
 1. **Traffic Management**: AI-powered traffic flow optimization reduces congestion and emissions
 2. **Energy Management**: Machine learning algorithms optimize power grid distribution
 3. **Waste Management**: Computer vision for smart recycling and waste sorting
 4. **Air Quality Monitoring**: IoT sensors with AI analysis for pollution tracking
 5. **Water Management**: Predictive analytics for leak detection and usage optimization`,
-        metadata: {
-          model: 'gemini-2.5-flash',
-          tokens: 250,
-          references: ['smart-city-guide-2024', 'ai-sustainability-report'],
-        },
-      },
-    });
-    
-    // User follows up
-    await taskRepo.addInteraction(firstTaskId, {
-      timestamp: new Date().toISOString(),
-      type: 'user_input',
-      content: {
-        message: 'Can you give me a specific example of AI reducing energy consumption in buildings?',
-      },
-    });
-    
-    // AI provides example
-    await taskRepo.addInteraction(firstTaskId, {
-      timestamp: new Date().toISOString(),
-      type: 'ai_response',
-      content: {
-        message: `Here's a concrete example from Singapore:
+          `Here's a concrete example from Singapore:
 
 The Building and Construction Authority uses an AI system that:
 - Analyzes real-time occupancy data from sensors
@@ -186,13 +169,15 @@ The Building and Construction Authority uses an AI system that:
 - Learns usage patterns over time
 - Results: 30% energy reduction in commercial buildings
 
-The system uses deep learning to predict occupancy patterns and pre-cool/heat spaces efficiently.`,
+The system uses deep learning to predict occupancy patterns and pre-cool/heat spaces efficiently.`
+        ],
         metadata: {
           model: 'gemini-2.5-flash',
-          tokens: 180,
-        },
+          totalTokens: 430,
+        }
       },
     });
+    log('Recorded task attempt with interactions', 'success');
     
     // 5. Complete and evaluate first task
     log('Completing and evaluating first task...', 'info');
@@ -280,50 +265,66 @@ The system uses deep learning to predict occupancy patterns and pre-cool/heat sp
 async function testDiscoveryMode() {
   log('Testing Discovery Mode', 'header');
   
-  const scenarioRepo = getScenarioRepository();
-  const programRepo = getProgramRepository();
-  const taskRepo = getTaskRepository();
-  const evaluationRepo = getEvaluationRepository();
+  const userRepo = repositoryFactory.getUserRepository();
+  const scenarioRepo = repositoryFactory.getScenarioRepository();
+  const programRepo = repositoryFactory.getProgramRepository();
+  const taskRepo = repositoryFactory.getTaskRepository();
+  const evaluationRepo = repositoryFactory.getEvaluationRepository();
   
   try {
+    // Create test user
+    log('Creating test user...', 'info');
+    const user = await userRepo.create({
+      email: 'discovery-test@example.com',
+      name: 'Discovery Test User',
+      preferredLanguage: 'en'
+    });
+    log(`Created user: ${user.id}`, 'success');
     // 1. Create Discovery Scenario (AI-generated based on user interest)
     log('Creating AI-generated discovery scenario...', 'info');
     const scenario = await scenarioRepo.create({
-      sourceType: 'discovery',
-      sourceRef: {
-        type: 'ai-generated',
-        sourceId: 'discovery-ai-ethics-001',
-        metadata: {
-          generatedBy: 'gemini-2.5-flash',
-          userPrompt: 'I want to explore AI ethics and bias in healthcare',
-          generationTimestamp: new Date().toISOString(),
-        },
+      type: 'discovery',
+      difficultyLevel: 'intermediate',
+      estimatedMinutes: 90,
+      prerequisites: ['Interest in AI ethics', 'Basic healthcare knowledge'],
+      xpRewards: {
+        completion: 300,
+        mastery: 150,
+        bonus: 50,
       },
-      title: 'Exploring AI Ethics in Healthcare',
-      description: 'An interactive exploration of ethical considerations and bias challenges in healthcare AI systems',
-      objectives: [
-        'Understand key ethical principles in healthcare AI',
-        'Identify potential biases in medical AI systems',
-        'Explore real-world case studies',
-        'Develop ethical reasoning framework',
-      ],
-      taskTemplates: [
+      tasks: [
         {
           id: 'explore-principles',
-          title: 'Explore Core Ethical Principles',
           type: 'discovery',
+          title: 'Explore Core Ethical Principles',
+          description: 'Discover fundamental ethical principles in healthcare AI',
         },
         {
           id: 'case-study',
-          title: 'Analyze Real-World Case: AI in Cancer Detection',
           type: 'discovery',
+          title: 'Analyze Real-World Case: AI in Cancer Detection',
+          description: 'Study real cases of AI bias in medical imaging',
         },
         {
           id: 'design-framework',
-          title: 'Design Your Ethical AI Framework',
           type: 'discovery',
+          title: 'Design Your Ethical AI Framework',
+          description: 'Create your own ethical guidelines for AI in healthcare',
         },
       ],
+      metadata: {
+        title: 'Exploring AI Ethics in Healthcare',
+        description: 'An interactive exploration of ethical considerations and bias challenges in healthcare AI systems',
+        sourceType: 'ai-generated',
+        generatedBy: 'gemini-2.5-flash',
+        userPrompt: 'I want to explore AI ethics and bias in healthcare',
+        objectives: [
+          'Understand key ethical principles in healthcare AI',
+          'Identify potential biases in medical AI systems',
+          'Explore real-world case studies',
+          'Develop ethical reasoning framework',
+        ],
+      },
     });
     log(`Created discovery scenario: ${scenario.id}`, 'success');
     
@@ -331,12 +332,8 @@ async function testDiscoveryMode() {
     log('User starting discovery journey...', 'info');
     const program = await programRepo.create({
       scenarioId: scenario.id,
-      userId: 'explorer@example.com',
-      metadata: {
-        discoveryPath: 'self-directed',
-        userGoals: ['understand AI bias', 'learn ethical frameworks'],
-        priorKnowledge: 'basic',
-      },
+      userId: user.id,
+      totalTasks: 3,
     });
     log(`Created discovery program: ${program.id}`, 'success');
     
@@ -507,49 +504,65 @@ Would you like to explore any of these solutions in more detail?`,
 async function testAssessmentMode() {
   log('Testing Assessment Mode', 'header');
   
-  const scenarioRepo = getScenarioRepository();
-  const programRepo = getProgramRepository();
-  const taskRepo = getTaskRepository();
-  const evaluationRepo = getEvaluationRepository();
+  const userRepo = repositoryFactory.getUserRepository();
+  const scenarioRepo = repositoryFactory.getScenarioRepository();
+  const programRepo = repositoryFactory.getProgramRepository();
+  const taskRepo = repositoryFactory.getTaskRepository();
+  const evaluationRepo = repositoryFactory.getEvaluationRepository();
   
   try {
+    // Create test user
+    log('Creating test user...', 'info');
+    const user = await userRepo.create({
+      email: 'assessment-test@example.com',
+      name: 'Assessment Test User',
+      preferredLanguage: 'en'
+    });
+    log(`Created user: ${user.id}`, 'success');
     // 1. Create Assessment Scenario
     log('Creating assessment scenario...', 'info');
     const scenario = await scenarioRepo.create({
-      sourceType: 'assessment',
-      sourceRef: {
-        type: 'structured',
-        sourceId: 'ai-literacy-assessment-v1',
-        metadata: {
-          assessmentType: 'diagnostic',
-          level: 'intermediate',
-          domains: ['Creating_with_AI', 'Managing_with_AI'],
-        },
+      type: 'assessment',
+      difficultyLevel: 'intermediate',
+      estimatedMinutes: 60,
+      prerequisites: ['Basic computer skills', 'English proficiency'],
+      xpRewards: {
+        completion: 200,
+        mastery: 100,
+        bonus: 50,
       },
-      title: 'AI Literacy Diagnostic Assessment',
-      description: 'Comprehensive assessment of your AI literacy across multiple domains',
-      objectives: [
-        'Assess current AI literacy level',
-        'Identify strengths and areas for improvement',
-        'Provide personalized learning recommendations',
-      ],
-      taskTemplates: [
+      tasks: [
         {
           id: 'creating-assessment',
-          title: 'Creating with AI Assessment',
           type: 'assessment',
+          title: 'Creating with AI Assessment',
+          description: 'Test your knowledge of creating content with AI tools',
         },
         {
           id: 'managing-assessment',
-          title: 'Managing AI Assessment',
           type: 'assessment',
+          title: 'Managing AI Assessment',
+          description: 'Evaluate your AI management and oversight skills',
         },
         {
           id: 'practical-scenario',
-          title: 'Practical AI Application Scenario',
           type: 'assessment',
+          title: 'Practical AI Application Scenario',
+          description: 'Apply your knowledge in a real-world scenario',
         },
       ],
+      metadata: {
+        title: 'AI Literacy Diagnostic Assessment',
+        description: 'Comprehensive assessment of your AI literacy across multiple domains',
+        assessmentType: 'diagnostic',
+        level: 'intermediate',
+        domains: ['Creating_with_AI', 'Managing_with_AI'],
+        objectives: [
+          'Assess current AI literacy level',
+          'Identify strengths and areas for improvement',
+          'Provide personalized learning recommendations',
+        ],
+      },
     });
     log(`Created assessment scenario: ${scenario.id}`, 'success');
     
@@ -557,12 +570,8 @@ async function testAssessmentMode() {
     log('User starting assessment...', 'info');
     const program = await programRepo.create({
       scenarioId: scenario.id,
-      userId: 'learner@example.com',
-      metadata: {
-        assessmentPurpose: 'skill-evaluation',
-        proctored: false,
-        timeLimit: '60 minutes',
-      },
+      userId: user.id,
+      totalTasks: 3,
     });
     log(`Created assessment program: ${program.id}`, 'success');
     
@@ -733,19 +742,19 @@ interface TestResults {
   };
 }
 
-async function verifyGCSData(results: TestResults) {
-  log('Verifying Data in GCS', 'header');
+async function verifyDatabaseData(results: TestResults) {
+  log('Verifying Data in PostgreSQL Database', 'header');
   
-  const scenarioRepo = getScenarioRepository();
-  const programRepo = getProgramRepository();
-  const taskRepo = getTaskRepository();
-  const evaluationRepo = getEvaluationRepository();
+  const scenarioRepo = repositoryFactory.getScenarioRepository();
+  const programRepo = repositoryFactory.getProgramRepository();
+  const taskRepo = repositoryFactory.getTaskRepository();
+  const evaluationRepo = repositoryFactory.getEvaluationRepository();
   
   try {
     // Verify all scenarios
     log('Checking scenarios...', 'info');
     const allScenarios = await scenarioRepo.listAll();
-    log(`Found ${allScenarios.length} scenarios in GCS`, 'success');
+    log(`Found ${allScenarios.length} scenarios in database`, 'success');
     
     // Verify programs
     log('Checking programs...', 'info');
@@ -777,29 +786,31 @@ async function verifyGCSData(results: TestResults) {
 - Tasks: ${pblTasks.length + discoveryTasks.length + assessmentTasks.length}
 - Evaluations: ${pblEvaluations.length + discoveryEvaluations.length + assessmentEvaluations.length}
 
-📁 GCS Paths:
-- Scenarios: gs://ai-square-db-v2/v2/scenarios/
-- Programs: gs://ai-square-db-v2/v2/programs/
-- Tasks: gs://ai-square-db-v2/v2/tasks/
-- Evaluations: gs://ai-square-db-v2/v2/evaluations/
+📁 PostgreSQL Tables:
+- Scenarios: public.scenarios
+- Programs: public.programs
+- Tasks: public.tasks
+- Evaluations: public.evaluations
 
-✅ All data successfully stored in GCS!
+✅ All data successfully stored in PostgreSQL!
     `);
     
     // Print sample commands to view data
     console.log(`
 🔍 View Data Commands:
-# List all files
-gsutil ls -r gs://ai-square-db-v2/v2/
+# Connect to database
+psql -h localhost -U postgres -d ai_square_db
 
 # View a specific scenario
-gsutil cat gs://ai-square-db-v2/v2/scenarios/${results.pbl.scenarioId}.json | jq
+SELECT * FROM scenarios WHERE id = '${results.pbl.scenarioId}';
 
 # View a specific program
-gsutil cat gs://ai-square-db-v2/v2/programs/${results.pbl.programId}.json | jq
+SELECT * FROM programs WHERE id = '${results.pbl.programId}';
 
-# View a specific task with interactions
-gsutil cat gs://ai-square-db-v2/v2/tasks/${results.pbl.taskIds[0]}.json | jq
+# View tasks with interactions
+SELECT t.*, ti.* FROM tasks t 
+LEFT JOIN task_interactions ti ON t.id = ti.task_id 
+WHERE t.program_id = '${results.pbl.programId}';
     `);
     
   } catch (error) {
@@ -811,8 +822,8 @@ gsutil cat gs://ai-square-db-v2/v2/tasks/${results.pbl.taskIds[0]}.json | jq
 async function runAllTests() {
   log('Starting Complete E2E Test for All Learning Modes', 'header');
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`GCS Bucket: ${process.env.GCS_BUCKET_NAME || 'not configured'}`);
-  console.log(`Project ID: ${process.env.GOOGLE_CLOUD_PROJECT || 'not configured'}\n`);
+  console.log(`Database: ${process.env.DB_NAME || 'ai_square_db'}`);
+  console.log(`DB Host: ${process.env.DB_HOST || 'localhost'}\n`);
   
   interface ModeTestResult {
     scenarioId: string;
@@ -833,8 +844,8 @@ async function runAllTests() {
     results.discovery = await testDiscoveryMode();
     results.assessment = await testAssessmentMode();
     
-    // Verify all data is in GCS
-    await verifyGCSData(results);
+    // Verify all data is in PostgreSQL
+    await verifyDatabaseData(results);
     
     log('\n🎉 ALL TESTS COMPLETED SUCCESSFULLY! 🎉', 'header');
     

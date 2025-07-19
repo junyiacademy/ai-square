@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
-import { UnifiedLearningService } from '@/lib/implementations/gcs-v2/services/unified-learning-service';
+import { postgresqlLearningService } from '@/lib/services/postgresql-learning-service';
 
 export async function POST(request: NextRequest) {
   try {
@@ -31,8 +31,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create learning program
-    const service = new UnifiedLearningService();
-    const result = await service.createLearningProgram(
+    const result = await postgresqlLearningService.createLearningProgram(
       scenarioId,
       session.user.email,
       metadata

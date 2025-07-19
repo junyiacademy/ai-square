@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
-import { UnifiedLearningService } from '@/lib/implementations/gcs-v2/services/unified-learning-service';
+import { postgresqlLearningService } from '@/lib/services/postgresql-learning-service';
 
 interface RouteParams {
   params: Promise<{ programId: string }>;
@@ -26,8 +26,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const { programId } = await params;
 
     // Get program status
-    const service = new UnifiedLearningService();
-    const result = await service.getProgramStatus(programId);
+    const result = await postgresqlLearningService.getProgramStatus(programId);
 
     return NextResponse.json(
       { success: true, data: result },

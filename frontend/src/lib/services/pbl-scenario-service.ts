@@ -80,8 +80,8 @@ export class PBLScenarioService {
     };
     
     // 使用 Scenario Repository 創建 UUID 檔案
-    const { getScenarioRepository } = await import('@/lib/implementations/gcs-v2');
-    const scenarioRepo = getScenarioRepository();
+    const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
     
     return scenarioRepo.create(scenario);
   }
@@ -90,8 +90,8 @@ export class PBLScenarioService {
    * 根據 YAML ID 尋找或創建 Scenario UUID
    */
   async findOrCreateScenarioByYAMLId(yamlId: string, language: string = 'en'): Promise<IScenario> {
-    const { getScenarioRepository } = await import('@/lib/implementations/gcs-v2');
-    const scenarioRepo = getScenarioRepository();
+    const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
     
     // 先嘗試找到現有的 Scenario (by sourceRef.metadata.yamlId)
     const existingScenarios = await scenarioRepo.findBySource('pbl');

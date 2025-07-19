@@ -42,8 +42,8 @@ class ScenarioIndexBuilder {
     console.log('Building scenario index...');
 
     try {
-      const { getScenarioRepository } = await import('@/lib/implementations/gcs-v2');
-      const scenarioRepo = getScenarioRepository();
+      const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
+      const scenarioRepo = repositoryFactory.getScenarioRepository();
 
       // Fetch all scenarios from all sources
       const [pblScenarios, assessmentScenarios, discoveryScenarios] = await Promise.all([
@@ -81,8 +81,8 @@ class ScenarioIndexBuilder {
     console.log(`Building index for ${sourceType} scenarios...`);
 
     try {
-      const { getScenarioRepository } = await import('@/lib/implementations/gcs-v2');
-      const scenarioRepo = getScenarioRepository();
+      const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
+      const scenarioRepo = repositoryFactory.getScenarioRepository();
 
       // Fetch scenarios for the specific source
       const scenarios = await scenarioRepo.findBySource(sourceType);

@@ -6,7 +6,7 @@
  * 符合統一學習架構：Content Source → Scenario → Program → Task → Evaluation
  */
 
-import { getScenarioRepository } from '@/lib/implementations/gcs-v2';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { IScenario, IContentSource } from '@/types/unified-learning';
 import { BaseYAMLLoader } from '@/lib/abstractions/base-yaml-loader';
 import { AssessmentYAMLLoader } from './assessment-yaml-loader';
@@ -32,7 +32,7 @@ export interface InitializationResult {
 }
 
 export class ScenarioInitializationService {
-  private scenarioRepo = getScenarioRepository();
+  private scenarioRepo = repositoryFactory.getScenarioRepository();
 
   /**
    * 初始化所有模組的 Scenarios

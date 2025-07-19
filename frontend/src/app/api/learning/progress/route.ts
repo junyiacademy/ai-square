@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
-import { UnifiedLearningService } from '@/lib/implementations/gcs-v2/services/unified-learning-service';
+import { postgresqlLearningService } from '@/lib/services/postgresql-learning-service';
 
 export async function GET(request: NextRequest) {
   try {
@@ -19,8 +19,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get learning progress
-    const service = new UnifiedLearningService();
-    const result = await service.getLearningProgress(session.user.email);
+    const result = await postgresqlLearningService.getLearningProgress(session.user.email);
 
     return NextResponse.json(
       { success: true, data: result },
