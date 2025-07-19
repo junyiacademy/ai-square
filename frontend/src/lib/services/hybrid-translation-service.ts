@@ -118,14 +118,14 @@ export class HybridTranslationService {
   /**
    * Get a program (no translation needed - user generated content)
    */
-  async getProgram(scenarioId: string, programId: string, _language: string): Promise<IProgram> {
+  async getProgram(scenarioId: string, programId: string, {}: string): Promise<IProgram> {
     return this.storageService.getProgram(scenarioId, programId);
   }
 
   /**
    * Get a task (no translation needed - user generated content)
    */
-  async getTask(scenarioId: string, programId: string, taskId: string, _language: string): Promise<ITask> {
+  async getTask(scenarioId: string, programId: string, taskId: string, {}: string): Promise<ITask> {
     return this.storageService.getTask(scenarioId, programId, taskId);
   }
 
@@ -136,7 +136,7 @@ export class HybridTranslationService {
     englishData: IScenario,
     scenarioId: string,
     language: string,
-    _dataType: 'scenario' | 'task'
+    {}: 'scenario' | 'task'
   ): Promise<IScenario> {
     try {
       const yamlPath = path.join(

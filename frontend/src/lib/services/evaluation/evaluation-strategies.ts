@@ -175,7 +175,7 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
     };
   }
 
-  private calculateKSADimensions(metrics: QualityMetrics, _task: IPBLTask): IDimensionScore[] {
+  private calculateKSADimensions(metrics: QualityMetrics, {}: IPBLTask): IDimensionScore[] {
     const baseScore = (metrics.interactionDepth + metrics.responseQuality + metrics.engagementLevel) / 3;
     
     return [
@@ -229,7 +229,7 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
     return 'low';
   }
 
-  private generateTaskFeedback(score: number, _metrics: QualityMetrics): string {
+  private generateTaskFeedback(score: number, {}: QualityMetrics): string {
     if (score >= 80) {
       return 'Excellent problem-solving approach with deep engagement!';
     } else if (score >= 60) {
@@ -420,7 +420,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
     }));
   }
 
-  private generateAssessmentProgramFeedback(score: number, _evaluations: IEvaluation[]): string {
+  private generateAssessmentProgramFeedback(score: number, {}: IEvaluation[]): string {
     const level = score >= 90 ? 'mastery' : score >= 80 ? 'proficient' : 
                   score >= 70 ? 'developing' : 'foundational';
     return `Assessment complete! Your AI literacy level is ${level} with an average score of ${Math.round(score)}%.`;

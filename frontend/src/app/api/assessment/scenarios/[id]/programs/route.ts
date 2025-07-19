@@ -12,19 +12,8 @@ import type {
   ProgramStatus
 } from '@/lib/repositories/interfaces/index';
 
-// Extend Scenario type to include sourceRef and sourceType
-interface ScenarioWithSourceRef extends Omit<Scenario, 'sourceRef'> {
-  sourceRef?: {
-    type: string;
-    path: string;
-    version?: string;
-    lastModified?: Date;
-    metadata?: {
-      configPath?: string;
-      [key: string]: unknown;
-    };
-    [key: string]: unknown;
-  };
+// Type alias for Scenario with additional properties
+type ScenarioWithSourceRef = Scenario & {
   sourceType?: string;
 }
 

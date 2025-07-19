@@ -97,15 +97,15 @@ class LocalStorageBackend implements StorageBackend {
 
 // Placeholder for future GCS implementation
 class GCSBackend implements StorageBackend {
-  async save(_userId: string, _data: UserData): Promise<void> {
+  async save({}: string, {}: UserData): Promise<void> {
     throw new Error('GCS backend not implemented - use UserDataServiceV2');
   }
   
-  async load(_userId: string): Promise<UserData | null> {
+  async load({}: string): Promise<UserData | null> {
     throw new Error('GCS backend not implemented - use UserDataServiceV2');
   }
   
-  async exists(_userId: string): Promise<boolean> {
+  async exists({}: string): Promise<boolean> {
     throw new Error('GCS backend not implemented - use UserDataServiceV2');
   }
 }
