@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
 
     // Check cache first
     const cacheKey = `discovery-my-scenarios-${user.email}`;
-    const cached = await cacheService.get<any[]>(cacheKey);
+    const cached = await cacheService.get<unknown[]>(cacheKey);
     if (cached) {
       console.log('Returning cached my scenarios');
       return NextResponse.json(cached);
@@ -80,7 +80,7 @@ export async function GET(request: NextRequest) {
         let progress = 0;
         let completedTasks = 0;
         let totalTasks = 0;
-        let activeProgramTasks: any[] = [];
+        let activeProgramTasks: Array<{ status: string }> = [];
         
         if (activeProgram) {
           // Get tasks for the active program

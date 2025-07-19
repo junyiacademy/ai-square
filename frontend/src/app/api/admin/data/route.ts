@@ -79,7 +79,7 @@ export async function PUT(request: NextRequest) {
       );
     }
     
-    const { jsonPath, yamlPath } = getDataPaths(type, filename);
+    const { jsonPath } = getDataPaths(type, filename);
     
     // Read current data
     const currentData = JSON.parse(await fs.readFile(jsonPath, 'utf-8'));
@@ -122,7 +122,7 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    const { jsonPath, yamlPath } = getDataPaths(type, filename);
+    const { jsonPath } = getDataPaths(type, filename);
     
     // Read current data
     const currentData = JSON.parse(await fs.readFile(jsonPath, 'utf-8'));
@@ -185,7 +185,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
     
-    const { jsonPath, yamlPath } = getDataPaths(type, filename);
+    const { jsonPath } = getDataPaths(type, filename);
     
     // Read current data
     const currentData = JSON.parse(await fs.readFile(jsonPath, 'utf-8'));

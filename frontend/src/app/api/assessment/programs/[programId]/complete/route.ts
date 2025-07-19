@@ -446,27 +446,16 @@ function generateOverallFeedback(score: number, level: string): string {
   }
 }
 
-function generateDomainFeedback(domain: string, score: number): string {
-  const domainName = domain.replace(/_/g, ' ');
-  if (score >= 80) {
-    return `Excellent understanding of ${domainName}`;
-  } else if (score >= 60) {
-    return `Good grasp of ${domainName} concepts`;
-  } else {
-    return `${domainName} is an area for further development`;
-  }
-}
-
 function generateRecommendations(domainScores: Map<string, DomainScore>, overallScore: number): string[] {
   const recommendations: string[] = [];
   
   // Find weak domains
   const weakDomains = Array.from(domainScores.entries())
-    .filter(([_, ds]) => ds.score < 60)
+    .filter(([, ds]) => ds.score < 60)
     .sort((a, b) => a[1].score - b[1].score);
   
   if (weakDomains.length > 0) {
-    weakDomains.forEach(([domain, _]) => {
+    weakDomains.forEach(([domain]) => {
       const domainName = domain.replace(/_/g, ' ').toLowerCase();
       recommendations.push(`Focus on improving your ${domainName} skills through hands-on practice`);
     });

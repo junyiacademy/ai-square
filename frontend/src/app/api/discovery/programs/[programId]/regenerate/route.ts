@@ -111,7 +111,7 @@ export async function POST(
     
     // Generate qualitative feedback based on all task completions
     let qualitativeFeedback = null;
-    let qualitativeFeedbackVersions = {};
+    const qualitativeFeedbackVersions = {};
     
     try {
       const aiService = new VertexAIService({

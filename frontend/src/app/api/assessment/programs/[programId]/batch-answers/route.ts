@@ -4,7 +4,7 @@ import { getServerSession } from '@/lib/auth/session';
 
 export async function POST(
   request: NextRequest,
-  _props: { params: Promise<{ programId: string }> }
+  {}: { params: Promise<{ programId: string }> }
 ) {
   try {
     // Try to get user from authentication

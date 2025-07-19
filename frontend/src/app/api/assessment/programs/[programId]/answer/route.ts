@@ -5,7 +5,7 @@ import { hasQuestions, AssessmentQuestion, AssessmentAnswerContent } from '@/typ
 
 export async function POST(
   request: NextRequest,
-  _props: { params: Promise<{ programId: string }> }
+  {}: { params: Promise<{ programId: string }> }
 ) {
   try {
     const session = await getServerSession();

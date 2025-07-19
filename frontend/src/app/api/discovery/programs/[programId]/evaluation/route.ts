@@ -73,7 +73,7 @@ export async function GET(
     });
     
     // Find the discovery_complete evaluation
-    let evaluation = evaluations.find(e => e.evaluationType === 'discovery_complete');
+    const evaluation = evaluations.find(e => e.evaluationType === 'discovery_complete');
     
     // If no evaluation exists
     if (!evaluation) {

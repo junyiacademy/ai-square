@@ -180,8 +180,8 @@ export async function PATCH(
         const questionsArray = Array.isArray((task.context as Record<string, unknown>)?.questions) 
           ? (task.context as Record<string, unknown>)?.questions as unknown[] 
           : [];
-        const interactions = answers.map((answer: any) => {
-          const question = questionsArray.find((q: any) => q.id === answer.questionId);
+        const interactions = answers.map((answer: { questionId: string; answer: string; timeSpent?: number }) => {
+          const question = questionsArray.find((q) => (q as Record<string, unknown>).id === answer.questionId);
           const isCorrect = question && 
             String(answer.answer) === String((question as Record<string, unknown>)?.correct_answer);
           
