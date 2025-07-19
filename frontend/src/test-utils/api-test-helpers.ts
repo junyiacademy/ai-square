@@ -1,10 +1,20 @@
 // Test utilities for API route testing
 
-export function createMockRequest(url: string, options: {
+interface MockRequestOptions {
   method?: string;
   headers?: Record<string, string>;
-  body?: any;
-} = {}) {
+  body?: unknown;
+}
+
+interface MockRequest {
+  url: string;
+  method: string;
+  headers: Headers;
+  json: () => Promise<unknown>;
+  text: () => Promise<string>;
+}
+
+export function createMockRequest(url: string, options: MockRequestOptions = {}): MockRequest {
   const { method = 'GET', headers = {}, body } = options;
   
   return {
@@ -27,22 +37,31 @@ export function createMockRequest(url: string, options: {
       }
       return JSON.stringify(body || {});
     }
-  } as any;
+  };
 }
 
-export function createMockResponse() {
+interface MockResponse {
+  json: (data: unknown) => Promise<unknown>;
+  status: (code: number) => {
+    json: (data: unknown) => Promise<unknown>;
+  };
+  getStatus: () => number;
+  getJson: () => unknown;
+}
+
+export function createMockResponse(): MockResponse {
   let status = 200;
-  let jsonData: any = null;
+  let jsonData: unknown = null;
   
   return {
-    json: (data: any) => {
+    json: (data: unknown) => {
       jsonData = data;
       return Promise.resolve(data);
     },
     status: (code: number) => {
       status = code;
       return {
-        json: (data: any) => {
+        json: (data: unknown) => {
           jsonData = data;
           return Promise.resolve(data);
         }
