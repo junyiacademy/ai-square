@@ -27,7 +27,6 @@ export async function POST(request: NextRequest) {
     // Create sample test user
     try {
       await userRepo.create({
-        id: '550e8400-e29b-41d4-a716-446655440000',
         email: 'staging-test@ai-square.com',
         name: 'Staging Test User',
         preferredLanguage: 'en',
