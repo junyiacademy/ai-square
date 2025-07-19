@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
       });
     } catch (error) {
       // User might already exist
-      console.log('User creation skipped:', error.message);
+      console.log('User creation skipped:', error instanceof Error ? error.message : 'Unknown error');
     }
 
     // Create sample scenarios
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
         await scenarioRepo.create(scenario);
       } catch (error) {
         // Scenario might already exist
-        console.log(`Scenario ${scenario.id} creation skipped:`, error.message);
+        console.log(`Scenario ${scenario.id} creation skipped:`, error instanceof Error ? error.message : 'Unknown error');
       }
     }
 
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
       { 
         success: false, 
         error: 'Failed to initialize database',
-        details: error.message 
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     );
