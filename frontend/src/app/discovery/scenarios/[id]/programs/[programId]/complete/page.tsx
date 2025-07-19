@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { CheckCircleIcon, StarIcon, TrophyIcon, LightBulbIcon, ChartBarIcon } from '@heroicons/react/24/solid';
@@ -78,7 +78,7 @@ export default function DiscoveryCompletePage() {
 
   useEffect(() => {
     loadCompletionData();
-  }, [params.programId, loadCompletionData]);
+  }, [loadCompletionData]);
 
   // Handle language change for qualitative feedback
   useEffect(() => {
@@ -104,7 +104,7 @@ export default function DiscoveryCompletePage() {
     handleLanguageChange();
   }, [i18n.language, completionData, generateTranslation]); // Only depend on language change
 
-  const generateTranslation = async (targetLang: string) => {
+  const generateTranslation = useCallback(async (targetLang: string) => {
     // Prevent multiple concurrent translations
     if (translatingFeedback) return;
     
@@ -138,9 +138,9 @@ export default function DiscoveryCompletePage() {
     } finally {
       setTranslatingFeedback(false);
     }
-  };
+  }, [params.programId]);
 
-  const loadCompletionData = async (regenerate = false) => {
+  const loadCompletionData = useCallback(async (regenerate = false) => {
     try {
       setLoading(true);
       setError(null);
@@ -199,7 +199,7 @@ export default function DiscoveryCompletePage() {
       setLoading(false);
       setRegenerating(false);
     }
-  };
+  }, [params.programId, params.id]);
 
   const handleRegenerate = async () => {
     setRegenerating(true);

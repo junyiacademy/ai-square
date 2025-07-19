@@ -155,19 +155,19 @@ export abstract class BaseApiHandler<TRequest = unknown, TResponse = unknown> {
   /**
    * 驗證方法 - 子類可覆寫
    */
-  protected async validateGetRequest(_request: NextRequest, _context: RequestContext): Promise<{ valid: boolean; error?: string }> {
+  protected async validateGetRequest({}: NextRequest, {}: RequestContext): Promise<{ valid: boolean; error?: string }> {
     return { valid: true };
   }
 
-  protected async validatePostRequest(_body: TRequest, _context: RequestContext): Promise<{ valid: boolean; error?: string }> {
+  protected async validatePostRequest({}: TRequest, {}: RequestContext): Promise<{ valid: boolean; error?: string }> {
     return { valid: true };
   }
 
-  protected async validatePutRequest(_body: TRequest, _context: RequestContext): Promise<{ valid: boolean; error?: string }> {
+  protected async validatePutRequest({}: TRequest, {}: RequestContext): Promise<{ valid: boolean; error?: string }> {
     return { valid: true };
   }
 
-  protected async validateDeleteRequest(_request: NextRequest, _context: RequestContext): Promise<{ valid: boolean; error?: string }> {
+  protected async validateDeleteRequest({}: NextRequest, {}: RequestContext): Promise<{ valid: boolean; error?: string }> {
     return { valid: true };
   }
 
@@ -272,7 +272,7 @@ export abstract class BaseApiHandler<TRequest = unknown, TResponse = unknown> {
   /**
    * 快取相關方法
    */
-  protected getCacheKey(_request: NextRequest, _context: RequestContext): string | null {
+  protected getCacheKey({}: NextRequest, {}: RequestContext): string | null {
     return null; // 子類可覆寫
   }
 
@@ -281,15 +281,15 @@ export abstract class BaseApiHandler<TRequest = unknown, TResponse = unknown> {
     return searchParams.get('nocache') !== 'true';
   }
 
-  protected shouldCacheResponse(_response: TResponse): boolean {
+  protected shouldCacheResponse({}: TResponse): boolean {
     return true; // 子類可覆寫
   }
 
-  protected getCacheTTL(_request: NextRequest): number {
+  protected getCacheTTL({}: NextRequest): number {
     return this.defaultCacheTTL;
   }
 
-  protected async invalidateCache(_request: NextRequest, _context: RequestContext): Promise<void> {
+  protected async invalidateCache({}: NextRequest, {}: RequestContext): Promise<void> {
     // 子類可覆寫以實作快取失效邏輯
   }
 

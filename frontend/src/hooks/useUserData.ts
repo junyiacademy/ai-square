@@ -113,7 +113,7 @@ export function useUserData(): UseUserDataReturn {
       setUserData(null);
       setIsLoading(false);
     }
-  }, [isLoggedIn, user?.email, loadUserData]); // Use user.email instead of loadUserData to avoid loops
+  }, [isLoggedIn, user?.email, user, loadUserData]); // Include user in dependencies
   
   // Wrap all service methods to handle errors and update local state
   const wrapServiceMethod = useCallback(<T extends unknown[], R>(
@@ -139,7 +139,7 @@ export function useUserData(): UseUserDataReturn {
         throw err;
       }
     };
-  }, [getService, loadUserData]);
+  }, [getService]);
   
   // Service methods
   const saveUserData = useCallback(async (data: UserData): Promise<void> => {

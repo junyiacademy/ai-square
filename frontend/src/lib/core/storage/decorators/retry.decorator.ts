@@ -23,13 +23,13 @@ export function Retryable(options: RetryOptions = {}) {
   } = options;
   
   return function (
-    target: any,
+    target: unknown,
     propertyKey: string,
     descriptor: PropertyDescriptor
   ) {
     const originalMethod = descriptor.value;
     
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = async function (...args: unknown[]) {
       let lastError: Error;
       
       for (let attempt = 1; attempt <= maxAttempts; attempt++) {

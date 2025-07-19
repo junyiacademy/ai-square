@@ -8,7 +8,7 @@ import { LocalStorageProvider } from '../providers/local-storage.provider';
 import { GCSStorageProvider } from '../providers/gcs-storage.provider';
 import { MockStorageProvider } from '../providers/mock-storage.provider';
 import { StorageError } from '../../errors';
-import { GCS_CONFIG, PUBLIC_GCS_BUCKET } from '@/lib/config/gcs.config';
+import { PUBLIC_GCS_BUCKET } from '@/lib/config/gcs.config';
 
 export type StorageType = 'local' | 'gcs' | 'mock';
 

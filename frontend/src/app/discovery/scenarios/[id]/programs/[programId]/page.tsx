@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
-import { useTranslation } from 'react-i18next';
 import DiscoveryPageLayout from '@/components/discovery/DiscoveryPageLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { motion } from 'framer-motion';
@@ -73,12 +72,7 @@ export default function ProgramDetailPage() {
       return;
     }
 
-    if (scenarioId && programId) {
-      loadProgramData();
-    }
-  }, [scenarioId, programId, isLoggedIn, authLoading, router, loadProgramData]);
-
-  const loadProgramData = async () => {
+    const loadProgramData = async () => {
     try {
       setLoading(true);
       const sessionToken = localStorage.getItem('ai_square_session');
@@ -102,6 +96,11 @@ export default function ProgramDetailPage() {
       setLoading(false);
     }
   };
+    
+    if (scenarioId && programId) {
+      loadProgramData();
+    }
+  }, [scenarioId, programId, isLoggedIn, authLoading, router]);
 
   const handleStartTask = (taskId: string) => {
     // Navigate to task learning page

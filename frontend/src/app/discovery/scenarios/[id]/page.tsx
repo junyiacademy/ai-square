@@ -109,12 +109,7 @@ export default function DiscoveryScenarioDetailPage() {
       return;
     }
 
-    if (scenarioId) {
-      loadScenarioData();
-    }
-  }, [scenarioId, isLoggedIn, authLoading, router, loadScenarioData]);
-
-  const loadScenarioData = async () => {
+    const loadScenarioData = async () => {
     try {
       setLoading(true);
       setError(null);
@@ -149,6 +144,11 @@ export default function DiscoveryScenarioDetailPage() {
       setLoading(false);
     }
   };
+
+    if (scenarioId) {
+      loadScenarioData();
+    }
+  }, [scenarioId, isLoggedIn, authLoading, router, i18n.language]);
 
   const createNewProgram = async () => {
     try {
