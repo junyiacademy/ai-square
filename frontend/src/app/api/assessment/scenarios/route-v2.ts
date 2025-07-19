@@ -19,10 +19,11 @@ export async function GET(request: NextRequest) {
     
     // 處理回應資料
     const responseScenarios = scenarios.map(scenario => {
-      // 如果 scenario 有 translations
-      if (scenario.translations) {
-        const translation = scenario.translations[lang] || 
-                          scenario.translations.en || 
+      // 如果 scenario 有 translations 在 metadata 中
+      const translations = scenario.metadata?.translations;
+      if (translations) {
+        const translation = translations[lang] || 
+                          translations.en || 
                           { title: scenario.title, description: scenario.description };
         
         return {
@@ -31,7 +32,7 @@ export async function GET(request: NextRequest) {
           description: translation.description,
           config: translation.content || {},
           // 如果需要，包含所有語言
-          ...(includeAllLanguages && { translations: scenario.translations }),
+          ...(includeAllLanguages && { translations }),
           // 用戶進度
           userProgress: user ? {
             completedPrograms: 0, // TODO: 從資料庫獲取
