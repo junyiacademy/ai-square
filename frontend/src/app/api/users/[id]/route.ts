@@ -8,11 +8,12 @@ import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params;
   try {
     const userRepo = repositoryFactory.getUserRepository();
-    const user = await userRepo.findById(params.id);
+    const user = await userRepo.findById(resolvedParams.id);
     
     if (!user) {
       return NextResponse.json(
@@ -36,8 +37,9 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params;
   try {
     const userRepo = repositoryFactory.getUserRepository();
     const body = await request.json();
@@ -52,7 +54,7 @@ export async function PATCH(
       }
     }
 
-    const updatedUser = await userRepo.update(params.id, updateData);
+    const updatedUser = await userRepo.update(resolvedParams.id, updateData);
     
     return NextResponse.json(updatedUser);
   } catch (error) {
@@ -74,11 +76,12 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params;
   try {
     const userRepo = repositoryFactory.getUserRepository();
-    const deleted = await userRepo.delete(params.id);
+    const deleted = await userRepo.delete(resolvedParams.id);
     
     if (!deleted) {
       return NextResponse.json(

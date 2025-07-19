@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { getVertexAI } from '@/lib/services/vertex-ai';
+import { getVertexAI } from '@/lib/ai/vertex-ai-service';
 
 export async function GET(request: NextRequest) {
   try {

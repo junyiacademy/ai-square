@@ -1,4 +1,5 @@
 import { GoogleAuth } from 'google-auth-library';
+import { VertexAI } from '@google-cloud/vertexai';
 import { AIModule, ConversationTurn, ProcessLog } from '@/types/pbl';
 import path from 'path';
 
@@ -325,4 +326,12 @@ export function vertexAIResponseToConversation(
   };
 
   return { ...conversation, processLog };
+}
+
+// Get VertexAI client instance
+export function getVertexAI(): VertexAI {
+  return new VertexAI({
+    project: process.env.GOOGLE_CLOUD_PROJECT,
+    location: process.env.GOOGLE_CLOUD_LOCATION || 'us-central1',
+  });
 }

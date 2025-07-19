@@ -8,11 +8,12 @@ import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params;
   try {
     const programRepo = repositoryFactory.getProgramRepository();
-    const program = await programRepo.getProgramWithScenario(params.id);
+    const program = await programRepo.getProgramWithScenario(resolvedParams.id);
     
     if (!program) {
       return NextResponse.json(
@@ -23,11 +24,11 @@ export async function GET(
 
     // Get tasks for the program
     const taskRepo = repositoryFactory.getTaskRepository();
-    const tasks = await taskRepo.findByProgram(params.id);
+    const tasks = await taskRepo.findByProgram(resolvedParams.id);
 
     // Get evaluations for the program
     const evaluationRepo = repositoryFactory.getEvaluationRepository();
-    const evaluations = await evaluationRepo.findByProgram(params.id);
+    const evaluations = await evaluationRepo.findByProgram(resolvedParams.id);
 
     return NextResponse.json({
       ...program,
@@ -45,8 +46,9 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params;
   try {
     const programRepo = repositoryFactory.getProgramRepository();
     const body = await request.json();
@@ -66,7 +68,7 @@ export async function PATCH(
       updateData.endTime = new Date();
     }
 
-    const updatedProgram = await programRepo.update(params.id, updateData);
+    const updatedProgram = await programRepo.update(resolvedParams.id, updateData);
     
     // If program is completed, update user XP
     if (body.status === 'completed') {
@@ -101,13 +103,14 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params;
   try {
     const programRepo = repositoryFactory.getProgramRepository();
     
     // Mark as abandoned instead of deleting
-    await programRepo.updateStatus(params.id, 'abandoned');
+    await programRepo.updateStatus(resolvedParams.id, 'abandoned');
     
     return NextResponse.json({ 
       message: 'Program marked as abandoned' 
