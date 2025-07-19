@@ -3,7 +3,14 @@ import { getServerSession } from '@/lib/auth/session';
 import crypto from 'crypto';
 
 // Helper function to generate sync checksum
-async function generateSyncChecksum(tasks: any[]): Promise<string> {
+interface TaskWithEvaluation {
+  id: string;
+  evaluationId?: string;
+  score?: number;
+  ksaMapping?: Record<string, unknown>;
+}
+
+async function generateSyncChecksum(tasks: TaskWithEvaluation[]): Promise<string> {
   const checksumData = tasks
     .filter(t => t.evaluationId)
     .map(t => ({
@@ -203,7 +210,7 @@ export async function POST(
             qualitativeFeedback: existing.metadata?.qualitativeFeedback ? 
               Object.entries(existing.metadata.qualitativeFeedback).reduce((acc, [lang, feedback]) => ({
                 ...acc,
-                [lang]: { ...feedback as any, isValid: false }
+                [lang]: { ...(feedback as Record<string, unknown>), isValid: false }
               }), {}) : {}
           }
         });
@@ -268,11 +275,11 @@ export async function POST(
 
 // Helper function for verification
 async function verifyEvaluationStatus(
-  program: any,
-  evaluation: any,
-  taskRepo: any
-): Promise<{ needsUpdate: boolean; reason: string; debug: any }> {
-  const debug: any = {
+  program: { id: string },
+  evaluation: { id: string; metadata?: Record<string, unknown> },
+  taskRepo: { findByProgram: (id: string) => Promise<TaskWithEvaluation[]> }
+): Promise<{ needsUpdate: boolean; reason: string; debug: Record<string, unknown> }> {
+  const debug: Record<string, unknown> = {
     evaluationId: evaluation.id,
     isLatest: evaluation.metadata?.isLatest,
     lastSyncedAt: evaluation.metadata?.lastSyncedAt
@@ -289,7 +296,7 @@ async function verifyEvaluationStatus(
   
   // Layer 2: Task count check
   const tasks = await taskRepo.findByProgram(program.id);
-  const currentEvaluatedCount = tasks.filter((t: any) => t.evaluationId).length;
+  const currentEvaluatedCount = tasks.filter((t) => t.evaluationId).length;
   debug.taskCountCheck = {
     stored: evaluation.metadata?.evaluatedTaskCount,
     current: currentEvaluatedCount

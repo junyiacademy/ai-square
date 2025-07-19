@@ -86,7 +86,7 @@ export async function GET(
     // Aggregate domain and KSA scores from evaluations
     const domainScores: Record<string, number> = {};
     const ksaScores: Record<string, number> = {};
-    let ksaCounts: Record<string, number> = {};
+    const ksaCounts: Record<string, number> = {};
     
     evaluations.forEach(evaluation => {
       if (evaluation.ksaScores) {

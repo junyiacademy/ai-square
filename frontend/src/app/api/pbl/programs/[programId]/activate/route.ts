@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(
   request: NextRequest,

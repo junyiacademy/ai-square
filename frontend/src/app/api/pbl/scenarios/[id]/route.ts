@@ -1,8 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
-import { pblScenarioService } from '@/lib/services/pbl-scenario-service';
 import { cachedGET, parallel, memoize } from '@/lib/api/optimization-utils';
 
 // Type definitions for KSA mapping
@@ -266,7 +265,7 @@ export async function GET(
       prerequisites: scenarioResult.metadata?.prerequisites || [],
       learningObjectives: scenarioResult.objectives || [],
       ksaMapping: buildKSAMapping(yamlData as unknown as YAMLData, ksaData, lang),
-      tasks: scenarioResult.taskTemplates.map((template, index) => ({
+      tasks: scenarioResult.taskTemplates.map((template) => ({
         id: template.id,
         title: template.title,
         description: template.description || '',

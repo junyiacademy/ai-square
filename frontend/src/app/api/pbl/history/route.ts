@@ -4,8 +4,7 @@ import {
   cachedGET, 
   getPaginationParams, 
   createPaginatedResponse,
-  parallel,
-  memoize
+  parallel
 } from '@/lib/api/optimization-utils';
 
 interface TaskSummary {
@@ -141,7 +140,7 @@ export async function GET(request: NextRequest) {
       try {
         const scenarioContent = await contentRepo.getScenarioContent(program.scenarioId, language);
         scenarioTitle = scenarioContent.title[language] || scenarioContent.title['en'] || program.scenarioId;
-      } catch (error) {
+      } catch {
         console.warn(`Failed to load scenario title for ${program.scenarioId}`);
       }
       
