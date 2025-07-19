@@ -33,6 +33,30 @@ export function useHybridScenarios() {
   // 預載下一個可能的語言
   const preloadLanguages = useRef<Set<string>>(new Set());
 
+  // 預載策略 - 定義在 loadScenarios 之前，避免循環依賴
+  const preloadNextLanguages = useCallback((currentLang: string) => {
+    // 預載常用語言組合
+    const preloadMap: Record<string, string[]> = {
+      'en': ['zhTW', 'zhCN'],
+      'zhTW': ['en', 'zhCN'],
+      'zhCN': ['en', 'zhTW'],
+      'ja': ['en'],
+      'ko': ['en']
+    };
+    
+    const toPreload = preloadMap[currentLang] || ['en'];
+    
+    toPreload.forEach(lang => {
+      if (!preloadLanguages.current.has(lang)) {
+        preloadLanguages.current.add(lang);
+        // 延遲預載，避免影響主要請求
+        setTimeout(() => {
+          loadScenarios(lang, true);
+        }, 1000);
+      }
+    });
+  }, []); // 暫時空的依賴，之後會設定 loadScenarios
+
   const loadScenarios = useCallback(async (language: string, isPreload = false) => {
     // 檢查快取
     const cached = cache.current.get(language);
@@ -79,31 +103,7 @@ export function useHybridScenarios() {
     } finally {
       if (!isPreload) setLoading(false);
     }
-  }, []);
-
-  // 預載策略
-  const preloadNextLanguages = useCallback((currentLang: string) => {
-    // 預載常用語言組合
-    const preloadMap: Record<string, string[]> = {
-      'en': ['zhTW', 'zhCN'],
-      'zhTW': ['en', 'zhCN'],
-      'zhCN': ['en', 'zhTW'],
-      'ja': ['en'],
-      'ko': ['en']
-    };
-    
-    const toPreload = preloadMap[currentLang] || ['en'];
-    
-    toPreload.forEach(lang => {
-      if (!preloadLanguages.current.has(lang)) {
-        preloadLanguages.current.add(lang);
-        // 延遲預載，避免影響主要請求
-        setTimeout(() => {
-          loadScenarios(lang, true);
-        }, 1000);
-      }
-    });
-  }, [loadScenarios]);
+  }, [CACHE_TTL, preloadNextLanguages]);
 
   // 語言變更時載入
   useEffect(() => {
@@ -122,7 +122,7 @@ export function useHybridScenarios() {
     }, 60000); // 每分鐘清理一次
 
     return () => clearInterval(cleanup);
-  }, []);
+  }, [CACHE_TTL]);
 
   return {
     scenarios,

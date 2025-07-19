@@ -23,7 +23,7 @@ export class GCSContentRepository implements IContentRepository {
     this.bucket = storage.bucket(bucketName);
   }
 
-  async getYamlContent(path: string): Promise<any> {
+  async getYamlContent(path: string): Promise<Record<string, unknown>> {
     try {
       const file = this.bucket.file(path);
       const [exists] = await file.exists();
@@ -33,7 +33,7 @@ export class GCSContentRepository implements IContentRepository {
       }
 
       const [content] = await file.download();
-      return parseYaml(content.toString());
+      return parseYaml(content.toString()) as Record<string, unknown>;
     } catch (error) {
       console.error(`Error reading YAML from GCS: ${path}`, error);
       throw error;
@@ -130,35 +130,35 @@ export class GCSContentRepository implements IContentRepository {
   // Private transformation methods
   // ========================================
 
-  private transformScenarioContent(raw: any, id: string): ScenarioContent {
+  private transformScenarioContent(raw: Record<string, unknown>, id: string): ScenarioContent {
     return {
       id,
       type: raw.type || 'pbl',
       title: this.extractMultilingualField(raw, 'title'),
       description: this.extractMultilingualField(raw, 'description'),
-      tasks: raw.tasks || [],
+      tasks: (raw.tasks as Array<Record<string, unknown>>) || [],
       metadata: {
-        difficulty: raw.difficulty,
-        duration: raw.duration,
-        prerequisites: raw.prerequisites,
-        ...raw.metadata
+        difficulty: raw.difficulty as string | undefined,
+        duration: raw.duration as number | undefined,
+        prerequisites: raw.prerequisites as string[] | undefined,
+        ...(raw.metadata as Record<string, unknown> | undefined)
       }
     };
   }
 
-  private transformKSAMappings(raw: any): KSAMapping[] {
+  private transformKSAMappings(raw: Record<string, unknown>): KSAMapping[] {
     const mappings: KSAMapping[] = [];
 
     // Process each type (knowledge, skills, attitudes)
     for (const [type, items] of Object.entries(raw)) {
       if (typeof items === 'object' && items !== null) {
-        for (const [code, data] of Object.entries(items as any)) {
+        for (const [code, data] of Object.entries(items as Record<string, unknown>)) {
           if (typeof data === 'object' && data !== null) {
             mappings.push({
               code,
               type: type.slice(0, -1) as 'knowledge' | 'skill' | 'attitude',
-              domain: data.domain || '',
-              description: this.extractMultilingualField(data, 'description')
+              domain: (data as Record<string, unknown>).domain as string || '',
+              description: this.extractMultilingualField(data as Record<string, unknown>, 'description')
             });
           }
         }
@@ -168,16 +168,16 @@ export class GCSContentRepository implements IContentRepository {
     return mappings;
   }
 
-  private transformAILiteracyDomains(raw: any): AILiteracyDomain[] {
+  private transformAILiteracyDomains(raw: Record<string, unknown>): AILiteracyDomain[] {
     const domains: AILiteracyDomain[] = [];
 
     if (raw.domains && Array.isArray(raw.domains)) {
-      for (const domain of raw.domains) {
+      for (const domain of raw.domains as Array<Record<string, unknown>>) {
         domains.push({
           id: domain.id,
           name: this.extractMultilingualField(domain, 'name'),
           description: this.extractMultilingualField(domain, 'description'),
-          competencies: domain.competencies || []
+          competencies: (domain.competencies as string[]) || []
         });
       }
     }
@@ -185,12 +185,12 @@ export class GCSContentRepository implements IContentRepository {
     return domains;
   }
 
-  private extractMultilingualField(obj: any, fieldName: string): { [lang: string]: string } {
+  private extractMultilingualField(obj: Record<string, unknown>, fieldName: string): { [lang: string]: string } {
     const result: { [lang: string]: string } = {};
 
     // Check for direct field
     if (obj[fieldName]) {
-      result.en = obj[fieldName];
+      result.en = obj[fieldName] as string;
     }
 
     // Check for language-specific fields
@@ -198,7 +198,7 @@ export class GCSContentRepository implements IContentRepository {
     for (const lang of languages) {
       const fieldKey = `${fieldName}_${lang}`;
       if (obj[fieldKey]) {
-        result[lang] = obj[fieldKey];
+        result[lang] = obj[fieldKey] as string;
       }
     }
 

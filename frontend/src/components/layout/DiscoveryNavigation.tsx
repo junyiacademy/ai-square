@@ -22,7 +22,6 @@ export default function DiscoveryNavigation() {
     level: 1,
     completedTasks: []
   });
-  const [hasAssessmentResults, setHasAssessmentResults] = useState(false);
 
   // Load user data
   useEffect(() => {
@@ -31,7 +30,6 @@ export default function DiscoveryNavigation() {
         const userData = await userDataService.loadUserData();
         if (userData) {
           setAchievements(userData.achievements);
-          setHasAssessmentResults(!!userData.assessmentResults);
         }
       } catch (error) {
         console.error('Failed to load navigation data:', error);

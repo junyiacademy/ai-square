@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   UserIcon,
-  DocumentTextIcon,
   CheckCircleIcon,
   ExclamationTriangleIcon,
   LightBulbIcon,

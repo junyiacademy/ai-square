@@ -32,7 +32,7 @@ export function verifySessionToken(token: string): SessionData | null {
     }
     
     return sessionData;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

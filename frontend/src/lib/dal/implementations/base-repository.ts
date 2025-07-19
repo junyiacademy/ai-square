@@ -117,14 +117,14 @@ export abstract class BaseRepositoryImpl<T extends BaseEntity> implements BaseRe
    */
   protected buildQuery(options?: QueryOptions): {
     query: string;
-    params: any[];
+    params: unknown[];
     countQuery: string;
-    countParams: any[];
+    countParams: unknown[];
   } {
     let query = `SELECT * FROM ${this.tableName}`;
     let countQuery = `SELECT COUNT(*) FROM ${this.tableName}`;
     const whereClauses: string[] = [];
-    const params: any[] = [];
+    const params: unknown[] = [];
     let paramIndex = 1;
 
     // Build WHERE clause from filters
@@ -173,9 +173,9 @@ export abstract class BaseRepositoryImpl<T extends BaseEntity> implements BaseRe
   protected buildFilterClauses(
     filters: FilterParams,
     startIndex: number
-  ): { clauses: string[]; values: any[] } {
+  ): { clauses: string[]; values: unknown[] } {
     const clauses: string[] = [];
-    const values: any[] = [];
+    const values: unknown[] = [];
     let paramIndex = startIndex;
 
     for (const [field, value] of Object.entries(filters)) {
@@ -187,27 +187,30 @@ export abstract class BaseRepositoryImpl<T extends BaseEntity> implements BaseRe
         clauses.push(`${field} IN (${placeholders.join(', ')})`);
         values.push(...value);
         paramIndex += value.length;
-      } else if (typeof value === 'object' && value.hasOwnProperty('$gte')) {
+      } else if (typeof value === 'object' && value !== null && '$gte' in value) {
         // Range queries
-        if (value.$gte !== undefined) {
+        const rangeValue = value as { $gte?: unknown; $lte?: unknown };
+        if (rangeValue.$gte !== undefined) {
           clauses.push(`${field} >= $${paramIndex}`);
-          values.push(value.$gte);
+          values.push(rangeValue.$gte);
           paramIndex++;
         }
-        if (value.$lte !== undefined) {
+        if (rangeValue.$lte !== undefined) {
           clauses.push(`${field} <= $${paramIndex}`);
-          values.push(value.$lte);
+          values.push(rangeValue.$lte);
           paramIndex++;
         }
-      } else if (typeof value === 'object' && value.hasOwnProperty('$like')) {
+      } else if (typeof value === 'object' && value !== null && '$like' in value) {
         // LIKE queries
         clauses.push(`${field} LIKE $${paramIndex}`);
-        values.push(value.$like);
+        const likeValue = value as { $like: string };
+        values.push(likeValue.$like);
         paramIndex++;
-      } else if (typeof value === 'object' && value.hasOwnProperty('$jsonb')) {
+      } else if (typeof value === 'object' && value !== null && '$jsonb' in value) {
         // JSONB containment queries
         clauses.push(`${field} @> $${paramIndex}::jsonb`);
-        values.push(JSON.stringify(value.$jsonb));
+        const jsonbValue = value as { $jsonb: unknown };
+        values.push(JSON.stringify(jsonbValue.$jsonb));
         paramIndex++;
       } else {
         // Exact match

@@ -39,8 +39,8 @@ export async function POST(
     const task = taskWithInteractions;
     
     // Get questions from task to check correct answer
-    const questions: AssessmentQuestion[] = hasQuestions(task.context?.context) 
-      ? task.context.context.questions as AssessmentQuestion[]
+    const questions: AssessmentQuestion[] = hasQuestions(task.content) 
+      ? (task.content as any).questions as AssessmentQuestion[]
       : [];
     const question = questions.find((q) => q.id === questionId);
     const isCorrect = question && question.correct_answer !== undefined
@@ -60,7 +60,7 @@ export async function POST(
     
     // Record the answer as an attempt
     await taskRepo.recordAttempt(taskId, {
-      response: answerContent,
+      response: answerContent as unknown as Record<string, unknown>,
       score: isCorrect ? 1 : 0,
       timeSpent: timeSpent || 0
     });

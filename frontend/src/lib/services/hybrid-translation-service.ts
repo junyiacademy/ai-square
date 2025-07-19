@@ -11,9 +11,37 @@ import { getScenarioStorageService } from './scenario-storage-service';
 import { readFile } from 'fs/promises';
 import * as yaml from 'js-yaml';
 import path from 'path';
+import { IScenario, IProgram, ITask } from '@/types/unified-learning';
+import { Scenario, Task } from '@/types/pbl';
+
+// Extended types for legacy PBL data that includes stages
+interface LegacyStage {
+  id: string;
+  title: string;
+  description: string;
+  tasks?: (Task | string)[];
+  [key: string]: unknown; // For translated fields like title_zh, description_es, etc.
+}
+
+interface LegacyScenarioData extends Partial<IScenario> {
+  scenario_info?: {
+    id?: string;
+    title?: string;
+    description?: string;
+    difficulty?: string;
+    estimated_duration?: number;
+    target_domains?: string[];
+    [key: string]: unknown;
+  };
+  stages?: LegacyStage[];
+  tasks?: Task[];
+  [key: string]: unknown;
+}
+
+type CacheableData = IScenario | IScenario[] | IProgram | ITask | Scenario | Task;
 
 interface TranslationCache {
-  [key: string]: any;
+  [key: string]: CacheableData;
 }
 
 export class HybridTranslationService {
@@ -23,12 +51,12 @@ export class HybridTranslationService {
   /**
    * Get a scenario with translations applied
    */
-  async getScenario(scenarioId: string, language: string): Promise<any> {
+  async getScenario(scenarioId: string, language: string): Promise<IScenario> {
     const cacheKey = `scenario:${scenarioId}:${language}`;
     
     // Check cache first
     if (this.cache.has(cacheKey)) {
-      return this.cache.get(cacheKey);
+      return this.cache.get(cacheKey) as IScenario;
     }
 
     try {
@@ -66,11 +94,11 @@ export class HybridTranslationService {
   /**
    * List all scenarios with translations applied
    */
-  async listScenarios(language: string): Promise<any[]> {
+  async listScenarios(language: string): Promise<IScenario[]> {
     const cacheKey = `list:scenarios:${language}`;
     
     if (this.cache.has(cacheKey)) {
-      return this.cache.get(cacheKey);
+      return this.cache.get(cacheKey) as IScenario[];
     }
 
     try {
@@ -90,14 +118,14 @@ export class HybridTranslationService {
   /**
    * Get a program (no translation needed - user generated content)
    */
-  async getProgram(scenarioId: string, programId: string, language: string): Promise<any> {
+  async getProgram(scenarioId: string, programId: string, language: string): Promise<IProgram> {
     return this.storageService.getProgram(scenarioId, programId);
   }
 
   /**
    * Get a task (no translation needed - user generated content)
    */
-  async getTask(scenarioId: string, programId: string, taskId: string, language: string): Promise<any> {
+  async getTask(scenarioId: string, programId: string, taskId: string, language: string): Promise<ITask> {
     return this.storageService.getTask(scenarioId, programId, taskId);
   }
 
@@ -105,11 +133,11 @@ export class HybridTranslationService {
    * Apply translations from YAML to English base data
    */
   private async applyTranslations(
-    englishData: any,
+    englishData: IScenario,
     scenarioId: string,
     language: string,
     dataType: 'scenario' | 'task'
-  ): Promise<any> {
+  ): Promise<IScenario> {
     try {
       const yamlPath = path.join(
         process.cwd(),
@@ -119,7 +147,7 @@ export class HybridTranslationService {
       );
 
       const yamlContent = await readFile(yamlPath, 'utf-8');
-      const yamlData = yaml.load(yamlContent) as any;
+      const yamlData = yaml.load(yamlContent) as LegacyScenarioData;
 
       return this.mergeTranslations(englishData, yamlData, language);
     } catch (error) {
@@ -131,25 +159,25 @@ export class HybridTranslationService {
   /**
    * Merge translations from YAML into English data structure
    */
-  private mergeTranslations(englishData: any, yamlData: any, language: string): any {
+  private mergeTranslations(englishData: IScenario, yamlData: LegacyScenarioData, language: string): IScenario {
     const translated = JSON.parse(JSON.stringify(englishData)); // Deep clone
 
     // Helper to get translated field
-    const getTranslated = (obj: any, field: string): string | undefined => {
+    const getTranslated = (obj: Record<string, unknown>, field: string): string | undefined => {
       const langField = `${field}_${language}`;
       return obj[langField] || obj[field];
     };
 
     // Translate scenario info
     if (yamlData.scenario_info) {
-      translated.title = getTranslated(yamlData.scenario_info, 'title') || translated.title;
-      translated.description = getTranslated(yamlData.scenario_info, 'description') || translated.description;
+      translated.title = getTranslated(yamlData.scenario_info as Record<string, unknown>, 'title') || translated.title;
+      translated.description = getTranslated(yamlData.scenario_info as Record<string, unknown>, 'description') || translated.description;
     }
 
     // Translate stages
-    if (translated.stages && yamlData.stages) {
-      translated.stages = translated.stages.map((stage: any) => {
-        const yamlStage = yamlData.stages.find((s: any) => s.id === stage.id);
+    if ((translated as LegacyScenarioData).stages && yamlData.stages) {
+      (translated as LegacyScenarioData).stages = (translated as LegacyScenarioData).stages!.map((stage) => {
+        const yamlStage = yamlData.stages!.find((s) => s.id === stage.id);
         if (!yamlStage) return stage;
 
         const translatedStage = {
@@ -161,8 +189,9 @@ export class HybridTranslationService {
         // Translate nested tasks within stages
         if (stage.tasks && Array.isArray(stage.tasks)) {
           if (typeof stage.tasks[0] === 'object' && yamlStage.tasks) {
-            translatedStage.tasks = stage.tasks.map((task: any) => {
-              const yamlTask = yamlStage.tasks.find((t: any) => t.id === task.id);
+            translatedStage.tasks = stage.tasks.map((task: Task | string) => {
+              if (typeof task === 'string') return task;
+              const yamlTask = (yamlStage.tasks as Task[]).find((t) => t.id === task.id);
               if (!yamlTask) return task;
 
               return {
@@ -181,16 +210,16 @@ export class HybridTranslationService {
     }
 
     // Translate nested tasks if present
-    if (translated.tasks && yamlData.stages) {
-      yamlData.stages.forEach((yamlStage: any) => {
+    if ((translated as LegacyScenarioData).tasks && yamlData.stages) {
+      yamlData.stages.forEach((yamlStage) => {
         if (yamlStage.tasks) {
-          yamlStage.tasks.forEach((yamlTask: any) => {
-            const task = translated.tasks?.find((t: any) => t.id === yamlTask.id);
+          (yamlStage.tasks as Task[]).forEach((yamlTask) => {
+            const task = (translated as LegacyScenarioData).tasks?.find((t) => t.id === yamlTask.id);
             if (task) {
-              task.title = getTranslated(yamlTask, 'title') || task.title;
-              task.description = getTranslated(yamlTask, 'description') || task.description;
-              task.instructions = getTranslated(yamlTask, 'instructions') || task.instructions;
-              task.expected_outcome = getTranslated(yamlTask, 'expected_outcome') || task.expected_outcome;
+              task.title = getTranslated(yamlTask as Record<string, unknown>, 'title') || task.title;
+              task.description = getTranslated(yamlTask as Record<string, unknown>, 'description') || task.description;
+              (task as Record<string, unknown>).instructions = getTranslated(yamlTask as Record<string, unknown>, 'instructions') || (task as Record<string, unknown>).instructions;
+              (task as Record<string, unknown>).expected_outcome = getTranslated(yamlTask as Record<string, unknown>, 'expected_outcome') || (task as Record<string, unknown>).expected_outcome;
             }
           });
         }
@@ -211,7 +240,7 @@ export class HybridTranslationService {
   /**
    * Load scenario directly from YAML (fallback method)
    */
-  private async loadFromYaml(scenarioId: string, language: string): Promise<any> {
+  private async loadFromYaml(scenarioId: string, language: string): Promise<IScenario> {
     try {
       const yamlPath = path.join(
         process.cwd(),
@@ -221,7 +250,7 @@ export class HybridTranslationService {
       );
 
       const yamlContent = await readFile(yamlPath, 'utf-8');
-      const yamlData = yaml.load(yamlContent) as any;
+      const yamlData = yaml.load(yamlContent) as LegacyScenarioData;
 
       // Build scenario from YAML
       const scenario: any = {
@@ -234,12 +263,12 @@ export class HybridTranslationService {
         stages: []
       };
 
-      // Process stages
+      // Process stages if present (for legacy compatibility)
       if (yamlData.stages) {
-        scenario.stages = yamlData.stages.map((stage: any) => ({
+        (scenario as LegacyScenarioData).stages = yamlData.stages.map((stage) => ({
           id: stage.id,
-          title: stage[`title_${language}`] || stage.title,
-          description: stage[`description_${language}`] || stage.description,
+          title: (stage[`title_${language}` as keyof LegacyStage] as string) || stage.title,
+          description: (stage[`description_${language}` as keyof LegacyStage] as string) || stage.description,
           tasks: stage.tasks || []
         }));
       }

@@ -14,7 +14,7 @@ import {
   BaseEvaluationRepository,
   IEvaluationSystem
 } from '@/types/unified-learning';
-import { ResourceNotFoundError, InvalidStateError } from '@/lib/errors/unified-learning-errors';
+import { ResourceNotFoundError } from '@/lib/errors/unified-learning-errors';
 
 export interface LearningServiceConfig {
   enableEvaluation?: boolean;
@@ -56,23 +56,23 @@ export abstract class BaseLearningService {
     return data;
   }
 
-  protected async afterProgramCreate(program: IProgram): Promise<void> {
+  protected async afterProgramCreate(_program: IProgram): Promise<void> {
     // Default: no-op
   }
 
-  protected async beforeTaskComplete(task: ITask): Promise<void> {
+  protected async beforeTaskComplete(_task: ITask): Promise<void> {
     // Default: no-op
   }
 
-  protected async afterTaskComplete(task: ITask, evaluation: IEvaluation): Promise<void> {
+  protected async afterTaskComplete(_task: ITask, _evaluation: IEvaluation): Promise<void> {
     // Default: no-op
   }
 
-  protected async beforeProgramComplete(program: IProgram): Promise<void> {
+  protected async beforeProgramComplete(_program: IProgram): Promise<void> {
     // Default: no-op
   }
 
-  protected async afterProgramComplete(program: IProgram, evaluation: IEvaluation): Promise<void> {
+  protected async afterProgramComplete(_program: IProgram, _evaluation: IEvaluation): Promise<void> {
     // Default: no-op
   }
 
@@ -160,7 +160,7 @@ export abstract class BaseLearningService {
   async completeTask(
     taskId: string,
     userId: string,
-    response?: any,
+    response?: unknown,
     evaluationData?: Partial<IEvaluation>
   ): Promise<{
     task: ITask;
@@ -391,7 +391,7 @@ export abstract class BaseLearningService {
   protected async createProgramEvaluation(
     program: IProgram,
     userId: string,
-    taskEvaluations: IEvaluation[],
+    _taskEvaluations: IEvaluation[],
     evaluationData?: Partial<IEvaluation>
   ): Promise<IEvaluation> {
     const baseEvaluation: Omit<IEvaluation, 'id'> = {
@@ -403,7 +403,7 @@ export abstract class BaseLearningService {
       createdAt: new Date().toISOString(),
       metadata: {
         sourceType: program.metadata?.sourceType || 'unknown',
-        taskCount: taskEvaluations.length,
+        taskCount: _taskEvaluations.length,
         ...evaluationData?.metadata
       },
       ...evaluationData

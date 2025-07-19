@@ -51,7 +51,7 @@ export async function POST(
     }
     
     // Get questions from task to check correct answers
-    const questions = (task.context?.context as any)?.questions || [];
+    const questions = (task.content as any)?.questions || [];
     
     // Prepare all interactions
     const interactions = answers.map((answer: any) => {

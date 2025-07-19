@@ -237,7 +237,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
   /**
    * 分析 PBL 互動品質
    */
-  private analyzePBLInteractionQuality(interactions: any[]): { knowledge: number; skills: number; attitudes: number } {
+  private analyzePBLInteractionQuality(interactions: IInteraction[]): { knowledge: number; skills: number; attitudes: number } {
     // 簡化的品質分析邏輯
     const userInputs = interactions.filter(i => i.type === 'user_input');
     const aiResponses = interactions.filter(i => i.type === 'ai_response');
@@ -255,7 +255,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
   /**
    * 計算領域分數
    */
-  private calculateDomainScores(interactions: any[], questions: any[]): IDimensionScore[] {
+  private calculateDomainScores(interactions: IInteraction[], questions: { domain?: string; [key: string]: unknown }[]): IDimensionScore[] {
     const domainMap = new Map<string, { correct: number; total: number }>();
     
     interactions.forEach((interaction, index) => {
@@ -281,7 +281,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
   /**
    * 分析探索品質
    */
-  private analyzeExplorationQuality(interactions: any[]): number {
+  private analyzeExplorationQuality(interactions: IInteraction[]): number {
     // 簡化的探索品質分析
     const totalInteractions = interactions.length;
     const userActions = interactions.filter(i => i.type === 'user_input').length;

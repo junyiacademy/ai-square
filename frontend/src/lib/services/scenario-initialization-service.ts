@@ -208,7 +208,6 @@ class PBLYAMLProcessor implements IYAMLProcessor {
   private loader: PBLYAMLLoader;
 
   constructor() {
-    const { PBLYAMLLoader } = require('./pbl-yaml-loader');
     this.loader = new PBLYAMLLoader();
   }
 
@@ -364,7 +363,6 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
   private loader: AssessmentYAMLLoader;
 
   constructor() {
-    const { AssessmentYAMLLoader } = require('./assessment-yaml-loader');
     this.loader = new AssessmentYAMLLoader();
   }
 

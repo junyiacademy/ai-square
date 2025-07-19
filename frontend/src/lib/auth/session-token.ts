@@ -59,7 +59,7 @@ export async function verifySessionToken(token: string): Promise<SessionData | n
     }
     
     return sessionData;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

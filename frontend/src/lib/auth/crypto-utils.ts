@@ -7,12 +7,11 @@ export async function createHmacSignature(
   if (typeof window === 'undefined' && typeof global !== 'undefined') {
     // Node.js environment
     try {
-      const crypto = require('crypto');
-      return crypto
-        .createHmac('sha256', secret)
+      const { createHmac } = await import('crypto');
+      return createHmac('sha256', secret)
         .update(data)
         .digest('hex');
-    } catch (error) {
+    } catch {
       // Fallback for Edge runtime
       return await webCryptoHmac(secret, data);
     }

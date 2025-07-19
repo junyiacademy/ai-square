@@ -13,7 +13,7 @@ export interface BaseEntity {
   id: string;
   created_at: Date;
   updated_at?: Date;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface MultilingualContent {
@@ -36,12 +36,28 @@ export interface Scenario extends BaseEntity {
   version?: string;
   title: MultilingualContent;
   description: MultilingualContent;
-  objectives?: any[];
+  objectives?: Array<{
+    id: string;
+    description: string;
+    type?: string;
+  }>;
   difficulty_level?: 'beginner' | 'intermediate' | 'advanced';
   estimated_minutes?: number;
   ksa_mappings?: string[];
-  tasks?: any[];
-  ai_modules?: Record<string, any>;
+  tasks?: Array<{
+    id: string;
+    type: string;
+    title?: MultilingualContent;
+    description?: MultilingualContent;
+    estimatedTime?: number;
+    requiredForCompletion?: boolean;
+    ksaCodes?: string[];
+  }>;
+  ai_modules?: Record<string, {
+    enabled: boolean;
+    model?: string;
+    config?: Record<string, unknown>;
+  }>;
 }
 
 export interface Program extends BaseEntity {
@@ -65,7 +81,14 @@ export interface Task extends BaseEntity {
   description: MultilingualContent;
   type: string;
   ksa_codes?: string[];
-  interactions?: any[];
+  interactions?: Array<{
+    id: string;
+    sequenceNumber: number;
+    type: string;
+    role: string;
+    content: string;
+    metadata?: Record<string, unknown>;
+  }>;
   user_solution?: string;
   score?: number;
   time_spent_seconds?: number;
@@ -82,12 +105,20 @@ export interface Evaluation extends BaseEntity {
   module_type: 'pbl' | 'assessment' | 'discovery';
   overall_score?: number;
   ksa_scores?: Record<string, number>;
-  detailed_scores?: Record<string, any>;
+  detailed_scores?: Record<string, {
+    score: number;
+    maxScore: number;
+    feedback?: string;
+  }>;
   feedback: MultilingualContent;
   strengths?: string[];
   improvements?: string[];
   evaluator_model?: string;
-  evaluation_criteria?: Record<string, any>;
+  evaluation_criteria?: Record<string, {
+    weight: number;
+    description: string;
+    rubric?: string;
+  }>;
 }
 
 // ==========================================
@@ -106,7 +137,7 @@ export interface SortParams {
 }
 
 export interface FilterParams {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface QueryOptions {
@@ -138,7 +169,7 @@ export interface BaseRepository<T extends BaseEntity> {
 
 export interface UserRepository extends BaseRepository<User> {
   findByEmail(email: string): Promise<User | null>;
-  updatePreferences(id: string, preferences: Record<string, any>): Promise<User>;
+  updatePreferences(id: string, preferences: Record<string, unknown>): Promise<User>;
 }
 
 export interface ScenarioRepository extends BaseRepository<Scenario> {
@@ -158,7 +189,13 @@ export interface ProgramRepository extends BaseRepository<Program> {
 export interface TaskRepository extends BaseRepository<Task> {
   findByProgram(programId: string, options?: QueryOptions): Promise<QueryResult<Task>>;
   findByProgramAndIndex(programId: string, taskIndex: number): Promise<Task | null>;
-  addInteraction(id: string, interaction: any): Promise<Task>;
+  addInteraction(id: string, interaction: {
+    sequenceNumber: number;
+    type: string;
+    role: string;
+    content: string;
+    metadata?: Record<string, unknown>;
+  }): Promise<Task>;
   complete(id: string, score: number, solution?: string): Promise<Task>;
 }
 
@@ -190,9 +227,9 @@ export interface UnitOfWork {
 // ==========================================
 
 export interface DatabaseConnection {
-  query<T = any>(sql: string, params?: any[]): Promise<T[]>;
-  queryOne<T = any>(sql: string, params?: any[]): Promise<T | null>;
-  execute(sql: string, params?: any[]): Promise<{ rowCount: number }>;
+  query<T = unknown>(sql: string, params?: unknown[]): Promise<T[]>;
+  queryOne<T = unknown>(sql: string, params?: unknown[]): Promise<T | null>;
+  execute(sql: string, params?: unknown[]): Promise<{ rowCount: number }>;
   transaction<T>(callback: (connection: DatabaseConnection) => Promise<T>): Promise<T>;
 }
 
@@ -204,12 +241,12 @@ export interface MigrationService {
   /**
    * Migrate a single entity from GCS to PostgreSQL
    */
-  migrateEntity(entityType: string, gcsData: any): Promise<void>;
+  migrateEntity(entityType: string, gcsData: unknown): Promise<void>;
   
   /**
    * Batch migrate entities
    */
-  migrateBatch(entityType: string, gcsDataArray: any[]): Promise<{ success: number; failed: number }>;
+  migrateBatch(entityType: string, gcsDataArray: unknown[]): Promise<{ success: number; failed: number }>;
   
   /**
    * Verify migration integrity

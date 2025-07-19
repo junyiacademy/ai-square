@@ -63,7 +63,7 @@ export interface IScenarioRepository {
 
 export interface IContentRepository {
   // YAML content management
-  getYamlContent(path: string): Promise<any>;
+  getYamlContent(path: string): Promise<Record<string, unknown>>;
   listYamlFiles(prefix: string): Promise<string[]>;
   
   // Scenario content
@@ -94,12 +94,17 @@ export interface User {
   preferredLanguage: string;
   level: number;
   totalXp: number;
-  learningPreferences: any;
+  learningPreferences: {
+    goals?: string[];
+    interests?: string[];
+    learningPreferences?: string[];
+    learningStyle?: string;
+  };
   onboardingCompleted: boolean;
   createdAt: Date;
   updatedAt: Date;
   lastActiveAt: Date;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 }
 
 export interface Program {
@@ -111,12 +116,12 @@ export interface Program {
   completedTasks: number;
   totalTasks: number;
   totalScore: number;
-  ksaScores?: any;
+  ksaScores?: Record<string, number>;
   startTime: Date;
   endTime?: Date;
   lastActivityAt: Date;
   timeSpentSeconds: number;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
   taskIds: string[];
   startedAt?: Date;
 }
@@ -127,17 +132,28 @@ export interface Task {
   taskIndex: number;
   type: string;
   title?: string;
-  content?: any;
+  content?: {
+    description?: string;
+    instructions?: string;
+    hints?: string[];
+    resources?: Array<{ type: string; url: string; title?: string }>;
+  };
   status: TaskStatus;
   score?: number;
   timeSpentSeconds: number;
   attemptCount: number;
   allowedAttempts: number;
-  context: any;
+  context: {
+    scenarioId?: string;
+    taskType?: string;
+    difficulty?: string;
+    estimatedTime?: number;
+    ksaCodes?: string[];
+  };
   userSolution?: string;
   startedAt?: Date;
   completedAt?: Date;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 }
 
 export interface Evaluation {
@@ -149,11 +165,16 @@ export interface Evaluation {
   score: number;
   maxScore: number;
   feedback?: string;
-  aiAnalysis?: any;
-  ksaScores?: any;
+  aiAnalysis?: {
+    insights?: string[];
+    strengths?: string[];
+    improvements?: string[];
+    detailedFeedback?: Record<string, string>;
+  };
+  ksaScores?: Record<string, number>;
   timeTakenSeconds: number;
   createdAt: Date;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
   targetId?: string;
 }
 
@@ -164,16 +185,50 @@ export interface Scenario {
   version: string;
   title?: string;
   description?: string;
-  sourceRef?: any;
+  sourceRef?: {
+    type: string;
+    path: string;
+    version?: string;
+    lastModified?: Date;
+  };
   difficultyLevel?: string;
   estimatedMinutes?: number;
   prerequisites: string[];
-  xpRewards: any;
-  unlockRequirements: any;
-  tasks: any[];
-  aiModules: any;
-  resources: any[];
-  metadata?: any;
+  xpRewards: {
+    completion?: number;
+    mastery?: number;
+    bonus?: number;
+    conditions?: Record<string, number>;
+  };
+  unlockRequirements: {
+    level?: number;
+    completedScenarios?: string[];
+    achievements?: string[];
+    customConditions?: Array<{ type: string; value: unknown }>;
+  };
+  tasks: Array<{
+    id: string;
+    type: string;
+    title?: string;
+    description?: string;
+    estimatedTime?: number;
+    requiredForCompletion?: boolean;
+    ksaCodes?: string[];
+  }>;
+  aiModules: {
+    tutor?: { enabled: boolean; model?: string; systemPrompt?: string };
+    evaluator?: { enabled: boolean; rubric?: string; criteria?: Record<string, unknown> };
+    feedbackGenerator?: { enabled: boolean; style?: string };
+  };
+  resources: Array<{
+    id?: string;
+    type: 'video' | 'article' | 'document' | 'link' | 'other';
+    url: string;
+    title: string;
+    description?: string;
+    required?: boolean;
+  }>;
+  metadata?: Record<string, unknown>;
   createdAt: Date;
   updatedAt: Date;
   publishedAt?: Date;
@@ -190,7 +245,12 @@ export interface CreateUserDto {
   email: string;
   name: string;
   preferredLanguage?: string;
-  learningPreferences?: any;
+  learningPreferences?: {
+    goals?: string[];
+    interests?: string[];
+    learningPreferences?: string[];
+    learningStyle?: string;
+  };
 }
 
 export interface UpdateUserDto {
@@ -198,7 +258,12 @@ export interface UpdateUserDto {
   preferredLanguage?: string;
   level?: number;
   totalXp?: number;
-  learningPreferences?: any;
+  learningPreferences?: {
+    goals?: string[];
+    interests?: string[];
+    learningPreferences?: string[];
+    learningStyle?: string;
+  };
   onboardingCompleted?: boolean;
 }
 
@@ -213,9 +278,9 @@ export interface UpdateProgramDto {
   currentTaskIndex?: number;
   completedTasks?: number;
   totalScore?: number;
-  ksaScores?: any;
+  ksaScores?: Record<string, number>;
   endTime?: Date;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
   taskIds?: string[];
 }
 
@@ -223,7 +288,13 @@ export interface CreateTaskDto {
   programId: string;
   taskIndex: number;
   type: string;
-  context: any;
+  context: {
+    scenarioId?: string;
+    taskType?: string;
+    difficulty?: string;
+    estimatedTime?: number;
+    ksaCodes?: string[];
+  };
   allowedAttempts?: number;
 }
 
@@ -234,7 +305,7 @@ export interface UpdateTaskDto {
   timeSpentSeconds?: number;
   attemptCount?: number;
   completedAt?: Date;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 }
 
 export interface CreateEvaluationDto {
@@ -245,13 +316,18 @@ export interface CreateEvaluationDto {
   score: number;
   maxScore: number;
   feedback?: string;
-  aiAnalysis?: any;
-  ksaScores?: any;
+  aiAnalysis?: {
+    insights?: string[];
+    strengths?: string[];
+    improvements?: string[];
+    detailedFeedback?: Record<string, string>;
+  };
+  ksaScores?: Record<string, number>;
   timeTakenSeconds: number;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
   targetType?: string;
   targetId?: string;
-  dimensions?: any[];
+  dimensions?: Array<{ name: string; score: number; maxScore: number }>;
   createdAt?: string;
 }
 
@@ -260,9 +336,22 @@ export interface CreateScenarioDto {
   difficultyLevel?: string;
   estimatedMinutes?: number;
   prerequisites?: string[];
-  xpRewards?: any;
-  tasks?: any[];
-  metadata?: any;
+  xpRewards?: {
+    completion?: number;
+    mastery?: number;
+    bonus?: number;
+    conditions?: Record<string, number>;
+  };
+  tasks?: Array<{
+    id: string;
+    type: string;
+    title?: string;
+    description?: string;
+    estimatedTime?: number;
+    requiredForCompletion?: boolean;
+    ksaCodes?: string[];
+  }>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface UpdateScenarioDto {
@@ -270,9 +359,22 @@ export interface UpdateScenarioDto {
   difficultyLevel?: string;
   estimatedMinutes?: number;
   prerequisites?: string[];
-  xpRewards?: any;
-  tasks?: any[];
-  metadata?: any;
+  xpRewards?: {
+    completion?: number;
+    mastery?: number;
+    bonus?: number;
+    conditions?: Record<string, number>;
+  };
+  tasks?: Array<{
+    id: string;
+    type: string;
+    title?: string;
+    description?: string;
+    estimatedTime?: number;
+    requiredForCompletion?: boolean;
+    ksaCodes?: string[];
+  }>;
+  metadata?: Record<string, unknown>;
 }
 
 // Query Options
@@ -295,7 +397,7 @@ export interface Interaction {
   type: string;
   role: string;
   content: string;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
   createdAt: Date;
 }
 
@@ -319,7 +421,7 @@ export interface Achievement {
 }
 
 export interface AttemptData {
-  response: any;
+  response: string | Record<string, unknown>;
   score?: number;
   timeSpent: number;
 }
@@ -330,8 +432,16 @@ export interface ScenarioContent {
   type: string;
   title: { [lang: string]: string };
   description: { [lang: string]: string };
-  tasks: any[];
-  metadata?: any;
+  tasks: Array<{
+    id: string;
+    type: string;
+    title?: string;
+    description?: string;
+    estimatedTime?: number;
+    requiredForCompletion?: boolean;
+    ksaCodes?: string[];
+  }>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface KSAMapping {
