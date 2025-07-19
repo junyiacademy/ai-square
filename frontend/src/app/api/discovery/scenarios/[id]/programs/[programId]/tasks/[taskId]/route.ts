@@ -306,16 +306,11 @@ export async function PATCH(
     
     if (action === 'submit') {
       // Add user response as interaction
-      const userInteraction: IInteraction = {
-        timestamp: new Date().toISOString(),
-        type: 'user_input',
-        context: {
-          response: content.response,
-          timeSpent: content.timeSpent
-        }
-      };
-      
-      await taskRepo.addInteraction(taskId, userInteraction);
+      // Record user attempt
+      await taskRepo.recordAttempt(taskId, {
+        response: content.response,
+        timeSpent: content.timeSpent || 0
+      });
       
       // Get repositories for scenario lookup
       const scenarioRepo = repositoryFactory.getScenarioRepository();
@@ -422,14 +417,14 @@ Return your evaluation as a JSON object:
           };
         }
         
-        // Add AI evaluation as interaction
-        const aiInteraction: IInteraction = {
-          timestamp: new Date().toISOString(),
-          type: 'ai_response',
-          context: evaluationResult
-        };
-        
-        await taskRepo.addInteraction(taskId, aiInteraction);
+        // Record AI evaluation as metadata (not a user attempt)
+        // We'll store this in task metadata instead
+        await taskRepo.update(taskId, {
+          metadata: {
+            lastEvaluation: evaluationResult,
+            lastEvaluatedAt: new Date().toISOString()
+          }
+        });
         
         // Don't create evaluation or mark complete yet - wait for user confirmation
         // Just return the result
@@ -737,7 +732,7 @@ Return your evaluation as a JSON object:
       
       // If all tasks completed, complete the program
       if (completedTasks === orderedTasks.length) {
-        await programRepo.complete(programId);
+        await programRepo.update(programId, { status: "completed" });
         
         // Create program completion evaluation
         await evaluationRepo.create({

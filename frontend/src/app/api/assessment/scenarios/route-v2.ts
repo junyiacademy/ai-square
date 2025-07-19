@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     
     // 獲取所有 assessment scenarios
-    const scenarios = await scenarioRepo.findBySourceType('assessment');
+    const scenarios = await scenarioRepo.findByType('assessment');
     
     // 處理回應資料
     const responseScenarios = scenarios.map(scenario => {

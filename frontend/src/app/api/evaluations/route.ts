@@ -164,20 +164,20 @@ export async function POST(request: NextRequest) {
 
           // Check if program is completed
           if (completedTasks >= program.totalTasks) {
-            await programRepo.updateStatus(task.programId, 'completed');
+            await programRepo.update(task.programId, { status: "completed" });
           }
         }
       }
     }
 
-    // Track AI usage
-    await evaluationRepo.trackAIUsage(
-      evaluation.id,
-      'vertex-ai',
-      'gemini-2.5-flash',
-      1000, // Estimated tokens
-      0.001 // Estimated cost
-    );
+    // Track AI usage - TODO: Implement this in PostgreSQL repository
+    // await evaluationRepo.trackAIUsage(
+    //   evaluation.id,
+    //   'vertex-ai',
+    //   'gemini-2.5-flash',
+    //   1000, // Estimated tokens
+    //   0.001 // Estimated cost
+    // );
 
     return NextResponse.json(evaluation, { status: 201 });
   } catch (error) {

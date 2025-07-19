@@ -31,24 +31,37 @@ export async function POST(
     }
 
     // Use unified architecture
-    const { getTaskRepository } = await import('@/lib/implementations/gcs-v2');
-    const taskRepo = getTaskRepository();
+    const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
+    const taskRepo = repositoryFactory.getTaskRepository();
 
-    // Create interaction in unified format
-    const newInteraction: IInteraction = {
-      timestamp: interaction.timestamp || new Date().toISOString(),
-      type: interaction.type === 'user' ? 'user_input' : 
-            interaction.type === 'ai' ? 'ai_response' : 'system_event',
-      context: interaction.content,
-      metadata: {
-        role: interaction.role || interaction.type,
-        originalType: interaction.type,
-        ...interaction.metadata
+    // Record user attempt or update metadata for other interactions
+    if (interaction.type === 'user') {
+      await taskRepo.recordAttempt(taskId, {
+        response: interaction.content,
+        timeSpent: interaction.metadata?.timeSpent || 0
+      });
+    } else {
+      // For AI and system interactions, store in task metadata
+      const task = await taskRepo.findById(taskId);
+      if (task) {
+        const metadata = task.metadata || {};
+        const interactions = metadata.interactions || [];
+        interactions.push({
+          timestamp: interaction.timestamp || new Date().toISOString(),
+          type: interaction.type,
+          content: interaction.content,
+          role: interaction.role || interaction.type,
+          metadata: interaction.metadata
+        });
+        
+        await taskRepo.update(taskId, {
+          metadata: {
+            ...metadata,
+            interactions
+          }
+        });
       }
-    };
-
-    // Add interaction to task
-    await taskRepo.addInteraction(taskId, newInteraction);
+    }
 
     return NextResponse.json({
       success: true,
@@ -82,8 +95,8 @@ export async function GET(
 
   return cachedGET(request, async () => {
     // Use unified architecture
-    const { getTaskRepository } = await import('@/lib/implementations/gcs-v2');
-    const taskRepo = getTaskRepository();
+    const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
+    const taskRepo = repositoryFactory.getTaskRepository();
 
     // Get task with interactions
     const task = await taskRepo.findById(taskId);

@@ -75,8 +75,13 @@ export async function POST(
       };
     });
     
-    // Batch update interactions
-    await taskRepo.updateInteractions(taskId, interactions);
+    // Store interactions in task metadata
+    await taskRepo.update(taskId, {
+      metadata: {
+        ...task.metadata,
+        interactions
+      }
+    });
     
     // Update task status if needed
     if (task.status === 'pending') {

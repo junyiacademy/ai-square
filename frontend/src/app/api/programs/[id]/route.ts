@@ -110,7 +110,7 @@ export async function DELETE(
     const programRepo = repositoryFactory.getProgramRepository();
     
     // Mark as abandoned instead of deleting
-    await programRepo.updateStatus(resolvedParams.id, 'abandoned');
+    await programRepo.update(resolvedParams.id, 'abandoned', { status: "completed" });
     
     return NextResponse.json({ 
       message: 'Program marked as abandoned' 

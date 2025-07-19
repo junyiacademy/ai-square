@@ -310,7 +310,9 @@ export async function POST(
     }
     
     // Update program with task IDs
-    await programRepo.updateTaskIds(program.id, tasks.map(t => t.id));
+    await programRepo.update(program.id, {
+      taskIds: tasks.map(t => t.id)
+    });
     
     return NextResponse.json({ 
       program,

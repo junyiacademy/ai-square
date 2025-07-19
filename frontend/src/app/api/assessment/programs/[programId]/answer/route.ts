@@ -57,10 +57,11 @@ export async function POST(
       ksa_mapping: question?.ksa_mapping
     };
     
-    await taskRepo.addInteraction(taskId, {
-      timestamp: new Date().toISOString(),
-      type: 'system_event',
-      context: answerContent
+    // Record the answer as an attempt
+    await taskRepo.recordAttempt(taskId, {
+      response: answerContent,
+      score: isCorrect ? 1 : 0,
+      timeSpent: timeSpent || 0
     });
     
     // Update task status if first answer

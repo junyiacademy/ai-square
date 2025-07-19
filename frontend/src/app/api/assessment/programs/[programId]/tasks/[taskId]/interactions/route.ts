@@ -161,7 +161,7 @@ export async function POST(
     
     // Update task with new interaction
     const updatedInteractions = [...(task.interactions || []), newInteraction];
-    await taskRepo.updateInteractions(taskId, updatedInteractions);
+    await taskRepo.update(taskId, updatedInteractions);
     
     return NextResponse.json({
       success: true,

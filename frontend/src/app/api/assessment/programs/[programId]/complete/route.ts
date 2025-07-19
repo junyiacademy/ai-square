@@ -98,7 +98,7 @@ export async function POST(
             score: existingAssessmentEval.score
           }
         });
-        await programRepo.complete(programId);
+        await programRepo.update(programId, { status: "completed" });
       }
       
       return NextResponse.json({ 
@@ -118,7 +118,7 @@ export async function POST(
     const validTasks = tasks.filter(t => t !== null);
     for (const task of validTasks) {
       if (task.status !== 'completed') {
-        await taskRepo.complete(task.id);
+        await taskRepo.updateStatus(task.id, "completed");
       }
     }
     
@@ -399,7 +399,7 @@ export async function POST(
         evaluationId: evaluation.id
       }
     });
-    await programRepo.complete(programId);
+    await programRepo.update(programId, { status: "completed" });
     
     // REMOVED: Duplicate save to v2/assessments/
     // Following unified learning architecture, we only save to evaluations

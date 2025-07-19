@@ -194,7 +194,7 @@ export async function POST(
     });
     
     // Mark program as completed
-    await programRepo.complete(programId);
+    await programRepo.update(programId, { status: "completed" });
     
     return NextResponse.json({ 
       success: true,

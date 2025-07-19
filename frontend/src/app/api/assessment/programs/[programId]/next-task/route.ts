@@ -40,7 +40,7 @@ export async function POST(
     
     // Complete current task if specified
     if (currentTaskId) {
-      await taskRepo.complete(currentTaskId);
+      await taskRepo.updateStatus(currentTaskId, "completed");
     }
     
     // Get all tasks

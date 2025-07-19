@@ -193,8 +193,13 @@ export async function PATCH(
           };
         });
         
-        // Update task with interactions
-        await taskRepo.updateInteractions(taskId, interactions);
+        // Store interactions in task metadata
+        await taskRepo.update(taskId, {
+          metadata: {
+            ...task.metadata,
+            interactions
+          }
+        });
         
         // Calculate score
         const correctCount = interactions.filter(i => i.context.isCorrect).length;
