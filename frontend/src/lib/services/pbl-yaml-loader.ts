@@ -67,7 +67,7 @@ export interface PBLYAMLData {
   scenario_info: PBLScenarioInfo;
   programs: PBLProgram[];
   ksa_mappings?: KSAMapping[];
-  ai_modules?: Record<string, any>;
+  ai_modules?: Record<string, unknown>;
 }
 
 export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
@@ -174,7 +174,7 @@ export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
   /**
    * Get translated field helper specific to PBL
    */
-  getTranslatedField(data: any, fieldName: string, language: string): string {
+  getTranslatedField(data: Record<string, unknown>, fieldName: string, language: string): string {
     const suffix = language === 'en' ? '' : `_${language}`;
     const fieldWithSuffix = `${fieldName}${suffix}`;
     

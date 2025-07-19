@@ -14,10 +14,7 @@ import {
 import {
   IPBLTask,
   IAssessmentTask,
-  IDiscoveryTask,
-  isPBLTask,
-  isAssessmentTask,
-  isDiscoveryTask
+  IDiscoveryTask
 } from '@/types/module-specific-types';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -178,7 +175,7 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
     };
   }
 
-  private calculateKSADimensions(metrics: QualityMetrics, task: IPBLTask): IDimensionScore[] {
+  private calculateKSADimensions(metrics: QualityMetrics, _task: IPBLTask): IDimensionScore[] {
     const baseScore = (metrics.interactionDepth + metrics.responseQuality + metrics.engagementLevel) / 3;
     
     return [
@@ -232,7 +229,7 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
     return 'low';
   }
 
-  private generateTaskFeedback(score: number, metrics: QualityMetrics): string {
+  private generateTaskFeedback(score: number, _metrics: QualityMetrics): string {
     if (score >= 80) {
       return 'Excellent problem-solving approach with deep engagement!';
     } else if (score >= 60) {
@@ -344,7 +341,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
     const domainScores: Record<string, { correct: number; total: number }> = {};
     const questionResults: AssessmentScoresResult['questionResults'] = [];
 
-    interactions.forEach((interaction, index) => {
+    interactions.forEach((interaction) => {
       if (interaction.type === 'user_input' && interaction.metadata?.questionId) {
         const isCorrect = interaction.metadata.isCorrect || false;
         const question = questions.find(q => q.id === interaction.metadata.questionId);
@@ -423,7 +420,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
     }));
   }
 
-  private generateAssessmentProgramFeedback(score: number, evaluations: IEvaluation[]): string {
+  private generateAssessmentProgramFeedback(score: number, _evaluations: IEvaluation[]): string {
     const level = score >= 90 ? 'mastery' : score >= 80 ? 'proficient' : 
                   score >= 70 ? 'developing' : 'foundational';
     return `Assessment complete! Your AI literacy level is ${level} with an average score of ${Math.round(score)}%.`;

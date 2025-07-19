@@ -241,7 +241,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
   private analyzePBLInteractionQuality(interactions: IInteraction[]): { knowledge: number; skills: number; attitudes: number } {
     // 簡化的品質分析邏輯
     const userInputs = interactions.filter(i => i.type === 'user_input');
-    const aiResponses = interactions.filter(i => i.type === 'ai_response');
+    // const aiResponses = interactions.filter(i => i.type === 'ai_response');
     
     // 基於互動深度給分
     const interactionDepth = Math.min(userInputs.length / 5, 1) * 100;

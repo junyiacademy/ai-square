@@ -106,12 +106,12 @@ export class RepositoryFactory {
   public async healthCheck(): Promise<{
     postgresql: boolean;
     gcs: boolean;
-    details: any;
+    details: Record<string, unknown>;
   }> {
     const results = {
       postgresql: false,
       gcs: false,
-      details: {} as any
+      details: {} as Record<string, unknown>
     };
 
     // Check PostgreSQL

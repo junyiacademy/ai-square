@@ -89,7 +89,7 @@ export class PostgreSQLTaskRepository implements ITaskRepository {
 
   async update(id: string, data: UpdateTaskDto): Promise<Task> {
     const updates: string[] = [];
-    const values: any[] = [];
+    const values: unknown[] = [];
     let paramCount = 1;
 
     if (data.status !== undefined) {

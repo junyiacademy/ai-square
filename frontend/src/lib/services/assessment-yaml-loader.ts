@@ -171,7 +171,7 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
   /**
    * Override to provide custom file path resolution
    */
-  protected getFilePath(fileName: string, basePath: string, language?: string): string {
+  protected getFilePath(fileName: string, basePath: string, _language?: string): string {
     // Assessment files are in subdirectories
     const assessmentName = fileName.replace(/_questions_\w+$/, '');
     return path.join(basePath, assessmentName, `${fileName}.yaml`);
@@ -180,7 +180,7 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
   /**
    * Get translated field helper specific to Assessment
    */
-  getTranslatedField(data: any, fieldName: string, language: string): string {
+  getTranslatedField(data: Record<string, unknown>, fieldName: string, language: string): string {
     const suffix = language === 'en' ? '' : `_${language}`;
     const fieldWithSuffix = `${fieldName}${suffix}`;
     

@@ -7,8 +7,7 @@
  */
 
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { IScenario, IContentSource } from '@/types/unified-learning';
-import { BaseYAMLLoader } from '@/lib/abstractions/base-yaml-loader';
+import { IScenario } from '@/types/unified-learning';
 import { AssessmentYAMLLoader } from './assessment-yaml-loader';
 import { PBLYAMLLoader } from './pbl-yaml-loader';
 import { DiscoveryYAMLLoader } from './discovery-yaml-loader';
@@ -197,8 +196,8 @@ export class ScenarioInitializationService {
  */
 interface IYAMLProcessor {
   scanYAMLFiles(basePath: string): Promise<string[]>;
-  loadYAML(filePath: string): Promise<any>;
-  transformToScenario(yamlData: any, filePath: string): Promise<Omit<IScenario, 'id'>>;
+  loadYAML(filePath: string): Promise<unknown>;
+  transformToScenario(yamlData: unknown, filePath: string): Promise<Omit<IScenario, 'id'>>;
 }
 
 /**
@@ -212,8 +211,8 @@ class PBLYAMLProcessor implements IYAMLProcessor {
   }
 
   async scanYAMLFiles(basePath: string): Promise<string[]> {
-    const fs = await import('fs/promises');
-    const fullPath = path.join(process.cwd(), 'public', basePath);
+    // const fs = await import('fs/promises');
+    // const fullPath = path.join(process.cwd(), 'public', basePath);
     
     try {
       const scenarios = await this.loader.scanScenarios();
@@ -227,7 +226,7 @@ class PBLYAMLProcessor implements IYAMLProcessor {
     }
   }
 
-  async loadYAML(filePath: string): Promise<any> {
+  async loadYAML(filePath: string): Promise<unknown> {
     // Extract scenario ID from path
     const parts = filePath.split(path.sep);
     const scenarioId = parts[parts.length - 2]; // Get folder name
@@ -240,7 +239,7 @@ class PBLYAMLProcessor implements IYAMLProcessor {
     return data;
   }
 
-  async transformToScenario(yamlData: any, filePath: string): Promise<Omit<IScenario, 'id'>> {
+  async transformToScenario(yamlData: unknown, filePath: string): Promise<Omit<IScenario, 'id'>> {
     const parts = filePath.split(path.sep);
     const scenarioId = parts[parts.length - 2];
     
@@ -296,7 +295,7 @@ class DiscoveryYAMLProcessor implements IYAMLProcessor {
     return allPaths;
   }
 
-  async loadYAML(filePath: string): Promise<any> {
+  async loadYAML(filePath: string): Promise<unknown> {
     // Extract career type and language from path
     const parts = filePath.split(path.sep);
     const careerType = parts[parts.length - 2];
@@ -314,12 +313,10 @@ class DiscoveryYAMLProcessor implements IYAMLProcessor {
     return data;
   }
 
-  async transformToScenario(yamlData: any, filePath: string): Promise<Omit<IScenario, 'id'>> {
+  async transformToScenario(yamlData: unknown, filePath: string): Promise<Omit<IScenario, 'id'>> {
     const parts = filePath.split(path.sep);
     const careerType = parts[parts.length - 2];
     const fileName = parts[parts.length - 1];
-    const match = fileName.match(/_(\w+)\.yml$/);
-    const language = match ? match[1] : 'en';
     
     return {
       sourceType: 'discovery',
@@ -385,7 +382,7 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
     return allPaths;
   }
 
-  async loadYAML(filePath: string): Promise<any> {
+  async loadYAML(filePath: string): Promise<unknown> {
     // Extract assessment name and language from path
     const parts = filePath.split(path.sep);
     const fileName = parts[parts.length - 1];
@@ -401,7 +398,7 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
     return data;
   }
 
-  async transformToScenario(yamlData: any, filePath: string): Promise<Omit<IScenario, 'id'>> {
+  async transformToScenario(yamlData: unknown, filePath: string): Promise<Omit<IScenario, 'id'>> {
     const parts = filePath.split(path.sep);
     const assessmentName = parts[parts.length - 2];
     const fileName = parts[parts.length - 1];

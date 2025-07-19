@@ -108,7 +108,7 @@ class ProductionMonitor {
     }
   }
 
-  private sendAlert(type: string, data: any): void {
+  private sendAlert(type: string, data: Record<string, unknown>): void {
     const now = Date.now();
     const lastAlert = this.alertCooldown.get(type);
     
@@ -126,7 +126,7 @@ class ProductionMonitor {
     }
   }
 
-  private async sendWebhookAlert(type: string, data: any): Promise<void> {
+  private async sendWebhookAlert(type: string, data: Record<string, unknown>): Promise<void> {
     try {
       await fetch(process.env.ALERT_WEBHOOK_URL!, {
         method: 'POST',
@@ -150,7 +150,7 @@ class ProductionMonitor {
    */
   getStatus(): {
     enabled: boolean;
-    alertThresholds: any;
+    alertThresholds: typeof this.config.alertThresholds;
     lastReported: Date;
   } {
     return {

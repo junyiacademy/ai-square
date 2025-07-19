@@ -13,8 +13,8 @@ import { IScenario } from '@/types/unified-learning';
 export interface TranslationContent {
   title?: string;
   description?: string;
-  config?: Record<string, any>;
-  [key: string]: any;
+  config?: Record<string, unknown>;
+  [key: string]: unknown;
 }
 
 interface CacheEntry {
@@ -69,7 +69,7 @@ export class ScenarioTranslationService {
 
       // Read and parse YAML
       const content = await fs.readFile(filePath, 'utf-8');
-      const yamlData = yaml.load(content) as any;
+      const yamlData = yaml.load(content) as Record<string, unknown>;
 
       // Extract translation content based on scenario type
       let translationContent: TranslationContent;

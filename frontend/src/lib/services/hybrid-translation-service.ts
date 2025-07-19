@@ -118,14 +118,14 @@ export class HybridTranslationService {
   /**
    * Get a program (no translation needed - user generated content)
    */
-  async getProgram(scenarioId: string, programId: string, language: string): Promise<IProgram> {
+  async getProgram(scenarioId: string, programId: string, _language: string): Promise<IProgram> {
     return this.storageService.getProgram(scenarioId, programId);
   }
 
   /**
    * Get a task (no translation needed - user generated content)
    */
-  async getTask(scenarioId: string, programId: string, taskId: string, language: string): Promise<ITask> {
+  async getTask(scenarioId: string, programId: string, taskId: string, _language: string): Promise<ITask> {
     return this.storageService.getTask(scenarioId, programId, taskId);
   }
 
@@ -136,7 +136,7 @@ export class HybridTranslationService {
     englishData: IScenario,
     scenarioId: string,
     language: string,
-    dataType: 'scenario' | 'task'
+    _dataType: 'scenario' | 'task'
   ): Promise<IScenario> {
     try {
       const yamlPath = path.join(
@@ -253,7 +253,7 @@ export class HybridTranslationService {
       const yamlData = yaml.load(yamlContent) as LegacyScenarioData;
 
       // Build scenario from YAML
-      const scenario: any = {
+      const scenario: Record<string, unknown> = {
         id: yamlData.scenario_info?.id || scenarioId,
         title: yamlData.scenario_info?.[`title_${language}`] || yamlData.scenario_info?.title,
         description: yamlData.scenario_info?.[`description_${language}`] || yamlData.scenario_info?.description,

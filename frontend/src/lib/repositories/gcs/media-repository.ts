@@ -215,7 +215,7 @@ export class GCSMediaRepository implements IMediaRepository {
   /**
    * Get file metadata
    */
-  async getMetadata(path: string): Promise<any> {
+  async getMetadata(path: string): Promise<Record<string, unknown>> {
     try {
       const file = this.bucket.file(path);
       const [metadata] = await file.getMetadata();
@@ -253,10 +253,11 @@ export class GCSMediaRepository implements IMediaRepository {
     }
   }
 
-  private isPublic(metadata: any): boolean {
+  private isPublic(metadata: Record<string, unknown>): boolean {
     // Check if file has public ACL
-    return metadata.acl?.some((acl: any) => 
-      acl.entity === 'allUsers' && acl.role === 'READER'
+    const acl = metadata.acl as Array<{ entity: string; role: string }> | undefined;
+    return acl?.some((item) => 
+      item.entity === 'allUsers' && item.role === 'READER'
     ) || false;
   }
 }

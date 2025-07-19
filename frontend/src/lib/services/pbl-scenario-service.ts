@@ -6,7 +6,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
-import { IScenario, IContentSource, ITaskTemplate } from '@/types/unified-learning';
+import { IScenario, ITaskTemplate } from '@/types/unified-learning';
 
 interface PBLYAMLData {
   scenario_info: {
@@ -123,20 +123,20 @@ export class PBLScenarioService {
     return yaml.load(yamlContent) as PBLYAMLData;
   }
   
-  private getLocalizedField(obj: any, fieldName: string, language: string): string {
+  private getLocalizedField(obj: Record<string, unknown>, fieldName: string, language: string): string {
     const langSuffix = language;
     const localizedField = `${fieldName}_${langSuffix}`;
     return obj[localizedField] || obj[fieldName] || '';
   }
   
-  private getLocalizedArrayField(obj: any, fieldName: string, language: string): string[] {
+  private getLocalizedArrayField(obj: Record<string, unknown>, fieldName: string, language: string): string[] {
     const langSuffix = language;
     const localizedField = `${fieldName}_${langSuffix}`;
     const value = obj[localizedField] || obj[fieldName] || [];
     return Array.isArray(value) ? value : [];
   }
   
-  private convertTasksToTemplates(tasks: any[], language: string): ITaskTemplate[] {
+  private convertTasksToTemplates(tasks: Array<Record<string, unknown>>, language: string): ITaskTemplate[] {
     return tasks.map(task => ({
       id: task.id,
       title: this.getLocalizedField(task, 'title', language),

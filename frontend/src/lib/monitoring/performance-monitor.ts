@@ -149,7 +149,7 @@ export function withPerformanceTracking<T>(
     .then(result => {
       // Check if result came from cache
       if (typeof result === 'object' && result !== null && 'cacheHit' in result) {
-        cacheHit = (result as any).cacheHit;
+        cacheHit = (result as { cacheHit: boolean }).cacheHit;
       }
       
       return result;

@@ -3,7 +3,7 @@
  * 處理所有用戶相關的資料庫操作
  */
 
-import { Pool, PoolClient } from 'pg';
+import { Pool } from 'pg';
 import {
   IUserRepository,
   User,

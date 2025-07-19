@@ -70,7 +70,7 @@ export class GCSContentRepository implements IContentRepository {
       try {
         const content = await this.getYamlContent(path);
         return this.transformScenarioContent(content, scenarioId);
-      } catch (error) {
+      } catch {
         // Continue to next path
       }
     }

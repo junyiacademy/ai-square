@@ -98,7 +98,7 @@ export class PostgreSQLProgramRepository implements IProgramRepository {
 
   async update(id: string, data: UpdateProgramDto): Promise<Program> {
     const updates: string[] = [];
-    const values: any[] = [];
+    const values: unknown[] = [];
     let paramCount = 1;
 
     if (data.status !== undefined) {
@@ -225,7 +225,7 @@ export class PostgreSQLProgramRepository implements IProgramRepository {
   }
 
   // Get program with scenario info (join query example)
-  async getProgramWithScenario(id: string): Promise<any> {
+  async getProgramWithScenario(id: string): Promise<Program & { scenarioTitle?: string; scenarioType?: string }> {
     const query = `
       SELECT 
         p.id, p.user_id as "userId", p.scenario_id as "scenarioId",

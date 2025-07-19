@@ -5,10 +5,10 @@
 
 export interface IScenarioStorageService {
   list(): Promise<string[]>;
-  getScenario(scenarioId: string): Promise<any>;
-  getProgram(scenarioId: string, programId: string): Promise<any>;
-  getTask(scenarioId: string, programId: string, taskId: string): Promise<any>;
-  getEvaluation(scenarioId: string, programId: string, evaluationId: string): Promise<any>;
+  getScenario(scenarioId: string): Promise<Record<string, unknown>>;
+  getProgram(scenarioId: string, programId: string): Promise<Record<string, unknown>>;
+  getTask(scenarioId: string, programId: string, taskId: string): Promise<Record<string, unknown>>;
+  getEvaluation(scenarioId: string, programId: string, evaluationId: string): Promise<Record<string, unknown>>;
 }
 
 // Mock implementation for now - will be replaced with actual GCS implementation
@@ -18,7 +18,7 @@ class MockScenarioStorageService implements IScenarioStorageService {
     return ['ai-job-search', 'smart-home-assistant'];
   }
 
-  async getScenario(scenarioId: string): Promise<any> {
+  async getScenario(scenarioId: string): Promise<Record<string, unknown>> {
     // Return mock scenario data
     return {
       id: scenarioId,
@@ -31,7 +31,7 @@ class MockScenarioStorageService implements IScenarioStorageService {
     };
   }
 
-  async getProgram(scenarioId: string, programId: string): Promise<any> {
+  async getProgram(scenarioId: string, programId: string): Promise<Record<string, unknown>> {
     return {
       id: programId,
       scenarioId,
@@ -40,7 +40,7 @@ class MockScenarioStorageService implements IScenarioStorageService {
     };
   }
 
-  async getTask(scenarioId: string, programId: string, taskId: string): Promise<any> {
+  async getTask(scenarioId: string, programId: string, taskId: string): Promise<Record<string, unknown>> {
     return {
       id: taskId,
       programId,
@@ -48,7 +48,7 @@ class MockScenarioStorageService implements IScenarioStorageService {
     };
   }
 
-  async getEvaluation(scenarioId: string, programId: string, evaluationId: string): Promise<any> {
+  async getEvaluation(scenarioId: string, programId: string, evaluationId: string): Promise<Record<string, unknown>> {
     return {
       id: evaluationId,
       programId,

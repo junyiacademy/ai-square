@@ -107,7 +107,7 @@ export class PostgreSQLScenarioRepository implements IScenarioRepository {
 
   async update(id: string, data: UpdateScenarioDto): Promise<Scenario> {
     const updates: string[] = [];
-    const values: any[] = [];
+    const values: unknown[] = [];
     let paramCount = 1;
 
     if (data.status !== undefined) {
@@ -190,7 +190,7 @@ export class PostgreSQLScenarioRepository implements IScenarioRepository {
   }
 
   // Get scenarios with usage statistics
-  async getScenariosWithStats(): Promise<any[]> {
+  async getScenariosWithStats(): Promise<Array<Scenario & { programCount?: number; completionRate?: number }>> {
     const query = `
       SELECT 
         s.id, s.type, s.status, s.version,

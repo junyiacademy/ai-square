@@ -22,12 +22,6 @@ interface AssessmentResultsProps {
   isReview?: boolean; // 是否為歷史記錄查看模式
 }
 
-interface KSAAnalysis {
-  knowledge: { code: string; count: number; competencies: string[] }[];
-  skills: { code: string; count: number; competencies: string[] }[];
-  attitudes: { code: string; count: number; competencies: string[] }[];
-}
-
 export default function AssessmentResults({ result, domains, onRetake, questions = [], userAnswers = [], isReview = false }: AssessmentResultsProps) {
   const { t, i18n } = useTranslation('assessment');
   const [activeTab, setActiveTab] = useState<'overview' | 'recommendations' | 'ksa' | 'knowledge-graph'>('overview');
@@ -110,74 +104,6 @@ export default function AssessmentResults({ result, domains, onRetake, questions
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
-
-  // Analyze KSA codes from answered questions
-  const analyzeKSA = useCallback((): KSAAnalysis => {
-    const ksaMap: { [key: string]: { type: 'knowledge' | 'skills' | 'attitudes'; competencies: Set<string> } } = {};
-
-    // Process each answered question
-    userAnswers.forEach((answer) => {
-      const question = questions.find(q => q.id === answer.questionId);
-      if (!question || !answer.isCorrect) return; // Only count correct answers
-
-      // Get the question's KSA mapping
-      const { knowledge = [], skills = [], attitudes = [] } = question.ksa_mapping || {};
-
-      // Process knowledge codes
-      knowledge.forEach((code: string) => {
-        if (!ksaMap[code]) {
-          ksaMap[code] = { type: 'knowledge', competencies: new Set() };
-        }
-        ksaMap[code].competencies.add(question.id);
-      });
-
-      // Process skills codes
-      skills.forEach((code: string) => {
-        if (!ksaMap[code]) {
-          ksaMap[code] = { type: 'skills', competencies: new Set() };
-        }
-        ksaMap[code].competencies.add(question.id);
-      });
-
-      // Process attitudes codes
-      attitudes.forEach((code: string) => {
-        if (!ksaMap[code]) {
-          ksaMap[code] = { type: 'attitudes', competencies: new Set() };
-        }
-        ksaMap[code].competencies.add(question.id);
-      });
-    });
-
-    // Convert to analysis format
-    const analysis: KSAAnalysis = {
-      knowledge: [],
-      skills: [],
-      attitudes: []
-    };
-
-    Object.entries(ksaMap).forEach(([code, data]) => {
-      const item = {
-        code,
-        count: data.competencies.size,
-        competencies: Array.from(data.competencies)
-      };
-
-      if (data.type === 'knowledge') {
-        analysis.knowledge.push(item);
-      } else if (data.type === 'skills') {
-        analysis.skills.push(item);
-      } else if (data.type === 'attitudes') {
-        analysis.attitudes.push(item);
-      }
-    });
-
-    // Sort by count (descending)
-    analysis.knowledge.sort((a, b) => b.count - a.count);
-    analysis.skills.sort((a, b) => b.count - a.count);
-    analysis.attitudes.sort((a, b) => b.count - a.count);
-
-    return analysis;
-  }, [questions, userAnswers]);
 
   const handleSaveResults = useCallback(async () => {
     console.log('=== Save button clicked ===');

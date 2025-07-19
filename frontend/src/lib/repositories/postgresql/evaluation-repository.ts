@@ -8,8 +8,7 @@ import {
   IEvaluationRepository,
   Evaluation,
   CreateEvaluationDto,
-  UserProgress,
-  Achievement
+  UserProgress
 } from '../interfaces';
 
 export class PostgreSQLEvaluationRepository implements IEvaluationRepository {
@@ -181,7 +180,7 @@ export class PostgreSQLEvaluationRepository implements IEvaluationRepository {
   }
 
   // Get evaluations with detailed information
-  async getDetailedEvaluations(userId: string, limit: number = 10): Promise<any[]> {
+  async getDetailedEvaluations(userId: string, limit: number = 10): Promise<Evaluation[]> {
     const query = `
       SELECT 
         e.id, e.user_id as "userId", e.program_id as "programId",
@@ -206,7 +205,7 @@ export class PostgreSQLEvaluationRepository implements IEvaluationRepository {
   }
 
   // Get KSA progress over time
-  async getKSAProgress(userId: string): Promise<any> {
+  async getKSAProgress(userId: string): Promise<Record<string, unknown>> {
     const query = `
       SELECT 
         e.created_at as date,
@@ -221,7 +220,7 @@ export class PostgreSQLEvaluationRepository implements IEvaluationRepository {
     const { rows } = await this.pool.query(query, [userId]);
     
     // Process KSA scores to track progress
-    const progress: any = {
+    const progress: Record<string, Array<{ date: Date; score: number }>> = {
       knowledge: [],
       skills: [],
       attitudes: []
@@ -247,7 +246,7 @@ export class PostgreSQLEvaluationRepository implements IEvaluationRepository {
   }
 
   // Calculate user's strengths and weaknesses
-  async getUserStrengthsWeaknesses(userId: string): Promise<any> {
+  async getUserStrengthsWeaknesses(userId: string): Promise<Record<string, unknown>> {
     const query = `
       SELECT 
         jsonb_object_keys(ksa_scores) as ksa_type,

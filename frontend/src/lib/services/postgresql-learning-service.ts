@@ -6,7 +6,6 @@
 import { BaseLearningService } from '@/lib/abstractions/base-learning-service';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { 
-  IScenario, 
   IProgram, 
   ITask, 
   IEvaluation 
