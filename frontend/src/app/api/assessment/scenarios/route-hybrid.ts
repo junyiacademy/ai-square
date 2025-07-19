@@ -6,8 +6,19 @@ import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
 
 // 記憶體快取
+interface TranslationData {
+  title?: string;
+  description?: string;
+  config?: {
+    totalQuestions: number;
+    timeLimit: number;
+    passingScore: number;
+    domains: string[];
+  };
+}
+
 const translationCache = new Map<string, {
-  data: any;
+  data: TranslationData;
   timestamp: number;
 }>();
 
@@ -42,8 +53,7 @@ export async function GET(request: NextRequest) {
         // 非英文：從 YAML 載入
         const translation = await loadTranslation(
           scenario.sourceRef?.metadata?.basePath || scenario.sourceRef?.metadata?.folderName,
-          lang,
-          scenario
+          lang
         );
         
         return {
@@ -77,8 +87,7 @@ export async function GET(request: NextRequest) {
 
 async function loadTranslation(
   folderPath: string,
-  language: string,
-  fallbackScenario: any
+  language: string
 ) {
   // 檢查快取
   const cacheKey = `${folderPath}-${language}`;
@@ -96,7 +105,24 @@ async function loadTranslation(
     
     // 讀取 YAML
     const content = await fs.readFile(filePath, 'utf-8');
-    const yamlData = yaml.load(content) as any;
+    const yamlData = yaml.load(content) as {
+      config?: {
+        title?: string;
+        description?: string;
+        total_questions?: number;
+        time_limit_minutes?: number;
+        passing_score?: number;
+        domains?: string[];
+      };
+      assessment_config?: {
+        title?: string;
+        description?: string;
+        total_questions?: number;
+        time_limit_minutes?: number;
+        passing_score?: number;
+        domains?: string[];
+      };
+    };
     const config = yamlData.config || yamlData.assessment_config || {};
     
     const translation = {
@@ -123,7 +149,7 @@ async function loadTranslation(
   }
 }
 
-async function getUserProgress(scenarioId: string, userId: string) {
+async function getUserProgress(_scenarioId: string, _userId: string) {
   // TODO: 實作從 GCS 獲取用戶進度
   return {
     completedPrograms: 0,

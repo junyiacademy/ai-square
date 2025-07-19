@@ -67,7 +67,10 @@ export async function POST(
     if (nextTask && nextTask.status === 'pending' && !nextTask.startedAt) {
       await taskRepo.update(nextTask.id, {
         status: 'active',
-        startedAt: new Date().toISOString()
+        metadata: {
+          ...nextTask.metadata,
+          startedAt: new Date().toISOString()
+        }
       });
       // Re-fetch to get updated task
       const updatedTask = await taskRepo.findById(nextTask.id);

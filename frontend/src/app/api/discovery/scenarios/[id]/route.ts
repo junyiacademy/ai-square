@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
-import { 
-  getScenarioRepository,
-  getProgramRepository 
-} from '@/lib/implementations/gcs-v2';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { IScenario } from '@/types/unified-learning';
 
 export async function GET(

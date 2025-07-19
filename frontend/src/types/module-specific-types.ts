@@ -36,8 +36,8 @@ export interface IPBLProgram extends IProgram {
   };
 }
 
-export interface IPBLTask extends ITask {
-  type: 'interactive' | 'reflection' | 'application';
+export interface IPBLTask extends Omit<ITask, 'type'> {
+  type: 'interactive' | 'reflection' | 'application' | 'question' | 'chat' | 'creation' | 'analysis';
   content: {
     context?: {
       scenario?: string;
@@ -105,8 +105,8 @@ export interface IAssessmentProgram extends IProgram {
   };
 }
 
-export interface IAssessmentTask extends ITask {
-  type: 'assessment' | 'quiz' | 'exam';
+export interface IAssessmentTask extends Omit<ITask, 'type'> {
+  type: 'assessment' | 'quiz' | 'exam' | 'question' | 'chat' | 'creation' | 'analysis';
   content: {
     context?: {
       questions?: Array<{
@@ -186,8 +186,8 @@ export interface IDiscoveryProgram extends IProgram {
   };
 }
 
-export interface IDiscoveryTask extends ITask {
-  type: 'exploration' | 'experiment' | 'creation';
+export interface IDiscoveryTask extends Omit<ITask, 'type'> {
+  type: 'exploration' | 'experiment' | 'creation' | 'question' | 'chat' | 'analysis';
   content: {
     context?: {
       explorationGoals?: string[];

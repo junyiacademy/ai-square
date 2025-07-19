@@ -28,7 +28,7 @@ interface AssessmentResult {
     selected: string;
     correct: string;
     time_spent: number;
-    ksa_mapping?: any;
+    ksa_mapping?: Record<string, unknown>;
   }>;
 }
 
@@ -54,7 +54,6 @@ export async function POST(request: NextRequest) {
     const userRepo = repositoryFactory.getUserRepository();
     const programRepo = repositoryFactory.getProgramRepository();
     const evaluationRepo = repositoryFactory.getEvaluationRepository();
-    const taskRepo = repositoryFactory.getTaskRepository();
 
     // Get user
     const user = await userRepo.findByEmail(body.userEmail || body.userId);
@@ -211,7 +210,7 @@ export async function GET(request: NextRequest) {
             correct_answers: (assessmentEvaluation.aiAnalysis?.correctAnswers as number) || 0,
             level: (assessmentEvaluation.aiAnalysis?.level as string) || 'beginner'
           },
-          answers: (assessmentEvaluation.metadata?.answers as any[]) || []
+          answers: (assessmentEvaluation.metadata?.answers as AssessmentResult['answers']) || []
         };
 
         assessmentResults.push(result);

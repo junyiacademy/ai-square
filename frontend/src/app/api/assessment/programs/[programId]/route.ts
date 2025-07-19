@@ -75,8 +75,7 @@ export async function GET(
     
     if (!tasks || tasks.length === 0) {
       console.error('No tasks found for program', programId, {
-        programData: program,
-        allTasksInRepo: await taskRepo.listAll()
+        programData: program
       });
       return NextResponse.json(
         { error: 'No tasks found' },

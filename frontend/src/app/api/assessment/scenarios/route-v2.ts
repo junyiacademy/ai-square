@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ScenarioSyncService } from '@/lib/services/scenario-sync-service';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
 

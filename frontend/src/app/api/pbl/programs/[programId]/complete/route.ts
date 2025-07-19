@@ -213,10 +213,13 @@ export async function POST(
     if (!programEvaluation) {
       // Create new evaluation
       programEvaluation = await evalRepo.create({
+        userId: user!.email,
         targetType: 'program',
         targetId: program.id,
         evaluationType: 'pbl_completion',
         score: overallScore,
+        maxScore: 100,
+        timeTakenSeconds: totalTimeSeconds,
         metadata: {
           taskEvaluationIds: evaluatedTasks.map(te => te.evaluation!.id),
           overallScore,

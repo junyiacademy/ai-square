@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
-import { 
-  getProgramRepository, 
-  getTaskRepository,
-  getScenarioRepository 
-} from '@/lib/implementations/gcs-v2';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { IProgram, ITask } from '@/types/unified-learning';
 import { DiscoveryYAMLLoader } from '@/lib/services/discovery-yaml-loader';
 

@@ -1,18 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { 
-  getScenarioRepository, 
-  getProgramRepository, 
-  getTaskRepository,
-  getEvaluationRepository 
-} from '@/lib/implementations/gcs-v2';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
-import { getAuthFromRequest } from '@/lib/auth/auth-utils';
 import { promises as fs } from 'fs';
-import path from 'path';
-import yaml from 'js-yaml';
+import * as path from 'path';
+import * as yaml from 'js-yaml';
+import type { 
+  Program, 
+  Task, 
+  Scenario, 
+  Evaluation,
+  ProgramStatus
+} from '@/lib/repositories/interfaces';
+
+// Extend Scenario type to include sourceRef and sourceType
+interface ScenarioWithSourceRef extends Scenario {
+  sourceRef?: {
+    metadata?: {
+      configPath?: string;
+      [key: string]: unknown;
+    };
+    [key: string]: unknown;
+  };
+  sourceType?: string;
+}
+
+// Extend Program type to include additional fields used in this route
+interface ProgramWithExtras extends Omit<Program, 'startedAt'> {
+  startedAt?: string | Date;
+  completedAt?: string | Date;
+}
 
 // Simple in-memory cache for scenarios
-const scenarioCache = new Map<string, { scenario: any; timestamp: number }>();
+interface CachedScenario {
+  scenario: ScenarioWithSourceRef;
+  timestamp: number;
+}
+const scenarioCache = new Map<string, CachedScenario>();
 const SCENARIO_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 export async function GET(
@@ -45,13 +68,13 @@ export async function GET(
     const now = Date.now();
     const cached = scenarioCache.get(id);
     
-    let scenario;
+    let scenario: ScenarioWithSourceRef | null;
     if (cached && (now - cached.timestamp) < SCENARIO_CACHE_TTL) {
       scenario = cached.scenario;
     } else {
       // Quick check if this scenario is assessment type
       const scenarioRepo = repositoryFactory.getScenarioRepository();
-      scenario = await scenarioRepo.findById(id);
+      scenario = await scenarioRepo.findById(id) as ScenarioWithSourceRef | null;
       
       // Cache the result
       if (scenario) {
@@ -59,25 +82,24 @@ export async function GET(
       }
     }
     
-    let userPrograms;
+    let userPrograms: ProgramWithExtras[];
     if (scenario && scenario.sourceType === 'assessment') {
       // For assessment scenarios, show all completed assessments from this user
       userPrograms = allUserPrograms.filter(p => 
         p.status === 'completed' && p.metadata?.score !== undefined
-      );
+      ) as ProgramWithExtras[];
     } else {
       // For non-assessment scenarios, only show programs for this specific scenario
-      userPrograms = allUserPrograms.filter(p => p.scenarioId === id);
+      userPrograms = allUserPrograms.filter(p => p.scenarioId === id) as ProgramWithExtras[];
     }
     
     // Sort by startedAt (newest first)
-    userPrograms.sort((a, b) => 
-      new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime()
+    userPrograms.sort((a: ProgramWithExtras, b: ProgramWithExtras) => 
+      new Date(b.startedAt || b.startTime).getTime() - new Date(a.startedAt || a.startTime).getTime()
     );
     
     // Optimize by batching evaluations for completed programs
     const evaluationRepo = repositoryFactory.getEvaluationRepository();
-    const taskRepo = repositoryFactory.getTaskRepository();
     
     // Get all evaluation IDs from completed programs
     const evaluationIds = userPrograms
@@ -85,20 +107,20 @@ export async function GET(
       .map(p => p.metadata!.evaluationId!);
     
     // Batch fetch evaluations
-    const evaluationsMap = new Map();
+    const evaluationsMap = new Map<string, Evaluation>();
     if (evaluationIds.length > 0) {
       const evaluations = await Promise.all(
-        evaluationIds.map(id => evaluationRepo.findById(id as string).catch(() => null))
+        evaluationIds.map((id: string) => evaluationRepo.findById(id).catch(() => null))
       );
       evaluationIds.forEach((id, index) => {
         if (evaluations[index]) {
-          evaluationsMap.set(id, evaluations[index]);
+          evaluationsMap.set(id, evaluations[index]!);
         }
       });
     }
     
     // Enrich programs with minimal async operations
-    const enrichedPrograms = userPrograms.map(program => {
+    const enrichedPrograms = userPrograms.map((program: ProgramWithExtras) => {
       // Get cached evaluation if available
       const evaluation = program.metadata?.evaluationId 
         ? evaluationsMap.get(program.metadata.evaluationId) 
@@ -171,7 +193,7 @@ export async function POST(
     const taskRepo = repositoryFactory.getTaskRepository();
     
     // Get scenario
-    const scenario = await scenarioRepo.findById(id);
+    const scenario = await scenarioRepo.findById(id) as ScenarioWithSourceRef | null;
     if (!scenario) {
       return NextResponse.json(
         { error: 'Scenario not found' },
@@ -181,9 +203,9 @@ export async function POST(
     
     // Check if user already has an active program for this scenario
     const existingPrograms = await programRepo.findByUser(email);
-    const activeProgram = existingPrograms.find(p => 
+    const activeProgram = existingPrograms.find((p: Program) => 
       p.scenarioId === id && p.status === 'active'
-    );
+    ) as ProgramWithExtras | undefined;
     
     if (activeProgram) {
       console.log(`User ${email} already has an active program for scenario ${id}, returning existing`);
@@ -193,14 +215,16 @@ export async function POST(
       });
     }
     
-    // Create new program
+    // Create new program - using the proper DTO
     const program = await programRepo.create({
       scenarioId: id,
       userId: email,
-      status: 'active',
-      startedAt: new Date().toISOString(),
-      taskIds: [],
-      currentTaskIndex: 0,
+      totalTasks: 0  // Will be updated after creating tasks
+    });
+    
+    // Update the program with additional fields after creation
+    await programRepo.update(program.id, {
+      status: 'active' as ProgramStatus,
       metadata: {
         sourceType: 'assessment',
         language,
@@ -211,17 +235,46 @@ export async function POST(
     });
     
     // Load questions from YAML and create tasks
-    const tasks = [];
+    const tasks: Task[] = [];
     console.log('Scenario sourceRef:', JSON.stringify(scenario.sourceRef, null, 2));
     
-    if (scenario.sourceRef.metadata?.configPath) {
+    if (scenario.sourceRef?.metadata?.configPath) {
       try {
         const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
         const configPath = path.join(baseDir, 'public', scenario.sourceRef.metadata.configPath as string);
         console.log('Loading assessment config from:', configPath);
         
         const configContent = await fs.readFile(configPath, 'utf-8');
-        const yamlData = yaml.load(configContent) as any;
+        interface AssessmentQuestion {
+          id: string;
+          domain: string;
+          question: string;
+          options: string[];
+          difficulty: string;
+          correct_answer: string;
+          explanation: string;
+          ksa_mapping: {
+            knowledge?: string[];
+            skills?: string[];
+            attitudes?: string[];
+          };
+          [key: string]: unknown; // For language-specific fields
+        }
+
+        interface AssessmentTask {
+          id: string;
+          title: string;
+          description?: string;
+          time_limit_minutes?: number;
+          questions?: AssessmentQuestion[];
+          [key: string]: unknown; // For language-specific fields
+        }
+
+        interface AssessmentYamlData {
+          tasks?: AssessmentTask[];
+          questions?: AssessmentQuestion[];
+        }
+        const yamlData = yaml.load(configContent) as AssessmentYamlData;
         console.log('YAML data loaded, has tasks:', !!yamlData.tasks);
         
         // Check if new format with tasks
@@ -231,7 +284,7 @@ export async function POST(
             const taskData = yamlData.tasks[i];
             
             // Get language-specific questions for this task
-            const taskQuestions = taskData.questions?.map((q: any) => ({
+            const taskQuestions = taskData.questions?.map((q) => ({
               id: q.id,
               domain: q.domain,
               question: q[`question_${language}`] || q.question,
@@ -246,16 +299,18 @@ export async function POST(
               taskId: taskData.id,
               title: taskData.title,
               questionsCount: taskQuestions.length,
-              firstQuestion: taskQuestions[0]?.question?.substring(0, 50)
+              firstQuestion: typeof taskQuestions[0]?.question === 'string' 
+                ? taskQuestions[0].question.substring(0, 50)
+                : 'No question text'
             });
             
-            // Create task for this domain
+            // Create task for this domain - using the proper DTO
             const task = await taskRepo.create({
               programId: program.id,
-              scenarioTaskIndex: i,
-              title: taskData[`title_${language}`] || taskData.title || `Task ${i + 1}`,
+              taskIndex: i,
               type: 'question',
               context: {
+                title: taskData[`title_${language}`] || taskData.title || `Task ${i + 1}`,
                 instructions: taskData[`description_${language}`] || taskData.description || 'Complete the assessment questions',
                 context: {
                   questions: taskQuestions,
@@ -263,17 +318,14 @@ export async function POST(
                   language,
                   domainId: taskData.id
                 }
-              },
-              status: 'pending',
-              startedAt: '',
-              interactions: []
+              }
             });
             
             tasks.push(task);
           }
         } else {
           // Legacy format: Single task with all questions
-          const questions = yamlData.questions?.map((q: any) => ({
+          const questions = yamlData.questions?.map((q) => ({
             id: q.id,
             domain: q.domain,
             question: q[`question_${language}`] || q.question,
@@ -286,20 +338,17 @@ export async function POST(
           
           const task = await taskRepo.create({
             programId: program.id,
-            scenarioTaskIndex: 0,
-            title: 'Assessment Questions',
+            taskIndex: 0,
             type: 'question',
             context: {
+              title: 'Assessment Questions',
               instructions: 'Complete the assessment questions',
               context: {
                 questions,
                 timeLimit: 900,
                 language
               }
-            },
-            status: 'pending',
-            startedAt: new Date().toISOString(),
-            interactions: []
+            }
           });
           
           tasks.push(task);
@@ -317,7 +366,10 @@ export async function POST(
     return NextResponse.json({ 
       program,
       tasks,
-      questionsCount: tasks.reduce((sum, t) => sum + ((t.context.context as any)?.questions?.length || 0), 0)
+      questionsCount: tasks.reduce((sum, t) => {
+        const context = t.context?.context as { questions?: unknown[] } | undefined;
+        return sum + (context?.questions?.length || 0);
+      }, 0)
     });
   } catch (error) {
     console.error('Error creating program:', error);

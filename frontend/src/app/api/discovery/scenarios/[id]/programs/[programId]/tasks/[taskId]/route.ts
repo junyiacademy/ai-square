@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
-import { 
-  getProgramRepository,
-  getTaskRepository,
-  getEvaluationRepository,
-  getScenarioRepository 
-} from '@/lib/implementations/gcs-v2';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { IInteraction, ITask } from '@/types/unified-learning';
 import { VertexAIService } from '@/lib/ai/vertex-ai-service';
 import { DiscoveryYAMLLoader } from '@/lib/services/discovery-yaml-loader';

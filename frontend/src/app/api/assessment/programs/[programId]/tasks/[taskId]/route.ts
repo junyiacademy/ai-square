@@ -125,10 +125,10 @@ export async function PATCH(
     const language = getLanguageFromHeader(request.headers.get('Accept-Language'));
     
     // Use unified architecture
-    const { getTaskRepository, getProgramRepository, getEvaluationRepository } = await import('@/lib/implementations/gcs-v2');
-    const taskRepo = getTaskRepository();
-    const programRepo = getProgramRepository();
-    const evalRepo = getEvaluationRepository();
+    const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
+    const taskRepo = repositoryFactory.getTaskRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
+    const evalRepo = repositoryFactory.getEvaluationRepository();
     
     // First verify the program exists and belongs to the user
     const program = await programRepo.findById(programId);
@@ -161,7 +161,10 @@ export async function PATCH(
         // Mark task as active
         await taskRepo.update(taskId, {
           status: 'active',
-          startedAt: new Date().toISOString()
+          metadata: {
+            ...task.metadata,
+            startedAt: new Date().toISOString()
+          }
         });
         break;
         
@@ -174,9 +177,11 @@ export async function PATCH(
         }
         
         // Process answers and create interactions
-        const questions = task.context.context?.questions || [];
+        const questionsArray = Array.isArray(task.content?.context?.questions) 
+          ? task.content.context.questions 
+          : [];
         const interactions = answers.map((answer: any) => {
-          const question = questions.find((q: any) => q.id === answer.questionId);
+          const question = questionsArray.find((q: any) => q.id === answer.questionId);
           const isCorrect = question && 
             String(answer.answer) === String(question.correct_answer);
           
@@ -203,15 +208,18 @@ export async function PATCH(
         
         // Calculate score
         const correctCount = interactions.filter(i => i.context.isCorrect).length;
-        const totalQuestions = questions.length;
+        const totalQuestions = questionsArray.length;
         const score = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
         
         // Create task evaluation
         const evaluation = await evalRepo.create({
+          userId: session.user.email,
           targetType: 'task',
           targetId: taskId,
           evaluationType: 'assessment_task',
           score,
+          maxScore: 100,
+          timeTakenSeconds: 0,
           feedback: `Assessment task completed with ${correctCount}/${totalQuestions} correct answers`,
           metadata: {
             totalQuestions,
@@ -226,8 +234,11 @@ export async function PATCH(
         // Update task status and link evaluation
         await taskRepo.update(taskId, {
           status: 'completed',
-          completedAt: new Date().toISOString(),
-          evaluationId: evaluation.id
+          metadata: {
+            ...task.metadata,
+            completedAt: new Date().toISOString(),
+            evaluationId: evaluation.id
+          }
         });
         
         return NextResponse.json({
@@ -245,7 +256,10 @@ export async function PATCH(
         // Mark task as completed
         await taskRepo.update(taskId, {
           status: 'completed',
-          completedAt: new Date().toISOString()
+          metadata: {
+            ...task.metadata,
+            completedAt: new Date().toISOString()
+          }
         });
         break;
         

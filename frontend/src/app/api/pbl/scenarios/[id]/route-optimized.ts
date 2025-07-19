@@ -241,8 +241,8 @@ export async function GET(
       id: scenarioResult.id,
       yamlId: scenarioResult.sourceRef.metadata?.yamlId,
       sourceType: scenarioResult.sourceType,
-      title: scenarioResult.title,
-      description: scenarioResult.description,
+      title: scenarioResult.title || '',
+      description: scenarioResult.description || '',
       difficulty: scenarioResult.metadata?.difficulty || 'intermediate',
       estimatedDuration: scenarioResult.metadata?.estimatedDuration || 60,
       targetDomain: scenarioResult.metadata?.targetDomains || [],
@@ -251,12 +251,12 @@ export async function GET(
       ksaMapping: buildKSAMapping(yamlData as unknown as YAMLData, ksaData, lang),
       tasks: scenarioResult.taskTemplates.map((template, index) => ({
         id: template.id,
-        title: template.title,
+        title: template.title || '',
         description: template.description || '',
-        category: template.metadata?.category || 'general',
-        instructions: template.metadata?.instructions || [],
-        expectedOutcome: template.metadata?.expectedOutcome || '',
-        timeLimit: template.metadata?.timeLimit
+        category: (template.metadata?.category || 'general') as string,
+        instructions: (template.metadata?.instructions || []) as string[],
+        expectedOutcome: (template.metadata?.expectedOutcome || '') as string,
+        timeLimit: template.metadata?.timeLimit as number | undefined
       }))
     };
     

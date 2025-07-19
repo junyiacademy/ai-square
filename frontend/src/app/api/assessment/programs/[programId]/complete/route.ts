@@ -109,13 +109,13 @@ export async function POST(
       });
     }
     
-    // Get all tasks for this program
-    const tasks = await Promise.all(
-      program.taskIds.map(id => taskRepo.findById(id))
+    // Get all tasks for this program with interactions
+    const tasksWithInteractions = await Promise.all(
+      program.taskIds.map(id => taskRepo.getTaskWithInteractions(id))
     );
     
     // Filter out null tasks and complete all pending tasks
-    const validTasks = tasks.filter(t => t !== null);
+    const validTasks = tasksWithInteractions.filter(t => t !== null);
     for (const task of validTasks) {
       if (task.status !== 'completed') {
         await taskRepo.updateStatus(task.id, "completed");
@@ -236,7 +236,7 @@ export async function POST(
     });
     
     // Calculate time spent
-    const startTime = program.metadata?.startTime || Date.parse(program.startedAt);
+    const startTime = program.metadata?.startTime || (program.startedAt ? Date.parse(program.startedAt.toString()) : Date.now());
     const completionTime = Math.floor((Date.now() - (startTime as number)) / 1000);
     
     // Determine level
@@ -337,10 +337,13 @@ export async function POST(
     });
     
     const evaluation = await evaluationRepo.create({
+      userId: user.email,
       targetType: 'program',
       targetId: programId,
       evaluationType: 'assessment_complete',
       score: overallScore,
+      maxScore: 100,
+      timeTakenSeconds: completionTime,
       feedback: generateOverallFeedback(overallScore, level),
       dimensions: Array.from(domainScores.values()).map(ds => ({
         dimension: ds.domain,

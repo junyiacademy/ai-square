@@ -46,7 +46,7 @@ export async function GET(
     }
     
     // Get evaluation for this program
-    const evaluations = await evaluationRepo.findByTarget('program', programId);
+    const evaluations = await evaluationRepo.findByProgram(programId);
     console.log('Found evaluations for program', programId, {
       evaluationsCount: evaluations.length,
       evaluationTypes: evaluations.map(e => e.evaluationType),

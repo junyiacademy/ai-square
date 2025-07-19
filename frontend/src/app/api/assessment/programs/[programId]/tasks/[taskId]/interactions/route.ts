@@ -159,9 +159,17 @@ export async function POST(
       }
     };
     
-    // Update task with new interaction
-    const updatedInteractions = [...(task.interactions || []), newInteraction];
-    await taskRepo.update(taskId, updatedInteractions);
+    // Update task with the new interaction
+    const existingInteractions = Array.isArray(task.metadata?.interactions) 
+      ? task.metadata.interactions 
+      : [];
+    
+    await taskRepo.update(taskId, {
+      metadata: {
+        ...task.metadata,
+        interactions: [...existingInteractions, newInteraction]
+      }
+    });
     
     return NextResponse.json({
       success: true,

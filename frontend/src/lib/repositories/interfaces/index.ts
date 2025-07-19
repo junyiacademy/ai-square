@@ -126,6 +126,8 @@ export interface Task {
   programId: string;
   taskIndex: number;
   type: string;
+  title?: string;
+  content?: any;
   status: TaskStatus;
   score?: number;
   timeSpentSeconds: number;
@@ -160,6 +162,9 @@ export interface Scenario {
   type: ScenarioType;
   status: ScenarioStatus;
   version: string;
+  title?: string;
+  description?: string;
+  sourceRef?: any;
   difficultyLevel?: string;
   estimatedMinutes?: number;
   prerequisites: string[];
@@ -246,6 +251,8 @@ export interface CreateEvaluationDto {
   metadata?: any;
   targetType?: string;
   targetId?: string;
+  dimensions?: any[];
+  createdAt?: string;
 }
 
 export interface CreateScenarioDto {

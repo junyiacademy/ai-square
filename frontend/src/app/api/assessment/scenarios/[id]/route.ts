@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { promises as fs } from 'fs';
 import path from 'path';
@@ -10,7 +10,7 @@ const loadConfigYAML = memoize(async (configPath: string) => {
   const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
   const fullPath = path.join(baseDir, 'public', configPath);
   const configContent = await fs.readFile(fullPath, 'utf-8');
-  return yaml.load(configContent) as any;
+  return yaml.load(configContent);
 }, 10 * 60 * 1000); // 10 minutes cache
 
 export async function GET(
@@ -34,7 +34,17 @@ export async function GET(
     // Load config from YAML file if available
     if (scenario.sourceRef.metadata?.configPath) {
       try {
-        const yamlData = await loadConfigYAML(scenario.sourceRef.metadata.configPath as string);
+        const yamlData = await loadConfigYAML(scenario.sourceRef.metadata.configPath as string) as {
+    config?: {
+      total_questions?: number;
+      time_limit?: number;
+      passing_score?: number;
+      domains?: string[];
+    };
+    title?: string;
+    description?: string;
+    [key: string]: unknown;
+  };
         
         // Extract language-specific content
         const config = yamlData.config || {};

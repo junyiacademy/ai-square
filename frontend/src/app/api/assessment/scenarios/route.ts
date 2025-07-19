@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import type { Scenario } from '@/lib/repositories/interfaces';
 import { getServerSession } from '@/lib/auth/session';
 
 interface AssessmentConfig {
@@ -14,9 +15,22 @@ interface AssessmentConfig {
   domains?: string[];
 }
 
+interface CachedScenario {
+  id: string;
+  title: string;
+  description: string;
+  folderName: string;
+  config: {
+    totalQuestions: number;
+    timeLimit: number;
+    passingScore: number;
+    domains: string[];
+  };
+}
+
 // In-memory cache for scenarios
 let scenariosCache: {
-  data: any[] | null;
+  data: CachedScenario[] | null;
   timestamp: number;
 } = {
   data: null,
@@ -77,9 +91,9 @@ export async function GET(request: NextRequest) {
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     
     // Get all existing scenarios in one batch query
-    const existingScenarios = await scenarioRepo.findAll();
+    const existingScenarios = await scenarioRepo.findActive();
     const scenariosByPath = new Map(
-      existingScenarios.map(s => [s.sourceRef?.metadata?.configPath, s])
+      existingScenarios.map((s: Scenario) => [s.sourceRef?.metadata?.configPath, s])
     );
     
     // Process each folder
@@ -87,8 +101,8 @@ export async function GET(request: NextRequest) {
       folders.map(async (folderName) => {
         try {
           // Look for language-specific config file first, then fallback to English
-          let configPath = path.join(assessmentDir, folderName, `${folderName}_questions_${lang}.yaml`);
-          let fallbackPath = path.join(assessmentDir, folderName, `${folderName}_questions_en.yaml`);
+          const configPath = path.join(assessmentDir, folderName, `${folderName}_questions_${lang}.yaml`);
+          const fallbackPath = path.join(assessmentDir, folderName, `${folderName}_questions_en.yaml`);
           let config: AssessmentConfig = {};
           let yamlPath = '';
           
@@ -96,15 +110,15 @@ export async function GET(request: NextRequest) {
             // Try language-specific file first
             try {
               const configContent = await fs.readFile(configPath, 'utf-8');
-              const yamlData = yaml.load(configContent) as any;
+              const yamlData = yaml.load(configContent) as { config?: AssessmentConfig; assessment_config?: AssessmentConfig };
               config = yamlData.config || yamlData.assessment_config || {};
               yamlPath = `assessment_data/${folderName}/${folderName}_questions_${lang}.yaml`;
               console.log(`Loaded ${lang} config for ${folderName}:`, config);
-            } catch (error) {
+            } catch {
               // Fallback to English if language-specific file doesn't exist
               console.log(`No ${lang} config found, trying English fallback`);
               const configContent = await fs.readFile(fallbackPath, 'utf-8');
-              const yamlData = yaml.load(configContent) as any;
+              const yamlData = yaml.load(configContent) as { config?: AssessmentConfig; assessment_config?: AssessmentConfig };
               config = yamlData.config || yamlData.assessment_config || {};
               yamlPath = `assessment_data/${folderName}/${folderName}_questions_en.yaml`;
               console.log(`Loaded English config for ${folderName}:`, config);
@@ -122,30 +136,31 @@ export async function GET(request: NextRequest) {
           if (!scenario) {
             console.log(`Creating new scenario for ${folderName}`);
             scenario = await scenarioRepo.create({
-              sourceType: 'assessment',
-              sourceRef: {
-                type: 'yaml',
-                sourceId: `assessment-${folderName}`,
-                metadata: {
-                  assessmentType: 'standard',
-                  folderName,
-                  configPath: yamlPath
-                }
+              type: 'assessment' as const,
+              metadata: {
+                sourceType: 'assessment',
+                sourceRef: {
+                  type: 'yaml',
+                  sourceId: `assessment-${folderName}`,
+                  metadata: {
+                    assessmentType: 'standard',
+                    folderName,
+                    configPath: yamlPath
+                  }
+                },
+                title: config.title || `${folderName.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())} Assessment`,
+                description: config.description || `Assessment for ${folderName.replace(/_/g, ' ')}`,
+                objectives: [
+                  'Evaluate your knowledge and skills',
+                  'Identify areas for improvement',
+                  'Get personalized recommendations'
+                ]
               },
-              title: config.title || `${folderName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Assessment`,
-              description: config.description || `Assessment for ${folderName.replace(/_/g, ' ')}`,
-              objectives: [
-                'Evaluate your knowledge and skills',
-                'Identify areas for improvement',
-                'Get personalized recommendations'
-              ],
-              taskTemplates: [{
+              tasks: [{
                 id: 'assessment-task',
                 title: 'Complete Assessment',
-                type: 'question',
-              }],
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString()
+                type: 'question'
+              }]
             });
           }
           
@@ -162,7 +177,7 @@ export async function GET(request: NextRequest) {
             }
           };
         } catch (error) {
-          console.error(`Error processing folder ${folderName}:`, error);
+          console.error('Error processing folder ' + folderName + ':', error);
           return null;
         }
       })
@@ -187,7 +202,7 @@ export async function GET(request: NextRequest) {
       } : undefined
     }));
     
-    return NextResponse.json({ 
+    return Response.json({ 
       success: true,
       data: {
         scenarios: scenariosWithProgress,
@@ -196,7 +211,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error in assessment scenarios API:', error);
-    return NextResponse.json(
+    return Response.json(
       { success: false, error: 'Failed to load assessment scenarios' },
       { status: 500 }
     );
