@@ -49,14 +49,14 @@ async function testParallel() {
   // Sequential execution
   const start1 = Date.now();
   const seq1 = await slowFunction(100, 'Task 1');
-  const seq2 = await slowFunction(100, 'Task 2');
-  const seq3 = await slowFunction(100, 'Task 3');
+  await slowFunction(100, 'Task 2');
+  await slowFunction(100, 'Task 3');
   const sequentialTime = Date.now() - start1;
   console.log(`Sequential: ${sequentialTime}ms`);
   
   // Parallel execution
   const start2 = Date.now();
-  const [par1, par2, par3] = await parallel(
+  const [par1] = await parallel(
     slowFunction(100, 'Task 1'),
     slowFunction(100, 'Task 2'),
     slowFunction(100, 'Task 3')

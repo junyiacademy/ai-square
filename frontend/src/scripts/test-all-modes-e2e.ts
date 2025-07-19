@@ -718,7 +718,22 @@ async function testAssessmentMode() {
   }
 }
 
-async function verifyGCSData(results: any) {
+interface TestResults {
+  pbl: {
+    scenarioId: string;
+    programId: string;
+  };
+  discovery: {
+    scenarioId: string;
+    programId: string;
+  };
+  assessment: {
+    scenarioId: string;
+    programId: string;
+  };
+}
+
+async function verifyGCSData(results: TestResults) {
   log('Verifying Data in GCS', 'header');
   
   const scenarioRepo = getScenarioRepository();
@@ -799,10 +814,17 @@ async function runAllTests() {
   console.log(`GCS Bucket: ${process.env.GCS_BUCKET_NAME || 'not configured'}`);
   console.log(`Project ID: ${process.env.GOOGLE_CLOUD_PROJECT || 'not configured'}\n`);
   
+  interface ModeTestResult {
+    scenarioId: string;
+    programId: string;
+    taskIds?: string[];
+    evaluationId?: string;
+  }
+
   const results = {
-    pbl: null as any,
-    discovery: null as any,
-    assessment: null as any,
+    pbl: null as ModeTestResult | null,
+    discovery: null as ModeTestResult | null,
+    assessment: null as ModeTestResult | null,
   };
   
   try {

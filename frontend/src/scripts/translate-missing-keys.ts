@@ -84,16 +84,16 @@ Example format:
   }
 }
 
-function setValueByPath(obj: any, path: string, value: string): void {
+function setValueByPath(obj: Record<string, unknown>, path: string, value: string): void {
   const keys = path.split('.');
-  let current = obj;
+  let current = obj as Record<string, unknown>;
   
   for (let i = 0; i < keys.length - 1; i++) {
     const key = keys[i];
     if (!(key in current)) {
       current[key] = {};
     }
-    current = current[key];
+    current = current[key] as Record<string, unknown>;
   }
   
   current[keys[keys.length - 1]] = value;
@@ -112,7 +112,7 @@ async function updateTranslationFile(
   try {
     const content = await fs.readFile(filePath, 'utf-8');
     existingContent = JSON.parse(content);
-  } catch (error) {
+  } catch {
     console.log(`Creating new file: ${filePath}`);
   }
   
@@ -168,7 +168,7 @@ async function main() {
         const translations = await translateKeys(batchKeys, language, context);
         
         // Map back to original key paths
-        for (const [keyPath, englishValue] of batch) {
+        for (const [keyPath] of batch) {
           const translatedValue = translations[keyPath];
           if (translatedValue) {
             translatedKeys[keyPath] = translatedValue;

@@ -317,30 +317,66 @@ AI: [執行: make ai-done]
 3. **優先更新現有文件** - 而非創建新文件
 4. **避免文件碎片化** - 相關內容集中在同一文件
 
+### 🚨 TypeScript 和 ESLint 嚴格規則
+
+#### 絕對禁止使用 any 類型
+**這是最重要的規則，沒有例外**：
+1. **完全禁止使用 `any` 類型**
+   - ❌ 禁止：`const data: any = {}`
+   - ✅ 正確：`const data: Record<string, unknown> = {}`
+   - ✅ 正確：`const data: UserData = {}`
+   
+2. **類型轉換必須安全**
+   - ❌ 禁止：`response as any`
+   - ✅ 正確：`response as unknown as SpecificType`
+   - ✅ 更好：定義正確的類型並驗證
+
+3. **函數參數必須有類型**
+   - ❌ 禁止：`function process(data) { }`
+   - ❌ 禁止：`function process(data: any) { }`
+   - ✅ 正確：`function process(data: ProcessData) { }`
+
+4. **陣列必須有明確類型**
+   - ❌ 禁止：`const items: any[] = []`
+   - ✅ 正確：`const items: string[] = []`
+   - ✅ 正確：`const items: Item[] = []`
+
+#### ESLint 規則必須完全遵守
+1. **@typescript-eslint/no-explicit-any**: 完全禁止使用 any
+2. **@typescript-eslint/no-unused-vars**: 所有變數必須使用或移除
+3. **react-hooks/exhaustive-deps**: Hook 依賴必須正確
+4. **prefer-const**: 不會重新賦值的變數必須用 const
+
 ### Git Commit 準則
 
 #### 🚨 最重要：Commit 前必須檢查
 **任何 commit 之前都必須執行以下檢查，這是最重要的事**：
-1. **ESLint 檢查**：
+
+1. **針對變更檔案的 ESLint 檢查**：
    ```bash
-   cd frontend && npm run lint
+   # 只檢查變更的檔案，不做全域檢查
+   cd frontend && npx eslint $(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js|jsx)$')
    ```
-   - 必須確保沒有任何 ESLint 錯誤或警告
+   - 必須確保變更的檔案沒有任何 ESLint 錯誤或警告
    - 不可以忽略或跳過任何 lint 規則
+   - **特別注意：不能有任何 any 類型警告**
 
 2. **TypeScript 類型檢查**：
    ```bash
-   cd frontend && npm run typecheck
+   # 針對變更檔案的類型檢查
+   cd frontend && npx tsc --noEmit
    ```
    - 必須確保沒有任何 TypeScript 類型錯誤
    - 不可以使用 any 類型繞過檢查
 
-3. ** npm run build 檢查並修復通過
-  ```bash
+3. **Build 檢查**：
+   ```bash
    cd frontend && npm run build
-  ```
+   ```
+   - 必須確保建置成功
+   - 不能有任何編譯錯誤
 
-4. **只有在兩個檢查都通過後才能 commit**
+4. **只有在所有檢查都通過後才能 commit**
 
 #### Commit Message 規範
 1. **所有 commit messages 必須使用英文**

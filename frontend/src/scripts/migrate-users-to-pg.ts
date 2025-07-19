@@ -30,6 +30,13 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD || 'postgres',
 });
 
+interface Achievement {
+  id: string;
+  name: string;
+  description?: string;
+  earned_at: string;
+}
+
 interface UserData {
   id?: string;
   email: string;
@@ -42,11 +49,11 @@ interface UserData {
   level?: number;
   totalXp?: number;
   xp?: number;
-  achievements?: any[];
-  preferences?: any;
-  learningPreferences?: any;
+  achievements?: Achievement[];
+  preferences?: Record<string, unknown>;
+  learningPreferences?: Record<string, unknown>;
   onboardingCompleted?: boolean;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 }
 
 async function migrateUsers() {
@@ -166,7 +173,7 @@ async function migrateUsers() {
                 achievement.earnedAt || achievement.unlockedAt || new Date().toISOString(),
                 achievement.code || achievement.id || 'unknown'
               ]);
-            } catch (achError) {
+            } catch {
               console.warn(chalk.yellow(`    ⚠️  Failed to migrate achievement: ${achievement.code}`));
             }
           }
