@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
 
     // Get counts
     const users = await userRepo.findAll({ limit: 1000 });
-    const scenariosData = await scenarioRepo.findAll({ limit: 1000 });
+    const scenariosData = await scenarioRepo.findActive();
 
     return NextResponse.json({
       success: true,
