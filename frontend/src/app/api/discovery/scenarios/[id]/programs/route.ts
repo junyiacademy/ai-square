@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { IProgram, ITask } from '@/types/unified-learning';
+import { ITask } from '@/types/unified-learning';
 import { DiscoveryYAMLLoader } from '@/lib/services/discovery-yaml-loader';
 
 // Task templates for discovery scenarios
@@ -135,7 +135,7 @@ export async function POST(
     try {
       const body = await request.json();
       language = body.language || 'en';
-    } catch (error) {
+    } catch {
       // If no body is provided, use default language
       console.log('No body provided, using default language:', language);
     }

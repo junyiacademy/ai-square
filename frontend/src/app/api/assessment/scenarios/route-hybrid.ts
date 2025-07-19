@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
             description: scenario.description,
             folderName: (scenario.sourceRef as { metadata?: { folderName?: string } })?.metadata?.folderName,
             config: (scenario.sourceRef as { metadata?: { config?: Record<string, unknown> } })?.metadata?.config || {},
-            userProgress: user ? await getUserProgress(scenario.id, user.id) : undefined
+            userProgress: user ? await getUserProgress({ scenarioId: scenario.id, userId: user.id }) : undefined
           };
         }
         
@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
           description: translation?.description || scenario.description,
           folderName: (scenario.sourceRef as { metadata?: { folderName?: string } })?.metadata?.folderName,
           config: translation?.config || (scenario.sourceRef as { metadata?: { config?: Record<string, unknown> } })?.metadata?.config || {},
-          userProgress: user ? await getUserProgress(scenario.id, user.id) : undefined
+          userProgress: user ? await getUserProgress({ scenarioId: scenario.id, userId: user.id }) : undefined
         };
       })
     );
@@ -149,7 +149,7 @@ async function loadTranslation(
   }
 }
 
-async function getUserProgress(_scenarioId: string, _userId: string) {
+async function getUserProgress({}: { scenarioId: string; userId: string }) {
   // TODO: 實作從 GCS 獲取用戶進度
   return {
     completedPrograms: 0,

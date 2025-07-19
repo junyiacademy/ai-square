@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { IInteraction, ITask } from '@/types/unified-learning';
+import { ITask } from '@/types/unified-learning';
 import { VertexAIService } from '@/lib/ai/vertex-ai-service';
 import { DiscoveryYAMLLoader } from '@/lib/services/discovery-yaml-loader';
 import { TranslationService } from '@/lib/services/translation-service';
 
 // System prompt for AI - keep in English as it's for the AI model
-function getSystemPromptForLanguage(language: string): string {
+function getSystemPromptForLanguage({}: { language: string }): string {
   return 'You are an expert educational psychologist and learning coach.';
 }
 
@@ -16,9 +16,9 @@ function generateComprehensiveFeedbackPrompt(
   careerType: string,
   taskTitle: string,
   taskInstructions: string,
-  taskContext: any,
-  yamlData: any,
-  learningJourney: any[]
+  taskContext: unknown,
+  yamlData: unknown,
+  learningJourney: unknown[]
 ): string {
   // Debug log language detection
   console.log('Language detection for feedback:', {
@@ -76,7 +76,7 @@ function getSkillsSection(language: string, skills: string[]): string {
   return `\n- Demonstrated abilities: ${skills.join(', ')}`;
 }
 
-function getFallbackMessage(language: string): string {
+function getFallbackMessage({}: { language: string }): string {
   // For now, use simple message - will be replaced with i18n
   return 'Congratulations on successfully completing this task! Your effort and persistence are commendable.';
 }
@@ -92,7 +92,7 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id: scenarioId, programId, taskId } = await params;
+    const { programId, taskId } = await params;
     const userEmail = session.user.email;
     
     // Get language from query params
@@ -446,7 +446,7 @@ Return your evaluation as a JSON object:
       // User confirms task completion
       // First check if task has any passed interactions
       const hasPassedInteraction = task.interactions.some(
-        i => i.type === 'ai_response' && (i.content as any).completed === true
+        i => i.type === 'ai_response' && (i.content as { completed?: boolean })?.completed === true
       );
       
       if (!hasPassedInteraction) {
@@ -572,7 +572,7 @@ Return your evaluation as a JSON object:
         
         // Use AI to generate comprehensive qualitative feedback
         const aiService = new VertexAIService({
-          systemPrompt: getSystemPromptForLanguage(userLanguage),
+          systemPrompt: getSystemPromptForLanguage({ language: userLanguage }),
           temperature: 0.8,
           model: 'gemini-2.5-flash'
         });
@@ -612,7 +612,7 @@ Return your evaluation as a JSON object:
           .filter(i => i.type === 'ai_response' && i.context?.completed === true)
           .slice(-1)[0]?.content;
         
-        comprehensiveFeedback = lastSuccessfulFeedback?.feedback || getFallbackMessage(userLanguage);
+        comprehensiveFeedback = lastSuccessfulFeedback?.feedback || getFallbackMessage({ language: userLanguage });
         
         if (userAttempts > 1) {
           const statsSection = getStatsSection(userLanguage, userAttempts, passedAttempts, bestXP);
@@ -852,7 +852,7 @@ Return your evaluation as a JSON object:
         console.log('==================================');
         
         const aiService = new VertexAIService({
-          systemPrompt: getSystemPromptForLanguage(userLanguage),
+          systemPrompt: getSystemPromptForLanguage({ language: userLanguage }),
           temperature: 0.8,
           model: 'gemini-2.5-flash'
         });
