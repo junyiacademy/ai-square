@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Scenario, DomainType, DifficultyLevel, KSAMapping, TaskCategory, AIModule } from '@/types/pbl';
 import { IProgram, ITask } from '@/types/unified-learning';
 
 

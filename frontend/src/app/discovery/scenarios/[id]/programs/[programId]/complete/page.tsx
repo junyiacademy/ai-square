@@ -138,7 +138,7 @@ export default function DiscoveryCompletePage() {
     } finally {
       setTranslatingFeedback(false);
     }
-  }, [params.programId]);
+  }, [params.programId, translatingFeedback]);
 
   const loadCompletionData = useCallback(async (regenerate = false) => {
     try {
