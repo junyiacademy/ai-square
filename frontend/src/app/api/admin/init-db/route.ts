@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import type { ScenarioType, ScenarioStatus } from '@/lib/repositories/interfaces';
 
 // This endpoint is for staging environment only
 export async function POST(request: NextRequest) {
@@ -37,14 +38,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Create sample scenarios
-    const scenarios = [
-      { id: 'marketing-crisis-management', type: 'pbl', status: 'active', difficultyLevel: 'intermediate', estimatedMinutes: 45 },
-      { id: 'social-media-strategy', type: 'pbl', status: 'active', difficultyLevel: 'beginner', estimatedMinutes: 30 },
-      { id: 'customer-service-automation', type: 'pbl', status: 'active', difficultyLevel: 'intermediate', estimatedMinutes: 40 },
-      { id: 'data-privacy-compliance', type: 'pbl', status: 'active', difficultyLevel: 'advanced', estimatedMinutes: 60 },
-      { id: 'ai-literacy-assessment', type: 'assessment', status: 'active', difficultyLevel: 'intermediate', estimatedMinutes: 30 },
-      { id: 'basic-ai-knowledge', type: 'assessment', status: 'active', difficultyLevel: 'beginner', estimatedMinutes: 20 },
-      { id: 'career-exploration', type: 'discovery', status: 'active', difficultyLevel: 'beginner', estimatedMinutes: 25 }
+    const scenarios: Array<{ id: string; type: ScenarioType; status: ScenarioStatus; difficultyLevel: string; estimatedMinutes: number }> = [
+      { id: 'marketing-crisis-management', type: 'pbl' as ScenarioType, status: 'active' as ScenarioStatus, difficultyLevel: 'intermediate', estimatedMinutes: 45 },
+      { id: 'social-media-strategy', type: 'pbl' as ScenarioType, status: 'active' as ScenarioStatus, difficultyLevel: 'beginner', estimatedMinutes: 30 },
+      { id: 'customer-service-automation', type: 'pbl' as ScenarioType, status: 'active' as ScenarioStatus, difficultyLevel: 'intermediate', estimatedMinutes: 40 },
+      { id: 'data-privacy-compliance', type: 'pbl' as ScenarioType, status: 'active' as ScenarioStatus, difficultyLevel: 'advanced', estimatedMinutes: 60 },
+      { id: 'ai-literacy-assessment', type: 'assessment' as ScenarioType, status: 'active' as ScenarioStatus, difficultyLevel: 'intermediate', estimatedMinutes: 30 },
+      { id: 'basic-ai-knowledge', type: 'assessment' as ScenarioType, status: 'active' as ScenarioStatus, difficultyLevel: 'beginner', estimatedMinutes: 20 },
+      { id: 'career-exploration', type: 'discovery' as ScenarioType, status: 'active' as ScenarioStatus, difficultyLevel: 'beginner', estimatedMinutes: 25 }
     ];
 
     for (const scenario of scenarios) {
