@@ -170,24 +170,24 @@ export class UserDataServiceClient {
 
   // Evaluation system methods (delegated to API)
   
-  async saveEvaluation(type: string, id: string, data: Record<string, unknown>): Promise<void> {
+  async saveEvaluation(_type: string, _id: string, _data: Record<string, unknown>): Promise<void> {
     // This would call a separate API endpoint for evaluations
     console.warn('Evaluation save not implemented in client service');
   }
 
-  async loadEvaluation(type: string, id: string): Promise<Record<string, unknown> | null> {
+  async loadEvaluation(_type: string, _id: string): Promise<Record<string, unknown> | null> {
     // This would call a separate API endpoint for evaluations
     console.warn('Evaluation load not implemented in client service');
     return null;
   }
 
-  async loadEvaluationsByType(type: string): Promise<Record<string, unknown>[]> {
+  async loadEvaluationsByType(_type: string): Promise<Record<string, unknown>[]> {
     // This would call a separate API endpoint for evaluations
     console.warn('Evaluation load by type not implemented in client service');
     return [];
   }
 
-  async deleteEvaluation(type: string, id: string): Promise<void> {
+  async deleteEvaluation(_type: string, _id: string): Promise<void> {
     // This would call a separate API endpoint for evaluations
     console.warn('Evaluation delete not implemented in client service');
   }

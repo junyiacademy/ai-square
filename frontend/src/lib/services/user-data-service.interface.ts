@@ -5,10 +5,6 @@
  */
 
 import type {
-  UserData,
-  AssessmentResults,
-  UserAchievements,
-  AssessmentSession,
   UserDataOperations,
   EvaluationOperations
 } from '@/lib/types/user-data';

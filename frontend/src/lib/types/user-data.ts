@@ -90,15 +90,15 @@ export interface EvaluationData {
   type: string;
   userId: string;
   userEmail?: string;
-  data: any;
+  data: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
   submittedAt?: string;
 }
 
 export interface EvaluationOperations {
-  saveEvaluation: (type: string, id: string, data: any) => Promise<void>;
-  loadEvaluation: (type: string, id: string) => Promise<any | null>;
-  loadEvaluationsByType: (type: string) => Promise<any[]>;
+  saveEvaluation: (type: string, id: string, data: Record<string, unknown>) => Promise<void>;
+  loadEvaluation: (type: string, id: string) => Promise<Record<string, unknown> | null>;
+  loadEvaluationsByType: (type: string) => Promise<Record<string, unknown>[]>;
   deleteEvaluation: (type: string, id: string) => Promise<void>;
 }

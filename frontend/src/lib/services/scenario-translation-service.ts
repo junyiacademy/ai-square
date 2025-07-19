@@ -97,7 +97,7 @@ export class ScenarioTranslationService {
       });
 
       return translationContent;
-    } catch (error) {
+    } catch {
       // Return null for any error (file not found, parse error, etc.)
       return null;
     }

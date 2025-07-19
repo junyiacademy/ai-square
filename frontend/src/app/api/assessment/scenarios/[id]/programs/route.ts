@@ -10,11 +10,15 @@ import type {
   Scenario, 
   Evaluation,
   ProgramStatus
-} from '@/lib/repositories/interfaces';
+} from '@/lib/repositories/interfaces/index';
 
 // Extend Scenario type to include sourceRef and sourceType
-interface ScenarioWithSourceRef extends Scenario {
+interface ScenarioWithSourceRef extends Omit<Scenario, 'sourceRef'> {
   sourceRef?: {
+    type: string;
+    path: string;
+    version?: string;
+    lastModified?: Date;
     metadata?: {
       configPath?: string;
       [key: string]: unknown;

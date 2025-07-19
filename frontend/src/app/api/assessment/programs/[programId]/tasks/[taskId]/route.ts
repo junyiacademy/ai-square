@@ -122,7 +122,7 @@ export async function PATCH(
     }
     
     // Get language from request
-    const language = getLanguageFromHeader(request.headers.get('Accept-Language'));
+    const language = getLanguageFromHeader(request);
     
     // Use unified architecture
     const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');

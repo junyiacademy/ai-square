@@ -316,7 +316,6 @@ class DiscoveryYAMLProcessor implements IYAMLProcessor {
   async transformToScenario(yamlData: unknown, filePath: string): Promise<Omit<IScenario, 'id'>> {
     const parts = filePath.split(path.sep);
     const careerType = parts[parts.length - 2];
-    const fileName = parts[parts.length - 1];
     
     return {
       sourceType: 'discovery',
