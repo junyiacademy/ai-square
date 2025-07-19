@@ -3,7 +3,7 @@
  * 用於自動快取方法的返回值
  */
 
-type CacheKey = string | ((...args: any[]) => string);
+type CacheKey = string | ((...args: unknown[]) => string);
 
 interface CacheOptions {
   ttl?: number;  // seconds
@@ -11,7 +11,7 @@ interface CacheOptions {
 }
 
 interface CacheEntry {
-  value: any;
+  value: unknown;
   expiresAt: number;
 }
 
@@ -24,13 +24,13 @@ const cacheMap = new Map<string, CacheEntry>();
  */
 export function Cacheable(options: CacheOptions = {}) {
   return function (
-    target: any,
+    target: unknown,
     propertyKey: string,
     descriptor: PropertyDescriptor
   ) {
     const originalMethod = descriptor.value;
     
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = async function (this: unknown, ...args: unknown[]) {
       const cacheKey = getCacheKey(options.key, propertyKey, args);
       const cached = cacheMap.get(cacheKey);
       
@@ -64,7 +64,7 @@ export function Cacheable(options: CacheOptions = {}) {
 function getCacheKey(
   keyOption: CacheKey | undefined,
   methodName: string,
-  args: any[]
+  args: unknown[]
 ): string {
   if (!keyOption) {
     // 預設使用方法名稱和參數生成 key

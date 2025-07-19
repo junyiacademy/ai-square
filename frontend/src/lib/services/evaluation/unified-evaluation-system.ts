@@ -9,7 +9,8 @@ import {
   ITask, 
   IProgram, 
   IEvaluationContext,
-  IDimensionScore 
+  IDimensionScore,
+  IInteraction 
 } from '@/types/unified-learning';
 import { BaseAIService } from '@/lib/abstractions/base-ai-service';
 import { v4 as uuidv4 } from 'uuid';

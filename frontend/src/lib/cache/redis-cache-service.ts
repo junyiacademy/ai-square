@@ -19,7 +19,7 @@ interface CacheOptions {
 class RedisCacheService {
   private redis: Redis | null = null;
   private isConnected = false;
-  private fallbackCache = new Map<string, CacheItem<any>>();
+  private fallbackCache = new Map<string, CacheItem<unknown>>();
   private readonly MAX_FALLBACK_SIZE = 1000;
 
   constructor() {

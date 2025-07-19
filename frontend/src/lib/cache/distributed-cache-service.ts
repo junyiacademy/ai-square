@@ -20,9 +20,9 @@ interface CacheItem<T> {
 }
 
 class DistributedCacheService {
-  private localCache = new Map<string, CacheItem<any>>();
+  private localCache = new Map<string, CacheItem<unknown>>();
   private readonly MAX_LOCAL_SIZE = 500;
-  private revalidationPromises = new Map<string, Promise<any>>();
+  private revalidationPromises = new Map<string, Promise<unknown>>();
 
   /**
    * Get value from cache with automatic fallback
@@ -81,7 +81,7 @@ class DistributedCacheService {
     fetcher: () => Promise<T>,
     options: CacheOptions = {}
   ): Promise<T> {
-    const { ttl = 300000, staleWhileRevalidate = 3600000 } = options;
+    const { ttl = 300000 } = options;
 
     try {
       // Check local cache first
@@ -172,7 +172,7 @@ class DistributedCacheService {
    */
   async getStats(): Promise<{
     localCacheSize: number;
-    redisStats: any;
+    redisStats: unknown;
     fallbackCacheSize: number;
     activeRevalidations: number;
   }> {

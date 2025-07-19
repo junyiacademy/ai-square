@@ -78,7 +78,7 @@ async function testStagingDeployment() {
       passed++;
     } catch (error) {
       console.error(`❌ Failed: ${name}`);
-      console.error(`   Error: ${error.message}`);
+      console.error(`   Error: ${error instanceof Error ? error.message : String(error)}`);
       failed++;
     }
   }

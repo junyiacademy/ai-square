@@ -35,7 +35,7 @@ class LocalStorageBackend implements StorageBackend {
   private readonly STORAGE_KEY = 'discoveryData';
   
   // Safe JSON serialization to handle circular references
-  private safeStringify(obj: any): string {
+  private safeStringify(obj: unknown): string {
     const seen = new WeakSet();
     return JSON.stringify(obj, (key, value) => {
       if (typeof value === 'object' && value !== null) {
@@ -97,15 +97,15 @@ class LocalStorageBackend implements StorageBackend {
 
 // Placeholder for future GCS implementation
 class GCSBackend implements StorageBackend {
-  async save(userId: string, data: UserData): Promise<void> {
+  async save(_userId: string, _data: UserData): Promise<void> {
     throw new Error('GCS backend not implemented - use UserDataServiceV2');
   }
   
-  async load(userId: string): Promise<UserData | null> {
+  async load(_userId: string): Promise<UserData | null> {
     throw new Error('GCS backend not implemented - use UserDataServiceV2');
   }
   
-  async exists(userId: string): Promise<boolean> {
+  async exists(_userId: string): Promise<boolean> {
     throw new Error('GCS backend not implemented - use UserDataServiceV2');
   }
 }
