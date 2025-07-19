@@ -45,7 +45,12 @@
     "db:test": "tsx src/scripts/test-local-postgres.ts",
     "db:up": "docker-compose -f docker-compose.postgres.yml up -d",
     "db:down": "docker-compose -f docker-compose.postgres.yml down",
-    "db:logs": "docker-compose -f docker-compose.postgres.yml logs -f"
+    "db:logs": "docker-compose -f docker-compose.postgres.yml logs -f",
+    "staging:deploy": "bash scripts/deploy-staging.sh",
+    "staging:migrate": "bash scripts/migrate-staging-db.sh",
+    "staging:cleanup": "bash scripts/cleanup-staging.sh",
+    "staging:logs": "gcloud logs tail --project=${GOOGLE_CLOUD_PROJECT}",
+    "staging:connect": "gcloud sql connect ai-square-db-staging --user=postgres --project=${GOOGLE_CLOUD_PROJECT}"
   },
   "dependencies": {
     "@google-cloud/storage": "^7.16.0",
