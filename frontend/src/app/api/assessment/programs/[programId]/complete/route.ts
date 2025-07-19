@@ -175,7 +175,7 @@ export async function POST(
     });
     
     const totalQuestions = allQuestions.length;
-    const correctAnswers = allAnswers.filter(a => (a.content as any).isCorrect === true).length;
+    const correctAnswers = allAnswers.filter(a => (a.context as any).isCorrect === true).length;
     const overallScore = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
     
     // Calculate domain scores based on actual questions and answers

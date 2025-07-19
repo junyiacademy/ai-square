@@ -28,14 +28,15 @@ export async function POST(
     
     const taskRepo = repositoryFactory.getTaskRepository();
     
-    // Get task
-    const task = await taskRepo.findById(taskId);
-    if (!task) {
+    // Get task with interactions
+    const taskWithInteractions = await taskRepo.getTaskWithInteractions(taskId);
+    if (!taskWithInteractions) {
       return NextResponse.json(
         { error: 'Task not found' },
         { status: 404 }
       );
     }
+    const task = taskWithInteractions;
     
     // Get questions from task to check correct answer
     const questions: AssessmentQuestion[] = hasQuestions(task.context?.context) 

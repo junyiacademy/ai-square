@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { 
-  getProgramRepository, 
-  getTaskRepository 
-} from '@/lib/implementations/gcs-v2';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
 
 export async function GET(

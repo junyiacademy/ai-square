@@ -117,6 +117,8 @@ export interface Program {
   lastActivityAt: Date;
   timeSpentSeconds: number;
   metadata?: any;
+  taskIds: string[];
+  startedAt?: Date;
 }
 
 export interface Task {
@@ -150,6 +152,7 @@ export interface Evaluation {
   timeTakenSeconds: number;
   createdAt: Date;
   metadata?: any;
+  targetId?: string;
 }
 
 export interface Scenario {
@@ -207,6 +210,8 @@ export interface UpdateProgramDto {
   totalScore?: number;
   ksaScores?: any;
   endTime?: Date;
+  metadata?: any;
+  taskIds?: string[];
 }
 
 export interface CreateTaskDto {
@@ -224,6 +229,7 @@ export interface UpdateTaskDto {
   timeSpentSeconds?: number;
   attemptCount?: number;
   completedAt?: Date;
+  metadata?: any;
 }
 
 export interface CreateEvaluationDto {
@@ -237,6 +243,9 @@ export interface CreateEvaluationDto {
   aiAnalysis?: any;
   ksaScores?: any;
   timeTakenSeconds: number;
+  metadata?: any;
+  targetType?: string;
+  targetId?: string;
 }
 
 export interface CreateScenarioDto {
