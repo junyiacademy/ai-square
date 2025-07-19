@@ -1,8 +1,8 @@
-# 數據存儲架構和遷移指南
+# 數據存儲架構指南
 
 ## 概述
 
-AI Square 現在使用統一的數據存儲服務，目前基於 localStorage，未來可以無縫遷移到 Google Cloud Storage (GCS)。
+AI Square 使用統一的數據存儲架構，將用戶資料存儲在 PostgreSQL 資料庫，靜態檔案（如圖片、文件）存儲在 Google Cloud Storage。
 
 ## 架構設計
 
@@ -10,7 +10,7 @@ AI Square 現在使用統一的數據存儲服務，目前基於 localStorage，
 
 - **位置**: `/src/lib/services/user-data-service.ts`
 - **目的**: 提供統一的 API 來管理所有用戶數據
-- **支持後端**: localStorage (當前) 和 GCS (未來)
+- **後端**: PostgreSQL (用戶資料) + GCS (靜態檔案)
 
 ### 數據結構
 
@@ -72,41 +72,36 @@ await userDataService.togglePathFavorite(pathId);
 await userDataService.deletePath(pathId);
 ```
 
-## 遷移到 GCS
+## 資料存儲策略
 
-### 準備工作
+### PostgreSQL (動態資料)
+- 用戶資料 (users table)
+- 學習進度 (programs, tasks tables)
+- 評估結果 (evaluations table)
+- 成就記錄 (achievements, user_achievements tables)
 
-1. **實作 GCS 後端**:
-   - 完善 `GCSBackend` 類別
-   - 實作 Google Cloud Storage API 集成
-   - 處理認證和權限
+### Google Cloud Storage (靜態檔案)
+- 用戶頭像、個人檔案圖片
+- 學習材料文件 (PDF, 影片等)
+- 匯出的報告檔案
+- 公開的靜態資源
 
-2. **數據遷移工具**:
-   ```typescript
-   import { migrateToGCS } from '@/lib/services/user-data-service';
-   
-   // 執行遷移
-   await migrateToGCS(userId);
-   ```
+### 使用範例
 
-### 遷移步驟
+```typescript
+// 儲存用戶資料到 PostgreSQL
+await userRepository.update(userId, userData);
 
-1. **開發環境測試**:
-   ```typescript
-   // 切換到 GCS (測試)
-   const gcsService = new UserDataService(userId, true);
-   ```
+// 上傳圖片到 GCS
+const imageUrl = await storageService.uploadFile(
+  file,
+  `users/${userId}/avatar.jpg`
+);
 
-2. **生產環境部署**:
-   - 部署 GCS 後端實作
-   - 執行批量數據遷移
-   - 更新服務配置使用 GCS
+// 更新用戶頭像 URL
+await userRepository.update(userId, { avatarUrl: imageUrl });
+```
 
-3. **回滾機制**:
-   ```typescript
-   // 切換回 localStorage (如果需要)
-   userDataService.switchToLocalStorage();
-   ```
 
 ## 數據版本控制
 

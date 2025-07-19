@@ -15,9 +15,9 @@ frontend/src/lib/
 │   │   │   ├── storage.interface.ts
 │   │   │   └── index.ts
 │   │   ├── providers/
-│   │   │   ├── local-storage.provider.ts
-│   │   │   ├── gcs-storage.provider.ts
-│   │   │   ├── database-storage.provider.ts
+│   │   │   ├── local-storage.provider.ts    # 瀏覽器本地儲存
+│   │   │   ├── gcs-storage.provider.ts      # GCS 靜態檔案儲存
+│   │   │   ├── database-storage.provider.ts  # PostgreSQL 資料儲存
 │   │   │   └── index.ts
 │   │   ├── decorators/
 │   │   │   ├── cache.decorator.ts

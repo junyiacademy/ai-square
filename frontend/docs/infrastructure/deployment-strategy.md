@@ -1,11 +1,11 @@
-# AI Square 部署策略評估
+# AI Square 部署策略
 
-## 📌 當前狀況
+## 📌 架構概覽
 
-- **Current Branch**: `feat/unified-learning-architecture`
-- **Target Branch**: `main` (production)
-- **Major Changes**: 從 GCS 遷移到 PostgreSQL + Cloud SQL
-- **Risk Level**: High (資料儲存層完全重構)
+- **Database**: PostgreSQL (Cloud SQL) - 用戶資料、學習記錄
+- **Static Storage**: Google Cloud Storage - 圖片、文件、媒體檔案
+- **Caching**: Redis - 分散式快取層
+- **Deployment**: Google Cloud Run - 容器化部署
 
 ## 🚀 部署策略選項
 
