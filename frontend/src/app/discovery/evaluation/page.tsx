@@ -17,7 +17,7 @@ const InterestAssessment = dynamic(
 );
 
 // Import types only
-import type { AssessmentResults, AssessmentSession } from '@/lib/types/user-data';
+import type { AssessmentResults } from '@/lib/types/user-data';
 import DiscoveryHeader from '@/components/discovery/DiscoveryHeader';
 
 export default function EvaluationPage() {
@@ -26,8 +26,6 @@ export default function EvaluationPage() {
   const [assessmentResults, setAssessmentResults] = useState<AssessmentResults | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [achievementCount, setAchievementCount] = useState(0);
-  const [assessmentAnswers, setAssessmentAnswers] = useState<Record<string, string[]>>({});
-  const [programCount, setProgramCount] = useState(0);
 
   // Load existing assessment results
   useEffect(() => {

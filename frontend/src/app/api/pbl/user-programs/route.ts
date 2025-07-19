@@ -4,7 +4,6 @@ import { cachedGET, getPaginationParams, createPaginatedResponse } from '@/lib/a
 
 export async function GET(request: NextRequest) {
   // Get user info from cookie
-  let userId: string | undefined;
   let userEmail: string | undefined;
   
   try {
@@ -69,7 +68,7 @@ export async function GET(request: NextRequest) {
       try {
         const scenarioContent = await contentRepo.getScenarioContent(program.scenarioId, user.preferredLanguage);
         scenarioTitle = scenarioContent.title[user.preferredLanguage] || scenarioContent.title['en'] || program.scenarioId;
-      } catch (error) {
+      } catch {
         // Fallback to scenarioId if content not found
         console.warn(`Scenario content not found for ${program.scenarioId}`);
       }

@@ -56,7 +56,7 @@ export default function ProgramCompletePage() {
     
     if (completionData.qualitativeFeedback && typeof completionData.qualitativeFeedback === 'object') {
       // Check if it's multi-language format (has language keys but no direct overallAssessment)
-      const feedbackObj = completionData.qualitativeFeedback as any;
+      const feedbackObj = completionData.qualitativeFeedback as Record<string, unknown>;
       const hasLanguageKeys = Object.keys(feedbackObj).some(key => 
         ['en', 'zhTW', 'ja', 'ko', 'es', 'fr', 'de', 'ru', 'it'].includes(key)
       );
@@ -298,7 +298,7 @@ export default function ProgramCompletePage() {
           let feedback: QualitativeFeedback | undefined;
           
           if (completionData?.qualitativeFeedback && typeof completionData.qualitativeFeedback === 'object') {
-            const feedbackObj = completionData.qualitativeFeedback as any;
+            const feedbackObj = completionData.qualitativeFeedback as Record<string, unknown>;
             
             // Check if it's multi-language format (has language keys)
             const hasLanguageKeys = Object.keys(feedbackObj).some(key => 

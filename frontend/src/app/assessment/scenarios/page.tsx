@@ -41,14 +41,7 @@ export default function AssessmentScenariosPage() {
   const { t, i18n } = useTranslation(['assessment', 'common']);
   const loadingRef = useRef(false);
 
-  useEffect(() => {
-    // Prevent multiple simultaneous loads
-    if (!loadingRef.current) {
-      loadAssessmentScenarios();
-    }
-  }, [i18n.language]);
-
-  const loadAssessmentScenarios = async () => {
+  const loadAssessmentScenarios = useCallback(async () => {
     const cacheKey = i18n.language;
     const now = Date.now();
     
@@ -86,7 +79,15 @@ export default function AssessmentScenariosPage() {
       setLoading(false);
       loadingRef.current = false;
     }
-  };
+  }, [i18n.language]);
+
+  useEffect(() => {
+    // Prevent multiple simultaneous loads
+    if (!loadingRef.current) {
+      loadAssessmentScenarios();
+    }
+  }, [loadAssessmentScenarios]);
+
 
   if (loading) {
     return (

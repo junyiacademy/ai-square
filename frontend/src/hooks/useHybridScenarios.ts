@@ -10,8 +10,8 @@ interface Scenario {
   id: string;
   title: string;
   description: string;
-  config: any;
-  userProgress?: any;
+  config: Record<string, unknown>;
+  userProgress?: Record<string, unknown>;
 }
 
 interface CacheEntry {
@@ -55,7 +55,7 @@ export function useHybridScenarios() {
         }, 1000);
       }
     });
-  }, []); // 暫時空的依賴，之後會設定 loadScenarios
+  }, [loadScenarios]); // 暫時空的依賴，之後會設定 loadScenarios
 
   const loadScenarios = useCallback(async (language: string, isPreload = false) => {
     // 檢查快取

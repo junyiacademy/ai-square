@@ -3,10 +3,10 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { FileQuestion, Clock, Target, ChevronLeft, Play, RotateCcw } from 'lucide-react';
+import { FileQuestion, ChevronLeft, Play, RotateCcw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 // Remove date-fns import - will use custom formatting
@@ -51,7 +51,7 @@ export default function AssessmentScenarioDetailPage({
   const [startingProgram, setStartingProgram] = useState(false);
   const [scenarioId, setScenarioId] = useState<string>('');
   const router = useRouter();
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const { isLoggedIn, user } = useAuth();
 
   useEffect(() => {
@@ -60,7 +60,7 @@ export default function AssessmentScenarioDetailPage({
       setScenarioId(p.id);
       loadScenarioAndPrograms(p.id);
     });
-  }, [params, i18n.language]);
+  }, [params, i18n.language]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadScenarioAndPrograms = async (id: string) => {
     try {
@@ -243,7 +243,7 @@ export default function AssessmentScenarioDetailPage({
         {programs.length === 0 ? (
           <Card className="p-8 text-center">
             <FileQuestion className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-            <p className="text-gray-600 mb-4">You haven't taken this assessment yet.</p>
+            <p className="text-gray-600 mb-4">You haven&apos;t taken this assessment yet.</p>
             <Button onClick={startNewProgram} disabled={startingProgram}>
               Take Your First Assessment
             </Button>

@@ -58,7 +58,7 @@ export default function SelfAssessmentForm({
     existingAssessment?.improvements || ''
   );
 
-  const handleScoreChange = (criteriaId: string, field: keyof CriteriaScore, value: any) => {
+  const handleScoreChange = (criteriaId: string, field: keyof CriteriaScore, value: string | number) => {
     setScores(prev => prev.map(score => 
       score.criteriaId === criteriaId 
         ? { ...score, [field]: value }

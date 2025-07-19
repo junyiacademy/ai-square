@@ -25,11 +25,7 @@ interface DiscoveryHeaderProps {
   achievementCount?: number;
 }
 
-export default function DiscoveryHeader({ 
-  hasAssessmentResults = false,
-  workspaceCount = 0,
-  achievementCount = 0
-}: DiscoveryHeaderProps) {
+export default function DiscoveryHeader({}: DiscoveryHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
   const { t } = useTranslation(['discovery', 'navigation']);

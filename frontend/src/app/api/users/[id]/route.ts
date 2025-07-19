@@ -46,7 +46,7 @@ export async function PATCH(
     
     // Validate input
     const allowedFields = ['name', 'preferredLanguage', 'learningPreferences', 'onboardingCompleted'];
-    const updateData: any = {};
+    const updateData: Record<string, unknown> = {};
     
     for (const field of allowedFields) {
       if (body[field] !== undefined) {

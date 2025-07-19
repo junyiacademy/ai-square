@@ -77,7 +77,7 @@ export default function MentorFeedbackForm({
     existingFeedback?.visibility || 'student_only'
   );
 
-  const handleScoreChange = (criteriaId: string, field: keyof CriteriaScore, value: any) => {
+  const handleScoreChange = (criteriaId: string, field: keyof CriteriaScore, value: string | number) => {
     setScores(prev => prev.map(score => 
       score.criteriaId === criteriaId 
         ? { ...score, [field]: value }

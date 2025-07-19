@@ -4,11 +4,9 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   SparklesIcon,
-  PencilIcon,
   ChatBubbleLeftRightIcon,
   DocumentTextIcon,
   CheckCircleIcon,
-  ArrowRightIcon,
   LightBulbIcon
 } from '@heroicons/react/24/outline';
 
@@ -32,7 +30,7 @@ interface WorkflowStep {
 
 export default function TaskWorkflow({ taskId, taskTitle, onComplete, onProgressUpdate, previousAnswer, isEditMode, isViewOnlyMode }: TaskWorkflowProps) {
   const [currentStep, setCurrentStep] = useState(isEditMode ? 2 : isViewOnlyMode ? 0 : 0); // Start at appropriate step
-  const [stepData, setStepData] = useState<Record<string, any>>({});
+  const [stepData, setStepData] = useState<Record<string, unknown>>({});
   
   // Parse previous answer if it's a structured object
   const parsedPreviousAnswer = React.useMemo(() => {
@@ -47,7 +45,7 @@ export default function TaskWorkflow({ taskId, taskTitle, onComplete, onProgress
       if (parsed && parsed.steps) {
         return parsed;
       }
-    } catch (e) {
+    } catch {
       // Not JSON, treat as simple string
     }
     
@@ -159,7 +157,7 @@ export default function TaskWorkflow({ taskId, taskTitle, onComplete, onProgress
 
   React.useEffect(() => {
     onProgressUpdate(progress);
-  }, [currentStep, steps.length, onProgressUpdate]); // Use currentStep instead of progress
+  }, [currentStep, steps.length, onProgressUpdate, progress]); // Use currentStep instead of progress
 
   const handleNextStep = () => {
     if (currentStep < steps.length - 1) {

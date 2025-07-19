@@ -302,13 +302,16 @@ export default function AssessmentCompletePage({
 
   // Convert interactions to UserAnswer format
   const userAnswers: UserAnswer[] = taskData.interactions
-    .filter((i: any) => i.type === 'system_event' && i.content?.eventType === 'assessment_answer')
-    .map((interaction: any) => ({
-      questionId: interaction.content.questionId,
-      selectedAnswer: interaction.content.selectedAnswer as 'a' | 'b' | 'c' | 'd',
-      timeSpent: interaction.content.timeSpent || 0,
-      isCorrect: interaction.content.isCorrect ?? false
-    }));
+    .filter((i: Record<string, unknown>) => i.type === 'system_event' && (i.content as Record<string, unknown>)?.eventType === 'assessment_answer')
+    .map((interaction: Record<string, unknown>) => {
+      const content = interaction.content as Record<string, unknown>;
+      return {
+        questionId: content.questionId,
+        selectedAnswer: content.selectedAnswer as 'a' | 'b' | 'c' | 'd',
+        timeSpent: (content.timeSpent as number) || 0,
+        isCorrect: (content.isCorrect as boolean) ?? false
+      };
+    });
   
   // Debug logging
   console.log('Assessment Complete - User Answers:', {

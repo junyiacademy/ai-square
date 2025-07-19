@@ -5,7 +5,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { v4 as uuidv4 } from 'uuid';
 
 export async function GET(request: NextRequest) {
   try {
@@ -92,7 +91,7 @@ export async function POST(request: NextRequest) {
 
     // Create tasks for the program
     if (scenarioContent.tasks && scenarioContent.tasks.length > 0) {
-      const tasksData = scenarioContent.tasks.map((task: any, index: number) => ({
+      const tasksData = scenarioContent.tasks.map((task: Record<string, unknown>, index: number) => ({
         taskIndex: index,
         type: task.type || 'question',
         context: task,

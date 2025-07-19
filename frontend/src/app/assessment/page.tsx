@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '@/hooks/useAuth';
 import AssessmentQuiz from '../../components/assessment/AssessmentQuiz';
 import AssessmentResults from '../../components/assessment/AssessmentResults';
 import { AssessmentData, UserAnswer, AssessmentResult } from '../../types/assessment';

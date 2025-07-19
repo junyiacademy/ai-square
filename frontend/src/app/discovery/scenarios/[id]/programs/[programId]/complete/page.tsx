@@ -1,12 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { CheckCircleIcon, StarIcon, TrophyIcon, LightBulbIcon, ChartBarIcon } from '@heroicons/react/24/solid';
 import { ClockIcon, BeakerIcon, ChatBubbleBottomCenterTextIcon, DocumentTextIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import DiscoveryPageLayout from '@/components/discovery/DiscoveryPageLayout';
 
@@ -69,7 +68,6 @@ interface DiscoveryCompletionData {
 
 export default function DiscoveryCompletePage() {
   const params = useParams();
-  const router = useRouter();
   const { t, i18n } = useTranslation(['common', 'discovery', 'assessment']);
   
   const [completionData, setCompletionData] = useState<DiscoveryCompletionData | null>(null);
@@ -80,7 +78,7 @@ export default function DiscoveryCompletePage() {
 
   useEffect(() => {
     loadCompletionData();
-  }, [params.programId]);
+  }, [params.programId, loadCompletionData]);
 
   // Handle language change for qualitative feedback
   useEffect(() => {
@@ -104,7 +102,7 @@ export default function DiscoveryCompletePage() {
     };
     
     handleLanguageChange();
-  }, [i18n.language]); // Only depend on language change
+  }, [i18n.language, completionData, generateTranslation]); // Only depend on language change
 
   const generateTranslation = async (targetLang: string) => {
     // Prevent multiple concurrent translations
@@ -231,16 +229,6 @@ export default function DiscoveryCompletePage() {
     }
   };
 
-  const formatTime = (seconds: number): string => {
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes % 60;
-    
-    if (hours > 0) {
-      return t('discovery:complete.hoursMinutes', { hours, minutes: remainingMinutes });
-    }
-    return t('discovery:complete.minutes', { minutes });
-  };
 
   const getScoreColor = (score: number): string => {
     if (score >= 80) return 'text-green-600';

@@ -12,10 +12,10 @@ interface MultilingualScenario {
     [language: string]: {
       title: string;
       description: string;
-      content?: any;
+      content?: Record<string, unknown>;
     };
   };
-  userProgress?: any;
+  userProgress?: Record<string, unknown>;
 }
 
 export function useMultilingualScenarios() {
@@ -36,7 +36,7 @@ export function useMultilingualScenarios() {
       } else {
         setError(data.error || 'Failed to load scenarios');
       }
-    } catch (err) {
+    } catch {
       setError('Network error');
     } finally {
       setLoading(false);
@@ -45,7 +45,7 @@ export function useMultilingualScenarios() {
 
   useEffect(() => {
     loadScenarios();
-  }, []); // 只載入一次
+  }, [loadScenarios]); // 只載入一次
 
   // 獲取當前語言的 scenarios
   const getCurrentLanguageScenarios = useCallback(() => {

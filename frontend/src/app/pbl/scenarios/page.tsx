@@ -7,7 +7,7 @@ import { PBLScenariosListSkeleton } from '@/components/pbl/loading-skeletons';
 import { IScenario } from '@/types/unified-learning';
 
 // Flexible scenario type for API responses that may not fully match unified architecture
-type FlexibleScenario = IScenario | any;
+type FlexibleScenario = IScenario | Record<string, unknown>;
 
 export default function PBLScenariosPage() {
   const { t, i18n } = useTranslation(['pbl', 'assessment']);
@@ -68,7 +68,7 @@ export default function PBLScenariosPage() {
   }, [i18n.language]);
 
   // Extract domains from scenario data (handle both unified architecture and direct API response)
-  const getScenarioDomains = (scenario: any): string[] => {
+  const getScenarioDomains = (scenario: FlexibleScenario): string[] => {
     // Try unified architecture format first
     if (scenario.sourceRef?.metadata?.domain) {
       const domain = scenario.sourceRef.metadata.domain;
@@ -90,7 +90,7 @@ export default function PBLScenariosPage() {
   };
 
   // Get difficulty from scenario data (handle both formats)
-  const getScenarioDifficulty = (scenario: any): string => {
+  const getScenarioDifficulty = (scenario: FlexibleScenario): string => {
     // Try unified architecture format first
     if (scenario.sourceRef?.metadata?.difficulty) {
       return scenario.sourceRef.metadata.difficulty;
@@ -100,14 +100,14 @@ export default function PBLScenariosPage() {
   };
 
   // Calculate estimated duration (handle both formats)
-  const getEstimatedDuration = (scenario: any): number => {
+  const getEstimatedDuration = (scenario: FlexibleScenario): number => {
     // Try direct API response format first
     if (scenario.estimatedDuration && typeof scenario.estimatedDuration === 'number') {
       return scenario.estimatedDuration;
     }
     // Fall back to task templates calculation
     if (scenario.taskTemplates && scenario.taskTemplates.length > 0) {
-      return scenario.taskTemplates.reduce((total: number, task: any) => total + (task.estimatedTime || 30), 0);
+      return scenario.taskTemplates.reduce((total: number, task: Record<string, unknown>) => total + ((task.estimatedTime as number) || 30), 0);
     }
     return 60; // Default to 60 minutes
   };

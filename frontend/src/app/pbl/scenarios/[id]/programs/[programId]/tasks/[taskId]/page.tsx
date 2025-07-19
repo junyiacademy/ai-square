@@ -9,8 +9,7 @@ import {
   Program, 
   Scenario, 
   Task, 
-  TaskInteraction,
-  TaskProgress 
+ 
 } from '@/types/pbl';
 import { TaskEvaluation } from '@/types/pbl-completion';
 import { formatDateWithLocale } from '@/utils/locale';
@@ -225,7 +224,7 @@ export default function ProgramLearningPage() {
           totalTasks: scenarioData.data.tasks.length,
           currentTaskId: taskId || scenarioData.data.tasks[0]?.id,
           language: i18n.language,
-          taskIds: scenarioData.data.tasks.map((t: any) => t.id) // Map task IDs from scenario
+          taskIds: scenarioData.data.tasks.map((t: Record<string, unknown>) => t.id) // Map task IDs from scenario
         };
         setProgram(mockProgram);
       }
@@ -240,7 +239,7 @@ export default function ProgramLearningPage() {
             if (evaluationsData.success && evaluationsData.data) {
               // Build a map of task evaluations
               const evaluations: Record<string, TaskEvaluation> = {};
-              evaluationsData.data.forEach((evaluation: any) => {
+              evaluationsData.data.forEach((evaluation: Record<string, unknown>) => {
                 if (evaluation.targetType === 'task' && evaluation.targetId) {
                   evaluations[evaluation.targetId] = evaluation;
                 }
@@ -326,7 +325,7 @@ export default function ProgramLearningPage() {
         console.log('Task history response:', data);
         
         if (data.data?.interactions) {
-          const loadedConversations = data.data.interactions.map((interaction: any): ConversationEntry => ({
+          const loadedConversations = data.data.interactions.map((interaction: Record<string, unknown>): ConversationEntry => ({
             id: interaction.id || `${interaction.timestamp}_${interaction.type}`,
             type: interaction.type,
             content: interaction.content,
@@ -718,7 +717,7 @@ export default function ProgramLearningPage() {
     );
   }
 
-  const taskIndex = (currentTask as any)?.scenarioTaskIndex ?? scenario.tasks.findIndex(t => t.id === currentTask.id);
+  const taskIndex = (currentTask as Record<string, unknown>)?.scenarioTaskIndex as number ?? scenario.tasks.findIndex(t => t.id === currentTask.id);
   // const progress = ((taskIndex + 1) / scenario.tasks.length) * 100;
 
   return (

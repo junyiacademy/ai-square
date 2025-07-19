@@ -9,7 +9,6 @@ import { Header } from '@/components/layout/Header';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { formatDateWithLocale } from '@/utils/locale';
-import { useUserData } from '@/hooks/useUserData';
 
 interface ChatSession {
   id: string;
@@ -49,14 +48,6 @@ interface PBLHistory {
   timeSpent: number;
 }
 
-interface ScenarioFromAPI {
-  id: string;
-  domains?: string[];
-  targetDomain?: string[];
-  difficulty: string;
-  title: string;
-  estimatedDuration?: number;
-}
 
 interface RecommendedScenario {
   id: string;
@@ -69,7 +60,6 @@ interface RecommendedScenario {
 
 function ChatPageContent() {
   const searchParams = useSearchParams();
-  const { userData } = useUserData();
   const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false);
   const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false);
   const [message, setMessage] = useState('');
@@ -81,9 +71,9 @@ function ChatPageContent() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<{ email: string; id: string; role: string } | null>(null);
   const [isTyping, setIsTyping] = useState(false);
-  const [assessmentResult, setAssessmentResult] = useState<AssessmentResult | null>(null);
+  const [assessmentResult] = useState<AssessmentResult | null>(null);
   const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
-  const [recommendedScenarios, setRecommendedScenarios] = useState<RecommendedScenario[]>([]);
+  const [recommendedScenarios] = useState<RecommendedScenario[]>([]);
   const [pblHistory, setPblHistory] = useState<PBLHistory[]>([]);
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
@@ -258,89 +248,6 @@ function ChatPageContent() {
     return streak;
   };
 
-  const generateRecommendations = async (result: AssessmentResult) => {
-    try {
-      // Fetch actual scenarios from API
-      const response = await fetch('/api/pbl/scenarios?lang=en');
-      const data = await response.json();
-      
-      if (!data.success || !data.data.scenarios) {
-        console.error('Failed to fetch scenarios');
-        return;
-      }
-      
-      const scenarios = data.data.scenarios;
-      const recommendations: RecommendedScenario[] = [];
-      const addedScenarioIds = new Set<string>();
-      
-      // Get completed scenario IDs
-      const completedIds = new Set(pblHistory.map(h => h.scenarioId));
-      
-      // Find weak domains (score < 60)
-      const weakDomains = Object.entries(result.domainScores)
-        .filter(([, score]) => score < 60)
-        .map(([domain]) => domain);
-      
-      // For each weak domain, find appropriate scenarios
-      weakDomains.forEach(domain => {
-        const domainKey = domain.replace('_', ' ');
-        
-        // Filter scenarios for this domain
-        const domainScenarios = (scenarios as ScenarioFromAPI[]).filter((s) => 
-          !completedIds.has(s.id) && // Exclude completed scenarios
-          !addedScenarioIds.has(s.id) && // Avoid duplicates
-          (s.domains?.includes(domain) || s.domains?.includes(domainKey) ||
-          s.targetDomain?.includes(domain) || s.targetDomain?.includes(domainKey))
-        );
-        
-        // Prefer beginner/intermediate scenarios for weak domains
-        const appropriateScenarios = domainScenarios
-          .filter((s) => s.difficulty === 'beginner' || s.difficulty === 'intermediate')
-          .slice(0, 1);
-        
-        appropriateScenarios.forEach((scenario) => {
-          addedScenarioIds.add(scenario.id);
-          recommendations.push({
-            id: scenario.id,
-            title: scenario.title,
-            difficulty: scenario.difficulty,
-            domain: domain.replace(/_/g, ' '),
-            reason: `Improve your ${domain.replace(/_/g, ' ').toLowerCase()} skills (currently at ${result.domainScores[domain]}%)`,
-            estimatedTime: scenario.estimatedDuration || 30
-          });
-        });
-      });
-      
-      // If user is doing well, recommend advanced scenarios
-      if (recommendations.length === 0) {
-        const advancedScenarios = (scenarios as ScenarioFromAPI[])
-          .filter((s) => 
-            !completedIds.has(s.id) && // Exclude completed
-            !addedScenarioIds.has(s.id) && // Avoid duplicates
-            s.difficulty === 'advanced'
-          )
-          .slice(0, 2);
-        
-        advancedScenarios.forEach((scenario) => {
-          if (!addedScenarioIds.has(scenario.id)) {
-            addedScenarioIds.add(scenario.id);
-            recommendations.push({
-              id: scenario.id,
-              title: scenario.title,
-              difficulty: scenario.difficulty,
-              domain: scenario.domains?.[0] || 'Mixed',
-              reason: 'Challenge yourself with advanced concepts',
-              estimatedTime: scenario.estimatedDuration || 60
-            });
-          }
-        });
-      }
-      
-      setRecommendedScenarios(recommendations.slice(0, 3));
-    } catch (error) {
-      console.error('Failed to generate recommendations:', error);
-    }
-  };
 
   const loadChatSession = async (sessionId: string) => {
     if (!currentUser) return;

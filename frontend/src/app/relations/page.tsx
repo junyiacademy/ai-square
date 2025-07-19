@@ -181,9 +181,9 @@ export default function RelationsClient() {
       if (data.ksa) {
         // Process knowledge items
         if (data.ksa.knowledge && data.ksa.knowledge.themes) {
-          Object.values(data.ksa.knowledge.themes).forEach((theme: any) => {
+          Object.values(data.ksa.knowledge.themes).forEach((theme: Record<string, unknown>) => {
             if (theme.codes && typeof theme.codes === 'object') {
-              Object.entries(theme.codes).forEach(([code, item]: [string, any]) => {
+              Object.entries(theme.codes).forEach(([code, item]: [string, Record<string, unknown>]) => {
                 kMap[code] = {
                   summary: item.summary,
                   theme: theme.name,
@@ -196,9 +196,9 @@ export default function RelationsClient() {
         
         // Process skills items
         if (data.ksa.skills && data.ksa.skills.themes) {
-          Object.values(data.ksa.skills.themes).forEach((theme: any) => {
+          Object.values(data.ksa.skills.themes).forEach((theme: Record<string, unknown>) => {
             if (theme.codes && typeof theme.codes === 'object') {
-              Object.entries(theme.codes).forEach(([code, item]: [string, any]) => {
+              Object.entries(theme.codes).forEach(([code, item]: [string, Record<string, unknown>]) => {
                 sMap[code] = {
                   summary: item.summary,
                   theme: theme.name,
@@ -211,9 +211,9 @@ export default function RelationsClient() {
         
         // Process attitudes items
         if (data.ksa.attitudes && data.ksa.attitudes.themes) {
-          Object.values(data.ksa.attitudes.themes).forEach((theme: any) => {
+          Object.values(data.ksa.attitudes.themes).forEach((theme: Record<string, unknown>) => {
             if (theme.codes && typeof theme.codes === 'object') {
-              Object.entries(theme.codes).forEach(([code, item]: [string, any]) => {
+              Object.entries(theme.codes).forEach(([code, item]: [string, Record<string, unknown>]) => {
                 aMap[code] = {
                   summary: item.summary,
                   theme: theme.name,

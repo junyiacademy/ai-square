@@ -1,42 +1,9 @@
 import { NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
-import * as yaml from 'js-yaml';
 import { cacheService } from '@/lib/cache/cache-service';
 import { pblScenarioService } from '@/lib/services/pbl-scenario-service';
 import { HybridTranslationService } from '@/lib/services/hybrid-translation-service';
 
 // Types for YAML data
-interface ScenarioInfo {
-  id: string;
-  title: string;
-  title_zhTW?: string;
-  title_ja?: string;
-  title_ko?: string;
-  title_es?: string;
-  title_fr?: string;
-  title_de?: string;
-  title_ru?: string;
-  title_it?: string;
-  description: string;
-  description_zhTW?: string;
-  description_ja?: string;
-  description_ko?: string;
-  description_es?: string;
-  description_fr?: string;
-  description_de?: string;
-  description_ru?: string;
-  description_it?: string;
-  difficulty: string;
-  estimated_duration: number;
-  target_domains: string[];
-  [key: string]: unknown;
-}
-
-interface ScenarioYAML {
-  scenario_info: ScenarioInfo;
-}
-
 interface LocalizedField {
   [key: string]: string | undefined;
 }

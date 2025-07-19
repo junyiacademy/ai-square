@@ -55,8 +55,7 @@ interface ProgramData {
 export default function ProgramDetailPage() {
   const router = useRouter();
   const params = useParams();
-  const { t } = useTranslation();
-  const { user, isLoggedIn, isLoading: authLoading } = useAuth();
+  const { isLoggedIn, isLoading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const [programData, setProgramData] = useState<ProgramData | null>(null);
 
@@ -77,7 +76,7 @@ export default function ProgramDetailPage() {
     if (scenarioId && programId) {
       loadProgramData();
     }
-  }, [scenarioId, programId, isLoggedIn, authLoading]);
+  }, [scenarioId, programId, isLoggedIn, authLoading, router, loadProgramData]);
 
   const loadProgramData = async () => {
     try {
@@ -143,7 +142,7 @@ export default function ProgramDetailPage() {
     : 0;
 
   // Career info mapping
-  const careerInfo: Record<string, { title: string; icon: any; color: string; skills: string[] }> = {
+  const careerInfo: Record<string, { title: string; icon: React.ComponentType<React.SVGProps<SVGSVGElement>>; color: string; skills: string[] }> = {
     'content_creator': {
       title: '數位魔法師 - 內容創作者',
       icon: PaintBrushIcon,

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import AssessmentQuiz from '@/components/assessment/AssessmentQuiz';
-import { AssessmentQuestion, AssessmentDomain, UserAnswer } from '@/types/assessment';
+import { AssessmentQuestion, UserAnswer } from '@/types/assessment';
 
 interface Task {
   id: string;
@@ -22,7 +22,7 @@ interface Task {
   };
   interactions: Array<{
     type: string;
-    content: any;
+    content: Record<string, unknown>;
   }>;
 }
 
@@ -49,7 +49,7 @@ export default function AssessmentProgramPage({
   const [submitting, setSubmitting] = useState(false);
   const [programId, setProgramId] = useState<string>('');
   const [scenarioId, setScenarioId] = useState<string>('');
-  const [tasks, setTasks] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
   const domains = {
     engaging_with_ai: { name: 'Engaging with AI', description: '', questions: 0 },
@@ -67,12 +67,11 @@ export default function AssessmentProgramPage({
       setScenarioId(p.id);
       loadProgramState(p.programId);
     });
-  }, [params]);
+  }, [params]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadProgramState = async (progId: string) => {
     try {
       // Check if user is logged in via localStorage
-      const isLoggedIn = localStorage.getItem('isLoggedIn');
       const sessionToken = localStorage.getItem('ai_square_session');
       
       const headers: HeadersInit = {
@@ -149,8 +148,8 @@ export default function AssessmentProgramPage({
     try {
       // Filter out already submitted answers
       const existingAnswerIds = currentTask?.interactions
-        .filter((i: any) => i.type === 'assessment_answer')
-        .map((i: any) => i.content.questionId) || [];
+        .filter((i) => i.type === 'assessment_answer')
+        .map((i) => (i.content as Record<string, unknown>).questionId as string) || [];
       
       const newAnswers = answers.filter(a => !existingAnswerIds.includes(a.questionId));
       
@@ -318,13 +317,14 @@ export default function AssessmentProgramPage({
             timeLimit={currentTask?.content?.context?.timeLimit || timeLimit}
             // Pass saved answers from interactions
             initialAnswers={currentTask.interactions
-              .filter((i: any) => i.type === 'assessment_answer')
-            .reduce((acc: any, i: any) => {
+              .filter((i) => i.type === 'assessment_answer')
+            .reduce((acc: UserAnswer[], i) => {
+              const content = i.content as Record<string, unknown>;
               acc.push({
-                questionId: i.content.questionId,
-                selectedAnswer: i.content.selectedAnswer,
-                timeSpent: i.content.timeSpent || 0,
-                isCorrect: i.content.isCorrect || false
+                questionId: content.questionId as string,
+                selectedAnswer: content.selectedAnswer as 'a' | 'b' | 'c' | 'd',
+                timeSpent: (content.timeSpent as number) || 0,
+                isCorrect: (content.isCorrect as boolean) || false
               });
               return acc;
             }, [])}

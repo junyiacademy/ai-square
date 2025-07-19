@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  PlayIcon,
   SparklesIcon,
   BoltIcon,
   CpuChipIcon,

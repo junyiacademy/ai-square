@@ -99,7 +99,6 @@ type HistoryItem = {
   data: AssessmentHistoryItem | PBLSession | DiscoverySession;
 };
 
-type ViewMode = 'list' | 'calendar' | 'timeline';
 
 export default function UnifiedHistoryPage() {
   const { t, i18n } = useTranslation(['navigation', 'assessment', 'pbl']);
@@ -107,7 +106,6 @@ export default function UnifiedHistoryPage() {
   const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'assessment' | 'pbl' | 'discovery'>('all');
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [currentUser, setCurrentUser] = useState<{ id: string; email?: string } | null>(null);
 
   // Get current user
@@ -227,7 +225,7 @@ export default function UnifiedHistoryPage() {
         }
 
         // Fetch Discovery history
-        let discoveryItems: HistoryItem[] = [];
+        const discoveryItems: HistoryItem[] = [];
         try {
           const discoveryResponse = await fetch(`/api/discovery/my-programs?t=${Date.now()}`);
           if (discoveryResponse.ok) {
@@ -259,12 +257,12 @@ export default function UnifiedHistoryPage() {
                   }
                   
                   // Create history items for each program
-                  const scenarioItems = programs.map((program: any) => {
+                  const scenarioItems = programs.map((program: Record<string, unknown>) => {
                     const isCompleted = program.status === 'completed';
                     
                     // Get task info from taskLogs if available, otherwise use taskIds
                     const taskLogs = program.taskLogs || [];
-                    const completedTasks = taskLogs.filter((log: any) => log.isCompleted).length || 0;
+                    const completedTasks = taskLogs.filter((log: Record<string, unknown>) => log.isCompleted).length || 0;
                     const totalTasks = program.taskIds?.length || taskLogs.length || 0;
                     
                     // For current task, we need to use currentTaskIndex with taskIds

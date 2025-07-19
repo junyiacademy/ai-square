@@ -174,7 +174,7 @@ export async function batchQueries<T, R>(
 /**
  * Stream large JSON responses
  */
-export function streamJSON(data: any[], chunkSize = 100): ReadableStream {
+export function streamJSON(data: unknown[], chunkSize = 100): ReadableStream {
   let index = 0;
   
   return new ReadableStream({
@@ -204,12 +204,12 @@ export function streamJSON(data: any[], chunkSize = 100): ReadableStream {
 /**
  * Select only specific fields from objects (reduces payload size)
  */
-export function selectFields<T extends Record<string, any>, K extends keyof T>(
+export function selectFields<T extends Record<string, unknown>, K extends keyof T>(
   items: T[],
   fields: K[]
 ): Pick<T, K>[] {
   return items.map(item => {
-    const selected: any = {};
+    const selected: Partial<Pick<T, K>> = {};
     for (const field of fields) {
       if (field in item) {
         selected[field] = item[field];
@@ -223,7 +223,7 @@ export function selectFields<T extends Record<string, any>, K extends keyof T>(
  * Compress response if supported by client
  */
 export function compressedResponse(
-  data: any,
+  data: unknown,
   request: NextRequest
 ): NextResponse {
   const acceptEncoding = request.headers.get('accept-encoding') || '';
@@ -272,13 +272,13 @@ export function rateLimit(
 /**
  * Memoization for expensive computations
  */
-export function memoize<T extends (...args: any[]) => any>(
+export function memoize<T extends (...args: unknown[]) => unknown>(
   fn: T,
   maxAge: number = 5 * 60 * 1000 // 5 minutes
 ): T {
-  const cache = new Map<string, { value: any; timestamp: number }>();
+  const cache = new Map<string, { value: unknown; timestamp: number }>();
   
-  return ((...args: any[]) => {
+  return ((...args: unknown[]) => {
     const key = JSON.stringify(args);
     const cached = cache.get(key);
     

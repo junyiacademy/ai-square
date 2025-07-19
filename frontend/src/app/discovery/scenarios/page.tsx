@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
-import dynamic from 'next/dynamic';
 import DiscoveryPageLayout from '@/components/discovery/DiscoveryPageLayout';
 import { useUserData } from '@/hooks/useUserData';
 import { useAuth } from '@/hooks/useAuth';
@@ -25,7 +24,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 // Icon mapping for career types
-const careerIcons: Record<string, any> = {
+const careerIcons: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
   content_creator: PaintBrushIcon,
   youtuber: VideoCameraIcon,
   app_developer: CodeBracketIcon,
@@ -76,13 +75,37 @@ const categoryFilters = [
 
 export default function ScenariosPage() {
   const router = useRouter();
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const { isLoggedIn } = useAuth();
-  const { userData, loadUserData } = useUserData();
+  const { loadUserData } = useUserData();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [activeTab, setActiveTab] = useState<'all' | 'my'>('all'); // Default to 'all' since v2 doesn't track discovery in userData
-  const [scenarios, setScenarios] = useState<any[]>([]);
-  const [myScenarios, setMyScenarios] = useState<any[]>([]);
+  interface Scenario {
+    id: string;
+    scenarioId: string;
+    title: string;
+    subtitle: string;
+    category: string;
+    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+    color: string;
+    skills: string[];
+    userPrograms?: {
+      active?: {
+        progress: number;
+        completedTasks: number;
+        totalTasks: number;
+      };
+      completed?: number;
+      lastActivity?: string;
+    };
+    progress?: number;
+    isActive?: boolean;
+    completedCount?: number;
+    lastActivity?: string;
+  }
+
+  const [scenarios, setScenarios] = useState<Scenario[]>([]);
+  const [myScenarios, setMyScenarios] = useState<Scenario[]>([]);
   const [isLoadingScenarios, setIsLoadingScenarios] = useState(true);
   const [isLoadingMyScenarios, setIsLoadingMyScenarios] = useState(false);
 
@@ -95,14 +118,14 @@ export default function ScenariosPage() {
         if (response.ok) {
           const data = await response.json();
           // Transform the scenarios to match the expected format
-          const transformedScenarios = data.map((scenario: any) => ({
+          const transformedScenarios = data.map((scenario: Record<string, unknown>) => ({
             id: scenario.sourceRef?.metadata?.careerType || scenario.id,
             scenarioId: scenario.id, // Store the actual scenario UUID
             title: scenario.title,
             subtitle: scenario.description,
             category: scenario.metadata?.category || 'general',
-            icon: careerIcons[scenario.sourceRef?.metadata?.careerType] || SparklesIcon,
-            color: careerColors[scenario.sourceRef?.metadata?.careerType] || 'from-gray-500 to-gray-600',
+            icon: careerIcons[(scenario.sourceRef as Record<string, unknown>)?.metadata?.careerType as string] || SparklesIcon,
+            color: careerColors[(scenario.sourceRef as Record<string, unknown>)?.metadata?.careerType as string] || 'from-gray-500 to-gray-600',
             skills: scenario.metadata?.skillFocus || []
           }));
           setScenarios(transformedScenarios);
@@ -126,7 +149,7 @@ export default function ScenariosPage() {
     if (isLoggedIn) {
       loadUserData();
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, loadUserData]);
 
 
   // Load user's Discovery scenarios
@@ -141,14 +164,14 @@ export default function ScenariosPage() {
           const data = await response.json();
           
           // Transform the data to match the expected format
-          const transformedScenarios = data.map((scenario: any) => ({
+          const transformedScenarios = data.map((scenario: Record<string, unknown>) => ({
             id: scenario.sourceRef?.metadata?.careerType || scenario.id,
             scenarioId: scenario.id,
             title: scenario.title,
             subtitle: scenario.description,
             category: scenario.metadata?.category || 'general',
-            icon: careerIcons[scenario.sourceRef?.metadata?.careerType] || SparklesIcon,
-            color: careerColors[scenario.sourceRef?.metadata?.careerType] || 'from-gray-500 to-gray-600',
+            icon: careerIcons[(scenario.sourceRef as Record<string, unknown>)?.metadata?.careerType as string] || SparklesIcon,
+            color: careerColors[(scenario.sourceRef as Record<string, unknown>)?.metadata?.careerType as string] || 'from-gray-500 to-gray-600',
             skills: scenario.metadata?.skillFocus || [],
             // Add user-specific data
             userPrograms: scenario.userPrograms,
@@ -180,7 +203,7 @@ export default function ScenariosPage() {
       ? scenarios 
       : scenarios.filter(s => s.category === selectedCategory);
 
-  const handleScenarioSelect = async (scenarioOrCareer: any) => {
+  const handleScenarioSelect = async (scenarioOrCareer: Scenario | string) => {
     if (!isLoggedIn) {
       // Redirect to login
       router.push('/login?redirect=/discovery/scenarios');

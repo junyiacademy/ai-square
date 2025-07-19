@@ -30,7 +30,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 // Icon mapping for career types
-const careerIcons: Record<string, any> = {
+const careerIcons: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
   content_creator: PaintBrushIcon,
   youtuber: VideoCameraIcon,
   app_developer: CodeBracketIcon,
@@ -75,8 +75,13 @@ interface ScenarioData {
   description: string;
   careerType: string;
   objectives: string[];
-  metadata?: any;
-  programs: any[];
+  metadata?: Record<string, unknown>;
+  programs: Array<{
+    id: string;
+    status: string;
+    startedAt: string;
+    metadata?: Record<string, unknown>;
+  }>;
 }
 
 export default function DiscoveryScenarioDetailPage() {
@@ -107,7 +112,7 @@ export default function DiscoveryScenarioDetailPage() {
     if (scenarioId) {
       loadScenarioData();
     }
-  }, [scenarioId, isLoggedIn, authLoading]);
+  }, [scenarioId, isLoggedIn, authLoading, router, loadScenarioData]);
 
   const loadScenarioData = async () => {
     try {

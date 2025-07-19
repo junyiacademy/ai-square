@@ -273,7 +273,7 @@ export default function AssessmentResults({ result, domains, onRetake, questions
     } finally {
       setIsSaving(false);
     }
-  }, [currentUser, isSaved, userAnswers, result, i18n.language, t]);
+  }, [currentUser, isSaved, userAnswers, questions, result, i18n.language, t]);
 
   // Auto-save when component mounts (assessment completed)
   useEffect(() => {

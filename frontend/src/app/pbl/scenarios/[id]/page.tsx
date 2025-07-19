@@ -79,7 +79,7 @@ export default function ScenarioDetailPage() {
   }, [params.id, i18n.language]);
 
   // Helper function to get data from scenario metadata
-  const getScenarioData = (key: string, fallback: any = null) => {
+  const getScenarioData = (key: string, fallback: unknown = null) => {
     return scenario?.metadata?.[key] || scenario?.[key] || fallback;
   };
 
@@ -417,7 +417,7 @@ export default function ScenarioDetailPage() {
                   <div>
                     <span className="font-medium text-green-700 dark:text-green-300">Knowledge: </span>
                     <span className="text-green-600 dark:text-green-400">
-                      {getScenarioData('ksaMapping').knowledge.map((item: any) => 
+                      {getScenarioData('ksaMapping').knowledge.map((item: unknown) => 
                         typeof item === 'string' ? item : item.code
                       ).join(', ')}
                     </span>
@@ -427,7 +427,7 @@ export default function ScenarioDetailPage() {
                   <div>
                     <span className="font-medium text-blue-700 dark:text-blue-300">Skills: </span>
                     <span className="text-blue-600 dark:text-blue-400">
-                      {getScenarioData('ksaMapping').skills.map((item: any) => 
+                      {getScenarioData('ksaMapping').skills.map((item: unknown) => 
                         typeof item === 'string' ? item : item.code
                       ).join(', ')}
                     </span>
@@ -437,7 +437,7 @@ export default function ScenarioDetailPage() {
                   <div>
                     <span className="font-medium text-purple-700 dark:text-purple-300">Attitudes: </span>
                     <span className="text-purple-600 dark:text-purple-400">
-                      {getScenarioData('ksaMapping').attitudes.map((item: any) => 
+                      {getScenarioData('ksaMapping').attitudes.map((item: unknown) => 
                         typeof item === 'string' ? item : item.code
                       ).join(', ')}
                     </span>
@@ -449,7 +449,7 @@ export default function ScenarioDetailPage() {
 
           {/* Tasks List */}
           <div className="space-y-4">
-            {getScenarioData('tasks', []).map((task: any, taskIndex: number) => (
+            {getScenarioData('tasks', []).map((task: Record<string, unknown>, taskIndex: number) => (
               <div key={task.id || taskIndex} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                 <div className="flex items-start justify-between mb-2">
                   <h5 className="font-medium text-gray-900 dark:text-white">
@@ -498,7 +498,7 @@ export default function ScenarioDetailPage() {
                         <div>
                           <span className="text-xs font-medium text-purple-600 dark:text-purple-400">Primary: </span>
                           <span className="text-xs text-purple-600 dark:text-purple-400">
-                            {task.KSA_focus.primary.map((item: any) => 
+                            {(task.KSA_focus as Record<string, unknown>).primary.map((item: unknown) => 
                               typeof item === 'string' ? item : item.code || item
                             ).join(', ')}
                           </span>
@@ -508,7 +508,7 @@ export default function ScenarioDetailPage() {
                         <div>
                           <span className="text-xs font-medium text-purple-600 dark:text-purple-400">Secondary: </span>
                           <span className="text-xs text-purple-600 dark:text-purple-400">
-                            {task.KSA_focus.secondary.map((item: any) => 
+                            {(task.KSA_focus as Record<string, unknown>).secondary.map((item: unknown) => 
                               typeof item === 'string' ? item : item.code || item
                             ).join(', ')}
                           </span>

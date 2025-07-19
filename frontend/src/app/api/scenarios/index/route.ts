@@ -34,8 +34,8 @@ export async function GET(request: NextRequest) {
     }
 
     // Convert Maps to objects for JSON serialization
-    const yamlToUuidObject: Record<string, any> = {};
-    const uuidToYamlObject: Record<string, any> = {};
+    const yamlToUuidObject: Record<string, string> = {};
+    const uuidToYamlObject: Record<string, string> = {};
 
     for (const [key, value] of index.yamlToUuid) {
       yamlToUuidObject[key] = value;
@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
  * DELETE /api/scenarios/index
  * Invalidates the scenario index cache
  */
-export async function DELETE(request: NextRequest) {
+export async function DELETE() {
   try {
     await scenarioIndexService.invalidate();
     

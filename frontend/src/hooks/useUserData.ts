@@ -34,9 +34,9 @@ interface UseUserDataReturn {
   updateAchievements: (updates: Partial<UserAchievements>) => Promise<void>;
   
   // Evaluation operations
-  saveEvaluation: (type: string, id: string, data: any) => Promise<void>;
-  loadEvaluation: (type: string, id: string) => Promise<any | null>;
-  loadEvaluationsByType: (type: string) => Promise<any[]>;
+  saveEvaluation: (type: string, id: string, data: Record<string, unknown>) => Promise<void>;
+  loadEvaluation: (type: string, id: string) => Promise<Record<string, unknown> | null>;
+  loadEvaluationsByType: (type: string) => Promise<Record<string, unknown>[]>;
   deleteEvaluation: (type: string, id: string) => Promise<void>;
   
   // Utility operations
@@ -103,7 +103,7 @@ export function useUserData(): UseUserDataReturn {
     } finally {
       setIsLoading(false);
     }
-  }, [getService]);
+  }, [getService, isLoggedIn]);
   
   // Auto-load when user changes
   useEffect(() => {
@@ -113,10 +113,10 @@ export function useUserData(): UseUserDataReturn {
       setUserData(null);
       setIsLoading(false);
     }
-  }, [isLoggedIn, user?.email]); // Use user.email instead of loadUserData to avoid loops
+  }, [isLoggedIn, user?.email, loadUserData]); // Use user.email instead of loadUserData to avoid loops
   
   // Wrap all service methods to handle errors and update local state
-  const wrapServiceMethod = useCallback(<T extends any[], R>(
+  const wrapServiceMethod = useCallback(<T extends unknown[], R>(
     method: (service: UserDataServiceClient, ...args: T) => Promise<R>
   ) => {
     return async (...args: T): Promise<R> => {
@@ -177,7 +177,7 @@ export function useUserData(): UseUserDataReturn {
   );
   
   // Evaluation methods
-  const saveEvaluation = useCallback(async (type: string, id: string, data: any): Promise<void> => {
+  const saveEvaluation = useCallback(async (type: string, id: string, data: Record<string, unknown>): Promise<void> => {
     const service = getService();
     if (!service) throw new Error('User not authenticated');
     
@@ -189,7 +189,7 @@ export function useUserData(): UseUserDataReturn {
     }
   }, [getService]);
   
-  const loadEvaluation = useCallback(async (type: string, id: string): Promise<any | null> => {
+  const loadEvaluation = useCallback(async (type: string, id: string): Promise<Record<string, unknown> | null> => {
     const service = getService();
     if (!service) return null;
     
@@ -201,7 +201,7 @@ export function useUserData(): UseUserDataReturn {
     }
   }, [getService]);
   
-  const loadEvaluationsByType = useCallback(async (type: string): Promise<any[]> => {
+  const loadEvaluationsByType = useCallback(async (type: string): Promise<Record<string, unknown>[]> => {
     const service = getService();
     if (!service) return [];
     

@@ -4,14 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  SparklesIcon,
-  ChatBubbleBottomCenterTextIcon,
-  HeartIcon,
-  GlobeAltIcon,
-  CurrencyDollarIcon,
-  AcademicCapIcon,
-  ArrowPathIcon,
-  CheckCircleIcon
+  SparklesIcon
 } from '@heroicons/react/24/outline';
 
 // Ikigai 四大支柱
@@ -57,12 +50,12 @@ interface IkigaiExplorerProps {
 }
 
 export default function IkigaiExplorer({ onComplete, onBack }: IkigaiExplorerProps) {
-  const { t } = useTranslation('discovery');
+  const { } = useTranslation('discovery');
   const [phase, setPhase] = useState<ExplorationPhase>(ExplorationPhase.INITIAL_CHOICE);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isThinking, setIsThinking] = useState(false);
-  const [ikigaiProfile, setIkigaiProfile] = useState<Partial<IkigaiDimensions>>({
+  const [ikigaiProfile] = useState<Partial<IkigaiDimensions>>({
     passion: [],
     mission: [],
     profession: [],

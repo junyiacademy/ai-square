@@ -40,7 +40,7 @@ interface TaskData {
   interactions: Array<{
     timestamp: string;
     type: string;
-    content: any;
+    content: Record<string, unknown>;
   }>;
   startedAt: string;
   completedAt?: string;
@@ -56,8 +56,8 @@ interface TaskData {
 export default function TaskDetailPage() {
   const router = useRouter();
   const params = useParams();
-  const { t, i18n } = useTranslation();
-  const { user, isLoggedIn, isLoading: authLoading } = useAuth();
+  const { i18n } = useTranslation();
+  const { isLoggedIn, isLoading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const [taskData, setTaskData] = useState<TaskData | null>(null);
   const [userResponse, setUserResponse] = useState('');
@@ -71,7 +71,6 @@ export default function TaskDetailPage() {
     improvements: string[];
   } | null>(null);
   const [showHistory, setShowHistory] = useState(true);
-  const [showCompleteDialog, setShowCompleteDialog] = useState(false);
   const [completingTask, setCompletingTask] = useState(false);
   const [regeneratingEvaluation, setRegeneratingEvaluation] = useState(false);
 
@@ -221,7 +220,7 @@ export default function TaskDetailPage() {
         throw new Error('Failed to complete task');
       }
       
-      const result = await res.json();
+      await res.json();
       
       // Navigate to program page
       setTimeout(() => {

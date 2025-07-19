@@ -6,9 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ChevronLeftIcon, 
   ChevronRightIcon,
-  CheckCircleIcon,
-  SparklesIcon,
-  BoltIcon
+  SparklesIcon
 } from '@heroicons/react/24/outline';
 
 interface AssessmentResults {
@@ -87,10 +85,6 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
     });
   };
 
-  const handleComplete = () => {
-    const results = calculateResults();
-    onComplete(results);
-  };
 
   const handleNext = async () => {
     if (!canGoNext || isAnimating) return;
@@ -164,7 +158,6 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
     return scores;
   };
 
-  const progressPercentage = ((currentQuestionIndex + 1) / totalQuestions) * 100;
 
   return (
     <div className="relative h-screen overflow-hidden">
