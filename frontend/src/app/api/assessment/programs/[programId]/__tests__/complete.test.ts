@@ -1,5 +1,5 @@
 // Mock dependencies first before imports
-jest.mock('@/lib/implementations/gcs-v2');
+jest.mock('@/lib/repositories/base/repository-factory');
 jest.mock('@/lib/auth/auth-utils');
 jest.mock('next/server', () => ({
   NextRequest: jest.fn().mockImplementation((url, init) => ({
@@ -26,17 +26,11 @@ jest.mock('next/server', () => ({
 }));
 
 import { POST } from '../complete/route';
-import { 
-  getProgramRepository, 
-  getTaskRepository,
-  getEvaluationRepository 
-} from '@/lib/implementations/gcs-v2';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getAuthFromRequest } from '@/lib/auth/auth-utils';
 import { NextRequest } from 'next/server';
 
-const mockGetProgramRepository = getProgramRepository as jest.MockedFunction<typeof getProgramRepository>;
-const mockGetTaskRepository = getTaskRepository as jest.MockedFunction<typeof getTaskRepository>;
-const mockGetEvaluationRepository = getEvaluationRepository as jest.MockedFunction<typeof getEvaluationRepository>;
+const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
 const mockGetAuthFromRequest = getAuthFromRequest as jest.MockedFunction<typeof getAuthFromRequest>;
 
 describe('POST /api/assessment/programs/[programId]/complete', () => {
@@ -148,10 +142,15 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
       create: jest.fn()
     };
     
-    mockGetProgramRepository.mockReturnValue(mockProgramRepo);
-    mockGetTaskRepository.mockReturnValue(mockTaskRepo);
-    mockGetEvaluationRepository.mockReturnValue(mockEvaluationRepo);
-    mockGetAuthFromRequest.mockResolvedValue(mockUser);
+    mockRepositoryFactory.getProgramRepository = jest.fn().mockReturnValue(mockProgramRepo);
+    mockRepositoryFactory.getTaskRepository = jest.fn().mockReturnValue(mockTaskRepo);
+    mockRepositoryFactory.getEvaluationRepository = jest.fn().mockReturnValue(mockEvaluationRepo);
+    mockGetAuthFromRequest.mockResolvedValue({ 
+      userId: mockUser.id, 
+      email: mockUser.email, 
+      role: 'user',
+      name: 'Test User'
+    });
   });
 
   const createRequest = (body: any = {}) => {

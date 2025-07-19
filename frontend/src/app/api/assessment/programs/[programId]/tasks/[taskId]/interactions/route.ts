@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
 export async function GET(
   request: NextRequest,
@@ -63,9 +64,12 @@ export async function GET(
       );
     }
     
+    // Get interactions from the task repository
+    const taskWithInteractions = await taskRepo.getTaskWithInteractions(taskId);
+    
     return NextResponse.json({
       success: true,
-      interactions: task.interactions || []
+      interactions: taskWithInteractions?.interactions || []
     });
     
   } catch (error) {
@@ -118,9 +122,8 @@ export async function POST(
     }
     
     // Use unified architecture
-    const { getTaskRepository, getProgramRepository } = await import('@/lib/implementations/gcs-v2');
-    const taskRepo = getTaskRepository();
-    const programRepo = getProgramRepository();
+    const taskRepo = repositoryFactory.getTaskRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
     
     // First verify the program exists and belongs to the user
     const program = await programRepo.findById(programId);

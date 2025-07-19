@@ -72,11 +72,11 @@ export async function GET(
         title: task.title,
         type: task.type,
         context: task.content,
-        interactions: task.interactions,
+        interactions: [], // Interactions are fetched separately via interactions endpoint
         status: task.status,
         startedAt: task.startedAt,
         completedAt: task.completedAt,
-        evaluationId: task.evaluationId
+        evaluationId: undefined // Evaluation ID is stored separately
       }
     });
     
@@ -177,13 +177,13 @@ export async function PATCH(
         }
         
         // Process answers and create interactions
-        const questionsArray = Array.isArray(task.content?.context?.questions) 
-          ? task.content.context.questions 
+        const questionsArray = Array.isArray((task.context as Record<string, unknown>)?.questions) 
+          ? (task.context as Record<string, unknown>)?.questions as unknown[] 
           : [];
         const interactions = answers.map((answer: any) => {
           const question = questionsArray.find((q: any) => q.id === answer.questionId);
           const isCorrect = question && 
-            String(answer.answer) === String(question.correct_answer);
+            String(answer.answer) === String((question as Record<string, unknown>)?.correct_answer);
           
           return {
             timestamp: new Date().toISOString(),
@@ -193,7 +193,7 @@ export async function PATCH(
               selectedAnswer: answer.answer,
               isCorrect,
               timeSpent: answer.timeSpent || 0,
-              ksa_mapping: question?.ksa_mapping
+              ksa_mapping: (question as Record<string, unknown>)?.ksa_mapping
             }
           };
         });

@@ -9,7 +9,14 @@ import {
   User,
   CreateUserDto,
   UpdateUserDto,
-  FindUsersOptions
+  FindUsersOptions,
+  AssessmentSession,
+  AssessmentResults,
+  UserBadge,
+  CreateAssessmentSessionDto,
+  CreateBadgeDto,
+  UserDataResponse,
+  UserDataInput
 } from '../interfaces';
 
 export class PostgreSQLUserRepository implements IUserRepository {
@@ -72,7 +79,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
 
   async update(id: string, data: UpdateUserDto): Promise<User> {
     const updates: string[] = [];
-    const values: any[] = [];
+    const values: unknown[] = [];
     let paramCount = 1;
 
     if (data.name !== undefined) {
@@ -210,5 +217,241 @@ export class PostgreSQLUserRepository implements IUserRepository {
     } finally {
       client.release();
     }
+  }
+
+  // ========================================
+  // Assessment System Methods
+  // ========================================
+
+  async saveAssessmentSession(userId: string, session: CreateAssessmentSessionDto): Promise<AssessmentSession> {
+    const query = `
+      INSERT INTO assessment_sessions (
+        user_id, session_key, tech_score, creative_score, business_score, answers, generated_paths
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+      RETURNING 
+        id, user_id as "userId", session_key as "sessionKey",
+        tech_score as "techScore", creative_score as "creativeScore", business_score as "businessScore",
+        answers, generated_paths as "generatedPaths", created_at as "createdAt", metadata
+    `;
+
+    const { rows } = await this.pool.query(query, [
+      userId,
+      session.sessionKey,
+      session.techScore,
+      session.creativeScore,
+      session.businessScore,
+      JSON.stringify(session.answers || {}),
+      JSON.stringify(session.generatedPaths || [])
+    ]);
+
+    return rows[0];
+  }
+
+  async getAssessmentSessions(userId: string): Promise<AssessmentSession[]> {
+    const query = `
+      SELECT 
+        id, user_id as "userId", session_key as "sessionKey",
+        tech_score as "techScore", creative_score as "creativeScore", business_score as "businessScore",
+        answers, generated_paths as "generatedPaths", created_at as "createdAt", metadata
+      FROM assessment_sessions
+      WHERE user_id = $1
+      ORDER BY created_at DESC
+    `;
+
+    const { rows } = await this.pool.query(query, [userId]);
+    return rows;
+  }
+
+  async getLatestAssessmentResults(userId: string): Promise<AssessmentResults | null> {
+    const query = `
+      SELECT tech_score as tech, creative_score as creative, business_score as business
+      FROM assessment_sessions
+      WHERE user_id = $1
+      ORDER BY created_at DESC
+      LIMIT 1
+    `;
+
+    const { rows } = await this.pool.query(query, [userId]);
+    return rows[0] || null;
+  }
+
+  // ========================================
+  // Badge System Methods
+  // ========================================
+
+  async addBadge(userId: string, badge: CreateBadgeDto): Promise<UserBadge> {
+    const query = `
+      INSERT INTO user_badges (
+        user_id, badge_id, name, description, image_url, category, xp_reward
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+      ON CONFLICT (user_id, badge_id) DO UPDATE SET
+        name = EXCLUDED.name,
+        description = EXCLUDED.description,
+        image_url = EXCLUDED.image_url,
+        category = EXCLUDED.category,
+        xp_reward = EXCLUDED.xp_reward
+      RETURNING 
+        id, user_id as "userId", badge_id as "badgeId", name, description,
+        image_url as "imageUrl", category, xp_reward as "xpReward",
+        unlocked_at as "unlockedAt", metadata
+    `;
+
+    const { rows } = await this.pool.query(query, [
+      userId,
+      badge.badgeId,
+      badge.name,
+      badge.description,
+      badge.imageUrl,
+      badge.category,
+      badge.xpReward
+    ]);
+
+    return rows[0];
+  }
+
+  async getUserBadges(userId: string): Promise<UserBadge[]> {
+    const query = `
+      SELECT 
+        id, user_id as "userId", badge_id as "badgeId", name, description,
+        image_url as "imageUrl", category, xp_reward as "xpReward",
+        unlocked_at as "unlockedAt", metadata
+      FROM user_badges
+      WHERE user_id = $1
+      ORDER BY unlocked_at DESC
+    `;
+
+    const { rows } = await this.pool.query(query, [userId]);
+    return rows;
+  }
+
+  // ========================================
+  // Complete User Data Operations (Legacy Compatibility)
+  // ========================================
+
+  async getUserData(userEmail: string): Promise<UserDataResponse | null> {
+    // First, find or create user
+    let user = await this.findByEmail(userEmail);
+    if (!user) {
+      // Auto-create user if doesn't exist (for backward compatibility)
+      user = await this.create({
+        email: userEmail,
+        name: userEmail.split('@')[0] // Use email prefix as default name
+      });
+    }
+
+    // Get assessment sessions
+    const assessmentSessions = await this.getAssessmentSessions(user.id);
+    
+    // Get latest assessment results
+    const latestResults = await this.getLatestAssessmentResults(user.id);
+    
+    // Get user badges
+    const badges = await this.getUserBadges(user.id);
+    
+    // Get achievements (from existing system)
+    const achievementsQuery = `
+      SELECT a.id, a.code, a.achievement_type as type, a.xp_reward as "xpReward", ua.earned_at as "earnedAt"
+      FROM user_achievements ua
+      JOIN achievements a ON ua.achievement_id = a.id
+      WHERE ua.user_id = $1
+      ORDER BY ua.earned_at DESC
+    `;
+    const { rows: achievements } = await this.pool.query(achievementsQuery, [user.id]);
+
+    // Format response to match legacy UserData interface
+    return {
+      assessmentResults: latestResults,
+      achievements: {
+        badges,
+        totalXp: user.totalXp,
+        level: user.level,
+        completedTasks: [], // TODO: Could derive from completed tasks
+        achievements
+      },
+      assessmentSessions: assessmentSessions.map(session => ({
+        ...session,
+        results: {
+          tech: session.techScore,
+          creative: session.creativeScore,
+          business: session.businessScore
+        }
+      })),
+      lastUpdated: new Date().toISOString(),
+      version: '3.0' // PostgreSQL version
+    };
+  }
+
+  async saveUserData(userEmail: string, data: UserDataInput): Promise<UserDataResponse> {
+    const client = await this.pool.connect();
+    
+    try {
+      await client.query('BEGIN');
+
+      // Find or create user
+      let user = await this.findByEmail(userEmail);
+      if (!user) {
+        user = await this.create({
+          email: userEmail,
+          name: userEmail.split('@')[0]
+        });
+      }
+
+      // Update user level and XP
+      if (data.achievements) {
+        await this.update(user.id, {
+          level: data.achievements.level,
+          totalXp: data.achievements.totalXp
+        });
+      }
+
+      // Save assessment sessions
+      if (data.assessmentSessions) {
+        for (const session of data.assessmentSessions) {
+          await this.saveAssessmentSession(user.id, {
+            sessionKey: session.id,
+            techScore: session.results.tech,
+            creativeScore: session.results.creative,
+            businessScore: session.results.business,
+            answers: session.answers,
+            generatedPaths: session.generatedPaths
+          });
+        }
+      }
+
+      // Save badges
+      if (data.achievements?.badges) {
+        for (const badge of data.achievements.badges) {
+          await this.addBadge(user.id, {
+            badgeId: badge.id,
+            name: badge.name,
+            description: badge.description,
+            imageUrl: badge.imageUrl,
+            category: badge.category,
+            xpReward: badge.xpReward
+          });
+        }
+      }
+
+      await client.query('COMMIT');
+      
+      // Return updated user data
+      return await this.getUserData(userEmail) as UserDataResponse;
+      
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async deleteUserData(userEmail: string): Promise<boolean> {
+    const user = await this.findByEmail(userEmail);
+    if (!user) {
+      return false;
+    }
+
+    // Delete user (cascade will handle related data)
+    return await this.delete(user.id);
   }
 }

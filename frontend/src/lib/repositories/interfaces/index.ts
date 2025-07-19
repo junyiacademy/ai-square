@@ -16,6 +16,20 @@ export interface IUserRepository {
   findAll(options?: FindUsersOptions): Promise<User[]>;
   updateLastActive(id: string): Promise<void>;
   addAchievement(userId: string, achievementId: string): Promise<void>;
+  
+  // Assessment-related methods
+  saveAssessmentSession(userId: string, session: CreateAssessmentSessionDto): Promise<AssessmentSession>;
+  getAssessmentSessions(userId: string): Promise<AssessmentSession[]>;
+  getLatestAssessmentResults(userId: string): Promise<AssessmentResults | null>;
+  
+  // Badge management
+  addBadge(userId: string, badge: CreateBadgeDto): Promise<UserBadge>;
+  getUserBadges(userId: string): Promise<UserBadge[]>;
+  
+  // Complete user data operations
+  getUserData(userEmail: string): Promise<UserDataResponse | null>;
+  saveUserData(userEmail: string, data: UserDataInput): Promise<UserDataResponse>;
+  deleteUserData(userEmail: string): Promise<boolean>;
 }
 
 export interface IProgramRepository {
@@ -464,4 +478,103 @@ export interface MediaFile {
   size: number;
   contentType: string;
   updatedAt: Date;
+}
+
+// ========================================
+// Assessment System Types
+// ========================================
+
+export interface AssessmentSession {
+  id: string;
+  userId: string;
+  sessionKey: string;
+  techScore: number;
+  creativeScore: number;
+  businessScore: number;
+  answers: Record<string, string[]>;
+  generatedPaths: string[];
+  createdAt: Date;
+  metadata?: Record<string, unknown>;
+}
+
+export interface AssessmentResults {
+  tech: number;
+  creative: number;
+  business: number;
+}
+
+export interface UserBadge {
+  id: string;
+  userId: string;
+  badgeId: string;
+  name: string;
+  description?: string;
+  imageUrl?: string;
+  category: 'exploration' | 'learning' | 'mastery' | 'community' | 'special';
+  xpReward: number;
+  unlockedAt: Date;
+  metadata?: Record<string, unknown>;
+}
+
+export interface CreateAssessmentSessionDto {
+  sessionKey: string;
+  techScore: number;
+  creativeScore: number;
+  businessScore: number;
+  answers?: Record<string, string[]>;
+  generatedPaths?: string[];
+}
+
+export interface CreateBadgeDto {
+  badgeId: string;
+  name: string;
+  description?: string;
+  imageUrl?: string;
+  category: 'exploration' | 'learning' | 'mastery' | 'community' | 'special';
+  xpReward: number;
+}
+
+// Legacy user data compatibility types
+export interface UserDataResponse {
+  assessmentResults?: AssessmentResults | null;
+  achievements: {
+    badges: UserBadge[];
+    totalXp: number;
+    level: number;
+    completedTasks: string[];
+    achievements?: Achievement[];
+  };
+  assessmentSessions: AssessmentSession[];
+  currentView?: string;
+  lastUpdated: string;
+  version: string;
+}
+
+export interface UserDataInput {
+  assessmentResults?: AssessmentResults | null;
+  achievements: {
+    badges: Array<{
+      id: string;
+      name: string;
+      description: string;
+      imageUrl?: string;
+      unlockedAt: string;
+      category: 'exploration' | 'learning' | 'mastery' | 'community' | 'special';
+      xpReward: number;
+    }>;
+    totalXp: number;
+    level: number;
+    completedTasks: string[];
+    achievements?: Achievement[];
+  };
+  assessmentSessions: Array<{
+    id: string;
+    createdAt: string;
+    results: AssessmentResults;
+    answers?: Record<string, string[]>;
+    generatedPaths?: string[];
+  }>;
+  currentView?: string;
+  lastUpdated: string;
+  version: string;
 }

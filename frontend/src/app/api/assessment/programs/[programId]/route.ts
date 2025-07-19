@@ -69,7 +69,9 @@ export async function GET(
         title: t.title,
         status: t.status,
         hasContent: !!t.content,
-        hasQuestions: !!((t.context?.context as any)?.questions?.length)
+        hasQuestions: Array.isArray((t.context as Record<string, unknown>)?.questions) 
+          ? ((t.context as Record<string, unknown>)?.questions as unknown[]).length > 0
+          : false
       })) || []
     });
     
@@ -107,7 +109,9 @@ export async function GET(
           id: t.id,
           title: t.title,
           status: t.status,
-          questionsCount: (t.context?.context as any)?.questions?.length || 0
+          questionsCount: Array.isArray((t.context as Record<string, unknown>)?.questions) 
+            ? ((t.context as Record<string, unknown>)?.questions as unknown[]).length 
+            : 0
         })),
         totalTasks: tasks.length
       });
@@ -122,7 +126,7 @@ export async function GET(
         id: t.id,
         title: t.title,
         status: t.status,
-        questionsCount: (t.context?.context as any)?.questions?.length || 0
+        questionsCount: ((t.context as Record<string, unknown>)?.questions as unknown[] | undefined)?.length || 0
       })),
       totalTasks: tasks.length
     });

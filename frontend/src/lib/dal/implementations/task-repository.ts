@@ -48,7 +48,7 @@ export class TaskRepositoryImpl extends BaseRepositoryImpl<Task> implements Task
   /**
    * Add an interaction to a task
    */
-  async addInteraction(id: string, interaction: any): Promise<Task> {
+  async addInteraction(id: string, interaction: Record<string, unknown>): Promise<Task> {
     // First, insert into interactions table
     const interactionQuery = `
       INSERT INTO interactions (
@@ -188,7 +188,7 @@ export class TaskRepositoryImpl extends BaseRepositoryImpl<Task> implements Task
   /**
    * Get all interactions for a task
    */
-  async getInteractions(taskId: string): Promise<any[]> {
+  async getInteractions(taskId: string): Promise<Record<string, unknown>[]> {
     const query = `
       SELECT * FROM interactions 
       WHERE task_id = $1 
@@ -219,7 +219,13 @@ export class TaskRepositoryImpl extends BaseRepositoryImpl<Task> implements Task
       WHERE program_id = $1
     `;
 
-    const result = await this.db.queryOne<any>(query, [programId]);
+    const result = await this.db.queryOne<{
+      total: number;
+      completed: number;
+      skipped: number;
+      average_score: number;
+      total_time_spent: number;
+    }>(query, [programId]);
     
     return {
       total: result.total,
@@ -233,7 +239,7 @@ export class TaskRepositoryImpl extends BaseRepositoryImpl<Task> implements Task
   /**
    * Create tasks for a new program from scenario definition
    */
-  async createTasksFromScenario(programId: string, scenarioTasks: any[]): Promise<Task[]> {
+  async createTasksFromScenario(programId: string, scenarioTasks: Record<string, unknown>[]): Promise<Task[]> {
     const tasks: Task[] = [];
 
     for (let i = 0; i < scenarioTasks.length; i++) {
@@ -317,7 +323,12 @@ export class TaskRepositoryImpl extends BaseRepositoryImpl<Task> implements Task
         AND t.status IN ('completed', 'active')
     `;
 
-    const result = await this.db.queryOne<any>(query, [userId, ksaCode]);
+    const result = await this.db.queryOne<{
+      tasks_attempted: number;
+      tasks_completed: number;
+      average_score: number;
+      total_practice_time: number;
+    }>(query, [userId, ksaCode]);
     
     return {
       tasksAttempted: result.tasks_attempted,

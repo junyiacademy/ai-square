@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthFromRequest } from '@/lib/auth/auth-utils';
-// TODO: Migrate user data to PostgreSQL when user data schema is finalized
-// For now, keeping GCS for backward compatibility with assessment results and achievements
-import { gcsUserDataRepository } from '@/lib/implementations/gcs-v2/repositories/gcs-user-data-repository';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
 export async function GET(request: NextRequest) {
   try {
@@ -19,7 +17,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const userData = await gcsUserDataRepository.getUserData(user.email);
+    const userRepo = repositoryFactory.getUserRepository();
+    const userData = await userRepo.getUserData(user.email);
     
     return NextResponse.json({
       success: true,
@@ -52,11 +51,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { data } = body;
 
-    const savedData = await gcsUserDataRepository.saveUserData(
-      user.email,
-      data,
-      user.email
-    );
+    const userRepo = repositoryFactory.getUserRepository();
+    const savedData = await userRepo.saveUserData(user.email, data);
     
     return NextResponse.json({
       success: true,
@@ -82,7 +78,8 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const success = await gcsUserDataRepository.deleteUserData(user.email);
+    const userRepo = repositoryFactory.getUserRepository();
+    const success = await userRepo.deleteUserData(user.email);
     
     return NextResponse.json({
       success

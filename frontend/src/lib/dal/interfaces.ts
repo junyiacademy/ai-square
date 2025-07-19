@@ -3,7 +3,6 @@
  * These interfaces define the contract for data operations
  */
 
-import { UUID } from 'crypto';
 
 // ==========================================
 // Base Interfaces

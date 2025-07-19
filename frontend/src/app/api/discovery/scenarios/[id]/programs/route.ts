@@ -287,8 +287,8 @@ export async function POST(
       tasks: createdTasks.map(t => ({
         id: t.id,
         title: t.title,
-        description: t.context.context?.description || '',
-        xp: t.context.context?.xp || 0,
+        description: (t.context as Record<string, unknown>)?.description as string || '',
+        xp: (t.context as Record<string, unknown>)?.xp as number || 0,
         status: t.status
       })),
       totalTasks: createdTasks.length,

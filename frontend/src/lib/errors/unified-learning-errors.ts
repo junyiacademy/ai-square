@@ -212,7 +212,7 @@ export class ErrorHandler {
   /**
    * 包裝異步函數以處理錯誤
    */
-  static wrapAsync<T extends (...args: any[]) => Promise<any>>(fn: T): T {
+  static wrapAsync<T extends (...args: unknown[]) => Promise<unknown>>(fn: T): T {
     return (async (...args: Parameters<T>) => {
       try {
         return await fn(...args);
@@ -252,7 +252,7 @@ export class ErrorHandler {
    */
   static isErrorType<T extends UnifiedLearningError>(
     error: unknown,
-    ErrorClass: new (...args: any[]) => T
+    ErrorClass: new (...args: unknown[]) => T
   ): error is T {
     return error instanceof ErrorClass;
   }

@@ -31,12 +31,7 @@ export {
   userDataService
 } from './user-data-service';
 
-// GCS Implementation
-export {
-  UserDataServiceGCS,
-  createUserDataServiceGCS,
-  migrateUserToGCS
-} from './user-data-service-gcs';
+// GCS Implementation removed - now using PostgreSQL
 
 // Client Implementation (for browser/API communication)
 export {

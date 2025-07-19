@@ -84,10 +84,12 @@ export async function POST(
       title: nextTask?.title,
       hasContent: !!nextTask?.content,
       hasContext: !!nextTask?.context,
-      questionsInContext: (nextTask?.context?.context as any)?.questions?.length || 0,
+      questionsInContext: Array.isArray((nextTask?.context as Record<string, unknown>)?.questions) 
+        ? ((nextTask?.context as Record<string, unknown>)?.questions as unknown[]).length 
+        : 0,
       questionsDirect: 0,
       contentKeys: nextTask?.content ? Object.keys(nextTask.content) : [],
-      contextKeys: nextTask?.context?.context ? Object.keys(nextTask.context.context) : []
+      contextKeys: nextTask?.context ? Object.keys(nextTask.context) : []
     });
     
     return NextResponse.json({

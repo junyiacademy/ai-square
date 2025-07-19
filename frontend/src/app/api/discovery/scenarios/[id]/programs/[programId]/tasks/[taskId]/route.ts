@@ -340,7 +340,7 @@ You are an AI learning evaluator in a discovery-based learning environment.
 Career Path: ${careerType}
 Task Title: ${task.title}
 Task Instructions: ${task.context.instructions}
-Task Context: ${JSON.stringify(task.context.context || {})}
+Task Context: ${JSON.stringify(task.context || {})}
 ${yamlData ? `World Setting: ${yamlData.world_setting.description}\nAtmosphere: ${yamlData.world_setting.atmosphere}` : ''}
 
 Learner's Response:
@@ -357,7 +357,7 @@ ${userLanguage === 'zhTW' ?
 `請用繁體中文提供評估，包含：
 - 詳細說明做得好的地方和需要改進的地方
 - 任務是否圓滿完成
-- 獲得的經驗值（0-${task.context.context?.xp || 100}）
+- 獲得的經驗值（0-${(task.context as Record<string, unknown>)?.xp as number || 100}）
 - 展現或提升的技能
 
 請以 JSON 格式返回評估結果：
@@ -366,14 +366,14 @@ ${userLanguage === 'zhTW' ?
   "strengths": ["優點1", "優點2"],
   "improvements": ["改進建議1", "改進建議2"],
   "completed": true/false,
-  "xpEarned": number (0-${task.context.context?.xp || 100}),
+  "xpEarned": number (0-${(task.context as Record<string, unknown>)?.xp as number || 100}),
   "skillsImproved": ["技能1（例如：創意思考）", "技能2（例如：市場分析）"]
 }
 請確保所有內容都是繁體中文，包括技能名稱。` : 
 `Provide your evaluation in English with:
 - Detailed feedback explaining what was done well and areas for improvement
 - Whether the task is completed satisfactorily
-- XP points earned (0-${task.context.context?.xp || 100})
+- XP points earned (0-${(task.context as Record<string, unknown>)?.xp as number || 100})
 - Skills that were demonstrated or improved
 
 Return your evaluation as a JSON object:
@@ -382,7 +382,7 @@ Return your evaluation as a JSON object:
   "strengths": ["Strength 1", "Strength 2"],
   "improvements": ["Improvement area 1", "Improvement area 2"],
   "completed": true/false,
-  "xpEarned": number (0-${task.context.context?.xp || 100}),
+  "xpEarned": number (0-${(task.context as Record<string, unknown>)?.xp as number || 100}),
   "skillsImproved": ["Skill 1", "Skill 2"]
 }`}`;
 
@@ -405,7 +405,7 @@ Return your evaluation as a JSON object:
           evaluationResult = {
             feedback: aiResponse.content,
             completed: true,
-            xpEarned: task.context.context?.xp || 100,
+            xpEarned: (task.context as Record<string, unknown>)?.xp as number || 100,
             strengths: [],
             improvements: [],
             skillsImproved: []
@@ -484,7 +484,7 @@ Return your evaluation as a JSON object:
       // Calculate total XP from best attempt
       const bestXP = Math.max(
         ...allFeedback.map(f => f.xpEarned || 0),
-        task.context.context?.xp || 100
+        (task.context as Record<string, unknown>)?.xp as number || 100
       );
       
       // Generate comprehensive qualitative feedback using LLM based on full learning journey
@@ -558,7 +558,7 @@ Return your evaluation as a JSON object:
           careerType,
           task.title,
           task.context.instructions,
-          task.context.context || {},
+          task.context || {},
           yamlData,
           learningJourney
         );
@@ -779,7 +779,7 @@ Return your evaluation as a JSON object:
       const aiResponses = task.interactions.filter(i => i.type === 'ai_response');
       const passedAttempts = aiResponses.filter(i => i.context?.completed === true).length;
       const allFeedback = task.interactions.filter(i => i.type === 'ai_response').map(i => i.content);
-      const bestXP = Math.max(...allFeedback.map(f => f.xpEarned || 0), task.context.context?.xp || 100);
+      const bestXP = Math.max(...allFeedback.map(f => f.xpEarned || 0), (task.context as Record<string, unknown>)?.xp as number || 100);
       
       let comprehensiveFeedback = 'Successfully regenerated task evaluation!';
       
@@ -839,7 +839,7 @@ Return your evaluation as a JSON object:
           careerType,
           task.title,
           task.context.instructions,
-          task.context.context || {},
+          task.context || {},
           yamlData,
           learningJourney
         );

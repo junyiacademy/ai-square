@@ -59,7 +59,7 @@ export async function GET(
     let totalXP = 0;
     
     const tasksSummary = tasks.map((task, index) => {
-      const xp = (task.context.context as any)?.xp || 0;
+      const xp = (task.context as Record<string, unknown>)?.xp as number || 0;
       
       // Calculate statistics from interactions
       let actualXP = 0;
@@ -103,7 +103,7 @@ export async function GET(
       return {
         id: task.id,
         title: task.title,
-        description: task.context.context?.description || '',
+        description: (task.context as Record<string, unknown>)?.description as string || '',
         xp: xp,
         status: displayStatus,
         completedAt: task.completedAt,
