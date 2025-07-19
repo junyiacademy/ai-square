@@ -83,7 +83,7 @@ export async function POST(
       id: nextTask?.id,
       title: nextTask?.title,
       hasContent: !!nextTask?.content,
-      hasContext: !!nextTask?.context?.context,
+      hasContext: !!nextTask?.context,
       questionsInContext: (nextTask?.context?.context as any)?.questions?.length || 0,
       questionsDirect: 0,
       contentKeys: nextTask?.content ? Object.keys(nextTask.content) : [],

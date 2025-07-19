@@ -151,7 +151,7 @@ export async function POST(
     
     for (const task of validTasks) {
       const taskAnswers = task.interactions.filter(i => i.type === 'system_event' && (i.content as any)?.eventType === 'assessment_answer');
-      const taskQuestions = (task.context?.context as any)?.questions || [];
+      const taskQuestions = (task.metadata as any)?.questions || [];
       
       console.log(`Task ${task.title}:`, {
         taskId: task.id,
@@ -346,15 +346,9 @@ export async function POST(
       timeTakenSeconds: completionTime,
       feedback: generateOverallFeedback(overallScore, level),
       dimensions: Array.from(domainScores.values()).map(ds => ({
-        dimension: ds.domain,
+        name: ds.domain,
         score: ds.score,
-        maxScore: 100,
-        feedback: generateDomainFeedback(ds.domain, ds.score),
-        metadata: {
-          knowledge: Array.from(ds.ksa.knowledge),
-          skills: Array.from(ds.ksa.skills),
-          attitudes: Array.from(ds.ksa.attitudes)
-        }
+        maxScore: 100
       })),
       metadata: {
         completionTime,

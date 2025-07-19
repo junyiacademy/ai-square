@@ -34,9 +34,9 @@ export async function GET(
     }
     
     // Use unified architecture to get task
-    const { getTaskRepository, getProgramRepository } = await import('@/lib/implementations/gcs-v2');
-    const taskRepo = getTaskRepository();
-    const programRepo = getProgramRepository();
+    const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
+    const taskRepo = repositoryFactory.getTaskRepository();
+    const programRepo = repositoryFactory.getProgramRepository();
     
     // First verify the program exists and belongs to the user
     const program = await programRepo.findById(programId);
