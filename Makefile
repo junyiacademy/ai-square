@@ -17,7 +17,8 @@ DESC ?= ""
         gcp-build-and-push gcp-deploy-service deploy-gcp deploy-backend-gcp \
         test-frontend test-backend test-all test-e2e test-smart \
         dev-lint dev-typecheck dev-quality lint-backend \
-        clean clean-all build-journey
+        clean clean-all build-journey \
+        graphiti graphiti-stop graphiti-status claude-init
 
 # 預設顯示幫助
 .DEFAULT_GOAL := help
@@ -236,11 +237,67 @@ ticket-from-commit:
 	@python3 docs/scripts/ticket-repair-tool.py create --commit $(COMMIT) --type $(TYPE)
 
 #=============================================================================
+# Graphiti Memory 系統
+#=============================================================================
+
+## 啟動 Graphiti MCP Server（簡化版）
+graphiti:
+	@echo "$(GREEN)🧠 啟動 Graphiti Memory 系統$(NC)"
+	@echo "$(CYAN)檢查服務狀態...$(NC)"
+	@if ! docker ps | grep -q neo4j; then \
+		echo "$(YELLOW)啟動 Neo4j 和 MCP Server...$(NC)"; \
+		cd ~/project/graphiti/mcp_server && docker compose up -d; \
+		echo "$(CYAN)等待服務啟動...$(NC)"; \
+		sleep 15; \
+	fi
+	@echo "$(CYAN)啟動 MCP Server (SSE 模式)...$(NC)"
+	@cd ~/project/graphiti/mcp_server && nohup uv run graphiti_mcp_server.py --transport sse > /tmp/graphiti.log 2>&1 &
+	@sleep 3
+	@echo "$(GREEN)✅ Graphiti 已啟動在 http://localhost:8000$(NC)"
+	@echo "$(BLUE)💡 Claude 已經設定好連接，可以直接使用記憶功能$(NC)"
+	@echo "$(YELLOW)📝 日誌檔案: /tmp/graphiti.log$(NC)"
+
+## 停止 Graphiti
+graphiti-stop:
+	@echo "$(YELLOW)🛑 停止 Graphiti Memory 系統$(NC)"
+	@pkill -f "graphiti_mcp_server.py" || true
+	@cd ~/project/graphiti/mcp_server && docker compose down
+	@echo "$(GREEN)✅ Graphiti 已停止$(NC)"
+
+## 檢查 Graphiti 狀態
+graphiti-status:
+	@echo "$(BLUE)📊 Graphiti 系統狀態$(NC)"
+	@echo "$(CYAN)Docker 服務:$(NC)"
+	@docker ps | grep -E "neo4j|mcp" || echo "  未運行"
+	@echo "$(CYAN)MCP Server 進程:$(NC)"
+	@ps aux | grep graphiti_mcp_server.py | grep -v grep || echo "  未運行"
+	@echo "$(CYAN)健康檢查:$(NC)"
+	@curl -s http://localhost:8000/sse 2>/dev/null > /dev/null && echo "  ✅ MCP Server 正常" || echo "  ❌ MCP Server 無回應"
+
+## 成本監控和使用統計
+graphiti-cost:
+	@./scripts/graphiti-cost-monitor.sh
+
+## Claude 專用初始化（含 Graphiti）
+claude-init: graphiti
+	@echo "$(GREEN)🤖 Claude 開發環境初始化完成$(NC)"
+	@echo "$(BLUE)記憶系統已啟動，Claude 會自動：$(NC)"
+	@echo "  - 查詢你的開發偏好和專案資訊"
+	@echo "  - 遵守 TDD 流程和禁止 any 類型規則"
+	@echo "  - 記錄新的需求和 bug 修復歷史"
+
+#=============================================================================
 # 幫助
 #=============================================================================
 
 help:
 	@echo "$(GREEN)🚀 現代化 AI 開發流程 - 完整版$(NC)"
+	@echo ""
+	@echo "$(YELLOW)=== Claude 記憶系統（一鍵啟動）===$(NC)"
+	@echo "$(CYAN)簡單使用:$(NC)"
+	@echo "  $(GREEN)make claude-init$(NC)                                   - 🧠 啟動 Claude 記憶系統（推薦）"
+	@echo "  $(GREEN)make graphiti-status$(NC)                               - 📊 檢查記憶系統狀態"
+	@echo "  $(GREEN)make graphiti-stop$(NC)                                 - 🛑 停止記憶系統"
 	@echo ""
 	@echo "$(YELLOW)=== AI 工作流程命令 ===$(NC)"
 	@echo "$(CYAN)核心流程:$(NC)"
@@ -260,6 +317,12 @@ help:
 	@echo "  $(GREEN)make smart-tickets-preview$(NC)                         - 預覽智能分組"
 	@echo "  $(GREEN)make smart-tickets$(NC)                                 - 智能補票（互動式）"
 	@echo "  $(GREEN)make batch-tickets$(NC) RECENT=5                        - 批次補票"
+	@echo ""
+	@echo "$(CYAN)Graphiti 記憶系統:$(NC)"
+	@echo "  $(GREEN)make claude-init$(NC)                                   - Claude 專用初始化（含記憶系統）"
+	@echo "  $(GREEN)make graphiti$(NC)                                      - 啟動 Graphiti MCP Server"
+	@echo "  $(GREEN)make graphiti-stop$(NC)                                 - 停止 Graphiti"
+	@echo "  $(GREEN)make graphiti-status$(NC)                               - 檢查 Graphiti 狀態"
 	@echo ""
 	@echo "$(YELLOW)=== 開發命令 ===$(NC)"
 	@echo "$(CYAN)應用程式執行:$(NC)"
