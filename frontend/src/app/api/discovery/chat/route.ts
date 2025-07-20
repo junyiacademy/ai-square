@@ -70,7 +70,7 @@ Please respond as the AI ${context.aiRole} in Traditional Chinese, being helpful
     });
 
     const response = result.response;
-    const text = response.candidates?.[0]?.context?.parts?.[0]?.text || '';
+    const text = response.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
     if (!text) {
       throw new Error('No response generated');

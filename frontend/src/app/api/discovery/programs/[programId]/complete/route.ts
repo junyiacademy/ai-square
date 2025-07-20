@@ -63,20 +63,21 @@ export async function POST(
     let validScoreCount = 0;
     
     completedTasks.forEach(task => {
-      const interactions = task.interactions || [];
+      const interactions = (task as { interactions?: unknown[] }).interactions || [];
       // Find the last successful AI response for this task
-      const successfulResponses = interactions.filter(i => 
-        i.type === 'ai_response' && i.context?.completed === true
-      );
+      const successfulResponses = interactions.filter((i: unknown) => {
+        const interaction = i as Record<string, unknown>;
+        return interaction.type === 'ai_response' && (interaction.context as Record<string, unknown>)?.completed === true;
+      });
       
       if (successfulResponses.length > 0) {
-        const lastSuccess = successfulResponses[successfulResponses.length - 1];
+        const lastSuccess = successfulResponses[successfulResponses.length - 1] as Record<string, unknown>;
         const content = typeof lastSuccess.content === 'string' 
           ? JSON.parse(lastSuccess.content) 
-          : lastSuccess.content;
+          : lastSuccess.content as Record<string, unknown>;
         
-        const xpEarned = content.xpEarned || 0;
-        const score = content.score || (content.completed ? 100 : 0);
+        const xpEarned = (content?.xpEarned as number) || 0;
+        const score = (content?.score as number) || (content?.completed ? 100 : 0);
         
         totalXP += xpEarned;
         totalScore += score;
@@ -88,11 +89,12 @@ export async function POST(
     
     // Calculate time spent
     const timeSpentSeconds = completedTasks.reduce((sum, task) => {
-      const interactions = task.interactions || [];
-      const timeSpent = interactions.reduce((taskTime, interaction) => {
+      const interactions = (task as { interactions?: unknown[] }).interactions || [];
+      const timeSpent = interactions.reduce((taskTime: number, interaction) => {
+        const i = interaction as Record<string, unknown>;
         // Check different possible locations for timeSpent
-        const time = interaction.metadata?.timeSpent || 
-                    interaction.context?.timeSpent || 
+        const time = (i.metadata as Record<string, unknown>)?.timeSpent as number || 
+                    (i.context as Record<string, unknown>)?.timeSpent as number || 
                     0;
         return taskTime + time;
       }, 0);
@@ -101,26 +103,29 @@ export async function POST(
     
     // Create task evaluations
     const taskEvaluations = completedTasks.map(task => {
-      const interactions = task.interactions || [];
-      const attempts = interactions.filter(i => i.type === 'user_input').length;
-      const aiResponses = interactions.filter(i => i.type === 'ai_response');
-      const passCount = aiResponses.filter(r => r.context?.completed === true).length;
+      const interactions = (task as { interactions?: unknown[] }).interactions || [];
+      const attempts = interactions.filter(i => (i as Record<string, unknown>).type === 'user_input').length;
+      const aiResponses = interactions.filter(i => (i as Record<string, unknown>).type === 'ai_response');
+      const passCount = aiResponses.filter(r => (r as Record<string, unknown>).context && ((r as Record<string, unknown>).context as Record<string, unknown>)?.completed === true).length;
       
       // Get the last successful response for XP and score
       let taskXP = 0;
       let taskScore = 0;
-      let skillsImproved = [];
+      let skillsImproved: string[] = [];
       
-      const successfulResponses = aiResponses.filter(r => r.context?.completed === true);
+      const successfulResponses = aiResponses.filter(r => {
+        const response = r as Record<string, unknown>;
+        return response.context && ((response.context as Record<string, unknown>)?.completed === true);
+      });
       if (successfulResponses.length > 0) {
-        const lastSuccess = successfulResponses[successfulResponses.length - 1];
+        const lastSuccess = successfulResponses[successfulResponses.length - 1] as Record<string, unknown>;
         const content = typeof lastSuccess.content === 'string' 
           ? JSON.parse(lastSuccess.content) 
-          : lastSuccess.content;
+          : lastSuccess.content as Record<string, unknown>;
         
-        taskXP = content.xpEarned || 0;
-        taskScore = content.score || (content.completed ? 100 : 0);
-        skillsImproved = content.skillsImproved || [];
+        taskXP = (content?.xpEarned as number) || 0;
+        taskScore = (content?.score as number) || (content?.completed ? 100 : 0);
+        skillsImproved = (content?.skillsImproved as string[]) || [];
       }
       
       return {
@@ -158,6 +163,8 @@ export async function POST(
       targetId: programId,
       evaluationType: 'discovery_complete',
       score: avgScore,
+      maxScore: 100,
+      timeTakenSeconds: timeSpentSeconds,
       userId: user.email,
       metadata: {
         programId,

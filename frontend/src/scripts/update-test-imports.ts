@@ -17,27 +17,6 @@ const testFiles = [
   'src/app/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]/__tests__/route.test.ts',
 ];
 
-const updateImports = (content: string): string => {
-  // Replace GCS v2 imports with repository factory
-  content = content.replace(
-    /import\s*\{[^}]+\}\s*from\s*['"]@\/lib\/implementations\/gcs-v2['"]/g,
-    "import { repositoryFactory } from '@/lib/repositories/base/repository-factory'"
-  );
-  
-  // Update mock declarations
-  content = content.replace(
-    /const\s+mockGet(\w+)Repository\s*=\s*get\1Repository\s+as\s+jest\.\w+/g,
-    'const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>'
-  );
-  
-  // Update mock setup calls
-  content = content.replace(
-    /mockGet(\w+)Repository\.mockReturnValue\((.*?)\)/g,
-    'mockRepositoryFactory.get$1Repository = jest.fn().mockReturnValue($2)'
-  );
-  
-  return content;
-};
 
 const commentOutFile = (filePath: string) => {
   const fullPath = resolve(filePath);

@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAuthFromRequest } from '@/lib/auth/auth-utils';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { cacheService } from '@/lib/cache/cache-service';
+import type { Task } from '@/lib/repositories/interfaces';
 
 export async function GET(request: NextRequest) {
   try {
@@ -45,7 +46,7 @@ export async function GET(request: NextRequest) {
 
     if (discoveryPrograms.length === 0) {
       // Cache empty result for shorter time
-      await cacheService.set(cacheKey, [], 30); // 30 seconds
+      await cacheService.set(cacheKey, [], { ttl: 30 * 1000 }); // 30 seconds
       return NextResponse.json([]);
     }
 
@@ -80,7 +81,7 @@ export async function GET(request: NextRequest) {
         let progress = 0;
         let completedTasks = 0;
         let totalTasks = 0;
-        let activeProgramTasks: Array<{ status: string }> = [];
+        let activeProgramTasks: Task[] = [];
         
         if (activeProgram) {
           // Get tasks for the active program
@@ -96,25 +97,30 @@ export async function GET(request: NextRequest) {
         if (scenarioPrograms.length > 0) {
           // Check program start times and completed times
           const programTimes = scenarioPrograms.map(p => {
-            const times = [new Date(p.startedAt).getTime()];
-            if (p.completedAt) {
-              times.push(new Date(p.completedAt).getTime());
+            const times: number[] = [];
+            if (p.startTime) {
+              times.push(new Date(p.startTime).getTime());
             }
-            return Math.max(...times);
+            if (p.endTime) {
+              times.push(new Date(p.endTime).getTime());
+            }
+            if (p.lastActivityAt) {
+              times.push(new Date(p.lastActivityAt).getTime());
+            }
+            return times.length > 0 ? Math.max(...times) : 0;
           });
           
           // Also check task update times for active program
           if (activeProgram && activeProgramTasks.length > 0) {
             const taskTimes = activeProgramTasks.map(t => {
-              const times = [new Date(t.startedAt).getTime()];
+              const times: number[] = [];
+              if (t.startedAt) {
+                times.push(new Date(t.startedAt).getTime());
+              }
               if (t.completedAt) {
                 times.push(new Date(t.completedAt).getTime());
               }
-              // Also consider updatedAt if available
-              if (t.updatedAt) {
-                times.push(new Date(t.updatedAt).getTime());
-              }
-              return Math.max(...times);
+              return times.length > 0 ? Math.max(...times) : 0;
             });
             programTimes.push(Math.max(...taskTimes));
           }
@@ -149,7 +155,7 @@ export async function GET(request: NextRequest) {
     );
 
     // Cache the result
-    await cacheService.set(cacheKey, myScenarios, 60); // Cache for 1 minute
+    await cacheService.set(cacheKey, myScenarios, { ttl: 60 * 1000 }); // Cache for 1 minute
 
     return NextResponse.json(myScenarios);
   } catch (error) {

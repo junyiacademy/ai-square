@@ -52,20 +52,23 @@ export async function GET(
       id: t.id,
       title: t.title,
       status: t.status,
-      hasEvaluation: !!t.evaluation
+      hasEvaluation: !!(t as { evaluation?: unknown }).evaluation
     })));
     
     // 2. 這些 task 的 evaluation 有誰？
     const completedTasks = tasks.filter(t => t.status === 'completed');
-    console.log(`2. Completed tasks (${completedTasks.length}):`, completedTasks.map(t => ({
-      taskId: t.id,
-      evaluationId: t.evaluation?.id,
-      score: t.evaluation?.score,
-      metadata: t.evaluation?.metadata
-    })));
+    console.log(`2. Completed tasks (${completedTasks.length}):`, completedTasks.map(t => {
+      const taskWithEval = t as { evaluation?: { id?: string; score?: number; metadata?: unknown } };
+      return {
+        taskId: t.id,
+        evaluationId: taskWithEval.evaluation?.id,
+        score: taskWithEval.evaluation?.score,
+        metadata: taskWithEval.evaluation?.metadata
+      };
+    }));
     
     // Get evaluations for this program
-    const evaluations = await evaluationRepo.findByTarget('program', programId);
+    const evaluations = await evaluationRepo.findByProgram(programId);
     console.log('Existing program evaluations:', {
       count: evaluations.length,
       types: evaluations.map(e => e.evaluationType),
@@ -87,10 +90,11 @@ export async function GET(
       
       // Create task evaluations array
       const taskEvaluations = completedTasks.map(task => {
-        const score = task.evaluation?.score || 0;
-        const xp = task.evaluation?.score || 0; // Using score as XP
-        const attempts = task.interactions?.filter(i => i.type === 'user_input').length || 1;
-        const skills = task.evaluation?.metadata?.skillsImproved || [];
+        const taskWithEval = task as { evaluation?: { score?: number; metadata?: { skillsImproved?: string[] } }; interactions?: { type: string }[] };
+        const score = taskWithEval.evaluation?.score || 0;
+        const xp = taskWithEval.evaluation?.score || 0; // Using score as XP
+        const attempts = taskWithEval.interactions?.filter(i => i.type === 'user_input').length || 1;
+        const skills = taskWithEval.evaluation?.metadata?.skillsImproved || [];
         
         if (score > 0) {
           totalXP += xp;
@@ -115,7 +119,8 @@ export async function GET(
       
       // Calculate time spent from interactions
       const timeSpentSeconds = completedTasks.reduce((sum, task) => {
-        const interactions = task.interactions || [];
+        const taskWithInteractions = task as { interactions?: { context?: { timeSpent?: number } }[] };
+        const interactions = taskWithInteractions.interactions || [];
         const time = interactions.reduce((taskTime, interaction) => {
           const t = interaction.context?.timeSpent || 0;
           return taskTime + t;
@@ -125,8 +130,8 @@ export async function GET(
       
       // Calculate days used from program start to last task completion
       let daysUsed = 0;
-      if (program.createdAt && completedTasks.length > 0) {
-        const startDate = new Date(program.createdAt);
+      if (program.startTime && completedTasks.length > 0) {
+        const startDate = new Date(program.startTime);
         const lastCompletionDate = completedTasks.reduce((latest, task) => {
           if (task.completedAt) {
             const taskDate = new Date(task.completedAt);

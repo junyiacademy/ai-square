@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
@@ -93,7 +93,10 @@ export async function GET(request: NextRequest) {
     // Get all existing scenarios in one batch query
     const existingScenarios = await scenarioRepo.findActive();
     const scenariosByPath = new Map(
-      existingScenarios.map((s: Scenario) => [s.sourceRef?.metadata?.configPath, s])
+      existingScenarios.map((s: Scenario) => {
+        const sourceRef = s.sourceRef as unknown as { metadata?: { configPath?: string } };
+        return [sourceRef?.metadata?.configPath, s];
+      })
     );
     
     // Process each folder
@@ -166,8 +169,8 @@ export async function GET(request: NextRequest) {
           
           return {
             id: scenario.id,
-            title: config.title || scenario.title,
-            description: config.description || scenario.description,
+            title: config.title || scenario.title || `${folderName.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())} Assessment`,
+            description: config.description || scenario.description || `Assessment for ${folderName.replace(/_/g, ' ')}`,
             folderName,
             config: {
               totalQuestions: config.total_questions || 12,

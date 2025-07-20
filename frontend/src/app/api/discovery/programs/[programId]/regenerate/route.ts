@@ -44,10 +44,11 @@ export async function POST(
     
     // Create task evaluations array
     const taskEvaluations = completedTasks.map(task => {
-      const score = task.evaluation?.score || 0;
-      const xp = task.evaluation?.score || 0; // Using score as XP
-      const attempts = task.interactions?.filter(i => i.type === 'user_input').length || 1;
-      const skills = task.evaluation?.metadata?.skillsImproved || [];
+      const taskWithExtras = task as { evaluation?: { score?: number; metadata?: { skillsImproved?: string[] } }; interactions?: { type: string }[] };
+      const score = taskWithExtras.evaluation?.score || 0;
+      const xp = taskWithExtras.evaluation?.score || 0; // Using score as XP
+      const attempts = taskWithExtras.interactions?.filter(i => i.type === 'user_input').length || 1;
+      const skills = taskWithExtras.evaluation?.metadata?.skillsImproved || [];
       
       if (score > 0) {
         totalXP += xp;
@@ -70,7 +71,8 @@ export async function POST(
     
     // Calculate time spent from interactions
     const timeSpentSeconds = completedTasks.reduce((sum, task) => {
-      const interactions = task.interactions || [];
+      const taskWithInteractions = task as { interactions?: { context?: { timeSpent?: number } }[] };
+      const interactions = taskWithInteractions.interactions || [];
       const time = interactions.reduce((taskTime, interaction) => {
         const t = interaction.context?.timeSpent || 0;
         return taskTime + t;
@@ -80,8 +82,8 @@ export async function POST(
     
     // Calculate days used
     let daysUsed = 0;
-    if (program.createdAt && completedTasks.length > 0) {
-      const startDate = new Date(program.createdAt);
+    if (program.startTime && completedTasks.length > 0) {
+      const startDate = new Date(program.startTime);
       const lastCompletionDate = completedTasks.reduce((latest, task) => {
         if (task.completedAt) {
           const taskDate = new Date(task.completedAt);
@@ -110,8 +112,8 @@ export async function POST(
     const userLanguage = acceptLanguage || program.metadata?.language || 'en';
     
     // Generate qualitative feedback based on all task completions
-    let qualitativeFeedback = null;
-    const qualitativeFeedbackVersions = {};
+    let qualitativeFeedback: Record<string, unknown> | null = null;
+    const qualitativeFeedbackVersions: Record<string, unknown> = {};
     
     try {
       const aiService = new VertexAIService({
@@ -121,14 +123,17 @@ export async function POST(
       });
       
       // Prepare learning journey summary
-      const learningJourney = completedTasks.map(task => ({
-        taskTitle: task.title,
-        taskType: task.type,
-        score: task.evaluation?.score || 0,
-        feedback: task.evaluation?.feedback || '',
-        attempts: task.interactions?.filter(i => i.type === 'user_input').length || 0,
-        skills: task.evaluation?.metadata?.skillsImproved || []
-      }));
+      const learningJourney = completedTasks.map(task => {
+        const taskWithExtras = task as { evaluation?: { score?: number; feedback?: string; metadata?: { skillsImproved?: string[] } }; interactions?: { type: string }[] };
+        return {
+          taskTitle: task.title,
+          taskType: task.type,
+          score: taskWithExtras.evaluation?.score || 0,
+          feedback: taskWithExtras.evaluation?.feedback || '',
+          attempts: taskWithExtras.interactions?.filter(i => i.type === 'user_input').length || 0,
+          skills: taskWithExtras.evaluation?.metadata?.skillsImproved || []
+        };
+      });
       
       const feedbackPrompt = `
 Based on the following Discovery learning journey in the ${careerType} career path, provide a comprehensive qualitative assessment:
@@ -164,12 +169,15 @@ Return your response in JSON format:
       const aiResponse = await aiService.sendMessage(feedbackPrompt);
       
       try {
-        const jsonMatch = aiResponse.context.match(/\{[\s\S]*\}/);
+        const jsonMatch = aiResponse.content.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
-          qualitativeFeedback = JSON.parse(jsonMatch[0]);
+          qualitativeFeedback = JSON.parse(jsonMatch[0]) as Record<string, unknown>;
           
           // Store the generated feedback in the user's language
-          qualitativeFeedbackVersions[userLanguage] = qualitativeFeedback;
+          if (qualitativeFeedback) {
+            const feedback = qualitativeFeedback as Record<string, unknown>;
+            qualitativeFeedbackVersions[userLanguage] = feedback;
+          }
           
           // If not English, also generate English version for storage
           if (userLanguage !== 'en') {
@@ -202,7 +210,9 @@ Return your response in JSON format:
             } catch (translationError) {
               console.error('Failed to generate English version:', translationError);
               // Fallback: store current version as English too
-              qualitativeFeedbackVersions['en'] = qualitativeFeedback;
+              if (qualitativeFeedback) {
+                qualitativeFeedbackVersions['en'] = qualitativeFeedback as Record<string, unknown>;
+              }
             }
           }
         }

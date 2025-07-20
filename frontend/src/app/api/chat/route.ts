@@ -263,7 +263,7 @@ Title:`;
   try {
     const result = await model.generateContent(prompt);
     const response = result.response;
-    const text = response.candidates?.[0]?.context?.parts?.[0]?.text || '學習討論';
+    const text = response.candidates?.[0]?.content?.parts?.[0]?.text || '學習討論';
     return text.trim().replace(/['"「」]/g, '');
   } catch (error) {
     console.error('Error generating title:', error);
@@ -348,7 +348,7 @@ Guidelines:
     
     const result = await chat.sendMessage(message);
     const response = result.response;
-    const aiResponse = response.candidates?.[0]?.context?.parts?.[0]?.text || 'I apologize, but I was unable to generate a response.';
+    const aiResponse = response.candidates?.[0]?.content?.parts?.[0]?.text || 'I apologize, but I was unable to generate a response.';
     
     // Create or use session ID
     const currentSessionId = sessionId || uuidv4();
