@@ -91,7 +91,7 @@ export default function AssessmentPage() {
 
     // Calculate scores by domain
     answers.forEach(answer => {
-      const question = data.questions.find(q => q.id === answer.questionId);
+      const question = data.questions?.find(q => q.id === answer.questionId);
       if (question) {
         domainTotals[question.domain]++;
         if (answer.selectedAnswer === question.correct_answer) {
@@ -146,7 +146,7 @@ export default function AssessmentPage() {
 
     // Recommend improvement areas for lowest scoring domains
     sortedDomains.slice(0, 2).forEach(([domain]) => {
-      const domainInfo = data.domains[domain as keyof typeof data.domains];
+      const domainInfo = data.domains?.[domain as keyof typeof data.domains];
       const domainName = getTranslatedField(i18n.language, domainInfo, 'name') as string;
       const domainDescription = getTranslatedField(i18n.language, domainInfo, 'description') as string;
       
@@ -273,8 +273,13 @@ export default function AssessmentPage() {
 
       {currentStep === 'quiz' && assessmentData && (
         <AssessmentQuiz
-          questions={assessmentData.questions}
-          domains={assessmentData.domains}
+          questions={assessmentData.questions || []}
+          domains={assessmentData.domains || {
+            engaging_with_ai: { name: '', description: '', icon: '' },
+            creating_with_ai: { name: '', description: '', icon: '' },
+            managing_with_ai: { name: '', description: '', icon: '' },
+            designing_with_ai: { name: '', description: '', icon: '' }
+          }}
           onComplete={handleQuizComplete}
           timeLimit={assessmentData.assessment_config.time_limit_minutes}
         />
@@ -283,9 +288,14 @@ export default function AssessmentPage() {
       {currentStep === 'results' && assessmentResult && (
         <AssessmentResults
           result={assessmentResult}
-          domains={assessmentData.domains}
+          domains={assessmentData?.domains || {
+            engaging_with_ai: { name: '', description: '', icon: '' },
+            creating_with_ai: { name: '', description: '', icon: '' },
+            managing_with_ai: { name: '', description: '', icon: '' },
+            designing_with_ai: { name: '', description: '', icon: '' }
+          }}
           onRetake={handleRetakeAssessment}
-          questions={assessmentData.questions}
+          questions={assessmentData?.questions || []}
           userAnswers={userAnswers}
         />
       )}

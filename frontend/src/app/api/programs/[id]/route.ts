@@ -13,7 +13,7 @@ export async function GET(
   const resolvedParams = await params;
   try {
     const programRepo = repositoryFactory.getProgramRepository();
-    const program = await programRepo.getProgramWithScenario(resolvedParams.id);
+    const program = await programRepo.findById(resolvedParams.id);
     
     if (!program) {
       return NextResponse.json(
@@ -87,7 +87,7 @@ export async function PATCH(
   } catch (error) {
     console.error('Error updating program:', error);
     
-    if (error.message === 'Program not found') {
+    if (error instanceof Error && error.message === 'Program not found') {
       return NextResponse.json(
         { error: 'Program not found' },
         { status: 404 }
@@ -110,7 +110,7 @@ export async function DELETE(
     const programRepo = repositoryFactory.getProgramRepository();
     
     // Mark as abandoned instead of deleting
-    await programRepo.update(resolvedParams.id, 'abandoned', { status: "completed" });
+    await programRepo.update(resolvedParams.id, { status: 'abandoned' });
     
     return NextResponse.json({ 
       message: 'Program marked as abandoned' 

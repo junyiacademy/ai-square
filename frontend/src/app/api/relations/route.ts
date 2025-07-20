@@ -87,10 +87,10 @@ export async function GET(request: NextRequest) {
     if (cached) {
       return NextResponse.json(cached);
     }
-    // Load data using the new hybrid loader with language support
+    // Load data using the new hybrid loader with language-specific paths
     const [domainsData, ksaCodesData] = await Promise.all([
-      jsonYamlLoader.load('ai_lit_domains', { preferJson: true, language: lang }) as Promise<DomainsYaml>,
-      jsonYamlLoader.load('ksa_codes', { preferJson: true, language: lang }) as Promise<KSACodesYaml>
+      jsonYamlLoader.load(`ai_lit_domains_${lang}`, { preferJson: true }) as Promise<DomainsYaml>,
+      jsonYamlLoader.load(`ksa_codes_${lang}`, { preferJson: true }) as Promise<KSACodesYaml>
     ]);
 
     if (!domainsData || !ksaCodesData) {

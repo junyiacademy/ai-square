@@ -60,7 +60,7 @@ export async function PATCH(
   } catch (error) {
     console.error('Error updating user:', error);
     
-    if (error.message === 'User not found') {
+    if (error instanceof Error && error.message === 'User not found') {
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }

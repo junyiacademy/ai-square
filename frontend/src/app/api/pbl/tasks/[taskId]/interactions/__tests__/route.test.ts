@@ -84,7 +84,7 @@ describe('Task Interactions API', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockGetServerSession.mockResolvedValue(mockSession);
+    mockGetServerSession.mockResolvedValue(mockSession as unknown as Session);
   });
 
   const createRequest = (url: string, options: RequestInit = {}) => {

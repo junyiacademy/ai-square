@@ -44,9 +44,9 @@ function convertScenarioForIndex(scenario: Scenario): IScenario {
     id: scenario.id,
     sourceType: scenario.type,
     sourceRef: {
-      type: scenario.sourceRef?.type || 'unknown',
+      type: (scenario.sourceRef?.type || 'yaml') as 'yaml' | 'api' | 'ai-generated',
       path: scenario.sourceRef?.path || '',
-      metadata: scenario.sourceRef?.metadata || {}
+      metadata: { yamlId: scenario.id }
     },
     title: scenario.title || '',
     description: scenario.description || '',
@@ -84,7 +84,7 @@ async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Recor
     
     // Create a map for quick lookup
     const existingScenariosMap = new Map(
-      existingScenarios.map((s: Scenario) => [s.sourceRef?.metadata?.yamlId, s])
+      existingScenarios.map((s: Scenario) => [s.metadata?.yamlId as string | undefined, s])
     );
     
     // Process each YAML ID

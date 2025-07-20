@@ -97,7 +97,7 @@ describe('/api/pbl/scenarios', () => {
       ]);
       
       // Mock createScenarioFromYAML to return translated content based on language
-      mockPblScenarioService.createScenarioFromYAML.mockImplementation(async (yamlId: string, language?: string) => {
+      mockPblScenarioService.createScenarioFromYAML.mockImplementation(async (yamlId: string, language?: string): Promise<IScenario> => {
         const lang = language || 'en';
         if (yamlId === 'ai-job-search') {
           const titleMap: Record<string, string> = {
@@ -117,28 +117,46 @@ describe('/api/pbl/scenarios', () => {
           
           return {
             id: 'ai-job-search',
+            sourceType: 'pbl' as const,
+            sourceRef: {
+              type: 'yaml' as const,
+              path: `pbl_data/${yamlId}_scenario.yaml`,
+              metadata: { yamlId }
+            },
             title: titleMap[lang] || titleMap['en'],
             description: descMap[lang] || descMap['en'],
+            objectives: [],
+            taskTemplates: [],
             metadata: {
               difficulty: mockScenarioData.scenario_info.difficulty,
               estimatedDuration: mockScenarioData.scenario_info.estimated_duration,
               targetDomains: mockScenarioData.scenario_info.target_domains
             },
-            taskTemplates: []
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
           };
         }
         
         // Return default for other scenarios
         return {
           id: yamlId,
+          sourceType: 'pbl' as const,
+          sourceRef: {
+            type: 'yaml' as const,
+            path: `pbl_data/${yamlId}_scenario.yaml`,
+            metadata: { yamlId }
+          },
           title: `${yamlId} Title`,
           description: `${yamlId} Description`,
+          objectives: [],
+          taskTemplates: [],
           metadata: {
             difficulty: 'intermediate',
             estimatedDuration: 60,
             targetDomains: ['engaging_with_ai']
           },
-          taskTemplates: []
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
         };
       });
     });
@@ -307,11 +325,10 @@ describe('/api/pbl/scenarios', () => {
         url: 'http://localhost/api/pbl/scenarios?lang=en'
       } as Request;
       
-      // Force an error by mocking URL constructor
-      const originalURL = global.URL;
-      global.URL = jest.fn().mockImplementation(() => {
-        throw new Error('Unexpected error');
-      });
+      // Force an error by mocking pblScenarioService instead of URL
+      mockPblScenarioService.listAvailableYAMLIds.mockRejectedValue(
+        new Error('Unexpected error')
+      );
 
       const response = await GET(mockRequest);
       const data = await response.json();
@@ -321,7 +338,6 @@ describe('/api/pbl/scenarios', () => {
       expect(data.error.code).toBe('FETCH_SCENARIOS_ERROR');
       expect(data.error.message).toBe('Failed to fetch PBL scenarios');
 
-      global.URL = originalURL;
       consoleError.mockRestore();
     });
   });
@@ -403,7 +419,7 @@ describe('/api/pbl/scenarios', () => {
       ]);
       
       // Mock createScenarioFromYAML to return translated content based on language
-      mockPblScenarioService.createScenarioFromYAML.mockImplementation(async (yamlId: string, language?: string) => {
+      mockPblScenarioService.createScenarioFromYAML.mockImplementation(async (yamlId: string, language?: string): Promise<IScenario> => {
         const lang = language || 'en';
         if (yamlId === 'ai-job-search') {
           const titleMap: Record<string, string> = {
@@ -423,28 +439,46 @@ describe('/api/pbl/scenarios', () => {
           
           return {
             id: 'ai-job-search',
+            sourceType: 'pbl' as const,
+            sourceRef: {
+              type: 'yaml' as const,
+              path: `pbl_data/${yamlId}_scenario.yaml`,
+              metadata: { yamlId }
+            },
             title: titleMap[lang] || titleMap['en'],
             description: descMap[lang] || descMap['en'],
+            objectives: [],
+            taskTemplates: [],
             metadata: {
               difficulty: mockScenarioData.scenario_info.difficulty,
               estimatedDuration: mockScenarioData.scenario_info.estimated_duration,
               targetDomains: mockScenarioData.scenario_info.target_domains
             },
-            taskTemplates: []
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
           };
         }
         
         // Return default for other scenarios
         return {
           id: yamlId,
+          sourceType: 'pbl' as const,
+          sourceRef: {
+            type: 'yaml' as const,
+            path: `pbl_data/${yamlId}_scenario.yaml`,
+            metadata: { yamlId }
+          },
           title: `${yamlId} Title`,
           description: `${yamlId} Description`,
+          objectives: [],
+          taskTemplates: [],
           metadata: {
             difficulty: 'intermediate',
             estimatedDuration: 60,
             targetDomains: ['engaging_with_ai']
           },
-          taskTemplates: []
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
         };
       });
     });

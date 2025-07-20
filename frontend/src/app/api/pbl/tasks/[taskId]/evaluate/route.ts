@@ -62,7 +62,7 @@ export async function POST(
             conversationCount: evaluation.conversationCount,
             evaluatedAt: evaluation.evaluatedAt || new Date().toISOString(),
             updatedAt: new Date().toISOString(),
-            updateCount: ((existingEval.metadata as Record<string, unknown>)?.updateCount || 0) + 1
+            updateCount: ((existingEval.metadata as Record<string, unknown>)?.updateCount as number || 0) + 1
           }
         });
       } else {
@@ -129,12 +129,12 @@ export async function POST(
         const programRepo = repositoryFactory.getProgramRepository();
         const program = await programRepo.findById(programId);
         
-        if (program?.evaluationId) {
-          const evalRepo = repositoryFactory.getEvaluationRepository();
-          
-          await evalRepo.update(program.evaluationId, {
+        if (program?.metadata?.evaluationId) {
+          // Just update the program metadata instead
+          await programRepo.update(program.id, {
             metadata: {
-              isLatest: false,
+              ...program.metadata,
+              evaluationOutdated: true,
               lastTaskEvaluationAt: new Date().toISOString()
             }
           });

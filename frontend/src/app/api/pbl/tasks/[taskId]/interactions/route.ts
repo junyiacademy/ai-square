@@ -45,7 +45,7 @@ export async function POST(
       const task = await taskRepo.findById(taskId);
       if (task) {
         const metadata = task.metadata || {};
-        const interactions = metadata.interactions || [];
+        const interactions = (metadata.interactions as Array<Record<string, unknown>>) || [];
         interactions.push({
           timestamp: interaction.timestamp || new Date().toISOString(),
           type: interaction.type,
@@ -110,13 +110,14 @@ export async function GET(
     }
 
     // Transform interactions for frontend compatibility
-    const transformedInteractions = (task.interactions || []).map((i: IInteraction) => ({
+    const interactions = (task.metadata?.interactions as Array<Record<string, unknown>>) || [];
+    const transformedInteractions = interactions.map((i: Record<string, unknown>) => ({
       id: `${task.id}_${i.timestamp}`,
       type: i.type === 'user_input' ? 'user' : 
             i.type === 'ai_response' ? 'ai' : 'system',
       context: i.content,
       timestamp: i.timestamp,
-      role: i.metadata?.role || i.type
+      role: (i.metadata as Record<string, unknown>)?.role || i.type
     }));
 
     return {
@@ -124,7 +125,7 @@ export async function GET(
       data: {
         interactions: transformedInteractions,
         taskStatus: task.status,
-        evaluationId: task.evaluationId
+        evaluationId: task.metadata?.evaluationId as string | undefined
       }
     };
   }, {

@@ -34,8 +34,8 @@ export async function GET(request: NextRequest) {
     }
 
     // Convert Maps to objects for JSON serialization
-    const yamlToUuidObject: Record<string, string> = {};
-    const uuidToYamlObject: Record<string, string> = {};
+    const yamlToUuidObject: Record<string, ScenarioIndexEntry> = {};
+    const uuidToYamlObject: Record<string, ScenarioIndexEntry> = {};
 
     for (const [key, value] of index.yamlToUuid) {
       yamlToUuidObject[key] = value;
