@@ -212,8 +212,9 @@ export async function POST(request: NextRequest) {
     
     // Get or create program evaluation
     let evaluation;
-    if (program.evaluationId) {
-      evaluation = await evalRepo.findById(program.evaluationId);
+    const evaluationId = program.metadata?.evaluationId as string | undefined;
+    if (evaluationId) {
+      evaluation = await evalRepo.findById(evaluationId);
     }
     
     if (!evaluation) {
@@ -268,9 +269,9 @@ export async function POST(request: NextRequest) {
         taskId: task.id,
         evaluation: taskEval ? {
           score: taskEval.score || 0,
-          feedback: taskEval.metadata?.feedback || '',
-          strengths: taskEval.metadata?.strengths || [],
-          improvements: taskEval.metadata?.improvements || []
+          feedback: (taskEval.metadata?.feedback as string) || '',
+          strengths: (taskEval.metadata?.strengths as string[]) || [],
+          improvements: (taskEval.metadata?.improvements as string[]) || []
         } : undefined,
         log: {
           interactions: [] // Task interactions would need to be fetched separately if needed
@@ -297,8 +298,12 @@ export async function POST(request: NextRequest) {
         }
       };
       
-      await evalRepo.update(evaluation.id, {
-        metadata: updatedMetadata
+      // Store updated feedback in program metadata since evalRepo doesn't have update
+      await programRepo.update(program.id, {
+        metadata: {
+          ...program.metadata,
+          evaluationMetadata: updatedMetadata
+        }
       });
       
       // Update local evaluation object
@@ -491,14 +496,18 @@ Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLan
       }
     };
     
-    await evalRepo.update(evaluation.id, {
+    // Store updated feedback in program metadata since evalRepo doesn't have update
+    await programRepo.update(program.id, {
       metadata: {
-        ...evaluation.metadata,
-        qualitativeFeedback: updatedQualitativeFeedback,
-        generatedLanguages: [
-          ...(evaluation.metadata?.generatedLanguages || []).filter((l: string) => l !== currentLang),
-          currentLang
-        ]
+        ...program.metadata,
+        evaluationMetadata: {
+          ...evaluation.metadata,
+          qualitativeFeedback: updatedQualitativeFeedback,
+          generatedLanguages: [
+            ...(evaluation.metadata?.generatedLanguages || []).filter((l: string) => l !== currentLang),
+            currentLang
+          ]
+        }
       }
     });
     

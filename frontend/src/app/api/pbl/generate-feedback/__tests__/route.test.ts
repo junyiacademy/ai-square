@@ -1,14 +1,22 @@
 import { NextRequest } from 'next/server';
 import { POST } from '../route';
-import { pblProgramService } from '@/lib/storage/pbl-program-service';
 import { VertexAI } from '@google-cloud/vertexai';
 
-// Mock dependencies
-jest.mock('@/lib/storage/pbl-program-service', () => ({
-  pblProgramService: {
-    getProgramCompletion: jest.fn(),
-    updateProgramCompletionFeedback: jest.fn()
-  }
+// Mock auth session
+const mockGetServerSession = jest.fn()
+jest.mock('@/lib/auth/session', () => ({
+  getServerSession: mockGetServerSession
+}))
+
+// Mock repository factory
+const mockRepositoryFactory = {
+  getProgramRepository: jest.fn(),
+  getEvaluationRepository: jest.fn(),
+  getTaskRepository: jest.fn(),
+  getScenarioRepository: jest.fn(),
+}
+jest.mock('@/lib/db/repositories/factory', () => ({
+  createRepositoryFactory: mockRepositoryFactory
 }));
 
 jest.mock('@google-cloud/vertexai', () => ({
@@ -120,18 +128,37 @@ describe('/api/pbl/generate-feedback', () => {
     jest.clearAllMocks();
     
     // Setup default mocks
-    NextRequest.prototype.cookies = {
-      get: jest.fn((name) => 
-        name === 'user' ? { value: JSON.stringify({ email: 'test@example.com' }) } : undefined
-      ),
-      set: jest.fn(),
-      delete: jest.fn(),
-      has: jest.fn(),
-      getAll: jest.fn(() => [])
-    } as any;
+    mockGetServerSession.mockResolvedValue({
+      user: { id: 'user123', email: 'test@example.com' }
+    });
 
-    (pblProgramService.getProgramCompletion as jest.Mock).mockResolvedValue(mockCompletionData);
-    (pblProgramService.updateProgramCompletionFeedback as jest.Mock).mockResolvedValue(true);
+    // Setup repository mocks
+    const mockProgramRepo = {
+      findById: jest.fn().mockResolvedValue({
+        id: 'prog123',
+        userId: 'user123',
+        scenarioId: 'career-advisor',
+        status: 'completed',
+        metadata: {}
+      }),
+      update: jest.fn()
+    };
+    const mockEvalRepo = {
+      findById: jest.fn().mockResolvedValue(null),
+      findByProgram: jest.fn().mockResolvedValue([]),
+      create: jest.fn()
+    };
+    const mockTaskRepo = {
+      findByProgram: jest.fn().mockResolvedValue([])
+    };
+    const mockScenarioRepo = {
+      findById: jest.fn()
+    };
+    
+    mockRepositoryFactory.getProgramRepository.mockReturnValue(mockProgramRepo);
+    mockRepositoryFactory.getEvaluationRepository.mockReturnValue(mockEvalRepo);
+    mockRepositoryFactory.getTaskRepository.mockReturnValue(mockTaskRepo);
+    mockRepositoryFactory.getScenarioRepository.mockReturnValue(mockScenarioRepo);
     
     const fs = require('fs/promises');
     const yaml = require('yaml');
@@ -321,13 +348,7 @@ describe('/api/pbl/generate-feedback', () => {
     });
 
     it('returns 401 when user is not authenticated', async () => {
-      NextRequest.prototype.cookies = {
-        get: jest.fn(() => undefined),
-        set: jest.fn(),
-        delete: jest.fn(),
-        has: jest.fn(),
-        getAll: jest.fn(() => [])
-      } as any;
+      mockGetServerSession.mockResolvedValue(null);
 
       const request = createRequest({
         programId: 'prog123',
@@ -342,7 +363,7 @@ describe('/api/pbl/generate-feedback', () => {
     });
 
     it('returns 404 when completion data not found', async () => {
-      (pblProgramService.getProgramCompletion as jest.Mock).mockResolvedValue(null);
+      mockRepositoryFactory.getProgramRepository().findById.mockResolvedValue(null);
 
       const request = createRequest({
         programId: 'prog123',

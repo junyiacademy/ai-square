@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { GET, PUT, DELETE } from '../route'
+import { GET } from '../route'
 
 // Mock storage service
 jest.mock('@/lib/storage/storage-factory', () => ({
