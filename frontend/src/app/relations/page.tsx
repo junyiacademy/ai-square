@@ -185,9 +185,9 @@ export default function RelationsClient() {
             if (theme.codes && typeof theme.codes === 'object') {
               Object.entries(theme.codes).forEach(([code, item]: [string, Record<string, unknown>]) => {
                 kMap[code] = {
-                  summary: item.summary,
-                  theme: theme.name,
-                  explanation: theme.explanation
+                  summary: String(item.summary || ''),
+                  theme: String(theme.name || ''),
+                  explanation: theme.explanation ? String(theme.explanation) : undefined
                 };
               });
             }
@@ -200,9 +200,9 @@ export default function RelationsClient() {
             if (theme.codes && typeof theme.codes === 'object') {
               Object.entries(theme.codes).forEach(([code, item]: [string, Record<string, unknown>]) => {
                 sMap[code] = {
-                  summary: item.summary,
-                  theme: theme.name,
-                  explanation: theme.explanation
+                  summary: String(item.summary || ''),
+                  theme: String(theme.name || ''),
+                  explanation: theme.explanation ? String(theme.explanation) : undefined
                 };
               });
             }
@@ -215,9 +215,9 @@ export default function RelationsClient() {
             if (theme.codes && typeof theme.codes === 'object') {
               Object.entries(theme.codes).forEach(([code, item]: [string, Record<string, unknown>]) => {
                 aMap[code] = {
-                  summary: item.summary,
-                  theme: theme.name,
-                  explanation: theme.explanation
+                  summary: String(item.summary || ''),
+                  theme: String(theme.name || ''),
+                  explanation: theme.explanation ? String(theme.explanation) : undefined
                 };
               });
             }

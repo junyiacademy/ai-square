@@ -109,7 +109,7 @@ class MockTaskRepository implements BaseTaskRepository<ITask> {
   async saveResponse(id: string, response: any): Promise<ITask> {
     const task = this.tasks.get(id);
     if (!task) throw new Error('Task not found');
-    task.response = response;
+    task.userResponse = response;
     task.status = 'completed';
     task.completedAt = new Date().toISOString();
     return task;
@@ -131,7 +131,13 @@ class MockEvaluationRepository implements BaseEvaluationRepository<IEvaluation> 
 
   async findByTarget(targetType: 'task' | 'program', targetId: string): Promise<IEvaluation[]> {
     return Array.from(this.evaluations.values()).filter(
-      e => e.targetType === targetType && e.targetId === targetId
+      e => {
+        if (targetType === 'task') {
+          return e.evaluationType === 'task' && e.taskId === targetId;
+        } else {
+          return e.evaluationType === 'program' && e.programId === targetId;
+        }
+      }
     );
   }
 
@@ -196,9 +202,9 @@ describe('BaseLearningService', () => {
     it('should create a complete learning program with tasks', async () => {
       // Arrange
       const scenario = await mockScenarioRepo.create({
-        sourceType: 'pbl',
-        title: 'Test Scenario',
-        description: 'Test Description',
+        sourceType: 'yaml' as const,
+        title: { en: 'Test Scenario' },
+        description: { en: 'Test Description' },
         taskTemplates: [
           {
             id: 'template-1',
@@ -294,9 +300,9 @@ describe('BaseLearningService', () => {
 
       // Assert
       expect(result.task.status).toBe('completed');
-      expect(result.task.response).toEqual({ answer: 'test' });
-      expect(result.evaluation.targetType).toBe('task');
-      expect(result.evaluation.targetId).toBe('task-1');
+      expect(result.task.userResponse).toEqual({ answer: 'test' });
+      expect(result.evaluation.evaluationType).toBe('task');
+      expect(result.evaluation.taskId).toBe('task-1');
       expect(result.nextTask?.id).toBe('task-2');
       expect(result.nextTask?.status).toBe('active');
     });
@@ -346,8 +352,8 @@ describe('BaseLearningService', () => {
       });
 
       await mockEvaluationRepo.create({
-        targetType: 'task',
-        targetId: 'task-1',
+        evaluationType: 'task',
+        taskId: 'task-1',
         programId: program1.id,
         userId: 'user-123',
         type: 'task_completion',
@@ -357,8 +363,8 @@ describe('BaseLearningService', () => {
       });
 
       await mockEvaluationRepo.create({
-        targetType: 'task',
-        targetId: 'task-2',
+        evaluationType: 'task',
+        taskId: 'task-2',
         programId: program1.id,
         userId: 'user-123',
         type: 'task_completion',
@@ -382,7 +388,7 @@ describe('BaseLearningService', () => {
     it('should return detailed program status with completion rate', async () => {
       // Arrange
       const scenario = await mockScenarioRepo.create({
-        sourceType: 'pbl',
+        sourceType: 'yaml' as const,
         title: 'Test Scenario',
         description: 'Test',
         taskTemplates: [],

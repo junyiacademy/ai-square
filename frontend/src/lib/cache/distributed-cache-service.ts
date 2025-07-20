@@ -32,7 +32,7 @@ class DistributedCacheService {
       // Try local cache first for speed
       const localItem = this.localCache.get(key);
       if (localItem && localItem.expiresAt > Date.now()) {
-        return localItem.value;
+        return localItem.value as T;
       }
 
       // Try Redis cache

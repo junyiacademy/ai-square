@@ -54,15 +54,28 @@ class ProductionMonitor {
 
   private async reportMetrics(): Promise<void> {
     try {
-      const report = performanceMonitor.getAllMetrics();
+      const metrics = performanceMonitor.getAllMetrics();
       const cacheStats = await distributedCacheService.getStats();
+
+      // Calculate summary
+      const summary = {
+        averageResponseTime: metrics.length > 0 
+          ? metrics.reduce((sum, m) => sum + m.averageResponseTime, 0) / metrics.length 
+          : 0,
+        averageCacheHitRate: metrics.length > 0 
+          ? metrics.reduce((sum, m) => sum + m.cacheHitRate, 0) / metrics.length 
+          : 0,
+        averageErrorRate: metrics.length > 0 
+          ? metrics.reduce((sum, m) => sum + m.errorRate, 0) / metrics.length 
+          : 0
+      };
 
       // Log metrics locally
       console.log('Performance Metrics:', {
         timestamp: new Date().toISOString(),
-        averageResponseTime: report.summary.averageResponseTime,
-        averageCacheHitRate: report.summary.averageCacheHitRate,
-        averageErrorRate: report.summary.averageErrorRate,
+        averageResponseTime: summary.averageResponseTime,
+        averageCacheHitRate: summary.averageCacheHitRate,
+        averageErrorRate: summary.averageErrorRate,
         cacheStats
       });
 
@@ -73,21 +86,31 @@ class ProductionMonitor {
 
 
   private async checkAlerts(): Promise<void> {
-    const report = performanceMonitor.getAllMetrics();
+    const metrics = performanceMonitor.getAllMetrics();
     const cacheStats = await distributedCacheService.getStats();
 
+    // Calculate summary
+    const summary = {
+      averageResponseTime: metrics.length > 0 
+        ? metrics.reduce((sum, m) => sum + m.averageResponseTime, 0) / metrics.length 
+        : 0,
+      averageErrorRate: metrics.length > 0 
+        ? metrics.reduce((sum, m) => sum + m.errorRate, 0) / metrics.length 
+        : 0
+    };
+
     // Check response time alerts
-    if (report.summary.averageResponseTime > this.config.alertThresholds.responseTime) {
+    if (summary.averageResponseTime > this.config.alertThresholds.responseTime) {
       this.sendAlert('high_response_time', {
-        current: report.summary.averageResponseTime,
+        current: summary.averageResponseTime,
         threshold: this.config.alertThresholds.responseTime
       });
     }
 
     // Check error rate alerts
-    if (report.summary.averageErrorRate > this.config.alertThresholds.errorRate) {
+    if (summary.averageErrorRate > this.config.alertThresholds.errorRate) {
       this.sendAlert('high_error_rate', {
-        current: report.summary.averageErrorRate,
+        current: summary.averageErrorRate,
         threshold: this.config.alertThresholds.errorRate
       });
     }

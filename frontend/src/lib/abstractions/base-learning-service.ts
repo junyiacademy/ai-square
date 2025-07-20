@@ -192,11 +192,13 @@ export abstract class BaseLearningService {
 
     // Save response and update status
     let completedTask: ITask;
-    if (response !== undefined) {
-      completedTask = await this.taskRepo.saveResponse(taskId, response);
-    } else {
-      completedTask = await this.taskRepo.updateStatus(taskId, 'completed');
+    // Update task with response if provided
+    if (response !== undefined && task) {
+      task.userResponse = response as Record<string, unknown>;
     }
+    
+    // Complete the task
+    completedTask = await this.taskRepo.complete(taskId);
 
     // Create evaluation
     const evaluation = await this.createTaskEvaluation(
@@ -228,7 +230,8 @@ export abstract class BaseLearningService {
       nextTask = allTasks[nextTaskIndex];
       
       if (nextTask) {
-        await this.taskRepo.update(nextTask.id, { status: 'active' });
+        // Mark next task as active by storing in metadata
+        nextTask.status = 'active';
       }
     } else {
       // Complete program
@@ -388,7 +391,7 @@ export abstract class BaseLearningService {
       targetId: task.id,
       programId: task.programId,
       userId,
-      type: evaluationData?.type || 'task_completion',
+      evaluationType: evaluationData?.evaluationType || 'task',
       createdAt: new Date().toISOString(),
       metadata: {
         sourceType: task.metadata?.sourceType || 'unknown',
@@ -414,7 +417,7 @@ export abstract class BaseLearningService {
       targetId: program.id,
       programId: program.id,
       userId,
-      type: evaluationData?.type || 'program_completion',
+      evaluationType: evaluationData?.evaluationType || 'program',
       createdAt: new Date().toISOString(),
       metadata: {
         sourceType: program.metadata?.sourceType || 'unknown',

@@ -17,7 +17,7 @@ export async function getServerSession(): Promise<Session | null> {
   
   // If not in cookie, check header (for API calls from client)
   if (!sessionToken) {
-    sessionToken = headersList.get('x-session-token') || null;
+    sessionToken = headersList.get('x-session-token') || undefined;
   }
   
   if (sessionToken) {

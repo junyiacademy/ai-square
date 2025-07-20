@@ -85,17 +85,17 @@ describe('vertex-ai-service', () => {
         })
       });
 
-      const response = await service.chat('Test message');
+      const response = await service.sendMessage('Test message');
 
       expect(response.content).toBe('Test response');
       expect(response.processingTime).toBeGreaterThan(0);
     });
 
     it('should evaluate task performance', async () => {
-      const evaluation = await service.evaluate(
-        'Task content',
+      const evaluation = await service.evaluateResponse(
         'User response',
-        ['criteria1', 'criteria2']
+        'Task content',
+        { criteria: ['criteria1', 'criteria2'] }
       );
 
       expect(evaluation).toHaveProperty('score');
