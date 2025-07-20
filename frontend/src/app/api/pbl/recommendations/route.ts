@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
     const folders = await fs.readdir(scenariosDir);
     
     // Get language from request headers or default to 'en'
-    const lang = getLanguageFromHeader(request.headers.get('Accept-Language'));
+    const lang = getLanguageFromHeader(request);
 
     const scenarios: ScenarioData[] = [];
     for (const folder of folders) {
