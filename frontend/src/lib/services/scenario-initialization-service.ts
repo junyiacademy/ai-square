@@ -8,6 +8,8 @@
 
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { IScenario } from '@/types/unified-learning';
+import { DifficultyLevel, LearningMode, SourceType, TaskType } from '@/types/database';
+import type { Scenario, ScenarioType } from '@/lib/repositories/interfaces';
 import { AssessmentYAMLLoader } from './assessment-yaml-loader';
 import { PBLYAMLLoader } from './pbl-yaml-loader';
 import { DiscoveryYAMLLoader } from './discovery-yaml-loader';
@@ -148,16 +150,48 @@ export class ScenarioInitializationService {
 
           // 創建或更新 Scenario
           if (existingScenario) {
+            // Convert IScenario to UpdateScenarioDto
+            const updateDto = {
+              status: 'active' as const,
+              difficultyLevel: this.getDifficultyString(scenarioData.difficulty),
+              estimatedMinutes: scenarioData.estimatedMinutes,
+              prerequisites: scenarioData.prerequisites,
+              xpRewards: scenarioData.xpRewards,
+              tasks: scenarioData.taskTemplates,
+              metadata: scenarioData.metadata
+            };
+            
             const updated = await this.scenarioRepo.update(
               existingScenario.id,
-              scenarioData
+              updateDto
             );
             result.updated++;
-            result.scenarios.push(updated);
+            // Convert back to IScenario format
+            result.scenarios.push(this.convertToIScenario(updated));
           } else {
-            const created = await this.scenarioRepo.create(scenarioData);
+            // Convert IScenario to CreateScenarioDto
+            const createDto = {
+              type: scenarioData.mode as ScenarioType,
+              difficultyLevel: this.getDifficultyString(scenarioData.difficulty),
+              estimatedMinutes: scenarioData.estimatedMinutes,
+              prerequisites: scenarioData.prerequisites,
+              xpRewards: scenarioData.xpRewards,
+              tasks: scenarioData.taskTemplates,
+              metadata: {
+                ...scenarioData.metadata,
+                sourceType: scenarioData.sourceType,
+                sourcePath: scenarioData.sourcePath,
+                sourceMetadata: scenarioData.sourceMetadata,
+                title: scenarioData.title,
+                description: scenarioData.description,
+                objectives: scenarioData.objectives
+              }
+            };
+            
+            const created = await this.scenarioRepo.create(createDto);
             result.created++;
-            result.scenarios.push(created);
+            // Convert back to IScenario format
+            result.scenarios.push(this.convertToIScenario(created));
           }
 
         } catch (error) {
@@ -181,13 +215,73 @@ export class ScenarioInitializationService {
     sourceType: string,
     yamlPath: string
   ): Promise<IScenario | null> {
-    // 根據 sourceRef 查找
-    const scenarios = await this.scenarioRepo.findBySource(sourceType);
+    // Use findByType to get scenarios of specific type
+    const scenarios = await this.scenarioRepo.findByType(sourceType as ScenarioType);
     
-    return scenarios.find((s: IScenario) => 
-      s.sourceRef.type === 'yaml' && 
-      s.sourceRef.path === yamlPath
-    ) || null;
+    // Find matching scenario by source path in metadata
+    const match = scenarios.find((s) => 
+      s.metadata?.sourcePath === yamlPath
+    );
+    
+    return match ? this.convertToIScenario(match) : null;
+  }
+  
+  /**
+   * Convert database Scenario to IScenario
+   */
+  private convertToIScenario(scenario: Scenario): IScenario {
+    return {
+      id: scenario.id,
+      mode: scenario.mode as LearningMode,
+      status: scenario.status,
+      version: scenario.version,
+      sourceType: (scenario.metadata?.sourceType as SourceType) || 'yaml',
+      sourcePath: scenario.metadata?.sourcePath as string,
+      sourceId: scenario.metadata?.sourceId as string,
+      sourceMetadata: (scenario.metadata?.sourceMetadata as Record<string, unknown>) || {},
+      title: (scenario.metadata?.title as Record<string, string>) || { en: scenario.title || '' },
+      description: (scenario.metadata?.description as Record<string, string>) || { en: scenario.description || '' },
+      objectives: (scenario.metadata?.objectives as string[]) || [],
+      difficulty: this.getDifficultyLevel(scenario.difficultyLevel),
+      estimatedMinutes: scenario.estimatedMinutes || 60,
+      prerequisites: scenario.prerequisites || [],
+      taskTemplates: (scenario.tasks || []).map(task => ({
+        ...task,
+        type: task.type as TaskType,
+        title: task.title || ''
+      })),
+      taskCount: scenario.tasks?.length || 0,
+      xpRewards: Object.fromEntries(
+        Object.entries(scenario.xpRewards || {})
+          .filter(([_, value]) => typeof value === 'number')
+          .map(([key, value]) => [key, value as number])
+      ),
+      unlockRequirements: scenario.unlockRequirements || {},
+      pblData: (scenario.metadata?.pblData as Record<string, unknown>) || {},
+      discoveryData: (scenario.metadata?.discoveryData as Record<string, unknown>) || {},
+      assessmentData: (scenario.metadata?.assessmentData as Record<string, unknown>) || {},
+      aiModules: scenario.aiModules || {},
+      resources: scenario.resources || [],
+      createdAt: scenario.createdAt.toISOString(),
+      updatedAt: scenario.updatedAt.toISOString(),
+      publishedAt: scenario.publishedAt?.toISOString(),
+      metadata: scenario.metadata || {}
+    };
+  }
+  
+  /**
+   * Convert DifficultyLevel enum to string
+   */
+  private getDifficultyString(level: DifficultyLevel): string {
+    return level;
+  }
+  
+  /**
+   * Convert string to DifficultyLevel enum
+   */
+  private getDifficultyLevel(level?: string): DifficultyLevel {
+    const validLevels: DifficultyLevel[] = ['beginner', 'intermediate', 'advanced', 'expert'];
+    return (validLevels.includes(level as DifficultyLevel) ? level : 'intermediate') as DifficultyLevel;
   }
 }
 
@@ -243,28 +337,42 @@ class PBLYAMLProcessor implements IYAMLProcessor {
     const parts = filePath.split(path.sep);
     const scenarioId = parts[parts.length - 2];
     
+    const pblData = yamlData as any;
+    
     return {
-      sourceType: 'pbl',
-      sourceRef: {
-        type: 'yaml',
-        path: filePath,
-        metadata: {
-          scenarioId,
-          lastSync: new Date().toISOString()
-        }
+      mode: 'pbl' as const,
+      status: 'active' as const,
+      version: '1.0',
+      sourceType: 'yaml' as const,
+      sourcePath: filePath,
+      sourceMetadata: {
+        scenarioId,
+        lastSync: new Date().toISOString()
       },
-      title: yamlData.scenario_info?.title || 'Untitled PBL Scenario',
-      description: yamlData.scenario_info?.description || '',
-      objectives: yamlData.scenario_info?.learning_objectives || [],
+      title: { en: pblData.scenario_info?.title || 'Untitled PBL Scenario' },
+      description: { en: pblData.scenario_info?.description || '' },
+      objectives: pblData.scenario_info?.learning_objectives || [],
+      difficulty: (pblData.scenario_info?.difficulty || 'intermediate') as DifficultyLevel,
+      estimatedMinutes: parseInt(pblData.scenario_info?.estimated_duration?.replace('minutes', '') || '60'),
+      prerequisites: [],
       taskTemplates: [], // PBL tasks are defined in the YAML
+      taskCount: pblData.programs?.[0]?.tasks?.length || 0,
+      xpRewards: {},
+      unlockRequirements: {},
+      pblData: {
+        targetDomains: pblData.scenario_info?.target_domains || [],
+        ksaMappings: pblData.ksa_mappings || [],
+        programs: pblData.programs || []
+      },
+      discoveryData: {},
+      assessmentData: {},
+      aiModules: pblData.ai_modules || {},
+      resources: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       metadata: {
-        difficulty: yamlData.scenario_info?.difficulty,
-        estimatedDuration: yamlData.scenario_info?.estimated_duration,
-        targetDomains: yamlData.scenario_info?.target_domains,
-        ksaMappings: yamlData.ksa_mappings || [],
-        programs: yamlData.programs || []
+        difficulty: pblData.scenario_info?.difficulty,
+        estimatedDuration: pblData.scenario_info?.estimated_duration
       }
     };
   }
@@ -317,36 +425,52 @@ class DiscoveryYAMLProcessor implements IYAMLProcessor {
     const parts = filePath.split(path.sep);
     const careerType = parts[parts.length - 2];
     
+    const discoveryData = yamlData as any;
+    
     return {
-      sourceType: 'discovery',
-      sourceRef: {
-        type: 'yaml',
-        path: filePath,
-        metadata: {
-          careerType,
-          category: yamlData.category,
-          lastSync: new Date().toISOString()
-        }
+      mode: 'discovery' as const,
+      status: 'active' as const,
+      version: '1.0',
+      sourceType: 'yaml' as const,
+      sourcePath: filePath,
+      sourceMetadata: {
+        careerType,
+        category: discoveryData.category,
+        lastSync: new Date().toISOString()
       },
-      title: yamlData.metadata?.title || 'Untitled Discovery Path',
-      description: yamlData.metadata?.long_description || yamlData.metadata?.short_description || '',
+      title: { en: discoveryData.metadata?.title || 'Untitled Discovery Path' },
+      description: { en: discoveryData.metadata?.long_description || discoveryData.metadata?.short_description || '' },
       objectives: [
         'Explore career possibilities',
         'Develop practical skills',
         'Complete challenges',
         'Build portfolio projects'
       ],
+      difficulty: 'intermediate' as DifficultyLevel,
+      estimatedMinutes: (discoveryData.metadata?.estimated_hours || 1) * 60,
+      prerequisites: [],
       taskTemplates: [], // Discovery generates tasks dynamically
+      taskCount: 0,
+      xpRewards: {},
+      unlockRequirements: {},
+      pblData: {},
+      discoveryData: {
+        category: discoveryData.category,
+        difficultyRange: discoveryData.difficulty_range,
+        estimatedHours: discoveryData.metadata?.estimated_hours,
+        skillFocus: discoveryData.metadata?.skill_focus || [],
+        worldSetting: discoveryData.world_setting,
+        skillTree: discoveryData.skill_tree,
+        milestoneQuests: discoveryData.milestone_quests || []
+      },
+      assessmentData: {},
+      aiModules: {},
+      resources: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       metadata: {
-        category: yamlData.category,
-        difficultyRange: yamlData.difficulty_range,
-        estimatedHours: yamlData.metadata?.estimated_hours,
-        skillFocus: yamlData.metadata?.skill_focus || [],
-        worldSetting: yamlData.world_setting,
-        skillTree: yamlData.skill_tree,
-        milestoneQuests: yamlData.milestone_quests || []
+        category: discoveryData.category,
+        difficultyRange: discoveryData.difficulty_range
       }
     };
   }
@@ -404,41 +528,59 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
     const match = fileName.match(/_questions_(\w+)\.yaml$/);
     const language = match ? match[1] : 'en';
     
-    const config = yamlData.config || yamlData.assessment_config || {};
+    const assessmentData = yamlData as any;
+    const config = assessmentData.config || assessmentData.assessment_config || {};
+    const titleValue = this.loader.getTranslatedField(config, 'title', language) || `${assessmentName} Assessment`;
+    const descValue = this.loader.getTranslatedField(config, 'description', language) || '';
     
     return {
-      sourceType: 'assessment',
-      sourceRef: {
-        type: 'yaml',
-        path: filePath,
-        metadata: {
-          assessmentType: 'standard',
-          assessmentName,
-          language,
-          lastSync: new Date().toISOString()
-        }
+      mode: 'assessment' as const,
+      status: 'active' as const,
+      version: '1.0',
+      sourceType: 'yaml' as const,
+      sourcePath: filePath,
+      sourceMetadata: {
+        assessmentType: 'standard',
+        assessmentName,
+        language,
+        lastSync: new Date().toISOString()
       },
-      title: this.loader.getTranslatedField(config, 'title', language) || `${assessmentName} Assessment`,
-      description: this.loader.getTranslatedField(config, 'description', language) || '',
+      title: { [language]: titleValue },
+      description: { [language]: descValue },
       objectives: [
         'Evaluate your knowledge and skills',
         'Identify areas for improvement',
         'Get personalized recommendations'
       ],
+      difficulty: 'intermediate' as DifficultyLevel,
+      estimatedMinutes: config.time_limit_minutes || 15,
+      prerequisites: [],
       taskTemplates: [{
         id: 'assessment-task',
         title: 'Complete Assessment',
-        type: 'question'
+        type: 'question' as const
       }],
+      taskCount: config.total_questions || 12,
+      xpRewards: {},
+      unlockRequirements: {},
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {
+        totalQuestions: config.total_questions || 12,
+        timeLimit: config.time_limit_minutes || 15,
+        passingScore: config.passing_score || 60,
+        domains: config.domains || [],
+        questionBank: assessmentData.questions || [],
+        language
+      },
+      aiModules: {},
+      resources: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       metadata: {
         totalQuestions: config.total_questions || 12,
         timeLimit: config.time_limit_minutes || 15,
-        passingScore: config.passing_score || 60,
-        domains: config.domains || [],
-        questionBank: yamlData.questions || [],
-        language
+        passingScore: config.passing_score || 60
       }
     };
   }

@@ -5,6 +5,7 @@ import yaml from 'js-yaml';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { IScenario } from '@/types/unified-learning';
 import { getServerSession } from '@/lib/auth/session';
+import { convertScenarioToIScenario } from '@/lib/utils/type-converters';
 
 interface AssessmentConfig {
   title?: string;
@@ -91,7 +92,8 @@ export async function GET(request: NextRequest) {
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     
     // Get all existing scenarios in one batch query
-    const existingScenarios = await scenarioRepo.findActive();
+    const rawScenarios = await scenarioRepo.findActive();
+    const existingScenarios = rawScenarios.map(convertScenarioToIScenario);
     const scenariosByPath = new Map(
       existingScenarios.map((s: IScenario) => {
         const configPath = s.sourceMetadata?.configPath as string | undefined;
@@ -141,49 +143,43 @@ export async function GET(request: NextRequest) {
             const title = config.title || `${folderName.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())} Assessment`;
             const description = config.description || `Assessment for ${folderName.replace(/_/g, ' ')}`;
             
-            scenario = await scenarioRepo.create({
-              mode: 'assessment',
-              status: 'active',
-              sourceType: 'yaml',
-              sourcePath: yamlPath,
-              sourceId: `assessment-${folderName}`,
-              sourceMetadata: {
-                assessmentType: 'standard',
-                folderName,
-                configPath: yamlPath
-              },
-              title: { en: title },  // Multi-language support
-              description: { en: description },
-              objectives: [
-                'Evaluate your knowledge and skills',
-                'Identify areas for improvement',
-                'Get personalized recommendations'
-              ],
-              difficulty: 'intermediate',
+            const createdScenario = await scenarioRepo.create({
+              type: 'assessment',
+              difficultyLevel: 'intermediate',
               estimatedMinutes: config.time_limit_minutes || 30,
               prerequisites: [],
-              taskTemplates: [{
+              tasks: [{
                 id: 'assessment-task',
                 title: 'Complete Assessment',
-                type: 'question' as const,
+                type: 'question',
                 description: 'Answer the assessment questions'
               }],
               xpRewards: { completion: 100 },
-              unlockRequirements: {},
-              pblData: {},
-              discoveryData: {},
-              assessmentData: {
-                totalQuestions: config.total_questions || 12,
-                passingScore: config.passing_score || 60,
-                domains: config.domains || []
-              },
-              aiModules: {},
-              resources: [],
               metadata: {
-                sourceType: 'assessment',
-                folderName
+                status: 'active',
+                sourceType: 'yaml',
+                sourcePath: yamlPath,
+                sourceId: `assessment-${folderName}`,
+                title: { en: title },
+                description: { en: description },
+                objectives: [
+                  'Evaluate your knowledge and skills',
+                  'Identify areas for improvement',
+                  'Get personalized recommendations'
+                ],
+                sourceMetadata: {
+                  assessmentType: 'standard',
+                  folderName,
+                  configPath: yamlPath
+                },
+                assessmentData: {
+                  totalQuestions: config.total_questions || 12,
+                  passingScore: config.passing_score || 60,
+                  domains: config.domains || []
+                }
               }
             });
+            scenario = convertScenarioToIScenario(createdScenario);
           }
           
           return {

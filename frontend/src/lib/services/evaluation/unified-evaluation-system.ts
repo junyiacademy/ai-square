@@ -52,8 +52,8 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
     const dimensionMap = new Map<string, { total: number; count: number; maxTotal: number }>();
     
     taskEvaluations.forEach(evaluation => {
-      if (evaluation.dimensions) {
-        evaluation.dimensions.forEach(dim => {
+      if (evaluation.dimensionScores) {
+        evaluation.dimensionScores.forEach(dim => {
           const existing = dimensionMap.get(dim.dimension) || { total: 0, count: 0, maxTotal: 0 };
           existing.total += dim.score;
           existing.count += 1;
@@ -79,7 +79,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       type: 'program_completion',
       score: averageScore,
       feedback: await this.generateProgramFeedback(program, taskEvaluations),
-      dimensions: aggregatedDimensions,
+      dimensionScores: aggregatedDimensions,
       createdAt: new Date().toISOString(),
       metadata: {
         taskCount: taskEvaluations.length,
@@ -119,7 +119,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
     const qualityScore = this.analyzePBLInteractionQuality(interactions);
     
     // KSA 維度評分
-    const dimensions: IDimensionScore[] = [
+    const dimensionScores: IDimensionScore[] = [
       { dimension: 'knowledge', score: qualityScore.knowledge, maxScore: 100 },
       { dimension: 'skills', score: qualityScore.skills, maxScore: 100 },
       { dimension: 'attitudes', score: qualityScore.attitudes, maxScore: 100 }
@@ -136,7 +136,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       type: 'pbl_task',
       score: overallScore,
       feedback: `Your PBL task shows ${this.getScoreLevel(overallScore)} understanding and engagement.`,
-      dimensions,
+      dimensionScores,
       createdAt: new Date().toISOString(),
       metadata: {
         interactionCount: interactions.length,
@@ -172,7 +172,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       type: 'assessment_task',
       score,
       feedback: `You answered ${correctAnswers} out of ${questions.length} questions correctly.`,
-      dimensions: domainScores,
+      dimensionScores: domainScores,
       createdAt: new Date().toISOString(),
       metadata: {
         totalQuestions: questions.length,
@@ -317,9 +317,9 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
     Score: ${evaluation.score || 'N/A'}
     Target: ${evaluation.targetType}
     
-    ${evaluation.dimensions ? `
+    ${evaluation.dimensionScores ? `
     Dimension Scores:
-    ${evaluation.dimensions.map(d => `- ${d.dimension}: ${d.score}/${d.maxScore}`).join('\n')}
+    ${evaluation.dimensionScores.map(d => `- ${d.dimension}: ${d.score}/${d.maxScore}`).join('\n')}
     ` : ''}
     
     Please provide:

@@ -9,7 +9,7 @@ interface Evaluation {
   id: string;
   score: number;
   feedback: string;
-  dimensions: Array<{
+  dimensionScores: Array<{
     name: string;
     score: number;
     feedback: string;

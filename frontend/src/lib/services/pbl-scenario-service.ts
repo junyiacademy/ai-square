@@ -7,6 +7,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 import { IScenario, ITaskTemplate } from '@/types/unified-learning';
+import { DifficultyLevel } from '@/types/database';
 
 interface PBLYAMLData {
   scenario_info: {
@@ -53,20 +54,35 @@ export class PBLScenarioService {
     
     // 轉換成 IScenario 格式
     const scenario: Omit<IScenario, 'id'> = {
-      sourceType: 'pbl',
-      sourceRef: {
-        type: 'yaml',
-        path: `pbl_data/scenarios/${yamlId.replace(/-/g, '_')}`,
-        metadata: {
-          yamlId,
-          language,
-          originalId: yamlData.scenario_info.id
-        }
+      mode: 'pbl' as const,
+      sourceType: 'pbl' as const,
+      sourcePath: `pbl_data/scenarios/${yamlId.replace(/-/g, '_')}`,
+      sourceId: yamlId,
+      sourceMetadata: {
+        yamlId,
+        language,
+        originalId: yamlData.scenario_info.id
       },
-      title: this.getLocalizedField(yamlData.scenario_info, 'title', language),
-      description: this.getLocalizedField(yamlData.scenario_info, 'description', language),
+      title: { [language]: this.getLocalizedField(yamlData.scenario_info, 'title', language) },
+      description: { [language]: this.getLocalizedField(yamlData.scenario_info, 'description', language) },
       objectives: this.getLocalizedArrayField(yamlData.scenario_info, 'learning_objectives', language),
+      difficulty: (yamlData.scenario_info.difficulty || 'intermediate') as DifficultyLevel,
+      estimatedMinutes: yamlData.scenario_info.estimated_duration || 60,
+      prerequisites: yamlData.scenario_info.prerequisites || [],
       taskTemplates: this.convertTasksToTemplates(yamlData.tasks || [], language),
+      taskCount: (yamlData.tasks || []).length,
+      xpRewards: {},
+      unlockRequirements: {},
+      pblData: {
+        targetDomains: yamlData.scenario_info.target_domains,
+        ksaMapping: yamlData.ksa_mapping
+      },
+      discoveryData: {},
+      assessmentData: {},
+      aiModules: {},
+      resources: [],
+      status: 'active' as const,
+      version: '1.0.0',
       metadata: {
         difficulty: yamlData.scenario_info.difficulty,
         estimatedDuration: yamlData.scenario_info.estimated_duration,
@@ -93,10 +109,10 @@ export class PBLScenarioService {
     const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     
-    // 先嘗試找到現有的 Scenario (by sourceRef.metadata.yamlId)
+    // 先嘗試找到現有的 Scenario (by sourceMetadata.yamlId)
     const existingScenarios = await scenarioRepo.findBySource('pbl');
     const existingScenario = existingScenarios.find((s: IScenario) => 
-      s.sourceRef.metadata?.yamlId === yamlId
+      s.sourceMetadata?.yamlId === yamlId
     );
     
     if (existingScenario) {

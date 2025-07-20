@@ -44,23 +44,22 @@ export async function GET(request: NextRequest) {
             id: scenario.id,
             title: scenario.title,
             description: scenario.description,
-            folderName: (scenario.sourceRef as { metadata?: { folderName?: string } })?.metadata?.folderName,
-            config: (scenario.sourceRef as { metadata?: { config?: Record<string, unknown> } })?.metadata?.config || {},
+            folderName: (scenario.sourceMetadata as Record<string, unknown>)?.folderName as string,
+            config: (scenario.sourceMetadata as Record<string, unknown>)?.config as Record<string, unknown> || {},
             userProgress: user ? await getUserProgress({ scenarioId: scenario.id, userId: user.id }) : undefined
           };
         }
         
         // 非英文：從 YAML 載入
-        const sourceRef = scenario.sourceRef as { metadata?: { basePath?: string; folderName?: string } };
-        const folderName = sourceRef?.metadata?.basePath || sourceRef?.metadata?.folderName || '';
+        const folderName = (scenario.sourceMetadata as Record<string, unknown>)?.basePath as string || (scenario.sourceMetadata as Record<string, unknown>)?.folderName as string || '';
         const translation = await loadTranslation(folderName, lang);
         
         return {
           id: scenario.id,
           title: translation?.title || scenario.title,
           description: translation?.description || scenario.description,
-          folderName: (scenario.sourceRef as { metadata?: { folderName?: string } })?.metadata?.folderName,
-          config: translation?.config || (scenario.sourceRef as { metadata?: { config?: Record<string, unknown> } })?.metadata?.config || {},
+          folderName: (scenario.sourceMetadata as Record<string, unknown>)?.folderName as string,
+          config: translation?.config || (scenario.sourceMetadata as Record<string, unknown>)?.config as Record<string, unknown> || {},
           userProgress: user ? await getUserProgress({ scenarioId: scenario.id, userId: user.id }) : undefined
         };
       })

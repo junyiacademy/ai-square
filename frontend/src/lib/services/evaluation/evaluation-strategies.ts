@@ -100,10 +100,10 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
     const qualityMetrics = this.calculateQualityMetrics(interactions);
     
     // Calculate KSA dimensions
-    const dimensions = this.calculateKSADimensions(qualityMetrics, pblTask);
+    const dimensionScores = this.calculateKSADimensions(qualityMetrics, pblTask);
     
     // Overall score is average of KSA dimensions
-    const overallScore = dimensions.reduce((sum, d) => sum + d.score, 0) / dimensions.length;
+    const overallScore = dimensionScores.reduce((sum, d) => sum + d.score, 0) / dimensionScores.length;
 
     return {
       id: uuidv4(),
@@ -114,7 +114,7 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
       type: 'pbl_task',
       score: Math.round(overallScore),
       feedback: this.generateTaskFeedback(overallScore, qualityMetrics),
-      dimensions,
+      dimensionScores,
       createdAt: new Date().toISOString(),
       metadata: {
         sourceType: 'pbl',
@@ -133,7 +133,7 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
       scores.reduce((a, b) => a + b, 0) / scores.length : 0;
 
     // Aggregate KSA dimensions
-    const dimensions = this.aggregateKSADimensions(taskEvaluations);
+    const dimensionScores = this.aggregateKSADimensions(taskEvaluations);
 
     return {
       id: uuidv4(),
@@ -144,7 +144,7 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
       type: 'pbl_completion',
       score: Math.round(averageScore),
       feedback: this.generateProgramFeedback(averageScore, taskEvaluations),
-      dimensions,
+      dimensionScores,
       createdAt: new Date().toISOString(),
       metadata: {
         sourceType: 'pbl',
@@ -204,8 +204,8 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
     const dimensionMap = new Map<string, { total: number; count: number }>();
     
     evaluations.forEach(evaluation => {
-      if (evaluation.dimensions) {
-        evaluation.dimensions.forEach(dim => {
+      if (evaluation.dimensionScores) {
+        evaluation.dimensionScores.forEach(dim => {
           const existing = dimensionMap.get(dim.dimension) || { total: 0, count: 0 };
           existing.total += dim.score;
           existing.count += 1;
@@ -293,7 +293,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
       type: 'assessment_task',
       score: Math.round(finalScore * 100) / 100, // Round to 2 decimals
       feedback: `You answered ${correctCount} out of ${totalCount} questions correctly.`,
-      dimensions: this.convertDomainScoresToDimensions(domainScores),
+      dimensionScores: this.convertDomainScoresToDimensions(domainScores),
       createdAt: new Date().toISOString(),
       metadata: {
         sourceType: 'assessment',
@@ -325,7 +325,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
       type: 'assessment_complete',
       score: Math.round(averageScore),
       feedback: this.generateAssessmentProgramFeedback(averageScore, taskEvaluations),
-      dimensions: aggregatedDomains,
+      dimensionScores: aggregatedDomains,
       createdAt: new Date().toISOString(),
       metadata: {
         sourceType: 'assessment',
@@ -402,8 +402,8 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
     const domainMap = new Map<string, { totalScore: number; count: number }>();
     
     evaluations.forEach(evaluation => {
-      if (evaluation.dimensions) {
-        evaluation.dimensions.forEach(dim => {
+      if (evaluation.dimensionScores) {
+        evaluation.dimensionScores.forEach(dim => {
           const existing = domainMap.get(dim.dimension) || { totalScore: 0, count: 0 };
           existing.totalScore += dim.score;
           existing.count += 1;
@@ -430,8 +430,8 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
     return evaluations.reduce((sum, e) => sum + (e.metadata?.totalQuestions || 0), 0);
   }
 
-  private identifyCompetencyGaps(dimensions: IDimensionScore[]): string[] {
-    return dimensions
+  private identifyCompetencyGaps(dimensionScores: IDimensionScore[]): string[] {
+    return dimensionScores
       .filter(d => d.score < 70)
       .map(d => d.dimension);
   }

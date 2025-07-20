@@ -189,7 +189,7 @@ The system uses deep learning to predict occupancy patterns and pre-cool/heat sp
       evaluationType: 'pbl_task',
       score: 88,
       feedback: 'Excellent research and critical thinking. You asked relevant follow-up questions and demonstrated understanding of AI applications in sustainability.',
-      dimensions: [
+      dimensionScores: [
         {
           name: 'Understanding',
           score: 90,
@@ -229,7 +229,7 @@ The system uses deep learning to predict occupancy patterns and pre-cool/heat sp
       evaluationType: 'pbl_completion',
       score: 92,
       feedback: 'Outstanding completion of the Smart City Sustainability project. You demonstrated strong understanding of AI applications and their environmental impact.',
-      dimensions: [
+      dimensionScores: [
         {
           name: 'Overall Understanding',
           score: 93,
@@ -445,7 +445,7 @@ Would you like to explore any of these solutions in more detail?`,
       evaluationType: 'discovery_engagement',
       score: 95,
       feedback: 'Excellent exploration! You asked thoughtful questions about AI bias and showed genuine engagement with ethical considerations.',
-      dimensions: [
+      dimensionScores: [
         {
           name: 'Curiosity',
           score: 98,
@@ -645,7 +645,7 @@ async function testAssessmentMode() {
       evaluationType: 'assessment_task',
       score: 85,
       feedback: 'Strong understanding of AI collaboration in creative processes. Your practical example shows good judgment about when and how to use AI effectively.',
-      dimensions: [
+      dimensionScores: [
         {
           name: 'Conceptual Understanding',
           score: 90,
@@ -684,7 +684,7 @@ async function testAssessmentMode() {
       evaluationType: 'assessment_complete',
       score: 87,
       feedback: 'Well done! Your AI literacy assessment shows strong foundational knowledge with room for growth in advanced applications.',
-      dimensions: [
+      dimensionScores: [
         {
           name: 'Creating with AI',
           score: 85,

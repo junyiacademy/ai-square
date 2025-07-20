@@ -70,8 +70,8 @@ export default function PBLScenariosPage() {
   // Extract domains from scenario data (handle both unified architecture and direct API response)
   const getScenarioDomains = (scenario: FlexibleScenario): string[] => {
     // Try unified architecture format first
-    if ('sourceRef' in scenario && (scenario as IScenario).sourceRef?.metadata?.domain) {
-      const domain = ((scenario as IScenario).sourceRef.metadata as Record<string, unknown>).domain;
+    if ('sourceMetadata' in scenario && (scenario as IScenario).sourceMetadata?.domain) {
+      const domain = ((scenario as IScenario).sourceMetadata as Record<string, unknown>).domain;
       if (domain && typeof domain === 'string') {
         return [domain];
       }
@@ -92,8 +92,8 @@ export default function PBLScenariosPage() {
   // Get difficulty from scenario data (handle both formats)
   const getScenarioDifficulty = (scenario: FlexibleScenario): string => {
     // Try unified architecture format first
-    if ('sourceRef' in scenario && (scenario as IScenario).sourceRef?.metadata?.difficulty) {
-      return String(((scenario as IScenario).sourceRef.metadata as Record<string, unknown>).difficulty);
+    if ('sourceMetadata' in scenario && (scenario as IScenario).sourceMetadata?.difficulty) {
+      return String(((scenario as IScenario).sourceMetadata as Record<string, unknown>).difficulty);
     }
     // Fall back to direct API response format
     return ('difficulty' in scenario && scenario.difficulty) ? String(scenario.difficulty) : 'intermediate';

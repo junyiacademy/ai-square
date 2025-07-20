@@ -94,7 +94,7 @@ describe('UnifiedEvaluationSystem', () => {
       expect(evaluation.targetId).toBe('task-1');
       expect(evaluation.type).toBe('pbl_task');
       expect(evaluation.score).toBeDefined();
-      expect(evaluation.dimensions).toHaveLength(3); // KSA dimensions
+      expect(evaluation.dimensionScores).toHaveLength(3); // KSA dimensions
       expect(evaluation.metadata?.sourceType).toBe('pbl');
     });
 
@@ -181,7 +181,7 @@ describe('UnifiedEvaluationSystem', () => {
           userId: 'user-123',
           type: 'task_completion',
           score: 80,
-          dimensions: [
+          dimensionScores: [
             { dimension: 'knowledge', score: 85, maxScore: 100 },
             { dimension: 'skills', score: 75, maxScore: 100 }
           ],
@@ -196,7 +196,7 @@ describe('UnifiedEvaluationSystem', () => {
           userId: 'user-123',
           type: 'task_completion',
           score: 90,
-          dimensions: [
+          dimensionScores: [
             { dimension: 'knowledge', score: 95, maxScore: 100 },
             { dimension: 'skills', score: 85, maxScore: 100 }
           ],
@@ -211,9 +211,9 @@ describe('UnifiedEvaluationSystem', () => {
       expect(evaluation.targetId).toBe('program-1');
       expect(evaluation.type).toBe('program_completion');
       expect(evaluation.score).toBe(85); // Average of 80 and 90
-      expect(evaluation.dimensions).toHaveLength(2); // Aggregated dimensions
-      expect(evaluation.dimensions?.[0].dimension).toBe('knowledge');
-      expect(evaluation.dimensions?.[0].score).toBe(90); // Average of 85 and 95
+      expect(evaluation.dimensionScores).toHaveLength(2); // Aggregated dimensions
+      expect(evaluation.dimensionScores?.[0].dimension).toBe('knowledge');
+      expect(evaluation.dimensionScores?.[0].score).toBe(90); // Average of 85 and 95
       expect(evaluation.metadata?.taskCount).toBe(2);
       expect(evaluation.metadata?.completionTime).toBeGreaterThan(0);
     });
@@ -230,7 +230,7 @@ describe('UnifiedEvaluationSystem', () => {
         type: 'task_completion',
         score: 85,
         feedback: 'Original feedback',
-        dimensions: [
+        dimensionScores: [
           { dimension: 'knowledge', score: 85, maxScore: 100, feedback: 'Good understanding' }
         ],
         createdAt: new Date().toISOString(),

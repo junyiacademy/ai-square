@@ -98,12 +98,26 @@ export abstract class BaseLearningService {
     let programData: Omit<IProgram, 'id'> = {
       scenarioId,
       userId,
+      mode: scenario.mode,
       status: 'active',
-      startedAt: new Date().toISOString(),
-      taskIds: [],
       currentTaskIndex: 0,
+      completedTaskCount: 0,
+      totalTaskCount: scenario.taskTemplates.length,
+      totalScore: 0,
+      dimensionScores: {},
+      xpEarned: 0,
+      badgesEarned: [],
+      createdAt: new Date().toISOString(),
+      startedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      lastActivityAt: new Date().toISOString(),
+      timeSpentSeconds: 0,
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {},
       metadata: {
         sourceType: scenario.sourceType,
+        taskIds: [],  // Store taskIds in metadata
         ...metadata
       }
     };

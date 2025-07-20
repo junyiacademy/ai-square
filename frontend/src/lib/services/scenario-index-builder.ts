@@ -5,6 +5,7 @@
 
 import { scenarioIndexService } from './scenario-index-service';
 import { IScenario } from '@/types/unified-learning';
+import { SourceType } from '@/types/database';
 
 class ScenarioIndexBuilder {
   private static instance: ScenarioIndexBuilder;
@@ -105,10 +106,9 @@ class ScenarioIndexBuilder {
               taskTemplates: [],
               createdAt: entry.lastUpdated,
               updatedAt: entry.lastUpdated,
-              sourceRef: {
-                type: entry.sourceType,
-                metadata: { yamlId: entry.yamlId }
-              }
+              sourceType: entry.sourceType as SourceType,
+              sourceId: entry.yamlId,
+              sourceMetadata: { yamlId: entry.yamlId }
             } as IScenario);
           }
         }

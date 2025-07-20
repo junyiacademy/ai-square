@@ -44,7 +44,7 @@ class ScenarioIndexService {
     const uuidToYaml = new Map<string, ScenarioIndexEntry>();
 
     for (const scenario of scenarios) {
-      const yamlId = scenario.sourceRef?.metadata?.yamlId;
+      const yamlId = scenario.sourceMetadata?.yamlId;
       if (yamlId) {
         const entry: ScenarioIndexEntry = {
           yamlId,

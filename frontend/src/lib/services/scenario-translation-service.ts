@@ -41,7 +41,7 @@ export class ScenarioTranslationService {
     }
 
     // Check cache first
-    const cacheKey = `${scenario.sourceRef?.sourceId}-${language}`;
+    const cacheKey = `${scenario.sourceId}-${language}`;
     const cached = this.cache.get(cacheKey);
     
     if (cached && this.timeProvider() - cached.timestamp < this.CACHE_TTL) {
@@ -50,7 +50,7 @@ export class ScenarioTranslationService {
 
     try {
       // Build file path based on scenario source reference
-      const folderName = scenario.sourceRef?.metadata?.folderName;
+      const folderName = scenario.sourceMetadata?.folderName;
       if (!folderName) {
         return null;
       }

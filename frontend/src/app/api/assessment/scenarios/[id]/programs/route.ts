@@ -11,11 +11,16 @@ import type {
   IEvaluation
 } from '@/types/unified-learning';
 import type { ProgramStatus } from '@/types/database';
+import { 
+  convertScenarioToIScenario, 
+  convertProgramToIProgram, 
+  convertTaskToITask,
+  convertEvaluationToIEvaluation 
+} from '@/lib/utils/type-converters';
 
 // Extend Program type to include additional fields used in this route
-interface ProgramWithExtras extends Omit<IProgram, 'startedAt'> {
-  startedAt?: string | Date;
-  completedAt?: string | Date;
+interface ProgramWithExtras extends IProgram {
+  // IProgram already has these as optional strings
 }
 
 // Simple in-memory cache for scenarios
@@ -50,7 +55,8 @@ export async function GET(
     const programRepo = repositoryFactory.getProgramRepository();
     
     // Get user programs efficiently
-    const allUserPrograms = await programRepo.findByUser(userEmail);
+    const rawPrograms = await programRepo.findByUser(userEmail);
+    const allUserPrograms = rawPrograms.map(convertProgramToIProgram);
     
     // Check if this is an assessment scenario
     const now = Date.now();
@@ -62,7 +68,8 @@ export async function GET(
     } else {
       // Quick check if this scenario is assessment type
       const scenarioRepo = repositoryFactory.getScenarioRepository();
-      scenario = await scenarioRepo.findById(id);
+      const rawScenario = await scenarioRepo.findById(id);
+      scenario = rawScenario ? convertScenarioToIScenario(rawScenario) : null;
       
       // Cache the result
       if (scenario) {
@@ -97,12 +104,13 @@ export async function GET(
     // Batch fetch evaluations
     const evaluationsMap = new Map<string, IEvaluation>();
     if (evaluationIds.length > 0) {
-      const evaluations = await Promise.all(
+      const rawEvaluations = await Promise.all(
         evaluationIds.map((id: unknown) => evaluationRepo.findById(id as string).catch(() => null))
       );
       evaluationIds.forEach((id: unknown, index: number) => {
-        if (evaluations[index]) {
-          evaluationsMap.set(id as string, evaluations[index]!);
+        const rawEval = rawEvaluations[index];
+        if (rawEval) {
+          evaluationsMap.set(id as string, convertEvaluationToIEvaluation(rawEval));
         }
       });
     }
@@ -182,16 +190,18 @@ export async function POST(
     const taskRepo = repositoryFactory.getTaskRepository();
     
     // Get scenario
-    const scenario = await scenarioRepo.findById(id);
-    if (!scenario) {
+    const rawScenario = await scenarioRepo.findById(id);
+    if (!rawScenario) {
       return NextResponse.json(
         { error: 'Scenario not found' },
         { status: 404 }
       );
     }
+    const scenario = convertScenarioToIScenario(rawScenario);
     
     // Check if user already has an active program for this scenario
-    const existingPrograms = await programRepo.findByUser(email);
+    const rawExistingPrograms = await programRepo.findByUser(email);
+    const existingPrograms = rawExistingPrograms.map(convertProgramToIProgram);
     const activeProgram = existingPrograms.find((p: IProgram) => 
       p.scenarioId === id && p.status === 'active'
     ) as ProgramWithExtras | undefined;
@@ -205,14 +215,14 @@ export async function POST(
     }
     
     // Create new program - using the proper DTO
-    const program = await programRepo.create({
+    const rawProgram = await programRepo.create({
       scenarioId: id,
       userId: email,
       totalTasks: 0  // Will be updated after creating tasks
     });
     
     // Update the program with additional fields after creation
-    await programRepo.update(program.id, {
+    const updatedRawProgram = await programRepo.update(rawProgram.id, {
       status: 'active' as ProgramStatus,
       metadata: {
         sourceType: 'assessment',
@@ -222,6 +232,8 @@ export async function POST(
         userName: email.split('@')[0]
       }
     });
+    
+    const program = convertProgramToIProgram(updatedRawProgram);
     
     // Load questions from YAML and create tasks
     const tasks: ITask[] = [];
@@ -294,7 +306,7 @@ export async function POST(
             });
             
             // Create task for this domain - using the proper DTO
-            const task = await taskRepo.create({
+            const rawTask = await taskRepo.create({
               programId: program.id,
               taskIndex: i,
               type: 'question',
@@ -316,7 +328,7 @@ export async function POST(
               }
             });
             
-            tasks.push(task);
+            tasks.push(convertTaskToITask(rawTask));
           }
         } else {
           // Legacy format: Single task with all questions
@@ -331,7 +343,7 @@ export async function POST(
             ksa_mapping: q.ksa_mapping
           })) || [];
           
-          const task = await taskRepo.create({
+          const rawTask = await taskRepo.create({
             programId: program.id,
             taskIndex: 0,
             type: 'question',
@@ -352,7 +364,7 @@ export async function POST(
             }
           });
           
-          tasks.push(task);
+          tasks.push(convertTaskToITask(rawTask));
         }
       } catch (error) {
         console.error('Error loading questions:', error);

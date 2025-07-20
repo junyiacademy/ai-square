@@ -376,7 +376,7 @@ export async function POST(
       maxScore: 100,
       timeTakenSeconds: completionTime,
       feedback: generateOverallFeedback(overallScore, level),
-      dimensions: Array.from(domainScores.values()).map(ds => ({
+      dimensionScores: Array.from(domainScores.values()).map(ds => ({
         name: ds.domain,
         score: ds.score,
         maxScore: 100

@@ -3,6 +3,11 @@ import { getServerSession } from '@/lib/auth/session';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { ITask } from '@/types/unified-learning';
 import { DiscoveryYAMLLoader } from '@/lib/services/discovery-yaml-loader';
+import { 
+  convertScenarioToIScenario, 
+  convertProgramToIProgram, 
+  convertTaskToITask 
+} from '@/lib/utils/type-converters';
 
 // Task templates for discovery scenarios
 const DISCOVERY_TASK_TEMPLATES = [
@@ -108,20 +113,21 @@ export async function POST(
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     
     // Verify scenario exists
-    const scenario = await scenarioRepo.findById(scenarioId);
-    if (!scenario) {
+    const rawScenario = await scenarioRepo.findById(scenarioId);
+    if (!rawScenario) {
       return NextResponse.json({ error: 'Scenario not found' }, { status: 404 });
     }
+    const scenario = convertScenarioToIScenario(rawScenario);
     
     // Create program following unified architecture
-    const program = await programRepo.create({
+    const rawProgram = await programRepo.create({
       scenarioId: scenarioId,
       userId: userEmail,
       totalTasks: 0  // Will be updated after creating tasks
     });
     
     // Update program with metadata
-    await programRepo.update(program.id, {
+    const updatedRawProgram = await programRepo.update(rawProgram.id, {
       status: 'active',
       metadata: {
         sourceType: 'discovery',
@@ -132,6 +138,8 @@ export async function POST(
         startedAt: new Date().toISOString()
       }
     });
+    
+    const program = convertProgramToIProgram(updatedRawProgram);
     
     // Get language from request body
     let language = 'en';
@@ -147,7 +155,7 @@ export async function POST(
     const createdTasks: ITask[] = [];
     
     // Check if scenario is PBL type based on metadata or type
-    const isPBLScenario = scenario.type === 'pbl' || (scenario.metadata as Record<string, unknown>)?.sourceType === 'pbl';
+    const isPBLScenario = scenario.mode === 'pbl' || (scenario.metadata as Record<string, unknown>)?.sourceType === 'pbl';
     
     if (isPBLScenario) {
       // For PBL scenarios, create tasks from taskTemplates
@@ -157,7 +165,7 @@ export async function POST(
         // Create tasks from PBL taskTemplates
         for (let i = 0; i < taskTemplates.length; i++) {
           const template = taskTemplates[i];
-          const task = await taskRepo.create({
+          const rawTask = await taskRepo.create({
             programId: program.id,
             taskIndex: i,
             title: template.title as string,
@@ -182,12 +190,12 @@ export async function POST(
               status: i === 0 ? 'active' : 'pending'
             }
           });
-          createdTasks.push(task as unknown as ITask);
+          createdTasks.push(convertTaskToITask(rawTask));
         }
       }
     } else {
       // For Discovery scenarios, load YAML data
-      const careerType = scenario.sourceRef ? (scenario.metadata as Record<string, unknown>)?.careerType as string | undefined : undefined;
+      const careerType = scenario.sourceMetadata ? (scenario.sourceMetadata as Record<string, unknown>)?.careerType as string | undefined : undefined;
       let yamlData = null;
       
       if (careerType) {
@@ -210,7 +218,7 @@ export async function POST(
         // First, create tasks from starting scenario
         for (const taskTitle of startingTasks.slice(0, 2)) {
           const currentTaskIndex = taskIndex++;
-          const task = await taskRepo.create({
+          const rawTask = await taskRepo.create({
             programId: program.id,
             taskIndex: currentTaskIndex,
             title: taskTitle,
@@ -232,7 +240,7 @@ export async function POST(
               status: currentTaskIndex === 0 ? 'active' : 'pending'
             }
           });
-          createdTasks.push(task as unknown as ITask);
+          createdTasks.push(convertTaskToITask(rawTask));
         }
         
         // Then add some beginner and intermediate tasks
@@ -243,7 +251,7 @@ export async function POST(
         
         for (const exampleTask of selectedTasks) {
           const currentTaskIndex = taskIndex++;
-          const task = await taskRepo.create({
+          const rawTask = await taskRepo.create({
             programId: program.id,
             taskIndex: currentTaskIndex,
             title: exampleTask.title as string,
@@ -265,13 +273,13 @@ export async function POST(
               status: 'pending'
             }
           });
-          createdTasks.push(task as unknown as ITask);
+          createdTasks.push(convertTaskToITask(rawTask));
         }
       } else {
         // Fallback to default templates if no YAML data
         for (let i = 0; i < DISCOVERY_TASK_TEMPLATES.length; i++) {
           const template = DISCOVERY_TASK_TEMPLATES[i];
-          const task = await taskRepo.create({
+          const rawTask = await taskRepo.create({
             programId: program.id,
             taskIndex: i,
             title: template.title,
@@ -293,7 +301,7 @@ export async function POST(
               status: i === 0 ? 'active' : 'pending'
             }
           });
-          createdTasks.push(task as unknown as ITask);
+          createdTasks.push(convertTaskToITask(rawTask));
         }
       }
     }
@@ -354,21 +362,27 @@ export async function GET(
     
     // Find programs for this user and scenario
     // Get all programs for this scenario and filter by user
-    const allPrograms = await programRepo.findByScenario(scenarioId);
+    const rawPrograms = await programRepo.findByScenario(scenarioId);
+    const allPrograms = rawPrograms.map(convertProgramToIProgram);
     const programs = allPrograms.filter(p => p.userId === userEmail);
     
     // For each program, load task details and evaluations
     const programsWithDetails = await Promise.all(
       programs.map(async (program) => {
         // Load tasks for this program
-        const tasks = await Promise.all(
-          program.taskIds.map(taskId => taskRepo.findById(taskId))
+        const taskIds = (program.metadata?.taskIds || []) as string[];
+        const rawTasks = await Promise.all(
+          taskIds.map(taskId => taskRepo.findById(taskId))
         );
         
-        // Filter out any null tasks and get evaluations
-        const validTasks = tasks.filter(Boolean) as unknown as ITask[];
+        // Filter out any null tasks and convert to ITask
+        const validTasks = rawTasks
+          .filter(Boolean)
+          .map(task => convertTaskToITask(task!));
+          
+        // Get evaluations from task metadata
         const evaluations = validTasks
-          .filter(task => task.evaluationId !== undefined)
+          .filter(task => task.metadata?.evaluationId !== undefined)
           .map(task => ({
             taskId: task.id,
             score: 0, // Would need to fetch evaluation to get actual score

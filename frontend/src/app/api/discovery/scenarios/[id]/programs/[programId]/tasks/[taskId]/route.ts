@@ -711,7 +711,7 @@ Return your evaluation as a JSON object:
         feedback: feedbackVersions['en'], // Default to English
         metadata: {
           feedbackVersions: feedbackVersions,
-          dimensions: [],
+          dimensionScores: [],
           completed: true,
           xpEarned: bestXP,
           totalAttempts: userAttempts,
@@ -790,7 +790,7 @@ Return your evaluation as a JSON object:
           timeTakenSeconds: 0,
           feedback: 'Congratulations! You have completed all learning tasks in this program.',
           metadata: {
-            dimensions: [],
+            dimensionScores: [],
             totalXP: currentXP + bestXP,
             tasksCompleted: orderedTasks.length
           }

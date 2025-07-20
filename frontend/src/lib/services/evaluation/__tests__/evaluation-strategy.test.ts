@@ -14,7 +14,8 @@ import {
   ITask, 
   IProgram, 
   IEvaluation, 
-  IEvaluationContext 
+  IEvaluationContext,
+  IInteraction 
 } from '@/types/unified-learning';
 import {
   IPBLTask,
@@ -138,8 +139,8 @@ describe('Evaluation Strategy Pattern', () => {
       expect(evaluation.targetType).toBe('task');
       expect(evaluation.targetId).toBe('task-1');
       expect(evaluation.score).toBeGreaterThan(0);
-      expect(evaluation.dimensions).toBeDefined();
-      expect(evaluation.dimensions?.length).toBe(3); // KSA dimensions
+      expect(evaluation.dimensionScores).toBeDefined();
+      expect(evaluation.dimensionScores?.length).toBe(3); // KSA dimensions
       expect(evaluation.metadata?.interactionCount).toBe(3);
       expect(evaluation.metadata?.ksaCodes).toEqual(['K1', 'S2', 'A3']);
     });
@@ -154,7 +155,7 @@ describe('Evaluation Strategy Pattern', () => {
           userId: 'user-123',
           type: 'pbl_task',
           score: 80,
-          dimensions: [
+          dimensionScores: [
             { dimension: 'knowledge', score: 85, maxScore: 100 },
             { dimension: 'skills', score: 75, maxScore: 100 },
             { dimension: 'attitudes', score: 80, maxScore: 100 }
@@ -170,7 +171,7 @@ describe('Evaluation Strategy Pattern', () => {
           userId: 'user-123',
           type: 'pbl_task',
           score: 90,
-          dimensions: [
+          dimensionScores: [
             { dimension: 'knowledge', score: 90, maxScore: 100 },
             { dimension: 'skills', score: 90, maxScore: 100 },
             { dimension: 'attitudes', score: 90, maxScore: 100 }
@@ -184,16 +185,28 @@ describe('Evaluation Strategy Pattern', () => {
 
       expect(evaluation.type).toBe('pbl_completion');
       expect(evaluation.score).toBe(85); // Average of 80 and 90
-      expect(evaluation.dimensions).toBeDefined();
-      expect(evaluation.dimensions?.[0].dimension).toBe('knowledge');
-      expect(evaluation.dimensions?.[0].score).toBe(87.5); // Average of 85 and 90
+      expect(evaluation.dimensionScores).toBeDefined();
+      expect(evaluation.dimensionScores?.[0].dimension).toBe('knowledge');
+      expect(evaluation.dimensionScores?.[0].score).toBe(87.5); // Average of 85 and 90
     });
 
     it('should calculate quality metrics', () => {
-      const interactions = [
-        { type: 'user_input', content: 'Short answer' },
-        { type: 'ai_response', content: 'Can you explain more?' },
-        { type: 'user_input', content: 'This is a much longer and more detailed explanation about the problem...' }
+      const interactions: IInteraction[] = [
+        { 
+          timestamp: new Date().toISOString(),
+          type: 'user_input', 
+          content: 'Short answer'
+        },
+        { 
+          timestamp: new Date().toISOString(),
+          type: 'ai_response', 
+          content: 'Can you explain more?'
+        },
+        { 
+          timestamp: new Date().toISOString(),
+          type: 'user_input', 
+          content: 'This is a much longer and more detailed explanation about the problem...'
+        }
       ];
 
       const metrics = strategy['calculateQualityMetrics'](interactions);
@@ -224,9 +237,24 @@ describe('Evaluation Strategy Pattern', () => {
         createdAt: new Date().toISOString(),
         completedAt: new Date().toISOString(),
         interactions: [
-          { type: 'user_input', content: 'A', metadata: { questionId: 'q1', isCorrect: true } },
-          { type: 'user_input', content: 'B', metadata: { questionId: 'q2', isCorrect: false } },
-          { type: 'user_input', content: 'C', metadata: { questionId: 'q3', isCorrect: true } }
+          { 
+            timestamp: new Date().toISOString(),
+            type: 'user_input', 
+            content: 'A', 
+            metadata: { questionId: 'q1', isCorrect: true } 
+          },
+          { 
+            timestamp: new Date().toISOString(),
+            type: 'user_input', 
+            content: 'B', 
+            metadata: { questionId: 'q2', isCorrect: false } 
+          },
+          { 
+            timestamp: new Date().toISOString(),
+            type: 'user_input', 
+            content: 'C', 
+            metadata: { questionId: 'q3', isCorrect: true } 
+          }
         ],
         content: {
           context: {
@@ -242,16 +270,16 @@ describe('Evaluation Strategy Pattern', () => {
 
       const evaluation = await strategy.evaluateTask(assessmentTask, {
         ...baseContext,
-        scenario: { ...baseContext.scenario, sourceType: 'assessment' }
+        scenario: { ...baseContext.scenario, mode: 'assessment' }
       });
 
       expect(evaluation.type).toBe('assessment_task');
       expect(evaluation.score).toBe(66.67); // 2 out of 3 correct
       expect(evaluation.metadata?.totalQuestions).toBe(3);
       expect(evaluation.metadata?.correctAnswers).toBe(2);
-      expect(evaluation.dimensions).toBeDefined();
-      expect(evaluation.dimensions?.find(d => d.dimension === 'Engaging_with_AI')?.score).toBe(100); // 2/2 correct
-      expect(evaluation.dimensions?.find(d => d.dimension === 'Creating_with_AI')?.score).toBe(0); // 0/1 correct
+      expect(evaluation.dimensionScores).toBeDefined();
+      expect(evaluation.dimensionScores?.find(d => d.dimension === 'Engaging_with_AI')?.score).toBe(100); // 2/2 correct
+      expect(evaluation.dimensionScores?.find(d => d.dimension === 'Creating_with_AI')?.score).toBe(0); // 0/1 correct
     });
 
     it('should calculate time-based bonus', () => {
@@ -284,10 +312,28 @@ describe('Evaluation Strategy Pattern', () => {
         createdAt: new Date().toISOString(),
         completedAt: new Date().toISOString(),
         interactions: [
-          { type: 'user_input', content: 'Trying prompt 1' },
-          { type: 'system_event', content: 'Tool response', metadata: { toolUsed: 'chatgpt' } },
-          { type: 'user_input', content: 'Trying prompt 2' },
-          { type: 'system_event', content: 'Challenge completed', metadata: { challengeId: 'c1' } }
+          { 
+            timestamp: new Date().toISOString(),
+            type: 'user_input', 
+            content: 'Trying prompt 1'
+          },
+          { 
+            timestamp: new Date().toISOString(),
+            type: 'system_event', 
+            content: 'Tool response', 
+            metadata: { toolUsed: 'chatgpt' } 
+          },
+          { 
+            timestamp: new Date().toISOString(),
+            type: 'user_input', 
+            content: 'Trying prompt 2'
+          },
+          { 
+            timestamp: new Date().toISOString(),
+            type: 'system_event', 
+            content: 'Challenge completed', 
+            metadata: { challengeId: 'c1' } 
+          }
         ],
         content: {
           context: {
@@ -302,7 +348,7 @@ describe('Evaluation Strategy Pattern', () => {
 
       const evaluation = await strategy.evaluateTask(discoveryTask, {
         ...baseContext,
-        scenario: { ...baseContext.scenario, sourceType: 'discovery' }
+        scenario: { ...baseContext.scenario, mode: 'discovery' }
       });
 
       expect(evaluation.type).toBe('discovery_task');
@@ -313,10 +359,22 @@ describe('Evaluation Strategy Pattern', () => {
     });
 
     it('should calculate exploration score', () => {
-      const interactions = [
-        { type: 'user_input', content: 'Test 1' },
-        { type: 'user_input', content: 'Test 2' },
-        { type: 'system_event', content: 'Achievement unlocked' }
+      const interactions: IInteraction[] = [
+        { 
+          timestamp: new Date().toISOString(),
+          type: 'user_input', 
+          content: 'Test 1'
+        },
+        { 
+          timestamp: new Date().toISOString(),
+          type: 'user_input', 
+          content: 'Test 2'
+        },
+        { 
+          timestamp: new Date().toISOString(),
+          type: 'system_event', 
+          content: 'Achievement unlocked'
+        }
       ];
       const goals = ['Goal 1', 'Goal 2'];
 

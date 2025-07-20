@@ -80,7 +80,7 @@ describe('Module-specific Types', () => {
         type: 'pbl_task',
         score: 85,
         feedback: 'Good problem-solving approach',
-        dimensions: [
+        dimensionScores: [
           { dimension: 'knowledge', score: 85, maxScore: 100 },
           { dimension: 'skills', score: 80, maxScore: 100 },
           { dimension: 'attitudes', score: 90, maxScore: 100 }
@@ -93,7 +93,7 @@ describe('Module-specific Types', () => {
         }
       };
 
-      expect(pblEval.dimensions).toHaveLength(3);
+      expect(pblEval.dimensionScores).toHaveLength(3);
       expect(pblEval.metadata?.interactionQuality).toBe('high');
     });
   });
@@ -166,7 +166,7 @@ describe('Module-specific Types', () => {
         type: 'assessment_task',
         score: 75,
         feedback: 'You scored 15/20 correct',
-        dimensions: [
+        dimensionScores: [
           { dimension: 'Engaging_with_AI', score: 80, maxScore: 100 },
           { dimension: 'Creating_with_AI', score: 70, maxScore: 100 }
         ],

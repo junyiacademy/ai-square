@@ -38,14 +38,14 @@ export async function POST() {
     }
 
     // Create sample scenarios
-    const scenarios: Array<{ id: string; type: ScenarioType; status: ScenarioStatus; difficultyLevel: string; estimatedMinutes: number }> = [
-      { id: 'marketing-crisis-management', type: 'pbl' as ScenarioType, status: 'active' as ScenarioStatus, difficultyLevel: 'intermediate', estimatedMinutes: 45 },
-      { id: 'social-media-strategy', type: 'pbl' as ScenarioType, status: 'active' as ScenarioStatus, difficultyLevel: 'beginner', estimatedMinutes: 30 },
-      { id: 'customer-service-automation', type: 'pbl' as ScenarioType, status: 'active' as ScenarioStatus, difficultyLevel: 'intermediate', estimatedMinutes: 40 },
-      { id: 'data-privacy-compliance', type: 'pbl' as ScenarioType, status: 'active' as ScenarioStatus, difficultyLevel: 'advanced', estimatedMinutes: 60 },
-      { id: 'ai-literacy-assessment', type: 'assessment' as ScenarioType, status: 'active' as ScenarioStatus, difficultyLevel: 'intermediate', estimatedMinutes: 30 },
-      { id: 'basic-ai-knowledge', type: 'assessment' as ScenarioType, status: 'active' as ScenarioStatus, difficultyLevel: 'beginner', estimatedMinutes: 20 },
-      { id: 'career-exploration', type: 'discovery' as ScenarioType, status: 'active' as ScenarioStatus, difficultyLevel: 'beginner', estimatedMinutes: 25 }
+    const scenarios: Array<{ type: ScenarioType; difficultyLevel: string; estimatedMinutes: number; metadata: Record<string, unknown> }> = [
+      { type: 'pbl' as ScenarioType, difficultyLevel: 'intermediate', estimatedMinutes: 45, metadata: { id: 'marketing-crisis-management' } },
+      { type: 'pbl' as ScenarioType, difficultyLevel: 'beginner', estimatedMinutes: 30, metadata: { id: 'social-media-strategy' } },
+      { type: 'pbl' as ScenarioType, difficultyLevel: 'intermediate', estimatedMinutes: 40, metadata: { id: 'customer-service-automation' } },
+      { type: 'pbl' as ScenarioType, difficultyLevel: 'advanced', estimatedMinutes: 60, metadata: { id: 'data-privacy-compliance' } },
+      { type: 'assessment' as ScenarioType, difficultyLevel: 'intermediate', estimatedMinutes: 30, metadata: { id: 'ai-literacy-assessment' } },
+      { type: 'assessment' as ScenarioType, difficultyLevel: 'beginner', estimatedMinutes: 20, metadata: { id: 'basic-ai-knowledge' } },
+      { type: 'discovery' as ScenarioType, difficultyLevel: 'beginner', estimatedMinutes: 25, metadata: { id: 'career-exploration' } }
     ];
 
     for (const scenario of scenarios) {
@@ -53,7 +53,7 @@ export async function POST() {
         await scenarioRepo.create(scenario);
       } catch (error) {
         // Scenario might already exist
-        console.log(`Scenario ${scenario.id} creation skipped:`, error instanceof Error ? error.message : 'Unknown error');
+        console.log(`Scenario creation skipped:`, error instanceof Error ? error.message : 'Unknown error');
       }
     }
 

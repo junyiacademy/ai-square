@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { convertScenarioToIScenario, convertProgramToIProgram } from '@/lib/utils/type-converters';
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,7 +23,8 @@ export async function GET(request: NextRequest) {
     const programRepo = repositoryFactory.getProgramRepository();
     
     // Find all discovery scenarios
-    const allScenarios = await scenarioRepo.findByMode('discovery');
+    const rawScenarios = await scenarioRepo.findByMode('discovery');
+    const allScenarios = rawScenarios.map(convertScenarioToIScenario);
     const discoveryScenarios = allScenarios.filter((s) => {
       const metadata = s.metadata as Record<string, unknown>;
       return metadata?.careerType === careerType;
@@ -30,7 +32,8 @@ export async function GET(request: NextRequest) {
     
     // Check if user has an active program for any of these scenarios
     for (const scenario of discoveryScenarios) {
-      const allPrograms = await programRepo.findByScenario(scenario.id);
+      const rawPrograms = await programRepo.findByScenario(scenario.id);
+      const allPrograms = rawPrograms.map(convertProgramToIProgram);
       const userPrograms = allPrograms.filter((p) => p.userId === userEmail);
       const activeProgram = userPrograms.find((p) => p.status === 'active');
       

@@ -144,7 +144,7 @@ export async function GET(
       totalXP: totalXP,
       metadata: program.metadata,
       // Add career info from scenario
-      careerType: scenario?.sourceRef && (scenario.sourceRef as unknown as { metadata?: { careerType?: string } }).metadata?.careerType || 'unknown',
+      careerType: scenario?.sourceMetadata && (scenario.sourceMetadata as Record<string, unknown>)?.careerType as string || 'unknown',
       scenarioTitle: scenario?.title || 'Discovery Scenario'
     };
     

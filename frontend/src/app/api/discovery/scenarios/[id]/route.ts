@@ -79,11 +79,13 @@ export async function GET(
     // Return scenario data with programs for backward compatibility
     return NextResponse.json({
       id: scenario.id,
-      sourceType: scenario.type,
-      sourceRef: scenario.sourceRef,
+      sourceType: scenario.sourceType,
+      sourcePath: scenario.sourcePath,
+      sourceId: scenario.sourceId,
+      sourceMetadata: scenario.sourceMetadata,
       title: scenario.title,
       description: scenario.description,
-      careerType: scenario.sourceRef ? (scenario.metadata as Record<string, unknown>)?.careerType || 'unknown' : 'unknown',
+      careerType: scenario.sourceMetadata ? (scenario.sourceMetadata as Record<string, unknown>)?.careerType || 'unknown' : 'unknown',
       objectives: (scenario.metadata as Record<string, unknown>)?.objectives || [],
       metadata: scenario.metadata, // Include all YAML data stored in metadata
       createdAt: scenario.createdAt,

@@ -94,7 +94,8 @@ export default function ScenarioDetailPage() {
         if (program) {
           // Get the current task or the first task
           const currentTaskIndex = program.currentTaskIndex || 0;
-          const targetTaskId = program.taskIds?.[currentTaskIndex] || program.taskIds?.[0];
+          const taskIds = (program.metadata?.taskIds as string[]) || [];
+          const targetTaskId = taskIds[currentTaskIndex] || taskIds[0];
           
           if (!targetTaskId) {
             console.error('No task ID found for navigation in program:', program);
@@ -213,7 +214,7 @@ export default function ScenarioDetailPage() {
               </Link>
             </li>
             <li className="text-gray-400 dark:text-gray-600">/</li>
-            <li className="text-gray-900 dark:text-white">{scenario.title}</li>
+            <li className="text-gray-900 dark:text-white">{scenario.title[i18n.language] || scenario.title.en || ''}</li>
           </ol>
         </nav>
 
@@ -222,10 +223,10 @@ export default function ScenarioDetailPage() {
           <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-6">
             <div className="flex-1">
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                {scenario.title}
+                {scenario.title[i18n.language] || scenario.title.en || ''}
               </h1>
               <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">
-                {scenario.description}
+                {scenario.description[i18n.language] || scenario.description.en || ''}
               </p>
               
               {/* Metadata */}
@@ -274,7 +275,7 @@ export default function ScenarioDetailPage() {
                         <div className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                           <div>
                             {t('common:progress', 'Progress')}: {(program.metadata?.completedTaskCount as number) || 0}/{(program.metadata?.totalTaskCount as number) || 0} {t('common:tasks', 'tasks')}
-                            {((program.metadata?.completedTaskCount as number) || 0) > 0 && program.evaluationId && (
+                            {((program.metadata?.completedTaskCount as number) || 0) > 0 && program.metadata?.evaluationId && (
                               <>
                                 <span className="mx-2">•</span>
                                 <span className="font-medium">
@@ -300,7 +301,7 @@ export default function ScenarioDetailPage() {
                           >
                             {t('common:continue', 'Continue')}
                           </button>
-                          {(((program.metadata?.completedTaskCount as number) || 0) > 0 || program.status === 'completed' || program.evaluationId) && (
+                          {(((program.metadata?.completedTaskCount as number) || 0) > 0 || program.status === 'completed' || program.metadata?.evaluationId) && (
                             <button
                               onClick={() => router.push(`/pbl/scenarios/${scenarioId}/programs/${program.id}/complete`)}
                               className="text-sm px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors font-medium"

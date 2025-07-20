@@ -3,6 +3,7 @@ import { cacheService } from '@/lib/cache/cache-service';
 import { pblScenarioService } from '@/lib/services/pbl-scenario-service';
 import { HybridTranslationService } from '@/lib/services/hybrid-translation-service';
 import type { IScenario } from '@/types/unified-learning';
+import { convertScenarioToIScenario } from '@/lib/utils/type-converters';
 
 // Types for YAML data
 interface LocalizedField {
@@ -49,11 +50,12 @@ async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Recor
     // First, get all existing scenarios in one batch to avoid multiple DB calls
     const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
     const scenarioRepo = repositoryFactory.getScenarioRepository();
-    const existingScenarios = await scenarioRepo.findByMode('pbl');
+    const rawScenarios = await scenarioRepo.findByMode('pbl');
+    const existingScenarios = rawScenarios.map(convertScenarioToIScenario);
     
     // Build/update the index with PBL scenarios
     const { scenarioIndexService } = await import('@/lib/services/scenario-index-service');
-    // existingScenarios are already IScenario objects from the repository
+    // existingScenarios are now IScenario objects
     await scenarioIndexService.buildIndex(existingScenarios);
     
     // Create a map for quick lookup

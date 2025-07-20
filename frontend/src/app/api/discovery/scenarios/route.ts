@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { IScenario } from '@/types/unified-learning';
 import { discoveryScenarioService } from '@/lib/services/discovery-scenario-service';
+import { convertScenarioToIScenario } from '@/lib/utils/type-converters';
 
 /**
  * GET /api/discovery/scenarios
@@ -32,7 +33,8 @@ export async function GET(request: NextRequest) {
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     
     // 先嘗試從儲存庫獲取現有的 scenarios
-    const repoScenarios = await scenarioRepo.findByMode('discovery');
+    const rawScenarios = await scenarioRepo.findByMode('discovery');
+    const repoScenarios = rawScenarios.map(convertScenarioToIScenario);
     
     let scenarios: IScenario[];
     
@@ -41,37 +43,8 @@ export async function GET(request: NextRequest) {
       console.log('No Discovery scenarios found, creating from YAML files...');
       scenarios = await createScenariosFromYAML(language);
     } else {
-      // Map Scenario to IScenario
-      scenarios = repoScenarios.map(s => {
-        // Ensure sourceRef has proper structure
-        const sourceRef: IScenario['sourceRef'] = s.sourceRef 
-          ? {
-              type: (s.sourceRef.type || 'yaml') as 'yaml' | 'api' | 'ai-generated',
-              path: s.sourceRef.path,
-              sourceId: undefined,
-              metadata: {}
-            }
-          : { type: 'yaml' as const, metadata: {} };
-          
-        return {
-          id: s.id,
-          sourceType: 'discovery' as const,
-          sourceRef,
-          title: s.title || '',
-          description: s.description || '',
-          objectives: (s.metadata as Record<string, unknown>)?.objectives as string[] || [],
-          taskTemplates: s.tasks.map(t => ({
-            id: t.id,
-            title: t.title || '',
-            type: t.type as 'question' | 'chat' | 'creation' | 'analysis',
-            description: t.description,
-            metadata: {}
-          })),
-          metadata: s.metadata,
-          createdAt: s.createdAt.toISOString(),
-          updatedAt: s.updatedAt.toISOString()
-        };
-      });
+      // Scenarios are already converted to IScenario
+      scenarios = repoScenarios;
     }
     
     // 更新快取

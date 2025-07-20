@@ -120,7 +120,7 @@ describe('/api/pbl/scenarios', () => {
           
           return {
             id: 'ai-job-search',
-            sourceType: 'pbl' as const,
+            sourceType: 'yaml' as const,
             sourceRef: {
               type: 'yaml' as const,
               path: `pbl_data/${yamlId}_scenario.yaml`,
@@ -143,7 +143,7 @@ describe('/api/pbl/scenarios', () => {
         // Return default for other scenarios
         return {
           id: yamlId,
-          sourceType: 'pbl' as const,
+          sourceType: 'yaml' as const,
           sourceRef: {
             type: 'yaml' as const,
             path: `pbl_data/${yamlId}_scenario.yaml`,
@@ -442,7 +442,7 @@ describe('/api/pbl/scenarios', () => {
           
           return {
             id: 'ai-job-search',
-            sourceType: 'pbl' as const,
+            sourceType: 'yaml' as const,
             sourceRef: {
               type: 'yaml' as const,
               path: `pbl_data/${yamlId}_scenario.yaml`,
@@ -465,7 +465,7 @@ describe('/api/pbl/scenarios', () => {
         // Return default for other scenarios
         return {
           id: yamlId,
-          sourceType: 'pbl' as const,
+          sourceType: 'yaml' as const,
           sourceRef: {
             type: 'yaml' as const,
             path: `pbl_data/${yamlId}_scenario.yaml`,
@@ -499,14 +499,14 @@ describe('/api/pbl/scenarios', () => {
   describe('hybrid translation architecture', () => {
     const mockGCSScenario: IScenario = {
       id: 'ai-job-search',
-      sourceType: 'pbl' as const,
+      sourceType: 'yaml' as const,
       sourceRef: {
         type: 'yaml' as const,
         path: 'pbl_data/ai-job-search_scenario.yaml',
         metadata: { yamlId: 'ai-job-search' }
       },
-      title: 'AI-Powered Job Search Assistant',
-      description: 'Learn to use AI for job searching',
+      title: { en: 'AI-Powered Job Search Assistant' },
+      description: { en: 'Learn to use AI for job searching' },
       objectives: [],
       taskTemplates: [],
       metadata: {
@@ -539,8 +539,8 @@ describe('/api/pbl/scenarios', () => {
       expect(response.status).toBe(200);
       expect(data.data.scenarios).toContainEqual(expect.objectContaining({
         id: 'ai-job-search',
-        title: 'AI-Powered Job Search Assistant',
-        description: 'Learn to use AI for job searching'
+        title: { en: 'AI-Powered Job Search Assistant' },
+        description: { en: 'Learn to use AI for job searching' }
       }));
     });
 
@@ -548,8 +548,8 @@ describe('/api/pbl/scenarios', () => {
       // Mock HybridTranslationService to return translated data
       MockHybridTranslationService.prototype.listScenarios.mockResolvedValue([{
         ...mockGCSScenario,
-        title: 'AI 求職助手',
-        description: '學習使用 AI 進行求職'
+        title: { zh: 'AI 求職助手' },
+        description: { zh: '學習使用 AI 進行求職' }
       }]);
 
       const request = new Request('http://localhost/api/pbl/scenarios?lang=zhTW&source=hybrid');

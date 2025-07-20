@@ -65,6 +65,7 @@ export interface IEvaluationRepository {
 export interface IScenarioRepository {
   findById(id: string): Promise<Scenario | null>;
   findByType(type: ScenarioType): Promise<Scenario[]>;
+  findByMode(mode: string): Promise<Scenario[]>;
   findActive(): Promise<Scenario[]>;
   create(data: CreateScenarioDto): Promise<Scenario>;
   update(id: string, data: UpdateScenarioDto): Promise<Scenario>;
@@ -199,12 +200,10 @@ export interface Scenario {
   version: string;
   title?: string;
   description?: string;
-  sourceRef?: {
-    type: string;
-    path: string;
-    version?: string;
-    lastModified?: Date;
-  };
+  sourceType?: string;
+  sourcePath?: string;
+  sourceId?: string;
+  sourceMetadata?: Record<string, unknown>;
   difficultyLevel?: string;
   estimatedMinutes?: number;
   prerequisites: string[];
@@ -349,7 +348,7 @@ export interface CreateEvaluationDto {
   metadata?: Record<string, unknown>;
   targetType?: string;
   targetId?: string;
-  dimensions?: Array<{ name: string; score: number; maxScore: number }>;
+  dimensionScores?: Array<{ name: string; score: number; maxScore: number }>;
   createdAt?: string;
 }
 
