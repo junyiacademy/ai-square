@@ -71,7 +71,7 @@ export async function GET(
     // Calculate some basic stats
     const completedTasks = tasks.filter(t => t.status === 'completed');
     const totalXP = completedTasks.reduce((sum, task) => {
-      return sum + (task.metadata?.xpEarned || 0);
+      return sum + ((task.metadata?.xpEarned as number) || 0);
     }, 0);
     
     const currentTaskIndex = program.currentTaskIndex || 0;
