@@ -3,7 +3,6 @@ import { cacheService } from '@/lib/cache/cache-service';
 import { pblScenarioService } from '@/lib/services/pbl-scenario-service';
 import { HybridTranslationService } from '@/lib/services/hybrid-translation-service';
 import type { IScenario } from '@/types/unified-learning';
-import type { Scenario } from '@/lib/repositories/interfaces';
 
 // Types for YAML data
 interface LocalizedField {
@@ -38,31 +37,6 @@ function getScenarioEmoji(scenarioId: string): string {
   return emojiMap[scenarioId] || '🤖';
 }
 
-// Helper function to convert Scenario to IScenario-like structure for indexing
-function convertScenarioForIndex(scenario: Scenario): IScenario {
-  return {
-    id: scenario.id,
-    sourceType: scenario.type,
-    sourceRef: {
-      type: (scenario.sourceRef?.type || 'yaml') as 'yaml' | 'api' | 'ai-generated',
-      path: scenario.sourceRef?.path || '',
-      metadata: { yamlId: scenario.id }
-    },
-    title: scenario.title || '',
-    description: scenario.description || '',
-    objectives: [],
-    taskTemplates: (scenario.tasks || []).map(task => ({
-      id: task.id,
-      title: task.title || '',
-      type: (task.type || 'question') as 'question' | 'chat' | 'creation' | 'analysis',
-      description: task.description,
-      metadata: {}
-    })),
-    metadata: scenario.metadata,
-    createdAt: scenario.createdAt.toISOString(),
-    updatedAt: scenario.updatedAt.toISOString()
-  };
-}
 
 // Load scenarios using unified architecture
 async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Record<string, unknown>[]> {
@@ -79,51 +53,55 @@ async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Recor
     
     // Build/update the index with PBL scenarios
     const { scenarioIndexService } = await import('@/lib/services/scenario-index-service');
-    const scenariosForIndex = existingScenarios.map(convertScenarioForIndex);
-    await scenarioIndexService.buildIndex(scenariosForIndex);
+    // existingScenarios are already IScenario objects from the repository
+    await scenarioIndexService.buildIndex(existingScenarios);
     
     // Create a map for quick lookup
     const existingScenariosMap = new Map(
-      existingScenarios.map((s: Scenario) => [s.metadata?.yamlId as string | undefined, s])
+      existingScenarios.map((s: IScenario) => [s.metadata?.yamlId as string | undefined, s])
     );
     
     // Process each YAML ID
     for (const yamlId of yamlIds) {
       try {
         // Check if scenario already exists
-        let scenario: Scenario | IScenario | undefined = existingScenariosMap.get(yamlId);
+        let scenario: IScenario | undefined = existingScenariosMap.get(yamlId);
         
         // If not, create it
         if (!scenario) {
           const newScenario = await pblScenarioService.createScenarioFromYAML(yamlId, lang);
           if (newScenario) {
-            // Convert IScenario to match what we need
             scenario = newScenario;
             // Update index with new scenario
             const allScenariosForIndex = [
-              ...scenariosForIndex,
-              scenario as IScenario
+              ...existingScenarios,
+              scenario
             ];
             await scenarioIndexService.buildIndex(allScenariosForIndex);
           }
         }
         
         if (scenario) {
-          // Handle both Scenario and IScenario types
-          const isRepoScenario = 'type' in scenario && 'status' in scenario;
+          // All scenarios are now IScenario type
+          const title = typeof scenario.title === 'string' 
+            ? scenario.title 
+            : scenario.title?.[lang] || scenario.title?.en || '';
+          const description = typeof scenario.description === 'string'
+            ? scenario.description
+            : scenario.description?.[lang] || scenario.description?.en || '';
           
           scenarios.push({
             id: scenario.id, // UUID
             yamlId: yamlId, // 原始 yaml ID for compatibility
             sourceType: 'pbl',
-            title: scenario.title || '',
-            description: scenario.description || '',
-            difficulty: scenario.metadata?.difficulty as string | undefined,
-            estimatedDuration: scenario.metadata?.estimatedDuration as number | undefined,
+            title,
+            description,
+            difficulty: scenario.difficulty || scenario.metadata?.difficulty as string | undefined,
+            estimatedDuration: scenario.estimatedMinutes || scenario.metadata?.estimatedDuration as number | undefined,
             targetDomains: scenario.metadata?.targetDomains as string[] | undefined,
             targetDomain: scenario.metadata?.targetDomains as string[] | undefined, // for compatibility
             domains: scenario.metadata?.targetDomains as string[] | undefined, // for compatibility 
-            taskCount: isRepoScenario ? (scenario as Scenario).tasks?.length || 0 : (scenario as IScenario).taskTemplates?.length || 0,
+            taskCount: scenario.taskTemplates?.length || 0,
             isAvailable: true,
             thumbnailEmoji: getScenarioEmoji(yamlId)
           });

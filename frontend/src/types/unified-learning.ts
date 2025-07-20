@@ -1,17 +1,28 @@
 /**
  * 統一學習架構類型定義
  * Based on Content Source → Scenario → Program → Task → Evaluation hierarchy
+ * Updated to match PostgreSQL schema v2
  */
+
+import type { 
+  LearningMode, 
+  ScenarioStatus, 
+  ProgramStatus, 
+  TaskStatus, 
+  TaskType, 
+  DifficultyLevel,
+  SourceType 
+} from './database';
 
 // ===== Core Interfaces =====
 
 /**
- * Content Source - 內容來源
+ * Content Source - 內容來源 (now part of Scenario)
  */
 export interface IContentSource {
-  type: 'yaml' | 'api' | 'ai-generated';
+  type: SourceType;
   path?: string;  // YAML檔案路徑
-  sourceId?: string;  // API或AI生成的來源ID
+  id?: string;  // API或AI生成的來源ID
   metadata: Record<string, unknown>;
 }
 
@@ -20,15 +31,50 @@ export interface IContentSource {
  */
 export interface IScenario {
   id: string;  // UUID
-  sourceType: 'pbl' | 'discovery' | 'assessment';
-  sourceRef: IContentSource;
-  title: string;
-  description: string;
+  mode: LearningMode;  // 改用統一的 ENUM
+  status: ScenarioStatus;
+  version: string;
+  
+  // Source tracking (unified)
+  sourceType: SourceType;
+  sourcePath?: string;
+  sourceId?: string;
+  sourceMetadata: Record<string, unknown>;
+  
+  // Basic info (multi-language)
+  title: Record<string, string>;  // {"en": "Title", "zh": "標題"}
+  description: Record<string, string>;
   objectives: string[];
-  taskTemplates: ITaskTemplate[];  // 任務模板
-  metadata?: Record<string, unknown>;  // 儲存額外資料（如完整的 YAML 內容）
+  
+  // Common attributes
+  difficulty: DifficultyLevel;
+  estimatedMinutes: number;
+  prerequisites: string[];
+  
+  // Task templates
+  taskTemplates: ITaskTemplate[];
+  taskCount: number;  // computed field
+  
+  // Rewards and progression
+  xpRewards: Record<string, number>;
+  unlockRequirements: Record<string, unknown>;
+  
+  // Mode-specific data
+  pblData: Record<string, unknown>;
+  discoveryData: Record<string, unknown>;
+  assessmentData: Record<string, unknown>;
+  
+  // Resources and AI
+  aiModules: Record<string, unknown>;
+  resources: Array<Record<string, unknown>>;
+  
+  // Timestamps
   createdAt: string;
   updatedAt: string;
+  publishedAt?: string;
+  
+  // Extensible metadata
+  metadata: Record<string, unknown>;
 }
 
 /**
@@ -37,9 +83,9 @@ export interface IScenario {
 export interface ITaskTemplate {
   id: string;
   title: string;
-  type: 'question' | 'chat' | 'creation' | 'analysis';
+  type: TaskType;
   description?: string;
-  metadata?: Record<string, unknown>;
+  [key: string]: unknown;  // Allow additional properties
 }
 
 /**
@@ -47,15 +93,41 @@ export interface ITaskTemplate {
  */
 export interface IProgram {
   id: string;  // UUID
-  scenarioId: string;  // 關聯Scenario UUID
   userId: string;
-  status: 'active' | 'completed' | 'abandoned';
-  startedAt: string;
-  completedAt?: string;
-  taskIds: string[];  // Task UUID列表
+  scenarioId: string;  // 關聯Scenario UUID
+  mode: LearningMode;  // Mode propagated from scenario
+  status: ProgramStatus;
+  
+  // Progress tracking
   currentTaskIndex: number;
-  evaluationId?: string;  // Program Evaluation UUID
-  metadata: Record<string, unknown>;  // 特定類型的額外資料
+  completedTaskCount: number;
+  totalTaskCount: number;
+  
+  // Scoring (unified)
+  totalScore: number;
+  dimensionScores: Record<string, number>;  // {"ksa": {...}, "creativity": 8}
+  
+  // XP and rewards (mainly for Discovery)
+  xpEarned: number;
+  badgesEarned: Array<Record<string, unknown>>;
+  
+  // Timestamps (unified naming)
+  createdAt: string;
+  startedAt?: string;
+  completedAt?: string;
+  updatedAt: string;
+  lastActivityAt: string;
+  
+  // Time tracking
+  timeSpentSeconds: number;
+  
+  // Mode-specific data
+  pblData: Record<string, unknown>;
+  discoveryData: Record<string, unknown>;
+  assessmentData: Record<string, unknown>;
+  
+  // Extensible metadata
+  metadata: Record<string, unknown>;
 }
 
 /**
@@ -64,24 +136,52 @@ export interface IProgram {
 export interface ITask {
   id: string;  // UUID
   programId: string;  // 關聯Program UUID
-  templateId: string;  // 新增: 關聯的任務模板ID
-  scenarioTaskIndex: number;  // 在Scenario中的任務索引
-  title: string;
-  description: string;  // 新增: 任務描述
-  type: 'question' | 'chat' | 'creation' | 'analysis';
-  order: number;  // 新增: 任務順序
-  content: {
-    instructions?: string;
-    question?: string;
-    options?: string[];
-    context?: Record<string, unknown>;
-  };
-  interactions: IInteraction[];  // 答題歷程或AI對話log
-  startedAt: string;
+  mode: LearningMode;  // Mode propagated from program
+  taskIndex: number;  // Order within program
+  scenarioTaskIndex?: number;  // Reference to scenario template
+  
+  // Basic info
+  title?: string;
+  description?: string;
+  type: TaskType;
+  status: TaskStatus;
+  
+  // Content (unified structure)
+  content: Record<string, unknown>;  // Instructions, questions, etc.
+  
+  // Interaction tracking
+  interactions: IInteraction[];  // Array of interactions
+  interactionCount: number;  // computed field
+  
+  // Response/solution
+  userResponse: Record<string, unknown>;  // User's answer/solution
+  
+  // Scoring
+  score: number;
+  maxScore: number;
+  
+  // Attempts and timing
+  allowedAttempts: number;
+  attemptCount: number;
+  timeLimitSeconds?: number;  // Optional time limit
+  timeSpentSeconds: number;
+  
+  // AI configuration
+  aiConfig: Record<string, unknown>;  // AI module settings
+  
+  // Timestamps
+  createdAt: string;
+  startedAt?: string;
   completedAt?: string;
-  status: 'pending' | 'active' | 'completed';
-  evaluationId?: string;  // 關聯的評估 UUID
-  metadata?: Record<string, unknown>;  // 新增: 額外資料
+  updatedAt: string;
+  
+  // Mode-specific data
+  pblData: Record<string, unknown>;
+  discoveryData: Record<string, unknown>;
+  assessmentData: Record<string, unknown>;
+  
+  // Extensible metadata
+  metadata: Record<string, unknown>;
 }
 
 /**
@@ -99,16 +199,44 @@ export interface IInteraction {
  */
 export interface IEvaluation {
   id: string;  // UUID
-  targetType: 'task' | 'program';  // 修正: entityType → targetType
-  targetId: string;  // 修正: entityId → targetId (Task UUID 或 Program UUID)
-  programId: string;  // 關聯的 Program ID
-  userId: string;  // 用戶 ID
-  type: string;  // 評估類型標識
-  score?: number;  // 新增: 評分
-  feedback?: string;  // 新增: 文字回饋
-  dimensions?: IDimensionScore[];  // 新增: 各維度分數
+  userId: string;
+  programId?: string;
+  taskId?: string;
+  mode: LearningMode;  // Mode for easy filtering
+  
+  // Evaluation scope
+  evaluationType: string;  // 'task', 'program', 'skill'
+  evaluationSubtype?: string;  // Mode-specific subtypes
+  
+  // Scoring (unified 0-100 scale)
+  score: number;
+  maxScore: number;
+  
+  // Multi-dimensional scoring
+  dimensionScores: Record<string, number>;
+  
+  // Feedback
+  feedbackText?: string;
+  feedbackData: Record<string, unknown>;  // Structured feedback
+  
+  // AI analysis
+  aiProvider?: string;  // 'vertex', 'openai', etc.
+  aiModel?: string;
+  aiAnalysis: Record<string, unknown>;
+  
+  // Time tracking
+  timeTakenSeconds: number;
+  
+  // Timestamps
   createdAt: string;
-  metadata: Record<string, unknown>;  // 其他額外資料
+  
+  // Mode-specific data
+  pblData: Record<string, unknown>;
+  discoveryData: Record<string, unknown>;
+  assessmentData: Record<string, unknown>;
+  
+  // Extensible metadata
+  metadata: Record<string, unknown>;
 }
 
 /**
@@ -163,9 +291,10 @@ export abstract class BaseTaskRepository<T extends ITask> {
 export abstract class BaseEvaluationRepository<T extends IEvaluation> {
   abstract create(evaluation: Omit<T, 'id'>): Promise<T>;
   abstract findById(id: string): Promise<T | null>;
-  abstract findByTarget(targetType: 'task' | 'program', targetId: string): Promise<T[]>;  // 修正: findByEntity → findByTarget
   abstract findByProgram(programId: string): Promise<T[]>;
+  abstract findByTask(taskId: string): Promise<T[]>;
   abstract findByUser(userId: string): Promise<T[]>;
+  abstract findByType(evaluationType: string, evaluationSubtype?: string): Promise<T[]>;
 }
 
 // ===== Service Interfaces =====

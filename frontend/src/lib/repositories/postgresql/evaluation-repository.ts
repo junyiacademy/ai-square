@@ -1,125 +1,206 @@
 /**
  * PostgreSQL Evaluation Repository
  * 處理所有評估相關的資料庫操作
+ * Updated for unified schema v2
  */
 
 import { Pool } from 'pg';
-import {
-  IEvaluationRepository,
-  Evaluation,
-  CreateEvaluationDto,
-  UserProgress
-} from '../interfaces';
+import type { DBEvaluation } from '@/types/database';
+import type { IEvaluation } from '@/types/unified-learning';
+import { BaseEvaluationRepository } from '@/types/unified-learning';
 
-export class PostgreSQLEvaluationRepository implements IEvaluationRepository {
-  constructor(private pool: Pool) {}
-
-  async findById(id: string): Promise<Evaluation | null> {
-    const query = `
-      SELECT 
-        id, user_id as "userId", program_id as "programId",
-        task_id as "taskId", evaluation_type as "evaluationType",
-        score, max_score as "maxScore", feedback,
-        ai_analysis as "aiAnalysis", ksa_scores as "ksaScores",
-        time_taken_seconds as "timeTakenSeconds",
-        created_at as "createdAt", metadata
-      FROM evaluations
-      WHERE id = $1
-    `;
-
-    const { rows } = await this.pool.query(query, [id]);
-    return rows[0] || null;
+export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEvaluation> {
+  constructor(private pool: Pool) {
+    super();
   }
 
-  async findByProgram(programId: string): Promise<Evaluation[]> {
+  /**
+   * Convert database row to IEvaluation interface
+   */
+  private toEvaluation(row: DBEvaluation): IEvaluation {
+    return {
+      id: row.id,
+      userId: row.user_id,
+      programId: row.program_id || undefined,
+      taskId: row.task_id || undefined,
+      mode: row.mode,  // Include mode from database
+      
+      // Evaluation scope
+      evaluationType: row.evaluation_type,
+      evaluationSubtype: row.evaluation_subtype || undefined,
+      
+      // Scoring
+      score: row.score,
+      maxScore: row.max_score,
+      
+      // Multi-dimensional scoring
+      dimensionScores: row.dimension_scores,
+      
+      // Feedback
+      feedbackText: row.feedback_text || undefined,
+      feedbackData: row.feedback_data,
+      
+      // AI analysis
+      aiProvider: row.ai_provider || undefined,
+      aiModel: row.ai_model || undefined,
+      aiAnalysis: row.ai_analysis,
+      
+      // Time tracking
+      timeTakenSeconds: row.time_taken_seconds,
+      
+      // Timestamps
+      createdAt: row.created_at,
+      
+      // Mode-specific data
+      pblData: row.pbl_data,
+      discoveryData: row.discovery_data,
+      assessmentData: row.assessment_data,
+      
+      // Extensible metadata
+      metadata: row.metadata
+    };
+  }
+
+  async findById(id: string): Promise<IEvaluation | null> {
     const query = `
-      SELECT 
-        id, user_id as "userId", program_id as "programId",
-        task_id as "taskId", evaluation_type as "evaluationType",
-        score, max_score as "maxScore", feedback,
-        ai_analysis as "aiAnalysis", ksa_scores as "ksaScores",
-        time_taken_seconds as "timeTakenSeconds",
-        created_at as "createdAt", metadata
-      FROM evaluations
+      SELECT * FROM evaluations WHERE id = $1
+    `;
+
+    const { rows } = await this.pool.query<DBEvaluation>(query, [id]);
+    return rows[0] ? this.toEvaluation(rows[0]) : null;
+  }
+
+  async findByProgram(programId: string): Promise<IEvaluation[]> {
+    const query = `
+      SELECT * FROM evaluations 
       WHERE program_id = $1
       ORDER BY created_at DESC
     `;
 
-    const { rows } = await this.pool.query(query, [programId]);
-    return rows;
+    const { rows } = await this.pool.query<DBEvaluation>(query, [programId]);
+    return rows.map(row => this.toEvaluation(row));
   }
 
-  async findByTask(taskId: string): Promise<Evaluation[]> {
+  async findByTask(taskId: string): Promise<IEvaluation[]> {
     const query = `
-      SELECT 
-        id, user_id as "userId", program_id as "programId",
-        task_id as "taskId", evaluation_type as "evaluationType",
-        score, max_score as "maxScore", feedback,
-        ai_analysis as "aiAnalysis", ksa_scores as "ksaScores",
-        time_taken_seconds as "timeTakenSeconds",
-        created_at as "createdAt", metadata
-      FROM evaluations
+      SELECT * FROM evaluations 
       WHERE task_id = $1
       ORDER BY created_at DESC
     `;
 
-    const { rows } = await this.pool.query(query, [taskId]);
-    return rows;
+    const { rows } = await this.pool.query<DBEvaluation>(query, [taskId]);
+    return rows.map(row => this.toEvaluation(row));
   }
 
-  async create(data: CreateEvaluationDto): Promise<Evaluation> {
+  async findByUser(userId: string): Promise<IEvaluation[]> {
     const query = `
-      INSERT INTO evaluations (
-        user_id, program_id, task_id, evaluation_type,
-        score, max_score, feedback, ai_analysis,
-        ksa_scores, time_taken_seconds, metadata
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-      RETURNING 
-        id, user_id as "userId", program_id as "programId",
-        task_id as "taskId", evaluation_type as "evaluationType",
-        score, max_score as "maxScore", feedback,
-        ai_analysis as "aiAnalysis", ksa_scores as "ksaScores",
-        time_taken_seconds as "timeTakenSeconds",
-        created_at as "createdAt", metadata
+      SELECT * FROM evaluations 
+      WHERE user_id = $1
+      ORDER BY created_at DESC
     `;
 
-    const { rows } = await this.pool.query(query, [
-      data.userId,
-      data.programId || null,
-      data.taskId || null,
-      data.evaluationType,
-      data.score,
-      data.maxScore,
-      data.feedback || null,
-      JSON.stringify(data.aiAnalysis || {}),
-      JSON.stringify(data.ksaScores || {}),
-      data.timeTakenSeconds,
-      JSON.stringify(data.metadata || {})
-    ]);
-
-    return rows[0];
+    const { rows } = await this.pool.query<DBEvaluation>(query, [userId]);
+    return rows.map(row => this.toEvaluation(row));
   }
 
-  async getLatestForTask(taskId: string): Promise<Evaluation | null> {
+  async findByType(evaluationType: string, evaluationSubtype?: string): Promise<IEvaluation[]> {
+    let query = `
+      SELECT * FROM evaluations 
+      WHERE evaluation_type = $1
+    `;
+    const params: unknown[] = [evaluationType];
+
+    if (evaluationSubtype) {
+      query += ` AND evaluation_subtype = $2`;
+      params.push(evaluationSubtype);
+    }
+
+    query += ` ORDER BY created_at DESC`;
+
+    const { rows } = await this.pool.query<DBEvaluation>(query, params);
+    return rows.map(row => this.toEvaluation(row));
+  }
+
+  async create(evaluation: Omit<IEvaluation, 'id'>): Promise<IEvaluation> {
     const query = `
-      SELECT 
-        id, user_id as "userId", program_id as "programId",
-        task_id as "taskId", evaluation_type as "evaluationType",
-        score, max_score as "maxScore", feedback,
-        ai_analysis as "aiAnalysis", ksa_scores as "ksaScores",
-        time_taken_seconds as "timeTakenSeconds",
-        created_at as "createdAt", metadata
-      FROM evaluations
+      INSERT INTO evaluations (
+        user_id, program_id, task_id,
+        evaluation_type, evaluation_subtype,
+        score, max_score,
+        dimension_scores,
+        feedback_text, feedback_data,
+        ai_provider, ai_model, ai_analysis,
+        time_taken_seconds,
+        pbl_data, discovery_data, assessment_data,
+        metadata
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+        $11, $12, $13, $14, $15, $16, $17, $18
+      )
+      RETURNING *
+    `;
+
+    const { rows } = await this.pool.query<DBEvaluation>(query, [
+      evaluation.userId,
+      evaluation.programId || null,
+      evaluation.taskId || null,
+      evaluation.evaluationType,
+      evaluation.evaluationSubtype || null,
+      evaluation.score,
+      evaluation.maxScore,
+      JSON.stringify(evaluation.dimensionScores || {}),
+      evaluation.feedbackText || null,
+      JSON.stringify(evaluation.feedbackData || {}),
+      evaluation.aiProvider || null,
+      evaluation.aiModel || null,
+      JSON.stringify(evaluation.aiAnalysis || {}),
+      evaluation.timeTakenSeconds,
+      JSON.stringify(evaluation.pblData || {}),
+      JSON.stringify(evaluation.discoveryData || {}),
+      JSON.stringify(evaluation.assessmentData || {}),
+      JSON.stringify(evaluation.metadata || {})
+    ]);
+
+    return this.toEvaluation(rows[0]);
+  }
+
+  // Additional methods specific to PostgreSQL implementation
+
+  async getLatestForTask(taskId: string): Promise<IEvaluation | null> {
+    const query = `
+      SELECT * FROM evaluations 
       WHERE task_id = $1
       ORDER BY created_at DESC
       LIMIT 1
     `;
 
-    const { rows } = await this.pool.query(query, [taskId]);
-    return rows[0] || null;
+    const { rows } = await this.pool.query<DBEvaluation>(query, [taskId]);
+    return rows[0] ? this.toEvaluation(rows[0]) : null;
   }
 
-  async getUserProgress(userId: string): Promise<UserProgress> {
+  async getLatestForProgram(programId: string): Promise<IEvaluation | null> {
+    const query = `
+      SELECT * FROM evaluations 
+      WHERE program_id = $1 AND task_id IS NULL
+      ORDER BY created_at DESC
+      LIMIT 1
+    `;
+
+    const { rows } = await this.pool.query<DBEvaluation>(query, [programId]);
+    return rows[0] ? this.toEvaluation(rows[0]) : null;
+  }
+
+  // Get user progress statistics
+  async getUserProgress(userId: string): Promise<{
+    totalPrograms: number;
+    completedPrograms: number;
+    totalTasks: number;
+    completedTasks: number;
+    totalXpEarned: number;
+    averageScore: number;
+    timeSpentSeconds: number;
+    achievements: Array<Record<string, unknown>>;
+  }> {
     const client = await this.pool.connect();
     
     try {
@@ -155,7 +236,7 @@ export class PostgreSQLEvaluationRepository implements IEvaluationRepository {
       // Get achievements
       const achievementsQuery = `
         SELECT 
-          a.id, a.code, a.achievement_type as type, 
+          a.id, a.code, a.name, a.description,
           a.xp_reward as "xpReward", ua.earned_at as "earnedAt"
         FROM user_achievements ua
         JOIN achievements a ON ua.achievement_id = a.id
@@ -180,17 +261,19 @@ export class PostgreSQLEvaluationRepository implements IEvaluationRepository {
   }
 
   // Get evaluations with detailed information
-  async getDetailedEvaluations(userId: string, limit: number = 10): Promise<Evaluation[]> {
+  async getDetailedEvaluations(userId: string, limit: number = 10): Promise<Array<IEvaluation & {
+    scenarioMode?: string;
+    scenarioDifficulty?: string;
+    taskType?: string;
+    taskIndex?: number;
+  }>> {
     const query = `
       SELECT 
-        e.id, e.user_id as "userId", e.program_id as "programId",
-        e.task_id as "taskId", e.evaluation_type as "evaluationType",
-        e.score, e.max_score as "maxScore", e.feedback,
-        e.ai_analysis as "aiAnalysis", e.ksa_scores as "ksaScores",
-        e.time_taken_seconds as "timeTakenSeconds",
-        e.created_at as "createdAt", e.metadata,
-        s.type as "scenarioType", s.difficulty_level as "difficultyLevel",
-        t.type as "taskType", t.task_index as "taskIndex"
+        e.*,
+        s.mode as scenario_mode,
+        s.difficulty as scenario_difficulty,
+        t.type as task_type,
+        t.task_index
       FROM evaluations e
       LEFT JOIN programs p ON e.program_id = p.id
       LEFT JOIN scenarios s ON p.scenario_id = s.id
@@ -201,60 +284,62 @@ export class PostgreSQLEvaluationRepository implements IEvaluationRepository {
     `;
 
     const { rows } = await this.pool.query(query, [userId, limit]);
-    return rows;
+    return rows.map(row => ({
+      ...this.toEvaluation(row),
+      scenarioMode: row.scenario_mode,
+      scenarioDifficulty: row.scenario_difficulty,
+      taskType: row.task_type,
+      taskIndex: row.task_index
+    }));
   }
 
-  // Get KSA progress over time
-  async getKSAProgress(userId: string): Promise<Record<string, unknown>> {
-    const query = `
+  // Get dimension scores progress over time
+  async getDimensionProgress(userId: string, dimension?: string): Promise<Array<{
+    date: string;
+    scores: Record<string, number>;
+  }>> {
+    let query = `
       SELECT 
-        e.created_at as date,
-        e.ksa_scores
-      FROM evaluations e
-      WHERE e.user_id = $1 
-        AND e.ksa_scores IS NOT NULL
-        AND e.ksa_scores != '{}'::jsonb
-      ORDER BY e.created_at ASC
+        created_at::date as date,
+        dimension_scores
+      FROM evaluations
+      WHERE user_id = $1 
+        AND dimension_scores IS NOT NULL
+        AND dimension_scores != '{}'::jsonb
     `;
 
-    const { rows } = await this.pool.query(query, [userId]);
+    if (dimension) {
+      query += ` AND dimension_scores ? $2`;
+    }
+
+    query += ` ORDER BY created_at ASC`;
+
+    const params = dimension ? [userId, dimension] : [userId];
+    const { rows } = await this.pool.query(query, params);
     
-    // Process KSA scores to track progress
-    const progress: Record<string, Array<{ date: Date; score: number }>> = {
-      knowledge: [],
-      skills: [],
-      attitudes: []
-    };
-
-    rows.forEach(row => {
-      const scores = row.ksa_scores;
-      progress.knowledge.push({
-        date: row.date,
-        score: scores.knowledge || 0
-      });
-      progress.skills.push({
-        date: row.date,
-        score: scores.skills || 0
-      });
-      progress.attitudes.push({
-        date: row.date,
-        score: scores.attitudes || 0
-      });
-    });
-
-    return progress;
+    return rows.map(row => ({
+      date: row.date,
+      scores: row.dimension_scores
+    }));
   }
 
   // Calculate user's strengths and weaknesses
-  async getUserStrengthsWeaknesses(userId: string): Promise<Record<string, unknown>> {
+  async getUserStrengthsWeaknesses(userId: string): Promise<{
+    strengths: Array<{ dimension: string; avgScore: number }>;
+    weaknesses: Array<{ dimension: string; avgScore: number }>;
+  }> {
     const query = `
-      SELECT 
-        jsonb_object_keys(ksa_scores) as ksa_type,
-        AVG((ksa_scores->>jsonb_object_keys(ksa_scores))::float) as avg_score
-      FROM evaluations
-      WHERE user_id = $1 
-        AND ksa_scores IS NOT NULL
-      GROUP BY jsonb_object_keys(ksa_scores)
+      WITH dimension_averages AS (
+        SELECT 
+          jsonb_object_keys(dimension_scores) as dimension,
+          AVG((dimension_scores->>jsonb_object_keys(dimension_scores))::float) as avg_score
+        FROM evaluations
+        WHERE user_id = $1 
+          AND dimension_scores IS NOT NULL
+        GROUP BY jsonb_object_keys(dimension_scores)
+      )
+      SELECT dimension, avg_score
+      FROM dimension_averages
       ORDER BY avg_score DESC
     `;
 
@@ -262,32 +347,95 @@ export class PostgreSQLEvaluationRepository implements IEvaluationRepository {
     
     return {
       strengths: rows.slice(0, 3).map(r => ({
-        type: r.ksa_type,
-        score: parseFloat(r.avg_score)
+        dimension: r.dimension,
+        avgScore: parseFloat(r.avg_score)
       })),
       weaknesses: rows.slice(-3).reverse().map(r => ({
-        type: r.ksa_type,
-        score: parseFloat(r.avg_score)
+        dimension: r.dimension,
+        avgScore: parseFloat(r.avg_score)
       }))
     };
   }
 
   // Track AI usage for evaluations
-  async trackAIUsage(evaluationId: string, aiProvider: string, model: string, tokens: number, cost: number): Promise<void> {
+  async trackAIUsage(evaluationId: string, usage: {
+    provider: string;
+    model: string;
+    promptTokens: number;
+    completionTokens: number;
+    totalTokens: number;
+    estimatedCostUsd: number;
+  }): Promise<void> {
     const query = `
       INSERT INTO ai_usage (
-        user_id, feature, provider, model,
+        user_id, program_id, task_id,
+        feature, provider, model,
         prompt_tokens, completion_tokens, total_tokens,
         estimated_cost_usd, metadata
       )
       SELECT 
-        e.user_id, 'evaluation', $2, $3, 
-        $4, $4, $4 * 2, $5,
+        e.user_id, e.program_id, e.task_id,
+        'evaluation', $2, $3, $4, $5, $6, $7,
         jsonb_build_object('evaluation_id', $1)
       FROM evaluations e
       WHERE e.id = $1
     `;
 
-    await this.pool.query(query, [evaluationId, aiProvider, model, tokens, cost]);
+    await this.pool.query(query, [
+      evaluationId,
+      usage.provider,
+      usage.model,
+      usage.promptTokens,
+      usage.completionTokens,
+      usage.totalTokens,
+      usage.estimatedCostUsd
+    ]);
+  }
+
+  // Get evaluations by date range
+  async findByDateRange(userId: string, startDate: Date, endDate: Date): Promise<IEvaluation[]> {
+    const query = `
+      SELECT * FROM evaluations 
+      WHERE user_id = $1
+        AND created_at >= $2
+        AND created_at <= $3
+      ORDER BY created_at DESC
+    `;
+
+    const { rows } = await this.pool.query<DBEvaluation>(query, [
+      userId,
+      startDate.toISOString(),
+      endDate.toISOString()
+    ]);
+    return rows.map(row => this.toEvaluation(row));
+  }
+
+  // Get average scores by evaluation type
+  async getAverageScoresByType(userId: string): Promise<Array<{
+    evaluationType: string;
+    evaluationSubtype?: string;
+    avgScore: number;
+    count: number;
+  }>> {
+    const query = `
+      SELECT 
+        evaluation_type,
+        evaluation_subtype,
+        AVG(score) as avg_score,
+        COUNT(*) as count
+      FROM evaluations
+      WHERE user_id = $1
+      GROUP BY evaluation_type, evaluation_subtype
+      ORDER BY evaluation_type, evaluation_subtype
+    `;
+
+    const { rows } = await this.pool.query(query, [userId]);
+    
+    return rows.map(row => ({
+      evaluationType: row.evaluation_type,
+      evaluationSubtype: row.evaluation_subtype,
+      avgScore: parseFloat(row.avg_score),
+      count: parseInt(row.count)
+    }));
   }
 }

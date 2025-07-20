@@ -3,7 +3,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import type { Scenario } from '@/lib/repositories/interfaces';
+import type { IScenario } from '@/types/unified-learning';
 import { getServerSession } from '@/lib/auth/session';
 
 interface AssessmentConfig {
@@ -93,9 +93,9 @@ export async function GET(request: NextRequest) {
     // Get all existing scenarios in one batch query
     const existingScenarios = await scenarioRepo.findActive();
     const scenariosByPath = new Map(
-      existingScenarios.map((s: Scenario) => {
-        const sourceRef = s.sourceRef as unknown as { metadata?: { configPath?: string } };
-        return [sourceRef?.metadata?.configPath, s];
+      existingScenarios.map((s: IScenario) => {
+        const configPath = s.sourceMetadata?.configPath as string | undefined;
+        return [configPath, s];
       })
     );
     
@@ -138,39 +138,58 @@ export async function GET(request: NextRequest) {
           // Create scenario if it doesn't exist
           if (!scenario) {
             console.log(`Creating new scenario for ${folderName}`);
+            const title = config.title || `${folderName.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())} Assessment`;
+            const description = config.description || `Assessment for ${folderName.replace(/_/g, ' ')}`;
+            
             scenario = await scenarioRepo.create({
-              type: 'assessment' as const,
-              metadata: {
-                sourceType: 'assessment',
-                sourceRef: {
-                  type: 'yaml',
-                  sourceId: `assessment-${folderName}`,
-                  metadata: {
-                    assessmentType: 'standard',
-                    folderName,
-                    configPath: yamlPath
-                  }
-                },
-                title: config.title || `${folderName.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())} Assessment`,
-                description: config.description || `Assessment for ${folderName.replace(/_/g, ' ')}`,
-                objectives: [
-                  'Evaluate your knowledge and skills',
-                  'Identify areas for improvement',
-                  'Get personalized recommendations'
-                ]
+              mode: 'assessment',
+              status: 'active',
+              sourceType: 'yaml',
+              sourcePath: yamlPath,
+              sourceId: `assessment-${folderName}`,
+              sourceMetadata: {
+                assessmentType: 'standard',
+                folderName,
+                configPath: yamlPath
               },
-              tasks: [{
+              title: { en: title },  // Multi-language support
+              description: { en: description },
+              objectives: [
+                'Evaluate your knowledge and skills',
+                'Identify areas for improvement',
+                'Get personalized recommendations'
+              ],
+              difficulty: 'intermediate',
+              estimatedMinutes: config.time_limit_minutes || 30,
+              prerequisites: [],
+              taskTemplates: [{
                 id: 'assessment-task',
                 title: 'Complete Assessment',
-                type: 'question'
-              }]
+                type: 'question' as const,
+                description: 'Answer the assessment questions'
+              }],
+              xpRewards: { completion: 100 },
+              unlockRequirements: {},
+              pblData: {},
+              discoveryData: {},
+              assessmentData: {
+                totalQuestions: config.total_questions || 12,
+                passingScore: config.passing_score || 60,
+                domains: config.domains || []
+              },
+              aiModules: {},
+              resources: [],
+              metadata: {
+                sourceType: 'assessment',
+                folderName
+              }
             });
           }
           
           return {
             id: scenario.id,
-            title: config.title || scenario.title || `${folderName.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())} Assessment`,
-            description: config.description || scenario.description || `Assessment for ${folderName.replace(/_/g, ' ')}`,
+            title: config.title || scenario.title?.[lang] || scenario.title?.en || `${folderName.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())} Assessment`,
+            description: config.description || scenario.description?.[lang] || scenario.description?.en || `Assessment for ${folderName.replace(/_/g, ' ')}`,
             folderName,
             config: {
               totalQuestions: config.total_questions || 12,

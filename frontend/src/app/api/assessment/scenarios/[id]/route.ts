@@ -33,10 +33,10 @@ export async function GET(
     }
     
     // Load config from YAML file if available
-    const sourceRef = scenario.sourceRef as unknown as { metadata?: { configPath?: string } };
-    if (sourceRef?.metadata?.configPath) {
+    const configPath = scenario.sourceMetadata?.configPath as string | undefined;
+    if (configPath) {
       try {
-        const yamlData = await loadConfigYAML(sourceRef.metadata.configPath) as {
+        const yamlData = await loadConfigYAML(configPath) as {
     config?: {
       total_questions?: number;
       time_limit?: number;

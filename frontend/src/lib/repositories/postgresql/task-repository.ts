@@ -1,158 +1,359 @@
 /**
  * PostgreSQL Task Repository
  * 處理所有任務相關的資料庫操作
+ * Updated for unified schema v2
  */
 
 import { Pool } from 'pg';
-import {
-  ITaskRepository,
-  Task,
-  CreateTaskDto,
-  UpdateTaskDto,
-  TaskStatus,
-  AttemptData,
-  TaskWithInteractions,
-  Interaction
-} from '../interfaces';
+import type { DBTask, TaskStatus, TaskType } from '@/types/database';
+import type { ITask, IInteraction } from '@/types/unified-learning';
+import { BaseTaskRepository } from '@/types/unified-learning';
 
-export class PostgreSQLTaskRepository implements ITaskRepository {
-  constructor(private pool: Pool) {}
-
-  async findById(id: string): Promise<Task | null> {
-    const query = `
-      SELECT 
-        id, program_id as "programId", task_index as "taskIndex",
-        scenario_task_index as "scenarioTaskIndex", status, type,
-        expected_duration as "expectedDuration", 
-        allowed_attempts as "allowedAttempts",
-        context, user_solution as "userSolution", score,
-        time_spent_seconds as "timeSpentSeconds",
-        attempt_count as "attemptCount",
-        started_at as "startedAt", completed_at as "completedAt",
-        created_at as "createdAt", updated_at as "updatedAt", metadata
-      FROM tasks
-      WHERE id = $1
-    `;
-
-    const { rows } = await this.pool.query(query, [id]);
-    return rows[0] || null;
+export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
+  constructor(private pool: Pool) {
+    super();
   }
 
-  async findByProgram(programId: string): Promise<Task[]> {
+  /**
+   * Convert database row to ITask interface
+   */
+  private toTask(row: DBTask): ITask {
+    return {
+      id: row.id,
+      programId: row.program_id,
+      mode: row.mode,  // Include mode from database
+      taskIndex: row.task_index,
+      scenarioTaskIndex: row.scenario_task_index || undefined,
+      
+      // Basic info
+      title: row.title || undefined,
+      description: row.description || undefined,
+      type: row.type,
+      status: row.status,
+      
+      // Content
+      content: row.content,
+      
+      // Interaction tracking
+      interactions: row.interactions as IInteraction[],
+      interactionCount: row.interaction_count,
+      
+      // Response/solution
+      userResponse: row.user_response,
+      
+      // Scoring
+      score: row.score,
+      maxScore: row.max_score,
+      
+      // Attempts and timing
+      allowedAttempts: row.allowed_attempts,
+      attemptCount: row.attempt_count,
+      timeLimitSeconds: row.time_limit_seconds || undefined,
+      timeSpentSeconds: row.time_spent_seconds,
+      
+      // AI configuration
+      aiConfig: row.ai_config,
+      
+      // Timestamps
+      createdAt: row.created_at,
+      startedAt: row.started_at || undefined,
+      completedAt: row.completed_at || undefined,
+      updatedAt: row.updated_at,
+      
+      // Mode-specific data
+      pblData: row.pbl_data,
+      discoveryData: row.discovery_data,
+      assessmentData: row.assessment_data,
+      
+      // Extensible metadata
+      metadata: row.metadata
+    };
+  }
+
+  async findById(id: string): Promise<ITask | null> {
     const query = `
-      SELECT 
-        id, program_id as "programId", task_index as "taskIndex",
-        scenario_task_index as "scenarioTaskIndex", status, type,
-        expected_duration as "expectedDuration", 
-        allowed_attempts as "allowedAttempts",
-        context, user_solution as "userSolution", score,
-        time_spent_seconds as "timeSpentSeconds",
-        attempt_count as "attemptCount",
-        started_at as "startedAt", completed_at as "completedAt",
-        created_at as "createdAt", updated_at as "updatedAt", metadata
-      FROM tasks
+      SELECT * FROM tasks WHERE id = $1
+    `;
+
+    const { rows } = await this.pool.query<DBTask>(query, [id]);
+    return rows[0] ? this.toTask(rows[0]) : null;
+  }
+
+  async findByProgram(programId: string): Promise<ITask[]> {
+    const query = `
+      SELECT * FROM tasks 
       WHERE program_id = $1
       ORDER BY task_index ASC
     `;
 
-    const { rows } = await this.pool.query(query, [programId]);
-    return rows;
+    const { rows } = await this.pool.query<DBTask>(query, [programId]);
+    return rows.map(row => this.toTask(row));
   }
 
-  async create(data: CreateTaskDto): Promise<Task> {
+  async create(task: Omit<ITask, 'id'>): Promise<ITask> {
     const query = `
       INSERT INTO tasks (
-        program_id, task_index, type, context, allowed_attempts
-      ) VALUES ($1, $2, $3, $4, $5)
-      RETURNING 
-        id, program_id as "programId", task_index as "taskIndex",
-        scenario_task_index as "scenarioTaskIndex", status, type,
-        expected_duration as "expectedDuration", 
-        allowed_attempts as "allowedAttempts",
-        context, user_solution as "userSolution", score,
-        time_spent_seconds as "timeSpentSeconds",
-        attempt_count as "attemptCount",
-        started_at as "startedAt", completed_at as "completedAt",
-        created_at as "createdAt", updated_at as "updatedAt", metadata
+        program_id, task_index, scenario_task_index,
+        title, description, type, status,
+        content, interactions,
+        user_response, score, max_score,
+        allowed_attempts, attempt_count,
+        time_limit_seconds, time_spent_seconds,
+        ai_config,
+        pbl_data, discovery_data, assessment_data,
+        metadata
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+        $11, $12, $13, $14, $15, $16, $17, $18, $19,
+        $20, $21
+      )
+      RETURNING *
     `;
 
-    const { rows } = await this.pool.query(query, [
-      data.programId,
-      data.taskIndex,
-      data.type,
-      JSON.stringify(data.context),
-      data.allowedAttempts || 3
+    const { rows } = await this.pool.query<DBTask>(query, [
+      task.programId,
+      task.taskIndex,
+      task.scenarioTaskIndex || null,
+      task.title || null,
+      task.description || null,
+      task.type,
+      task.status || 'pending',
+      JSON.stringify(task.content || {}),
+      JSON.stringify(task.interactions || []),
+      JSON.stringify(task.userResponse || {}),
+      task.score || 0,
+      task.maxScore || 100,
+      task.allowedAttempts || 3,
+      task.attemptCount || 0,
+      task.timeLimitSeconds || null,
+      task.timeSpentSeconds || 0,
+      JSON.stringify(task.aiConfig || {}),
+      JSON.stringify(task.pblData || {}),
+      JSON.stringify(task.discoveryData || {}),
+      JSON.stringify(task.assessmentData || {}),
+      JSON.stringify(task.metadata || {})
     ]);
 
-    return rows[0];
+    return this.toTask(rows[0]);
   }
 
-  async update(id: string, data: UpdateTaskDto): Promise<Task> {
-    const updates: string[] = [];
-    const values: unknown[] = [];
-    let paramCount = 1;
+  async createBatch(tasks: Omit<ITask, 'id'>[]): Promise<ITask[]> {
+    const client = await this.pool.connect();
+    const createdTasks: ITask[] = [];
 
-    if (data.status !== undefined) {
-      updates.push(`status = $${paramCount++}`);
-      values.push(data.status);
-      
-      // Set started_at when task becomes active
-      if (data.status === 'active') {
-        updates.push(`started_at = COALESCE(started_at, CURRENT_TIMESTAMP)`);
+    try {
+      await client.query('BEGIN');
+
+      for (const task of tasks) {
+        const query = `
+          INSERT INTO tasks (
+            program_id, task_index, scenario_task_index,
+            title, description, type, status,
+            content, interactions,
+            user_response, score, max_score,
+            allowed_attempts, attempt_count,
+            time_limit_seconds, time_spent_seconds,
+            ai_config,
+            pbl_data, discovery_data, assessment_data,
+            metadata
+          ) VALUES (
+            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+            $11, $12, $13, $14, $15, $16, $17, $18, $19,
+            $20, $21
+          )
+          RETURNING *
+        `;
+
+        const { rows } = await client.query<DBTask>(query, [
+          task.programId,
+          task.taskIndex,
+          task.scenarioTaskIndex || null,
+          task.title || null,
+          task.description || null,
+          task.type,
+          task.status || 'pending',
+          JSON.stringify(task.content || {}),
+          JSON.stringify(task.interactions || []),
+          JSON.stringify(task.userResponse || {}),
+          task.score || 0,
+          task.maxScore || 100,
+          task.allowedAttempts || 3,
+          task.attemptCount || 0,
+          task.timeLimitSeconds || null,
+          task.timeSpentSeconds || 0,
+          JSON.stringify(task.aiConfig || {}),
+          JSON.stringify(task.pblData || {}),
+          JSON.stringify(task.discoveryData || {}),
+          JSON.stringify(task.assessmentData || {}),
+          JSON.stringify(task.metadata || {})
+        ]);
+
+        createdTasks.push(this.toTask(rows[0]));
       }
-      
-      // Set completed_at when task is completed
-      if (data.status === 'completed') {
-        updates.push(`completed_at = CURRENT_TIMESTAMP`);
-      }
+
+      await client.query('COMMIT');
+      return createdTasks;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
     }
+  }
 
-    if (data.score !== undefined) {
-      updates.push(`score = $${paramCount++}`);
-      values.push(data.score);
-    }
-
-    if (data.userSolution !== undefined) {
-      updates.push(`user_solution = $${paramCount++}`);
-      values.push(data.userSolution);
-    }
-
-    if (data.timeSpentSeconds !== undefined) {
-      updates.push(`time_spent_seconds = $${paramCount++}`);
-      values.push(data.timeSpentSeconds);
-    }
-
-    if (data.attemptCount !== undefined) {
-      updates.push(`attempt_count = $${paramCount++}`);
-      values.push(data.attemptCount);
-    }
-
-    updates.push(`updated_at = CURRENT_TIMESTAMP`);
-    values.push(id);
-
+  async updateInteractions(id: string, interactions: IInteraction[]): Promise<ITask> {
     const query = `
       UPDATE tasks
-      SET ${updates.join(', ')}
-      WHERE id = $${paramCount}
-      RETURNING 
-        id, program_id as "programId", task_index as "taskIndex",
-        scenario_task_index as "scenarioTaskIndex", status, type,
-        expected_duration as "expectedDuration", 
-        allowed_attempts as "allowedAttempts",
-        context, user_solution as "userSolution", score,
-        time_spent_seconds as "timeSpentSeconds",
-        attempt_count as "attemptCount",
-        started_at as "startedAt", completed_at as "completedAt",
-        created_at as "createdAt", updated_at as "updatedAt", metadata
+      SET interactions = $1,
+          updated_at = CURRENT_TIMESTAMP
+      WHERE id = $2
+      RETURNING *
     `;
 
-    const { rows } = await this.pool.query(query, values);
+    const { rows } = await this.pool.query<DBTask>(query, [
+      JSON.stringify(interactions),
+      id
+    ]);
     
     if (!rows[0]) {
       throw new Error('Task not found');
     }
 
-    return rows[0];
+    return this.toTask(rows[0]);
+  }
+
+  async complete(id: string): Promise<ITask> {
+    const query = `
+      UPDATE tasks
+      SET status = 'completed',
+          completed_at = CURRENT_TIMESTAMP,
+          updated_at = CURRENT_TIMESTAMP
+      WHERE id = $1
+      RETURNING *
+    `;
+
+    const { rows } = await this.pool.query<DBTask>(query, [id]);
+    
+    if (!rows[0]) {
+      throw new Error('Task not found');
+    }
+
+    return this.toTask(rows[0]);
+  }
+
+  // Additional methods specific to PostgreSQL implementation
+
+  async update(id: string, updates: Partial<ITask>): Promise<ITask> {
+    const updateFields: string[] = [];
+    const values: unknown[] = [];
+    let paramCount = 1;
+
+    // Status update
+    if (updates.status !== undefined) {
+      updateFields.push(`status = $${paramCount++}`);
+      values.push(updates.status);
+      
+      // Update timestamps based on status
+      if (updates.status === 'active' && !updates.startedAt) {
+        updateFields.push(`started_at = COALESCE(started_at, CURRENT_TIMESTAMP)`);
+      }
+      if (updates.status === 'completed' && !updates.completedAt) {
+        updateFields.push(`completed_at = CURRENT_TIMESTAMP`);
+      }
+    }
+
+    // Basic info
+    if (updates.title !== undefined) {
+      updateFields.push(`title = $${paramCount++}`);
+      values.push(updates.title);
+    }
+    if (updates.description !== undefined) {
+      updateFields.push(`description = $${paramCount++}`);
+      values.push(updates.description);
+    }
+
+    // Content
+    if (updates.content !== undefined) {
+      updateFields.push(`content = $${paramCount++}`);
+      values.push(JSON.stringify(updates.content));
+    }
+
+    // Interactions
+    if (updates.interactions !== undefined) {
+      updateFields.push(`interactions = $${paramCount++}`);
+      values.push(JSON.stringify(updates.interactions));
+    }
+
+    // Response
+    if (updates.userResponse !== undefined) {
+      updateFields.push(`user_response = $${paramCount++}`);
+      values.push(JSON.stringify(updates.userResponse));
+    }
+
+    // Scoring
+    if (updates.score !== undefined) {
+      updateFields.push(`score = $${paramCount++}`);
+      values.push(updates.score);
+    }
+
+    // Attempts
+    if (updates.attemptCount !== undefined) {
+      updateFields.push(`attempt_count = $${paramCount++}`);
+      values.push(updates.attemptCount);
+    }
+
+    // Time
+    if (updates.timeSpentSeconds !== undefined) {
+      updateFields.push(`time_spent_seconds = $${paramCount++}`);
+      values.push(updates.timeSpentSeconds);
+    }
+
+    // AI config
+    if (updates.aiConfig !== undefined) {
+      updateFields.push(`ai_config = $${paramCount++}`);
+      values.push(JSON.stringify(updates.aiConfig));
+    }
+
+    // Mode-specific data
+    if (updates.pblData !== undefined) {
+      updateFields.push(`pbl_data = $${paramCount++}`);
+      values.push(JSON.stringify(updates.pblData));
+    }
+    if (updates.discoveryData !== undefined) {
+      updateFields.push(`discovery_data = $${paramCount++}`);
+      values.push(JSON.stringify(updates.discoveryData));
+    }
+    if (updates.assessmentData !== undefined) {
+      updateFields.push(`assessment_data = $${paramCount++}`);
+      values.push(JSON.stringify(updates.assessmentData));
+    }
+
+    // Metadata
+    if (updates.metadata !== undefined) {
+      updateFields.push(`metadata = $${paramCount++}`);
+      values.push(JSON.stringify(updates.metadata));
+    }
+
+    if (updateFields.length === 0) {
+      throw new Error('No fields to update');
+    }
+
+    values.push(id);
+
+    const query = `
+      UPDATE tasks
+      SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $${paramCount}
+      RETURNING *
+    `;
+
+    const { rows } = await this.pool.query<DBTask>(query, values);
+    
+    if (!rows[0]) {
+      throw new Error('Task not found');
+    }
+
+    return this.toTask(rows[0]);
   }
 
   async updateStatus(id: string, status: TaskStatus): Promise<void> {
@@ -174,129 +375,64 @@ export class PostgreSQLTaskRepository implements ITaskRepository {
     await this.pool.query(query, [status, id]);
   }
 
-  async recordAttempt(id: string, attempt: AttemptData): Promise<void> {
-    const client = await this.pool.connect();
-    
-    try {
-      await client.query('BEGIN');
-
-      // Update task with attempt data
-      await client.query(`
-        UPDATE tasks
-        SET attempt_count = attempt_count + 1,
-            time_spent_seconds = time_spent_seconds + $1,
-            score = GREATEST(score, $2),
-            user_solution = $3,
-            updated_at = CURRENT_TIMESTAMP
-        WHERE id = $4
-      `, [
-        attempt.timeSpent,
-        attempt.score || 0,
-        JSON.stringify(attempt.response),
-        id
-      ]);
-
-      // Record interaction if needed
-      if (attempt.response) {
-        await client.query(`
-          INSERT INTO interactions (
-            task_id, sequence_number, type, role, content
-          ) 
-          SELECT $1, COALESCE(MAX(sequence_number), 0) + 1, 'attempt', 'user', $2
-          FROM interactions
-          WHERE task_id = $1
-        `, [id, JSON.stringify(attempt.response)]);
-      }
-
-      await client.query('COMMIT');
-    } catch (error) {
-      await client.query('ROLLBACK');
-      throw error;
-    } finally {
-      client.release();
-    }
-  }
-
-  async getTaskWithInteractions(id: string): Promise<TaskWithInteractions | null> {
-    const task = await this.findById(id);
-    if (!task) return null;
-
-    const interactionsQuery = `
-      SELECT 
-        id, task_id as "taskId", sequence_number as "sequenceNumber",
-        type, role, content, metadata, created_at as "createdAt"
-      FROM interactions
-      WHERE task_id = $1
-      ORDER BY sequence_number ASC
+  // Add interaction to task
+  async addInteraction(taskId: string, interaction: IInteraction): Promise<void> {
+    const getTaskQuery = `
+      SELECT interactions FROM tasks WHERE id = $1
     `;
 
-    const { rows: interactions } = await this.pool.query(interactionsQuery, [id]);
+    const { rows } = await this.pool.query(getTaskQuery, [taskId]);
+    
+    if (!rows[0]) {
+      throw new Error('Task not found');
+    }
 
-    return {
-      ...task,
-      interactions
-    };
+    const currentInteractions = rows[0].interactions as IInteraction[];
+    currentInteractions.push(interaction);
+
+    const updateQuery = `
+      UPDATE tasks
+      SET interactions = $1,
+          updated_at = CURRENT_TIMESTAMP
+      WHERE id = $2
+    `;
+
+    await this.pool.query(updateQuery, [
+      JSON.stringify(currentInteractions),
+      taskId
+    ]);
   }
 
-  // Batch create tasks for a program
-  async createBatch(programId: string, tasksData: Omit<CreateTaskDto, 'programId'>[]): Promise<Task[]> {
-    const client = await this.pool.connect();
-    const createdTasks: Task[] = [];
+  // Record attempt (updates score and increments attempt count)
+  async recordAttempt(id: string, score: number, response: Record<string, unknown>): Promise<void> {
+    const query = `
+      UPDATE tasks
+      SET attempt_count = attempt_count + 1,
+          score = GREATEST(score, $1),
+          user_response = $2,
+          updated_at = CURRENT_TIMESTAMP
+      WHERE id = $3
+    `;
 
-    try {
-      await client.query('BEGIN');
+    await this.pool.query(query, [score, JSON.stringify(response), id]);
+  }
 
-      for (const [index, taskData] of tasksData.entries()) {
-        const query = `
-          INSERT INTO tasks (
-            program_id, task_index, type, context, allowed_attempts
-          ) VALUES ($1, $2, $3, $4, $5)
-          RETURNING 
-            id, program_id as "programId", task_index as "taskIndex",
-            scenario_task_index as "scenarioTaskIndex", status, type,
-            expected_duration as "expectedDuration", 
-            allowed_attempts as "allowedAttempts",
-            context, user_solution as "userSolution", score,
-            time_spent_seconds as "timeSpentSeconds",
-            attempt_count as "attemptCount",
-            started_at as "startedAt", completed_at as "completedAt",
-            created_at as "createdAt", updated_at as "updatedAt", metadata
-        `;
+  // Update time spent
+  async updateTimeSpent(id: string, additionalSeconds: number): Promise<void> {
+    const query = `
+      UPDATE tasks
+      SET time_spent_seconds = time_spent_seconds + $1,
+          updated_at = CURRENT_TIMESTAMP
+      WHERE id = $2
+    `;
 
-        const { rows } = await client.query(query, [
-          programId,
-          taskData.taskIndex || index,
-          taskData.type,
-          JSON.stringify(taskData.context),
-          taskData.allowedAttempts || 3
-        ]);
-
-        createdTasks.push(rows[0]);
-      }
-
-      await client.query('COMMIT');
-      return createdTasks;
-    } catch (error) {
-      await client.query('ROLLBACK');
-      throw error;
-    } finally {
-      client.release();
-    }
+    await this.pool.query(query, [additionalSeconds, id]);
   }
 
   // Get current active task for a program
-  async getCurrentTask(programId: string): Promise<Task | null> {
+  async getCurrentTask(programId: string): Promise<ITask | null> {
     const query = `
-      SELECT 
-        t.id, t.program_id as "programId", t.task_index as "taskIndex",
-        t.scenario_task_index as "scenarioTaskIndex", t.status, t.type,
-        t.expected_duration as "expectedDuration", 
-        t.allowed_attempts as "allowedAttempts",
-        t.context, t.user_solution as "userSolution", t.score,
-        t.time_spent_seconds as "timeSpentSeconds",
-        t.attempt_count as "attemptCount",
-        t.started_at as "startedAt", t.completed_at as "completedAt",
-        t.created_at as "createdAt", t.updated_at as "updatedAt", t.metadata
+      SELECT t.*
       FROM tasks t
       JOIN programs p ON t.program_id = p.id
       WHERE t.program_id = $1 
@@ -304,25 +440,45 @@ export class PostgreSQLTaskRepository implements ITaskRepository {
       LIMIT 1
     `;
 
-    const { rows } = await this.pool.query(query, [programId]);
-    return rows[0] || null;
+    const { rows } = await this.pool.query<DBTask>(query, [programId]);
+    return rows[0] ? this.toTask(rows[0]) : null;
   }
 
-  // Add interaction to task
-  async addInteraction(taskId: string, interaction: Omit<Interaction, 'id' | 'taskId' | 'createdAt'>): Promise<void> {
-    const query = `
-      INSERT INTO interactions (
-        task_id, sequence_number, type, role, content, metadata
-      ) VALUES ($1, $2, $3, $4, $5, $6)
+  // Get tasks by type
+  async findByType(type: TaskType, programId?: string): Promise<ITask[]> {
+    let query = `
+      SELECT * FROM tasks 
+      WHERE type = $1
     `;
+    const params: unknown[] = [type];
 
-    await this.pool.query(query, [
-      taskId,
-      interaction.sequenceNumber,
-      interaction.type,
-      interaction.role,
-      interaction.content,
-      JSON.stringify(interaction.metadata || {})
-    ]);
+    if (programId) {
+      query += ` AND program_id = $2`;
+      params.push(programId);
+    }
+
+    query += ` ORDER BY task_index ASC`;
+
+    const { rows } = await this.pool.query<DBTask>(query, params);
+    return rows.map(row => this.toTask(row));
+  }
+
+  // Get tasks by status
+  async findByStatus(status: TaskStatus, programId?: string): Promise<ITask[]> {
+    let query = `
+      SELECT * FROM tasks 
+      WHERE status = $1
+    `;
+    const params: unknown[] = [status];
+
+    if (programId) {
+      query += ` AND program_id = $2`;
+      params.push(programId);
+    }
+
+    query += ` ORDER BY task_index ASC`;
+
+    const { rows } = await this.pool.query<DBTask>(query, params);
+    return rows.map(row => this.toTask(row));
   }
 }
