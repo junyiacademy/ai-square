@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import type { CreateTaskDto } from '@/lib/repositories/interfaces';
 
 export async function GET(request: NextRequest) {
   try {
@@ -98,7 +99,15 @@ export async function POST(request: NextRequest) {
         allowedAttempts: task.maxAttempts || 3
       }));
 
-      await taskRepo.createBatch(program.id, tasksData);
+      await Promise.all(tasksData.map((taskData: Record<string, unknown>) => 
+        taskRepo.create({
+          programId: program.id,
+          taskIndex: taskData.taskIndex as number,
+          type: taskData.type as string,
+          context: taskData.context as CreateTaskDto['context'],
+          allowedAttempts: taskData.allowedAttempts as number
+        })
+      ));
     }
 
     return NextResponse.json(program, { status: 201 });
