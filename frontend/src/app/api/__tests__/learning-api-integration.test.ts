@@ -8,13 +8,13 @@ import { jest } from '@jest/globals';
 
 // Mock authentication (simulating session without next-auth dependency)
 const mockGetServerSession = jest.fn(() => Promise.resolve({
-  user: { email: 'test@example.com' }
+  user: { id: 'test-user-id', email: 'test@example.com' }
 }));
 
-// Mock auth helper if it exists
-jest.mock('@/lib/auth', () => ({
+// Mock auth helper
+jest.mock('@/lib/auth/session', () => ({
   getServerSession: mockGetServerSession
-}), { virtual: true });
+}));
 
 // Mock the unified learning service
 const mockUnifiedLearningService = {
@@ -38,7 +38,7 @@ const createMockRequest = (method: string, url: string, body?: unknown): NextReq
     json: jest.fn(() => Promise.resolve(body)),
     headers: new Map(),
     nextUrl: { pathname: url }
-  } as any;
+  } as unknown as NextRequest;
   
   return request;
 };
@@ -186,7 +186,7 @@ describe('Learning API Integration Tests', () => {
 
       const request = createMockRequest('GET', '/api/learning/progress');
 
-      const response = await GET(request);
+      const response = await GET();
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -256,12 +256,12 @@ describe('Learning API Integration Tests', () => {
 
   describe('Authentication', () => {
     it('should require authentication for protected routes', async () => {
-      mockGetServerSession.mockResolvedValue(null);
+      mockGetServerSession.mockResolvedValue(null as unknown as { user: { email: string } });
 
       const { GET } = await import('@/app/api/learning/progress/route');
       const request = createMockRequest('GET', '/api/learning/progress');
 
-      const response = await GET(request);
+      const response = await GET();
       const data = await response.json();
 
       expect(response.status).toBe(401);
@@ -280,7 +280,7 @@ describe('Learning API Integration Tests', () => {
 
       const request = createMockRequest('GET', '/api/learning/progress');
 
-      const response = await GET(request);
+      const response = await GET();
       const data = await response.json();
 
       expect(response.status).toBe(500);
@@ -320,7 +320,7 @@ describe('Learning API Integration Tests', () => {
 
       const request = createMockRequest('GET', '/api/learning/progress');
 
-      const response = await GET(request);
+      const response = await GET();
       const data = await response.json();
 
       expect(data).toHaveProperty('success');

@@ -169,7 +169,7 @@ export async function GET(
             console.log('Source feedback preview:', sourceFeedback.substring(0, 100) + '...');
             
             const translationService = new TranslationService();
-            const careerType = scenario?.sourceRef.metadata?.careerType as string;
+            const careerType = (scenario?.metadata?.careerType || 'general') as string;
             
             // Special handling: if requesting English and source is English, no translation needed
             if (requestedLanguage === 'en' && sourceLanguage === 'en') {
@@ -323,7 +323,7 @@ export async function PATCH(
       
       // Get scenario for context
       const scenario = await scenarioRepo.findById(program.scenarioId);
-      const careerType = (scenario?.metadata?.careerType as string) || 'unknown';
+      const careerType = (scenario?.metadata?.careerType || 'unknown') as string;
       const language = program.metadata?.language || 'en';
       
       // Get user's preferred language from request header
@@ -476,16 +476,21 @@ Return your evaluation as a JSON object:
         taskId,
         userAttempts,
         aiResponseCount: aiResponses.length,
-        aiResponseDetails: aiResponses.map(r => ({
-          timestamp: r.timestamp,
-          completed: r.context?.completed,
-          context: r.content
+        aiResponseDetails: aiResponses.map((r: Interaction) => ({
+          timestamp: r.createdAt.toISOString(),
+          completed: (r.metadata as { completed?: boolean })?.completed,
+          content: r.content
         }))
       });
       
-      const passedAttempts = aiResponses.filter(
-        i => i.context?.completed === true
-      ).length;
+      const passedAttempts = aiResponses.filter((i: Interaction) => {
+        try {
+          const parsed = JSON.parse(i.content) as { completed?: boolean };
+          return parsed.completed === true;
+        } catch {
+          return false;
+        }
+      }).length;
       
       // Get all feedback for comprehensive review
       const allFeedback = task.interactions
@@ -510,18 +515,19 @@ Return your evaluation as a JSON object:
             return {
               type: 'user_response',
               attempt: Math.floor(index / 2) + 1,
-              context: interaction.context.response,
-              timeSpent: interaction.context.timeSpent
+              content: interaction.content,
+              timeSpent: (interaction.metadata as { timeSpent?: number })?.timeSpent || 0
             };
           } else if (interaction.type === 'ai_response') {
+            const parsed = JSON.parse(interaction.content) as { completed?: boolean; feedback?: string; strengths?: string[]; improvements?: string[]; xpEarned?: number };
             return {
               type: 'ai_feedback',
               attempt: Math.floor(index / 2) + 1,
-              passed: interaction.context.completed,
-              feedback: interaction.context.feedback,
-              strengths: interaction.context.strengths || [],
-              improvements: interaction.context.improvements || [],
-              xpEarned: interaction.context.xpEarned
+              passed: parsed.completed || false,
+              feedback: parsed.feedback || '',
+              strengths: parsed.strengths || [],
+              improvements: parsed.improvements || [],
+              xpEarned: parsed.xpEarned || 0
             };
           }
           return null;
@@ -619,11 +625,28 @@ Return your evaluation as a JSON object:
       } catch (error) {
         console.error('Error generating comprehensive feedback:', error);
         // Fallback to simple feedback if AI generation fails
-        const lastSuccessfulFeedback = task.interactions
-          .filter(i => i.type === 'ai_response' && i.context?.completed === true)
-          .slice(-1)[0]?.content;
+        const lastSuccessfulInteraction = task.interactions
+          .filter((i: Interaction) => {
+            if (i.type !== 'ai_response') return false;
+            try {
+              const parsed = JSON.parse(i.content) as { completed?: boolean };
+              return parsed.completed === true;
+            } catch {
+              return false;
+            }
+          })
+          .slice(-1)[0];
         
-        comprehensiveFeedback = lastSuccessfulFeedback?.feedback || getFallbackMessage({ language: userLanguage });
+        if (lastSuccessfulInteraction) {
+          try {
+            const parsed = JSON.parse(lastSuccessfulInteraction.content) as { feedback?: string };
+            comprehensiveFeedback = parsed.feedback || getFallbackMessage({ language: userLanguage });
+          } catch {
+            comprehensiveFeedback = getFallbackMessage({ language: userLanguage });
+          }
+        } else {
+          comprehensiveFeedback = getFallbackMessage({ language: userLanguage });
+        }
         
         if (userAttempts > 1) {
           const statsSection = getStatsSection(userLanguage, userAttempts, passedAttempts, bestXP);
@@ -807,18 +830,19 @@ Return your evaluation as a JSON object:
             return {
               type: 'user_response',
               attempt: Math.floor(index / 2) + 1,
-              context: interaction.context.response,
-              timeSpent: interaction.context.timeSpent
+              content: interaction.content,
+              timeSpent: (interaction.metadata as { timeSpent?: number })?.timeSpent || 0
             };
           } else if (interaction.type === 'ai_response') {
+            const parsed = JSON.parse(interaction.content) as { completed?: boolean; feedback?: string; strengths?: string[]; improvements?: string[]; xpEarned?: number };
             return {
               type: 'ai_feedback',
               attempt: Math.floor(index / 2) + 1,
-              passed: interaction.context.completed,
-              feedback: interaction.context.feedback,
-              strengths: interaction.context.strengths || [],
-              improvements: interaction.context.improvements || [],
-              xpEarned: interaction.context.xpEarned
+              passed: parsed.completed || false,
+              feedback: parsed.feedback || '',
+              strengths: parsed.strengths || [],
+              improvements: parsed.improvements || [],
+              xpEarned: parsed.xpEarned || 0
             };
           }
           return null;
@@ -826,7 +850,7 @@ Return your evaluation as a JSON object:
         
         const scenarioRepo = repositoryFactory.getScenarioRepository();
         const scenario = await scenarioRepo.findById(program.scenarioId);
-        const careerType = (scenario?.metadata?.careerType as string) || 'unknown';
+        const careerType = (scenario?.metadata?.careerType || 'unknown') as string;
         const language = program.metadata?.language || 'en';
         const acceptLanguage = request.headers.get('accept-language')?.split(',')[0];
         userLanguage = acceptLanguage || language;

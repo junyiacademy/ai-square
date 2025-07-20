@@ -1,6 +1,6 @@
 import { GET } from '../route';
 import { cookies } from 'next/headers';
-import { verifyAccessToken, isTokenExpiringSoon } from '@/lib/auth/jwt';
+import { verifyAccessToken, isTokenExpiringSoon, type TokenPayload } from '@/lib/auth/jwt';
 
 // Mock dependencies
 jest.mock('next/headers');
@@ -28,8 +28,8 @@ describe('/api/auth/check', () => {
 
   describe('JWT access token authentication', () => {
     it('returns authenticated user when valid access token exists', async () => {
-      const mockPayload = {
-        userId: 'user123',
+      const mockPayload: TokenPayload = {
+        userId: 123,
         email: 'test@example.com',
         role: 'user',
         name: 'Test User',
@@ -40,7 +40,7 @@ describe('/api/auth/check', () => {
         accessToken: 'valid.jwt.token'
       });
       
-      mockCookies.mockResolvedValue(cookieStore as any);
+      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
       mockVerifyAccessToken.mockResolvedValue(mockPayload);
       mockIsTokenExpiringSoon.mockReturnValue(false);
 
@@ -51,7 +51,7 @@ describe('/api/auth/check', () => {
       expect(data).toEqual({
         authenticated: true,
         user: {
-          id: 'user123',
+          id: 123,
           email: 'test@example.com',
           role: 'user',
           name: 'Test User'
@@ -64,7 +64,7 @@ describe('/api/auth/check', () => {
 
     it('returns token expiring soon when token is close to expiry', async () => {
       const mockPayload = {
-        userId: 'user123',
+        userId: 123,
         email: 'test@example.com',
         role: 'user',
         name: 'Test User',
@@ -75,7 +75,7 @@ describe('/api/auth/check', () => {
         accessToken: 'expiring.jwt.token'
       });
       
-      mockCookies.mockResolvedValue(cookieStore as any);
+      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
       mockVerifyAccessToken.mockResolvedValue(mockPayload);
       mockIsTokenExpiringSoon.mockReturnValue(true);
 
@@ -88,7 +88,7 @@ describe('/api/auth/check', () => {
 
     it('handles expired token gracefully', async () => {
       const mockPayload = {
-        userId: 'user123',
+        userId: 123,
         email: 'test@example.com',
         role: 'user',
         name: 'Test User',
@@ -99,7 +99,7 @@ describe('/api/auth/check', () => {
         accessToken: 'expired.jwt.token'
       });
       
-      mockCookies.mockResolvedValue(cookieStore as any);
+      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
       mockVerifyAccessToken.mockResolvedValue(mockPayload);
       mockIsTokenExpiringSoon.mockReturnValue(false);
 
@@ -121,7 +121,7 @@ describe('/api/auth/check', () => {
         })
       });
       
-      mockCookies.mockResolvedValue(cookieStore as any);
+      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
       mockVerifyAccessToken.mockResolvedValue(null); // JWT verification fails
 
       const response = await GET();
@@ -153,7 +153,7 @@ describe('/api/auth/check', () => {
         })
       });
       
-      mockCookies.mockResolvedValue(cookieStore as any);
+      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
 
       const response = await GET();
       const data = await response.json();
@@ -181,7 +181,7 @@ describe('/api/auth/check', () => {
         })
       });
       
-      mockCookies.mockResolvedValue(cookieStore as any);
+      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
 
       const response = await GET();
       const data = await response.json();
@@ -197,7 +197,7 @@ describe('/api/auth/check', () => {
         user: 'invalid-json'
       });
       
-      mockCookies.mockResolvedValue(cookieStore as any);
+      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
 
       const response = await GET();
       const data = await response.json();
@@ -217,7 +217,7 @@ describe('/api/auth/check', () => {
     it('returns unauthenticated when no tokens or cookies exist', async () => {
       const cookieStore = createMockCookieStore({});
       
-      mockCookies.mockResolvedValue(cookieStore as any);
+      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
 
       const response = await GET();
       const data = await response.json();
@@ -235,7 +235,7 @@ describe('/api/auth/check', () => {
         user: JSON.stringify({ id: '123', email: 'test@example.com' })
       });
       
-      mockCookies.mockResolvedValue(cookieStore as any);
+      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
 
       const response = await GET();
       const data = await response.json();
@@ -248,7 +248,7 @@ describe('/api/auth/check', () => {
         isLoggedIn: 'true'
       });
       
-      mockCookies.mockResolvedValue(cookieStore as any);
+      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
 
       const response = await GET();
       const data = await response.json();
@@ -261,7 +261,7 @@ describe('/api/auth/check', () => {
         accessToken: 'invalid.jwt.token'
       });
       
-      mockCookies.mockResolvedValue(cookieStore as any);
+      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
       mockVerifyAccessToken.mockResolvedValue(null);
 
       const response = await GET();
@@ -275,7 +275,7 @@ describe('/api/auth/check', () => {
     it('always includes required fields in response', async () => {
       const cookieStore = createMockCookieStore({});
       
-      mockCookies.mockResolvedValue(cookieStore as any);
+      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
 
       const response = await GET();
       const data = await response.json();
@@ -289,7 +289,7 @@ describe('/api/auth/check', () => {
 
     it('includes expiresIn field only for JWT authentication', async () => {
       const mockPayload = {
-        userId: 'user123',
+        userId: 123,
         email: 'test@example.com',
         role: 'user',
         name: 'Test User',
@@ -300,7 +300,7 @@ describe('/api/auth/check', () => {
         accessToken: 'valid.jwt.token'
       });
       
-      mockCookies.mockResolvedValue(cookieStore as any);
+      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
       mockVerifyAccessToken.mockResolvedValue(mockPayload);
       mockIsTokenExpiringSoon.mockReturnValue(false);
 
@@ -317,7 +317,7 @@ describe('/api/auth/check', () => {
         user: JSON.stringify({ id: '123', email: 'test@example.com', name: 'Test' })
       });
       
-      mockCookies.mockResolvedValue(cookieStore as any);
+      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
 
       const response = await GET();
       const data = await response.json();
