@@ -92,20 +92,27 @@ export async function POST(request: NextRequest) {
 
     // Create tasks for the program
     if (scenarioContent.tasks && scenarioContent.tasks.length > 0) {
-      const tasksData = scenarioContent.tasks.map((task: Record<string, unknown>, index: number) => ({
-        taskIndex: index,
-        type: task.type || 'question',
-        context: task,
-        allowedAttempts: task.maxAttempts || 3
-      }));
-
-      await Promise.all(tasksData.map((taskData: Record<string, unknown>) => 
+      await Promise.all(scenarioContent.tasks.map((task: Record<string, unknown>, index: number) => 
         taskRepo.create({
           programId: program.id,
-          taskIndex: taskData.taskIndex as number,
-          type: taskData.type as string,
-          context: taskData.context as CreateTaskDto['context'],
-          allowedAttempts: taskData.allowedAttempts as number
+          taskIndex: index,
+          type: (task.type as string) || 'question',
+          title: task.title as string,
+          // DDD: content = 用戶看到的內容
+          content: {
+            description: task.description as string,
+            instructions: task.instructions as string,
+            hints: task.hints as string[]
+          },
+          // DDD: context = 系統執行背景資訊
+          context: {
+            scenarioId,
+            taskType: task.category as string,
+            difficulty: task.difficulty as string,
+            estimatedTime: task.time_limit as number,
+            ksaCodes: task.KSA_focus as string[]
+          },
+          allowedAttempts: (task.maxAttempts as number) || 3
         })
       ));
     }
