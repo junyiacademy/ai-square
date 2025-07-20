@@ -96,6 +96,253 @@ For a new feature:
 
 ✅ One test at a time → Make it pass → Improve structure → Always run tests
 
+## 🔧 TypeScript 錯誤修復安全規則
+
+### 🚨 關鍵原則：零風險修復策略
+**絕對不能破壞現有功能，每個修復都必須可驗證和可回退**
+
+### 修復前的強制檢查清單
+**在修復任何 TypeScript 錯誤前，必須完成以下所有檢查**：
+
+1. **🔍 錯誤分類與風險評估**
+   ```bash
+   # 執行完整類型檢查，記錄當前錯誤數量
+   npx tsc --noEmit 2>&1 | grep -c "error TS"
+   
+   # 分析錯誤類型分布
+   npx tsc --noEmit 2>&1 | grep -E "error TS[0-9]+" | sed 's/.*error \(TS[0-9]*\).*/\1/' | sort | uniq -c | sort -nr
+   ```
+
+2. **📸 創建修復前快照**
+   ```bash
+   # 記錄當前git狀態
+   git status > typescript-fix-before.log
+   git stash push -m "Before TypeScript fix - $(date)"
+   
+   # 記錄當前錯誤詳情
+   npx tsc --noEmit > typescript-errors-before.log 2>&1
+   ```
+
+3. **🧪 建立基線測試**
+   ```bash
+   # 確保所有現有測試通過
+   npm run test:ci
+   npm run build
+   ```
+
+### 階段式修復流程
+
+#### Phase 1: 錯誤隔離分析
+**絕對禁止直接開始修復，必須先分析**
+
+```bash
+# 1. 按檔案分組分析錯誤
+npx tsc --noEmit 2>&1 | grep "error TS" | cut -d'(' -f1 | sort | uniq -c | sort -nr | head -20
+
+# 2. 按錯誤類型分組
+npx tsc --noEmit 2>&1 | grep "error TS" | grep -E "TS[0-9]+" -o | sort | uniq -c | sort -nr
+
+# 3. 識別高風險檔案（錯誤數量 > 10）
+npx tsc --noEmit 2>&1 | grep "error TS" | cut -d'(' -f1 | sort | uniq -c | awk '$1 > 10 {print $0}'
+```
+
+#### Phase 2: 安全修復策略選擇
+
+**根據錯誤類型選擇修復策略**：
+
+1. **TS2339 (Property does not exist)** - 高風險
+   - ❌ 禁止：直接添加屬性到 interface
+   - ✅ 安全：先檢查所有使用處，確認屬性確實存在
+   - ✅ 方法：使用 optional chaining 或類型守衛
+
+2. **TS2322 (Type not assignable)** - 中風險  
+   - ❌ 禁止：強制類型轉換 `as any`
+   - ✅ 安全：創建正確的類型映射函數
+   - ✅ 方法：逐步類型轉換或重構資料結構
+
+3. **TS2345 (Argument type error)** - 中風險
+   - ❌ 禁止：修改函數簽名以符合錯誤調用
+   - ✅ 安全：修改調用方式以符合正確簽名
+   - ✅ 方法：創建適配器函數
+
+#### Phase 3: 單一檔案修復流程
+
+**每次只修復一個檔案，絕不批量修復**
+
+```bash
+# 1. 選擇修復目標（錯誤最少的檔案優先）
+TARGET_FILE="src/path/to/file.ts"
+
+# 2. 只檢查該檔案的錯誤
+npx tsc --noEmit $TARGET_FILE
+
+# 3. 修復前備份
+cp $TARGET_FILE "${TARGET_FILE}.backup"
+
+# 4. 修復單一錯誤（一次只修復一個錯誤）
+# 5. 立即驗證
+npx tsc --noEmit $TARGET_FILE
+
+# 6. 如果新增錯誤，立即回退
+if [ $? -ne 0 ]; then
+  mv "${TARGET_FILE}.backup" $TARGET_FILE
+  echo "修復失敗，已回退"
+  exit 1
+fi
+
+# 7. 執行相關測試
+npm run test -- --testPathPattern="${TARGET_FILE%.ts}.test"
+
+# 8. 確認無副作用後才繼續下一個錯誤
+```
+
+#### Phase 4: 修復驗證與回退機制
+
+**每個修復都必須通過完整驗證**
+
+```bash
+# 1. 類型檢查驗證
+npx tsc --noEmit
+
+# 2. 測試驗證
+npm run test:ci
+
+# 3. 建置驗證  
+npm run build
+
+# 4. ESLint 驗證
+npm run lint
+
+# 5. 如果任何步驟失敗，執行自動回退
+if [ $? -ne 0 ]; then
+  git reset --hard HEAD
+  git stash pop
+  echo "修復導致副作用，已完全回退"
+  exit 1
+fi
+```
+
+### 禁止的危險修復方式
+
+**以下修復方式絕對禁止使用**：
+
+❌ **禁止使用 `any` 類型**
+```typescript
+// ❌ 絕對禁止
+const data: any = response;
+property as any
+```
+
+❌ **禁止使用 TypeScript ignore**
+```typescript
+// ❌ 絕對禁止  
+// @ts-ignore
+// @ts-nocheck
+```
+
+❌ **禁止批量修改 interface**
+```typescript
+// ❌ 危險：一次修改多個屬性
+interface Program {
+  completedAt?: string;    // 新增
+  evaluationId?: string;   // 新增
+  startedAt?: string;      // 新增
+}
+```
+
+❌ **禁止強制類型轉換**
+```typescript
+// ❌ 危險
+(response as unknown as CorrectType)
+```
+
+### 安全的修復模式
+
+✅ **使用類型守衛**
+```typescript
+function hasCompletedAt(obj: unknown): obj is { completedAt: string } {
+  return typeof obj === 'object' && obj !== null && 'completedAt' in obj;
+}
+```
+
+✅ **使用 Optional Chaining**
+```typescript
+const completedAt = program?.completedAt ?? null;
+```
+
+✅ **創建類型映射函數**
+```typescript
+function mapDatabaseToInterface(dbRow: DatabaseRow): ProgramInterface {
+  return {
+    id: dbRow.id,
+    completedAt: dbRow.completed_at,
+    // ...
+  };
+}
+```
+
+✅ **漸進式類型修復**
+```typescript
+// 先創建完整類型
+interface CompleteProgramType {
+  id: string;
+  completedAt?: string;
+  // ...
+}
+
+// 再逐步應用
+```
+
+### 自動化檢查腳本
+
+**在 package.json 中添加檢查腳本**：
+```json
+{
+  "scripts": {
+    "typecheck:safe": "npx tsc --noEmit && npm run test:ci && npm run build",
+    "fix:typescript-safe": "node scripts/safe-typescript-fix.js"
+  }
+}
+```
+
+### 修復進度追蹤
+
+**修復過程中必須記錄**：
+```bash
+# 記錄修復進度
+echo "$(date): Fixed file $TARGET_FILE, errors: $BEFORE_COUNT -> $AFTER_COUNT" >> typescript-fix-log.txt
+
+# 每10個修復後創建commit
+if [ $((FIXED_COUNT % 10)) -eq 0 ]; then
+  git add .
+  git commit -m "fix: resolve $FIXED_COUNT TypeScript errors safely
+
+  🤖 Generated with [Claude Code](https://claude.ai/code)
+  
+  Co-Authored-By: Claude <noreply@anthropic.com>"
+fi
+```
+
+### 緊急回退流程
+
+**如果發現修復造成問題**：
+```bash
+# 1. 立即停止所有修復
+# 2. 檢查git狀態
+git status
+
+# 3. 回退到最後一個穩定狀態
+git reset --hard HEAD~1
+
+# 4. 恢復stash（如果有）
+git stash pop
+
+# 5. 重新評估修復策略
+npx tsc --noEmit > typescript-errors-after-rollback.log 2>&1
+```
+
+**⚠️ 重要：這些規則是強制性的，任何 TypeScript 錯誤修復都必須嚴格遵循此流程**
+
 
 ## 🚀 現代化 AI 開發流程
 
