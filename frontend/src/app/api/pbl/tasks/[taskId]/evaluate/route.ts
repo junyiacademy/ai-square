@@ -28,8 +28,7 @@ export async function POST(
     }
 
     // Use unified architecture
-    const { createRepositoryFactory } = await import('@/lib/db/repositories/factory');
-    const repositoryFactory = createRepositoryFactory();
+    const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
     const evalRepo = repositoryFactory.getEvaluationRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
 
@@ -37,13 +36,19 @@ export async function POST(
     const task = await taskRepo.findById(taskId);
     let evaluationRecord;
     
-    if (task?.evaluationId) {
+    const existingEvaluationId = task?.metadata?.evaluationId as string | undefined;
+    if (existingEvaluationId) {
       // Update existing evaluation
-      const existingEval = await evalRepo.findById(task.evaluationId);
+      const existingEval = await evalRepo.findById(existingEvaluationId);
       if (existingEval) {
-        // Update the existing evaluation
-        evaluationRecord = await evalRepo.update(task.evaluationId, {
+        // Evaluation repository doesn't have update method, create new one
+        evaluationRecord = await evalRepo.create({
+          userId: task?.programId || '',
+          taskId: taskId,
+          evaluationType: 'pbl_task',
           score: evaluation.score,
+          maxScore: 100,
+          timeTakenSeconds: 0,
           metadata: {
             ...existingEval.metadata,
             programId: programId || '',
@@ -63,10 +68,12 @@ export async function POST(
       } else {
         // Evaluation ID exists but evaluation not found, create new one
         evaluationRecord = await evalRepo.create({
-          targetType: 'task',
-          targetId: taskId,
+          userId: task?.programId || '',
+          taskId: taskId,
           evaluationType: 'pbl_task',
           score: evaluation.score,
+          maxScore: 100,
+          timeTakenSeconds: 0,
           metadata: {
             programId: programId || '',
             ksaScores: evaluation.ksaScores,
@@ -84,10 +91,12 @@ export async function POST(
     } else {
       // No existing evaluation, create new one
       evaluationRecord = await evalRepo.create({
-        targetType: 'task',
-        targetId: taskId,
+        userId: task?.programId || '',
+        taskId: taskId,
         evaluationType: 'pbl_task',
         score: evaluation.score,
+        maxScore: 100,
+        timeTakenSeconds: 0,
         metadata: {
           programId: programId || '',
           ksaScores: evaluation.ksaScores,
@@ -104,17 +113,19 @@ export async function POST(
       
       // Update task with evaluation ID only if it's a new evaluation
       await taskRepo.update(taskId, {
-        evaluationId: evaluationRecord.id,
         status: 'completed' as const,
-        completedAt: task?.completedAt || new Date().toISOString()
+        completedAt: task?.completedAt || new Date(),
+        metadata: {
+          ...task?.metadata,
+          evaluationId: evaluationRecord.id
+        }
       });
     }
     
     // Mark program evaluation as outdated (async)
     setImmediate(async () => {
       try {
-        const { createRepositoryFactory } = await import('@/lib/db/repositories/factory');
-        const repositoryFactory = createRepositoryFactory();
+        const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
         const programRepo = repositoryFactory.getProgramRepository();
         const program = await programRepo.findById(programId);
         
@@ -150,11 +161,11 @@ export async function POST(
     
     return NextResponse.json({
       success: true,
-      message: task?.evaluationId ? 'Evaluation updated successfully' : 'Evaluation created successfully',
+      message: existingEvaluationId ? 'Evaluation updated successfully' : 'Evaluation created successfully',
       data: {
         evaluationId: evaluationRecord.id,
         evaluation: transformedEvaluation,
-        isUpdate: !!task?.evaluationId
+        isUpdate: !!existingEvaluationId
       }
     });
 
@@ -185,8 +196,7 @@ export async function GET(
     const { taskId } = await params;
 
     // Use unified architecture
-    const { createRepositoryFactory } = await import('@/lib/db/repositories/factory');
-    const repositoryFactory = createRepositoryFactory();
+    const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
     const taskRepo = repositoryFactory.getTaskRepository();
     const evalRepo = repositoryFactory.getEvaluationRepository();
 
@@ -195,12 +205,13 @@ export async function GET(
     
     let evaluation = null;
     
-    if (task?.evaluationId) {
+    const evaluationId = task?.metadata?.evaluationId as string | undefined;
+    if (evaluationId) {
       // Direct lookup by evaluation ID
-      evaluation = await evalRepo.findById(task.evaluationId);
+      evaluation = await evalRepo.findById(evaluationId);
     } else {
-      // Fallback: search by target
-      const evaluations = await evalRepo.findByTarget('task', taskId);
+      // Fallback: search by task
+      const evaluations = await evalRepo.findByTask(taskId);
       evaluation = evaluations[0] || null;
     }
     
