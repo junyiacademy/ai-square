@@ -203,7 +203,7 @@ describe('/api/pbl/generate-feedback', () => {
       expect(data.feedback).toEqual(mockFeedbackResponse);
       expect(data.cached).toBe(false);
       
-      expect(pblProgramService.updateProgramCompletionFeedback).toHaveBeenCalledWith(
+      expect(mockRepositoryFactory.getProgramRepository().update).toHaveBeenCalledWith(
         'test@example.com',
         'career-advisor',
         'prog123',
@@ -213,10 +213,18 @@ describe('/api/pbl/generate-feedback', () => {
     });
 
     it('returns cached feedback when it exists for the language', async () => {
-      (pblProgramService.getProgramCompletion as jest.Mock).mockResolvedValue({
-        ...mockCompletionData,
-        qualitativeFeedback: {
-          en: mockFeedbackResponse
+      mockRepositoryFactory.getProgramRepository().findById.mockResolvedValue({
+        id: 'prog123',
+        userId: 'user123',
+        scenarioId: 'career-advisor',
+        status: 'completed',
+        metadata: {
+          evaluationMetadata: {
+            ...mockCompletionData,
+            qualitativeFeedback: {
+              en: mockFeedbackResponse
+            }
+          }
         }
       });
 
@@ -234,7 +242,7 @@ describe('/api/pbl/generate-feedback', () => {
       
       // Should not call AI or update feedback
       expect(VertexAI).not.toHaveBeenCalled();
-      expect(pblProgramService.updateProgramCompletionFeedback).not.toHaveBeenCalled();
+      expect(mockRepositoryFactory.getProgramRepository().update).not.toHaveBeenCalled();
     });
 
     it('generates feedback in different languages', async () => {
@@ -280,10 +288,16 @@ describe('/api/pbl/generate-feedback', () => {
     });
 
     it('forces regeneration when forceRegenerate is true', async () => {
-      (pblProgramService.getProgramCompletion as jest.Mock).mockResolvedValue({
-        ...mockCompletionData,
-        qualitativeFeedback: {
-          en: { overallAssessment: 'Old feedback' }
+      mockRepositoryFactory.getProgramRepository().findById.mockResolvedValue({
+        id: 'prog123',
+        userId: 'user123',
+        scenarioId: 'career-advisor',
+        status: 'completed',
+        metadata: {
+          ...mockCompletionData,
+          qualitativeFeedback: {
+            en: { overallAssessment: 'Old feedback' }
+          }
         }
       });
 
@@ -318,7 +332,7 @@ describe('/api/pbl/generate-feedback', () => {
       expect(data.feedback).toEqual(mockFeedbackResponse);
       
       // Should update feedback twice - once to remove, once to add new
-      expect(pblProgramService.updateProgramCompletionFeedback).toHaveBeenCalledTimes(2);
+      expect(mockRepositoryFactory.getProgramRepository().update).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -446,10 +460,16 @@ describe('/api/pbl/generate-feedback', () => {
         encouragement: "Keep going!"
       };
 
-      (pblProgramService.getProgramCompletion as jest.Mock).mockResolvedValue({
-        ...mockCompletionData,
-        qualitativeFeedback: legacyFeedback,
-        feedbackLanguage: 'en'
+      mockRepositoryFactory.getProgramRepository().findById.mockResolvedValue({
+        id: 'prog123',
+        userId: 'user123',
+        scenarioId: 'career-advisor',
+        status: 'completed',
+        metadata: {
+          ...mockCompletionData,
+          qualitativeFeedback: legacyFeedback,
+          feedbackLanguage: 'en'
+        }
       });
 
       const request = createRequest({
@@ -474,10 +494,16 @@ describe('/api/pbl/generate-feedback', () => {
         encouragement: "Keep going!"
       };
 
-      (pblProgramService.getProgramCompletion as jest.Mock).mockResolvedValue({
-        ...mockCompletionData,
-        qualitativeFeedback: legacyFeedback,
-        feedbackLanguage: 'en'
+      mockRepositoryFactory.getProgramRepository().findById.mockResolvedValue({
+        id: 'prog123',
+        userId: 'user123',
+        scenarioId: 'career-advisor',
+        status: 'completed',
+        metadata: {
+          ...mockCompletionData,
+          qualitativeFeedback: legacyFeedback,
+          feedbackLanguage: 'en'
+        }
       });
 
       const mockGenerateContent = jest.fn().mockResolvedValue({
