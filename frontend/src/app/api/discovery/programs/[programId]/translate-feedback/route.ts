@@ -84,10 +84,11 @@ export async function POST(
       };
       
       // Update evaluation with new translation
-      const updatedVersions = {
-        ...feedbackVersions,
-        [targetLanguage]: translatedFeedback
-      };
+      // Store updated versions for future use (when update method is available)
+      // const updatedVersions = {
+      //   ...feedbackVersions,
+      //   [targetLanguage]: translatedFeedback
+      // };
       
       // Note: Evaluation repository doesn't have an update method
       // In a real implementation, you might want to create a new evaluation

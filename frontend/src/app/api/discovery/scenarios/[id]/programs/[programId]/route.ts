@@ -45,7 +45,7 @@ export async function GET(
     // Get tasks in the correct order based on program.taskIds
     const tasks = program.taskIds
       .map(id => taskMap.get(id))
-      .filter(Boolean) as ITask[];
+      .filter(Boolean) as unknown as ITask[];
     
     // Debug logging
     console.log('Program task order:', {
@@ -59,7 +59,7 @@ export async function GET(
     let totalXP = 0;
     
     const tasksSummary = tasks.map((task, index) => {
-      const xp = (task.context as Record<string, unknown>)?.xp as number || 0;
+      const xp = (task.content as Record<string, unknown>)?.xp as number || 0;
       
       // Calculate statistics from interactions
       let actualXP = 0;
@@ -73,17 +73,18 @@ export async function GET(
         // Count successful attempts and find highest XP
         const aiResponses = task.interactions.filter(i => i.type === 'ai_response');
         aiResponses.forEach(response => {
-          if (response.context?.completed === true) {
+          const responseContent = response.content as { completed?: boolean; xpEarned?: number };
+          if (responseContent?.completed === true) {
             passCount++;
-            if (response.context?.xpEarned) {
-              actualXP = Math.max(actualXP, response.context.xpEarned);
+            if (responseContent?.xpEarned) {
+              actualXP = Math.max(actualXP, responseContent.xpEarned);
             }
           }
         });
         
         // If task is completed but actualXP is 0, use the evaluation score or default XP
         if (task.status === 'completed' && actualXP === 0) {
-          actualXP = task.evaluation?.score || xp;
+          actualXP = xp; // Use default XP since evaluation is not directly on task
         }
       }
       
@@ -103,7 +104,7 @@ export async function GET(
       return {
         id: task.id,
         title: task.title,
-        description: (task.context as Record<string, unknown>)?.description as string || '',
+        description: (task.content as Record<string, unknown>)?.description as string || '',
         xp: xp,
         status: displayStatus,
         completedAt: task.completedAt,
@@ -133,8 +134,8 @@ export async function GET(
       scenarioId: program.scenarioId,
       userId: program.userId,
       status: program.status,
-      createdAt: program.startedAt,
-      completedAt: program.completedAt,
+      createdAt: program.startTime,
+      completedAt: program.endTime,
       currentTaskIndex: program.currentTaskIndex,
       taskIds: program.taskIds,
       tasks: tasksSummary,
@@ -143,7 +144,7 @@ export async function GET(
       totalXP: totalXP,
       metadata: program.metadata,
       // Add career info from scenario
-      careerType: scenario?.sourceRef.metadata?.careerType || 'unknown',
+      careerType: scenario?.sourceRef && (scenario.sourceRef as unknown as { metadata?: { careerType?: string } }).metadata?.careerType || 'unknown',
       scenarioTitle: scenario?.title || 'Discovery Scenario'
     };
     

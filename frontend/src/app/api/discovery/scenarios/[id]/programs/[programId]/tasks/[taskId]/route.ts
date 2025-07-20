@@ -5,6 +5,7 @@ import { ITask } from '@/types/unified-learning';
 import { VertexAIService } from '@/lib/ai/vertex-ai-service';
 import { DiscoveryYAMLLoader } from '@/lib/services/discovery-yaml-loader';
 import { TranslationService } from '@/lib/services/translation-service';
+import { Interaction } from '@/lib/repositories/interfaces';
 
 // System prompt for AI - keep in English as it's for the AI model
 function getSystemPromptForLanguage({}: { language: string }): string {
@@ -117,24 +118,26 @@ export async function GET(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
     
-    // Get task
-    const task = await taskRepo.findById(taskId);
-    if (!task || task.programId !== programId) {
+    // Get task with interactions
+    const taskWithInteractions = await taskRepo.getTaskWithInteractions(taskId);
+    if (!taskWithInteractions || taskWithInteractions.programId !== programId) {
       return NextResponse.json({ error: 'Task not found' }, { status: 404 });
     }
+    const task = taskWithInteractions;
     
     // Load scenario for career info
     const scenario = await scenarioRepo.findById(program.scenarioId);
     
     // Handle multilingual evaluation if task is completed
-    let processedEvaluation = task.evaluation;
+    let processedEvaluation = null;
+    const evaluationId = (task.metadata?.evaluationId as string) || null;
     
-    if (task.evaluation && task.status === 'completed') {
+    if (evaluationId && task.status === 'completed') {
       // Get full evaluation record
-      const fullEvaluation = await evaluationRepo.findById(task.evaluation.id);
+      const fullEvaluation = await evaluationRepo.findById(evaluationId);
       
       if (fullEvaluation) {
-        const existingVersions = fullEvaluation.feedbackVersions || {};
+        const existingVersions = (fullEvaluation.metadata?.feedbackVersions || {}) as Record<string, string>;
         
         // Debug log existing versions
         console.log('=== EVALUATION VERSIONS DEBUG ===');
@@ -171,9 +174,11 @@ export async function GET(
             // Special handling: if requesting English and source is English, no translation needed
             if (requestedLanguage === 'en' && sourceLanguage === 'en') {
               processedEvaluation = {
-                ...task.evaluation,
+                id: fullEvaluation.id,
+                score: fullEvaluation.score,
                 feedback: sourceFeedback,
-                feedbackVersions: { ...existingVersions, 'en': sourceFeedback }
+                feedbackVersions: { ...existingVersions, 'en': sourceFeedback },
+                evaluatedAt: fullEvaluation.createdAt.toISOString()
               };
             } else {
               const translatedFeedback = await translationService.translateFeedback(
@@ -188,23 +193,24 @@ export async function GET(
                 [requestedLanguage]: translatedFeedback
               };
               
-              await evaluationRepo.update(fullEvaluation.id, {
-                feedbackVersions: updatedVersions
-              });
-              
-              // Also update task reference
+              // Note: evaluationRepo doesn't have update method
+              // Store updated versions in task metadata
               await taskRepo.update(taskId, {
-                evaluation: {
-                  ...task.evaluation,
-                  feedbackVersions: updatedVersions
+                metadata: {
+                  ...task.metadata,
+                  evaluationFeedbackVersions: updatedVersions
                 }
               });
               
+              // Already updated task metadata above
+              
               // Use translated version for response
               processedEvaluation = {
-                ...task.evaluation,
+                id: fullEvaluation.id,
+                score: fullEvaluation.score,
                 feedback: translatedFeedback,
-                feedbackVersions: updatedVersions
+                feedbackVersions: updatedVersions,
+                evaluatedAt: fullEvaluation.createdAt.toISOString()
               };
             }
           } catch (error) {
@@ -217,9 +223,11 @@ export async function GET(
             );
             if (fallbackFeedback) {
               processedEvaluation = {
-                ...task.evaluation,
+                id: fullEvaluation.id,
+                score: fullEvaluation.score,
                 feedback: fallbackFeedback,
-                feedbackVersions: existingVersions
+                feedbackVersions: existingVersions,
+                evaluatedAt: fullEvaluation.createdAt.toISOString()
               };
             }
           }
@@ -232,9 +240,11 @@ export async function GET(
           );
           if (feedbackByLanguage) {
             processedEvaluation = {
-              ...task.evaluation,
+              id: fullEvaluation.id,
+              score: fullEvaluation.score,
               feedback: feedbackByLanguage,
-              feedbackVersions: existingVersions
+              feedbackVersions: existingVersions,
+              evaluatedAt: fullEvaluation.createdAt.toISOString()
             };
           }
         }
@@ -293,11 +303,12 @@ export async function PATCH(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
     
-    // Get task
-    const task = await taskRepo.findById(taskId);
-    if (!task || task.programId !== programId) {
+    // Get task with interactions
+    const taskWithInteractions = await taskRepo.getTaskWithInteractions(taskId);
+    if (!taskWithInteractions || taskWithInteractions.programId !== programId) {
       return NextResponse.json({ error: 'Task not found' }, { status: 404 });
     }
+    const task = taskWithInteractions;
     
     if (action === 'submit') {
       // Add user response as interaction
@@ -312,7 +323,7 @@ export async function PATCH(
       
       // Get scenario for context
       const scenario = await scenarioRepo.findById(program.scenarioId);
-      const careerType = (scenario?.sourceRef.metadata?.careerType as string) || 'unknown';
+      const careerType = (scenario?.metadata?.careerType as string) || 'unknown';
       const language = program.metadata?.language || 'en';
       
       // Get user's preferred language from request header
@@ -323,7 +334,7 @@ export async function PATCH(
       let yamlData = null;
       if (careerType !== 'unknown') {
         const loader = new DiscoveryYAMLLoader();
-        yamlData = await loader.loadPath(careerType, language);
+        yamlData = await loader.loadPath(careerType, language) as { world_setting?: { description?: string; atmosphere?: string } };
       }
       
       // Use AI to evaluate the response
@@ -339,7 +350,7 @@ You are an AI learning evaluator in a discovery-based learning environment.
 
 Career Path: ${careerType}
 Task Title: ${task.title}
-Task Instructions: ${task.context.instructions}
+Task Instructions: ${(task.context as { instructions?: string }).instructions || ''}
 Task Context: ${JSON.stringify(task.context || {})}
 ${yamlData ? `World Setting: ${yamlData.world_setting.description}\nAtmosphere: ${yamlData.world_setting.atmosphere}` : ''}
 
@@ -393,7 +404,7 @@ Return your evaluation as a JSON object:
         let evaluationResult;
         try {
           // Extract JSON from the response (AI might include markdown code blocks)
-          const jsonMatch = aiResponse.context.match(/\{[\s\S]*\}/);
+          const jsonMatch = aiResponse.content.match(/\{[\s\S]*\}/);
           if (jsonMatch) {
             evaluationResult = JSON.parse(jsonMatch[0]);
           } else {
@@ -457,8 +468,8 @@ Return your evaluation as a JSON object:
       }
       
       // Create comprehensive evaluation based on all interactions
-      const userAttempts = task.interactions.filter(i => i.type === 'user_input').length;
-      const aiResponses = task.interactions.filter(i => i.type === 'ai_response');
+      const userAttempts = task.interactions.filter((i: Interaction) => i.type === 'user_input').length;
+      const aiResponses = task.interactions.filter((i: Interaction) => i.type === 'ai_response');
       
       // Debug log
       console.log('Task interactions for completion:', {
@@ -549,7 +560,7 @@ Return your evaluation as a JSON object:
         let yamlData = null;
         if (careerType !== 'unknown') {
           const loader = new DiscoveryYAMLLoader();
-          yamlData = await loader.loadPath(careerType, language);
+          yamlData = await loader.loadPath(careerType, language) as { world_setting?: { description?: string; atmosphere?: string } };
         }
         
         // Generate multilingual comprehensive qualitative feedback
@@ -775,10 +786,16 @@ Return your evaluation as a JSON object:
       }
       
       // Regenerate comprehensive feedback using the same logic as confirm-complete
-      const userAttempts = task.interactions.filter(i => i.type === 'user_input').length;
-      const aiResponses = task.interactions.filter(i => i.type === 'ai_response');
-      const passedAttempts = aiResponses.filter(i => i.context?.completed === true).length;
-      const allFeedback = task.interactions.filter(i => i.type === 'ai_response').map(i => i.content);
+      const userAttempts = task.interactions.filter((i: Interaction) => i.type === 'user_input').length;
+      const aiResponses = task.interactions.filter((i: Interaction) => i.type === 'ai_response');
+      const passedAttempts = aiResponses.filter((i: Interaction) => ((i.metadata as { completed?: boolean }) || {}).completed === true).length;
+      const allFeedback = task.interactions.filter((i: Interaction) => i.type === 'ai_response').map((i: Interaction) => {
+        try {
+          return JSON.parse(i.content) as { xpEarned?: number; skillsImproved?: string[]; feedback?: string; completed?: boolean };
+        } catch {
+          return { xpEarned: 0, skillsImproved: [] };
+        }
+      });
       const bestXP = Math.max(...allFeedback.map(f => f.xpEarned || 0), (task.context as Record<string, unknown>)?.xp as number || 100);
       
       let comprehensiveFeedback = 'Successfully regenerated task evaluation!';
@@ -809,7 +826,7 @@ Return your evaluation as a JSON object:
         
         const scenarioRepo = repositoryFactory.getScenarioRepository();
         const scenario = await scenarioRepo.findById(program.scenarioId);
-        const careerType = (scenario?.sourceRef.metadata?.careerType as string) || 'unknown';
+        const careerType = (scenario?.metadata?.careerType as string) || 'unknown';
         const language = program.metadata?.language || 'en';
         const acceptLanguage = request.headers.get('accept-language')?.split(',')[0];
         userLanguage = acceptLanguage || language;
@@ -831,7 +848,7 @@ Return your evaluation as a JSON object:
         let yamlData = null;
         if (careerType !== 'unknown') {
           const loader = new DiscoveryYAMLLoader();
-          yamlData = await loader.loadPath(careerType, language);
+          yamlData = await loader.loadPath(careerType, language) as { world_setting?: { description?: string; atmosphere?: string } };
         }
         
         const comprehensivePrompt = generateComprehensiveFeedbackPrompt(
