@@ -76,33 +76,7 @@ export default function DiscoveryCompletePage() {
   const [regenerating, setRegenerating] = useState(false);
   const [translatingFeedback, setTranslatingFeedback] = useState(false);
 
-  useEffect(() => {
-    loadCompletionData();
-  }, [loadCompletionData]);
-
-  // Handle language change for qualitative feedback
-  useEffect(() => {
-    if (!completionData || !completionData.qualitativeFeedback) return;
-    
-    const handleLanguageChange = async () => {
-      const versions = completionData.qualitativeFeedbackVersions || {};
-      const currentLang = i18n.language === 'zh-TW' ? 'zhTW' : i18n.language;
-      
-      // Check if we have this language version
-      if (versions[currentLang]) {
-        // Use existing version
-        setCompletionData(prev => ({
-          ...prev!,
-          qualitativeFeedback: versions[currentLang]
-        }));
-      } else {
-        // Need to generate translation
-        await generateTranslation(currentLang);
-      }
-    };
-    
-    handleLanguageChange();
-  }, [i18n.language, completionData, generateTranslation]); // Only depend on language change
+  // These hooks will be moved after their dependencies are defined
 
   const generateTranslation = useCallback(async (targetLang: string) => {
     // Prevent multiple concurrent translations
@@ -139,6 +113,30 @@ export default function DiscoveryCompletePage() {
       setTranslatingFeedback(false);
     }
   }, [params.programId, translatingFeedback]);
+
+  // Handle language change for qualitative feedback
+  useEffect(() => {
+    if (!completionData || !completionData.qualitativeFeedback) return;
+    
+    const handleLanguageChange = async () => {
+      const versions = completionData.qualitativeFeedbackVersions || {};
+      const currentLang = i18n.language === 'zh-TW' ? 'zhTW' : i18n.language;
+      
+      // Check if we have this language version
+      if (versions[currentLang]) {
+        // Use existing version
+        setCompletionData(prev => ({
+          ...prev!,
+          qualitativeFeedback: versions[currentLang]
+        }));
+      } else {
+        // Need to generate translation
+        await generateTranslation(currentLang);
+      }
+    };
+    
+    handleLanguageChange();
+  }, [i18n.language, completionData, generateTranslation]); // Only depend on language change
 
   const loadCompletionData = useCallback(async (regenerate = false) => {
     try {
@@ -200,6 +198,11 @@ export default function DiscoveryCompletePage() {
       setRegenerating(false);
     }
   }, [params.programId, params.id]);
+
+  // Load completion data on mount
+  useEffect(() => {
+    loadCompletionData();
+  }, [loadCompletionData]);
 
   const handleRegenerate = async () => {
     setRegenerating(true);

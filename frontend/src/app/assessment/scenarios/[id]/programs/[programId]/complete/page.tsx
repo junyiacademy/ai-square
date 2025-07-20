@@ -306,7 +306,7 @@ export default function AssessmentCompletePage({
     .map((interaction: Record<string, unknown>) => {
       const content = interaction.content as Record<string, unknown>;
       return {
-        questionId: content.questionId,
+        questionId: content.questionId as string,
         selectedAnswer: content.selectedAnswer as 'a' | 'b' | 'c' | 'd',
         timeSpent: (content.timeSpent as number) || 0,
         isCorrect: (content.isCorrect as boolean) ?? false
@@ -327,10 +327,18 @@ export default function AssessmentCompletePage({
   // Create assessment data structure for domains
   const assessmentData: AssessmentData = {
     assessment_config: {
+      id: scenarioId || 'assessment',
+      title: 'AI Literacy Assessment',
+      description: 'Test your AI literacy competencies',
       total_questions: 12,
       time_limit_minutes: 15,
       passing_score: 60,
-      domains: ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai']
+      domains: {
+        engaging_with_ai: { description: 'Understanding and effectively communicating with AI systems', questions: 3 },
+        creating_with_ai: { description: 'Using AI tools to enhance creativity and productivity', questions: 3 },
+        managing_with_ai: { description: 'Understanding AI limitations, privacy, and ethical considerations', questions: 3 },
+        designing_with_ai: { description: 'Strategic thinking about AI implementation and innovation', questions: 3 }
+      }
     },
     domains: {
       engaging_with_ai: {
@@ -339,7 +347,7 @@ export default function AssessmentCompletePage({
         questions: 3
       },
       creating_with_ai: {
-        name: 'Creating with AI',
+        name: 'Creating with AI', 
         description: 'Using AI tools to enhance creativity and productivity',
         questions: 3
       },
@@ -354,13 +362,19 @@ export default function AssessmentCompletePage({
         questions: 3
       }
     },
-    questions: taskData.questions || []
+    questions: taskData.questions || [],
+    tasks: [] // Required by AssessmentData interface
   };
 
   return (
     <AssessmentResults
       result={assessmentResult}
-      domains={assessmentData.domains}
+      domains={assessmentData.domains || {
+        engaging_with_ai: { name: '', description: '', questions: 0 },
+        creating_with_ai: { name: '', description: '', questions: 0 },
+        managing_with_ai: { name: '', description: '', questions: 0 },
+        designing_with_ai: { name: '', description: '', questions: 0 }
+      }}
       onRetake={() => router.push(`/assessment/scenarios/${scenarioId}`)}
       questions={assessmentData.questions}
       userAnswers={userAnswers}

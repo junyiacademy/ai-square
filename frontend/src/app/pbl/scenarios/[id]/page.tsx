@@ -80,7 +80,7 @@ export default function ScenarioDetailPage() {
 
   // Helper function to get data from scenario metadata
   const getScenarioData = (key: string, fallback: unknown = null) => {
-    return scenario?.metadata?.[key] || scenario?.[key] || fallback;
+    return (scenario?.metadata as Record<string, unknown>)?.[key] || fallback;
   };
 
   const handleStartProgram = async (programId?: string) => {
@@ -231,15 +231,15 @@ export default function ScenarioDetailPage() {
               {/* Metadata */}
               <div className="flex flex-wrap gap-4 mb-6">
                 <div className="flex items-center">
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${getDifficultyBadge(getScenarioData('difficulty', 'beginner'))}`}>
-                    {t(`difficulty.${getScenarioData('difficulty', 'beginner')}`, getScenarioData('difficulty', 'beginner'))}
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${getDifficultyBadge(String(getScenarioData('difficulty', 'beginner')))}`}>
+                    {t(`difficulty.${String(getScenarioData('difficulty', 'beginner'))}`, String(getScenarioData('difficulty', 'beginner')))}
                   </span>
                 </div>
                 <div className="flex items-center text-gray-600 dark:text-gray-400">
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <span>{getScenarioData('estimatedDuration', 30)} {t('common:minutes', 'minutes')}</span>
+                  <span>{String(getScenarioData('estimatedDuration', 30))} {t('common:minutes', 'minutes')}</span>
                 </div>
               </div>
 
@@ -263,7 +263,7 @@ export default function ScenarioDetailPage() {
                             <span className={`ml-3 text-xs px-2 py-1 rounded-full ${
                               program.status === 'completed' 
                                 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                                : program.status === 'in_progress'
+                                : program.status === 'active'
                                 ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
                                 : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                             }`}>
@@ -273,8 +273,8 @@ export default function ScenarioDetailPage() {
                         </div>
                         <div className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                           <div>
-                            {t('common:progress', 'Progress')}: {program.completedTaskCount || 0}/{program.totalTaskCount || 0} {t('common:tasks', 'tasks')}
-                            {program.completedTaskCount > 0 && program.evaluationId && (
+                            {t('common:progress', 'Progress')}: {(program.metadata?.completedTaskCount as number) || 0}/{(program.metadata?.totalTaskCount as number) || 0} {t('common:tasks', 'tasks')}
+                            {((program.metadata?.completedTaskCount as number) || 0) > 0 && program.evaluationId && (
                               <>
                                 <span className="mx-2">•</span>
                                 <span className="font-medium">
@@ -300,7 +300,7 @@ export default function ScenarioDetailPage() {
                           >
                             {t('common:continue', 'Continue')}
                           </button>
-                          {(program.completedTaskCount > 0 || program.status === 'completed' || program.evaluationId) && (
+                          {(((program.metadata?.completedTaskCount as number) || 0) > 0 || program.status === 'completed' || program.evaluationId) && (
                             <button
                               onClick={() => router.push(`/pbl/scenarios/${scenarioId}/programs/${program.id}/complete`)}
                               className="text-sm px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors font-medium"
@@ -368,13 +368,13 @@ export default function ScenarioDetailPage() {
               {t('prerequisites', 'Prerequisites')}
             </h2>
             <ul className="space-y-2">
-              {getScenarioData('prerequisites', []).map((prereq: string, index: number) => (
+              {(getScenarioData('prerequisites', []) as string[]).map((prereq: string, index: number) => (
                 <li key={index} className="flex items-start">
                   <span className="text-blue-500 mr-2">•</span>
                   <span className="text-gray-600 dark:text-gray-300">{prereq}</span>
                 </li>
               ))}
-              {getScenarioData('prerequisites', []).length === 0 && (
+              {(getScenarioData('prerequisites', []) as string[]).length === 0 && (
                 <li className="text-gray-500 dark:text-gray-400">No prerequisites</li>
               )}
             </ul>
@@ -388,12 +388,12 @@ export default function ScenarioDetailPage() {
             {t('targetDomains', 'Target Domains')}
           </h2>
           <div className="flex flex-wrap gap-2">
-            {getScenarioData('targetDomains', []).map((domain: string, index: number) => (
+            {(getScenarioData('targetDomains', []) as string[]).map((domain: string, index: number) => (
               <span key={index} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                 {getDomainTranslation(domain)}
               </span>
             ))}
-            {getScenarioData('targetDomains', []).length === 0 && (
+            {(getScenarioData('targetDomains', []) as string[]).length === 0 && (
               <span className="text-gray-500 dark:text-gray-400">No target domains specified</span>
             )}
           </div>
@@ -413,32 +413,32 @@ export default function ScenarioDetailPage() {
                 🧠 KSA Competencies Covered in This Scenario
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                {getScenarioData('ksaMapping').knowledge && getScenarioData('ksaMapping').knowledge.length > 0 && (
+                {(getScenarioData('ksaMapping') as Record<string, unknown>)?.knowledge && ((getScenarioData('ksaMapping') as Record<string, unknown>).knowledge as unknown[]).length > 0 && (
                   <div>
                     <span className="font-medium text-green-700 dark:text-green-300">Knowledge: </span>
                     <span className="text-green-600 dark:text-green-400">
-                      {getScenarioData('ksaMapping').knowledge.map((item: unknown) => 
-                        typeof item === 'string' ? item : item.code
+                      {(getScenarioData('ksaMapping') as Record<string, unknown>)?.knowledge && ((getScenarioData('ksaMapping') as Record<string, unknown>).knowledge as unknown[]).map((item: unknown) => 
+                        typeof item === 'string' ? item : (item as Record<string, unknown>)?.code
                       ).join(', ')}
                     </span>
                   </div>
                 )}
-                {getScenarioData('ksaMapping').skills && getScenarioData('ksaMapping').skills.length > 0 && (
+                {(getScenarioData('ksaMapping') as Record<string, unknown>)?.skills && ((getScenarioData('ksaMapping') as Record<string, unknown>).skills as unknown[]).length > 0 && (
                   <div>
                     <span className="font-medium text-blue-700 dark:text-blue-300">Skills: </span>
                     <span className="text-blue-600 dark:text-blue-400">
-                      {getScenarioData('ksaMapping').skills.map((item: unknown) => 
-                        typeof item === 'string' ? item : item.code
+                      {(getScenarioData('ksaMapping') as Record<string, unknown>)?.skills && ((getScenarioData('ksaMapping') as Record<string, unknown>).skills as unknown[]).map((item: unknown) => 
+                        typeof item === 'string' ? item : (item as Record<string, unknown>)?.code
                       ).join(', ')}
                     </span>
                   </div>
                 )}
-                {getScenarioData('ksaMapping').attitudes && getScenarioData('ksaMapping').attitudes.length > 0 && (
+                {(getScenarioData('ksaMapping') as Record<string, unknown>)?.attitudes && ((getScenarioData('ksaMapping') as Record<string, unknown>).attitudes as unknown[]).length > 0 && (
                   <div>
                     <span className="font-medium text-purple-700 dark:text-purple-300">Attitudes: </span>
                     <span className="text-purple-600 dark:text-purple-400">
-                      {getScenarioData('ksaMapping').attitudes.map((item: unknown) => 
-                        typeof item === 'string' ? item : item.code
+                      {(getScenarioData('ksaMapping') as Record<string, unknown>)?.attitudes && ((getScenarioData('ksaMapping') as Record<string, unknown>).attitudes as unknown[]).map((item: unknown) => 
+                        typeof item === 'string' ? item : (item as Record<string, unknown>)?.code
                       ).join(', ')}
                     </span>
                   </div>
@@ -449,35 +449,35 @@ export default function ScenarioDetailPage() {
 
           {/* Tasks List */}
           <div className="space-y-4">
-            {getScenarioData('tasks', []).map((task: Record<string, unknown>, taskIndex: number) => (
-              <div key={task.id || taskIndex} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            {(getScenarioData('tasks', []) as Record<string, unknown>[]).map((task: Record<string, unknown>, taskIndex: number) => (
+              <div key={(task.id as string) || taskIndex} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                 <div className="flex items-start justify-between mb-2">
                   <h5 className="font-medium text-gray-900 dark:text-white">
-                    {taskIndex + 1}. {task.title}
+                    {taskIndex + 1}. {task.title as string}
                   </h5>
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-gray-500 dark:text-gray-400">
-                      {getCategoryIcon(task.category || task.type)}
+                      {getCategoryIcon((task.category as string) || (task.type as string))}
                     </span>
                     {task.timeLimit && (
                       <span className="text-sm text-gray-500 dark:text-gray-400">
-                        {task.timeLimit} min
+                        {String(task.timeLimit)} min
                       </span>
                     )}
                   </div>
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                  {task.description}
+                  {String(task.description)}
                 </p>
                 
                 {/* Instructions */}
-                {task.instructions && task.instructions.length > 0 && (
+                {task.instructions && (task.instructions as unknown[]).length > 0 && (
                   <div className="mb-3">
                     <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                       {t('instructions', 'Instructions')}
                     </p>
                     <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-                      {task.instructions.map((instruction: string, i: number) => (
+                      {(task.instructions as string[]).map((instruction: string, i: number) => (
                         <li key={i} className="flex items-start">
                           <span className="text-gray-400 mr-2">•</span>
                           {instruction}
@@ -494,22 +494,22 @@ export default function ScenarioDetailPage() {
                       🧠 KSA
                     </p>
                     <div className="space-y-1">
-                      {task.KSA_focus.primary && task.KSA_focus.primary.length > 0 && (
+                      {(task.KSA_focus as Record<string, unknown>).primary && ((task.KSA_focus as Record<string, unknown>).primary as unknown[]).length > 0 && (
                         <div>
                           <span className="text-xs font-medium text-purple-600 dark:text-purple-400">Primary: </span>
                           <span className="text-xs text-purple-600 dark:text-purple-400">
-                            {(task.KSA_focus as Record<string, unknown>).primary.map((item: unknown) => 
-                              typeof item === 'string' ? item : item.code || item
+                            {((task.KSA_focus as Record<string, unknown>).primary as unknown[]).map((item: unknown) => 
+                              String(typeof item === 'string' ? item : (item as Record<string, unknown>)?.code || item)
                             ).join(', ')}
                           </span>
                         </div>
                       )}
-                      {task.KSA_focus.secondary && task.KSA_focus.secondary.length > 0 && (
+                      {(task.KSA_focus as Record<string, unknown>).secondary && ((task.KSA_focus as Record<string, unknown>).secondary as unknown[]).length > 0 && (
                         <div>
                           <span className="text-xs font-medium text-purple-600 dark:text-purple-400">Secondary: </span>
                           <span className="text-xs text-purple-600 dark:text-purple-400">
-                            {(task.KSA_focus as Record<string, unknown>).secondary.map((item: unknown) => 
-                              typeof item === 'string' ? item : item.code || item
+                            {((task.KSA_focus as Record<string, unknown>).secondary as unknown[]).map((item: unknown) => 
+                              String(typeof item === 'string' ? item : (item as Record<string, unknown>)?.code || item)
                             ).join(', ')}
                           </span>
                         </div>
@@ -525,13 +525,13 @@ export default function ScenarioDetailPage() {
                       {t('expectedOutcome', 'Expected Outcome')}
                     </p>
                     <p className="text-sm text-blue-600 dark:text-blue-400">
-                      {task.expectedOutcome}
+                      {String(task.expectedOutcome)}
                     </p>
                   </div>
                 )}
               </div>
             ))}
-            {getScenarioData('tasks', []).length === 0 && (
+            {(getScenarioData('tasks', []) as unknown[]).length === 0 && (
               <div className="text-center text-gray-500 dark:text-gray-400 py-8">
                 No tasks defined for this scenario
               </div>

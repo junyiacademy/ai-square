@@ -220,10 +220,10 @@ export default function DiscoveryScenarioDetailPage() {
     );
   }
 
-  const careerType = scenarioData.careerType || scenarioData.metadata?.careerType;
-  const Icon = careerIcons[careerType] || SparklesIcon;
-  const color = careerColors[careerType] || 'from-gray-500 to-gray-600';
-  const skills = scenarioData.metadata?.skillFocus || [];
+  const careerType = (scenarioData.careerType || scenarioData.metadata?.careerType) as string;
+  const Icon = careerIcons[careerType as keyof typeof careerIcons] || SparklesIcon;
+  const color = careerColors[careerType as keyof typeof careerColors] || 'from-gray-500 to-gray-600';
+  const skills = (scenarioData.metadata?.skillFocus || []) as string[];
 
   return (
     <DiscoveryPageLayout>
@@ -254,7 +254,7 @@ export default function DiscoveryScenarioDetailPage() {
               {scenarioData.description}
             </p>
             <p className="text-gray-700 mb-6">
-              {scenarioData.metadata?.longDescription || scenarioData.objectives?.[0] || ''}
+              {(scenarioData.metadata?.longDescription as string) || scenarioData.objectives?.[0] || ''}
             </p>
             
             {/* Skills */}
@@ -330,11 +330,11 @@ export default function DiscoveryScenarioDetailPage() {
                         <div className="flex items-center space-x-4 text-sm text-gray-600">
                           <div className="flex items-center space-x-1">
                             <ClockIcon className="w-4 h-4" />
-                            <span>{t('discovery:programCard.startedOn')} {new Date(program.createdAt).toLocaleDateString()}</span>
+                            <span>{t('discovery:programCard.startedOn')} {new Date(program.startedAt).toLocaleDateString()}</span>
                           </div>
                           <div className="flex items-center space-x-1">
                             <TrophyIcon className="w-4 h-4" />
-                            <span>{program.totalXP || 0} XP</span>
+                            <span>{(program.metadata?.totalXP as number) || 0} XP</span>
                           </div>
                         </div>
                         
@@ -342,16 +342,16 @@ export default function DiscoveryScenarioDetailPage() {
                         <div className="mt-4">
                           <div className="flex items-center justify-between text-sm mb-1">
                             <span className="text-gray-600">{t('discovery:programCard.progress')}</span>
-                            <span className="text-gray-900 font-medium">{program.progress}%</span>
+                            <span className="text-gray-900 font-medium">{(program.metadata?.progress as number) || 0}%</span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div
                               className="bg-gradient-to-r from-purple-600 to-blue-600 h-2 rounded-full transition-all"
-                              style={{ width: `${program.progress}%` }}
+                              style={{ width: `${(program.metadata?.progress as number) || 0}%` }}
                             />
                           </div>
                           <p className="mt-1 text-xs text-gray-500">
-                            {t('discovery:programCard.tasksCompleted', { completed: program.completedTasks, total: program.totalTasks })}
+                            {t('discovery:programCard.tasksCompleted', { completed: (program.metadata?.completedTasks as number) || 0, total: (program.metadata?.totalTasks as number) || 0 })}
                           </p>
                         </div>
                       </div>

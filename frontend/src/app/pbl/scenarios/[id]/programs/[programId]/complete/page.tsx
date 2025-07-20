@@ -63,8 +63,9 @@ export default function ProgramCompletePage() {
       
       if (hasLanguageKeys) {
         // Multi-language format
-        const langFeedback = feedbackObj[currentLang];
-        hasFeedbackForLang = langFeedback?.content?.overallAssessment || langFeedback?.overallAssessment;
+        const langFeedback = feedbackObj[currentLang] as Record<string, unknown>;
+        const content = langFeedback?.content as Record<string, unknown> | undefined;
+        hasFeedbackForLang = !!(content?.overallAssessment || langFeedback?.overallAssessment);
       } else if (feedbackObj.overallAssessment) {
         // Old single-language format
         hasFeedbackForLang = completionData.feedbackLanguage === currentLang;
@@ -310,11 +311,16 @@ export default function ProgramCompletePage() {
               const langFeedback = feedbackObj[currentLang];
               if (langFeedback) {
                 // Check if it's wrapped in content property or direct
-                feedback = langFeedback.content || langFeedback;
+                const content = (langFeedback as Record<string, unknown>).content as QualitativeFeedback | undefined;
+                if (content?.overallAssessment) {
+                  feedback = content;
+                } else if ((langFeedback as QualitativeFeedback)?.overallAssessment) {
+                  feedback = langFeedback as QualitativeFeedback;
+                }
               }
             } else if (feedbackObj.overallAssessment) {
               // Old format - single language feedback
-              feedback = feedbackObj;
+              feedback = feedbackObj as QualitativeFeedback;
             }
           }
           

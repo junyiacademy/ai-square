@@ -26,6 +26,8 @@ export default function EvaluationPage() {
   const [assessmentResults, setAssessmentResults] = useState<AssessmentResults | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [achievementCount, setAchievementCount] = useState(0);
+  const [programCount, setProgramCount] = useState(0);
+  const [assessmentAnswers, setAssessmentAnswers] = useState<Record<string, string[]>>({});
 
   // Load existing assessment results
   useEffect(() => {
@@ -109,11 +111,8 @@ export default function EvaluationPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
       <DiscoveryHeader 
-        title={pageTitle}
-        description={pageDescription}
-        progress={achievementCount > 0 ? 33 : 0}
-        currentStep={2}
-        totalSteps={3}
+        hasAssessmentResults={!!assessmentResults}
+        achievementCount={achievementCount}
       />
 
       <div className="max-w-4xl mx-auto px-4 py-8">

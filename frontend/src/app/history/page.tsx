@@ -262,12 +262,12 @@ export default function UnifiedHistoryPage() {
                     
                     // Get task info from taskLogs if available, otherwise use taskIds
                     const taskLogs = program.taskLogs || [];
-                    const completedTasks = taskLogs.filter((log: Record<string, unknown>) => log.isCompleted).length || 0;
-                    const totalTasks = program.taskIds?.length || taskLogs.length || 0;
+                    const completedTasks = (taskLogs as Record<string, unknown>[])?.filter((log: Record<string, unknown>) => log.isCompleted).length || 0;
+                    const totalTasks = (program.taskIds as string[])?.length || (taskLogs as unknown[])?.length || 0;
                     
                     // For current task, we need to use currentTaskIndex with taskIds
-                    const currentTaskIndex = program.currentTaskIndex || 0;
-                    const currentTaskId = program.taskIds?.[currentTaskIndex] || program.metadata?.currentTaskId;
+                    const currentTaskIndex = (program.currentTaskIndex as number) || 0;
+                    const currentTaskId = (program.taskIds as string[])?.[currentTaskIndex] || (program.metadata as Record<string, unknown>)?.currentTaskId;
                     const currentTask = {
                       id: currentTaskId,
                       title: `Task ${currentTaskIndex + 1}` // We'll need to load task details separately if needed
@@ -276,17 +276,17 @@ export default function UnifiedHistoryPage() {
                     // Calculate duration
                     let duration = 0;
                     if (program.startedAt) {
-                      const endTime = program.completedAt ? new Date(program.completedAt) : new Date();
-                      duration = Math.round((endTime.getTime() - new Date(program.startedAt).getTime()) / 1000);
+                      const endTime = program.completedAt ? new Date(program.completedAt as string) : new Date();
+                      duration = Math.round((endTime.getTime() - new Date(program.startedAt as string).getTime()) / 1000);
                     }
                     
                     // Get scores from completion data if available
                     let scores = {};
                     if (isCompleted && program.completionData) {
                       scores = {
-                        averageScore: program.completionData.overallScore,
-                        domainScores: program.completionData.domainScores,
-                        ksaScores: program.completionData.ksaScores
+                        averageScore: (program.completionData as Record<string, unknown>)?.overallScore,
+                        domainScores: (program.completionData as Record<string, unknown>)?.domainScores,
+                        ksaScores: (program.completionData as Record<string, unknown>)?.ksaScores
                       };
                     }
                     
@@ -294,32 +294,32 @@ export default function UnifiedHistoryPage() {
                     console.log('Discovery program structure:', {
                       id: program.id,
                       status: program.status,
-                      tasks: program.tasks?.length,
-                      taskIds: program.taskIds?.length,
+                      tasks: (program.tasks as unknown[])?.length,
+                      taskIds: (program.taskIds as string[])?.length,
                       currentTaskIndex: program.currentTaskIndex
                     });
                     
                     return {
                       type: 'discovery' as const,
-                      timestamp: program.completedAt || program.startedAt || program.createdAt || new Date().toISOString(),
+                      timestamp: (program.completedAt as string) || (program.startedAt as string) || (program.createdAt as string) || new Date().toISOString(),
                       data: {
                         id: scenario.id,
                         programId: program.id,
                         scenarioId: scenario.id,
                         scenarioTitle: scenario.title,
-                        careerType: scenario.metadata?.careerType || 'unknown',
+                        careerType: (scenario.metadata as Record<string, unknown>)?.careerType as string || 'unknown',
                         currentTaskId: currentTask?.id,
                         currentTaskTitle: currentTask?.title,
                         status: program.status === 'active' ? 'active' : program.status === 'completed' ? 'completed' : 'inactive',
-                        startedAt: program.startedAt || new Date().toISOString(),
-                        completedAt: program.completedAt,
+                        startedAt: (program.startedAt as string) || new Date().toISOString(),
+                        completedAt: program.completedAt as string | undefined,
                         duration,
                         progress: {
                           percentage: totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0,
                           completedTasks,
                           totalTasks
                         },
-                        totalInteractions: program.evaluations?.length || 0,
+                        totalInteractions: (program.evaluations as unknown[])?.length || 0,
                         ...scores
                       } as DiscoverySession
                     };

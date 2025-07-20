@@ -70,21 +70,21 @@ export default function PBLScenariosPage() {
   // Extract domains from scenario data (handle both unified architecture and direct API response)
   const getScenarioDomains = (scenario: FlexibleScenario): string[] => {
     // Try unified architecture format first
-    if (scenario.sourceRef?.metadata?.domain) {
-      const domain = scenario.sourceRef.metadata.domain;
+    if ('sourceRef' in scenario && (scenario as IScenario).sourceRef?.metadata?.domain) {
+      const domain = ((scenario as IScenario).sourceRef.metadata as Record<string, unknown>).domain;
       if (domain && typeof domain === 'string') {
         return [domain];
       }
     }
     // Fall back to direct API response format
-    if (scenario.domains && Array.isArray(scenario.domains)) {
-      return scenario.domains;
+    if ('domains' in scenario && scenario.domains && Array.isArray(scenario.domains)) {
+      return scenario.domains as string[];
     }
-    if (scenario.targetDomains && Array.isArray(scenario.targetDomains)) {
-      return scenario.targetDomains;
+    if ('targetDomains' in scenario && scenario.targetDomains && Array.isArray(scenario.targetDomains)) {
+      return scenario.targetDomains as string[];
     }
-    if (scenario.targetDomain && Array.isArray(scenario.targetDomain)) {
-      return scenario.targetDomain;
+    if ('targetDomain' in scenario && scenario.targetDomain && Array.isArray(scenario.targetDomain)) {
+      return scenario.targetDomain as string[];
     }
     return [];
   };
@@ -92,22 +92,22 @@ export default function PBLScenariosPage() {
   // Get difficulty from scenario data (handle both formats)
   const getScenarioDifficulty = (scenario: FlexibleScenario): string => {
     // Try unified architecture format first
-    if (scenario.sourceRef?.metadata?.difficulty) {
-      return scenario.sourceRef.metadata.difficulty;
+    if ('sourceRef' in scenario && (scenario as IScenario).sourceRef?.metadata?.difficulty) {
+      return String(((scenario as IScenario).sourceRef.metadata as Record<string, unknown>).difficulty);
     }
     // Fall back to direct API response format
-    return scenario.difficulty || 'intermediate';
+    return ('difficulty' in scenario && scenario.difficulty) ? String(scenario.difficulty) : 'intermediate';
   };
 
   // Calculate estimated duration (handle both formats)
   const getEstimatedDuration = (scenario: FlexibleScenario): number => {
     // Try direct API response format first
-    if (scenario.estimatedDuration && typeof scenario.estimatedDuration === 'number') {
+    if ('estimatedDuration' in scenario && scenario.estimatedDuration && typeof scenario.estimatedDuration === 'number') {
       return scenario.estimatedDuration;
     }
     // Fall back to task templates calculation
-    if (scenario.taskTemplates && scenario.taskTemplates.length > 0) {
-      return scenario.taskTemplates.reduce((total: number, task: Record<string, unknown>) => total + ((task.estimatedTime as number) || 30), 0);
+    if ('taskTemplates' in scenario && scenario.taskTemplates && Array.isArray(scenario.taskTemplates) && scenario.taskTemplates.length > 0) {
+      return (scenario.taskTemplates as Record<string, unknown>[]).reduce((total: number, task: Record<string, unknown>) => total + ((task.estimatedTime as number) || 30), 0);
     }
     return 60; // Default to 60 minutes
   };
@@ -147,11 +147,11 @@ export default function PBLScenariosPage() {
               const difficulty = getScenarioDifficulty(scenario);
               const duration = getEstimatedDuration(scenario);
               
-              const isAvailable = scenario.isAvailable !== false;
+              const isAvailable = !('isAvailable' in scenario) || scenario.isAvailable !== false;
               
               return (
                 <div 
-                  key={scenario.id}
+                  key={String(scenario.id)}
                   className={`bg-white dark:bg-gray-800 rounded-lg shadow-md ${
                     isAvailable ? 'hover:shadow-lg transition-shadow' : 'opacity-60'
                   }`}
@@ -161,10 +161,10 @@ export default function PBLScenariosPage() {
                       <div className={`w-12 h-12 ${
                         isAvailable ? 'bg-blue-100 dark:bg-blue-900' : 'bg-gray-200 dark:bg-gray-700'
                       } rounded-lg flex items-center justify-center`}>
-                        <span className="text-2xl">{scenario.thumbnailEmoji || '📚'}</span>
+                        <span className="text-2xl">{('thumbnailEmoji' in scenario ? String(scenario.thumbnailEmoji) : null) || '📚'}</span>
                       </div>
                       <h2 className="ml-4 text-xl font-semibold text-gray-900 dark:text-white pr-16">
-                        {scenario.title}
+                        {String(scenario.title)}
                       </h2>
                     </div>
                     
@@ -198,13 +198,13 @@ export default function PBLScenariosPage() {
                         </span>
                       </div>
                       <p className="text-gray-600 dark:text-gray-300">
-                        {scenario.description}
+                        {String(scenario.description)}
                       </p>
                     </div>
 
                     {/* Task Count */}
                     <div className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                      {scenario.taskTemplates?.length || scenario.taskCount || 0} tasks available
+                      {('taskTemplates' in scenario && Array.isArray(scenario.taskTemplates) ? scenario.taskTemplates.length : ('taskCount' in scenario ? Number(scenario.taskCount) : 0))} {t('pbl:tasks', 'tasks')}
                     </div>
 
                     {isAvailable ? (

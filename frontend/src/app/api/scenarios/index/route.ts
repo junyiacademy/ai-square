@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { scenarioIndexService } from '@/lib/services/scenario-index-service';
+import { scenarioIndexService, type ScenarioIndexEntry } from '@/lib/services/scenario-index-service';
 import { scenarioIndexBuilder } from '@/lib/services/scenario-index-builder';
 
 /**

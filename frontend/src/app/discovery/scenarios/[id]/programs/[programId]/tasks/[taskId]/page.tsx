@@ -303,12 +303,12 @@ export default function TaskDetailPage() {
   
   // Check if task has any passed interactions and calculate pass statistics
   const passedInteractions = taskData.interactions.filter(
-    i => i.type === 'ai_response' && i.content.completed === true
+    i => i.type === 'ai_response' && (i.content as Record<string, unknown>)?.completed === true
   );
   const hasPassedBefore = passedInteractions.length > 0;
   const passCount = passedInteractions.length;
-  const bestScore = hasPassedBefore ? Math.max(...passedInteractions.map(i => i.content.xpEarned || 0)) : 0;
-  const latestPassScore = hasPassedBefore ? passedInteractions[passedInteractions.length - 1]?.content.xpEarned || 0 : 0;
+  const bestScore = hasPassedBefore ? Math.max(...passedInteractions.map(i => (i.content as Record<string, unknown>)?.xpEarned as number || 0)) : 0;
+  const latestPassScore = hasPassedBefore ? (passedInteractions[passedInteractions.length - 1]?.content as Record<string, unknown>)?.xpEarned as number || 0 : 0;
 
   return (
     <DiscoveryPageLayout>
@@ -490,9 +490,10 @@ export default function TaskDetailPage() {
                   // Collect all skills from AI responses
                   const allSkills = new Set<string>();
                   taskData.interactions
-                    .filter(i => i.type === 'ai_response' && i.content?.skillsImproved)
+                    .filter(i => i.type === 'ai_response' && (i.content as Record<string, unknown>)?.skillsImproved)
                     .forEach(i => {
-                      i.content.skillsImproved.forEach((skill: string) => allSkills.add(skill));
+                      const skills = (i.content as Record<string, unknown>)?.skillsImproved as string[];
+                      skills?.forEach((skill: string) => allSkills.add(skill));
                     });
                   
                   const skillsArray = Array.from(allSkills);
@@ -639,14 +640,14 @@ export default function TaskDetailPage() {
                             <SparklesIcon className="w-4 h-4 text-white" />
                           </div>
                           <span className={`text-sm font-medium ${
-                            interaction.content.completed 
+                            (interaction.content as Record<string, unknown>)?.completed 
                               ? 'text-green-700' 
                               : 'text-orange-700'
                           }`}>
                             AI 回饋
-                            {interaction.content.completed && interaction.content.xpEarned > 0 && (
+                            {(interaction.content as Record<string, unknown>)?.completed && (
                               <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                                {interaction.content.xpEarned} XP
+                                {String((interaction.content as Record<string, unknown>)?.xpEarned)} XP
                               </span>
                             )}
                           </span>
@@ -660,7 +661,7 @@ export default function TaskDetailPage() {
                   
                   <div className="text-sm text-gray-700">
                     {interaction.type === 'user_input' ? (
-                      <p className="whitespace-pre-wrap">{interaction.content.response}</p>
+                      <p className="whitespace-pre-wrap">{(interaction.content as Record<string, unknown>)?.response as string}</p>
                     ) : (
                       <div className="space-y-3">
                         {(() => {
@@ -671,7 +672,7 @@ export default function TaskDetailPage() {
                               content = JSON.parse(content);
                             } catch (e) {
                               console.error('Failed to parse interaction content:', e);
-                              return <p className="text-gray-700">{interaction.content}</p>;
+                              return <p className="text-gray-700">{String(interaction.content)}</p>;
                             }
                           }
                           
@@ -679,14 +680,14 @@ export default function TaskDetailPage() {
                             <>
                               {/* Pass/Fail Status */}
                               <div className="flex items-center space-x-2">
-                                {content.completed ? (
+                                {(content as Record<string, unknown>)?.completed ? (
                             <>
                               <CheckCircleIcon className="w-5 h-5 text-green-600" />
                               <span className="text-sm font-medium text-green-700">任務通過</span>
-                              {content.xpEarned > 0 && (
+                              {((content as Record<string, unknown>)?.xpEarned as number) > 0 && (
                                 <div className="flex items-center space-x-1 text-purple-600 font-medium ml-2">
                                   <TrophyIcon className="w-4 h-4" />
-                                  <span>+{content.xpEarned} XP</span>
+                                  <span>+{String((content as Record<string, unknown>)?.xpEarned)} XP</span>
                                 </div>
                               )}
                             </>
@@ -699,14 +700,14 @@ export default function TaskDetailPage() {
                         </div>
                         
                         {/* Feedback */}
-                        <p className="text-gray-700">{content.feedback}</p>
+                        <p className="text-gray-700">{(content as Record<string, unknown>)?.feedback as string}</p>
                         
                         {/* Strengths */}
-                        {content.strengths && content.strengths.length > 0 && (
+                        {(content as Record<string, unknown>)?.strengths && ((content as Record<string, unknown>)?.strengths as string[])?.length > 0 && (
                           <div className="bg-green-50 rounded-md p-3">
                             <p className="text-sm font-medium text-green-800 mb-1">優點：</p>
                             <ul className="text-sm text-green-700 space-y-1">
-                              {content.strengths.map((strength: string, idx: number) => (
+                              {((content as Record<string, unknown>)?.strengths as string[])?.map((strength: string, idx: number) => (
                                 <li key={idx} className="flex items-start">
                                   <span className="mr-2">•</span>
                                   <span>{strength}</span>
@@ -717,11 +718,11 @@ export default function TaskDetailPage() {
                         )}
                         
                         {/* Improvements */}
-                        {content.improvements && content.improvements.length > 0 && (
+                        {(content as Record<string, unknown>)?.improvements && ((content as Record<string, unknown>)?.improvements as string[])?.length > 0 && (
                           <div className="bg-orange-50 rounded-md p-3">
                             <p className="text-sm font-medium text-orange-800 mb-1">改進建議：</p>
                             <ul className="text-sm text-orange-700 space-y-1">
-                              {content.improvements.map((improvement: string, idx: number) => (
+                              {((content as Record<string, unknown>)?.improvements as string[])?.map((improvement: string, idx: number) => (
                                 <li key={idx} className="flex items-start">
                                   <span className="mr-2">•</span>
                                   <span>{improvement}</span>
@@ -732,9 +733,9 @@ export default function TaskDetailPage() {
                         )}
                         
                         {/* Skills Improved */}
-                        {content.skillsImproved && content.skillsImproved.length > 0 && (
+                        {(content as Record<string, unknown>)?.skillsImproved && ((content as Record<string, unknown>)?.skillsImproved as string[])?.length > 0 && (
                           <div className="flex flex-wrap gap-2 mt-2">
-                            {content.skillsImproved.map((skill: string, idx: number) => (
+                            {((content as Record<string, unknown>)?.skillsImproved as string[])?.map((skill: string, idx: number) => (
                               <span key={idx} className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-md">
                                 {skill}
                               </span>

@@ -119,14 +119,14 @@ export default function ScenariosPage() {
           const data = await response.json();
           // Transform the scenarios to match the expected format
           const transformedScenarios = data.map((scenario: Record<string, unknown>) => ({
-            id: scenario.sourceRef?.metadata?.careerType || scenario.id,
+            id: ((scenario.sourceRef as Record<string, unknown>)?.metadata as Record<string, unknown>)?.careerType as string || scenario.id as string,
             scenarioId: scenario.id, // Store the actual scenario UUID
             title: scenario.title,
             subtitle: scenario.description,
-            category: scenario.metadata?.category || 'general',
-            icon: careerIcons[(scenario.sourceRef as Record<string, unknown>)?.metadata?.careerType as string] || SparklesIcon,
-            color: careerColors[(scenario.sourceRef as Record<string, unknown>)?.metadata?.careerType as string] || 'from-gray-500 to-gray-600',
-            skills: scenario.metadata?.skillFocus || []
+            category: (scenario.metadata as Record<string, unknown>)?.category as string || 'general',
+            icon: careerIcons[((scenario.sourceRef as Record<string, unknown>)?.metadata as Record<string, unknown>)?.careerType as string] || SparklesIcon,
+            color: careerColors[((scenario.sourceRef as Record<string, unknown>)?.metadata as Record<string, unknown>)?.careerType as string] || 'from-gray-500 to-gray-600',
+            skills: (scenario.metadata as Record<string, unknown>)?.skillFocus as string[] || []
           }));
           setScenarios(transformedScenarios);
         } else {
@@ -165,20 +165,20 @@ export default function ScenariosPage() {
           
           // Transform the data to match the expected format
           const transformedScenarios = data.map((scenario: Record<string, unknown>) => ({
-            id: scenario.sourceRef?.metadata?.careerType || scenario.id,
+            id: ((scenario.sourceRef as Record<string, unknown>)?.metadata as Record<string, unknown>)?.careerType as string || scenario.id as string,
             scenarioId: scenario.id,
             title: scenario.title,
             subtitle: scenario.description,
-            category: scenario.metadata?.category || 'general',
-            icon: careerIcons[(scenario.sourceRef as Record<string, unknown>)?.metadata?.careerType as string] || SparklesIcon,
-            color: careerColors[(scenario.sourceRef as Record<string, unknown>)?.metadata?.careerType as string] || 'from-gray-500 to-gray-600',
-            skills: scenario.metadata?.skillFocus || [],
+            category: (scenario.metadata as Record<string, unknown>)?.category as string || 'general',
+            icon: careerIcons[((scenario.sourceRef as Record<string, unknown>)?.metadata as Record<string, unknown>)?.careerType as string] || SparklesIcon,
+            color: careerColors[((scenario.sourceRef as Record<string, unknown>)?.metadata as Record<string, unknown>)?.careerType as string] || 'from-gray-500 to-gray-600',
+            skills: (scenario.metadata as Record<string, unknown>)?.skillFocus as string[] || [],
             // Add user-specific data
             userPrograms: scenario.userPrograms,
-            progress: scenario.userPrograms?.active?.progress || 0,
-            isActive: !!scenario.userPrograms?.active,
-            completedCount: scenario.userPrograms?.completed || 0,
-            lastActivity: scenario.userPrograms?.lastActivity
+            progress: ((scenario.userPrograms as Record<string, unknown>)?.active as Record<string, unknown>)?.progress as number || 0,
+            isActive: !!((scenario.userPrograms as Record<string, unknown>)?.active),
+            completedCount: (scenario.userPrograms as Record<string, unknown>)?.completed as number || 0,
+            lastActivity: (scenario.userPrograms as Record<string, unknown>)?.lastActivity as string
           }));
           
           setMyScenarios(transformedScenarios);
@@ -356,7 +356,7 @@ export default function ScenariosPage() {
                     )}
                     
                     {/* Completed Badge */}
-                    {!activeProgram && completedCount > 0 && (
+                    {!activeProgram && completedCount && completedCount > 0 && (
                       <div className="absolute top-3 right-3 px-3 py-1 bg-white/90 backdrop-blur rounded-full">
                         <span className="text-xs font-medium text-green-700">
                           已完成 {completedCount} 次
@@ -417,7 +417,7 @@ export default function ScenariosPage() {
                     {/* Action Button */}
                     <div className="pt-4 border-t border-gray-100">
                       <button className="w-full py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all">
-                        {activeProgram ? '繼續學習' : (completedCount > 0 ? '重新開始' : '開始冒險')}
+                        {activeProgram ? '繼續學習' : (completedCount && completedCount > 0 ? '重新開始' : '開始冒險')}
                       </button>
                     </div>
                   </div>

@@ -309,7 +309,7 @@ export default function ProgramDetailPage() {
                 transition={{ delay: index * 0.1 }}
                 className={`
                   bg-white rounded-xl shadow-md border transition-all
-                  ${(task.status === 'available' || task.status === 'active')
+                  ${((task as Task).status === 'available')
                     ? 'border-purple-200 hover:shadow-lg cursor-pointer' 
                     : task.status === 'completed'
                     ? 'border-green-100 hover:shadow-lg cursor-pointer'
@@ -317,7 +317,7 @@ export default function ProgramDetailPage() {
                   }
                   ${task.status === 'completed' ? 'bg-gray-50' : ''}
                 `}
-                onClick={() => (task.status === 'available' || task.status === 'active' || task.status === 'completed') && handleStartTask(task.id)}
+                onClick={() => ((task as Task).status === 'available' || (task as Task).status === 'completed') && handleStartTask(task.id)}
               >
                 <div className="p-6">
                   <div className="flex items-start justify-between">
@@ -327,7 +327,7 @@ export default function ProgramDetailPage() {
                         p-3 rounded-full
                         ${task.status === 'completed' 
                           ? 'bg-green-100' 
-                          : (task.status === 'available' || task.status === 'active')
+                          : ((task as Task).status === 'available')
                           ? 'bg-purple-100'
                           : 'bg-gray-100'
                         }
@@ -335,10 +335,10 @@ export default function ProgramDetailPage() {
                         {task.status === 'completed' && (
                           <CheckCircleIcon className="w-6 h-6 text-green-600" />
                         )}
-                        {(task.status === 'available' || task.status === 'active') && (
+                        {((task as Task).status === 'available') && (
                           <SparklesIcon className="w-6 h-6 text-purple-600" />
                         )}
-                        {(task.status === 'locked' || task.status === 'pending') && (
+                        {((task as Task).status === 'locked') && (
                           <LockClosedIcon className="w-6 h-6 text-gray-400" />
                         )}
                       </div>
@@ -393,10 +393,10 @@ export default function ProgramDetailPage() {
                     </div>
                     
                     {/* Action Button */}
-                    {(task.status === 'available' || task.status === 'active') && (
+                    {((task as Task).status === 'available') && (
                       <button className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
                         <PlayIcon className="w-4 h-4" />
-                        <span>{task.status === 'active' ? '繼續' : '開始'}</span>
+                        <span>開始</span>
                       </button>
                     )}
                     {task.status === 'completed' && (

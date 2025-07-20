@@ -24,6 +24,10 @@ interface Task {
     type: string;
     content: Record<string, unknown>;
   }>;
+  metadata?: {
+    questionsCount?: number;
+    [key: string]: unknown;
+  };
 }
 
 interface Program {
@@ -289,7 +293,7 @@ export default function AssessmentProgramPage({
                     Task {currentTaskIndex + 1} of {tasks.length}: {currentTask?.title}
                   </h3>
                   <span className="text-sm text-gray-500">
-                    {tasks[currentTaskIndex]?.questionsCount || 0} questions
+                    {(tasks[currentTaskIndex]?.metadata?.questionsCount as number) || 0} questions
                   </span>
                 </div>
                 <div className="flex space-x-2">

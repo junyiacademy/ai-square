@@ -2,6 +2,7 @@ import { GET } from '../route';
 import fs from 'fs/promises';
 import * as yaml from 'js-yaml';
 import { cacheService } from '@/lib/cache/cache-service';
+import type { IScenario } from '@/types/unified-learning';
 
 // Mock dependencies
 jest.mock('fs', () => ({
@@ -494,15 +495,27 @@ describe('/api/pbl/scenarios', () => {
   });
 
   describe('hybrid translation architecture', () => {
-    const mockGCSScenario = {
+    const mockGCSScenario: IScenario = {
       id: 'ai-job-search',
+      sourceType: 'pbl' as const,
+      sourceRef: {
+        type: 'yaml' as const,
+        path: 'pbl_data/ai-job-search_scenario.yaml',
+        metadata: { yamlId: 'ai-job-search' }
+      },
       title: 'AI-Powered Job Search Assistant',
       description: 'Learn to use AI for job searching',
-      difficulty: 'intermediate',
-      estimated_duration: 90,
-      target_domains: ['engaging_with_ai', 'creating_with_ai'],
-      isAvailable: true,
-      thumbnailEmoji: '💼'
+      objectives: [],
+      taskTemplates: [],
+      metadata: {
+        difficulty: 'intermediate',
+        estimatedDuration: 90,
+        targetDomains: ['engaging_with_ai', 'creating_with_ai'],
+        isAvailable: true,
+        thumbnailEmoji: '💼'
+      },
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     };
 
     beforeEach(() => {
@@ -549,9 +562,9 @@ describe('/api/pbl/scenarios', () => {
       expect(scenario.description).toBe('學習使用 AI 進行求職');
       
       // Should retain English structure data from GCS
-      expect(scenario.difficulty).toBe('intermediate');
-      expect(scenario.estimatedDuration).toBe(90);
-      expect(scenario.isAvailable).toBe(true);
+      expect(scenario.metadata?.difficulty).toBe('intermediate');
+      expect(scenario.metadata?.estimatedDuration).toBe(90);
+      expect(scenario.metadata?.isAvailable).toBe(true);
     });
 
     it('falls back to YAML when GCS fails', async () => {

@@ -7,6 +7,7 @@ import { GET, POST } from '../route';
 import { NextRequest } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import type { ITask, IInteraction } from '@/types/unified-learning';
+import type { Session } from 'next-auth';
 
 // Mock dependencies
 jest.mock('@/lib/auth/session');
@@ -88,7 +89,7 @@ describe('Task Interactions API', () => {
   });
 
   const createRequest = (url: string, options: RequestInit = {}) => {
-    return new NextRequest(url, options);
+    return new NextRequest(url, options as ConstructorParameters<typeof NextRequest>[1]);
   };
 
   describe('POST /api/pbl/tasks/[taskId]/interactions', () => {

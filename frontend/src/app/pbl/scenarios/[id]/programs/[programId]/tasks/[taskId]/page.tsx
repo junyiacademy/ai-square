@@ -170,7 +170,7 @@ export default function ProgramLearningPage() {
                         expectedOutcome: originalTaskData.expectedOutcome || taskTemplate.expectedOutcome || '',
                         // Store the scenario task index for matching
                         scenarioTaskIndex: taskData.scenarioTaskIndex
-                      } as Task;
+                      } as unknown as Task;
                       setCurrentTask(loadedTask);
                     }
                   }
@@ -289,8 +289,10 @@ export default function ProgramLearningPage() {
             instructions: originalTaskData.instructions || taskTemplate.instructions || [],
             expectedOutcome: originalTaskData.expectedOutcome || taskTemplate.expectedOutcome || '',
             // Store the scenario task index for matching
-            scenarioTaskIndex: taskData.scenarioTaskIndex
-          } as Task;
+            scenarioTaskIndex: taskData.scenarioTaskIndex,
+            category: taskTemplate.category || originalTaskData.category || 'task',
+            assessmentFocus: taskTemplate.assessmentFocus || originalTaskData.assessmentFocus || null
+          } as unknown as Task;
           
           setCurrentTask(loadedTask);
           loadTaskHistory();
@@ -326,10 +328,10 @@ export default function ProgramLearningPage() {
         
         if (data.data?.interactions) {
           const loadedConversations = data.data.interactions.map((interaction: Record<string, unknown>): ConversationEntry => ({
-            id: interaction.id || `${interaction.timestamp}_${interaction.type}`,
-            type: interaction.type,
-            content: interaction.content,
-            timestamp: interaction.timestamp
+            id: String(interaction.id || `${interaction.timestamp}_${interaction.type}`),
+            type: interaction.type as 'user' | 'ai' | 'system',
+            content: String(interaction.content),
+            timestamp: String(interaction.timestamp)
           }));
           console.log('Loaded conversations:', loadedConversations);
           setConversations(loadedConversations);
@@ -717,7 +719,7 @@ export default function ProgramLearningPage() {
     );
   }
 
-  const taskIndex = (currentTask as Record<string, unknown>)?.scenarioTaskIndex as number ?? scenario.tasks.findIndex(t => t.id === currentTask.id);
+  const taskIndex = (currentTask as unknown as Record<string, unknown>)?.scenarioTaskIndex as number ?? scenario.tasks.findIndex(t => t.id === currentTask.id);
   // const progress = ((taskIndex + 1) / scenario.tasks.length) * 100;
 
   return (

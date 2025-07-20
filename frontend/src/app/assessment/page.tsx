@@ -275,10 +275,10 @@ export default function AssessmentPage() {
         <AssessmentQuiz
           questions={assessmentData.questions || []}
           domains={assessmentData.domains || {
-            engaging_with_ai: { name: '', description: '', icon: '' },
-            creating_with_ai: { name: '', description: '', icon: '' },
-            managing_with_ai: { name: '', description: '', icon: '' },
-            designing_with_ai: { name: '', description: '', icon: '' }
+            engaging_with_ai: { name: '', description: '', questions: 0 },
+            creating_with_ai: { name: '', description: '', questions: 0 },
+            managing_with_ai: { name: '', description: '', questions: 0 },
+            designing_with_ai: { name: '', description: '', questions: 0 }
           }}
           onComplete={handleQuizComplete}
           timeLimit={assessmentData.assessment_config.time_limit_minutes}
@@ -289,10 +289,10 @@ export default function AssessmentPage() {
         <AssessmentResults
           result={assessmentResult}
           domains={assessmentData?.domains || {
-            engaging_with_ai: { name: '', description: '', icon: '' },
-            creating_with_ai: { name: '', description: '', icon: '' },
-            managing_with_ai: { name: '', description: '', icon: '' },
-            designing_with_ai: { name: '', description: '', icon: '' }
+            engaging_with_ai: { name: '', description: '', questions: 0 },
+            creating_with_ai: { name: '', description: '', questions: 0 },
+            managing_with_ai: { name: '', description: '', questions: 0 },
+            designing_with_ai: { name: '', description: '', questions: 0 }
           }}
           onRetake={handleRetakeAssessment}
           questions={assessmentData?.questions || []}
