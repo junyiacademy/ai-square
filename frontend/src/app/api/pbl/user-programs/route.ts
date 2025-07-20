@@ -79,7 +79,7 @@ export async function GET(request: NextRequest) {
         scenarioId: program.scenarioId,
         scenarioTitle,
         status: program.status,
-        startedAt: program.startTime,
+        startedAt: program.startedAt || program.createdAt,
         updatedAt: program.lastActivityAt,
         totalTasks: program.totalTasks,
         evaluatedTasks: completedTasks.length,

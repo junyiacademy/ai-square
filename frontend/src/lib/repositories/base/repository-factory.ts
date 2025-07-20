@@ -6,6 +6,7 @@
 
 import { Pool } from 'pg';
 import { Storage } from '@google-cloud/storage';
+import { runMigrations } from '@/lib/db/migration-runner';
 
 // PostgreSQL Repositories
 import { PostgreSQLUserRepository } from '../postgresql/user-repository';
@@ -33,6 +34,7 @@ export class RepositoryFactory {
   private static instance: RepositoryFactory;
   private pool: Pool;
   private storage: Storage;
+  private migrationsRun = false;
 
   private constructor() {
     // Initialize PostgreSQL connection pool
@@ -61,11 +63,25 @@ export class RepositoryFactory {
     return RepositoryFactory.instance;
   }
 
+  private async ensureMigrationsRun(): Promise<void> {
+    if (!this.migrationsRun) {
+      try {
+        await runMigrations(this.pool);
+        this.migrationsRun = true;
+      } catch (error) {
+        console.error('Failed to run migrations:', error);
+        // Don't throw - allow app to continue even if migrations fail
+      }
+    }
+  }
+
   // ========================================
   // PostgreSQL Repositories (動態資料)
   // ========================================
 
   public getUserRepository(): IUserRepository {
+    // Run migrations on first repository access
+    this.ensureMigrationsRun().catch(console.error);
     return new PostgreSQLUserRepository(this.pool);
   }
 

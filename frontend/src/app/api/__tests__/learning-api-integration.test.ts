@@ -256,7 +256,7 @@ describe('Learning API Integration Tests', () => {
 
   describe('Authentication', () => {
     it('should require authentication for protected routes', async () => {
-      mockGetServerSession.mockResolvedValue(null as unknown as { user: { email: string } });
+      mockGetServerSession.mockResolvedValue(null);
 
       const { GET } = await import('@/app/api/learning/progress/route');
       const request = createMockRequest('GET', '/api/learning/progress');

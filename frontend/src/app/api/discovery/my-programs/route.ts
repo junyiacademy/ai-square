@@ -98,8 +98,11 @@ export async function GET(request: NextRequest) {
           // Check program start times and completed times
           const programTimes = scenarioPrograms.map(p => {
             const times: number[] = [];
-            if (p.startTime) {
-              times.push(new Date(p.startTime).getTime());
+            if (p.createdAt) {
+              times.push(new Date(p.createdAt).getTime());
+            }
+            if (p.startedAt) {
+              times.push(new Date(p.startedAt).getTime());
             }
             if (p.endTime) {
               times.push(new Date(p.endTime).getTime());

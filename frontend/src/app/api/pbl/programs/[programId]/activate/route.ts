@@ -94,7 +94,7 @@ export async function POST(
         currentTaskIndex: updatedProgram!.currentTaskIndex,
         completedTasks: updatedProgram!.completedTasks,
         totalTasks: updatedProgram!.totalTasks,
-        startedAt: updatedProgram!.startTime.toISOString(),
+        startedAt: updatedProgram!.startedAt?.toISOString() || updatedProgram!.createdAt.toISOString(),
         updatedAt: updatedProgram!.lastActivityAt.toISOString()
       }
     });

@@ -22,7 +22,7 @@ export class PostgreSQLProgramRepository implements IProgramRepository {
         status, current_task_index as "currentTaskIndex",
         completed_tasks as "completedTasks", total_tasks as "totalTasks",
         total_score as "totalScore", ksa_scores as "ksaScores",
-        start_time as "startTime", end_time as "endTime",
+        created_at as "createdAt", end_time as "endTime", start_time as "startedAt",
         last_activity_at as "lastActivityAt", 
         time_spent_seconds as "timeSpentSeconds", metadata
       FROM programs
@@ -40,7 +40,7 @@ export class PostgreSQLProgramRepository implements IProgramRepository {
         status, current_task_index as "currentTaskIndex",
         completed_tasks as "completedTasks", total_tasks as "totalTasks",
         total_score as "totalScore", ksa_scores as "ksaScores",
-        start_time as "startTime", end_time as "endTime",
+        created_at as "createdAt", end_time as "endTime", start_time as "startedAt",
         last_activity_at as "lastActivityAt", 
         time_spent_seconds as "timeSpentSeconds", metadata
       FROM programs
@@ -59,7 +59,7 @@ export class PostgreSQLProgramRepository implements IProgramRepository {
         status, current_task_index as "currentTaskIndex",
         completed_tasks as "completedTasks", total_tasks as "totalTasks",
         total_score as "totalScore", ksa_scores as "ksaScores",
-        start_time as "startTime", end_time as "endTime",
+        created_at as "createdAt", end_time as "endTime", start_time as "startedAt",
         last_activity_at as "lastActivityAt", 
         time_spent_seconds as "timeSpentSeconds", metadata
       FROM programs
@@ -75,14 +75,14 @@ export class PostgreSQLProgramRepository implements IProgramRepository {
     const query = `
       INSERT INTO programs (
         user_id, scenario_id, total_tasks, status,
-        start_time, last_activity_at
+        created_at, last_activity_at
       ) VALUES ($1, $2, $3, 'active', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
       RETURNING 
         id, user_id as "userId", scenario_id as "scenarioId",
         status, current_task_index as "currentTaskIndex",
         completed_tasks as "completedTasks", total_tasks as "totalTasks",
         total_score as "totalScore", ksa_scores as "ksaScores",
-        start_time as "startTime", end_time as "endTime",
+        created_at as "createdAt", end_time as "endTime", start_time as "startedAt",
         last_activity_at as "lastActivityAt", 
         time_spent_seconds as "timeSpentSeconds", metadata
     `;
@@ -146,7 +146,7 @@ export class PostgreSQLProgramRepository implements IProgramRepository {
         status, current_task_index as "currentTaskIndex",
         completed_tasks as "completedTasks", total_tasks as "totalTasks",
         total_score as "totalScore", ksa_scores as "ksaScores",
-        start_time as "startTime", end_time as "endTime",
+        created_at as "createdAt", end_time as "endTime", start_time as "startedAt",
         last_activity_at as "lastActivityAt", 
         time_spent_seconds as "timeSpentSeconds", metadata
     `;
@@ -164,6 +164,7 @@ export class PostgreSQLProgramRepository implements IProgramRepository {
     const query = `
       UPDATE programs
       SET status = $1,
+          ${status === 'active' ? 'started_at = COALESCE(started_at, CURRENT_TIMESTAMP),' : ''}
           ${status === 'completed' ? 'end_time = CURRENT_TIMESTAMP,' : ''}
           last_activity_at = CURRENT_TIMESTAMP,
           updated_at = CURRENT_TIMESTAMP
@@ -180,7 +181,7 @@ export class PostgreSQLProgramRepository implements IProgramRepository {
         status, current_task_index as "currentTaskIndex",
         completed_tasks as "completedTasks", total_tasks as "totalTasks",
         total_score as "totalScore", ksa_scores as "ksaScores",
-        start_time as "startTime", end_time as "endTime",
+        created_at as "createdAt", end_time as "endTime", start_time as "startedAt",
         last_activity_at as "lastActivityAt", 
         time_spent_seconds as "timeSpentSeconds", metadata
       FROM programs
@@ -199,7 +200,7 @@ export class PostgreSQLProgramRepository implements IProgramRepository {
         status, current_task_index as "currentTaskIndex",
         completed_tasks as "completedTasks", total_tasks as "totalTasks",
         total_score as "totalScore", ksa_scores as "ksaScores",
-        start_time as "startTime", end_time as "endTime",
+        created_at as "createdAt", end_time as "endTime", start_time as "startedAt",
         last_activity_at as "lastActivityAt", 
         time_spent_seconds as "timeSpentSeconds", metadata
       FROM programs
@@ -232,7 +233,7 @@ export class PostgreSQLProgramRepository implements IProgramRepository {
         p.status, p.current_task_index as "currentTaskIndex",
         p.completed_tasks as "completedTasks", p.total_tasks as "totalTasks",
         p.total_score as "totalScore", p.ksa_scores as "ksaScores",
-        p.start_time as "startTime", p.end_time as "endTime",
+        p.created_at as "createdAt", p.end_time as "endTime", p.start_time as "startedAt",
         p.last_activity_at as "lastActivityAt", 
         p.time_spent_seconds as "timeSpentSeconds", p.metadata,
         s.type as "scenarioType", s.difficulty_level as "difficultyLevel",

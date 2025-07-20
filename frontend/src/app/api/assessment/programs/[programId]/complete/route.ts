@@ -267,7 +267,7 @@ export async function POST(
     });
     
     // Calculate time spent
-    const startTime = program.metadata?.startTime || (program.startedAt ? Date.parse(program.startedAt.toString()) : Date.now());
+    const startTime = program.metadata?.createdAt || program.metadata?.startTime || (program.startedAt ? Date.parse(program.startedAt.toString()) : (program.createdAt ? Date.parse(program.createdAt.toString()) : Date.now()));
     const completionTime = Math.floor((Date.now() - (startTime as number)) / 1000);
     
     // Determine level

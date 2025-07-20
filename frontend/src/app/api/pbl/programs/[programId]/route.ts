@@ -69,7 +69,7 @@ export async function GET(
         totalTasks: program.totalTasks,
         totalScore: program.totalScore,
         ksaScores: program.ksaScores,
-        startedAt: program.startTime.toISOString(),
+        startedAt: program.startedAt?.toISOString() || program.createdAt.toISOString(),
         updatedAt: program.lastActivityAt.toISOString(),
         completedAt: program.endTime?.toISOString(),
         taskIds: tasks.map(t => t.id),

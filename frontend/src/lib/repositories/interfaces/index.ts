@@ -131,7 +131,7 @@ export interface Program {
   totalTasks: number;
   totalScore: number;
   ksaScores?: Record<string, number>;
-  startTime: Date;
+  createdAt: Date;
   endTime?: Date;
   lastActivityAt: Date;
   timeSpentSeconds: number;

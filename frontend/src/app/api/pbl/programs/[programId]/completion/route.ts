@@ -129,7 +129,7 @@ export async function GET(
       scenarioId: program.scenarioId,
       userEmail: userEmail,
       status: program.status,
-      startedAt: program.startTime.toISOString(),
+      startedAt: program.startedAt?.toISOString() || program.createdAt.toISOString(),
       completedAt: program.endTime?.toISOString() || new Date().toISOString(),
       totalTasks: program.totalTasks,
       completedTasks: completedTasks.length,

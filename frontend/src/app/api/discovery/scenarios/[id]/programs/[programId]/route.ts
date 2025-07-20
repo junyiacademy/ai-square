@@ -134,7 +134,7 @@ export async function GET(
       scenarioId: program.scenarioId,
       userId: program.userId,
       status: program.status,
-      createdAt: program.startTime,
+      createdAt: program.createdAt,
       completedAt: program.endTime,
       currentTaskIndex: program.currentTaskIndex,
       taskIds: program.taskIds,

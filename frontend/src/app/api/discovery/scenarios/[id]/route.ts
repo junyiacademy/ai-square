@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { Program } from '@/lib/repositories/interfaces';
 
 export async function GET(
   request: NextRequest,
@@ -37,11 +38,13 @@ export async function GET(
     // not in user-specific mapping files
     
     // Load programs for this scenario and user
-    const userPrograms = await programRepo.findByScenarioAndUser(scenarioId, userEmail);
+    // Get all programs for this scenario and filter by user
+    const allPrograms = await programRepo.findByScenario(scenarioId);
+    const userPrograms = allPrograms.filter(p => p.userId === userEmail);
     
     // Calculate progress for each program
     const programsWithProgress = await Promise.all(
-      userPrograms.map(async (program) => {
+      userPrograms.map(async (program: Program) => {
         const taskCount = program.taskIds.length;
         const completedCount = program.status === 'completed' 
           ? taskCount 
@@ -57,7 +60,7 @@ export async function GET(
           userId: program.userId,
           status: program.status,
           createdAt: program.startedAt,
-          lastActiveAt: program.completedAt || program.startedAt,
+          lastActiveAt: program.endTime || program.startedAt,
           currentTaskIndex: program.currentTaskIndex,
           totalTasks: taskCount,
           completedTasks: completedCount,
@@ -70,18 +73,18 @@ export async function GET(
     
     // Sort programs by most recent first
     programsWithProgress.sort((a, b) => 
-      new Date(b.lastActiveAt).getTime() - new Date(a.lastActiveAt).getTime()
+      new Date(b.lastActiveAt as string).getTime() - new Date(a.lastActiveAt as string).getTime()
     );
     
     // Return scenario data with programs for backward compatibility
     return NextResponse.json({
       id: scenario.id,
-      sourceType: scenario.sourceType,
+      sourceType: scenario.type,
       sourceRef: scenario.sourceRef,
       title: scenario.title,
       description: scenario.description,
-      careerType: scenario.sourceRef.metadata?.careerType || 'unknown',
-      objectives: scenario.objectives,
+      careerType: scenario.sourceRef ? (scenario.metadata as Record<string, unknown>)?.careerType || 'unknown' : 'unknown',
+      objectives: (scenario.metadata as Record<string, unknown>)?.objectives || [],
       metadata: scenario.metadata, // Include all YAML data stored in metadata
       createdAt: scenario.createdAt,
       updatedAt: scenario.updatedAt,

@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
           currentTaskIndex: draftProgram.currentTaskIndex,
           completedTasks: draftProgram.completedTasks,
           totalTasks: draftProgram.totalTasks,
-          startedAt: draftProgram.startTime.toISOString(),
+          startedAt: draftProgram.startedAt?.toISOString() || draftProgram.createdAt.toISOString(),
           updatedAt: draftProgram.lastActivityAt.toISOString()
         }
       });

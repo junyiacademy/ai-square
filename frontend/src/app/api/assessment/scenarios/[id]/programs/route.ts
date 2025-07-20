@@ -88,7 +88,7 @@ export async function GET(
     
     // Sort by startedAt (newest first)
     userPrograms.sort((a: ProgramWithExtras, b: ProgramWithExtras) => 
-      new Date(b.startedAt || b.startTime).getTime() - new Date(a.startedAt || a.startTime).getTime()
+      new Date(b.startedAt || b.createdAt).getTime() - new Date(a.startedAt || a.createdAt).getTime()
     );
     
     // Optimize by batching evaluations for completed programs
@@ -222,7 +222,7 @@ export async function POST(
       metadata: {
         sourceType: 'assessment',
         language,
-        startTime: Date.now(),
+        createdAt: Date.now(),
         timeLimit: 900, // 15 minutes default
         userName: email.split('@')[0]
       }

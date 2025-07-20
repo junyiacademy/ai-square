@@ -130,8 +130,8 @@ export async function GET(
       
       // Calculate days used from program start to last task completion
       let daysUsed = 0;
-      if (program.startTime && completedTasks.length > 0) {
-        const startDate = new Date(program.startTime);
+      if ((program.createdAt || program.startedAt) && completedTasks.length > 0) {
+        const startDate = new Date(program.createdAt || program.startedAt!);
         const lastCompletionDate = completedTasks.reduce((latest, task) => {
           if (task.completedAt) {
             const taskDate = new Date(task.completedAt);
