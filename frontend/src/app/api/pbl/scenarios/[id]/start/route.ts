@@ -113,8 +113,8 @@ export async function POST(
         context: {
           scenarioId: scenarioId,
           taskType: taskTemplate.type,
-          difficulty: scenario.metadata?.difficulty || 'intermediate',
-          estimatedTime: taskTemplate.metadata?.estimatedTime as number || 30
+          difficulty: (scenario.metadata?.difficulty as string) || 'intermediate',
+          estimatedTime: (taskTemplate.estimatedTime as number) || 30
         }
       });
       

@@ -264,14 +264,14 @@ export async function GET(
       prerequisites: (scenarioResult.metadata as any)?.prerequisites || [],
       learningObjectives: (scenarioResult as any).objectives || [],
       ksaMapping: buildKSAMapping(yamlData as unknown as YAMLData, ksaData, lang),
-      tasks: scenarioResult.taskTemplates.map((template: ITaskTemplate) => ({
-        id: template.id,
-        title: template.title,
-        description: template.description || '',
-        category: template.metadata?.category || 'general',
-        instructions: template.metadata?.instructions || [],
-        expectedOutcome: template.metadata?.expectedOutcome || '',
-        timeLimit: template.metadata?.timeLimit
+      tasks: (scenarioResult.tasks || []).map((task) => ({
+        id: task.id,
+        title: task.title || '',
+        description: task.description || '',
+        category: 'general',
+        instructions: [],
+        expectedOutcome: '',
+        timeLimit: task.estimatedTime
       }))
     };
     

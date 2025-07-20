@@ -242,20 +242,20 @@ export async function GET(
       id: scenarioResult.id,
       title: scenarioResult.title || '',
       description: scenarioResult.description || '',
-      difficulty: scenarioResult.metadata?.difficulty || 'intermediate',
-      estimatedDuration: scenarioResult.metadata?.estimatedDuration || 60,
-      targetDomain: scenarioResult.metadata?.targetDomains || [],
-      prerequisites: scenarioResult.metadata?.prerequisites || [],
-      learningObjectives: scenarioResult.objectives || [],
+      difficulty: (scenarioResult.metadata?.difficulty as string) || 'intermediate',
+      estimatedDuration: (scenarioResult.metadata?.estimatedDuration as number) || 60,
+      targetDomain: (scenarioResult.metadata?.targetDomains as string[]) || [],
+      prerequisites: (scenarioResult.metadata?.prerequisites as string[]) || [],
+      learningObjectives: (scenarioResult.metadata?.objectives as string[]) || [],
       ksaMapping: buildKSAMapping(yamlData as unknown as YAMLData, ksaData, lang),
-      tasks: scenarioResult.taskTemplates.map((template: ITaskTemplate) => ({
-        id: template.id,
-        title: template.title || '',
-        description: template.description || '',
-        category: (template.metadata?.category || 'general') as string,
-        instructions: (template.metadata?.instructions || []) as string[],
-        expectedOutcome: (template.metadata?.expectedOutcome || '') as string,
-        timeLimit: template.metadata?.timeLimit as number | undefined
+      tasks: (scenarioResult.tasks || []).map((task) => ({
+        id: task.id,
+        title: task.title || '',
+        description: task.description || '',
+        category: 'general',
+        instructions: [],
+        expectedOutcome: '',
+        timeLimit: task.estimatedTime as number | undefined
       }))
     };
     
