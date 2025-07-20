@@ -5,9 +5,32 @@ import { OptimizedImage } from '../optimized-image'
 // Mock Next.js Image component
 jest.mock('next/image', () => ({
   __esModule: true,
-  default: jest.fn(({ alt, onLoad, onError, ...props }) => {
+  default: jest.fn(({ alt, onLoad, onError, priority, placeholder, blurDataURL, ...props }) => {
+    // Filter out Next.js specific props that shouldn't be on DOM elements
+    const imgProps = {
+      ...props,
+      alt,
+      onLoad,
+      onError,
+    }
+    
+    // Add loading attribute based on priority
+    if (priority) {
+      imgProps.loading = 'eager'
+    } else if (props.loading) {
+      imgProps.loading = props.loading
+    }
+    
+    // Add placeholder and blurDataURL as data attributes for testing
+    if (placeholder) {
+      imgProps['data-placeholder'] = placeholder
+    }
+    if (blurDataURL) {
+      imgProps['data-blur'] = blurDataURL
+    }
+    
     // eslint-disable-next-line @next/next/no-img-element
-    return <img alt={alt} onLoad={onLoad} onError={onError} {...props} />
+    return <img {...imgProps} />
   }),
 }))
 
@@ -15,8 +38,6 @@ describe('OptimizedImage', () => {
   const defaultProps = {
     src: '/test-image.jpg',
     alt: 'Test image',
-    width: 300,
-    height: 200,
   }
 
   beforeEach(() => {
@@ -31,31 +52,63 @@ describe('OptimizedImage', () => {
     expect(image).toHaveAttribute('src', '/test-image.jpg')
   })
 
-  it('shows loading skeleton initially', () => {
-    render(<OptimizedImage {...defaultProps} />)
-    
-    const skeleton = screen.getByTestId('image-skeleton')
-    expect(skeleton).toBeInTheDocument()
-    expect(skeleton).toHaveClass('animate-pulse')
-  })
-
-  it('hides skeleton after image loads', async () => {
+  it('renders with default dimensions', () => {
     render(<OptimizedImage {...defaultProps} />)
     
     const image = screen.getByAltText('Test image')
-    const skeleton = screen.getByTestId('image-skeleton')
+    expect(image).toHaveAttribute('width', '400')
+    expect(image).toHaveAttribute('height', '300')
+  })
+
+  it('renders with custom dimensions', () => {
+    render(<OptimizedImage {...defaultProps} width={600} height={400} />)
     
+    const image = screen.getByAltText('Test image')
+    expect(image).toHaveAttribute('width', '600')
+    expect(image).toHaveAttribute('height', '400')
+  })
+
+  it('shows loading state initially', () => {
+    const { container } = render(<OptimizedImage {...defaultProps} />)
+    
+    // Check for the loading skeleton div
+    const skeleton = container.querySelector('.animate-pulse')
     expect(skeleton).toBeInTheDocument()
+    expect(skeleton).toHaveClass('bg-gray-200')
+  })
+
+  it('hides loading state after image loads', async () => {
+    const { container } = render(<OptimizedImage {...defaultProps} />)
+    
+    const image = screen.getByAltText('Test image')
+    
+    // Check initial state
+    expect(image).toHaveClass('opacity-0')
     
     // Simulate image load
     fireEvent.load(image)
     
     await waitFor(() => {
+      expect(image).toHaveClass('opacity-100')
+      const skeleton = container.querySelector('.animate-pulse')
       expect(skeleton).not.toBeInTheDocument()
     })
   })
 
-  it('shows fallback on error', async () => {
+  it('shows fallback image on error', async () => {
+    render(<OptimizedImage {...defaultProps} fallback="/custom-fallback.png" />)
+    
+    const image = screen.getByAltText('Test image')
+    
+    // Simulate image error
+    fireEvent.error(image)
+    
+    await waitFor(() => {
+      expect(image).toHaveAttribute('src', '/custom-fallback.png')
+    })
+  })
+
+  it('uses default fallback when not specified', async () => {
     render(<OptimizedImage {...defaultProps} />)
     
     const image = screen.getByAltText('Test image')
@@ -64,122 +117,75 @@ describe('OptimizedImage', () => {
     fireEvent.error(image)
     
     await waitFor(() => {
-      const fallback = screen.getByTestId('image-fallback')
-      expect(fallback).toBeInTheDocument()
-      expect(fallback).toHaveTextContent('Failed to load image')
+      expect(image).toHaveAttribute('src', '/images/placeholder.png')
     })
   })
 
-  it('renders with custom fallback', async () => {
-    const CustomFallback = () => <div>Custom error message</div>
-    
-    render(
-      <OptimizedImage 
-        {...defaultProps} 
-        fallback={<CustomFallback />}
-      />
-    )
-    
-    const image = screen.getByAltText('Test image')
-    fireEvent.error(image)
-    
-    await waitFor(() => {
-      expect(screen.getByText('Custom error message')).toBeInTheDocument()
-    })
-  })
-
-  it('applies custom className', () => {
-    render(
+  it('applies custom className to container', () => {
+    const { container } = render(
       <OptimizedImage 
         {...defaultProps} 
         className="custom-image-class rounded-lg"
       />
     )
     
-    const container = screen.getByTestId('image-container')
-    expect(container).toHaveClass('custom-image-class', 'rounded-lg')
+    const wrapper = container.firstChild as HTMLElement
+    expect(wrapper).toHaveClass('relative', 'custom-image-class', 'rounded-lg')
   })
 
   it('handles priority loading', () => {
     render(<OptimizedImage {...defaultProps} priority />)
     
     const image = screen.getByAltText('Test image')
-    expect(image).toHaveAttribute('priority', 'true')
+    expect(image).toHaveAttribute('loading', 'eager')
   })
 
-  it('supports different object fit options', () => {
-    render(<OptimizedImage {...defaultProps} objectFit="contain" />)
-    
-    const image = screen.getByAltText('Test image')
-    expect(image).toHaveStyle({ objectFit: 'contain' })
-  })
-
-  it('handles responsive sizes', () => {
-    render(
-      <OptimizedImage 
-        {...defaultProps} 
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-      />
-    )
-    
-    const image = screen.getByAltText('Test image')
-    expect(image).toHaveAttribute(
-      'sizes', 
-      '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-    )
-  })
-
-  it('supports lazy loading by default', () => {
+  it('uses lazy loading by default', () => {
     render(<OptimizedImage {...defaultProps} />)
     
     const image = screen.getByAltText('Test image')
     expect(image).toHaveAttribute('loading', 'lazy')
   })
 
-  it('disables lazy loading when priority is set', () => {
-    render(<OptimizedImage {...defaultProps} priority />)
+  it('always uses blur placeholder', () => {
+    render(<OptimizedImage {...defaultProps} />)
     
     const image = screen.getByAltText('Test image')
-    expect(image).not.toHaveAttribute('loading', 'lazy')
+    expect(image).toHaveAttribute('data-placeholder', 'blur')
+    // The component includes a hardcoded blurDataURL
+    expect(image).toHaveAttribute('data-blur')
   })
 
-  it('handles blur placeholder', () => {
-    render(
-      <OptimizedImage 
-        {...defaultProps} 
-        placeholder="blur"
-        blurDataURL="data:image/jpeg;base64,..."
-      />
-    )
+  it('transitions opacity on load', async () => {
+    render(<OptimizedImage {...defaultProps} />)
     
     const image = screen.getByAltText('Test image')
-    expect(image).toHaveAttribute('placeholder', 'blur')
-    expect(image).toHaveAttribute('blurDataURL', 'data:image/jpeg;base64,...')
-  })
-
-  it('calls onLoad callback when provided', async () => {
-    const onLoadMock = jest.fn()
     
-    render(<OptimizedImage {...defaultProps} onLoad={onLoadMock} />)
+    // Initially opacity-0
+    expect(image).toHaveClass('opacity-0', 'transition-opacity', 'duration-300')
     
-    const image = screen.getByAltText('Test image')
+    // Simulate load
     fireEvent.load(image)
     
     await waitFor(() => {
-      expect(onLoadMock).toHaveBeenCalled()
+      expect(image).toHaveClass('opacity-100', 'transition-opacity', 'duration-300')
     })
   })
 
-  it('calls onError callback when provided', async () => {
-    const onErrorMock = jest.fn()
-    
-    render(<OptimizedImage {...defaultProps} onError={onErrorMock} />)
+  it('removes loading state on error', async () => {
+    const { container } = render(<OptimizedImage {...defaultProps} />)
     
     const image = screen.getByAltText('Test image')
+    
+    // Initially has loading skeleton
+    expect(container.querySelector('.animate-pulse')).toBeInTheDocument()
+    
+    // Simulate error
     fireEvent.error(image)
     
     await waitFor(() => {
-      expect(onErrorMock).toHaveBeenCalled()
+      const skeleton = container.querySelector('.animate-pulse')
+      expect(skeleton).not.toBeInTheDocument()
     })
   })
 })

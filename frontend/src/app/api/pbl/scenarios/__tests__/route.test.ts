@@ -126,8 +126,8 @@ describe('/api/pbl/scenarios', () => {
               path: `pbl_data/${yamlId}_scenario.yaml`,
               metadata: { yamlId }
             },
-            title: titleMap[lang] || titleMap['en'],
-            description: descMap[lang] || descMap['en'],
+            title: { [lang]: titleMap[lang] || titleMap['en'] },
+            description: { [lang]: descMap[lang] || descMap['en'] },
             objectives: [],
             taskTemplates: [],
             metadata: {
@@ -149,8 +149,8 @@ describe('/api/pbl/scenarios', () => {
             path: `pbl_data/${yamlId}_scenario.yaml`,
             metadata: { yamlId }
           },
-          title: `${yamlId} Title`,
-          description: `${yamlId} Description`,
+          title: { en: `${yamlId} Title` },
+          description: { en: `${yamlId} Description` },
           objectives: [],
           taskTemplates: [],
           metadata: {
@@ -448,8 +448,8 @@ describe('/api/pbl/scenarios', () => {
               path: `pbl_data/${yamlId}_scenario.yaml`,
               metadata: { yamlId }
             },
-            title: titleMap[lang] || titleMap['en'],
-            description: descMap[lang] || descMap['en'],
+            title: { [lang]: titleMap[lang] || titleMap['en'] },
+            description: { [lang]: descMap[lang] || descMap['en'] },
             objectives: [],
             taskTemplates: [],
             metadata: {
@@ -471,8 +471,8 @@ describe('/api/pbl/scenarios', () => {
             path: `pbl_data/${yamlId}_scenario.yaml`,
             metadata: { yamlId }
           },
-          title: `${yamlId} Title`,
-          description: `${yamlId} Description`,
+          title: { en: `${yamlId} Title` },
+          description: { en: `${yamlId} Description` },
           objectives: [],
           taskTemplates: [],
           metadata: {
@@ -499,25 +499,34 @@ describe('/api/pbl/scenarios', () => {
   describe('hybrid translation architecture', () => {
     const mockGCSScenario: IScenario = {
       id: 'ai-job-search',
+      mode: 'pbl' as const,
+      status: 'active' as const,
+      version: '1.0.0',
       sourceType: 'yaml' as const,
-      sourceRef: {
-        type: 'yaml' as const,
-        path: 'pbl_data/ai-job-search_scenario.yaml',
-        metadata: { yamlId: 'ai-job-search' }
-      },
+      sourcePath: 'pbl_data/ai-job-search_scenario.yaml',
+      sourceMetadata: { yamlId: 'ai-job-search' },
       title: { en: 'AI-Powered Job Search Assistant' },
       description: { en: 'Learn to use AI for job searching' },
       objectives: [],
+      difficulty: 'intermediate' as const,
+      estimatedMinutes: 90,
+      prerequisites: [],
       taskTemplates: [],
+      taskCount: 0,
+      xpRewards: {},
+      unlockRequirements: {},
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {},
+      aiModules: {},
+      resources: [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       metadata: {
-        difficulty: 'intermediate',
-        estimatedDuration: 90,
         targetDomains: ['engaging_with_ai', 'creating_with_ai'],
         isAvailable: true,
         thumbnailEmoji: '💼'
-      },
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      }
     };
 
     beforeEach(() => {

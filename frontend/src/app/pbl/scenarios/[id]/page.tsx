@@ -275,14 +275,14 @@ export default function ScenarioDetailPage() {
                         <div className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                           <div>
                             {t('common:progress', 'Progress')}: {(program.metadata?.completedTaskCount as number) || 0}/{(program.metadata?.totalTaskCount as number) || 0} {t('common:tasks', 'tasks')}
-                            {((program.metadata?.completedTaskCount as number) || 0) > 0 && program.metadata?.evaluationId && (
+                            {program.metadata && typeof program.metadata.completedTaskCount === 'number' && program.metadata.completedTaskCount > 0 && program.metadata.evaluationId ? (
                               <>
                                 <span className="mx-2">•</span>
                                 <span className="font-medium">
                                   {t('hasEvaluation', 'Has Evaluation')}
                                 </span>
                               </>
-                            )}
+                            ) : null}
                           </div>
                           <div>
                             {t('common:startedAt', 'Started')}: {formatDateSafely(program.startedAt, i18n.language)}
@@ -301,14 +301,14 @@ export default function ScenarioDetailPage() {
                           >
                             {t('common:continue', 'Continue')}
                           </button>
-                          {(((program.metadata?.completedTaskCount as number) || 0) > 0 || program.status === 'completed' || program.metadata?.evaluationId) && (
+                          {((program.metadata && typeof program.metadata.completedTaskCount === 'number' && program.metadata.completedTaskCount > 0) || program.status === 'completed' || program.metadata?.evaluationId) ? (
                             <button
                               onClick={() => router.push(`/pbl/scenarios/${scenarioId}/programs/${program.id}/complete`)}
                               className="text-sm px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors font-medium"
                             >
                               {t('viewResults', 'View Results')}
                             </button>
-                          )}
+                          ) : null}
                         </div>
                       </div>
                     ))}
@@ -408,45 +408,48 @@ export default function ScenarioDetailPage() {
           </h2>
 
           {/* Scenario KSA Overview */}
-          {getScenarioData('ksaMapping') && (
+          {(() => {
+            const ksaMapping = getScenarioData('ksaMapping') as Record<string, unknown> | null;
+            return ksaMapping ? (
             <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
               <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center">
                 🧠 KSA Competencies Covered in This Scenario
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                {(getScenarioData('ksaMapping') as Record<string, unknown>)?.knowledge && ((getScenarioData('ksaMapping') as Record<string, unknown>).knowledge as unknown[]).length > 0 && (
+                {ksaMapping?.knowledge && Array.isArray(ksaMapping.knowledge) && ksaMapping.knowledge.length > 0 ? (
                   <div>
                     <span className="font-medium text-green-700 dark:text-green-300">Knowledge: </span>
                     <span className="text-green-600 dark:text-green-400">
-                      {(getScenarioData('ksaMapping') as Record<string, unknown>)?.knowledge && ((getScenarioData('ksaMapping') as Record<string, unknown>).knowledge as unknown[]).map((item: unknown) => 
-                        typeof item === 'string' ? item : (item as Record<string, unknown>)?.code
-                      ).join(', ')}
+                      {ksaMapping?.knowledge && Array.isArray(ksaMapping.knowledge) && ksaMapping.knowledge.map((item: unknown) => 
+                        typeof item === 'string' ? item : (item && typeof item === 'object' && 'code' in item ? String(item.code) : '')
+                      ).filter(Boolean).join(', ')}
                     </span>
                   </div>
-                )}
-                {(getScenarioData('ksaMapping') as Record<string, unknown>)?.skills && ((getScenarioData('ksaMapping') as Record<string, unknown>).skills as unknown[]).length > 0 && (
+                ) : null}
+                {ksaMapping?.skills && Array.isArray(ksaMapping.skills) && ksaMapping.skills.length > 0 ? (
                   <div>
                     <span className="font-medium text-blue-700 dark:text-blue-300">Skills: </span>
                     <span className="text-blue-600 dark:text-blue-400">
-                      {(getScenarioData('ksaMapping') as Record<string, unknown>)?.skills && ((getScenarioData('ksaMapping') as Record<string, unknown>).skills as unknown[]).map((item: unknown) => 
-                        typeof item === 'string' ? item : (item as Record<string, unknown>)?.code
-                      ).join(', ')}
+                      {ksaMapping?.skills && Array.isArray(ksaMapping.skills) && ksaMapping.skills.map((item: unknown) => 
+                        typeof item === 'string' ? item : (item && typeof item === 'object' && 'code' in item ? String(item.code) : '')
+                      ).filter(Boolean).join(', ')}
                     </span>
                   </div>
-                )}
-                {(getScenarioData('ksaMapping') as Record<string, unknown>)?.attitudes && ((getScenarioData('ksaMapping') as Record<string, unknown>).attitudes as unknown[]).length > 0 && (
+                ) : null}
+                {ksaMapping?.attitudes && Array.isArray(ksaMapping.attitudes) && ksaMapping.attitudes.length > 0 ? (
                   <div>
                     <span className="font-medium text-purple-700 dark:text-purple-300">Attitudes: </span>
                     <span className="text-purple-600 dark:text-purple-400">
-                      {(getScenarioData('ksaMapping') as Record<string, unknown>)?.attitudes && ((getScenarioData('ksaMapping') as Record<string, unknown>).attitudes as unknown[]).map((item: unknown) => 
-                        typeof item === 'string' ? item : (item as Record<string, unknown>)?.code
-                      ).join(', ')}
+                      {ksaMapping?.attitudes && Array.isArray(ksaMapping.attitudes) && ksaMapping.attitudes.map((item: unknown) => 
+                        typeof item === 'string' ? item : (item && typeof item === 'object' && 'code' in item ? String(item.code) : '')
+                      ).filter(Boolean).join(', ')}
                     </span>
                   </div>
-                )}
+                ) : null}
               </div>
             </div>
-          )}
+          ) : null;
+          })()}
 
           {/* Tasks List */}
           <div className="space-y-4">
@@ -460,11 +463,11 @@ export default function ScenarioDetailPage() {
                     <span className="text-sm text-gray-500 dark:text-gray-400">
                       {getCategoryIcon((task.category as string) || (task.type as string))}
                     </span>
-                    {task.timeLimit && (
+                    {task.timeLimit ? (
                       <span className="text-sm text-gray-500 dark:text-gray-400">
                         {String(task.timeLimit)} min
                       </span>
-                    )}
+                    ) : null}
                   </div>
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
@@ -472,7 +475,7 @@ export default function ScenarioDetailPage() {
                 </p>
                 
                 {/* Instructions */}
-                {task.instructions && (task.instructions as unknown[]).length > 0 && (
+                {task.instructions && Array.isArray(task.instructions) && task.instructions.length > 0 ? (
                   <div className="mb-3">
                     <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                       {t('instructions', 'Instructions')}
@@ -486,41 +489,44 @@ export default function ScenarioDetailPage() {
                       ))}
                     </ul>
                   </div>
-                )}
+                ) : null}
                 
                 {/* KSA Focus */}
-                {task.KSA_focus && (
+                {(() => {
+                  const ksaFocus = task.KSA_focus as Record<string, unknown> | undefined;
+                  return ksaFocus ? (
                   <div className="bg-purple-50 dark:bg-purple-900/20 rounded p-3 mb-3">
                     <p className="text-sm font-medium text-purple-700 dark:text-purple-300 mb-2">
                       🧠 KSA
                     </p>
                     <div className="space-y-1">
-                      {(task.KSA_focus as Record<string, unknown>).primary && ((task.KSA_focus as Record<string, unknown>).primary as unknown[]).length > 0 && (
+                      {ksaFocus.primary && Array.isArray(ksaFocus.primary) && ksaFocus.primary.length > 0 ? (
                         <div>
                           <span className="text-xs font-medium text-purple-600 dark:text-purple-400">Primary: </span>
                           <span className="text-xs text-purple-600 dark:text-purple-400">
-                            {((task.KSA_focus as Record<string, unknown>).primary as unknown[]).map((item: unknown) => 
-                              String(typeof item === 'string' ? item : (item as Record<string, unknown>)?.code || item)
+                            {(ksaFocus.primary as unknown[]).map((item: unknown) => 
+                              String(typeof item === 'string' ? item : (item && typeof item === 'object' && 'code' in item ? item.code : item))
                             ).join(', ')}
                           </span>
                         </div>
-                      )}
-                      {(task.KSA_focus as Record<string, unknown>).secondary && ((task.KSA_focus as Record<string, unknown>).secondary as unknown[]).length > 0 && (
+                      ) : null}
+                      {ksaFocus.secondary && Array.isArray(ksaFocus.secondary) && ksaFocus.secondary.length > 0 ? (
                         <div>
                           <span className="text-xs font-medium text-purple-600 dark:text-purple-400">Secondary: </span>
                           <span className="text-xs text-purple-600 dark:text-purple-400">
-                            {((task.KSA_focus as Record<string, unknown>).secondary as unknown[]).map((item: unknown) => 
-                              String(typeof item === 'string' ? item : (item as Record<string, unknown>)?.code || item)
+                            {(ksaFocus.secondary as unknown[]).map((item: unknown) => 
+                              String(typeof item === 'string' ? item : (item && typeof item === 'object' && 'code' in item ? item.code : item))
                             ).join(', ')}
                           </span>
                         </div>
-                      )}
+                      ) : null}
                     </div>
                   </div>
-                )}
+                ) : null;
+                })()}
                 
                 {/* Expected Outcome */}
-                {task.expectedOutcome && (
+                {task.expectedOutcome ? (
                   <div className="bg-blue-50 dark:bg-blue-900/20 rounded p-3">
                     <p className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">
                       {t('expectedOutcome', 'Expected Outcome')}
@@ -529,7 +535,7 @@ export default function ScenarioDetailPage() {
                       {String(task.expectedOutcome)}
                     </p>
                   </div>
-                )}
+                ) : null}
               </div>
             ))}
             {(getScenarioData('tasks', []) as unknown[]).length === 0 && (

@@ -645,9 +645,18 @@ export default function TaskDetailPage() {
                               : 'text-orange-700'
                           }`}>
                             AI 回饋
-                            {(interaction.content as Record<string, unknown>)?.completed && (
+                            {typeof interaction.content === 'object' && 
+                             interaction.content !== null &&
+                             'completed' in interaction.content &&
+                             interaction.content.completed && (
                               <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                                {String((interaction.content as Record<string, unknown>)?.xpEarned)} XP
+                                {String(
+                                  typeof interaction.content === 'object' && 
+                                  interaction.content !== null &&
+                                  'xpEarned' in interaction.content
+                                    ? interaction.content.xpEarned
+                                    : ''
+                                )} XP
                               </span>
                             )}
                           </span>

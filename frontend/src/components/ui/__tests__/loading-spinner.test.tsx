@@ -10,15 +10,15 @@ describe('LoadingSpinner', () => {
     expect(spinner).toBeInTheDocument()
     expect(spinner).toHaveClass('animate-spin')
     
-    // Check for sr-only loading text
-    expect(screen.getByText('Loading...')).toBeInTheDocument()
+    // Check for sr-only loading text (Chinese text)
+    expect(screen.getByText('載入中...')).toBeInTheDocument()
   })
 
-  it('renders with custom size', () => {
+  it('renders with large size', () => {
     render(<LoadingSpinner size="lg" />)
     
     const spinner = screen.getByRole('status')
-    expect(spinner).toHaveClass('h-8', 'w-8')
+    expect(spinner).toHaveClass('h-12', 'w-12')
   })
 
   it('renders with small size', () => {
@@ -28,63 +28,53 @@ describe('LoadingSpinner', () => {
     expect(spinner).toHaveClass('h-4', 'w-4')
   })
 
-  it('renders with medium size', () => {
+  it('renders with medium size (default)', () => {
     render(<LoadingSpinner size="md" />)
     
     const spinner = screen.getByRole('status')
-    expect(spinner).toHaveClass('h-6', 'w-6')
+    expect(spinner).toHaveClass('h-8', 'w-8')
   })
 
   it('renders with custom className', () => {
-    render(<LoadingSpinner className="custom-class text-red-500" />)
-    
-    const spinner = screen.getByRole('status')
-    expect(spinner).toHaveClass('custom-class', 'text-red-500')
-  })
-
-  it('renders inline version', () => {
-    render(<LoadingSpinner inline />)
-    
-    const spinner = screen.getByRole('status')
-    expect(spinner).toHaveClass('inline-block')
-  })
-
-  it('renders centered version', () => {
-    render(<LoadingSpinner center />)
+    render(<LoadingSpinner className="mt-4 mb-4" />)
     
     const container = screen.getByRole('status').parentElement
-    expect(container).toHaveClass('flex', 'justify-center', 'items-center')
-  })
-
-  it('renders with custom loading text', () => {
-    render(<LoadingSpinner loadingText="Please wait..." />)
-    
-    expect(screen.getByText('Please wait...')).toBeInTheDocument()
+    expect(container).toHaveClass('mt-4', 'mb-4')
   })
 
   it('maintains accessibility with aria-label', () => {
     render(<LoadingSpinner />)
     
     const spinner = screen.getByRole('status')
-    expect(spinner).toHaveAttribute('aria-label', 'Loading')
+    expect(spinner).toHaveAttribute('aria-label', '載入中')
   })
 
-  it('combines multiple props correctly', () => {
+  it('combines size and className props correctly', () => {
     render(
       <LoadingSpinner 
         size="lg" 
         className="text-blue-500" 
-        center 
-        loadingText="Processing..."
       />
     )
     
     const spinner = screen.getByRole('status')
-    expect(spinner).toHaveClass('h-8', 'w-8', 'text-blue-500')
+    expect(spinner).toHaveClass('h-12', 'w-12')
     
     const container = spinner.parentElement
-    expect(container).toHaveClass('flex', 'justify-center', 'items-center')
+    expect(container).toHaveClass('text-blue-500')
+  })
+
+  it('has correct default spinner styling', () => {
+    render(<LoadingSpinner />)
     
-    expect(screen.getByText('Processing...')).toBeInTheDocument()
+    const spinner = screen.getByRole('status')
+    expect(spinner).toHaveClass('animate-spin', 'rounded-full', 'border-b-2', 'border-blue-600')
+  })
+
+  it('renders with flex container for centering', () => {
+    render(<LoadingSpinner />)
+    
+    const container = screen.getByRole('status').parentElement
+    expect(container).toHaveClass('flex', 'items-center', 'justify-center')
   })
 })

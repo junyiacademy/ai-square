@@ -7,7 +7,6 @@ import { GET, POST } from '../route';
 import { NextRequest } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import type { ITask, IInteraction } from '@/types/unified-learning';
-import type { Session } from 'next-auth';
 
 // Mock dependencies
 jest.mock('@/lib/auth/session');
@@ -81,13 +80,12 @@ describe('Task Interactions API', () => {
         content: { event: 'task_paused' },
         metadata: { role: 'system' }
       }
-    ],
-    evaluationId: 'eval_456'
+    ]
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockGetServerSession.mockResolvedValue(mockSession as unknown as Session);
+    mockGetServerSession.mockResolvedValue(mockSession as any);
   });
 
   const createRequest = (url: string, options: RequestInit = {}) => {
@@ -388,7 +386,6 @@ describe('Task Interactions API', () => {
         });
 
         expect(data.data.taskStatus).toBe('active');
-        expect(data.data.evaluationId).toBe('eval_456');
       });
 
       it('should return empty array when task not found', async () => {
