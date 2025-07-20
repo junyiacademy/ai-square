@@ -11,8 +11,10 @@ import type { Session } from 'next-auth';
 
 // Mock dependencies
 jest.mock('@/lib/auth/session');
-jest.mock('@/lib/implementations/gcs-v2', () => ({
-  getTaskRepository: jest.fn()
+jest.mock('@/lib/repositories/base/repository-factory', () => ({
+  repositoryFactory: {
+    getTaskRepository: jest.fn()
+  }
 }));
 jest.mock('@/lib/cache/cache-service', () => ({
   cacheService: {
@@ -42,8 +44,8 @@ const mockTaskRepo = {
 };
 
 // Mock getTaskRepository
-const mockGetTaskRepository = jest.requireMock('@/lib/implementations/gcs-v2').getTaskRepository;
-mockGetTaskRepository.mockReturnValue(mockTaskRepo);
+const mockRepositoryFactory = jest.requireMock('@/lib/repositories/base/repository-factory').repositoryFactory;
+mockRepositoryFactory.getTaskRepository.mockReturnValue(mockTaskRepo);
 
 describe('Task Interactions API', () => {
   const mockSession = {

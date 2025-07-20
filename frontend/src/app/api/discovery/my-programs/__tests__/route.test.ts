@@ -7,12 +7,12 @@
 import { NextRequest } from 'next/server';
 import { GET } from '../route';
 import { getAuthFromRequest } from '@/lib/auth/auth-utils';
-import { getProgramRepository, getScenarioRepository, getTaskRepository } from '@/lib/implementations/gcs-v2';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { cacheService } from '@/lib/cache/cache-service';
 
 // Mock dependencies
 jest.mock('@/lib/auth/auth-utils');
-jest.mock('@/lib/implementations/gcs-v2');
+jest.mock('@/lib/repositories/base/repository-factory');
 jest.mock('@/lib/cache/cache-service');
 
 describe('GET /api/discovery/my-programs', () => {

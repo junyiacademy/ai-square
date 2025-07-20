@@ -12,10 +12,12 @@ jest.mock('@/lib/auth/session', () => ({
   getServerSession: jest.fn()
 }));
 
-// Mock the GCS implementation
-jest.mock('@/lib/implementations/gcs-v2', () => ({
-  getEvaluationRepository: jest.fn(),
-  getScenarioRepository: jest.fn()
+// Mock the repository factory
+jest.mock('@/lib/repositories/base/repository-factory', () => ({
+  repositoryFactory: {
+    getEvaluationRepository: jest.fn(),
+    getScenarioRepository: jest.fn()
+  }
 }));
 
 import { getServerSession } from '@/lib/auth/session';

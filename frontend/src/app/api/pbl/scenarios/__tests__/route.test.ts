@@ -15,10 +15,12 @@ jest.mock('js-yaml');
 jest.mock('../../../../../lib/cache/cache-service');
 jest.mock('../../../../../lib/services/pbl-scenario-service');
 jest.mock('../../../../../lib/services/hybrid-translation-service');
-jest.mock('../../../../../lib/implementations/gcs-v2', () => ({
-  getScenarioRepository: jest.fn(() => ({
-    findBySource: jest.fn().mockResolvedValue([])
-  }))
+jest.mock('../../../../../lib/repositories/base/repository-factory', () => ({
+  repositoryFactory: {
+    getScenarioRepository: jest.fn(() => ({
+      findByMode: jest.fn().mockResolvedValue([])
+    }))
+  }
 }));
 
 const mockFs = {

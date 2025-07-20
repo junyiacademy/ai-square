@@ -18,7 +18,7 @@ const mockUnifiedLearningService = {
   getLearningAnalytics: jest.fn<MockServiceFunction>()
 };
 
-jest.mock('@/lib/implementations/gcs-v2/services/unified-learning-service', () => ({
+jest.mock('@/lib/services/unified-learning-service', () => ({
   UnifiedLearningService: jest.fn(() => mockUnifiedLearningService)
 }));
 

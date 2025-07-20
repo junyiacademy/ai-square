@@ -7,15 +7,11 @@
 import { NextRequest } from 'next/server';
 import { POST } from '../route';
 import { getServerSession } from '@/lib/auth/session';
-import { 
-  getProgramRepository, 
-  getTaskRepository,
-  getScenarioRepository 
-} from '@/lib/implementations/gcs-v2';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
 // Mock dependencies
 jest.mock('@/lib/auth/session');
-jest.mock('@/lib/implementations/gcs-v2');
+jest.mock('@/lib/repositories/base/repository-factory');
 jest.mock('@/lib/services/discovery-yaml-loader');
 
 describe('POST /api/discovery/scenarios/[id]/programs', () => {
