@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { getLanguageFromHeader } from '@/lib/utils/language';
 import { cachedGET } from '@/lib/api/optimization-utils';
+import { Task, Evaluation, Interaction, TaskWithInteractions } from '@/lib/repositories/interfaces';
 
 export async function GET(request: NextRequest) {
   // Get user session
@@ -18,7 +19,7 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const programId = searchParams.get('programId');
   const scenarioId = searchParams.get('scenarioId');
-  const language = getLanguageFromHeader(request.headers.get('Accept-Language'));
+  const language = getLanguageFromHeader(request);
 
   if (!programId || !scenarioId) {
     return NextResponse.json(
@@ -31,7 +32,7 @@ export async function GET(request: NextRequest) {
 
     // Get repositories
     const { createRepositoryFactory } = await import('@/lib/db/repositories/factory');
-    const repositoryFactory = createRepositoryFactory();
+    const repositoryFactory = createRepositoryFactory;
     const programRepo = repositoryFactory.getProgramRepository();
     const evalRepo = repositoryFactory.getEvaluationRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
@@ -71,7 +72,7 @@ export async function GET(request: NextRequest) {
     
     // Sort tasks by their position in the program's taskIds array
     const sortedTasks = program.taskIds ? 
-      tasks.sort((a, b) => {
+      tasks.sort((a: Task, b: Task) => {
         const indexA = program.taskIds!.indexOf(a.id);
         const indexB = program.taskIds!.indexOf(b.id);
         return indexA - indexB;
@@ -79,18 +80,23 @@ export async function GET(request: NextRequest) {
     
     // Build tasks array with evaluations and progress
     const tasksWithDetails = await Promise.all(
-      sortedTasks.map(async (task, index) => {
-        const taskEvaluation = task.evaluationId 
-          ? await evalRepo.findById(task.evaluationId)
+      sortedTasks.map(async (task: Task, index: number) => {
+        // Get task with interactions
+        const taskWithInteractions = await taskRepo.getTaskWithInteractions(task.id);
+        const interactions = taskWithInteractions?.interactions || [];
+        
+        // Get evaluation if exists
+        const taskEvaluation = task.metadata?.evaluationId 
+          ? await evalRepo.findById(task.metadata.evaluationId as string)
           : null;
         
         // Calculate time spent
         let timeSpentSeconds = 0;
-        if (task.interactions && task.interactions.length > 0) {
-          const firstInteraction = task.interactions[0];
-          const lastInteraction = task.interactions[task.interactions.length - 1];
+        if (interactions.length > 0) {
+          const firstInteraction = interactions[0];
+          const lastInteraction = interactions[interactions.length - 1];
           timeSpentSeconds = Math.floor(
-            (new Date(lastInteraction.timestamp).getTime() - new Date(firstInteraction.timestamp).getTime()) / 1000
+            (new Date(lastInteraction.createdAt).getTime() - new Date(firstInteraction.createdAt).getTime()) / 1000
           );
         }
         
@@ -108,10 +114,10 @@ export async function GET(request: NextRequest) {
             evaluatedAt: taskEvaluation.createdAt
           } : undefined,
           log: {
-            interactions: task.interactions.map(i => ({
+            interactions: interactions.map((i: Interaction) => ({
               type: i.type === 'user_input' ? 'user' : 'assistant',
-              message: i.context.message || i.content,
-              timestamp: i.timestamp
+              message: (i.metadata as Record<string, unknown>)?.message || i.content,
+              timestamp: i.createdAt
             })),
             startedAt: task.startedAt,
             completedAt: task.completedAt
@@ -132,9 +138,9 @@ export async function GET(request: NextRequest) {
       status: program.status === 'completed' ? 'completed' : 'in_progress',
       startedAt: program.startedAt,
       updatedAt: evaluation?.metadata?.lastUpdatedAt || program.startedAt,
-      completedAt: program.completedAt,
+      completedAt: program.endTime,
       totalTasks: evaluation?.metadata?.totalTasks || tasks.length,
-      completedTasks: tasks.filter(t => t.status === 'completed').length,
+      completedTasks: tasks.filter((t: Task) => t.status === 'completed').length,
       evaluatedTasks: evaluation?.metadata?.evaluatedTasks || 0,
       overallScore: evaluation?.score || 0,
       domainScores: evaluation?.metadata?.domainScores || {},
