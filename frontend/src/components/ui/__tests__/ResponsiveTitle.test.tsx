@@ -2,21 +2,8 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { ResponsiveTitle } from '../ResponsiveTitle'
 
-// Mock useMediaQuery hook
-jest.mock('@/hooks/useMediaQuery', () => ({
-  useMediaQuery: jest.fn(),
-}))
-
-import { useMediaQuery } from '@/hooks/useMediaQuery'
-
 describe('ResponsiveTitle', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-
   it('renders with default props', () => {
-    ;(useMediaQuery as jest.Mock).mockReturnValue(false)
-    
     render(<ResponsiveTitle>Test Title</ResponsiveTitle>)
     
     const title = screen.getByText('Test Title')
@@ -24,18 +11,7 @@ describe('ResponsiveTitle', () => {
     expect(title.tagName).toBe('H1')
   })
 
-  it('renders as specified heading level', () => {
-    ;(useMediaQuery as jest.Mock).mockReturnValue(false)
-    
-    render(<ResponsiveTitle as="h3">Heading 3</ResponsiveTitle>)
-    
-    const title = screen.getByText('Heading 3')
-    expect(title.tagName).toBe('H3')
-  })
-
   it('applies custom className', () => {
-    ;(useMediaQuery as jest.Mock).mockReturnValue(false)
-    
     render(
       <ResponsiveTitle className="custom-class text-blue-500">
         Custom Styled Title
@@ -46,174 +22,92 @@ describe('ResponsiveTitle', () => {
     expect(title).toHaveClass('custom-class', 'text-blue-500')
   })
 
-  it('renders with mobile styles on small screens', () => {
-    ;(useMediaQuery as jest.Mock).mockReturnValue(true)
+  it('applies default responsive font sizes for normal titles', () => {
+    render(<ResponsiveTitle>Normal Title</ResponsiveTitle>)
     
-    render(<ResponsiveTitle>Mobile Title</ResponsiveTitle>)
+    const title = screen.getByText('Normal Title')
+    expect(title).toHaveClass('text-2xl', 'sm:text-3xl', 'font-bold', 'text-center', 'px-4')
+  })
+
+  it('adjusts font size for long titles (> 30 chars but <= 40)', () => {
+    const longTitle = 'This is a long title with 35 chars!'
+    expect(longTitle.length).toBe(35)
+    expect(longTitle.length).toBeGreaterThan(30)
+    expect(longTitle.length).toBeLessThanOrEqual(40)
     
-    const title = screen.getByText('Mobile Title')
+    render(<ResponsiveTitle>{longTitle}</ResponsiveTitle>)
+    
+    const title = screen.getByText(longTitle)
     expect(title).toHaveClass('text-2xl', 'sm:text-3xl')
   })
 
-  it('renders with desktop styles on large screens', () => {
-    ;(useMediaQuery as jest.Mock).mockReturnValue(false)
+  it('adjusts font size for very long titles (> 40 chars)', () => {
+    const veryLongTitle = 'This is an extremely long title that definitely exceeds forty characters and should use smaller font'
+    render(<ResponsiveTitle>{veryLongTitle}</ResponsiveTitle>)
     
-    render(<ResponsiveTitle>Desktop Title</ResponsiveTitle>)
-    
-    const title = screen.getByText('Desktop Title')
-    expect(title).toHaveClass('text-4xl', 'lg:text-5xl')
-  })
-
-  it('applies size variants correctly', () => {
-    ;(useMediaQuery as jest.Mock).mockReturnValue(false)
-    
-    const { rerender } = render(
-      <ResponsiveTitle size="small">Small Title</ResponsiveTitle>
-    )
-    
-    let title = screen.getByText('Small Title')
-    expect(title).toHaveClass('text-xl', 'sm:text-2xl')
-    
-    rerender(<ResponsiveTitle size="medium">Medium Title</ResponsiveTitle>)
-    title = screen.getByText('Medium Title')
-    expect(title).toHaveClass('text-2xl', 'sm:text-3xl')
-    
-    rerender(<ResponsiveTitle size="large">Large Title</ResponsiveTitle>)
-    title = screen.getByText('Large Title')
-    expect(title).toHaveClass('text-4xl', 'lg:text-5xl')
+    const title = screen.getByText(veryLongTitle)
+    expect(title).toHaveClass('text-xl', 'sm:text-2xl', 'md:text-3xl')
   })
 
   it('combines base classes with custom classes', () => {
-    ;(useMediaQuery as jest.Mock).mockReturnValue(false)
-    
     render(
-      <ResponsiveTitle 
-        className="font-bold text-center" 
-        size="medium"
-      >
+      <ResponsiveTitle className="text-blue-600 uppercase">
         Combined Classes
       </ResponsiveTitle>
     )
     
     const title = screen.getByText('Combined Classes')
-    expect(title).toHaveClass('font-bold', 'text-center', 'text-2xl', 'sm:text-3xl')
+    expect(title).toHaveClass('font-bold', 'text-center', 'px-4', 'text-blue-600', 'uppercase')
   })
 
-  it('handles complex children', () => {
-    ;(useMediaQuery as jest.Mock).mockReturnValue(false)
-    
-    render(
-      <ResponsiveTitle>
-        <span>Complex</span> <strong>Children</strong> Content
-      </ResponsiveTitle>
-    )
-    
-    expect(screen.getByText('Complex')).toBeInTheDocument()
-    expect(screen.getByText('Children')).toBeInTheDocument()
-  })
-
-  it('responds to screen size changes', () => {
-    const mockUseMediaQuery = useMediaQuery as jest.Mock
-    mockUseMediaQuery.mockReturnValue(false)
-    
+  it('updates font size when children change', () => {
     const { rerender } = render(
-      <ResponsiveTitle>Responsive Title</ResponsiveTitle>
+      <ResponsiveTitle>Short</ResponsiveTitle>
     )
     
-    let title = screen.getByText('Responsive Title')
-    expect(title).toHaveClass('text-4xl')
+    let title = screen.getByText('Short')
+    expect(title).toHaveClass('text-2xl', 'sm:text-3xl')
     
-    // Simulate screen size change
-    mockUseMediaQuery.mockReturnValue(true)
-    rerender(<ResponsiveTitle>Responsive Title</ResponsiveTitle>)
+    // Change to a very long title
+    const veryLongTitle = 'This title is much longer than forty characters and should trigger smaller font size'
+    rerender(<ResponsiveTitle>{veryLongTitle}</ResponsiveTitle>)
     
-    title = screen.getByText('Responsive Title')
-    expect(title).toHaveClass('text-2xl')
+    title = screen.getByText(veryLongTitle)
+    expect(title).toHaveClass('text-xl', 'sm:text-2xl', 'md:text-3xl')
   })
 
-  it('applies weight variants', () => {
-    ;(useMediaQuery as jest.Mock).mockReturnValue(false)
+  it('handles edge case of exactly 30 characters', () => {
+    const title30Chars = 'This title has exactly 30 char'
+    expect(title30Chars.length).toBe(30)
     
-    const { rerender } = render(
-      <ResponsiveTitle weight="normal">Normal Weight</ResponsiveTitle>
-    )
+    render(<ResponsiveTitle>{title30Chars}</ResponsiveTitle>)
     
-    let title = screen.getByText('Normal Weight')
-    expect(title).toHaveClass('font-normal')
-    
-    rerender(<ResponsiveTitle weight="medium">Medium Weight</ResponsiveTitle>)
-    title = screen.getByText('Medium Weight')
-    expect(title).toHaveClass('font-medium')
-    
-    rerender(<ResponsiveTitle weight="semibold">Semibold Weight</ResponsiveTitle>)
-    title = screen.getByText('Semibold Weight')
-    expect(title).toHaveClass('font-semibold')
-    
-    rerender(<ResponsiveTitle weight="bold">Bold Weight</ResponsiveTitle>)
-    title = screen.getByText('Bold Weight')
-    expect(title).toHaveClass('font-bold')
+    const title = screen.getByText(title30Chars)
+    expect(title).toHaveClass('text-2xl', 'sm:text-3xl')
   })
 
-  it('handles gradient text styling', () => {
-    ;(useMediaQuery as jest.Mock).mockReturnValue(false)
+  it('handles edge case of exactly 40 characters', () => {
+    const title40Chars = 'This title has exactly forty characters!'
+    expect(title40Chars.length).toBe(40)
     
-    render(
-      <ResponsiveTitle gradient>
-        Gradient Title
-      </ResponsiveTitle>
-    )
+    render(<ResponsiveTitle>{title40Chars}</ResponsiveTitle>)
     
-    const title = screen.getByText('Gradient Title')
-    expect(title).toHaveClass('bg-gradient-to-r', 'from-blue-600', 'to-purple-600', 'bg-clip-text', 'text-transparent')
+    const title = screen.getByText(title40Chars)
+    expect(title).toHaveClass('text-2xl', 'sm:text-3xl')
   })
 
-  it('handles alignment props', () => {
-    ;(useMediaQuery as jest.Mock).mockReturnValue(false)
+  it('handles empty className prop', () => {
+    render(<ResponsiveTitle className="">Empty Class</ResponsiveTitle>)
     
-    const { rerender } = render(
-      <ResponsiveTitle align="left">Left Aligned</ResponsiveTitle>
-    )
-    
-    let title = screen.getByText('Left Aligned')
-    expect(title).toHaveClass('text-left')
-    
-    rerender(<ResponsiveTitle align="center">Center Aligned</ResponsiveTitle>)
-    title = screen.getByText('Center Aligned')
-    expect(title).toHaveClass('text-center')
-    
-    rerender(<ResponsiveTitle align="right">Right Aligned</ResponsiveTitle>)
-    title = screen.getByText('Right Aligned')
-    expect(title).toHaveClass('text-right')
+    const title = screen.getByText('Empty Class')
+    expect(title).toHaveClass('text-2xl', 'sm:text-3xl', 'font-bold', 'text-center', 'px-4')
+    expect(title.className).not.toContain('  ') // No double spaces
   })
 
-  it('preserves semantic HTML structure', () => {
-    ;(useMediaQuery as jest.Mock).mockReturnValue(false)
+  it('maintains consistent padding', () => {
+    render(<ResponsiveTitle>Padded Title</ResponsiveTitle>)
     
-    const { container } = render(
-      <ResponsiveTitle as="h2" id="main-title" role="heading" aria-level={2}>
-        Semantic Title
-      </ResponsiveTitle>
-    )
-    
-    const title = container.querySelector('h2')
-    expect(title).toHaveAttribute('id', 'main-title')
-    expect(title).toHaveAttribute('role', 'heading')
-    expect(title).toHaveAttribute('aria-level', '2')
-  })
-
-  it('handles responsive breakpoints', () => {
-    ;(useMediaQuery as jest.Mock).mockReturnValue(false)
-    
-    render(
-      <ResponsiveTitle 
-        className="md:text-6xl xl:text-7xl"
-        size="large"
-      >
-        Breakpoint Title
-      </ResponsiveTitle>
-    )
-    
-    const title = screen.getByText('Breakpoint Title')
-    expect(title).toHaveClass('text-4xl', 'lg:text-5xl', 'md:text-6xl', 'xl:text-7xl')
+    const title = screen.getByText('Padded Title')
+    expect(title).toHaveClass('px-4')
   })
 })

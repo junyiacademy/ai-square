@@ -53,7 +53,15 @@ export default function DiscoveryNavigation() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navigationItems = [
+  const navigationItems: Array<{
+    id: string;
+    label: string;
+    icon: React.ComponentType<{ className?: string }>;
+    href: string;
+    path: string;
+    disabled?: boolean;
+    badge?: string | number;
+  }> = [
     {
       id: 'overview',
       label: '總覽',

@@ -20,7 +20,7 @@ jest.mock('recharts', () => {
       <div data-testid={`radar-${dataKey}`} data-name={name} {...props} />
     ),
     Legend: () => <div data-testid="legend" />,
-    Tooltip: ({ content }: any) => <div data-testid="tooltip">{content && <content />}</div>,
+    Tooltip: ({ content }: any) => <div data-testid="tooltip">{content && typeof content === 'function' ? content({}) : content}</div>,
   }
 })
 

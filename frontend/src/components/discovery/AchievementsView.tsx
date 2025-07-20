@@ -104,8 +104,9 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
     return benefits;
   };
 
-  const earnedBadges = allBadges.filter(badge => achievements.badges.includes(badge.id));
-  const availableBadges = allBadges.filter(badge => !achievements.badges.includes(badge.id));
+  const earnedBadgeIds = achievements.badges.map(b => b.id);
+  const earnedBadges = allBadges.filter(badge => earnedBadgeIds.includes(badge.id));
+  const availableBadges = allBadges.filter(badge => !earnedBadgeIds.includes(badge.id));
 
   return (
     <div className="max-w-4xl mx-auto">

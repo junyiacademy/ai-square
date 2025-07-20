@@ -90,7 +90,11 @@ const mockQuestions: AssessmentQuestion[] = [
     difficulty: 'advanced',
     domain: 'engaging_with_ai',
     explanation: 'AI ethics refers to moral principles guiding AI development.',
-    ksa_mapping: undefined
+    ksa_mapping: {
+      knowledge: [],
+      skills: [],
+      attitudes: []
+    }
   }
 ];
 

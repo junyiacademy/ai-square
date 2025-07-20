@@ -117,7 +117,6 @@ export abstract class BaseLearningService {
       assessmentData: {},
       metadata: {
         sourceType: scenario.sourceType,
-        taskIds: [],  // Store taskIds in metadata
         ...metadata
       }
     };
@@ -158,8 +157,7 @@ export abstract class BaseLearningService {
       tasks.push(task);
     }
 
-    // Update program with task IDs
-    program.taskIds = tasks.map(t => t.id);
+    // Tasks are linked to program via programId, no need to store taskIds in program
 
     return {
       scenario,
@@ -221,13 +219,16 @@ export abstract class BaseLearningService {
     const nextTaskIndex = program.currentTaskIndex + 1;
     let nextTask: ITask | undefined;
 
-    if (nextTaskIndex < program.taskIds.length) {
+    // Get all tasks for the program to check if there are more
+    const allTasks = await this.taskRepo.findByProgram(task.programId);
+    
+    if (nextTaskIndex < allTasks.length) {
       // Move to next task
       await this.programRepo.updateProgress(task.programId, nextTaskIndex);
-      nextTask = await this.taskRepo.findById(program.taskIds[nextTaskIndex]);
+      nextTask = allTasks[nextTaskIndex];
       
       if (nextTask) {
-        nextTask = await this.taskRepo.updateStatus(nextTask.id, 'active');
+        await this.taskRepo.update(nextTask.id, { status: 'active' });
       }
     } else {
       // Complete program
