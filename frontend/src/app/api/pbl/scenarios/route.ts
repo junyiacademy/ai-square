@@ -38,6 +38,32 @@ function getScenarioEmoji(scenarioId: string): string {
   return emojiMap[scenarioId] || '🤖';
 }
 
+// Helper function to convert Scenario to IScenario-like structure for indexing
+function convertScenarioForIndex(scenario: Scenario): IScenario {
+  return {
+    id: scenario.id,
+    sourceType: scenario.type,
+    sourceRef: {
+      type: scenario.sourceRef?.type || 'unknown',
+      path: scenario.sourceRef?.path || '',
+      metadata: scenario.sourceRef?.metadata || {}
+    },
+    title: scenario.title || '',
+    description: scenario.description || '',
+    objectives: [],
+    taskTemplates: (scenario.tasks || []).map(task => ({
+      id: task.id,
+      title: task.title || '',
+      type: (task.type || 'question') as 'question' | 'chat' | 'creation' | 'analysis',
+      description: task.description,
+      metadata: {}
+    })),
+    metadata: scenario.metadata,
+    createdAt: scenario.createdAt.toISOString(),
+    updatedAt: scenario.updatedAt.toISOString()
+  };
+}
+
 // Load scenarios using unified architecture
 async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Record<string, unknown>[]> {
   const scenarios: Record<string, unknown>[] = [];
@@ -53,30 +79,39 @@ async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Recor
     
     // Build/update the index with PBL scenarios
     const { scenarioIndexService } = await import('@/lib/services/scenario-index-service');
-    await scenarioIndexService.buildIndex(existingScenarios);
+    const scenariosForIndex = existingScenarios.map(convertScenarioForIndex);
+    await scenarioIndexService.buildIndex(scenariosForIndex);
     
     // Create a map for quick lookup
     const existingScenariosMap = new Map(
-      existingScenarios.map((s: IScenario) => [s.sourceRef.metadata?.yamlId, s])
+      existingScenarios.map((s: Scenario) => [s.sourceRef?.metadata?.yamlId, s])
     );
     
     // Process each YAML ID
     for (const yamlId of yamlIds) {
       try {
         // Check if scenario already exists
-        let scenario = existingScenariosMap.get(yamlId);
+        let scenario: Scenario | IScenario | undefined = existingScenariosMap.get(yamlId);
         
         // If not, create it
         if (!scenario) {
-          scenario = await pblScenarioService.createScenarioFromYAML(yamlId, lang);
-          
-          // Update index with new scenario
-          if (scenario) {
-            await scenarioIndexService.buildIndex([...existingScenarios, scenario]);
+          const newScenario = await pblScenarioService.createScenarioFromYAML(yamlId, lang);
+          if (newScenario) {
+            // Convert IScenario to match what we need
+            scenario = newScenario;
+            // Update index with new scenario
+            const allScenariosForIndex = [
+              ...scenariosForIndex,
+              scenario as IScenario
+            ];
+            await scenarioIndexService.buildIndex(allScenariosForIndex);
           }
         }
         
         if (scenario) {
+          // Handle both Scenario and IScenario types
+          const isRepoScenario = 'type' in scenario && 'status' in scenario;
+          
           scenarios.push({
             id: scenario.id, // UUID
             yamlId: yamlId, // 原始 yaml ID for compatibility
@@ -88,7 +123,7 @@ async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Recor
             targetDomains: scenario.metadata?.targetDomains as string[] | undefined,
             targetDomain: scenario.metadata?.targetDomains as string[] | undefined, // for compatibility
             domains: scenario.metadata?.targetDomains as string[] | undefined, // for compatibility 
-            taskCount: ((scenario as Scenario).tasks?.length || 0),
+            taskCount: isRepoScenario ? (scenario as Scenario).tasks?.length || 0 : (scenario as IScenario).taskTemplates?.length || 0,
             isAvailable: true,
             thumbnailEmoji: getScenarioEmoji(yamlId)
           });
