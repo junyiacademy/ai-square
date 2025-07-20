@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     const programRepo = repositoryFactory.getProgramRepository();
     
     // Find all discovery scenarios
-    const allScenarios = await scenarioRepo.findByType('discovery');
+    const allScenarios = await scenarioRepo.findByMode('discovery');
     const discoveryScenarios = allScenarios.filter((s) => {
       const metadata = s.metadata as Record<string, unknown>;
       return metadata?.careerType === careerType;

@@ -50,33 +50,43 @@ export class DiscoveryScenarioService {
     
     // 轉換成 IScenario 格式
     const scenario: Omit<IScenario, 'id'> = {
-      sourceType: 'discovery',
-      sourceRef: {
-        type: 'yaml',
-        path: `discovery_data/${careerType}`,
-        metadata: {
-          careerType,
-          language,
-          originalId: yamlData.path_id
-        }
+      mode: 'discovery',
+      status: 'active',
+      version: '1.0.0',
+      sourceType: 'yaml',
+      sourcePath: `discovery_data/${careerType}`,
+      sourceId: yamlData.path_id,
+      sourceMetadata: {
+        careerType,
+        language,
+        originalId: yamlData.path_id
       },
-      title: yamlData.metadata.title,
-      description: yamlData.metadata.short_description,
+      title: { [language]: yamlData.metadata.title },
+      description: { [language]: yamlData.metadata.short_description },
       objectives: this.extractObjectives(yamlData),
+      difficulty: yamlData.difficulty_range?.[0] || 'beginner',
+      estimatedMinutes: (yamlData.metadata.estimated_hours || 1) * 60,
+      prerequisites: [],
       taskTemplates: this.createTaskTemplates(yamlData),
-      metadata: {
+      xpRewards: { completion: 100, bonus: 20 },
+      unlockRequirements: { level: 1 },
+      discoveryData: {
         careerType,
         category: yamlData.category,
         difficultyRange: yamlData.difficulty_range,
-        estimatedHours: yamlData.metadata.estimated_hours,
         skillFocus: yamlData.metadata.skill_focus,
         worldSetting: yamlData.world_setting,
         startingScenario: yamlData.starting_scenario,
-        longDescription: yamlData.metadata.long_description,
-        yamlData: yamlData // 保存完整的 YAML 資料
+        longDescription: yamlData.metadata.long_description
       },
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      aiModules: [],
+      resources: [],
+      metadata: {
+        careerType,
+        yamlData: yamlData // 保存完整的 YAML 資料供相容性使用
+      },
+      createdAt: new Date(),
+      updatedAt: new Date()
     };
     
     // 使用 Scenario Repository 創建 UUID 檔案
@@ -93,10 +103,10 @@ export class DiscoveryScenarioService {
     const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     
-    // 先嘗試找到現有的 Scenario (by sourceRef.metadata.careerType)
-    const existingScenarios = await scenarioRepo.findBySource('discovery');
+    // 先嘗試找到現有的 Scenario (by sourceMetadata.careerType)
+    const existingScenarios = await scenarioRepo.findBySource('yaml');
     const existingScenario = existingScenarios.find((s: IScenario) => 
-      s.sourceRef.metadata?.careerType === careerType
+      s.mode === 'discovery' && s.sourceMetadata?.careerType === careerType
     );
     
     if (existingScenario) {
@@ -147,12 +157,13 @@ export class DiscoveryScenarioService {
         templates.push({
           id: taskId,
           title: this.formatTaskTitle(taskId),
-          type: 'discovery' as const, // Discovery 特有的任務類型
+          type: 'chat' as const, // Use a valid TaskType
           description: `Initial task for ${yamlData.metadata.title}`,
           metadata: {
             order: index + 1,
             isInitial: true,
-            careerType: yamlData.path_id
+            careerType: yamlData.path_id,
+            taskSubtype: 'discovery' // Store discovery type in metadata
           }
         });
       });

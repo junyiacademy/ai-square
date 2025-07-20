@@ -5,27 +5,22 @@ import { promises as fs } from 'fs';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
 import type { 
-  Program, 
-  Task, 
-  Scenario, 
-  Evaluation,
-  ProgramStatus
-} from '@/lib/repositories/interfaces/index';
-
-// Type alias for Scenario with additional properties
-type ScenarioWithSourceRef = Scenario & {
-  sourceType?: string;
-}
+  IProgram, 
+  ITask, 
+  IScenario, 
+  IEvaluation
+} from '@/types/unified-learning';
+import type { ProgramStatus } from '@/types/database';
 
 // Extend Program type to include additional fields used in this route
-interface ProgramWithExtras extends Omit<Program, 'startedAt'> {
+interface ProgramWithExtras extends Omit<IProgram, 'startedAt'> {
   startedAt?: string | Date;
   completedAt?: string | Date;
 }
 
 // Simple in-memory cache for scenarios
 interface CachedScenario {
-  scenario: ScenarioWithSourceRef;
+  scenario: IScenario;
   timestamp: number;
 }
 const scenarioCache = new Map<string, CachedScenario>();
@@ -61,13 +56,13 @@ export async function GET(
     const now = Date.now();
     const cached = scenarioCache.get(id);
     
-    let scenario: ScenarioWithSourceRef | null;
+    let scenario: IScenario | null;
     if (cached && (now - cached.timestamp) < SCENARIO_CACHE_TTL) {
       scenario = cached.scenario;
     } else {
       // Quick check if this scenario is assessment type
       const scenarioRepo = repositoryFactory.getScenarioRepository();
-      scenario = await scenarioRepo.findById(id) as ScenarioWithSourceRef | null;
+      scenario = await scenarioRepo.findById(id);
       
       // Cache the result
       if (scenario) {
@@ -76,7 +71,7 @@ export async function GET(
     }
     
     let userPrograms: ProgramWithExtras[];
-    if (scenario && scenario.sourceType === 'assessment') {
+    if (scenario && scenario.mode === 'assessment') {
       // For assessment scenarios, show all completed assessments from this user
       userPrograms = allUserPrograms.filter(p => 
         p.status === 'completed' && p.metadata?.score !== undefined
@@ -100,7 +95,7 @@ export async function GET(
       .map(p => p.metadata!.evaluationId!);
     
     // Batch fetch evaluations
-    const evaluationsMap = new Map<string, Evaluation>();
+    const evaluationsMap = new Map<string, IEvaluation>();
     if (evaluationIds.length > 0) {
       const evaluations = await Promise.all(
         evaluationIds.map((id: unknown) => evaluationRepo.findById(id as string).catch(() => null))
@@ -187,7 +182,7 @@ export async function POST(
     const taskRepo = repositoryFactory.getTaskRepository();
     
     // Get scenario
-    const scenario = await scenarioRepo.findById(id) as ScenarioWithSourceRef | null;
+    const scenario = await scenarioRepo.findById(id);
     if (!scenario) {
       return NextResponse.json(
         { error: 'Scenario not found' },
@@ -197,7 +192,7 @@ export async function POST(
     
     // Check if user already has an active program for this scenario
     const existingPrograms = await programRepo.findByUser(email);
-    const activeProgram = existingPrograms.find((p: Program) => 
+    const activeProgram = existingPrograms.find((p: IProgram) => 
       p.scenarioId === id && p.status === 'active'
     ) as ProgramWithExtras | undefined;
     
@@ -229,14 +224,13 @@ export async function POST(
     });
     
     // Load questions from YAML and create tasks
-    const tasks: Task[] = [];
-    console.log('Scenario sourceRef:', JSON.stringify(scenario.sourceRef, null, 2));
+    const tasks: ITask[] = [];
+    console.log('Scenario sourceMetadata:', JSON.stringify(scenario.sourceMetadata, null, 2));
     
-    const sourceRef = scenario.sourceRef as unknown as { metadata?: { configPath?: string } };
-    if (sourceRef?.metadata?.configPath) {
+    if (scenario.sourceMetadata?.configPath) {
       try {
         const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
-        const configPath = path.join(baseDir, 'public', sourceRef.metadata.configPath);
+        const configPath = path.join(baseDir, 'public', scenario.sourceMetadata.configPath as string);
         console.log('Loading assessment config from:', configPath);
         
         const configContent = await fs.readFile(configPath, 'utf-8');

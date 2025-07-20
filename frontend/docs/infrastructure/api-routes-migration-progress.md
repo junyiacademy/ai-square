@@ -21,15 +21,36 @@ Updating API routes to use the new unified Schema V3 instead of the old sourceRe
 - Fixed multi-language title/description handling
 - Removed old Scenario interface import
 
+## Completed Routes (Updated)
+
+### Discovery Routes
+✅ **src/app/api/discovery/scenarios/route.ts**
+- Updated from `findByType('discovery')` to `findByMode('discovery')`
+
+✅ **src/app/api/discovery/scenarios/find-by-career/route.ts**
+- Updated from `findByType('discovery')` to `findByMode('discovery')`
+
+### Other Assessment Routes
+✅ **src/app/api/assessment/scenarios/[id]/programs/route.ts**
+- Updated to use IScenario, IProgram, ITask, IEvaluation interfaces
+- Changed from `sourceRef?.metadata?.configPath` to `sourceMetadata?.configPath`
+- Updated from `sourceType === 'assessment'` to `mode === 'assessment'`
+
+✅ **src/app/api/assessment/scenarios/route-hybrid.ts**
+- Updated from `findByType('assessment')` to `findByMode('assessment')`
+
+✅ **src/app/api/assessment/scenarios/route-v2.ts**
+- Updated from `findByType('assessment')` to `findByMode('assessment')`
+
+### PBL Routes (Updated)
+✅ **src/app/api/pbl/scenarios/route.ts**
+- Updated from `findByType('pbl')` to `findByMode('pbl')`
+
 ## Routes Still To Update
 
 ### Discovery Routes
-- [ ] src/app/api/discovery/scenarios/route.ts
 - [ ] src/app/api/discovery/scenarios/[id]/route.ts
 - [ ] src/app/api/discovery/scenarios/[id]/programs/[programId]/route.ts
-
-### Other Assessment Routes
-- [ ] src/app/api/assessment/scenarios/[id]/programs/route.ts - Still uses old Scenario interface
 
 ## Key Changes Pattern
 
