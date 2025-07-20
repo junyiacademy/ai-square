@@ -11,19 +11,22 @@ jest.mock('next/navigation', () => ({
 global.fetch = jest.fn()
 
 // Mock localStorage
-const localStorageMock = {
-  store: {} as Record<string, string>,
-  getItem: jest.fn((key: string) => localStorageMock.store[key] || null),
-  setItem: jest.fn((key: string, value: string) => {
-    localStorageMock.store[key] = value
-  }),
-  removeItem: jest.fn((key: string) => {
-    delete localStorageMock.store[key]
-  }),
-  clear: jest.fn(() => {
-    localStorageMock.store = {}
-  })
+const createLocalStorageMock = () => {
+  let store: Record<string, string> = {}
+  return {
+    getItem: jest.fn((key: string) => store[key] || null),
+    setItem: jest.fn((key: string, value: string) => {
+      store[key] = value
+    }),
+    removeItem: jest.fn((key: string) => {
+      delete store[key]
+    }),
+    clear: jest.fn(() => {
+      store = {}
+    })
+  }
 }
+const localStorageMock = createLocalStorageMock()
 
 Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,

@@ -241,7 +241,7 @@ export default function ProgramLearningPage() {
               const evaluations: Record<string, TaskEvaluation> = {};
               evaluationsData.data.forEach((evaluation: Record<string, unknown>) => {
                 if (evaluation.targetType === 'task' && evaluation.targetId) {
-                  evaluations[evaluation.targetId] = evaluation;
+                  evaluations[String(evaluation.targetId)] = evaluation as TaskEvaluation;
                 }
               });
               setTaskEvaluations(evaluations);

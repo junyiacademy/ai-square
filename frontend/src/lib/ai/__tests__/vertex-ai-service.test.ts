@@ -109,7 +109,7 @@ describe('vertex-ai-service', () => {
   describe('createPBLVertexAIService', () => {
     it('should create service with correct language instructions for Traditional Chinese', () => {
       const aiModule: AIModule = {
-        role: 'tutor' as const,
+        role: 'assistant' as const,
         model: 'gemini-2.5-flash',
         persona: 'AI Tutor'
       };
@@ -127,7 +127,7 @@ describe('vertex-ai-service', () => {
 
     it('should create service with English instructions by default', () => {
       const aiModule: AIModule = {
-        role: 'tutor' as const,
+        role: 'assistant' as const,
         model: 'gemini-2.5-flash',
         persona: 'AI Assistant'
       };

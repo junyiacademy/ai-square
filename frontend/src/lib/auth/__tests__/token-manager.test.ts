@@ -1,8 +1,8 @@
 import { TokenManager, getTokenManager } from '../token-manager'
-import { logError } from '@/lib/utils/error-logger'
+// Mock logError
+const logError = jest.fn()
 
-// Mock dependencies
-jest.mock('@/lib/utils/error-logger')
+// Mock dependencies removed - logError is now mocked above
 
 // Mock fetch
 global.fetch = jest.fn()

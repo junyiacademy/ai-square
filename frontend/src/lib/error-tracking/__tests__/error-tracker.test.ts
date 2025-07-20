@@ -53,6 +53,12 @@ describe('ErrorTracker', () => {
     jest.clearAllMocks()
     localStorageMock.store = {}
     originalEnv = process.env.NODE_ENV
+    // Override NODE_ENV using Object.defineProperty
+    Object.defineProperty(process.env, 'NODE_ENV', {
+      value: originalEnv,
+      writable: true,
+      configurable: true
+    })
     
     // Clear errors before each test
     const errorTracker = getErrorTracker()
@@ -61,7 +67,12 @@ describe('ErrorTracker', () => {
   })
 
   afterEach(() => {
-    process.env.NODE_ENV = originalEnv
+    // Restore NODE_ENV
+    Object.defineProperty(process.env, 'NODE_ENV', {
+      value: originalEnv,
+      writable: true,
+      configurable: true
+    })
     consoleGroupSpy.mockClear()
     consoleGroupEndSpy.mockClear()
     consoleErrorSpy.mockClear()
@@ -362,7 +373,7 @@ describe('ErrorTracker', () => {
 
   describe('error reporting', () => {
     beforeEach(() => {
-      process.env.NODE_ENV = 'development'
+      Object.defineProperty(process.env, 'NODE_ENV', { value: 'development', writable: true, configurable: true })
     })
 
     it('should log errors in development mode', () => {
@@ -376,7 +387,7 @@ describe('ErrorTracker', () => {
     })
 
     it('should send to external service in production', async () => {
-      process.env.NODE_ENV = 'production'
+      Object.defineProperty(process.env, 'NODE_ENV', { value: 'production', writable: true, configurable: true })
       process.env.NEXT_PUBLIC_ERROR_REPORTING_URL = 'https://errors.example.com/api'
       
       ;(global.fetch as jest.Mock).mockResolvedValueOnce({
@@ -400,7 +411,7 @@ describe('ErrorTracker', () => {
     })
 
     it('should not send to external service in development', () => {
-      process.env.NODE_ENV = 'development'
+      Object.defineProperty(process.env, 'NODE_ENV', { value: 'development', writable: true, configurable: true })
       delete process.env.NEXT_PUBLIC_ERROR_REPORTING_URL
       
       const errorTracker = getErrorTracker()

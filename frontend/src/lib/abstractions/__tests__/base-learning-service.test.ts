@@ -209,7 +209,7 @@ describe('BaseLearningService', () => {
         title: { en: 'Test Scenario' },
         description: { en: 'Test Description' },
         difficulty: 'intermediate',
-        estimatedTime: 30,
+        estimatedMinutes: 30,
         prerequisites: [],
         learningObjectives: [],
         tags: [],
@@ -221,6 +221,7 @@ describe('BaseLearningService', () => {
           attitudes: []
         },
         rubric: {},
+        objectives: [],
         taskTemplates: [
           {
             id: 'template-1',
@@ -235,6 +236,14 @@ describe('BaseLearningService', () => {
             metadata: {}
           }
         ],
+        taskCount: 2,
+        xpRewards: {},
+        unlockRequirements: {},
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
+        aiModules: {},
+        resources: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         metadata: {}
@@ -471,7 +480,7 @@ describe('BaseLearningService', () => {
         title: { en: 'Test Scenario' },
         description: { en: 'Test' },
         difficulty: 'intermediate',
-        estimatedTime: 30,
+        estimatedMinutes: 30,
         prerequisites: [],
         learningObjectives: [],
         tags: [],
@@ -483,7 +492,16 @@ describe('BaseLearningService', () => {
           attitudes: []
         },
         rubric: {},
+        objectives: [],
         taskTemplates: [],
+        taskCount: 0,
+        xpRewards: {},
+        unlockRequirements: {},
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
+        aiModules: {},
+        resources: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         metadata: {}

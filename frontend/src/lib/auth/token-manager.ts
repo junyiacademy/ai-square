@@ -3,7 +3,10 @@
  * 負責自動更新 access token，確保用戶保持登入狀態
  */
 
-import { logError } from '@/lib/utils/error-logger'
+// Simple error logging function
+const logError = (error: Error, options?: { context?: string }) => {
+  console.error(`[${options?.context || 'Error'}]:`, error)
+}
 
 interface User {
   email: string

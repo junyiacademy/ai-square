@@ -1,26 +1,30 @@
 import { cacheService } from '../cache-service'
 
 // Mock localStorage
-const localStorageMock = {
-  store: {} as Record<string, string>,
-  getItem: jest.fn((key: string) => localStorageMock.store[key] || null),
-  setItem: jest.fn((key: string, value: string) => {
-    localStorageMock.store[key] = value
-  }),
-  removeItem: jest.fn((key: string) => {
-    delete localStorageMock.store[key]
-  }),
-  clear: jest.fn(() => {
-    localStorageMock.store = {}
-  }),
-  get length() {
-    return Object.keys(this.store).length
-  },
-  key: jest.fn((index: number) => {
-    const keys = Object.keys(localStorageMock.store)
-    return keys[index] || null
-  })
+const createLocalStorageMock = () => {
+  let store: Record<string, string> = {}
+  const mock = {
+    getItem: jest.fn((key: string) => store[key] || null),
+    setItem: jest.fn((key: string, value: string) => {
+      store[key] = value
+    }),
+    removeItem: jest.fn((key: string) => {
+      delete store[key]
+    }),
+    clear: jest.fn(() => {
+      store = {}
+    }),
+    get length() {
+      return Object.keys(store).length
+    },
+    key: jest.fn((index: number) => {
+      const keys = Object.keys(store)
+      return keys[index] || null
+    })
+  }
+  return mock
 }
+const localStorageMock = createLocalStorageMock()
 
 // Mock fetch
 global.fetch = jest.fn()

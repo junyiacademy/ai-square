@@ -320,7 +320,7 @@ export default function ProgramCompletePage() {
               }
             } else if (feedbackObj.overallAssessment) {
               // Old format - single language feedback
-              feedback = feedbackObj as QualitativeFeedback;
+              feedback = feedbackObj as unknown as QualitativeFeedback;
             }
           }
           

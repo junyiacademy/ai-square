@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { KSARadarChart } from '../KSARadarChart'
+import KSARadarChart from '../KSARadarChart'
 
 // Mock recharts components
 jest.mock('recharts', () => {

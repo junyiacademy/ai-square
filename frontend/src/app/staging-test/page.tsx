@@ -19,7 +19,7 @@ export default function StagingTestPage() {
       const data = await response.json();
       setDbStatus(JSON.stringify(data, null, 2));
     } catch (error) {
-      setDbStatus(`Error: ${error.message}`);
+      setDbStatus(`Error: ${error instanceof Error ? error.message : String(error)}`);
     }
     setLoading(false);
   };

@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
-import { DomainRadarChart } from '../DomainRadarChart'
+import DomainRadarChart from '../DomainRadarChart'
 
 // Mock recharts components
 jest.mock('recharts', () => {

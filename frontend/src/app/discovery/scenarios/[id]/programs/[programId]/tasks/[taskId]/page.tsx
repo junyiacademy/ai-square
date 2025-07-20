@@ -650,13 +650,11 @@ export default function TaskDetailPage() {
                              'completed' in interaction.content &&
                              interaction.content.completed && (
                               <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                                {String(
-                                  typeof interaction.content === 'object' && 
+                                {typeof interaction.content === 'object' && 
                                   interaction.content !== null &&
                                   'xpEarned' in interaction.content
-                                    ? interaction.content.xpEarned
-                                    : ''
-                                )} XP
+                                    ? String((interaction.content as Record<string, unknown>).xpEarned)
+                                    : ''} XP
                               </span>
                             )}
                           </span>
