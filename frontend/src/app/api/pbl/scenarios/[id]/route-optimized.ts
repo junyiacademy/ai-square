@@ -3,6 +3,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 import { cachedGET, parallel, memoize } from '@/lib/api/optimization-utils';
+import type { ITaskTemplate } from '@/types/unified-learning';
 
 // Type definitions remain the same
 interface KSAItem {
@@ -74,18 +75,16 @@ interface ScenarioResponse {
 }
 
 // Memoized helper functions for better performance
-const getLocalizedValue = memoize(<T = unknown>(
-  data: Record<string, T>, 
-  fieldName: string, 
-  lang: string
-): T | string => {
+const getLocalizedValue = memoize(((...args: unknown[]) => {
+  const [data, fieldName, lang] = args as [Record<string, unknown>, string, string];
   const langSuffix = lang;
   const localizedField = `${fieldName}_${langSuffix}`;
   return data[localizedField] || data[fieldName] || '';
-});
+}) as (...args: unknown[]) => unknown);
 
 // Cache KSA data in memory (memoized for 30 minutes)
-const loadKSACodes = memoize(async (lang: string = 'en'): Promise<KSAData | null> => {
+const loadKSACodes = memoize((async (...args: unknown[]) => {
+  const [lang = 'en'] = args as [string?];
   try {
     const ksaPath = path.join(process.cwd(), 'public', 'rubrics_data', 'ksa_codes', `ksa_codes_${lang}.yaml`);
     const ksaContent = await fs.readFile(ksaPath, 'utf8');
@@ -94,11 +93,12 @@ const loadKSACodes = memoize(async (lang: string = 'en'): Promise<KSAData | null
     console.error('Error loading KSA codes:', error);
     // Fallback to English if specific language not found
     if (lang !== 'en') {
-      return loadKSACodes('en');
+      const loadKSACodesInner = loadKSACodes as (lang?: string) => Promise<KSAData | null>;
+      return loadKSACodesInner('en');
     }
     return null;
   }
-}, 30 * 60 * 1000); // 30 minutes cache
+}) as (...args: unknown[]) => unknown, 30 * 60 * 1000) as (lang?: string) => Promise<KSAData | null>; cache
 
 // Optimized KSA lookup with indexing
 const ksaIndexCache = new Map<string, Map<string, KSAItem>>();
@@ -218,12 +218,12 @@ export async function GET(
     const [scenarioResult, ksaData] = await parallel(
       (async () => {
         const { createRepositoryFactory } = await import('@/lib/db/repositories/factory');
-        const repositoryFactory = createRepositoryFactory();
+        const repositoryFactory = createRepositoryFactory;
         const scenarioRepo = repositoryFactory.getScenarioRepository();
         return scenarioRepo.findById(scenarioId);
       })(),
       loadKSACodes(lang)
-    );
+    ) as [Awaited<ReturnType<typeof repositoryFactory.getScenarioRepository>['findById']>, KSAData | null];
     
     if (!scenarioResult) {
       throw new Error('Scenario not found');
@@ -239,7 +239,7 @@ export async function GET(
     // Transform to API response format
     const scenarioResponse: ScenarioResponse = {
       id: scenarioResult.id,
-      yamlId: scenarioResult.sourceRef.metadata?.yamlId,
+      yamlId: (scenarioResult.sourceRef?.metadata as any)?.yamlId,
       sourceType: scenarioResult.sourceType,
       title: scenarioResult.title || '',
       description: scenarioResult.description || '',
@@ -249,7 +249,7 @@ export async function GET(
       prerequisites: scenarioResult.metadata?.prerequisites || [],
       learningObjectives: scenarioResult.objectives || [],
       ksaMapping: buildKSAMapping(yamlData as unknown as YAMLData, ksaData, lang),
-      tasks: scenarioResult.taskTemplates.map((template) => ({
+      tasks: scenarioResult.taskTemplates.map((template: ITaskTemplate) => ({
         id: template.id,
         title: template.title || '',
         description: template.description || '',

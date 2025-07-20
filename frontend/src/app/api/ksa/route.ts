@@ -29,9 +29,10 @@ export async function GET(request: NextRequest) {
     const lang = searchParams.get('lang') || 'en';
 
     // Load language-specific KSA codes file
-    const data = await jsonYamlLoader.load('ksa_codes', { 
-      preferJson: true, 
-      language: lang 
+    // For language-specific files, use format: ksa_codes_lang
+    const fileName = lang === 'en' ? 'ksa_codes' : `ksa_codes_${lang}`;
+    const data = await jsonYamlLoader.load(fileName, { 
+      preferJson: true 
     }) as YAMLData;
 
     if (!data) {

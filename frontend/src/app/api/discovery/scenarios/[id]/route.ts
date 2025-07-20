@@ -59,8 +59,8 @@ export async function GET(
           scenarioId: program.scenarioId,
           userId: program.userId,
           status: program.status,
-          createdAt: program.startedAt,
-          lastActiveAt: program.endTime || program.startedAt,
+          createdAt: (program.startedAt || program.createdAt).toISOString(),
+          lastActiveAt: program.endTime ? program.endTime.toISOString() : (program.lastActivityAt || program.createdAt).toISOString(),
           currentTaskIndex: program.currentTaskIndex,
           totalTasks: taskCount,
           completedTasks: completedCount,
@@ -73,7 +73,7 @@ export async function GET(
     
     // Sort programs by most recent first
     programsWithProgress.sort((a, b) => 
-      new Date(b.lastActiveAt as string).getTime() - new Date(a.lastActiveAt as string).getTime()
+      new Date(b.lastActiveAt).getTime() - new Date(a.lastActiveAt).getTime()
     );
     
     // Return scenario data with programs for backward compatibility

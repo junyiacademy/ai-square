@@ -95,7 +95,7 @@ export class PBLScenarioService {
     
     // 先嘗試找到現有的 Scenario (by sourceRef.metadata.yamlId)
     const existingScenarios = await scenarioRepo.findBySource('pbl');
-    const existingScenario = existingScenarios.find(s => 
+    const existingScenario = existingScenarios.find((s: IScenario) => 
       s.sourceRef.metadata?.yamlId === yamlId
     );
     

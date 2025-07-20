@@ -75,9 +75,11 @@ export async function POST(
         taskIndex: 0,
         type: 'task',
         context: {
-          taskId: taskId,
-          title: taskTitle,
           scenarioId: scenarioId
+        },
+        metadata: {
+          taskId: taskId,
+          title: taskTitle
         }
       });
     }

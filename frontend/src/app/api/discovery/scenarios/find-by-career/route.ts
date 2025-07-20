@@ -22,16 +22,17 @@ export async function GET(request: NextRequest) {
     const programRepo = repositoryFactory.getProgramRepository();
     
     // Find all discovery scenarios
-    const allScenarios = await scenarioRepo.listAll();
-    const discoveryScenarios = allScenarios.filter(s => 
-      s.sourceType === 'discovery' && 
-      s.sourceRef.metadata?.careerType === careerType
-    );
+    const allScenarios = await scenarioRepo.findByType('discovery');
+    const discoveryScenarios = allScenarios.filter((s) => {
+      const metadata = s.metadata as Record<string, unknown>;
+      return metadata?.careerType === careerType;
+    });
     
     // Check if user has an active program for any of these scenarios
     for (const scenario of discoveryScenarios) {
-      const userPrograms = await programRepo.findByScenarioAndUser(scenario.id, userEmail);
-      const activeProgram = userPrograms.find(p => p.status === 'active');
+      const allPrograms = await programRepo.findByScenario(scenario.id);
+      const userPrograms = allPrograms.filter((p) => p.userId === userEmail);
+      const activeProgram = userPrograms.find((p) => p.status === 'active');
       
       if (activeProgram) {
         return NextResponse.json({ scenarioId: scenario.id });

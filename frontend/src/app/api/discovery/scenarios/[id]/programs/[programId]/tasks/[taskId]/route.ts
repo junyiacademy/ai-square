@@ -169,7 +169,7 @@ export async function GET(
             console.log('Source feedback preview:', sourceFeedback.substring(0, 100) + '...');
             
             const translationService = new TranslationService();
-            const careerType = (scenario?.metadata?.careerType || 'general') as string;
+            const careerType = ((scenario?.metadata as Record<string, unknown>)?.careerType || 'general') as string;
             
             // Special handling: if requesting English and source is English, no translation needed
             if (requestedLanguage === 'en' && sourceLanguage === 'en') {
@@ -263,7 +263,7 @@ export async function GET(
       completedAt: task.completedAt,
       evaluation: processedEvaluation,
       // Add career info
-      careerType: (scenario?.metadata?.careerType || 'unknown') as string,
+      careerType: ((scenario?.metadata as Record<string, unknown>)?.careerType || 'unknown') as string,
       scenarioTitle: scenario?.title || 'Discovery Scenario'
     });
   } catch (error) {
@@ -324,7 +324,7 @@ export async function PATCH(
       // Get scenario for context
       const scenario = await scenarioRepo.findById(program.scenarioId);
       const careerType = (scenario?.metadata?.careerType || 'unknown') as string;
-      const language = program.metadata?.language || 'en';
+      const language = (program.metadata?.language || 'en') as string;
       
       // Get user's preferred language from request header
       const acceptLanguage = request.headers.get('accept-language')?.split(',')[0];
@@ -334,7 +334,7 @@ export async function PATCH(
       let yamlData = null;
       if (careerType !== 'unknown') {
         const loader = new DiscoveryYAMLLoader();
-        yamlData = await loader.loadPath(careerType as string, language);
+        yamlData = await loader.loadPath(careerType, language);
       }
       
       // Use AI to evaluate the response
@@ -537,7 +537,7 @@ Return your evaluation as a JSON object:
         const scenarioRepo = repositoryFactory.getScenarioRepository();
         const scenario = await scenarioRepo.findById(program.scenarioId);
         careerType = (scenario?.metadata?.careerType || 'unknown') as string;
-        const language = program.metadata?.language || 'en';
+        const language = (program.metadata?.language || 'en') as string;
         
         // Get current user language preference from request headers or use program language
         const acceptLanguage = request.headers.get('accept-language')?.split(',')[0];
@@ -566,7 +566,7 @@ Return your evaluation as a JSON object:
         let yamlData = null;
         if (careerType !== 'unknown') {
           const loader = new DiscoveryYAMLLoader();
-          yamlData = await loader.loadPath(careerType as string, language);
+          yamlData = await loader.loadPath(careerType, language);
         }
         
         // Generate multilingual comprehensive qualitative feedback
@@ -662,13 +662,15 @@ Return your evaluation as a JSON object:
       // Collect all skills improved across attempts
       const allSkillsImproved = new Set<string>();
       allFeedback.forEach(f => {
-        const fRecord = f as Record<string, unknown>;
-        if (fRecord.skillsImproved && Array.isArray(fRecord.skillsImproved)) {
-          fRecord.skillsImproved.forEach((skill: unknown) => {
-            if (typeof skill === 'string') {
-              allSkillsImproved.add(skill);
-            }
-          });
+        if (typeof f === 'object' && f !== null) {
+          const fRecord = f as Record<string, unknown>;
+          if (fRecord.skillsImproved && Array.isArray(fRecord.skillsImproved)) {
+            fRecord.skillsImproved.forEach((skill: unknown) => {
+              if (typeof skill === 'string') {
+                allSkillsImproved.add(skill);
+              }
+            });
+          }
         }
       });
       
@@ -868,7 +870,7 @@ Return your evaluation as a JSON object:
         const scenarioRepo = repositoryFactory.getScenarioRepository();
         const scenario = await scenarioRepo.findById(program.scenarioId);
         const careerType = (scenario?.metadata?.careerType || 'unknown') as string;
-        const language = program.metadata?.language || 'en';
+        const language = (program.metadata?.language || 'en') as string;
         const acceptLanguage = request.headers.get('accept-language')?.split(',')[0];
         userLanguage = (acceptLanguage || language) as string;
         
@@ -889,7 +891,7 @@ Return your evaluation as a JSON object:
         let yamlData = null;
         if (careerType !== 'unknown') {
           const loader = new DiscoveryYAMLLoader();
-          yamlData = await loader.loadPath(careerType as string, language);
+          yamlData = await loader.loadPath(careerType, language);
         }
         
         const comprehensivePrompt = generateComprehensiveFeedbackPrompt(

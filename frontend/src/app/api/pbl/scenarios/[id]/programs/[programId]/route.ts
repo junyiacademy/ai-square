@@ -34,7 +34,7 @@ export async function GET(
     
     // Use unified architecture to get program
     const { createRepositoryFactory } = await import('@/lib/db/repositories/factory');
-    const repositoryFactory = createRepositoryFactory();
+    const repositoryFactory = createRepositoryFactory;
     const programRepo = repositoryFactory.getProgramRepository();
     const program = await programRepo.findById(programId);
     

@@ -34,14 +34,14 @@ export async function GET(request: NextRequest) {
     
     if (taskId && targetType === 'task') {
       // Get evaluations for a specific task
-      evaluations = await evaluationRepo.findByTarget('task', taskId);
+      evaluations = await evaluationRepo.findByTask(taskId);
     } else if (programId && targetType === 'program') {
       // Get program-level evaluations
-      evaluations = await evaluationRepo.findByTarget('program', programId);
+      evaluations = await evaluationRepo.findByProgram(programId);
     } else if (programId && targetType === 'task') {
       // Get all task evaluations for a program
       const allEvaluations = await evaluationRepo.findByProgram(programId);
-      evaluations = allEvaluations.filter(e => e.targetType === 'task');
+      evaluations = allEvaluations.filter(e => (e.metadata as Record<string, unknown>)?.targetType === 'task');
     } else if (programId) {
       // Get all evaluations for a program
       evaluations = await evaluationRepo.findByProgram(programId);

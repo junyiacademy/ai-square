@@ -41,7 +41,7 @@ export async function GET(
     
     // Use unified architecture to get task
     const { createRepositoryFactory } = await import('@/lib/db/repositories/factory');
-    const repositoryFactory = createRepositoryFactory();
+    const repositoryFactory = createRepositoryFactory;
     const taskRepo = repositoryFactory.getTaskRepository();
     const programRepo = repositoryFactory.getProgramRepository();
     

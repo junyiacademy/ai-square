@@ -418,7 +418,7 @@ describe('CacheService', () => {
 
       it('should remove invalid JSON entries', () => {
         localStorageMock.store['cache:invalid'] = 'not-json'
-        localStorageMock.getItem.mockImplementation((key) => localStorageMock.store[key] || null)
+        localStorageMock.getItem.mockImplementation((key: string) => localStorageMock.store[key] || null)
         
         // Need to manually set up Object.keys for the mock
         Object.defineProperty(Object, 'keys', {

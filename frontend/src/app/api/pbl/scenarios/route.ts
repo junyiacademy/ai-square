@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { cacheService } from '@/lib/cache/cache-service';
 import { pblScenarioService } from '@/lib/services/pbl-scenario-service';
 import { HybridTranslationService } from '@/lib/services/hybrid-translation-service';
+import type { IScenario } from '@/types/unified-learning';
 
 // Types for YAML data
 interface LocalizedField {
@@ -56,7 +57,7 @@ async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Recor
     
     // Create a map for quick lookup
     const existingScenariosMap = new Map(
-      existingScenarios.map(s => [s.sourceRef.metadata?.yamlId, s])
+      existingScenarios.map((s: IScenario) => [s.sourceRef.metadata?.yamlId, s])
     );
     
     // Process each YAML ID

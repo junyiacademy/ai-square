@@ -52,7 +52,7 @@ describe('/api/pbl/programs/[programId]', () => {
       })
 
       const request = new NextRequest('http://localhost:3000/api/pbl/programs/prog123')
-      const response = await GET(request, { params: { programId: 'prog123' } })
+      const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) })
 
       expect(response.status).toBe(401)
       const data = await response.json()
@@ -73,7 +73,7 @@ describe('/api/pbl/programs/[programId]', () => {
         },
       })
 
-      const response = await GET(request, { params: { programId: 'prog123' } })
+      const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) })
 
       expect(response.status).toBe(200)
       const data = await response.json()
@@ -106,7 +106,7 @@ describe('/api/pbl/programs/[programId]', () => {
       mockStorageService.getProgram.mockRejectedValue(new Error('Storage error'))
 
       const request = new NextRequest('http://localhost:3000/api/pbl/programs/prog123')
-      const response = await GET(request, { params: { programId: 'prog123' } })
+      const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) })
 
       expect(response.status).toBe(500)
       const data = await response.json()

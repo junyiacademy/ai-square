@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     });
 
     const response = result.response;
-    const translatedText = response.candidates?.[0]?.context?.parts?.[0]?.text;
+    const translatedText = response.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!translatedText) {
       throw new Error('No translation generated');
@@ -118,9 +118,9 @@ function buildTranslationPrompt(
   // Filter content to only specified fields if provided
   const contentToTranslate = fields 
     ? Object.fromEntries(
-        Object.entries(content).filter(([key]) => fields.includes(key))
+        Object.entries(context).filter(([key]) => fields.includes(key))
       )
-    : content;
+    : context;
 
   return `你是一個專業的翻譯員，專門翻譯教育和職涯發展相關的內容。
 

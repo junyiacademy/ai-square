@@ -706,7 +706,7 @@ export default function TaskDetailPage() {
                           <div className="bg-green-50 rounded-md p-3">
                             <p className="text-sm font-medium text-green-800 mb-1">優點：</p>
                             <ul className="text-sm text-green-700 space-y-1">
-                              {content.strengths.map((strength, idx) => (
+                              {content.strengths.map((strength: string, idx: number) => (
                                 <li key={idx} className="flex items-start">
                                   <span className="mr-2">•</span>
                                   <span>{strength}</span>
@@ -721,7 +721,7 @@ export default function TaskDetailPage() {
                           <div className="bg-orange-50 rounded-md p-3">
                             <p className="text-sm font-medium text-orange-800 mb-1">改進建議：</p>
                             <ul className="text-sm text-orange-700 space-y-1">
-                              {content.improvements.map((improvement, idx) => (
+                              {content.improvements.map((improvement: string, idx: number) => (
                                 <li key={idx} className="flex items-start">
                                   <span className="mr-2">•</span>
                                   <span>{improvement}</span>
@@ -734,7 +734,7 @@ export default function TaskDetailPage() {
                         {/* Skills Improved */}
                         {content.skillsImproved && content.skillsImproved.length > 0 && (
                           <div className="flex flex-wrap gap-2 mt-2">
-                            {content.skillsImproved.map((skill, idx) => (
+                            {content.skillsImproved.map((skill: string, idx: number) => (
                               <span key={idx} className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-md">
                                 {skill}
                               </span>

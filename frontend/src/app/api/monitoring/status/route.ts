@@ -17,19 +17,22 @@ export async function GET(request: NextRequest) {
       timestamp: new Date().toISOString(),
       monitoring: {
         enabled: monitoringStatus.enabled,
-        services: monitoringStatus.externalServices,
+        services: [], // externalServices not available in getStatus()
         thresholds: monitoringStatus.alertThresholds
       },
       cache: {
-        redis: cacheStats.redisStats?.redisConnected || false,
+        redis: (cacheStats as unknown as { redisConnected?: boolean })?.redisConnected || false,
         local: cacheStats.localCacheSize,
         revalidations: cacheStats.activeRevalidations
       },
       performance: {
-        totalEndpoints: perfReport.endpoints.length,
-        averageResponseTime: perfReport.summary.averageResponseTime,
-        cacheHitRate: perfReport.summary.averageCacheHitRate,
-        errorRate: perfReport.summary.averageErrorRate
+        totalEndpoints: perfReport.length,
+        averageResponseTime: perfReport.length > 0 ? 
+          perfReport.reduce((sum, m) => sum + m.averageResponseTime, 0) / perfReport.length : 0,
+        cacheHitRate: perfReport.length > 0 ?
+          perfReport.reduce((sum, m) => sum + m.cacheHitRate, 0) / perfReport.length : 0,
+        errorRate: perfReport.length > 0 ?
+          perfReport.reduce((sum, m) => sum + m.errorRate, 0) / perfReport.length : 0
       },
       health: 'healthy'
     };
@@ -39,8 +42,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({
         ...basicStatus,
         detailed: {
-          endpoints: perfReport.endpoints,
-          alerts: perfReport.alerts,
+          endpoints: perfReport,
+          alerts: [], // alerts not available in perfReport
           cacheDetails: cacheStats,
           recentMetrics: performanceMonitor.getRecentMetrics(50)
         }

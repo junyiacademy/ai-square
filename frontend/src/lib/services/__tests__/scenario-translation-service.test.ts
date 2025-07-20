@@ -30,6 +30,9 @@ describe('ScenarioTranslationService', () => {
       description: 'Evaluate your understanding',
       taskTemplates: [],
       metadata: {},
+      objectives: [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       sourceRef: {
         type: 'yaml',
         sourceId: 'ai_literacy',
@@ -125,6 +128,9 @@ assessment_config:
       description: 'Evaluate your understanding',
       taskTemplates: [],
       metadata: {},
+      objectives: [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       sourceRef: {
         type: 'yaml',
         sourceId: 'ai_literacy',
@@ -235,6 +241,9 @@ assessment_config:
         description: 'Test',
         taskTemplates: [],
         metadata: {},
+        objectives: [],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         sourceRef: {
           type: 'yaml',
           sourceId: 'test',
@@ -268,6 +277,9 @@ assessment_config:
         description: 'Test',
         taskTemplates: [],
         metadata: {},
+        objectives: [],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         sourceRef: {
           type: 'yaml',
           sourceId: 'test',

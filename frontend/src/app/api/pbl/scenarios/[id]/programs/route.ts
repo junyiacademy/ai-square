@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
+import type { Program } from '@/lib/repositories/interfaces';
 
 // Add response caching
 export const revalidate = 60; // Cache for 60 seconds
@@ -53,27 +54,28 @@ export async function GET(
     const taskRepo = repositoryFactory.getTaskRepository();
     
     // Get user's programs for this scenario
-    const programs = await programRepo.findByScenarioAndUser(actualScenarioId, userEmail);
+    const allPrograms = await programRepo.findByScenario(actualScenarioId);
+    const programs = allPrograms.filter(p => p.userId === userEmail);
     
     // Enrich programs with task completion data
     const enrichedPrograms = await Promise.all(
-      (programs || []).map(async (program) => {
+      (programs || []).map(async (program: Program) => {
         // Get tasks for this program
         const tasks = await taskRepo.findByProgram(program.id);
         
-        // Auto-fix: Update task status if they have evaluationId but wrong status
+        // Auto-fix: Update task status if they have completedAt but wrong status
         const tasksNeedingFix = tasks.filter(task => 
-          task.evaluationId && task.status !== 'completed'
+          task.completedAt && task.status !== 'completed'
         );
         
         if (tasksNeedingFix.length > 0) {
-          console.log(`Auto-fixing ${tasksNeedingFix.length} tasks with evaluationId but wrong status`);
+          console.log(`Auto-fixing ${tasksNeedingFix.length} tasks with completedAt but wrong status`);
           // Update tasks in parallel
           await Promise.all(
             tasksNeedingFix.map(task => 
               taskRepo.update(task.id, {
                 status: 'completed',
-                completedAt: task.completedAt || new Date().toISOString()
+                completedAt: task.completedAt || new Date()
               })
             )
           );
@@ -82,9 +84,9 @@ export async function GET(
           tasks.splice(0, tasks.length, ...updatedTasks);
         }
         
-        // Calculate completed tasks - based on evaluationId
-        const tasksWithEvaluation = tasks.filter(task => task.evaluationId);
-        const completedTaskCount = tasksWithEvaluation.length;
+        // Calculate completed tasks - based on status
+        const completedTasks = tasks.filter(task => task.status === 'completed');
+        const completedTaskCount = completedTasks.length;
         
         // Debug logging
         console.log(`Program ${program.id}:`, {
@@ -94,7 +96,7 @@ export async function GET(
           taskDetails: tasks.map(t => ({
             id: t.id,
             status: t.status,
-            hasEvaluationId: !!t.evaluationId
+            hasCompleted: t.status === 'completed'
           }))
         });
         

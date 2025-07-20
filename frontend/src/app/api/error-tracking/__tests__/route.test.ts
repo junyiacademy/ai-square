@@ -24,14 +24,14 @@ describe('/api/error-tracking', () => {
         message: 'Test error',
         stack: 'Error: Test error\n    at Component.render',
         severity: 'medium',
-        source: 'client',
-        userAgent: 'Mozilla/5.0',
-        url: '/test-page',
         timestamp: new Date().toISOString(),
         context: {
           component: 'TestComponent',
           action: 'render',
-        }
+          userAgent: 'Mozilla/5.0',
+          url: '/test-page',
+        },
+        fingerprint: 'test-error-fingerprint'
       }
 
       const request = new NextRequest('http://localhost:3000/api/error-tracking', {
@@ -54,7 +54,6 @@ describe('/api/error-tracking', () => {
       const invalidReport = {
         // Missing required fields: id, message, timestamp
         severity: 'medium',
-        source: 'client',
       }
 
       const request = new NextRequest('http://localhost:3000/api/error-tracking', {
@@ -78,12 +77,12 @@ describe('/api/error-tracking', () => {
         message: 'Critical system failure',
         stack: 'Error stack trace',
         severity: 'critical',
-        source: 'server',
         timestamp: new Date().toISOString(),
         context: {
           component: 'DatabaseConnection',
           error: 'Connection timeout',
-        }
+        },
+        fingerprint: 'critical-error-fingerprint'
       }
 
       const request = new NextRequest('http://localhost:3000/api/error-tracking', {
@@ -117,8 +116,9 @@ describe('/api/error-tracking', () => {
           id: `error${i}`,
           message: `Test error ${i}`,
           severity: 'low',
-          source: 'client',
           timestamp: new Date().toISOString(),
+          context: {},
+          fingerprint: `error-${i}-fingerprint`
         })
       }
 
@@ -142,7 +142,9 @@ describe('/api/error-tracking', () => {
         id: 'minimal123',
         message: 'Minimal error',
         timestamp: new Date().toISOString(),
-        // Optional fields omitted
+        severity: 'low',
+        context: {},
+        fingerprint: 'minimal-error-fingerprint'
       }
 
       const request = new NextRequest('http://localhost:3000/api/error-tracking', {
@@ -250,12 +252,16 @@ describe('/api/error-tracking', () => {
           message: 'First error',
           timestamp: new Date().toISOString(),
           severity: 'high',
+          context: {},
+          fingerprint: 'first-error-fingerprint'
         },
         {
           id: 'get-test-2',
           message: 'Second error',
           timestamp: new Date().toISOString(),
           severity: 'low',
+          context: {},
+          fingerprint: 'second-error-fingerprint'
         },
       ]
 
@@ -308,9 +314,7 @@ describe('/api/error-tracking', () => {
       
       // All returned errors should have server source
       data.errors.forEach((error: ErrorReport) => {
-        if (error.source) {
-          expect(error.source).toBe('server')
-        }
+        // Source check removed - not part of ErrorReport interface
       })
     })
 

@@ -1,0 +1,99 @@
+2025-07-20T04:36:05.499Z: 🚀 開始安全 TypeScript 錯誤修復
+2025-07-20T04:36:05.501Z: === Phase 1: 錯誤分析 ===
+2025-07-20T04:36:08.432Z: 總錯誤數量: 662
+2025-07-20T04:36:08.432Z: 
+錯誤類型分布:
+2025-07-20T04:36:10.663Z:  208 TS2339
+ 113 TS2322
+  61 TS2345
+  60 TS18046
+  26 TS2353
+  22 TS2540
+  17 TS2352
+  14 TS2307
+  13 TS7053
+  13 TS2741
+  10 TS2739
+  10 TS2305
+   9 TS18048
+   8 TS2538
+   8 TS2367
+   7 TS7022
+   7 TS2740
+   6 TS2554
+   6 TS2365
+   5 TS7024
+   5 TS2304
+   4 TS2769
+   4 TS2349
+   3 TS2677
+   3 TS2552
+   3 TS2515
+   3 TS2448
+   2 TS2720
+   2 TS2614
+   2 TS2571
+   2 TS2559
+   2 TS2454
+   1 TS2698
+   1 TS2683
+   1 TS2551
+   1 TS18047
+
+2025-07-20T04:36:10.663Z: 
+檔案錯誤分布 (前20個):
+2025-07-20T04:36:12.900Z:   36 src/scripts/test-all-modes-e2e.ts
+  29 src/app/pbl/scenarios/[id]/page.tsx
+  26 src/lib/services/scenario-initialization-service.ts
+  26 src/app/pbl/scenarios/page.tsx
+  21 src/lib/services/hybrid-translation-service.ts
+  18 src/components/ui/__tests__/ResponsiveTitle.test.tsx
+  17 src/app/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]/page.tsx
+  17 src/app/api/pbl/scenarios/route.ts
+  16 src/lib/services/evaluation/__tests__/evaluation-strategy.test.ts
+  16 src/app/discovery/scenarios/page.tsx
+  15 src/types/__tests__/module-specific-types.test.ts
+  15 src/lib/services/evaluation/evaluation-strategies.ts
+  15 src/app/history/page.tsx
+  12 src/scripts/archive/gcs-migration/migrate-programs-to-pg.ts
+  12 src/lib/abstractions/__tests__/base-learning-service.test.ts
+  12 src/components/layout/DiscoveryNavigation.tsx
+  11 src/lib/monitoring/production-monitor.ts
+  11 src/app/discovery/scenarios/[id]/page.tsx
+  10 src/scripts/archive/gcs-migration/migrate-users-to-pg.ts
+  10 src/app/api/pbl/scenarios/__tests__/route.test.ts
+
+2025-07-20T04:36:12.900Z: 
+高風險檔案 (錯誤 > 10):
+2025-07-20T04:36:15.139Z:   17 src/app/api/pbl/scenarios/route.ts
+  11 src/app/discovery/scenarios/[id]/page.tsx
+  17 src/app/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]/page.tsx
+  16 src/app/discovery/scenarios/page.tsx
+  15 src/app/history/page.tsx
+  29 src/app/pbl/scenarios/[id]/page.tsx
+  26 src/app/pbl/scenarios/page.tsx
+  12 src/components/layout/DiscoveryNavigation.tsx
+  18 src/components/ui/__tests__/ResponsiveTitle.test.tsx
+  12 src/lib/abstractions/__tests__/base-learning-service.test.ts
+  11 src/lib/monitoring/production-monitor.ts
+  16 src/lib/services/evaluation/__tests__/evaluation-strategy.test.ts
+  15 src/lib/services/evaluation/evaluation-strategies.ts
+  21 src/lib/services/hybrid-translation-service.ts
+  26 src/lib/services/scenario-initialization-service.ts
+  12 src/scripts/archive/gcs-migration/migrate-programs-to-pg.ts
+  36 src/scripts/test-all-modes-e2e.ts
+  15 src/types/__tests__/module-specific-types.test.ts
+
+2025-07-20T04:36:15.139Z: 
+=== Phase 2: 創建安全檢查點 ===
+2025-07-20T04:36:15.184Z: ✅ Git 狀態已記錄
+2025-07-20T04:36:15.372Z: ✅ Git stash 已創建
+2025-07-20T04:36:18.572Z: ❌ 修復過程發生錯誤: Command failed: npx tsc --noEmit > typescript-errors-before.log 2>&1
+Error: Command failed: npx tsc --noEmit > typescript-errors-before.log 2>&1
+2025-07-20T04:36:18.572Z: 
+=== 緊急回退流程 ===
+2025-07-20T04:36:18.599Z: ✅ Git reset 完成
+2025-07-20T04:36:18.674Z: ✅ Stash 已恢復
+2025-07-20T04:36:18.674Z: 🔄 完全回退到修復前狀態
+2025年 7月20日 週日 12時42分35秒 CST: Starting TypeScript error fix, current count: 662, baseline test failures noted
+2025年 7月20日 週日 12時44分32秒 CST: Fixed file src/app/api/pbl/completion/route.ts, error TS2339, errors: 662 -> 661

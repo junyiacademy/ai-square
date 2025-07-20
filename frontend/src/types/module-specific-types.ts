@@ -251,27 +251,27 @@ export function isDiscoveryScenario(scenario: IScenario): scenario is IDiscovery
 }
 
 export function isPBLTask(task: ITask): task is IPBLTask {
-  return task.metadata?.sourceType === 'pbl';
+  return (task.metadata as Record<string, unknown>)?.sourceType === 'pbl';
 }
 
 export function isAssessmentTask(task: ITask): task is IAssessmentTask {
-  return task.metadata?.sourceType === 'assessment';
+  return (task.metadata as Record<string, unknown>)?.sourceType === 'assessment';
 }
 
 export function isDiscoveryTask(task: ITask): task is IDiscoveryTask {
-  return task.metadata?.sourceType === 'discovery';
+  return (task.metadata as Record<string, unknown>)?.sourceType === 'discovery';
 }
 
 export function isPBLEvaluation(evaluation: IEvaluation): evaluation is IPBLEvaluation {
-  return evaluation.metadata?.sourceType === 'pbl';
+  return (evaluation.metadata as Record<string, unknown>)?.sourceType === 'pbl';
 }
 
 export function isAssessmentEvaluation(evaluation: IEvaluation): evaluation is IAssessmentEvaluation {
-  return evaluation.metadata?.sourceType === 'assessment';
+  return (evaluation.metadata as Record<string, unknown>)?.sourceType === 'assessment';
 }
 
 export function isDiscoveryEvaluation(evaluation: IEvaluation): evaluation is IDiscoveryEvaluation {
-  return evaluation.metadata?.sourceType === 'discovery';
+  return (evaluation.metadata as Record<string, unknown>)?.sourceType === 'discovery';
 }
 
 // ===========================

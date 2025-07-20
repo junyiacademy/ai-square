@@ -95,7 +95,7 @@ export class DiscoveryScenarioService {
     
     // 先嘗試找到現有的 Scenario (by sourceRef.metadata.careerType)
     const existingScenarios = await scenarioRepo.findBySource('discovery');
-    const existingScenario = existingScenarios.find(s => 
+    const existingScenario = existingScenarios.find((s: IScenario) => 
       s.sourceRef.metadata?.careerType === careerType
     );
     

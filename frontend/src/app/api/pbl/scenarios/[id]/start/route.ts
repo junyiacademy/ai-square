@@ -77,8 +77,8 @@ export async function POST(
       );
     }
     
-    // Extract tasks from taskTemplates
-    const tasks = scenario.taskTemplates || [];
+    // Extract tasks from scenario
+    const tasks = scenario.tasks || [];
     
     // Use unified architecture - get repositories
     const programRepo = repositoryFactory.getProgramRepository();
@@ -87,20 +87,10 @@ export async function POST(
     console.log('   Creating program using unified architecture...');
     
     // Create Program following unified architecture
-    const program: IProgram = await programRepo.create({
+    const program = await programRepo.create({
       scenarioId: scenario.id, // Use scenario UUID
       userId: userEmail,
-      status: 'active',
-      startedAt: new Date().toISOString(),
-      taskIds: [],
-      currentTaskIndex: 0,
-      metadata: {
-        sourceType: 'pbl',
-        language,
-        title: scenario.title,
-        totalTasks: tasks.length,
-        yamlId: scenario.sourceRef.metadata?.yamlId // Keep original yaml ID for reference
-      }
+      totalTasks: tasks.length
     });
     
     console.log('   ✅ Program created with UUID:', program.id);
@@ -111,25 +101,18 @@ export async function POST(
     for (let i = 0; i < tasks.length; i++) {
       const taskTemplate = tasks[i];
       
-      const task: ITask = await taskRepo.create({
+      const task = await taskRepo.create({
         programId: program.id,
-        scenarioTaskIndex: i,
+        taskIndex: i,
         title: taskTemplate.title,
         type: taskTemplate.type,
         content: {
-          instructions: taskTemplate.description,
-          context: {
-            taskTemplate,
-            originalTaskData: taskTemplate.metadata?.originalTaskData,
-            language
-          }
-        },
-        interactions: [],
-        startedAt: new Date().toISOString(),
-        status: i === 0 ? 'active' : 'pending'
+          description: taskTemplate.description,
+          instructions: taskTemplate.description
+        }
       });
       
-      createdTasks.push(task);
+      createdTasks.push(task as ITask);
     }
     
     // Update program with task IDs

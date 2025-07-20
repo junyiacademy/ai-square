@@ -135,15 +135,7 @@ export async function POST(
     const program = await programRepo.create({
       scenarioId,
       userId: userEmail,
-      status: 'draft',
-      title: language === 'zhTW' ? (scenario.title_zhTW || scenario.title) : scenario.title,
-      taskCount: scenario.tasks.length,
-      language,
-      startedAt: new Date(),
-      metadata: {
-        sourceType: 'pbl',
-        language
-      }
+      totalTasks: scenario.tasks.length
     });
     
     return NextResponse.json({

@@ -184,7 +184,7 @@ export class ScenarioInitializationService {
     // 根據 sourceRef 查找
     const scenarios = await this.scenarioRepo.findBySource(sourceType);
     
-    return scenarios.find(s => 
+    return scenarios.find((s: IScenario) => 
       s.sourceRef.type === 'yaml' && 
       s.sourceRef.path === yamlPath
     ) || null;

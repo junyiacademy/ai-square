@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { cachedGET } from '@/lib/api/optimization-utils';
+import type { IInteraction } from '@/types/unified-learning';
 
 // POST - Add interaction to task
 export async function POST(
@@ -109,7 +110,7 @@ export async function GET(
     }
 
     // Transform interactions for frontend compatibility
-    const transformedInteractions = (task.interactions || []).map(i => ({
+    const transformedInteractions = (task.interactions || []).map((i: IInteraction) => ({
       id: `${task.id}_${i.timestamp}`,
       type: i.type === 'user_input' ? 'user' : 
             i.type === 'ai_response' ? 'ai' : 'system',

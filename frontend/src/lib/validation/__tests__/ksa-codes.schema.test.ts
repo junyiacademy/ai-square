@@ -533,7 +533,7 @@ describe('KSA Codes Schema Validation', () => {
       const result = extractKSAIds(ksaFile);
       
       // K1.1 應該只出現一次
-      const k11Count = result.knowledgeIds.filter(id => id === 'K1.1').length;
+      const k11Count = result.knowledgeIds.filter((id: string) => id === 'K1.1').length;
       expect(k11Count).toBe(1);
     });
   });

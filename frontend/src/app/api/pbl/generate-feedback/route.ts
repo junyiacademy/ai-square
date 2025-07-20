@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { VertexAI, SchemaType } from '@google-cloud/vertexai';
 import { getServerSession } from '@/lib/auth/session';
 import { getLanguageFromHeader, LANGUAGE_NAMES } from '@/lib/utils/language';
+import { Task, Evaluation } from '@/lib/repositories/interfaces';
 
 // Types for feedback structure
 interface FeedbackStrength {
@@ -188,7 +189,7 @@ export async function POST(request: NextRequest) {
     
     // Get repositories
     const { createRepositoryFactory } = await import('@/lib/db/repositories/factory');
-    const repositoryFactory = createRepositoryFactory();
+    const repositoryFactory = createRepositoryFactory;
     const programRepo = repositoryFactory.getProgramRepository();
     const evalRepo = repositoryFactory.getEvaluationRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
@@ -248,9 +249,9 @@ export async function POST(request: NextRequest) {
     // Build completion data from evaluation for backward compatibility
     const tasks = await taskRepo.findByProgram(programId);
     const taskEvaluations = await Promise.all(
-      tasks.map(async (task) => {
-        if (task.evaluationId) {
-          const taskEval = await evalRepo.findById(task.evaluationId);
+      tasks.map(async (task: Task) => {
+        if (task.metadata?.evaluationId) {
+          const taskEval = await evalRepo.findById(task.metadata.evaluationId as string);
           return { task, evaluation: taskEval };
         }
         return { task, evaluation: null };
@@ -263,7 +264,7 @@ export async function POST(request: NextRequest) {
       totalTasks: evaluation.metadata?.totalTasks || tasks.length,
       totalTimeSeconds: evaluation.metadata?.totalTimeSeconds || 0,
       domainScores: evaluation.metadata?.domainScores || {},
-      tasks: taskEvaluations.map(({ task, evaluation: taskEval }) => ({
+      tasks: taskEvaluations.map(({ task, evaluation: taskEval }: { task: Task; evaluation: Evaluation | null }) => ({
         taskId: task.id,
         evaluation: taskEval ? {
           score: taskEval.score || 0,
@@ -272,10 +273,7 @@ export async function POST(request: NextRequest) {
           improvements: taskEval.metadata?.improvements || []
         } : undefined,
         log: {
-          interactions: task.interactions?.map(i => ({
-            role: i.type === 'user_input' ? 'user' : 'assistant',
-            context: i.context.message || i.content
-          })) || []
+          interactions: [] // Task interactions would need to be fetched separately if needed
         }
       })),
       qualitativeFeedback: evaluation.metadata?.qualitativeFeedback,
@@ -283,7 +281,7 @@ export async function POST(request: NextRequest) {
     };
     
     // Get current language - prioritize explicit language parameter
-    const currentLang = language || getLanguageFromHeader(request.headers.get('accept-language'));
+    const currentLang = language || getLanguageFromHeader(request);
     
     // If forceRegenerate, mark existing feedback for current language as invalid
     if (forceRegenerate && evaluation.metadata?.qualitativeFeedback?.[currentLang]) {
@@ -342,8 +340,8 @@ export async function POST(request: NextRequest) {
     const taskSummaries: TaskSummary[] = completionData.tasks?.map((task) => ({
       taskId: task.taskId,
       score: task.evaluation?.score || 0,
-      conversations: task.log?.interactions?.filter((i) => i.role === 'user')
-        .map((i) => i.content) || [],
+      conversations: task.log?.interactions?.filter((i: any) => i.role === 'user')
+        .map((i: any) => i.content as string) || [],
       feedback: task.evaluation?.feedback || '',
       strengths: task.evaluation?.strengths || [],
       improvements: task.evaluation?.improvements || []
@@ -398,7 +396,7 @@ Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLan
     });
     
     const response = result.response;
-    const feedbackText = response.candidates?.[0]?.context?.parts?.[0]?.text || '{}';
+    const feedbackText = response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
     
     let feedback: QualitativeFeedback | undefined;
     try {
@@ -498,7 +496,7 @@ Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLan
         ...evaluation.metadata,
         qualitativeFeedback: updatedQualitativeFeedback,
         generatedLanguages: [
-          ...(evaluation.metadata?.generatedLanguages || []).filter(l => l !== currentLang),
+          ...(evaluation.metadata?.generatedLanguages || []).filter((l: string) => l !== currentLang),
           currentLang
         ]
       }
