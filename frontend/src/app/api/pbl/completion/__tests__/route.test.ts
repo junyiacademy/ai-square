@@ -1,43 +1,49 @@
 import { NextRequest } from 'next/server'
 import { GET } from '../route'
 
-// Mock storage service
-jest.mock('@/lib/storage/storage-factory', () => ({
-  StorageFactory: {
-    getService: jest.fn(() => ({
-      saveCompletionData: jest.fn(),
-      getCompletionData: jest.fn(),
-    })),
-  },
+// Mock auth session
+const mockGetServerSession = jest.fn()
+jest.mock('@/lib/auth/session', () => ({
+  getServerSession: mockGetServerSession
 }))
 
-// Mock auth utils
-jest.mock('@/lib/auth/auth-utils', () => ({
-  validateAuthHeader: jest.fn(),
+// Mock repository factory
+const mockRepositoryFactory = {
+  getProgramRepository: jest.fn(),
+  getTaskRepository: jest.fn(),
+  getEvaluationRepository: jest.fn(),
+}
+jest.mock('@/lib/repositories/base/repository-factory', () => ({
+  repositoryFactory: mockRepositoryFactory
 }))
-
-import { StorageFactory } from '@/lib/storage/storage-factory'
-import { validateAuthHeader } from '@/lib/auth/auth-utils'
 
 describe('/api/pbl/completion', () => {
-  const mockStorageService = {
-    saveCompletionData: jest.fn(),
-    getCompletionData: jest.fn(),
+  // Mock repositories
+  const mockProgramRepo = {
+    findById: jest.fn(),
+    update: jest.fn(),
+  }
+  const mockTaskRepo = {
+    findByProgram: jest.fn(),
+    getTaskWithInteractions: jest.fn(),
+  }
+  const mockEvaluationRepo = {
+    findByProgram: jest.fn(),
+    findByTask: jest.fn(),
   }
 
   beforeEach(() => {
     jest.clearAllMocks()
-    ;(StorageFactory.getService as jest.Mock).mockReturnValue(mockStorageService)
+    mockRepositoryFactory.getProgramRepository.mockReturnValue(mockProgramRepo)
+    mockRepositoryFactory.getTaskRepository.mockReturnValue(mockTaskRepo)
+    mockRepositoryFactory.getEvaluationRepository.mockReturnValue(mockEvaluationRepo)
   })
 
   // Note: POST functionality removed as route only supports GET
 
   describe('GET', () => {
     it('should return 401 for unauthenticated requests', async () => {
-      ;(validateAuthHeader as jest.Mock).mockResolvedValue({
-        isValid: false,
-        error: 'No token provided',
-      })
+      mockGetServerSession.mockResolvedValue(null)
 
       const request = new NextRequest('http://localhost:3000/api/pbl/completion')
 
@@ -45,87 +51,93 @@ describe('/api/pbl/completion', () => {
 
       expect(response.status).toBe(401)
       const data = await response.json()
-      expect(data.error).toBe('No token provided')
+      expect(data.error).toBe('Authentication required')
     })
 
     it('should retrieve completion data for authenticated users', async () => {
-      ;(validateAuthHeader as jest.Mock).mockResolvedValue({
-        isValid: true,
-        user: { email: 'test@example.com' },
+      mockGetServerSession.mockResolvedValue({
+        user: { id: 'user123', email: 'test@example.com' }
       })
 
-      const mockCompletions = [
-        {
-          id: 'comp1',
-          programId: 'prog1',
-          scenarioId: 'scenario1',
-          score: 90,
-          completedAt: '2024-01-01T00:00:00Z',
-        },
-        {
-          id: 'comp2',
-          programId: 'prog2',
-          scenarioId: 'scenario2',
-          score: 85,
-          completedAt: '2024-01-02T00:00:00Z',
-        },
+      const mockProgram = {
+        id: 'prog1',
+        userId: 'user123',
+        scenarioId: 'scenario1',
+        status: 'completed',
+        completedTasks: 3,
+        totalTasks: 3,
+        endTime: new Date('2024-01-01T00:00:00Z'),
+      }
+
+      const mockTasks = [
+        { id: 'task1', programId: 'prog1', status: 'completed' },
+        { id: 'task2', programId: 'prog1', status: 'completed' },
+        { id: 'task3', programId: 'prog1', status: 'completed' },
       ]
 
-      mockStorageService.getCompletionData.mockResolvedValue(mockCompletions)
+      const mockEvaluations = [
+        { id: 'eval1', taskId: 'task1', score: 90 },
+        { id: 'eval2', taskId: 'task2', score: 85 },
+        { id: 'eval3', programId: 'prog1', score: 88 },
+      ]
 
-      const request = new NextRequest('http://localhost:3000/api/pbl/completion', {
-        headers: {
-          'Authorization': 'Bearer valid-token',
-        },
-      })
+      mockProgramRepo.findById.mockResolvedValue(mockProgram)
+      mockTaskRepo.findByProgram.mockResolvedValue(mockTasks)
+      mockEvaluationRepo.findByProgram.mockResolvedValue(mockEvaluations)
+
+      const request = new NextRequest('http://localhost:3000/api/pbl/completion?programId=prog1')
 
       const response = await GET(request)
 
       expect(response.status).toBe(200)
       const data = await response.json()
       expect(data.success).toBe(true)
-      expect(data.data).toEqual(mockCompletions)
-      expect(mockStorageService.getCompletionData).toHaveBeenCalledWith(
-        'test@example.com',
-        {}
-      )
+      expect(data.data.program).toEqual(expect.objectContaining({
+        id: 'prog1',
+        status: 'completed'
+      }))
+      expect(data.data.tasks).toHaveLength(3)
+      expect(data.data.evaluations).toHaveLength(3)
     })
 
-    it('should handle query parameters for filtering', async () => {
-      ;(validateAuthHeader as jest.Mock).mockResolvedValue({
-        isValid: true,
-        user: { email: 'test@example.com' },
+    it('should return 404 for non-existent program', async () => {
+      mockGetServerSession.mockResolvedValue({
+        user: { id: 'user123', email: 'test@example.com' }
       })
 
-      mockStorageService.getCompletionData.mockResolvedValue([])
+      mockProgramRepo.findById.mockResolvedValue(null)
 
-      const request = new NextRequest(
-        'http://localhost:3000/api/pbl/completion?scenarioId=scenario123&programId=prog456'
-      )
+      const request = new NextRequest('http://localhost:3000/api/pbl/completion?programId=invalid')
 
       const response = await GET(request)
 
-      expect(response.status).toBe(200)
-      expect(mockStorageService.getCompletionData).toHaveBeenCalledWith(
-        'test@example.com',
-        {
-          scenarioId: 'scenario123',
-          programId: 'prog456',
-        }
-      )
+      expect(response.status).toBe(404)
+      const data = await response.json()
+      expect(data.error).toBe('Program not found')
     })
 
-    it('should handle storage service errors', async () => {
-      ;(validateAuthHeader as jest.Mock).mockResolvedValue({
-        isValid: true,
-        user: { email: 'test@example.com' },
+    it('should handle missing programId parameter', async () => {
+      mockGetServerSession.mockResolvedValue({
+        user: { id: 'user123', email: 'test@example.com' }
       })
 
-      mockStorageService.getCompletionData.mockRejectedValue(
-        new Error('Database connection failed')
-      )
-
       const request = new NextRequest('http://localhost:3000/api/pbl/completion')
+
+      const response = await GET(request)
+
+      expect(response.status).toBe(400)
+      const data = await response.json()
+      expect(data.error).toBe('programId is required')
+    })
+
+    it('should handle repository errors gracefully', async () => {
+      mockGetServerSession.mockResolvedValue({
+        user: { id: 'user123', email: 'test@example.com' }
+      })
+
+      mockProgramRepo.findById.mockRejectedValue(new Error('Database connection failed'))
+
+      const request = new NextRequest('http://localhost:3000/api/pbl/completion?programId=prog1')
 
       const response = await GET(request)
 
