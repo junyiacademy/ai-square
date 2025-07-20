@@ -75,7 +75,7 @@ describe('/api/pbl/evaluate', () => {
     ]
   };
 
-  const createRequest = (body: any, cookies: Record<string, string> = {}) => {
+  const createRequest = (body: any, cookieData: Record<string, string> = {}) => {
     const request = new NextRequest('http://localhost:3000/api/pbl/evaluate', {
       method: 'POST',
       headers: {
@@ -84,11 +84,25 @@ describe('/api/pbl/evaluate', () => {
       body: JSON.stringify(body)
     });
 
-    // Mock cookies
-    Object.entries(cookies).forEach(([key, value]) => {
-      (request.cookies.get as jest.Mock) = jest.fn((name) => 
-        name === key ? { value } : undefined
-      );
+    // Mock cookies for this specific request instance
+    const mockCookies = {
+      get: jest.fn((name) => {
+        if (name === 'user' && !cookieData[name]) {
+          return { value: JSON.stringify({ email: 'test@example.com' }) };
+        }
+        return cookieData[name] ? { value: cookieData[name] } : undefined;
+      }),
+      set: jest.fn(),
+      delete: jest.fn(),
+      has: jest.fn((name) => !!cookieData[name] || name === 'user'),
+      getAll: jest.fn(() => Object.entries(cookieData).map(([name, value]) => ({ name, value })))
+    };
+
+    // Override the cookies property for this request instance
+    Object.defineProperty(request, 'cookies', {
+      value: mockCookies,
+      writable: true,
+      configurable: true
     });
 
     return request;
@@ -96,16 +110,6 @@ describe('/api/pbl/evaluate', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    // Setup default mock cookie behavior
-    NextRequest.prototype.cookies = {
-      get: jest.fn((name) => 
-        name === 'user' ? { value: JSON.stringify({ email: 'test@example.com' }) } : undefined
-      ),
-      set: jest.fn(),
-      delete: jest.fn(),
-      has: jest.fn(),
-      getAll: jest.fn(() => [])
-    } as any;
   });
 
   describe('successful evaluations', () => {
@@ -233,15 +237,30 @@ describe('/api/pbl/evaluate', () => {
 
   describe('error handling', () => {
     it('returns 401 when user is not authenticated', async () => {
-      NextRequest.prototype.cookies = {
+      // Create request without user cookie
+      const request = new NextRequest('http://localhost:3000/api/pbl/evaluate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(validRequestBody)
+      });
+
+      // Mock empty cookies
+      const mockCookies = {
         get: jest.fn(() => undefined),
         set: jest.fn(),
         delete: jest.fn(),
-        has: jest.fn(),
+        has: jest.fn(() => false),
         getAll: jest.fn(() => [])
-      } as any;
+      };
 
-      const request = createRequest(validRequestBody);
+      Object.defineProperty(request, 'cookies', {
+        value: mockCookies,
+        writable: true,
+        configurable: true
+      });
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -472,7 +491,12 @@ describe('/api/pbl/evaluate', () => {
 
     it('includes development error details in dev mode', async () => {
       const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'development';
+      // Use Object.defineProperty to mock NODE_ENV
+      Object.defineProperty(process.env, 'NODE_ENV', {
+        value: 'development',
+        writable: true,
+        configurable: true
+      });
 
       const error = new Error('Detailed error message');
       (VertexAI as jest.Mock).mockImplementation(() => ({
@@ -488,7 +512,12 @@ describe('/api/pbl/evaluate', () => {
       expect(response.status).toBe(500);
       expect(data.details).toBeDefined();
 
-      process.env.NODE_ENV = originalEnv;
+      // Restore original NODE_ENV
+      Object.defineProperty(process.env, 'NODE_ENV', {
+        value: originalEnv,
+        writable: true,
+        configurable: true
+      });
     });
   });
 });
