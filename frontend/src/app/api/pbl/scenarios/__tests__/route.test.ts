@@ -121,11 +121,9 @@ describe('/api/pbl/scenarios', () => {
           return {
             id: 'ai-job-search',
             sourceType: 'yaml' as const,
-            sourceRef: {
-              type: 'yaml' as const,
-              path: `pbl_data/${yamlId}_scenario.yaml`,
-              metadata: { yamlId }
-            },
+            sourcePath: `pbl_data/${yamlId}_scenario.yaml`,
+            sourceId: yamlId,
+            sourceMetadata: { yamlId },
             title: { [lang]: titleMap[lang] || titleMap['en'] },
             description: { [lang]: descMap[lang] || descMap['en'] },
             objectives: [],
@@ -144,11 +142,9 @@ describe('/api/pbl/scenarios', () => {
         return {
           id: yamlId,
           sourceType: 'yaml' as const,
-          sourceRef: {
-            type: 'yaml' as const,
-            path: `pbl_data/${yamlId}_scenario.yaml`,
-            metadata: { yamlId }
-          },
+          sourcePath: `pbl_data/${yamlId}_scenario.yaml`,
+          sourceId: yamlId,
+          sourceMetadata: { yamlId },
           title: { en: `${yamlId} Title` },
           description: { en: `${yamlId} Description` },
           objectives: [],
@@ -443,11 +439,9 @@ describe('/api/pbl/scenarios', () => {
           return {
             id: 'ai-job-search',
             sourceType: 'yaml' as const,
-            sourceRef: {
-              type: 'yaml' as const,
-              path: `pbl_data/${yamlId}_scenario.yaml`,
-              metadata: { yamlId }
-            },
+            sourcePath: `pbl_data/${yamlId}_scenario.yaml`,
+            sourceId: yamlId,
+            sourceMetadata: { yamlId },
             title: { [lang]: titleMap[lang] || titleMap['en'] },
             description: { [lang]: descMap[lang] || descMap['en'] },
             objectives: [],
@@ -466,11 +460,9 @@ describe('/api/pbl/scenarios', () => {
         return {
           id: yamlId,
           sourceType: 'yaml' as const,
-          sourceRef: {
-            type: 'yaml' as const,
-            path: `pbl_data/${yamlId}_scenario.yaml`,
-            metadata: { yamlId }
-          },
+          sourcePath: `pbl_data/${yamlId}_scenario.yaml`,
+          sourceId: yamlId,
+          sourceMetadata: { yamlId },
           title: { en: `${yamlId} Title` },
           description: { en: `${yamlId} Description` },
           objectives: [],

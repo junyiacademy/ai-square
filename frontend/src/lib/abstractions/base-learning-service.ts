@@ -140,16 +140,32 @@ export abstract class BaseLearningService {
       const template = scenario.taskTemplates[i];
       const taskData: Omit<ITask, 'id'> = {
         programId: program.id,
-        templateId: template.id,
+        mode: scenario.mode,
+        taskIndex: i,
+        scenarioTaskIndex: i,
         title: template.title,
         description: template.description || '',
         type: template.type,
-        order: i + 1,
         status: i === 0 ? 'active' : 'pending',
+        content: {},
+        interactions: [],
+        interactionCount: 0,
+        userResponse: {},
+        score: 0,
+        maxScore: 100,
+        allowedAttempts: 3,
+        attemptCount: 0,
+        timeSpentSeconds: 0,
+        aiConfig: {},
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
         metadata: {
           sourceType: scenario.sourceType,
-          ...template.metadata
+          templateId: template.id,
+          ...(typeof template.metadata === 'object' ? template.metadata : {})
         }
       };
 
@@ -387,17 +403,25 @@ export abstract class BaseLearningService {
     evaluationData?: Partial<IEvaluation>
   ): Promise<IEvaluation> {
     const baseEvaluation: Omit<IEvaluation, 'id'> = {
-      targetType: 'task',
-      targetId: task.id,
-      programId: task.programId,
       userId,
+      programId: task.programId,
+      taskId: task.id,
+      mode: task.mode,
       evaluationType: evaluationData?.evaluationType || 'task',
+      score: evaluationData?.score || 0,
+      maxScore: evaluationData?.maxScore || 100,
+      dimensionScores: evaluationData?.dimensionScores || {},
+      feedbackData: evaluationData?.feedbackData || {},
+      aiAnalysis: evaluationData?.aiAnalysis || {},
+      timeTakenSeconds: evaluationData?.timeTakenSeconds || 0,
       createdAt: new Date().toISOString(),
+      pblData: evaluationData?.pblData || {},
+      discoveryData: evaluationData?.discoveryData || {},
+      assessmentData: evaluationData?.assessmentData || {},
       metadata: {
         sourceType: task.metadata?.sourceType || 'unknown',
         ...evaluationData?.metadata
-      },
-      ...evaluationData
+      }
     };
 
     return this.evaluationRepo.create(baseEvaluation);
@@ -413,18 +437,25 @@ export abstract class BaseLearningService {
     evaluationData?: Partial<IEvaluation>
   ): Promise<IEvaluation> {
     const baseEvaluation: Omit<IEvaluation, 'id'> = {
-      targetType: 'program',
-      targetId: program.id,
-      programId: program.id,
       userId,
+      programId: program.id,
+      mode: program.mode,
       evaluationType: evaluationData?.evaluationType || 'program',
+      score: evaluationData?.score || 0,
+      maxScore: evaluationData?.maxScore || 100,
+      dimensionScores: evaluationData?.dimensionScores || {},
+      feedbackData: evaluationData?.feedbackData || {},
+      aiAnalysis: evaluationData?.aiAnalysis || {},
+      timeTakenSeconds: evaluationData?.timeTakenSeconds || 0,
       createdAt: new Date().toISOString(),
+      pblData: evaluationData?.pblData || {},
+      discoveryData: evaluationData?.discoveryData || {},
+      assessmentData: evaluationData?.assessmentData || {},
       metadata: {
         sourceType: program.metadata?.sourceType || 'unknown',
         taskCount: _taskEvaluations.length,
         ...evaluationData?.metadata
-      },
-      ...evaluationData
+      }
     };
 
     return this.evaluationRepo.create(baseEvaluation);

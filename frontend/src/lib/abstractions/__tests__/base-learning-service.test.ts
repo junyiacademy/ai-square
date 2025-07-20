@@ -9,6 +9,7 @@ import {
   IProgram, 
   ITask, 
   IEvaluation,
+  IInteraction,
   BaseScenarioRepository,
   BaseProgramRepository,
   BaseTaskRepository,
@@ -30,12 +31,18 @@ class MockScenarioRepository implements BaseScenarioRepository<IScenario> {
     return this.scenarios.get(id) || null;
   }
 
-  async findBySourceType(sourceType: string): Promise<IScenario[]> {
-    return Array.from(this.scenarios.values()).filter(s => s.sourceType === sourceType);
+  async findBySource(sourceType: string, sourceId?: string): Promise<IScenario[]> {
+    return Array.from(this.scenarios.values()).filter(s => 
+      s.sourceType === sourceType && (!sourceId || s.sourceId === sourceId)
+    );
   }
 
-  async listAll(): Promise<IScenario[]> {
-    return Array.from(this.scenarios.values());
+  async update(id: string, updates: Partial<IScenario>): Promise<IScenario> {
+    const scenario = this.scenarios.get(id);
+    if (!scenario) throw new Error('Scenario not found');
+    const updated = { ...scenario, ...updates };
+    this.scenarios.set(id, updated);
+    return updated;
   }
 }
 
@@ -78,11 +85,16 @@ class MockProgramRepository implements BaseProgramRepository<IProgram> {
 
 class MockTaskRepository implements BaseTaskRepository<ITask> {
   public tasks: Map<string, ITask> = new Map();
+  private counter = 0;
 
   async create(task: Omit<ITask, 'id'>): Promise<ITask> {
-    const newTask = { ...task, id: 'task-' + Date.now() } as ITask;
+    const newTask = { ...task, id: 'task-' + (++this.counter) } as ITask;
     this.tasks.set(newTask.id, newTask);
     return newTask;
+  }
+
+  async createBatch(tasks: Omit<ITask, 'id'>[]): Promise<ITask[]> {
+    return Promise.all(tasks.map(task => this.create(task)));
   }
 
   async findById(id: string): Promise<ITask | null> {
@@ -90,26 +102,22 @@ class MockTaskRepository implements BaseTaskRepository<ITask> {
   }
 
   async findByProgram(programId: string): Promise<ITask[]> {
-    return Array.from(this.tasks.values()).filter(t => t.programId === programId);
+    return Array.from(this.tasks.values())
+      .filter(t => t.programId === programId)
+      .sort((a, b) => (a.taskIndex || 0) - (b.taskIndex || 0));
   }
 
-  async updateStatus(id: string, status: 'pending' | 'active' | 'completed'): Promise<ITask> {
+  async updateInteractions(id: string, interactions: IInteraction[]): Promise<ITask> {
     const task = this.tasks.get(id);
     if (!task) throw new Error('Task not found');
-    task.status = status;
-    if (status === 'active' && !task.startedAt) {
-      task.startedAt = new Date().toISOString();
-    }
-    if (status === 'completed' && !task.completedAt) {
-      task.completedAt = new Date().toISOString();
-    }
+    task.interactions = interactions;
+    task.interactionCount = interactions.length;
     return task;
   }
 
-  async saveResponse(id: string, response: any): Promise<ITask> {
+  async complete(id: string): Promise<ITask> {
     const task = this.tasks.get(id);
     if (!task) throw new Error('Task not found');
-    task.userResponse = response;
     task.status = 'completed';
     task.completedAt = new Date().toISOString();
     return task;
@@ -129,31 +137,23 @@ class MockEvaluationRepository implements BaseEvaluationRepository<IEvaluation> 
     return this.evaluations.get(id) || null;
   }
 
-  async findByTarget(targetType: 'task' | 'program', targetId: string): Promise<IEvaluation[]> {
-    return Array.from(this.evaluations.values()).filter(
-      e => {
-        if (targetType === 'task') {
-          return e.evaluationType === 'task' && e.taskId === targetId;
-        } else {
-          return e.evaluationType === 'program' && e.programId === targetId;
-        }
-      }
-    );
-  }
-
   async findByProgram(programId: string): Promise<IEvaluation[]> {
     return Array.from(this.evaluations.values()).filter(e => e.programId === programId);
+  }
+
+  async findByTask(taskId: string): Promise<IEvaluation[]> {
+    return Array.from(this.evaluations.values()).filter(e => e.taskId === taskId);
   }
 
   async findByUser(userId: string): Promise<IEvaluation[]> {
     return Array.from(this.evaluations.values()).filter(e => e.userId === userId);
   }
 
-  async findLatestByTarget(targetType: 'task' | 'program', targetId: string): Promise<IEvaluation | null> {
-    const evaluations = await this.findByTarget(targetType, targetId);
-    return evaluations.sort((a, b) => 
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    )[0] || null;
+  async findByType(evaluationType: string, evaluationSubtype?: string): Promise<IEvaluation[]> {
+    return Array.from(this.evaluations.values()).filter(e => 
+      e.evaluationType === evaluationType && 
+      (!evaluationSubtype || e.evaluationSubtype === evaluationSubtype)
+    );
   }
 }
 
@@ -203,8 +203,24 @@ describe('BaseLearningService', () => {
       // Arrange
       const scenario = await mockScenarioRepo.create({
         sourceType: 'yaml' as const,
+        sourcePath: 'test_scenario.yaml',
+        sourceId: 'test_scenario',
+        mode: 'pbl' as const,
         title: { en: 'Test Scenario' },
         description: { en: 'Test Description' },
+        difficulty: 'intermediate',
+        estimatedTime: 30,
+        prerequisites: [],
+        learningObjectives: [],
+        tags: [],
+        status: 'active' as const,
+        version: '1.0.0',
+        ksaMapping: {
+          knowledge: [],
+          skills: [],
+          attitudes: []
+        },
+        rubric: {},
         taskTemplates: [
           {
             id: 'template-1',
@@ -219,6 +235,8 @@ describe('BaseLearningService', () => {
             metadata: {}
           }
         ],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         metadata: {}
       });
 
@@ -253,45 +271,87 @@ describe('BaseLearningService', () => {
       program = await mockProgramRepo.create({
         scenarioId: 'scenario-1',
         userId: 'user-123',
-        status: 'active',
-        startedAt: new Date().toISOString(),
-        taskIds: ['task-1', 'task-2'],
+        mode: 'pbl' as const,
+        status: 'active' as const,
         currentTaskIndex: 0,
+        completedTaskCount: 0,
+        totalTaskCount: 2,
+        totalScore: 0,
+        dimensionScores: {},
+        xpEarned: 0,
+        badgesEarned: [],
+        createdAt: new Date().toISOString(),
+        startedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        lastActivityAt: new Date().toISOString(),
+        timeSpentSeconds: 0,
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
         metadata: {}
       });
 
       // Create task1 with fixed ID
-      const task1Data = {
+      const task1Data: Omit<ITask, 'id'> = {
         programId: program.id,
-        templateId: 'template-1',
+        mode: 'pbl' as const,
+        taskIndex: 0,
+        scenarioTaskIndex: 0,
         title: 'Task 1',
         description: 'Test Task 1',
         type: 'interactive' as const,
-        order: 1,
         status: 'active' as const,
+        content: {},
+        interactions: [],
+        interactionCount: 0,
+        userResponse: {},
+        score: 0,
+        maxScore: 100,
+        allowedAttempts: 3,
+        attemptCount: 0,
+        timeSpentSeconds: 0,
+        aiConfig: {},
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
         metadata: {}
       };
       task1 = { ...task1Data, id: 'task-1' } as ITask;
       mockTaskRepo.tasks.set('task-1', task1);
 
       // Create task2 with fixed ID
-      const task2Data = {
+      const task2Data: Omit<ITask, 'id'> = {
         programId: program.id,
-        templateId: 'template-2',
+        mode: 'pbl' as const,
+        taskIndex: 1,
+        scenarioTaskIndex: 1,
         title: 'Task 2',
         description: 'Test Task 2',
         type: 'assessment' as const,
-        order: 2,
         status: 'pending' as const,
+        content: {},
+        interactions: [],
+        interactionCount: 0,
+        userResponse: {},
+        score: 0,
+        maxScore: 100,
+        allowedAttempts: 3,
+        attemptCount: 0,
+        timeSpentSeconds: 0,
+        aiConfig: {},
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
         metadata: {}
       };
       task2 = { ...task2Data, id: 'task-2' } as ITask;
       mockTaskRepo.tasks.set('task-2', task2);
 
-      // Fix the mock repository to store the updated program
-      mockProgramRepo.programs.set(program.id, { ...program, taskIds: ['task-1', 'task-2'] });
+      // No need to store taskIds - tasks are linked via programId
     });
 
     it('should complete task and create evaluation', async () => {
@@ -356,9 +416,17 @@ describe('BaseLearningService', () => {
         taskId: 'task-1',
         programId: program1.id,
         userId: 'user-123',
-        type: 'task_completion',
+        mode: 'pbl' as const,
         score: 85,
+        maxScore: 100,
+        dimensionScores: {},
+        feedbackData: {},
+        aiAnalysis: {},
+        timeTakenSeconds: 0,
         createdAt: new Date().toISOString(),
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
         metadata: {}
       });
 
@@ -367,9 +435,17 @@ describe('BaseLearningService', () => {
         taskId: 'task-2',
         programId: program1.id,
         userId: 'user-123',
-        type: 'task_completion',
+        mode: 'pbl' as const,
         score: 90,
+        maxScore: 100,
+        dimensionScores: {},
+        feedbackData: {},
+        aiAnalysis: {},
+        timeTakenSeconds: 0,
         createdAt: new Date().toISOString(),
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
         metadata: {}
       });
 
@@ -389,9 +465,27 @@ describe('BaseLearningService', () => {
       // Arrange
       const scenario = await mockScenarioRepo.create({
         sourceType: 'yaml' as const,
-        title: 'Test Scenario',
-        description: 'Test',
+        sourcePath: 'test_scenario.yaml',
+        sourceId: 'test_scenario', 
+        mode: 'pbl' as const,
+        title: { en: 'Test Scenario' },
+        description: { en: 'Test' },
+        difficulty: 'intermediate',
+        estimatedTime: 30,
+        prerequisites: [],
+        learningObjectives: [],
+        tags: [],
+        status: 'active' as const,
+        version: '1.0.0',
+        ksaMapping: {
+          knowledge: [],
+          skills: [],
+          attitudes: []
+        },
+        rubric: {},
         taskTemplates: [],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         metadata: {}
       });
 
@@ -407,7 +501,6 @@ describe('BaseLearningService', () => {
 
       const task1 = await mockTaskRepo.create({
         programId: program.id,
-        templateId: 'template-1',
         title: 'Task 1',
         description: 'Test',
         type: 'interactive',
@@ -419,7 +512,6 @@ describe('BaseLearningService', () => {
 
       const task2 = await mockTaskRepo.create({
         programId: program.id,
-        templateId: 'template-2',
         title: 'Task 2',
         description: 'Test',
         type: 'assessment',

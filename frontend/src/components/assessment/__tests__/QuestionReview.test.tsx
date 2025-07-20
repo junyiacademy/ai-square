@@ -41,6 +41,7 @@ window.location = { href: '' } as any;
 const mockQuestions: AssessmentQuestion[] = [
   {
     id: 'q1',
+    type: 'multiple_choice',
     question: 'What is AI?',
     options: {
       a: 'Artificial Intelligence',
@@ -60,6 +61,7 @@ const mockQuestions: AssessmentQuestion[] = [
   },
   {
     id: 'q2',
+    type: 'multiple_choice',
     question: 'How does machine learning work?',
     options: {
       a: 'Pre-programmed rules',
@@ -79,6 +81,7 @@ const mockQuestions: AssessmentQuestion[] = [
   },
   {
     id: 'q3',
+    type: 'multiple_choice',
     question: 'What are AI ethics?',
     options: {
       a: 'Technical standards',

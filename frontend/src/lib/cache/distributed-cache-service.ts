@@ -89,11 +89,11 @@ class DistributedCacheService {
       if (localItem) {
         if (localItem.expiresAt > Date.now()) {
           // Fresh data
-          return localItem.value;
+          return localItem.value as T;
         } else if (localItem.staleAt > Date.now()) {
           // Stale data - return it but trigger revalidation
           this.revalidateInBackground(key, fetcher, options);
-          return localItem.value;
+          return localItem.value as T;
         }
       }
 
@@ -119,7 +119,7 @@ class DistributedCacheService {
       // Try to return stale data on error
       const localItem = this.localCache.get(key);
       if (localItem) {
-        return localItem.value;
+        return localItem.value as T;
       }
       throw error;
     }
@@ -212,7 +212,7 @@ class DistributedCacheService {
         } else {
           const localItem = this.localCache.get(keys[i]);
           if (localItem && localItem.expiresAt > Date.now()) {
-            results[i] = localItem.value;
+            results[i] = localItem.value as T;
           } else {
             results[i] = null;
           }

@@ -202,14 +202,14 @@ class RedisCacheService {
       // Try Redis first
       if (this.isConnected && this.redis) {
         const values = await this.redis.mget(...keys);
-        return values.map(v => v ? JSON.parse(v) : null);
+        return values.map(v => v ? JSON.parse(v) as T : null);
       }
 
       // Fallback to in-memory cache
       return keys.map(key => {
         const item = this.fallbackCache.get(key);
         if (item && item.expiresAt > Date.now()) {
-          return item.value;
+          return item.value as T;
         }
         return null;
       });
@@ -243,7 +243,7 @@ class RedisCacheService {
 
       // Fallback to in-memory cache
       const item = this.fallbackCache.get(key);
-      const currentValue = item?.value || 0;
+      const currentValue = typeof item?.value === 'number' ? item.value : 0;
       const newValue = currentValue + amount;
       
       this.fallbackCache.set(key, {

@@ -1,5 +1,6 @@
 import { VertexAI } from '@google-cloud/vertexai';
 import { VertexAIService, getVertexAI, createPBLVertexAIService } from '../vertex-ai-service';
+import { AIModule } from '@/types/pbl';
 
 // Mock the VertexAI SDK
 jest.mock('@google-cloud/vertexai');
@@ -107,7 +108,8 @@ describe('vertex-ai-service', () => {
 
   describe('createPBLVertexAIService', () => {
     it('should create service with correct language instructions for Traditional Chinese', () => {
-      const aiModule = {
+      const aiModule: AIModule = {
+        role: 'tutor' as const,
         model: 'gemini-2.5-flash',
         persona: 'AI Tutor'
       };
@@ -124,7 +126,8 @@ describe('vertex-ai-service', () => {
     });
 
     it('should create service with English instructions by default', () => {
-      const aiModule = {
+      const aiModule: AIModule = {
+        role: 'tutor' as const,
         model: 'gemini-2.5-flash',
         persona: 'AI Assistant'
       };
