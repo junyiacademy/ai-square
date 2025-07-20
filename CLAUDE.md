@@ -317,6 +317,71 @@ AI: [執行: make ai-done]
 3. **優先更新現有文件** - 而非創建新文件
 4. **避免文件碎片化** - 相關內容集中在同一文件
 
+### 🏗️ 資料模型與命名規範
+
+#### 時間戳記欄位命名標準
+為避免重複修復相同問題，所有時間相關欄位必須遵循以下命名規範：
+
+1. **createdAt**: 記錄創建時間（所有實體必有）
+   - 對應 PostgreSQL: `created_at TIMESTAMP WITH TIME ZONE`
+   - TypeScript: `createdAt: Date`
+   - 永遠不要使用 `createTime`, `creationTime`, `startTime` 等
+
+2. **startedAt**: 實際開始時間（可選）
+   - 對應 PostgreSQL: `started_at TIMESTAMP WITH TIME ZONE`
+   - TypeScript: `startedAt?: Date`
+   - 用於記錄狀態從 pending → active 的時間
+
+3. **completedAt**: 完成時間（可選）
+   - 對應 PostgreSQL: `completed_at TIMESTAMP WITH TIME ZONE`
+   - TypeScript: `completedAt?: Date`
+   - 不要使用 `endTime`, `finishedAt` 等
+
+4. **updatedAt**: 最後更新時間
+   - 對應 PostgreSQL: `updated_at TIMESTAMP WITH TIME ZONE`
+   - TypeScript: `updatedAt: Date`
+
+#### 資料映射原則
+1. **PostgreSQL → TypeScript 映射必須一致**
+   ```typescript
+   // ✅ 正確
+   created_at → createdAt
+   started_at → startedAt
+   
+   // ❌ 錯誤
+   start_time → startTime (應該是 createdAt)
+   ```
+
+2. **避免語意混淆**
+   - `createdAt`: 資料庫記錄建立時間
+   - `startedAt`: 業務邏輯上的開始時間
+   - 不要混用這兩個概念
+
+3. **使用統一的映射函數**
+   ```typescript
+   // Repository 中統一處理時間欄位映射
+   created_at as "createdAt",
+   started_at as "startedAt",
+   completed_at as "completedAt",
+   updated_at as "updatedAt"
+   ```
+
+#### 防止「鬼打牆」開發問題
+1. **修改前先搜尋**
+   - 使用 `git log --grep` 檢查是否有類似的修改
+   - 使用 `grep -r` 搜尋所有相關使用處
+   - 確認修改會影響的所有地方
+
+2. **建立單一事實來源**
+   - PostgreSQL schema 是資料結構的事實來源
+   - TypeScript interfaces 必須與 schema 保持一致
+   - 不要在多處定義相同的類型
+
+3. **遵循既定模式**
+   - 查看現有程式碼的模式
+   - 不要創造新的命名方式
+   - 保持一致性
+
 ### 🚨 TypeScript 和 ESLint 嚴格規則
 
 #### 絕對禁止使用 any 類型
@@ -436,14 +501,45 @@ AI: [執行: make ai-done]
    - 必須確保沒有任何 TypeScript 類型錯誤
    - 不可以使用 any 類型繞過檢查
 
-3. **Build 檢查**：
+3. **測試執行**：
+   ```bash
+   # 執行相關測試
+   cd frontend && npm run test:ci
+   ```
+   - 必須確保所有測試通過
+   - 特別是修改過的檔案相關的測試
+
+4. **Build 檢查**：
    ```bash
    cd frontend && npm run build
    ```
    - 必須確保建置成功
    - 不能有任何編譯錯誤
 
-4. **只有在所有檢查都通過後才能 commit**
+5. **CLAUDE.md 規則檢查清單**：
+   - [ ] 時間戳記欄位是否使用正確命名（createdAt, startedAt, completedAt, updatedAt）？
+   - [ ] 是否有使用 any 類型？必須全部移除
+   - [ ] PostgreSQL 欄位映射是否正確（created_at → createdAt）？
+   - [ ] 是否檢查過 git log 避免重複修改？
+   - [ ] 是否遵循既有的程式碼模式？
+   - [ ] commit message 是否使用英文？
+   - [ ] 是否在開發到一半就自行 commit？必須等待用戶確認
+
+6. **只有在所有檢查都通過後才能 commit**
+
+#### Commit 前的自動化檢查指令
+```bash
+# 建議將這個指令存為 alias 或 script
+make pre-commit-check
+
+# 或手動執行
+cd frontend && \
+npx eslint $(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js|jsx)$') && \
+npx tsc --noEmit && \
+npm run test:ci && \
+npm run build && \
+echo "✅ All checks passed! Ready to commit."
+```
 
 #### Commit Message 規範
 1. **所有 commit messages 必須使用英文**

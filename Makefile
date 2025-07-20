@@ -17,7 +17,7 @@ DESC ?= ""
         gcp-build-and-push gcp-deploy-service deploy-gcp deploy-backend-gcp \
         test-frontend test-backend test-all test-e2e test-smart \
         dev-lint dev-typecheck dev-quality lint-backend \
-        clean clean-all build-journey \
+        clean clean-all build-journey pre-commit-check \
         graphiti graphiti-stop graphiti-status claude-init
 
 # 預設顯示幫助
@@ -337,6 +337,7 @@ help:
 	@echo "  $(GREEN)make dev-update$(NC)                                - 更新相依套件"
 	@echo ""
 	@echo "$(CYAN)品質檢查:$(NC)"
+	@echo "  $(RED)make pre-commit-check$(NC)                          - 🔍 Commit 前必須執行的檢查 $(YELLOW)(重要!)$(NC)"
 	@echo "  $(GREEN)make dev-quality$(NC)                               - 執行所有品質檢查"
 	@echo "  $(GREEN)make dev-lint$(NC)                                  - 執行程式碼檢查"
 	@echo "  $(GREEN)make dev-typecheck$(NC)                             - 執行型別檢查"
@@ -758,6 +759,37 @@ dev-typecheck:
 ## 執行所有品質檢查
 dev-quality: dev-lint dev-typecheck validate-scenarios
 	@echo "$(GREEN)✅ 所有品質檢查通過$(NC)"
+
+## Pre-commit 檢查 - 確保遵守 CLAUDE.md 規則
+pre-commit-check:
+	@echo "$(BLUE)🔍 執行 pre-commit 檢查...$(NC)"
+	@echo "$(YELLOW)1️⃣ ESLint 檢查變更的檔案...$(NC)"
+	@cd frontend && npx eslint $$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js|jsx)$$') || (echo "$(RED)❌ ESLint 檢查失敗$(NC)" && exit 1)
+	@echo "$(GREEN)✅ ESLint 檢查通過$(NC)"
+	@echo ""
+	@echo "$(YELLOW)2️⃣ TypeScript 類型檢查...$(NC)"
+	@cd frontend && npx tsc --noEmit || (echo "$(RED)❌ TypeScript 檢查失敗$(NC)" && exit 1)
+	@echo "$(GREEN)✅ TypeScript 檢查通過$(NC)"
+	@echo ""
+	@echo "$(YELLOW)3️⃣ 執行測試...$(NC)"
+	@cd frontend && npm run test:ci || (echo "$(RED)❌ 測試失敗$(NC)" && exit 1)
+	@echo "$(GREEN)✅ 測試通過$(NC)"
+	@echo ""
+	@echo "$(YELLOW)4️⃣ Build 檢查...$(NC)"
+	@cd frontend && npm run build || (echo "$(RED)❌ Build 失敗$(NC)" && exit 1)
+	@echo "$(GREEN)✅ Build 通過$(NC)"
+	@echo ""
+	@echo "$(YELLOW)5️⃣ CLAUDE.md 合規檢查清單:$(NC)"
+	@echo "   請手動確認:"
+	@echo "   $(CYAN)[ ]$(NC) 時間戳記欄位使用正確命名 (createdAt, startedAt, completedAt, updatedAt)"
+	@echo "   $(CYAN)[ ]$(NC) 沒有使用 'any' 類型"
+	@echo "   $(CYAN)[ ]$(NC) PostgreSQL 欄位映射正確 (created_at → createdAt)"
+	@echo "   $(CYAN)[ ]$(NC) 已檢查 git log 避免重複修改"
+	@echo "   $(CYAN)[ ]$(NC) 遵循既有的程式碼模式"
+	@echo "   $(CYAN)[ ]$(NC) Commit message 使用英文"
+	@echo "   $(CYAN)[ ]$(NC) 等待用戶確認後才 commit"
+	@echo ""
+	@echo "$(GREEN)✅ 所有自動化檢查通過！手動確認後即可 commit。$(NC)"
 
 #=============================================================================
 # 清理命令
