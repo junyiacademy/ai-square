@@ -1078,28 +1078,103 @@ The app uses a hybrid translation architecture:
 - **Gradient backgrounds** and **responsive design** patterns
 - **Custom animations** with CSS-in-JS for mobile interactions
 
-### Database Architecture
-AI Square 現在使用 **PostgreSQL** 作為主要資料庫：
+### Database Architecture (Unified Schema V3)
+AI Square 使用 **PostgreSQL** 作為主要資料庫，採用統一學習架構設計：
 
-#### 資料表結構
-- **users**: 用戶資料、學習偏好、語言設定
-- **scenarios**: 學習情境定義（從 YAML 同步）
-- **programs**: 用戶的學習計劃實例
-- **tasks**: 任務進度與互動記錄
-- **evaluations**: AI 評估結果與回饋
-- **achievements**: 用戶成就與里程碑
-- **user_achievements**: 用戶與成就的關聯
+#### 統一學習架構資料流
+```
+Content Source → Scenario (UUID) → Program (UUID) → Task (UUID) → Evaluation (UUID)
+```
+
+#### 核心資料表結構
+
+##### Scenarios 表（學習情境）
+- **id**: UUID 主鍵
+- **mode**: ENUM ('pbl', 'discovery', 'assessment') - 學習模式
+- **status**: ENUM ('draft', 'active', 'archived') - 發布狀態
+- **source_type**: ENUM ('yaml', 'api', 'ai-generated') - 來源類型
+- **source_path/source_id**: 來源識別
+- **source_metadata**: JSONB - 額外來源資訊
+- **title/description**: JSONB - 多語言支援
+- **objectives**: JSONB - 學習目標
+- **task_templates**: JSONB - 任務模板定義
+- **pbl_data/discovery_data/assessment_data**: JSONB - 模式特定資料
+- **ai_modules/resources**: JSONB - AI 模組與資源配置
+
+##### Programs 表（學習實例）
+- **id**: UUID 主鍵
+- **mode**: ENUM - 從 scenario 繼承的模式（使用 trigger 自動填充）
+- **scenario_id**: 關聯的情境
+- **user_id**: 學習者識別
+- **status**: ENUM ('pending', 'active', 'completed', 'expired')
+- **total_score/time_spent_seconds**: 學習成效追蹤
+- **started_at/completed_at**: 時間戳記
+
+##### Tasks 表（任務）
+- **id**: UUID 主鍵
+- **mode**: ENUM - 從 program 繼承的模式
+- **program_id**: 關聯的學習實例
+- **type**: ENUM ('question', 'chat', 'creation', 'analysis')
+- **title/instructions**: JSONB - 多語言支援
+- **context/metadata**: JSONB - 任務資料
+- **interactions**: JSONB - 互動記錄
+- **started_at/completed_at**: 任務時間追蹤
+
+##### Evaluations 表（評估）
+- **id**: UUID 主鍵
+- **mode**: ENUM - 從 task 繼承的模式
+- **task_id/user_id**: 關聯資訊
+- **evaluation_type**: ENUM ('formative', 'summative', 'diagnostic', 'ai-feedback')
+- **score/feedback**: 評估結果
+- **criteria/rubric**: JSONB - 評估標準
+- **ai_config/ai_response**: JSONB - AI 評估設定與回應
+
+#### 重要設計特點
+1. **Mode 欄位繼承**: programs、tasks、evaluations 都有 mode 欄位，透過 trigger 自動從上層繼承，避免過多 JOIN
+2. **多語言支援**: 使用 JSONB 儲存 `{en: "English", zh: "中文", ...}` 格式
+3. **彈性擴充**: 每個模式有專屬的 data 欄位（pbl_data、discovery_data、assessment_data）
+4. **統一介面**: 所有模式使用相同的資料流程和 Repository Pattern
+5. **時間戳記標準化**: 
+   - `createdAt`: 記錄建立時間
+   - `startedAt`: 實際開始時間（狀態從 pending → active）
+   - `completedAt`: 完成時間
+   - `updatedAt`: 最後更新時間
+
+#### TypeScript 型別對應
+```typescript
+// 資料庫 ENUM 對應
+export type LearningMode = 'pbl' | 'discovery' | 'assessment';
+export type SourceType = 'yaml' | 'api' | 'ai-generated';
+export type ScenarioStatus = 'draft' | 'active' | 'archived';
+export type ProgramStatus = 'pending' | 'active' | 'completed' | 'expired';
+export type TaskType = 'question' | 'chat' | 'creation' | 'analysis';
+export type EvaluationType = 'formative' | 'summative' | 'diagnostic' | 'ai-feedback';
+
+// 統一介面
+export interface IScenario {
+  id: string;
+  mode: LearningMode;
+  sourceType: SourceType;
+  sourcePath?: string;
+  sourceId?: string;
+  sourceMetadata?: Record<string, unknown>;
+  title: Record<string, string>;
+  description: Record<string, string>;
+  // ... 其他欄位
+}
+```
 
 #### 資料儲存策略
 - **PostgreSQL**: 所有動態用戶資料、學習記錄、進度追蹤
-- **YAML 檔案**: 靜態內容定義（情境、任務、KSA 映射）
+- **YAML 檔案**: 靜態內容定義（情境模板、KSA 映射、rubrics）
 - **Google Cloud Storage**: 僅用於靜態檔案（圖片、文件、媒體）
-- **Redis**: 快取層，提升查詢效能
+- **Redis**: 分散式快取層，提升查詢效能
 
-#### 重要提醒
-- **不再使用 GCS 作為資料庫**: 所有用戶資料都存在 PostgreSQL
-- **Repository Pattern**: 使用 PostgreSQL repositories 而非 GCS repositories
-- **事務支援**: 利用 PostgreSQL 的 ACID 特性確保資料一致性
+#### Repository Pattern 實作
+- 所有資料存取都透過 Repository 抽象層
+- 基礎介面定義在 `@/types/unified-learning.ts`
+- PostgreSQL 實作在 `@/lib/repositories/postgresql/`
+- 支援未來擴充其他資料庫（如 MongoDB）
 
 ### Configuration Files
 - `eslint.config.mjs` - Next.js + TypeScript ESLint setup
