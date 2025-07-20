@@ -4,6 +4,7 @@ import path from 'path';
 import yaml from 'js-yaml';
 import { cachedGET, parallel, memoize } from '@/lib/api/optimization-utils';
 import type { ITaskTemplate } from '@/types/unified-learning';
+import type { Scenario } from '@/lib/repositories/interfaces';
 
 // Type definitions remain the same
 interface KSAItem {
@@ -98,7 +99,7 @@ const loadKSACodes = memoize((async (...args: unknown[]) => {
     }
     return null;
   }
-}) as (...args: unknown[]) => unknown, 30 * 60 * 1000) as (lang?: string) => Promise<KSAData | null>; cache
+}) as (...args: unknown[]) => unknown, 30 * 60 * 1000) as (lang?: string) => Promise<KSAData | null>;
 
 // Optimized KSA lookup with indexing
 const ksaIndexCache = new Map<string, Map<string, KSAItem>>();
@@ -223,7 +224,7 @@ export async function GET(
         return scenarioRepo.findById(scenarioId);
       })(),
       loadKSACodes(lang)
-    ) as [Awaited<ReturnType<typeof repositoryFactory.getScenarioRepository>['findById']>, KSAData | null];
+    ) as [Scenario | null, KSAData | null];
     
     if (!scenarioResult) {
       throw new Error('Scenario not found');
@@ -239,8 +240,6 @@ export async function GET(
     // Transform to API response format
     const scenarioResponse: ScenarioResponse = {
       id: scenarioResult.id,
-      yamlId: (scenarioResult.sourceRef?.metadata as any)?.yamlId,
-      sourceType: scenarioResult.sourceType,
       title: scenarioResult.title || '',
       description: scenarioResult.description || '',
       difficulty: scenarioResult.metadata?.difficulty || 'intermediate',

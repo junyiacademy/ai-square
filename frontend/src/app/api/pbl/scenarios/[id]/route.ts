@@ -4,6 +4,7 @@ import path from 'path';
 import yaml from 'js-yaml';
 import { cachedGET, parallel, memoize } from '@/lib/api/optimization-utils';
 import type { ITaskTemplate } from '@/types/unified-learning';
+import type { Scenario } from '@/lib/repositories/interfaces';
 
 // Type definitions for KSA mapping
 interface KSAItem {
@@ -239,7 +240,7 @@ export async function GET(
         }
       })(),
       loadKSACodes(lang)
-    ) as [Awaited<ReturnType<typeof scenarioRepo.findById>>, KSAData | null];
+    ) as [Scenario | null, KSAData | null];
     
     if (!scenarioResult) {
       throw new Error('Scenario not found');
@@ -255,8 +256,6 @@ export async function GET(
     // Transform to API response format
     const scenarioResponse: ScenarioResponse = {
       id: scenarioResult.id,
-      yamlId: (scenarioResult.sourceRef?.metadata as any)?.yamlId,
-      sourceType: (scenarioResult as any).sourceType || 'pbl',
       title: scenarioResult.title || '',
       description: scenarioResult.description || '',
       difficulty: (scenarioResult.metadata as any)?.difficulty || 'intermediate',

@@ -109,14 +109,22 @@ export async function POST(
         content: {
           description: taskTemplate.description,
           instructions: taskTemplate.description
+        },
+        context: {
+          scenarioId: scenarioId,
+          taskType: taskTemplate.type,
+          difficulty: scenario.metadata?.difficulty || 'intermediate',
+          estimatedTime: taskTemplate.metadata?.estimatedTime as number || 30
         }
       });
       
-      createdTasks.push(task as ITask);
+      createdTasks.push(task as unknown as ITask);
     }
     
     // Update program with task IDs
-    await programRepo.update(program.id, createdTasks.map(t => t.id));
+    await programRepo.update(program.id, {
+      taskIds: createdTasks.map(t => t.id)
+    });
     
     console.log('   ✅ Created', createdTasks.length, 'tasks with UUIDs:', createdTasks.map(t => t.id));
     

@@ -97,7 +97,8 @@ describe('/api/pbl/scenarios', () => {
       ]);
       
       // Mock createScenarioFromYAML to return translated content based on language
-      mockPblScenarioService.createScenarioFromYAML.mockImplementation(async (yamlId, lang) => {
+      mockPblScenarioService.createScenarioFromYAML.mockImplementation(async (yamlId: string, language?: string) => {
+        const lang = language || 'en';
         if (yamlId === 'ai-job-search') {
           const titleMap: Record<string, string> = {
             'en': 'AI-Powered Job Search Assistant',
@@ -402,7 +403,8 @@ describe('/api/pbl/scenarios', () => {
       ]);
       
       // Mock createScenarioFromYAML to return translated content based on language
-      mockPblScenarioService.createScenarioFromYAML.mockImplementation(async (yamlId, lang) => {
+      mockPblScenarioService.createScenarioFromYAML.mockImplementation(async (yamlId: string, language?: string) => {
+        const lang = language || 'en';
         if (yamlId === 'ai-job-search') {
           const titleMap: Record<string, string> = {
             'en': 'AI-Powered Job Search Assistant',
