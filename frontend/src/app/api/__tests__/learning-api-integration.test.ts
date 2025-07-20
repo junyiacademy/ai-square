@@ -7,7 +7,7 @@ import { NextRequest } from 'next/server';
 import { jest } from '@jest/globals';
 
 // Mock authentication (simulating session without next-auth dependency)
-const mockGetServerSession = jest.fn(() => Promise.resolve({
+const mockGetServerSession = jest.fn<() => Promise<{ user: { id: string; email: string } } | null>>(() => Promise.resolve({
   user: { id: 'test-user-id', email: 'test@example.com' }
 }));
 
