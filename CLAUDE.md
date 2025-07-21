@@ -1398,7 +1398,38 @@ npm run typecheck 2>&1 | grep -E "error TS2322" | head -10  # Type assignment er
 npm run typecheck 2>&1 | grep -E "error TS2722" | head -10  # Possibly undefined
 ```
 
-### 2. **優先順序策略**
+### 2. **檢查使用情況（重要！）**
+
+在修復任何錯誤之前，先確認該檔案或函數是否還在使用中：
+
+```bash
+# 檢查檔案是否被引用
+grep -r "from.*filename" --include="*.ts" --include="*.tsx" .
+grep -r "import.*filename" --include="*.ts" --include="*.tsx" .
+
+# 檢查函數是否被呼叫
+grep -r "functionName" --include="*.ts" --include="*.tsx" . | grep -v "function functionName"
+
+# 使用 Git 查看最後修改時間
+git log -1 --format="%ci" path/to/file.ts
+
+# 檢查是否在任何 export 中
+grep -r "export.*from.*filename" --include="*.ts" --include="*.tsx" .
+```
+
+#### 刪除未使用程式碼的原則
+1. **確認完全沒有引用** - 使用多種方式交叉確認
+2. **檢查動態引用** - 注意字串拼接的 import
+3. **確認測試檔案** - 可能只在測試中使用
+4. **保留必要的範例** - 有些檔案可能是文檔範例
+
+```bash
+# 安全刪除流程
+git rm path/to/unused-file.ts
+git commit -m "chore: remove unused file [filename]"
+```
+
+### 3. **優先順序策略**
 1. **批量修復相同模式的錯誤**（效率最高）
    - 例如：`dimensions` → `dimensionScores`（一次修復 21 個）
    - 例如：`sourceRef` → `sourceType/sourcePath/sourceId`（一次修復 11 個）
@@ -1411,7 +1442,7 @@ npm run typecheck 2>&1 | grep -E "error TS2722" | head -10  # Possibly undefined
    - 先修復簡單的屬性名稱錯誤
    - 再修復複雜的類型不匹配
 
-### 3. **修復技巧**
+### 4. **修復技巧**
 
 #### A. 屬性名稱變更
 ```bash
@@ -1444,7 +1475,7 @@ title: 'PBL Scenario'
 title: { en: 'PBL Scenario' }
 ```
 
-### 4. **避免破壞功能的原則**
+### 5. **避免破壞功能的原則**
 
 #### 理解錯誤的根本原因
 ```typescript
@@ -1475,7 +1506,7 @@ const programs = await programRepo.getActivePrograms?.(userId);
 const programs = await programRepo.getActivePrograms?.(userId) || [];
 ```
 
-### 5. **常見錯誤模式與解法**
+### 6. **常見錯誤模式與解法**
 
 | 錯誤類型 | 錯誤訊息 | 解決方法 |
 |---------|---------|---------|
@@ -1485,13 +1516,13 @@ const programs = await programRepo.getActivePrograms?.(userId) || [];
 | TS2345 | Argument type mismatch | 確保參數類型符合函數定義 |
 | TS18046 | 'error' is of type 'unknown' | 使用 `error instanceof Error` 檢查 |
 
-### 6. **提交原則**
+### 7. **提交原則**
 - 每修復 50-100 個錯誤就提交一次
 - Commit message 要清楚說明修了什麼
 - 記錄錯誤數量的變化
 - 不要為了消除錯誤而使用 `any` 類型
 
-### 7. **關鍵原則**
+### 8. **關鍵原則**
 1. **理解 > 修復**：先理解為什麼會有這個錯誤
 2. **測試保護**：修復前後都要跑測試
 3. **保留業務邏輯**：確保原本的功能意圖不變
