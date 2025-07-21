@@ -150,7 +150,10 @@ export async function POST(
     
     // Update program with task IDs
     await programRepo.update?.(program.id, {
-      taskIds: createdTasks.map(t => t.id)
+      metadata: {
+        ...program.metadata,
+        taskIds: createdTasks.map(t => t.id)
+      }
     });
     
     console.log('   ✅ Created', createdTasks.length, 'tasks with UUIDs:', createdTasks.map(t => t.id));

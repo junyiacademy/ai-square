@@ -147,7 +147,7 @@ async function loadTranslation(
   }
 }
 
-async function getUserProgress({}: { scenarioId: string; userId: string }) {
+async function getUserProgress(params: { scenarioId: string; userId: string }) {
   // TODO: 實作從 GCS 獲取用戶進度
   return {
     completedPrograms: 0,

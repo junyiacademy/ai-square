@@ -72,21 +72,30 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
 
     return {
       id: uuidv4(),
-      targetType: 'program',
-      targetId: program.id,
       programId: program.id,
       userId: program.userId,
-      evaluationType: 'program_completion',
+      mode: program.mode,
+      evaluationType: 'program',
+      evaluationSubtype: 'program_completion',
       score: averageScore,
+      maxScore: 100,
       feedbackText: await this.generateProgramFeedback(program, taskEvaluations),
+      feedbackData: {},
       dimensionScores: aggregatedDimensions,
+      aiAnalysis: {},
+      timeTakenSeconds: program.timeSpentSeconds || 0,
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {},
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       metadata: {
+        targetType: 'program',
         taskCount: taskEvaluations.length,
         completionTime: this.calculateCompletionTime(program),
         sourceType: program.metadata?.sourceType
       }
-    };
+    } as IEvaluation;
   }
 
   /**
@@ -119,31 +128,41 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
     const qualityScore = this.analyzePBLInteractionQuality(interactions);
     
     // KSA 維度評分
-    const dimensionScores: IDimensionScore[] = [
-      { dimension: 'knowledge', score: qualityScore.knowledge, maxScore: 100 },
-      { dimension: 'skills', score: qualityScore.skills, maxScore: 100 },
-      { dimension: 'attitudes', score: qualityScore.attitudes, maxScore: 100 }
-    ];
+    const dimensionScores: Record<string, number> = {
+      knowledge: qualityScore.knowledge,
+      skills: qualityScore.skills,
+      attitudes: qualityScore.attitudes
+    };
 
     const overallScore = (qualityScore.knowledge + qualityScore.skills + qualityScore.attitudes) / 3;
 
     return {
       id: uuidv4(),
-      targetType: 'task',
-      targetId: task.id,
+      taskId: task.id,
       programId: task.programId,
       userId: context.program.userId,
-      evaluationType: 'pbl_task',
+      mode: 'pbl' as LearningMode,
+      evaluationType: 'task',
+      evaluationSubtype: 'pbl_task',
       score: overallScore,
+      maxScore: 100,
       feedbackText: `Your PBL task shows ${this.getScoreLevel(overallScore)} understanding and engagement.`,
+      feedbackData: {},
       dimensionScores,
+      aiAnalysis: {},
+      timeTakenSeconds: 0,
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {},
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       metadata: {
         interactionCount: interactions.length,
         ksaCodes: task.content.context?.ksaCodes || [],
-        sourceType: 'pbl'
+        sourceType: 'pbl',
+        targetType: 'task'
       }
-    };
+    } as IEvaluation;
   }
 
   /**
@@ -165,22 +184,32 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
 
     return {
       id: uuidv4(),
-      targetType: 'task',
-      targetId: task.id,
+      taskId: task.id,
       programId: task.programId,
       userId: context.program.userId,
-      evaluationType: 'assessment_task',
+      mode: 'assessment' as LearningMode,
+      evaluationType: 'task',
+      evaluationSubtype: 'assessment_task',
       score,
+      maxScore: 100,
       feedbackText: `You answered ${correctAnswers} out of ${questions.length} questions correctly.`,
+      feedbackData: {},
       dimensionScores: domainScores,
+      aiAnalysis: {},
+      timeTakenSeconds: 0,
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {},
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       metadata: {
+        targetType: 'task',
         totalQuestions: questions.length,
         correctAnswers,
         timeSpent: this.calculateTimeSpent(task),
         sourceType: 'assessment'
       }
-    };
+    } as IEvaluation;
   }
 
   /**
@@ -195,20 +224,32 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
 
     return {
       id: uuidv4(),
-      targetType: 'task',
-      targetId: task.id,
+      taskId: task.id,
       programId: task.programId,
       userId: context.program.userId,
-      evaluationType: 'discovery_task',
+      mode: 'discovery' as LearningMode,
+      evaluationType: 'task',
+      evaluationSubtype: 'discovery_task',
       score: explorationQuality * 100,
+      maxScore: 100,
       feedbackText: `Great exploration! You earned ${xpEarned} XP.`,
-      createdAt: new Date().toISOString(),
-      metadata: {
+      feedbackData: {},
+      dimensionScores: {},
+      aiAnalysis: {},
+      timeTakenSeconds: 0,
+      pblData: {},
+      discoveryData: {
         xpEarned,
-        skillsImproved: task.content.context?.requiredSkills || [],
+        skillsImproved: task.content.context?.requiredSkills || []
+      },
+      assessmentData: {},
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      metadata: {
+        targetType: 'task',
         sourceType: 'discovery'
       }
-    };
+    } as IEvaluation;
   }
 
   /**
@@ -220,19 +261,30 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
     
     return {
       id: uuidv4(),
-      targetType: 'task',
-      targetId: task.id,
+      taskId: task.id,
       programId: task.programId,
       userId: context.program.userId,
-      evaluationType: 'generic_task',
+      mode: context.program.mode,
+      evaluationType: 'task',
+      evaluationSubtype: 'generic_task',
       score: hasInteractions ? 100 : 0,
+      maxScore: 100,
       feedbackText: hasInteractions ? 'Task completed successfully.' : 'No interactions recorded.',
+      feedbackData: {},
+      dimensionScores: {},
+      aiAnalysis: {},
+      timeTakenSeconds: 0,
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {},
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       metadata: {
+        targetType: 'task',
         interactionCount: interactions.length,
         sourceType: context.scenario.sourceType
       }
-    };
+    } as IEvaluation;
   }
 
   /**

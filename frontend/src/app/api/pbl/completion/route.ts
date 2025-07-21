@@ -71,10 +71,11 @@ export async function GET(request: NextRequest) {
     const tasks = await taskRepo.findByProgram(programId);
     
     // Sort tasks by their position in the program's taskIds array
-    const sortedTasks = program.taskIds ? 
+    const taskIds = (program.metadata?.taskIds || []) as string[];
+    const sortedTasks = taskIds.length > 0 ? 
       tasks.sort((a: Task, b: Task) => {
-        const indexA = program.taskIds!.indexOf(a.id);
-        const indexB = program.taskIds!.indexOf(b.id);
+        const indexA = taskIds.indexOf(a.id);
+        const indexB = taskIds.indexOf(b.id);
         return indexA - indexB;
       }) : tasks;
     

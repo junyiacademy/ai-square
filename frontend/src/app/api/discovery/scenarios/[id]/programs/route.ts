@@ -373,9 +373,9 @@ export async function POST(
     // Update program with task IDs and set currentTaskId
     const firstTaskId = createdTasks[0]?.id;
     await programRepo.update?.(program.id, {
-      taskIds: createdTasks.map(t => t.id),
       metadata: {
         ...program.metadata,
+        taskIds: createdTasks.map(t => t.id),
         currentTaskId: firstTaskId, // Set the first task as current
         currentTaskIndex: 0
       }

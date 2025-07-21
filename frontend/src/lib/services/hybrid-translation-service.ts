@@ -218,8 +218,8 @@ export class HybridTranslationService {
             if (task) {
               task.title = getTranslated(yamlTask as Record<string, unknown>, 'title') || task.title;
               task.description = getTranslated(yamlTask as Record<string, unknown>, 'description') || task.description;
-              (task as Record<string, unknown>).instructions = getTranslated(yamlTask as Record<string, unknown>, 'instructions') || (task as Record<string, unknown>).instructions;
-              (task as Record<string, unknown>).expected_outcome = getTranslated(yamlTask as Record<string, unknown>, 'expected_outcome') || (task as Record<string, unknown>).expected_outcome;
+              (task as unknown as Record<string, unknown>).instructions = getTranslated(yamlTask as unknown as Record<string, unknown>, 'instructions') || (task as unknown as Record<string, unknown>).instructions;
+              (task as unknown as Record<string, unknown>).expected_outcome = getTranslated(yamlTask as unknown as Record<string, unknown>, 'expected_outcome') || (task as unknown as Record<string, unknown>).expected_outcome;
             }
           });
         }

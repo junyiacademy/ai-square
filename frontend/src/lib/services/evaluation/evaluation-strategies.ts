@@ -107,23 +107,33 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
 
     return {
       id: uuidv4(),
-      targetType: 'task',
-      targetId: task.id,
+      taskId: task.id,
       programId: task.programId,
       userId: context.program.userId,
-      type: 'pbl_task',
+      mode: 'pbl' as const,
+      evaluationType: 'task',
+      evaluationSubtype: 'pbl_task',
       score: Math.round(overallScore),
-      feedback: this.generateTaskFeedback(overallScore, qualityMetrics),
-      dimensionScores,
+      maxScore: 100,
+      feedbackText: this.generateTaskFeedback(overallScore, qualityMetrics),
+      feedbackData: {},
+      dimensionScores: this.convertDimensionScoresToRecord(dimensionScores),
+      aiAnalysis: {},
+      timeTakenSeconds: 0,
+      pblData: {
+        qualityMetrics,
+        interactionQuality: this.getInteractionQuality(qualityMetrics)
+      },
+      discoveryData: {},
+      assessmentData: {},
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       metadata: {
         sourceType: 'pbl',
         interactionCount: interactions.length,
-        ksaCodes: pblTask.content?.context?.ksaCodes || [],
-        qualityMetrics,
-        interactionQuality: this.getInteractionQuality(qualityMetrics)
+        ksaCodes: pblTask.content?.context?.ksaCodes || []
       }
-    };
+    } as IEvaluation;
   }
 
   async evaluateProgram(program: IProgram, taskEvaluations: IEvaluation[]): Promise<IEvaluation> {
@@ -137,22 +147,30 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
 
     return {
       id: uuidv4(),
-      targetType: 'program',
-      targetId: program.id,
       programId: program.id,
       userId: program.userId,
-      type: 'pbl_completion',
+      mode: 'pbl' as const,
+      evaluationType: 'program',
+      evaluationSubtype: 'pbl_completion',
       score: Math.round(averageScore),
-      feedback: this.generateProgramFeedback(averageScore, taskEvaluations),
+      maxScore: 100,
+      feedbackText: this.generateProgramFeedback(averageScore, taskEvaluations),
+      feedbackData: {},
       dimensionScores,
+      aiAnalysis: {},
+      timeTakenSeconds: program.timeSpentSeconds || 0,
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {},
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       metadata: {
         sourceType: 'pbl',
         taskCount: taskEvaluations.length,
         completionTime: this.calculateCompletionTime(program),
         ksaAchieved: this.extractAchievedKSA(taskEvaluations)
       }
-    };
+    } as IEvaluation;
   }
 
   protected calculateQualityMetrics(interactions: IInteraction[]): QualityMetrics {
@@ -260,6 +278,13 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
     });
     return Array.from(ksaSet);
   }
+
+  private convertDimensionScoresToRecord(dimensionScores: IDimensionScore[]): Record<string, number> {
+    return dimensionScores.reduce((acc, score) => {
+      acc[score.dimension] = score.score;
+      return acc;
+    }, {} as Record<string, number>);
+  }
 }
 
 /**
@@ -286,17 +311,31 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
 
     return {
       id: uuidv4(),
-      targetType: 'task',
-      targetId: task.id,
+      taskId: task.id,
       programId: task.programId,
       userId: context.program.userId,
-      type: 'assessment_task',
+      mode: 'assessment' as const,
+      evaluationType: 'task',
+      evaluationSubtype: 'assessment_task',
       score: Math.round(finalScore * 100) / 100, // Round to 2 decimals
-      feedback: `You answered ${correctCount} out of ${totalCount} questions correctly.`,
+      maxScore: 100,
+      feedbackText: `You answered ${correctCount} out of ${totalCount} questions correctly.`,
+      feedbackData: {},
       dimensionScores: this.convertDomainScoresToDimensions(domainScores),
+      aiAnalysis: {},
+      timeTakenSeconds: timeSpent,
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {
+        questionResults,
+        domainScores,
+        timeBonus
+      },
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       metadata: {
         sourceType: 'assessment',
+        targetType: 'task',
         totalQuestions: totalCount,
         correctAnswers: correctCount,
         timeSpent,
@@ -304,7 +343,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
         questionResults,
         domainScores
       }
-    };
+    } as IEvaluation;
   }
 
   async evaluateProgram(program: IProgram, taskEvaluations: IEvaluation[]): Promise<IEvaluation> {
@@ -318,22 +357,32 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
 
     return {
       id: uuidv4(),
-      targetType: 'program',
-      targetId: program.id,
       programId: program.id,
       userId: program.userId,
-      type: 'assessment_complete',
+      mode: 'assessment' as const,
+      evaluationType: 'program',
+      evaluationSubtype: 'assessment_complete',
       score: Math.round(averageScore),
-      feedback: this.generateAssessmentProgramFeedback(averageScore, taskEvaluations),
+      maxScore: 100,
+      feedbackText: this.generateAssessmentProgramFeedback(averageScore, taskEvaluations),
+      feedbackData: {},
       dimensionScores: aggregatedDomains,
-      createdAt: new Date().toISOString(),
-      metadata: {
-        sourceType: 'assessment',
-        taskCount: taskEvaluations.length,
+      aiAnalysis: {},
+      timeTakenSeconds: program.timeSpentSeconds || 0,
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {
         totalQuestions: this.getTotalQuestions(taskEvaluations),
         competencyGaps: this.identifyCompetencyGaps(aggregatedDomains)
+      },
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      metadata: {
+        sourceType: 'assessment',
+        targetType: 'program',
+        taskCount: taskEvaluations.length
       }
-    };
+    } as IEvaluation;
   }
 
   private calculateAssessmentScores(interactions: IInteraction[], questions: AssessmentQuestion[]): AssessmentScoresResult {
@@ -430,10 +479,10 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
     return evaluations.reduce((sum, e) => sum + (e.metadata?.totalQuestions || 0), 0);
   }
 
-  private identifyCompetencyGaps(dimensionScores: IDimensionScore[]): string[] {
-    return dimensionScores
-      .filter(d => d.score < 70)
-      .map(d => d.dimension);
+  private identifyCompetencyGaps(dimensionScores: Record<string, number>): string[] {
+    return Object.entries(dimensionScores)
+      .filter(([_, score]) => score < 70)
+      .map(([dimension, _]) => dimension);
   }
 }
 
@@ -458,16 +507,21 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
 
     return {
       id: uuidv4(),
-      targetType: 'task',
-      targetId: task.id,
+      taskId: task.id,
       programId: task.programId,
       userId: context.program.userId,
-      type: 'discovery_task',
+      mode: 'discovery' as const,
+      evaluationType: 'task',
+      evaluationSubtype: 'discovery_task',
       score: explorationScore,
-      feedback: this.generateDiscoveryFeedback(explorationScore, totalXP),
-      createdAt: new Date().toISOString(),
-      metadata: {
-        sourceType: 'discovery',
+      maxScore: 100,
+      feedbackText: this.generateDiscoveryFeedback(explorationScore, totalXP),
+      feedbackData: {},
+      dimensionScores: {},
+      aiAnalysis: {},
+      timeTakenSeconds: 0,
+      pblData: {},
+      discoveryData: {
         xpEarned: totalXP,
         baseXP,
         challengeXP,
@@ -475,8 +529,15 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
         challengesCompleted: challengesCompleted.map(c => c.id),
         explorationDepth: this.calculateExplorationDepth(interactions),
         skillsImproved: discoveryTask.content?.context?.requiredSkills || []
+      },
+      assessmentData: {},
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      metadata: {
+        sourceType: 'discovery',
+        targetType: 'task'
       }
-    };
+    } as IEvaluation;
   }
 
   async evaluateProgram(program: IProgram, taskEvaluations: IEvaluation[]): Promise<IEvaluation> {
@@ -491,24 +552,35 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
 
     return {
       id: uuidv4(),
-      targetType: 'program',
-      targetId: program.id,
       programId: program.id,
       userId: program.userId,
-      type: 'discovery_complete',
+      mode: 'discovery' as const,
+      evaluationType: 'program',
+      evaluationSubtype: 'discovery_complete',
       score: 100, // Discovery programs are always "complete"
-      feedback: this.generateDiscoveryProgramFeedback(totalXP, milestones),
-      createdAt: new Date().toISOString(),
-      metadata: {
-        sourceType: 'discovery',
+      maxScore: 100,
+      feedbackText: this.generateDiscoveryProgramFeedback(totalXP, milestones),
+      feedbackData: {},
+      dimensionScores: {},
+      aiAnalysis: {},
+      timeTakenSeconds: program.timeSpentSeconds || 0,
+      pblData: {},
+      discoveryData: {
         totalXP: totalXP + bonusXP,
         earnedXP,
         bonusXP,
         milestonesAchieved: milestones.map(m => m.id),
         discoveryLevel: this.calculateDiscoveryLevel(totalXP + bonusXP),
         toolsMastered: this.aggregateToolsMastered(taskEvaluations)
+      },
+      assessmentData: {},
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      metadata: {
+        sourceType: 'discovery',
+        targetType: 'program'
       }
-    };
+    } as IEvaluation;
   }
 
   protected calculateExplorationScore(interactions: IInteraction[], goals: string[]): number {

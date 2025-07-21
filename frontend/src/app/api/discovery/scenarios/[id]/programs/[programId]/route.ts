@@ -43,14 +43,15 @@ export async function GET(
     const taskMap = new Map(allTasks.map(t => [t.id, t]));
     
     // Get tasks in the correct order based on program.taskIds
-    const tasks = (program as any).taskIds
+    const taskIds = (program.metadata?.taskIds || []) as string[];
+    const tasks = taskIds
       .map((id: string) => taskMap.get(id))
       .filter(Boolean) as unknown as ITask[];
     
     // Debug logging
     console.log('Program task order:', {
       programId: program.id,
-      taskIds: program.taskIds,
+      taskIds: taskIds,
       orderedTaskTitles: tasks.map(t => ({ id: t.id, title: t.title, status: t.status, index: t.scenarioTaskIndex }))
     });
     
@@ -137,7 +138,7 @@ export async function GET(
       createdAt: program.createdAt,
       completedAt: program.completedAt,
       currentTaskIndex: program.currentTaskIndex,
-      taskIds: program.taskIds,
+      taskIds: taskIds,
       tasks: tasksSummary,
       totalTasks: tasks.length,
       completedTasks: completedCount,

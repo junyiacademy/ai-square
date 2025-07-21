@@ -45,7 +45,7 @@ export async function GET(
     // Calculate progress for each program
     const programsWithProgress = await Promise.all(
       userPrograms.map(async (program: Program) => {
-        const taskCount = program.taskIds.length;
+        const taskCount = (program.metadata?.taskIds as string[] || []).length;
         const completedCount = program.status === 'completed' 
           ? taskCount 
           : program.currentTaskIndex;

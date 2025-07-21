@@ -8,7 +8,7 @@ import { TranslationService } from '@/lib/services/translation-service';
 import { Interaction } from '@/lib/repositories/interfaces';
 
 // System prompt for AI - keep in English as it's for the AI model
-function getSystemPromptForLanguage({}: { language: string }): string {
+function getSystemPromptForLanguage(language: string): string {
   return 'You are an expert educational psychologist and learning coach.';
 }
 
@@ -77,7 +77,7 @@ function getSkillsSection(language: string, skills: string[]): string {
   return `\n- Demonstrated abilities: ${skills.join(', ')}`;
 }
 
-function getFallbackMessage({}: { language: string }): string {
+function getFallbackMessage(language: string): string {
   // For now, use simple message - will be replaced with i18n
   return 'Congratulations on successfully completing this task! Your effort and persistence are commendable.';
 }
@@ -589,7 +589,7 @@ Return your evaluation as a JSON object:
         
         // Use AI to generate comprehensive qualitative feedback
         const aiService = new VertexAIService({
-          systemPrompt: getSystemPromptForLanguage({ language: userLanguage }),
+          systemPrompt: getSystemPromptForLanguage(userLanguage),
           temperature: 0.8,
           model: 'gemini-2.5-flash'
         });
@@ -645,12 +645,12 @@ Return your evaluation as a JSON object:
         if (lastSuccessfulInteraction) {
           try {
             const parsed = JSON.parse(lastSuccessfulInteraction.content) as { feedback?: string };
-            comprehensiveFeedback = parsed.feedback || getFallbackMessage({ language: userLanguage });
+            comprehensiveFeedback = parsed.feedback || getFallbackMessage(userLanguage);
           } catch {
-            comprehensiveFeedback = getFallbackMessage({ language: userLanguage });
+            comprehensiveFeedback = getFallbackMessage(userLanguage);
           }
         } else {
-          comprehensiveFeedback = getFallbackMessage({ language: userLanguage });
+          comprehensiveFeedback = getFallbackMessage(userLanguage);
         }
         
         if (userAttempts > 1) {
@@ -912,7 +912,7 @@ Return your evaluation as a JSON object:
         console.log('==================================');
         
         const aiService = new VertexAIService({
-          systemPrompt: getSystemPromptForLanguage({ language: userLanguage }),
+          systemPrompt: getSystemPromptForLanguage(userLanguage),
           temperature: 0.8,
           model: 'gemini-2.5-flash'
         });
