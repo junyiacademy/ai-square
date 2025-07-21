@@ -1382,6 +1382,125 @@ MVP 絕不能省的：
 - 正確的抽象層能救你一命
 - 文件化決策避免重蹈覆轍
 
+## 🔧 TypeScript 錯誤修復 SOP
+
+### 1. **評估現況**
+```bash
+# 計算總錯誤數
+npm run typecheck 2>&1 | grep -E "error TS[0-9]+" | wc -l
+
+# 查看錯誤類型分佈
+npm run typecheck 2>&1 | grep -E "error TS[0-9]+" | sort | uniq -c | sort -nr | head -20
+
+# 查看特定錯誤類型
+npm run typecheck 2>&1 | grep -E "error TS2339" | head -10  # Property does not exist
+npm run typecheck 2>&1 | grep -E "error TS2322" | head -10  # Type assignment error
+npm run typecheck 2>&1 | grep -E "error TS2722" | head -10  # Possibly undefined
+```
+
+### 2. **優先順序策略**
+1. **批量修復相同模式的錯誤**（效率最高）
+   - 例如：`dimensions` → `dimensionScores`（一次修復 21 個）
+   - 例如：`sourceRef` → `sourceType/sourcePath/sourceId`（一次修復 11 個）
+
+2. **修復影響面最大的錯誤**
+   - 介面定義錯誤（會導致連鎖錯誤）
+   - 基礎類型定義錯誤
+
+3. **由簡到難**
+   - 先修復簡單的屬性名稱錯誤
+   - 再修復複雜的類型不匹配
+
+### 3. **修復技巧**
+
+#### A. 屬性名稱變更
+```bash
+# 使用 grep 找出所有使用舊屬性的地方
+grep -r "\.dimensions" --include="*.ts" --include="*.tsx" .
+
+# 批量替換（使用 MultiEdit）
+old_string: "dimensionScores: ["
+new_string: "dimensionScores: {"
+```
+
+#### B. Optional Method 呼叫
+```typescript
+// ❌ 錯誤
+await taskRepo.updateStatus(id, status);
+
+// ✅ 正確
+await taskRepo.updateStatus?.(id, status);
+
+// ✅ 需要預設值時
+const result = await repo.findActive?.() || [];
+```
+
+#### C. 類型不匹配
+```typescript
+// ❌ 錯誤：title 應該是多語言物件
+title: 'PBL Scenario'
+
+// ✅ 正確
+title: { en: 'PBL Scenario' }
+```
+
+### 4. **避免破壞功能的原則**
+
+#### 理解錯誤的根本原因
+```typescript
+// ❌ 錯誤做法：盲目消除錯誤
+const tasks = []; // 這會破壞功能！
+
+// ✅ 正確做法：找出正確的資料來源
+const tasks = await taskRepo.findByProgram(program.id);
+```
+
+#### 測試驅動的修復流程
+```bash
+# 1. 先跑測試，確認目前功能正常
+npm run test -- --testNamePattern="assessment complete"
+
+# 2. 修復 TypeScript 錯誤
+
+# 3. 再跑一次測試，確保功能沒壞
+npm run test -- --testNamePattern="assessment complete"
+```
+
+#### 處理 Optional 的正確方式
+```typescript
+// ❌ 錯誤：可能返回 undefined
+const programs = await programRepo.getActivePrograms?.(userId);
+
+// ✅ 正確：提供合理的預設值
+const programs = await programRepo.getActivePrograms?.(userId) || [];
+```
+
+### 5. **常見錯誤模式與解法**
+
+| 錯誤類型 | 錯誤訊息 | 解決方法 |
+|---------|---------|---------|
+| TS2339 | Property 'X' does not exist | 檢查屬性名稱是否正確、是否需要更新介面定義 |
+| TS2322 | Type 'X' is not assignable to type 'Y' | 修正類型定義或轉換資料格式 |
+| TS2722 | Cannot invoke possibly 'undefined' | 使用 optional chaining (`?.`) |
+| TS2345 | Argument type mismatch | 確保參數類型符合函數定義 |
+| TS18046 | 'error' is of type 'unknown' | 使用 `error instanceof Error` 檢查 |
+
+### 6. **提交原則**
+- 每修復 50-100 個錯誤就提交一次
+- Commit message 要清楚說明修了什麼
+- 記錄錯誤數量的變化
+- 不要為了消除錯誤而使用 `any` 類型
+
+### 7. **關鍵原則**
+1. **理解 > 修復**：先理解為什麼會有這個錯誤
+2. **測試保護**：修復前後都要跑測試
+3. **保留業務邏輯**：確保原本的功能意圖不變
+4. **防禦性程式設計**：處理 undefined/null 的情況
+5. **註解說明**：複雜的修復要加註解說明原因
+6. **小步前進**：一次修一個問題，確認沒問題再繼續
+
+記住：**TypeScript 錯誤通常是在提醒我們程式碼可能有問題**，而不是要我們盲目地讓它閉嘴。
+
 ---
 
 Note: This CLAUDE.md file must remain in the project root directory to be automatically read by Claude AI.
