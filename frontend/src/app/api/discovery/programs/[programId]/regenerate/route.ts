@@ -235,7 +235,7 @@ Return your response in JSON format:
       console.log('Note: Update method not available in evaluation repository');
       
       // Update program metadata
-      await programRepo.update(programId, {
+      await programRepo.update?.(programId, {
         metadata: {
           ...program.metadata,
           totalXP,
@@ -259,33 +259,39 @@ Return your response in JSON format:
       console.log('Creating new evaluation (none exists)');
       
       const evaluation = await evaluationRepo.create({
-        targetType: 'program',
-        targetId: programId,
-        evaluationType: 'discovery_complete',
+        userId: session.user.email,
+        programId: programId,
+        mode: 'discovery',
+        evaluationType: 'program',
+        evaluationSubtype: 'discovery_complete',
         score: avgScore,
         maxScore: 100,
         timeTakenSeconds: timeSpentSeconds,
-        userId: session.user.email,
-        metadata: {
-          programId,
-          scenarioId: program.scenarioId,
-          scenarioTitle: scenario?.title,
+        dimensionScores: {},
+        feedbackText: qualitativeFeedbackVersions['en'] || qualitativeFeedback,
+        feedbackData: qualitativeFeedbackVersions,
+        aiAnalysis: {},
+        createdAt: new Date().toISOString(),
+        pblData: {},
+        discoveryData: {
           careerType,
-          overallScore: avgScore,
           totalXP,
           totalTasks: tasks.length,
           completedTasks: completedTasks.length,
-          timeSpentSeconds,
-          daysUsed,
+          daysUsed
+        },
+        assessmentData: {},
+        metadata: {
+          scenarioId: program.scenarioId,
+          scenarioTitle: scenario?.title,
+          overallScore: avgScore,
           taskEvaluations,
-          qualitativeFeedback: qualitativeFeedbackVersions['en'] || qualitativeFeedback,
-          qualitativeFeedbackVersions,
           completedAt: new Date().toISOString()
         }
       });
       
       // Update program to reference the new evaluation
-      await programRepo.update(programId, {
+      await programRepo.update?.(programId, {
         metadata: {
           ...program.metadata,
           evaluationId: evaluation.id,

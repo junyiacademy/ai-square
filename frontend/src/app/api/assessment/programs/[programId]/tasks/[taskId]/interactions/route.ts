@@ -65,7 +65,7 @@ export async function GET(
     }
     
     // Get interactions from the task repository
-    const taskWithInteractions = await taskRepo.getTaskWithInteractions(taskId);
+    const taskWithInteractions = await taskRepo.getTaskWithInteractions?.(taskId);
     
     return NextResponse.json({
       success: true,
@@ -167,7 +167,7 @@ export async function POST(
       ? task.metadata.interactions 
       : [];
     
-    await taskRepo.update(taskId, {
+    await taskRepo.update?.(taskId, {
       metadata: {
         ...task.metadata,
         interactions: [...existingInteractions, newInteraction]

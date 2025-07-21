@@ -29,6 +29,9 @@ Object.defineProperty(window, 'performance', {
 const originalLog = console.log;
 const mockConsoleLog = jest.fn();
 
+// Store original NODE_ENV value
+const originalNodeEnv = process.env.NODE_ENV;
+
 describe('PerformanceMonitor', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -37,6 +40,20 @@ describe('PerformanceMonitor', () => {
     // Reset the metrics array by calling clear
     performanceMonitor.clear();
     console.log = originalLog;
+    
+    // Make NODE_ENV writable for tests
+    Object.defineProperty(process.env, 'NODE_ENV', {
+      writable: true,
+      value: process.env.NODE_ENV
+    });
+  });
+  
+  afterEach(() => {
+    // Restore original NODE_ENV value and make it read-only again
+    Object.defineProperty(process.env, 'NODE_ENV', {
+      writable: false,
+      value: originalNodeEnv
+    });
   });
 
   describe('recordMetric', () => {
@@ -69,27 +86,21 @@ describe('PerformanceMonitor', () => {
     });
 
     it('logs to console in development environment', () => {
-      const originalEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'development';
       console.log = mockConsoleLog;
 
       performanceMonitor.recordMetric('dev-metric', 200);
 
       expect(mockConsoleLog).toHaveBeenCalledWith('[Performance] dev-metric: 200ms');
-      
-      process.env.NODE_ENV = originalEnv;
     });
 
     it('does not log to console in production environment', () => {
-      const originalEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'production';
       console.log = mockConsoleLog;
 
       performanceMonitor.recordMetric('prod-metric', 300);
 
       expect(mockConsoleLog).not.toHaveBeenCalled();
-      
-      process.env.NODE_ENV = originalEnv;
     });
 
     it('prevents memory leak by limiting metrics array size', () => {

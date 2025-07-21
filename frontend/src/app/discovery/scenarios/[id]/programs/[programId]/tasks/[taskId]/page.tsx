@@ -260,7 +260,7 @@ export default function TaskDetailPage() {
           evaluation: {
             id: result.evaluation.id,
             score: result.evaluation.score,
-            feedback: result.evaluation.feedback,
+            feedback: result.evaluation.feedbackText,
             evaluatedAt: new Date().toISOString()
           }
         });

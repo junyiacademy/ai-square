@@ -159,23 +159,31 @@ export async function POST(
     });
     
     const evaluation = await evaluationRepo.create({
-      targetType: 'program',
-      targetId: programId,
-      evaluationType: 'discovery_complete',
+      userId: user.email,
+      programId: programId,
+      mode: 'discovery',
+      evaluationType: 'program',
+      evaluationSubtype: 'discovery_complete',
       score: avgScore,
       maxScore: 100,
       timeTakenSeconds: timeSpentSeconds,
-      userId: user.email,
-      metadata: {
-        programId,
-        scenarioId: program.scenarioId,
-        scenarioTitle: scenario?.title,
+      dimensionScores: {},
+      feedbackText: '',
+      feedbackData: {},
+      aiAnalysis: {},
+      createdAt: new Date().toISOString(),
+      pblData: {},
+      discoveryData: {
         careerType,
-        overallScore: avgScore,
         totalXP,
         totalTasks: tasks.length,
-        completedTasks: completedTasks.length,
-        timeSpentSeconds,
+        completedTasks: completedTasks.length
+      },
+      assessmentData: {},
+      metadata: {
+        scenarioId: program.scenarioId,
+        scenarioTitle: scenario?.title,
+        overallScore: avgScore,
         taskEvaluations,
         completedAt: new Date().toISOString()
       }
@@ -184,7 +192,7 @@ export async function POST(
     console.log('Evaluation created successfully:', evaluation.id);
     
     // Update program to mark as completed
-    await programRepo.update(programId, { 
+    await programRepo.update?.(programId, { 
       status: 'completed',
       metadata: {
         ...program.metadata,
@@ -196,7 +204,7 @@ export async function POST(
     });
     
     // Mark program as completed
-    await programRepo.update(programId, { status: "completed" });
+    await programRepo.update?.(programId, { status: "completed" });
     
     return NextResponse.json({ 
       success: true,

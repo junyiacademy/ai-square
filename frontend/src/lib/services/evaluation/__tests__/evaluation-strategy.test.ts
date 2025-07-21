@@ -135,7 +135,7 @@ describe('Evaluation Strategy Pattern', () => {
 
       const evaluation = await strategy.evaluateTask(pblTask, baseContext);
 
-      expect(evaluation.type).toBe('pbl_task');
+      expect(evaluation.evaluationType).toBe('pbl_task');
       expect(evaluation.targetType).toBe('task');
       expect(evaluation.targetId).toBe('task-1');
       expect(evaluation.score).toBeGreaterThan(0);
@@ -183,7 +183,7 @@ describe('Evaluation Strategy Pattern', () => {
 
       const evaluation = await strategy.evaluateProgram(baseContext.program, taskEvaluations);
 
-      expect(evaluation.type).toBe('pbl_completion');
+      expect(evaluation.evaluationType).toBe('pbl_completion');
       expect(evaluation.score).toBe(85); // Average of 80 and 90
       expect(evaluation.dimensionScores).toBeDefined();
       expect(evaluation.dimensionScores?.[0].dimension).toBe('knowledge');
@@ -273,13 +273,13 @@ describe('Evaluation Strategy Pattern', () => {
         scenario: { ...baseContext.scenario, mode: 'assessment' }
       });
 
-      expect(evaluation.type).toBe('assessment_task');
+      expect(evaluation.evaluationType).toBe('assessment_task');
       expect(evaluation.score).toBe(66.67); // 2 out of 3 correct
       expect(evaluation.metadata?.totalQuestions).toBe(3);
       expect(evaluation.metadata?.correctAnswers).toBe(2);
       expect(evaluation.dimensionScores).toBeDefined();
-      expect(evaluation.dimensionScores?.find(d => d.dimension === 'Engaging_with_AI')?.score).toBe(100); // 2/2 correct
-      expect(evaluation.dimensionScores?.find(d => d.dimension === 'Creating_with_AI')?.score).toBe(0); // 0/1 correct
+      expect(evaluation.dimensionScores?.['Engaging_with_AI']).toBe(100); // 2/2 correct
+      expect(evaluation.dimensionScores?.['Creating_with_AI']).toBe(0); // 0/1 correct
     });
 
     it('should calculate time-based bonus', () => {
@@ -351,7 +351,7 @@ describe('Evaluation Strategy Pattern', () => {
         scenario: { ...baseContext.scenario, mode: 'discovery' }
       });
 
-      expect(evaluation.type).toBe('discovery_task');
+      expect(evaluation.evaluationType).toBe('discovery_task');
       expect(evaluation.score).toBeGreaterThan(0);
       expect(evaluation.metadata?.xpEarned).toBeGreaterThan(0);
       expect(evaluation.metadata?.toolsExplored).toContain('chatgpt');

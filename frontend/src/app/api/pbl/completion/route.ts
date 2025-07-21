@@ -82,7 +82,7 @@ export async function GET(request: NextRequest) {
     const tasksWithDetails = await Promise.all(
       sortedTasks.map(async (task: Task, index: number) => {
         // Get task with interactions
-        const taskWithInteractions = await taskRepo.getTaskWithInteractions(task.id);
+        const taskWithInteractions = await taskRepo.getTaskWithInteractions?.(task.id);
         const interactions = taskWithInteractions?.interactions || [];
         
         // Get evaluation if exists
@@ -138,7 +138,7 @@ export async function GET(request: NextRequest) {
       status: program.status === 'completed' ? 'completed' : 'in_progress',
       startedAt: program.startedAt,
       updatedAt: evaluation?.metadata?.lastUpdatedAt || program.startedAt,
-      completedAt: program.endTime,
+      completedAt: program.completedAt,
       totalTasks: evaluation?.metadata?.totalTasks || tasks.length,
       completedTasks: tasks.filter((t: Task) => t.status === 'completed').length,
       evaluatedTasks: evaluation?.metadata?.evaluatedTasks || 0,

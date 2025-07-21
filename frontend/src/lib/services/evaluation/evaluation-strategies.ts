@@ -205,11 +205,11 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
     
     evaluations.forEach(evaluation => {
       if (evaluation.dimensionScores) {
-        evaluation.dimensionScores.forEach(dim => {
-          const existing = dimensionMap.get(dim.dimension) || { total: 0, count: 0 };
-          existing.total += dim.score;
+        Object.entries(evaluation.dimensionScores).forEach(([dim, score]: [string, number]) => {
+          const existing = dimensionMap.get(dim) || { total: 0, count: 0 };
+          existing.total += score;
           existing.count += 1;
-          dimensionMap.set(dim.dimension, existing);
+          dimensionMap.set(dim, existing);
         });
       }
     });
@@ -403,11 +403,11 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
     
     evaluations.forEach(evaluation => {
       if (evaluation.dimensionScores) {
-        evaluation.dimensionScores.forEach(dim => {
-          const existing = domainMap.get(dim.dimension) || { totalScore: 0, count: 0 };
-          existing.totalScore += dim.score;
+        Object.entries(evaluation.dimensionScores).forEach(([dim, score]: [string, number]) => {
+          const existing = domainMap.get(dim) || { totalScore: 0, count: 0 };
+          existing.totalScore += score;
           existing.count += 1;
-          domainMap.set(dim.dimension, existing);
+          domainMap.set(dim, existing);
         });
       }
     });

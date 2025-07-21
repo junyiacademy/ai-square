@@ -36,7 +36,7 @@ export async function POST(
 
     // Record user attempt or update metadata for other interactions
     if (interaction.type === 'user') {
-      await taskRepo.recordAttempt(taskId, {
+      await taskRepo.recordAttempt?.(taskId, {
         response: interaction.content,
         timeSpent: interaction.metadata?.timeSpent || 0
       });
@@ -54,7 +54,7 @@ export async function POST(
           metadata: interaction.metadata
         });
         
-        await taskRepo.update(taskId, {
+        await taskRepo.update?.(taskId, {
           metadata: {
             ...metadata,
             interactions

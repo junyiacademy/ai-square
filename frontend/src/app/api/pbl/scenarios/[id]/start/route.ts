@@ -90,7 +90,17 @@ export async function POST(
     const program = await programRepo.create({
       scenarioId: scenario.id, // Use scenario UUID
       userId: userEmail,
-      totalTasks: tasks.length
+      totalTaskCount: tasks.length,
+      mode: 'pbl',
+      status: 'active',
+      createdAt: new Date().toISOString(),
+      startedAt: new Date().toISOString(),
+      currentTaskIndex: 0,
+      language,
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {},
+      metadata: {}
     });
     
     console.log('   ✅ Program created with UUID:', program.id);
@@ -103,26 +113,43 @@ export async function POST(
       
       const task = await taskRepo.create({
         programId: program.id,
+        mode: 'pbl',
         taskIndex: i,
+        scenarioTaskIndex: i,
         title: taskTemplate.title,
+        description: taskTemplate.description,
         type: taskTemplate.type,
+        status: i === 0 ? 'active' : 'pending',
         content: {
-          description: taskTemplate.description,
-          instructions: taskTemplate.description
-        },
-        context: {
+          instructions: taskTemplate.description,
           scenarioId: scenarioId,
           taskType: taskTemplate.type,
           difficulty: (scenario.metadata?.difficulty as string) || 'intermediate',
           estimatedTime: (taskTemplate.estimatedTime as number) || 30
-        }
+        },
+        interactions: [],
+        interactionCount: 0,
+        userResponse: {},
+        score: 0,
+        maxScore: 100,
+        allowedAttempts: 3,
+        attemptCount: 0,
+        timeLimitSeconds: (taskTemplate.estimatedTime as number) * 60 || 1800,
+        timeSpentSeconds: 0,
+        aiConfig: {},
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
+        metadata: {}
       });
       
       createdTasks.push(task as unknown as ITask);
     }
     
     // Update program with task IDs
-    await programRepo.update(program.id, {
+    await programRepo.update?.(program.id, {
       taskIds: createdTasks.map(t => t.id)
     });
     

@@ -293,7 +293,7 @@ describe('Module-specific Types', () => {
           questionResults: [
             { questionId: 'q1', correct: true, timeSpent: 60 }
           ],
-          domainScores: {
+          dimensionScores: {
             'Engaging_with_AI': 80,
             'Creating_with_AI': 70
           }

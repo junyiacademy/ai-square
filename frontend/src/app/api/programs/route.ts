@@ -19,9 +19,9 @@ export async function GET(request: NextRequest) {
     let programs;
     
     if (userId && status === 'active') {
-      programs = await programRepo.getActivePrograms(userId);
+      programs = await programRepo.getActivePrograms?.(userId);
     } else if (userId && status === 'completed') {
-      programs = await programRepo.getCompletedPrograms(userId);
+      programs = await programRepo.getCompletedPrograms?.(userId);
     } else if (userId) {
       programs = await programRepo.findByUser(userId);
     } else if (scenarioId) {
@@ -87,7 +87,17 @@ export async function POST(request: NextRequest) {
     const program = await programRepo.create({
       userId,
       scenarioId,
-      totalTasks
+      totalTaskCount: totalTasks,
+      mode: (scenario.metadata?.mode as 'pbl' | 'discovery' | 'assessment') || 'pbl',
+      status: 'active',
+      createdAt: new Date().toISOString(),
+      startedAt: new Date().toISOString(),
+      currentTaskIndex: 0,
+      language: 'en',
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {},
+      metadata: {}
     });
 
     // Create tasks for the program
@@ -95,24 +105,40 @@ export async function POST(request: NextRequest) {
       await Promise.all(scenarioContent.tasks.map((task: Record<string, unknown>, index: number) => 
         taskRepo.create({
           programId: program.id,
+          mode: program.mode,
           taskIndex: index,
+          scenarioTaskIndex: index,
           type: (task.type as string) || 'question',
+          status: index === 0 ? 'active' : 'pending',
           title: task.title as string,
+          description: task.description as string,
           // DDD: content = 用戶看到的內容
           content: {
             description: task.description as string,
             instructions: task.instructions as string,
-            hints: task.hints as string[]
-          },
-          // DDD: context = 系統執行背景資訊
-          context: {
+            hints: task.hints as string[],
             scenarioId,
             taskType: task.category as string,
             difficulty: task.difficulty as string,
             estimatedTime: task.time_limit as number,
             ksaCodes: task.KSA_focus as string[]
           },
-          allowedAttempts: (task.maxAttempts as number) || 3
+          interactions: [],
+          interactionCount: 0,
+          userResponse: {},
+          score: 0,
+          maxScore: 100,
+          allowedAttempts: (task.maxAttempts as number) || 3,
+          attemptCount: 0,
+          timeLimitSeconds: (task.time_limit as number) * 60 || 1800,
+          timeSpentSeconds: 0,
+          aiConfig: task.aiModule as Record<string, unknown> || {},
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          pblData: {},
+          discoveryData: {},
+          assessmentData: {},
+          metadata: {}
         })
       ));
     }

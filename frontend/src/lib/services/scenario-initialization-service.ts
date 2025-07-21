@@ -219,7 +219,7 @@ export class ScenarioInitializationService {
     const scenarios = await this.scenarioRepo.findByType(sourceType as ScenarioType);
     
     // Find matching scenario by source path in metadata
-    const match = scenarios.find((s) => 
+    const match = scenarios.find((s: any) => 
       s.metadata?.sourcePath === yamlPath
     );
     
@@ -245,7 +245,7 @@ export class ScenarioInitializationService {
       difficulty: this.getDifficultyLevel(scenario.difficultyLevel),
       estimatedMinutes: scenario.estimatedMinutes || 60,
       prerequisites: scenario.prerequisites || [],
-      taskTemplates: (scenario.tasks || []).map(task => ({
+      taskTemplates: ((scenario as any).tasks || []).map((task: any) => ({
         ...task,
         type: task.type as TaskType,
         title: task.title || ''

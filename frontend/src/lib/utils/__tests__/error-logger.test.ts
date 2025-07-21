@@ -1,7 +1,15 @@
 import { errorLogger, logError, logComponentError } from '../error-logger'
 
+// Define LocalStorageMock interface
+interface LocalStorageMock {
+  store: Record<string, string>
+  getItem: jest.Mock<string | null, [string]>
+  setItem: jest.Mock<void, [string, string]>
+  removeItem: jest.Mock<void, [string]>
+}
+
 // Mock localStorage
-const localStorageMock = {
+const localStorageMock: LocalStorageMock = {
   store: {} as Record<string, string>,
   getItem: jest.fn((key: string) => localStorageMock.store[key] || null),
   setItem: jest.fn((key: string, value: string) => {
@@ -14,6 +22,9 @@ const localStorageMock = {
 
 // Mock console
 const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation()
+
+// Store original NODE_ENV value
+const originalNodeEnv = process.env.NODE_ENV
 
 describe('ErrorLogger', () => {
   beforeEach(() => {
@@ -37,10 +48,22 @@ describe('ErrorLogger', () => {
       writable: true,
       configurable: true
     })
+    
+    // Make NODE_ENV writable for tests
+    Object.defineProperty(process.env, 'NODE_ENV', {
+      writable: true,
+      value: process.env.NODE_ENV
+    })
   })
 
   afterEach(() => {
     consoleErrorSpy.mockClear()
+    
+    // Restore original NODE_ENV value and make it read-only again
+    Object.defineProperty(process.env, 'NODE_ENV', {
+      writable: false,
+      value: originalNodeEnv
+    })
   })
 
   describe('log', () => {
@@ -64,7 +87,6 @@ describe('ErrorLogger', () => {
     })
 
     it('should log to console in development mode', () => {
-      const originalEnv = process.env.NODE_ENV
       process.env.NODE_ENV = 'development'
       
       const error = new Error('Dev error')
@@ -74,20 +96,15 @@ describe('ErrorLogger', () => {
       
       expect(consoleErrorSpy).toHaveBeenCalledWith('🚨 Error:', error)
       expect(consoleErrorSpy).toHaveBeenCalledWith('📋 Context:', context)
-      
-      process.env.NODE_ENV = originalEnv
     })
 
     it('should not log to console in production mode', () => {
-      const originalEnv = process.env.NODE_ENV
       process.env.NODE_ENV = 'production'
       
       const error = new Error('Prod error')
       errorLogger.log(error)
       
       expect(consoleErrorSpy).not.toHaveBeenCalled()
-      
-      process.env.NODE_ENV = originalEnv
     })
 
     it('should maintain max logs limit', () => {
@@ -417,7 +434,6 @@ describe('ErrorLogger', () => {
     })
 
     it('should log to console in development without context', () => {
-      const originalEnv = process.env.NODE_ENV
       process.env.NODE_ENV = 'development'
       
       const error = new Error('Dev error no context')
@@ -425,8 +441,6 @@ describe('ErrorLogger', () => {
       
       expect(consoleErrorSpy).toHaveBeenCalledWith('🚨 Error:', error)
       expect(consoleErrorSpy).toHaveBeenCalledTimes(1) // Only error, no context
-      
-      process.env.NODE_ENV = originalEnv
     })
   })
 })

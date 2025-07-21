@@ -89,15 +89,15 @@ export async function GET(
     const ksaCounts: Record<string, number> = {};
     
     evaluations.forEach(evaluation => {
-      if (evaluation.ksaScores) {
-        Object.entries(evaluation.ksaScores).forEach(([key, value]) => {
-          if (key.includes('_')) {
+      if (evaluation.dimensionScores) {
+        Object.entries(evaluation.dimensionScores).forEach(([dimension, score]: [string, number]) => {
+          if (dimension.includes('_')) {
             // Domain score
-            domainScores[key] = (domainScores[key] || 0) + (value as number);
+            domainScores[dimension] = (domainScores[dimension] || 0) + score;
           } else {
             // KSA score
-            ksaScores[key] = (ksaScores[key] || 0) + (value as number);
-            ksaCounts[key] = (ksaCounts[key] || 0) + 1;
+            ksaScores[dimension] = (ksaScores[dimension] || 0) + score;
+            ksaCounts[dimension] = (ksaCounts[dimension] || 0) + 1;
           }
         });
       }
@@ -119,7 +119,7 @@ export async function GET(
         taskIndex: task.taskIndex,
         status: task.status,
         score: taskEvaluation?.score || task.score || 0,
-        completedAt: task.completedAt?.toISOString(),
+        completedAt: task.completedAt,
         timeSpentSeconds: task.timeSpentSeconds
       };
     });
@@ -129,9 +129,9 @@ export async function GET(
       scenarioId: program.scenarioId,
       userEmail: userEmail,
       status: program.status,
-      startedAt: program.startedAt?.toISOString() || program.createdAt.toISOString(),
-      completedAt: program.endTime?.toISOString() || new Date().toISOString(),
-      totalTasks: program.totalTasks,
+      startedAt: program.startedAt || program.createdAt,
+      completedAt: program.completedAt || new Date().toISOString(),
+      totalTasks: program.totalTaskCount,
       completedTasks: completedTasks.length,
       evaluatedTasks: evaluations.length,
       totalScore: averageScore,

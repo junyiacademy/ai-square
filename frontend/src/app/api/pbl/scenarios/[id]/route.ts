@@ -256,15 +256,15 @@ export async function GET(
     // Transform to API response format
     const scenarioResponse: ScenarioResponse = {
       id: scenarioResult.id,
-      title: scenarioResult.title || '',
-      description: scenarioResult.description || '',
+      title: typeof scenarioResult.title === 'string' ? scenarioResult.title : (scenarioResult.title as Record<string, string>)?.[lang] || (scenarioResult.title as Record<string, string>)?.en || '',
+      description: typeof scenarioResult.description === 'string' ? scenarioResult.description : (scenarioResult.description as Record<string, string>)?.[lang] || (scenarioResult.description as Record<string, string>)?.en || '',
       difficulty: (scenarioResult.metadata as any)?.difficulty || 'intermediate',
       estimatedDuration: (scenarioResult.metadata as any)?.estimatedDuration || 60,
       targetDomain: (scenarioResult.metadata as any)?.targetDomains || [],
       prerequisites: (scenarioResult.metadata as any)?.prerequisites || [],
       learningObjectives: (scenarioResult as any).objectives || [],
       ksaMapping: buildKSAMapping(yamlData as unknown as YAMLData, ksaData, lang),
-      tasks: (scenarioResult.tasks || []).map((task) => ({
+      tasks: ((scenarioResult as any).tasks || []).map((task: any) => ({
         id: task.id,
         title: task.title || '',
         description: task.description || '',

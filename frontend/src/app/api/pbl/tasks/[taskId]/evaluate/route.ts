@@ -36,83 +36,59 @@ export async function POST(
     const task = await taskRepo.findById(taskId);
     let evaluationRecord;
     
+    // Helper to create evaluation with proper structure
+    const createEvaluationData = (evaluation: any, existingMetadata?: Record<string, unknown>) => ({
+      userId: session.user.email,
+      programId: programId || undefined,
+      taskId: taskId,
+      mode: 'pbl' as const,
+      evaluationType: 'task',
+      evaluationSubtype: 'pbl_task',
+      score: evaluation.score || 0,
+      maxScore: 100,
+      timeTakenSeconds: evaluation.timeTakenSeconds || 0,
+      dimensionScores: evaluation.domainScores || {},
+      feedbackText: evaluation.feedback || '',
+      feedbackData: {
+        strengths: evaluation.strengths || [],
+        improvements: evaluation.improvements || [],
+        nextSteps: evaluation.nextSteps || []
+      },
+      aiAnalysis: evaluation.conversationInsights || {},
+      createdAt: new Date().toISOString(),
+      pblData: {
+        ksaScores: evaluation.ksaScores || evaluation.domainScores || {},
+        rubricsScores: evaluation.rubricsScores || {},
+        conversationCount: evaluation.conversationCount || 0
+      },
+      discoveryData: {},
+      assessmentData: {},
+      metadata: {
+        ...existingMetadata,
+        programId: programId || '',
+        evaluatedAt: evaluation.evaluatedAt || new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        updateCount: (existingMetadata?.updateCount as number || 0) + 1
+      }
+    });
+    
     const existingEvaluationId = task?.metadata?.evaluationId as string | undefined;
     if (existingEvaluationId) {
       // Update existing evaluation
       const existingEval = await evalRepo.findById(existingEvaluationId);
       if (existingEval) {
         // Evaluation repository doesn't have update method, create new one
-        evaluationRecord = await evalRepo.create({
-          userId: task?.programId || '',
-          taskId: taskId,
-          evaluationType: 'pbl_task',
-          score: evaluation.score,
-          maxScore: 100,
-          timeTakenSeconds: 0,
-          metadata: {
-            ...existingEval.metadata,
-            programId: programId || '',
-            ksaScores: evaluation.ksaScores,
-            domainScores: evaluation.domainScores,
-            rubricsScores: evaluation.rubricsScores,
-            strengths: evaluation.strengths,
-            improvements: evaluation.improvements,
-            nextSteps: evaluation.nextSteps,
-            conversationInsights: evaluation.conversationInsights,
-            conversationCount: evaluation.conversationCount,
-            evaluatedAt: evaluation.evaluatedAt || new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            updateCount: ((existingEval.metadata as Record<string, unknown>)?.updateCount as number || 0) + 1
-          }
-        });
+        evaluationRecord = await evalRepo.create(createEvaluationData(evaluation, existingEval.metadata));
       } else {
         // Evaluation ID exists but evaluation not found, create new one
-        evaluationRecord = await evalRepo.create({
-          userId: task?.programId || '',
-          taskId: taskId,
-          evaluationType: 'pbl_task',
-          score: evaluation.score,
-          maxScore: 100,
-          timeTakenSeconds: 0,
-          metadata: {
-            programId: programId || '',
-            ksaScores: evaluation.ksaScores,
-            domainScores: evaluation.domainScores,
-            rubricsScores: evaluation.rubricsScores,
-            strengths: evaluation.strengths,
-            improvements: evaluation.improvements,
-            nextSteps: evaluation.nextSteps,
-            conversationInsights: evaluation.conversationInsights,
-            conversationCount: evaluation.conversationCount,
-            evaluatedAt: evaluation.evaluatedAt || new Date().toISOString()
-          }
-        });
+        evaluationRecord = await evalRepo.create(createEvaluationData(evaluation));
       }
     } else {
       // No existing evaluation, create new one
-      evaluationRecord = await evalRepo.create({
-        userId: task?.programId || '',
-        taskId: taskId,
-        evaluationType: 'pbl_task',
-        score: evaluation.score,
-        maxScore: 100,
-        timeTakenSeconds: 0,
-        metadata: {
-          programId: programId || '',
-          ksaScores: evaluation.ksaScores,
-          domainScores: evaluation.domainScores,
-          rubricsScores: evaluation.rubricsScores,
-          strengths: evaluation.strengths,
-          improvements: evaluation.improvements,
-          nextSteps: evaluation.nextSteps,
-          conversationInsights: evaluation.conversationInsights,
-          conversationCount: evaluation.conversationCount,
-          evaluatedAt: evaluation.evaluatedAt || new Date().toISOString()
-        }
-      });
+      evaluationRecord = await evalRepo.create(createEvaluationData(evaluation));
       
       // Update task with evaluation ID only if it's a new evaluation
-      await taskRepo.update(taskId, {
+      await taskRepo.update?.(taskId, {
         status: 'completed' as const,
         completedAt: task?.completedAt || new Date(),
         metadata: {
@@ -131,7 +107,7 @@ export async function POST(
         
         if (program?.metadata?.evaluationId) {
           // Just update the program metadata instead
-          await programRepo.update(program.id, {
+          await programRepo.update?.(program.id, {
             metadata: {
               ...program.metadata,
               evaluationOutdated: true,

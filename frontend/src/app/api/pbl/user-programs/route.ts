@@ -81,15 +81,15 @@ export async function GET(request: NextRequest) {
         status: program.status,
         startedAt: program.startedAt || program.createdAt,
         updatedAt: program.lastActivityAt,
-        totalTasks: program.totalTasks,
+        totalTasks: program.totalTaskCount,
         evaluatedTasks: completedTasks.length,
         overallScore,
-        taskCount: program.totalTasks,
+        taskCount: program.totalTaskCount,
         lastActivity: program.lastActivityAt,
         // Add the progress field that the frontend expects
         progress: {
           completedTasks: completedTasks.length,
-          totalTasks: program.totalTasks
+          totalTasks: program.totalTaskCount
         }
       };
     }));

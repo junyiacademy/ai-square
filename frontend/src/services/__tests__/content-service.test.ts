@@ -105,7 +105,7 @@ describe('ContentService', () => {
     it('should fetch assessment data with correct parameters', async () => {
       const mockAssessment = {
         id: 'assessment1',
-        title: 'Test Assessment',
+        title: { en: 'Test Assessment' },
         questions: []
       }
 
@@ -129,8 +129,8 @@ describe('ContentService', () => {
     it('should fetch single PBL scenario with correct parameters', async () => {
       const mockScenario = {
         id: 'scenario1',
-        title: 'Test Scenario',
-        description: 'Description'
+        title: { en: 'Test Scenario' },
+        description: { en: 'Description' }
       }
 
       ;(cacheService.fetchWithCache as jest.Mock).mockResolvedValue(mockScenario)

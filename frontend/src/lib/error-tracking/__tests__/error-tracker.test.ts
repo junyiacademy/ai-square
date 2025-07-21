@@ -7,8 +7,17 @@ const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation()
 const consoleTableSpy = jest.spyOn(console, 'table').mockImplementation()
 const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation()
 
+// Define LocalStorageMock interface
+interface LocalStorageMock {
+  store: Record<string, string>
+  getItem: jest.Mock<string | null, [string]>
+  setItem: jest.Mock<void, [string, string]>
+  removeItem: jest.Mock<void, [string]>
+  clear: jest.Mock<void, []>
+}
+
 // Mock localStorage
-const localStorageMock = {
+const localStorageMock: LocalStorageMock = {
   store: {} as Record<string, string>,
   getItem: jest.fn((key: string) => localStorageMock.store[key] || null),
   setItem: jest.fn((key: string, value: string) => {

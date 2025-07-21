@@ -159,7 +159,7 @@ export async function PATCH(
     switch (action) {
       case 'start':
         // Mark task as active
-        await taskRepo.update(taskId, {
+        await taskRepo.update?.(taskId, {
           status: 'active',
           metadata: {
             ...task.metadata,
@@ -177,8 +177,8 @@ export async function PATCH(
         }
         
         // Process answers and create interactions
-        const questionsArray = Array.isArray((task.context as Record<string, unknown>)?.questions) 
-          ? (task.context as Record<string, unknown>)?.questions as unknown[] 
+        const questionsArray = Array.isArray((task.content as Record<string, unknown>)?.questions) 
+          ? (task.content as Record<string, unknown>)?.questions as unknown[] 
           : [];
         const interactions = answers.map((answer: { questionId: string; answer: string; timeSpent?: number }) => {
           const question = questionsArray.find((q) => (q as Record<string, unknown>).id === answer.questionId);
@@ -199,7 +199,7 @@ export async function PATCH(
         });
         
         // Store interactions in task metadata
-        await taskRepo.update(taskId, {
+        await taskRepo.update?.(taskId, {
           metadata: {
             ...task.metadata,
             interactions
@@ -214,25 +214,34 @@ export async function PATCH(
         // Create task evaluation
         const evaluation = await evalRepo.create({
           userId: session.user.email,
-          targetType: 'task',
-          targetId: taskId,
-          evaluationType: 'assessment_task',
+          programId: programId,
+          taskId: taskId,
+          mode: 'assessment',
+          evaluationType: 'task',
+          evaluationSubtype: 'assessment_task',
           score,
           maxScore: 100,
           timeTakenSeconds: 0,
-          feedback: `Assessment task completed with ${correctCount}/${totalQuestions} correct answers`,
-          metadata: {
+          dimensionScores: {},
+          feedbackText: `Assessment task completed with ${correctCount}/${totalQuestions} correct answers`,
+          feedbackData: {},
+          aiAnalysis: {},
+          pblData: {},
+          discoveryData: {},
+          assessmentData: {
             totalQuestions,
             correctAnswers: correctCount,
             language,
-            interactions,
-            domainScores: {},
+            interactions
+          },
+          metadata: {
             evaluatedAt: new Date().toISOString()
-          }
+          },
+          createdAt: new Date().toISOString()
         });
         
         // Update task status and link evaluation
-        await taskRepo.update(taskId, {
+        await taskRepo.update?.(taskId, {
           status: 'completed',
           metadata: {
             ...task.metadata,
@@ -248,13 +257,13 @@ export async function PATCH(
             score: evaluation.score,
             totalQuestions,
             correctAnswers: correctCount,
-            feedback: evaluation.feedback
+            feedback: evaluation.feedbackText
           }
         });
         
       case 'complete':
         // Mark task as completed
-        await taskRepo.update(taskId, {
+        await taskRepo.update?.(taskId, {
           status: 'completed',
           metadata: {
             ...task.metadata,

@@ -66,12 +66,12 @@ export async function GET(
         status: program.status,
         currentTaskIndex: program.currentTaskIndex,
         completedTasks: program.completedTasks,
-        totalTasks: program.totalTasks,
+        totalTasks: program.totalTaskCount,
         totalScore: program.totalScore,
         ksaScores: program.ksaScores,
-        startedAt: program.startedAt?.toISOString() || program.createdAt.toISOString(),
-        updatedAt: program.lastActivityAt.toISOString(),
-        completedAt: program.endTime?.toISOString(),
+        startedAt: program.startedAt || program.createdAt,
+        updatedAt: program.lastActivityAt,
+        completedAt: program.completedAt,
         taskIds: tasks.map(t => t.id),
         metadata: program.metadata
       }

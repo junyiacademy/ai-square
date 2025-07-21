@@ -42,7 +42,7 @@ describe('/api/pbl/evaluate', () => {
       'K1.1': 85,
       'S2.1': 70
     },
-    domainScores: {
+    dimensionScores: {
       engaging_with_ai: 80,
       creating_with_ai: 70,
       managing_with_ai: 75,
@@ -187,7 +187,7 @@ describe('/api/pbl/evaluate', () => {
           skills: 20,
           attitudes: 20
         },
-        domainScores: {
+        dimensionScores: {
           engaging_with_ai: 20,
           creating_with_ai: 20,
           managing_with_ai: 20,

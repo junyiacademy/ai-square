@@ -53,12 +53,12 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
     
     taskEvaluations.forEach(evaluation => {
       if (evaluation.dimensionScores) {
-        evaluation.dimensionScores.forEach(dim => {
-          const existing = dimensionMap.get(dim.dimension) || { total: 0, count: 0, maxTotal: 0 };
-          existing.total += dim.score;
+        Object.entries(evaluation.dimensionScores).forEach(([dim, score]: [string, number]) => {
+          const existing = dimensionMap.get(dim) || { total: 0, count: 0, maxTotal: 0 };
+          existing.total += score;
           existing.count += 1;
-          existing.maxTotal += dim.maxScore;
-          dimensionMap.set(dim.dimension, existing);
+          existing.maxTotal += 100; // Assuming max score is 100
+          dimensionMap.set(dim, existing);
         });
       }
     });
@@ -76,9 +76,9 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       targetId: program.id,
       programId: program.id,
       userId: program.userId,
-      type: 'program_completion',
+      evaluationType: 'program_completion',
       score: averageScore,
-      feedback: await this.generateProgramFeedback(program, taskEvaluations),
+      feedbackText: await this.generateProgramFeedback(program, taskEvaluations),
       dimensionScores: aggregatedDimensions,
       createdAt: new Date().toISOString(),
       metadata: {
@@ -102,10 +102,10 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
         temperature: 0.7
       });
       
-      return response.text || evaluation.feedback || 'No feedback available';
+      return response.text || evaluation.feedbackText || 'No feedback available';
     } catch (error) {
       console.error('Error generating feedback:', error);
-      return evaluation.feedback || 'No feedback available';
+      return evaluation.feedbackText || 'No feedback available';
     }
   }
 
@@ -133,9 +133,9 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       targetId: task.id,
       programId: task.programId,
       userId: context.program.userId,
-      type: 'pbl_task',
+      evaluationType: 'pbl_task',
       score: overallScore,
-      feedback: `Your PBL task shows ${this.getScoreLevel(overallScore)} understanding and engagement.`,
+      feedbackText: `Your PBL task shows ${this.getScoreLevel(overallScore)} understanding and engagement.`,
       dimensionScores,
       createdAt: new Date().toISOString(),
       metadata: {
@@ -169,9 +169,9 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       targetId: task.id,
       programId: task.programId,
       userId: context.program.userId,
-      type: 'assessment_task',
+      evaluationType: 'assessment_task',
       score,
-      feedback: `You answered ${correctAnswers} out of ${questions.length} questions correctly.`,
+      feedbackText: `You answered ${correctAnswers} out of ${questions.length} questions correctly.`,
       dimensionScores: domainScores,
       createdAt: new Date().toISOString(),
       metadata: {
@@ -199,9 +199,9 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       targetId: task.id,
       programId: task.programId,
       userId: context.program.userId,
-      type: 'discovery_task',
+      evaluationType: 'discovery_task',
       score: explorationQuality * 100,
-      feedback: `Great exploration! You earned ${xpEarned} XP.`,
+      feedbackText: `Great exploration! You earned ${xpEarned} XP.`,
       createdAt: new Date().toISOString(),
       metadata: {
         xpEarned,
@@ -224,9 +224,9 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       targetId: task.id,
       programId: task.programId,
       userId: context.program.userId,
-      type: 'generic_task',
+      evaluationType: 'generic_task',
       score: hasInteractions ? 100 : 0,
-      feedback: hasInteractions ? 'Task completed successfully.' : 'No interactions recorded.',
+      feedbackText: hasInteractions ? 'Task completed successfully.' : 'No interactions recorded.',
       createdAt: new Date().toISOString(),
       metadata: {
         interactionCount: interactions.length,
@@ -313,13 +313,13 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
   private buildFeedbackPrompt(evaluation: IEvaluation, language: string): string {
     return `Generate constructive feedback in ${language} for a learning evaluation:
     
-    Type: ${evaluation.type}
+    Type: ${evaluation.evaluationType}
     Score: ${evaluation.score || 'N/A'}
     Target: ${evaluation.targetType}
     
     ${evaluation.dimensionScores ? `
     Dimension Scores:
-    ${evaluation.dimensionScores.map(d => `- ${d.dimension}: ${d.score}/${d.maxScore}`).join('\n')}
+    ${Object.entries(evaluation.dimensionScores).map(([d, score]: [string, number]) => `- ${d}: ${score}/100`).join('\n')}
     ` : ''}
     
     Please provide:

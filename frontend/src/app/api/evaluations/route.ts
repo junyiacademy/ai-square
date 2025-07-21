@@ -20,8 +20,8 @@ export async function GET(request: NextRequest) {
       // Get user's evaluation history
       // TODO: IEvaluationRepository doesn't have findByUser method
       // const evaluations = await evaluationRepo.findByUser(userId);
-      const progress = await evaluationRepo.getUserProgress(userId);
-      const ksaProgress = await evaluationRepo.getUserProgress(userId); // KSA progress is part of getUserProgress
+      const progress = await evaluationRepo.getUserProgress?.(userId);
+      const ksaProgress = await evaluationRepo.getUserProgress?.(userId); // KSA progress is part of getUserProgress
       
       return NextResponse.json({
         evaluations: [], // Return empty array for now
@@ -135,13 +135,17 @@ export async function POST(request: NextRequest) {
         improvements: aiEvaluation.improvements,
         ...aiEvaluation
       },
-      ksaScores: aiEvaluation.ksaScores,
+      domainScores: aiEvaluation.ksaScores ? {
+        knowledge: aiEvaluation.ksaScores.knowledge,
+        skills: aiEvaluation.ksaScores.skills,
+        attitudes: aiEvaluation.ksaScores.attitudes
+      } : {},
       timeTakenSeconds: body.timeTaken || 0
     });
 
     // Update task if provided
     if (taskId && task) {
-      await taskRepo.update(taskId, {
+      await taskRepo.update?.(taskId, {
         status: 'completed',
         score: aiEvaluation.score,
         completedAt: new Date()
@@ -157,15 +161,15 @@ export async function POST(request: NextRequest) {
           const completedTasks = tasks.filter(t => t.status === 'completed').length;
           const totalScore = tasks.reduce((sum, t) => sum + (t.score || 0), 0) / tasks.length;
 
-          await programRepo.update(task.programId, {
+          await programRepo.update?.(task.programId, {
             completedTasks,
             totalScore,
-            currentTaskIndex: Math.min(task.taskIndex + 1, program.totalTasks - 1)
+            currentTaskIndex: Math.min(task.taskIndex + 1, program.totalTaskCount - 1)
           });
 
           // Check if program is completed
-          if (completedTasks >= program.totalTasks) {
-            await programRepo.update(task.programId, { status: "completed" });
+          if (completedTasks >= program.totalTaskCount) {
+            await programRepo.update?.(task.programId, { status: "completed" });
           }
         }
       }

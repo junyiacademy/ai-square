@@ -73,7 +73,7 @@ export async function GET(
           // Update tasks in parallel
           await Promise.all(
             tasksNeedingFix.map(task => 
-              taskRepo.update(task.id, {
+              taskRepo.update?.(task.id, {
                 status: 'completed',
                 completedAt: task.completedAt || new Date()
               })

@@ -679,7 +679,7 @@ export default function ProgramCompletePage() {
                             )}
                             
                             {/* KSA Scores Column */}
-                            {task.evaluation.ksaScores && (
+                            {task.evaluation.domainScores && Object.keys(task.evaluation.domainScores).length > 0 && (
                               <div>
                                 <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                                   {t('pbl:complete.ksa')}:
@@ -690,14 +690,14 @@ export default function ProgramCompletePage() {
                                       <span className="text-sm text-gray-600 dark:text-gray-400">
                                         {t('pbl:complete.knowledge')}
                                       </span>
-                                      <span className={`text-sm font-bold ${getScoreColor(task.evaluation.ksaScores.knowledge)}`}>
-                                        {task.evaluation.ksaScores.knowledge}%
+                                      <span className={`text-sm font-bold ${getScoreColor(task.evaluation.domainScores?.['knowledge'] || 0)}`}>
+                                        {Math.round((task.evaluation.domainScores?.['knowledge'] || 0) / (100) * 100)}%
                                       </span>
                                     </div>
                                     <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                                       <div 
                                         className="bg-blue-500 h-2 rounded-full"
-                                        style={{ width: `${task.evaluation.ksaScores.knowledge}%` }}
+                                        style={{ width: `${Math.round((task.evaluation.domainScores?.['knowledge'] || 0) / (100) * 100)}%` }}
                                       />
                                     </div>
                                   </div>
@@ -707,14 +707,14 @@ export default function ProgramCompletePage() {
                                       <span className="text-sm text-gray-600 dark:text-gray-400">
                                         {t('pbl:complete.skills')}
                                       </span>
-                                      <span className={`text-sm font-bold ${getScoreColor(task.evaluation.ksaScores.skills)}`}>
-                                        {task.evaluation.ksaScores.skills}%
+                                      <span className={`text-sm font-bold ${getScoreColor(task.evaluation.domainScores?.['skills'] || 0)}`}>
+                                        {Math.round((task.evaluation.domainScores?.['skills'] || 0) / (100) * 100)}%
                                       </span>
                                     </div>
                                     <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                                       <div 
                                         className="bg-green-500 h-2 rounded-full"
-                                        style={{ width: `${task.evaluation.ksaScores.skills}%` }}
+                                        style={{ width: `${Math.round((task.evaluation.domainScores?.['skills'] || 0) / (100) * 100)}%` }}
                                       />
                                     </div>
                                   </div>
@@ -724,14 +724,14 @@ export default function ProgramCompletePage() {
                                       <span className="text-sm text-gray-600 dark:text-gray-400">
                                         {t('pbl:complete.attitudes')}
                                       </span>
-                                      <span className={`text-sm font-bold ${getScoreColor(task.evaluation.ksaScores.attitudes)}`}>
-                                        {task.evaluation.ksaScores.attitudes}%
+                                      <span className={`text-sm font-bold ${getScoreColor(task.evaluation.domainScores?.['attitudes'] || 0)}`}>
+                                        {Math.round((task.evaluation.domainScores?.['attitudes'] || 0) / (100) * 100)}%
                                       </span>
                                     </div>
                                     <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                                       <div 
                                         className="bg-purple-500 h-2 rounded-full"
-                                        style={{ width: `${task.evaluation.ksaScores.attitudes}%` }}
+                                        style={{ width: `${Math.round((task.evaluation.domainScores?.['attitudes'] || 0) / (100) * 100)}%` }}
                                       />
                                     </div>
                                   </div>

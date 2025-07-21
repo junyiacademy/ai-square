@@ -61,9 +61,9 @@ export async function GET(request: NextRequest) {
           status: draftProgram.status,
           currentTaskIndex: draftProgram.currentTaskIndex,
           completedTasks: draftProgram.completedTasks,
-          totalTasks: draftProgram.totalTasks,
-          startedAt: draftProgram.startedAt?.toISOString() || draftProgram.createdAt.toISOString(),
-          updatedAt: draftProgram.lastActivityAt.toISOString()
+          totalTaskCount: draftProgram.totalTaskCount,
+          startedAt: draftProgram.startedAt || draftProgram.createdAt,
+          updatedAt: draftProgram.lastActivityAt
         }
       });
     } else {

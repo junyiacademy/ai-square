@@ -1,62 +1,67 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { checkAdminAuth, withAdminAuth } from '../auth';
 
+// Mock the JWT verification module
+jest.mock('@/lib/auth/jwt', () => ({
+  verifyAccessToken: jest.fn().mockResolvedValue(null)
+}));
+
 describe('Auth Middleware', () => {
   describe('checkAdminAuth', () => {
-    it('should return valid for admin user', () => {
+    it('should return valid for admin user', async () => {
       const request = new NextRequest('http://localhost:3000/admin');
       request.cookies.set('isLoggedIn', 'true');
       request.cookies.set('user', JSON.stringify({ email: 'admin@example.com', role: 'admin' }));
 
-      const result = checkAdminAuth(request);
+      const result = await checkAdminAuth(request);
 
       expect(result.isValid).toBe(true);
       expect(result.user).toEqual({ email: 'admin@example.com', role: 'admin' });
     });
 
-    it('should return invalid when not logged in', () => {
+    it('should return invalid when not logged in', async () => {
       const request = new NextRequest('http://localhost:3000/admin');
       request.cookies.set('isLoggedIn', 'false');
 
-      const result = checkAdminAuth(request);
+      const result = await checkAdminAuth(request);
 
       expect(result.isValid).toBe(false);
       expect(result.user).toBeUndefined();
     });
 
-    it('should return invalid when no cookies exist', () => {
+    it('should return invalid when no cookies exist', async () => {
       const request = new NextRequest('http://localhost:3000/admin');
 
-      const result = checkAdminAuth(request);
+      const result = await checkAdminAuth(request);
 
       expect(result.isValid).toBe(false);
     });
 
-    it('should return invalid for non-admin user', () => {
+    it('should return invalid for non-admin user', async () => {
       const request = new NextRequest('http://localhost:3000/admin');
       request.cookies.set('isLoggedIn', 'true');
       request.cookies.set('user', JSON.stringify({ email: 'student@example.com', role: 'student' }));
 
-      const result = checkAdminAuth(request);
+      const result = await checkAdminAuth(request);
 
       expect(result.isValid).toBe(false);
     });
 
-    it('should handle invalid JSON in user cookie', () => {
+    it('should handle invalid JSON in user cookie', async () => {
       const request = new NextRequest('http://localhost:3000/admin');
       request.cookies.set('isLoggedIn', 'true');
       request.cookies.set('user', 'invalid-json');
 
-      const result = checkAdminAuth(request);
+      const result = await checkAdminAuth(request);
 
       expect(result.isValid).toBe(false);
     });
 
-    it('should handle missing user cookie when logged in', () => {
+    it('should handle missing user cookie when logged in', async () => {
       const request = new NextRequest('http://localhost:3000/admin');
       request.cookies.set('isLoggedIn', 'true');
 
-      const result = checkAdminAuth(request);
+      const result = await checkAdminAuth(request);
 
       expect(result.isValid).toBe(false);
     });

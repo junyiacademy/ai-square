@@ -37,7 +37,7 @@ export async function POST(
     
     // Complete current task if specified
     if (currentTaskId) {
-      await taskRepo.updateStatus(currentTaskId, "completed");
+      await taskRepo.updateStatus?.(currentTaskId, "completed");
     }
     
     // Get all tasks
@@ -58,14 +58,14 @@ export async function POST(
     }
     
     // Update program's current task index
-    await programRepo.update(programId, {
+    await programRepo.update?.(programId, {
       currentTaskIndex: nextIndex
     });
     
     // Start the next task if it's still pending
     let nextTask = tasks[nextIndex];
     if (nextTask && nextTask.status === 'pending' && !nextTask.startedAt) {
-      await taskRepo.update(nextTask.id, {
+      await taskRepo.update?.(nextTask.id, {
         status: 'active',
         metadata: {
           ...nextTask.metadata,
@@ -83,13 +83,13 @@ export async function POST(
       id: nextTask?.id,
       title: nextTask?.title,
       hasContent: !!nextTask?.content,
-      hasContext: !!nextTask?.context,
-      questionsInContext: Array.isArray((nextTask?.context as Record<string, unknown>)?.questions) 
-        ? ((nextTask?.context as Record<string, unknown>)?.questions as unknown[]).length 
+      hasContext: !!nextTask?.content,
+      questionsInContext: Array.isArray((nextTask?.content as Record<string, unknown>)?.questions) 
+        ? ((nextTask?.content as Record<string, unknown>)?.questions as unknown[]).length 
         : 0,
       questionsDirect: 0,
       contentKeys: nextTask?.content ? Object.keys(nextTask.content) : [],
-      contextKeys: nextTask?.context ? Object.keys(nextTask.context) : []
+      contextKeys: nextTask?.content ? Object.keys(nextTask.content) : []
     });
     
     return NextResponse.json({

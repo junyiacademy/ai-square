@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     
     // 從 GCS 獲取基本資訊（英文版）
     const scenarioRepo = repositoryFactory.getScenarioRepository();
-    const scenarios = await scenarioRepo.findByMode('assessment');
+    const scenarios = await scenarioRepo.findByMode?.('assessment') || [];
     
     // 處理每個 scenario
     const responseScenarios = await Promise.all(

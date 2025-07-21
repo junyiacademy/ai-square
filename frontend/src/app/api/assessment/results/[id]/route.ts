@@ -63,11 +63,11 @@ export async function GET(
         assessment_id: evaluation.id,
         user_id: userId,
         scenario_id: evaluation.metadata?.scenarioId || 'unknown',
-        completed_at: evaluation.createdAt.toISOString(),
+        completed_at: evaluation.createdAt,
         score: evaluation.score,
         max_score: evaluation.maxScore,
-        feedback: evaluation.feedback,
-        ksa_scores: evaluation.ksaScores,
+        feedback: evaluation.feedbackText,
+        ksa_scores: evaluation.dimensionScores,
         metadata: evaluation.metadata
       };
     } else {

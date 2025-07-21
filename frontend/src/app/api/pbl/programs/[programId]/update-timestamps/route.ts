@@ -50,7 +50,7 @@ export async function POST(
       );
     }
     
-    const updatedProgram = await programRepo.update(programId, {
+    const updatedProgram = await programRepo.update?.(programId, {
       metadata: {
         ...existingProgram.metadata,
         startedAt: new Date().toISOString(),

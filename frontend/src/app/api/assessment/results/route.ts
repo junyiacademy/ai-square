@@ -76,7 +76,17 @@ export async function POST(request: NextRequest) {
       assessmentProgram = await programRepo.create({
         userId: user.id,
         scenarioId: body.scenarioId || 'assessment-default',
-        totalTasks: body.result.totalQuestions || body.answers.length
+        totalTaskCount: body.result.totalQuestions || body.answers.length,
+        mode: 'assessment',
+        status: 'active',
+        createdAt: new Date().toISOString(),
+        startedAt: new Date().toISOString(),
+        currentTaskIndex: 0,
+        language: body.language || 'en',
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
+        metadata: {}
       });
     }
 
@@ -84,10 +94,14 @@ export async function POST(request: NextRequest) {
     const evaluation = await evaluationRepo.create({
       userId: user.id,
       programId: assessmentProgram.id,
+      mode: 'assessment',
       evaluationType: 'assessment_complete',
+      evaluationSubtype: undefined,
       score: body.result.overallScore,
       maxScore: 100,
-      feedback: `Assessment completed. Level: ${body.result.level}`,
+      dimensionScores: body.result.domainScores || {},
+      feedbackText: `Assessment completed. Level: ${body.result.level}`,
+      feedbackData: {},
       aiAnalysis: {
         insights: [`You achieved ${body.result.level} level with ${body.result.correctAnswers}/${body.result.totalQuestions} correct answers`],
         strengths: body.result.domainScores ? Object.entries(body.result.domainScores)
@@ -97,8 +111,15 @@ export async function POST(request: NextRequest) {
           .filter(([, score]) => (score as number) < 70)
           .map(([domain]) => `Could improve in ${domain}`) : []
       },
-      ksaScores: body.result.domainScores,
       timeTakenSeconds: body.result.timeSpentSeconds || 0,
+      createdAt: new Date().toISOString(),
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {
+        totalQuestions: body.result.totalQuestions,
+        correctAnswers: body.result.correctAnswers,
+        level: body.result.level
+      },
       metadata: {
         language: body.language || 'en',
         answers: body.answers,
@@ -107,7 +128,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Update program status
-    await programRepo.update(assessmentProgram.id, {
+    await programRepo.update?.(assessmentProgram.id, {
       status: 'completed',
       completedTasks: body.result.totalQuestions,
       totalScore: body.result.overallScore,
@@ -176,7 +197,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get all completed assessment programs
-    const programs = await programRepo.getCompletedPrograms(user.id);
+    const programs = await programRepo.getCompletedPrograms?.(user.id) || [];
     const assessmentPrograms = programs.filter(p => 
       p.scenarioId?.includes('assessment') || 
       p.metadata?.type === 'assessment'
@@ -196,16 +217,16 @@ export async function GET(request: NextRequest) {
           assessment_id: assessmentEvaluation.id,
           user_id: user.id,
           user_email: user.email,
-          timestamp: assessmentEvaluation.createdAt.toISOString(),
+          timestamp: assessmentEvaluation.createdAt,
           duration_seconds: assessmentEvaluation.timeTakenSeconds,
           language: (assessmentEvaluation.metadata?.language as string) || 'en',
           scores: {
             overall: assessmentEvaluation.score,
             domains: {
-              engaging_with_ai: (assessmentEvaluation.ksaScores?.Engaging_with_AI as number) || 0,
-              creating_with_ai: (assessmentEvaluation.ksaScores?.Creating_with_AI as number) || 0,
-              managing_with_ai: (assessmentEvaluation.ksaScores?.Managing_with_AI as number) || 0,
-              designing_with_ai: (assessmentEvaluation.ksaScores?.Designing_with_AI as number) || 0,
+              engaging_with_ai: assessmentEvaluation.dimensionScores?.['Engaging_with_AI'] || 0,
+              creating_with_ai: assessmentEvaluation.dimensionScores?.['Creating_with_AI'] || 0,
+              managing_with_ai: assessmentEvaluation.dimensionScores?.['Managing_with_AI'] || 0,
+              designing_with_ai: assessmentEvaluation.dimensionScores?.['Designing_with_AI'] || 0,
             }
           },
           summary: {

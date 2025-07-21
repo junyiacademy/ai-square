@@ -62,7 +62,7 @@ export async function POST(
     }
     
     // Update program status from pending to active
-    await programRepo.update(programId, { status: "active" });
+    await programRepo.update?.(programId, { status: "active" });
     
     // Initialize the first task if not already initialized
     const existingTasks = await taskRepo.findByProgram(programId);
@@ -95,9 +95,9 @@ export async function POST(
         status: updatedProgram!.status,
         currentTaskIndex: updatedProgram!.currentTaskIndex,
         completedTasks: updatedProgram!.completedTasks,
-        totalTasks: updatedProgram!.totalTasks,
-        startedAt: updatedProgram!.startedAt?.toISOString() || updatedProgram!.createdAt.toISOString(),
-        updatedAt: updatedProgram!.lastActivityAt.toISOString()
+        totalTaskCount: updatedProgram!.totalTaskCount,
+        startedAt: updatedProgram!.startedAt || updatedProgram!.createdAt,
+        updatedAt: updatedProgram!.lastActivityAt
       }
     });
     

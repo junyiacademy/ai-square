@@ -92,7 +92,7 @@ describe('UnifiedEvaluationSystem', () => {
 
       expect(evaluation.targetType).toBe('task');
       expect(evaluation.targetId).toBe('task-1');
-      expect(evaluation.type).toBe('pbl_task');
+      expect(evaluation.evaluationType).toBe('pbl_task');
       expect(evaluation.score).toBeDefined();
       expect(evaluation.dimensionScores).toHaveLength(3); // KSA dimensions
       expect(evaluation.metadata?.sourceType).toBe('pbl');
@@ -123,9 +123,9 @@ describe('UnifiedEvaluationSystem', () => {
       const evaluation = await evaluationSystem.evaluateTask(assessmentTask, assessmentContext);
 
       expect(evaluation.targetType).toBe('task');
-      expect(evaluation.type).toBe('assessment_task');
+      expect(evaluation.evaluationType).toBe('assessment_task');
       expect(evaluation.score).toBe(50); // 1 correct out of 2
-      expect(evaluation.feedback).toContain('1 out of 2');
+      expect(evaluation.feedbackText).toContain('1 out of 2');
       expect(evaluation.metadata?.correctAnswers).toBe(1);
     });
 
@@ -151,9 +151,9 @@ describe('UnifiedEvaluationSystem', () => {
       const evaluation = await evaluationSystem.evaluateTask(discoveryTask, discoveryContext);
 
       expect(evaluation.targetType).toBe('task');
-      expect(evaluation.type).toBe('discovery_task');
+      expect(evaluation.evaluationType).toBe('discovery_task');
       expect(evaluation.score).toBeDefined();
-      expect(evaluation.feedback).toContain('XP');
+      expect(evaluation.feedbackText).toContain('XP');
       expect(evaluation.metadata?.xpEarned).toBeDefined();
     });
   });
@@ -209,7 +209,7 @@ describe('UnifiedEvaluationSystem', () => {
 
       expect(evaluation.targetType).toBe('program');
       expect(evaluation.targetId).toBe('program-1');
-      expect(evaluation.type).toBe('program_completion');
+      expect(evaluation.evaluationType).toBe('program_completion');
       expect(evaluation.score).toBe(85); // Average of 80 and 90
       expect(evaluation.dimensionScores).toHaveLength(2); // Aggregated dimensions
       expect(evaluation.dimensionScores?.[0].dimension).toBe('knowledge');

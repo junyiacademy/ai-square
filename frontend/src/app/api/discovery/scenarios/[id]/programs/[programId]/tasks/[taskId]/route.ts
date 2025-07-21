@@ -119,7 +119,7 @@ export async function GET(
     }
     
     // Get task with interactions
-    const taskWithInteractions = await taskRepo.getTaskWithInteractions(taskId);
+    const taskWithInteractions = await taskRepo.getTaskWithInteractions?.(taskId);
     if (!taskWithInteractions || taskWithInteractions.programId !== programId) {
       return NextResponse.json({ error: 'Task not found' }, { status: 404 });
     }
@@ -143,7 +143,7 @@ export async function GET(
         console.log('=== EVALUATION VERSIONS DEBUG ===');
         console.log('Requested language:', requestedLanguage);
         console.log('Existing versions:', Object.keys(existingVersions));
-        console.log('Full evaluation feedback:', fullEvaluation.feedback?.substring(0, 100) + '...');
+        console.log('Full evaluation feedback:', fullEvaluation.feedbackText?.substring(0, 100) + '...');
         console.log('=================================');
         
         // Check if we need the requested language version
@@ -157,9 +157,9 @@ export async function GET(
               // Prefer English as source for translation
               sourceFeedback = existingVersions['en'];
               sourceLanguage = 'en';
-            } else if (fullEvaluation.feedback) {
+            } else if (fullEvaluation.feedbackText) {
               // Use default feedback (might be in another language)
-              sourceFeedback = fullEvaluation.feedback;
+              sourceFeedback = fullEvaluation.feedbackText;
               sourceLanguage = 'en'; // Assume default is English unless we track source language
             } else {
               throw new Error('No source feedback available for translation');
@@ -178,7 +178,7 @@ export async function GET(
                 score: fullEvaluation.score,
                 feedback: sourceFeedback,
                 feedbackVersions: { ...existingVersions, 'en': sourceFeedback },
-                evaluatedAt: fullEvaluation.createdAt.toISOString()
+                evaluatedAt: fullEvaluation.createdAt
               };
             } else {
               const translatedFeedback = await translationService.translateFeedback(
@@ -195,7 +195,7 @@ export async function GET(
               
               // Note: evaluationRepo doesn't have update method
               // Store updated versions in task metadata
-              await taskRepo.update(taskId, {
+              await taskRepo.update?.(taskId, {
                 metadata: {
                   ...task.metadata,
                   evaluationFeedbackVersions: updatedVersions
@@ -210,7 +210,7 @@ export async function GET(
                 score: fullEvaluation.score,
                 feedback: translatedFeedback,
                 feedbackVersions: updatedVersions,
-                evaluatedAt: fullEvaluation.createdAt.toISOString()
+                evaluatedAt: fullEvaluation.createdAt
               };
             }
           } catch (error) {
@@ -227,7 +227,7 @@ export async function GET(
                 score: fullEvaluation.score,
                 feedback: fallbackFeedback,
                 feedbackVersions: existingVersions,
-                evaluatedAt: fullEvaluation.createdAt.toISOString()
+                evaluatedAt: fullEvaluation.createdAt
               };
             }
           }
@@ -244,7 +244,7 @@ export async function GET(
               score: fullEvaluation.score,
               feedback: feedbackByLanguage,
               feedbackVersions: existingVersions,
-              evaluatedAt: fullEvaluation.createdAt.toISOString()
+              evaluatedAt: fullEvaluation.createdAt
             };
           }
         }
@@ -304,7 +304,7 @@ export async function PATCH(
     }
     
     // Get task with interactions
-    const taskWithInteractions = await taskRepo.getTaskWithInteractions(taskId);
+    const taskWithInteractions = await taskRepo.getTaskWithInteractions?.(taskId);
     if (!taskWithInteractions || taskWithInteractions.programId !== programId) {
       return NextResponse.json({ error: 'Task not found' }, { status: 404 });
     }
@@ -313,7 +313,7 @@ export async function PATCH(
     if (action === 'submit') {
       // Add user response as interaction
       // Record user attempt
-      await taskRepo.recordAttempt(taskId, {
+      await taskRepo.recordAttempt?.(taskId, {
         response: content.response,
         timeSpent: content.timeSpent || 0
       });
@@ -351,7 +351,7 @@ You are an AI learning evaluator in a discovery-based learning environment.
 Career Path: ${careerType}
 Task Title: ${task.title}
 Task Instructions: ${(task.metadata as Record<string, unknown>)?.instructions || ''}
-Task Context: ${JSON.stringify(task.context || {})}
+Task Context: ${JSON.stringify(task.content || {})}
 ${yamlData && (yamlData as { world_setting?: { description?: string; atmosphere?: string } }).world_setting ? `World Setting: ${(yamlData as { world_setting?: { description?: string; atmosphere?: string } }).world_setting?.description || 'Unknown'}\nAtmosphere: ${(yamlData as { world_setting?: { description?: string; atmosphere?: string } }).world_setting?.atmosphere || 'Unknown'}` : ''}
 
 Learner's Response:
@@ -368,7 +368,7 @@ ${userLanguage === 'zhTW' ?
 `請用繁體中文提供評估，包含：
 - 詳細說明做得好的地方和需要改進的地方
 - 任務是否圓滿完成
-- 獲得的經驗值（0-${(task.context as Record<string, unknown>)?.xp as number || 100}）
+- 獲得的經驗值（0-${(task.content as Record<string, unknown>)?.xp as number || 100}）
 - 展現或提升的技能
 
 請以 JSON 格式返回評估結果：
@@ -377,14 +377,14 @@ ${userLanguage === 'zhTW' ?
   "strengths": ["優點1", "優點2"],
   "improvements": ["改進建議1", "改進建議2"],
   "completed": true/false,
-  "xpEarned": number (0-${(task.context as Record<string, unknown>)?.xp as number || 100}),
+  "xpEarned": number (0-${(task.content as Record<string, unknown>)?.xp as number || 100}),
   "skillsImproved": ["技能1（例如：創意思考）", "技能2（例如：市場分析）"]
 }
 請確保所有內容都是繁體中文，包括技能名稱。` : 
 `Provide your evaluation in English with:
 - Detailed feedback explaining what was done well and areas for improvement
 - Whether the task is completed satisfactorily
-- XP points earned (0-${(task.context as Record<string, unknown>)?.xp as number || 100})
+- XP points earned (0-${(task.content as Record<string, unknown>)?.xp as number || 100})
 - Skills that were demonstrated or improved
 
 Return your evaluation as a JSON object:
@@ -393,7 +393,7 @@ Return your evaluation as a JSON object:
   "strengths": ["Strength 1", "Strength 2"],
   "improvements": ["Improvement area 1", "Improvement area 2"],
   "completed": true/false,
-  "xpEarned": number (0-${(task.context as Record<string, unknown>)?.xp as number || 100}),
+  "xpEarned": number (0-${(task.content as Record<string, unknown>)?.xp as number || 100}),
   "skillsImproved": ["Skill 1", "Skill 2"]
 }`}`;
 
@@ -416,7 +416,7 @@ Return your evaluation as a JSON object:
           evaluationResult = {
             feedback: aiResponse.content,
             completed: true,
-            xpEarned: (task.context as Record<string, unknown>)?.xp as number || 100,
+            xpEarned: (task.content as Record<string, unknown>)?.xp as number || 100,
             strengths: [],
             improvements: [],
             skillsImproved: []
@@ -425,7 +425,7 @@ Return your evaluation as a JSON object:
         
         // Record AI evaluation as metadata (not a user attempt)
         // We'll store this in task metadata instead
-        await taskRepo.update(taskId, {
+        await taskRepo.update?.(taskId, {
           metadata: {
             lastEvaluation: evaluationResult,
             lastEvaluatedAt: new Date().toISOString()
@@ -477,7 +477,7 @@ Return your evaluation as a JSON object:
         userAttempts,
         aiResponseCount: aiResponses.length,
         aiResponseDetails: aiResponses.map((r: Interaction) => ({
-          timestamp: r.createdAt.toISOString(),
+          timestamp: r.createdAt,
           completed: (r.metadata as { completed?: boolean })?.completed,
           content: r.content
         }))
@@ -500,7 +500,7 @@ Return your evaluation as a JSON object:
       // Calculate total XP from best attempt
       const bestXP = Math.max(
         ...allFeedback.map(f => typeof f === 'object' && f !== null && 'xpEarned' in f ? (f as { xpEarned?: number }).xpEarned || 0 : 0),
-        (task.context as Record<string, unknown>)?.xp as number || 100
+        (task.content as Record<string, unknown>)?.xp as number || 100
       );
       
       // Generate comprehensive qualitative feedback using LLM based on full learning journey
@@ -575,7 +575,7 @@ Return your evaluation as a JSON object:
           careerType,
           task.title || '',
           (task.metadata as Record<string, unknown>)?.instructions as string || '',
-          task.context || {},
+          task.content || {},
           yamlData,
           learningJourney
         );
@@ -711,7 +711,7 @@ Return your evaluation as a JSON object:
         feedback: feedbackVersions['en'], // Default to English
         metadata: {
           feedbackVersions: feedbackVersions,
-          dimensionScores: [],
+          domainScores: {},
           completed: true,
           xpEarned: bestXP,
           totalAttempts: userAttempts,
@@ -723,7 +723,7 @@ Return your evaluation as a JSON object:
       });
       
       // Mark task as completed and save evaluation ID
-      await taskRepo.update(taskId, {
+      await taskRepo.update?.(taskId, {
         status: 'completed' as const,
         completedAt: new Date(),
         metadata: {
@@ -731,7 +731,7 @@ Return your evaluation as a JSON object:
           evaluation: {
             id: evaluation.id,
             score: evaluation.score,
-            feedback: feedbackVersions[userLanguage] || evaluation.feedback, // Return in user's language
+            feedback: feedbackVersions[userLanguage] || evaluation.feedbackText, // Return in user's language
             feedbackVersions: feedbackVersions,
             evaluatedAt: evaluation.createdAt
           }
@@ -747,8 +747,8 @@ Return your evaluation as a JSON object:
       const taskMap = new Map(allTasks.map(t => [t.id, t]));
       
       // Get tasks in the correct order based on program.taskIds
-      const orderedTasks = program.taskIds
-        .map(id => taskMap.get(id))
+      const orderedTasks = (program as any).taskIds
+        .map((id: string) => taskMap.get(id))
         .filter(Boolean) as unknown as ITask[];
       
       const completedTasks = orderedTasks.filter(t => t.status === 'completed').length;
@@ -758,16 +758,16 @@ Return your evaluation as a JSON object:
       let nextTaskId = null;
       if (nextTaskIndex < orderedTasks.length) {
         const nextTask = orderedTasks[nextTaskIndex];
-        await taskRepo.updateStatus(nextTask.id, 'active');
+        await taskRepo.updateStatus?.(nextTask.id, 'active');
         nextTaskId = nextTask.id;
       }
       
       // Update program current task index and currentTaskId
       // Update program current task index
-      await programRepo.update(programId, { currentTaskIndex: nextTaskIndex });
+      await programRepo.update?.(programId, { currentTaskIndex: nextTaskIndex });
       
       // Update currentTaskId in metadata
-      await programRepo.update(programId, {
+      await programRepo.update?.(programId, {
         metadata: {
           ...program.metadata,
           currentTaskId: nextTaskId,
@@ -778,7 +778,7 @@ Return your evaluation as a JSON object:
       
       // If all tasks completed, complete the program
       if (completedTasks === orderedTasks.length) {
-        await programRepo.update(programId, { status: "completed" });
+        await programRepo.update?.(programId, { status: "completed" });
         
         // Create program completion evaluation
         await evaluationRepo.create({
@@ -790,7 +790,7 @@ Return your evaluation as a JSON object:
           timeTakenSeconds: 0,
           feedback: 'Congratulations! You have completed all learning tasks in this program.',
           metadata: {
-            dimensionScores: [],
+            domainScores: {},
             totalXP: currentXP + bestXP,
             tasksCompleted: orderedTasks.length
           }
@@ -837,7 +837,7 @@ Return your evaluation as a JSON object:
           return { xpEarned: 0, skillsImproved: [] };
         }
       });
-      const bestXP = Math.max(...allFeedback.map(f => f.xpEarned || 0), (task.context as Record<string, unknown>)?.xp as number || 100);
+      const bestXP = Math.max(...allFeedback.map(f => f.xpEarned || 0), (task.content as Record<string, unknown>)?.xp as number || 100);
       
       let comprehensiveFeedback = 'Successfully regenerated task evaluation!';
       let userLanguage = 'en'; // Default language
@@ -899,7 +899,7 @@ Return your evaluation as a JSON object:
           careerType,
           task.title || '',
           (task.metadata as Record<string, unknown>)?.instructions as string || '',
-          task.context || {},
+          task.content || {},
           yamlData,
           learningJourney
         );
@@ -964,7 +964,7 @@ Return your evaluation as a JSON object:
         });
         
         // Update task metadata with new feedback
-        await taskRepo.update(taskId, {
+        await taskRepo.update?.(taskId, {
           metadata: {
             ...task.metadata,
             lastRegeneratedFeedback: comprehensiveFeedback,
@@ -984,7 +984,7 @@ Return your evaluation as a JSON object:
       });
     } else if (action === 'start') {
       // Mark task as active
-      await taskRepo.updateStatus(taskId, 'active');
+      await taskRepo.updateStatus?.(taskId, 'active');
       
       return NextResponse.json({
         success: true,

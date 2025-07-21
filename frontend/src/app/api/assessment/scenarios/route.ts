@@ -92,7 +92,7 @@ export async function GET(request: NextRequest) {
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     
     // Get all existing scenarios in one batch query
-    const rawScenarios = await scenarioRepo.findActive();
+    const rawScenarios = await scenarioRepo.findActive?.() || [];
     const existingScenarios = rawScenarios.map(convertScenarioToIScenario);
     const scenariosByPath = new Map(
       existingScenarios.map((s: IScenario) => {

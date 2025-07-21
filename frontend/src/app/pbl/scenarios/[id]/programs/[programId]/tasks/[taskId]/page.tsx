@@ -76,6 +76,7 @@ export default function ProgramLearningPage() {
   const [evaluation, setEvaluation] = useState<TaskEvaluation | null>(null);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [taskEvaluations, setTaskEvaluations] = useState<Record<string, TaskEvaluation>>({});
+  const [programTasks, setProgramTasks] = useState<Array<{ id: string; taskIndex: number }>>([]);
   
   const conversationEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -140,10 +141,9 @@ export default function ProgramLearningPage() {
                 startedAt: programData.startedAt,
                 updatedAt: programData.startedAt, // Using startedAt as updatedAt fallback
                 status: programData.status,
-                totalTasks: programData.taskIds?.length || 0,
-                currentTaskId: programData.taskIds?.[programData.currentTaskIndex] || taskId,
-                language: i18n.language,
-                taskIds: programData.taskIds || []
+                totalTaskCount: programData.totalTaskCount || 0,
+                currentTaskId: taskId,
+                language: i18n.language
               } as Program;
               
               // Load task data using PBL unified architecture
@@ -221,10 +221,10 @@ export default function ProgramLearningPage() {
           startedAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           status: programId.startsWith('temp_') ? 'in_progress' : 'draft',
-          totalTasks: scenarioData.data.tasks.length,
+          totalTaskCount: scenarioData.data.tasks.length,
           currentTaskId: taskId || scenarioData.data.tasks[0]?.id,
           language: i18n.language,
-          taskIds: scenarioData.data.tasks.map((t: Record<string, unknown>) => t.id) // Map task IDs from scenario
+          // taskIds will be fetched separately
         };
         setProgram(mockProgram);
       }
@@ -232,6 +232,14 @@ export default function ProgramLearningPage() {
       // Load all task evaluations for this program (only for non-temp programs)
       if (!programId.startsWith('temp_')) {
         try {
+          // Fetch all tasks for the program
+          const tasksRes = await fetch(`/api/pbl/programs/${programId}/tasks`);
+          if (tasksRes.ok) {
+            const tasksData = await tasksRes.json();
+            const sortedTasks = tasksData.sort((a: { taskIndex: number }, b: { taskIndex: number }) => a.taskIndex - b.taskIndex);
+            setProgramTasks(sortedTasks.map((t: { id: string; taskIndex: number }) => ({ id: t.id, taskIndex: t.taskIndex })));
+          }
+          
           // Get evaluations for all tasks in this program
           const evaluationsRes = await fetch(`/api/pbl/evaluations?programId=${programId}&targetType=task`);
           if (evaluationsRes.ok) {
@@ -672,25 +680,38 @@ export default function ProgramLearningPage() {
       return;
     }
     
-    // Use program.taskIds to find the current and next task
-    const taskIds = program.taskIds || [];
-    const currentIndex = taskIds.findIndex(id => id === currentTask.id);
-    
-    console.log('handleCompleteTask:', {
-      currentTaskId: currentTask.id,
-      taskIds,
-      currentIndex,
-      hasNextTask: currentIndex !== -1 && currentIndex < taskIds.length - 1
-    });
-    
-    if (currentIndex !== -1 && currentIndex < taskIds.length - 1) {
-      // Navigate to next task
-      const nextTaskId = taskIds[currentIndex + 1];
-      console.log('Navigating to next task:', nextTaskId);
-      router.push(`/pbl/scenarios/${scenarioId}/programs/${programId}/tasks/${nextTaskId}`);
-    } else {
-      // All tasks completed or current task not found in taskIds
-      console.log('All tasks completed or task not found, going to complete page');
+    // Fetch all tasks for the program to find the current and next task
+    try {
+      const tasksRes = await fetch(`/api/pbl/programs/${programId}/tasks`);
+      if (tasksRes.ok) {
+        const tasks = await tasksRes.json();
+        const sortedTasks = tasks.sort((a: { taskIndex: number }, b: { taskIndex: number }) => a.taskIndex - b.taskIndex);
+        const currentIndex = sortedTasks.findIndex((t: { id: string }) => t.id === currentTask.id);
+        
+        console.log('handleCompleteTask:', {
+          currentTaskId: currentTask.id,
+          totalTaskCount: sortedTasks.length,
+          currentIndex,
+          hasNextTask: currentIndex !== -1 && currentIndex < sortedTasks.length - 1
+        });
+        
+        if (currentIndex !== -1 && currentIndex < sortedTasks.length - 1) {
+          // Navigate to next task
+          const nextTaskId = sortedTasks[currentIndex + 1].id;
+          console.log('Navigating to next task:', nextTaskId);
+          router.push(`/pbl/scenarios/${scenarioId}/programs/${programId}/tasks/${nextTaskId}`);
+        } else {
+          // All tasks completed or current task not found
+          console.log('All tasks completed or task not found, going to complete page');
+          router.push(`/pbl/scenarios/${scenarioId}/programs/${programId}/complete`);
+        }
+      } else {
+        // Fallback to complete page if tasks fetch fails
+        console.log('Failed to fetch tasks, going to complete page');
+        router.push(`/pbl/scenarios/${scenarioId}/programs/${programId}/complete`);
+      }
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
       router.push(`/pbl/scenarios/${scenarioId}/programs/${programId}/complete`);
     }
   };
@@ -779,8 +800,9 @@ export default function ProgramLearningPage() {
                   <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600"></div>
                   <div className="space-y-6 relative">
                     {scenario.tasks.map((task, index) => {
-                      // Get the actual task UUID from program taskIds
-                      const actualTaskId = program?.taskIds?.[index] || task.id;
+                      // Get the actual task UUID from programTasks
+                      const programTask = programTasks[index];
+                      const actualTaskId = programTask?.id || task.id;
                       const isEvaluated = !!taskEvaluations[actualTaskId];
                       const isCurrent = currentTask && currentTask.id === actualTaskId;
                       const taskEval = taskEvaluations[actualTaskId];
@@ -964,22 +986,22 @@ export default function ProgramLearningPage() {
                   </div>
                   
                   {/* KSA Scores */}
-                  {evaluation.ksaScores && (
+                  {evaluation.domainScores && (
                   <div className="space-y-2">
-                    {Object.entries(evaluation.ksaScores).map(([key, value]) => (
-                      <div key={key} className="flex items-center justify-between">
+                    {Object.entries(evaluation.domainScores).map(([dimension, score]: [string, number]) => (
+                      <div key={dimension} className="flex items-center justify-between">
                         <span className="text-sm text-gray-600 dark:text-gray-400 capitalize">
-                          {t(`pbl:complete.${key}`)}
+                          {t(`pbl:complete.${dimension}`)}
                         </span>
                         <div className="flex items-center">
                           <div className="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
                             <div 
                               className="bg-purple-600 h-2 rounded-full"
-                              style={{ width: `${Number(value)}%` }}
+                              style={{ width: `${score}%` }}
                             />
                           </div>
                           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                            {Number(value)}%
+                            {Math.round(score)}%
                           </span>
                         </div>
                       </div>
@@ -1112,7 +1134,7 @@ export default function ProgramLearningPage() {
                 onClick={handleCompleteTask}
                 className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
               >
-                {program && currentTask && program.taskIds && program.taskIds.indexOf(currentTask.id) < program.taskIds.length - 1
+                {program && currentTask && programTasks.findIndex(t => t.id === currentTask.id) < programTasks.length - 1
                   ? t('pbl:learn.nextTask', 'Next Task')
                   : t('pbl:learn.completeProgram', 'Complete Program')}
               </button>
@@ -1246,8 +1268,9 @@ export default function ProgramLearningPage() {
                   <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600"></div>
                   <div className="space-y-6 relative">
                     {scenario.tasks.map((task, index) => {
-                      // Get the actual task UUID from program taskIds
-                      const actualTaskId = program?.taskIds?.[index] || task.id;
+                      // Get the actual task UUID from programTasks
+                      const programTask = programTasks[index];
+                      const actualTaskId = programTask?.id || task.id;
                       const isCompleted = index < taskIndex;
                       const isCurrent = currentTask && currentTask.id === actualTaskId;
                       

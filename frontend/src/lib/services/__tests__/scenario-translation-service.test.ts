@@ -26,8 +26,8 @@ describe('ScenarioTranslationService', () => {
     const mockScenario: IScenario = {
       id: 'scenario-123',
       sourceType: 'assessment',
-      title: 'AI Literacy Assessment',
-      description: 'Evaluate your understanding',
+      title: { en: 'AI Literacy Assessment' },
+      description: { en: 'Evaluate your understanding' },
       taskTemplates: [],
       metadata: {},
       objectives: [],
@@ -124,8 +124,8 @@ assessment_config:
     const mockScenario: IScenario = {
       id: 'scenario-123',
       sourceType: 'assessment',
-      title: 'AI Literacy Assessment',
-      description: 'Evaluate your understanding',
+      title: { en: 'AI Literacy Assessment' },
+      description: { en: 'Evaluate your understanding' },
       taskTemplates: [],
       metadata: {},
       objectives: [],
@@ -237,8 +237,8 @@ assessment_config:
       const scenario: IScenario = {
         id: 'scenario-123',
         sourceType: 'assessment',
-        title: 'Test',
-        description: 'Test',
+        title: { en: 'Test' },
+        description: { en: 'Test' },
         taskTemplates: [],
         metadata: {},
         objectives: [],
@@ -273,8 +273,8 @@ assessment_config:
       const scenario: IScenario = {
         id: 'scenario-123',
         sourceType: 'assessment',
-        title: 'Test',
-        description: 'Test',
+        title: { en: 'Test' },
+        description: { en: 'Test' },
         taskTemplates: [],
         metadata: {},
         objectives: [],

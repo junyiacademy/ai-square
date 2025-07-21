@@ -29,7 +29,7 @@ export async function POST(
     const taskRepo = repositoryFactory.getTaskRepository();
     
     // Get task with interactions
-    const taskWithInteractions = await taskRepo.getTaskWithInteractions(taskId);
+    const taskWithInteractions = await taskRepo.getTaskWithInteractions?.(taskId);
     if (!taskWithInteractions) {
       return NextResponse.json(
         { error: 'Task not found' },
@@ -59,7 +59,7 @@ export async function POST(
     };
     
     // Record the answer as an attempt
-    await taskRepo.recordAttempt(taskId, {
+    await taskRepo.recordAttempt?.(taskId, {
       response: answerContent as unknown as Record<string, unknown>,
       score: isCorrect ? 1 : 0,
       timeSpent: timeSpent || 0
@@ -74,7 +74,7 @@ export async function POST(
       (i.content as Record<string, unknown>).eventType === 'assessment_answer'
     );
     if (answers.length === 0) {
-      await taskRepo.updateStatus(taskId, 'active');
+      await taskRepo.updateStatus?.(taskId, 'active');
     }
     
     return NextResponse.json({ 

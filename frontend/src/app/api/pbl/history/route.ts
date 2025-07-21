@@ -108,12 +108,12 @@ export async function GET(request: NextRequest) {
       const ksaScores: Record<string, number> = {};
       
       evaluations.forEach(evaluation => {
-        if (evaluation.ksaScores) {
-          Object.entries(evaluation.ksaScores).forEach(([key, value]) => {
-            if (key.includes('_')) {
-              domainScores[key] = (domainScores[key] || 0) + (value as number);
+        if (evaluation.dimensionScores) {
+          Object.entries(evaluation.dimensionScores).forEach(([dimension, score]: [string, number]) => {
+            if (dimension.includes('_')) {
+              domainScores[dimension] = (domainScores[dimension] || 0) + score;
             } else {
-              ksaScores[key] = (ksaScores[key] || 0) + (value as number);
+              ksaScores[dimension] = (ksaScores[dimension] || 0) + score;
             }
           });
         }
@@ -132,7 +132,7 @@ export async function GET(request: NextRequest) {
         taskId: task.id,
         title: `Task ${task.taskIndex + 1}`,
         score: task.score,
-        completedAt: task.completedAt?.toISOString()
+        completedAt: task.completedAt
       }));
       
       // Get scenario title
@@ -149,10 +149,10 @@ export async function GET(request: NextRequest) {
         scenarioId: program.scenarioId,
         userEmail: user.email,
         status: program.status,
-        startedAt: program.startedAt?.toISOString() || program.createdAt.toISOString(),
-        updatedAt: program.lastActivityAt.toISOString(),
-        completedAt: program.endTime?.toISOString(),
-        totalTasks: program.totalTasks,
+        startedAt: program.startedAt || program.createdAt,
+        updatedAt: program.lastActivityAt,
+        completedAt: program.completedAt,
+        totalTasks: program.totalTaskCount,
         evaluatedTasks: completedTasks.length,
         overallScore,
         domainScores,

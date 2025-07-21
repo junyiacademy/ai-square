@@ -43,8 +43,8 @@ export async function GET(
     const taskMap = new Map(allTasks.map(t => [t.id, t]));
     
     // Get tasks in the correct order based on program.taskIds
-    const tasks = program.taskIds
-      .map(id => taskMap.get(id))
+    const tasks = (program as any).taskIds
+      .map((id: string) => taskMap.get(id))
       .filter(Boolean) as unknown as ITask[];
     
     // Debug logging
@@ -117,7 +117,7 @@ export async function GET(
     
     // Update program metadata if needed
     if (program.metadata?.totalXP !== totalXP) {
-      await programRepo.update(programId, {
+      await programRepo.update?.(programId, {
         metadata: {
           ...program.metadata,
           totalXP: totalXP
@@ -135,7 +135,7 @@ export async function GET(
       userId: program.userId,
       status: program.status,
       createdAt: program.createdAt,
-      completedAt: program.endTime,
+      completedAt: program.completedAt,
       currentTaskIndex: program.currentTaskIndex,
       taskIds: program.taskIds,
       tasks: tasksSummary,

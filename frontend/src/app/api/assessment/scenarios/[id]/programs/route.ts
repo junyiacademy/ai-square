@@ -218,11 +218,21 @@ export async function POST(
     const rawProgram = await programRepo.create({
       scenarioId: id,
       userId: email,
-      totalTasks: 0  // Will be updated after creating tasks
+      totalTaskCount: 0,  // Will be updated after creating tasks
+      mode: 'assessment',
+      status: 'active',
+      createdAt: new Date().toISOString(),
+      startedAt: new Date().toISOString(),
+      currentTaskIndex: 0,
+      language,
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {},
+      metadata: {}
     });
     
     // Update the program with additional fields after creation
-    const updatedRawProgram = await programRepo.update(rawProgram.id, {
+    const updatedRawProgram = await programRepo.update?.(rawProgram.id, {
       status: 'active' as ProgramStatus,
       metadata: {
         sourceType: 'assessment',
@@ -308,20 +318,35 @@ export async function POST(
             // Create task for this domain - using the proper DTO
             const rawTask = await taskRepo.create({
               programId: program.id,
+              mode: 'assessment',
               taskIndex: i,
               type: 'question',
+              status: 'pending',
               title: String(taskData[`title_${language}`] || taskData.title || `Task ${i + 1}`),
+              description: String(taskData[`description_${language}`] || taskData.description || 'Complete the assessment questions'),
               content: {
-                instructions: String(taskData[`description_${language}`] || taskData.description || 'Complete the assessment questions')
+                instructions: String(taskData[`description_${language}`] || taskData.description || 'Complete the assessment questions'),
+                questions: taskQuestions
               },
-              context: {
-                scenarioId: scenario.id,
-                taskType: 'assessment',
-                difficulty: (typeof taskData.difficulty === 'string' ? taskData.difficulty : 'medium'),
-                estimatedTime: taskData.time_limit_minutes ? taskData.time_limit_minutes * 60 : 240
+              interactions: [],
+              interactionCount: 0,
+              userResponse: {},
+              score: 0,
+              maxScore: 100,
+              allowedAttempts: 1,
+              attemptCount: 0,
+              timeLimitSeconds: taskData.time_limit_minutes ? taskData.time_limit_minutes * 60 : 240,
+              timeSpentSeconds: 0,
+              aiConfig: {},
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+              pblData: {},
+              discoveryData: {},
+              assessmentData: {
+                domainId: taskData.id,
+                questionsCount: taskQuestions.length
               },
               metadata: {
-                questions: taskQuestions,
                 timeLimit: taskData.time_limit_minutes ? taskData.time_limit_minutes * 60 : 240,
                 language,
                 domainId: taskData.id
@@ -345,20 +370,34 @@ export async function POST(
           
           const rawTask = await taskRepo.create({
             programId: program.id,
+            mode: 'assessment',
             taskIndex: 0,
             type: 'question',
+            status: 'pending',
             title: 'Assessment Questions',
+            description: 'Complete the assessment questions',
             content: {
-              instructions: 'Complete the assessment questions'
+              instructions: 'Complete the assessment questions',
+              questions
             },
-            context: {
-              scenarioId: scenario.id,
-              taskType: 'assessment',
-              difficulty: 'medium',
-              estimatedTime: 900
+            interactions: [],
+            interactionCount: 0,
+            userResponse: {},
+            score: 0,
+            maxScore: 100,
+            allowedAttempts: 1,
+            attemptCount: 0,
+            timeLimitSeconds: 900,
+            timeSpentSeconds: 0,
+            aiConfig: {},
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            pblData: {},
+            discoveryData: {},
+            assessmentData: {
+              questionsCount: questions.length
             },
             metadata: {
-              questions,
               timeLimit: 900,
               language
             }
@@ -372,7 +411,7 @@ export async function POST(
     }
     
     // Update program with task IDs
-    await programRepo.update(program.id, {
+    await programRepo.update?.(program.id, {
       taskIds: tasks.map(t => t.id)
     });
     

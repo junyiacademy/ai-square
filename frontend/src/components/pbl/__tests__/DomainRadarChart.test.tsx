@@ -25,32 +25,12 @@ jest.mock('recharts', () => {
 })
 
 describe('DomainRadarChart', () => {
-  const mockDomainScores = [
-    {
-      domain: 'Engaging_with_AI',
-      displayName: 'Engaging with AI',
-      score: 85,
-      color: '#3b82f6',
-    },
-    {
-      domain: 'Creating_with_AI',
-      displayName: 'Creating with AI',
-      score: 72,
-      color: '#10b981',
-    },
-    {
-      domain: 'Managing_AI',
-      displayName: 'Managing AI',
-      score: 90,
-      color: '#f59e0b',
-    },
-    {
-      domain: 'Designing_AI',
-      displayName: 'Designing AI',
-      score: 68,
-      color: '#ef4444',
-    },
-  ]
+  const mockDomainScores = {
+    engaging_with_ai: 85,
+    creating_with_ai: 72,
+    managing_with_ai: 90,
+    designing_with_ai: 68
+  }
 
   it('renders the radar chart with all components', () => {
     render(<DomainRadarChart domainScores={mockDomainScores} />)
@@ -212,8 +192,9 @@ describe('DomainRadarChart', () => {
   })
 
   it('handles custom colors in domain scores', () => {
-    const customColorScores = mockDomainScores.map((score, index) => ({
-      ...score,
+    const customColorScores = Object.entries(mockDomainScores).map(([domain, score]: [string, number], index: number) => ({
+      domain,
+      score,
       color: `#${index}${index}${index}${index}${index}${index}`,
     }))
 

@@ -68,7 +68,7 @@ export async function PATCH(
       updateData.endTime = new Date();
     }
 
-    const updatedProgram = await programRepo.update(resolvedParams.id, updateData);
+    const updatedProgram = await programRepo.update?.(resolvedParams.id, updateData);
     
     // If program is completed, update user XP
     if (body.status === 'completed') {
@@ -110,7 +110,7 @@ export async function DELETE(
     const programRepo = repositoryFactory.getProgramRepository();
     
     // Mark as abandoned instead of deleting
-    await programRepo.update(resolvedParams.id, { status: 'abandoned' });
+    await programRepo.update?.(resolvedParams.id, { status: 'abandoned' });
     
     return NextResponse.json({ 
       message: 'Program marked as abandoned' 

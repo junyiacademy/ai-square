@@ -299,7 +299,7 @@ export async function POST(request: NextRequest) {
       };
       
       // Store updated feedback in program metadata since evalRepo doesn't have update
-      await programRepo.update(program.id, {
+      await programRepo.update?.(program.id, {
         metadata: {
           ...program.metadata,
           evaluationMetadata: updatedMetadata
@@ -329,10 +329,10 @@ export async function POST(request: NextRequest) {
       const scenario = await scenarioRepo.findById(scenarioId);
       if (scenario) {
         scenarioData = {
-          title: scenario.title,
+          title: typeof scenario.title === 'string' ? scenario.title : (scenario.title as Record<string, string>)?.[language] || (scenario.title as Record<string, string>)?.en || '',
           learning_objectives: scenario.metadata?.learningObjectives as string[] || [],
           scenario_info: {
-            title: scenario.title,
+            title: typeof scenario.title === 'string' ? scenario.title : (scenario.title as Record<string, string>)?.[language] || (scenario.title as Record<string, string>)?.en || '',
             learning_objectives: scenario.metadata?.learningObjectives as string[] || []
           }
         };
@@ -497,7 +497,7 @@ Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLan
     };
     
     // Store updated feedback in program metadata since evalRepo doesn't have update
-    await programRepo.update(program.id, {
+    await programRepo.update?.(program.id, {
       metadata: {
         ...program.metadata,
         evaluationMetadata: {

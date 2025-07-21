@@ -144,7 +144,7 @@ export async function POST(
     
     // Get interactions for each task to calculate time
     for (const task of tasks) {
-      const taskWithInteractions = await taskRepo.getTaskWithInteractions(task.id);
+      const taskWithInteractions = await taskRepo.getTaskWithInteractions?.(task.id);
       if (taskWithInteractions?.interactions && taskWithInteractions.interactions.length > 0) {
         const interactions = taskWithInteractions.interactions;
         const firstInteraction = interactions[0];
@@ -165,7 +165,7 @@ export async function POST(
       id: t.id,
       evaluationId: t.metadata?.evaluationId as string | undefined,
       score: t.score,
-      completedAt: t.completedAt?.toISOString()
+      completedAt: t.completedAt
     }));
     const syncChecksum = await generateSyncChecksum(tasksWithEvaluation);
     
@@ -210,21 +210,30 @@ export async function POST(
       // Create new evaluation
       programEvaluation = await evalRepo.create({
         userId: session.user.email,
-        targetType: 'program',
-        targetId: program.id,
-        evaluationType: 'pbl_completion',
+        programId: program.id,
+        mode: 'pbl',
+        evaluationType: 'program',
+        evaluationSubtype: 'pbl_completion',
         score: overallScore,
         maxScore: 100,
         timeTakenSeconds: totalTimeSeconds,
-        metadata: {
+        dimensionScores: domainScores,
+        feedbackText: '',
+        feedbackData: {},
+        aiAnalysis: {},
+        createdAt: new Date().toISOString(),
+        pblData: {
           taskEvaluationIds: evaluatedTasks.map(te => te.evaluation!.id),
-          overallScore,
-          domainScores,
           ksaScores,
           evaluatedTasks: evaluatedTasks.length,
           totalTasks,
+          conversationCount
+        },
+        discoveryData: {},
+        assessmentData: {},
+        metadata: {
+          overallScore,
           totalTimeSeconds,
-          conversationCount,
           // Verification fields
           isLatest: true,
           syncChecksum,
@@ -237,13 +246,13 @@ export async function POST(
       });
       
       // Update program with evaluation ID
-      await programRepo.update(programId, {
+      await programRepo.update?.(programId, {
         status: 'completed' as const,
         endTime: new Date(),
         metadata: {
           ...program.metadata,
           evaluationId: programEvaluation.id,
-          completedAt: program.endTime?.toISOString() || new Date().toISOString()
+          completedAt: program.completedAt || new Date().toISOString()
         }
       });
     }
@@ -393,7 +402,7 @@ export async function GET(
             return tasks.map(t => ({
               id: t.id,
               score: t.score,
-              completedAt: t.completedAt?.toISOString()
+              completedAt: t.completedAt
             }));
           }
         };

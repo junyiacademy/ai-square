@@ -70,7 +70,7 @@ export async function POST(
     });
     
     // Store interactions in task metadata
-    await taskRepo.update(taskId, {
+    await taskRepo.update?.(taskId, {
       metadata: {
         ...task.metadata,
         interactions
@@ -79,7 +79,7 @@ export async function POST(
     
     // Update task status if needed
     if (task.status === 'pending') {
-      await taskRepo.updateStatus(taskId, 'active');
+      await taskRepo.updateStatus?.(taskId, 'active');
     }
     
     return NextResponse.json({ 

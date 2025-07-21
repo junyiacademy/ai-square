@@ -198,7 +198,7 @@ Format your response as JSON with keys: score, feedback, suggestions (array)
         const evaluation = JSON.parse(jsonMatch[0]);
         return {
           score: evaluation.score || 0,
-          feedback: evaluation.feedback || '',
+          feedback: evaluation.feedbackText || '',
           suggestions: evaluation.suggestions || []
         };
       }

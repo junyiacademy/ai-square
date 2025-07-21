@@ -123,11 +123,21 @@ export async function POST(
     const rawProgram = await programRepo.create({
       scenarioId: scenarioId,
       userId: userEmail,
-      totalTasks: 0  // Will be updated after creating tasks
+      totalTaskCount: 0,  // Will be updated after creating tasks
+      mode: 'discovery',
+      status: 'active',
+      createdAt: new Date().toISOString(),
+      startedAt: new Date().toISOString(),
+      currentTaskIndex: 0,
+      language: 'en',
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {},
+      metadata: {}
     });
     
     // Update program with metadata
-    const updatedRawProgram = await programRepo.update(rawProgram.id, {
+    const updatedRawProgram = await programRepo.update?.(rawProgram.id, {
       status: 'active',
       metadata: {
         sourceType: 'discovery',
@@ -167,27 +177,38 @@ export async function POST(
           const template = taskTemplates[i];
           const rawTask = await taskRepo.create({
             programId: program.id,
+            mode: 'discovery',
             taskIndex: i,
+            scenarioTaskIndex: i,
             title: template.title as string,
+            description: template.description as string,
             type: 'chat', // PBL tasks are primarily chat-based
-            context: {
+            status: i === 0 ? 'active' : 'pending',
+            content: {
               scenarioId: scenario.id,
+              instructions: template.instructions || [],
+              expectedOutcome: template.expectedOutcome,
+              category: template.category,
+              ksaFocus: template.ksaFocus || template.assessmentFocus,
+              aiModule: template.aiModule
             },
+            interactions: [],
+            interactionCount: 0,
+            userResponse: {},
+            score: 0,
+            maxScore: 100,
+            allowedAttempts: 3,
+            attemptCount: 0,
+            timeLimitSeconds: template.timeLimit as number || 1800,
+            timeSpentSeconds: 0,
+            aiConfig: template.aiModule as Record<string, unknown> || {},
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            pblData: {},
+            discoveryData: {},
+            assessmentData: {},
             metadata: {
-              scenarioTaskIndex: i,
-              instructions: template.description as string,
-              context: {
-                description: template.description,
-                instructions: template.instructions || [],
-                expectedOutcome: template.expectedOutcome,
-                timeLimit: template.timeLimit,
-                category: template.category,
-                ksaFocus: template.ksaFocus || template.assessmentFocus,
-                aiModule: template.aiModule,
-                language: language
-              },
-              interactions: [],
-              status: i === 0 ? 'active' : 'pending'
+              language: language
             }
           });
           createdTasks.push(convertTaskToITask(rawTask));
@@ -220,25 +241,39 @@ export async function POST(
           const currentTaskIndex = taskIndex++;
           const rawTask = await taskRepo.create({
             programId: program.id,
+            mode: 'discovery',
             taskIndex: currentTaskIndex,
+            scenarioTaskIndex: currentTaskIndex,
             title: taskTitle,
+            description: (startingScenario?.description || '') as string,
             type: 'analysis',
-            context: {
+            status: currentTaskIndex === 0 ? 'active' : 'pending',
+            content: {
               scenarioId: scenario.id,
-            },
-            metadata: {
-              scenarioTaskIndex: currentTaskIndex,
               instructions: (startingScenario?.description || '') as string,
-              context: {
-                description: (startingScenario?.description || '') as string,
-                xp: 100,
-                difficulty: 'beginner',
-                worldSetting: yamlDataRecord.world_setting,
-                skillFocus: (yamlDataRecord.metadata as Record<string, unknown>)?.skill_focus
-              },
-              interactions: [],
-              status: currentTaskIndex === 0 ? 'active' : 'pending'
-            }
+              xp: 100,
+              difficulty: 'beginner',
+              worldSetting: yamlDataRecord.world_setting,
+              skillFocus: (yamlDataRecord.metadata as Record<string, unknown>)?.skill_focus
+            },
+            interactions: [],
+            interactionCount: 0,
+            userResponse: {},
+            score: 0,
+            maxScore: 100,
+            allowedAttempts: 3,
+            attemptCount: 0,
+            timeSpentSeconds: 0,
+            aiConfig: {},
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            pblData: {},
+            discoveryData: {
+              xp: 100,
+              difficulty: 'beginner'
+            },
+            assessmentData: {},
+            metadata: {}
           });
           createdTasks.push(convertTaskToITask(rawTask));
         }
@@ -253,25 +288,40 @@ export async function POST(
           const currentTaskIndex = taskIndex++;
           const rawTask = await taskRepo.create({
             programId: program.id,
+            mode: 'discovery',
             taskIndex: currentTaskIndex,
+            scenarioTaskIndex: currentTaskIndex,
             title: exampleTask.title as string,
-            type: exampleTask.type as string,
-            context: {
+            description: exampleTask.description as string,
+            type: exampleTask.type as string || 'analysis',
+            status: 'pending',
+            content: {
               scenarioId: scenario.id,
-            },
-            metadata: {
-              scenarioTaskIndex: currentTaskIndex,
               instructions: exampleTask.description as string,
-              context: {
-                description: exampleTask.description,
-                xp: exampleTask.xp_reward,
-                skillsImproved: exampleTask.skills_improved,
-                difficulty: currentTaskIndex <= 2 ? 'beginner' : 'intermediate',
-                worldSetting: yamlDataRecord.world_setting
-              },
-              interactions: [],
-              status: 'pending'
-            }
+              xp: exampleTask.xp_reward,
+              skillsImproved: exampleTask.skills_improved,
+              difficulty: currentTaskIndex <= 2 ? 'beginner' : 'intermediate',
+              worldSetting: yamlDataRecord.world_setting
+            },
+            interactions: [],
+            interactionCount: 0,
+            userResponse: {},
+            score: 0,
+            maxScore: 100,
+            allowedAttempts: 3,
+            attemptCount: 0,
+            timeSpentSeconds: 0,
+            aiConfig: {},
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            pblData: {},
+            discoveryData: {
+              xp: exampleTask.xp_reward as number || 100,
+              skillsImproved: exampleTask.skills_improved,
+              difficulty: currentTaskIndex <= 2 ? 'beginner' : 'intermediate'
+            },
+            assessmentData: {},
+            metadata: {}
           });
           createdTasks.push(convertTaskToITask(rawTask));
         }
@@ -281,25 +331,39 @@ export async function POST(
           const template = DISCOVERY_TASK_TEMPLATES[i];
           const rawTask = await taskRepo.create({
             programId: program.id,
+            mode: 'discovery',
             taskIndex: i,
+            scenarioTaskIndex: i,
             title: template.title,
+            description: template.description,
             type: template.type,
-            context: {
+            status: i === 0 ? 'active' : 'pending',
+            content: {
               scenarioId: scenario.id,
-            },
-            metadata: {
-              scenarioTaskIndex: i,
               instructions: template.context.instructions,
-              context: {
-                description: template.description,
-                xp: template.xp,
-                objectives: template.context.objectives,
-                completionCriteria: template.context.completionCriteria,
-                difficulty: i < 3 ? 'beginner' : i < 7 ? 'intermediate' : 'advanced'
-              },
-              interactions: [],
-              status: i === 0 ? 'active' : 'pending'
-            }
+              xp: template.xp,
+              objectives: template.context.objectives,
+              completionCriteria: template.context.completionCriteria,
+              difficulty: i < 3 ? 'beginner' : i < 7 ? 'intermediate' : 'advanced'
+            },
+            interactions: [],
+            interactionCount: 0,
+            userResponse: {},
+            score: 0,
+            maxScore: 100,
+            allowedAttempts: 3,
+            attemptCount: 0,
+            timeSpentSeconds: 0,
+            aiConfig: {},
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            pblData: {},
+            discoveryData: {
+              xp: template.xp,
+              difficulty: i < 3 ? 'beginner' : i < 7 ? 'intermediate' : 'advanced'
+            },
+            assessmentData: {},
+            metadata: {}
           });
           createdTasks.push(convertTaskToITask(rawTask));
         }
@@ -308,7 +372,7 @@ export async function POST(
     
     // Update program with task IDs and set currentTaskId
     const firstTaskId = createdTasks[0]?.id;
-    await programRepo.update(program.id, {
+    await programRepo.update?.(program.id, {
       taskIds: createdTasks.map(t => t.id),
       metadata: {
         ...program.metadata,

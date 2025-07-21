@@ -43,7 +43,7 @@ interface PBLSession {
   progress: {
     percentage: number;
     completedTasks: number;
-    totalTasks: number;
+    totalTaskCount: number;
   };
   score?: number;
   totalInteractions?: number;
@@ -76,7 +76,7 @@ interface DiscoverySession {
   progress: {
     percentage: number;
     completedTasks: number;
-    totalTasks: number;
+    totalTaskCount: number;
   };
   totalInteractions?: number;
   averageScore?: number;
@@ -165,7 +165,7 @@ export default function UnifiedHistoryPage() {
                 completedAt?: string;
                 totalTimeSeconds?: number;
                 evaluatedTasks: number;
-                totalTasks: number;
+                totalTaskCount: number;
                 tasks?: Array<{ 
                   id?: string;
                   title?: string;
@@ -206,9 +206,9 @@ export default function UnifiedHistoryPage() {
                     completedAt: program.completedAt,
                     duration: program.totalTimeSeconds || 0,
                     progress: {
-                      percentage: Math.round((program.evaluatedTasks / program.totalTasks) * 100),
+                      percentage: Math.round((program.evaluatedTasks / program.totalTaskCount) * 100),
                       completedTasks: program.evaluatedTasks,
-                      totalTasks: program.totalTasks
+                      totalTaskCount: program.totalTaskCount
                     },
                     totalInteractions: program.tasks?.reduce((sum, task) => 
                       sum + (task.log?.interactions?.length || 0), 0) || 0,
@@ -263,11 +263,11 @@ export default function UnifiedHistoryPage() {
                     // Get task info from taskLogs if available, otherwise use taskIds
                     const taskLogs = program.taskLogs || [];
                     const completedTasks = (taskLogs as Record<string, unknown>[])?.filter((log: Record<string, unknown>) => log.isCompleted).length || 0;
-                    const totalTasks = (program.taskIds as string[])?.length || (taskLogs as unknown[])?.length || 0;
+                    const totalTasks = (program.totalTaskCount as number) || (taskLogs as unknown[])?.length || 0;
                     
                     // For current task, we need to use currentTaskIndex with taskIds
                     const currentTaskIndex = (program.currentTaskIndex as number) || 0;
-                    const currentTaskId = (program.taskIds as string[])?.[currentTaskIndex] || (program.metadata as Record<string, unknown>)?.currentTaskId;
+                    const currentTaskId = (program.metadata as Record<string, unknown>)?.currentTaskId || '';
                     const currentTask = {
                       id: currentTaskId,
                       title: `Task ${currentTaskIndex + 1}` // We'll need to load task details separately if needed
@@ -295,7 +295,7 @@ export default function UnifiedHistoryPage() {
                       id: program.id,
                       status: program.status,
                       tasks: (program.tasks as unknown[])?.length,
-                      taskIds: (program.taskIds as string[])?.length,
+                      totalTaskCount: program.totalTaskCount,
                       currentTaskIndex: program.currentTaskIndex
                     });
                     
@@ -685,7 +685,7 @@ export default function UnifiedHistoryPage() {
                                     </span>
                                   </div>
                                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    {session.progress.completedTasks}/{session.progress.totalTasks} {t('pbl:history.tasksEvaluated')}
+                                    {session.progress.completedTasks}/{session.progress.totalTaskCount} {t('pbl:history.tasksEvaluated')}
                                   </p>
                                   <div className="mt-3 space-y-2">
                                     <div>
@@ -799,7 +799,7 @@ export default function UnifiedHistoryPage() {
                               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('pbl:history.progress')}</p>
                                 <p className="text-lg font-bold text-gray-900 dark:text-white">
-                                  {session.progress.completedTasks}/{session.progress.totalTasks} {t('pbl:history.tasks')}
+                                  {session.progress.completedTasks}/{session.progress.totalTaskCount} {t('pbl:history.tasks')}
                                 </p>
                                 {session.totalInteractions !== undefined && (
                                   <div className="mt-3">
@@ -905,7 +905,7 @@ export default function UnifiedHistoryPage() {
                                 </span>
                               </div>
                               <p className="text-sm text-gray-600 dark:text-gray-400">
-                                {session.progress.completedTasks}/{session.progress.totalTasks} {t('pbl:history.tasksEvaluated')}
+                                {session.progress.completedTasks}/{session.progress.totalTaskCount} {t('pbl:history.tasksEvaluated')}
                               </p>
                               {session.totalInteractions !== undefined && (
                                 <div className="mt-3 space-y-2">
@@ -1021,7 +1021,7 @@ export default function UnifiedHistoryPage() {
                           <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                             <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('pbl:history.progress')}</p>
                             <p className="text-lg font-bold text-gray-900 dark:text-white">
-                              {session.progress.completedTasks}/{session.progress.totalTasks} {t('pbl:history.tasks')}
+                              {session.progress.completedTasks}/{session.progress.totalTaskCount} {t('pbl:history.tasks')}
                             </p>
                             {session.totalInteractions !== undefined && (
                               <div className="mt-3">
