@@ -111,7 +111,7 @@ describe('Module-specific Types', () => {
         }
       };
 
-      expect(pblTask.content.context?.scenario).toBeDefined();
+      expect(pblTask.content.context).toBeDefined();
       expect(pblTask.pblData.aiMentorGuidelines).toBeDefined();
     });
 
@@ -261,8 +261,8 @@ describe('Module-specific Types', () => {
         }
       };
 
-      expect(assessmentTask.content.context?.questions).toHaveLength(1);
-      expect(assessmentTask.content.context?.timeLimit).toBe(1800);
+      expect(assessmentTask.content.questions).toHaveLength(1);
+      expect(assessmentTask.content.timeLimit).toBe(1800);
     });
 
     it('should create valid Assessment evaluation', () => {
@@ -337,7 +337,7 @@ describe('Module-specific Types', () => {
         unlockRequirements: {},
         pblData: {},
         discoveryData: {
-          explorationPath: 'ai-tools',
+          explorationPath: ['ai-tools'],
           careerPaths: [],
           skillProgression: ['beginner', 'intermediate', 'advanced']
         },

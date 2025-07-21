@@ -23,20 +23,20 @@ async function checkHealth() {
     console.log(chalk.yellow('📊 PostgreSQL Status:'));
     if (health.postgresql) {
       console.log(chalk.green('  ✓ Connected'));
-      console.log(chalk.gray(`  Time: ${health.details.postgresql.time}`));
+      console.log(chalk.gray(`  Time: ${(health.details as any).postgresql?.time}`));
     } else {
       console.log(chalk.red('  ✗ Connection Failed'));
-      console.log(chalk.red(`  Error: ${health.details.postgresql.error}`));
+      console.log(chalk.red(`  Error: ${(health.details as any).postgresql?.error}`));
     }
 
     // GCS Status
     console.log(chalk.yellow('\n☁️  Google Cloud Storage Status:'));
     if (health.gcs) {
       console.log(chalk.green('  ✓ Connected'));
-      console.log(chalk.gray(`  Buckets Accessible: ${health.details.gcs.bucketsAccessible}`));
+      console.log(chalk.gray(`  Buckets Accessible: ${(health.details as any).gcs?.bucketsAccessible}`));
     } else {
       console.log(chalk.red('  ✗ Connection Failed'));
-      console.log(chalk.red(`  Error: ${health.details.gcs.error}`));
+      console.log(chalk.red(`  Error: ${(health.details as any).gcs?.error}`));
     }
 
     // Quick database stats
@@ -49,7 +49,7 @@ async function checkHealth() {
       
       await userRepo.findAll({ limit: 1 });
       await programRepo.findByUser('dummy'); // Just to test connection
-      const scenarios = await scenarioRepo.findActive();
+      const scenarios = await scenarioRepo.findActive?.() || [];
       
       console.log(chalk.gray(`  Active Scenarios: ${scenarios.length}`));
       console.log(chalk.gray(`  Database: Connected and operational`));

@@ -18,7 +18,17 @@ jest.mock('@/lib/performance/performance-monitor', () => ({
 }))
 
 // Mock localStorage
-const localStorageMock = {
+interface LocalStorageMock {
+  store: Record<string, string>;
+  getItem: jest.Mock<string | null, [string]>;
+  setItem: jest.Mock<void, [string, string]>;
+  removeItem: jest.Mock<void, [string]>;
+  clear: jest.Mock<void, []>;
+  key: jest.Mock<string | null, [number]>;
+  readonly length: number;
+}
+
+const localStorageMock: LocalStorageMock = {
   store: {} as Record<string, string>,
   getItem: jest.fn((key: string) => localStorageMock.store[key] || null),
   setItem: jest.fn((key: string, value: string) => {
