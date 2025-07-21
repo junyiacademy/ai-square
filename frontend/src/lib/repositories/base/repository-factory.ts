@@ -143,7 +143,7 @@ export class RepositoryFactory {
     } catch (error) {
       results.details.postgresql = {
         status: 'error',
-        error: error.message
+        error: error instanceof Error ? error.message : String(error)
       };
     }
 
@@ -158,7 +158,7 @@ export class RepositoryFactory {
     } catch (error) {
       results.details.gcs = {
         status: 'error',
-        error: error.message
+        error: error instanceof Error ? error.message : String(error)
       };
     }
 

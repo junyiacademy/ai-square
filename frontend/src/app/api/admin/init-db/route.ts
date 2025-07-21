@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import type { ScenarioType, ScenarioStatus } from '@/lib/repositories/interfaces';
+import type { IScenario } from '@/types/unified-learning';
 
 // This endpoint is for staging environment only
 export async function POST() {
@@ -38,14 +38,107 @@ export async function POST() {
     }
 
     // Create sample scenarios
-    const scenarios: Array<{ type: ScenarioType; difficultyLevel: string; estimatedMinutes: number; metadata: Record<string, unknown> }> = [
-      { type: 'pbl' as ScenarioType, difficultyLevel: 'intermediate', estimatedMinutes: 45, metadata: { id: 'marketing-crisis-management' } },
-      { type: 'pbl' as ScenarioType, difficultyLevel: 'beginner', estimatedMinutes: 30, metadata: { id: 'social-media-strategy' } },
-      { type: 'pbl' as ScenarioType, difficultyLevel: 'intermediate', estimatedMinutes: 40, metadata: { id: 'customer-service-automation' } },
-      { type: 'pbl' as ScenarioType, difficultyLevel: 'advanced', estimatedMinutes: 60, metadata: { id: 'data-privacy-compliance' } },
-      { type: 'assessment' as ScenarioType, difficultyLevel: 'intermediate', estimatedMinutes: 30, metadata: { id: 'ai-literacy-assessment' } },
-      { type: 'assessment' as ScenarioType, difficultyLevel: 'beginner', estimatedMinutes: 20, metadata: { id: 'basic-ai-knowledge' } },
-      { type: 'discovery' as ScenarioType, difficultyLevel: 'beginner', estimatedMinutes: 25, metadata: { id: 'career-exploration' } }
+    const scenarios: Array<Omit<IScenario, 'id'>> = [
+      { 
+        mode: 'pbl',
+        status: 'active',
+        version: '1.0.0',
+        sourceType: 'manual',
+        sourceMetadata: { id: 'marketing-crisis-management' },
+        title: { en: 'Marketing Crisis Management' },
+        description: { en: 'Learn to handle marketing crises using AI tools' },
+        objectives: [],
+        difficulty: 'intermediate',
+        estimatedMinutes: 45,
+        prerequisites: [],
+        taskTemplates: [],
+        taskCount: 0,
+        xpRewards: {},
+        unlockRequirements: {},
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
+        aiModules: {},
+        resources: [],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        metadata: { id: 'marketing-crisis-management' }
+      },
+      { 
+        mode: 'pbl',
+        status: 'active',
+        version: '1.0.0',
+        sourceType: 'manual',
+        sourceMetadata: { id: 'social-media-strategy' },
+        title: { en: 'Social Media Strategy' },
+        description: { en: 'Develop social media strategies with AI assistance' },
+        objectives: [],
+        difficulty: 'beginner',
+        estimatedMinutes: 30,
+        prerequisites: [],
+        taskTemplates: [],
+        taskCount: 0,
+        xpRewards: {},
+        unlockRequirements: {},
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
+        aiModules: {},
+        resources: [],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        metadata: { id: 'social-media-strategy' }
+      },
+      { 
+        mode: 'assessment',
+        status: 'active',
+        version: '1.0.0',
+        sourceType: 'manual',
+        sourceMetadata: { id: 'ai-literacy-assessment' },
+        title: { en: 'AI Literacy Assessment' },
+        description: { en: 'Test your AI literacy knowledge' },
+        objectives: [],
+        difficulty: 'intermediate',
+        estimatedMinutes: 30,
+        prerequisites: [],
+        taskTemplates: [],
+        taskCount: 0,
+        xpRewards: {},
+        unlockRequirements: {},
+        pblData: {},
+        discoveryData: {},
+        assessmentData: { assessmentType: 'diagnostic' },
+        aiModules: {},
+        resources: [],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        metadata: { id: 'ai-literacy-assessment' }
+      },
+      { 
+        mode: 'discovery',
+        status: 'active',
+        version: '1.0.0',
+        sourceType: 'manual',
+        sourceMetadata: { id: 'career-exploration' },
+        title: { en: 'Career Exploration' },
+        description: { en: 'Explore AI-related career paths' },
+        objectives: [],
+        difficulty: 'beginner',
+        estimatedMinutes: 25,
+        prerequisites: [],
+        taskTemplates: [],
+        taskCount: 0,
+        xpRewards: { completion: 100 },
+        unlockRequirements: {},
+        pblData: {},
+        discoveryData: { explorationPath: 'careers' },
+        assessmentData: {},
+        aiModules: {},
+        resources: [],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        metadata: { id: 'career-exploration' }
+      }
     ];
 
     for (const scenario of scenarios) {
@@ -59,7 +152,7 @@ export async function POST() {
 
     // Get counts
     const users = await userRepo.findAll({ limit: 1000 });
-    const scenariosData = await scenarioRepo.findActive();
+    const scenariosData = await scenarioRepo.findActive?.() || [];
 
     return NextResponse.json({
       success: true,

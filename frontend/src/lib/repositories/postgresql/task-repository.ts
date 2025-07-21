@@ -481,4 +481,13 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
     const { rows } = await this.pool.query<DBTask>(query, params);
     return rows.map(row => this.toTask(row));
   }
+
+  /**
+   * Get task with interactions populated
+   */
+  async getTaskWithInteractions(id: string): Promise<ITask | null> {
+    // Since interactions are already stored in the task table as JSONB,
+    // we can just use findById which already includes interactions
+    return this.findById(id);
+  }
 }

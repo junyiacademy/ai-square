@@ -3,6 +3,25 @@
  * 定義所有 Repository 的介面
  */
 
+import type { 
+  IProgram, 
+  ITask, 
+  IEvaluation, 
+  IScenario,
+  IInteraction,
+  LearningMode,
+  ProgramStatus as IProgramStatus,
+  TaskStatus as ITaskStatus,
+  ScenarioStatus as IScenarioStatus,
+  SourceType
+} from '@/types/unified-learning';
+import type {
+  LearningMode as DBLearningMode,
+  ProgramStatus as DBProgramStatus,
+  TaskStatus as DBTaskStatus,
+  ScenarioStatus as DBScenarioStatus
+} from '@/types/database';
+
 // ========================================
 // 動態資料 Repositories (PostgreSQL)
 // ========================================
@@ -33,43 +52,50 @@ export interface IUserRepository {
 }
 
 export interface IProgramRepository {
-  findById(id: string): Promise<Program | null>;
-  findByUser(userId: string): Promise<Program[]>;
-  findByScenario(scenarioId: string): Promise<Program[]>;
-  create(data: CreateProgramDto): Promise<Program>;
-  update(id: string, data: UpdateProgramDto): Promise<Program>;
-  updateStatus(id: string, status: ProgramStatus): Promise<void>;
-  getActivePrograms(userId: string): Promise<Program[]>;
-  getCompletedPrograms(userId: string): Promise<Program[]>;
+  findById(id: string): Promise<IProgram | null>;
+  findByUser(userId: string): Promise<IProgram[]>;
+  findByScenario(scenarioId: string): Promise<IProgram[]>;
+  create(data: Omit<IProgram, 'id'>): Promise<IProgram>;
+  updateProgress(id: string, taskIndex: number): Promise<IProgram>;
+  complete(id: string): Promise<IProgram>;
+  update?(id: string, data: UpdateProgramDto): Promise<IProgram>;
+  updateStatus?(id: string, status: IProgramStatus): Promise<void>;
+  getActivePrograms?(userId: string): Promise<IProgram[]>;
+  getCompletedPrograms?(userId: string): Promise<IProgram[]>;
 }
 
 export interface ITaskRepository {
-  findById(id: string): Promise<Task | null>;
-  findByProgram(programId: string): Promise<Task[]>;
-  create(data: CreateTaskDto): Promise<Task>;
-  update(id: string, data: UpdateTaskDto): Promise<Task>;
-  updateStatus(id: string, status: TaskStatus): Promise<void>;
-  recordAttempt(id: string, attempt: AttemptData): Promise<void>;
-  getTaskWithInteractions(id: string): Promise<TaskWithInteractions | null>;
+  findById(id: string): Promise<ITask | null>;
+  findByProgram(programId: string): Promise<ITask[]>;
+  create(data: Omit<ITask, 'id'>): Promise<ITask>;
+  createBatch(tasks: Omit<ITask, 'id'>[]): Promise<ITask[]>;
+  updateInteractions(id: string, interactions: IInteraction[]): Promise<ITask>;
+  complete(id: string): Promise<ITask>;
+  update?(id: string, data: UpdateTaskDto): Promise<ITask>;
+  updateStatus?(id: string, status: ITaskStatus): Promise<void>;
+  recordAttempt?(id: string, attempt: AttemptData): Promise<void>;
+  getTaskWithInteractions?(id: string): Promise<TaskWithInteractions | null>;
 }
 
 export interface IEvaluationRepository {
-  findById(id: string): Promise<Evaluation | null>;
-  findByProgram(programId: string): Promise<Evaluation[]>;
-  findByTask(taskId: string): Promise<Evaluation[]>;
-  create(data: CreateEvaluationDto): Promise<Evaluation>;
-  getLatestForTask(taskId: string): Promise<Evaluation | null>;
-  getUserProgress(userId: string): Promise<UserProgress>;
+  findById(id: string): Promise<IEvaluation | null>;
+  findByProgram(programId: string): Promise<IEvaluation[]>;
+  findByTask(taskId: string): Promise<IEvaluation[]>;
+  findByUser(userId: string): Promise<IEvaluation[]>;
+  findByType(evaluationType: string, evaluationSubtype?: string): Promise<IEvaluation[]>;
+  create(data: Omit<IEvaluation, 'id'>): Promise<IEvaluation>;
+  getLatestForTask?(taskId: string): Promise<IEvaluation | null>;
+  getUserProgress?(userId: string): Promise<UserProgress>;
 }
 
 export interface IScenarioRepository {
-  findById(id: string): Promise<Scenario | null>;
-  findByType(type: ScenarioType): Promise<Scenario[]>;
-  findByMode(mode: string): Promise<Scenario[]>;
-  findActive(): Promise<Scenario[]>;
-  create(data: CreateScenarioDto): Promise<Scenario>;
-  update(id: string, data: UpdateScenarioDto): Promise<Scenario>;
-  updateStatus(id: string, status: ScenarioStatus): Promise<void>;
+  findById(id: string): Promise<IScenario | null>;
+  findBySource(sourceType: string, sourceId?: string): Promise<IScenario[]>;
+  update(id: string, updates: Partial<IScenario>): Promise<IScenario>;
+  create(data: Omit<IScenario, 'id'>): Promise<IScenario>;
+  findByMode?(mode: DBLearningMode): Promise<IScenario[]>;
+  findActive?(): Promise<IScenario[]>;
+  updateStatus?(id: string, status: IScenarioStatus): Promise<void>;
 }
 
 // ========================================
@@ -122,136 +148,23 @@ export interface User {
   metadata?: Record<string, unknown>;
 }
 
-export interface Program {
-  id: string;
-  userId: string;
-  scenarioId: string;
-  status: ProgramStatus;
-  currentTaskIndex: number;
-  completedTasks: number;
-  totalTasks: number;
-  totalScore: number;
-  ksaScores?: Record<string, number>;
-  createdAt: Date;
-  endTime?: Date;
-  lastActivityAt: Date;
-  timeSpentSeconds: number;
-  metadata?: Record<string, unknown>;
-  taskIds: string[];
-  startedAt?: Date;
-}
+// Legacy Program type for compatibility
+export interface Program extends IProgram {}
 
-export interface Task {
-  id: string;
-  programId: string;
-  taskIndex: number;
-  type: string;
-  title?: string;
-  content?: {
-    description?: string;
-    instructions?: string;
-    hints?: string[];
-    resources?: Array<{ type: string; url: string; title?: string }>;
-  };
-  status: TaskStatus;
-  score?: number;
-  timeSpentSeconds: number;
-  attemptCount: number;
-  allowedAttempts: number;
-  context: {
-    scenarioId?: string;
-    taskType?: string;
-    difficulty?: string;
-    estimatedTime?: number;
-    ksaCodes?: string[];
-  };
-  userSolution?: string;
-  startedAt?: Date;
-  completedAt?: Date;
-  metadata?: Record<string, unknown>;
-}
+// Legacy Task type for compatibility
+export interface Task extends ITask {}
 
-export interface Evaluation {
-  id: string;
-  userId: string;
-  programId?: string;
-  taskId?: string;
-  evaluationType: string;
-  score: number;
-  maxScore: number;
-  feedback?: string;
-  aiAnalysis?: {
-    insights?: string[];
-    strengths?: string[];
-    improvements?: string[];
-    detailedFeedback?: Record<string, string>;
-  };
-  ksaScores?: Record<string, number>;
-  timeTakenSeconds: number;
-  createdAt: Date;
-  metadata?: Record<string, unknown>;
-  targetId?: string;
-}
+// Legacy Evaluation type for compatibility
+export interface Evaluation extends IEvaluation {}
 
-export interface Scenario {
-  id: string;
-  type: ScenarioType;
-  status: ScenarioStatus;
-  version: string;
-  title?: string;
-  description?: string;
-  sourceType?: string;
-  sourcePath?: string;
-  sourceId?: string;
-  sourceMetadata?: Record<string, unknown>;
-  difficultyLevel?: string;
-  estimatedMinutes?: number;
-  prerequisites: string[];
-  xpRewards: {
-    completion?: number;
-    mastery?: number;
-    bonus?: number;
-    conditions?: Record<string, number>;
-  };
-  unlockRequirements: {
-    level?: number;
-    completedScenarios?: string[];
-    achievements?: string[];
-    customConditions?: Array<{ type: string; value: unknown }>;
-  };
-  tasks: Array<{
-    id: string;
-    type: string;
-    title?: string;
-    description?: string;
-    estimatedTime?: number;
-    requiredForCompletion?: boolean;
-    ksaCodes?: string[];
-  }>;
-  aiModules: {
-    tutor?: { enabled: boolean; model?: string; systemPrompt?: string };
-    evaluator?: { enabled: boolean; rubric?: string; criteria?: Record<string, unknown> };
-    feedbackGenerator?: { enabled: boolean; style?: string };
-  };
-  resources: Array<{
-    id?: string;
-    type: 'video' | 'article' | 'document' | 'link' | 'other';
-    url: string;
-    title: string;
-    description?: string;
-    required?: boolean;
-  }>;
-  metadata?: Record<string, unknown>;
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt?: Date;
-}
+// Legacy Scenario type for compatibility
+export interface Scenario extends IScenario {}
 
-// Enums
-export type ProgramStatus = 'pending' | 'active' | 'completed' | 'abandoned';
-export type TaskStatus = 'pending' | 'active' | 'completed' | 'skipped';
-export type ScenarioType = 'pbl' | 'assessment' | 'discovery';
-export type ScenarioStatus = 'active' | 'draft' | 'archived';
+// Re-export types from database for backward compatibility
+export type ProgramStatus = DBProgramStatus;
+export type TaskStatus = DBTaskStatus;
+export type ScenarioType = DBLearningMode;
+export type ScenarioStatus = DBScenarioStatus;
 
 // DTOs
 export interface CreateUserDto {
@@ -283,49 +196,48 @@ export interface UpdateUserDto {
 export interface CreateProgramDto {
   userId: string;
   scenarioId: string;
-  totalTasks: number;
+  mode: DBLearningMode;
+  totalTaskCount: number;
+  status?: DBProgramStatus;
 }
 
 export interface UpdateProgramDto {
-  status?: ProgramStatus;
+  status?: DBProgramStatus;
   currentTaskIndex?: number;
-  completedTasks?: number;
+  completedTaskCount?: number;
   totalScore?: number;
-  ksaScores?: Record<string, number>;
-  endTime?: Date;
+  dimensionScores?: Record<string, number>;
+  completedAt?: string;
   metadata?: Record<string, unknown>;
-  taskIds?: string[];
+  startedAt?: string;
+  lastActivityAt?: string;
+  xpEarned?: number;
 }
 
 export interface CreateTaskDto {
   programId: string;
+  mode: DBLearningMode;
   taskIndex: number;
   type: string;
   title?: string;
-  content?: {
-    description?: string;
-    instructions?: string;
-    hints?: string[];
-    resources?: Array<{ type: string; url: string; title?: string }>;
-  };
-  context: {
-    scenarioId?: string;
-    taskType?: string;
-    difficulty?: string;
-    estimatedTime?: number;
-    ksaCodes?: string[];
-  };
+  description?: string;
+  content?: Record<string, unknown>;
+  maxScore?: number;
   allowedAttempts?: number;
+  aiConfig?: Record<string, unknown>;
   metadata?: Record<string, unknown>;
 }
 
 export interface UpdateTaskDto {
-  status?: TaskStatus;
+  status?: DBTaskStatus;
   score?: number;
-  userSolution?: string;
+  userResponse?: Record<string, unknown>;
   timeSpentSeconds?: number;
   attemptCount?: number;
-  completedAt?: Date;
+  completedAt?: string;
+  startedAt?: string;
+  interactions?: IInteraction[];
+  interactionCount?: number;
   metadata?: Record<string, unknown>;
 }
 
@@ -333,69 +245,68 @@ export interface CreateEvaluationDto {
   userId: string;
   programId?: string;
   taskId?: string;
+  mode: DBLearningMode;
   evaluationType: string;
+  evaluationSubtype?: string;
   score: number;
   maxScore: number;
-  feedback?: string;
-  aiAnalysis?: {
-    insights?: string[];
-    strengths?: string[];
-    improvements?: string[];
-    detailedFeedback?: Record<string, string>;
-  };
-  ksaScores?: Record<string, number>;
+  dimensionScores?: Record<string, number>;
+  feedbackText?: string;
+  feedbackData?: Record<string, unknown>;
+  aiProvider?: string;
+  aiModel?: string;
+  aiAnalysis?: Record<string, unknown>;
   timeTakenSeconds: number;
+  pblData?: Record<string, unknown>;
+  discoveryData?: Record<string, unknown>;
+  assessmentData?: Record<string, unknown>;
   metadata?: Record<string, unknown>;
-  targetType?: string;
-  targetId?: string;
-  dimensionScores?: Array<{ name: string; score: number; maxScore: number }>;
-  createdAt?: string;
 }
 
 export interface CreateScenarioDto {
-  type: ScenarioType;
-  difficultyLevel?: string;
+  mode: DBLearningMode;
+  status?: DBScenarioStatus;
+  version?: string;
+  sourceType: SourceType;
+  sourcePath?: string;
+  sourceId?: string;
+  sourceMetadata?: Record<string, unknown>;
+  title: Record<string, string>;
+  description: Record<string, string>;
+  objectives?: string[];
+  difficulty?: string;
   estimatedMinutes?: number;
   prerequisites?: string[];
-  xpRewards?: {
-    completion?: number;
-    mastery?: number;
-    bonus?: number;
-    conditions?: Record<string, number>;
-  };
-  tasks?: Array<{
-    id: string;
-    type: string;
-    title?: string;
-    description?: string;
-    estimatedTime?: number;
-    requiredForCompletion?: boolean;
-    ksaCodes?: string[];
-  }>;
+  taskTemplates?: Array<Record<string, unknown>>;
+  xpRewards?: Record<string, number>;
+  unlockRequirements?: Record<string, unknown>;
+  pblData?: Record<string, unknown>;
+  discoveryData?: Record<string, unknown>;
+  assessmentData?: Record<string, unknown>;
+  aiModules?: Record<string, unknown>;
+  resources?: Array<Record<string, unknown>>;
   metadata?: Record<string, unknown>;
 }
 
 export interface UpdateScenarioDto {
-  status?: ScenarioStatus;
-  difficultyLevel?: string;
+  status?: DBScenarioStatus;
+  version?: string;
+  title?: Record<string, string>;
+  description?: Record<string, string>;
+  objectives?: string[];
+  difficulty?: string;
   estimatedMinutes?: number;
   prerequisites?: string[];
-  xpRewards?: {
-    completion?: number;
-    mastery?: number;
-    bonus?: number;
-    conditions?: Record<string, number>;
-  };
-  tasks?: Array<{
-    id: string;
-    type: string;
-    title?: string;
-    description?: string;
-    estimatedTime?: number;
-    requiredForCompletion?: boolean;
-    ksaCodes?: string[];
-  }>;
+  taskTemplates?: Array<Record<string, unknown>>;
+  xpRewards?: Record<string, number>;
+  unlockRequirements?: Record<string, unknown>;
+  pblData?: Record<string, unknown>;
+  discoveryData?: Record<string, unknown>;
+  assessmentData?: Record<string, unknown>;
+  aiModules?: Record<string, unknown>;
+  resources?: Array<Record<string, unknown>>;
   metadata?: Record<string, unknown>;
+  publishedAt?: string;
 }
 
 // Query Options
@@ -407,20 +318,11 @@ export interface FindUsersOptions {
 }
 
 // Extended Types
-export interface TaskWithInteractions extends Task {
-  interactions: Interaction[];
+export interface TaskWithInteractions extends ITask {
+  interactions: IInteraction[];
 }
 
-export interface Interaction {
-  id: string;
-  taskId: string;
-  sequenceNumber: number;
-  type: string;
-  role: string;
-  content: string;
-  metadata?: Record<string, unknown>;
-  createdAt: Date;
-}
+// Remove the Interaction interface as we use IInteraction from unified-learning types
 
 export interface UserProgress {
   totalPrograms: number;

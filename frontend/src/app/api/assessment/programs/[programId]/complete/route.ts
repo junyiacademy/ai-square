@@ -112,14 +112,14 @@ export async function POST(
       
       // Update program to mark as completed if not already
       if (program.status !== 'completed') {
-        await programRepo.update(programId, { 
+        await programRepo.update?.(programId, { 
           metadata: {
             ...program.metadata,
             evaluationId: existingAssessmentEval.id,
             score: existingAssessmentEval.score
           }
         });
-        await programRepo.update(programId, { status: "completed" });
+        await programRepo.update?.(programId, { status: "completed" });
       }
       
       return NextResponse.json({ 
@@ -130,16 +130,13 @@ export async function POST(
       });
     }
     
-    // Get all tasks for this program with interactions
-    const tasksWithInteractions = await Promise.all(
-      program.taskIds.map(id => taskRepo.getTaskWithInteractions(id))
-    );
+    // Get all tasks for this program
+    const tasks = await taskRepo.findByProgram(programId);
     
-    // Filter out null tasks and complete all pending tasks
-    const validTasks = tasksWithInteractions.filter(t => t !== null);
-    for (const task of validTasks) {
+    // Complete all pending tasks
+    for (const task of tasks) {
       if (task.status !== 'completed') {
-        await taskRepo.updateStatus(task.id, "completed");
+        await taskRepo.updateStatus?.(task.id, "completed");
       }
     }
     
@@ -168,9 +165,9 @@ export async function POST(
       };
     }> = [];
     
-    console.log('Collecting answers and questions from', validTasks.length, 'tasks');
+    console.log('Collecting answers and questions from', tasks.length, 'tasks');
     
-    for (const task of validTasks) {
+    for (const task of tasks) {
       const taskAnswers = task.interactions
         .filter(i => i.type === 'system_event' && (i.content as { eventType?: string })?.eventType === 'assessment_answer')
         .map(i => ({
@@ -369,18 +366,31 @@ export async function POST(
     
     const evaluation = await evaluationRepo.create({
       userId: user.email,
-      targetType: 'program',
-      targetId: programId,
-      evaluationType: 'assessment_complete',
+      programId: programId,
+      mode: 'assessment',
+      evaluationType: 'program',
+      evaluationSubtype: 'assessment_complete',
       score: overallScore,
       maxScore: 100,
       timeTakenSeconds: completionTime,
-      feedback: generateOverallFeedback(overallScore, level),
-      dimensionScores: Array.from(domainScores.values()).map(ds => ({
-        name: ds.domain,
-        score: ds.score,
-        maxScore: 100
-      })),
+      feedbackText: generateOverallFeedback(overallScore, level),
+      feedbackData: {},
+      dimensionScores: Array.from(domainScores.values()).reduce((acc, ds) => {
+        acc[ds.domain] = ds.score;
+        return acc;
+      }, {} as Record<string, number>),
+      aiAnalysis: {},
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {
+        totalQuestions,
+        correctAnswers,
+        domainScores: Array.from(domainScores.values()).map(ds => ({
+          name: ds.domain,
+          score: ds.score,
+          maxScore: 100
+        }))
+      },
       metadata: {
         completionTime,
         totalQuestions,
@@ -415,11 +425,11 @@ export async function POST(
     console.log('Evaluation created successfully:', {
       evaluationId: evaluation.id,
       score: evaluation.score,
-      targetId: evaluation.targetId
+      programId: evaluation.programId || evaluation.id
     });
     
     // Update program score and complete it
-    await programRepo.update(programId, { 
+    await programRepo.update?.(programId, { 
       metadata: {
         ...program.metadata,
         score: overallScore,
@@ -427,7 +437,7 @@ export async function POST(
         evaluationId: evaluation.id
       }
     });
-    await programRepo.update(programId, { status: "completed" });
+    await programRepo.update?.(programId, { status: "completed" });
     
     // REMOVED: Duplicate save to v2/assessments/
     // Following unified learning architecture, we only save to evaluations

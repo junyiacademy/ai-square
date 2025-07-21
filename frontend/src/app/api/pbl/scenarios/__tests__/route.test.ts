@@ -2,7 +2,7 @@ import { GET } from '../route';
 import fs from 'fs/promises';
 import * as yaml from 'js-yaml';
 import { cacheService } from '@/lib/cache/cache-service';
-import type { IScenario } from '@/types/unified-learning';
+import type { IScenario, DifficultyLevel } from '@/types/unified-learning';
 
 // Mock dependencies
 jest.mock('fs', () => ({
@@ -129,9 +129,8 @@ describe('/api/pbl/scenarios', () => {
             version: '1.0.0',
             title: { [lang]: titleMap[lang] || titleMap['en'] },
             description: { [lang]: descMap[lang] || descMap['en'] },
-            category: 'career',
-            difficulty: mockScenarioData.scenario_info.difficulty,
-            estimatedTime: mockScenarioData.scenario_info.estimated_duration,
+            difficulty: mockScenarioData.scenario_info.difficulty as DifficultyLevel,
+            estimatedMinutes: mockScenarioData.scenario_info.estimated_duration,
             prerequisites: [],
             learningObjectives: [],
             tags: [],
@@ -162,9 +161,8 @@ describe('/api/pbl/scenarios', () => {
           version: '1.0.0',
           title: { en: `${yamlId} Title` },
           description: { en: `${yamlId} Description` },
-          category: 'general',
-          difficulty: 'intermediate',
-          estimatedTime: 60,
+          difficulty: 'intermediate' as DifficultyLevel,
+          estimatedMinutes: 60,
           prerequisites: [],
           learningObjectives: [],
           tags: [],
@@ -471,9 +469,8 @@ describe('/api/pbl/scenarios', () => {
             version: '1.0.0',
             title: { [lang]: titleMap[lang] || titleMap['en'] },
             description: { [lang]: descMap[lang] || descMap['en'] },
-            category: 'career',
-            difficulty: mockScenarioData.scenario_info.difficulty,
-            estimatedTime: mockScenarioData.scenario_info.estimated_duration,
+            difficulty: mockScenarioData.scenario_info.difficulty as DifficultyLevel,
+            estimatedMinutes: mockScenarioData.scenario_info.estimated_duration,
             prerequisites: [],
             learningObjectives: [],
             tags: [],
@@ -504,9 +501,8 @@ describe('/api/pbl/scenarios', () => {
           version: '1.0.0',
           title: { en: `${yamlId} Title` },
           description: { en: `${yamlId} Description` },
-          category: 'general',
-          difficulty: 'intermediate',
-          estimatedTime: 60,
+          difficulty: 'intermediate' as DifficultyLevel,
+          estimatedMinutes: 60,
           prerequisites: [],
           learningObjectives: [],
           tags: [],
