@@ -40,12 +40,8 @@ interface LegacyScenarioData extends Partial<IScenario> {
 
 type CacheableData = IScenario | IScenario[] | IProgram | ITask | Scenario | Task;
 
-interface TranslationCache {
-  [key: string]: CacheableData;
-}
-
 export class HybridTranslationService {
-  private cache: Map<string, TranslationCache> = new Map();
+  private cache: Map<string, CacheableData> = new Map();
   private storageService = getScenarioStorageService();
 
   /**
@@ -63,7 +59,7 @@ export class HybridTranslationService {
       // For English, return directly from GCS
       if (language === 'en') {
         const scenario = await this.storageService.getScenario(scenarioId);
-        this.cache.set(cacheKey, scenario);
+        this.cache.set(cacheKey, scenario as CacheableData);
         return scenario;
       }
 
@@ -76,7 +72,7 @@ export class HybridTranslationService {
         'scenario'
       );
 
-      this.cache.set(cacheKey, translatedScenario);
+      this.cache.set(cacheKey, translatedScenario as CacheableData);
       return translatedScenario;
     } catch (error) {
       // Clear cache on error

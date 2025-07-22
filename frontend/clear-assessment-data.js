@@ -31,22 +31,16 @@ async function clearAssessmentData() {
     
     try {
       // Import the repositories
-      const { 
-        getScenarioRepository, 
-        getProgramRepository, 
-        getTaskRepository, 
-        getEvaluationRepository 
-      } = require('./src/lib/implementations/gcs-v2');
+      const { repositoryFactory } = require('./src/lib/repositories/base/repository-factory');
       
-      const scenarioRepo = getScenarioRepository();
-      const programRepo = getProgramRepository();
-      const taskRepo = getTaskRepository();
-      const evaluationRepo = getEvaluationRepository();
+      const scenarioRepo = repositoryFactory.getScenarioRepository();
+      const programRepo = repositoryFactory.getProgramRepository();
+      const taskRepo = repositoryFactory.getTaskRepository();
+      const evaluationRepo = repositoryFactory.getEvaluationRepository();
       
       // 1. Get all assessment scenarios
       console.log('1️⃣ Finding assessment scenarios...');
-      const allScenarios = await scenarioRepo.findAll();
-      const assessmentScenarios = allScenarios.filter(s => s.sourceType === 'assessment');
+      const assessmentScenarios = await scenarioRepo.findByFilters({ mode: 'assessment' });
       console.log(`   Found ${assessmentScenarios.length} assessment scenarios`);
       
       // 2. Get all programs for assessment scenarios
@@ -77,10 +71,9 @@ async function clearAssessmentData() {
       // 3. Clear the data
       console.log('\n3️⃣ Clearing data...');
       
-      // Note: The current GCS implementation doesn't have delete methods
-      // We would need to implement them or manually clear from GCS
-      console.log('   ⚠️  Note: Automatic deletion not implemented in current GCS repository');
-      console.log('   You may need to manually clear the GCS bucket or local storage');
+      // Clear data using PostgreSQL repositories
+      console.log('   ⚠️  Note: This will delete data from the database');
+      console.log('   Deletion functionality would need to be implemented in repositories');
       
       // Alternative: Create a marker file to indicate reset
       const fs = require('fs').promises;

@@ -37,7 +37,7 @@ export async function POST(
     let evaluationRecord;
     
     // Helper to create evaluation with proper structure
-    const createEvaluationData = (evaluation: any, existingMetadata?: Record<string, unknown>) => ({
+    const createEvaluationData = (evaluation: Record<string, any>, existingMetadata?: Record<string, unknown>) => ({
       userId: session.user.email,
       programId: programId || undefined,
       taskId: taskId,
@@ -46,20 +46,20 @@ export async function POST(
       evaluationSubtype: 'pbl_task',
       score: evaluation.score || 0,
       maxScore: 100,
-      timeTakenSeconds: evaluation.timeTakenSeconds || 0,
-      dimensionScores: evaluation.domainScores || {},
+      timeTakenSeconds: (evaluation.timeTakenSeconds as number) || 0,
+      dimensionScores: (evaluation.domainScores as Record<string, number>) || {},
       feedbackText: evaluation.feedback || '',
       feedbackData: {
-        strengths: evaluation.strengths || [],
-        improvements: evaluation.improvements || [],
-        nextSteps: evaluation.nextSteps || []
+        strengths: (evaluation.strengths as string[]) || [],
+        improvements: (evaluation.improvements as string[]) || [],
+        nextSteps: (evaluation.nextSteps as string[]) || []
       },
-      aiAnalysis: evaluation.conversationInsights || {},
+      aiAnalysis: (evaluation.conversationInsights as Record<string, unknown>) || {},
       createdAt: new Date().toISOString(),
       pblData: {
-        ksaScores: evaluation.ksaScores || evaluation.domainScores || {},
-        rubricsScores: evaluation.rubricsScores || {},
-        conversationCount: evaluation.conversationCount || 0
+        ksaScores: (evaluation.ksaScores as Record<string, number>) || (evaluation.domainScores as Record<string, number>) || {},
+        rubricsScores: (evaluation.rubricsScores as Record<string, number>) || {},
+        conversationCount: (evaluation.conversationCount as number) || 0
       },
       discoveryData: {},
       assessmentData: {},
@@ -90,7 +90,7 @@ export async function POST(
       // Update task with evaluation ID only if it's a new evaluation
       await taskRepo.update?.(taskId, {
         status: 'completed' as const,
-        completedAt: task?.completedAt || new Date(),
+        completedAt: task?.completedAt || new Date().toISOString(),
         metadata: {
           ...task?.metadata,
           evaluationId: evaluationRecord.id

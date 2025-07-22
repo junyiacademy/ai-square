@@ -131,9 +131,9 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
       metadata: {
         sourceType: 'pbl',
         interactionCount: interactions.length,
-        ksaCodes: pblTask.content?.context?.ksaCodes || []
+        ksaCodes: ((pblTask.content?.context as Record<string, unknown>)?.ksaCodes as string[]) || []
       }
-    } as IEvaluation;
+    } as unknown as IEvaluation;
   }
 
   async evaluateProgram(program: IProgram, taskEvaluations: IEvaluation[]): Promise<IEvaluation> {
@@ -170,7 +170,7 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
         completionTime: this.calculateCompletionTime(program),
         ksaAchieved: this.extractAchievedKSA(taskEvaluations)
       }
-    } as IEvaluation;
+    } as unknown as IEvaluation;
   }
 
   protected calculateQualityMetrics(interactions: IInteraction[]): QualityMetrics {
@@ -343,7 +343,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
         questionResults,
         domainScores
       }
-    } as IEvaluation;
+    } as unknown as IEvaluation;
   }
 
   async evaluateProgram(program: IProgram, taskEvaluations: IEvaluation[]): Promise<IEvaluation> {
@@ -373,7 +373,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
       discoveryData: {},
       assessmentData: {
         totalQuestions: this.getTotalQuestions(taskEvaluations),
-        competencyGaps: this.identifyCompetencyGaps(aggregatedDomains)
+        competencyGaps: this.identifyCompetencyGaps(this.convertDimensionScoresToRecord(aggregatedDomains))
       },
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -382,7 +382,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
         targetType: 'program',
         taskCount: taskEvaluations.length
       }
-    } as IEvaluation;
+    } as unknown as IEvaluation;
   }
 
   private calculateAssessmentScores(interactions: IInteraction[], questions: AssessmentQuestion[]): AssessmentScoresResult {
@@ -392,7 +392,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
 
     interactions.forEach((interaction) => {
       if (interaction.type === 'user_input' && interaction.metadata?.questionId) {
-        const isCorrect = interaction.metadata.isCorrect || false;
+        const isCorrect = Boolean(interaction.metadata?.isCorrect);
         const question = questions.find(q => q.id === interaction.metadata.questionId);
         
         if (isCorrect) correctCount++;
@@ -406,10 +406,10 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
         }
 
         questionResults.push({
-          questionId: interaction.metadata.questionId,
+          questionId: interaction.metadata?.questionId as string,
           correct: isCorrect,
-          answer: interaction.content,
-          timeSpent: interaction.metadata?.timeSpent
+          answer: String(interaction.content),
+          timeSpent: interaction.metadata?.timeSpent as number | undefined
         });
       }
     });
@@ -451,12 +451,12 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
     const domainMap = new Map<string, { totalScore: number; count: number }>();
     
     evaluations.forEach(evaluation => {
-      if (evaluation.dimensionScores) {
-        Object.entries(evaluation.dimensionScores).forEach(([dim, score]: [string, number]) => {
-          const existing = domainMap.get(dim) || { totalScore: 0, count: 0 };
-          existing.totalScore += score;
+      if (evaluation.dimensionScores && Array.isArray(evaluation.dimensionScores)) {
+        evaluation.dimensionScores.forEach((dimScore: IDimensionScore) => {
+          const existing = domainMap.get(dimScore.dimension) || { totalScore: 0, count: 0 };
+          existing.totalScore += dimScore.score;
           existing.count += 1;
-          domainMap.set(dim, existing);
+          domainMap.set(dimScore.dimension, existing);
         });
       }
     });
@@ -476,13 +476,23 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
   }
 
   private getTotalQuestions(evaluations: IEvaluation[]): number {
-    return evaluations.reduce((sum, e) => sum + (e.metadata?.totalQuestions || 0), 0);
+    return evaluations.reduce((sum, e) => sum + ((e.metadata?.totalQuestions as number) || 0), 0);
   }
 
-  private identifyCompetencyGaps(dimensionScores: Record<string, number>): string[] {
-    return Object.entries(dimensionScores)
-      .filter(([_, score]) => score < 70)
-      .map(([dimension, _]) => dimension);
+  private identifyCompetencyGaps(dimensionScores: Record<string, number> | IDimensionScore[]): string[] {
+    const scores = Array.isArray(dimensionScores) 
+      ? this.convertDimensionScoresToRecord(dimensionScores)
+      : dimensionScores;
+    return Object.entries(scores)
+      .filter(([, score]) => score < 70)
+      .map(([dimension]) => dimension);
+  }
+
+  private convertDimensionScoresToRecord(dimensionScores: IDimensionScore[]): Record<string, number> {
+    return dimensionScores.reduce((acc, score) => {
+      acc[score.dimension] = score.score;
+      return acc;
+    }, {} as Record<string, number>);
   }
 }
 
@@ -537,7 +547,7 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
         sourceType: 'discovery',
         targetType: 'task'
       }
-    } as IEvaluation;
+    } as unknown as IEvaluation;
   }
 
   async evaluateProgram(program: IProgram, taskEvaluations: IEvaluation[]): Promise<IEvaluation> {
@@ -580,7 +590,7 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
         sourceType: 'discovery',
         targetType: 'program'
       }
-    } as IEvaluation;
+    } as unknown as IEvaluation;
   }
 
   protected calculateExplorationScore(interactions: IInteraction[], goals: string[]): number {
