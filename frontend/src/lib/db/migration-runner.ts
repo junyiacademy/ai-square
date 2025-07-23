@@ -37,7 +37,7 @@ export class MigrationRunner {
       
       try {
         migrationFiles = await fs.readdir(migrationsDir);
-      } catch (error) {
+      } catch {
         console.log('No migrations directory found, skipping migrations');
         return;
       }

@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import type { CreateTaskDto } from '@/lib/repositories/interfaces';
+import type { TaskType } from '@/types/database';
 
 export async function GET(request: NextRequest) {
   try {
@@ -81,19 +81,26 @@ export async function POST(request: NextRequest) {
 
     // Get scenario content to determine tasks
     const scenarioContent = await contentRepo.getScenarioContent(scenarioId);
-    const totalTasks = scenarioContent.tasks?.length || scenario.tasks?.length || 0;
+    const totalTasks = scenarioContent.tasks?.length || scenario.taskTemplates?.length || 0;
 
     // Create new program
     const program = await programRepo.create({
       userId,
       scenarioId,
-      totalTaskCount: totalTasks,
       mode: (scenario.metadata?.mode as 'pbl' | 'discovery' | 'assessment') || 'pbl',
-      status: 'active',
+      status: 'active' as const,
+      currentTaskIndex: 0,
+      completedTaskCount: 0,
+      totalTaskCount: totalTasks,
+      totalScore: 0,
+      dimensionScores: {},
+      xpEarned: 0,
+      badgesEarned: [],
       createdAt: new Date().toISOString(),
       startedAt: new Date().toISOString(),
-      currentTaskIndex: 0,
-      language: 'en',
+      updatedAt: new Date().toISOString(),
+      lastActivityAt: new Date().toISOString(),
+      timeSpentSeconds: 0,
       pblData: {},
       discoveryData: {},
       assessmentData: {},
@@ -108,7 +115,7 @@ export async function POST(request: NextRequest) {
           mode: program.mode,
           taskIndex: index,
           scenarioTaskIndex: index,
-          type: (task.type as string) || 'question',
+          type: (task.type as TaskType) || 'question',
           status: index === 0 ? 'active' : 'pending',
           title: task.title as string,
           description: task.description as string,

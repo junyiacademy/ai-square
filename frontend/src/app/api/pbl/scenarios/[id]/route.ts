@@ -3,7 +3,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 import { cachedGET, parallel, memoize } from '@/lib/api/optimization-utils';
-import type { ITaskTemplate } from '@/types/unified-learning';
+// Removed unused import
 import type { Scenario } from '@/lib/repositories/interfaces';
 
 // Type definitions for KSA mapping
@@ -258,13 +258,13 @@ export async function GET(
       id: scenarioResult.id,
       title: typeof scenarioResult.title === 'string' ? scenarioResult.title : (scenarioResult.title as Record<string, string>)?.[lang] || (scenarioResult.title as Record<string, string>)?.en || '',
       description: typeof scenarioResult.description === 'string' ? scenarioResult.description : (scenarioResult.description as Record<string, string>)?.[lang] || (scenarioResult.description as Record<string, string>)?.en || '',
-      difficulty: (scenarioResult.metadata as any)?.difficulty || 'intermediate',
-      estimatedDuration: (scenarioResult.metadata as any)?.estimatedDuration || 60,
-      targetDomain: (scenarioResult.metadata as any)?.targetDomains || [],
-      prerequisites: (scenarioResult.metadata as any)?.prerequisites || [],
-      learningObjectives: (scenarioResult as any).objectives || [],
+      difficulty: (scenarioResult.metadata as Record<string, unknown>)?.difficulty as string || 'intermediate',
+      estimatedDuration: (scenarioResult.metadata as Record<string, unknown>)?.estimatedDuration as number || 60,
+      targetDomain: (scenarioResult.metadata as Record<string, unknown>)?.targetDomains as string[] || [],
+      prerequisites: (scenarioResult.metadata as Record<string, unknown>)?.prerequisites as string[] || [],
+      learningObjectives: (scenarioResult as { objectives?: string[] }).objectives || [],
       ksaMapping: buildKSAMapping(yamlData as unknown as YAMLData, ksaData, lang),
-      tasks: ((scenarioResult as any).tasks || []).map((task: any) => ({
+      tasks: ((scenarioResult as { tasks?: Array<{ id: string; title: string; description?: string; type?: string; estimatedTime?: number }> }).tasks || []).map((task) => ({
         id: task.id,
         title: task.title || '',
         description: task.description || '',

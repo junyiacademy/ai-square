@@ -70,6 +70,13 @@ export async function PATCH(
 
     const updatedProgram = await programRepo.update?.(resolvedParams.id, updateData);
     
+    if (!updatedProgram) {
+      return NextResponse.json(
+        { error: 'Failed to update program' },
+        { status: 500 }
+      );
+    }
+    
     // If program is completed, update user XP
     if (body.status === 'completed') {
       const userRepo = repositoryFactory.getUserRepository();

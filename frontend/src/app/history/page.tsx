@@ -308,8 +308,8 @@ export default function UnifiedHistoryPage() {
                         scenarioId: scenario.id,
                         scenarioTitle: scenario.title,
                         careerType: (scenario.metadata as Record<string, unknown>)?.careerType as string || 'unknown',
-                        currentTaskId: currentTask?.id,
-                        currentTaskTitle: currentTask?.title,
+                        currentTaskId: currentTask?.id || undefined,
+                        currentTaskTitle: currentTask?.title || undefined,
                         status: program.status === 'active' ? 'active' : program.status === 'completed' ? 'completed' : 'inactive',
                         startedAt: (program.startedAt as string) || new Date().toISOString(),
                         completedAt: program.completedAt as string | undefined,
@@ -317,7 +317,7 @@ export default function UnifiedHistoryPage() {
                         progress: {
                           percentage: totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0,
                           completedTasks,
-                          totalTasks
+                          totalTaskCount: totalTasks
                         },
                         totalInteractions: (program.evaluations as unknown[])?.length || 0,
                         ...scores

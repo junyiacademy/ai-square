@@ -96,7 +96,8 @@ class ProductionMonitor {
         : 0,
       averageErrorRate: metrics.length > 0 
         ? metrics.reduce((sum, m) => sum + m.errorRate, 0) / metrics.length 
-        : 0
+        : 0,
+      averageCacheHitRate: (cacheStats as { hitRate?: number }).hitRate || 0
     };
 
     // Check response time alerts
@@ -116,15 +117,15 @@ class ProductionMonitor {
     }
 
     // Check cache hit rate alerts
-    if (report.summary.averageCacheHitRate < this.config.alertThresholds.cacheHitRate) {
+    if (summary.averageCacheHitRate < this.config.alertThresholds.cacheHitRate) {
       this.sendAlert('low_cache_hit_rate', {
-        current: report.summary.averageCacheHitRate,
+        current: summary.averageCacheHitRate,
         threshold: this.config.alertThresholds.cacheHitRate
       });
     }
 
     // Check Redis connectivity
-    if (!cacheStats.redisStats?.redisConnected) {
+    if (cacheStats.redisStats && typeof cacheStats.redisStats === 'object' && cacheStats.redisStats !== null && 'redisConnected' in cacheStats.redisStats && !cacheStats.redisStats.redisConnected) {
       this.sendAlert('redis_disconnected', {
         fallbackCacheSize: cacheStats.localCacheSize
       });
@@ -173,7 +174,7 @@ class ProductionMonitor {
    */
   getStatus(): {
     enabled: boolean;
-    alertThresholds: typeof this.config.alertThresholds;
+    alertThresholds: MonitoringConfig['alertThresholds'];
     lastReported: Date;
   } {
     return {

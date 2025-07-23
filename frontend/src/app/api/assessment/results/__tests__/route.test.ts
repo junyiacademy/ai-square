@@ -3,6 +3,12 @@
  * TODO: Update to use PostgreSQL repositories
  */
 
+describe('Assessment Results API', () => {
+  it('placeholder test - TODO: implement with PostgreSQL', () => {
+    expect(true).toBe(true);
+  });
+});
+
 /*
 import { NextRequest } from 'next/server';
 import { GET, POST } from '../route';

@@ -3,6 +3,23 @@ import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { verifyRefreshToken, createAccessToken } from '@/lib/auth/jwt';
 
+// Mock cookies to handle set operation
+const mockCookiesSet = jest.fn();
+
+// Mock NextResponse
+jest.mock('next/server', () => ({
+  NextResponse: {
+    json: (data: any, init?: ResponseInit) => {
+      const response = new Response(JSON.stringify(data), init);
+      Object.defineProperty(response, 'cookies', {
+        value: { set: mockCookiesSet },
+        writable: false,
+      });
+      return response;
+    }
+  }
+}));
+
 // Mock dependencies
 jest.mock('next/headers', () => ({
   cookies: jest.fn()
@@ -20,6 +37,7 @@ describe('/api/auth/refresh', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockCookiesSet.mockClear();
   });
 
   describe('POST', () => {
@@ -52,10 +70,8 @@ describe('/api/auth/refresh', () => {
         name: 'Student User'
       });
 
-      // Check cookies
-      const cookies = response.headers.getSetCookie();
-      expect(cookies).toContainEqual(expect.stringContaining('accessToken=new-access-token'));
-      expect(cookies).toContainEqual(expect.stringContaining('user='));
+      // Check cookies were set
+      expect(mockCookiesSet).toHaveBeenCalledWith('accessToken', 'new-access-token', expect.any(Object));
     });
 
     it('should handle teacher user refresh', async () => {

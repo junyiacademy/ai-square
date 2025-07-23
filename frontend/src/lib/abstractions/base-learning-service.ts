@@ -207,14 +207,13 @@ export abstract class BaseLearningService {
     }
 
     // Save response and update status
-    let completedTask: ITask;
     // Update task with response if provided
     if (response !== undefined && task) {
       task.userResponse = response as Record<string, unknown>;
     }
     
     // Complete the task
-    completedTask = await this.taskRepo.complete(taskId);
+    const completedTask = await this.taskRepo.complete(taskId);
 
     // Create evaluation
     const evaluation = await this.createTaskEvaluation(

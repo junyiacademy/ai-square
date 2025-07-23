@@ -8,6 +8,7 @@ import { Pool } from 'pg';
 import type { DBTask, TaskStatus, TaskType } from '@/types/database';
 import type { ITask, IInteraction } from '@/types/unified-learning';
 import { BaseTaskRepository } from '@/types/unified-learning';
+import type { AttemptData } from '@/lib/repositories/interfaces';
 
 export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
   constructor(private pool: Pool) {
@@ -35,7 +36,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       content: row.content,
       
       // Interaction tracking
-      interactions: row.interactions as IInteraction[],
+      interactions: row.interactions as unknown as IInteraction[],
       interactionCount: row.interaction_count,
       
       // Response/solution
@@ -404,17 +405,23 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
   }
 
   // Record attempt (updates score and increments attempt count)
-  async recordAttempt(id: string, score: number, response: Record<string, unknown>): Promise<void> {
+  async recordAttempt(id: string, attempt: AttemptData): Promise<void> {
     const query = `
       UPDATE tasks
       SET attempt_count = attempt_count + 1,
           score = GREATEST(score, $1),
           user_response = $2,
+          time_spent_seconds = time_spent_seconds + $3,
           updated_at = CURRENT_TIMESTAMP
-      WHERE id = $3
+      WHERE id = $4
     `;
 
-    await this.pool.query(query, [score, JSON.stringify(response), id]);
+    await this.pool.query(query, [
+      attempt.score || 0,
+      JSON.stringify(attempt.response),
+      attempt.timeSpent,
+      id
+    ]);
   }
 
   // Update time spent

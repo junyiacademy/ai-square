@@ -477,7 +477,7 @@ Return your evaluation as a JSON object:
         userAttempts,
         aiResponseCount: aiResponses.length,
         aiResponseDetails: aiResponses.map((r: Interaction) => ({
-          timestamp: r.createdAt,
+          timestamp: r.timestamp,
           completed: (r.metadata as { completed?: boolean })?.completed,
           content: r.content
         }))
@@ -485,7 +485,7 @@ Return your evaluation as a JSON object:
       
       const passedAttempts = aiResponses.filter((i: Interaction) => {
         try {
-          const parsed = JSON.parse(i.content) as { completed?: boolean };
+          const parsed = JSON.parse(String(i.content)) as { completed?: boolean };
           return parsed.completed === true;
         } catch {
           return false;
@@ -519,7 +519,7 @@ Return your evaluation as a JSON object:
               timeSpent: (interaction.metadata as { timeSpent?: number })?.timeSpent || 0
             };
           } else if (interaction.type === 'ai_response') {
-            const parsed = JSON.parse(interaction.content) as { completed?: boolean; feedback?: string; strengths?: string[]; improvements?: string[]; xpEarned?: number };
+            const parsed = JSON.parse(String(interaction.content)) as { completed?: boolean; feedback?: string; strengths?: string[]; improvements?: string[]; xpEarned?: number };
             return {
               type: 'ai_feedback',
               attempt: Math.floor(index / 2) + 1,
@@ -634,7 +634,7 @@ Return your evaluation as a JSON object:
           .filter((i: Interaction) => {
             if (i.type !== 'ai_response') return false;
             try {
-              const parsed = JSON.parse(i.content) as { completed?: boolean };
+              const parsed = JSON.parse(String(i.content)) as { completed?: boolean };
               return parsed.completed === true;
             } catch {
               return false;
@@ -644,7 +644,7 @@ Return your evaluation as a JSON object:
         
         if (lastSuccessfulInteraction) {
           try {
-            const parsed = JSON.parse(lastSuccessfulInteraction.content) as { feedback?: string };
+            const parsed = JSON.parse(String(lastSuccessfulInteraction.content)) as { feedback?: string };
             comprehensiveFeedback = parsed.feedback || getFallbackMessage(userLanguage);
           } catch {
             comprehensiveFeedback = getFallbackMessage(userLanguage);
@@ -703,20 +703,30 @@ Return your evaluation as a JSON object:
       // Create formal evaluation record with multilingual support
       const evaluation = await evaluationRepo.create({
         userId: session.user.email,
+        programId: programId,
         taskId: taskId,
-        evaluationType: 'discovery_task',
+        mode: 'discovery',
+        evaluationType: 'task',
+        evaluationSubtype: 'discovery_task',
         score: bestXP,
         maxScore: 100,
+        dimensionScores: {},
+        feedbackText: feedbackVersions['en'], // Default to English
+        feedbackData: feedbackVersions,
+        aiAnalysis: {},
         timeTakenSeconds: 0,
-        feedback: feedbackVersions['en'], // Default to English
-        metadata: {
-          feedbackVersions: feedbackVersions,
-          domainScores: {},
-          completed: true,
+        createdAt: new Date().toISOString(),
+        pblData: {},
+        discoveryData: {
           xpEarned: bestXP,
           totalAttempts: userAttempts,
           passedAttempts: passedAttempts,
           skillsImproved: Array.from(allSkillsImproved),
+        },
+        assessmentData: {},
+        metadata: {
+          feedbackVersions: feedbackVersions,
+          completed: true,
           learningJourney: allFeedback,
           originalLanguage: userLanguage
         }
@@ -725,7 +735,7 @@ Return your evaluation as a JSON object:
       // Mark task as completed and save evaluation ID
       await taskRepo.update?.(taskId, {
         status: 'completed' as const,
-        completedAt: new Date(),
+        completedAt: new Date().toISOString(),
         metadata: {
           ...(task.metadata || {}),
           evaluation: {
@@ -746,10 +756,11 @@ Return your evaluation as a JSON object:
       const allTasks = await taskRepo.findByProgram(programId);
       const taskMap = new Map(allTasks.map(t => [t.id, t]));
       
-      // Get tasks in the correct order based on program.taskIds
-      const orderedTasks = (program as any).taskIds
+      // Get tasks in the correct order based on taskIds in metadata
+      const taskIds = (program.metadata?.taskIds as string[]) || [];
+      const orderedTasks = taskIds
         .map((id: string) => taskMap.get(id))
-        .filter(Boolean) as unknown as ITask[];
+        .filter(Boolean) as ITask[];
       
       const completedTasks = orderedTasks.filter(t => t.status === 'completed').length;
       const nextTaskIndex = completedTasks;
@@ -784,11 +795,23 @@ Return your evaluation as a JSON object:
         await evaluationRepo.create({
           userId: session.user.email,
           programId: programId,
-          evaluationType: 'discovery_completion',
+          mode: 'discovery',
+          evaluationType: 'program',
+          evaluationSubtype: 'discovery_completion',
           score: 100,
           maxScore: 100,
           timeTakenSeconds: 0,
-          feedback: 'Congratulations! You have completed all learning tasks in this program.',
+          dimensionScores: {},
+          feedbackText: 'Congratulations! You have completed all learning tasks in this program.',
+          feedbackData: {},
+          aiAnalysis: {},
+          createdAt: new Date().toISOString(),
+          pblData: {},
+          discoveryData: {
+            totalXP: currentXP + bestXP,
+            tasksCompleted: orderedTasks.length
+          },
+          assessmentData: {},
           metadata: {
             domainScores: {},
             totalXP: currentXP + bestXP,
@@ -832,7 +855,7 @@ Return your evaluation as a JSON object:
       const passedAttempts = aiResponses.filter((i: Interaction) => ((i.metadata as { completed?: boolean }) || {}).completed === true).length;
       const allFeedback = task.interactions.filter((i: Interaction) => i.type === 'ai_response').map((i: Interaction) => {
         try {
-          return JSON.parse(i.content) as { xpEarned?: number; skillsImproved?: string[]; feedback?: string; completed?: boolean };
+          return JSON.parse(String(i.content)) as { xpEarned?: number; skillsImproved?: string[]; feedback?: string; completed?: boolean };
         } catch {
           return { xpEarned: 0, skillsImproved: [] };
         }
@@ -853,7 +876,7 @@ Return your evaluation as a JSON object:
               timeSpent: (interaction.metadata as { timeSpent?: number })?.timeSpent || 0
             };
           } else if (interaction.type === 'ai_response') {
-            const parsed = JSON.parse(interaction.content) as { completed?: boolean; feedback?: string; strengths?: string[]; improvements?: string[]; xpEarned?: number };
+            const parsed = JSON.parse(String(interaction.content)) as { completed?: boolean; feedback?: string; strengths?: string[]; improvements?: string[]; xpEarned?: number };
             return {
               type: 'ai_feedback',
               attempt: Math.floor(index / 2) + 1,

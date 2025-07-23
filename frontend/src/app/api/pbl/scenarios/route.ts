@@ -50,8 +50,8 @@ async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Recor
     // First, get all existing scenarios in one batch to avoid multiple DB calls
     const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
     const scenarioRepo = repositoryFactory.getScenarioRepository();
-    const rawScenarios = await scenarioRepo.findByMode?.('pbl');
-    const existingScenarios = rawScenarios.map(convertScenarioToIScenario);
+    const rawScenarios = await scenarioRepo.findByMode?.('pbl') || [];
+    const existingScenarios = rawScenarios as IScenario[];
     
     // Build/update the index with PBL scenarios
     const { scenarioIndexService } = await import('@/lib/services/scenario-index-service');

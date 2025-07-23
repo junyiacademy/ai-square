@@ -113,7 +113,7 @@ export async function POST(
     
     // Generate qualitative feedback based on all task completions
     let qualitativeFeedback: Record<string, unknown> | null = null;
-    const qualitativeFeedbackVersions: Record<string, unknown> = {};
+    const qualitativeFeedbackVersions: Record<string, Record<string, unknown> | string> = {};
     
     try {
       const aiService = new VertexAIService({
@@ -268,7 +268,9 @@ Return your response in JSON format:
         maxScore: 100,
         timeTakenSeconds: timeSpentSeconds,
         dimensionScores: {},
-        feedbackText: qualitativeFeedbackVersions['en'] || qualitativeFeedback,
+        feedbackText: typeof qualitativeFeedbackVersions['en'] === 'string' 
+          ? qualitativeFeedbackVersions['en'] 
+          : JSON.stringify(qualitativeFeedbackVersions['en'] || qualitativeFeedback || {}),
         feedbackData: qualitativeFeedbackVersions,
         aiAnalysis: {},
         createdAt: new Date().toISOString(),

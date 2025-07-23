@@ -8,6 +8,64 @@ jest.mock('../../../../lib/auth/jwt', () => ({
   ),
 }))
 
+// Mock session
+jest.mock('../../../../lib/auth/session-simple', () => ({
+  createSessionToken: jest.fn().mockReturnValue('mock-session-token')
+}))
+
+// Mock pg Pool
+jest.mock('pg', () => ({
+  Pool: jest.fn().mockImplementation(() => ({
+    query: jest.fn(),
+    end: jest.fn(),
+  })),
+}))
+
+// Mock PostgreSQL repository
+jest.mock('../../../../lib/repositories/postgresql', () => ({
+  PostgreSQLUserRepository: jest.fn().mockImplementation(() => ({
+    findByEmail: jest.fn().mockResolvedValue(null),
+    create: jest.fn().mockImplementation((user) => Promise.resolve({
+      id: '1',
+      ...user
+    })),
+    updateLastActive: jest.fn().mockResolvedValue(undefined),
+  })),
+}))
+
+// Mock NextResponse to handle cookies properly
+const mockCookies = {
+  set: jest.fn(),
+}
+
+jest.mock('next/server', () => ({
+  NextRequest: class {
+    url: string
+    method: string
+    private body: string
+
+    constructor(url: string, init?: RequestInit) {
+      this.url = url
+      this.method = init?.method || 'GET'
+      this.body = init?.body as string || ''
+    }
+
+    async json() {
+      return JSON.parse(this.body)
+    }
+  },
+  NextResponse: {
+    json: (data: any, init?: ResponseInit) => {
+      const response = new Response(JSON.stringify(data), init)
+      Object.defineProperty(response, 'cookies', {
+        value: mockCookies,
+        writable: false,
+      })
+      return response
+    }
+  }
+}))
+
 // Create a mock NextRequest class
 class MockNextRequest {
   url: string
@@ -37,6 +95,11 @@ describe('/api/auth/login', () => {
 
     const response = await POST(request as any)
     const data = await response.json()
+    
+    // Log the error if status is not 200
+    if (response.status !== 200) {
+      console.error('Login error:', data)
+    }
 
     expect(response.status).toBe(200)
     expect(data.success).toBe(true)

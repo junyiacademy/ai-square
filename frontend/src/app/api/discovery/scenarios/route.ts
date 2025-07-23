@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
     
     // 先嘗試從儲存庫獲取現有的 scenarios
     const rawScenarios = await scenarioRepo.findByMode?.('discovery');
-    const repoScenarios = rawScenarios.map(convertScenarioToIScenario);
+    const repoScenarios = rawScenarios || [];
     
     let scenarios: IScenario[];
     

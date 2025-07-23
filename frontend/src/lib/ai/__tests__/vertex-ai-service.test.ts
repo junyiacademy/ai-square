@@ -96,7 +96,7 @@ describe('vertex-ai-service', () => {
       const evaluation = await service.evaluateResponse(
         'User response',
         'Task content',
-        { criteria: ['criteria1', 'criteria2'] }
+        ['criteria1', 'criteria2']
       );
 
       expect(evaluation).toHaveProperty('score');

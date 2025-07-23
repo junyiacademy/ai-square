@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
           userEmail: userEmail,
           status: draftProgram.status,
           currentTaskIndex: draftProgram.currentTaskIndex,
-          completedTasks: draftProgram.completedTasks,
+          completedTaskCount: draftProgram.completedTaskCount,
           totalTaskCount: draftProgram.totalTaskCount,
           startedAt: draftProgram.startedAt || draftProgram.createdAt,
           updatedAt: draftProgram.lastActivityAt

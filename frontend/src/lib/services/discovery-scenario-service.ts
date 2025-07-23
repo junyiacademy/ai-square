@@ -6,6 +6,7 @@
 import path from 'path';
 import yaml from 'js-yaml';
 import { IScenario, ITaskTemplate } from '@/types/unified-learning';
+import { DifficultyLevel } from '@/types/database';
 
 interface DiscoveryYAMLData {
   path_id: string;
@@ -64,7 +65,7 @@ export class DiscoveryScenarioService {
       title: { [language]: yamlData.metadata.title },
       description: { [language]: yamlData.metadata.short_description },
       objectives: this.extractObjectives(yamlData),
-      difficulty: yamlData.difficulty_range?.[0] || 'beginner',
+      difficulty: (yamlData.difficulty_range?.[0] || 'beginner') as DifficultyLevel,
       estimatedMinutes: (yamlData.metadata.estimated_hours || 1) * 60,
       prerequisites: [],
       taskTemplates: this.createTaskTemplates(yamlData),
@@ -79,14 +80,17 @@ export class DiscoveryScenarioService {
         startingScenario: yamlData.starting_scenario,
         longDescription: yamlData.metadata.long_description
       },
-      aiModules: [],
+      taskCount: 0,
+      pblData: {},
+      assessmentData: {},
+      aiModules: {},
       resources: [],
       metadata: {
         careerType,
         yamlData: yamlData // 保存完整的 YAML 資料供相容性使用
       },
-      createdAt: new Date(),
-      updatedAt: new Date()
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     };
     
     // 使用 Scenario Repository 創建 UUID 檔案

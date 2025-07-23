@@ -62,7 +62,6 @@ export async function GET(
     
     console.log('Debug: Tasks loaded for program', programId, {
       tasksCount: tasks?.length || 0,
-      programTaskIds: program.taskIds || [],
       includeAllTasks,
       tasks: tasks?.map(t => ({
         id: t.id,

@@ -7,8 +7,7 @@ import {
   IScenario, 
   IProgram, 
   ITask, 
-  IEvaluation,
-  IDimensionScore 
+  IEvaluation
 } from './unified-learning';
 
 import type { TaskType } from './database';

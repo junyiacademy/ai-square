@@ -8,18 +8,14 @@ import type {
   ITask, 
   IEvaluation, 
   IScenario,
-  IInteraction,
-  LearningMode,
-  ProgramStatus as IProgramStatus,
-  TaskStatus as ITaskStatus,
-  ScenarioStatus as IScenarioStatus,
-  SourceType
+  IInteraction
 } from '@/types/unified-learning';
 import type {
   LearningMode as DBLearningMode,
   ProgramStatus as DBProgramStatus,
   TaskStatus as DBTaskStatus,
-  ScenarioStatus as DBScenarioStatus
+  ScenarioStatus as DBScenarioStatus,
+  SourceType as DBSourceType
 } from '@/types/database';
 
 // ========================================
@@ -59,7 +55,7 @@ export interface IProgramRepository {
   updateProgress(id: string, taskIndex: number): Promise<IProgram>;
   complete(id: string): Promise<IProgram>;
   update?(id: string, data: UpdateProgramDto): Promise<IProgram>;
-  updateStatus?(id: string, status: IProgramStatus): Promise<void>;
+  updateStatus?(id: string, status: DBProgramStatus): Promise<void>;
   getActivePrograms?(userId: string): Promise<IProgram[]>;
   getCompletedPrograms?(userId: string): Promise<IProgram[]>;
 }
@@ -72,7 +68,7 @@ export interface ITaskRepository {
   updateInteractions(id: string, interactions: IInteraction[]): Promise<ITask>;
   complete(id: string): Promise<ITask>;
   update?(id: string, data: UpdateTaskDto): Promise<ITask>;
-  updateStatus?(id: string, status: ITaskStatus): Promise<void>;
+  updateStatus?(id: string, status: DBTaskStatus): Promise<void>;
   recordAttempt?(id: string, attempt: AttemptData): Promise<void>;
   getTaskWithInteractions?(id: string): Promise<TaskWithInteractions | null>;
 }
@@ -95,7 +91,7 @@ export interface IScenarioRepository {
   create(data: Omit<IScenario, 'id'>): Promise<IScenario>;
   findByMode?(mode: DBLearningMode): Promise<IScenario[]>;
   findActive?(): Promise<IScenario[]>;
-  updateStatus?(id: string, status: IScenarioStatus): Promise<void>;
+  updateStatus?(id: string, status: DBScenarioStatus): Promise<void>;
 }
 
 // ========================================
@@ -148,17 +144,11 @@ export interface User {
   metadata?: Record<string, unknown>;
 }
 
-// Legacy Program type for compatibility
-export interface Program extends IProgram {}
-
-// Legacy Task type for compatibility
-export interface Task extends ITask {}
-
-// Legacy Evaluation type for compatibility
-export interface Evaluation extends IEvaluation {}
-
-// Legacy Scenario type for compatibility
-export interface Scenario extends IScenario {}
+// Legacy type aliases for compatibility
+export type Program = IProgram;
+export type Task = ITask;
+export type Evaluation = IEvaluation;
+export type Scenario = IScenario;
 
 // Re-export types from database for backward compatibility
 export type ProgramStatus = DBProgramStatus;
@@ -267,7 +257,7 @@ export interface CreateScenarioDto {
   mode: DBLearningMode;
   status?: DBScenarioStatus;
   version?: string;
-  sourceType: SourceType;
+  sourceType: DBSourceType;
   sourcePath?: string;
   sourceId?: string;
   sourceMetadata?: Record<string, unknown>;
@@ -318,6 +308,8 @@ export interface FindUsersOptions {
 }
 
 // Extended Types
+export type Interaction = IInteraction;
+
 export interface TaskWithInteractions extends ITask {
   interactions: IInteraction[];
 }

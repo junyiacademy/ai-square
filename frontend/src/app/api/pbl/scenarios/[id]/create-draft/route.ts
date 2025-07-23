@@ -117,9 +117,8 @@ export async function POST(
       );
     }
     
-    // Get request body
-    const body = await request.json();
-    const language = body.language || 'en';
+    // Get request body (not used in current implementation)
+    // const body = await request.json();
     
     // Load scenario
     const scenario = await loadScenario(scenarioId);
@@ -135,17 +134,26 @@ export async function POST(
     const program = await programRepo.create({
       scenarioId,
       userId: userEmail,
+      mode: 'pbl' as const,
+      status: 'active' as const,
+      currentTaskIndex: 0,
+      completedTaskCount: 0,
       totalTaskCount: scenario.tasks.length,
-      mode: 'pbl',
-      status: 'active',
+      totalScore: 0,
+      dimensionScores: {},
+      xpEarned: 0,
+      badgesEarned: [],
       createdAt: new Date().toISOString(),
       startedAt: new Date().toISOString(),
-      currentTaskIndex: 0,
-      language: 'en',
+      updatedAt: new Date().toISOString(),
+      lastActivityAt: new Date().toISOString(),
+      timeSpentSeconds: 0,
       pblData: {},
       discoveryData: {},
       assessmentData: {},
-      metadata: {}
+      metadata: {
+        language: 'en'
+      }
     });
     
     return NextResponse.json({

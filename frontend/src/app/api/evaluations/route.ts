@@ -126,21 +126,28 @@ export async function POST(request: NextRequest) {
       userId,
       programId,
       taskId,
+      mode: 'pbl' as const, // Add required mode field
       evaluationType,
       score: aiEvaluation.score || 0,
       maxScore: 100,
-      feedback: aiEvaluation.feedback,
+      feedbackText: aiEvaluation.feedback,
+      feedbackData: {}, // Add required feedbackData field
       aiAnalysis: {
         strengths: aiEvaluation.strengths,
         improvements: aiEvaluation.improvements,
         ...aiEvaluation
       },
-      domainScores: aiEvaluation.ksaScores ? {
+      dimensionScores: aiEvaluation.ksaScores ? {
         knowledge: aiEvaluation.ksaScores.knowledge,
         skills: aiEvaluation.ksaScores.skills,
         attitudes: aiEvaluation.ksaScores.attitudes
       } : {},
-      timeTakenSeconds: body.timeTaken || 0
+      timeTakenSeconds: body.timeTaken || 0,
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {},
+      metadata: {},
+      createdAt: new Date().toISOString()
     });
 
     // Update task if provided
@@ -148,7 +155,7 @@ export async function POST(request: NextRequest) {
       await taskRepo.update?.(taskId, {
         status: 'completed',
         score: aiEvaluation.score,
-        completedAt: new Date()
+        completedAt: new Date().toISOString()
       });
 
       // Update program progress
@@ -162,7 +169,7 @@ export async function POST(request: NextRequest) {
           const totalScore = tasks.reduce((sum, t) => sum + (t.score || 0), 0) / tasks.length;
 
           await programRepo.update?.(task.programId, {
-            completedTasks,
+            completedTaskCount: completedTasks,
             totalScore,
             currentTaskIndex: Math.min(task.taskIndex + 1, program.totalTaskCount - 1)
           });

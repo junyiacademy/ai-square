@@ -63,7 +63,7 @@ export class ScenarioTranslationService {
         baseDir,
         'public',
         'assessment_data',
-        folderName,
+        String(folderName),
         `${folderName}_questions_${language}.yaml`
       );
 
@@ -74,15 +74,15 @@ export class ScenarioTranslationService {
       // Extract translation content based on scenario type
       let translationContent: TranslationContent;
       
-      if (scenario.sourceType === 'assessment') {
-        const config = yamlData.assessment_config || yamlData.config || {};
+      if (scenario.mode === 'assessment') {
+        const config = (yamlData.assessment_config || yamlData.config || {}) as Record<string, any>;
         translationContent = {
-          title: config.title,
-          description: config.description,
+          title: config.title as string,
+          description: config.description as string,
           config: {
-            totalQuestions: config.total_questions,
-            timeLimit: config.time_limit_minutes,
-            passingScore: config.passing_score
+            totalQuestions: config.total_questions as number,
+            timeLimit: config.time_limit_minutes as number,
+            passingScore: config.passing_score as number
           }
         };
       } else {
@@ -131,8 +131,12 @@ export class ScenarioTranslationService {
     // Merge translation with original scenario
     return {
       ...scenario,
-      title: translation.title || scenario.title,
-      description: translation.description || scenario.description,
+      title: typeof translation.title === 'string' 
+        ? { [language]: translation.title } 
+        : scenario.title,
+      description: typeof translation.description === 'string' 
+        ? { [language]: translation.description } 
+        : scenario.description,
       metadata: {
         ...scenario.metadata,
         translatedFrom: 'yaml',

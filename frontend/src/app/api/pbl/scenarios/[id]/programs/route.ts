@@ -75,7 +75,7 @@ export async function GET(
             tasksNeedingFix.map(task => 
               taskRepo.update?.(task.id, {
                 status: 'completed',
-                completedAt: task.completedAt || new Date()
+                completedAt: task.completedAt || new Date().toISOString()
               })
             )
           );
@@ -103,7 +103,7 @@ export async function GET(
         return {
           ...program,
           completedTaskCount,
-          totalTaskCount: program.taskIds?.length || 0
+          totalTaskCount: program.totalTaskCount || 0
         };
       })
     );

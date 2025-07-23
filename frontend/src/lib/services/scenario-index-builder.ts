@@ -99,17 +99,31 @@ class ScenarioIndexBuilder {
             // This is a simplified scenario object just for the index
             allScenarios.push({
               id: uuid,
-              sourceType: entry.sourceType,
-              title: entry.title || '',
-              description: '',
-              objectives: [],
-              taskTemplates: [],
-              createdAt: entry.lastUpdated,
-              updatedAt: entry.lastUpdated,
+              mode: 'pbl' as const, // Default mode
+              status: 'active' as const,
+              version: '1.0.0',
               sourceType: entry.sourceType as SourceType,
               sourceId: entry.yamlId,
-              sourceMetadata: { yamlId: entry.yamlId }
-            } as IScenario);
+              sourceMetadata: { yamlId: entry.yamlId },
+              title: { en: entry.title || '' },
+              description: { en: '' },
+              objectives: [],
+              taskTemplates: [],
+              difficulty: 'intermediate' as const,
+              estimatedMinutes: 60,
+              prerequisites: [],
+              taskCount: 0,
+              xpRewards: {},
+              unlockRequirements: {},
+              pblData: {},
+              discoveryData: {},
+              assessmentData: {},
+              aiModules: {},
+              resources: [],
+              createdAt: entry.lastUpdated,
+              updatedAt: entry.lastUpdated,
+              metadata: {}
+            } as unknown as IScenario);
           }
         }
       }

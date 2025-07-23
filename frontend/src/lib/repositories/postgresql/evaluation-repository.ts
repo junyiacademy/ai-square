@@ -8,6 +8,7 @@ import { Pool } from 'pg';
 import type { DBEvaluation } from '@/types/database';
 import type { IEvaluation } from '@/types/unified-learning';
 import { BaseEvaluationRepository } from '@/types/unified-learning';
+import type { UserProgress, Achievement } from '@/lib/repositories/interfaces';
 
 export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEvaluation> {
   constructor(private pool: Pool) {
@@ -191,16 +192,7 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
   }
 
   // Get user progress statistics
-  async getUserProgress(userId: string): Promise<{
-    totalPrograms: number;
-    completedPrograms: number;
-    totalTasks: number;
-    completedTasks: number;
-    totalXpEarned: number;
-    averageScore: number;
-    timeSpentSeconds: number;
-    achievements: Array<Record<string, unknown>>;
-  }> {
+  async getUserProgress(userId: string): Promise<UserProgress> {
     const client = await this.pool.connect();
     
     try {
@@ -253,7 +245,13 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
         totalXpEarned: xpData?.total_xp || 0,
         averageScore: parseFloat(taskStats.avg_score) || 0,
         timeSpentSeconds: parseInt(taskStats.total_time) || 0,
-        achievements
+        achievements: achievements.map((a: any) => ({
+          id: a.id,
+          code: a.code,
+          type: a.type,
+          xpReward: a.xp_reward,
+          earnedAt: new Date(a.earned_at)
+        })) as Achievement[]
       };
     } finally {
       client.release();

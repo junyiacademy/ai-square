@@ -3,7 +3,7 @@
  * 繼承自 BaseYAMLLoader，專門處理 Discovery Path YAML 檔案
  */
 
-import { BaseYAMLLoader, YAMLLoaderOptions } from '@/lib/abstractions/base-yaml-loader';
+import { BaseYAMLLoader, YAMLLoaderOptions, LoadResult } from '@/lib/abstractions/base-yaml-loader';
 import path from 'path';
 
 export interface DiscoveryMetadata {
@@ -100,10 +100,37 @@ export interface DiscoveryPath {
 export class DiscoveryYAMLLoader extends BaseYAMLLoader<DiscoveryPath> {
   protected readonly loaderName = 'DiscoveryYAMLLoader';
 
+  private basePath: string;
+
   constructor() {
     super();
-    // Override default base path for discovery data
-    this.defaultOptions.basePath = path.join(process.cwd(), 'public', 'discovery_data');
+    // Set base path for discovery data
+    this.basePath = path.join(process.cwd(), 'public', 'discovery_data');
+  }
+
+  /**
+   * Implement abstract load method
+   */
+  async load(fileName: string): Promise<LoadResult<DiscoveryPath>> {
+    try {
+      const filePath = this.getFilePath(fileName);
+      const { promises: fs } = await import('fs');
+      const yaml = await import('js-yaml');
+      
+      const content = await fs.readFile(filePath, 'utf8');
+      const data = yaml.load(content) as DiscoveryPath;
+      
+      return { data };
+    } catch (error) {
+      return { data: null, error: error as Error };
+    }
+  }
+
+  /**
+   * Get file path for discovery path
+   */
+  protected getFilePath(fileName: string): string {
+    return path.join(this.basePath, `${fileName}.yml`);
   }
 
   /**
@@ -117,24 +144,18 @@ export class DiscoveryYAMLLoader extends BaseYAMLLoader<DiscoveryPath> {
     // Discovery paths use format: careertype/careertype_lang.yml
     const langCode = language === 'zh-TW' ? 'zhTW' : language;
     const fileName = `${careerType}/${careerType}_${langCode}`;
-    const result = await this.load(fileName, language, {
-      ...options,
-      basePath: this.defaultOptions.basePath
-    });
+    const result = await this.load(fileName);
 
-    if (result.success && result.data) {
+    if (result.data) {
       return result.data;
     }
 
     // Fallback to English if language not found
     if (language !== 'en') {
       const fallbackFileName = `${careerType}/${careerType}_en`;
-      const fallbackResult = await this.load(fallbackFileName, 'en', {
-        ...options,
-        basePath: this.defaultOptions.basePath
-      });
+      const fallbackResult = await this.load(fallbackFileName);
       
-      if (fallbackResult.success && fallbackResult.data) {
+      if (fallbackResult.data) {
         return fallbackResult.data;
       }
     }
@@ -147,7 +168,7 @@ export class DiscoveryYAMLLoader extends BaseYAMLLoader<DiscoveryPath> {
    */
   async scanPaths(): Promise<string[]> {
     const fs = await import('fs/promises');
-    const pathsDir = this.defaultOptions.basePath!;
+    const pathsDir = this.options.basePath!;
     
     try {
       const items = await fs.readdir(pathsDir, { withFileTypes: true });

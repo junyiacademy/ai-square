@@ -76,17 +76,26 @@ export async function POST(request: NextRequest) {
       assessmentProgram = await programRepo.create({
         userId: user.id,
         scenarioId: body.scenarioId || 'assessment-default',
-        totalTaskCount: body.result.totalQuestions || body.answers.length,
         mode: 'assessment',
         status: 'active',
+        currentTaskIndex: 0,
+        completedTaskCount: 0,
+        totalTaskCount: body.result.totalQuestions || body.answers.length,
+        totalScore: 0,
+        dimensionScores: {},
+        xpEarned: 0,
+        badgesEarned: [],
         createdAt: new Date().toISOString(),
         startedAt: new Date().toISOString(),
-        currentTaskIndex: 0,
-        language: body.language || 'en',
+        updatedAt: new Date().toISOString(),
+        lastActivityAt: new Date().toISOString(),
+        timeSpentSeconds: 0,
         pblData: {},
         discoveryData: {},
         assessmentData: {},
-        metadata: {}
+        metadata: {
+          language: body.language || 'en'
+        }
       });
     }
 
@@ -130,9 +139,9 @@ export async function POST(request: NextRequest) {
     // Update program status
     await programRepo.update?.(assessmentProgram.id, {
       status: 'completed',
-      completedTasks: body.result.totalQuestions,
+      completedTaskCount: body.result.totalQuestions,
       totalScore: body.result.overallScore,
-      endTime: new Date(),
+      completedAt: new Date().toISOString(),
       metadata: {
         ...assessmentProgram.metadata,
         evaluationId: evaluation.id

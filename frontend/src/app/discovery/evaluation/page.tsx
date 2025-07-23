@@ -26,8 +26,6 @@ export default function EvaluationPage() {
   const [assessmentResults, setAssessmentResults] = useState<AssessmentResults | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [achievementCount, setAchievementCount] = useState(0);
-  const [programCount, setProgramCount] = useState(0);
-  const [assessmentAnswers, setAssessmentAnswers] = useState<Record<string, string[]>>({});
 
   // Load existing assessment results
   useEffect(() => {
@@ -41,14 +39,12 @@ export default function EvaluationPage() {
         }
         setAchievementCount(userData?.achievements?.badges?.length || 0);
         // Programs are stored in GCS in v2 architecture, not in userData
-        setProgramCount(0); // TODO: Query from GCS if needed
+        // TODO: Query program count from database if needed
         
         // Load the latest assessment session's answers
         if (userData?.assessmentSessions && userData.assessmentSessions.length > 0) {
           const latestSession = userData.assessmentSessions[userData.assessmentSessions.length - 1];
-          if (latestSession.answers) {
-            setAssessmentAnswers(latestSession.answers);
-          }
+          // Assessment answers are available in latestSession if needed
         }
       } catch (error) {
         console.error('Failed to load assessment data:', error);
@@ -62,7 +58,7 @@ export default function EvaluationPage() {
   const handleAssessmentComplete = async (results: AssessmentResults, answers?: Record<string, string[]>) => {
     setAssessmentResults(results);
     if (answers) {
-      setAssessmentAnswers(answers);
+      // Assessment answers saved
     }
     
     // Save assessment session
@@ -99,14 +95,6 @@ export default function EvaluationPage() {
       </div>
     );
   }
-
-  const pageTitle = assessmentResults 
-    ? t('discovery:evaluation.resultsTitle')
-    : t('discovery:evaluation.title');
-
-  const pageDescription = assessmentResults
-    ? t('discovery:evaluation.resultsDescription')
-    : t('discovery:evaluation.subtitle');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">

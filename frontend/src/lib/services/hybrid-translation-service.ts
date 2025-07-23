@@ -59,14 +59,14 @@ export class HybridTranslationService {
       // For English, return directly from GCS
       if (language === 'en') {
         const scenario = await this.storageService.getScenario(scenarioId);
-        this.cache.set(cacheKey, scenario as CacheableData);
-        return scenario;
+        this.cache.set(cacheKey, scenario as unknown as CacheableData);
+        return scenario as unknown as IScenario;
       }
 
       // For other languages, merge translations
       const englishScenario = await this.storageService.getScenario(scenarioId);
       const translatedScenario = await this.applyTranslations(
-        englishScenario,
+        englishScenario as unknown as IScenario,
         scenarioId,
         language,
         'scenario'
@@ -115,14 +115,14 @@ export class HybridTranslationService {
    * Get a program (no translation needed - user generated content)
    */
   async getProgram(scenarioId: string, programId: string, {}: string): Promise<IProgram> {
-    return this.storageService.getProgram(scenarioId, programId);
+    return this.storageService.getProgram(scenarioId, programId) as unknown as IProgram;
   }
 
   /**
    * Get a task (no translation needed - user generated content)
    */
   async getTask(scenarioId: string, programId: string, taskId: string, {}: string): Promise<ITask> {
-    return this.storageService.getTask(scenarioId, programId, taskId);
+    return this.storageService.getTask(scenarioId, programId, taskId) as unknown as ITask;
   }
 
   /**
@@ -161,7 +161,7 @@ export class HybridTranslationService {
     // Helper to get translated field
     const getTranslated = (obj: Record<string, unknown>, field: string): string | undefined => {
       const langField = `${field}_${language}`;
-      return obj[langField] || obj[field];
+      return obj[langField] as string || obj[field] as string;
     };
 
     // Translate scenario info
@@ -192,8 +192,8 @@ export class HybridTranslationService {
 
               return {
                 ...task,
-                title: getTranslated(yamlTask, 'title') || task.title,
-                description: getTranslated(yamlTask, 'description') || task.description
+                title: getTranslated(yamlTask as unknown as Record<string, unknown>, 'title') || task.title,
+                description: getTranslated(yamlTask as unknown as Record<string, unknown>, 'description') || task.description
               };
             });
           } else {
@@ -212,8 +212,8 @@ export class HybridTranslationService {
           (yamlStage.tasks as Task[]).forEach((yamlTask) => {
             const task = (translated as LegacyScenarioData).tasks?.find((t) => t.id === yamlTask.id);
             if (task) {
-              task.title = getTranslated(yamlTask as Record<string, unknown>, 'title') || task.title;
-              task.description = getTranslated(yamlTask as Record<string, unknown>, 'description') || task.description;
+              task.title = getTranslated(yamlTask as unknown as Record<string, unknown>, 'title') || task.title;
+              task.description = getTranslated(yamlTask as unknown as Record<string, unknown>, 'description') || task.description;
               (task as unknown as Record<string, unknown>).instructions = getTranslated(yamlTask as unknown as Record<string, unknown>, 'instructions') || (task as unknown as Record<string, unknown>).instructions;
               (task as unknown as Record<string, unknown>).expected_outcome = getTranslated(yamlTask as unknown as Record<string, unknown>, 'expected_outcome') || (task as unknown as Record<string, unknown>).expected_outcome;
             }
@@ -269,7 +269,7 @@ export class HybridTranslationService {
         }));
       }
 
-      return scenario;
+      return scenario as unknown as IScenario;
     } catch (error) {
       throw new Error(`Failed to load scenario ${scenarioId} from YAML: ${error}`);
     }

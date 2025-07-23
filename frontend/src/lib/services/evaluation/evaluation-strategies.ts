@@ -143,7 +143,11 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
       scores.reduce((a, b) => a + b, 0) / scores.length : 0;
 
     // Aggregate KSA dimensions
-    const dimensionScores = this.aggregateKSADimensions(taskEvaluations);
+    const dimensionScoresArray = this.aggregateKSADimensions(taskEvaluations);
+    const dimensionScores = dimensionScoresArray.reduce((acc, dim) => {
+      acc[dim.dimension] = dim.score;
+      return acc;
+    }, {} as Record<string, number>);
 
     return {
       id: uuidv4(),
@@ -179,7 +183,7 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
     
     // Calculate interaction depth
     const avgInputLength = userInputs.length > 0 ?
-      userInputs.reduce((sum, i) => sum + (i.content?.length || 0), 0) / userInputs.length : 0;
+      userInputs.reduce((sum, i) => sum + (typeof i.content === 'string' ? i.content.length : 0), 0) / userInputs.length : 0;
     
     // Calculate response quality based on length and variety
     const interactionDepth = Math.min(avgInputLength / 100, 1) * 100; // Normalize to 0-100
@@ -274,7 +278,9 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
     const ksaSet = new Set<string>();
     evaluations.forEach(e => {
       const codes = e.metadata?.ksaCodes || [];
-      codes.forEach((code: string) => ksaSet.add(code));
+      if (Array.isArray(codes)) {
+        codes.forEach((code: string) => ksaSet.add(code));
+      }
     });
     return Array.from(ksaSet);
   }
@@ -294,7 +300,8 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
   async evaluateTask(task: ITask, context: IEvaluationContext): Promise<IEvaluation> {
     const assessmentTask = task as IAssessmentTask;
     const interactions = task.interactions || [];
-    const questions = assessmentTask.content?.context?.questions || [];
+    const taskContext = assessmentTask.content?.context as Record<string, unknown>;
+    const questions = (taskContext?.questions as AssessmentQuestion[]) || [];
     
     // Calculate scores
     const { correctCount, totalCount, domainScores, questionResults } = 
@@ -304,7 +311,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
     
     // Apply time bonus if applicable
     const timeSpent = this.calculateTimeSpent(task);
-    const timeLimit = assessmentTask.content?.context?.timeLimit;
+    const timeLimit = taskContext?.timeLimit as number | undefined;
     const timeBonus = timeLimit ? this.calculateTimeBonus(timeSpent, timeLimit) : 0;
     
     const finalScore = Math.min(baseScore + timeBonus, 100);
@@ -393,7 +400,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
     interactions.forEach((interaction) => {
       if (interaction.type === 'user_input' && interaction.metadata?.questionId) {
         const isCorrect = Boolean(interaction.metadata?.isCorrect);
-        const question = questions.find(q => q.id === interaction.metadata.questionId);
+        const question = questions.find((q: any) => q.id === interaction.metadata?.questionId);
         
         if (isCorrect) correctCount++;
         
@@ -503,7 +510,8 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
   async evaluateTask(task: ITask, context: IEvaluationContext): Promise<IEvaluation> {
     const discoveryTask = task as IDiscoveryTask;
     const interactions = task.interactions || [];
-    const goals = discoveryTask.content?.context?.explorationGoals || [];
+    const taskContext = discoveryTask.content?.context as Record<string, unknown>;
+    const goals = (taskContext?.explorationGoals as string[]) || [];
     
     // Calculate exploration metrics
     const explorationScore = this.calculateExplorationScore(interactions, goals);
@@ -538,7 +546,7 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
         toolsExplored,
         challengesCompleted: challengesCompleted.map(c => c.id),
         explorationDepth: this.calculateExplorationDepth(interactions),
-        skillsImproved: discoveryTask.content?.context?.requiredSkills || []
+        skillsImproved: (taskContext?.requiredSkills as string[]) || []
       },
       assessmentData: {},
       createdAt: new Date().toISOString(),
@@ -552,8 +560,8 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
 
   async evaluateProgram(program: IProgram, taskEvaluations: IEvaluation[]): Promise<IEvaluation> {
     // Calculate total XP
-    const currentXP = program.metadata?.totalXP || 0;
-    const earnedXP = taskEvaluations.reduce((sum, e) => sum + (e.metadata?.xpEarned || 0), 0);
+    const currentXP = (program.metadata?.totalXP as number) || 0;
+    const earnedXP = taskEvaluations.reduce((sum, e) => sum + ((e.metadata?.xpEarned as number) || 0), 0);
     const totalXP = currentXP + earnedXP;
     
     // Check for milestones
@@ -611,7 +619,7 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
     const tools = new Set<string>();
     interactions.forEach(i => {
       if (i.metadata?.toolUsed) {
-        tools.add(i.metadata.toolUsed);
+        tools.add(String(i.metadata.toolUsed));
       }
     });
     return Array.from(tools);
@@ -619,11 +627,12 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
 
   private extractChallengesCompleted(interactions: IInteraction[], task: IDiscoveryTask): Challenge[] {
     const completedChallenges: Challenge[] = [];
-    const challenges = (task.content?.context?.challenges || []) as Challenge[];
+    const context = task.content?.context as Record<string, unknown>;
+    const challenges = (context?.challenges || []) as Challenge[];
     
     interactions.forEach(i => {
       if (i.metadata?.challengeId) {
-        const challenge = challenges.find(c => c.id === i.metadata.challengeId);
+        const challenge = challenges.find((c: any) => c.id === i.metadata?.challengeId);
         if (challenge) {
           completedChallenges.push(challenge);
         }
@@ -637,7 +646,7 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
     // Measure variety and depth of exploration
     const uniqueTypes = new Set(interactions.map(i => i.type)).size;
     const avgContentLength = interactions.reduce((sum, i) => 
-      sum + (i.content?.length || 0), 0) / Math.max(interactions.length, 1);
+      sum + (typeof i.content === 'string' ? i.content.length : 0), 0) / Math.max(interactions.length, 1);
     
     return Math.min((uniqueTypes * 20) + (avgContentLength / 10), 100);
   }
@@ -666,7 +675,9 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
     const tools = new Set<string>();
     evaluations.forEach(e => {
       const explored = e.metadata?.toolsExplored || [];
-      explored.forEach((tool: string) => tools.add(tool));
+      if (Array.isArray(explored)) {
+        explored.forEach((tool: string) => tools.add(tool));
+      }
     });
     return Array.from(tools);
   }

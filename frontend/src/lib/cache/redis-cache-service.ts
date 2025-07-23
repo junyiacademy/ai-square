@@ -36,7 +36,6 @@ class RedisCacheService {
       }
 
       this.redis = new Redis(redisUrl, {
-        retryDelayOnFailover: 100,
         maxRetriesPerRequest: 3,
         lazyConnect: true,
         connectTimeout: 5000,
@@ -90,7 +89,7 @@ class RedisCacheService {
       // Fallback to in-memory cache
       const item = this.fallbackCache.get(key);
       if (item && item.expiresAt > Date.now()) {
-        return item.value;
+        return item.value as T;
       }
 
       // Remove expired item

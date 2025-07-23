@@ -1,19 +1,19 @@
 import { Pool } from 'pg';
 import { 
-  ScenarioRepository,
-  ProgramRepository, 
-  TaskRepository,
-  EvaluationRepository,
-  UserRepository
+  PostgreSQLScenarioRepository,
+  PostgreSQLProgramRepository, 
+  PostgreSQLTaskRepository,
+  PostgreSQLEvaluationRepository,
+  PostgreSQLUserRepository
 } from '../index';
 
 describe('Unified Schema Tests', () => {
   let pool: Pool;
-  let scenarioRepo: ScenarioRepository;
-  let programRepo: ProgramRepository;
-  let taskRepo: TaskRepository;
-  let evaluationRepo: EvaluationRepository;
-  let userRepo: UserRepository;
+  let scenarioRepo: PostgreSQLScenarioRepository;
+  let programRepo: PostgreSQLProgramRepository;
+  let taskRepo: PostgreSQLTaskRepository;
+  let evaluationRepo: PostgreSQLEvaluationRepository;
+  let userRepo: PostgreSQLUserRepository;
   
   let testUserId: string;
   let testScenarioIds: Record<string, string> = {};
@@ -30,11 +30,11 @@ describe('Unified Schema Tests', () => {
     });
 
     // Initialize repositories
-    scenarioRepo = new ScenarioRepository(pool);
-    programRepo = new ProgramRepository(pool);
-    taskRepo = new TaskRepository(pool);
-    evaluationRepo = new EvaluationRepository(pool);
-    userRepo = new UserRepository(pool);
+    scenarioRepo = new PostgreSQLScenarioRepository(pool);
+    programRepo = new PostgreSQLProgramRepository(pool);
+    taskRepo = new PostgreSQLTaskRepository(pool);
+    evaluationRepo = new PostgreSQLEvaluationRepository(pool);
+    userRepo = new PostgreSQLUserRepository(pool);
 
     // Create test user
     const userResult = await pool.query(`
@@ -46,7 +46,12 @@ describe('Unified Schema Tests', () => {
   });
 
   afterAll(async () => {
-    // Clean up test data
+    // Clean up test data in correct order due to foreign key constraints
+    await pool.query('DELETE FROM evaluations WHERE user_id = $1', [testUserId]);
+    await pool.query('DELETE FROM tasks WHERE program_id IN (SELECT id FROM programs WHERE user_id = $1)', [testUserId]);
+    await pool.query('DELETE FROM programs WHERE user_id = $1', [testUserId]);
+    await pool.query('DELETE FROM scenarios WHERE id IN ($1, $2, $3)', 
+      [testScenarioIds.pbl, testScenarioIds.discovery, testScenarioIds.assessment]);
     await pool.query('DELETE FROM users WHERE email = $1', ['test@example.com']);
     await pool.end();
   });
@@ -452,8 +457,9 @@ describe('Unified Schema Tests', () => {
           task_count
         FROM scenarios
         WHERE source_type = 'yaml'
+          AND id IN ($1, $2, $3)
         ORDER BY mode
-      `);
+      `, [testScenarioIds.pbl, testScenarioIds.discovery, testScenarioIds.assessment]);
 
       expect(scenarios.rows.length).toBe(3);
       

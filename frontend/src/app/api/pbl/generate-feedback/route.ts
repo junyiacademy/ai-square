@@ -329,10 +329,10 @@ export async function POST(request: NextRequest) {
       const scenario = await scenarioRepo.findById(scenarioId);
       if (scenario) {
         scenarioData = {
-          title: typeof scenario.title === 'string' ? scenario.title : (scenario.title as Record<string, string>)?.[language] || (scenario.title as Record<string, string>)?.en || '',
+          title: typeof scenario.title === 'string' ? scenario.title : (scenario.title as Record<string, string>)?.[language || 'en'] || (scenario.title as Record<string, string>)?.en || '',
           learning_objectives: scenario.metadata?.learningObjectives as string[] || [],
           scenario_info: {
-            title: typeof scenario.title === 'string' ? scenario.title : (scenario.title as Record<string, string>)?.[language] || (scenario.title as Record<string, string>)?.en || '',
+            title: typeof scenario.title === 'string' ? scenario.title : (scenario.title as Record<string, string>)?.[language || 'en'] || (scenario.title as Record<string, string>)?.en || '',
             learning_objectives: scenario.metadata?.learningObjectives as string[] || []
           }
         };
@@ -345,8 +345,8 @@ export async function POST(request: NextRequest) {
     const taskSummaries: TaskSummary[] = completionData.tasks?.map((task) => ({
       taskId: task.taskId,
       score: task.evaluation?.score || 0,
-      conversations: task.log?.interactions?.filter((i: any) => i.role === 'user')
-        .map((i: any) => i.content as string) || [],
+      conversations: task.log?.interactions?.filter((i: { role: string; context: string }) => i.role === 'user')
+        .map((i: { role: string; context: string }) => (i as { content?: unknown }).content as string || '') || [],
       feedback: task.evaluation?.feedback || '',
       strengths: task.evaluation?.strengths || [],
       improvements: task.evaluation?.improvements || []

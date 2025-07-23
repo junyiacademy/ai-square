@@ -24,7 +24,7 @@ export type TaskType =
   | 'quiz'
   | 'assessment';
 export type DifficultyLevel = 'beginner' | 'intermediate' | 'advanced' | 'expert';
-export type SourceType = 'yaml' | 'api' | 'ai-generated';
+export type SourceType = 'yaml' | 'api' | 'ai-generated' | 'manual';
 
 // ============================================
 // Database Table Types
@@ -205,6 +205,13 @@ export interface DBTask {
   
   // Extensible metadata
   metadata: Record<string, unknown>;
+}
+
+export interface DBInteraction {
+  timestamp: Date;
+  type: 'user_input' | 'ai_response' | 'system_event';
+  content: unknown;
+  metadata?: Record<string, unknown>;
 }
 
 export interface DBEvaluation {

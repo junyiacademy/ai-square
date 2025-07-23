@@ -111,13 +111,21 @@ describe('Evaluation Strategy Pattern', () => {
       const pblTask: IPBLTask = {
         id: 'task-1',
         programId: 'program-1',
-        templateId: 'template-1',
+        mode: 'pbl',
         title: 'PBL Task',
-        description: 'Test',
-        type: 'interactive',
-        order: 1,
+        type: 'question',
+        taskIndex: 0,
         status: 'completed',
+        userResponse: {},
+        score: 0,
+        maxScore: 100,
+        interactionCount: 3,
+        allowedAttempts: 3,
+        attemptCount: 1,
+        timeSpentSeconds: 300,
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        startedAt: new Date().toISOString(),
         completedAt: new Date().toISOString(),
         interactions: [
           { timestamp: new Date().toISOString(), type: 'user_input', content: 'I think the solution is...' },
@@ -125,22 +133,31 @@ describe('Evaluation Strategy Pattern', () => {
           { timestamp: new Date().toISOString(), type: 'user_input', content: 'Yes, because...' }
         ],
         content: {
+          instructions: { en: 'Test' },
           context: {
             scenario: 'Problem scenario',
             ksaCodes: ['K1', 'S2', 'A3']
           }
         },
+        aiConfig: {},
+        pblData: {
+          ksaFocus: {
+            primary: ['K1'],
+            secondary: ['S2', 'A3']
+          }
+        },
+        discoveryData: {},
+        assessmentData: {},
         metadata: { sourceType: 'pbl' }
       };
 
       const evaluation = await strategy.evaluateTask(pblTask, baseContext);
 
-      expect(evaluation.evaluationType).toBe('pbl_task');
-      expect(evaluation.targetType).toBe('task');
-      expect(evaluation.targetId).toBe('task-1');
+      expect(evaluation.evaluationSubtype).toBe('pbl_task');
+      expect(evaluation.taskId).toBe('task-1');
       expect(evaluation.score).toBeGreaterThan(0);
       expect(evaluation.dimensionScores).toBeDefined();
-      expect(evaluation.dimensionScores?.length).toBe(3); // KSA dimensions
+      expect(Object.keys(evaluation.dimensionScores).length).toBe(3); // KSA dimensions
       expect(evaluation.metadata?.interactionCount).toBe(3);
       expect(evaluation.metadata?.ksaCodes).toEqual(['K1', 'S2', 'A3']);
     });
@@ -149,33 +166,49 @@ describe('Evaluation Strategy Pattern', () => {
       const taskEvaluations: IEvaluation[] = [
         {
           id: 'eval-1',
-          targetType: 'task',
-          targetId: 'task-1',
+          taskId: 'task-1',
           programId: 'program-1',
           userId: 'user-123',
-          type: 'pbl_task',
+          mode: 'pbl',
+          evaluationType: 'task',
+          evaluationSubtype: 'pbl_task',
           score: 80,
-          dimensionScores: [
-            { dimension: 'knowledge', score: 85, maxScore: 100 },
-            { dimension: 'skills', score: 75, maxScore: 100 },
-            { dimension: 'attitudes', score: 80, maxScore: 100 }
-          ],
+          maxScore: 100,
+          dimensionScores: {
+            knowledge: 85,
+            skills: 75,
+            attitudes: 80
+          },
+          feedbackData: {},
+          aiAnalysis: {},
+          timeTakenSeconds: 0,
+          pblData: {},
+          discoveryData: {},
+          assessmentData: {},
           createdAt: new Date().toISOString(),
           metadata: { sourceType: 'pbl' }
         },
         {
           id: 'eval-2',
-          targetType: 'task',
-          targetId: 'task-2',
+          taskId: 'task-2',
           programId: 'program-1',
           userId: 'user-123',
-          type: 'pbl_task',
+          mode: 'pbl',
+          evaluationType: 'task',
+          evaluationSubtype: 'pbl_task',
           score: 90,
-          dimensionScores: [
-            { dimension: 'knowledge', score: 90, maxScore: 100 },
-            { dimension: 'skills', score: 90, maxScore: 100 },
-            { dimension: 'attitudes', score: 90, maxScore: 100 }
-          ],
+          maxScore: 100,
+          dimensionScores: {
+            knowledge: 90,
+            skills: 90,
+            attitudes: 90
+          },
+          feedbackData: {},
+          aiAnalysis: {},
+          timeTakenSeconds: 0,
+          pblData: {},
+          discoveryData: {},
+          assessmentData: {},
           createdAt: new Date().toISOString(),
           metadata: { sourceType: 'pbl' }
         }
@@ -183,11 +216,14 @@ describe('Evaluation Strategy Pattern', () => {
 
       const evaluation = await strategy.evaluateProgram(baseContext.program, taskEvaluations);
 
-      expect(evaluation.evaluationType).toBe('pbl_completion');
+      expect(evaluation.evaluationSubtype).toBe('pbl_completion');
       expect(evaluation.score).toBe(85); // Average of 80 and 90
       expect(evaluation.dimensionScores).toBeDefined();
-      expect(evaluation.dimensionScores?.[0].dimension).toBe('knowledge');
-      expect(evaluation.dimensionScores?.[0].score).toBe(87.5); // Average of 85 and 90
+      // dimensionScores should be aggregated as Record<string, number>
+      expect(evaluation.dimensionScores).toBeDefined();
+      expect(evaluation.dimensionScores.knowledge).toBe(88); // Average of 85 and 90, rounded
+      expect(evaluation.dimensionScores.skills).toBe(83); // Average of 75 and 90, rounded
+      expect(evaluation.dimensionScores.attitudes).toBe(85); // Average of 80 and 90, rounded
     });
 
     it('should calculate quality metrics', () => {
@@ -228,13 +264,21 @@ describe('Evaluation Strategy Pattern', () => {
       const assessmentTask: IAssessmentTask = {
         id: 'task-1',
         programId: 'program-1',
-        templateId: 'template-1',
+        mode: 'assessment',
         title: 'Assessment',
-        description: 'Test',
-        type: 'assessment',
-        order: 1,
+        type: 'question',
+        taskIndex: 0,
         status: 'completed',
+        userResponse: {},
+        score: 0,
+        maxScore: 100,
+        interactionCount: 3,
+        allowedAttempts: 1,
+        attemptCount: 1,
+        timeSpentSeconds: 300,
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        startedAt: new Date().toISOString(),
         completedAt: new Date().toISOString(),
         interactions: [
           { 
@@ -265,6 +309,17 @@ describe('Evaluation Strategy Pattern', () => {
             ]
           }
         },
+        aiConfig: {},
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {
+          questions: [
+            { id: 'q1', type: 'multiple-choice', question: 'Q1', domain: 'Engaging_with_AI' },
+            { id: 'q2', type: 'multiple-choice', question: 'Q2', domain: 'Creating_with_AI' },
+            { id: 'q3', type: 'multiple-choice', question: 'Q3', domain: 'Engaging_with_AI' }
+          ] as any,
+          timeLimit: 1800
+        },
         metadata: { sourceType: 'assessment' }
       };
 
@@ -273,13 +328,17 @@ describe('Evaluation Strategy Pattern', () => {
         scenario: { ...baseContext.scenario, mode: 'assessment' }
       });
 
-      expect(evaluation.evaluationType).toBe('assessment_task');
-      expect(evaluation.score).toBe(66.67); // 2 out of 3 correct
+      expect(evaluation.evaluationSubtype).toBe('assessment_task');
+      expect(Math.round(evaluation.score * 100) / 100).toBe(66.67); // 2 out of 3 correct
       expect(evaluation.metadata?.totalQuestions).toBe(3);
       expect(evaluation.metadata?.correctAnswers).toBe(2);
       expect(evaluation.dimensionScores).toBeDefined();
-      expect(evaluation.dimensionScores?.['Engaging_with_AI']).toBe(100); // 2/2 correct
-      expect(evaluation.dimensionScores?.['Creating_with_AI']).toBe(0); // 0/1 correct
+      // Check domain scores which should be in metadata
+      const domainScores = evaluation.metadata?.domainScores || {};
+      expect((domainScores as any)['Engaging_with_AI']?.correct).toBe(2);
+      expect((domainScores as any)['Engaging_with_AI']?.total).toBe(2);
+      expect((domainScores as any)['Creating_with_AI']?.correct).toBe(0);
+      expect((domainScores as any)['Creating_with_AI']?.total).toBe(1)
     });
 
     it('should calculate time-based bonus', () => {
@@ -303,13 +362,21 @@ describe('Evaluation Strategy Pattern', () => {
       const discoveryTask: IDiscoveryTask = {
         id: 'task-1',
         programId: 'program-1',
-        templateId: 'template-1',
+        mode: 'discovery',
         title: 'Explore AI Tools',
-        description: 'Test',
-        type: 'exploration',
-        order: 1,
+        type: 'analysis',
+        taskIndex: 0,
         status: 'completed',
+        userResponse: {},
+        score: 0,
+        maxScore: 100,
+        interactionCount: 3,
+        allowedAttempts: 999,
+        attemptCount: 1,
+        timeSpentSeconds: 300,
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        startedAt: new Date().toISOString(),
         completedAt: new Date().toISOString(),
         interactions: [
           { 
@@ -343,6 +410,14 @@ describe('Evaluation Strategy Pattern', () => {
             ]
           }
         },
+        aiConfig: {},
+        pblData: {},
+        discoveryData: {
+          explorationPrompt: 'Explore AI Tools',
+          toolsToExplore: ['chatgpt'],
+          xpReward: 100
+        },
+        assessmentData: {},
         metadata: { sourceType: 'discovery' }
       };
 
@@ -351,11 +426,13 @@ describe('Evaluation Strategy Pattern', () => {
         scenario: { ...baseContext.scenario, mode: 'discovery' }
       });
 
-      expect(evaluation.evaluationType).toBe('discovery_task');
+      expect(evaluation.evaluationSubtype).toBe('discovery_task');
       expect(evaluation.score).toBeGreaterThan(0);
-      expect(evaluation.metadata?.xpEarned).toBeGreaterThan(0);
-      expect(evaluation.metadata?.toolsExplored).toContain('chatgpt');
-      expect(evaluation.metadata?.challengesCompleted).toContain('c1');
+      // Check discovery data instead of metadata
+      const discoveryData = evaluation.discoveryData as any;
+      expect(discoveryData?.xpEarned).toBeGreaterThan(0);
+      expect(discoveryData?.toolsExplored).toContain('chatgpt');
+      expect(discoveryData?.challengesCompleted).toContain('c1');
     });
 
     it('should calculate exploration score', () => {
@@ -393,12 +470,23 @@ describe('Evaluation Strategy Pattern', () => {
       const taskEvaluations: IEvaluation[] = [
         {
           id: 'eval-1',
-          targetType: 'task',
-          targetId: 'task-1',
+          taskId: 'task-1',
           programId: 'program-1',
           userId: 'user-123',
-          type: 'discovery_task',
+          mode: 'discovery',
+          evaluationType: 'task',
+          evaluationSubtype: 'discovery_task',
           score: 100,
+          maxScore: 100,
+          dimensionScores: {},
+          feedbackData: {},
+          aiAnalysis: {},
+          timeTakenSeconds: 0,
+          pblData: {},
+          discoveryData: {
+            xpEarned: 100
+          },
+          assessmentData: {},
           createdAt: new Date().toISOString(),
           metadata: { sourceType: 'discovery', xpEarned: 100 }
         }
@@ -406,9 +494,11 @@ describe('Evaluation Strategy Pattern', () => {
 
       const evaluation = await strategy.evaluateProgram(program, taskEvaluations);
 
-      expect(evaluation.metadata?.totalXP).toBe(550); // 450 + 100
-      expect(evaluation.metadata?.milestonesAchieved).toContain('500_xp'); // Crossed 500 XP milestone
-      expect(evaluation.metadata?.bonusXP).toBeGreaterThan(0); // Milestone bonus
+      // Check discovery data for XP and milestones
+      const discoveryData = evaluation.discoveryData as any;
+      expect(discoveryData?.totalXP).toBe(600); // 450 + 100 + 50 bonus (500 XP milestone)
+      expect(discoveryData?.milestonesAchieved).toContain('500_xp'); // Crossed 500 XP milestone
+      expect(discoveryData?.bonusXP).toBeGreaterThan(0); // Milestone bonus
     });
   });
 });

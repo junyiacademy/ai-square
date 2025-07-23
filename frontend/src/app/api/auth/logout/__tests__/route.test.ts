@@ -1,6 +1,23 @@
 import { POST } from '../route';
 import { cookies } from 'next/headers';
 
+// Mock cookies set
+const mockCookiesSet = jest.fn();
+
+// Mock NextResponse
+jest.mock('next/server', () => ({
+  NextResponse: {
+    json: (data: any, init?: ResponseInit) => {
+      const response = new Response(JSON.stringify(data), init);
+      Object.defineProperty(response, 'cookies', {
+        value: { set: mockCookiesSet },
+        writable: false,
+      });
+      return response;
+    }
+  }
+}));
+
 // Mock next/headers
 jest.mock('next/headers', () => ({
   cookies: jest.fn()
@@ -10,6 +27,9 @@ describe('/api/auth/logout', () => {
   const mockCookies = cookies as jest.MockedFunction<typeof cookies>;
   
   beforeEach(() => {
+    jest.clearAllMocks();
+    mockCookiesSet.mockClear();
+    
     // Mock the cookies function
     const mockCookieStore = {
       delete: jest.fn()
@@ -25,25 +45,27 @@ describe('/api/auth/logout', () => {
       expect(data.success).toBe(true);
       expect(data.message).toBe('Logged out successfully');
 
-      // Check that cookies are cleared (Max-Age=0)
-      const cookies = response.headers.getSetCookie();
-      expect(cookies).toContainEqual(expect.stringMatching(/accessToken=;.*Max-Age=0/));
-      expect(cookies).toContainEqual(expect.stringMatching(/refreshToken=;.*Max-Age=0/));
-      expect(cookies).toContainEqual(expect.stringMatching(/isLoggedIn=;.*Max-Age=0/));
-      expect(cookies).toContainEqual(expect.stringMatching(/user=;.*Max-Age=0/));
-      expect(cookies).toContainEqual(expect.stringMatching(/rememberMe=;.*Max-Age=0/));
+      // Check that cookies are cleared with maxAge=0
+      expect(mockCookiesSet).toHaveBeenCalledWith('accessToken', '', expect.objectContaining({ maxAge: 0 }));
+      expect(mockCookiesSet).toHaveBeenCalledWith('refreshToken', '', expect.objectContaining({ maxAge: 0 }));
+      expect(mockCookiesSet).toHaveBeenCalledWith('isLoggedIn', '', expect.objectContaining({ maxAge: 0 }));
+      expect(mockCookiesSet).toHaveBeenCalledWith('user', '', expect.objectContaining({ maxAge: 0 }));
+      expect(mockCookiesSet).toHaveBeenCalledWith('rememberMe', '', expect.objectContaining({ maxAge: 0 }));
     });
 
     it('should have proper cookie settings', async () => {
       const response = await POST();
-      const cookies = response.headers.getSetCookie();
 
       // Check that all cookies have proper security settings
-      cookies.forEach(cookie => {
-        expect(cookie).toContain('HttpOnly');
-        expect(cookie).toContain('SameSite=Lax');
-        expect(cookie).toContain('Path=/');
-      });
+      expect(mockCookiesSet).toHaveBeenCalledWith(
+        expect.any(String), 
+        '', 
+        expect.objectContaining({
+          httpOnly: true,
+          sameSite: 'lax',
+          path: '/'
+        })
+      );
     });
   });
 

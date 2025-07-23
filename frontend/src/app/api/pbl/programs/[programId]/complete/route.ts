@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import crypto from 'crypto';
-import { Task, Evaluation } from '@/lib/repositories/interfaces';
+// Removed unused imports
 
 // Helper function to generate sync checksum
 interface TaskWithEvaluation {
@@ -150,7 +150,7 @@ export async function POST(
         const firstInteraction = interactions[0];
         const lastInteraction = interactions[interactions.length - 1];
         const taskTime = Math.floor(
-          (new Date(lastInteraction.createdAt).getTime() - new Date(firstInteraction.createdAt).getTime()) / 1000
+          (new Date(lastInteraction.timestamp).getTime() - new Date(firstInteraction.timestamp).getTime()) / 1000
         );
         totalTimeSeconds += taskTime;
         
@@ -248,7 +248,7 @@ export async function POST(
       // Update program with evaluation ID
       await programRepo.update?.(programId, {
         status: 'completed' as const,
-        endTime: new Date(),
+        completedAt: new Date().toISOString(),
         metadata: {
           ...program.metadata,
           evaluationId: programEvaluation.id,

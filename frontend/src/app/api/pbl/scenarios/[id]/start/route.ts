@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { IProgram, ITask } from '@/types/unified-learning';
+import { ITask } from '@/types/unified-learning';
 
 
 
@@ -78,7 +78,7 @@ export async function POST(
     }
     
     // Extract tasks from scenario
-    const tasks = scenario.tasks || [];
+    const tasks = scenario.taskTemplates || [];
     
     // Use unified architecture - get repositories
     const programRepo = repositoryFactory.getProgramRepository();
@@ -90,17 +90,26 @@ export async function POST(
     const program = await programRepo.create({
       scenarioId: scenario.id, // Use scenario UUID
       userId: userEmail,
-      totalTaskCount: tasks.length,
       mode: 'pbl',
       status: 'active',
+      currentTaskIndex: 0,
+      completedTaskCount: 0,
+      totalTaskCount: tasks.length,
+      totalScore: 0,
+      dimensionScores: {},
+      xpEarned: 0,
+      badgesEarned: [],
       createdAt: new Date().toISOString(),
       startedAt: new Date().toISOString(),
-      currentTaskIndex: 0,
-      language,
+      updatedAt: new Date().toISOString(),
+      lastActivityAt: new Date().toISOString(),
+      timeSpentSeconds: 0,
       pblData: {},
       discoveryData: {},
       assessmentData: {},
-      metadata: {}
+      metadata: {
+        language
+      }
     });
     
     console.log('   ✅ Program created with UUID:', program.id);

@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import type { TaskType } from '@/types/database';
 import { getServerSession } from '@/lib/auth/session';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { ITask } from '@/types/unified-learning';
 import { DiscoveryYAMLLoader } from '@/lib/services/discovery-yaml-loader';
-import { 
-  convertScenarioToIScenario, 
-  convertProgramToIProgram, 
-  convertTaskToITask 
-} from '@/lib/utils/type-converters';
+// Type converters no longer needed - repositories return correct types
 
 // Task templates for discovery scenarios
 const DISCOVERY_TASK_TEMPLATES = [
@@ -117,23 +114,32 @@ export async function POST(
     if (!rawScenario) {
       return NextResponse.json({ error: 'Scenario not found' }, { status: 404 });
     }
-    const scenario = convertScenarioToIScenario(rawScenario);
+    const scenario = rawScenario;
     
     // Create program following unified architecture
     const rawProgram = await programRepo.create({
       scenarioId: scenarioId,
       userId: userEmail,
-      totalTaskCount: 0,  // Will be updated after creating tasks
       mode: 'discovery',
       status: 'active',
-      createdAt: new Date().toISOString(),
-      startedAt: new Date().toISOString(),
       currentTaskIndex: 0,
-      language: 'en',
+      completedTaskCount: 0,
+      totalTaskCount: 0,  // Will be updated after creating tasks
+      totalScore: 0,
+      dimensionScores: {},
+      xpEarned: 0,
+      badgesEarned: [],
+      timeSpentSeconds: 0,
       pblData: {},
       discoveryData: {},
       assessmentData: {},
-      metadata: {}
+      createdAt: new Date().toISOString(),
+      startedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      lastActivityAt: new Date().toISOString(),
+      metadata: {
+        language: 'en'
+      }
     });
     
     // Update program with metadata
@@ -149,7 +155,7 @@ export async function POST(
       }
     });
     
-    const program = convertProgramToIProgram(updatedRawProgram);
+    const program = updatedRawProgram || rawProgram;
     
     // Get language from request body
     let language = 'en';
@@ -176,7 +182,7 @@ export async function POST(
         for (let i = 0; i < taskTemplates.length; i++) {
           const template = taskTemplates[i];
           const rawTask = await taskRepo.create({
-            programId: program.id,
+            programId: program?.id || rawProgram.id,
             mode: 'discovery',
             taskIndex: i,
             scenarioTaskIndex: i,
@@ -211,7 +217,7 @@ export async function POST(
               language: language
             }
           });
-          createdTasks.push(convertTaskToITask(rawTask));
+          createdTasks.push(rawTask);
         }
       }
     } else {
@@ -240,7 +246,7 @@ export async function POST(
         for (const taskTitle of startingTasks.slice(0, 2)) {
           const currentTaskIndex = taskIndex++;
           const rawTask = await taskRepo.create({
-            programId: program.id,
+            programId: program?.id || rawProgram.id,
             mode: 'discovery',
             taskIndex: currentTaskIndex,
             scenarioTaskIndex: currentTaskIndex,
@@ -275,7 +281,7 @@ export async function POST(
             assessmentData: {},
             metadata: {}
           });
-          createdTasks.push(convertTaskToITask(rawTask));
+          createdTasks.push(rawTask);
         }
         
         // Then add some beginner and intermediate tasks
@@ -287,13 +293,13 @@ export async function POST(
         for (const exampleTask of selectedTasks) {
           const currentTaskIndex = taskIndex++;
           const rawTask = await taskRepo.create({
-            programId: program.id,
+            programId: program?.id || rawProgram.id,
             mode: 'discovery',
             taskIndex: currentTaskIndex,
             scenarioTaskIndex: currentTaskIndex,
             title: exampleTask.title as string,
             description: exampleTask.description as string,
-            type: exampleTask.type as string || 'analysis',
+            type: (exampleTask.type as TaskType) || 'analysis',
             status: 'pending',
             content: {
               scenarioId: scenario.id,
@@ -323,14 +329,14 @@ export async function POST(
             assessmentData: {},
             metadata: {}
           });
-          createdTasks.push(convertTaskToITask(rawTask));
+          createdTasks.push(rawTask);
         }
       } else {
         // Fallback to default templates if no YAML data
         for (let i = 0; i < DISCOVERY_TASK_TEMPLATES.length; i++) {
           const template = DISCOVERY_TASK_TEMPLATES[i];
           const rawTask = await taskRepo.create({
-            programId: program.id,
+            programId: program?.id || rawProgram.id,
             mode: 'discovery',
             taskIndex: i,
             scenarioTaskIndex: i,
@@ -365,7 +371,7 @@ export async function POST(
             assessmentData: {},
             metadata: {}
           });
-          createdTasks.push(convertTaskToITask(rawTask));
+          createdTasks.push(rawTask);
         }
       }
     }
@@ -427,7 +433,7 @@ export async function GET(
     // Find programs for this user and scenario
     // Get all programs for this scenario and filter by user
     const rawPrograms = await programRepo.findByScenario(scenarioId);
-    const allPrograms = rawPrograms.map(convertProgramToIProgram);
+    const allPrograms = rawPrograms;
     const programs = allPrograms.filter(p => p.userId === userEmail);
     
     // For each program, load task details and evaluations
@@ -442,7 +448,7 @@ export async function GET(
         // Filter out any null tasks and convert to ITask
         const validTasks = rawTasks
           .filter(Boolean)
-          .map(task => convertTaskToITask(task!));
+          .map(task => task!);
           
         // Get evaluations from task metadata
         const evaluations = validTasks

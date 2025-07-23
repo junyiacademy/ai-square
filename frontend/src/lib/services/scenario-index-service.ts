@@ -47,14 +47,14 @@ class ScenarioIndexService {
       const yamlId = scenario.sourceMetadata?.yamlId;
       if (yamlId) {
         const entry: ScenarioIndexEntry = {
-          yamlId,
+          yamlId: yamlId as string,
           uuid: scenario.id,
-          sourceType: scenario.sourceType as 'pbl' | 'assessment' | 'discovery',
-          title: scenario.title,
+          sourceType: scenario.mode as 'pbl' | 'assessment' | 'discovery',
+          title: typeof scenario.title === 'object' && scenario.title.en ? scenario.title.en : undefined,
           lastUpdated: scenario.updatedAt || scenario.createdAt
         };
 
-        yamlToUuid.set(yamlId, entry);
+        yamlToUuid.set(yamlId as string, entry);
         uuidToYaml.set(scenario.id, entry);
       }
     }
@@ -156,14 +156,18 @@ class ScenarioIndexService {
       lastUpdated: index.lastUpdated
     };
 
-    await cacheService.set(this.CACHE_KEY, serializable, this.CACHE_TTL);
+    await cacheService.set(this.CACHE_KEY, serializable, { ttl: this.CACHE_TTL });
   }
 
   /**
    * Load index from cache
    */
   private async loadFromCache(): Promise<ScenarioIndex | null> {
-    const cached = await cacheService.get(this.CACHE_KEY);
+    const cached = await cacheService.get(this.CACHE_KEY) as {
+      yamlToUuid: Array<[string, ScenarioIndexEntry]>;
+      uuidToYaml: Array<[string, ScenarioIndexEntry]>;
+      lastUpdated: string;
+    } | null;
     if (!cached) return null;
 
     // Reconstruct Maps from arrays
@@ -186,7 +190,9 @@ class ScenarioIndexService {
    * Check if index exists
    */
   async exists(): Promise<boolean> {
-    return this.memoryIndex !== null || await cacheService.has(this.CACHE_KEY);
+    if (this.memoryIndex !== null) return true;
+    const cached = await cacheService.get(this.CACHE_KEY);
+    return cached !== null;
   }
 }
 

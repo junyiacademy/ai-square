@@ -25,22 +25,33 @@ describe('ScenarioTranslationService', () => {
   describe('loadTranslation', () => {
     const mockScenario: IScenario = {
       id: 'scenario-123',
-      sourceType: 'assessment',
+      mode: 'assessment',
+      status: 'active',
+      version: '1.0.0',
+      sourceType: 'yaml',
+      sourceId: 'ai_literacy',
+      sourceMetadata: {
+        folderName: 'ai_literacy',
+        basePath: 'assessment_data/ai_literacy'
+      },
       title: { en: 'AI Literacy Assessment' },
       description: { en: 'Evaluate your understanding' },
-      taskTemplates: [],
-      metadata: {},
       objectives: [],
+      difficulty: 'intermediate',
+      estimatedMinutes: 30,
+      prerequisites: [],
+      taskTemplates: [],
+      taskCount: 0,
+      xpRewards: {},
+      unlockRequirements: {},
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {},
+      aiModules: {},
+      resources: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      sourceRef: {
-        type: 'yaml',
-        sourceId: 'ai_literacy',
-        metadata: {
-          folderName: 'ai_literacy',
-          basePath: 'assessment_data/ai_literacy'
-        }
-      }
+      metadata: {}
     };
 
     it('should load translation from YAML file for non-English language', async () => {
@@ -123,21 +134,32 @@ assessment_config:
   describe('translateScenario', () => {
     const mockScenario: IScenario = {
       id: 'scenario-123',
-      sourceType: 'assessment',
+      mode: 'assessment',
+      status: 'active',
+      version: '1.0.0',
+      sourceType: 'yaml',
+      sourceId: 'ai_literacy',
+      sourceMetadata: {
+        folderName: 'ai_literacy'
+      },
       title: { en: 'AI Literacy Assessment' },
       description: { en: 'Evaluate your understanding' },
-      taskTemplates: [],
-      metadata: {},
       objectives: [],
+      difficulty: 'intermediate',
+      estimatedMinutes: 30,
+      prerequisites: [],
+      taskTemplates: [],
+      taskCount: 0,
+      xpRewards: {},
+      unlockRequirements: {},
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {},
+      aiModules: {},
+      resources: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      sourceRef: {
-        type: 'yaml',
-        sourceId: 'ai_literacy',
-        metadata: {
-          folderName: 'ai_literacy'
-        }
-      }
+      metadata: {}
     };
 
     it('should return original scenario for English', async () => {
@@ -162,8 +184,8 @@ assessment_config:
       const result = await service.translateScenario(mockScenario, 'zhTW');
 
       // Assert
-      expect(result.title).toBe('AI 素養評估');
-      expect(result.description).toBe('評估您對 AI 系統的理解');
+      expect(result.title).toEqual({ zhTW: 'AI 素養評估' });
+      expect(result.description).toEqual({ zhTW: '評估您對 AI 系統的理解' });
       expect(result.metadata.translatedFrom).toBe('yaml');
       expect(result.metadata.config).toEqual({ totalQuestions: 12 });
     });
@@ -185,39 +207,67 @@ assessment_config:
   describe('translateMultipleScenarios', () => {
     it('should translate multiple scenarios in parallel', async () => {
       // Arrange
-      const scenarios = [
+      const scenarios: IScenario[] = [
         {
           id: '1',
-          sourceType: 'assessment' as const,
-          title: 'Test 1',
-          description: 'Desc 1',
+          mode: 'assessment',
+          status: 'active',
+          version: '1.0.0',
+          sourceType: 'yaml',
+          sourceId: 'test1',
+          sourceMetadata: { folderName: 'test1' },
+          title: { en: 'Test 1' },
+          description: { en: 'Desc 1' },
+          objectives: [],
+          difficulty: 'intermediate',
+          estimatedMinutes: 30,
+          prerequisites: [],
           taskTemplates: [],
-          metadata: {},
-          sourceRef: {
-            type: 'yaml' as const,
-            sourceId: 'test1',
-            metadata: { folderName: 'test1' }
-          }
+          taskCount: 0,
+          xpRewards: {},
+          unlockRequirements: {},
+          pblData: {},
+          discoveryData: {},
+          assessmentData: {},
+          aiModules: {},
+          resources: [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          metadata: {}
         },
         {
           id: '2',
-          sourceType: 'assessment' as const,
-          title: 'Test 2',
-          description: 'Desc 2',
+          mode: 'assessment',
+          status: 'active',
+          version: '1.0.0',
+          sourceType: 'yaml',
+          sourceId: 'test2',
+          sourceMetadata: { folderName: 'test2' },
+          title: { en: 'Test 2' },
+          description: { en: 'Desc 2' },
+          objectives: [],
+          difficulty: 'intermediate',
+          estimatedMinutes: 30,
+          prerequisites: [],
           taskTemplates: [],
-          metadata: {},
-          sourceRef: {
-            type: 'yaml' as const,
-            sourceId: 'test2',
-            metadata: { folderName: 'test2' }
-          }
+          taskCount: 0,
+          xpRewards: {},
+          unlockRequirements: {},
+          pblData: {},
+          discoveryData: {},
+          assessmentData: {},
+          aiModules: {},
+          resources: [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          metadata: {}
         }
       ];
 
       const translateSpy = jest.spyOn(service, 'translateScenario')
-        .mockImplementation(async (scenario) => ({
+        .mockImplementation(async (scenario: IScenario, language: string): Promise<IScenario> => ({
           ...scenario,
-          title: `Translated ${scenario.title}`
+          title: { [language]: `Translated ${scenario.title.en || ''}` }
         }));
 
       // Act
@@ -225,8 +275,8 @@ assessment_config:
 
       // Assert
       expect(results).toHaveLength(2);
-      expect(results[0].title).toBe('Translated Test 1');
-      expect(results[1].title).toBe('Translated Test 2');
+      expect(results[0].title.zhTW).toBe('Translated Test 1');
+      expect(results[1].title.zhTW).toBe('Translated Test 2');
       expect(translateSpy).toHaveBeenCalledTimes(2);
     });
   });
@@ -236,19 +286,30 @@ assessment_config:
       // Arrange
       const scenario: IScenario = {
         id: 'scenario-123',
-        sourceType: 'assessment',
+        mode: 'assessment',
+        status: 'active',
+        version: '1.0.0',
+        sourceType: 'yaml',
+        sourceId: 'test',
+        sourceMetadata: { folderName: 'test' },
         title: { en: 'Test' },
         description: { en: 'Test' },
-        taskTemplates: [],
-        metadata: {},
         objectives: [],
+        difficulty: 'intermediate',
+        estimatedMinutes: 30,
+        prerequisites: [],
+        taskTemplates: [],
+        taskCount: 0,
+        xpRewards: {},
+        unlockRequirements: {},
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
+        aiModules: {},
+        resources: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        sourceRef: {
-          type: 'yaml',
-          sourceId: 'test',
-          metadata: { folderName: 'test' }
-        }
+        metadata: {}
       };
 
       mockFs.readFile.mockResolvedValue('title: 測試');
@@ -272,19 +333,30 @@ assessment_config:
       
       const scenario: IScenario = {
         id: 'scenario-123',
-        sourceType: 'assessment',
+        mode: 'assessment',
+        status: 'active',
+        version: '1.0.0',
+        sourceType: 'yaml',
+        sourceId: 'test',
+        sourceMetadata: { folderName: 'test' },
         title: { en: 'Test' },
         description: { en: 'Test' },
-        taskTemplates: [],
-        metadata: {},
         objectives: [],
+        difficulty: 'intermediate',
+        estimatedMinutes: 30,
+        prerequisites: [],
+        taskTemplates: [],
+        taskCount: 0,
+        xpRewards: {},
+        unlockRequirements: {},
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
+        aiModules: {},
+        resources: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        sourceRef: {
-          type: 'yaml',
-          sourceId: 'test',
-          metadata: { folderName: 'test' }
-        }
+        metadata: {}
       };
 
       mockFs.readFile.mockResolvedValue('title: 測試');

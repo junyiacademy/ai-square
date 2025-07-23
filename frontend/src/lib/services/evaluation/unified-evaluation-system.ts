@@ -10,9 +10,10 @@ import {
   IProgram, 
   IEvaluationContext,
   IDimensionScore,
-  IInteraction 
+  IInteraction
 } from '@/types/unified-learning';
 import { BaseAIService } from '@/lib/abstractions/base-ai-service';
+import type { SourceType, LearningMode } from '@/types/database';
 import { v4 as uuidv4 } from 'uuid';
 
 export class UnifiedEvaluationSystem implements IEvaluationSystem {
@@ -23,7 +24,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
    */
   async evaluateTask(task: ITask, context: IEvaluationContext): Promise<IEvaluation> {
     // 根據不同的 scenario 類型選擇評估策略
-    switch (context.scenario.sourceType) {
+    switch (context.scenario.mode) {
       case 'pbl':
         return this.evaluatePBLTask(task, context);
       case 'assessment':
@@ -63,6 +64,13 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       }
     });
 
+    // Convert to Record<string, number> for dimensionScores
+    const dimensionScores: Record<string, number> = {};
+    Array.from(dimensionMap.entries()).forEach(([dimension, data]) => {
+      dimensionScores[dimension] = data.total / data.count;
+    });
+
+    // Store detailed dimension data in metadata
     const aggregatedDimensions: IDimensionScore[] = Array.from(dimensionMap.entries()).map(([dimension, data]) => ({
       dimension,
       score: data.total / data.count,
@@ -81,19 +89,19 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       maxScore: 100,
       feedbackText: await this.generateProgramFeedback(program, taskEvaluations),
       feedbackData: {},
-      dimensionScores: aggregatedDimensions,
+      dimensionScores: dimensionScores,
       aiAnalysis: {},
       timeTakenSeconds: program.timeSpentSeconds || 0,
       pblData: {},
       discoveryData: {},
       assessmentData: {},
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
       metadata: {
         targetType: 'program',
         taskCount: taskEvaluations.length,
         completionTime: this.calculateCompletionTime(program),
-        sourceType: program.metadata?.sourceType
+        sourceType: program.metadata?.sourceType,
+        aggregatedDimensions: aggregatedDimensions
       }
     } as IEvaluation;
   }
@@ -111,7 +119,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
         temperature: 0.7
       });
       
-      return response.text || evaluation.feedbackText || 'No feedback available';
+      return response.content || evaluation.feedbackText || 'No feedback available';
     } catch (error) {
       console.error('Error generating feedback:', error);
       return evaluation.feedbackText || 'No feedback available';
@@ -155,10 +163,9 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       discoveryData: {},
       assessmentData: {},
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
       metadata: {
         interactionCount: interactions.length,
-        ksaCodes: task.content.context?.ksaCodes || [],
+        ksaCodes: (task.content.context as any)?.ksaCodes || [],
         sourceType: 'pbl',
         targetType: 'task'
       }
@@ -170,7 +177,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
    */
   private async evaluateAssessmentTask(task: ITask, context: IEvaluationContext): Promise<IEvaluation> {
     const interactions = task.interactions;
-    const questions = task.content.context?.questions || [];
+    const questions = (task.content.context as any)?.questions || [];
     
     // 計算正確率
     const correctAnswers = interactions.filter(i => 
@@ -201,7 +208,6 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       discoveryData: {},
       assessmentData: {},
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
       metadata: {
         targetType: 'task',
         totalQuestions: questions.length,
@@ -240,11 +246,10 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       pblData: {},
       discoveryData: {
         xpEarned,
-        skillsImproved: task.content.context?.requiredSkills || []
+        skillsImproved: (task.content as any).context?.requiredSkills || []
       },
       assessmentData: {},
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
       metadata: {
         targetType: 'task',
         sourceType: 'discovery'
@@ -278,7 +283,6 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       discoveryData: {},
       assessmentData: {},
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
       metadata: {
         targetType: 'task',
         interactionCount: interactions.length,
@@ -307,7 +311,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
   /**
    * 計算領域分數
    */
-  private calculateDomainScores(interactions: IInteraction[], questions: { domain?: string; [key: string]: unknown }[]): IDimensionScore[] {
+  private calculateDomainScores(interactions: IInteraction[], questions: { domain?: string; [key: string]: unknown }[]): Record<string, number> {
     const domainMap = new Map<string, { correct: number; total: number }>();
     
     interactions.forEach((interaction, index) => {
@@ -322,12 +326,12 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       }
     });
 
-    return Array.from(domainMap.entries()).map(([domain, stats]) => ({
-      dimension: domain,
-      score: (stats.correct / stats.total) * 100,
-      maxScore: 100,
-      feedback: `${stats.correct}/${stats.total} correct`
-    }));
+    // Convert to Record<string, number>
+    const domainScores: Record<string, number> = {};
+    domainMap.forEach((stats, domain) => {
+      domainScores[domain] = (stats.correct / stats.total) * 100;
+    });
+    return domainScores;
   }
 
   /**
@@ -367,7 +371,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
     
     Type: ${evaluation.evaluationType}
     Score: ${evaluation.score || 'N/A'}
-    Target: ${evaluation.targetType}
+    Target: ${evaluation.evaluationType}
     
     ${evaluation.dimensionScores ? `
     Dimension Scores:

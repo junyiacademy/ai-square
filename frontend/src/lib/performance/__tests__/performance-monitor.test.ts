@@ -86,21 +86,39 @@ describe('PerformanceMonitor', () => {
     });
 
     it('logs to console in development environment', () => {
-      process.env.NODE_ENV = 'development';
+      const originalEnv = process.env.NODE_ENV;
+      Object.defineProperty(process.env, 'NODE_ENV', {
+        value: 'development',
+        configurable: true
+      });
       console.log = mockConsoleLog;
 
       performanceMonitor.recordMetric('dev-metric', 200);
 
       expect(mockConsoleLog).toHaveBeenCalledWith('[Performance] dev-metric: 200ms');
+      
+      Object.defineProperty(process.env, 'NODE_ENV', {
+        value: originalEnv,
+        configurable: true
+      });
     });
 
     it('does not log to console in production environment', () => {
-      process.env.NODE_ENV = 'production';
+      const originalEnv = process.env.NODE_ENV;
+      Object.defineProperty(process.env, 'NODE_ENV', {
+        value: 'production',
+        configurable: true
+      });
       console.log = mockConsoleLog;
 
       performanceMonitor.recordMetric('prod-metric', 300);
 
       expect(mockConsoleLog).not.toHaveBeenCalled();
+      
+      Object.defineProperty(process.env, 'NODE_ENV', {
+        value: originalEnv,
+        configurable: true
+      });
     });
 
     it('prevents memory leak by limiting metrics array size', () => {

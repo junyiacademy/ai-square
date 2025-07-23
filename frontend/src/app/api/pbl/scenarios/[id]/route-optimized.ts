@@ -3,7 +3,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 import { cachedGET, parallel, memoize } from '@/lib/api/optimization-utils';
-import type { ITaskTemplate } from '@/types/unified-learning';
+// Removed unused import
 import type { Scenario } from '@/lib/repositories/interfaces';
 
 // Type definitions remain the same
@@ -248,7 +248,7 @@ export async function GET(
       prerequisites: (scenarioResult.metadata?.prerequisites as string[]) || [],
       learningObjectives: (scenarioResult.metadata?.objectives as string[]) || [],
       ksaMapping: buildKSAMapping(yamlData as unknown as YAMLData, ksaData, lang),
-      tasks: ((scenarioResult as any).tasks || []).map((task: any) => ({
+      tasks: ((scenarioResult as { tasks?: Array<{ id: string; title: string; description?: string; type?: string; estimatedTime?: number }> }).tasks || []).map((task) => ({
         id: task.id,
         title: task.title || '',
         description: task.description || '',

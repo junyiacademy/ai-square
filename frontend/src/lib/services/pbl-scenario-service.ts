@@ -55,7 +55,7 @@ export class PBLScenarioService {
     // 轉換成 IScenario 格式
     const scenario: Omit<IScenario, 'id'> = {
       mode: 'pbl' as const,
-      sourceType: 'pbl' as const,
+      sourceType: 'yaml' as const,
       sourcePath: `pbl_data/scenarios/${yamlId.replace(/-/g, '_')}`,
       sourceId: yamlId,
       sourceMetadata: {
@@ -142,7 +142,7 @@ export class PBLScenarioService {
   private getLocalizedField(obj: Record<string, unknown>, fieldName: string, language: string): string {
     const langSuffix = language;
     const localizedField = `${fieldName}_${langSuffix}`;
-    return obj[localizedField] || obj[fieldName] || '';
+    return (obj[localizedField] as string) || (obj[fieldName] as string) || '';
   }
   
   private getLocalizedArrayField(obj: Record<string, unknown>, fieldName: string, language: string): string[] {
@@ -154,7 +154,7 @@ export class PBLScenarioService {
   
   private convertTasksToTemplates(tasks: Array<Record<string, unknown>>, language: string): ITaskTemplate[] {
     return tasks.map(task => ({
-      id: task.id,
+      id: task.id as string,
       title: this.getLocalizedField(task, 'title', language),
       type: 'chat' as const, // PBL tasks are primarily chat-based
       description: this.getLocalizedField(task, 'description', language),

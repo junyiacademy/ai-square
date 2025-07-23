@@ -5,7 +5,7 @@ import yaml from 'js-yaml';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { IScenario } from '@/types/unified-learning';
 import { getServerSession } from '@/lib/auth/session';
-import { convertScenarioToIScenario } from '@/lib/utils/type-converters';
+// Removed unused import
 
 interface AssessmentConfig {
   title?: string;
@@ -92,8 +92,7 @@ export async function GET(request: NextRequest) {
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     
     // Get all existing scenarios in one batch query
-    const rawScenarios = await scenarioRepo.findActive?.() || [];
-    const existingScenarios = rawScenarios.map(convertScenarioToIScenario);
+    const existingScenarios = await scenarioRepo.findActive?.() || [];
     const scenariosByPath = new Map(
       existingScenarios.map((s: IScenario) => {
         const configPath = s.sourceMetadata?.configPath as string | undefined;
@@ -144,42 +143,50 @@ export async function GET(request: NextRequest) {
             const description = config.description || `Assessment for ${folderName.replace(/_/g, ' ')}`;
             
             const createdScenario = await scenarioRepo.create({
-              type: 'assessment',
-              difficultyLevel: 'intermediate',
+              mode: 'assessment',
+              status: 'active',
+              version: '1.0',
+              sourceType: 'yaml',
+              sourcePath: yamlPath,
+              sourceId: `assessment-${folderName}`,
+              sourceMetadata: {
+                assessmentType: 'standard',
+                folderName,
+                configPath: yamlPath
+              },
+              title: { en: title },
+              description: { en: description },
+              objectives: [
+                'Evaluate your knowledge and skills',
+                'Identify areas for improvement',
+                'Get personalized recommendations'
+              ],
+              difficulty: 'intermediate',
               estimatedMinutes: config.time_limit_minutes || 30,
               prerequisites: [],
-              tasks: [{
+              taskTemplates: [{
                 id: 'assessment-task',
                 title: 'Complete Assessment',
                 type: 'question',
                 description: 'Answer the assessment questions'
               }],
+              taskCount: 1,
               xpRewards: { completion: 100 },
-              metadata: {
-                status: 'active',
-                sourceType: 'yaml',
-                sourcePath: yamlPath,
-                sourceId: `assessment-${folderName}`,
-                title: { en: title },
-                description: { en: description },
-                objectives: [
-                  'Evaluate your knowledge and skills',
-                  'Identify areas for improvement',
-                  'Get personalized recommendations'
-                ],
-                sourceMetadata: {
-                  assessmentType: 'standard',
-                  folderName,
-                  configPath: yamlPath
-                },
-                assessmentData: {
+              unlockRequirements: {},
+              pblData: {},
+              discoveryData: {},
+              assessmentData: {
                   totalQuestions: config.total_questions || 12,
                   passingScore: config.passing_score || 60,
                   domains: config.domains || []
-                }
-              }
+                },
+              aiModules: {},
+              resources: [],
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+              metadata: {}
             });
-            scenario = convertScenarioToIScenario(createdScenario);
+            scenario = createdScenario;
           }
           
           return {

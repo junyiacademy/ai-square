@@ -1,15 +1,15 @@
 /**
  * Type conversion utilities for mapping between database entities and interface types
- * Handles conversion from Prisma models to unified learning interfaces
+ * Handles conversion from database models to unified learning interfaces
  */
 
 import type {
-  Scenario,
-  Program,
-  Task,
-  Evaluation,
-  Interaction
-} from '@prisma/client';
+  DBScenario as Scenario,
+  DBProgram as Program,
+  DBTask as Task,
+  DBEvaluation as Evaluation,
+  DBInteraction as Interaction
+} from '@/types/database';
 
 import type {
   IScenario,
@@ -38,15 +38,15 @@ export function convertScenarioToIScenario(scenario: Scenario): IScenario {
   const title = scenario.title as Record<string, string>;
   const description = scenario.description as Record<string, string>;
   const objectives = scenario.objectives as string[];
-  const taskTemplates = scenario.taskTemplates as ITaskTemplate[];
-  const xpRewards = scenario.xpRewards as Record<string, number>;
-  const unlockRequirements = scenario.unlockRequirements as Record<string, unknown>;
-  const pblData = scenario.pblData as Record<string, unknown>;
-  const discoveryData = scenario.discoveryData as Record<string, unknown>;
-  const assessmentData = scenario.assessmentData as Record<string, unknown>;
-  const aiModules = scenario.aiModules as Record<string, unknown>;
+  const taskTemplates = scenario.task_templates as ITaskTemplate[];
+  const xpRewards = scenario.xp_rewards as Record<string, number>;
+  const unlockRequirements = scenario.unlock_requirements as Record<string, unknown>;
+  const pblData = scenario.pbl_data as Record<string, unknown>;
+  const discoveryData = scenario.discovery_data as Record<string, unknown>;
+  const assessmentData = scenario.assessment_data as Record<string, unknown>;
+  const aiModules = scenario.ai_modules as Record<string, unknown>;
   const resources = scenario.resources as Array<Record<string, unknown>>;
-  const sourceMetadata = scenario.sourceMetadata as Record<string, unknown>;
+  const sourceMetadata = scenario.source_metadata as Record<string, unknown>;
   const metadata = scenario.metadata as Record<string, unknown>;
 
   return {
@@ -56,9 +56,9 @@ export function convertScenarioToIScenario(scenario: Scenario): IScenario {
     version: scenario.version,
     
     // Source tracking
-    sourceType: scenario.sourceType as SourceType,
-    sourcePath: scenario.sourcePath || undefined,
-    sourceId: scenario.sourceId || undefined,
+    sourceType: scenario.source_type as SourceType,
+    sourcePath: scenario.source_path || undefined,
+    sourceId: scenario.source_id || undefined,
     sourceMetadata,
     
     // Basic info
@@ -68,12 +68,12 @@ export function convertScenarioToIScenario(scenario: Scenario): IScenario {
     
     // Common attributes
     difficulty: scenario.difficulty as DifficultyLevel,
-    estimatedMinutes: scenario.estimatedMinutes,
+    estimatedMinutes: scenario.estimated_minutes,
     prerequisites: scenario.prerequisites,
     
     // Task templates
     taskTemplates,
-    taskCount: scenario.taskCount,
+    taskCount: scenario.task_count,
     
     // Rewards and progression
     xpRewards,
@@ -89,9 +89,9 @@ export function convertScenarioToIScenario(scenario: Scenario): IScenario {
     resources,
     
     // Timestamps
-    createdAt: scenario.createdAt.toISOString(),
-    updatedAt: scenario.updatedAt.toISOString(),
-    publishedAt: scenario.publishedAt?.toISOString(),
+    createdAt: scenario.created_at,
+    updatedAt: scenario.updated_at,
+    publishedAt: scenario.published_at || undefined,
     
     // Extensible metadata
     metadata
@@ -103,42 +103,42 @@ export function convertScenarioToIScenario(scenario: Scenario): IScenario {
  */
 export function convertProgramToIProgram(program: Program): IProgram {
   // Parse JSON fields with type safety
-  const dimensionScores = program.dimensionScores as Record<string, number>;
-  const badgesEarned = program.badgesEarned as Array<Record<string, unknown>>;
-  const pblData = program.pblData as Record<string, unknown>;
-  const discoveryData = program.discoveryData as Record<string, unknown>;
-  const assessmentData = program.assessmentData as Record<string, unknown>;
+  const dimensionScores = program.dimension_scores as Record<string, number>;
+  const badgesEarned = program.badges_earned as Array<Record<string, unknown>>;
+  const pblData = program.pbl_data as Record<string, unknown>;
+  const discoveryData = program.discovery_data as Record<string, unknown>;
+  const assessmentData = program.assessment_data as Record<string, unknown>;
   const metadata = program.metadata as Record<string, unknown>;
 
   return {
     id: program.id,
-    userId: program.userId,
-    scenarioId: program.scenarioId,
+    userId: program.user_id,
+    scenarioId: program.scenario_id,
     mode: program.mode as LearningMode,
     status: program.status as ProgramStatus,
     
     // Progress tracking
-    currentTaskIndex: program.currentTaskIndex,
-    completedTaskCount: program.completedTaskCount,
-    totalTaskCount: program.totalTaskCount,
+    currentTaskIndex: program.current_task_index,
+    completedTaskCount: program.completed_task_count,
+    totalTaskCount: program.total_task_count,
     
     // Scoring (unified)
-    totalScore: program.totalScore,
+    totalScore: program.total_score,
     dimensionScores,
     
     // XP and rewards
-    xpEarned: program.xpEarned,
+    xpEarned: program.xp_earned,
     badgesEarned,
     
     // Timestamps (unified naming)
-    createdAt: program.createdAt.toISOString(),
-    startedAt: program.startedAt?.toISOString(),
-    completedAt: program.completedAt?.toISOString(),
-    updatedAt: program.updatedAt.toISOString(),
-    lastActivityAt: program.lastActivityAt.toISOString(),
+    createdAt: program.created_at,
+    startedAt: program.started_at || undefined,
+    completedAt: program.completed_at || undefined,
+    updatedAt: program.updated_at,
+    lastActivityAt: program.last_activity_at,
     
     // Time tracking
-    timeSpentSeconds: program.timeSpentSeconds,
+    timeSpentSeconds: program.time_spent_seconds,
     
     // Mode-specific data
     pblData,
@@ -156,20 +156,20 @@ export function convertProgramToIProgram(program: Program): IProgram {
 export function convertTaskToITask(task: Task): ITask {
   // Parse JSON fields with type safety
   const content = task.content as Record<string, unknown>;
-  const interactions = task.interactions as IInteraction[];
-  const userResponse = task.userResponse as Record<string, unknown>;
-  const aiConfig = task.aiConfig as Record<string, unknown>;
-  const pblData = task.pblData as Record<string, unknown>;
-  const discoveryData = task.discoveryData as Record<string, unknown>;
-  const assessmentData = task.assessmentData as Record<string, unknown>;
+  const interactions = task.interactions as unknown as IInteraction[];
+  const userResponse = task.user_response as Record<string, unknown>;
+  const aiConfig = task.ai_config as Record<string, unknown>;
+  const pblData = task.pbl_data as Record<string, unknown>;
+  const discoveryData = task.discovery_data as Record<string, unknown>;
+  const assessmentData = task.assessment_data as Record<string, unknown>;
   const metadata = task.metadata as Record<string, unknown>;
 
   return {
     id: task.id,
-    programId: task.programId,
+    programId: task.program_id,
     mode: task.mode as LearningMode,
-    taskIndex: task.taskIndex,
-    scenarioTaskIndex: task.scenarioTaskIndex || undefined,
+    taskIndex: task.task_index,
+    scenarioTaskIndex: task.scenario_task_index || undefined,
     
     // Basic info
     title: task.title || undefined,
@@ -182,29 +182,29 @@ export function convertTaskToITask(task: Task): ITask {
     
     // Interaction tracking
     interactions,
-    interactionCount: task.interactionCount,
+    interactionCount: task.interaction_count,
     
     // Response/solution
     userResponse,
     
     // Scoring
     score: task.score,
-    maxScore: task.maxScore,
+    maxScore: task.max_score,
     
     // Attempts and timing
-    allowedAttempts: task.allowedAttempts,
-    attemptCount: task.attemptCount,
-    timeLimitSeconds: task.timeLimitSeconds || undefined,
-    timeSpentSeconds: task.timeSpentSeconds,
+    allowedAttempts: task.allowed_attempts,
+    attemptCount: task.attempt_count,
+    timeLimitSeconds: task.time_limit_seconds || undefined,
+    timeSpentSeconds: task.time_spent_seconds,
     
     // AI configuration
     aiConfig,
     
     // Timestamps
-    createdAt: task.createdAt.toISOString(),
-    startedAt: task.startedAt?.toISOString(),
-    completedAt: task.completedAt?.toISOString(),
-    updatedAt: task.updatedAt.toISOString(),
+    createdAt: task.created_at,
+    startedAt: task.started_at || undefined,
+    completedAt: task.completed_at || undefined,
+    updatedAt: task.updated_at,
     
     // Mode-specific data
     pblData,
@@ -221,46 +221,46 @@ export function convertTaskToITask(task: Task): ITask {
  */
 export function convertEvaluationToIEvaluation(evaluation: Evaluation): IEvaluation {
   // Parse JSON fields with type safety
-  const dimensionScores = evaluation.dimensionScores as Record<string, number>;
-  const feedbackData = evaluation.feedbackData as Record<string, unknown>;
-  const aiAnalysis = evaluation.aiAnalysis as Record<string, unknown>;
-  const pblData = evaluation.pblData as Record<string, unknown>;
-  const discoveryData = evaluation.discoveryData as Record<string, unknown>;
-  const assessmentData = evaluation.assessmentData as Record<string, unknown>;
+  const dimensionScores = evaluation.dimension_scores as Record<string, number>;
+  const feedbackData = evaluation.feedback_data as Record<string, unknown>;
+  const aiAnalysis = evaluation.ai_analysis as Record<string, unknown>;
+  const pblData = evaluation.pbl_data as Record<string, unknown>;
+  const discoveryData = evaluation.discovery_data as Record<string, unknown>;
+  const assessmentData = evaluation.assessment_data as Record<string, unknown>;
   const metadata = evaluation.metadata as Record<string, unknown>;
 
   return {
     id: evaluation.id,
-    userId: evaluation.userId,
-    programId: evaluation.programId || undefined,
-    taskId: evaluation.taskId || undefined,
+    userId: evaluation.user_id,
+    programId: evaluation.program_id || undefined,
+    taskId: evaluation.task_id || undefined,
     mode: evaluation.mode as LearningMode,
     
     // Evaluation scope
-    evaluationType: evaluation.evaluationType,
-    evaluationSubtype: evaluation.evaluationSubtype || undefined,
+    evaluationType: evaluation.evaluation_type,
+    evaluationSubtype: evaluation.evaluation_subtype || undefined,
     
     // Scoring (unified 0-100 scale)
     score: evaluation.score,
-    maxScore: evaluation.maxScore,
+    maxScore: evaluation.max_score,
     
     // Multi-dimensional scoring
     dimensionScores,
     
     // Feedback
-    feedbackText: evaluation.feedbackText || undefined,
+    feedbackText: evaluation.feedback_text || undefined,
     feedbackData,
     
     // AI analysis
-    aiProvider: evaluation.aiProvider || undefined,
-    aiModel: evaluation.aiModel || undefined,
+    aiProvider: evaluation.ai_provider || undefined,
+    aiModel: evaluation.ai_model || undefined,
     aiAnalysis,
     
     // Time tracking
-    timeTakenSeconds: evaluation.timeTakenSeconds,
+    timeTakenSeconds: evaluation.time_taken_seconds,
     
     // Timestamps
-    createdAt: evaluation.createdAt.toISOString(),
+    createdAt: evaluation.created_at,
     
     // Mode-specific data
     pblData,
@@ -280,7 +280,7 @@ export function convertInteractionToIInteraction(interaction: Interaction): IInt
   const metadata = interaction.metadata as Record<string, unknown> | undefined;
 
   return {
-    timestamp: interaction.timestamp.toISOString(),
+    timestamp: interaction.timestamp instanceof Date ? interaction.timestamp.toISOString() : (interaction.timestamp as string) || new Date().toISOString(),
     type: interaction.type as 'user_input' | 'ai_response' | 'system_event',
     content,
     metadata

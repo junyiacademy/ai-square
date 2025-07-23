@@ -151,10 +151,10 @@ describe('ErrorHandler', () => {
       const notFoundError = new ResourceNotFoundError('Evaluation', 'eval-123');
       const validationError = new ValidationError('Invalid');
       
-      expect(ErrorHandler.isErrorType(notFoundError, ResourceNotFoundError)).toBe(true);
-      expect(ErrorHandler.isErrorType(notFoundError, ValidationError)).toBe(false);
-      expect(ErrorHandler.isErrorType(validationError, ValidationError)).toBe(true);
-      expect(ErrorHandler.isErrorType(validationError, ResourceNotFoundError)).toBe(false);
+      expect(ErrorHandler.isErrorType(notFoundError, ResourceNotFoundError as any)).toBe(true);
+      expect(ErrorHandler.isErrorType(notFoundError, ValidationError as any)).toBe(false);
+      expect(ErrorHandler.isErrorType(validationError, ValidationError as any)).toBe(true);
+      expect(ErrorHandler.isErrorType(validationError, ResourceNotFoundError as any)).toBe(false);
     });
   });
 

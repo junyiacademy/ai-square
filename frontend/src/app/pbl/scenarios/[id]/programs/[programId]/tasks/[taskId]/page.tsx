@@ -141,7 +141,7 @@ export default function ProgramLearningPage() {
                 startedAt: programData.startedAt,
                 updatedAt: programData.startedAt, // Using startedAt as updatedAt fallback
                 status: programData.status,
-                totalTaskCount: programData.totalTaskCount || 0,
+                totalTasks: programData.totalTaskCount || 0,
                 currentTaskId: taskId,
                 language: i18n.language
               } as Program;
@@ -221,7 +221,7 @@ export default function ProgramLearningPage() {
           startedAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           status: programId.startsWith('temp_') ? 'in_progress' : 'draft',
-          totalTaskCount: scenarioData.data.tasks.length,
+          totalTasks: scenarioData.data.tasks.length,
           currentTaskId: taskId || scenarioData.data.tasks[0]?.id,
           language: i18n.language,
           // taskIds will be fetched separately
@@ -249,7 +249,7 @@ export default function ProgramLearningPage() {
               const evaluations: Record<string, TaskEvaluation> = {};
               evaluationsData.data.forEach((evaluation: Record<string, unknown>) => {
                 if (evaluation.targetType === 'task' && evaluation.targetId) {
-                  evaluations[String(evaluation.targetId)] = evaluation as TaskEvaluation;
+                  evaluations[String(evaluation.targetId)] = evaluation as unknown as TaskEvaluation;
                 }
               });
               setTaskEvaluations(evaluations);

@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     
     // Find all discovery scenarios
     const rawScenarios = await scenarioRepo.findByMode?.('discovery');
-    const allScenarios = rawScenarios.map(convertScenarioToIScenario);
+    const allScenarios = rawScenarios || [];
     const discoveryScenarios = allScenarios.filter((s) => {
       const metadata = s.metadata as Record<string, unknown>;
       return metadata?.careerType === careerType;
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     // Check if user has an active program for any of these scenarios
     for (const scenario of discoveryScenarios) {
       const rawPrograms = await programRepo.findByScenario(scenario.id);
-      const allPrograms = rawPrograms.map(convertProgramToIProgram);
+      const allPrograms = rawPrograms;
       const userPrograms = allPrograms.filter((p) => p.userId === userEmail);
       const activeProgram = userPrograms.find((p) => p.status === 'active');
       

@@ -3,6 +3,12 @@
  * TODO: Update to use PostgreSQL repositories
  */
 
+describe('POST /api/discovery/scenarios/[id]/programs', () => {
+  it('placeholder test - TODO: implement with PostgreSQL', () => {
+    expect(true).toBe(true);
+  });
+});
+
 /*
 import { NextRequest } from 'next/server';
 import { POST } from '../route';

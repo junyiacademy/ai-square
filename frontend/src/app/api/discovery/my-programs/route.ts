@@ -104,8 +104,8 @@ export async function GET(request: NextRequest) {
             if (p.startedAt) {
               times.push(new Date(p.startedAt).getTime());
             }
-            if (p.endTime) {
-              times.push(new Date(p.endTime).getTime());
+            if (p.completedAt) {
+              times.push(new Date(p.completedAt).getTime());
             }
             if (p.lastActivityAt) {
               times.push(new Date(p.lastActivityAt).getTime());

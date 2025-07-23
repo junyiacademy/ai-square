@@ -4,20 +4,21 @@
  */
 
 import { UnifiedEvaluationSystem } from '../unified-evaluation-system';
-import { BaseAIService } from '@/lib/abstractions/base-ai-service';
-import { ITask, IProgram, IScenario, IEvaluationContext } from '@/types/unified-learning';
+import { BaseAIService, IAIRequest, IAIResponse } from '@/lib/abstractions/base-ai-service';
+import { ITask, IProgram, IScenario, IEvaluationContext, IEvaluation } from '@/types/unified-learning';
 
 // Mock AI Service
 class MockAIService extends BaseAIService {
-  async generateContent(params: any): Promise<{ text: string }> {
-    return { text: 'Mocked AI response' };
+  async generateContent(request: IAIRequest): Promise<IAIResponse> {
+    return { content: 'Mocked AI response' };
   }
   
-  async generateContentStream(params: any): Promise<AsyncIterable<{ text: string }>> {
-    async function* generator() {
-      yield { text: 'Mocked stream response' };
-    }
-    return generator();
+  async generateChat(messages: Array<{ role: string; content: string }>): Promise<IAIResponse> {
+    return { content: 'Mocked chat response' };
+  }
+  
+  async evaluateResponse(prompt: string, response: string, criteria: string[]): Promise<number> {
+    return 85; // Mock score
   }
 }
 
@@ -34,47 +35,104 @@ describe('UnifiedEvaluationSystem', () => {
     const baseTask: ITask = {
       id: 'task-1',
       programId: 'program-1',
-      templateId: 'template-1',
+      mode: 'pbl' as const,
+      taskIndex: 0,
       title: 'Test Task',
       description: 'Test Description',
-      type: 'interactive',
-      order: 1,
-      status: 'completed',
-      createdAt: new Date().toISOString(),
-      completedAt: new Date().toISOString(),
-      interactions: [],
+      type: 'chat' as const,
+      status: 'completed' as const,
       content: { context: {} },
+      interactions: [],
+      interactionCount: 0,
+      userResponse: {},
+      score: 0,
+      maxScore: 100,
+      allowedAttempts: 3,
+      attemptCount: 1,
+      timeSpentSeconds: 300,
+      aiConfig: {},
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {},
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      completedAt: new Date().toISOString(),
       metadata: {}
     };
 
     const baseContext: IEvaluationContext = {
       scenario: {
         id: 'scenario-1',
-        sourceType: 'pbl',
-        title: 'Test Scenario',
-        description: 'Test',
+        mode: 'pbl' as const,
+        status: 'active' as const,
+        version: '1.0.0',
+        sourceType: 'yaml' as const,
+        sourcePath: 'test_scenario.yaml',
+        sourceId: 'test_scenario',
+        sourceMetadata: {},
+        difficulty: 'intermediate',
+        estimatedMinutes: 30,
+        prerequisites: [],
+        title: { en: 'Test Scenario' },
+        description: { en: 'Test' },
+        objectives: [],
         taskTemplates: [],
+        taskCount: 0,
+        xpRewards: {},
+        unlockRequirements: {},
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
+        aiModules: {},
+        resources: [],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        publishedAt: new Date().toISOString(),
+        // tags: [],
         metadata: {}
       },
       program: {
         id: 'program-1',
-        scenarioId: 'scenario-1',
         userId: 'user-123',
-        status: 'active',
-        startedAt: new Date().toISOString(),
-        taskIds: ['task-1'],
+        scenarioId: 'scenario-1',
+        mode: 'pbl' as const,
+        status: 'active' as const,
         currentTaskIndex: 0,
+        completedTaskCount: 0,
+        totalTaskCount: 1,
+        totalScore: 0,
+        dimensionScores: {},
+        timeSpentSeconds: 0,
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
+        xpEarned: 0,
+        badgesEarned: [],
+        lastActivityAt: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        startedAt: new Date().toISOString(),
         metadata: {}
       },
       previousEvaluations: []
     };
 
     it('should evaluate PBL task', async () => {
-      const pblTask = {
+      const pblTask: ITask = {
         ...baseTask,
         interactions: [
-          { type: 'user_input', content: 'Test input' },
-          { type: 'ai_response', content: 'Test response' }
+          { 
+            timestamp: new Date().toISOString(),
+            type: 'user_input' as const,
+            content: 'Test input',
+            metadata: {}
+          },
+          { 
+            timestamp: new Date().toISOString(),
+            type: 'ai_response' as const,
+            content: 'Test response',
+            metadata: {}
+          }
         ],
         content: {
           context: {
@@ -83,18 +141,18 @@ describe('UnifiedEvaluationSystem', () => {
         }
       };
 
-      const pblContext = {
+      const pblContext: IEvaluationContext = {
         ...baseContext,
-        scenario: { ...baseContext.scenario, sourceType: 'pbl' as const }
+        scenario: { ...baseContext.scenario, mode: 'pbl' as const }
       };
 
       const evaluation = await evaluationSystem.evaluateTask(pblTask, pblContext);
 
-      expect(evaluation.targetType).toBe('task');
-      expect(evaluation.targetId).toBe('task-1');
-      expect(evaluation.evaluationType).toBe('pbl_task');
+      expect(evaluation.taskId).toBe('task-1');
+      expect(evaluation.evaluationType).toBe('task');
+      expect(evaluation.evaluationSubtype).toBe('pbl_task');
       expect(evaluation.score).toBeDefined();
-      expect(evaluation.dimensionScores).toHaveLength(3); // KSA dimensions
+      expect(evaluation.dimensionScores).toBeDefined();
       expect(evaluation.metadata?.sourceType).toBe('pbl');
     });
 
@@ -102,8 +160,18 @@ describe('UnifiedEvaluationSystem', () => {
       const assessmentTask = {
         ...baseTask,
         interactions: [
-          { type: 'user_input', content: 'Answer 1', metadata: { isCorrect: true } },
-          { type: 'user_input', content: 'Answer 2', metadata: { isCorrect: false } }
+          { 
+            timestamp: new Date().toISOString(),
+            type: 'user_input' as const,
+            content: 'Answer 1',
+            metadata: { isCorrect: true }
+          },
+          { 
+            timestamp: new Date().toISOString(),
+            type: 'user_input' as const,
+            content: 'Answer 2',
+            metadata: { isCorrect: false }
+          }
         ],
         content: {
           context: {
@@ -115,15 +183,15 @@ describe('UnifiedEvaluationSystem', () => {
         }
       };
 
-      const assessmentContext = {
+      const assessmentContext: IEvaluationContext = {
         ...baseContext,
-        scenario: { ...baseContext.scenario, sourceType: 'assessment' as const }
+        scenario: { ...baseContext.scenario, mode: 'assessment' as const }
       };
 
       const evaluation = await evaluationSystem.evaluateTask(assessmentTask, assessmentContext);
 
-      expect(evaluation.targetType).toBe('task');
-      expect(evaluation.evaluationType).toBe('assessment_task');
+      expect(evaluation.evaluationType).toBe('task');
+      expect(evaluation.evaluationSubtype).toBe('assessment_task');
       expect(evaluation.score).toBe(50); // 1 correct out of 2
       expect(evaluation.feedbackText).toContain('1 out of 2');
       expect(evaluation.metadata?.correctAnswers).toBe(1);
@@ -133,8 +201,16 @@ describe('UnifiedEvaluationSystem', () => {
       const discoveryTask = {
         ...baseTask,
         interactions: [
-          { type: 'user_input', content: 'Explore action' },
-          { type: 'system_event', content: 'Discovery made' }
+          { 
+            timestamp: new Date().toISOString(),
+            type: 'user_input' as const, 
+            content: 'Explore action' 
+          },
+          { 
+            timestamp: new Date().toISOString(),
+            type: 'system_event' as const, 
+            content: 'Discovery made' 
+          }
         ],
         content: {
           context: {
@@ -143,18 +219,18 @@ describe('UnifiedEvaluationSystem', () => {
         }
       };
 
-      const discoveryContext = {
+      const discoveryContext: IEvaluationContext = {
         ...baseContext,
-        scenario: { ...baseContext.scenario, sourceType: 'discovery' as const }
+        scenario: { ...baseContext.scenario, mode: 'discovery' as const }
       };
 
       const evaluation = await evaluationSystem.evaluateTask(discoveryTask, discoveryContext);
 
-      expect(evaluation.targetType).toBe('task');
-      expect(evaluation.evaluationType).toBe('discovery_task');
+      expect(evaluation.evaluationType).toBe('task');
+      expect(evaluation.evaluationSubtype).toBe('discovery_task');
       expect(evaluation.score).toBeDefined();
       expect(evaluation.feedbackText).toContain('XP');
-      expect(evaluation.metadata?.xpEarned).toBeDefined();
+      expect((evaluation.discoveryData as any)?.xpEarned).toBeDefined();
     });
   });
 
@@ -164,42 +240,65 @@ describe('UnifiedEvaluationSystem', () => {
         id: 'program-1',
         scenarioId: 'scenario-1',
         userId: 'user-123',
-        status: 'completed',
-        startedAt: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
-        completedAt: new Date().toISOString(),
-        taskIds: ['task-1', 'task-2'],
+        mode: 'pbl' as const,
+        status: 'completed' as const,
         currentTaskIndex: 2,
+        completedTaskCount: 2,
+        totalTaskCount: 2,
+        totalScore: 85,
+        dimensionScores: { knowledge: 90, skills: 80 },
+        xpEarned: 100,
+        badgesEarned: [],
+        timeSpentSeconds: 3600,
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
+        createdAt: new Date(Date.now() - 3600000).toISOString(),
+        startedAt: new Date(Date.now() - 3600000).toISOString(),
+        completedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        lastActivityAt: new Date().toISOString(),
         metadata: { sourceType: 'pbl' }
       };
 
-      const taskEvaluations = [
+      const taskEvaluations: IEvaluation[] = [
         {
           id: 'eval-1',
-          targetType: 'task' as const,
-          targetId: 'task-1',
+          taskId: 'task-1',
           programId: 'program-1',
           userId: 'user-123',
-          type: 'task_completion',
+          mode: 'pbl' as const,
+          evaluationType: 'task',
+          evaluationSubtype: 'task_completion',
           score: 80,
-          dimensionScores: [
-            { dimension: 'knowledge', score: 85, maxScore: 100 },
-            { dimension: 'skills', score: 75, maxScore: 100 }
-          ],
+          maxScore: 100,
+          dimensionScores: { knowledge: 85, skills: 75 },
+          feedbackData: {},
+          aiAnalysis: {},
+          timeTakenSeconds: 300,
+          pblData: {},
+          discoveryData: {},
+          assessmentData: {},
           createdAt: new Date().toISOString(),
           metadata: {}
         },
         {
           id: 'eval-2',
-          targetType: 'task' as const,
-          targetId: 'task-2',
+          taskId: 'task-2',
           programId: 'program-1',
           userId: 'user-123',
-          type: 'task_completion',
+          mode: 'pbl' as const,
+          evaluationType: 'task',
+          evaluationSubtype: 'task_completion',
           score: 90,
-          dimensionScores: [
-            { dimension: 'knowledge', score: 95, maxScore: 100 },
-            { dimension: 'skills', score: 85, maxScore: 100 }
-          ],
+          maxScore: 100,
+          dimensionScores: { knowledge: 95, skills: 85 },
+          feedbackData: {},
+          aiAnalysis: {},
+          timeTakenSeconds: 300,
+          pblData: {},
+          discoveryData: {},
+          assessmentData: {},
           createdAt: new Date().toISOString(),
           metadata: {}
         }
@@ -207,13 +306,13 @@ describe('UnifiedEvaluationSystem', () => {
 
       const evaluation = await evaluationSystem.evaluateProgram(program, taskEvaluations);
 
-      expect(evaluation.targetType).toBe('program');
-      expect(evaluation.targetId).toBe('program-1');
-      expect(evaluation.evaluationType).toBe('program_completion');
+      expect(evaluation.evaluationType).toBe('program');
+      expect(evaluation.programId).toBe('program-1');
+      expect(evaluation.evaluationSubtype).toBe('program_completion');
       expect(evaluation.score).toBe(85); // Average of 80 and 90
-      expect(evaluation.dimensionScores).toHaveLength(2); // Aggregated dimensions
-      expect(evaluation.dimensionScores?.[0].dimension).toBe('knowledge');
-      expect(evaluation.dimensionScores?.[0].score).toBe(90); // Average of 85 and 95
+      expect(Object.keys(evaluation.dimensionScores)).toHaveLength(2); // Aggregated dimensions
+      expect(evaluation.dimensionScores?.knowledge).toBe(90); // Average of 85 and 95
+      expect(evaluation.dimensionScores?.skills).toBe(80); // Average of 75 and 85
       expect(evaluation.metadata?.taskCount).toBe(2);
       expect(evaluation.metadata?.completionTime).toBeGreaterThan(0);
     });
@@ -221,18 +320,24 @@ describe('UnifiedEvaluationSystem', () => {
 
   describe('generateFeedback', () => {
     it('should generate multilingual feedback', async () => {
-      const evaluation = {
+      const evaluation: IEvaluation = {
         id: 'eval-1',
-        targetType: 'task' as const,
-        targetId: 'task-1',
+        taskId: 'task-1',
         programId: 'program-1',
         userId: 'user-123',
-        type: 'task_completion',
+        mode: 'pbl' as const,
+        evaluationType: 'task',
+        evaluationSubtype: 'task_completion',
         score: 85,
-        feedback: 'Original feedback',
-        dimensionScores: [
-          { dimension: 'knowledge', score: 85, maxScore: 100, feedback: 'Good understanding' }
-        ],
+        maxScore: 100,
+        feedbackText: 'Original feedback',
+        dimensionScores: { knowledge: 85 },
+        feedbackData: {},
+        aiAnalysis: {},
+        timeTakenSeconds: 300,
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
         createdAt: new Date().toISOString(),
         metadata: {}
       };

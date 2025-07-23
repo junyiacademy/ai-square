@@ -133,10 +133,18 @@ export class GCSContentRepository implements IContentRepository {
   private transformScenarioContent(raw: Record<string, unknown>, id: string): ScenarioContent {
     return {
       id,
-      type: raw.type || 'pbl',
+      type: (raw.type as string) || 'pbl',
       title: this.extractMultilingualField(raw, 'title'),
       description: this.extractMultilingualField(raw, 'description'),
-      tasks: (raw.tasks as Array<Record<string, unknown>>) || [],
+      tasks: ((raw.tasks as Array<Record<string, unknown>>) || []).map((t: Record<string, unknown>) => ({
+        id: t.id as string,
+        type: t.type as string,
+        title: t.title as string | undefined,
+        description: t.description as string | undefined,
+        estimatedTime: t.estimatedTime as number | undefined,
+        requiredForCompletion: t.requiredForCompletion as boolean | undefined,
+        ksaCodes: t.ksaCodes as string[] | undefined
+      })),
       metadata: {
         difficulty: raw.difficulty as string | undefined,
         duration: raw.duration as number | undefined,
@@ -174,7 +182,7 @@ export class GCSContentRepository implements IContentRepository {
     if (raw.domains && Array.isArray(raw.domains)) {
       for (const domain of raw.domains as Array<Record<string, unknown>>) {
         domains.push({
-          id: domain.id,
+          id: domain.id as string,
           name: this.extractMultilingualField(domain, 'name'),
           description: this.extractMultilingualField(domain, 'description'),
           competencies: (domain.competencies as string[]) || []

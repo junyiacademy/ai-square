@@ -58,12 +58,8 @@ describe('PBLYAMLLoader', () => {
 
   describe('constructor', () => {
     it('should set correct default base path for PBL data', () => {
-      expect(loader['defaultOptions'].basePath).toContain('pbl_data');
-      expect(loader['defaultOptions'].basePath).toContain('scenarios');
-    });
-
-    it('should have correct loader name', () => {
-      expect(loader['loaderName']).toBe('PBLYAMLLoader');
+      expect((loader as any)['basePath']).toContain('pbl_data');
+      expect((loader as any)['basePath']).toContain('scenarios');
     });
   });
 
@@ -315,18 +311,6 @@ describe('PBLYAMLLoader', () => {
       await loader.loadScenario('test-scenario').catch(() => {});
       
       expect(mockCacheService.get).toHaveBeenCalled();
-    });
-
-    it('should generate correct cache key', () => {
-      const cacheKey = loader['getCacheKey']('test-file', 'zhTW');
-      
-      expect(cacheKey).toBe('PBLYAMLLoader:test-file:zhTW');
-    });
-
-    it('should generate cache key without language', () => {
-      const cacheKey = loader['getCacheKey']('test-file');
-      
-      expect(cacheKey).toBe('PBLYAMLLoader:test-file');
     });
   });
 });

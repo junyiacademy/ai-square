@@ -209,7 +209,7 @@ export function selectFields<T extends Record<string, unknown>, K extends keyof 
   fields: K[]
 ): Pick<T, K>[] {
   return items.map(item => {
-    const selected: Partial<Pick<T, K>> = {};
+    const selected = {} as Pick<T, K>;
     for (const field of fields) {
       if (field in item) {
         selected[field] = item[field];

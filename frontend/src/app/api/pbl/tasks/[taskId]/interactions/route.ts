@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { cachedGET } from '@/lib/api/optimization-utils';
-import type { IInteraction } from '@/types/unified-learning';
+// Removed unused import
 
 // POST - Add interaction to task
 export async function POST(

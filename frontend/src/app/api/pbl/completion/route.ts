@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { getLanguageFromHeader } from '@/lib/utils/language';
 import { cachedGET } from '@/lib/api/optimization-utils';
-import { Task, Evaluation, Interaction, TaskWithInteractions } from '@/lib/repositories/interfaces';
+import { ITask, IInteraction } from '@/types/unified-learning';
 
 export async function GET(request: NextRequest) {
   // Get user session
@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
     // Sort tasks by their position in the program's taskIds array
     const taskIds = (program.metadata?.taskIds || []) as string[];
     const sortedTasks = taskIds.length > 0 ? 
-      tasks.sort((a: Task, b: Task) => {
+      tasks.sort((a: ITask, b: ITask) => {
         const indexA = taskIds.indexOf(a.id);
         const indexB = taskIds.indexOf(b.id);
         return indexA - indexB;
@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
     
     // Build tasks array with evaluations and progress
     const tasksWithDetails = await Promise.all(
-      sortedTasks.map(async (task: Task, index: number) => {
+      sortedTasks.map(async (task: ITask, index: number) => {
         // Get task with interactions
         const taskWithInteractions = await taskRepo.getTaskWithInteractions?.(task.id);
         const interactions = taskWithInteractions?.interactions || [];
@@ -97,7 +97,7 @@ export async function GET(request: NextRequest) {
           const firstInteraction = interactions[0];
           const lastInteraction = interactions[interactions.length - 1];
           timeSpentSeconds = Math.floor(
-            (new Date(lastInteraction.createdAt).getTime() - new Date(firstInteraction.createdAt).getTime()) / 1000
+            (new Date(lastInteraction.timestamp).getTime() - new Date(firstInteraction.timestamp).getTime()) / 1000
           );
         }
         
@@ -115,10 +115,10 @@ export async function GET(request: NextRequest) {
             evaluatedAt: taskEvaluation.createdAt
           } : undefined,
           log: {
-            interactions: interactions.map((i: Interaction) => ({
+            interactions: interactions.map((i: IInteraction) => ({
               type: i.type === 'user_input' ? 'user' : 'assistant',
               message: (i.metadata as Record<string, unknown>)?.message || i.content,
-              timestamp: i.createdAt
+              timestamp: i.timestamp
             })),
             startedAt: task.startedAt,
             completedAt: task.completedAt
@@ -141,7 +141,7 @@ export async function GET(request: NextRequest) {
       updatedAt: evaluation?.metadata?.lastUpdatedAt || program.startedAt,
       completedAt: program.completedAt,
       totalTasks: evaluation?.metadata?.totalTasks || tasks.length,
-      completedTasks: tasks.filter((t: Task) => t.status === 'completed').length,
+      completedTasks: tasks.filter((t: ITask) => t.status === 'completed').length,
       evaluatedTasks: evaluation?.metadata?.evaluatedTasks || 0,
       overallScore: evaluation?.score || 0,
       domainScores: evaluation?.metadata?.domainScores || {},

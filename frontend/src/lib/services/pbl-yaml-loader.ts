@@ -3,7 +3,7 @@
  * 繼承自 BaseYAMLLoader，專門處理 PBL Scenario YAML 檔案
  */
 
-import { BaseYAMLLoader, YAMLLoaderOptions } from '@/lib/abstractions/base-yaml-loader';
+import { BaseYAMLLoader, YAMLLoaderOptions, LoadResult } from '@/lib/abstractions/base-yaml-loader';
 import path from 'path';
 
 export interface PBLScenarioInfo {
@@ -73,10 +73,39 @@ export interface PBLYAMLData {
 export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
   protected readonly loaderName = 'PBLYAMLLoader';
 
+  private basePath: string;
+
   constructor() {
     super();
-    // Override default base path for PBL data
-    this.defaultOptions.basePath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios');
+    // Set base path for PBL data
+    this.basePath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios');
+  }
+
+  /**
+   * Implement abstract load method
+   */
+  async load(fileName: string): Promise<LoadResult<PBLYAMLData>> {
+    try {
+      const filePath = this.getFilePath(fileName);
+      const { promises: fs } = await import('fs');
+      const yaml = await import('js-yaml');
+      
+      const content = await fs.readFile(filePath, 'utf8');
+      const data = yaml.load(content) as PBLYAMLData;
+      
+      return { data };
+    } catch (error) {
+      return { data: null, error: error as Error };
+    }
+  }
+
+  /**
+   * Get file path for PBL scenario
+   */
+  protected getFilePath(fileName: string): string {
+    // PBL files are in subdirectories
+    const scenarioId = fileName.replace(/_scenario$/, '');
+    return path.join(this.basePath, scenarioId, `${scenarioId}_scenario.yaml`);
   }
 
   /**
@@ -88,10 +117,10 @@ export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
     options?: YAMLLoaderOptions
   ): Promise<PBLYAMLData | null> {
     // PBL scenarios are organized in subdirectories
-    const fileName = path.join(scenarioId, `${scenarioId}_scenario`);
-    const result = await this.load(fileName, language, options);
+    const fileName = scenarioId;
+    const result = await this.load(fileName);
 
-    if (result.success && result.data) {
+    if (result.data) {
       return result.data;
     }
 
@@ -103,7 +132,7 @@ export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
    */
   async scanScenarios(): Promise<string[]> {
     const fs = await import('fs/promises');
-    const scenariosDir = this.defaultOptions.basePath!;
+    const scenariosDir = this.basePath;
     
     try {
       const items = await fs.readdir(scenariosDir, { withFileTypes: true });
@@ -178,7 +207,7 @@ export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
     const suffix = language === 'en' ? '' : `_${language}`;
     const fieldWithSuffix = `${fieldName}${suffix}`;
     
-    return data[fieldWithSuffix] || data[fieldName] || '';
+    return (data[fieldWithSuffix] as string) || (data[fieldName] as string) || '';
   }
 
   /**

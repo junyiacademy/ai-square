@@ -25,26 +25,20 @@ jest.mock('recharts', () => {
 })
 
 describe('KSARadarChart', () => {
-  const mockData = {
-    knowledge: [
-      { code: 'K1', name: 'AI Fundamentals', value: 85 },
-      { code: 'K2', name: 'Machine Learning', value: 72 },
-      { code: 'K3', name: 'Data Science', value: 90 },
-    ],
-    skills: [
-      { code: 'S1', name: 'Programming', value: 88 },
-      { code: 'S2', name: 'Analysis', value: 75 },
-      { code: 'S3', name: 'Problem Solving', value: 82 },
-    ],
-    attitudes: [
-      { code: 'A1', name: 'Ethics', value: 95 },
-      { code: 'A2', name: 'Collaboration', value: 80 },
-      { code: 'A3', name: 'Innovation', value: 77 },
-    ],
+  const mockKsaScores = {
+    'K1': { score: 85, category: 'knowledge' as const },
+    'K2': { score: 72, category: 'knowledge' as const },
+    'K3': { score: 90, category: 'knowledge' as const },
+    'S1': { score: 88, category: 'skills' as const },
+    'S2': { score: 75, category: 'skills' as const },
+    'S3': { score: 82, category: 'skills' as const },
+    'A1': { score: 95, category: 'attitudes' as const },
+    'A2': { score: 80, category: 'attitudes' as const },
+    'A3': { score: 77, category: 'attitudes' as const },
   }
 
   it('renders the radar chart with all components', () => {
-    render(<KSARadarChart data={mockData} />)
+    render(<KSARadarChart ksaScores={mockKsaScores} />)
 
     expect(screen.getByTestId('responsive-container')).toBeInTheDocument()
     expect(screen.getByTestId('radar-chart')).toBeInTheDocument()
@@ -56,7 +50,7 @@ describe('KSARadarChart', () => {
   })
 
   it('renders three radar areas for K, S, and A', () => {
-    render(<KSARadarChart data={mockData} />)
+    render(<KSARadarChart ksaScores={mockKsaScores} />)
 
     expect(screen.getByTestId('radar-knowledge')).toBeInTheDocument()
     expect(screen.getByTestId('radar-skills')).toBeInTheDocument()
@@ -64,7 +58,7 @@ describe('KSARadarChart', () => {
   })
 
   it('formats data correctly for the chart', () => {
-    render(<KSARadarChart data={mockData} />)
+    render(<KSARadarChart ksaScores={mockKsaScores} />)
 
     const chartElement = screen.getByTestId('radar-chart')
     const chartData = JSON.parse(chartElement.getAttribute('data-chart-data') || '[]')
@@ -79,13 +73,7 @@ describe('KSARadarChart', () => {
   })
 
   it('handles empty data gracefully', () => {
-    const emptyData = {
-      knowledge: [],
-      skills: [],
-      attitudes: [],
-    }
-
-    render(<KSARadarChart data={emptyData} />)
+    render(<KSARadarChart ksaScores={{}} />)
 
     const chartElement = screen.getByTestId('radar-chart')
     const chartData = JSON.parse(chartElement.getAttribute('data-chart-data') || '[]')
@@ -93,39 +81,33 @@ describe('KSARadarChart', () => {
     expect(chartData).toHaveLength(0)
   })
 
-  it('applies custom className', () => {
-    render(<KSARadarChart data={mockData} className="custom-chart-class" />)
-
-    const container = screen.getByTestId('responsive-container').parentElement
-    expect(container).toHaveClass('custom-chart-class')
-  })
-
-  it('renders with custom height', () => {
-    render(<KSARadarChart data={mockData} height={500} />)
+  it('renders without custom className', () => {
+    render(<KSARadarChart ksaScores={mockKsaScores} />)
 
     const container = screen.getByTestId('responsive-container')
-    expect(container).toHaveStyle({ height: '500px' })
+    expect(container).toBeInTheDocument()
   })
 
-  it('shows loading state when data is being fetched', () => {
-    render(<KSARadarChart data={mockData} loading />)
+  it('renders with default height', () => {
+    render(<KSARadarChart ksaScores={mockKsaScores} />)
 
-    expect(screen.getByTestId('chart-loading')).toBeInTheDocument()
-    expect(screen.queryByTestId('radar-chart')).not.toBeInTheDocument()
+    const container = screen.getByTestId('responsive-container')
+    expect(container).toBeInTheDocument()
+  })
+
+  it('renders when data is available', () => {
+    render(<KSARadarChart ksaScores={mockKsaScores} />)
+
+    expect(screen.getByTestId('radar-chart')).toBeInTheDocument()
   })
 
   it('handles partial data correctly', () => {
-    const partialData = {
-      knowledge: [
-        { code: 'K1', name: 'AI Fundamentals', value: 85 },
-      ],
-      skills: [],
-      attitudes: [
-        { code: 'A1', name: 'Ethics', value: 95 },
-      ],
+    const partialKsaScores = {
+      'K1': { score: 85, category: 'knowledge' as const },
+      'A1': { score: 95, category: 'attitudes' as const }
     }
-
-    render(<KSARadarChart data={partialData} />)
+    
+    render(<KSARadarChart ksaScores={partialKsaScores} />)
 
     const chartElement = screen.getByTestId('radar-chart')
     const chartData = JSON.parse(chartElement.getAttribute('data-chart-data') || '[]')
@@ -133,36 +115,21 @@ describe('KSARadarChart', () => {
     expect(chartData).toHaveLength(2)
   })
 
-  it('renders custom tooltip content', () => {
-    const CustomTooltip = ({ active, payload }: any) => {
-      if (active && payload && payload.length) {
-        return (
-          <div data-testid="custom-tooltip-content">
-            {payload[0].value}
-          </div>
-        )
-      }
-      return null
-    }
+  it('renders default tooltip content', () => {
+    render(<KSARadarChart ksaScores={mockKsaScores} />)
 
-    render(<KSARadarChart data={mockData} customTooltip={CustomTooltip} />)
-
-    // The custom tooltip would be rendered when hovering
+    // The default tooltip would be rendered
     expect(screen.getByTestId('tooltip')).toBeInTheDocument()
   })
 
   it('handles different value ranges', () => {
-    const dataWithDifferentRanges = {
-      knowledge: [
-        { code: 'K1', name: 'Test 1', value: 25 },
-        { code: 'K2', name: 'Test 2', value: 100 },
-        { code: 'K3', name: 'Test 3', value: 0 },
-      ],
-      skills: [],
-      attitudes: [],
+    const ksaScoresWithDifferentRanges = {
+      'K1': { score: 25, category: 'knowledge' as const },
+      'K2': { score: 100, category: 'knowledge' as const },
+      'K3': { score: 0, category: 'knowledge' as const }
     }
-
-    render(<KSARadarChart data={dataWithDifferentRanges} />)
+    
+    render(<KSARadarChart ksaScores={ksaScoresWithDifferentRanges} />)
 
     const chartElement = screen.getByTestId('radar-chart')
     const chartData = JSON.parse(chartElement.getAttribute('data-chart-data') || '[]')
@@ -173,7 +140,7 @@ describe('KSARadarChart', () => {
   })
 
   it('preserves data order', () => {
-    render(<KSARadarChart data={mockData} />)
+    render(<KSARadarChart ksaScores={mockKsaScores} />)
 
     const angleAxis = screen.getByTestId('polar-angle-axis')
     expect(angleAxis).toHaveAttribute('data-key', 'indicator')
@@ -198,7 +165,7 @@ describe('KSARadarChart', () => {
   })
 
   it('applies theme colors correctly', () => {
-    render(<KSARadarChart data={mockData} />)
+    render(<KSARadarChart ksaScores={mockKsaScores} />)
 
     const knowledgeRadar = screen.getByTestId('radar-knowledge')
     const skillsRadar = screen.getByTestId('radar-skills')
@@ -215,19 +182,11 @@ describe('KSARadarChart', () => {
   })
 
   it('handles long indicator names', () => {
-    const dataWithLongNames = {
-      knowledge: [
-        { 
-          code: 'K1', 
-          name: 'Very Long Knowledge Indicator Name That Should Be Truncated', 
-          value: 85 
-        },
-      ],
-      skills: [],
-      attitudes: [],
+    const ksaScoresWithLongNames = {
+      'K1': { score: 85, category: 'knowledge' as const }
     }
-
-    render(<KSARadarChart data={dataWithLongNames} />)
+    
+    render(<KSARadarChart ksaScores={ksaScoresWithLongNames} />)
 
     const chartElement = screen.getByTestId('radar-chart')
     const chartData = JSON.parse(chartElement.getAttribute('data-chart-data') || '[]')

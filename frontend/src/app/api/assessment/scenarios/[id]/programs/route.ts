@@ -11,17 +11,7 @@ import type {
   IEvaluation
 } from '@/types/unified-learning';
 import type { ProgramStatus } from '@/types/database';
-import { 
-  convertScenarioToIScenario, 
-  convertProgramToIProgram, 
-  convertTaskToITask,
-  convertEvaluationToIEvaluation 
-} from '@/lib/utils/type-converters';
-
-// Extend Program type to include additional fields used in this route
-interface ProgramWithExtras extends IProgram {
-  // IProgram already has these as optional strings
-}
+// Removed unused imports
 
 // Simple in-memory cache for scenarios
 interface CachedScenario {
@@ -55,8 +45,7 @@ export async function GET(
     const programRepo = repositoryFactory.getProgramRepository();
     
     // Get user programs efficiently
-    const rawPrograms = await programRepo.findByUser(userEmail);
-    const allUserPrograms = rawPrograms.map(convertProgramToIProgram);
+    const allUserPrograms = await programRepo.findByUser(userEmail);
     
     // Check if this is an assessment scenario
     const now = Date.now();
@@ -68,8 +57,7 @@ export async function GET(
     } else {
       // Quick check if this scenario is assessment type
       const scenarioRepo = repositoryFactory.getScenarioRepository();
-      const rawScenario = await scenarioRepo.findById(id);
-      scenario = rawScenario ? convertScenarioToIScenario(rawScenario) : null;
+      scenario = await scenarioRepo.findById(id);
       
       // Cache the result
       if (scenario) {
@@ -77,19 +65,19 @@ export async function GET(
       }
     }
     
-    let userPrograms: ProgramWithExtras[];
+    let userPrograms: IProgram[];
     if (scenario && scenario.mode === 'assessment') {
       // For assessment scenarios, show all completed assessments from this user
       userPrograms = allUserPrograms.filter(p => 
         p.status === 'completed' && p.metadata?.score !== undefined
-      ) as ProgramWithExtras[];
+      );
     } else {
       // For non-assessment scenarios, only show programs for this specific scenario
-      userPrograms = allUserPrograms.filter(p => p.scenarioId === id) as ProgramWithExtras[];
+      userPrograms = allUserPrograms.filter(p => p.scenarioId === id);
     }
     
     // Sort by startedAt (newest first)
-    userPrograms.sort((a: ProgramWithExtras, b: ProgramWithExtras) => 
+    userPrograms.sort((a, b) => 
       new Date(b.startedAt || b.createdAt).getTime() - new Date(a.startedAt || a.createdAt).getTime()
     );
     
@@ -110,13 +98,13 @@ export async function GET(
       evaluationIds.forEach((id: unknown, index: number) => {
         const rawEval = rawEvaluations[index];
         if (rawEval) {
-          evaluationsMap.set(id as string, convertEvaluationToIEvaluation(rawEval));
+          evaluationsMap.set(id as string, rawEval);
         }
       });
     }
     
     // Enrich programs with minimal async operations
-    const enrichedPrograms = userPrograms.map((program: ProgramWithExtras) => {
+    const enrichedPrograms = userPrograms.map((program) => {
       // Get cached evaluation if available
       const evaluationId = program.metadata?.evaluationId;
       const evaluation = (typeof evaluationId === 'string' && evaluationId)
@@ -190,21 +178,19 @@ export async function POST(
     const taskRepo = repositoryFactory.getTaskRepository();
     
     // Get scenario
-    const rawScenario = await scenarioRepo.findById(id);
-    if (!rawScenario) {
+    const scenario = await scenarioRepo.findById(id);
+    if (!scenario) {
       return NextResponse.json(
         { error: 'Scenario not found' },
         { status: 404 }
       );
     }
-    const scenario = convertScenarioToIScenario(rawScenario);
     
     // Check if user already has an active program for this scenario
-    const rawExistingPrograms = await programRepo.findByUser(email);
-    const existingPrograms = rawExistingPrograms.map(convertProgramToIProgram);
+    const existingPrograms = await programRepo.findByUser(email);
     const activeProgram = existingPrograms.find((p: IProgram) => 
       p.scenarioId === id && p.status === 'active'
-    ) as ProgramWithExtras | undefined;
+    );
     
     if (activeProgram) {
       console.log(`User ${email} already has an active program for scenario ${id}, returning existing`);
@@ -218,17 +204,26 @@ export async function POST(
     const rawProgram = await programRepo.create({
       scenarioId: id,
       userId: email,
-      totalTaskCount: 0,  // Will be updated after creating tasks
       mode: 'assessment',
       status: 'active',
+      currentTaskIndex: 0,
+      completedTaskCount: 0,
+      totalTaskCount: 0,  // Will be updated after creating tasks
+      totalScore: 0,
+      dimensionScores: {},
+      xpEarned: 0,
+      badgesEarned: [],
       createdAt: new Date().toISOString(),
       startedAt: new Date().toISOString(),
-      currentTaskIndex: 0,
-      language,
+      updatedAt: new Date().toISOString(),
+      lastActivityAt: new Date().toISOString(),
+      timeSpentSeconds: 0,
       pblData: {},
       discoveryData: {},
       assessmentData: {},
-      metadata: {}
+      metadata: {
+        language
+      }
     });
     
     // Update the program with additional fields after creation
@@ -243,7 +238,7 @@ export async function POST(
       }
     });
     
-    const program = convertProgramToIProgram(updatedRawProgram);
+    const program = updatedRawProgram || rawProgram;
     
     // Load questions from YAML and create tasks
     const tasks: ITask[] = [];
@@ -353,7 +348,7 @@ export async function POST(
               }
             });
             
-            tasks.push(convertTaskToITask(rawTask));
+            tasks.push(rawTask);
           }
         } else {
           // Legacy format: Single task with all questions
@@ -403,16 +398,19 @@ export async function POST(
             }
           });
           
-          tasks.push(convertTaskToITask(rawTask));
+          tasks.push(rawTask);
         }
       } catch (error) {
         console.error('Error loading questions:', error);
       }
     }
     
-    // Update program with task IDs
+    // Update program with task IDs in metadata
     await programRepo.update?.(program.id, {
-      taskIds: tasks.map(t => t.id)
+      metadata: {
+        ...program.metadata,
+        taskIds: tasks.map(t => t.id)
+      }
     });
     
     return NextResponse.json({ 

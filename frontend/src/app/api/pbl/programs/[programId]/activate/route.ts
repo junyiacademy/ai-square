@@ -72,11 +72,30 @@ export async function POST(
       // Create the first task
       await taskRepo.create({
         programId: programId,
+        mode: 'pbl' as const,
         taskIndex: 0,
-        type: 'task',
-        context: {
-          scenarioId: scenarioId
+        type: 'chat' as const,
+        status: 'active' as const,
+        title: taskTitle,
+        content: {
+          context: {
+            scenarioId: scenarioId
+          }
         },
+        interactions: [],
+        interactionCount: 0,
+        userResponse: {},
+        score: 0,
+        maxScore: 100,
+        allowedAttempts: 3,
+        attemptCount: 0,
+        timeSpentSeconds: 0,
+        aiConfig: {},
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
         metadata: {
           taskId: taskId,
           title: taskTitle
@@ -94,7 +113,7 @@ export async function POST(
         scenarioId: updatedProgram!.scenarioId,
         status: updatedProgram!.status,
         currentTaskIndex: updatedProgram!.currentTaskIndex,
-        completedTasks: updatedProgram!.completedTasks,
+        completedTaskCount: updatedProgram!.completedTaskCount,
         totalTaskCount: updatedProgram!.totalTaskCount,
         startedAt: updatedProgram!.startedAt || updatedProgram!.createdAt,
         updatedAt: updatedProgram!.lastActivityAt

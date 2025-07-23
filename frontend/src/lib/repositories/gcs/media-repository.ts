@@ -107,9 +107,9 @@ export class GCSMediaRepository implements IMediaRepository {
         mediaFiles.push({
           name: file.name,
           url: await this.getFileUrl(file.name),
-          size: parseInt(metadata.size || '0'),
+          size: typeof metadata.size === 'string' ? parseInt(metadata.size) : (metadata.size || 0),
           contentType: metadata.contentType || 'application/octet-stream',
-          updatedAt: new Date(metadata.updated || metadata.timeCreated)
+          updatedAt: new Date(metadata.updated as string || metadata.timeCreated as string)
         });
       }
 

@@ -2,7 +2,8 @@ import { GET } from '../route';
 import fs from 'fs/promises';
 import * as yaml from 'js-yaml';
 import { cacheService } from '@/lib/cache/cache-service';
-import type { IScenario, DifficultyLevel } from '@/types/unified-learning';
+import type { IScenario } from '@/types/unified-learning';
+import type { DifficultyLevel } from '@/types/database';
 
 // Mock dependencies
 jest.mock('fs', () => ({
@@ -132,15 +133,23 @@ describe('/api/pbl/scenarios', () => {
             difficulty: mockScenarioData.scenario_info.difficulty as DifficultyLevel,
             estimatedMinutes: mockScenarioData.scenario_info.estimated_duration,
             prerequisites: [],
-            learningObjectives: [],
-            tags: [],
-            ksaMapping: {
-              knowledge: [],
-              skills: [],
-              attitudes: []
-            },
-            rubric: {},
+            objectives: [],
+            // tags: [],
+            // ksaMapping: {
+            //   knowledge: [],
+            //   skills: [],
+            //   attitudes: []
+            // },
+            // rubric: {},
             taskTemplates: [],
+            taskCount: 0,
+            xpRewards: {},
+            unlockRequirements: {},
+            pblData: {},
+            discoveryData: {},
+            assessmentData: {},
+            aiModules: {},
+            resources: [],
             metadata: {
               targetDomains: mockScenarioData.scenario_info.target_domains
             },
@@ -164,15 +173,23 @@ describe('/api/pbl/scenarios', () => {
           difficulty: 'intermediate' as DifficultyLevel,
           estimatedMinutes: 60,
           prerequisites: [],
-          learningObjectives: [],
-          tags: [],
-          ksaMapping: {
-            knowledge: [],
-            skills: [],
-            attitudes: []
-          },
-          rubric: {},
+          objectives: [],
+          // tags: [],
+          // ksaMapping: {
+          //   knowledge: [],
+          //   skills: [],
+          //   attitudes: []
+          // },
+          // rubric: {},
           taskTemplates: [],
+          taskCount: 0,
+          xpRewards: {},
+          unlockRequirements: {},
+          pblData: {},
+          discoveryData: {},
+          assessmentData: {},
+          aiModules: {},
+          resources: [],
           metadata: {
             targetDomains: ['engaging_with_ai']
           },
@@ -472,15 +489,23 @@ describe('/api/pbl/scenarios', () => {
             difficulty: mockScenarioData.scenario_info.difficulty as DifficultyLevel,
             estimatedMinutes: mockScenarioData.scenario_info.estimated_duration,
             prerequisites: [],
-            learningObjectives: [],
-            tags: [],
-            ksaMapping: {
-              knowledge: [],
-              skills: [],
-              attitudes: []
-            },
-            rubric: {},
+            objectives: [],
+            // tags: [],
+            // ksaMapping: {
+            //   knowledge: [],
+            //   skills: [],
+            //   attitudes: []
+            // },
+            // rubric: {},
             taskTemplates: [],
+            taskCount: 0,
+            xpRewards: {},
+            unlockRequirements: {},
+            pblData: {},
+            discoveryData: {},
+            assessmentData: {},
+            aiModules: {},
+            resources: [],
             metadata: {
               targetDomains: mockScenarioData.scenario_info.target_domains
             },
@@ -504,15 +529,23 @@ describe('/api/pbl/scenarios', () => {
           difficulty: 'intermediate' as DifficultyLevel,
           estimatedMinutes: 60,
           prerequisites: [],
-          learningObjectives: [],
-          tags: [],
-          ksaMapping: {
-            knowledge: [],
-            skills: [],
-            attitudes: []
-          },
-          rubric: {},
+          objectives: [],
+          // tags: [],
+          // ksaMapping: {
+          //   knowledge: [],
+          //   skills: [],
+          //   attitudes: []
+          // },
+          // rubric: {},
           taskTemplates: [],
+          taskCount: 0,
+          xpRewards: {},
+          unlockRequirements: {},
+          pblData: {},
+          discoveryData: {},
+          assessmentData: {},
+          aiModules: {},
+          resources: [],
           metadata: {
             targetDomains: ['engaging_with_ai']
           },

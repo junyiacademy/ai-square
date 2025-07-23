@@ -3,7 +3,7 @@
  * 繼承自 BaseYAMLLoader，專門處理 Assessment YAML 檔案
  */
 
-import { BaseYAMLLoader, YAMLLoaderOptions } from '@/lib/abstractions/base-yaml-loader';
+import { BaseYAMLLoader, YAMLLoaderOptions, LoadResult } from '@/lib/abstractions/base-yaml-loader';
 import path from 'path';
 
 export interface AssessmentConfig {
@@ -63,10 +63,30 @@ export interface AssessmentYAMLData {
 export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
   protected readonly loaderName = 'AssessmentYAMLLoader';
 
+  private basePath: string;
+
   constructor() {
     super();
-    // Override default base path for assessment data
-    this.defaultOptions.basePath = path.join(process.cwd(), 'public', 'assessment_data');
+    // Set base path for assessment data
+    this.basePath = path.join(process.cwd(), 'public', 'assessment_data');
+  }
+
+  /**
+   * Implement abstract load method
+   */
+  async load(fileName: string): Promise<LoadResult<AssessmentYAMLData>> {
+    try {
+      const filePath = this.getFilePath(fileName);
+      const { promises: fs } = await import('fs');
+      const yaml = await import('js-yaml');
+      
+      const content = await fs.readFile(filePath, 'utf8');
+      const data = yaml.load(content) as AssessmentYAMLData;
+      
+      return { data };
+    } catch (error) {
+      return { data: null, error: error as Error };
+    }
   }
 
   /**
@@ -79,9 +99,9 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
   ): Promise<AssessmentYAMLData | null> {
     // Try language-specific file first
     const fileName = `${assessmentName}_questions_${language}`;
-    const result = await this.load(fileName, language, options);
+    const result = await this.load(fileName);
 
-    if (result.success && result.data) {
+    if (result.data) {
       return result.data;
     }
 
@@ -89,9 +109,9 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
     if (language !== 'en') {
       console.log(`Language-specific file not found for ${language}, falling back to English`);
       const fallbackFileName = `${assessmentName}_questions_en`;
-      const fallbackResult = await this.load(fallbackFileName, 'en', options);
+      const fallbackResult = await this.load(fallbackFileName);
       
-      if (fallbackResult.success && fallbackResult.data) {
+      if (fallbackResult.data) {
         return fallbackResult.data;
       }
     }
@@ -104,7 +124,7 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
    */
   async scanAssessments(): Promise<string[]> {
     const fs = await import('fs/promises');
-    const assessmentDir = this.defaultOptions.basePath!;
+    const assessmentDir = this.basePath;
     
     try {
       const items = await fs.readdir(assessmentDir, { withFileTypes: true });
@@ -122,7 +142,7 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
    */
   async getAvailableLanguages(assessmentName: string): Promise<string[]> {
     const fs = await import('fs/promises');
-    const assessmentDir = path.join(this.defaultOptions.basePath!, assessmentName);
+    const assessmentDir = path.join(this.basePath, assessmentName);
     
     try {
       const files = await fs.readdir(assessmentDir);
@@ -171,10 +191,10 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
   /**
    * Override to provide custom file path resolution
    */
-  protected getFilePath(fileName: string, basePath: string, {}: string = ''): string {
+  protected getFilePath(fileName: string, _language: string = ''): string {
     // Assessment files are in subdirectories
     const assessmentName = fileName.replace(/_questions_\w+$/, '');
-    return path.join(basePath, assessmentName, `${fileName}.yaml`);
+    return path.join(this.basePath, assessmentName, `${fileName}.yaml`);
   }
 
   /**
@@ -184,7 +204,7 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
     const suffix = language === 'en' ? '' : `_${language}`;
     const fieldWithSuffix = `${fieldName}${suffix}`;
     
-    return data[fieldWithSuffix] || data[fieldName] || '';
+    return (data[fieldWithSuffix] as string) || (data[fieldName] as string) || '';
   }
 }
 

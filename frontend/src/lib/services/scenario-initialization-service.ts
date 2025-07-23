@@ -8,8 +8,8 @@
 
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { IScenario } from '@/types/unified-learning';
-import { DifficultyLevel, LearningMode, SourceType, TaskType } from '@/types/database';
-import type { Scenario, ScenarioType } from '@/lib/repositories/interfaces';
+import { DifficultyLevel, LearningMode, SourceType, TaskType, LearningMode as DBLearningMode } from '@/types/database';
+import { CreateScenarioDto, UpdateScenarioDto } from '../repositories/interfaces';
 import { AssessmentYAMLLoader } from './assessment-yaml-loader';
 import { PBLYAMLLoader } from './pbl-yaml-loader';
 import { DiscoveryYAMLLoader } from './discovery-yaml-loader';
@@ -151,47 +151,34 @@ export class ScenarioInitializationService {
           // 創建或更新 Scenario
           if (existingScenario) {
             // Convert IScenario to UpdateScenarioDto
-            const updateDto = {
+            const updateData: Partial<IScenario> = {
               status: 'active' as const,
-              difficultyLevel: this.getDifficultyString(scenarioData.difficulty),
-              estimatedMinutes: scenarioData.estimatedMinutes,
-              prerequisites: scenarioData.prerequisites,
-              xpRewards: scenarioData.xpRewards,
-              tasks: scenarioData.taskTemplates,
-              metadata: scenarioData.metadata
+              version: scenarioData.version,
+              title: scenarioData.title,
+              description: scenarioData.description,
+              objectives: scenarioData.objectives
             };
             
             const updated = await this.scenarioRepo.update(
               existingScenario.id,
-              updateDto
+              updateData
             );
             result.updated++;
-            // Convert back to IScenario format
-            result.scenarios.push(this.convertToIScenario(updated));
+            result.scenarios.push(updated);
           } else {
             // Convert IScenario to CreateScenarioDto
-            const createDto = {
-              type: scenarioData.mode as ScenarioType,
-              difficultyLevel: this.getDifficultyString(scenarioData.difficulty),
-              estimatedMinutes: scenarioData.estimatedMinutes,
-              prerequisites: scenarioData.prerequisites,
-              xpRewards: scenarioData.xpRewards,
-              tasks: scenarioData.taskTemplates,
-              metadata: {
-                ...scenarioData.metadata,
-                sourceType: scenarioData.sourceType,
-                sourcePath: scenarioData.sourcePath,
-                sourceMetadata: scenarioData.sourceMetadata,
-                title: scenarioData.title,
-                description: scenarioData.description,
-                objectives: scenarioData.objectives
-              }
+            // Create scenario with all required IScenario fields
+            const scenarioToCreate = {
+              ...scenarioData,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
             };
+            // Remove id as it will be generated
+            delete (scenarioToCreate as any).id;
             
-            const created = await this.scenarioRepo.create(createDto);
+            const created = await this.scenarioRepo.create(scenarioToCreate as Omit<IScenario, 'id'>);
             result.created++;
-            // Convert back to IScenario format
-            result.scenarios.push(this.convertToIScenario(created));
+            result.scenarios.push(created);
           }
 
         } catch (error) {
@@ -215,58 +202,23 @@ export class ScenarioInitializationService {
     sourceType: string,
     yamlPath: string
   ): Promise<IScenario | null> {
-    // Use findByType to get scenarios of specific type
-    const scenarios = await this.scenarioRepo.findByType(sourceType as ScenarioType);
+    // Use findByMode to get scenarios of specific mode
+    const scenarios = await this.scenarioRepo.findByMode?.(sourceType as DBLearningMode) || [];
     
     // Find matching scenario by source path in metadata
     const match = scenarios.find((s: any) => 
       s.metadata?.sourcePath === yamlPath
     );
     
-    return match ? this.convertToIScenario(match) : null;
+    return match || null;
   }
   
   /**
    * Convert database Scenario to IScenario
    */
-  private convertToIScenario(scenario: Scenario): IScenario {
-    return {
-      id: scenario.id,
-      mode: scenario.mode as LearningMode,
-      status: scenario.status,
-      version: scenario.version,
-      sourceType: (scenario.metadata?.sourceType as SourceType) || 'yaml',
-      sourcePath: scenario.metadata?.sourcePath as string,
-      sourceId: scenario.metadata?.sourceId as string,
-      sourceMetadata: (scenario.metadata?.sourceMetadata as Record<string, unknown>) || {},
-      title: (scenario.metadata?.title as Record<string, string>) || { en: scenario.title || '' },
-      description: (scenario.metadata?.description as Record<string, string>) || { en: scenario.description || '' },
-      objectives: (scenario.metadata?.objectives as string[]) || [],
-      difficulty: this.getDifficultyLevel(scenario.difficultyLevel),
-      estimatedMinutes: scenario.estimatedMinutes || 60,
-      prerequisites: scenario.prerequisites || [],
-      taskTemplates: ((scenario as any).tasks || []).map((task: any) => ({
-        ...task,
-        type: task.type as TaskType,
-        title: task.title || ''
-      })),
-      taskCount: scenario.tasks?.length || 0,
-      xpRewards: Object.fromEntries(
-        Object.entries(scenario.xpRewards || {})
-          .filter(([_, value]) => typeof value === 'number')
-          .map(([key, value]) => [key, value as number])
-      ),
-      unlockRequirements: scenario.unlockRequirements || {},
-      pblData: (scenario.metadata?.pblData as Record<string, unknown>) || {},
-      discoveryData: (scenario.metadata?.discoveryData as Record<string, unknown>) || {},
-      assessmentData: (scenario.metadata?.assessmentData as Record<string, unknown>) || {},
-      aiModules: scenario.aiModules || {},
-      resources: scenario.resources || [],
-      createdAt: scenario.createdAt.toISOString(),
-      updatedAt: scenario.updatedAt.toISOString(),
-      publishedAt: scenario.publishedAt?.toISOString(),
-      metadata: scenario.metadata || {}
-    };
+  private convertToIScenario(scenario: IScenario): IScenario {
+    // Simply return the scenario as it's already in IScenario format
+    return scenario;
   }
   
   /**
@@ -274,14 +226,6 @@ export class ScenarioInitializationService {
    */
   private getDifficultyString(level: DifficultyLevel): string {
     return level;
-  }
-  
-  /**
-   * Convert string to DifficultyLevel enum
-   */
-  private getDifficultyLevel(level?: string): DifficultyLevel {
-    const validLevels: DifficultyLevel[] = ['beginner', 'intermediate', 'advanced', 'expert'];
-    return (validLevels.includes(level as DifficultyLevel) ? level : 'intermediate') as DifficultyLevel;
   }
 }
 
