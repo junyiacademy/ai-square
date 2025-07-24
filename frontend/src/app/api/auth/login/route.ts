@@ -135,6 +135,30 @@ export async function POST(request: NextRequest) {
       maxAge: 60 * 60 * 24, // 24 hours
     })
 
+    // Also set legacy cookies for auth check API compatibility
+    response.cookies.set('isLoggedIn', 'true', {
+      ...cookieOptions,
+      httpOnly: false, // Make it accessible to client-side code
+      maxAge: 60 * 60 * 24, // 24 hours
+    })
+
+    response.cookies.set('user', JSON.stringify({
+      id: userId,
+      email: user.email,
+      name: user.name,
+      role: mockUser.role
+    }), {
+      ...cookieOptions,
+      httpOnly: false, // Make it accessible to client-side code
+      maxAge: 60 * 60 * 24, // 24 hours
+    })
+
+    response.cookies.set('userRole', mockUser.role, {
+      ...cookieOptions,
+      httpOnly: false, // Make it accessible to client-side code
+      maxAge: 60 * 60 * 24, // 24 hours
+    })
+
     return response
   } catch (error) {
     console.error('Login API error:', error)
