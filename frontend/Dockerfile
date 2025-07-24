@@ -15,9 +15,9 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/node_modules ./node_modules
 
-# Copy src directory for SQL schema files and scripts
+# Copy src directory for SQL schema files
 COPY --from=builder /app/src ./src
-COPY --from=builder /app/scripts ./scripts
+# Skip scripts directory for now - it doesn't exist in this project
 
 # Copy service account key if it exists in the project root
 # Note: In production, this should be mounted as a secret or provided via environment variable
