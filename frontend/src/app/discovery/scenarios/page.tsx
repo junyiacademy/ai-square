@@ -77,7 +77,7 @@ export default function ScenariosPage() {
   const router = useRouter();
   const { i18n } = useTranslation();
   const { isLoggedIn } = useAuth();
-  const { loadUserData } = useUserData();
+  useUserData(); // Trigger user data loading
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [activeTab, setActiveTab] = useState<'all' | 'my'>('all'); // Default to 'all' since v2 doesn't track discovery in userData
   interface Scenario {
@@ -148,12 +148,7 @@ export default function ScenariosPage() {
     fetchScenarios();
   }, [i18n.language]);
 
-  // Load user data on mount
-  useEffect(() => {
-    if (isLoggedIn) {
-      loadUserData();
-    }
-  }, [isLoggedIn, loadUserData]);
+  // Note: useUserData hook automatically loads data when user logs in
 
 
   // Load user's Discovery scenarios

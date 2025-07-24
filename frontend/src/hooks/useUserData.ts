@@ -107,13 +107,49 @@ export function useUserData(): UseUserDataReturn {
   
   // Auto-load when user changes
   useEffect(() => {
-    if (isLoggedIn && user) {
-      loadUserData();
+    if (isLoggedIn && user?.email) {
+      // Use a ref to prevent dependency issues
+      const loadData = async () => {
+        const service = getService();
+        if (!service) {
+          setUserData(null);
+          setIsLoading(false);
+          return;
+        }
+        
+        setIsLoading(true);
+        setError(null);
+        
+        try {
+          const data = await service.loadUserData();
+          setUserData(data);
+          
+          // If no data exists, try to migrate from localStorage
+          if (!data) {
+            try {
+              const migrated = await service.migrateFromLocalStorage();
+              if (migrated) {
+                const migratedData = await service.loadUserData();
+                setUserData(migratedData);
+              }
+            } catch (migrationError) {
+              console.error('Migration failed:', migrationError);
+            }
+          }
+        } catch (err) {
+          console.error('Failed to load user data:', err);
+          setError(err instanceof Error ? err.message : 'Failed to load user data');
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      
+      loadData();
     } else {
       setUserData(null);
       setIsLoading(false);
     }
-  }, [isLoggedIn, user?.email, user, loadUserData]); // Include user in dependencies
+  }, [isLoggedIn, user?.email, getService]);
   
   // Wrap all service methods to handle errors and update local state
   const wrapServiceMethod = useCallback(<T extends unknown[], R>(
