@@ -149,7 +149,7 @@ export function useUserData(): UseUserDataReturn {
       setUserData(null);
       setIsLoading(false);
     }
-  }, [isLoggedIn, user?.email, getService]);
+  }, [isLoggedIn, user?.email]); // Remove getService to break circular dependency
   
   // Wrap all service methods to handle errors and update local state
   const wrapServiceMethod = useCallback(<T extends unknown[], R>(
