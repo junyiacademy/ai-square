@@ -211,10 +211,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setUser(parsedUser);
             setIsLoggedIn(true);
           } catch {
-            clearAuthState();
+            // Clear state without triggering another event
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('user');
+            localStorage.removeItem('ai_square_session');
+            setUser(null);
+            setIsLoggedIn(false);
+            setTokenExpiringSoon(false);
           }
         } else {
-          clearAuthState();
+          // Clear state without triggering another event
+          localStorage.removeItem('isLoggedIn');
+          localStorage.removeItem('user');
+          localStorage.removeItem('ai_square_session');
+          setUser(null);
+          setIsLoggedIn(false);
+          setTokenExpiringSoon(false);
         }
       }
     };
@@ -230,10 +242,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(parsedUser);
           setIsLoggedIn(true);
         } catch {
-          clearAuthState();
+          // Clear state without triggering another event
+          localStorage.removeItem('isLoggedIn');
+          localStorage.removeItem('user');
+          localStorage.removeItem('ai_square_session');
+          setUser(null);
+          setIsLoggedIn(false);
+          setTokenExpiringSoon(false);
         }
       } else {
-        clearAuthState();
+        // Clear state without triggering another event
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('user');
+        localStorage.removeItem('ai_square_session');
+        setUser(null);
+        setIsLoggedIn(false);
+        setTokenExpiringSoon(false);
       }
     };
 
