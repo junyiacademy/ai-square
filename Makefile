@@ -18,7 +18,9 @@ DESC ?= ""
         test-frontend test-backend test-all test-e2e test-smart \
         dev-lint dev-typecheck dev-quality lint-backend \
         clean clean-all build-journey pre-commit-check \
-        graphiti graphiti-stop graphiti-status claude-init
+        graphiti graphiti-stop graphiti-status claude-init \
+        db-init db-reset db-seed db-up db-down db-backup db-restore \
+        db-status db-migrate db-shell db-logs db-clean-backups
 
 # 預設顯示幫助
 .DEFAULT_GOAL := help
@@ -335,6 +337,17 @@ help:
 	@echo "  $(GREEN)make dev-setup$(NC)                                 - 初始化開發環境"
 	@echo "  $(GREEN)make dev-install$(NC)                               - 安裝相依套件"
 	@echo "  $(GREEN)make dev-update$(NC)                                - 更新相依套件"
+	@echo ""
+	@echo "$(CYAN)資料庫管理:$(NC)"
+	@echo "  $(GREEN)make db-init$(NC)                                   - 初始化本地資料庫（含 demo users）"
+	@echo "  $(GREEN)make db-up$(NC)                                     - 啟動本地 PostgreSQL"
+	@echo "  $(GREEN)make db-down$(NC)                                   - 停止本地 PostgreSQL"
+	@echo "  $(GREEN)make db-reset$(NC)                                  - 重置資料庫（清空並重新初始化）"
+	@echo "  $(GREEN)make db-seed$(NC)                                   - 載入範例資料"
+	@echo "  $(GREEN)make db-status$(NC)                                 - 檢查資料庫狀態"
+	@echo "  $(GREEN)make db-shell$(NC)                                  - 進入資料庫 shell（psql）"
+	@echo "  $(GREEN)make db-backup$(NC)                                 - 備份資料庫"
+	@echo "  $(GREEN)make db-restore FILE=backup.sql$(NC)                - 還原資料庫"
 	@echo ""
 	@echo "$(CYAN)品質檢查:$(NC)"
 	@echo "  $(RED)make pre-commit-check$(NC)                          - 🔍 Commit 前必須執行的檢查 $(YELLOW)(重要!)$(NC)"
@@ -814,6 +827,77 @@ clean-all: clean
 	rm -rf backend/__pycache__/
 	rm -rf backend/venv/
 	@echo "$(GREEN)✅ 深度清理完成$(NC)"
+
+#=============================================================================
+# 資料庫管理命令
+#=============================================================================
+
+## 初始化本地資料庫（包含 demo users 和 scenarios）
+db-init:
+	@echo "$(GREEN)🗄️  初始化本地資料庫...$(NC)"
+	@cd frontend && make -f Makefile.db db-init
+	@echo "$(GREEN)✅ 資料庫初始化完成！$(NC)"
+
+## 重置資料庫（清空並重新初始化）
+db-reset:
+	@echo "$(RED)⚠️  重置資料庫...$(NC)"
+	@cd frontend && make -f Makefile.db db-reset
+	@echo "$(GREEN)✅ 資料庫已重置$(NC)"
+
+## 載入範例資料
+db-seed:
+	@echo "$(BLUE)🌱 載入範例資料...$(NC)"
+	@cd frontend && make -f Makefile.db db-seed
+	@echo "$(GREEN)✅ 範例資料載入完成$(NC)"
+
+## 啟動本地 PostgreSQL
+db-up:
+	@echo "$(GREEN)🚀 啟動本地 PostgreSQL...$(NC)"
+	@cd frontend && make -f Makefile.db db-up
+
+## 停止本地 PostgreSQL
+db-down:
+	@echo "$(YELLOW)🛑 停止本地 PostgreSQL...$(NC)"
+	@cd frontend && make -f Makefile.db db-down
+
+## 資料庫備份
+db-backup:
+	@echo "$(BLUE)💾 備份資料庫...$(NC)"
+	@cd frontend && make -f Makefile.db db-backup
+	@echo "$(GREEN)✅ 備份完成$(NC)"
+
+## 資料庫還原
+db-restore:
+	@echo "$(YELLOW)📥 還原資料庫...$(NC)"
+	@cd frontend && make -f Makefile.db db-restore FILE=$(FILE)
+	@echo "$(GREEN)✅ 還原完成$(NC)"
+
+## 檢查資料庫狀態
+db-status:
+	@echo "$(CYAN)📊 檢查資料庫狀態...$(NC)"
+	@cd frontend && make -f Makefile.db db-status
+
+## 資料庫遷移
+db-migrate:
+	@echo "$(BLUE)🔄 執行資料庫遷移...$(NC)"
+	@cd frontend && make -f Makefile.db db-migrate
+	@echo "$(GREEN)✅ 遷移完成$(NC)"
+
+## 執行 psql（交互式資料庫 shell）
+db-shell:
+	@echo "$(CYAN)🖥️  進入資料庫 shell...$(NC)"
+	@cd frontend && make -f Makefile.db db-shell
+
+## 檢視資料庫日誌
+db-logs:
+	@echo "$(BLUE)📋 檢視資料庫日誌...$(NC)"
+	@cd frontend && make -f Makefile.db db-logs
+
+## 清理資料庫備份
+db-clean-backups:
+	@echo "$(YELLOW)🧹 清理舊備份...$(NC)"
+	@cd frontend && make -f Makefile.db db-clean-backups
+	@echo "$(GREEN)✅ 清理完成$(NC)"
 
 #=============================================================================
 # AI 專用配置

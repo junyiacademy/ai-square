@@ -1,0 +1,186 @@
+# Database Management Makefile
+# Usage: make -f Makefile.db [target]
+
+# Variables
+DB_HOST ?= 127.0.0.1
+DB_PORT ?= 5433
+DB_NAME ?= ai_square_db
+DB_USER ?= postgres
+DB_PASSWORD ?= postgres
+DOCKER_COMPOSE_FILE ?= docker-compose.postgres.yml
+
+# Colors for output
+GREEN := \033[0;32m
+RED := \033[0;31m
+YELLOW := \033[0;33m
+NC := \033[0m # No Color
+
+# Default target
+.PHONY: help
+help:
+	@echo "$(GREEN)AI Square Database Management$(NC)"
+	@echo "================================"
+	@echo "Available commands:"
+	@echo "  $(YELLOW)make db-up$(NC)          - Start PostgreSQL container"
+	@echo "  $(YELLOW)make db-down$(NC)        - Stop PostgreSQL container"
+	@echo "  $(YELLOW)make db-init$(NC)        - Initialize database schema"
+	@echo "  $(YELLOW)make db-users$(NC)       - Create demo users"
+	@echo "  $(YELLOW)make db-scenarios$(NC)   - Load all scenarios from YAML"
+	@echo "  $(YELLOW)make db-seed$(NC)        - Complete setup (init + users + scenarios)"
+	@echo "  $(YELLOW)make db-reset$(NC)       - Reset database (drop + recreate + seed)"
+	@echo "  $(YELLOW)make db-status$(NC)      - Check database health"
+	@echo "  $(YELLOW)make db-clean$(NC)       - Clean all data (keep schema)"
+	@echo "  $(YELLOW)make db-backup$(NC)      - Backup database"
+	@echo "  $(YELLOW)make db-restore$(NC)     - Restore from backup"
+
+# Start PostgreSQL container
+.PHONY: db-up
+db-up:
+	@echo "$(GREEN)Starting PostgreSQL container...$(NC)"
+	docker-compose -f $(DOCKER_COMPOSE_FILE) up -d
+	@echo "$(GREEN)Waiting for PostgreSQL to be ready...$(NC)"
+	@sleep 5
+	@echo "$(GREEN)PostgreSQL is ready at port $(DB_PORT)$(NC)"
+
+# Stop PostgreSQL container
+.PHONY: db-down
+db-down:
+	@echo "$(YELLOW)Stopping PostgreSQL container...$(NC)"
+	docker-compose -f $(DOCKER_COMPOSE_FILE) down
+	@echo "$(GREEN)PostgreSQL stopped$(NC)"
+
+# Initialize database schema
+.PHONY: db-init
+db-init:
+	@echo "$(GREEN)Initializing database schema...$(NC)"
+	@PGPASSWORD=$(DB_PASSWORD) psql -h $(DB_HOST) -p $(DB_PORT) -U $(DB_USER) -d $(DB_NAME) \
+		-f src/lib/repositories/postgresql/schema-v3.sql \
+		-v ON_ERROR_STOP=1 || (echo "$(RED)Schema initialization failed$(NC)" && exit 1)
+	@echo "$(GREEN)Database schema initialized successfully$(NC)"
+
+# Create demo users
+.PHONY: db-users
+db-users:
+	@echo "$(GREEN)Creating demo users...$(NC)"
+	@DB_HOST=$(DB_HOST) DB_PORT=$(DB_PORT) DB_NAME=$(DB_NAME) DB_USER=$(DB_USER) DB_PASSWORD=$(DB_PASSWORD) \
+		npx ts-node src/scripts/create-demo-users.ts || (echo "$(RED)User creation failed$(NC)" && exit 1)
+	@echo "$(GREEN)Demo users created:$(NC)"
+	@echo "  - admin@example.com / admin123"
+	@echo "  - teacher@example.com / teacher123"
+	@echo "  - student@example.com / student123"
+
+# Load Discovery scenarios
+.PHONY: db-scenarios-discovery
+db-scenarios-discovery:
+	@echo "$(GREEN)Loading Discovery scenarios...$(NC)"
+	@DB_HOST=$(DB_HOST) DB_PORT=$(DB_PORT) DB_NAME=$(DB_NAME) DB_USER=$(DB_USER) DB_PASSWORD=$(DB_PASSWORD) \
+		npx ts-node src/scripts/load-discovery-scenarios-direct.ts || (echo "$(RED)Discovery scenarios loading failed$(NC)" && exit 1)
+
+# Load PBL scenarios
+.PHONY: db-scenarios-pbl
+db-scenarios-pbl:
+	@echo "$(GREEN)Loading PBL scenarios...$(NC)"
+	@DB_HOST=$(DB_HOST) DB_PORT=$(DB_PORT) DB_NAME=$(DB_NAME) DB_USER=$(DB_USER) DB_PASSWORD=$(DB_PASSWORD) \
+		npx ts-node src/scripts/populate-all-yaml-scenarios.ts --mode=pbl || (echo "$(RED)PBL scenarios loading failed$(NC)" && exit 1)
+
+# Load Assessment scenarios
+.PHONY: db-scenarios-assessment
+db-scenarios-assessment:
+	@echo "$(GREEN)Loading Assessment scenarios...$(NC)"
+	@DB_HOST=$(DB_HOST) DB_PORT=$(DB_PORT) DB_NAME=$(DB_NAME) DB_USER=$(DB_USER) DB_PASSWORD=$(DB_PASSWORD) \
+		npx ts-node src/scripts/populate-all-yaml-scenarios.ts --mode=assessment || (echo "$(RED)Assessment scenarios loading failed$(NC)" && exit 1)
+
+# Load all scenarios
+.PHONY: db-scenarios
+db-scenarios: db-scenarios-discovery db-scenarios-pbl db-scenarios-assessment
+	@echo "$(GREEN)All scenarios loaded successfully$(NC)"
+
+# Complete database setup
+.PHONY: db-seed
+db-seed: db-init db-users db-scenarios
+	@echo "$(GREEN)Database seeding completed!$(NC)"
+	@$(MAKE) -f Makefile.db db-status
+
+# Check database status
+.PHONY: db-status
+db-status:
+	@echo "$(GREEN)Checking database health...$(NC)"
+	@DB_HOST=$(DB_HOST) DB_PORT=$(DB_PORT) DB_NAME=$(DB_NAME) DB_USER=$(DB_USER) DB_PASSWORD=$(DB_PASSWORD) \
+		npx ts-node src/scripts/check-db-health.ts || echo "$(YELLOW)Database health check completed with warnings$(NC)"
+
+# Clean all data (keep schema)
+.PHONY: db-clean
+db-clean:
+	@echo "$(YELLOW)Cleaning all data (keeping schema)...$(NC)"
+	@PGPASSWORD=$(DB_PASSWORD) psql -h $(DB_HOST) -p $(DB_PORT) -U $(DB_USER) -d $(DB_NAME) \
+		-c "TRUNCATE TABLE evaluations, tasks, programs, scenarios, users CASCADE;" \
+		-v ON_ERROR_STOP=1 || (echo "$(RED)Data cleanup failed$(NC)" && exit 1)
+	@echo "$(GREEN)All data cleaned$(NC)"
+
+# Reset database (drop + recreate + seed)
+.PHONY: db-reset
+db-reset:
+	@echo "$(RED)Resetting database...$(NC)"
+	@echo "$(YELLOW)This will delete all data. Press Ctrl+C to cancel, or wait 3 seconds to continue...$(NC)"
+	@sleep 3
+	@$(MAKE) -f Makefile.db db-clean
+	@$(MAKE) -f Makefile.db db-seed
+	@echo "$(GREEN)Database reset completed$(NC)"
+
+# Backup database
+.PHONY: db-backup
+db-backup:
+	@echo "$(GREEN)Backing up database...$(NC)"
+	@mkdir -p backups
+	@BACKUP_FILE="backups/ai_square_backup_$$(date +%Y%m%d_%H%M%S).sql" && \
+		PGPASSWORD=$(DB_PASSWORD) pg_dump -h $(DB_HOST) -p $(DB_PORT) -U $(DB_USER) -d $(DB_NAME) \
+		--clean --if-exists --create > $$BACKUP_FILE && \
+		echo "$(GREEN)Backup saved to: $$BACKUP_FILE$(NC)"
+
+# Restore from backup
+.PHONY: db-restore
+db-restore:
+	@if [ -z "$(BACKUP_FILE)" ]; then \
+		echo "$(RED)Please specify BACKUP_FILE. Example: make db-restore BACKUP_FILE=backups/ai_square_backup_20240125_120000.sql$(NC)"; \
+		exit 1; \
+	fi
+	@echo "$(YELLOW)Restoring from $(BACKUP_FILE)...$(NC)"
+	@PGPASSWORD=$(DB_PASSWORD) psql -h $(DB_HOST) -p $(DB_PORT) -U $(DB_USER) \
+		-f $(BACKUP_FILE) -v ON_ERROR_STOP=1 || (echo "$(RED)Restore failed$(NC)" && exit 1)
+	@echo "$(GREEN)Database restored successfully$(NC)"
+
+# Quick setup for development
+.PHONY: dev
+dev: db-up db-seed
+	@echo "$(GREEN)Development database ready!$(NC)"
+	@echo "$(GREEN)You can now run: npm run dev$(NC)"
+
+# Show connection info
+.PHONY: db-info
+db-info:
+	@echo "$(GREEN)Database Connection Info:$(NC)"
+	@echo "  Host: $(DB_HOST)"
+	@echo "  Port: $(DB_PORT)"
+	@echo "  Database: $(DB_NAME)"
+	@echo "  User: $(DB_USER)"
+	@echo "  Password: $(DB_PASSWORD)"
+	@echo ""
+	@echo "$(YELLOW)Connection string:$(NC)"
+	@echo "  postgresql://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)"
+
+# Connect to database with psql
+.PHONY: db-connect
+db-connect:
+	@echo "$(GREEN)Connecting to database...$(NC)"
+	@PGPASSWORD=$(DB_PASSWORD) psql -h $(DB_HOST) -p $(DB_PORT) -U $(DB_USER) -d $(DB_NAME)
+
+# Run custom SQL file
+.PHONY: db-sql
+db-sql:
+	@if [ -z "$(SQL_FILE)" ]; then \
+		echo "$(RED)Please specify SQL_FILE. Example: make db-sql SQL_FILE=custom.sql$(NC)"; \
+		exit 1; \
+	fi
+	@echo "$(GREEN)Running SQL file: $(SQL_FILE)$(NC)"
+	@PGPASSWORD=$(DB_PASSWORD) psql -h $(DB_HOST) -p $(DB_PORT) -U $(DB_USER) -d $(DB_NAME) \
+		-f $(SQL_FILE) -v ON_ERROR_STOP=1
