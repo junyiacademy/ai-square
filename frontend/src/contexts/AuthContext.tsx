@@ -15,7 +15,7 @@ interface AuthContextType {
   isLoggedIn: boolean;
   isLoading: boolean;
   tokenExpiringSoon: boolean;
-  login: (credentials: { email: string; password: string; rememberMe?: boolean }) => Promise<{ success: boolean; error?: string }>;
+  login: (credentials: { email: string; password: string; rememberMe?: boolean }) => Promise<{ success: boolean; error?: string; user?: User }>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
   refreshToken: () => Promise<boolean>;
@@ -109,7 +109,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           localStorage.setItem('ai_square_session', data.sessionToken);
         }
         
-        return { success: true };
+        return { success: true, user: data.user };
       } else {
         return { success: false, error: data.error || 'Login failed' };
       }

@@ -4,11 +4,13 @@ import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
 import { LoginForm } from '@/components/auth/LoginForm'
+import { useAuth } from '@/contexts/AuthContext'
 
 function LoginContent() {
   const { t } = useTranslation('auth')
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { login } = useAuth()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [info, setInfo] = useState('')
@@ -25,25 +27,10 @@ function LoginContent() {
     setError('')
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(credentials),
-      })
+      // Use AuthContext login method which handles all state updates
+      const result = await login(credentials)
 
-      const data = await response.json()
-
-      if (data.success) {
-        // Store auth data in localStorage for Header component
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('user', JSON.stringify(data.user));
-        
-        // Store session token if provided
-        if (data.sessionToken) {
-          localStorage.setItem('ai_square_session', data.sessionToken);
-        }
+      if (result.success) {
         
         // Check if there's a redirect URL
         const redirectUrl = searchParams.get('redirect')
@@ -58,8 +45,8 @@ function LoginContent() {
         }
         
         // Default navigation based on onboarding status
-        const onboarding = data.user.onboarding || {};
-        const hasAssessment = data.user.assessmentCompleted || false;
+        const onboarding = result.user?.onboarding || {};
+        const hasAssessment = result.user?.assessmentCompleted || false;
         
         // Navigate based on actual progress
         if (!onboarding.welcomeCompleted) {
@@ -75,7 +62,7 @@ function LoginContent() {
         }
       } else {
         // 顯示錯誤訊息
-        setError(data.error || t('error.invalidCredentials'))
+        setError(result.error || t('error.invalidCredentials'))
       }
     } catch (err) {
       console.error('Login error:', err)
