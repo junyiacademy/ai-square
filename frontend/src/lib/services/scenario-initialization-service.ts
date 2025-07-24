@@ -205,9 +205,11 @@ export class ScenarioInitializationService {
     // Use findByMode to get scenarios of specific mode
     const scenarios = await this.scenarioRepo.findByMode?.(sourceType as DBLearningMode) || [];
     
-    // Find matching scenario by source path in metadata
+    // Find matching scenario by source path or sourceMetadata.configPath
     const match = scenarios.find((s: any) => 
-      s.metadata?.sourcePath === yamlPath
+      s.sourcePath === yamlPath || 
+      s.sourceMetadata?.sourcePath === yamlPath ||
+      s.sourceMetadata?.configPath === yamlPath
     );
     
     return match || null;
@@ -289,8 +291,10 @@ class PBLYAMLProcessor implements IYAMLProcessor {
       version: '1.0',
       sourceType: 'yaml' as const,
       sourcePath: filePath,
+      sourceId: scenarioId,
       sourceMetadata: {
         scenarioId,
+        configPath: filePath,
         lastSync: new Date().toISOString()
       },
       title: { en: pblData.scenario_info?.title || 'Untitled PBL Scenario' },
@@ -377,9 +381,11 @@ class DiscoveryYAMLProcessor implements IYAMLProcessor {
       version: '1.0',
       sourceType: 'yaml' as const,
       sourcePath: filePath,
+      sourceId: careerType,
       sourceMetadata: {
         careerType,
         category: discoveryData.category,
+        configPath: filePath,
         lastSync: new Date().toISOString()
       },
       title: { en: discoveryData.metadata?.title || 'Untitled Discovery Path' },
@@ -483,10 +489,12 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
       version: '1.0',
       sourceType: 'yaml' as const,
       sourcePath: filePath,
+      sourceId: assessmentName,
       sourceMetadata: {
         assessmentType: 'standard',
         assessmentName,
         language,
+        configPath: filePath,
         lastSync: new Date().toISOString()
       },
       title: { [language]: titleValue },

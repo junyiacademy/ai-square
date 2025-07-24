@@ -11,12 +11,12 @@ services:
       - "5433:5432"
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: aisquare2025local
       POSTGRES_DB: ai_square_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ../docs/infrastructure/postgresql-migration-schema-docker-v3.5.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
-      - ../docs/infrastructure/performance-indexes.sql:/docker-entrypoint-initdb.d/02-indexes.sql:ro
+      - ./src/scripts/init-demo-users.sql:/docker-entrypoint-initdb.d/03-demo-users.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -32,7 +32,7 @@ services:
       - "5050:80"
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@ai-square.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_PASSWORD: pgadmin2025
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     depends_on:
       postgres:

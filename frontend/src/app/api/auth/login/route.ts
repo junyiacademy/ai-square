@@ -1,25 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAccessToken, createRefreshToken } from '@/lib/auth/jwt'
 import { createSessionToken } from '@/lib/auth/session-simple'
-import { Pool } from 'pg'
+import { getPool } from '@/lib/db/get-pool'
 import { PostgreSQLUserRepository } from '@/lib/repositories/postgresql'
 
-// Lazy initialize database connection
-let pool: Pool | null = null
+// Lazy initialize repository
 let userRepo: PostgreSQLUserRepository | null = null
 
-function getDbConnection() {
-  if (!pool) {
-    pool = new Pool({
-      host: process.env.DB_HOST || '127.0.0.1',
-      port: parseInt(process.env.DB_PORT || '5433'),
-      database: process.env.DB_NAME || 'ai_square_db',
-      user: process.env.DB_USER || 'postgres',
-      password: process.env.DB_PASSWORD || 'postgres',
-    })
+function getUserRepository() {
+  if (!userRepo) {
+    const pool = getPool()
     userRepo = new PostgreSQLUserRepository(pool)
   }
-  return { pool, userRepo: userRepo! }
+  return userRepo
 }
 
 // Mock users for testing (in production, these would be in the database with hashed passwords)
@@ -74,8 +67,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Get database connection
-    const { userRepo } = getDbConnection()
+
+    // Get user repository
+    const userRepo = getUserRepository()
 
     // Try to find or create user in database
     let user = await userRepo.findByEmail(email)

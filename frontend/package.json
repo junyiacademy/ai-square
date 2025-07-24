@@ -44,7 +44,10 @@
     "staging:migrate": "bash scripts/migrate-staging-db.sh",
     "staging:cleanup": "bash scripts/cleanup-staging.sh",
     "staging:logs": "gcloud logs tail --project=${GOOGLE_CLOUD_PROJECT}",
-    "staging:connect": "gcloud sql connect ai-square-db-staging --user=postgres --project=${GOOGLE_CLOUD_PROJECT}"
+    "staging:connect": "gcloud sql connect ai-square-db-staging --user=postgres --project=${GOOGLE_CLOUD_PROJECT}",
+    "populate-staging-scenarios": "tsx src/scripts/populate-staging-scenarios.ts",
+    "populate-staging-direct": "tsx src/scripts/populate-staging-scenarios-direct.ts",
+    "populate-all-yaml": "tsx src/scripts/populate-all-yaml-scenarios.ts"
   },
   "dependencies": {
     "@google-cloud/storage": "^7.16.0",

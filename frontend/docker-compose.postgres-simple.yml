@@ -1,0 +1,27 @@
+# Simple PostgreSQL setup with trust authentication for local development
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: ai-square-postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ai_square_db
+      POSTGRES_HOST_AUTH_METHOD: trust  # This allows connections without password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../docs/infrastructure/postgresql-migration-schema-docker-v3.5.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./src/scripts/init-demo-users.sql:/docker-entrypoint-initdb.d/02-demo-users.sql:ro
+    networks:
+      - ai-square-network
+
+volumes:
+  postgres_data:
+
+networks:
+  ai-square-network:
+    driver: bridge

@@ -744,6 +744,19 @@ INSERT INTO achievements (code, name, description, category, xp_reward, criteria
 '{"type": "perfect_score"}'::jsonb);
 
 -- ============================================
+-- Demo Users
+-- ============================================
+
+-- Insert demo users for testing (passwords handled by application)
+INSERT INTO users (id, email, name, preferred_language, level, total_xp, onboarding_completed, metadata) VALUES
+(gen_random_uuid(), 'student@example.com', 'Student User', 'en', 1, 0, false, 
+ '{"role": "student", "description": "Demo student account"}'::jsonb),
+(gen_random_uuid(), 'teacher@example.com', 'Teacher User', 'en', 5, 500, true,
+ '{"role": "teacher", "description": "Demo teacher account"}'::jsonb),
+(gen_random_uuid(), 'admin@example.com', 'Admin User', 'en', 10, 1000, true,
+ '{"role": "admin", "description": "Demo admin account"}'::jsonb);
+
+-- ============================================
 -- Comments
 -- ============================================
 

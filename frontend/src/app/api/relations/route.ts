@@ -89,8 +89,8 @@ export async function GET(request: NextRequest) {
     }
     // Load data using the new hybrid loader with language-specific paths
     const [domainsData, ksaCodesData] = await Promise.all([
-      jsonYamlLoader.load(`ai_lit_domains_${lang}`, { preferJson: true }) as Promise<DomainsYaml>,
-      jsonYamlLoader.load(`ksa_codes_${lang}`, { preferJson: true }) as Promise<KSACodesYaml>
+      jsonYamlLoader.load(`rubrics_data/ai_lit_domains/ai_lit_domains_${lang}`, { preferJson: true }) as Promise<DomainsYaml>,
+      jsonYamlLoader.load(`rubrics_data/ksa_codes/ksa_codes_${lang}`, { preferJson: true }) as Promise<KSACodesYaml>
     ]);
 
     if (!domainsData || !ksaCodesData) {
