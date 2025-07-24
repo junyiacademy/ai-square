@@ -5,13 +5,10 @@ export async function GET() {
   try {
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     
-    // Test 1: Get all scenarios
-    const allScenarios = await scenarioRepo.findAll({ limit: 100 });
-    
-    // Test 2: Get active scenarios
+    // Test 1: Get active scenarios
     const activeScenarios = await scenarioRepo.findActive?.() || [];
     
-    // Test 3: Get scenarios by mode
+    // Test 2: Get scenarios by mode
     const assessmentScenarios = await scenarioRepo.findByMode?.('assessment') || [];
     const pblScenarios = await scenarioRepo.findByMode?.('pbl') || [];
     const discoveryScenarios = await scenarioRepo.findByMode?.('discovery') || [];
@@ -22,14 +19,13 @@ export async function GET() {
       host: process.env.DB_HOST,
       usePostgres: process.env.USE_POSTGRES,
       counts: {
-        total: allScenarios.length,
         active: activeScenarios.length,
         assessment: assessmentScenarios.length,
         pbl: pblScenarios.length,
         discovery: discoveryScenarios.length
       },
       scenarios: {
-        all: allScenarios,
+        active: activeScenarios,
         assessment: assessmentScenarios,
         pbl: pblScenarios,
         discovery: discoveryScenarios
