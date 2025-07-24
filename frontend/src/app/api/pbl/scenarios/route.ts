@@ -1,25 +1,8 @@
 import { NextResponse } from 'next/server';
 import { cacheService } from '@/lib/cache/cache-service';
-import { pblScenarioService } from '@/lib/services/pbl-scenario-service';
 import { HybridTranslationService } from '@/lib/services/hybrid-translation-service';
 import type { IScenario } from '@/types/unified-learning';
-import { convertScenarioToIScenario } from '@/lib/utils/type-converters';
 
-// Types for YAML data
-interface LocalizedField {
-  [key: string]: string | undefined;
-}
-
-// Helper function to get localized field
-function getLocalizedValue(data: LocalizedField, fieldName: string, lang: string): string {
-  if (!data) return '';
-  
-  // Use language code directly as suffix
-  const langSuffix = lang;
-  
-  const localizedField = `${fieldName}_${langSuffix}`;
-  return data[localizedField] || data[fieldName] || '';
-}
 
 // Helper function to get scenario emoji
 function getScenarioEmoji(scenarioId: string): string {
@@ -78,9 +61,9 @@ async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Recor
           description,
           difficulty: scenario.difficulty || scenario.metadata?.difficulty as string | undefined,
           estimatedDuration: scenario.estimatedMinutes || scenario.metadata?.estimatedDuration as number | undefined,
-          targetDomains: scenario.metadata?.targetDomains as string[] | undefined || (scenario.pblData as any)?.targetDomains,
-          targetDomain: scenario.metadata?.targetDomains as string[] | undefined || (scenario.pblData as any)?.targetDomains, // for compatibility
-          domains: scenario.metadata?.targetDomains as string[] | undefined || (scenario.pblData as any)?.targetDomains, // for compatibility 
+          targetDomains: scenario.metadata?.targetDomains as string[] | undefined || (scenario.pblData as Record<string, unknown>)?.targetDomains as string[] | undefined,
+          targetDomain: scenario.metadata?.targetDomains as string[] | undefined || (scenario.pblData as Record<string, unknown>)?.targetDomains as string[] | undefined, // for compatibility
+          domains: scenario.metadata?.targetDomains as string[] | undefined || (scenario.pblData as Record<string, unknown>)?.targetDomains as string[] | undefined, // for compatibility 
           taskCount: scenario.taskTemplates?.length || scenario.taskCount || 0,
           isAvailable: true,
           thumbnailEmoji: getScenarioEmoji(yamlId)
