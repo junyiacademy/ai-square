@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import DiscoveryPageLayout from '@/components/discovery/DiscoveryPageLayout';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { motion } from 'framer-motion';
 import { normalizeLanguageCode } from '@/lib/utils/language';
 import { 

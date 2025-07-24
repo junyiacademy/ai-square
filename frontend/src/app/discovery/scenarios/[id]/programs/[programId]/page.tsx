@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import DiscoveryPageLayout from '@/components/discovery/DiscoveryPageLayout';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { motion } from 'framer-motion';
 import { 
   ArrowLeftIcon,

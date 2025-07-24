@@ -7,92 +7,28 @@ import Image from 'next/image'
 import { useTranslation } from 'react-i18next'
 import { LanguageSelector } from '@/components/ui/LanguageSelector'
 import { useTheme } from '@/contexts/ThemeContext'
-
-interface User {
-  id: number
-  email: string
-  role: string
-  name: string
-}
+import { useAuth } from '@/contexts/AuthContext'
 
 export function Header() {
   const router = useRouter()
   const pathname = usePathname()
   const { t } = useTranslation(['navigation'])
   const { theme, toggleTheme } = useTheme()
+  const { user, isLoggedIn, logout } = useAuth()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
-  
-  // 從 localStorage 讀取初始狀態，避免 hydration mismatch
-  const [user, setUser] = useState<User | null>(null)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   const handleLogout = useCallback(async () => {
-    // Call logout API to clear cookies
-    try {
-      await fetch('/api/auth/logout', {
-        method: 'POST',
-      })
-    } catch (error) {
-      console.error('Logout error:', error)
-    }
-    
-    // Clear local state
-    localStorage.removeItem('isLoggedIn')
-    localStorage.removeItem('user')
-    setUser(null)
-    setIsLoggedIn(false)
-    router.push('/login')
-  }, [router])
+    await logout()
+  }, [logout])
 
   const handleLogin = useCallback(() => {
     router.push('/login')
   }, [router])
 
-  // 簡化的 auth 狀態管理 - 只從 localStorage 讀取，不做 API 檢查
+  // Set mounted state for hydration
   useEffect(() => {
-    // 只在 mount 時從 localStorage 讀取一次
-    const loggedInStatus = localStorage.getItem('isLoggedIn')
-    const userData = localStorage.getItem('user')
-
-    if (loggedInStatus === 'true' && userData) {
-      try {
-        const parsedUser = JSON.parse(userData)
-        setUser(parsedUser)
-        setIsLoggedIn(true)
-      } catch (parseError) {
-        console.error('Error parsing user data:', parseError)
-      }
-    }
-
-    // 監聽 storage 變化 (當其他 tab 登入/登出時)
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'isLoggedIn' || e.key === 'user') {
-        const newLoggedInStatus = localStorage.getItem('isLoggedIn')
-        const newUserData = localStorage.getItem('user')
-        
-        if (newLoggedInStatus === 'true' && newUserData) {
-          try {
-            const parsedUser = JSON.parse(newUserData)
-            setUser(parsedUser)
-            setIsLoggedIn(true)
-          } catch (parseError) {
-            console.error('Error parsing user data:', parseError)
-            setUser(null)
-            setIsLoggedIn(false)
-          }
-        } else {
-          setUser(null)
-          setIsLoggedIn(false)
-        }
-      }
-    }
-
-    window.addEventListener('storage', handleStorageChange)
-    
-    return () => {
-      window.removeEventListener('storage', handleStorageChange)
-    }
+    setMounted(true)
   }, [])
 
   const getRoleDisplayName = (role: string) => {
@@ -121,10 +57,6 @@ export function Header() {
   // 所有導航連結（用於手機選單）
   const allNavLinks = [...primaryNavLinks, ...secondaryNavLinks]
 
-  // 設置 mounted 狀態
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
   return (
     <header 

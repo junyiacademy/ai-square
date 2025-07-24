@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { FileQuestion, ChevronLeft, Play, RotateCcw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 // Remove date-fns import - will use custom formatting
 
 interface AssessmentScenario {
