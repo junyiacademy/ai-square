@@ -23,11 +23,6 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Global flag to prevent multiple auth checks
-let isAuthCheckInProgress = false;
-let lastAuthCheck = 0;
-const AUTH_CHECK_DEBOUNCE = 1000; // 1 second debounce
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
@@ -41,38 +36,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('ai_square_session');
     setUser(null);
     setIsLoggedIn(false);
+    setTokenExpiringSoon(false);
+    window.dispatchEvent(new CustomEvent('auth-changed'));
+  }, []);
+
+  const updateAuthState = useCallback((userData: User) => {
+    setUser(userData);
+    setIsLoggedIn(true);
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('user', JSON.stringify(userData));
     window.dispatchEvent(new CustomEvent('auth-changed'));
   }, []);
 
   const checkAuth = useCallback(async () => {
-    // Debounce auth checks to prevent rapid fire
-    const now = Date.now();
-    if (isAuthCheckInProgress || (now - lastAuthCheck) < AUTH_CHECK_DEBOUNCE) {
-      return;
-    }
-
-    isAuthCheckInProgress = true;
-    lastAuthCheck = now;
-    setIsLoading(true);
-
     try {
       const response = await fetch('/api/auth/check', {
         credentials: 'include'
       });
+      
+      if (!response.ok) {
+        throw new Error('Auth check failed');
+      }
+      
       const data = await response.json();
       
       if (data.authenticated && data.user) {
-        setUser(data.user);
-        setIsLoggedIn(true);
+        updateAuthState(data.user);
         setTokenExpiringSoon(data.tokenExpiringSoon || false);
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('user', JSON.stringify(data.user));
       } else {
         clearAuthState();
       }
     } catch (error) {
       console.error('Error checking auth:', error);
-      // Fallback to localStorage
+      
+      // Fallback to localStorage only if API fails
       const storedAuth = localStorage.getItem('isLoggedIn');
       const storedUser = localStorage.getItem('user');
       
@@ -89,9 +86,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     } finally {
       setIsLoading(false);
-      isAuthCheckInProgress = false;
     }
-  }, [clearAuthState]);
+  }, [clearAuthState, updateAuthState]);
 
   const login = useCallback(async (credentials: { email: string; password: string; rememberMe?: boolean }) => {
     try {
@@ -106,26 +102,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       const data = await response.json();
 
-      if (data.success) {
-        setUser(data.user);
-        setIsLoggedIn(true);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        localStorage.setItem('isLoggedIn', 'true');
+      if (data.success && data.user) {
+        updateAuthState(data.user);
         
         if (data.sessionToken) {
           localStorage.setItem('ai_square_session', data.sessionToken);
         }
         
-        window.dispatchEvent(new CustomEvent('auth-changed'));
         return { success: true };
       } else {
-        return { success: false, error: data.error };
+        return { success: false, error: data.error || 'Login failed' };
       }
     } catch (error) {
       console.error('Login error:', error);
       return { success: false, error: 'Network error' };
     }
-  }, []);
+  }, [updateAuthState]);
 
   const logout = useCallback(async () => {
     try {
@@ -151,7 +143,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
-          // Use the existing checkAuth to update state
           await checkAuth();
           return true;
         }
@@ -163,28 +154,80 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return false;
   }, [checkAuth]);
 
-  // Initial auth check - only once
+  // 初始化時檢查登入狀態
   useEffect(() => {
+    // 先從 localStorage 快速設置狀態，避免 UI 閃動
+    const storedAuth = localStorage.getItem('isLoggedIn');
+    const storedUser = localStorage.getItem('user');
+    
+    if (storedAuth === 'true' && storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+        setIsLoggedIn(true);
+      } catch (error) {
+        console.error('Error parsing stored user:', error);
+      }
+    }
+    
+    // 然後進行 API 驗證
     checkAuth();
-  }, []);
+  }, [checkAuth]);
 
-  // Auto-refresh token when expiring soon
+  // 監聽其他 tab 的登入狀態變化
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'isLoggedIn' || e.key === 'user') {
+        const newLoggedInStatus = localStorage.getItem('isLoggedIn');
+        const newUserData = localStorage.getItem('user');
+        
+        if (newLoggedInStatus === 'true' && newUserData) {
+          try {
+            const parsedUser = JSON.parse(newUserData);
+            setUser(parsedUser);
+            setIsLoggedIn(true);
+          } catch {
+            clearAuthState();
+          }
+        } else {
+          clearAuthState();
+        }
+      }
+    };
+
+    const handleAuthChange = () => {
+      // 當其他組件觸發 auth-changed 事件時，重新檢查狀態
+      const storedAuth = localStorage.getItem('isLoggedIn');
+      const storedUser = localStorage.getItem('user');
+      
+      if (storedAuth === 'true' && storedUser) {
+        try {
+          const parsedUser = JSON.parse(storedUser);
+          setUser(parsedUser);
+          setIsLoggedIn(true);
+        } catch {
+          clearAuthState();
+        }
+      } else {
+        clearAuthState();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('auth-changed', handleAuthChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('auth-changed', handleAuthChange);
+    };
+  }, [clearAuthState]);
+
+  // Token 快過期時自動刷新
   useEffect(() => {
     if (tokenExpiringSoon && isLoggedIn) {
       refreshToken();
     }
   }, [tokenExpiringSoon, isLoggedIn, refreshToken]);
-  
-  // Set up periodic auth check (every 5 minutes) - only when logged in
-  useEffect(() => {
-    if (!isLoggedIn) return;
-    
-    const interval = setInterval(() => {
-      checkAuth();
-    }, 5 * 60 * 1000); // 5 minutes
-    
-    return () => clearInterval(interval);
-  }, [isLoggedIn, checkAuth]);
 
   const value: AuthContextType = {
     user,
