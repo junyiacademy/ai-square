@@ -50,8 +50,22 @@ export async function GET(
         
         // Extract language-specific content
         const config = yamlData.config || {};
-        const title = yamlData[`title_${lang}`] || yamlData.title || scenario.title;
-        const description = yamlData[`description_${lang}`] || yamlData.description || scenario.description;
+        
+        // Get title - ensure it's a string
+        let title = yamlData[`title_${lang}`] || yamlData.title;
+        if (!title) {
+          title = typeof scenario.title === 'string' 
+            ? scenario.title 
+            : scenario.title?.[lang] || scenario.title?.en || 'Assessment';
+        }
+        
+        // Get description - ensure it's a string
+        let description = yamlData[`description_${lang}`] || yamlData.description;
+        if (!description) {
+          description = typeof scenario.description === 'string'
+            ? scenario.description
+            : scenario.description?.[lang] || scenario.description?.en || '';
+        }
         
         return {
           ...scenario,
@@ -70,8 +84,18 @@ export async function GET(
     }
     
     // Return scenario with default config if YAML loading fails
+    // Extract language-specific content from scenario
+    const title = typeof scenario.title === 'string' 
+      ? scenario.title 
+      : scenario.title?.[lang] || scenario.title?.en || 'Assessment';
+    const description = typeof scenario.description === 'string'
+      ? scenario.description
+      : scenario.description?.[lang] || scenario.description?.en || '';
+    
     return {
       ...scenario,
+      title,
+      description,
       config: {
         totalQuestions: 12,
         timeLimit: 15,
