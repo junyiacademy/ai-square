@@ -152,8 +152,30 @@ export function useAuth(): UseAuthReturn {
       if (response.ok) {
         const data = await response.json()
         if (data.success) {
-          // Token refreshed successfully, re-check auth
-          await checkAuth()
+          // Token refreshed successfully - inline auth check to break circular dependency
+          try {
+            const checkResponse = await fetch('/api/auth/check', {
+              credentials: 'include'
+            })
+            const checkData = await checkResponse.json()
+            
+            if (checkData.authenticated && checkData.user) {
+              setUser(checkData.user)
+              setIsLoggedIn(true)
+              setTokenExpiringSoon(checkData.tokenExpiringSoon || false)
+              localStorage.setItem('isLoggedIn', 'true')
+              localStorage.setItem('user', JSON.stringify(checkData.user))
+            } else {
+              localStorage.removeItem('isLoggedIn')
+              localStorage.removeItem('user')
+              localStorage.removeItem('ai_square_session')
+              setUser(null)
+              setIsLoggedIn(false)
+              window.dispatchEvent(new CustomEvent('auth-changed'))
+            }
+          } catch (checkError) {
+            console.error('Auth check after refresh failed:', checkError)
+          }
           return true
         }
       }
@@ -162,17 +184,18 @@ export function useAuth(): UseAuthReturn {
     }
     
     return false
-  }, [checkAuth])
+  }, []) // Remove checkAuth dependency to break circular dependency
 
   // Initial auth check
   useEffect(() => {
     checkAuth()
-  }, []) // Only run once on mount
+  }, [checkAuth]) // Include checkAuth dependency
 
   // Listen for auth changes
   useEffect(() => {
     const handleAuthChange = () => {
-      checkAuth()
+      // Debounce auth checks to prevent rapid fire
+      setTimeout(() => checkAuth(), 100)
     }
 
     window.addEventListener('auth-changed', handleAuthChange)
@@ -182,7 +205,7 @@ export function useAuth(): UseAuthReturn {
       window.removeEventListener('auth-changed', handleAuthChange)
       window.removeEventListener('storage', handleAuthChange)
     }
-  }, []) // Only set up listeners once
+  }, [checkAuth]) // Include checkAuth but debounce to prevent loops
   
   // Auto-refresh token when expiring soon
   useEffect(() => {
@@ -200,7 +223,7 @@ export function useAuth(): UseAuthReturn {
     }, 5 * 60 * 1000) // 5 minutes
     
     return () => clearInterval(interval)
-  }, [isLoggedIn]) // Only depend on login status, not checkAuth function
+  }, [isLoggedIn, checkAuth]) // Include checkAuth dependency
 
   return {
     user,
