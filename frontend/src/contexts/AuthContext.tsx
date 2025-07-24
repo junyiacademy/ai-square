@@ -143,7 +143,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
-          await checkAuth();
+          // Inline auth check to avoid dependency issues
+          try {
+            const checkResponse = await fetch('/api/auth/check', {
+              credentials: 'include'
+            });
+            
+            if (!checkResponse.ok) {
+              throw new Error('Auth check failed');
+            }
+            
+            const checkData = await checkResponse.json();
+            
+            if (checkData.authenticated && checkData.user) {
+              updateAuthState(checkData.user);
+              setTokenExpiringSoon(checkData.tokenExpiringSoon || false);
+            } else {
+              clearAuthState();
+            }
+          } catch (checkError) {
+            console.error('Auth check after refresh failed:', checkError);
+          }
           return true;
         }
       }
@@ -152,27 +172,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     
     return false;
-  }, [checkAuth]);
+  }, [updateAuthState, clearAuthState]);
 
   // 初始化時檢查登入狀態
   useEffect(() => {
-    // 先從 localStorage 快速設置狀態，避免 UI 閃動
-    const storedAuth = localStorage.getItem('isLoggedIn');
-    const storedUser = localStorage.getItem('user');
-    
-    if (storedAuth === 'true' && storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
-        setIsLoggedIn(true);
-      } catch (error) {
-        console.error('Error parsing stored user:', error);
+    const initializeAuth = async () => {
+      // 先從 localStorage 快速設置狀態，避免 UI 閃動
+      const storedAuth = localStorage.getItem('isLoggedIn');
+      const storedUser = localStorage.getItem('user');
+      
+      if (storedAuth === 'true' && storedUser) {
+        try {
+          const parsedUser = JSON.parse(storedUser);
+          setUser(parsedUser);
+          setIsLoggedIn(true);
+        } catch (error) {
+          console.error('Error parsing stored user:', error);
+        }
       }
-    }
+      
+      // 然後進行 API 驗證
+      await checkAuth();
+    };
     
-    // 然後進行 API 驗證
-    checkAuth();
-  }, [checkAuth]);
+    initializeAuth();
+  }, []); // Remove checkAuth dependency to prevent loops
 
   // 監聽其他 tab 的登入狀態變化
   useEffect(() => {
