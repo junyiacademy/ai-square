@@ -15,9 +15,15 @@ export async function GET() {
     
     return NextResponse.json({
       success: true,
-      database: process.env.DB_NAME,
-      host: process.env.DB_HOST,
-      usePostgres: process.env.USE_POSTGRES,
+      environment: {
+        NODE_ENV: process.env.NODE_ENV,
+        ENVIRONMENT: process.env.ENVIRONMENT,
+        USE_POSTGRES: process.env.USE_POSTGRES,
+        DB_HOST: process.env.DB_HOST,
+        DB_NAME: process.env.DB_NAME,
+        DB_USER: process.env.DB_USER,
+        DB_PORT: process.env.DB_PORT
+      },
       counts: {
         active: activeScenarios.length,
         assessment: assessmentScenarios.length,
@@ -35,7 +41,16 @@ export async function GET() {
     return NextResponse.json({
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : undefined
+      stack: error instanceof Error ? error.stack : undefined,
+      environment: {
+        NODE_ENV: process.env.NODE_ENV,
+        ENVIRONMENT: process.env.ENVIRONMENT,
+        USE_POSTGRES: process.env.USE_POSTGRES,
+        DB_HOST: process.env.DB_HOST,
+        DB_NAME: process.env.DB_NAME,
+        DB_USER: process.env.DB_USER,
+        DB_PORT: process.env.DB_PORT
+      }
     }, { status: 500 });
   }
 }

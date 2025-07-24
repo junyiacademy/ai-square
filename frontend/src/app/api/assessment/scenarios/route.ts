@@ -47,6 +47,47 @@ export async function GET(request: NextRequest) {
     const session = await getServerSession();
     const user = session?.user;
     
+    // Get scenario repository
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
+    
+    // First, try to get scenarios from database
+    console.log('Loading assessment scenarios from database');
+    const dbScenarios = await scenarioRepo.findByMode?.('assessment') || [];
+    
+    if (dbScenarios.length > 0) {
+      console.log(`Found ${dbScenarios.length} assessment scenarios in database`);
+      
+      // Format scenarios from database
+      const formattedScenarios = dbScenarios.map((scenario: IScenario) => ({
+        id: scenario.id,
+        title: scenario.title?.[lang] || scenario.title?.en || 'Untitled Assessment',
+        description: scenario.description?.[lang] || scenario.description?.en || 'No description',
+        folderName: scenario.sourceMetadata?.folderName || scenario.sourceId || scenario.id,
+        config: {
+          totalQuestions: (scenario.assessmentData as any)?.totalQuestions || 12,
+          timeLimit: scenario.estimatedMinutes || 15,
+          passingScore: (scenario.assessmentData as any)?.passingScore || 60,
+          domains: (scenario.assessmentData as any)?.domains || []
+        },
+        userProgress: user ? {
+          completedPrograms: 0,
+          lastAttempt: undefined,
+          bestScore: undefined
+        } : undefined
+      }));
+      
+      return NextResponse.json({ 
+        success: true,
+        data: {
+          scenarios: formattedScenarios,
+          totalCount: formattedScenarios.length
+        }
+      });
+    }
+    
+    // If no scenarios in database, fall back to file system
+    console.log('No scenarios in database, checking file system');
+    
     // Check cache first
     const now = Date.now();
     if (scenariosCache.data && (now - scenariosCache.timestamp) < CACHE_TTL) {
@@ -74,7 +115,8 @@ export async function GET(request: NextRequest) {
     console.log('Cache miss, loading scenarios from disk');
     
     // Scan assessment_data directory for folders
-    const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
+    // In Docker, working directory is /app
+    const baseDir = process.cwd();
     const assessmentDir = path.join(baseDir, 'public', 'assessment_data');
     
     let folders: string[] = [];
@@ -88,10 +130,7 @@ export async function GET(request: NextRequest) {
       console.error('Error reading assessment directory:', error);
     }
     
-    // Get scenario repository
-    const scenarioRepo = repositoryFactory.getScenarioRepository();
-    
-    // Get all existing scenarios in one batch query
+    // Get all existing scenarios in one batch query (already have scenarioRepo from above)
     const existingScenarios = await scenarioRepo.findActive?.() || [];
     const scenariosByPath = new Map(
       existingScenarios.map((s: IScenario) => {

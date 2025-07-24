@@ -1204,6 +1204,59 @@ AI Square 正處於從 MVP 轉向 SaaS 平台的關鍵階段。Phase 1 已完成
 
 ### 重要技術規範
 
+#### 🚨 Cloud SQL 部署關鍵原則 - 區域必須匹配
+**這是從痛苦的 staging 部署經驗學到的重要教訓**
+
+##### 問題背景
+我們在 staging 環境遇到了看似是「資料庫表不存在」的錯誤，但實際上是因為：
+- Cloud SQL 實例在 `us-central1`
+- Cloud Run 服務在 `asia-east1`
+- 跨區域的 Unix socket 連線導致超時和不穩定
+
+##### 關鍵學習
+1. **Cloud SQL 和 Cloud Run 必須在同一區域**
+   ```bash
+   # ❌ 錯誤：跨區域連線
+   Cloud SQL: us-central1
+   Cloud Run: asia-east1
+   
+   # ✅ 正確：同區域連線
+   Cloud SQL: asia-east1
+   Cloud Run: asia-east1
+   ```
+
+2. **Unix Socket 連線對延遲極度敏感**
+   ```bash
+   # Cloud Run 使用 Unix socket 連接 Cloud SQL
+   DB_HOST=/cloudsql/project:region:instance
+   ```
+
+3. **Repository Factory 必須正確處理 Cloud SQL 連線**
+   ```typescript
+   // ✅ 正確：檢測 Cloud SQL Unix socket
+   const isCloudSQL = dbHost.startsWith('/cloudsql/');
+   if (isCloudSQL) {
+     poolConfig.host = dbHost;
+     // 不要設定 port！
+   } else {
+     poolConfig.host = dbHost;
+     poolConfig.port = parseInt(process.env.DB_PORT || '5432');
+   }
+   ```
+
+##### Production 部署檢查清單
+- [ ] 確認 Cloud SQL 實例區域
+- [ ] 確認 Cloud Run 服務區域
+- [ ] 兩者必須在同一區域
+- [ ] 使用正確的 Unix socket 連線字串
+- [ ] Repository Factory 正確處理連線
+- [ ] 設定足夠的連線超時時間（Cloud SQL 需要更長）
+
+##### 症狀與診斷
+- 錯誤訊息：`relation "scenarios" does not exist`
+- 實際原因：連線超時，而非資料庫結構問題
+- 診斷方法：檢查區域是否匹配
+
 #### Vertex AI Model Names
 - **正確的模型名稱**: `gemini-2.5-flash` (不是 gemini-pro, 不是 gemini-2.0-flash-exp)
 - **使用方式**: 

@@ -39,81 +39,58 @@ function getScenarioEmoji(scenarioId: string): string {
 }
 
 
-// Load scenarios using unified architecture
+// Load scenarios from database only
 async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Record<string, unknown>[]> {
   const scenarios: Record<string, unknown>[] = [];
   
   try {
-    // Get available YAML IDs
-    const yamlIds = await pblScenarioService.listAvailableYAMLIds();
-    
-    // First, get all existing scenarios in one batch to avoid multiple DB calls
+    // Get all PBL scenarios from database
     const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     const rawScenarios = await scenarioRepo.findByMode?.('pbl') || [];
     const existingScenarios = rawScenarios as IScenario[];
     
+    console.log(`Found ${existingScenarios.length} PBL scenarios in database`);
+    
     // Build/update the index with PBL scenarios
     const { scenarioIndexService } = await import('@/lib/services/scenario-index-service');
-    // existingScenarios are now IScenario objects
     await scenarioIndexService.buildIndex(existingScenarios);
     
-    // Create a map for quick lookup
-    const existingScenariosMap = new Map(
-      existingScenarios.map((s: IScenario) => [s.metadata?.yamlId as string | undefined, s])
-    );
-    
-    // Process each YAML ID
-    for (const yamlId of yamlIds) {
+    // Process each scenario from database
+    for (const scenario of existingScenarios) {
       try {
-        // Check if scenario already exists
-        let scenario: IScenario | undefined = existingScenariosMap.get(yamlId);
+        // Extract title and description with proper language support
+        const title = typeof scenario.title === 'string' 
+          ? scenario.title 
+          : scenario.title?.[lang] || scenario.title?.en || '';
+        const description = typeof scenario.description === 'string'
+          ? scenario.description
+          : scenario.description?.[lang] || scenario.description?.en || '';
         
-        // If not, create it
-        if (!scenario) {
-          const newScenario = await pblScenarioService.createScenarioFromYAML(yamlId, lang);
-          if (newScenario) {
-            scenario = newScenario;
-            // Update index with new scenario
-            const allScenariosForIndex = [
-              ...existingScenarios,
-              scenario
-            ];
-            await scenarioIndexService.buildIndex(allScenariosForIndex);
-          }
-        }
+        // Get yamlId from metadata or sourceId
+        const yamlId = scenario.metadata?.yamlId as string || scenario.sourceId || scenario.id;
         
-        if (scenario) {
-          // All scenarios are now IScenario type
-          const title = typeof scenario.title === 'string' 
-            ? scenario.title 
-            : scenario.title?.[lang] || scenario.title?.en || '';
-          const description = typeof scenario.description === 'string'
-            ? scenario.description
-            : scenario.description?.[lang] || scenario.description?.en || '';
-          
-          scenarios.push({
-            id: scenario.id, // UUID
-            yamlId: yamlId, // 原始 yaml ID for compatibility
-            sourceType: 'pbl',
-            title,
-            description,
-            difficulty: scenario.difficulty || scenario.metadata?.difficulty as string | undefined,
-            estimatedDuration: scenario.estimatedMinutes || scenario.metadata?.estimatedDuration as number | undefined,
-            targetDomains: scenario.metadata?.targetDomains as string[] | undefined,
-            targetDomain: scenario.metadata?.targetDomains as string[] | undefined, // for compatibility
-            domains: scenario.metadata?.targetDomains as string[] | undefined, // for compatibility 
-            taskCount: scenario.taskTemplates?.length || 0,
-            isAvailable: true,
-            thumbnailEmoji: getScenarioEmoji(yamlId)
-          });
-        }
+        scenarios.push({
+          id: scenario.id, // UUID
+          yamlId: yamlId, // for compatibility
+          sourceType: 'pbl',
+          title,
+          description,
+          difficulty: scenario.difficulty || scenario.metadata?.difficulty as string | undefined,
+          estimatedDuration: scenario.estimatedMinutes || scenario.metadata?.estimatedDuration as number | undefined,
+          targetDomains: scenario.metadata?.targetDomains as string[] | undefined || (scenario.pblData as any)?.targetDomains,
+          targetDomain: scenario.metadata?.targetDomains as string[] | undefined || (scenario.pblData as any)?.targetDomains, // for compatibility
+          domains: scenario.metadata?.targetDomains as string[] | undefined || (scenario.pblData as any)?.targetDomains, // for compatibility 
+          taskCount: scenario.taskTemplates?.length || scenario.taskCount || 0,
+          isAvailable: true,
+          thumbnailEmoji: getScenarioEmoji(yamlId)
+        });
       } catch (error) {
-        console.error(`Error loading scenario ${yamlId}:`, error);
+        console.error(`Error processing scenario ${scenario.id}:`, error);
       }
     }
   } catch (error) {
-    console.error('Error loading scenarios:', error);
+    console.error('Error loading scenarios from database:', error);
   }
   
   // Add placeholder scenarios for future content

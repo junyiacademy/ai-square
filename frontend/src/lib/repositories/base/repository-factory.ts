@@ -38,16 +38,36 @@ export class RepositoryFactory {
 
   private constructor() {
     // Initialize PostgreSQL connection pool
-    this.pool = new Pool({
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT || '5432'),
+    const dbHost = process.env.DB_HOST || 'localhost';
+    const isCloudSQL = dbHost.startsWith('/cloudsql/');
+    
+    const poolConfig: any = {
       database: process.env.DB_NAME || 'ai_square_db',
       user: process.env.DB_USER || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
       max: 20, // Maximum number of clients in the pool
       idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 2000,
+      connectionTimeoutMillis: isCloudSQL ? 10000 : 2000, // Longer timeout for Cloud SQL
+    };
+    
+    if (isCloudSQL) {
+      // For Cloud SQL Unix socket connections
+      poolConfig.host = dbHost;
+      // Don't set port for Unix socket connections
+    } else {
+      // For regular TCP connections
+      poolConfig.host = dbHost;
+      poolConfig.port = parseInt(process.env.DB_PORT || '5432');
+    }
+    
+    console.log('Initializing database connection:', {
+      host: poolConfig.host,
+      database: poolConfig.database,
+      isCloudSQL,
+      port: poolConfig.port
     });
+    
+    this.pool = new Pool(poolConfig);
 
     // Initialize GCS client
     this.storage = new Storage({

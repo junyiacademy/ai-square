@@ -32,20 +32,13 @@ export async function GET(request: NextRequest) {
     
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     
-    // 先嘗試從儲存庫獲取現有的 scenarios
+    // 只從資料庫獲取 scenarios
     const rawScenarios = await scenarioRepo.findByMode?.('discovery');
-    const repoScenarios = rawScenarios || [];
+    const scenarios = rawScenarios || [];
     
-    let scenarios: IScenario[];
+    console.log(`Found ${scenarios.length} Discovery scenarios in database`);
     
-    // 如果沒有 scenarios，從 YAML 檔案建立
-    if (repoScenarios.length === 0) {
-      console.log('No Discovery scenarios found, creating from YAML files...');
-      scenarios = await createScenariosFromYAML(language);
-    } else {
-      // Scenarios are already converted to IScenario
-      scenarios = repoScenarios;
-    }
+    // 不再從 YAML 建立 scenarios
     
     // 更新快取
     cachedScenarios = scenarios;
@@ -62,29 +55,4 @@ export async function GET(request: NextRequest) {
 }
 
 
-/**
- * 從 YAML 檔案建立 Discovery Scenarios
- */
-async function createScenariosFromYAML(language: string): Promise<IScenario[]> {
-  const scenarios: IScenario[] = [];
-  
-  try {
-    // 獲取所有可用的 career types
-    const careerTypes = await discoveryScenarioService.listAvailableCareerTypes();
-    
-    // 為每個 career type 創建 scenario
-    for (const careerType of careerTypes) {
-      try {
-        const scenario = await discoveryScenarioService.findOrCreateScenarioByCareerType(careerType, language);
-        scenarios.push(scenario);
-        console.log(`Created Discovery scenario: ${scenario.title} (${scenario.id})`);
-      } catch (error) {
-        console.error(`Failed to create scenario for ${careerType}:`, error);
-      }
-    }
-  } catch (error) {
-    console.error('Failed to create Discovery scenarios:', error);
-  }
-  
-  return scenarios;
-}
+// Removed createScenariosFromYAML function - only use database
