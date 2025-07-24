@@ -186,17 +186,33 @@ export function useAuth(): UseAuthReturn {
     return false
   }, []) // Remove checkAuth dependency to break circular dependency
 
-  // Initial auth check
+  // Initial auth check - run only once on mount
   useEffect(() => {
     checkAuth()
-  }, [checkAuth]) // Include checkAuth dependency
+  }, []) // No dependencies - only run once on mount
 
-  // Listen for auth changes
+  // Listen for auth changes - use useRef to avoid dependency issues
   useEffect(() => {
     const handleAuthChange = () => {
-      // Debounce auth checks to prevent rapid fire
-      setTimeout(() => checkAuth(), 100)
-    }
+      // Debounce auth checks to prevent rapid fire and avoid circular dependencies
+      setTimeout(() => {
+        // Inline minimal auth check to avoid dependency loops
+        fetch('/api/auth/check', { credentials: 'include' })
+          .then(response => response.json())
+          .then(data => {
+            if (data.authenticated && data.user) {
+              setUser(data.user);
+              setIsLoggedIn(true);
+              setTokenExpiringSoon(data.tokenExpiringSoon || false);
+            } else {
+              setUser(null);
+              setIsLoggedIn(false);
+              setTokenExpiringSoon(false);
+            }
+          })
+          .catch(error => console.error('Auth change check failed:', error));
+      }, 100);
+    };
 
     window.addEventListener('auth-changed', handleAuthChange)
     window.addEventListener('storage', handleAuthChange)
@@ -205,7 +221,7 @@ export function useAuth(): UseAuthReturn {
       window.removeEventListener('auth-changed', handleAuthChange)
       window.removeEventListener('storage', handleAuthChange)
     }
-  }, [checkAuth]) // Include checkAuth but debounce to prevent loops
+  }, []) // No dependencies to prevent circular loops
   
   // Auto-refresh token when expiring soon
   useEffect(() => {
@@ -219,11 +235,25 @@ export function useAuth(): UseAuthReturn {
     if (!isLoggedIn) return
     
     const interval = setInterval(() => {
-      checkAuth()
+      // Inline auth check to avoid circular dependency
+      fetch('/api/auth/check', { credentials: 'include' })
+        .then(response => response.json())
+        .then(data => {
+          if (data.authenticated && data.user) {
+            setUser(data.user);
+            setIsLoggedIn(true);
+            setTokenExpiringSoon(data.tokenExpiringSoon || false);
+          } else {
+            setUser(null);
+            setIsLoggedIn(false);
+            setTokenExpiringSoon(false);
+          }
+        })
+        .catch(error => console.error('Periodic auth check failed:', error));
     }, 5 * 60 * 1000) // 5 minutes
     
     return () => clearInterval(interval)
-  }, [isLoggedIn, checkAuth]) // Include checkAuth dependency
+  }, [isLoggedIn]) // Only depend on login status
 
   return {
     user,
