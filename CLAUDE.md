@@ -1585,6 +1585,153 @@ const programs = await programRepo.getActivePrograms?.(userId) || [];
 
 記住：**TypeScript 錯誤通常是在提醒我們程式碼可能有問題**，而不是要我們盲目地讓它閉嘴。
 
+## 📚 Cloud Run 連接 Cloud SQL 完整部署指南
+
+### 🚨 關鍵原則：區域必須匹配
+**從 staging 部署的慘痛教訓學到的重要經驗**
+
+#### 問題診斷流程
+
+##### 1. 確認 Cloud SQL 實例資訊
+```bash
+# 檢查實例詳情
+gcloud sql instances describe INSTANCE_NAME --format="table(name,state,ipAddresses[0].ipAddress,region,databaseVersion)"
+
+# 檢查是否有重複實例
+gcloud sql instances list --filter="name~PATTERN"
+```
+
+##### 2. 檢查 Cloud Run 服務配置
+```bash
+# 確認 Cloud SQL 實例已掛載
+gcloud run services describe SERVICE_NAME --region=REGION --format="json" | jq '.spec.template.metadata.annotations."run.googleapis.com/cloudsql-instances"'
+
+# 檢查環境變數
+gcloud run services describe SERVICE_NAME --region=REGION --format="json" | jq '.spec.template.spec.containers[0].env[]'
+```
+
+#### 連線方式配置
+
+##### 方式一：Unix Socket（推薦）
+```bash
+# 部署時設定
+gcloud run deploy SERVICE_NAME \
+  --add-cloudsql-instances=PROJECT_ID:REGION:INSTANCE_NAME \
+  --set-env-vars DB_HOST="/cloudsql/PROJECT_ID:REGION:INSTANCE_NAME"
+```
+
+##### 方式二：Public IP（僅測試用）
+```bash
+# 允許連線（生產環境請設定特定 IP）
+gcloud sql instances patch INSTANCE_NAME --authorized-networks=0.0.0.0/0
+
+# 設定環境變數
+gcloud run services update SERVICE_NAME --set-env-vars DB_HOST="PUBLIC_IP"
+```
+
+##### 方式三：Private IP + VPC Connector（最安全）
+```bash
+# 創建 VPC Connector
+gcloud compute networks vpc-access connectors create CONNECTOR_NAME \
+  --region=REGION --network=default --range=10.8.0.0/28
+
+# 部署時使用
+gcloud run deploy SERVICE_NAME \
+  --vpc-connector=CONNECTOR_NAME \
+  --vpc-egress=all-traffic
+```
+
+### 常見問題與解決方案
+
+#### 1. 密碼認證失敗
+**問題**：特殊字元密碼（如 `@#!`）在不同環境需要不同轉義
+**解決方案**：
+- 開發/測試：使用簡單密碼
+- 生產環境：使用 Secret Manager
+
+```bash
+# 使用 Secret Manager（推薦）
+echo -n 'YOUR_PASSWORD' | gcloud secrets create db-password --data-file=-
+gcloud run services update SERVICE_NAME --set-secrets=DB_PASSWORD=db-password:latest
+```
+
+#### 2. 連線超時
+**可能原因**：
+- Cloud SQL Proxy 未正確啟動
+- 區域不匹配（如 Cloud Run 在 asia-east1，Cloud SQL 在 us-central1）
+- 網路配置問題
+
+**診斷步驟**：
+```bash
+# 檢查 Cloud SQL Proxy 日誌
+gcloud logging read 'resource.type="cloud_run_revision" AND textPayload:"cloud-sql-proxy"'
+
+# 檢查錯誤日誌
+gcloud logging read 'resource.type="cloud_run_revision" AND severity>=ERROR'
+```
+
+#### 3. 權限問題
+**確保服務帳號有以下角色**：
+- `roles/cloudsql.client`
+- `roles/vpcaccess.user`（如果使用 VPC Connector）
+
+```bash
+gcloud projects add-iam-policy-binding PROJECT_ID \
+  --member="serviceAccount:SERVICE_ACCOUNT@PROJECT_ID.iam.gserviceaccount.com" \
+  --role="roles/cloudsql.client"
+```
+
+### 部署檢查清單
+
+- [ ] **區域匹配**：Cloud SQL 和 Cloud Run 必須在相同區域
+- [ ] **環境變數**：正確設定 DB_HOST、DB_NAME、DB_USER、DB_PASSWORD
+- [ ] **Cloud SQL 掛載**：使用 `--add-cloudsql-instances` 參數
+- [ ] **服務帳號權限**：確認有 cloudsql.client 角色
+- [ ] **資料庫初始化**：確認資料庫、表格、使用者都已創建
+- [ ] **密碼管理**：避免特殊字元或使用 Secret Manager
+
+### 最佳實踐
+
+1. **開發環境**：使用 Cloud SQL Proxy 本地連線
+   ```bash
+   cloud_sql_proxy -instances=PROJECT:REGION:INSTANCE=tcp:5432
+   ```
+
+2. **Staging 環境**：使用 Unix Socket 連線
+   - 簡單且安全
+   - 不需要管理 IP 白名單
+
+3. **Production 環境**：使用 Private IP + VPC Connector
+   - 最高安全性
+   - 最佳效能
+   - 避免公網暴露
+
+### 緊急修復流程
+
+如果遇到連線問題：
+1. **簡化密碼**：先排除認證問題
+2. **確認區域**：檢查是否在同一區域
+3. **檢查配置**：驗證環境變數和掛載
+4. **查看日誌**：找出具體錯誤訊息
+
+### Repository Pattern 中的連線處理
+
+確保 `repository-factory.ts` 正確處理 Cloud SQL 連線：
+```typescript
+const dbHost = process.env.DB_HOST || 'localhost';
+const isCloudSQL = dbHost.startsWith('/cloudsql/');
+
+if (isCloudSQL) {
+  // Unix socket 連線
+  poolConfig.host = dbHost;
+  // 不設定 port
+} else {
+  // TCP 連線
+  poolConfig.host = dbHost;
+  poolConfig.port = parseInt(process.env.DB_PORT || '5432');
+}
+```
+
 ---
 
 Note: This CLAUDE.md file must remain in the project root directory to be automatically read by Claude AI.
