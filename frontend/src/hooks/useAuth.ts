@@ -51,7 +51,13 @@ export function useAuth(): UseAuthReturn {
         localStorage.setItem('isLoggedIn', 'true')
         localStorage.setItem('user', JSON.stringify(data.user))
       } else {
-        clearAuthState()
+        // Clear auth state inline to avoid dependency issues
+        localStorage.removeItem('isLoggedIn')
+        localStorage.removeItem('user')
+        localStorage.removeItem('ai_square_session')
+        setUser(null)
+        setIsLoggedIn(false)
+        window.dispatchEvent(new CustomEvent('auth-changed'))
       }
     } catch (error) {
       console.error('Error checking auth:', error)
@@ -65,15 +71,27 @@ export function useAuth(): UseAuthReturn {
           setUser(parsedUser)
           setIsLoggedIn(true)
         } catch {
-          clearAuthState()
+          // Clear auth state inline
+          localStorage.removeItem('isLoggedIn')
+          localStorage.removeItem('user')
+          localStorage.removeItem('ai_square_session')
+          setUser(null)
+          setIsLoggedIn(false)
+          window.dispatchEvent(new CustomEvent('auth-changed'))
         }
       } else {
-        clearAuthState()
+        // Clear auth state inline
+        localStorage.removeItem('isLoggedIn')
+        localStorage.removeItem('user')
+        localStorage.removeItem('ai_square_session')
+        setUser(null)
+        setIsLoggedIn(false)
+        window.dispatchEvent(new CustomEvent('auth-changed'))
       }
     } finally {
       setIsLoading(false)
     }
-  }, [clearAuthState])
+  }, []) // Remove clearAuthState dependency to prevent infinite loops
 
   const login = useCallback(async (credentials: { email: string; password: string; rememberMe?: boolean }) => {
     try {
@@ -149,7 +167,7 @@ export function useAuth(): UseAuthReturn {
   // Initial auth check
   useEffect(() => {
     checkAuth()
-  }, [checkAuth])
+  }, []) // Only run once on mount
 
   // Listen for auth changes
   useEffect(() => {
@@ -164,7 +182,7 @@ export function useAuth(): UseAuthReturn {
       window.removeEventListener('auth-changed', handleAuthChange)
       window.removeEventListener('storage', handleAuthChange)
     }
-  }, [checkAuth])
+  }, []) // Only set up listeners once
   
   // Auto-refresh token when expiring soon
   useEffect(() => {
@@ -173,7 +191,7 @@ export function useAuth(): UseAuthReturn {
     }
   }, [tokenExpiringSoon, isLoggedIn, refreshToken])
   
-  // Set up periodic auth check (every 5 minutes)
+  // Set up periodic auth check (every 5 minutes) - only when logged in
   useEffect(() => {
     if (!isLoggedIn) return
     
@@ -182,7 +200,7 @@ export function useAuth(): UseAuthReturn {
     }, 5 * 60 * 1000) // 5 minutes
     
     return () => clearInterval(interval)
-  }, [isLoggedIn, checkAuth])
+  }, [isLoggedIn]) // Only depend on login status, not checkAuth function
 
   return {
     user,

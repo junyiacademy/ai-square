@@ -118,16 +118,20 @@ export default function ScenariosPage() {
         if (response.ok) {
           const data = await response.json();
           // Transform the scenarios to match the expected format
-          const transformedScenarios = data.map((scenario: Record<string, unknown>) => ({
-            id: (scenario.sourceMetadata as Record<string, unknown>)?.careerType as string || scenario.id as string,
-            scenarioId: scenario.id, // Store the actual scenario UUID
-            title: scenario.title,
-            subtitle: scenario.description,
-            category: (scenario.metadata as Record<string, unknown>)?.category as string || 'general',
-            icon: careerIcons[(scenario.sourceMetadata as Record<string, unknown>)?.careerType as string] || SparklesIcon,
-            color: careerColors[(scenario.sourceMetadata as Record<string, unknown>)?.careerType as string] || 'from-gray-500 to-gray-600',
-            skills: (scenario.metadata as Record<string, unknown>)?.skillFocus as string[] || []
-          }));
+          const transformedScenarios = data.map((scenario: Record<string, unknown>) => {
+            const careerType = (scenario.discovery_data as Record<string, unknown>)?.careerType as string || 'general';
+            
+            return {
+              id: careerType,
+              scenarioId: scenario.id, // Store the actual scenario UUID
+              title: scenario.title as string, // API now returns localized string
+              subtitle: scenario.description as string, // API now returns localized string
+              category: (scenario.metadata as Record<string, unknown>)?.category as string || 'general',
+              icon: careerIcons[careerType] || SparklesIcon,
+              color: careerColors[careerType] || 'from-gray-500 to-gray-600',
+              skills: (scenario.metadata as Record<string, unknown>)?.skillFocus as string[] || []
+            };
+          });
           setScenarios(transformedScenarios);
         } else {
           console.error('Failed to fetch scenarios from API');
@@ -164,22 +168,26 @@ export default function ScenariosPage() {
           const data = await response.json();
           
           // Transform the data to match the expected format
-          const transformedScenarios = data.map((scenario: Record<string, unknown>) => ({
-            id: (scenario.sourceMetadata as Record<string, unknown>)?.careerType as string || scenario.id as string,
-            scenarioId: scenario.id,
-            title: scenario.title,
-            subtitle: scenario.description,
-            category: (scenario.metadata as Record<string, unknown>)?.category as string || 'general',
-            icon: careerIcons[(scenario.sourceMetadata as Record<string, unknown>)?.careerType as string] || SparklesIcon,
-            color: careerColors[(scenario.sourceMetadata as Record<string, unknown>)?.careerType as string] || 'from-gray-500 to-gray-600',
-            skills: (scenario.metadata as Record<string, unknown>)?.skillFocus as string[] || [],
-            // Add user-specific data
-            userPrograms: scenario.userPrograms,
-            progress: ((scenario.userPrograms as Record<string, unknown>)?.active as Record<string, unknown>)?.progress as number || 0,
-            isActive: !!((scenario.userPrograms as Record<string, unknown>)?.active),
-            completedCount: (scenario.userPrograms as Record<string, unknown>)?.completed as number || 0,
-            lastActivity: (scenario.userPrograms as Record<string, unknown>)?.lastActivity as string
-          }));
+          const transformedScenarios = data.map((scenario: Record<string, unknown>) => {
+            const careerType = (scenario.discovery_data as Record<string, unknown>)?.careerType as string || 'general';
+            
+            return {
+              id: careerType,
+              scenarioId: scenario.id,
+              title: scenario.title as string, // API now returns localized string
+              subtitle: scenario.description as string, // API now returns localized string
+              category: (scenario.metadata as Record<string, unknown>)?.category as string || 'general',
+              icon: careerIcons[careerType] || SparklesIcon,
+              color: careerColors[careerType] || 'from-gray-500 to-gray-600',
+              skills: (scenario.metadata as Record<string, unknown>)?.skillFocus as string[] || [],
+              // Add user-specific data
+              userPrograms: scenario.userPrograms,
+              progress: ((scenario.userPrograms as Record<string, unknown>)?.active as Record<string, unknown>)?.progress as number || 0,
+              isActive: !!((scenario.userPrograms as Record<string, unknown>)?.active),
+              completedCount: (scenario.userPrograms as Record<string, unknown>)?.completed as number || 0,
+              lastActivity: (scenario.userPrograms as Record<string, unknown>)?.lastActivity as string
+            };
+          });
           
           setMyScenarios(transformedScenarios);
         } else {

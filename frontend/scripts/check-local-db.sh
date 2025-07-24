@@ -42,7 +42,7 @@ echo ""
 # Scenarios summary
 echo "📚 Scenarios:"
 psql -U $DB_USER -h $DB_HOST -p $DB_PORT -d $DB_NAME -t -c "
-SELECT '  - ' || COALESCE(metadata->>'title', 'Untitled') || ' (' || type || ')'
+SELECT '  - ' || COALESCE(title->>'en', 'Untitled') || ' (' || mode || ')'
 FROM scenarios
 ORDER BY created_at;"
 

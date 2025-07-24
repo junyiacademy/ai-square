@@ -20,31 +20,46 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 分鐘
 
 export async function GET(request: NextRequest) {
   try {
-    // 檢查快取
+    // Get language from query params
+    const { searchParams } = new URL(request.url);
+    const language = searchParams.get('lang') || 'en';
+    
+    // 檢查語言特定快取
+    const cacheKey = `discovery_scenarios_${language}`;
     const now = Date.now();
     if (cachedScenarios && (now - cacheTimestamp) < CACHE_DURATION) {
       return NextResponse.json(cachedScenarios);
     }
     
-    // Get language from query params
-    const { searchParams } = new URL(request.url);
-    const language = searchParams.get('lang') || 'en';
-    
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     
-    // 只從資料庫獲取 scenarios
+    // 從資料庫獲取 scenarios
     const rawScenarios = await scenarioRepo.findByMode?.('discovery');
     const scenarios = rawScenarios || [];
     
     console.log(`Found ${scenarios.length} Discovery scenarios in database`);
     
-    // 不再從 YAML 建立 scenarios
+    // 處理多語言字段並轉換為前端期望的格式
+    const processedScenarios = scenarios.map(scenario => {
+      // 處理 title 多語言字段
+      const titleObj = scenario.title as Record<string, string>;
+      const descObj = scenario.description as Record<string, string>;
+      
+      return {
+        ...scenario,
+        title: titleObj?.[language] || titleObj?.en || 'Untitled',
+        description: descObj?.[language] || descObj?.en || 'No description',
+        // 保留原始多語言對象供前端使用
+        titleObj,
+        descObj
+      };
+    });
     
     // 更新快取
-    cachedScenarios = scenarios;
+    cachedScenarios = processedScenarios;
     cacheTimestamp = now;
     
-    return NextResponse.json(scenarios);
+    return NextResponse.json(processedScenarios);
   } catch (error) {
     console.error('Error in GET /api/discovery/scenarios:', error);
     return NextResponse.json(

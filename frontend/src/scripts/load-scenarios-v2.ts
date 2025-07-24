@@ -69,40 +69,49 @@ async function loadPBLScenarios() {
         
         const scenario = {
           id: uuidv4(),
-          type: 'pbl',
+          mode: 'pbl',
           status: 'active',
           version: '1.0.0',
-          difficulty_level: data.scenario_info.difficulty || 'intermediate',
+          source_type: 'yaml',
+          source_path: `pbl_data/scenarios/${dir}/${selectedFile}`,
+          source_id: dir,
+          source_metadata: {
+            available_languages: langFiles.map(f => f.match(/_([a-zA-Z]+)\.yaml$/)?.[1]).filter(Boolean)
+          },
+          title: { en: data.scenario_info.title || dir.replace(/_/g, ' ') },
+          description: { en: data.scenario_info.description || '' },
+          objectives: data.scenario_info.learning_objectives || [],
+          difficulty: data.scenario_info.difficulty || 'intermediate',
           estimated_minutes: typeof data.scenario_info.estimated_duration === 'number' 
             ? data.scenario_info.estimated_duration 
             : parseInt(String(data.scenario_info.estimated_duration || '60').replace(/[^0-9]/g, '')),
           prerequisites: data.scenario_info.prerequisites || [],
-          xp_rewards: { completion: 100 },
-          unlock_requirements: {},
-          tasks: (data.tasks || []).map((task: any, tIdx: number) => ({
+          task_templates: (data.tasks || []).map((task: any, tIdx: number) => ({
             id: task.id || `task_${tIdx}`,
-            type: task.category || 'question',
+            type: task.category || 'interactive',
             title: task.title || task.description || `Task ${tIdx + 1}`,
             order: tIdx,
             content: task
           })),
+          xp_rewards: { completion: 100 },
+          unlock_requirements: {},
+          pbl_data: {
+            ksaMapping: data.ksa_mapping || [],
+            aiMentorGuidelines: data.ai_modules || {}
+          },
+          discovery_data: {},
+          assessment_data: {},
           ai_modules: data.ai_modules || {},
           resources: [],
           metadata: {
             source: `pbl_data/scenarios/${dir}`,
             scenario_id: dir,
-            title: data.scenario_info.title || dir.replace(/_/g, ' '),
-            description: data.scenario_info.description || '',
-            learning_objectives: data.scenario_info.learning_objectives || [],
-            target_domains: data.scenario_info.target_domains || [],
-            ksa_mappings: data.ksa_mapping || [],
-            tasks_raw: data.tasks || [],
-            available_languages: langFiles.map(f => f.match(/_([a-zA-Z]+)\.yaml$/)?.[1]).filter(Boolean)
+            tasks_raw: data.tasks || []
           }
         };
         
         scenarios.push(scenario);
-        console.log(`  ✓ Loaded: ${scenario.metadata.title} (${selectedFile})`);
+        console.log(`  ✓ Loaded: ${scenario.title.en} (${selectedFile})`);
         
       } catch (error) {
         console.log(`  ⚠️  Error loading ${selectedFile}: ${error}`);
@@ -129,33 +138,35 @@ async function insertScenarios(scenarios: any[]) {
       );
       
       if (existing.rows.length > 0) {
-        console.log(`  → Skipping existing: ${scenario.metadata.title}`);
+        console.log(`  → Skipping existing: ${scenario.title.en}`);
         skipped++;
         continue;
       }
       
       await pool.query(`
         INSERT INTO scenarios (
-          id, type, status, version, difficulty_level,
-          estimated_minutes, prerequisites, xp_rewards,
-          unlock_requirements, tasks, ai_modules, resources, metadata
+          id, mode, status, version, source_type, source_path, source_id, source_metadata,
+          title, description, objectives, difficulty, estimated_minutes, prerequisites,
+          task_templates, xp_rewards, unlock_requirements, 
+          pbl_data, discovery_data, assessment_data, ai_modules, resources, metadata
         ) VALUES (
-          $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
+          $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23
         )
       `, [
-        scenario.id, scenario.type, scenario.status, scenario.version,
-        scenario.difficulty_level, scenario.estimated_minutes,
-        JSON.stringify(scenario.prerequisites), JSON.stringify(scenario.xp_rewards),
-        JSON.stringify(scenario.unlock_requirements), JSON.stringify(scenario.tasks),
-        JSON.stringify(scenario.ai_modules), JSON.stringify(scenario.resources),
-        JSON.stringify(scenario.metadata)
+        scenario.id, scenario.mode, scenario.status, scenario.version,
+        scenario.source_type, scenario.source_path, scenario.source_id, JSON.stringify(scenario.source_metadata),
+        JSON.stringify(scenario.title), JSON.stringify(scenario.description), JSON.stringify(scenario.objectives),
+        scenario.difficulty, scenario.estimated_minutes, JSON.stringify(scenario.prerequisites),
+        JSON.stringify(scenario.task_templates), JSON.stringify(scenario.xp_rewards), JSON.stringify(scenario.unlock_requirements),
+        JSON.stringify(scenario.pbl_data), JSON.stringify(scenario.discovery_data), JSON.stringify(scenario.assessment_data),
+        JSON.stringify(scenario.ai_modules), JSON.stringify(scenario.resources), JSON.stringify(scenario.metadata)
       ]);
       
-      console.log(`  ✅ Inserted: ${scenario.metadata.title}`);
+      console.log(`  ✅ Inserted: ${scenario.title.en}`);
       inserted++;
       
     } catch (error) {
-      console.error(`  ❌ Error inserting ${scenario.metadata.title}:`, error);
+      console.error(`  ❌ Error inserting ${scenario.title.en}:`, error);
     }
   }
   
@@ -191,15 +202,15 @@ async function main() {
     const count = await pool.query('SELECT COUNT(*) FROM scenarios');
     console.log(`Total scenarios in database: ${count.rows[0].count}`);
     
-    const byType = await pool.query(`
-      SELECT type, COUNT(*) as count 
+    const byMode = await pool.query(`
+      SELECT mode, COUNT(*) as count 
       FROM scenarios 
-      GROUP BY type 
-      ORDER BY type
+      GROUP BY mode 
+      ORDER BY mode
     `);
-    console.log('\nBy type:');
-    byType.rows.forEach(row => {
-      console.log(`  ${row.type}: ${row.count}`);
+    console.log('\nBy mode:');
+    byMode.rows.forEach(row => {
+      console.log(`  ${row.mode}: ${row.count}`);
     });
     
     console.log(`\nInserted this run: ${results.inserted}`);
