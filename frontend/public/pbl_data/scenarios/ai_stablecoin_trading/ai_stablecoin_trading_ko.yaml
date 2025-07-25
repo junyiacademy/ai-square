@@ -24,7 +24,6 @@ ksa_mapping:
     - K3.2
   skills:
     - S2.1
-    - S3.3
   attitudes:
     - A1.2
     - A2.1
@@ -142,7 +141,6 @@ completion_criteria:
   required_competencies:
     - K2.1
     - S2.1
-    - S3.3
   min_overall_score: 75
 metadata:
   language: ko

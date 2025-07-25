@@ -481,7 +481,7 @@ questions:
     explanation: "Clear policies and training ensure responsible, effective, and consistent AI tool usage across the team while maximizing benefits and minimizing risks."
     ksa_mapping:
       knowledge: ["K3.1", "K3.2"]
-      skills: ["S3.1", "S3.2"]
+      skills: ["S3.1"]
       attitudes: ["A3.1", "A2.1"]
 
   - id: "M003"
@@ -511,7 +511,7 @@ questions:
     explanation: "Understanding AI limitations and maintaining appropriate human oversight ensures successful, responsible, and sustainable AI implementation in business."
     ksa_mapping:
       knowledge: ["K2.2", "K3.1", "K3.2"]
-      skills: ["S3.1", "S3.2"]
+      skills: ["S3.1"]
       attitudes: ["A2.1", "A3.1"]
 
   # Designing with AI (3 questions)
@@ -602,5 +602,5 @@ questions:
     explanation: "Inclusive AI design requires understanding diverse cultural contexts and actively working to prevent algorithmic bias that could harm different groups."
     ksa_mapping:
       knowledge: ["K3.1", "K3.2"]
-      skills: ["S2.2", "S3.2"]
+      skills: ["S2.2"]
       attitudes: ["A3.1", "A3.2"]

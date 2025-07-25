@@ -17,7 +17,7 @@ INSERT INTO scenarios (id, mode, status, version, source_type, title, descriptio
  '{"en": "Social Media Strategy", "zh": "社群媒體策略"}',
  '{"en": "Develop social media strategies with AI assistance", "zh": "使用 AI 協助開發社群媒體策略"}',
  'beginner', 30,
- '{"ksaMapping": {"knowledge": ["K1.2", "K2.1"], "skills": ["S2.1", "S3.2"], "attitudes": ["A1.2", "A2.1"]}}');
+ '{"ksaMapping": {"knowledge": ["K1.2", "K2.1"], "skills": ["S2.1"], "attitudes": ["A1.2", "A2.1"]}}');
 
 -- Create Assessment scenario
 INSERT INTO scenarios (id, mode, status, version, source_type, title, description, difficulty, estimated_minutes, assessment_data) VALUES

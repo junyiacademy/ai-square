@@ -118,7 +118,6 @@ ksa_mapping:
   skills:
     - S2.1  # Critical evaluation of AI outputs
     - S3.1  # AI system integration
-    - S3.3  # AI-assisted analysis
     - S4.2  # Collaborative AI design
   attitudes:
     - A1.2  # Responsible AI use

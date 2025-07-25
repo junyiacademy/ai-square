@@ -21,8 +21,6 @@ export const KSA_CODES = {
     'S2.2': 'Model selection and fine-tuning',
     'S2.3': 'Creating AI-powered content and solutions',
     'S3.1': 'Managing AI projects and workflows',
-    'S3.2': 'Monitoring AI system performance',
-    'S3.3': 'Troubleshooting AI implementation issues',
     'S4.1': 'Designing AI system architecture',
     'S4.2': 'Prototyping AI solutions',
     'S4.3': 'Testing and validating AI applications'

@@ -117,7 +117,6 @@ ksa_mapping:
   skills:
     - S2.1  # Critical evaluation of AI outputs
     - S2.2  # Effective AI tool selection
-    - S3.3  # AI-assisted analysis
   attitudes:
     - A1.2  # Responsible AI use
     - A2.1  # Critical thinking
@@ -557,5 +556,4 @@ completion_criteria:
   required_competencies:
     - K2.1  # Understanding AI capabilities and limitations
     - S2.1  # Critical evaluation of AI outputs
-    - S3.3  # AI-assisted analysis
   min_overall_score: 75
