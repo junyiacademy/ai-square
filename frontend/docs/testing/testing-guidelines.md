@@ -49,6 +49,25 @@
 2. **樣式** - CSS/Tailwind
 3. **配置檔** - 靜態設定
 
+### 尚未測試的關鍵檔案（已從 GCS-v2 遷移到 PostgreSQL）
+
+#### 核心服務層
+- **YAML Loaders**
+  - `src/lib/services/assessment-yaml-loader.ts`
+  - `src/lib/services/discovery-yaml-loader.ts`
+  - `src/lib/services/pbl-yaml-loader.ts`
+  - `src/lib/services/scenario-initialization-service.ts`
+
+#### Repository 實現（PostgreSQL）
+- `src/lib/repositories/postgresql/`
+  - 各種 repository 實現檔案
+
+#### 統一架構測試案例
+參考：`src/scripts/test/test-unified-modes-complete.ts`
+- 測試三個模組的完整流程
+- 驗證資料一致性
+- 檢查錯誤處理
+
 ### 測試命名規範
 
 ```typescript
