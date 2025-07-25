@@ -171,40 +171,109 @@ export default function CompetencyKnowledgeGraph({
     if (result.ksaAnalysis) {
       console.log('📊 Using KSA analysis from evaluation result:', result.ksaAnalysis);
       
-      // Convert the evaluation's ksaAnalysis to the mastery format we expect
+      // First, calculate actual mastery from questions and answers to get real totals
+      const calculatedMastery = calculateKSAMastery();
+      
+      // Then use the evaluation's ksaAnalysis to determine performance levels
       const { knowledge, skills, attitudes } = result.ksaAnalysis;
       
-      // Process knowledge codes
+      // Process knowledge codes with nuanced scoring
       if (knowledge) {
         knowledge.strong?.forEach(code => {
-          ksaMastery[code] = { correct: 1, total: 1, questions: [] };
+          const actual = calculatedMastery[code];
+          if (actual) {
+            // Strong = high performance, but use actual totals for accurate representation
+            ksaMastery[code] = { 
+              correct: Math.max(Math.ceil(actual.total * 0.8), actual.correct), 
+              total: actual.total, 
+              questions: actual.questions 
+            };
+          } else {
+            // Fallback if not in calculated data
+            ksaMastery[code] = { correct: 2, total: 2, questions: [] };
+          }
         });
         knowledge.weak?.forEach(code => {
-          ksaMastery[code] = { correct: 0, total: 1, questions: [] };
+          const actual = calculatedMastery[code];
+          if (actual) {
+            // Weak = low performance, but use actual totals
+            ksaMastery[code] = { 
+              correct: Math.min(Math.floor(actual.total * 0.3), actual.correct), 
+              total: actual.total, 
+              questions: actual.questions 
+            };
+          } else {
+            // Fallback if not in calculated data
+            ksaMastery[code] = { correct: 0, total: 2, questions: [] };
+          }
         });
       }
       
-      // Process skills codes
+      // Process skills codes with nuanced scoring
       if (skills) {
         skills.strong?.forEach(code => {
-          ksaMastery[code] = { correct: 1, total: 1, questions: [] };
+          const actual = calculatedMastery[code];
+          if (actual) {
+            ksaMastery[code] = { 
+              correct: Math.max(Math.ceil(actual.total * 0.8), actual.correct), 
+              total: actual.total, 
+              questions: actual.questions 
+            };
+          } else {
+            ksaMastery[code] = { correct: 2, total: 2, questions: [] };
+          }
         });
         skills.weak?.forEach(code => {
-          ksaMastery[code] = { correct: 0, total: 1, questions: [] };
+          const actual = calculatedMastery[code];
+          if (actual) {
+            ksaMastery[code] = { 
+              correct: Math.min(Math.floor(actual.total * 0.3), actual.correct), 
+              total: actual.total, 
+              questions: actual.questions 
+            };
+          } else {
+            ksaMastery[code] = { correct: 0, total: 2, questions: [] };
+          }
         });
       }
       
-      // Process attitudes codes
+      // Process attitudes codes with nuanced scoring
       if (attitudes) {
         attitudes.strong?.forEach(code => {
-          ksaMastery[code] = { correct: 1, total: 1, questions: [] };
+          const actual = calculatedMastery[code];
+          if (actual) {
+            ksaMastery[code] = { 
+              correct: Math.max(Math.ceil(actual.total * 0.8), actual.correct), 
+              total: actual.total, 
+              questions: actual.questions 
+            };
+          } else {
+            ksaMastery[code] = { correct: 2, total: 2, questions: [] };
+          }
         });
         attitudes.weak?.forEach(code => {
-          ksaMastery[code] = { correct: 0, total: 1, questions: [] };
+          const actual = calculatedMastery[code];
+          if (actual) {
+            ksaMastery[code] = { 
+              correct: Math.min(Math.floor(actual.total * 0.3), actual.correct), 
+              total: actual.total, 
+              questions: actual.questions 
+            };
+          } else {
+            ksaMastery[code] = { correct: 0, total: 2, questions: [] };
+          }
         });
       }
       
-      console.log('📊 Converted KSA mastery from evaluation:', ksaMastery);
+      // Add any other codes from calculated mastery that aren't in strong/weak (these become yellow)
+      Object.entries(calculatedMastery).forEach(([code, data]) => {
+        if (!ksaMastery[code]) {
+          // These are the "medium" performance codes - they become yellow
+          ksaMastery[code] = data;
+        }
+      });
+      
+      console.log('📊 Enhanced KSA mastery with nuanced scoring:', ksaMastery);
     } else {
       // Fall back to calculated mastery from questions and answers
       console.log('📊 Using calculated KSA mastery from questions/answers');
