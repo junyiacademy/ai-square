@@ -1,4 +1,0 @@
-@import "tailwindcss";
-
-/* Enable all Tailwind layers */
-@layer theme, base, components, utilities;
