@@ -47,6 +47,15 @@ export default function CompetencyKnowledgeGraph({
   domainsData,
   ksaMaps 
 }: CompetencyKnowledgeGraphProps) {
+  
+  // Log the result.ksaAnalysis data for debugging
+  console.log('🎯 CompetencyKnowledgeGraph received data:', {
+    resultKsaAnalysis: result.ksaAnalysis,
+    hasQuestions: questions.length > 0,
+    hasUserAnswers: userAnswers.length > 0,
+    hasDomainsData: !!domainsData,
+    hasKsaMaps: !!ksaMaps
+  });
   const { t, i18n } = useTranslation('assessment');
   const svgRef = useRef<SVGSVGElement>(null);
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
@@ -56,9 +65,28 @@ export default function CompetencyKnowledgeGraph({
 
   // Calculate KSA code mastery based on user answers
   const calculateKSAMastery = useCallback(() => {
+    console.log('🔄 Calculating KSA mastery with:', {
+      questionsCount: questions.length,
+      userAnswersCount: userAnswers.length,
+      questionsWithKSA: questions.filter(q => q && q.ksa_mapping).length,
+      hasKsaMaps: !!ksaMaps,
+      sampleQuestion: questions[0] ? {
+        id: questions[0].id,
+        hasKSAMapping: !!questions[0].ksa_mapping,
+        ksaMapping: questions[0].ksa_mapping
+      } : 'No questions'
+    });
+    
+    // If we don't have KSA maps, return empty mastery
+    if (!ksaMaps) {
+      console.log('⚠️ No KSA maps available, returning empty mastery');
+      return {};
+    }
+    
     const ksaMastery: Record<string, { correct: number; total: number; questions: string[] }> = {};
 
     // First pass: collect all KSA codes from all questions (not just answered ones)
+    // But only include codes that exist in the KSA maps
     questions.forEach(question => {
       if (question && question.ksa_mapping) {
         const allCodes = [
@@ -68,6 +96,17 @@ export default function CompetencyKnowledgeGraph({
         ];
         
         allCodes.forEach(code => {
+          // Check if this KSA code exists in the maps (only process valid codes)
+          const ksaMap = code.startsWith('K') ? ksaMaps?.kMap : 
+                         code.startsWith('S') ? ksaMaps?.sMap : 
+                         ksaMaps?.aMap;
+          
+          const ksaInfo = ksaMap?.[code];
+          if (!ksaInfo) {
+            console.log(`⚠️ Skipping unmapped KSA code: ${code}`);
+            return; // Skip this code if it's not in the KSA maps
+          }
+          
           if (!ksaMastery[code]) {
             ksaMastery[code] = { correct: 0, total: 0, questions: [] };
           }
@@ -99,8 +138,19 @@ export default function CompetencyKnowledgeGraph({
       }
     });
 
+    console.log('✅ KSA mastery calculation complete:', {
+      totalCodes: Object.keys(ksaMastery).length,
+      codeDetails: Object.entries(ksaMastery).slice(0, 5).map(([code, data]) => ({
+        code,
+        correct: data.correct,
+        total: data.total,
+        questionsCount: data.questions.length
+      })),
+      allCodes: Object.keys(ksaMastery)
+    });
+    
     return ksaMastery;
-  }, [questions, userAnswers]);
+  }, [questions, userAnswers, ksaMaps]);
 
   // Get mastery status: 0 = red (no correct), 1 = yellow (some correct), 2 = green (all correct)
   const getMasteryStatus = (correct: number, total: number): number => {
@@ -114,7 +164,52 @@ export default function CompetencyKnowledgeGraph({
   const buildGraphData = useCallback(() => {
     const nodes: GraphNode[] = [];
     const links: GraphLink[] = [];
-    const ksaMastery = calculateKSAMastery();
+    
+    // Use KSA analysis from result if available, otherwise fall back to calculated mastery
+    let ksaMastery: Record<string, { correct: number; total: number; questions: string[] }> = {};
+    
+    if (result.ksaAnalysis) {
+      console.log('📊 Using KSA analysis from evaluation result:', result.ksaAnalysis);
+      
+      // Convert the evaluation's ksaAnalysis to the mastery format we expect
+      const { knowledge, skills, attitudes } = result.ksaAnalysis;
+      
+      // Process knowledge codes
+      if (knowledge) {
+        knowledge.strong?.forEach(code => {
+          ksaMastery[code] = { correct: 1, total: 1, questions: [] };
+        });
+        knowledge.weak?.forEach(code => {
+          ksaMastery[code] = { correct: 0, total: 1, questions: [] };
+        });
+      }
+      
+      // Process skills codes
+      if (skills) {
+        skills.strong?.forEach(code => {
+          ksaMastery[code] = { correct: 1, total: 1, questions: [] };
+        });
+        skills.weak?.forEach(code => {
+          ksaMastery[code] = { correct: 0, total: 1, questions: [] };
+        });
+      }
+      
+      // Process attitudes codes
+      if (attitudes) {
+        attitudes.strong?.forEach(code => {
+          ksaMastery[code] = { correct: 1, total: 1, questions: [] };
+        });
+        attitudes.weak?.forEach(code => {
+          ksaMastery[code] = { correct: 0, total: 1, questions: [] };
+        });
+      }
+      
+      console.log('📊 Converted KSA mastery from evaluation:', ksaMastery);
+    } else {
+      // Fall back to calculated mastery from questions and answers
+      console.log('📊 Using calculated KSA mastery from questions/answers');
+      ksaMastery = calculateKSAMastery();
+    }
 
     // Add center node
     nodes.push({
@@ -179,7 +274,12 @@ export default function CompetencyKnowledgeGraph({
                      ksaMaps?.aMap;
       
       const ksaInfo = ksaMap?.[parentCode];
-      if (!ksaInfo) return;
+      
+      // If we don't have KSA info, skip this code (ignore unmapped codes)
+      if (!ksaInfo) {
+        console.log(`⚠️ No KSA info found for ${parentCode}, skipping (unmapped code)`);
+        return; // Skip processing this code
+      }
       
       const ksaType = parentCode.startsWith('K') ? 'knowledge' : 
                       parentCode.startsWith('S') ? 'skills' : 'attitudes';
@@ -222,7 +322,12 @@ export default function CompetencyKnowledgeGraph({
                      ksaMaps?.aMap;
       
       const ksaInfo = ksaMap?.[code];
-      if (!ksaInfo) return;
+      
+      // If we don't have KSA info, skip this code (ignore unmapped codes)
+      if (!ksaInfo) {
+        console.log(`⚠️ No KSA info found for ${code}, skipping (unmapped code)`);
+        return; // Skip processing this code
+      }
 
       const ksaType = code.startsWith('K') ? 'knowledge' : 
                       code.startsWith('S') ? 'skills' : 'attitudes';
@@ -282,8 +387,7 @@ export default function CompetencyKnowledgeGraph({
     });
 
     return { nodes, links };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [questions, userAnswers, ksaMaps, result, t]);
+  }, [questions, userAnswers, ksaMaps, result, t, calculateKSAMastery]);
 
   // Traffic light colors for mastery status
   const getTrafficLightColor = (mastery: number): string => {
@@ -308,7 +412,28 @@ export default function CompetencyKnowledgeGraph({
   };
 
   useEffect(() => {
-    if (!svgRef.current || !domainsData || !ksaMaps) return;
+    console.log('🎯 CompetencyKnowledgeGraph useEffect - Data availability check:', {
+      svgRefCurrent: !!svgRef.current,
+      domainsData: !!domainsData,
+      ksaMaps: !!ksaMaps,
+      questionsCount: questions.length,
+      userAnswersCount: userAnswers.length,
+      ksaMapKeys: ksaMaps ? {
+        kMap: Object.keys(ksaMaps.kMap || {}).length,
+        sMap: Object.keys(ksaMaps.sMap || {}).length,
+        aMap: Object.keys(ksaMaps.aMap || {}).length
+      } : 'No KSA Maps'
+    });
+    
+    if (!svgRef.current) {
+      console.log('⚠️ CompetencyKnowledgeGraph: No SVG ref, graph will not render');
+      return;
+    }
+    
+    // Show a warning if we don't have KSA maps but still render with available data
+    if (!domainsData || !ksaMaps) {
+      console.log('⚠️ CompetencyKnowledgeGraph: Missing KSA maps data, using simplified display');
+    }
 
     // Clear previous visualization
     d3.select(svgRef.current).selectAll('*').remove();

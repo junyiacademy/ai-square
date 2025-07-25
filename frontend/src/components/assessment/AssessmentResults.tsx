@@ -40,7 +40,15 @@ export default function AssessmentResults({ result, domains, onRetake, questions
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log('🔄 Fetching relations tree data for language:', i18n.language);
         const data = await contentService.getRelationsTree(i18n.language);
+        console.log('✅ Relations tree data loaded:', {
+          domainsCount: data.domains?.length || 0,
+          kMapKeys: Object.keys(data.kMap || {}).length,
+          sMapKeys: Object.keys(data.sMap || {}).length,
+          aMapKeys: Object.keys(data.aMap || {}).length
+        });
+        
         setDomainsData(data.domains);
         setKsaMaps({
           kMap: data.kMap as Record<string, { summary: string; theme: string; explanation?: string }>,
@@ -48,7 +56,16 @@ export default function AssessmentResults({ result, domains, onRetake, questions
           aMap: data.aMap as Record<string, { summary: string; theme: string; explanation?: string }>
         });
       } catch (error) {
-        console.error('Failed to fetch domains data:', error);
+        console.error('❌ Failed to fetch domains data:', error);
+        
+        // Provide fallback empty data so the graph doesn't break completely
+        console.log('🔄 Setting fallback empty data for KSA graph');
+        setDomainsData([]);
+        setKsaMaps({
+          kMap: {},
+          sMap: {},
+          aMap: {}
+        });
       }
     };
     fetchData();

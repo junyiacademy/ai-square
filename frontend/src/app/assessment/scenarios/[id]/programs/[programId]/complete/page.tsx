@@ -313,6 +313,17 @@ export default function AssessmentCompletePage({
       };
     });
   
+  console.log('📊 Assessment Complete Page - Preparing data for KSA graph:', {
+    questionsCount: taskData.questions?.length || 0,
+    userAnswersCount: userAnswers.length,
+    questionsWithKSA: taskData.questions?.filter(q => q && q.ksa_mapping).length || 0,
+    sampleQuestionKSA: taskData.questions?.[0]?.ksa_mapping || 'No KSA mapping',
+    userAnswersSample: userAnswers.slice(0, 3).map(a => ({
+      questionId: a.questionId,
+      isCorrect: a.isCorrect
+    }))
+  });
+  
   // Debug logging
   console.log('Assessment Complete - User Answers:', {
     totalAnswers: userAnswers.length,
