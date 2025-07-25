@@ -1,40 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
-
-interface DomainScore {
-  domain: string;
-  totalQuestions: number;
-  correctAnswers: number;
-  score: number;
-  competencies: Set<string>;
-  ksa: {
-    knowledge: Set<string>;
-    skills: Set<string>;
-    attitudes: Set<string>;
-  };
-}
-
-interface AssessmentInteraction {
-  type: string;
-  content?: { eventType?: string };
-  context?: { isCorrect?: boolean; questionId?: string; ksa_mapping?: unknown };
-}
-
-interface Question {
-  id: string;
-  domain: string;
-  question: string;
-  options: Record<string, string>;
-  difficulty: string;
-  correct_answer: string;
-  explanation: string;
-  ksa_mapping?: {
-    knowledge?: string[];
-    skills?: string[];
-    attitudes?: string[];
-  };
-}
+import { 
+  AssessmentInteraction, 
+  AssessmentQuestion, 
+  DomainScore,
+  isAssessmentInteraction,
+  fromIInteraction 
+} from '@/types/assessment-types';
 
 export async function POST(
   request: NextRequest,
@@ -148,14 +121,20 @@ export async function POST(
     let totalAnsweredQuestions = 0;
     
     for (const task of tasks) {
-      const taskQuestions = (task.content as { questions?: Question[] })?.questions || 
-                           (task.metadata as { questions?: Question[] })?.questions || [];
+      const taskQuestions = (task.content as { questions?: AssessmentQuestion[] })?.questions || 
+                           (task.metadata as { questions?: AssessmentQuestion[] })?.questions || [];
       totalExpectedQuestions += taskQuestions.length;
       
-      const taskAnswers = task.interactions?.filter(i => 
-        i.type === 'assessment_answer' || 
-        (i.type === 'system_event' && (i.content as { eventType?: string })?.eventType === 'assessment_answer')
-      ) || [];
+      const taskAnswers = task.interactions?.filter(i => {
+        // Check if it's already an assessment interaction
+        if (isAssessmentInteraction(i as unknown as AssessmentInteraction)) return true;
+        // Or check if it's a system_event with assessment_answer
+        return i.type === 'system_event' && 
+               typeof i.content === 'object' && 
+               i.content !== null &&
+               'eventType' in i.content &&
+               i.content.eventType === 'assessment_answer';
+      }) || [];
       totalAnsweredQuestions += taskAnswers.length;
     }
     
@@ -183,67 +162,31 @@ export async function POST(
     }
     
     // Collect all answers and questions from all tasks
-    let allAnswers: Array<{
-      type: string;
-      context: {
-        questionId: string;
-        selectedAnswer: string;
-        timeSpent: number;
-        isCorrect: boolean;
-      };
-    }> = [];
-    let allQuestions: Array<{
-      id: string;
-      domain: string;
-      question: string;
-      options: Record<string, string>;
-      difficulty: string;
-      correct_answer: string;
-      explanation: string;
-      ksa_mapping: {
-        knowledge?: string[];
-        skills?: string[];
-        attitudes?: string[];
-      };
-    }> = [];
+    let allAnswers: AssessmentInteraction[] = [];
+    let allQuestions: AssessmentQuestion[] = [];
     
     console.log('Collecting answers and questions from', tasks.length, 'tasks');
     
     for (const task of tasks) {
       // Handle both old format (system_event) and new format (assessment_answer)
       const taskAnswers = task.interactions
-        .filter(i => 
-          (i.type === 'system_event' && (i.content as { eventType?: string })?.eventType === 'assessment_answer') ||
-          i.type === 'assessment_answer'
-        )
         .map(i => {
-          // Handle new format where context is already structured
-          if (i.type === 'assessment_answer' && i.context) {
-            return {
-              type: i.type,
-              context: {
-                questionId: i.context.questionId || '',
-                selectedAnswer: i.context.selectedAnswer || '',
-                timeSpent: i.context.timeSpent || 0,
-                isCorrect: i.context.isCorrect === true
-              }
-            };
+          // Try to convert from IInteraction format first
+          const converted = fromIInteraction(i);
+          if (converted) return converted;
+          
+          // Handle if it's already AssessmentInteraction
+          if (isAssessmentInteraction(i as unknown as AssessmentInteraction)) {
+            return i as unknown as AssessmentInteraction;
           }
-          // Handle old format for backward compatibility
-          return {
-            type: i.type,
-            context: {
-              questionId: (i.content as { questionId?: string })?.questionId || '',
-              selectedAnswer: (i.content as { selectedAnswer?: string })?.selectedAnswer || '',
-              timeSpent: (i.content as { timeSpent?: number })?.timeSpent || 0,
-              isCorrect: (i.content as { isCorrect?: boolean })?.isCorrect || false
-            }
-          };
-        });
+          
+          return null;
+        })
+        .filter((i): i is AssessmentInteraction => i !== null);
       
       // Questions can be in task.content.questions or task.metadata.questions
-      const taskQuestions = (task.content as { questions?: Question[] })?.questions || 
-                           (task.metadata as { questions?: Question[] })?.questions || [];
+      const taskQuestions = (task.content as { questions?: AssessmentQuestion[] })?.questions || 
+                           (task.metadata as { questions?: AssessmentQuestion[] })?.questions || [];
       
       console.log(`Task ${task.title}:`, {
         taskId: task.id,
@@ -257,7 +200,7 @@ export async function POST(
       });
       
       allAnswers = [...allAnswers, ...taskAnswers];
-      allQuestions = [...allQuestions, ...taskQuestions] as typeof allQuestions;
+      allQuestions = [...allQuestions, ...taskQuestions];
     }
     
     console.log('Total collected:', {
@@ -267,7 +210,7 @@ export async function POST(
     });
     
     const totalQuestions = allQuestions.length;
-    const correctAnswers = allAnswers.filter(a => (a.context as { isCorrect?: boolean })?.isCorrect === true).length;
+    const correctAnswers = allAnswers.filter(a => a.context.isCorrect).length;
     const overallScore = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
     
     // Calculate domain scores based on actual questions and answers
@@ -292,28 +235,27 @@ export async function POST(
     
     // Process each answer to calculate domain scores and collect KSA mappings
     allAnswers.forEach((answer) => {
-      const answerContent = answer.context as { questionId?: string; isCorrect?: boolean };
-      const questionId = answerContent.questionId;
+      const questionId = answer.context.questionId;
       const question = allQuestions.find((q) => q.id === questionId);
       
       if (question && question.domain) {
         const domainScore = domainScores.get(question.domain);
         if (domainScore) {
           domainScore.totalQuestions++;
-          if (answerContent.isCorrect) {
+          if (answer.context.isCorrect) {
             domainScore.correctAnswers++;
           }
           
           // Collect KSA mappings from question
           if (question.ksa_mapping) {
             if (question.ksa_mapping.knowledge) {
-              question.ksa_mapping.knowledge.forEach((k: string) => domainScore.ksa.knowledge.add(k));
+              question.ksa_mapping.knowledge.forEach(k => domainScore.ksa.knowledge.add(k));
             }
             if (question.ksa_mapping.skills) {
-              question.ksa_mapping.skills.forEach((s: string) => domainScore.ksa.skills.add(s));
+              question.ksa_mapping.skills.forEach(s => domainScore.ksa.skills.add(s));
             }
             if (question.ksa_mapping.attitudes) {
-              question.ksa_mapping.attitudes.forEach((a: string) => domainScore.ksa.attitudes.add(a));
+              question.ksa_mapping.attitudes.forEach(a => domainScore.ksa.attitudes.add(a));
             }
           }
         }
@@ -356,29 +298,28 @@ export async function POST(
     console.log('Analyzing KSA performance for', allAnswers.length, 'answers');
     
     allAnswers.forEach((answer, index) => {
-      const answerContent = (answer as AssessmentInteraction).context || {};
-      const questionId = answerContent.questionId;
+      const questionId = answer.context.questionId;
       const question = allQuestions.find((q) => q.id === questionId);
       
       console.log(`Answer ${index + 1}:`, {
         questionId,
-        isCorrect: answerContent.isCorrect,
+        isCorrect: answer.context.isCorrect,
         hasQuestion: !!question,
         hasKSAMapping: !!(question?.ksa_mapping),
         ksa: question?.ksa_mapping
       });
       
       if (question && question.ksa_mapping) {
-        const targetKSA = answerContent.isCorrect ? correctKSA : incorrectKSA;
+        const targetKSA = answer.context.isCorrect ? correctKSA : incorrectKSA;
         
         if (question.ksa_mapping.knowledge) {
-          question.ksa_mapping.knowledge.forEach((k) => targetKSA.knowledge.add(k));
+          question.ksa_mapping.knowledge.forEach(k => targetKSA.knowledge.add(k));
         }
         if (question.ksa_mapping.skills) {
-          question.ksa_mapping.skills.forEach((s) => targetKSA.skills.add(s));
+          question.ksa_mapping.skills.forEach(s => targetKSA.skills.add(s));
         }
         if (question.ksa_mapping.attitudes) {
-          question.ksa_mapping.attitudes.forEach((a) => targetKSA.attitudes.add(a));
+          question.ksa_mapping.attitudes.forEach(a => targetKSA.attitudes.add(a));
         }
       }
     });

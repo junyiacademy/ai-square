@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
+import type { IInteraction } from '@/types/unified-learning';
+import { AssessmentInteraction, toIInteraction } from '@/types/assessment-types';
 
 export async function POST(
   request: NextRequest,
@@ -45,10 +47,15 @@ export async function POST(
     }
     
     // Get questions from task to check correct answers
-    const questions = (task.content as { questions?: Array<{ id: string; correct_answer?: string; ksa_mapping?: unknown }> })?.questions || [];
+    interface QuestionType {
+      id: string;
+      correct_answer?: string;
+      ksa_mapping?: Record<string, unknown>;
+    }
+    const questions = (task.content as { questions?: QuestionType[] })?.questions || [];
     
     // Prepare all interactions
-    const interactions = answers.map((answer: { questionId: string; answer: string; timeSpent?: number }) => {
+    const assessmentInteractions: AssessmentInteraction[] = answers.map((answer: { questionId: string; answer: string; timeSpent?: number }) => {
       // Find the question to check the correct answer
       const question = questions.find((q) => q.id === answer.questionId);
       const isCorrect = question && question.correct_answer !== undefined
@@ -68,9 +75,10 @@ export async function POST(
       };
     });
     
-    // Store interactions in task (not metadata) and merge with existing
+    // Convert to IInteraction for storage and merge with existing
     const existingInteractions = task.interactions || [];
-    const updatedInteractions = [...existingInteractions, ...interactions];
+    const newInteractions = assessmentInteractions.map(toIInteraction);
+    const updatedInteractions = [...existingInteractions, ...newInteractions];
     
     await taskRepo.update?.(taskId, {
       interactions: updatedInteractions,
@@ -88,7 +96,7 @@ export async function POST(
     
     return NextResponse.json({ 
       success: true,
-      submitted: interactions.length
+      submitted: assessmentInteractions.length
     });
   } catch (error) {
     console.error('Error submitting batch answers:', error);

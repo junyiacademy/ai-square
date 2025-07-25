@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { getLanguageFromHeader } from '@/lib/utils/language';
+import type { IInteraction } from '@/types/unified-learning';
+import { AssessmentInteraction, toIInteraction } from '@/types/assessment-types';
 
 export async function GET(
   request: NextRequest,
@@ -177,26 +179,35 @@ export async function PATCH(
         }
         
         // Process answers and create interactions
+        interface QuestionType {
+          id: string;
+          correct_answer?: string;
+          ksa_mapping?: Record<string, unknown>;
+        }
         const questionsArray = Array.isArray((task.content as Record<string, unknown>)?.questions) 
-          ? (task.content as Record<string, unknown>)?.questions as unknown[] 
+          ? (task.content as Record<string, unknown>)?.questions as QuestionType[] 
           : [];
-        const interactions = answers.map((answer: { questionId: string; answer: string; timeSpent?: number }) => {
-          const question = questionsArray.find((q) => (q as Record<string, unknown>).id === answer.questionId);
-          const isCorrect = question && 
-            String(answer.answer) === String((question as Record<string, unknown>)?.correct_answer);
+        const assessmentInteractions: AssessmentInteraction[] = answers.map((answer: { questionId: string; answer: string; timeSpent?: number }) => {
+          const question = questionsArray.find((q) => q.id === answer.questionId);
+          const isCorrect = question && question.correct_answer !== undefined
+            ? String(answer.answer) === String(question.correct_answer)
+            : false;
           
           return {
             timestamp: new Date().toISOString(),
-            type: 'assessment_answer',
+            type: 'assessment_answer' as const,
             context: {
               questionId: answer.questionId,
               selectedAnswer: answer.answer,
               isCorrect,
               timeSpent: answer.timeSpent || 0,
-              ksa_mapping: (question as Record<string, unknown>)?.ksa_mapping
+              ksa_mapping: question?.ksa_mapping
             }
           };
         });
+        
+        // Convert to IInteraction for storage
+        const interactions = assessmentInteractions.map(toIInteraction);
         
         // Store interactions in task
         const updatedInteractions = [...(task.interactions || []), ...interactions];
@@ -210,7 +221,7 @@ export async function PATCH(
         });
         
         // Calculate score
-        const correctCount = interactions.filter(i => i.context.isCorrect).length;
+        const correctCount = assessmentInteractions.filter(i => i.context.isCorrect).length;
         const totalQuestions = questionsArray.length;
         const score = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
         
@@ -235,7 +246,7 @@ export async function PATCH(
             totalQuestions,
             correctAnswers: correctCount,
             language,
-            interactions
+            interactions: assessmentInteractions
           },
           metadata: {
             evaluatedAt: new Date().toISOString()
