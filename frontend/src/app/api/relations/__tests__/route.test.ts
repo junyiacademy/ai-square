@@ -59,7 +59,7 @@ const mockDomainsData = {
           description: 'Collaborating creatively with AI',
           description_zhTW: '與 AI 創意合作',
           knowledge: ['K2.1'],
-          skills: ['S2.1', 'S2.2'],
+          skills: ['S2.1'],
           attitudes: ['A2.1']
         }
       }
@@ -114,10 +114,6 @@ const mockKsaData = {
           'S2.1': {
             summary: 'Use AI for creative tasks',
             summary_zhTW: '使用 AI 進行創意任務'
-          },
-          'S2.2': {
-            summary: 'Iterate with AI feedback',
-            summary_zhTW: '根據 AI 反饋進行迭代'
           }
         }
       }

@@ -67,7 +67,7 @@ tasks:
     correct_answer: b
     ksa_mapping:
       knowledge: [K3.1, K3.2]
-      skills: [S2.1, S2.2]
+      skills: [S2.1]
       attitudes: [A2.1, A3.1]
     question: ¿Cuál es el factor más importante al evaluar el sesgo en contenido generado por IA?
     options:
@@ -143,7 +143,7 @@ tasks:
     correct_answer: b
     ksa_mapping:
       knowledge: [K3.3, K5.2]
-      skills: [S2.2]
+      skills: []
       attitudes: [A1.1]
     question: ¿Qué deberías hacer con información personal sensible al usar herramientas de IA?
     options:

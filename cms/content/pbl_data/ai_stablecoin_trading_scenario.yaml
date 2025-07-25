@@ -116,7 +116,6 @@ ksa_mapping:
     - K3.2  # AI integration in workflows
   skills:
     - S2.1  # Critical evaluation of AI outputs
-    - S2.2  # Effective AI tool selection
   attitudes:
     - A1.2  # Responsible AI use
     - A2.1  # Critical thinking

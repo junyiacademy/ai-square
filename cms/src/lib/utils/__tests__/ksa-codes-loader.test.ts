@@ -13,7 +13,6 @@ jest.mock('../../data/ksa-codes', () => ({
       'S1.1': 'Using AI tools effectively',
       'S1.2': 'Evaluating AI outputs',
       'S2.1': 'Data preparation skills',
-      'S2.2': 'Model fine-tuning'
     },
     attitudes: {
       'A1.1': 'Ethical AI usage',
@@ -44,7 +43,6 @@ describe('ksa-codes-loader utils', () => {
       expect(result).toContain('S1.1: Using AI tools effectively')
       expect(result).toContain('S1.2: Evaluating AI outputs')
       expect(result).toContain('S2.1: Data preparation skills')
-      expect(result).toContain('S2.2: Model fine-tuning')
       
       // Check Attitudes section
       expect(result).toContain('Attitudes (A):')

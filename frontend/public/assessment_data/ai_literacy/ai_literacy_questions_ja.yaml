@@ -89,7 +89,6 @@ tasks:
       - K3.2
       skills:
       - S2.1
-      - S2.2
       attitudes:
       - A2.1
       - A3.1
@@ -183,7 +182,6 @@ tasks:
       - K3.3
       - K5.2
       skills:
-      - S2.2
       attitudes:
       - A1.1
   - id: M002

@@ -108,7 +108,6 @@ ksa_mapping:
   skills:
     - S1.1  # Basic AI interaction
     - S2.1  # Content creation with AI
-    - S2.2  # AI-assisted creative work
   attitudes:
     - A1.1  # Curiosity about AI
     - A2.1  # Responsible AI use

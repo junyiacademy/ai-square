@@ -421,7 +421,7 @@ Return your response as a valid JSON object with EXACTLY this structure:
 {
   "ksa_mapping": {
     "knowledge": ["K1.1", "K2.3"],
-    "skills": ["S1.1", "S2.2"],
+    "skills": ["S1.1"],
     "attitudes": ["A1.1", "A2.1"]
   }
 }

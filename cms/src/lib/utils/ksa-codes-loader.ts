@@ -126,8 +126,6 @@ function getFallbackKSACodes(): KSACodesData {
       { code: 'S1.2', summary: 'Identify appropriate AI tools for tasks' },
       { code: 'S1.3', summary: 'Use AI effectively and responsibly' },
       { code: 'S2.1', summary: 'Create with AI assistance' },
-      { code: 'S2.2', summary: 'Collaborate with AI systems' },
-      { code: 'S2.3', summary: 'Adapt AI outputs for specific needs' },
       { code: 'S3.1', summary: 'Manage AI risks and limitations' },
       { code: 'S4.1', summary: 'Design AI-enhanced solutions' },
       { code: 'S4.2', summary: 'Consider ethical implications' },

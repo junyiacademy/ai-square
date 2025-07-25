@@ -64,7 +64,7 @@ async function testUnifiedSchema() {
       JSON.stringify({
         ksaMapping: {
           knowledge: ['K1.1', 'K2.1'],
-          skills: ['S1.1', 'S2.2'],
+          skills: ['S1.1'],
           attitudes: ['A1.1']
         }
       }),

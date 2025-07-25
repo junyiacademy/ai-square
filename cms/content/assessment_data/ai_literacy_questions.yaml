@@ -243,7 +243,7 @@ questions:
     explanation_it: "Il pregiudizio dell'IA spesso deriva da dati di addestramento che mancano di diversità o contengono pregiudizi storici, rendendo le fonti di dati cruciali per la valutazione."
     ksa_mapping:
       knowledge: ["K3.1", "K3.2"]
-      skills: ["S2.1", "S2.2"]
+      skills: ["S2.1"]
       attitudes: ["A2.1", "A3.1"]
 
   # Creating with AI (3 questions)
@@ -390,7 +390,7 @@ questions:
     explanation_it: "Rispettare i diritti di proprietà intellettuale ed evitare l'uso improprio per creare somiglianze non autorizzate o contenuti fuorvianti è cruciale per l'uso etico dell'IA."
     ksa_mapping:
       knowledge: ["K3.1", "K3.2"]
-      skills: ["S2.2"]
+      skills: [""]
       attitudes: ["A3.1", "A3.2"]
 
   - id: "C003"
@@ -420,7 +420,7 @@ questions:
     explanation: "Critical software requires human oversight, thorough testing, and validation of AI-generated code to ensure security, reliability, and correctness."
     ksa_mapping:
       knowledge: ["K2.2", "K3.1"]
-      skills: ["S2.1", "S2.2"]
+      skills: ["S2.1", ""]
       attitudes: ["A2.1", "A3.1"]
 
   # Managing with AI (3 questions)
@@ -602,5 +602,5 @@ questions:
     explanation: "Inclusive AI design requires understanding diverse cultural contexts and actively working to prevent algorithmic bias that could harm different groups."
     ksa_mapping:
       knowledge: ["K3.1", "K3.2"]
-      skills: ["S2.2"]
+      skills: [""]
       attitudes: ["A3.1", "A3.2"]

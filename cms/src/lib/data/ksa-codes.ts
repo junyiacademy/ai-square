@@ -18,8 +18,6 @@ export const KSA_CODES = {
     'S1.2': 'Evaluating AI outputs and responses',
     'S1.3': 'Prompt engineering and interaction skills',
     'S2.1': 'Data preparation and preprocessing',
-    'S2.2': 'Model selection and fine-tuning',
-    'S2.3': 'Creating AI-powered content and solutions',
     'S3.1': 'Managing AI projects and workflows',
     'S4.1': 'Designing AI system architecture',
     'S4.2': 'Prototyping AI solutions',
