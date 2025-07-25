@@ -33,7 +33,19 @@ async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Recor
     const rawScenarios = await scenarioRepo.findByMode?.('pbl') || [];
     const existingScenarios = rawScenarios as IScenario[];
     
-    console.log(`Found ${existingScenarios.length} PBL scenarios in database`);
+    console.log(`[PBL API] Repository returned ${rawScenarios.length} raw scenarios`);
+    console.log(`[PBL API] Found ${existingScenarios.length} PBL scenarios in database`);
+    if (existingScenarios.length > 0) {
+      console.log('[PBL API] First scenario:', {
+        id: existingScenarios[0].id,
+        title: existingScenarios[0].title,
+        status: existingScenarios[0].status,
+        mode: existingScenarios[0].mode
+      });
+    } else {
+      console.log('[PBL API] No scenarios found, checking repository...');
+      console.log('[PBL API] Repository findByMode exists?', !!scenarioRepo.findByMode);
+    }
     
     // Build/update the index with PBL scenarios
     const { scenarioIndexService } = await import('@/lib/services/scenario-index-service');
@@ -92,7 +104,10 @@ export async function GET(request: Request) {
     
     // Use cache with source-specific key
     const cacheKey = source === 'hybrid' ? `pbl:scenarios:hybrid:${lang}` : `pbl:scenarios:${lang}`;
-    const cached = await cacheService.get(cacheKey);
+    
+    // Temporarily disable cache to debug
+    const useCache = false;
+    const cached = useCache ? await cacheService.get(cacheKey) : null;
     
     if (cached) {
       return NextResponse.json(cached, {

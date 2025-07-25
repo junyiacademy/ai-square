@@ -280,7 +280,7 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
   async findByMode(mode: LearningMode): Promise<IScenario[]> {
     const query = `
       SELECT * FROM scenarios 
-      WHERE mode = $1
+      WHERE mode = $1 AND status = 'active'
       ORDER BY created_at DESC
     `;
 

@@ -59,7 +59,21 @@ export async function GET(request: NextRequest) {
     cachedScenarios = processedScenarios;
     cacheTimestamp = now;
     
-    return NextResponse.json(processedScenarios);
+    // Return in consistent format with other APIs
+    return NextResponse.json({
+      success: true,
+      data: {
+        scenarios: processedScenarios,
+        total: processedScenarios.length,
+        available: processedScenarios.length
+      },
+      meta: {
+        timestamp: new Date().toISOString(),
+        version: '1.0.0',
+        language: language,
+        source: 'unified'
+      }
+    });
   } catch (error) {
     console.error('Error in GET /api/discovery/scenarios:', error);
     return NextResponse.json(

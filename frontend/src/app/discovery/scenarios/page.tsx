@@ -116,9 +116,10 @@ export default function ScenariosPage() {
         const lang = normalizeLanguageCode(i18n.language);
         const response = await fetch(`/api/discovery/scenarios?lang=${lang}`);
         if (response.ok) {
-          const data = await response.json();
+          const result = await response.json();
+          const scenarios = result.data?.scenarios || result; // Handle both formats
           // Transform the scenarios to match the expected format
-          const transformedScenarios = data.map((scenario: Record<string, unknown>) => {
+          const transformedScenarios = scenarios.map((scenario: Record<string, unknown>) => {
             const careerType = (scenario.discovery_data as Record<string, unknown>)?.careerType as string || 'general';
             
             return {

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { AssessmentData } from '../../../types/assessment';
-import { contentService } from '@/lib/cms/content-service';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { cacheService } from '@/lib/cache/cache-service';
 
 export const revalidate = 3600; // Revalidate every hour
@@ -24,76 +24,73 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Read the language-specific assessment data with CMS override support
-    const fileName = `ai_literacy_questions_${lang}.yaml`;
-    console.log(`Loading assessment data: ${fileName} for language: ${lang}`);
+    // Load assessment scenarios from database
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
+    const scenarios = await scenarioRepo.findByMode('assessment');
     
-    let assessmentData: AssessmentData;
-    try {
-      assessmentData = await contentService.getContent('question', fileName) as AssessmentData;
-      console.log('Assessment data loaded successfully');
-      
-      if (!assessmentData) {
-        throw new Error('No data returned from contentService');
-      }
-    } catch (loadError) {
-      console.error('Error loading content from contentService:', loadError);
-      throw loadError;
-    }
-    
-    if (!assessmentData || !assessmentData.assessment_config) {
-      console.error('Invalid assessment data structure:', assessmentData);
+    if (!scenarios || scenarios.length === 0) {
       return NextResponse.json(
-        { error: 'Invalid assessment data' },
-        { status: 500 }
+        { error: 'No assessment scenarios found' },
+        { status: 404 }
       );
     }
-
-    // Utility function to get translated field
-    const getTranslatedField = (obj: Record<string, unknown>, fieldName: string, language: string): string => {
-      // Language key is already in the correct format (e.g., zhTW, es, ja)
-      const langKey = language;
+    
+    // Get the first active assessment scenario
+    const activeScenario = scenarios.find(s => s.status === 'active') || scenarios[0];
+    
+    console.log(`Loading assessment data from database for scenario: ${activeScenario.id}`);
+    
+    // Convert scenario data to AssessmentData format
+    let assessmentData: AssessmentData;
+    try {
+      // Extract assessment data from the scenario
+      const assessmentConfig = activeScenario.assessmentData?.config || {
+        total_questions: 20,
+        time_limit_minutes: 30,
+        passing_score: 70
+      };
       
-      const translatedKey = `${fieldName}_${langKey}`;
-      const translatedValue = obj[translatedKey] as string;
-      const defaultValue = obj[fieldName] as string;
+      // Get questions from assessment data based on language
+      let rawQuestions = [];
+      if (activeScenario.assessmentData?.questions) {
+        // Questions are stored by language
+        rawQuestions = activeScenario.assessmentData.questions[lang] || 
+                      activeScenario.assessmentData.questions['en'] || 
+                      [];
+      } else if (activeScenario.taskTemplates) {
+        // Fallback to task templates
+        rawQuestions = activeScenario.taskTemplates;
+      }
       
-      return translatedValue || defaultValue || '';
-    };
-
-    // Helper function to get translated options
-    const getTranslatedOptions = (question: Record<string, unknown>, language: string) => {
-      const langKey = language;
+      // Get domains from assessment data
+      const domains = activeScenario.assessmentData?.domains || {
+        engaging_with_ai: { name: 'Engaging with AI', description: 'Understanding AI interactions', questions: 5 },
+        creating_with_ai: { name: 'Creating with AI', description: 'Using AI for creation', questions: 5 },
+        managing_with_ai: { name: 'Managing AI', description: 'Managing AI systems', questions: 5 },
+        designing_with_ai: { name: 'Designing AI', description: 'Designing AI solutions', questions: 5 }
+      };
       
-      const optionsKey = `options_${langKey}`;
-      const translatedOptions = question[optionsKey];
-      const defaultOptions = question.options;
+      // Process questions to ensure they have the correct structure
+      const processedQuestions = rawQuestions.map((q: any) => {
+        // Handle multilingual fields
+        const question = typeof q.question === 'object' ? q.question[lang] || q.question.en : q.question;
+        const options = q.options;
+        const explanation = typeof q.explanation === 'object' ? q.explanation[lang] || q.explanation.en : q.explanation;
+        
+        return {
+          ...q,
+          question,
+          options,
+          explanation,
+          domain: q.domain || 'engaging_with_ai' // Default domain if not specified
+        };
+      });
       
-      return translatedOptions || defaultOptions;
-    };
-
-    // Check if we have the new tasks structure
-    if (assessmentData.tasks) {
-      // New format with tasks
-      const processedTasks = assessmentData.tasks.map(task => ({
-        ...task,
-        title: getTranslatedField(task as unknown as Record<string, unknown>, 'title', lang),
-        description: getTranslatedField(task as unknown as Record<string, unknown>, 'description', lang),
-        questions: task.questions.map(question => ({
-          ...question,
-          question: getTranslatedField(question as unknown as Record<string, unknown>, 'question', lang),
-          options: getTranslatedOptions(question as unknown as Record<string, unknown>, lang),
-          explanation: getTranslatedField(question as unknown as Record<string, unknown>, 'explanation', lang),
-        }))
-      }));
-
-      // Flatten all questions from tasks for compatibility
-      const allQuestions = processedTasks.flatMap(task => task.questions);
-      
+      // Return the assessment data
       const result = {
-        assessment_config: assessmentData.assessment_config,
-        tasks: processedTasks,
-        questions: allQuestions, // Add flattened questions for backward compatibility
+        assessment_config: assessmentConfig,
+        domains: domains,
+        questions: processedQuestions,
       };
       
       // Store in cache
@@ -105,48 +102,11 @@ export async function GET(request: NextRequest) {
           'X-Cache': 'MISS'
         }
       });
-    }
-    
-    // Legacy format fallback (for backward compatibility)
-    const allQuestions: Array<{ domain: string; [key: string]: unknown }> = [];
-    const processedDomains: Record<string, { name: string; description: string; [key: string]: unknown }> = {};
-    
-    // If old format with domains and questions at root
-    if ('domains' in assessmentData && 'questions' in assessmentData && assessmentData.domains) {
-      Object.entries(assessmentData.domains).forEach(([key, domain]) => {
-        processedDomains[key] = {
-          ...domain,
-          name: key,
-          description: domain.description,
-        };
-      });
       
-      assessmentData.questions?.forEach(q => {
-        allQuestions.push({
-          ...q,
-          question: getTranslatedField(q as unknown as Record<string, unknown>, 'question', lang),
-          options: getTranslatedOptions(q as unknown as Record<string, unknown>, lang),
-          explanation: getTranslatedField(q as unknown as Record<string, unknown>, 'explanation', lang),
-        });
-      });
+    } catch (error) {
+      console.error('Error processing assessment data:', error);
+      throw error;
     }
-
-    // Return legacy format
-    const result = {
-      assessment_config: assessmentData.assessment_config,
-      domains: processedDomains,
-      questions: allQuestions,
-    };
-    
-    // Store in cache
-    await cacheService.set(cacheKey, result, { ttl: 60 * 60 * 1000 }); // 1 hour
-    
-    return NextResponse.json(result, {
-      headers: {
-        'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
-        'X-Cache': 'MISS'
-      }
-    });
 
   } catch (error) {
     console.error('Error loading assessment data:', error);

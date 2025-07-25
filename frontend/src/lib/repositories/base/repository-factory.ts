@@ -42,7 +42,7 @@ export class RepositoryFactory {
     const isCloudSQL = dbHost.startsWith('/cloudsql/');
     
     const poolConfig: any = {
-      database: process.env.DB_NAME || 'ai_square_db',
+      database: process.env.DB_NAME || 'ai_square_dev',
       user: process.env.DB_USER || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
       max: 20, // Maximum number of clients in the pool
@@ -57,7 +57,7 @@ export class RepositoryFactory {
     } else {
       // For regular TCP connections
       poolConfig.host = dbHost;
-      poolConfig.port = parseInt(process.env.DB_PORT || '5432');
+      poolConfig.port = parseInt(process.env.DB_PORT || '5433');
     }
     
     console.log('Initializing database connection:', {
