@@ -8,7 +8,7 @@ import { TranslationService } from '@/lib/services/translation-service';
 import { Interaction } from '@/lib/repositories/interfaces';
 
 // System prompt for AI - keep in English as it's for the AI model
-function getSystemPromptForLanguage(language: string): string {
+function getSystemPromptForLanguage(_language: string): string {
   return 'You are an expert educational psychologist and learning coach.';
 }
 
@@ -77,7 +77,7 @@ function getSkillsSection(language: string, skills: string[]): string {
   return `\n- Demonstrated abilities: ${skills.join(', ')}`;
 }
 
-function getFallbackMessage(language: string): string {
+function getFallbackMessage(_language: string): string {
   // For now, use simple message - will be replaced with i18n
   return 'Congratulations on successfully completing this task! Your effort and persistence are commendable.';
 }

@@ -75,7 +75,7 @@ export class ScenarioTranslationService {
       let translationContent: TranslationContent;
       
       if (scenario.mode === 'assessment') {
-        const config = (yamlData.assessment_config || yamlData.config || {}) as Record<string, any>;
+        const config = (yamlData.assessment_config || yamlData.config || {}) as Record<string, unknown>;
         translationContent = {
           title: config.title as string,
           description: config.description as string,

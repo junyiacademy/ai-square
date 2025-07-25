@@ -90,7 +90,7 @@ export async function POST(
     const program = await programRepo.create({
       scenarioId: scenario.id, // Use scenario UUID
       userId: userEmail,
-      mode: 'pbl',
+      mode: scenario.mode || 'pbl', // Use scenario mode, default to 'pbl'
       status: 'active',
       currentTaskIndex: 0,
       completedTaskCount: 0,

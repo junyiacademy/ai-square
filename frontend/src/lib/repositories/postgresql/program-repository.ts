@@ -92,7 +92,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
   async create(program: Omit<IProgram, 'id'>): Promise<IProgram> {
     const query = `
       INSERT INTO programs (
-        user_id, scenario_id, status,
+        user_id, scenario_id, mode, status,
         current_task_index, completed_task_count, total_task_count,
         total_score, dimension_scores,
         xp_earned, badges_earned,
@@ -101,7 +101,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
         metadata
       ) VALUES (
         $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-        $11, $12, $13, $14, $15
+        $11, $12, $13, $14, $15, $16
       )
       RETURNING *
     `;
@@ -109,6 +109,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     const { rows } = await this.pool.query<DBProgram>(query, [
       program.userId,
       program.scenarioId,
+      program.mode,
       program.status || 'pending',
       program.currentTaskIndex || 0,
       program.completedTaskCount || 0,

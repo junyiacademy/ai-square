@@ -194,12 +194,12 @@ export default function AssessmentScenarioDetailPage({
         <h1 className="text-3xl font-bold mb-4">
           {typeof scenario.title === 'string' 
             ? scenario.title 
-            : (scenario.title as any)?.[i18n.language] || (scenario.title as any)?.en || 'Assessment'}
+            : (scenario.title as Record<string, string>)?.[i18n.language] || (scenario.title as Record<string, string>)?.en || 'Assessment'}
         </h1>
         <p className="text-gray-600 mb-6">
           {typeof scenario.description === 'string'
             ? scenario.description
-            : (scenario.description as any)?.[i18n.language] || (scenario.description as any)?.en || ''}
+            : (scenario.description as Record<string, string>)?.[i18n.language] || (scenario.description as Record<string, string>)?.en || ''}
         </p>
         
         {/* Assessment Details */}

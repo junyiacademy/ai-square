@@ -29,7 +29,7 @@ export async function POST() {
 
   try {
     // Step 1: Connect to postgres database to create our database
-    const adminPoolConfig: any = {
+    const adminPoolConfig = {
       host: dbHost,
       database: 'postgres', // Connect to default postgres database
       user: dbUser,
@@ -65,7 +65,7 @@ export async function POST() {
     }
 
     // Step 2: Connect to the new database and create schema
-    const appPoolConfig: any = {
+    const appPoolConfig = {
       host: dbHost,
       database: dbName,
       user: dbUser,

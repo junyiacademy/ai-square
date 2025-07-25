@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
       };
       
       // Process questions to ensure they have the correct structure
-      const processedQuestions = rawQuestions.map((q: any) => {
+      const processedQuestions = rawQuestions.map((q: Record<string, unknown>) => {
         // Handle multilingual fields
         const question = typeof q.question === 'object' ? q.question[lang] || q.question.en : q.question;
         const options = q.options;

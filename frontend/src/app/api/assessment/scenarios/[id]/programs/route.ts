@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
-import { promises as fs } from 'fs';
-import * as path from 'path';
-import * as yaml from 'js-yaml';
 import type { 
   IProgram, 
   ITask, 
@@ -73,7 +70,7 @@ export async function GET(
     }
     
     // Always filter by scenario ID to show only programs for this specific scenario
-    let userPrograms = allUserPrograms.filter(p => p.scenarioId === id);
+    const userPrograms = allUserPrograms.filter(p => p.scenarioId === id);
     
     // Sort by startedAt (newest first)
     userPrograms.sort((a, b) => 
@@ -264,7 +261,7 @@ export async function POST(
         const questions = template.content?.questions || [];
         
         // Apply language-specific content if needed
-        const localizedQuestions = questions.map((q: any) => ({
+        const localizedQuestions = questions.map((q: Record<string, unknown>) => ({
           id: q.id,
           domain: q.domain,
           question: q[`question_${language}`] || q.question,

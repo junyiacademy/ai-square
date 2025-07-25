@@ -37,7 +37,7 @@ export async function POST(
     let evaluationRecord;
     
     // Helper to create evaluation with proper structure
-    const createEvaluationData = (evaluation: Record<string, any>, existingMetadata?: Record<string, unknown>) => ({
+    const createEvaluationData = (evaluation: Record<string, unknown>, existingMetadata?: Record<string, unknown>) => ({
       userId: session.user.email,
       programId: programId || undefined,
       taskId: taskId,

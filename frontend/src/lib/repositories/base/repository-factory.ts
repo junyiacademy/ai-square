@@ -41,7 +41,7 @@ export class RepositoryFactory {
     const dbHost = process.env.DB_HOST || 'localhost';
     const isCloudSQL = dbHost.startsWith('/cloudsql/');
     
-    const poolConfig: any = {
+    const poolConfig = {
       database: process.env.DB_NAME || 'ai_square_db',
       user: process.env.DB_USER || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { convertScenarioToIScenario, convertProgramToIProgram } from '@/lib/utils/type-converters';
 
 export async function GET(request: NextRequest) {
   try {

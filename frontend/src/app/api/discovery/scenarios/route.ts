@@ -6,8 +6,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { IScenario } from '@/types/unified-learning';
-import { discoveryScenarioService } from '@/lib/services/discovery-scenario-service';
-import { convertScenarioToIScenario } from '@/lib/utils/type-converters';
 
 /**
  * GET /api/discovery/scenarios
@@ -25,7 +23,7 @@ export async function GET(request: NextRequest) {
     const language = searchParams.get('lang') || 'en';
     
     // 檢查語言特定快取
-    const cacheKey = `discovery_scenarios_${language}`;
+    // const cacheKey = `discovery_scenarios_${language}`;
     const now = Date.now();
     if (cachedScenarios && (now - cacheTimestamp) < CACHE_DURATION) {
       return NextResponse.json(cachedScenarios);

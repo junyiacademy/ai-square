@@ -94,7 +94,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
   async create(task: Omit<ITask, 'id'>): Promise<ITask> {
     const query = `
       INSERT INTO tasks (
-        program_id, task_index, scenario_task_index,
+        program_id, mode, task_index, scenario_task_index,
         title, description, type, status,
         content, interactions,
         user_response, score, max_score,
@@ -106,13 +106,14 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       ) VALUES (
         $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
         $11, $12, $13, $14, $15, $16, $17, $18, $19,
-        $20, $21
+        $20, $21, $22
       )
       RETURNING *
     `;
 
     const { rows } = await this.pool.query<DBTask>(query, [
       task.programId,
+      task.mode,
       task.taskIndex,
       task.scenarioTaskIndex || null,
       task.title || null,
@@ -148,7 +149,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       for (const task of tasks) {
         const query = `
           INSERT INTO tasks (
-            program_id, task_index, scenario_task_index,
+            program_id, mode, task_index, scenario_task_index,
             title, description, type, status,
             content, interactions,
             user_response, score, max_score,
@@ -160,13 +161,14 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
           ) VALUES (
             $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
             $11, $12, $13, $14, $15, $16, $17, $18, $19,
-            $20, $21
+            $20, $21, $22
           )
           RETURNING *
         `;
 
         const { rows } = await client.query<DBTask>(query, [
           task.programId,
+          task.mode,
           task.taskIndex,
           task.scenarioTaskIndex || null,
           task.title || null,

@@ -400,7 +400,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
     interactions.forEach((interaction) => {
       if (interaction.type === 'user_input' && interaction.metadata?.questionId) {
         const isCorrect = Boolean(interaction.metadata?.isCorrect);
-        const question = questions.find((q: any) => q.id === interaction.metadata?.questionId);
+        const question = questions.find((q: { id: string; correct_answer?: string }) => q.id === interaction.metadata?.questionId);
         
         if (isCorrect) correctCount++;
         
@@ -632,7 +632,7 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
     
     interactions.forEach(i => {
       if (i.metadata?.challengeId) {
-        const challenge = challenges.find((c: any) => c.id === i.metadata?.challengeId);
+        const challenge = challenges.find((c: { id: string; points?: number }) => c.id === i.metadata?.challengeId);
         if (challenge) {
           completedChallenges.push(challenge);
         }

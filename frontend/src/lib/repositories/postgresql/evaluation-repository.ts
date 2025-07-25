@@ -245,7 +245,7 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
         totalXpEarned: xpData?.total_xp || 0,
         averageScore: parseFloat(taskStats.avg_score) || 0,
         timeSpentSeconds: parseInt(taskStats.total_time) || 0,
-        achievements: achievements.map((a: any) => ({
+        achievements: achievements.map((a: { id: string; code: string; name: string; description: string; earned_at: Date }) => ({
           id: a.id,
           code: a.code,
           type: a.type,
