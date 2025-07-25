@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+/* Tailwind v4 configuration */
+@theme {
+  /* Extended color palette for dark mode */
+  --color-dark-bg: #0f172a;
+  --color-dark-surface: #1e293b;
+  --color-dark-border: #334155;
+  --color-dark-text-primary: #f1f5f9;
+  --color-dark-text-secondary: #cbd5e1;
+
+  /* Define custom colors for Tailwind */
+  --color-dark-bg: var(--color-dark-bg);
+  --color-dark-surface: var(--color-dark-surface);
+  --color-dark-border: var(--color-dark-border);
+  --color-dark-text-primary: var(--color-dark-text-primary);
+  --color-dark-text-secondary: var(--color-dark-text-secondary);
+}
+
+/* Dark mode support for Tailwind v4 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+/* Apply dark mode when dark class is present */
+:root.dark {
+  color-scheme: dark;
+}
+
+/* Custom utilities */
+@utility line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Base styles */
+html {
+  scroll-behavior: smooth;
+}
