@@ -62,3 +62,5 @@ frontend/package-lock.json.backup
 ai-square-key.json
 
 .claudedocs/
+
+frontend/test-screenshots/*

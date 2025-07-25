@@ -70,3 +70,8 @@ dev.log
 # Temporary documentation
 debug-*.md
 test-*.md
+
+# Test screenshots
+test-*.png
+screenshot-*.png
+*.screenshot.png
