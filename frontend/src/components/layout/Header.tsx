@@ -195,9 +195,11 @@ export function Header() {
                       <p className="text-sm text-gray-900 dark:text-white font-medium">
                         {user.name || user.email}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                        {user.email}
-                      </p>
+                      {user.name && (
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                          {user.email}
+                        </p>
+                      )}
                     </div>
                     
                     {/* Theme toggle */}
@@ -280,17 +282,23 @@ export function Header() {
       )}
 
       {/* 移動端用戶資訊 (當登入時顯示) */}
-      {isLoggedIn && user && (
+      {isLoggedIn && user && isMobileMenuOpen && (
         <div className="sm:hidden bg-gray-50 dark:bg-slate-900 border-t border-gray-200 dark:border-slate-700 px-4 py-3">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-sm font-medium text-gray-900 dark:text-white">
-                {user.email}
+                {user.name || user.email}
               </div>
               <div className="text-xs text-gray-500 dark:text-gray-400">
                 {getRoleDisplayName(user.role)}
               </div>
             </div>
+            <button
+              onClick={handleLogout}
+              className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+            >
+              {t('signOut')}
+            </button>
           </div>
         </div>
       )}

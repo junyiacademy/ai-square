@@ -49,22 +49,27 @@ async function verify() {
       
       const userId = userResult.rows[0].id;
       
-      // Check assessment sessions
+      // Check assessment evaluations (unified architecture)
       const sessionQuery = `
-        SELECT id, session_key, tech_score, creative_score, business_score, created_at
-        FROM assessment_sessions 
-        WHERE user_id = $1
-        ORDER BY created_at DESC
+        SELECT e.id, e.score, e.feedback, e.created_at
+        FROM evaluations e
+        JOIN tasks t ON e.task_id = t.id
+        WHERE e.user_id = $1 AND t.mode = 'assessment'
+        ORDER BY e.created_at DESC
       `;
       const sessionResult = await client.query(sessionQuery, [userId]);
       
-      console.log(`\n📊 Assessment Sessions: ${sessionResult.rowCount}`);
+      console.log(`\n📊 Assessment Evaluations: ${sessionResult.rowCount}`);
       sessionResult.rows.forEach((session, index) => {
-        console.log(`\n   Session ${index + 1}:`);
-        console.log(`   - Key: ${session.session_key}`);
-        console.log(`   - Tech: ${session.tech_score}`);
-        console.log(`   - Creative: ${session.creative_score}`);
-        console.log(`   - Business: ${session.business_score}`);
+        const feedback = typeof session.feedback === 'string' ? JSON.parse(session.feedback) : session.feedback;
+        console.log(`\n   Evaluation ${index + 1}:`);
+        console.log(`   - ID: ${session.id}`);
+        console.log(`   - Overall Score: ${session.score}`);
+        if (feedback?.techScore !== undefined) {
+          console.log(`   - Tech: ${feedback.techScore}`);
+          console.log(`   - Creative: ${feedback.creativeScore}`);
+          console.log(`   - Business: ${feedback.businessScore}`);
+        }
         console.log(`   - Created: ${session.created_at}`);
       });
       

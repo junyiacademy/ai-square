@@ -220,59 +220,124 @@ export class PostgreSQLUserRepository implements IUserRepository {
   }
 
   // ========================================
-  // Assessment System Methods
+  // Assessment System Methods (Updated for Unified Architecture)
   // ========================================
 
   async saveAssessmentSession(userId: string, session: CreateAssessmentSessionDto): Promise<AssessmentSession> {
-    const query = `
-      INSERT INTO assessment_sessions (
-        user_id, session_key, tech_score, creative_score, business_score, answers, generated_paths
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7)
-      RETURNING 
-        id, user_id as "userId", session_key as "sessionKey",
-        tech_score as "techScore", creative_score as "creativeScore", business_score as "businessScore",
-        answers, generated_paths as "generatedPaths", created_at as "createdAt", metadata
+    // In the unified architecture, assessment results are stored in evaluations table
+    // This method is kept for backward compatibility but redirects to evaluations
+    
+    // First, find the assessment task for this user
+    const taskQuery = `
+      SELECT t.id 
+      FROM tasks t
+      JOIN programs p ON t.program_id = p.id
+      WHERE p.user_id = $1 AND t.mode = 'assessment'
+      ORDER BY t.created_at DESC
+      LIMIT 1
     `;
-
-    const { rows } = await this.pool.query(query, [
+    
+    const { rows: taskRows } = await this.pool.query(taskQuery, [userId]);
+    const taskId = taskRows[0]?.id || null;
+    
+    // Create evaluation record
+    const evalQuery = `
+      INSERT INTO evaluations (
+        task_id, user_id, evaluation_type, score, feedback, criteria, metadata
+      ) VALUES ($1, $2, 'summative', $3, $4, $5, $6)
+      RETURNING 
+        id, user_id as "userId", created_at as "createdAt",
+        score as "overallScore", feedback, metadata
+    `;
+    
+    const overallScore = (session.techScore + session.creativeScore + session.businessScore) / 3;
+    const feedback = {
+      techScore: session.techScore,
+      creativeScore: session.creativeScore,
+      businessScore: session.businessScore,
+      answers: session.answers,
+      generatedPaths: session.generatedPaths
+    };
+    
+    const { rows } = await this.pool.query(evalQuery, [
+      taskId,
       userId,
-      session.sessionKey,
-      session.techScore,
-      session.creativeScore,
-      session.businessScore,
-      JSON.stringify(session.answers || {}),
-      JSON.stringify(session.generatedPaths || [])
+      overallScore,
+      JSON.stringify(feedback),
+      JSON.stringify({ domains: ['tech', 'creative', 'business'] }),
+      JSON.stringify({ sessionKey: session.sessionKey })
     ]);
-
-    return rows[0];
+    
+    // Transform to match legacy AssessmentSession interface
+    return {
+      id: rows[0].id,
+      userId: rows[0].userId,
+      sessionKey: session.sessionKey,
+      techScore: session.techScore,
+      creativeScore: session.creativeScore,
+      businessScore: session.businessScore,
+      answers: session.answers || {},
+      generatedPaths: session.generatedPaths || [],
+      createdAt: rows[0].createdAt,
+      metadata: rows[0].metadata
+    };
   }
 
   async getAssessmentSessions(userId: string): Promise<AssessmentSession[]> {
+    // Get assessment evaluations from unified evaluations table
     const query = `
       SELECT 
-        id, user_id as "userId", session_key as "sessionKey",
-        tech_score as "techScore", creative_score as "creativeScore", business_score as "businessScore",
-        answers, generated_paths as "generatedPaths", created_at as "createdAt", metadata
-      FROM assessment_sessions
-      WHERE user_id = $1
-      ORDER BY created_at DESC
+        e.id, e.user_id as "userId", e.created_at as "createdAt",
+        e.score as "overallScore", e.feedback, e.metadata
+      FROM evaluations e
+      JOIN tasks t ON e.task_id = t.id
+      WHERE e.user_id = $1 AND t.mode = 'assessment'
+      ORDER BY e.created_at DESC
     `;
 
     const { rows } = await this.pool.query(query, [userId]);
-    return rows;
+    
+    // Transform to match legacy AssessmentSession interface
+    return rows.map(row => {
+      const feedback = typeof row.feedback === 'string' ? JSON.parse(row.feedback) : row.feedback;
+      const metadata = typeof row.metadata === 'string' ? JSON.parse(row.metadata) : row.metadata;
+      
+      return {
+        id: row.id,
+        userId: row.userId,
+        sessionKey: metadata?.sessionKey || '',
+        techScore: feedback?.techScore || 0,
+        creativeScore: feedback?.creativeScore || 0,
+        businessScore: feedback?.businessScore || 0,
+        answers: feedback?.answers || {},
+        generatedPaths: feedback?.generatedPaths || [],
+        createdAt: row.createdAt,
+        metadata: metadata
+      };
+    });
   }
 
   async getLatestAssessmentResults(userId: string): Promise<AssessmentResults | null> {
+    // Get latest assessment evaluation from unified evaluations table
     const query = `
-      SELECT tech_score as tech, creative_score as creative, business_score as business
-      FROM assessment_sessions
-      WHERE user_id = $1
-      ORDER BY created_at DESC
+      SELECT e.feedback
+      FROM evaluations e
+      JOIN tasks t ON e.task_id = t.id
+      WHERE e.user_id = $1 AND t.mode = 'assessment'
+      ORDER BY e.created_at DESC
       LIMIT 1
     `;
 
     const { rows } = await this.pool.query(query, [userId]);
-    return rows[0] || null;
+    if (!rows[0]) return null;
+    
+    const feedback = typeof rows[0].feedback === 'string' ? JSON.parse(rows[0].feedback) : rows[0].feedback;
+    
+    return {
+      tech: feedback?.techScore || 0,
+      creative: feedback?.creativeScore || 0,
+      business: feedback?.businessScore || 0
+    };
   }
 
   // ========================================
