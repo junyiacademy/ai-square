@@ -23,22 +23,28 @@ function LoginContent() {
   }, [searchParams, t])
 
   const handleLogin = async (credentials: { email: string; password: string; rememberMe: boolean }) => {
+    console.log('handleLogin called with:', credentials)
     setLoading(true)
     setError('')
 
     try {
       // Use AuthContext login method which handles all state updates
+      console.log('Calling login method...')
       const result = await login(credentials)
+      console.log('Login result:', result)
 
       if (result.success) {
+        console.log('Login successful, preparing to navigate...')
         
         // Check if there's a redirect URL
         const redirectUrl = searchParams.get('redirect')
+        console.log('Redirect URL:', redirectUrl)
         
         if (redirectUrl) {
           // Validate redirect URL to prevent open redirect vulnerabilities
           const isValidRedirect = redirectUrl.startsWith('/') && !redirectUrl.startsWith('//')
           if (isValidRedirect) {
+            console.log('Redirecting to:', redirectUrl)
             router.push(redirectUrl)
             return
           }
@@ -47,27 +53,35 @@ function LoginContent() {
         // Default navigation based on onboarding status
         const onboarding = result.user?.onboarding || {};
         const hasAssessment = result.user?.assessmentCompleted || false;
+        console.log('User status:', { onboarding, hasAssessment })
         
         // Navigate based on actual progress
         if (!onboarding.welcomeCompleted) {
+          console.log('Navigating to: /onboarding/welcome')
           router.push('/onboarding/welcome');
         } else if (!onboarding.identityCompleted) {
+          console.log('Navigating to: /onboarding/identity')
           router.push('/onboarding/identity');
         } else if (!onboarding.goalsCompleted) {
+          console.log('Navigating to: /onboarding/goals')
           router.push('/onboarding/goals');
         } else if (!hasAssessment) {
+          console.log('Navigating to: /assessment')
           router.push('/assessment');
         } else {
+          console.log('Navigating to: /dashboard')
           router.push('/dashboard');
         }
       } else {
         // 顯示錯誤訊息
+        console.log('Login failed:', result.error)
         setError(result.error || t('error.invalidCredentials'))
       }
     } catch (err) {
       console.error('Login error:', err)
       setError(t('error.networkError'))
     } finally {
+      console.log('Login process complete, loading:', false)
       setLoading(false)
     }
   }

@@ -57,9 +57,10 @@ export const jsonYamlLoader = {
   async loadJson<T = unknown>(filePath: string): Promise<T | null> {
     try {
       const fullPath = path.join(process.cwd(), 'public', filePath);
-      const content = await fs.promises.readFile(fullPath, 'utf-8');
+      const content = fs.readFileSync(fullPath, 'utf-8');
       return JSON.parse(content);
-    } catch {
+    } catch (error) {
+      console.error(`Failed to load JSON ${filePath}:`, error);
       return null;
     }
   },
@@ -70,9 +71,10 @@ export const jsonYamlLoader = {
   async loadYaml<T = unknown>(filePath: string): Promise<T | null> {
     try {
       const fullPath = path.join(process.cwd(), 'public', filePath);
-      const content = await fs.promises.readFile(fullPath, 'utf-8');
+      const content = fs.readFileSync(fullPath, 'utf-8');
       return yaml.load(content) as T;
-    } catch {
+    } catch (error) {
+      console.error(`Failed to load YAML ${filePath}:`, error);
       return null;
     }
   },

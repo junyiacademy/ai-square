@@ -43,9 +43,16 @@ export async function GET(
     const { id } = await params;
     
     const programRepo = repositoryFactory.getProgramRepository();
+    const userRepo = repositoryFactory.getUserRepository();
+    
+    // Get user ID from email
+    const user = await userRepo.findByEmail(userEmail);
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
     
     // Get user programs efficiently
-    const allUserPrograms = await programRepo.findByUser(userEmail);
+    const allUserPrograms = await programRepo.findByUser(user.id);
     
     // Check if this is an assessment scenario
     const now = Date.now();
@@ -65,16 +72,8 @@ export async function GET(
       }
     }
     
-    let userPrograms: IProgram[];
-    if (scenario && scenario.mode === 'assessment') {
-      // For assessment scenarios, show all completed assessments from this user
-      userPrograms = allUserPrograms.filter(p => 
-        p.status === 'completed' && p.metadata?.score !== undefined
-      );
-    } else {
-      // For non-assessment scenarios, only show programs for this specific scenario
-      userPrograms = allUserPrograms.filter(p => p.scenarioId === id);
-    }
+    // Always filter by scenario ID to show only programs for this specific scenario
+    let userPrograms = allUserPrograms.filter(p => p.scenarioId === id);
     
     // Sort by startedAt (newest first)
     userPrograms.sort((a, b) => 
@@ -176,6 +175,17 @@ export async function POST(
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     const programRepo = repositoryFactory.getProgramRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
+    const userRepo = repositoryFactory.getUserRepository();
+    
+    // Get user by email
+    let user = await userRepo.findByEmail(email);
+    if (!user) {
+      // Auto-create user if doesn't exist
+      user = await userRepo.create({
+        email: email,
+        name: email.split('@')[0]
+      });
+    }
     
     // Get scenario
     const scenario = await scenarioRepo.findById(id);
@@ -187,7 +197,7 @@ export async function POST(
     }
     
     // Check if user already has an active program for this scenario
-    const existingPrograms = await programRepo.findByUser(email);
+    const existingPrograms = await programRepo.findByUser(user.id);
     const activeProgram = existingPrograms.find((p: IProgram) => 
       p.scenarioId === id && p.status === 'active'
     );
@@ -203,7 +213,7 @@ export async function POST(
     // Create new program - using the proper DTO
     const rawProgram = await programRepo.create({
       scenarioId: id,
-      userId: email,
+      userId: user.id,
       mode: 'assessment',
       status: 'active',
       currentTaskIndex: 0,
@@ -240,169 +250,80 @@ export async function POST(
     
     const program = updatedRawProgram || rawProgram;
     
-    // Load questions from YAML and create tasks
+    // Create tasks from scenario.taskTemplates
     const tasks: ITask[] = [];
-    console.log('Scenario sourceMetadata:', JSON.stringify(scenario.sourceMetadata, null, 2));
+    console.log('Scenario has taskTemplates:', !!scenario.taskTemplates);
+    console.log('TaskTemplates count:', scenario.taskTemplates?.length || 0);
     
-    if (scenario.sourceMetadata?.configPath) {
-      try {
-        const baseDir = process.cwd().endsWith('/frontend') ? process.cwd() : path.join(process.cwd(), 'frontend');
-        const configPath = path.join(baseDir, 'public', scenario.sourceMetadata.configPath as string);
-        console.log('Loading assessment config from:', configPath);
+    if (scenario.taskTemplates && Array.isArray(scenario.taskTemplates)) {
+      // Create tasks from task templates
+      for (let i = 0; i < scenario.taskTemplates.length; i++) {
+        const template = scenario.taskTemplates[i];
         
-        const configContent = await fs.readFile(configPath, 'utf-8');
-        interface AssessmentQuestion {
-          id: string;
-          domain: string;
-          question: string;
-          options: string[];
-          difficulty: string;
-          correct_answer: string;
-          explanation: string;
-          ksa_mapping: {
-            knowledge?: string[];
-            skills?: string[];
-            attitudes?: string[];
-          };
-          [key: string]: unknown; // For language-specific fields
-        }
-
-        interface AssessmentTask {
-          id: string;
-          title: string;
-          description?: string;
-          time_limit_minutes?: number;
-          questions?: AssessmentQuestion[];
-          [key: string]: unknown; // For language-specific fields
-        }
-
-        interface AssessmentYamlData {
-          tasks?: AssessmentTask[];
-          questions?: AssessmentQuestion[];
-        }
-        const yamlData = yaml.load(configContent) as AssessmentYamlData;
-        console.log('YAML data loaded, has tasks:', !!yamlData.tasks);
+        // Get questions from template content
+        const questions = template.content?.questions || [];
         
-        // Check if new format with tasks
-        if (yamlData.tasks) {
-          // New format: Multiple tasks based on domains
-          for (let i = 0; i < yamlData.tasks.length; i++) {
-            const taskData = yamlData.tasks[i];
-            
-            // Get language-specific questions for this task
-            const taskQuestions = taskData.questions?.map((q) => ({
-              id: q.id,
-              domain: q.domain,
-              question: q[`question_${language}`] || q.question,
-              options: q[`options_${language}`] || q.options,
-              difficulty: q.difficulty,
-              correct_answer: q.correct_answer,
-              explanation: q[`explanation_${language}`] || q.explanation,
-              ksa_mapping: q.ksa_mapping
-            })) || [];
-            
-            console.log(`Creating task ${i + 1}:`, {
-              taskId: taskData.id,
-              title: taskData.title,
-              questionsCount: taskQuestions.length,
-              firstQuestion: typeof taskQuestions[0]?.question === 'string' 
-                ? taskQuestions[0].question.substring(0, 50)
-                : 'No question text'
-            });
-            
-            // Create task for this domain - using the proper DTO
-            const rawTask = await taskRepo.create({
-              programId: program.id,
-              mode: 'assessment',
-              taskIndex: i,
-              type: 'question',
-              status: 'pending',
-              title: String(taskData[`title_${language}`] || taskData.title || `Task ${i + 1}`),
-              description: String(taskData[`description_${language}`] || taskData.description || 'Complete the assessment questions'),
-              content: {
-                instructions: String(taskData[`description_${language}`] || taskData.description || 'Complete the assessment questions'),
-                questions: taskQuestions
-              },
-              interactions: [],
-              interactionCount: 0,
-              userResponse: {},
-              score: 0,
-              maxScore: 100,
-              allowedAttempts: 1,
-              attemptCount: 0,
-              timeLimitSeconds: taskData.time_limit_minutes ? taskData.time_limit_minutes * 60 : 240,
-              timeSpentSeconds: 0,
-              aiConfig: {},
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
-              pblData: {},
-              discoveryData: {},
-              assessmentData: {
-                domainId: taskData.id,
-                questionsCount: taskQuestions.length
-              },
-              metadata: {
-                timeLimit: taskData.time_limit_minutes ? taskData.time_limit_minutes * 60 : 240,
-                language,
-                domainId: taskData.id
-              }
-            });
-            
-            tasks.push(rawTask);
+        // Apply language-specific content if needed
+        const localizedQuestions = questions.map((q: any) => ({
+          id: q.id,
+          domain: q.domain,
+          question: q[`question_${language}`] || q.question,
+          options: q[`options_${language}`] || q.options,
+          difficulty: q.difficulty,
+          correct_answer: q.correct_answer,
+          explanation: q[`explanation_${language}`] || q.explanation,
+          ksa_mapping: q.ksa_mapping
+        }));
+        
+        console.log(`Creating task ${i + 1}:`, {
+          taskId: template.id,
+          title: template.title,
+          questionsCount: localizedQuestions.length,
+          firstQuestion: localizedQuestions[0]?.question?.substring(0, 50) || 'No question'
+        });
+        
+        // Create task from template
+        const rawTask = await taskRepo.create({
+          programId: program.id,
+          mode: 'assessment',
+          taskIndex: i,
+          type: template.type || 'question',
+          status: 'pending',
+          title: String(template.title || `Task ${i + 1}`),
+          description: String(template.description || template.instructions || 'Complete the assessment questions'),
+          content: {
+            instructions: String(template.instructions || template.description || 'Complete the assessment questions'),
+            questions: localizedQuestions
+          },
+          interactions: [],
+          interactionCount: 0,
+          userResponse: {},
+          score: 0,
+          maxScore: 100,
+          allowedAttempts: 1,
+          attemptCount: 0,
+          timeLimitSeconds: template.context?.timeLimit || 240,
+          timeSpentSeconds: 0,
+          aiConfig: {},
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          pblData: {},
+          discoveryData: {},
+          assessmentData: {
+            domainId: template.id,
+            questionsCount: localizedQuestions.length
+          },
+          metadata: {
+            timeLimit: template.context?.timeLimit || 240,
+            language,
+            domainId: template.id
           }
-        } else {
-          // Legacy format: Single task with all questions
-          const questions = yamlData.questions?.map((q) => ({
-            id: q.id,
-            domain: q.domain,
-            question: q[`question_${language}`] || q.question,
-            options: q[`options_${language}`] || q.options,
-            difficulty: q.difficulty,
-            correct_answer: q.correct_answer,
-            explanation: q[`explanation_${language}`] || q.explanation,
-            ksa_mapping: q.ksa_mapping
-          })) || [];
-          
-          const rawTask = await taskRepo.create({
-            programId: program.id,
-            mode: 'assessment',
-            taskIndex: 0,
-            type: 'question',
-            status: 'pending',
-            title: 'Assessment Questions',
-            description: 'Complete the assessment questions',
-            content: {
-              instructions: 'Complete the assessment questions',
-              questions
-            },
-            interactions: [],
-            interactionCount: 0,
-            userResponse: {},
-            score: 0,
-            maxScore: 100,
-            allowedAttempts: 1,
-            attemptCount: 0,
-            timeLimitSeconds: 900,
-            timeSpentSeconds: 0,
-            aiConfig: {},
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            pblData: {},
-            discoveryData: {},
-            assessmentData: {
-              questionsCount: questions.length
-            },
-            metadata: {
-              timeLimit: 900,
-              language
-            }
-          });
-          
-          tasks.push(rawTask);
-        }
-      } catch (error) {
-        console.error('Error loading questions:', error);
+        });
+        
+        tasks.push(rawTask);
       }
+    } else {
+      console.error('No task templates found in scenario');
     }
     
     // Update program with task IDs in metadata

@@ -30,12 +30,47 @@ export function LoginForm({ onSubmit, loading = false, error }: LoginFormProps) 
   ]
 
   const handleDemoLogin = (demoAccount: { email: string; password: string }) => {
+    console.log('handleDemoLogin called with:', demoAccount)
+    
+    // 立即設定值
     setEmail(demoAccount.email)
     setPassword(demoAccount.password)
-    // 自動提交表單
-    setTimeout(() => {
-      onSubmit({ ...demoAccount, rememberMe })
-    }, 100)
+    
+    // 使用 requestAnimationFrame 確保 React 狀態更新
+    requestAnimationFrame(() => {
+      console.log('requestAnimationFrame callback')
+      
+      // 再次確保值已設定
+      const emailInput = document.getElementById('email') as HTMLInputElement
+      const passwordInput = document.getElementById('password') as HTMLInputElement
+      
+      console.log('DOM elements found:', { 
+        email: !!emailInput, 
+        password: !!passwordInput 
+      })
+      
+      if (emailInput && passwordInput) {
+        emailInput.value = demoAccount.email
+        passwordInput.value = demoAccount.password
+        
+        // 觸發 onChange 事件
+        const emailEvent = new Event('input', { bubbles: true })
+        const passwordEvent = new Event('input', { bubbles: true })
+        emailInput.dispatchEvent(emailEvent)
+        passwordInput.dispatchEvent(passwordEvent)
+        
+        console.log('Values set:', {
+          email: emailInput.value,
+          password: passwordInput.value
+        })
+      }
+      
+      // 延遲提交以確保 UI 更新
+      setTimeout(() => {
+        console.log('About to submit with:', { ...demoAccount, rememberMe })
+        onSubmit({ ...demoAccount, rememberMe })
+      }, 200)
+    })
   }
 
   return (
@@ -62,6 +97,7 @@ export function LoginForm({ onSubmit, loading = false, error }: LoginFormProps) 
           <input
             id="email"
             type="email"
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 bg-white"
@@ -81,6 +117,7 @@ export function LoginForm({ onSubmit, loading = false, error }: LoginFormProps) 
           <input
             id="password"
             type="password"
+            autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 bg-white"
@@ -139,7 +176,10 @@ export function LoginForm({ onSubmit, loading = false, error }: LoginFormProps) 
             <button
               key={index}
               type="button"
-              onClick={() => handleDemoLogin(account)}
+              onClick={() => {
+                console.log('Demo button clicked:', account.label)
+                handleDemoLogin(account)
+              }}
               disabled={loading}
               className="group flex flex-col items-center justify-center p-4 text-sm bg-gray-50 rounded-lg hover:bg-gray-100 hover:shadow-lg transition-all duration-200 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >

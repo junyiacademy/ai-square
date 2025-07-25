@@ -38,10 +38,20 @@ export async function GET(
     
     // Get program
     const program = await programRepo.findById(programId);
-    if (!program || program.userId !== userEmail) {
+    if (!program) {
       return NextResponse.json(
-        { error: 'Program not found or access denied' },
+        { error: 'Program not found' },
         { status: 404 }
+      );
+    }
+    
+    // Verify ownership - need to get user ID from email
+    const userRepo = repositoryFactory.getUserRepository();
+    const user = await userRepo.findByEmail(userEmail);
+    if (!user || program.userId !== user.id) {
+      return NextResponse.json(
+        { error: 'Access denied' },
+        { status: 403 }
       );
     }
     
@@ -53,10 +63,15 @@ export async function GET(
       evaluationIds: evaluations.map(e => e.id)
     });
     
-    const evaluation = evaluations.find(e => e.evaluationType === 'assessment_complete');
+    const evaluation = evaluations.find(e => 
+      e.evaluationType === 'program' && e.evaluationSubtype === 'assessment_complete'
+    );
     
     if (!evaluation) {
-      console.error('No assessment_complete evaluation found for program', programId);
+      console.error('No assessment_complete evaluation found for program', programId, {
+        evaluationCount: evaluations.length,
+        evaluationTypes: evaluations.map(e => ({ type: e.evaluationType, subtype: e.evaluationSubtype }))
+      });
       return NextResponse.json(
         { error: 'Evaluation not found' },
         { status: 404 }

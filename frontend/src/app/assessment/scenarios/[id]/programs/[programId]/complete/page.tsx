@@ -302,14 +302,14 @@ export default function AssessmentCompletePage({
 
   // Convert interactions to UserAnswer format
   const userAnswers: UserAnswer[] = taskData.interactions
-    .filter((i: Record<string, unknown>) => i.type === 'system_event' && (i.content as Record<string, unknown>)?.eventType === 'assessment_answer')
+    .filter((i: Record<string, unknown>) => i.type === 'assessment_answer')
     .map((interaction: Record<string, unknown>) => {
-      const content = interaction.content as Record<string, unknown>;
+      const context = interaction.context as Record<string, unknown>;
       return {
-        questionId: content.questionId as string,
-        selectedAnswer: content.selectedAnswer as 'a' | 'b' | 'c' | 'd',
-        timeSpent: (content.timeSpent as number) || 0,
-        isCorrect: (content.isCorrect as boolean) ?? false
+        questionId: context.questionId as string,
+        selectedAnswer: context.selectedAnswer as 'a' | 'b' | 'c' | 'd',
+        timeSpent: (context.timeSpent as number) || 0,
+        isCorrect: (context.isCorrect as boolean) ?? false
       };
     });
   

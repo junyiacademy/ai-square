@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
-import yaml from 'js-yaml';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { IScenario } from '@/types/unified-learning';
 import { getServerSession } from '@/lib/auth/session';
-// Removed unused import
 
 interface AssessmentConfig {
   title?: string;
@@ -29,16 +25,7 @@ interface CachedScenario {
   };
 }
 
-// In-memory cache for scenarios
-let scenariosCache: {
-  data: CachedScenario[] | null;
-  timestamp: number;
-} = {
-  data: null,
-  timestamp: 0
-};
-
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+// Removed unused cache variables
 
 export async function GET(request: NextRequest) {
   try {
@@ -64,10 +51,10 @@ export async function GET(request: NextRequest) {
         description: scenario.description?.[lang] || scenario.description?.en || 'No description',
         folderName: scenario.sourceMetadata?.folderName || scenario.sourceId || scenario.id,
         config: {
-          totalQuestions: (scenario.assessmentData as any)?.totalQuestions || 12,
+          totalQuestions: (scenario.assessmentData as Record<string, unknown>)?.totalQuestions as number || 12,
           timeLimit: scenario.estimatedMinutes || 15,
-          passingScore: (scenario.assessmentData as any)?.passingScore || 60,
-          domains: (scenario.assessmentData as any)?.domains || []
+          passingScore: (scenario.assessmentData as Record<string, unknown>)?.passingScore as number || 60,
+          domains: (scenario.assessmentData as Record<string, unknown>)?.domains as string[] || []
         },
         userProgress: user ? {
           completedPrograms: 0,
@@ -88,29 +75,8 @@ export async function GET(request: NextRequest) {
     // If no scenarios in database, fall back to file system
     console.log('No scenarios in database, checking file system');
     
-    // Check cache first
+    // Skip cache for now to ensure fresh data
     const now = Date.now();
-    if (scenariosCache.data && (now - scenariosCache.timestamp) < CACHE_TTL) {
-      console.log('Returning cached scenarios');
-      
-      // Add user progress if authenticated
-      const scenariosWithProgress = scenariosCache.data.map(scenario => ({
-        ...scenario,
-        userProgress: user ? {
-          completedPrograms: 0,
-          lastAttempt: undefined,
-          bestScore: undefined
-        } : undefined
-      }));
-      
-      return NextResponse.json({ 
-        success: true,
-        data: {
-          scenarios: scenariosWithProgress,
-          totalCount: scenariosWithProgress.length
-        }
-      });
-    }
     
     console.log('Cache miss, loading scenarios from disk');
     
@@ -124,7 +90,8 @@ export async function GET(request: NextRequest) {
       const items = await fs.readdir(assessmentDir, { withFileTypes: true });
       folders = items
         .filter(item => item.isDirectory())
-        .map(item => item.name);
+        .map(item => item.name)
+        .filter(name => name === 'ai_literacy'); // Only use ai_literacy scenario
       console.log('Found assessment folders:', folders);
     } catch (error) {
       console.error('Error reading assessment directory:', error);

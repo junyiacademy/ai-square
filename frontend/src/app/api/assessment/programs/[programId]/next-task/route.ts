@@ -28,10 +28,20 @@ export async function POST(
     
     // Get program
     const program = await programRepo.findById(programId);
-    if (!program || program.userId !== session.user.email) {
+    if (!program) {
       return NextResponse.json(
-        { error: 'Program not found or access denied' },
+        { error: 'Program not found' },
         { status: 404 }
+      );
+    }
+    
+    // Verify ownership by getting user ID from email
+    const userRepo = repositoryFactory.getUserRepository();
+    const user = await userRepo.findByEmail(session.user.email);
+    if (!user || program.userId !== user.id) {
+      return NextResponse.json(
+        { error: 'Access denied' },
+        { status: 403 }
       );
     }
     

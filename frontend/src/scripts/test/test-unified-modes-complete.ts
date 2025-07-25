@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT || '5433'),
-  database: process.env.DB_NAME || 'ai_square_dev',
+  database: process.env.DB_NAME || 'ai_square_db',
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || 'postgres123',
 });
@@ -447,7 +447,7 @@ async function generateReport() {
     connection: {
       host: process.env.DB_HOST || 'localhost',
       port: process.env.DB_PORT || '5433',
-      database: process.env.DB_NAME || 'ai_square_dev'
+      database: process.env.DB_NAME || 'ai_square_db'
     },
     results,
     summary: {

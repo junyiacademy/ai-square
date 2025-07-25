@@ -8,7 +8,7 @@ import fetch from 'node-fetch';
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT || '5433'),
-  database: process.env.DB_NAME || 'ai_square_dev',
+  database: process.env.DB_NAME || 'ai_square_db',
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || 'postgres123',
 });
@@ -268,7 +268,7 @@ async function generateReport() {
   console.log('='.repeat(80));
   console.log(`Test Date: ${new Date().toISOString()}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`Database: ${process.env.DB_NAME || 'ai_square_dev'}`);
+  console.log(`Database: ${process.env.DB_NAME || 'ai_square_db'}`);
   console.log(`API URL: ${API_BASE}`);
   
   // Summary by category
@@ -342,7 +342,7 @@ async function generateReport() {
     metadata: {
       testDate: new Date().toISOString(),
       environment: process.env.NODE_ENV || 'development',
-      database: process.env.DB_NAME || 'ai_square_dev',
+      database: process.env.DB_NAME || 'ai_square_db',
       apiUrl: API_BASE
     },
     results,

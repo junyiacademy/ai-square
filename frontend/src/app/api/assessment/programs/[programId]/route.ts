@@ -12,9 +12,17 @@ export async function GET(
     
     // If no auth, check if user info is in query params (for viewing history)
     let userEmail: string | null = null;
+    let userId: string | null = null;
     
     if (session?.user?.email) {
       userEmail = session.user.email;
+      
+      // Get user ID from email
+      const userRepo = repositoryFactory.getUserRepository();
+      const user = await userRepo.findByEmail(userEmail);
+      if (user) {
+        userId = user.id;
+      }
     } else {
       // Check for user info from query params
       const { searchParams } = new URL(request.url);
@@ -22,6 +30,12 @@ export async function GET(
       
       if (emailParam) {
         userEmail = emailParam;
+        // Get user ID from email
+        const userRepo = repositoryFactory.getUserRepository();
+        const user = await userRepo.findByEmail(emailParam);
+        if (user) {
+          userId = user.id;
+        }
       } else {
         return NextResponse.json(
           { error: 'Authentication required' },
@@ -45,8 +59,13 @@ export async function GET(
       );
     }
     
-    // Verify ownership
-    if (program.userId !== userEmail) {
+    // Verify ownership - compare user IDs not emails
+    if (program.userId !== userId) {
+      console.error('Access denied:', {
+        programUserId: program.userId,
+        currentUserId: userId,
+        userEmail
+      });
       return NextResponse.json(
         { error: 'Access denied' },
         { status: 403 }

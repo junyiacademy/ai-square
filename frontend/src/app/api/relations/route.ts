@@ -88,9 +88,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(cached);
     }
     // Load data using the new hybrid loader with language-specific paths
+    // Note: We only have YAML files, not JSON, so disable preferJson
     const [domainsData, ksaCodesData] = await Promise.all([
-      jsonYamlLoader.load(`rubrics_data/ai_lit_domains/ai_lit_domains_${lang}`, { preferJson: true }) as Promise<DomainsYaml>,
-      jsonYamlLoader.load(`rubrics_data/ksa_codes/ksa_codes_${lang}`, { preferJson: true }) as Promise<KSACodesYaml>
+      jsonYamlLoader.load(`rubrics_data/ai_lit_domains/ai_lit_domains_${lang}`, { preferJson: false }) as Promise<DomainsYaml>,
+      jsonYamlLoader.load(`rubrics_data/ksa_codes/ksa_codes_${lang}`, { preferJson: false }) as Promise<KSACodesYaml>
     ]);
 
     if (!domainsData || !ksaCodesData) {

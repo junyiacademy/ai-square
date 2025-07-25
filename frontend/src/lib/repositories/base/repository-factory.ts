@@ -42,7 +42,7 @@ export class RepositoryFactory {
     const isCloudSQL = dbHost.startsWith('/cloudsql/');
     
     const poolConfig: any = {
-      database: process.env.DB_NAME || 'ai_square_dev',
+      database: process.env.DB_NAME || 'ai_square_db',
       user: process.env.DB_USER || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
       max: 20, // Maximum number of clients in the pool

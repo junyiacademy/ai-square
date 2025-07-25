@@ -198,11 +198,14 @@ export async function PATCH(
           };
         });
         
-        // Store interactions in task metadata
+        // Store interactions in task
+        const updatedInteractions = [...(task.interactions || []), ...interactions];
         await taskRepo.update?.(taskId, {
+          interactions: updatedInteractions,
+          interactionCount: updatedInteractions.length,
           metadata: {
             ...task.metadata,
-            interactions
+            lastAnsweredAt: new Date().toISOString()
           }
         });
         

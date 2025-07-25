@@ -80,10 +80,20 @@ export async function POST(
     
     // Get program
     const program = await programRepo.findById(programId);
-    if (!program || program.userId !== user.email) {
+    if (!program) {
       return NextResponse.json(
-        { error: 'Program not found or access denied' },
+        { error: 'Program not found' },
         { status: 404 }
+      );
+    }
+    
+    // Verify ownership by getting user ID from email
+    const userRepo = repositoryFactory.getUserRepository();
+    const userRecord = await userRepo.findByEmail(user.email);
+    if (!userRecord || program.userId !== userRecord.id) {
+      return NextResponse.json(
+        { error: 'Access denied' },
+        { status: 403 }
       );
     }
     
@@ -133,6 +143,38 @@ export async function POST(
     // Get all tasks for this program
     const tasks = await taskRepo.findByProgram(programId);
     
+    // Check if all tasks have been attempted
+    let totalExpectedQuestions = 0;
+    let totalAnsweredQuestions = 0;
+    
+    for (const task of tasks) {
+      const taskQuestions = (task.content as { questions?: Question[] })?.questions || 
+                           (task.metadata as { questions?: Question[] })?.questions || [];
+      totalExpectedQuestions += taskQuestions.length;
+      
+      const taskAnswers = task.interactions?.filter(i => 
+        i.type === 'assessment_answer' || 
+        (i.type === 'system_event' && (i.content as { eventType?: string })?.eventType === 'assessment_answer')
+      ) || [];
+      totalAnsweredQuestions += taskAnswers.length;
+    }
+    
+    // If user hasn't answered all questions, consider this an incomplete assessment
+    if (totalAnsweredQuestions < totalExpectedQuestions) {
+      console.warn(`Incomplete assessment: ${totalAnsweredQuestions}/${totalExpectedQuestions} questions answered`);
+      
+      // Don't create evaluation for incomplete assessments
+      return NextResponse.json({ 
+        success: false,
+        error: 'Assessment incomplete',
+        details: {
+          totalQuestions: totalExpectedQuestions,
+          answeredQuestions: totalAnsweredQuestions,
+          missingQuestions: totalExpectedQuestions - totalAnsweredQuestions
+        }
+      }, { status: 400 });
+    }
+    
     // Complete all pending tasks
     for (const task of tasks) {
       if (task.status !== 'completed') {
@@ -168,18 +210,40 @@ export async function POST(
     console.log('Collecting answers and questions from', tasks.length, 'tasks');
     
     for (const task of tasks) {
+      // Handle both old format (system_event) and new format (assessment_answer)
       const taskAnswers = task.interactions
-        .filter(i => i.type === 'system_event' && (i.content as { eventType?: string })?.eventType === 'assessment_answer')
-        .map(i => ({
-          type: i.type,
-          context: {
-            questionId: (i.content as { questionId?: string })?.questionId || '',
-            selectedAnswer: (i.content as { selectedAnswer?: string })?.selectedAnswer || '',
-            timeSpent: (i.content as { timeSpent?: number })?.timeSpent || 0,
-            isCorrect: (i.content as { isCorrect?: boolean })?.isCorrect || false
+        .filter(i => 
+          (i.type === 'system_event' && (i.content as { eventType?: string })?.eventType === 'assessment_answer') ||
+          i.type === 'assessment_answer'
+        )
+        .map(i => {
+          // Handle new format where context is already structured
+          if (i.type === 'assessment_answer' && i.context) {
+            return {
+              type: i.type,
+              context: {
+                questionId: i.context.questionId || '',
+                selectedAnswer: i.context.selectedAnswer || '',
+                timeSpent: i.context.timeSpent || 0,
+                isCorrect: i.context.isCorrect === true
+              }
+            };
           }
-        }));
-      const taskQuestions = (task.metadata as { questions?: Question[] })?.questions || [];
+          // Handle old format for backward compatibility
+          return {
+            type: i.type,
+            context: {
+              questionId: (i.content as { questionId?: string })?.questionId || '',
+              selectedAnswer: (i.content as { selectedAnswer?: string })?.selectedAnswer || '',
+              timeSpent: (i.content as { timeSpent?: number })?.timeSpent || 0,
+              isCorrect: (i.content as { isCorrect?: boolean })?.isCorrect || false
+            }
+          };
+        });
+      
+      // Questions can be in task.content.questions or task.metadata.questions
+      const taskQuestions = (task.content as { questions?: Question[] })?.questions || 
+                           (task.metadata as { questions?: Question[] })?.questions || [];
       
       console.log(`Task ${task.title}:`, {
         taskId: task.id,
@@ -365,7 +429,7 @@ export async function POST(
     });
     
     const evaluation = await evaluationRepo.create({
-      userId: user.email,
+      userId: userRecord.id,
       programId: programId,
       mode: 'assessment',
       evaluationType: 'program',

@@ -57,9 +57,8 @@ export async function POST(
       
       return {
         timestamp: new Date().toISOString(),
-        type: 'system_event' as const,
+        type: 'assessment_answer' as const,
         context: {
-          eventType: 'assessment_answer',
           questionId: answer.questionId,
           selectedAnswer: answer.answer,
           isCorrect,
@@ -69,11 +68,16 @@ export async function POST(
       };
     });
     
-    // Store interactions in task metadata
+    // Store interactions in task (not metadata) and merge with existing
+    const existingInteractions = task.interactions || [];
+    const updatedInteractions = [...existingInteractions, ...interactions];
+    
     await taskRepo.update?.(taskId, {
+      interactions: updatedInteractions,
+      interactionCount: updatedInteractions.length,
       metadata: {
         ...task.metadata,
-        interactions
+        lastAnsweredAt: new Date().toISOString()
       }
     });
     

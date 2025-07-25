@@ -244,6 +244,19 @@ export default function AssessmentProgramPage({
   // Get questions from either location (new structure or legacy)
   const questions = currentTask?.content?.context?.questions || currentTask?.content?.questions || [];
   
+  // Enhanced debugging
+  console.log('=== ASSESSMENT PAGE DEBUG ===');
+  console.log('currentTask:', !!currentTask);
+  console.log('questions found:', questions.length);
+  if (currentTask) {
+    console.log('currentTask.content:', !!currentTask.content);
+    console.log('currentTask.content.questions:', currentTask.content?.questions?.length || 0);
+    console.log('currentTask.content.context:', !!currentTask.content?.context);
+    console.log('currentTask.content.context.questions:', currentTask.content?.context?.questions?.length || 0);
+    console.log('First question sample:', currentTask.content?.questions?.[0]);
+  }
+  console.log('===========================');
+  
   if (!currentTask || questions.length === 0) {
     const debugInfo = {
       hasTask: !!currentTask,
