@@ -100,6 +100,17 @@ export async function POST(
       .map(te => te.evaluation?.score)
       .filter(score => typeof score === 'number' && !isNaN(score));
     
+    console.log('Complete route - score calculation:', {
+      evaluatedTasksCount: evaluatedTasks.length,
+      validScoresCount: validScores.length,
+      scores: validScores,
+      taskEvaluations: evaluatedTasks.map(te => ({
+        taskId: te.task.id,
+        evaluationId: te.evaluation?.id,
+        score: te.evaluation?.score
+      }))
+    });
+    
     const overallScore = validScores.length > 0
       ? Math.round(
           validScores.reduce((sum, score) => sum + score, 0) / validScores.length
@@ -111,14 +122,18 @@ export async function POST(
     const domainCounts: Record<string, number> = {};
     
     evaluatedTasks.forEach(({ evaluation }) => {
-      if (evaluation?.metadata?.domainScores) {
-        Object.entries(evaluation.metadata.domainScores).forEach(([domain, score]) => {
-          if (!domainScores[domain]) {
-            domainScores[domain] = 0;
-            domainCounts[domain] = 0;
+      // Check both domainScores (direct property) and metadata.domainScores
+      const evalDomainScores = evaluation?.domainScores || evaluation?.metadata?.domainScores;
+      if (evalDomainScores && typeof evalDomainScores === 'object') {
+        Object.entries(evalDomainScores).forEach(([domain, score]) => {
+          if (typeof score === 'number' && !isNaN(score)) {
+            if (!domainScores[domain]) {
+              domainScores[domain] = 0;
+              domainCounts[domain] = 0;
+            }
+            domainScores[domain] += score;
+            domainCounts[domain]++;
           }
-          domainScores[domain] += score as number;
-          domainCounts[domain]++;
         });
       }
     });

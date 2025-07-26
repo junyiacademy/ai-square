@@ -31,11 +31,20 @@ export async function GET(request: NextRequest) {
   return cachedGET(request, async () => {
 
     // Get repositories
-    const { createRepositoryFactory } = await import('@/lib/db/repositories/factory');
-    const repositoryFactory = createRepositoryFactory;
+    const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
     const programRepo = repositoryFactory.getProgramRepository();
     const evalRepo = repositoryFactory.getEvaluationRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
+    const userRepo = repositoryFactory.getUserRepository();
+    
+    // Get user by email to get UUID
+    const user = await userRepo.findByEmail(userEmail);
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: 'User not found' },
+        { status: 404 }
+      );
+    }
     
     // Get program
     const program = await programRepo.findById(programId);
@@ -43,6 +52,14 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         { success: false, error: 'Program not found' },
         { status: 404 }
+      );
+    }
+    
+    // Verify ownership
+    if (program.userId !== user.id) {
+      return NextResponse.json(
+        { success: false, error: 'Access denied' },
+        { status: 403 }
       );
     }
 
@@ -66,6 +83,14 @@ export async function GET(request: NextRequest) {
     
     const completeData = await completeRes.json();
     const evaluation = completeData.evaluation;
+    
+    // Debug logging
+    console.log('Completion API - completeData:', {
+      success: completeData.success,
+      hasEvaluation: !!completeData.evaluation,
+      evaluationScore: completeData.evaluation?.score,
+      evaluationId: completeData.evaluation?.id
+    });
     
     // Get all tasks for detailed information
     const tasks = await taskRepo.findByProgram(programId);
