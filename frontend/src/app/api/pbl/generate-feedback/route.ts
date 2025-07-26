@@ -340,6 +340,31 @@ export async function POST(request: NextRequest) {
                             currentEvaluationVersion && 
                             new Date(currentEvaluationVersion) > new Date(existingFeedback.evaluationVersion);
     
+    // If evaluation is outdated, clear all language feedback
+    if (feedbackOutdated && feedbackData) {
+      console.log('Evaluation updated - clearing all language feedback');
+      
+      // Clear all language feedback since evaluation has been updated
+      const clearedFeedback: Record<string, { isValid: boolean }> = {};
+      Object.keys(feedbackData).forEach(lang => {
+        clearedFeedback[lang] = { isValid: false };
+      });
+      
+      // Update program metadata to invalidate all feedback
+      await programRepo.update?.(program.id, {
+        metadata: {
+          ...program.metadata,
+          evaluationMetadata: {
+            ...evaluation.metadata,
+            qualitativeFeedback: clearedFeedback
+          }
+        }
+      });
+      
+      // Force regeneration for current language
+      forceRegenerate = true;
+    }
+    
     if (!forceRegenerate && existingFeedback?.isValid && existingFeedback?.content && !feedbackOutdated) {
       return NextResponse.json({
         success: true,
@@ -521,8 +546,10 @@ Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLan
     }
     
     // Save feedback to evaluation with language info
+    // Keep existing feedback for other languages unless they were invalidated
+    const existingQualitativeFeedback = evaluation.metadata?.qualitativeFeedback as Record<string, unknown> || {};
     const updatedQualitativeFeedback = {
-      ...(evaluation.metadata?.qualitativeFeedback as Record<string, unknown> || {}),
+      ...existingQualitativeFeedback,
       [currentLang]: {
         content: feedback,
         generatedAt: new Date().toISOString(),
