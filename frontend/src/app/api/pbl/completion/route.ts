@@ -67,11 +67,25 @@ export async function GET(request: NextRequest) {
     const completeUrl = new URL(`/api/pbl/programs/${programId}/complete`, request.url);
     completeUrl.searchParams.set('language', language);
     
-    const completeRes = await fetch(completeUrl.toString(), {
+    // First try GET to see if evaluation exists
+    let completeRes = await fetch(completeUrl.toString(), {
       headers: {
         cookie: request.headers.get('cookie') || '',
       },
     });
+    
+    // If not found or no evaluation, trigger POST to create it
+    if (!completeRes.ok || completeRes.status === 404) {
+      console.log('Completion API - Evaluation not found, creating new one');
+      completeRes = await fetch(completeUrl.toString(), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          cookie: request.headers.get('cookie') || '',
+        },
+        body: JSON.stringify({})
+      });
+    }
     
     if (!completeRes.ok) {
       console.error('Failed to get program evaluation');
@@ -89,8 +103,16 @@ export async function GET(request: NextRequest) {
       success: completeData.success,
       hasEvaluation: !!completeData.evaluation,
       evaluationScore: completeData.evaluation?.score,
-      evaluationId: completeData.evaluation?.id
+      evaluationId: completeData.evaluation?.id,
+      metadata: completeData.evaluation?.metadata,
+      pblData: completeData.evaluation?.pblData,
+      debug: completeData.debug
     });
+    
+    // If no evaluation, log error and return empty data
+    if (!evaluation) {
+      console.error('Completion API - No evaluation found after complete API call');
+    }
     
     // Get all tasks for detailed information
     const tasks = await taskRepo.findByProgram(programId);
@@ -165,13 +187,13 @@ export async function GET(request: NextRequest) {
       startedAt: program.startedAt,
       updatedAt: evaluation?.metadata?.lastUpdatedAt || program.startedAt,
       completedAt: program.completedAt,
-      totalTasks: evaluation?.metadata?.totalTasks || tasks.length,
+      totalTasks: evaluation?.metadata?.totalTasks || evaluation?.pblData?.totalTasks || tasks.length,
       completedTasks: tasks.filter((t: ITask) => t.status === 'completed').length,
-      evaluatedTasks: evaluation?.metadata?.evaluatedTasks || 0,
+      evaluatedTasks: evaluation?.metadata?.evaluatedTaskCount || evaluation?.pblData?.evaluatedTasks || 0,
       overallScore: evaluation?.score || 0,
-      domainScores: evaluation?.metadata?.domainScores || {},
-      ksaScores: evaluation?.metadata?.ksaScores || {},
-      totalTimeSeconds: evaluation?.metadata?.totalTimeSeconds || 0,
+      domainScores: evaluation?.metadata?.domainScores || evaluation?.domainScores || {},
+      ksaScores: evaluation?.metadata?.ksaScores || evaluation?.pblData?.ksaScores || {},
+      totalTimeSeconds: evaluation?.metadata?.totalTimeSeconds || evaluation?.timeTakenSeconds || 0,
       tasks: tasksWithDetails,
       // Always return the full multi-language feedback structure
       // This allows the UI to detect which languages have feedback

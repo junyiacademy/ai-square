@@ -270,6 +270,10 @@ export async function POST(
         metadata: {
           overallScore,
           totalTimeSeconds,
+          evaluatedTasks: evaluatedTasks.length,
+          totalTasks,
+          domainScores,
+          ksaScores,
           // Verification fields
           isLatest: true,
           syncChecksum,
