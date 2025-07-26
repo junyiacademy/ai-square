@@ -188,11 +188,20 @@ export async function POST(request: NextRequest) {
     const userEmail = session.user.email;
     
     // Get repositories
-    const { createRepositoryFactory } = await import('@/lib/db/repositories/factory');
-    const repositoryFactory = createRepositoryFactory;
+    const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
     const programRepo = repositoryFactory.getProgramRepository();
     const evalRepo = repositoryFactory.getEvaluationRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
+    const userRepo = repositoryFactory.getUserRepository();
+    
+    // Get user by email to get UUID
+    const user = await userRepo.findByEmail(userEmail);
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: 'User not found' },
+        { status: 404 }
+      );
+    }
     
     // Get program and verify ownership
     const program = await programRepo.findById(programId);
@@ -203,7 +212,7 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    if (program.userId !== userEmail) {
+    if (program.userId !== user.id) {
       return NextResponse.json(
         { success: false, error: 'Access denied' },
         { status: 403 }
@@ -261,10 +270,10 @@ export async function POST(request: NextRequest) {
     
     const completionData: CompletionData = {
       overallScore: evaluation.score || 0,
-      evaluatedTasks: evaluation.metadata?.evaluatedTasks || 0,
-      totalTasks: evaluation.metadata?.totalTasks || tasks.length,
-      totalTimeSeconds: evaluation.metadata?.totalTimeSeconds || 0,
-      domainScores: evaluation.metadata?.domainScores || {},
+      evaluatedTasks: evaluation.metadata?.evaluatedTasks as number || 0,
+      totalTasks: evaluation.metadata?.totalTasks as number || tasks.length,
+      totalTimeSeconds: evaluation.metadata?.totalTimeSeconds as number || 0,
+      domainScores: evaluation.metadata?.domainScores as Record<string, number> || {},
       tasks: taskEvaluations.map(({ task, evaluation: taskEval }: { task: Task; evaluation: Evaluation | null }) => ({
         taskId: task.id,
         evaluation: taskEval ? {
@@ -277,22 +286,23 @@ export async function POST(request: NextRequest) {
           interactions: [] // Task interactions would need to be fetched separately if needed
         }
       })),
-      qualitativeFeedback: evaluation.metadata?.qualitativeFeedback,
-      feedbackLanguage: evaluation.metadata?.feedbackLanguage
+      qualitativeFeedback: evaluation.metadata?.qualitativeFeedback as QualitativeFeedback | Record<string, QualitativeFeedback> | undefined,
+      feedbackLanguage: evaluation.metadata?.feedbackLanguage as string | undefined
     };
     
     // Get current language - prioritize explicit language parameter
     const currentLang = language || getLanguageFromHeader(request);
     
     // If forceRegenerate, mark existing feedback for current language as invalid
-    if (forceRegenerate && evaluation.metadata?.qualitativeFeedback?.[currentLang]) {
+    const existingQualitativeFeedback = evaluation.metadata?.qualitativeFeedback as Record<string, { content?: QualitativeFeedback; isValid?: boolean; generatedAt?: string }> | undefined;
+    if (forceRegenerate && existingQualitativeFeedback?.[currentLang]) {
       // Mark the feedback as invalid to trigger regeneration
       const updatedMetadata = {
         ...evaluation.metadata,
         qualitativeFeedback: {
-          ...evaluation.metadata.qualitativeFeedback,
+          ...existingQualitativeFeedback,
           [currentLang]: {
-            ...evaluation.metadata.qualitativeFeedback[currentLang],
+            ...existingQualitativeFeedback[currentLang],
             isValid: false
           }
         }
@@ -311,7 +321,8 @@ export async function POST(request: NextRequest) {
     }
     
     // Check if valid feedback already exists for current language
-    const existingFeedback = evaluation.metadata?.qualitativeFeedback?.[currentLang];
+    const feedbackData = evaluation.metadata?.qualitativeFeedback as Record<string, { content?: QualitativeFeedback; isValid?: boolean; generatedAt?: string }> | undefined;
+    const existingFeedback = feedbackData?.[currentLang];
     if (!forceRegenerate && existingFeedback?.isValid && existingFeedback?.content) {
       return NextResponse.json({
         success: true,
@@ -488,9 +499,9 @@ Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLan
     
     // Save feedback to evaluation with language info
     const updatedQualitativeFeedback = {
-      ...evaluation.metadata?.qualitativeFeedback,
+      ...(evaluation.metadata?.qualitativeFeedback as Record<string, unknown> || {}),
       [currentLang]: {
-        context: feedback,
+        content: feedback,
         generatedAt: new Date().toISOString(),
         isValid: true
       }
