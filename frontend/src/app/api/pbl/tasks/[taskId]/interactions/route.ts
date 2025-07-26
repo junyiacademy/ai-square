@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { cachedGET } from '@/lib/api/optimization-utils';
-// Removed unused import
+import { cacheService } from '@/lib/cache/cache-service';
+import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
+import type { IInteraction } from '@/lib/repositories/interfaces';
 
 // POST - Add interaction to task
 export async function POST(
@@ -34,34 +36,50 @@ export async function POST(
     const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
     const taskRepo = repositoryFactory.getTaskRepository();
 
-    // Record user attempt or update metadata for other interactions
-    if (interaction.type === 'user') {
-      await taskRepo.recordAttempt?.(taskId, {
-        response: interaction.content,
-        timeSpent: interaction.metadata?.timeSpent || 0
-      });
-    } else {
-      // For AI and system interactions, store in task metadata
-      const task = await taskRepo.findById(taskId);
-      if (task) {
-        const metadata = task.metadata || {};
-        const interactions = (metadata.interactions as Array<Record<string, unknown>>) || [];
-        interactions.push({
-          timestamp: interaction.timestamp || new Date().toISOString(),
-          type: interaction.type,
-          content: interaction.content,
-          role: interaction.role || interaction.type,
-          metadata: interaction.metadata
-        });
-        
+    // Store interaction in task.interactions column
+    const task = await taskRepo.findById(taskId);
+    if (task) {
+      const currentInteractions = task.interactions || [];
+      
+      // Add the new interaction with consistent format
+      const newInteraction: IInteraction = {
+        timestamp: interaction.timestamp || new Date().toISOString(),
+        type: interaction.type === 'user' ? 'user_input' : 
+              interaction.type === 'ai' ? 'ai_response' : 
+              'system_event',
+        content: interaction.content,
+        metadata: interaction.metadata
+      };
+      
+      const updatedInteractions = [...currentInteractions, newInteraction];
+      
+      // Update task interactions using updateInteractions method
+      if (taskRepo.updateInteractions) {
+        await taskRepo.updateInteractions(taskId, updatedInteractions);
+      } else {
+        // Fallback to update method
         await taskRepo.update?.(taskId, {
-          metadata: {
-            ...metadata,
-            interactions
-          }
+          interactions: updatedInteractions
+        });
+      }
+      
+      // For user interactions, also record attempt for scoring
+      if (interaction.type === 'user') {
+        await taskRepo.recordAttempt?.(taskId, {
+          response: interaction.content,
+          timeSpent: interaction.metadata?.timeSpent || 0
         });
       }
     }
+
+    // Clear cache for this task's interactions
+    const cacheKey = `api:/api/pbl/tasks/${taskId}/interactions:`;
+    
+    // Clear both local and distributed cache
+    await Promise.all([
+      cacheService.delete(cacheKey),
+      distributedCacheService.delete(cacheKey)
+    ]);
 
     return NextResponse.json({
       success: true,
@@ -109,15 +127,17 @@ export async function GET(
       };
     }
 
+    // Get interactions from task.interactions column
+    const interactions = task.interactions || [];
+    
     // Transform interactions for frontend compatibility
-    const interactions = (task.metadata?.interactions as Array<Record<string, unknown>>) || [];
-    const transformedInteractions = interactions.map((i: Record<string, unknown>) => ({
+    const transformedInteractions = interactions.map((i: IInteraction) => ({
       id: `${task.id}_${i.timestamp}`,
       type: i.type === 'user_input' ? 'user' : 
-            i.type === 'ai_response' ? 'ai' : 'system',
-      context: i.content,
-      timestamp: i.timestamp,
-      role: (i.metadata as Record<string, unknown>)?.role || i.type
+            i.type === 'ai_response' ? 'ai' : 
+            'system',
+      content: i.content,
+      timestamp: i.timestamp
     }));
 
     return {
@@ -129,7 +149,8 @@ export async function GET(
       }
     };
   }, {
-    ttl: 120, // 2 minutes cache (interactions change frequently)
-    staleWhileRevalidate: 600 // 10 minutes
+    ttl: 10, // Reduced to 10 seconds for interactions (they change frequently)
+    staleWhileRevalidate: 30, // 30 seconds
+    useDistributedCache: false // Disable distributed cache for frequently changing data
   });
 }
