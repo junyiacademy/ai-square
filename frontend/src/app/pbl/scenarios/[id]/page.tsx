@@ -214,7 +214,7 @@ export default function ScenarioDetailPage() {
               </Link>
             </li>
             <li className="text-gray-400 dark:text-gray-600">/</li>
-            <li className="text-gray-900 dark:text-white">{scenario.title[i18n.language] || scenario.title.en || ''}</li>
+            <li className="text-gray-900 dark:text-white">{typeof scenario.title === 'string' ? scenario.title : (scenario.title[i18n.language] || scenario.title.en || '')}</li>
           </ol>
         </nav>
 
@@ -223,10 +223,10 @@ export default function ScenarioDetailPage() {
           <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-6">
             <div className="flex-1">
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                {scenario.title[i18n.language] || scenario.title.en || ''}
+                {typeof scenario.title === 'string' ? scenario.title : (scenario.title[i18n.language] || scenario.title.en || '')}
               </h1>
               <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">
-                {scenario.description[i18n.language] || scenario.description.en || ''}
+                {typeof scenario.description === 'string' ? scenario.description : (scenario.description[i18n.language] || scenario.description.en || '')}
               </p>
               
               {/* Metadata */}

@@ -1,23 +1,24 @@
-import { NextRequest } from 'next/server';
-import { POST } from '../route';
-import { VertexAI } from '@google-cloud/vertexai';
-
-// Mock auth session
-const mockGetServerSession = jest.fn()
+// Mock setup must come before any imports that use the mocked modules
+const mockGetServerSession = jest.fn();
 jest.mock('@/lib/auth/session', () => ({
-  getServerSession: mockGetServerSession
-}))
+  getServerSession: () => mockGetServerSession()
+}));
 
-// Mock repository factory
+// Mock repository factory before route import
 const mockRepositoryFactory = {
   getProgramRepository: jest.fn(),
   getEvaluationRepository: jest.fn(),
   getTaskRepository: jest.fn(),
   getScenarioRepository: jest.fn(),
-}
+};
 jest.mock('@/lib/db/repositories/factory', () => ({
-  createRepositoryFactory: mockRepositoryFactory
+  createRepositoryFactory: () => mockRepositoryFactory
 }));
+
+import { NextRequest } from 'next/server';
+import { POST } from '../route';
+import { VertexAI } from '@google-cloud/vertexai';
+
 
 jest.mock('@google-cloud/vertexai', () => ({
   VertexAI: jest.fn().mockImplementation(() => ({
@@ -30,6 +31,11 @@ jest.mock('@google-cloud/vertexai', () => ({
     STRING: 'string',
     ARRAY: 'array'
   }
+}));
+
+// Also mock the base repository factory
+jest.mock('@/lib/repositories/base/repository-factory', () => ({
+  repositoryFactory: mockRepositoryFactory
 }));
 
 jest.mock('fs/promises', () => ({
@@ -373,7 +379,7 @@ describe('/api/pbl/generate-feedback', () => {
 
       expect(response.status).toBe(401);
       expect(data.success).toBe(false);
-      expect(data.error).toBe('User authentication required');
+      expect(data.error).toBe('Authentication required');
     });
 
     it('returns 404 when completion data not found', async () => {
@@ -388,7 +394,7 @@ describe('/api/pbl/generate-feedback', () => {
 
       expect(response.status).toBe(404);
       expect(data.success).toBe(false);
-      expect(data.error).toBe('Completion data not found');
+      expect(data.error).toBe('Program not found');
     });
 
     it('handles AI generation errors', async () => {
@@ -494,15 +500,17 @@ describe('/api/pbl/generate-feedback', () => {
         encouragement: "Keep going!"
       };
 
-      mockRepositoryFactory.getProgramRepository().findById.mockResolvedValue({
+      mockProgramRepo.findById.mockResolvedValue({
         id: 'prog123',
-        userId: 'user123',
+        userId: 'test@example.com',
         scenarioId: 'career-advisor',
         status: 'completed',
         metadata: {
-          ...mockCompletionData,
-          qualitativeFeedback: legacyFeedback,
-          feedbackLanguage: 'en'
+          evaluationMetadata: {
+            ...mockCompletionData,
+            qualitativeFeedback: legacyFeedback,
+            feedbackLanguage: 'en'
+          }
         }
       });
 

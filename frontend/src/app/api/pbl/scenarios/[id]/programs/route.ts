@@ -46,16 +46,24 @@ export async function GET(
       );
     }
     
-    const userEmail = session.user.email;
-    
     // Get repositories
     const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
     const programRepo = repositoryFactory.getProgramRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
+    const userRepo = repositoryFactory.getUserRepository();
+    
+    // Get user by email to get UUID
+    const user = await userRepo.findByEmail(session.user.email);
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: 'User not found' },
+        { status: 404 }
+      );
+    }
     
     // Get user's programs for this scenario
     const allPrograms = await programRepo.findByScenario(actualScenarioId);
-    const programs = allPrograms.filter(p => p.userId === userEmail);
+    const programs = allPrograms.filter(p => p.userId === user.id);
     
     // Enrich programs with task completion data
     const enrichedPrograms = await Promise.all(

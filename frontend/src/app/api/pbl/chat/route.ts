@@ -70,25 +70,49 @@ export async function POST(request: NextRequest) {
 
     // Extract AI module configuration from task metadata
     const taskTemplate = task.metadata?.taskTemplate as Record<string, unknown> || {};
-    const aiModule = taskTemplate.aiModule || taskTemplate.ai_module || 
+    let aiModule = taskTemplate.aiModule || taskTemplate.ai_module || 
                     (task.metadata?.originalTaskData as Record<string, unknown>)?.aiModule ||
                     (task.metadata?.originalTaskData as Record<string, unknown>)?.ai_module;
 
     if (!aiModule) {
-      return NextResponse.json<ErrorResponse>(
-        { error: 'AI module not found for this task' },
-        { status: 404 }
-      );
+      console.warn('AI module not found for task:', {
+        taskId,
+        taskTemplate,
+        metadata: task.metadata
+      });
+      // Use default AI module configuration
+      aiModule = {
+        role: 'helpful AI tutor',
+        persona: 'supportive learning assistant',
+        initialPrompt: 'I am here to help you complete this task successfully.'
+      };
+      console.log('Using default AI module configuration');
     }
 
     // Build conversation context
+    console.log('Conversation history received:', {
+      count: conversationHistory?.length || 0,
+      history: conversationHistory
+    });
+    
     const conversationContext = conversationHistory?.map((entry: ChatMessage) => 
       `${entry.role === 'user' ? 'User' : 'Assistant'}: ${entry.content}`
     ).join('\n');
+    
+    console.log('Formatted conversation context:', conversationContext);
 
     // Initialize Vertex AI
+    const projectId = process.env.GOOGLE_CLOUD_PROJECT;
+    if (!projectId) {
+      console.error('GOOGLE_CLOUD_PROJECT environment variable not set');
+      return NextResponse.json<ErrorResponse>(
+        { error: 'AI service not configured' },
+        { status: 500 }
+      );
+    }
+    
     const vertexAI = new VertexAI({
-      project: process.env.GOOGLE_CLOUD_PROJECT || '',
+      project: projectId,
       location: 'us-central1',
     });
 
@@ -116,14 +140,28 @@ export async function POST(request: NextRequest) {
       : `${systemPrompt}\n\nUser: ${message}`;
 
     // Generate response
-    const result = await model.generateContent(fullPrompt);
-    const response = result.response;
-    const text = response.candidates?.[0]?.content?.parts?.[0]?.text || 'I apologize, but I was unable to generate a response.';
-
-    return NextResponse.json({
-      response: text,
-      sessionId,
-    });
+    try {
+      const result = await model.generateContent(fullPrompt);
+      const response = result.response;
+      const text = response.candidates?.[0]?.content?.parts?.[0]?.text || 'I apologize, but I was unable to generate a response.';
+      
+      return NextResponse.json({
+        response: text,
+        sessionId,
+      });
+    } catch (vertexError) {
+      console.error('Vertex AI error:', {
+        error: vertexError,
+        message: (vertexError as Error).message,
+        stack: (vertexError as Error).stack,
+        projectId,
+        aiModule,
+      });
+      return NextResponse.json<ErrorResponse>(
+        { error: `AI generation failed: ${(vertexError as Error).message}` },
+        { status: 500 }
+      );
+    }
 
   } catch (error) {
     console.error('Chat API error:', error);

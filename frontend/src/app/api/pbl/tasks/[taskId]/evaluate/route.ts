@@ -31,6 +31,16 @@ export async function POST(
     const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
     const evalRepo = repositoryFactory.getEvaluationRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
+    const userRepo = repositoryFactory.getUserRepository();
+    
+    // Get user by email to get UUID
+    const user = await userRepo.findByEmail(session.user.email);
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: 'User not found' },
+        { status: 404 }
+      );
+    }
 
     // Check if task already has an evaluation
     const task = await taskRepo.findById(taskId);
@@ -38,7 +48,7 @@ export async function POST(
     
     // Helper to create evaluation with proper structure
     const createEvaluationData = (evaluation: Record<string, unknown>, existingMetadata?: Record<string, unknown>) => ({
-      userId: session.user.email,
+      userId: user.id,
       programId: programId || undefined,
       taskId: taskId,
       mode: 'pbl' as const,
@@ -47,7 +57,7 @@ export async function POST(
       score: evaluation.score || 0,
       maxScore: 100,
       timeTakenSeconds: (evaluation.timeTakenSeconds as number) || 0,
-      dimensionScores: (evaluation.domainScores as Record<string, number>) || {},
+      domainScores: (evaluation.domainScores as Record<string, number>) || {},
       feedbackText: evaluation.feedback || '',
       feedbackData: {
         strengths: (evaluation.strengths as string[]) || [],
@@ -195,14 +205,14 @@ export async function GET(
     const transformedEvaluation = evaluation ? {
       ...evaluation,
       score: evaluation.score || 0,
-      ksaScores: evaluation.metadata?.ksaScores || {},
-      domainScores: evaluation.metadata?.domainScores || {},
-      rubricsScores: evaluation.metadata?.rubricsScores || {},
-      strengths: evaluation.metadata?.strengths || [],
-      improvements: evaluation.metadata?.improvements || [],
-      nextSteps: evaluation.metadata?.nextSteps || [],
-      conversationInsights: evaluation.metadata?.conversationInsights || {},
-      conversationCount: evaluation.metadata?.conversationCount || 0,
+      ksaScores: (evaluation as Record<string, unknown> & { pbl_data?: { ksaScores?: Record<string, number> } }).pbl_data?.ksaScores || evaluation.pblData?.ksaScores || {},
+      domainScores: evaluation.domainScores || (evaluation as Record<string, unknown> & { domain_scores?: Record<string, number> }).domain_scores || {},
+      rubricsScores: (evaluation as Record<string, unknown> & { pbl_data?: { rubricsScores?: Record<string, number> } }).pbl_data?.rubricsScores || evaluation.metadata?.rubricsScores || {},
+      strengths: evaluation.feedbackData?.strengths || evaluation.metadata?.strengths || [],
+      improvements: evaluation.feedbackData?.improvements || evaluation.metadata?.improvements || [],
+      nextSteps: evaluation.feedbackData?.nextSteps || evaluation.metadata?.nextSteps || [],
+      conversationInsights: evaluation.aiAnalysis || (evaluation as Record<string, unknown> & { ai_analysis?: Record<string, unknown> }).ai_analysis || evaluation.metadata?.conversationInsights || {},
+      conversationCount: (evaluation as Record<string, unknown> & { pbl_data?: { conversationCount?: number } }).pbl_data?.conversationCount || evaluation.metadata?.conversationCount || 0,
       evaluatedAt: evaluation.metadata?.evaluatedAt || evaluation.createdAt
     } : null;
 

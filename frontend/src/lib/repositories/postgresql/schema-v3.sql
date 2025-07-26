@@ -148,7 +148,7 @@ CREATE TABLE programs (
     
     -- Scoring (unified)
     total_score DECIMAL(5,2) DEFAULT 0,              -- 0-100 scale
-    dimension_scores JSONB DEFAULT '{}'::jsonb,      -- {"ksa": {...}, "creativity": 8}
+    domain_scores JSONB DEFAULT '{}'::jsonb,         -- {"ksa": {...}, "creativity": 8}
     
     -- XP and rewards (mainly for Discovery)
     xp_earned INTEGER DEFAULT 0,
@@ -245,7 +245,7 @@ CREATE TABLE evaluations (
     max_score DECIMAL(5,2) DEFAULT 100,
     
     -- Multi-dimensional scoring
-    dimension_scores JSONB DEFAULT '{}'::jsonb,       -- {"accuracy": 90, "creativity": 85}
+    domain_scores JSONB DEFAULT '{}'::jsonb,          -- {"accuracy": 90, "creativity": 85}
     
     -- Feedback
     feedback_text TEXT,

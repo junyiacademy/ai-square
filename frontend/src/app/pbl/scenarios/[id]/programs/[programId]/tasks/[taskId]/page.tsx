@@ -137,7 +137,7 @@ export default function ProgramLearningPage() {
                 id: programData.id,
                 scenarioId: scenarioId,
                 userId: programData.userId,
-                userEmail: programData.userId, // Using userId as userEmail for now
+                userEmail: '', // Will be populated separately if needed
                 startedAt: programData.startedAt,
                 updatedAt: programData.startedAt, // Using startedAt as updatedAt fallback
                 status: programData.status,
@@ -216,8 +216,8 @@ export default function ProgramLearningPage() {
         const mockProgram: Program = {
           id: programId,
           scenarioId: scenarioId,
-          userId: 'user@example.com',
-          userEmail: 'user@example.com',
+          userId: '', // Will be populated from actual user
+          userEmail: '', // Will be populated from actual user
           startedAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           status: programId.startsWith('temp_') ? 'in_progress' : 'draft',
@@ -493,7 +493,7 @@ export default function ProgramLearningPage() {
       await new Promise(resolve => setTimeout(resolve, 200));
       
       // Get AI response
-      const aiRes = await fetch('/api/pbl/chat', {
+      const aiRes = await fetch(`/api/pbl/chat?lang=${i18n.language}`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -503,7 +503,7 @@ export default function ProgramLearningPage() {
           message: userMessage,
           sessionId: actualProgramId,
           context: {
-            scenarioId,
+            scenarioId: scenario?.id || scenarioId,  // Use actual UUID from scenario object
             taskId: currentTask.id,
             taskTitle: getLocalizedField(currentTask as unknown as Record<string, unknown>, 'title', i18n.language),
             taskDescription: getLocalizedField(currentTask as unknown as Record<string, unknown>, 'description', i18n.language),
@@ -517,7 +517,16 @@ export default function ProgramLearningPage() {
         })
       });
       
-      if (!aiRes.ok) throw new Error('Failed to get AI response');
+      if (!aiRes.ok) {
+        const errorData = await aiRes.json().catch(() => ({}));
+        console.error('Chat API error:', {
+          status: aiRes.status,
+          statusText: aiRes.statusText,
+          error: errorData.error || errorData,
+          url: aiRes.url
+        });
+        throw new Error(`Failed to get AI response: ${aiRes.status} ${errorData.error || aiRes.statusText}`);
+      }
       
       const aiData = await aiRes.json();
       const aiMessage = aiData.response;
@@ -986,26 +995,56 @@ export default function ProgramLearningPage() {
                   </div>
                   
                   {/* KSA Scores */}
-                  {evaluation.domainScores && (
+                  {evaluation.ksaScores && (
                   <div className="space-y-2">
-                    {Object.entries(evaluation.domainScores).map(([dimension, score]: [string, number]) => (
-                      <div key={dimension} className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600 dark:text-gray-400 capitalize">
-                          {t(`pbl:complete.${dimension}`)}
-                        </span>
-                        <div className="flex items-center">
-                          <div className="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                            <div 
-                              className="bg-purple-600 h-2 rounded-full"
-                              style={{ width: `${score}%` }}
-                            />
-                          </div>
-                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                            {Math.round(score)}%
-                          </span>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">
+                        {t('pbl:complete.knowledge')}
+                      </span>
+                      <div className="flex items-center">
+                        <div className="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
+                          <div 
+                            className="bg-purple-600 h-2 rounded-full"
+                            style={{ width: `${evaluation.ksaScores.knowledge}%` }}
+                          />
                         </div>
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          {Math.round(evaluation.ksaScores.knowledge)}%
+                        </span>
                       </div>
-                    ))}
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">
+                        {t('pbl:complete.skills')}
+                      </span>
+                      <div className="flex items-center">
+                        <div className="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
+                          <div 
+                            className="bg-purple-600 h-2 rounded-full"
+                            style={{ width: `${evaluation.ksaScores.skills}%` }}
+                          />
+                        </div>
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          {Math.round(evaluation.ksaScores.skills)}%
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">
+                        {t('pbl:complete.attitudes')}
+                      </span>
+                      <div className="flex items-center">
+                        <div className="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
+                          <div 
+                            className="bg-purple-600 h-2 rounded-full"
+                            style={{ width: `${evaluation.ksaScores.attitudes}%` }}
+                          />
+                        </div>
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          {Math.round(evaluation.ksaScores.attitudes)}%
+                        </span>
+                      </div>
+                    </div>
                   </div>
                   )}
                 </div>
@@ -1016,7 +1055,9 @@ export default function ProgramLearningPage() {
                     {t('pbl:complete.domainScores')}
                   </h4>
                   <div className="space-y-2">
-                    {evaluation.domainScores && Object.entries(evaluation.domainScores).map(([domain, score]) => (
+                    {(() => {
+                      const domainScores = evaluation.domainScores || (evaluation as any).dimension_scores;
+                      return domainScores && Object.entries(domainScores).map(([domain, score]) => (
                       <div key={domain} className="flex items-center justify-between">
                         <span className="text-sm text-gray-600 dark:text-gray-400">
                           {t(`assessment:domains.${domain}`)}
@@ -1033,7 +1074,8 @@ export default function ProgramLearningPage() {
                           </span>
                         </div>
                       </div>
-                    ))}
+                    ));
+                    })()}
                   </div>
                 </div>
                 

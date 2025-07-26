@@ -44,10 +44,20 @@ export async function GET(
     const repositoryFactory = createRepositoryFactory;
     const taskRepo = repositoryFactory.getTaskRepository();
     const programRepo = repositoryFactory.getProgramRepository();
+    const userRepo = repositoryFactory.getUserRepository();
+    
+    // Get user by email to get UUID
+    const user = await userRepo.findByEmail(session.user.email);
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: 'User not found' },
+        { status: 404 }
+      );
+    }
     
     // First verify the program exists and belongs to the user
     const program = await programRepo.findById(programId);
-    if (!program || program.userId !== session.user.email) {
+    if (!program || program.userId !== user.id) {
       return NextResponse.json(
         { success: false, error: 'Program not found or access denied' },
         { status: 404 }

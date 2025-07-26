@@ -30,6 +30,16 @@ export async function GET(
     const repositoryFactory = createRepositoryFactory;
     const programRepo = repositoryFactory.getProgramRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
+    const userRepo = repositoryFactory.getUserRepository();
+    
+    // Get user by email to get UUID
+    const user = await userRepo.findByEmail(session.user.email);
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: 'User not found' },
+        { status: 404 }
+      );
+    }
     
     // Verify program exists and belongs to user
     const program = await programRepo.findById(programId);
@@ -40,7 +50,7 @@ export async function GET(
       );
     }
     
-    if (program.userId !== session.user.email) {
+    if (program.userId !== user.id) {
       return NextResponse.json(
         { success: false, error: 'Access denied' },
         { status: 403 }

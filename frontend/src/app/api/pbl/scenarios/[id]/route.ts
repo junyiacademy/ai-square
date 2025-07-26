@@ -246,32 +246,33 @@ export async function GET(
       throw new Error('Scenario not found');
     }
     
-    const yamlData = scenarioResult.metadata?.yamlData;
-    if (!yamlData) {
-      throw new Error('Scenario YAML data not found');
-    }
+    // Get YAML data from metadata or pblData
+    const yamlData = scenarioResult.metadata?.yamlData || scenarioResult.pblData;
     
     console.log('Scenario loaded from unified architecture: success');
+    console.log('Has yamlData:', !!yamlData);
+    console.log('Has pblData:', !!scenarioResult.pblData);
+    console.log('Has taskTemplates:', !!scenarioResult.taskTemplates);
     
     // Transform to API response format
     const scenarioResponse: ScenarioResponse = {
       id: scenarioResult.id,
       title: typeof scenarioResult.title === 'string' ? scenarioResult.title : (scenarioResult.title as Record<string, string>)?.[lang] || (scenarioResult.title as Record<string, string>)?.en || '',
       description: typeof scenarioResult.description === 'string' ? scenarioResult.description : (scenarioResult.description as Record<string, string>)?.[lang] || (scenarioResult.description as Record<string, string>)?.en || '',
-      difficulty: (scenarioResult.metadata as Record<string, unknown>)?.difficulty as string || 'intermediate',
-      estimatedDuration: (scenarioResult.metadata as Record<string, unknown>)?.estimatedDuration as number || 60,
-      targetDomain: (scenarioResult.metadata as Record<string, unknown>)?.targetDomains as string[] || [],
+      difficulty: scenarioResult.difficulty || (scenarioResult.metadata as Record<string, unknown>)?.difficulty as string || 'intermediate',
+      estimatedDuration: scenarioResult.estimatedMinutes || (scenarioResult.metadata as Record<string, unknown>)?.estimatedDuration as number || 60,
+      targetDomain: (scenarioResult.pblData as Record<string, unknown>)?.targetDomains as string[] || (scenarioResult.metadata as Record<string, unknown>)?.targetDomains as string[] || [],
       prerequisites: (scenarioResult.metadata as Record<string, unknown>)?.prerequisites as string[] || [],
-      learningObjectives: (scenarioResult as { objectives?: string[] }).objectives || [],
-      ksaMapping: buildKSAMapping(yamlData as unknown as YAMLData, ksaData, lang),
-      tasks: ((scenarioResult as { tasks?: Array<{ id: string; title: string; description?: string; type?: string; estimatedTime?: number }> }).tasks || []).map((task) => ({
-        id: task.id,
-        title: task.title || '',
-        description: task.description || '',
-        category: 'general',
-        instructions: [],
-        expectedOutcome: '',
-        timeLimit: task.estimatedTime
+      learningObjectives: scenarioResult.objectives || (scenarioResult as { objectives?: string[] }).objectives || [],
+      ksaMapping: yamlData ? buildKSAMapping(yamlData as unknown as YAMLData, ksaData, lang) : undefined,
+      tasks: (scenarioResult.taskTemplates || []).map((task: Record<string, unknown>) => ({
+        id: String(task.id || ''),
+        title: typeof task.title === 'object' ? ((task.title as Record<string, string>)?.[lang] || (task.title as Record<string, string>)?.en || '') : String(task.title || ''),
+        description: typeof task.description === 'object' ? ((task.description as Record<string, string>)?.[lang] || (task.description as Record<string, string>)?.en || '') : String(task.description || task.instructions || ''),
+        category: String(task.category || task.type || 'general'),
+        instructions: Array.isArray(task.instructions) ? task.instructions as string[] : [String(task.instructions || task.description || '')],
+        expectedOutcome: String(task.expectedOutcome || ''),
+        timeLimit: Number(task.estimatedTime || task.timeLimit || 30)
       }))
     };
     

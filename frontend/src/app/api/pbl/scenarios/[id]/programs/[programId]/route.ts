@@ -32,10 +32,21 @@ export async function GET(
       );
     }
     
-    // Use unified architecture to get program
+    // Use unified architecture to get program and user
     const { createRepositoryFactory } = await import('@/lib/db/repositories/factory');
     const repositoryFactory = createRepositoryFactory;
     const programRepo = repositoryFactory.getProgramRepository();
+    const userRepo = repositoryFactory.getUserRepository();
+    
+    // Get user by email to get UUID
+    const user = await userRepo.findByEmail(session.user.email);
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: 'User not found' },
+        { status: 404 }
+      );
+    }
+    
     const program = await programRepo.findById(programId);
     
     if (!program) {
@@ -45,8 +56,8 @@ export async function GET(
       );
     }
     
-    // Verify the program belongs to the user
-    if (program.userId !== session.user.email) {
+    // Verify the program belongs to the user (compare UUIDs)
+    if (program.userId !== user.id) {
       return NextResponse.json(
         { success: false, error: 'Access denied' },
         { status: 403 }

@@ -51,6 +51,16 @@ export async function POST(
     const programRepo = repositoryFactory.getProgramRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
     const evalRepo = repositoryFactory.getEvaluationRepository();
+    const userRepo = repositoryFactory.getUserRepository();
+    
+    // Get user by email to get UUID
+    const user = await userRepo.findByEmail(session.user.email);
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: 'User not found' },
+        { status: 404 }
+      );
+    }
     
     // Get program
     const program = await programRepo.findById(programId);
@@ -62,7 +72,7 @@ export async function POST(
     }
     
     // Verify the program belongs to the user
-    if (program.userId !== session.user.email) {
+    if (program.userId !== user.id) {
       return NextResponse.json(
         { success: false, error: 'Access denied' },
         { status: 403 }
@@ -209,7 +219,7 @@ export async function POST(
     if (!programEvaluation) {
       // Create new evaluation
       programEvaluation = await evalRepo.create({
-        userId: session.user.email,
+        userId: user.id,
         programId: program.id,
         mode: 'pbl',
         evaluationType: 'program',
@@ -368,6 +378,16 @@ export async function GET(
     const programRepo = repositoryFactory.getProgramRepository();
     const evalRepo = repositoryFactory.getEvaluationRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
+    const userRepo = repositoryFactory.getUserRepository();
+    
+    // Get user by email to get UUID
+    const user = await userRepo.findByEmail(session.user.email);
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: 'User not found' },
+        { status: 404 }
+      );
+    }
     
     // Get program
     const program = await programRepo.findById(programId);
@@ -379,7 +399,7 @@ export async function GET(
     }
     
     // Verify the program belongs to the user
-    if (program.userId !== session.user.email) {
+    if (program.userId !== user.id) {
       return NextResponse.json(
         { success: false, error: 'Access denied' },
         { status: 403 }

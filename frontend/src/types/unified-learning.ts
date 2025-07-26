@@ -105,7 +105,7 @@ export interface IProgram {
   
   // Scoring (unified)
   totalScore: number;
-  dimensionScores: Record<string, number>;  // {"ksa": {...}, "creativity": 8}
+  domainScores: Record<string, number>;     // {"ksa": {...}, "creativity": 8}
   
   // XP and rewards (mainly for Discovery)
   xpEarned: number;
@@ -213,7 +213,7 @@ export interface IEvaluation {
   maxScore: number;
   
   // Multi-dimensional scoring
-  dimensionScores: Record<string, number>;
+  domainScores: Record<string, number>;
   
   // Feedback
   feedbackText?: string;
@@ -240,10 +240,10 @@ export interface IEvaluation {
 }
 
 /**
- * Dimension Score - 維度分數
+ * Domain Score - 領域分數
  */
-export interface IDimensionScore {
-  dimension: string;
+export interface IDomainScore {
+  domain: string;
   score: number;
   maxScore: number;
   feedback?: string;

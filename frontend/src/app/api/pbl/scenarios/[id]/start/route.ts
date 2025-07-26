@@ -83,34 +83,53 @@ export async function POST(
     // Use unified architecture - get repositories
     const programRepo = repositoryFactory.getProgramRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
+    const userRepo = repositoryFactory.getUserRepository();
     
+    // Get or create user
+    let user = await userRepo.findByEmail(userEmail);
+    if (!user) {
+      console.log('   Creating new user for:', userEmail);
+      user = await userRepo.create({
+        email: userEmail,
+        name: userEmail.split('@')[0],
+        preferredLanguage: language
+      });
+    }
+    
+    console.log('   User ID:', user.id);
     console.log('   Creating program using unified architecture...');
     
-    // Create Program following unified architecture
-    const program = await programRepo.create({
-      scenarioId: scenario.id, // Use scenario UUID
-      userId: userEmail,
-      mode: scenario.mode || 'pbl', // Use scenario mode, default to 'pbl'
-      status: 'active',
-      currentTaskIndex: 0,
-      completedTaskCount: 0,
-      totalTaskCount: tasks.length,
-      totalScore: 0,
-      dimensionScores: {},
-      xpEarned: 0,
-      badgesEarned: [],
-      createdAt: new Date().toISOString(),
-      startedAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      lastActivityAt: new Date().toISOString(),
-      timeSpentSeconds: 0,
-      pblData: {},
-      discoveryData: {},
-      assessmentData: {},
-      metadata: {
-        language
-      }
-    });
+    let program;
+    try {
+      // Create Program following unified architecture
+      program = await programRepo.create({
+        scenarioId: scenario.id, // Use scenario UUID
+        userId: user.id, // Use user UUID, not email
+        mode: scenario.mode || 'pbl', // Use scenario mode, default to 'pbl'
+        status: 'active',
+        currentTaskIndex: 0,
+        completedTaskCount: 0,
+        totalTaskCount: tasks.length,
+        totalScore: 0,
+        dimensionScores: {},
+        xpEarned: 0,
+        badgesEarned: [],
+        createdAt: new Date().toISOString(),
+        startedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        lastActivityAt: new Date().toISOString(),
+        timeSpentSeconds: 0,
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
+        metadata: {
+          language
+        }
+      });
+    } catch (programError) {
+      console.error('   ❌ Failed to create program:', programError);
+      throw programError;
+    }
     
     console.log('   ✅ Program created with UUID:', program.id);
     
@@ -118,23 +137,50 @@ export async function POST(
     const createdTasks: ITask[] = [];
     
     for (let i = 0; i < tasks.length; i++) {
-      const taskTemplate = tasks[i];
+      const taskTemplate = tasks[i] as Record<string, unknown>;
+      
+      // Extract title and description with language support
+      const title = typeof taskTemplate.title === 'object' 
+        ? ((taskTemplate.title as Record<string, string>)?.[language] || (taskTemplate.title as Record<string, string>)?.en || 'Task')
+        : String(taskTemplate.title || `Task ${i + 1}`);
+        
+      const description = typeof taskTemplate.description === 'object'
+        ? ((taskTemplate.description as Record<string, string>)?.[language] || (taskTemplate.description as Record<string, string>)?.en || '')
+        : String(taskTemplate.description || taskTemplate.instructions || '');
+      
+      // Map task types to valid enum values
+      let taskType = String(taskTemplate.type || 'interactive');
+      const typeMapping: Record<string, string> = {
+        'research': 'analysis',
+        'design': 'creation',
+        'implement': 'creation',
+        'test': 'analysis',
+        'deploy': 'creation'
+      };
+      taskType = typeMapping[taskType] || taskType;
+      
+      // Ensure task type is valid
+      const validTypes = ['interactive', 'reflection', 'chat', 'creation', 'analysis', 'exploration', 'experiment', 'challenge', 'question', 'quiz', 'assessment'];
+      if (!validTypes.includes(taskType)) {
+        console.warn(`Invalid task type "${taskType}", defaulting to "interactive"`);
+        taskType = 'interactive';
+      }
       
       const task = await taskRepo.create({
         programId: program.id,
         mode: 'pbl',
         taskIndex: i,
         scenarioTaskIndex: i,
-        title: taskTemplate.title,
-        description: taskTemplate.description,
-        type: taskTemplate.type,
+        title: title,
+        description: description,
+        type: taskType as any, // Type assertion needed for enum
         status: i === 0 ? 'active' : 'pending',
         content: {
-          instructions: taskTemplate.description,
+          instructions: description,
           scenarioId: scenarioId,
-          taskType: taskTemplate.type,
-          difficulty: (scenario.metadata?.difficulty as string) || 'intermediate',
-          estimatedTime: (taskTemplate.estimatedTime as number) || 30
+          taskType: String(taskTemplate.type || 'interactive'),
+          difficulty: scenario.difficulty || (scenario.metadata?.difficulty as string) || 'intermediate',
+          estimatedTime: Number(taskTemplate.estimatedTime || 30)
         },
         interactions: [],
         interactionCount: 0,
@@ -190,11 +236,14 @@ export async function POST(
     
   } catch (error) {
     console.error('Start program error:', error);
+    console.error('Error details:', error instanceof Error ? error.message : 'Unknown error');
+    console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace');
     
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to start learning program'
+        error: 'Failed to start learning program',
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     );
