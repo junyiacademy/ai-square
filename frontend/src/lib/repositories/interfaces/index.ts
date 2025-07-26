@@ -80,6 +80,7 @@ export interface IEvaluationRepository {
   findByUser(userId: string): Promise<IEvaluation[]>;
   findByType(evaluationType: string, evaluationSubtype?: string): Promise<IEvaluation[]>;
   create(data: Omit<IEvaluation, 'id'>): Promise<IEvaluation>;
+  update?(id: string, data: UpdateEvaluationDto): Promise<IEvaluation>;
   getLatestForTask?(taskId: string): Promise<IEvaluation | null>;
   getUserProgress?(userId: string): Promise<UserProgress>;
 }
@@ -250,6 +251,16 @@ export interface CreateEvaluationDto {
   pblData?: Record<string, unknown>;
   discoveryData?: Record<string, unknown>;
   assessmentData?: Record<string, unknown>;
+  metadata?: Record<string, unknown>;
+}
+
+export interface UpdateEvaluationDto {
+  score?: number;
+  maxScore?: number;
+  domainScores?: Record<string, number>;
+  feedbackText?: string;
+  feedbackData?: Record<string, unknown>;
+  aiAnalysis?: Record<string, unknown>;
   metadata?: Record<string, unknown>;
 }
 

@@ -112,8 +112,8 @@ export async function GET(request: NextRequest) {
     // Debug program metadata
     console.log('Completion API - program metadata:', {
       hasEvaluationMetadata: !!program.metadata?.evaluationMetadata,
-      hasQualitativeFeedback: !!(program.metadata as any)?.evaluationMetadata?.qualitativeFeedback,
-      feedbackKeys: Object.keys((program.metadata as any)?.evaluationMetadata?.qualitativeFeedback || {})
+      hasQualitativeFeedback: !!(program.metadata as Record<string, unknown>)?.evaluationMetadata?.qualitativeFeedback,
+      feedbackKeys: Object.keys((program.metadata as Record<string, unknown>)?.evaluationMetadata?.qualitativeFeedback || {})
     });
     
     // If no evaluation, log error and return empty data
@@ -204,16 +204,11 @@ export async function GET(request: NextRequest) {
       tasks: tasksWithDetails,
       // Always return the full multi-language feedback structure
       // This allows the UI to detect which languages have feedback
-      // Check both evaluation metadata and program metadata for feedback
-      qualitativeFeedback: evaluation?.metadata?.qualitativeFeedback || 
-                          program.metadata?.evaluationMetadata?.qualitativeFeedback || 
-                          null,
+      // Read feedback from evaluation metadata only (single source of truth)
+      qualitativeFeedback: evaluation?.metadata?.qualitativeFeedback || null,
       feedbackLanguage: language,
-      feedbackLanguages: evaluation?.metadata?.generatedLanguages || 
-                        program.metadata?.evaluationMetadata?.generatedLanguages || 
-                        [],
-      feedbackGeneratedAt: evaluation?.metadata?.qualitativeFeedback?.[language]?.generatedAt ||
-                          (program.metadata?.evaluationMetadata?.qualitativeFeedback as Record<string, any>)?.[language]?.generatedAt,
+      feedbackLanguages: evaluation?.metadata?.generatedLanguages || [],
+      feedbackGeneratedAt: evaluation?.metadata?.qualitativeFeedback?.[language]?.generatedAt,
       programEvaluationId: evaluation?.id
     };
 

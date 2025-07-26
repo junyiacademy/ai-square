@@ -8,6 +8,7 @@ import { Pool } from 'pg';
 import type { DBEvaluation } from '@/types/database';
 import type { IEvaluation } from '@/types/unified-learning';
 import { BaseEvaluationRepository } from '@/types/unified-learning';
+import type { UpdateEvaluationDto } from '../interfaces';
 import type { UserProgress, Achievement } from '@/lib/repositories/interfaces';
 
 export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEvaluation> {
@@ -408,6 +409,78 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
       endDate.toISOString()
     ]);
     return rows.map(row => this.toEvaluation(row));
+  }
+
+  // Update evaluation
+  async update(id: string, data: UpdateEvaluationDto): Promise<IEvaluation> {
+    const updates: string[] = [];
+    const values: unknown[] = [];
+    let paramIndex = 1;
+
+    if (data.score !== undefined) {
+      updates.push(`score = $${paramIndex}`);
+      values.push(data.score);
+      paramIndex++;
+    }
+
+    if (data.maxScore !== undefined) {
+      updates.push(`max_score = $${paramIndex}`);
+      values.push(data.maxScore);
+      paramIndex++;
+    }
+
+    if (data.domainScores !== undefined) {
+      updates.push(`domain_scores = $${paramIndex}`);
+      values.push(data.domainScores);
+      paramIndex++;
+    }
+
+    if (data.feedbackText !== undefined) {
+      updates.push(`feedback_text = $${paramIndex}`);
+      values.push(data.feedbackText);
+      paramIndex++;
+    }
+
+    if (data.feedbackData !== undefined) {
+      updates.push(`feedback_data = $${paramIndex}`);
+      values.push(data.feedbackData);
+      paramIndex++;
+    }
+
+    if (data.aiAnalysis !== undefined) {
+      updates.push(`ai_analysis = $${paramIndex}`);
+      values.push(data.aiAnalysis);
+      paramIndex++;
+    }
+
+    if (data.metadata !== undefined) {
+      updates.push(`metadata = $${paramIndex}`);
+      values.push(data.metadata);
+      paramIndex++;
+    }
+
+    if (updates.length === 0) {
+      const evaluation = await this.findById(id);
+      if (!evaluation) {
+        throw new Error('Evaluation not found');
+      }
+      return evaluation;
+    }
+
+    values.push(id);
+    const query = `
+      UPDATE evaluations
+      SET ${updates.join(', ')}
+      WHERE id = $${paramIndex}
+      RETURNING *
+    `;
+
+    const { rows } = await this.pool.query<DBEvaluation>(query, values);
+    if (rows.length === 0) {
+      throw new Error('Evaluation not found');
+    }
+
+    return this.toEvaluation(rows[0]);
   }
 
   // Get average scores by evaluation type

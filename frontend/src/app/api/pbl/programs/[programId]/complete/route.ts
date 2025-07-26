@@ -1,16 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import crypto from 'crypto';
-import { Pool } from 'pg';
-
-// Create a pool for direct database operations
-const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '5432'),
-  database: process.env.DB_NAME || 'ai_square_db',
-  user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || '',
-});
 
 // Helper function to generate sync checksum
 interface TaskWithEvaluation {
@@ -36,6 +26,23 @@ async function generateSyncChecksum(tasks: TaskWithEvaluation[]): Promise<string
     .update(JSON.stringify(checksumData))
     .digest('hex')
     .substring(0, 8);
+}
+
+// Helper function to clear feedback validity flags
+function clearFeedbackFlags(qualitativeFeedback: Record<string, unknown> | undefined | null): Record<string, unknown> {
+  if (!qualitativeFeedback || typeof qualitativeFeedback !== 'object') {
+    return {};
+  }
+  
+  const clearedFeedback: Record<string, unknown> = {};
+  Object.keys(qualitativeFeedback).forEach(lang => {
+    clearedFeedback[lang] = {
+      ...qualitativeFeedback[lang],
+      isValid: false
+    };
+  });
+  
+  return clearedFeedback;
 }
 
 // POST - 計算或更新 Program Evaluation
@@ -251,18 +258,30 @@ export async function POST(
       const existing = await evalRepo.findById(programEvaluationId);
       if (existing && (existing.score !== overallScore || existing.metadata?.evaluatedTaskCount !== evaluatedTasks.length)) {
         updateReason = 'score_update';
-        // Since we can't update, we'll delete the old one and create a new one
-        // First, delete the old evaluation
-        await pool.query('DELETE FROM evaluations WHERE id = $1', [programEvaluationId]);
-        // Clear the evaluationId from program metadata
-        await programRepo.update?.(programId, {
+        // Update the existing evaluation
+        programEvaluation = await evalRepo.update?.(programEvaluationId, {
+          score: overallScore,
+          domainScores: domainScores,
           metadata: {
-            ...program.metadata,
-            evaluationId: null
+            ...existing.metadata,
+            overallScore,
+            totalTimeSeconds,
+            evaluatedTasks: evaluatedTasks.length,
+            totalTasks,
+            domainScores,
+            ksaScores,
+            // Update sync fields
+            isLatest: true,
+            syncChecksum,
+            evaluatedTaskCount: evaluatedTasks.length,
+            lastSyncedAt: new Date().toISOString(),
+            // Clear feedback flags to trigger regeneration
+            qualitativeFeedback: clearFeedbackFlags(existing.metadata?.qualitativeFeedback as Record<string, unknown>),
+            conversationInsights: {
+              totalConversations: conversationCount
+            }
           }
-        });
-        // Set programEvaluation to null to create a new one
-        programEvaluation = null;
+        }) || existing;
       } else {
         programEvaluation = existing;
       }

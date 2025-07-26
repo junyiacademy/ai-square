@@ -313,12 +313,9 @@ export async function POST(request: NextRequest) {
         }
       };
       
-      // Store updated feedback in program metadata since evalRepo doesn't have update
-      await programRepo.update?.(program.id, {
-        metadata: {
-          ...program.metadata,
-          evaluationMetadata: updatedMetadata
-        }
+      // Update evaluation metadata directly
+      await evalRepo.update?.(evaluation.id, {
+        metadata: updatedMetadata
       });
       
       // Update local evaluation object
@@ -350,14 +347,11 @@ export async function POST(request: NextRequest) {
         clearedFeedback[lang] = { isValid: false };
       });
       
-      // Update program metadata to invalidate all feedback
-      await programRepo.update?.(program.id, {
+      // Update evaluation metadata to invalidate all feedback
+      await evalRepo.update?.(evaluation.id, {
         metadata: {
-          ...program.metadata,
-          evaluationMetadata: {
-            ...evaluation.metadata,
-            qualitativeFeedback: clearedFeedback
-          }
+          ...evaluation.metadata,
+          qualitativeFeedback: clearedFeedback
         }
       });
       
@@ -558,18 +552,15 @@ Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLan
       }
     };
     
-    // Store updated feedback in program metadata since evalRepo doesn't have update
-    await programRepo.update?.(program.id, {
+    // Store updated feedback in evaluation metadata
+    await evalRepo.update?.(evaluation.id, {
       metadata: {
-        ...program.metadata,
-        evaluationMetadata: {
-          ...evaluation.metadata,
-          qualitativeFeedback: updatedQualitativeFeedback,
-          generatedLanguages: [
-            ...(evaluation.metadata?.generatedLanguages || []).filter((l: string) => l !== currentLang),
-            currentLang
-          ]
-        }
+        ...evaluation.metadata,
+        qualitativeFeedback: updatedQualitativeFeedback,
+        generatedLanguages: [
+          ...(evaluation.metadata?.generatedLanguages || []).filter((l: string) => l !== currentLang),
+          currentLang
+        ]
       }
     });
     
