@@ -547,9 +547,9 @@ Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLan
     
     // Save feedback to evaluation with language info
     // Keep existing feedback for other languages unless they were invalidated
-    const existingQualitativeFeedback = evaluation.metadata?.qualitativeFeedback as Record<string, unknown> || {};
+    const currentQualitativeFeedback = evaluation.metadata?.qualitativeFeedback as Record<string, unknown> || {};
     const updatedQualitativeFeedback = {
-      ...existingQualitativeFeedback,
+      ...currentQualitativeFeedback,
       [currentLang]: {
         content: feedback,
         generatedAt: new Date().toISOString(),
