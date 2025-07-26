@@ -96,9 +96,13 @@ export async function POST(
     const totalTasks = tasks.length;
     
     // Calculate overall score
-    const overallScore = evaluatedTasks.length > 0
+    const validScores = evaluatedTasks
+      .map(te => te.evaluation?.score)
+      .filter(score => typeof score === 'number' && !isNaN(score));
+    
+    const overallScore = validScores.length > 0
       ? Math.round(
-          evaluatedTasks.reduce((sum, te) => sum + (te.evaluation?.score || 0), 0) / evaluatedTasks.length
+          validScores.reduce((sum, score) => sum + score, 0) / validScores.length
         )
       : 0;
     
@@ -121,7 +125,11 @@ export async function POST(
     
     // Average domain scores
     Object.keys(domainScores).forEach(domain => {
-      domainScores[domain] = Math.round(domainScores[domain] / domainCounts[domain]);
+      if (domainCounts[domain] > 0) {
+        domainScores[domain] = Math.round(domainScores[domain] / domainCounts[domain]);
+      } else {
+        domainScores[domain] = 0;
+      }
     });
     
     // Calculate KSA scores
@@ -217,6 +225,9 @@ export async function POST(
     }
     
     if (!programEvaluation) {
+      // Validate score before creating evaluation
+      const finalScore = typeof overallScore === 'number' && !isNaN(overallScore) ? overallScore : 0;
+      
       // Create new evaluation
       programEvaluation = await evalRepo.create({
         userId: user.id,
@@ -224,7 +235,7 @@ export async function POST(
         mode: 'pbl',
         evaluationType: 'program',
         evaluationSubtype: 'pbl_completion',
-        score: overallScore,
+        score: finalScore,
         maxScore: 100,
         timeTakenSeconds: totalTimeSeconds,
         domainScores: domainScores,

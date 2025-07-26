@@ -2,9 +2,18 @@
 -- Date: 2025-01-26
 -- Purpose: Update column name to follow DDD principles
 
--- Step 1: Rename the column
-ALTER TABLE evaluations 
-RENAME COLUMN dimension_scores TO domain_scores;
+-- Step 1: Rename the column (only if it exists)
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'evaluations' 
+        AND column_name = 'dimension_scores'
+    ) THEN
+        ALTER TABLE evaluations 
+        RENAME COLUMN dimension_scores TO domain_scores;
+    END IF;
+END $$;
 
 -- Step 2: Also rename in programs table if exists
 DO $$
