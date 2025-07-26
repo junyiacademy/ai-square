@@ -109,6 +109,13 @@ export async function GET(request: NextRequest) {
       debug: completeData.debug
     });
     
+    // Debug program metadata
+    console.log('Completion API - program metadata:', {
+      hasEvaluationMetadata: !!program.metadata?.evaluationMetadata,
+      hasQualitativeFeedback: !!(program.metadata as any)?.evaluationMetadata?.qualitativeFeedback,
+      feedbackKeys: Object.keys((program.metadata as any)?.evaluationMetadata?.qualitativeFeedback || {})
+    });
+    
     // If no evaluation, log error and return empty data
     if (!evaluation) {
       console.error('Completion API - No evaluation found after complete API call');
