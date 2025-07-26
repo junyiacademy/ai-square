@@ -30,9 +30,9 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
       evaluationType: row.evaluation_type,
       evaluationSubtype: row.evaluation_subtype || undefined,
       
-      // Scoring
-      score: row.score,
-      maxScore: row.max_score,
+      // Scoring - PostgreSQL returns DECIMAL as string, convert to number
+      score: typeof row.score === 'string' ? parseFloat(row.score) : row.score,
+      maxScore: typeof row.max_score === 'string' ? parseFloat(row.max_score) : row.max_score,
       
       // Multi-dimensional scoring
       domainScores: row.domain_scores,
@@ -46,8 +46,10 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
       aiModel: row.ai_model || undefined,
       aiAnalysis: row.ai_analysis,
       
-      // Time tracking
-      timeTakenSeconds: row.time_taken_seconds,
+      // Time tracking - convert string to number if needed
+      timeTakenSeconds: row.time_taken_seconds 
+        ? (typeof row.time_taken_seconds === 'string' ? parseInt(row.time_taken_seconds) : row.time_taken_seconds)
+        : undefined,
       
       // Timestamps
       createdAt: row.created_at,

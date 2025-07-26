@@ -95,10 +95,17 @@ export async function POST(
     const evaluatedTasks = taskEvaluations.filter(te => te.evaluation !== null);
     const totalTasks = tasks.length;
     
-    // Calculate overall score
+    // Calculate overall score - handle both number and string scores from DB
     const validScores = evaluatedTasks
-      .map(te => te.evaluation?.score)
-      .filter(score => typeof score === 'number' && !isNaN(score));
+      .map(te => {
+        const score = te.evaluation?.score;
+        // Convert string scores from PostgreSQL to numbers
+        if (typeof score === 'string') {
+          return parseFloat(score);
+        }
+        return score;
+      })
+      .filter(score => typeof score === 'number' && !isNaN(score) && score >= 0);
     
     console.log('Complete route - score calculation:', {
       evaluatedTasksCount: evaluatedTasks.length,
@@ -107,7 +114,8 @@ export async function POST(
       taskEvaluations: evaluatedTasks.map(te => ({
         taskId: te.task.id,
         evaluationId: te.evaluation?.id,
-        score: te.evaluation?.score
+        score: te.evaluation?.score,
+        scoreType: typeof te.evaluation?.score
       }))
     });
     
