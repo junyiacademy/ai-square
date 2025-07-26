@@ -294,7 +294,12 @@ export async function POST(request: NextRequest) {
     const currentLang = language || getLanguageFromHeader(request);
     
     // If forceRegenerate, mark existing feedback for current language as invalid
-    const existingQualitativeFeedback = evaluation.metadata?.qualitativeFeedback as Record<string, { content?: QualitativeFeedback; isValid?: boolean; generatedAt?: string }> | undefined;
+    const existingQualitativeFeedback = evaluation.metadata?.qualitativeFeedback as Record<string, { 
+      content?: QualitativeFeedback; 
+      isValid?: boolean; 
+      generatedAt?: string;
+      evaluationVersion?: string;
+    }> | undefined;
     if (forceRegenerate && existingQualitativeFeedback?.[currentLang]) {
       // Mark the feedback as invalid to trigger regeneration
       const updatedMetadata = {
@@ -321,14 +326,32 @@ export async function POST(request: NextRequest) {
     }
     
     // Check if valid feedback already exists for current language
-    const feedbackData = evaluation.metadata?.qualitativeFeedback as Record<string, { content?: QualitativeFeedback; isValid?: boolean; generatedAt?: string }> | undefined;
+    const feedbackData = evaluation.metadata?.qualitativeFeedback as Record<string, { 
+      content?: QualitativeFeedback; 
+      isValid?: boolean; 
+      generatedAt?: string;
+      evaluationVersion?: string;
+    }> | undefined;
     const existingFeedback = feedbackData?.[currentLang];
-    if (!forceRegenerate && existingFeedback?.isValid && existingFeedback?.content) {
+    
+    // Check if feedback needs regeneration due to evaluation updates
+    const currentEvaluationVersion = evaluation.metadata?.lastSyncedAt || evaluation.createdAt;
+    const feedbackOutdated = existingFeedback?.evaluationVersion && 
+                            currentEvaluationVersion && 
+                            new Date(currentEvaluationVersion) > new Date(existingFeedback.evaluationVersion);
+    
+    if (!forceRegenerate && existingFeedback?.isValid && existingFeedback?.content && !feedbackOutdated) {
       return NextResponse.json({
         success: true,
         feedback: existingFeedback.content,
         cached: true,
-        language: currentLang
+        language: currentLang,
+        debug: {
+          feedbackGeneratedAt: existingFeedback.generatedAt,
+          evaluationVersion: existingFeedback.evaluationVersion,
+          currentEvaluationVersion,
+          outdated: feedbackOutdated
+        }
       });
     }
     
@@ -503,7 +526,8 @@ Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLan
       [currentLang]: {
         content: feedback,
         generatedAt: new Date().toISOString(),
-        isValid: true
+        isValid: true,
+        evaluationVersion: evaluation.metadata?.lastSyncedAt || evaluation.createdAt
       }
     };
     
