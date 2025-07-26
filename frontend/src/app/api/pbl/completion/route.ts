@@ -197,10 +197,16 @@ export async function GET(request: NextRequest) {
       tasks: tasksWithDetails,
       // Always return the full multi-language feedback structure
       // This allows the UI to detect which languages have feedback
-      qualitativeFeedback: evaluation?.metadata?.qualitativeFeedback || null,
+      // Check both evaluation metadata and program metadata for feedback
+      qualitativeFeedback: evaluation?.metadata?.qualitativeFeedback || 
+                          program.metadata?.evaluationMetadata?.qualitativeFeedback || 
+                          null,
       feedbackLanguage: language,
-      feedbackLanguages: evaluation?.metadata?.generatedLanguages || [],
-      feedbackGeneratedAt: evaluation?.metadata?.qualitativeFeedback?.[language]?.generatedAt,
+      feedbackLanguages: evaluation?.metadata?.generatedLanguages || 
+                        program.metadata?.evaluationMetadata?.generatedLanguages || 
+                        [],
+      feedbackGeneratedAt: evaluation?.metadata?.qualitativeFeedback?.[language]?.generatedAt ||
+                          (program.metadata?.evaluationMetadata?.qualitativeFeedback as Record<string, any>)?.[language]?.generatedAt,
       programEvaluationId: evaluation?.id
     };
 
