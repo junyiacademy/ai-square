@@ -211,7 +211,7 @@ async function testDatabaseFunctionality() {
 
       let viewTestsPassed = 0;
       for (const viewQuery of viewTests) {
-        const result = await pool.query(viewQuery);
+        await pool.query(viewQuery);
         viewTestsPassed++;
       }
 

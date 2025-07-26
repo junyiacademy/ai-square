@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import 'dotenv/config';
-import { chromium, Browser, Page } from 'playwright';
+import { chromium, Browser } from 'playwright';
 import { Pool } from 'pg';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -81,7 +81,7 @@ async function setupDetailedTestData() {
     // 2. Create scenarios for each mode with proper data
     console.log('2️⃣ 創建各模式的測試情境...');
     const modes = ['pbl', 'assessment', 'discovery'];
-    const createdScenarios: Record<string, any[]> = { pbl: [], assessment: [], discovery: [] };
+    const createdScenarios: Record<string, Array<Record<string, unknown>>> = { pbl: [], assessment: [], discovery: [] };
     
     for (const mode of modes) {
       console.log(`   創建 ${mode.toUpperCase()} 情境...`);
@@ -91,7 +91,7 @@ async function setupDetailedTestData() {
         const scenarioId = uuidv4();
         
         // Mode-specific data
-        const modeData: any = {};
+        const modeData: Record<string, unknown> = {};
         if (mode === 'pbl') {
           modeData.pbl_data = {
             ksaMapping: {
@@ -219,7 +219,7 @@ async function setupDetailedTestData() {
 }
 
 // Detailed browser tests
-async function runDetailedTests(browser: Browser, testData: any) {
+async function runDetailedTests(browser: Browser, _testData: Record<string, unknown>) {
   const page = await browser.newPage();
   console.log('\n🌐 開始詳細的瀏覽器測試...\n');
   
@@ -655,8 +655,8 @@ function generateDetailedReport() {
   console.log('\n' + '='.repeat(80));
   
   // Save detailed report
-  const fs = require('fs');
-  fs.writeFileSync(
+  const { promises: fs } = await import('fs');
+  await fs.writeFile(
     'test-results/detailed-test-report.json',
     JSON.stringify({
       timestamp: new Date().toISOString(),
@@ -693,9 +693,9 @@ async function main() {
     });
     
     // Create screenshots directory
-    const fs = require('fs');
-    if (!fs.existsSync('test-screenshots')) {
-      fs.mkdirSync('test-screenshots');
+    const { existsSync, mkdirSync } = await import('fs');
+    if (!existsSync('test-screenshots')) {
+      mkdirSync('test-screenshots');
     }
     
     // Run detailed tests
