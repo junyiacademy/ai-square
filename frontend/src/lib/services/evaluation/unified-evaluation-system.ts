@@ -9,11 +9,10 @@ import {
   ITask, 
   IProgram, 
   IEvaluationContext,
-  IDimensionScore,
   IInteraction
 } from '@/types/unified-learning';
 import { BaseAIService } from '@/lib/abstractions/base-ai-service';
-import type { SourceType, LearningMode } from '@/types/database';
+import type { LearningMode } from '@/types/database';
 import { v4 as uuidv4 } from 'uuid';
 
 export class UnifiedEvaluationSystem implements IEvaluationSystem {
@@ -71,7 +70,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
     });
 
     // Store detailed dimension data in metadata
-    const aggregatedDimensions: IDimensionScore[] = Array.from(dimensionMap.entries()).map(([dimension, data]) => ({
+    const aggregatedDimensions: { dimension: string; score: number; feedback: string; maxScore?: number }[] = Array.from(dimensionMap.entries()).map(([dimension, data]) => ({
       dimension,
       score: data.total / data.count,
       maxScore: data.maxTotal / data.count,
@@ -165,7 +164,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       createdAt: new Date().toISOString(),
       metadata: {
         interactionCount: interactions.length,
-        ksaCodes: (task.content.context as any)?.ksaCodes || [],
+        ksaCodes: (task.content.context as Record<string, unknown>)?.ksaCodes as string[] || [],
         sourceType: 'pbl',
         targetType: 'task'
       }
@@ -177,7 +176,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
    */
   private async evaluateAssessmentTask(task: ITask, context: IEvaluationContext): Promise<IEvaluation> {
     const interactions = task.interactions;
-    const questions = (task.content.context as any)?.questions || [];
+    const questions = (task.content.context as Record<string, unknown>)?.questions as unknown[] || [];
     
     // 計算正確率
     const correctAnswers = interactions.filter(i => 
@@ -187,7 +186,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
     const score = questions.length > 0 ? (correctAnswers / questions.length) * 100 : 0;
 
     // 領域分數
-    const domainScores = this.calculateDomainScores(interactions, questions);
+    const domainScores = this.calculateDomainScores(interactions, questions as { [key: string]: unknown; domain?: string }[]);
 
     return {
       id: uuidv4(),
@@ -246,7 +245,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       pblData: {},
       discoveryData: {
         xpEarned,
-        skillsImproved: (task.content as any).context?.requiredSkills || []
+        skillsImproved: ((task.content as Record<string, unknown>).context as Record<string, unknown>)?.requiredSkills as string[] || []
       },
       assessmentData: {},
       createdAt: new Date().toISOString(),

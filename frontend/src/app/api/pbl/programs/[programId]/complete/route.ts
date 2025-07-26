@@ -36,8 +36,9 @@ function clearFeedbackFlags(qualitativeFeedback: Record<string, unknown> | undef
   
   const clearedFeedback: Record<string, unknown> = {};
   Object.keys(qualitativeFeedback).forEach(lang => {
+    const langFeedback = qualitativeFeedback[lang];
     clearedFeedback[lang] = {
-      ...qualitativeFeedback[lang],
+      ...(typeof langFeedback === 'object' && langFeedback !== null ? langFeedback : {}),
       isValid: false
     };
   });
@@ -137,7 +138,7 @@ export async function POST(
     
     const overallScore = validScores.length > 0
       ? Math.round(
-          validScores.reduce((sum, score) => sum + score, 0) / validScores.length
+          (validScores as number[]).reduce((sum: number, score: number) => sum + score, 0) / validScores.length
         )
       : 0;
     

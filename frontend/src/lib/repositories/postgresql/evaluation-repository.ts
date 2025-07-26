@@ -49,8 +49,8 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
       
       // Time tracking - convert string to number if needed
       timeTakenSeconds: row.time_taken_seconds 
-        ? (typeof row.time_taken_seconds === 'string' ? parseInt(row.time_taken_seconds) : row.time_taken_seconds)
-        : undefined,
+        ? (typeof row.time_taken_seconds === 'string' ? parseInt(row.time_taken_seconds) || 0 : row.time_taken_seconds)
+        : 0,
       
       // Timestamps
       createdAt: row.created_at,
@@ -248,11 +248,11 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
         totalXpEarned: xpData?.total_xp || 0,
         averageScore: parseFloat(taskStats.avg_score) || 0,
         timeSpentSeconds: parseInt(taskStats.total_time) || 0,
-        achievements: achievements.map((a: { id: string; code: string; name: string; description: string; earned_at: Date }) => ({
+        achievements: achievements.map((a: { id: string; code: string; name: string; description: string; earned_at: Date; type?: string; xp_reward?: number }) => ({
           id: a.id,
           code: a.code,
-          type: a.type,
-          xpReward: a.xp_reward,
+          type: a.type || 'achievement',
+          xpReward: a.xp_reward || 0,
           earnedAt: new Date(a.earned_at)
         })) as Achievement[]
       };

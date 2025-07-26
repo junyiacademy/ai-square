@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { IScenario } from '@/types/unified-learning';
 import { getServerSession } from '@/lib/auth/session';
+import path from 'path';
+import { promises as fs } from 'fs';
+import { parse as yamlParse } from 'yaml';
 
 interface AssessmentConfig {
   title?: string;
@@ -120,7 +123,7 @@ export async function GET(request: NextRequest) {
             // Try language-specific file first
             try {
               const configContent = await fs.readFile(configPath, 'utf-8');
-              const yamlData = yaml.load(configContent) as { config?: AssessmentConfig; assessment_config?: AssessmentConfig };
+              const yamlData = yamlParse(configContent) as { config?: AssessmentConfig; assessment_config?: AssessmentConfig };
               config = yamlData.config || yamlData.assessment_config || {};
               yamlPath = `assessment_data/${folderName}/${folderName}_questions_${lang}.yaml`;
               console.log(`Loaded ${lang} config for ${folderName}:`, config);
@@ -128,7 +131,7 @@ export async function GET(request: NextRequest) {
               // Fallback to English if language-specific file doesn't exist
               console.log(`No ${lang} config found, trying English fallback`);
               const configContent = await fs.readFile(fallbackPath, 'utf-8');
-              const yamlData = yaml.load(configContent) as { config?: AssessmentConfig; assessment_config?: AssessmentConfig };
+              const yamlData = yamlParse(configContent) as { config?: AssessmentConfig; assessment_config?: AssessmentConfig };
               config = yamlData.config || yamlData.assessment_config || {};
               yamlPath = `assessment_data/${folderName}/${folderName}_questions_en.yaml`;
               console.log(`Loaded English config for ${folderName}:`, config);
@@ -217,11 +220,7 @@ export async function GET(request: NextRequest) {
     // Filter out any null results
     const validScenarios = scenarios.filter(s => s !== null);
     
-    // Update cache
-    scenariosCache = {
-      data: validScenarios,
-      timestamp: now
-    };
+    // Cache removed - using database for data consistency
     
     // Add user progress if authenticated
     const scenariosWithProgress = validScenarios.map(scenario => ({

@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
 
     // Load assessment scenarios from database
     const scenarioRepo = repositoryFactory.getScenarioRepository();
-    const scenarios = await scenarioRepo.findByMode('assessment');
+    const scenarios = await scenarioRepo.findByMode?.('assessment') || [];
     
     if (!scenarios || scenarios.length === 0) {
       return NextResponse.json(
@@ -51,12 +51,10 @@ export async function GET(request: NextRequest) {
       };
       
       // Get questions from assessment data based on language
-      let rawQuestions = [];
+      let rawQuestions: Record<string, unknown>[] = [];
       if (activeScenario.assessmentData?.questions) {
-        // Questions are stored by language
-        rawQuestions = activeScenario.assessmentData.questions[lang] || 
-                      activeScenario.assessmentData.questions['en'] || 
-                      [];
+        const questionsData = activeScenario.assessmentData.questions as Record<string, Record<string, unknown>[]>;
+        rawQuestions = questionsData[lang] || questionsData['en'] || [];
       } else if (activeScenario.taskTemplates) {
         // Fallback to task templates
         rawQuestions = activeScenario.taskTemplates;
@@ -73,9 +71,17 @@ export async function GET(request: NextRequest) {
       // Process questions to ensure they have the correct structure
       const processedQuestions = rawQuestions.map((q: Record<string, unknown>) => {
         // Handle multilingual fields
-        const question = typeof q.question === 'object' ? q.question[lang] || q.question.en : q.question;
+        const questionObj = q.question as Record<string, unknown> | string | null;
+        const question = typeof questionObj === 'object' && questionObj !== null 
+          ? (questionObj[lang] as string) || (questionObj['en'] as string) || ''
+          : (questionObj as string) || '';
+        
         const options = q.options;
-        const explanation = typeof q.explanation === 'object' ? q.explanation[lang] || q.explanation.en : q.explanation;
+        
+        const explanationObj = q.explanation as Record<string, unknown> | string | null;
+        const explanation = typeof explanationObj === 'object' && explanationObj !== null
+          ? (explanationObj[lang] as string) || (explanationObj['en'] as string) || ''
+          : (explanationObj as string) || '';
         
         return {
           ...q,

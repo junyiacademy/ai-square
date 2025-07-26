@@ -110,10 +110,12 @@ export async function GET(request: NextRequest) {
     });
     
     // Debug program metadata
+    const metadata = program.metadata as Record<string, unknown> | undefined;
+    const evaluationMetadata = metadata?.evaluationMetadata as Record<string, unknown> | undefined;
     console.log('Completion API - program metadata:', {
-      hasEvaluationMetadata: !!program.metadata?.evaluationMetadata,
-      hasQualitativeFeedback: !!(program.metadata as Record<string, unknown>)?.evaluationMetadata?.qualitativeFeedback,
-      feedbackKeys: Object.keys((program.metadata as Record<string, unknown>)?.evaluationMetadata?.qualitativeFeedback || {})
+      hasEvaluationMetadata: !!evaluationMetadata,
+      hasQualitativeFeedback: !!evaluationMetadata?.qualitativeFeedback,
+      feedbackKeys: Object.keys((evaluationMetadata?.qualitativeFeedback as Record<string, unknown>) || {})
     });
     
     // If no evaluation, log error and return empty data

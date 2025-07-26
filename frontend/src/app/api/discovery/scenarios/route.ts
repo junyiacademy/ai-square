@@ -12,7 +12,7 @@ import { IScenario } from '@/types/unified-learning';
  * 獲取所有 Discovery Scenarios
  */
 // 簡單的記憶體快取
-let cachedScenarios: IScenario[] | null = null;
+let cachedScenarios: unknown[] | null = null;
 let cacheTimestamp: number = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 分鐘
 

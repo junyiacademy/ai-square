@@ -31,16 +31,13 @@ export async function POST() {
     // Step 1: Connect to postgres database to create our database
     const adminPoolConfig = {
       host: dbHost,
-      database: 'postgres', // Connect to default postgres database
+      database: 'postgres',
       user: dbUser,
       password: dbPassword,
       max: 1,
       connectionTimeoutMillis: 10000,
+      ...(isCloudSQL ? {} : { port: parseInt(process.env.DB_PORT || '5432') })
     };
-    
-    if (!isCloudSQL) {
-      adminPoolConfig.port = parseInt(process.env.DB_PORT || '5432');
-    }
 
     console.log('Connecting to postgres database to create database...');
     const adminPool = new Pool(adminPoolConfig);
@@ -72,11 +69,8 @@ export async function POST() {
       password: dbPassword,
       max: 5,
       connectionTimeoutMillis: 10000,
+      ...(isCloudSQL ? {} : { port: parseInt(process.env.DB_PORT || '5432') })
     };
-    
-    if (!isCloudSQL) {
-      appPoolConfig.port = parseInt(process.env.DB_PORT || '5432');
-    }
 
     console.log(`Connecting to ${dbName} database to create schema...`);
     const appPool = new Pool(appPoolConfig);

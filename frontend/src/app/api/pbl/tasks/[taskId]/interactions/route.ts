@@ -3,7 +3,7 @@ import { getServerSession } from '@/lib/auth/session';
 import { cachedGET } from '@/lib/api/optimization-utils';
 import { cacheService } from '@/lib/cache/cache-service';
 import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
-import type { IInteraction } from '@/lib/repositories/interfaces';
+import type { Interaction } from '@/lib/repositories/interfaces';
 
 // POST - Add interaction to task
 export async function POST(
@@ -42,7 +42,7 @@ export async function POST(
       const currentInteractions = task.interactions || [];
       
       // Add the new interaction with consistent format
-      const newInteraction: IInteraction = {
+      const newInteraction: Interaction = {
         timestamp: interaction.timestamp || new Date().toISOString(),
         type: interaction.type === 'user' ? 'user_input' : 
               interaction.type === 'ai' ? 'ai_response' : 
@@ -131,7 +131,7 @@ export async function GET(
     const interactions = task.interactions || [];
     
     // Transform interactions for frontend compatibility
-    const transformedInteractions = interactions.map((i: IInteraction) => ({
+    const transformedInteractions = interactions.map((i: Interaction) => ({
       id: `${task.id}_${i.timestamp}`,
       type: i.type === 'user_input' ? 'user' : 
             i.type === 'ai_response' ? 'ai' : 

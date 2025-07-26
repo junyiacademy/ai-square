@@ -51,8 +51,9 @@ function LoginContent() {
         }
         
         // Default navigation based on onboarding status
-        const onboarding = result.user?.onboarding || {};
-        const hasAssessment = result.user?.assessmentCompleted || false;
+        const userData = result.user as unknown as { onboarding?: Record<string, boolean>; assessmentCompleted?: boolean };
+        const onboarding = userData?.onboarding || {};
+        const hasAssessment = userData?.assessmentCompleted || false;
         console.log('User status:', { onboarding, hasAssessment })
         
         // Navigate based on actual progress

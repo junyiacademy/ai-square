@@ -8,7 +8,6 @@ import {
   IProgram, 
   IEvaluation, 
   IEvaluationContext,
-  IDimensionScore,
   IInteraction 
 } from '@/types/unified-learning';
 import {
@@ -197,7 +196,7 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
     };
   }
 
-  private calculateKSADimensions(metrics: QualityMetrics, {}: IPBLTask): IDimensionScore[] {
+  private calculateKSADimensions(metrics: QualityMetrics, {}: IPBLTask): { dimension: string; score: number; feedback: string; maxScore?: number }[] {
     const baseScore = (metrics.interactionDepth + metrics.responseQuality + metrics.engagementLevel) / 3;
     
     return [
@@ -222,7 +221,7 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
     ];
   }
 
-  private aggregateKSADimensions(evaluations: IEvaluation[]): IDimensionScore[] {
+  private aggregateKSADimensions(evaluations: IEvaluation[]): { dimension: string; score: number; feedback: string; maxScore?: number }[] {
     const dimensionMap = new Map<string, { total: number; count: number }>();
     
     evaluations.forEach(evaluation => {
@@ -285,7 +284,7 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
     return Array.from(ksaSet);
   }
 
-  private convertDimensionScoresToRecord(domainScores: IDimensionScore[]): Record<string, number> {
+  private convertDimensionScoresToRecord(domainScores: { dimension: string; score: number; feedback: string; maxScore?: number }[]): Record<string, number> {
     return domainScores.reduce((acc, score) => {
       acc[score.dimension] = score.score;
       return acc;
@@ -445,7 +444,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
     return Math.round((end - start) / 1000); // seconds
   }
 
-  private convertDomainScoresToDimensions(domainScores: Record<string, { correct: number; total: number }>): IDimensionScore[] {
+  private convertDomainScoresToDimensions(domainScores: Record<string, { correct: number; total: number }>): { dimension: string; score: number; feedback: string; maxScore?: number }[] {
     return Object.entries(domainScores).map(([domain, scores]) => ({
       dimension: domain,
       score: Math.round((scores.correct / scores.total) * 100),
@@ -454,12 +453,12 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
     }));
   }
 
-  private aggregateDomainScores(evaluations: IEvaluation[]): IDimensionScore[] {
+  private aggregateDomainScores(evaluations: IEvaluation[]): { dimension: string; score: number; feedback: string; maxScore?: number }[] {
     const domainMap = new Map<string, { totalScore: number; count: number }>();
     
     evaluations.forEach(evaluation => {
       if (evaluation.domainScores && Array.isArray(evaluation.domainScores)) {
-        evaluation.domainScores.forEach((dimScore: IDimensionScore) => {
+        evaluation.domainScores.forEach((dimScore: { dimension: string; score: number; feedback: string; maxScore?: number }) => {
           const existing = domainMap.get(dimScore.dimension) || { totalScore: 0, count: 0 };
           existing.totalScore += dimScore.score;
           existing.count += 1;
@@ -486,7 +485,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
     return evaluations.reduce((sum, e) => sum + ((e.metadata?.totalQuestions as number) || 0), 0);
   }
 
-  private identifyCompetencyGaps(domainScores: Record<string, number> | IDimensionScore[]): string[] {
+  private identifyCompetencyGaps(domainScores: Record<string, number> | { dimension: string; score: number; feedback: string; maxScore?: number }[]): string[] {
     const scores = Array.isArray(domainScores) 
       ? this.convertDimensionScoresToRecord(domainScores)
       : domainScores;
@@ -495,7 +494,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
       .map(([dimension]) => dimension);
   }
 
-  private convertDimensionScoresToRecord(domainScores: IDimensionScore[]): Record<string, number> {
+  private convertDimensionScoresToRecord(domainScores: { dimension: string; score: number; feedback: string; maxScore?: number }[]): Record<string, number> {
     return domainScores.reduce((acc, score) => {
       acc[score.dimension] = score.score;
       return acc;

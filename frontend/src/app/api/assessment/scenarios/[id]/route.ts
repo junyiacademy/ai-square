@@ -27,12 +27,16 @@ export async function GET(
     if (scenario.taskTemplates && Array.isArray(scenario.taskTemplates)) {
       // Calculate total questions from all tasks
       const totalQuestions = scenario.taskTemplates.reduce((sum, task) => {
-        return sum + (task.content?.questions?.length || 0);
+        const taskData = task as Record<string, unknown>;
+        const content = taskData.content as { questions?: unknown[] } | undefined;
+        return sum + (content?.questions?.length || 0);
       }, 0);
       
       // Calculate total time limit from all tasks
       const totalTimeLimit = scenario.taskTemplates.reduce((sum, task) => {
-        return sum + Math.floor((task.context?.timeLimit || 240) / 60); // Convert seconds to minutes
+        const taskData = task as Record<string, unknown>;
+        const context = taskData.context as { timeLimit?: number } | undefined;
+        return sum + Math.floor((context?.timeLimit || 240) / 60);
       }, 0);
       
       config = {

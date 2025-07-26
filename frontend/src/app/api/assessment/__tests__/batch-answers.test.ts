@@ -59,7 +59,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
       })
     });
 
-    const response = await POST(request, {});
+    const response = await POST(request, { params: Promise.resolve({ programId: '123' }) });
     const data = await response.json();
 
     expect(response.status).toBe(200);
@@ -112,7 +112,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
       metadata: {}
     });
 
-    const response = await POST(request, {});
+    const response = await POST(request, { params: Promise.resolve({ programId: '123' }) });
     
     expect(response.status).toBe(200);
   });
@@ -128,7 +128,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
       })
     });
 
-    const response = await POST(request, {});
+    const response = await POST(request, { params: Promise.resolve({ programId: '123' }) });
     const data = await response.json();
 
     expect(response.status).toBe(401);
@@ -141,7 +141,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
       body: JSON.stringify({})
     });
 
-    const response = await POST(request, {});
+    const response = await POST(request, { params: Promise.resolve({ programId: '123' }) });
     const data = await response.json();
 
     expect(response.status).toBe(400);
@@ -165,7 +165,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
       })
     });
 
-    await POST(request, {});
+    await POST(request, { params: Promise.resolve({ programId: '123' }) });
 
     expect(mockTaskRepo.updateStatus).toHaveBeenCalledWith('task-123', 'active');
   });

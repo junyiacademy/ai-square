@@ -500,7 +500,7 @@ describe('/api/pbl/generate-feedback', () => {
         encouragement: "Keep going!"
       };
 
-      mockProgramRepo.findById.mockResolvedValue({
+      mockRepositoryFactory.getProgramRepository().findById.mockResolvedValue({
         id: 'prog123',
         userId: 'test@example.com',
         scenarioId: 'career-advisor',

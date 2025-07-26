@@ -168,7 +168,8 @@ You must always respond with a valid JSON object following the exact schema prov
 
 export async function POST(request: NextRequest) {
   try {
-    const { programId, scenarioId, forceRegenerate = false, language }: GenerateFeedbackBody = await request.json();
+    const { programId, scenarioId, forceRegenerate: originalForceRegenerate = false, language }: GenerateFeedbackBody = await request.json();
+    let forceRegenerate = originalForceRegenerate;
     
     if (!programId || !scenarioId) {
       return NextResponse.json(

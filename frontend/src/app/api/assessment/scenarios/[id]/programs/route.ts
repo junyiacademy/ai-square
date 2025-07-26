@@ -258,7 +258,10 @@ export async function POST(
         const template = scenario.taskTemplates[i];
         
         // Get questions from template content
-        const questions = template.content?.questions || [];
+        const templateData = template as Record<string, unknown>;
+        const content = templateData.content as { questions?: Record<string, unknown>[] } | undefined;
+        const context = templateData.context as { timeLimit?: number } | undefined;
+        const questions = content?.questions || [];
         
         // Apply language-specific content if needed
         const localizedQuestions = questions.map((q: Record<string, unknown>) => ({
@@ -276,7 +279,7 @@ export async function POST(
           taskId: template.id,
           title: template.title,
           questionsCount: localizedQuestions.length,
-          firstQuestion: localizedQuestions[0]?.question?.substring(0, 50) || 'No question'
+          firstQuestion: String(localizedQuestions[0]?.question || 'No question').substring(0, 50)
         });
         
         // Create task from template
@@ -299,7 +302,7 @@ export async function POST(
           maxScore: 100,
           allowedAttempts: 1,
           attemptCount: 0,
-          timeLimitSeconds: template.context?.timeLimit || 240,
+          timeLimitSeconds: context?.timeLimit || 240,
           timeSpentSeconds: 0,
           aiConfig: {},
           createdAt: new Date().toISOString(),
@@ -311,7 +314,7 @@ export async function POST(
             questionsCount: localizedQuestions.length
           },
           metadata: {
-            timeLimit: template.context?.timeLimit || 240,
+            timeLimit: context?.timeLimit || 240,
             language,
             domainId: template.id
           }
