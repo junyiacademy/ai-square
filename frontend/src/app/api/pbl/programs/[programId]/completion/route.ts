@@ -89,8 +89,8 @@ export async function GET(
     const ksaCounts: Record<string, number> = {};
     
     evaluations.forEach(evaluation => {
-      if (evaluation.dimensionScores) {
-        Object.entries(evaluation.dimensionScores).forEach(([dimension, score]: [string, number]) => {
+      if (evaluation.domainScores) {
+        Object.entries(evaluation.domainScores).forEach(([dimension, score]: [string, number]) => {
           if (dimension.includes('_')) {
             // Domain score
             domainScores[dimension] = (domainScores[dimension] || 0) + score;

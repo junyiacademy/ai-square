@@ -101,7 +101,7 @@ describe('UnifiedEvaluationSystem', () => {
         completedTaskCount: 0,
         totalTaskCount: 1,
         totalScore: 0,
-        dimensionScores: {},
+        domainScores: {},
         timeSpentSeconds: 0,
         pblData: {},
         discoveryData: {},
@@ -152,7 +152,7 @@ describe('UnifiedEvaluationSystem', () => {
       expect(evaluation.evaluationType).toBe('task');
       expect(evaluation.evaluationSubtype).toBe('pbl_task');
       expect(evaluation.score).toBeDefined();
-      expect(evaluation.dimensionScores).toBeDefined();
+      expect(evaluation.domainScores).toBeDefined();
       expect(evaluation.metadata?.sourceType).toBe('pbl');
     });
 
@@ -246,7 +246,7 @@ describe('UnifiedEvaluationSystem', () => {
         completedTaskCount: 2,
         totalTaskCount: 2,
         totalScore: 85,
-        dimensionScores: { knowledge: 90, skills: 80 },
+        domainScores: { knowledge: 90, skills: 80 },
         xpEarned: 100,
         badgesEarned: [],
         timeSpentSeconds: 3600,
@@ -272,7 +272,7 @@ describe('UnifiedEvaluationSystem', () => {
           evaluationSubtype: 'task_completion',
           score: 80,
           maxScore: 100,
-          dimensionScores: { knowledge: 85, skills: 75 },
+          domainScores: { knowledge: 85, skills: 75 },
           feedbackData: {},
           aiAnalysis: {},
           timeTakenSeconds: 300,
@@ -292,7 +292,7 @@ describe('UnifiedEvaluationSystem', () => {
           evaluationSubtype: 'task_completion',
           score: 90,
           maxScore: 100,
-          dimensionScores: { knowledge: 95, skills: 85 },
+          domainScores: { knowledge: 95, skills: 85 },
           feedbackData: {},
           aiAnalysis: {},
           timeTakenSeconds: 300,
@@ -310,9 +310,9 @@ describe('UnifiedEvaluationSystem', () => {
       expect(evaluation.programId).toBe('program-1');
       expect(evaluation.evaluationSubtype).toBe('program_completion');
       expect(evaluation.score).toBe(85); // Average of 80 and 90
-      expect(Object.keys(evaluation.dimensionScores)).toHaveLength(2); // Aggregated dimensions
-      expect(evaluation.dimensionScores?.knowledge).toBe(90); // Average of 85 and 95
-      expect(evaluation.dimensionScores?.skills).toBe(80); // Average of 75 and 85
+      expect(Object.keys(evaluation.domainScores)).toHaveLength(2); // Aggregated dimensions
+      expect(evaluation.domainScores?.knowledge).toBe(90); // Average of 85 and 95
+      expect(evaluation.domainScores?.skills).toBe(80); // Average of 75 and 85
       expect(evaluation.metadata?.taskCount).toBe(2);
       expect(evaluation.metadata?.completionTime).toBeGreaterThan(0);
     });
@@ -331,7 +331,7 @@ describe('UnifiedEvaluationSystem', () => {
         score: 85,
         maxScore: 100,
         feedbackText: 'Original feedback',
-        dimensionScores: { knowledge: 85 },
+        domainScores: { knowledge: 85 },
         feedbackData: {},
         aiAnalysis: {},
         timeTakenSeconds: 300,

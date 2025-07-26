@@ -32,7 +32,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
       
       // Scoring
       totalScore: row.total_score,
-      dimensionScores: row.dimension_scores,
+      domainScores: row.domain_scores,
       
       // XP and rewards
       xpEarned: row.xp_earned,
@@ -94,7 +94,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
       INSERT INTO programs (
         user_id, scenario_id, mode, status,
         current_task_index, completed_task_count, total_task_count,
-        total_score, dimension_scores,
+        total_score, domain_scores,
         xp_earned, badges_earned,
         time_spent_seconds,
         pbl_data, discovery_data, assessment_data,
@@ -115,7 +115,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
       program.completedTaskCount || 0,
       program.totalTaskCount,
       program.totalScore || 0,
-      JSON.stringify(program.dimensionScores || {}),
+      JSON.stringify(program.domainScores || {}),
       program.xpEarned || 0,
       JSON.stringify(program.badgesEarned || []),
       program.timeSpentSeconds || 0,
@@ -203,9 +203,9 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
       updateFields.push(`total_score = $${paramCount++}`);
       values.push(updates.totalScore);
     }
-    if (updates.dimensionScores !== undefined) {
-      updateFields.push(`dimension_scores = $${paramCount++}`);
-      values.push(JSON.stringify(updates.dimensionScores));
+    if (updates.domainScores !== undefined) {
+      updateFields.push(`domain_scores = $${paramCount++}`);
+      values.push(JSON.stringify(updates.domainScores));
     }
 
     // XP and rewards

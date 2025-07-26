@@ -196,7 +196,7 @@ export interface UpdateProgramDto {
   currentTaskIndex?: number;
   completedTaskCount?: number;
   totalScore?: number;
-  dimensionScores?: Record<string, number>;
+  domainScores?: Record<string, number>;
   completedAt?: string;
   metadata?: Record<string, unknown>;
   startedAt?: string;
@@ -240,7 +240,7 @@ export interface CreateEvaluationDto {
   evaluationSubtype?: string;
   score: number;
   maxScore: number;
-  dimensionScores?: Record<string, number>;
+  domainScores?: Record<string, number>;
   feedbackText?: string;
   feedbackData?: Record<string, unknown>;
   aiProvider?: string;

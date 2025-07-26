@@ -67,7 +67,7 @@ export async function GET(
         score: evaluation.score,
         max_score: evaluation.maxScore,
         feedback: evaluation.feedbackText,
-        ksa_scores: evaluation.dimensionScores,
+        ksa_scores: evaluation.domainScores,
         metadata: evaluation.metadata
       };
     } else {

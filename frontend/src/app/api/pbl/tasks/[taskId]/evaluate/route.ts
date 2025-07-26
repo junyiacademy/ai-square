@@ -19,6 +19,9 @@ export async function POST(
     const { taskId } = await params;
     const body = await request.json();
     const { evaluation, programId } = body;
+    
+    console.log('POST /api/pbl/tasks/[taskId]/evaluate - Received evaluation:');
+    console.log('  domainScores:', JSON.stringify(evaluation?.domainScores || {}, null, 2));
 
     if (!evaluation) {
       return NextResponse.json(
@@ -54,11 +57,11 @@ export async function POST(
       mode: 'pbl' as const,
       evaluationType: 'task',
       evaluationSubtype: 'pbl_task',
-      score: evaluation.score || 0,
+      score: (evaluation.score as number) || 0,
       maxScore: 100,
       timeTakenSeconds: (evaluation.timeTakenSeconds as number) || 0,
       domainScores: (evaluation.domainScores as Record<string, number>) || {},
-      feedbackText: evaluation.feedback || '',
+      feedbackText: (evaluation.feedback as string) || '',
       feedbackData: {
         strengths: (evaluation.strengths as string[]) || [],
         improvements: (evaluation.improvements as string[]) || [],
@@ -97,6 +100,9 @@ export async function POST(
       // No existing evaluation, create new one
       evaluationRecord = await evalRepo.create(createEvaluationData(evaluation));
       
+      console.log('Created evaluation record:');
+      console.log('  domainScores:', JSON.stringify(evaluationRecord.domainScores || {}, null, 2));
+      
       // Update task with evaluation ID only if it's a new evaluation
       await taskRepo.update?.(taskId, {
         status: 'completed' as const,
@@ -134,14 +140,14 @@ export async function POST(
     const transformedEvaluation = {
       ...evaluationRecord,
       score: evaluationRecord.score || 0,
-      ksaScores: evaluationRecord.metadata?.ksaScores || {},
-      domainScores: evaluationRecord.metadata?.domainScores || {},
-      rubricsScores: evaluationRecord.metadata?.rubricsScores || {},
-      strengths: evaluationRecord.metadata?.strengths || [],
-      improvements: evaluationRecord.metadata?.improvements || [],
-      nextSteps: evaluationRecord.metadata?.nextSteps || [],
-      conversationInsights: evaluationRecord.metadata?.conversationInsights || {},
-      conversationCount: evaluationRecord.metadata?.conversationCount || 0,
+      ksaScores: evaluationRecord.pblData?.ksaScores || {},
+      domainScores: evaluationRecord.domainScores || {},
+      rubricsScores: evaluationRecord.pblData?.rubricsScores || {},
+      strengths: evaluationRecord.feedbackData?.strengths || [],
+      improvements: evaluationRecord.feedbackData?.improvements || [],
+      nextSteps: evaluationRecord.feedbackData?.nextSteps || [],
+      conversationInsights: evaluationRecord.aiAnalysis || {},
+      conversationCount: evaluationRecord.pblData?.conversationCount || 0,
       evaluatedAt: evaluationRecord.metadata?.evaluatedAt || evaluationRecord.createdAt
     };
     
@@ -205,14 +211,14 @@ export async function GET(
     const transformedEvaluation = evaluation ? {
       ...evaluation,
       score: evaluation.score || 0,
-      ksaScores: (evaluation as Record<string, unknown> & { pbl_data?: { ksaScores?: Record<string, number> } }).pbl_data?.ksaScores || evaluation.pblData?.ksaScores || {},
-      domainScores: evaluation.domainScores || (evaluation as Record<string, unknown> & { domain_scores?: Record<string, number> }).domain_scores || {},
-      rubricsScores: (evaluation as Record<string, unknown> & { pbl_data?: { rubricsScores?: Record<string, number> } }).pbl_data?.rubricsScores || evaluation.metadata?.rubricsScores || {},
-      strengths: evaluation.feedbackData?.strengths || evaluation.metadata?.strengths || [],
-      improvements: evaluation.feedbackData?.improvements || evaluation.metadata?.improvements || [],
-      nextSteps: evaluation.feedbackData?.nextSteps || evaluation.metadata?.nextSteps || [],
-      conversationInsights: evaluation.aiAnalysis || (evaluation as Record<string, unknown> & { ai_analysis?: Record<string, unknown> }).ai_analysis || evaluation.metadata?.conversationInsights || {},
-      conversationCount: (evaluation as Record<string, unknown> & { pbl_data?: { conversationCount?: number } }).pbl_data?.conversationCount || evaluation.metadata?.conversationCount || 0,
+      ksaScores: evaluation.pblData?.ksaScores || {},
+      domainScores: evaluation.domainScores || {},
+      rubricsScores: evaluation.pblData?.rubricsScores || {},
+      strengths: evaluation.feedbackData?.strengths || [],
+      improvements: evaluation.feedbackData?.improvements || [],
+      nextSteps: evaluation.feedbackData?.nextSteps || [],
+      conversationInsights: evaluation.aiAnalysis || {},
+      conversationCount: evaluation.pblData?.conversationCount || 0,
       evaluatedAt: evaluation.metadata?.evaluatedAt || evaluation.createdAt
     } : null;
 

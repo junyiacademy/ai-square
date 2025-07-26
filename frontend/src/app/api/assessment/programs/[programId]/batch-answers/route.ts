@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
-import type { IInteraction } from '@/types/unified-learning';
 import { AssessmentInteraction, toIInteraction } from '@/types/assessment-types';
 
 export async function POST(

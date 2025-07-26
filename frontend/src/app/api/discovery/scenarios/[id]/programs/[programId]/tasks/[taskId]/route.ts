@@ -8,7 +8,7 @@ import { TranslationService } from '@/lib/services/translation-service';
 import { Interaction } from '@/lib/repositories/interfaces';
 
 // System prompt for AI - keep in English as it's for the AI model
-function getSystemPromptForLanguage(_language: string): string {
+function getSystemPromptForLanguage(_language: string): string { // eslint-disable-line @typescript-eslint/no-unused-vars
   return 'You are an expert educational psychologist and learning coach.';
 }
 
@@ -77,7 +77,7 @@ function getSkillsSection(language: string, skills: string[]): string {
   return `\n- Demonstrated abilities: ${skills.join(', ')}`;
 }
 
-function getFallbackMessage(_language: string): string {
+function getFallbackMessage(_language: string): string { // eslint-disable-line @typescript-eslint/no-unused-vars
   // For now, use simple message - will be replaced with i18n
   return 'Congratulations on successfully completing this task! Your effort and persistence are commendable.';
 }
@@ -710,7 +710,7 @@ Return your evaluation as a JSON object:
         evaluationSubtype: 'discovery_task',
         score: bestXP,
         maxScore: 100,
-        dimensionScores: {},
+        domainScores: {},
         feedbackText: feedbackVersions['en'], // Default to English
         feedbackData: feedbackVersions,
         aiAnalysis: {},
@@ -801,7 +801,7 @@ Return your evaluation as a JSON object:
           score: 100,
           maxScore: 100,
           timeTakenSeconds: 0,
-          dimensionScores: {},
+          domainScores: {},
           feedbackText: 'Congratulations! You have completed all learning tasks in this program.',
           feedbackData: {},
           aiAnalysis: {},
@@ -973,7 +973,7 @@ Return your evaluation as a JSON object:
       
       // Update the existing evaluation
       if (task.metadata?.evaluationId) {
-        const evaluationRepo = repositoryFactory.getEvaluationRepository();
+        // const evaluationRepo = repositoryFactory.getEvaluationRepository();
         // Note: evaluationRepo doesn't have update method
         console.log('Would update evaluation:', task.metadata.evaluationId, {
           feedback: comprehensiveFeedback,

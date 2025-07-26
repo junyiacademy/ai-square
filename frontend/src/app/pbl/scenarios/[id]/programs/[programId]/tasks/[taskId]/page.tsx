@@ -238,22 +238,34 @@ export default function ProgramLearningPage() {
             const tasksData = await tasksRes.json();
             const sortedTasks = tasksData.sort((a: { taskIndex: number }, b: { taskIndex: number }) => a.taskIndex - b.taskIndex);
             setProgramTasks(sortedTasks.map((t: { id: string; taskIndex: number }) => ({ id: t.id, taskIndex: t.taskIndex })));
-          }
-          
-          // Get evaluations for all tasks in this program
-          const evaluationsRes = await fetch(`/api/pbl/evaluations?programId=${programId}&targetType=task`);
-          if (evaluationsRes.ok) {
-            const evaluationsData = await evaluationsRes.json();
-            if (evaluationsData.success && evaluationsData.data) {
-              // Build a map of task evaluations
-              const evaluations: Record<string, TaskEvaluation> = {};
-              evaluationsData.data.forEach((evaluation: Record<string, unknown>) => {
-                if (evaluation.targetType === 'task' && evaluation.targetId) {
-                  evaluations[String(evaluation.targetId)] = evaluation as unknown as TaskEvaluation;
+            
+            // Get evaluations for all tasks in this program
+            const evaluations: Record<string, TaskEvaluation> = {};
+            
+            // Load evaluations for all tasks in parallel
+            const evalPromises = sortedTasks.map(async (task: { id: string }) => {
+              try {
+                const evalRes = await fetch(`/api/pbl/tasks/${task.id}/evaluate`);
+                if (evalRes.ok) {
+                  const evalData = await evalRes.json();
+                  if (evalData.success && evalData.data?.evaluation) {
+                    return { taskId: task.id, evaluation: evalData.data.evaluation };
+                  }
                 }
-              });
-              setTaskEvaluations(evaluations);
-            }
+              } catch (err) {
+                console.error(`Error loading evaluation for task ${task.id}:`, err);
+              }
+              return null;
+            });
+            
+            const evalResults = await Promise.all(evalPromises);
+            evalResults.forEach(result => {
+              if (result) {
+                evaluations[result.taskId] = result.evaluation;
+              }
+            });
+            
+            setTaskEvaluations(evaluations);
           }
         } catch (error) {
           console.error('Error loading task evaluations:', error);
@@ -726,6 +738,7 @@ export default function ProgramLearningPage() {
   };
 
   const switchTask = (newTaskId: string) => {
+    // Navigate to the new task
     router.push(`/pbl/scenarios/${scenarioId}/programs/${programId}/tasks/${newTaskId}`);
   };
 
@@ -875,8 +888,9 @@ export default function ProgramLearningPage() {
               {isProgressCollapsed && (
                 <div className="space-y-4">
                   {scenario.tasks.map((task, index) => {
-                    // Get the actual task UUID from program taskIds
-                    const actualTaskId = program?.taskIds?.[index] || task.id;
+                    // Get the actual task UUID from programTasks
+                    const programTask = programTasks[index];
+                    const actualTaskId = programTask?.id || task.id;
                     const isEvaluated = !!taskEvaluations[actualTaskId];
                     const isCurrent = currentTask && currentTask.id === actualTaskId;
                     const taskEval = taskEvaluations[actualTaskId];
@@ -978,13 +992,13 @@ export default function ProgramLearningPage() {
                   {t('pbl:learn.evaluationResults', 'Evaluation Results')}
                 </h3>
                 
-                {/* Overall Score */}
-                <div className="mb-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                {/* Section 1: Overall Score */}
+                <div className="mb-4 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
                       {t('pbl:learn.overallScore')}
-                    </span>
-                    <span className={`text-2xl font-bold ${
+                    </h4>
+                    <span className={`text-3xl font-bold ${
                       evaluation.score >= 75 ? 'text-green-600' :
                       evaluation.score >= 60 ? 'text-blue-600' :
                       evaluation.score >= 40 ? 'text-yellow-600' :
@@ -993,22 +1007,60 @@ export default function ProgramLearningPage() {
                       {evaluation.score}%
                     </span>
                   </div>
-                  
-                  {/* KSA Scores */}
-                  {evaluation.ksaScores && (
+                </div>
+                
+                {/* Section 2: Domain Scores */}
+                <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                  <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+                    {t('pbl:complete.domainScores')}
+                  </h4>
+                  <div className="space-y-2">
+                    {evaluation.domainScores && (() => {
+                      const domainOrder = ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai'];
+                      return domainOrder.map(domain => {
+                        const score = evaluation.domainScores![domain] || 0;
+                        return (
+                      <div key={domain} className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                          {t(`assessment:domains.${domain}`)}
+                        </span>
+                        <div className="flex items-center">
+                          <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
+                            <div 
+                              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                              style={{ width: `${Number(score)}%` }}
+                            />
+                          </div>
+                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">
+                            {Number(score)}%
+                          </span>
+                        </div>
+                      </div>
+                        );
+                      });
+                    })()}
+                  </div>
+                </div>
+                
+                {/* Section 3: KSA Scores */}
+                {evaluation.ksaScores && (
+                <div className="mb-4 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                  <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+                    {t('pbl:complete.ksaScores', 'KSA Scores')}
+                  </h4>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-600 dark:text-gray-400">
                         {t('pbl:complete.knowledge')}
                       </span>
                       <div className="flex items-center">
-                        <div className="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
+                        <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
                           <div 
-                            className="bg-purple-600 h-2 rounded-full"
+                            className="bg-green-600 h-2 rounded-full transition-all duration-300"
                             style={{ width: `${evaluation.ksaScores.knowledge}%` }}
                           />
                         </div>
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">
                           {Math.round(evaluation.ksaScores.knowledge)}%
                         </span>
                       </div>
@@ -1018,13 +1070,13 @@ export default function ProgramLearningPage() {
                         {t('pbl:complete.skills')}
                       </span>
                       <div className="flex items-center">
-                        <div className="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
+                        <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
                           <div 
-                            className="bg-purple-600 h-2 rounded-full"
+                            className="bg-green-600 h-2 rounded-full transition-all duration-300"
                             style={{ width: `${evaluation.ksaScores.skills}%` }}
                           />
                         </div>
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">
                           {Math.round(evaluation.ksaScores.skills)}%
                         </span>
                       </div>
@@ -1034,50 +1086,20 @@ export default function ProgramLearningPage() {
                         {t('pbl:complete.attitudes')}
                       </span>
                       <div className="flex items-center">
-                        <div className="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
+                        <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
                           <div 
-                            className="bg-purple-600 h-2 rounded-full"
+                            className="bg-green-600 h-2 rounded-full transition-all duration-300"
                             style={{ width: `${evaluation.ksaScores.attitudes}%` }}
                           />
                         </div>
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">
                           {Math.round(evaluation.ksaScores.attitudes)}%
                         </span>
                       </div>
                     </div>
                   </div>
-                  )}
                 </div>
-                
-                {/* Domain Scores */}
-                <div className="mb-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {t('pbl:complete.domainScores')}
-                  </h4>
-                  <div className="space-y-2">
-                    {(() => {
-                      const domainScores = evaluation.domainScores || (evaluation as any).dimension_scores;
-                      return domainScores && Object.entries(domainScores).map(([domain, score]) => (
-                      <div key={domain} className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600 dark:text-gray-400">
-                          {t(`assessment:domains.${domain}`)}
-                        </span>
-                        <div className="flex items-center">
-                          <div className="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                            <div 
-                              className="bg-purple-600 h-2 rounded-full"
-                              style={{ width: `${Number(score)}%` }}
-                            />
-                          </div>
-                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                            {Number(score)}%
-                          </span>
-                        </div>
-                      </div>
-                    ));
-                    })()}
-                  </div>
-                </div>
+                )}
                 
                 {/* Conversation Insights - Only show if there are meaningful insights */}
                 {evaluation.conversationInsights && 
@@ -1315,6 +1337,8 @@ export default function ProgramLearningPage() {
                       const actualTaskId = programTask?.id || task.id;
                       const isCompleted = index < taskIndex;
                       const isCurrent = currentTask && currentTask.id === actualTaskId;
+                      const taskEvaluation = taskEvaluations[actualTaskId];
+                      const hasEvaluation = !!taskEvaluation;
                       
                       return (
                         <button
@@ -1326,13 +1350,13 @@ export default function ProgramLearningPage() {
                           className="flex items-center w-full text-left hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors"
                         >
                           <div className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full border-2 bg-white dark:bg-gray-800 flex-shrink-0 ${
-                            isCompleted 
+                            hasEvaluation 
                               ? 'border-green-600 dark:border-green-500' 
                               : isCurrent 
                               ? 'border-purple-600 dark:border-purple-500 ring-2 ring-purple-600 ring-offset-2' 
                               : 'border-gray-300 dark:border-gray-600'
                           }`}>
-                            {isCompleted ? (
+                            {hasEvaluation ? (
                               <svg className="h-5 w-5 text-green-600 dark:text-green-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                               </svg>
@@ -1350,12 +1374,17 @@ export default function ProgramLearningPage() {
                             <p className={`text-sm font-medium ${
                               isCurrent
                                 ? 'text-purple-600 dark:text-purple-400'
-                                : isCompleted
+                                : hasEvaluation
                                 ? 'text-gray-900 dark:text-white'
                                 : 'text-gray-500 dark:text-gray-400'
                             }`}>
                               {getLocalizedField(task as unknown as Record<string, unknown>, 'title', i18n.language)}
                             </p>
+                            {hasEvaluation && taskEvaluation.score !== undefined && (
+                              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                {t('pbl:learn.score')}: {Math.round(taskEvaluation.score)}%
+                              </p>
+                            )}
                           </div>
                         </button>
                       );
@@ -1413,6 +1442,124 @@ export default function ProgramLearningPage() {
                     </div>
                   )}
                 </div>
+                
+                {/* Evaluation Results for Mobile */}
+                {evaluation && (
+                  <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                    <h3 className="font-medium text-gray-900 dark:text-white mb-4">
+                      {t('pbl:learn.evaluationResults', 'Evaluation Results')}
+                    </h3>
+                    
+                    {/* Section 1: Overall Score */}
+                    <div className="mb-4 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
+                          {t('pbl:learn.overallScore')}
+                        </h4>
+                        <span className={`text-3xl font-bold ${
+                          evaluation.score >= 75 ? 'text-green-600' :
+                          evaluation.score >= 60 ? 'text-blue-600' :
+                          evaluation.score >= 40 ? 'text-yellow-600' :
+                          'text-red-600'
+                        }`}>
+                          {evaluation.score}%
+                        </span>
+                      </div>
+                    </div>
+                    
+                    {/* Section 2: Domain Scores */}
+                    <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                      <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+                        {t('pbl:complete.domainScores')}
+                      </h4>
+                      <div className="space-y-2">
+                        {evaluation.domainScores && (() => {
+                          const domainOrder = ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai'];
+                          return domainOrder.map(domain => {
+                            const score = evaluation.domainScores![domain] || 0;
+                            return (
+                          <div key={domain} className="flex items-center justify-between">
+                            <span className="text-sm text-gray-600 dark:text-gray-400">
+                              {t(`assessment:domains.${domain}`)}
+                            </span>
+                            <div className="flex items-center">
+                              <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
+                                <div 
+                                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                                  style={{ width: `${Number(score)}%` }}
+                                />
+                              </div>
+                              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">
+                                {Number(score)}%
+                              </span>
+                            </div>
+                          </div>
+                            );
+                          });
+                        })()}
+                      </div>
+                    </div>
+                    
+                    {/* Section 3: KSA Scores */}
+                    {evaluation.ksaScores && (
+                    <div className="mb-4 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                      <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+                        {t('pbl:complete.ksaScores', 'KSA Scores')}
+                      </h4>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-600 dark:text-gray-400">
+                            {t('pbl:complete.knowledge')}
+                          </span>
+                          <div className="flex items-center">
+                            <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
+                              <div 
+                                className="bg-green-600 h-2 rounded-full transition-all duration-300"
+                                style={{ width: `${evaluation.ksaScores.knowledge}%` }}
+                              />
+                            </div>
+                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">
+                              {Math.round(evaluation.ksaScores.knowledge)}%
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-600 dark:text-gray-400">
+                            {t('pbl:complete.skills')}
+                          </span>
+                          <div className="flex items-center">
+                            <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
+                              <div 
+                                className="bg-green-600 h-2 rounded-full transition-all duration-300"
+                                style={{ width: `${evaluation.ksaScores.skills}%` }}
+                              />
+                            </div>
+                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">
+                              {Math.round(evaluation.ksaScores.skills)}%
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-600 dark:text-gray-400">
+                            {t('pbl:complete.attitudes')}
+                          </span>
+                          <div className="flex items-center">
+                            <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
+                              <div 
+                                className="bg-green-600 h-2 rounded-full transition-all duration-300"
+                                style={{ width: `${evaluation.ksaScores.attitudes}%` }}
+                              />
+                            </div>
+                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">
+                              {Math.round(evaluation.ksaScores.attitudes)}%
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    )}
+                  </div>
+                )}
                 
                 <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
                   <button

@@ -75,17 +75,25 @@ Evaluation Guidelines:
 
 Note: For research/exploration tasks, value the learning process over "completion"
 
+CRITICAL SCORING RULES:
+- The overall score should be the average of KSA scores and domain scores
+- For minimal engagement (just greetings), assign scores in the 10-25 range consistently
+- All scores must be logically consistent - if overall is 15, individual scores should be similar
+- Domain scores should reflect actual demonstration in that domain (0 if not demonstrated)
+
 Please evaluate and provide:
 1. Overall performance score (0-100): Based on actual effort and task completion
 
 2. Individual KSA scores (0-100 each):
-   Consider partial demonstration and learning progress
+   - Knowledge: Understanding of the task and AI concepts (0 if no demonstration)
+   - Skills: Practical application and problem-solving (0 if no demonstration)
+   - Attitudes: Engagement, curiosity, and learning mindset (minimum 5 for attempting)
 
 3. Domain scores (0-100):
-   - engaging_with_ai: Quality of AI interaction and questioning
-   - creating_with_ai: Creativity in using AI responses
-   - managing_with_ai: Organization and planning in approach
-   - designing_with_ai: Strategic thinking and problem-solving
+   - engaging_with_ai: Quality of AI interaction and questioning (0 if just greeting)
+   - creating_with_ai: Creativity in using AI responses (0 if no creative work)
+   - managing_with_ai: Organization and planning in approach (0 if no management shown)
+   - designing_with_ai: Strategic thinking and problem-solving (0 if no design thinking)
 
 4. Rubrics scores (1-4 levels):
    Level 1: Beginning (starting to explore)
@@ -114,8 +122,17 @@ Provide a comprehensive evaluation including:
 
 CRITICAL: You are ONLY evaluating the LEARNER'S messages listed above. Do NOT consider or evaluate the AI assistant's responses.
 
+SPECIAL CASE - GREETING ONLY:
+If the learner only sent a greeting (like "hi", "hello"):
+- Overall score: 15 points
+- Knowledge: 0 (no knowledge demonstrated)
+- Skills: 0 (no skills demonstrated)  
+- Attitudes: 15 (showed willingness to start)
+- All domain scores: 0 (no domain-specific work)
+- This ensures mathematical consistency
+
 Important evaluation principles:
-0. **Quality over quantity in insights** - Only provide conversation insights when there's something meaningful to highlight. Empty arrays are better than generic observations.
+0. **Mathematical consistency** - Overall score should logically relate to component scores
 1. **ONLY evaluate the learner's input messages shown above** - ignore all AI assistant responses completely
 2. Consider the **stage type** and **task nature** when evaluating:
    - For research/exploration tasks: Value curiosity, questioning, and discovery process
@@ -245,6 +262,7 @@ Important evaluation principles:
     try {
       evaluation = JSON.parse(text);
       console.log('Successfully parsed evaluation response');
+      console.log('AI Response - domainScores:', JSON.stringify(evaluation.domainScores || {}, null, 2));
     } catch (parseError) {
       console.error('Error parsing AI response:', parseError);
       console.error('Raw response:', text);

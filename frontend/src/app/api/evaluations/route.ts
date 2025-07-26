@@ -137,7 +137,7 @@ export async function POST(request: NextRequest) {
         improvements: aiEvaluation.improvements,
         ...aiEvaluation
       },
-      dimensionScores: aiEvaluation.ksaScores ? {
+      domainScores: aiEvaluation.ksaScores ? {
         knowledge: aiEvaluation.ksaScores.knowledge,
         skills: aiEvaluation.ksaScores.skills,
         attitudes: aiEvaluation.ksaScores.attitudes

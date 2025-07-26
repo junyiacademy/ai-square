@@ -126,7 +126,7 @@ describe('Module-specific Types', () => {
         evaluationSubtype: 'pbl_task',
         score: 85,
         maxScore: 100,
-        dimensionScores: {
+        domainScores: {
           knowledge: 85,
           skills: 80,
           attitudes: 90
@@ -152,7 +152,7 @@ describe('Module-specific Types', () => {
         }
       };
 
-      expect(Object.keys(pblEval.dimensionScores)).toHaveLength(3);
+      expect(Object.keys(pblEval.domainScores)).toHaveLength(3);
       expect(pblEval.pblData.interactionQuality).toBe('high');
     });
   });
@@ -276,7 +276,7 @@ describe('Module-specific Types', () => {
         evaluationSubtype: 'assessment_task',
         score: 75,
         maxScore: 100,
-        dimensionScores: {
+        domainScores: {
           'Engaging_with_AI': 80,
           'Creating_with_AI': 70
         },
@@ -293,7 +293,7 @@ describe('Module-specific Types', () => {
           questionResults: [
             { questionId: 'q1', correct: true, timeSpent: 60 }
           ],
-          dimensionScores: {
+          domainScores: {
             'Engaging_with_AI': 80,
             'Creating_with_AI': 70
           }
@@ -416,7 +416,7 @@ describe('Module-specific Types', () => {
         evaluationSubtype: 'discovery_task',
         score: 100,
         maxScore: 100,
-        dimensionScores: {
+        domainScores: {
           exploration: 100,
           creativity: 90,
           problemSolving: 95

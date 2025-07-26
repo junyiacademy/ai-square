@@ -111,7 +111,7 @@ export async function POST(
         completedTaskCount: 0,
         totalTaskCount: tasks.length,
         totalScore: 0,
-        dimensionScores: {},
+        domainScores: {},
         xpEarned: 0,
         badgesEarned: [],
         createdAt: new Date().toISOString(),
@@ -173,7 +173,7 @@ export async function POST(
         scenarioTaskIndex: i,
         title: title,
         description: description,
-        type: taskType as any, // Type assertion needed for enum
+        type: taskType as 'question' | 'quiz' | 'assessment' | 'interactive' | 'reflection' | 'chat' | 'creation' | 'analysis' | 'exploration' | 'experiment' | 'challenge', // Type assertion needed for enum
         status: i === 0 ? 'active' : 'pending',
         content: {
           instructions: description,

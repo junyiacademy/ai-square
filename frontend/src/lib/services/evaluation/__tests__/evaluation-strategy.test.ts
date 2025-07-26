@@ -61,7 +61,7 @@ describe('Evaluation Strategy Pattern', () => {
       completedTaskCount: 0,
       totalTaskCount: 1,
       totalScore: 0,
-      dimensionScores: {},
+      domainScores: {},
       xpEarned: 0,
       badgesEarned: [],
       createdAt: new Date().toISOString(),
@@ -156,8 +156,8 @@ describe('Evaluation Strategy Pattern', () => {
       expect(evaluation.evaluationSubtype).toBe('pbl_task');
       expect(evaluation.taskId).toBe('task-1');
       expect(evaluation.score).toBeGreaterThan(0);
-      expect(evaluation.dimensionScores).toBeDefined();
-      expect(Object.keys(evaluation.dimensionScores).length).toBe(3); // KSA dimensions
+      expect(evaluation.domainScores).toBeDefined();
+      expect(Object.keys(evaluation.domainScores).length).toBe(3); // KSA dimensions
       expect(evaluation.metadata?.interactionCount).toBe(3);
       expect(evaluation.metadata?.ksaCodes).toEqual(['K1', 'S2', 'A3']);
     });
@@ -174,7 +174,7 @@ describe('Evaluation Strategy Pattern', () => {
           evaluationSubtype: 'pbl_task',
           score: 80,
           maxScore: 100,
-          dimensionScores: {
+          domainScores: {
             knowledge: 85,
             skills: 75,
             attitudes: 80
@@ -198,7 +198,7 @@ describe('Evaluation Strategy Pattern', () => {
           evaluationSubtype: 'pbl_task',
           score: 90,
           maxScore: 100,
-          dimensionScores: {
+          domainScores: {
             knowledge: 90,
             skills: 90,
             attitudes: 90
@@ -218,12 +218,12 @@ describe('Evaluation Strategy Pattern', () => {
 
       expect(evaluation.evaluationSubtype).toBe('pbl_completion');
       expect(evaluation.score).toBe(85); // Average of 80 and 90
-      expect(evaluation.dimensionScores).toBeDefined();
-      // dimensionScores should be aggregated as Record<string, number>
-      expect(evaluation.dimensionScores).toBeDefined();
-      expect(evaluation.dimensionScores.knowledge).toBe(88); // Average of 85 and 90, rounded
-      expect(evaluation.dimensionScores.skills).toBe(83); // Average of 75 and 90, rounded
-      expect(evaluation.dimensionScores.attitudes).toBe(85); // Average of 80 and 90, rounded
+      expect(evaluation.domainScores).toBeDefined();
+      // domainScores should be aggregated as Record<string, number>
+      expect(evaluation.domainScores).toBeDefined();
+      expect(evaluation.domainScores.knowledge).toBe(88); // Average of 85 and 90, rounded
+      expect(evaluation.domainScores.skills).toBe(83); // Average of 75 and 90, rounded
+      expect(evaluation.domainScores.attitudes).toBe(85); // Average of 80 and 90, rounded
     });
 
     it('should calculate quality metrics', () => {
@@ -332,7 +332,7 @@ describe('Evaluation Strategy Pattern', () => {
       expect(Math.round(evaluation.score * 100) / 100).toBe(66.67); // 2 out of 3 correct
       expect(evaluation.metadata?.totalQuestions).toBe(3);
       expect(evaluation.metadata?.correctAnswers).toBe(2);
-      expect(evaluation.dimensionScores).toBeDefined();
+      expect(evaluation.domainScores).toBeDefined();
       // Check domain scores which should be in metadata
       const domainScores = evaluation.metadata?.domainScores || {};
       expect((domainScores as any)['Engaging_with_AI']?.correct).toBe(2);
@@ -478,7 +478,7 @@ describe('Evaluation Strategy Pattern', () => {
           evaluationSubtype: 'discovery_task',
           score: 100,
           maxScore: 100,
-          dimensionScores: {},
+          domainScores: {},
           feedbackData: {},
           aiAnalysis: {},
           timeTakenSeconds: 0,

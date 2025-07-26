@@ -35,7 +35,7 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
       maxScore: row.max_score,
       
       // Multi-dimensional scoring
-      dimensionScores: row.dimension_scores,
+      domainScores: row.domain_scores,
       
       // Feedback
       feedbackText: row.feedback_text || undefined,
@@ -128,7 +128,7 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
         user_id, program_id, task_id,
         evaluation_type, evaluation_subtype,
         score, max_score,
-        dimension_scores,
+        domain_scores,
         feedback_text, feedback_data,
         ai_provider, ai_model, ai_analysis,
         time_taken_seconds,
@@ -149,7 +149,7 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
       evaluation.evaluationSubtype || null,
       evaluation.score,
       evaluation.maxScore,
-      JSON.stringify(evaluation.dimensionScores || {}),
+      JSON.stringify(evaluation.domainScores || {}),
       evaluation.feedbackText || null,
       JSON.stringify(evaluation.feedbackData || {}),
       evaluation.aiProvider || null,
@@ -299,15 +299,15 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
     let query = `
       SELECT 
         created_at::date as date,
-        dimension_scores
+        domain_scores
       FROM evaluations
       WHERE user_id = $1 
-        AND dimension_scores IS NOT NULL
-        AND dimension_scores != '{}'::jsonb
+        AND domain_scores IS NOT NULL
+        AND domain_scores != '{}'::jsonb
     `;
 
     if (dimension) {
-      query += ` AND dimension_scores ? $2`;
+      query += ` AND domain_scores ? $2`;
     }
 
     query += ` ORDER BY created_at ASC`;
@@ -317,7 +317,7 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
     
     return rows.map(row => ({
       date: row.date,
-      scores: row.dimension_scores
+      scores: row.domain_scores
     }));
   }
 
@@ -329,12 +329,12 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
     const query = `
       WITH dimension_averages AS (
         SELECT 
-          jsonb_object_keys(dimension_scores) as dimension,
-          AVG((dimension_scores->>jsonb_object_keys(dimension_scores))::float) as avg_score
+          jsonb_object_keys(domain_scores) as dimension,
+          AVG((domain_scores->>jsonb_object_keys(domain_scores))::float) as avg_score
         FROM evaluations
         WHERE user_id = $1 
-          AND dimension_scores IS NOT NULL
-        GROUP BY jsonb_object_keys(dimension_scores)
+          AND domain_scores IS NOT NULL
+        GROUP BY jsonb_object_keys(domain_scores)
       )
       SELECT dimension, avg_score
       FROM dimension_averages

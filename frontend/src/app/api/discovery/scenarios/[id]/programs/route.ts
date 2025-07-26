@@ -126,7 +126,7 @@ export async function POST(
       completedTaskCount: 0,
       totalTaskCount: 0,  // Will be updated after creating tasks
       totalScore: 0,
-      dimensionScores: {},
+      domainScores: {},
       xpEarned: 0,
       badgesEarned: [],
       timeSpentSeconds: 0,

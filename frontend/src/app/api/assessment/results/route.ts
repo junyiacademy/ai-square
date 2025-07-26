@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
         completedTaskCount: 0,
         totalTaskCount: body.result.totalQuestions || body.answers.length,
         totalScore: 0,
-        dimensionScores: {},
+        domainScores: {},
         xpEarned: 0,
         badgesEarned: [],
         createdAt: new Date().toISOString(),
@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
       evaluationSubtype: undefined,
       score: body.result.overallScore,
       maxScore: 100,
-      dimensionScores: body.result.domainScores || {},
+      domainScores: body.result.domainScores || {},
       feedbackText: `Assessment completed. Level: ${body.result.level}`,
       feedbackData: {},
       aiAnalysis: {
@@ -232,10 +232,10 @@ export async function GET(request: NextRequest) {
           scores: {
             overall: assessmentEvaluation.score,
             domains: {
-              engaging_with_ai: assessmentEvaluation.dimensionScores?.['Engaging_with_AI'] || 0,
-              creating_with_ai: assessmentEvaluation.dimensionScores?.['Creating_with_AI'] || 0,
-              managing_with_ai: assessmentEvaluation.dimensionScores?.['Managing_with_AI'] || 0,
-              designing_with_ai: assessmentEvaluation.dimensionScores?.['Designing_with_AI'] || 0,
+              engaging_with_ai: assessmentEvaluation.domainScores?.['Engaging_with_AI'] || 0,
+              creating_with_ai: assessmentEvaluation.domainScores?.['Creating_with_AI'] || 0,
+              managing_with_ai: assessmentEvaluation.domainScores?.['Managing_with_AI'] || 0,
+              designing_with_ai: assessmentEvaluation.domainScores?.['Designing_with_AI'] || 0,
             }
           },
           summary: {

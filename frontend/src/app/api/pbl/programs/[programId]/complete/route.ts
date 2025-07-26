@@ -227,7 +227,7 @@ export async function POST(
         score: overallScore,
         maxScore: 100,
         timeTakenSeconds: totalTimeSeconds,
-        dimensionScores: domainScores,
+        domainScores: domainScores,
         feedbackText: '',
         feedbackData: {},
         aiAnalysis: {},

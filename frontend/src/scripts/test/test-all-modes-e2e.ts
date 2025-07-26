@@ -122,7 +122,7 @@ async function testPBLMode() {
       completedTaskCount: 0,
       totalTaskCount: 3,
       totalScore: 0,
-      dimensionScores: {},
+      domainScores: {},
       xpEarned: 0,
       badgesEarned: [],
       createdAt: new Date().toISOString(),
@@ -238,7 +238,7 @@ The system uses deep learning to predict occupancy patterns and pre-cool/heat sp
       maxScore: 100,
       feedbackText: 'Excellent research and critical thinking. You asked relevant follow-up questions and demonstrated understanding of AI applications in sustainability.',
       feedbackData: {},
-      dimensionScores: {
+      domainScores: {
         'Understanding': 90,
         'Critical Thinking': 85,
         'Application': 88,
@@ -275,7 +275,7 @@ The system uses deep learning to predict occupancy patterns and pre-cool/heat sp
       maxScore: 100,
       feedbackText: 'Outstanding completion of the Smart City Sustainability project. You demonstrated strong understanding of AI applications and their environmental impact.',
       feedbackData: {},
-      dimensionScores: {
+      domainScores: {
         'Overall Understanding': 93,
         'Project Completion': 91,
       },
@@ -404,7 +404,7 @@ async function testDiscoveryMode() {
       completedTaskCount: 0,
       totalTaskCount: 3,
       totalScore: 0,
-      dimensionScores: {},
+      domainScores: {},
       xpEarned: 0,
       badgesEarned: [],
       createdAt: new Date().toISOString(),
@@ -485,7 +485,7 @@ async function testDiscoveryMode() {
       maxScore: 100,
       feedbackText: 'Excellent exploration! You asked thoughtful questions about AI bias and showed genuine engagement with ethical considerations.',
       feedbackData: {},
-      dimensionScores: {
+      domainScores: {
         'Curiosity': 98,
         'Depth of Exploration': 92,
         'Connection Making': 95,
@@ -517,7 +517,7 @@ async function testDiscoveryMode() {
       maxScore: 100,
       feedbackText: 'Fantastic discovery journey! You explored AI ethics with depth and critical thinking.',
       feedbackData: {},
-      dimensionScores: {},
+      domainScores: {},
       aiAnalysis: {},
       timeTakenSeconds: 5400,
       createdAt: new Date().toISOString(),
@@ -642,7 +642,7 @@ async function testAssessmentMode() {
       completedTaskCount: 0,
       totalTaskCount: 3,
       totalScore: 0,
-      dimensionScores: {},
+      domainScores: {},
       xpEarned: 0,
       badgesEarned: [],
       createdAt: new Date().toISOString(),
@@ -732,7 +732,7 @@ async function testAssessmentMode() {
       maxScore: 100,
       feedbackText: 'Strong understanding of AI collaboration in creative processes. Your practical example shows good judgment about when and how to use AI effectively.',
       feedbackData: {},
-      dimensionScores: {
+      domainScores: {
         'Conceptual Understanding': 90,
         'Practical Application': 85,
         'Critical Thinking': 80,
@@ -768,7 +768,7 @@ async function testAssessmentMode() {
       maxScore: 100,
       feedbackText: 'Well done! Your AI literacy assessment shows strong foundational knowledge with room for growth in advanced applications.',
       feedbackData: {},
-      dimensionScores: {
+      domainScores: {
         'Creating with AI': 85,
         'Managing AI': 88,
         'Overall AI Literacy': 87,

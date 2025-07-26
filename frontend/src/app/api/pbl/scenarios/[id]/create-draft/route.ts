@@ -140,7 +140,7 @@ export async function POST(
       completedTaskCount: 0,
       totalTaskCount: scenario.tasks.length,
       totalScore: 0,
-      dimensionScores: {},
+      domainScores: {},
       xpEarned: 0,
       badgesEarned: [],
       createdAt: new Date().toISOString(),

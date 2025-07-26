@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
     console.log(`Loading assessment data from database for scenario: ${activeScenario.id}`);
     
     // Convert scenario data to AssessmentData format
-    let assessmentData: AssessmentData;
+    let assessmentData: AssessmentData; // eslint-disable-line @typescript-eslint/no-unused-vars
     try {
       // Extract assessment data from the scenario
       const assessmentConfig = activeScenario.assessmentData?.config || {

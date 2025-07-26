@@ -56,7 +56,7 @@ describe('/api/pbl/generate-feedback', () => {
     evaluatedTasks: 3,
     totalTasks: 3,
     totalTimeSeconds: 1800,
-    dimensionScores: {
+    domainScores: {
       engaging_with_ai: 80,
       creating_with_ai: 70,
       managing_with_ai: 75,

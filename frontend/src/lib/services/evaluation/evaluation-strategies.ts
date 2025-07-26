@@ -100,10 +100,10 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
     const qualityMetrics = this.calculateQualityMetrics(interactions);
     
     // Calculate KSA dimensions
-    const dimensionScores = this.calculateKSADimensions(qualityMetrics, pblTask);
+    const domainScores = this.calculateKSADimensions(qualityMetrics, pblTask);
     
     // Overall score is average of KSA dimensions
-    const overallScore = dimensionScores.reduce((sum, d) => sum + d.score, 0) / dimensionScores.length;
+    const overallScore = domainScores.reduce((sum, d) => sum + d.score, 0) / domainScores.length;
 
     return {
       id: uuidv4(),
@@ -117,7 +117,7 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
       maxScore: 100,
       feedbackText: this.generateTaskFeedback(overallScore, qualityMetrics),
       feedbackData: {},
-      dimensionScores: this.convertDimensionScoresToRecord(dimensionScores),
+      domainScores: this.convertDimensionScoresToRecord(domainScores),
       aiAnalysis: {},
       timeTakenSeconds: 0,
       pblData: {
@@ -143,8 +143,8 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
       scores.reduce((a, b) => a + b, 0) / scores.length : 0;
 
     // Aggregate KSA dimensions
-    const dimensionScoresArray = this.aggregateKSADimensions(taskEvaluations);
-    const dimensionScores = dimensionScoresArray.reduce((acc, dim) => {
+    const domainScoresArray = this.aggregateKSADimensions(taskEvaluations);
+    const domainScores = domainScoresArray.reduce((acc, dim) => {
       acc[dim.dimension] = dim.score;
       return acc;
     }, {} as Record<string, number>);
@@ -160,7 +160,7 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
       maxScore: 100,
       feedbackText: this.generateProgramFeedback(averageScore, taskEvaluations),
       feedbackData: {},
-      dimensionScores,
+      domainScores,
       aiAnalysis: {},
       timeTakenSeconds: program.timeSpentSeconds || 0,
       pblData: {},
@@ -226,8 +226,8 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
     const dimensionMap = new Map<string, { total: number; count: number }>();
     
     evaluations.forEach(evaluation => {
-      if (evaluation.dimensionScores) {
-        Object.entries(evaluation.dimensionScores).forEach(([dim, score]: [string, number]) => {
+      if (evaluation.domainScores) {
+        Object.entries(evaluation.domainScores).forEach(([dim, score]: [string, number]) => {
           const existing = dimensionMap.get(dim) || { total: 0, count: 0 };
           existing.total += score;
           existing.count += 1;
@@ -285,8 +285,8 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
     return Array.from(ksaSet);
   }
 
-  private convertDimensionScoresToRecord(dimensionScores: IDimensionScore[]): Record<string, number> {
-    return dimensionScores.reduce((acc, score) => {
+  private convertDimensionScoresToRecord(domainScores: IDimensionScore[]): Record<string, number> {
+    return domainScores.reduce((acc, score) => {
       acc[score.dimension] = score.score;
       return acc;
     }, {} as Record<string, number>);
@@ -328,7 +328,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
       maxScore: 100,
       feedbackText: `You answered ${correctCount} out of ${totalCount} questions correctly.`,
       feedbackData: {},
-      dimensionScores: this.convertDomainScoresToDimensions(domainScores),
+      domainScores: this.convertDomainScoresToDimensions(domainScores),
       aiAnalysis: {},
       timeTakenSeconds: timeSpent,
       pblData: {},
@@ -373,7 +373,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
       maxScore: 100,
       feedbackText: this.generateAssessmentProgramFeedback(averageScore, taskEvaluations),
       feedbackData: {},
-      dimensionScores: aggregatedDomains,
+      domainScores: aggregatedDomains,
       aiAnalysis: {},
       timeTakenSeconds: program.timeSpentSeconds || 0,
       pblData: {},
@@ -458,8 +458,8 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
     const domainMap = new Map<string, { totalScore: number; count: number }>();
     
     evaluations.forEach(evaluation => {
-      if (evaluation.dimensionScores && Array.isArray(evaluation.dimensionScores)) {
-        evaluation.dimensionScores.forEach((dimScore: IDimensionScore) => {
+      if (evaluation.domainScores && Array.isArray(evaluation.domainScores)) {
+        evaluation.domainScores.forEach((dimScore: IDimensionScore) => {
           const existing = domainMap.get(dimScore.dimension) || { totalScore: 0, count: 0 };
           existing.totalScore += dimScore.score;
           existing.count += 1;
@@ -486,17 +486,17 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
     return evaluations.reduce((sum, e) => sum + ((e.metadata?.totalQuestions as number) || 0), 0);
   }
 
-  private identifyCompetencyGaps(dimensionScores: Record<string, number> | IDimensionScore[]): string[] {
-    const scores = Array.isArray(dimensionScores) 
-      ? this.convertDimensionScoresToRecord(dimensionScores)
-      : dimensionScores;
+  private identifyCompetencyGaps(domainScores: Record<string, number> | IDimensionScore[]): string[] {
+    const scores = Array.isArray(domainScores) 
+      ? this.convertDimensionScoresToRecord(domainScores)
+      : domainScores;
     return Object.entries(scores)
       .filter(([, score]) => score < 70)
       .map(([dimension]) => dimension);
   }
 
-  private convertDimensionScoresToRecord(dimensionScores: IDimensionScore[]): Record<string, number> {
-    return dimensionScores.reduce((acc, score) => {
+  private convertDimensionScoresToRecord(domainScores: IDimensionScore[]): Record<string, number> {
+    return domainScores.reduce((acc, score) => {
       acc[score.dimension] = score.score;
       return acc;
     }, {} as Record<string, number>);
@@ -535,7 +535,7 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
       maxScore: 100,
       feedbackText: this.generateDiscoveryFeedback(explorationScore, totalXP),
       feedbackData: {},
-      dimensionScores: {},
+      domainScores: {},
       aiAnalysis: {},
       timeTakenSeconds: 0,
       pblData: {},
@@ -579,7 +579,7 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
       maxScore: 100,
       feedbackText: this.generateDiscoveryProgramFeedback(totalXP, milestones),
       feedbackData: {},
-      dimensionScores: {},
+      domainScores: {},
       aiAnalysis: {},
       timeTakenSeconds: program.timeSpentSeconds || 0,
       pblData: {},

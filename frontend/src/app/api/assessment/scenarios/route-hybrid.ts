@@ -147,7 +147,7 @@ async function loadTranslation(
   }
 }
 
-async function getUserProgress(_params: { scenarioId: string; userId: string }): Promise<{ completedPrograms: number; lastAttempt: undefined; bestScore: undefined }> {
+async function getUserProgress(_params: { scenarioId: string; userId: string }): Promise<{ completedPrograms: number; lastAttempt: undefined; bestScore: undefined }> { // eslint-disable-line @typescript-eslint/no-unused-vars
   // TODO: 實作從 GCS 獲取用戶進度
   return {
     completedPrograms: 0,

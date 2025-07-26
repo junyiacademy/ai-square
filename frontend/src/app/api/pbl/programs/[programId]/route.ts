@@ -68,7 +68,7 @@ export async function GET(
         completedTasks: program.completedTaskCount,
         totalTasks: program.totalTaskCount,
         totalScore: program.totalScore,
-        ksaScores: program.dimensionScores,
+        ksaScores: program.domainScores,
         startedAt: program.startedAt || program.createdAt,
         updatedAt: program.lastActivityAt,
         completedAt: program.completedAt,

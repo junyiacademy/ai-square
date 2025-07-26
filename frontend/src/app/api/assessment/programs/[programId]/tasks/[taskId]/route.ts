@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { getLanguageFromHeader } from '@/lib/utils/language';
-import type { IInteraction } from '@/types/unified-learning';
 import { AssessmentInteraction, toIInteraction } from '@/types/assessment-types';
 
 export async function GET(
@@ -236,7 +235,7 @@ export async function PATCH(
           score,
           maxScore: 100,
           timeTakenSeconds: 0,
-          dimensionScores: {},
+          domainScores: {},
           feedbackText: `Assessment task completed with ${correctCount}/${totalQuestions} correct answers`,
           feedbackData: {},
           aiAnalysis: {},

@@ -380,7 +380,7 @@ export async function POST(
       timeTakenSeconds: completionTime,
       feedbackText: generateOverallFeedback(overallScore, level),
       feedbackData: {},
-      dimensionScores: Array.from(domainScores.values()).reduce((acc, ds) => {
+      domainScores: Array.from(domainScores.values()).reduce((acc, ds) => {
         acc[ds.domain] = ds.score;
         return acc;
       }, {} as Record<string, number>),

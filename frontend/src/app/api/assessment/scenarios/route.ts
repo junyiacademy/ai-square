@@ -12,7 +12,7 @@ interface AssessmentConfig {
   domains?: string[];
 }
 
-interface CachedScenario {
+interface CachedScenario { // eslint-disable-line @typescript-eslint/no-unused-vars
   id: string;
   title: string;
   description: string;

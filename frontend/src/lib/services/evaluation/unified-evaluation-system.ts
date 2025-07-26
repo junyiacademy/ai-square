@@ -53,8 +53,8 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
     const dimensionMap = new Map<string, { total: number; count: number; maxTotal: number }>();
     
     taskEvaluations.forEach(evaluation => {
-      if (evaluation.dimensionScores) {
-        Object.entries(evaluation.dimensionScores).forEach(([dim, score]: [string, number]) => {
+      if (evaluation.domainScores) {
+        Object.entries(evaluation.domainScores).forEach(([dim, score]: [string, number]) => {
           const existing = dimensionMap.get(dim) || { total: 0, count: 0, maxTotal: 0 };
           existing.total += score;
           existing.count += 1;
@@ -64,10 +64,10 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       }
     });
 
-    // Convert to Record<string, number> for dimensionScores
-    const dimensionScores: Record<string, number> = {};
+    // Convert to Record<string, number> for domainScores
+    const domainScores: Record<string, number> = {};
     Array.from(dimensionMap.entries()).forEach(([dimension, data]) => {
-      dimensionScores[dimension] = data.total / data.count;
+      domainScores[dimension] = data.total / data.count;
     });
 
     // Store detailed dimension data in metadata
@@ -89,7 +89,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       maxScore: 100,
       feedbackText: await this.generateProgramFeedback(program, taskEvaluations),
       feedbackData: {},
-      dimensionScores: dimensionScores,
+      domainScores: domainScores,
       aiAnalysis: {},
       timeTakenSeconds: program.timeSpentSeconds || 0,
       pblData: {},
@@ -136,7 +136,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
     const qualityScore = this.analyzePBLInteractionQuality(interactions);
     
     // KSA 維度評分
-    const dimensionScores: Record<string, number> = {
+    const domainScores: Record<string, number> = {
       knowledge: qualityScore.knowledge,
       skills: qualityScore.skills,
       attitudes: qualityScore.attitudes
@@ -156,7 +156,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       maxScore: 100,
       feedbackText: `Your PBL task shows ${this.getScoreLevel(overallScore)} understanding and engagement.`,
       feedbackData: {},
-      dimensionScores,
+      domainScores,
       aiAnalysis: {},
       timeTakenSeconds: 0,
       pblData: {},
@@ -201,7 +201,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       maxScore: 100,
       feedbackText: `You answered ${correctAnswers} out of ${questions.length} questions correctly.`,
       feedbackData: {},
-      dimensionScores: domainScores,
+      domainScores: domainScores,
       aiAnalysis: {},
       timeTakenSeconds: 0,
       pblData: {},
@@ -240,7 +240,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       maxScore: 100,
       feedbackText: `Great exploration! You earned ${xpEarned} XP.`,
       feedbackData: {},
-      dimensionScores: {},
+      domainScores: {},
       aiAnalysis: {},
       timeTakenSeconds: 0,
       pblData: {},
@@ -276,7 +276,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
       maxScore: 100,
       feedbackText: hasInteractions ? 'Task completed successfully.' : 'No interactions recorded.',
       feedbackData: {},
-      dimensionScores: {},
+      domainScores: {},
       aiAnalysis: {},
       timeTakenSeconds: 0,
       pblData: {},
@@ -373,9 +373,9 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
     Score: ${evaluation.score || 'N/A'}
     Target: ${evaluation.evaluationType}
     
-    ${evaluation.dimensionScores ? `
+    ${evaluation.domainScores ? `
     Dimension Scores:
-    ${Object.entries(evaluation.dimensionScores).map(([d, score]: [string, number]) => `- ${d}: ${score}/100`).join('\n')}
+    ${Object.entries(evaluation.domainScores).map(([d, score]: [string, number]) => `- ${d}: ${score}/100`).join('\n')}
     ` : ''}
     
     Please provide:

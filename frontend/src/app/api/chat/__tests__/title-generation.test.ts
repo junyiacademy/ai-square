@@ -63,7 +63,7 @@ describe('/api/chat - Title Generation', () => {
       goals: ['improve AI skills'],
       assessmentResult: {
         overallScore: 75,
-        dimensionScores: { 'Engaging_with_AI': 80 }
+        domainScores: { 'Engaging_with_AI': 80 }
       }
     })]);
 

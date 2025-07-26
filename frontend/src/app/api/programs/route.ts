@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
       completedTaskCount: 0,
       totalTaskCount: totalTasks,
       totalScore: 0,
-      dimensionScores: {},
+      domainScores: {},
       xpEarned: 0,
       badgesEarned: [],
       createdAt: new Date().toISOString(),

@@ -267,7 +267,7 @@ Return your response in JSON format:
         score: avgScore,
         maxScore: 100,
         timeTakenSeconds: timeSpentSeconds,
-        dimensionScores: {},
+        domainScores: {},
         feedbackText: typeof qualitativeFeedbackVersions['en'] === 'string' 
           ? qualitativeFeedbackVersions['en'] 
           : JSON.stringify(qualitativeFeedbackVersions['en'] || qualitativeFeedback || {}),

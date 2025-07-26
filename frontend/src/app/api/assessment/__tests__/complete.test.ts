@@ -275,7 +275,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
     expect(data.score).toBe(67); // 2 out of 3 correct
 
     const createCall = mockEvaluationRepo.create.mock.calls[0][0];
-    expect(createCall.dimensionScores).toEqual({
+    expect(createCall.domainScores).toEqual({
       engaging_with_ai: 50,     // 1 out of 2
       creating_with_ai: 100,    // 1 out of 1
       managing_with_ai: 0,      // No questions

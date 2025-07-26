@@ -103,7 +103,7 @@ export function convertScenarioToIScenario(scenario: Scenario): IScenario {
  */
 export function convertProgramToIProgram(program: Program): IProgram {
   // Parse JSON fields with type safety
-  const dimensionScores = program.dimension_scores as Record<string, number>;
+  const domainScores = program.domain_scores as Record<string, number>;
   const badgesEarned = program.badges_earned as Array<Record<string, unknown>>;
   const pblData = program.pbl_data as Record<string, unknown>;
   const discoveryData = program.discovery_data as Record<string, unknown>;
@@ -124,7 +124,7 @@ export function convertProgramToIProgram(program: Program): IProgram {
     
     // Scoring (unified)
     totalScore: program.total_score,
-    dimensionScores,
+    domainScores,
     
     // XP and rewards
     xpEarned: program.xp_earned,
@@ -221,7 +221,7 @@ export function convertTaskToITask(task: Task): ITask {
  */
 export function convertEvaluationToIEvaluation(evaluation: Evaluation): IEvaluation {
   // Parse JSON fields with type safety
-  const dimensionScores = evaluation.dimension_scores as Record<string, number>;
+  const domainScores = evaluation.domain_scores as Record<string, number>;
   const feedbackData = evaluation.feedback_data as Record<string, unknown>;
   const aiAnalysis = evaluation.ai_analysis as Record<string, unknown>;
   const pblData = evaluation.pbl_data as Record<string, unknown>;
@@ -245,7 +245,7 @@ export function convertEvaluationToIEvaluation(evaluation: Evaluation): IEvaluat
     maxScore: evaluation.max_score,
     
     // Multi-dimensional scoring
-    dimensionScores,
+    domainScores,
     
     // Feedback
     feedbackText: evaluation.feedback_text || undefined,

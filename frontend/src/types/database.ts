@@ -131,7 +131,7 @@ export interface DBProgram {
   
   // Scoring (unified)
   total_score: number;
-  dimension_scores: Record<string, number>; // {"ksa": {...}, "creativity": 8}
+  domain_scores: Record<string, number>; // {"engaging_with_ai": 85, "creating_with_ai": 70}
   
   // XP and rewards (mainly for Discovery)
   xp_earned: number;
@@ -230,7 +230,7 @@ export interface DBEvaluation {
   max_score: number;
   
   // Multi-dimensional scoring
-  dimension_scores: Record<string, number>;
+  domain_scores: Record<string, number>;
   
   // Feedback
   feedback_text: string | null;

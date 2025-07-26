@@ -43,7 +43,7 @@ export default function EvaluationPage() {
         
         // Load the latest assessment session's answers
         if (userData?.assessmentSessions && userData.assessmentSessions.length > 0) {
-          const latestSession = userData.assessmentSessions[userData.assessmentSessions.length - 1];
+          // const latestSession = userData.assessmentSessions[userData.assessmentSessions.length - 1];
           // Assessment answers are available in latestSession if needed
         }
       } catch (error) {
