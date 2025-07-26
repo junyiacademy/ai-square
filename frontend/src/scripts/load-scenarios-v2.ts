@@ -55,7 +55,7 @@ async function loadPBLScenarios() {
       }
       
       // Prefer English, then Chinese, then any
-      let selectedFile = langFiles.find(f => f.endsWith('_en.yaml')) ||
+      const selectedFile = langFiles.find(f => f.endsWith('_en.yaml')) ||
                         langFiles.find(f => f.endsWith('_zhTW.yaml')) ||
                         langFiles[0];
       

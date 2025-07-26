@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import 'dotenv/config';
 import { Pool } from 'pg';
 import bcrypt from 'bcryptjs';

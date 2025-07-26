@@ -38,8 +38,8 @@ async function testMode(mode: 'pbl' | 'assessment' | 'discovery') {
   const startTime = Date.now();
   let scenarioId: string;
   let programId: string;
-  let taskIds: string[] = [];
-  let evaluationIds: string[] = [];
+  const taskIds: string[] = [];
+  const evaluationIds: string[] = [];
   let userId: string;
 
   try {

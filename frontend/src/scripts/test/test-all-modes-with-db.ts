@@ -62,7 +62,7 @@ async function testMode(mode: 'pbl' | 'assessment' | 'discovery') {
     };
 
     // Add mode-specific data
-    let scenario: any = baseScenario;
+    const scenario: any = baseScenario;
     
     if (mode === 'pbl') {
       scenario.pblData = {
