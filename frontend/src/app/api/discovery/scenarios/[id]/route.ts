@@ -1,101 +1,83 @@
+/**
+ * Discovery Scenario Detail API
+ * GET /api/discovery/scenarios/[id] - 獲取單一 Discovery 場景詳細資訊
+ */
+
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from '@/lib/auth/session';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { Program } from '@/lib/repositories/interfaces';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    // Check session token from header first
-    const sessionToken = request.headers.get('x-session-token');
+    // Get language from query params
+    const { searchParams } = new URL(request.url);
+    const language = searchParams.get('lang') || 'en';
     
-    const session = await getServerSession();
-    if (!session?.user?.email) {
-      console.log('No session found, token:', sessionToken ? 'present' : 'missing');
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { id: scenarioId } = await params;
-    const userEmail = session.user.email;
+    const { id: scenarioId } = params;
     
-    // Get repositories
+    // Get repository
     const scenarioRepo = repositoryFactory.getScenarioRepository();
-    const programRepo = repositoryFactory.getProgramRepository();
     
     // Check if scenario exists
     const scenario = await scenarioRepo.findById(scenarioId);
     
-    if (!scenario) {
+    if (!scenario || scenario.mode !== 'discovery') {
       return NextResponse.json(
-        { error: 'Scenario not found' },
+        { 
+          success: false,
+          error: 'Scenario not found',
+          meta: {
+            timestamp: new Date().toISOString()
+          }
+        },
         { status: 404 }
       );
     }
     
-    // Note: In v2 architecture, scenario metadata is stored in the scenario itself,
-    // not in user-specific mapping files
+    // Process multilingual fields
+    const titleObj = scenario.title as Record<string, string>;
+    const descObj = scenario.description as Record<string, string>;
     
-    // Load programs for this scenario and user
-    // Get all programs for this scenario and filter by user
-    const allPrograms = await programRepo.findByScenario(scenarioId);
-    const userPrograms = allPrograms.filter(p => p.userId === userEmail);
+    const processedScenario = {
+      ...scenario,
+      title: titleObj?.[language] || titleObj?.en || 'Untitled',
+      description: descObj?.[language] || descObj?.en || 'No description',
+      // Preserve original multilingual objects
+      titleObj,
+      descObj,
+      // Process discoveryData multilingual fields
+      discoveryData: scenario.discoveryData ? {
+        ...scenario.discoveryData,
+        dayInLife: scenario.discoveryData.dayInLife?.[language] || scenario.discoveryData.dayInLife?.en || '',
+        challenges: scenario.discoveryData.challenges?.[language] || scenario.discoveryData.challenges?.en || [],
+        rewards: scenario.discoveryData.rewards?.[language] || scenario.discoveryData.rewards?.en || []
+      } : {}
+    };
     
-    // Calculate progress for each program
-    const programsWithProgress = await Promise.all(
-      userPrograms.map(async (program: Program) => {
-        const taskCount = (program.metadata?.taskIds as string[] || []).length;
-        const completedCount = program.status === 'completed' 
-          ? taskCount 
-          : program.currentTaskIndex;
-        
-        const progress = taskCount > 0 
-          ? Math.round((completedCount / taskCount) * 100)
-          : 0;
-        
-        return {
-          id: program.id,
-          scenarioId: program.scenarioId,
-          userId: program.userId,
-          status: program.status,
-          createdAt: program.startedAt || program.createdAt,
-          lastActiveAt: program.completedAt || program.lastActivityAt || program.createdAt,
-          currentTaskIndex: program.currentTaskIndex,
-          totalTasks: taskCount,
-          completedTasks: completedCount,
-          progress,
-          totalXP: program.metadata?.totalXP || 0,
-          metadata: program.metadata
-        };
-      })
-    );
-    
-    // Sort programs by most recent first
-    programsWithProgress.sort((a, b) => 
-      new Date(b.lastActiveAt).getTime() - new Date(a.lastActiveAt).getTime()
-    );
-    
-    // Return scenario data with programs for backward compatibility
+    // Return scenario data
     return NextResponse.json({
-      id: scenario.id,
-      sourceType: scenario.sourceType,
-      sourcePath: scenario.sourcePath,
-      sourceId: scenario.sourceId,
-      sourceMetadata: scenario.sourceMetadata,
-      title: scenario.title,
-      description: scenario.description,
-      careerType: scenario.sourceMetadata ? (scenario.sourceMetadata as Record<string, unknown>)?.careerType || 'unknown' : 'unknown',
-      objectives: (scenario.metadata as Record<string, unknown>)?.objectives || [],
-      metadata: scenario.metadata, // Include all YAML data stored in metadata
-      createdAt: scenario.createdAt,
-      updatedAt: scenario.updatedAt,
-      programs: programsWithProgress
+      success: true,
+      data: {
+        scenario: processedScenario
+      },
+      meta: {
+        timestamp: new Date().toISOString(),
+        version: '1.0.0',
+        language: language
+      }
     });
   } catch (error) {
     console.error('Error in GET /api/discovery/scenarios/[id]:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        success: false,
+        error: 'Internal server error',
+        meta: {
+          timestamp: new Date().toISOString()
+        }
+      },
       { status: 500 }
     );
   }

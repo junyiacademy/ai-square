@@ -301,6 +301,15 @@
     "loading": "載入中...",
     "notFound": "找不到此職業冒險",
     "daysUsed": "使用天數",
-    "translating": "翻譯中"
+    "translating": "翻譯中",
+    "startExploration": "開始探索",
+    "readyToStart": "準備好開始你的職業探索之旅了嗎？",
+    "jobMarket": "就業市場",
+    "demand": "需求",
+    "growth": "成長率",
+    "salary": "薪資範圍",
+    "requiredSkills": "所需技能",
+    "technical": "技術技能",
+    "soft": "軟技能"
   }
 }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { ITask } from '@/types/unified-learning';
+import { normalizeLanguageCode } from '@/lib/utils/language';
 
 export async function GET(
   request: NextRequest,
@@ -19,7 +20,11 @@ export async function GET(
     }
 
     const { id: scenarioId, programId } = await params;
-    const userEmail = session.user.email;
+    const userId = session.user.id; // Get user ID
+    
+    // Get language from query param
+    const { searchParams } = new URL(request.url);
+    const lang = normalizeLanguageCode(searchParams.get('lang') || 'en');
     
     // Get repositories
     const programRepo = repositoryFactory.getProgramRepository();
@@ -34,7 +39,13 @@ export async function GET(
     }
     
     // Verify this program belongs to the current user and scenario
-    if (program.userId !== userEmail || program.scenarioId !== scenarioId) {
+    if (program.userId !== userId || program.scenarioId !== scenarioId) {
+      console.log('Authorization check failed:', {
+        programUserId: program.userId,
+        currentUserId: userId,
+        programScenarioId: program.scenarioId,
+        requestedScenarioId: scenarioId
+      });
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
     
@@ -104,8 +115,39 @@ export async function GET(
       
       return {
         id: task.id,
-        title: task.title,
-        description: (task.content as Record<string, unknown>)?.description as string || '',
+        title: (() => {
+          let titleObj = task.title;
+          // Handle case where title is a JSON string
+          if (typeof titleObj === 'string' && titleObj.startsWith('{')) {
+            try {
+              titleObj = JSON.parse(titleObj);
+            } catch {
+              return titleObj; // Return as-is if parse fails
+            }
+          }
+          // Now extract the language-specific value
+          if (typeof titleObj === 'object' && titleObj !== null) {
+            return (titleObj as Record<string, string>)[lang] || (titleObj as Record<string, string>)['en'] || '';
+          }
+          return titleObj as string || '';
+        })(),
+        description: (() => {
+          const desc = (task.content as Record<string, unknown>)?.description;
+          let descObj = desc;
+          // Handle case where description is a JSON string
+          if (typeof descObj === 'string' && descObj.startsWith('{')) {
+            try {
+              descObj = JSON.parse(descObj);
+            } catch {
+              return descObj as string || '';
+            }
+          }
+          // Now extract the language-specific value
+          if (typeof descObj === 'object' && descObj !== null) {
+            return (descObj as Record<string, string>)[lang] || (descObj as Record<string, string>)['en'] || '';
+          }
+          return descObj as string || '';
+        })(),
         xp: xp,
         status: displayStatus,
         completedAt: task.completedAt,
@@ -146,7 +188,11 @@ export async function GET(
       metadata: program.metadata,
       // Add career info from scenario
       careerType: scenario?.sourceMetadata && (scenario.sourceMetadata as Record<string, unknown>)?.careerType as string || 'unknown',
-      scenarioTitle: scenario?.title || 'Discovery Scenario'
+      scenarioTitle: scenario?.title ? 
+        (typeof scenario.title === 'object' && scenario.title !== null ? 
+          (scenario.title as Record<string, string>)[lang] || (scenario.title as Record<string, string>)['en'] || 'Discovery Scenario' : 
+          scenario.title as string) : 
+        'Discovery Scenario'
     };
     
     return NextResponse.json(responseData, { headers });

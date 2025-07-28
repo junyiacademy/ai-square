@@ -284,60 +284,15 @@ export class PostgreSQLUserRepository implements IUserRepository {
   }
 
   async getAssessmentSessions(userId: string): Promise<AssessmentSession[]> {
-    // Get assessment evaluations from unified evaluations table
-    const query = `
-      SELECT 
-        e.id, e.user_id as "userId", e.created_at as "createdAt",
-        e.score as "overallScore", e.feedback, e.metadata
-      FROM evaluations e
-      JOIN tasks t ON e.task_id = t.id
-      WHERE e.user_id = $1 AND t.mode = 'assessment'
-      ORDER BY e.created_at DESC
-    `;
-
-    const { rows } = await this.pool.query(query, [userId]);
-    
-    // Transform to match legacy AssessmentSession interface
-    return rows.map(row => {
-      const feedback = typeof row.feedback === 'string' ? JSON.parse(row.feedback) : row.feedback;
-      const metadata = typeof row.metadata === 'string' ? JSON.parse(row.metadata) : row.metadata;
-      
-      return {
-        id: row.id,
-        userId: row.userId,
-        sessionKey: metadata?.sessionKey || '',
-        techScore: feedback?.techScore || 0,
-        creativeScore: feedback?.creativeScore || 0,
-        businessScore: feedback?.businessScore || 0,
-        answers: feedback?.answers || {},
-        generatedPaths: feedback?.generatedPaths || [],
-        createdAt: row.createdAt,
-        metadata: metadata
-      };
-    });
+    // TODO: Assessment 模組需要遷移到統一架構
+    // 暫時返回空陣列避免阻擋 Discovery 開發
+    return [];
   }
 
   async getLatestAssessmentResults(userId: string): Promise<AssessmentResults | null> {
-    // Get latest assessment evaluation from unified evaluations table
-    const query = `
-      SELECT e.feedback
-      FROM evaluations e
-      JOIN tasks t ON e.task_id = t.id
-      WHERE e.user_id = $1 AND t.mode = 'assessment'
-      ORDER BY e.created_at DESC
-      LIMIT 1
-    `;
-
-    const { rows } = await this.pool.query(query, [userId]);
-    if (!rows[0]) return null;
-    
-    const feedback = typeof rows[0].feedback === 'string' ? JSON.parse(rows[0].feedback) : rows[0].feedback;
-    
-    return {
-      tech: feedback?.techScore || 0,
-      creative: feedback?.creativeScore || 0,
-      business: feedback?.businessScore || 0
-    };
+    // TODO: Assessment 模組需要遷移到統一架構
+    // 暫時返回 null 避免阻擋 Discovery 開發
+    return null;
   }
 
   // ========================================
@@ -375,18 +330,9 @@ export class PostgreSQLUserRepository implements IUserRepository {
   }
 
   async getUserBadges(userId: string): Promise<UserBadge[]> {
-    const query = `
-      SELECT 
-        id, user_id as "userId", badge_id as "badgeId", name, description,
-        image_url as "imageUrl", category, xp_reward as "xpReward",
-        unlocked_at as "unlockedAt", metadata
-      FROM user_badges
-      WHERE user_id = $1
-      ORDER BY unlocked_at DESC
-    `;
-
-    const { rows } = await this.pool.query(query, [userId]);
-    return rows;
+    // TODO: Badge 系統需要建立相關資料表
+    // 暫時返回空陣列避免阻擋 Discovery 開發
+    return [];
   }
 
   // ========================================
@@ -413,15 +359,9 @@ export class PostgreSQLUserRepository implements IUserRepository {
     // Get user badges
     const badges = await this.getUserBadges(user.id);
     
-    // Get achievements (from existing system)
-    const achievementsQuery = `
-      SELECT a.id, a.code, a.achievement_type as type, a.xp_reward as "xpReward", ua.earned_at as "earnedAt"
-      FROM user_achievements ua
-      JOIN achievements a ON ua.achievement_id = a.id
-      WHERE ua.user_id = $1
-      ORDER BY ua.earned_at DESC
-    `;
-    const { rows: achievements } = await this.pool.query(achievementsQuery, [user.id]);
+    // TODO: Achievement 系統需要建立相關資料表
+    // 暫時返回空陣列避免阻擋 Discovery 開發
+    const achievements: any[] = [];
 
     // Format response to match legacy UserData interface
     return {

@@ -14,6 +14,7 @@ import { PostgreSQLProgramRepository } from '../postgresql/program-repository';
 import { PostgreSQLTaskRepository } from '../postgresql/task-repository';
 import { PostgreSQLEvaluationRepository } from '../postgresql/evaluation-repository';
 import { PostgreSQLScenarioRepository } from '../postgresql/scenario-repository';
+import { PostgreSQLDiscoveryRepository } from '../postgresql/discovery-repository';
 
 // GCS Repositories (for content only)
 import { GCSContentRepository } from '../gcs/content-repository';
@@ -26,6 +27,7 @@ import type {
   ITaskRepository,
   IEvaluationRepository,
   IScenarioRepository,
+  IDiscoveryRepository,
   IContentRepository,
   IMediaRepository
 } from '../interfaces';
@@ -119,6 +121,10 @@ export class RepositoryFactory {
 
   public getScenarioRepository(): IScenarioRepository {
     return new PostgreSQLScenarioRepository(this.pool);
+  }
+
+  public getDiscoveryRepository(): IDiscoveryRepository {
+    return new PostgreSQLDiscoveryRepository(this.pool);
   }
 
   // ========================================

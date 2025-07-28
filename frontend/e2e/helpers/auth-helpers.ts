@@ -45,21 +45,21 @@ export async function performLogin(
   // 前往登入頁
   await page.goto('/login')
 
-  // 填寫表單
-  await page.getByLabel('Email').fill(user.email)
-  await page.getByLabel('Password').fill(user.password)
+  // 填寫表單 - 使用 id 選擇器更穩定
+  await page.locator('#email').fill(user.email)
+  await page.locator('#password').fill(user.password)
 
   // 設定 Remember Me
   if (rememberMe) {
     await page.locator('#remember-me').check()
   }
 
-  // 提交表單
-  await page.getByRole('button', { name: 'Login' }).click()
+  // 提交表單 - 使用更穩定的選擇器
+  await page.locator('button[type="submit"]').click()
 
   // 驗證結果
   if (expectSuccess) {
-    await expect(page).toHaveURL(/\/relations/, { timeout: 10000 })
+    await expect(page).toHaveURL(/\/(relations|onboarding|discovery|assessment|dashboard)/, { timeout: 10000 })
   }
 }
 

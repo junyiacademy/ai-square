@@ -33,7 +33,7 @@ export async function createAccessToken(payload: Omit<TokenPayload, 'exp' | 'iat
 }
 
 // Create refresh token (long-lived)
-export async function createRefreshToken(userId: number, rememberMe: boolean = false): Promise<string> {
+export async function createRefreshToken(userId: string | number, rememberMe: boolean = false): Promise<string> {
   const token = await new SignJWT({ userId })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()

@@ -236,6 +236,93 @@
     "assessment": "Assessment", 
     "paths": "Paths",
     "program": "Program",
-    "achievements": "Achievements"
+    "achievements": "Achievements",
+    "scenarios": "Career Adventures"
+  },
+  
+  "complete": {
+    "congratulations": "Congratulations! 🎉",
+    "completedProgram": "You've completed {{title}}",
+    "totalXP": "Total XP Earned",
+    "overallScore": "Overall Score",
+    "tasksCompleted": "Tasks Completed",
+    "timeSpent": "Time Spent",
+    "daysUsed": "Days Used",
+    "hoursMinutes": "{{hours}}h {{minutes}}m",
+    "minutes": "{{minutes}} minutes",
+    "achievementsUnlocked": "Achievements Unlocked",
+    "skillImprovements": "Skill Improvements",
+    "previousLevel": "Previous",
+    "currentLevel": "Current",
+    "taskBreakdown": "Task Performance",
+    "task": "Task",
+    "type": "Type",
+    "score": "Score",
+    "xpEarned": "XP Earned",
+    "attempts": "Attempts",
+    "aiFeedback": "AI Mentor Feedback",
+    "overallAssessment": "Overall Assessment",
+    "careerAlignment": "Career Path Alignment",
+    "strengths": "Strengths",
+    "growthAreas": "Areas for Growth",
+    "nextSteps": "Recommended Next Steps",
+    "backToScenario": "Back to Scenario",
+    "exploreMore": "Explore More Paths",
+    "printResults": "Print Results",
+    "errorLoading": "Error Loading Results",
+    "noData": "No completion data found"
+  },
+  
+  "taskTypes": {
+    "question": "Question",
+    "chat": "AI Chat",
+    "creation": "Creation",
+    "analysis": "Analysis"
+  },
+  
+  "programCard": {
+    "title": "Learning Journey",
+    "statusActive": "In Progress",
+    "statusCompleted": "Completed",
+    "startedOn": "Started on",
+    "progress": "Progress",
+    "tasksCompleted": "{{completed}} / {{total}} tasks completed",
+    "continue": "Continue",
+    "viewResults": "View Results"
+  },
+  
+  "scenarioDetail": {
+    "loading": "Loading...",
+    "notFound": "Scenario not found",
+    "backToList": "Back to Career List",
+    "myPrograms": "My Programs",
+    "startNewProgram": "Start New Program",
+    "creating": "Creating...",
+    "noProgramsYet": "No learning journeys started yet",
+    "startFirstProgram": "Start Your First Journey",
+    "startExploration": "Start Exploration",
+    "readyToStart": "Ready to begin your career exploration journey?",
+    "jobMarket": "Job Market",
+    "demand": "Demand",
+    "growth": "Growth Rate",
+    "salary": "Salary Range",
+    "requiredSkills": "Required Skills",
+    "technical": "Technical",
+    "soft": "Soft Skills",
+    "daysUsed": "Days Used",
+    "translating": "Translating"
+  },
+  
+  "status": {
+    "loading": "Loading...",
+    "saving": "Saving...",
+    "error": "Something went wrong",
+    "success": "Success!"
+  },
+  
+  "errors": {
+    "loadingFailed": "Failed to load content",
+    "savingFailed": "Failed to save progress",
+    "networkError": "Network error, please try again"
   }
 }

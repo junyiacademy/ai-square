@@ -3,9 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import DiscoveryPageLayout from '@/components/discovery/DiscoveryPageLayout';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion } from 'framer-motion';
+import { normalizeLanguageCode } from '@/lib/utils/language';
 import { 
   ArrowLeftIcon,
   SparklesIcon,
@@ -54,6 +56,7 @@ interface ProgramData {
 export default function ProgramDetailPage() {
   const router = useRouter();
   const params = useParams();
+  const { i18n } = useTranslation();
   const { isLoggedIn, isLoading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
   const [programData, setProgramData] = useState<ProgramData | null>(null);
@@ -76,7 +79,8 @@ export default function ProgramDetailPage() {
     try {
       setLoading(true);
       const sessionToken = localStorage.getItem('ai_square_session');
-      const response = await fetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}?t=${Date.now()}`, {
+      const lang = normalizeLanguageCode(i18n.language);
+      const response = await fetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}?t=${Date.now()}&lang=${lang}`, {
         credentials: 'include',
         headers: {
           'x-session-token': sessionToken || '',
@@ -100,7 +104,7 @@ export default function ProgramDetailPage() {
     if (scenarioId && programId) {
       loadProgramData();
     }
-  }, [scenarioId, programId, isLoggedIn, authLoading, router]);
+  }, [scenarioId, programId, isLoggedIn, authLoading, router, i18n.language]);
 
   const handleStartTask = (taskId: string) => {
     // Navigate to task learning page
@@ -309,7 +313,7 @@ export default function ProgramDetailPage() {
                 transition={{ delay: index * 0.1 }}
                 className={`
                   bg-white rounded-xl shadow-md border transition-all
-                  ${((task as Task).status === 'available')
+                  ${((task as Task).status === 'available' || (task as Task).status === 'active')
                     ? 'border-purple-200 hover:shadow-lg cursor-pointer' 
                     : task.status === 'completed'
                     ? 'border-green-100 hover:shadow-lg cursor-pointer'
@@ -317,7 +321,7 @@ export default function ProgramDetailPage() {
                   }
                   ${task.status === 'completed' ? 'bg-gray-50' : ''}
                 `}
-                onClick={() => ((task as Task).status === 'available' || (task as Task).status === 'completed') && handleStartTask(task.id)}
+                onClick={() => ((task as Task).status === 'available' || (task as Task).status === 'active' || (task as Task).status === 'completed') && handleStartTask(task.id)}
               >
                 <div className="p-6">
                   <div className="flex items-start justify-between">
@@ -327,7 +331,7 @@ export default function ProgramDetailPage() {
                         p-3 rounded-full
                         ${task.status === 'completed' 
                           ? 'bg-green-100' 
-                          : ((task as Task).status === 'available')
+                          : ((task as Task).status === 'available' || (task as Task).status === 'active')
                           ? 'bg-purple-100'
                           : 'bg-gray-100'
                         }
@@ -335,7 +339,7 @@ export default function ProgramDetailPage() {
                         {task.status === 'completed' && (
                           <CheckCircleIcon className="w-6 h-6 text-green-600" />
                         )}
-                        {((task as Task).status === 'available') && (
+                        {((task as Task).status === 'available' || (task as Task).status === 'active') && (
                           <SparklesIcon className="w-6 h-6 text-purple-600" />
                         )}
                         {((task as Task).status === 'locked') && (
@@ -349,13 +353,21 @@ export default function ProgramDetailPage() {
                           text-lg font-semibold mb-1
                           ${task.status === 'completed' ? 'text-gray-600' : 'text-gray-900'}
                         `}>
-                          任務 {index + 1}: {task.title}
+                          任務 {index + 1}: {typeof task.title === 'object' && task.title !== null ? 
+                            (task.title as Record<string, string>)[normalizeLanguageCode(i18n.language)] || 
+                            (task.title as Record<string, string>)['en'] || 
+                            'Untitled Task' : 
+                            task.title as string}
                         </h3>
                         <p className={`
                           text-sm mb-2
                           ${task.status === 'completed' ? 'text-gray-500' : 'text-gray-600'}
                         `}>
-                          {task.description}
+                          {typeof task.description === 'object' && task.description !== null ? 
+                            (task.description as Record<string, string>)[normalizeLanguageCode(i18n.language)] || 
+                            (task.description as Record<string, string>)['en'] || 
+                            '' : 
+                            task.description as string}
                         </p>
                         
                         <div className="flex items-center space-x-4 text-sm">
@@ -393,7 +405,7 @@ export default function ProgramDetailPage() {
                     </div>
                     
                     {/* Action Button */}
-                    {((task as Task).status === 'available') && (
+                    {((task as Task).status === 'available' || (task as Task).status === 'active') && (
                       <button className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
                         <PlayIcon className="w-4 h-4" />
                         <span>開始</span>

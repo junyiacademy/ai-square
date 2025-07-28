@@ -200,10 +200,51 @@ async function loadDiscoveryScenarios() {
           )
         `;
         
+        // Create proper task templates with multilingual support
+        const createTaskTemplate = (task: { id: string; type: string; title: string; description: string; skills_improved: string[]; xp_reward: number }, difficulty: string, order: number) => {
+          const taskTitle: Record<string, string> = {};
+          const taskDescription: Record<string, string> = {};
+          const taskInstructions: Record<string, string> = {};
+          
+          // Build multilingual content for each task
+          for (const [lang, data] of Object.entries(multilangData)) {
+            const langTasks = data.example_tasks[difficulty as keyof typeof data.example_tasks];
+            const langTask = langTasks?.find((t) => t.id === task.id);
+            if (langTask) {
+              taskTitle[lang] = langTask.title;
+              taskDescription[lang] = langTask.description;
+              taskInstructions[lang] = `Complete this ${difficulty} level ${langTask.type} task`;
+            }
+          }
+          
+          return {
+            id: task.id,
+            type: task.type,
+            order: order,
+            title: taskTitle,
+            description: taskDescription,
+            instructions: taskInstructions,
+            difficulty: difficulty,
+            context: {
+              taskId: task.id,
+              skillsImproved: task.skills_improved,
+              xpReward: task.xp_reward
+            }
+          };
+        };
+        
+        // Create task templates with proper ordering
+        let taskOrder = 0;
         const taskTemplates = [
-          ...enData.example_tasks.beginner,
-          ...enData.example_tasks.intermediate,
-          ...enData.example_tasks.advanced
+          ...enData.example_tasks.beginner.map((task) => 
+            createTaskTemplate(task, 'beginner', taskOrder++)
+          ),
+          ...enData.example_tasks.intermediate.map((task) => 
+            createTaskTemplate(task, 'intermediate', taskOrder++)
+          ),
+          ...enData.example_tasks.advanced.map((task) => 
+            createTaskTemplate(task, 'advanced', taskOrder++)
+          )
         ];
         
         const discoveryData = {

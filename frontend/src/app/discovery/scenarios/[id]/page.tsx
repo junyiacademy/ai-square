@@ -16,7 +16,8 @@ import {
   TrophyIcon,
   PlayIcon,
   PlusIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
+  AcademicCapIcon
 } from '@heroicons/react/24/outline';
 import {
   BriefcaseIcon,
@@ -73,15 +74,37 @@ interface ScenarioData {
   id: string;
   title: string;
   description: string;
-  careerType: string;
-  objectives: string[];
+  mode: string;
+  difficulty: string;
+  estimatedMinutes: number;
+  discoveryData?: {
+    pathId?: string;
+    category?: string;
+    careerInsights?: {
+      job_market?: {
+        demand?: string;
+        growth_rate?: string;
+        salary_range?: string;
+        job_titles?: string[];
+      };
+      required_skills?: {
+        technical?: string[];
+        soft?: string[];
+      };
+      typical_day?: Record<string, string>;
+    };
+    worldSetting?: {
+      name?: Record<string, string>;
+      description?: Record<string, string>;
+    };
+    startingScenario?: {
+      title?: Record<string, string>;
+      description?: Record<string, string>;
+    };
+  };
   metadata?: Record<string, unknown>;
-  programs: Array<{
-    id: string;
-    status: string;
-    startedAt: string;
-    metadata?: Record<string, unknown>;
-  }>;
+  taskTemplates?: Array<any>;
+  careerType?: string; // For backward compatibility
 }
 
 export default function DiscoveryScenarioDetailPage() {
@@ -136,7 +159,12 @@ export default function DiscoveryScenarioDetailPage() {
       }
 
       const data = await response.json();
-      setScenarioData(data);
+      // API returns { success, data: { scenario } }
+      if (data.success && data.data?.scenario) {
+        setScenarioData(data.data.scenario);
+      } else {
+        throw new Error('Invalid response format');
+      }
     } catch (error) {
       console.error('Error loading scenario data:', error);
       setError(error instanceof Error ? error.message : 'Failed to load scenario data');
@@ -220,7 +248,7 @@ export default function DiscoveryScenarioDetailPage() {
     );
   }
 
-  const careerType = (scenarioData.careerType || scenarioData.metadata?.careerType) as string;
+  const careerType = (scenarioData.discoveryData?.pathId || scenarioData.metadata?.yamlId || scenarioData.careerType || 'app_developer') as string;
   const Icon = careerIcons[careerType as keyof typeof careerIcons] || SparklesIcon;
   const color = careerColors[careerType as keyof typeof careerColors] || 'from-gray-500 to-gray-600';
   const skills = (scenarioData.metadata?.skillFocus || []) as string[];
@@ -296,10 +324,98 @@ export default function DiscoveryScenarioDetailPage() {
             </button>
           </div>
 
-          {/* Programs List */}
-          {scenarioData.programs.length > 0 ? (
+          {/* Start Learning Button - Show when no programs */}
+          <div className="text-center py-8">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={createNewProgram}
+              disabled={creatingProgram}
+              className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform transition-all disabled:opacity-50"
+            >
+              {creatingProgram ? (
+                <span className="flex items-center space-x-2">
+                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  <span>{t('discovery:scenarioDetail.creating')}</span>
+                </span>
+              ) : (
+                t('discovery:scenarioDetail.startExploration')
+              )}
+            </motion.button>
+            <p className="mt-4 text-gray-600">
+              {t('discovery:scenarioDetail.readyToStart')}
+            </p>
+          </div>
+          
+          {/* Career Insights */}
+          {scenarioData.discoveryData?.careerInsights && (
+            <div className="grid md:grid-cols-2 gap-6 mt-8">
+              {/* Job Market */}
+              {scenarioData.discoveryData.careerInsights.job_market && (
+                <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
+                  <h3 className="text-lg font-semibold mb-4 flex items-center">
+                    <ChartBarIcon className="w-5 h-5 mr-2 text-purple-600" />
+                    {t('discovery:scenarioDetail.jobMarket')}
+                  </h3>
+                  <div className="space-y-2 text-sm">
+                    {scenarioData.discoveryData.careerInsights.job_market.demand && (
+                      <p><span className="font-medium">{t('discovery:scenarioDetail.demand')}:</span> {scenarioData.discoveryData.careerInsights.job_market.demand}</p>
+                    )}
+                    {scenarioData.discoveryData.careerInsights.job_market.growth_rate && (
+                      <p><span className="font-medium">{t('discovery:scenarioDetail.growth')}:</span> {scenarioData.discoveryData.careerInsights.job_market.growth_rate}</p>
+                    )}
+                    {scenarioData.discoveryData.careerInsights.job_market.salary_range && (
+                      <p><span className="font-medium">{t('discovery:scenarioDetail.salary')}:</span> {scenarioData.discoveryData.careerInsights.job_market.salary_range}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+              
+              {/* Required Skills */}
+              {scenarioData.discoveryData.careerInsights.required_skills && (
+                <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
+                  <h3 className="text-lg font-semibold mb-4 flex items-center">
+                    <AcademicCapIcon className="w-5 h-5 mr-2 text-purple-600" />
+                    {t('discovery:scenarioDetail.requiredSkills')}
+                  </h3>
+                  <div className="space-y-3">
+                    {scenarioData.discoveryData.careerInsights.required_skills.technical && (
+                      <div>
+                        <p className="font-medium text-sm mb-1">{t('discovery:scenarioDetail.technical')}:</p>
+                        <div className="flex flex-wrap gap-2">
+                          {scenarioData.discoveryData.careerInsights.required_skills.technical.map((skill, idx) => (
+                            <span key={idx} className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {scenarioData.discoveryData.careerInsights.required_skills.soft && (
+                      <div>
+                        <p className="font-medium text-sm mb-1">{t('discovery:scenarioDetail.soft')}:</p>
+                        <div className="flex flex-wrap gap-2">
+                          {scenarioData.discoveryData.careerInsights.required_skills.soft.map((skill, idx) => (
+                            <span key={idx} className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+          
+          {/* Hidden programs section for future use */}
+          {false && (
             <div className="grid gap-4">
-              {scenarioData.programs.map((program, index) => (
+              {[].map((program: any, index) => (
                 <motion.div
                   key={program.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -381,21 +497,6 @@ export default function DiscoveryScenarioDetailPage() {
                   </div>
                 </motion.div>
               ))}
-            </div>
-          ) : (
-            <div className="bg-gray-50 rounded-xl p-12 text-center">
-              <RocketLaunchIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-600 mb-6">
-                {t('discovery:scenarioDetail.noProgramsYet')}
-              </p>
-              <button
-                onClick={createNewProgram}
-                disabled={creatingProgram}
-                className="inline-flex items-center space-x-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-              >
-                <SparklesIcon className="w-5 h-5" />
-                <span>{creatingProgram ? t('discovery:scenarioDetail.creating') : t('discovery:scenarioDetail.startFirstProgram')}</span>
-              </button>
             </div>
           )}
         </div>

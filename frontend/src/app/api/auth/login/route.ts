@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create JWT tokens
-    const userId = parseInt(user.id, 10)
+    const userId = user.id // Keep UUID as string
     const accessToken = await createAccessToken({
       userId,
       email: user.email,
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
       name: user.name || mockUser.name
     })
     
-    const refreshToken = await createRefreshToken(userId, rememberMe)
+    const refreshToken = await createRefreshToken(userId.toString(), rememberMe)
     
     // Create session token
     const sessionToken = createSessionToken(user.id, user.email)

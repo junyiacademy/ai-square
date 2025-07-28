@@ -259,8 +259,22 @@
   },
   
   "scenarioDetail": {
-    "noProgramsYet": "No learning journeys started yet",
+    "loading": "Loading...",
+    "notFound": "Scenario not found",
+    "backToScenarios": "Back to Scenarios",
+    "myPrograms": "My Programs",
+    "startNewProgram": "Start New Program",
     "creating": "Creating...",
-    "startFirstProgram": "Start Your First Journey"
+    "noProgramsYet": "No learning journeys started yet",
+    "startFirstProgram": "Start Your First Journey",
+    "startExploration": "Start Exploration",
+    "readyToStart": "Ready to begin your career exploration journey?",
+    "jobMarket": "Job Market",
+    "demand": "Demand",
+    "growth": "Growth Rate",
+    "salary": "Salary Range",
+    "requiredSkills": "Required Skills",
+    "technical": "Technical",
+    "soft": "Soft Skills"
   }
 }

@@ -11,6 +11,12 @@ import type {
   IInteraction
 } from '@/types/unified-learning';
 import type {
+  IDiscoveryScenario,
+  ICareerRecommendation,
+  IDiscoveryMilestone,
+  IPortfolioItem
+} from '@/types/discovery-types';
+import type {
   LearningMode as DBLearningMode,
   ProgramStatus as DBProgramStatus,
   TaskStatus as DBTaskStatus,
@@ -93,6 +99,30 @@ export interface IScenarioRepository {
   findByMode?(mode: DBLearningMode): Promise<IScenario[]>;
   findActive?(): Promise<IScenario[]>;
   updateStatus?(id: string, status: DBScenarioStatus): Promise<void>;
+}
+
+export interface IDiscoveryRepository {
+  // Career path management
+  findCareerPaths(): Promise<IDiscoveryScenario[]>;
+  findCareerPathById(id: string): Promise<IDiscoveryScenario | null>;
+  findCareerPathBySlug(slug: string): Promise<IDiscoveryScenario | null>;
+  
+  // Career recommendations
+  getCareerRecommendations(userId: string): Promise<ICareerRecommendation[]>;
+  
+  // Progress tracking
+  getUserDiscoveryProgress(userId: string): Promise<{
+    exploredCareers: string[];
+    completedMilestones: IDiscoveryMilestone[];
+    portfolioItems: IPortfolioItem[];
+    overallProgress: number;
+  }>;
+  
+  // Portfolio management
+  addPortfolioItem(userId: string, item: Omit<IPortfolioItem, 'id' | 'createdAt'>): Promise<IPortfolioItem>;
+  updatePortfolioItem(userId: string, itemId: string, updates: Partial<IPortfolioItem>): Promise<IPortfolioItem>;
+  deletePortfolioItem(userId: string, itemId: string): Promise<void>;
+  getPortfolioItems(userId: string): Promise<IPortfolioItem[]>;
 }
 
 // ========================================
