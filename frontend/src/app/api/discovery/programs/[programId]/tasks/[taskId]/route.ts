@@ -13,7 +13,7 @@ import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { programId: string; taskId: string } }
+  context: { params: Promise<{ programId: string; taskId: string }> }
 ) {
   try {
     // Check authentication
@@ -25,7 +25,7 @@ export async function PATCH(
       );
     }
 
-    const { programId, taskId } = params;
+    const { programId, taskId } = await context.params;
     const body = await request.json();
 
     // Get repositories
