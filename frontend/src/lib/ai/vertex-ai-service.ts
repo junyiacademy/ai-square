@@ -83,23 +83,38 @@ export class VertexAIService {
     const token = await this.getAccessToken();
     const url = `https://${this.location}-aiplatform.googleapis.com/v1/projects/${this.projectId}/locations/${this.location}/publishers/google/models/${this.model}:generateContent`;
     
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body)
-    });
+    // Add timeout support with AbortController
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 25000); // 25 second timeout
+    
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+        signal: controller.signal
+      });
 
-    if (!response.ok) {
-      const error = await response.text();
-      // 不要在錯誤訊息中洩露敏感資訊
-      console.error('Vertex AI request failed:', { status: response.status, projectId: this.projectId });
-      throw new Error(`Vertex AI error: ${response.status} - ${error}`);
+      clearTimeout(timeout);
+
+      if (!response.ok) {
+        const error = await response.text();
+        // 不要在錯誤訊息中洩露敏感資訊
+        console.error('Vertex AI request failed:', { status: response.status, projectId: this.projectId });
+        throw new Error(`Vertex AI error: ${response.status} - ${error}`);
+      }
+
+      return response.json();
+    } catch (error) {
+      clearTimeout(timeout);
+      if ((error as Error).name === 'AbortError') {
+        throw new Error('Vertex AI request timed out after 25 seconds');
+      }
+      throw error;
     }
-
-    return response.json();
   }
 
   async sendMessage(message: string, context?: Record<string, unknown>): Promise<VertexAIResponse> {

@@ -221,14 +221,36 @@ export default function TaskDetailPage() {
         throw new Error('Failed to complete task');
       }
       
-      await res.json();
+      const result = await res.json();
       
-      // Navigate to program page
-      setTimeout(() => {
-        router.push(`/discovery/scenarios/${scenarioId}/programs/${programId}`);
-      }, 1000);
+      // Successfully completed - show comprehensive evaluation
+      if (result.success && result.evaluation) {
+        // Update task data with comprehensive evaluation
+        setTaskData({
+          ...taskData!,
+          status: 'completed',
+          evaluation: result.evaluation
+        });
+        
+        // Scroll to evaluation section after a short delay
+        setTimeout(() => {
+          const evaluationElement = document.getElementById('comprehensive-evaluation');
+          if (evaluationElement) {
+            evaluationElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Add highlight effect
+            evaluationElement.classList.add('highlight-evaluation');
+            setTimeout(() => {
+              evaluationElement.classList.remove('highlight-evaluation');
+            }, 3000);
+          }
+        }, 500);
+      } else {
+        throw new Error(result.error || 'Failed to complete task');
+      }
     } catch (error) {
       console.error('Error completing task:', error);
+      alert('任務完成失敗，請稍後再試');
+    } finally {
       setCompletingTask(false);
     }
   };
@@ -516,7 +538,7 @@ export default function TaskDetailPage() {
             </div>
             
             {/* Final Evaluation */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
+            <div id="comprehensive-evaluation" className="bg-white rounded-2xl shadow-lg p-6 transition-all duration-500">
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
                   <ChatBubbleLeftRightIcon className="w-5 h-5 text-blue-600" />

@@ -136,6 +136,29 @@ export default function DiscoveryScenarioDetailPage() {
   // Get scenario ID (UUID) from params
   const scenarioId = params.id as string;
 
+  const loadPrograms = useCallback(async () => {
+    try {
+      setLoadingPrograms(true);
+      const sessionToken = localStorage.getItem('ai_square_session');
+      
+      const response = await fetch(`/api/discovery/scenarios/${scenarioId}/programs?lang=${i18n.language}`, {
+        credentials: 'include',
+        headers: {
+          'x-session-token': sessionToken || ''
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setPrograms(data.programs || []);
+      }
+    } catch (error) {
+      console.error('Error loading programs:', error);
+    } finally {
+      setLoadingPrograms(false);
+    }
+  }, [scenarioId, i18n.language]);
+
   useEffect(() => {
     // Wait for auth check to complete
     if (authLoading) {
@@ -193,29 +216,6 @@ export default function DiscoveryScenarioDetailPage() {
       loadPrograms();
     }
   }, [scenarioId, isLoggedIn, authLoading, router, i18n.language, loadPrograms]);
-
-  const loadPrograms = useCallback(async () => {
-    try {
-      setLoadingPrograms(true);
-      const sessionToken = localStorage.getItem('ai_square_session');
-      
-      const response = await fetch(`/api/discovery/scenarios/${scenarioId}/programs?lang=${i18n.language}`, {
-        credentials: 'include',
-        headers: {
-          'x-session-token': sessionToken || ''
-        }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setPrograms(data.programs || []);
-      }
-    } catch (error) {
-      console.error('Error loading programs:', error);
-    } finally {
-      setLoadingPrograms(false);
-    }
-  }, [scenarioId, i18n.language]);
 
   const createNewProgram = async () => {
     try {

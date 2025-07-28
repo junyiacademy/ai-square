@@ -81,13 +81,39 @@ export async function GET(request: NextRequest) {
         const scenario = entry.scenario as Record<string, unknown>;
         const activeProgram = entry.activeProgram as Record<string, unknown> | null;
         
-        // Calculate progress for active program
-        let progress = 0;
-        if (activeProgram) {
+        // Calculate display status and statistics
+        let primaryStatus: 'mastered' | 'in-progress' | 'new' = 'new';
+        let currentProgress = 0;
+        let bestScore = 0;
+        let activeCount = 0;
+        
+        // Count active programs and find best score
+        entry.programs.forEach((prog: unknown) => {
+          const program = prog as Record<string, unknown>;
+          if (program.status === 'active') {
+            activeCount++;
+          }
+          if (program.status === 'completed') {
+            const score = program.totalScore as number || 0;
+            if (score > bestScore) bestScore = score;
+          }
+        });
+        
+        // Determine primary status
+        if (entry.completedCount > 0) {
+          primaryStatus = 'mastered';
+          // For mastered scenarios, show 100% to indicate completion
+          currentProgress = 100;
+        } else if (activeProgram) {
+          primaryStatus = 'in-progress';
           const completed = activeProgram.completedTaskCount as number || 0;
           const total = activeProgram.totalTaskCount as number || 1;
-          progress = Math.round((completed / total) * 100);
+          currentProgress = Math.round((completed / total) * 100);
         }
+        
+        // DEPRECATED: keeping for backward compatibility
+        const progress = currentProgress;
+        const displayStatus = primaryStatus === 'mastered' ? 'completed' : primaryStatus === 'in-progress' ? 'active' : 'pending';
         
         // Map career type to display format
         const careerType = scenario.metadata?.careerType as string || 
@@ -100,9 +126,20 @@ export async function GET(request: NextRequest) {
           title: getLocalizedField(scenario.title, request),
           subtitle: getLocalizedField(scenario.description, request),
           careerType,
+          // Primary display info
+          primaryStatus,
+          currentProgress,
+          stats: {
+            completedCount: entry.completedCount,
+            activeCount,
+            totalAttempts: entry.programs.length,
+            bestScore
+          },
+          // Legacy fields for compatibility
           isActive: activeProgram !== null,
           completedCount: entry.completedCount,
           progress,
+          displayStatus,
           userPrograms: {
             active: activeProgram ? {
               id: activeProgram.id,

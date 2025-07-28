@@ -337,11 +337,16 @@ export default function ScenariosPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredScenarios.map((scenario, index) => {
             const Icon = scenario.icon;
-            // Use data from API for 'my' tab, null for 'all' tab
-            const isMyScenario = activeTab === 'my';
-            const activeProgram = isMyScenario && scenario.isActive ? scenario.userPrograms?.active : null;
-            const completedCount = isMyScenario ? scenario.completedCount : 0;
-            const progress = isMyScenario ? scenario.progress : 0;
+            // Unified display logic for all tabs
+            const primaryStatus = scenario.primaryStatus || 'new';
+            const currentProgress = scenario.currentProgress || scenario.progress || 0;
+            const stats = scenario.stats || { 
+              completedCount: scenario.completedCount || 0, 
+              activeCount: 0, 
+              totalAttempts: 0,
+              bestScore: 0 
+            };
+            const hasUserProgress = primaryStatus !== 'new';
 
             return (
               <motion.div
@@ -362,20 +367,18 @@ export default function ScenariosPage() {
                       <Icon className="w-16 h-16 text-white/90" />
                     </div>
                     
-                    {/* Status Badge */}
-                    {activeProgram && (
-                      <div className="absolute top-3 right-3 px-3 py-1 bg-white/90 backdrop-blur rounded-full">
-                        <span className="text-xs font-medium text-purple-700">
-                          進行中 - {progress}%
-                        </span>
+                    {/* Unified Status Badge - Show for all tabs if user has progress */}
+                    {primaryStatus === 'mastered' && (
+                      <div className="absolute top-3 right-3 px-3 py-1 bg-green-100 backdrop-blur rounded-full flex items-center gap-1">
+                        <span className="text-xs font-medium text-green-700">已達成</span>
+                        <span className="text-lg">🏆</span>
                       </div>
                     )}
                     
-                    {/* Completed Badge */}
-                    {!activeProgram && completedCount && completedCount > 0 && (
-                      <div className="absolute top-3 right-3 px-3 py-1 bg-white/90 backdrop-blur rounded-full">
-                        <span className="text-xs font-medium text-green-700">
-                          已完成 {completedCount} 次
+                    {primaryStatus === 'in-progress' && (
+                      <div className="absolute top-3 right-3 px-3 py-1 bg-blue-100 backdrop-blur rounded-full">
+                        <span className="text-xs font-medium text-blue-700">
+                          學習中 - {currentProgress}%
                         </span>
                       </div>
                     )}
@@ -407,24 +410,38 @@ export default function ScenariosPage() {
                       )}
                     </div>
 
-                    {/* Progress Bar for Active Scenarios */}
-                    {activeProgram && (
+                    {/* Unified Progress Display - Show if user has any progress */}
+                    {hasUserProgress && (
                       <div className="mb-4">
                         <div className="flex justify-between text-xs text-gray-600 mb-1">
-                          <span>學習進度</span>
-                          <span>{activeProgram.completedTasks}/{activeProgram.totalTasks} 任務</span>
+                          <span>
+                            {primaryStatus === 'mastered' ? '最佳成績' : '學習進度'}
+                          </span>
+                          <span>{currentProgress}%</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div 
-                            className="bg-gradient-to-r from-purple-600 to-blue-600 h-2 rounded-full transition-all duration-300"
-                            style={{ width: `${progress}%` }}
+                            className={`h-2 rounded-full transition-all duration-300 ${
+                              primaryStatus === 'mastered' 
+                                ? 'bg-green-500' 
+                                : 'bg-gradient-to-r from-purple-600 to-blue-600'
+                            }`}
+                            style={{ width: `${currentProgress}%` }}
                           />
                         </div>
+                        
+                        {/* Statistics Info */}
+                        {stats.totalAttempts > 0 && (
+                          <div className="mt-2 text-xs text-gray-500">
+                            學習 {stats.totalAttempts} 次
+                            {stats.completedCount > 0 && `・${stats.completedCount} 次完成`}
+                          </div>
+                        )}
                       </div>
                     )}
 
-                    {/* Last Activity for My Scenarios */}
-                    {isMyScenario && scenario.lastActivity && (
+                    {/* Last Activity */}
+                    {activeTab === 'my' && scenario.lastActivity && (
                       <div className="text-xs text-gray-500 mb-4">
                         上次活動：{new Date(scenario.lastActivity).toLocaleDateString('zh-TW')}
                       </div>

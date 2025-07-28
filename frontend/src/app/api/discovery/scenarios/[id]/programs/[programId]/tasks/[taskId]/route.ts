@@ -414,63 +414,79 @@ export async function PATCH(
       
       // Use AI to evaluate the response
       const aiService = new VertexAIService({
-        systemPrompt: 'You are an AI learning evaluator in a discovery-based learning environment.',
+        systemPrompt: userLanguage === 'zhTW' 
+          ? '你是嚴格的學習評估助手。請根據任務要求客觀評估學習者是否真正完成了任務。如果回答與任務無關或未完成要求，必須給予誠實的評估。'
+          : 'You are a strict learning evaluator. Objectively assess if the learner actually completed the task based on requirements. If response is unrelated or incomplete, provide honest assessment.',
         temperature: 0.7,
         model: 'gemini-2.5-flash'
       });
       
-      // Prepare evaluation prompt
-      const evaluationPrompt = `
-You are an AI learning evaluator in a discovery-based learning environment.
+      // Prepare evaluation prompt with clear task context
+      const taskInstructions = (task.metadata as Record<string, unknown>)?.instructions || '';
+      const maxXP = (task.content as Record<string, unknown>)?.xp as number || 100;
+      const taskContent = task.content as Record<string, unknown> || {};
+      
+      // Extract language-specific values from multilingual objects
+      const getLocalizedValue = (obj: unknown): string => {
+        if (typeof obj === 'string') return obj;
+        if (typeof obj === 'object' && obj !== null) {
+          const multilingualObj = obj as Record<string, string>;
+          return multilingualObj[userLanguage] || multilingualObj['en'] || JSON.stringify(obj);
+        }
+        return String(obj);
+      };
+      
+      const evaluationPrompt = userLanguage === 'zhTW' 
+        ? `嚴格評估學習者是否完成了指定任務：
 
-Career Path: ${careerType}
-Task Title: ${task.title}
-Task Instructions: ${(task.metadata as Record<string, unknown>)?.instructions || ''}
-Task Context: ${JSON.stringify(task.content || {})}
-${yamlData && (yamlData as { world_setting?: { description?: string; atmosphere?: string } }).world_setting ? `World Setting: ${(yamlData as { world_setting?: { description?: string; atmosphere?: string } }).world_setting?.description || 'Unknown'}\nAtmosphere: ${(yamlData as { world_setting?: { description?: string; atmosphere?: string } }).world_setting?.atmosphere || 'Unknown'}` : ''}
+任務標題：${getLocalizedValue(task.title)}
+任務說明：${getLocalizedValue(taskInstructions)}
+${taskContent.description ? `任務描述：${getLocalizedValue(taskContent.description)}` : ''}
+${taskContent.instructions ? `任務指示：${getLocalizedValue(taskContent.instructions)}` : ''}
+${taskContent.requirements ? `具體要求：${JSON.stringify(taskContent.requirements)}` : ''}
+
+學習者回答：
+${content.response}
+
+請仔細判斷：
+1. 回答是否真的針對任務要求？
+2. 是否實際完成了要求的內容？
+3. 如果回答與任務無關，completed 必須為 false
+
+請用繁體中文以 JSON 格式回覆：
+{
+  "feedback": "具體說明是否完成任務及原因",
+  "strengths": ["優點（如果有）"],
+  "improvements": ["必須改進的地方"],
+  "completed": true/false（嚴格判斷）,
+  "xpEarned": number (0-${maxXP}，未完成任務應該很低),
+  "skillsImproved": ["實際展現的相關技能"]
+}`
+        : `Strictly evaluate if the learner completed the assigned task:
+
+Task Title: ${getLocalizedValue(task.title)}
+Instructions: ${getLocalizedValue(taskInstructions)}
+${taskContent.description ? `Description: ${getLocalizedValue(taskContent.description)}` : ''}
+${taskContent.instructions ? `Task Instructions: ${getLocalizedValue(taskContent.instructions)}` : ''}
+${taskContent.requirements ? `Requirements: ${JSON.stringify(taskContent.requirements)}` : ''}
 
 Learner's Response:
 ${content.response}
 
-Please evaluate this response considering:
-1. Understanding of the task requirements
-2. Depth of analysis or quality of creation
-3. Creativity and original thinking
-4. Practical application of concepts
-5. Evidence of learning and growth
+Carefully judge:
+1. Does the response address the task requirements?
+2. Did they actually complete what was asked?
+3. If response is unrelated to task, completed MUST be false
 
-${userLanguage === 'zhTW' ? 
-`請用繁體中文提供評估，包含：
-- 詳細說明做得好的地方和需要改進的地方
-- 任務是否圓滿完成
-- 獲得的經驗值（0-${(task.content as Record<string, unknown>)?.xp as number || 100}）
-- 展現或提升的技能
-
-請以 JSON 格式返回評估結果：
+Return JSON:
 {
-  "feedback": "詳細的中文回饋",
-  "strengths": ["優點1", "優點2"],
-  "improvements": ["改進建議1", "改進建議2"],
-  "completed": true/false,
-  "xpEarned": number (0-${(task.content as Record<string, unknown>)?.xp as number || 100}),
-  "skillsImproved": ["技能1（例如：創意思考）", "技能2（例如：市場分析）"]
-}
-請確保所有內容都是繁體中文，包括技能名稱。` : 
-`Provide your evaluation in English with:
-- Detailed feedback explaining what was done well and areas for improvement
-- Whether the task is completed satisfactorily
-- XP points earned (0-${(task.content as Record<string, unknown>)?.xp as number || 100})
-- Skills that were demonstrated or improved
-
-Return your evaluation as a JSON object:
-{
-  "feedback": "Detailed feedback in English",
-  "strengths": ["Strength 1", "Strength 2"],
-  "improvements": ["Improvement area 1", "Improvement area 2"],
-  "completed": true/false,
-  "xpEarned": number (0-${(task.content as Record<string, unknown>)?.xp as number || 100}),
-  "skillsImproved": ["Skill 1", "Skill 2"]
-}`}`;
+  "feedback": "Specific feedback on task completion",
+  "strengths": ["Strengths if any"],
+  "improvements": ["What needs improvement"],
+  "completed": true/false (strict judgment),
+  "xpEarned": number (0-${maxXP}, should be low if not completed),
+  "skillsImproved": ["Actually demonstrated relevant skills"]
+}`;
 
       try {
         const aiResponse = await aiService.sendMessage(evaluationPrompt);
@@ -603,6 +619,7 @@ Return your evaluation as a JSON object:
       let userLanguage = 'en'; // Default language
       let careerType = 'unknown'; // Default career type
       
+      // Generate comprehensive feedback based on learning journey
       try {
         // Prepare all user responses and AI feedback for comprehensive analysis
         const learningJourney = task.interactions.map((interaction, index) => {
@@ -777,29 +794,13 @@ Return your evaluation as a JSON object:
       });
       
       // Prepare multilingual feedback versions
-      // Always store English version first, then current language if different
+      // Store feedback in the generated language, no need to translate back
       const feedbackVersions: Record<string, string> = {};
+      feedbackVersions[userLanguage] = comprehensiveFeedback;
       
-      if (userLanguage === 'en') {
-        // Generated feedback is already in English
-        feedbackVersions['en'] = comprehensiveFeedback;
-      } else {
-        // Generated feedback is in user's language, need English version
-        try {
-          console.log('Generating English version for storage...');
-          const translationService = new TranslationService();
-          const englishFeedback = await translationService.translateFeedback(
-            comprehensiveFeedback,
-            'en',
-            careerType
-          );
-          feedbackVersions['en'] = englishFeedback;
-          feedbackVersions[userLanguage] = comprehensiveFeedback;
-        } catch (error) {
-          console.error('Failed to generate English version:', error);
-          // Fallback: store current feedback as English
-          feedbackVersions['en'] = comprehensiveFeedback;
-        }
+      // If not English, also store as English for compatibility
+      if (userLanguage !== 'en') {
+        feedbackVersions['en'] = comprehensiveFeedback; // Store as is, will be translated on demand if needed
       }
       
       // Create formal evaluation record with multilingual support
@@ -810,7 +811,7 @@ Return your evaluation as a JSON object:
         mode: 'discovery',
         evaluationType: 'task',
         evaluationSubtype: 'discovery_task',
-        score: bestXP,
+        score: Math.min(bestXP, 100), // Ensure score doesn't exceed maxScore
         maxScore: 100,
         domainScores: {},
         feedbackText: feedbackVersions['en'], // Default to English
@@ -830,7 +831,8 @@ Return your evaluation as a JSON object:
           feedbackVersions: feedbackVersions,
           completed: true,
           learningJourney: allFeedback,
-          originalLanguage: userLanguage
+          originalLanguage: userLanguage,
+          actualXPEarned: bestXP // Store the actual XP (can be > 100)
         }
       });
       
@@ -843,6 +845,7 @@ Return your evaluation as a JSON object:
           evaluation: {
             id: evaluation.id,
             score: evaluation.score,
+            actualXP: bestXP, // Include actual XP earned
             feedback: feedbackVersions[userLanguage] || evaluation.feedbackText, // Return in user's language
             feedbackVersions: feedbackVersions,
             evaluatedAt: evaluation.createdAt
