@@ -147,7 +147,8 @@ export default function DiscoveryCompletePage() {
       const completeResponse = await fetch(`/api/discovery/programs/${params.programId}/complete`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept-Language': i18n.language
         }
       });
       
@@ -164,7 +165,11 @@ export default function DiscoveryCompletePage() {
 
       // Get the evaluation data (with regenerate flag if needed)
       const evalUrl = `/api/discovery/programs/${params.programId}/evaluation${regenerate ? '?regenerate=true' : ''}`;
-      const evalResponse = await fetch(evalUrl);
+      const evalResponse = await fetch(evalUrl, {
+        headers: {
+          'Accept-Language': i18n.language
+        }
+      });
       if (!evalResponse.ok) {
         throw new Error('Failed to load evaluation data');
       }
@@ -180,7 +185,15 @@ export default function DiscoveryCompletePage() {
         ...programData,
         ...evalData.evaluation,
         scenarioId: params.id as string,
-        scenarioTitle: programData.scenario?.title || 'Discovery Program',
+        scenarioTitle: (() => {
+          const title = programData.scenario?.title;
+          if (typeof title === 'string') return title;
+          if (typeof title === 'object' && title !== null) {
+            const lang = i18n.language === 'zh-TW' ? 'zhTW' : i18n.language;
+            return title[lang] || title.en || 'Discovery Program';
+          }
+          return 'Discovery Program';
+        })(),
         overallScore: evalData.evaluation.overallScore || evalData.evaluation.score || 0,
         totalXP: evalData.evaluation.totalXP || programData.totalXP || 0,
         totalTasks: evalData.evaluation.totalTasks || programData.totalTasks || 0,
@@ -197,7 +210,7 @@ export default function DiscoveryCompletePage() {
       setLoading(false);
       setRegenerating(false);
     }
-  }, [params.programId, params.id]);
+  }, [params.programId, params.id, i18n.language]);
 
   // Load completion data on mount
   useEffect(() => {
@@ -324,7 +337,9 @@ export default function DiscoveryCompletePage() {
           <div className="flex justify-center items-center text-gray-700 mb-2">
             <ClockIcon className="h-6 w-6 mr-2" />
             <span className="text-xl font-semibold">
-              {completionData.daysUsed || 'N/A'}
+              {completionData.daysUsed !== undefined && completionData.daysUsed !== null 
+                ? completionData.daysUsed === 0 ? 1 : completionData.daysUsed
+                : 'N/A'}
             </span>
           </div>
           <div className="text-sm text-gray-600">{t('discovery:complete.daysUsed')}</div>

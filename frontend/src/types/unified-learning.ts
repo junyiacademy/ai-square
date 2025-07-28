@@ -82,9 +82,9 @@ export interface IScenario {
  */
 export interface ITaskTemplate {
   id: string;
-  title: string;
+  title: Record<string, string>;  // Multilingual title
   type: TaskType;
-  description?: string;
+  description?: Record<string, string>;  // Multilingual description
   [key: string]: unknown;  // Allow additional properties
 }
 
@@ -140,9 +140,9 @@ export interface ITask {
   taskIndex: number;  // Order within program
   scenarioTaskIndex?: number;  // Reference to scenario template
   
-  // Basic info
-  title?: string;
-  description?: string;
+  // Basic info (multilingual support)
+  title?: Record<string, string>;  // {"en": "...", "zhTW": "..."}
+  description?: Record<string, string>;  // {"en": "...", "zhTW": "..."}
   type: TaskType;
   status: TaskStatus;
   

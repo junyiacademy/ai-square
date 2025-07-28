@@ -2,6 +2,53 @@ import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
 
+// Helper function to generate task evaluations
+async function generateTaskEvaluations(tasks: unknown[], request: NextRequest) {
+  const completedTasks = tasks.filter(task => task.status === 'completed');
+  
+  return completedTasks.map(task => {
+    // Extract XP from nested evaluation structure
+    const evaluation = task.metadata?.evaluation || task.metadata?.lastEvaluation || {};
+    const xpEarned = evaluation.actualXP || evaluation.xpEarned || task.metadata?.xpEarned || task.score || 0;
+    const score = evaluation.score || xpEarned;
+    const attempts = task.interactions?.filter((i: unknown) => (i as {type: string}).type === 'user_input').length || 1;
+    const skills = evaluation.skillsImproved || task.metadata?.skillsImproved || [];
+    
+    // Extract language-specific title
+    const getLocalizedTitle = (title: unknown) => {
+      if (typeof title === 'string') return title;
+      if (typeof title === 'object' && title !== null) {
+        const acceptLang = request.headers.get('accept-language') || 'en';
+        
+        // Handle zh-TW -> zhTW mapping
+        let lookupLang = acceptLang;
+        if (acceptLang === 'zh-TW') lookupLang = 'zhTW';
+        if (acceptLang === 'zh-CN') lookupLang = 'zhCN';
+        
+        const titleObj = title as Record<string, string>;
+        // Try direct lookup
+        if (titleObj[lookupLang]) {
+          return titleObj[lookupLang];
+        }
+        
+        // Fallback
+        return titleObj.en || titleObj.zhTW || Object.values(titleObj)[0] || 'Task';
+      }
+      return 'Task';
+    };
+    
+    return {
+      taskId: task.id,
+      taskTitle: getLocalizedTitle(task.title),
+      taskType: task.type || 'question',
+      score: score,
+      xpEarned: xpEarned,
+      attempts: attempts,
+      skillsImproved: skills
+    };
+  });
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ programId: string }> }
@@ -91,26 +138,49 @@ export async function GET(
       
       // Create task evaluations array
       const taskEvaluations = completedTasks.map(task => {
-        const taskWithEval = task as { evaluation?: { score?: number; metadata?: { skillsImproved?: string[] } }; interactions?: { type: string }[] };
-        const score = taskWithEval.evaluation?.score || 0;
-        const xp = taskWithEval.evaluation?.score || 0; // Using score as XP
-        const attempts = taskWithEval.interactions?.filter(i => i.type === 'user_input').length || 1;
-        const skills = taskWithEval.evaluation?.metadata?.skillsImproved || [];
+        // Extract XP from task metadata
+        const evaluation = task.metadata?.evaluation || task.metadata?.lastEvaluation || {};
+        const xpEarned = evaluation.actualXP || evaluation.xpEarned || task.metadata?.xpEarned || 0;
+        const score = evaluation.score || xpEarned;
+        const attempts = task.interactions?.filter((i: unknown) => (i as {type: string}).type === 'user_input').length || 1;
+        const skills = evaluation.skillsImproved || task.metadata?.skillsImproved || [];
         
-        if (score > 0) {
-          totalXP += xp;
+        if (xpEarned > 0) {
+          totalXP += xpEarned;
           totalScore += score;
           validScoreCount++;
         }
         
-        console.log(`Task ${task.title}: score=${score}, xp=${xp}, attempts=${attempts}`);
+        
+        // Extract language-specific title
+        const getLocalizedTitle = (title: unknown) => {
+          if (typeof title === 'string') return title;
+          if (typeof title === 'object' && title !== null) {
+            const acceptLang = request.headers.get('accept-language') || 'en';
+            
+            // Handle zh-TW -> zhTW mapping
+            let lookupLang = acceptLang;
+            if (acceptLang === 'zh-TW') lookupLang = 'zhTW';
+            if (acceptLang === 'zh-CN') lookupLang = 'zhCN';
+            
+            const titleObj = title as Record<string, string>;
+            // Try direct lookup
+            if (titleObj[lookupLang]) {
+              return titleObj[lookupLang];
+            }
+            
+            // Fallback
+            return titleObj.en || titleObj.zhTW || Object.values(titleObj)[0] || 'Task';
+          }
+          return 'Task';
+        };
         
         return {
           taskId: task.id,
-          taskTitle: task.title || 'Task',
+          taskTitle: getLocalizedTitle(task.title),
           taskType: task.type || 'question',
           score: score,
-          xpEarned: xp,
+          xpEarned: xpEarned,
           attempts: attempts,
           skillsImproved: skills
         };
@@ -185,12 +255,12 @@ export async function GET(
       ...evaluation,
       // Expose metadata fields at top level for compatibility
       overallScore: evaluation.metadata?.overallScore || evaluation.score || 0,
-      totalXP: evaluation.metadata?.totalXP || 0,
-      totalTasks: evaluation.metadata?.totalTasks || 0,
-      completedTasks: evaluation.metadata?.completedTasks || 0,
+      totalXP: evaluation.metadata?.totalXP || program.metadata?.totalXP || 0,
+      totalTasks: evaluation.metadata?.totalTasks || evaluation.metadata?.tasksCompleted || 6,
+      completedTasks: evaluation.metadata?.completedTasks || evaluation.metadata?.tasksCompleted || 6,
       timeSpentSeconds: evaluation.metadata?.timeSpentSeconds || 0,
       daysUsed: evaluation.metadata?.daysUsed || 0,
-      taskEvaluations: evaluation.metadata?.taskEvaluations || [],
+      taskEvaluations: evaluation.metadata?.taskEvaluations || (evaluation.metadata?.taskEvaluations === undefined ? await generateTaskEvaluations(tasks, request) : []),
       skillImprovements: evaluation.metadata?.skillImprovements || [],
       achievementsUnlocked: evaluation.metadata?.achievementsUnlocked || [],
       qualitativeFeedback: evaluation.metadata?.qualitativeFeedback || null,

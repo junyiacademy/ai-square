@@ -181,9 +181,9 @@ CREATE TABLE tasks (
     task_index INTEGER NOT NULL,                      -- Order within program
     scenario_task_index INTEGER,                      -- Reference to scenario template
     
-    -- Basic info
-    title VARCHAR(500),
-    description TEXT,
+    -- Basic info (multilingual support)
+    title JSONB,                                      -- Multilingual title {"en": "...", "zhTW": "..."}
+    description JSONB,                                -- Multilingual description
     type task_type NOT NULL,
     status task_status DEFAULT 'pending',
     
@@ -539,6 +539,9 @@ CREATE INDEX idx_tasks_type ON tasks(type);
 CREATE INDEX idx_tasks_mode ON tasks(mode);
 CREATE INDEX idx_tasks_program_index ON tasks(program_id, task_index);
 CREATE INDEX idx_tasks_mode_type ON tasks(mode, type);
+-- Multilingual field indexes for better query performance
+CREATE INDEX idx_tasks_title_en ON tasks((title->>'en'));
+CREATE INDEX idx_tasks_title_zhTW ON tasks((title->>'zhTW'));
 
 -- Evaluation indexes (including new mode index)
 CREATE INDEX idx_evaluations_user_id ON evaluations(user_id);

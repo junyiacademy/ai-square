@@ -31,7 +31,8 @@ export async function POST(
     
     // Get program
     const program = await programRepo.findById(programId);
-    if (!program || program.userId !== user.email) {
+    const userId = user.id;
+    if (!program || program.userId !== userId) {
       return NextResponse.json(
         { error: 'Program not found or access denied' },
         { status: 404 }
@@ -128,9 +129,32 @@ export async function POST(
         skillsImproved = (content?.skillsImproved as string[]) || [];
       }
       
+      // Extract language-specific title
+      const getLocalizedTitle = (title: unknown) => {
+        if (typeof title === 'string') return title;
+        if (typeof title === 'object' && title !== null) {
+          const titleObj = title as Record<string, string>;
+          const acceptLang = request.headers.get('accept-language') || 'en';
+          
+          // Handle zh-TW -> zhTW mapping
+          let lookupLang = acceptLang;
+          if (acceptLang === 'zh-TW') lookupLang = 'zhTW';
+          if (acceptLang === 'zh-CN') lookupLang = 'zhCN';
+          
+          // Try direct lookup
+          if (titleObj[lookupLang]) {
+            return titleObj[lookupLang];
+          }
+          
+          // Fallback to English or first available
+          return titleObj.en || titleObj.zhTW || Object.values(titleObj)[0] || 'Task';
+        }
+        return 'Task';
+      };
+      
       return {
         taskId: task.id,
-        taskTitle: task.title || 'Task',
+        taskTitle: getLocalizedTitle(task.title), // Localize to string before saving
         taskType: task.metadata?.taskType || 'question',
         score: taskScore,
         xpEarned: taskXP,
@@ -159,7 +183,7 @@ export async function POST(
     });
     
     const evaluation = await evaluationRepo.create({
-      userId: user.email,
+      userId: userId,
       programId: programId,
       mode: 'discovery',
       evaluationType: 'program',
