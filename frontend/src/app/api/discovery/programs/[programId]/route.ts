@@ -46,7 +46,8 @@ export async function GET(
     }
     
     // Verify ownership
-    if (program.userId !== userEmail) {
+    const userId = session.user.id;
+    if (program.userId !== userId) {
       return NextResponse.json(
         { error: 'Access denied' },
         { status: 403 }

@@ -39,7 +39,8 @@ export async function GET(
     
     // Get program
     const program = await programRepo.findById(programId);
-    if (!program || program.userId !== userEmail) {
+    const userId = session?.user?.id || userEmail; // Use ID if available
+    if (!program || program.userId !== userId) {
       return NextResponse.json(
         { error: 'Program not found or access denied' },
         { status: 404 }

@@ -23,7 +23,7 @@ export async function POST(
     
     // Get program
     const program = await programRepo.findById(programId);
-    if (!program || program.userId !== session.user.email) {
+    if (!program || program.userId !== session.user.id) {
       return NextResponse.json(
         { error: 'Program not found or access denied' },
         { status: 404 }
@@ -259,7 +259,7 @@ Return your response in JSON format:
       console.log('Creating new evaluation (none exists)');
       
       const evaluation = await evaluationRepo.create({
-        userId: session.user.email,
+        userId: session.user.id,
         programId: programId,
         mode: 'discovery',
         evaluationType: 'program',

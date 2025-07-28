@@ -94,7 +94,7 @@ export async function GET(
     }
 
     const { programId, taskId } = await params;
-    const userEmail = session.user.email;
+    const userId = session.user.id; // Use user ID not email
     
     // Get language from query params
     const url = new URL(request.url);
@@ -114,7 +114,7 @@ export async function GET(
     
     // Verify program ownership
     const program = await programRepo.findById(programId);
-    if (!program || program.userId !== userEmail) {
+    if (!program || program.userId !== userId) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
     
@@ -130,7 +130,7 @@ export async function GET(
     
     // Handle multilingual evaluation if task is completed
     let processedEvaluation = null;
-    const evaluationId = (task.metadata?.evaluationId as string) || null;
+    const evaluationId = (task.metadata?.evaluationId as string) || (task.metadata?.evaluation as { id?: string })?.id || null;
     
     if (evaluationId && task.status === 'completed') {
       // Get full evaluation record
@@ -254,17 +254,74 @@ export async function GET(
     // Return task data
     return NextResponse.json({
       id: task.id,
-      title: task.title,
+      title: (() => {
+        let titleObj = task.title;
+        // Handle case where title is a JSON string
+        if (typeof titleObj === 'string' && titleObj.startsWith('{')) {
+          try {
+            titleObj = JSON.parse(titleObj);
+          } catch {
+            return titleObj; // Return as-is if parse fails
+          }
+        }
+        // Now extract the language-specific value
+        if (typeof titleObj === 'object' && titleObj !== null) {
+          return (titleObj as Record<string, string>)[requestedLanguage] || (titleObj as Record<string, string>)['en'] || '';
+        }
+        return titleObj as string || '';
+      })(),
       type: task.type,
       status: task.status,
-      context: task.content,
+      content: (() => {
+        const content = task.content as Record<string, unknown>;
+        // Extract multilingual fields from content
+        const processMultilingual = (value: unknown): unknown => {
+          if (typeof value === 'string' && value.startsWith('{')) {
+            try {
+              const parsed = JSON.parse(value);
+              if (typeof parsed === 'object' && parsed !== null && requestedLanguage in parsed) {
+                return parsed[requestedLanguage] || parsed['en'] || value;
+              }
+            } catch {
+              // Not JSON, return as-is
+            }
+          } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+            const obj = value as Record<string, unknown>;
+            // Check if it's a multilingual object
+            if ('en' in obj || 'zhTW' in obj) {
+              return obj[requestedLanguage] || obj['en'] || value;
+            }
+          }
+          return value;
+        };
+        
+        // Process content fields
+        return {
+          ...content,
+          instructions: processMultilingual(content.instructions),
+          description: processMultilingual(content.description)
+        };
+      })(),
       interactions: task.interactions,
       startedAt: task.startedAt,
       completedAt: task.completedAt,
       evaluation: processedEvaluation,
       // Add career info
       careerType: ((scenario?.metadata as Record<string, unknown>)?.careerType || 'unknown') as string,
-      scenarioTitle: scenario?.title || 'Discovery Scenario'
+      scenarioTitle: (() => {
+        let titleObj = scenario?.title;
+        if (typeof titleObj === 'string' && titleObj.startsWith('{')) {
+          try {
+            titleObj = JSON.parse(titleObj);
+          } catch {
+            return titleObj as string || 'Discovery Scenario';
+          }
+        }
+        if (typeof titleObj === 'object' && titleObj !== null) {
+          return (titleObj as Record<string, string>)[requestedLanguage] || (titleObj as Record<string, string>)['en'] || 'Discovery Scenario';
+        }
+        return titleObj as string || 'Discovery Scenario';
+      })()
     });
   } catch (error) {
     console.error('Error in GET task:', error);
@@ -287,7 +344,8 @@ export async function PATCH(
     }
 
     const { programId, taskId } = await params;
-    const userEmail = session.user.email;
+    const userId = session.user.id; // Use user ID not email
+    const userEmail = session.user.email; // Keep for evaluation records
     
     const body = await request.json();
     const { action, content } = body;
@@ -299,7 +357,7 @@ export async function PATCH(
     
     // Verify program ownership
     const program = await programRepo.findById(programId);
-    if (!program || program.userId !== userEmail) {
+    if (!program || program.userId !== userId) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
     
@@ -312,7 +370,24 @@ export async function PATCH(
     
     if (action === 'submit') {
       // Add user response as interaction
-      // Record user attempt
+      const newInteraction: Interaction = {
+        id: crypto.randomUUID(),
+        timestamp: new Date().toISOString(),
+        type: 'user_input',
+        content: content.response,
+        metadata: {
+          timeSpent: content.timeSpent || 0
+        }
+      };
+      
+      // Get current interactions and add new one
+      const currentInteractions = task.interactions || [];
+      const updatedInteractions = [...currentInteractions, newInteraction];
+      
+      // Update task with new interaction
+      await taskRepo.updateInteractions?.(taskId, updatedInteractions);
+      
+      // Also record attempt for score tracking
       await taskRepo.recordAttempt?.(taskId, {
         response: content.response,
         timeSpent: content.timeSpent || 0
@@ -422,6 +497,26 @@ Return your evaluation as a JSON object:
             skillsImproved: []
           };
         }
+        
+        // Add AI evaluation as interaction
+        const aiInteraction: Interaction = {
+          id: crypto.randomUUID(),
+          timestamp: new Date().toISOString(),
+          type: 'ai_response',
+          content: evaluationResult,
+          metadata: {
+            completed: evaluationResult.completed,
+            xpEarned: evaluationResult.xpEarned
+          }
+        };
+        
+        // Get latest interactions and add AI response
+        const latestTask = await taskRepo.getTaskWithInteractions?.(taskId);
+        const latestInteractions = latestTask?.interactions || updatedInteractions;
+        const finalInteractions = [...latestInteractions, aiInteraction];
+        
+        // Update task with AI interaction
+        await taskRepo.updateInteractions?.(taskId, finalInteractions);
         
         // Record AI evaluation as metadata (not a user attempt)
         // We'll store this in task metadata instead
@@ -702,7 +797,7 @@ Return your evaluation as a JSON object:
       
       // Create formal evaluation record with multilingual support
       const evaluation = await evaluationRepo.create({
-        userId: session.user.email,
+        userId: userId,
         programId: programId,
         taskId: taskId,
         mode: 'discovery',

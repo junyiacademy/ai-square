@@ -28,14 +28,15 @@ interface TaskData {
   status: 'pending' | 'active' | 'completed';
   content: {
     instructions?: string;
-    context?: {
-      description?: string;
-      xp?: number;
-      objectives?: string[];
-      completionCriteria?: string[];
-      difficulty?: string;
-      hints?: string[];
-    };
+    description?: string;
+    xp?: number;
+    objectives?: string[];
+    completionCriteria?: string[];
+    difficulty?: string;
+    hints?: string[];
+    taskId?: string;
+    skillsImproved?: string[];
+    scenarioId?: string;
   };
   interactions: Array<{
     timestamp: string;
@@ -330,23 +331,23 @@ export default function TaskDetailPage() {
                 {taskData.title}
               </h1>
               <p className="text-lg text-gray-600">
-                {taskData.content.context?.description || taskData.content.instructions || ''}
+                {taskData.content.description || taskData.content.instructions || ''}
               </p>
             </div>
             <div className="flex items-center space-x-2 px-3 py-1 bg-purple-100 text-purple-700 rounded-full">
               <TrophyIcon className="w-4 h-4" />
-              <span className="text-sm font-medium">{taskData.content.context?.xp || 0} XP</span>
+              <span className="text-sm font-medium">{taskData.content.xp || 0} XP</span>
             </div>
           </div>
 
           {/* Instructions/Objectives */}
-          {taskData.content.context?.objectives && taskData.content.context.objectives.length > 0 && (
+          {taskData.content.objectives && taskData.content.objectives.length > 0 && (
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">
                 任務指引
               </h3>
               <ul className="space-y-2">
-                {taskData.content.context.objectives.map((objective, index) => (
+                {taskData.content.objectives.map((objective, index) => (
                   <li key={index} className="flex items-start space-x-3">
                     <span className="flex-shrink-0 w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-sm font-medium">
                       {index + 1}
@@ -359,14 +360,14 @@ export default function TaskDetailPage() {
           )}
 
           {/* Completion Criteria */}
-          {taskData.content.context?.completionCriteria && taskData.content.context.completionCriteria.length > 0 && (
+          {taskData.content.completionCriteria && taskData.content.completionCriteria.length > 0 && (
             <div className="bg-purple-50 rounded-xl p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center space-x-2">
                 <CheckCircleIcon className="w-5 h-5 text-purple-600" />
                 <span>完成標準</span>
               </h3>
               <ul className="space-y-2">
-                {taskData.content.context.completionCriteria.map((criteria, index) => (
+                {taskData.content.completionCriteria.map((criteria, index) => (
                   <li key={index} className="flex items-start space-x-2">
                     <span className="text-purple-600 mt-1">•</span>
                     <span className="text-gray-700">{criteria}</span>
@@ -628,7 +629,6 @@ export default function TaskDetailPage() {
                           <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
                             <span className="text-sm font-medium text-gray-600">你</span>
                           </div>
-                          <span className="text-sm font-medium text-gray-700">你的回答</span>
                         </>
                       ) : (
                         <>
@@ -668,7 +668,11 @@ export default function TaskDetailPage() {
                   
                   <div className="text-sm text-gray-700">
                     {interaction.type === 'user_input' ? (
-                      <p className="whitespace-pre-wrap">{(interaction.content as Record<string, unknown>)?.response as string}</p>
+                      <p className="whitespace-pre-wrap">{
+                        typeof interaction.content === 'string' 
+                          ? interaction.content 
+                          : (interaction.content as Record<string, unknown>)?.response as string || interaction.content
+                      }</p>
                     ) : (
                       <div className="space-y-3">
                         {(() => {
@@ -827,14 +831,14 @@ export default function TaskDetailPage() {
         )}
 
         {/* Hints Section */}
-        {showHints && taskData.content.context?.hints && taskData.content.context.hints.length > 0 && (
+        {showHints && taskData.content.hints && taskData.content.hints.length > 0 && (
           <div className="bg-yellow-50 rounded-xl p-6 border border-yellow-200 mb-6">
             <h4 className="text-lg font-semibold text-gray-900 mb-3 flex items-center space-x-2">
               <LightBulbIcon className="w-5 h-5 text-yellow-600" />
               <span>提示</span>
             </h4>
             <ul className="space-y-2">
-              {taskData.content.context.hints.map((hint, index) => (
+              {taskData.content.hints.map((hint, index) => (
                 <li key={index} className="flex items-start space-x-2">
                   <span className="text-yellow-600 mt-1">💡</span>
                   <span className="text-gray-700">{hint}</span>

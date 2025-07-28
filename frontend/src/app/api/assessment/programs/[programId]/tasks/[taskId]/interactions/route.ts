@@ -40,7 +40,7 @@ export async function GET(
     
     // First verify the program exists and belongs to the user
     const program = await programRepo.findById(programId);
-    if (!program || program.userId !== session.user.email) {
+    if (!program || program.userId !== session.user.id) {
       return NextResponse.json(
         { success: false, error: 'Program not found or access denied' },
         { status: 404 }
@@ -127,7 +127,7 @@ export async function POST(
     
     // First verify the program exists and belongs to the user
     const program = await programRepo.findById(programId);
-    if (!program || program.userId !== session.user.email) {
+    if (!program || program.userId !== session.user.id) {
       return NextResponse.json(
         { success: false, error: 'Program not found or access denied' },
         { status: 404 }
@@ -157,7 +157,7 @@ export async function POST(
       type,
       content,
       metadata: {
-        userId: session.user.email,
+        userId: session.user.id,
         userAgent: request.headers.get('User-Agent') || ''
       }
     };
