@@ -159,29 +159,41 @@ export default function ScenariosPage() {
       
       setIsLoadingMyScenarios(true);
       try {
-        const response = await fetch('/api/discovery/my-programs');
+        const response = await fetch('/api/discovery/scenarios/my');
         if (response.ok) {
           const data = await response.json();
           
           // Transform the data to match the expected format
-          const transformedScenarios = data.map((scenario: Record<string, unknown>) => {
-            const careerType = (scenario.discovery_data as Record<string, unknown>)?.careerType as string || 'general';
+          const transformedScenarios = (data.scenarios || []).map((scenario: Record<string, unknown>) => {
+            const careerType = scenario.careerType as string || 'general';
+            
+            // Map icon string to actual icon component
+            const iconName = scenario.icon as string || 'SparklesIcon';
+            const iconMap: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
+              'CodeBracketIcon': CodeBracketIcon,
+              'ChartBarIcon': ChartBarIcon,
+              'PaintBrushIcon': PaintBrushIcon,
+              'AcademicCapIcon': UserGroupIcon,
+              'ScaleIcon': UserGroupIcon,
+              'BeakerIcon': LightBulbIcon,
+              'SparklesIcon': SparklesIcon
+            };
             
             return {
               id: careerType,
-              scenarioId: scenario.id,
-              title: scenario.title as string, // API now returns localized string
-              subtitle: scenario.description as string, // API now returns localized string
-              category: (scenario.metadata as Record<string, unknown>)?.category as string || 'general',
-              icon: careerIcons[careerType] || SparklesIcon,
-              color: careerColors[careerType] || 'from-gray-500 to-gray-600',
-              skills: (scenario.metadata as Record<string, unknown>)?.skillFocus as string[] || [],
+              scenarioId: scenario.scenarioId as string,
+              title: scenario.title as string,
+              subtitle: scenario.subtitle as string,
+              category: scenario.category as string || 'general',
+              icon: iconMap[iconName] || careerIcons[careerType] || SparklesIcon,
+              color: scenario.color as string || careerColors[careerType] || 'from-gray-500 to-gray-600',
+              skills: scenario.skills as string[] || [],
               // Add user-specific data
               userPrograms: scenario.userPrograms,
-              progress: ((scenario.userPrograms as Record<string, unknown>)?.active as Record<string, unknown>)?.progress as number || 0,
-              isActive: !!((scenario.userPrograms as Record<string, unknown>)?.active),
-              completedCount: (scenario.userPrograms as Record<string, unknown>)?.completed as number || 0,
-              lastActivity: (scenario.userPrograms as Record<string, unknown>)?.lastActivity as string
+              progress: scenario.progress as number || 0,
+              isActive: scenario.isActive as boolean || false,
+              completedCount: scenario.completedCount as number || 0,
+              lastActivity: scenario.lastActivity as string
             };
           });
           
