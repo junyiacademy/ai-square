@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
@@ -103,8 +103,21 @@ interface ScenarioData {
     };
   };
   metadata?: Record<string, unknown>;
-  taskTemplates?: Array<any>;
+  taskTemplates?: Array<Record<string, unknown>>;
   careerType?: string; // For backward compatibility
+}
+
+interface ProgramData {
+  id: string;
+  status: string;
+  createdAt: string;
+  completedAt?: string;
+  currentTaskIndex?: number;
+  metadata?: {
+    totalXP?: number;
+    completedTasks?: number;
+    totalTasks?: number;
+  };
 }
 
 export default function DiscoveryScenarioDetailPage() {
@@ -115,6 +128,8 @@ export default function DiscoveryScenarioDetailPage() {
   
   const [loading, setLoading] = useState(true);
   const [scenarioData, setScenarioData] = useState<ScenarioData | null>(null);
+  const [programs, setPrograms] = useState<ProgramData[]>([]);
+  const [loadingPrograms, setLoadingPrograms] = useState(true);
   const [creatingProgram, setCreatingProgram] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -175,8 +190,32 @@ export default function DiscoveryScenarioDetailPage() {
 
     if (scenarioId) {
       loadScenarioData();
+      loadPrograms();
     }
-  }, [scenarioId, isLoggedIn, authLoading, router, i18n.language]);
+  }, [scenarioId, isLoggedIn, authLoading, router, i18n.language, loadPrograms]);
+
+  const loadPrograms = useCallback(async () => {
+    try {
+      setLoadingPrograms(true);
+      const sessionToken = localStorage.getItem('ai_square_session');
+      
+      const response = await fetch(`/api/discovery/scenarios/${scenarioId}/programs?lang=${i18n.language}`, {
+        credentials: 'include',
+        headers: {
+          'x-session-token': sessionToken || ''
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setPrograms(data.programs || []);
+      }
+    } catch (error) {
+      console.error('Error loading programs:', error);
+    } finally {
+      setLoadingPrograms(false);
+    }
+  }, [scenarioId, i18n.language]);
 
   const createNewProgram = async () => {
     try {
@@ -324,31 +363,84 @@ export default function DiscoveryScenarioDetailPage() {
             </button>
           </div>
 
-          {/* Start Learning Button - Show when no programs */}
-          <div className="text-center py-8">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={createNewProgram}
-              disabled={creatingProgram}
-              className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform transition-all disabled:opacity-50"
-            >
-              {creatingProgram ? (
-                <span className="flex items-center space-x-2">
-                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                  </svg>
-                  <span>{t('discovery:scenarioDetail.creating')}</span>
-                </span>
-              ) : (
-                t('discovery:scenarioDetail.startExploration')
-              )}
-            </motion.button>
-            <p className="mt-4 text-gray-600">
-              {t('discovery:scenarioDetail.readyToStart')}
-            </p>
-          </div>
+          {/* Programs List or Start Button */}
+          {loadingPrograms ? (
+            <div className="text-center py-8">
+              <div className="animate-spin h-8 w-8 border-2 border-purple-600 border-t-transparent rounded-full mx-auto"></div>
+              <p className="mt-2 text-gray-600">Loading programs...</p>
+            </div>
+          ) : programs.length > 0 ? (
+            <div className="grid gap-4 mt-6">
+              {programs.map((program) => (
+                <div key={program.id} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer"
+                     onClick={() => router.push(`/discovery/scenarios/${scenarioId}/programs/${program.id}`)}>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="flex items-center space-x-3">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {program.status === 'completed' ? '✅ ' : '🚀 '}
+                          Learning Journey #{programs.indexOf(program) + 1}
+                        </h3>
+                        <span className={`px-2 py-1 text-xs rounded-full ${
+                          program.status === 'completed' 
+                            ? 'bg-green-100 text-green-700' 
+                            : 'bg-blue-100 text-blue-700'
+                        }`}>
+                          {program.status}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Started {new Date(program.createdAt).toLocaleDateString()}
+                        {program.completedAt && ` • Completed ${new Date(program.completedAt).toLocaleDateString()}`}
+                      </p>
+                      <div className="flex items-center space-x-4 mt-2 text-sm text-gray-600">
+                        <span>💎 {program.metadata?.totalXP || 0} XP</span>
+                        <span>📊 {program.metadata?.completedTasks || 0}/{program.metadata?.totalTasks || 6} 個任務</span>
+                        {program.metadata?.completedTasks && program.metadata?.totalTasks && (
+                          <span className="text-purple-600 font-medium">
+                            ({Math.round((program.metadata.completedTasks / program.metadata.totalTasks) * 100)}% 完成)
+                          </span>
+                        )}
+                      </div>
+                      {/* Progress bar */}
+                      <div className="mt-3 w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${Math.round(((program.metadata?.completedTasks || 0) / (program.metadata?.totalTasks || 6)) * 100)}%` }}
+                        />
+                      </div>
+                    </div>
+                    <ChevronRightIcon className="w-5 h-5 text-gray-400" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={createNewProgram}
+                disabled={creatingProgram}
+                className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform transition-all disabled:opacity-50"
+              >
+                {creatingProgram ? (
+                  <span className="flex items-center space-x-2">
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    <span>{t('discovery:scenarioDetail.creating')}</span>
+                  </span>
+                ) : (
+                  t('discovery:scenarioDetail.startExploration')
+                )}
+              </motion.button>
+              <p className="mt-4 text-gray-600">
+                {t('discovery:scenarioDetail.readyToStart')}
+              </p>
+            </div>
+          )}
           
           {/* Career Insights */}
           {scenarioData.discoveryData?.careerInsights && (
@@ -415,7 +507,7 @@ export default function DiscoveryScenarioDetailPage() {
           {/* Hidden programs section for future use */}
           {false && (
             <div className="grid gap-4">
-              {[].map((program: any, index) => (
+              {[].map((program: ProgramData, index) => (
                 <motion.div
                   key={program.id}
                   initial={{ opacity: 0, y: 20 }}

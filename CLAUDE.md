@@ -282,8 +282,10 @@ Complexity levels: `simple`, `medium`, `complex`, `debug`
 
 **Never use ESLint disable comments:**
 - ❌ Forbidden: `// eslint-disable-line`
+- ❌ Forbidden: `// eslint-disable-next-line`
 - ❌ Forbidden: `// @ts-ignore`
 - ✅ Correct: Fix the code to comply with rules
+- 📌 Exception: Only allowed in scripts (not in production code)
 
 **Common fixes:**
 - React Hooks: Use `useCallback` for dependencies

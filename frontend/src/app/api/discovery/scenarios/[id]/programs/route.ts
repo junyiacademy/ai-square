@@ -2,6 +2,81 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
+// GET handler to fetch user's programs for a scenario
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await getServerSession();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { id: scenarioId } = await params;
+    const userId = session.user.id;
+    
+    // Get repositories
+    const programRepo = repositoryFactory.getProgramRepository();
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
+    
+    // Verify scenario exists
+    const scenario = await scenarioRepo.findById(scenarioId);
+    if (!scenario) {
+      return NextResponse.json({ error: 'Scenario not found' }, { status: 404 });
+    }
+    
+    // Get all programs for this user and scenario
+    const allPrograms = await programRepo.findByUser(userId);
+    const scenarioPrograms = allPrograms.filter(p => p.scenarioId === scenarioId);
+    
+    // Get tasks for each program to calculate progress
+    const taskRepo = repositoryFactory.getTaskRepository();
+    const programsWithProgress = await Promise.all(
+      scenarioPrograms.map(async (program) => {
+        const tasks = await taskRepo.findByProgram(program.id);
+        const completedTasks = tasks.filter(t => t.status === 'completed').length;
+        const totalXP = tasks.reduce((sum, task) => {
+          const xp = (task.metadata?.xpEarned as number) || 0;
+          return sum + xp;
+        }, 0);
+        
+        return {
+          ...program,
+          metadata: {
+            ...program.metadata,
+            totalTasks: tasks.length,
+            completedTasks: completedTasks,
+            totalXP: totalXP
+          }
+        };
+      })
+    );
+    
+    // Sort by creation date, newest first
+    programsWithProgress.sort((a, b) => {
+      const dateA = new Date(a.createdAt || 0).getTime();
+      const dateB = new Date(b.createdAt || 0).getTime();
+      return dateB - dateA;
+    });
+    
+    return NextResponse.json({
+      programs: programsWithProgress,
+      scenario: {
+        id: scenario.id,
+        title: scenario.title,
+        description: scenario.description
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching Discovery programs:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch programs' },
+      { status: 500 }
+    );
+  }
+}
+
 // Simplified POST handler for testing
 export async function POST(
   request: NextRequest,

@@ -137,7 +137,7 @@ export async function GET(
       const fullEvaluation = await evaluationRepo.findById(evaluationId);
       
       if (fullEvaluation) {
-        const existingVersions = (fullEvaluation.metadata?.feedbackVersions || {}) as Record<string, string>;
+        const existingVersions = (fullEvaluation.feedbackData || fullEvaluation.metadata?.feedbackVersions || {}) as Record<string, string>;
         
         // Debug log existing versions
         console.log('=== EVALUATION VERSIONS DEBUG ===');
@@ -345,7 +345,7 @@ export async function PATCH(
 
     const { programId, taskId } = await params;
     const userId = session.user.id; // Use user ID not email
-    const userEmail = session.user.email; // Keep for evaluation records
+ // Keep for evaluation records
     
     const body = await request.json();
     const { action, content } = body;
@@ -614,7 +614,14 @@ Return your evaluation as a JSON object:
               timeSpent: (interaction.metadata as { timeSpent?: number })?.timeSpent || 0
             };
           } else if (interaction.type === 'ai_response') {
-            const parsed = JSON.parse(String(interaction.content)) as { completed?: boolean; feedback?: string; strengths?: string[]; improvements?: string[]; xpEarned?: number };
+            let parsed: { completed?: boolean; feedback?: string; strengths?: string[]; improvements?: string[]; xpEarned?: number };
+            try {
+              parsed = typeof interaction.content === 'string' 
+                ? JSON.parse(interaction.content)
+                : interaction.content as { completed?: boolean; feedback?: string; strengths?: string[]; improvements?: string[]; xpEarned?: number };
+            } catch {
+              parsed = { completed: false, feedback: '', strengths: [], improvements: [], xpEarned: 0 };
+            }
             return {
               type: 'ai_feedback',
               attempt: Math.floor(index / 2) + 1,
@@ -888,7 +895,7 @@ Return your evaluation as a JSON object:
         
         // Create program completion evaluation
         await evaluationRepo.create({
-          userId: session.user.email,
+          userId: session.user.id,
           programId: programId,
           mode: 'discovery',
           evaluationType: 'program',
@@ -947,7 +954,14 @@ Return your evaluation as a JSON object:
       // Regenerate comprehensive feedback using the same logic as confirm-complete
       const userAttempts = task.interactions.filter((i: Interaction) => i.type === 'user_input').length;
       const aiResponses = task.interactions.filter((i: Interaction) => i.type === 'ai_response');
-      const passedAttempts = aiResponses.filter((i: Interaction) => ((i.metadata as { completed?: boolean }) || {}).completed === true).length;
+      const passedAttempts = aiResponses.filter((i: Interaction) => {
+        try {
+          const content = typeof i.content === 'string' ? JSON.parse(i.content) : i.content;
+          return content.completed === true;
+        } catch {
+          return false;
+        }
+      }).length;
       const allFeedback = task.interactions.filter((i: Interaction) => i.type === 'ai_response').map((i: Interaction) => {
         try {
           return JSON.parse(String(i.content)) as { xpEarned?: number; skillsImproved?: string[]; feedback?: string; completed?: boolean };
@@ -971,7 +985,14 @@ Return your evaluation as a JSON object:
               timeSpent: (interaction.metadata as { timeSpent?: number })?.timeSpent || 0
             };
           } else if (interaction.type === 'ai_response') {
-            const parsed = JSON.parse(String(interaction.content)) as { completed?: boolean; feedback?: string; strengths?: string[]; improvements?: string[]; xpEarned?: number };
+            let parsed: { completed?: boolean; feedback?: string; strengths?: string[]; improvements?: string[]; xpEarned?: number };
+            try {
+              parsed = typeof interaction.content === 'string' 
+                ? JSON.parse(interaction.content)
+                : interaction.content as { completed?: boolean; feedback?: string; strengths?: string[]; improvements?: string[]; xpEarned?: number };
+            } catch {
+              parsed = { completed: false, feedback: '', strengths: [], improvements: [], xpEarned: 0 };
+            }
             return {
               type: 'ai_feedback',
               attempt: Math.floor(index / 2) + 1,
@@ -1067,26 +1088,48 @@ Return your evaluation as a JSON object:
       }
       
       // Update the existing evaluation
-      if (task.metadata?.evaluationId) {
-        // const evaluationRepo = repositoryFactory.getEvaluationRepository();
-        // Note: evaluationRepo doesn't have update method
-        console.log('Would update evaluation:', task.metadata.evaluationId, {
-          feedback: comprehensiveFeedback,
-          metadata: {
-            completed: true,
-            xpEarned: bestXP,
-            totalAttempts: userAttempts,
-            passedAttempts: passedAttempts,
-            regeneratedAt: new Date().toISOString()
-          }
-        });
+      const evaluationId = (task.metadata?.evaluationId as string) || (task.metadata?.evaluation as { id?: string })?.id;
+      
+      if (evaluationId) {
         
-        // Update task metadata with new feedback
+        // Get the pool directly to update evaluation
+        const { getPool } = await import('@/lib/db/get-pool');
+        const pool = getPool();
+        
+        // Update evaluation with new feedback
+        await pool.query(
+          `UPDATE evaluations 
+           SET feedback_text = $1,
+               feedback_data = feedback_data || $2::jsonb,
+               metadata = metadata || $3::jsonb
+           WHERE id = $4`,
+          [
+            comprehensiveFeedback,
+            JSON.stringify({ [userLanguage]: comprehensiveFeedback }),
+            JSON.stringify({
+              regeneratedAt: new Date().toISOString(),
+              actualPassedAttempts: passedAttempts,
+              regeneratedBy: 'api'
+            }),
+            evaluationId
+          ]
+        );
+        
+        console.log('Successfully updated evaluation:', evaluationId);
+        
+        // Also update task metadata with new feedback for quick access
         await taskRepo.update?.(taskId, {
           metadata: {
             ...task.metadata,
-            lastRegeneratedFeedback: comprehensiveFeedback,
-            lastRegeneratedAt: new Date().toISOString()
+            evaluation: {
+              ...(task.metadata?.evaluation as Record<string, unknown> || {}),
+              feedback: comprehensiveFeedback,
+              feedbackVersions: {
+                ...((task.metadata?.evaluation as { feedbackVersions?: Record<string, string> })?.feedbackVersions || {}),
+                [userLanguage]: comprehensiveFeedback
+              },
+              lastRegeneratedAt: new Date().toISOString()
+            }
           }
         });
       }
