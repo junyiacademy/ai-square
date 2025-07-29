@@ -38,7 +38,13 @@ export function convertScenarioToIScenario(scenario: Scenario): IScenario {
   const title = scenario.title as Record<string, string>;
   const description = scenario.description as Record<string, string>;
   const objectives = scenario.objectives as string[];
-  const taskTemplates = scenario.task_templates as ITaskTemplate[];
+  const taskTemplates = (scenario.task_templates as Array<Record<string, unknown>>).map((template): ITaskTemplate => ({
+    id: template.id as string,
+    title: template.title as Record<string, string>,
+    type: template.type as TaskType,
+    description: template.description as Record<string, string> | undefined,
+    ...template
+  }));
   const xpRewards = scenario.xp_rewards as Record<string, number>;
   const unlockRequirements = scenario.unlock_requirements as Record<string, unknown>;
   const pblData = scenario.pbl_data as Record<string, unknown>;
@@ -172,8 +178,8 @@ export function convertTaskToITask(task: Task): ITask {
     scenarioTaskIndex: task.scenario_task_index || undefined,
     
     // Basic info
-    title: task.title || undefined,
-    description: task.description || undefined,
+    title: task.title as unknown as Record<string, string> | undefined,
+    description: task.description as unknown as Record<string, string> | undefined,
     type: task.type as TaskType,
     status: task.status as TaskStatus,
     

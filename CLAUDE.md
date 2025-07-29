@@ -290,6 +290,28 @@ Complexity levels: `simple`, `medium`, `complex`, `debug`
 
 ### 🚨 TypeScript & ESLint Strict Rules
 
+#### 🔴 Rule #0: TypeScript 錯誤檢查優先順序
+**永遠先檢查 TypeScript 編譯錯誤，再處理 ESLint 警告！**
+
+1. **TypeScript 錯誤 (最優先)**
+   - 使用 `npx tsc --noEmit` 檢查
+   - 編譯錯誤 = 程式無法執行
+   - 必須全部修復才能 build
+   
+2. **ESLint 警告 (次要)**
+   - 使用 `npm run lint` 檢查
+   - 程式碼品質問題
+   - 不影響編譯但要遵守規範
+
+**檢查順序：**
+```bash
+# 1. 先檢查 TypeScript 錯誤
+npx tsc --noEmit
+
+# 2. 修復所有 TypeScript 錯誤後，再處理 ESLint
+npm run lint
+```
+
 #### Rule #1: Absolutely NO `any` Type
 **This is the most important rule, no exceptions:**
 
@@ -425,8 +447,120 @@ const task: ITask = {
 - ❌ Wrong: `export function clearCache() { }`
 - ✅ Right: `function clearCache() { }` (no export)
 
+#### Rule #11: Type Definition Single Source of Truth
+
+**Each type/interface MUST be defined in ONE place only:**
+
+1. **Check before creating new interfaces**
+   ```bash
+   # Search for existing definitions
+   grep -r "interface Achievement" src/
+   grep -r "type Achievement" src/
+   ```
+
+2. **Import from single source**
+   - ❌ Wrong: Define `Achievement` in multiple files
+   - ✅ Right: `import type { Achievement } from '@/types/unified-learning'`
+
+3. **Type hierarchy**
+   ```
+   @/types/database.ts       → Database schema types
+   @/types/unified-learning.ts → Core business interfaces
+   @/lib/repositories/interfaces → Repository-specific types
+   @/lib/types/*            → Domain-specific types
+   ```
+
+#### Rule #12: Database to Interface Conversion
+
+**MUST handle null/undefined conversions properly:**
+
+1. **Database null → Interface undefined**
+   ```typescript
+   // Database: string | null
+   // Interface: Record<string, string> | undefined
+   
+   // ❌ Wrong
+   title: dbRow.title as Record<string, string> | undefined
+   
+   // ✅ Right
+   title: dbRow.title ? (dbRow.title as unknown as Record<string, string>) : undefined
+   ```
+
+2. **Type conversion helpers**
+   ```typescript
+   // Standard conversion function
+   function toMultilingual(value: unknown): Record<string, string> | undefined {
+     if (!value || value === null) return undefined;
+     if (typeof value === 'string') return { en: value };
+     return value as Record<string, string>;
+   }
+   ```
+
+3. **Array handling**
+   ```typescript
+   // ❌ Wrong
+   taskTemplates: row.task_templates as ITaskTemplate[]
+   
+   // ✅ Right
+   taskTemplates: (row.task_templates as Array<Record<string, unknown>> || []).map((t): ITaskTemplate => ({
+     id: t.id as string,
+     title: t.title as Record<string, string>,
+     type: t.type as TaskType,
+     ...t
+   }))
+   ```
+
+#### Rule #13: Type Safety Pre-check List
+
+**Before implementing new features:**
+
+- [ ] Check if types already exist (`grep -r "interface TypeName"`)
+- [ ] Verify multilingual fields use `Record<string, string>`
+- [ ] Ensure database fields map correctly to interfaces
+- [ ] Add type conversion functions for complex types
+- [ ] Use `as unknown as Type` for non-overlapping conversions
+- [ ] Handle all null/undefined cases explicitly
+
 **Valid route exports only:**
 - GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS
+
+### 🛡️ TypeScript Error Prevention Summary
+
+#### Common Error Patterns & Solutions
+
+1. **Multilingual Field Mismatch**
+   - **Error**: Type 'string' is not assignable to type 'Record<string, string>'
+   - **Solution**: Always use `{ en: value }` format or conversion helper
+
+2. **Type Definition Conflicts**
+   - **Error**: Type 'X' is not assignable to type 'Y' (same interface name)
+   - **Solution**: Import from single source, never redefine
+
+3. **Unsafe Type Conversions**
+   - **Error**: Conversion may be a mistake
+   - **Solution**: Use `as unknown as Type` for safety
+
+4. **Optional Chaining on Unknown**
+   - **Error**: Property does not exist on type
+   - **Solution**: Cast to Record<string, unknown> first
+
+5. **Next.js 15 Route Parameters**
+   - **Error**: Type '{ params: { id: string } }' not assignable
+   - **Solution**: Use Promise<{ params }> and await
+
+#### Quick Fix Checklist
+```bash
+# 1. Check TypeScript errors first
+npx tsc --noEmit
+
+# 2. Search for type conflicts
+grep -r "interface TypeName" src/
+
+# 3. Fix in order: imports → types → conversions → implementations
+
+# 4. Validate fixes
+npm run typecheck && npm run lint && npm run test:ci
+```
 
 #### Rule #11: TDD for TypeScript Error Fixes
 **修復 TypeScript 錯誤時必須使用 TDD 流程：**
@@ -465,14 +599,15 @@ const task: ITask = {
 #### 🚨 Pre-commit Checklist
 **Must complete ALL checks before commit:**
 
-1. **ESLint Check**: 
-   ```bash
-   cd frontend && npx eslint $(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js|jsx)$')
-   ```
-
-2. **TypeScript Check**:
+1. **TypeScript Check (永遠最先檢查)**:
    ```bash
    cd frontend && npx tsc --noEmit
+   ```
+   **如果有任何 TypeScript 錯誤，必須先修復才能繼續！**
+
+2. **ESLint Check (TypeScript 通過後才檢查)**: 
+   ```bash
+   cd frontend && npx eslint $(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js|jsx)$')
    ```
 
 3. **Test Check**:

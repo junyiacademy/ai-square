@@ -373,7 +373,7 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
       resources: row.resources as Array<Record<string, unknown>>,
       createdAt: row.created_at as string,
       updatedAt: row.updated_at as string,
-      metadata: row.metadata as Record<string, unknown> | undefined
+      metadata: (row.metadata || {}) as Record<string, unknown>
     };
   }
 
@@ -384,7 +384,11 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
       description: row.description as string,
       achievedAt: row.achieved_at as string,
       criteria: row.criteria as Record<string, unknown>,
-      rewards: row.rewards as Record<string, unknown>
+      rewards: {
+        xp: (row.rewards as Record<string, unknown>)?.xp as number || 0,
+        badges: (row.rewards as Record<string, unknown>)?.badges as string[] | undefined,
+        unlocks: (row.rewards as Record<string, unknown>)?.unlocks as string[] | undefined
+      }
     };
   }
 

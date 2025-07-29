@@ -27,8 +27,8 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       scenarioTaskIndex: row.scenario_task_index || undefined,
       
       // Basic info
-      title: row.title || undefined,
-      description: row.description || undefined,
+      title: typeof row.title === 'string' ? { en: row.title } : row.title || undefined,
+      description: typeof row.description === 'string' ? { en: row.description } : row.description || undefined,
       type: row.type,
       status: row.status,
       

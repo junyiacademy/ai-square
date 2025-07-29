@@ -283,6 +283,8 @@ class PBLYAMLProcessor implements IYAMLProcessor {
     const scenarioId = parts[parts.length - 2];
     
     const pblData = yamlData as Record<string, unknown>;
+    const scenarioInfo = (pblData.scenario_info || {}) as Record<string, unknown>;
+    const programs = (pblData.programs || []) as Array<Record<string, unknown>>;
     
     return {
       mode: 'pbl' as const,
@@ -296,30 +298,30 @@ class PBLYAMLProcessor implements IYAMLProcessor {
         configPath: filePath,
         lastSync: new Date().toISOString()
       },
-      title: { en: pblData.scenario_info?.title || 'Untitled PBL Scenario' },
-      description: { en: pblData.scenario_info?.description || '' },
-      objectives: pblData.scenario_info?.learning_objectives || [],
-      difficulty: (pblData.scenario_info?.difficulty || 'intermediate') as DifficultyLevel,
-      estimatedMinutes: parseInt(pblData.scenario_info?.estimated_duration?.replace('minutes', '') || '60'),
+      title: { en: (scenarioInfo.title as string) || 'Untitled PBL Scenario' },
+      description: { en: (scenarioInfo.description as string) || '' },
+      objectives: (scenarioInfo.learning_objectives as string[]) || [],
+      difficulty: ((scenarioInfo.difficulty as string) || 'intermediate') as DifficultyLevel,
+      estimatedMinutes: parseInt((scenarioInfo.estimated_duration as string)?.replace('minutes', '') || '60'),
       prerequisites: [],
       taskTemplates: [], // PBL tasks are defined in the YAML
-      taskCount: pblData.programs?.[0]?.tasks?.length || 0,
+      taskCount: (programs[0]?.tasks as Array<unknown>)?.length || 0,
       xpRewards: {},
       unlockRequirements: {},
       pblData: {
-        targetDomains: pblData.scenario_info?.target_domains || [],
-        ksaMappings: pblData.ksa_mappings || [],
-        programs: pblData.programs || []
+        targetDomains: (scenarioInfo.target_domains as string[]) || [],
+        ksaMappings: (pblData.ksa_mappings as Array<Record<string, unknown>>) || [],
+        programs: programs
       },
       discoveryData: {},
       assessmentData: {},
-      aiModules: pblData.ai_modules || {},
+      aiModules: (pblData.ai_modules as Record<string, unknown>) || {},
       resources: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       metadata: {
-        difficulty: pblData.scenario_info?.difficulty,
-        estimatedDuration: pblData.scenario_info?.estimated_duration
+        difficulty: scenarioInfo.difficulty,
+        estimatedDuration: scenarioInfo.estimated_duration
       }
     };
   }
@@ -373,6 +375,7 @@ class DiscoveryYAMLProcessor implements IYAMLProcessor {
     const careerType = parts[parts.length - 2];
     
     const discoveryData = yamlData as Record<string, unknown>;
+    const metadata = (discoveryData.metadata || {}) as Record<string, unknown>;
     
     return {
       mode: 'discovery' as const,
@@ -387,8 +390,8 @@ class DiscoveryYAMLProcessor implements IYAMLProcessor {
         configPath: filePath,
         lastSync: new Date().toISOString()
       },
-      title: { en: discoveryData.metadata?.title || 'Untitled Discovery Path' },
-      description: { en: discoveryData.metadata?.long_description || discoveryData.metadata?.short_description || '' },
+      title: { en: (metadata.title as string) || 'Untitled Discovery Path' },
+      description: { en: (metadata.long_description as string) || (metadata.short_description as string) || '' },
       objectives: [
         'Explore career possibilities',
         'Develop practical skills',
@@ -396,7 +399,7 @@ class DiscoveryYAMLProcessor implements IYAMLProcessor {
         'Build portfolio projects'
       ],
       difficulty: 'intermediate' as DifficultyLevel,
-      estimatedMinutes: (discoveryData.metadata?.estimated_hours || 1) * 60,
+      estimatedMinutes: ((metadata.estimated_hours as number) || 1) * 60,
       prerequisites: [],
       taskTemplates: [], // Discovery generates tasks dynamically
       taskCount: 0,
@@ -406,8 +409,8 @@ class DiscoveryYAMLProcessor implements IYAMLProcessor {
       discoveryData: {
         category: discoveryData.category,
         difficultyRange: discoveryData.difficulty_range,
-        estimatedHours: discoveryData.metadata?.estimated_hours,
-        skillFocus: discoveryData.metadata?.skill_focus || [],
+        estimatedHours: metadata.estimated_hours as number,
+        skillFocus: (metadata.skill_focus as string[]) || [],
         worldSetting: discoveryData.world_setting,
         skillTree: discoveryData.skill_tree,
         milestoneQuests: discoveryData.milestone_quests || []
@@ -478,9 +481,9 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
     const language = match ? match[1] : 'en';
     
     const assessmentData = yamlData as Record<string, unknown>;
-    const config = assessmentData.config || assessmentData.assessment_config || {};
-    const titleValue = this.loader.getTranslatedField(config, 'title', language) || `${assessmentName} Assessment`;
-    const descValue = this.loader.getTranslatedField(config, 'description', language) || '';
+    const config = (assessmentData.config || assessmentData.assessment_config || {}) as Record<string, unknown>;
+    const titleValue = this.loader.getTranslatedField(config as Record<string, unknown>, 'title', language) || `${assessmentName} Assessment`;
+    const descValue = this.loader.getTranslatedField(config as Record<string, unknown>, 'description', language) || '';
     
     return {
       mode: 'assessment' as const,
@@ -504,23 +507,23 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
         'Get personalized recommendations'
       ],
       difficulty: 'intermediate' as DifficultyLevel,
-      estimatedMinutes: config.time_limit_minutes || 15,
+      estimatedMinutes: (config.time_limit_minutes as number) || 15,
       prerequisites: [],
       taskTemplates: [{
         id: 'assessment-task',
-        title: 'Complete Assessment',
+        title: { en: 'Complete Assessment' },
         type: 'question' as const
       }],
-      taskCount: config.total_questions || 12,
+      taskCount: (config.total_questions as number) || 12,
       xpRewards: {},
       unlockRequirements: {},
       pblData: {},
       discoveryData: {},
       assessmentData: {
-        totalQuestions: config.total_questions || 12,
-        timeLimit: config.time_limit_minutes || 15,
-        passingScore: config.passing_score || 60,
-        domains: config.domains || [],
+        totalQuestions: (config.total_questions as number) || 12,
+        timeLimit: (config.time_limit_minutes as number) || 15,
+        passingScore: (config.passing_score as number) || 60,
+        domains: (config.domains as string[]) || [],
         questionBank: assessmentData.questions || [],
         language
       },
@@ -529,9 +532,9 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       metadata: {
-        totalQuestions: config.total_questions || 12,
-        timeLimit: config.time_limit_minutes || 15,
-        passingScore: config.passing_score || 60
+        totalQuestions: (config.total_questions as number) || 12,
+        timeLimit: (config.time_limit_minutes as number) || 15,
+        passingScore: (config.passing_score as number) || 60
       }
     };
   }

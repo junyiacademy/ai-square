@@ -155,9 +155,9 @@ export class PBLScenarioService {
   private convertTasksToTemplates(tasks: Array<Record<string, unknown>>, language: string): ITaskTemplate[] {
     return tasks.map(task => ({
       id: task.id as string,
-      title: this.getLocalizedField(task, 'title', language),
+      title: { [language]: this.getLocalizedField(task, 'title', language) },
       type: 'chat' as const, // PBL tasks are primarily chat-based
-      description: this.getLocalizedField(task, 'description', language),
+      description: { [language]: this.getLocalizedField(task, 'description', language) },
       metadata: {
         category: task.category,
         instructions: this.getLocalizedArrayField(task, 'instructions', language),

@@ -221,7 +221,7 @@ export class DiscoveryService implements IDiscoveryService {
       title: 'Task Portfolio Item', // TODO: 從任務獲取標題
       description: 'Created from task completion',
       taskId,
-      artifacts,
+      artifacts: artifacts as Array<{ type: 'code' | 'design' | 'document' | 'presentation'; url: string; thumbnail?: string }>,
       skills: [], // TODO: 從任務提取技能
       feedback: undefined
     });
@@ -251,12 +251,9 @@ export class DiscoveryService implements IDiscoveryService {
       4. Realistic timeline expectations
     `;
 
-    const insights = await this.aiService.generateContent(prompt, {
-      temperature: 0.7,
-      maxTokens: 500
-    });
+    const insights = await this.aiService.generateContent({ prompt });
 
-    return insights;
+    return insights.content || JSON.stringify(insights);
   }
 
 

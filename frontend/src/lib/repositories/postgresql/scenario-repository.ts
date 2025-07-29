@@ -9,9 +9,10 @@ import type {
   DBScenario, 
   LearningMode, 
   ScenarioStatus, 
-  DifficultyLevel
+  DifficultyLevel,
+  TaskType
 } from '@/types/database';
-import type { IScenario } from '@/types/unified-learning';
+import type { IScenario, ITaskTemplate } from '@/types/unified-learning';
 import { BaseScenarioRepository } from '@/types/unified-learning';
 
 export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenario> {
@@ -46,7 +47,13 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
       prerequisites: row.prerequisites,
       
       // Task templates
-      taskTemplates: row.task_templates,
+      taskTemplates: (row.task_templates as Array<Record<string, unknown>> || []).map((t): ITaskTemplate => ({
+        id: t.id as string,
+        title: t.title as Record<string, string>,
+        type: t.type as TaskType,
+        description: t.description as Record<string, string> | undefined,
+        ...t
+      })),
       taskCount: row.task_count,
       
       // Rewards and progression

@@ -18,6 +18,7 @@ import {
   UserDataResponse,
   UserDataInput
 } from '../interfaces';
+import type { Achievement } from '../interfaces';
 
 export class PostgreSQLUserRepository implements IUserRepository {
   constructor(private pool: Pool) {}
@@ -361,7 +362,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
     
     // TODO: Achievement 系統需要建立相關資料表
     // 暫時返回空陣列避免阻擋 Discovery 開發
-    const achievements: unknown[] = [];
+    const achievements: Achievement[] = [];
 
     // Format response to match legacy UserData interface
     return {

@@ -160,9 +160,9 @@ export class DiscoveryScenarioService {
       yamlData.starting_scenario.initial_tasks.forEach((taskId, index) => {
         templates.push({
           id: taskId,
-          title: this.formatTaskTitle(taskId),
+          title: { en: this.formatTaskTitle(taskId) },
           type: 'chat' as const, // Use a valid TaskType
-          description: `Initial task for ${yamlData.metadata.title}`,
+          description: { en: `Initial task for ${yamlData.metadata.title}` },
           metadata: {
             order: index + 1,
             isInitial: true,
