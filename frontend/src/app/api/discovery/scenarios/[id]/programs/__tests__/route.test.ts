@@ -158,12 +158,9 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       getPersonalizedRecommendations: jest.fn(),
       analyzeSkillGaps: jest.fn(),
       calculateCareerReadiness: jest.fn(),
-      trackMilestone: jest.fn(),
       calculateOverallProgress: jest.fn(),
       createPortfolioFromTask: jest.fn(),
-      sharePortfolio: jest.fn(),
-      generateCareerInsights: jest.fn(),
-      getPersonalizedLearningPath: jest.fn()
+      generateCareerInsights: jest.fn()
     } as any;
 
     // Setup factory mocks

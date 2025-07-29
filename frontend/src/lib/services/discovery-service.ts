@@ -26,16 +26,13 @@ export interface IDiscoveryService {
   calculateCareerReadiness(userId: string, careerId: string): Promise<number>;
   
   // Progress tracking
-  trackMilestone(userId: string, milestoneId: string): Promise<void>;
   calculateOverallProgress(userId: string): Promise<number>;
   
   // Portfolio management
   createPortfolioFromTask(userId: string, taskId: string, artifacts: unknown[]): Promise<IPortfolioItem>;
-  sharePortfolio(userId: string, portfolioId: string): Promise<string>;
   
   // AI-powered features
   generateCareerInsights(userId: string, careerId: string): Promise<string>;
-  getPersonalizedLearningPath(userId: string, targetCareer: string): Promise<unknown>;
 }
 
 export class DiscoveryService implements IDiscoveryService {
@@ -201,16 +198,6 @@ export class DiscoveryService implements IDiscoveryService {
     return Math.round(weightedSum / totalWeight);
   }
 
-  /**
-   * 記錄里程碑達成
-   */
-  async trackMilestone(_userId: string, _milestoneId: string): Promise<void> {
-    // TODO: 實作里程碑追蹤邏輯
-    // 1. 驗證里程碑條件
-    // 2. 記錄達成時間
-    // 3. 發放獎勵
-    // 4. 更新用戶進度
-  }
 
   /**
    * 計算總體進度
@@ -243,17 +230,6 @@ export class DiscoveryService implements IDiscoveryService {
     return portfolioItem;
   }
 
-  /**
-   * 分享作品集
-   */
-  async sharePortfolio(userId: string, portfolioId: string): Promise<string> {
-    // TODO: 實作分享邏輯
-    // 1. 生成分享連結
-    // 2. 設定權限
-    // 3. 記錄分享歷史
-    
-    return `https://ai-square.com/portfolio/${portfolioId}`;
-  }
 
   /**
    * AI 生成職涯洞察
@@ -284,23 +260,6 @@ export class DiscoveryService implements IDiscoveryService {
     return insights;
   }
 
-  /**
-   * 獲取個人化學習路徑
-   */
-  async getPersonalizedLearningPath(userId: string, targetCareer: string): Promise<unknown> {
-    // TODO: 實作個人化學習路徑生成
-    // 1. 分析當前能力
-    // 2. 設定目標
-    // 3. 規劃路徑
-    // 4. 推薦資源
-    
-    return {
-      targetCareer,
-      estimatedDuration: '3-6 months',
-      steps: [],
-      resources: []
-    };
-  }
 
   // Private helper methods
 
