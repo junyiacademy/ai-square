@@ -3,45 +3,20 @@
 > **更新日期**: 2025-01-29  
 > **狀態**: 部分實作完成
 
-## 實作進度
+## 實作進度摘要
 
-### ✅ 已完成
-- **基礎架構**
-  - ✅ BaseLearningService 介面定義
-  - ✅ Repository Pattern (PostgreSQL 實作)
-  - ✅ 統一評估系統 (UnifiedEvaluationSystem)
-  - ✅ 評估策略模式 (EvaluationStrategy Pattern)
-  
-- **Assessment 模組**
-  - ✅ AssessmentLearningService (完整 TDD 實作)
-  - ✅ Assessment 評估策略
-  - ✅ 多語言題庫支援
-  - ✅ 批次答題功能
-  
-- **資料庫架構**
-  - ✅ PostgreSQL Schema v3 (scenarios, programs, tasks, evaluations)
-  - ✅ Mode 欄位繼承機制
-  - ✅ 多語言 JSONB 支援
-  
-- **型別系統**
-  - ✅ TypeScript 型別定義完整
-  - ✅ 零 any 型別使用
-  - ✅ 嚴格型別檢查 (包含測試)
+### ✅ 已完成 (100%)
+- **基礎架構**: BaseLearningService、Repository Pattern、統一評估系統
+- **Assessment 模組**: 完整 TDD 實作、多語言支援、批次答題
+- **資料庫**: PostgreSQL Schema v3、Mode 繼承、JSONB 多語言
+- **型別系統**: 零 any 類型、嚴格檢查
 
 ### 🚧 進行中
-- **PBL 模組**
-  - ⏳ PBLLearningService 實作
-  - ⏳ AI 導師整合
-  
-- **Discovery 模組**  
-  - ⏳ DiscoveryLearningService 實作
-  - ⏳ 動態任務生成
+- **PBL 模組**: 基礎服務實作、AI 導師整合
+- **Discovery 模組**: 服務架構、動態任務生成
 
 ### ❌ 待實作
-- **進階功能**
-  - ❌ Redis 快取層整合
-  - ❌ AI 回饋生成 (generateFeedback)
-  - ❌ 完整的 E2E 測試覆蓋
+- Redis 快取整合、AI 回饋生成、完整 E2E 測試
 
 ## 1. 核心架構概念
 
@@ -57,42 +32,13 @@ Content Source → Scenario → Program → Task → Evaluation
 - **Task**：具體的學習任務（向下隸屬於Program UUID）
 - **Evaluation**：評估結果（Task級別和Program級別）
 
-### 1.2 統一資料流程與共同模式
+### 1.2 共同模式（所有模組共享）
 
-#### 統一資料流程
-```
-YAML/API → Content Source → Scenario (UUID) → Program (UUID) → Tasks (UUID) → Evaluations (UUID)
-```
-
-#### 共同 Pattern（所有模組共享）
-1. **Repository Pattern**: 所有模組都使用 GCS Repository 抽象層
-   - 統一的 CRUD 操作介面
-   - 一致的錯誤處理機制
-   - 標準化的查詢方法
-
-2. **UUID 識別**: 所有實體都有唯一 UUID
-   - 全域唯一性保證
-   - 便於跨模組引用
-   - 支援分散式系統擴展
-
-3. **狀態管理**: pending → active → completed
-   - 標準化的生命週期
-   - 統一的狀態轉換規則
-   - 清晰的進度追蹤
-
-4. **多語言支援**: 統一的翻譯機制
-   - 14 種語言支援 (100% 覆蓋率)
-   - 混合式翻譯架構 (YAML suffix + 獨立檔案)
-   - LLM 自動化翻譯整合
-   - 統一的語言代碼處理
-
-5. **快取策略**: 多層快取提升效能
-   - Memory 快取（短期，60秒）
-   - localStorage 快取（中期）
-   - Redis 分散式快取（配置化，自動 fallback）
-   - GCS 持久化（長期）
-   - 智能快取失效機制
-   - 5-10x 效能提升
+1. **Repository Pattern**: PostgreSQL 統一資料存取層
+2. **UUID 識別**: 所有實體唯一識別，支援分散式擴展
+3. **狀態管理**: `pending → active → completed` 生命週期
+4. **多語言支援**: 14 種語言，JSONB 儲存，LLM 翻譯整合
+5. **快取策略**: Memory → localStorage → Redis → PostgreSQL 多層架構
 
 ### 1.3 三大模組對應
 ```
@@ -539,394 +485,66 @@ abstract class BaseLearningService<
 }
 ```
 
-## 4. 實作範例
+## 4. 實作模式與流程
 
-### 4.1 PBL Service 實作
-```typescript
-class PBLLearningService extends BaseLearningService<
-  PBLScenario,
-  PBLProgram,
-  PBLSession
-> {
-  protected async createContainer(
-    userId: string, 
-    scenario: PBLScenario
-  ): Promise<PBLProgram> {
-    return this.containerRepo.create({
-      scenarioId: scenario.id,
-      userId,
-      status: 'active',
-      startedAt: new Date().toISOString(),
-      currentTaskIndex: 0,
-      tasks: scenario.programs[0].tasks,  // 第一個 program 的任務
-      sessions: []
-    });
-  }
-  
-  protected getEvaluationType(): string {
-    return 'pbl_task';
-  }
-  
-  protected async buildEvaluationContext(session: PBLSession): Promise<EvaluationContext> {
-    const program = await this.containerRepo.findById(session.containerId);
-    const scenario = await this.projectRepo.findById(program.scenarioId);
-    
-    return {
-      ksaMappings: scenario.ksaMappings,
-      taskObjectives: session.task.objectives,
-      previousResponses: session.previousResponses
-    };
-  }
-}
-```
+### 4.1 Service Pattern 規範
 
-### 4.2 Discovery Service 實作
-```typescript
-class DiscoveryLearningService extends BaseLearningService<
-  DiscoveryPath,
-  DiscoveryWorkspace,
-  DiscoverySession
-> {
-  protected async createContainer(
-    userId: string,
-    path: DiscoveryPath
-  ): Promise<DiscoveryWorkspace> {
-    // 生成初始任務
-    const initialTasks = await this.generateInitialTasks(path);
-    
-    return this.containerRepo.create({
-      pathId: path.id,
-      userId,
-      status: 'active',
-      startedAt: new Date().toISOString(),
-      currentTaskIndex: 0,
-      tasks: initialTasks,
-      sessions: [],
-      totalXp: 0,
-      achievements: []
-    });
-  }
-  
-  private async generateInitialTasks(path: DiscoveryPath): Promise<DiscoveryTask[]> {
-    // 使用 AI 生成個人化任務
-    return this.aiService.generateTasks({
-      pathContext: path,
-      count: 3,
-      difficulty: 'progressive'
-    });
-  }
-  
-  protected async updateContainerProgress(containerId: string): Promise<void> {
-    const workspace = await this.containerRepo.findById(containerId);
-    const completedSessions = await this.sessionRepo.findByContainer(containerId);
-    
-    // 計算 XP
-    const totalXp = completedSessions.reduce((sum, s) => sum + s.xpEarned, 0);
-    
-    // 檢查成就
-    const newAchievements = await this.checkAchievements(workspace, completedSessions);
-    
-    // 更新工作區
-    await this.containerRepo.update(containerId, {
-      totalXp,
-      achievements: [...workspace.achievements, ...newAchievements],
-      completedTasksCount: completedSessions.length
-    });
-  }
-}
-```
+#### Assessment Service Pattern
+- **題目選擇**: 每領域隨機選擇指定數量
+- **批次答案**: 將所有答案轉換為 interactions
+- **領域評分**: 統計各領域正確率並計算分數
 
-### 4.3 Assessment Service 實作
-```typescript
-class AssessmentLearningService extends BaseLearningService<
-  AssessmentScenario,
-  AssessmentProgram,
-  AssessmentTask,
-  AssessmentEvaluation
-> {
-  // 從YAML載入Assessment config作為Scenario
-  async createScenarioFromConfig(configPath: string): Promise<AssessmentScenario> {
-    const config = await this.yamlLoader.load(configPath);
-    return this.scenarioRepo.create({
-      sourceType: 'assessment',
-      sourceRef: {
-        type: 'yaml',
-        path: configPath,
-        metadata: {}
-      },
-      title: config.title,
-      description: config.description,
-      objectives: config.objectives,
-      taskTemplates: [],  // 將在createTasksFromScenario中動態選擇
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      assessmentConfig: config.assessment_config,
-      domains: config.domains,
-      questionBank: config.questions
-    });
-  }
-  
-  protected async createProgram(
-    userId: string,
-    scenario: AssessmentScenario
-  ): Promise<AssessmentProgram> {
-    // 從題庫中選擇題目
-    const selectedQuestions = this.selectQuestions(
-      scenario.questionBank,
-      scenario.assessmentConfig.questionsPerDomain
-    );
-    
-    return this.programRepo.create({
-      scenarioId: scenario.id,
-      userId,
-      status: 'active',
-      startedAt: new Date().toISOString(),
-      taskIds: [],
-      currentTaskIndex: 0,
-      metadata: {
-        selectedQuestions: selectedQuestions.map(q => q.id),
-        timeStarted: new Date().toISOString(),
-        timeLimit: scenario.assessmentConfig.timeLimit
-      }
-    });
-  }
-  
-  protected async createTasksFromScenario(
-    program: AssessmentProgram,
-    scenario: AssessmentScenario
-  ): Promise<AssessmentTask[]> {
-    const selectedQuestions = scenario.questionBank.filter(
-      q => program.metadata.selectedQuestions.includes(q.id)
-    );
-    
-    // 創建一個包含所有題目的 Task
-    const task = await this.taskRepo.create({
-      programId: program.id,
-      scenarioTaskIndex: 0,
-      title: 'Assessment Questions',
-      type: 'question',
-      content: {
-        instructions: 'Complete the assessment questions',
-        context: {
-          questions: selectedQuestions,
-          timeLimit: scenario.assessmentConfig.timeLimit,
-          language: program.metadata.language || 'en'
-        }
-      },
-      interactions: [],
-      startedAt: new Date().toISOString(),
-      status: 'pending'
-    });
-    
-    return [task];
-  }
-  
-  protected shouldEvaluate(task: AssessmentTask, interaction: IInteraction): boolean {
-    // Assessment在回答後立即評估
-    return interaction.type === 'user_input';
-  }
-  
-  protected async evaluateTask(task: AssessmentTask): Promise<AssessmentEvaluation> {
-    // 計算所有題目的總分
-    const questions = task.content.context.questions;
-    const correctCount = task.interactions.filter(i => 
-      i.type === 'assessment_answer' && i.content.isCorrect
-    ).length;
-    
-    const score = (correctCount / questions.length) * 100;
-    
-    const evaluation: AssessmentEvaluation = {
-      id: this.generateUUID(),
-      targetType: 'task',
-      targetId: task.id,
-      evaluationType: 'assessment_complete',
-      score,
-      createdAt: new Date().toISOString(),
-      metadata: {
-        totalQuestions: questions.length,
-        correctAnswers: correctCount,
-        completionTime: this.calculateCompletionTime(task),
-        interactions: task.interactions
-      }
-    };
-    
-    await this.evaluationRepo.create(evaluation);
-    return evaluation;
-  }
-  
-  // 批次提交答案
-  async submitBatchAnswers(taskId: string, answers: AssessmentAnswer[]): Promise<void> {
-    const task = await this.taskRepo.findById(taskId);
-    if (!task) throw new Error('Task not found');
-    
-    const questions = task.content.context.questions;
-    
-    // 將所有答案轉換為 interactions
-    const interactions: AssessmentInteraction[] = answers.map(answer => {
-      const question = questions.find(q => q.id === answer.questionId);
-      const isCorrect = question && 
-        String(answer.answer) === String(question.correct_answer);
-      
-      return {
-        timestamp: new Date().toISOString(),
-        type: 'assessment_answer',
-        content: {
-          questionId: answer.questionId,
-          selectedAnswer: answer.answer,
-          isCorrect,
-          timeSpent: answer.timeSpent || 0,
-          ksa_mapping: question?.ksa_mapping
-        }
-      };
-    });
-    
-    // 一次更新所有互動
-    await this.taskRepo.updateInteractions(taskId, interactions);
-  }
-  
-  // Assessment特有：計算領域分數
-  async completeProgramWithDomainScores(programId: string): Promise<AssessmentEvaluation> {
-    const evaluation = await this.completeProgram(programId);
-    
-    // 計算各領域分數
-    const taskEvaluations = await this.evaluationRepo.findByProgram(programId);
-    const domainScores = this.calculateDomainScores(taskEvaluations);
-    
-    // 更新評估結果
-    evaluation.domainScores = domainScores;
-    evaluation.competencyMapping = this.mapToCompetencies(domainScores);
-    
-    await this.evaluationRepo.update(evaluation.id, evaluation);
-    return evaluation;
-  }
-  
-  private selectQuestions(questionBank: AssessmentQuestion[], perDomain: number): AssessmentQuestion[] {
-    // 從每個領域選擇指定數量的題目
-    const selected: AssessmentQuestion[] = [];
-    const domains = [...new Set(questionBank.map(q => q.domain))];
-    
-    domains.forEach(domain => {
-      const domainQuestions = questionBank.filter(q => q.domain === domain);
-      const shuffled = domainQuestions.sort(() => Math.random() - 0.5);
-      selected.push(...shuffled.slice(0, perDomain));
-    });
-    
-    return selected.sort(() => Math.random() - 0.5);
-  }
-  
-  private calculateDomainScores(evaluations: AssessmentEvaluation[]): DomainScore[] {
-    // 計算各領域的分數
-    const domainMap = new Map<string, { correct: number; total: number }>();
-    
-    evaluations.forEach(eval => {
-      if (eval.targetType === 'task') {
-        const domain = eval.metadata.domain;
-        if (!domainMap.has(domain)) {
-          domainMap.set(domain, { correct: 0, total: 0 });
-        }
-        const stats = domainMap.get(domain)!;
-        stats.total++;
-        if (eval.isCorrect) stats.correct++;
-      }
-    });
-    
-    return Array.from(domainMap.entries()).map(([domain, stats]) => ({
-      domain,
-      score: (stats.correct / stats.total) * 100,
-      questionsAnswered: stats.total,
-      questionsCorrect: stats.correct
-    }));
-  }
-  
-  private mapToCompetencies(domainScores: DomainScore[]): CompetencyResult[] {
-    // 將領域分數映射到AI素養能力
-    return domainScores.map(ds => ({
-      competencyId: ds.domain,
-      competencyType: 'ai_literacy',
-      level: ds.score / 100,
-      evidence: {
-        source: 'assessment',
-        score: ds.score,
-        date: new Date().toISOString()
-      }
-    }));
-  }
-}
-```
+#### PBL Service Pattern  
+- **任務結構**: 多任務對應學習目標
+- **AI 整合**: 導師對話與即時回饋
+- **KSA 映射**: 能力追蹤與評估
 
-## 5. 資料庫 Schema 設計
+#### Discovery Service Pattern
+- **動態生成**: AI 生成個人化任務
+- **進度系統**: XP 與成就追蹤
+- **階段設計**: 探索、挑戰、成就
 
-### 5.1 核心表格
-```sql
--- Scenarios 表（學習情境UUID檔案）
-CREATE TABLE scenarios (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  source_type VARCHAR(50) NOT NULL, -- 'pbl', 'discovery', 'assessment'
-  source_ref JSONB NOT NULL, -- Content Source資訊
-  title VARCHAR(255) NOT NULL,
-  description TEXT,
-  objectives TEXT[],
-  task_templates JSONB, -- 任務模板（PBL、Assessment使用）
-  metadata JSONB NOT NULL, -- 特定類型的額外資料
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
+### 4.2 統一工作流程 SOP
 
--- Programs 表（學習實例）
-CREATE TABLE programs (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  scenario_id UUID REFERENCES scenarios(id),
-  user_id UUID REFERENCES users(id),
-  status VARCHAR(50) DEFAULT 'active', -- 'active', 'completed', 'abandoned'
-  started_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  completed_at TIMESTAMP WITH TIME ZONE,
-  task_ids UUID[],  -- Task UUID列表
-  current_task_index INTEGER DEFAULT 0,
-  metadata JSONB NOT NULL, -- 特定類型資料（XP、achievements等）
-  UNIQUE(scenario_id, user_id)
-);
+1. **啟動學習**
+   - 載入 Scenario
+   - 創建 Program
+   - 生成 Tasks
+   - 初始化狀態
 
--- Tasks 表（學習任務UUID檔案）
-CREATE TABLE tasks (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  program_id UUID REFERENCES programs(id),
-  scenario_task_index INTEGER NOT NULL, -- 在Scenario中的任務索引
-  title VARCHAR(255) NOT NULL,
-  type VARCHAR(50) NOT NULL, -- 'question', 'chat', 'creation', 'analysis'
-  content JSONB NOT NULL, -- 任務內容
-  interactions JSONB DEFAULT '[]', -- 互動記錄（答題歷程、AI對話）
-  started_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  completed_at TIMESTAMP WITH TIME ZONE,
-  status VARCHAR(50) DEFAULT 'pending', -- 'pending', 'active', 'completed'
-  metadata JSONB DEFAULT '{}' -- 特定類型資料
-);
+2. **互動處理**
+   - 接收用戶輸入
+   - 更新 interactions
+   - 即時評估判斷
+   - 狀態轉換
 
--- Evaluations 表（評估結果）
-CREATE TABLE evaluations (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  target_type VARCHAR(50) NOT NULL, -- 'task', 'program'
-  target_id UUID NOT NULL, -- Task UUID 或 Program UUID
-  evaluation_type VARCHAR(100) NOT NULL, -- 評估類型標識
-  score DECIMAL(5,2),
-  feedback TEXT,
-  dimensions JSONB, -- 各維度分數
-  metadata JSONB NOT NULL, -- 特定評估資料
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  INDEX idx_evaluations_target (target_type, target_id)
-);
+3. **評估流程**
+   - Task 級別評估
+   - Program 總結評估
+   - 能力映射更新
+   - 回饋生成
 
--- 能力進度表（統一追蹤各類能力）
-CREATE TABLE competency_progress (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES users(id),
-  competency_id VARCHAR(100) NOT NULL,
-  competency_type VARCHAR(50) NOT NULL, -- 'ai_literacy', 'skill', 'achievement'
-  current_level DECIMAL(5,2) DEFAULT 0,
-  evidence_refs JSONB DEFAULT '[]', -- 關聯Evaluation IDs
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE(user_id, competency_id)
-);
-```
+4. **完成處理**
+   - 狀態更新
+   - 成就計算
+   - 報告生成
+   - 資料歸檔
+
+## 5. 資料庫 Schema 設計原則
+
+### 5.1 核心表格結構
+1. **scenarios**: 學習情境定義 (UUID, source_type, metadata)
+2. **programs**: 學習實例 (scenario_id, user_id, status, task_ids)
+3. **tasks**: 學習任務 (program_id, type, content, interactions)
+4. **evaluations**: 評估結果 (target_type, target_id, score, dimensions)
+5. **competency_progress**: 能力進度 (user_id, competency_id, level)
+
+### 5.2 設計特點
+- UUID 作為主鍵確保全局唯一
+- JSONB 儲存靈活的結構化資料
+- 多語言欄位使用 Record<string, string> 格式
+- Mode 欄位透過 trigger 繼承，減少 JOIN
+- 索引優化查詢效能
 
 ## 6. 統一架構的優勢
 
@@ -979,49 +597,12 @@ YAML Files → YAML Loader → Scenario Initialization Service → Scenario Repo
    - 檢查重複並更新
    - 批次處理
 
-### 7.2 初始化流程
+### 7.2 初始化流程 SOP
 
-#### Step 1: 掃描 YAML 檔案
-```typescript
-// 各模組的 YAML 檔案位置
-const yamlPaths = {
-  pbl: 'public/pbl_data/scenarios/**/*.yaml',
-  discovery: 'public/discovery_data/paths/**/*.yaml',
-  assessment: 'public/assessment_data/**/questions_*.yaml'
-};
-```
-
-#### Step 2: 載入並轉換
-```typescript
-// 使用專用的 YAML Loader
-const yamlData = await assessmentYAMLLoader.loadAssessment(name, language);
-
-// 轉換為 Scenario 格式
-const scenario: IScenario = {
-  sourceType: 'assessment',
-  sourceRef: {
-    type: 'yaml',
-    path: yamlPath,
-    lastSync: new Date().toISOString()
-  },
-  title: yamlData.config.title,
-  // ... 其他欄位
-};
-```
-
-#### Step 3: 建立或更新 Scenario
-```typescript
-// 檢查是否已存在
-const existing = await scenarioRepo.findBySource('assessment', yamlPath);
-
-if (existing) {
-  // 更新現有 Scenario（如果 YAML 有變更）
-  await scenarioRepo.update(existing.id, scenario);
-} else {
-  // 創建新 Scenario
-  await scenarioRepo.create(scenario);
-}
-```
+1. **掃描**: 找出所有 YAML 檔案位置
+2. **載入**: 使用專用 Loader 處理各模組格式
+3. **轉換**: YAML 資料轉換為 Scenario 格式
+4. **存儲**: 檢查重複並建立/更新 Scenario
 
 ### 7.3 執行初始化
 
@@ -1065,23 +646,11 @@ interface IScenario {
 - **結構變更**：通知管理員審核
 - **破壞性變更**：創建新版本，保留舊版
 
-#### 3. 智能同步
-```typescript
-class ScenarioSyncService {
-  async checkForUpdates() {
-    const scenarios = await scenarioRepo.findAll();
-    
-    for (const scenario of scenarios) {
-      if (scenario.sourceRef.type === 'yaml') {
-        const yamlChanged = await this.hasYAMLChanged(scenario);
-        if (yamlChanged) {
-          await this.syncScenario(scenario);
-        }
-      }
-    }
-  }
-}
-```
+#### 3. 智能同步策略
+- 定期檢查 YAML 變更
+- 使用 checksum 比對
+- 支援增量更新  
+- 保留變更歷史
 
 ### 7.5 最佳實踐
 
@@ -1136,240 +705,41 @@ class ScenarioSyncService {
 
 ## 9. 設計原理與最佳實踐
 
-### 9.1 統一設計：所有模組都是 Multiple Tasks
+### 9.1 統一設計原則
 
-#### 核心原則：Program → Multiple Tasks
-
+#### 核心架構：Program → Multiple Tasks
 ```
-// 統一的架構
 任何學習模式 → Program → Multiple Tasks → Evaluations
 ```
 
-#### 現狀 vs 未來
+#### 現狀與未來展望
+- **Assessment**: 現在單一 Task，未來可分卷或分領域
+- **PBL**: 已經是多任務結構（理解、研究、實作）
+- **Discovery**: 已經是多階段結構（探索、挑戰、成就）
 
-**現在的 Assessment**
-```typescript
-Assessment Program {
-  id: "assessment-001",
-  taskIds: ["task-1"]  // 目前只有一個題組
-}
+#### Task 粒度設計
+1. **Assessment**: 一個完整題組或按領域分割
+2. **PBL**: 每個學習目標 30-60 分鐘
+3. **Discovery**: 按自然斷點切割階段
 
-Task {
-  id: "task-1",
-  title: "AI 素養測驗",
-  content: {
-    questions: [20題]  // 所有題目在一個 task
-  }
-}
-```
+### 9.2 實作準則
 
-**未來的 Assessment**
-```typescript
-Assessment Program {
-  id: "assessment-002",
-  taskIds: [
-    "task-A",  // A卷：10題基礎題
-    "task-B",  // B卷：5題進階題  
-    "task-C"   // C卷：4題應用題
-  ]
-}
-
-Task A {
-  id: "task-A",
-  title: "基礎概念測驗",
-  content: {
-    questions: [10題基礎題]
-  }
-}
-
-Task B {
-  id: "task-B", 
-  title: "進階理解測驗",
-  content: {
-    questions: [5題進階題]
-  }
-}
-```
-
-**PBL（本來就是 Multiple Tasks）**
-```typescript
-PBL Program {
-  id: "pbl-001",
-  taskIds: [
-    "task-1",  // 理解問題
-    "task-2",  // 研究方案
-    "task-3"   // 實作原型
-  ]
-}
-```
-
-**Discovery（本來就是 Multiple Tasks）**
-```typescript
-Discovery Program {
-  id: "discovery-001",
-  taskIds: [
-    "task-1",  // 探索世界
-    "task-2",  // 解決挑戰
-    "task-3"   // 獲得成就
-  ]
-}
-```
-
-#### 實作統一介面
-
-```typescript
-// 所有 Repository 都遵循相同模式
-interface IProgramRepository {
-  create(program: Omit<IProgram, 'id'>): Promise<IProgram>;
-  findById(id: string): Promise<IProgram | null>;
-  findByUser(userId: string): Promise<IProgram[]>;
-  update(id: string, updates: Partial<IProgram>): Promise<IProgram>;
-  addTask(programId: string, taskId: string): Promise<void>;
-}
-
-interface ITaskRepository {
-  create(task: Omit<ITask, 'id'>): Promise<ITask>;
-  findById(id: string): Promise<ITask | null>;
-  findByProgram(programId: string): Promise<ITask[]>;
-  updateInteractions(id: string, interactions: IInteraction[]): Promise<ITask>;
-}
-```
-
-#### 簡化的 Task 定義
-
-```typescript
-interface ITask {
-  id: string;
-  programId: string;
-  type: 'question' | 'chat' | 'creation' | 'analysis';
-  title: string;
-  content: {
-    // 根據 type 可以包含不同內容
-    questions?: Question[];      // for assessment
-    objectives?: string[];       // for pbl
-    instructions?: string;       // for any
-    context?: any;              // 其他需要的資料
-  };
-  interactions: IInteraction[];  // 統一的互動記錄
-  status: 'pending' | 'active' | 'completed';
-  startedAt: string;
-  completedAt?: string;
-}
-```
-
-#### 優勢
-
-1. **統一簡單**：所有模組都是 Program → Tasks 結構
-2. **向後相容**：現有的單一 task assessment 仍然運作
-3. **易於擴展**：未來要分卷很容易
-4. **概念清晰**：不需要特殊處理不同模組
-
-#### 實際應用
-
-```typescript
-// 創建任何類型的學習都是一樣的流程
-class UnifiedLearningService {
-  async startLearning(userId: string, scenarioId: string) {
-    // 1. 創建 Program
-    const program = await this.programRepo.create({
-      scenarioId,
-      userId,
-      status: 'active',
-      taskIds: []
-    });
-    
-    // 2. 根據 Scenario 創建 Tasks
-    const tasks = await this.createTasksForScenario(scenarioId);
-    
-    // 3. 關聯 Tasks 到 Program
-    for (const task of tasks) {
-      await this.programRepo.addTask(program.id, task.id);
-    }
-    
-    return program;
-  }
-  
-  private async createTasksForScenario(scenarioId: string) {
-    const scenario = await this.scenarioRepo.findById(scenarioId);
-    
-    switch (scenario.sourceType) {
-      case 'assessment':
-        // 目前創建 1 個 task，未來可能創建多個
-        return this.createAssessmentTasks(scenario);
-      
-      case 'pbl':
-        // 創建多個 tasks（每個子任務一個）
-        return this.createPBLTasks(scenario);
-        
-      case 'discovery':
-        // 創建多個 tasks（每個階段一個）
-        return this.createDiscoveryTasks(scenario);
-    }
-  }
-}
-```
-
-#### Task 粒度設計原則
-
-1. **Assessment**: 
-   - 現在：一個 Task 包含一個完整題組
-   - 未來：可按 domain 或難度分成多個 Tasks
-
-2. **PBL**: 
-   - 每個學習目標一個 Task
-   - 避免單一 Task 過大（控制在 30-60 分鐘）
-
-3. **Discovery**: 
-   - 每個探索階段一個 Task
-   - 自然斷點處切割（如完成挑戰、獲得成就）
-
-### 8.2 實作準則
-
-1. **創建新 Program 的時機**
-   - 每次用戶開始新的學習會話
-   - 不重用已完成或放棄的 Program
-
-2. **Task 的生命週期**
-   ```
-   pending → active → completed
-   ```
-   - pending: 已創建但未開始
-   - active: 正在進行中
-   - completed: 已完成
-
-3. **Interaction 記錄原則**
-   - 保留所有用戶輸入和系統回應
-   - 包含時間戳記和元數據
-   - 支援重播學習過程
+1. **Program 生命週期**: 每次新學習創建新 Program
+2. **Task 狀態**: `pending → active → completed`
+3. **Interaction 記錄**: 保留完整學習歷程，支援重播
 
 ## 10. 結論
 
-這個 Content Source → Scenario → Program → Task → Evaluation 的統一架構為 AI Square 平台提供了：
+統一學習架構為 AI Square 平台提供一致的學習體驗、靈活的資料管理、完整的評估體系，並保持良好的擴展性。通過這個架構，我們確保平台的持續發展和優化，同時提供高品質的學習體驗。
 
-1. **一致的學習體驗**：不管是PBL、Discovery還是Assessment，都遵循相同的學習流程
-2. **靈活的資料管理**：基於UUID的資料結構，便於追蹤和管理
-3. **完整的評佰體系**：Task級別和Program級別的雙層評佰
-4. **良好的擴展性**：新增學習模組只需遵循統一模式
+## 11. Staging 部署檢查清單
 
-通過這個架構，我們可以確保平台的持續發展和優化，同時提供高品質的學習體驗。
-
-## 6. Staging 部署檢查清單
-
-### 6.1 必要條件確認
+### 必要條件確認
 
 #### 環境配置
 - [ ] 所有環境變數已設定 (.env.staging)
-  - `DATABASE_URL` - PostgreSQL 連線字串
-  - `GOOGLE_CLOUD_PROJECT` - GCP 專案 ID
-  - `VERTEX_AI_LOCATION` - Vertex AI 區域
-  - `OPENAI_API_KEY` - OpenAI API 金鑰
-  - `CLAUDE_API_KEY` - Claude API 金鑰
-  - `REDIS_URL` - Redis 連線字串 (可選)
-
-#### 資料庫準備
 - [ ] PostgreSQL Schema v3 已部署
 - [ ] 資料庫遷移腳本已執行
-- [ ] 測試資料已載入 (scenarios, demo users)
 
 #### 程式碼品質
 - [x] TypeScript 編譯無錯誤 (0 errors)
@@ -1377,111 +747,19 @@ class UnifiedLearningService {
 - [ ] 單元測試通過率 > 70%
 - [x] 建置成功 (npm run build)
 
-### 6.2 功能完整性
+### 功能完整性
+- **Assessment 模組**: 100% 完成 ✓
+- **PBL 模組**: 基礎功能進行中
+- **Discovery 模組**: 待實作
 
-#### Assessment 模組 (100% 完成)
-- [x] 多語言題庫載入
-- [x] 動態選題機制
-- [x] 答題互動記錄
-- [x] 即時評分計算
-- [x] 領域分數統計
-- [x] 完成報告生成
+### 已知限制
+1. PBL 模組: AI 導師功能使用模擬回應
+2. Discovery 模組: 動態任務生成待開發
+3. Redis 快取: 使用記憶體快取 fallback
+4. AI 回饋生成: 返回預設文字
 
-#### PBL 模組 (進行中)
-- [ ] 情境載入與初始化
-- [ ] AI 導師對話整合
-- [ ] KSA 映射與評估
-- [ ] 學習歷程記錄
-
-#### Discovery 模組 (待實作)
-- [ ] 職涯路徑生成
-- [ ] 動態任務創建
-- [ ] XP 與成就系統
-- [ ] 技能進度追蹤
-
-### 6.3 整合測試
-
-#### API 端點測試
-- [x] `/api/assessment/*` - Assessment 相關 API
-- [ ] `/api/pbl/*` - PBL 相關 API
-- [ ] `/api/discovery/*` - Discovery 相關 API
-- [x] `/api/auth/*` - 認證相關 API
-
-#### 端到端流程
-- [ ] 用戶註冊 → 登入 → 選擇模組 → 完成學習
-- [ ] 多語言切換測試
-- [ ] 錯誤處理與恢復
-
-### 6.4 效能與監控
-
-#### 效能指標
-- [ ] API 回應時間 < 200ms (P95)
-- [ ] 頁面載入時間 < 3s
-- [ ] 快取命中率 > 80%
-
-#### 監控設置
-- [ ] 錯誤追蹤 (Sentry/類似工具)
-- [ ] 效能監控 (APM)
-- [ ] 日誌收集與分析
-
-### 6.5 部署步驟
-
-1. **前置作業**
-   ```bash
-   # 確認所有變更已提交
-   git status
-   
-   # 執行完整測試
-   npm run test:ci
-   
-   # 建置生產版本
-   npm run build
-   ```
-
-2. **資料庫更新**
-   ```bash
-   # 執行遷移腳本
-   npm run db:migrate:staging
-   
-   # 載入初始資料
-   npm run db:seed:staging
-   ```
-
-3. **部署應用**
-   ```bash
-   # 建置 Docker 映像
-   make build-frontend-image
-   
-   # 部署到 Cloud Run
-   make deploy-staging
-   ```
-
-4. **驗證部署**
-   - [ ] 健康檢查端點回應正常
-   - [ ] 關鍵功能運作正常
-   - [ ] 監控指標正常
-
-### 6.6 已知限制
-
-1. **PBL 模組**: AI 導師功能尚未完整實作，目前使用模擬回應
-2. **Discovery 模組**: 動態任務生成功能待開發
-3. **Redis 快取**: 尚未整合，使用記憶體快取作為 fallback
-4. **AI 回饋生成**: generateFeedback 目前返回預設文字
-
-### 6.7 建議優先順序
-
-1. **立即需要** (Staging 前必須)
-   - 完成 PBL 基本功能
-   - 修復失敗的測試
-   - 設定環境變數
-
-2. **短期目標** (Staging 後 1-2 週)
-   - 實作 Discovery 模組
-   - 整合 Redis 快取
-   - 提升測試覆蓋率
-
-3. **中期目標** (1 個月內)
-   - AI 回饋生成優化
-   - 完整 E2E 測試
-   - 效能優化
+### 部署前必須
+- 完成 PBL 基本功能
+- 修復失敗的測試
+- 設定環境變數
 EOF < /dev/null
