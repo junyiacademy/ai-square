@@ -151,11 +151,14 @@ export async function GET(request: NextRequest) {
             } : null,
             total: entry.programs.length
           },
-          // Map additional display fields
-          icon: getCareerIcon(careerType),
-          color: getCareerColor(careerType),
-          skills: getCareerSkills(careerType),
-          category: getCareerCategory(careerType)
+          // Pass through all scenario metadata
+          metadata: scenario.metadata,
+          discoveryData: scenario.discoveryData,
+          icon: 'SparklesIcon', // Frontend will map based on careerType
+          color: 'from-gray-500 to-gray-600', // Frontend will map based on careerType
+          skills: (scenario.metadata as Record<string, unknown>)?.skillFocus as string[] || [],
+          category: (scenario.metadata as Record<string, unknown>)?.category as string || 'general',
+          lastActivity: entry.lastActivity
         };
       });
     
@@ -174,66 +177,18 @@ function getLocalizedField(field: unknown, request: NextRequest): string {
   if (typeof field === 'string') return field;
   if (typeof field === 'object' && field !== null) {
     const fieldObj = field as Record<string, string>;
-    const acceptLang = request.headers.get('accept-language') || 'en';
+    
+    // Get language from query params first, then accept-language header
+    const url = new URL(request.url);
+    const lang = url.searchParams.get('lang') || request.headers.get('accept-language') || 'en';
     
     // Handle zh-TW -> zhTW mapping
-    let lookupLang = acceptLang;
-    if (acceptLang === 'zh-TW') lookupLang = 'zhTW';
-    if (acceptLang === 'zh-CN') lookupLang = 'zhCN';
+    let lookupLang = lang;
+    if (lang === 'zh-TW' || lang === 'zhTW') lookupLang = 'zhTW';
+    if (lang === 'zh-CN' || lang === 'zhCN') lookupLang = 'zhCN';
     
     return fieldObj[lookupLang] || fieldObj.en || fieldObj.zhTW || Object.values(fieldObj)[0] || '';
   }
   return '';
 }
 
-// Career type to icon mapping
-function getCareerIcon(careerType: string): unknown {
-  const iconMap: Record<string, string> = {
-    'ai_engineer': 'CodeBracketIcon',
-    'data_analyst': 'ChartBarIcon',
-    'ai_designer': 'PaintBrushIcon',
-    'ai_educator': 'AcademicCapIcon',
-    'ai_ethicist': 'ScaleIcon',
-    'ai_researcher': 'BeakerIcon'
-  };
-  return iconMap[careerType] || 'SparklesIcon';
-}
-
-// Career type to color mapping
-function getCareerColor(careerType: string): string {
-  const colorMap: Record<string, string> = {
-    'ai_engineer': 'from-blue-500 to-purple-600',
-    'data_analyst': 'from-green-500 to-teal-600',
-    'ai_designer': 'from-pink-500 to-rose-600',
-    'ai_educator': 'from-yellow-500 to-orange-600',
-    'ai_ethicist': 'from-purple-500 to-indigo-600',
-    'ai_researcher': 'from-cyan-500 to-blue-600'
-  };
-  return colorMap[careerType] || 'from-gray-500 to-gray-600';
-}
-
-// Career type to skills mapping
-function getCareerSkills(careerType: string): string[] {
-  const skillsMap: Record<string, string[]> = {
-    'ai_engineer': ['程式設計', '系統架構', '模型開發'],
-    'data_analyst': ['數據分析', '視覺化', '統計方法'],
-    'ai_designer': ['創意設計', '使用者體驗', 'AI 工具'],
-    'ai_educator': ['教學設計', '課程開發', 'AI 素養'],
-    'ai_ethicist': ['倫理思考', '風險評估', '政策分析'],
-    'ai_researcher': ['研究方法', '實驗設計', '論文撰寫']
-  };
-  return skillsMap[careerType] || ['AI 技能', '批判思考', '創新能力'];
-}
-
-// Career type to category mapping
-function getCareerCategory(careerType: string): string {
-  const categoryMap: Record<string, string> = {
-    'ai_engineer': 'tech',
-    'data_analyst': 'tech',
-    'ai_designer': 'creative',
-    'ai_educator': 'education',
-    'ai_ethicist': 'social',
-    'ai_researcher': 'research'
-  };
-  return categoryMap[careerType] || 'all';
-}

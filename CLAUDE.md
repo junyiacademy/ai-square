@@ -2,6 +2,39 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 🚨🚨🚨 最重要的規則 - 測試驅動開發 (TDD) 🚨🚨🚨
+
+### 每次修復都必須：
+1. **寫測試** - 先寫測試確認問題存在
+2. **自己測試** - 實際執行代碼驗證修復
+3. **模擬操作** - 從畫面模擬用戶操作流程
+4. **驗證結果** - 確認看到正確的結果
+5. **必要時登入登出** - 測試認證相關功能
+
+### 測試流程：
+```bash
+# 1. 先用 curl 測試 API
+curl -s "http://localhost:3001/api/..." | jq
+
+# 2. 檢查資料庫
+PGPASSWORD=postgres psql -h 127.0.0.1 -p 5433 -U postgres -d ai_square_db -c "SELECT ..."
+
+# 3. 使用 Playwright 或 Browser MCP 測試實際畫面
+npx playwright test --headed
+# 或使用 Browser MCP 親自操作並驗證
+
+# 4. 檢查瀏覽器 console 錯誤
+# 5. 確認修復成功後才回報
+```
+
+### 強制要求：
+- **必須使用 Playwright 或類似的瀏覽器工具親自看過結果**
+- **不能只依賴 API 測試**
+- **要模擬真實用戶操作流程**
+- **確認畫面上顯示正確的內容**
+
+**絕對不要讓用戶一直幫你抓錯！每個修復都要自己先測試過！**
+
 ## 🛠️ Claude Code Commands
 
 ### Slash Commands

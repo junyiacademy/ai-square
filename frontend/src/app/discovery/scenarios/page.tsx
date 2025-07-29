@@ -4,9 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import DiscoveryPageLayout from '@/components/discovery/DiscoveryPageLayout';
+import ScenarioCard from '@/components/discovery/ScenarioCard';
 import { useUserData } from '@/hooks/useUserData';
 import { useAuth } from '@/contexts/AuthContext';
-import { motion } from 'framer-motion';
 import { normalizeLanguageCode } from '@/lib/utils/language';
 import { 
   BriefcaseIcon,
@@ -69,13 +69,12 @@ const categoryFilters = [
   { id: 'arts', name: '創意', icon: PaintBrushIcon },
   { id: 'technology', name: '技術', icon: CodeBracketIcon },
   { id: 'business', name: '商業', icon: BriefcaseIcon },
-  { id: 'society', name: '社會', icon: UserGroupIcon },
   { id: 'science', name: '科學', icon: LightBulbIcon }
 ];
 
 export default function ScenariosPage() {
   const router = useRouter();
-  const { i18n } = useTranslation();
+  const { i18n } = useTranslation(['discovery', 'skills']);
   const { isLoggedIn } = useAuth();
   useUserData(); // Trigger user data loading
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -130,7 +129,16 @@ export default function ScenariosPage() {
               category: (scenario.metadata as Record<string, unknown>)?.category as string || 'general',
               icon: careerIcons[careerType] || SparklesIcon,
               color: careerColors[careerType] || 'from-gray-500 to-gray-600',
-              skills: (scenario.metadata as Record<string, unknown>)?.skillFocus as string[] || []
+              skills: (scenario.metadata as Record<string, unknown>)?.skillFocus as string[] || [],
+              // Include user progress data from API
+              primaryStatus: scenario.primaryStatus as 'mastered' | 'in-progress' | 'new' || 'new',
+              currentProgress: scenario.currentProgress as number || 0,
+              stats: scenario.stats || {
+                completedCount: 0,
+                activeCount: 0,
+                totalAttempts: 0,
+                bestScore: 0
+              }
             };
           });
           setScenarios(transformedScenarios);
@@ -159,13 +167,18 @@ export default function ScenariosPage() {
       
       setIsLoadingMyScenarios(true);
       try {
-        const response = await fetch('/api/discovery/scenarios/my');
+        const lang = normalizeLanguageCode(i18n.language);
+        const response = await fetch(`/api/discovery/scenarios/my?lang=${lang}`);
         if (response.ok) {
           const data = await response.json();
           
           // Transform the data to match the expected format
           const transformedScenarios = (data.scenarios || []).map((scenario: Record<string, unknown>) => {
-            const careerType = scenario.careerType as string || 'general';
+            // Get career type from multiple possible locations
+            const careerType = scenario.careerType as string || 
+                             (scenario.discoveryData as Record<string, unknown>)?.careerType as string ||
+                             (scenario.metadata as Record<string, unknown>)?.careerType as string ||
+                             'general';
             
             // Map icon string to actual icon component
             const iconName = scenario.icon as string || 'SparklesIcon';
@@ -176,7 +189,8 @@ export default function ScenariosPage() {
               'AcademicCapIcon': UserGroupIcon,
               'ScaleIcon': UserGroupIcon,
               'BeakerIcon': LightBulbIcon,
-              'SparklesIcon': SparklesIcon
+              'SparklesIcon': SparklesIcon,
+              'VideoCameraIcon': VideoCameraIcon
             };
             
             return {
@@ -186,9 +200,18 @@ export default function ScenariosPage() {
               subtitle: scenario.subtitle as string,
               category: scenario.category as string || 'general',
               icon: iconMap[iconName] || careerIcons[careerType] || SparklesIcon,
-              color: scenario.color as string || careerColors[careerType] || 'from-gray-500 to-gray-600',
+              color: careerColors[careerType] || 'from-gray-500 to-gray-600',
               skills: scenario.skills as string[] || [],
-              // Add user-specific data
+              // Include progress data for unified display
+              primaryStatus: scenario.primaryStatus as 'mastered' | 'in-progress' | 'new' || 'new',
+              currentProgress: scenario.currentProgress as number || 0,
+              stats: scenario.stats || {
+                completedCount: 0,
+                activeCount: 0,
+                totalAttempts: 0,
+                bestScore: 0
+              },
+              // Legacy fields
               userPrograms: scenario.userPrograms,
               progress: scenario.progress as number || 0,
               isActive: scenario.isActive as boolean || false,
@@ -211,7 +234,7 @@ export default function ScenariosPage() {
     };
 
     loadMyScenarios();
-  }, [isLoggedIn, activeTab]);
+  }, [isLoggedIn, activeTab, i18n.language]);
   
   const filteredScenarios = activeTab === 'my' 
     ? myScenarios
@@ -335,129 +358,15 @@ export default function ScenariosPage() {
         {/* Scenarios Grid */}
         {!isLoadingScenarios && !(activeTab === 'my' && isLoadingMyScenarios) && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredScenarios.map((scenario, index) => {
-            const Icon = scenario.icon;
-            // Unified display logic for all tabs
-            const primaryStatus = scenario.primaryStatus || 'new';
-            const currentProgress = scenario.currentProgress || scenario.progress || 0;
-            const stats = scenario.stats || { 
-              completedCount: scenario.completedCount || 0, 
-              activeCount: 0, 
-              totalAttempts: 0,
-              bestScore: 0 
-            };
-            const hasUserProgress = primaryStatus !== 'new';
-
-            return (
-              <motion.div
+            {filteredScenarios.map((scenario, index) => (
+              <ScenarioCard
                 key={scenario.scenarioId || scenario.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                className="group relative"
-              >
-                <div
-                  onClick={() => handleScenarioSelect(scenario)}
-                  className="cursor-pointer h-full bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-purple-200"
-                >
-                  {/* Gradient Background */}
-                  <div className={`h-32 bg-gradient-to-br ${scenario.color} relative`}>
-                    <div className="absolute inset-0 bg-black/10"></div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Icon className="w-16 h-16 text-white/90" />
-                    </div>
-                    
-                    {/* Unified Status Badge - Show for all tabs if user has progress */}
-                    {primaryStatus === 'mastered' && (
-                      <div className="absolute top-3 right-3 px-3 py-1 bg-green-100 backdrop-blur rounded-full flex items-center gap-1">
-                        <span className="text-xs font-medium text-green-700">已達成</span>
-                        <span className="text-lg">🏆</span>
-                      </div>
-                    )}
-                    
-                    {primaryStatus === 'in-progress' && (
-                      <div className="absolute top-3 right-3 px-3 py-1 bg-blue-100 backdrop-blur rounded-full">
-                        <span className="text-xs font-medium text-blue-700">
-                          學習中 - {currentProgress}%
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-purple-700 transition-colors">
-                      {scenario.title}
-                    </h3>
-                    <p className="text-sm text-gray-600 mb-4">
-                      {scenario.subtitle}
-                    </p>
-
-                    {/* Skills */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {scenario.skills.slice(0, 3).map((skill, i) => (
-                        <span
-                          key={i}
-                          className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                      {scenario.skills.length > 3 && (
-                        <span className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded-md">
-                          +{scenario.skills.length - 3}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Unified Progress Display - Show if user has any progress */}
-                    {hasUserProgress && (
-                      <div className="mb-4">
-                        <div className="flex justify-between text-xs text-gray-600 mb-1">
-                          <span>
-                            {primaryStatus === 'mastered' ? '最佳成績' : '學習進度'}
-                          </span>
-                          <span>{currentProgress}%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
-                            className={`h-2 rounded-full transition-all duration-300 ${
-                              primaryStatus === 'mastered' 
-                                ? 'bg-green-500' 
-                                : 'bg-gradient-to-r from-purple-600 to-blue-600'
-                            }`}
-                            style={{ width: `${currentProgress}%` }}
-                          />
-                        </div>
-                        
-                        {/* Statistics Info */}
-                        {stats.totalAttempts > 0 && (
-                          <div className="mt-2 text-xs text-gray-500">
-                            學習 {stats.totalAttempts} 次
-                            {stats.completedCount > 0 && `・${stats.completedCount} 次完成`}
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Last Activity */}
-                    {activeTab === 'my' && scenario.lastActivity && (
-                      <div className="text-xs text-gray-500 mb-4">
-                        上次活動：{new Date(scenario.lastActivity).toLocaleDateString('zh-TW')}
-                      </div>
-                    )}
-
-                    {/* Action Button */}
-                    <div className="pt-4 border-t border-gray-100">
-                      <button className="w-full py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all">
-                        {activeProgram ? '繼續學習' : (completedCount && completedCount > 0 ? '重新開始' : '開始冒險')}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
+                scenario={scenario}
+                index={index}
+                showLastActivity={activeTab === 'my'}
+                onSelect={handleScenarioSelect}
+              />
+            ))}
           </div>
         )}
 

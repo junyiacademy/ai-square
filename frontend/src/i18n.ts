@@ -245,6 +245,22 @@ import itLegal from '../public/locales/it/legal.json';
 import enDiscovery from '../public/locales/en/discovery.json';
 import zhTWDiscovery from '../public/locales/zhTW/discovery.json';
 
+// Skills 翻譯
+import enSkills from '../public/locales/en/skills.json';
+import zhTWSkills from '../public/locales/zhTW/skills.json';
+import zhCNSkills from '../public/locales/zhCN/skills.json';
+import ptSkills from '../public/locales/pt/skills.json';
+import arSkills from '../public/locales/ar/skills.json';
+import idSkills from '../public/locales/id/skills.json';
+import thSkills from '../public/locales/th/skills.json';
+import esSkills from '../public/locales/es/skills.json';
+import jaSkills from '../public/locales/ja/skills.json';
+import koSkills from '../public/locales/ko/skills.json';
+import frSkills from '../public/locales/fr/skills.json';
+import deSkills from '../public/locales/de/skills.json';
+import ruSkills from '../public/locales/ru/skills.json';
+import itSkills from '../public/locales/it/skills.json';
+
 // 在伺服器端和客戶端都使用相同的預設語言避免 hydration mismatch
 const getDefaultLng = () => {
   // 伺服器端總是返回英文作為預設語言
@@ -272,7 +288,8 @@ i18n
         journey: zhTWJourney,
         learning: zhTWLearning,
         legal: zhTWLegal,
-        discovery: zhTWDiscovery
+        discovery: zhTWDiscovery,
+        skills: zhTWSkills
       },
       'zhCN': { 
         relations: zhCNRelations,
@@ -289,7 +306,8 @@ i18n
         learningPath: zhCNLearningPath,
         journey: zhCNJourney,
         learning: zhCNLearning,
-        legal: zhCNLegal
+        legal: zhCNLegal,
+        skills: zhCNSkills
       },
       'pt': { 
         relations: ptRelations,
@@ -306,7 +324,8 @@ i18n
         learningPath: ptLearningPath,
         journey: ptJourney,
         learning: ptLearning,
-        legal: ptLegal
+        legal: ptLegal,
+        skills: ptSkills
       },
       'ar': { 
         relations: arRelations,
@@ -323,7 +342,8 @@ i18n
         learningPath: arLearningPath,
         journey: arJourney,
         learning: arLearning,
-        legal: arLegal
+        legal: arLegal,
+        skills: arSkills
       },
       'id': { 
         relations: idRelations,
@@ -340,7 +360,8 @@ i18n
         learningPath: idLearningPath,
         journey: idJourney,
         learning: idLearning,
-        legal: idLegal
+        legal: idLegal,
+        skills: idSkills
       },
       'th': { 
         relations: thRelations,
@@ -357,7 +378,8 @@ i18n
         learningPath: thLearningPath,
         journey: thJourney,
         learning: thLearning,
-        legal: thLegal
+        legal: thLegal,
+        skills: thSkills
       },
       en: { 
         relations: enRelations,
@@ -375,7 +397,8 @@ i18n
         journey: enJourney,
         learning: enLearning,
         legal: enLegal,
-        discovery: enDiscovery
+        discovery: enDiscovery,
+        skills: enSkills
       },
       es: { 
         relations: esRelations,
@@ -392,7 +415,8 @@ i18n
         learningPath: esLearningPath,
         journey: esJourney,
         learning: esLearning,
-        legal: esLegal
+        legal: esLegal,
+        skills: esSkills
       },
       ja: { 
         relations: jaRelations,
@@ -409,7 +433,8 @@ i18n
         learningPath: jaLearningPath,
         journey: jaJourney,
         learning: jaLearning,
-        legal: jaLegal
+        legal: jaLegal,
+        skills: jaSkills
       },
       ko: { 
         relations: koRelations,
@@ -426,7 +451,8 @@ i18n
         learningPath: koLearningPath,
         journey: koJourney,
         learning: koLearning,
-        legal: koLegal
+        legal: koLegal,
+        skills: koSkills
       },
       fr: { 
         relations: frRelations,
@@ -443,7 +469,8 @@ i18n
         learningPath: frLearningPath,
         journey: frJourney,
         learning: frLearning,
-        legal: frLegal
+        legal: frLegal,
+        skills: frSkills
       },
       de: { 
         relations: deRelations,
@@ -460,7 +487,8 @@ i18n
         learningPath: deLearningPath,
         journey: deJourney,
         learning: deLearning,
-        legal: deLegal
+        legal: deLegal,
+        skills: deSkills
       },
       ru: { 
         relations: ruRelations,
@@ -477,7 +505,8 @@ i18n
         learningPath: ruLearningPath,
         journey: ruJourney,
         learning: ruLearning,
-        legal: ruLegal
+        legal: ruLegal,
+        skills: ruSkills
       },
       it: { 
         relations: itRelations,
@@ -494,7 +523,8 @@ i18n
         learningPath: itLearningPath,
         journey: itJourney,
         learning: itLearning,
-        legal: itLegal
+        legal: itLegal,
+        skills: itSkills
       },
     },
     lng: getDefaultLng(),

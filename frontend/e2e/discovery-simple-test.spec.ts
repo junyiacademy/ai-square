@@ -5,7 +5,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Discovery Simple Test', () => {
-  test('Check Discovery page content', async ({ page }) => {
+  test('Check Discovery My Adventures stats and skills', async ({ page }) => {
     // 1. 登入
     await page.goto('/login');
     await page.locator('button:has-text("Student")').click();
@@ -15,40 +15,96 @@ test.describe('Discovery Simple Test', () => {
     await page.goto('/discovery/scenarios');
     await page.waitForLoadState('networkidle');
     
-    // 3. 截圖看看頁面內容
-    await page.screenshot({ path: 'discovery-page.png', fullPage: true });
-    console.log('Screenshot saved as discovery-page.png');
-    
-    // 4. 檢查頁面上有什麼內容
-    const pageContent = await page.content();
-    console.log('Page URL:', page.url());
-    console.log('Page title:', await page.title());
-    
-    // 5. 找出所有可見的文字
-    const visibleText = await page.evaluate(() => {
-      const elements = document.querySelectorAll('h1, h2, h3, p, button');
-      return Array.from(elements).map(el => el.textContent?.trim()).filter(Boolean);
+    // Set language to Traditional Chinese
+    await page.evaluate(() => {
+      localStorage.setItem('ai-square-language', 'zhTW');
     });
     
-    console.log('Visible text on page:', visibleText);
+    // Reload page to apply language change
+    await page.reload();
+    await page.waitForLoadState('networkidle');
     
-    // 6. 檢查是否有 scenarios
-    const hasScenarios = pageContent.includes('scenario');
-    console.log('Page contains "scenario":', hasScenarios);
+    // Check current language
+    const currentLang = await page.evaluate(() => {
+      return localStorage.getItem('ai-square-language');
+    });
+    console.log('Current language from localStorage:', currentLang);
     
-    // 7. 檢查是否有任何卡片元素
-    const cards = await page.locator('[class*="card"]').count();
-    console.log('Cards found:', cards);
+    // 3. 檢查 All tab
+    console.log('=== Checking All Tab ===');
+    const allTab = page.locator('button:has-text("全部")').first();
+    await expect(allTab).toBeVisible();
     
-    // 8. 檢查是否有列表項目
-    const listItems = await page.locator('li').count();
-    console.log('List items found:', listItems);
+    // Check skills in All tab
+    const allTabCards = page.locator('[data-testid="scenario-card"]');
+    const allTabCardCount = await allTabCards.count();
+    console.log('Cards in All tab:', allTabCardCount);
     
-    // 9. 檢查是否有任何錯誤訊息
-    const hasError = pageContent.includes('error') || pageContent.includes('Error');
-    console.log('Page has error:', hasError);
+    if (allTabCardCount > 0) {
+      const firstCard = allTabCards.first();
+      const skills = await firstCard.locator('.bg-gray-100.text-gray-700').allTextContents();
+      console.log('Skills in first card (All tab):', skills);
+      
+      // Check if skills are translated
+      const hasChineseSkills = skills.some(skill => /[\u4e00-\u9fa5]/.test(skill));
+      console.log('Has Chinese skills in All tab:', hasChineseSkills);
+    }
     
-    // 基本斷言 - 確保頁面載入成功
-    expect(page.url()).toContain('discovery');
+    // 4. 檢查 My Adventures tab
+    console.log('\n=== Checking My Adventures Tab ===');
+    const myAdventuresTab = page.locator('button:has-text("我的冒險")');
+    if (await myAdventuresTab.isVisible()) {
+      await myAdventuresTab.click();
+      await page.waitForLoadState('networkidle');
+      
+      // Wait a bit for data to load
+      await page.waitForTimeout(2000);
+      
+      // Check for cards
+      const myAdventureCards = page.locator('[data-testid="scenario-card"]');
+      const myAdventureCardCount = await myAdventureCards.count();
+      console.log('Cards in My Adventures tab:', myAdventureCardCount);
+      
+      if (myAdventureCardCount > 0) {
+        const firstCard = myAdventureCards.first();
+        
+        // Check skills translation
+        const skills = await firstCard.locator('.bg-gray-100.text-gray-700').allTextContents();
+        console.log('Skills in first card (My Adventures):', skills);
+        
+        // Check stats section
+        const statsSection = firstCard.locator('.bg-gray-50');
+        const hasStats = await statsSection.isVisible();
+        console.log('Has stats section:', hasStats);
+        
+        if (hasStats) {
+          const statsText = await statsSection.textContent();
+          console.log('Stats section content:', statsText);
+          
+          // Check specific stat values
+          const totalAttemptsElement = statsSection.locator('text=總嘗試次數').locator('..');
+          if (await totalAttemptsElement.isVisible()) {
+            const totalAttemptsText = await totalAttemptsElement.textContent();
+            console.log('Total attempts text:', totalAttemptsText);
+            
+            // Verify it contains a number
+            const hasNumber = /\d+/.test(totalAttemptsText || '');
+            expect(hasNumber).toBe(true);
+          }
+        }
+        
+        // Take screenshot of the card
+        await firstCard.screenshot({ path: 'my-adventure-card.png' });
+      } else {
+        console.log('No cards found in My Adventures - checking empty state');
+        const emptyStateText = await page.locator('text=還沒有開始任何學習歷程').isVisible();
+        console.log('Shows empty state:', emptyStateText);
+      }
+    } else {
+      console.log('My Adventures tab not visible - user might not be logged in properly');
+    }
+    
+    // 5. Final screenshots
+    await page.screenshot({ path: 'discovery-final.png', fullPage: true });
   });
 });

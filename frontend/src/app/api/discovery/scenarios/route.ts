@@ -5,7 +5,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { IScenario } from '@/types/unified-learning';
 
 /**
  * GET /api/discovery/scenarios
@@ -122,6 +121,7 @@ export async function GET(request: NextRequest) {
         }
       }
       
+      
       return {
         ...scenario,
         title: titleObj?.[language] || titleObj?.en || 'Untitled',
@@ -136,7 +136,9 @@ export async function GET(request: NextRequest) {
         // Legacy fields for compatibility
         completedCount: stats.completedCount,
         progress: currentProgress,
-        isActive: stats.activeCount > 0
+        isActive: stats.activeCount > 0,
+        // Include discovery_data for frontend to map colors/icons
+        discovery_data: scenario.discoveryData
       };
     });
     
