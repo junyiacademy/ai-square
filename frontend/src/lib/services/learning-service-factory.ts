@@ -65,16 +65,16 @@ export class LearningServiceFactory implements ILearningServiceFactory {
         const progress = await assessmentService.getProgress(programId);
         return {
           programId: progress.programId,
-          status: progress.status as any,
+          status: progress.status,
           currentTaskIndex: 0,
           totalTasks: 1,
-          completedTasks: progress.answeredQuestions === progress.totalQuestions ? 1 : 0,
-          score: progress.currentScore,
-          timeSpent: progress.timeElapsed,
-          estimatedTimeRemaining: progress.timeRemaining,
+          completedTasks: (progress.metadata as Record<string, unknown>)?.answeredQuestions === (progress.metadata as Record<string, unknown>)?.totalQuestions ? 1 : 0,
+          score: (progress.metadata as Record<string, unknown>)?.currentScore as number | undefined,
+          timeSpent: (progress.metadata as Record<string, unknown>)?.timeElapsed as number || progress.timeSpent,
+          estimatedTimeRemaining: (progress.metadata as Record<string, unknown>)?.timeRemaining as number | undefined,
           metadata: {
-            answeredQuestions: progress.answeredQuestions,
-            totalQuestions: progress.totalQuestions
+            answeredQuestions: (progress.metadata as Record<string, unknown>)?.answeredQuestions,
+            totalQuestions: (progress.metadata as Record<string, unknown>)?.totalQuestions
           }
         };
       },
@@ -82,8 +82,8 @@ export class LearningServiceFactory implements ILearningServiceFactory {
       async submitResponse(programId, taskId, response) {
         const result = await assessmentService.submitAnswer(
           programId,
-          response.questionId,
-          response.answer
+          response.questionId as string,
+          response.answer as string
         );
         
         return {
@@ -92,7 +92,7 @@ export class LearningServiceFactory implements ILearningServiceFactory {
           score: result.isCorrect ? 100 : 0,
           feedback: result.isCorrect ? 'Correct!' : `Incorrect. The correct answer is ${result.correctAnswer}`,
           nextTaskAvailable: false, // Assessment only has one task
-          metadata: result
+          metadata: result as unknown as Record<string, unknown>
         };
       },
 
@@ -109,17 +109,17 @@ export class LearningServiceFactory implements ILearningServiceFactory {
         };
       },
 
-      async getNextTask(programId) {
+      async getNextTask(_programId: string) {
         // Assessment doesn't have multiple tasks
         return null;
       },
 
-      async evaluateTask(taskId) {
+      async evaluateTask(_taskId: string) {
         // This would be implemented if needed
         throw new Error('Not implemented for assessment mode');
       },
 
-      async generateFeedback(evaluationId, language) {
+      async generateFeedback(_evaluationId: string, _language: string) {
         // This would be implemented with AI service
         return 'Thank you for completing the assessment.';
       }

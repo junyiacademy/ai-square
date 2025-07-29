@@ -8,10 +8,12 @@ import {
   IDiscoveryRepository,
   IDiscoveryScenario,
   ICareerRecommendation,
-  ISkillGap
+  ISkillGap,
+  IPortfolioItem
 } from '@/types/discovery-types';
-import { IUserRepository } from '@/lib/repositories/interfaces';
-import { BaseAIService } from '@/lib/abstractions/base-ai-service';
+import type { TaskType } from '@/types/database';
+import { IUserRepository, User } from '@/lib/repositories/interfaces';
+import { BaseAIService, IAIResponse } from '@/lib/abstractions/base-ai-service';
 import { UnifiedEvaluationSystem } from '../evaluation/unified-evaluation-system';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -32,8 +34,20 @@ describe('DiscoveryService', () => {
   const testUser = {
     id: testUserId,
     email: 'test@example.com',
-    name: 'Test User'
-  };
+    name: 'Test User',
+    preferredLanguage: 'en',
+    level: 5,
+    totalXp: 1500,
+    learningPreferences: {
+      goals: ['career-growth'],
+      interests: ['technology'],
+      learningStyle: 'visual'
+    },
+    onboardingCompleted: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    lastActiveAt: new Date()
+  } as User;
 
   const testCareerScenario: IDiscoveryScenario = {
     id: testCareerId,
@@ -51,8 +65,8 @@ describe('DiscoveryService', () => {
     estimatedMinutes: 180,
     prerequisites: [],
     taskTemplates: [
-      { id: 'task-1', title: 'Introduction', type: 'exploration' },
-      { id: 'task-2', title: 'Build First App', type: 'project' }
+      { id: 'task-1', title: { en: 'Introduction' }, type: 'exploration' as TaskType },
+      { id: 'task-2', title: { en: 'Build First App' }, type: 'project' as TaskType }
     ],
     taskCount: 2,
     xpRewards: { completion: 1000 },
@@ -193,9 +207,10 @@ describe('DiscoveryService', () => {
       ];
 
       mockDiscoveryRepo.getCareerRecommendations.mockResolvedValue(mockRecommendations);
-      mockAIService.generateContent.mockResolvedValue(
-        'Your analytical mindset is perfect for software development'
-      );
+      mockAIService.generateContent.mockResolvedValue({
+        content: 'Your analytical mindset is perfect for software development',
+        metadata: {}
+      } as IAIResponse);
 
       // Act
       const recommendations = await service.getPersonalizedRecommendations(testUserId);
@@ -318,10 +333,10 @@ describe('DiscoveryService', () => {
       // Arrange
       const taskId = uuidv4();
       const artifacts = [
-        { type: 'code', url: 'https://github.com/user/project' }
+        { type: 'code' as const, url: 'https://github.com/user/project' }
       ];
       
-      const mockPortfolioItem = {
+      const mockPortfolioItem: IPortfolioItem = {
         id: uuidv4(),
         title: 'Task Portfolio Item',
         description: 'Created from task completion',
@@ -378,7 +393,10 @@ describe('DiscoveryService', () => {
       jest.spyOn(service, 'analyzeSkillGaps').mockResolvedValue(mockSkillGaps);
 
       const mockInsights = 'Based on your progress, you show strong potential...';
-      mockAIService.generateContent.mockResolvedValue(mockInsights);
+      mockAIService.generateContent.mockResolvedValue({
+        content: mockInsights,
+        metadata: {}
+      } as IAIResponse);
 
       // Act
       const insights = await service.generateCareerInsights(testUserId, testCareerId);

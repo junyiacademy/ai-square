@@ -4,9 +4,9 @@
  */
 
 import { NextRequest } from 'next/server';
-import { GET, clearCache } from '../route';
-import { createMockNextRequest } from '@/test-utils/mock-next-request';
+import { GET } from '../route';
 import type { IScenario } from '@/types/unified-learning';
+import type { TaskType } from '@/types/database';
 
 // Mock repository factory
 jest.mock('@/lib/repositories/base/repository-factory', () => ({
@@ -45,8 +45,8 @@ describe('GET /api/discovery/scenarios', () => {
       estimatedMinutes: 180,
       prerequisites: [],
       taskTemplates: [
-        { id: 'task-1', title: 'Introduction', type: 'exploration' },
-        { id: 'task-2', title: 'Build First App', type: 'project' }
+        { id: 'task-1', title: { en: 'Introduction' }, type: 'exploration' as TaskType },
+        { id: 'task-2', title: { en: 'Build First App' }, type: 'project' as TaskType }
       ],
       taskCount: 2,
       xpRewards: { completion: 1000 },
@@ -130,7 +130,7 @@ describe('GET /api/discovery/scenarios', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    clearCache(); // Clear the route cache
+    // clearCache is not exported from route, so we can't clear it directly
 
     // Mock repository
     mockScenarioRepo = {
@@ -151,7 +151,7 @@ describe('GET /api/discovery/scenarios', () => {
       // Arrange
       mockScenarioRepo.findByMode.mockResolvedValue(mockScenarios);
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios');
+      const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
 
       // Act
       const response = await GET(request);
@@ -170,7 +170,7 @@ describe('GET /api/discovery/scenarios', () => {
       // Arrange
       mockScenarioRepo.findByMode.mockResolvedValue(mockScenarios);
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios?lang=zh');
+      const request = new NextRequest('http://localhost:3000/api/discovery/scenarios?lang=zh');
 
       // Act
       const response = await GET(request);
@@ -194,7 +194,7 @@ describe('GET /api/discovery/scenarios', () => {
       };
       mockScenarioRepo.findByMode.mockResolvedValue([scenarioWithMissingTranslation]);
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios?lang=zh');
+      const request = new NextRequest('http://localhost:3000/api/discovery/scenarios?lang=zh');
 
       // Act
       const response = await GET(request);
@@ -210,7 +210,7 @@ describe('GET /api/discovery/scenarios', () => {
       // Arrange
       mockScenarioRepo.findByMode.mockResolvedValue(mockScenarios);
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios');
+      const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
 
       // Act
       const response = await GET(request);
@@ -232,14 +232,12 @@ describe('GET /api/discovery/scenarios', () => {
       // Arrange
       mockScenarioRepo.findByMode.mockResolvedValue(mockScenarios);
 
-      const request1 = createMockNextRequest({
-        method: 'GET',
-        url: 'http://localhost:3000/api/discovery/scenarios'
+      const request1 = new NextRequest('http://localhost:3000/api/discovery/scenarios', {
+        method: 'GET'
       });
 
-      const request2 = createMockNextRequest({
-        method: 'GET',
-        url: 'http://localhost:3000/api/discovery/scenarios'
+      const request2 = new NextRequest('http://localhost:3000/api/discovery/scenarios', {
+        method: 'GET'
       });
 
       // Act
@@ -260,7 +258,7 @@ describe('GET /api/discovery/scenarios', () => {
         new Error('Database connection failed')
       );
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios');
+      const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
 
       // Act
       const response = await GET(request);
@@ -275,7 +273,7 @@ describe('GET /api/discovery/scenarios', () => {
       // Arrange
       mockScenarioRepo.findByMode.mockResolvedValue([]);
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios');
+      const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
 
       // Act
       const response = await GET(request);
@@ -292,7 +290,7 @@ describe('GET /api/discovery/scenarios', () => {
       // Arrange
       mockScenarioRepo.findByMode.mockResolvedValue(null);
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios');
+      const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
 
       // Act
       const response = await GET(request);
@@ -312,7 +310,7 @@ describe('GET /api/discovery/scenarios', () => {
       };
       mockScenarioRepo.findByMode.mockResolvedValue([malformedScenario]);
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios');
+      const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
 
       // Act
       const response = await GET(request);
@@ -330,7 +328,7 @@ describe('GET /api/discovery/scenarios', () => {
       // Arrange
       mockScenarioRepo.findByMode.mockResolvedValue(mockScenarios);
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios');
+      const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
 
       // Act
       const response = await GET(request);
@@ -348,7 +346,7 @@ describe('GET /api/discovery/scenarios', () => {
       // Arrange
       mockScenarioRepo.findByMode.mockResolvedValue(mockScenarios);
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios');
+      const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
 
       // Act
       const response = await GET(request);

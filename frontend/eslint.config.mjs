@@ -12,7 +12,14 @@ const compat = new FlatCompat({
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
-    ignores: ["**/__tests__/**", "**/*.test.*", "**/*.spec.*"],
+    ignores: [
+      "**/__tests__/**", 
+      "**/*.test.*", 
+      "**/*.spec.*",
+      // Ignore script files with shebang
+      "src/scripts/**/*.ts",
+      "src/scripts/**/*.js"
+    ],
   },
   {
     rules: {
@@ -23,15 +30,6 @@ const eslintConfig = [
       "prefer-const": "warn",
       "react/jsx-no-undef": "error", // Keep this as error
       "react/no-unescaped-entities": "warn", // Allow unescaped entities
-    },
-  },
-  // Special rules for scripts directory
-  {
-    files: ["src/scripts/**/*.ts", "src/scripts/**/*.js"],
-    rules: {
-      "@typescript-eslint/no-unused-vars": "off",
-      "@typescript-eslint/no-explicit-any": "off",
-      "no-console": "off",
     },
   },
   // Special rules for test-utils directory

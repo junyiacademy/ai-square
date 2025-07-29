@@ -13,11 +13,15 @@ import type {
   IEvaluation,
   IInteraction 
 } from '@/types/unified-learning';
-import type { BaseLearningService } from './base-learning-service';
+import type { 
+  BaseLearningService,
+  LearningOptions,
+  LearningProgress,
+  TaskResult,
+  CompletionResult
+} from './base-learning-service';
 
-export interface StartAssessmentResult extends IProgram {
-  // Assessment-specific fields can be added here
-}
+export type StartAssessmentResult = IProgram;
 
 export interface SubmitAnswerResult {
   isCorrect: boolean;
@@ -44,11 +48,46 @@ export interface AssessmentProgress {
   currentScore?: number;
 }
 
-export class AssessmentLearningService implements Partial<BaseLearningService> {
+export class AssessmentLearningService implements BaseLearningService {
   private scenarioRepo = repositoryFactory.getScenarioRepository();
   private programRepo = repositoryFactory.getProgramRepository();
   private taskRepo = repositoryFactory.getTaskRepository();
   private evaluationRepo = repositoryFactory.getEvaluationRepository();
+
+  // Implement BaseLearningService interface methods
+  async startLearning(userId: string, scenarioId: string, options?: LearningOptions): Promise<IProgram> {
+    const language = options?.language || 'en';
+    const result = await this.startAssessment(userId, scenarioId, language);
+    return result; // StartAssessmentResult is already IProgram
+  }
+
+  async submitResponse(programId: string, taskId: string, response: Record<string, unknown>): Promise<TaskResult> {
+    const questionId = response.questionId as string;
+    const answer = response.answer as string;
+    const result = await this.submitAnswer(programId, questionId, answer);
+    
+    return {
+      taskId,
+      success: true,
+      score: result.isCorrect ? 100 : 0,
+      feedback: result.isCorrect ? 'Correct!' : `Incorrect. The correct answer is ${result.correctAnswer}`,
+      nextTaskAvailable: false,
+      metadata: result as unknown as Record<string, unknown>
+    };
+  }
+
+  async completeLearning(programId: string): Promise<CompletionResult> {
+    const result = await this.completeAssessment(programId);
+    return {
+      program: result.program,
+      evaluation: result.evaluation,
+      passed: result.passed,
+      finalScore: result.score,
+      metadata: {
+        domainScores: result.domainScores
+      }
+    };
+  }
 
   /**
    * 開始新的評估
@@ -152,10 +191,11 @@ export class AssessmentLearningService implements Partial<BaseLearningService> {
     }
 
     const task = tasks[0]; // Assessment 只有一個 task
-    const questions = (task.content as any).questions || [];
+    const content = task.content as Record<string, unknown>;
+    const questions = (content.questions as Array<Record<string, unknown>>) || [];
     
     // 2. 找到題目並檢查答案
-    const question = questions.find((q: any) => q.id === questionId);
+    const question = questions.find((q: Record<string, unknown>) => q.id === questionId);
     if (!question) {
       throw new Error('Question not found');
     }
@@ -181,7 +221,7 @@ export class AssessmentLearningService implements Partial<BaseLearningService> {
       isCorrect,
       questionId,
       selectedAnswer: answer,
-      correctAnswer: isCorrect ? undefined : question.correct_answer
+      correctAnswer: isCorrect ? undefined : question.correct_answer as string
     };
   }
 
@@ -219,7 +259,7 @@ export class AssessmentLearningService implements Partial<BaseLearningService> {
       score: scoreData.totalScore,
       maxScore: 100,
       domainScores: scoreData.domainScores,
-      feedbackText: this.generateFeedback(scoreData),
+      feedbackText: this.generateSimpleFeedback(scoreData as Record<string, unknown>),
       feedbackData: {
         correctAnswers: scoreData.correctAnswers,
         totalQuestions: scoreData.totalQuestions,
@@ -238,7 +278,7 @@ export class AssessmentLearningService implements Partial<BaseLearningService> {
 
     // 5. 判斷是否通過
     const scenario = await this.scenarioRepo.findById(program.scenarioId);
-    const passingScore = scenario?.assessmentData?.passingScore || 60;
+    const passingScore = (scenario?.assessmentData as Record<string, unknown>)?.passingScore as number || 60;
     const passed = scoreData.totalScore >= passingScore;
 
     return {
@@ -251,9 +291,74 @@ export class AssessmentLearningService implements Partial<BaseLearningService> {
   }
 
   /**
+   * 取得下一個任務
+   */
+  async getNextTask(programId: string): Promise<ITask | null> {
+    // Assessment only has one task
+    const tasks = await this.taskRepo.findByProgram(programId);
+    return tasks?.[0] || null;
+  }
+
+  /**
+   * 評估任務表現
+   */
+  async evaluateTask(taskId: string): Promise<IEvaluation> {
+    const task = await this.taskRepo.findById(taskId);
+    if (!task) {
+      throw new Error('Task not found');
+    }
+
+    const scoreData = this.calculateScore(task);
+    const evaluation = await this.evaluationRepo.create({
+      userId: '', // Will be filled from task
+      programId: task.programId,
+      taskId: task.id,
+      mode: 'assessment',
+      evaluationType: 'task',
+      evaluationSubtype: 'task_complete',
+      score: scoreData.totalScore,
+      maxScore: 100,
+      domainScores: scoreData.domainScores,
+      feedbackText: this.generateSimpleFeedback(scoreData as Record<string, unknown>),
+      feedbackData: {
+        correctAnswers: scoreData.correctAnswers,
+        totalQuestions: scoreData.totalQuestions
+      },
+      aiAnalysis: {},
+      timeTakenSeconds: task.timeSpentSeconds,
+      createdAt: new Date().toISOString(),
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {
+        questions: scoreData.questionResults
+      },
+      metadata: {}
+    });
+
+    return evaluation;
+  }
+
+  /**
+   * 產生學習回饋
+   */
+  async generateFeedback(
+    evaluationId: string,
+    _language: string
+  ): Promise<string> {
+    const evaluation = await this.evaluationRepo.findById(evaluationId);
+    if (!evaluation) {
+      throw new Error('Evaluation not found');
+    }
+
+    // Return pre-generated feedback for now
+    // TODO: Implement AI-based feedback generation
+    return evaluation.feedbackText || 'Good job!';
+  }
+
+  /**
    * 取得進度
    */
-  async getProgress(programId: string): Promise<AssessmentProgress> {
+  async getProgress(programId: string): Promise<LearningProgress> {
     const program = await this.programRepo.findById(programId);
     if (!program) {
       throw new Error('Program not found');
@@ -267,39 +372,52 @@ export class AssessmentLearningService implements Partial<BaseLearningService> {
     }
 
     const answeredQuestions = task.interactions.filter(
-      i => i.type === 'user_input' && i.content?.questionId
+      i => i.type === 'user_input' && (i.content as Record<string, unknown>)?.questionId
     ).length;
 
-    const totalQuestions = program.assessmentData?.selectedQuestions?.length || 0;
-    const timeStarted = new Date(program.assessmentData?.timeStarted || program.startedAt || '').getTime();
+    const assessmentData = program.assessmentData as Record<string, unknown> || {};
+    const selectedQuestions = assessmentData.selectedQuestions as string[] || [];
+    const totalQuestions = selectedQuestions.length;
+    const timeStartedValue = assessmentData.timeStarted as string || program.startedAt || '';
+    const timeStarted = new Date(timeStartedValue).getTime();
     const timeElapsed = Math.floor((Date.now() - timeStarted) / 1000);
-    const timeLimit = (program.assessmentData?.timeLimit || 15) * 60; // Convert to seconds
+    const timeLimit = ((assessmentData.timeLimit as number) || 15) * 60; // Convert to seconds
     const timeRemaining = Math.max(0, timeLimit - timeElapsed);
 
     return {
       programId,
-      status: program.status,
-      answeredQuestions,
-      totalQuestions,
-      timeElapsed,
-      timeRemaining,
-      currentScore: this.calculateCurrentScore(task)
+      status: program.status === 'abandoned' ? 'expired' : program.status as 'pending' | 'active' | 'completed' | 'expired',
+      currentTaskIndex: program.currentTaskIndex,
+      totalTasks: program.totalTaskCount,
+      completedTasks: program.completedTaskCount,
+      score: this.calculateCurrentScore(task),
+      timeSpent: timeElapsed,
+      estimatedTimeRemaining: timeRemaining,
+      metadata: {
+        answeredQuestions,
+        totalQuestions,
+        timeElapsed,
+        timeRemaining,
+        currentScore: this.calculateCurrentScore(task)
+      }
     };
   }
 
   // Helper methods
 
-  private selectQuestions(scenario: IScenario, language: string): any[] {
-    const questionBank = scenario.assessmentData?.questionBankByLanguage?.[language] || 
-                        scenario.assessmentData?.questionBankByLanguage?.['en'] || 
+  private selectQuestions(scenario: IScenario, language: string): Array<Record<string, unknown>> {
+    const assessmentData = scenario.assessmentData as Record<string, unknown> || {};
+    const questionBankByLanguage = assessmentData.questionBankByLanguage as Record<string, Array<Record<string, unknown>>> || {};
+    const questionBank = questionBankByLanguage[language] || 
+                        questionBankByLanguage['en'] || 
                         [];
     
-    const totalQuestions = scenario.assessmentData?.totalQuestions || 12;
+    const totalQuestions = (assessmentData.totalQuestions as number) || 12;
     
     // Simple random selection for now
     // TODO: Implement domain-based selection
     const shuffled = [...questionBank].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, totalQuestions);
+    return shuffled.slice(0, Math.min(totalQuestions, shuffled.length));
   }
 
   private calculateTimeSpent(task: ITask): number {
@@ -316,10 +434,10 @@ export class AssessmentLearningService implements Partial<BaseLearningService> {
     domainScores: Record<string, number>;
     correctAnswers: number;
     totalQuestions: number;
-    questionResults: any[];
+    questionResults: Array<Record<string, unknown>>;
   } {
     const interactions = task.interactions.filter(i => i.type === 'user_input');
-    const correctAnswers = interactions.filter(i => i.content?.isCorrect).length;
+    const correctAnswers = interactions.filter(i => (i.content as Record<string, unknown>)?.isCorrect).length;
     const totalQuestions = interactions.length;
     const totalScore = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
 
@@ -333,7 +451,7 @@ export class AssessmentLearningService implements Partial<BaseLearningService> {
       domainScores,
       correctAnswers,
       totalQuestions,
-      questionResults: interactions.map(i => i.content)
+      questionResults: interactions.map(i => i.content) as Record<string, unknown>[]
     };
   }
 
@@ -342,8 +460,8 @@ export class AssessmentLearningService implements Partial<BaseLearningService> {
     return scoreData.totalScore;
   }
 
-  private generateFeedback(scoreData: any): string {
-    const percentage = scoreData.totalScore;
+  private generateSimpleFeedback(scoreData: Record<string, unknown>): string {
+    const percentage = scoreData.totalScore as number;
     
     if (percentage >= 90) {
       return 'Excellent! You have demonstrated strong AI literacy.';

@@ -6,7 +6,6 @@
  */
 
 import type { 
-  IScenario, 
   IProgram, 
   ITask, 
   IEvaluation 
@@ -44,7 +43,7 @@ export interface BaseLearningService {
   submitResponse(
     programId: string,
     taskId: string,
-    response: any
+    response: Record<string, unknown>
   ): Promise<TaskResult>;
 
   /**

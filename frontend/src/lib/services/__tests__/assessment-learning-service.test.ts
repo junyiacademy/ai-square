@@ -428,9 +428,9 @@ describe('AssessmentLearningService', () => {
       const result = await service.getProgress(programId);
 
       // Assert
-      expect(result.answeredQuestions).toBe(1);
-      expect(result.totalQuestions).toBe(3);
-      expect(result.timeRemaining).toBeLessThan(15 * 60); // Less than 15 minutes
+      expect((result.metadata as Record<string, unknown>)?.answeredQuestions).toBe(1);
+      expect((result.metadata as Record<string, unknown>)?.totalQuestions).toBe(3);
+      expect((result.metadata as Record<string, unknown>)?.timeRemaining).toBeLessThan(15 * 60); // Less than 15 minutes
       expect(result.status).toBe('active');
     });
   });

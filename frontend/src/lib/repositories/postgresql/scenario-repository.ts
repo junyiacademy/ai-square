@@ -437,7 +437,7 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
    */
   async findAll(options?: { limit?: number; offset?: number }): Promise<IScenario[]> {
     let query = 'SELECT * FROM scenarios ORDER BY created_at DESC';
-    const values: any[] = [];
+    const values: Array<string | number> = [];
 
     if (options?.limit) {
       query += ` LIMIT $1`;

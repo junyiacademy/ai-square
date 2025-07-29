@@ -1,5 +1,14 @@
 import { cacheService } from '../cache-service'
 
+// Type for accessing private properties in tests
+interface CacheServicePrivate {
+  memoryCache: Map<string, { data: unknown; timestamp: number; ttl: number }>
+  isValid<T>(entry: { data: T; timestamp: number; ttl: number }): boolean
+  getCacheKey(key: string): string
+  generateCacheKey(url: string, options: RequestInit): string
+  cleanupLocalStorage(): void
+}
+
 // Define LocalStorageMock interface
 interface LocalStorageMock {
   store: Record<string, string>
@@ -50,7 +59,7 @@ describe('CacheService', () => {
     localStorageMock.store = {}
     
     // Clear memory cache by accessing private property
-    ;(cacheService as any).memoryCache.clear()
+    ;(cacheService as unknown as CacheServicePrivate).memoryCache.clear()
     
     // Setup localStorage mock
     Object.defineProperty(window, 'localStorage', {
@@ -83,7 +92,7 @@ describe('CacheService', () => {
       await cacheService.set('test-key', { data: 'test' }, { storage: 'both' })
       
       // Clear memory cache to force localStorage retrieval
-      ;(cacheService as any).memoryCache.clear()
+      ;(cacheService as unknown as CacheServicePrivate).memoryCache.clear()
       
       const result = await cacheService.get('test-key', 'both')
       expect(result).toEqual({ data: 'test' })
@@ -132,15 +141,23 @@ describe('CacheService', () => {
 
     it('should work in SSR environment without window', async () => {
       const originalWindow = global.window
-      // @ts-ignore
-      delete global.window
+      // Temporarily undefine window for SSR testing
+      Object.defineProperty(global, 'window', {
+        value: undefined,
+        writable: true,
+        configurable: true
+      })
       
       await cacheService.set('test-key', { data: 'test' }, { storage: 'both' })
       const result = await cacheService.get('test-key', 'both')
       
       expect(result).toEqual({ data: 'test' })
       
-      global.window = originalWindow
+      Object.defineProperty(global, 'window', {
+        value: originalWindow,
+        writable: true,
+        configurable: true
+      })
     })
   })
 
@@ -148,7 +165,7 @@ describe('CacheService', () => {
     it('should set to memory cache when storage is memory', async () => {
       await cacheService.set('test-key', { data: 'test' }, { storage: 'memory' })
       
-      const memCache = (cacheService as any).memoryCache
+      const memCache = (cacheService as unknown as CacheServicePrivate).memoryCache
       expect(memCache.has('test-key')).toBe(true)
     })
 
@@ -164,7 +181,7 @@ describe('CacheService', () => {
     it('should set to both storages when storage is both', async () => {
       await cacheService.set('test-key', { data: 'test' }, { storage: 'both' })
       
-      const memCache = (cacheService as any).memoryCache
+      const memCache = (cacheService as unknown as CacheServicePrivate).memoryCache
       expect(memCache.has('test-key')).toBe(true)
       expect(localStorageMock.setItem).toHaveBeenCalled()
     })
@@ -172,17 +189,17 @@ describe('CacheService', () => {
     it('should use default TTL when not specified', async () => {
       await cacheService.set('test-key', { data: 'test' })
       
-      const memCache = (cacheService as any).memoryCache
+      const memCache = (cacheService as unknown as CacheServicePrivate).memoryCache
       const entry = memCache.get('test-key')
-      expect(entry.ttl).toBe(5 * 60 * 1000) // 5 minutes
+      expect(entry?.ttl).toBe(5 * 60 * 1000) // 5 minutes
     })
 
     it('should use custom TTL when specified', async () => {
       await cacheService.set('test-key', { data: 'test' }, { ttl: 1000 })
       
-      const memCache = (cacheService as any).memoryCache
+      const memCache = (cacheService as unknown as CacheServicePrivate).memoryCache
       const entry = memCache.get('test-key')
-      expect(entry.ttl).toBe(1000)
+      expect(entry?.ttl).toBe(1000)
     })
 
     it('should enforce memory limit', async () => {
@@ -191,7 +208,7 @@ describe('CacheService', () => {
         await cacheService.set(`key-${i}`, { data: i }, { storage: 'memory' })
       }
       
-      const memCache = (cacheService as any).memoryCache
+      const memCache = (cacheService as unknown as CacheServicePrivate).memoryCache
       expect(memCache.size).toBe(100)
     })
 
@@ -214,23 +231,31 @@ describe('CacheService', () => {
       
       await cacheService.delete('test-key')
       
-      const memCache = (cacheService as any).memoryCache
+      const memCache = (cacheService as unknown as CacheServicePrivate).memoryCache
       expect(memCache.has('test-key')).toBe(false)
       expect(localStorageMock.removeItem).toHaveBeenCalledWith('cache:test-key')
     })
 
     it('should handle delete in SSR environment', async () => {
       const originalWindow = global.window
-      // @ts-ignore
-      delete global.window
+      // Temporarily undefine window for SSR testing
+      Object.defineProperty(global, 'window', {
+        value: undefined,
+        writable: true,
+        configurable: true
+      })
       
       await cacheService.set('test-key', { data: 'test' }, { storage: 'memory' })
       await cacheService.delete('test-key')
       
-      const memCache = (cacheService as any).memoryCache
+      const memCache = (cacheService as unknown as CacheServicePrivate).memoryCache
       expect(memCache.has('test-key')).toBe(false)
       
-      global.window = originalWindow
+      Object.defineProperty(global, 'window', {
+        value: originalWindow,
+        writable: true,
+        configurable: true
+      })
     })
   })
 
@@ -244,7 +269,7 @@ describe('CacheService', () => {
       
       await cacheService.clear()
       
-      const memCache = (cacheService as any).memoryCache
+      const memCache = (cacheService as unknown as CacheServicePrivate).memoryCache
       expect(memCache.size).toBe(0)
       expect(localStorageMock.store['cache:key1']).toBeUndefined()
       expect(localStorageMock.store['cache:key2']).toBeUndefined()
@@ -253,16 +278,24 @@ describe('CacheService', () => {
 
     it('should work in SSR environment', async () => {
       const originalWindow = global.window
-      // @ts-ignore
-      delete global.window
+      // Temporarily undefine window for SSR testing
+      Object.defineProperty(global, 'window', {
+        value: undefined,
+        writable: true,
+        configurable: true
+      })
       
       await cacheService.set('key1', { data: 1 }, { storage: 'memory' })
       await cacheService.clear()
       
-      const memCache = (cacheService as any).memoryCache
+      const memCache = (cacheService as unknown as CacheServicePrivate).memoryCache
       expect(memCache.size).toBe(0)
       
-      global.window = originalWindow
+      Object.defineProperty(global, 'window', {
+        value: originalWindow,
+        writable: true,
+        configurable: true
+      })
     })
   })
 
@@ -341,9 +374,9 @@ describe('CacheService', () => {
         storage: 'memory'
       })
       
-      const memCache = (cacheService as any).memoryCache
+      const memCache = (cacheService as unknown as CacheServicePrivate).memoryCache
       const entry = memCache.get('GET:https://api.example.com/data:')
-      expect(entry.ttl).toBe(1000)
+      expect(entry?.ttl).toBe(1000)
       expect(localStorageMock.setItem).not.toHaveBeenCalled()
     })
   })
@@ -357,7 +390,7 @@ describe('CacheService', () => {
           ttl: 5000
         }
         
-        const isValid = (cacheService as any).isValid(entry)
+        const isValid = (cacheService as unknown as CacheServicePrivate).isValid(entry)
         expect(isValid).toBe(true)
       })
 
@@ -368,27 +401,27 @@ describe('CacheService', () => {
           ttl: 5000
         }
         
-        const isValid = (cacheService as any).isValid(entry)
+        const isValid = (cacheService as unknown as CacheServicePrivate).isValid(entry)
         expect(isValid).toBe(false)
       })
     })
 
     describe('getCacheKey', () => {
       it('should prefix keys with cache:', () => {
-        const key = (cacheService as any).getCacheKey('test-key')
+        const key = (cacheService as unknown as CacheServicePrivate).getCacheKey('test-key')
         expect(key).toBe('cache:test-key')
       })
     })
 
     describe('generateCacheKey', () => {
       it('should generate key with method and URL', () => {
-        const key = (cacheService as any).generateCacheKey('https://api.example.com', {})
+        const key = (cacheService as unknown as CacheServicePrivate).generateCacheKey('https://api.example.com', {})
         expect(key).toBe('GET:https://api.example.com:')
       })
 
       it('should include body in key', () => {
         const body = { test: true }
-        const key = (cacheService as any).generateCacheKey('https://api.example.com', {
+        const key = (cacheService as unknown as CacheServicePrivate).generateCacheKey('https://api.example.com', {
           method: 'POST',
           body: JSON.stringify(body)
         })
@@ -404,7 +437,7 @@ describe('CacheService', () => {
           await cacheService.set(`key-${i}`, { data: i }, { storage: 'memory' })
         }
         
-        const memCache = (cacheService as any).memoryCache
+        const memCache = (cacheService as unknown as CacheServicePrivate).memoryCache
         expect(memCache.size).toBe(100)
         expect(memCache.has('key-0')).toBe(false) // Oldest removed
         expect(memCache.has('key-100')).toBe(true) // Newest kept
@@ -427,7 +460,7 @@ describe('CacheService', () => {
           ttl: 5000
         })
         
-        ;(cacheService as any).cleanupLocalStorage()
+        ;(cacheService as unknown as CacheServicePrivate).cleanupLocalStorage()
         
         expect(localStorageMock.store['cache:expired']).toBeUndefined()
         expect(localStorageMock.store['cache:valid']).toBeDefined()
@@ -444,7 +477,7 @@ describe('CacheService', () => {
           configurable: true
         })
         
-        ;(cacheService as any).cleanupLocalStorage()
+        ;(cacheService as unknown as CacheServicePrivate).cleanupLocalStorage()
         
         expect(localStorageMock.removeItem).toHaveBeenCalledWith('cache:invalid')
       })
@@ -467,7 +500,7 @@ describe('CacheService', () => {
           configurable: true
         })
         
-        ;(cacheService as any).cleanupLocalStorage()
+        ;(cacheService as unknown as CacheServicePrivate).cleanupLocalStorage()
         
         // Should remove 10 oldest entries
         expect(localStorageMock.removeItem).toHaveBeenCalledTimes(10)
@@ -478,11 +511,15 @@ describe('CacheService', () => {
         // @ts-ignore
         delete global.window
         
-        ;(cacheService as any).cleanupLocalStorage()
+        ;(cacheService as unknown as CacheServicePrivate).cleanupLocalStorage()
         
         expect(localStorageMock.removeItem).not.toHaveBeenCalled()
         
-        global.window = originalWindow
+        Object.defineProperty(global, 'window', {
+        value: originalWindow,
+        writable: true,
+        configurable: true
+      })
       })
     })
   })

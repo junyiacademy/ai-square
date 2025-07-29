@@ -95,9 +95,9 @@ describe('Scenario Initialization', () => {
       // Assert
       expect(scenario.pblData).toBeDefined();
       expect(scenario.pblData?.ksaMapping).toBeDefined();
-      expect(scenario.pblData?.ksaMapping.knowledge).toBeInstanceOf(Array);
-      expect(scenario.pblData?.ksaMapping.skills).toBeInstanceOf(Array);
-      expect(scenario.pblData?.ksaMapping.attitudes).toBeInstanceOf(Array);
+      expect((scenario.pblData?.ksaMapping as Record<string, unknown>)?.knowledge).toBeInstanceOf(Array);
+      expect((scenario.pblData?.ksaMapping as Record<string, unknown>)?.skills).toBeInstanceOf(Array);
+      expect((scenario.pblData?.ksaMapping as Record<string, unknown>)?.attitudes).toBeInstanceOf(Array);
     });
 
     it('should have AI modules configuration', async () => {
@@ -108,8 +108,8 @@ describe('Scenario Initialization', () => {
       // Assert
       expect(scenario.aiModules).toBeDefined();
       expect(scenario.aiModules?.tutor).toBeDefined();
-      expect(scenario.aiModules?.tutor.enabled).toBe(true);
-      expect(scenario.aiModules?.tutor.model).toBe('gemini-2.5-flash');
+      expect((scenario.aiModules?.tutor as Record<string, unknown>)?.enabled).toBe(true);
+      expect((scenario.aiModules?.tutor as Record<string, unknown>)?.model).toBe('gemini-2.5-flash');
     });
   });
 
@@ -130,8 +130,8 @@ describe('Scenario Initialization', () => {
 
       // Assert
       expect(scenario.discoveryData).toBeDefined();
-      expect(scenario.discoveryData?.careerPaths).toBeInstanceOf(Array);
-      expect(scenario.discoveryData?.careerPaths.length).toBeGreaterThan(0);
+      expect((scenario.discoveryData as Record<string, unknown>)?.careerPaths).toBeInstanceOf(Array);
+      expect(((scenario.discoveryData as Record<string, unknown>)?.careerPaths as Array<unknown>).length).toBeGreaterThan(0);
     });
   });
 

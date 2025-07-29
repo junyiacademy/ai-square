@@ -5,11 +5,12 @@
 
 import { NextRequest } from 'next/server';
 import { POST } from '../route';
-import { createMockNextRequest } from '@/test-utils/mock-next-request';
+// import { createMockNextRequest } from '@/test-utils/mock-next-request';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { DiscoveryService } from '@/lib/services/discovery-service';
-import type { IDiscoveryScenario, IDiscoveryProgram } from '@/types/discovery-types';
+import type { IDiscoveryScenario, IDiscoveryProgram, ISkillGap, IDiscoveryMilestone } from '@/types/discovery-types';
 import type { IScenario } from '@/types/unified-learning';
+import type { TaskType } from '@/types/database';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
@@ -65,8 +66,8 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
     estimatedMinutes: 180,
     prerequisites: [],
     taskTemplates: [
-      { id: 'task-1', title: 'Introduction', type: 'exploration' },
-      { id: 'task-2', title: 'Build First App', type: 'project' }
+      { id: 'task-1', title: { en: 'Introduction' }, type: 'exploration' as TaskType },
+      { id: 'task-2', title: { en: 'Build First App' }, type: 'project' as TaskType }
     ],
     taskCount: 2,
     xpRewards: { completion: 1000 },
@@ -124,7 +125,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
         }
       ],
       careerReadiness: 75,
-      portfolioProjects: []
+      // portfolioProjects is not part of the interface
     },
     assessmentData: {},
     metadata: {}
@@ -181,14 +182,17 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       mockProgramRepo.findByUser.mockResolvedValue([]);
       mockDiscoveryService.exploreCareer.mockResolvedValue(mockProgram);
 
-      const request = createMockNextRequest({
-        method: 'POST',
-        url: `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
-        body: { userEmail: 'test@example.com' }
-      });
+      const request = new NextRequest(
+        `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ userEmail: 'test@example.com' }),
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
 
       // Act
-      const response = await POST(request, { params: { id: testScenarioId } });
+      const response = await POST(request, { params: Promise.resolve({ id: testScenarioId }) });
       const data = await response.json();
 
       // Assert
@@ -212,14 +216,17 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
       mockProgramRepo.findByUser.mockResolvedValue([existingProgram]);
 
-      const request = createMockNextRequest({
-        method: 'POST',
-        url: `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
-        body: { userEmail: 'test@example.com' }
-      });
+      const request = new NextRequest(
+        `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ userEmail: 'test@example.com' }),
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
 
       // Act
-      const response = await POST(request, { params: { id: testScenarioId } });
+      const response = await POST(request, { params: Promise.resolve({ id: testScenarioId }) });
       const data = await response.json();
 
       // Assert
@@ -247,14 +254,17 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
         id: '550e8400-e29b-41d4-a716-446655440003' // New ID
       });
 
-      const request = createMockNextRequest({
-        method: 'POST',
-        url: `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
-        body: { userEmail: 'test@example.com' }
-      });
+      const request = new NextRequest(
+        `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ userEmail: 'test@example.com' }),
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
 
       // Act
-      const response = await POST(request, { params: { id: testScenarioId } });
+      const response = await POST(request, { params: Promise.resolve({ id: testScenarioId }) });
       const data = await response.json();
 
       // Assert
@@ -270,14 +280,17 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       mockProgramRepo.findByUser.mockResolvedValue([]);
       mockDiscoveryService.exploreCareer.mockResolvedValue(mockProgram);
 
-      const request = createMockNextRequest({
-        method: 'POST',
-        url: `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
-        body: { userEmail: 'test@example.com' }
-      });
+      const request = new NextRequest(
+        `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ userEmail: 'test@example.com' }),
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
 
       // Act
-      const response = await POST(request, { params: { id: testScenarioId } });
+      const response = await POST(request, { params: Promise.resolve({ id: testScenarioId }) });
       const data = await response.json();
 
       // Assert
@@ -292,14 +305,17 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
   describe('Error Cases', () => {
     it('should return 400 when userEmail is missing', async () => {
       // Arrange
-      const request = createMockNextRequest({
-        method: 'POST',
-        url: `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
-        body: {}
-      });
+      const request = new NextRequest(
+        `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
+        {
+          method: 'POST',
+          body: JSON.stringify({}),
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
 
       // Act
-      const response = await POST(request, { params: { id: testScenarioId } });
+      const response = await POST(request, { params: Promise.resolve({ id: testScenarioId }) });
       const data = await response.json();
 
       // Assert
@@ -311,14 +327,17 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(null);
 
-      const request = createMockNextRequest({
-        method: 'POST',
-        url: `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
-        body: { userEmail: 'nonexistent@example.com' }
-      });
+      const request = new NextRequest(
+        `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ userEmail: 'nonexistent@example.com' }),
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
 
       // Act
-      const response = await POST(request, { params: { id: testScenarioId } });
+      const response = await POST(request, { params: Promise.resolve({ id: testScenarioId }) });
       const data = await response.json();
 
       // Assert
@@ -331,14 +350,17 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       mockScenarioRepo.findById.mockResolvedValue(null);
 
-      const request = createMockNextRequest({
-        method: 'POST',
-        url: `http://localhost:3000/api/discovery/scenarios/invalid-id/programs`,
-        body: { userEmail: 'test@example.com' }
-      });
+      const request = new NextRequest(
+        `http://localhost:3000/api/discovery/scenarios/invalid-id/programs`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ userEmail: 'test@example.com' }),
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
 
       // Act
-      const response = await POST(request, { params: { id: 'invalid-id' } });
+      const response = await POST(request, { params: Promise.resolve({ id: 'invalid-id' }) });
       const data = await response.json();
 
       // Assert
@@ -355,14 +377,17 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
         new Error('Service unavailable')
       );
 
-      const request = createMockNextRequest({
-        method: 'POST',
-        url: `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
-        body: { userEmail: 'test@example.com' }
-      });
+      const request = new NextRequest(
+        `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ userEmail: 'test@example.com' }),
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
 
       // Act
-      const response = await POST(request, { params: { id: testScenarioId } });
+      const response = await POST(request, { params: Promise.resolve({ id: testScenarioId }) });
       const data = await response.json();
 
       // Assert
@@ -374,14 +399,14 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
   describe('Validation', () => {
     it('should validate scenario ID format', async () => {
       // Arrange
-      const request = createMockNextRequest({
+      const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/invalid-uuid/programs', {
         method: 'POST',
-        url: 'http://localhost:3000/api/discovery/scenarios/invalid-uuid/programs',
-        body: { userEmail: 'test@example.com' }
+        body: JSON.stringify({ userEmail: 'test@example.com' }),
+        headers: { 'Content-Type': 'application/json' }
       });
 
       // Act
-      const response = await POST(request, { params: { id: 'invalid-uuid' } });
+      const response = await POST(request, { params: Promise.resolve({ id: 'invalid-uuid' }) });
       const data = await response.json();
 
       // Assert
@@ -391,14 +416,17 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
 
     it('should validate email format', async () => {
       // Arrange
-      const request = createMockNextRequest({
-        method: 'POST',
-        url: `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
-        body: { userEmail: 'invalid-email' }
-      });
+      const request = new NextRequest(
+        `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ userEmail: 'invalid-email' }),
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
 
       // Act
-      const response = await POST(request, { params: { id: testScenarioId } });
+      const response = await POST(request, { params: Promise.resolve({ id: testScenarioId }) });
       const data = await response.json();
 
       // Assert
@@ -417,14 +445,17 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       mockUserRepo.findByEmail.mockResolvedValue(ineligibleUser);
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
-      const request = createMockNextRequest({
-        method: 'POST',
-        url: `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
-        body: { userEmail: 'test@example.com' }
-      });
+      const request = new NextRequest(
+        `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ userEmail: 'test@example.com' }),
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
 
       // Act
-      const response = await POST(request, { params: { id: testScenarioId } });
+      const response = await POST(request, { params: Promise.resolve({ id: testScenarioId }) });
       const data = await response.json();
 
       // Assert
@@ -441,20 +472,23 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       mockProgramRepo.findByUser.mockResolvedValue([]);
       mockDiscoveryService.exploreCareer.mockResolvedValue(mockProgram);
 
-      const request = createMockNextRequest({
-        method: 'POST',
-        url: `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
-        body: { 
+      const request = new NextRequest(
+        `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ 
           userEmail: 'test@example.com',
           trackingData: {
             source: 'recommendation',
             referrer: 'home-page'
           }
+        }),
+          headers: { 'Content-Type': 'application/json' }
         }
-      });
+      );
 
       // Act
-      const response = await POST(request, { params: { id: testScenarioId } });
+      const response = await POST(request, { params: Promise.resolve({ id: testScenarioId }) });
 
       // Assert
       expect(response.status).toBe(201);
@@ -484,14 +518,17 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
         }
       });
 
-      const request = createMockNextRequest({
-        method: 'POST',
-        url: `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
-        body: { userEmail: 'test@example.com' }
-      });
+      const request = new NextRequest(
+        `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ userEmail: 'test@example.com' }),
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
 
       // Act
-      const response = await POST(request, { params: { id: testScenarioId } });
+      const response = await POST(request, { params: Promise.resolve({ id: testScenarioId }) });
       const data = await response.json();
 
       // Assert

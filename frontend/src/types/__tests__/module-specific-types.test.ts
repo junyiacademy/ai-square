@@ -75,8 +75,8 @@ describe('Module-specific Types', () => {
         programId: 'program-1',
         mode: 'pbl',
         taskIndex: 0,
-        title: 'PBL Task',
-        description: 'Test',
+        title: { en: 'PBL Task' },
+        description: { en: 'Test' },
         type: 'interactive',
         status: 'active',
         content: {
@@ -216,8 +216,8 @@ describe('Module-specific Types', () => {
         programId: 'program-1',
         mode: 'assessment',
         taskIndex: 0,
-        title: 'Assessment Task',
-        description: 'Answer questions',
+        title: { en: 'Assessment Task' },
+        description: { en: 'Answer questions' },
         type: 'quiz',
         status: 'active',
         content: {
@@ -367,8 +367,8 @@ describe('Module-specific Types', () => {
         programId: 'program-1',
         mode: 'discovery',
         taskIndex: 0,
-        title: 'Explore ChatGPT',
-        description: 'Learn about ChatGPT',
+        title: { en: 'Explore ChatGPT' },
+        description: { en: 'Learn about ChatGPT' },
         type: 'exploration',
         status: 'active',
         content: {
