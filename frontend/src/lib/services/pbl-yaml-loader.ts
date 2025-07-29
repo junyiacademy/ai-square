@@ -112,9 +112,7 @@ export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
    * Load PBL scenario YAML file
    */
   async loadScenario(
-    scenarioId: string,
-    language: string = 'en',
-    options?: YAMLLoaderOptions
+    scenarioId: string
   ): Promise<PBLYAMLData | null> {
     // PBL scenarios are organized in subdirectories
     const fileName = scenarioId;

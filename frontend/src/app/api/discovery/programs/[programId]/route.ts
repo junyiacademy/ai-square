@@ -10,23 +10,11 @@ export async function GET(
     // Get authentication
     const session = await getServerSession();
     
-    let userEmail: string | null = null;
-    
-    if (session?.user?.email) {
-      userEmail = session.user.email;
-    } else {
-      // Check for user info from query params (for viewing history)
-      const { searchParams } = new URL(request.url);
-      const emailParam = searchParams.get('userEmail');
-      
-      if (emailParam) {
-        userEmail = emailParam;
-      } else {
-        return NextResponse.json(
-          { error: 'Authentication required' },
-          { status: 401 }
-        );
-      }
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
     }
     
     // Await params before using

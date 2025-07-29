@@ -182,7 +182,7 @@ async function main() {
   
   try {
     // Test connection
-    const result = await pool.query('SELECT version()');
+    await pool.query('SELECT version()');
     console.log('✅ Connected to database');
     
     // Load and insert PBL scenarios

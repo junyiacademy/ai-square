@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import 'dotenv/config';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { chromium, Browser, Page } from 'playwright';
 import { Pool } from 'pg';
 import { v4 as uuidv4 } from 'uuid';
@@ -135,6 +136,7 @@ async function testBrowserScenarios(browser: Browser) {
   try {
     await page.goto(BASE_URL);
     await page.waitForSelector('h1', { timeout: 10000 });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const title = await page.textContent('h1');
     recordResult('Browser', 'Home page loads', 'pass', undefined, 0);
     
@@ -209,6 +211,7 @@ async function testBrowserScenarios(browser: Browser) {
   // Test 4: Navigate to each module after login
   console.log('\n📍 Testing: Module pages (logged in)');
   
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   for (const [mode, scenarioId] of Object.entries(testData.scenarioIds)) {
     try {
       console.log(`\n  Testing ${mode.toUpperCase()} module...`);

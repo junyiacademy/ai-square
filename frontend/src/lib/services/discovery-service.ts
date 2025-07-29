@@ -114,13 +114,14 @@ export class DiscoveryService implements IDiscoveryService {
     // 增強推薦結果
     const enhancedRecommendations = await Promise.all(
       recommendations.map(async (rec) => {
-        // 使用 AI 生成更詳細的推薦理由
-        const prompt = `Based on user's career match for ${rec.careerPath} with score ${rec.matchScore}, provide 2 personalized insights.`;
-        const aiResponse = await this.aiService.generateContent(prompt, {
-          temperature: 0.7,
-          maxTokens: 200
-        });
+        // TODO: 使用 AI 生成更詳細的推薦理由
+        // const prompt = `Based on user's career match for ${rec.careerPath} with score ${rec.matchScore}, provide 2 personalized insights.`;
+        // const aiResponse = await this.aiService.generateContent(prompt, {
+        //   temperature: 0.7,
+        //   maxTokens: 200
+        // });
         
+        // For now, use placeholder insights
         const aiInsights = [
           'Your analytical mindset is perfect for this role',
           'This career offers excellent growth opportunities'

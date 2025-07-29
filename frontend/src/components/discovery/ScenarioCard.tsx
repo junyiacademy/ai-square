@@ -33,7 +33,6 @@ export default function ScenarioCard({ scenario, index, showLastActivity = false
   const { t } = useTranslation('skills');
   const Icon = scenario.icon;
   const primaryStatus = scenario.primaryStatus || 'new';
-  const currentProgress = scenario.currentProgress || 0;
   const stats = scenario.stats || { 
     completedCount: 0, 
     activeCount: 0, 

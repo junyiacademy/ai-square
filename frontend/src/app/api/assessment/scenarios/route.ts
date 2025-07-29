@@ -79,7 +79,6 @@ export async function GET(request: NextRequest) {
     console.log('No scenarios in database, checking file system');
     
     // Skip cache for now to ensure fresh data
-    const now = Date.now();
     
     console.log('Cache miss, loading scenarios from disk');
     

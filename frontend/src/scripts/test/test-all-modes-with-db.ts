@@ -110,7 +110,7 @@ async function testMode(mode: 'pbl' | 'assessment' | 'discovery') {
     // Phase 2: Create Program
     console.log(`\n📝 Phase 2: Creating program for user...`);
     const programId = uuidv4();
-    const program = await programRepo.create({
+    await programRepo.create({
       id: programId,
       scenarioId,
       userId: TEST_USER_ID,
@@ -129,7 +129,7 @@ async function testMode(mode: 'pbl' | 'assessment' | 'discovery') {
     const taskIds: string[] = [];
     for (const template of scenario.taskTemplates) {
       const taskId = uuidv4();
-      const task = await taskRepo.create({
+      await taskRepo.create({
         id: taskId,
         programId,
         scenarioId,
@@ -158,7 +158,7 @@ async function testMode(mode: 'pbl' | 'assessment' | 'discovery') {
     const evaluationIds: string[] = [];
     for (const taskId of taskIds) {
       const evaluationId = uuidv4();
-      const evaluation = await evaluationRepo.create({
+      await evaluationRepo.create({
         id: evaluationId,
         taskId,
         userId: TEST_USER_ID,

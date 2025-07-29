@@ -191,7 +191,7 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
   /**
    * Override to provide custom file path resolution
    */
-  protected getFilePath(fileName: string, _language: string = ''): string {
+  protected getFilePath(fileName: string): string {
     // Assessment files are in subdirectories
     const assessmentName = fileName.replace(/_questions_\w+$/, '');
     return path.join(this.basePath, assessmentName, `${fileName}.yaml`);

@@ -1335,7 +1335,6 @@ export default function ProgramLearningPage() {
                       // Get the actual task UUID from programTasks
                       const programTask = programTasks[index];
                       const actualTaskId = programTask?.id || task.id;
-                      const isCompleted = index < taskIndex;
                       const isCurrent = currentTask && currentTask.id === actualTaskId;
                       const taskEvaluation = taskEvaluations[actualTaskId];
                       const hasEvaluation = !!taskEvaluation;

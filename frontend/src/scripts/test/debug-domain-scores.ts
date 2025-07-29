@@ -60,7 +60,6 @@ async function debugDomainScores() {
       }
       
       // Domain scores should have 4 domains
-      const expectedDomains = ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai'];
       const hasDomainScores = row.domain_scores && Object.keys(row.domain_scores).length > 0;
       if (!hasDomainScores) {
         console.log(`   ⚠️  Domain scores are empty!`);

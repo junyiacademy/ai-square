@@ -20,9 +20,12 @@ export function createMockNextRequest(
   }
   
   // Create request with proper URL
-  const { searchParams: _, signal, ...cleanOptions } = options || {};
+  const { signal, ...optionsWithoutSearchParams } = options || {};
+  // Remove searchParams from options if it exists
+  delete (optionsWithoutSearchParams as any).searchParams;
+  
   const request = new NextRequest(fullUrl.toString(), {
-    ...cleanOptions,
+    ...optionsWithoutSearchParams,
     ...(signal && signal !== null ? { signal } : {})
   })
   

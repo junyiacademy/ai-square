@@ -393,24 +393,11 @@ export async function PATCH(
         timeSpent: content.timeSpent || 0
       });
       
-      // Get repositories for scenario lookup
-      const scenarioRepo = repositoryFactory.getScenarioRepository();
-      
-      // Get scenario for context
-      const scenario = await scenarioRepo.findById(program.scenarioId);
-      const careerType = (scenario?.metadata?.careerType || 'unknown') as string;
       const language = (program.metadata?.language || 'en') as string;
       
       // Get user's preferred language from request header
       const acceptLanguage = request.headers.get('accept-language')?.split(',')[0];
       const userLanguage = acceptLanguage || language;
-      
-      // Load YAML data for world setting context
-      let yamlData = null;
-      if (careerType !== 'unknown') {
-        const loader = new DiscoveryYAMLLoader();
-        yamlData = await loader.loadPath(careerType, language);
-      }
       
       // Use AI to evaluate the response
       const aiService = new VertexAIService({

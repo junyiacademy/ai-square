@@ -10,16 +10,6 @@ const PROTECTED_ROUTES = [
   '/profile'
 ];
 
-// Public routes that don't require authentication
-const PUBLIC_ROUTES = [
-  '/',
-  '/login',
-  '/register',
-  '/auth',
-  '/api/auth',
-  '/relations' // AI literacy visualization is public
-];
-
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   

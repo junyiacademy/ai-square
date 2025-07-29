@@ -6,7 +6,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { v4 as uuidv4 } from 'uuid';
 import type { IProgram } from '@/types/unified-learning';
 
 /**
