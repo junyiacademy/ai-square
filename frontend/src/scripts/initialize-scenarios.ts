@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 #!/usr/bin/env tsx
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Initialize Scenarios from YAML files
  * 

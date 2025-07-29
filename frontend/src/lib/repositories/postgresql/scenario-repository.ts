@@ -431,4 +431,38 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     const { rows } = await this.pool.query<DBScenario>(query, [domainId]);
     return rows.map(row => this.toScenario(row));
   }
+
+  /**
+   * Find all scenarios with optional pagination
+   */
+  async findAll(options?: { limit?: number; offset?: number }): Promise<IScenario[]> {
+    let query = 'SELECT * FROM scenarios ORDER BY created_at DESC';
+    const values: any[] = [];
+
+    if (options?.limit) {
+      query += ` LIMIT $1`;
+      values.push(options.limit);
+      if (options.offset) {
+        query += ` OFFSET $2`;
+        values.push(options.offset);
+      }
+    }
+
+    const { rows } = await this.pool.query<DBScenario>(query, values);
+    return rows.map(row => this.toScenario(row));
+  }
+
+  /**
+   * Find scenario by source path
+   */
+  async findBySourcePath(sourcePath: string): Promise<IScenario | null> {
+    const query = 'SELECT * FROM scenarios WHERE source_path = $1 LIMIT 1';
+    const { rows } = await this.pool.query<DBScenario>(query, [sourcePath]);
+    
+    if (rows.length === 0) {
+      return null;
+    }
+    
+    return this.toScenario(rows[0]);
+  }
 }

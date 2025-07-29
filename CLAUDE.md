@@ -524,6 +524,42 @@ const task: ITask = {
 **Valid route exports only:**
 - GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS
 
+#### Rule #14: Multi-language YAML File Processing
+
+**🚨 重要：多語言 YAML 檔案不是獨立的 Scenario！**
+
+**錯誤示例：**
+```
+assessment_data/
+├── ai_literacy/
+    ├── ai_literacy_questions_en.yaml    ❌ 不是獨立 scenario
+    ├── ai_literacy_questions_zh.yaml    ❌ 不是獨立 scenario
+    ├── ai_literacy_questions_es.yaml    ❌ 不是獨立 scenario
+    └── ...14 個語言版本
+```
+
+**正確理解：**
+- 這些是**同一個 Assessment Scenario** 的不同語言版本
+- 應該創建**一個** Scenario，包含所有語言的內容
+- `title` 和 `description` 應該是 `Record<string, string>` 格式：
+  ```typescript
+  {
+    title: {
+      en: "AI Literacy Assessment",
+      zh: "AI 素養評估",
+      es: "Evaluación de Alfabetización en IA",
+      // ...其他語言
+    }
+  }
+  ```
+
+**實作檢查清單：**
+- [ ] 掃描 YAML 時要識別語言後綴（`_en`, `_zh`, `_es` 等）
+- [ ] 將同一主題的不同語言版本合併為一個 Scenario
+- [ ] 不要為每個語言版本創建獨立的 Scenario
+- [ ] 使用 `sourcePath` 記錄主要語言版本路徑
+- [ ] 在 `sourceMetadata` 中記錄所有語言版本路徑
+
 ### 🛡️ TypeScript Error Prevention Summary
 
 #### Common Error Patterns & Solutions

@@ -440,21 +440,12 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
 
   async scanYAMLFiles(basePath: string): Promise<string[]> {
     const assessments = await this.loader.scanAssessments();
-    const allPaths: string[] = [];
     
-    // For each assessment, check available languages
-    for (const assessmentName of assessments) {
-      const languages = await this.loader.getAvailableLanguages(assessmentName);
-      
-      // Add path for each language version
-      for (const lang of languages) {
-        allPaths.push(
-          path.join(basePath, assessmentName, `${assessmentName}_questions_${lang}.yaml`)
-        );
-      }
-    }
-    
-    return allPaths;
+    // 根據 Rule #14: 每個 assessment 主題只返回一個路徑（主要語言版本）
+    // 不要為每個語言版本創建獨立的路徑
+    return assessments.map(assessmentName => 
+      path.join(basePath, assessmentName, `${assessmentName}_questions_en.yaml`) // 使用英文作為主要版本
+    );
   }
 
   async loadYAML(filePath: string): Promise<unknown> {
@@ -476,14 +467,34 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
   async transformToScenario(yamlData: unknown, filePath: string): Promise<Omit<IScenario, 'id'>> {
     const parts = filePath.split(path.sep);
     const assessmentName = parts[parts.length - 2];
-    const fileName = parts[parts.length - 1];
-    const match = fileName.match(/_questions_(\w+)\.yaml$/);
-    const language = match ? match[1] : 'en';
     
-    const assessmentData = yamlData as Record<string, unknown>;
-    const config = (assessmentData.config || assessmentData.assessment_config || {}) as Record<string, unknown>;
-    const titleValue = this.loader.getTranslatedField(config as Record<string, unknown>, 'title', language) || `${assessmentName} Assessment`;
-    const descValue = this.loader.getTranslatedField(config as Record<string, unknown>, 'description', language) || '';
+    // 根據 Rule #14: 載入所有語言版本並合併
+    const availableLanguages = await this.loader.getAvailableLanguages(assessmentName);
+    const titles: Record<string, string> = {};
+    const descriptions: Record<string, string> = {};
+    const allQuestionsByLang: Record<string, unknown[]> = {};
+    
+    // 載入所有語言版本
+    for (const lang of availableLanguages) {
+      const langData = await this.loader.loadAssessment(assessmentName, lang);
+      if (langData) {
+        const config = (langData.config || langData.assessment_config || {}) as Record<string, unknown>;
+        
+        // 收集多語言 title 和 description
+        const titleValue = this.loader.getTranslatedField(config, 'title', lang) || `${assessmentName} Assessment`;
+        const descValue = this.loader.getTranslatedField(config, 'description', lang) || '';
+        
+        titles[lang] = titleValue;
+        descriptions[lang] = descValue;
+        
+        // 儲存該語言的題目
+        allQuestionsByLang[lang] = langData.questions || [];
+      }
+    }
+    
+    // 使用英文版本的配置作為基礎
+    const baseData = yamlData as Record<string, unknown>;
+    const config = (baseData.config || baseData.assessment_config || {}) as Record<string, unknown>;
     
     return {
       mode: 'assessment' as const,
@@ -495,12 +506,13 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
       sourceMetadata: {
         assessmentType: 'standard',
         assessmentName,
-        language,
+        availableLanguages,
+        primaryLanguage: 'en',
         configPath: filePath,
         lastSync: new Date().toISOString()
       },
-      title: { [language]: titleValue },
-      description: { [language]: descValue },
+      title: titles, // 包含所有語言的標題
+      description: descriptions, // 包含所有語言的描述
       objectives: [
         'Evaluate your knowledge and skills',
         'Identify areas for improvement',
@@ -511,7 +523,17 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
       prerequisites: [],
       taskTemplates: [{
         id: 'assessment-task',
-        title: { en: 'Complete Assessment' },
+        title: { 
+          en: 'Complete Assessment',
+          zh: '完成評估',
+          es: 'Completar evaluación',
+          ja: '評価を完了する',
+          ko: '평가 완료',
+          fr: 'Terminer l\'évaluation',
+          de: 'Bewertung abschließen',
+          ru: 'Завершить оценку',
+          it: 'Completa valutazione'
+        },
         type: 'question' as const
       }],
       taskCount: (config.total_questions as number) || 12,
@@ -524,8 +546,8 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
         timeLimit: (config.time_limit_minutes as number) || 15,
         passingScore: (config.passing_score as number) || 60,
         domains: (config.domains as string[]) || [],
-        questionBank: assessmentData.questions || [],
-        language
+        questionBankByLanguage: allQuestionsByLang, // 儲存所有語言的題目
+        primaryLanguage: 'en'
       },
       aiModules: {},
       resources: [],

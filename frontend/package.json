@@ -37,6 +37,7 @@
     "data:crud": "node scripts/yaml-json-crud-system.js",
     "test:all-modes": "tsx src/scripts/test-all-modes-e2e.ts",
     "init:scenarios": "tsx src/scripts/initialize-scenarios.ts",
+    "init:scenarios:staging": "tsx src/scripts/initialize-scenarios-staging.ts",
     "db:up": "docker-compose -f docker-compose.postgres.yml up -d",
     "db:down": "docker-compose -f docker-compose.postgres.yml down",
     "db:logs": "docker-compose -f docker-compose.postgres.yml logs -f",
