@@ -1352,3 +1352,136 @@ class UnifiedLearningService {
 4. **良好的擴展性**：新增學習模組只需遵循統一模式
 
 通過這個架構，我們可以確保平台的持續發展和優化，同時提供高品質的學習體驗。
+
+## 6. Staging 部署檢查清單
+
+### 6.1 必要條件確認
+
+#### 環境配置
+- [ ] 所有環境變數已設定 (.env.staging)
+  - `DATABASE_URL` - PostgreSQL 連線字串
+  - `GOOGLE_CLOUD_PROJECT` - GCP 專案 ID
+  - `VERTEX_AI_LOCATION` - Vertex AI 區域
+  - `OPENAI_API_KEY` - OpenAI API 金鑰
+  - `CLAUDE_API_KEY` - Claude API 金鑰
+  - `REDIS_URL` - Redis 連線字串 (可選)
+
+#### 資料庫準備
+- [ ] PostgreSQL Schema v3 已部署
+- [ ] 資料庫遷移腳本已執行
+- [ ] 測試資料已載入 (scenarios, demo users)
+
+#### 程式碼品質
+- [x] TypeScript 編譯無錯誤 (0 errors)
+- [x] ESLint 檢查無錯誤 (0 errors, 0 warnings)
+- [ ] 單元測試通過率 > 70%
+- [x] 建置成功 (npm run build)
+
+### 6.2 功能完整性
+
+#### Assessment 模組 (100% 完成)
+- [x] 多語言題庫載入
+- [x] 動態選題機制
+- [x] 答題互動記錄
+- [x] 即時評分計算
+- [x] 領域分數統計
+- [x] 完成報告生成
+
+#### PBL 模組 (進行中)
+- [ ] 情境載入與初始化
+- [ ] AI 導師對話整合
+- [ ] KSA 映射與評估
+- [ ] 學習歷程記錄
+
+#### Discovery 模組 (待實作)
+- [ ] 職涯路徑生成
+- [ ] 動態任務創建
+- [ ] XP 與成就系統
+- [ ] 技能進度追蹤
+
+### 6.3 整合測試
+
+#### API 端點測試
+- [x] `/api/assessment/*` - Assessment 相關 API
+- [ ] `/api/pbl/*` - PBL 相關 API
+- [ ] `/api/discovery/*` - Discovery 相關 API
+- [x] `/api/auth/*` - 認證相關 API
+
+#### 端到端流程
+- [ ] 用戶註冊 → 登入 → 選擇模組 → 完成學習
+- [ ] 多語言切換測試
+- [ ] 錯誤處理與恢復
+
+### 6.4 效能與監控
+
+#### 效能指標
+- [ ] API 回應時間 < 200ms (P95)
+- [ ] 頁面載入時間 < 3s
+- [ ] 快取命中率 > 80%
+
+#### 監控設置
+- [ ] 錯誤追蹤 (Sentry/類似工具)
+- [ ] 效能監控 (APM)
+- [ ] 日誌收集與分析
+
+### 6.5 部署步驟
+
+1. **前置作業**
+   ```bash
+   # 確認所有變更已提交
+   git status
+   
+   # 執行完整測試
+   npm run test:ci
+   
+   # 建置生產版本
+   npm run build
+   ```
+
+2. **資料庫更新**
+   ```bash
+   # 執行遷移腳本
+   npm run db:migrate:staging
+   
+   # 載入初始資料
+   npm run db:seed:staging
+   ```
+
+3. **部署應用**
+   ```bash
+   # 建置 Docker 映像
+   make build-frontend-image
+   
+   # 部署到 Cloud Run
+   make deploy-staging
+   ```
+
+4. **驗證部署**
+   - [ ] 健康檢查端點回應正常
+   - [ ] 關鍵功能運作正常
+   - [ ] 監控指標正常
+
+### 6.6 已知限制
+
+1. **PBL 模組**: AI 導師功能尚未完整實作，目前使用模擬回應
+2. **Discovery 模組**: 動態任務生成功能待開發
+3. **Redis 快取**: 尚未整合，使用記憶體快取作為 fallback
+4. **AI 回饋生成**: generateFeedback 目前返回預設文字
+
+### 6.7 建議優先順序
+
+1. **立即需要** (Staging 前必須)
+   - 完成 PBL 基本功能
+   - 修復失敗的測試
+   - 設定環境變數
+
+2. **短期目標** (Staging 後 1-2 週)
+   - 實作 Discovery 模組
+   - 整合 Redis 快取
+   - 提升測試覆蓋率
+
+3. **中期目標** (1 個月內)
+   - AI 回饋生成優化
+   - 完整 E2E 測試
+   - 效能優化
+EOF < /dev/null
