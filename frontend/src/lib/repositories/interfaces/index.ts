@@ -226,13 +226,17 @@ export interface UpdateProgramDto {
   status?: DBProgramStatus;
   currentTaskIndex?: number;
   completedTaskCount?: number;
+  totalTaskCount?: number;
   totalScore?: number;
-  domainScores?: Record<string, number>;
+  domainScores?: Record<string, unknown>;
   completedAt?: string;
   metadata?: Record<string, unknown>;
   startedAt?: string;
   lastActivityAt?: string;
   xpEarned?: number;
+  discoveryData?: Record<string, unknown>;
+  pblData?: Record<string, unknown>;
+  assessmentData?: Record<string, unknown>;
 }
 
 export interface CreateTaskDto {

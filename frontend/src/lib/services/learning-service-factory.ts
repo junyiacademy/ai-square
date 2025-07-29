@@ -7,8 +7,8 @@
 
 import type { BaseLearningService, ILearningServiceFactory } from './base-learning-service';
 import { AssessmentLearningService } from './assessment-learning-service';
-// import { PBLLearningService } from './pbl-learning-service';
-// import { DiscoveryLearningService } from './discovery-learning-service';
+import { PBLLearningService } from './pbl-learning-service';
+import { DiscoveryLearningService } from './discovery-learning-service';
 
 export class LearningServiceFactory implements ILearningServiceFactory {
   private static instance: LearningServiceFactory;
@@ -32,9 +32,9 @@ export class LearningServiceFactory implements ILearningServiceFactory {
     // 這裡暫時使用 adapter pattern
     this.services.set('assessment', this.createAssessmentAdapter());
     
-    // TODO: 實作其他服務
-    // this.services.set('pbl', new PBLLearningService());
-    // this.services.set('discovery', new DiscoveryLearningService());
+    // 實作其他服務
+    this.services.set('pbl', new PBLLearningService());
+    this.services.set('discovery', new DiscoveryLearningService());
   }
 
   public getService(mode: 'assessment' | 'pbl' | 'discovery'): BaseLearningService {

@@ -1,41 +1,28 @@
+/**
+ * Discovery Start API Route
+ * Uses the new unified service layer
+ */
+
 import { NextRequest, NextResponse } from 'next/server';
 import { learningServiceFactory } from '@/lib/services/learning-service-factory';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { getServerSession } from '@/lib/auth/session';
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  console.log('🚨 START API CALLED - This should only happen when explicitly requested!');
+  console.log('🚀 Discovery START API CALLED');
   console.log('   Timestamp:', new Date().toISOString());
   console.log('   Scenario ID:', id);
-  
-  // Log request headers to trace the source
-  console.log('   Request headers:', {
-    referer: request.headers.get('referer'),
-    userAgent: request.headers.get('user-agent'),
-    origin: request.headers.get('origin')
-  });
   
   try {
     const scenarioId = id;
     
-    // Get user info from cookie
-    let userEmail: string | undefined;
-    try {
-      const userCookie = request.cookies.get('user')?.value;
-      if (userCookie) {
-        const user = JSON.parse(userCookie);
-        userEmail = user.email;
-      }
-    } catch {
-      console.log('No user cookie found');
-    }
-    
-    console.log('   User email:', userEmail);
-    
-    if (!userEmail) {
+    // Get user from session
+    const session = await getServerSession();
+    if (!session?.user?.email) {
       return NextResponse.json(
         {
           success: false,
@@ -45,7 +32,9 @@ export async function POST(
       );
     }
     
-    // Get request body
+    console.log('   User email:', session.user.email);
+    
+    // Get language from request body
     const body = await request.json();
     const language = body.language || 'en';
     
@@ -64,7 +53,7 @@ export async function POST(
     const userRepo = repositoryFactory.getUserRepository();
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     
-    // Verify scenario exists and is PBL type
+    // Verify scenario exists and is Discovery type
     const scenario = await scenarioRepo.findById(scenarioId);
     if (!scenario) {
       return NextResponse.json(
@@ -76,33 +65,33 @@ export async function POST(
       );
     }
     
-    if (scenario.mode !== 'pbl') {
+    if (scenario.mode !== 'discovery') {
       return NextResponse.json(
         {
           success: false,
-          error: 'Scenario is not a PBL scenario'
+          error: 'Scenario is not a Discovery scenario'
         },
         { status: 400 }
       );
     }
     
     // Get or create user
-    let user = await userRepo.findByEmail(userEmail);
+    let user = await userRepo.findByEmail(session.user.email);
     if (!user) {
-      console.log('   Creating new user for:', userEmail);
+      console.log('   Creating new user for:', session.user.email);
       user = await userRepo.create({
-        email: userEmail,
-        name: userEmail.split('@')[0],
+        email: session.user.email,
+        name: session.user.email.split('@')[0],
         preferredLanguage: language
       });
     }
     
     console.log('   User ID:', user.id);
-    console.log('   Using PBL Learning Service to start learning...');
+    console.log('   Using Discovery Learning Service to start learning...');
     
     // Use the new service layer
-    const pblService = learningServiceFactory.getService('pbl');
-    const program = await pblService.startLearning(
+    const discoveryService = learningServiceFactory.getService('discovery');
+    const program = await discoveryService.startLearning(
       user.id,
       scenarioId,
       { language }
@@ -110,15 +99,33 @@ export async function POST(
     
     console.log('   ✅ Program created with UUID:', program.id);
     
-    // Return response
+    // Get created tasks
+    const taskRepo = repositoryFactory.getTaskRepository();
+    const tasks = await taskRepo.findByProgram(program.id);
+    
+    // Return response in the expected format
     return NextResponse.json({
       success: true,
-      program,
+      id: program.id,
+      scenarioId: program.scenarioId,
+      status: program.status,
+      currentTaskId: tasks[0]?.id,
+      tasks: tasks.map(task => ({
+        id: task.id,
+        title: task.title,
+        description: task.description,
+        status: task.status,
+        type: task.type,
+        xp: (task.discoveryData as Record<string, unknown>)?.xpReward as number || 50
+      })),
+      totalTasks: tasks.length,
+      completedTasks: 0,
+      totalXP: 0,
       language
     });
     
   } catch (error) {
-    console.error('Error starting PBL program:', error);
+    console.error('Error starting Discovery program:', error);
     return NextResponse.json(
       {
         success: false,

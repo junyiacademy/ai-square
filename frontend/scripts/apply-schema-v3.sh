@@ -8,7 +8,7 @@ DB_HOST="${DB_HOST:-127.0.0.1}"
 DB_PORT="${DB_PORT:-5433}"
 DB_NAME="${DB_NAME:-ai_square_db}"
 DB_USER="${DB_USER:-postgres}"
-DB_PASSWORD="${DB_PASSWORD:-aisquare2025local}"
+DB_PASSWORD="${DB_PASSWORD:-postgres}"
 
 echo "🔧 Applying Schema V3 to PostgreSQL..."
 echo "   Host: $DB_HOST:$DB_PORT"
