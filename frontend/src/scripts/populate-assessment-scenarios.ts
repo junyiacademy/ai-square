@@ -58,7 +58,7 @@ async function loadAssessmentData(language: string): Promise<AssessmentYAML | nu
     console.log(`Loading assessment data for language: ${language}`);
     const content = readFileSync(filePath, 'utf8');
     return parse(content);
-  } catch (error) {
+  } catch (_error) {
     console.error(`Failed to load assessment data for ${language}:`, error);
     return null;
   }
@@ -212,7 +212,7 @@ async function populateAssessmentScenarios() {
       console.log(`  - ${scenario.title.en}: ${questionCount} questions`);
     }
     
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Failed to populate assessment scenarios:', error);
     throw error;
   } finally {

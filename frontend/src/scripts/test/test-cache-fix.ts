@@ -81,7 +81,7 @@ async function testCacheFix() {
       console.log('❌ Cache issue still exists. Interactions not persisting.');
     }
     
-  } catch (error) {
+  } catch (_error) {
     console.error('Test failed:', error);
   } finally {
     // Keep browser open for manual inspection

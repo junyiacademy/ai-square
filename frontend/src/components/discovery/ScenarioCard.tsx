@@ -26,7 +26,7 @@ interface ScenarioCardProps {
   };
   index: number;
   showLastActivity?: boolean;
-  onSelect: (scenario: any) => void;
+  onSelect: (scenario: ScenarioCardProps['scenario']) => void;
 }
 
 export default function ScenarioCard({ scenario, index, showLastActivity = false, onSelect }: ScenarioCardProps) {

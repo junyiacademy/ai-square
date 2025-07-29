@@ -97,7 +97,7 @@ async function directUpdateTaskTemplates() {
       console.log('❌ No scenario updated');
     }
     
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Failed to update task templates:', error);
     throw error;
   } finally {

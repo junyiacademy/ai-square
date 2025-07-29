@@ -155,7 +155,7 @@ async function main() {
     
     console.log(`\n✅ Summary: ${created} created, ${updated} updated`);
     
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Error:', error);
   } finally {
     await pool.end();

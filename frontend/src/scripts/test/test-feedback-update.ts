@@ -122,7 +122,7 @@ async function testFeedbackUpdate() {
       console.log('\n✅ Feedback regeneration detection is working correctly!');
     }
 
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Test failed:', error);
   }
 }
@@ -130,7 +130,7 @@ async function testFeedbackUpdate() {
 async function main() {
   try {
     await testFeedbackUpdate();
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Error:', error);
     process.exit(1);
   }

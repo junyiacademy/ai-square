@@ -32,7 +32,7 @@ async function createTestUser() {
     
     console.log('✅ Test user created/updated:', result.rows[0]);
     
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Error creating test user:', error);
   } finally {
     await pool.end();

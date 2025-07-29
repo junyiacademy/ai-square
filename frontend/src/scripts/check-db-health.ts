@@ -23,9 +23,11 @@ async function checkHealth() {
     console.log(chalk.yellow('📊 PostgreSQL Status:'));
     if (health.postgresql) {
       console.log(chalk.green('  ✓ Connected'));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       console.log(chalk.gray(`  Time: ${(health.details as any).postgresql?.time}`));
     } else {
       console.log(chalk.red('  ✗ Connection Failed'));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       console.log(chalk.red(`  Error: ${(health.details as any).postgresql?.error}`));
     }
 
@@ -33,9 +35,11 @@ async function checkHealth() {
     console.log(chalk.yellow('\n☁️  Google Cloud Storage Status:'));
     if (health.gcs) {
       console.log(chalk.green('  ✓ Connected'));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       console.log(chalk.gray(`  Buckets Accessible: ${(health.details as any).gcs?.bucketsAccessible}`));
     } else {
       console.log(chalk.red('  ✗ Connection Failed'));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       console.log(chalk.red(`  Error: ${(health.details as any).gcs?.error}`));
     }
 
@@ -67,7 +71,7 @@ async function checkHealth() {
       console.log(chalk.red('  ❌ Both systems have issues'));
     }
 
-  } catch (error) {
+  } catch (_error) {
     spinner.fail('Health check failed');
     console.error(chalk.red('\n❌ Error:'), error);
     process.exit(1);

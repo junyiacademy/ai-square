@@ -395,7 +395,7 @@ async function insertScenarios() {
       
       console.log(`  ✅ Created: ${scenario.title.en}`);
       totalInserted++;
-    } catch (error) {
+    } catch (_error) {
       console.error(`  ❌ Error creating ${scenario.title.en}:`, error);
     }
   }
@@ -426,7 +426,7 @@ async function insertScenarios() {
       
       console.log(`  ✅ Created: ${scenario.title.en}`);
       totalInserted++;
-    } catch (error) {
+    } catch (_error) {
       console.error(`  ❌ Error creating ${scenario.title.en}:`, error);
     }
   }
@@ -457,7 +457,7 @@ async function insertScenarios() {
       
       console.log(`  ✅ Created: ${scenario.title.en}`);
       totalInserted++;
-    } catch (error) {
+    } catch (_error) {
       console.error(`  ❌ Error creating ${scenario.title.en}:`, error);
     }
   }
@@ -506,7 +506,7 @@ async function main() {
     console.log('✅ Database queries working correctly');
     console.log(`Found ${testQuery.rows.length} API-created scenarios`);
 
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Error:', error);
     process.exit(1);
   } finally {

@@ -162,7 +162,7 @@ async function testCompletionData() {
       } else {
         console.log(`\n❌ Completion API Error: ${response.status} ${response.statusText}`);
       }
-    } catch (error) {
+    } catch (_error) {
       console.log(`\n❌ Failed to call completion API:`, error);
     }
 
@@ -186,11 +186,11 @@ async function testCompletionData() {
       } else {
         console.log(`\n❌ Complete API Error: ${response.status} ${response.statusText}`);
       }
-    } catch (error) {
+    } catch (_error) {
       console.log(`\n❌ Failed to call complete API:`, error);
     }
 
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Test failed:', error);
     throw error;
   }
@@ -206,7 +206,7 @@ async function main() {
     console.log('- If "No program evaluation found", the POST to complete API needs to be triggered');
     console.log('\n🔗 Test the completion page at:');
     console.log('http://localhost:3002/pbl/scenarios/[scenarioId]/programs/[programId]/complete');
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Error:', error);
     process.exit(1);
   } finally {

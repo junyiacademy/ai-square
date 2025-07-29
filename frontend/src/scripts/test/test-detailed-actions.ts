@@ -212,7 +212,7 @@ async function setupDetailedTestData() {
     console.log('\n✅ 所有測試資料創建完成\n');
     return { testUserId, createdScenarios };
     
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ 創建測試資料失敗:', error);
     throw error;
   }
@@ -244,7 +244,7 @@ async function runDetailedTests(browser: Browser, _testData: Record<string, unkn
     );
     
     await page.screenshot({ path: 'test-screenshots/1-homepage.png' });
-  } catch (error) {
+  } catch (_error) {
     recordDetailedResult(
       '訪問首頁',
       '頁面正常載入',
@@ -282,7 +282,7 @@ async function runDetailedTests(browser: Browser, _testData: Record<string, unkn
     await page.waitForTimeout(2000);
     await page.screenshot({ path: 'test-screenshots/2-after-login.png' });
     
-  } catch (error) {
+  } catch (_error) {
     recordDetailedResult(
       '登入流程',
       '成功登入',
@@ -332,7 +332,7 @@ async function runDetailedTests(browser: Browser, _testData: Record<string, unkn
       await page.click('body', { position: { x: 10, y: 10 } });
       await page.waitForTimeout(500);
     }
-  } catch (error) {
+  } catch (_error) {
     recordDetailedResult(
       '用戶選單測試',
       '正常顯示用戶資訊',
@@ -384,7 +384,7 @@ async function runDetailedTests(browser: Browser, _testData: Record<string, unkn
       await page.screenshot({ path: 'test-screenshots/5-pbl-detail.png' });
     }
     
-  } catch (error) {
+  } catch (_error) {
     recordDetailedResult(
       'PBL 模組測試',
       '正常顯示並可互動',
@@ -415,7 +415,7 @@ async function runDetailedTests(browser: Browser, _testData: Record<string, unkn
     
     await page.screenshot({ path: 'test-screenshots/6-assessment-page.png' });
     
-  } catch (error) {
+  } catch (_error) {
     recordDetailedResult(
       'Assessment 模組測試',
       '正常顯示',
@@ -446,7 +446,7 @@ async function runDetailedTests(browser: Browser, _testData: Record<string, unkn
     
     await page.screenshot({ path: 'test-screenshots/7-discovery-page.png' });
     
-  } catch (error) {
+  } catch (_error) {
     recordDetailedResult(
       'Discovery 模組測試',
       '正常顯示',
@@ -520,7 +520,7 @@ async function runDetailedTests(browser: Browser, _testData: Record<string, unkn
     
     await page.screenshot({ path: 'test-screenshots/8-language-switch.png' });
     
-  } catch (error) {
+  } catch (_error) {
     recordDetailedResult(
       '語言切換測試',
       '可切換語言',
@@ -559,7 +559,7 @@ async function runDetailedTests(browser: Browser, _testData: Record<string, unkn
     
     await page.screenshot({ path: 'test-screenshots/9-after-logout.png' });
     
-  } catch (error) {
+  } catch (_error) {
     recordDetailedResult(
       '登出測試',
       '正常登出',
@@ -588,7 +588,7 @@ async function runDetailedTests(browser: Browser, _testData: Record<string, unkn
       Date.now() - start9
     );
     
-  } catch (error) {
+  } catch (_error) {
     recordDetailedResult(
       '路由保護測試',
       '未登入不能訪問',
@@ -714,7 +714,7 @@ async function main() {
     const failedCount = results.filter(r => r.status === 'fail').length;
     process.exit(failedCount === 0 ? 0 : 1);
     
-  } catch (error) {
+  } catch (_error) {
     console.error('\n❌ 測試失敗:', error);
     process.exit(1);
   } finally {

@@ -76,7 +76,7 @@ async function testProgramCreation() {
       console.log('Tasks created:', programData.tasks?.length || 0);
     }
 
-  } catch (error) {
+  } catch (_error) {
     console.error('\n❌ Test failed:', error);
   }
 }

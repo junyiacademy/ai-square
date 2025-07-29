@@ -65,7 +65,7 @@ async function main() {
     // Print summary
     printSummary(results);
 
-  } catch (error) {
+  } catch (_error) {
     console.error(chalk.red('\n❌ Initialization failed:'), error);
     process.exit(1);
   }

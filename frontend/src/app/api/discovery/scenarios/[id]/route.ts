@@ -8,14 +8,14 @@ import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Get language from query params
     const { searchParams } = new URL(request.url);
     const language = searchParams.get('lang') || 'en';
     
-    const { id: scenarioId } = params;
+    const { id: scenarioId } = await params;
     
     // Get repository
     const scenarioRepo = repositoryFactory.getScenarioRepository();
@@ -50,9 +50,18 @@ export async function GET(
       // Process discoveryData multilingual fields
       discoveryData: scenario.discoveryData ? {
         ...scenario.discoveryData,
-        dayInLife: scenario.discoveryData.dayInLife?.[language] || scenario.discoveryData.dayInLife?.en || '',
-        challenges: scenario.discoveryData.challenges?.[language] || scenario.discoveryData.challenges?.en || [],
-        rewards: scenario.discoveryData.rewards?.[language] || scenario.discoveryData.rewards?.en || []
+        dayInLife: (() => {
+          const dayInLife = (scenario.discoveryData as Record<string, unknown>).dayInLife as Record<string, string> | undefined;
+          return dayInLife?.[language] || dayInLife?.en || '';
+        })(),
+        challenges: (() => {
+          const challenges = (scenario.discoveryData as Record<string, unknown>).challenges as Record<string, unknown[]> | undefined;
+          return challenges?.[language] || challenges?.en || [];
+        })(),
+        rewards: (() => {
+          const rewards = (scenario.discoveryData as Record<string, unknown>).rewards as Record<string, unknown[]> | undefined;
+          return rewards?.[language] || rewards?.en || [];
+        })()
       } : {}
     };
     

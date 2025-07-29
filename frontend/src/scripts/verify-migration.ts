@@ -111,7 +111,7 @@ async function verify() {
       console.log('❌ User not found in database');
     }
     
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Verification error:', error);
   } finally {
     client.release();

@@ -77,7 +77,7 @@ async function debugDomainScores() {
       console.log(`\n⚠️  Warning: Found ${emptyResult.rows[0].count} evaluations with empty domain scores`);
     }
     
-  } catch (error) {
+  } catch (_error) {
     console.error('Error:', error);
   } finally {
     await pool.end();

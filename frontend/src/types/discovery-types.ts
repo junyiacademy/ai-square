@@ -4,7 +4,6 @@
  */
 
 import { IScenario, IProgram, ITask, IEvaluation } from './unified-learning';
-import { LearningMode } from './database';
 
 /**
  * Discovery Scenario 擴展介面

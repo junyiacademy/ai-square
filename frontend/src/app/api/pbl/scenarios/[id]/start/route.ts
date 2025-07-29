@@ -139,11 +139,7 @@ export async function POST(
     for (let i = 0; i < tasks.length; i++) {
       const taskTemplate = tasks[i] as Record<string, unknown>;
       
-      // Extract title and description with language support
-      const title = typeof taskTemplate.title === 'object' 
-        ? ((taskTemplate.title as Record<string, string>)?.[language] || (taskTemplate.title as Record<string, string>)?.en || 'Task')
-        : String(taskTemplate.title || `Task ${i + 1}`);
-        
+      // Extract description for content field
       const description = typeof taskTemplate.description === 'object'
         ? ((taskTemplate.description as Record<string, string>)?.[language] || (taskTemplate.description as Record<string, string>)?.en || '')
         : String(taskTemplate.description || taskTemplate.instructions || '');
@@ -171,8 +167,8 @@ export async function POST(
         mode: 'pbl',
         taskIndex: i,
         scenarioTaskIndex: i,
-        title: title,
-        description: description,
+        title: taskTemplate.title as Record<string, string>,
+        description: taskTemplate.description as Record<string, string>,
         type: taskType as 'question' | 'quiz' | 'assessment' | 'interactive' | 'reflection' | 'chat' | 'creation' | 'analysis' | 'exploration' | 'experiment' | 'challenge', // Type assertion needed for enum
         status: i === 0 ? 'active' : 'pending',
         content: {

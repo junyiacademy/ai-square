@@ -290,7 +290,7 @@ Complexity levels: `simple`, `medium`, `complex`, `debug`
 
 ### 🚨 TypeScript & ESLint Strict Rules
 
-#### Absolutely NO `any` Type
+#### Rule #1: Absolutely NO `any` Type
 **This is the most important rule, no exceptions:**
 
 1. **Completely forbidden `any` type**
@@ -311,23 +311,154 @@ Complexity levels: `simple`, `medium`, `complex`, `debug`
    - ❌ Wrong: `const items: any[] = []`
    - ✅ Right: `const items: string[] = []`
 
-#### ESLint Rules - Zero Tolerance
+#### Rule #2: Next.js 15 Dynamic Route Parameters
+**All route parameters must be Promises in Next.js 15:**
 
-**Never use ESLint disable comments:**
+1. **Route handler parameters MUST use Promise type**
+   - ❌ Wrong: `{ params: { id: string } }`
+   - ✅ Right: `{ params: Promise<{ id: string }> }`
+
+2. **MUST await params before use**
+   ```typescript
+   export async function GET(
+     request: NextRequest,
+     { params }: { params: Promise<{ id: string }> }
+   ) {
+     const { id } = await params; // REQUIRED
+   }
+   ```
+
+#### Rule #3: Multilingual Field Types
+**All multilingual fields MUST use Record<string, string>:**
+
+1. **Interface definitions**
+   - ❌ Wrong: `title: string`
+   - ✅ Right: `title: Record<string, string>`
+
+2. **Creating objects**
+   - ❌ Wrong: `title: 'My Title'`
+   - ✅ Right: `title: { en: 'My Title' }`
+
+3. **Type assertions for unknown data**
+   ```typescript
+   const title = (data.title as Record<string, string>)?.[language] || 
+                 (data.title as Record<string, string>)?.en || '';
+   ```
+
+#### Rule #4: Repository Method Calls
+**All optional repository methods MUST use optional chaining:**
+
+1. **Update operations**
+   - ❌ Wrong: `await repo.update(id, data)`
+   - ✅ Right: `await repo.update?.(id, data)`
+
+2. **Custom methods**
+   - ❌ Wrong: `await repo.getActivePrograms(userId)`
+   - ✅ Right: `await repo.getActivePrograms?.(userId)`
+
+#### Rule #5: Record<string, unknown> Property Access
+**MUST use type assertions when accessing properties:**
+
+1. **Nested property access**
+   - ❌ Wrong: `scenario.metadata.careerType`
+   - ✅ Right: `(scenario.metadata as Record<string, unknown>)?.careerType`
+
+2. **With type casting**
+   ```typescript
+   const careerType = (scenario.metadata as Record<string, unknown>)?.careerType as string || 'default';
+   ```
+
+#### Rule #6: IInteraction Interface
+**MUST NOT include 'id' field:**
+
+- ❌ Wrong: `{ id: uuidv4(), type: 'user', content: '...' }`
+- ✅ Right: `{ type: 'user', content: '...', timestamp: '...' }`
+
+#### Rule #7: Required Interface Properties
+**MUST include all required properties when creating objects:**
+
+```typescript
+// ITask requires: title, description, type, status, content, interactions
+const task: ITask = {
+  id: uuidv4(),
+  title: { en: 'Task Title' },
+  description: { en: 'Task Description' },
+  type: 'question',
+  status: 'active',
+  content: { instructions: 'Do this task' },
+  interactions: [],
+  // ... all other required fields
+};
+```
+
+#### Rule #8: ESLint Compliance
+
+**Production code (src/**): Zero tolerance**
 - ❌ Forbidden: `// eslint-disable-line`
 - ❌ Forbidden: `// eslint-disable-next-line`
 - ❌ Forbidden: `// @ts-ignore`
-- ✅ Correct: Fix the code to comply with rules
-- 📌 Exception: Only allowed in scripts (not in production code)
+- ✅ Required: Fix all warnings before commit
 
-**Common fixes:**
-- React Hooks: Use `useCallback` for dependencies
-- Unused vars: Remove or prefix with `_`
-- Type issues: Define proper interfaces
+**Script files (scripts/**): May use disable comments**
+- ✅ Allowed: `// eslint-disable-next-line @typescript-eslint/no-unused-vars`
+- Only for testing scripts, not production code
 
-**Zero tolerance policy:**
-- Must have zero ESLint warnings before commit
-- Fix warnings immediately, don't accumulate debt
+#### Rule #9: Pre-commit Validation
+**MUST pass ALL checks before commit:**
+
+1. **Run checks in order:**
+   ```bash
+   make pre-commit-check
+   ```
+
+2. **Manual check sequence:**
+   ```bash
+   npm run lint        # Zero warnings
+   npm run typecheck   # Zero errors
+   npm run test:ci     # All pass
+   npm run build       # Success
+   ```
+
+#### Rule #10: Import/Export Compliance
+
+**Route handlers MUST NOT export non-HTTP methods:**
+- ❌ Wrong: `export function clearCache() { }`
+- ✅ Right: `function clearCache() { }` (no export)
+
+**Valid route exports only:**
+- GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS
+
+#### Rule #11: TDD for TypeScript Error Fixes
+**修復 TypeScript 錯誤時必須使用 TDD 流程：**
+
+1. **先寫測試確認錯誤存在**
+   ```bash
+   # 寫一個會失敗的測試，證明問題存在
+   npm run test -- --testNamePattern="should handle multilingual fields"
+   ```
+
+2. **修復錯誤**
+   - 一次只修復一個錯誤
+   - 確保測試通過
+
+3. **驗證修復沒有破壞其他功能**
+   ```bash
+   npm run test:ci  # 所有測試必須通過
+   npm run build    # Build 必須成功
+   ```
+
+4. **實際測試修復效果**
+   ```bash
+   # 使用 Playwright 或 Browser 工具測試
+   npx playwright test --headed
+   ```
+
+#### Enforcement
+- **Build will fail** if any rule is violated
+- **PR will be rejected** if TypeScript errors exist
+- **No exceptions** for production code
+- **Fix immediately** when errors appear
+- **Always use TDD** when fixing errors to avoid breaking existing functionality
 
 ### Git Commit Guidelines
 
@@ -1006,6 +1137,151 @@ if (isCloudSQL) {
   poolConfig.port = parseInt(process.env.DB_PORT || '5432');
 }
 ```
+
+## 🚨 TypeScript Build 錯誤防範指南
+
+### 常見錯誤類型與解決方案
+
+#### 1. Next.js 15 動態路由參數錯誤
+**錯誤**: `Type '{ params: { id: string } }' is not assignable to type '{ params: Promise<{ id: string }> }'`
+
+**原因**: Next.js 15 將動態路由參數改為 Promise
+```typescript
+// ❌ 錯誤
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+}
+
+// ✅ 正確
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+}
+```
+
+#### 2. 多語言欄位型別不匹配
+**錯誤**: `Type 'string' is not assignable to type 'Record<string, string>'`
+
+**原因**: 資料庫期望多語言物件，但傳入字串
+```typescript
+// ❌ 錯誤
+title: template.title as string,
+description: template.description as string,
+
+// ✅ 正確 - 保持原始型別
+title: template.title as Record<string, string>,
+description: template.description as Record<string, string>,
+
+// ✅ 或轉換為多語言物件
+title: { en: titleString },
+description: { en: descriptionString },
+```
+
+#### 3. Record<string, unknown> 屬性存取錯誤
+**錯誤**: `Property 'X' does not exist on type '{}'`
+
+**原因**: TypeScript 不知道動態物件的屬性
+```typescript
+// ❌ 錯誤
+scenario.discoveryData.careerType
+
+// ✅ 正確
+(scenario.discoveryData as Record<string, unknown>)?.careerType as string
+```
+
+#### 4. IInteraction 介面錯誤
+**錯誤**: `Object literal may only specify known properties, and 'id' does not exist in type 'IInteraction'`
+
+**原因**: 嘗試添加介面中不存在的屬性
+```typescript
+// ❌ 錯誤
+const newInteraction: IInteraction = {
+  id: crypto.randomUUID(),  // IInteraction 沒有 id 屬性
+  timestamp: new Date().toISOString(),
+  type: 'user_input',
+  content: response
+};
+
+// ✅ 正確
+const newInteraction: IInteraction = {
+  timestamp: new Date().toISOString(),
+  type: 'user_input',
+  content: response
+};
+```
+
+#### 5. 字串字面值型別錯誤
+**錯誤**: `Type 'never' error with string literal types`
+
+**原因**: TypeScript 無法推斷條件檢查後的型別
+```typescript
+// ❌ 可能出錯
+if (typeof titleObj === 'string' && titleObj.startsWith('{')) {
+  // TypeScript 可能認為 titleObj 是 never
+}
+
+// ✅ 使用明確的型別斷言
+const titleObj = task.title as string | Record<string, string> | undefined;
+if (typeof titleObj === 'string') {
+  if (titleObj.startsWith('{')) {
+    // 現在 TypeScript 知道 titleObj 是 string
+  }
+}
+```
+
+### 預防措施
+
+1. **統一資料模型設計**
+   - 從一開始就決定多語言欄位格式
+   - 避免混用 string 和 Record<string, string>
+   - 在 interface 中明確定義所有欄位
+
+2. **使用嚴格的型別定義**
+   ```typescript
+   // 在 types 資料夾中定義清晰的介面
+   interface ITask {
+     title?: Record<string, string>;  // 明確定義為多語言
+     description?: Record<string, string>;
+     // ... 其他欄位
+   }
+   ```
+
+3. **建立型別轉換輔助函數**
+   ```typescript
+   function ensureMultilingual(value: unknown): Record<string, string> {
+     if (typeof value === 'string') {
+       return { en: value };
+     }
+     if (typeof value === 'object' && value !== null) {
+       return value as Record<string, string>;
+     }
+     return { en: '' };
+   }
+   ```
+
+4. **定期執行 build 檢查**
+   ```bash
+   # 在提交前執行
+   npm run build
+   npm run typecheck
+   ```
+
+5. **避免使用 any 型別**
+   - 使用 unknown 並進行型別檢查
+   - 使用具體的型別斷言
+   - 定義明確的介面
+
+### 關鍵教訓
+
+1. **Next.js 升級影響**: 主要框架升級（如 Next.js 14 → 15）會帶來重大 API 變更
+2. **型別一致性**: 整個專案要保持型別定義的一致性
+3. **漸進式修復**: 修復一個錯誤可能暴露更多錯誤，需要耐心逐一解決
+4. **測試覆蓋**: 良好的測試覆蓋可以在重構時提供信心
 
 ---
 

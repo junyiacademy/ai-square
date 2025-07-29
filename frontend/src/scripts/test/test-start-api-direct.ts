@@ -40,7 +40,7 @@ async function testStartAPI() {
       }
     }
     
-  } catch (error) {
+  } catch (_error) {
     console.error('\n❌ Error making request:', error);
   }
 }

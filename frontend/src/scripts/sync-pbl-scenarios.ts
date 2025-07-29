@@ -49,7 +49,7 @@ async function loadYAMLFile(filePath: string): Promise<YAMLScenario | null> {
   try {
     const content = await fs.readFile(filePath, 'utf-8');
     return yaml.load(content) as YAMLScenario;
-  } catch (error) {
+  } catch (_error) {
     console.error(`Failed to load ${filePath}:`, error);
     return null;
   }
@@ -169,7 +169,7 @@ async function syncPBLScenarios() {
     
     console.log(`📊 Total PBL scenarios in database: ${countResult.rows[0].count}`);
     
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Error syncing scenarios:', error);
     process.exit(1);
   } finally {

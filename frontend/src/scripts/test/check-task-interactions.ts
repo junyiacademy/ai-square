@@ -88,7 +88,7 @@ async function checkTaskInteractions(taskId: string) {
       console.log(`- Task ${row.id}: ${interactionCount} interactions, updated ${row.updated_at}`);
     });
 
-  } catch (error) {
+  } catch (_error) {
     console.error('Error checking task interactions:', error);
   } finally {
     await pool.end();

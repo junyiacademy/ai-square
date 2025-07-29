@@ -75,7 +75,7 @@ class PBLCompletionBrowserTest {
         duration: Date.now() - startTime
       })
       console.log(`✅ ${testName}`)
-    } catch (error) {
+    } catch (_error) {
       this.results.push({
         testName,
         status: 'failed',

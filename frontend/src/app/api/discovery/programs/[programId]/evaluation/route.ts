@@ -3,7 +3,15 @@ import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
 
 // Helper function to generate task evaluations
-async function generateTaskEvaluations(tasks: unknown[], request: NextRequest) {
+async function generateTaskEvaluations(tasks: Array<{
+  id: string;
+  status: string;
+  type?: string;
+  title?: unknown;
+  score?: number;
+  metadata?: Record<string, unknown>;
+  interactions?: unknown[];
+}>, request: NextRequest) {
   const completedTasks = tasks.filter(task => task.status === 'completed');
   
   return completedTasks.map(task => {
@@ -139,7 +147,7 @@ export async function GET(
       // Create task evaluations array
       const taskEvaluations = completedTasks.map(task => {
         // Extract XP from task metadata
-        const evaluation = task.metadata?.evaluation || task.metadata?.lastEvaluation || {};
+        const evaluation = (task.metadata?.evaluation || task.metadata?.lastEvaluation || {}) as Record<string, unknown>;
         const xpEarned = evaluation.actualXP || evaluation.xpEarned || task.metadata?.xpEarned || 0;
         const score = evaluation.score || xpEarned;
         const attempts = task.interactions?.filter((i: unknown) => (i as {type: string}).type === 'user_input').length || 1;

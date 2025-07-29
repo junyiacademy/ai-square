@@ -6,7 +6,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { v4 as uuidv4 } from 'uuid';
 import type { ITask } from '@/types/unified-learning';
 
 const VALID_TASK_TYPES = ['exploration', 'practice', 'reflection', 'project', 'assessment'];
@@ -17,7 +16,7 @@ const VALID_TASK_TYPES = ['exploration', 'practice', 'reflection', 'project', 'a
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { programId: string } }
+  { params }: { params: Promise<{ programId: string }> }
 ) {
   try {
     // Check authentication
@@ -33,7 +32,7 @@ export async function GET(
     const { searchParams } = new URL(request.url);
     const language = searchParams.get('lang') || 'en';
 
-    const { programId } = params;
+    const { programId } = await params;
 
     // Get repositories
     const userRepo = repositoryFactory.getUserRepository();
@@ -72,13 +71,13 @@ export async function GET(
     const processedTasks = tasks
       .map(task => {
         const titleObj = task.title as Record<string, string>;
-        const instructionsObj = task.instructions as Record<string, string>;
-        const feedbackObj = task.feedback as Record<string, string> | undefined;
+        const instructionsObj = (task.content as Record<string, unknown>)?.instructions as Record<string, string> | undefined;
+        const feedbackObj = (task.metadata as Record<string, unknown>)?.feedback as Record<string, string> | undefined;
 
         return {
           ...task,
           title: titleObj?.[language] || titleObj?.en || 'Untitled',
-          instructions: instructionsObj?.[language] || instructionsObj?.en || '',
+          instructions: instructionsObj ? (instructionsObj[language] || instructionsObj.en || '') : '',
           feedback: feedbackObj ? (feedbackObj[language] || feedbackObj.en || '') : undefined,
           // Preserve original objects
           titleObj,
@@ -86,7 +85,7 @@ export async function GET(
           feedbackObj
         };
       })
-      .sort((a, b) => a.order - b.order);
+      .sort((a, b) => ((a as unknown as {order?: number}).order || 0) - ((b as unknown as {order?: number}).order || 0));
 
     // Calculate progress
     const completedCount = tasks.filter(t => t.status === 'completed').length;
@@ -129,7 +128,7 @@ export async function GET(
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { programId: string } }
+  { params }: { params: Promise<{ programId: string }> }
 ) {
   try {
     // Check authentication
@@ -141,7 +140,7 @@ export async function POST(
       );
     }
 
-    const { programId } = params;
+    const { programId } = await params;
     const body = await request.json();
     const { type, title, instructions, context = {} } = body;
 
@@ -200,24 +199,40 @@ export async function POST(
       mode: 'discovery',
       type,
       title,
-      instructions,
-      order: nextOrder,
       status: 'pending',
+      taskIndex: nextOrder,
       score: 0,
+      maxScore: 100,
+      allowedAttempts: 99,
+      attemptCount: 0,
       timeSpentSeconds: 0,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      context,
+      content: {
+        instructions,
+        ...context
+      },
       interactions: [],
-      metadata: {}
+      interactionCount: 0,
+      userResponse: {},
+      aiConfig: {},
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {},
+      metadata: {
+        order: nextOrder
+      }
     };
 
     const createdTask = await taskRepo.create(newTask);
 
-    // Update program task count
-    await programRepo.update(programId, {
-      totalTaskCount: existingTasks.length + 1,
-      updatedAt: new Date().toISOString()
+    // Update program metadata
+    await programRepo.update?.(programId, {
+      metadata: {
+        ...(program.metadata || {}),
+        lastTaskCreatedAt: new Date().toISOString()
+      },
+      lastActivityAt: new Date().toISOString()
     });
 
     return NextResponse.json({

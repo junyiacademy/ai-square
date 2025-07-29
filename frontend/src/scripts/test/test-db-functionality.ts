@@ -192,7 +192,7 @@ async function testDatabaseFunctionality() {
 
       console.log(`  ✅ Helper functions working: found ${userPrograms.rows.length} user programs and ${tasksByMode.rows.length} tasks`);
       testsPassed++;
-    } catch (error) {
+    } catch (_error) {
       console.log('  ❌ Helper functions failed:', error);
     }
 
@@ -217,7 +217,7 @@ async function testDatabaseFunctionality() {
 
       console.log(`  ✅ All ${viewTestsPassed} views working correctly`);
       testsPassed++;
-    } catch (error) {
+    } catch (_error) {
       console.log('  ❌ View tests failed:', error);
     }
 
@@ -270,7 +270,7 @@ async function testDatabaseFunctionality() {
       console.log(`  ${row.mode}: ${row.count}`);
     });
 
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Database functionality test failed:', error);
     throw error;
   }
@@ -279,7 +279,7 @@ async function testDatabaseFunctionality() {
 async function main() {
   try {
     await testDatabaseFunctionality();
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Error:', error);
     process.exit(1);
   } finally {

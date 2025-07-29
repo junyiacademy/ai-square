@@ -106,7 +106,7 @@ async function testPBLFlow() {
         await page.waitForURL((url) => !url.toString().includes('/login'), { timeout: 10000 });
         console.log('✅ UI login successful');
       }
-    } catch (error) {
+    } catch (_error) {
       console.log('❌ Login error:', error instanceof Error ? error.message : error);
       await page.screenshot({ path: 'screenshots/03-login-error.png' });
     }
@@ -152,7 +152,7 @@ async function testPBLFlow() {
         // Wait for either title or loading state
         await page.waitForSelector('h1, h2, [data-testid="scenario-title"], .loading', { timeout: 10000 });
         await sleep(2000);
-      } catch (error) {
+      } catch (_error) {
         console.log('  ⚠️ Timeout waiting for scenario content');
       }
       
@@ -240,7 +240,7 @@ async function testPBLFlow() {
         try {
           await page.waitForURL('**/tasks/**', { timeout: 10000 });
           console.log('  Navigated to task page');
-        } catch (error) {
+        } catch (_error) {
           console.log('  ⚠️ Navigation timeout, checking current URL...');
           
           // Check for any alert dialogs
@@ -349,7 +349,7 @@ async function testPBLFlow() {
             await sleep(2000);
             await page.screenshot({ path: 'screenshots/11-ai-feedback.png' });
             console.log('✅ AI qualitative feedback generated');
-          } catch (error) {
+          } catch (_error) {
             console.log('⚠️ AI feedback not generated in time');
           }
         } else {
@@ -412,7 +412,7 @@ async function testPBLFlow() {
     console.log('\n✅ PBL flow test completed!');
     console.log('📸 Screenshots saved in screenshots/ directory');
     
-  } catch (error) {
+  } catch (_error) {
     console.error('\n❌ Test failed:', error);
     if (page) {
       await page.screenshot({ path: 'screenshots/error-state.png' });
@@ -434,7 +434,7 @@ async function setupScreenshotsDir() {
   const fs = await import('fs/promises');
   try {
     await fs.mkdir('screenshots', { recursive: true });
-  } catch (error) {
+  } catch (_error) {
     // Directory might already exist
   }
 }
@@ -445,7 +445,7 @@ async function main() {
     await setupScreenshotsDir();
     await testPBLFlow();
     process.exit(0);
-  } catch (error) {
+  } catch (_error) {
     console.error('Test suite failed:', error);
     process.exit(1);
   }

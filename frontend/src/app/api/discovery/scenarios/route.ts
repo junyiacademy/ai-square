@@ -15,11 +15,6 @@ let cachedScenarios: unknown | null = null;
 let cacheTimestamp: number = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 分鐘
 
-// Export for testing purposes
-export function clearCache() {
-  cachedScenarios = null;
-  cacheTimestamp = 0;
-}
 
 export async function GET(request: NextRequest) {
   try {

@@ -48,7 +48,7 @@ async function testInit() {
     }
     
     console.log('\n✅ Test completed!');
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Test failed:', error);
     process.exit(1);
   }

@@ -133,6 +133,7 @@ async function testMode(mode: 'pbl' | 'assessment' | 'discovery') {
         id: taskId,
         programId,
         scenarioId,
+        type: template.type // eslint-disable-next-line @typescript-eslint/no-explicit-any
         type: template.type as any,
         status: 'pending',
         mode, // Will be inherited from program
@@ -215,7 +216,7 @@ async function testMode(mode: 'pbl' | 'assessment' | 'discovery') {
     const userPrograms = await programRepo.findByUserAndMode(TEST_USER_ID, mode);
     console.log(`Found ${userPrograms.length} ${mode} programs for user`);
 
-  } catch (error) {
+  } catch (_error) {
     console.error(`❌ Error in ${mode} mode:`, error);
     results.push({ 
       mode, 
@@ -307,7 +308,7 @@ async function main() {
     await generateReport();
 
     console.log('\n✅ All tests completed!');
-  } catch (error) {
+  } catch (_error) {
     console.error('\n❌ Test suite failed:', error);
     process.exit(1);
   }

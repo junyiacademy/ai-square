@@ -161,7 +161,7 @@ async function loadDiscoveryScenarios() {
           } else {
             console.log(`  ⚠️  Missing ${lang} version: ${filePath}`);
           }
-        } catch (error) {
+        } catch (_error) {
           console.error(`  ❌ Error loading ${lang} version:`, error);
         }
       }
@@ -329,7 +329,7 @@ async function loadDiscoveryScenarios() {
           
           loadedCount++;
           console.log(`  ✅ Created scenario: ${title.en}`);
-        } catch (error) {
+        } catch (_error) {
           console.error(`  ❌ Failed to create scenario for ${careerPath}:`, error);
         }
       } else {
@@ -347,7 +347,7 @@ async function loadDiscoveryScenarios() {
       console.log(`  - ${row.title_en || 'Untitled'} (${row.source_id})`);
     }
     
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Error loading Discovery scenarios:', error);
     process.exit(1);
   } finally {

@@ -283,13 +283,13 @@ export class PostgreSQLUserRepository implements IUserRepository {
     };
   }
 
-  async getAssessmentSessions(userId: string): Promise<AssessmentSession[]> {
+  async getAssessmentSessions(_userId: string): Promise<AssessmentSession[]> {
     // TODO: Assessment 模組需要遷移到統一架構
     // 暫時返回空陣列避免阻擋 Discovery 開發
     return [];
   }
 
-  async getLatestAssessmentResults(userId: string): Promise<AssessmentResults | null> {
+  async getLatestAssessmentResults(_userId: string): Promise<AssessmentResults | null> {
     // TODO: Assessment 模組需要遷移到統一架構
     // 暫時返回 null 避免阻擋 Discovery 開發
     return null;
@@ -329,7 +329,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
     return rows[0];
   }
 
-  async getUserBadges(userId: string): Promise<UserBadge[]> {
+  async getUserBadges(_userId: string): Promise<UserBadge[]> {
     // TODO: Badge 系統需要建立相關資料表
     // 暫時返回空陣列避免阻擋 Discovery 開發
     return [];
@@ -361,7 +361,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
     
     // TODO: Achievement 系統需要建立相關資料表
     // 暫時返回空陣列避免阻擋 Discovery 開發
-    const achievements: any[] = [];
+    const achievements: unknown[] = [];
 
     // Format response to match legacy UserData interface
     return {

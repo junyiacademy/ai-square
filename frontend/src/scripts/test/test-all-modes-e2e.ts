@@ -300,7 +300,7 @@ The system uses deep learning to predict occupancy patterns and pre-cool/heat sp
       evaluationIds: [taskEvaluation.id, programEvaluation.id],
     };
     
-  } catch (error) {
+  } catch (_error) {
     log(`PBL test failed: ${error}`, 'error');
     throw error;
   }
@@ -539,7 +539,7 @@ async function testDiscoveryMode() {
       evaluationIds: [discoveryEvaluation.id, journeyEvaluation.id],
     };
     
-  } catch (error) {
+  } catch (_error) {
     log(`Discovery test failed: ${error}`, 'error');
     throw error;
   }
@@ -799,7 +799,7 @@ async function testAssessmentMode() {
       evaluationIds: [assessmentEvaluation.id, fullAssessmentEvaluation.id],
     };
     
-  } catch (error) {
+  } catch (_error) {
     log(`Assessment test failed: ${error}`, 'error');
     throw error;
   }
@@ -881,7 +881,7 @@ LEFT JOIN task_interactions ti ON t.id = ti.task_id
 WHERE t.program_id = '${results.pbl?.programId || 'N/A'}';
     `);
     
-  } catch (error) {
+  } catch (_error) {
     log(`Verification failed: ${error}`, 'error');
     throw error;
   }
@@ -919,9 +919,9 @@ async function runAllTests() {
     
     return results;
     
-  } catch (error) {
+  } catch (_error) {
     log(`\n💥 TEST SUITE FAILED: ${error}`, 'error');
-    console.error(error);
+    console.error(_error);
     process.exit(1);
   }
 }

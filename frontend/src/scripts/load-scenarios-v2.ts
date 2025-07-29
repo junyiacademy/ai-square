@@ -113,13 +113,13 @@ async function loadPBLScenarios() {
         scenarios.push(scenario);
         console.log(`  ✓ Loaded: ${scenario.title.en} (${selectedFile})`);
         
-      } catch (error) {
+      } catch (_error) {
         console.log(`  ⚠️  Error loading ${selectedFile}: ${error}`);
       }
     }
     
     return scenarios;
-  } catch (error) {
+  } catch (_error) {
     console.error('Error loading PBL scenarios:', error);
     return [];
   }
@@ -165,7 +165,7 @@ async function insertScenarios(scenarios: any[]) {
       console.log(`  ✅ Inserted: ${scenario.title.en}`);
       inserted++;
       
-    } catch (error) {
+    } catch (_error) {
       console.error(`  ❌ Error inserting ${scenario.title.en}:`, error);
     }
   }
@@ -229,7 +229,7 @@ async function main() {
     
     console.log('\n✅ Done!');
     
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Error:', error);
     process.exit(1);
   } finally {

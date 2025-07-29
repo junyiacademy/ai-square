@@ -116,20 +116,24 @@ export async function GET(
       return {
         id: task.id,
         title: (() => {
-          let titleObj = task.title;
-          // Handle case where title is a JSON string
-          if (typeof titleObj === 'string' && titleObj.startsWith('{')) {
-            try {
-              titleObj = JSON.parse(titleObj);
-            } catch {
-              return titleObj; // Return as-is if parse fails
+          const titleObj = task.title as string | Record<string, string> | undefined;
+          // Handle different types of title
+          if (typeof titleObj === 'string') {
+            // Check if it's a JSON string
+            if (titleObj.startsWith('{')) {
+              try {
+                const parsed = JSON.parse(titleObj);
+                return parsed[lang] || parsed['en'] || titleObj;
+              } catch {
+                return titleObj; // Return as-is if parse fails
+              }
             }
+            return titleObj;
+          } else if (typeof titleObj === 'object' && titleObj !== null) {
+            // It's already an object
+            return titleObj[lang] || titleObj['en'] || '';
           }
-          // Now extract the language-specific value
-          if (typeof titleObj === 'object' && titleObj !== null) {
-            return (titleObj as Record<string, string>)[lang] || (titleObj as Record<string, string>)['en'] || '';
-          }
-          return titleObj as string || '';
+          return '';
         })(),
         description: (() => {
           const desc = (task.content as Record<string, unknown>)?.description;

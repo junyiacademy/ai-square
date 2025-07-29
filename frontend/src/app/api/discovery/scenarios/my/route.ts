@@ -116,8 +116,8 @@ export async function GET(request: NextRequest) {
         const displayStatus = primaryStatus === 'mastered' ? 'completed' : primaryStatus === 'in-progress' ? 'active' : 'pending';
         
         // Map career type to display format
-        const careerType = scenario.metadata?.careerType as string || 
-                          scenario.discoveryData?.careerType as string || 
+        const careerType = (scenario.metadata as Record<string, unknown>)?.careerType as string || 
+                          (scenario.discoveryData as Record<string, unknown>)?.careerType as string || 
                           'unknown';
         
         return {

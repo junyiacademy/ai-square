@@ -189,7 +189,7 @@ export function useAuth(): UseAuthReturn {
   // Initial auth check - run only once on mount
   useEffect(() => {
     checkAuth()
-  }, []) // No dependencies - only run once on mount
+  }, [checkAuth]) // No dependencies - only run once on mount
 
   // Listen for auth changes - use useRef to avoid dependency issues
   useEffect(() => {

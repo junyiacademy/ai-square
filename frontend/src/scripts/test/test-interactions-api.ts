@@ -62,7 +62,7 @@ async function testInteractionsAPI() {
 
     await pool.end();
 
-  } catch (error) {
+  } catch (_error) {
     console.error('Error testing API:', error);
   }
 }

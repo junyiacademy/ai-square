@@ -196,8 +196,8 @@ export async function POST(
             mode: 'discovery',
             taskIndex: i,
             scenarioTaskIndex: i,
-            title: template.title as string,
-            description: template.description as string,
+            title: template.title as Record<string, string> | undefined,
+            description: template.description as Record<string, string> | undefined,
             type: 'chat', // PBL tasks are primarily chat-based
             status: i === 0 ? 'active' : 'pending',
             content: {
@@ -277,8 +277,8 @@ export async function POST(
             mode: 'discovery',
             taskIndex: currentTaskIndex,
             scenarioTaskIndex: currentTaskIndex,
-            title: taskTitle,
-            description: (startingScenario?.description || '') as string,
+            title: { en: taskTitle },
+            description: { en: (startingScenario?.description || '') as string },
             type: 'analysis',
             status: currentTaskIndex === 0 ? 'active' : 'pending',
             content: {
@@ -324,8 +324,8 @@ export async function POST(
             mode: 'discovery',
             taskIndex: currentTaskIndex,
             scenarioTaskIndex: currentTaskIndex,
-            title: exampleTask.title as string,
-            description: exampleTask.description as string,
+            title: { en: exampleTask.title as string },
+            description: { en: exampleTask.description as string },
             type: (exampleTask.type as TaskType) || 'analysis',
             status: 'pending',
             content: {
@@ -369,8 +369,8 @@ export async function POST(
             mode: 'discovery',
             taskIndex: i,
             scenarioTaskIndex: i,
-            title: template.title,
-            description: template.description,
+            title: { en: template.title },
+            description: { en: template.description },
             type: template.type,
             status: i === 0 ? 'active' : 'pending',
             content: {

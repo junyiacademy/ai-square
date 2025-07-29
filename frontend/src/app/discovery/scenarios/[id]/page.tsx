@@ -321,7 +321,7 @@ export default function DiscoveryScenarioDetailPage() {
               {scenarioData.description}
             </p>
             <p className="text-gray-700 mb-6">
-              {(scenarioData.metadata?.longDescription as string) || scenarioData.objectives?.[0] || ''}
+              {(scenarioData.metadata?.longDescription as string) || ''}
             </p>
             
             {/* Skills */}
@@ -538,7 +538,7 @@ export default function DiscoveryScenarioDetailPage() {
                         <div className="flex items-center space-x-4 text-sm text-gray-600">
                           <div className="flex items-center space-x-1">
                             <ClockIcon className="w-4 h-4" />
-                            <span>{t('discovery:programCard.startedOn')} {new Date(program.startedAt).toLocaleDateString()}</span>
+                            <span>{t('discovery:programCard.startedOn')} {new Date(program.createdAt).toLocaleDateString()}</span>
                           </div>
                           <div className="flex items-center space-x-1">
                             <TrophyIcon className="w-4 h-4" />
@@ -550,12 +550,12 @@ export default function DiscoveryScenarioDetailPage() {
                         <div className="mt-4">
                           <div className="flex items-center justify-between text-sm mb-1">
                             <span className="text-gray-600">{t('discovery:programCard.progress')}</span>
-                            <span className="text-gray-900 font-medium">{(program.metadata?.progress as number) || 0}%</span>
+                            <span className="text-gray-900 font-medium">{Math.round(((program.metadata?.completedTasks || 0) / (program.metadata?.totalTasks || 1)) * 100)}%</span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div
                               className="bg-gradient-to-r from-purple-600 to-blue-600 h-2 rounded-full transition-all"
-                              style={{ width: `${(program.metadata?.progress as number) || 0}%` }}
+                              style={{ width: `${Math.round(((program.metadata?.completedTasks || 0) / (program.metadata?.totalTasks || 1)) * 100)}%` }}
                             />
                           </div>
                           <p className="mt-1 text-xs text-gray-500">

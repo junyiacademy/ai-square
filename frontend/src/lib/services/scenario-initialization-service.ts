@@ -9,7 +9,6 @@
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { IScenario } from '@/types/unified-learning';
 import { DifficultyLevel, LearningMode, SourceType, TaskType, LearningMode as DBLearningMode } from '@/types/database';
-import { CreateScenarioDto, UpdateScenarioDto } from '../repositories/interfaces';
 import { AssessmentYAMLLoader } from './assessment-yaml-loader';
 import { PBLYAMLLoader } from './pbl-yaml-loader';
 import { DiscoveryYAMLLoader } from './discovery-yaml-loader';
@@ -174,7 +173,7 @@ export class ScenarioInitializationService {
               updatedAt: new Date().toISOString()
             };
             // Remove id as it will be generated
-            delete (scenarioToCreate as any).id;
+            delete (scenarioToCreate as Record<string, unknown>).id;
             
             const created = await this.scenarioRepo.create(scenarioToCreate as Omit<IScenario, 'id'>);
             result.created++;
@@ -283,7 +282,7 @@ class PBLYAMLProcessor implements IYAMLProcessor {
     const parts = filePath.split(path.sep);
     const scenarioId = parts[parts.length - 2];
     
-    const pblData = yamlData as any;
+    const pblData = yamlData as Record<string, unknown>;
     
     return {
       mode: 'pbl' as const,
@@ -373,7 +372,7 @@ class DiscoveryYAMLProcessor implements IYAMLProcessor {
     const parts = filePath.split(path.sep);
     const careerType = parts[parts.length - 2];
     
-    const discoveryData = yamlData as any;
+    const discoveryData = yamlData as Record<string, unknown>;
     
     return {
       mode: 'discovery' as const,
@@ -478,7 +477,7 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
     const match = fileName.match(/_questions_(\w+)\.yaml$/);
     const language = match ? match[1] : 'en';
     
-    const assessmentData = yamlData as any;
+    const assessmentData = yamlData as Record<string, unknown>;
     const config = assessmentData.config || assessmentData.assessment_config || {};
     const titleValue = this.loader.getTranslatedField(config, 'title', language) || `${assessmentName} Assessment`;
     const descValue = this.loader.getTranslatedField(config, 'description', language) || '';

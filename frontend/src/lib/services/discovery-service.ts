@@ -7,8 +7,6 @@ import {
   IDiscoveryRepository,
   IDiscoveryScenario,
   IDiscoveryProgram,
-  IDiscoveryTask,
-  IDiscoveryEvaluation,
   ICareerRecommendation,
   ISkillGap,
   IPortfolioItem
@@ -32,12 +30,12 @@ export interface IDiscoveryService {
   calculateOverallProgress(userId: string): Promise<number>;
   
   // Portfolio management
-  createPortfolioFromTask(userId: string, taskId: string, artifacts: any[]): Promise<IPortfolioItem>;
+  createPortfolioFromTask(userId: string, taskId: string, artifacts: unknown[]): Promise<IPortfolioItem>;
   sharePortfolio(userId: string, portfolioId: string): Promise<string>;
   
   // AI-powered features
   generateCareerInsights(userId: string, careerId: string): Promise<string>;
-  getPersonalizedLearningPath(userId: string, targetCareer: string): Promise<any>;
+  getPersonalizedLearningPath(userId: string, targetCareer: string): Promise<unknown>;
 }
 
 export class DiscoveryService implements IDiscoveryService {
@@ -206,7 +204,7 @@ export class DiscoveryService implements IDiscoveryService {
   /**
    * 記錄里程碑達成
    */
-  async trackMilestone(userId: string, milestoneId: string): Promise<void> {
+  async trackMilestone(_userId: string, _milestoneId: string): Promise<void> {
     // TODO: 實作里程碑追蹤邏輯
     // 1. 驗證里程碑條件
     // 2. 記錄達成時間
@@ -228,7 +226,7 @@ export class DiscoveryService implements IDiscoveryService {
   async createPortfolioFromTask(
     userId: string, 
     taskId: string, 
-    artifacts: any[]
+    artifacts: unknown[]
   ): Promise<IPortfolioItem> {
     // TODO: 驗證任務完成狀態
     // TODO: 處理檔案上傳
@@ -289,7 +287,7 @@ export class DiscoveryService implements IDiscoveryService {
   /**
    * 獲取個人化學習路徑
    */
-  async getPersonalizedLearningPath(userId: string, targetCareer: string): Promise<any> {
+  async getPersonalizedLearningPath(userId: string, targetCareer: string): Promise<unknown> {
     // TODO: 實作個人化學習路徑生成
     // 1. 分析當前能力
     // 2. 設定目標
@@ -306,7 +304,7 @@ export class DiscoveryService implements IDiscoveryService {
 
   // Private helper methods
 
-  private async getUserSkillLevels(userId: string): Promise<Map<string, number>> {
+  private async getUserSkillLevels(_userId: string): Promise<Map<string, number>> {
     // TODO: 從評估結果獲取用戶技能水平
     // 暫時返回模擬資料
     return new Map([
@@ -329,7 +327,7 @@ export class DiscoveryService implements IDiscoveryService {
 
   private determineSkillImportance(
     skill: string, 
-    career: IDiscoveryScenario
+    _career: IDiscoveryScenario
   ): 'critical' | 'important' | 'nice-to-have' {
     // TODO: 實作更複雜的重要性判斷邏輯
     const criticalSkills = ['Communication', 'Problem Solving'];
@@ -342,8 +340,8 @@ export class DiscoveryService implements IDiscoveryService {
 
   private getSuggestedResources(
     skill: string, 
-    currentLevel: number, 
-    requiredLevel: number
+    _currentLevel: number, 
+    _requiredLevel: number
   ): string[] {
     // TODO: 實作資源推薦邏輯
     return [
@@ -354,8 +352,8 @@ export class DiscoveryService implements IDiscoveryService {
   }
 
   private async calculatePersonalityMatch(
-    userId: string, 
-    career: IDiscoveryScenario
+    _userId: string, 
+    _career: IDiscoveryScenario
   ): Promise<number> {
     // TODO: 實作性格匹配演算法
     return Math.floor(Math.random() * 30) + 70; // 70-100
@@ -369,7 +367,7 @@ export class DiscoveryService implements IDiscoveryService {
 
   private sortByUserPreferences(
     recommendations: ICareerRecommendation[],
-    userId: string
+    _userId: string
   ): ICareerRecommendation[] {
     // TODO: 根據用戶偏好排序
     return recommendations.sort((a, b) => b.matchScore - a.matchScore);

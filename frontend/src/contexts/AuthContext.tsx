@@ -196,7 +196,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
     
     initializeAuth();
-  }, []); // Remove checkAuth dependency to prevent loops
+  }, [checkAuth]); // Remove checkAuth dependency to prevent loops
 
   // 監聽其他 tab 的登入狀態變化
   useEffect(() => {

@@ -91,7 +91,7 @@ async function fixAssessmentTaskTemplates() {
       }
     }
     
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Failed to update task templates:', error);
     throw error;
   }

@@ -65,7 +65,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Calculate initial skill gaps (simplified for now)
-    const skillGaps = scenario.discoveryData?.requiredSkills?.map(skill => ({
+    const discoveryData = scenario.discoveryData as {
+      requiredSkills?: string[];
+      careerPath?: string;
+      careerLevel?: string;
+    };
+    const skillGaps = discoveryData.requiredSkills?.map(skill => ({
       skill,
       currentLevel: 60, // TODO: Get from user profile
       requiredLevel: 75,
@@ -93,7 +98,7 @@ export async function POST(request: NextRequest) {
       timeSpentSeconds: 0,
       pblData: {},
       discoveryData: {
-        explorationPath: [scenario.discoveryData?.careerPath || ''],
+        explorationPath: [discoveryData.careerPath || ''],
         milestones: [],
         personalityMatch: 85, // TODO: Calculate based on user profile
         skillGapAnalysis: skillGaps,
@@ -102,7 +107,7 @@ export async function POST(request: NextRequest) {
       assessmentData: {},
       metadata: {
         scenarioTitle: scenario.title,
-        careerLevel: scenario.discoveryData?.careerLevel
+        careerLevel: discoveryData.careerLevel
       }
     };
 
@@ -182,14 +187,21 @@ export async function GET(request: NextRequest) {
         ? Math.round((program.completedTaskCount / program.totalTaskCount) * 100)
         : 0;
 
+      const programDiscoveryData = program.discoveryData as {
+        careerReadiness?: number;
+        skillGapAnalysis?: unknown[];
+      };
+
       return {
         ...program,
         progress: {
           completionRate,
           tasksCompleted: program.completedTaskCount,
           totalTasks: program.totalTaskCount,
-          careerReadiness: program.discoveryData?.careerReadiness || 0,
-          skillGaps: program.discoveryData?.skillGapAnalysis?.length || 0
+          careerReadiness: programDiscoveryData.careerReadiness || 0,
+          skillGaps: Array.isArray(programDiscoveryData.skillGapAnalysis) 
+            ? programDiscoveryData.skillGapAnalysis.length 
+            : 0
         }
       };
     });

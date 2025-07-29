@@ -255,20 +255,24 @@ export async function GET(
     return NextResponse.json({
       id: task.id,
       title: (() => {
-        let titleObj = task.title;
-        // Handle case where title is a JSON string
-        if (typeof titleObj === 'string' && titleObj.startsWith('{')) {
-          try {
-            titleObj = JSON.parse(titleObj);
-          } catch {
-            return titleObj; // Return as-is if parse fails
+        const titleObj = task.title as string | Record<string, string> | undefined;
+        // Handle different types of title
+        if (typeof titleObj === 'string') {
+          // Check if it's a JSON string
+          if (titleObj.startsWith('{')) {
+            try {
+              const parsed = JSON.parse(titleObj);
+              return parsed[requestedLanguage] || parsed['en'] || titleObj;
+            } catch {
+              return titleObj; // Return as-is if parse fails
+            }
           }
+          return titleObj;
+        } else if (typeof titleObj === 'object' && titleObj !== null) {
+          // It's already an object
+          return titleObj[requestedLanguage] || titleObj['en'] || '';
         }
-        // Now extract the language-specific value
-        if (typeof titleObj === 'object' && titleObj !== null) {
-          return (titleObj as Record<string, string>)[requestedLanguage] || (titleObj as Record<string, string>)['en'] || '';
-        }
-        return titleObj as string || '';
+        return '';
       })(),
       type: task.type,
       status: task.status,
@@ -309,18 +313,21 @@ export async function GET(
       // Add career info
       careerType: ((scenario?.metadata as Record<string, unknown>)?.careerType || 'unknown') as string,
       scenarioTitle: (() => {
-        let titleObj = scenario?.title;
-        if (typeof titleObj === 'string' && titleObj.startsWith('{')) {
-          try {
-            titleObj = JSON.parse(titleObj);
-          } catch {
-            return titleObj as string || 'Discovery Scenario';
+        const titleObj = scenario?.title as string | Record<string, string> | undefined;
+        if (typeof titleObj === 'string') {
+          if (titleObj.startsWith('{')) {
+            try {
+              const parsed = JSON.parse(titleObj);
+              return parsed[requestedLanguage] || parsed['en'] || titleObj;
+            } catch {
+              return titleObj;
+            }
           }
+          return titleObj;
+        } else if (typeof titleObj === 'object' && titleObj !== null) {
+          return titleObj[requestedLanguage] || titleObj['en'] || 'Discovery Scenario';
         }
-        if (typeof titleObj === 'object' && titleObj !== null) {
-          return (titleObj as Record<string, string>)[requestedLanguage] || (titleObj as Record<string, string>)['en'] || 'Discovery Scenario';
-        }
-        return titleObj as string || 'Discovery Scenario';
+        return 'Discovery Scenario';
       })()
     });
   } catch (error) {
@@ -371,7 +378,6 @@ export async function PATCH(
     if (action === 'submit') {
       // Add user response as interaction
       const newInteraction: Interaction = {
-        id: crypto.randomUUID(),
         timestamp: new Date().toISOString(),
         type: 'user_input',
         content: content.response,
@@ -503,7 +509,6 @@ Return JSON:
         
         // Add AI evaluation as interaction
         const aiInteraction: Interaction = {
-          id: crypto.randomUUID(),
           timestamp: new Date().toISOString(),
           type: 'ai_response',
           content: evaluationResult,
@@ -675,11 +680,22 @@ Return JSON:
           yamlData = await loader.loadPath(careerType, language);
         }
         
+        // Extract title as string
+        const taskTitle = (() => {
+          const titleObj = task.title;
+          if (typeof titleObj === 'string') {
+            return titleObj;
+          } else if (typeof titleObj === 'object' && titleObj !== null) {
+            return (titleObj as Record<string, string>)[language] || (titleObj as Record<string, string>)['en'] || '';
+          }
+          return '';
+        })();
+        
         // Generate multilingual comprehensive qualitative feedback
         const comprehensivePrompt = generateComprehensiveFeedbackPrompt(
           userLanguage,
           careerType,
-          task.title || '',
+          taskTitle,
           (task.metadata as Record<string, unknown>)?.instructions as string || '',
           task.content || {},
           yamlData,
@@ -1023,10 +1039,21 @@ Return JSON:
           yamlData = await loader.loadPath(careerType, language);
         }
         
+        // Extract title as string
+        const taskTitleStr = (() => {
+          const titleObj = task.title;
+          if (typeof titleObj === 'string') {
+            return titleObj;
+          } else if (typeof titleObj === 'object' && titleObj !== null) {
+            return (titleObj as Record<string, string>)[language] || (titleObj as Record<string, string>)['en'] || '';
+          }
+          return '';
+        })();
+        
         const comprehensivePrompt = generateComprehensiveFeedbackPrompt(
           userLanguage,
           careerType,
-          task.title || '',
+          taskTitleStr,
           (task.metadata as Record<string, unknown>)?.instructions as string || '',
           task.content || {},
           yamlData,

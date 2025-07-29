@@ -174,9 +174,9 @@ export async function GET(request: NextRequest) {
               prerequisites: [],
               taskTemplates: [{
                 id: 'assessment-task',
-                title: 'Complete Assessment',
+                title: { en: 'Complete Assessment' },
                 type: 'question',
-                description: 'Answer the assessment questions'
+                description: { en: 'Answer the assessment questions' }
               }],
               taskCount: 1,
               xpRewards: { completion: 100 },

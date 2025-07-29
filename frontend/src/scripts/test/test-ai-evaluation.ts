@@ -63,7 +63,7 @@ async function testAIEvaluation() {
       }
     }
     
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Error:', error);
   }
 }

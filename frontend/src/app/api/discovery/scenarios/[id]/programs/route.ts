@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import type { TaskType } from '@/types/database';
 
 // GET handler to fetch user's programs for a scenario
 export async function GET(
@@ -172,7 +173,7 @@ export async function POST(
           scenarioTaskIndex: i,
           title: template.title as Record<string, string>,
           description: template.description as Record<string, string>,
-          type: (template.type as string) || 'creation',
+          type: (template.type as TaskType) || 'creation',
           status: i === 0 ? 'active' : 'pending',
           content: {
             scenarioId: scenario.id,

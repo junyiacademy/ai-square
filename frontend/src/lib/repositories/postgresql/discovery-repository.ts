@@ -328,7 +328,7 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
 
   // Private helper methods
 
-  private mapToDiscoveryScenario(row: any): IDiscoveryScenario {
+  private mapToDiscoveryScenario(row: Record<string, unknown>): IDiscoveryScenario {
     return {
       id: row.id,
       mode: 'discovery',
@@ -359,7 +359,7 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
     };
   }
 
-  private mapToMilestone(row: any): IDiscoveryMilestone {
+  private mapToMilestone(row: Record<string, unknown>): IDiscoveryMilestone {
     return {
       id: row.id,
       name: row.name,
@@ -370,7 +370,7 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
     };
   }
 
-  private mapToPortfolioItem(row: any): IPortfolioItem {
+  private mapToPortfolioItem(row: Record<string, unknown>): IPortfolioItem {
     return {
       id: row.id,
       title: row.title,
@@ -387,7 +387,7 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
     };
   }
 
-  private calculateMatchScore(skillMatches: any[]): number {
+  private calculateMatchScore(skillMatches: Array<{userLevel: number; requiredLevel: number}>): number {
     if (skillMatches.length === 0) return 0;
     
     const totalScore = skillMatches.reduce((sum, match) => {
@@ -408,8 +408,8 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
   }
 
   private generateRecommendationReasons(
-    skillMatches: any[],
-    career: IDiscoveryScenario
+    skillMatches: Array<{skill: string; userLevel: number; requiredLevel: number}>,
+    _career: IDiscoveryScenario
   ): string[] {
     const reasons: string[] = [];
     
@@ -434,7 +434,7 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
     return reasons;
   }
 
-  private estimateTimeToReady(skillMatches: any[]): number {
+  private estimateTimeToReady(skillMatches: Array<{userLevel: number; requiredLevel: number}>): number {
     // 估算每個技能差距需要的週數
     const totalWeeks = skillMatches.reduce((sum, match) => {
       const gap = Math.max(0, match.requiredLevel - match.userLevel);

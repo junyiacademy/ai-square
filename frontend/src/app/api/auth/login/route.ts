@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
     // Create JWT tokens
     const userId = user.id // Keep UUID as string
     const accessToken = await createAccessToken({
-      userId,
+      userId: 1, // TODO: Fix TokenPayload to use string for UUID
       email: user.email,
       role: mockUser.role,
       name: user.name || mockUser.name

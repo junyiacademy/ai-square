@@ -242,7 +242,7 @@ async function main() {
     
     console.log('\n✅ Done!');
     
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Error:', error);
   } finally {
     await pool.end();

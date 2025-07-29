@@ -109,7 +109,7 @@ async function testEvaluationFlow() {
       console.log('\n✅ Domain scores successfully saved and retrieved');
     }
     
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Test failed:', error);
   }
 }

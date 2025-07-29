@@ -347,7 +347,7 @@ async function testMode(mode: 'pbl' | 'assessment' | 'discovery') {
 
     console.log(`\n✅ ${mode.toUpperCase()} mode test completed successfully!`);
 
-  } catch (error) {
+  } catch (_error) {
     console.error(`\n❌ Error in ${mode} mode:`, error);
     results.push({ 
       mode, 
@@ -484,7 +484,7 @@ async function main() {
 
     console.log('\n✅ All tests completed successfully!');
     process.exit(0);
-  } catch (error) {
+  } catch (_error) {
     console.error('\n❌ Test suite failed:', error);
     process.exit(1);
   } finally {

@@ -456,7 +456,7 @@ export default function CompetencyKnowledgeGraph({
     });
 
     return { nodes, links };
-  }, [questions, userAnswers, ksaMaps, result, t, calculateKSAMastery]);
+  }, [ksaMaps, result, t, calculateKSAMastery]);
 
   // Traffic light colors for mastery status
   const getTrafficLightColor = (mastery: number): string => {

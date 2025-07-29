@@ -2,7 +2,6 @@
 
 import { readFile } from 'fs/promises';
 import * as yaml from 'js-yaml';
-import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
 import path from 'path';
 import { repositoryFactory } from '../lib/repositories/base/repository-factory';
@@ -53,7 +52,7 @@ async function loadYAMLFile(filePath: string): Promise<unknown> {
   try {
     const content = await readFile(filePath, 'utf8');
     return yaml.load(content);
-  } catch (error) {
+  } catch (_error) {
     console.error(`Error loading ${filePath}:`, error);
     return null;
   }
@@ -71,7 +70,7 @@ async function clearExistingScenarios(mode: LearningMode) {
     try {
       await scenarioRepo.delete(scenario.id);
       console.log(`  ✅ Deleted: ${scenario.id}`);
-    } catch (error) {
+    } catch (_error) {
       console.error(`  ❌ Failed to delete ${scenario.id}:`, error);
     }
   }
@@ -150,7 +149,7 @@ async function importPBLScenarios() {
     try {
       const created = await scenarioRepo.create(scenario);
       console.log(`  ✅ Created PBL scenario: ${created.id} - ${title.en}`);
-    } catch (error) {
+    } catch (_error) {
       console.error(`  ❌ Failed to create PBL scenario ${folder}:`, error);
     }
   }
@@ -236,7 +235,7 @@ async function importDiscoveryScenarios() {
     try {
       const created = await scenarioRepo.create(scenario);
       console.log(`  ✅ Created Discovery scenario: ${created.id} - ${title.en}`);
-    } catch (error) {
+    } catch (_error) {
       console.error(`  ❌ Failed to create Discovery scenario ${careerType}:`, error);
     }
   }
@@ -267,7 +266,7 @@ async function main() {
     console.log(`  - Discovery scenarios: ${discoveryCount}`);
     console.log(`  - Assessment scenarios: ${assessmentCount}`);
     
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Import failed:', error);
     process.exit(1);
   }

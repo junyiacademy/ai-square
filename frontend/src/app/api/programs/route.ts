@@ -117,8 +117,8 @@ export async function POST(request: NextRequest) {
           scenarioTaskIndex: index,
           type: (task.type as TaskType) || 'question',
           status: index === 0 ? 'active' : 'pending',
-          title: task.title as string,
-          description: task.description as string,
+          title: { en: task.title as string },
+          description: { en: task.description as string },
           // DDD: content = 用戶看到的內容
           content: {
             description: task.description as string,

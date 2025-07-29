@@ -67,7 +67,7 @@ async function testDatabaseConnection() {
       allTablesExist ? undefined : `Missing tables: ${expectedTables.filter(t => !actualTables.includes(t)).join(', ')}`,
       { tables: actualTables.length }, Date.now() - start);
     
-  } catch (error) {
+  } catch (_error) {
     recordResult('Database', 'Connection test', 'fail', error instanceof Error ? error.message : String(error));
   }
 }
@@ -192,7 +192,7 @@ async function testModeDataFlow(mode: 'pbl' | 'assessment' | 'discovery') {
     
     recordResult(`${mode} Data Flow`, 'Complete program', 'pass', undefined, undefined, Date.now() - start);
     
-  } catch (error) {
+  } catch (_error) {
     recordResult(`${mode} Data Flow`, 'Error', 'fail', error instanceof Error ? error.message : String(error));
   }
 }
@@ -214,7 +214,7 @@ async function testAPIEndpoints() {
         response.ok ? undefined : `Status: ${response.status}`,
         { count: Array.isArray(data) ? data.length : 0 }
       );
-    } catch (error) {
+    } catch (_error) {
       recordResult('API Endpoints', `GET /api/${mode}/scenarios`, 'fail', 
         error instanceof Error ? error.message : String(error));
     }
@@ -227,7 +227,7 @@ async function testAPIEndpoints() {
       response.ok ? 'pass' : 'fail',
       response.ok ? undefined : `Status: ${response.status}`
     );
-  } catch (error) {
+  } catch (_error) {
     recordResult('API Endpoints', 'GET /api/auth/check', 'fail', 
       error instanceof Error ? error.message : String(error));
   }
@@ -254,7 +254,7 @@ async function testFrontendPages() {
         response.ok ? 'pass' : 'fail',
         response.ok ? undefined : `Status: ${response.status}`
       );
-    } catch (error) {
+    } catch (_error) {
       recordResult('Frontend Pages', `GET ${page}`, 'fail', 
         error instanceof Error ? error.message : String(error));
     }
@@ -399,7 +399,7 @@ async function main() {
     console.log('\n✅ Full system test completed!');
     process.exit(0);
     
-  } catch (error) {
+  } catch (_error) {
     console.error('\n❌ Test suite failed:', error);
     process.exit(1);
   } finally {
@@ -425,7 +425,7 @@ async function preflight() {
   try {
     await pool.query('SELECT 1');
     console.log('✅ Database is running');
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Database is not running. Please run: make db-up');
     process.exit(1);
   }

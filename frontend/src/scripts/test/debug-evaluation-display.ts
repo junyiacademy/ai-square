@@ -68,7 +68,7 @@ async function checkEvaluationData() {
       }
     });
     
-  } catch (error) {
+  } catch (_error) {
     console.error('Error checking evaluation data:', error);
   } finally {
     await pool.end();

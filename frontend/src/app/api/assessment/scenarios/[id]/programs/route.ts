@@ -289,8 +289,8 @@ export async function POST(
           taskIndex: i,
           type: template.type || 'question',
           status: 'pending',
-          title: String(template.title || `Task ${i + 1}`),
-          description: String(template.description || template.instructions || 'Complete the assessment questions'),
+          title: { en: String(template.title || `Task ${i + 1}`) },
+          description: { en: String(template.description || template.instructions || 'Complete the assessment questions') },
           content: {
             instructions: String(template.instructions || template.description || 'Complete the assessment questions'),
             questions: localizedQuestions

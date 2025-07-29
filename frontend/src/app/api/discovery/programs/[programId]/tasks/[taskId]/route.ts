@@ -75,7 +75,7 @@ export async function PATCH(
     }
 
     // Prepare update data
-    const updateData: any = {
+    const updateData: Record<string, unknown> = {
       updatedAt: new Date().toISOString()
     };
 
@@ -113,7 +113,7 @@ export async function PATCH(
     }
 
     // Update task
-    const updatedTask = await taskRepo.update(taskId, updateData);
+    const updatedTask = await taskRepo.update?.(taskId, updateData);
 
     // Update program progress if task was completed
     if (body.status === 'completed' && task.status !== 'completed') {
@@ -126,11 +126,10 @@ export async function PATCH(
         t.id !== taskId && t.status === 'pending'
       );
 
-      await programRepo.update(programId, {
+      await programRepo.update?.(programId, {
         completedTaskCount: completedCount,
         currentTaskIndex: nextPendingIndex >= 0 ? nextPendingIndex : completedCount,
-        lastActivityAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        lastActivityAt: new Date().toISOString()
       });
     }
 
