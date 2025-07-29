@@ -343,7 +343,7 @@ export class AssessmentLearningService implements BaseLearningService {
    */
   async generateFeedback(
     evaluationId: string,
-    _language: string
+    language: string
   ): Promise<string> {
     const evaluation = await this.evaluationRepo.findById(evaluationId);
     if (!evaluation) {
@@ -351,7 +351,9 @@ export class AssessmentLearningService implements BaseLearningService {
     }
 
     // Return pre-generated feedback for now
-    // TODO: Implement AI-based feedback generation
+    // TODO: Implement AI-based feedback generation with language support
+    // For now, we acknowledge the language parameter for future use
+    void language; // Mark as intentionally unused
     return evaluation.feedbackText || 'Good job!';
   }
 

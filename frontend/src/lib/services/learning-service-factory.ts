@@ -109,18 +109,22 @@ export class LearningServiceFactory implements ILearningServiceFactory {
         };
       },
 
-      async getNextTask(_programId: string) {
+      async getNextTask(programId: string) {
         // Assessment doesn't have multiple tasks
+        void programId; // Mark as intentionally unused - assessment has single task flow
         return null;
       },
 
-      async evaluateTask(_taskId: string) {
+      async evaluateTask(taskId: string) {
         // This would be implemented if needed
+        void taskId; // Mark as intentionally unused - assessment evaluation is handled differently
         throw new Error('Not implemented for assessment mode');
       },
 
-      async generateFeedback(_evaluationId: string, _language: string) {
+      async generateFeedback(evaluationId: string, language: string) {
         // This would be implemented with AI service
+        void evaluationId; // Mark as intentionally unused for now
+        void language; // Mark as intentionally unused for now
         return 'Thank you for completing the assessment.';
       }
     };
