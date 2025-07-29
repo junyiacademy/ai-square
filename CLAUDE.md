@@ -727,6 +727,77 @@ npm run typecheck && npm run lint && npm run test:ci
    npx playwright test --headed
    ```
 
+#### Rule #16: 服務層資料結構驗證與 TDD 錯誤修復
+
+**🚨 重要：遇到錯誤時必須先理解實際資料結構，再修復介面定義！**
+
+**錯誤修復流程 (TDD):**
+1. **檢查實際資料結構** - 查看資料庫中的真實 JSON 資料
+2. **識別介面與實際不符** - 找出 TypeScript 介面與資料的差異  
+3. **寫測試驗證問題存在** - 建立重現錯誤的測試
+4. **修復介面定義** - 更新 TypeScript 介面符合實際資料
+5. **支援向後相容** - 保留舊格式支援，避免破壞現有功能
+6. **測試驗證修復** - 確認所有測試通過
+
+**常見資料結構錯誤類型:**
+
+1. **Assessment Service 資料格式不一致**
+   ```typescript
+   // 錯誤：期望 questionBankByLanguage 但實際是扁平化結構
+   const questionBank = assessmentData.questionBankByLanguage[language];
+   
+   // 修復：支援兩種格式
+   if (questionBankByLanguage[language]) {
+     questionBank = questionBankByLanguage[language];
+   } else {
+     // 支援扁平化格式 questionBank
+     const flatQuestionBank = assessmentData.questionBank || [];
+     questionBank = flatQuestionBank.flatMap(domain => domain.questions || []);
+   }
+   ```
+
+2. **Discovery Service 介面定義過時**
+   ```typescript
+   // 錯誤：使用不存在的屬性
+   discoveryData.career.title[language]  // career 不存在於新格式
+   
+   // 修復：使用實際存在的屬性並提供 fallback
+   (scenario.title as Record<string, string>)[language] || 'Career Path'
+   discoveryData.pathId  // pathId 確實存在於 discoveryData 中
+   ```
+
+3. **動態屬性存取類型安全**
+   ```typescript
+   // 錯誤：假設所有 skill 都有相同屬性
+   nextSkill.unlocks  // advanced_skills 沒有 unlocks，只有 requires
+   
+   // 修復：使用 type guard
+   'unlocks' in nextSkill ? nextSkill.unlocks : []
+   ```
+
+4. **Union Types 的正確處理**
+   ```typescript
+   // 錯誤：直接比較 union type
+   advancedSkills.includes(nextSkill)  // 型別不符
+   
+   // 修復：比較唯一識別屬性
+   advancedSkills.some(skill => skill.id === nextSkill.id)
+   ```
+
+**防範措施:**
+- [ ] 新功能開發前先檢查實際資料結構
+- [ ] 定義介面時查看資料庫中的真實 JSON (`SELECT jsonb_pretty(data) FROM table`)
+- [ ] 使用 optional properties (`?`) 和 union types 處理多種格式
+- [ ] 建立資料驗證輔助函數
+- [ ] 定期同步介面定義與實際資料結構
+
+**驗證檢查清單:**
+- [ ] `npm run typecheck` 無錯誤
+- [ ] 所有測試通過
+- [ ] 驗證腳本可以執行
+- [ ] 資料庫查詢返回預期結果
+- [ ] 向後相容性測試通過
+
 #### Enforcement
 - **Build will fail** if any rule is violated
 - **PR will be rejected** if TypeScript errors exist
