@@ -560,6 +560,110 @@ assessment_data/
 - [ ] 使用 `sourcePath` 記錄主要語言版本路徑
 - [ ] 在 `sourceMetadata` 中記錄所有語言版本路徑
 
+#### Rule #15: Test File TypeScript Compliance
+
+**🚨 測試檔案必須嚴格遵守所有 TypeScript 規則，零例外！**
+
+**為什麼測試也要嚴格？**
+1. **測試即文檔** - 測試展示正確用法，錯誤的型別會誤導開發者
+2. **防止誤用** - 型別不符的測試無法正確驗證功能
+3. **維護一致性** - 整個程式碼庫應該有統一標準
+4. **發現真實問題** - 嚴格型別檢查能在測試階段發現介面設計缺陷
+
+**測試檔案常見錯誤與修正：**
+
+1. **多語言欄位必須使用 Record<string, string>**
+   ```typescript
+   // ❌ 錯誤：測試中使用字串
+   const mockScenario = {
+     title: 'Test Scenario',
+     description: 'Test Description'
+   };
+   
+   // ✅ 正確：與生產代碼保持一致
+   const mockScenario = {
+     title: { en: 'Test Scenario' },
+     description: { en: 'Test Description' }
+   };
+   ```
+
+2. **必須導入所有使用的型別**
+   ```typescript
+   // ❌ 錯誤：未導入 TaskType
+   { type: 'question' as TaskType }
+   
+   // ✅ 正確：明確導入
+   import type { TaskType } from '@/types/unified-learning';
+   { type: 'question' as TaskType }
+   ```
+
+3. **Mock 物件必須符合介面定義**
+   ```typescript
+   // ❌ 錯誤：添加不存在的屬性
+   const mockProgram: IProgram = {
+     // ...
+     discoveryData: {
+       explorationPath: [],
+       portfolioProjects: []  // 此屬性不在介面中！
+     }
+   };
+   
+   // ✅ 正確：只使用介面定義的屬性
+   const mockProgram: IProgram = {
+     // ...
+     discoveryData: {
+       explorationPath: [],
+       milestones: []  // 使用正確的屬性
+     }
+   };
+   ```
+
+4. **不能導入未導出的函數**
+   ```typescript
+   // ❌ 錯誤：嘗試導入內部函數
+   import { clearCache } from '../route';
+   
+   // ✅ 正確：只導入公開的 API
+   import { GET, POST } from '../route';
+   ```
+
+5. **NextRequest 建構子格式**
+   ```typescript
+   // ❌ 錯誤：物件格式
+   new NextRequest({
+     method: 'POST',
+     url: 'http://...'
+   })
+   
+   // ✅ 正確：URL 在前，選項在後
+   new NextRequest('http://...', {
+     method: 'POST',
+     body: JSON.stringify(data)
+   })
+   ```
+
+**測試檔案檢查清單：**
+- [ ] 所有多語言欄位使用 `Record<string, string>`
+- [ ] 所有型別都有正確的 import
+- [ ] Mock 資料完全符合介面定義
+- [ ] 沒有存取不存在的屬性
+- [ ] 沒有使用 `any` 型別
+- [ ] 沒有使用 `@ts-ignore` 或 `@ts-expect-error`
+
+**執行檢查：**
+```bash
+# 只檢查測試檔案的 TypeScript 錯誤
+npx tsc --noEmit 2>&1 | grep -E "test\.(ts|tsx)"
+
+# 檢查測試檔案的 ESLint 問題
+npx eslint '**/*.test.{ts,tsx}'
+```
+
+**零容忍政策：**
+- 測試檔案的 TypeScript 錯誤必須**立即修復**
+- PR 不能包含任何測試檔案的型別錯誤
+- 測試必須展示**正確的**使用方式
+
 ### 🛡️ TypeScript Error Prevention Summary
 
 #### Common Error Patterns & Solutions
@@ -626,9 +730,11 @@ npm run typecheck && npm run lint && npm run test:ci
 #### Enforcement
 - **Build will fail** if any rule is violated
 - **PR will be rejected** if TypeScript errors exist
-- **No exceptions** for production code
+- **No exceptions** for production code OR test code
 - **Fix immediately** when errors appear
 - **Always use TDD** when fixing errors to avoid breaking existing functionality
+- **Test files must follow same standards** as production code
+- **Zero tolerance** for type errors in tests
 
 ### Git Commit Guidelines
 
@@ -639,7 +745,12 @@ npm run typecheck && npm run lint && npm run test:ci
    ```bash
    cd frontend && npx tsc --noEmit
    ```
-   **如果有任何 TypeScript 錯誤，必須先修復才能繼續！**
+   **如果有任何 TypeScript 錯誤（包含測試檔案），必須先修復才能繼續！**
+   
+   檢查測試檔案錯誤：
+   ```bash
+   npx tsc --noEmit 2>&1 | grep -E "test\.(ts|tsx)"
+   ```
 
 2. **ESLint Check (TypeScript 通過後才檢查)**: 
    ```bash
