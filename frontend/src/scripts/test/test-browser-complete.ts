@@ -117,7 +117,7 @@ async function setupTestData() {
     console.log('  ✅ Test data created successfully');
     return { userId, scenarioIds };
     
-  } catch (_error) {
+  } catch (error) {
     console.error('  ❌ Failed to create test data:', error);
     throw error;
   }
@@ -145,7 +145,7 @@ async function testBrowserScenarios(browser: Browser) {
     } else {
       recordResult('Browser', 'Login button visible', 'fail', 'Login button not found');
     }
-  } catch (_error) {
+  } catch (error) {
     recordResult('Browser', 'Home page loads', 'fail', error instanceof Error ? error.message : String(error));
     await page.screenshot({ path: 'test-screenshots/home-error.png' });
   }
@@ -169,7 +169,7 @@ async function testBrowserScenarios(browser: Browser) {
         recordResult('Browser', `${path} requires login`, needsLogin ? 'pass' : 'fail', 
           needsLogin ? undefined : 'Page accessible without login');
       }
-    } catch (_error) {
+    } catch (error) {
       recordResult('Browser', `${path} protection check`, 'fail', error instanceof Error ? error.message : String(error));
     }
   }
@@ -201,7 +201,7 @@ async function testBrowserScenarios(browser: Browser) {
       recordResult('Browser', 'User menu visible after login', 'fail', 'User menu not found');
     }
     
-  } catch (_error) {
+  } catch (error) {
     recordResult('Browser', 'Login flow', 'fail', error instanceof Error ? error.message : String(error));
     await page.screenshot({ path: 'test-screenshots/login-error.png' });
   }
@@ -245,7 +245,7 @@ async function testBrowserScenarios(browser: Browser) {
         recordResult('Browser', `${mode} scenarios loaded`, 'fail', 'No scenarios found');
       }
       
-    } catch (_error) {
+    } catch (error) {
       recordResult('Browser', `${mode} module test`, 'fail', error instanceof Error ? error.message : String(error));
       await page.screenshot({ path: `test-screenshots/${mode}-error.png` });
     }
@@ -282,7 +282,7 @@ async function testBrowserScenarios(browser: Browser) {
     } else {
       recordResult('Browser', 'Language selector found', 'fail', 'Language selector not visible');
     }
-  } catch (_error) {
+  } catch (error) {
     recordResult('Browser', 'Language switching', 'fail', error instanceof Error ? error.message : String(error));
   }
   
@@ -315,7 +315,7 @@ async function testBrowserScenarios(browser: Browser) {
     } else {
       recordResult('Browser', 'User menu for logout', 'fail', 'User menu not found');
     }
-  } catch (_error) {
+  } catch (error) {
     recordResult('Browser', 'Logout flow', 'fail', error instanceof Error ? error.message : String(error));
   }
   
@@ -333,7 +333,7 @@ async function testBrowserScenarios(browser: Browser) {
       recordResult('Browser', 'Protected pages after logout', needsLogin ? 'pass' : 'fail',
         needsLogin ? undefined : 'Page still accessible after logout');
     }
-  } catch (_error) {
+  } catch (error) {
     recordResult('Browser', 'Post-logout protection', 'fail', error instanceof Error ? error.message : String(error));
   }
   
@@ -401,7 +401,7 @@ async function main() {
     const totalFailed = results.filter(r => r.status === 'fail').length;
     process.exit(totalFailed === 0 ? 0 : 1);
     
-  } catch (_error) {
+  } catch (error) {
     console.error('\n❌ Test suite failed:', error);
     process.exit(1);
   } finally {

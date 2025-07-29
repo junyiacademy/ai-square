@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Test interactions API endpoint
  * Usage: cd frontend && npx tsx src/scripts/test/test-interactions-api.ts

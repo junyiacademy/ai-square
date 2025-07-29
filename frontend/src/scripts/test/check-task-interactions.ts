@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Script to check task interactions in database
  * Usage: cd frontend && npx tsx src/scripts/test/check-task-interactions.ts

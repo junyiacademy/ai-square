@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 #!/usr/bin/env node
 import 'dotenv/config';
 import { chromium, Browser } from 'playwright';

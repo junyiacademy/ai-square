@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Debug evaluation display issue
  * Usage: cd frontend && npx tsx src/scripts/test/debug-evaluation-display.ts

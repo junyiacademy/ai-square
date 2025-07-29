@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 #!/usr/bin/env tsx
 /**
  * Verify GCS to PostgreSQL Migration

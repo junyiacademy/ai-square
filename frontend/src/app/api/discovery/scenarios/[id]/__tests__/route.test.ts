@@ -43,8 +43,8 @@ describe('GET /api/discovery/scenarios/[id]', () => {
     estimatedMinutes: 180,
     prerequisites: [],
     taskTemplates: [
-      { id: 'task-1', title: 'Introduction', type: 'exploration' },
-      { id: 'task-2', title: 'Build First App', type: 'project' }
+      { id: 'task-1', title: { en: 'Introduction', zh: '介紹' }, type: 'exploration' },
+      { id: 'task-2', title: { en: 'Build First App', zh: '建立第一個應用' }, type: 'creation' }
     ],
     taskCount: 2,
     xpRewards: { completion: 1000 },
@@ -101,7 +101,7 @@ describe('GET /api/discovery/scenarios/[id]', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios/550e8400-e29b-41d4-a716-446655440001');
 
       // Act
-      const response = await GET(request, { params: { id: '550e8400-e29b-41d4-a716-446655440001' } });
+      const response = await GET(request, { params: Promise.resolve({ id: '550e8400-e29b-41d4-a716-446655440001' }) });
       const data = await response.json();
 
       // Assert
@@ -119,7 +119,7 @@ describe('GET /api/discovery/scenarios/[id]', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios/550e8400-e29b-41d4-a716-446655440001?lang=zh');
 
       // Act
-      const response = await GET(request, { params: { id: '550e8400-e29b-41d4-a716-446655440001' } });
+      const response = await GET(request, { params: Promise.resolve({ id: '550e8400-e29b-41d4-a716-446655440001' }) });
       const data = await response.json();
 
       // Assert
@@ -136,7 +136,7 @@ describe('GET /api/discovery/scenarios/[id]', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios/550e8400-e29b-41d4-a716-446655440001');
 
       // Act
-      const response = await GET(request, { params: { id: '550e8400-e29b-41d4-a716-446655440001' } });
+      const response = await GET(request, { params: Promise.resolve({ id: '550e8400-e29b-41d4-a716-446655440001' }) });
       const data = await response.json();
 
       // Assert
@@ -154,7 +154,7 @@ describe('GET /api/discovery/scenarios/[id]', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios/550e8400-e29b-41d4-a716-446655440001?lang=zh');
 
       // Act
-      const response = await GET(request, { params: { id: '550e8400-e29b-41d4-a716-446655440001' } });
+      const response = await GET(request, { params: Promise.resolve({ id: '550e8400-e29b-41d4-a716-446655440001' }) });
       const data = await response.json();
 
       // Assert
@@ -173,7 +173,7 @@ describe('GET /api/discovery/scenarios/[id]', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios/non-existent-id');
 
       // Act
-      const response = await GET(request, { params: { id: 'non-existent-id' } });
+      const response = await GET(request, { params: Promise.resolve({ id: 'non-existent-id' }) });
       const data = await response.json();
 
       // Assert
@@ -193,7 +193,7 @@ describe('GET /api/discovery/scenarios/[id]', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios/550e8400-e29b-41d4-a716-446655440001');
 
       // Act
-      const response = await GET(request, { params: { id: '550e8400-e29b-41d4-a716-446655440001' } });
+      const response = await GET(request, { params: Promise.resolve({ id: '550e8400-e29b-41d4-a716-446655440001' }) });
       const data = await response.json();
 
       // Assert
@@ -208,7 +208,7 @@ describe('GET /api/discovery/scenarios/[id]', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios/550e8400-e29b-41d4-a716-446655440001');
 
       // Act
-      const response = await GET(request, { params: { id: '550e8400-e29b-41d4-a716-446655440001' } });
+      const response = await GET(request, { params: Promise.resolve({ id: '550e8400-e29b-41d4-a716-446655440001' }) });
       const data = await response.json();
 
       // Assert
@@ -226,7 +226,7 @@ describe('GET /api/discovery/scenarios/[id]', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios/550e8400-e29b-41d4-a716-446655440001');
 
       // Act
-      const response = await GET(request, { params: { id: '550e8400-e29b-41d4-a716-446655440001' } });
+      const response = await GET(request, { params: Promise.resolve({ id: '550e8400-e29b-41d4-a716-446655440001' }) });
       const data = await response.json();
 
       // Assert
@@ -243,7 +243,7 @@ describe('GET /api/discovery/scenarios/[id]', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios/550e8400-e29b-41d4-a716-446655440001');
 
       // Act
-      const response = await GET(request, { params: { id: '550e8400-e29b-41d4-a716-446655440001' } });
+      const response = await GET(request, { params: Promise.resolve({ id: '550e8400-e29b-41d4-a716-446655440001' }) });
       const data = await response.json();
 
       // Assert
@@ -273,7 +273,7 @@ describe('GET /api/discovery/scenarios/[id]', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios/550e8400-e29b-41d4-a716-446655440001?lang=zh');
 
       // Act
-      const response = await GET(request, { params: { id: '550e8400-e29b-41d4-a716-446655440001' } });
+      const response = await GET(request, { params: Promise.resolve({ id: '550e8400-e29b-41d4-a716-446655440001' }) });
       const data = await response.json();
 
       // Assert

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * E2E Test Script for All Learning Modes
  * Tests PBL, Discovery, and Assessment modes with PostgreSQL database

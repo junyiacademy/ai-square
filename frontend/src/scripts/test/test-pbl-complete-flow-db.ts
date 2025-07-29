@@ -65,7 +65,7 @@ async function createTestUser() {
     recordResult('Create test user', 'pass', undefined, { userId });
     return userId;
     
-  } catch (_error) {
+  } catch (error) {
     recordResult('Create test user', 'fail', error instanceof Error ? error.message : String(error));
     throw error;
   }
@@ -136,7 +136,7 @@ async function createPBLScenario() {
     recordResult('Create PBL scenario', 'pass', undefined, { scenarioId });
     return scenarioId;
     
-  } catch (_error) {
+  } catch (error) {
     recordResult('Create PBL scenario', 'fail', error instanceof Error ? error.message : String(error));
     throw error;
   }
@@ -292,7 +292,7 @@ async function testPBLAPIFlow(userId: string, scenarioId: string) {
     
     return { programId, taskId };
     
-  } catch (_error) {
+  } catch (error) {
     const duration = Date.now() - startTime;
     let errorMessage = 'Unknown error';
     
@@ -350,7 +350,7 @@ async function verifyDatabaseState(programId: string) {
       types: evalResult.rows.map(e => e.evaluation_type)
     });
     
-  } catch (_error) {
+  } catch (error) {
     recordResult('Database verification', 'fail', error instanceof Error ? error.message : String(error));
   }
 }
@@ -411,7 +411,7 @@ async function cleanup(userId?: string) {
     await pool.query(`DELETE FROM scenarios WHERE source_path = 'test_pbl_scenario.yaml'`);
     
     console.log('  ✅ Cleanup completed');
-  } catch (_error) {
+  } catch (error) {
     console.error('  ❌ Cleanup error:', error);
   }
 }
@@ -438,7 +438,7 @@ async function main() {
     const totalFailed = results.filter(r => r.status === 'fail').length;
     process.exit(totalFailed === 0 ? 0 : 1);
     
-  } catch (_error) {
+  } catch (error) {
     console.error('\n❌ Test suite failed:', error);
     generateReport();
     process.exit(1);

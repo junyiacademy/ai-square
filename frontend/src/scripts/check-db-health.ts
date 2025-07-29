@@ -67,7 +67,7 @@ async function checkHealth() {
       console.log(chalk.red('  ❌ Both systems have issues'));
     }
 
-  } catch (_error) {
+  } catch (error) {
     spinner.fail('Health check failed');
     console.error(chalk.red('\n❌ Error:'), error);
     process.exit(1);

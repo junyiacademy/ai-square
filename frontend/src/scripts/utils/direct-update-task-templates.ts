@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { parse } from 'yaml';

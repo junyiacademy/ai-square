@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Test cache fix for interactions
  * Usage: cd frontend && npm run dev

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 #!/usr/bin/env npx tsx
 
 import { readFile } from 'fs/promises';

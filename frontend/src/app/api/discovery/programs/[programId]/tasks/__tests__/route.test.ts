@@ -60,55 +60,81 @@ describe('Discovery Tasks API', () => {
       id: 'task1',
       programId: 'prog123',
       mode: 'discovery',
+      taskIndex: 0,
       type: 'exploration',
       title: { en: 'Introduction to Software Development' },
-      instructions: { en: 'Learn about the basics' },
-      order: 0,
+      description: { en: 'Learn about the basics' },
       status: 'completed',
+      content: { instructions: { en: 'Learn about the basics' } },
+      interactions: [],
+      interactionCount: 0,
+      userResponse: {},
       score: 100,
-      feedback: { en: 'Great job!' },
+      maxScore: 100,
+      allowedAttempts: 1,
+      attemptCount: 1,
       timeSpentSeconds: 300,
+      aiConfig: {},
       completedAt: new Date().toISOString(),
       startedAt: new Date().toISOString(),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      context: {},
-      interactions: [],
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {},
       metadata: {}
     },
     {
       id: 'task2',
       programId: 'prog123',
       mode: 'discovery',
-      type: 'practice',
+      taskIndex: 1,
+      type: 'exploration',
       title: { en: 'Build Your First App' },
-      instructions: { en: 'Create a simple web application' },
-      order: 1,
+      description: { en: 'Create a simple web application' },
       status: 'active',
+      content: { instructions: { en: 'Create a simple web application' } },
+      interactions: [],
+      interactionCount: 0,
+      userResponse: {},
       score: 0,
+      maxScore: 100,
+      allowedAttempts: 1,
+      attemptCount: 0,
       timeSpentSeconds: 0,
+      aiConfig: {},
       startedAt: new Date().toISOString(),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      context: {},
-      interactions: [],
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {},
       metadata: {}
     },
     {
       id: 'task3',
       programId: 'prog123',
       mode: 'discovery',
-      type: 'reflection',
+      taskIndex: 2,
+      type: 'exploration',
       title: { en: 'Career Reflection' },
-      instructions: { en: 'Reflect on your learning journey' },
-      order: 2,
+      description: { en: 'Reflect on your learning journey' },
       status: 'pending',
+      content: { instructions: { en: 'Reflect on your learning journey' } },
+      interactions: [],
+      interactionCount: 0,
+      userResponse: {},
       score: 0,
+      maxScore: 100,
+      allowedAttempts: 1,
+      attemptCount: 0,
       timeSpentSeconds: 0,
+      aiConfig: {},
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      context: {},
-      interactions: [],
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {},
       metadata: {}
     }
   ];
@@ -152,7 +178,7 @@ describe('Discovery Tasks API', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks');
 
       // Act
-      const response = await GET(request, { params: { programId: 'prog123' } });
+      const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) });
       const data = await response.json();
 
       // Assert
@@ -166,8 +192,8 @@ describe('Discovery Tasks API', () => {
       // Arrange
       const tasksWithMultilang = mockTasks.map(task => ({
         ...task,
-        title: { en: task.title.en, zh: `${task.title.en} (中文)` },
-        instructions: { en: task.instructions.en, zh: `${task.instructions.en} (中文)` }
+        title: { en: task.title!.en, zh: `${task.title!.en} (中文)` },
+        description: { en: task.description!.en, zh: `${task.description!.en} (中文)` }
       }));
 
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
@@ -177,13 +203,13 @@ describe('Discovery Tasks API', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks?lang=zh');
 
       // Act
-      const response = await GET(request, { params: { programId: 'prog123' } });
+      const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) });
       const data = await response.json();
 
       // Assert
       expect(response.status).toBe(200);
       expect(data.data.tasks[0].title).toContain('(中文)');
-      expect(data.data.tasks[0].instructions).toContain('(中文)');
+      expect(data.data.tasks[0].description).toContain('(中文)');
     });
 
     it('should include task progress information', async () => {
@@ -195,7 +221,7 @@ describe('Discovery Tasks API', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks');
 
       // Act
-      const response = await GET(request, { params: { programId: 'prog123' } });
+      const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) });
       const data = await response.json();
 
       // Assert
@@ -213,7 +239,7 @@ describe('Discovery Tasks API', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks');
 
       // Act
-      const response = await GET(request, { params: { programId: 'prog123' } });
+      const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) });
       const data = await response.json();
 
       // Assert
@@ -232,7 +258,7 @@ describe('Discovery Tasks API', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks');
 
       // Act
-      const response = await GET(request, { params: { programId: 'prog123' } });
+      const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) });
       const data = await response.json();
 
       // Assert
@@ -267,7 +293,7 @@ describe('Discovery Tasks API', () => {
       });
 
       // Act
-      const response = await POST(request, { params: { programId: 'prog123' } });
+      const response = await POST(request, { params: Promise.resolve({ programId: 'prog123' }) });
       const data = await response.json();
 
       // Assert
@@ -294,7 +320,7 @@ describe('Discovery Tasks API', () => {
       });
 
       // Act
-      await POST(request, { params: { programId: 'prog123' } });
+      await POST(request, { params: Promise.resolve({ programId: 'prog123' }) });
 
       // Assert
       expect(mockProgramRepo.update).toHaveBeenCalledWith('prog123', {
@@ -330,7 +356,7 @@ describe('Discovery Tasks API', () => {
       });
 
       // Act
-      const response = await PATCH(request, { params: { programId: 'prog123', taskId: 'task2' } });
+      const response = await PATCH(request, { params: Promise.resolve({ programId: 'prog123', taskId: 'task2' }) });
       const data = await response.json();
 
       // Assert
@@ -358,7 +384,7 @@ describe('Discovery Tasks API', () => {
       });
 
       // Act
-      await PATCH(request, { params: { programId: 'prog123', taskId: 'task2' } });
+      await PATCH(request, { params: Promise.resolve({ programId: 'prog123', taskId: 'task2' }) });
 
       // Assert
       expect(mockProgramRepo.update).toHaveBeenCalledWith('prog123', {
@@ -387,7 +413,7 @@ describe('Discovery Tasks API', () => {
       });
 
       // Act
-      const response = await PATCH(request, { params: { programId: 'prog123', taskId: 'task2' } });
+      const response = await PATCH(request, { params: Promise.resolve({ programId: 'prog123', taskId: 'task2' }) });
 
       // Assert
       expect(response.status).toBe(200);
@@ -415,7 +441,7 @@ describe('Discovery Tasks API', () => {
       });
 
       // Act
-      const response = await PATCH(request, { params: { programId: 'prog123', taskId: 'task1' } });
+      const response = await PATCH(request, { params: Promise.resolve({ programId: 'prog123', taskId: 'task1' }) });
       const data = await response.json();
 
       // Assert
@@ -433,7 +459,7 @@ describe('Discovery Tasks API', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks');
 
       // Act
-      const response = await GET(request, { params: { programId: 'prog123' } });
+      const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) });
       const data = await response.json();
 
       // Assert
@@ -457,7 +483,7 @@ describe('Discovery Tasks API', () => {
       });
 
       // Act
-      const response = await POST(request, { params: { programId: 'prog123' } });
+      const response = await POST(request, { params: Promise.resolve({ programId: 'prog123' }) });
       const data = await response.json();
 
       // Assert

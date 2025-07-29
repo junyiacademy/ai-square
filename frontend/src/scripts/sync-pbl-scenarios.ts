@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Sync PBL scenarios from YAML files to database
  * This ensures the unified architecture has all necessary data
