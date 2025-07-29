@@ -32,7 +32,7 @@ interface Task {
   title: string;
   description: string;
   xp: number;
-  status: 'locked' | 'available' | 'completed';
+  status: 'locked' | 'available' | 'completed' | 'active';
   completedAt?: string;
   actualXP?: number;  // Actual XP earned (from evaluation)
   attempts?: number;  // Total attempts
@@ -313,7 +313,7 @@ export default function ProgramDetailPage() {
                 transition={{ delay: index * 0.1 }}
                 className={`
                   bg-white rounded-xl shadow-md border transition-all
-                  ${((task as Task).status === 'available' || (task as Task).status === 'active')
+                  ${(task.status === 'available' || task.status === 'active')
                     ? 'border-purple-200 hover:shadow-lg cursor-pointer' 
                     : task.status === 'completed'
                     ? 'border-green-100 hover:shadow-lg cursor-pointer'
@@ -321,7 +321,7 @@ export default function ProgramDetailPage() {
                   }
                   ${task.status === 'completed' ? 'bg-gray-50' : ''}
                 `}
-                onClick={() => ((task as Task).status === 'available' || (task as Task).status === 'active' || (task as Task).status === 'completed') && handleStartTask(task.id)}
+                onClick={() => (task.status === 'available' || task.status === 'active' || task.status === 'completed') && handleStartTask(task.id)}
               >
                 <div className="p-6">
                   <div className="flex items-start justify-between">

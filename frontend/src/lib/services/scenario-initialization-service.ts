@@ -8,7 +8,7 @@
 
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { IScenario } from '@/types/unified-learning';
-import { DifficultyLevel, LearningMode, SourceType, TaskType, LearningMode as DBLearningMode } from '@/types/database';
+import { DifficultyLevel, LearningMode as DBLearningMode } from '@/types/database';
 import { AssessmentYAMLLoader } from './assessment-yaml-loader';
 import { PBLYAMLLoader } from './pbl-yaml-loader';
 import { DiscoveryYAMLLoader } from './discovery-yaml-loader';
@@ -205,10 +205,10 @@ export class ScenarioInitializationService {
     const scenarios = await this.scenarioRepo.findByMode?.(sourceType as DBLearningMode) || [];
     
     // Find matching scenario by source path or sourceMetadata.configPath
-    const match = scenarios.find((s: any) => 
+    const match = scenarios.find((s) => 
       s.sourcePath === yamlPath || 
-      s.sourceMetadata?.sourcePath === yamlPath ||
-      s.sourceMetadata?.configPath === yamlPath
+      (s.sourceMetadata as Record<string, unknown>)?.sourcePath === yamlPath ||
+      (s.sourceMetadata as Record<string, unknown>)?.configPath === yamlPath
     );
     
     return match || null;

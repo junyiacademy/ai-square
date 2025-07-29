@@ -17,10 +17,14 @@ async function generateTaskEvaluations(tasks: Array<{
   return completedTasks.map(task => {
     // Extract XP from nested evaluation structure
     const evaluation = task.metadata?.evaluation || task.metadata?.lastEvaluation || {};
-    const xpEarned = evaluation.actualXP || evaluation.xpEarned || task.metadata?.xpEarned || task.score || 0;
-    const score = evaluation.score || xpEarned;
-    const attempts = task.interactions?.filter((i: unknown) => (i as {type: string}).type === 'user_input').length || 1;
-    const skills = evaluation.skillsImproved || task.metadata?.skillsImproved || [];
+    const evaluationData = evaluation as Record<string, unknown>;
+    const xpEarned = (evaluationData.actualXP as number) || (evaluationData.xpEarned as number) || (task.metadata?.xpEarned as number) || task.score || 0;
+    const score = (evaluationData.score as number) || xpEarned;
+    const attempts = task.interactions?.filter((i: unknown) => {
+      const interaction = i as Record<string, unknown>;
+      return interaction.type === 'user_input';
+    }).length || 1;
+    const skills = (evaluationData.skillsImproved as string[]) || (task.metadata?.skillsImproved as string[]) || [];
     
     // Extract language-specific title
     const getLocalizedTitle = (title: unknown) => {
@@ -148,10 +152,10 @@ export async function GET(
       const taskEvaluations = completedTasks.map(task => {
         // Extract XP from task metadata
         const evaluation = (task.metadata?.evaluation || task.metadata?.lastEvaluation || {}) as Record<string, unknown>;
-        const xpEarned = evaluation.actualXP || evaluation.xpEarned || task.metadata?.xpEarned || 0;
-        const score = evaluation.score || xpEarned;
+        const xpEarned = (evaluation.actualXP as number) || (evaluation.xpEarned as number) || (task.metadata?.xpEarned as number) || 0;
+        const score = (evaluation.score as number) || xpEarned;
         const attempts = task.interactions?.filter((i: unknown) => (i as {type: string}).type === 'user_input').length || 1;
-        const skills = evaluation.skillsImproved || task.metadata?.skillsImproved || [];
+        const skills = (evaluation.skillsImproved as string[]) || (task.metadata?.skillsImproved as string[]) || [];
         
         if (xpEarned > 0) {
           totalXP += xpEarned;

@@ -5,7 +5,6 @@
 
 import { 
   IDiscoveryRepository,
-  IDiscoveryScenario,
   IDiscoveryProgram,
   ICareerRecommendation,
   ISkillGap,
@@ -85,7 +84,7 @@ export class DiscoveryService implements IDiscoveryService {
       discoveryData: {
         explorationPath: [careerId],
         milestones: [],
-        personalityMatch: await this.calculatePersonalityMatch(userId, career),
+        personalityMatch: await this.calculatePersonalityMatch(),
         skillGapAnalysis: skillGaps,
         careerReadiness: await this.calculateCareerReadiness(userId, careerId)
       },
@@ -131,7 +130,7 @@ export class DiscoveryService implements IDiscoveryService {
     );
 
     // 根據用戶偏好排序
-    return this.sortByUserPreferences(enhancedRecommendations, userId);
+    return this.sortByUserPreferences(enhancedRecommendations);
   }
 
   /**
@@ -145,7 +144,7 @@ export class DiscoveryService implements IDiscoveryService {
     }
 
     // 獲取用戶當前技能水平
-    const userSkills = await this.getUserSkillLevels(userId);
+    const userSkills = await this.getUserSkillLevels();
     
     // 分析差距
     const skillGaps: ISkillGap[] = career.discoveryData.requiredSkills.map(skill => {
@@ -156,8 +155,8 @@ export class DiscoveryService implements IDiscoveryService {
         skill,
         currentLevel,
         requiredLevel,
-        importance: this.determineSkillImportance(skill, career),
-        suggestedResources: this.getSuggestedResources(skill, currentLevel, requiredLevel)
+        importance: this.determineSkillImportance(skill),
+        suggestedResources: this.getSuggestedResources(skill)
       };
     });
 
@@ -263,7 +262,7 @@ export class DiscoveryService implements IDiscoveryService {
 
   // Private helper methods
 
-  private async getUserSkillLevels(_userId: string): Promise<Map<string, number>> {
+  private async getUserSkillLevels(): Promise<Map<string, number>> {
     // TODO: 從評估結果獲取用戶技能水平
     // 暫時返回模擬資料
     return new Map([
@@ -285,8 +284,7 @@ export class DiscoveryService implements IDiscoveryService {
   }
 
   private determineSkillImportance(
-    skill: string, 
-    _career: IDiscoveryScenario
+    skill: string
   ): 'critical' | 'important' | 'nice-to-have' {
     // TODO: 實作更複雜的重要性判斷邏輯
     const criticalSkills = ['Communication', 'Problem Solving'];
@@ -298,9 +296,7 @@ export class DiscoveryService implements IDiscoveryService {
   }
 
   private getSuggestedResources(
-    skill: string, 
-    _currentLevel: number, 
-    _requiredLevel: number
+    skill: string
   ): string[] {
     // TODO: 實作資源推薦邏輯
     return [
@@ -310,10 +306,7 @@ export class DiscoveryService implements IDiscoveryService {
     ];
   }
 
-  private async calculatePersonalityMatch(
-    _userId: string, 
-    _career: IDiscoveryScenario
-  ): Promise<number> {
+  private async calculatePersonalityMatch(): Promise<number> {
     // TODO: 實作性格匹配演算法
     return Math.floor(Math.random() * 30) + 70; // 70-100
   }
@@ -325,8 +318,7 @@ export class DiscoveryService implements IDiscoveryService {
   }
 
   private sortByUserPreferences(
-    recommendations: ICareerRecommendation[],
-    _userId: string
+    recommendations: ICareerRecommendation[]
   ): ICareerRecommendation[] {
     // TODO: 根據用戶偏好排序
     return recommendations.sort((a, b) => b.matchScore - a.matchScore);

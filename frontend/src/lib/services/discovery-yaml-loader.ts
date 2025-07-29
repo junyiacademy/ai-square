@@ -3,7 +3,7 @@
  * 繼承自 BaseYAMLLoader，專門處理 Discovery Path YAML 檔案
  */
 
-import { BaseYAMLLoader, YAMLLoaderOptions, LoadResult } from '@/lib/abstractions/base-yaml-loader';
+import { BaseYAMLLoader, LoadResult } from '@/lib/abstractions/base-yaml-loader';
 import path from 'path';
 
 export interface DiscoveryMetadata {
@@ -138,8 +138,7 @@ export class DiscoveryYAMLLoader extends BaseYAMLLoader<DiscoveryPath> {
    */
   async loadPath(
     careerType: string,
-    language: string = 'en',
-    options?: YAMLLoaderOptions
+    language: string = 'en'
   ): Promise<DiscoveryPath | null> {
     // Discovery paths use format: careertype/careertype_lang.yml
     const langCode = language === 'zh-TW' ? 'zhTW' : language;

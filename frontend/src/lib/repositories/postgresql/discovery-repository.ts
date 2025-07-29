@@ -11,6 +11,8 @@ import {
   IPortfolioItem,
   IDiscoveryMilestone
 } from '@/types/discovery-types';
+import { ITaskTemplate } from '@/types/unified-learning';
+import { TaskType } from '@/types/database';
 import { v4 as uuidv4 } from 'uuid';
 
 export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
@@ -125,7 +127,7 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
         const matchScore = this.calculateMatchScore(skillMatches);
         
         // 生成推薦理由
-        const reasons = this.generateRecommendationReasons(skillMatches, careerData);
+        const reasons = this.generateRecommendationReasons(skillMatches);
         
         // 估算準備時間
         const estimatedTimeToReady = this.estimateTimeToReady(skillMatches);
@@ -330,60 +332,76 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
 
   private mapToDiscoveryScenario(row: Record<string, unknown>): IDiscoveryScenario {
     return {
-      id: row.id,
+      id: row.id as string,
       mode: 'discovery',
-      status: row.status,
-      version: row.version,
-      sourceType: row.source_type,
-      sourcePath: row.source_path,
-      sourceId: row.source_id,
-      sourceMetadata: row.source_metadata,
-      title: row.title,
-      description: row.description,
-      objectives: row.objectives,
-      difficulty: row.difficulty,
-      estimatedMinutes: row.estimated_minutes,
-      prerequisites: row.prerequisites,
-      taskTemplates: row.task_templates,
-      taskCount: row.task_count,
-      xpRewards: row.xp_rewards,
-      unlockRequirements: row.unlock_requirements,
-      pblData: row.pbl_data || {},
-      discoveryData: row.discovery_data || {},
-      assessmentData: row.assessment_data || {},
-      aiModules: row.ai_modules,
-      resources: row.resources,
-      createdAt: row.created_at,
-      updatedAt: row.updated_at,
-      metadata: row.metadata
+      status: row.status as 'draft' | 'active' | 'archived',
+      version: row.version as string,
+      sourceType: row.source_type as 'yaml' | 'api' | 'ai-generated',
+      sourcePath: row.source_path as string | undefined,
+      sourceId: row.source_id as string | undefined,
+      sourceMetadata: (row.source_metadata || {}) as Record<string, unknown>,
+      title: row.title as Record<string, string>,
+      description: row.description as Record<string, string>,
+      objectives: row.objectives as string[],
+      difficulty: row.difficulty as 'beginner' | 'intermediate' | 'advanced' | 'expert',
+      estimatedMinutes: row.estimated_minutes as number,
+      prerequisites: row.prerequisites as string[],
+      taskTemplates: (row.task_templates as Array<Record<string, unknown>> || []).map((t): ITaskTemplate => ({
+        id: t.id as string,
+        title: t.title as Record<string, string>,
+        type: t.type as TaskType,
+        description: t.description as Record<string, string> | undefined,
+        ...t
+      })),
+      taskCount: row.task_count as number,
+      xpRewards: row.xp_rewards as Record<string, number>,
+      unlockRequirements: row.unlock_requirements as Record<string, unknown>,
+      pblData: (row.pbl_data || {}) as Record<string, unknown>,
+      discoveryData: {
+        careerPath: (row.discovery_data as Record<string, unknown>)?.careerPath as string || '',
+        requiredSkills: (row.discovery_data as Record<string, unknown>)?.requiredSkills as string[] || [],
+        industryInsights: (row.discovery_data as Record<string, unknown>)?.industryInsights as Record<string, unknown> || {},
+        careerLevel: ((row.discovery_data as Record<string, unknown>)?.careerLevel as 'entry' | 'intermediate' | 'senior' | 'expert') || 'intermediate',
+        estimatedSalaryRange: (row.discovery_data as Record<string, unknown>)?.estimatedSalaryRange as { min: number; max: number; currency: string; } | undefined,
+        relatedCareers: (row.discovery_data as Record<string, unknown>)?.relatedCareers as string[] || [],
+        dayInLife: (row.discovery_data as Record<string, unknown>)?.dayInLife as Record<string, string> | undefined,
+        challenges: (row.discovery_data as Record<string, unknown>)?.challenges as Record<string, string[]> | undefined,
+        rewards: (row.discovery_data as Record<string, unknown>)?.rewards as Record<string, string[]> | undefined
+      },
+      assessmentData: (row.assessment_data || {}) as Record<string, unknown>,
+      aiModules: row.ai_modules as Record<string, unknown>,
+      resources: row.resources as Array<Record<string, unknown>>,
+      createdAt: row.created_at as string,
+      updatedAt: row.updated_at as string,
+      metadata: row.metadata as Record<string, unknown> | undefined
     };
   }
 
   private mapToMilestone(row: Record<string, unknown>): IDiscoveryMilestone {
     return {
-      id: row.id,
-      name: row.name,
-      description: row.description,
-      achievedAt: row.achieved_at,
-      criteria: row.criteria,
-      rewards: row.rewards
+      id: row.id as string,
+      name: row.name as string,
+      description: row.description as string,
+      achievedAt: row.achieved_at as string,
+      criteria: row.criteria as Record<string, unknown>,
+      rewards: row.rewards as Record<string, unknown>
     };
   }
 
   private mapToPortfolioItem(row: Record<string, unknown>): IPortfolioItem {
     return {
-      id: row.id,
-      title: row.title,
-      description: row.description,
-      taskId: row.task_id,
-      createdAt: row.created_at,
+      id: row.id as string,
+      title: row.title as string,
+      description: row.description as string,
+      taskId: row.task_id as string,
+      createdAt: row.created_at as string,
       artifacts: typeof row.artifacts === 'string' 
-        ? JSON.parse(row.artifacts) 
-        : row.artifacts,
+        ? JSON.parse(row.artifacts as string) 
+        : row.artifacts as unknown[],
       skills: typeof row.skills === 'string' 
-        ? JSON.parse(row.skills) 
-        : row.skills,
-      feedback: row.feedback
+        ? JSON.parse(row.skills as string) 
+        : row.skills as string[],
+      feedback: row.feedback as string | undefined
     };
   }
 
@@ -408,8 +426,7 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
   }
 
   private generateRecommendationReasons(
-    skillMatches: Array<{skill: string; userLevel: number; requiredLevel: number}>,
-    _career: IDiscoveryScenario
+    skillMatches: Array<{skill: string; userLevel: number; requiredLevel: number}>
   ): string[] {
     const reasons: string[] = [];
     

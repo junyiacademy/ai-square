@@ -283,13 +283,13 @@ export class PostgreSQLUserRepository implements IUserRepository {
     };
   }
 
-  async getAssessmentSessions(_userId: string): Promise<AssessmentSession[]> {
+  async getAssessmentSessions(): Promise<AssessmentSession[]> {
     // TODO: Assessment 模組需要遷移到統一架構
     // 暫時返回空陣列避免阻擋 Discovery 開發
     return [];
   }
 
-  async getLatestAssessmentResults(_userId: string): Promise<AssessmentResults | null> {
+  async getLatestAssessmentResults(): Promise<AssessmentResults | null> {
     // TODO: Assessment 模組需要遷移到統一架構
     // 暫時返回 null 避免阻擋 Discovery 開發
     return null;
@@ -329,7 +329,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
     return rows[0];
   }
 
-  async getUserBadges(_userId: string): Promise<UserBadge[]> {
+  async getUserBadges(): Promise<UserBadge[]> {
     // TODO: Badge 系統需要建立相關資料表
     // 暫時返回空陣列避免阻擋 Discovery 開發
     return [];
@@ -351,13 +351,13 @@ export class PostgreSQLUserRepository implements IUserRepository {
     }
 
     // Get assessment sessions
-    const assessmentSessions = await this.getAssessmentSessions(user.id);
+    const assessmentSessions = await this.getAssessmentSessions();
     
     // Get latest assessment results
-    const latestResults = await this.getLatestAssessmentResults(user.id);
+    const latestResults = await this.getLatestAssessmentResults();
     
     // Get user badges
-    const badges = await this.getUserBadges(user.id);
+    const badges = await this.getUserBadges();
     
     // TODO: Achievement 系統需要建立相關資料表
     // 暫時返回空陣列避免阻擋 Discovery 開發

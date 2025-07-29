@@ -3,7 +3,7 @@
  * 繼承自 BaseYAMLLoader，專門處理 PBL Scenario YAML 檔案
  */
 
-import { BaseYAMLLoader, YAMLLoaderOptions, LoadResult } from '@/lib/abstractions/base-yaml-loader';
+import { BaseYAMLLoader, LoadResult } from '@/lib/abstractions/base-yaml-loader';
 import path from 'path';
 
 export interface PBLScenarioInfo {

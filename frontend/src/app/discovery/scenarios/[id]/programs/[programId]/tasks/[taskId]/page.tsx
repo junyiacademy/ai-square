@@ -693,7 +693,7 @@ export default function TaskDetailPage() {
                       <p className="whitespace-pre-wrap">{
                         typeof interaction.content === 'string' 
                           ? interaction.content 
-                          : (interaction.content as Record<string, unknown>)?.response as string || interaction.content
+                          : (interaction.content as Record<string, unknown>)?.response as string || JSON.stringify(interaction.content)
                       }</p>
                     ) : (
                       <div className="space-y-3">

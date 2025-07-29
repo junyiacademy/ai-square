@@ -3,7 +3,7 @@
  * 繼承自 BaseYAMLLoader，專門處理 Assessment YAML 檔案
  */
 
-import { BaseYAMLLoader, YAMLLoaderOptions, LoadResult } from '@/lib/abstractions/base-yaml-loader';
+import { BaseYAMLLoader, LoadResult } from '@/lib/abstractions/base-yaml-loader';
 import path from 'path';
 
 export interface AssessmentConfig {
@@ -94,8 +94,7 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
    */
   async loadAssessment(
     assessmentName: string,
-    language: string = 'en',
-    options?: YAMLLoaderOptions
+    language: string = 'en'
   ): Promise<AssessmentYAMLData | null> {
     // Try language-specific file first
     const fileName = `${assessmentName}_questions_${language}`;

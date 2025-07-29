@@ -144,7 +144,7 @@ export abstract class BaseLearningService {
         taskIndex: i,
         scenarioTaskIndex: i,
         title: template.title,
-        description: template.description || '',
+        description: typeof template.description === 'string' ? { en: template.description } : template.description || { en: '' },
         type: template.type,
         status: i === 0 ? 'active' : 'pending',
         content: {},
