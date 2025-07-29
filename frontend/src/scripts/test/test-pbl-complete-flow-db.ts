@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import 'dotenv/config';
 import { Pool } from 'pg';
 import { v4 as uuidv4 } from 'uuid';

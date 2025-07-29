@@ -25,6 +25,23 @@ const eslintConfig = [
       "react/no-unescaped-entities": "warn", // Allow unescaped entities
     },
   },
+  // Special rules for scripts directory
+  {
+    files: ["src/scripts/**/*.ts", "src/scripts/**/*.js"],
+    rules: {
+      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "no-console": "off",
+    },
+  },
+  // Special rules for test-utils directory
+  {
+    files: ["src/test-utils/**/*.ts", "src/test-utils/**/*.tsx"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    },
+  },
 ];
 
 export default eslintConfig;
