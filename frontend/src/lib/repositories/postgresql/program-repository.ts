@@ -197,6 +197,10 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
       updateFields.push(`completed_task_count = $${paramCount++}`);
       values.push(updates.completedTaskCount);
     }
+    if (updates.totalTaskCount !== undefined) {
+      updateFields.push(`total_task_count = $${paramCount++}`);
+      values.push(updates.totalTaskCount);
+    }
 
     // Scoring
     if (updates.totalScore !== undefined) {

@@ -12,7 +12,6 @@ import { test, expect } from '@playwright/test';
 import { Pool } from 'pg';
 import { v4 as uuidv4 } from 'uuid';
 import { learningServiceFactory } from '../src/lib/services/learning-service-factory';
-import { AssessmentLearningService } from '../src/lib/services/assessment-learning-service';
 
 // 資料庫配置
 const pool = new Pool({
@@ -88,15 +87,8 @@ async function testLearningMode(mode: 'assessment' | 'pbl' | 'discovery'): Promi
     const service = learningServiceFactory.getService(mode);
     result.details.push(`✅ Got ${mode} service from factory`);
     
-    let program;
-    if (mode === 'assessment') {
-      // Assessment 使用特殊的方法
-      const assessmentService = service as AssessmentLearningService;
-      program = await assessmentService.startAssessment(TEST_USER_ID, scenario.id, 'en');
-    } else {
-      // PBL 和 Discovery 使用通用方法
-      program = await service.startLearning(TEST_USER_ID, scenario.id, { language: 'en' });
-    }
+    // 使用統一的 startLearning 方法
+    const program = await service.startLearning(TEST_USER_ID, scenario.id, { language: 'en' });
     result.programId = program.id;
     result.details.push(`✅ Created program: ${program.id}`);
     
@@ -128,9 +120,13 @@ async function testLearningMode(mode: 'assessment' | 'pbl' | 'discovery'): Promi
         const questions = taskContent.questions || [];
         if (questions.length > 0) {
           const firstQuestion = questions[0];
-          const assessmentService = service as AssessmentLearningService;
-          const mockResponse = await assessmentService.submitAnswer(program.id, firstQuestion.id, 'b');
-          result.details.push(`✅ Submitted assessment answer, correct: ${mockResponse.isCorrect}`);
+          const mockResponse = {
+            questionId: firstQuestion.id,
+            answer: 'b',
+            language: 'en'
+          };
+          const taskResult = await service.submitResponse(program.id, taskId, mockResponse);
+          result.details.push(`✅ Submitted assessment answer, success: ${taskResult.success}`);
         } else {
           result.details.push(`⚠️ No questions found in assessment task`);
         }
@@ -320,7 +316,14 @@ test.describe('統一學習架構端到端驗證 (Service Layer)', () => {
 
   test('Discovery Service 完整流程測試', async () => {
     const result = await testLearningMode('discovery');
-    expect(result.success).toBe(true);
+    
+    if (!result.success) {
+      console.log('Discovery test failed:');
+      console.log('Error:', result.error);
+      console.log('Details:', result.details);
+    }
+    
+    expect(result.success, `Discovery test failed: ${result.error}`).toBe(true);
     expect(result.scenarioTitle).toBeTruthy();
     expect(result.programId).toBeTruthy();
     expect(result.taskCount).toBeGreaterThan(0);
@@ -336,9 +339,9 @@ test.describe('統一學習架構端到端驗證 (Service Layer)', () => {
     expect(pblService).toBeDefined();
     expect(discoveryService).toBeDefined();
     
-    // 測試 Assessment 特有方法
-    expect(typeof (assessmentService as AssessmentLearningService).startAssessment).toBe('function');
-    expect(typeof (assessmentService as AssessmentLearningService).submitAnswer).toBe('function');
+    // 測試統一介面方法
+    expect(typeof assessmentService.startLearning).toBe('function');
+    expect(typeof assessmentService.submitResponse).toBe('function');
   });
 
   test('資料庫模式一致性驗證', async () => {
