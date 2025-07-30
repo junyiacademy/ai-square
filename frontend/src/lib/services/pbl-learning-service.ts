@@ -356,9 +356,10 @@ export class PBLLearningService implements BaseLearningService {
 
   private async generateAIResponse(
     task: ITask, 
-    _userResponse: Record<string, unknown>
+    userResponse: Record<string, unknown>
   ): Promise<Record<string, unknown>> {
     // TODO: 整合 AI 服務
+    void userResponse; // Mark as intentionally unused for now
     // 目前返回模擬回應
     const phase = (task.pblData as Record<string, unknown>)?.phase || 'understanding';
     

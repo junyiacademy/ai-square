@@ -537,11 +537,14 @@ export class DiscoveryLearningService implements BaseLearningService {
     };
   }
 
-  private async generateNewTasks(program: IProgram, _completedTask: ITask): Promise<void> {
+  private async generateNewTasks(program: IProgram, completedTask: ITask): Promise<void> {
     const scenario = await this.scenarioRepo.findById(program.scenarioId);
     if (!scenario) return;
 
     const discoveryData = scenario.discoveryData as unknown as DiscoveryScenarioData;
+    
+    // Use completedTask to determine next difficulty
+    void completedTask; // Mark as intentionally unused for now
     const programDiscoveryData = program.discoveryData as unknown as DiscoveryProgress;
     
     // 根據等級選擇適當的技能挑戰
