@@ -1,42 +1,38 @@
 # Tech Entrepreneur Discovery Path - Indonesian
-# PLACEHOLDER FILE - Perlu diterjemahkan
 path_id: tech_entrepreneur
 category: technology
 difficulty_range: beginner_to_expert
 metadata:
-  title: Dimension Business Traveler - Tech Entrepreneur
-  short_description: Build technology business empires across multiverses
+  title: "Penjelajah Bisnis Dimensi - Pengusaha Teknologi"
+  short_description: "Bangun kerajaan bisnis teknologi di seluruh multiverse"
   long_description: |
-    You are a newly inducted traveler of the Cross-Dimensional Business Alliance, 
-    possessing the ability to establish technology enterprises across different 
-    spacetimes. Each parallel universe has unique technological development levels, 
-    and you must adapt to various environments to build successful business empires.
+    Anda adalah penjelajah baru yang dilantik dalam Aliansi Bisnis Lintas Dimensi, 
+    memiliki kemampuan untuk mendirikan perusahaan teknologi di berbagai ruang waktu. 
+    Setiap alam semesta paralel memiliki tingkat perkembangan teknologi yang unik, 
+    dan Anda harus beradaptasi dengan berbagai lingkungan untuk membangun kerajaan 
+    bisnis yang sukses.
   estimated_hours: 65
   skill_focus:
     - dimensional_business_insight
     - cross_tech_integration
     - team_summoning
     - innovation_prophecy
-  translation_notice: Perlu diterjemahkan - This is a placeholder file
-  original_language: en
-  target_language: id
-  generated_date: "2025-07-16T07:00:56.540Z"
 world_setting:
-  name: Multiverse Business Network
+  name: "Jaringan Bisnis Multiverse"
   description: |
-    The Multiverse Business Network consists of countless parallel spacetimes forming 
-    a vast commercial web. Tech entrepreneurs travel between dimensions, bringing 
-    innovations from one universe to solve problems in another, while competing against 
-    monopolistic forces that seek to control all realities.
+    Jaringan Bisnis Multiverse terdiri dari ruang waktu paralel yang tak terhitung 
+    membentuk jaring komersial yang luas. Pengusaha teknologi bepergian antar dimensi, 
+    membawa inovasi dari satu alam semesta untuk memecahkan masalah di alam lainnya, 
+    sambil bersaing melawan kekuatan monopoli yang berusaha mengendalikan semua realitas.
   atmosphere: futuristic_dynamic
   visual_theme: interdimensional_tech
 starting_scenario:
-  title: Dimensional Gateway Activation
+  title: "Aktivasi Gerbang Dimensi"
   description: |
-    Business Mentor Atlas greets you at the dimensional hub, explaining your newfound 
-    ability to travel between universes. But CEO Greed of Monopoly Corp is using unfair 
-    tactics to crush startups across all dimensions. You must use innovation and 
-    collaboration to fight his monopolistic plans.
+    Mentor Bisnis Atlas menyambut Anda di pusat dimensi, menjelaskan kemampuan baru 
+    Anda untuk bepergian antar alam semesta. Namun CEO Keserakahan dari Monopoly Corp 
+    menggunakan taktik tidak adil untuk menghancurkan startup di semua dimensi. 
+    Anda harus menggunakan inovasi dan kolaborasi untuk melawan rencana monopolinya.
   initial_tasks:
     - understand_multiverse
     - identify_opportunity
@@ -44,59 +40,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: opportunity_sensing
-      name: Opportunity Radar
-      description: Detect business opportunities across dimensions
+      name: "Radar Peluang"
+      description: "Deteksi peluang bisnis lintas dimensi"
       max_level: 10
       unlocks:
         - market_gaps
         - trend_prediction
     - id: tech_fusion
-      name: Technology Fusion
-      description: Combine technologies from different realities
+      name: "Fusi Teknologi"
+      description: "Gabungkan teknologi dari realitas berbeda"
       max_level: 10
       unlocks:
         - innovation_synthesis
         - cross_platform_tech
     - id: venture_building
-      name: Venture Architecture
-      description: Build scalable tech businesses
+      name: "Arsitektur Ventura"
+      description: "Bangun bisnis teknologi yang dapat diskalakan"
       max_level: 10
       unlocks:
         - business_models
         - growth_hacking
     - id: dimensional_networking
-      name: Multiverse Connections
-      description: Build networks across dimensions
+      name: "Koneksi Multiverse"
+      description: "Bangun jaringan lintas dimensi"
       max_level: 10
       unlocks:
         - investor_portals
         - talent_summoning
   advanced_skills:
     - id: disruption_mastery
-      name: Disruption Engineering
-      description: Create industry-changing innovations
+      name: "Rekayasa Disrupsi"
+      description: "Ciptakan inovasi yang mengubah industri"
       max_level: 15
       requires:
         - opportunity_sensing
         - tech_fusion
     - id: unicorn_creation
-      name: Unicorn Summoning
-      description: Build billion-dollar tech companies
+      name: "Pemanggilan Unicorn"
+      description: "Bangun perusahaan teknologi bernilai miliaran dolar"
       max_level: 15
       requires:
         - venture_building
         - dimensional_networking
     - id: ecosystem_architecture
-      name: Ecosystem Building
-      description: Create thriving tech ecosystems
+      name: "Pembangunan Ekosistem"
+      description: "Ciptakan ekosistem teknologi yang berkembang"
       max_level: 15
       requires:
         - dimensional_networking
         - tech_fusion
 milestone_quests:
   - id: first_startup
-    name: Dimensional Debut
-    description: Launch your first cross-dimensional startup
+    name: "Debut Dimensi"
+    description: "Luncurkan startup lintas dimensi pertama Anda"
     required_level: 5
     skills_tested:
       - opportunity_sensing
@@ -106,8 +102,8 @@ milestone_quests:
       - dimension_traveler_badge
       - investor_interest
   - id: monopoly_breaker
-    name: Monopoly Breaker
-    description: Disrupt Greed's monopoly in one dimension
+    name: "Pemecah Monopoli"
+    description: "Ganggu monopoli Keserakahan di satu dimensi"
     required_level: 10
     skills_tested:
       - disruption_mastery
@@ -117,8 +113,8 @@ milestone_quests:
       - freedom_fighter_title
       - resistance_network
   - id: multiverse_empire
-    name: Multiverse Empire
-    description: Build successful ventures in 5 dimensions
+    name: "Kekaisaran Multiverse"
+    description: "Bangun usaha sukses di 5 dimensi"
     required_level: 20
     skills_tested:
       - unicorn_creation
@@ -129,39 +125,39 @@ milestone_quests:
       - alliance_leadership
 achievements:
   - id: first_funding
-    name: Seed Crystal
-    description: Raise your first investment
+    name: "Kristal Benih"
+    description: "Dapatkan investasi pertama Anda"
     xp_reward: 150
     badge_type: bronze
   - id: tech_innovator
-    name: Innovation Catalyst
-    description: Create 5 breakthrough technologies
+    name: "Katalis Inovasi"
+    description: "Ciptakan 5 teknologi terobosan"
     xp_reward: 400
     badge_type: silver
   - id: exit_success
-    name: Dimensional Exit
-    description: Successfully exit a startup
+    name: "Keluar Dimensi"
+    description: "Berhasil keluar dari startup"
     xp_reward: 800
     badge_type: gold
   - id: serial_legend
-    name: Serial Dimension Hopper
-    description: Complete all entrepreneurial challenges
+    name: "Pelompat Dimensi Serial"
+    description: "Selesaikan semua tantangan kewirausahaan"
     xp_reward: 1500
     badge_type: platinum
 example_tasks:
   beginner:
     - id: market_validation
       type: analysis
-      title: Dimensional Market Scan
-      description: Validate a business idea across dimensions
+      title: "Pemindaian Pasar Dimensi"
+      description: "Validasi ide bisnis lintas dimensi"
       skills_improved:
         - opportunity_sensing
         - dimensional_business_insight
       xp_reward: 80
     - id: mvp_launch
       type: creation
-      title: Prototype Portal
-      description: Build and launch an MVP
+      title: "Portal Prototipe"
+      description: "Bangun dan luncurkan MVP"
       skills_improved:
         - venture_building
         - tech_fusion
@@ -169,16 +165,16 @@ example_tasks:
   intermediate:
     - id: team_assembly
       type: chat
-      title: Multiverse Team Building
-      description: Recruit talent from different dimensions
+      title: "Pembangunan Tim Multiverse"
+      description: "Rekrut talenta dari dimensi berbeda"
       skills_improved:
         - dimensional_networking
         - team_summoning
       xp_reward: 200
     - id: product_scaling
       type: creation
-      title: Dimensional Scaling
-      description: Scale product across multiple universes
+      title: "Penskalaan Dimensi"
+      description: "Skalakan produk di berbagai alam semesta"
       skills_improved:
         - growth_hacking
         - venture_building
@@ -186,35 +182,35 @@ example_tasks:
   advanced:
     - id: industry_disruption
       type: creation
-      title: Reality Reshaper
-      description: Create technology that changes an industry
+      title: "Pembentuk Ulang Realitas"
+      description: "Ciptakan teknologi yang mengubah industri"
       skills_improved:
         - disruption_mastery
         - innovation_prophecy
       xp_reward: 450
     - id: ecosystem_creation
       type: creation
-      title: Dimensional Ecosystem
-      description: Build a thriving tech ecosystem
+      title: "Ekosistem Dimensi"
+      description: "Bangun ekosistem teknologi yang berkembang"
       skills_improved:
         - ecosystem_architecture
         - dimensional_networking
       xp_reward: 500
 learning_objectives:
-  - Identify opportunities across different markets and dimensions
-  - Build and scale technology companies from idea to exit
-  - Master fundraising and investor relations
-  - Create innovative products that solve real problems
-  - Build and lead high-performing distributed teams
-  - Navigate regulatory and cultural differences
-  - Develop sustainable competitive advantages
-  - Foster innovation ecosystems
+  - "Identifikasi peluang di berbagai pasar dan dimensi"
+  - "Bangun dan skalakan perusahaan teknologi dari ide hingga keluar"
+  - "Kuasai penggalangan dana dan hubungan investor"
+  - "Ciptakan produk inovatif yang memecahkan masalah nyata"
+  - "Bangun dan pimpin tim terdistribusi berkinerja tinggi"
+  - "Navigasi perbedaan regulasi dan budaya"
+  - "Kembangkan keunggulan kompetitif berkelanjutan"
+  - "Pupuk ekosistem inovasi"
 career_outcomes:
-  - Tech Startup Founder
-  - Serial Entrepreneur
-  - Venture Partner
-  - Innovation Director
-  - Startup Ecosystem Builder
-  - Technology Strategist
-  - Corporate Innovation Lead
-  - Angel Investor
+  - "Pendiri Startup Teknologi"
+  - "Pengusaha Serial"
+  - "Mitra Ventura"
+  - "Direktur Inovasi"
+  - "Pembangun Ekosistem Startup"
+  - "Ahli Strategi Teknologi"
+  - "Pemimpin Inovasi Korporat"
+  - "Investor Malaikat"

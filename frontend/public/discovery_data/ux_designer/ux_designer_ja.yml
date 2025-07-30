@@ -1,41 +1,36 @@
 # Ux Designer Discovery Path - Japanese
-# PLACEHOLDER FILE - 翻訳が必要です
 path_id: ux_designer
 category: arts
 difficulty_range: beginner_to_expert
 metadata:
-  title: Experience Architect - UX Designer
-  short_description: Build perfect experience worlds in digital spaces
+  title: "体験の建築師 - UXデザイナー"
+  short_description: "デジタル空間で完璧な体験世界を構築する"
   long_description: |
-    You are an apprentice architect at the "Experience Design Academy," skilled at 
-    building unforgettable experience spaces in the digital world. Every click and 
-    swipe is a carefully designed journey, and your mission is to make users feel 
-    joy and satisfaction in these spaces.
+    あなたは「体験デザイン学院」の見習い建築師です。デジタル世界で忘れ難い
+    体験空間を構築することに長けています。すべてのクリックやスワイプは慎重に
+    設計された旅であり、あなたの使命はユーザーがこれらの空間で喜びと満足を
+    感じられるようにすることです。
   estimated_hours: 55
   skill_focus:
     - user_psychology
     - experience_magic
     - prototype_sculpting
     - communication_arts
-  translation_notice: 翻訳が必要です - This is a placeholder file
-  original_language: en
-  target_language: ja
-  generated_date: "2025-07-16T07:00:56.552Z"
 world_setting:
-  name: Experience Design Academy
+  name: "体験デザイン学院"
   description: |
-    The Experience Design Academy is a mysterious institution dedicated to studying 
-    human experiences. Designers here learn to balance aesthetics with functionality, 
-    emotion with efficiency, creating digital spaces that heal and inspire.
+    体験デザイン学院は人間の体験を研究することに専念する神秘的な機関です。
+    ここでデザイナーたちは美学と機能性、感情と効率のバランスを取ることを学び、
+    癒しとインスピレーションをもたらすデジタル空間を創造します。
   atmosphere: harmonious_innovative
   visual_theme: minimalist_magic
 starting_scenario:
-  title: The Indifference Crisis
+  title: "無関心の危機"
   description: |
-    Design Sage Maya welcomes you with an urgent mission: Indifference, the cold 
-    corporate giant, is standardizing all designs, eliminating personalized experiences. 
-    You must use soulful design to combat mechanization and restore humanity to 
-    digital interactions.
+    デザインの賢者マヤが緊急任務であなたを迎えます：冷たい企業巨人「無関心」が
+    すべてのデザインを標準化し、個人化された体験を排除しています。あなたは
+    魂のこもったデザインを使って機械化と戦い、デジタルインタラクションに
+    人間性を取り戻さなければなりません。
   initial_tasks:
     - understand_users
     - learn_design_principles
@@ -43,59 +38,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: user_research
-      name: Mind Reading
-      description: Understand user needs deeply
+      name: "心読み術"
+      description: "ユーザーのニーズを深く理解する"
       max_level: 10
       unlocks:
         - empathy_mapping
         - user_interviews
     - id: interaction_design
-      name: Touch Magic
-      description: Design intuitive interactions
+      name: "タッチマジック"
+      description: "直感的なインタラクションをデザインする"
       max_level: 10
       unlocks:
         - gesture_design
         - microinteractions
     - id: visual_design
-      name: Aesthetic Alchemy
-      description: Create beautiful interfaces
+      name: "美的錬金術"
+      description: "美しいインターフェースを創造する"
       max_level: 10
       unlocks:
         - color_theory
         - typography_mastery
     - id: prototyping
-      name: Reality Shaping
-      description: Build interactive prototypes
+      name: "現実形成術"
+      description: "インタラクティブなプロトタイプを構築する"
       max_level: 10
       unlocks:
         - rapid_prototyping
         - high_fidelity_design
   advanced_skills:
     - id: design_systems
-      name: System Harmony
-      description: Create scalable design systems
+      name: "システム調和術"
+      description: "スケーラブルなデザインシステムを作成する"
       max_level: 15
       requires:
         - visual_design
         - interaction_design
     - id: accessibility_design
-      name: Universal Magic
-      description: Design for all users
+      name: "万能マジック"
+      description: "すべてのユーザー向けにデザインする"
       max_level: 15
       requires:
         - user_research
         - interaction_design
     - id: strategic_design
-      name: Business Empathy
-      description: Align design with business goals
+      name: "ビジネス共感術"
+      description: "デザインをビジネス目標と整合させる"
       max_level: 15
       requires:
         - user_research
         - prototyping
 milestone_quests:
   - id: first_design
-    name: Soul Touch
-    description: Create your first user-loved design
+    name: "魂のタッチ"
+    description: "ユーザーに愛される初めてのデザインを創る"
     required_level: 5
     skills_tested:
       - user_research
@@ -105,8 +100,8 @@ milestone_quests:
       - empathy_designer_badge
       - user_testimonials
   - id: indifference_challenge
-    name: Humanity Restored
-    description: Defeat Indifference with personalized design
+    name: "人間性の復活"
+    description: "パーソナライズされたデザインで無関心を打ち負かす"
     required_level: 10
     skills_tested:
       - interaction_design
@@ -116,8 +111,8 @@ milestone_quests:
       - humanity_champion_title
       - emotional_resonance
   - id: design_legacy
-    name: Experience Revolution
-    description: Create design used by millions
+    name: "体験革命"
+    description: "数百万人に使われるデザインを創造する"
     required_level: 20
     skills_tested:
       - design_systems
@@ -128,39 +123,39 @@ milestone_quests:
       - design_philosophy
 achievements:
   - id: first_prototype
-    name: First Creation
-    description: Build your first interactive prototype
+    name: "初回創造"
+    description: "初めてのインタラクティブプロトタイプを構築する"
     xp_reward: 70
     badge_type: bronze
   - id: user_advocate
-    name: User Champion
-    description: Conduct 50 user research sessions
+    name: "ユーザーチャンピオン"
+    description: "50回のユーザーリサーチセッションを実施する"
     xp_reward: 250
     badge_type: silver
   - id: pixel_perfect
-    name: Perfection Achieved
-    description: Create flawless high-fidelity designs
+    name: "完璧達成"
+    description: "完璧な高忠実度デザインを創る"
     xp_reward: 450
     badge_type: gold
   - id: design_master
-    name: Experience Sage
-    description: Complete all design challenges
+    name: "体験の賢者"
+    description: "すべてのデザインチャレンジを完了する"
     xp_reward: 900
     badge_type: platinum
 example_tasks:
   beginner:
     - id: user_research
       type: analysis
-      title: Soul Mining Mission
-      description: Understand user needs and pain points
+      title: "魂の採掘ミッション"
+      description: "ユーザーのニーズと痛点を理解する"
       skills_improved:
         - user_research
         - user_psychology
       xp_reward: 60
     - id: wireframe_creation
       type: creation
-      title: Blueprint Magic
-      description: Create your first wireframes
+      title: "設計図マジック"
+      description: "初めてのワイヤーフレームを作成する"
       skills_improved:
         - interaction_design
         - prototype_sculpting
@@ -168,16 +163,16 @@ example_tasks:
   intermediate:
     - id: prototype_design
       type: creation
-      title: Warm Prototype Building
-      description: Design interactive prototype
+      title: "温かいプロトタイプ構築"
+      description: "インタラクティブプロトタイプをデザインする"
       skills_improved:
         - prototyping
         - experience_magic
       xp_reward: 170
     - id: design_system
       type: creation
-      title: Harmony Framework
-      description: Create cohesive design system
+      title: "調和フレームワーク"
+      description: "一貫性のあるデザインシステムを作成する"
       skills_improved:
         - design_systems
         - visual_design
@@ -185,35 +180,35 @@ example_tasks:
   advanced:
     - id: accessibility_audit
       type: analysis
-      title: Universal Gateway
-      description: Ensure design works for everyone
+      title: "万能ゲートウェイ"
+      description: "デザインがすべての人に機能することを確保する"
       skills_improved:
         - accessibility_design
         - user_psychology
       xp_reward: 340
     - id: strategic_redesign
       type: creation
-      title: Business Soul Fusion
-      description: Redesign for user and business success
+      title: "ビジネス・魂の融合"
+      description: "ユーザーとビジネスの成功のためにリデザインする"
       skills_improved:
         - strategic_design
         - communication_arts
       xp_reward: 380
 learning_objectives:
-  - Master user research techniques
-  - Create intuitive user interfaces
-  - Design beautiful visual experiences
-  - Build interactive prototypes
-  - Understand human psychology
-  - Implement accessibility standards
-  - Develop design systems
-  - Balance user needs with business goals
+  - "ユーザーリサーチ技術をマスターする"
+  - "直感的なユーザーインターフェースを作成する"
+  - "美しいビジュアル体験をデザインする"
+  - "インタラクティブプロトタイプを構築する"
+  - "人間心理学を理解する"
+  - "アクセシビリティ基準を実装する"
+  - "デザインシステムを開発する"
+  - "ユーザーニーズとビジネス目標のバランスを取る"
 career_outcomes:
-  - UX Designer
-  - UI Designer
-  - Product Designer
-  - Design System Lead
-  - UX Research Manager
-  - Design Director
-  - Chief Design Officer
-  - Design Consultant
+  - "UXデザイナー"
+  - "UIデザイナー"
+  - "プロダクトデザイナー"
+  - "デザインシステムリード"
+  - "UXリサーチマネージャー"
+  - "デザインディレクター"
+  - "チーフデザインオフィサー"
+  - "デザインコンサルタント"

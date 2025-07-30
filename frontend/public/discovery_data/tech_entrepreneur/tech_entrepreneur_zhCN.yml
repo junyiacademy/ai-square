@@ -1,42 +1,34 @@
 # Tech Entrepreneur Discovery Path - Simplified Chinese
-# PLACEHOLDER FILE - 需要翻译
 path_id: tech_entrepreneur
 category: technology
 difficulty_range: beginner_to_expert
 metadata:
-  title: Dimension Business Traveler - Tech Entrepreneur
-  short_description: Build technology business empires across multiverses
+  title: "维度商业旅行者 - 科技创业者"
+  short_description: "在多元宇宙中构建科技商业帝国"
   long_description: |
-    You are a newly inducted traveler of the Cross-Dimensional Business Alliance, 
-    possessing the ability to establish technology enterprises across different 
-    spacetimes. Each parallel universe has unique technological development levels, 
-    and you must adapt to various environments to build successful business empires.
+    你是跨维度商业联盟新加入的旅行者，拥有在不同时空中建立科技企业的
+    能力。每个平行宇宙都有独特的科技发展水平，你必须适应各种环境以构建
+    成功的商业帝国。
   estimated_hours: 65
   skill_focus:
     - dimensional_business_insight
     - cross_tech_integration
     - team_summoning
     - innovation_prophecy
-  translation_notice: 需要翻译 - This is a placeholder file
-  original_language: en
-  target_language: zhCN
-  generated_date: "2025-07-16T07:00:56.546Z"
 world_setting:
-  name: Multiverse Business Network
+  name: "多元宇宙商业网络"
   description: |
-    The Multiverse Business Network consists of countless parallel spacetimes forming 
-    a vast commercial web. Tech entrepreneurs travel between dimensions, bringing 
-    innovations from one universe to solve problems in another, while competing against 
-    monopolistic forces that seek to control all realities.
+    多元宇宙商业网络由无数平行时空构成，形成一个庞大的商业网。科技创业者
+    在维度之间旅行，将来自一个宇宙的创新带到另一个宇宙解决问题，同时与试图
+    控制所有现实的垄断力量竞争。
   atmosphere: futuristic_dynamic
   visual_theme: interdimensional_tech
 starting_scenario:
-  title: Dimensional Gateway Activation
+  title: "维度传送门激活"
   description: |
-    Business Mentor Atlas greets you at the dimensional hub, explaining your newfound 
-    ability to travel between universes. But CEO Greed of Monopoly Corp is using unfair 
-    tactics to crush startups across all dimensions. You must use innovation and 
-    collaboration to fight his monopolistic plans.
+    商业导师阿特拉斯在维度中枢迎接你，解释你新获得的在宇宙间旅行的能力。
+    但Monopoly Corp的CEO贪婪正在使用不公正手段摧毁所有维度的创业公司。
+    你必须运用创新和合作来对抗他的垄断计划。
   initial_tasks:
     - understand_multiverse
     - identify_opportunity
@@ -44,59 +36,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: opportunity_sensing
-      name: Opportunity Radar
-      description: Detect business opportunities across dimensions
+      name: "机会雷达"
+      description: "探测跨维度的商业机会"
       max_level: 10
       unlocks:
         - market_gaps
         - trend_prediction
     - id: tech_fusion
-      name: Technology Fusion
-      description: Combine technologies from different realities
+      name: "科技融合"
+      description: "结合不同现实的技术"
       max_level: 10
       unlocks:
         - innovation_synthesis
         - cross_platform_tech
     - id: venture_building
-      name: Venture Architecture
-      description: Build scalable tech businesses
+      name: "风险企业架构"
+      description: "构建可扩展的科技业务"
       max_level: 10
       unlocks:
         - business_models
         - growth_hacking
     - id: dimensional_networking
-      name: Multiverse Connections
-      description: Build networks across dimensions
+      name: "多元宇宙连接"
+      description: "在维度间构建网络"
       max_level: 10
       unlocks:
         - investor_portals
         - talent_summoning
   advanced_skills:
     - id: disruption_mastery
-      name: Disruption Engineering
-      description: Create industry-changing innovations
+      name: "颠覆工程"
+      description: "创造改变行业的创新"
       max_level: 15
       requires:
         - opportunity_sensing
         - tech_fusion
     - id: unicorn_creation
-      name: Unicorn Summoning
-      description: Build billion-dollar tech companies
+      name: "独角兽召唤"
+      description: "构建十亿美元的科技公司"
       max_level: 15
       requires:
         - venture_building
         - dimensional_networking
     - id: ecosystem_architecture
-      name: Ecosystem Building
-      description: Create thriving tech ecosystems
+      name: "生态系统构建"
+      description: "创建繁荣的科技生态系统"
       max_level: 15
       requires:
         - dimensional_networking
         - tech_fusion
 milestone_quests:
   - id: first_startup
-    name: Dimensional Debut
-    description: Launch your first cross-dimensional startup
+    name: "维度首秀"
+    description: "启动你的第一个跨维度创业公司"
     required_level: 5
     skills_tested:
       - opportunity_sensing
@@ -106,8 +98,8 @@ milestone_quests:
       - dimension_traveler_badge
       - investor_interest
   - id: monopoly_breaker
-    name: Monopoly Breaker
-    description: Disrupt Greed's monopoly in one dimension
+    name: "垄断破坏者"
+    description: "打破贪婪在一个维度的垄断"
     required_level: 10
     skills_tested:
       - disruption_mastery
@@ -117,8 +109,8 @@ milestone_quests:
       - freedom_fighter_title
       - resistance_network
   - id: multiverse_empire
-    name: Multiverse Empire
-    description: Build successful ventures in 5 dimensions
+    name: "多元宇宙帝国"
+    description: "在五个维度中构建成功的企业"
     required_level: 20
     skills_tested:
       - unicorn_creation
@@ -129,39 +121,39 @@ milestone_quests:
       - alliance_leadership
 achievements:
   - id: first_funding
-    name: Seed Crystal
-    description: Raise your first investment
+    name: "种子水晶"
+    description: "募集你的第一笔投资"
     xp_reward: 150
     badge_type: bronze
   - id: tech_innovator
-    name: Innovation Catalyst
-    description: Create 5 breakthrough technologies
+    name: "创新催化剂"
+    description: "创造五项突破性技术"
     xp_reward: 400
     badge_type: silver
   - id: exit_success
-    name: Dimensional Exit
-    description: Successfully exit a startup
+    name: "维度退出"
+    description: "成功退出一家创业公司"
     xp_reward: 800
     badge_type: gold
   - id: serial_legend
-    name: Serial Dimension Hopper
-    description: Complete all entrepreneurial challenges
+    name: "连续维度跳跃者"
+    description: "完成所有创业挑战"
     xp_reward: 1500
     badge_type: platinum
 example_tasks:
   beginner:
     - id: market_validation
       type: analysis
-      title: Dimensional Market Scan
-      description: Validate a business idea across dimensions
+      title: "维度市场扫描"
+      description: "验证跨维度的商业理念"
       skills_improved:
         - opportunity_sensing
         - dimensional_business_insight
       xp_reward: 80
     - id: mvp_launch
       type: creation
-      title: Prototype Portal
-      description: Build and launch an MVP
+      title: "原型传送门"
+      description: "构建和启动MVP"
       skills_improved:
         - venture_building
         - tech_fusion
@@ -169,16 +161,16 @@ example_tasks:
   intermediate:
     - id: team_assembly
       type: chat
-      title: Multiverse Team Building
-      description: Recruit talent from different dimensions
+      title: "多元宇宙团队建设"
+      description: "从不同维度招募人才"
       skills_improved:
         - dimensional_networking
         - team_summoning
       xp_reward: 200
     - id: product_scaling
       type: creation
-      title: Dimensional Scaling
-      description: Scale product across multiple universes
+      title: "维度扩展"
+      description: "在多个宇宙中扩展产品"
       skills_improved:
         - growth_hacking
         - venture_building
@@ -186,35 +178,35 @@ example_tasks:
   advanced:
     - id: industry_disruption
       type: creation
-      title: Reality Reshaper
-      description: Create technology that changes an industry
+      title: "现实重塑者"
+      description: "创造改变行业的技术"
       skills_improved:
         - disruption_mastery
         - innovation_prophecy
       xp_reward: 450
     - id: ecosystem_creation
       type: creation
-      title: Dimensional Ecosystem
-      description: Build a thriving tech ecosystem
+      title: "维度生态系统"
+      description: "构建繁荣的科技生态系统"
       skills_improved:
         - ecosystem_architecture
         - dimensional_networking
       xp_reward: 500
 learning_objectives:
-  - Identify opportunities across different markets and dimensions
-  - Build and scale technology companies from idea to exit
-  - Master fundraising and investor relations
-  - Create innovative products that solve real problems
-  - Build and lead high-performing distributed teams
-  - Navigate regulatory and cultural differences
-  - Develop sustainable competitive advantages
-  - Foster innovation ecosystems
+  - "识别不同市场和维度的机会"
+  - "从理念到退出构建和扩展科技公司"
+  - "精通筹资和投资者关系"
+  - "创造解决真实问题的创新产品"
+  - "构建和领导高绩效分布式团队"
+  - "应对监管和文化差异"
+  - "发展可持续的竞争优势"
+  - "培育创新生态系统"
 career_outcomes:
-  - Tech Startup Founder
-  - Serial Entrepreneur
-  - Venture Partner
-  - Innovation Director
-  - Startup Ecosystem Builder
-  - Technology Strategist
-  - Corporate Innovation Lead
-  - Angel Investor
+  - "科技创业公司创始人"
+  - "连续创业者"
+  - "风险投资合伙人"
+  - "创新总监"
+  - "创业生态系统构建者"
+  - "技术战略家"
+  - "企业创新负责人"
+  - "天使投资人"

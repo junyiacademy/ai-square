@@ -1,42 +1,40 @@
 # Tech Entrepreneur Discovery Path - Thai
-# PLACEHOLDER FILE - ต้องการการแปล
 path_id: tech_entrepreneur
 category: technology
 difficulty_range: beginner_to_expert
 metadata:
-  title: Dimension Business Traveler - Tech Entrepreneur
-  short_description: Build technology business empires across multiverses
+  title: "นักเดินทางธุรกิจข้ามมิติ - ผู้ประกอบการเทคโนโลยี"
+  short_description: "สร้างอาณาจักรธุรกิจเทคโนโลยีข้ามพหุจักรวาล"
   long_description: |
-    You are a newly inducted traveler of the Cross-Dimensional Business Alliance, 
-    possessing the ability to establish technology enterprises across different 
-    spacetimes. Each parallel universe has unique technological development levels, 
-    and you must adapt to various environments to build successful business empires.
+    คุณคือนักเดินทางใหม่ของพันธมิตรธุรกิจข้ามมิติ มีความสามารถ
+    ในการก่อตั้งวิสาหกิจเทคโนโลยีข้ามกาลอวกาศต่างๆ 
+    แต่ละจักรวาลคู่ขนานมีระดับการพัฒนาเทคโนโลยีที่แตกต่างกัน 
+    คุณต้องปรับตัวให้เข้ากับสภาพแวดล้อมต่างๆ เพื่อสร้าง
+    อาณาจักรธุรกิจที่ประสบความสำเร็จ
   estimated_hours: 65
   skill_focus:
     - dimensional_business_insight
     - cross_tech_integration
     - team_summoning
     - innovation_prophecy
-  translation_notice: ต้องการการแปล - This is a placeholder file
-  original_language: en
-  target_language: th
-  generated_date: "2025-07-16T07:00:56.545Z"
 world_setting:
-  name: Multiverse Business Network
+  name: "เครือข่ายธุรกิจพหุจักรวาล"
   description: |
-    The Multiverse Business Network consists of countless parallel spacetimes forming 
-    a vast commercial web. Tech entrepreneurs travel between dimensions, bringing 
-    innovations from one universe to solve problems in another, while competing against 
-    monopolistic forces that seek to control all realities.
+    เครือข่ายธุรกิจพหุจักรวาลประกอบด้วยกาลอวกาศคู่ขนานนับไม่ถ้วน
+    ที่สร้างเป็นเครือข่ายการค้าอันกว้างใหญ่ ผู้ประกอบการเทคโนโลยี
+    เดินทางระหว่างมิติ นำนวัตกรรมจากจักรวาลหนึ่งไปแก้ปัญหา
+    ในอีกจักรวาลหนึ่ง พร้อมกับแข่งขันกับอำนาจผูกขาดที่พยายาม
+    ควบคุมทุกความเป็นจริง
   atmosphere: futuristic_dynamic
   visual_theme: interdimensional_tech
 starting_scenario:
-  title: Dimensional Gateway Activation
+  title: "การเปิดใช้งานประตูมิติ"
   description: |
-    Business Mentor Atlas greets you at the dimensional hub, explaining your newfound 
-    ability to travel between universes. But CEO Greed of Monopoly Corp is using unfair 
-    tactics to crush startups across all dimensions. You must use innovation and 
-    collaboration to fight his monopolistic plans.
+    พี่เลี้ยงธุรกิจแอตลาสต้อนรับคุณที่ศูนย์กลางมิติ อธิบายถึง
+    ความสามารถใหม่ของคุณในการเดินทางระหว่างจักรวาล แต่ซีอีโอ
+    โลภมากของ Monopoly Corp กำลังใช้ยุทธวิธีที่ไม่เป็นธรรมเพื่อ
+    ทำลายสตาร์ทอัพในทุกมิติ คุณต้องใช้นวัตกรรมและความร่วมมือ
+    เพื่อต่อสู้กับแผนการผูกขาดของเขา
   initial_tasks:
     - understand_multiverse
     - identify_opportunity
@@ -44,59 +42,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: opportunity_sensing
-      name: Opportunity Radar
-      description: Detect business opportunities across dimensions
+      name: "เรดาร์ตรวจจับโอกาส"
+      description: "ตรวจจับโอกาสทางธุรกิจข้ามมิติ"
       max_level: 10
       unlocks:
         - market_gaps
         - trend_prediction
     - id: tech_fusion
-      name: Technology Fusion
-      description: Combine technologies from different realities
+      name: "การหลอมรวมเทคโนโลยี"
+      description: "ผสมผสานเทคโนโลยีจากความเป็นจริงต่างๆ"
       max_level: 10
       unlocks:
         - innovation_synthesis
         - cross_platform_tech
     - id: venture_building
-      name: Venture Architecture
-      description: Build scalable tech businesses
+      name: "สถาปัตยกรรมวิสาหกิจ"
+      description: "สร้างธุรกิจเทคโนโลยีที่ขยายได้"
       max_level: 10
       unlocks:
         - business_models
         - growth_hacking
     - id: dimensional_networking
-      name: Multiverse Connections
-      description: Build networks across dimensions
+      name: "การเชื่อมต่อพหุจักรวาล"
+      description: "สร้างเครือข่ายข้ามมิติ"
       max_level: 10
       unlocks:
         - investor_portals
         - talent_summoning
   advanced_skills:
     - id: disruption_mastery
-      name: Disruption Engineering
-      description: Create industry-changing innovations
+      name: "วิศวกรรมการพลิกโฉม"
+      description: "สร้างนวัตกรรมที่เปลี่ยนอุตสาหกรรม"
       max_level: 15
       requires:
         - opportunity_sensing
         - tech_fusion
     - id: unicorn_creation
-      name: Unicorn Summoning
-      description: Build billion-dollar tech companies
+      name: "การอัญเชิญยูนิคอร์น"
+      description: "สร้างบริษัทเทคโนโลยีมูลค่าพันล้านดอลลาร์"
       max_level: 15
       requires:
         - venture_building
         - dimensional_networking
     - id: ecosystem_architecture
-      name: Ecosystem Building
-      description: Create thriving tech ecosystems
+      name: "การสร้างระบบนิเวศ"
+      description: "สร้างระบบนิเวศเทคโนโลยีที่เจริญรุ่งเรือง"
       max_level: 15
       requires:
         - dimensional_networking
         - tech_fusion
 milestone_quests:
   - id: first_startup
-    name: Dimensional Debut
-    description: Launch your first cross-dimensional startup
+    name: "การเปิดตัวข้ามมิติ"
+    description: "เริ่มสตาร์ทอัพข้ามมิติแรกของคุณ"
     required_level: 5
     skills_tested:
       - opportunity_sensing
@@ -106,8 +104,8 @@ milestone_quests:
       - dimension_traveler_badge
       - investor_interest
   - id: monopoly_breaker
-    name: Monopoly Breaker
-    description: Disrupt Greed's monopoly in one dimension
+    name: "ผู้ทำลายการผูกขาด"
+    description: "ทำลายการผูกขาดของโลภมากในหนึ่งมิติ"
     required_level: 10
     skills_tested:
       - disruption_mastery
@@ -117,8 +115,8 @@ milestone_quests:
       - freedom_fighter_title
       - resistance_network
   - id: multiverse_empire
-    name: Multiverse Empire
-    description: Build successful ventures in 5 dimensions
+    name: "อาณาจักรพหุจักรวาล"
+    description: "สร้างวิสาหกิจที่ประสบความสำเร็จใน 5 มิติ"
     required_level: 20
     skills_tested:
       - unicorn_creation
@@ -129,39 +127,39 @@ milestone_quests:
       - alliance_leadership
 achievements:
   - id: first_funding
-    name: Seed Crystal
-    description: Raise your first investment
+    name: "คริสตัลเมล็ดพันธุ์"
+    description: "ระดมเงินลงทุนครั้งแรก"
     xp_reward: 150
     badge_type: bronze
   - id: tech_innovator
-    name: Innovation Catalyst
-    description: Create 5 breakthrough technologies
+    name: "ตัวเร่งนวัตกรรม"
+    description: "สร้างเทคโนโลยีทะลุกำแพง 5 ชิ้น"
     xp_reward: 400
     badge_type: silver
   - id: exit_success
-    name: Dimensional Exit
-    description: Successfully exit a startup
+    name: "ทางออกข้ามมิติ"
+    description: "ออกจากสตาร์ทอัพอย่างสำเร็จ"
     xp_reward: 800
     badge_type: gold
   - id: serial_legend
-    name: Serial Dimension Hopper
-    description: Complete all entrepreneurial challenges
+    name: "นักกระโดดข้ามมิติอันดับ"
+    description: "เสร็จสิ้นความท้าทายของผู้ประกอบการทั้งหมด"
     xp_reward: 1500
     badge_type: platinum
 example_tasks:
   beginner:
     - id: market_validation
       type: analysis
-      title: Dimensional Market Scan
-      description: Validate a business idea across dimensions
+      title: "การสแกนตลาดข้ามมิติ"
+      description: "ตรวจสอบไอเดียธุรกิจข้ามมิติ"
       skills_improved:
         - opportunity_sensing
         - dimensional_business_insight
       xp_reward: 80
     - id: mvp_launch
       type: creation
-      title: Prototype Portal
-      description: Build and launch an MVP
+      title: "พอร์ทัลต้นแบบ"
+      description: "สร้างและเปิดตัว MVP"
       skills_improved:
         - venture_building
         - tech_fusion
@@ -169,16 +167,16 @@ example_tasks:
   intermediate:
     - id: team_assembly
       type: chat
-      title: Multiverse Team Building
-      description: Recruit talent from different dimensions
+      title: "การสร้างทีมพหุจักรวาล"
+      description: "รับสมัครคนเก่งจากมิติต่างๆ"
       skills_improved:
         - dimensional_networking
         - team_summoning
       xp_reward: 200
     - id: product_scaling
       type: creation
-      title: Dimensional Scaling
-      description: Scale product across multiple universes
+      title: "การขยายข้ามมิติ"
+      description: "ขยายผลิตภัณฑ์ข้ามหลายจักรวาล"
       skills_improved:
         - growth_hacking
         - venture_building
@@ -186,35 +184,35 @@ example_tasks:
   advanced:
     - id: industry_disruption
       type: creation
-      title: Reality Reshaper
-      description: Create technology that changes an industry
+      title: "ผู้ปั้นความเป็นจริง"
+      description: "สร้างเทคโนโลยีที่เปลี่ยนอุตสาหกรรม"
       skills_improved:
         - disruption_mastery
         - innovation_prophecy
       xp_reward: 450
     - id: ecosystem_creation
       type: creation
-      title: Dimensional Ecosystem
-      description: Build a thriving tech ecosystem
+      title: "ระบบนิเวศข้ามมิติ"
+      description: "สร้างระบบนิเวศเทคโนโลยีที่เจริญรุ่งเรือง"
       skills_improved:
         - ecosystem_architecture
         - dimensional_networking
       xp_reward: 500
 learning_objectives:
-  - Identify opportunities across different markets and dimensions
-  - Build and scale technology companies from idea to exit
-  - Master fundraising and investor relations
-  - Create innovative products that solve real problems
-  - Build and lead high-performing distributed teams
-  - Navigate regulatory and cultural differences
-  - Develop sustainable competitive advantages
-  - Foster innovation ecosystems
+  - "ระบุโอกาสข้ามตลาดและมิติต่างๆ"
+  - "สร้างและขยายบริษัทเทคโนโลยีจากไอเดียจนถึงการออก"
+  - "เชี่ยวชาญการระดมทุนและความสัมพันธ์กับนักลงทุน"
+  - "สร้างผลิตภัณฑ์นวัตกรรมที่แก้ปัญหาจริง"
+  - "สร้างและนำทีมกระจายที่มีประสิทธิภาพสูง"
+  - "จัดการความแตกต่างด้านกฎระเบียบและวัฒนธรรม"
+  - "พัฒนาความได้เปรียบที่ยั่งยืน"
+  - "ส่งเสริมระบบนิเวศนวัตกรรม"
 career_outcomes:
-  - Tech Startup Founder
-  - Serial Entrepreneur
-  - Venture Partner
-  - Innovation Director
-  - Startup Ecosystem Builder
-  - Technology Strategist
-  - Corporate Innovation Lead
-  - Angel Investor
+  - "ผู้ก่อตั้งสตาร์ทอัพเทคโนโลยี"
+  - "ผู้ประกอบการอันดับ"
+  - "หุ้นส่วนวิสาหกิจ"
+  - "ผู้อำนวยการนวัตกรรม"
+  - "ผู้สร้างระบบนิเวศสตาร์ทอัพ"
+  - "นักยุทธศาสตร์เทคโนโลยี"
+  - "ผู้นำนวัตกรรมองค์กร"
+  - "นักลงทุนเทวดา"

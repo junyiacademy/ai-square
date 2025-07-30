@@ -1,42 +1,37 @@
 # Tech Entrepreneur Discovery Path - Japanese
-# PLACEHOLDER FILE - 翻訳が必要です
 path_id: tech_entrepreneur
 category: technology
 difficulty_range: beginner_to_expert
 metadata:
-  title: Dimension Business Traveler - Tech Entrepreneur
-  short_description: Build technology business empires across multiverses
+  title: "次元ビジネス旅行者 - テクノロジー起業家"
+  short_description: "マルチバースを超えてテクノロジービジネス帝国を築く"
   long_description: |
-    You are a newly inducted traveler of the Cross-Dimensional Business Alliance, 
-    possessing the ability to establish technology enterprises across different 
-    spacetimes. Each parallel universe has unique technological development levels, 
-    and you must adapt to various environments to build successful business empires.
+    あなたは「次元間ビジネス同盟」に新たに加入した旅行者であり、
+    異なる時空間にまたがってテクノロジー企業を設立する能力を持っています。
+    各平行宇宙には独自の技術発展レベルがあり、様々な環境に適応して
+    成功するビジネス帝国を築く必要があります。
   estimated_hours: 65
   skill_focus:
     - dimensional_business_insight
     - cross_tech_integration
     - team_summoning
     - innovation_prophecy
-  translation_notice: 翻訳が必要です - This is a placeholder file
-  original_language: en
-  target_language: ja
-  generated_date: "2025-07-16T07:00:56.542Z"
 world_setting:
-  name: Multiverse Business Network
+  name: "マルチバース・ビジネスネットワーク"
   description: |
-    The Multiverse Business Network consists of countless parallel spacetimes forming 
-    a vast commercial web. Tech entrepreneurs travel between dimensions, bringing 
-    innovations from one universe to solve problems in another, while competing against 
-    monopolistic forces that seek to control all realities.
+    マルチバース・ビジネスネットワークは、無数の平行時空間で構成される
+    広大な商業網です。テクノロジー起業家は次元を渡り歩き、ある宇宙の
+    イノベーションを別の宇宙の問題解決に活用しながら、全ての現実を
+    支配しようとする独占的勢力と競い合います。
   atmosphere: futuristic_dynamic
   visual_theme: interdimensional_tech
 starting_scenario:
-  title: Dimensional Gateway Activation
+  title: "次元ゲートウェイの起動"
   description: |
-    Business Mentor Atlas greets you at the dimensional hub, explaining your newfound 
-    ability to travel between universes. But CEO Greed of Monopoly Corp is using unfair 
-    tactics to crush startups across all dimensions. You must use innovation and 
-    collaboration to fight his monopolistic plans.
+    ビジネスメンター・アトラスが次元ハブであなたを迎え、宇宙間を旅する
+    新たな能力について説明します。しかし、モノポリー社のCEOグリードは
+    不公正な戦術を使って全次元のスタートアップを潰そうとしています。
+    あなたはイノベーションと協力を駆使して彼の独占計画と戦わなければなりません。
   initial_tasks:
     - understand_multiverse
     - identify_opportunity
@@ -44,59 +39,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: opportunity_sensing
-      name: Opportunity Radar
-      description: Detect business opportunities across dimensions
+      name: "機会レーダー"
+      description: "次元を超えてビジネスチャンスを探知する"
       max_level: 10
       unlocks:
         - market_gaps
         - trend_prediction
     - id: tech_fusion
-      name: Technology Fusion
-      description: Combine technologies from different realities
+      name: "テクノロジー融合"
+      description: "異なる現実の技術を組み合わせる"
       max_level: 10
       unlocks:
         - innovation_synthesis
         - cross_platform_tech
     - id: venture_building
-      name: Venture Architecture
-      description: Build scalable tech businesses
+      name: "ベンチャー構築術"
+      description: "スケーラブルなテクノロジービジネスを構築する"
       max_level: 10
       unlocks:
         - business_models
         - growth_hacking
     - id: dimensional_networking
-      name: Multiverse Connections
-      description: Build networks across dimensions
+      name: "マルチバース・コネクション"
+      description: "次元を超えたネットワークを構築する"
       max_level: 10
       unlocks:
         - investor_portals
         - talent_summoning
   advanced_skills:
     - id: disruption_mastery
-      name: Disruption Engineering
-      description: Create industry-changing innovations
+      name: "破壊的革新工学"
+      description: "業界を変革するイノベーションを創造する"
       max_level: 15
       requires:
         - opportunity_sensing
         - tech_fusion
     - id: unicorn_creation
-      name: Unicorn Summoning
-      description: Build billion-dollar tech companies
+      name: "ユニコーン召喚術"
+      description: "10億ドル規模のテクノロジー企業を築く"
       max_level: 15
       requires:
         - venture_building
         - dimensional_networking
     - id: ecosystem_architecture
-      name: Ecosystem Building
-      description: Create thriving tech ecosystems
+      name: "エコシステム構築"
+      description: "繁栄するテクノロジーエコシステムを創造する"
       max_level: 15
       requires:
         - dimensional_networking
         - tech_fusion
 milestone_quests:
   - id: first_startup
-    name: Dimensional Debut
-    description: Launch your first cross-dimensional startup
+    name: "次元デビュー"
+    description: "初めての次元間スタートアップを立ち上げる"
     required_level: 5
     skills_tested:
       - opportunity_sensing
@@ -106,8 +101,8 @@ milestone_quests:
       - dimension_traveler_badge
       - investor_interest
   - id: monopoly_breaker
-    name: Monopoly Breaker
-    description: Disrupt Greed's monopoly in one dimension
+    name: "独占破壊者"
+    description: "一つの次元でグリードの独占を破る"
     required_level: 10
     skills_tested:
       - disruption_mastery
@@ -117,8 +112,8 @@ milestone_quests:
       - freedom_fighter_title
       - resistance_network
   - id: multiverse_empire
-    name: Multiverse Empire
-    description: Build successful ventures in 5 dimensions
+    name: "マルチバース帝国"
+    description: "5つの次元で成功するベンチャーを構築する"
     required_level: 20
     skills_tested:
       - unicorn_creation
@@ -129,39 +124,39 @@ milestone_quests:
       - alliance_leadership
 achievements:
   - id: first_funding
-    name: Seed Crystal
-    description: Raise your first investment
+    name: "シードクリスタル"
+    description: "初めての投資を受ける"
     xp_reward: 150
     badge_type: bronze
   - id: tech_innovator
-    name: Innovation Catalyst
-    description: Create 5 breakthrough technologies
+    name: "イノベーション触媒"
+    description: "5つの画期的技術を創造する"
     xp_reward: 400
     badge_type: silver
   - id: exit_success
-    name: Dimensional Exit
-    description: Successfully exit a startup
+    name: "次元エグジット"
+    description: "スタートアップを成功裏にエグジットする"
     xp_reward: 800
     badge_type: gold
   - id: serial_legend
-    name: Serial Dimension Hopper
-    description: Complete all entrepreneurial challenges
+    name: "連続次元ホッパー"
+    description: "全ての起業家チャレンジを完成する"
     xp_reward: 1500
     badge_type: platinum
 example_tasks:
   beginner:
     - id: market_validation
       type: analysis
-      title: Dimensional Market Scan
-      description: Validate a business idea across dimensions
+      title: "次元市場スキャン"
+      description: "次元を超えてビジネスアイデアを検証する"
       skills_improved:
         - opportunity_sensing
         - dimensional_business_insight
       xp_reward: 80
     - id: mvp_launch
       type: creation
-      title: Prototype Portal
-      description: Build and launch an MVP
+      title: "プロトタイプポータル"
+      description: "MVPを構築してローンチする"
       skills_improved:
         - venture_building
         - tech_fusion
@@ -169,16 +164,16 @@ example_tasks:
   intermediate:
     - id: team_assembly
       type: chat
-      title: Multiverse Team Building
-      description: Recruit talent from different dimensions
+      title: "マルチバース・チームビルディング"
+      description: "異なる次元から人材を採用する"
       skills_improved:
         - dimensional_networking
         - team_summoning
       xp_reward: 200
     - id: product_scaling
       type: creation
-      title: Dimensional Scaling
-      description: Scale product across multiple universes
+      title: "次元スケーリング"
+      description: "複数の宇宙に製品を展開する"
       skills_improved:
         - growth_hacking
         - venture_building
@@ -186,35 +181,35 @@ example_tasks:
   advanced:
     - id: industry_disruption
       type: creation
-      title: Reality Reshaper
-      description: Create technology that changes an industry
+      title: "リアリティ・リシェイパー"
+      description: "業界を変える技術を創造する"
       skills_improved:
         - disruption_mastery
         - innovation_prophecy
       xp_reward: 450
     - id: ecosystem_creation
       type: creation
-      title: Dimensional Ecosystem
-      description: Build a thriving tech ecosystem
+      title: "次元エコシステム"
+      description: "繁栄するテクノロジーエコシステムを構築する"
       skills_improved:
         - ecosystem_architecture
         - dimensional_networking
       xp_reward: 500
 learning_objectives:
-  - Identify opportunities across different markets and dimensions
-  - Build and scale technology companies from idea to exit
-  - Master fundraising and investor relations
-  - Create innovative products that solve real problems
-  - Build and lead high-performing distributed teams
-  - Navigate regulatory and cultural differences
-  - Develop sustainable competitive advantages
-  - Foster innovation ecosystems
+  - "異なる市場と次元で機会を特定する"
+  - "アイデアからエグジットまでテクノロジー企業を構築・成長させる"
+  - "資金調達と投資家関係をマスターする"
+  - "現実の問題を解決する革新的な製品を創造する"
+  - "高パフォーマンスな分散チームを構築・率いる"
+  - "規制や文化の違いをナビゲートする"
+  - "持続可能な競争優位性を開発する"
+  - "イノベーションエコシステムを育成する"
 career_outcomes:
-  - Tech Startup Founder
-  - Serial Entrepreneur
-  - Venture Partner
-  - Innovation Director
-  - Startup Ecosystem Builder
-  - Technology Strategist
-  - Corporate Innovation Lead
-  - Angel Investor
+  - "テクノロジースタートアップ創業者"
+  - "シリアルアントレプレナー"
+  - "ベンチャーパートナー"
+  - "イノベーションディレクター"
+  - "スタートアップエコシステムビルダー"
+  - "テクノロジーストラテジスト"
+  - "コーポレートイノベーションリード"
+  - "エンジェル投資家"

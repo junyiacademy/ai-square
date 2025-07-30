@@ -1,41 +1,37 @@
 # Ux Designer Discovery Path - Spanish
-# PLACEHOLDER FILE - Necesita traducción
 path_id: ux_designer
 category: arts
 difficulty_range: beginner_to_expert
 metadata:
-  title: Experience Architect - UX Designer
-  short_description: Build perfect experience worlds in digital spaces
+  title: "Arquitecto de Experiencias - Diseñador UX"
+  short_description: "Construye mundos de experiencia perfectos en espacios digitales"
   long_description: |
-    You are an apprentice architect at the "Experience Design Academy," skilled at 
-    building unforgettable experience spaces in the digital world. Every click and 
-    swipe is a carefully designed journey, and your mission is to make users feel 
-    joy and satisfaction in these spaces.
+    Eres un arquitecto aprendiz en la "Academia de Diseño de Experiencias", hábil en 
+    construir espacios de experiencia inolvidables en el mundo digital. Cada clic y 
+    deslizamiento es un viaje cuidadosamente diseñado, y tu misión es hacer que los 
+    usuarios sientan alegría y satisfacción en estos espacios.
   estimated_hours: 55
   skill_focus:
     - user_psychology
     - experience_magic
     - prototype_sculpting
     - communication_arts
-  translation_notice: Necesita traducción - This is a placeholder file
-  original_language: en
-  target_language: es
-  generated_date: "2025-07-16T07:00:56.548Z"
 world_setting:
-  name: Experience Design Academy
+  name: "Academia de Diseño de Experiencias"
   description: |
-    The Experience Design Academy is a mysterious institution dedicated to studying 
-    human experiences. Designers here learn to balance aesthetics with functionality, 
-    emotion with efficiency, creating digital spaces that heal and inspire.
+    La Academia de Diseño de Experiencias es una institución misteriosa dedicada al estudio 
+    de las experiencias humanas. Los diseñadores aprenden aquí a equilibrar la estética 
+    con la funcionalidad, la emoción con la eficiencia, creando espacios digitales que 
+    sanan e inspiran.
   atmosphere: harmonious_innovative
   visual_theme: minimalist_magic
 starting_scenario:
-  title: The Indifference Crisis
+  title: "La Crisis de la Indiferencia"
   description: |
-    Design Sage Maya welcomes you with an urgent mission: Indifference, the cold 
-    corporate giant, is standardizing all designs, eliminating personalized experiences. 
-    You must use soulful design to combat mechanization and restore humanity to 
-    digital interactions.
+    La Sabia del Diseño Maya te da la bienvenida con una misión urgente: Indiferencia, 
+    el frío gigante corporativo, está estandarizando todos los diseños, eliminando las 
+    experiencias personalizadas. Debes usar el diseño con alma para combatir la mecanización 
+    y restaurar la humanidad en las interacciones digitales.
   initial_tasks:
     - understand_users
     - learn_design_principles
@@ -43,59 +39,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: user_research
-      name: Mind Reading
-      description: Understand user needs deeply
+      name: "Lectura de Mentes"
+      description: "Comprender profundamente las necesidades del usuario"
       max_level: 10
       unlocks:
         - empathy_mapping
         - user_interviews
     - id: interaction_design
-      name: Touch Magic
-      description: Design intuitive interactions
+      name: "Magia del Tacto"
+      description: "Diseñar interacciones intuitivas"
       max_level: 10
       unlocks:
         - gesture_design
         - microinteractions
     - id: visual_design
-      name: Aesthetic Alchemy
-      description: Create beautiful interfaces
+      name: "Alquimia Estética"
+      description: "Crear interfaces hermosas"
       max_level: 10
       unlocks:
         - color_theory
         - typography_mastery
     - id: prototyping
-      name: Reality Shaping
-      description: Build interactive prototypes
+      name: "Moldeado de Realidad"
+      description: "Construir prototipos interactivos"
       max_level: 10
       unlocks:
         - rapid_prototyping
         - high_fidelity_design
   advanced_skills:
     - id: design_systems
-      name: System Harmony
-      description: Create scalable design systems
+      name: "Armonía del Sistema"
+      description: "Crear sistemas de diseño escalables"
       max_level: 15
       requires:
         - visual_design
         - interaction_design
     - id: accessibility_design
-      name: Universal Magic
-      description: Design for all users
+      name: "Magia Universal"
+      description: "Diseñar para todos los usuarios"
       max_level: 15
       requires:
         - user_research
         - interaction_design
     - id: strategic_design
-      name: Business Empathy
-      description: Align design with business goals
+      name: "Empatía Empresarial"
+      description: "Alinear el diseño con los objetivos del negocio"
       max_level: 15
       requires:
         - user_research
         - prototyping
 milestone_quests:
   - id: first_design
-    name: Soul Touch
-    description: Create your first user-loved design
+    name: "Toque del Alma"
+    description: "Crea tu primer diseño amado por los usuarios"
     required_level: 5
     skills_tested:
       - user_research
@@ -105,8 +101,8 @@ milestone_quests:
       - empathy_designer_badge
       - user_testimonials
   - id: indifference_challenge
-    name: Humanity Restored
-    description: Defeat Indifference with personalized design
+    name: "Humanidad Restaurada"
+    description: "Derrota a la Indiferencia con diseño personalizado"
     required_level: 10
     skills_tested:
       - interaction_design
@@ -116,8 +112,8 @@ milestone_quests:
       - humanity_champion_title
       - emotional_resonance
   - id: design_legacy
-    name: Experience Revolution
-    description: Create design used by millions
+    name: "Revolución de Experiencia"
+    description: "Crea un diseño usado por millones"
     required_level: 20
     skills_tested:
       - design_systems
@@ -128,39 +124,39 @@ milestone_quests:
       - design_philosophy
 achievements:
   - id: first_prototype
-    name: First Creation
-    description: Build your first interactive prototype
+    name: "Primera Creación"
+    description: "Construye tu primer prototipo interactivo"
     xp_reward: 70
     badge_type: bronze
   - id: user_advocate
-    name: User Champion
-    description: Conduct 50 user research sessions
+    name: "Campeón del Usuario"
+    description: "Realiza 50 sesiones de investigación de usuarios"
     xp_reward: 250
     badge_type: silver
   - id: pixel_perfect
-    name: Perfection Achieved
-    description: Create flawless high-fidelity designs
+    name: "Perfección Alcanzada"
+    description: "Crea diseños de alta fidelidad impecables"
     xp_reward: 450
     badge_type: gold
   - id: design_master
-    name: Experience Sage
-    description: Complete all design challenges
+    name: "Sabio de la Experiencia"
+    description: "Completa todos los desafíos de diseño"
     xp_reward: 900
     badge_type: platinum
 example_tasks:
   beginner:
     - id: user_research
       type: analysis
-      title: Soul Mining Mission
-      description: Understand user needs and pain points
+      title: "Misión de Exploración del Alma"
+      description: "Comprende las necesidades y puntos de dolor del usuario"
       skills_improved:
         - user_research
         - user_psychology
       xp_reward: 60
     - id: wireframe_creation
       type: creation
-      title: Blueprint Magic
-      description: Create your first wireframes
+      title: "Magia de Planos"
+      description: "Crea tus primeros wireframes"
       skills_improved:
         - interaction_design
         - prototype_sculpting
@@ -168,16 +164,16 @@ example_tasks:
   intermediate:
     - id: prototype_design
       type: creation
-      title: Warm Prototype Building
-      description: Design interactive prototype
+      title: "Construcción de Prototipo Cálido"
+      description: "Diseña un prototipo interactivo"
       skills_improved:
         - prototyping
         - experience_magic
       xp_reward: 170
     - id: design_system
       type: creation
-      title: Harmony Framework
-      description: Create cohesive design system
+      title: "Marco de Armonía"
+      description: "Crea un sistema de diseño cohesivo"
       skills_improved:
         - design_systems
         - visual_design
@@ -185,35 +181,35 @@ example_tasks:
   advanced:
     - id: accessibility_audit
       type: analysis
-      title: Universal Gateway
-      description: Ensure design works for everyone
+      title: "Portal Universal"
+      description: "Asegura que el diseño funcione para todos"
       skills_improved:
         - accessibility_design
         - user_psychology
       xp_reward: 340
     - id: strategic_redesign
       type: creation
-      title: Business Soul Fusion
-      description: Redesign for user and business success
+      title: "Fusión Alma-Negocio"
+      description: "Rediseña para el éxito del usuario y del negocio"
       skills_improved:
         - strategic_design
         - communication_arts
       xp_reward: 380
 learning_objectives:
-  - Master user research techniques
-  - Create intuitive user interfaces
-  - Design beautiful visual experiences
-  - Build interactive prototypes
-  - Understand human psychology
-  - Implement accessibility standards
-  - Develop design systems
-  - Balance user needs with business goals
+  - "Dominar las técnicas de investigación de usuarios"
+  - "Crear interfaces de usuario intuitivas"
+  - "Diseñar hermosas experiencias visuales"
+  - "Construir prototipos interactivos"
+  - "Comprender la psicología humana"
+  - "Implementar estándares de accesibilidad"
+  - "Desarrollar sistemas de diseño"
+  - "Equilibrar las necesidades del usuario con los objetivos del negocio"
 career_outcomes:
-  - UX Designer
-  - UI Designer
-  - Product Designer
-  - Design System Lead
-  - UX Research Manager
-  - Design Director
-  - Chief Design Officer
-  - Design Consultant
+  - "Diseñador UX"
+  - "Diseñador UI"
+  - "Diseñador de Producto"
+  - "Líder de Sistema de Diseño"
+  - "Gerente de Investigación UX"
+  - "Director de Diseño"
+  - "Chief Design Officer"
+  - "Consultor de Diseño"
