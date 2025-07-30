@@ -1,16 +1,16 @@
 # Cybersecurity Specialist Discovery Path - French
-# PLACEHOLDER FILE - Traduction nécessaire
 path_id: cybersecurity_specialist
 category: technology
 difficulty_range: beginner_to_expert
 metadata:
-  title: Digital Fortress Guardian - Cybersecurity Specialist
-  short_description: Defend the digital realm from cyber threats
+  title: "Gardien de la Forteresse Numérique - Spécialiste en Cybersécurité"
+  short_description: "Défends le royaume numérique contre les cybermenaces"
   long_description: |
-    You are a recruit at the "Cyber Defense Academy," an elite training ground for 
-    digital warriors. In a world where data is the new gold and hackers lurk in 
-    every shadow of the internet, you'll learn to protect critical infrastructure, 
-    hunt cyber criminals, and build impenetrable digital fortresses.
+    Tu es une recrue à l'"Académie de Cyberdéfense", un terrain d'entraînement 
+    d'élite pour les guerriers numériques. Dans un monde où les données sont le 
+    nouvel or et où les hackers se cachent dans chaque ombre d'Internet, tu apprendras 
+    à protéger les infrastructures critiques, chasser les cybercriminels et construire 
+    des forteresses numériques impénétrables.
   estimated_hours: 65
   skill_focus:
     - threat_detection
@@ -18,26 +18,23 @@ metadata:
     - network_defense
     - ethical_hacking
     - incident_response
-  translation_notice: Traduction nécessaire - This is a placeholder file
-  original_language: en
-  target_language: fr
-  generated_date: "2025-07-16T07:00:56.488Z"
 world_setting:
-  name: Cyber Defense Academy
+  name: "Académie de Cyberdéfense"
   description: |
-    The Cyber Defense Academy exists in both physical and virtual realms. Students 
-    navigate through simulated cyber attacks, learn from legendary white hat hackers, 
-    and prepare for real-world threats that could cripple nations or corporations 
-    in seconds.
+    L'Académie de Cyberdéfense existe dans les royaumes physiques et virtuels. Les 
+    étudiants naviguent à travers des cyberattaques simulées, apprennent des hackers 
+    légendaires au chapeau blanc et se préparent aux menaces du monde réel qui 
+    pourraient paralyser des nations ou des entreprises en quelques secondes.
   atmosphere: high_stakes_tactical
   visual_theme: matrix_fortress
 starting_scenario:
-  title: The Dark Web Rising
+  title: "L'Ascension du Dark Web"
   description: |
-    Commander Firewall briefs you on an urgent situation: the notorious hacker 
-    collective "Shadow Byte" led by the mysterious Zero Day is planning a massive 
-    attack on global infrastructure. You must master cybersecurity skills quickly 
-    to join the defense force and prevent digital apocalypse.
+    Le Commandant Firewall te brieffe sur une situation urgente : le célèbre 
+    collectif de hackers "Shadow Byte", dirigé par le mystérieux Zero Day, prépare 
+    une attaque massive contre l'infrastructure mondiale. Tu dois maîtriser rapidement 
+    les compétences en cybersécurité pour rejoindre la force de défense et empêcher 
+    l'apocalypse numérique.
   initial_tasks:
     - understand_threats
     - setup_defenses
@@ -45,59 +42,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: network_security
-      name: Network Shield
-      description: Secure network infrastructure
+      name: "Bouclier Réseau"
+      description: "Sécurise l'infrastructure réseau"
       max_level: 10
       unlocks:
         - firewall_configuration
         - intrusion_detection
     - id: cryptography
-      name: Code Cipher
-      description: Master encryption and decryption
+      name: "Chiffre de Code"
+      description: "Maîtrise le chiffrement et le déchiffrement"
       max_level: 10
       unlocks:
         - advanced_encryption
         - blockchain_security
     - id: ethical_hacking
-      name: White Hat Arsenal
-      description: Think like an attacker to defend
+      name: "Arsenal du Chapeau Blanc"
+      description: "Pense comme un attaquant pour défendre"
       max_level: 10
       unlocks:
         - penetration_testing
         - vulnerability_assessment
     - id: security_analysis
-      name: Threat Intelligence
-      description: Analyze and predict cyber threats
+      name: "Renseignement sur les Menaces"
+      description: "Analyse et prédis les cybermenaces"
       max_level: 10
       unlocks:
         - malware_analysis
         - forensics
   advanced_skills:
     - id: zero_day_hunting
-      name: Vulnerability Oracle
-      description: Discover unknown vulnerabilities
+      name: "Oracle des Vulnérabilités"
+      description: "Découvre des vulnérabilités inconnues"
       max_level: 15
       requires:
         - ethical_hacking
         - security_analysis
     - id: ai_security
-      name: AI Defense Matrix
-      description: Use AI to enhance security
+      name: "Matrice de Défense IA"
+      description: "Utilise l'IA pour améliorer la sécurité"
       max_level: 15
       requires:
         - network_security
         - cryptography
     - id: cyber_warfare
-      name: Digital Battlefield
-      description: Defend against nation-state attacks
+      name: "Champ de Bataille Numérique"
+      description: "Défends contre les attaques d'États-nations"
       max_level: 15
       requires:
         - security_analysis
         - network_security
 milestone_quests:
   - id: first_defense
-    name: Firewall Rising
-    description: Successfully defend against first attack
+    name: "Ascension du Pare-feu"
+    description: "Défends avec succès contre la première attaque"
     required_level: 5
     skills_tested:
       - network_security
@@ -107,8 +104,8 @@ milestone_quests:
       - defender_badge
       - security_clearance_1
   - id: shadow_byte_hack
-    name: Into the Shadows
-    description: Infiltrate Shadow Byte and prevent attack
+    name: "Dans les Ombres"
+    description: "Infiltre Shadow Byte et empêche l'attaque"
     required_level: 10
     skills_tested:
       - ethical_hacking
@@ -118,8 +115,8 @@ milestone_quests:
       - ghost_hacker_title
       - dark_web_access
   - id: zero_day_showdown
-    name: Final Firewall
-    description: Defeat Zero Day in cyber combat
+    name: "Pare-feu Final"
+    description: "Vaincs Zero Day dans un combat cybernétique"
     required_level: 20
     skills_tested:
       - zero_day_hunting
@@ -130,39 +127,39 @@ milestone_quests:
       - global_recognition
 achievements:
   - id: first_patch
-    name: Bug Squasher
-    description: Fix your first vulnerability
+    name: "Écraseur de Bugs"
+    description: "Corrige ta première vulnérabilité"
     xp_reward: 120
     badge_type: bronze
   - id: threat_hunter
-    name: Malware Hunter
-    description: Detect and neutralize 20 threats
+    name: "Chasseur de Malware"
+    description: "Détecte et neutralise 20 menaces"
     xp_reward: 380
     badge_type: silver
   - id: fortress_builder
-    name: Impenetrable
-    description: Build unhackable security system
+    name: "Impénétrable"
+    description: "Construis un système de sécurité inviolable"
     xp_reward: 720
     badge_type: gold
   - id: cyber_guardian
-    name: Digital Savior
-    description: Complete all security challenges
+    name: "Sauveur Numérique"
+    description: "Complète tous les défis de sécurité"
     xp_reward: 1400
     badge_type: platinum
 example_tasks:
   beginner:
     - id: password_audit
       type: analysis
-      title: Credential Check
-      description: Audit and improve password security
+      title: "Vérification des Identifiants"
+      description: "Audite et améliore la sécurité des mots de passe"
       skills_improved:
         - cryptography
         - security_analysis
       xp_reward: 70
     - id: phishing_detection
       type: analysis
-      title: Bait Detector
-      description: Identify phishing attempts
+      title: "Détecteur d'Appâts"
+      description: "Identifie les tentatives de phishing"
       skills_improved:
         - threat_detection
         - security_analysis
@@ -170,16 +167,16 @@ example_tasks:
   intermediate:
     - id: penetration_test
       type: creation
-      title: Breach Simulation
-      description: Conduct penetration testing
+      title: "Simulation de Brèche"
+      description: "Réalise des tests de pénétration"
       skills_improved:
         - ethical_hacking
         - network_defense
       xp_reward: 210
     - id: incident_response
       type: chat
-      title: Crisis Command
-      description: Lead incident response team
+      title: "Commandement de Crise"
+      description: "Dirige l'équipe de réponse aux incidents"
       skills_improved:
         - incident_response
         - network_security
@@ -187,35 +184,35 @@ example_tasks:
   advanced:
     - id: zero_day_discovery
       type: analysis
-      title: Unknown Unknown
-      description: Find zero-day vulnerability
+      title: "Inconnu Inconnu"
+      description: "Trouve une vulnérabilité zero-day"
       skills_improved:
         - zero_day_hunting
         - ethical_hacking
       xp_reward: 460
     - id: ai_defense_system
       type: creation
-      title: Sentient Shield
-      description: Build AI-powered defense system
+      title: "Bouclier Sentient"
+      description: "Construis un système de défense alimenté par l'IA"
       skills_improved:
         - ai_security
         - network_defense
       xp_reward: 510
 learning_objectives:
-  - Master network security fundamentals
-  - Understand cryptography and encryption
-  - Learn ethical hacking techniques
-  - Develop incident response capabilities
-  - Analyze malware and cyber threats
-  - Build secure systems and architectures
-  - Stay ahead of emerging threats
-  - Balance security with usability
+  - "Maîtrise les fondamentaux de la sécurité réseau"
+  - "Comprends la cryptographie et le chiffrement"
+  - "Apprends les techniques de hacking éthique"
+  - "Développe des capacités de réponse aux incidents"
+  - "Analyse les malwares et les cybermenaces"
+  - "Construis des systèmes et architectures sécurisés"
+  - "Reste en avance sur les menaces émergentes"
+  - "Équilibre sécurité et utilisabilité"
 career_outcomes:
-  - Cybersecurity Analyst
-  - Penetration Tester
-  - Security Architect
-  - Incident Response Manager
-  - Chief Information Security Officer
-  - Cybersecurity Consultant
-  - Threat Intelligence Analyst
-  - Security Operations Center Lead
+  - "Analyste en Cybersécurité"
+  - "Testeur de Pénétration"
+  - "Architecte de Sécurité"
+  - "Gestionnaire de Réponse aux Incidents"
+  - "Directeur de la Sécurité de l'Information"
+  - "Consultant en Cybersécurité"
+  - "Analyste en Renseignement sur les Menaces"
+  - "Responsable du Centre des Opérations de Sécurité"
