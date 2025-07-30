@@ -1,41 +1,39 @@
 # Data Analyst Discovery Path - Japanese
-# PLACEHOLDER FILE - 翻訳が必要です
 path_id: data_analyst
 category: technology
 difficulty_range: beginner_to_expert
 metadata:
-  title: Data Oracle - Data Analyst
-  short_description: Discover hidden truths in the ocean of data
+  title: "データオラクル - データアナリスト"
+  short_description: "データの海に隠された真実を発見しよう"
   long_description: |
-    You are an apprentice oracle at the "Data Oracle Temple," possessing the mystical 
-    ability to see future trends in chaotic data. In this temple filled with numbers 
-    and charts, every data point contains important messages, and your mission is to 
-    decipher the secrets behind these numbers.
+    あなたは「データオラクル神殿」の綻書オラクルです。混沌としたデータの中に
+    未来のトレンドを見る神秘的な能力を持っています。数字とグラフで満たされたこの
+    神殿では、すべてのデータポイントに重要なメッセージが含まれており、あなたの
+    使命はこれらの数字に秘められた秘密を解き明かすことです。
+  
   estimated_hours: 50
   skill_focus:
     - data_alchemy
     - predictive_statistics
     - visualization_magic
     - insight_summoning
-  translation_notice: 翻訳が必要です - This is a placeholder file
-  original_language: en
-  target_language: ja
-  generated_date: "2025-07-16T07:00:56.498Z"
 world_setting:
-  name: Data Oracle Temple
+  name: "データオラクル神殿"
   description: |
-    The Data Oracle Temple is a mysterious sanctuary that collects data from all over 
-    the world. Here, data analysts are trained as oracles who can interpret the language 
-    of numbers and reveal truths that shape decisions across realms.
-  atmosphere: mystical_analytical
-  visual_theme: digital_temple
+    データオラクル神殿は、世界中からデータを収集する神秘的な聖域です。ここで
+    データアナリストたちは、数字の言葉を解読し、領域全体の意思決定を形成する
+    真実を明らかにできるオラクルとして訓練されます。
+  
+  atmosphere: "mystical_analytical"
+  visual_theme: "digital_temple"
 starting_scenario:
-  title: Initiation at the Temple
+  title: "神殿での入門"
   description: |
-    Wise Mentor Oracle welcomes you to the temple, speaking in riddles about data's 
-    secrets. But a threat looms: Chaos, the data destroyer, is polluting data sources 
-    and spreading misleading analyses. You must use pure statistical methods to find 
-    the truth amidst the confusion.
+    賢者メンターオラクルがあなたを神殿に迎え入れ、データの秘密について謎かけで
+    語りかけます。しかし脅威が迫っています：データ破壊者のカオスがデータソースを
+    汚染し、誤解を招く分析を広めています。あなたは純粋な統計手法を使って、
+    混乱の中から真実を見つけ出さなければなりません。
+  
   initial_tasks:
     - learn_data_basics
     - master_tools
@@ -43,51 +41,51 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: data_collection
-      name: Data Gathering
-      description: Master the art of collecting and cleaning data
+      name: データ収集
+      description: データの収集とクリーニングの技術をマスターする
       max_level: 10
       unlocks:
         - web_scraping
         - api_mastery
     - id: statistical_analysis
-      name: Statistical Sorcery
-      description: Wield statistical methods to reveal patterns
+      name: 統計魔法
+      description: 統計手法を駆使してパターンを明らかにする
       max_level: 10
       unlocks:
         - hypothesis_testing
         - regression_magic
     - id: data_visualization
-      name: Visual Prophecy
-      description: Transform data into compelling visual stories
+      name: 視覚予言
+      description: データを魅力的なビジュアルストーリーに変換する
       max_level: 10
       unlocks:
         - dashboard_creation
         - interactive_charts
     - id: business_intelligence
-      name: Strategic Insights
-      description: Convert data into actionable business wisdom
+      name: 戦略的洞察
+      description: データを実行可能なビジネス知恵に変換する
       max_level: 10
       unlocks:
         - kpi_tracking
         - forecasting
   advanced_skills:
     - id: machine_learning
-      name: Predictive Arts
-      description: Use ML to predict future outcomes
+      name: 予測芸術
+      description: 機械学習を使って未来の結果を予測する
       max_level: 15
       requires:
         - statistical_analysis
         - data_collection
     - id: big_data_mastery
-      name: Massive Data Manipulation
-      description: Handle and analyze enormous datasets
+      name: 巨大データ操作
+      description: 巨大なデータセットを扱い、分析する
       max_level: 15
       requires:
         - data_collection
         - business_intelligence
     - id: real_time_analytics
-      name: Instant Oracle
-      description: Perform real-time data analysis
+      name: 瞬間オラクル
+      description: リアルタイムデータ分析を実行する
       max_level: 15
       requires:
         - data_visualization
