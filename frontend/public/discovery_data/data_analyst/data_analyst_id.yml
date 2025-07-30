@@ -1,41 +1,39 @@
 # Data Analyst Discovery Path - Indonesian
-# PLACEHOLDER FILE - Perlu diterjemahkan
 path_id: data_analyst
 category: technology
 difficulty_range: beginner_to_expert
 metadata:
-  title: Data Oracle - Data Analyst
-  short_description: Discover hidden truths in the ocean of data
+  title: "Peramal Data - Analis Data"
+  short_description: "Temukan kebenaran tersembunyi di lautan data"
   long_description: |
-    You are an apprentice oracle at the "Data Oracle Temple," possessing the mystical 
-    ability to see future trends in chaotic data. In this temple filled with numbers 
-    and charts, every data point contains important messages, and your mission is to 
-    decipher the secrets behind these numbers.
+    Anda adalah seorang peramal magang di "Kuil Peramal Data", memiliki kemampuan 
+    mistis untuk melihat tren masa depan dalam data yang kacau. Di kuil yang dipenuhi 
+    angka dan grafik ini, setiap titik data mengandung pesan penting, dan misi Anda 
+    adalah menguraikan rahasia di balik angka-angka ini.
+  
   estimated_hours: 50
   skill_focus:
     - data_alchemy
     - predictive_statistics
     - visualization_magic
     - insight_summoning
-  translation_notice: Perlu diterjemahkan - This is a placeholder file
-  original_language: en
-  target_language: id
-  generated_date: "2025-07-16T07:00:56.497Z"
 world_setting:
-  name: Data Oracle Temple
+  name: "Kuil Peramal Data"
   description: |
-    The Data Oracle Temple is a mysterious sanctuary that collects data from all over 
-    the world. Here, data analysts are trained as oracles who can interpret the language 
-    of numbers and reveal truths that shape decisions across realms.
-  atmosphere: mystical_analytical
-  visual_theme: digital_temple
+    Kuil Peramal Data adalah tempat suci misterius yang mengumpulkan data dari seluruh 
+    dunia. Di sini, analis data dilatih sebagai peramal yang dapat menafsirkan bahasa 
+    angka dan mengungkap kebenaran yang membentuk keputusan di seluruh dunia.
+  
+  atmosphere: "mystical_analytical"
+  visual_theme: "digital_temple"
 starting_scenario:
-  title: Initiation at the Temple
+  title: "Inisiasi di Kuil"
   description: |
-    Wise Mentor Oracle welcomes you to the temple, speaking in riddles about data's 
-    secrets. But a threat looms: Chaos, the data destroyer, is polluting data sources 
-    and spreading misleading analyses. You must use pure statistical methods to find 
-    the truth amidst the confusion.
+    Peramal Mentor yang Bijaksana menyambut Anda di kuil, berbicara dalam teka-teki 
+    tentang rahasia data. Namun ancaman mengintai: Chaos, sang penghancur data, 
+    mencemari sumber data dan menyebarkan analisis yang menyesatkan. Anda harus 
+    menggunakan metode statistik murni untuk menemukan kebenaran di tengah kebingungan.
+  
   initial_tasks:
     - learn_data_basics
     - master_tools
@@ -43,59 +41,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: data_collection
-      name: Data Gathering
-      description: Master the art of collecting and cleaning data
+      name: Pengumpulan Data
+      description: Kuasai seni mengumpulkan dan membersihkan data
       max_level: 10
       unlocks:
         - web_scraping
         - api_mastery
     - id: statistical_analysis
-      name: Statistical Sorcery
-      description: Wield statistical methods to reveal patterns
+      name: Sihir Statistik
+      description: Gunakan metode statistik untuk mengungkap pola
       max_level: 10
       unlocks:
         - hypothesis_testing
         - regression_magic
     - id: data_visualization
-      name: Visual Prophecy
-      description: Transform data into compelling visual stories
+      name: Ramalan Visual
+      description: Ubah data menjadi cerita visual yang menarik
       max_level: 10
       unlocks:
         - dashboard_creation
         - interactive_charts
     - id: business_intelligence
-      name: Strategic Insights
-      description: Convert data into actionable business wisdom
+      name: Wawasan Strategis
+      description: Ubah data menjadi kebijaksanaan bisnis yang dapat ditindaklanjuti
       max_level: 10
       unlocks:
         - kpi_tracking
         - forecasting
   advanced_skills:
     - id: machine_learning
-      name: Predictive Arts
-      description: Use ML to predict future outcomes
+      name: Seni Prediktif
+      description: Gunakan pembelajaran mesin untuk memprediksi hasil masa depan
       max_level: 15
       requires:
         - statistical_analysis
         - data_collection
     - id: big_data_mastery
-      name: Massive Data Manipulation
-      description: Handle and analyze enormous datasets
+      name: Manipulasi Data Masif
+      description: Tangani dan analisis dataset yang sangat besar
       max_level: 15
       requires:
         - data_collection
         - business_intelligence
     - id: real_time_analytics
-      name: Instant Oracle
-      description: Perform real-time data analysis
+      name: Peramal Instan
+      description: Lakukan analisis data real-time
       max_level: 15
       requires:
         - data_visualization
         - statistical_analysis
 milestone_quests:
   - id: first_insight
-    name: First Revelation
-    description: Discover your first meaningful business insight
+    name: Wahyu Pertama
+    description: Temukan wawasan bisnis bermakna pertama Anda
     required_level: 5
     skills_tested:
       - data_collection
@@ -105,8 +103,8 @@ milestone_quests:
       - insight_badge
       - temple_recognition
   - id: chaos_detection
-    name: Chaos Hunter
-    description: Detect and correct misleading data manipulations
+    name: Pemburu Chaos
+    description: Deteksi dan perbaiki manipulasi data yang menyesatkan
     required_level: 10
     skills_tested:
       - data_visualization
@@ -116,8 +114,8 @@ milestone_quests:
       - truth_seeker_title
       - advanced_access
   - id: oracle_ascension
-    name: Master Oracle
-    description: Predict a major trend before it happens
+    name: Peramal Utama
+    description: Prediksi tren besar sebelum terjadi
     required_level: 20
     skills_tested:
       - machine_learning
@@ -128,55 +126,55 @@ milestone_quests:
       - temple_leadership
 achievements:
   - id: first_dashboard
-    name: First Vision
-    description: Create your first data dashboard
+    name: Visi Pertama
+    description: Buat dashboard data pertama Anda
     xp_reward: 100
     badge_type: bronze
   - id: data_detective
-    name: Data Detective
-    description: Find 10 data quality issues
+    name: Detektif Data
+    description: Temukan 10 masalah kualitas data
     xp_reward: 250
     badge_type: silver
   - id: prediction_master
-    name: Prediction Master
-    description: Make 5 accurate predictions
+    name: Master Prediksi
+    description: Buat 5 prediksi yang akurat
     xp_reward: 500
     badge_type: gold
   - id: oracle_legend
-    name: Oracle of Legend
-    description: Complete all data challenges
+    name: Peramal Legendaris
+    description: Selesaikan semua tantangan data
     xp_reward: 1000
     badge_type: platinum
 example_tasks:
   beginner:
     - id: data_cleaning
       type: analysis
-      title: Oracle Data Collection
-      description: Collect and clean a messy dataset
+      title: Pengumpulan Data Peramal
+      description: Kumpulkan dan bersihkan dataset yang berantakan
       skills_improved:
         - data_collection
         - data_alchemy
       xp_reward: 60
     - id: basic_stats
       type: analysis
-      title: Statistical Foundations
-      description: Perform basic statistical analysis
+      title: Dasar-dasar Statistik
+      description: Lakukan analisis statistik dasar
       skills_improved:
         - statistical_analysis
       xp_reward: 50
   intermediate:
     - id: trend_analysis
       type: analysis
-      title: Truth Analysis Spell
-      description: Conduct deep trend analysis
+      title: Mantra Analisis Kebenaran
+      description: Lakukan analisis tren mendalam
       skills_improved:
         - statistical_analysis
         - business_intelligence
       xp_reward: 180
     - id: dashboard_design
       type: creation
-      title: Vision Dashboard
-      description: Create an interactive business dashboard
+      title: Dashboard Visi
+      description: Buat dashboard bisnis interaktif
       skills_improved:
         - data_visualization
         - visualization_magic
@@ -184,35 +182,36 @@ example_tasks:
   advanced:
     - id: predictive_model
       type: creation
-      title: Future Sight
-      description: Build a predictive model
+      title: Penglihatan Masa Depan
+      description: Bangun model prediktif
       skills_improved:
         - machine_learning
         - predictive_statistics
       xp_reward: 350
     - id: real_time_system
       type: creation
-      title: Instant Oracle System
-      description: Create real-time analytics system
+      title: Sistem Peramal Instan
+      description: Buat sistem analitik real-time
       skills_improved:
         - real_time_analytics
         - big_data_mastery
       xp_reward: 400
 learning_objectives:
-  - Master data collection and cleaning techniques
-  - Apply statistical methods to uncover insights
-  - Create compelling data visualizations
-  - Transform data into business recommendations
-  - Build predictive models using machine learning
-  - Handle big data efficiently
-  - Communicate findings effectively
-  - Maintain data integrity and ethics
+  - "Kuasai teknik pengumpulan dan pembersihan data"
+  - "Terapkan metode statistik untuk mengungkap wawasan"
+  - "Buat visualisasi data yang menarik"
+  - "Ubah data menjadi rekomendasi bisnis"
+  - "Bangun model prediktif menggunakan pembelajaran mesin"
+  - "Tangani big data dengan efisien"
+  - "Komunikasikan temuan secara efektif"
+  - "Jaga integritas dan etika data"
+
 career_outcomes:
-  - Data Analyst
-  - Business Intelligence Analyst
-  - Data Scientist
-  - Analytics Consultant
-  - Market Research Analyst
-  - Financial Analyst
-  - Operations Analyst
-  - Data Analytics Manager
+  - "Analis Data"
+  - "Analis Business Intelligence"
+  - "Ilmuwan Data"
+  - "Konsultan Analitik"
+  - "Analis Riset Pasar"
+  - "Analis Keuangan"
+  - "Analis Operasional"
+  - "Manajer Analitik Data"

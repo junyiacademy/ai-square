@@ -1,41 +1,36 @@
 # Data Analyst Discovery Path - Simplified Chinese
-# PLACEHOLDER FILE - 需要翻译
 path_id: data_analyst
 category: technology
 difficulty_range: beginner_to_expert
 metadata:
-  title: Data Oracle - Data Analyst
-  short_description: Discover hidden truths in the ocean of data
+  title: "数据神谕 - 数据分析师"
+  short_description: "在数据海洋中发现隐藏的真相"
   long_description: |
-    You are an apprentice oracle at the "Data Oracle Temple," possessing the mystical 
-    ability to see future trends in chaotic data. In this temple filled with numbers 
-    and charts, every data point contains important messages, and your mission is to 
-    decipher the secrets behind these numbers.
+    你是「数据神谕圣殿」的学徒神谕，拥有在混乱数据中预见未来趋势的神秘能力。
+    在这个充满数字和图表的圣殿中，每个数据点都包含着重要的信息，你的使命
+    是破译这些数字背后的秘密。
+  
   estimated_hours: 50
   skill_focus:
     - data_alchemy
     - predictive_statistics
     - visualization_magic
     - insight_summoning
-  translation_notice: 需要翻译 - This is a placeholder file
-  original_language: en
-  target_language: zhCN
-  generated_date: "2025-07-16T07:00:56.501Z"
 world_setting:
-  name: Data Oracle Temple
+  name: "数据神谕圣殿"
   description: |
-    The Data Oracle Temple is a mysterious sanctuary that collects data from all over 
-    the world. Here, data analysts are trained as oracles who can interpret the language 
-    of numbers and reveal truths that shape decisions across realms.
-  atmosphere: mystical_analytical
-  visual_theme: digital_temple
+    数据神谕圣殿是一个收集世界各地数据的神秘圣地。在这里，数据分析师被训练成
+    能够解读数字语言、揭示塑造各领域决策真相的神谕。
+  
+  atmosphere: "mystical_analytical"
+  visual_theme: "digital_temple"
 starting_scenario:
-  title: Initiation at the Temple
+  title: "圣殿入门仪式"
   description: |
-    Wise Mentor Oracle welcomes you to the temple, speaking in riddles about data's 
-    secrets. But a threat looms: Chaos, the data destroyer, is polluting data sources 
-    and spreading misleading analyses. You must use pure statistical methods to find 
-    the truth amidst the confusion.
+    智慧导师神谕在圣殿欢迎你，用谜语讲述数据的秘密。但危机逼近：
+    数据毁灭者「混沌」正在污染数据源，传播误导性的分析。你必须使用
+    纯正的统计方法，在混乱中找到真相。
+  
   initial_tasks:
     - learn_data_basics
     - master_tools
@@ -43,59 +38,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: data_collection
-      name: Data Gathering
-      description: Master the art of collecting and cleaning data
+      name: 数据采集术
+      description: 掌握收集和清洗数据的艺术
       max_level: 10
       unlocks:
         - web_scraping
         - api_mastery
     - id: statistical_analysis
-      name: Statistical Sorcery
-      description: Wield statistical methods to reveal patterns
+      name: 统计魔法
+      description: 运用统计方法揭示模式
       max_level: 10
       unlocks:
         - hypothesis_testing
         - regression_magic
     - id: data_visualization
-      name: Visual Prophecy
-      description: Transform data into compelling visual stories
+      name: 视觉预言
+      description: 将数据转化为引人入胜的视觉故事
       max_level: 10
       unlocks:
         - dashboard_creation
         - interactive_charts
     - id: business_intelligence
-      name: Strategic Insights
-      description: Convert data into actionable business wisdom
+      name: 战略洞察
+      description: 将数据转化为可执行的商业智慧
       max_level: 10
       unlocks:
         - kpi_tracking
         - forecasting
   advanced_skills:
     - id: machine_learning
-      name: Predictive Arts
-      description: Use ML to predict future outcomes
+      name: 预测艺术
+      description: 使用机器学习预测未来结果
       max_level: 15
       requires:
         - statistical_analysis
         - data_collection
     - id: big_data_mastery
-      name: Massive Data Manipulation
-      description: Handle and analyze enormous datasets
+      name: 海量数据操纵
+      description: 处理和分析庞大的数据集
       max_level: 15
       requires:
         - data_collection
         - business_intelligence
     - id: real_time_analytics
-      name: Instant Oracle
-      description: Perform real-time data analysis
+      name: 瞬息神谕
+      description: 执行实时数据分析
       max_level: 15
       requires:
         - data_visualization
         - statistical_analysis
 milestone_quests:
   - id: first_insight
-    name: First Revelation
-    description: Discover your first meaningful business insight
+    name: 初次启示
+    description: 发现你的第一个有意义的商业洞察
     required_level: 5
     skills_tested:
       - data_collection
@@ -105,8 +100,8 @@ milestone_quests:
       - insight_badge
       - temple_recognition
   - id: chaos_detection
-    name: Chaos Hunter
-    description: Detect and correct misleading data manipulations
+    name: 混沌猎人
+    description: 检测并纠正误导性的数据操纵
     required_level: 10
     skills_tested:
       - data_visualization
@@ -116,8 +111,8 @@ milestone_quests:
       - truth_seeker_title
       - advanced_access
   - id: oracle_ascension
-    name: Master Oracle
-    description: Predict a major trend before it happens
+    name: 神谕大师
+    description: 在趋势发生前预测它
     required_level: 20
     skills_tested:
       - machine_learning
@@ -128,55 +123,55 @@ milestone_quests:
       - temple_leadership
 achievements:
   - id: first_dashboard
-    name: First Vision
-    description: Create your first data dashboard
+    name: 初见天光
+    description: 创建你的第一个数据仪表板
     xp_reward: 100
     badge_type: bronze
   - id: data_detective
-    name: Data Detective
-    description: Find 10 data quality issues
+    name: 数据侦探
+    description: 找到10个数据质量问题
     xp_reward: 250
     badge_type: silver
   - id: prediction_master
-    name: Prediction Master
-    description: Make 5 accurate predictions
+    name: 预测大师
+    description: 做出5个准确的预测
     xp_reward: 500
     badge_type: gold
   - id: oracle_legend
-    name: Oracle of Legend
-    description: Complete all data challenges
+    name: 传奇神谕
+    description: 完成所有数据挑战
     xp_reward: 1000
     badge_type: platinum
 example_tasks:
   beginner:
     - id: data_cleaning
       type: analysis
-      title: Oracle Data Collection
-      description: Collect and clean a messy dataset
+      title: 神谕数据收集
+      description: 收集并清理杂乱的数据集
       skills_improved:
         - data_collection
         - data_alchemy
       xp_reward: 60
     - id: basic_stats
       type: analysis
-      title: Statistical Foundations
-      description: Perform basic statistical analysis
+      title: 统计基础
+      description: 执行基本统计分析
       skills_improved:
         - statistical_analysis
       xp_reward: 50
   intermediate:
     - id: trend_analysis
       type: analysis
-      title: Truth Analysis Spell
-      description: Conduct deep trend analysis
+      title: 真相分析法术
+      description: 进行深度趋势分析
       skills_improved:
         - statistical_analysis
         - business_intelligence
       xp_reward: 180
     - id: dashboard_design
       type: creation
-      title: Vision Dashboard
-      description: Create an interactive business dashboard
+      title: 视觉仪表板
+      description: 创建互动式商业仪表板
       skills_improved:
         - data_visualization
         - visualization_magic
@@ -184,35 +179,36 @@ example_tasks:
   advanced:
     - id: predictive_model
       type: creation
-      title: Future Sight
-      description: Build a predictive model
+      title: 未来视野
+      description: 构建预测模型
       skills_improved:
         - machine_learning
         - predictive_statistics
       xp_reward: 350
     - id: real_time_system
       type: creation
-      title: Instant Oracle System
-      description: Create real-time analytics system
+      title: 瞬息神谕系统
+      description: 创建实时分析系统
       skills_improved:
         - real_time_analytics
         - big_data_mastery
       xp_reward: 400
 learning_objectives:
-  - Master data collection and cleaning techniques
-  - Apply statistical methods to uncover insights
-  - Create compelling data visualizations
-  - Transform data into business recommendations
-  - Build predictive models using machine learning
-  - Handle big data efficiently
-  - Communicate findings effectively
-  - Maintain data integrity and ethics
+  - "掌握数据收集和清洗技术"
+  - "应用统计方法揭示洞察"
+  - "创建引人入胜的数据可视化"
+  - "将数据转化为商业建议"
+  - "使用机器学习构建预测模型"
+  - "高效处理大数据"
+  - "有效沟通发现"
+  - "维护数据完整性和道德"
+
 career_outcomes:
-  - Data Analyst
-  - Business Intelligence Analyst
-  - Data Scientist
-  - Analytics Consultant
-  - Market Research Analyst
-  - Financial Analyst
-  - Operations Analyst
-  - Data Analytics Manager
+  - "数据分析师"
+  - "商业智能分析师"
+  - "数据科学家"
+  - "分析顾问"
+  - "市场研究分析师"
+  - "金融分析师"
+  - "运营分析师"
+  - "数据分析经理"

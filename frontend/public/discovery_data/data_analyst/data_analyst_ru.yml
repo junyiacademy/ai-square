@@ -1,41 +1,41 @@
 # Data Analyst Discovery Path - Russian
-# PLACEHOLDER FILE - Требуется перевод
 path_id: data_analyst
 category: technology
 difficulty_range: beginner_to_expert
 metadata:
-  title: Data Oracle - Data Analyst
-  short_description: Discover hidden truths in the ocean of data
+  title: "Оракул Данных - Аналитик Данных"
+  short_description: "Открывайте скрытые истины в океане данных"
   long_description: |
-    You are an apprentice oracle at the "Data Oracle Temple," possessing the mystical 
-    ability to see future trends in chaotic data. In this temple filled with numbers 
-    and charts, every data point contains important messages, and your mission is to 
-    decipher the secrets behind these numbers.
+    Вы - ученик-оракул в "Храме Оракула Данных", обладающий мистической 
+    способностью видеть будущие тренды в хаотичных данных. В этом храме,
+    наполненном цифрами и графиками, каждая точка данных содержит важные 
+    сообщения, а ваша миссия - расшифровать секреты, скрытые за этими цифрами.
+  
   estimated_hours: 50
   skill_focus:
     - data_alchemy
     - predictive_statistics
     - visualization_magic
     - insight_summoning
-  translation_notice: Требуется перевод - This is a placeholder file
-  original_language: en
-  target_language: ru
-  generated_date: "2025-07-16T07:00:56.500Z"
 world_setting:
-  name: Data Oracle Temple
+  name: "Храм Оракула Данных"
   description: |
-    The Data Oracle Temple is a mysterious sanctuary that collects data from all over 
-    the world. Here, data analysts are trained as oracles who can interpret the language 
-    of numbers and reveal truths that shape decisions across realms.
-  atmosphere: mystical_analytical
-  visual_theme: digital_temple
+    Храм Оракула Данных - это таинственное святилище, которое собирает данные 
+    со всего мира. Здесь аналитиков данных обучают как оракулов, которые могут 
+    интерпретировать язык цифр и открывать истины, которые формируют 
+    решения во всех областях.
+  
+  atmosphere: "mystical_analytical"
+  visual_theme: "digital_temple"
 starting_scenario:
-  title: Initiation at the Temple
+  title: "Посвящение в Храме"
   description: |
-    Wise Mentor Oracle welcomes you to the temple, speaking in riddles about data's 
-    secrets. But a threat looms: Chaos, the data destroyer, is polluting data sources 
-    and spreading misleading analyses. You must use pure statistical methods to find 
-    the truth amidst the confusion.
+    Мудрый Ментор-Оракул приветствует вас в храме, говоря загадками о 
+    секретах данных. Но нависла угроза: Хаос, разрушитель данных,
+    загрязняет источники данных и распространяет обманчивые анализы. 
+    Вы должны использовать чистые статистические методы, чтобы найти 
+    истину среди хаоса.
+  
   initial_tasks:
     - learn_data_basics
     - master_tools
@@ -43,51 +43,51 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: data_collection
-      name: Data Gathering
-      description: Master the art of collecting and cleaning data
+      name: Сбор Данных
+      description: Освоить искусство сбора и очистки данных
       max_level: 10
       unlocks:
         - web_scraping
         - api_mastery
     - id: statistical_analysis
-      name: Statistical Sorcery
-      description: Wield statistical methods to reveal patterns
+      name: Статистическое Колдовство
+      description: Используйте статистические методы для выявления закономерностей
       max_level: 10
       unlocks:
         - hypothesis_testing
         - regression_magic
     - id: data_visualization
-      name: Visual Prophecy
-      description: Transform data into compelling visual stories
+      name: Визуальное Пророчество
+      description: Превращайте данные в увлекательные визуальные истории
       max_level: 10
       unlocks:
         - dashboard_creation
         - interactive_charts
     - id: business_intelligence
-      name: Strategic Insights
-      description: Convert data into actionable business wisdom
+      name: Стратегические Озарения
+      description: Превращайте данные в практическую бизнес-мудрость
       max_level: 10
       unlocks:
         - kpi_tracking
         - forecasting
   advanced_skills:
     - id: machine_learning
-      name: Predictive Arts
-      description: Use ML to predict future outcomes
+      name: Предсказательное Искусство
+      description: Используйте машинное обучение для прогнозирования будущих результатов
       max_level: 15
       requires:
         - statistical_analysis
         - data_collection
     - id: big_data_mastery
-      name: Massive Data Manipulation
-      description: Handle and analyze enormous datasets
+      name: Манипуляция Массивными Данными
+      description: Обрабатывайте и анализируйте огромные наборы данных
       max_level: 15
       requires:
         - data_collection
         - business_intelligence
     - id: real_time_analytics
-      name: Instant Oracle
-      description: Perform real-time data analysis
+      name: Мгновенный Оракул
+      description: Выполняйте анализ данных в реальном времени
       max_level: 15
       requires:
         - data_visualization
@@ -199,20 +199,21 @@ example_tasks:
         - big_data_mastery
       xp_reward: 400
 learning_objectives:
-  - Master data collection and cleaning techniques
-  - Apply statistical methods to uncover insights
-  - Create compelling data visualizations
-  - Transform data into business recommendations
-  - Build predictive models using machine learning
-  - Handle big data efficiently
-  - Communicate findings effectively
-  - Maintain data integrity and ethics
+  - "Освоить методы сбора и очистки данных"
+  - "Применять статистические методы для выявления закономерностей"
+  - "Создавать убедительные визуализации данных"
+  - "Преобразовывать данные в бизнес-рекомендации"
+  - "Строить предсказательные модели с помощью машинного обучения"
+  - "Эффективно обрабатывать большие данные"
+  - "Эффективно коммуницировать результаты"
+  - "Поддерживать целостность данных и этику"
+
 career_outcomes:
-  - Data Analyst
-  - Business Intelligence Analyst
-  - Data Scientist
-  - Analytics Consultant
-  - Market Research Analyst
-  - Financial Analyst
-  - Operations Analyst
-  - Data Analytics Manager
+  - "Аналитик Данных"
+  - "Аналитик Бизнес-Интеллидженса"
+  - "Исследователь Данных"
+  - "Консультант по Аналитике"
+  - "Аналитик Маркетинговых Исследований"
+  - "Финансовый Аналитик"
+  - "Операционный Аналитик"
+  - "Менеджер по Аналитике Данных"

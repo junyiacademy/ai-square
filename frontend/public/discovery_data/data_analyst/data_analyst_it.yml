@@ -1,41 +1,40 @@
 # Data Analyst Discovery Path - Italian
-# PLACEHOLDER FILE - Necessita traduzione
 path_id: data_analyst
 category: technology
 difficulty_range: beginner_to_expert
 metadata:
-  title: Data Oracle - Data Analyst
-  short_description: Discover hidden truths in the ocean of data
+  title: "Oracolo dei Dati - Analista Dati"
+  short_description: "Scopri le verità nascoste nell'oceano dei dati"
   long_description: |
-    You are an apprentice oracle at the "Data Oracle Temple," possessing the mystical 
-    ability to see future trends in chaotic data. In this temple filled with numbers 
-    and charts, every data point contains important messages, and your mission is to 
-    decipher the secrets behind these numbers.
+    Sei un oracolo apprendista nel "Tempio dell'Oracolo dei Dati", dotato della 
+    mistica capacità di vedere le tendenze future nei dati caotici. In questo tempio 
+    pieno di numeri e grafici, ogni punto dati contiene messaggi importanti, e la tua 
+    missione è decifrare i segreti dietro questi numeri.
+  
   estimated_hours: 50
   skill_focus:
     - data_alchemy
     - predictive_statistics
     - visualization_magic
     - insight_summoning
-  translation_notice: Necessita traduzione - This is a placeholder file
-  original_language: en
-  target_language: it
-  generated_date: "2025-07-16T07:00:56.497Z"
 world_setting:
-  name: Data Oracle Temple
+  name: "Tempio dell'Oracolo dei Dati"
   description: |
-    The Data Oracle Temple is a mysterious sanctuary that collects data from all over 
-    the world. Here, data analysts are trained as oracles who can interpret the language 
-    of numbers and reveal truths that shape decisions across realms.
-  atmosphere: mystical_analytical
-  visual_theme: digital_temple
+    Il Tempio dell'Oracolo dei Dati è un santuario misterioso che raccoglie dati da 
+    tutto il mondo. Qui, gli analisti di dati vengono addestrati come oracoli che 
+    possono interpretare il linguaggio dei numeri e rivelare verità che plasmano 
+    le decisioni in tutti i regni.
+  
+  atmosphere: "mystical_analytical"
+  visual_theme: "digital_temple"
 starting_scenario:
-  title: Initiation at the Temple
+  title: "Iniziazione al Tempio"
   description: |
-    Wise Mentor Oracle welcomes you to the temple, speaking in riddles about data's 
-    secrets. But a threat looms: Chaos, the data destroyer, is polluting data sources 
-    and spreading misleading analyses. You must use pure statistical methods to find 
-    the truth amidst the confusion.
+    Il Saggio Mentore Oracolo ti accoglie al tempio, parlando in enigmi sui segreti 
+    dei dati. Ma una minaccia incombe: Chaos, il distruttore di dati, sta inquinando 
+    le fonti di dati e diffondendo analisi fuorvianti. Devi usare metodi statistici 
+    puri per trovare la verità in mezzo alla confusione.
+  
   initial_tasks:
     - learn_data_basics
     - master_tools
@@ -43,59 +42,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: data_collection
-      name: Data Gathering
-      description: Master the art of collecting and cleaning data
+      name: Raccolta Dati
+      description: Padroneggia l'arte di raccogliere e pulire i dati
       max_level: 10
       unlocks:
         - web_scraping
         - api_mastery
     - id: statistical_analysis
-      name: Statistical Sorcery
-      description: Wield statistical methods to reveal patterns
+      name: Stregoneria Statistica
+      description: Usa metodi statistici per rivelare pattern
       max_level: 10
       unlocks:
         - hypothesis_testing
         - regression_magic
     - id: data_visualization
-      name: Visual Prophecy
-      description: Transform data into compelling visual stories
+      name: Profezia Visiva
+      description: Trasforma i dati in storie visive coinvolgenti
       max_level: 10
       unlocks:
         - dashboard_creation
         - interactive_charts
     - id: business_intelligence
-      name: Strategic Insights
-      description: Convert data into actionable business wisdom
+      name: Intuizioni Strategiche
+      description: Converti i dati in saggezza aziendale attuabile
       max_level: 10
       unlocks:
         - kpi_tracking
         - forecasting
   advanced_skills:
     - id: machine_learning
-      name: Predictive Arts
-      description: Use ML to predict future outcomes
+      name: Arti Predittive
+      description: Usa il machine learning per prevedere risultati futuri
       max_level: 15
       requires:
         - statistical_analysis
         - data_collection
     - id: big_data_mastery
-      name: Massive Data Manipulation
-      description: Handle and analyze enormous datasets
+      name: Manipolazione Dati Massiva
+      description: Gestisci e analizza dataset enormi
       max_level: 15
       requires:
         - data_collection
         - business_intelligence
     - id: real_time_analytics
-      name: Instant Oracle
-      description: Perform real-time data analysis
+      name: Oracolo Istantaneo
+      description: Esegui analisi dati in tempo reale
       max_level: 15
       requires:
         - data_visualization
         - statistical_analysis
 milestone_quests:
   - id: first_insight
-    name: First Revelation
-    description: Discover your first meaningful business insight
+    name: Prima Rivelazione
+    description: Scopri la tua prima intuizione aziendale significativa
     required_level: 5
     skills_tested:
       - data_collection
@@ -105,8 +104,8 @@ milestone_quests:
       - insight_badge
       - temple_recognition
   - id: chaos_detection
-    name: Chaos Hunter
-    description: Detect and correct misleading data manipulations
+    name: Cacciatore del Chaos
+    description: Rileva e correggi manipolazioni di dati fuorvianti
     required_level: 10
     skills_tested:
       - data_visualization
@@ -116,8 +115,8 @@ milestone_quests:
       - truth_seeker_title
       - advanced_access
   - id: oracle_ascension
-    name: Master Oracle
-    description: Predict a major trend before it happens
+    name: Maestro Oracolo
+    description: Prevedi una tendenza importante prima che accada
     required_level: 20
     skills_tested:
       - machine_learning
@@ -128,55 +127,55 @@ milestone_quests:
       - temple_leadership
 achievements:
   - id: first_dashboard
-    name: First Vision
-    description: Create your first data dashboard
+    name: Prima Visione
+    description: Crea il tuo primo dashboard dati
     xp_reward: 100
     badge_type: bronze
   - id: data_detective
-    name: Data Detective
-    description: Find 10 data quality issues
+    name: Detective dei Dati
+    description: Trova 10 problemi di qualità dei dati
     xp_reward: 250
     badge_type: silver
   - id: prediction_master
-    name: Prediction Master
-    description: Make 5 accurate predictions
+    name: Maestro delle Previsioni
+    description: Fai 5 previsioni accurate
     xp_reward: 500
     badge_type: gold
   - id: oracle_legend
-    name: Oracle of Legend
-    description: Complete all data challenges
+    name: Oracolo Leggendario
+    description: Completa tutte le sfide sui dati
     xp_reward: 1000
     badge_type: platinum
 example_tasks:
   beginner:
     - id: data_cleaning
       type: analysis
-      title: Oracle Data Collection
-      description: Collect and clean a messy dataset
+      title: Raccolta Dati dell'Oracolo
+      description: Raccogli e pulisci un dataset disordinato
       skills_improved:
         - data_collection
         - data_alchemy
       xp_reward: 60
     - id: basic_stats
       type: analysis
-      title: Statistical Foundations
-      description: Perform basic statistical analysis
+      title: Fondamenti Statistici
+      description: Esegui un'analisi statistica di base
       skills_improved:
         - statistical_analysis
       xp_reward: 50
   intermediate:
     - id: trend_analysis
       type: analysis
-      title: Truth Analysis Spell
-      description: Conduct deep trend analysis
+      title: Incantesimo di Analisi della Verità
+      description: Conduci un'analisi approfondita dei trend
       skills_improved:
         - statistical_analysis
         - business_intelligence
       xp_reward: 180
     - id: dashboard_design
       type: creation
-      title: Vision Dashboard
-      description: Create an interactive business dashboard
+      title: Dashboard della Visione
+      description: Crea un dashboard aziendale interattivo
       skills_improved:
         - data_visualization
         - visualization_magic
@@ -184,35 +183,36 @@ example_tasks:
   advanced:
     - id: predictive_model
       type: creation
-      title: Future Sight
-      description: Build a predictive model
+      title: Vista del Futuro
+      description: Costruisci un modello predittivo
       skills_improved:
         - machine_learning
         - predictive_statistics
       xp_reward: 350
     - id: real_time_system
       type: creation
-      title: Instant Oracle System
-      description: Create real-time analytics system
+      title: Sistema Oracolo Istantaneo
+      description: Crea un sistema di analisi in tempo reale
       skills_improved:
         - real_time_analytics
         - big_data_mastery
       xp_reward: 400
 learning_objectives:
-  - Master data collection and cleaning techniques
-  - Apply statistical methods to uncover insights
-  - Create compelling data visualizations
-  - Transform data into business recommendations
-  - Build predictive models using machine learning
-  - Handle big data efficiently
-  - Communicate findings effectively
-  - Maintain data integrity and ethics
+  - "Padroneggiare le tecniche di raccolta e pulizia dei dati"
+  - "Applicare metodi statistici per scoprire intuizioni"
+  - "Creare visualizzazioni dati coinvolgenti"
+  - "Trasformare i dati in raccomandazioni aziendali"
+  - "Costruire modelli predittivi usando il machine learning"
+  - "Gestire i big data in modo efficiente"
+  - "Comunicare i risultati in modo efficace"
+  - "Mantenere l'integrità e l'etica dei dati"
+
 career_outcomes:
-  - Data Analyst
-  - Business Intelligence Analyst
-  - Data Scientist
-  - Analytics Consultant
-  - Market Research Analyst
-  - Financial Analyst
-  - Operations Analyst
-  - Data Analytics Manager
+  - "Analista Dati"
+  - "Analista Business Intelligence"
+  - "Data Scientist"
+  - "Consulente Analytics"
+  - "Analista Ricerche di Mercato"
+  - "Analista Finanziario"
+  - "Analista Operativo"
+  - "Manager Analytics Dati"

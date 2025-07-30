@@ -96,8 +96,8 @@ skill_tree:
       requires: [data_visualization, statistical_analysis]
 milestone_quests:
   - id: first_insight
-    name: First Revelation
-    description: Discover your first meaningful business insight
+    name: Primera Revelación
+    description: Descubre tu primera visión empresarial significativa
     required_level: 5
     skills_tested:
       - data_collection
@@ -107,8 +107,8 @@ milestone_quests:
       - insight_badge
       - temple_recognition
   - id: chaos_detection
-    name: Chaos Hunter
-    description: Detect and correct misleading data manipulations
+    name: Cazador del Caos
+    description: Detecta y corrige manipulaciones de datos engañosas
     required_level: 10
     skills_tested:
       - data_visualization
@@ -118,8 +118,8 @@ milestone_quests:
       - truth_seeker_title
       - advanced_access
   - id: oracle_ascension
-    name: Master Oracle
-    description: Predict a major trend before it happens
+    name: Oráculo Maestro
+    description: Predice una tendencia importante antes de que ocurra
     required_level: 20
     skills_tested:
       - machine_learning
@@ -130,55 +130,55 @@ milestone_quests:
       - temple_leadership
 achievements:
   - id: first_dashboard
-    name: First Vision
-    description: Create your first data dashboard
+    name: Primera Visión
+    description: Crea tu primer tablero de datos
     xp_reward: 100
     badge_type: bronze
   - id: data_detective
-    name: Data Detective
-    description: Find 10 data quality issues
+    name: Detective de Datos
+    description: Encuentra 10 problemas de calidad de datos
     xp_reward: 250
     badge_type: silver
   - id: prediction_master
-    name: Prediction Master
-    description: Make 5 accurate predictions
+    name: Maestro de Predicciones
+    description: Haz 5 predicciones precisas
     xp_reward: 500
     badge_type: gold
   - id: oracle_legend
-    name: Oracle of Legend
-    description: Complete all data challenges
+    name: Oráculo Legendario
+    description: Completa todos los desafíos de datos
     xp_reward: 1000
     badge_type: platinum
 example_tasks:
   beginner:
     - id: data_cleaning
       type: analysis
-      title: Oracle Data Collection
-      description: Collect and clean a messy dataset
+      title: Recolección de Datos del Oráculo
+      description: Recolecta y limpia un conjunto de datos desordenado
       skills_improved:
         - data_collection
         - data_alchemy
       xp_reward: 60
     - id: basic_stats
       type: analysis
-      title: Statistical Foundations
-      description: Perform basic statistical analysis
+      title: Fundamentos Estadísticos
+      description: Realiza análisis estadístico básico
       skills_improved:
         - statistical_analysis
       xp_reward: 50
   intermediate:
     - id: trend_analysis
       type: analysis
-      title: Truth Analysis Spell
-      description: Conduct deep trend analysis
+      title: Hechizo de Análisis de la Verdad
+      description: Realiza un análisis profundo de tendencias
       skills_improved:
         - statistical_analysis
         - business_intelligence
       xp_reward: 180
     - id: dashboard_design
       type: creation
-      title: Vision Dashboard
-      description: Create an interactive business dashboard
+      title: Tablero de Visión
+      description: Crea un tablero empresarial interactivo
       skills_improved:
         - data_visualization
         - visualization_magic
@@ -186,16 +186,16 @@ example_tasks:
   advanced:
     - id: predictive_model
       type: creation
-      title: Future Sight
-      description: Build a predictive model
+      title: Visión del Futuro
+      description: Construye un modelo predictivo
       skills_improved:
         - machine_learning
         - predictive_statistics
       xp_reward: 350
     - id: real_time_system
       type: creation
-      title: Instant Oracle System
-      description: Create real-time analytics system
+      title: Sistema Oráculo Instantáneo
+      description: Crea un sistema de análisis en tiempo real
       skills_improved:
         - real_time_analytics
         - big_data_mastery
