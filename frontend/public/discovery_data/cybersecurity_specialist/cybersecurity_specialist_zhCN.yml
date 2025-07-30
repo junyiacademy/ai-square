@@ -1,16 +1,14 @@
 # Cybersecurity Specialist Discovery Path - Simplified Chinese
-# PLACEHOLDER FILE - 需要翻译
 path_id: cybersecurity_specialist
 category: technology
 difficulty_range: beginner_to_expert
 metadata:
-  title: Digital Fortress Guardian - Cybersecurity Specialist
-  short_description: Defend the digital realm from cyber threats
+  title: "数字要塞守护者 - 网络安全专家"
+  short_description: "保护数字领域免受网络威胁"
   long_description: |
-    You are a recruit at the "Cyber Defense Academy," an elite training ground for 
-    digital warriors. In a world where data is the new gold and hackers lurk in 
-    every shadow of the internet, you'll learn to protect critical infrastructure, 
-    hunt cyber criminals, and build impenetrable digital fortresses.
+    你是"网络防御学院"的一名新兵，这是一个为数字战士设立的精英训练营。
+    在这个数据是新黄金、黑客潜伏在互联网每个阴影中的世界里，
+    你将学会保护关键基础设施，追捕网络罪犯，并构建坚不可摧的数字要塞。
   estimated_hours: 65
   skill_focus:
     - threat_detection
@@ -18,26 +16,21 @@ metadata:
     - network_defense
     - ethical_hacking
     - incident_response
-  translation_notice: 需要翻译 - This is a placeholder file
-  original_language: en
-  target_language: zhCN
-  generated_date: "2025-07-16T07:00:56.493Z"
 world_setting:
-  name: Cyber Defense Academy
+  name: "网络防御学院"
   description: |
-    The Cyber Defense Academy exists in both physical and virtual realms. Students 
-    navigate through simulated cyber attacks, learn from legendary white hat hackers, 
-    and prepare for real-world threats that could cripple nations or corporations 
-    in seconds.
+    网络防御学院同时存在于物理和虚拟领域。学生们通过模拟的网络攻击
+    进行导航，向传奇的白帽黑客学习，并为可能在几秒钟内瘠痪国家
+    或企业的现实世界威胁做好准备。
   atmosphere: high_stakes_tactical
   visual_theme: matrix_fortress
 starting_scenario:
-  title: The Dark Web Rising
+  title: "暗网的崛起"
   description: |
-    Commander Firewall briefs you on an urgent situation: the notorious hacker 
-    collective "Shadow Byte" led by the mysterious Zero Day is planning a massive 
-    attack on global infrastructure. You must master cybersecurity skills quickly 
-    to join the defense force and prevent digital apocalypse.
+    防火墙指挥官向你汇报了一个紧急情况：由神秘的零日攻击者领导的
+    臭名昭著的黑客集团"Shadow Byte"正在计划对全球基础设施发动
+    大规模攻击。你必须快速掌握网络安全技能，加入防御部队，
+    防止数字末日的到来。
   initial_tasks:
     - understand_threats
     - setup_defenses
@@ -45,59 +38,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: network_security
-      name: Network Shield
-      description: Secure network infrastructure
+      name: "网络盾牌"
+      description: "保护网络基础设施"
       max_level: 10
       unlocks:
         - firewall_configuration
         - intrusion_detection
     - id: cryptography
-      name: Code Cipher
-      description: Master encryption and decryption
+      name: "代码密码"
+      description: "精通加密和解密"
       max_level: 10
       unlocks:
         - advanced_encryption
         - blockchain_security
     - id: ethical_hacking
-      name: White Hat Arsenal
-      description: Think like an attacker to defend
+      name: "白帽武库"
+      description: "像攻击者一样思考以进行防御"
       max_level: 10
       unlocks:
         - penetration_testing
         - vulnerability_assessment
     - id: security_analysis
-      name: Threat Intelligence
-      description: Analyze and predict cyber threats
+      name: "威胁情报"
+      description: "分析和预测网络威胁"
       max_level: 10
       unlocks:
         - malware_analysis
         - forensics
   advanced_skills:
     - id: zero_day_hunting
-      name: Vulnerability Oracle
-      description: Discover unknown vulnerabilities
+      name: "漏洞神谕"
+      description: "发现未知的漏洞"
       max_level: 15
       requires:
         - ethical_hacking
         - security_analysis
     - id: ai_security
-      name: AI Defense Matrix
-      description: Use AI to enhance security
+      name: "AI防御矩阵"
+      description: "使用AI增强安全性"
       max_level: 15
       requires:
         - network_security
         - cryptography
     - id: cyber_warfare
-      name: Digital Battlefield
-      description: Defend against nation-state attacks
+      name: "数字战场"
+      description: "防御国家级攻击"
       max_level: 15
       requires:
         - security_analysis
         - network_security
 milestone_quests:
   - id: first_defense
-    name: Firewall Rising
-    description: Successfully defend against first attack
+    name: "防火墙崛起"
+    description: "成功防御第一次攻击"
     required_level: 5
     skills_tested:
       - network_security
@@ -107,8 +100,8 @@ milestone_quests:
       - defender_badge
       - security_clearance_1
   - id: shadow_byte_hack
-    name: Into the Shadows
-    description: Infiltrate Shadow Byte and prevent attack
+    name: "潜入暗影"
+    description: "渗透Shadow Byte并阻止攻击"
     required_level: 10
     skills_tested:
       - ethical_hacking
@@ -118,8 +111,8 @@ milestone_quests:
       - ghost_hacker_title
       - dark_web_access
   - id: zero_day_showdown
-    name: Final Firewall
-    description: Defeat Zero Day in cyber combat
+    name: "最终防火墙"
+    description: "在网络战斗中击败零日"
     required_level: 20
     skills_tested:
       - zero_day_hunting
@@ -130,39 +123,39 @@ milestone_quests:
       - global_recognition
 achievements:
   - id: first_patch
-    name: Bug Squasher
-    description: Fix your first vulnerability
+    name: "漏洞修复者"
+    description: "修复你的第一个漏洞"
     xp_reward: 120
     badge_type: bronze
   - id: threat_hunter
-    name: Malware Hunter
-    description: Detect and neutralize 20 threats
+    name: "恶意软件猎人"
+    description: "检测并消除20个威胁"
     xp_reward: 380
     badge_type: silver
   - id: fortress_builder
-    name: Impenetrable
-    description: Build unhackable security system
+    name: "铜墙铁壁"
+    description: "构建不可破解的安全系统"
     xp_reward: 720
     badge_type: gold
   - id: cyber_guardian
-    name: Digital Savior
-    description: Complete all security challenges
+    name: "数字救世主"
+    description: "完成所有安全挑战"
     xp_reward: 1400
     badge_type: platinum
 example_tasks:
   beginner:
     - id: password_audit
       type: analysis
-      title: Credential Check
-      description: Audit and improve password security
+      title: "凭证检查"
+      description: "审核并改进密码安全性"
       skills_improved:
         - cryptography
         - security_analysis
       xp_reward: 70
     - id: phishing_detection
       type: analysis
-      title: Bait Detector
-      description: Identify phishing attempts
+      title: "钓鱼探测器"
+      description: "识别钓鱼企图"
       skills_improved:
         - threat_detection
         - security_analysis
@@ -170,16 +163,16 @@ example_tasks:
   intermediate:
     - id: penetration_test
       type: creation
-      title: Breach Simulation
-      description: Conduct penetration testing
+      title: "渗透模拟"
+      description: "进行渗透测试"
       skills_improved:
         - ethical_hacking
         - network_defense
       xp_reward: 210
     - id: incident_response
       type: chat
-      title: Crisis Command
-      description: Lead incident response team
+      title: "危机指挥"
+      description: "领导事件响应团队"
       skills_improved:
         - incident_response
         - network_security
@@ -187,35 +180,35 @@ example_tasks:
   advanced:
     - id: zero_day_discovery
       type: analysis
-      title: Unknown Unknown
-      description: Find zero-day vulnerability
+      title: "未知的未知"
+      description: "发现零日漏洞"
       skills_improved:
         - zero_day_hunting
         - ethical_hacking
       xp_reward: 460
     - id: ai_defense_system
       type: creation
-      title: Sentient Shield
-      description: Build AI-powered defense system
+      title: "智能防护盾"
+      description: "构建AI驱动的防御系统"
       skills_improved:
         - ai_security
         - network_defense
       xp_reward: 510
 learning_objectives:
-  - Master network security fundamentals
-  - Understand cryptography and encryption
-  - Learn ethical hacking techniques
-  - Develop incident response capabilities
-  - Analyze malware and cyber threats
-  - Build secure systems and architectures
-  - Stay ahead of emerging threats
-  - Balance security with usability
+  - "掌握网络安全基础知识"
+  - "理解密码学和加密技术"
+  - "学习道德黑客技术"
+  - "培养事件响应能力"
+  - "分析恶意软件和网络威胁"
+  - "构建安全的系统和架构"
+  - "领先于新兴威胁"
+  - "平衡安全性与可用性"
 career_outcomes:
-  - Cybersecurity Analyst
-  - Penetration Tester
-  - Security Architect
-  - Incident Response Manager
-  - Chief Information Security Officer
-  - Cybersecurity Consultant
-  - Threat Intelligence Analyst
-  - Security Operations Center Lead
+  - "网络安全分析师"
+  - "渗透测试员"
+  - "安全架构师"
+  - "事件响应经理"
+  - "首席信息安全官"
+  - "网络安全顾问"
+  - "威胁情报分析师"
+  - "安全运营中心负责人"

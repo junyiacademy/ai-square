@@ -1,42 +1,37 @@
 # Tech Entrepreneur Discovery Path - Arabic
-# PLACEHOLDER FILE - يحتاج إلى ترجمة
 path_id: tech_entrepreneur
 category: technology
 difficulty_range: beginner_to_expert
 metadata:
-  title: Dimension Business Traveler - Tech Entrepreneur
-  short_description: Build technology business empires across multiverses
+  title: "مسافر الأعمال عبر الأبعاد - رائد أعمال تقني"
+  short_description: "ابنِ إمبراطوريات أعمال تقنية عبر الأكوان المتعددة"
   long_description: |
-    You are a newly inducted traveler of the Cross-Dimensional Business Alliance, 
-    possessing the ability to establish technology enterprises across different 
-    spacetimes. Each parallel universe has unique technological development levels, 
-    and you must adapt to various environments to build successful business empires.
+    أنت مسافر حديث الانضمام إلى "تحالف الأعمال عبر الأبعاد"، تمتلك 
+    القدرة على إنشاء مشاريع تقنية عبر أزمنة فضائية مختلفة. كل كون 
+    موازٍ له مستويات تطور تقني فريدة، وعليك التكيف مع بيئات مختلفة 
+    لبناء إمبراطوريات أعمال ناجحة.
   estimated_hours: 65
   skill_focus:
     - dimensional_business_insight
     - cross_tech_integration
     - team_summoning
     - innovation_prophecy
-  translation_notice: يحتاج إلى ترجمة - This is a placeholder file
-  original_language: en
-  target_language: ar
-  generated_date: "2025-07-16T07:00:56.537Z"
 world_setting:
-  name: Multiverse Business Network
+  name: "شبكة الأعمال متعددة الأكوان"
   description: |
-    The Multiverse Business Network consists of countless parallel spacetimes forming 
-    a vast commercial web. Tech entrepreneurs travel between dimensions, bringing 
-    innovations from one universe to solve problems in another, while competing against 
-    monopolistic forces that seek to control all realities.
+    تتكون شبكة الأعمال متعددة الأكوان من أزمنة فضائية موازية لا حصر لها 
+    تشكل شبكة تجارية واسعة. يسافر رواد الأعمال التقنيون بين الأبعاد، 
+    جالبين الابتكارات من كون إلى آخر لحل المشاكل، بينما يتنافسون ضد 
+    قوى احتكارية تسعى للسيطرة على جميع الحقائق.
   atmosphere: futuristic_dynamic
   visual_theme: interdimensional_tech
 starting_scenario:
-  title: Dimensional Gateway Activation
+  title: "تفعيل بوابة الأبعاد"
   description: |
-    Business Mentor Atlas greets you at the dimensional hub, explaining your newfound 
-    ability to travel between universes. But CEO Greed of Monopoly Corp is using unfair 
-    tactics to crush startups across all dimensions. You must use innovation and 
-    collaboration to fight his monopolistic plans.
+    يستقبلك مرشد الأعمال أطلس في محور الأبعاد، موضحاً قدرتك الجديدة 
+    على السفر بين الأكوان. لكن الرئيس التنفيذي الجشع من شركة الاحتكار 
+    يستخدم تكتيكات غير عادلة لسحق الشركات الناشئة عبر جميع الأبعاد. 
+    عليك استخدام الابتكار والتعاون لمحاربة خططه الاحتكارية.
   initial_tasks:
     - understand_multiverse
     - identify_opportunity
@@ -44,59 +39,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: opportunity_sensing
-      name: Opportunity Radar
-      description: Detect business opportunities across dimensions
+      name: "رادار الفرص"
+      description: "اكتشف فرص الأعمال عبر الأبعاد"
       max_level: 10
       unlocks:
         - market_gaps
         - trend_prediction
     - id: tech_fusion
-      name: Technology Fusion
-      description: Combine technologies from different realities
+      name: "دمج التقنيات"
+      description: "ادمج التقنيات من حقائق مختلفة"
       max_level: 10
       unlocks:
         - innovation_synthesis
         - cross_platform_tech
     - id: venture_building
-      name: Venture Architecture
-      description: Build scalable tech businesses
+      name: "هندسة المشاريع"
+      description: "ابنِ أعمالاً تقنية قابلة للتوسع"
       max_level: 10
       unlocks:
         - business_models
         - growth_hacking
     - id: dimensional_networking
-      name: Multiverse Connections
-      description: Build networks across dimensions
+      name: "اتصالات الأكوان المتعددة"
+      description: "ابنِ شبكات عبر الأبعاد"
       max_level: 10
       unlocks:
         - investor_portals
         - talent_summoning
   advanced_skills:
     - id: disruption_mastery
-      name: Disruption Engineering
-      description: Create industry-changing innovations
+      name: "هندسة التعطيل"
+      description: "اخلق ابتكارات تغير الصناعة"
       max_level: 15
       requires:
         - opportunity_sensing
         - tech_fusion
     - id: unicorn_creation
-      name: Unicorn Summoning
-      description: Build billion-dollar tech companies
+      name: "استدعاء اليونيكورن"
+      description: "ابنِ شركات تقنية بمليارات الدولارات"
       max_level: 15
       requires:
         - venture_building
         - dimensional_networking
     - id: ecosystem_architecture
-      name: Ecosystem Building
-      description: Create thriving tech ecosystems
+      name: "بناء النظم البيئية"
+      description: "اخلق أنظمة بيئية تقنية مزدهرة"
       max_level: 15
       requires:
         - dimensional_networking
         - tech_fusion
 milestone_quests:
   - id: first_startup
-    name: Dimensional Debut
-    description: Launch your first cross-dimensional startup
+    name: "الظهور الأول عبر الأبعاد"
+    description: "أطلق أول شركة ناشئة عبر الأبعاد"
     required_level: 5
     skills_tested:
       - opportunity_sensing
@@ -106,8 +101,8 @@ milestone_quests:
       - dimension_traveler_badge
       - investor_interest
   - id: monopoly_breaker
-    name: Monopoly Breaker
-    description: Disrupt Greed's monopoly in one dimension
+    name: "كاسر الاحتكار"
+    description: "عطل احتكار الجشع في بُعد واحد"
     required_level: 10
     skills_tested:
       - disruption_mastery
@@ -117,8 +112,8 @@ milestone_quests:
       - freedom_fighter_title
       - resistance_network
   - id: multiverse_empire
-    name: Multiverse Empire
-    description: Build successful ventures in 5 dimensions
+    name: "إمبراطورية الأكوان المتعددة"
+    description: "ابنِ مشاريع ناجحة في 5 أبعاد"
     required_level: 20
     skills_tested:
       - unicorn_creation
@@ -129,39 +124,39 @@ milestone_quests:
       - alliance_leadership
 achievements:
   - id: first_funding
-    name: Seed Crystal
-    description: Raise your first investment
+    name: "بلورة البذور"
+    description: "اجمع أول استثمار لك"
     xp_reward: 150
     badge_type: bronze
   - id: tech_innovator
-    name: Innovation Catalyst
-    description: Create 5 breakthrough technologies
+    name: "محفز الابتكار"
+    description: "اخلق 5 تقنيات ثورية"
     xp_reward: 400
     badge_type: silver
   - id: exit_success
-    name: Dimensional Exit
-    description: Successfully exit a startup
+    name: "الخروج عبر الأبعاد"
+    description: "اخرج بنجاح من شركة ناشئة"
     xp_reward: 800
     badge_type: gold
   - id: serial_legend
-    name: Serial Dimension Hopper
-    description: Complete all entrepreneurial challenges
+    name: "قافز الأبعاد المتسلسل"
+    description: "أكمل جميع تحديات ريادة الأعمال"
     xp_reward: 1500
     badge_type: platinum
 example_tasks:
   beginner:
     - id: market_validation
       type: analysis
-      title: Dimensional Market Scan
-      description: Validate a business idea across dimensions
+      title: "مسح السوق عبر الأبعاد"
+      description: "تحقق من صحة فكرة عمل عبر الأبعاد"
       skills_improved:
         - opportunity_sensing
         - dimensional_business_insight
       xp_reward: 80
     - id: mvp_launch
       type: creation
-      title: Prototype Portal
-      description: Build and launch an MVP
+      title: "بوابة النموذج الأولي"
+      description: "ابنِ وأطلق منتجاً بالحد الأدنى"
       skills_improved:
         - venture_building
         - tech_fusion
@@ -169,16 +164,16 @@ example_tasks:
   intermediate:
     - id: team_assembly
       type: chat
-      title: Multiverse Team Building
-      description: Recruit talent from different dimensions
+      title: "بناء فريق الأكوان المتعددة"
+      description: "وظف المواهب من أبعاد مختلفة"
       skills_improved:
         - dimensional_networking
         - team_summoning
       xp_reward: 200
     - id: product_scaling
       type: creation
-      title: Dimensional Scaling
-      description: Scale product across multiple universes
+      title: "التوسع عبر الأبعاد"
+      description: "وسع المنتج عبر أكوان متعددة"
       skills_improved:
         - growth_hacking
         - venture_building
@@ -186,35 +181,35 @@ example_tasks:
   advanced:
     - id: industry_disruption
       type: creation
-      title: Reality Reshaper
-      description: Create technology that changes an industry
+      title: "معيد تشكيل الواقع"
+      description: "اخلق تقنية تغير صناعة بأكملها"
       skills_improved:
         - disruption_mastery
         - innovation_prophecy
       xp_reward: 450
     - id: ecosystem_creation
       type: creation
-      title: Dimensional Ecosystem
-      description: Build a thriving tech ecosystem
+      title: "النظام البيئي عبر الأبعاد"
+      description: "ابنِ نظاماً بيئياً تقنياً مزدهراً"
       skills_improved:
         - ecosystem_architecture
         - dimensional_networking
       xp_reward: 500
 learning_objectives:
-  - Identify opportunities across different markets and dimensions
-  - Build and scale technology companies from idea to exit
-  - Master fundraising and investor relations
-  - Create innovative products that solve real problems
-  - Build and lead high-performing distributed teams
-  - Navigate regulatory and cultural differences
-  - Develop sustainable competitive advantages
-  - Foster innovation ecosystems
+  - "حدد الفرص عبر الأسواق والأبعاد المختلفة"
+  - "ابنِ ووسع شركات التقنية من الفكرة إلى الخروج"
+  - "أتقن جمع الأموال وعلاقات المستثمرين"
+  - "اخلق منتجات مبتكرة تحل مشاكل حقيقية"
+  - "ابنِ وقُد فرقاً موزعة عالية الأداء"
+  - "تنقل عبر الاختلافات التنظيمية والثقافية"
+  - "طور مزايا تنافسية مستدامة"
+  - "عزز أنظمة الابتكار البيئية"
 career_outcomes:
-  - Tech Startup Founder
-  - Serial Entrepreneur
-  - Venture Partner
-  - Innovation Director
-  - Startup Ecosystem Builder
-  - Technology Strategist
-  - Corporate Innovation Lead
-  - Angel Investor
+  - "مؤسس شركة ناشئة تقنية"
+  - "رائد أعمال متسلسل"
+  - "شريك استثماري"
+  - "مدير الابتكار"
+  - "باني النظام البيئي للشركات الناشئة"
+  - "استراتيجي التقنية"
+  - "قائد الابتكار المؤسسي"
+  - "مستثمر ملاك"

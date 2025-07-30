@@ -1,42 +1,40 @@
 # Tech Entrepreneur Discovery Path - French
-# PLACEHOLDER FILE - Traduction nécessaire
 path_id: tech_entrepreneur
 category: technology
 difficulty_range: beginner_to_expert
 metadata:
-  title: Dimension Business Traveler - Tech Entrepreneur
-  short_description: Build technology business empires across multiverses
+  title: "Voyageur d'Affaires Dimensionnel - Entrepreneur Tech"
+  short_description: "Construisez des empires d'affaires technologiques à travers les multivers"
   long_description: |
-    You are a newly inducted traveler of the Cross-Dimensional Business Alliance, 
-    possessing the ability to establish technology enterprises across different 
-    spacetimes. Each parallel universe has unique technological development levels, 
-    and you must adapt to various environments to build successful business empires.
+    Vous êtes un voyageur nouvellement intronise de l'Alliance d'Affaires 
+    Transdimensionnelle, possédant la capacité d'établir des entreprises 
+    technologiques à travers différents espaces-temps. Chaque univers parallèle 
+    a des niveaux uniques de développement technologique, et vous devez vous 
+    adapter à divers environnements pour construire des empires commerciaux prospères.
   estimated_hours: 65
   skill_focus:
     - dimensional_business_insight
     - cross_tech_integration
     - team_summoning
     - innovation_prophecy
-  translation_notice: Traduction nécessaire - This is a placeholder file
-  original_language: en
-  target_language: fr
-  generated_date: "2025-07-16T07:00:56.540Z"
 world_setting:
-  name: Multiverse Business Network
+  name: "Réseau d'Affaires du Multivers"
   description: |
-    The Multiverse Business Network consists of countless parallel spacetimes forming 
-    a vast commercial web. Tech entrepreneurs travel between dimensions, bringing 
-    innovations from one universe to solve problems in another, while competing against 
-    monopolistic forces that seek to control all realities.
+    Le Réseau d'Affaires du Multivers se compose d'innombrables espaces-temps 
+    parallèles formant une vaste toile commerciale. Les entrepreneurs tech 
+    voyagent entre les dimensions, apportant des innovations d'un univers pour 
+    résoudre des problèmes dans un autre, tout en rivalisant contre des forces 
+    monopolistiques qui cherchent à contrôler toutes les réalités.
   atmosphere: futuristic_dynamic
   visual_theme: interdimensional_tech
 starting_scenario:
-  title: Dimensional Gateway Activation
+  title: "Activation du Portail Dimensionnel"
   description: |
-    Business Mentor Atlas greets you at the dimensional hub, explaining your newfound 
-    ability to travel between universes. But CEO Greed of Monopoly Corp is using unfair 
-    tactics to crush startups across all dimensions. You must use innovation and 
-    collaboration to fight his monopolistic plans.
+    Le Mentor d'Affaires Atlas vous accueille au hub dimensionnel, expliquant votre 
+    nouvelle capacité à voyager entre les univers. Mais le PDG Cupidité de Monopoly 
+    Corp utilise des tactiques déloyales pour écraser les startups à travers toutes 
+    les dimensions. Vous devez utiliser l'innovation et la collaboration pour 
+    combattre ses plans monopolistiques.
   initial_tasks:
     - understand_multiverse
     - identify_opportunity
@@ -44,59 +42,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: opportunity_sensing
-      name: Opportunity Radar
-      description: Detect business opportunities across dimensions
+      name: "Radar d'Opportunités"
+      description: "Détectez les opportunités d'affaires à travers les dimensions"
       max_level: 10
       unlocks:
         - market_gaps
         - trend_prediction
     - id: tech_fusion
-      name: Technology Fusion
-      description: Combine technologies from different realities
+      name: "Fusion Technologique"
+      description: "Combinez les technologies de différentes réalités"
       max_level: 10
       unlocks:
         - innovation_synthesis
         - cross_platform_tech
     - id: venture_building
-      name: Venture Architecture
-      description: Build scalable tech businesses
+      name: "Architecture d'Entreprise"
+      description: "Construisez des entreprises tech évolutives"
       max_level: 10
       unlocks:
         - business_models
         - growth_hacking
     - id: dimensional_networking
-      name: Multiverse Connections
-      description: Build networks across dimensions
+      name: "Connexions du Multivers"
+      description: "Construisez des réseaux à travers les dimensions"
       max_level: 10
       unlocks:
         - investor_portals
         - talent_summoning
   advanced_skills:
     - id: disruption_mastery
-      name: Disruption Engineering
-      description: Create industry-changing innovations
+      name: "Ingénierie de Disruption"
+      description: "Créez des innovations qui transforment les industries"
       max_level: 15
       requires:
         - opportunity_sensing
         - tech_fusion
     - id: unicorn_creation
-      name: Unicorn Summoning
-      description: Build billion-dollar tech companies
+      name: "Invocation de Licorne"
+      description: "Construisez des entreprises tech valant des milliards"
       max_level: 15
       requires:
         - venture_building
         - dimensional_networking
     - id: ecosystem_architecture
-      name: Ecosystem Building
-      description: Create thriving tech ecosystems
+      name: "Construction d'Écosystème"
+      description: "Créez des écosystèmes tech florissants"
       max_level: 15
       requires:
         - dimensional_networking
         - tech_fusion
 milestone_quests:
   - id: first_startup
-    name: Dimensional Debut
-    description: Launch your first cross-dimensional startup
+    name: "Début Dimensionnel"
+    description: "Lancez votre première startup transdimensionnelle"
     required_level: 5
     skills_tested:
       - opportunity_sensing
@@ -106,8 +104,8 @@ milestone_quests:
       - dimension_traveler_badge
       - investor_interest
   - id: monopoly_breaker
-    name: Monopoly Breaker
-    description: Disrupt Greed's monopoly in one dimension
+    name: "Briseur de Monopole"
+    description: "Perturbez le monopole de Cupidité dans une dimension"
     required_level: 10
     skills_tested:
       - disruption_mastery
@@ -117,8 +115,8 @@ milestone_quests:
       - freedom_fighter_title
       - resistance_network
   - id: multiverse_empire
-    name: Multiverse Empire
-    description: Build successful ventures in 5 dimensions
+    name: "Empire du Multivers"
+    description: "Construisez des entreprises réussies dans 5 dimensions"
     required_level: 20
     skills_tested:
       - unicorn_creation
@@ -129,39 +127,39 @@ milestone_quests:
       - alliance_leadership
 achievements:
   - id: first_funding
-    name: Seed Crystal
-    description: Raise your first investment
+    name: "Cristal de Semence"
+    description: "Levez votre premier investissement"
     xp_reward: 150
     badge_type: bronze
   - id: tech_innovator
-    name: Innovation Catalyst
-    description: Create 5 breakthrough technologies
+    name: "Catalyseur d'Innovation"
+    description: "Créez 5 technologies révolutionnaires"
     xp_reward: 400
     badge_type: silver
   - id: exit_success
-    name: Dimensional Exit
-    description: Successfully exit a startup
+    name: "Sortie Dimensionnelle"
+    description: "Réussissez la sortie d'une startup"
     xp_reward: 800
     badge_type: gold
   - id: serial_legend
-    name: Serial Dimension Hopper
-    description: Complete all entrepreneurial challenges
+    name: "Sauteur Dimensionnel en Série"
+    description: "Complétez tous les défis entrepreneuriaux"
     xp_reward: 1500
     badge_type: platinum
 example_tasks:
   beginner:
     - id: market_validation
       type: analysis
-      title: Dimensional Market Scan
-      description: Validate a business idea across dimensions
+      title: "Scan de Marché Dimensionnel"
+      description: "Validez une idée d'affaires à travers les dimensions"
       skills_improved:
         - opportunity_sensing
         - dimensional_business_insight
       xp_reward: 80
     - id: mvp_launch
       type: creation
-      title: Prototype Portal
-      description: Build and launch an MVP
+      title: "Portail Prototype"
+      description: "Construisez et lancez un MVP"
       skills_improved:
         - venture_building
         - tech_fusion
@@ -169,16 +167,16 @@ example_tasks:
   intermediate:
     - id: team_assembly
       type: chat
-      title: Multiverse Team Building
-      description: Recruit talent from different dimensions
+      title: "Construction d'Équipe Multivers"
+      description: "Recrutez des talents de différentes dimensions"
       skills_improved:
         - dimensional_networking
         - team_summoning
       xp_reward: 200
     - id: product_scaling
       type: creation
-      title: Dimensional Scaling
-      description: Scale product across multiple universes
+      title: "Mise à l'Échelle Dimensionnelle"
+      description: "Déployez un produit à travers plusieurs univers"
       skills_improved:
         - growth_hacking
         - venture_building
@@ -186,35 +184,35 @@ example_tasks:
   advanced:
     - id: industry_disruption
       type: creation
-      title: Reality Reshaper
-      description: Create technology that changes an industry
+      title: "Reforgeur de Réalité"
+      description: "Créez une technologie qui transforme une industrie"
       skills_improved:
         - disruption_mastery
         - innovation_prophecy
       xp_reward: 450
     - id: ecosystem_creation
       type: creation
-      title: Dimensional Ecosystem
-      description: Build a thriving tech ecosystem
+      title: "Écosystème Dimensionnel"
+      description: "Construisez un écosystème tech florissant"
       skills_improved:
         - ecosystem_architecture
         - dimensional_networking
       xp_reward: 500
 learning_objectives:
-  - Identify opportunities across different markets and dimensions
-  - Build and scale technology companies from idea to exit
-  - Master fundraising and investor relations
-  - Create innovative products that solve real problems
-  - Build and lead high-performing distributed teams
-  - Navigate regulatory and cultural differences
-  - Develop sustainable competitive advantages
-  - Foster innovation ecosystems
+  - "Identifiez les opportunités à travers différents marchés et dimensions"
+  - "Construisez et développez des entreprises technologiques de l'idée à la sortie"
+  - "Maîtrisez la levée de fonds et les relations avec les investisseurs"
+  - "Créez des produits innovants qui résolvent de vrais problèmes"
+  - "Construisez et dirigez des équipes distribuées performantes"
+  - "Naviguez les différences réglementaires et culturelles"
+  - "Développez des avantages concurrentiels durables"
+  - "Favorisez les écosystèmes d'innovation"
 career_outcomes:
-  - Tech Startup Founder
-  - Serial Entrepreneur
-  - Venture Partner
-  - Innovation Director
-  - Startup Ecosystem Builder
-  - Technology Strategist
-  - Corporate Innovation Lead
-  - Angel Investor
+  - "Fondateur de Startup Tech"
+  - "Entrepreneur en Série"
+  - "Partenaire de Capital-Risque"
+  - "Directeur de l'Innovation"
+  - "Constructeur d'Écosystème de Startups"
+  - "Stratège Technologique"
+  - "Responsable de l'Innovation Corporate"
+  - "Investisseur Providentiel"

@@ -1,41 +1,37 @@
 # Ux Designer Discovery Path - Arabic
-# PLACEHOLDER FILE - يحتاج إلى ترجمة
 path_id: ux_designer
 category: arts
 difficulty_range: beginner_to_expert
 metadata:
-  title: Experience Architect - UX Designer
-  short_description: Build perfect experience worlds in digital spaces
+  title: "مهندس التجارب - مصمم تجربة المستخدم"
+  short_description: "ابنِ عوالم تجربة مثالية في الفضاءات الرقمية"
   long_description: |
-    You are an apprentice architect at the "Experience Design Academy," skilled at 
-    building unforgettable experience spaces in the digital world. Every click and 
-    swipe is a carefully designed journey, and your mission is to make users feel 
-    joy and satisfaction in these spaces.
+    أنت مهندس متدرب في "أكاديمية تصميم التجارب"، ماهر في بناء 
+    مساحات تجربة لا تُنسى في العالم الرقمي. كل نقرة وسحبة هي 
+    رحلة مصممة بعناية، ومهمتك هي جعل المستخدمين يشعرون بالفرح 
+    والرضا في هذه المساحات.
   estimated_hours: 55
   skill_focus:
     - user_psychology
     - experience_magic
     - prototype_sculpting
     - communication_arts
-  translation_notice: يحتاج إلى ترجمة - This is a placeholder file
-  original_language: en
-  target_language: ar
-  generated_date: "2025-07-16T07:00:56.547Z"
 world_setting:
-  name: Experience Design Academy
+  name: "أكاديمية تصميم التجارب"
   description: |
-    The Experience Design Academy is a mysterious institution dedicated to studying 
-    human experiences. Designers here learn to balance aesthetics with functionality, 
-    emotion with efficiency, creating digital spaces that heal and inspire.
+    أكاديمية تصميم التجارب هي مؤسسة غامضة مكرسة لدراسة 
+    التجارب البشرية. يتعلم المصممون هنا كيفية تحقيق التوازن بين 
+    الجماليات والوظيفية، والعاطفة والكفاءة، لخلق مساحات رقمية 
+    تشفي وتلهم.
   atmosphere: harmonious_innovative
   visual_theme: minimalist_magic
 starting_scenario:
-  title: The Indifference Crisis
+  title: "أزمة اللامبالاة"
   description: |
-    Design Sage Maya welcomes you with an urgent mission: Indifference, the cold 
-    corporate giant, is standardizing all designs, eliminating personalized experiences. 
-    You must use soulful design to combat mechanization and restore humanity to 
-    digital interactions.
+    ترحب بك حكيمة التصميم مايا بمهمة عاجلة: "اللامبالاة"، العملاق 
+    المؤسسي البارد، يقوم بتوحيد جميع التصميمات، ملغياً التجارب 
+    المخصصة. عليك استخدام تصميم ذي روح لمحاربة الميكنة واستعادة 
+    الإنسانية للتفاعلات الرقمية.
   initial_tasks:
     - understand_users
     - learn_design_principles
@@ -43,59 +39,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: user_research
-      name: Mind Reading
-      description: Understand user needs deeply
+      name: "قراءة العقول"
+      description: "فهم احتياجات المستخدم بعمق"
       max_level: 10
       unlocks:
         - empathy_mapping
         - user_interviews
     - id: interaction_design
-      name: Touch Magic
-      description: Design intuitive interactions
+      name: "سحر اللمس"
+      description: "تصميم تفاعلات بديهية"
       max_level: 10
       unlocks:
         - gesture_design
         - microinteractions
     - id: visual_design
-      name: Aesthetic Alchemy
-      description: Create beautiful interfaces
+      name: "كيمياء الجمال"
+      description: "إنشاء واجهات جميلة"
       max_level: 10
       unlocks:
         - color_theory
         - typography_mastery
     - id: prototyping
-      name: Reality Shaping
-      description: Build interactive prototypes
+      name: "تشكيل الواقع"
+      description: "بناء نماذج تفاعلية"
       max_level: 10
       unlocks:
         - rapid_prototyping
         - high_fidelity_design
   advanced_skills:
     - id: design_systems
-      name: System Harmony
-      description: Create scalable design systems
+      name: "انسجام النظام"
+      description: "إنشاء أنظمة تصميم قابلة للتوسع"
       max_level: 15
       requires:
         - visual_design
         - interaction_design
     - id: accessibility_design
-      name: Universal Magic
-      description: Design for all users
+      name: "السحر الشامل"
+      description: "تصميم لجميع المستخدمين"
       max_level: 15
       requires:
         - user_research
         - interaction_design
     - id: strategic_design
-      name: Business Empathy
-      description: Align design with business goals
+      name: "تعاطف الأعمال"
+      description: "مواءمة التصميم مع أهداف العمل"
       max_level: 15
       requires:
         - user_research
         - prototyping
 milestone_quests:
   - id: first_design
-    name: Soul Touch
-    description: Create your first user-loved design
+    name: "لمسة الروح"
+    description: "أنشئ أول تصميم يحبه المستخدمون"
     required_level: 5
     skills_tested:
       - user_research
@@ -105,8 +101,8 @@ milestone_quests:
       - empathy_designer_badge
       - user_testimonials
   - id: indifference_challenge
-    name: Humanity Restored
-    description: Defeat Indifference with personalized design
+    name: "استعادة الإنسانية"
+    description: "اهزم اللامبالاة بتصميم مخصص"
     required_level: 10
     skills_tested:
       - interaction_design
@@ -116,8 +112,8 @@ milestone_quests:
       - humanity_champion_title
       - emotional_resonance
   - id: design_legacy
-    name: Experience Revolution
-    description: Create design used by millions
+    name: "ثورة التجربة"
+    description: "أنشئ تصميماً يستخدمه الملايين"
     required_level: 20
     skills_tested:
       - design_systems
@@ -128,39 +124,39 @@ milestone_quests:
       - design_philosophy
 achievements:
   - id: first_prototype
-    name: First Creation
-    description: Build your first interactive prototype
+    name: "الإبداع الأول"
+    description: "ابنِ أول نموذج تفاعلي"
     xp_reward: 70
     badge_type: bronze
   - id: user_advocate
-    name: User Champion
-    description: Conduct 50 user research sessions
+    name: "بطل المستخدم"
+    description: "أجرِ 50 جلسة بحث مع المستخدمين"
     xp_reward: 250
     badge_type: silver
   - id: pixel_perfect
-    name: Perfection Achieved
-    description: Create flawless high-fidelity designs
+    name: "الكمال المحقق"
+    description: "أنشئ تصميمات عالية الدقة بلا عيوب"
     xp_reward: 450
     badge_type: gold
   - id: design_master
-    name: Experience Sage
-    description: Complete all design challenges
+    name: "حكيم التجربة"
+    description: "أكمل جميع تحديات التصميم"
     xp_reward: 900
     badge_type: platinum
 example_tasks:
   beginner:
     - id: user_research
       type: analysis
-      title: Soul Mining Mission
-      description: Understand user needs and pain points
+      title: "مهمة استكشاف الروح"
+      description: "فهم احتياجات ونقاط ألم المستخدمين"
       skills_improved:
         - user_research
         - user_psychology
       xp_reward: 60
     - id: wireframe_creation
       type: creation
-      title: Blueprint Magic
-      description: Create your first wireframes
+      title: "سحر المخططات"
+      description: "أنشئ أول مخططاتك الهيكلية"
       skills_improved:
         - interaction_design
         - prototype_sculpting
@@ -168,16 +164,16 @@ example_tasks:
   intermediate:
     - id: prototype_design
       type: creation
-      title: Warm Prototype Building
-      description: Design interactive prototype
+      title: "بناء نموذج دافئ"
+      description: "صمم نموذجاً تفاعلياً"
       skills_improved:
         - prototyping
         - experience_magic
       xp_reward: 170
     - id: design_system
       type: creation
-      title: Harmony Framework
-      description: Create cohesive design system
+      title: "إطار الانسجام"
+      description: "أنشئ نظام تصميم متماسك"
       skills_improved:
         - design_systems
         - visual_design
@@ -185,35 +181,35 @@ example_tasks:
   advanced:
     - id: accessibility_audit
       type: analysis
-      title: Universal Gateway
-      description: Ensure design works for everyone
+      title: "البوابة الشاملة"
+      description: "تأكد من أن التصميم يعمل للجميع"
       skills_improved:
         - accessibility_design
         - user_psychology
       xp_reward: 340
     - id: strategic_redesign
       type: creation
-      title: Business Soul Fusion
-      description: Redesign for user and business success
+      title: "دمج روح الأعمال"
+      description: "إعادة تصميم لنجاح المستخدم والعمل"
       skills_improved:
         - strategic_design
         - communication_arts
       xp_reward: 380
 learning_objectives:
-  - Master user research techniques
-  - Create intuitive user interfaces
-  - Design beautiful visual experiences
-  - Build interactive prototypes
-  - Understand human psychology
-  - Implement accessibility standards
-  - Develop design systems
-  - Balance user needs with business goals
+  - "إتقان تقنيات بحث المستخدمين"
+  - "إنشاء واجهات مستخدم بديهية"
+  - "تصميم تجارب بصرية جميلة"
+  - "بناء نماذج تفاعلية"
+  - "فهم علم النفس البشري"
+  - "تطبيق معايير إمكانية الوصول"
+  - "تطوير أنظمة التصميم"
+  - "تحقيق التوازن بين احتياجات المستخدم وأهداف العمل"
 career_outcomes:
-  - UX Designer
-  - UI Designer
-  - Product Designer
-  - Design System Lead
-  - UX Research Manager
-  - Design Director
-  - Chief Design Officer
-  - Design Consultant
+  - "مصمم تجربة المستخدم"
+  - "مصمم واجهة المستخدم"
+  - "مصمم منتجات"
+  - "قائد نظام التصميم"
+  - "مدير بحوث تجربة المستخدم"
+  - "مدير التصميم"
+  - "رئيس مسؤولي التصميم"
+  - "مستشار تصميم"
